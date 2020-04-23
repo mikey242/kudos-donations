@@ -35,7 +35,6 @@ import 'bootstrap';
                 success: function (result) {
                     if(result.success) {
                         $(location).attr('href', result.data);
-                        console.log('success', result);
                     }
                 },
                 error: function (error) {
