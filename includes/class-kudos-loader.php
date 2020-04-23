@@ -6,8 +6,8 @@
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Cudo
- * @subpackage Cudo/includes
+ * @package    Kudos
+ * @subpackage Kudos/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Cudo
- * @subpackage Cudo/includes
+ * @package    Kudos
+ * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
-class Cudo_Loader {
+class Kudos_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

@@ -1,0 +1,20 @@
+.kudos_block_button {
+  a {
+    background: #9b51e0;
+    border: none;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 18px;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  .kudos_block_button_block__label {
+    margin-left: 12px;
+  }
+}

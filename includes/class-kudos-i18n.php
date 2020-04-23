@@ -9,8 +9,8 @@
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Cudo
- * @subpackage Cudo/includes
+ * @package    Kudos
+ * @subpackage Kudos/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Cudo
- * @subpackage Cudo/includes
+ * @package    Kudos
+ * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
-class Cudo_i18n {
+class Kudos_i18n {
 
 
 	/**

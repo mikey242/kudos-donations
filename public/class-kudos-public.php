@@ -6,8 +6,8 @@
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Cudo
- * @subpackage Cudo/public
+ * @package    Kudos
+ * @subpackage Kudos/public
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @package    Cudo
- * @subpackage Cudo/public
+ * @package    Kudos
+ * @subpackage Kudos/public
  * @author     Michael Iseard <michael@iseard.media>
  */
-class Cudo_Public {
+class Kudos_Public {
 
 	/**
 	 * The ID of this plugin.
@@ -61,19 +61,8 @@ class Cudo_Public {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Cudo_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Cudo_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/cudo-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/css/kudos-public.css', [], $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . 'blocks', plugin_dir_url( __FILE__ ) . '../dist/css/kudos-blocks.css', [], $this->version, 'all' );
 
 	}
 
@@ -84,20 +73,19 @@ class Cudo_Public {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Cudo_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Cudo_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/js/kudos-public.js', [ 'jquery' ], $this->version, false );
+		wp_enqueue_script( $this->plugin_name . '-blocks', plugin_dir_url( __FILE__ ) . '../dist/js/kudos-blocks.js', [ 'jquery' ], $this->version, false );
+		wp_localize_script( $this->plugin_name, 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/cudo-public.js', array( 'jquery' ), $this->version, false );
+	}
 
+	public function create_payment() {
+		parse_str($_REQUEST['form'], $form);
+		$value = $form['value'];
+		$email = $form['email_address'];
+		$mollie = new Mollie();
+		$payment = $mollie->payment($value, $email);
+		wp_send_json_success($payment->getCheckoutUrl());
 	}
 
 }

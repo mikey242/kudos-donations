@@ -9,8 +9,8 @@
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Cudo
- * @subpackage Cudo/includes
+ * @package    Kudos
+ * @subpackage Kudos/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Cudo
- * @subpackage Cudo/includes
+ * @package    Kudos
+ * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
-class Cudo {
+class Kudos {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class Cudo {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Cudo_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Kudos_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -67,12 +67,12 @@ class Cudo {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'CUDO_VERSION' ) ) {
-			$this->version = CUDO_VERSION;
+		if ( defined( 'KUDOS_VERSION' ) ) {
+			$this->version = KUDOS_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'cudo';
+		$this->plugin_name = 'kudos';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -86,10 +86,10 @@ class Cudo {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Cudo_Loader. Orchestrates the hooks of the plugin.
-	 * - Cudo_i18n. Defines internationalization functionality.
-	 * - Cudo_Admin. Defines all hooks for the admin area.
-	 * - Cudo_Public. Defines all hooks for the public side of the site.
+	 * - Kudos_Loader. Orchestrates the hooks of the plugin.
+	 * - Kudos_i18n. Defines internationalization functionality.
+	 * - Kudos_Admin. Defines all hooks for the admin area.
+	 * - Kudos_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -103,33 +103,43 @@ class Cudo {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-cudo-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-cudo-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-cudo-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-kudos-admin.php';
+
+		/**
+		 * The class responsible for defining all actions that occur in the admin area.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-carbon.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-cudo-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-public.php';
 
-		$this->loader = new Cudo_Loader();
+		/**
+		 * Mollie functions
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mollie.php';
+
+		$this->loader = new Kudos_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Cudo_i18n class in order to set the domain and to register the hook
+	 * Uses the Kudos_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -137,7 +147,7 @@ class Cudo {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Cudo_i18n();
+		$plugin_i18n = new Kudos_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -152,10 +162,12 @@ class Cudo {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Cudo_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Kudos_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'after_setup_theme', $plugin_admin, 'kudos_admin_init' );
+		$this->loader->add_action('wp_ajax_check_mollie_connection', $plugin_admin, 'check_mollie_connection');
 
 	}
 
@@ -168,10 +180,12 @@ class Cudo {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Cudo_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Kudos_Public( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action('wp_ajax_nopriv_create_payment', $plugin_public, 'create_payment');
+		$this->loader->add_action('wp_ajax_create_payment', $plugin_public, 'create_payment');
 
 	}
 
@@ -199,7 +213,7 @@ class Cudo {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    Cudo_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Kudos_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;

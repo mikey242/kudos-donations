@@ -6,8 +6,8 @@
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Cudo
- * @subpackage Cudo/admin
+ * @package    Kudos
+ * @subpackage Kudos/admin
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    Cudo
- * @subpackage Cudo/admin
+ * @package    Kudos
+ * @subpackage Kudos/admin
  * @author     Michael Iseard <michael@iseard.media>
  */
-class Cudo_Admin {
+class Kudos_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -61,19 +61,8 @@ class Cudo_Admin {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Cudo_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Cudo_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/cudo-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/css/kudos-admin.css', [], $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . 'blocks', plugin_dir_url( __FILE__ ) . '../dist/css/kudos-blocks.css', [], $this->version, 'all' );
 
 	}
 
@@ -84,20 +73,30 @@ class Cudo_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Cudo_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Cudo_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/cudo-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/js/kudos-admin.js', [ 'jquery' ], $this->version, false );
+		wp_enqueue_script( $this->plugin_name . '-blocks', plugin_dir_url( __FILE__ ) . '../dist/js/kudos-blocks.js', [ 'jquery' ], $this->version, false );
+		wp_localize_script( $this->plugin_name, 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
 
 	}
+
+	public function kudos_admin_init() {
+		Kudos_Carbon::init();
+	}
+
+	/**
+	 * Check the Mollie Api key
+	 */
+	public function check_mollie_connection() {
+		$apiKey = sanitize_text_field($_REQUEST['apiKey']);
+		$mollie = new Mollie();
+		$result = $mollie->checkApiKey($apiKey);
+		if($result) {
+			carbon_set_theme_option('mollie_api_key', $apiKey);
+		    $return = "Connection successful!";
+		} else {
+            $return = "Error connecting with Mollie, please check the API key and try again";
+		}
+        wp_send_json_success($return);
+    }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 /**
  * The plugin bootstrap file
  *
@@ -10,10 +12,10 @@
  *
  * @link              https://www.linkedin.com/in/michael-iseard/
  * @since             1.0.0
- * @package           Cudo
+ * @package           Kudos-Mollie
  *
  * @wordpress-plugin
- * Plugin Name:       Cudo
+ * Plugin Name:       Kudos-Mollie
  * Plugin URI:        https://iseard.media
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0
@@ -21,7 +23,7 @@
  * Author URI:        https://www.linkedin.com/in/michael-iseard/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       cudo
+ * Text Domain:       kudos
  * Domain Path:       /languages
  */
 
@@ -35,34 +37,34 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CUDO_VERSION', '1.0.0' );
+define( 'KUDOS_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-cudo-activator.php
+ * This action is documented in includes/class-kudos-activator.php
  */
-function activate_cudo() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-cudo-activator.php';
-	Cudo_Activator::activate();
+function activate_kudos() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kudos-activator.php';
+	Kudos_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-cudo-deactivator.php
+ * This action is documented in includes/class-kudos-deactivator.php
  */
-function deactivate_cudo() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-cudo-deactivator.php';
-	Cudo_Deactivator::deactivate();
+function deactivate_kudos() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kudos-deactivator.php';
+	Kudos_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_cudo' );
-register_deactivation_hook( __FILE__, 'deactivate_cudo' );
+register_activation_hook( __FILE__, 'activate_kudos' );
+register_deactivation_hook( __FILE__, 'deactivate_kudos' );
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-cudo.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-kudos.php';
 
 /**
  * Begins execution of the plugin.
@@ -73,10 +75,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-cudo.php';
  *
  * @since    1.0.0
  */
-function run_cudo() {
+function run_kudos() {
 
-	$plugin = new Cudo();
+	$plugin = new Kudos();
 	$plugin->run();
 
 }
-run_cudo();
+run_kudos();

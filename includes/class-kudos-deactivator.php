@@ -6,8 +6,8 @@
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Cudo
- * @subpackage Cudo/includes
+ * @package    Kudos
+ * @subpackage Kudos/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Cudo
- * @subpackage Cudo/includes
+ * @package    Kudos
+ * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
-class Cudo_Deactivator {
+class Kudos_Deactivator {
 
 	/**
 	 * Short Description. (use period)
