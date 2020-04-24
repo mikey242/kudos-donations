@@ -30,6 +30,7 @@ dom.watch();
                 },
                 success:function(response){
                     $loader.removeClass('is-active');
+                    $message.addClass('text-success');
                     $message.text(response.data).css('display', 'inline-block');
                     console.log(response, $message);
                 },

@@ -1,4 +1,4 @@
-.kudos_block_button {
+.kudos_button {
   a {
     background: #9b51e0;
     border: none;
@@ -9,8 +9,17 @@
     text-decoration: none;
     cursor: pointer;
 
+    .fa-hand-holding-heart {
+      transition: transform 0.4s ease;
+      //font-size: 18px;
+    }
+
     &:hover {
       color: #fff;
+
+      .fa-hand-holding-heart {
+        transform: rotate(10deg);
+      }
     }
   }
 

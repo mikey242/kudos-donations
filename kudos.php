@@ -1,5 +1,7 @@
 <?php
 
+namespace Kudos;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 /**
@@ -57,8 +59,8 @@ function deactivate_kudos() {
 	Kudos_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_kudos' );
-register_deactivation_hook( __FILE__, 'deactivate_kudos' );
+register_activation_hook( __FILE__, __NAMESPACE__ . '\activate_kudos' );
+register_deactivation_hook( __FILE__,  __NAMESPACE__ . '\deactivate_kudos' );
 
 /**
  * The core plugin class that is used to define internationalization,

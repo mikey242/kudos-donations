@@ -1,5 +1,7 @@
 <?php
 
+namespace Kudos;
+
 /**
  * Fired during plugin deactivation
  *

@@ -1,5 +1,10 @@
 <?php
 
+namespace Kudos;
+
+use Kudos\Mollie\Mollie;
+use Kudos\Transactions\Transactions_Table;
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -79,10 +84,6 @@ class Kudos_Admin {
 
 	}
 
-	public function kudos_admin_init() {
-		Kudos_Carbon::init();
-	}
-
 	/**
 	 * Check the Mollie Api key
 	 */
@@ -98,5 +99,46 @@ class Kudos_Admin {
 		}
         wp_send_json_success($return);
     }
+
+    public function create_transaction_page() {
+		add_submenu_page(
+			'crb_carbon_fields_container_kudos.php',
+			'Kudos Transactions',
+			'Transactions',
+			'manage_options',
+			'kudos-transactions',
+			[$this, 'transactions_table']
+
+		);
+    }
+
+    public function transactions_table() {
+	    $table = new Transactions_Table();
+	    $table->prepare_items();
+	    ?>
+	    <div class="wrap">
+		    <div id="icon-users" class="icon32"></div>
+		    <h2>Transacties</h2>
+		    <?php $table->display(); ?>
+	    </div>
+	    <?php
+    }
+
+	public function register_shortcodes() {
+		add_shortcode('kudos', [$this, 'kudos_button_shortcode']);
+	}
+
+	public function kudos_button_shortcode($atts) {
+
+			$atts = shortcode_atts(
+				[
+				'label' => '',
+				],
+				$atts,
+				'kudos'
+			);
+
+			return kudos_button($atts['label'], false);
+	}
 
 }

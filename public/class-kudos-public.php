@@ -1,5 +1,10 @@
 <?php
 
+namespace Kudos;
+
+use Kudos\Mollie\Mollie;
+use Kudos\Mollie\Webhook;
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -83,9 +88,51 @@ class Kudos_Public {
 		parse_str($_REQUEST['form'], $form);
 		$value = $form['value'];
 		$email = $form['email_address'];
+		$redirectUrl = $_REQUEST['redirectUrl'];
+
 		$mollie = new Mollie();
-		$payment = $mollie->payment($value, $email);
+		$payment = $mollie->payment($value, $email, $redirectUrl);
 		wp_send_json_success($payment->getCheckoutUrl());
+	}
+
+	/**
+	 * Register custom query vars
+	 *
+	 * @param array $vars The array of available query variables
+	 * @link https://codex.wordpress.org/Plugin_API/Filter_Reference/query_vars
+	 * @return array
+	 */
+	public function register_query_vars( $vars ) {
+		$vars[] = 'kudos_order_id';
+		return $vars;
+	}
+
+	public function register_webhook() {
+		$webhook = new Webhook();
+		$webhook->register_webhook();
+	}
+
+	/**
+	 * @return bool | string
+	 */
+	public function check_transaction() {
+		$order_id = $_REQUEST['order_id'];
+
+		if(!$order_id) {
+			return false;
+		}
+
+		$transaction = new Transactions\Transaction();
+		$transaction = $transaction->get_transaction($order_id);
+		$order_id_session = $_COOKIE['order_id'];
+
+		if($order_id === $order_id_session) {
+			// Unset cookie to prevent repeat message
+			setcookie('order_id', '', 1);
+			wp_send_json_success($transaction);
+		}
+
+		return false;
 	}
 
 }

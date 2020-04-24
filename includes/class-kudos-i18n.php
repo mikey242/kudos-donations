@@ -1,5 +1,7 @@
 <?php
 
+namespace Kudos;
+
 /**
  * Define the internationalization functionality
  *

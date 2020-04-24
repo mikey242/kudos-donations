@@ -1,5 +1,9 @@
 <?php
 
+namespace Kudos;
+
+use Kudos\Webhook\Mollie_Webhook;
+
 /**
  * The file that defines the core plugin class
  *
@@ -84,13 +88,6 @@ class Kudos {
 	/**
 	 * Load the required dependencies for this plugin.
 	 *
-	 * Include the following files that make up the plugin:
-	 *
-	 * - Kudos_Loader. Orchestrates the hooks of the plugin.
-	 * - Kudos_i18n. Defines internationalization functionality.
-	 * - Kudos_Admin. Defines all hooks for the admin area.
-	 * - Kudos_Public. Defines all hooks for the public side of the site.
-	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
 	 *
@@ -99,38 +96,16 @@ class Kudos {
 	 */
 	private function load_dependencies() {
 
-		/**
-		 * The class responsible for orchestrating the actions and filters of the
-		 * core plugin.
-		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-loader.php';
-
-		/**
-		 * The class responsible for defining internationalization functionality
-		 * of the plugin.
-		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-i18n.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the admin area.
-		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transaction.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transactions-table.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/kudos-carbon.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-kudos-admin.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the admin area.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-carbon.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-public.php';
-
-		/**
-		 * Mollie functions
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mollie.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-mollie.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mollie-webhook.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/includes/kudos-button.php';
 
 		$this->loader = new Kudos_Loader();
 
@@ -166,8 +141,9 @@ class Kudos {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-		$this->loader->add_action( 'after_setup_theme', $plugin_admin, 'kudos_admin_init' );
+		$this->loader->add_action('admin_menu', $plugin_admin, 'create_transaction_page', 11);
 		$this->loader->add_action('wp_ajax_check_mollie_connection', $plugin_admin, 'check_mollie_connection');
+		$this->loader->add_action('init', $plugin_admin, 'register_shortcodes');
 
 	}
 
@@ -186,6 +162,10 @@ class Kudos {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action('wp_ajax_nopriv_create_payment', $plugin_public, 'create_payment');
 		$this->loader->add_action('wp_ajax_create_payment', $plugin_public, 'create_payment');
+		$this->loader->add_action('wp_ajax_nopriv_check_transaction', $plugin_public, 'check_transaction');
+		$this->loader->add_action('wp_ajax_check_transaction', $plugin_public, 'check_transaction');
+		$this->loader->add_action('rest_api_init', $plugin_public, 'register_webhook');
+		$this->loader->add_filter('query_vars', $plugin_public, 'register_query_vars');
 
 	}
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace Kudos;
+
 /**
  * Register all actions and filters for the plugin
  *
