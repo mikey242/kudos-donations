@@ -44,6 +44,7 @@ class Mollie
 		} catch (ApiException $e) {
 			error_log($e->getMessage());
 		}
+		return false;
 	}
 
 	public function payment($value, $email, $redirectUrl) {
@@ -62,8 +63,8 @@ class Mollie
 						"currency" => "EUR",
 						"value" => $value
 					],
-					"redirectUrl" => $redirectUrl . '?kudos_order_id=' . $order_id,
-					"webhookUrl" => 'https://9486fba9.ngrok.io/wp-json/kudos/v1/mollie',
+					"redirectUrl" => add_query_arg('kudos_order_id', base64_encode($order_id), $redirectUrl),
+					"webhookUrl" => 'https://06f183bc.ngrok.io/wp-json/kudos/v1/mollie',
 //					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
 					'metadata' => [

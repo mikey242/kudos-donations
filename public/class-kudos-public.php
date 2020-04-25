@@ -116,7 +116,7 @@ class Kudos_Public {
 	 * @return bool | string
 	 */
 	public function check_transaction() {
-		$order_id = $_REQUEST['order_id'];
+		$order_id = base64_decode($_REQUEST['order_id']);
 
 		if(!$order_id) {
 			return false;
