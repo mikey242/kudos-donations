@@ -15,22 +15,29 @@ dom.watch();
 
         $checkApiButton.click( function(e) {
             e.preventDefault();
-            let apiKey =  $('input[name="carbon_fields_compact_input[_mollie_api_key]"]').val();
+            let formData = $('#theme-options-form').serialize();
+            console.log(formData);
             $.ajax({
                 method : "post",
                 dataType : "json",
                 url : wp_ajax.ajaxurl,
                 data : {
+                    formData: formData,
                     action: 'check_mollie_connection',
-                    apiKey: apiKey
                 },
                 beforeSend: function() {
                     $loader.addClass('is-active');
                     $message.hide();
                 },
                 success:function(response){
+                    if(response.success) {
+                        $message.removeClass('text-error');
+                        $message.addClass('text-success');
+                    } else {
+                        $message.removeClass('text-success');
+                        $message.addClass('text-error');
+                    }
                     $loader.removeClass('is-active');
-                    $message.addClass('text-success');
                     $message.text(response.data).css('display', 'inline-block');
                     console.log(response, $message);
                 },

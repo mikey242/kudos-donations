@@ -8,7 +8,7 @@ namespace Kudos;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/includes
  */
 
@@ -18,7 +18,7 @@ namespace Kudos;
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
@@ -38,9 +38,11 @@ class Kudos_Activator {
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
 		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-		  email VARCHAR(320) NOT NULL,
+		  name VARCHAR(255), 
+		  email VARCHAR(320),
 		  value DECIMAL(7,2) NOT NULL,
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
+		  mode VARCHAR(255) NOT NULL, 
 		  order_id VARCHAR(255) NOT NULL,
 		  transaction_id VARCHAR(255),  
 		  PRIMARY KEY  (id)

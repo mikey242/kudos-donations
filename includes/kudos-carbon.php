@@ -16,16 +16,28 @@ add_action( 'carbon_fields_register_fields', 'crb_kudos_attach_theme_options' );
 function crb_kudos_attach_theme_options() {
 	Container::make( 'theme_options', __( 'Kudos', 'kudos' ) )
        ->set_page_menu_title('Kudos Settings')
-       ->set_icon('data:image/svg+xml;base64,' . base64_encode('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512"><path fill="#f0f5fa99" d="M256 416c114.9 0 208-93.1 208-208S370.9 0 256 0 48 93.1 48 208s93.1 208 208 208zM233.8 97.4V80.6c0-9.2 7.4-16.6 16.6-16.6h11.1c9.2 0 16.6 7.4 16.6 16.6v17c15.5.8 30.5 6.1 43 15.4 5.6 4.1 6.2 12.3 1.2 17.1L306 145.6c-3.8 3.7-9.5 3.8-14 1-5.4-3.4-11.4-5.1-17.8-5.1h-38.9c-9 0-16.3 8.2-16.3 18.3 0 8.2 5 15.5 12.1 17.6l62.3 18.7c25.7 7.7 43.7 32.4 43.7 60.1 0 34-26.4 61.5-59.1 62.4v16.8c0 9.2-7.4 16.6-16.6 16.6h-11.1c-9.2 0-16.6-7.4-16.6-16.6v-17c-15.5-.8-30.5-6.1-43-15.4-5.6-4.1-6.2-12.3-1.2-17.1l16.3-15.5c3.8-3.7 9.5-3.8 14-1 5.4 3.4 11.4 5.1 17.8 5.1h38.9c9 0 16.3-8.2 16.3-18.3 0-8.2-5-15.5-12.1-17.6l-62.3-18.7c-25.7-7.7-43.7-32.4-43.7-60.1.1-34 26.4-61.5 59.1-62.4zM480 352h-32.5c-19.6 26-44.6 47.7-73 64h63.8c5.3 0 9.6 3.6 9.6 8v16c0 4.4-4.3 8-9.6 8H73.6c-5.3 0-9.6-3.6-9.6-8v-16c0-4.4 4.3-8 9.6-8h63.8c-28.4-16.3-53.3-38-73-64H32c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32h448c17.7 0 32-14.3 32-32v-96c0-17.7-14.3-32-32-32z"></path></svg>'))
+       ->set_icon('data:image/svg+xml;base64,' . base64_encode('
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>
+        '))
+
+//       ->set_icon('data:image/svg+xml;base64,' . base64_encode('
+//            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 449 555"><defs/><path fill="#f0f5fa99" d="M-.002 554.834V424.377h448.355v130.457zM224.18 64.948C271.373-13.46 365.767-13.46 412.962 25.747c47.194 39.2 47.194 117.612 0 196.02-33.04 58.808-117.992 117.612-188.784 156.817-70.793-39.205-155.744-98.01-188.781-156.818-47.196-78.407-47.196-156.818 0-196.02 47.195-39.205 141.587-39.205 188.781 39.202z"/></svg>
+//        '))
        ->add_fields( [
            Field::make( 'html', 'api_description_html', __('Html', 'kudos') )
                 ->set_html('You can find this key in your <a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a> as soon as we have approved your website. Would you like to test the system first? Then you can use the test API key. To receive payments from your consumers, please use the live API key.'),
-           Field::make( 'text', 'mollie_api_key', __( 'Mollie API Key', 'kudos' ) ),
+           Field::make('radio', 'kudos_mollie_api_mode', __('Mode', 'kudos'))
+                ->add_options([
+	                    'test' => 'Test',
+                        'live' => 'Live'
+                ]),
+           Field::make( 'text', 'mollie_test_api_key', __( 'Mollie Test API Key', 'kudos' ) ),
+           Field::make( 'text', 'mollie_live_api_key', __( 'Mollie Live API Key', 'kudos' ) ),
            Field::make('html', 'check_api_key_button', null)
                 ->set_html('
                     <input id="test_mollie_api_key" type="button" class="button button-secondary" value="Check Api Key">
                     <div id="check_key_spinner" class="spinner"></div>
-                    <div id="result_message" class="hidden success message">Not hidden</div>
+                    <div id="result_message" class="hidden message"></div>
                 '),
        ] )
 	;

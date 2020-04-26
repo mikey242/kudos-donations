@@ -11,7 +11,7 @@ use Kudos\Mollie\Webhook;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos
+ * @package    Kudos-Mollie-Mollie
  * @subpackage Kudos/public
  */
 
@@ -21,7 +21,7 @@ use Kudos\Mollie\Webhook;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @package    Kudos
+ * @package    Kudos-Mollie-Mollie
  * @subpackage Kudos/public
  * @author     Michael Iseard <michael@iseard.media>
  */
@@ -87,12 +87,16 @@ class Kudos_Public {
 	public function create_payment() {
 		parse_str($_REQUEST['form'], $form);
 		$value = $form['value'];
+		$name = $form['name'];
 		$email = $form['email_address'];
 		$redirectUrl = $_REQUEST['redirectUrl'];
 
 		$mollie = new Mollie();
-		$payment = $mollie->payment($value, $email, $redirectUrl);
-		wp_send_json_success($payment->getCheckoutUrl());
+		$payment = $mollie->payment($value, $redirectUrl, $name, $email);
+		if($payment) {
+			wp_send_json_success($payment->getCheckoutUrl());
+		}
+		wp_send_json_error($payment);
 	}
 
 	/**

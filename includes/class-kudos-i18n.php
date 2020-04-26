@@ -11,7 +11,7 @@ namespace Kudos;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/includes
  */
 
@@ -22,7 +22,7 @@ namespace Kudos;
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */

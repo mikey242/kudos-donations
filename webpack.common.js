@@ -1,5 +1,6 @@
 const path = require('path')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const svgToMiniDataURI = require('mini-svg-data-uri');
 
 module.exports = {
     entry: {
@@ -12,6 +13,7 @@ module.exports = {
     watch: true,
     output: {
         path: path.resolve(__dirname, 'dist'),
+        publicPath: '/wp-content/plugins/kudos-mollie/dist/',
         filename: 'js/[name].js',
         chunkFilename: 'js/[id].js'
     },
@@ -43,7 +45,29 @@ module.exports = {
                         }
                     }, 'sass-loader'
                 ]
-            }
+            },
+            {
+                test: /\.svg$/i,
+                loader: 'url-loader',
+                options: {
+                    generator: (content) => svgToMiniDataURI(content.toString()),
+                },
+            },
+            {
+                test: /\.(ttf|otf|eot|woff2?)$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 4096,
+                    outputPath:'./fonts/'
+                },
+            },
+            // {
+            //     test: /\.(woff|woff2|eot|ttf|otf)$/,
+            //     loader: 'file-loader',
+            //     options: {
+            //         outputPath:'./fonts/'
+            //     },
+            // }
         ]
     },
     resolve: {

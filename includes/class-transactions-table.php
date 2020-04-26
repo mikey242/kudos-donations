@@ -53,9 +53,11 @@ class Transactions_Table extends WP_List_Table {
 	public function get_columns() {
 		return $columns= [
 			'time'=>__('Datum', 'kudos'),
+			'name'=>__('Naam', 'kudos'),
 			'email'=>__('E-mail', 'kudos'),
 			'value'=>__('Bedrag', 'kudos'),
 			'status'=>__('Status', 'kudos'),
+			'mode'=>__('Mode', 'kudos'),
 		];
 	}
 
@@ -124,9 +126,11 @@ class Transactions_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'time':
+			case 'name':
 			case 'email':
 			case 'value':
 			case 'status':
+			case 'mode':
 				return $item[$column_name];
 			default:
 				return print_r( $item, true ) ;

@@ -19,7 +19,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  * @wordpress-plugin
  * Plugin Name:       Kudos-Mollie
  * Plugin URI:        https://iseard.media
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Allows ability to receive donations via Mollie
  * Version:           1.0.0
  * Author:            Michael Iseard
  * Author URI:        https://www.linkedin.com/in/michael-iseard/
@@ -79,7 +79,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-kudos.php';
  */
 function run_kudos() {
 
-	$plugin = new Kudos();
+	$plugin = new Kudos_Mollie();
 	$plugin->run();
 
 }

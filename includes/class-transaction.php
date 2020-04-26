@@ -19,17 +19,20 @@ class Transaction {
 
 	/**
 	 * @param string $order_id
-	 * @param string $email
 	 * @param string $value
+	 * @param string $email
+	 * @param string $name
 	 */
-	public function create_record($order_id, $email, $value) {
+	public function create_record($order_id, $value, $email=null, $name=null) {
 		$this->wpdb->insert(
 			$this->wpdb->prefix . self::TABLE,
 			[
 				'time' => current_time('mysql'),
+				'name' => $name,
 				'email' => $email,
 				'value' => $value,
 				'status' => 'open',
+				'mode' => get_option('_kudos_mollie_api_mode'),
 				'order_id' => $order_id
 			]
 		);

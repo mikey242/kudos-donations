@@ -13,7 +13,7 @@ use Kudos\Webhook\Mollie_Webhook;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/includes
  */
 
@@ -27,11 +27,11 @@ use Kudos\Webhook\Mollie_Webhook;
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
-class Kudos {
+class Kudos_Mollie {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -76,7 +76,7 @@ class Kudos {
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'kudos';
+		$this->plugin_name = 'kudos-mollie';
 
 		$this->load_dependencies();
 		$this->set_locale();

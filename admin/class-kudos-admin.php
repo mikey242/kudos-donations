@@ -11,7 +11,7 @@ use Kudos\Transactions\Transactions_Table;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/admin
  */
 
@@ -21,7 +21,7 @@ use Kudos\Transactions\Transactions_Table;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/admin
  * @author     Michael Iseard <michael@iseard.media>
  */
@@ -88,23 +88,30 @@ class Kudos_Admin {
 	 * Check the Mollie Api key
 	 */
 	public function check_mollie_connection() {
-		$apiKey = sanitize_text_field($_REQUEST['apiKey']);
+
+	    parse_str($_REQUEST['formData'], $formData);
+
+	    $mode = $formData['carbon_fields_compact_input']['_kudos_mollie_api_mode'];
+	    $apiKey = $formData['carbon_fields_compact_input']['_mollie_'.$mode.'_api_key'];
+
 		$mollie = new Mollie();
+
 		$result = $mollie->checkApiKey($apiKey);
+
 		if($result) {
-			carbon_set_theme_option('mollie_api_key', $apiKey);
-		    $return = "Connection successful!";
+			carbon_set_theme_option('mollie_'.$mode.'_api_key', $apiKey);
+			carbon_set_theme_option('kudos_mollie_api_mode', $mode);
+			wp_send_json_success("Connection successful!");
 		} else {
-            $return = "Error connecting with Mollie, please check the API key and try again";
+            wp_send_json_error("Error connecting with Mollie, please check the ". $mode ." API key and try again");
 		}
-        wp_send_json_success($return);
     }
 
     public function create_transaction_page() {
 		add_submenu_page(
 			'crb_carbon_fields_container_kudos.php',
-			'Kudos Transactions',
-			'Transactions',
+			'Kudos Transacties',
+			'Transacties',
 			'manage_options',
 			'kudos-transactions',
 			[$this, 'transactions_table']

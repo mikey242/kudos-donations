@@ -47,34 +47,39 @@ class Mollie
 		return false;
 	}
 
-	public function payment($value, $email, $redirectUrl) {
+	public function payment($value, $redirectUrl, $name=null, $email=null) {
 
 		$mollieApi = $this->mollieApi;
-		$transaction = new Transaction();
 		$order_id = time();
 		setcookie('order_id', $order_id);
 		$value = number_format($value, 2);
-		$transaction->create_record($order_id, $email, $value);
 
 		try {
-			return $mollieApi->payments->create(
+			$payment = $mollieApi->payments->create(
 				[
 					"amount" => [
 						"currency" => "EUR",
 						"value" => $value
 					],
 					"redirectUrl" => add_query_arg('kudos_order_id', base64_encode($order_id), $redirectUrl),
-					"webhookUrl" => 'https://06f183bc.ngrok.io/wp-json/kudos/v1/mollie',
+					"webhookUrl" => 'https://25b65ba4.ngrok.io/wp-json/kudos/v1/mollie',
 //					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
 					'metadata' => [
-						'order_id' => $order_id
+						'order_id' => $order_id,
+						'email' => $email,
+						'name' => $name
 					]
 				]
 			);
 
+			$transaction = new Transaction();
+			$transaction->create_record($order_id, $value, $email, $name);
+
+			return $payment;
+
 		} catch (ApiException $e) {
-			error_log($e->getMessage());
+			error_log($e->getMessage() . 'redirectUrl: ');
 			return false;
 		}
 

@@ -3,14 +3,22 @@ import bootbox from 'bootbox';
 import 'bootstrap';
 import 'jquery-validation';
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
-import {faHeart} from "@fortawesome/free-solid-svg-icons";
+import {faHeart, faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
+import logo from "../img/logo-colour.svg";
 
-library.add(faHeart);
+library.add(faHeart, faLock, faCircle);
 dom.watch();
 
 $(function () {
 
+    // Set validation defaults
+    $.validator.setDefaults({
+        errorElement: 'small',
+    });
+
+
     const $body = $('body');
+    let redirectUrl;
     let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
     // Check order status if query var exists
@@ -28,6 +36,7 @@ $(function () {
                 if(result.success) {
                     if (result.data.status === 'paid')
                     bootbox.alert({
+                        centerVertical: true,
                         message: 'Thanks for your donation of €' + result.data.value
                     })
                 }
@@ -39,23 +48,46 @@ $(function () {
     }
 
     // Setup button action
-    $('.kudos_button a').each(function() {
+    $('.kudos-button').each(function() {
         $(this).click(function () {
-            let form = $("\
-                <form id='kudos_form' action=''>\
-                    <input required type='email' class='form-control' name='email_address' placeholder='E-mail adres' /><br/>\
-                    <input required type='text' min='1' class='form-control' name='value' placeholder='Bedrag (5, 10, 20)' />\
-                </form>"
-                );
+            redirectUrl = $(this).data('redirect');
+            let topContent = $('\
+                <div class="top-content text-center">\
+                    <h2>Steun ons!</h2>\
+                    <p>Wat lief dat je ons wilt steunen. <br/>Doneer eenmalig zonder verplichtingen.</p>\
+                </div>\
+            ')
+            let paymentBy = $('\
+                <div class="payment-by mt-3 text-muted text-right"><small class="d-inline-block">\
+                    <span class="fa-stack fa-1x align-middle">\
+                        <i class="fas fa-circle fa-stack-2x"></i>\
+                        <i class="fas fa-lock fa-stack-1x fa-inverse"></i>\
+                    </span>\
+                         Beveiligde betaling via\
+                </small></div>\
+                <i class="kudos-spinner fa-spin"></i> \
+            ');
+            let form = $('\
+                <form id="kudos_form" action="">\
+                    <input type="name" class="form-control mb-3" name="name" placeholder="Naam" />\
+                    <input type="email" class="form-control mb-3" name="email_address" placeholder="E-mailadres" />\
+                    <input required type="text" min="1" class="form-control" name="value" placeholder="Bedrag (in euro\'s)" />\
+                </form>\
+                ');
+            let message = topContent.add(form).add(paymentBy);
+            let image = new Image(30);
+            image.src = logo;
             bootbox.confirm({
-                    title: 'Kudos donation <i class="fas fa-heart"></i>',
-                    message: form,
+                    title: image,
+                    message: message,
                     className: 'kudos-modal',
+                    centerVertical: true,
                     buttons: {
                         confirm: {
                             label: 'Doneer'
                         },
                         cancel: {
+                            className: 'btn-outline-primary',
                             label: 'Annuleren'
                         }
                     },
@@ -69,17 +101,17 @@ $(function () {
                                 },
                                 messages: {
                                     value: {
-                                        required: "Oops, looks like you forgot something",
-                                        min: "Minimum donation is 1 euro"
+                                        required: "Vul een donatiebedrag in",
+                                        min: "Minimum donatie is 1 euro"
                                     }
                                 }
                             });
-                            console.log(validator);
                             if(form.valid()) {
                                 form.submit();
-                            } else {
-                                return false;
+                                $(this).addClass('kudos-loading');
+                                console.log(this);
                             }
+                            return false;
                         }
                     },
                 }
@@ -96,7 +128,7 @@ $(function () {
             url: wp_ajax.ajaxurl,
             data:  {
                 action: 'create_payment',
-                redirectUrl: $(location).attr('href').split('?kudos_order_id')[0],
+                redirectUrl: redirectUrl,
                 form: $(e.currentTarget).serialize()
             },
             success: function (result) {

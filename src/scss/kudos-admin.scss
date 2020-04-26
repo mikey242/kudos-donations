@@ -2,7 +2,11 @@
   height: 20px;
   margin: 4px 10px 0;
 
-  &.success {
+  &.text-success {
     color: green;
+  }
+
+  &.text-error {
+    color: red;
   }
 }

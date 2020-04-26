@@ -8,7 +8,7 @@ namespace Kudos;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/includes
  */
 
@@ -19,7 +19,7 @@ namespace Kudos;
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Kudos
+ * @package    Kudos-Mollie
  * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
