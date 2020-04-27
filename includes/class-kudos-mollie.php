@@ -18,8 +18,8 @@ class Mollie
 	 */
 	public function __construct() {
 		$this->mollieApi = new MollieApiClient();
-		$this->apiMode = get_option('_kudos_mollie_api_mode');
-		$this->apiKey = get_option('_kudos_mollie_'.$this->apiMode.'_api_key');
+		$this->apiMode = carbon_get_theme_option('kudos_mollie_api_mode');
+		$this->apiKey = carbon_get_theme_option('kudos_mollie_'.$this->apiMode.'_api_key');
 		if($this->apiKey) {
 			try {
 				$this->mollieApi->setApiKey($this->apiKey);
@@ -83,7 +83,7 @@ class Mollie
 		$value = number_format($value, 2);
 
 		// Add order id if option to show message enabled
-		if(get_option('_kudos_return_message_enable')) {
+		if(carbon_get_theme_option('kudos_return_message_enable')) {
 			$redirectUrl = add_query_arg('kudos_order_id', base64_encode($order_id), $redirectUrl);
 		}
 

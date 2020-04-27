@@ -101,7 +101,7 @@ class Kudos_Admin {
 		$result = $mollie->checkApiKey($apiKey);
 
 		if($result) {
-			carbon_set_theme_option('mollie_'.$mode.'_api_key', $apiKey);
+			carbon_set_theme_option('kudos_mollie_'.$mode.'_api_key', $apiKey);
 			carbon_set_theme_option('kudos_mollie_api_mode', $mode);
 			wp_send_json_success("Connection successful!");
 		} else {

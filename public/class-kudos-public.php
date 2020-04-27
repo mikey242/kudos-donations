@@ -140,7 +140,7 @@ class Kudos_Public {
 	}
 
 	public static function get_return_url() {
-		$use_custom = get_option('_kudos_custom_return_enable');
+		$use_custom = carbon_get_theme_option('kudos_custom_return_enable');
 		$custom_url = get_option('_kudos_custom_return_url');
 		if($use_custom && $custom_url) {
 			return $custom_url;
@@ -149,6 +149,15 @@ class Kudos_Public {
 			$redirectUrl .= $_SERVER['HTTP_HOST'] . parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
 			return $redirectUrl;
 		}
+	}
+
+	public static function ready() {
+		$apiMode = carbon_get_theme_option('kudos_mollie_api_mode');
+		$apiKey = carbon_get_theme_option('kudos_mollie_'.$apiMode.'_api_key');
+		if($apiKey) {
+			return true;
+		}
+		return false;
 	}
 
 }

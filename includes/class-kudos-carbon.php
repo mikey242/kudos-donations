@@ -51,13 +51,14 @@ class Carbon {
             '))
             ->add_tab(__('Mollie', 'kudos'), [
                 Field::make( 'html', 'api_description_html', __('Html', 'kudos') )
-                    ->set_html('You can find your Mollie API keys in your <a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>. Would you like to test the system first? Then you can use the test API key. To receive payments from your consumers, please use the live API key.'),
+                    ->set_html('<h2>You can find your Mollie API keys in your <a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>. Would you like to test the system first? Then you can use the test API key. To receive payments from your consumers, please use the live API key.</h2>'),
                 Field::make('radio', 'kudos_mollie_api_mode', __('Mode', 'kudos'))
 	                ->set_help_text( 'Set to "test" to first test the configuration is working correctly. Once you\'re ready to recieve live payments you can switch this to "live"'  )
                     ->add_options([
                         'test' => 'Test',
                         'live' => 'Live'
-                    ]),
+                    ])
+	                ->set_default_value('test'),
                 Field::make( 'text', 'kudos_mollie_test_api_key', __( 'Mollie Test API Key', 'kudos' ) ),
                 Field::make( 'text', 'kudos_mollie_live_api_key', __( 'Mollie Live API Key', 'kudos' ) ),
                 Field::make('html', 'check_api_key_button', null)
@@ -69,7 +70,8 @@ class Carbon {
             ] )
             ->add_tab(__('Completed Payment', 'kudos'), [
                     Field::make('checkbox', 'kudos_custom_return_enable', __('Use custom return URL', 'kudos'))
-	                    ->set_help_text( 'Useful if you want to create a custom thank you page' ),
+	                    ->set_help_text( 'Useful if you want to create a custom thank you page' )
+	                    ->set_default_value(false),
                     Field::make('text', 'kudos_custom_return_url', __('URL', 'kudos'))
 	                    ->set_help_text( 'e.g: https://mijnwebsite.nl/bedankt' )
                         ->set_conditional_logic([
@@ -79,6 +81,8 @@ class Carbon {
                                 ]
                         ]),
                     Field::make('checkbox', 'kudos_return_message_enable', __('Show pop-up message when payment complete', 'kudos'))
+	                    ->set_help_text( 'Enable this to show a pop-up thanking the customer for their donation.'  )
+                        ->set_default_value(true)
             ])
         ;
     }
