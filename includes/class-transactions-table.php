@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * @source https://gist.github.com/paulund/7659452
+ */
+
 namespace Kudos\Transactions;
 
 use WP_List_Table;
@@ -24,6 +28,11 @@ class Transactions_Table extends WP_List_Table {
 		}
 	}
 
+	public function display() {
+		$this->views();
+		parent::display();
+	}
+
 	public function no_items() {
 		_e( 'Geen transacties beschikbaar.', 'kudos' );
 	}
@@ -38,11 +47,21 @@ class Transactions_Table extends WP_List_Table {
 	public function fetch_table_data() {
 		global $wpdb;
 
+		$mode = (!empty($_GET['mode']) ? $_GET['mode'] : '');
+
+		$search_custom_vars = '';
+
+		if($mode) {
+			$search_custom_vars = "WHERE mode LIKE '%" . esc_sql($mode) ."%'";
+		}
+
 		$table = $wpdb->prefix . Transaction::TABLE;
 		$query = "SELECT
 					*
 				  FROM 
-				  	$table";
+				  	$table
+				  $search_custom_vars
+				  	";
 
 		return $wpdb->get_results($query, ARRAY_A);
 	}
@@ -63,6 +82,28 @@ class Transactions_Table extends WP_List_Table {
 			'status'=>__('Status', 'kudos'),
 			'mode'=>__('Mode', 'kudos'),
 		];
+	}
+
+	protected function get_views() {
+		$views = array();
+		$current = ( !empty($_REQUEST['mode']) ? $_REQUEST['mode'] : 'all');
+
+		//All link
+		$class = ($current == 'all' ? ' class="current"' :'');
+		$all_url = remove_query_arg('mode');
+		$views['all'] = "<a href='{$all_url }' {$class} >All</a>";
+
+		//Test link
+		$test_url = add_query_arg('mode','test');
+		$class = ($current == 'test' ? ' class="current"' :'');
+		$views['test'] = "<a href='{$test_url}' {$class} >Test</a>";
+
+		//Live link
+		$live_url = add_query_arg('mode','live');
+		$class = ($current == 'live' ? ' class="current"' :'');
+		$views['live'] = "<a href='{$live_url}' {$class} >Live</a>";
+		return $views;
+
 	}
 
 	/**
