@@ -6,6 +6,9 @@ import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
 import logo from "../img/logo-colour.svg";
 
+let modalLogo = new Image(40);
+modalLogo.src = logo;
+
 library.add(faLock, faCircle);
 dom.watch();
 
@@ -23,6 +26,7 @@ $(function () {
 
     // Check order status if query var exists
     if(order_id) {
+
         $.ajax({
             method: 'post',
             dataType: 'json',
@@ -34,10 +38,23 @@ $(function () {
             success: function (result) {
                 console.log(result);
                 if(result.success) {
-                    if (result.data.status === 'paid')
+                    let message = $('<div class="top-content text-center"></div>');
+                    switch (result.data.status) {
+                        case 'paid':
+                            message.append('<h2>Bedankt!</h2><p>Heel veel dank voor je donatie van €'+ result.data.value +'. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>');
+                            break;
+                    }
                     bootbox.alert({
+                        title: modalLogo,
                         centerVertical: true,
-                        message: 'Thanks for your donation of €' + result.data.value
+                        className: 'kudos-modal',
+                        message: message,
+                        buttons: {
+                            ok: {
+                                label: 'Ok',
+                                className: 'ml-auto btn-primary',
+                            }
+                        }
                     })
                 }
             },
@@ -60,7 +77,7 @@ $(function () {
             ')
             let paymentBy = $('\
                 <div class="payment-by mt-3 text-muted text-right"><small class="d-inline-block">\
-                    <span class="fa-stack fa-1x align-middle">\
+                    <span class="fa-stack fa-xs align-middle">\
                         <i class="fas fa-circle fa-stack-2x"></i>\
                         <i class="fas fa-lock fa-stack-1x fa-inverse"></i>\
                     </span>\
@@ -76,10 +93,8 @@ $(function () {
                 </form>\
                 ');
             let message = topContent.add(form).add(paymentBy);
-            let image = new Image(30);
-            image.src = logo;
             bootbox.confirm({
-                    title: image,
+                    title: modalLogo,
                     message: message,
                     className: 'kudos-modal',
                     centerVertical: true,

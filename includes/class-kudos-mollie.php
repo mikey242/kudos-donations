@@ -82,6 +82,11 @@ class Mollie
 		setcookie('order_id', $order_id);
 		$value = number_format($value, 2);
 
+		// Add order id if option to show message enabled
+		if(get_option('_kudos_return_message_enable')) {
+			$redirectUrl = add_query_arg('kudos_order_id', base64_encode($order_id), $redirectUrl);
+		}
+
 		try {
 			$payment = $mollieApi->payments->create(
 				[
@@ -89,7 +94,7 @@ class Mollie
 						"currency" => "EUR",
 						"value" => $value
 					],
-					"redirectUrl" => add_query_arg('kudos_order_id', base64_encode($order_id), $redirectUrl),
+					"redirectUrl" => $redirectUrl,
 					"webhookUrl" => 'https://927ba6df.ngrok.io/wp-json/kudos/v1/mollie',
 //					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
