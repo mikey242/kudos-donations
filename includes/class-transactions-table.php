@@ -12,6 +12,9 @@ class Transactions_Table extends WP_List_Table {
 
 	/**
 	 * Add extra markup in the toolbars before or after the list
+	 *
+	 * @since      1.0.0
+	 *
 	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
 	 */
 	public function extra_tablenav( $which ) {
@@ -27,6 +30,8 @@ class Transactions_Table extends WP_List_Table {
 
 	/**
 	 * Get the table data
+	 *
+	 * @since      1.0.0
 	 *
 	 * @return array
 	 */
@@ -45,6 +50,8 @@ class Transactions_Table extends WP_List_Table {
 	/**
 	 * Override the parent columns method. Defines the columns to use in your listing table
 	 *
+	 * @since      1.0.0
+	 *
 	 * @return array
 	 */
 	public function get_columns() {
@@ -61,6 +68,8 @@ class Transactions_Table extends WP_List_Table {
 	/**
 	 * Define which columns are hidden
 	 *
+	 * @since      1.0.0
+	 *
 	 * @return array
 	 */
 	public function get_hidden_columns()
@@ -70,6 +79,8 @@ class Transactions_Table extends WP_List_Table {
 
 	/**
 	 * Define the sortable columns
+	 *
+	 * @since      1.0.0
 	 *
 	 * @return array
 	 */
@@ -89,6 +100,10 @@ class Transactions_Table extends WP_List_Table {
 
 	/**
 	 * Prepare the table with different parameters, pagination, columns and table elements
+	 *
+	 * @since      1.0.0
+	 *
+	 * @return void
 	 */
 	function prepare_items() {
 
@@ -115,6 +130,8 @@ class Transactions_Table extends WP_List_Table {
 	/**
 	 * Define what data to show on each column of the table
 	 *
+	 * @since      1.0.0
+	 *
 	 * @param  array $item        Data
 	 * @param  string $column_name - Current column name
 	 *
@@ -136,6 +153,11 @@ class Transactions_Table extends WP_List_Table {
 
 	/**
 	 * Allows you to sort the data by the variables set in the $_GET
+	 *
+	 * @since      1.0.0
+	 *
+	 * @param $a
+	 * @param $b
 	 *
 	 * @return Mixed
 	 */
