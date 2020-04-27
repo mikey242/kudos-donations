@@ -34,13 +34,10 @@ class Transactions_Table extends WP_List_Table {
 		global $wpdb;
 
 		$table = $wpdb->prefix . Transaction::TABLE;
-		$orderBy = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'time';
-		$order = ( isset( $_GET['order'] ) ) ? esc_sql( $_GET['order'] ) : 'DESC';
 		$query = "SELECT
 					*
 				  FROM 
-				  	$table
-				  ORDER BY $orderBy $order";
+				  	$table";
 
 		return $wpdb->get_results($query, ARRAY_A);
 	}
@@ -103,7 +100,7 @@ class Transactions_Table extends WP_List_Table {
 		$table_data = $this->fetch_table_data();
 		usort( $table_data, array( &$this, 'sort_data' ) );
 
-		$transactions_per_page = 10;
+		$transactions_per_page = 20;
 		$current_page = $this->get_pagenum();
 		$this->items = array_slice( $table_data, ( ( $current_page - 1 ) * $transactions_per_page ), $transactions_per_page );
 		$total_transactions = count( $table_data );
@@ -135,5 +132,38 @@ class Transactions_Table extends WP_List_Table {
 			default:
 				return print_r( $item, true ) ;
 		}
+	}
+
+	/**
+	 * Allows you to sort the data by the variables set in the $_GET
+	 *
+	 * @return Mixed
+	 */
+	private function sort_data( $a, $b )
+	{
+		// Set defaults
+		$orderBy = 'time';
+		$order = 'desc';
+
+		// If orderBy is set, use this as the sort column
+		if(!empty($_GET['orderby']))
+		{
+			$orderBy = $_GET['orderby'];
+		}
+
+		// If order is set use this as the order
+		if(!empty($_GET['order']))
+		{
+			$order = $_GET['order'];
+		}
+
+		$result = strcmp( $a[$orderBy], $b[$orderBy] );
+
+		if($order === 'asc')
+		{
+			return $result;
+		}
+
+		return -$result;
 	}
 }
