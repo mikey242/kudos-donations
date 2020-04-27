@@ -1,7 +1,14 @@
 .kudos-button {
+  &.style-1 {
+    background: #2ec4b6;
+  }
+
+  &.style-2 {
+    background: #ff9f1c;
+  }
+
   display: inline-flex;
   align-items: center;
-  background: #2ec4b6;
   border: none;
   color: #fff;
   padding: 12px 24px;
