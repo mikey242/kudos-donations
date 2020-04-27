@@ -139,4 +139,16 @@ class Kudos_Public {
 		return false;
 	}
 
+	public static function get_return_url() {
+		$use_custom = get_option('_kudos_custom_return_enable');
+		$custom_url = get_option('_kudos_custom_return_url');
+		if($use_custom && $custom_url) {
+			return $custom_url;
+		} else {
+			$redirectUrl = is_ssl() ? 'https://' : 'http://';
+			$redirectUrl .= $_SERVER['HTTP_HOST'] . parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
+			return $redirectUrl;
+		}
+	}
+
 }
