@@ -163,7 +163,7 @@ class Kudos_Mollie {
 		$this->loader->add_action('wp_ajax_nopriv_check_transaction', $plugin_public, 'check_transaction');
 		$this->loader->add_action('wp_ajax_check_transaction', $plugin_public, 'check_transaction');
 		$this->loader->add_action('rest_api_init', $plugin_public, 'register_webhook');
-		$this->loader->add_filter('query_vars', $plugin_public, 'register_query_vars');
+//		$this->loader->add_filter('query_vars', $plugin_public, 'register_query_vars');
 
 	}
 
