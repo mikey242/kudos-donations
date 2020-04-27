@@ -86,13 +86,15 @@ class Kudos_Admin {
 
 	/**
 	 * Check the Mollie Api key
+     *
+     * @since    1.0.0
 	 */
 	public function check_mollie_connection() {
 
 	    parse_str($_REQUEST['formData'], $formData);
 
 	    $mode = $formData['carbon_fields_compact_input']['_kudos_mollie_api_mode'];
-	    $apiKey = $formData['carbon_fields_compact_input']['_mollie_'.$mode.'_api_key'];
+	    $apiKey = $formData['carbon_fields_compact_input']['_kudos_mollie_'.$mode.'_api_key'];
 
 		$mollie = new Mollie();
 
@@ -107,7 +109,12 @@ class Kudos_Admin {
 		}
     }
 
-    public function create_transaction_page() {
+	/**
+	 * Creates the transactions admin page
+     *
+	 * @since    1.0.0
+	 */
+	public function create_transaction_page() {
 		add_submenu_page(
 			'crb_carbon_fields_container_kudos.php',
 			'Kudos Transacties',
@@ -119,7 +126,12 @@ class Kudos_Admin {
 		);
     }
 
-    public function transactions_table() {
+	/**
+	 * Creates the transactions table
+     *
+	 * @since    1.0.0
+	 */
+	public function transactions_table() {
 	    $table = new Transactions_Table();
 	    $table->prepare_items();
 	    ?>
@@ -131,21 +143,25 @@ class Kudos_Admin {
 	    <?php
     }
 
+	/**
+	 * Creates and registers the [kudos] shortcode
+     *
+	 * @since    1.0.0
+	 */
 	public function register_shortcodes() {
-		add_shortcode('kudos', [$this, 'kudos_button_shortcode']);
-	}
-
-	public function kudos_button_shortcode($atts) {
+		add_shortcode( 'kudos', function ( $atts ) {
 
 			$atts = shortcode_atts(
 				[
-				'label' => '',
+					'label' => '',
+					'text'  => ''
 				],
 				$atts,
 				'kudos'
 			);
 
-			return kudos_button($atts['label'], false);
+			return kudos_button( $atts['label'], $atts['text'], false );
+		} );
 	}
 
 }

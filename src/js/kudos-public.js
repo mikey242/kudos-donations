@@ -1,12 +1,12 @@
 import $ from 'jquery';
 import bootbox from 'bootbox';
-import 'bootstrap';
+import 'bootstrap/js/dist/modal';
 import 'jquery-validation';
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
-import {faHeart, faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
+import {faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
 import logo from "../img/logo-colour.svg";
 
-library.add(faHeart, faLock, faCircle);
+library.add(faLock, faCircle);
 dom.watch();
 
 $(function () {
@@ -51,10 +51,11 @@ $(function () {
     $('.kudos-button').each(function() {
         $(this).click(function () {
             redirectUrl = $(this).data('redirect');
+            let customText = $(this).data('customText');
             let topContent = $('\
                 <div class="top-content text-center">\
                     <h2>Steun ons!</h2>\
-                    <p>Wat lief dat je ons wilt steunen. <br/>Doneer eenmalig zonder verplichtingen.</p>\
+                    <p>'+ customText +'</p>\
                 </div>\
             ')
             let paymentBy = $('\
@@ -69,9 +70,9 @@ $(function () {
             ');
             let form = $('\
                 <form id="kudos_form" action="">\
-                    <input type="name" class="form-control mb-3" name="name" placeholder="Naam" />\
-                    <input type="email" class="form-control mb-3" name="email_address" placeholder="E-mailadres" />\
-                    <input required type="text" min="1" class="form-control" name="value" placeholder="Bedrag (in euro\'s)" />\
+                    <input type="name" class="form-control mb-3" name="name" placeholder="Naam (optioneel)" />\
+                    <input type="email" class="form-control mb-3" name="email_address" placeholder="E-mailadres (optioneel)" />\
+                    <input required type="text" min="1" class="form-control" name="value" placeholder="Bedrag (in euro\'s) *" />\
                 </form>\
                 ');
             let message = topContent.add(form).add(paymentBy);

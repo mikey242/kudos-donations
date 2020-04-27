@@ -5,20 +5,35 @@ namespace Kudos\Mollie;
 use Kudos\Transactions\Transaction;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
+use Mollie\Api\Resources\Payment;
 
 class Mollie
 {
 	private $mollieApi;
 	private $apiKey;
+	private $apiMode;
 
+	/**
+	 * Mollie constructor.
+	 */
 	public function __construct() {
 		$this->mollieApi = new MollieApiClient();
-		$this->apiKey = get_option('_mollie_api_key');
+		$this->apiMode = get_option('_kudos_mollie_api_mode');
+		$this->apiKey = get_option('_kudos_mollie_'.$this->apiMode.'_api_key');
 		if($this->apiKey) {
-			$this->mollieApi->setApiKey($this->apiKey);
+			try {
+				$this->mollieApi->setApiKey($this->apiKey);
+			} catch (ApiException $e) {
+				error_log($e->getMessage());
+			}
 		}
 	}
 
+	/**
+	 * @param $apiKey
+	 *
+	 * @return bool
+	 */
 	public function checkApiKey($apiKey) {
 
 		if(!$apiKey) {
@@ -37,6 +52,11 @@ class Mollie
 		return true;
 	}
 
+	/**
+	 * @param $mollie_payment_id
+	 *
+	 * @return bool|Payment
+	 */
 	public function getPayment($mollie_payment_id) {
 		$mollieApi = $this->mollieApi;
 		try {
@@ -47,6 +67,14 @@ class Mollie
 		return false;
 	}
 
+	/**
+	 * @param string $value
+	 * @param string $redirectUrl
+	 * @param string|null $name
+	 * @param string|null $email
+	 *
+	 * @return bool|object
+	 */
 	public function payment($value, $redirectUrl, $name=null, $email=null) {
 
 		$mollieApi = $this->mollieApi;
@@ -62,7 +90,7 @@ class Mollie
 						"value" => $value
 					],
 					"redirectUrl" => add_query_arg('kudos_order_id', base64_encode($order_id), $redirectUrl),
-					"webhookUrl" => 'https://25b65ba4.ngrok.io/wp-json/kudos/v1/mollie',
+					"webhookUrl" => 'https://927ba6df.ngrok.io/wp-json/kudos/v1/mollie',
 //					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
 					'metadata' => [

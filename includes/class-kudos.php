@@ -2,8 +2,6 @@
 
 namespace Kudos;
 
-use Kudos\Webhook\Mollie_Webhook;
-
 /**
  * The file that defines the core plugin class
  *
@@ -100,7 +98,7 @@ class Kudos_Mollie {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-i18n.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transaction.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transactions-table.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/kudos-carbon.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-carbon.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-kudos-admin.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-public.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-mollie.php';

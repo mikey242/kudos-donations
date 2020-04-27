@@ -1,16 +1,19 @@
 const path = require('path')
+const glob = require('glob-all')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+// const PurgecssPlugin = require('purgecss-webpack-plugin')
 const svgToMiniDataURI = require('mini-svg-data-uri');
+
+const PATHS = {
+    src: path.join(__dirname, 'src')
+}
 
 module.exports = {
     entry: {
-        'kudos-admin' : [path.join(__dirname, '/src', '/js', '/kudos-admin.js'), path.join(__dirname, '/src', '/scss', '/kudos-admin.scss'),],
-        'kudos-public' : [path.join(__dirname, '/src', '/js', '/kudos-public.js'), path.join(__dirname, '/src', '/scss', '/kudos-public.scss'),],
-        'kudos-blocks' : [path.join(__dirname, '/src', '/js', '/kudos-blocks.js'),path.join(__dirname, '/src', '/scss', '/kudos-blocks.scss')],
-        // 'css/kudos-public.css' : path.join(__dirname, '/src', '/scss', '/kudos-public.scss'),
-        // 'js/kudos-public.js' : path.join(__dirname, '/src', '/js', '/kudos-public.js'),
+        'kudos-admin' : [path.join(PATHS.src, '/js', '/kudos-admin.js'), path.join(PATHS.src, '/scss', '/kudos-admin.scss'),],
+        'kudos-public' : [path.join(PATHS.src, '/js', '/kudos-public.js'), path.join(PATHS.src, '/scss', '/kudos-public.scss'),],
+        'kudos-blocks' : [path.join(PATHS.src, '/js', '/kudos-blocks.js'),path.join(PATHS.src, '/scss', '/kudos-blocks.scss')],
     },
-    watch: true,
     output: {
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/wp-content/plugins/kudos-mollie/dist/',
@@ -41,7 +44,7 @@ module.exports = {
                     {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: () => [require('autoprefixer')]
+                            // config: { path: __dirname, ctx: config },
                         }
                     }, 'sass-loader'
                 ]
@@ -61,13 +64,6 @@ module.exports = {
                     outputPath:'./fonts/'
                 },
             },
-            // {
-            //     test: /\.(woff|woff2|eot|ttf|otf)$/,
-            //     loader: 'file-loader',
-            //     options: {
-            //         outputPath:'./fonts/'
-            //     },
-            // }
         ]
     },
     resolve: {
@@ -76,6 +72,15 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'css/[name].css'
-        })
+        }),
+        // new PurgecssPlugin({
+        //     // paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }),
+        //     paths: glob.sync([
+        //         'src/js/*.js',
+        //         'public/includes/kudos-button.php'
+        //     ]),
+        //     // whitelist: [ 'modal', 'btn', 'btn-primary', 'modal-content', 'kudos-loading', 'modal-footer' ],
+        //     // whiteListPatterns: [/^kudos-/]
+        // })
     ]
 };
