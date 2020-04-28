@@ -21,6 +21,8 @@ $(function () {
 
 
     const $body = $('body');
+    let $kudosButtons = $('.kudos-button');
+
     let redirectUrl;
     let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
@@ -65,7 +67,7 @@ $(function () {
     }
 
     // Setup button action
-    $('.kudos-button').each(function() {
+    $kudosButtons.each(function() {
         $(this).click(function () {
             redirectUrl = $(this).data('redirect');
             let customText = $(this).data('customText');
