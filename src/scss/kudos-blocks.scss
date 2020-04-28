@@ -1,12 +1,4 @@
 .kudos-button {
-  &.style-1 {
-    background: #2ec4b6;
-  }
-
-  &.style-2 {
-    background: #ff9f1c;
-  }
-
   display: inline-flex;
   align-items: center;
   border: none;
@@ -16,6 +8,15 @@
   font-size: 18px;
   text-decoration: none;
   cursor: pointer;
+  line-height: 1;
+
+  &.style-1 {
+    background: #2ec4b6;
+  }
+
+  &.style-2 {
+    background: #ff9f1c;
+  }
 
   .kudos-logo {
     background-image: url("../img/logo-white.svg");
@@ -32,8 +33,7 @@
   }
 
   &:hover,
-  &:active,
-  &:focus {
+  &:active {
     .kudos-logo {
       transform: rotate(-90deg);
     }

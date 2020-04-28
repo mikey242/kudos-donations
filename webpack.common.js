@@ -72,15 +72,6 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'css/[name].css'
-        }),
-        // new PurgecssPlugin({
-        //     // paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }),
-        //     paths: glob.sync([
-        //         'src/js/*.js',
-        //         'public/includes/kudos-button.php'
-        //     ]),
-        //     // whitelist: [ 'modal', 'btn', 'btn-primary', 'modal-content', 'kudos-loading', 'modal-footer' ],
-        //     // whiteListPatterns: [/^kudos-/]
-        // })
+        })
     ]
 };

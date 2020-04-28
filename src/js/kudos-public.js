@@ -1,27 +1,38 @@
 import $ from 'jquery';
-import bootbox from 'bootbox';
-import 'bootstrap/js/dist/modal';
-import 'jquery-validation';
+import MicroModal from "micromodal";
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
 import logo from "../img/logo-colour.svg";
-
-let modalLogo = new Image(40);
-modalLogo.src = logo;
 
 library.add(faLock, faCircle);
 dom.watch();
 
 $(function () {
 
-    // Set validation defaults
-    $.validator.setDefaults({
-        errorElement: 'small',
-    });
-
-
     const $body = $('body');
     let $kudosButtons = $('.kudos-button');
+    if($kudosButtons.length) {
+        $body.addClass('kudos-mollie');
+    }
+
+    let modalLogo = new Image(40);
+    modalLogo.src = logo;
+
+    let $kudosModal = $('\
+        <div id="kudos-modal" class="kudos-modal text-gray-900 text-base" aria-hidden="true">\
+            <div class="kudos_modal_overlay flex justify-center items-center fixed top-0 left-0 w-full h-full bg-gray-900 z-50" tabindex="-1" data-micromodal-close>\
+                <div class="kudos_modal_container bg-white py-4 px-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="kudos-modal-title">\
+                    <header class="kudos_modal_header flex items-center justify-between">\
+                        <div class="kudos_modal_title mt-0 mb-0" id="kudos-modal-title">\
+                        '+modalLogo.outerHTML+'\
+                        </div>\
+                        <button class="kudos_modal_close text-black p-0" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>\
+                    </header>\
+                    <main class="kudos_modal_content" id="kudos-modal-content"></main>\
+                </div>\
+            </div>\
+        </div>\
+    ');
 
     let redirectUrl;
     let order_id = new URLSearchParams(location.search).get('kudos_order_id');
@@ -40,24 +51,24 @@ $(function () {
             success: function (result) {
                 console.log(result);
                 if(result.success) {
-                    let message = $('<div class="top-content text-center"></div>');
+                    let $content = '';
                     switch (result.data.status) {
                         case 'paid':
-                            message.append('<h2>Bedankt!</h2><p>Heel veel dank voor je donatie van €'+ result.data.value +'. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>');
+                            $content = $('\
+                                <div class="top-content text-center">\
+                                    <h2 class="font-normal">Bedankt!</h2><p>Heel veel dank voor je donatie van €100. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>\
+                                </div>\
+                                <footer class="kudos_modal_footer text-right">\
+                                    <button class="kudos_modal_btn kudos_modal_btn-primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
+                                </footer>\
+                            ');
                             break;
                     }
-                    bootbox.alert({
-                        title: modalLogo,
-                        centerVertical: true,
-                        className: 'kudos-modal',
-                        message: message,
-                        buttons: {
-                            ok: {
-                                label: 'Ok',
-                                className: 'ml-auto btn-primary',
-                            }
-                        }
-                    })
+                    $body.append($kudosModal);
+                    MicroModal.show('kudos-modal', {
+                        onShow: modal => $(modal).find('#kudos-modal-content').html($content),
+                        awaitCloseAnimation: true
+                    });
                 }
             },
             error: function (error) {
@@ -71,69 +82,36 @@ $(function () {
         $(this).click(function () {
             redirectUrl = $(this).data('redirect');
             let customText = $(this).data('customText');
-            let topContent = $('\
+
+            let content = $('\
                 <div class="top-content text-center">\
-                    <h2>Steun ons!</h2>\
+                    <h2 class="font-normal">Steun ons!</h2>\
                     <p>'+ customText +'</p>\
                 </div>\
-            ')
-            let paymentBy = $('\
-                <div class="payment-by mt-3 text-muted text-right"><small class="d-inline-block">\
-                    <span class="fa-stack fa-xs align-middle">\
-                        <i class="fas fa-circle fa-stack-2x"></i>\
-                        <i class="fas fa-lock fa-stack-1x fa-inverse"></i>\
-                    </span>\
-                         Beveiligde betaling via\
-                </small></div>\
+                <form id="kudos_form" action="">\
+                    <input type="text" class="mb-3 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" name="name" placeholder="Naam (optioneel)" />\
+                    <input type="email" class="mb-3 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="email_address" placeholder="E-mailadres (optioneel)" />\
+                    <input required type="text" min="1" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="value" placeholder="Bedrag (in euro\'s) *" />\
+                    <div class="payment-by mt-3 text-muted text-right"><small class="text-gray-600">\
+                        <span class="fa-stack fa-xs align-middle">\
+                            <i class="fas fa-circle fa-stack-2x"></i>\
+                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>\
+                        </span>\
+                        Beveiligde betaling via\
+                    </small></div>\
+                    <footer class="kudos_modal_footer text-center">\
+                        <button class="kudos_modal_btn kudos_modal_btn-secondary" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>\
+                        <button class="kudos_modal_btn kudos_modal_btn-primary" type="submit">Doneeren</button>\
+                    </footer>\
+                </form>\
                 <i class="kudos-spinner fa-spin"></i> \
             ');
-            let form = $('\
-                <form id="kudos_form" action="">\
-                    <input type="name" class="form-control mb-3" name="name" placeholder="Naam (optioneel)" />\
-                    <input type="email" class="form-control mb-3" name="email_address" placeholder="E-mailadres (optioneel)" />\
-                    <input required type="text" min="1" class="form-control" name="value" placeholder="Bedrag (in euro\'s) *" />\
-                </form>\
-                ');
-            let message = topContent.add(form).add(paymentBy);
-            bootbox.confirm({
-                    title: modalLogo,
-                    message: message,
-                    className: 'kudos-modal',
-                    centerVertical: true,
-                    buttons: {
-                        confirm: {
-                            label: 'Doneer'
-                        },
-                        cancel: {
-                            className: 'btn-outline-primary',
-                            label: 'Annuleren'
-                        }
-                    },
-                    callback: function (result) {
-                        if(result) {
-                            let validator = form.validate({
-                                rules: {
-                                    value: {
-                                        digits: true
-                                    }
-                                },
-                                messages: {
-                                    value: {
-                                        required: "Vul een donatiebedrag in",
-                                        min: "Minimum donatie is 1 euro"
-                                    }
-                                }
-                            });
-                            if(form.valid()) {
-                                form.submit();
-                                $(this).addClass('kudos-loading');
-                                console.log(this);
-                            }
-                            return false;
-                        }
-                    },
-                }
-            );
+            $body.append($kudosModal);
+            MicroModal.show('kudos-modal', {
+                onShow: modal => $(modal).find('#kudos-modal-content').html(content),
+                // onClose: modal => $(modal).remove(),
+                awaitCloseAnimation: true
+            });
         })
     })
 
@@ -148,6 +126,9 @@ $(function () {
                 action: 'create_payment',
                 redirectUrl: redirectUrl,
                 form: $(e.currentTarget).serialize()
+            },
+            beforeSend: function() {
+                $kudosModal.addClass('kudos-loading');
             },
             success: function (result) {
                 if(result.success) {
