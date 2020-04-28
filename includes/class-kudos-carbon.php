@@ -77,7 +77,7 @@ class Carbon {
                     ])
                     ->set_default_value('style-1'),
                 Field::make('html', 'shortcode_instructions', null)
-	                ->set_html('<h2>You can find your Mollie API keys in your <a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>. Would you like to test the system first? Then you can use the test API key. To receive payments from your consumers, please use the live API key.</h2>'),
+	                ->set_html('<h4>Buttons can be placed using either a Gutenberg block or a shortcode</h4>'),
             ])
             ->add_tab(__('Completed Payment', 'kudos'), [
                     Field::make('checkbox', 'kudos_custom_return_enable', __('Use custom return URL', 'kudos'))
