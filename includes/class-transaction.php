@@ -56,11 +56,20 @@ class Transaction {
 		);
 	}
 
-	public function get_transaction($order_id) {
+	/**
+	 * @param $order_id
+	 * @param array $fields
+	 *
+	 * @return array|object|void|null
+	 */
+	public function get_transaction($order_id, array $fields=['*']) {
+
 		$wpdb = $this->wpdb;
 		$table = $this->wpdb->prefix . self::TABLE;
-		return $wpdb->get_row( sprintf( "
-			SELECT * FROM $table WHERE order_id = '%s'
-		", esc_sql($order_id) ) );
+		$columns = implode(', ', $fields);
+
+		return $wpdb->get_row( $wpdb->prepare( "
+			SELECT $columns FROM $table WHERE order_id = '%s'
+		", $order_id ) );
 	}
 }

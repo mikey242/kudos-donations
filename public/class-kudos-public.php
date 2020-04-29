@@ -141,7 +141,7 @@ class Kudos_Public {
 		}
 
 		$transaction = new Transactions\Transaction();
-		$transaction = $transaction->get_transaction($order_id);
+		$transaction = $transaction->get_transaction($order_id, ['status', 'value']);
 		$order_id_session = $_COOKIE['order_id'];
 
 		if($order_id === $order_id_session) {
