@@ -16,7 +16,7 @@
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.kudos_btn-primary {
+.kudos_btn_primary {
   background-color: theme('colors.orange.500');
   color: #fff;
 
@@ -25,7 +25,16 @@
   }
 }
 
-.kudos_btn-secondary {
+.kudos_btn_secondary {
+  background-color: theme('colors.green.500');
+  color: #fff;
+
+  &:hover {
+    background-color: theme('colors.green.700');
+  }
+}
+
+.kudos_btn_primary_outline {
   color: theme('colors.orange.500');
   background-color: transparent;
   border: 1px solid theme('colors.orange.500');
@@ -40,7 +49,6 @@
 .kudos_button_icon {
   display: inline-flex;
   align-items: center;
-  color: #fff;
 
   &.style-1 {
     background: theme('colors.green'); //#2ec4b6

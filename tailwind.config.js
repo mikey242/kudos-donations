@@ -6,7 +6,11 @@ module.exports = {
           '500': '#ff9f1c',
           '700': '#f58d00',
         },
-        green: '#2ec4b6'
+        green: {
+          '500': '#2ec4b6',
+          '700': '#2bb9ac',
+        },
+        modal: '#1a202ccc'
       },
     },
   },

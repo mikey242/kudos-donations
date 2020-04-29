@@ -72,10 +72,10 @@ class Carbon {
                 Field::make('radio_image', 'kudos_button_style', __('Button style', 'kudos'))
                     ->set_help_text( 'Choose the style of the Kudos button'  )
                     ->add_options([
-                        'style-1' => 'data:image/png;base64,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',
-                        'style-2' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALUAAAA0CAYAAADMv3nUAAAFYUlEQVR4nO2dQWvbZhiA/UPU4w7JzbBBySE9zbBDbu0pt+7UnpZbb7nluEvTkwuCLIG4IcUeg4QwzyEeKYGGUWNBhsHDTjLjgJk7lzimhmeH73NtOZJjyXGkKa/gAdt6Zb369Eh69VmyYrgN5Qwc/AA/fwc/fQWmIQjBsj4D6W+Vl+WMq7qxa5+cZmFrLvgFEISb2JqD84MbpP7wMvhEBcErhVcuUhdWg09OEPxSWB2S+iwH5oPgExME3zyA09+01J8/QerrECQlCBOS+ga6V8Qop4NPRhBui3KaGLlnwSciCLdF7hkxtueDT0QQbovteWKszwSfiCDcFuszxAJPQhBuGZFaiBwitRA5RGohcojUQuQQqYXIMX2p//3r+gWvnz+NP/3WQ7CS0Cj2p28U1TW1IWhAIXyEV+qNWSilrk87OFivA29AIXyEU+pMAlrV0UL3hp0ngTeiEC7CJ3UmAZ3meEIDlN74zO0FXBw7U0nB0WLgK0fwR7ik9io0QO2dz9ySavqWg9TNuhrXLcH7x4GvJMEb4ZF6Y9Z+MnhXUlsu4zcfQ6UKtMFaCHxFCeMTHqmt196FBqjs+sztBqlNA8w4lEpAHfYdxu8tQ2lX7d3Lq7D3yOE7ElBYgz0DNhPwPgW1YzhLjy5x3i5CQcdWUpBPTBabWYKTZXvehRHzH4zPLI2xnItwopfT6fuO1u6spAuH1DtP/AkNkF+aotQGmE/hErhYGfhsAWq6TGoV1cpu6fe14Xs9n6vpS0noAp2qPb6Vhs1hAXJqXC+2oU+amxPE7u8CRbCK/fiT5+7LbYtv6+UsQqet3peH2/2G9mwAjeQ9krp16k/o1qkqW6YqtQFnTbjsHRHiUKmrejsbt8cdppW4lUFZtNS0wRqqz/O7Kofy0/5nv6w5S/P2hfqexqq/2H09r24RduI3L7NrvF5+6pAVqZ2l/uNHf0J3PqoTS9+5eZDaKgJF9TqjRbJc5n1SUrFf9pJaarcVetFWe+vBDaiVco7NpoFq/xDvJbYn6cmYbdaLt5w2gBW18ZYHywmRuj/e7146+/2EuXmQulyFTk69LhSHpB2iJ/3RkNRll3qyUh84CujY2grsLTqwAp1ezl5ie5JW3WteR6nd4vW8bUckkbo//mjZn9Sd5h3tqeNqhTTX1PvBvfZY36sFcJuPk9SXJfc+9ItjOPQaa/Rr5HHbZ2S8SD1aatOYoKauTr+mzu9iKzfyOa7Xk8MyDPaWeJFab0C2k1I3vMQGLXUCmvdN6rD2fuzoHgvbynihDuuOK2gBGm24HPzbCS9SG7omLzmfzG0+spc9XmKnLvUitIALh3/6yqZVW98rqU0juH7qkkM9ml+B2ohutF6vRSMF2QSYccguQ6MJ1CE/KJlHqXsbRrcK1hJk4qp/O5+EVvt61+K4sVOX2tDnG22orKhc3i7AURq6bdWFee+k3piFhuVd6kl/UXQaum1oHcLhiJ/Is8l+X3NvaOUc9ppepdaylovqKPFlaEIt6XCCOmbsXUhtxsE6tufS0ZcaVOr3UGrTUNdOdz56MJoJpBaiSrikNg19UZMHsX1fpSdElfBJbRr6euoxe0Qm6tYTokg4pTYNfefLm9FCy50vggPTl/qfP6F7ZeeqMf70Ww+VvLV3fZkru7fwi6IQVeRuciFyiNRC5BCphcghUguRQ6QWIodILUQOeZKAEC3WZ+SZL0LE2J6Xp3MJESP3TJ6jKESMcpoY3Sv1pNCgkxGESdme10+8BTj9NfiEBGFS/v4dQEsNUHC4t0wQ/i8UVr+o3JcaoPAq+OQEwSsfXto0tksNcL4PW3PBJyoIN7E1B+cH1xT+D8sT4LVVufYDAAAAAElFTkSuQmCC',
+                        'kudos_btn_secondary' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALUAAAA0CAYAAADMv3nUAAAGM0lEQVR4nO2dMW/aaBiA+UXueFI7RbpK7dBOF93QLVO2TJma6bZMHW9oM6VTp9xCdBFplMM5GtKIo0kB0VDUM04o0BDjUkyAPjeYUCAmMSSNfe5r6RnAr+3X9uPPn18+5BAjptXyIY+zSX5NqPz0958oalgQPOV2bI1fElEeZ5Oslg9HqUto+Iu/jkvc39nwfAcE4TLu72wQq1YulvqpduB5ooIwLktazlnqZ1rO8+QEYVKe9YkdAlCrZW75IDFBmJRbapjoccmWut5u83P8pedJCcJVuRt/SfNrh1C4fOh5MoJwXYTLh4TmMwnPExGE62I+kyD0YHfT80QE4bp4sLtJ6HZszfNEBOG6uB1bI+R1EoJw3YjUQuAQqYXAIVILgUOkFgKHSC0Eju8u9b+N+rmhgfV22/Xy93Y2WNbzpD8bveXTnw0eZ5OeHzzBn/hW6juxNVY+aiMHggM81/OeH0DBf/hS6ulElIL15UKhz6aZvVeeH0TBX/hO6ulElFq75UpogD8+FibMbY+VWpWkA/GKxlIuzkMfnCBhfHwl9bhCA+wYnybMLU8aMBoOYtctLICOyXr+FVM+OFGCe3wj9Z3Y2sDD4E1JndZHzN9+xZNKHYs2aX3L8xMluMc3Uj/X82MLDfDyU3HC3C6RWg2jqBFmiiZgsZ45P//h/luWikXitSpq6YDFfacRj1EWtA8s7odRtqMs5DXWT6okj/WLuzi7cRY1OzZe0XiSjY6+Y7iJTSRZOnrLbF/e61p89L73xU8lkjy5dD/jLB5199NhfbO5D7zIXbC9oEk9s/dqIqEBFiYu7bmROoyivma1CVYt0/fdFksnpwAYDYNkrUq60f18csCjgeUTrDchXcyT7oDVqpPuxluA1dBZ2B7c5qNciTJANzZp1jEAq36F2EyRMgYrumFvt1UneXTBWPqB+HZ3Pw0KrTbQplBKDl04Fx/PZRMwb6Za5QupdZeVjuFJt75wZ+Khs26lDrNwfArNIvNqGEWNsFCxoGPyIhUZiHv4TqfQgXKlXxZbamiT1gf751PZImWgXHr9Lf6fD7x3kmZ3D7UJlnnA9CSxGXtbdAyW30Qu3efR8d39x2I1JVI7Sv37v+8mErrWbjGdiF4hN/dSK7oBGCypYZSELVJad972oyMTMFjutZJdqc28Y/fhSa0NDZ3Z7uffjk+hoQ219l1SOmXqrO6PH3sm6fsjl8esG5/WnS6ADMkOFEr93QmRujd/0lZ6LrV7xdzcSz1bqkOrxIIaRtGMIWmH6Eofzw1KPSjAN+YrVt9dwI41TjLM7scdyBBvneU8TuyZpH2Su5J6VLy97cE7kkjdm7/4PjWR1DfXUkfsE1L/YN/Ku632suv1dvvUI7bjJLXVNB3r52esvBs3NtzrI4/O20nqUfEi9YVSK+rkrXXhBvrUdr+3r7uRLWGc608Oy9BfLRlHavsCGnwoHcU4sV5LHeVF/QeT2q/Vj6k33YqFme/rt+6htoa/O2OLZbMNTZ25IQHcSR1m+sgETFacHua2N3nY1+0ZJ/b7Sx1ntQFW7eD8s0NKp8APJrWielenfl906I9mM6ye1O3Sl0MZ7axqYZgai6koU2qE6dRbVsxTwGI92y/ZeFL3LoxOHVVPMpOIoGxHmcnmURttrFqmr7Y9Rux3lzrMtGaX/wqVDHOJCMruFvM5nXSnTaFx+uNJfSe2RuZzbWypr/qLouPUaWM0Kqy8G/0T+VQqT7xbmz6bjEaJpXOt5rhS27IulgzKnf61n1I4yTN37gHVZewNSK2oEeb06mAuLXuowULF+vGkVlR77PTNjf0QgoqvpFbUmxylJwQV30mtqLbYbisiVyvrCUHEl1Irqt3H/uNj4UKh5Z8vghPfXeqDuknza2eA41bT9fL3djZ4rufZMT71ZH75qXgNvygKQUX+TS4EDpFaCBwitRA4RGohcIjUQuAQqYXAIW8SEALF7diavPNFCBYPdjfl7VxCsJjPJOQ9ikKwCJcPCTW/drgrb7wVAsCD3U37jbcAm8clzxMShKuyfVIBsKUGeKblPE9KECblmZbrDXjrSQ2wJGIL/0OeagcDQ5IHpAbYqpa5v7PheaKCcBn3dzaIVSvnxtn/BzRzfxL7iEDQAAAAAElFTkSuQmCC',
+                        'kudos_btn_primary' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALUAAAA0CAYAAADMv3nUAAAFYUlEQVR4nO2dQWvbZhiA/UPU4w7JzbBBySE9zbBDbu0pt+7UnpZbb7nluEvTkwuCLIG4IcUeg4QwzyEeKYGGUWNBhsHDTjLjgJk7lzimhmeH73NtOZJjyXGkKa/gAdt6Zb369Eh69VmyYrgN5Qwc/AA/fwc/fQWmIQjBsj4D6W+Vl+WMq7qxa5+cZmFrLvgFEISb2JqD84MbpP7wMvhEBcErhVcuUhdWg09OEPxSWB2S+iwH5oPgExME3zyA09+01J8/QerrECQlCBOS+ga6V8Qop4NPRhBui3KaGLlnwSciCLdF7hkxtueDT0QQbovteWKszwSfiCDcFuszxAJPQhBuGZFaiBwitRA5RGohcojUQuQQqYXIMX2p//3r+gWvnz+NP/3WQ7CS0Cj2p28U1TW1IWhAIXyEV+qNWSilrk87OFivA29AIXyEU+pMAlrV0UL3hp0ngTeiEC7CJ3UmAZ3meEIDlN74zO0FXBw7U0nB0WLgK0fwR7ik9io0QO2dz9ySavqWg9TNuhrXLcH7x4GvJMEb4ZF6Y9Z+MnhXUlsu4zcfQ6UKtMFaCHxFCeMTHqmt196FBqjs+sztBqlNA8w4lEpAHfYdxu8tQ2lX7d3Lq7D3yOE7ElBYgz0DNhPwPgW1YzhLjy5x3i5CQcdWUpBPTBabWYKTZXvehRHzH4zPLI2xnItwopfT6fuO1u6spAuH1DtP/AkNkF+aotQGmE/hErhYGfhsAWq6TGoV1cpu6fe14Xs9n6vpS0noAp2qPb6Vhs1hAXJqXC+2oU+amxPE7u8CRbCK/fiT5+7LbYtv6+UsQqet3peH2/2G9mwAjeQ9krp16k/o1qkqW6YqtQFnTbjsHRHiUKmrejsbt8cdppW4lUFZtNS0wRqqz/O7Kofy0/5nv6w5S/P2hfqexqq/2H09r24RduI3L7NrvF5+6pAVqZ2l/uNHf0J3PqoTS9+5eZDaKgJF9TqjRbJc5n1SUrFf9pJaarcVetFWe+vBDaiVco7NpoFq/xDvJbYn6cmYbdaLt5w2gBW18ZYHywmRuj/e7146+/2EuXmQulyFTk69LhSHpB2iJ/3RkNRll3qyUh84CujY2grsLTqwAp1ezl5ie5JW3WteR6nd4vW8bUckkbo//mjZn9Sd5h3tqeNqhTTX1PvBvfZY36sFcJuPk9SXJfc+9ItjOPQaa/Rr5HHbZ2S8SD1aatOYoKauTr+mzu9iKzfyOa7Xk8MyDPaWeJFab0C2k1I3vMQGLXUCmvdN6rD2fuzoHgvbynihDuuOK2gBGm24HPzbCS9SG7omLzmfzG0+spc9XmKnLvUitIALh3/6yqZVW98rqU0juH7qkkM9ml+B2ohutF6vRSMF2QSYccguQ6MJ1CE/KJlHqXsbRrcK1hJk4qp/O5+EVvt61+K4sVOX2tDnG22orKhc3i7AURq6bdWFee+k3piFhuVd6kl/UXQaum1oHcLhiJ/Is8l+X3NvaOUc9ppepdaylovqKPFlaEIt6XCCOmbsXUhtxsE6tufS0ZcaVOr3UGrTUNdOdz56MJoJpBaiSrikNg19UZMHsX1fpSdElfBJbRr6euoxe0Qm6tYTokg4pTYNfefLm9FCy50vggPTl/qfP6F7ZeeqMf70Ww+VvLV3fZkru7fwi6IQVeRuciFyiNRC5BCphcghUguRQ6QWIodILUQOeZKAEC3WZ+SZL0LE2J6Xp3MJESP3TJ6jKESMcpoY3Sv1pNCgkxGESdme10+8BTj9NfiEBGFS/v4dQEsNUHC4t0wQ/i8UVr+o3JcaoPAq+OQEwSsfXto0tksNcL4PW3PBJyoIN7E1B+cH1xT+D8sT4LVVufYDAAAAAElFTkSuQmCC',
                     ])
-                    ->set_default_value('style-1'),
+                    ->set_default_value('kudos_btn-primary'),
                 Field::make('html', 'shortcode_instructions', null)
 	                ->set_html('<h4>Buttons can be placed using either a Gutenberg block or a shortcode</h4>'),
             ])
@@ -93,7 +93,23 @@ class Carbon {
                         ]),
                     Field::make('checkbox', 'kudos_return_message_enable', __('Show pop-up message when payment complete', 'kudos'))
 	                    ->set_help_text( 'Enable this to show a pop-up thanking the customer for their donation.'  )
-                        ->set_default_value(true)
+                        ->set_default_value(true),
+	                Field::make('text', 'kudos_return_message_header', __('Message header', 'kudos'))
+		                ->set_default_value('Bedankt!')
+		                ->set_conditional_logic([
+			                [
+				                'field' => 'kudos_return_message_enable',
+				                'value' => true
+			                ]
+		                ]),
+	                Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos'))
+		                ->set_default_value('Heel veel dank voor je donatie van €{{value}}. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.')
+		                ->set_conditional_logic([
+			                [
+				                'field' => 'kudos_return_message_enable',
+				                'value' => true
+			                ]
+		                ]),
             ])
         ;
     }
@@ -107,21 +123,23 @@ class Carbon {
         Block::make(__('Kudos Button', 'kudos'))
             ->set_icon('heart')
             ->add_fields([
-                Field::make('text', 'button_label', __('Button Label', 'kudos'))
-	                ->set_default_value("Steun ons"),
-                Field::make('text', 'modal_text', __('Pop-up text', 'kudos'))
+                Field::make('text', 'kudos_button_label', __('Button label', 'kudos'))
+	                ->set_default_value("Doneer nu"),
+	            Field::make('text', 'kudos_modal_header', __('Pop-up header', 'kudos'))
+	                 ->set_default_value("Steun ons!"),
+                Field::make('text', 'kudos_modal_text', __('Pop-up text', 'kudos'))
                     ->set_default_value("Wat lief dat je ons wilt steunen. Doneer eenmalig zonder verplichtingen."),
             ])
             ->set_render_callback( function ( $fields, $attributes, $inner_blocks ) {
-                $label = $fields['button_label'];
-                $text = $fields['modal_text'];
-                ?>
-                    <div class="kudos_block_button">
-                <?php
-                    kudos_button($label, $text);
-                ?>
-                    </div><!-- /.block -->
-                <?php
+                $label = $fields['kudos_button_label'];
+                $text = $fields['kudos_modal_text'];
+                $header = $fields['kudos_modal_header'];
+                $classes = $attributes ? $attributes['className'] : '';
+
+                    echo "<div class='kudos_block_button $classes'>";
+                        kudos_button($label, $header, $text);
+                    echo "</div><!-- /.block -->";
+
             } );
     }
 }

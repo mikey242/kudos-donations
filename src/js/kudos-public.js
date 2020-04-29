@@ -1,5 +1,7 @@
 import $ from 'jquery';
+import KudosModal from "./kudos-modals";
 import "jquery-validation";
+import Mustache from "mustache";
 import MicroModal from "micromodal";
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
@@ -10,8 +12,12 @@ dom.watch();
 
 $(function () {
 
+    // console.log(modalFrame());
+
     const $body = $('body');
     let $kudosButtons = $('.kudos_btn');
+    let redirectUrl;
+    let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
     // Add kudos_mollie class to body if button found
     if($kudosButtons.length) {
@@ -23,7 +29,7 @@ $(function () {
 
     let $kudosModal = $('\
         <div id="kudos_modal" class="kudos_modal" aria-hidden="true">\
-            <div class="kudos_modal_overlay flex justify-center items-center fixed top-0 left-0 w-full h-full bg-gray-900 z-50" tabindex="-1" data-micromodal-close>\
+            <div class="kudos_modal_overlay flex justify-center items-center fixed top-0 left-0 w-full h-full bg-modal z-50" tabindex="-1" data-micromodal-close>\
                 <div class="kudos_modal_container bg-white py-4 px-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">\
                     <header class="kudos_modal_header flex items-center justify-between">\
                         <div class="kudos_modal_title mt-0 mb-0" id="kudos_modal-title">\
@@ -31,14 +37,12 @@ $(function () {
                         </div>\
                         <button class="kudos_modal_close text-black p-0" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>\
                     </header>\
-                    <main class="kudos_modal_content" id="kudos_modal-content"></main>\
+                    <main class="kudos_modal_content" id="kudos_modal_content"></main>\
                 </div>\
             </div>\
         </div>\
     ');
 
-    let redirectUrl;
-    let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
     // Check order status if query var exists
     if(order_id) {
@@ -54,22 +58,25 @@ $(function () {
                 console.log(result);
                 if(result.success) {
                     let $content = '';
-                    switch (result.data.status) {
+                    let message;
+                    let data = result.data
+                    switch (data.transaction.status) {
                         case 'paid':
                         case 'open':
+                            message = Mustache.render(data.modalText, {value: Math.round(data.transaction.value)});
                             $content = $('\
                                 <div class="top-content text-center">\
-                                    <h2 class="font-normal">Bedankt!</h2><p>Heel veel dank voor je donatie van €'+ Math.round(result.data.value) +'. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>\
+                                    <h2 class="font-normal">' + data.modalHeader + '</h2><p>'+ message +'</p>\
                                 </div>\
                                 <footer class="kudos_modal_footer mt-4 text-right">\
-                                    <button class="kudos_btn kudos_btn-primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
+                                    <button class="kudos_btn kudos_btn_primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
                                 </footer>\
                             ');
                             break;
                     }
                     $body.append($kudosModal);
                     MicroModal.show('kudos_modal', {
-                        onShow: modal => $(modal).find('#kudos_modal-content').html($content),
+                        onShow: modal => $(modal).find('#kudos_modal_content').html($content),
                         awaitCloseAnimation: true
                     });
                 }
@@ -83,12 +90,14 @@ $(function () {
     // Setup button action
     $kudosButtons.each(function() {
         $(this).click(function () {
+
             redirectUrl = $(this).data('redirect');
+            let customHeader = $(this).data('customHeader');
             let customText = $(this).data('customText');
 
             let content = $('\
                 <div class="top-content text-center">\
-                    <h2 class="font-normal">Steun ons!</h2>\
+                    <h2 class="font-normal">'+ customHeader +'</h2>\
                     <p>'+ customText +'</p>\
                 </div>\
                 <form id="kudos_form" action="">\
@@ -103,15 +112,16 @@ $(function () {
                         Beveiligde betaling via\
                     </small></div>\
                     <footer class="kudos_modal_footer mt-4 text-center">\
-                        <button class="kudos_btn kudos_btn-secondary mr-3" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>\
-                        <button id="kudos_submit" class="kudos_btn kudos_btn-primary" type="submit">Doneeren</button>\
+                        <button class="kudos_btn kudos_btn_primary_outline mr-3" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>\
+                        <button id="kudos_submit" class="kudos_btn kudos_btn_primary" type="submit">Doneeren</button>\
                     </footer>\
                 </form>\
                 <i class="kudos_spinner"></i> \
             ');
+
             $body.append($kudosModal);
             MicroModal.show('kudos_modal', {
-                onShow: modal => $(modal).find('#kudos_modal-content').html(content),
+                onShow: modal => $(modal).find('#kudos_modal_content').html(content),
                 awaitCloseAnimation: true
             });
         })

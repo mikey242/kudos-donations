@@ -153,13 +153,14 @@ class Kudos_Admin {
 			$atts = shortcode_atts(
 				[
 					'label' => '',
+					'header' => '',
 					'text'  => ''
 				],
 				$atts,
 				'kudos'
 			);
 
-			return kudos_button( $atts['label'], $atts['text'], false );
+			return kudos_button( $atts['label'], $atts['header'], $atts['text'], false );
 		} );
 	}
 

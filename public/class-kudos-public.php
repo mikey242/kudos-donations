@@ -7,6 +7,7 @@ use Kudos\Mollie\Webhook;
 
 /**
  * The public-facing functionality of the plugin.
+ *
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
@@ -27,6 +28,7 @@ class Kudos_Public {
 
 	/**
 	 * The ID of this plugin.
+	 *
 	 * @since    1.0.0
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
@@ -35,6 +37,7 @@ class Kudos_Public {
 
 	/**
 	 * The version of this plugin.
+	 *
 	 * @since    1.0.0
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
@@ -43,6 +46,7 @@ class Kudos_Public {
 
 	/**
 	 * Initialize the class and set its properties.
+	 *
 	 * @since    1.0.0
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
@@ -56,34 +60,37 @@ class Kudos_Public {
 
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
+	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name . '-css', get_asset_path('kudos-public.css'), [], $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . 'public-css', get_asset_path('kudos-public.css'), [], $this->version, 'all' );
 
 	}
 
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
+	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name . '-js', get_asset_path('kudos-public.js'), [ 'jquery' ], $this->version, false );
+		wp_enqueue_script( $this->plugin_name . 'public-js', get_asset_path('kudos-public.js'), [ 'jquery' ], $this->version, false );
 		wp_enqueue_script( $this->plugin_name . '-vendors', get_asset_path('vendors.js'), [ 'jquery' ], $this->version, false );
-		wp_localize_script( $this->plugin_name . '-js', 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_localize_script( $this->plugin_name . 'public-js', 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
 
 	}
 
 	/**
 	 * Register the assets used for blocks.
+	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_block_assets() {
 
-		wp_enqueue_style( $this->plugin_name . 'blocks', get_asset_path('kudos-blocks.css'), [], $this->version, 'all' );
-		wp_enqueue_script( $this->plugin_name . '-blocks', get_asset_path('kudos-blocks.js'), [ 'jquery' ], $this->version, false );
+		wp_enqueue_style( $this->plugin_name . '-blocks-css', get_asset_path('kudos-blocks.css'), [], $this->version, 'all' );
+		wp_enqueue_script( $this->plugin_name . '-blocks-js', get_asset_path('kudos-blocks.js'), [ 'jquery' ], $this->version, false );
 
 	}
 
@@ -111,6 +118,7 @@ class Kudos_Public {
 	/**
 	 * Register custom query vars
 	 *
+	 * @since    1.0.0
 	 * @param array $vars The array of available query variables
 	 * @link https://codex.wordpress.org/Plugin_API/Filter_Reference/query_vars
 	 * @return array
@@ -131,6 +139,8 @@ class Kudos_Public {
 
 	/**
 	 * Using the provided $_REQUEST variable checks payment status
+	 *
+	 * @since    1.0.0
 	 * @return bool | string
 	 */
 	public function check_transaction() {
@@ -143,13 +153,18 @@ class Kudos_Public {
 			return false;
 		}
 
-		$transaction = new Transactions\Transaction();
-		$transaction = $transaction->get_transaction($order_id, ['status', 'value']);
+		$return = [];
 
 		if($order_id === $order_id_session) {
+
+			$transaction = new Transactions\Transaction();
+			$return['transaction'] = $transaction->get_transaction($order_id, ['status', 'value']);
+			$return['modalHeader'] = carbon_get_theme_option('kudos_return_message_header');
+			$return['modalText'] = carbon_get_theme_option('kudos_return_message_text');
+
 			// Unset cookie to prevent repeat message
-			setcookie('kudos_order_id', '', 1);
-			wp_send_json_success($transaction);
+//			setcookie('kudos_order_id', '', 1);
+			wp_send_json_success($return);
 		}
 
 		return false;
@@ -157,6 +172,8 @@ class Kudos_Public {
 
 	/**
 	 * Gets url Mollie will use to redirect customer to
+	 *
+	 * @since    1.0.0
 	 * @return string|void
 	 */
 	public static function get_return_url() {
@@ -173,6 +190,8 @@ class Kudos_Public {
 
 	/**
 	 * Checks if required settings are saved before displaying button
+	 *
+	 * @since    1.0.0
 	 * @return bool
 	 */
 	public static function ready() {
