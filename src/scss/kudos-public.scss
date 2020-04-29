@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 .kudos_mollie {
-  .kudos_modal .kudos_modal_container,
-  .kudos_modal .kudos_modal_overlay {
+  #kudos_modal .kudos_modal_container,
+  #kudos_modal .kudos_modal_overlay {
     will-change: transform;
     z-index: 1050;
   }
 
   #kudos_form {
     input {
-      @apply appearance-none border-2 rounded w-full py-2 px-3 text-gray-700;
+      @apply appearance-none border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-gray-700;
 
       &:focus {
         @apply border-orange-500;
@@ -23,7 +23,9 @@
     }
   }
 
-  .kudos_modal {
+  #kudos_modal {
+    @apply text-gray-900 text-base;
+
     display: none;
 
     * {
