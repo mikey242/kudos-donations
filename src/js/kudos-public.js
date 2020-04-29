@@ -91,9 +91,9 @@ $(function () {
                     <p>'+ customText +'</p>\
                 </div>\
                 <form id="kudos_form" action="">\
-                    <input type="text" class="appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="name" placeholder="Naam (optioneel)" />\
-                    <input type="email" class="mt-3 appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="email_address" placeholder="E-mailadres (optioneel)" />\
-                    <input required type="text" min="1" class="mt-3 appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="value" placeholder="Bedrag (in euro\'s) *" />\
+                    <input type="text" name="name" placeholder="Naam (optioneel)" />\
+                    <input type="email" class="mt-3" name="email_address" placeholder="E-mailadres (optioneel)" />\
+                    <input required type="text" min="1" class="mt-3" name="value" placeholder="Bedrag (in euro\'s) *" />\
                     <div class="payment_by mt-3 text-muted text-right"><small class="text-gray-600">\
                         <span class="fa-stack fa-xs align-middle">\
                             <i class="fas fa-circle fa-stack-2x"></i>\
