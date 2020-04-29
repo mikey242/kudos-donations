@@ -76,7 +76,7 @@ class Mollie
 
 		$mollieApi = $this->mollieApi;
 		$order_id = time();
-		setcookie('order_id', $order_id);
+		setcookie('kudos_order_id', $order_id);
 		$value = number_format($value, 2);
 
 		// Add order id if option to show message enabled

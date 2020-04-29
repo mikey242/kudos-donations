@@ -146,7 +146,7 @@ class Kudos_Public {
 
 		if($order_id === $order_id_session) {
 			// Unset cookie to prevent repeat message
-			setcookie('order_id', '', 1);
+			setcookie('kudos_order_id', '', 1);
 			wp_send_json_success($transaction);
 		}
 
