@@ -163,7 +163,7 @@ class Kudos_Public {
 			$return['modalText'] = carbon_get_theme_option('kudos_return_message_text');
 
 			// Unset cookie to prevent repeat message
-//			setcookie('kudos_order_id', '', 1);
+			setcookie('kudos_order_id', '', 1);
 			wp_send_json_success($return);
 		}
 
