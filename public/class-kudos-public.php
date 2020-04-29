@@ -134,15 +134,17 @@ class Kudos_Public {
 	 * @return bool | string
 	 */
 	public function check_transaction() {
-		$order_id = base64_decode($_REQUEST['order_id']);
 
-		if(!$order_id) {
+		$order_id = $_REQUEST['order_id'] ? base64_decode($_REQUEST['order_id']) : null;
+		$order_id_session = $_COOKIE['kudos_order_id'];
+
+		// If either $_GET['kudos_order_id'] or $_COOKIE['kudos_order_id'] not set then stop
+		if(!$order_id || !$order_id_session) {
 			return false;
 		}
 
 		$transaction = new Transactions\Transaction();
 		$transaction = $transaction->get_transaction($order_id, ['status', 'value']);
-		$order_id_session = $_COOKIE['order_id'];
 
 		if($order_id === $order_id_session) {
 			// Unset cookie to prevent repeat message
