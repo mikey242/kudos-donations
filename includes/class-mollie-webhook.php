@@ -3,17 +3,14 @@
 namespace Kudos\Mollie;
 
 use Kudos\Transactions\Transaction;
+use WP_Error;
+use WP_HTTP_Response;
 use WP_REST_Request;
+use WP_REST_Response;
 
 class Webhook {
 
-	/**
-	 * @var Transaction
-	 */
 	private $transaction;
-	/**
-	 * @var Mollie
-	 */
 	private $mollie;
 
 	public function __construct() {
@@ -21,6 +18,10 @@ class Webhook {
 		$this->mollie = new Mollie();
 	}
 
+	/**
+	 * Register webhook using rest
+	 * @return void
+	 */
 	public function register_webhook() {
 		register_rest_route( 'kudos/v1', 'mollie/', [
 			'methods' => 'POST',
@@ -33,6 +34,11 @@ class Webhook {
 		] );
 	}
 
+	/**
+	 * Mollie webhook action
+	 * @param WP_REST_Request $request
+	 * @return mixed|WP_Error|WP_HTTP_Response|WP_REST_Response
+	 */
 	public function rest_api_mollie_webhook( WP_REST_Request $request ) {
 		$id = $request->get_param( 'id' );
 		error_log('Webhook received with ID: ' . $id);
