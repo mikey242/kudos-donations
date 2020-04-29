@@ -9,6 +9,12 @@
     z-index: 1050;
   }
 
+  #kudos_form {
+    input.error {
+      border: 2px solid red;
+    }
+  }
+
   .kudos-modal {
     display: none;
     font-family: "Century Gothic", sans-serif;
@@ -100,40 +106,45 @@
   }
 
   .kudos_modal_btn-primary {
-    background-color: #ff9f1c;
+    background-color: theme('colors.orange.500');
+    color: #fff;
 
     &:hover {
-      background-color: #f58d00;
+      background-color: theme('colors.orange.700');
     }
   }
 
   .kudos_modal_btn-secondary {
-    color: #ff9f1c;
+    color: theme('colors.orange.500');
     background-color: transparent;
-    border: 1px solid #ff9f1c;
+    border: 1px solid theme('colors.orange.500');
 
     &:hover {
       color: #fff;
-      background-color: #ff9f1c;
-      border-color: #ff9f1c;
+      background-color: theme('colors.orange.500');
+      border-color: theme('colors.orange.500');
     }
+  }
+
+  .kudos_modal_footer {
+    margin-top: 1rem;
   }
 }
 
 .kudos-modal[aria-hidden="false"] .kudos_modal_overlay {
-  animation: mmfadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+  animation: fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .kudos-modal[aria-hidden="false"] .kudos_modal_container {
-  animation: mmslideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+  animation: slideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .kudos-modal[aria-hidden="true"] .kudos_modal_overlay {
-  animation: mmfadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+  animation: fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .kudos-modal[aria-hidden="true"] .kudos_modal_container {
-  animation: mmslideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+  animation: slideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
 @keyframes loader-spin {
@@ -152,22 +163,22 @@
   }
 }
 
-@keyframes mmfadeIn {
+@keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes mmfadeOut {
+@keyframes fadeOut {
   from { opacity: 1; }
   to { opacity: 0; }
 }
 
-@keyframes mmslideIn {
+@keyframes slideIn {
   from { transform: translateY(15%); }
   to { transform: translateY(0); }
 }
 
-@keyframes mmslideOut {
+@keyframes slideOut {
   from { transform: translateY(0); }
   to { transform: translateY(-10%); }
 }
