@@ -94,6 +94,7 @@ class Kudos_Mollie {
 	 */
 	private function load_dependencies() {
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/kudos-helpers.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-loader.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-i18n.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transaction.php';

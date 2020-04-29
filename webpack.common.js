@@ -1,11 +1,12 @@
 const path = require('path')
-const glob = require('glob-all')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-// const PurgecssPlugin = require('purgecss-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const WebpackAssetsManifest = require('webpack-assets-manifest');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 
 const PATHS = {
-    src: path.join(__dirname, 'src')
+    src: path.join(__dirname, 'src'),
+    dist: path.resolve(__dirname, 'dist')
 }
 
 module.exports = {
@@ -15,10 +16,22 @@ module.exports = {
         'kudos-blocks' : [path.join(PATHS.src, '/js', '/kudos-blocks.js'),path.join(PATHS.src, '/scss', '/kudos-blocks.scss')],
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: PATHS.dist,
         publicPath: '/wp-content/plugins/kudos-mollie/dist/',
-        filename: 'js/[name].js',
-        chunkFilename: 'js/[id].js'
+        filename: 'js/[name].[contenthash].js',
+    },
+    optimization: {
+        moduleIds: 'hashed',
+        // runtimeChunk: 'single',
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                },
+            },
+        },
     },
     module: {
         rules: [{
@@ -43,9 +56,6 @@ module.exports = {
                     'css-loader',
                     {
                         loader: 'postcss-loader',
-                        options: {
-                            // config: { path: __dirname, ctx: config },
-                        }
                     }, 'sass-loader'
                 ]
             },
@@ -71,7 +81,9 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: 'css/[name].css'
-        })
+            filename: 'css/[name].[contenthash].css'
+        }),
+        new WebpackAssetsManifest(),
+        new CleanWebpackPlugin()
     ]
 };

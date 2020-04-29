@@ -66,8 +66,7 @@ class Kudos_Admin {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/css/kudos-admin.css', [], $this->version, 'all' );
-		wp_enqueue_style( $this->plugin_name . 'blocks', plugin_dir_url( __FILE__ ) . '../dist/css/kudos-blocks.css', [], $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . '-admin-css', get_asset_path('kudos-admin.css'), [], $this->version, 'all' );
 
 	}
 
@@ -78,9 +77,9 @@ class Kudos_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/js/kudos-admin.js', [ 'jquery' ], $this->version, false );
-		wp_enqueue_script( $this->plugin_name . '-blocks', plugin_dir_url( __FILE__ ) . '../dist/js/kudos-blocks.js', [ 'jquery' ], $this->version, false );
-		wp_localize_script( $this->plugin_name, 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_enqueue_script( $this->plugin_name . '-admin-js', get_asset_path('kudos-admin.js'), [ 'jquery' ], $this->version, false );
+		wp_enqueue_script( $this->plugin_name . '-vendors', get_asset_path('vendors.js'), [ 'jquery' ], $this->version, false );
+		wp_localize_script( $this->plugin_name . '-admin-js', 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
 
 	}
 

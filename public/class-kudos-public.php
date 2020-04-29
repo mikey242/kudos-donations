@@ -60,7 +60,7 @@ class Kudos_Public {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/css/kudos-public.css', [], $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . '-css', get_asset_path('kudos-public.css'), [], $this->version, 'all' );
 
 	}
 
@@ -70,8 +70,9 @@ class Kudos_Public {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/js/kudos-public.js', [ 'jquery' ], $this->version, false );
-		wp_localize_script( $this->plugin_name, 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_enqueue_script( $this->plugin_name . '-js', get_asset_path('kudos-public.js'), [ 'jquery' ], $this->version, false );
+		wp_enqueue_script( $this->plugin_name . '-vendors', get_asset_path('vendors.js'), [ 'jquery' ], $this->version, false );
+		wp_localize_script( $this->plugin_name . '-js', 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
 
 	}
 
@@ -81,8 +82,8 @@ class Kudos_Public {
 	 */
 	public function enqueue_block_assets() {
 
-		wp_enqueue_style( $this->plugin_name . 'blocks', plugin_dir_url( __FILE__ ) . '../dist/css/kudos-blocks.css', [], $this->version, 'all' );
-		wp_enqueue_script( $this->plugin_name . '-blocks', plugin_dir_url( __FILE__ ) . '../dist/js/kudos-blocks.js', [ 'jquery' ], $this->version, false );
+		wp_enqueue_style( $this->plugin_name . 'blocks', get_asset_path('kudos-blocks.css'), [], $this->version, 'all' );
+		wp_enqueue_script( $this->plugin_name . '-blocks', get_asset_path('kudos-blocks.js'), [ 'jquery' ], $this->version, false );
 
 	}
 
