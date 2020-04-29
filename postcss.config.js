@@ -12,7 +12,7 @@ module.exports = {
         }),
         purgecss({
             content: ['./src/js/*.js', './public/**/*.php'],
-            whitelistPatternsChildren: [/kudos/]
+            whitelistPatternsChildren: [/kudos/, /orange/]
         })
     ]
 }
