@@ -31,7 +31,6 @@ class Mollie
 
 	/**
 	 * @param $apiKey
-	 *
 	 * @return bool
 	 */
 	public function checkApiKey($apiKey) {
@@ -54,7 +53,6 @@ class Mollie
 
 	/**
 	 * @param $mollie_payment_id
-	 *
 	 * @return bool|Payment
 	 */
 	public function getPayment($mollie_payment_id) {
@@ -72,7 +70,6 @@ class Mollie
 	 * @param string $redirectUrl
 	 * @param string|null $name
 	 * @param string|null $email
-	 *
 	 * @return bool|object
 	 */
 	public function payment($value, $redirectUrl, $name=null, $email=null) {
@@ -95,7 +92,7 @@ class Mollie
 						"value" => $value
 					],
 					"redirectUrl" => $redirectUrl,
-					"webhookUrl" => 'https://927ba6df.ngrok.io/wp-json/kudos/v1/mollie',
+					"webhookUrl" => 'https://6da0f061.ngrok.io/wp-json/kudos/v1/mollie',
 //					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
 					'metadata' => [
