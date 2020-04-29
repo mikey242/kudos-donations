@@ -19,7 +19,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  * @wordpress-plugin
  * Plugin Name:       Kudos-Mollie
  * Plugin URI:        https://iseard.media
- * Description:       Allows ability to receive donations via Mollie
+ * Description:       Easily receive donations via Mollie
  * Version:           1.0.0
  * Author:            Michael Iseard
  * Author URI:        https://www.linkedin.com/in/michael-iseard/
