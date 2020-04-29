@@ -22,7 +22,7 @@ $(function () {
     modalLogo.src = logo;
 
     let $kudosModal = $('\
-        <div id="kudos_modal" class="kudos_modal text-gray-900 text-base" aria-hidden="true">\
+        <div id="kudos_modal" class="kudos_modal" aria-hidden="true">\
             <div class="kudos_modal_overlay flex justify-center items-center fixed top-0 left-0 w-full h-full bg-gray-900 z-50" tabindex="-1" data-micromodal-close>\
                 <div class="kudos_modal_container bg-white py-4 px-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">\
                     <header class="kudos_modal_header flex items-center justify-between">\
@@ -51,6 +51,7 @@ $(function () {
                 order_id: order_id
             },
             success: function (result) {
+                console.log(result);
                 if(result.success) {
                     let $content = '';
                     switch (result.data.status) {
@@ -58,7 +59,7 @@ $(function () {
                         case 'open':
                             $content = $('\
                                 <div class="top-content text-center">\
-                                    <h2 class="font-normal">Bedankt!</h2><p>Heel veel dank voor je donatie van €'+ result.data.value +'. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>\
+                                    <h2 class="font-normal">Bedankt!</h2><p>Heel veel dank voor je donatie van €'+ Math.round(result.data.value) +'. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>\
                                 </div>\
                                 <footer class="kudos_modal_footer mt-4 text-right">\
                                     <button class="kudos_btn kudos_btn-primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
