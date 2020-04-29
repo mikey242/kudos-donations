@@ -103,7 +103,7 @@ $(function () {
                         Beveiligde betaling via\
                     </small></div>\
                     <footer class="kudos_modal_footer mt-4 text-center">\
-                        <button class="kudos_btn kudos_btn-secondary" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>\
+                        <button class="kudos_btn kudos_btn-secondary mr-3" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>\
                         <button id="kudos_submit" class="kudos_btn kudos_btn-primary" type="submit">Doneeren</button>\
                     </footer>\
                 </form>\
