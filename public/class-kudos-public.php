@@ -7,7 +7,6 @@ use Kudos\Mollie\Webhook;
 
 /**
  * The public-facing functionality of the plugin.
- *
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
@@ -17,7 +16,6 @@ use Kudos\Mollie\Webhook;
 
 /**
  * The public-facing functionality of the plugin.
- *
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
@@ -29,7 +27,6 @@ class Kudos_Public {
 
 	/**
 	 * The ID of this plugin.
-	 *
 	 * @since    1.0.0
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
@@ -38,7 +35,6 @@ class Kudos_Public {
 
 	/**
 	 * The version of this plugin.
-	 *
 	 * @since    1.0.0
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
@@ -47,7 +43,6 @@ class Kudos_Public {
 
 	/**
 	 * Initialize the class and set its properties.
-	 *
 	 * @since    1.0.0
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
@@ -61,29 +56,42 @@ class Kudos_Public {
 
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
-	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/css/kudos-public.css', [], $this->version, 'all' );
-		wp_enqueue_style( $this->plugin_name . 'blocks', plugin_dir_url( __FILE__ ) . '../dist/css/kudos-blocks.css', [], $this->version, 'all' );
 
 	}
 
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
-	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '../dist/js/kudos-public.js', [ 'jquery' ], $this->version, false );
-		wp_enqueue_script( $this->plugin_name . '-blocks', plugin_dir_url( __FILE__ ) . '../dist/js/kudos-blocks.js', [ 'jquery' ], $this->version, false );
 		wp_localize_script( $this->plugin_name, 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
 
 	}
 
+	/**
+	 * Register the assets used for blocks.
+	 * @since    1.0.0
+	 */
+	public function enqueue_block_assets() {
+
+		wp_enqueue_style( $this->plugin_name . 'blocks', plugin_dir_url( __FILE__ ) . '../dist/css/kudos-blocks.css', [], $this->version, 'all' );
+		wp_enqueue_script( $this->plugin_name . '-blocks', plugin_dir_url( __FILE__ ) . '../dist/js/kudos-blocks.js', [ 'jquery' ], $this->version, false );
+
+	}
+
+	/**
+	 * Creates a payment with Mollie.
+	 *
+	 * @since    1.0.0
+	 * @return string
+	 */
 	public function create_payment() {
 		parse_str($_REQUEST['form'], $form);
 		$value = $form['value'];
@@ -111,12 +119,17 @@ class Kudos_Public {
 		return $vars;
 	}
 
+	/**
+	 * Registers the webhook url
+	 * @return void
+	 */
 	public function register_webhook() {
 		$webhook = new Webhook();
 		$webhook->register_webhook();
 	}
 
 	/**
+	 * Using the provided $_REQUEST variable checks payment status
 	 * @return bool | string
 	 */
 	public function check_transaction() {
@@ -139,6 +152,10 @@ class Kudos_Public {
 		return false;
 	}
 
+	/**
+	 * Gets url Mollie will use to redirect customer to
+	 * @return string|void
+	 */
 	public static function get_return_url() {
 		$use_custom = carbon_get_theme_option('kudos_custom_return_enable');
 		$custom_url = get_option('_kudos_custom_return_url');
@@ -151,6 +168,10 @@ class Kudos_Public {
 		}
 	}
 
+	/**
+	 * Checks if required settings are saved before displaying button
+	 * @return bool
+	 */
 	public static function ready() {
 		$apiMode = carbon_get_theme_option('kudos_mollie_api_mode');
 		$apiKey = carbon_get_theme_option('kudos_mollie_'.$apiMode.'_api_key');

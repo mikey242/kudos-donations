@@ -158,6 +158,7 @@ class Kudos_Mollie {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'enqueue_block_assets', $plugin_public, 'enqueue_block_assets' );
 		$this->loader->add_action('wp_ajax_nopriv_create_payment', $plugin_public, 'create_payment');
 		$this->loader->add_action('wp_ajax_create_payment', $plugin_public, 'create_payment');
 		$this->loader->add_action('wp_ajax_nopriv_check_transaction', $plugin_public, 'check_transaction');
