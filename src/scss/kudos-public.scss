@@ -109,19 +109,19 @@
   }
 }
 
-.kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
+#kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
   animation: fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.kudos_modal[aria-hidden="false"] .kudos_modal_container {
+#kudos_modal[aria-hidden="false"] .kudos_modal_container {
   animation: slideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.kudos_modal[aria-hidden="true"] .kudos_modal_overlay {
+#kudos_modal[aria-hidden="true"] .kudos_modal_overlay {
   animation: fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.kudos_modal[aria-hidden="true"] .kudos_modal_container {
+#kudos_modal[aria-hidden="true"] .kudos_modal_container {
   animation: slideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
