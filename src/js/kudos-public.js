@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import "jquery-validation";
 import MicroModal from "micromodal";
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
@@ -39,7 +40,6 @@ $(function () {
 
     // Check order status if query var exists
     if(order_id) {
-
         $.ajax({
             method: 'post',
             dataType: 'json',
@@ -54,11 +54,12 @@ $(function () {
                     let $content = '';
                     switch (result.data.status) {
                         case 'paid':
+                        case 'open':
                             $content = $('\
                                 <div class="top-content text-center">\
-                                    <h2 class="font-normal">Bedankt!</h2><p>Heel veel dank voor je donatie van €100. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>\
+                                    <h2 class="font-normal">Bedankt!</h2><p>Heel veel dank voor je donatie van €'+ result.data.value +'. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>\
                                 </div>\
-                                <footer class="kudos_modal_footer text-right">\
+                                <footer class="kudos_modal_footer mt-4 text-right">\
                                     <button class="kudos_modal_btn kudos_modal_btn-primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
                                 </footer>\
                             ');
@@ -89,9 +90,9 @@ $(function () {
                     <p>'+ customText +'</p>\
                 </div>\
                 <form id="kudos_form" action="">\
-                    <input type="text" class="mb-3 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" name="name" placeholder="Naam (optioneel)" />\
-                    <input type="email" class="mb-3 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="email_address" placeholder="E-mailadres (optioneel)" />\
-                    <input required type="text" min="1" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="value" placeholder="Bedrag (in euro\'s) *" />\
+                    <input type="text" class="appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="name" placeholder="Naam (optioneel)" />\
+                    <input type="email" class="mt-3 appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="email_address" placeholder="E-mailadres (optioneel)" />\
+                    <input required type="text" min="1" class="mt-3 appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="value" placeholder="Bedrag (in euro\'s) *" />\
                     <div class="payment-by mt-3 text-muted text-right"><small class="text-gray-600">\
                         <span class="fa-stack fa-xs align-middle">\
                             <i class="fas fa-circle fa-stack-2x"></i>\
@@ -99,9 +100,9 @@ $(function () {
                         </span>\
                         Beveiligde betaling via\
                     </small></div>\
-                    <footer class="kudos_modal_footer text-center">\
+                    <footer class="kudos_modal_footer mt-4 text-center">\
                         <button class="kudos_modal_btn kudos_modal_btn-secondary" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>\
-                        <button class="kudos_modal_btn kudos_modal_btn-primary" type="submit">Doneeren</button>\
+                        <button id="kudos_submit" class="kudos_modal_btn kudos_modal_btn-primary" type="submit">Doneeren</button>\
                     </footer>\
                 </form>\
                 <i class="kudos-spinner fa-spin"></i> \
@@ -109,10 +110,31 @@ $(function () {
             $body.append($kudosModal);
             MicroModal.show('kudos-modal', {
                 onShow: modal => $(modal).find('#kudos-modal-content').html(content),
-                // onClose: modal => $(modal).remove(),
                 awaitCloseAnimation: true
             });
         })
+    })
+
+    // Check form before submit
+    $body.on('click', '#kudos_submit', function (e) {
+        e.preventDefault();
+        let $form = $(this.form);
+        $form.validate({
+            rules: {
+                value: {
+                    digits: true
+                }
+            },
+            messages: {
+                value: {
+                    required: "Vul een donatiebedrag in",
+                    min: "Minimum donatie is 1 euro"
+                }
+            }
+        })
+        if($(this.form).valid()) {
+            $form.submit();
+        }
     })
 
     // Submit donation form action
