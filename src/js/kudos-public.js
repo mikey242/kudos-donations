@@ -11,25 +11,27 @@ dom.watch();
 $(function () {
 
     const $body = $('body');
-    let $kudosButtons = $('.kudos-button');
+    let $kudosButtons = $('.kudos_btn');
+
+    // Add kudos_mollie class to body if button found
     if($kudosButtons.length) {
-        $body.addClass('kudos-mollie');
+        $body.addClass('kudos_mollie');
     }
 
     let modalLogo = new Image(40);
     modalLogo.src = logo;
 
     let $kudosModal = $('\
-        <div id="kudos-modal" class="kudos-modal text-gray-900 text-base" aria-hidden="true">\
+        <div id="kudos_modal" class="kudos_modal text-gray-900 text-base" aria-hidden="true">\
             <div class="kudos_modal_overlay flex justify-center items-center fixed top-0 left-0 w-full h-full bg-gray-900 z-50" tabindex="-1" data-micromodal-close>\
-                <div class="kudos_modal_container bg-white py-4 px-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="kudos-modal-title">\
+                <div class="kudos_modal_container bg-white py-4 px-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">\
                     <header class="kudos_modal_header flex items-center justify-between">\
-                        <div class="kudos_modal_title mt-0 mb-0" id="kudos-modal-title">\
+                        <div class="kudos_modal_title mt-0 mb-0" id="kudos_modal-title">\
                         '+modalLogo.outerHTML+'\
                         </div>\
                         <button class="kudos_modal_close text-black p-0" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>\
                     </header>\
-                    <main class="kudos_modal_content" id="kudos-modal-content"></main>\
+                    <main class="kudos_modal_content" id="kudos_modal-content"></main>\
                 </div>\
             </div>\
         </div>\
@@ -49,7 +51,6 @@ $(function () {
                 order_id: order_id
             },
             success: function (result) {
-                console.log(result);
                 if(result.success) {
                     let $content = '';
                     switch (result.data.status) {
@@ -60,14 +61,14 @@ $(function () {
                                     <h2 class="font-normal">Bedankt!</h2><p>Heel veel dank voor je donatie van €'+ result.data.value +'. Wĳ waarderen je steun enorm. Dankzĳ jouw inzet blĳft cultuur bereikbaar voor iedereen.</p>\
                                 </div>\
                                 <footer class="kudos_modal_footer mt-4 text-right">\
-                                    <button class="kudos_modal_btn kudos_modal_btn-primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
+                                    <button class="kudos_btn kudos_btn-primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
                                 </footer>\
                             ');
                             break;
                     }
                     $body.append($kudosModal);
-                    MicroModal.show('kudos-modal', {
-                        onShow: modal => $(modal).find('#kudos-modal-content').html($content),
+                    MicroModal.show('kudos_modal', {
+                        onShow: modal => $(modal).find('#kudos_modal-content').html($content),
                         awaitCloseAnimation: true
                     });
                 }
@@ -93,7 +94,7 @@ $(function () {
                     <input type="text" class="appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="name" placeholder="Naam (optioneel)" />\
                     <input type="email" class="mt-3 appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="email_address" placeholder="E-mailadres (optioneel)" />\
                     <input required type="text" min="1" class="mt-3 appearance-none border-2 rounded w-full py-2 px-3 text-gray-700 focus:border-orange-500" name="value" placeholder="Bedrag (in euro\'s) *" />\
-                    <div class="payment-by mt-3 text-muted text-right"><small class="text-gray-600">\
+                    <div class="payment_by mt-3 text-muted text-right"><small class="text-gray-600">\
                         <span class="fa-stack fa-xs align-middle">\
                             <i class="fas fa-circle fa-stack-2x"></i>\
                             <i class="fas fa-lock fa-stack-1x fa-inverse"></i>\
@@ -101,15 +102,15 @@ $(function () {
                         Beveiligde betaling via\
                     </small></div>\
                     <footer class="kudos_modal_footer mt-4 text-center">\
-                        <button class="kudos_modal_btn kudos_modal_btn-secondary" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>\
-                        <button id="kudos_submit" class="kudos_modal_btn kudos_modal_btn-primary" type="submit">Doneeren</button>\
+                        <button class="kudos_btn kudos_btn-secondary" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>\
+                        <button id="kudos_submit" class="kudos_btn kudos_btn-primary" type="submit">Doneeren</button>\
                     </footer>\
                 </form>\
-                <i class="kudos-spinner fa-spin"></i> \
+                <i class="kudos_spinner"></i> \
             ');
             $body.append($kudosModal);
-            MicroModal.show('kudos-modal', {
-                onShow: modal => $(modal).find('#kudos-modal-content').html(content),
+            MicroModal.show('kudos_modal', {
+                onShow: modal => $(modal).find('#kudos_modal-content').html(content),
                 awaitCloseAnimation: true
             });
         })
@@ -150,7 +151,7 @@ $(function () {
                 form: $(e.currentTarget).serialize()
             },
             beforeSend: function() {
-                $kudosModal.addClass('kudos-loading');
+                $kudosModal.addClass('kudos_loading');
             },
             success: function (result) {
                 if(result.success) {

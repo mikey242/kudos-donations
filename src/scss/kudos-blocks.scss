@@ -1,29 +1,58 @@
 @tailwind base;
 
-.kudos-button {
-  display: inline-flex;
-  align-items: center;
-  border: none;
-  color: #fff;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-size: 18px;
+.kudos_btn {
+  display: inline-block;
+  text-align: center;
+  user-select: none;
+  padding: 10px 20px;
+  text-transform: none;
   text-decoration: none;
   cursor: pointer;
-  line-height: 1;
+  background-size: 240% 100%;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  font-weight: 400;
+  border-radius: 10px;
+  border: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.kudos_btn-primary {
+  background-color: theme('colors.orange.500');
+  color: #fff;
+
+  &:hover {
+    background-color: theme('colors.orange.700');
+  }
+}
+
+.kudos_btn-secondary {
+  color: theme('colors.orange.500');
+  background-color: transparent;
+  border: 1px solid theme('colors.orange.500');
+
+  &:hover {
+    color: #fff;
+    background-color: theme('colors.orange.500');
+    border-color: theme('colors.orange.500');
+  }
+}
+
+.kudos_button_icon {
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
 
   &.style-1 {
     background: theme('colors.green'); //#2ec4b6
   }
 
   &.style-2 {
-    background: theme('colors.orange'); //#ff9f1c
+    background: theme('colors.orange.500'); //#ff9f1c
   }
 
-  .kudos-logo {
-    background-image: url("../img/logo-white.svg");
-    background-repeat: no-repeat;
-    background-position: center;
+  .kudos_logo {
+    background: url("../img/logo-white.svg") no-repeat center;
     background-size: contain;
     width: 25px;
     height: 25px;
@@ -36,7 +65,7 @@
 
   &:hover,
   &:active {
-    .kudos-logo {
+    .kudos_logo {
       transform: rotate(-90deg);
     }
   }

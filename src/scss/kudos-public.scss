@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.kudos-mollie {
-  .kudos-modal .kudos_modal_container,
-  .kudos-modal .kudos_modal_overlay {
+.kudos_mollie {
+  .kudos_modal .kudos_modal_container,
+  .kudos_modal .kudos_modal_overlay {
     will-change: transform;
     z-index: 1050;
   }
@@ -15,7 +15,7 @@
     }
   }
 
-  .kudos-modal {
+  .kudos_modal {
     display: none;
     font-family: "Century Gothic", sans-serif;
 
@@ -23,7 +23,7 @@
       font-family: Elephant, "Times New Roman", serif;
     }
 
-    .kudos-spinner {
+    .kudos_spinner {
       display: none;
       width: 36px;
       height: 36px;
@@ -55,8 +55,8 @@
       }
     }
 
-    &.kudos-loading {
-      .kudos-spinner {
+    &.kudos_loading {
+      .kudos_spinner {
         display: block;
         background-size: contain;
         background-repeat: no-repeat;
@@ -78,7 +78,7 @@
       }
     }
 
-    .payment-by {
+    .payment_by {
       &::after {
         content: '';
         display: inline-block;
@@ -89,41 +89,6 @@
         margin-left: 5px;
       }
     }
-
-    .kudos_modal_btn {
-      display: inline-block;
-      text-align: center;
-      user-select: none;
-      padding: 10px 20px;
-      text-transform: none;
-      background-size: 240% 100%;
-      font-size: 1.2rem;
-      line-height: 1.6;
-      font-weight: 400;
-      border-radius: 10px;
-      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-  }
-
-  .kudos_modal_btn-primary {
-    background-color: theme('colors.orange.500');
-    color: #fff;
-
-    &:hover {
-      background-color: theme('colors.orange.700');
-    }
-  }
-
-  .kudos_modal_btn-secondary {
-    color: theme('colors.orange.500');
-    background-color: transparent;
-    border: 1px solid theme('colors.orange.500');
-
-    &:hover {
-      color: #fff;
-      background-color: theme('colors.orange.500');
-      border-color: theme('colors.orange.500');
-    }
   }
 
   .kudos_modal_footer {
@@ -131,19 +96,19 @@
   }
 }
 
-.kudos-modal[aria-hidden="false"] .kudos_modal_overlay {
+.kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
   animation: fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.kudos-modal[aria-hidden="false"] .kudos_modal_container {
+.kudos_modal[aria-hidden="false"] .kudos_modal_container {
   animation: slideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.kudos-modal[aria-hidden="true"] .kudos_modal_overlay {
+.kudos_modal[aria-hidden="true"] .kudos_modal_overlay {
   animation: fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.kudos-modal[aria-hidden="true"] .kudos_modal_container {
+.kudos_modal[aria-hidden="true"] .kudos_modal_container {
   animation: slideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
