@@ -153,17 +153,33 @@ class Kudos_Public {
 			return false;
 		}
 
-		$return = [];
-
 		if($order_id === $order_id_session) {
 
 			$transaction = new Transactions\Transaction();
-			$return['transaction'] = $transaction->get_transaction($order_id, ['status', 'value']);
-			$return['modalHeader'] = carbon_get_theme_option('kudos_return_message_header');
-			$return['modalText'] = carbon_get_theme_option('kudos_return_message_text');
+			$transaction = $transaction->get_transaction($order_id, ['status', 'value', 'name']);
+
+			switch($transaction->status) {
+				case 'open':
+				case 'paid':
+					$vars = [
+						'{{value}}' => number_format_i18n($transaction->value, 2),
+						'{{name}}' => $transaction->name
+					];
+					$header = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);
+					$text = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
+					break;
+				case 'canceled':
+					$header = __('Geannuleerd', 'kudos');
+	                $text = __('Betaling geannuleerd', 'kudos');
+	                break;
+
+			}
+
+			$return['modal_header'] = $header;
+			$return['modal_text'] = $text;
 
 			// Unset cookie to prevent repeat message
-			setcookie('kudos_order_id', '', 1);
+//			setcookie('kudos_order_id', '', 1);
 			wp_send_json_success($return);
 		}
 

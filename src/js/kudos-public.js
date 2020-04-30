@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import {init as initModal, messageModal, donateModal} from "./kudos-modals";
 import "jquery-validation";
-import Mustache from "mustache";
 import MicroModal from "micromodal";
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
@@ -36,15 +35,11 @@ $(() => {
             success: function (result) {
                 if(result.success) {
                     let $content = '';
-                    let message;
                     let data = result.data
-                    switch (data.transaction.status) {
-                        case 'paid':
-                        case 'open':
-                            message = Mustache.render(data.modalText, {value: Math.round(data.transaction.value)});
-                            break;
-                    }
-                    $content = messageModal(data.modalHeader, message);
+                    let header = data.modal_header;
+                    let message = data.modal_text;
+
+                    $content = messageModal(header, message);
                     MicroModal.show('kudos_modal', {
                         onShow: modal => $(modal).find('#kudos_modal_content').html($content),
                         awaitCloseAnimation: true
