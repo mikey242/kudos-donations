@@ -77,10 +77,9 @@ class Transactions_Table extends WP_List_Table {
 		return $columns= [
 			'time'=>__('Datum', 'kudos'),
 			'name'=>__('Naam', 'kudos'),
-			'email'=>__('E-mail', 'kudos'),
+			'email'=>__('E-mailadres', 'kudos'),
 			'value'=>__('Bedrag', 'kudos'),
 			'status'=>__('Status', 'kudos'),
-			'mode'=>__('Mode', 'kudos'),
 		];
 	}
 
@@ -197,12 +196,15 @@ class Transactions_Table extends WP_List_Table {
 
 		switch ( $column_name ) {
 			case 'time':
+				return date_i18n($item[$column_name], get_option('date_format') . ' ' . get_option('time_format'));
+				break;
 			case 'name':
 			case 'email':
-			case 'value':
-			case 'status':
-			case 'mode':
 				return $item[$column_name];
+			case 'value':
+				return '<i title="'.$item['method'].'" class="'. $icon .'"></i> € ' . number_format_i18n($item[$column_name], 2);
+			case 'status':
+				return $item[$column_name] . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '');
 			default:
 				return print_r( $item, true ) ;
 		}
