@@ -42,6 +42,7 @@ class Kudos_Activator {
 		  email VARCHAR(320),
 		  value DECIMAL(7,2) NOT NULL,
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
+		  method VARCHAR(255),
 		  mode VARCHAR(255) NOT NULL, 
 		  order_id VARCHAR(255) NOT NULL,
 		  transaction_id VARCHAR(255),  

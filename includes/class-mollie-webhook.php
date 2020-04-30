@@ -71,7 +71,7 @@ class Webhook {
 		// Update payment.
 		$order_id = $payment->metadata->order_id;
 		$transaction_id = $payment->id;
-		$this->transaction->update_record($order_id, $transaction_id, $payment->status);
+		$this->transaction->update_record($order_id, $transaction_id, $payment->status, $payment->method);
 
 		// Add note.
 		$note = \sprintf(

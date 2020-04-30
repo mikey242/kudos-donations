@@ -42,13 +42,15 @@ class Transaction {
 	 * @param string $order_id
 	 * @param string $transaction_id
 	 * @param string $status
+	 * @param string $method
 	 */
-	public function update_record($order_id, $transaction_id, $status) {
+	public function update_record($order_id, $transaction_id, $status, $method) {
 		$this->wpdb->update(
 			$this->wpdb->prefix . self::TABLE,
 			[
 				'status' => $status,
-				'transaction_id' => $transaction_id
+				'transaction_id' => $transaction_id,
+				'method' => $method
 			],
 			[
 				'order_id' => $order_id

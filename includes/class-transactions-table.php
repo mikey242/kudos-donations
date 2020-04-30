@@ -179,6 +179,22 @@ class Transactions_Table extends WP_List_Table {
 	 * @return mixed
 	 */
 	public function column_default( $item, $column_name ) {
+
+		switch ($item['method']) {
+			case 'ideal':
+				$icon = 'fab fa-ideal';
+				break;
+			case 'creditcard':
+				$icon = 'fas fa-credit-card';
+				break;
+			case 'paypal':
+				$icon = 'fab fa-paypal';
+				break;
+			default:
+				$icon = '';
+				break;
+		}
+
 		switch ( $column_name ) {
 			case 'time':
 			case 'name':
