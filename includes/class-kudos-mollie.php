@@ -92,8 +92,8 @@ class Mollie
 						"value" => $value
 					],
 					"redirectUrl" => $redirectUrl,
-					"webhookUrl" => 'https://6da0f061.ngrok.io/wp-json/kudos/v1/mollie',
-//					"webhookUrl" => rest_url('kudos/v1/mollie'),
+//					"webhookUrl" => 'https://f70ac335.ngrok.io/wp-json/kudos/v1/mollie',
+					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
 					'metadata' => [
 						'order_id' => $order_id,
