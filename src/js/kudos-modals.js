@@ -16,7 +16,7 @@ export function init() {
                         </div>\
                         <button class="kudos_modal_close text-black p-0" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>\
                     </header>\
-                    <div id="kudos_modal_content" class="kudos_modal_content">\
+                    <div id="kudos_modal_content" class="kudos_modal_content mt-4">\
                     </div>\
                 </div>\
             </div>\
@@ -30,7 +30,7 @@ export function init() {
 export function messageModal(header, message) {
 
     return $('\
-        <div class="top-content text-center">\
+        <div class="text-center">\
             <h2 class="font-normal">' + header + '</h2><p>' + message + '</p>\
         </div>\
         <footer class="kudos_modal_footer mt-4 text-right">\
@@ -42,7 +42,7 @@ export function messageModal(header, message) {
 export function donateModal(header, text) {
 
     return ($('\
-        <div class="top-content text-center">\
+        <div class="text-center">\
             <h2 class="font-normal">' + header + '</h2>\
             <p>' + text + '</p>\
         </div>\
