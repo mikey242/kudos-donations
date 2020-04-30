@@ -219,4 +219,58 @@ class Kudos_Public {
 		return false;
 	}
 
+	/**
+	 *Checks if the kudos shortcode or block exists on the page and places the kudos modal
+     *
+     * @since    1.0.0
+	 */
+	public function place_modal() {
+
+	    global $post;
+
+		if(has_block('carbon-fields/kudos-button') || has_shortcode($post->post_content, 'kudos')) {
+
+		    $text = "Wat lief dat je ons wilt steunen. Doneer eenmalig zonder verplichtingen.";
+			$header = "Steun ons!";
+
+			?>
+			<div id="kudos_form_modal" class="kudos_modal hidden" aria-hidden="true">
+				<div class="kudos_modal_overlay" tabindex="-1" data-micromodal-close>
+					<div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">
+                        <header class="kudos_modal_header">
+                            <div class="kudos_modal_logo"></div>
+                            <button class="kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>
+                        </header>
+                        <div id="kudos_modal_content" class="kudos_modal_content mt-4">
+                            <div class="text-center">
+                                <h2 id="kudos_modal_title" class="font-normal"><?php echo $header ?></h2>
+                                <p id="kudos_modal_text"><?php echo $text ?></p>
+                            </div>
+                            <form id="kudos_form" action="">
+                                <input type="text" name="name" placeholder="Naam (optioneel)" />
+                                <input type="email" class="mt-3" name="email_address" placeholder="E-mailadres (optioneel)" />
+                                <input required type="text" min="1" class="mt-3" name="value" placeholder="Bedrag (in euro's) *" />
+                                <div class="payment_by mt-3 text-muted text-right">
+                                    <small class="text-gray-600">
+                                        <span class="fa-stack fa-xs align-middle">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                        Beveiligde betaling via
+                                    </small>
+                                </div>
+                                <footer class="kudos_modal_footer text-center">
+                                    <button class="kudos_btn kudos_btn_primary_outline mr-3" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>
+                                    <button id="kudos_submit" class="kudos_btn kudos_btn_primary" type="submit">Doneeren</button>
+                                </footer>
+                            </form>
+                            <i class="kudos_spinner"></i>
+                        <div>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+	}
+
 }

@@ -19,7 +19,6 @@ $(() => {
     // Add kudos_mollie class and modal markup to body if button found
     if($kudosButtons.length) {
         $body.addClass('kudos_mollie');
-        $kudosModal = initModal();
     }
 
     // Check order status if query var exists
@@ -38,10 +37,27 @@ $(() => {
                     let data = result.data
                     let header = data.modal_header;
                     let message = data.modal_text;
-
-                    $content = messageModal(header, message);
-                    MicroModal.show('kudos_modal', {
-                        onShow: modal => $(modal).find('#kudos_modal_content').html($content),
+                    $body.append($('\
+                        <div id="kudos_message_modal" class="kudos_modal" aria-hidden="true">\
+                            <div class="kudos_modal_overlay" tabindex="-1" data-micromodal-close>\
+                                <div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">\
+                                    <header class="kudos_modal_header">\
+                                        <div class="kudos_modal_logo"></div>\
+                                        <button class="kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>\
+                                    </header>\
+                                    <div id="kudos_modal_content" class="kudos_modal_content mt-4">\
+                                        <div class="text-center">\
+                                            <h2 class="font-normal">' + header + '</h2><p>' + message + '</p>\
+                                        </div>\
+                                        <footer class="kudos_modal_footer text-right">\
+                                            <button class="kudos_btn kudos_btn_primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
+                                        </footer>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    '));
+                    MicroModal.show('kudos_message_modal', {
                         awaitCloseAnimation: true
                     });
                 }
@@ -60,10 +76,11 @@ $(() => {
             let customHeader = $(this).data('customHeader');
             let customText = $(this).data('customText');
 
-            let $content = donateModal(customHeader, customText);
-
-            MicroModal.show('kudos_modal', {
-                onShow: modal => $(modal).find('#kudos_modal_content').html($content),
+            MicroModal.show('kudos_form_modal', {
+                onShow: function (modal) {
+                    $(modal).find('#kudos_modal_title').html(customHeader);
+                    $(modal).find('#kudos_modal_text').html(customText);
+                },
                 awaitCloseAnimation: true
             });
         })
