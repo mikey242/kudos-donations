@@ -43,8 +43,14 @@
       }
     }
 
+    small.error {
+      font-size: 80%;
+      font-weight: 400;
+      color: theme('colors.red.500');
+    }
+
     input.error {
-      border: 2px solid red;
+      border: 2px solid theme('colors.red.500');
     }
   }
 

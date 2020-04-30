@@ -14,6 +14,12 @@ $(() => {
     let redirectUrl = 'hello';
     let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
+    // Set validation defaults
+    $.validator.setDefaults({
+        errorElement: 'small',
+    });
+
+
     // Add kudos_mollie class and modal markup to body if button found
     if($kudosButtons.length) {
         $body.addClass('kudos_mollie');
@@ -76,6 +82,10 @@ $(() => {
                 onShow: function (modal) {
                     $(modal).find('#kudos_modal_title').html(customHeader);
                     $(modal).find('#kudos_modal_text').html(customText);
+                },
+                onClose: function (modal) {
+                    $(modal).find('form').validate().resetForm();
+                    document.getElementById('kudos_form').reset();
                 },
                 awaitCloseAnimation: true
             });
