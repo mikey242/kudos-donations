@@ -10,9 +10,8 @@ dom.watch();
 $(() => {
 
     const $body = $('body');
-    let $kudosButtons = $('.kudos_btn');
-    let $kudosModal;
-    let redirectUrl;
+    let $kudosButtons = $('.kudos_button_icon');
+    let redirectUrl = 'hello';
     let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
     // Add kudos_mollie class and modal markup to body if button found
@@ -69,7 +68,6 @@ $(() => {
     // Setup button action
     $kudosButtons.each(function() {
         $(this).click(function () {
-
             redirectUrl = $(this).data('redirect');
             let customHeader = $(this).data('customHeader');
             let customText = $(this).data('customText');
@@ -119,7 +117,7 @@ $(() => {
                 form: $(e.currentTarget).serialize()
             },
             beforeSend: function() {
-                $kudosModal.addClass('kudos_loading');
+                $('#kudos_form_modal').addClass('kudos_loading');
             },
             success: function (result) {
                 if(result.success) {
