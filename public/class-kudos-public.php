@@ -157,9 +157,9 @@ class Kudos_Public {
 
 			$transaction = new Transactions\Transaction();
 			$transaction = $transaction->get_transaction($order_id, ['status', 'value', 'name']);
+			$return['trigger'] = true;
 
 			switch($transaction->status) {
-				case 'open':
 				case 'paid':
 					$vars = [
 						'{{value}}' => number_format_i18n($transaction->value, 2),
@@ -172,14 +172,15 @@ class Kudos_Public {
 					$header = __('Geannuleerd', 'kudos');
 	                $text = __('Betaling geannuleerd', 'kudos');
 	                break;
-
+                default:
+	                $return['trigger'] = false;
 			}
 
 			$return['modal_header'] = $header;
 			$return['modal_text'] = $text;
 
 			// Unset cookie to prevent repeat message
-//			setcookie('kudos_order_id', '', 1);
+			setcookie('kudos_order_id', '', 1);
 			wp_send_json_success($return);
 		}
 

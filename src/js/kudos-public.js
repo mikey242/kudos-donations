@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import {init as initModal, messageModal, donateModal} from "./kudos-modals";
 import "jquery-validation";
 import MicroModal from "micromodal";
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
@@ -32,8 +31,7 @@ $(() => {
                 order_id: order_id
             },
             success: function (result) {
-                if(result.success) {
-                    let $content = '';
+                if(result.success && result.data.trigger) {
                     let data = result.data
                     let header = data.modal_header;
                     let message = data.modal_text;
