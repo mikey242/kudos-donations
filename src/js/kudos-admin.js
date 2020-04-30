@@ -1,10 +1,11 @@
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
-import {faHandHoldingHeart} from "@fortawesome/free-solid-svg-icons";
+import {faHandHoldingHeart, faCreditCard} from "@fortawesome/free-solid-svg-icons";
+import {faIdeal, faPaypal} from "@fortawesome/free-brands-svg-icons";
 
-library.add(faHandHoldingHeart);
+library.add(faHandHoldingHeart, faCreditCard, faIdeal, faPaypal);
 dom.watch();
 
-(function( $ ) {
+($ => {
     'use strict';
 
     $(document).ready( function() {
