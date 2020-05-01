@@ -1,10 +1,10 @@
 <div align="center">
-    <img src="assets/logo-colour.png" width="75">
+    <img src="readme/logo-colour.png" width="75">
     <h1>Kudos Donations</h1>
     Easily receive donations in WordPress via Mollie
     <br>
     <br>
-    <img src="assets/demo-1.gif" alt="Kudos Donations">
+    <img src="readme/demo-1.gif" alt="Kudos Donations">
 </div>
 
 ## Development
