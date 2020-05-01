@@ -15,6 +15,8 @@ class Mollie
 
 	/**
 	 * Mollie constructor.
+	 *
+	 * @since      1.0.0
 	 */
 	public function __construct() {
 		$this->mollieApi = new MollieApiClient();
@@ -30,6 +32,9 @@ class Mollie
 	}
 
 	/**
+	 * Checks the provided api key by attempting to get associated payments
+	 *
+	 * @since      1.0.0
 	 * @param $apiKey
 	 * @return bool
 	 */
@@ -52,6 +57,9 @@ class Mollie
 	}
 
 	/**
+	 * Gets specified payment
+	 *
+	 * @since      1.0.0
 	 * @param $mollie_payment_id
 	 * @return bool|Payment
 	 */
@@ -66,6 +74,9 @@ class Mollie
 	}
 
 	/**
+	 * Creates a payment and returns it as an object
+	 *
+	 * @since      1.0.0
 	 * @param string $value
 	 * @param string $redirectUrl
 	 * @param string|null $name
@@ -92,7 +103,6 @@ class Mollie
 						"value" => $value
 					],
 					"redirectUrl" => $redirectUrl,
-//					"webhookUrl" => 'https://f70ac335.ngrok.io/wp-json/kudos/v1/mollie',
 					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
 					'metadata' => [
