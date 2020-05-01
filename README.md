@@ -2,25 +2,23 @@
 
 Easily receive donations in WordPress via Mollie
 
+<div align="center"><img src="assets/screenshot-1.png" alt="Kudos Donations"></div>
+
+
 ## Development
 
 Use the [yarn](https://yarnpkg.com/) and [composer](https://getcomposer.org/) package managers to install the required dependencies.
 
 ```bash
+# install dependencies
 yarn install
 composer install
-```
 
-## Usage
+# start development
+yarn run start
 
-Development
-```bash
-yarn start
-```
-
-Deployment
-```bash
-yarn build
+# build assets for export
+yarn run build
 ```
 
 ## Contributing
