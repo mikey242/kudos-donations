@@ -11,7 +11,7 @@ use Kudos\Mollie\Webhook;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos-Mollie-Mollie
+ * @package    Kudos-Donations-Mollie
  * @subpackage Kudos/public
  */
 
@@ -20,7 +20,7 @@ use Kudos\Mollie\Webhook;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @package    Kudos-Mollie-Mollie
+ * @package    Kudos-Donations-Mollie
  * @subpackage Kudos/public
  * @author     Michael Iseard <michael@iseard.media>
  */
@@ -78,7 +78,12 @@ class Kudos_Public {
 
 		wp_enqueue_script( $this->plugin_name . 'public-js', get_asset_path('kudos-public.js'), [ 'jquery' ], $this->version, false );
 		wp_enqueue_script( $this->plugin_name . '-vendors', get_asset_path('vendors.js'), [ 'jquery' ], $this->version, false );
-		wp_localize_script( $this->plugin_name . 'public-js', 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_localize_script( $this->plugin_name . 'public-js', 'kudos', [
+		        'ajaxurl' => admin_url('admin-ajax.php'),
+                'value_required' => __('Donation amount is required', 'kudos-donations'),
+                'value_minimum' => __('Minimum donation is 1 euro', 'kudos-donations'),
+                'value_digits' => __('Only digits are valid', 'kudos-donations')
+        ]);
 
 	}
 
@@ -98,7 +103,6 @@ class Kudos_Public {
 	 * Creates a payment with Mollie.
 	 *
 	 * @since    1.0.0
-	 * @return string
 	 */
 	public function create_payment() {
 		parse_str($_REQUEST['form'], $form);
@@ -112,7 +116,8 @@ class Kudos_Public {
 		if($payment) {
 			wp_send_json_success($payment->getCheckoutUrl());
 		}
-		wp_send_json_error($payment);
+
+		wp_send_json_error(['message' => __('Error creating Mollie payment. Please try again later.', 'kudos-donations')]);
 	}
 
 	/**
@@ -130,6 +135,8 @@ class Kudos_Public {
 
 	/**
 	 * Registers the webhook url
+     *
+     * @since      1.0.0
 	 * @return void
 	 */
 	public function register_webhook() {
@@ -138,7 +145,7 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Using the provided $_REQUEST variable checks payment status
+	 * Using the ajax provided $_REQUEST variable checks payment status
 	 *
 	 * @since    1.0.0
 	 * @return bool | string
@@ -188,7 +195,7 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Gets url Mollie will use to redirect customer to
+	 * Gets url Mollie will use to redirect customer to after payment complete
 	 *
 	 * @since    1.0.0
 	 * @return string|void
@@ -221,7 +228,7 @@ class Kudos_Public {
 	}
 
 	/**
-	 *Checks if the kudos shortcode or block exists on the page and places the kudos modal
+	 * Checks if the kudos shortcode or block exists on the page and places the kudos modal
      *
      * @since    1.0.0
 	 */
@@ -246,23 +253,24 @@ class Kudos_Public {
                             <div class="text-center">
                                 <h2 id="kudos_modal_title" class="font-normal"><?php echo $header ?></h2>
                                 <p id="kudos_modal_text"><?php echo $text ?></p>
+                                <p class="text-red-500 kudos_error_message"></p>
                             </div>
                             <form id="kudos_form" action="">
-                                <input type="text" name="name" placeholder="Naam (optioneel)" />
-                                <input type="email" class="mt-3" name="email_address" placeholder="E-mailadres (optioneel)" />
-                                <input required type="text" min="1" class="mt-3" name="value" placeholder="Bedrag (in euro's) *" />
+                                <input type="text" name="name" placeholder="<?php _e('Name', 'kudos-donations')?>" />
+                                <input type="email" class="mt-3" name="email_address" placeholder="<?php _e('E-mail address', 'kudos-donations')?>" />
+                                <input required type="text" min="1" class="mt-3" name="value" placeholder="<?php _e('Amount', 'kudos-donations') ?>" />
                                 <div class="payment_by mt-3 text-muted text-right">
                                     <small class="text-gray-600">
                                         <span class="fa-stack fa-xs align-middle">
                                             <i class="fas fa-circle fa-stack-2x"></i>
                                             <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
                                         </span>
-                                        Beveiligde betaling via
+                                        <?php _e('Secure payment by', 'kudos-donations') ?>
                                     </small>
                                 </div>
                                 <footer class="kudos_modal_footer text-center">
-                                    <button class="kudos_btn kudos_btn_primary_outline mr-3" type="button" data-micromodal-close aria-label="Close this dialog window">Annuleren</button>
-                                    <button id="kudos_submit" class="kudos_btn kudos_btn_primary" type="submit">Doneeren</button>
+                                    <button class="kudos_btn kudos_btn_primary_outline mr-3" type="button" data-micromodal-close aria-label="<?php _e('Cancel', 'kudos-donations') ?>"><?php _e('Cancel', 'kudos-donations') ?></button>
+                                    <button id="kudos_submit" class="kudos_btn kudos_btn_primary" type="submit" aria-label="<?php _e('Donate', 'kudos-donations') ?>"><?php _e('Donate', 'kudos-donations') ?></button>
                                 </footer>
                             </form>
                             <i class="kudos_spinner"></i>

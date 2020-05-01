@@ -14,10 +14,10 @@ require_once __DIR__ . '/vendor/autoload.php';
  *
  * @link              https://www.linkedin.com/in/michael-iseard/
  * @since             1.0.0
- * @package           Kudos-Mollie
+ * @package           Kudos-Donations
  *
  * @wordpress-plugin
- * Plugin Name:       Kudos-Mollie
+ * Plugin Name:       Kudos-Donations
  * Plugin URI:        https://iseard.media
  * Description:       Easily receive donations via Mollie
  * Version:           1.0.0
@@ -25,7 +25,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  * Author URI:        https://www.linkedin.com/in/michael-iseard/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       kudos
+ * Text Domain:       kudos-donations
  * Domain Path:       /languages
  */
 

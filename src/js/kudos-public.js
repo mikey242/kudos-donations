@@ -11,6 +11,7 @@ $(() => {
 
     const $body = $('body');
     let $kudosButtons = $('.kudos_button_icon');
+    let $kudosErrorMessage = $('.kudos_error_message');
     let redirectUrl = 'hello';
     let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
@@ -22,7 +23,7 @@ $(() => {
 
     // Add kudos_mollie class and modal markup to body if button found
     if($kudosButtons.length) {
-        $body.addClass('kudos_mollie');
+        $body.addClass('kudos_donations');
     }
 
     // Check order status if query var exists
@@ -30,7 +31,7 @@ $(() => {
         $.ajax({
             method: 'post',
             dataType: 'json',
-            url: wp_ajax.ajaxurl,
+            url: kudos.ajaxurl,
             data: {
                 action: 'check_transaction',
                 order_id: order_id
@@ -85,6 +86,7 @@ $(() => {
                 },
                 onClose: function (modal) {
                     $(modal).find('form').validate().resetForm();
+                    $kudosErrorMessage.text('');
                     document.getElementById('kudos_form').reset();
                 },
                 awaitCloseAnimation: true
@@ -104,8 +106,9 @@ $(() => {
             },
             messages: {
                 value: {
-                    required: "Vul een donatiebedrag in",
-                    min: "Minimum donatie is 1 euro"
+                    required: kudos.value_required,
+                    min: kudos.value_minimum,
+                    digits: kudos.value_digits
                 }
             }
         })
@@ -116,22 +119,29 @@ $(() => {
 
     // Submit donation form action
     $body.on('submit', 'form#kudos_form', function (e) {
+
+        let $form = $('#kudos_form_modal');
+
         e.preventDefault();
         $.ajax({
             method: 'post',
             dataType: 'json',
-            url: wp_ajax.ajaxurl,
+            url: kudos.ajaxurl,
             data:  {
                 action: 'create_payment',
                 redirectUrl: redirectUrl,
                 form: $(e.currentTarget).serialize()
             },
             beforeSend: function() {
-                $('#kudos_form_modal').addClass('kudos_loading');
+                $form.addClass('kudos_loading');
             },
             success: function (result) {
+                console.log(result)
                 if(result.success) {
                     $(location).attr('href', result.data);
+                } else {
+                    $kudosErrorMessage.text(result.data.message);
+                    $form.removeClass('kudos_loading').addClass('error');
                 }
             },
             error: function (error) {

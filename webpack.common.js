@@ -17,7 +17,7 @@ module.exports = {
     },
     output: {
         path: PATHS.dist,
-        publicPath: '/wp-content/plugins/kudos-mollie/dist/',
+        publicPath: '/wp-content/plugins/kudos-donations/dist/',
         filename: 'js/[name].[contenthash].js',
     },
     optimization: {

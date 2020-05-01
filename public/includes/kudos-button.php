@@ -12,10 +12,10 @@ use Kudos\Kudos_Public;
 function kudos_button($label=null, $customHeader=null, $customText=null, $echo=true) {
 
 	if(Kudos_Public::ready()) {
-		$label = $label ? $label : 'Doneer nu';
+		$label = $label ? $label : __('Donate now', 'kudos-donations');
 		$redirectUrl = Kudos_Public::get_return_url();
-		$customText = $customText ? $customText : "Wat lief dat je ons wilt steunen. Doneer eenmalig zonder verplichtingen.";
-		$customHeader = $customHeader ? $customHeader : "Steun ons!";
+		$customText = $customText ? $customText : __("We really appreciate that you want to help us out.", 'kudos-donations');
+		$customHeader = $customHeader ? $customHeader : __("Support us!", 'kudos-donations');
 		$style = carbon_get_theme_option('kudos_button_style');
 
 		$out = "<button class='kudos_btn kudos_button_icon $style' data-redirect='$redirectUrl' data-custom-header='$customHeader' data-custom-text='$customText'>";

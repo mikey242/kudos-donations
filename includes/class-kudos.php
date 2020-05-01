@@ -11,7 +11,7 @@ namespace Kudos;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos-Mollie
+ * @package    Kudos-Donations
  * @subpackage Kudos/includes
  */
 
@@ -25,7 +25,7 @@ namespace Kudos;
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Kudos-Mollie
+ * @package    Kudos-Donations
  * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
@@ -74,7 +74,7 @@ class Kudos_Mollie {
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'kudos-mollie';
+		$this->plugin_name = 'kudos-donations';
 
 		$this->load_dependencies();
 		$this->set_locale();

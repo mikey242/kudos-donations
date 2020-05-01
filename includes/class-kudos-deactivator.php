@@ -8,7 +8,7 @@ namespace Kudos;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos-Mollie
+ * @package    Kudos-Donations
  * @subpackage Kudos/includes
  */
 
@@ -18,7 +18,7 @@ namespace Kudos;
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Kudos-Mollie
+ * @package    Kudos-Donations
  * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */

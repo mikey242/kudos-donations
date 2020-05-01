@@ -22,10 +22,20 @@
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Cudo
+ * @package    Kudos-Donations
  */
 
 // If uninstall not called from WordPress, then exit.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+// Needs work
+//global $wpdb;
+//$table = $wpdb->prefix . Transaction::TABLE;
+//$wpdb->query( "DROP TABLE IF EXISTS $table" );
+//foreach (wp_load_alloptions() as $option) {
+//	if(strpos($option, '_kudos_') === 0) {
+//		delete_option($option);
+//	}
+//}

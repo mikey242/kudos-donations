@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.kudos_mollie {
+.kudos_donations {
   .kudos_modal_overlay {
     @apply flex justify-center items-center fixed top-0 left-0 w-full h-full bg-modal z-50;
   }
@@ -35,6 +35,9 @@
   }
 
   #kudos_form {
+    margin: 0;
+    padding: 0;
+
     input {
       @apply appearance-none border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-base text-gray-700;
 
@@ -86,7 +89,7 @@
     }
 
     .kudos_modal_container {
-      @apply bg-white py-4 px-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden;
+      @apply bg-white p-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden;
 
       &::before {
         content: '';

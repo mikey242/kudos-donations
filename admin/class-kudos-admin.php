@@ -11,7 +11,7 @@ use Kudos\Transactions\Transactions_Table;
  * @link       https://www.linkedin.com/in/michael-iseard/
  * @since      1.0.0
  *
- * @package    Kudos-Mollie
+ * @package    Kudos-Donations
  * @subpackage Kudos/admin
  */
 
@@ -21,7 +21,7 @@ use Kudos\Transactions\Transactions_Table;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    Kudos-Mollie
+ * @package    Kudos-Donations
  * @subpackage Kudos/admin
  * @author     Michael Iseard <michael@iseard.media>
  */
@@ -102,9 +102,10 @@ class Kudos_Admin {
 		if($result) {
 			carbon_set_theme_option('kudos_mollie_'.$mode.'_api_key', $apiKey);
 			carbon_set_theme_option('kudos_mollie_api_mode', $mode);
-			wp_send_json_success("Connection successful!");
+			wp_send_json_success(__("Connection successful!", 'kudos-donations'));
 		} else {
-            wp_send_json_error("Error connecting with Mollie, please check the ". $mode ." API key and try again");
+			/* translators: %s: API mode */
+            wp_send_json_error( sprintf(__("Error connecting with Mollie, please check the %s API key and try again", 'kudos-donations'), $mode));
 		}
     }
 
@@ -116,8 +117,8 @@ class Kudos_Admin {
 	public function create_transaction_page() {
 		add_submenu_page(
 			'crb_carbon_fields_container_kudos.php',
-			'Kudos Transacties',
-			'Transacties',
+			__('Kudos Transactions', 'kudos-donations'),
+			__('Transactions', 'kudos-donations'),
 			'manage_options',
 			'kudos-transactions',
 			[$this, 'transactions_table']
@@ -135,8 +136,7 @@ class Kudos_Admin {
 	    $table->prepare_items();
 	    ?>
 	    <div class="wrap">
-		    <div id="icon-users" class="icon32"></div>
-		    <h2>Transacties</h2>
+		    <h2><?php _e('Transactions', 'kudos-donations'); ?></h2>
 		    <?php $table->display(); ?>
 	    </div>
 	    <?php

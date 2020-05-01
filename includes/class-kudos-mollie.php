@@ -103,6 +103,7 @@ class Mollie
 						"value" => $value
 					],
 					"redirectUrl" => $redirectUrl,
+//					"webhookUrl" => 'https://77978f67.ngrok.io/wp-json/kudos/v1/mollie',
 					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
 					'metadata' => [
@@ -119,7 +120,7 @@ class Mollie
 			return $payment;
 
 		} catch (ApiException $e) {
-			error_log($e->getMessage() . 'redirectUrl: ');
+			error_log($e->getMessage());
 			return false;
 		}
 

@@ -24,7 +24,7 @@ class Transactions_Table extends WP_List_Table {
 	public function extra_tablenav( $which ) {
 		if ( $which == "top" ){
 			//The code that goes before the table is here
-			echo "Jouw recent Kudos transacties";
+			_e("Your recent Kudos transactions",'kudos-donations');
 		}
 	}
 
@@ -34,7 +34,7 @@ class Transactions_Table extends WP_List_Table {
 	}
 
 	public function no_items() {
-		_e( 'Geen transacties beschikbaar.', 'kudos' );
+		_e( 'Geen transacties beschikbaar.', 'kudos-donations' );
 	}
 
 	/**
@@ -75,11 +75,11 @@ class Transactions_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return $columns= [
-			'time'=>__('Datum', 'kudos'),
-			'name'=>__('Naam', 'kudos'),
-			'email'=>__('E-mailadres', 'kudos'),
-			'value'=>__('Bedrag', 'kudos'),
-			'status'=>__('Status', 'kudos'),
+			'time'=>__('Date', 'kudos-donations'),
+			'name'=>__('Name', 'kudos-donations'),
+			'email'=>__('E-mail', 'kudos-donations'),
+			'value'=>__('Amount', 'kudos-donations'),
+			'status'=>__('Status', 'kudos-donations'),
 		];
 	}
 
@@ -90,17 +90,17 @@ class Transactions_Table extends WP_List_Table {
 		//All link
 		$class = ($current == 'all' ? ' class="current"' :'');
 		$all_url = remove_query_arg('mode');
-		$views['all'] = "<a href='{$all_url }' {$class} >All</a>";
+		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') ."</a>";
 
 		//Test link
 		$test_url = add_query_arg('mode','test');
 		$class = ($current == 'test' ? ' class="current"' :'');
-		$views['test'] = "<a href='{$test_url}' {$class} >Test</a>";
+		$views['test'] = "<a href='{$test_url}' {$class} >". __('Test', 'kudos-donations') ."</a>";
 
 		//Live link
 		$live_url = add_query_arg('mode','live');
 		$class = ($current == 'live' ? ' class="current"' :'');
-		$views['live'] = "<a href='{$live_url}' {$class} >Live</a>";
+		$views['live'] = "<a href='{$live_url}' {$class} >". __('Live', 'kudos-donations') ."</a>";
 		return $views;
 
 	}
@@ -204,9 +204,33 @@ class Transactions_Table extends WP_List_Table {
 			case 'value':
 				return '<i title="'.$item['method'].'" class="'. $icon .'"></i> € ' . number_format_i18n($item[$column_name], 2);
 			case 'status':
-				return $item[$column_name] . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '');
+				return $this->translate_status($item[$column_name]) . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '');
 			default:
 				return print_r( $item, true ) ;
+		}
+	}
+
+	/**
+	 * @param $status
+	 *
+	 * @since      1.0.0
+	 * @return string|void
+	 */
+	private function translate_status($status)
+	{
+		switch ($status) {
+			case 'paid':
+				return __('Paid', 'kudos-donations');
+			case 'open':
+				return __('Open', 'kudos-donations');
+			case 'expired':
+				return __('Expired', 'kudos-donations');
+			case 'canceled':
+				return __('Canceled', 'kudos-donations');
+			case 'failed':
+				return __('Failed', 'kudos-donations');
+			default:
+				return __('Unknown', 'kudos-donations');
 		}
 	}
 
