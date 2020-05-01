@@ -102,7 +102,8 @@ class Kudos_Admin {
 		if($result) {
 			carbon_set_theme_option('kudos_mollie_'.$mode.'_api_key', $apiKey);
 			carbon_set_theme_option('kudos_mollie_api_mode', $mode);
-			wp_send_json_success(__("Connection successful!", 'kudos-donations'));
+			/* translators: %s: API mode */
+			wp_send_json_success(sprintf(__("Connection using %s API key successful!", 'kudos-donations'), $mode));
 		} else {
 			/* translators: %s: API mode */
             wp_send_json_error( sprintf(__("Error connecting with Mollie, please check the %s API key and try again", 'kudos-donations'), $mode));
@@ -116,7 +117,7 @@ class Kudos_Admin {
 	 */
 	public function create_transaction_page() {
 		add_submenu_page(
-			'crb_carbon_fields_container_kudos.php',
+			'kudos-settings',
 			/* translators: %s: Plugin name */
 			sprintf(__('%s Transactions', 'kudos-donations'), 'Kudos'),
 			__('Transactions', 'kudos-donations'),

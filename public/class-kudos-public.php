@@ -258,7 +258,8 @@ class Kudos_Public {
                             <form id="kudos_form" action="">
                                 <input type="text" name="name" placeholder="<?php _e('Name', 'kudos-donations')?>" />
                                 <input type="email" class="mt-3" name="email_address" placeholder="<?php _e('E-mail address', 'kudos-donations')?>" />
-                                <input required type="text" min="1" class="mt-3" name="value" placeholder="<?php _e('Amount', 'kudos-donations') ?>" />
+                                <?php /* translators: %s: Star denoting required field */ ?>
+                                <input required type="text" min="1" class="mt-3" name="value" placeholder="<?php printf(__('Amount %s', 'kudos-donations'), '*') ?>" />
                                 <div class="payment_by mt-3 text-muted text-right">
                                     <small class="text-gray-600">
                                         <span class="fa-stack fa-xs align-middle">
