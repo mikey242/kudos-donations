@@ -52,13 +52,33 @@ class Carbon {
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>
             '))
 
+	        ->add_tab('Intro', [
+		        Field::make('html', 'step_1', null)
+		             ->set_html('
+                        <h3>Step 1. Configure Mollie</h3>
+                        <p>Go to the Mollie tab and enter your API key(s)</p>
+					'),
+		        Field::make('html', 'step_2', null)
+		             ->set_html('
+                        <h3>Step 2. Place a button</h3>
+                        <p>You can place your Kudos button using either a block or a shortcode. Blocks can be accessed from the post or page editor.</p>
+	                    <div>
+							<h4>Shortcode usage</h4>
+							<p>Shortcodes can be used almost anywhere; from posts, pages or even on widgets. Just place <code>[kudos]</code> where you want the button to appear. You can configure the shortcode by adding one or more of the following settings:</p>
+							<p><code>[kudos label="Help us out!"]</code> - <span>Add a custom title to the button</span></p>
+							<p><code>[kudos header="Support our cause"]</code> - <span>Add a custom header to the pop-up modal</span></p>
+							<p><code>[kudos text="Fill out the form below to give us a hand"]</code> - <span>Add custom text to the pop-up modal</span></p>
+						</div>
+					'),
+	        ])
+
 	        /*
 			 * Mollie tab
 			 */
 	        ->add_tab('Mollie', [
                 Field::make( 'html', 'api_description_html', null )
 	                /* translators: %s: Link to Mollie dashboard */
-                    ->set_html('<p>' . sprintf(__('You can find your Mollie API keys in your %s. Would you like to test the system first? Then you can use the test API key. To receive payments from your consumers, please use the live API key.', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>') . '</p>'),
+                    ->set_html('<p>' . sprintf(__('Tip: You can find your Mollie API keys in your %s. Would you like to test the system first? Then you can use the test API key. To receive payments from your consumers, please use the live API key.', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>') . '</p>'),
                 Field::make('radio', 'kudos_mollie_api_mode', __('Mode', 'kudos-donations'))
 	                ->set_help_text( __('Set to "test" to first check the configuration is working correctly. Once you\'re ready to recieve live payments you can switch this to "live"', 'kudos-donations')  )
                     ->add_options([
@@ -74,7 +94,7 @@ class Carbon {
 	                ->set_help_text( sprintf(__('This begins with "%s"', 'kudos-donations'), 'live_')),
                 Field::make('html', 'check_api_key_button', null)
                     ->set_html('
-                        <input id="test_mollie_api_key" type="button" class="button button-secondary" value="Check Api Key">
+                        <input id="test_mollie_api_key" type="button" class="button button-secondary" value="'. __("Test Api Key", "kudos-donations") .'">
                         <div id="check_key_spinner" class="spinner"></div>
                         <div id="result_message" class="hidden message"></div>
                     ')
@@ -91,10 +111,6 @@ class Carbon {
                         'kudos_btn_primary' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALUAAAA0CAYAAADMv3nUAAAFYUlEQVR4nO2dQWvbZhiA/UPU4w7JzbBBySE9zbBDbu0pt+7UnpZbb7nluEvTkwuCLIG4IcUeg4QwzyEeKYGGUWNBhsHDTjLjgJk7lzimhmeH73NtOZJjyXGkKa/gAdt6Zb369Eh69VmyYrgN5Qwc/AA/fwc/fQWmIQjBsj4D6W+Vl+WMq7qxa5+cZmFrLvgFEISb2JqD84MbpP7wMvhEBcErhVcuUhdWg09OEPxSWB2S+iwH5oPgExME3zyA09+01J8/QerrECQlCBOS+ga6V8Qop4NPRhBui3KaGLlnwSciCLdF7hkxtueDT0QQbovteWKszwSfiCDcFuszxAJPQhBuGZFaiBwitRA5RGohcojUQuQQqYXIMX2p//3r+gWvnz+NP/3WQ7CS0Cj2p28U1TW1IWhAIXyEV+qNWSilrk87OFivA29AIXyEU+pMAlrV0UL3hp0ngTeiEC7CJ3UmAZ3meEIDlN74zO0FXBw7U0nB0WLgK0fwR7ik9io0QO2dz9ySavqWg9TNuhrXLcH7x4GvJMEb4ZF6Y9Z+MnhXUlsu4zcfQ6UKtMFaCHxFCeMTHqmt196FBqjs+sztBqlNA8w4lEpAHfYdxu8tQ2lX7d3Lq7D3yOE7ElBYgz0DNhPwPgW1YzhLjy5x3i5CQcdWUpBPTBabWYKTZXvehRHzH4zPLI2xnItwopfT6fuO1u6spAuH1DtP/AkNkF+aotQGmE/hErhYGfhsAWq6TGoV1cpu6fe14Xs9n6vpS0noAp2qPb6Vhs1hAXJqXC+2oU+amxPE7u8CRbCK/fiT5+7LbYtv6+UsQqet3peH2/2G9mwAjeQ9krp16k/o1qkqW6YqtQFnTbjsHRHiUKmrejsbt8cdppW4lUFZtNS0wRqqz/O7Kofy0/5nv6w5S/P2hfqexqq/2H09r24RduI3L7NrvF5+6pAVqZ2l/uNHf0J3PqoTS9+5eZDaKgJF9TqjRbJc5n1SUrFf9pJaarcVetFWe+vBDaiVco7NpoFq/xDvJbYn6cmYbdaLt5w2gBW18ZYHywmRuj/e7146+/2EuXmQulyFTk69LhSHpB2iJ/3RkNRll3qyUh84CujY2grsLTqwAp1ezl5ie5JW3WteR6nd4vW8bUckkbo//mjZn9Sd5h3tqeNqhTTX1PvBvfZY36sFcJuPk9SXJfc+9ItjOPQaa/Rr5HHbZ2S8SD1aatOYoKauTr+mzu9iKzfyOa7Xk8MyDPaWeJFab0C2k1I3vMQGLXUCmvdN6rD2fuzoHgvbynihDuuOK2gBGm24HPzbCS9SG7omLzmfzG0+spc9XmKnLvUitIALh3/6yqZVW98rqU0juH7qkkM9ml+B2ohutF6vRSMF2QSYccguQ6MJ1CE/KJlHqXsbRrcK1hJk4qp/O5+EVvt61+K4sVOX2tDnG22orKhc3i7AURq6bdWFee+k3piFhuVd6kl/UXQaum1oHcLhiJ/Is8l+X3NvaOUc9ppepdaylovqKPFlaEIt6XCCOmbsXUhtxsE6tufS0ZcaVOr3UGrTUNdOdz56MJoJpBaiSrikNg19UZMHsX1fpSdElfBJbRr6euoxe0Qm6tYTokg4pTYNfefLm9FCy50vggPTl/qfP6F7ZeeqMf70Ww+VvLV3fZkru7fwi6IQVeRuciFyiNRC5BCphcghUguRQ6QWIodILUQOeZKAEC3WZ+SZL0LE2J6Xp3MJESP3TJ6jKESMcpoY3Sv1pNCgkxGESdme10+8BTj9NfiEBGFS/v4dQEsNUHC4t0wQ/i8UVr+o3JcaoPAq+OQEwSsfXto0tksNcL4PW3PBJyoIN7E1B+cH1xT+D8sT4LVVufYDAAAAAElFTkSuQmCC',
                     ])
                     ->set_default_value('kudos_btn-primary'),
-                Field::make('html', 'shortcode_instructions', null)
-	                ->set_html('
-						<h4>Buttons can be placed using either a Gutenberg block or a shortcode</h4>
-					'),
             ])
 
 	        /*
@@ -147,6 +163,8 @@ class Carbon {
 		/* translators: %s: Name of this plugin */
         Block::make( sprintf(__('%s Button', 'kudos-donations'), 'Kudos'))
             ->set_icon('heart')
+	        ->set_description(__('Adds a Kudos donate button to your post or page.', 'kudos-donations'))
+	        ->set_category('widgets', 'common')
             ->add_fields([
                 Field::make('text', 'kudos_button_label', __('Button label', 'kudos-donations'))
 	                ->set_default_value(__('Donate now', 'kudos-donations')),
