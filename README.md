@@ -2,7 +2,7 @@
 
 Easily receive donations in WordPress via Mollie
 
-<div align="center"><img src="assets/screenshot-1.png" alt="Kudos Donations"></div>
+<div align="center"><img src="assets/demo-1.gif" alt="Kudos Donations"></div>
 
 
 ## Development
