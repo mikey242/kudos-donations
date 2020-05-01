@@ -5,7 +5,7 @@ import {library, dom} from "@fortawesome/fontawesome-svg-core";
 import {faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
 
 library.add(faLock, faCircle);
-dom.watch();
+dom.i2svg({ node: document.getElementById('kudos_form_modal') });
 
 $(() => {
 
@@ -24,6 +24,28 @@ $(() => {
     // Add kudos_mollie class and modal markup to body if button found
     if($kudosButtons.length) {
         $body.addClass('kudos_donations');
+
+        // Setup button action
+        $kudosButtons.each(function() {
+            $(this).click(function () {
+                redirectUrl = $(this).data('redirect');
+                let customHeader = $(this).data('customHeader');
+                let customText = $(this).data('customText');
+
+                MicroModal.show('kudos_form_modal', {
+                    onShow: function (modal) {
+                        $(modal).find('#kudos_modal_title').html(customHeader);
+                        $(modal).find('#kudos_modal_text').html(customText);
+                    },
+                    onClose: function (modal) {
+                        $(modal).find('form').validate().resetForm();
+                        $kudosErrorMessage.text('');
+                        document.getElementById('kudos_form').reset();
+                    },
+                    awaitCloseAnimation: true
+                });
+            })
+        })
     }
 
     // Check order status if query var exists
@@ -71,28 +93,6 @@ $(() => {
             }
         })
     }
-
-    // Setup button action
-    $kudosButtons.each(function() {
-        $(this).click(function () {
-            redirectUrl = $(this).data('redirect');
-            let customHeader = $(this).data('customHeader');
-            let customText = $(this).data('customText');
-
-            MicroModal.show('kudos_form_modal', {
-                onShow: function (modal) {
-                    $(modal).find('#kudos_modal_title').html(customHeader);
-                    $(modal).find('#kudos_modal_text').html(customText);
-                },
-                onClose: function (modal) {
-                    $(modal).find('form').validate().resetForm();
-                    $kudosErrorMessage.text('');
-                    document.getElementById('kudos_form').reset();
-                },
-                awaitCloseAnimation: true
-            });
-        })
-    })
 
     // Check form before submit
     $body.on('click', '#kudos_submit', function (e) {
