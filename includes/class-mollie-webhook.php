@@ -20,6 +20,8 @@ class Webhook {
 
 	/**
 	 * Register webhook using rest
+	 *
+	 * @since    1.0.0
 	 * @return void
 	 */
 	public function register_webhook() {
@@ -36,6 +38,8 @@ class Webhook {
 
 	/**
 	 * Mollie webhook action
+	 *
+	 * @since    1.0.0
 	 * @param WP_REST_Request $request
 	 * @return mixed|WP_Error|WP_HTTP_Response|WP_REST_Response
 	 */
