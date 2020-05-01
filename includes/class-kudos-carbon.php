@@ -44,7 +44,8 @@ class Carbon {
 	 * @since      1.0.0
 	 */
 	private function kudos_options() {
-        Container::make( 'theme_options', __( 'Kudos', 'kudos-donations' ) )
+        Container::make( 'theme_options', sprintf(__('%s Settings', 'kudos-donations'), 'Kudos'))
+	        ->set_page_file( 'kudos-settings' )
 	        /* translators: %s: Plugin name */
             ->set_page_menu_title(sprintf(__('%s Settings', 'kudos-donations'), 'Kudos'))
             ->set_icon('data:image/svg+xml;base64,' . base64_encode('
