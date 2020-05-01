@@ -1,4 +1,4 @@
-# Kudos Donations
+<div align="center"><h1>Kudos Donations</h1></div>
 
 Easily receive donations in WordPress via Mollie
 
