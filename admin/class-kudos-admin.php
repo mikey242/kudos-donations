@@ -117,7 +117,8 @@ class Kudos_Admin {
 	public function create_transaction_page() {
 		add_submenu_page(
 			'crb_carbon_fields_container_kudos.php',
-			__('Kudos Transactions', 'kudos-donations'),
+			/* translators: %s: Plugin name */
+			sprintf(__('%s Transactions', 'kudos-donations'), 'Kudos'),
 			__('Transactions', 'kudos-donations'),
 			'manage_options',
 			'kudos-transactions',

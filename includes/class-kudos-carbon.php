@@ -45,7 +45,8 @@ class Carbon {
 	 */
 	private function kudos_options() {
         Container::make( 'theme_options', __( 'Kudos', 'kudos-donations' ) )
-            ->set_page_menu_title(__('Kudos Settings', 'kudos-donations'))
+	        /* translators: %s: Plugin name */
+            ->set_page_menu_title(sprintf(__('%s Settings', 'kudos-donations'), 'Kudos'))
             ->set_icon('data:image/svg+xml;base64,' . base64_encode('
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>
             '))
@@ -53,7 +54,7 @@ class Carbon {
 	        /*
 			 * Mollie tab
 			 */
-	        ->add_tab(__('Mollie', 'kudos-donations'), [
+	        ->add_tab('Mollie', [
                 Field::make( 'html', 'api_description_html', null )
 	                /* translators: %s: Link to Mollie dashboard */
                     ->set_html('<p>' . sprintf(__('You can find your Mollie API keys in your %s. Would you like to test the system first? Then you can use the test API key. To receive payments from your consumers, please use the live API key.', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>') . '</p>'),
@@ -124,6 +125,7 @@ class Carbon {
 	                Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
 		                /* translators: %s: Numerical currency value */
 		                ->set_default_value(sprintf(__('Thanks a lot for your donation of € %s. We greatly appreciate your support. Thanks to your efforts, culture remains accessible to everyone.', 'kudos-donations'), '{{value}}'))
+		                /* translators: %s: Available handlebar variables */
 		                ->set_help_text(sprintf(__('You can use the following variables %s', 'kudos-donations'), '{{value}}, {{name}}'))
 		                ->set_conditional_logic([
 			                [
