@@ -19,12 +19,14 @@
 
   .kudos_modal_logo {
     color: green;
+
     &::before {
       content: '';
       display: block;
       background-size: contain;
       background-repeat: no-repeat;
       background-image: url("../img/logo-colour.svg");
+      background-position: center;
       width: 40px;
       height: 40px;
     }
