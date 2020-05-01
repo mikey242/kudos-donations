@@ -24,7 +24,7 @@ function kudos_button($label=null, $customHeader=null, $customText=null, $echo=t
 
 	} elseif(is_user_logged_in()) {
 
-		$out = 'Mollie not configured';
+		$out = __('Mollie not configured', 'kudos-donations');
 
 	} else {
 
