@@ -28,19 +28,6 @@ class Transactions_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Add extra markup in the toolbars before or after the list
-	 *
-	 * @since      1.0.0
-	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
-	 */
-	public function extra_tablenav( $which ) {
-		if ( $which == "top" ){
-			//The code that goes before the table is here
-			_e("Your recent Kudos transactions",'kudos-donations');
-		}
-	}
-
-	/**
 	 * Call this function where the table is to be displayed
 	 *
 	 * @since      1.0.0
@@ -101,6 +88,7 @@ class Transactions_Table extends WP_List_Table {
 			'email'=>__('E-mail', 'kudos-donations'),
 			'value'=>__('Amount', 'kudos-donations'),
 			'status'=>__('Status', 'kudos-donations'),
+			'transaction_id'=>__('Transaction Id', 'kudos-donations')
 		];
 	}
 
@@ -140,7 +128,9 @@ class Transactions_Table extends WP_List_Table {
 	 */
 	public function get_hidden_columns()
 	{
-		return array();
+		return [
+			'transaction_id'
+		];
 	}
 
 	/**
@@ -175,6 +165,7 @@ class Transactions_Table extends WP_List_Table {
 
 		switch ( $column_name ) {
 			case 'name':
+			case 'transaction_id':
 				return $item[$column_name];
 			default:
 				return print_r( $item, true ) ;

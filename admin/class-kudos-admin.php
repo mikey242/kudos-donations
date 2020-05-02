@@ -146,6 +146,7 @@ class Kudos_Admin {
 	    ?>
 	    <div class="wrap">
 		    <h2><?php _e('Transactions', 'kudos-donations'); ?></h2>
+            <p><?php _e("Your recent Kudos transactions",'kudos-donations');?></p>
 		    <?php echo $message; ?>
             <form id="transactions-table" method="POST">
             <?php
