@@ -14,7 +14,7 @@
 
 function get_asset_path( $asset ) {
 
-	$map = plugin_dir_path( dirname( __FILE__ ) ) . 'assets/manifest.json';
+	$map = plugin_dir_path( dirname( __FILE__ ) ) . 'dist/manifest.json';
 	static $hash = null;
 
 	if ( null === $hash ) {
@@ -22,7 +22,7 @@ function get_asset_path( $asset ) {
 	}
 
 	if ( array_key_exists( $asset, $hash ) ) {
-		return plugin_dir_url( dirname( __FILE__ ) ) . 'assets/' . $hash[ $asset ];
+		return plugin_dir_url( dirname( __FILE__ ) ) . 'dist/' . $hash[ $asset ];
 	}
 
 	return $asset;
