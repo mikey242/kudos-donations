@@ -2,92 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-.kudos_donations {
-  .kudos_modal_overlay {
-    @apply flex justify-center items-center fixed top-0 left-0 w-full h-full bg-modal z-50;
-  }
+body.kudos_donations {
+  #kudos_message_modal,
+  #kudos_form_modal {
 
-  .kudos_modal .kudos_modal_container,
-  .kudos_modal .kudos_modal_overlay {
-    will-change: transform;
-    z-index: 1050;
-  }
-
-  .kudos_modal_header {
-    @apply flex items-center justify-between;
-  }
-
-  .kudos_modal_logo {
-    color: green;
-
-    &::before {
-      content: '';
-      display: block;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-image: url("../img/logo-colour.svg");
-      background-position: center;
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  .kudos_modal_close {
-    @apply text-black p-0;
-  }
-
-  #kudos_form {
-    margin: 0;
-    padding: 0;
-
-    input {
-      @apply appearance-none border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-base text-gray-700;
-
-      &:focus {
-        @apply border-orange-500;
-      }
-    }
-
-    small.error {
-      font-size: 80%;
-      font-weight: 400;
-      color: theme('colors.red.500');
-    }
-
-    input.error {
-      border: 2px solid theme('colors.red.500');
-    }
-  }
-
-  .kudos_modal {
     @apply text-gray-900 text-base;
 
     display: none;
 
     * {
       font-family: "Century Gothic", sans-serif;
+      @apply text-base;
     }
 
     h2 {
       font-family: Elephant, "Times New Roman", serif;
+      @apply text-4xl;
     }
 
-    .kudos_spinner {
-      display: none;
-      width: 36px;
-      height: 36px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-left: -18px;
-      margin-top: -18px;
-      z-index: 999;
+    .kudos_modal_overlay {
+      @apply flex justify-center items-center fixed top-0 left-0 w-full h-full bg-modal z-50;
     }
 
-    &.is-open {
-      display: block;
-      overflow-x: hidden;
-      overflow-y: auto;
+    .kudos_modal_header {
+      @apply flex items-center justify-between;
+    }
+
+    .kudos_modal_logo {
+      color: green;
+
+      &::before {
+        content: '';
+        display: block;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-image: url("../img/logo-colour.svg");
+        background-position: center;
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    .kudos_modal_close {
+      @apply text-black p-0;
+
+      background: transparent;
+      border: 0;
+
+      &::before {
+        content: "\2715";
+      }
     }
 
     .kudos_modal_container {
@@ -106,6 +70,60 @@
       }
     }
 
+    .kudos_modal .kudos_modal_container,
+    .kudos_modal .kudos_modal_overlay {
+      will-change: transform;
+      z-index: 1050;
+    }
+
+    &.is-open {
+      display: block;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
+
+  #kudos_form_modal {
+    #kudos_form {
+      margin: 0;
+      padding: 0;
+
+      input {
+        @apply appearance-none border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-base text-gray-700;
+
+        &:focus {
+          @apply border-orange-500;
+        }
+      }
+
+      small {
+        font-size: 80%;
+        font-weight: 400;
+
+        &.error {
+          color: theme('colors.red.500');
+        }
+      }
+
+      input.error {
+        border: 2px solid theme('colors.red.500');
+      }
+    }
+  }
+
+  .kudos_modal {
+    .kudos_spinner {
+      display: none;
+      width: 36px;
+      height: 36px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -18px;
+      margin-top: -18px;
+      z-index: 999;
+    }
+
     &.kudos_loading {
       .kudos_spinner {
         display: block;
@@ -114,28 +132,27 @@
         background-image: url("../img/logo-black.svg");
         animation: loader-spin 2s infinite;
       }
-
-      .kudos_modal_container::before {
-        z-index: 1;
-      }
-    }
-
-    .kudos_modal_close {
-      background: transparent;
-      border: 0;
-
-      &::before {
-        content: "\2715";
-      }
     }
 
     .payment_by {
+      display: flex;
+      justify-content: flex-end;
+
+      &::before {
+        content: '';
+        width: 17px;
+        height: 20px;
+        background: url("../img/lock.svg") no-repeat center;
+        background-size: contain;
+        margin: auto 5px auto 0;
+      }
+
       &::after {
         content: '';
-        display: inline-block;
         width: 51px;
         height: 15px;
-        background: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDY3NyAyMDAiIHdpZHRoPSI2NzciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0iIzAwMCI+PHBhdGggY2xpcC1ydWxlPSJldmVub2RkIiBkPSJtMjg2LjM0MiA2NS4zMTMyYy0zNy4xNzUgMC02Ny4zNSAzMC4yNDE1LTY3LjM1IDY3LjM0MzggMCAzNy4xMDEgMzAuMjQ1IDY3LjM0MyA2Ny4zNSA2Ny4zNDMgMzcuMTA2IDAgNjcuMzUtMzAuMjQyIDY3LjM1LTY3LjM0MyAwLTM3LjEwMjMtMzAuMTc0LTY3LjM0MzgtNjcuMzUtNjcuMzQzOHptMCAxMDIuODM0OGMtMTkuNTMzIDAtMzUuNDI1LTE1Ljg5LTM1LjQyNS0zNS40MjFzMTUuODkyLTM1LjQyMjIgMzUuNDI1LTM1LjQyMjIgMzUuNDI2IDE1Ljg5MTIgMzUuNDI2IDM1LjQyMjItMTUuODkzIDM1LjQyMS0zNS40MjYgMzUuNDIxeiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PHBhdGggZD0ibTUxMC4zNzUgNDIuMDAyMWMxMS42IDAgMjEuMDAzLTkuNDAyNSAyMS4wMDMtMjEuMDAxMSAwLTExLjU5ODUxLTkuNDAzLTIxLjAwMS0yMS4wMDMtMjEuMDAxLTExLjU5OSAwLTIxLjAwMyA5LjQwMjQ5LTIxLjAwMyAyMS4wMDEgMCAxMS41OTg2IDkuNDA0IDIxLjAwMTEgMjEuMDAzIDIxLjAwMTF6Ii8+PHBhdGggY2xpcC1ydWxlPSJldmVub2RkIiBkPSJtMTQ4Ljg0MiA2NS4zODMzYy0xLjc1LS4xNC0zLjQzMS0uMjEtNS4xODEtLjIxLTE2LjI0MiAwLTMxLjY0NCA2LjY1MDMtNDIuNzA2IDE4LjQxMDktMTEuMDYxNy0xMS42OTA2LTI2LjM5NC0xOC40MTA5LTQyLjQ5NjQtMTguNDEwOS0zMi4yMDQ3IDAtNTguNDU4NiAyNi4xODEzLTU4LjQ1ODYgNTguMzgyN3Y3My43MTRoMzEuNTA0N3YtNzIuODA0YzAtMTMuMzcgMTAuOTkxNi0yNS42OTEgMjMuOTQzNS0yNy4wMjExLjkxMDEtLjA3IDEuODIwMy0uMTQgMi42NjA0LS4xNCAxNC41NjIxIDAgMjYuNDYzOSAxMS45MDAxIDI2LjUzMzkgMjYuNDYxMXY3My41MDRoMzIuMjA0NXYtNzIuOTQ0YzAtMTMuMyAxMC45MjItMjUuNjIxIDIzLjk0NC0yNi45NTExLjkxLS4wNyAxLjgyLS4xNCAyLjY2LS4xNCAxNC41NjIgMCAyNi41MzQgMTEuODMwMSAyNi42MDQgMjYuMzIxMXY3My43MTRoMzIuMjA1di03Mi44MDRjMC0xNC43Ny01LjQ2MS0yOC45ODEyLTE1LjMzMi0zOS45NzE3LTkuODcyLTExLjA2MDYtMjMuMzg0LTE3Ljg1MDktMzguMDg2LTE5LjExMXoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjxwYXRoIGQ9Im00MDMuMjYgMy4xNTAxNWgtMzIuMjA1djE5NC4yNTk4NWgzMi4yMDV6Ii8+PHBhdGggZD0ibTQ2NC44NjkgMy4xNTAxNWgtMzIuMjA1djE5NC4yNTk4NWgzMi4yMDV6Ii8+PHBhdGggZD0ibTUyNi40NzggNjguNTMzNGgtMzIuMjA1djEyOC44MDY2aDMyLjIwNXoiLz48cGF0aCBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Im02NzcgMTI5LjY0NmMwLTE3LjA4LTYuNjUxLTMzLjE4MTItMTguNjkzLTQ1LjQzMTgtMTIuMTEyLTEyLjI1MDYtMjguMDc0LTE5LjA0MDktNDUuMDg2LTE5LjA0MDktLjI4IDAtLjU2MSAwLS44NDEgMC0xNy42NDIuMjEtMzQuMzA1IDcuMjEwMy00Ni43NjYgMTkuNzQxLTEyLjQ2MiAxMi41MzA2LTE5LjQ2MyAyOS4xMjE3LTE5LjY3MyA0Ni44MzI3LS4yMSAxOC4wNiA2LjcyMSAzNS4xNDEgMTkuNTMzIDQ4LjA5MiAxMi44MTEgMTIuOTUxIDI5Ljc1NCAyMC4wOTEgNDcuODE3IDIwLjA5MWguMDdjMjMuNjYzIDAgNDUuODU2LTEyLjY3MSA1Ny45NjgtMzMuMDQybDEuNTQtMi41OS0yNi42MDQtMTMuMDktMS4zMyAyLjE3Yy02LjY1MSAxMC45OS0xOC4yMDIgMTcuNTAxLTMxLjAxNCAxNy41MDEtMTYuMzgzIDAtMzAuNTI1LTEwLjkyMS0zNC44NjYtMjYuNDYyaDk3Ljk0NXptLTY1LjA0LTM1LjIxMTNjMTQuNzAzIDAgMjcuODY0IDkuNjYwMyAzMi40ODUgMjMuMzgxM2gtNjQuODk5YzQuNTUtMTMuNzIxIDE3LjcxMi0yMy4zODEzIDMyLjQxNC0yMy4zODEzeiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9nPjwvc3ZnPg==") no-repeat center left;
+        background: url("../img/mollie.svg") no-repeat;
+        background-position: top;
         background-size: contain;
         margin-left: 5px;
       }
@@ -145,22 +162,22 @@
   .kudos_modal_footer {
     @apply mt-8;
   }
-}
 
-.kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
-  animation: fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
-}
+  .kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
+    animation: fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+  }
 
-.kudos_modal[aria-hidden="false"] .kudos_modal_container {
-  animation: slideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
-}
+  .kudos_modal[aria-hidden="false"] .kudos_modal_container {
+    animation: slideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+  }
 
-.kudos_modal[aria-hidden="true"] .kudos_modal_overlay {
-  animation: fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
-}
+  .kudos_modal[aria-hidden="true"] .kudos_modal_overlay {
+    animation: fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+  }
 
-.kudos_modal[aria-hidden="true"] .kudos_modal_container {
-  animation: slideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+  .kudos_modal[aria-hidden="true"] .kudos_modal_container {
+    animation: slideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+  }
 }
 
 // Animations
