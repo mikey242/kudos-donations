@@ -158,19 +158,16 @@ class Kudos_Public {
 						'{{value}}' => number_format_i18n($transaction->value, 2),
 						'{{name}}' => $transaction->name
 					];
-					$header = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);
-					$text = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
+					$return['modal_header'] = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);
+					$return['modal_text'] = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
 					break;
 				case 'canceled':
-					$header = __('Geannuleerd', 'kudos');
-	                $text = __('Betaling geannuleerd', 'kudos');
+					$return['modal_header'] = __('Geannuleerd', 'kudos');
+	                $return['modal_text'] = __('Betaling geannuleerd', 'kudos');
 	                break;
                 default:
 	                $return['trigger'] = false;
 			}
-
-			$return['modal_header'] = $header;
-			$return['modal_text'] = $text;
 
 			// Unset cookie to prevent repeat message
 			setcookie('kudos_order_id', '', 1);
