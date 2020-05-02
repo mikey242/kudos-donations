@@ -120,19 +120,6 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Register custom query vars
-	 *
-	 * @since    1.0.0
-	 * @param array $vars The array of available query variables
-	 * @link https://codex.wordpress.org/Plugin_API/Filter_Reference/query_vars
-	 * @return array
-	 */
-	public function register_query_vars( $vars ) {
-		$vars[] = 'kudos_order_id';
-		return $vars;
-	}
-
-	/**
 	 * Registers the webhook url
      *
      * @since      1.0.0
