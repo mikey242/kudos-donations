@@ -1,8 +1,8 @@
 import {library, dom} from "@fortawesome/fontawesome-svg-core";
-import {faHandHoldingHeart, faCreditCard} from "@fortawesome/free-solid-svg-icons";
+import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
 import {faIdeal, faPaypal} from "@fortawesome/free-brands-svg-icons";
 
-library.add(faHandHoldingHeart, faCreditCard, faIdeal, faPaypal);
+library.add(faCreditCard, faIdeal, faPaypal);
 dom.watch();
 
 ($ => {
@@ -21,7 +21,7 @@ dom.watch();
             $.ajax({
                 method : "post",
                 dataType : "json",
-                url : wp_ajax.ajaxurl,
+                url : kudos.ajaxurl,
                 data : {
                     formData: formData,
                     action: 'check_mollie_connection',
@@ -43,7 +43,7 @@ dom.watch();
                     console.log(response, $message);
                 },
                 error: function(errorThrown){
-                    console.log(wp_ajax.ajaxurl, errorThrown);
+                    console.log(kudos.ajaxurl, errorThrown);
                 }
             });
         });
