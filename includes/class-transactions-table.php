@@ -1,7 +1,9 @@
 <?php
 
 /*
- * @source https://gist.github.com/paulund/7659452
+ * https://gist.github.com/paulund/7659452
+ * https://github.com/pmbaldha/WP-Custom-List-Table-With-Database-Example/blob/master/custom-list-table-db-example.php
+ * https://github.com/collizo4sky/WP_List_Table-Class-Plugin-Example/blob/master/plugin.php
  */
 
 namespace Kudos\Transactions;
@@ -14,11 +16,21 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 class Transactions_Table extends WP_List_Table {
 
+	/** Class constructor */
+	public function __construct() {
+
+		parent::__construct( [
+			'singular' => __( 'Transaction', 'kudos-donations' ), //singular name of the listed records
+			'plural'   => __( 'Transactions', 'kudos-donations' ), //plural name of the listed records
+			'ajax'     => false //does this table support ajax?
+		] );
+
+	}
+
 	/**
 	 * Add extra markup in the toolbars before or after the list
 	 *
 	 * @since      1.0.0
-	 *
 	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
 	 */
 	public function extra_tablenav( $which ) {
@@ -28,11 +40,21 @@ class Transactions_Table extends WP_List_Table {
 		}
 	}
 
+	/**
+	 * Call this function where the table is to be displayed
+	 *
+	 * @since      1.0.0
+	 */
 	public function display() {
 		$this->views();
 		parent::display();
 	}
 
+	/**
+	 * Message to show when no transactions available
+	 *
+	 * @since      1.0.0
+	 */
 	public function no_items() {
 		_e( 'Geen transacties beschikbaar.', 'kudos-donations' );
 	}
@@ -41,7 +63,6 @@ class Transactions_Table extends WP_List_Table {
 	 * Get the table data
 	 *
 	 * @since      1.0.0
-	 *
 	 * @return array
 	 */
 	public function fetch_table_data() {
@@ -67,14 +88,14 @@ class Transactions_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Override the parent columns method. Defines the columns to use in your listing table
+	 * Columns to show
 	 *
 	 * @since      1.0.0
-	 *
 	 * @return array
 	 */
 	public function get_columns() {
 		return $columns= [
+			'cb' => '<input type="checkbox" />',
 			'time'=>__('Date', 'kudos-donations'),
 			'name'=>__('Name', 'kudos-donations'),
 			'email'=>__('E-mail', 'kudos-donations'),
@@ -83,6 +104,12 @@ class Transactions_Table extends WP_List_Table {
 		];
 	}
 
+	/**
+	 * Gets view data
+	 *
+	 * @since      1.0.0
+	 * @return array
+	 */
 	protected function get_views() {
 		$views = array();
 		$current = ( !empty($_REQUEST['mode']) ? $_REQUEST['mode'] : 'all');
@@ -109,7 +136,6 @@ class Transactions_Table extends WP_List_Table {
 	 * Define which columns are hidden
 	 *
 	 * @since      1.0.0
-	 *
 	 * @return array
 	 */
 	public function get_hidden_columns()
@@ -121,7 +147,6 @@ class Transactions_Table extends WP_List_Table {
 	 * Define the sortable columns
 	 *
 	 * @since      1.0.0
-	 *
 	 * @return array
 	 */
 	public function get_sortable_columns()
@@ -139,13 +164,141 @@ class Transactions_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Define what data to show on each column of the table
+	 *
+	 * @since      1.0.0
+	 * @param  array $item        Data
+	 * @param  string $column_name - Current column name
+	 * @return mixed
+	 */
+	public function column_default( $item, $column_name ) {
+
+		switch ( $column_name ) {
+			case 'name':
+			case 'email':
+				return $item[$column_name];
+			default:
+				return print_r( $item, true ) ;
+		}
+	}
+
+	/**
+	 * Render the bulk edit checkbox
+	 *
+	 * @since      1.0.0
+	 * @param array $item
+	 * @return string
+	 */
+	function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['id']
+		);
+	}
+
+	/**
+	 * Time (date) column
+	 *
+	 * @since      1.0.0
+	 * @param array $item an array of DB data
+	 * @return string
+	 */
+	function column_time( $item ) {
+
+		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
+
+		$title = '<strong>' . date_i18n($item['time'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
+
+		$actions = [
+			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['id'] ), $delete_nonce )
+		];
+
+		return $title . $this->row_actions( $actions );
+	}
+
+	/**
+	 * Value (amount) column
+	 *
+	 * @since      1.0.0
+	 * @param array $item
+	 * @return string|void
+	 */
+	function column_value($item)
+	{
+
+		switch ($item['method']) {
+			case 'ideal':
+				$icon = 'fab fa-ideal';
+				break;
+			case 'creditcard':
+				$icon = 'fas fa-credit-card';
+				break;
+			case 'paypal':
+				$icon = 'fab fa-paypal';
+				break;
+			default:
+				$icon = '';
+				break;
+		}
+
+		return '<i title="'.$item['method'].'" class="'. $icon .'"></i> € ' . number_format_i18n($item['value'], 2);
+
+	}
+
+	/**
+	 * Payment status column
+	 *
+	 * @since      1.0.0
+	 * @param array $item
+	 * @return string|void
+	 */
+	function column_status($item)
+	{
+
+		switch ($item['status']) {
+			case 'paid':
+				$status = __('Paid', 'kudos-donations');
+				break;
+			case 'open':
+				$status = __('Open', 'kudos-donations');
+				break;
+			case 'expired':
+				$status = __('Expired', 'kudos-donations');
+				break;
+			case 'canceled':
+				$status = __('Canceled', 'kudos-donations');
+				break;
+			case 'failed':
+				$status = __('Failed', 'kudos-donations');
+				break;
+			default:
+				$status = __('Unknown', 'kudos-donations');
+		}
+
+		return $status . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '');
+	}
+
+	/**
+	 * Returns an associative array containing the bulk action
+	 *
+	 * @since      1.0.0
+	 * @return array|string[]
+	 */
+	function get_bulk_actions() {
+		return [
+			'bulk-delete'    => 'Delete'
+		];
+	}
+
+	/**
 	 * Prepare the table with different parameters, pagination, columns and table elements
 	 *
 	 * @since      1.0.0
-	 *
 	 * @return void
 	 */
 	function prepare_items() {
+
+		// Process bulk action if any
+		$this->process_bulk_action();
 
 		$columns = $this->get_columns();
 		$hidden = $this->get_hidden_columns();
@@ -166,82 +319,12 @@ class Transactions_Table extends WP_List_Table {
 		] );
 	}
 
-
-	/**
-	 * Define what data to show on each column of the table
-	 *
-	 * @since      1.0.0
-	 *
-	 * @param  array $item        Data
-	 * @param  string $column_name - Current column name
-	 *
-	 * @return mixed
-	 */
-	public function column_default( $item, $column_name ) {
-
-		switch ($item['method']) {
-			case 'ideal':
-				$icon = 'fab fa-ideal';
-				break;
-			case 'creditcard':
-				$icon = 'fas fa-credit-card';
-				break;
-			case 'paypal':
-				$icon = 'fab fa-paypal';
-				break;
-			default:
-				$icon = '';
-				break;
-		}
-
-		switch ( $column_name ) {
-			case 'time':
-				return date_i18n($item[$column_name], get_option('date_format') . ' ' . get_option('time_format'));
-				break;
-			case 'name':
-			case 'email':
-				return $item[$column_name];
-			case 'value':
-				return '<i title="'.$item['method'].'" class="'. $icon .'"></i> € ' . number_format_i18n($item[$column_name], 2);
-			case 'status':
-				return $this->translate_status($item[$column_name]) . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '');
-			default:
-				return print_r( $item, true ) ;
-		}
-	}
-
-	/**
-	 * @param $status
-	 *
-	 * @since      1.0.0
-	 * @return string|void
-	 */
-	private function translate_status($status)
-	{
-		switch ($status) {
-			case 'paid':
-				return __('Paid', 'kudos-donations');
-			case 'open':
-				return __('Open', 'kudos-donations');
-			case 'expired':
-				return __('Expired', 'kudos-donations');
-			case 'canceled':
-				return __('Canceled', 'kudos-donations');
-			case 'failed':
-				return __('Failed', 'kudos-donations');
-			default:
-				return __('Unknown', 'kudos-donations');
-		}
-	}
-
 	/**
 	 * Allows you to sort the data by the variables set in the $_GET
 	 *
 	 * @since      1.0.0
-	 *
 	 * @param $a
 	 * @param $b
-	 *
 	 * @return Mixed
 	 */
 	private function sort_data( $a, $b )
@@ -270,5 +353,57 @@ class Transactions_Table extends WP_List_Table {
 		}
 
 		return -$result;
+	}
+
+
+	/**
+	 * Delete a transaction.
+	 *
+	 * @since      1.0.0
+	 * @param int $id transaction ID
+	 */
+	public static function delete_transaction( $id ) {
+		global $wpdb;
+
+		$wpdb->delete(
+			$table = $wpdb->prefix . Transaction::TABLE,
+			[ 'id' => $id ],
+			[ '%d' ]
+		);
+	}
+
+	/**
+	 * Process delete and bulk-delete actions
+	 *
+	 * @since      1.0.0
+	 */
+	public function process_bulk_action() {
+
+		//Detect when a bulk action is being triggered...
+		switch ($this->current_action()) {
+
+			case 'delete':
+				// In our file that handles the request, verify the nonce.
+				$nonce = esc_attr( $_REQUEST['_wpnonce'] );
+				if ( ! wp_verify_nonce( $nonce, 'bulk-' . $this->_args['singular'] ) ) {
+					die( 'Go get a life script kiddies' );
+				} else {
+					self::delete_transaction( absint( $_GET['transaction'] ) );
+				}
+				break;
+
+			case 'bulk-delete':
+				// In our file that handles the request, verify the nonce.
+				$nonce = esc_attr( $_REQUEST['_wpnonce'] );
+				if ( ! wp_verify_nonce( $nonce, 'bulk-' . $this->_args['plural'] ) ) {
+					die( 'Go get a life script kiddies' );
+
+				}
+				$delete_ids = esc_sql( $_POST['bulk-delete'] );
+				foreach ( $delete_ids as $id ) {
+						self::delete_transaction( $id );
+				}
+				break;
+		}
 	}
 }

@@ -103,10 +103,10 @@ class Kudos_Admin {
 			carbon_set_theme_option('kudos_mollie_'.$mode.'_api_key', $apiKey);
 			carbon_set_theme_option('kudos_mollie_api_mode', $mode);
 			/* translators: %s: API mode */
-			wp_send_json_success(sprintf(__("Connection using %s API key successful!", 'kudos-donations'), $mode));
+			wp_send_json_success(sprintf(__("%s API key connection was successful!", 'kudos-donations'), ucfirst($mode)));
 		} else {
 			/* translators: %s: API mode */
-            wp_send_json_error( sprintf(__("Error connecting with Mollie, please check the %s API key and try again", 'kudos-donations'), $mode));
+            wp_send_json_error( sprintf(__("Error connecting with Mollie, please check the %s API key and try again.", 'kudos-donations'), ucfirst($mode)));
 		}
     }
 
@@ -136,10 +136,22 @@ class Kudos_Admin {
 	public function transactions_table() {
 	    $table = new Transactions_Table();
 	    $table->prepare_items();
+		$message = '';
+		if ('delete' === $table->current_action()) {
+			$message = '<div class="updated below-h2" id="message"><p>' . __('Transaction deleted', 'kudos-donations') . '</p></div>';
+		} elseif ('bulk-delete' === $table->current_action()) {
+			/* translators: %s: Number of transactions */
+			$message = '<div class="updated below-h2" id="message"><p>' . sprintf(__('%s transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-delete'])) . '</p></div>';
+        }
 	    ?>
 	    <div class="wrap">
 		    <h2><?php _e('Transactions', 'kudos-donations'); ?></h2>
-		    <?php $table->display(); ?>
+		    <?php echo $message; ?>
+            <form id="transactions-table" method="POST">
+            <?php
+                $table->display();
+            ?>
+            </form>
 	    </div>
 	    <?php
     }
