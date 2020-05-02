@@ -103,7 +103,6 @@ class Kudos_Mollie {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-kudos-admin.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-public.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-mollie.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mollie-webhook.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/includes/kudos-button.php';
 
 		$this->loader = new Kudos_Loader();

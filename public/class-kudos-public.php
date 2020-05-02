@@ -3,7 +3,6 @@
 namespace Kudos;
 
 use Kudos\Mollie\Mollie;
-use Kudos\Mollie\Webhook;
 
 /**
  * The public-facing functionality of the plugin.
@@ -140,8 +139,8 @@ class Kudos_Public {
 	 * @return void
 	 */
 	public function register_webhook() {
-		$webhook = new Webhook();
-		$webhook->register_webhook();
+		$mollie = new Mollie();
+		$mollie->register_webhook();
 	}
 
 	/**

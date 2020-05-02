@@ -6,12 +6,17 @@ use Kudos\Transactions\Transaction;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\Payment;
+use WP_Error;
+use WP_HTTP_Response;
+use WP_REST_Request;
+use WP_REST_Response;
 
 class Mollie
 {
 	private $mollieApi;
 	private $apiKey;
 	private $apiMode;
+	private $transaction;
 
 	/**
 	 * Mollie constructor.
@@ -19,6 +24,7 @@ class Mollie
 	 * @since      1.0.0
 	 */
 	public function __construct() {
+		$this->transaction = new Transaction();
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = carbon_get_theme_option('kudos_mollie_api_mode');
 		$this->apiKey = carbon_get_theme_option('kudos_mollie_'.$this->apiMode.'_api_key');
@@ -103,7 +109,7 @@ class Mollie
 						"value" => $value
 					],
 					"redirectUrl" => $redirectUrl,
-//					"webhookUrl" => 'https://77978f67.ngrok.io/wp-json/kudos/v1/mollie',
+//					"webhookUrl" => 'http://1db3a710.ngrok.io/wp-json/kudos/v1/mollie',
 					"webhookUrl" => rest_url('kudos/v1/mollie'),
 					"description" => "Kudos Payment - $order_id",
 					'metadata' => [
@@ -114,7 +120,7 @@ class Mollie
 				]
 			);
 
-			$transaction = new Transaction();
+			$transaction = $this->transaction;
 			$transaction->create_record($order_id, $value, $email, $name);
 
 			return $payment;
@@ -124,5 +130,76 @@ class Mollie
 			return false;
 		}
 
+	}
+
+	/**
+	 * Register webhook using rest
+	 *
+	 * @since    1.0.0
+	 * @return void
+	 */
+	public function register_webhook() {
+		register_rest_route( 'kudos/v1', 'mollie/', [
+			'methods' => 'POST',
+			'callback' => [$this, 'rest_api_mollie_webhook'],
+			'args' => [
+				'id' => [
+					'required' => true
+				]
+			]
+		] );
+	}
+
+	/**
+	 * Mollie webhook action
+	 *
+	 * @since    1.0.0
+	 * @param WP_REST_Request $request
+	 * @return mixed|WP_Error|WP_HTTP_Response|WP_REST_Response
+	 */
+	public function rest_api_mollie_webhook( WP_REST_Request $request ) {
+		$id = $request->get_param( 'id' );
+		error_log('Webhook received with ID: ' . $id);
+
+		/**
+		 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
+		 */
+		$response = rest_ensure_response(
+			[
+				'success' => true,
+				'id'      => $id,
+			]
+		);
+
+		$response->add_link( 'self', rest_url( $request->get_route() ) );
+
+		$payment = $this->getPayment($id);
+
+		if ( null === $payment ) {
+			/**
+			 *
+			 * To not leak any information to malicious third parties, it is recommended
+			 * to return a 200 OK response even if the ID is not known to your system.
+			 *
+			 * @link https://docs.mollie.com/guides/webhooks#how-to-handle-unknown-ids
+			 */
+			return $response;
+		}
+
+		// Update payment.
+		$order_id = $payment->metadata->order_id;
+		$transaction_id = $payment->id;
+		$this->transaction->update_record($order_id, $transaction_id, $payment->status, $payment->method);
+
+		// Add note.
+		$note = sprintf(
+		/* translators: %s: Mollie */
+			__( 'Webhook requested by %s.', 'kudos' ),
+			__( 'Mollie', 'kudos' )
+		);
+
+		error_log( $note );
+
+		return $response;
 	}
 }
