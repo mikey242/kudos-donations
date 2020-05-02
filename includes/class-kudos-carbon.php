@@ -52,35 +52,54 @@ class Carbon {
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>
             '))
 
-	        ->add_tab('Intro', [
+	        ->add_tab(__('Get started', 'kudos-donation'), [
 		        Field::make('html', 'step_1', null)
 		             ->set_html('
-                        <h3>Step 1. Configure Mollie</h3>
-                        <p>Go to the Mollie tab and enter your API key(s)</p>
+                        <h3>Step 1. Configure your payment method</h3>
+                        <p>In the ‘Payment’ tab, fill in your payment settings. Kudos works with payment vendor <a alt="Mollie website" href="https://www.mollie.com">Mollie</a>. If you don’t have one already, you’ll need to create a Mollie account.</p>
 					'),
 		        Field::make('html', 'step_2', null)
 		             ->set_html('
-                        <h3>Step 2. Place a button</h3>
-                        <p>You can place your Kudos button using either a block or a shortcode. Blocks can be accessed from the post or page editor.</p>
-	                    <div>
-							<h4>Shortcode usage</h4>
-							<p>Shortcodes can be used almost anywhere; from posts, pages or even on widgets. Just place <code>[kudos]</code> where you want the button to appear. You can configure the shortcode by adding one or more of the following settings:</p>
-							<p><code>[kudos label="Help us out!"]</code> - <span>Add a custom title to the button</span></p>
-							<p><code>[kudos header="Support our cause"]</code> - <span>Add a custom header to the pop-up modal</span></p>
-							<p><code>[kudos text="Fill out the form below to give us a hand"]</code> - <span>Add custom text to the pop-up modal</span></p>
-						</div>
+                        <h3>Step 2. Configure look and feel</h3>
+                        <p>Customise the design of the donation button under the ‘Styles’ tab. You can also change the generic text settings of the donate and results pop-ups here.</p>
+                        <p><i>Did you know: It is also possible to change text settings when adding each individual button.</i></p>
 					'),
+		        Field::make('html', 'step_3', null)
+		            ->set_html('
+                        <h3>Step 3. Add your first button</h3>
+                        <p>There are two ways to place a donation button, depending on which WordPress text editor you use.</p>
+                        <h4>[Option 1] - Using the block editor</h4>
+                        <p>When using the block editor in a post or page, press the + sign to add a block. Search for ‘Kudos’. Select the Kudos Donations button option. </p>
+                        <p>Voila! You’ve created your first donations button.</p>
+						<p><i>Tip: Keep the call-to-action text on the button short & sweet.</i></p>
+						<h4>[Option 2] - Using the regular text editor</h4>
+						<p>The regular WordPress editor uses shortcodes. A shortcode is a piece of text between brackets [like this]. To place a donations button, add the following code to a text field:</p>
+						<p><code>[kudos]</code></p>
+						<p>The button will now appear on the page!</p>
+						<p><i>Tip: You can customise each button and donate pop-up text by adding extra options to the shortcode. Check the ‘Advanced’ tab for more information.</i></p>
+		            '),
+		        Field::make('html', 'support', null)
+		            ->set_html('
+		                <h3>Need support?</h3>
+		                <p>We tried to make the Kudos Donations plugin as easy to use as possible. But we all need a little help sometimes.</p>
+						<p>If you have questions about the Kudos plugin or require support with the installation, please get in touch with us via <a href="mailto:kudos@iseard.media">kudos@iseard.media</a>.</p>
+					 	<p>This plugin was created by iseard.media – your digital marketing agency for the arts</p>
+		            ')
 	        ])
 
 	        /*
-			 * Mollie tab
+			 * Payment tab
 			 */
-	        ->add_tab('Mollie', [
-                Field::make( 'html', 'api_description_html', null )
+	        ->add_tab('Payment', [
+                Field::make( 'html', 'payment_intro', null )
 	                /* translators: %s: Link to Mollie dashboard */
-                    ->set_html('<p>' . sprintf(__('Tip: You can find your Mollie API keys in your %s. Would you like to test the system first? Then you can use the test API key. To receive payments from your consumers, please use the live API key.', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>') . '</p>'),
+                    ->set_html('
+						<p><strong>' . sprintf(__('Kudos Donations works with payment vendor Mollie. If you don’t have a Mollie account, please create one here: %s', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/">Mollie</a>') . '</strong></p>
+						<p>To receive payments, you will need to add your Mollie Live API key in the box below. Would you like to test the system first? Then you can use the Mollie Test API key. </p>
+						<p>Both "Live" and "Test" API keys can be found in your <a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>.</p>
+					'),
                 Field::make('radio', 'kudos_mollie_api_mode', __('Mode', 'kudos-donations'))
-	                ->set_help_text( __('Set to "test" to first check the configuration is working correctly. Once you\'re ready to recieve live payments you can switch this to "live"', 'kudos-donations')  )
+	                ->set_help_text( __('When using this plugin for the first time, the payment mode is set to "Test". That’s so that you can first check that the configuration is working correctly. Once you\'re ready to receive live payments you can switch the mode to "Live".', 'kudos-donations')  )
                     ->add_options([
                         'test' => __('Test', 'kudos-donations'),
                         'live' => __('Live', 'kudos-donations')
@@ -88,35 +107,56 @@ class Carbon {
 	                ->set_default_value('test'),
                 Field::make( 'text', 'kudos_mollie_test_api_key', __( 'Mollie Test API Key', 'kudos-donations' ) )
 	                /* translators: %s: Start of API key */
-	                ->set_help_text( sprintf(__('This begins with "%s"', 'kudos-donations'), 'test_')),
+		            ->set_attribute('placeholder', sprintf(__('This begins with "%s"', 'kudos-donations'), 'test_')),
                 Field::make( 'text', 'kudos_mollie_live_api_key', __( 'Mollie Live API Key', 'kudos-donations' ) )
 	                /* translators: %s: Start of API key */
-	                ->set_help_text( sprintf(__('This begins with "%s"', 'kudos-donations'), 'live_')),
+	                ->set_attribute('placeholder', sprintf(__('This begins with "%s"', 'kudos-donations'), 'live_')),
                 Field::make('html', 'check_api_key_button', null)
                     ->set_html('
-                        <input id="test_mollie_api_key" type="button" class="button button-secondary" value="'. __("Test Api Key", "kudos-donations") .'">
+                        <input id="test_mollie_api_key" type="button" class="button button-secondary" value="'. __("Check API Key", "kudos-donations") .'">
                         <div id="check_key_spinner" class="spinner"></div>
                         <div id="result_message" class="hidden message"></div>
                     ')
             ] )
 
 	        /*
-			 * Button tab
+			 * Look & Feel tab
 			 */
-	        ->add_tab(__('Button', 'kudos-donations'), [
+	        ->add_tab(__('Customize', 'kudos-donations'), [
+	        	Field::make('html', 'customize_intro', null)
+	                ->set_html('
+	                	<p><strong>Customise your donation button and pop-up below.</strong></p>
+	                '),
                 Field::make('radio_image', 'kudos_button_style', __('Button style', 'kudos-donations'))
-                    ->set_help_text( __('Choose the style of the Kudos button', 'kudos-donations')  )
                     ->add_options([
-                        'kudos_btn_secondary' => 'data:image/png;base64,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',
-                        'kudos_btn_primary' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALUAAAA0CAYAAADMv3nUAAAFYUlEQVR4nO2dQWvbZhiA/UPU4w7JzbBBySE9zbBDbu0pt+7UnpZbb7nluEvTkwuCLIG4IcUeg4QwzyEeKYGGUWNBhsHDTjLjgJk7lzimhmeH73NtOZJjyXGkKa/gAdt6Zb369Eh69VmyYrgN5Qwc/AA/fwc/fQWmIQjBsj4D6W+Vl+WMq7qxa5+cZmFrLvgFEISb2JqD84MbpP7wMvhEBcErhVcuUhdWg09OEPxSWB2S+iwH5oPgExME3zyA09+01J8/QerrECQlCBOS+ga6V8Qop4NPRhBui3KaGLlnwSciCLdF7hkxtueDT0QQbovteWKszwSfiCDcFuszxAJPQhBuGZFaiBwitRA5RGohcojUQuQQqYXIMX2p//3r+gWvnz+NP/3WQ7CS0Cj2p28U1TW1IWhAIXyEV+qNWSilrk87OFivA29AIXyEU+pMAlrV0UL3hp0ngTeiEC7CJ3UmAZ3meEIDlN74zO0FXBw7U0nB0WLgK0fwR7ik9io0QO2dz9ySavqWg9TNuhrXLcH7x4GvJMEb4ZF6Y9Z+MnhXUlsu4zcfQ6UKtMFaCHxFCeMTHqmt196FBqjs+sztBqlNA8w4lEpAHfYdxu8tQ2lX7d3Lq7D3yOE7ElBYgz0DNhPwPgW1YzhLjy5x3i5CQcdWUpBPTBabWYKTZXvehRHzH4zPLI2xnItwopfT6fuO1u6spAuH1DtP/AkNkF+aotQGmE/hErhYGfhsAWq6TGoV1cpu6fe14Xs9n6vpS0noAp2qPb6Vhs1hAXJqXC+2oU+amxPE7u8CRbCK/fiT5+7LbYtv6+UsQqet3peH2/2G9mwAjeQ9krp16k/o1qkqW6YqtQFnTbjsHRHiUKmrejsbt8cdppW4lUFZtNS0wRqqz/O7Kofy0/5nv6w5S/P2hfqexqq/2H09r24RduI3L7NrvF5+6pAVqZ2l/uNHf0J3PqoTS9+5eZDaKgJF9TqjRbJc5n1SUrFf9pJaarcVetFWe+vBDaiVco7NpoFq/xDvJbYn6cmYbdaLt5w2gBW18ZYHywmRuj/e7146+/2EuXmQulyFTk69LhSHpB2iJ/3RkNRll3qyUh84CujY2grsLTqwAp1ezl5ie5JW3WteR6nd4vW8bUckkbo//mjZn9Sd5h3tqeNqhTTX1PvBvfZY36sFcJuPk9SXJfc+9ItjOPQaa/Rr5HHbZ2S8SD1aatOYoKauTr+mzu9iKzfyOa7Xk8MyDPaWeJFab0C2k1I3vMQGLXUCmvdN6rD2fuzoHgvbynihDuuOK2gBGm24HPzbCS9SG7omLzmfzG0+spc9XmKnLvUitIALh3/6yqZVW98rqU0juH7qkkM9ml+B2ohutF6vRSMF2QSYccguQ6MJ1CE/KJlHqXsbRrcK1hJk4qp/O5+EVvt61+K4sVOX2tDnG22orKhc3i7AURq6bdWFee+k3piFhuVd6kl/UXQaum1oHcLhiJ/Is8l+X3NvaOUc9ppepdaylovqKPFlaEIt6XCCOmbsXUhtxsE6tufS0ZcaVOr3UGrTUNdOdz56MJoJpBaiSrikNg19UZMHsX1fpSdElfBJbRr6euoxe0Qm6tYTokg4pTYNfefLm9FCy50vggPTl/qfP6F7ZeeqMf70Ww+VvLV3fZkru7fwi6IQVeRuciFyiNRC5BCphcghUguRQ6QWIodILUQOeZKAEC3WZ+SZL0LE2J6Xp3MJESP3TJ6jKESMcpoY3Sv1pNCgkxGESdme10+8BTj9NfiEBGFS/v4dQEsNUHC4t0wQ/i8UVr+o3JcaoPAq+OQEwSsfXto0tksNcL4PW3PBJyoIN7E1B+cH1xT+D8sT4LVVufYDAAAAAElFTkSuQmCC',
+	                    'kudos_btn_primary' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAIAAACCil8SAAABgmlDQ1BzUkdCIElFQzYxOTY2LTIuMQAAKJF1kb9LQlEUxz9pYpRhUUNDg4g1ZZhB1NKglAXVoAZZLfr8Fag93jMiWoNWoSBq6ddQf0GtQXMQFEUQTQ3NRS0lr/M0MCLP5dzzud97z+Hec8ESzSl5vdEH+UJRC4cCrrnYvMv+jA0L7XhxxxVdnY6MR6lrH3c0mPHGa9aqf+5fa0mmdAUamoRHFVUrCk8IT60WVZO3hTuVbDwpfCrcp8kFhW9NPVHlF5MzVf4yWYuGg2BpE3ZlfnHiFytZLS8sL8eTz60oP/cxX+JIFWYjEt3i3eiECRHAxSRjBBligBGZh6Q7fvplRZ18XyV/hmXJVWRWWUNjiQxZivSJuiLVUxLToqdk5Fgz+/+3r3p60F+t7giA7ckw3nrAvgXlkmF8HhpG+Qisj3BRqOUvH8Dwu+ilmubZB+cGnF3WtMQOnG9C14Ma1+IVySpuSafh9QRaY9BxDc0L1Z797HN8D9F1+aor2N2DXjnvXPwGce5n6w3W25IAAAAJcEhZcwAACxMAAAsTAQCanBgAAAJESURBVGiB7Zo/aBNRHMc/edaKkiIEhBRidMggKUKhUyQu7RAnF2lGF7s5GRFUENzEwXTRrcHFyTh1alGiYjTFQYKSgBARbZQDIfjnaiFGzyVGk5Le72xf3wXyWcLL+/K7D+HH+12OCziOQw9vF6k/5PNrvtRorffuGmWka1UvsHIF+70hGXf+0X15kxfXzZmIUO3PV7f87woEHMfhwyPun4YNTew/FK01nl4YCFdAsfqA75ZpDSmKd8umHTygaFRMO3hAsf7JtIMHFD++mXbwgHKP+Imhrk4GTHfEPbIJp54wdvjvsrXGnSOb5UNxYrOEE4QmABoVKgu8uSe/4NZ05QQjJLOEE11fhiY4Ps94guJ5YZkdaYZoipNLva4dYum+WxvQrxubZXqB0f0uGRmadaMpkln3WPCgsJ5O3WCE5I3tLalTdzrn0gMd7FVhSW26kxlCcWm4lhcG9egGI0yek4arOaySMKtHNzkvTVZzPL8qL2x6CI+OeYrr0S2KOyGW9nR66NG165TF/eCLqVbO0qhKw76YaoUzNL+Kkr6Yanadwtz2ltR8Mlglihn3mPmp1qGWZynt0hWGp1oPVonFVF+nWl4+1bb2b+Jnk1/NrmU/7DrFDOUs8TnCifbthLVC7a78pwUCzu3If9vuPKaHsEeGujoZ6upEsdvbHadZFHsPmHbwgGo/rhoQFIdSph08oIieYN+4aQ0pil17OHbNtIYUBRCZYeqiaRMRf87do2eZumTURESg6/WLj495dtnP7zP8Bq4Aja10468CAAAAAElFTkSuQmCC',
+                        'kudos_btn_secondary' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAIAAACCil8SAAABgmlDQ1BzUkdCIElFQzYxOTY2LTIuMQAAKJF1kb9LQlEUxz9pYpRhUUNDg4g1ZZhB1NKglAXVoAZZLfr8Fag93jMiWoNWoSBq6ddQf0GtQXMQFEUQTQ3NRS0lr/M0MCLP5dzzud97z+Hec8ESzSl5vdEH+UJRC4cCrrnYvMv+jA0L7XhxxxVdnY6MR6lrH3c0mPHGa9aqf+5fa0mmdAUamoRHFVUrCk8IT60WVZO3hTuVbDwpfCrcp8kFhW9NPVHlF5MzVf4yWYuGg2BpE3ZlfnHiFytZLS8sL8eTz60oP/cxX+JIFWYjEt3i3eiECRHAxSRjBBligBGZh6Q7fvplRZ18XyV/hmXJVWRWWUNjiQxZivSJuiLVUxLToqdk5Fgz+/+3r3p60F+t7giA7ckw3nrAvgXlkmF8HhpG+Qisj3BRqOUvH8Dwu+ilmubZB+cGnF3WtMQOnG9C14Ma1+IVySpuSafh9QRaY9BxDc0L1Z797HN8D9F1+aor2N2DXjnvXPwGce5n6w3W25IAAAAJcEhZcwAACxMAAAsTAQCanBgAAAKRSURBVGiB7ZrPb9JgGMfLK+GHjBFLbJPaqTFDtkRJdOxgYjTE+7h58raLXnR/gBizLTHxtGSHedCbu3gbGmO8GCMaTVhMthm2lSmbULOOwQC7DrTgAcMQhT4NvntLwucCL3zz8CG87dOH1FSpVKg/eZH+FsluxeVCQpGVskoZCXP94k12697ap1RRIWWjyb7uw+Ta9PoqQRUIqPrwKPnZ+K5UVfftTnp6fYW0CQi0q6p3hcXGw82ooNdZSSrtkdaAgl5tb5J20AFalvOkHXSAtktF0g46QN/Vn6QddIBIC+ijq4uTDtM1a0ea82zocp/tcG25q6oX3r9skfc6nCMM73fRA45eiqKW5fxjMfFUSsE/sS1dOJzVPu7xDbvo+hcHHL2THt+wi74jLALrHMRmCNDsk3MXG1xrBBne3+Stv8GuO8Icmxo87zzU6mcMMjywGl7dAM1OeHyaMc5mBxbEqMtZ7ROntV11gVF3anCo9R6oIe5Bp0NcujeOe7wOJzA8JyWBSSy6nNV+va8fGJ4VE9FcBhjGogvfsrNi4v6XGLwy4SbcY9bXp7DohlYXgMkgw497zsIrY9EVi8qDr3Fg2BBdbWZDWJELwLAhutpYbL4Am6wM0dXEojIWm/+/NfGeGaK5TEjQPuzId7UaYSk1uvSh9a4g3NUaiOYyVz9Gwk2mhrCUgne1tqaJUrn8o1LeX9Y9b0AsKiFhYWZDuMad9Lvc1cuJaD4zt5ls9jX+ickXed6O8QHTYZNwVxcnXV2coB7YOGUQkNtiJe2gA1T9u6pTQAE3S9pBB+iKm2UtNtIaUJDFhG73nyGtAQVRFHXpyNGbJ7ykTUD8Pu+O8qdudYKxqf72i3c76cn4kpHvZ/gFXzjMlNqW1W8AAAAASUVORK5CYII=',
                     ])
-                    ->set_default_value('kudos_btn-primary'),
+                    ->set_default_value('kudos_btn_primary'),
+		        Field::make('text', 'kudos_button_label', __('Button label', 'kudos-donations'))
+//			        ->set_help_text('Customise the text of the pop-ups')
+		            ->set_default_value(__('Donate now', 'kudos-donations')),
+		        Field::make('text', 'kudos_form_header', __('Payment form header', 'kudos-donations'))
+//			        ->set_help_text('Customise the text of the donate pop-up screen')
+		            ->set_default_value(__('Support us!', 'kudos-donations')),
+		        Field::make('text', 'kudos_form_text', __('Payment form text', 'kudos-donations'))
+		            ->set_default_value(__('We really appreciate that you want to help us out.', 'kudos-donations'))
             ])
 
 	        /*
-	         * Completed payment tab
+	         * Advanced tab
 	         */
-            ->add_tab(__('Completed Payment', 'kudos-donations'), [
+            ->add_tab(__('Advanced', 'kudos-donations'), [
+            	    Field::make('html', 'advanced_intro', null)
+	                    ->set_html('
+	                        <p><strong>Shortcode options</strong></p>
+	                        <p>Override the default settings per button by using the following shortcode options:</p>
+	                        <p>To add a custom button text, use: <code>[kudos label="Help us out!"]</code></p>
+							<p>To add a custom header text, use: <code>[kudos header="Support our cause"]</code></p>
+							<p>To add a custom message, use: <code>[kudos text="All donations will go straight to the artists who created this video. Thank you for your support!"]</code></p>
+							<p>A fully customised button and text would look like this:</p>
+							<p><code>[kudos label="Help us out!" header="Support our cause" text=" All donations will go straight to the artists who created this video. Thank you for your support!"]</code></p>
+	                    '),
                     Field::make('checkbox', 'kudos_custom_return_enable', __('Use custom return URL', 'kudos-donations'))
 	                    ->set_help_text( 'Useful if you want to create a custom thank you page' )
 	                    ->set_default_value(false),
@@ -184,6 +224,12 @@ class Carbon {
                     echo "</div><!-- /.block -->";
 
             } );
+    }
+
+    public function button() {
+		add_action('carbon_fields_fields_registered', function () {
+			return 'Hello';
+		});
     }
 }
 
