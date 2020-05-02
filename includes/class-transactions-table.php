@@ -175,7 +175,6 @@ class Transactions_Table extends WP_List_Table {
 
 		switch ( $column_name ) {
 			case 'name':
-			case 'email':
 				return $item[$column_name];
 			default:
 				return print_r( $item, true ) ;
@@ -192,6 +191,19 @@ class Transactions_Table extends WP_List_Table {
 	function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['id']
+		);
+	}
+
+	/**
+	 * Email column
+	 *
+	 * @since      1.0.0
+	 * @param array $item
+	 * @return string
+	 */
+	function column_email( $item ) {
+		return sprintf(
+			'<a href="mailto: %1$s" />%1$s</a>', $item['email']
 		);
 	}
 
