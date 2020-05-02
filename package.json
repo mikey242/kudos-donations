@@ -1,9 +1,11 @@
 {
-  "name": "kudos",
+  "name": "kudos-donations",
   "version": "1.0.0",
+  "description": "Easily receive donations in WordPress via Mollie",
+  "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
-    "start": "set NODE_ENV=development && webpack --config webpack.dev.js",
-    "build": "set NODE_ENV=production && webpack --config webpack.prod.js"
+    "start": "webpack --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
