@@ -79,7 +79,7 @@ class Kudos_Admin {
 
 		wp_enqueue_script( $this->plugin_name . '-admin', get_asset_path('kudos-admin.js'), [ 'jquery' ], $this->version, false );
 		wp_enqueue_script( $this->plugin_name . '-vendors', get_asset_path('vendors.js'), [ 'jquery' ], $this->version, false );
-		wp_localize_script( $this->plugin_name . '-admin', 'wp_ajax', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_localize_script( $this->plugin_name . '-admin', 'kudos', ['ajaxurl' => admin_url('admin-ajax.php')]);
 
 	}
 
