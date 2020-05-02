@@ -245,10 +245,6 @@ class Kudos_Public {
                                 <input required type="text" min="1" class="mt-3" name="value" placeholder="<?php printf(__('Amount %s', 'kudos-donations'), '*') ?>" />
                                 <div class="payment_by mt-3 text-muted text-right">
                                     <small class="text-gray-600">
-                                        <span class="fa-stack fa-xs align-middle">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
-                                        </span>
                                         <?php _e('Secure payment by', 'kudos-donations') ?>
                                     </small>
                                 </div>

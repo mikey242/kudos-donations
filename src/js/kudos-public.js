@@ -1,11 +1,6 @@
 import $ from 'jquery';
 import "jquery-validation";
 import MicroModal from "micromodal";
-import {library, dom} from "@fortawesome/fontawesome-svg-core";
-import {faLock, faCircle} from "@fortawesome/free-solid-svg-icons";
-
-library.add(faLock, faCircle);
-dom.i2svg({ node: document.getElementById('kudos_form_modal') });
 
 $(() => {
 
@@ -20,9 +15,8 @@ $(() => {
         errorElement: 'small',
     });
 
-
-    // Add kudos_mollie class and modal markup to body if button found
     if($kudosButtons.length) {
+        // Add kudos_mollie class and modal markup to body if button found
         $body.addClass('kudos_donations');
 
         // Setup button action
