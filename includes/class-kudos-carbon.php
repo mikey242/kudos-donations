@@ -6,6 +6,7 @@ use Carbon_Fields\Carbon_Fields;
 use Carbon_Fields\Field;
 use Carbon_Fields\Container;
 use Carbon_Fields\Block;
+use Kudos_Button;
 
 class Carbon {
 
@@ -220,7 +221,8 @@ class Carbon {
                 $classes = $attributes ? $attributes['className'] : '';
 
                     echo "<div class='kudos_block_button $classes'>";
-                        kudos_button($label, $header, $text);
+						$button = new Kudos_Button($label, $header, $text);
+						$button->get_button();
                     echo "</div><!-- /.block -->";
 
             } );

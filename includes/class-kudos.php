@@ -103,7 +103,8 @@ class Kudos_Mollie {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-kudos-admin.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-public.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-mollie.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/includes/kudos-button.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-button.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-modal.php';
 
 		$this->loader = new Kudos_Loader();
 
@@ -141,7 +142,6 @@ class Kudos_Mollie {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action('admin_menu', $plugin_admin, 'create_transaction_page', 11);
 		$this->loader->add_action('wp_ajax_check_mollie_connection', $plugin_admin, 'check_mollie_connection');
-		$this->loader->add_action('init', $plugin_admin, 'register_shortcodes');
 
 	}
 
@@ -164,6 +164,7 @@ class Kudos_Mollie {
 		$this->loader->add_action('wp_ajax_nopriv_check_transaction', $plugin_public, 'check_transaction');
 		$this->loader->add_action('wp_ajax_check_transaction', $plugin_public, 'check_transaction');
 		$this->loader->add_action('rest_api_init', $plugin_public, 'register_webhook');
+		$this->loader->add_action('init', $plugin_public, 'register_shortcodes');
 		$this->loader->add_action('wp_footer', $plugin_public, 'place_modal', 1000);
 
 	}
