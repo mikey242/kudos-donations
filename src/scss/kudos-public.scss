@@ -12,7 +12,7 @@ body.kudos_donations {
 
     * {
       font-family: "Century Gothic", sans-serif;
-      @apply text-base;
+      @apply text-lg;
     }
 
     h2 {
@@ -70,6 +70,20 @@ body.kudos_donations {
       }
     }
 
+    &.kudos_loading {
+      .kudos_modal_container::before {
+        z-index: 1;
+      }
+
+      .kudos_spinner {
+        display: block;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-image: url("../img/logo-black.svg");
+        animation: loader-spin 2s infinite;
+      }
+    }
+
     .kudos_modal .kudos_modal_container,
     .kudos_modal .kudos_modal_overlay {
       will-change: transform;
@@ -101,6 +115,9 @@ body.kudos_donations {
         font-weight: 400;
 
         &.error {
+          @apply relative;
+
+          top: 5px;
           color: theme('colors.red.500');
         }
       }
@@ -124,19 +141,10 @@ body.kudos_donations {
       z-index: 999;
     }
 
-    &.kudos_loading {
-      .kudos_spinner {
-        display: block;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-image: url("../img/logo-black.svg");
-        animation: loader-spin 2s infinite;
-      }
-    }
-
     .payment_by {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
 
       &::before {
         content: '';
@@ -151,8 +159,7 @@ body.kudos_donations {
         content: '';
         width: 51px;
         height: 15px;
-        background: url("../img/mollie.svg") no-repeat;
-        background-position: top;
+        background: url("../img/mollie.svg") no-repeat top;
         background-size: contain;
         margin-left: 5px;
       }
