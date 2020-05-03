@@ -4,6 +4,7 @@ namespace Kudos;
 
 use Kudos\Mollie\Mollie;
 use Kudos_Button;
+use Kudos_Modal;
 
 /**
  * The public-facing functionality of the plugin.
@@ -244,7 +245,7 @@ class Kudos_Public {
 	    global $post;
 
 		if(has_block('carbon-fields/kudos-button') || has_shortcode($post->post_content, 'kudos')) {
-			$modal = new \Kudos_Modal();
+			$modal = new Kudos_Modal();
 			$modal->get_modal();
 		}
 	}
