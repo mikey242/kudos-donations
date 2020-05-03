@@ -38,7 +38,7 @@ class Kudos_Modal {
 
 		if($this->ready) {
 			?>
-            <div id="kudos_form_modal" class="kudos_modal hidden" aria-hidden="true">
+            <div id="kudos_form_modal" class="kudos_modal" aria-hidden="true">
             <div class="kudos_modal_overlay" tabindex="-1" data-micromodal-close>
             <div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">
                 <header class="kudos_modal_header">
