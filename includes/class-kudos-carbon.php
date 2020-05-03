@@ -54,53 +54,65 @@ class Carbon {
             '))
 
 	        ->add_tab(__('Get started', 'kudos-donation'), [
+	        	Field::make('html', 'welcome', null)
+					->set_html('
+						<div style="display: flex;">
+							<img style="padding-right: 10px" width=40 src="data:image/svg+xml;base64,'. base64_encode(
+								file_get_contents(__DIR__ . '/../src/img/logo-colour.svg')
+							) .'">
+							<p>'. __("Thank you for downloading the Kudos plugin. Follow these steps to start receiving donations for your creative projects.", 'kudos-donations') .'</p>
+						</div>
+					'),
 		        Field::make('html', 'step_1', null)
 		             ->set_html('
-                        <h3>Step 1. Configure your payment method</h3>
-                        <p>In the ‘Payment’ tab, fill in your payment settings. Kudos works with payment vendor <a alt="Mollie website" href="https://www.mollie.com">Mollie</a>. If you don’t have one already, you’ll need to create a Mollie account.</p>
+                        <h3>'.__("Step 1. Configure your payment method").'</h3>
+                        '/* translators: %s: Plugin name */.'
+                        <p>'.sprintf(__("In the Mollie tab, fill in your payment settings. Kudos works with payment vendor %s.", 'kudos-donations'), "<a target='_blank' alt='Mollie website' href='https://www.mollie.com'>Mollie</a>") .'</p>
 					'),
 		        Field::make('html', 'step_2', null)
 		             ->set_html('
-                        <h3>Step 2. Configure look and feel</h3>
-                        <p>Customise the design of the donation button under the ‘Styles’ tab. You can also change the generic text settings of the donate and results pop-ups here.</p>
-                        <p><i>Did you know: It is also possible to change text settings when adding each individual button.</i></p>
+                        <h3>'. __('Step 2. Configure look and feel', 'kudos-donations') .'</h3>
+                        <p>'. __('Set the design of the donation button and text under the ‘Customise’ tab.', 'kudos-donations') .'</p>
 					'),
 		        Field::make('html', 'step_3', null)
 		            ->set_html('
-                        <h3>Step 3. Add your first button</h3>
-                        <p>There are two ways to place a donation button, depending on which WordPress text editor you use.</p>
-                        <h4>[Option 1] - Using the block editor</h4>
-                        <p>When using the block editor in a post or page, press the + sign to add a block. Search for ‘Kudos’. Select the Kudos Donations button option. </p>
-                        <p>Voila! You’ve created your first donations button.</p>
-						<p><i>Tip: Keep the call-to-action text on the button short & sweet.</i></p>
-						<h4>[Option 2] - Using the regular text editor</h4>
-						<p>The regular WordPress editor uses shortcodes. A shortcode is a piece of text between brackets [like this]. To place a donations button, add the following code to a text field:</p>
+                        <h3>'. __('Step 3. Add your first button', 'kudos-donations') .'</h3>
+                        <p>'. __('There are two ways to place a donation button, depending on which WordPress text editor you use.', 'kudos-donations') .'</p>
+                        <h4>'. __('[Option 1] - Using the block editor', 'kudos-donations') .'</h4>
+                        <p>'. __('When using the block editor in a post or page, press the + sign to add a block. Search for ‘Kudos’. Select the Kudos Donations button option. ', 'kudos-donations') .'</p>
+                        <p>'. __('Voila! You’ve created your first donations button.', 'kudos-donations') .'</p>
+						<p><i>'. __('Tip: Keep the button call-to-action text short & sweet.', 'kudos-donations') .'</i></p>
+						<h4>'. __('[Option 2] - Using the regular text editor', 'kudos-donations') .'</h4>
+						<p>'. __('The regular WordPress editor uses shortcodes. A shortcode is a piece of text between brackets [like this]. To place a donations button, add the following code to a text field', 'kudos-donations') .':</p>
 						<p><code>[kudos]</code></p>
-						<p>The button will now appear on the page!</p>
-						<p><i>Tip: You can customise each button and donate pop-up text by adding extra options to the shortcode. Check the ‘Advanced’ tab for more information.</i></p>
+						<p>'. __('The button will now appear on the page!', 'kudos-donations') .'</p>
+						<p><i>'. __('Tip: You can customise each button and donate pop-up text by adding extra options to the shortcode. Check the ‘Advanced’ tab for more information.', 'kudos-donations') .'</i></p>
 		            '),
 		        Field::make('html', 'support', null)
 		            ->set_html('
-		                <h3>Need support?</h3>
-		                <p>We tried to make the Kudos Donations plugin as easy to use as possible. But we all need a little help sometimes.</p>
-						<p>If you have questions about the Kudos plugin or require support with the installation, please get in touch with us via <a href="mailto:kudos@iseard.media">kudos@iseard.media</a>.</p>
-					 	<p>This plugin was created by iseard.media – your digital marketing agency for the arts</p>
+		                <h3>'. __('Need support?', 'kudos-donations') .'</h3>
+		                <p>'. __('We tried to make the Kudos Donations plugin as easy to use as possible. But we all need a little help sometimes.', 'kudos-donations') .'</p>
+		                '/* translators: %s: Email address */.'
+						<p>'. sprintf(__('If you have questions about the Kudos plugin or require support with the installation, please get in touch via %s.', 'kudos-donations'), '<a href="mailto:kudos@iseard.media">kudos@iseard.media</a>') .'</p>
+						'/* translators: %s: Iseard Media website link */.'
+					 	<p>'. sprintf(__('This plugin was created by %s – your digital marketing agency for the arts'), '<a target="_blank" href="https://iseard.media">iseard.media</a>') .'</p>
 		            ')
 	        ])
 
 	        /*
 			 * Payment tab
 			 */
-	        ->add_tab('Payment', [
+	        ->add_tab('Mollie', [
                 Field::make( 'html', 'payment_intro', null )
 	                /* translators: %s: Link to Mollie dashboard */
                     ->set_html('
-						<p><strong>' . sprintf(__('Kudos Donations works with payment vendor Mollie. If you don’t have a Mollie account, please create one here: %s', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/">Mollie</a>') . '</strong></p>
-						<p>To receive payments, you will need to add your Mollie Live API key in the box below. Would you like to test the system first? Then you can use the Mollie Test API key. </p>
-						<p>Both "Live" and "Test" API keys can be found in your <a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>.</p>
+						<p><strong>' . sprintf(__('Kudos works with payment vendor Mollie. Create a %s', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/">Mollie account</a>') . '</strong></p>
+						<p>'. __('To receive payments, you will need to add your Mollie Live API key in the box below. Would you like to test the system first? Then you can use the Mollie Test API key.', 'kudos-donations') .'</p>
+						'/* translators: %s: Mollie website link */.'
+						<p>'. sprintf(__('Both "Live" and "Test" API keys can be found in your %s', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>') .'.</p>
 					'),
                 Field::make('radio', 'kudos_mollie_api_mode', __('Mode', 'kudos-donations'))
-	                ->set_help_text( __('When using this plugin for the first time, the payment mode is set to "Test". That’s so that you can first check that the configuration is working correctly. Once you\'re ready to receive live payments you can switch the mode to "Live".', 'kudos-donations')  )
+	                ->set_help_text( __('When using this plugin for the first time, the payment mode is set to "Test". Check that the configuration is working correctly. Once you\'re ready to receive live payments you can switch the mode to "Live".', 'kudos-donations')  )
                     ->add_options([
                         'test' => __('Test', 'kudos-donations'),
                         'live' => __('Live', 'kudos-donations')
@@ -121,12 +133,13 @@ class Carbon {
             ] )
 
 	        /*
-			 * Look & Feel tab
+			 * Customise tab
 			 */
-	        ->add_tab(__('Customize', 'kudos-donations'), [
-	        	Field::make('html', 'customize_intro', null)
+	        ->add_tab(__('Customise', 'kudos-donations'), [
+	        	Field::make('html', 'customise_intro', null)
 	                ->set_html('
-	                	<p><strong>Customise your donation button and pop-up below.</strong></p>
+	                	<p><strong>'. __('Customise your donation button and pop-up below.', 'kudos-donations') .'</strong></p>
+	                	<p><i>'. __('Did you know: It is also possible to change text settings when adding each individual button.', 'kudos-donations') .'</i></p>
 	                '),
                 Field::make('radio_image', 'kudos_button_style', __('Button style', 'kudos-donations'))
                     ->add_options([
@@ -141,7 +154,26 @@ class Carbon {
 //			        ->set_help_text('Customise the text of the donate pop-up screen')
 		            ->set_default_value(__('Support us!', 'kudos-donations')),
 		        Field::make('text', 'kudos_form_text', __('Payment form text', 'kudos-donations'))
-		            ->set_default_value(__('We really appreciate that you want to help us out.', 'kudos-donations'))
+		            ->set_default_value(__('We really appreciate that you want to help us out.', 'kudos-donations')),
+		        Field::make('text', 'kudos_return_message_header', __('Message header', 'kudos-donations'))
+		             ->set_default_value(__('Thanks!', 'kudos-donations'))
+		             ->set_conditional_logic([
+			             [
+				             'field' => 'kudos_return_message_enable',
+				             'value' => true
+			             ]
+		             ]),
+		        Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
+			        /* translators: %s: Value of donation */
+			         ->set_default_value(sprintf(__('Thanks a lot for your donation of € %s. We greatly appreciate your support. Thanks to your efforts, culture remains accessible to everyone.', 'kudos-donations'), '{{value}}'))
+			        /* translators: %s: Available handlebar variables */
+			         ->set_help_text(sprintf(__('You can use the following variables %s', 'kudos-donations'), '{{value}}, {{name}}'))
+		             ->set_conditional_logic([
+			             [
+				             'field' => 'kudos_return_message_enable',
+				             'value' => true
+			             ]
+		             ]),
             ])
 
 	        /*
@@ -150,13 +182,13 @@ class Carbon {
             ->add_tab(__('Advanced', 'kudos-donations'), [
             	    Field::make('html', 'advanced_intro', null)
 	                    ->set_html('
-	                        <p><strong>Shortcode options</strong></p>
-	                        <p>Override the default settings per button by using the following shortcode options:</p>
-	                        <p>To add a custom button text, use: <code>[kudos label="Help us out!"]</code></p>
-							<p>To add a custom header text, use: <code>[kudos header="Support our cause"]</code></p>
-							<p>To add a custom message, use: <code>[kudos text="All donations will go straight to the artists who created this video. Thank you for your support!"]</code></p>
-							<p>A fully customised button and text would look like this:</p>
-							<p><code>[kudos label="Help us out!" header="Support our cause" text=" All donations will go straight to the artists who created this video. Thank you for your support!"]</code></p>
+	                        <p><strong>'. __('Shortcode options', 'kudos-donations') .'</strong></p>
+	                        <p>'. __('Override the default settings per button by using the following shortcode options', 'kudos-donations') .':</p>
+	                        <p>'. __('To add a custom button text, use', 'kudos-donations') .': <code>[kudos button="'. __('Help us out!', 'kudos-donations') .'"]</code></p>
+							<p>'. __('To add a custom header text, use', 'kudos-donations') .' <code>[kudos header="'. __('Support our cause', 'kudos-donations') .'"]</code></p>
+							<p>'. __('To add a custom message, use', 'kudos-donations') .': <code>[kudos text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code></p>
+							<p>'. __('A fully customised button and text would look like this', 'kudos-donations') .':</p>
+							<p><code>[kudos label="'. __('Help us out!') .'" header="'. __('Support our cause', 'kudos-donations') .'" text="'. __('Thank you for donating to this project. We really appreciate your support.') .'"]</code></p>
 	                    '),
                     Field::make('checkbox', 'kudos_custom_return_enable', __('Use custom return URL', 'kudos-donations'))
 	                    ->set_help_text( 'Useful if you want to create a custom thank you page' )
@@ -171,26 +203,7 @@ class Carbon {
                         ]),
                     Field::make('checkbox', 'kudos_return_message_enable', __('Show pop-up message when payment complete', 'kudos-donations'))
 	                    ->set_help_text( __('Enable this to show a pop-up thanking the customer for their donation.', 'kudos-donations')  )
-                        ->set_default_value(true),
-	                Field::make('text', 'kudos_return_message_header', __('Message header', 'kudos-donations'))
-		                ->set_default_value(__('Thanks!', 'kudos-donations'))
-		                ->set_conditional_logic([
-			                [
-				                'field' => 'kudos_return_message_enable',
-				                'value' => true
-			                ]
-		                ]),
-	                Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
-		                /* translators: %s: Numerical currency value */
-		                ->set_default_value(sprintf(__('Thanks a lot for your donation of € %s. We greatly appreciate your support. Thanks to your efforts, culture remains accessible to everyone.', 'kudos-donations'), '{{value}}'))
-		                /* translators: %s: Available handlebar variables */
-		                ->set_help_text(sprintf(__('You can use the following variables %s', 'kudos-donations'), '{{value}}, {{name}}'))
-		                ->set_conditional_logic([
-			                [
-				                'field' => 'kudos_return_message_enable',
-				                'value' => true
-			                ]
-		                ]),
+                        ->set_default_value(true)
             ])
         ;
     }
@@ -208,11 +221,11 @@ class Carbon {
 	        ->set_category('widgets', 'common')
             ->add_fields([
                 Field::make('text', 'kudos_button_label', __('Button label', 'kudos-donations'))
-	                ->set_default_value(__('Donate now', 'kudos-donations')),
+	                ->set_default_value(get_option('_kudos_button_label')),
 	            Field::make('text', 'kudos_modal_header', __('Modal header', 'kudos-donations'))
-	                 ->set_default_value(__('Support us!', 'kudos-donations')),
+	                 ->set_default_value(get_option('_kudos_form_header')),
                 Field::make('text', 'kudos_modal_text', __('Modal text', 'kudos-donations'))
-                    ->set_default_value(__("We really appreciate that you want to help us out.", 'kudos-donations')),
+	                ->set_default_value(get_option('_kudos_form_text')),
             ])
             ->set_render_callback( function ( $fields, $attributes, $inner_blocks ) {
                 $label = $fields['kudos_button_label'];
