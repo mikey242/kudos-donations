@@ -25,11 +25,21 @@ namespace Kudos;
 class Kudos_Activator {
 
 	/**
-	 * Create the transactions database
+	 * Runs all activation functions
 	 *
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+		Kudos_Activator::create_transactions_db();
+		Kudos_Activator::set_defaults();
+	}
+
+	/**
+	 * Creates the transactions database
+	 *
+	 * @since    1.0.0
+	 */
+	private static function create_transactions_db() {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
@@ -53,4 +63,28 @@ class Kudos_Activator {
 		dbDelta( $sql );
 	}
 
+	/**
+	 * Adds default options if not already set
+	 *
+	 * @since    1.0.0
+	 */
+	private static function set_defaults() {
+		if(!get_option('_kudos_mollie_api_mode')) {
+			$options = [
+				'_kudos_mollie_api_mode' => 'test',
+				'_kudos_button_style' => 'kudos_btn_primary',
+				'_kudos_button_label' => __('Donate now', 'kudos-donations'),
+				'_kudos_form_header' => __('Support us!', 'kudos-donations'),
+				'_kudos_form_text' => __('Thank you for donating to this project. We really appreciate you supporting the arts.', 'kudos-donations'),
+				'_kudos_return_message_enable' => 'yes',
+				'_kudos_return_message_header' => __('Thank you!', 'kudos-donations'),
+				/* translators: %s: Value of donation */
+				'_kudos_return_message_text' => sprintf(__('Many thanks for your donation of %s. We appreciate your support. Thanks to your kindness we can continue to make art available to everyone.', 'kudos-donations'), '{{value}}')
+			];
+
+			foreach ($options as $option=>$value) {
+				add_option($option, $value);
+			}
+		}
+	}
 }
