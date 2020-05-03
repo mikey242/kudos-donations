@@ -1,36 +1,38 @@
 .kudos_btn {
-  display: inline-block;
-  text-align: center;
-  user-select: none;
-  padding: 10px 20px;
-  text-transform: none;
-  text-decoration: none;
-  cursor: pointer;
-  background-size: 240% 100%;
-  font-size: 1.2rem;
-  height: auto;
-  line-height: 1.6;
-  font-weight: 400;
+  @apply inline-block text-center select-none py-3 px-5 normal-case no-underline cursor-pointer text-lg h-auto leading-normal font-normal rounded-lg border-none;
+
   font-family: "Century Gothic", sans-serif;
-  border-radius: 10px;
-  border: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: #fff;
+  }
+}
+
+.kudos_btn_primary,
+.kudos-btn_primary:focus {
+  background-color: theme('colors.orange.500');
+  color: #fff;
 }
 
 .kudos_btn_primary {
-  background-color: theme('colors.orange.500');
-  color: #fff;
-
-  &:hover {
+  &:hover,
+  &:active, {
     background-color: theme('colors.orange.700');
   }
 }
 
-.kudos_btn_secondary {
+.kudos_btn_secondary,
+.kudos_btn_secondary:focus {
   background-color: theme('colors.green.500');
   color: #fff;
+}
 
-  &:hover {
+.kudos_btn_secondary {
+  &:hover,
+  &:active {
     background-color: theme('colors.green.700');
   }
 }

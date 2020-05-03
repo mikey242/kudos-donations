@@ -2,189 +2,196 @@
 @tailwind components;
 @tailwind utilities;
 
-body.kudos_donations {
-  #kudos_message_modal,
-  #kudos_form_modal {
+@font-face {
+  font-family: 'Elephant';
+  src: url('../fonts/elephnt.ttf') format('truetype');
+}
 
-    @apply text-gray-900 text-base;
+#kudos_message_modal,
+#kudos_form_modal {
+  font-size: 16px;
+  display: none;
 
-    display: none;
+  * {
+    font-family: "Century Gothic", sans-serif;
+    @apply box-border leading-normal;
+  }
 
-    * {
-      font-family: "Century Gothic", sans-serif;
-      @apply text-lg;
+  p {
+    @apply text-lg text-gray-900;
+  }
+
+  h2 {
+    font-family: 'Elephant', "Times New Roman", serif;
+    @apply text-4xl m-0 mb-2;
+  }
+
+  small {
+    font-size: 80%;
+    font-weight: 400;
+
+    &.error {
+      @apply relative;
+
+      top: 5px;
+      color: theme('colors.red.500');
     }
+  }
 
-    h2 {
-      font-family: Elephant, "Times New Roman", serif;
-      @apply text-4xl;
-    }
+  .kudos_modal_overlay {
+    @apply flex justify-center items-center fixed top-0 left-0 w-full h-full bg-modal;
 
-    .kudos_modal_overlay {
-      @apply flex justify-center items-center fixed top-0 left-0 w-full h-full bg-modal z-50;
-    }
+    z-index: 1050;
+  }
 
-    .kudos_modal_header {
-      @apply flex items-center justify-between;
-    }
+  .kudos_modal_header {
+    @apply flex items-center justify-between;
+  }
 
-    .kudos_modal_logo {
-      color: green;
+  .kudos_modal_logo {
+    color: green;
 
-      &::before {
-        content: '';
-        display: block;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-image: url("../img/logo-colour.svg");
-        background-position: center;
-        width: 40px;
-        height: 40px;
-      }
-    }
-
-    .kudos_modal_close {
-      @apply text-black p-0;
-
-      background: transparent;
-      border: 0;
-
-      &::before {
-        content: "\2715";
-      }
-    }
-
-    .kudos_modal_container {
-      @apply bg-white p-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden;
-
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: #fff;
-        z-index: -1;
-        opacity: 0.7;
-      }
-    }
-
-    &.kudos_loading {
-      .kudos_modal_container::before {
-        z-index: 1;
-      }
-
-      .kudos_spinner {
-        display: block;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-image: url("../img/logo-black.svg");
-        animation: loader-spin 2s infinite;
-      }
-    }
-
-    .kudos_modal .kudos_modal_container,
-    .kudos_modal .kudos_modal_overlay {
-      will-change: transform;
-      z-index: 1050;
-    }
-
-    &.is-open {
+    &::before {
+      content: '';
       display: block;
-      overflow-x: hidden;
-      overflow-y: auto;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-image: url("../img/logo-colour.svg");
+      background-position: center;
+      width: 40px;
+      height: 40px;
     }
   }
 
-  #kudos_form_modal {
-    #kudos_form {
-      margin: 0;
-      padding: 0;
+  .kudos_modal_close {
+    @apply text-black p-0;
 
-      input {
-        @apply appearance-none border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-base text-gray-700;
+    background: transparent;
+    border: 0;
 
-        &:focus {
-          @apply border-orange-500;
-        }
-      }
-
-      small {
-        font-size: 80%;
-        font-weight: 400;
-
-        &.error {
-          @apply relative;
-
-          top: 5px;
-          color: theme('colors.red.500');
-        }
-      }
-
-      input.error {
-        border: 2px solid theme('colors.red.500');
-      }
+    &::before {
+      content: "\2715";
     }
   }
 
-  .kudos_modal {
-    .kudos_spinner {
-      display: none;
-      width: 36px;
-      height: 36px;
+  .kudos_modal_container {
+    @apply bg-white p-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden;
+
+    &::before {
+      content: '';
       position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-left: -18px;
-      margin-top: -18px;
-      z-index: 999;
-    }
-
-    .payment_by {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-
-      &::before {
-        content: '';
-        width: 17px;
-        height: 20px;
-        background: url("../img/lock.svg") no-repeat center;
-        background-size: contain;
-        margin: auto 5px auto 0;
-      }
-
-      &::after {
-        content: '';
-        width: 51px;
-        height: 15px;
-        background: url("../img/mollie.svg") no-repeat top;
-        background-size: contain;
-        margin-left: 5px;
-      }
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: -1;
+      opacity: 0.7;
     }
   }
 
-  .kudos_modal_footer {
-    @apply mt-8;
+  .kudos_modal .kudos_modal_container,
+  .kudos_modal .kudos_modal_overlay {
+    will-change: transform;
+    z-index: 1050;
   }
 
-  .kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
-    animation: fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+  &.is-open {
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+#kudos_form_modal {
+  .kudos_spinner {
+    display: none;
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -18px;
+    margin-top: -18px;
+    z-index: 999;
   }
 
-  .kudos_modal[aria-hidden="false"] .kudos_modal_container {
-    animation: slideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+  &.kudos_loading {
+    .kudos_modal_container::before {
+      z-index: 1;
+    }
+
+    .kudos_spinner {
+      display: block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-image: url("../img/logo-black.svg");
+      animation: loader-spin 2s infinite;
+    }
   }
 
-  .kudos_modal[aria-hidden="true"] .kudos_modal_overlay {
-    animation: fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
-  }
+  #kudos_form {
+    margin: 0;
+    padding: 0;
 
-  .kudos_modal[aria-hidden="true"] .kudos_modal_container {
-    animation: slideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+    input {
+      @apply appearance-none leading-normal bg-transparent border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-base text-gray-700;
+
+      &:focus {
+        @apply border-orange-500;
+      }
+    }
+
+    input.error {
+      border: 2px solid theme('colors.red.500');
+    }
   }
+}
+
+.kudos_modal {
+  .payment_by {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    &::before {
+      content: '';
+      width: 17px;
+      height: 20px;
+      background: url("../img/lock.svg") no-repeat center;
+      background-size: contain;
+      margin: auto 5px auto 0;
+    }
+
+    &::after {
+      content: '';
+      width: 51px;
+      height: 15px;
+      background: url("../img/mollie.svg") no-repeat top;
+      background-size: contain;
+      margin-left: 5px;
+    }
+  }
+}
+
+.kudos_modal_footer {
+  @apply mt-8;
+}
+
+.kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
+  animation: fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.kudos_modal[aria-hidden="false"] .kudos_modal_container {
+  animation: slideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.kudos_modal[aria-hidden="true"] .kudos_modal_overlay {
+  animation: fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.kudos_modal[aria-hidden="true"] .kudos_modal_container {
+  animation: slideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
 }
 
 // Animations
