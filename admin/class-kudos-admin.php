@@ -139,7 +139,7 @@ class Kudos_Admin {
 		$message = '';
 		if ('delete' === $table->current_action()) {
 			$message = '<div class="updated below-h2" id="message"><p>' . __('Transaction deleted', 'kudos-donations') . '</p></div>';
-		} elseif ('bulk-delete' === $table->current_action()) {
+		} elseif ('bulk-delete' === $table->current_action() && isset($_REQUEST['bulk-delete'])) {
 			/* translators: %s: Number of transactions */
 			$message = '<div class="updated below-h2" id="message"><p>' . sprintf(__('%s transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-delete'])) . '</p></div>';
         }
@@ -156,27 +156,5 @@ class Kudos_Admin {
 	    </div>
 	    <?php
     }
-
-	/**
-	 * Creates and registers the [kudos] shortcode
-     *
-	 * @since    1.0.0
-	 */
-	public function register_shortcodes() {
-		add_shortcode( 'kudos', function ( $atts ) {
-
-			$atts = shortcode_atts(
-				[
-					'label' => '',
-					'header' => '',
-					'text'  => ''
-				],
-				$atts,
-				'kudos'
-			);
-
-			return kudos_button( $atts['label'], $atts['header'], $atts['text'], false );
-		} );
-	}
 
 }
