@@ -49,7 +49,7 @@ class Kudos_Modal {
                     <div class="text-center">
                         <h2 id="kudos_modal_title" class="font-normal"><?php echo $this->header ?></h2>
                         <p id="kudos_modal_text"><?php echo $this->text ?></p>
-                        <p class="text-red-500 kudos_error_message"></p>
+                        <p><small class="kudos_error_message error"></small></p>
                     </div>
                     <form id="kudos_form" action="">
                         <input type="text" name="name" placeholder="<?php _e('Name', 'kudos-donations')?>" />
