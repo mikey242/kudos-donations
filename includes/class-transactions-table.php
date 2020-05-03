@@ -16,7 +16,11 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 class Transactions_Table extends WP_List_Table {
 
-	/** Class constructor */
+	/**
+	 * Class constructor
+	 *
+	 * @since      1.0.0
+	 */
 	public function __construct() {
 
 		parent::__construct( [
@@ -389,7 +393,7 @@ class Transactions_Table extends WP_List_Table {
 				// In our file that handles the request, verify the nonce.
 				$nonce = esc_attr( $_REQUEST['_wpnonce'] );
 				if ( ! wp_verify_nonce( $nonce, 'bulk-' . $this->_args['singular'] ) ) {
-					die( 'Go get a life script kiddies' );
+					die();
 				} else {
 					self::delete_transaction( absint( $_GET['transaction'] ) );
 				}
@@ -399,13 +403,17 @@ class Transactions_Table extends WP_List_Table {
 				// In our file that handles the request, verify the nonce.
 				$nonce = esc_attr( $_REQUEST['_wpnonce'] );
 				if ( ! wp_verify_nonce( $nonce, 'bulk-' . $this->_args['plural'] ) ) {
-					die( 'Go get a life script kiddies' );
+					die();
 
 				}
-				$delete_ids = esc_sql( $_POST['bulk-delete'] );
-				foreach ( $delete_ids as $id ) {
+
+				if(isset($_REQUEST['bulk-delete'])) {
+					$delete_ids = esc_sql( $_REQUEST['bulk-delete']);
+					foreach ( $delete_ids as $id ) {
 						self::delete_transaction( $id );
+					}
 				}
+
 				break;
 		}
 	}
