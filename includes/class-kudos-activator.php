@@ -75,11 +75,11 @@ class Kudos_Activator {
 				'_kudos_button_style' => 'kudos_btn_primary',
 				'_kudos_button_label' => __('Donate now', 'kudos-donations'),
 				'_kudos_form_header' => __('Support us!', 'kudos-donations'),
-				'_kudos_form_text' => __('Thank you for donating to this project. We really appreciate you supporting the arts.', 'kudos-donations'),
+				'_kudos_form_text' => __('Thank you for your donation. We appreciate your support!', 'kudos-donations'),
 				'_kudos_return_message_enable' => 'yes',
 				'_kudos_return_message_header' => __('Thank you!', 'kudos-donations'),
 				/* translators: %s: Value of donation */
-				'_kudos_return_message_text' => sprintf(__('Many thanks for your donation of %s. We appreciate your support. Thanks to your kindness we can continue to make art available to everyone.', 'kudos-donations'), '{{value}}')
+				'_kudos_return_message_text' => sprintf(__('Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations'), '{{value}}')
 			];
 
 			foreach ($options as $option=>$value) {

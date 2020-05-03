@@ -57,15 +57,13 @@ class Carbon {
 	        	Field::make('html', 'welcome', null)
 					->set_html('
 						<div style="display: flex;">
-							<img style="padding-right: 10px" width=40 src="data:image/svg+xml;base64,'. base64_encode(
-								file_get_contents(__DIR__ . '/../src/img/logo-colour.svg')
-							) .'">
-							<p>'. __("Thank you for downloading the Kudos plugin. Follow these steps to start receiving donations for your creative projects.", 'kudos-donations') .'</p>
+							<img style="padding-right: 10px" width=40 src="data:image/svg+xml;base64,'. base64_encode('<svg xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 555 449"><defs/><path fill="#2ec4b6" d="M0-.003h130.458v448.355H.001z"/><path fill="#ff9f1c" d="M489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>') .'">
+							<p>'. __("Welcome to Kudos. Follow these steps to start receiving donations.", 'kudos-donations') .'</p>
 						</div>
 					'),
 		        Field::make('html', 'step_1', null)
 		             ->set_html('
-                        <h3>'.__("Step 1. Configure your payment method").'</h3>
+                        <h3>'.__("Step 1. Configure your payment method", 'kudos-donations').'</h3>
                         '/* translators: %s: Plugin name */.'
                         <p>'.sprintf(__("In the Mollie tab, fill in your payment settings. Kudos works with payment vendor %s.", 'kudos-donations'), "<a target='_blank' alt='Mollie website' href='https://www.mollie.com'>Mollie</a>") .'</p>
 					'),
@@ -106,7 +104,7 @@ class Carbon {
                 Field::make( 'html', 'payment_intro', null )
 	                /* translators: %s: Link to Mollie dashboard */
                     ->set_html('
-						<p><strong>' . sprintf(__('Kudos works with payment vendor Mollie. Create a %s', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/">Mollie account</a>') . '</strong></p>
+						<p><strong>' . sprintf(__('Kudos works with payment vendor Mollie. Create a %s.', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/">Mollie account</a>') . '</strong></p>
 						<p>'. __('To receive payments, you will need to add your Mollie Live API key in the box below. Would you like to test the system first? Then you can use the Mollie Test API key.', 'kudos-donations') .'</p>
 						'/* translators: %s: Mollie website link */.'
 						<p>'. sprintf(__('Both "Live" and "Test" API keys can be found in your %s', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>') .'.</p>
@@ -165,7 +163,7 @@ class Carbon {
 		             ]),
 		        Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
 			        /* translators: %s: Value of donation */
-			         ->set_default_value(sprintf(__('Thanks a lot for your donation of € %s. We greatly appreciate your support. Thanks to your efforts, culture remains accessible to everyone.', 'kudos-donations'), '{{value}}'))
+//			         ->set_default_value(sprintf(__('Thanks a lot for your donation of € %s. We greatly appreciate your support. Thanks to your efforts, culture remains accessible to everyone.', 'kudos-donations'), '{{value}}'))
 			        /* translators: %s: Available handlebar variables */
 			         ->set_help_text(sprintf(__('You can use the following variables %s', 'kudos-donations'), '{{value}}, {{name}}'))
 		             ->set_conditional_logic([
@@ -188,7 +186,7 @@ class Carbon {
 							<p>'. __('To add a custom header text, use', 'kudos-donations') .' <code>[kudos header="'. __('Support our cause', 'kudos-donations') .'"]</code></p>
 							<p>'. __('To add a custom message, use', 'kudos-donations') .': <code>[kudos text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code></p>
 							<p>'. __('A fully customised button and text would look like this', 'kudos-donations') .':</p>
-							<p><code>[kudos label="'. __('Help us out!') .'" header="'. __('Support our cause', 'kudos-donations') .'" text="'. __('Thank you for donating to this project. We really appreciate your support.') .'"]</code></p>
+							<p><code>[kudos label="'. __('Help us out!', 'kudos-donations') .'" header="'. __('Support our cause', 'kudos-donations') .'" text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code></p>
 	                    '),
                     Field::make('checkbox', 'kudos_custom_return_enable', __('Use custom return URL', 'kudos-donations'))
 	                    ->set_help_text( 'Useful if you want to create a custom thank you page' )
@@ -215,7 +213,7 @@ class Carbon {
 	 */
 	public function kudos_blocks() {
 		/* translators: %s: Name of this plugin */
-        Block::make( sprintf(__('%s Button', 'kudos-donations'), 'Kudos'))
+        Block::make( 'Kudos Button')
             ->set_icon('heart')
 	        ->set_description(__('Adds a Kudos donate button to your post or page.', 'kudos-donations'))
 	        ->set_category('widgets', 'common')

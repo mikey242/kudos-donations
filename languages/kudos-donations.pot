@@ -1,0 +1,448 @@
+# Copyright (C) 2020 Michael Iseard
+# This file is distributed under the same license as the Kudos Donations plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Kudos Donations 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-05-03T16:40:29+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.4.0\n"
+"X-Domain: kudos-donations\n"
+
+#. Plugin Name of the plugin
+msgid "Kudos Donations"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://iseard.media"
+msgstr ""
+
+#. Description of the plugin
+msgid "Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments."
+msgstr ""
+
+#. Author of the plugin
+msgid "Michael Iseard"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.linkedin.com/in/michael-iseard/"
+msgstr ""
+
+#. translators: %s: API mode
+#: admin/class-kudos-admin.php:106
+msgid "%s API key connection was successful!"
+msgstr ""
+
+#. translators: %s: API mode
+#: admin/class-kudos-admin.php:109
+msgid "Error connecting with Mollie, please check the %s API key and try again."
+msgstr ""
+
+#. translators: %s: Plugin name
+#: admin/class-kudos-admin.php:122
+msgid "%s Transactions"
+msgstr ""
+
+#: admin/class-kudos-admin.php:123
+#: admin/class-kudos-admin.php:148
+#: includes/class-transactions-table.php:28
+msgid "Transactions"
+msgstr ""
+
+#: admin/class-kudos-admin.php:141
+msgid "Transaction deleted"
+msgstr ""
+
+#. translators: %s: Number of transactions
+#: admin/class-kudos-admin.php:144
+msgid "%s transaction(s) deleted"
+msgstr ""
+
+#: admin/class-kudos-admin.php:149
+msgid "Your recent Kudos transactions"
+msgstr ""
+
+#: includes/class-kudos-activator.php:76
+#: includes/class-kudos-carbon.php:150
+msgid "Donate now"
+msgstr ""
+
+#: includes/class-kudos-activator.php:77
+#: includes/class-kudos-carbon.php:153
+msgid "Support us!"
+msgstr ""
+
+#: includes/class-kudos-activator.php:78
+msgid "Thank you for your donation. We appreciate your support!"
+msgstr ""
+
+#: includes/class-kudos-activator.php:80
+msgid "Thank you!"
+msgstr ""
+
+#. translators: %s: Value of donation
+#: includes/class-kudos-activator.php:82
+msgid "Many thanks for your donation of %s. We appreciate your support."
+msgstr ""
+
+#. translators: %s: Plugin name
+#: includes/class-kudos-carbon.php:48
+#: includes/class-kudos-carbon.php:51
+msgid "%s Settings"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:61
+msgid "Welcome to Kudos. Follow these steps to start receiving donations."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:66
+msgid "Step 1. Configure your payment method"
+msgstr ""
+
+#. translators: %s: Plugin name
+#: includes/class-kudos-carbon.php:68
+msgid "In the Mollie tab, fill in your payment settings. Kudos works with payment vendor %s."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:72
+msgid "Step 2. Configure look and feel"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:73
+msgid "Set the design of the donation button and text under the ‘Customise’ tab."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:77
+msgid "Step 3. Add your first button"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:78
+msgid "There are two ways to place a donation button, depending on which WordPress text editor you use."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:79
+msgid "[Option 1] - Using the block editor"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:80
+msgid "When using the block editor in a post or page, press the + sign to add a block. Search for ‘Kudos’. Select the Kudos Donations button option. "
+msgstr ""
+
+#: includes/class-kudos-carbon.php:81
+msgid "Voila! You’ve created your first donations button."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:82
+msgid "Tip: Keep the button call-to-action text short & sweet."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:83
+msgid "[Option 2] - Using the regular text editor"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:84
+msgid "The regular WordPress editor uses shortcodes. A shortcode is a piece of text between brackets [like this]. To place a donations button, add the following code to a text field"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:86
+msgid "The button will now appear on the page!"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:87
+msgid "Tip: You can customise each button and donate pop-up text by adding extra options to the shortcode. Check the ‘Advanced’ tab for more information."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:91
+msgid "Need support?"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:92
+msgid "We tried to make the Kudos Donations plugin as easy to use as possible. But we all need a little help sometimes."
+msgstr ""
+
+#. translators: %s: Email address
+#: includes/class-kudos-carbon.php:94
+msgid "If you have questions about the Kudos plugin or require support with the installation, please get in touch via %s."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:107
+msgid "Kudos works with payment vendor Mollie. Create a %s."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:108
+msgid "To receive payments, you will need to add your Mollie Live API key in the box below. Would you like to test the system first? Then you can use the Mollie Test API key."
+msgstr ""
+
+#. translators: %s: Mollie website link
+#: includes/class-kudos-carbon.php:110
+msgid "Both \"Live\" and \"Test\" API keys can be found in your %s"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:112
+msgid "Mode"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:113
+msgid "When using this plugin for the first time, the payment mode is set to \"Test\". Check that the configuration is working correctly. Once you're ready to receive live payments you can switch the mode to \"Live\"."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:115
+#: includes/class-transactions-table.php:117
+msgid "Test"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:116
+#: includes/class-transactions-table.php:122
+msgid "Live"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:119
+msgid "Mollie Test API Key"
+msgstr ""
+
+#. translators: %s: Start of API key
+#: includes/class-kudos-carbon.php:121
+#: includes/class-kudos-carbon.php:124
+msgid "This begins with \"%s\""
+msgstr ""
+
+#: includes/class-kudos-carbon.php:122
+msgid "Mollie Live API Key"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:127
+msgid "Check API Key"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:136
+msgid "Customise"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:139
+msgid "Customise your donation button and pop-up below."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:140
+msgid "Did you know: It is also possible to change text settings when adding each individual button."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:142
+msgid "Button style"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:148
+#: includes/class-kudos-carbon.php:221
+msgid "Button label"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:151
+msgid "Payment form header"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:154
+msgid "Payment form text"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:155
+msgid "We really appreciate that you want to help us out."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:156
+msgid "Message header"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:157
+msgid "Thanks!"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:164
+msgid "Message text"
+msgstr ""
+
+#. translators: %s: Available handlebar variables
+#: includes/class-kudos-carbon.php:168
+msgid "You can use the following variables %s"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:180
+msgid "Advanced"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:183
+msgid "Shortcode options"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:184
+msgid "Override the default settings per button by using the following shortcode options"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:185
+msgid "To add a custom button text, use"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:185
+msgid "Help us out!"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:186
+msgid "To add a custom header text, use"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:186
+#: includes/class-kudos-carbon.php:189
+msgid "Support our cause"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:187
+msgid "To add a custom message, use"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:187
+#: includes/class-kudos-carbon.php:189
+msgid "Thank you for donating to this project. We really appreciate your support."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:188
+msgid "A fully customised button and text would look like this"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:191
+msgid "Use custom return URL"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:194
+msgid "URL"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:202
+msgid "Show pop-up message when payment complete"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:203
+msgid "Enable this to show a pop-up thanking the customer for their donation."
+msgstr ""
+
+#. translators: %s: Name of this plugin
+#: includes/class-kudos-carbon.php:216
+msgid "%s Button"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:218
+msgid "Adds a Kudos donate button to your post or page."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:223
+msgid "Modal header"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:225
+msgid "Modal text"
+msgstr ""
+
+#: includes/class-transactions-table.php:27
+msgid "Transaction"
+msgstr ""
+
+#: includes/class-transactions-table.php:50
+msgid "Geen transacties beschikbaar."
+msgstr ""
+
+#: includes/class-transactions-table.php:90
+msgid "Date"
+msgstr ""
+
+#: includes/class-transactions-table.php:91
+#: public/class-kudos-modal.php:55
+msgid "Name"
+msgstr ""
+
+#: includes/class-transactions-table.php:92
+msgid "E-mail"
+msgstr ""
+
+#: includes/class-transactions-table.php:93
+msgid "Amount"
+msgstr ""
+
+#: includes/class-transactions-table.php:94
+msgid "Status"
+msgstr ""
+
+#: includes/class-transactions-table.php:95
+msgid "Transaction Id"
+msgstr ""
+
+#: includes/class-transactions-table.php:112
+msgid "All"
+msgstr ""
+
+#: includes/class-transactions-table.php:266
+msgid "Paid"
+msgstr ""
+
+#: includes/class-transactions-table.php:269
+msgid "Open"
+msgstr ""
+
+#: includes/class-transactions-table.php:272
+msgid "Expired"
+msgstr ""
+
+#: includes/class-transactions-table.php:275
+msgid "Canceled"
+msgstr ""
+
+#: includes/class-transactions-table.php:278
+msgid "Failed"
+msgstr ""
+
+#: includes/class-transactions-table.php:281
+msgid "Unknown"
+msgstr ""
+
+#: public/class-kudos-button.php:63
+msgid "Mollie not configured"
+msgstr ""
+
+#: public/class-kudos-modal.php:56
+msgid "E-mail address"
+msgstr ""
+
+#. translators: %s: Star denoting required field
+#: public/class-kudos-modal.php:58
+msgid "Amount %s"
+msgstr ""
+
+#: public/class-kudos-modal.php:61
+msgid "Secure payment by"
+msgstr ""
+
+#: public/class-kudos-modal.php:65
+msgid "Cancel"
+msgstr ""
+
+#: public/class-kudos-modal.php:66
+msgid "Donate"
+msgstr ""
+
+#: public/class-kudos-public.php:84
+msgid "Donation amount is required"
+msgstr ""
+
+#: public/class-kudos-public.php:85
+msgid "Minimum donation is 1 euro"
+msgstr ""
+
+#: public/class-kudos-public.php:86
+msgid "Only digits are valid"
+msgstr ""
+
+#: public/class-kudos-public.php:121
+msgid "Error creating Mollie payment. Please try again later."
+msgstr ""

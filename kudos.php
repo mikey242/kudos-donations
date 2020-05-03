@@ -19,7 +19,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  * @wordpress-plugin
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://iseard.media
- * Description:       Add a donation button to any page on your website. Easy & simple setup. Works with Mollie payments. Built with theatres, museums & other creative content creators in mind.
+ * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
  * Version:           1.0.0
  * Author:            Michael Iseard
  * Author URI:        https://www.linkedin.com/in/michael-iseard/
