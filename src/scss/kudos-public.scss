@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "partials/buttons";
 
 @font-face {
   font-family: 'Elephant';
@@ -23,8 +24,6 @@
     font-family: "Century Gothic", sans-serif;
     @apply box-border text-base leading-normal opacity-100 relative;
   }
-
-  @import "buttons";
 
   display: none;
 

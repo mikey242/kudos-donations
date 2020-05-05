@@ -58,14 +58,14 @@ $(() => {
                                 <div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">
                                     <header class="kudos_modal_header">
                                         <div class="kudos_modal_logo"></div>
-                                        <button class="kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>
+                                        <button class="kudos_button kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>
                                     </header>
                                     <div id="kudos_modal_content" class="kudos_modal_content mt-4">
                                         <div class="text-center">
                                             <h2 class="font-normal">` + header + `</h2><p>` + message + `</p>
                                         </div>
                                         <footer class="kudos_modal_footer text-right">
-                                            <button class="kudos_btn kudos_btn_primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
+                                            <button class="kudos_button style-orange" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
                                         </footer>
                                     </div>
                                 </div>

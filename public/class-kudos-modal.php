@@ -43,7 +43,7 @@ class Kudos_Modal {
                         <div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">
                             <header class="kudos_modal_header">
                                 <div class="kudos_modal_logo"></div>
-                                <button class="kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>
+                                <button class="kudos_button kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>
                             </header>
                             <div id="kudos_modal_content" class="kudos_modal_content mt-4">
                                 <div class="text-center">
@@ -62,8 +62,8 @@ class Kudos_Modal {
                                         </small>
                                     </div>
                                     <footer class="kudos_modal_footer text-center">
-                                        <button class="kudos_btn kudos_btn_primary_outline mr-3" type="button" data-micromodal-close aria-label="<?php _e('Cancel', 'kudos-donations') ?>"><?php _e('Cancel', 'kudos-donations') ?></button>
-                                        <button id="kudos_submit" class="kudos_btn kudos_btn_primary" type="submit" aria-label="<?php _e('Donate', 'kudos-donations') ?>"><?php _e('Donate', 'kudos-donations') ?></button>
+                                        <button class="kudos_button style-orange-outline mr-3" type="button" data-micromodal-close aria-label="<?php _e('Cancel', 'kudos-donations') ?>"><?php _e('Cancel', 'kudos-donations') ?></button>
+                                        <button id="kudos_submit" class="kudos_button style-orange" type="submit" aria-label="<?php _e('Donate', 'kudos-donations') ?>"><?php _e('Donate', 'kudos-donations') ?></button>
                                     </footer>
                                 </form>
                             </div>
