@@ -1,6 +1,7 @@
 {
     "require": {
         "mollie/mollie-api-php": "2.0",
-        "htmlburger/carbon-fields": "^3.1"
+        "htmlburger/carbon-fields": "^3.1",
+        "monolog/monolog": "^2.0"
     }
 }
