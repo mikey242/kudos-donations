@@ -9,9 +9,8 @@ button.kudos_button {
     @apply text-white no-underline shadow-none;
   }
 
-  @apply w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
+  @apply font-sans w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
 
-  font-family: "Century Gothic", sans-serif;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
   &.style-orange {

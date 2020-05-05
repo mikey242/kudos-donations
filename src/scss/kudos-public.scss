@@ -2,12 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "partials/fonts";
 @import "partials/buttons";
-
-@font-face {
-  font-family: 'Elephant';
-  src: url('../fonts/elephnt.ttf') format('truetype');
-}
 
 .kudos-modal {
   *,
@@ -22,8 +18,7 @@
   *,
   *::before,
   *::after {
-    font-family: "Century Gothic", sans-serif;
-    @apply box-border text-base leading-normal opacity-100 relative;
+    @apply font-sans box-border text-base leading-normal opacity-100 relative;
   }
 
   display: none;
@@ -33,8 +28,7 @@
   }
 
   h2 {
-    font-family: 'Elephant', "Times New Roman", serif;
-    @apply text-4xl m-0 mb-2 text-gray-900;
+    @apply font-serif text-4xl m-0 mb-2 text-gray-900;
   }
 
   button {

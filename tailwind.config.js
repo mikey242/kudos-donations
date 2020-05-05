@@ -5,6 +5,10 @@ module.exports = {
       'lg': '1.125em', //'18px'
       '4xl': '2.25em', //'36px'
     },
+    fontFamily: {
+      'sans': ['Open Sans Regular','Century Gothic', 'sans-serif'],
+      'serif': ['Elephant', 'Times New Roman', 'serif']
+    },
     maxWidth: {
       'lg': '32em', //'512px'
     },
