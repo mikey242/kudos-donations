@@ -35,18 +35,23 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * Currently plugin version.
+ * Current plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'KUDOS_VERSION', '1.0.0' );
 
 /**
+ * Plugin directory constant
+ */
+define('KUDOS_DIR', plugin_dir_path(__FILE__));
+
+/**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-kudos-activator.php
  */
 function activate_kudos() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kudos-activator.php';
+	require_once KUDOS_DIR . 'includes/class-kudos-activator.php';
 	Kudos_Activator::activate();
 }
 
@@ -55,7 +60,7 @@ function activate_kudos() {
  * This action is documented in includes/class-kudos-deactivator.php
  */
 function deactivate_kudos() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-kudos-deactivator.php';
+	require_once KUDOS_DIR . 'includes/class-kudos-deactivator.php';
 	Kudos_Deactivator::deactivate();
 }
 
@@ -66,7 +71,7 @@ register_deactivation_hook( __FILE__,  __NAMESPACE__ . '\deactivate_kudos' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-kudos.php';
+require KUDOS_DIR . 'includes/class-kudos.php';
 
 /**
  * Begins execution of the plugin.

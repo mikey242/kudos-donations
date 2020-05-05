@@ -94,17 +94,18 @@ class Kudos_Mollie {
 	 */
 	private function load_dependencies() {
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/kudos-helpers.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-loader.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-i18n.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transaction.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-transactions-table.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-carbon.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-kudos-admin.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-public.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-kudos-mollie.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-button.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-kudos-modal.php';
+		require_once KUDOS_DIR . 'includes/kudos-helpers.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-logger.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-loader.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-i18n.php';
+		require_once KUDOS_DIR . 'includes/class-transaction.php';
+		require_once KUDOS_DIR . 'includes/class-transactions-table.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-carbon.php';
+		require_once KUDOS_DIR . 'admin/class-kudos-admin.php';
+		require_once KUDOS_DIR . 'public/class-kudos-public.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-mollie.php';
+		require_once KUDOS_DIR . 'public/class-kudos-button.php';
+		require_once KUDOS_DIR . 'public/class-kudos-modal.php';
 
 		$this->loader = new Kudos_Loader();
 
