@@ -230,7 +230,7 @@ class Kudos_Public {
 				'kudos'
 			);
 
-			$button = new Kudos_Button($atts['label'], $atts['header'], $atts['text']);
+			$button = new Kudos_Button($atts);
 			return $button->get_button(false);
 		} );
 	}

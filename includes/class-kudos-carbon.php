@@ -226,13 +226,13 @@ class Carbon {
 	                ->set_default_value(get_option('_kudos_form_text')),
             ])
             ->set_render_callback( function ( $fields, $attributes, $inner_blocks ) {
-                $label = $fields['kudos_button_label'];
-                $text = $fields['kudos_modal_text'];
-                $header = $fields['kudos_modal_header'];
+                $atts['label'] = $fields['kudos_button_label'];
+                $atts['text'] = $fields['kudos_modal_text'];
+                $atts['header'] = $fields['kudos_modal_header'];
                 $classes = $attributes ? $attributes['className'] : '';
 
                     echo "<div class='kudos_block_button $classes'>";
-						$button = new Kudos_Button($label, $header, $text);
+						$button = new Kudos_Button($atts);
 						$button->get_button();
                     echo "</div><!-- /.block -->";
 

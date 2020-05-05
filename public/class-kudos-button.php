@@ -34,16 +34,14 @@ class Kudos_Button {
 	 * Kudos_Button constructor.
 	 *
 	 * @since    1.0.0
-	 * @param string|null $label
-	 * @param string|null $header
-	 * @param string|null $text
+	 * @param array|null $atts
 	 */
-	public function __construct($label=null, $header=null, $text=null) {
+	public function __construct($atts=[]) {
 
 		$this->redirectUrl = Kudos_Public::get_return_url();
-		$this->label = $label ? $label : get_option('_kudos_button_label');
-		$this->text = $text ? $text : get_option('_kudos_form_text');
-		$this->header = $header ? $header : get_option('_kudos_form_header');
+		$this->label = !empty($atts['label']) ? $atts['label'] : get_option('_kudos_button_label');
+		$this->text = !empty($atts['text']) ? $atts['text'] : get_option('_kudos_form_text');
+		$this->header = !empty($atts['header']) ? $atts['header'] : get_option('_kudos_form_header');
 		$this->style = get_option('_kudos_button_style');
 		$this->ready = Kudos_Public::ready();
 	}
