@@ -141,7 +141,7 @@ class Kudos_Public {
 	public function check_transaction() {
 
 		$order_id = $_REQUEST['order_id'] ? base64_decode($_REQUEST['order_id']) : null;
-		$order_id_session = $_COOKIE['kudos_order_id'];
+		$order_id_session = !empty($_COOKIE['kudos_order_id']) ? $_COOKIE['kudos_order_id'] : null;
 
 		// If either $_GET['kudos_order_id'] or $_COOKIE['kudos_order_id'] not set then stop
 		if(!$order_id || !$order_id_session) {
@@ -244,7 +244,7 @@ class Kudos_Public {
 
 	    global $post;
 
-		if(has_block('carbon-fields/kudos-button') || has_shortcode($post->post_content, 'kudos')) {
+		if(has_block('carbon-fields/kudos-button') || (is_object($post) ? has_shortcode($post->post_content, 'kudos') : null)) {
 			$modal = new Kudos_Modal();
 			$modal->get_modal();
 		}
