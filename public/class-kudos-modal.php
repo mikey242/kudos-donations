@@ -53,10 +53,10 @@ class Kudos_Modal {
                                 </div>
                                 <form id="kudos_form" action="">
                                     <input type="text" name="name" placeholder="<?php _e('Name', 'kudos-donations')?>" />
-                                    <input type="email" class="mt-3" name="email_address" placeholder="<?php _e('E-mail address', 'kudos-donations')?>" />
+                                    <input type="email" name="email_address" placeholder="<?php _e('E-mail address', 'kudos-donations')?>" />
                                     <?php /* translators: %s: Star denoting required field */ ?>
-                                    <input required type="text" min="1" class="mt-3" name="value" placeholder="<?php printf(__('Amount %s', 'kudos-donations'), '*') ?>" />
-                                    <div class="payment_by mt-3 text-muted text-right">
+                                    <input required type="text" min="1" name="value" placeholder="<?php printf(__('Amount %s', 'kudos-donations'), '*') ?>" />
+                                    <div class="payment_by mollie">
                                         <small class="text-gray-600">
                                             <?php _e('Secure payment by', 'kudos-donations') ?>
                                         </small>
@@ -66,8 +66,8 @@ class Kudos_Modal {
                                         <button id="kudos_submit" class="kudos_btn kudos_btn_primary" type="submit" aria-label="<?php _e('Donate', 'kudos-donations') ?>"><?php _e('Donate', 'kudos-donations') ?></button>
                                     </footer>
                                 </form>
-                                <i class="kudos_spinner"></i>
                             </div>
+                            <i class="kudos_spinner"></i>
                         </div>
                     </div>
                 </div>

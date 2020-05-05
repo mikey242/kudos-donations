@@ -7,15 +7,26 @@
   src: url('../fonts/elephnt.ttf') format('truetype');
 }
 
+.kudos-modal {
+  *,
+  *::before,
+  *::after {
+    all: unset;
+  }
+}
+
 #kudos_message_modal,
 #kudos_form_modal {
-  font-size: 16px;
-  display: none;
-
-  * {
+  *,
+  *::before,
+  *::after {
     font-family: "Century Gothic", sans-serif;
-    @apply box-border leading-normal;
+    @apply box-border text-base leading-normal opacity-100 relative;
   }
+
+  @import "buttons";
+
+  display: none;
 
   p {
     @apply text-lg text-gray-900;
@@ -23,7 +34,11 @@
 
   h2 {
     font-family: 'Elephant', "Times New Roman", serif;
-    @apply text-4xl m-0 mb-2;
+    @apply text-4xl m-0 mb-2 text-gray-900;
+  }
+
+  button {
+    cursor: pointer;
   }
 
   small {
@@ -71,6 +86,7 @@
 
     &::before {
       content: "\2715";
+      cursor: pointer;
     }
   }
 
@@ -140,6 +156,10 @@
       &:focus {
         @apply border-orange-500;
       }
+
+      &:not(:first-child) {
+        @apply mt-3;
+      }
     }
 
     input.error {
@@ -150,9 +170,7 @@
 
 .kudos_modal {
   .payment_by {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    @apply flex justify-end items-center mt-3 text-right;
 
     &::before {
       content: '';
@@ -163,13 +181,15 @@
       margin: auto 5px auto 0;
     }
 
-    &::after {
-      content: '';
-      width: 51px;
-      height: 15px;
-      background: url("../img/mollie.svg") no-repeat top;
-      background-size: contain;
-      margin-left: 5px;
+    &.mollie {
+      &::after {
+        content: '';
+        width: 51px;
+        height: 15px;
+        background: url("../img/mollie.svg") no-repeat center left;
+        background-size: contain;
+        margin-left: 5px;
+      }
     }
   }
 }

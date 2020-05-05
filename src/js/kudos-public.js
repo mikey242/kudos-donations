@@ -5,7 +5,7 @@ import MicroModal from "micromodal";
 $(() => {
 
     const $body = $('body');
-    let $kudosButtons = $('.kudos_button_icon');
+    let $kudosButtons = $('.kudos_button_donate');
     let redirectUrl;
     let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 

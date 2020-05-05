@@ -1,64 +1,38 @@
-.kudos_btn {
-  @apply inline-block text-center select-none py-3 px-5 normal-case no-underline cursor-pointer text-lg h-auto leading-normal font-normal rounded-lg border-none;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  font-family: "Century Gothic", sans-serif;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+button.kudos_button_donate {
+  * {
+    all: unset;
+  }
 
   &:hover,
   &:focus,
   &:active {
-    color: #fff;
+    @apply text-white no-underline;
   }
-}
 
-.kudos_btn_primary,
-.kudos-btn_primary:focus {
-  background-color: theme('colors.orange.500');
-  color: #fff;
-}
+  @apply w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer;
 
-.kudos_btn_primary {
-  &:hover,
-  &:active, {
-    background-color: theme('colors.orange.700');
-  }
-}
-
-.kudos_btn_secondary,
-.kudos_btn_secondary:focus {
-  background-color: theme('colors.green.500');
-  color: #fff;
-}
-
-.kudos_btn_secondary {
-  &:hover,
-  &:active {
-    background-color: theme('colors.green.700');
-  }
-}
-
-.kudos_btn_primary_outline {
-  color: theme('colors.orange.500');
-  background-color: transparent;
-  border: 1px solid theme('colors.orange.500');
-
-  &:hover {
-    color: #fff;
-    background-color: theme('colors.orange.500');
-    border-color: theme('colors.orange.500');
-  }
-}
-
-.kudos_button_icon {
-  display: inline-flex;
-  align-items: center;
+  font-family: "Century Gothic", sans-serif;
+  font-size: 18px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
   &.style-1 {
-    background: theme('colors.green'); //#2ec4b6
+    background: theme('colors.orange.500');
+    &:focus,
+    &:active {
+      background: theme('colors.orange.500');
+    }
   }
 
   &.style-2 {
-    background: theme('colors.orange.500'); //#ff9f1c
+    background: theme('colors.green.500');
+    &:focus,
+    &:active {
+      background: theme('colors.green.700');
+    }
   }
 
   .kudos_logo {
@@ -69,7 +43,7 @@
     transition: transform 0.6s ease;
   }
 
-  .kudos_block_button_block__label {
+  .kudos_button_label {
     margin-left: 12px;
   }
 

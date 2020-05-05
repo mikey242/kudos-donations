@@ -54,8 +54,8 @@ class Kudos_Button {
 	public function get_button($echo=true) {
 
 		if($this->ready) {
-			$out = "<button type='button' class='kudos_btn kudos_button_icon $this->style' data-redirect='$this->redirectUrl' data-custom-header='$this->header' data-custom-text='$this->text'>";
-				$out .= "<span class='kudos_logo'></span><span class='kudos_block_button_block__label'>$this->label</span>";
+			$out = "<button type='button' class='kudos_button kudos_button_donate $this->style' data-redirect='$this->redirectUrl' data-custom-header='$this->header' data-custom-text='$this->text'>";
+				$out .= "<span class='kudos_logo'></span><span class='kudos_button_label'>$this->label</span>";
 			$out .= "</button>";
 		} elseif(is_user_logged_in()) {
 			$out = __('Mollie not configured', 'kudos-donations');
