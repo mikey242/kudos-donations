@@ -2,6 +2,8 @@
 
 namespace Kudos;
 
+use Kudos\Logger\Kudos_Logger;
+
 /**
  * Fired during plugin activation
  *
@@ -30,6 +32,7 @@ class Kudos_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+		Kudos_Logger::init();
 		Kudos_Activator::create_transactions_db();
 		Kudos_Activator::set_defaults();
 	}

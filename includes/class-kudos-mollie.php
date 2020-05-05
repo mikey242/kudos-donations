@@ -6,6 +6,7 @@ use Kudos\Transactions\Transaction;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\Payment;
+use Kudos\Logger\Kudos_Logger;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
@@ -17,6 +18,7 @@ class Mollie
 	private $apiKey;
 	private $apiMode;
 	private $transaction;
+	private $logger;
 
 	/**
 	 * Mollie constructor.
@@ -24,6 +26,7 @@ class Mollie
 	 * @since      1.0.0
 	 */
 	public function __construct() {
+		$this->logger = new Kudos_Logger();
 		$this->transaction = new Transaction();
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = carbon_get_theme_option('kudos_mollie_api_mode');
@@ -32,7 +35,7 @@ class Mollie
 			try {
 				$this->mollieApi->setApiKey($this->apiKey);
 			} catch (ApiException $e) {
-				error_log($e->getMessage());
+				$this->logger->log($e->getMessage(), 'CRITICAL');
 			}
 		}
 	}
@@ -56,7 +59,7 @@ class Mollie
 			$mollieApi->setApiKey($apiKey);
 			$mollieApi->payments->page();
 		} catch ( ApiException $e) {
-			error_log($e->getMessage());
+			$this->logger->log($e->getMessage(), 'CRITICAL');
 			return false;
 		}
 		return true;
@@ -74,7 +77,7 @@ class Mollie
 		try {
 			return $mollieApi->payments->get($mollie_payment_id);
 		} catch (ApiException $e) {
-			error_log($e->getMessage());
+			$this->logger->log($e->getMessage(), 'CRITICAL');
 		}
 		return false;
 	}
@@ -126,7 +129,7 @@ class Mollie
 			return $payment;
 
 		} catch (ApiException $e) {
-			error_log($e->getMessage());
+			$this->logger->log($e->getMessage(), 'CRITICAL');
 			return false;
 		}
 
@@ -158,8 +161,8 @@ class Mollie
 	 * @return mixed|WP_Error|WP_HTTP_Response|WP_REST_Response
 	 */
 	public function rest_api_mollie_webhook( WP_REST_Request $request ) {
+
 		$id = $request->get_param( 'id' );
-		error_log('Webhook received with ID: ' . $id);
 
 		/**
 		 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
@@ -191,14 +194,9 @@ class Mollie
 		$transaction_id = $payment->id;
 		$this->transaction->update_record($order_id, $transaction_id, $payment->status, $payment->method);
 
-		// Add note.
-		$note = sprintf(
 		/* translators: %s: Mollie */
-			__( 'Webhook requested by %s.', 'kudos' ),
-			__( 'Mollie', 'kudos' )
-		);
-
-		error_log( $note );
+		$note = sprintf(__( 'Webhook requested by %s.', 'kudos-donations' ),'Mollie');
+		$this->logger->log($note, 'INFO', ['order_id' => $order_id, 'status' => $payment->status]);
 
 		return $response;
 	}
