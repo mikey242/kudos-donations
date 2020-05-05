@@ -6,8 +6,7 @@ $(() => {
 
     const $body = $('body');
     let $kudosButtons = $('.kudos_button_icon');
-    let $kudosErrorMessage = $('.kudos_error_message');
-    let redirectUrl = 'hello';
+    let redirectUrl;
     let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
     // Set validation defaults
@@ -16,9 +15,6 @@ $(() => {
     });
 
     if($kudosButtons.length) {
-        // Add kudos_mollie class and modal markup to body if button found
-        $body.addClass('kudos_donations');
-
         // Setup button action
         $kudosButtons.each(function() {
             $(this).click(function () {
@@ -33,7 +29,6 @@ $(() => {
                     },
                     onClose: function (modal) {
                         $(modal).find('form').validate().resetForm();
-                        $kudosErrorMessage.text('');
                         document.getElementById('kudos_form').reset();
                     },
                     awaitCloseAnimation: true
@@ -57,26 +52,26 @@ $(() => {
                     let data = result.data
                     let header = data.modal_header;
                     let message = data.modal_text;
-                    $body.append($('\
-                        <div id="kudos_message_modal" class="kudos_modal" aria-hidden="true">\
-                            <div class="kudos_modal_overlay" tabindex="-1" data-micromodal-close>\
-                                <div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">\
-                                    <header class="kudos_modal_header">\
-                                        <div class="kudos_modal_logo"></div>\
-                                        <button class="kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>\
-                                    </header>\
-                                    <div id="kudos_modal_content" class="kudos_modal_content mt-4">\
-                                        <div class="text-center">\
-                                            <h2 class="font-normal">' + header + '</h2><p>' + message + '</p>\
-                                        </div>\
-                                        <footer class="kudos_modal_footer text-right">\
+                    $body.append($(`
+                        <div id="kudos_message_modal" class="kudos_modal" aria-hidden="true">
+                            <div class="kudos_modal_overlay" tabindex="-1" data-micromodal-close>
+                                <div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">
+                                    <header class="kudos_modal_header">
+                                        <div class="kudos_modal_logo"></div>
+                                        <button class="kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>
+                                    </header>
+                                    <div id="kudos_modal_content" class="kudos_modal_content mt-4">
+                                        <div class="text-center">
+                                            <h2 class="font-normal">` + header + `</h2><p>` + message + `</p>
+                                        </div>
+                                        <footer class="kudos_modal_footer text-right">
                                             <button class="kudos_btn kudos_btn_primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
-                                        </footer>\
-                                    </div>\
-                                </div>\
-                            </div>\
-                        </div>\
-                    '));
+                                        </footer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `));
                     MicroModal.show('kudos_message_modal', {
                         awaitCloseAnimation: true
                     });
@@ -114,9 +109,10 @@ $(() => {
     // Submit donation form action
     $body.on('submit', 'form#kudos_form', function (e) {
 
-        let $form = $('#kudos_form_modal');
-
         e.preventDefault();
+        let $form = $('#kudos_form_modal');
+        let $kudosErrorMessage = $('.kudos_error_message');
+
         $.ajax({
             method: 'post',
             dataType: 'json',
