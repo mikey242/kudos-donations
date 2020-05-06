@@ -104,6 +104,7 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'admin/class-kudos-admin.php';
 		require_once KUDOS_DIR . 'public/class-kudos-public.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-mollie.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-twig.php';
 		require_once KUDOS_DIR . 'public/class-kudos-button.php';
 		require_once KUDOS_DIR . 'public/class-kudos-modal.php';
 

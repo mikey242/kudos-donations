@@ -131,6 +131,28 @@ class Carbon {
             ] )
 
 	        /*
+			 * Form tab
+			 */
+		   ->add_tab(__('Form', 'kudos-donations'), [
+		        Field::make('html', 'form_intro', null)
+		             ->set_html('
+	                	<p><strong>'. __('Here you can customise the form by setting which fields will be required.', 'kudos-donations') .'</strong></p>
+	                '),
+		        Field::make('radio', 'kudos_name_required', __('Name', 'kudos-donations'))
+		            ->add_options([
+		            	true => __('Required', 'kudos-donations'),
+			            false => __('Optional', 'kudos-donations')
+		            ])
+			        ->set_default_value(true),
+                Field::make('radio', 'kudos_email_required', __('Email', 'kudos-donations'))
+                     ->add_options([
+	                     true => __('Required', 'kudos-donations'),
+	                     false => __('Optional', 'kudos-donations')
+                     ])
+	                ->set_default_value(true),
+	        ])
+
+	        /*
 			 * Customise tab
 			 */
 	        ->add_tab(__('Customise', 'kudos-donations'), [
@@ -139,22 +161,24 @@ class Carbon {
 	                	<p><strong>'. __('Customise your donation button and pop-up below.', 'kudos-donations') .'</strong></p>
 	                	<p><i>'. __('Did you know: It is also possible to change text settings when adding each individual button.', 'kudos-donations') .'</i></p>
 	                '),
+		        Field::make( 'separator', 'button_separator', __( 'Kudos button', 'kudos-donations' ) ),
                 Field::make('radio_image', 'kudos_button_style', __('Button style', 'kudos-donations'))
                     ->add_options([
 	                    'style-orange' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAIAAACCil8SAAABgmlDQ1BzUkdCIElFQzYxOTY2LTIuMQAAKJF1kb9LQlEUxz9pYpRhUUNDg4g1ZZhB1NKglAXVoAZZLfr8Fag93jMiWoNWoSBq6ddQf0GtQXMQFEUQTQ3NRS0lr/M0MCLP5dzzud97z+Hec8ESzSl5vdEH+UJRC4cCrrnYvMv+jA0L7XhxxxVdnY6MR6lrH3c0mPHGa9aqf+5fa0mmdAUamoRHFVUrCk8IT60WVZO3hTuVbDwpfCrcp8kFhW9NPVHlF5MzVf4yWYuGg2BpE3ZlfnHiFytZLS8sL8eTz60oP/cxX+JIFWYjEt3i3eiECRHAxSRjBBligBGZh6Q7fvplRZ18XyV/hmXJVWRWWUNjiQxZivSJuiLVUxLToqdk5Fgz+/+3r3p60F+t7giA7ckw3nrAvgXlkmF8HhpG+Qisj3BRqOUvH8Dwu+ilmubZB+cGnF3WtMQOnG9C14Ma1+IVySpuSafh9QRaY9BxDc0L1Z797HN8D9F1+aor2N2DXjnvXPwGce5n6w3W25IAAAAJcEhZcwAACxMAAAsTAQCanBgAAAJESURBVGiB7Zo/aBNRHMc/edaKkiIEhBRidMggKUKhUyQu7RAnF2lGF7s5GRFUENzEwXTRrcHFyTh1alGiYjTFQYKSgBARbZQDIfjnaiFGzyVGk5Le72xf3wXyWcLL+/K7D+HH+12OCziOQw9vF6k/5PNrvtRorffuGmWka1UvsHIF+70hGXf+0X15kxfXzZmIUO3PV7f87woEHMfhwyPun4YNTew/FK01nl4YCFdAsfqA75ZpDSmKd8umHTygaFRMO3hAsf7JtIMHFD++mXbwgHKP+Imhrk4GTHfEPbIJp54wdvjvsrXGnSOb5UNxYrOEE4QmABoVKgu8uSe/4NZ05QQjJLOEE11fhiY4Ps94guJ5YZkdaYZoipNLva4dYum+WxvQrxubZXqB0f0uGRmadaMpkln3WPCgsJ5O3WCE5I3tLalTdzrn0gMd7FVhSW26kxlCcWm4lhcG9egGI0yek4arOaySMKtHNzkvTVZzPL8qL2x6CI+OeYrr0S2KOyGW9nR66NG165TF/eCLqVbO0qhKw76YaoUzNL+Kkr6Yanadwtz2ltR8Mlglihn3mPmp1qGWZynt0hWGp1oPVonFVF+nWl4+1bb2b+Jnk1/NrmU/7DrFDOUs8TnCifbthLVC7a78pwUCzu3If9vuPKaHsEeGujoZ6upEsdvbHadZFHsPmHbwgGo/rhoQFIdSph08oIieYN+4aQ0pil17OHbNtIYUBRCZYeqiaRMRf87do2eZumTURESg6/WLj495dtnP7zP8Bq4Aja10468CAAAAAElFTkSuQmCC',
                         'style-green' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAyCAIAAACCil8SAAABgmlDQ1BzUkdCIElFQzYxOTY2LTIuMQAAKJF1kb9LQlEUxz9pYpRhUUNDg4g1ZZhB1NKglAXVoAZZLfr8Fag93jMiWoNWoSBq6ddQf0GtQXMQFEUQTQ3NRS0lr/M0MCLP5dzzud97z+Hec8ESzSl5vdEH+UJRC4cCrrnYvMv+jA0L7XhxxxVdnY6MR6lrH3c0mPHGa9aqf+5fa0mmdAUamoRHFVUrCk8IT60WVZO3hTuVbDwpfCrcp8kFhW9NPVHlF5MzVf4yWYuGg2BpE3ZlfnHiFytZLS8sL8eTz60oP/cxX+JIFWYjEt3i3eiECRHAxSRjBBligBGZh6Q7fvplRZ18XyV/hmXJVWRWWUNjiQxZivSJuiLVUxLToqdk5Fgz+/+3r3p60F+t7giA7ckw3nrAvgXlkmF8HhpG+Qisj3BRqOUvH8Dwu+ilmubZB+cGnF3WtMQOnG9C14Ma1+IVySpuSafh9QRaY9BxDc0L1Z797HN8D9F1+aor2N2DXjnvXPwGce5n6w3W25IAAAAJcEhZcwAACxMAAAsTAQCanBgAAAKRSURBVGiB7ZrPb9JgGMfLK+GHjBFLbJPaqTFDtkRJdOxgYjTE+7h58raLXnR/gBizLTHxtGSHedCbu3gbGmO8GCMaTVhMthm2lSmbULOOwQC7DrTgAcMQhT4NvntLwucCL3zz8CG87dOH1FSpVKg/eZH+FsluxeVCQpGVskoZCXP94k12697ap1RRIWWjyb7uw+Ta9PoqQRUIqPrwKPnZ+K5UVfftTnp6fYW0CQi0q6p3hcXGw82ooNdZSSrtkdaAgl5tb5J20AFalvOkHXSAtktF0g46QN/Vn6QddIBIC+ijq4uTDtM1a0ea82zocp/tcG25q6oX3r9skfc6nCMM73fRA45eiqKW5fxjMfFUSsE/sS1dOJzVPu7xDbvo+hcHHL2THt+wi74jLALrHMRmCNDsk3MXG1xrBBne3+Stv8GuO8Icmxo87zzU6mcMMjywGl7dAM1OeHyaMc5mBxbEqMtZ7ROntV11gVF3anCo9R6oIe5Bp0NcujeOe7wOJzA8JyWBSSy6nNV+va8fGJ4VE9FcBhjGogvfsrNi4v6XGLwy4SbcY9bXp7DohlYXgMkgw497zsIrY9EVi8qDr3Fg2BBdbWZDWJELwLAhutpYbL4Am6wM0dXEojIWm/+/NfGeGaK5TEjQPuzId7UaYSk1uvSh9a4g3NUaiOYyVz9Gwk2mhrCUgne1tqaJUrn8o1LeX9Y9b0AsKiFhYWZDuMad9Lvc1cuJaD4zt5ls9jX+ickXed6O8QHTYZNwVxcnXV2coB7YOGUQkNtiJe2gA1T9u6pTQAE3S9pBB+iKm2UtNtIaUJDFhG73nyGtAQVRFHXpyNGbJ7ykTUD8Pu+O8qdudYKxqf72i3c76cn4kpHvZ/gFXzjMlNqW1W8AAAAASUVORK5CYII=',
                     ])
-                    ->set_default_value('kudos_btn_primary'),
+                    ->set_default_value('style-orange'),
 		        Field::make('text', 'kudos_button_label', __('Button label', 'kudos-donations'))
-//			        ->set_help_text('Customise the text of the pop-ups')
 		            ->set_default_value(__('Donate now', 'kudos-donations')),
+		        Field::make( 'separator', 'payment_form_separator', __( 'Payment form', 'kudos-donations' ) ),
 		        Field::make('text', 'kudos_form_header', __('Payment form header', 'kudos-donations'))
-//			        ->set_help_text('Customise the text of the donate pop-up screen')
 		            ->set_default_value(__('Support us!', 'kudos-donations')),
 		        Field::make('text', 'kudos_form_text', __('Payment form text', 'kudos-donations'))
-		            ->set_default_value(__('We really appreciate that you want to help us out.', 'kudos-donations')),
+		            ->set_default_value(__('Thank you for your donation. We appreciate your support!', 'kudos-donations')),
+		        Field::make( 'separator', 'return_message_separator', __( 'Return message', 'kudos-donations' ) )
+		            ->set_help_text(sprintf(__('You can use the following variables %s', 'kudos-donations'), '{{value}}, {{name}}')),
 		        Field::make('text', 'kudos_return_message_header', __('Message header', 'kudos-donations'))
-		             ->set_default_value(__('Thanks!', 'kudos-donations'))
+		             ->set_default_value(__('Thank you!', 'kudos-donations'))
 		             ->set_conditional_logic([
 			             [
 				             'field' => 'kudos_return_message_enable',
@@ -163,9 +187,8 @@ class Carbon {
 		             ]),
 		        Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
 			        /* translators: %s: Value of donation */
-//			         ->set_default_value(sprintf(__('Thanks a lot for your donation of € %s. We greatly appreciate your support. Thanks to your efforts, culture remains accessible to everyone.', 'kudos-donations'), '{{value}}'))
+			         ->set_default_value(sprintf(__('Many thanks for your donation of €%s. We appreciate your support.', 'kudos-donations'), '{{value}}'))
 			        /* translators: %s: Available handlebar variables */
-			         ->set_help_text(sprintf(__('You can use the following variables %s', 'kudos-donations'), '{{value}}, {{name}}'))
 		             ->set_conditional_logic([
 			             [
 				             'field' => 'kudos_return_message_enable',

@@ -34,7 +34,7 @@ class Kudos_Activator {
 	public static function activate() {
 		Kudos_Logger::init();
 		Kudos_Activator::create_transactions_db();
-		Kudos_Activator::set_defaults();
+//		Kudos_Activator::set_defaults();
 	}
 
 	/**

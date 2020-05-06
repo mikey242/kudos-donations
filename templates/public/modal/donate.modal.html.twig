@@ -1,0 +1,34 @@
+{% extends 'public/modal/base.html.twig' %}
+{% set modal_id = 'kudos_form_modal' %}
+
+{% block header %}
+    {{ header }}
+{% endblock header %}
+
+{% block text %}
+    {{ text }}
+{% endblock text %}
+
+{% block footer %}
+    <form id="kudos_form" action="">
+        {{ nonce|raw }}
+        <label>
+            <input {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ name_placeholder ~ ((name_required) ? ' *' : null) }}" />
+        </label>
+        <label>
+            <input {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ email_placeholder ~ ((email_required) ? ' *' : null) }}" />
+        </label>
+        <label>
+            <input required type="text" min="1" name="value" placeholder="{{ amount_placeholder }} *" />
+        </label>
+        <div class="payment_by mollie">
+            <small class="text-gray-600">
+                {{ secure_payment }}
+            </small>
+        </div>
+        <div class="kudos_modal_buttons text-center">
+            <button class="kudos_button style-orange-outline mr-3" type="button" data-micromodal-close aria-label="{{ cancel }}">{{ cancel }}</button>
+            <button id="kudos_submit" name="kudos_submit" class="kudos_button style-orange" type="submit" aria-label="{{ donate }}">{{ donate }}</button>
+        </div>
+    </form>
+{% endblock footer %}

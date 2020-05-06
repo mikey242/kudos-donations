@@ -48,30 +48,10 @@ $(() => {
                 order_id: order_id
             },
             success: function (result) {
-                if(result.success && result.data.trigger) {
+                if(result.success && result.data.html) {
                     let data = result.data
-                    let header = data.modal_header ? data.modal_header : '';
-                    let message = data.modal_text ? data.modal_text : '';
-                    $body.append($(`
-                        <div id="kudos_message_modal" class="kudos_modal" aria-hidden="true">
-                            <div class="kudos_modal_overlay" tabindex="-1" data-micromodal-close>
-                                <div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal-title">
-                                    <header class="kudos_modal_header">
-                                        <div class="kudos_modal_logo"></div>
-                                        <button class="kudos_button kudos_modal_close" aria-hidden="true" aria-label="Close modal" data-micromodal-close></button>
-                                    </header>
-                                    <div id="kudos_modal_content" class="kudos_modal_content mt-4">
-                                        <div class="text-center">
-                                            <h2 class="font-normal">` + header + `</h2><p>` + message + `</p>
-                                        </div>
-                                        <footer class="kudos_modal_footer text-right">
-                                            <button class="kudos_button style-orange" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>\
-                                        </footer>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `));
+                    let html = data.html ? data.html : '';
+                    $body.append(html);
                     MicroModal.show('kudos_message_modal', {
                         awaitCloseAnimation: true
                     });

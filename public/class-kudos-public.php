@@ -5,7 +5,7 @@ namespace Kudos;
 use Kudos\Logger\Kudos_Logger;
 use Kudos\Mollie\Kudos_Mollie;
 use Kudos_Button;
-use Kudos_Modal;
+use Kudos\Modal\Kudos_Modal;
 
 /**
  * The public-facing functionality of the plugin.
@@ -65,7 +65,6 @@ class Kudos_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->logger = new Kudos_Logger();
-
 	}
 
 	/**
@@ -176,18 +175,20 @@ class Kudos_Public {
 						'{{value}}' => number_format_i18n($transaction->value, 2),
 						'{{name}}' => $transaction->name
 					];
-					$return['modal_header'] = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);
-					$return['modal_text'] = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
+					$header = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);
+					$text = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
+					$return['html'] = $modal->get_message_modal($header, $text);
 					break;
 				case 'canceled':
-					$return['modal_header'] = __('Payment cancelled', 'kudos-donations');
+					$header = __('Payment cancelled', 'kudos-donations');
+					$return['html'] = $modal->get_message_modal($header);
 	                break;
                 default:
-	                $return['trigger'] = false;
+	                $return['html'] = false;
 			}
 
 			// Unset cookie to prevent repeat message
-			setcookie('kudos_order_id', '', 1);
+//			setcookie('kudos_order_id', '', 1);
 			wp_send_json_success($return);
 		}
 
@@ -255,13 +256,13 @@ class Kudos_Public {
      *
      * @since    1.0.0
 	 */
-	public function place_modal() {
+	public function place_payment_modal() {
 
 	    global $post;
 
 		if(has_block('carbon-fields/kudos-button') || (is_object($post) ? has_shortcode($post->post_content, 'kudos') : null)) {
 			$modal = new Kudos_Modal();
-			$modal->get_modal();
+			echo $modal->get_payment_modal();
 		}
 	}
 
