@@ -84,7 +84,7 @@ require KUDOS_DIR . 'includes/class-kudos.php';
  */
 function run_kudos() {
 
-	$plugin = new Kudos_Mollie();
+	$plugin = new Kudos_Donations();
 	$plugin->run();
 
 }

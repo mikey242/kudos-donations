@@ -29,7 +29,7 @@ namespace Kudos;
  * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
  */
-class Kudos_Mollie {
+class Kudos_Donations {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
