@@ -3,7 +3,7 @@
 namespace Kudos;
 
 use Kudos\Logger\Kudos_Logger;
-use Kudos\Mollie\Mollie;
+use Kudos\Mollie\Kudos_Mollie;
 use Kudos_Button;
 use Kudos_Modal;
 
@@ -128,7 +128,7 @@ class Kudos_Public {
 		$email = $form['email_address'];
 		$redirectUrl = $_REQUEST['redirectUrl'];
 
-		$mollie = new Mollie();
+		$mollie = new Kudos_Mollie();
 		$payment = $mollie->payment($value, $redirectUrl, $name, $email);
 		if($payment) {
 			wp_send_json_success($payment->getCheckoutUrl());
@@ -144,7 +144,7 @@ class Kudos_Public {
 	 * @return void
 	 */
 	public function register_webhook() {
-		$mollie = new Mollie();
+		$mollie = new Kudos_Mollie();
 		$mollie->register_webhook();
 	}
 
@@ -167,8 +167,8 @@ class Kudos_Public {
 		if($order_id === $order_id_session) {
 
 			$transaction = new Transactions\Transaction();
+			$modal = new Kudos_Modal();
 			$transaction = $transaction->get_transaction($order_id, ['status', 'value', 'name']);
-			$return['trigger'] = true;
 
 			switch($transaction->status) {
 				case 'paid':
