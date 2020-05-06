@@ -2,6 +2,7 @@
 
 namespace Kudos;
 
+use Kudos\Logger\Kudos_Logger;
 use Kudos\Mollie\Mollie;
 use Kudos_Button;
 use Kudos_Modal;
@@ -46,6 +47,13 @@ class Kudos_Public {
 	private $version;
 
 	/**
+	 * @var Kudos_Logger
+	 *
+	 * @since    1.0.0
+	 */
+	private $logger;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -56,6 +64,7 @@ class Kudos_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->logger = new Kudos_Logger();
 
 	}
 
@@ -81,6 +90,9 @@ class Kudos_Public {
 		wp_enqueue_script( $this->plugin_name . '-vendors', get_asset_path('vendors.js'), [ 'jquery' ], $this->version, false );
 		wp_localize_script( $this->plugin_name . '-public', 'kudos', [
 		        'ajaxurl' => admin_url('admin-ajax.php'),
+                'name_required' => __('Your name is required', 'kudos-donations'),
+                'email_required' => __('Your email is required', 'kudos-donations'),
+                'email_invalid' => __('Please enter a valid email', 'kudos-donations'),
                 'value_required' => __('Donation amount is required', 'kudos-donations'),
                 'value_minimum' => __('Minimum donation is 1 euro', 'kudos-donations'),
                 'value_digits' => __('Only digits are valid', 'kudos-donations')
@@ -107,6 +119,10 @@ class Kudos_Public {
 	 */
 	public function create_payment() {
 		parse_str($_REQUEST['form'], $form);
+		if(!wp_verify_nonce($form['_wpnonce'], 'kudos_submit')) {
+			$this->logger->log('wp_verify_nonce failed', 'CRITICAL');
+			wp_send_json_error(['message' => __('Request invalid.', 'kudos-donations')]);
+		}
 		$value = $form['value'];
 		$name = $form['name'];
 		$email = $form['email_address'];
@@ -143,7 +159,7 @@ class Kudos_Public {
 		$order_id = $_REQUEST['order_id'] ? base64_decode($_REQUEST['order_id']) : null;
 		$order_id_session = !empty($_COOKIE['kudos_order_id']) ? $_COOKIE['kudos_order_id'] : null;
 
-		// If either $_GET['kudos_order_id'] or $_COOKIE['kudos_order_id'] not set then stop
+		// If either $_GET['order_id'] or $_COOKIE['kudos_order_id'] not set then stop
 		if(!$order_id || !$order_id_session) {
 			return false;
 		}
@@ -164,8 +180,7 @@ class Kudos_Public {
 					$return['modal_text'] = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
 					break;
 				case 'canceled':
-					$return['modal_header'] = __('Geannuleerd', 'kudos');
-	                $return['modal_text'] = __('Betaling geannuleerd', 'kudos');
+					$return['modal_header'] = __('Payment cancelled', 'kudos-donations');
 	                break;
                 default:
 	                $return['trigger'] = false;
