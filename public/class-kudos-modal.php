@@ -34,7 +34,7 @@ class Kudos_Modal {
 	 *
 	 * @since    1.0.0
 	 */
-	function get_modal() {
+	function get_payment_modal() {
 
 		if($this->ready) {
 
