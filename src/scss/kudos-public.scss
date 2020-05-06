@@ -164,7 +164,7 @@
 
 .kudos_modal {
   .payment_by {
-    @apply flex justify-end items-center mt-3 text-right;
+    @apply flex justify-end items-baseline mt-3 text-right;
 
     &::before {
       content: '';

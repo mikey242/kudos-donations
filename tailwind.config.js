@@ -6,8 +6,8 @@ module.exports = {
       '4xl': '2.25em', //'36px'
     },
     fontFamily: {
-      'sans': ['Open Sans Regular','Century Gothic', 'sans-serif'],
-      'serif': ['Elephant', 'Times New Roman', 'serif']
+      'sans': ['Merriweather Sans Light', 'Century Gothic', 'sans-serif'],
+      'serif': ['Elephant Regular', 'Times New Roman', 'serif']
     },
     maxWidth: {
       'lg': '32em', //'512px'

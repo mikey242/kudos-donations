@@ -50,8 +50,8 @@ $(() => {
             success: function (result) {
                 if(result.success && result.data.trigger) {
                     let data = result.data
-                    let header = data.modal_header;
-                    let message = data.modal_text;
+                    let header = data.modal_header ? data.modal_header : '';
+                    let message = data.modal_text ? data.modal_text : '';
                     $body.append($(`
                         <div id="kudos_message_modal" class="kudos_modal" aria-hidden="true">
                             <div class="kudos_modal_overlay" tabindex="-1" data-micromodal-close>
@@ -94,6 +94,13 @@ $(() => {
                 }
             },
             messages: {
+                name: {
+                    required: kudos.name_required
+                },
+                email_address: {
+                    required: kudos.email_required,
+                    email: kudos.email_invalid
+                },
                 value: {
                     required: kudos.value_required,
                     min: kudos.value_minimum,
