@@ -112,9 +112,8 @@ class Mollie
 						"value" => $value
 					],
 					"redirectUrl" => $redirectUrl,
-//					"webhookUrl" => 'http://1db3a710.ngrok.io/wp-json/kudos/v1/mollie',
 					"webhookUrl" => rest_url('kudos/v1/mollie'),
-					"description" => "Kudos Payment - $order_id",
+					"description" => sprintf(__("Kudos Payment - %s", 'kudos-donations'), $order_id),
 					'metadata' => [
 						'order_id' => $order_id,
 						'email' => $email,

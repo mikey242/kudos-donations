@@ -37,6 +37,10 @@ class Kudos_Modal {
 	function get_modal() {
 
 		if($this->ready) {
+
+		    $name_required = get_option('_kudos_name_required');
+		    $email_required = get_option('_kudos_email_required');
+
 			?>
                 <div id="kudos_form_modal" class="kudos_modal" aria-hidden="true">
                     <div class="kudos_modal_overlay" tabindex="-1" data-micromodal-close>
@@ -52,8 +56,9 @@ class Kudos_Modal {
                                     <p><small class="kudos_error_message error"></small></p>
                                 </div>
                                 <form id="kudos_form" action="">
-                                    <input type="text" name="name" placeholder="<?php _e('Name', 'kudos-donations')?>" />
-                                    <input type="email" name="email_address" placeholder="<?php _e('E-mail address', 'kudos-donations')?>" />
+                                    <?php wp_nonce_field('kudos_submit') ?>
+                                    <input <?php echo $name_required ? 'required' : '' ?> type="text" name="name" placeholder="<?php _e('Name', 'kudos-donations')?><?php echo $name_required ? ' *' : '' ?>" />
+                                    <input <?php echo $email_required ? 'required' : '' ?> type="email" name="email_address" placeholder="<?php _e('E-mail address', 'kudos-donations')?><?php echo $email_required ? ' *' : '' ?>" />
                                     <?php /* translators: %s: Star denoting required field */ ?>
                                     <input required type="text" min="1" name="value" placeholder="<?php printf(__('Amount %s', 'kudos-donations'), '*') ?>" />
                                     <div class="payment_by mollie">
@@ -63,7 +68,7 @@ class Kudos_Modal {
                                     </div>
                                     <footer class="kudos_modal_footer text-center">
                                         <button class="kudos_button style-orange-outline mr-3" type="button" data-micromodal-close aria-label="<?php _e('Cancel', 'kudos-donations') ?>"><?php _e('Cancel', 'kudos-donations') ?></button>
-                                        <button id="kudos_submit" class="kudos_button style-orange" type="submit" aria-label="<?php _e('Donate', 'kudos-donations') ?>"><?php _e('Donate', 'kudos-donations') ?></button>
+                                        <button id="kudos_submit" name="kudos_submit" class="kudos_button style-orange" type="submit" aria-label="<?php _e('Donate', 'kudos-donations') ?>"><?php _e('Donate', 'kudos-donations') ?></button>
                                     </footer>
                                 </form>
                             </div>
