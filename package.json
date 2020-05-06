@@ -38,6 +38,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "install": "^0.13.0",
+    "jquery": "^3.5.1",
     "jquery-validation": "^1.19.1",
     "micromodal": "^0.4.6",
     "stylelint-config-recommended": "^3.0.0",
