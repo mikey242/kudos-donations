@@ -175,7 +175,7 @@ class Kudos_Public {
 					$return['html'] = $modal->get_message_modal($header, $text);
 					break;
 				case 'canceled':
-					$header = __('Payment cancelled', 'kudos-donations');
+					$header = __('Payment canceled', 'kudos-donations');
 					$return['html'] = $modal->get_message_modal($header);
 	                break;
                 default:
@@ -183,7 +183,7 @@ class Kudos_Public {
 			}
 
 			// Unset cookie to prevent repeat message
-//			setcookie('kudos_order_id', '', 1);
+			setcookie('kudos_order_id', '', 1);
 			wp_send_json_success($return);
 		}
 
