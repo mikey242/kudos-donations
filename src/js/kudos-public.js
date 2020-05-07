@@ -113,7 +113,6 @@ $(() => {
                 $form.addClass('kudos_loading');
             },
             success: function (result) {
-                console.log(result)
                 if(result.success) {
                     $(location).attr('href', result.data);
                 } else {
