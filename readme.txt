@@ -12,12 +12,21 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 == Description ==
 
-*Kudos Donations* allows you to add a donate button anywhere on your website. Once a user clicks this button they will be greeted
-with a configurable pop-up window, where they can enter their details and how much they would like to donate.
+*Kudos Donations* allows you to add a donate button anywhere on your website. Once a user clicks this button they will be greeted with a configurable pop-up window, where they can enter their details and how much they would like to donate. Features of this plugin include:
 
-Buttons can be placed either using the provided 'Kudos Button' block or using a shortcode:
+
+* Smart and modern design
+* Connect with Mollie for secure payments by credit card, iDEAL and many others
+* Use the provided Gutenberg block or shortcode to place your button
+* Buttons and form can be configured all at once or individually
+* View all your transactions from the WordPress dashboard
+
+= Shortcode =
 
 `
+//Use the default settings
+[kudos]
+
 //Customise button text
 [kudos button="Help us out!"]
 
@@ -31,6 +40,10 @@ Buttons can be placed either using the provided 'Kudos Button' block or using a 
 [kudos label="Help us out!" header="Support our cause" text="Thank you for donating to this project. We really appreciate your support."]
 `
 
+= Source =
+The Git repository for this plugin can be found [here](https://gitlab.iseard.media/michael/kudos-donations).
+
+
 == Installation ==
 
 1. Install using the WordPress plugin control panel or manually download the plugin and upload the *kudos-donations* folder to the /wp-content/plugins/ directory
@@ -41,7 +54,7 @@ Buttons can be placed either using the provided 'Kudos Button' block or using a 
 
 = What vendors can I use with this plugin? =
 
-This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wide range of payment methods such as iDeal, Credit Card and PayPal. For a full list of payment methods please check out [this link](https://www.mollie.com/en/payments)
+This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wide range of payment methods such as iDeal, Credit Card and PayPal. For a full list of payment methods please check out [this link](https://www.mollie.com/en/payments).
 
 == Screenshots ==
 
