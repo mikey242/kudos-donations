@@ -24,11 +24,11 @@
   display: none;
 
   p {
-    @apply text-lg text-gray-900;
+    @apply text-lg text-gray-900 text-center;
   }
 
   h2 {
-    @apply font-serif text-4xl m-0 mb-2 text-gray-900;
+    @apply font-serif text-4xl m-0 mb-2 text-gray-900 text-center;
   }
 
   button {
@@ -86,6 +86,8 @@
   .kudos_modal_container {
     @apply bg-white p-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden;
 
+    z-index: 1050;
+
     &::before {
       content: '';
       position: absolute;
@@ -102,7 +104,6 @@
   .kudos_modal .kudos_modal_container,
   .kudos_modal .kudos_modal_overlay {
     will-change: transform;
-    z-index: 1050;
   }
 
   &.is-open {
