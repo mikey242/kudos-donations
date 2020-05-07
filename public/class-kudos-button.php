@@ -28,6 +28,10 @@ class Kudos_Button {
 	 * @var bool
 	 */
 	private $ready;
+	/**
+	 * @var Kudos_Twig
+	 */
+	private $twig;
 
 
 	/**
@@ -38,12 +42,13 @@ class Kudos_Button {
 	 */
 	public function __construct($atts=[]) {
 
-		$this->redirectUrl = Kudos_Public::get_return_url();
-		$this->label = !empty($atts['label']) ? $atts['label'] : get_option('_kudos_button_label');
-		$this->text = !empty($atts['text']) ? $atts['text'] : get_option('_kudos_form_text');
-		$this->header = !empty($atts['header']) ? $atts['header'] : get_option('_kudos_form_header');
-		$this->style = get_option('_kudos_button_style');
 		$this->ready = Kudos_Public::ready();
+		$this->redirectUrl = Kudos_Public::get_return_url();
+		$this->twig = new Kudos_Twig();
+		$this->label = !empty($atts['label']) ? $atts['label'] : carbon_get_theme_option('kudos_button_label');
+		$this->text = !empty($atts['text']) ? $atts['text'] : carbon_get_theme_option('kudos_form_text');
+		$this->header = !empty($atts['header']) ? $atts['header'] : carbon_get_theme_option('kudos_form_header');
+		$this->style = carbon_get_theme_option('kudos_button_style');
 	}
 
 	/**
@@ -54,10 +59,14 @@ class Kudos_Button {
 	public function get_button($echo=true) {
 
 		if($this->ready) {
-			$out = "<button type='button' class='kudos_button kudos_button_donate $this->style' data-redirect='$this->redirectUrl' data-custom-header='$this->header' data-custom-text='$this->text'>";
-				$out .= "<span class='kudos_logo'></span><span class='kudos_button_label'>$this->label</span>";
-			$out .= "</button>";
-			do_action('kudos_button');
+			$data = [
+				'style' => $this->style,
+				'header' => $this->header,
+				'text' => $this->text,
+				'label' => $this->label,
+				'redirectUrl' => $this->redirectUrl
+			];
+			$out = $this->twig->render('public/kudos.button.html.twig', $data);
 		} elseif(is_user_logged_in()) {
 			$out = __('Mollie not configured', 'kudos-donations');
 		} else {
