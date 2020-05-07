@@ -42,7 +42,6 @@
     &.error {
       @apply relative;
 
-      top: 5px;
       color: theme('colors.red.500');
     }
   }
@@ -145,7 +144,11 @@
     padding: 0;
 
     label {
-      @apply w-full;
+      @apply w-full m-0;
+
+      &:not(:first-child) input {
+        @apply mt-2;
+      }
     }
 
     input {
@@ -153,10 +156,6 @@
 
       &:focus {
         @apply border-orange-500;
-      }
-
-      &:not(:first-child) {
-        @apply mt-3;
       }
     }
 

@@ -15,6 +15,7 @@ button.kudos_button {
 
   &.style-orange {
     background: theme('colors.orange.500');
+    @apply font-bold;
 
     &:focus,
     &:active {
@@ -46,8 +47,8 @@ button.kudos_button {
 
     &:hover {
       color: #fff;
-      background-color: theme('colors.orange.500');
-      border-color: theme('colors.orange.500');
+      background-color: theme('colors.orange.700');
+      border-color: theme('colors.orange.700');
     }
   }
 }
