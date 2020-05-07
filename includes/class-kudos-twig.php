@@ -9,8 +9,13 @@ use Throwable;
 
 class Kudos_Twig
 {
-
-	public $twig;
+	/**
+	 * @var Environment
+	 */
+	private $twig;
+	/**
+	 * @var Kudos_Logger
+	 */
 	private $logger;
 
 	/**
@@ -19,9 +24,26 @@ class Kudos_Twig
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		$loader = new FilesystemLoader(KUDOS_DIR . 'templates/');
+		$path = KUDOS_DIR . 'templates/';
+		$loader = new FilesystemLoader($path);
 		$this->twig = new Environment($loader);
 		$this->logger = new Kudos_Logger();
+		$this->initialize_twig_functions();
+	}
+
+	/**
+	 * Initialize additional twig functions
+	 *
+	 * @since    1.0.0
+	 * @source https://wordpress.stackexchange.com/questions/287988/use-str-to-translate-strings-symfony-twig
+	 */
+	public function initialize_twig_functions() {
+
+		/**
+		 * Add gettext __ functions to twig functions.
+		 */
+		$function = new TwigFunction('__', '__');
+		$this->twig->addFunction($function);
 	}
 
 	/**
