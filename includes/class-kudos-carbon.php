@@ -6,7 +6,6 @@ use Carbon_Fields\Carbon_Fields;
 use Carbon_Fields\Field;
 use Carbon_Fields\Container;
 use Carbon_Fields\Block;
-use Kudos_Button;
 
 class Carbon {
 

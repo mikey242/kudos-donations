@@ -1,11 +1,6 @@
 <?php
 
-namespace Kudos\Modal;
-
-use Kudos\Kudos_Public;
-use Kudos\Twig\Kudos_Twig;
-use Kudos\Logger\Kudos_Logger;
-use Throwable;
+namespace Kudos;
 
 class Kudos_Modal {
 

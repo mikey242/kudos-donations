@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Transactions;
+namespace Kudos;
 
 use wpdb;
 

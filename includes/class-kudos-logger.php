@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Logger;
+namespace Kudos;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;

@@ -2,8 +2,6 @@
 
 namespace Kudos;
 
-use Kudos\Logger\Kudos_Logger;
-
 /**
  * Fired during plugin activation
  *

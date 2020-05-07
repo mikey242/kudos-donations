@@ -1,12 +1,10 @@
 <?php
 
-namespace Kudos\Mollie;
+namespace Kudos;
 
-use Kudos\Transactions\Transaction;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\Payment;
-use Kudos\Logger\Kudos_Logger;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;

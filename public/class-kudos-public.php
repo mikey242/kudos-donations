@@ -2,11 +2,6 @@
 
 namespace Kudos;
 
-use Kudos\Logger\Kudos_Logger;
-use Kudos\Mollie\Kudos_Mollie;
-use Kudos_Button;
-use Kudos\Modal\Kudos_Modal;
-
 /**
  * The public-facing functionality of the plugin.
  *

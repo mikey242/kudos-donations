@@ -1,11 +1,11 @@
 <?php
 
-namespace Kudos\Twig;
+namespace Kudos;
 
-use Kudos\Logger\Kudos_Logger;
-use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
+use Throwable;
 
 class Kudos_Twig
 {

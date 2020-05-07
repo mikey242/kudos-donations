@@ -6,7 +6,7 @@
  * https://github.com/collizo4sky/WP_List_Table-Class-Plugin-Example/blob/master/plugin.php
  */
 
-namespace Kudos\Transactions;
+namespace Kudos;
 
 use WP_List_Table;
 

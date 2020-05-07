@@ -1,6 +1,6 @@
 <?php
 
-use Kudos\Kudos_Public;
+namespace Kudos;
 
 class Kudos_Button {
 

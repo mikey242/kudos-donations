@@ -2,9 +2,6 @@
 
 namespace Kudos;
 
-use Kudos\Mollie\Mollie;
-use Kudos\Transactions\Transactions_Table;
-
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -95,7 +92,7 @@ class Kudos_Admin {
 	    $mode = $formData['carbon_fields_compact_input']['_kudos_mollie_api_mode'];
 	    $apiKey = $formData['carbon_fields_compact_input']['_kudos_mollie_'.$mode.'_api_key'];
 
-		$mollie = new Mollie();
+		$mollie = new Kudos_Mollie();
 
 		$result = $mollie->checkApiKey($apiKey);
 
