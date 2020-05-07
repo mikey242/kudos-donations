@@ -160,7 +160,7 @@ class Kudos_Public {
 
 		if($order_id === $order_id_session) {
 
-			$transaction = new Transactions\Transaction();
+			$transaction = new Transaction();
 			$modal = new Kudos_Modal();
 			$transaction = $transaction->get_transaction($order_id, ['status', 'value', 'name']);
 
