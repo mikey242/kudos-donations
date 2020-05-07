@@ -110,12 +110,12 @@ class Carbon {
 			 */
 	        ->add_tab('Mollie', [
                 Field::make( 'html', 'payment_intro', null )
-	                /* translators: %s: Link to Mollie dashboard */
                     ->set_html('
 						<h1>Mollie</h1>
+						'/* translators: %s: Mollie website link */.'
 						<p><strong>' . sprintf(__('Kudos works with payment vendor Mollie. Create a %s.', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/">Mollie account</a>') . '</strong></p>
 						<p>'. __('To receive payments, you will need to add your Mollie Live API key in the box below. Would you like to test the system first? Then you can use the Mollie Test API key.', 'kudos-donations') .'</p>
-						'/* translators: %s: Mollie website link */.'
+						'./* translators: %s: Link to Mollie dashboard */'
 						<p>'. sprintf(__('Both "Live" and "Test" API keys can be found in your %s', 'kudos-donations'), '<a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">Mollie Dashboard</a>') .'.</p>
 					'),
                 Field::make('radio', 'kudos_mollie_api_mode', __('Mode', 'kudos-donations'))
@@ -197,6 +197,7 @@ class Carbon {
 			    Field::make('html', 'popup_intro', null)
 			        ->set_html('
 			            <h3><strong>'. __('Pop-up message', 'kudos-donations') .'</strong></h3>
+			            './* translators: %s: Available handlebar variables */'
 			            <p>'. sprintf(__('Use the following variables %s to include the donated amount and donor\'s name in displayed text.', 'kudos-donations'), '{{value}}, {{name}}') .'</p>
 			        '),
 			    Field::make('checkbox', 'kudos_return_message_enable', __('Show pop-up message when payment complete', 'kudos-donations'))
@@ -213,7 +214,6 @@ class Carbon {
 			    Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
 			        /* translators: %s: Value of donation */
 			         ->set_default_value(sprintf(__('Many thanks for your donation of €%s. We appreciate your support.', 'kudos-donations'), '{{value}}'))
-			        /* translators: %s: Available handlebar variables */
 			         ->set_conditional_logic([
 			             [
 				             'field' => 'kudos_return_message_enable',
@@ -228,6 +228,7 @@ class Carbon {
 			    Field::make('checkbox', 'kudos_custom_return_enable', __('Use custom return URL', 'kudos-donations'))
 			         ->set_default_value(false),
 			    Field::make('text', 'kudos_custom_return_url', __('URL', 'kudos-donations'))
+				    /* translators: %s: Current web address (e.g https://mywebsite.com) */
 			         ->set_help_text( sprintf(__('e.g: %s/thanks', 'kudos-donations'), get_site_url()) )
 			         ->set_conditional_logic([
 			             [
@@ -248,6 +249,7 @@ class Carbon {
             	    Field::make('html', 'shortcode_intro', null)
 	                    ->set_html('
                             <h3><strong>'. __('Shortcode options', 'kudos-donations') .'</strong></h3>
+                            './* translators: %s: <code>[kudos]</code>*/'
 	                        <p>'. sprintf(__('Override the default settings %s by using the following shortcode options', 'kudos-donations'), '<code>[kudos]</code>') .':</p>
 	                    '),
             	    Field::make('html', 'shortcode_options', null)

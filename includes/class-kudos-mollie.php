@@ -111,6 +111,7 @@ class Kudos_Mollie
 					],
 					"redirectUrl" => $redirectUrl,
 					"webhookUrl" => rest_url('kudos/v1/mollie'),
+					/* translators: %s: The order id */
 					"description" => sprintf(__("Kudos Payment - %s", 'kudos-donations'), $order_id),
 					'metadata' => [
 						'order_id' => $order_id,
