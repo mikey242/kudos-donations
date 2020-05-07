@@ -61,14 +61,9 @@ class Kudos_Modal {
 		            'header' => get_option('_kudos_form_header'),
                     'text' => get_option('_kudos_form_text'),
 			        'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
-                    'name_placeholder' => __('Name', 'kudos-donations'),
-                    'email_placeholder' => __('E-mail address', 'kudos-donations'),
-                    'amount_placeholder' => __('Amount', 'kudos-donations'),
 		            'name_required' => get_option('_kudos_name_required'),
 		            'email_required' => get_option('_kudos_email_required'),
-                    'secure_payment' => __('Secure payment by', 'kudos-donations'),
-                    'cancel' => __('Cancel', 'kudos-donations'),
-                    'donate' => __('Donate', 'kudos-donations')
+			        'vendor' => (get_option('_kudos_payment_vendor') ? get_option('_kudos_payment_vendor') : 'mollie')
 		    ];
 			return $this->twig->render('/public/modal/donate.modal.html.twig', $data);
 		}

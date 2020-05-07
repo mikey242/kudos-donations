@@ -13,22 +13,22 @@
     <form id="kudos_form" action="">
         {{ nonce|raw }}
         <label>
-            <input {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ name_placeholder ~ ((name_required) ? ' *' : null) }}" />
+            <input {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') ~ ((name_required) ? ' *' : null) }}" />
         </label>
         <label>
-            <input {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ email_placeholder ~ ((email_required) ? ' *' : null) }}" />
+            <input {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') ~ ((email_required) ? ' *' : null) }}" />
         </label>
         <label>
-            <input required type="text" min="1" name="value" placeholder="{{ amount_placeholder }} *" />
+            <input required type="text" min="1" name="value" placeholder="{{ __('Amount', 'kudos-donations')}} *" />
         </label>
-        <div class="payment_by mollie">
+        <div class="payment_by {{ vendor }}">
             <small class="text-gray-600">
-                {{ secure_payment }}
+                {{ __('Secure payment by', 'kudos-donations') }}
             </small>
         </div>
         <div class="kudos_modal_buttons text-center">
-            <button class="kudos_button style-orange-outline mr-3" type="button" data-micromodal-close aria-label="{{ cancel }}">{{ cancel }}</button>
-            <button id="kudos_submit" name="kudos_submit" class="kudos_button style-orange" type="submit" aria-label="{{ donate }}">{{ donate }}</button>
+            <button class="kudos_button style-orange-outline mr-3" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+            <button id="kudos_submit" name="kudos_submit" class="kudos_button style-orange" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
         </div>
     </form>
 {% endblock footer %}
