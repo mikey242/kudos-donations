@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="assets/logo-colour.png" width="75">
+    <img src="assets/icon-256x256.png" width="75">
     <h1>Kudos Donations</h1>
     Easily receive donations in WordPress via Mollie
     <br>

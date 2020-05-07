@@ -1,96 +1,57 @@
-=== Plugin Name ===
+=== Kudos Donations ===
 Contributors: iseardmedia
-Donate link: https://www.linkedin.com/in/michael-iseard/
-Tags: donation, mollie, payment
-Requires at least: 4.6
+Tags: donation, mollie, payment, ideal, creditcard
+Requires at least: 4.7
 Tested up to: 5.4.1
-Stable tag: 4.3
+Requires PHP: 7.0
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Easily receive donations via Mollie
+Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+*Kudos Donations* allows you to add a donate button anywhere on your website. Once a user clicks this button they will be greeted
+with a configurable pop-up window, where they can enter their details and how much they would like to donate.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+Buttons can be placed either using the provided 'Kudos Button' block or using a shortcode:
 
-A few notes about the sections above:
+`
+//Customise button text
+[kudos button="Help us out!"]
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+//Customise header text
+[kudos header="Support our cause"]
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+//Customise message text
+[kudos text="Thank you for donating to this project. We really appreciate your support."]
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+//A fully customised button and text would look like this
+[kudos label="Help us out!" header="Support our cause" text="Thank you for donating to this project. We really appreciate your support."]
+`
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
-
-e.g.
-
-1. Upload `kudos.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+1. Install using the WordPress plugin control panel or manually download the plugin and upload the *kudos-donations* folder to the /wp-content/plugins/ directory
+1. Activate the plugin through the *Plugins* menu in WordPress.
+1. Go to the 'Kudos Settings' menu in the dashboard and follow the instructions to get started.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= What vendors can I use with this plugin? =
 
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
+This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wide range of payment methods such as iDeal, Credit Card and PayPal. For a full list of payment methods please check out [this link](https://www.mollie.com/en/payments)
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Kudos modal
+2. Thank you pop-up
+3. Settings page
+4. The Kudos block
+5. Transactions screen
 
 == Changelog ==
 
 = 1.0 =
 * Initial release
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
