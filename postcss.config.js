@@ -2,7 +2,7 @@
 const tailwindcss = require('tailwindcss');
 
 const purgecss = require('@fullhuman/postcss-purgecss')({
-    content: ['./src/js/*.js', './public/**/*.php'],
+    content: ['./src/js/*.js', './public/**/*.php', './templates/**/*.twig'],
     whitelistPatternsChildren: [/kudos/, /orange/]
 });
 
