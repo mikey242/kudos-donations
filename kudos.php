@@ -18,11 +18,11 @@ require_once __DIR__ . '/vendor/autoload.php';
  *
  * @wordpress-plugin
  * Plugin Name:       Kudos Donations
- * Plugin URI:        https://iseard.media
+ * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
  * Version:           1.0.0
- * Author:            Michael Iseard
- * Author URI:        https://www.linkedin.com/in/michael-iseard/
+ * Author:            Iseard Media
+ * Author URI:        https://iseard.media
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       kudos-donations
