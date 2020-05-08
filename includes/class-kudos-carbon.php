@@ -161,7 +161,7 @@ class Carbon {
 	        /*
 			 * Donation Form tab
 			 */
-		   ->add_tab(__('Donation Form', 'kudos-donations'), [
+			->add_tab(__('Donation Form', 'kudos-donations'), [
 		        Field::make('html', 'form_intro', null)
 		             ->set_html('
 						<h1>'. __('Donation Form', 'kudos-donations') .'</h1>
@@ -239,28 +239,28 @@ class Carbon {
 			])
 
 	        /*
-	         * Advanced tab
+	         * Shortcode tab
 	         */
             ->add_tab(__('Shortcode', 'kudos-donations'), [
-		            Field::make('html', 'advanced_intro', null)
-		                ->set_html('
-							<h1>'. __('Shortcode', 'kudos-donations') .'</h1>
-	                    '),
-            	    Field::make('html', 'shortcode_intro', null)
-	                    ->set_html('
-                            <h3><strong>'. __('Shortcode options', 'kudos-donations') .'</strong></h3>
-                            './* translators: %s: <code>[kudos]</code>*/'
-	                        <p>'. sprintf(__('Override the default settings %s by using the following shortcode options', 'kudos-donations'), '<code>[kudos]</code>') .':</p>
-	                    '),
-            	    Field::make('html', 'shortcode_options', null)
-	                    ->set_html('
-	                        <p><code>[kudos button="'. __('Help us out!', 'kudos-donations') .'"]</code> - '. __('Customise button text', 'kudos-donations') .'</p>
-							<p><code>[kudos header="'. __('Support our cause', 'kudos-donations') .'"]</code> - '. __('Customise header text', 'kudos-donations') .'</p>
-							<p><code>[kudos text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code> - '. __('Customise message text', 'kudos-donations') .'</p>
-							<p>'. __('A fully customised button and text would look like this', 'kudos-donations') .':</p>
-							<p><code>[kudos label="'. __('Help us out!', 'kudos-donations') .'" header="'. __('Support our cause', 'kudos-donations') .'" text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code></p>
-	                    '),
-            ])
+	            Field::make('html', 'advanced_intro', null)
+	                ->set_html('
+						<h1>'. __('Shortcode', 'kudos-donations') .'</h1>
+	                '),
+	            Field::make('html', 'shortcode_intro', null)
+	                ->set_html('
+	                    <h3><strong>'. __('Shortcode options', 'kudos-donations') .'</strong></h3>
+	                    './* translators: %s: <code>[kudos]</code>*/'
+	                    <p>'. sprintf(__('Override the default settings %s by using the following shortcode options', 'kudos-donations'), '<code>[kudos]</code>') .':</p>
+	                '),
+	            Field::make('html', 'shortcode_options', null)
+	                ->set_html('
+	                    <p><code>[kudos button="'. __('Help us out!', 'kudos-donations') .'"]</code> - '. __('Customise button text', 'kudos-donations') .'</p>
+						<p><code>[kudos header="'. __('Support our cause', 'kudos-donations') .'"]</code> - '. __('Customise header text', 'kudos-donations') .'</p>
+						<p><code>[kudos text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code> - '. __('Customise message text', 'kudos-donations') .'</p>
+						<p>'. __('A fully customised button and text would look like this', 'kudos-donations') .':</p>
+						<p><code>[kudos label="'. __('Help us out!', 'kudos-donations') .'" header="'. __('Support our cause', 'kudos-donations') .'" text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code></p>
+	                '),
+           ])
         ;
     }
 
@@ -295,12 +295,6 @@ class Carbon {
                     echo "</div><!-- /.block -->";
 
             } );
-    }
-
-    public function button() {
-		add_action('carbon_fields_fields_registered', function () {
-			return 'Hello';
-		});
     }
 }
 
