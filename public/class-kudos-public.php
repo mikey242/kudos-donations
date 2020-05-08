@@ -190,7 +190,7 @@ class Kudos_Public {
 	 */
 	public static function get_return_url() {
 		$use_custom = carbon_get_theme_option('kudos_custom_return_enable');
-		$custom_url = get_option('_kudos_custom_return_url');
+		$custom_url = carbon_get_theme_option('kudos_custom_return_url');
 		if($use_custom && $custom_url) {
 			return $custom_url;
 		} else {
