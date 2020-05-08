@@ -7,7 +7,6 @@ $(() => {
     const $body = $('body');
     let $kudosButtons = $('.kudos_button_donate');
     let redirectUrl;
-    let order_id = new URLSearchParams(location.search).get('kudos_order_id');
 
     // Set validation defaults
     $.validator.setDefaults({
@@ -37,29 +36,11 @@ $(() => {
         })
     }
 
-    // Check order status if query var exists
-    if(order_id) {
-        $.ajax({
-            method: 'post',
-            dataType: 'json',
-            url: kudos.ajaxurl,
-            data: {
-                action: 'check_transaction',
-                order_id: order_id
-            },
-            success: function (result) {
-                if(result.success && result.data.html) {
-                    let data = result.data
-                    let html = data.html ? data.html : '';
-                    $body.append(html);
-                    MicroModal.show('kudos_message_modal', {
-                        awaitCloseAnimation: true
-                    });
-                }
-            },
-            error: function (error) {
-                console.log(error);
-            }
+    // Show message modal if exists
+    if($('#kudos_message_modal').length) {
+        MicroModal.show('kudos_message_modal', {
+            awaitCloseAnimation: true,
+            awaitOpenAnimation: true
         })
     }
 
@@ -97,7 +78,7 @@ $(() => {
     $body.on('submit', 'form#kudos_form', function (e) {
 
         e.preventDefault();
-        let $form = $('#kudos_form_modal');
+        let $kudosFormModal = $('#kudos_form_modal');
         let $kudosErrorMessage = $('.kudos_error_message');
 
         $.ajax({
@@ -110,14 +91,14 @@ $(() => {
                 form: $(e.currentTarget).serialize()
             },
             beforeSend: function() {
-                $form.addClass('kudos_loading');
+                $kudosFormModal.addClass('kudos_loading');
             },
             success: function (result) {
                 if(result.success) {
                     $(location).attr('href', result.data);
                 } else {
                     $kudosErrorMessage.text(result.data.message);
-                    $form.removeClass('kudos_loading').addClass('error');
+                    $kudosFormModal.removeClass('kudos_loading').addClass('error');
                 }
             },
             error: function (error) {

@@ -137,7 +137,9 @@ class Kudos_Public {
      * @since      1.0.0
 	 * @return void
 	 */
-	public function register_webhook() {
+	public function register_routes() {
+
+		// Mollie webhook
 		$mollie = new Kudos_Mollie();
 		$mollie->register_webhook();
 	}
@@ -146,22 +148,16 @@ class Kudos_Public {
 	 * Using the ajax provided $_REQUEST variable checks payment status
 	 *
 	 * @since    1.0.0
+	 * @param $order_id
 	 * @return bool | string
 	 */
-	public function check_transaction() {
+	public function check_transaction($order_id) {
 
-		$order_id = $_REQUEST['order_id'] ? base64_decode($_REQUEST['order_id']) : null;
-		$order_id_session = !empty($_COOKIE['kudos_order_id']) ? $_COOKIE['kudos_order_id'] : null;
+		$order_id = base64_decode($order_id);
 
-		// If either $_GET['order_id'] or $_COOKIE['kudos_order_id'] not set then stop
-		if(!$order_id || !$order_id_session) {
-			return false;
-		}
-
-		if($order_id === $order_id_session) {
+		if($order_id) {
 
 			$transaction = new Transaction();
-			$modal = new Kudos_Modal();
 			$transaction = $transaction->get_transaction($order_id, ['status', 'value', 'name']);
 
 			switch($transaction->status) {
@@ -170,21 +166,17 @@ class Kudos_Public {
 						'{{value}}' => number_format_i18n($transaction->value, 2),
 						'{{name}}' => $transaction->name
 					];
-					$header = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);
-					$text = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
-					$return['html'] = $modal->get_message_modal($header, $text);
+					$return['header'] = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);
+					$return['text'] = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
 					break;
 				case 'canceled':
-					$header = __('Payment canceled', 'kudos-donations');
-					$return['html'] = $modal->get_message_modal($header);
+					$return['header'] = __('Payment canceled', 'kudos-donations');
 	                break;
                 default:
-	                $return['html'] = false;
+	                return false;
 			}
 
-			// Unset cookie to prevent repeat message
-			setcookie('kudos_order_id', '', 1);
-			wp_send_json_success($return);
+			return $return;
 		}
 
 		return false;
@@ -247,18 +239,27 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Checks if the kudos shortcode or block exists on the page and places the kudos modal
+	 * Places modals on page if conditions are met
      *
      * @since    1.0.0
 	 */
-	public function place_payment_modal() {
+	public function place_modals() {
 
 	    global $post;
+		$modal = new Kudos_Modal();
 
+		// Payment modal
 		if(has_block('carbon-fields/kudos-button') || (is_object($post) ? has_shortcode($post->post_content, 'kudos') : null)) {
-			$modal = new Kudos_Modal();
 			echo $modal->get_payment_modal();
 		}
-	}
 
+		// Message modal
+		if(!empty($_REQUEST['kudos_order_id']) && !empty($_REQUEST['_wpnonce'])) {
+			$order_id = base64_decode($_REQUEST['kudos_order_id']);
+			if(wp_verify_nonce($_REQUEST['_wpnonce'],'check_kudos_order-' . $order_id)) {
+				$data = $this->check_transaction($_REQUEST['kudos_order_id']);
+				echo $modal->get_message_modal($data['header'], $data['text']);
+			}
+		}
+	}
 }

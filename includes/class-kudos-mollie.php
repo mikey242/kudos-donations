@@ -94,12 +94,12 @@ class Kudos_Mollie
 
 		$mollieApi = $this->mollieApi;
 		$order_id = time();
-		setcookie('kudos_order_id', $order_id);
 		$value = number_format($value, 2);
 
 		// Add order id if option to show message enabled
 		if(carbon_get_theme_option('kudos_return_message_enable')) {
 			$redirectUrl = add_query_arg('kudos_order_id', base64_encode($order_id), $redirectUrl);
+			$redirectUrl = add_query_arg('_wpnonce', wp_create_nonce('check_kudos_order-' . $order_id), $redirectUrl);
 		}
 
 		try {
