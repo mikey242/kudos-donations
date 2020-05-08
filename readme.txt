@@ -14,7 +14,6 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 *Kudos Donations* allows you to add a donate button anywhere on your website. Once a user clicks this button they will be greeted with a configurable pop-up window, where they can enter their details and how much they would like to donate. Features of this plugin include:
 
-
 * Smart and modern design
 * Connect with Mollie for secure payments by credit card, iDEAL and many others
 * Use the provided Gutenberg block or shortcode to place your button
@@ -34,10 +33,10 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 [kudos header="Support our cause"]
 
 //Customise message text
-[kudos text="Thank you for donating to this project. We really appreciate your support."]
+[kudos body="Thank you for donating to this project. We really appreciate your support."]
 
 //A fully customised button and text would look like this
-[kudos label="Help us out!" header="Support our cause" text="Thank you for donating to this project. We really appreciate your support."]
+[kudos button="Help us out!" header="Support our cause" body="Thank you for donating to this project. We really appreciate your support."]
 `
 
 = Source =
