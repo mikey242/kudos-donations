@@ -278,14 +278,14 @@ class Carbon {
             ->add_fields([
                 Field::make('text', 'kudos_button_label', __('Button label', 'kudos-donations'))
 	                ->set_default_value(get_option('_kudos_button_label')),
-	            Field::make('text', 'kudos_modal_header', __('Modal header', 'kudos-donations'))
+	            Field::make('text', 'kudos_modal_header', __('Pop-up header', 'kudos-donations'))
 	                 ->set_default_value(get_option('_kudos_form_header')),
-                Field::make('text', 'kudos_modal_text', __('Modal text', 'kudos-donations'))
+                Field::make('text', 'kudos_modal_text', __('Pop-up text', 'kudos-donations'))
 	                ->set_default_value(get_option('_kudos_form_text')),
             ])
             ->set_render_callback( function ( $fields, $attributes, $inner_blocks ) {
-                $atts['label'] = $fields['kudos_button_label'];
-                $atts['text'] = $fields['kudos_modal_text'];
+                $atts['button'] = $fields['kudos_button_label'];
+                $atts['body'] = $fields['kudos_modal_text'];
                 $atts['header'] = $fields['kudos_modal_header'];
                 $classes = $attributes ? $attributes['className'] : '';
 

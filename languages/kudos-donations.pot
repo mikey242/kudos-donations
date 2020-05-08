@@ -1,4 +1,4 @@
-# Copyright (C) 2020 Michael Iseard
+# Copyright (C) 2020 Iseard Media
 # This file is distributed under the same license as the Kudos Donations plugin.
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-07T18:53:11+00:00\n"
+"POT-Creation-Date: 2020-05-08T19:10:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: kudos-donations\n"
@@ -27,7 +27,7 @@ msgid "Add a donation button to any page on your website. Easy & fast setup. Wor
 msgstr ""
 
 #. Author of the plugin
-msgid "Michael Iseard"
+msgid "Iseard Media"
 msgstr ""
 
 #. Author URI of the plugin
@@ -394,11 +394,11 @@ msgid "Adds a Kudos donate button to your post or page."
 msgstr ""
 
 #: includes/class-kudos-carbon.php:281
-msgid "Modal header"
+msgid "Pop-up header"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:283
-msgid "Modal text"
+msgid "Pop-up text"
 msgstr ""
 
 #. translators: %s: The order id
@@ -503,6 +503,6 @@ msgstr ""
 msgid "Error creating Mollie payment. Please try again later."
 msgstr ""
 
-#: public/class-kudos-public.php:178
+#: public/class-kudos-public.php:173
 msgid "Payment canceled"
 msgstr ""

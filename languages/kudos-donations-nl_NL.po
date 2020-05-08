@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
-"POT-Creation-Date: 2020-05-07T18:53:11+00:00\n"
-"PO-Revision-Date: 2020-05-08 15:06+0200\n"
+"POT-Creation-Date: 2020-05-08T19:10:21+00:00\n"
+"PO-Revision-Date: 2020-05-08 21:32+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -33,8 +33,8 @@ msgstr ""
 "geïnstalleerd. Maakt gebruik van Mollie online betaalservice."
 
 #. Author of the plugin
-msgid "Michael Iseard"
-msgstr "Michael Iseard"
+msgid "Iseard Media"
+msgstr ""
 
 #. Author URI of the plugin
 msgid "https://www.linkedin.com/in/michael-iseard/"
@@ -464,12 +464,16 @@ msgid "Adds a Kudos donate button to your post or page."
 msgstr "Voeg een Kudos donatieknop toe aan een bericht of pagina."
 
 #: includes/class-kudos-carbon.php:281
-msgid "Modal header"
-msgstr "Modal titel"
+#, fuzzy
+#| msgid "Pop-up message"
+msgid "Pop-up header"
+msgstr "Pop-up bericht"
 
 #: includes/class-kudos-carbon.php:283
-msgid "Modal text"
-msgstr "Modal tekst"
+#, fuzzy
+#| msgid "Pop-up message"
+msgid "Pop-up text"
+msgstr "Pop-up bericht"
 
 #. translators: %s: The order id
 #: includes/class-kudos-mollie.php:115
@@ -573,9 +577,18 @@ msgstr "Verzoek is ongeldig"
 msgid "Error creating Mollie payment. Please try again later."
 msgstr "Fout bij het maken van een Mollie-betaling. Probeer het later opnieuw."
 
-#: public/class-kudos-public.php:178
+#: public/class-kudos-public.php:173
 msgid "Payment canceled"
 msgstr "Betaling geannuleerd."
+
+#~ msgid "Michael Iseard"
+#~ msgstr "Michael Iseard"
+
+#~ msgid "Modal header"
+#~ msgstr "Modal titel"
+
+#~ msgid "Modal text"
+#~ msgstr "Modal tekst"
 
 #~ msgid ""
 #~ "Set the design of the donation button and text under the ‘Customise’ tab."
