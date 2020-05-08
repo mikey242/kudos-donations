@@ -45,8 +45,8 @@ class Kudos_Button {
 		$this->ready = Kudos_Public::ready();
 		$this->redirectUrl = Kudos_Public::get_return_url();
 		$this->twig = new Kudos_Twig();
-		$this->label = !empty($atts['label']) ? $atts['label'] : carbon_get_theme_option('kudos_button_label');
-		$this->text = !empty($atts['text']) ? $atts['text'] : carbon_get_theme_option('kudos_form_text');
+		$this->label = !empty($atts['button']) ? $atts['button'] : carbon_get_theme_option('kudos_button_label');
+		$this->text = !empty($atts['body']) ? $atts['body'] : carbon_get_theme_option('kudos_form_text');
 		$this->header = !empty($atts['header']) ? $atts['header'] : carbon_get_theme_option('kudos_form_header');
 		$this->style = carbon_get_theme_option('kudos_button_style');
 	}

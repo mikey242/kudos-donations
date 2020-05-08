@@ -256,9 +256,9 @@ class Carbon {
 	                ->set_html('
 	                    <p><code>[kudos button="'. __('Help us out!', 'kudos-donations') .'"]</code> - '. __('Customise button text', 'kudos-donations') .'</p>
 						<p><code>[kudos header="'. __('Support our cause', 'kudos-donations') .'"]</code> - '. __('Customise header text', 'kudos-donations') .'</p>
-						<p><code>[kudos text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code> - '. __('Customise message text', 'kudos-donations') .'</p>
+						<p><code>[kudos body="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code> - '. __('Customise message text', 'kudos-donations') .'</p>
 						<p>'. __('A fully customised button and text would look like this', 'kudos-donations') .':</p>
-						<p><code>[kudos label="'. __('Help us out!', 'kudos-donations') .'" header="'. __('Support our cause', 'kudos-donations') .'" text="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code></p>
+						<p><code>[kudos button="'. __('Help us out!', 'kudos-donations') .'" header="'. __('Support our cause', 'kudos-donations') .'" body="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code></p>
 	                '),
            ])
         ;

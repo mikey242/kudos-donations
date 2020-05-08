@@ -225,9 +225,9 @@ class Kudos_Public {
 
 			$atts = shortcode_atts(
 				[
-					'button-label' => '',
-					'form-header' => '',
-					'form-text'  => ''
+					'button' => '',
+					'header' => '',
+					'body'  => ''
 				],
 				$atts,
 				'kudos'
