@@ -1,7 +1,7 @@
 <div align="center">
     <img src="assets/icon-256x256.png" width="75">
     <h1>Kudos Donations</h1>
-    Easily receive donations in WordPress via Mollie
+    Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
     <br>
     <br>
     <img src="assets/demo-1.gif" alt="Kudos Donations">
