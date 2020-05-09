@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const svgToMiniDataURI = require('mini-svg-data-uri');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const PATHS = {
     src: path.join(__dirname, 'src'),
@@ -24,17 +25,10 @@ module.exports = {
         jquery: 'jQuery',
     },
     optimization: {
-        moduleIds: 'hashed',
-        // runtimeChunk: 'single',
-        splitChunks: {
-            cacheGroups: {
-                vendor: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
-                    chunks: 'all',
-                },
-            },
-        },
+        minimize: true,
+        minimizer: [new TerserPlugin({
+            extractComments: false,
+        })],
     },
     module: {
         rules: [{
