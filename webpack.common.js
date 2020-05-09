@@ -68,6 +68,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     limit: 4096,
+                    name: "[name].[ext]",
                     outputPath:'./fonts/'
                 },
             },
