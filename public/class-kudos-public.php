@@ -80,8 +80,9 @@ class Kudos_Public {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name . '-public', get_asset_path('kudos-public.js'), [ 'jquery' ], $this->version, false );
-		wp_enqueue_script( $this->plugin_name . '-vendors', get_asset_path('vendors.js'), [ 'jquery' ], $this->version, false );
+		wp_enqueue_script( 'micromodal', plugin_dir_url( __FILE__ ) . '../dist/js/vendor/micromodal.min.js', [ 'jquery' ], $this->version, true );
+		wp_enqueue_script( 'jquery-validate', plugin_dir_url( __FILE__ ) . '../dist/js/vendor/jquery.validate.min.js', [ 'jquery' ], $this->version, true );
+		wp_enqueue_script( $this->plugin_name . '-public', get_asset_path('kudos-public.js'), [ 'jquery' ], $this->version, true );
 		wp_localize_script( $this->plugin_name . '-public', 'kudos', [
 		        'ajaxurl' => admin_url('admin-ajax.php'),
                 'name_required' => __('Your name is required', 'kudos-donations'),
@@ -102,7 +103,6 @@ class Kudos_Public {
 	public function enqueue_block_assets() {
 
 		wp_enqueue_style( $this->plugin_name . '-blocks', get_asset_path('kudos-blocks.css'), [], $this->version, 'all' );
-		wp_enqueue_script( $this->plugin_name . '-blocks', get_asset_path('kudos-blocks.js'), [ 'jquery' ], $this->version, false );
 
 	}
 

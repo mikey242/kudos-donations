@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import "jquery-validation";
 import MicroModal from "micromodal";
 
 $(() => {

@@ -1,20 +1,44 @@
-const path = require('path')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 const TerserPlugin = require('terser-webpack-plugin');
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const { join, resolve } = require( 'path' );
+
 
 const PATHS = {
-    src: path.join(__dirname, 'src'),
-    dist: path.resolve(__dirname, 'dist')
+    src: join(__dirname, 'src'),
+    dist: resolve(__dirname, 'dist')
 }
+
+const vendors = {
+    'jquery.validate.min.js': 'jquery-validation/dist/jquery.validate.min.js',
+    'micromodal.min.js': 'micromodal/dist/micromodal.min.js'
+};
+
+/**
+ * Maps vendors to copy commands for the CopyWebpackPlugin.
+ *
+ * @source https://github.com/WordPress/wordpress-develop/blob/master/tools/webpack/packages.js
+ * @param {Object} vendors     Vendors to include in the vendor folder.
+ * @param {string} buildTarget The folder in which to build the packages.
+ * @return {Object[]} Copy object suitable for the CopyWebpackPlugin.
+ */
+function mapVendorCopies( vendors, buildTarget ) {
+    return Object.keys( vendors ).map( ( filename ) => ( {
+        from: join( __dirname, `node_modules/${ vendors[ filename ] }` ),
+        to: join( __dirname, `${ buildTarget }/js/vendor/${ filename }` ),
+    } ) );
+}
+
+const vendorCopies = mapVendorCopies(vendors, 'dist');
 
 module.exports = {
     entry: {
-        'kudos-admin' : [path.join(PATHS.src, '/js', '/kudos-admin.js'), path.join(PATHS.src, '/scss', '/kudos-admin.scss'),],
-        'kudos-public' : [path.join(PATHS.src, '/js', '/kudos-public.js'), path.join(PATHS.src, '/scss', '/kudos-public.scss'),],
-        'kudos-blocks' : [path.join(PATHS.src, '/js', '/kudos-blocks.js'),path.join(PATHS.src, '/scss', '/kudos-blocks.scss')],
+        'kudos-admin' : [join(PATHS.src, '/js', '/kudos-admin.js'), join(PATHS.src, '/scss', '/kudos-admin.scss'),],
+        'kudos-public' : [join(PATHS.src, '/js', '/kudos-public.js'), join(PATHS.src, '/scss', '/kudos-public.scss'),],
+        'kudos-blocks' : [join(PATHS.src, '/scss', '/kudos-blocks.scss')],
     },
     output: {
         path: PATHS.dist,
@@ -22,7 +46,8 @@ module.exports = {
         filename: 'js/[name].[contenthash].js',
     },
     externals: {
-        jquery: 'jQuery',
+        'jquery': 'jQuery',
+        'micromodal': 'MicroModal',
     },
     optimization: {
         minimize: true,
@@ -34,10 +59,10 @@ module.exports = {
         rules: [{
             test: /.jsx?$/,
             include: [
-                path.resolve(__dirname, 'src')
+                resolve(__dirname, 'src')
             ],
             exclude: [
-                path.resolve(__dirname, 'node_modules')
+                resolve(__dirname, 'node_modules')
             ],
             loader: 'babel-loader',
             query: {
@@ -83,5 +108,10 @@ module.exports = {
         }),
         new WebpackAssetsManifest(),
         new CleanWebpackPlugin(),
+        new CopyWebpackPlugin(
+            [
+                ...vendorCopies,
+            ],
+        ),
     ]
 };
