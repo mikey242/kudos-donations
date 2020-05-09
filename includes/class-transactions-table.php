@@ -59,7 +59,7 @@ class Transactions_Table extends WP_List_Table {
 	public function fetch_table_data() {
 		global $wpdb;
 
-		$mode = (!empty($_GET['mode']) ? $_GET['mode'] : '');
+		$mode = (!empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : '');
 
 		$search_custom_vars = '';
 
@@ -103,8 +103,8 @@ class Transactions_Table extends WP_List_Table {
 	 * @return array
 	 */
 	protected function get_views() {
-		$views = array();
-		$current = ( !empty($_REQUEST['mode']) ? $_REQUEST['mode'] : 'all');
+		$views = [];
+		$current = ( !empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : 'all');
 
 		//All link
 		$class = ($current == 'all' ? ' class="current"' :'');

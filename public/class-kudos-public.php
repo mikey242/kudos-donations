@@ -255,7 +255,7 @@ class Kudos_Public {
 
 		// Message modal
 		if(!empty($_REQUEST['kudos_order_id']) && !empty($_REQUEST['_wpnonce'])) {
-			$order_id = base64_decode($_REQUEST['kudos_order_id']);
+			$order_id = base64_decode(sanitize_text_field($_REQUEST['kudos_order_id']));
 			if(wp_verify_nonce($_REQUEST['_wpnonce'],'check_kudos_order-' . $order_id)) {
 				$data = $this->check_transaction($_REQUEST['kudos_order_id']);
 				echo $modal->get_message_modal($data['header'], $data['text']);
