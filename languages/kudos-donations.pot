@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-08T19:10:21+00:00\n"
+"POT-Creation-Date: 2020-05-09T16:12:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: kudos-donations\n"
@@ -19,7 +19,7 @@ msgid "Kudos Donations"
 msgstr ""
 
 #. Plugin URI of the plugin
-msgid "https://iseard.media"
+msgid "https://gitlab.iseard.media/michael/kudos-donations"
 msgstr ""
 
 #. Description of the plugin
@@ -31,7 +31,7 @@ msgid "Iseard Media"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://www.linkedin.com/in/michael-iseard/"
+msgid "https://iseard.media"
 msgstr ""
 
 #. translators: %s: API mode
@@ -402,12 +402,12 @@ msgid "Pop-up text"
 msgstr ""
 
 #. translators: %s: The order id
-#: includes/class-kudos-mollie.php:115
+#: includes/class-kudos-mollie.php:116
 msgid "Kudos Payment - %s"
 msgstr ""
 
 #. translators: %s: Mollie
-#: includes/class-kudos-mollie.php:196
+#: includes/class-kudos-mollie.php:197
 msgid "Webhook requested by %s."
 msgstr ""
 
@@ -471,27 +471,27 @@ msgstr ""
 msgid "Mollie not configured"
 msgstr ""
 
-#: public/class-kudos-public.php:87
+#: public/class-kudos-public.php:88
 msgid "Your name is required"
 msgstr ""
 
-#: public/class-kudos-public.php:88
+#: public/class-kudos-public.php:89
 msgid "Your email is required"
 msgstr ""
 
-#: public/class-kudos-public.php:89
+#: public/class-kudos-public.php:90
 msgid "Please enter a valid email"
 msgstr ""
 
-#: public/class-kudos-public.php:90
+#: public/class-kudos-public.php:91
 msgid "Donation amount is required"
 msgstr ""
 
-#: public/class-kudos-public.php:91
+#: public/class-kudos-public.php:92
 msgid "Minimum donation is 1 euro"
 msgstr ""
 
-#: public/class-kudos-public.php:92
+#: public/class-kudos-public.php:93
 msgid "Only digits are valid"
 msgstr ""
 
@@ -505,4 +505,12 @@ msgstr ""
 
 #: public/class-kudos-public.php:173
 msgid "Payment canceled"
+msgstr ""
+
+#: public/class-kudos-public.php:176
+msgid "Thanks"
+msgstr ""
+
+#: public/class-kudos-public.php:177
+msgid "Your donation will be processed soon."
 msgstr ""

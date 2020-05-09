@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
-"POT-Creation-Date: 2020-05-08T19:10:21+00:00\n"
-"PO-Revision-Date: 2020-05-08 21:32+0200\n"
+"POT-Creation-Date: 2020-05-09T16:12:21+00:00\n"
+"PO-Revision-Date: 2020-05-09 18:13+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -21,8 +21,8 @@ msgid "Kudos Donations"
 msgstr "Kudos Donations"
 
 #. Plugin URI of the plugin
-msgid "https://iseard.media"
-msgstr "https://iseard.media"
+msgid "https://gitlab.iseard.media/michael/kudos-donations"
+msgstr ""
 
 #. Description of the plugin
 msgid ""
@@ -37,8 +37,8 @@ msgid "Iseard Media"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://www.linkedin.com/in/michael-iseard/"
-msgstr "https://www.linkedin.com/in/michael-iseard/"
+msgid "https://iseard.media"
+msgstr "https://iseard.media"
 
 #. translators: %s: API mode
 #: admin/class-kudos-admin.php:103
@@ -464,24 +464,20 @@ msgid "Adds a Kudos donate button to your post or page."
 msgstr "Voeg een Kudos donatieknop toe aan een bericht of pagina."
 
 #: includes/class-kudos-carbon.php:281
-#, fuzzy
-#| msgid "Pop-up message"
 msgid "Pop-up header"
-msgstr "Pop-up bericht"
+msgstr "Pop-up titel"
 
 #: includes/class-kudos-carbon.php:283
-#, fuzzy
-#| msgid "Pop-up message"
 msgid "Pop-up text"
 msgstr "Pop-up bericht"
 
 #. translators: %s: The order id
-#: includes/class-kudos-mollie.php:115
+#: includes/class-kudos-mollie.php:116
 msgid "Kudos Payment - %s"
 msgstr "Kudos Betaling - %s"
 
 #. translators: %s: Mollie
-#: includes/class-kudos-mollie.php:196
+#: includes/class-kudos-mollie.php:197
 msgid "Webhook requested by %s."
 msgstr "Webhook aangevraagd door %s."
 
@@ -545,27 +541,27 @@ msgstr "Onbekend"
 msgid "Mollie not configured"
 msgstr "Mollie is niet geconfigureerd"
 
-#: public/class-kudos-public.php:87
+#: public/class-kudos-public.php:88
 msgid "Your name is required"
 msgstr "Vul uw naam in"
 
-#: public/class-kudos-public.php:88
+#: public/class-kudos-public.php:89
 msgid "Your email is required"
 msgstr "Vul uw e-mailadres in"
 
-#: public/class-kudos-public.php:89
+#: public/class-kudos-public.php:90
 msgid "Please enter a valid email"
 msgstr "Vul een geldig e-mailadres in"
 
-#: public/class-kudos-public.php:90
+#: public/class-kudos-public.php:91
 msgid "Donation amount is required"
 msgstr "Donatiebedrag is vereist"
 
-#: public/class-kudos-public.php:91
+#: public/class-kudos-public.php:92
 msgid "Minimum donation is 1 euro"
 msgstr "Minimale donatie is 1 euro"
 
-#: public/class-kudos-public.php:92
+#: public/class-kudos-public.php:93
 msgid "Only digits are valid"
 msgstr "Alleen cijfers zijn geldig"
 
@@ -580,6 +576,17 @@ msgstr "Fout bij het maken van een Mollie-betaling. Probeer het later opnieuw."
 #: public/class-kudos-public.php:173
 msgid "Payment canceled"
 msgstr "Betaling geannuleerd."
+
+#: public/class-kudos-public.php:176
+msgid "Thanks"
+msgstr "Bedankt"
+
+#: public/class-kudos-public.php:177
+msgid "Your donation will be processed soon."
+msgstr "Uw donatie wordt zo snel mogelijk verwerkt."
+
+#~ msgid "https://www.linkedin.com/in/michael-iseard/"
+#~ msgstr "https://www.linkedin.com/in/michael-iseard/"
 
 #~ msgid "Michael Iseard"
 #~ msgstr "Michael Iseard"
@@ -611,9 +618,6 @@ msgstr "Betaling geannuleerd."
 
 #~ msgid "We really appreciate that you want to help us out."
 #~ msgstr "Wij waarderen dat je ons steunt."
-
-#~ msgid "Thanks!"
-#~ msgstr "Bedankt!"
 
 #~ msgid "You can use the following variables %s"
 #~ msgstr "Gebruik de volgende variabelen %s"
