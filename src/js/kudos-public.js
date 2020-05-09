@@ -3,6 +3,7 @@ import "jquery-validation";
 import MicroModal from "micromodal";
 
 $(() => {
+    'use strict';
 
     const $body = $('body');
     let $kudosButtons = $('.kudos_button_donate');

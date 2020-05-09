@@ -20,6 +20,9 @@ module.exports = {
         publicPath: '/wp-content/plugins/kudos-donations/dist/',
         filename: 'js/[name].[contenthash].js',
     },
+    externals: {
+        jquery: 'jQuery',
+    },
     optimization: {
         moduleIds: 'hashed',
         // runtimeChunk: 'single',
@@ -84,6 +87,6 @@ module.exports = {
             filename: 'css/[name].[contenthash].css'
         }),
         new WebpackAssetsManifest(),
-        new CleanWebpackPlugin()
+        new CleanWebpackPlugin(),
     ]
 };
