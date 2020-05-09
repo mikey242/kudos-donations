@@ -25,7 +25,7 @@
     "file-loader": "^6.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "mini-svg-data-uri": "^1.1.3",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "postcss-cli": "^7.1.1",
     "postcss-loader": "^3.0.0",
     "postcss-purgecss": "^2.0.3",
@@ -48,12 +48,10 @@
     "jquery": "^3.5.1",
     "jquery-validation": "^1.19.1",
     "micromodal": "^0.4.6",
+    "parsley": "^0.1.0",
     "stylelint-config-recommended": "^3.0.0",
-    "tailwindcss": "^1.3.5"
+    "tailwindcss": "^1.4.6"
   },
-  "browserslist": [
-    "extends @wordpress/browserslist-config"
-  ],
   "stylelint": {
     "extends": "stylelint-config-standard",
     "rules": {
