@@ -48,7 +48,7 @@ module.exports = {
             loader: 'babel-loader',
             query: {
                 presets: [
-                    ["@babel/preset-env"]
+                    ["@wordpress/default"]
                 ]
         },
             },
