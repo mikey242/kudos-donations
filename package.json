@@ -7,6 +7,9 @@
     "start": "webpack --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js && composer install --no-dev -o"
   },
+  "browserslist": [
+    "extends @wordpress/browserslist-config"
+  ],
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
