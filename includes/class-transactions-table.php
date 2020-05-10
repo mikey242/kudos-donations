@@ -40,9 +40,11 @@ class Transactions_Table extends WP_List_Table {
 	function extra_tablenav( $which ) {
 		if ( $which == "top" ){
 			//The code that goes before the table is here
-			$export_nonce = wp_create_nonce( 'export-' . $this->_args['plural'] );
-			$url = sprintf( '?page=%s&%s&_wpnonce=%s', esc_attr( $_REQUEST['page'] ), 'export_transactions', $export_nonce );
-			echo "<a href='$url' class='button action'>". __('Export', 'kudos-donations') ."</a>";
+			if($this->has_items()) {
+				$export_nonce = wp_create_nonce( 'export-' . $this->_args['plural'] );
+				$url = sprintf( '?page=%s&%s&_wpnonce=%s', esc_attr( $_REQUEST['page'] ), 'export_transactions', $export_nonce );
+				echo "<a href='$url' class='button action'>". __('Export', 'kudos-donations') ."</a>";
+			}
 		}
 	}
 
@@ -407,12 +409,14 @@ class Transactions_Table extends WP_List_Table {
 			die();
 		}
 
+		// Get rows and end if no data
+		$rows = self::fetch_table_data();
+		if(!$rows) {
+			return;
+		}
+
 		$filename = "kudos_". __('transactions', 'kudos-donations') ."-" . date( "Y-m-d_H-i", time() ) . '.csv';
-		header("Pragma: public");
-		header("Expires: 0");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-		header("Cache-Control: private", false);
-		header("Content-Type: application/octet-stream");
+		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=$filename;");
 		header("Content-Transfer-Encoding: binary");
 
@@ -424,7 +428,6 @@ class Transactions_Table extends WP_List_Table {
 		fputcsv($out, $headers);
 
 		// Add rows
-		$rows = self::fetch_table_data();
 		foreach ( $rows as $row ) {
 			// Remove id
 			$row = array_slice($row, 1);
@@ -432,6 +435,7 @@ class Transactions_Table extends WP_List_Table {
 		}
 
 		fclose( $out );
+		exit();
 	}
 
 	/**
