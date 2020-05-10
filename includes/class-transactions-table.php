@@ -420,20 +420,29 @@ class Transactions_Table extends WP_List_Table {
 		header("Content-Disposition: attachment; filename=$filename;");
 		header("Content-Transfer-Encoding: binary");
 
+		// Start output
 		$out = fopen( 'php://output', 'w' );
 
 		// Add headers
-		$headers = self::get_columns();
-		$headers = array_slice($headers, 1); // Remove check-box column
+		$headers = [
+			__('Date', 'kudos-donations'),
+			__('Name', 'kudos-donations'),
+			__('E-mail', 'kudos-donations'),
+			__('Amount', 'kudos-donations'),
+			__('Status', 'kudos-donations'),
+			__('Method', 'kudos-donations'),
+			__('Mode', 'kudos-donations'),
+			__('Order ID', 'kudos-donations'),
+			__('Transaction ID', 'kudos-donations')
+		];
 		fputcsv($out, $headers);
 
 		// Add rows
 		foreach ( $rows as $row ) {
-			// Remove id
-			$row = array_slice($row, 1);
-			fputcsv( $out, $row );
+			fputcsv( $out, array_slice($row, 1) );
 		}
 
+		// Close output
 		fclose( $out );
 		exit();
 	}
