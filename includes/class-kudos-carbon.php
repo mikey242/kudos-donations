@@ -277,11 +277,11 @@ class Carbon {
 	        ->set_category('widgets', 'common')
             ->add_fields([
                 Field::make('text', 'kudos_button_label', __('Button label', 'kudos-donations'))
-	                ->set_default_value(get_option('_kudos_button_label')),
+	                ->set_default_value(__('Donate now', 'kudos-donations')),
 	            Field::make('text', 'kudos_modal_header', __('Pop-up header', 'kudos-donations'))
-	                 ->set_default_value(get_option('_kudos_form_header')),
+	                 ->set_default_value(__('Support us!', 'kudos-donations')),
                 Field::make('text', 'kudos_modal_text', __('Pop-up text', 'kudos-donations'))
-	                ->set_default_value(get_option('_kudos_form_text')),
+	                ->set_default_value(__('Thank you for your donation. We appreciate your support!', 'kudos-donations')),
             ])
             ->set_render_callback( function ( $fields, $attributes, $inner_blocks ) {
                 $atts['button'] = $fields['kudos_button_label'];
