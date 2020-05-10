@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-09T16:12:21+00:00\n"
+"POT-Creation-Date: 2020-05-10T17:43:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: kudos-donations\n"
@@ -200,12 +200,12 @@ msgid "When using this plugin for the first time, the payment mode is set to \"T
 msgstr ""
 
 #: includes/class-kudos-carbon.php:124
-#: includes/class-transactions-table.php:117
+#: includes/class-transactions-table.php:132
 msgid "Test"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:125
-#: includes/class-transactions-table.php:122
+#: includes/class-transactions-table.php:137
 msgid "Live"
 msgstr ""
 
@@ -258,7 +258,7 @@ msgid "This is where you can change the settings of the donation pop-up that app
 msgstr ""
 
 #: includes/class-kudos-carbon.php:170
-#: includes/class-transactions-table.php:91
+#: includes/class-transactions-table.php:106
 msgid "Name"
 msgstr ""
 
@@ -415,56 +415,69 @@ msgstr ""
 msgid "Transaction"
 msgstr ""
 
-#: includes/class-transactions-table.php:50
+#: includes/class-transactions-table.php:45
+msgid "Export"
+msgstr ""
+
+#: includes/class-transactions-table.php:65
 msgid "Geen transacties beschikbaar."
 msgstr ""
 
-#: includes/class-transactions-table.php:90
+#: includes/class-transactions-table.php:105
 msgid "Date"
 msgstr ""
 
-#: includes/class-transactions-table.php:92
+#: includes/class-transactions-table.php:107
 msgid "E-mail"
 msgstr ""
 
-#: includes/class-transactions-table.php:93
+#: includes/class-transactions-table.php:108
 msgid "Amount"
 msgstr ""
 
-#: includes/class-transactions-table.php:94
+#: includes/class-transactions-table.php:109
 msgid "Status"
 msgstr ""
 
-#: includes/class-transactions-table.php:95
+#: includes/class-transactions-table.php:110
 msgid "Transaction Id"
 msgstr ""
 
-#: includes/class-transactions-table.php:112
+#: includes/class-transactions-table.php:127
 msgid "All"
 msgstr ""
 
-#: includes/class-transactions-table.php:266
-msgid "Paid"
-msgstr ""
-
-#: includes/class-transactions-table.php:269
-msgid "Open"
-msgstr ""
-
-#: includes/class-transactions-table.php:272
-msgid "Expired"
-msgstr ""
-
-#: includes/class-transactions-table.php:275
-msgid "Canceled"
-msgstr ""
-
-#: includes/class-transactions-table.php:278
-msgid "Failed"
+#: includes/class-transactions-table.php:234
+#: includes/class-transactions-table.php:310
+msgid "Delete"
 msgstr ""
 
 #: includes/class-transactions-table.php:281
+msgid "Paid"
+msgstr ""
+
+#: includes/class-transactions-table.php:284
+msgid "Open"
+msgstr ""
+
+#: includes/class-transactions-table.php:287
+msgid "Expired"
+msgstr ""
+
+#: includes/class-transactions-table.php:290
+msgid "Canceled"
+msgstr ""
+
+#: includes/class-transactions-table.php:293
+msgid "Failed"
+msgstr ""
+
+#: includes/class-transactions-table.php:296
 msgid "Unknown"
+msgstr ""
+
+#: includes/class-transactions-table.php:410
+msgid "transactions"
 msgstr ""
 
 #: public/class-kudos-button.php:71

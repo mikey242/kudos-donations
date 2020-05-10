@@ -154,4 +154,19 @@ class Kudos_Admin {
 	    <?php
     }
 
+	/**
+	 * Exports transactions if request present
+     *
+	 * @since    1.0.0
+	 */
+	public function export_csv() {
+
+	    if(isset($_REQUEST['export_transactions'])) {
+
+	        $table = new Transactions_Table();
+	        $table->export_transactions();
+
+	    }
+	}
+
 }

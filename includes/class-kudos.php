@@ -143,6 +143,7 @@ class Kudos_Donations {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action('admin_menu', $plugin_admin, 'create_transaction_page', 11);
+		$this->loader->add_action('admin_init', $plugin_admin, 'export_csv');
 		$this->loader->add_action('wp_ajax_check_mollie_connection', $plugin_admin, 'check_mollie_connection');
 
 	}

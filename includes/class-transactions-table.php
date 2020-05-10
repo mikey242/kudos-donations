@@ -32,6 +32,21 @@ class Transactions_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Add extra markup in the toolbars before or after the list
+	 *
+	 * @since      1.0.0
+	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
+	 */
+	function extra_tablenav( $which ) {
+		if ( $which == "top" ){
+			//The code that goes before the table is here
+			$export_nonce = wp_create_nonce( 'export-' . $this->_args['plural'] );
+			$url = sprintf( '?page=%s&%s&_wpnonce=%s', esc_attr( $_REQUEST['page'] ), 'export_transactions', $export_nonce );
+			echo "<a href='$url' class='button action'>". __('Export', 'kudos-donations') ."</a>";
+		}
+	}
+
+	/**
 	 * Call this function where the table is to be displayed
 	 *
 	 * @since      1.0.0
@@ -216,7 +231,7 @@ class Transactions_Table extends WP_List_Table {
 		$title = '<strong>' . date_i18n($item['time'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
 
 		$actions = [
-			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['id'] ), $delete_nonce )
+			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['id'] ), $delete_nonce, __('Delete', 'kudos-donations') )
 		];
 
 		return $title . $this->row_actions( $actions );
@@ -292,7 +307,7 @@ class Transactions_Table extends WP_List_Table {
 	 */
 	function get_bulk_actions() {
 		return [
-			'bulk-delete'    => 'Delete'
+			'bulk-delete'   => __('Delete', 'kudos-donations'),
 		];
 	}
 
@@ -380,6 +395,46 @@ class Transactions_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Exports all transactions to a csv file
+	 *
+	 * @since      1.0.0
+	 */
+	public function export_transactions() {
+
+		// Check nonce
+		$nonce = esc_attr( $_REQUEST['_wpnonce'] );
+		if ( ! wp_verify_nonce( $nonce, 'export-' .$this->_args['plural'] ) ) {
+			die();
+		}
+
+		$filename = "kudos_". __('transactions', 'kudos-donations') ."-" . date( "Y-m-d_H-i", time() ) . '.csv';
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
+		header("Content-Type: application/octet-stream");
+		header("Content-Disposition: attachment; filename=$filename;");
+		header("Content-Transfer-Encoding: binary");
+
+		$out = fopen( 'php://output', 'w' );
+
+		// Add headers
+		$headers = self::get_columns();
+		$headers = array_slice($headers, 1); // Remove check-box column
+		fputcsv($out, $headers);
+
+		// Add rows
+		$rows = self::fetch_table_data();
+		foreach ( $rows as $row ) {
+			// Remove id
+			$row = array_slice($row, 1);
+			fputcsv( $out, $row );
+		}
+
+		fclose( $out );
+	}
+
+	/**
 	 * Process delete and bulk-delete actions
 	 *
 	 * @since      1.0.0
@@ -404,7 +459,6 @@ class Transactions_Table extends WP_List_Table {
 				$nonce = esc_attr( $_REQUEST['_wpnonce'] );
 				if ( ! wp_verify_nonce( $nonce, 'bulk-' . $this->_args['plural'] ) ) {
 					die();
-
 				}
 
 				if(isset($_REQUEST['bulk-delete'])) {
@@ -413,7 +467,6 @@ class Transactions_Table extends WP_List_Table {
 						self::delete_transaction( $id );
 					}
 				}
-
 				break;
 		}
 	}
