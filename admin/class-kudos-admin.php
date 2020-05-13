@@ -156,7 +156,7 @@ class Kudos_Admin {
 	/**
 	 * Exports transactions if request present
      *
-	 * @since    1.0.0
+	 * @since    1.0.1
 	 */
 	public function export_csv() {
 

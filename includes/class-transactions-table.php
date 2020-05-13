@@ -399,7 +399,7 @@ class Transactions_Table extends WP_List_Table {
 	/**
 	 * Exports all transactions to a csv file
 	 *
-	 * @since      1.0.0
+	 * @since      1.0.1
 	 */
 	public function export_transactions() {
 
