@@ -22,7 +22,7 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 = Shortcode =
 
-`
+~~~~
 //Use the default settings
 [kudos]
 
@@ -37,7 +37,7 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 //A fully customised button and text would look like this
 [kudos button="Help us out!" header="Support our cause" body="Thank you for donating to this project. We really appreciate your support."]
-`
+~~~~
 
 = Source =
 The Git repository for this plugin can be found [here](https://gitlab.iseard.media/michael/kudos-donations).
@@ -64,6 +64,10 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 5. Transactions screen
 
 == Changelog ==
+
+= 1.0.1 =
+* *Added* - ability to export transactions
+* *Fixed* - missing defaults from Kudos button block
 
 = 1.0 =
 * Initial release
