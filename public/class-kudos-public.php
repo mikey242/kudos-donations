@@ -120,7 +120,7 @@ class Kudos_Public {
 		$value = $form['value'];
 		$name = $form['name'];
 		$email = $form['email_address'];
-		$redirectUrl = $_REQUEST['redirectUrl'];
+		$redirectUrl = sanitize_text_field($_REQUEST['redirectUrl']);
 
 		$mollie = new Kudos_Mollie();
 		$payment = $mollie->payment($value, $redirectUrl, $name, $email);
@@ -145,15 +145,13 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Using the ajax provided $_REQUEST variable checks payment status
+	 * Check payment status based on local order_id
 	 *
 	 * @since    1.0.0
 	 * @param $order_id
 	 * @return bool | string
 	 */
 	public function check_transaction($order_id) {
-
-		$order_id = base64_decode($order_id);
 
 		if($order_id) {
 
@@ -259,7 +257,7 @@ class Kudos_Public {
 		if(!empty($_REQUEST['kudos_order_id']) && !empty($_REQUEST['_wpnonce'])) {
 			$order_id = base64_decode(sanitize_text_field($_REQUEST['kudos_order_id']));
 			if(wp_verify_nonce($_REQUEST['_wpnonce'],'check_kudos_order-' . $order_id)) {
-				$data = $this->check_transaction($_REQUEST['kudos_order_id']);
+				$data = $this->check_transaction($order_id);
 				echo $modal->get_message_modal($data['header'], $data['text']);
 			}
 		}
