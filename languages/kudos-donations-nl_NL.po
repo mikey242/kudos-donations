@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Kudos Donations 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
 "POT-Creation-Date: 2020-05-10T17:43:59+00:00\n"
-"PO-Revision-Date: 2020-05-10 19:45+0200\n"
+"PO-Revision-Date: 2020-05-13 10:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -130,7 +130,7 @@ msgid ""
 "Payments."
 msgstr ""
 "Selecteer de gewenste donatieknop bij de Kudos Knop tab. Pas alle "
-"tekstvelden aan bij de tabs Donatie Formulier en Bedankt Pop-up"
+"tekstvelden aan bij de tabs Donatie Formulier en Bedankt Pop-up."
 
 #: includes/class-kudos-carbon.php:81
 msgid "Step 3. Add your first button"
@@ -364,7 +364,7 @@ msgid ""
 "name in displayed text."
 msgstr ""
 "Gebruik de volgende codes om het gedoneerde bedrag en/of de naam van de "
-"donor weer te geven: %s"
+"donor weer te geven: %s."
 
 #: includes/class-kudos-carbon.php:203
 msgid "Show pop-up message when payment complete"
@@ -581,7 +581,7 @@ msgstr "Alleen cijfers zijn geldig"
 
 #: public/class-kudos-public.php:118
 msgid "Request invalid."
-msgstr "Verzoek is ongeldig"
+msgstr "Verzoek is ongeldig."
 
 #: public/class-kudos-public.php:131
 msgid "Error creating Mollie payment. Please try again later."
@@ -589,7 +589,7 @@ msgstr "Fout bij het maken van een Mollie-betaling. Probeer het later opnieuw."
 
 #: public/class-kudos-public.php:173
 msgid "Payment canceled"
-msgstr "Betaling geannuleerd."
+msgstr "Betaling geannuleerd"
 
 #: public/class-kudos-public.php:176
 msgid "Thanks"
