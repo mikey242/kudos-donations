@@ -154,7 +154,8 @@ class Kudos_Admin {
     }
 
 	/**
-	 * Exports transactions if request present
+	 * Exports transactions if request present.
+     * Needs to be hooked to admin_init as it modifies headers.
      *
 	 * @since    1.0.1
 	 */
