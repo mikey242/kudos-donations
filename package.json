@@ -1,6 +1,6 @@
 {
   "name": "kudos-donations",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Easily receive donations in WordPress via Mollie",
   "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
