@@ -6,7 +6,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const { join, resolve } = require( 'path' );
 
-
 const PATHS = {
     src: join(__dirname, 'src'),
     dist: resolve(__dirname, 'dist')
