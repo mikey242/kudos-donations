@@ -191,11 +191,12 @@ class Kudos_Mollie
 		// Update payment.
 		$order_id = $payment->metadata->order_id;
 		$transaction_id = $payment->id;
-		$this->transaction->update_record($order_id, $transaction_id, $payment->status, $payment->method);
+		$status = $payment->status;
+		$this->transaction->update_record($order_id, $transaction_id, $status, $payment->method);
 
 		/* translators: %s: Mollie */
 		$note = sprintf(__( 'Webhook requested by %s.', 'kudos-donations' ),'Mollie');
-		$this->logger->log($note, 'INFO', ['order_id' => $order_id, 'status' => $payment->status]);
+		$this->logger->log($note, 'INFO', ['order_id' => $order_id, 'status' => $status]);
 
 		return $response;
 	}

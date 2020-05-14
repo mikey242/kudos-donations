@@ -133,17 +133,20 @@ class Kudos_Admin {
 	    $table = new Transactions_Table();
 	    $table->prepare_items();
 		$message = '';
+
 		if ('delete' === $table->current_action()) {
-			$message = '<div class="updated below-h2" id="message"><p>' . __('Transaction deleted', 'kudos-donations') . '</p></div>';
+			$message = __('Transaction deleted', 'kudos-donations');
 		} elseif ('bulk-delete' === $table->current_action() && isset($_REQUEST['bulk-delete'])) {
 			/* translators: %s: Number of transactions */
-			$message = '<div class="updated below-h2" id="message"><p>' . sprintf(__('%s transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-delete'])) . '</p></div>';
+			$message = sprintf(__('%s transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-delete']));
         }
 	    ?>
 	    <div class="wrap">
 		    <h2><?php _e('Transactions', 'kudos-donations'); ?></h2>
             <p><?php _e("Your recent Kudos transactions",'kudos-donations');?></p>
-		    <?php echo $message; ?>
+            <?php if($message) { ?>
+                <div class="updated below-h2" id="message"><p><?php echo esc_html($message); ?></p></div>
+            <?php } ?>
             <form id="transactions-table" method="POST">
             <?php
                 $table->display();

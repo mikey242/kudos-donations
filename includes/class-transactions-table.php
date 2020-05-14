@@ -87,12 +87,8 @@ class Transactions_Table extends WP_List_Table {
 		}
 
 		$table = $wpdb->prefix . Transaction::TABLE;
-		$query = "SELECT
-					*
-				  FROM 
-				  	$table
-				  $search_custom_vars
-				  	";
+		$query = "SELECT * FROM `$table`
+				  $search_custom_vars";
 
 		return $wpdb->get_results($query, ARRAY_A);
 	}
@@ -332,7 +328,7 @@ class Transactions_Table extends WP_List_Table {
 		$this->_column_headers = [ $columns, $hidden, $sortable ];
 
 		$table_data = $this->fetch_table_data();
-		usort( $table_data, array( &$this, 'sort_data' ) );
+		usort( $table_data, [&$this, 'sort_data']);
 
 		$transactions_per_page = 20;
 		$current_page = $this->get_pagenum();
