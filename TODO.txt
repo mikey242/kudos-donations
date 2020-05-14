@@ -1,0 +1,2 @@
+- redirectUrl currently set as data attribute per button. This should be set on the modal as it is not per button but per page
+- Add ability to modify number of records per page in transactions table
