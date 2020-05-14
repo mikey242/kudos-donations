@@ -81,7 +81,9 @@ class Transactions_Table extends WP_List_Table {
 		$search_custom_vars = '';
 
 		if($mode) {
-			$search_custom_vars = "WHERE mode LIKE '%" . esc_sql($mode) ."%'";
+			$search_custom_vars = $wpdb->prepare(
+                "WHERE mode = %s", esc_sql($mode)
+            );
 		}
 
 		$table = $wpdb->prefix . Transaction::TABLE;
@@ -459,8 +461,7 @@ class Transactions_Table extends WP_List_Table {
 
 			case 'delete':
 				// In our file that handles the request, verify the nonce.
-				$nonce = esc_attr( $_REQUEST['_wpnonce'] );
-				if ( ! wp_verify_nonce( $nonce, 'bulk-' . $this->_args['singular'] ) ) {
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
 					die();
 				} else {
 					self::delete_transaction( absint( $_GET['transaction'] ) );
@@ -469,8 +470,7 @@ class Transactions_Table extends WP_List_Table {
 
 			case 'bulk-delete':
 				// In our file that handles the request, verify the nonce.
-				$nonce = esc_attr( $_REQUEST['_wpnonce'] );
-				if ( ! wp_verify_nonce( $nonce, 'bulk-' . $this->_args['plural'] ) ) {
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
 					die();
 				}
 

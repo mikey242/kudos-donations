@@ -88,8 +88,8 @@ class Kudos_Admin {
 
 	    parse_str($_REQUEST['formData'], $formData);
 
-	    $mode = $formData['carbon_fields_compact_input']['_kudos_mollie_api_mode'];
-	    $apiKey = $formData['carbon_fields_compact_input']['_kudos_mollie_'.$mode.'_api_key'];
+	    $mode = sanitize_text_field($formData['carbon_fields_compact_input']['_kudos_mollie_api_mode']);
+	    $apiKey = sanitize_text_field($formData['carbon_fields_compact_input']['_kudos_mollie_'.$mode.'_api_key']);
 
 		$mollie = new Kudos_Mollie();
 

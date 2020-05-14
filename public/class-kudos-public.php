@@ -117,9 +117,9 @@ class Kudos_Public {
 			$this->logger->log('wp_verify_nonce failed', 'CRITICAL');
 			wp_send_json_error(['message' => __('Request invalid.', 'kudos-donations')]);
 		}
-		$value = $form['value'];
-		$name = $form['name'];
-		$email = $form['email_address'];
+		$value = intval($form['value']);
+		$name = sanitize_text_field($form['name']);
+		$email = sanitize_email($form['email_address']);
 		$redirectUrl = sanitize_text_field($_REQUEST['redirectUrl']);
 
 		$mollie = new Kudos_Mollie();
@@ -190,7 +190,7 @@ class Kudos_Public {
 	 */
 	public static function get_return_url() {
 		$use_custom = carbon_get_theme_option('kudos_custom_return_enable');
-		$custom_url = carbon_get_theme_option('kudos_custom_return_url');
+		$custom_url = esc_url(carbon_get_theme_option('kudos_custom_return_url'));
 		if($use_custom && $custom_url) {
 			return $custom_url;
 		} else {

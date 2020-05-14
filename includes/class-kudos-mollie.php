@@ -160,7 +160,8 @@ class Kudos_Mollie
 	 */
 	public function rest_api_mollie_webhook( WP_REST_Request $request ) {
 
-		$id = $request->get_param( 'id' );
+	    // ID is case sensitive e.g: tr_Tb6UdQP523
+		$id = sanitize_text_field($request->get_param( 'id' ));
 
 		/**
 		 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
