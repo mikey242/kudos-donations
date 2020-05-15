@@ -106,7 +106,7 @@ class Kudos_Mollie
 			$payment = $mollieApi->payments->create(
 				[
 					"amount" => [
-						"currency" => "EUR",
+						"currency" => $currency,
 						"value" => $value
 					],
 					"redirectUrl" => $redirectUrl,
@@ -122,7 +122,7 @@ class Kudos_Mollie
 			);
 
 			$transaction = $this->transaction;
-			$transaction->create_record($order_id, $value, $email, $name);
+			$transaction->create_record($order_id, $value, $currency, $email, $name);
 
 			return $payment;
 
