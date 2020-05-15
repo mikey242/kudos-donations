@@ -11,6 +11,7 @@ class Kudos_Logger
 	private $log;
 	private $file;
 	const LOG_DIR = KUDOS_DIR . 'logs/';
+	const LOG_FILE = self::LOG_DIR . 'kudos.log';
 
 	/**
 	 * Kudos_Logger constructor.
@@ -18,9 +19,8 @@ class Kudos_Logger
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-			$this->file = 'kudos.log';
 			$this->log = new Logger('kudos');
-			$this->log->pushHandler(new StreamHandler(self::LOG_DIR . $this->file));
+			$this->log->pushHandler(new StreamHandler(self::LOG_FILE));
 	}
 
 	/**
@@ -33,6 +33,20 @@ class Kudos_Logger
 	}
 
 	/**
+	 * Checks if log file is writeable and returns true if it is
+	 *
+	 * @since   1.0.1
+	 * @return bool
+	 */
+	private function isWriteable() {
+		if(is_writable(self::LOG_FILE)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Write message to log file
 	 *
 	 * @since    1.0.0
@@ -42,6 +56,9 @@ class Kudos_Logger
 	 */
 	public function log($message, $level=null, $context=[]) {
 		$level = ($level ? $level : 'DEBUG');
+		if(!$this->isWriteable()) {
+			return;
+		}
 		$this->log->log($level, $message, $context);
 	}
 
