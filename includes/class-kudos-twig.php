@@ -2,10 +2,10 @@
 
 namespace Kudos;
 
+use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
-use Throwable;
 
 class Kudos_Twig
 {

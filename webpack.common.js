@@ -45,8 +45,8 @@ module.exports = {
         filename: 'js/[name].[contenthash].js',
     },
     externals: {
-        'jquery': 'jQuery',
-        'micromodal': 'MicroModal',
+        jquery: 'jQuery',
+        micromodal: 'MicroModal',
     },
     optimization: {
         minimize: true,

@@ -2,8 +2,8 @@
 
 namespace Kudos;
 
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class Kudos_Logger
 {

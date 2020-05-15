@@ -1,5 +1,5 @@
-import $ from 'jquery';
-import MicroModal from "micromodal";
+import $ from 'jquery'
+import MicroModal from "micromodal"
 
 $(() => {
     'use strict';
