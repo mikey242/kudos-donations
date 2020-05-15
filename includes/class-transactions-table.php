@@ -71,7 +71,7 @@ class Transactions_Table extends WP_List_Table {
 	 * @since      1.0.0
 	 */
 	public function no_items() {
-		_e( 'Geen transacties beschikbaar.', 'kudos-donations' );
+		_e( 'No transactions available.', 'kudos-donations' );
 	}
 
 	/**
