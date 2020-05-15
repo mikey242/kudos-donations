@@ -120,7 +120,7 @@ class Kudos_Public {
 		$value = intval($form['value']);
 		$name = sanitize_text_field($form['name']);
 		$email = sanitize_email($form['email_address']);
-		$redirectUrl = sanitize_text_field($_REQUEST['redirectUrl']);
+		$redirectUrl = sanitize_text_field($form['return_url']);
 
 		$mollie = new Kudos_Mollie();
 		$payment = $mollie->payment($value, $redirectUrl, $name, $email);
@@ -183,7 +183,7 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Gets url Mollie will use to redirect customer to after payment complete
+	 * Gets url Mollie will use to return customer to after payment complete
 	 *
 	 * @since   1.0.0
 	 * @return string|void
@@ -194,9 +194,9 @@ class Kudos_Public {
 		if($use_custom && $custom_url) {
 			return $custom_url;
 		} else {
-			$redirectUrl = is_ssl() ? 'https://' : 'http://';
-			$redirectUrl .= $_SERVER['HTTP_HOST'] . parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
-			return $redirectUrl;
+			$returnUrl = is_ssl() ? 'https://' : 'http://';
+			$returnUrl .= $_SERVER['HTTP_HOST'] . parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
+			return $returnUrl;
 		}
 	}
 
