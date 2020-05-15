@@ -10,6 +10,8 @@ services:
     ports:
       - "8080:80"
     restart: always
+    depends_on:
+      - db
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: wordpress
@@ -20,6 +22,7 @@ services:
         define('WP_SITEURL', 'http://' . $$_SERVER['HTTP_HOST']);
         define('WP_HOME', 'http://' . $$_SERVER['HTTP_HOST']);
         define('WP_DEBUG_LOG', true);
+        define('FS_METHOD','direct');
 
   db:
     image: mariadb:10.5
@@ -40,11 +43,12 @@ services:
     container_name: ngrok-kudos
     ports:
       - "4040:4040"
+    depends_on:
+      - wordpress
     environment:
       NGROK_PORT: wordpress:80
       NGROK_REGION: eu
 
 volumes:
   db_data:
-  wordpress:
 
