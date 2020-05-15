@@ -6,7 +6,6 @@ $(() => {
 
     const $body = $('body');
     let $kudosButtons = $('.kudos_button_donate');
-    let redirectUrl;
 
     // Set validation defaults
     $.validator.setDefaults({
@@ -17,7 +16,6 @@ $(() => {
         // Setup button action
         $kudosButtons.each(function() {
             $(this).click(function () {
-                redirectUrl = $(this).data('redirect');
                 let customHeader = $(this).data('customHeader');
                 let customText = $(this).data('customText');
 
@@ -87,7 +85,6 @@ $(() => {
             url: kudos.ajaxurl,
             data:  {
                 action: 'create_payment',
-                redirectUrl: redirectUrl,
                 form: $(e.currentTarget).serialize()
             },
             beforeSend: function() {

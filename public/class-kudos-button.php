@@ -43,7 +43,6 @@ class Kudos_Button {
 	public function __construct($atts=[]) {
 
 		$this->ready = Kudos_Public::ready();
-		$this->redirectUrl = Kudos_Public::get_return_url();
 		$this->twig = new Kudos_Twig();
 		$this->label = !empty($atts['button']) ? $atts['button'] : carbon_get_theme_option('kudos_button_label');
 		$this->text = !empty($atts['body']) ? $atts['body'] : carbon_get_theme_option('kudos_form_text');
@@ -64,7 +63,6 @@ class Kudos_Button {
 				'header' => $this->header,
 				'text' => $this->text,
 				'label' => $this->label,
-				'redirectUrl' => $this->redirectUrl
 			];
 			$out = $this->twig->render('public/kudos.button.html.twig', $data);
 		} elseif(is_user_logged_in()) {

@@ -16,6 +16,10 @@ class Kudos_Modal {
 	 * @var Kudos_Twig
 	 */
 	private $twig;
+	/**
+	 * @var string|void
+	 */
+	private $returnUrl;
 
 	/**
 	 * Kudos_Modal constructor.
@@ -26,6 +30,7 @@ class Kudos_Modal {
 
 	    $this->logger = new Kudos_Logger();
 	    $this->ready = Kudos_Public::ready();
+	    $this->returnUrl = Kudos_Public::get_return_url();
 	    $this->twig = new Kudos_Twig();
 
     }
@@ -43,7 +48,7 @@ class Kudos_Modal {
 
 		    $data = [
 			    'header' => $header,
-			    'text' => $text
+			    'text' => $text,
 		    ];
 
 		    return $this->twig->render('/public/modal/message.modal.html.twig', $data);
@@ -63,6 +68,7 @@ class Kudos_Modal {
 			        'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
 		            'name_required' => carbon_get_theme_option('kudos_name_required'),
 		            'email_required' => carbon_get_theme_option('kudos_email_required'),
+		            'return_url' => $this->returnUrl,
 			        'vendor' => (carbon_get_theme_option('kudos_payment_vendor') ? carbon_get_theme_option('kudos_payment_vendor') : 'mollie')
 		    ];
 			return $this->twig->render('/public/modal/donate.modal.html.twig', $data);

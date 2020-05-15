@@ -13,6 +13,9 @@
     <form id="kudos_form" action="">
         {{ nonce|raw }}
         <label>
+            <input name="return_url" type="hidden" value="{{ return_url }}">
+        </label>
+        <label>
             <input {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') ~ ((name_required) ? ' *' : null) }}" />
         </label>
         <label>
