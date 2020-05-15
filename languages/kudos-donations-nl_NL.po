@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
-"POT-Creation-Date: 2020-05-15T09:21:16+00:00\n"
-"PO-Revision-Date: 2020-05-15 11:28+0200\n"
+"POT-Creation-Date: 2020-05-15T11:23:01+00:00\n"
+"PO-Revision-Date: 2020-05-15 13:32+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -247,7 +247,7 @@ msgstr ""
 "Zowel de \"Live\" als \"Test\" API keys kunnen gevonden worden in je %s"
 
 #: includes/class-kudos-carbon.php:121
-#: includes/class-transactions-table.php:432
+#: includes/class-transactions-table.php:438
 msgid "Mode"
 msgstr "Status"
 
@@ -262,12 +262,12 @@ msgstr ""
 "live betalingen wilt ontvangen, verander de status naar 'Live'."
 
 #: includes/class-kudos-carbon.php:124
-#: includes/class-transactions-table.php:132
+#: includes/class-transactions-table.php:137
 msgid "Test"
 msgstr "Test"
 
 #: includes/class-kudos-carbon.php:125
-#: includes/class-transactions-table.php:137
+#: includes/class-transactions-table.php:143
 msgid "Live"
 msgstr "Live"
 
@@ -321,8 +321,8 @@ msgstr ""
 "verschijnt als je op de donatieknop drukt."
 
 #: includes/class-kudos-carbon.php:170
-#: includes/class-transactions-table.php:106
-#: includes/class-transactions-table.php:427
+#: includes/class-transactions-table.php:109
+#: includes/class-transactions-table.php:433
 msgid "Name"
 msgstr "Naam"
 
@@ -478,12 +478,12 @@ msgid "Pop-up text"
 msgstr "Pop-up bericht"
 
 #. translators: %s: The order id
-#: includes/class-kudos-mollie.php:115
+#: includes/class-kudos-mollie.php:116
 msgid "Kudos Payment - %s"
 msgstr "Kudos Betaling - %s"
 
 #. translators: %s: Mollie
-#: includes/class-kudos-mollie.php:198
+#: includes/class-kudos-mollie.php:199
 msgid "Webhook requested by %s."
 msgstr "Webhook aangevraagd door %s."
 
@@ -496,79 +496,79 @@ msgid "Export"
 msgstr "Exporteren"
 
 #: includes/class-transactions-table.php:67
-msgid "Geen transacties beschikbaar."
+msgid "No transactions available."
 msgstr "Geen transacties beschikbaar."
 
-#: includes/class-transactions-table.php:105
-#: includes/class-transactions-table.php:426
+#: includes/class-transactions-table.php:108
+#: includes/class-transactions-table.php:432
 msgid "Date"
 msgstr "Datum"
 
-#: includes/class-transactions-table.php:107
-#: includes/class-transactions-table.php:428
+#: includes/class-transactions-table.php:110
+#: includes/class-transactions-table.php:434
 msgid "E-mail"
 msgstr "E-mail"
 
-#: includes/class-transactions-table.php:108
-#: includes/class-transactions-table.php:429
+#: includes/class-transactions-table.php:111
+#: includes/class-transactions-table.php:435
 msgid "Amount"
 msgstr "Bedrag"
 
-#: includes/class-transactions-table.php:109
-#: includes/class-transactions-table.php:430
+#: includes/class-transactions-table.php:112
+#: includes/class-transactions-table.php:436
 msgid "Status"
 msgstr "Status"
 
-#: includes/class-transactions-table.php:110
+#: includes/class-transactions-table.php:113
 msgid "Transaction Id"
 msgstr "Transactie Id"
 
-#: includes/class-transactions-table.php:127
+#: includes/class-transactions-table.php:131
 msgid "All"
 msgstr "Alles"
 
-#: includes/class-transactions-table.php:234
-#: includes/class-transactions-table.php:310
+#: includes/class-transactions-table.php:240
+#: includes/class-transactions-table.php:316
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: includes/class-transactions-table.php:281
+#: includes/class-transactions-table.php:287
 msgid "Paid"
 msgstr "Betaald"
 
-#: includes/class-transactions-table.php:284
+#: includes/class-transactions-table.php:290
 msgid "Open"
 msgstr "Open"
 
-#: includes/class-transactions-table.php:287
+#: includes/class-transactions-table.php:293
 msgid "Expired"
 msgstr "Niet meer geldig"
 
-#: includes/class-transactions-table.php:290
+#: includes/class-transactions-table.php:296
 msgid "Canceled"
 msgstr "Geannuleerd"
 
-#: includes/class-transactions-table.php:293
+#: includes/class-transactions-table.php:299
 msgid "Failed"
 msgstr "Mislukt"
 
-#: includes/class-transactions-table.php:296
+#: includes/class-transactions-table.php:302
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: includes/class-transactions-table.php:416
+#: includes/class-transactions-table.php:422
 msgid "transactions"
 msgstr "transacties"
 
-#: includes/class-transactions-table.php:431
+#: includes/class-transactions-table.php:437
 msgid "Method"
 msgstr "Methode"
 
-#: includes/class-transactions-table.php:433
+#: includes/class-transactions-table.php:439
 msgid "Order ID"
 msgstr "Bestelnummer"
 
-#: includes/class-transactions-table.php:434
+#: includes/class-transactions-table.php:440
 msgid "Transaction ID"
 msgstr "Transactie Id"
 
@@ -619,6 +619,9 @@ msgstr "Bedankt"
 #: public/class-kudos-public.php:175
 msgid "Your donation will be processed soon."
 msgstr "Uw donatie wordt zo snel mogelijk verwerkt."
+
+#~ msgid "Geen transacties beschikbaar."
+#~ msgstr "Geen transacties beschikbaar."
 
 #~ msgid "https://www.linkedin.com/in/michael-iseard/"
 #~ msgstr "https://www.linkedin.com/in/michael-iseard/"
