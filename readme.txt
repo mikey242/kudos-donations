@@ -65,6 +65,13 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 == Changelog ==
 
+= 1.0.2 =
+* *Added* - transactions table now shows record count per filter
+* *Added* - return message now shows currency symbol
+* *Fixed* - if log file cannot be written this no longer prevents plugin from working
+* *Fixed* - export now only exports transaction in current view (all/live/test)
+* *Fixed* - incorrect record count on transaction table
+
 = 1.0.1 =
 * *Added* - ability to export transactions
 * *Fixed* - missing defaults from Kudos button block
