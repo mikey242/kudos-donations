@@ -39,10 +39,17 @@ class Transactions_Table extends WP_List_Table {
 	 */
 	function extra_tablenav( $which ) {
 		if ( $which == "top" ){
-			//The code that goes before the table is here
+
+			//Export Button
 			if($this->has_items()) {
 				$export_nonce = wp_create_nonce( 'export-' . $this->_args['plural'] );
-				$url = sprintf( '?page=%s&%s&_wpnonce=%s', esc_attr( $_REQUEST['page'] ), 'export_transactions', $export_nonce );
+				$url = add_query_arg([
+					'page' => !empty($_REQUEST['page']) ? esc_attr($_REQUEST['page']) : '',
+					'mode' => !empty($_REQUEST['mode']) ? esc_attr($_REQUEST['mode']) : '',
+					'_wpnonce' => $export_nonce,
+					'export_transactions' => ''
+
+				]);
 				echo "<a href='$url' class='button action'>". __('Export', 'kudos-donations') ."</a>";
 			}
 		}
@@ -70,17 +77,20 @@ class Transactions_Table extends WP_List_Table {
 	/**
 	 * Get the table data
 	 *
-	 * @since      1.0.0
+	 * @param null|string $mode
 	 * @return array
+	 * @since      1.0.0
 	 */
-	public function fetch_table_data() {
+	public function fetch_table_data($mode=null) {
 		global $wpdb;
-
-		$mode = (!empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : '');
 
 		$search_custom_vars = '';
 
-		if($mode) {
+		if(!$mode) {
+			$mode = (!empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : '');
+		}
+
+		if($mode && $mode !== 'all') {
 			$search_custom_vars = $wpdb->prepare(
                 "WHERE mode = %s", esc_sql($mode)
             );
@@ -122,19 +132,22 @@ class Transactions_Table extends WP_List_Table {
 		$current = ( !empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : 'all');
 
 		//All link
+		$count = count($this->fetch_table_data('all'));
 		$class = ($current == 'all' ? ' class="current"' :'');
 		$all_url = remove_query_arg('mode');
-		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') ."</a>";
+		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') . " ($count)</a>";
 
 		//Test link
+		$count = count($this->fetch_table_data('test'));
 		$test_url = add_query_arg('mode','test');
 		$class = ($current == 'test' ? ' class="current"' :'');
-		$views['test'] = "<a href='{$test_url}' {$class} >". __('Test', 'kudos-donations') ."</a>";
+		$views['test'] = "<a href='{$test_url}' {$class} >". __('Test', 'kudos-donations') ." ($count)</a>";
 
 		//Live link
+		$count = count($this->fetch_table_data('live'));
 		$live_url = add_query_arg('mode','live');
 		$class = ($current == 'live' ? ' class="current"' :'');
-		$views['live'] = "<a href='{$live_url}' {$class} >". __('Live', 'kudos-donations') ."</a>";
+		$views['live'] = "<a href='{$live_url}' {$class} >". __('Live', 'kudos-donations') ." ($count)</a>";
 		return $views;
 
 	}
@@ -335,7 +348,7 @@ class Transactions_Table extends WP_List_Table {
 		$this->items = array_slice( $table_data, ( ( $current_page - 1 ) * $transactions_per_page ), $transactions_per_page );
 		$total_transactions = count( $table_data );
 		$this->set_pagination_args( [
-			'total_items' => '10',
+			'total_items' => count($this->items),
 			'per_page'    => $transactions_per_page,
 			'total_pages' => ceil( $total_transactions/$transactions_per_page )
 		] );
