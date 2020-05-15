@@ -94,6 +94,7 @@ class Kudos_Mollie
 
 		$mollieApi = $this->mollieApi;
 		$order_id = time();
+		$currency = 'EUR';
 		$value = number_format($value, 2);
 
 		// Add order id if option to show message enabled
