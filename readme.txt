@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, creditcard
 Requires at least: 4.7
 Tested up to: 5.4.1
 Requires PHP: 7.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,7 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 = 1.0.1 =
 * *Added* - ability to export transactions
 * *Fixed* - missing defaults from Kudos button block
+* *Fixed* - missing Dutch translations
 
 = 1.0 =
 * Initial release
