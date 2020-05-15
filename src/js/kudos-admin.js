@@ -1,7 +1,7 @@
-import $ from "jquery";
-import {library, dom} from "@fortawesome/fontawesome-svg-core";
-import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
-import {faIdeal, faPaypal} from "@fortawesome/free-brands-svg-icons";
+import $ from "jquery"
+import {dom, library} from "@fortawesome/fontawesome-svg-core"
+import {faCreditCard} from "@fortawesome/free-solid-svg-icons"
+import {faIdeal, faPaypal} from "@fortawesome/free-brands-svg-icons"
 
 library.add(faCreditCard, faIdeal, faPaypal);
 dom.watch();
