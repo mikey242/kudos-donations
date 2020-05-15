@@ -275,7 +275,10 @@ class Transactions_Table extends WP_List_Table {
 				break;
 		}
 
-		return '<i title="'.$item['method'].'" class="'. $icon .'"></i> € ' . number_format_i18n($item['value'], 2);
+
+		$currency = !empty($item['currency']) ? get_currency_symbol($item['currency']) : '';
+
+		return '<i title="'.$item['method'].'" class="'. $icon .'"></i> '. $currency . ' ' . number_format_i18n($item['value'], 2);
 
 	}
 

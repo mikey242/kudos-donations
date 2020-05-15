@@ -156,12 +156,12 @@ class Kudos_Public {
 		if($order_id) {
 
 			$transaction = new Transaction();
-			$transaction = $transaction->get_transaction($order_id, ['status', 'value', 'name']);
+			$transaction = $transaction->get_transaction($order_id, ['status', 'value', 'currency', 'name']);
 
 			switch($transaction->status) {
 				case 'paid':
 					$vars = [
-						'{{value}}' => number_format_i18n($transaction->value, 2),
+						'{{value}}' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
 						'{{name}}' => $transaction->name
 					];
 					$return['header'] = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);

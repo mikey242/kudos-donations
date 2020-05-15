@@ -24,3 +24,34 @@ function get_asset_path( $asset ) {
 	return $asset;
 
 }
+
+/**
+ * Converts three letter currency code into a symbol
+ *
+ * @since      1.0.2
+ * @param $currency
+ * @return string
+ */
+function get_currency_symbol($currency) {
+
+	$currency = strtoupper($currency);
+
+	switch ($currency) {
+		case 'EUR':
+		    $symbol = '&#8364;';
+            break;
+		case 'USD':
+		    $symbol = '&#36;';
+            break;
+		case 'GBP':
+		    $symbol = '&#163;';
+            break;
+		case 'JPY':
+		    $symbol = '&#165;';
+            break;
+		default:
+		    $symbol = $currency;
+	}
+
+	return $symbol;
+}
