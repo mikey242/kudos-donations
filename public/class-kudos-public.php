@@ -6,7 +6,7 @@ namespace Kudos;
  * The public-facing functionality of the plugin.
  *
  * @link       https://www.linkedin.com/in/michael-iseard/
- * @since      1.0.0
+ * @since   1.0.0
  *
  * @package    Kudos-Donations-Mollie
  * @subpackage Kudos/public
@@ -26,7 +26,7 @@ class Kudos_Public {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
@@ -35,7 +35,7 @@ class Kudos_Public {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
@@ -44,14 +44,14 @@ class Kudos_Public {
 	/**
 	 * @var Kudos_Logger
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 */
 	private $logger;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
@@ -65,7 +65,7 @@ class Kudos_Public {
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 */
 	public function enqueue_styles() {
 
@@ -76,7 +76,7 @@ class Kudos_Public {
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 */
 	public function enqueue_scripts() {
 
@@ -98,7 +98,7 @@ class Kudos_Public {
 	/**
 	 * Register the assets used for blocks.
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 */
 	public function enqueue_block_assets() {
 
@@ -109,7 +109,7 @@ class Kudos_Public {
 	/**
 	 * Creates a payment with Mollie.
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 */
 	public function create_payment() {
 		parse_str($_REQUEST['form'], $form);
@@ -134,7 +134,7 @@ class Kudos_Public {
 	/**
 	 * Registers the webhook url
      *
-     * @since      1.0.0
+     * @since   1.0.0
 	 * @return void
 	 */
 	public function register_routes() {
@@ -147,7 +147,7 @@ class Kudos_Public {
 	/**
 	 * Check payment status based on local order_id
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 * @param $order_id
 	 * @return bool | string
 	 */
@@ -185,7 +185,7 @@ class Kudos_Public {
 	/**
 	 * Gets url Mollie will use to redirect customer to after payment complete
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 * @return string|void
 	 */
 	public static function get_return_url() {
@@ -203,7 +203,7 @@ class Kudos_Public {
 	/**
 	 * Checks if required settings are saved before displaying button or modal
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 * @return bool
 	 */
 	public static function ready() {
@@ -218,7 +218,7 @@ class Kudos_Public {
 	/**
 	 * Creates and registers the [kudos] shortcode
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
 	 */
 	public function register_shortcodes() {
 		add_shortcode( 'kudos', function ( $atts ) {
@@ -241,7 +241,7 @@ class Kudos_Public {
 	/**
 	 * Places modals on page if conditions are met
      *
-     * @since    1.0.0
+     * @since   1.0.0
 	 */
 	public function place_modals() {
 
