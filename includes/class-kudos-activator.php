@@ -52,6 +52,7 @@ class Kudos_Activator {
 		  name VARCHAR(255), 
 		  email VARCHAR(320),
 		  value DECIMAL(7,2) NOT NULL,
+		  currency VARCHAR(255) 
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
 		  method VARCHAR(255),
 		  mode VARCHAR(255) NOT NULL, 
