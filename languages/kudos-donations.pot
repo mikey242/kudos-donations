@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-13T08:00:50+00:00\n"
+"POT-Creation-Date: 2020-05-15T09:21:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: kudos-donations\n"
@@ -50,21 +50,21 @@ msgid "%s Transactions"
 msgstr ""
 
 #: admin/class-kudos-admin.php:119
-#: admin/class-kudos-admin.php:144
+#: admin/class-kudos-admin.php:145
 #: includes/class-transactions-table.php:28
 msgid "Transactions"
 msgstr ""
 
-#: admin/class-kudos-admin.php:137
+#: admin/class-kudos-admin.php:138
 msgid "Transaction deleted"
 msgstr ""
 
 #. translators: %s: Number of transactions
-#: admin/class-kudos-admin.php:140
+#: admin/class-kudos-admin.php:141
 msgid "%s transaction(s) deleted"
 msgstr ""
 
-#: admin/class-kudos-admin.php:145
+#: admin/class-kudos-admin.php:146
 msgid "Your recent Kudos transactions"
 msgstr ""
 
@@ -195,7 +195,7 @@ msgid "Both \"Live\" and \"Test\" API keys can be found in your %s"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:121
-#: includes/class-transactions-table.php:434
+#: includes/class-transactions-table.php:432
 msgid "Mode"
 msgstr ""
 
@@ -204,12 +204,12 @@ msgid "When using this plugin for the first time, the payment mode is set to \"T
 msgstr ""
 
 #: includes/class-kudos-carbon.php:124
-#: includes/class-transactions-table.php:134
+#: includes/class-transactions-table.php:132
 msgid "Test"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:125
-#: includes/class-transactions-table.php:139
+#: includes/class-transactions-table.php:137
 msgid "Live"
 msgstr ""
 
@@ -262,8 +262,8 @@ msgid "This is where you can change the settings of the donation pop-up that app
 msgstr ""
 
 #: includes/class-kudos-carbon.php:170
-#: includes/class-transactions-table.php:108
-#: includes/class-transactions-table.php:429
+#: includes/class-transactions-table.php:106
+#: includes/class-transactions-table.php:427
 msgid "Name"
 msgstr ""
 
@@ -407,12 +407,12 @@ msgid "Pop-up text"
 msgstr ""
 
 #. translators: %s: The order id
-#: includes/class-kudos-mollie.php:116
+#: includes/class-kudos-mollie.php:115
 msgid "Kudos Payment - %s"
 msgstr ""
 
 #. translators: %s: Mollie
-#: includes/class-kudos-mollie.php:197
+#: includes/class-kudos-mollie.php:198
 msgid "Webhook requested by %s."
 msgstr ""
 
@@ -428,76 +428,76 @@ msgstr ""
 msgid "Geen transacties beschikbaar."
 msgstr ""
 
+#: includes/class-transactions-table.php:105
+#: includes/class-transactions-table.php:426
+msgid "Date"
+msgstr ""
+
 #: includes/class-transactions-table.php:107
 #: includes/class-transactions-table.php:428
-msgid "Date"
+msgid "E-mail"
+msgstr ""
+
+#: includes/class-transactions-table.php:108
+#: includes/class-transactions-table.php:429
+msgid "Amount"
 msgstr ""
 
 #: includes/class-transactions-table.php:109
 #: includes/class-transactions-table.php:430
-msgid "E-mail"
-msgstr ""
-
-#: includes/class-transactions-table.php:110
-#: includes/class-transactions-table.php:431
-msgid "Amount"
-msgstr ""
-
-#: includes/class-transactions-table.php:111
-#: includes/class-transactions-table.php:432
 msgid "Status"
 msgstr ""
 
-#: includes/class-transactions-table.php:112
+#: includes/class-transactions-table.php:110
 msgid "Transaction Id"
 msgstr ""
 
-#: includes/class-transactions-table.php:129
+#: includes/class-transactions-table.php:127
 msgid "All"
 msgstr ""
 
-#: includes/class-transactions-table.php:236
-#: includes/class-transactions-table.php:312
+#: includes/class-transactions-table.php:234
+#: includes/class-transactions-table.php:310
 msgid "Delete"
 msgstr ""
 
-#: includes/class-transactions-table.php:283
+#: includes/class-transactions-table.php:281
 msgid "Paid"
 msgstr ""
 
-#: includes/class-transactions-table.php:286
+#: includes/class-transactions-table.php:284
 msgid "Open"
 msgstr ""
 
-#: includes/class-transactions-table.php:289
+#: includes/class-transactions-table.php:287
 msgid "Expired"
 msgstr ""
 
-#: includes/class-transactions-table.php:292
+#: includes/class-transactions-table.php:290
 msgid "Canceled"
 msgstr ""
 
-#: includes/class-transactions-table.php:295
+#: includes/class-transactions-table.php:293
 msgid "Failed"
 msgstr ""
 
-#: includes/class-transactions-table.php:298
+#: includes/class-transactions-table.php:296
 msgid "Unknown"
 msgstr ""
 
-#: includes/class-transactions-table.php:418
+#: includes/class-transactions-table.php:416
 msgid "transactions"
 msgstr ""
 
-#: includes/class-transactions-table.php:433
+#: includes/class-transactions-table.php:431
 msgid "Method"
 msgstr ""
 
-#: includes/class-transactions-table.php:435
+#: includes/class-transactions-table.php:433
 msgid "Order ID"
 msgstr ""
 
-#: includes/class-transactions-table.php:436
+#: includes/class-transactions-table.php:434
 msgid "Transaction ID"
 msgstr ""
 

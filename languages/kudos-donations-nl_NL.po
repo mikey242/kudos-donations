@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
-"POT-Creation-Date: 2020-05-10T17:43:59+00:00\n"
-"PO-Revision-Date: 2020-05-13 10:01+0200\n"
+"POT-Creation-Date: 2020-05-15T09:21:16+00:00\n"
+"PO-Revision-Date: 2020-05-15 11:28+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -41,12 +41,12 @@ msgid "https://iseard.media"
 msgstr "https://iseard.media"
 
 #. translators: %s: API mode
-#: admin/class-kudos-admin.php:103
+#: admin/class-kudos-admin.php:102
 msgid "%s API key connection was successful!"
 msgstr "%s API key verbinding is succesvol!"
 
 #. translators: %s: API mode
-#: admin/class-kudos-admin.php:106
+#: admin/class-kudos-admin.php:105
 msgid ""
 "Error connecting with Mollie, please check the %s API key and try again."
 msgstr ""
@@ -54,11 +54,11 @@ msgstr ""
 "nogmaals."
 
 #. translators: %s: Plugin name
-#: admin/class-kudos-admin.php:119
+#: admin/class-kudos-admin.php:118
 msgid "%s Transactions"
 msgstr "%s Transacties"
 
-#: admin/class-kudos-admin.php:120 admin/class-kudos-admin.php:145
+#: admin/class-kudos-admin.php:119 admin/class-kudos-admin.php:145
 #: includes/class-transactions-table.php:28
 msgid "Transactions"
 msgstr "Transacties"
@@ -77,14 +77,17 @@ msgid "Your recent Kudos transactions"
 msgstr "Meest recente Kudos transacties"
 
 #: includes/class-kudos-activator.php:77 includes/class-kudos-carbon.php:158
+#: includes/class-kudos-carbon.php:280
 msgid "Donate now"
 msgstr "Doneer nu"
 
 #: includes/class-kudos-activator.php:78 includes/class-kudos-carbon.php:183
+#: includes/class-kudos-carbon.php:282
 msgid "Support us!"
 msgstr "Steun ons!"
 
 #: includes/class-kudos-activator.php:79 includes/class-kudos-carbon.php:185
+#: includes/class-kudos-carbon.php:284
 msgid "Thank you for your donation. We appreciate your support!"
 msgstr "Bedankt voor je donatie. Wij waarderen je steun enorm!"
 
@@ -244,6 +247,7 @@ msgstr ""
 "Zowel de \"Live\" als \"Test\" API keys kunnen gevonden worden in je %s"
 
 #: includes/class-kudos-carbon.php:121
+#: includes/class-transactions-table.php:432
 msgid "Mode"
 msgstr "Status"
 
@@ -318,6 +322,7 @@ msgstr ""
 
 #: includes/class-kudos-carbon.php:170
 #: includes/class-transactions-table.php:106
+#: includes/class-transactions-table.php:427
 msgid "Name"
 msgstr "Naam"
 
@@ -473,12 +478,12 @@ msgid "Pop-up text"
 msgstr "Pop-up bericht"
 
 #. translators: %s: The order id
-#: includes/class-kudos-mollie.php:116
+#: includes/class-kudos-mollie.php:115
 msgid "Kudos Payment - %s"
 msgstr "Kudos Betaling - %s"
 
 #. translators: %s: Mollie
-#: includes/class-kudos-mollie.php:197
+#: includes/class-kudos-mollie.php:198
 msgid "Webhook requested by %s."
 msgstr "Webhook aangevraagd door %s."
 
@@ -486,27 +491,31 @@ msgstr "Webhook aangevraagd door %s."
 msgid "Transaction"
 msgstr "Transactie"
 
-#: includes/class-transactions-table.php:45
+#: includes/class-transactions-table.php:46
 msgid "Export"
 msgstr "Exporteren"
 
-#: includes/class-transactions-table.php:65
+#: includes/class-transactions-table.php:67
 msgid "Geen transacties beschikbaar."
 msgstr "Geen transacties beschikbaar."
 
 #: includes/class-transactions-table.php:105
+#: includes/class-transactions-table.php:426
 msgid "Date"
 msgstr "Datum"
 
 #: includes/class-transactions-table.php:107
+#: includes/class-transactions-table.php:428
 msgid "E-mail"
 msgstr "E-mail"
 
 #: includes/class-transactions-table.php:108
+#: includes/class-transactions-table.php:429
 msgid "Amount"
 msgstr "Bedrag"
 
 #: includes/class-transactions-table.php:109
+#: includes/class-transactions-table.php:430
 msgid "Status"
 msgstr "Status"
 
@@ -547,9 +556,21 @@ msgstr "Mislukt"
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: includes/class-transactions-table.php:410
+#: includes/class-transactions-table.php:416
 msgid "transactions"
 msgstr "transacties"
+
+#: includes/class-transactions-table.php:431
+msgid "Method"
+msgstr "Methode"
+
+#: includes/class-transactions-table.php:433
+msgid "Order ID"
+msgstr "Bestelnummer"
+
+#: includes/class-transactions-table.php:434
+msgid "Transaction ID"
+msgstr "Transactie Id"
 
 #: public/class-kudos-button.php:71
 msgid "Mollie not configured"
@@ -587,15 +608,15 @@ msgstr "Verzoek is ongeldig."
 msgid "Error creating Mollie payment. Please try again later."
 msgstr "Fout bij het maken van een Mollie-betaling. Probeer het later opnieuw."
 
-#: public/class-kudos-public.php:173
+#: public/class-kudos-public.php:171
 msgid "Payment canceled"
 msgstr "Betaling geannuleerd"
 
-#: public/class-kudos-public.php:176
+#: public/class-kudos-public.php:174
 msgid "Thanks"
 msgstr "Bedankt"
 
-#: public/class-kudos-public.php:177
+#: public/class-kudos-public.php:175
 msgid "Your donation will be processed soon."
 msgstr "Uw donatie wordt zo snel mogelijk verwerkt."
 
