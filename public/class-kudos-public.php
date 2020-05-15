@@ -82,7 +82,7 @@ class Kudos_Public {
 
 		wp_enqueue_script( 'micromodal', plugin_dir_url( __FILE__ ) . '../dist/js/vendor/micromodal.min.js', [], '0.4.6', true );
 		wp_enqueue_script( 'jquery-validate', plugin_dir_url( __FILE__ ) . '../dist/js/vendor/jquery.validate.min.js', [ 'jquery' ], '1.19.1', true );
-		wp_enqueue_script( $this->plugin_name . '-public', get_asset_path('kudos-public.js'), [ 'jquery' ], $this->version, true );
+		wp_enqueue_script( $this->plugin_name . '-public', get_asset_path('kudos-public.js'), [ 'jquery', 'jquery-validate', 'micromodal' ], $this->version, true );
 		wp_localize_script( $this->plugin_name . '-public', 'kudos', [
 		        'ajaxurl' => admin_url('admin-ajax.php'),
                 'name_required' => __('Your name is required', 'kudos-donations'),
