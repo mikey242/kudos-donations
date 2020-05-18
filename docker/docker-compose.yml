@@ -38,6 +38,15 @@ services:
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
 
+  adminer:
+    image: adminer
+    container_name: adminer-kudos
+    restart: always
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+
   ngrok:
     image: wernight/ngrok
     container_name: ngrok-kudos
