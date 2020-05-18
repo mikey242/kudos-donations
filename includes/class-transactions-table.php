@@ -438,18 +438,7 @@ class Transactions_Table extends WP_List_Table {
 		$out = fopen( 'php://output', 'w' );
 
 		// Add headers
-		$headers = [
-			__('Date', 'kudos-donations'),
-			__('Name', 'kudos-donations'),
-			__('E-mail', 'kudos-donations'),
-			__('Amount', 'kudos-donations'),
-			__('Status', 'kudos-donations'),
-			__('Method', 'kudos-donations'),
-			__('Mode', 'kudos-donations'),
-			__('Order ID', 'kudos-donations'),
-			__('Transaction ID', 'kudos-donations')
-		];
-		fputcsv($out, $headers);
+		fputcsv($out, array_slice(array_keys($rows[0]), 1));
 
 		// Add rows
 		foreach ( $rows as $row ) {
