@@ -1,7 +1,7 @@
 {
   "name": "kudos-donations",
-  "version": "1.0.1",
-  "description": "Easily receive donations in WordPress via Mollie",
+  "version": "1.0.2",
+  "description": " Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.",
   "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
     "start": "webpack --config webpack.dev.js",

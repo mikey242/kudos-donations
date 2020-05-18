@@ -20,7 +20,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Iseard Media
  * Author URI:        https://iseard.media
  * License:           GPL-2.0+
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'KUDOS_VERSION', '1.0.1' );
+define( 'KUDOS_VERSION', '1.0.2' );
 define('KUDOS_DIR', plugin_dir_path(__FILE__));
 
 /**
