@@ -140,6 +140,7 @@ class Kudos_Donations {
 
 		$plugin_admin = new Kudos_Admin( $this->get_plugin_name(), $this->get_version() );
 
+		$this->loader->add_action('plugins_loaded', $this, 'version_check');
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action('admin_menu', $plugin_admin, 'create_transaction_page', 11);
@@ -208,6 +209,22 @@ class Kudos_Donations {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Checks plugin version stored in database and runs activation
+	 * hook if different.
+	 *
+	 * @since 1.0.2
+	 */
+	public function version_check() {
+
+		$db_version = get_option('kudos_donations_version');
+
+		if($db_version !== $this->get_version()) {
+			require_once KUDOS_DIR . 'includes/class-kudos-activator.php';
+			Kudos_Activator::activate();
+		}
 	}
 
 }

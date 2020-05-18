@@ -32,7 +32,7 @@ class Kudos_Activator {
 	public static function activate() {
 		Kudos_Logger::init();
 		Kudos_Activator::create_transactions_db();
-//		Kudos_Activator::set_defaults();
+		Kudos_Activator::set_defaults();
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Kudos_Activator {
 		  name VARCHAR(255), 
 		  email VARCHAR(320),
 		  value DECIMAL(7,2) NOT NULL,
-		  currency VARCHAR(255) 
+		  currency VARCHAR(255),
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
 		  method VARCHAR(255),
 		  mode VARCHAR(255) NOT NULL, 
@@ -71,22 +71,27 @@ class Kudos_Activator {
 	 * @since    1.0.0
 	 */
 	private static function set_defaults() {
-		if(!get_option('_kudos_mollie_api_mode')) {
-			$options = [
-				'_kudos_mollie_api_mode' => 'test',
-				'_kudos_button_style' => 'kudos_btn_primary',
-				'_kudos_button_label' => __('Donate now', 'kudos-donations'),
-				'_kudos_form_header' => __('Support us!', 'kudos-donations'),
-				'_kudos_form_text' => __('Thank you for your donation. We appreciate your support!', 'kudos-donations'),
-				'_kudos_return_message_enable' => 'yes',
-				'_kudos_return_message_header' => __('Thank you!', 'kudos-donations'),
-				/* translators: %s: Value of donation */
-				'_kudos_return_message_text' => sprintf(__('Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations'), '{{value}}')
-			];
 
-			foreach ($options as $option=>$value) {
-				add_option($option, $value);
-			}
-		}
+		update_option('kudos_donations_version', KUDOS_VERSION);
+
+//		--- FOR FUTURE USE ---
+
+//		if(!get_option('_kudos_mollie_api_mode')) {
+//			$options = [
+//				'_kudos_mollie_api_mode' => 'test',
+//				'_kudos_button_style' => 'kudos_btn_primary',
+//				'_kudos_button_label' => __('Donate now', 'kudos-donations'),
+//				'_kudos_form_header' => __('Support us!', 'kudos-donations'),
+//				'_kudos_form_text' => __('Thank you for your donation. We appreciate your support!', 'kudos-donations'),
+//				'_kudos_return_message_enable' => 'yes',
+//				'_kudos_return_message_header' => __('Thank you!', 'kudos-donations'),
+//				/* translators: %s: Value of donation */
+//				'_kudos_return_message_text' => sprintf(__('Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations'), '{{value}}')
+//			];
+//
+//			foreach ($options as $option=>$value) {
+//				add_option($option, $value);
+//			}
+//		}
 	}
 }
