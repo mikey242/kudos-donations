@@ -213,7 +213,7 @@ class Carbon {
 			         ]),
 			    Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
 			        /* translators: %s: Value of donation */
-			         ->set_default_value(sprintf(__('Many thanks for your donation of €%s. We appreciate your support.', 'kudos-donations'), '{{value}}'))
+			         ->set_default_value(sprintf(__('Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations'), '{{value}}'))
 			         ->set_conditional_logic([
 			             [
 				             'field' => 'kudos_return_message_enable',
