@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Kudos Donations plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kudos Donations 1.0.1\n"
+"Project-Id-Version: Kudos Donations 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-15T11:23:01+00:00\n"
+"POT-Creation-Date: 2020-05-18T09:57:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: kudos-donations\n"
@@ -66,34 +66,6 @@ msgstr ""
 
 #: admin/class-kudos-admin.php:146
 msgid "Your recent Kudos transactions"
-msgstr ""
-
-#: includes/class-kudos-activator.php:77
-#: includes/class-kudos-carbon.php:158
-#: includes/class-kudos-carbon.php:280
-msgid "Donate now"
-msgstr ""
-
-#: includes/class-kudos-activator.php:78
-#: includes/class-kudos-carbon.php:183
-#: includes/class-kudos-carbon.php:282
-msgid "Support us!"
-msgstr ""
-
-#: includes/class-kudos-activator.php:79
-#: includes/class-kudos-carbon.php:185
-#: includes/class-kudos-carbon.php:284
-msgid "Thank you for your donation. We appreciate your support!"
-msgstr ""
-
-#: includes/class-kudos-activator.php:81
-#: includes/class-kudos-carbon.php:207
-msgid "Thank you!"
-msgstr ""
-
-#. translators: %s: Value of donation
-#: includes/class-kudos-activator.php:83
-msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr ""
 
 #. translators: %s: Plugin name
@@ -195,7 +167,6 @@ msgid "Both \"Live\" and \"Test\" API keys can be found in your %s"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:121
-#: includes/class-transactions-table.php:438
 msgid "Mode"
 msgstr ""
 
@@ -204,12 +175,12 @@ msgid "When using this plugin for the first time, the payment mode is set to \"T
 msgstr ""
 
 #: includes/class-kudos-carbon.php:124
-#: includes/class-transactions-table.php:137
+#: includes/class-transactions-table.php:144
 msgid "Test"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:125
-#: includes/class-transactions-table.php:143
+#: includes/class-transactions-table.php:150
 msgid "Live"
 msgstr ""
 
@@ -252,6 +223,11 @@ msgstr ""
 msgid "Button label"
 msgstr ""
 
+#: includes/class-kudos-carbon.php:158
+#: includes/class-kudos-carbon.php:280
+msgid "Donate now"
+msgstr ""
+
 #: includes/class-kudos-carbon.php:164
 #: includes/class-kudos-carbon.php:167
 msgid "Donation Form"
@@ -262,8 +238,7 @@ msgid "This is where you can change the settings of the donation pop-up that app
 msgstr ""
 
 #: includes/class-kudos-carbon.php:170
-#: includes/class-transactions-table.php:109
-#: includes/class-transactions-table.php:433
+#: includes/class-transactions-table.php:116
 msgid "Name"
 msgstr ""
 
@@ -285,8 +260,18 @@ msgstr ""
 msgid "Payment form header"
 msgstr ""
 
+#: includes/class-kudos-carbon.php:183
+#: includes/class-kudos-carbon.php:282
+msgid "Support us!"
+msgstr ""
+
 #: includes/class-kudos-carbon.php:184
 msgid "Payment form text"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:185
+#: includes/class-kudos-carbon.php:284
+msgid "Thank you for your donation. We appreciate your support!"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:191
@@ -319,13 +304,17 @@ msgstr ""
 msgid "Message header"
 msgstr ""
 
+#: includes/class-kudos-carbon.php:207
+msgid "Thank you!"
+msgstr ""
+
 #: includes/class-kudos-carbon.php:214
 msgid "Message text"
 msgstr ""
 
 #. translators: %s: Value of donation
 #: includes/class-kudos-carbon.php:216
-msgid "Many thanks for your donation of €%s. We appreciate your support."
+msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr ""
 
 #: includes/class-kudos-carbon.php:225
@@ -407,12 +396,12 @@ msgid "Pop-up text"
 msgstr ""
 
 #. translators: %s: The order id
-#: includes/class-kudos-mollie.php:116
+#: includes/class-kudos-mollie.php:117
 msgid "Kudos Payment - %s"
 msgstr ""
 
 #. translators: %s: Mollie
-#: includes/class-kudos-mollie.php:199
+#: includes/class-kudos-mollie.php:200
 msgid "Webhook requested by %s."
 msgstr ""
 
@@ -420,89 +409,77 @@ msgstr ""
 msgid "Transaction"
 msgstr ""
 
-#: includes/class-transactions-table.php:46
+#: includes/class-transactions-table.php:53
 msgid "Export"
 msgstr ""
 
-#: includes/class-transactions-table.php:67
+#: includes/class-transactions-table.php:74
 msgid "No transactions available."
 msgstr ""
 
-#: includes/class-transactions-table.php:108
-#: includes/class-transactions-table.php:432
+#: includes/class-transactions-table.php:115
 msgid "Date"
 msgstr ""
 
-#: includes/class-transactions-table.php:110
-#: includes/class-transactions-table.php:434
+#: includes/class-transactions-table.php:117
 msgid "E-mail"
 msgstr ""
 
-#: includes/class-transactions-table.php:111
-#: includes/class-transactions-table.php:435
+#: includes/class-transactions-table.php:118
 msgid "Amount"
 msgstr ""
 
-#: includes/class-transactions-table.php:112
-#: includes/class-transactions-table.php:436
+#: includes/class-transactions-table.php:119
 msgid "Status"
 msgstr ""
 
-#: includes/class-transactions-table.php:113
+#: includes/class-transactions-table.php:120
 msgid "Transaction Id"
 msgstr ""
 
-#: includes/class-transactions-table.php:131
+#: includes/class-transactions-table.php:138
 msgid "All"
 msgstr ""
 
-#: includes/class-transactions-table.php:240
-#: includes/class-transactions-table.php:316
+#: includes/class-transactions-table.php:247
+#: includes/class-transactions-table.php:326
 msgid "Delete"
 msgstr ""
 
-#: includes/class-transactions-table.php:287
+#: includes/class-transactions-table.php:297
 msgid "Paid"
 msgstr ""
 
-#: includes/class-transactions-table.php:290
+#: includes/class-transactions-table.php:300
 msgid "Open"
 msgstr ""
 
-#: includes/class-transactions-table.php:293
+#: includes/class-transactions-table.php:303
 msgid "Expired"
 msgstr ""
 
-#: includes/class-transactions-table.php:296
+#: includes/class-transactions-table.php:306
 msgid "Canceled"
 msgstr ""
 
-#: includes/class-transactions-table.php:299
+#: includes/class-transactions-table.php:309
 msgid "Failed"
 msgstr ""
 
-#: includes/class-transactions-table.php:302
+#: includes/class-transactions-table.php:312
 msgid "Unknown"
 msgstr ""
 
-#: includes/class-transactions-table.php:422
+#: includes/class-transactions-table.php:432
 msgid "transactions"
 msgstr ""
 
-#: includes/class-transactions-table.php:437
-msgid "Method"
-msgstr ""
-
-#: includes/class-transactions-table.php:439
-msgid "Order ID"
-msgstr ""
-
-#: includes/class-transactions-table.php:440
-msgid "Transaction ID"
-msgstr ""
-
-#: public/class-kudos-button.php:71
+#: public/class-kudos-button.php:69
 msgid "Mollie not configured"
+msgstr ""
+
+#: public/class-kudos-modal.php:74
+msgid "Secure payment by"
 msgstr ""
 
 #: public/class-kudos-public.php:88
