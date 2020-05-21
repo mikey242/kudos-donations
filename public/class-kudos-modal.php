@@ -69,6 +69,7 @@ class Kudos_Modal {
 		            'name_required' => carbon_get_theme_option('kudos_name_required'),
 		            'email_required' => carbon_get_theme_option('kudos_email_required'),
 		            'return_url' => $this->returnUrl,
+			        'payment_by' => __('Secure payment by', 'kudos-donations'),
 			        'vendor' => (carbon_get_theme_option('kudos_payment_vendor') ? carbon_get_theme_option('kudos_payment_vendor') : 'mollie')
 		    ];
 			return $this->twig->render('/public/modal/donate.modal.html.twig', $data);
