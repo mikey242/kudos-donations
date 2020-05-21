@@ -5,7 +5,8 @@
   "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
     "start": "webpack --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js && composer install --no-dev -o"
+    "build": "webpack --config webpack.prod.js",
+    "build:production": "webpack --config webpack.prod.js && composer install --no-dev -o",
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
