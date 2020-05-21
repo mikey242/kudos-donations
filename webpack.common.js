@@ -88,6 +88,16 @@ module.exports = {
                 },
             },
             {
+                test: /\.(png|jpe?g|gif)$/i,
+                use :[{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[contenthash].[ext]',
+                        outputPath:'./img/'
+                    },
+                }]
+            },
+            {
                 test: /\.(ttf|otf|eot|woff2?)$/,
                 loader: 'url-loader',
                 options: {
