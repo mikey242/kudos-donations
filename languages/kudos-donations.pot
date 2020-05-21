@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-18T09:57:05+00:00\n"
+"POT-Creation-Date: 2020-05-21T13:21:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: kudos-donations\n"
@@ -34,38 +34,82 @@ msgstr ""
 msgid "https://iseard.media"
 msgstr ""
 
-#. translators: %s: API mode
-#: admin/class-kudos-admin.php:102
-msgid "%s API key connection was successful!"
+#: admin/class-kudos-admin.php:80
+#: public/class-kudos-public.php:90
+msgid "Please enter a valid email"
 msgstr ""
 
 #. translators: %s: API mode
 #: admin/class-kudos-admin.php:105
+msgid "%s API key connection was successful!"
+msgstr ""
+
+#. translators: %s: API mode
+#: admin/class-kudos-admin.php:108
 msgid "Error connecting with Mollie, please check the %s API key and try again."
 msgstr ""
 
+#. translators: %s: API mode
+#: admin/class-kudos-admin.php:130
+msgid "Email sent to %s."
+msgstr ""
+
+#. translators: %s: API mode
+#: admin/class-kudos-admin.php:133
+msgid "Error sending email, please check the settings and try again."
+msgstr ""
+
 #. translators: %s: Plugin name
-#: admin/class-kudos-admin.php:118
+#: admin/class-kudos-admin.php:146
 msgid "%s Transactions"
 msgstr ""
 
-#: admin/class-kudos-admin.php:119
-#: admin/class-kudos-admin.php:145
+#: admin/class-kudos-admin.php:147
+#: admin/class-kudos-admin.php:173
 #: includes/class-transactions-table.php:28
 msgid "Transactions"
 msgstr ""
 
-#: admin/class-kudos-admin.php:138
+#: admin/class-kudos-admin.php:166
 msgid "Transaction deleted"
 msgstr ""
 
 #. translators: %s: Number of transactions
-#: admin/class-kudos-admin.php:141
+#: admin/class-kudos-admin.php:169
 msgid "%s transaction(s) deleted"
 msgstr ""
 
-#: admin/class-kudos-admin.php:146
+#: admin/class-kudos-admin.php:182
 msgid "Your recent Kudos transactions"
+msgstr ""
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:93
+#: includes/class-kudos-carbon.php:170
+#: includes/class-transactions-table.php:147
+msgid "Name"
+msgstr ""
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:101
+msgid "E-mail address"
+msgstr ""
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:107
+#: includes/class-transactions-table.php:149
+msgid "Amount"
+msgstr ""
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:124
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:126
+msgid "Cancel"
+msgstr ""
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:130
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:132
+msgid "Donate"
+msgstr ""
+
+#: cache/d6/d661e766ef20c899673ecdc855afe2e25bd1a6df2860df545c84b6fea9f0b093.php:61
+msgid "It worked!"
 msgstr ""
 
 #. translators: %s: Plugin name
@@ -175,12 +219,12 @@ msgid "When using this plugin for the first time, the payment mode is set to \"T
 msgstr ""
 
 #: includes/class-kudos-carbon.php:124
-#: includes/class-transactions-table.php:144
+#: includes/class-transactions-table.php:175
 msgid "Test"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:125
-#: includes/class-transactions-table.php:150
+#: includes/class-transactions-table.php:181
 msgid "Live"
 msgstr ""
 
@@ -219,12 +263,12 @@ msgid "Button style"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:157
-#: includes/class-kudos-carbon.php:279
+#: includes/class-kudos-carbon.php:361
 msgid "Button label"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:158
-#: includes/class-kudos-carbon.php:280
+#: includes/class-kudos-carbon.php:362
 msgid "Donate now"
 msgstr ""
 
@@ -235,11 +279,6 @@ msgstr ""
 
 #: includes/class-kudos-carbon.php:168
 msgid "This is where you can change the settings of the donation pop-up that appears when you click on the donations button."
-msgstr ""
-
-#: includes/class-kudos-carbon.php:170
-#: includes/class-transactions-table.php:116
-msgid "Name"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:172
@@ -261,7 +300,7 @@ msgid "Payment form header"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:183
-#: includes/class-kudos-carbon.php:282
+#: includes/class-kudos-carbon.php:364
 msgid "Support us!"
 msgstr ""
 
@@ -270,7 +309,7 @@ msgid "Payment form text"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:185
-#: includes/class-kudos-carbon.php:284
+#: includes/class-kudos-carbon.php:366
 msgid "Thank you for your donation. We appreciate your support!"
 msgstr ""
 
@@ -318,90 +357,175 @@ msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr ""
 
 #: includes/class-kudos-carbon.php:225
-msgid "Return url"
+msgid "Email receipts"
 msgstr ""
 
 #: includes/class-kudos-carbon.php:226
-msgid "After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, select the box below."
+msgid "Once a payment has been completed, you can automatically send an email receipt to the donor."
 msgstr ""
 
 #: includes/class-kudos-carbon.php:228
+msgid "Send email receipts"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:232
+msgid "Return url"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:233
+msgid "After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, select the box below."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:235
 msgid "Use custom return URL"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:230
+#: includes/class-kudos-carbon.php:237
 msgid "URL"
 msgstr ""
 
 #. translators: %s: Current web address (e.g https://mywebsite.com)
-#: includes/class-kudos-carbon.php:232
+#: includes/class-kudos-carbon.php:239
 msgid "e.g: %s/thanks"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:244
-#: includes/class-kudos-carbon.php:247
+#: includes/class-kudos-carbon.php:251
+#: includes/class-kudos-carbon.php:254
+msgid "Email Settings"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:255
+msgid "Configure custom email settings. Unless you are using an external plugin to configure email you will want enable this."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:257
+msgid "Use custom email settings"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:258
+msgid "Enable this to use your own SMTP server settings."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:260
+msgid "Host"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:268
+msgid "Encryption"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:276
+msgid "None"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:277
+msgid "SSL"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:278
+msgid "TLS"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:281
+msgid "Auto TLS"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:282
+msgid " By default TLS encryption is automatically used if the server supports it, which is recommended. In some cases, due to server misconfigurations, this can cause issues and may need to be disabled."
+msgstr ""
+
+#: includes/class-kudos-carbon.php:290
+msgid "Username"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:298
+msgid "Password"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:306
+msgid "Port"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:317
+msgid "Send Test Email"
+msgstr ""
+
+#: includes/class-kudos-carbon.php:326
+#: includes/class-kudos-carbon.php:329
 msgid "Shortcode"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:251
+#: includes/class-kudos-carbon.php:333
 msgid "Shortcode options"
 msgstr ""
 
 #. translators: %s: <code>[kudos]</code>
-#: includes/class-kudos-carbon.php:253
+#: includes/class-kudos-carbon.php:335
 msgid "Override the default settings %s by using the following shortcode options"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:257
-#: includes/class-kudos-carbon.php:261
+#: includes/class-kudos-carbon.php:339
+#: includes/class-kudos-carbon.php:343
 msgid "Help us out!"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:257
+#: includes/class-kudos-carbon.php:339
 msgid "Customise button text"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:258
-#: includes/class-kudos-carbon.php:261
+#: includes/class-kudos-carbon.php:340
+#: includes/class-kudos-carbon.php:343
 msgid "Support our cause"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:258
+#: includes/class-kudos-carbon.php:340
 msgid "Customise header text"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:259
-#: includes/class-kudos-carbon.php:261
+#: includes/class-kudos-carbon.php:341
+#: includes/class-kudos-carbon.php:343
 msgid "Thank you for donating to this project. We really appreciate your support."
 msgstr ""
 
-#: includes/class-kudos-carbon.php:259
+#: includes/class-kudos-carbon.php:341
 msgid "Customise message text"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:260
+#: includes/class-kudos-carbon.php:342
 msgid "A fully customised button and text would look like this"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:276
+#: includes/class-kudos-carbon.php:358
 msgid "Adds a Kudos donate button to your post or page."
 msgstr ""
 
-#: includes/class-kudos-carbon.php:281
+#: includes/class-kudos-carbon.php:363
 msgid "Pop-up header"
 msgstr ""
 
-#: includes/class-kudos-carbon.php:283
+#: includes/class-kudos-carbon.php:365
 msgid "Pop-up text"
 msgstr ""
 
+#: includes/class-kudos-mailer.php:68
+msgid "Client"
+msgstr ""
+
+#: includes/class-kudos-mailer.php:80
+msgid "Kudos Donation Receipt"
+msgstr ""
+
+#: includes/class-kudos-mailer.php:99
+msgid "Kudos Donation - Test email"
+msgstr ""
+
 #. translators: %s: The order id
-#: includes/class-kudos-mollie.php:117
+#: includes/class-kudos-mollie.php:116
 msgid "Kudos Payment - %s"
 msgstr ""
 
 #. translators: %s: Mollie
-#: includes/class-kudos-mollie.php:200
+#: includes/class-kudos-mollie.php:206
 msgid "Webhook requested by %s."
 msgstr ""
 
@@ -413,64 +537,60 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: includes/class-transactions-table.php:74
+#: includes/class-transactions-table.php:75
 msgid "No transactions available."
 msgstr ""
 
-#: includes/class-transactions-table.php:115
+#: includes/class-transactions-table.php:146
 msgid "Date"
 msgstr ""
 
-#: includes/class-transactions-table.php:117
+#: includes/class-transactions-table.php:148
 msgid "E-mail"
 msgstr ""
 
-#: includes/class-transactions-table.php:118
-msgid "Amount"
-msgstr ""
-
-#: includes/class-transactions-table.php:119
+#: includes/class-transactions-table.php:150
 msgid "Status"
 msgstr ""
 
-#: includes/class-transactions-table.php:120
+#: includes/class-transactions-table.php:151
 msgid "Transaction Id"
 msgstr ""
 
-#: includes/class-transactions-table.php:138
+#: includes/class-transactions-table.php:169
 msgid "All"
 msgstr ""
 
-#: includes/class-transactions-table.php:247
-#: includes/class-transactions-table.php:326
+#: includes/class-transactions-table.php:278
+#: includes/class-transactions-table.php:357
 msgid "Delete"
 msgstr ""
 
-#: includes/class-transactions-table.php:297
+#: includes/class-transactions-table.php:328
 msgid "Paid"
 msgstr ""
 
-#: includes/class-transactions-table.php:300
+#: includes/class-transactions-table.php:331
 msgid "Open"
 msgstr ""
 
-#: includes/class-transactions-table.php:303
+#: includes/class-transactions-table.php:334
 msgid "Expired"
 msgstr ""
 
-#: includes/class-transactions-table.php:306
+#: includes/class-transactions-table.php:337
 msgid "Canceled"
 msgstr ""
 
-#: includes/class-transactions-table.php:309
+#: includes/class-transactions-table.php:340
 msgid "Failed"
 msgstr ""
 
-#: includes/class-transactions-table.php:312
+#: includes/class-transactions-table.php:343
 msgid "Unknown"
 msgstr ""
 
-#: includes/class-transactions-table.php:432
+#: includes/class-transactions-table.php:463
 msgid "transactions"
 msgstr ""
 
@@ -478,7 +598,7 @@ msgstr ""
 msgid "Mollie not configured"
 msgstr ""
 
-#: public/class-kudos-modal.php:74
+#: public/class-kudos-modal.php:72
 msgid "Secure payment by"
 msgstr ""
 
@@ -488,10 +608,6 @@ msgstr ""
 
 #: public/class-kudos-public.php:89
 msgid "Your email is required"
-msgstr ""
-
-#: public/class-kudos-public.php:90
-msgid "Please enter a valid email"
 msgstr ""
 
 #: public/class-kudos-public.php:91
@@ -514,14 +630,14 @@ msgstr ""
 msgid "Error creating Mollie payment. Please try again later."
 msgstr ""
 
-#: public/class-kudos-public.php:171
+#: public/class-kudos-public.php:173
 msgid "Payment canceled"
 msgstr ""
 
-#: public/class-kudos-public.php:174
+#: public/class-kudos-public.php:176
 msgid "Thanks"
 msgstr ""
 
-#: public/class-kudos-public.php:175
+#: public/class-kudos-public.php:177
 msgid "Your donation will be processed soon."
 msgstr ""
