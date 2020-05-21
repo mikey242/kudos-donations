@@ -1,0 +1,10 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block preheader %}
+    Kudos Donations - Test Email
+{% endblock preheader %}
+
+{% block body %}
+    <h1>{{ __('It worked!', 'kudos-donations') }}</h1>
+    <p>Looks like your email settings are set up correctly :-)</p>
+{% endblock body %}

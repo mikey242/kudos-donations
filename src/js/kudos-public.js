@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import MicroModal from "micromodal"
+import '../img/logo-colour-40.png' //used as email attachment
 
 $(() => {
     'use strict';

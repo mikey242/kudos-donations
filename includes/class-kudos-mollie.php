@@ -195,6 +195,13 @@ class Kudos_Mollie
 		$status = $payment->status;
 		$this->transaction->update_record($order_id, $transaction_id, $status, $payment->method);
 
+		// Send email receipt on success
+		$mailer = new Kudos_Mailer();
+		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
+			$transaction = $this->transaction->get_transaction($order_id);
+			$mailer->send_invoice($transaction);
+		}
+
 		/* translators: %s: Mollie */
 		$note = sprintf(__( 'Webhook requested by %s.', 'kudos-donations' ),'Mollie');
 		$this->logger->log($note, 'INFO', ['order_id' => $order_id, 'status' => $status]);

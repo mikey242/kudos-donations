@@ -104,6 +104,7 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'admin/class-kudos-admin.php';
 		require_once KUDOS_DIR . 'public/class-kudos-public.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-mollie.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-mailer.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-twig.php';
 		require_once KUDOS_DIR . 'public/class-kudos-button.php';
 		require_once KUDOS_DIR . 'public/class-kudos-modal.php';
@@ -146,6 +147,7 @@ class Kudos_Donations {
 		$this->loader->add_action('admin_menu', $plugin_admin, 'create_transaction_page', 11);
 		$this->loader->add_action('admin_init', $plugin_admin, 'export_csv');
 		$this->loader->add_action('wp_ajax_check_mollie_connection', $plugin_admin, 'check_mollie_connection');
+		$this->loader->add_action('wp_ajax_send_test_email', $plugin_admin, 'send_test_email');
 
 	}
 

@@ -135,7 +135,7 @@ class Carbon {
                     ->set_html('
                         <input id="test_mollie_api_key" type="button" class="button button-secondary" value="'. __("Check API Key", "kudos-donations") .'">
                         <div id="check_key_spinner" class="spinner"></div>
-                        <div id="result_message" class="hidden message"></div>
+                        <div id="api_result_message" class="hidden message kudos_result_message"></div>
                     ')
             ] )
 
@@ -185,58 +185,140 @@ class Carbon {
 		             ->set_default_value(__('Thank you for your donation. We appreciate your support!', 'kudos-donations')),
 			])
 
-			/*
+	        /*
 			 * Completed payment tab
 			 */
-			->add_tab(__('Completed Payment', 'kudos-donations'), [
-			    Field::make('html', 'completed_payment_intro', null)
-			        ->set_html('
+	        ->add_tab(__('Completed Payment', 'kudos-donations'), [
+		        Field::make('html', 'completed_payment_intro', null)
+		             ->set_html('
 						<h1>'. __('Completed Payment', 'kudos-donations') .'</h1>
 						<p>'. __( 'This is where you can change the settings of the \'thank you\' pop-up that appears after a payment has been made.', 'kudos-donations' ) .'</p>
 			        '),
-			    Field::make('html', 'popup_intro', null)
-			        ->set_html('
+		        Field::make('html', 'popup_intro', null)
+		             ->set_html('
 			            <h3><strong>'. __('Pop-up message', 'kudos-donations') .'</strong></h3>
 			            './* translators: %s: Available handlebar variables */'
 			            <p>'. sprintf(__('Use the following variables %s to include the donated amount and donor\'s name in displayed text.', 'kudos-donations'), '{{value}}, {{name}}') .'</p>
 			        '),
-			    Field::make('checkbox', 'kudos_return_message_enable', __('Show pop-up message when payment complete', 'kudos-donations'))
-			         ->set_help_text( __('Enable this to show a pop-up thanking the customer for their donation.', 'kudos-donations')  )
-			         ->set_default_value(true),
-			    Field::make('text', 'kudos_return_message_header', __('Message header', 'kudos-donations'))
-			         ->set_default_value(__('Thank you!', 'kudos-donations'))
-			         ->set_conditional_logic([
+		        Field::make('checkbox', 'kudos_return_message_enable', __('Show pop-up message when payment complete', 'kudos-donations'))
+		             ->set_help_text( __('Enable this to show a pop-up thanking the customer for their donation.', 'kudos-donations')  )
+		             ->set_default_value(true),
+		        Field::make('text', 'kudos_return_message_header', __('Message header', 'kudos-donations'))
+		             ->set_default_value(__('Thank you!', 'kudos-donations'))
+		             ->set_conditional_logic([
 			             [
 				             'field' => 'kudos_return_message_enable',
 				             'value' => true
 			             ]
-			         ]),
-			    Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
+		             ]),
+		        Field::make('textarea', 'kudos_return_message_text', __('Message text', 'kudos-donations'))
 			        /* translators: %s: Value of donation */
 			         ->set_default_value(sprintf(__('Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations'), '{{value}}'))
-			         ->set_conditional_logic([
+		             ->set_conditional_logic([
 			             [
 				             'field' => 'kudos_return_message_enable',
 				             'value' => true
 			             ]
-			         ]),
-			    Field::make('html', 'return_url_intro', null)
-			         ->set_html('
+		             ]),
+		        Field::make('html', 'email_receipts_intro', null)
+		             ->set_html('
+			            <h3><strong>'. __('Email receipts', 'kudos-donations') .'</strong></h3>
+			            <p>'. __('Once a payment has been completed, you can automatically send an email receipt to the donor.', 'kudos-donations') .'</p>
+			        '),
+		        Field::make('checkbox', 'kudos_email_receipt_enable', __('Send email receipts', 'kudos-donations'))
+		             ->set_default_value(false),
+		        Field::make('html', 'return_url_intro', null)
+		             ->set_html('
 			            <h3><strong>'. __('Return url', 'kudos-donations') .'</strong></h3>
 			            <p>'. __('After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, select the box below.', 'kudos-donations') .'</p>
 			        '),
-			    Field::make('checkbox', 'kudos_custom_return_enable', __('Use custom return URL', 'kudos-donations'))
-			         ->set_default_value(false),
-			    Field::make('text', 'kudos_custom_return_url', __('URL', 'kudos-donations'))
-				    /* translators: %s: Current web address (e.g https://mywebsite.com) */
+		        Field::make('checkbox', 'kudos_custom_return_enable', __('Use custom return URL', 'kudos-donations'))
+		             ->set_default_value(false),
+		        Field::make('text', 'kudos_custom_return_url', __('URL', 'kudos-donations'))
+			        /* translators: %s: Current web address (e.g https://mywebsite.com) */
 			         ->set_help_text( sprintf(__('e.g: %s/thanks', 'kudos-donations'), get_site_url()) )
-			         ->set_conditional_logic([
+		             ->set_conditional_logic([
 			             [
 				             'field' => 'kudos_custom_return_enable',
 				             'value' => true
 			             ]
-			         ]),
-			])
+		             ]),
+	        ])
+
+	        /*
+			 * Email Settings tab
+			 */
+	        ->add_tab(__('Email Settings', 'kudos-donations'), [
+		        Field::make('html', 'email_intro', null)
+		             ->set_html('
+						<h1>'. __('Email Settings', 'kudos-donations') .'</h1>
+						<p>'. __( 'Configure custom email settings. Unless you are using an external plugin to configure email you will want enable this.', 'kudos-donations' ) .'</p>
+	                '),
+		        Field::make('checkbox', 'kudos_smtp_enable', __('Use custom email settings', 'kudos-donations'))
+		             ->set_help_text( __('Enable this to use your own SMTP server settings.', 'kudos-donations'))
+		             ->set_default_value(false),
+		        Field::make('text', 'kudos_smtp_host', __('Host', 'kudos-donations'))
+					->set_attribute('placeholder', 'mail.host.com')
+					->set_conditional_logic([
+						[
+							'field' => 'kudos_smtp_enable',
+							'value' => true
+						]
+					]),
+		        Field::make('radio', 'kudos_smtp_encryption', __('Encryption', 'kudos-donations'))
+			        ->set_conditional_logic([
+				        [
+					        'field' => 'kudos_smtp_enable',
+					        'value' => true
+				        ]
+			        ])
+					->add_options([
+						'none' => __('None', 'kudos-donations'),
+						'ssl' => __('SSL', 'kudos-donations'),
+						'tls' => __('TLS', 'kudos-donations')
+					])
+	                ->set_default_value('none'),
+		        Field::make('checkbox', 'kudos_smtp_autotls', __('Auto TLS', 'kudos-donations'))
+		            ->set_help_text( __(' By default TLS encryption is automatically used if the server supports it, which is recommended. In some cases, due to server misconfigurations, this can cause issues and may need to be disabled.', 'kudos-donations')  )
+					->set_default_value(true)
+			        ->set_conditional_logic([
+				        [
+					        'field' => 'kudos_smtp_enable',
+					        'value' => true
+				        ]
+			        ]),
+		        Field::make('text', 'kudos_smtp_username', __('Username', 'kudos-donations'))
+					->set_attribute('placeholder', 'user@domain.com')
+	                ->set_conditional_logic([
+			             [
+				             'field' => 'kudos_smtp_enable',
+				             'value' => true
+			             ]
+		             ]),
+		        Field::make('text', 'kudos_smtp_password', __('Password', 'kudos-donations'))
+			        ->set_attribute('type', 'password')
+		             ->set_conditional_logic([
+			             [
+				             'field' => 'kudos_smtp_enable',
+				             'value' => true
+			             ]
+		             ]),
+		        Field::make('text', 'kudos_smtp_port', __('Port', 'kudos-donations'))
+			        ->set_attribute('placeholder', '587')
+			        ->set_conditional_logic([
+				        [
+					        'field' => 'kudos_smtp_enable',
+					        'value' => true
+				        ]
+			        ]),
+		        Field::make('html', 'send_test_email_button', null)
+		             ->set_html('
+		                <input id="test_email_address" type="email">
+                        <input id="send_test_email" type="button" class="button button-secondary" value="'. __("Send Test Email", "kudos-donations") .'">
+                        <div id="send_email_spinner" class="spinner"></div>
+                        <div id="email_result_message" class="hidden message kudos_result_message"></div>
+                    ')
+	        ])
 
 	        /*
 	         * Shortcode tab

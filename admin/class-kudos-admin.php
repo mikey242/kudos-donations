@@ -63,7 +63,7 @@ class Kudos_Admin {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name . '-admin', get_asset_path('kudos-admin.css'), [], $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . '-admin', get_asset_url('kudos-admin.css'), [], $this->version, 'all' );
 
 	}
 
@@ -74,8 +74,11 @@ class Kudos_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name . '-admin', get_asset_path('kudos-admin.js'), [ 'jquery' ], $this->version, false );
-		wp_localize_script( $this->plugin_name . '-admin', 'kudos', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_enqueue_script( $this->plugin_name . '-admin', get_asset_url('kudos-admin.js'), [ 'jquery' ], $this->version, false );
+		wp_localize_script( $this->plugin_name . '-admin', 'kudos', [
+		        'ajaxurl' => admin_url('admin-ajax.php'),
+		        'email_invalid' => __('Please enter a valid email', 'kudos-donations'),
+        ]);
 
 	}
 
@@ -105,6 +108,31 @@ class Kudos_Admin {
             wp_send_json_error( sprintf(__("Error connecting with Mollie, please check the %s API key and try again.", 'kudos-donations'), ucfirst($mode)));
 		}
     }
+
+	/**
+	 * Send test email
+	 *
+	 * @since    1.1.0
+	 */
+	public function send_test_email() {
+
+		if(empty($_REQUEST['email'])) {
+		   wp_send_json_error(__('Please provide an email address.', 'kudos_donations'));
+        }
+
+		$email = sanitize_email($_REQUEST['email']);
+
+        $mailer = new Kudos_Mailer();
+		$result = $mailer->send_test($email);
+
+		if($result) {
+			/* translators: %s: API mode */
+			wp_send_json_success(sprintf(__("Email sent to %s.", 'kudos-donations'), $email));
+		} else {
+			/* translators: %s: API mode */
+			wp_send_json_error( __("Error sending email, please check the settings and try again.", 'kudos-donations'));
+		}
+	}
 
 	/**
 	 * Creates the transactions admin page
@@ -142,7 +170,15 @@ class Kudos_Admin {
         }
 	    ?>
 	    <div class="wrap">
-		    <h2><?php _e('Transactions', 'kudos-donations'); ?></h2>
+		    <h1 class="wp-heading-inline"><?php _e('Transactions', 'kudos-donations'); ?></h1>
+		    <?php if (!empty($_REQUEST['s'])) { ?>
+            <span class="subtitle">
+                <?php
+                    /* translators: %s: Search term */
+                    printf(__('Search results for “%s”'), $_REQUEST['s'])
+                ?>
+            </span>
+            <?php } ?>
             <p><?php _e("Your recent Kudos transactions",'kudos-donations');?></p>
             <?php if($message) { ?>
                 <div class="updated below-h2" id="message"><p><?php echo esc_html($message); ?></p></div>
