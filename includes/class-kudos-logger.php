@@ -55,7 +55,7 @@ class Kudos_Logger
 	 * @param array $context
 	 */
 	public function log($message, $level=null, $context=[]) {
-		$level = ($level ? $level : 'DEBUG');
+		$level = ($level ? $level : 'INFO');
 		if(!$this->isWriteable()) {
 			return;
 		}
