@@ -62,6 +62,7 @@ class Transactions_Table extends WP_List_Table {
 	 */
 	public function display() {
 		$this->views();
+		$this->search_box(__('Search Donors'), 'search_donors');
 		parent::display();
 	}
 
@@ -75,25 +76,55 @@ class Transactions_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Get the table data
-	 *
-	 * @param null|string $mode
-	 * @return array
-	 * @since      1.0.0
+	 * @since   1.1.0
+	 * @param string|null $mode
+	 * @return array|object|null
 	 */
-	public function fetch_table_data($mode=null) {
+	public function count_records($mode=null) {
 		global $wpdb;
 
 		$search_custom_vars = '';
 
-		if(!$mode) {
-			$mode = (!empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : '');
+		if($mode) {
+			$search_custom_vars = $wpdb->prepare(
+				"WHERE mode = %s", esc_sql($mode)
+			);
 		}
 
-		if($mode && $mode !== 'all') {
+		$table = $wpdb->prefix . Transaction::TABLE;
+		$query = "SELECT * FROM `$table`
+				  $search_custom_vars";
+
+		return $wpdb->get_results($query, ARRAY_A);
+	}
+
+	/**
+	 * Get the table data
+	 *
+	 * @return array
+	 * @since      1.0.0
+	 */
+	public function fetch_table_data() {
+		global $wpdb;
+
+		$search_custom_vars = null;
+
+		$mode = (!empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : '');
+
+		// Add mode if exist
+		if($mode) {
 			$search_custom_vars = $wpdb->prepare(
                 "WHERE mode = %s", esc_sql($mode)
             );
+		}
+
+		// Add search query if exist
+		if(!empty($_REQUEST['s'])) {
+			$search = esc_sql($_REQUEST['s']);
+			$search_custom_vars .= $wpdb->prepare(
+				($search_custom_vars ? " AND" : " WHERE") . " (`email` LIKE '%%%s%%') OR (`name` LIKE '%%%s%')",
+				$search, $search
+			);
 		}
 
 		$table = $wpdb->prefix . Transaction::TABLE;
@@ -132,19 +163,19 @@ class Transactions_Table extends WP_List_Table {
 		$current = ( !empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : 'all');
 
 		//All link
-		$count = count($this->fetch_table_data('all'));
+		$count = count($this->count_records());
 		$class = ($current == 'all' ? ' class="current"' :'');
 		$all_url = remove_query_arg('mode');
 		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') . " ($count)</a>";
 
 		//Test link
-		$count = count($this->fetch_table_data('test'));
+		$count = count($this->count_records('test'));
 		$test_url = add_query_arg('mode','test');
 		$class = ($current == 'test' ? ' class="current"' :'');
 		$views['test'] = "<a href='{$test_url}' {$class} >". __('Test', 'kudos-donations') ." ($count)</a>";
 
 		//Live link
-		$count = count($this->fetch_table_data('live'));
+		$count = count($this->count_records('live'));
 		$live_url = add_query_arg('mode','live');
 		$class = ($current == 'live' ? ' class="current"' :'');
 		$views['live'] = "<a href='{$live_url}' {$class} >". __('Live', 'kudos-donations') ." ($count)</a>";
