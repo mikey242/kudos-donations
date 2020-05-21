@@ -1,28 +1,28 @@
 {% extends 'emails/base.html.twig' %}
 
 {% block preheader %}
-    This is a receipt for your recent donation on {{ purchase_date | date('m/d/y') }}
+    {{ __('This is a receipt for your recent donation on', 'kudos-donations') }} {{ purchase_date | date('m/d/y') }}
 {% endblock preheader %}
 
 {% block body %}
-    <h1>Hi {{name}},</h1>
-    <p>Thanks for your donation. This email is the receipt for your records.</p>
+    <h1>{{__('Hi', 'kudos-donations') ~ ' ' ~ name}},</h1>
+    <p>{{ __('Thanks for your donation. This email is the receipt for your records.', 'kudos-donations') }}</p>
     <table class="purchase" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
             <td>
-                <h3>Order ID: {{receipt_id}}</h3></td>
+                <h3>{{ __('Order ID', 'kudos-donations') }}: {{receipt_id}}</h3></td>
             <td>
-                <h3 class="align-right">Date: {{date | date('m/d/y')}}</h3></td>
+                <h3 class="align-right">{{ __('Date', 'kudos-donations') }}: {{date | date('m/d/y')}}</h3></td>
         </tr>
         <tr>
             <td colspan="2">
                 <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                         <th class="purchase_heading" align="left">
-                            <p class="f-fallback">Description</p>
+                            <p class="f-fallback">{{ __('Description', 'kudos-donations') }}</p>
                         </th>
                         <th class="purchase_heading" align="right">
-                            <p class="f-fallback">Amount</p>
+                            <p class="f-fallback">{{ __('Amount', 'kudos-donations') }}</p>
                         </th>
                     </tr>
                     <tr>
@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <td width="80%" class="purchase_footer" valign="middle">
-                            <p class="f-fallback purchase_total purchase_total--label">Total</p>
+                            <p class="f-fallback purchase_total purchase_total--label">{{ __('Total', 'kudos-donations') }}</p>
                         </td>
                         <td width="20%" class="purchase_footer" valign="middle">
                             <p class="f-fallback purchase_total">{{amount}}</p>
@@ -41,15 +41,14 @@
             </td>
         </tr>
     </table>
-    <p>If you have any questions about this receipt, please send an email to our <a href="{{support_url}}">support team</a> for help.</p>
-    <p>Thanks,
+    <p>{{ __('Thanks', 'kudos-donations') }},
         <br>{{ website_name }}</p>
     <!-- Cancel subscription -->
     {% if subscription %}
         <table class="body-sub" role="presentation">
             <tr>
                 <td>
-                    <p class="f-fallback sub">Want to cancel your subscription? <a href="{{billing_url}}">Click here</a>.</p>
+                    <p class="f-fallback sub">{{ __('Want to cancel your subscription?', 'kudos-donations') }} <a href="{{billing_url}}">{{ __('Click here', 'kudos-donations') }}</a>.</p>
                 </td>
             </tr>
         </table>

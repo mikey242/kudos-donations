@@ -65,9 +65,9 @@ class Kudos_Mailer
 
 		$twig = new Kudos_Twig();
 		$body = $twig->render('emails/invoice.html.twig', [
-			'name' => !empty($transaction->name) ? $transaction->name : __('Client', 'kudos-donations'),
+			'name' => !empty($transaction->name) ? $transaction->name : '',
 			'date' => $transaction->time,
-			'description' => 'One-off donation',
+			'description' => __('One-off donation', 'kudos-donations'),
 			'amount' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
 			'receipt_id' => $transaction->order_id,
 			'website_name' => get_bloginfo('name'),
@@ -96,7 +96,7 @@ class Kudos_Mailer
 			"From: Kudos Donations <wordpress@iseard.media>"
 		];
 
-		return self::send($email, __('Kudos Donation - Test email', 'kudos-donations'), $body, $headers);
+		return self::send($email, __('Test email', 'kudos-donations'), $body, $headers);
 	}
 
 	/**
