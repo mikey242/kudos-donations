@@ -49,13 +49,14 @@ class Kudos_Activator {
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
 		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-		  name VARCHAR(255), 
+		  name VARCHAR(255),
 		  email VARCHAR(320),
 		  value DECIMAL(7,2) NOT NULL,
 		  currency VARCHAR(255),
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
 		  method VARCHAR(255),
-		  mode VARCHAR(255) NOT NULL, 
+		  mode VARCHAR(255) NOT NULL,
+		  sequenceType VARCHAR(255) NOT NULL,
 		  order_id VARCHAR(255) NOT NULL,
 		  transaction_id VARCHAR(255),  
 		  PRIMARY KEY  (id)

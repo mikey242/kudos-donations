@@ -10,7 +10,7 @@ class Transaction {
 	 * @var wpdb
 	 */
 	private $wpdb;
-	public const TABLE = "kudos_transactions";
+	const TABLE = "kudos_transactions";
 
 	public function __construct() {
 		global $wpdb;
@@ -21,10 +21,12 @@ class Transaction {
 	 * @param string $order_id
 	 * @param string $value
 	 * @param string $currency
+	 * @param string $status
+	 * @param string $sequenceType
 	 * @param string $email
 	 * @param string $name
 	 */
-	public function create_record($order_id, $value, $currency, $email=null, $name=null) {
+	public function create_record($order_id, $value, $currency, $status, $sequenceType,  $email=null, $name=null) {
 		$this->wpdb->insert(
 			$this->wpdb->prefix . self::TABLE,
 			[
@@ -33,8 +35,9 @@ class Transaction {
 				'email' => $email,
 				'value' => $value,
 				'currency' => $currency,
-				'status' => 'open',
+				'status' => $status,
 				'mode' => get_option('_kudos_mollie_api_mode'),
+				'sequenceType' => $sequenceType,
 				'order_id' => $order_id
 			]
 		);
