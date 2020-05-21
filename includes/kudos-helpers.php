@@ -9,20 +9,24 @@
  *
  * @source https://danielshaw.co.nz/wordpress-cache-busting-json-hash-map/
  * @param string $asset e.g style.css
+ * @param bool $path
+ *
  * @return string
  */
 
-function get_asset_path( $asset ) {
+function get_asset_url( $asset, $path=false ) {
 
-	$map = plugin_dir_path( dirname( __FILE__ ) ) . 'dist/manifest.json';
+	$map = KUDOS_DIR . 'dist/manifest.json';
 	$hash = file_exists( $map ) ? json_decode( file_get_contents( $map ), true ) : [];
 
 	if ( array_key_exists( $asset, $hash ) ) {
-		return plugin_dir_url( dirname( __FILE__ ) ) . 'dist/' . $hash[ $asset ];
+		if(!$path) {
+			return plugin_dir_url( dirname( __FILE__ ) ) . 'dist/' . $hash[ $asset ];
+		}
+		return KUDOS_DIR . 'dist/' . $hash[ $asset ];
 	}
 
 	return $asset;
-
 }
 
 /**

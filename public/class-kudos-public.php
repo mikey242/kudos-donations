@@ -69,7 +69,7 @@ class Kudos_Public {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name . '-public', get_asset_path('kudos-public.css'), [], $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . '-public', get_asset_url('kudos-public.css'), [], $this->version, 'all' );
 
 	}
 
@@ -82,7 +82,7 @@ class Kudos_Public {
 
 		wp_enqueue_script( 'micromodal', plugin_dir_url( __FILE__ ) . '../dist/js/vendor/micromodal.min.js', [], '0.4.6', true );
 		wp_enqueue_script( 'jquery-validate', plugin_dir_url( __FILE__ ) . '../dist/js/vendor/jquery.validate.min.js', [ 'jquery' ], '1.19.1', true );
-		wp_enqueue_script( $this->plugin_name . '-public', get_asset_path('kudos-public.js'), [ 'jquery', 'jquery-validate', 'micromodal' ], $this->version, true );
+		wp_enqueue_script( $this->plugin_name . '-public', get_asset_url('kudos-public.js'), [ 'jquery', 'jquery-validate', 'micromodal' ], $this->version, true );
 		wp_localize_script( $this->plugin_name . '-public', 'kudos', [
 		        'ajaxurl' => admin_url('admin-ajax.php'),
                 'name_required' => __('Your name is required', 'kudos-donations'),
@@ -102,7 +102,7 @@ class Kudos_Public {
 	 */
 	public function enqueue_block_assets() {
 
-		wp_enqueue_style( $this->plugin_name . '-blocks', get_asset_path('kudos-blocks.css'), [], $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . '-blocks', get_asset_url('kudos-blocks.css'), [], $this->version, 'all' );
 
 	}
 
@@ -156,7 +156,7 @@ class Kudos_Public {
 		if($order_id) {
 
 			$transaction = new Transaction();
-			$transaction = $transaction->get_transaction($order_id, ['status', 'value', 'currency', 'name']);
+			$transaction = $transaction->get_transaction($order_id);
 
 			switch($transaction->status) {
 				case 'paid':
