@@ -65,6 +65,10 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 == Changelog ==
 
+= 1.1.0 =
+* *Added* - Email receipts - You can now configure email server settings and enable automatic email receipts
+* *Added* - Donor search bar to transactions
+
 = 1.0.2 =
 * *Added* - transactions table now shows record count per filter
 * *Added* - return message now shows currency symbol
