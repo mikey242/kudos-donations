@@ -123,7 +123,7 @@ class Kudos_Mollie
 			);
 
 			$transaction = $this->transaction;
-			$transaction->create_record($order_id, $value, $currency, $email, $name);
+			$transaction->create_record($order_id, $value, $currency, $payment->status, $payment->sequenceType, $email, $name);
 
 			return $payment;
 
