@@ -18,15 +18,19 @@ class Kudos_Twig
 	 */
 	private $logger;
 
+	const TEMPLATES_DIR = KUDOS_DIR . 'templates/';
+	const CACHE_DIR = KUDOS_DIR . 'cache/';
+
 	/**
 	 * Twig constructor
 	 *
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		$path = KUDOS_DIR . 'templates/';
-		$loader = new FilesystemLoader($path);
-		$this->twig = new Environment($loader);
+		$loader = new FilesystemLoader(self::TEMPLATES_DIR);
+		$this->twig = new Environment($loader, [
+			'cache' => self::CACHE_DIR,
+		]);
 		$this->logger = new Kudos_Logger();
 		$this->initialize_twig_functions();
 	}
