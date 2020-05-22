@@ -94,8 +94,13 @@ class Kudos_Admin {
 	    $mode = sanitize_text_field($formData['carbon_fields_compact_input']['_kudos_mollie_api_mode']);
 	    $apiKey = sanitize_text_field($formData['carbon_fields_compact_input']['_kudos_mollie_'.$mode.'_api_key']);
 
-		$mollie = new Kudos_Mollie();
+	    // Check that the api key corresponds to the mode
+	    if(substr($apiKey, 0, 4) !== $mode) {
+		    wp_send_json_error( sprintf(__("%s API key should begin with \"%s\".", 'kudos-donations'), ucfirst($mode), $mode . '_'));
+        }
 
+	    // Test api key with mollie
+		$mollie = new Kudos_Mollie();
 		$result = $mollie->checkApiKey($apiKey);
 
 		if($result) {
