@@ -9,7 +9,6 @@ class Kudos_Logger
 {
 
 	private $log;
-	private $file;
 	const LOG_DIR = KUDOS_DIR . 'logs/';
 	const LOG_FILE = self::LOG_DIR . 'kudos.log';
 
