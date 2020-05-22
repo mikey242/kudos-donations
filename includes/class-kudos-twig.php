@@ -44,10 +44,16 @@ class Kudos_Twig
 	public function initialize_twig_functions() {
 
 		/**
-		 * Add gettext __ functions to twig functions.
+		 * Add gettext __ functions.
 		 */
-		$function = new TwigFunction('__', '__');
-		$this->twig->addFunction($function);
+		$get_text = new TwigFunction('__', '__');
+		$this->twig->addFunction($get_text);
+
+		/**
+		 * Add get_asset function.
+		 */
+		$get_asset = new TwigFunction('get_asset', 'get_asset_url');
+		$this->twig->addFunction($get_asset);
 	}
 
 	/**
