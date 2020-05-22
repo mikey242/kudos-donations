@@ -25,7 +25,7 @@ class Kudos_Mollie
 	 */
 	public function __construct() {
 		$this->logger = new Kudos_Logger();
-		$this->transaction = new Transaction();
+		$this->transaction = new Kudos_Transaction();
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = carbon_get_theme_option('kudos_mollie_api_mode');
 		$this->apiKey = carbon_get_theme_option('kudos_mollie_'.$this->apiMode.'_api_key');
@@ -199,7 +199,9 @@ class Kudos_Mollie
 		$mailer = new Kudos_Mailer();
 		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
 			$transaction = $this->transaction->get_transaction($order_id);
-			$mailer->send_invoice($transaction);
+			if($transaction->email) {
+				$mailer->send_invoice($transaction);
+			}
 		}
 
 		/* translators: %s: Mollie */
