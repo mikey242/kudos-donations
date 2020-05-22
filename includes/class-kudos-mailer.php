@@ -11,6 +11,10 @@ class Kudos_Mailer
 	 * @var Kudos_Logger
 	 */
 	private $logger;
+	/**
+	 * @var Kudos_Invoice
+	 */
+	private $invoice;
 
 	/**
 	 * Kudos_Mailer constructor.
@@ -19,6 +23,7 @@ class Kudos_Mailer
 	 */
 	public function __construct() {
 		$this->logger = new Kudos_Logger();
+		$this->invoice = new Kudos_Invoice();
 	}
 
 	/**
@@ -63,6 +68,8 @@ class Kudos_Mailer
 			return;
 		}
 
+		$invoice = $this->invoice->generate_invoice($transaction);
+
 		$twig = new Kudos_Twig();
 		$body = $twig->render('emails/invoice.html.twig', [
 			'name' => !empty($transaction->name) ? $transaction->name : '',
@@ -77,7 +84,7 @@ class Kudos_Mailer
 			"From: Kudos Donations <wordpress@iseard.media>"
 		];
 
-		self::send($transaction->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers);
+		self::send($transaction->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$invoice]);
 	}
 
 	/**
@@ -102,18 +109,20 @@ class Kudos_Mailer
 	/**
 	 * Email send function
 	 *
-	 * @since    1.1.0
 	 * @param string $to
 	 * @param string $subject
 	 * @param string $body
 	 * @param array $headers
+	 * @param array $attachment
+	 *
 	 * @return bool
+	 * @since    1.1.0
 	 */
-	private function send($to, $subject, $body, $headers=[]) {
+	private function send($to, $subject, $body, $headers=[], $attachment=[]) {
 
 		// Use hook to modify existing config
 		add_action('phpmailer_init', [$this, 'init']);
-		$mail = wp_mail($to, $subject, $body, $headers);
+		$mail = wp_mail($to, $subject, $body, $headers, $attachment);
 
 		if($mail) {
 			$this->logger->log(sprintf(__('Email with subject "%s" sent to "%s"', 'kudos_donations'), $subject, $to));
