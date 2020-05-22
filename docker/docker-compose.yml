@@ -50,6 +50,7 @@ services:
   ngrok:
     image: wernight/ngrok
     container_name: ngrok-kudos
+    restart: always
     ports:
       - "4040:4040"
     depends_on:
