@@ -313,11 +313,12 @@ class Carbon {
 			        ]),
 		        Field::make('html', 'send_test_email_button', null)
 		             ->set_html('
-		                <input id="test_email_address" type="email">
+		                <input id="test_email_address" name="test_email_address" type="email">
                         <input id="send_test_email" type="button" class="button button-secondary" value="'. __("Send Test Email", "kudos-donations") .'">
                         <div id="send_email_spinner" class="spinner"></div>
                         <div id="email_result_message" class="hidden message kudos_result_message"></div>
                     ')
+			        ->set_help_text( __('Test the current configuration. Make sure you save any changes first.', 'kudos-donations')  )
 	        ])
 
 	        /*
