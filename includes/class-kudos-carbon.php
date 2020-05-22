@@ -127,10 +127,12 @@ class Carbon {
 	                ->set_default_value('test'),
                 Field::make( 'text', 'kudos_mollie_test_api_key', __( 'Mollie Test API Key', 'kudos-donations' ) )
 	                /* translators: %s: Start of API key */
-		            ->set_attribute('placeholder', sprintf(__('This begins with "%s"', 'kudos-donations'), 'test_')),
+		            ->set_attribute('placeholder', sprintf(__('This begins with "%s"', 'kudos-donations'), 'test_'))
+		            ->set_attribute('pattern', 'test_.+'),
                 Field::make( 'text', 'kudos_mollie_live_api_key', __( 'Mollie Live API Key', 'kudos-donations' ) )
 	                /* translators: %s: Start of API key */
-	                ->set_attribute('placeholder', sprintf(__('This begins with "%s"', 'kudos-donations'), 'live_')),
+	                ->set_attribute('placeholder', sprintf(__('This begins with "%s"', 'kudos-donations'), 'live_'))
+	                ->set_attribute('pattern', 'live_.+'),
                 Field::make('html', 'check_api_key_button', null)
                     ->set_html('
                         <input id="test_mollie_api_key" type="button" class="button button-secondary" value="'. __("Check API Key", "kudos-donations") .'">
@@ -279,7 +281,7 @@ class Carbon {
 					])
 	                ->set_default_value('none'),
 		        Field::make('checkbox', 'kudos_smtp_autotls', __('Auto TLS', 'kudos-donations'))
-		            ->set_help_text( __(' By default TLS encryption is automatically used if the server supports it, which is recommended. In some cases, due to server misconfigurations, this can cause issues and may need to be disabled.', 'kudos-donations')  )
+		            ->set_help_text( __('By default TLS encryption is automatically used if the server supports it, which is recommended. In some cases, due to server misconfigurations, this can cause issues and may need to be disabled.', 'kudos-donations')  )
 					->set_default_value(true)
 			        ->set_conditional_logic([
 				        [
