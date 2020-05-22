@@ -155,7 +155,7 @@ class Kudos_Public {
 
 		if($order_id) {
 
-			$transaction = new Transaction();
+			$transaction = new Kudos_Transaction();
 			$transaction = $transaction->get_transaction($order_id);
 
 			switch($transaction->status) {

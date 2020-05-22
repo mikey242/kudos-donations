@@ -4,7 +4,7 @@ namespace Kudos;
 
 use wpdb;
 
-class Transaction {
+class Kudos_Transaction {
 
 	/**
 	 * @var wpdb

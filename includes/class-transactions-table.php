@@ -15,6 +15,10 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 class Transactions_Table extends WP_List_Table {
+	/**
+	 * @var Kudos_Invoice
+	 */
+	private $invoice;
 
 	/**
 	 * Class constructor
@@ -22,6 +26,8 @@ class Transactions_Table extends WP_List_Table {
 	 * @since      1.0.0
 	 */
 	public function __construct() {
+
+		$this->invoice = new Kudos_Invoice();
 
 		parent::__construct( [
 			'singular' => __( 'Transaction', 'kudos-donations' ), //singular name of the listed records
@@ -91,7 +97,7 @@ class Transactions_Table extends WP_List_Table {
 			);
 		}
 
-		$table = $wpdb->prefix . Transaction::TABLE;
+		$table = $wpdb->prefix . Kudos_Transaction::TABLE;
 		$query = "SELECT * FROM `$table`
 				  $search_custom_vars";
 
@@ -127,7 +133,7 @@ class Transactions_Table extends WP_List_Table {
 			);
 		}
 
-		$table = $wpdb->prefix . Transaction::TABLE;
+		$table = $wpdb->prefix . Kudos_Transaction::TABLE;
 		$query = "SELECT * FROM `$table`
 				  $search_custom_vars";
 
@@ -148,7 +154,7 @@ class Transactions_Table extends WP_List_Table {
 			'email'=>__('E-mail', 'kudos-donations'),
 			'value'=>__('Amount', 'kudos-donations'),
 			'status'=>__('Status', 'kudos-donations'),
-			'transaction_id'=>__('Transaction Id', 'kudos-donations')
+			'transaction_id'=>__('Transaction Id', 'kudos-donations'),
 		];
 	}
 
@@ -244,7 +250,7 @@ class Transactions_Table extends WP_List_Table {
 	 */
 	function column_cb( $item ) {
 		return sprintf(
-			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['id']
+			'<input type="checkbox" name="bulk-action[]" value="%s" />', $item['order_id']
 		);
 	}
 
@@ -273,9 +279,12 @@ class Transactions_Table extends WP_List_Table {
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
 		$title = '<strong>' . date_i18n($item['time'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
+		$invoice = $this->invoice;
+		$pdf = $invoice->get_invoice($item['order_id']);
 
 		$actions = [
-			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['id'] ), $delete_nonce, __('Delete', 'kudos-donations') )
+			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['order_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),
+			'view' => $pdf ? ' <a href="'.$pdf.'">'. __('Invoice') .'</a>' : ''
 		];
 
 		return $title . $this->row_actions( $actions );
@@ -343,7 +352,10 @@ class Transactions_Table extends WP_List_Table {
 				$status = __('Unknown', 'kudos-donations');
 		}
 
-		return $status . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '');
+		$invoice = $this->invoice;
+		$pdf = $invoice->get_invoice($item['order_id']);
+
+		return $status . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '') . ($pdf ? ' <a href="'.$pdf.'"><i class="far fa-file-pdf"></i></a>' : '' );
 	}
 
 	/**
@@ -429,16 +441,25 @@ class Transactions_Table extends WP_List_Table {
 	 * Delete a transaction.
 	 *
 	 * @since      1.0.0
-	 * @param int $id transaction ID
+	 * @param int $order_id order ID
 	 */
-	public static function delete_transaction( $id ) {
+	public static function delete_transaction( $order_id ) {
 		global $wpdb;
 
-		$wpdb->delete(
-			$table = $wpdb->prefix . Transaction::TABLE,
-			[ 'id' => $id ],
+		$result = $wpdb->delete(
+			$table = $wpdb->prefix . Kudos_Transaction::TABLE,
+			[ 'order_id' => $order_id ],
 			[ '%d' ]
 		);
+
+		// Delete invoice if found
+		if($result) {
+			$invoice = new Kudos_Invoice();
+			$file = $invoice->get_invoice($order_id, true);
+			if($file) {
+				unlink($file);
+			}
+		}
 	}
 
 	/**
@@ -468,8 +489,45 @@ class Transactions_Table extends WP_List_Table {
 		// Start output
 		$out = fopen( 'php://output', 'w' );
 
+		// Set header names
+		$headers = [];
+		foreach (array_keys($rows[0]) as $header) {
+			switch ($header) {
+				case 'time':
+					$result = __('Date', 'kudos-donations');
+					break;
+				case 'name':
+					$result = __('Name', 'kudos-donations');
+					break;
+				case 'email':
+					$result = __('Email', 'kudos-donations');
+					break;
+				case 'value':
+					$result = __('Amount', 'kudos-donations');
+					break;
+				case 'status':
+					$result = __('Status', 'kudos-donations');
+					break;
+				case 'method':
+					$result = __('Method', 'kudos-donations');
+					break;
+				case 'mode':
+					$result = __('Mode', 'kudos-donations');
+					break;
+				case 'currency':
+					$result = __('Currency', 'kudos-donations');
+					break;
+				case 'sequenceType':
+					$result = __('Type', 'kudos-donations');
+					break;
+				default:
+					$result = ucfirst($header);
+			}
+			array_push($headers, $result);
+		}
+
 		// Add headers
-		fputcsv($out, array_slice(array_keys($rows[0]), 1));
+		fputcsv($out, array_slice($headers, 1));
 
 		// Add rows
 		foreach ( $rows as $row ) {
@@ -507,7 +565,7 @@ class Transactions_Table extends WP_List_Table {
 				}
 
 				if(isset($_REQUEST['bulk-delete'])) {
-					$delete_ids = esc_sql( $_REQUEST['bulk-delete']);
+					$delete_ids = esc_sql( $_REQUEST['bulk-action']);
 					foreach ( $delete_ids as $id ) {
 						self::delete_transaction( $id );
 					}
