@@ -16,6 +16,7 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 * Smart and modern design
 * Connect with Mollie for secure payments by credit card, iDEAL and many others
+* Automated invoice emails with PDF attachments
 * Use the provided Gutenberg block or shortcode to place your button
 * Buttons and form can be configured all at once or individually
 * View all your transactions from the WordPress dashboard
@@ -67,7 +68,9 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 = 1.1.0 =
 * *Added* - Email receipts - You can now configure email server settings and enable automatic email receipts
+* *Added* - Invoices - PDFs now generated for each successful transaction and are available from the transactions table
 * *Added* - Donor search bar to transactions
+* *Fixed* - Input checks for API Key type
 
 = 1.0.2 =
 * *Added* - transactions table now shows record count per filter
