@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "build:production": "webpack --config webpack.prod.js && composer install --no-dev -o"
+    "build:production": "webpack --config webpack.prod.js && composer install --no-dev --optimize-autoloader"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
@@ -44,6 +44,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-brands-svg-icons": "^5.13.0",
+    "@fortawesome/free-regular-svg-icons": "^5.13.0",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
