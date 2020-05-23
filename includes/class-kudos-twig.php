@@ -28,8 +28,9 @@ class Kudos_Twig
 	 */
 	public function __construct() {
 		$loader = new FilesystemLoader(self::TEMPLATES_DIR);
+		$cache = (WP_DEBUG ? false : self::CACHE_DIR);
 		$this->twig = new Environment($loader, [
-			'cache' => self::CACHE_DIR,
+			'cache' => $cache,
 		]);
 		$this->logger = new Kudos_Logger();
 		$this->initialize_twig_functions();
