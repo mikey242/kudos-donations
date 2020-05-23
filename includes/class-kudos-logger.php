@@ -37,7 +37,7 @@ class Kudos_Logger
 	 * @since   1.0.1
 	 * @return bool
 	 */
-	private function isWriteable() {
+	public static function isWriteable() {
 		if(is_writable(self::LOG_FILE)) {
 			return true;
 		} else {
