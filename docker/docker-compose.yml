@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   wordpress:
-    image: wordpress:latest
+    image: wordpress:5.2.3-php7.1
     container_name: wordpress-kudos
     volumes:
       - ./wordpress:/var/www/html
@@ -23,6 +23,7 @@ services:
         define('WP_HOME', 'http://' . $$_SERVER['HTTP_HOST']);
         define('WP_DEBUG_LOG', true);
         define('FS_METHOD','direct');
+        define('SCRIPT_DEBUG', true);
 
   db:
     image: mariadb:10.5
