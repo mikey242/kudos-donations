@@ -35,7 +35,21 @@ class Kudos_Invoice
 		$this->pdf->setPaper('A4');
 
 		if(!file_exists(self::INVOICE_DIR)) {
-			mkdir(self::INVOICE_DIR, 0755, true);
+			wp_mkdir_p(self::INVOICE_DIR);
+		}
+	}
+
+	/**
+	 * Checks if invoice file is writeable and returns true if it is
+	 *
+	 * @since   1.1.0
+	 * @return bool
+	 */
+	public static function isWriteable() {
+		if(is_writable(self::INVOICE_DIR)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -43,18 +57,27 @@ class Kudos_Invoice
 	 * Generates pdf invoice for given transaction
 	 *
 	 * @param object $transaction
+	 * @param bool $overwrite
 	 * @param bool $display
 	 *
 	 * @return bool|string
 	 * @since    1.1.0
 	 */
-	public function generate_invoice($transaction, $display=false) {
+	public function generate_invoice($transaction, $overwrite=false, $display=false) {
+
+		if(!$this->isWriteable()) {
+			return false;
+		}
 
 		$dompdf = $this->pdf;
 		$twig = $this->twig;
 
 		$order_id = $transaction->order_id;
-		$filename = self::INVOICE_DIR . 'invoice-'. $order_id .'.pdf';
+		$file = self::INVOICE_DIR . 'invoice-'. $order_id .'.pdf';
+
+		if(file_exists($file) && !$overwrite) {
+			return false;
+		}
 
 		try {
 			$dompdf->loadHtml(
@@ -69,11 +92,14 @@ class Kudos_Invoice
 			);
 
 			$dompdf->render();
-
 			$pdf = $dompdf->output();
 
 			if($display) {
 				$dompdf->stream();
+			}
+
+			if(file_put_contents($file, $pdf)) {
+				return $file;
 			}
 
 		} catch (Throwable $e) {
@@ -81,9 +107,6 @@ class Kudos_Invoice
 			return false;
 		}
 
-		if(file_put_contents($filename, $pdf)) {
-			return $filename;
-		}
 		return false;
 	}
 
@@ -112,7 +135,7 @@ class Kudos_Invoice
 	}
 
 	/**
-	 * Regenerates all invoices from the twig template
+	 * Regenerates all paid invoices from the twig template
 	 *
 	 * @since   1.1.0
 	 */
@@ -129,8 +152,10 @@ class Kudos_Invoice
 		$n=0;
 
 		foreach ($transactions as $transaction) {
-			$invoice = new Kudos_Invoice();
-			$invoice->generate_invoice($transaction) ? $n++ : null;
+			if($transaction->status === 'paid') {
+				$invoice = new Kudos_Invoice();
+				$invoice->generate_invoice($transaction, true) ? $n++ : null;
+			}
 		}
 
 		return $n;
