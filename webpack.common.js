@@ -35,8 +35,9 @@ const vendorCopies = mapVendorCopies(vendors, 'dist');
 
 module.exports = {
     entry: {
-        'kudos-admin' : [join(PATHS.src, '/js', '/kudos-admin.js'), join(PATHS.src, '/scss', '/kudos-admin.scss'),],
-        'kudos-public' : [join(PATHS.src, '/js', '/kudos-public.js'), join(PATHS.src, '/scss', '/kudos-public.scss'),],
+        'kudos-admin' : [join(PATHS.src, '/js', '/kudos-admin.js'), join(PATHS.src, '/scss', '/kudos-admin.scss')],
+        'kudos-admin-react' : [join(PATHS.src, '/js', '/kudos-admin-react.js'), join(PATHS.src, '/scss', '/kudos-admin-react.scss')],
+        'kudos-public' : [join(PATHS.src, '/js', '/kudos-public.js'), join(PATHS.src, '/scss', '/kudos-public.scss')],
         'kudos-blocks' : [join(PATHS.src, '/scss', '/kudos-blocks.scss')],
     },
     output: {

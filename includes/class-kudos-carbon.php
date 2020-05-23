@@ -39,6 +39,32 @@ class Carbon {
     }
 
 	/**
+	 * Returns diagnostic information
+	 *
+	 * @since   1.1.0
+	 * @return string
+	 */
+	private function diagnostics() {
+
+		$php = phpversion();
+		$out = "<p><strong>PHP Version: </strong><span class='kudos_result_message ". ($php >= 7.1 ? 'text-success' : 'text-error') ."'>".phpversion()."</span></p>";
+
+		$gd = extension_loaded('gd');
+		$out .= "<p><strong>GD Library: </strong><span class='kudos_result_message ". ($gd ? 'text-success' : 'text-error') ."'>".($gd ? 'OK' : 'Failed')."</span></p>";
+
+		$mbstring = extension_loaded('mbstring');
+		$out .= "<p><strong>MBString Extension: </strong><span class='kudos_result_message ". ($mbstring ? 'text-success' : 'text-error') ."'>".($mbstring ? 'OK' : 'Failed')."</span></p>";
+
+		$invoice_writeable = Kudos_Invoice::isWriteable();
+		$out .= "<p><strong>Invoices Directory Writeable: </strong><span class='kudos_result_message ". ($invoice_writeable ? 'text-success' : 'text-error') ."'>".($invoice_writeable ? 'OK' : 'Failed')."</span></p>";
+
+		$log_writeable = Kudos_Logger::isWriteable();
+		$out .= "<p><strong>Log File Writeable: </strong><span class='kudos_result_message ". ($log_writeable ? 'text-success' : 'text-error') ."'>".($log_writeable ? 'OK' : 'Failed')."</span></p>";
+
+		return $out;
+	}
+
+	/**
      * Create the Kudos settings page
      *
 	 * @since      1.0.0
@@ -345,7 +371,19 @@ class Carbon {
 						<p>'. __('A fully customised button and text would look like this', 'kudos-donations') .':</p>
 						<p><code>[kudos button="'. __('Help us out!', 'kudos-donations') .'" header="'. __('Support our cause', 'kudos-donations') .'" body="'. __('Thank you for donating to this project. We really appreciate your support.', 'kudos-donations') .'"]</code></p>
 	                '),
-           ])
+            ])
+
+	        /*
+			 * Diagnostics tab
+			 */
+	        ->add_tab(__('Diagnostics', 'kudos-donations'), [
+		        Field::make('html', 'diagnostics_intro', null)
+		             ->set_html('
+						<h1>'. __('Diagnostics', 'kudos-donations') .'</h1>
+	                '),
+		        Field::make('html', 'diagnostics', null)
+		             ->set_html($this->diagnostics()),
+	        ])
         ;
     }
 

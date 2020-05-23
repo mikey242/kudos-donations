@@ -14,6 +14,6 @@ module.exports = {
     plugins: [
         require('autoprefixer'),
         tailwindcss('./tailwind.config.js'),
-        ...[cssnano, purgecss]
+        // ...[cssnano, purgecss]
     ]
 }
