@@ -571,6 +571,9 @@ class Transactions_Table extends WP_List_Table {
 					}
 				}
 				break;
+
+			case 'regenerate-invoices':
+				Kudos_Invoice::regenerate_invoices();
 		}
 	}
 }
