@@ -102,7 +102,6 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'includes/class-transactions-table.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-carbon.php';
 		require_once KUDOS_DIR . 'admin/class-kudos-admin.php';
-		require_once KUDOS_DIR . 'admin/class-kudos-admin-react.php';
 		require_once KUDOS_DIR . 'public/class-kudos-public.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-mollie.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-mailer.php';
