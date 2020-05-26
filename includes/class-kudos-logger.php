@@ -38,7 +38,7 @@ class Kudos_Logger
 	 * @return bool
 	 */
 	public static function isWriteable() {
-		if(is_writable(self::LOG_FILE)) {
+		if(is_writable(self::LOG_DIR)) {
 			return true;
 		} else {
 			return false;
