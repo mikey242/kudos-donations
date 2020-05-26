@@ -68,7 +68,7 @@ class Kudos_Mailer
 			return;
 		}
 
-		$invoice = $this->invoice->generate_invoice($transaction);
+		$invoice = $this->invoice->get_invoice($transaction->order_id, true);
 
 		$twig = new Kudos_Twig();
 		$body = $twig->render('emails/invoice.html.twig', [
