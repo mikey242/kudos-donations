@@ -1,0 +1,228 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: inherit;
+}
+
+.settings_page_awesome {
+  background: #f6f6f6;
+  font-size: 14px;
+  position: relative;
+  box-sizing: border-box;
+  font-family: Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;
+}
+
+#wpcontent {
+  padding-left: 0;
+}
+
+.auto-fold {
+  #wpcontent {
+    padding-left: 0;
+  }
+}
+
+#kudos-dashboard {
+
+  .dashboard-wrap {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 750px;
+    width: 100%;
+  }
+
+  input[type="text"],
+  input[type="password"]{
+    @apply appearance-none block w-full border border-solid border-orange-500 rounded py-2 px-4;
+    &:disabled {
+      @apply border-orange-200;
+    }
+  }
+
+  .components-base-control__label {
+    @apply appearance-none block font-semibold w-full rounded py-3;
+  }
+
+  .components-base-control__help {
+    @apply mt-4 mb-0;
+  }
+
+  .components-form-toggle.is-checked {
+    .components-form-toggle__track {
+      @apply bg-orange-500;
+    }
+  }
+
+  .components-external-link {
+    @apply text-orange-500 font-bold;
+  }
+
+  .components-snackbar {
+    position: fixed;
+    bottom: 20px;
+    padding-left: 16px;
+    margin-left: 20px;
+    padding-right: 16px;
+    z-index: 1;
+    opacity: 0;
+    transition: 0.2s opacity ease;
+    width: auto;
+
+    &.notification-shown {
+      opacity: 1;
+    }
+  }
+
+  .kudos-dashboard-header {
+    padding: 20px 10px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 0 rgba(213,213,213,0.5),0 1px 2px #eee;
+
+    img {
+      margin-right: 15px;
+    }
+
+    .kudos-api-status {
+      color: #999;
+      margin-left: 15px;
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: 5px;
+        background: #999;
+        border-width: 2px;
+        border-style: solid;
+        border-color: #ccc;
+      }
+
+      &.connected {
+        color: green;
+        &:before {
+          background: #35ac35;
+          border-color: #90ee90;
+        }
+      }
+
+      &.not-connected {
+        color: red;
+        &:before {
+          background: red;
+          border-color: lightcoral;
+        }
+      }
+    }
+
+    .kudos-version {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+  }
+
+  .kudos-tab-panel {
+
+    .components-tab-panel__tabs {
+      display: flex;
+      justify-content: center;
+      background: #fff;
+      box-shadow: 0 1px 0 rgba(213, 213, 213, 0.5), 0 1px 2px #eee;
+
+      .components-button.is-active {
+        box-shadow: inset 0 -3px theme('colors.orange.500');
+        font-weight: 600;
+        position: relative;
+      }
+
+      .components-button {
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        height: 50px;
+        box-shadow: none;
+        cursor: pointer;
+        display: inline-block;
+        padding: 3px 15px;
+        margin-left: 0;
+        font-weight: 400;
+        color: #191e23;
+        outline-offset: -1px;
+        transition: box-shadow .1s linear;
+      }
+
+    }
+
+  }
+
+  .components-placeholder {
+    background: #f6f6f6;
+
+    .components-placeholder__fieldset {
+      justify-content: center;
+    }
+  }
+
+  .components-button.is-primary {
+    color: #fff;
+    @apply bg-orange-500 border-none text-white font-bold py-2 px-4;
+    &:focus {
+      @apply shadow-none;
+    }
+    &:hover {
+      @apply bg-orange-700;
+    }
+    &:disabled {
+      @apply text-orange-200;
+    }
+  }
+
+  .kudos-settings-main {
+
+    .components-base-control {
+      @apply w-full;
+    }
+
+    .components-button-group {
+      @apply border border-orange-500;
+      .components-button.is-primary {
+        @apply bg-transparent text-orange-700 py-2 px-4 border border-solid border-orange-500;
+        &.is-pressed {
+          color: #fff;
+          @apply bg-orange-500 font-semibold;
+        }
+        &:focus {
+          @apply shadow-none;
+        }
+        &:disabled {
+
+        }
+      }
+    }
+
+    .components-panel__body {
+      margin: 25px 0;
+      background: #fff;
+      border: 1px solid #e2e4e7;
+    }
+
+    .kudos-donations-info {
+      padding: 0 10px 10px;
+
+      h2 {
+        font-weight: 300;
+        margin-bottom: 10px;
+      }
+
+      p {
+        margin: 0 0 1.5em 0;
+      }
+    }
+  }
+}

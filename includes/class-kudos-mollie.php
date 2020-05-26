@@ -9,14 +9,35 @@ use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
 use WP_REST_Response;
+use WP_REST_Server;
 
 class Kudos_Mollie
 {
-	private $mollieApi;
-	private $apiKey;
-	private $apiMode;
-	private $transaction;
+	/**
+	 * @var Kudos_Logger
+	 */
 	private $logger;
+	/**
+	 * @var Kudos_Transaction
+	 */
+	private $transaction;
+	/**
+	 * @var Kudos_Invoice
+	 */
+	private $invoice;
+	/**
+	 * @var MollieApiClient
+	 */
+	private $mollieApi;
+	/**
+	 * @var mixed
+	 */
+	private $apiMode;
+	/**
+	 * @var mixed
+	 */
+	private $apiKey;
+
 
 	/**
 	 * Mollie constructor.
@@ -26,6 +47,7 @@ class Kudos_Mollie
 	public function __construct() {
 		$this->logger = new Kudos_Logger();
 		$this->transaction = new Kudos_Transaction();
+		$this->invoice = new Kudos_Invoice();
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = carbon_get_theme_option('kudos_mollie_api_mode');
 		$this->apiKey = carbon_get_theme_option('kudos_mollie_'.$this->apiMode.'_api_key');
@@ -41,9 +63,10 @@ class Kudos_Mollie
 	/**
 	 * Checks the provided api key by attempting to get associated payments
 	 *
-	 * @since      1.0.0
 	 * @param $apiKey
+	 *
 	 * @return bool
+	 * @since      1.0.0
 	 */
 	public function checkApiKey($apiKey) {
 
@@ -66,9 +89,10 @@ class Kudos_Mollie
 	/**
 	 * Gets specified payment
 	 *
-	 * @since      1.0.0
 	 * @param $mollie_payment_id
+	 *
 	 * @return bool|Payment
+	 * @since      1.0.0
 	 */
 	public function getPayment($mollie_payment_id) {
 		$mollieApi = $this->mollieApi;
@@ -84,7 +108,7 @@ class Kudos_Mollie
 	 * Creates a payment and returns it as an object
 	 *
 	 * @since      1.0.0
-	 * @param string $value
+
 	 * @param string $redirectUrl
 	 * @param string|null $name
 	 * @param string|null $email
@@ -111,7 +135,7 @@ class Kudos_Mollie
 						"value" => $value
 					],
 					"redirectUrl" => $redirectUrl,
-					"webhookUrl" => rest_url('kudos/v1/mollie'),
+					"webhookUrl" => rest_url('kudos/v1/mollie/webhook'),
 					/* translators: %s: The order id */
 					"description" => sprintf(__("Kudos Payment - %s", 'kudos-donations'), $order_id),
 					'metadata' => [
@@ -141,7 +165,7 @@ class Kudos_Mollie
 	 * @return void
 	 */
 	public function register_webhook() {
-		register_rest_route( 'kudos/v1', 'mollie/', [
+		register_rest_route( 'kudos/v1', 'mollie/webhook', [
 			'methods' => 'POST',
 			'callback' => [$this, 'rest_api_mollie_webhook'],
 			'args' => [
@@ -153,11 +177,62 @@ class Kudos_Mollie
 	}
 
 	/**
+	 * @since   1.1.0
+	 */
+	function register_api_key_check() {
+		register_rest_route('kudos/v1', 'mollie/admin', [
+			'methods'   => WP_REST_Server::READABLE,
+			'callback'  => [$this, 'check_api_keys'],
+			'args' => [
+				'apiMode' => [
+					'required' => true
+				],
+				'testKey',
+				'liveKey'
+			]
+		]);
+	}
+
+	/**
+	 * Check the Mollie Api key associated with the Api mode
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @since    1.1.0
+	 */
+	public function check_api_keys(WP_REST_Request $request) {
+
+		$mode = sanitize_text_field($request['apiMode']);
+		$apiKey = sanitize_text_field($request[$mode . 'Key']);
+
+		// Check that the api key corresponds to the mode
+		if(substr($apiKey, 0, 4) !== $mode) {
+			wp_send_json_error( sprintf(__("%s API key should begin with \"%s\".", 'kudos-donations'), ucfirst($mode), $mode . '_'));
+		}
+
+		// Test api key
+		$result = $this->checkApiKey($apiKey);
+
+		if($result) {
+			update_option('_kudos_mollie_'.$mode.'_api_key', $apiKey);
+			update_option('_kudos_mollie_api_mode', $mode);
+			update_option('_kudos_mollie_connected', 1);
+			/* translators: %s: API mode */
+			wp_send_json_success(sprintf(__("%s API key connection was successful!", 'kudos-donations'), ucfirst($mode)));
+		} else {
+			/* translators: %s: API mode */
+			update_option('_kudos_mollie_connected', 0);
+			wp_send_json_error( sprintf(__("Error connecting with Mollie, please check the %s API key and try again.", 'kudos-donations'), ucfirst($mode)));
+		}
+	}
+
+	/**
 	 * Mollie webhook action
 	 *
-	 * @since    1.0.0
 	 * @param WP_REST_Request $request
+	 *
 	 * @return mixed|WP_Error|WP_HTTP_Response|WP_REST_Response
+	 * @since    1.0.0
 	 */
 	public function rest_api_mollie_webhook( WP_REST_Request $request ) {
 
@@ -198,7 +273,14 @@ class Kudos_Mollie
 		// Send email receipt on success
 		$mailer = new Kudos_Mailer();
 		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
+
+			// Get transaction
 			$transaction = $this->transaction->get_transaction($order_id);
+
+			// Create invoice
+			$this->invoice->generate_invoice($transaction);
+
+			// Send email - email setting is checked in mailer
 			if($transaction->email) {
 				$mailer->send_invoice($transaction);
 			}

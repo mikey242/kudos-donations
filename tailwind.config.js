@@ -28,6 +28,7 @@ module.exports = {
     extend: {
       colors: {
         orange: {
+          '200': '#ffd59c',
           '500': '#ff9f1c',
           '700': '#f58d00',
         },
@@ -39,7 +40,6 @@ module.exports = {
       },
     },
   },
-  variants: {},
   plugins: [],
   corePlugins: {
     preflight: false

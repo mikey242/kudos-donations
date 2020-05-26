@@ -86,6 +86,7 @@ class Kudos_Admin {
 	 * Check the Mollie Api key
      *
      * @since    1.0.0
+     * @deprecated Now handled with rest api via mollie class
 	 */
 	public function check_mollie_connection() {
 
@@ -113,6 +114,19 @@ class Kudos_Admin {
             wp_send_json_error( sprintf(__("Error connecting with Mollie, please check the %s API key and try again.", 'kudos-donations'), ucfirst($mode)));
 		}
     }
+
+	/**
+	 * Registers routes
+	 *
+	 * @since   1.1.0
+	 * @return void
+	 */
+	public function register_routes() {
+
+		// Mollie webhook
+		$mollie = new Kudos_Mollie();
+		$mollie->register_api_key_check();
+	}
 
 	/**
 	 * Send test email
