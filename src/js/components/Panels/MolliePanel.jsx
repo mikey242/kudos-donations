@@ -1,9 +1,7 @@
 const { __ } = wp.i18n;
 
 const {
-    PanelRow,
     PanelBody,
-    Button,
     ExternalLink
 } = wp.components;
 
@@ -11,8 +9,9 @@ const {
     useState
 } = wp.element;
 
-import {TextInput} from "../FormElements/TextInput";
-import {ButtonGroupToggle} from "../FormElements/ButtonGroupToggle"
+import {TextInput} from "../FormElements/TextInput"
+import {RadioImage} from "../FormElements/RadioImage"
+import {PrimaryButton} from "../FormElements/PrimaryButton"
 
 const MolliePanel = props => {
 
@@ -23,56 +22,59 @@ const MolliePanel = props => {
         props.handleInputChange(e);
     }
 
-    console.log(isEdited);
-
     return (
         <PanelBody
-            title={__('Mollie')}
+            title={__('Mollie', 'kudos-donations')}
+            initialOpen={false}
         >
-            <ButtonGroupToggle
-                label='Mollie API Mode'
-                help='When using Kudos Donations for the first time, the payment mode is set to "Test". Check that the configuration is working correctly. Once you are ready to receive live payments you can switch the mode to "Live".'
-                option='_kudos_mollie_api_mode'
-                value={props.apiMode}
+
+            <RadioImage
+                isPrimary
+                className="components-kudos-toggle"
+                id="_kudos_mollie_api_mode"
+                value={props._kudos_mollie_api_mode}
+                label={__('Mollie API Mode', 'kudos-donations')}
+                help={__('When using Kudos Donations for the first time, the payment mode is set to "Test". Check that the configuration is working correctly. Once you are ready to receive live payments you can switch the mode to "Live".', 'kudos-donations')}
                 onClick={props.updateSetting}
             >
-            </ButtonGroupToggle>
+                { [
+                    { value: 'test', content: 'Test' },
+                    { value: 'live', content: 'Live' },
+                ] }
+            </RadioImage>
 
             <TextInput
                 id='_kudos_mollie_test_api_key'
                 label="Test API Key"
-                value={props.testKey}
+                value={props._kudos_mollie_test_api_key}
                 placeHolder='Mollie Test API Key'
-                disabled={props.isSaving || props.apiMode !== 'test'}
+                disabled={props.isSaving || props._kudos_mollie_api_mode !== 'test'}
                 onChange={handleChange}
             />
 
             <TextInput
                 id='_kudos_mollie_live_api_key'
                 label="Mollie Live API Key"
-                value={props.liveKey}
+                value={props._kudos_mollie_live_api_key}
                 placeHolder='Mollie Live API Key'
-                disabled={props.isSaving || props.apiMode !== 'live'}
+                disabled={props.isSaving || props._kudos_mollie_api_mode !== 'live'}
                 onChange={handleChange}
             />
 
-            <PanelRow>
-                <Button
-                    isPrimary
-                    disabled={!isEdited || props.isSaving}
-                    onClick={() => {
-                        props.updateSetting('_kudos_mollie_test_api_key', props.testKey)
-                        props.updateSetting('_kudos_mollie_live_api_key', props.liveKey)
-                        props.checkApiKey()
-                    }}
-                >
-                    {__('Save', 'kudos-donations')}
-                </Button>
-
+            <PrimaryButton
+                label= 'Save and Verify'
+                disabled={!isEdited || props.isSaving}
+                isBusy={props.isSaving}
+                onClick={() => {
+                    props.updateSetting('_kudos_mollie_test_api_key', props._kudos_mollie_test_api_key, false)
+                    props.updateSetting('_kudos_mollie_live_api_key', props._kudos_mollie_live_api_key, false)
+                    props.checkApiKey()
+                }}
+            >
                 <ExternalLink href="https://mollie.com/dashboard/developers/api-keys">
                     {__('Get API Key(s)', 'kudos-donations')}
                 </ExternalLink>
-            </PanelRow>
+            </PrimaryButton>
 
         </PanelBody>
     )

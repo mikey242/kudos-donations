@@ -11,10 +11,11 @@ const {
     useState
 } = wp.element;
 
-import {Toggle} from "../FormElements/Toggle";
-import {TextInput} from "../FormElements/TextInput";
-import {RadioButtons} from "../FormElements/RadioButtons";
-import {Checkbox} from "../FormElements/Checkbox";
+import {Toggle} from "../FormElements/Toggle"
+import {TextInput} from "../FormElements/TextInput"
+import {RadioButtons} from "../FormElements/RadioButtons"
+import {Checkbox} from "../FormElements/Checkbox"
+import {PrimaryButton} from "../FormElements/PrimaryButton"
 
 const EmailSettingsPanel = props => {
 
@@ -31,7 +32,7 @@ const EmailSettingsPanel = props => {
                 id='_kudos_smtp_host'
                 label='Host'
                 help="Your email server's hostname"
-                value={props.host}
+                value={props._kudos_smtp_host}
                 placeholder='mail.host.com'
                 onChange={handleChange}
             />
@@ -39,7 +40,7 @@ const EmailSettingsPanel = props => {
                 id='_kudos_smtp_encryption'
                 label='Encryption'
                 help='Choose your encryption type'
-                selected={props.encryption}
+                selected={props._kudos_smtp_encryption}
                 onChange={props.updateSetting}
             >
                 { [
@@ -53,14 +54,14 @@ const EmailSettingsPanel = props => {
                 heading='Auto TLS'
                 label='Enable'
                 help='In most cases you will want this enabled. Disable for troubleshooting.'
-                value={props.autoTls}
+                value={props._kudos_smtp_autotls}
                 onChange={props.updateSetting}
             />
             <TextInput
                 id='_kudos_smtp_username'
                 label='Username'
                 help="This is usually an email address"
-                value={props.username}
+                value={props._kudos_smtp_username}
                 placeholder='user@domain.com'
                 onChange={handleChange}
             />
@@ -69,7 +70,7 @@ const EmailSettingsPanel = props => {
                 label='Password'
                 type="password"
                 help=""
-                value={props.password}
+                value={props._kudos_smtp_password}
                 placeholder='*****'
                 onChange={handleChange}
             />
@@ -77,40 +78,48 @@ const EmailSettingsPanel = props => {
                 id='_kudos_smtp_port'
                 label='Port'
                 help=""
-                value={props.port}
+                value={props._kudos_smtp_port}
                 placeholder='587'
                 onChange={handleChange}
             />
-            <PanelRow>
-                <Button
-                    isPrimary
-                    disabled={!isEdited || props.isSaving}
-                    onClick={() => {
-                        props.updateSetting('_kudos_smtp_host', props.host, true)
-                        props.updateSetting('_kudos_smtp_username', props.username, true)
-                        props.updateSetting('_kudos_smtp_password', props.password, true)
-                        props.updateSetting('_kudos_smtp_port', props.port, true)
-                    }}
-                >
-                    {__('Save', 'kudos-donations')}
-                </Button>
-            </PanelRow>
+
+            <PrimaryButton
+                label='Save'
+                isBusy={props.isSaving}
+                disabled={!isEdited || props.isSaving}
+                onClick={() => {
+                    props.updateSetting('_kudos_smtp_host', props._kudos_smtp_host, true)
+                    props.updateSetting('_kudos_smtp_username', props._kudos_smtp_username, true)
+                    props.updateSetting('_kudos_smtp_password', props._kudos_smtp_password, true)
+                    props.updateSetting('_kudos_smtp_port', props._kudos_smtp_port, true)
+                }}
+            />
         </Fragment>
     )
 
-    if(!props.enableSmtp) {
+    if(!props._kudos_smtp_enable) {
         optionalForm = '';
     }
 
     return (
         <PanelBody
             title={__('Email Settings')}
+            initialOpen={false}
         >
+
+            <Toggle
+                id='_kudos_email_receipt_enable'
+                label={'Send email receipts'}
+                help={'Once a payment has been completed, you can automatically send an email receipt to the donor.'}
+                value={props._kudos_email_receipt_enable}
+                onChange={props.updateSetting}
+            />
+
             <Toggle
                 id='_kudos_smtp_enable'
                 label={'Use custom email settings'}
                 help={'Enable this to use your own SMTP server settings.'}
-                value={props.enableSmtp}
+                value={props._kudos_smtp_enable}
                 onChange={props.updateSetting}
             />
 

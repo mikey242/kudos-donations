@@ -164,8 +164,8 @@ class Kudos_Public {
 						'{{value}}' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
 						'{{name}}' => $transaction->name
 					];
-					$return['header'] = strtr(carbon_get_theme_option('kudos_return_message_header'), $vars);
-					$return['text'] = strtr(carbon_get_theme_option('kudos_return_message_text'), $vars);
+					$return['header'] = strtr(get_option('_kudos_return_message_header'), $vars);
+					$return['text'] = strtr(get_option('_kudos_return_message_text'), $vars);
 					break;
 				case 'canceled':
 					$return['header'] = __('Payment canceled', 'kudos-donations');
@@ -189,8 +189,8 @@ class Kudos_Public {
 	 * @return string|void
 	 */
 	public static function get_return_url() {
-		$use_custom = carbon_get_theme_option('kudos_custom_return_enable');
-		$custom_url = esc_url(carbon_get_theme_option('kudos_custom_return_url'));
+		$use_custom = get_option('_kudos_custom_return_enable');
+		$custom_url = esc_url(get_option('_kudos_custom_return_url'));
 		if($use_custom && $custom_url) {
 			return $custom_url;
 		} else {
@@ -207,9 +207,10 @@ class Kudos_Public {
 	 * @return bool
 	 */
 	public static function ready() {
-		$apiMode = carbon_get_theme_option('kudos_mollie_api_mode');
-		$apiKey = carbon_get_theme_option('kudos_mollie_'.$apiMode.'_api_key');
-		if($apiKey) {
+		$apiConnected = get_option('_kudos_mollie_connected');
+		$apiMode = get_option('_kudos_mollie_api_mode');
+		$apiKey = get_option('_kudos_mollie_'.$apiMode.'_api_key');
+		if($apiKey && $apiConnected) {
 			return true;
 		}
 		return false;

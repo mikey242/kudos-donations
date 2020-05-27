@@ -35,9 +35,29 @@
 
   input[type="text"],
   input[type="password"]{
-    @apply appearance-none block w-full border border-solid border-orange-500 rounded py-2 px-4;
+    @apply block w-full rounded py-2 px-4;
     &:disabled {
-      @apply border-orange-200;
+      //@apply border-orange-200;
+    }
+  }
+
+  input[type="checkbox"] {
+    &:checked {
+      @apply bg-orange-500 border border-orange-500;
+    }
+    &:focus {
+      @apply border-orange-500;
+      box-shadow: 0 0 2px theme('colors.orange.500');
+    }
+  }
+
+  input[type="radio"] {
+    &::before {
+      @apply bg-orange-500;
+    }
+    &:focus {
+      @apply border-orange-500;
+      box-shadow: 0 0 1px theme('colors.orange.500');
     }
   }
 
@@ -156,9 +176,37 @@
         outline-offset: -1px;
         transition: box-shadow .1s linear;
       }
-
     }
+  }
 
+  // Custom components
+  .components-kudos-radio-image {
+    button {
+      @apply p-2 h-auto;
+      min-height: 36px;
+
+      &:disabled {
+        @apply opacity-100;
+      }
+    }
+    .is-pressed {
+      @apply border border-solid;
+    }
+  }
+
+  .components-kudos-toggle {
+    .components-button-group {
+      .components-button.is-primary {
+        @apply bg-transparent text-orange-700 py-2 px-4 border border-solid border-orange-500;
+        &.is-pressed {
+          color: #fff;
+          @apply bg-orange-500 font-semibold;
+        }
+        &:focus {
+          @apply shadow-none;
+        }
+      }
+    }
   }
 
   .components-placeholder {
@@ -181,6 +229,10 @@
     &:disabled {
       @apply text-orange-200;
     }
+    &.is-busy {
+      background-image: linear-gradient(-45deg, theme('colors.orange.200') 28%, theme('colors.orange.500') 28%, theme('colors.orange.500') 72%, theme('colors.orange.200') 72%);
+      border-color: rgb(0, 124, 186);
+    }
   }
 
   .kudos-settings-main {
@@ -189,27 +241,13 @@
       @apply w-full;
     }
 
-    .components-button-group {
-      @apply border border-orange-500;
-      .components-button.is-primary {
-        @apply bg-transparent text-orange-700 py-2 px-4 border border-solid border-orange-500;
-        &.is-pressed {
-          color: #fff;
-          @apply bg-orange-500 font-semibold;
-        }
-        &:focus {
-          @apply shadow-none;
-        }
-        &:disabled {
-
-        }
-      }
-    }
-
     .components-panel__body {
-      margin: 25px 0;
       background: #fff;
       border: 1px solid #e2e4e7;
+
+      &:first-child {
+        margin: 25px 0 0 0;
+      }
     }
 
     .kudos-donations-info {

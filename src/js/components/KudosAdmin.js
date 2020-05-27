@@ -1,7 +1,13 @@
-/**
- * WordPress dependencies
- */
-
+import axios from "axios"
+// Settings Panels
+import {DonationFormPanel} from "./Panels/DonationFormPanel"
+import {KudosNotice} from "./KudosNotice"
+import {KudosHeader} from "./KudosHeader"
+import {EmailSettingsPanel} from "./Panels/EmailSettingsPanel"
+import {TestEmailPanel} from "./Panels/TestEmailPanel"
+import {MolliePanel} from "./Panels/MolliePanel"
+import {DonationButtonPanel} from "./Panels/DonationButtonPanel"
+import {CompletedPaymentPanel} from "./Panels/CompletedPaymentPanel"
 
 const { __ } = wp.i18n;
 
@@ -15,17 +21,6 @@ const {
     Component,
     Fragment,
 } = wp.element;
-
-/**
- * Internal dependencies
- */
-
-import axios from "axios"
-import {KudosNotice} from "./KudosNotice";
-import {KudosHeader} from "./KudosHeader";
-import {EmailSettingsPanel} from "./Panels/EmailSettingsPanel";
-import {TestEmailPanel} from "./Panels/TestEmailPanel";
-import {MolliePanel} from "./Panels/MolliePanel";
 
 class KudosAdmin extends Component {
     constructor() {
@@ -46,6 +41,7 @@ class KudosAdmin extends Component {
             isMollieConnected: false,
             isAPILoaded: false,
             isAPISaving: false,
+            checkingApi: false,
             _kudos_mollie_api_mode: '',
             _kudos_mollie_test_api_key: '',
             _kudos_mollie_live_api_key: '',
@@ -70,8 +66,6 @@ class KudosAdmin extends Component {
 
     getSettings() {
         wp.api.loadPromise.then( () => {
-
-            console.log('getting settings')
             this.settings.fetch().then( response => {
                 this.setState({
                     ...response,
@@ -84,6 +78,10 @@ class KudosAdmin extends Component {
     }
 
     checkApiKey() {
+        this.setState({
+            checkingApi: true,
+            isAPISaving: true
+        });
 
         // Create form data from current state
         const formData = new FormData();
@@ -103,8 +101,11 @@ class KudosAdmin extends Component {
                 'liveKey': this.state._kudos_mollie_live_api_key
             }
         }).then(response => {
+            this.showNotice(response.data.data);
             this.setState({
-                _kudos_mollie_connected: (response.data.success)
+                _kudos_mollie_connected: (response.data.success),
+                checkingApi: false,
+                isAPISaving: false
             })
 
         }).catch(error => {
@@ -140,7 +141,7 @@ class KudosAdmin extends Component {
         })
     }
 
-    updateSetting( option, value) {
+    updateSetting( option, value, showNotice=true) {
 
         this.setState({ isAPISaving: true });
 
@@ -158,7 +159,9 @@ class KudosAdmin extends Component {
                 [option]: response[option],
                 isAPISaving: false,
             });
-            this.showNotice(__('Setting(s) updated', 'kudos-donations'));
+            if (showNotice) {
+                this.showNotice(__('Setting(s) updated', 'kudos-donations'));
+            }
         });
     }
 
@@ -180,6 +183,7 @@ class KudosAdmin extends Component {
 
                     <KudosHeader
                         apiConnected={this.state._kudos_mollie_connected}
+                        checkingApi={this.state.checkingApi}
                     />
 
                     <TabPanel
@@ -196,8 +200,18 @@ class KudosAdmin extends Component {
                                 className: 'tab-mollie',
                             },
                             {
+                                name: 'customize',
+                                title: __('Customize', 'kudos-donations'),
+                                className: 'tab-customize',
+                            },
+                            {
+                                name: 'receipts',
+                                title: __('Receipts', 'kudos-donations'),
+                                className: 'tab-receipts',
+                            },
+                            {
                                 name: 'email',
-                                title: 'Email',
+                                title: __('Email', 'kudos-donations'),
                                 className: 'tab-email',
                             },
                         ]}
@@ -211,14 +225,39 @@ class KudosAdmin extends Component {
                                         return (
                                             <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
                                                 <MolliePanel
-                                                    apiMode={this.state._kudos_mollie_api_mode}
-                                                    isSaving = {this.state.isAPISaving}
-                                                    testKey={this.state._kudos_mollie_test_api_key}
-                                                    liveKey={this.state._kudos_mollie_live_api_key}
+                                                    {...this.state}
                                                     handleInputChange={this.handleInputChange}
                                                     updateSetting={this.updateSetting}
                                                     checkApiKey={this.checkApiKey}
                                                 />
+                                            </div>
+                                        )
+
+                                    case 'customize':
+
+                                        return (
+                                            <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
+                                                <DonationButtonPanel
+                                                    {...this.state}
+                                                    handleInputChange={this.handleInputChange}
+                                                    updateSetting={this.updateSetting}
+                                                />
+                                                <DonationFormPanel
+                                                    {...this.state}
+                                                    handleInputChange={this.handleInputChange}
+                                                    updateSetting={this.updateSetting}
+                                                />
+                                                <CompletedPaymentPanel
+                                                    {...this.state}
+                                                    handleInputChange={this.handleInputChange}
+                                                    updateSetting={this.updateSetting}
+                                                />
+                                            </div>
+                                        )
+
+                                    case 'receipts':
+                                        return (
+                                            <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
                                             </div>
                                         )
 
@@ -227,14 +266,9 @@ class KudosAdmin extends Component {
                                         return (
                                             <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
                                                 <EmailSettingsPanel
+                                                    {...this.state}
                                                     isSaving = {this.state.isAPISaving}
                                                     enableSmtp={this.state._kudos_smtp_enable}
-                                                    host={this.state._kudos_smtp_host}
-                                                    encryption={this.state._kudos_smtp_encryption}
-                                                    autoTls={this.state._kudos_smtp_autotls}
-                                                    username={this.state._kudos_smtp_username}
-                                                    password={this.state._kudos_smtp_password}
-                                                    port={this.state._kudos_smtp_port}
                                                     handleInputChange={this.handleInputChange}
                                                     handleRadioChange={this.handleRadioChange}
                                                     updateSetting={this.updateSetting}

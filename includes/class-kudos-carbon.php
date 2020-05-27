@@ -34,7 +34,7 @@ class Carbon {
 	 * @since      1.0.0
 	 */
 	public function register_fields() {
-        $this->kudos_options();
+//        $this->kudos_options();
         $this->kudos_blocks();
     }
 
@@ -60,6 +60,9 @@ class Carbon {
 
 		$log_writeable = Kudos_Logger::isWriteable();
 		$out .= "<p><strong>Log File Writeable: </strong><span class='kudos_result_message ". ($log_writeable ? 'text-success' : 'text-error') ."'>".($log_writeable ? 'OK' : 'Failed')."</span></p>";
+
+		ini_set('sendmail_path', '/usr/sbin/sendmail');
+		$out .= ini_get('sendmail_path');
 
 		return $out;
 	}

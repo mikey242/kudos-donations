@@ -116,22 +116,27 @@ class Kudos_Admin {
     }
 
 	/**
-	 * Registers routes
+	 * Registers REST routes
 	 *
 	 * @since   1.1.0
 	 * @return void
 	 */
 	public function register_routes() {
 
-		// Mollie webhook
+		// Mollie API key check
 		$mollie = new Kudos_Mollie();
 		$mollie->register_api_key_check();
+
+		// Test Email
+        $mailer = new Kudos_Mailer();
+        $mailer->register_send_test_email();
 	}
 
 	/**
 	 * Send test email
 	 *
 	 * @since    1.1.0
+     * @deprecated Use similar function in mailer class
 	 */
 	public function send_test_email() {
 

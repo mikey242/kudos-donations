@@ -3,6 +3,8 @@
 namespace Kudos;
 
 use PHPMailer;
+use WP_REST_Request;
+use WP_REST_Server;
 
 class Kudos_Mailer
 {
@@ -35,7 +37,9 @@ class Kudos_Mailer
 	 */
 	public function init($phpmailer) {
 
-		$custom_smtp = carbon_get_theme_option('kudos_smtp_enable');
+		$custom_smtp = get_option('_kudos_smtp_enable');
+
+		$phpmailer->SMTPDebug = (WP_DEBUG ? 0 : 0); //Alternative to above constant
 
 		// Add logo as attachment
 		$phpmailer->addEmbeddedImage(get_asset_url('img/logo-colour-40.png', true), 'kudos-logo', 'kudos-logo.png');
@@ -44,13 +48,13 @@ class Kudos_Mailer
 		if($custom_smtp) {
 			$phpmailer->isSMTP();
 			$phpmailer->isHTML(true);
-			$phpmailer->Host = carbon_get_theme_option('kudos_smtp_host');
-			$phpmailer->SMTPAutoTLS = carbon_get_theme_option('kudos_smtp_autotls');
+			$phpmailer->Host = get_option('_kudos_smtp_host');
+			$phpmailer->SMTPAutoTLS = get_option('_kudos_smtp_autotls');
 			$phpmailer->SMTPAuth = true;
-			$phpmailer->SMTPSecure = carbon_get_theme_option('kudos_smtp_encryption');
-			$phpmailer->Username = carbon_get_theme_option('kudos_smtp_username');
-			$phpmailer->Password = carbon_get_theme_option('kudos_smtp_password');
-			$phpmailer->Port = carbon_get_theme_option('kudos_smtp_port');
+			$phpmailer->SMTPSecure = get_option('_kudos_smtp_encryption');
+			$phpmailer->Username = get_option('_kudos_smtp_username');
+			$phpmailer->Password = get_option('_kudos_smtp_password');
+			$phpmailer->Port = get_option('_kudos_smtp_port');
 		}
 
 	}
@@ -64,9 +68,13 @@ class Kudos_Mailer
 	public function send_invoice($transaction) {
 
 		// Check if setting enabled
-		if(!carbon_get_theme_option('kudos_email_receipt_enable')) {
+		if(!get_option('_kudos_email_receipt_enable')) {
 			return;
 		}
+
+		$headers = [
+			"From: Kudos Donations <wordpress@iseard.media>"
+		];
 
 		$invoice = $this->invoice->get_invoice($transaction->order_id, true);
 
@@ -80,21 +88,24 @@ class Kudos_Mailer
 			'website_name' => get_bloginfo('name'),
 		]);
 
-		$headers = [
-			"From: Kudos Donations <wordpress@iseard.media>"
-		];
-
 		self::send($transaction->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$invoice]);
 	}
 
 	/**
-	 * Sends an invoice to the customer
+	 * Sends a test email to specified email address
 	 *
-	 * @since    1.1.0
-	 * @param string $email
+	 * @param WP_REST_Request $request
+	 *
 	 * @return bool
+	 * @since    1.1.0
 	 */
-	public function send_test($email) {
+	public function send_test(WP_REST_Request $request) {
+
+		if(empty($request['email'])) {
+			wp_send_json_error(__('Please provide an email address.', 'kudos_donations'));
+		}
+
+		$email = sanitize_email($request['email']);
 
 		$twig = new Kudos_Twig();
 		$body = $twig->render('emails/test.html.twig', ['website_name' => get_bloginfo('name')]);
@@ -103,7 +114,17 @@ class Kudos_Mailer
 			"From: Kudos Donations <wordpress@iseard.media>"
 		];
 
-		return self::send($email, __('Test email', 'kudos-donations'), $body, $headers);
+		$result = self::send($email, __('Test email', 'kudos-donations'), $body, $headers);
+
+		if($result) {
+			/* translators: %s: API mode */
+			wp_send_json_success(sprintf(__("Email sent to %s.", 'kudos-donations'), $email));
+		} else {
+			/* translators: %s: API mode */
+			wp_send_json_error( __("Error sending email, please check the settings and try again.", 'kudos-donations'));
+		}
+
+		return $result;
 	}
 
 	/**
@@ -135,6 +156,23 @@ class Kudos_Mailer
 
 		return $mail;
 
+	}
+
+	/**
+	 * REST route for checking API keys
+	 *
+	 * @since   1.1.0
+	 */
+	public function register_send_test_email() {
+		register_rest_route('kudos/v1', 'email/test', [
+			'methods'   => WP_REST_Server::CREATABLE,
+			'callback'  => [$this, 'send_test'],
+			'args' => [
+				'email' => [
+					'required' => true
+				]
+			]
+		]);
 	}
 
 }
