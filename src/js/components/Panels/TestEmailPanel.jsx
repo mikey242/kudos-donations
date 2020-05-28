@@ -24,9 +24,9 @@ const TestEmailPanel = props => {
         return emailReg.test( email );
     }
 
-    const handleChange = (option, value) => {
+    const handleChange = (value) => {
         setIsEdited(true)
-        props.handleInputChange(option, value);
+       setEmail(value);
     }
 
     const sendTest = (email) => {
@@ -72,7 +72,7 @@ const TestEmailPanel = props => {
                     value={email}
                     placeholder={__('user@domain.com', 'kudos-donations')}
                     disabled={props.disabled}
-                    onChange={(e)=>handleChange(e)}
+                    onChange={(e)=>handleChange(e.target.value)}
                 />
             </BaseControl>
         </PanelRow>

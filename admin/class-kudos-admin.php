@@ -2,6 +2,8 @@
 
 namespace Kudos;
 
+use WP_REST_Server;
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -71,6 +73,12 @@ class Kudos_Admin {
 		// Test Email
         $mailer = new Kudos_Mailer();
         $mailer->register_send_test_email();
+
+        // Diagnostics
+		register_rest_route('kudos/v1', 'diagnostics', [
+			'methods'   => WP_REST_Server::READABLE,
+			'callback'  => [$this, 'diagnostics'],
+		]);
 	}
 
 	/**
@@ -80,17 +88,27 @@ class Kudos_Admin {
 	 */
 	public function kudos_add_menu_pages() {
 
-		$settings_page_hook_suffix = add_menu_page(
+	    add_menu_page(
+	        __('Kudos', 'kudos-donations'),
+            __('Kudos', 'kudos-donations'),
+            'manage_options',
+            'kudos-settings',
+            false,
+		    'data:image/svg+xml;base64,' . base64_encode('
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>
+            ')
+
+        );
+
+		$settings_page_hook_suffix = add_submenu_page(
+			'kudos-settings',
 			__( 'Kudos Settings', 'kudos-donations' ),
-			__( 'Kudos', 'kudos-donations' ),
+			__( 'Settings', 'kudos-donations' ),
 			'manage_options',
 			'kudos-settings',
 			function() {
 				echo '<div id="kudos-settings"></div>';
-            },
-			'data:image/svg+xml;base64,' . base64_encode('
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>
-            ')
+            }
 		);
 		add_action( "admin_print_scripts-{$settings_page_hook_suffix}", [$this, 'kudos_settings_page_assets'] );
 
@@ -119,6 +137,7 @@ class Kudos_Admin {
 			'nonce'   => wp_create_nonce( 'wp_rest' ),
 			'checkApiUrl' => rest_url('kudos/v1/mollie/admin'),
 			'sendTestUrl' => rest_url('kudos/v1/email/test'),
+			'getDiagnosticsUrl' => rest_url('kudos/v1/diagnostics'),
 			'ajaxurl' => admin_url('admin-ajax.php'),
 		]);
 		wp_set_script_translations( $this->plugin_name . '-settings', 'kudos-donations' );
@@ -189,6 +208,25 @@ class Kudos_Admin {
 	        $table->export_transactions();
 
 	    }
+	}
+
+	/**
+	 * Returns diagnostic information
+	 *
+	 * @since   1.1.0
+	 * @return string
+	 */
+	public function diagnostics() {
+
+	    $response = [
+	        'phpVersion' => phpversion(),
+            'mbstring' => extension_loaded('mbstring'),
+            'invoiceWriteable'  => Kudos_Invoice::isWriteable(),
+            'logWriteable'  => Kudos_Logger::isWriteable()
+        ];
+
+		wp_send_json_success($response);
+		wp_die();
 	}
 
 	/**

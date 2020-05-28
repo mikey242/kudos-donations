@@ -18,8 +18,8 @@ const EmailReceipts = props => {
                 id='_kudos_email_receipt_enable'
                 label={'Send email receipts'}
                 help={'Once a payment has been completed, you can automatically send an email receipt to the donor.'}
-                value={props._kudos_email_receipt_enable}
-                onChange={props.updateSetting}
+                value={props.settings._kudos_email_receipt_enable}
+                onChange={props.handleInputChange}
             />
 
         </PanelBody>

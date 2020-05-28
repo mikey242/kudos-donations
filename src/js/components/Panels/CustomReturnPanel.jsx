@@ -10,17 +10,9 @@ const {
 
 const {
     Fragment,
-    useState
 } = wp.element;
 
 const CustomReturnPanel = props => {
-
-    const [isEdited, setIsEdited] = useState(false);
-
-    const handleChange = (option, value) => {
-        setIsEdited(true)
-        props.handleInputChange(option, value);
-    }
 
     return (
         <PanelBody
@@ -32,11 +24,11 @@ const CustomReturnPanel = props => {
                 id='_kudos_custom_return_enable'
                 label={'Use custom return URL'}
                 help={'After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, enable this option.'}
-                value={props._kudos_custom_return_enable}
-                onChange={props.updateSetting}
+                value={props.settings._kudos_custom_return_enable}
+                onChange={props.handleInputChange}
             />
 
-            {props._kudos_custom_return_enable ? [
+            {props.settings._kudos_custom_return_enable ? [
 
                 <Fragment key="_kudos_custom_return_fields">
 
@@ -44,20 +36,9 @@ const CustomReturnPanel = props => {
                         id='_kudos_custom_return_url'
                         label="URL"
                         help={'e.g https://mywebsite.com/thanks'}
-                        value={props._kudos_custom_return_url}
+                        value={props.settings._kudos_custom_return_url}
                         disabled={props.isSaving}
-                        onChange={handleChange}
-                    />
-
-                    <PrimaryButton
-                        label="Save"
-                        disabled={!isEdited || props.isSaving}
-                        isBusy={props.isSaving}
-                        onClick={()=> {
-                            props.updateSetting('_kudos_button_label', props._kudos_button_label)
-                            props.updateSetting('_kudos_custom_return_url', props._kudos_custom_return_url)
-                            setIsEdited(false)
-                        }}
+                        onChange={props.handleInputChange}
                     />
 
                 </Fragment>

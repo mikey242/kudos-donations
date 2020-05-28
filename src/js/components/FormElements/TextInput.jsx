@@ -18,7 +18,7 @@ const TextInput = props => {
                     key={"key_" + props.id}
                     id={props.id}
                     type={props.type || "text"}
-                    value={props.value}
+                    value={props.value || ""}
                     placeholder={__(props.placeholder, 'kudos-donations')}
                     disabled={props.disabled}
                     onChange={ (value) => props.onChange(props.id, value) }

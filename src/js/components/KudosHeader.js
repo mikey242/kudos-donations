@@ -13,7 +13,7 @@ const KudosHeader = (props) => {
                     <span className={
                         "kudos-api-status " + (props.checkingApi ? '' : props.apiConnected ? 'connected' : 'not-connected')}
                     >
-                        {props.apiConnected ? 'Connected' : 'Not Connected'}
+                        {props.checkingApi ? 'Checking' : props.apiConnected ? 'Connected' : 'Not Connected'}
                     </span>
                     <span className="kudos-version">{kudos.version}</span>
                 </div>

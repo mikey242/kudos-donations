@@ -1,5 +1,4 @@
 import {TextInput} from "../FormElements/TextInput"
-import {PrimaryButton} from "../FormElements/PrimaryButton"
 import {Checkbox} from "../FormElements/Checkbox"
 
 const { __ } = wp.i18n;
@@ -8,18 +7,7 @@ const {
     PanelBody,
 } = wp.components;
 
-const {
-    useState
-} = wp.element;
-
 const DonationFormPanel = props => {
-
-    const [isEdited, setIsEdited] = useState(false);
-
-    const handleChange = (option, value) => {
-        setIsEdited(true)
-        props.handleInputChange(option, value);
-    }
 
     return (
         <PanelBody
@@ -31,43 +19,32 @@ const DonationFormPanel = props => {
                 id='_kudos_email_required'
                 heading='Email'
                 label='Required'
-                value={props._kudos_email_required}
-                onChange={props.updateSetting}
+                value={props.settings._kudos_email_required}
+                onChange={props.handleInputChange}
             />
 
             <Checkbox
                 id='_kudos_name_required'
                 heading='Name'
                 label='Required'
-                value={props._kudos_name_required}
-                onChange={props.updateSetting}
+                value={props.settings._kudos_name_required}
+                onChange={props.handleInputChange}
             />
 
             <TextInput
                 id='_kudos_form_header'
                 label="Payment form header"
-                value={props._kudos_form_header}
+                value={props.settings._kudos_form_header}
                 disabled={props.isSaving}
-                onChange={handleChange}
+                onChange={props.handleInputChange}
             />
 
             <TextInput
                 id='_kudos_form_text'
                 label="Payment form text"
-                value={props._kudos_form_text}
+                value={props.settings._kudos_form_text}
                 disabled={props.isSaving}
-                onChange={handleChange}
-            />
-
-            <PrimaryButton
-                label= 'Save'
-                disabled={!isEdited || props.isSaving}
-                isBusy={props.isSaving}
-                onClick={() => {
-                    props.updateSetting('_kudos_form_header', props._kudos_form_header)
-                    props.updateSetting('_kudos_form_text', props._kudos_form_text, false)
-                    setIsEdited(false)
-                }}
+                onChange={props.handleInputChange}
             />
 
         </PanelBody>

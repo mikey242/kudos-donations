@@ -66,7 +66,7 @@ class Kudos_Button {
 			];
 			$out = $this->twig->render('public/kudos.button.html.twig', $data);
 		} elseif(is_user_logged_in()) {
-			$out = __('Mollie not configured', 'kudos-donations');
+			$out = "<a href=". esc_url( admin_url('?page=kudos-settings')) .">" . __('Mollie not connected', 'kudos-donations') . "</a>";
 		} else {
 			$out='';
 		}

@@ -8,7 +8,9 @@ const {
 const PrimaryButton = props => {
 
     return (
-        <PanelRow>
+        <PanelRow
+            className={props.className}
+        >
             <Button
                 isPrimary
                 disabled={props.disabled}
@@ -17,9 +19,6 @@ const PrimaryButton = props => {
             >
                 {__(props.label, 'kudos-donations')}
             </Button>
-
-            {props.children}
-
         </PanelRow>
     )
 }

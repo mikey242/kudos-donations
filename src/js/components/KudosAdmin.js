@@ -11,6 +11,8 @@ import {DonationButtonPanel} from "./Panels/DonationButtonPanel"
 import {CustomReturnPanel} from "./Panels/CustomReturnPanel"
 import {EmailReceipts} from "./Panels/EmailReceipts"
 import {InvoiceCompanyPanel} from "./Panels/InvoiceCompanyPanel"
+import {PrimaryButton} from "./FormElements/PrimaryButton"
+import {DiagnosticsPanel} from "./Panels/DiagnosticsPanel"
 
 const { __ } = wp.i18n;
 
@@ -32,8 +34,9 @@ class KudosAdmin extends Component {
 
         this.changeTab = this.changeTab.bind(this);
         this.updateSetting = this.updateSetting.bind( this );
+        this.updateAll = this.updateAll.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleRadioChange = this.handleRadioChange.bind(this);
+        this.mollieChanged = this.mollieChanged.bind(this)
         this.showNotice = this.showNotice.bind(this);
         this.hideNotice = this.hideNotice.bind(this);
         this.checkApiKey = this.checkApiKey.bind(this);
@@ -42,35 +45,31 @@ class KudosAdmin extends Component {
             showNotice: false,
             noticeMessage: '',
             isMollieConnected: false,
+            isMollieEdited: false,
+            isEdited: false,
             isAPILoaded: false,
             isAPISaving: false,
             checkingApi: false,
+            settings: {},
         };
 
     }
 
     componentDidMount() {
-        this.settings = new wp.api.models.Settings();
         if ( false === this.state.isAPILoaded ) {
-            this.getSettings();
+            this.getSettings()
+            this.getDiagnostics()
         }
+    }
+
+    mollieChanged() {
+        this.setState({
+            isMollieEdited: true,
+        });
     }
 
     changeTab(tab) {
         this.getSettings();
-    }
-
-    getSettings() {
-        wp.api.loadPromise.then( () => {
-            this.settings.fetch().then( response => {
-                this.setState({
-                    ...response,
-                    isAPILoaded: true,
-                    showNotice: false
-                });
-            });
-
-        });
     }
 
     checkApiKey() {
@@ -82,9 +81,9 @@ class KudosAdmin extends Component {
         // Create form data from current state
         const formData = new FormData();
         formData.append('action', 'check_mollie_connection');
-        formData.append('apiMode', this.state._kudos_mollie_api_mode);
-        formData.append('testKey', this.state._kudos_mollie_test_api_key);
-        formData.append('liveKey', this.state._kudos_mollie_live_api_key);
+        formData.append('apiMode', this.state.settings._kudos_mollie_api_mode);
+        formData.append('testKey', this.state.settings._kudos_mollie_test_api_key);
+        formData.append('liveKey', this.state.settings._kudos_mollie_live_api_key);
 
         // Perform Get request
         axios.get(kudos.checkApiUrl, {
@@ -92,18 +91,41 @@ class KudosAdmin extends Component {
                 'X-WP-Nonce': wpApiSettings.nonce
             },
             params: {
-                'apiMode': this.state._kudos_mollie_api_mode,
-                'testKey': this.state._kudos_mollie_test_api_key,
-                'liveKey': this.state._kudos_mollie_live_api_key
+                'apiMode': this.state.settings._kudos_mollie_api_mode,
+                'testKey': this.state.settings._kudos_mollie_test_api_key,
+                'liveKey': this.state.settings._kudos_mollie_live_api_key
             }
         }).then(response => {
             this.showNotice(response.data.data);
             this.setState({
-                _kudos_mollie_connected: (response.data.success),
+                settings: {
+                    ...this.state.settings,
+                    _kudos_mollie_connected: (response.data.success)
+                },
                 checkingApi: false,
                 isAPISaving: false
             })
+        }).catch(error => {
+            console.log(error)
+        })
+    }
 
+    getDiagnostics() {
+        axios.get(kudos.getDiagnosticsUrl, {
+            headers: {
+                'X-WP-Nonce': wpApiSettings.nonce
+            }
+        }).then(response => {
+            console.log(response.data.data)
+            if(response.data.success) {
+                this.setState({
+                    diagnostics: {
+                        ...response.data.data
+                    },
+                    checkingApi: false,
+                    isAPISaving: false
+                })
+            }
         }).catch(error => {
             console.log(error)
         })
@@ -111,15 +133,11 @@ class KudosAdmin extends Component {
 
     handleInputChange(option, value) {
         this.setState({
-            ...this.state,
-            [option]: value
-        })
-    }
-
-    handleRadioChange(option, value) {
-        this.setState({
-            ...this.state,
-            [option]: value
+            isEdited: true,
+            settings:{
+                ...this.state.settings,
+                [option]: value
+            }
         })
     }
 
@@ -135,6 +153,62 @@ class KudosAdmin extends Component {
         this.setState({
             showNotice: false
         })
+    }
+
+    getSettings() {
+        wp.api.loadPromise.then( () => {
+            this.settings = new wp.api.models.Settings();
+            this.settings.fetch().then( response => {
+                this.setState({
+                    settings:{...response},
+                    isAPILoaded: true,
+                    showNotice: false
+                });
+            });
+        });
+    }
+
+    updateAll(showNotice=true) {
+        this.setState({ isAPISaving: true });
+
+        // Delete empty settings keys
+        for(let key in this.state.settings) {
+            if(this.state.settings[key] === null) {
+                delete this.state.settings[key];
+            }
+        }
+
+        //Create WordPress settings model
+        const model = new wp.api.models.Settings(
+            {
+                ...this.state.settings
+            }
+        );
+
+        //Save to database
+        model.save().then( response => {
+            // Commit state
+            this.setState({
+                settings: {
+                    ...response
+                },
+                isEdited: false,
+                isAPISaving: false,
+            });
+            if (showNotice) {
+                this.showNotice(__('Setting(s) updated', 'kudos-donations'));
+            }
+            if(this.state.isMollieEdited) {
+                this.checkApiKey()
+                this.setState({
+                    isMollieEdited: false
+                })
+            }
+        }).fail(response => {
+            if (showNotice) {
+                this.showNotice(response.statusText);
+            }
+        });
     }
 
     updateSetting( option, value, showNotice=true) {
@@ -155,10 +229,79 @@ class KudosAdmin extends Component {
                 [option]: response[option],
                 isAPISaving: false,
             });
-            if (showNotice) {
-                this.showNotice(__('Setting(s) updated', 'kudos-donations'));
-            }
         });
+    }
+
+    renderTab(tab) {
+        switch (tab.name) {
+
+            case 'mollie':
+
+                return (
+                    <MolliePanel
+                        {...this.state}
+                        mollieChanged={this.mollieChanged}
+                        handleInputChange={this.handleInputChange}
+                    />
+                )
+
+            case 'customize':
+
+                return (
+                    <Fragment>
+                        <DonationButtonPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <DonationFormPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <CompletedPaymentPopup
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <CustomReturnPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                    </Fragment>
+                )
+
+            case 'invoice':
+                return (
+                    <InvoiceCompanyPanel
+                        {...this.state}
+                        handleInputChange={this.handleInputChange}
+                    />
+                )
+
+            case 'email':
+
+                return (
+                    <Fragment>
+                        <EmailReceipts
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <EmailSettingsPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <TestEmailPanel
+                            handleInputChange={this.handleInputChange}
+                            showNotice={this.showNotice}
+                        />
+                    </Fragment>
+                )
+
+            case 'advanced':
+                return (
+                    <DiagnosticsPanel
+                        {...this.state.diagnostics}
+                    />
+                )
+        }
     }
 
     render() {
@@ -178,7 +321,7 @@ class KudosAdmin extends Component {
                     </KudosNotice>
 
                     <KudosHeader
-                        apiConnected={this.state._kudos_mollie_connected}
+                        apiConnected={this.state.settings._kudos_mollie_connected}
                         checkingApi={this.state.checkingApi}
                     />
 
@@ -201,7 +344,7 @@ class KudosAdmin extends Component {
                                 className: 'tab-customize',
                             },
                             {
-                                name: 'Invoice',
+                                name: 'invoice',
                                 title: __('Invoice', 'kudos-donations'),
                                 className: 'tab-Invoice',
                             },
@@ -210,88 +353,27 @@ class KudosAdmin extends Component {
                                 title: __('Email', 'kudos-donations'),
                                 className: 'tab-email',
                             },
+                            {
+                                name: 'advanced',
+                                title: __('Advanced', 'kudos-donations'),
+                                className: 'tab-advanced',
+                            },
                         ]}
                     >
                         {
                             (tab) => {
-                                switch (tab.name) {
-
-                                    case 'mollie':
-
-                                        return (
-                                            <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
-                                                <MolliePanel
-                                                    {...this.state}
-                                                    handleInputChange={this.handleInputChange}
-                                                    updateSetting={this.updateSetting}
-                                                    checkApiKey={this.checkApiKey}
-                                                />
-                                            </div>
-                                        )
-
-                                    case 'customize':
-
-                                        return (
-                                            <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
-                                                <DonationButtonPanel
-                                                    {...this.state}
-                                                    handleInputChange={this.handleInputChange}
-                                                    updateSetting={this.updateSetting}
-                                                />
-                                                <DonationFormPanel
-                                                    {...this.state}
-                                                    handleInputChange={this.handleInputChange}
-                                                    updateSetting={this.updateSetting}
-                                                />
-                                                <CompletedPaymentPopup
-                                                    {...this.state}
-                                                    handleInputChange={this.handleInputChange}
-                                                    updateSetting={this.updateSetting}
-                                                />
-                                                <CustomReturnPanel
-                                                    {...this.state}
-                                                    handleInputChange={this.handleInputChange}
-                                                    updateSetting={this.updateSetting}
-                                                />
-                                            </div>
-                                        )
-
-                                    case 'Invoice':
-                                        return (
-                                            <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
-                                                <InvoiceCompanyPanel
-                                                    {...this.state}
-                                                    handleInputChange={this.handleInputChange}
-                                                    updateSetting={this.updateSetting}
-                                                />
-                                            </div>
-                                        )
-
-                                    case 'email':
-
-                                        return (
-                                            <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
-
-                                                <EmailReceipts
-                                                    {...this.state}
-                                                    updateSetting={this.updateSetting}
-                                                />
-
-                                                <EmailSettingsPanel
-                                                    {...this.state}
-                                                    isSaving = {this.state.isAPISaving}
-                                                    enableSmtp={this.state._kudos_smtp_enable}
-                                                    handleInputChange={this.handleInputChange}
-                                                    handleRadioChange={this.handleRadioChange}
-                                                    updateSetting={this.updateSetting}
-                                                />
-                                                <TestEmailPanel
-                                                    handleInputChange={this.handleInputChange}
-                                                    showNotice={this.showNotice}
-                                                />
-                                            </div>
-                                        )
-                                }
+                                return(
+                                    <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
+                                        {this.renderTab(tab)}
+                                        <PrimaryButton
+                                            className={"justify-center"}
+                                            label='Save'
+                                            disabled={this.state.isSaving || !this.state.isEdited}
+                                            isBusy={this.state.isSaving || this.state.checkingApi}
+                                            onClick={this.updateAll}
+                                        />
+                                    </div>
+                                )
                             }
                         }
                     </TabPanel>
