@@ -1,13 +1,16 @@
 import axios from "axios"
 // Settings Panels
 import {DonationFormPanel} from "./Panels/DonationFormPanel"
+import {CompletedPaymentPopup} from "./Panels/CompletedPaymentPopup"
 import {KudosNotice} from "./KudosNotice"
 import {KudosHeader} from "./KudosHeader"
 import {EmailSettingsPanel} from "./Panels/EmailSettingsPanel"
 import {TestEmailPanel} from "./Panels/TestEmailPanel"
 import {MolliePanel} from "./Panels/MolliePanel"
 import {DonationButtonPanel} from "./Panels/DonationButtonPanel"
-import {CompletedPaymentPanel} from "./Panels/CompletedPaymentPanel"
+import {CustomReturnPanel} from "./Panels/CustomReturnPanel"
+import {EmailReceipts} from "./Panels/EmailReceipts"
+import {InvoiceCompanyPanel} from "./Panels/InvoiceCompanyPanel"
 
 const { __ } = wp.i18n;
 
@@ -42,13 +45,6 @@ class KudosAdmin extends Component {
             isAPILoaded: false,
             isAPISaving: false,
             checkingApi: false,
-            _kudos_mollie_api_mode: '',
-            _kudos_mollie_test_api_key: '',
-            _kudos_mollie_live_api_key: '',
-            _kudos_mollie_connected: false,
-            _kudos_smtp_enable: false,
-            _kudos_smtp_host: '',
-            _kudos_smtp_autotls: ''
         };
 
     }
@@ -113,10 +109,10 @@ class KudosAdmin extends Component {
         })
     }
 
-    handleInputChange(e) {
+    handleInputChange(option, value) {
         this.setState({
             ...this.state,
-            [e.target.id]: e.target.value
+            [option]: value
         })
     }
 
@@ -205,9 +201,9 @@ class KudosAdmin extends Component {
                                 className: 'tab-customize',
                             },
                             {
-                                name: 'receipts',
-                                title: __('Receipts', 'kudos-donations'),
-                                className: 'tab-receipts',
+                                name: 'Invoice',
+                                title: __('Invoice', 'kudos-donations'),
+                                className: 'tab-Invoice',
                             },
                             {
                                 name: 'email',
@@ -247,7 +243,12 @@ class KudosAdmin extends Component {
                                                     handleInputChange={this.handleInputChange}
                                                     updateSetting={this.updateSetting}
                                                 />
-                                                <CompletedPaymentPanel
+                                                <CompletedPaymentPopup
+                                                    {...this.state}
+                                                    handleInputChange={this.handleInputChange}
+                                                    updateSetting={this.updateSetting}
+                                                />
+                                                <CustomReturnPanel
                                                     {...this.state}
                                                     handleInputChange={this.handleInputChange}
                                                     updateSetting={this.updateSetting}
@@ -255,9 +256,14 @@ class KudosAdmin extends Component {
                                             </div>
                                         )
 
-                                    case 'receipts':
+                                    case 'Invoice':
                                         return (
                                             <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
+                                                <InvoiceCompanyPanel
+                                                    {...this.state}
+                                                    handleInputChange={this.handleInputChange}
+                                                    updateSetting={this.updateSetting}
+                                                />
                                             </div>
                                         )
 
@@ -265,6 +271,12 @@ class KudosAdmin extends Component {
 
                                         return (
                                             <div className="kudos-settings-main dashboard-wrap" key='kudos-settings'>
+
+                                                <EmailReceipts
+                                                    {...this.state}
+                                                    updateSetting={this.updateSetting}
+                                                />
+
                                                 <EmailSettingsPanel
                                                     {...this.state}
                                                     isSaving = {this.state.isAPISaving}

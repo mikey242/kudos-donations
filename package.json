@@ -5,8 +5,8 @@
   "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
     "start": "webpack --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
-    "build:production": "webpack --config webpack.prod.js && composer install --no-dev --optimize-autoloader"
+    "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
+    "build:production": "cross-env NODE_ENV=production webpack --env.NODE_ENV=local --env.production --progress --config webpack.prod.js && composer install --no-dev --optimize-autoloader"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
@@ -14,13 +14,13 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
-    "@fullhuman/postcss-purgecss": "^2.1.2",
     "@wordpress/babel-preset-default": "^4.12.1",
     "@wordpress/browserslist-config": "^2.6.0",
     "autoprefixer": "^9.7.6",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
+    "cross-env": "^7.0.2",
     "css-loader": "^3.5.2",
     "cssnano": "^4.1.10",
     "file-loader": "^6.0.0",

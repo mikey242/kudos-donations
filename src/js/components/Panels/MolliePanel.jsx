@@ -17,9 +17,9 @@ const MolliePanel = props => {
 
     const [isEdited, setIsEdited] = useState(false);
 
-    const handleChange = (e) => {
+    const handleChange = (option, value) => {
         setIsEdited(true)
-        props.handleInputChange(e);
+        props.handleInputChange(option, value);
     }
 
     return (
@@ -64,11 +64,12 @@ const MolliePanel = props => {
             <PrimaryButton
                 label= 'Save and Verify'
                 disabled={!isEdited || props.isSaving}
-                isBusy={props.isSaving}
-                onClick={() => {
+                isBusy={props.isSaving || props.checkingApi}
+                onClick={(e) => {
                     props.updateSetting('_kudos_mollie_test_api_key', props._kudos_mollie_test_api_key, false)
                     props.updateSetting('_kudos_mollie_live_api_key', props._kudos_mollie_live_api_key, false)
                     props.checkApiKey()
+                    setIsEdited(false)
                 }}
             >
                 <ExternalLink href="https://mollie.com/dashboard/developers/api-keys">

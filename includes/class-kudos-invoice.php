@@ -87,7 +87,8 @@ class Kudos_Invoice
 					'description' => __('One-off donation', 'kudos-donations'),
 					'amount' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
 					'order_id' => $order_id,
-					'website_name' => get_bloginfo('name'),
+					'company_name' => get_option('_kudos_invoice_company_name'),
+					'company_address' => get_option('_kudos_invoice_company_address'),
 				])
 			);
 

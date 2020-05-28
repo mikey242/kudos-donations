@@ -1,4 +1,11 @@
 module.exports = {
+  purge: [
+    './src/js/**/.js',
+    './src/js/**/.jsx',
+    './src/js/components/*.js',
+    './public/**/*.php',
+    './templates/**/*.twig'
+  ],
   theme: {
     fontSize: {
       'base': '16px',

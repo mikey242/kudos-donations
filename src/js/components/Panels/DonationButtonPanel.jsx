@@ -1,9 +1,7 @@
 const { __ } = wp.i18n;
 
 const {
-    PanelRow,
     PanelBody,
-    Button,
 } = wp.components;
 
 const {
@@ -18,9 +16,9 @@ const DonationButtonPanel = props => {
 
     const [isEdited, setIsEdited] = useState(false);
 
-    const handleChange = (e) => {
+    const handleChange = (option, value) => {
         setIsEdited(true)
-        props.handleInputChange(e);
+        props.handleInputChange(option, value);
     }
 
     return (
@@ -30,6 +28,7 @@ const DonationButtonPanel = props => {
         >
             <RadioImage
                 id="_kudos_button_style"
+                className={"component-kudos-images"}
                 value={props._kudos_button_style}
                 label={__('Button Style', 'kudos-donations')}
                 onClick={props.updateSetting}
@@ -53,7 +52,10 @@ const DonationButtonPanel = props => {
                 label="Save"
                 disabled={!isEdited || props.isSaving}
                 isBusy={props.isSaving}
-                onClick={()=>props.updateSetting('_kudos_button_label', props._kudos_button_label)}
+                onClick={()=> {
+                    props.updateSetting('_kudos_button_label', props._kudos_button_label)
+                    setIsEdited(false)
+                }}
             />
 
         </PanelBody>

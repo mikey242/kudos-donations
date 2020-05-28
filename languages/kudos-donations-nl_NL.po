@@ -1,14 +1,970 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"POT-Creation-Date: 2020-05-21 16:28+0200\n"
-"PO-Revision-Date: 2020-05-21 16:28+0200\n"
+"Project-Id-Version: Kudos Donations\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
+"POT-Creation-Date: 2020-05-28T13:29:08+00:00\n"
+"PO-Revision-Date: 2020-05-28 15:38+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3.1\n"
-"X-Poedit-Basepath: .\n"
+"X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: nl_NL\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: kudos.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+"X-Poedit-SearchPathExcluded-2: node_modules\n"
+
+#. Plugin Name of the plugin
+msgid "Kudos Donations"
+msgstr "Kudos Donations"
+
+#. Plugin URI of the plugin
+#, fuzzy
+msgid "https://gitlab.iseard.media/michael/kudos-donations"
+msgstr "https://gitlab.iseard.media/michael/kudos-donations"
+
+#. Description of the plugin
+msgid ""
+"Add a donation button to any page on your website. Easy & fast setup. Works "
+"with Mollie payments."
+msgstr ""
+"Voeg een donatieknop toe op elke websitepagina. Makkelijk & snel "
+"geïnstalleerd. Maakt gebruik van Mollie online betaalservice."
+
+#. Author of the plugin
+#, fuzzy
+msgid "Iseard Media"
+msgstr "Iseard Media"
+
+#. Author URI of the plugin
+msgid "https://iseard.media"
+msgstr "https://iseard.media"
+
+#: admin/class-kudos-admin.php:84 admin/class-kudos-admin.php:85
+msgid "Kudos Settings"
+msgstr "Kudos-instellingen"
+
+#. translators: %s: Plugin name
+#: admin/class-kudos-admin.php:100
+msgid "%s Transactions"
+msgstr "%s Transacties"
+
+#: admin/class-kudos-admin.php:101 admin/class-kudos-admin.php:155
+#: includes/class-transactions-table.php:34
+msgid "Transactions"
+msgstr "Transacties"
+
+#: admin/class-kudos-admin.php:148
+msgid "Transaction deleted"
+msgstr "Transactie verwijderd"
+
+#. translators: %s: Number of transactions
+#: admin/class-kudos-admin.php:151
+msgid "%s transaction(s) deleted"
+msgstr "%s transactie(s) verwijderd"
+
+#: admin/class-kudos-admin.php:164
+msgid "Your recent Kudos transactions"
+msgstr "Meest recente Kudos transacties"
+
+#: admin/class-kudos-admin.php:325 includes/class-kudos-carbon.php:189
+#: includes/class-kudos-carbon.php:406
+msgid "Donate now"
+msgstr "Doneer nu"
+
+#: admin/class-kudos-admin.php:367 includes/class-kudos-carbon.php:214
+#: includes/class-kudos-carbon.php:408
+msgid "Support us!"
+msgstr "Steun ons!"
+
+#: admin/class-kudos-admin.php:377 includes/class-kudos-carbon.php:216
+#: includes/class-kudos-carbon.php:410
+msgid "Thank you for your donation. We appreciate your support!"
+msgstr "Bedankt voor je donatie. Wij waarderen je steun enorm!"
+
+#: admin/class-kudos-admin.php:399 includes/class-kudos-carbon.php:238
+msgid "Thank you!"
+msgstr "Bedankt!"
+
+#. translators: %s: Value of donation
+#: admin/class-kudos-admin.php:409 includes/class-kudos-carbon.php:247
+msgid "Many thanks for your donation of %s. We appreciate your support."
+msgstr "Bedankt voor je donatie van %s. Wij waarderen je steun enorm."
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:93
+#: includes/class-kudos-carbon.php:201
+#: includes/class-transactions-table.php:153
+#: includes/class-transactions-table.php:500
+msgid "Name"
+msgstr "Naam"
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:101
+msgid "E-mail address"
+msgstr "E-mailadres"
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:107
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:101
+#: includes/class-transactions-table.php:155
+#: includes/class-transactions-table.php:506
+msgid "Amount"
+msgstr "Bedrag"
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:124
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:126
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:130
+#: cache/a7/a7772ab1ad5e7df7f930ce3413fd9c04cd1b05ddb41133fcf0bbcfe3a8f5528e.php:132
+msgid "Donate"
+msgstr "Doneer"
+
+#: cache/b3/b34f37a1ac91a947dbd009056951dc1becbc2430f433d3d9f745ac3244c84714.php:484
+msgid "All rights reserved."
+msgstr "Alle rechten voorbehouden."
+
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:52
+#, fuzzy
+msgid "This is a receipt for your recent donation on"
+msgstr "Dit is een ontvangstbewijs voor uw recente donatie op"
+
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:65
+msgid "Hi"
+msgstr "Hallo"
+
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:69
+#, fuzzy
+msgid "Thanks for your donation. This email is the receipt for your records."
+msgstr ""
+"Bedankt voor je donatie. Deze e-mail is het ontvangstbewijs voor uw "
+"administratie."
+
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:76
+msgid "Order ID"
+msgstr "Bestelnummer"
+
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:83
+#: includes/class-transactions-table.php:152
+#: includes/class-transactions-table.php:497
+msgid "Date"
+msgstr "Datum"
+
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:95
+msgid "Description"
+msgstr "Omschrijving"
+
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:119
+msgid "Total"
+msgstr "Totaal"
+
+#: cache/d7/d79febef40fc0496daa614170397be940f96636104f0c89fadcc8a99bb6251b0.php:135
+#: public/class-kudos-public.php:174
+msgid "Thanks"
+msgstr "Bedankt"
+
+#. translators: %s: Plugin name
+#: includes/class-kudos-carbon.php:76 includes/class-kudos-carbon.php:79
+msgid "%s Settings"
+msgstr "%s Instellingen"
+
+#: includes/class-kudos-carbon.php:94
+msgid "Welcome to Kudos. Follow these steps to start receiving donations."
+msgstr "Welkom bij Kudos. Volg deze stappen om donaties te kunnen werven."
+
+#: includes/class-kudos-carbon.php:99
+msgid "Step 1. Configure your payment method"
+msgstr "Stap 1. Stel je betaalmethode in"
+
+#. translators: %s: Plugin name
+#: includes/class-kudos-carbon.php:101
+msgid ""
+"In the Mollie tab, fill in your payment settings. Kudos works with payment "
+"vendor %s."
+msgstr ""
+"In het tabblad Mollie, voeg de betalingsgegevens toe. Kudos gebruikt "
+"betaalservice %s."
+
+#: includes/class-kudos-carbon.php:105
+msgid "Step 2. Configure look and feel"
+msgstr "Stap 2. Configureer het design"
+
+#: includes/class-kudos-carbon.php:106
+msgid ""
+"Choose the design of the donation button under the Kudos Button tab. Review "
+"or change all text fields under the tabs Donation Form and Completed "
+"Payments."
+msgstr ""
+"Selecteer de gewenste donatieknop bij de Kudos Knop tab. Pas alle "
+"tekstvelden aan bij de tabs Donatie Formulier en Bedankt Pop-up."
+
+#: includes/class-kudos-carbon.php:110
+msgid "Step 3. Add your first button"
+msgstr "Stap 3. Voeg de eerste knop toe"
+
+#: includes/class-kudos-carbon.php:111
+msgid ""
+"There are two ways to place a donation button, depending on which WordPress "
+"text editor you use."
+msgstr ""
+"Je kunt op twee manieren een donatieknop plaatsen. Dit ligt aan je WordPress "
+"editor."
+
+#: includes/class-kudos-carbon.php:112
+msgid "[Option 1] - Using the block editor"
+msgstr "[Optie 1] - Bij de blok editor"
+
+#: includes/class-kudos-carbon.php:113
+msgid ""
+"When using the block editor in a post or page, press the + sign to add a "
+"block. Search for ‘Kudos’. Select the Kudos Donations button option. Voila! "
+"You’ve created your first donations button."
+msgstr ""
+"Als je de blok editor gebruikt in een bericht of pagina, klik op het plusje "
+"om een blok toe te voegen. Zoek op de naam 'Kudos'. Selecteer de optie Kudos "
+"Donations knop. Voila! Je eerste donatieknop staat nu paraat."
+
+#: includes/class-kudos-carbon.php:114
+msgid "Tip: Keep the button call-to-action text short & sweet."
+msgstr "Tip: Gebruik een korte, aantrekkelijke call-to-action tekst."
+
+#: includes/class-kudos-carbon.php:115
+msgid "[Option 2] - Using the regular text editor"
+msgstr "[Optie 2] - Bij de reguliere tekst editor"
+
+#: includes/class-kudos-carbon.php:116
+msgid ""
+"The regular WordPress editor uses shortcodes. A shortcode is a piece of text "
+"between brackets [like this]. To place a donations button, add the following "
+"code to a text field"
+msgstr ""
+"Bij de reguliere WordPress editor kun je gebruik maken van shortcodes. Een "
+"shortcode is een stukje tekst tussen haakjes [zoals dit]. Plaats een "
+"donatieknop door de volgende shortcode toe te voegen aan een tekst vak"
+
+#: includes/class-kudos-carbon.php:118
+msgid "The button will now appear on the page!"
+msgstr "De knop zal nu op de pagina verschijnen!"
+
+#: includes/class-kudos-carbon.php:119
+msgid ""
+"Tip: You can customise each button and donate pop-up text by adding extra "
+"options to the shortcode. Check the ‘Shortcode’ tab for more information."
+msgstr ""
+"Tip: Je kunt elke donatieknop en -tekst verder configureren door extra "
+"commando's toe te voegen aan de shortcode. Check het tabblad 'Shortcode' "
+"voor meer informatie."
+
+#: includes/class-kudos-carbon.php:123
+msgid "Step 4. View your transactions"
+msgstr "Stap 4. Bekijk je transacties"
+
+#: includes/class-kudos-carbon.php:124
+msgid ""
+"Check out the transactions table in the main Kudos menu to see your "
+"donations."
+msgstr ""
+"Check de transactie tabel in het Kudos hoofdmenu om alle donaties te "
+"bekijken."
+
+#: includes/class-kudos-carbon.php:128
+msgid "Need support?"
+msgstr "Hulp nodig?"
+
+#: includes/class-kudos-carbon.php:129
+msgid ""
+"We tried to make the Kudos Donations plugin as easy to use as possible. But "
+"we all need a little help sometimes."
+msgstr ""
+"We hebben geprobeerd om het gebruik van de Kudos Donations plugin zo "
+"makkelijk mogelijk te maken. Als je er niet uit komt, laat het dan weten."
+
+#. translators: %s: Email address
+#: includes/class-kudos-carbon.php:131
+msgid ""
+"If you have questions about the Kudos plugin or require support with the "
+"installation, please get in touch via %s."
+msgstr ""
+"Als je vragen hebt over de Kudos plugin of als je hulp nodig hebt met de "
+"installatie, neem dan contact met ons op via %s."
+
+#. translators: %s: Mollie website link
+#: includes/class-kudos-carbon.php:145
+msgid "Kudos works with payment vendor Mollie. Create a %s."
+msgstr "Kudos gebruikt Mollie online betaalservice. Maak een %s aan."
+
+#: includes/class-kudos-carbon.php:146
+msgid ""
+"To receive payments, you will need to add your Mollie Live API key in the "
+"box below. Would you like to test the system first? Then you can use the "
+"Mollie Test API key."
+msgstr ""
+"Om betalingen te ontvangen, voeg je Mollie Live API key toe in het "
+"onderstaande vak. Wil je eerst het systeem testen? Gebruik dan de Mollie "
+"Test API key."
+
+#. translators: %s: Link to Mollie dashboard
+#: includes/class-kudos-carbon.php:148
+msgid "Both \"Live\" and \"Test\" API keys can be found in your %s"
+msgstr ""
+"Zowel de \"Live\" als \"Test\" API keys kunnen gevonden worden in je %s"
+
+#: includes/class-kudos-carbon.php:150
+#: includes/class-transactions-table.php:515
+msgid "Mode"
+msgstr "Status"
+
+#: includes/class-kudos-carbon.php:151
+msgid ""
+"When using this plugin for the first time, the payment mode is set to \"Test"
+"\". Check that the configuration is working correctly. Once you're ready to "
+"receive live payments you can switch the mode to \"Live\"."
+msgstr ""
+"Wanneer je deze plug-in voor het eerst gebruikt, staat de betalingsmodus "
+"ingesteld op \"Test\". Controleer of de configuratie correct is. Zodra je "
+"live betalingen wilt ontvangen, verander de status naar 'Live'."
+
+#: includes/class-kudos-carbon.php:153
+#: includes/class-transactions-table.php:181
+msgid "Test"
+msgstr "Test"
+
+#: includes/class-kudos-carbon.php:154
+#: includes/class-transactions-table.php:187
+msgid "Live"
+msgstr "Live"
+
+#: includes/class-kudos-carbon.php:157
+msgid "Mollie Test API Key"
+msgstr "Mollie Test API Key"
+
+#. translators: %s: Start of API key
+#: includes/class-kudos-carbon.php:159 includes/class-kudos-carbon.php:163
+msgid "This begins with \"%s\""
+msgstr "Dit begint met \"%s\""
+
+#: includes/class-kudos-carbon.php:161
+msgid "Mollie Live API Key"
+msgstr "Mollie Live API Key"
+
+#: includes/class-kudos-carbon.php:167
+msgid "Check API Key"
+msgstr "Check API Key"
+
+#: includes/class-kudos-carbon.php:176
+msgid "Kudos Button"
+msgstr "Kudos Knop"
+
+#: includes/class-kudos-carbon.php:179
+msgid "Kudos button"
+msgstr "Kudos Knop"
+
+#: includes/class-kudos-carbon.php:180
+msgid "Set the colour and text of your donation button below."
+msgstr "Selecteer de gewenste donatieknop."
+
+#: includes/class-kudos-carbon.php:182
+msgid "Button style"
+msgstr "Knop design"
+
+#: includes/class-kudos-carbon.php:188 includes/class-kudos-carbon.php:405
+msgid "Button label"
+msgstr "Knop tekst"
+
+#: includes/class-kudos-carbon.php:195 includes/class-kudos-carbon.php:198
+#: src/js/components/Panels/DonationFormPanel.jsx:26
+msgid "Donation Form"
+msgstr "Donatie Formulier"
+
+#: includes/class-kudos-carbon.php:199
+msgid ""
+"This is where you can change the settings of the donation pop-up that "
+"appears when you click on the donations button."
+msgstr ""
+"Hier kun je de instellingen van de donatie pop-up veranderen. Deze pop-up "
+"verschijnt als je op de donatieknop drukt."
+
+#: includes/class-kudos-carbon.php:203 includes/class-kudos-carbon.php:209
+msgid "Required"
+msgstr "Verplicht"
+
+#: includes/class-kudos-carbon.php:204 includes/class-kudos-carbon.php:210
+msgid "Optional"
+msgstr "Optioneel"
+
+#: includes/class-kudos-carbon.php:207
+#: includes/class-transactions-table.php:503
+#: src/js/components/KudosAdmin.js:210
+msgid "Email"
+msgstr "E-mail"
+
+#: includes/class-kudos-carbon.php:213
+msgid "Payment form header"
+msgstr "Donatie pop-up titel"
+
+#: includes/class-kudos-carbon.php:215
+msgid "Payment form text"
+msgstr "Donatie pop-up tekst"
+
+#: includes/class-kudos-carbon.php:222 includes/class-kudos-carbon.php:225
+msgid "Completed Payment"
+msgstr "Bedankt Pop-up"
+
+#: includes/class-kudos-carbon.php:226
+msgid ""
+"This is where you can change the settings of the 'thank you' pop-up that "
+"appears after a payment has been made."
+msgstr ""
+"Hier kun je de instellingen veranderen van de 'Bedankt' pop-up die "
+"verschijnt wanneer een donatie is voltooid."
+
+#: includes/class-kudos-carbon.php:230
+msgid "Pop-up message"
+msgstr "Pop-up bericht"
+
+#. translators: %s: Available handlebar variables
+#: includes/class-kudos-carbon.php:232
+msgid ""
+"Use the following variables %s to include the donated amount and donor's "
+"name in displayed text."
+msgstr ""
+"Gebruik de volgende codes om het gedoneerde bedrag en/of de naam van de "
+"donor weer te geven: %s."
+
+#: includes/class-kudos-carbon.php:234
+msgid "Show pop-up message when payment complete"
+msgstr "Laat een pop-up zien wanneer de betaling voltooid is"
+
+#: includes/class-kudos-carbon.php:235
+msgid "Enable this to show a pop-up thanking the customer for their donation."
+msgstr ""
+"Selecteer dit veld om een 'Bedankt' pop-up te laten zien na betaling van de "
+"donatie."
+
+#: includes/class-kudos-carbon.php:237
+msgid "Message header"
+msgstr "Bericht titel"
+
+#: includes/class-kudos-carbon.php:245
+msgid "Message text"
+msgstr "Bericht tekst"
+
+#: includes/class-kudos-carbon.php:256
+#, fuzzy
+msgid "Email receipts"
+msgstr "E-mailontvangstbewijzen"
+
+#: includes/class-kudos-carbon.php:257
+#, fuzzy
+msgid ""
+"Once a payment has been completed, you can automatically send an email "
+"receipt to the donor."
+msgstr ""
+"Zodra een betaling is voltooid, u automatisch een ontvangstbewijs per e-mail "
+"naar de donor sturen."
+
+#: includes/class-kudos-carbon.php:259
+#, fuzzy
+msgid "Send email receipts"
+msgstr "E-mailontvangstbewijzen verzenden"
+
+#: includes/class-kudos-carbon.php:263
+msgid "Return url"
+msgstr "Landingspagina na betaling"
+
+#: includes/class-kudos-carbon.php:264
+msgid ""
+"After payment the customer is returned to the page where they clicked on the "
+"donation button. To use a different return URL, select the box below."
+msgstr ""
+"Na betaling wordt de klant teruggebracht naar de beginpagina. Voor een "
+"andere landingspagina na betaling, selecteer onderstaand veld en voer de URL "
+"in."
+
+#: includes/class-kudos-carbon.php:266
+msgid "Use custom return URL"
+msgstr "Gebruik een aangepaste URL"
+
+#: includes/class-kudos-carbon.php:268
+msgid "URL"
+msgstr "URL"
+
+#. translators: %s: Current web address (e.g https://mywebsite.com)
+#: includes/class-kudos-carbon.php:270
+msgid "e.g: %s/thanks"
+msgstr "bijvoorbeeld: %s/bedankt"
+
+#: includes/class-kudos-carbon.php:282 includes/class-kudos-carbon.php:285
+msgid "Email Settings"
+msgstr "E-mail Instellingen"
+
+#: includes/class-kudos-carbon.php:286
+#, fuzzy
+msgid ""
+"Configure custom email settings. Unless you are using an external plugin to "
+"configure email you will want enable this."
+msgstr ""
+"Aangepaste e-mailinstellingen configureren. Tenzij u een externe plug-in "
+"gebruikt om e-mail te configureren, wilt u dit inschakelen."
+
+#: includes/class-kudos-carbon.php:288
+#, fuzzy
+msgid "Use custom email settings"
+msgstr "Aangepaste e-mailinstellingen gebruiken"
+
+#: includes/class-kudos-carbon.php:289
+#, fuzzy
+msgid "Enable this to use your own SMTP server settings."
+msgstr "Schakel dit in om uw eigen SMTP-serverinstellingen te gebruiken."
+
+#: includes/class-kudos-carbon.php:291
+msgid "Host"
+msgstr "Host"
+
+#: includes/class-kudos-carbon.php:299
+msgid "Encryption"
+msgstr "Versleuteling"
+
+#: includes/class-kudos-carbon.php:307
+#: src/js/components/Panels/EmailSettingsPanel.jsx:45
+msgid "None"
+msgstr "Geen"
+
+#: includes/class-kudos-carbon.php:308
+#: src/js/components/Panels/EmailSettingsPanel.jsx:46
+msgid "SSL"
+msgstr "SSL"
+
+#: includes/class-kudos-carbon.php:309
+#: src/js/components/Panels/EmailSettingsPanel.jsx:47
+msgid "TLS"
+msgstr "TLS"
+
+#: includes/class-kudos-carbon.php:312
+msgid "Auto TLS"
+msgstr "Auto-TLS"
+
+#: includes/class-kudos-carbon.php:313
+msgid ""
+"By default TLS encryption is automatically used if the server supports it, "
+"which is recommended. In some cases, due to server misconfigurations, this "
+"can cause issues and may need to be disabled."
+msgstr ""
+"Standaard wordt TLS-versleuteling automatisch gebruikt als de server dit "
+"ondersteunt, wat wordt aanbevolen. In sommige gevallen kan, vanwege onjuiste "
+"serverconfiguraties, dit problemen veroorzaken en moet mogelijk worden "
+"uitgeschakeld."
+
+#: includes/class-kudos-carbon.php:321
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#: includes/class-kudos-carbon.php:329
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: includes/class-kudos-carbon.php:337
+msgid "Port"
+msgstr "Poort"
+
+#: includes/class-kudos-carbon.php:348
+#: src/js/components/Panels/TestEmailPanel.jsx:60
+msgid "Send Test Email"
+msgstr "Verstuur een test-email"
+
+#: includes/class-kudos-carbon.php:352
+#, fuzzy
+msgid "Test the current configuration. Make sure you save any changes first."
+msgstr ""
+"Test de huidige configuratie. Zorg ervoor dat u eventuele wijzigingen eerst "
+"opslaat."
+
+#: includes/class-kudos-carbon.php:358 includes/class-kudos-carbon.php:361
+msgid "Shortcode"
+msgstr "Shortcode"
+
+#: includes/class-kudos-carbon.php:365
+msgid "Shortcode options"
+msgstr "Shortcode opties"
+
+#. translators: %s: <code>[kudos]</code>
+#: includes/class-kudos-carbon.php:367
+msgid ""
+"Override the default settings %s by using the following shortcode options"
+msgstr ""
+"Verander de standaard instellingen %s door middel van de volgende shortcodes"
+
+#: includes/class-kudos-carbon.php:371 includes/class-kudos-carbon.php:375
+msgid "Help us out!"
+msgstr "Help ons!"
+
+#: includes/class-kudos-carbon.php:371
+msgid "Customise button text"
+msgstr "Verander de tekst van de knop"
+
+#: includes/class-kudos-carbon.php:372 includes/class-kudos-carbon.php:375
+msgid "Support our cause"
+msgstr "Steun ons doel"
+
+#: includes/class-kudos-carbon.php:372
+msgid "Customise header text"
+msgstr "Verander de titel van de donatie pop-up"
+
+#: includes/class-kudos-carbon.php:373 includes/class-kudos-carbon.php:375
+msgid ""
+"Thank you for donating to this project. We really appreciate your support."
+msgstr ""
+"Bedankt voor je donatie voor dit project. Wij waarderen je steun enorm."
+
+#: includes/class-kudos-carbon.php:373
+msgid "Customise message text"
+msgstr "Pas de bericht tekst aan"
+
+#: includes/class-kudos-carbon.php:374
+msgid "A fully customised button and text would look like this"
+msgstr "Een volledig aangepaste knop en pop-up tekst ziet er zo uit"
+
+#: includes/class-kudos-carbon.php:382 includes/class-kudos-carbon.php:385
+msgid "Diagnostics"
+msgstr "Diagnostieken"
+
+#: includes/class-kudos-carbon.php:402
+msgid "Adds a Kudos donate button to your post or page."
+msgstr "Voeg een Kudos donatieknop toe aan een bericht of pagina."
+
+#: includes/class-kudos-carbon.php:407
+msgid "Pop-up header"
+msgstr "Pop-up titel"
+
+#: includes/class-kudos-carbon.php:409
+msgid "Pop-up text"
+msgstr "Pop-up bericht"
+
+#: includes/class-kudos-invoice.php:87 includes/class-kudos-mailer.php:85
+msgid "One-off donation"
+msgstr "Eenmalige donatie"
+
+#: includes/class-kudos-mailer.php:91
+#, fuzzy
+msgid "Kudos Donation Receipt"
+msgstr "Kudos Donatie Ontvangstbewijs"
+
+#: includes/class-kudos-mailer.php:117
+msgid "Test email"
+msgstr "Test email"
+
+#. translators: %s: API mode
+#: includes/class-kudos-mailer.php:121
+#, fuzzy
+msgid "Email sent to %s."
+msgstr "E-mail verzonden naar %s."
+
+#. translators: %s: API mode
+#: includes/class-kudos-mailer.php:124
+#, fuzzy
+msgid "Error sending email, please check the settings and try again."
+msgstr ""
+"Fout verzenden van e-mail, controleer de instellingen en probeer het opnieuw."
+
+#. translators: %s: The order id
+#: includes/class-kudos-mollie.php:140
+msgid "Kudos Payment - %s"
+msgstr "Kudos Betaling - %s"
+
+#: includes/class-kudos-mollie.php:212
+#, fuzzy
+msgid "%s API key should begin with \"%s\"."
+msgstr "%s API-sleutel moet beginnen met \"%s\"."
+
+#. translators: %s: API mode
+#: includes/class-kudos-mollie.php:223
+msgid "%s API key connection was successful!"
+msgstr "%s API key verbinding is succesvol!"
+
+#: includes/class-kudos-mollie.php:227
+msgid ""
+"Error connecting with Mollie, please check the %s API key and try again."
+msgstr ""
+"Kan geen verbinding maken met Mollie. Check de %s API key en probeer het "
+"nogmaals."
+
+#. translators: %s: Mollie
+#: includes/class-kudos-mollie.php:292
+msgid "Webhook requested by %s."
+msgstr "Webhook aangevraagd door %s."
+
+#: includes/class-transactions-table.php:33
+msgid "Transaction"
+msgstr "Transactie"
+
+#: includes/class-transactions-table.php:59
+msgid "Export"
+msgstr "Exporteren"
+
+#: includes/class-transactions-table.php:81
+msgid "No transactions available."
+msgstr "Geen transacties beschikbaar."
+
+#: includes/class-transactions-table.php:154
+msgid "E-mail"
+msgstr "E-mail"
+
+#: includes/class-transactions-table.php:156
+#: includes/class-transactions-table.php:509
+msgid "Status"
+msgstr "Status"
+
+#: includes/class-transactions-table.php:157
+msgid "Transaction Id"
+msgstr "Transactie Id"
+
+#: includes/class-transactions-table.php:175
+msgid "All"
+msgstr "Alles"
+
+#: includes/class-transactions-table.php:286
+#: includes/class-transactions-table.php:369
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: includes/class-transactions-table.php:337
+msgid "Paid"
+msgstr "Betaald"
+
+#: includes/class-transactions-table.php:340
+msgid "Open"
+msgstr "Open"
+
+#: includes/class-transactions-table.php:343
+msgid "Expired"
+msgstr "Niet meer geldig"
+
+#: includes/class-transactions-table.php:346
+msgid "Canceled"
+msgstr "Geannuleerd"
+
+#: includes/class-transactions-table.php:349
+msgid "Failed"
+msgstr "Mislukt"
+
+#: includes/class-transactions-table.php:352
+msgid "Unknown"
+msgstr "Onbekend"
+
+#: includes/class-transactions-table.php:484
+msgid "transactions"
+msgstr "transacties"
+
+#: includes/class-transactions-table.php:512
+msgid "Method"
+msgstr "Methode"
+
+#: includes/class-transactions-table.php:518
+msgid "Currency"
+msgstr "Valuta"
+
+#: includes/class-transactions-table.php:521
+msgid "Type"
+msgstr "Type"
+
+#: public/class-kudos-button.php:69
+msgid "Mollie not configured"
+msgstr "Mollie is niet geconfigureerd"
+
+#: public/class-kudos-modal.php:72
+msgid "Secure payment by"
+msgstr "Veilig betalen door"
+
+#: public/class-kudos-public.php:88
+msgid "Your name is required"
+msgstr "Vul uw naam in"
+
+#: public/class-kudos-public.php:89
+msgid "Your email is required"
+msgstr "Vul uw e-mailadres in"
+
+#: public/class-kudos-public.php:90
+msgid "Please enter a valid email"
+msgstr "Vul een geldig e-mailadres in"
+
+#: public/class-kudos-public.php:91
+msgid "Donation amount is required"
+msgstr "Donatiebedrag is vereist"
+
+#: public/class-kudos-public.php:92
+msgid "Minimum donation is 1 euro"
+msgstr "Minimale donatie is 1 euro"
+
+#: public/class-kudos-public.php:93
+msgid "Only digits are valid"
+msgstr "Alleen cijfers zijn geldig"
+
+#: public/class-kudos-public.php:118
+msgid "Request invalid."
+msgstr "Verzoek is ongeldig."
+
+#: public/class-kudos-public.php:131
+msgid "Error creating Mollie payment. Please try again later."
+msgstr "Fout bij het maken van een Mollie-betaling. Probeer het later opnieuw."
+
+#: public/class-kudos-public.php:171
+msgid "Payment canceled"
+msgstr "Betaling geannuleerd"
+
+#: public/class-kudos-public.php:175
+msgid "Your donation will be processed soon."
+msgstr "Uw donatie wordt zo snel mogelijk verwerkt."
+
+#: src/js/components/KudosAdmin.js:159
+#, fuzzy
+msgid "Setting(s) updated"
+msgstr "Instelling(en) bijgewerkt"
+
+#: src/js/components/KudosAdmin.js:200
+msgid "Customize"
+msgstr "Aanpassen"
+
+#: src/js/components/KudosAdmin.js:205
+msgid "Invoice"
+msgstr "Factuur"
+
+#: src/js/components/Panels/CompletedPaymentPopup.jsx:27
+#, fuzzy
+#| msgid "Completed Payment"
+msgid "Completed Payment Pop-up"
+msgstr "Bedankt Pop-up"
+
+#: src/js/components/Panels/CustomReturnPanel.jsx:27
+#, fuzzy
+#| msgid "Use custom return URL"
+msgid "Custom Return URL"
+msgstr "Gebruik een aangepaste URL"
+
+#: src/js/components/Panels/DonationButtonPanel.jsx:26
+#, fuzzy
+#| msgid "Donation Form"
+msgid "Donation Button"
+msgstr "Donatie Formulier"
+
+#: src/js/components/Panels/DonationButtonPanel.jsx:33
+msgid "Button Style"
+msgstr "Button Stijl"
+
+#: src/js/components/Panels/DonationButtonPanel.jsx:37
+msgid "Orange"
+msgstr "Oranje"
+
+#: src/js/components/Panels/DonationButtonPanel.jsx:38
+msgid "Green"
+msgstr "Groen"
+
+#: src/js/components/Panels/InvoiceCompanyPanel.jsx:26
+msgid "Company Details"
+msgstr "Bedrijf Details"
+
+#: src/js/components/Panels/MolliePanel.jsx:27
+msgid "Mollie"
+msgstr "Mollie"
+
+#: src/js/components/Panels/MolliePanel.jsx:36
+#, fuzzy
+#| msgid "Mollie Live API Key"
+msgid "Mollie API Mode"
+msgstr "Mollie Live API Key"
+
+#: src/js/components/Panels/MolliePanel.jsx:37
+#, fuzzy
+#| msgid ""
+#| "When using this plugin for the first time, the payment mode is set to "
+#| "\"Test\". Check that the configuration is working correctly. Once you're "
+#| "ready to receive live payments you can switch the mode to \"Live\"."
+msgid ""
+"When using Kudos Donations for the first time, the payment mode is set to "
+"\"Test\". Check that the configuration is working correctly. Once you are "
+"ready to receive live payments you can switch the mode to \"Live\"."
+msgstr ""
+"Wanneer je deze plug-in voor het eerst gebruikt, staat de betalingsmodus "
+"ingesteld op \"Test\". Controleer of de configuratie correct is. Zodra je "
+"live betalingen wilt ontvangen, verander de status naar 'Live'."
+
+#: src/js/components/Panels/MolliePanel.jsx:76
+#, fuzzy
+#| msgid "Check API Key"
+msgid "Get API Key(s)"
+msgstr "Check API Key"
+
+#: src/js/components/Panels/TestEmailPanel.jsx:37
+msgid "Invalid email address"
+msgstr "Ongeldig e-mailadres"
+
+#: src/js/components/Panels/TestEmailPanel.jsx:66
+msgid "Email address"
+msgstr "E-mailadres"
+
+#: src/js/components/Panels/TestEmailPanel.jsx:67
+#, fuzzy
+msgid "Make sure you save any changes beforehand."
+msgstr ""
+"Test de huidige configuratie. Zorg ervoor dat u eventuele wijzigingen eerst "
+"opslaat."
+
+#: src/js/components/Panels/TestEmailPanel.jsx:73
+#, fuzzy
+msgid "user@domain.com"
+msgstr "user@domain.com"
+
+#~ msgid "Settings"
+#~ msgstr "Instellingen"
+
+#~ msgid "Search results for “%s”"
+#~ msgstr "Zoekresultaten voor '%s'"
+
+#~ msgid "Get Started"
+#~ msgstr "Aan de slag"
+
+#, fuzzy
+#~ msgid "This plugin was created by %s"
+#~ msgstr "Deze plug-in is gemaakt door %s"
+
+#, fuzzy
+#~ msgid "Please provide an email address."
+#~ msgstr "Geef een e-mailadres op."
+
+#, fuzzy
+#~ msgid "Email with subject \"%s\" sent to \"%s\""
+#~ msgstr "E-mail met onderwerp \"%s\" verzonden naar \"%s\""
+
+#, fuzzy
+#~ msgid "Email with subject \"%s\" failed to be sent to \"%s\""
+#~ msgstr "E-mail met onderwerp \"%s\" kan niet worden verzonden naar \"%s\""
+
+#, fuzzy
+#~ msgid "Search Donors"
+#~ msgstr "Zoeken naar donoren"
+
+#, fuzzy
+#~ msgid "Want to cancel your subscription?"
+#~ msgstr "Wilt u uw abonnement opzeggen?"
+
+#~ msgid "Click here"
+#~ msgstr "Klik hier"
+
+#~ msgid "Test Email"
+#~ msgstr "Test e-mail"
+
+#, fuzzy
+#~ msgid "It worked!"
+#~ msgstr "Het werkte!"
+
+#, fuzzy
+#~ msgid "Looks like your email settings are set up correctly :-)"
+#~ msgstr "Het lijkt erop dat uw e-mailinstellingen correct zijn ingesteld :-)"

@@ -355,7 +355,7 @@ class Transactions_Table extends WP_List_Table {
 		$invoice = $this->invoice;
 		$pdf = $invoice->get_invoice($item['order_id']);
 
-		return $status . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '') . ($pdf ? ' <a href="'.$pdf.'"><i class="far fa-file-pdf"></i></a>' : '' );
+		return ($pdf ? ' <a href="'.$pdf.'">'. $status . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '') .' <i class="far fa-file-pdf"></i></a>' : '' );
 	}
 
 	/**

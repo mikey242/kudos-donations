@@ -3,10 +3,10 @@ const { __ } = wp.i18n;
 const {
     PanelRow,
     BaseControl,
-    TextControl
+    TextareaControl
 } = wp.components;
 
-const TextInput = props => {
+const TextArea = props => {
 
     return (
         <PanelRow>
@@ -14,7 +14,7 @@ const TextInput = props => {
                 label={__(props.label, 'kudos-donations')}
                 help={__(props.help, 'kudos-donations')}
             >
-                <TextControl
+                <TextareaControl
                     key={"key_" + props.id}
                     id={props.id}
                     type={props.type || "text"}
@@ -28,4 +28,4 @@ const TextInput = props => {
     )
 }
 
-export {TextInput};
+export {TextArea};

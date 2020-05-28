@@ -19,13 +19,24 @@ const TestEmailPanel = props => {
     const [email, setEmail] = useState('');
     const [isBusy, setIsBusy] = useState(false);
 
-    const handleChange = (e) => {
+    const validateEmail = (email) => {
+        let emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,6})?$/;
+        return emailReg.test( email );
+    }
+
+    const handleChange = (option, value) => {
         setIsEdited(true)
-        setEmail(e.target.value)
+        props.handleInputChange(option, value);
     }
 
     const sendTest = (email) => {
         setIsBusy(true);
+
+        if(!validateEmail(email)) {
+            setIsBusy(false);
+            props.showNotice(__('Invalid email address', 'kudos-donations'));
+            return
+        }
 
         // Perform Post request
         axios.post(kudos.sendTestUrl, {

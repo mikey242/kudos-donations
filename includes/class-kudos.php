@@ -102,7 +102,6 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'includes/class-transactions-table.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-carbon.php';
 		require_once KUDOS_DIR . 'admin/class-kudos-admin.php';
-		require_once KUDOS_DIR . 'admin/class-kudos-admin-react.php';
 		require_once KUDOS_DIR . 'public/class-kudos-public.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-mollie.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-mailer.php';
@@ -144,13 +143,10 @@ class Kudos_Donations {
 		$plugin_admin = new Kudos_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action('plugins_loaded', $this, 'version_check');
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-		$this->loader->add_action('admin_menu', $plugin_admin, 'create_transaction_page', 11);
+		$this->loader->add_action('admin_menu', $plugin_admin, 'kudos_add_menu_pages', 11);
 		$this->loader->add_action('admin_init', $plugin_admin, 'export_csv');
+		$this->loader->add_action('init', $plugin_admin, 'register_settings');
 		$this->loader->add_action('rest_api_init', $plugin_admin, 'register_routes');
-		$this->loader->add_action('wp_ajax_check_mollie_connection', $plugin_admin, 'check_mollie_connection');
-		$this->loader->add_action('wp_ajax_send_test_email', $plugin_admin, 'send_test_email');
 
 	}
 

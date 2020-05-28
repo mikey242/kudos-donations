@@ -13,18 +13,18 @@ const {
     useState
 } = wp.element;
 
-const CompletedPaymentPanel = props => {
+const CompletedPaymentPopup = props => {
 
     const [isEdited, setIsEdited] = useState(false);
 
-    const handleChange = (e) => {
+    const handleChange = (option, value) => {
         setIsEdited(true)
-        props.handleInputChange(e);
+        props.handleInputChange(option, value);
     }
 
     return (
         <PanelBody
-            title={__('Completed Payment', 'kudos-donations')}
+            title={__('Completed Payment Pop-up', 'kudos-donations')}
             initialOpen={false}
         >
 
@@ -54,44 +54,24 @@ const CompletedPaymentPanel = props => {
                         disabled={props.isSaving}
                         onChange={handleChange}
                     />
-                </Fragment>
 
-            ]:''}
-
-            <Toggle
-                id='_kudos_custom_return_enable'
-                label={'Use custom return URL'}
-                help={'After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, enable this option.'}
-                value={props._kudos_custom_return_enable}
-                onChange={props.updateSetting}
-            />
-
-            {props._kudos_custom_return_enable ? [
-
-                <Fragment key="_kudos_custom_return_fields">
-
-                    <TextInput
-                        id='_kudos_custom_return_url'
-                        label="URL"
-                        help={'e.g https://mywebsite.com/thanks.'}
-                        value={props._kudos_custom_return_url}
-                        disabled={props.isSaving}
-                        onChange={handleChange}
+                    <PrimaryButton
+                        label="Save"
+                        disabled={!isEdited || props.isSaving}
+                        isBusy={props.isSaving}
+                        onClick={()=> {
+                            props.updateSetting('_kudos_return_message_header', props._kudos_return_message_header)
+                            props.updateSetting('_kudos_return_message_text', props._kudos_return_message_text)
+                            setIsEdited(false)
+                        }}
                     />
 
                 </Fragment>
 
             ]:''}
 
-            <PrimaryButton
-                label="Save"
-                disabled={!isEdited || props.isSaving}
-                isBusy={props.isSaving}
-                onClick={()=>props.updateSetting('_kudos_button_label', props._kudos_button_label)}
-            />
-
         </PanelBody>
     )
 }
 
-export {CompletedPaymentPanel}
+export {CompletedPaymentPopup}

@@ -6,6 +6,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const { join, resolve } = require( 'path' );
 
+const env = process.env.NODE_ENV;
+
 const PATHS = {
     src: join(__dirname, 'src'),
     dist: resolve(__dirname, 'dist')
@@ -35,8 +37,8 @@ const vendorCopies = mapVendorCopies(vendors, 'dist');
 
 module.exports = {
     entry: {
-        'kudos-admin' : [join(PATHS.src, '/js', '/kudos-admin.js'), join(PATHS.src, '/scss', '/kudos-admin.scss')],
-        'kudos-admin-react' : [join(PATHS.src, '/js', '/kudos-admin-react.js'), join(PATHS.src, '/scss', '/kudos-admin-react.scss')],
+        'kudos-admin-transactions' : [join(PATHS.src, '/js', '/kudos-admin-transactions.js'), join(PATHS.src, '/scss', '/kudos-admin-transactions.scss')],
+        'kudos-admin-settings' : [join(PATHS.src, '/js', '/kudos-admin-settings.jsx'), join(PATHS.src, '/scss', '/kudos-admin-settings.scss')],
         'kudos-public' : [join(PATHS.src, '/js', '/kudos-public.js'), join(PATHS.src, '/scss', '/kudos-public.scss')],
         'kudos-blocks' : [join(PATHS.src, '/scss', '/kudos-blocks.scss')],
     },
@@ -65,7 +67,7 @@ module.exports = {
                 resolve(__dirname, 'node_modules')
             ],
             loader: 'babel-loader',
-            query: {
+            options: {
                 presets: [
                     ["@wordpress/default"]
                 ]

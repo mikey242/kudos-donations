@@ -1,9 +1,7 @@
 const { __ } = wp.i18n;
 
 const {
-    PanelRow,
     PanelBody,
-    Button
 } = wp.components;
 
 const {
@@ -21,9 +19,9 @@ const EmailSettingsPanel = props => {
 
     const [isEdited, setIsEdited] = useState(false);
 
-    const handleChange = (e) => {
-        setIsEdited(true);
-        props.handleInputChange(e)
+    const handleChange = (option, value) => {
+        setIsEdited(true)
+        props.handleInputChange(option, value);
     }
 
     let optionalForm = (
@@ -92,6 +90,7 @@ const EmailSettingsPanel = props => {
                     props.updateSetting('_kudos_smtp_username', props._kudos_smtp_username, true)
                     props.updateSetting('_kudos_smtp_password', props._kudos_smtp_password, true)
                     props.updateSetting('_kudos_smtp_port', props._kudos_smtp_port, true)
+                    setIsEdited(false)
                 }}
             />
         </Fragment>
@@ -106,14 +105,6 @@ const EmailSettingsPanel = props => {
             title={__('Email Settings')}
             initialOpen={false}
         >
-
-            <Toggle
-                id='_kudos_email_receipt_enable'
-                label={'Send email receipts'}
-                help={'Once a payment has been completed, you can automatically send an email receipt to the donor.'}
-                value={props._kudos_email_receipt_enable}
-                onChange={props.updateSetting}
-            />
 
             <Toggle
                 id='_kudos_smtp_enable'

@@ -15,7 +15,7 @@ const RadioImage = props => {
             <BaseControl
                 label={__(props.label, 'kudos-donations')}
                 help={__(props.help, 'kudos-donations')}
-                className={"components-kudos-radio-image" + (props.className ? ' ' + props.className : '')}
+                className={"components-kudos-radio-buttons" + (props.className ? ' ' + props.className : '')}
             >
                 <ButtonGroup>
                     {props.children.map((child, index) => {

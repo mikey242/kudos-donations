@@ -16,9 +16,9 @@ const DonationFormPanel = props => {
 
     const [isEdited, setIsEdited] = useState(false);
 
-    const handleChange = (e) => {
+    const handleChange = (option, value) => {
         setIsEdited(true)
-        props.handleInputChange(e);
+        props.handleInputChange(option, value);
     }
 
     return (
@@ -66,6 +66,7 @@ const DonationFormPanel = props => {
                 onClick={() => {
                     props.updateSetting('_kudos_form_header', props._kudos_form_header)
                     props.updateSetting('_kudos_form_text', props._kudos_form_text, false)
+                    setIsEdited(false)
                 }}
             />
 

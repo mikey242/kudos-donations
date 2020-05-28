@@ -209,6 +209,7 @@ class Kudos_Mollie
 
 		// Check that the api key corresponds to the mode
 		if(substr($apiKey, 0, 4) !== $mode) {
+			/* translators: %s: API mode */
 			wp_send_json_error( sprintf(__("%s API key should begin with \"%s\".", 'kudos-donations'), ucfirst($mode), $mode . '_'));
 		}
 
