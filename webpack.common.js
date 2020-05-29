@@ -37,10 +37,10 @@ const vendorCopies = mapVendorCopies(vendors, 'dist');
 
 module.exports = {
     entry: {
-        'kudos-admin-transactions' : [join(PATHS.src, '/js', '/kudos-admin-transactions.js'), join(PATHS.src, '/scss', '/kudos-admin-transactions.scss')],
+        'kudos-admin-transactions' : [join(PATHS.src, '/js', '/kudos-admin-transactions.js')],
         'kudos-admin-settings' : [join(PATHS.src, '/js', '/kudos-admin-settings.jsx'), join(PATHS.src, '/scss', '/kudos-admin-settings.scss')],
+        'kudos-button-block' : [join(PATHS.src, '/js', '/kudos-button-block.jsx'),join(PATHS.src, '/scss', '/kudos-button-block.scss')],
         'kudos-public' : [join(PATHS.src, '/js', '/kudos-public.js'), join(PATHS.src, '/scss', '/kudos-public.scss')],
-        'kudos-blocks' : [join(PATHS.src, '/scss', '/kudos-blocks.scss')],
     },
     output: {
         path: PATHS.dist,
@@ -49,6 +49,7 @@ module.exports = {
     },
     externals: {
         jquery: 'jQuery',
+        'lodash': 'lodash',
         micromodal: 'MicroModal',
     },
     optimization: {
@@ -68,10 +69,12 @@ module.exports = {
             ],
             loader: 'babel-loader',
             options: {
+                plugins: ['lodash'],
                 presets: [
-                    ["@wordpress/default"]
+                    ["@wordpress/default"],
+                    ['@babel/env', { 'targets': { 'node': 6 } }]
                 ]
-        },
+            },
             },
             {
                 test: /\.(sa|sc|c)ss$/,

@@ -8,21 +8,19 @@
 button.kudos_button_donate {
   font-size: 18px;
 
-  .kudos_logo {
+  &:before {
+    content: '';
     background: url("../img/logo-white.svg") no-repeat center;
     background-size: contain;
     width: 25px;
     height: 25px;
     transition: transform 0.6s ease;
-  }
-
-  .kudos_button_label {
-    margin-left: 12px;
+    margin-right: 12px;
   }
 
   &:hover,
   &:active {
-    .kudos_logo {
+    &:before {
       transform: rotate(-90deg);
     }
   }

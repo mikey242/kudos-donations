@@ -102,8 +102,8 @@ class Kudos_Public {
 	 */
 	public function enqueue_block_assets() {
 
-		wp_enqueue_style( $this->plugin_name . '-blocks', get_asset_url('kudos-blocks.css'), [], $this->version, 'all' );
-
+		wp_enqueue_style( $this->plugin_name . '-button-block', get_asset_url('kudos-button-block.css'), [], $this->version, 'all' );
+		wp_enqueue_script($this->plugin_name . '-button-block', get_asset_url('kudos-button-block.js'), [ 'wp-i18n', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post', 'wp-api' ], $this->version, true );
 	}
 
 	/**
@@ -250,7 +250,7 @@ class Kudos_Public {
 		$modal = new Kudos_Modal();
 
 		// Payment modal
-		if(has_block('carbon-fields/kudos-button') || (is_object($post) ? has_shortcode($post->post_content, 'kudos') : null)) {
+		if(has_block('iseardmedia/kudos-button') || (is_object($post) ? has_shortcode($post->post_content, 'kudos') : null)) {
 			echo $modal->get_payment_modal();
 		}
 
