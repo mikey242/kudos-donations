@@ -5,9 +5,10 @@ const KudosButton = props => {
     return (
         <div className={props.className + " has-text-align-" + props.alignment}>
             <button
-                className={'kudos_button kudos_button_donate ' + props.style }
+                style={{backgroundColor: props.style}}
+                className={'kudos_button kudos_button_donate'}
                 data-custom-header={ props.header }
-                data-custom-text={ props.text }>
+                data-custom-text={ props.body }>
                 {props.label}
             </button>
         </div>
