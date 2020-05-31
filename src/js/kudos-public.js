@@ -17,27 +17,26 @@ $(() => {
         // Setup button action
         $kudosButtons.each(function() {
             $(this).click(function () {
-                let customHeader = $(this).data('customHeader');
-                let customText = $(this).data('customText');
-
-                MicroModal.show('kudos_form_modal', {
-                    onShow: function (modal) {
-                        $(modal).find('#kudos_modal_title').html(customHeader);
-                        $(modal).find('#kudos_modal_text').html(customText);
-                    },
-                    onClose: function (modal) {
-                        $(modal).find('form').validate().resetForm();
-                        document.getElementById('kudos_form').reset();
-                    },
-                    awaitCloseAnimation: true
-                });
+                let $target = $(this).data("target")
+                if($target) {
+                    MicroModal.show($target, {
+                        onClose: function (modal) {
+                            let $form = $(modal).find('#kudos_form');
+                            if($form.length) {
+                                $form.validate().resetForm();
+                                // $form.reset();
+                            }
+                        },
+                        awaitCloseAnimation: true
+                    });
+                }
             })
         })
     }
 
     // Show message modal if exists
-    if($('#kudos_message_modal').length) {
-        MicroModal.show('kudos_message_modal', {
+    if($('#kudos_modal-message').length) {
+        MicroModal.show('kudos_modal-message', {
             awaitCloseAnimation: true,
             awaitOpenAnimation: true
         })
@@ -74,10 +73,9 @@ $(() => {
     })
 
     // Submit donation form action
-    $body.on('submit', 'form#kudos_form', function (e) {
-
+    $body.on('submit', 'form.kudos_form', function (e) {
         e.preventDefault();
-        let $kudosFormModal = $('#kudos_form_modal');
+        let $kudosFormModal = $(this).closest('.kudos_form_modal');
         let $kudosErrorMessage = $('.kudos_error_message');
 
         $.ajax({

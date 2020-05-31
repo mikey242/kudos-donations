@@ -16,6 +16,7 @@ const DiagnosticsPanel = props => {
             <p>mbString: {(props.mbstring ? 'True' : 'False')}</p>
             <p>Invoice Directory Writeable: {(props.invoiceWriteable ? 'True' : 'False')}</p>
             <p>Log Directory Writeable: {(props.logWriteable ? 'True' : 'False')}</p>
+            <p>Permalink structure:</p>
         </PanelBody>
     )
 }

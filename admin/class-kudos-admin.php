@@ -367,11 +367,11 @@ class Kudos_Admin {
 
 		register_setting(
 			'kudos_donations',
-			'_kudos_button_style',
+			'_kudos_button_color',
 			[
 				'type'          => 'string',
 				'show_in_rest'  => true,
-				'default'       => 'style-orange'
+				'default'       => '#ff9f1c'
 			]
 		);
 

@@ -7,7 +7,7 @@ const {render} = wp.element;
 /**
  * Internal dependencies
  */
-import {KudosAdmin} from "./components/KudosAdmin";
+import {KudosAdmin} from "./Admin/KudosAdmin";
 import '../scss/kudos-admin-settings.scss';
 
 render(

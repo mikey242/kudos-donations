@@ -3,18 +3,29 @@
 @tailwind utilities;
 
 @import "partials/fonts";
-@import "partials/buttons";
 
-.kudos-modal {
+.kudos_modal {
+
   *,
   *::before,
   *::after {
     all: unset;
   }
+
+  style {
+    display: none;
+  }
+
+  position: absolute;
+  p {
+    @apply mb-4;
+  }
 }
 
-#kudos_message_modal,
-#kudos_form_modal {
+div[id^='kudos_modal-']  {
+
+  @import "partials/buttons";
+
   *,
   *::before,
   *::after {
@@ -28,7 +39,7 @@
   }
 
   h2 {
-    @apply font-serif text-4xl m-0 mb-2 text-gray-900 text-center;
+    @apply font-serif text-4xl m-0 mb-2 text-gray-900 block text-center;
   }
 
   button {
@@ -38,6 +49,7 @@
   small {
     font-size: 80%;
     font-weight: 400;
+    @apply text-gray-600;
 
     &.error {
       @apply relative;
@@ -72,7 +84,7 @@
   }
 
   .kudos_modal_close {
-    @apply text-black p-0;
+    @apply text-black p-0 no-underline leading-normal font-normal;
 
     background: transparent;
     border: 0;
@@ -111,9 +123,18 @@
     overflow-x: hidden;
     overflow-y: auto;
   }
+
+  .kudos_modal_title,
+  .kudos_modal_text {
+    @apply text-center block font-normal;
+  }
+
+  .kudos_modal_content {
+    @apply mt-4 block;
+  }
 }
 
-#kudos_form_modal {
+.kudos_form_modal {
   .kudos_spinner {
     display: none;
     width: 36px;
@@ -140,7 +161,7 @@
     }
   }
 
-  #kudos_form {
+  .kudos_form {
     margin: 0;
     padding: 0;
 
@@ -157,6 +178,10 @@
 
       &:focus {
         @apply border-orange-500;
+      }
+
+      &::placeholder {
+        @apply text-gray-500;
       }
     }
 
@@ -193,7 +218,11 @@
 }
 
 .kudos_modal_buttons {
-  @apply mt-8;
+  @apply mt-8 block;
+
+  button:last-child {
+    @apply ml-3;
+  }
 }
 
 .kudos_modal[aria-hidden="false"] .kudos_modal_overlay {

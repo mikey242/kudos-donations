@@ -166,8 +166,8 @@ class Kudos_Donations {
 		$this->loader->add_action('wp_ajax_nopriv_create_payment', $plugin_public, 'create_payment');
 		$this->loader->add_action('wp_ajax_create_payment', $plugin_public, 'create_payment');
 		$this->loader->add_action('rest_api_init', $plugin_public, 'register_routes');
-		$this->loader->add_action('init', $plugin_public, 'register_shortcodes');
-		$this->loader->add_action('wp_footer', $plugin_public, 'place_modals', 1000);
+		$this->loader->add_action('init', $plugin_public, 'register_kudos');
+		$this->loader->add_action('wp_footer', $plugin_public, 'place_modal', 1000);
 
 	}
 

@@ -15,7 +15,7 @@ const PATHS = {
 
 const vendors = {
     'jquery.validate.min.js': 'jquery-validation/dist/jquery.validate.min.js',
-    'micromodal.min.js': 'micromodal/dist/micromodal.min.js'
+    // 'micromodal.min.js': 'micromodal/dist/micromodal.min.js'
 };
 
 /**
@@ -50,7 +50,7 @@ module.exports = {
     externals: {
         jquery: 'jQuery',
         'lodash': 'lodash',
-        micromodal: 'MicroModal',
+        // micromodal: 'MicroModal',
     },
     optimization: {
         minimize: true,

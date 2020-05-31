@@ -51,6 +51,12 @@ class Kudos_Twig
 		$this->twig->addFunction($get_text);
 
 		/**
+		 * Add color_luminance helper functions.
+		 */
+		$color_luminance = new TwigFunction('color_luminance', 'color_luminance');
+		$this->twig->addFunction($color_luminance);
+
+		/**
 		 * Add get_asset function.
 		 */
 		$get_asset = new TwigFunction('get_asset', 'get_asset_url');

@@ -1,3 +1,9 @@
-<button type='button' class='kudos_button kudos_button_donate alignfull {{ style }}' data-custom-header='{{ header }}' data-custom-text='{{ text }}'>
-    <span class='kudos_logo'></span><span class='kudos_button_label'>{{ label }}</span>
-</button>
+{#<button type='button' class='kudos_button kudos_button_donate alignfull {{ style }}' data-custom-header='{{ header }}' data-custom-text='{{ text }}'>#}
+{#    <span class='kudos_logo'></span><span class='kudos_button_label'>{{ label }}</span>#}
+{#</button>#}
+
+<div class="has-text-align-{{alignment}}">
+    <button style="background-color: {{color}}" class='kudos_button kudos_button_donate' data-target="{{ target }}">
+        {{label | raw}}
+    </button>
+</div>

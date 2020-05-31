@@ -1,54 +1,26 @@
 button.kudos_button {
-  * {
-    all: unset;
-  }
+  //* {
+  //  all: unset;
+  //}
+
+  @apply bg-orange-500;
 
   &:hover,
   &:focus,
   &:active {
-    @apply text-white no-underline shadow-none;
+    @apply text-white no-underline shadow-none bg-orange-700;
   }
 
   @apply font-sans w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
 
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
-  &.style-orange {
-    background: theme('colors.orange.500');
-    @apply font-bold;
-
-    &:focus,
-    &:active {
-      background: theme('colors.orange.500');
-    }
-
-    &:hover {
-      background: theme('colors.orange.700');
-    }
-  }
-
-  &.style-green {
-    background: theme('colors.green.500');
-
-    &:focus,
-    &:active {
-      background: theme('colors.green.500');
-    }
-
-    &:hover {
-      background: theme('colors.green.500');
-    }
-  }
-
-  &.style-orange-outline {
-    color: theme('colors.orange.500');
-    background-color: transparent;
-    border: 1px solid theme('colors.orange.500');
+  &.button-style-outline {
+    border-width: 1px;
+    border-style: solid;
 
     &:hover {
       color: #fff;
-      background-color: theme('colors.orange.700');
-      border-color: theme('colors.orange.700');
     }
   }
 }

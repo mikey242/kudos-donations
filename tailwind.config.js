@@ -1,8 +1,7 @@
 module.exports = {
   purge: [
-    './src/js/**/.js',
-    './src/js/**/.jsx',
-    './src/js/components/*.js',
+    './src/js/**/*.js',
+    './src/js/**/*.jsx',
     './public/**/*.php',
     './templates/**/*.twig'
   ],

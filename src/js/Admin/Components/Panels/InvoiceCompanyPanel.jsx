@@ -1,6 +1,5 @@
 import {TextInput} from "../FormElements/TextInput"
 import {TextArea} from "../FormElements/TextArea"
-import {PrimaryButton} from "../FormElements/PrimaryButton"
 
 const { __ } = wp.i18n;
 

@@ -1,5 +1,5 @@
 const { __ } = wp.i18n;
-import logo from "../../img/logo-colour.svg"
+import logo from "../../../img/logo-colour.svg"
 
 const KudosHeader = (props) => {
     return (

@@ -21,10 +21,6 @@ class Kudos_Button {
 	 */
 	private $header;
 	/**
-	 * @var string|null
-	 */
-	private $style;
-	/**
 	 * @var bool
 	 */
 	private $ready;
@@ -32,6 +28,18 @@ class Kudos_Button {
 	 * @var Kudos_Twig
 	 */
 	private $twig;
+	/**
+	 * @var mixed|string
+	 */
+	private $alignment;
+	/**
+	 * @var bool|mixed|void
+	 */
+	private $color;
+	/**
+	 * @var mixed
+	 */
+	private $target;
 
 
 	/**
@@ -45,9 +53,9 @@ class Kudos_Button {
 		$this->ready = Kudos_Public::ready();
 		$this->twig = new Kudos_Twig();
 		$this->label = !empty($atts['button']) ? $atts['button'] : get_option('_kudos_button_label');
-		$this->text = !empty($atts['body']) ? $atts['body'] : get_option('_kudos_form_text');
-		$this->header = !empty($atts['header']) ? $atts['header'] : get_option('_kudos_form_header');
-		$this->style = get_option('_kudos_button_style');
+		$this->color = !empty($atts['color']) ? $atts['color'] : get_option('_kudos_button_color');
+		$this->alignment = !empty($atts['alignment']) ? $atts['alignment'] : 'left';
+		$this->target = $atts['target'];
 	}
 
 	/**
@@ -59,10 +67,10 @@ class Kudos_Button {
 
 		if($this->ready) {
 			$data = [
-				'style' => $this->style,
-				'header' => $this->header,
-				'text' => $this->text,
+				'color' => $this->color,
+				'alignment' => $this->alignment,
 				'label' => $this->label,
+				'target' => $this->target
 			];
 			$out = $this->twig->render('public/kudos.button.html.twig', $data);
 		} elseif(is_user_logged_in()) {

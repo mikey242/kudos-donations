@@ -1,5 +1,5 @@
 {% extends 'public/modal/base.html.twig' %}
-{% set modal_id = 'kudos_form_modal' %}
+{% set classes = 'kudos_form_modal' %}
 
 {% block header %}
     {{ header }}
@@ -10,7 +10,8 @@
 {% endblock text %}
 
 {% block footer %}
-    <form id="kudos_form" action="">
+
+    <form class="kudos_form" action="">
         {{ nonce|raw }}
         <label>
             <input name="return_url" type="hidden" value="{{ return_url }}">
@@ -25,13 +26,36 @@
             <input required type="text" min="1" name="value" placeholder="{{ __('Amount', 'kudos-donations')}} *" />
         </label>
         <div class="payment_by {{ vendor }}">
-            <small class="text-gray-600">
+            <small>
                 {{ payment_by }}
             </small>
         </div>
-        <div class="kudos_modal_buttons text-center">
-            <button class="kudos_button style-orange-outline mr-3" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
-            <button id="kudos_submit" name="kudos_submit" class="kudos_button style-orange" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
+        <div class="kudos_modal_buttons" style="text-align: center">
+            <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+            <button id="kudos_submit" name="kudos_submit" class="kudos_button" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
         </div>
     </form>
+
+    <style>
+        {{ '#' ~ modal_id }} .kudos_form input:focus {
+            border-color: {{ color }}
+        }
+        {{ '#' ~ modal_id }} .kudos_modal_buttons button.kudos_button.button-style-outline {
+             background-color: transparent;
+             color: {{ color }};
+             border-color: {{ color }}
+        }
+        {{ '#' ~ modal_id }} .kudos_modal_buttons button.kudos_button {
+             background-color: {{ color }};
+         }
+        {{ '#' ~ modal_id }} .kudos_modal_buttons button.kudos_button:hover {
+             background-color: {{ color_luminance(color, '-0.05') }};
+         }
+        {{ '#' ~ modal_id }} .kudos_modal_buttons button.kudos_button.button-style-outline:hover {
+             color: #fff;
+             background-color: {{ color_luminance(color, '-0.08') }};
+             border-color: {{ color }};
+         }
+    </style>
+
 {% endblock footer %}

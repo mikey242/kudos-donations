@@ -217,49 +217,102 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Creates and registers the [kudos] shortcode
+	 * Creates and registers the [kudos] shortcode and block
 	 *
 	 * @since   1.0.0
 	 */
-	public function register_shortcodes() {
+	public function register_kudos() {
+
+		// Add shortcode
 		add_shortcode( 'kudos', function ( $atts ) {
 
 			$atts = shortcode_atts(
 				[
-					'button' => '',
-					'header' => '',
-					'body'  => ''
+					'label' => '',
+					'alignment' => '',
+					'modalHeader' => '',
+					'modalBody'  => ''
 				],
 				$atts,
 				'kudos'
 			);
 
-			$button = new Kudos_Button($atts);
-			return $button->get_button(false);
+			return $this->kudos_render_callback($atts);
 		} );
+
+		// Register kudos button block
+		register_block_type( 'iseardmedia/kudos-button', [
+			'editor_script' => $this->plugin_name . '-button-block',
+		    'render_callback' => [$this, 'kudos_render_callback'],
+		    'attributes' => [
+		        'label' => [
+					'type' => 'string',
+		            'default' => get_option('_kudos_button_label'),
+		        ],
+				'alignment' => [
+					'type' => 'string',
+		            'default' => 'none',
+		        ],
+				'color' => [
+					'type' => 'string',
+		            'default' => get_option('_kudos_button_color')
+		        ],
+				'modalHeader' => [
+					'type' => 'string',
+		            'default' => get_option('_kudos_form_header')
+		        ],
+				'modalBody' => [
+					'type' => 'string',
+		            'default' => get_option('_kudos_form_text')
+		        ],
+				'id' => [
+					'type' => 'string',
+		            'source' => 'attribute',
+		            'default' => 'kudos_modal-1',
+		            'selector' => 'button.kudos_button',
+		            'attribute' => 'data-target'
+		        ]
+			]
+		]);
+	}
+
+	public function kudos_render_callback($attr) {
+
+		// Create modal
+		$modal = new Kudos_Modal();
+		$modalId = $modal->get_id();
+		$modal = $modal->get_payment_modal([
+			'header' => $attr['modalHeader'],
+			'text' => $attr['modalBody'],
+			'color' => (!empty($attr['color']) ? $attr['color'] : null)
+		]);
+
+		// Create button
+		$button = new Kudos_Button([
+			'button' => $attr['label'],
+			'alignment' => $attr['alignment'],
+			'color' => (!empty($attr['color']) ? $attr['color'] : null),
+			'target' => $modalId
+		]);
+
+		return $button->get_button(false) . $modal;
 	}
 
 	/**
-	 * Places modals on page if conditions are met
+	 * Places message modal on page if conditions are met
      *
      * @since   1.0.0
 	 */
-	public function place_modals() {
+	public function place_modal() {
 
-	    global $post;
 		$modal = new Kudos_Modal();
-
-		// Payment modal
-		if(has_block('iseardmedia/kudos-button') || (is_object($post) ? has_shortcode($post->post_content, 'kudos') : null)) {
-			echo $modal->get_payment_modal();
-		}
 
 		// Message modal
 		if(!empty($_REQUEST['kudos_order_id']) && !empty($_REQUEST['_wpnonce'])) {
 			$order_id = base64_decode(sanitize_text_field($_REQUEST['kudos_order_id']));
 			if(wp_verify_nonce($_REQUEST['_wpnonce'],'check_kudos_order-' . $order_id)) {
-				$data = $this->check_transaction($order_id);
-				echo $modal->get_message_modal($data['header'], $data['text']);
+				$atts = $this->check_transaction($order_id);
+				echo $modal->get_message_modal($atts);
 			}
 		}
 	}
