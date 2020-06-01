@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import MicroModal from "micromodal"
+// import validator from 'jquery-validation';
 import '../img/logo-colour-40.png' //used as email attachment
 
 $(() => {
@@ -7,10 +8,31 @@ $(() => {
 
     const $body = $('body');
     let $kudosButtons = $('.kudos_button_donate');
+    let animating = false;
 
     // Set validation defaults
     $.validator.setDefaults({
+        ignore: [],
         errorElement: 'small',
+        rules: {
+            value: {
+                digits: true
+            }
+        },
+        messages: {
+            name: {
+                required: kudos.name_required
+            },
+            email_address: {
+                required: kudos.email_required,
+                email: kudos.email_invalid
+            },
+            value: {
+                required: kudos.value_required,
+                min: kudos.value_minimum,
+                digits: kudos.value_digits
+            }
+        }
     });
 
     if($kudosButtons.length) {
@@ -20,11 +42,14 @@ $(() => {
                 let $target = $(this).data("target")
                 if($target) {
                     MicroModal.show($target, {
-                        onClose: function (modal) {
-                            let $form = $(modal).find('#kudos_form');
+                        onShow: function (modal) {
+                            $(modal).find('.kudos_error_message').text('');
+                            let $form = $(modal).find('.kudos_form');
                             if($form.length) {
+                                $('fieldset.current-tab').removeClass('current-tab');
+                                $('fieldset:first-child').addClass('current-tab');
                                 $form.validate().resetForm();
-                                // $form.reset();
+                                $form[0].reset();
                             }
                         },
                         awaitCloseAnimation: true
@@ -42,32 +67,58 @@ $(() => {
         })
     }
 
-    // Check form before submit
-    $body.on('click', '#kudos_submit', function (e) {
-        e.preventDefault();
-        let $form = $(this.form);
-        $form.validate({
-            rules: {
-                value: {
-                    digits: true
-                }
+    // Multi step form next button
+    $('.kudos_next').on('click', function (e) {
+        if(animating) return false;
+
+        // Check if current tabs fields are valid
+        let $current_tab = $(this).closest('.form-tab');
+        $current_tab.find('input').validate();
+        if(!$current_tab.find('input').valid()) {
+            return;
+        }
+
+        let $modal = $(this).closest('.kudos_modal_container');
+        let $next_tab = $current_tab.next();
+
+        // Begin animation
+        animating = true;
+        $modal.animate({opacity:0}, {
+            step: function (now, mx) {
+                let position = (1 - now) * 50;
+                $modal.css({
+                    'transform': 'translateX(-' + position + 'px)'
+                })
             },
-            messages: {
-                name: {
-                    required: kudos.name_required
-                },
-                email_address: {
-                    required: kudos.email_required,
-                    email: kudos.email_invalid
-                },
-                value: {
-                    required: kudos.value_required,
-                    min: kudos.value_minimum,
-                    digits: kudos.value_digits
-                }
+            duration: 100,
+            easing: 'linear',
+            complete: function () {
+                $current_tab.removeClass('current-tab');
+                $next_tab.addClass('current-tab');
+                $modal.animate({opacity:1}, {
+                    step: function (now, mx) {
+                        let position = (1 - now) * 50;
+                        $modal.css({
+                            'transform': 'translateX(+' + position + 'px)'
+                        })
+                    },
+                    duration: 100,
+                    easing: 'linear',
+                    complete: function () {
+                        animating = false;
+                    }
+                })
             }
         })
-        if($(this.form).valid()) {
+    })
+
+    // Check form before submit
+    $body.on('click', '.kudos_submit', function (e) {
+        e.preventDefault();
+        let $form = $(this.form);
+        $form.validate()
+        if($form.valid()) {
+            console.log($form.valid())
             $form.submit();
         }
     })
@@ -76,7 +127,7 @@ $(() => {
     $body.on('submit', 'form.kudos_form', function (e) {
         e.preventDefault();
         let $kudosFormModal = $(this).closest('.kudos_form_modal');
-        let $kudosErrorMessage = $('.kudos_error_message');
+        let $kudosErrorMessage = $kudosFormModal.find('.kudos_error_message');
 
         $.ajax({
             method: 'post',

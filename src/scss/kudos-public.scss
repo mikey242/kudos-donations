@@ -99,6 +99,7 @@ div[id^='kudos_modal-']  {
     @apply bg-white p-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden;
 
     z-index: 1050;
+    //transition: 0.6s ease all;
 
     &::before {
       content: '';
@@ -158,6 +159,19 @@ div[id^='kudos_modal-']  {
       background-repeat: no-repeat;
       background-image: url("../img/logo-black.svg");
       animation: loader-spin 2s infinite;
+    }
+  }
+
+  .form-tabs {
+    display: block;
+    overflow: hidden;
+  }
+
+  .form-tab {
+    @apply w-full relative;
+    display: none;
+    &.current-tab {
+      display: block;
     }
   }
 
@@ -256,6 +270,21 @@ div[id^='kudos_modal-']  {
 
   100% {
     transform: rotate(1800deg);
+  }
+}
+
+@keyframes tabIn {
+  0%{
+    display: none;
+    opacity: 0;
+  }
+  1% {
+    display: block;
+    opacity: 0;
+  }
+  100% {
+    display: block;
+    opacity: 1;
   }
 }
 

@@ -31,16 +31,17 @@ class Kudos_Activator {
 	 */
 	public static function activate() {
 		Kudos_Logger::init();
-		Kudos_Activator::create_transactions_db();
-		Kudos_Activator::set_defaults();
+		self::create_transactions_table();
+		self::create_donors_table();
+		self::set_defaults();
 	}
 
 	/**
-	 * Creates the transactions database
+	 * Creates the transactions table
 	 *
 	 * @since    1.0.0
 	 */
-	private static function create_transactions_db() {
+	private static function create_transactions_table() {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
@@ -56,11 +57,38 @@ class Kudos_Activator {
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
 		  method VARCHAR(255),
 		  mode VARCHAR(255) NOT NULL,
-		  sequenceType VARCHAR(255) NOT NULL,
+		  sequence_type VARCHAR(255) NOT NULL,
 		  order_id VARCHAR(255) NOT NULL,
 		  transaction_id VARCHAR(255),  
-		  PRIMARY KEY  (id)
+		  PRIMARY KEY (id)
 		) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+	}
+
+	/**
+	 * Creates the donors table
+	 *
+	 * @since    1.1.0
+	 */
+	private static function create_donors_table() {
+		global $wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+		$table_name = $wpdb->prefix . "kudos_donors";  //get the database table prefix to create my new table
+
+		$sql = "CREATE TABLE $table_name (
+		  id mediumint(9) NOT NULL AUTO_INCREMENT,
+		  email VARCHAR(320),
+		  name VARCHAR(255),
+		  street VARCHAR(255),
+		  postcode VARCHAR(255),
+		  city VARCHAR(255),
+		  country VARCHAR(255),
+		  customer_id VARCHAR(255),
+		  PRIMARY KEY (id)
+		) $charset_collate";
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );

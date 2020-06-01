@@ -27,7 +27,7 @@ const EmailSettingsPanel = props => {
             <RadioButtons
                 id='_kudos_smtp_encryption'
                 label='Encryption'
-                help='Choose your encryption type'
+                help='Choose your encryption type. Always use TLS or SSL if available.'
                 selected={props.settings._kudos_smtp_encryption}
                 onChange={props.handleInputChange}
             >
@@ -65,7 +65,7 @@ const EmailSettingsPanel = props => {
             <TextInput
                 id='_kudos_smtp_port'
                 label='Port'
-                help=""
+                help="587 (TLS), 465 (SSL), 25 (Unencrypted)"
                 value={props.settings._kudos_smtp_port}
                 placeholder='587'
                 onChange={props.handleInputChange}

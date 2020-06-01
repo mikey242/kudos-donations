@@ -31,6 +31,14 @@ const InvoiceCompanyPanel = props => {
                 onChange={props.handleInputChange}
             />
 
+            <TextInput
+                id='_kudos_invoice_vat_number'
+                label="VAT Number"
+                value={props.settings._kudos_invoice_vat_number}
+                disabled={props.isSaving}
+                onChange={props.handleInputChange}
+            />
+
         </PanelBody>
     )
 }

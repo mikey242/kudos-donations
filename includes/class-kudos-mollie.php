@@ -107,14 +107,17 @@ class Kudos_Mollie
 	/**
 	 * Creates a payment and returns it as an object
 	 *
-	 * @since      1.0.0
-
+	 * @param $value
 	 * @param string $redirectUrl
+	 * @param $customerId
+	 *
 	 * @param string|null $name
 	 * @param string|null $email
+	 *
 	 * @return bool|object
+	 * @since      1.0.0
 	 */
-	public function payment($value, $redirectUrl, $name=null, $email=null) {
+	public function create_payment($value, $redirectUrl, $name=null, $email=null, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
 		$order_id = time();
@@ -127,30 +130,62 @@ class Kudos_Mollie
 			$redirectUrl = add_query_arg('_wpnonce', wp_create_nonce('check_kudos_order-' . $order_id), $redirectUrl);
 		}
 
+		$paymentArray = [
+			"amount" => [
+				"currency" => $currency,
+				"value" => $value
+			],
+			"redirectUrl" => $redirectUrl,
+			"webhookUrl" => rest_url('kudos/v1/mollie/webhook'),
+			/* translators: %s: The order id */
+			"description" => sprintf(__("Kudos Payment - %s", 'kudos-donations'), $order_id),
+			'metadata' => [
+				'order_id' => $order_id,
+				'email' => $email,
+				'name' => $name
+			]
+		];
+
+		if($customerId) {
+			$paymentArray['customerId'] = $customerId;
+		}
+
 		try {
-			$payment = $mollieApi->payments->create(
-				[
-					"amount" => [
-						"currency" => $currency,
-						"value" => $value
-					],
-					"redirectUrl" => $redirectUrl,
-					"webhookUrl" => rest_url('kudos/v1/mollie/webhook'),
-					/* translators: %s: The order id */
-					"description" => sprintf(__("Kudos Payment - %s", 'kudos-donations'), $order_id),
-					'metadata' => [
-						'order_id' => $order_id,
-						'email' => $email,
-						'name' => $name
-					]
-				]
-			);
+			$payment = $mollieApi->payments->create($paymentArray);
 
 			$transaction = $this->transaction;
-			$transaction->create_record($order_id, $value, $currency, $payment->status, $payment->sequenceType, $email, $name);
+			$transaction->create_transaction($order_id, $value, $currency, $payment->status, $payment->sequenceType, $email, $name);
 
 			return $payment;
 
+		} catch (ApiException $e) {
+			$this->logger->log($e->getMessage(), 'CRITICAL');
+			return false;
+		}
+
+	}
+
+	/**
+	 * @param $email
+	 * @param $name
+	 *
+	 * @return bool|object
+	 * @since   1.1.0
+	 */
+	public function create_customer($email, $name) {
+
+		$mollieApi = $this->mollieApi;
+
+		$customerArray = [
+			'email' => $email
+		];
+
+		if ($name) {
+			$customerArray['name'] = $name;
+		}
+
+		try {
+			return $mollieApi->customers->create($customerArray);
 		} catch (ApiException $e) {
 			$this->logger->log($e->getMessage(), 'CRITICAL');
 			return false;
@@ -271,7 +306,7 @@ class Kudos_Mollie
 		$order_id = $payment->metadata->order_id;
 		$transaction_id = $payment->id;
 		$status = $payment->status;
-		$this->transaction->update_record($order_id, $transaction_id, $status, $payment->method);
+		$this->transaction->update_transaction($order_id, $transaction_id, $status, $payment->method);
 
 		// Send email receipt on success
 		$mailer = new Kudos_Mailer();

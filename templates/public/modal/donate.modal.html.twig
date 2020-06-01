@@ -13,26 +13,52 @@
 
     <form class="kudos_form" action="">
         {{ nonce|raw }}
-        <label>
-            <input name="return_url" type="hidden" value="{{ return_url }}">
-        </label>
-        <label>
-            <input {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') ~ ((name_required) ? ' *' : null) }}" />
-        </label>
-        <label>
-            <input {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') ~ ((email_required) ? ' *' : null) }}" />
-        </label>
-        <label>
-            <input required type="text" min="1" name="value" placeholder="{{ __('Amount', 'kudos-donations')}} *" />
-        </label>
-        <div class="payment_by {{ vendor }}">
-            <small>
-                {{ payment_by }}
-            </small>
-        </div>
-        <div class="kudos_modal_buttons" style="text-align: center">
-            <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
-            <button id="kudos_submit" name="kudos_submit" class="kudos_button" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
+        <div class="form-tabs">
+
+            {#   INITIAL FIELDS   #}
+            <fieldset class="form-tab form-tab-1 current-tab">
+                <label>
+                    <input name="return_url" type="hidden" value="{{ return_url }}">
+                </label>
+                <label>
+                    <input {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') ~ ((name_required) ? ' *' : null) }}" />
+                </label>
+                <label>
+                    <input {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') ~ ((email_required) ? ' *' : null) }}" />
+                </label>
+                <label>
+                    <input required type="text" min="1" name="value" placeholder="{{ __('Amount', 'kudos-donations')}} *" />
+                </label>
+                <div class="kudos_modal_buttons" style="text-align: center">
+                    <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+                    <button name="kudos_submit" class="kudos_button kudos_next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
+                </div>
+            </fieldset>
+
+            {#   SECOND TAB   #}
+            <fieldset class="form-tab form-tab-2">
+                <label>
+                    <input name="return_url" type="hidden" value="{{ return_url }}">
+                </label>
+                <label>
+                    <input type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }}" />
+                </label>
+                <label>
+                    <input type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }}" />
+                </label>
+                <label>
+                    <input type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }}" />
+                </label>
+                <div class="payment_by {{ vendor }}">
+                    <small>
+                        {{ payment_by }}
+                    </small>
+                </div>
+                <div class="kudos_modal_buttons" style="text-align: center">
+                    <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+                    <button name="kudos_submit" class="kudos_submit kudos_button" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
+                </div>
+            </fieldset>
         </div>
     </form>
 

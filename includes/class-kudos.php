@@ -99,6 +99,7 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'includes/class-kudos-loader.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-i18n.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-transaction.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-donor.php';
 		require_once KUDOS_DIR . 'includes/class-transactions-table.php';
 		require_once KUDOS_DIR . 'admin/class-kudos-admin.php';
 		require_once KUDOS_DIR . 'public/class-kudos-public.php';

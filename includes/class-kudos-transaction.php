@@ -22,11 +22,11 @@ class Kudos_Transaction {
 	 * @param string $value
 	 * @param string $currency
 	 * @param string $status
-	 * @param string $sequenceType
+	 * @param string $sequence_type
 	 * @param string $email
 	 * @param string $name
 	 */
-	public function create_record($order_id, $value, $currency, $status, $sequenceType,  $email=null, $name=null) {
+	public function create_transaction($order_id, $value, $currency, $status, $sequence_type,  $email=null, $name=null) {
 		$this->wpdb->insert(
 			$this->wpdb->prefix . self::TABLE,
 			[
@@ -37,7 +37,7 @@ class Kudos_Transaction {
 				'currency' => $currency,
 				'status' => $status,
 				'mode' => get_option('_kudos_mollie_api_mode'),
-				'sequenceType' => $sequenceType,
+				'sequence_type' => $sequence_type,
 				'order_id' => $order_id
 			]
 		);
@@ -49,7 +49,7 @@ class Kudos_Transaction {
 	 * @param string $status
 	 * @param string $method
 	 */
-	public function update_record($order_id, $transaction_id, $status, $method) {
+	public function update_transaction($order_id, $transaction_id, $status, $method) {
 		$this->wpdb->update(
 			$this->wpdb->prefix . self::TABLE,
 			[

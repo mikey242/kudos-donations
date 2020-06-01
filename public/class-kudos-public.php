@@ -117,13 +117,30 @@ class Kudos_Public {
 			$this->logger->log('wp_verify_nonce failed', 'CRITICAL');
 			wp_send_json_error(['message' => __('Request invalid.', 'kudos-donations')]);
 		}
+
+		// Sanitize form fields
 		$value = intval($form['value']);
 		$name = sanitize_text_field($form['name']);
 		$email = sanitize_email($form['email_address']);
+		$street = sanitize_text_field($form['street']);
+		$postcode = sanitize_text_field($form['postcode']);
+		$city = sanitize_text_field($form['city']);
 		$redirectUrl = sanitize_text_field($form['return_url']);
 
 		$mollie = new Kudos_Mollie();
-		$payment = $mollie->payment($value, $redirectUrl, $name, $email);
+
+		if($email) {
+			$customer = $mollie->create_customer($email, $name);
+			$donorClass = new Kudos_Donor();
+			$donor = $donorClass->get_donor($email);
+			if($donor) {
+				$donorClass->update_donor($email, $name, $street, $postcode, $city);
+			} else {
+				$donorClass->create_donor($email, $customer->id, $name, $street, $postcode, $city);
+			}
+		}
+
+		$payment = $mollie->create_payment($value, $redirectUrl, $name, $email);
 		if($payment) {
 			wp_send_json_success($payment->getCheckoutUrl());
 		}

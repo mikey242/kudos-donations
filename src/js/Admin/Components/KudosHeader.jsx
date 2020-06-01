@@ -1,7 +1,11 @@
 const { __ } = wp.i18n;
+const {useEffect} = wp.element;
 import logo from "../../../img/logo-colour.svg"
 
 const KudosHeader = (props) => {
+
+    const status = props.isMollieEdited ? 'unknown' : props.checkingApi ? 'checking' : props.apiConnected && !props.isMollieEdited ? 'connected' : !props.apiConnected ? 'not-connected' : ''
+
     return (
         <div className="kudos-dashboard-header">
             <div className="dashboard-wrap flex items-center justify-between">
@@ -10,10 +14,10 @@ const KudosHeader = (props) => {
                     <h1>{__('Kudos Settings')}</h1>
                 </div>
                 <div className="kudos-dashboard-header__right">
-                    <span className={
-                        "kudos-api-status " + (props.checkingApi ? '' : props.apiConnected ? 'connected' : 'not-connected')}
+                    <span style={{textTransform: 'capitalize'}} className={
+                        "kudos-api-status " + status}
                     >
-                        {props.checkingApi ? 'Checking' : props.apiConnected ? 'Connected' : 'Not Connected'}
+                        {(status) + ( props.isMollieEdited ? '' : ' (' + props.apiMode + ')' )}
                     </span>
                     <span className="kudos-version">{kudos.version}</span>
                 </div>

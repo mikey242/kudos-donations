@@ -11,6 +11,13 @@
                 <h2 style="margin-bottom:0">{{ company_name }}</h2>
                 <p>{{ company_address | nl2br}}</p>
             </td>
+            <td>
+                <h2 class="align-right" style="margin-bottom:0">{{ donor_name }}</h2>
+                <p class="align-right">
+                    {{ donor_street }}<br/>
+                    {{ donor_postcode }} {{ donor_city }}
+                </p>
+            </td>
         </tr>
         <tr>
             <td>

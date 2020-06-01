@@ -222,7 +222,8 @@ class Kudos_Admin {
 	        'phpVersion' => phpversion(),
             'mbstring' => extension_loaded('mbstring'),
             'invoiceWriteable'  => Kudos_Invoice::isWriteable(),
-            'logWriteable'  => Kudos_Logger::isWriteable()
+            'logWriteable'  => Kudos_Logger::isWriteable(),
+            'permalinkStructure' => get_option( 'permalink_structure' )
         ];
 
 		wp_send_json_success($response);
@@ -483,6 +484,16 @@ class Kudos_Admin {
 		register_setting(
 			'kudos_donations',
 			'_kudos_invoice_company_address',
+			[
+				'type'          => 'string',
+				'show_in_rest'  => true,
+				'default'       => ''
+			]
+		);
+
+		register_setting(
+			'kudos_donations',
+			'_kudos_invoice_vat_number',
 			[
 				'type'          => 'string',
 				'show_in_rest'  => true,

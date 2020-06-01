@@ -44,7 +44,6 @@ class KudosAdmin extends Component {
         this.state = {
             showNotice: false,
             noticeMessage: '',
-            isMollieConnected: false,
             isMollieEdited: false,
             isEdited: false,
             isAPILoaded: false,
@@ -65,6 +64,9 @@ class KudosAdmin extends Component {
     mollieChanged() {
         this.setState({
             isMollieEdited: true,
+            settings: {
+                _kudos_mollie_connected: false
+            }
         });
     }
 
@@ -322,6 +324,8 @@ class KudosAdmin extends Component {
 
                     <KudosHeader
                         apiConnected={this.state.settings._kudos_mollie_connected}
+                        apiMode={this.state.settings._kudos_mollie_api_mode}
+                        isMollieEdited={this.state.isMollieEdited}
                         checkingApi={this.state.checkingApi}
                     />
 

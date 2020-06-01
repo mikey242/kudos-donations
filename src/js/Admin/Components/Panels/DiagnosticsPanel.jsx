@@ -12,11 +12,12 @@ const DiagnosticsPanel = props => {
             title={__('Diagnostics', 'kudos-donations')}
             initialOpen={true}
         >
-            <p>PHP Version: {props.phpVersion}</p>
+
+            <p>PHP Version: <span>{props.phpVersion}</span></p>
             <p>mbString: {(props.mbstring ? 'True' : 'False')}</p>
             <p>Invoice Directory Writeable: {(props.invoiceWriteable ? 'True' : 'False')}</p>
             <p>Log Directory Writeable: {(props.logWriteable ? 'True' : 'False')}</p>
-            <p>Permalink structure:</p>
+            <p>Permalink structure: {(props.permalinkStructure ? props.permalinkStructure : 'We recommend setting a non-plain permalink structure')}</p>
         </PanelBody>
     )
 }
