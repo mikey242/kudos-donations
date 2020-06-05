@@ -121,6 +121,7 @@ class Kudos_Public {
 
 		// Sanitize form fields
 		$value = intval($form['value']);
+		$payment_frequency = ($form['payment_frequency'] ? sanitize_text_field($form['payment_frequency']) : 'oneoff');
 		$name = sanitize_text_field($form['name']);
 		$email = sanitize_email($form['email_address']);
 		$street = sanitize_text_field($form['street']);
