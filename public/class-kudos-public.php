@@ -112,6 +112,7 @@ class Kudos_Public {
 	 * @since   1.0.0
 	 */
 	public function create_payment() {
+
 		parse_str($_REQUEST['form'], $form);
 		if(!wp_verify_nonce($form['_wpnonce'], 'kudos_submit')) {
 			$this->logger->log('wp_verify_nonce failed', 'CRITICAL');
@@ -126,11 +127,12 @@ class Kudos_Public {
 		$postcode = sanitize_text_field($form['postcode']);
 		$city = sanitize_text_field($form['city']);
 		$redirectUrl = sanitize_text_field($form['return_url']);
+		$customerId = null;
 
 		$mollie = new Kudos_Mollie();
 
+		// Get or create donor and fetch their Mollie customer id
 		if($email) {
-			$customer = $mollie->create_customer($email, $name);
 			$donorClass = new Kudos_Donor();
 			$donor = $donorClass->get_donor($email);
 			if($donor) {
@@ -140,9 +142,10 @@ class Kudos_Public {
 				$donorClass->create_donor($email, $customer->id, $payment_frequency, $name, $street, $postcode, $city);
 				$donor = $donorClass->get_donor($email);
 			}
+			$customerId = $donor->customer_id;
 		}
 
-		$payment = $mollie->create_payment($value, $redirectUrl, $name, $email);
+		$payment = $mollie->create_payment($value, $redirectUrl, $name, $email, $customerId);
 		if($payment) {
 			wp_send_json_success($payment->getCheckoutUrl());
 		}
