@@ -299,6 +299,12 @@ class Kudos_Public {
 		]);
 	}
 
+	/**
+	 * @param $attr
+	 *
+	 * @return bool|string
+	 * @since   1.1.0
+	 */
 	public function kudos_render_callback($attr) {
 
 		// Create modal
@@ -318,7 +324,12 @@ class Kudos_Public {
 			'target' => $modalId
 		]);
 
-		return $button->get_button(false) . $modal;
+		// Return only if modal and button not empty
+		if(!empty($modal) && !empty($button)) {
+			return $button->get_button(false) . $modal;
+		}
+
+		return false;
 	}
 
 	/**
