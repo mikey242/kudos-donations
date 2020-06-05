@@ -68,7 +68,7 @@ class Kudos_Mollie
 	 * @return bool
 	 * @since      1.0.0
 	 */
-	public function checkApiKey($apiKey) {
+	public function check_api_key($apiKey) {
 
 		if(!$apiKey) {
 			return false;
@@ -94,7 +94,7 @@ class Kudos_Mollie
 	 * @return bool|Payment
 	 * @since      1.0.0
 	 */
-	public function getPayment($mollie_payment_id) {
+	public function get_payment($mollie_payment_id) {
 		$mollieApi = $this->mollieApi;
 		try {
 			return $mollieApi->payments->get($mollie_payment_id);
@@ -109,10 +109,10 @@ class Kudos_Mollie
 	 *
 	 * @param $value
 	 * @param string $redirectUrl
-	 * @param $customerId
-	 *
 	 * @param string|null $name
 	 * @param string|null $email
+	 *
+	 * @param $customerId
 	 *
 	 * @return bool|object
 	 * @since      1.0.0
@@ -146,6 +146,7 @@ class Kudos_Mollie
 			]
 		];
 
+		// Link payment to customer if specified
 		if($customerId) {
 			$paymentArray['customerId'] = $customerId;
 		}
@@ -249,7 +250,7 @@ class Kudos_Mollie
 		}
 
 		// Test api key
-		$result = $this->checkApiKey($apiKey);
+		$result = $this->check_api_key($apiKey);
 
 		if($result) {
 			update_option('_kudos_mollie_'.$mode.'_api_key', $apiKey);
@@ -289,7 +290,7 @@ class Kudos_Mollie
 
 		$response->add_link( 'self', rest_url( $request->get_route() ) );
 
-		$payment = $this->getPayment($id);
+		$payment = $this->get_payment($id);
 
 		if ( null === $payment ) {
 			/**
