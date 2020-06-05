@@ -27,7 +27,11 @@
                     <input {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') ~ ((email_required) ? ' *' : null) }}" />
                 </label>
                 <label>
-                    <input required type="text" min="1" name="value" placeholder="{{ __('Amount', 'kudos-donations')}} *" />
+                    <select required class="kudos_field" name="payment_frequency">
+                        <option value="oneoff">{{ __('Frequency: One-off', 'kudos-donations') }}</option>
+                        <option value="yearly">{{ __('Frequency: Yearly', 'kudos-donations') }}</option>
+                        <option value="monthly">{{ __('Frequency: Monthly', 'kudos-donations') }}</option>
+                    </select>
                 </label>
                 <div class="kudos_modal_buttons" style="text-align: center">
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>

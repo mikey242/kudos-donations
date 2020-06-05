@@ -134,9 +134,11 @@ class Kudos_Public {
 			$donorClass = new Kudos_Donor();
 			$donor = $donorClass->get_donor($email);
 			if($donor) {
-				$donorClass->update_donor($email, $name, $street, $postcode, $city);
+				$donorClass->update_donor($email, $payment_frequency, $name, $street, $postcode, $city);
 			} else {
-				$donorClass->create_donor($email, $customer->id, $name, $street, $postcode, $city);
+				$customer = $mollie->create_customer($email, $name);
+				$donorClass->create_donor($email, $customer->id, $payment_frequency, $name, $street, $postcode, $city);
+				$donor = $donorClass->get_donor($email);
 			}
 		}
 

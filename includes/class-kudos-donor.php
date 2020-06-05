@@ -24,7 +24,8 @@ class Kudos_Donor {
 
 	/**
 	 * @param string $email
-	 * @param $customer_id
+	 * @param string $customer_id
+	 * @param string $payment_frequency
 	 * @param string $name
 	 * @param string|null $street
 	 * @param string|null $postcode
@@ -34,7 +35,7 @@ class Kudos_Donor {
 	 * @return bool|false|int
 	 * @since   1.1.0
 	 */
-	public function create_donor($email, $customer_id, $name=null, $street=null, $postcode=null, $city=null,  $country=null) {
+	public function create_donor($email, $customer_id, $payment_frequency, $name=null, $street=null, $postcode=null, $city=null,  $country=null) {
 		return $this->wpdb->insert(
 			$this->wpdb->prefix . self::TABLE,
 			[
@@ -44,13 +45,15 @@ class Kudos_Donor {
 				'postcode' => $postcode,
 				'city' => $city,
 				'country' => $country,
-				'customer_id' => $customer_id
+				'customer_id' => $customer_id,
+				'payment_frequency' => $payment_frequency
 			]
 		);
 	}
 
 	/**
 	 * @param string $email
+	 * @param string $payment_frequency
 	 * @param string $name
 	 * @param string|null $street
 	 * @param string|null $postcode
@@ -60,7 +63,7 @@ class Kudos_Donor {
 	 * @return bool|false|int
 	 * @since   1.1.0
 	 */
-	public function update_donor($email, $name=null, $street=null, $postcode=null, $city=null,  $country=null) {
+	public function update_donor($email, $payment_frequency, $name=null, $street=null, $postcode=null, $city=null,  $country=null) {
 		return $this->wpdb->update(
 			$this->wpdb->prefix . self::TABLE,
 			[
@@ -69,6 +72,7 @@ class Kudos_Donor {
 				'postcode' => $postcode,
 				'city' => $city,
 				'country' => $country,
+				'payment_frequency' => $payment_frequency
 			], [
 				'email' => $email,
 			]

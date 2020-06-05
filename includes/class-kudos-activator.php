@@ -80,13 +80,14 @@ class Kudos_Activator {
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
-		  email VARCHAR(320),
-		  name VARCHAR(255),
+		  email VARCHAR(320) NOT NULL,
+		  name VARCHAR(255) NOT NULL,
 		  street VARCHAR(255),
 		  postcode VARCHAR(255),
 		  city VARCHAR(255),
 		  country VARCHAR(255),
 		  customer_id VARCHAR(255),
+		  payment_frequency VARCHAR(255) NOT NULL,
 		  PRIMARY KEY (id)
 		) $charset_collate";
 
