@@ -18,13 +18,10 @@
             {#   INITIAL FIELDS   #}
             <fieldset class="form-tab form-tab-1 current-tab">
                 <label>
-                    <input name="return_url" type="hidden" value="{{ return_url }}">
+                    <input class="kudos_field" name="return_url" type="hidden" value="{{ return_url }}">
                 </label>
                 <label>
-                    <input {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') ~ ((name_required) ? ' *' : null) }}" />
-                </label>
-                <label>
-                    <input {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') ~ ((email_required) ? ' *' : null) }}" />
+                    <input class="kudos_field" required type="text" min="1" name="value" placeholder="{{ __('Amount', 'kudos-donations')}} *" />
                 </label>
                 <label>
                     <select required class="kudos_field" name="payment_frequency">
@@ -35,23 +32,26 @@
                 </label>
                 <div class="kudos_modal_buttons" style="text-align: center">
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
-                    <button name="kudos_submit" class="kudos_button kudos_next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
+                    <button name="kudos_submit" class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
                 </div>
             </fieldset>
 
             {#   SECOND TAB   #}
             <fieldset class="form-tab form-tab-2">
                 <label>
-                    <input name="return_url" type="hidden" value="{{ return_url }}">
+                    <input class="kudos_field" {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') ~ ((name_required) ? ' *' : null) }}" />
                 </label>
                 <label>
-                    <input type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }}" />
+                    <input class="kudos_field" {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') ~ ((email_required) ? ' *' : null) }}" />
                 </label>
                 <label>
-                    <input type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }}" />
+                    <input class="kudos_field" type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }}" />
                 </label>
                 <label>
-                    <input type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }}" />
+                    <input class="kudos_field" type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }}" />
+                </label>
+                <label>
+                    <input class="kudos_field" type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }}" />
                 </label>
                 <div class="payment_by {{ vendor }}">
                     <small>
@@ -59,6 +59,7 @@
                     </small>
                 </div>
                 <div class="kudos_modal_buttons" style="text-align: center">
+                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
                     <button name="kudos_submit" class="kudos_submit kudos_button" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
                 </div>

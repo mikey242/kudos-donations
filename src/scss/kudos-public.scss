@@ -179,15 +179,7 @@ div[id^='kudos_modal-']  {
     margin: 0;
     padding: 0;
 
-    label {
-      @apply w-full m-0;
-
-      &:not(:first-child) input {
-        @apply mt-2;
-      }
-    }
-
-    input {
+    .kudos_field {
       @apply appearance-none leading-normal bg-transparent border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-base text-gray-700;
 
       &:focus {
@@ -196,6 +188,14 @@ div[id^='kudos_modal-']  {
 
       &::placeholder {
         @apply text-gray-500;
+      }
+    }
+
+    label {
+      @apply w-full m-0;
+
+      &:not(:first-child) .kudos_field {
+        @apply mt-2;
       }
     }
 
@@ -233,6 +233,17 @@ div[id^='kudos_modal-']  {
 
 .kudos_modal_buttons {
   @apply mt-8 block;
+
+  .kudos_back {
+    @apply text-gray-500 text-2xl;
+
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    margin: 0;
+    transform: translateY(50%);
+    cursor: pointer;
+  }
 
   button:last-child {
     @apply ml-3;

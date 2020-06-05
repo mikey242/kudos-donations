@@ -67,19 +67,20 @@ $(() => {
         })
     }
 
-    // Multi step form next button
-    $('.kudos_next').on('click', function (e) {
+    // Multi step form navigation
+    $('.kudos_form_nav').on('click', function () {
         if(animating) return false;
-
-        // Check if current tabs fields are valid
         let $current_tab = $(this).closest('.form-tab');
-        $current_tab.find('input').validate();
-        if(!$current_tab.find('input').valid()) {
-            return;
-        }
-
         let $modal = $(this).closest('.kudos_modal_container');
-        let $next_tab = $current_tab.next();
+        let direction = $(this).data('direction');
+        let $next_tab = $current_tab.prev();
+        if(direction === 'next') {
+            $next_tab = $current_tab.next();
+            $current_tab.find('input').validate();
+            if(!$current_tab.find('input').valid()) {
+                return;
+            }
+        }
 
         // Begin animation
         animating = true;
@@ -87,7 +88,7 @@ $(() => {
             step: function (now, mx) {
                 let position = (1 - now) * 50;
                 $modal.css({
-                    'transform': 'translateX(-' + position + 'px)'
+                    'transform': 'translateX(' + (direction === 'next' ? '-' : '') + position + 'px)'
                 })
             },
             duration: 100,
@@ -99,7 +100,7 @@ $(() => {
                     step: function (now, mx) {
                         let position = (1 - now) * 50;
                         $modal.css({
-                            'transform': 'translateX(+' + position + 'px)'
+                            'transform': 'translateX(' + (direction === 'next' ? '' : '-') + position + 'px)'
                         })
                     },
                     duration: 100,
@@ -118,7 +119,6 @@ $(() => {
         let $form = $(this.form);
         $form.validate()
         if($form.valid()) {
-            console.log($form.valid())
             $form.submit();
         }
     })
