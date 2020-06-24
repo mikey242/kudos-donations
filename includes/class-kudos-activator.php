@@ -33,6 +33,7 @@ class Kudos_Activator {
 		Kudos_Logger::init();
 		self::create_transactions_table();
 		self::create_donors_table();
+		self::create_subscriptions_table();
 		self::set_defaults();
 	}
 
@@ -50,14 +51,13 @@ class Kudos_Activator {
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
 		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-		  name VARCHAR(255),
-		  email VARCHAR(320),
 		  value DECIMAL(7,2) NOT NULL,
 		  currency VARCHAR(255),
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
 		  method VARCHAR(255),
 		  mode VARCHAR(255) NOT NULL,
 		  sequence_type VARCHAR(255) NOT NULL,
+		  customer_id VARCHAR(255),
 		  order_id VARCHAR(255) NOT NULL,
 		  transaction_id VARCHAR(255),  
 		  PRIMARY KEY (id)
@@ -87,13 +87,41 @@ class Kudos_Activator {
 		  city VARCHAR(255),
 		  country VARCHAR(255),
 		  customer_id VARCHAR(255),
-		  payment_frequency VARCHAR(255) NOT NULL,
 		  PRIMARY KEY (id)
 		) $charset_collate";
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 	}
+
+    /**
+     * Creates the subscription table
+     *
+     * @since    1.1.0
+     */
+    private static function create_subscriptions_table() {
+        global $wpdb;
+
+        $charset_collate = $wpdb->get_charset_collate();
+        $table_name = $wpdb->prefix . "kudos_subscriptions";  //get the database table prefix to create my new table
+
+        $sql = "CREATE TABLE $table_name (
+		  id mediumint(9) NOT NULL AUTO_INCREMENT,
+          time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  value DECIMAL(7,2) NOT NULL,
+		  currency VARCHAR(255),
+		  frequency VARCHAR(255) NOT NULL,
+		  customer_id VARCHAR(255),
+		  transaction_id VARCHAR(255),
+		  k_subscription_id VARCHAR(255),
+		  subscription_id VARCHAR(255),
+		  status VARCHAR(255),
+		  PRIMARY KEY (id)
+		) $charset_collate";
+
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        dbDelta( $sql );
+    }
 
 	/**
 	 * Adds default options if not already set

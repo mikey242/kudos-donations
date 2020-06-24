@@ -4,7 +4,9 @@ namespace Kudos;
 
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
+use Mollie\Api\Resources\Customer;
 use Mollie\Api\Resources\Payment;
+use Mollie\Api\Resources\Subscription;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
@@ -104,23 +106,24 @@ class Kudos_Mollie
 		return false;
 	}
 
-	/**
-	 * Creates a payment and returns it as an object
-	 *
-	 * @param $value
-	 * @param string $redirectUrl
-	 * @param string|null $name
-	 * @param string|null $email
-	 *
-	 * @param $customerId
-	 *
-	 * @return bool|object
-	 * @since      1.0.0
-	 */
-	public function create_payment($value, $redirectUrl, $name=null, $email=null, $customerId=null) {
+    /**
+     * Creates a payment and returns it as an object
+     *
+     * @param $value
+     * @param string $redirectUrl
+     * @param string|null $payment_frequency
+     * @param string|null $name
+     * @param string|null $email
+     *
+     * @param $customerId
+     *
+     * @return bool|object
+     * @since      1.0.0
+     */
+	public function create_payment($value, $payment_frequency, $redirectUrl, $name=null, $email=null, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
-		$order_id = time();
+		$order_id = 'kdo_'.time();
 		$currency = 'EUR';
 		$value = number_format($value, 2);
 
@@ -130,17 +133,36 @@ class Kudos_Mollie
 			$redirectUrl = add_query_arg('_wpnonce', wp_create_nonce('check_kudos_order-' . $order_id), $redirectUrl);
 		}
 
+		// Set payment frequency
+		switch ($payment_frequency) {
+            case "12 months":
+                $frequency_text = __('Yearly', 'kudos-donations');
+                $sequenceType = 'first';
+                break;
+            case "1 month":
+                $frequency_text = __('Monthly', 'kudos-donations');
+                $sequenceType = 'first';
+                break;
+            case "oneoff":
+            default:
+                $frequency_text = __('One off', 'kudos-donations');
+                $sequenceType = 'oneoff';
+        }
+
 		$paymentArray = [
 			"amount" => [
 				"currency" => $currency,
 				"value" => $value
 			],
 			"redirectUrl" => $redirectUrl,
-			"webhookUrl" => rest_url('kudos/v1/mollie/webhook'),
+//			"webhookUrl" => rest_url('kudos/v1/mollie/payment/webhook'),
+            "sequenceType" => $sequenceType,
+			"webhookUrl" => 'http://d38699244220.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
 			/* translators: %s: The order id */
-			"description" => sprintf(__("Kudos Payment - %s", 'kudos-donations'), $order_id),
+			"description" => sprintf(__("Kudos Donation (%s) - %s", 'kudos-donations'), $frequency_text, $order_id),
 			'metadata' => [
 				'order_id' => $order_id,
+				'payment_frequency' => $payment_frequency,
 				'email' => $email,
 				'name' => $name
 			]
@@ -155,7 +177,7 @@ class Kudos_Mollie
 			$payment = $mollieApi->payments->create($paymentArray);
 
 			$transaction = $this->transaction;
-			$transaction->create_transaction($order_id, $value, $currency, $payment->status, $payment->sequenceType, $email, $name);
+			$transaction->insert_transaction($order_id, $customerId, $value, $currency, $payment->status, $payment->sequenceType);
 
 			return $payment;
 
@@ -165,6 +187,63 @@ class Kudos_Mollie
 		}
 
 	}
+
+	/**
+	 * Create a subscription
+	 *
+	 * @param object $transaction
+	 * @param $interval
+	 * @param null $times
+	 *
+	 * @return bool|object
+	 * @since      1.1.0
+	 */
+	public function create_subscription($transaction, $interval, $times=null) {
+
+        $mollieApi = $this->mollieApi;
+        $customer_id = $transaction->customer_id;
+        $k_subscription_id = 'kds_'.time();
+        $startDate = date("Y-m-d", strtotime("+" . $interval));
+        $currency = 'EUR';
+        $value = number_format($transaction->value, 2);
+
+        $subscriptionArray = [
+            "amount" => [
+                "value" => $value,
+                "currency" => $currency
+            ],
+            "interval" => $interval,
+            "startDate" => $startDate,
+            "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $k_subscription_id),
+//            "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
+            "webhookUrl" => 'http://d38699244220.ngrok.io/wp-json/kudos/v1/mollie/subscription/webhook',
+            "metadata" => [
+                "subscription_id" => $k_subscription_id
+            ]
+        ];
+
+        if($times) {
+            $subscriptionArray["times"] = $times;
+        }
+
+        try {
+            /** @var Customer $customer */
+            $customer = $mollieApi->customers->get($customer_id);
+	        $subscription = $customer->createSubscription($subscriptionArray);
+
+	        if($subscription) {
+		        $kudos_subscription = new Kudos_Subscription();
+		        $kudos_subscription->insert_subscription($transaction->transaction_id, $customer_id, $interval, $value, $currency, $k_subscription_id, $subscription->id, $subscription->status);
+		        return $subscription;
+	        }
+
+	        return false;
+
+        } catch (ApiException $e) {
+            $this->logger->log($e->getMessage(), 'CRITICAL', [$customer_id, $subscriptionArray]);
+            return false;
+        }
+    }
 
 	/**
 	 * @param $email
@@ -194,6 +273,20 @@ class Kudos_Mollie
 
 	}
 
+	public function cancel_subscription($customerId, $subscriptionId) {
+
+		$mollieApi = $this->mollieApi;
+
+		try {
+			$customer = $mollieApi->customers->get($customerId);
+			return $customer->cancelSubscription($subscriptionId);
+		} catch (ApiException $e) {
+			$this->logger->log($e->getMessage(), 'CRITICAL', [$customerId, $subscriptionId]);
+			return false;
+		}
+
+	}
+
 	/**
 	 * Register webhook using rest
 	 *
@@ -201,7 +294,9 @@ class Kudos_Mollie
 	 * @return void
 	 */
 	public function register_webhook() {
-		register_rest_route( 'kudos/v1', 'mollie/webhook', [
+
+	    // Payment webhook
+		register_rest_route( 'kudos/v1', 'mollie/payment/webhook', [
 			'methods' => 'POST',
 			'callback' => [$this, 'rest_api_mollie_webhook'],
 			'args' => [
@@ -210,6 +305,17 @@ class Kudos_Mollie
 				]
 			]
 		] );
+
+		// Subscription webhook
+        register_rest_route( 'kudos/v1', 'mollie/subscription/webhook', [
+            'methods' => 'POST',
+            'callback' => [$this, 'rest_api_mollie_webhook'],
+            'args' => [
+                'id' => [
+                    'required' => true
+                ]
+            ]
+        ] );
 	}
 
 	/**
@@ -307,27 +413,38 @@ class Kudos_Mollie
 		$order_id = $payment->metadata->order_id;
 		$transaction_id = $payment->id;
 		$status = $payment->status;
-		$this->transaction->update_transaction($order_id, $transaction_id, $status, $payment->method);
+        $sequence_type = $payment->sequenceType;
+		$this->transaction->update_transaction($order_id, [
+			'status' => $status,
+			'transaction_id' => $transaction_id,
+			'method' => $payment->method
+		]);
 
 		// Send email receipt on success
 		$mailer = new Kudos_Mailer();
 		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
 
 			// Get transaction
-			$transaction = $this->transaction->get_transaction($order_id);
+			$transaction = $this->transaction->get_transaction_by(['order_id' => $order_id]);
 
 			// Create invoice
 			$this->invoice->generate_invoice($transaction);
 
-			// Send email - email setting is checked in mailer
 			if($transaction->email) {
+
+                // Send email - email setting is checked in mailer
 				$mailer->send_invoice($transaction);
+
+                // Set up recurring payment if sequence is first
+                if($sequence_type === 'first') {
+                    return $this->create_subscription($transaction, $payment->metadata->payment_frequency);
+                }
 			}
 		}
 
 		/* translators: %s: Mollie */
 		$note = sprintf(__( 'Webhook requested by %s.', 'kudos-donations' ),'Mollie');
-		$this->logger->log($note, 'INFO', ['order_id' => $order_id, 'status' => $status]);
+		$this->logger->log($note, 'INFO', ['order_id' => $order_id, 'status' => $status, 'sequence_type' => $sequence_type]);
 
 		return $response;
 	}

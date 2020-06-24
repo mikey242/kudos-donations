@@ -123,6 +123,18 @@ class Kudos_Admin {
 
 		);
 		add_action( "admin_print_scripts-{$transactions_page_hook_suffix}", [$this, 'kudos_transactions_page_assets'] );
+
+		$subscriptions_page_hook_suffix = add_submenu_page(
+			'kudos-settings',
+			/* translators: %s: Plugin name */
+			sprintf(__('%s Subscriptions', 'kudos-donations'), 'Kudos'),
+			__('Subscriptions', 'kudos-donations'),
+			'manage_options',
+			'kudos-subscriptions',
+			[$this, 'subscriptions_table']
+
+		);
+		add_action( "admin_print_scripts-{$subscriptions_page_hook_suffix}", [$this, 'kudos_subscriptions_page_assets'] );
 	}
 
 	/**
@@ -150,8 +162,22 @@ class Kudos_Admin {
 	 * @since   1.1.0
 	 */
 	public function kudos_transactions_page_assets() {
-		wp_enqueue_style( $this->plugin_name . '-transactions', get_asset_url('kudos-admin-transactions.css'), [], $this->version, 'all' );
-		wp_enqueue_script( $this->plugin_name . '-transaction', get_asset_url('kudos-admin-transactions.js'), [ 'jquery' ], $this->version, false );
+		wp_enqueue_script( $this->plugin_name . '-transactions', get_asset_url('kudos-admin-transactions.js'), [ 'jquery' ], $this->version, false );
+		wp_localize_script($this->plugin_name . '-transactions', 'kudos', [
+			'confirmation' => __('Are you sure you want to delete this transaction?', 'kudos-donations'),
+		]);
+	}
+
+	/**
+	 * Assets specific to the Kudos Subscriptions page
+	 *
+	 * @since   1.1.0
+	 */
+	public function kudos_subscriptions_page_assets() {
+		wp_enqueue_script( $this->plugin_name . '-subscriptions', get_asset_url('kudos-admin-subscriptions.js'), [ 'jquery' ], $this->version, false );
+		wp_localize_script($this->plugin_name . '-subscriptions', 'kudos', [
+			'confirmation' => __('Are you sure you want to cancel this subscription?', 'kudos-donations'),
+		]);
 	}
 
 	/**
@@ -166,9 +192,9 @@ class Kudos_Admin {
 
 		if ('delete' === $table->current_action()) {
 			$message = __('Transaction deleted', 'kudos-donations');
-		} elseif ('bulk-delete' === $table->current_action() && isset($_REQUEST['bulk-delete'])) {
+		} elseif ('bulk-delete' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
 			/* translators: %s: Number of transactions */
-			$message = sprintf(__('%s transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-delete']));
+			$message = sprintf(__('%s transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
         }
 	    ?>
 	    <div class="wrap">
@@ -195,6 +221,46 @@ class Kudos_Admin {
     }
 
 	/**
+	 * Creates the subscriptions table
+	 *
+	 * @since    1.1.0
+	 */
+	public function subscriptions_table() {
+		$table = new Subscriptions_Table();
+		$table->prepare_items();
+		$message = '';
+
+		if ('cancel' === $table->current_action()) {
+			$message = __('Subscription cancelled', 'kudos-donations');
+		} elseif ('bulk-cancel' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
+			/* translators: %s: Number of transactions */
+			$message = sprintf(__('%s subscription(s) cancelled', 'kudos-donations'), count($_REQUEST['bulk-action']));
+		}
+		?>
+        <div class="wrap">
+            <h1 class="wp-heading-inline"><?php _e('Subscriptions', 'kudos-donations'); ?></h1>
+			<?php if (!empty($_REQUEST['s'])) { ?>
+                <span class="subtitle">
+                <?php
+                /* translators: %s: Search term */
+                printf(__('Search results for “%s”'), $_REQUEST['s'])
+                ?>
+            </span>
+			<?php } ?>
+            <p><?php _e("Your recent Kudos subscriptions",'kudos-donations');?></p>
+			<?php if($message) { ?>
+                <div class="updated below-h2" id="message"><p><?php echo esc_html($message); ?></p></div>
+			<?php } ?>
+            <form id="subscriptions-table" method="POST">
+				<?php
+				$table->display();
+				?>
+            </form>
+        </div>
+		<?php
+	}
+
+	/**
 	 * Exports transactions if request present.
      * Needs to be hooked to admin_init as it modifies headers.
      *
@@ -205,9 +271,16 @@ class Kudos_Admin {
 	    if(isset($_REQUEST['export_transactions'])) {
 
 	        $table = new Transactions_Table();
-	        $table->export_transactions();
+	        $table->export();
 
 	    }
+
+		if(isset($_REQUEST['export_subscriptions'])) {
+
+			$table = new Subscriptions_Table();
+			$table->export();
+
+		}
 	}
 
 	/**

@@ -9,4 +9,9 @@ dom.watch();
 
 $(() => {
     'use strict';
+    $('.row-actions .delete').click(function (e) {
+        if(!confirm(window.kudos.confirmation)) {
+            e.preventDefault();
+        }
+    })
 })

@@ -4,28 +4,21 @@ namespace Kudos;
 
 use wpdb;
 
-class Kudos_Donor {
+class Kudos_Donor extends Database_Object {
 
+	public const TABLE = "kudos_donors";
 	/**
 	 * @var wpdb
 	 */
-	private $wpdb;
-	const TABLE = "kudos_donors";
-
+	protected $wpdb;
 	/**
-	 * Kudos_Donor constructor.
-	 *
-	 * @since   1.1.0
+	 * @var string
 	 */
-	public function __construct() {
-		global $wpdb;
-		$this->wpdb = $wpdb;
-	}
+	protected $table;
 
 	/**
 	 * @param string $email
 	 * @param string $customer_id
-	 * @param string $payment_frequency
 	 * @param string $name
 	 * @param string|null $street
 	 * @param string|null $postcode
@@ -35,65 +28,31 @@ class Kudos_Donor {
 	 * @return bool|false|int
 	 * @since   1.1.0
 	 */
-	public function create_donor($email, $customer_id, $payment_frequency, $name=null, $street=null, $postcode=null, $city=null,  $country=null) {
-		return $this->wpdb->insert(
-			$this->wpdb->prefix . self::TABLE,
-			[
-				'email' => $email,
-				'name' => $name,
-				'street' => $street,
-				'postcode' => $postcode,
-				'city' => $city,
-				'country' => $country,
-				'customer_id' => $customer_id,
-				'payment_frequency' => $payment_frequency
-			]
-		);
+	public function insert_donor($email, $customer_id, $name=null, $street=null, $postcode=null, $city=null, $country=null) {
+
+		return $this->insert([
+			'email' => $email,
+			'name' => $name,
+			'street' => $street,
+			'postcode' => $postcode,
+			'city' => $city,
+			'country' => $country,
+			'customer_id' => $customer_id,
+		]);
 	}
 
 	/**
+	 * Update donor by email
+	 *
 	 * @param string $email
-	 * @param string $payment_frequency
-	 * @param string $name
-	 * @param string|null $street
-	 * @param string|null $postcode
-	 * @param string|null $city
-	 * @param string|null $country
+	 * @param array $array
 	 *
-	 * @return bool|false|int
-	 * @since   1.1.0
-	 */
-	public function update_donor($email, $payment_frequency, $name=null, $street=null, $postcode=null, $city=null,  $country=null) {
-		return $this->wpdb->update(
-			$this->wpdb->prefix . self::TABLE,
-			[
-				'name' => $name,
-				'street' => $street,
-				'postcode' => $postcode,
-				'city' => $city,
-				'country' => $country,
-				'payment_frequency' => $payment_frequency
-			], [
-				'email' => $email,
-			]
-		);
-	}
-
-	/**
-	 * @param string $email // Email address used to find a donor
-	 * @param array $fields // Specify fields to fetch from database
+	 * @return false|int
 	 *
-	 * @return array|object|void|null
-	 * @since   1.1.0
+	 * * @since   1.1.0
 	 */
-	public function get_donor($email, array $fields=['*']) {
+	public function update_donor($email, $array) {
 
-		$wpdb = $this->wpdb;
-		$table = $this->wpdb->prefix . self::TABLE;
-		$columns = implode(', ', $fields);
-
-		return $wpdb->get_row( $wpdb->prepare( "
-			SELECT $columns FROM $table WHERE email = '%s'
-		", $email ) );
+		return $this->update($array, ['email' => $email]);
 	}
 }

@@ -101,7 +101,6 @@ class Kudos_Public {
 	 * @since   1.0.0
 	 */
 	public function enqueue_block_assets() {
-
 		wp_enqueue_style( $this->plugin_name . '-button-block', get_asset_url('kudos-button-block.css'), [], $this->version, 'all' );
 		wp_enqueue_script($this->plugin_name . '-button-block', get_asset_url('kudos-button-block.js'), [ 'wp-i18n', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post', 'wp-api' ], $this->version, true );
 	}
@@ -135,18 +134,23 @@ class Kudos_Public {
 		// Get or create donor and fetch their Mollie customer id
 		if($email) {
 			$donorClass = new Kudos_Donor();
-			$donor = $donorClass->get_donor($email);
+			$donor = $donorClass->get_by(['email' => $email]);
 			if($donor) {
-				$donorClass->update_donor($email, $payment_frequency, $name, $street, $postcode, $city);
+				$donorClass->update_donor($email, [
+					'name' => $name,
+					'street' => $street,
+					'postcode' => $postcode,
+					'city' => $city,
+				]);
 			} else {
 				$customer = $mollie->create_customer($email, $name);
-				$donorClass->create_donor($email, $customer->id, $payment_frequency, $name, $street, $postcode, $city);
-				$donor = $donorClass->get_donor($email);
+				$donorClass->insert_donor($email, $customer->id, $name, $street, $postcode, $city);
+				$donor = $donorClass->get_by(['email' => $email]);
 			}
 			$customerId = $donor->customer_id;
 		}
 
-		$payment = $mollie->create_payment($value, $redirectUrl, $name, $email, $customerId);
+		$payment = $mollie->create_payment($value, $payment_frequency, $redirectUrl, $name, $email, $customerId);
 		if($payment) {
 			wp_send_json_success($payment->getCheckoutUrl());
 		}
@@ -161,7 +165,6 @@ class Kudos_Public {
 	 * @return void
 	 */
 	public function register_routes() {
-
 		// Mollie webhook
 		$mollie = new Kudos_Mollie();
 		$mollie->register_webhook();
@@ -179,7 +182,7 @@ class Kudos_Public {
 		if($order_id) {
 
 			$transaction = new Kudos_Transaction();
-			$transaction = $transaction->get_transaction($order_id);
+			$transaction = $transaction->get_transaction_by(['order_id' => $order_id]);
 
 			switch($transaction->status) {
 				case 'paid':
@@ -338,6 +341,8 @@ class Kudos_Public {
      * @since   1.0.0
 	 */
 	public function place_modal() {
+
+		$test = new Kudos_Donor();
 
 		$modal = new Kudos_Modal();
 

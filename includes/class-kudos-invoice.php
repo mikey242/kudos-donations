@@ -2,6 +2,7 @@
 
 namespace Kudos;
 
+use Composer\DependencyResolver\Transaction;
 use Dompdf\Dompdf;
 use Throwable;
 
@@ -88,16 +89,11 @@ class Kudos_Invoice
 			'company_name' => get_option('_kudos_invoice_company_name'),
 			'company_address' => get_option('_kudos_invoice_company_address'),
 			'vat_number' => get_option('_kudos_invoice_vat_number'),
+			'donor_name' => $transaction->name,
+			'donor_street' => $transaction->street,
+			'donor_postcode' => $transaction->postcode,
+			'donor_city' => $transaction->city,
 		];
-
-		$donorClass = new Kudos_Donor();
-		$donor = $donorClass->get_donor($transaction->email);
-		if($donor) {
-			$invoiceArray['donor_name'] = $donor->name;
-			$invoiceArray['donor_street'] = $donor->street;
-			$invoiceArray['donor_postcode'] = $donor->postcode;
-			$invoiceArray['donor_city'] = $donor->city;
-		}
 
 		try {
 			$dompdf->loadHtml(
@@ -154,14 +150,9 @@ class Kudos_Invoice
 	 */
 	public static function regenerate_invoices() {
 
-		global $wpdb;
+		$transactions = new Kudos_Transaction();
+		$transactions = $transactions->get_transactions();
 
-		$table = $wpdb->prefix . Kudos_Transaction::TABLE;
-		$query = "
-			SELECT * from $table
-		";
-
-		$transactions = $wpdb->get_results($query);
 		$n=0;
 
 		foreach ($transactions as $transaction) {

@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import MicroModal from "micromodal"
-// import validator from 'jquery-validation';
+import validator from 'jquery-validation';
 import '../img/logo-colour-40.png' //used as email attachment
 
 $(() => {
@@ -84,26 +84,28 @@ $(() => {
 
         // Begin animation
         animating = true;
+        let offset = 25;
+        let duration = 150;
         $modal.animate({opacity:0}, {
-            step: function (now, mx) {
-                let position = (1 - now) * 50;
+            step: function (now) {
+                let position = (1 - now) * offset;
                 $modal.css({
                     'transform': 'translateX(' + (direction === 'next' ? '-' : '') + position + 'px)'
                 })
             },
-            duration: 100,
+            duration: duration,
             easing: 'linear',
             complete: function () {
                 $current_tab.removeClass('current-tab');
                 $next_tab.addClass('current-tab');
                 $modal.animate({opacity:1}, {
-                    step: function (now, mx) {
-                        let position = (1 - now) * 50;
+                    step: function (now) {
+                        let position = (1 - now) * offset;
                         $modal.css({
                             'transform': 'translateX(' + (direction === 'next' ? '' : '-') + position + 'px)'
                         })
                     },
-                    duration: 100,
+                    duration: duration,
                     easing: 'linear',
                     complete: function () {
                         animating = false;
