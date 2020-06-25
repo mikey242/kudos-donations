@@ -21,6 +21,7 @@ class Transactions_Table extends Table_Object {
 
 		parent::__construct( [
 			'table'    => $wpdb->prefix . Kudos_Transaction::TABLE,
+			'orderBy'  => 'transaction_created',
 			'singular' => __( 'Transaction', 'kudos-donations' ), //singular name of the listed records
 			'plural'   => __( 'Transactions', 'kudos-donations' ), //plural name of the listed records
 			'ajax'     => false //does this table support ajax?
@@ -61,24 +62,37 @@ class Transactions_Table extends Table_Object {
 	public function fetch_table_data() {
 		global $wpdb;
 
-		$search_custom_vars = null;
+		$query = [];
 
 		$mode = (!empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : '');
+		$customer_id = (!empty($_GET['customer_id']) ? sanitize_text_field($_GET['customer_id']) : '');
 
 		// Add mode if exist
 		if($mode) {
-			$search_custom_vars = $wpdb->prepare(
-                "WHERE mode = %s", esc_sql($mode)
-            );
+			array_push($query, $wpdb->prepare(
+                "mode = %s", esc_sql($mode)
+            ));
+		}
+
+		// Add donor if exist
+		if($customer_id) {
+			array_push($query, $wpdb->prepare(
+				"d.customer_id = %s", esc_sql($customer_id)
+			));
 		}
 
 		// Add search query if exist
 		if(!empty($_REQUEST['s'])) {
 			$search = esc_sql($_REQUEST['s']);
-			$search_custom_vars .= $wpdb->prepare(
-				($search_custom_vars ? " AND" : " WHERE") . " (`email` LIKE '%%%s%%') OR (`name` LIKE '%%%s%')",
+			array_push($query, $wpdb->prepare(
+				'(`email` LIKE "%%%s%%") OR (`name` LIKE "%%%s%")',
 				$search, $search
-			);
+			));
+		}
+
+		$search_custom_vars = null;
+		if($query) {
+			$search_custom_vars = 'WHERE ' . implode(' AND ', $query);
 		}
 
 		$transaction = new Kudos_Transaction();
@@ -98,7 +112,7 @@ class Transactions_Table extends Table_Object {
 		$headers = [];
 		foreach (array_keys($rows[0]) as $header) {
 			switch ($header) {
-				case 'time':
+				case 'transaction_created':
 					$result = __('Date', 'kudos-donations');
 					break;
 				case 'name':
@@ -135,18 +149,18 @@ class Transactions_Table extends Table_Object {
 	}
 
 	/**
-	 * Columns to show
+	 * Returns a list of columns to include in table
 	 *
-	 * @since      1.0.0
 	 * @return array
+	 * @since   1.1.0
 	 */
-	public function get_columns() {
-		return $columns= [
-			'cb' => '<input type="checkbox" />',
-			'time'=>__('Date', 'kudos-donations'),
+	public function column_names() {
+		return [
+			'transaction_created'=>__('Date', 'kudos-donations'),
 			'name'=>__('Name', 'kudos-donations'),
 			'email'=>__('E-mail', 'kudos-donations'),
 			'value'=>__('Amount', 'kudos-donations'),
+			'type' => __('Type', 'kudos-donations'),
 			'status'=>__('Status', 'kudos-donations'),
 			'transaction_id'=>__('Transaction Id', 'kudos-donations'),
 		];
@@ -205,8 +219,8 @@ class Transactions_Table extends Table_Object {
 	public function get_sortable_columns()
 	{
 		return [
-			'time' => [
-				'time',
+			'transaction_created' => [
+				'transaction_created',
 				false
 			],
 			'value' => [
@@ -249,11 +263,10 @@ class Transactions_Table extends Table_Object {
 	 * @param array $item an array of DB data
 	 * @return string
 	 */
-	function column_time( $item ) {
-
+	function column_transaction_created( $item ) {
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . date_i18n($item['time'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
+		$title = '<strong>' . date_i18n($item['transaction_created'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
 		$invoice = $this->invoice;
 		$pdf = $invoice->get_invoice($item['order_id']);
 
@@ -339,6 +352,10 @@ class Transactions_Table extends Table_Object {
 		}
 
 		return $return;
+	}
+
+	function column_type($item) {
+		return sequence_type($item['sequence_type']);
 	}
 
 	/**

@@ -31,7 +31,7 @@ class Kudos_Subscription extends Database_Object {
 	 */
 	public function insert_subscription($transaction_id, $customer_id, $frequency, $value, $currency, $k_subscription_id, $subscription_id, $status) {
 		return $this->insert([
-			'time' => current_time('mysql'),
+			'subscription_created' => current_time('mysql'),
 			'value' => $value,
 			'currency' => $currency,
 			'frequency' => $frequency,

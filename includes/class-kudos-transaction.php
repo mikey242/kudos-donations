@@ -31,7 +31,7 @@ class Kudos_Transaction extends Database_Object {
 	public function insert_transaction($order_id, $customer_id, $value, $currency, $status, $sequence_type) {
 
 		return $this->insert([
-			'time' => current_time('mysql'),
+			'transaction_created' => current_time('mysql'),
 			'value' => $value,
 			'currency' => $currency,
 			'status' => $status,
@@ -101,9 +101,14 @@ class Kudos_Transaction extends Database_Object {
 		$wpdb = $this->wpdb;
 		$donor_table = $wpdb->prefix . Kudos_Donor::TABLE;
 
-		$query = "LEFT JOIN $donor_table ON $this->table.customer_id = $donor_table.customer_id
-				  $search_custom_vars";
+		$query = "SELECT 
+       			  	t.*,
+					d.*
+				  FROM $this->table AS t
+				  LEFT JOIN $donor_table as d ON t.customer_id = d.customer_id
+				  $search_custom_vars
+		";
 
-		return $this->get_all($query, ARRAY_A);
+		return $wpdb->get_results($query, ARRAY_A);
 	}
 }

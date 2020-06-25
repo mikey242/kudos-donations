@@ -31,6 +31,7 @@ class Kudos_Donor extends Database_Object {
 	public function insert_donor($email, $customer_id, $name=null, $street=null, $postcode=null, $city=null, $country=null) {
 
 		return $this->insert([
+			'donor_created' => current_time('mysql'),
 			'email' => $email,
 			'name' => $name,
 			'street' => $street,

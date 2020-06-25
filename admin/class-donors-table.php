@@ -2,7 +2,7 @@
 
 namespace Kudos;
 
-class Subscriptions_Table extends Table_Object {
+class Donors_Table extends Table_Object {
 
 	/**
 	 * Class constructor
@@ -14,10 +14,10 @@ class Subscriptions_Table extends Table_Object {
 		global $wpdb;
 
 		parent::__construct( [
-			'table'    => $wpdb->prefix . Kudos_Subscription::TABLE,
-			'orderBy'  => 'subscription_created',
-			'singular' => __( 'Subscription', 'kudos-donations' ),
-			'plural'   => __( 'Subscriptions', 'kudos-donations' ),
+			'table'    => $wpdb->prefix . Kudos_Donor::TABLE,
+			'orderBy'  => 'donor_created',
+			'singular' => __( 'Donor', 'kudos-donations' ),
+			'plural'   => __( 'Donors', 'kudos-donations' ),
 			'ajax'     => false
 		] );
 
@@ -37,9 +37,8 @@ class Subscriptions_Table extends Table_Object {
 				$export_nonce = wp_create_nonce( 'export-' . $this->_args['plural'] );
 				$url = add_query_arg([
 					'page' => !empty($_REQUEST['page']) ? esc_attr($_REQUEST['page']) : '',
-					'frequency' => !empty($_REQUEST['frequency']) ? esc_attr($_REQUEST['frequency']) : '',
 					'_wpnonce' => $export_nonce,
-					'export_subscriptions' => ''
+					'export_donors' => ''
 
 				]);
 				echo "<a href='$url' class='button action'>". __('Export', 'kudos-donations') ."</a>";
@@ -58,15 +57,6 @@ class Subscriptions_Table extends Table_Object {
 
 		$search_custom_vars = null;
 
-		$frequency = (!empty($_GET['frequency']) ? sanitize_text_field($_GET['frequency']) : '');
-
-		// Add frequency if exist
-		if($frequency) {
-			$search_custom_vars = $wpdb->prepare(
-				"WHERE frequency = %s", esc_sql($frequency)
-			);
-		}
-
 		// Add search query if exist
 		if(!empty($_REQUEST['s'])) {
 			$search = esc_sql($_REQUEST['s']);
@@ -76,7 +66,7 @@ class Subscriptions_Table extends Table_Object {
 			);
 		}
 
-		$subscription = new Kudos_Subscription();
+		$subscription = new Kudos_Donor();
 		return $subscription->get_table_data($search_custom_vars);
 	}
 
@@ -93,7 +83,7 @@ class Subscriptions_Table extends Table_Object {
 		$headers = [];
 		foreach (array_keys($rows[0]) as $header) {
 			switch ($header) {
-				case 'subscription_created':
+				case 'donor_created':
 					$result = __('Date', 'kudos-donations');
 					break;
 				case 'name':
@@ -134,45 +124,12 @@ class Subscriptions_Table extends Table_Object {
 	 */
 	public function column_names() {
 		return [
-			'subscription_created'=>__('Date', 'kudos-donations'),
-			'frequency'=>__('Frequency', 'kudos-donations'),
+			'donor_created'=>__('Date', 'kudos-donations'),
 			'name' => __('Name', 'kudos-donations'),
 			'email'=>__('E-mail', 'kudos-donations'),
-			'value'=>__('Amount', 'kudos-donations'),
-			'status'=>__('Status', 'kudos-donations'),
-			'subscription_id'=>__('Subscription Id', 'kudos-donations'),
+			'address' => __('Address', 'kudos-donations'),
+			'donations' => __('Donations', 'kudos-donations')
 		];
-	}
-
-	/**
-	 * Gets view data
-	 *
-	 * @since      1.1.0
-	 * @return array
-	 */
-	protected function get_views() {
-		$views = [];
-		$current = ( !empty($_GET['frequency']) ? sanitize_text_field($_GET['frequency']) : 'all');
-
-		//All link
-		$count = count($this->count_records());
-		$class = ($current == 'all' ? ' class="current"' :'');
-		$all_url = remove_query_arg('frequency');
-		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') . " ($count)</a>";
-
-		//Yearly link
-		$count = count($this->count_records('frequency', '12 months'));
-		$yearly_url = add_query_arg('frequency','12 months');
-		$class = ($current == '12 months' ? ' class="current"' :'');
-		$views['test'] = "<a href='{$yearly_url}' {$class} >". __('Yearly', 'kudos-donations') ." ($count)</a>";
-
-		//Monthly link
-		$count = count($this->count_records('frequency', '1 month'));
-		$monthly_url = add_query_arg('frequency','1 month');
-		$class = ($current == '1 month' ? ' class="current"' :'');
-		$views['live'] = "<a href='{$monthly_url}' {$class} >". __('Monthly', 'kudos-donations') ." ($count)</a>";
-		return $views;
-
 	}
 
 	/**
@@ -184,7 +141,8 @@ class Subscriptions_Table extends Table_Object {
 	public function get_hidden_columns()
 	{
 		return [
-			'subscription_id'
+			'subscription_id',
+			'id'
 		];
 	}
 
@@ -197,8 +155,8 @@ class Subscriptions_Table extends Table_Object {
 	public function get_sortable_columns()
 	{
 		return [
-			'subscription_created' => [
-				'subscription_created',
+			'donor_created' => [
+				'donor_created',
 				false
 			],
 			'value' => [
@@ -217,38 +175,28 @@ class Subscriptions_Table extends Table_Object {
 	 */
 	function column_cb( $item ) {
 		return sprintf(
-			'<input type="checkbox" name="bulk-action[]" value="%s" />', $item['subscription_id']
+			'<input type="checkbox" name="bulk-action[]" value="%s" />', $item['customer_id']
 		);
 	}
 
 	/**
 	 * Time (date) column
 	 *
-	 * @since      1.1.0
+	 * @since      1.0.0
 	 * @param array $item an array of DB data
 	 * @return string
 	 */
-	function column_subscription_created( $item ) {
+	function column_donor_created( $item ) {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . date_i18n($item['subscription_created'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
+		$title = '<strong>' . date_i18n($item['donor_created'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
 
 		$actions = [
-			'cancel' => sprintf( '<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'cancel', sanitize_text_field( $item['subscription_id'] ), $delete_nonce, __('Cancel', 'kudos-donations') ),
+			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['customer_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),
 		];
 
 		return $title . $this->row_actions( $actions );
-	}
-
-	function column_frequency($item) {
-		switch ($item['frequency']) {
-			case '12 months':
-				return __('Yearly', 'kudos-donations');
-			case '1 month':
-				return __('Monthly', 'kudos-donations');
-		}
-		return false;
 	}
 
 	/**
@@ -265,42 +213,46 @@ class Subscriptions_Table extends Table_Object {
 	}
 
 	/**
-	 * Value (amount) column
+	 * Address column
 	 *
 	 * @since      1.1.0
 	 * @param array $item
-	 * @return string|void
+	 * @return string
 	 */
-	function column_value($item)
-	{
+	function column_address( $item ) {
 
-		$currency = !empty($item['currency']) ? get_currency_symbol($item['currency']) : '';
+		$address = [
+			$item['street'],
+			$item['postcode'] . ' ' . $item['city'],
+			$item['country']
+		];
 
-		return $currency . ' ' . number_format_i18n($item['value'], 2);
-
+		return implode('<br/>', $address);
 	}
 
 	/**
-	 * Payment status column
+	 * Donations column
 	 *
 	 * @since      1.1.0
 	 * @param array $item
-	 * @return string|void
+	 * @return string
 	 */
-	function column_status($item)
-	{
+	function column_donations( $item ) {
 
-		switch ($item['status']) {
-			case 'active':
-				$status = __('Active', 'kudos-donations');
-				break;
-			default:
-				$status = $item['status'];
+		$kudos_transaction = new Kudos_Transaction();
+		$transactions = $kudos_transaction->get_all_by(['customer_id' => $item['customer_id']]);
+
+		if($transactions) {
+			$number = count($transactions);
+			$total = 0;
+			foreach ($transactions as $transaction) {
+				$total = $total + $transaction->value;
+			}
+
+			return '<a href="'. admin_url('admin.php?page=kudos-transactions&customer_id='. urlencode($item['customer_id']) .'') .'">' . $number . ' ( ' . get_currency_symbol($transactions[0]->currency) . $total . ' )' . '</a>';
 		}
 
-		$frequency = $item['frequency'] === 'test' ? ' ('. $item['frequency'] .')' : '';
-
-		return $status . ' ' . $frequency;
+		return false;
 	}
 
 	/**
@@ -311,37 +263,8 @@ class Subscriptions_Table extends Table_Object {
 	 */
 	function get_bulk_actions() {
 		return [
-			'bulk-cancel'   => __('Cancel', 'kudos-donations'),
+			'bulk-delete'   => __('Delete', 'kudos-donations'),
 		];
-	}
-
-	/**
-	 * Cancel a subscription.
-	 *
-	 * @since      1.1.0
-	 * @param int $subscription_id order ID
-	 */
-	public static function cancel_subscription( $subscription_id ) {
-
-		$mollie = new Kudos_Mollie();
-		$subscription = new Kudos_Subscription();
-		$customer = $subscription->get_by(['subscription_id' => $subscription_id]);
-
-		if(empty($customer)) {
-			return;
-		}
-
-		$customer_id = $customer->customer_id;
-
-		$subscription = $mollie->cancel_subscription($customer_id, $subscription_id);
-
-		if($subscription) {
-			global $wpdb;
-			$wpdb->delete(
-				$table = $wpdb->prefix . Kudos_Subscription::TABLE,
-				[ 'subscription_id' => $subscription_id ]
-			);
-		}
 	}
 
 	/**
@@ -354,16 +277,16 @@ class Subscriptions_Table extends Table_Object {
 		//Detect when a bulk action is being triggered...
 		switch ($this->current_action()) {
 
-			case 'cancel':
+			case 'delete':
 				// In our file that handles the request, verify the nonce.
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
 					die();
 				} else {
-					self::cancel_subscription( sanitize_text_field( $_GET['subscription_id'] ) );
+					self::cancel_subscription( sanitize_text_field( $_GET['customer_id'] ) );
 				}
 				break;
 
-			case 'bulk-cancel':
+			case 'bulk-delete':
 				// In our file that handles the request, verify the nonce.
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
 					die();

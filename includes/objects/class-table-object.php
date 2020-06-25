@@ -27,6 +27,7 @@ class Table_Object extends WP_List_Table {
 
 		parent::__construct( [
 			'table'    => $args['table'],
+			'orderBy'  => !empty($args['orderBy']) ? $args['orderBy'] : null,
 			'singular' => $args['singular'], //singular name of the listed records
 			'plural'   => $args['plural'], //plural name of the listed records
 			'ajax'     => false //does this table support ajax?
@@ -80,7 +81,18 @@ class Table_Object extends WP_List_Table {
 	}
 
 	/**
-	 * Exports all transactions to a csv file
+	 * Columns to show
+	 *
+	 * @since      1.1.0
+	 * @return array
+	 */
+	public function get_columns() {
+		$columns['cb'] = '<input type="checkbox" />';
+		return array_merge($columns, static::column_names());
+	}
+
+	/**
+	 * Exports all data to a csv file
 	 *
 	 * @since      1.0.1
 	 */
@@ -118,26 +130,6 @@ class Table_Object extends WP_List_Table {
 		// Close output
 		fclose( $out );
 		exit();
-	}
-
-	/**
-	 * Define the sortable columns
-	 *
-	 * @since      1.0.0
-	 * @return array
-	 */
-	public function get_sortable_columns()
-	{
-		return [
-			'time' => [
-				'time',
-				false
-			],
-			'value' => [
-				'value',
-				false
-			]
-		];
 	}
 
 	/**
@@ -194,9 +186,10 @@ class Table_Object extends WP_List_Table {
 	 */
 	private function sort_data( $a, $b )
 	{
+
 		// Set defaults
-		$orderBy = 'time';
-		$order = 'desc';
+		$orderBy = $this->_args['orderBy'] ?? 'time';
+		$order = $this->_args['order'] ?? 'desc';
 
 		// If orderBy is set, use this as the sort column
 		if(!empty($_GET['orderby']))

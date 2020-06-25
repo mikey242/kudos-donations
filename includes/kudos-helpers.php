@@ -86,3 +86,22 @@ function color_luminance( $hex, $percent ) {
 
 	return $new_hex;
 }
+
+/**
+ * Returns a translated string of the sequence type
+ *
+ * @param $text
+ *
+ * @return string|void
+ * @since   1.1.0
+ */
+function sequence_type($text) {
+	switch ($text) {
+		case 'oneoff':
+			return __('One-off', 'kudos-donations');
+		case 'first':
+			return __('Recurring (first payment)', 'kudos-donations');
+		default:
+			return __('Recurring', 'kudos-donations');
+	}
+}

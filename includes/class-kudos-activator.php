@@ -50,7 +50,7 @@ class Kudos_Activator {
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
-		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  transaction_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  value DECIMAL(7,2) NOT NULL,
 		  currency VARCHAR(255),
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
@@ -80,6 +80,7 @@ class Kudos_Activator {
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
+		  donor_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  email VARCHAR(320) NOT NULL,
 		  name VARCHAR(255) NOT NULL,
 		  street VARCHAR(255),
@@ -107,7 +108,7 @@ class Kudos_Activator {
 
         $sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
-          time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+          subscription_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  value DECIMAL(7,2) NOT NULL,
 		  currency VARCHAR(255),
 		  frequency VARCHAR(255) NOT NULL,

@@ -157,7 +157,7 @@ class Kudos_Mollie
 			"redirectUrl" => $redirectUrl,
 //			"webhookUrl" => rest_url('kudos/v1/mollie/payment/webhook'),
             "sequenceType" => $sequenceType,
-			"webhookUrl" => 'http://d38699244220.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
+			"webhookUrl" => 'http://07ca0d5d2d08.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
 			/* translators: %s: The order id */
 			"description" => sprintf(__("Kudos Donation (%s) - %s", 'kudos-donations'), $frequency_text, $order_id),
 			'metadata' => [
@@ -216,7 +216,7 @@ class Kudos_Mollie
             "startDate" => $startDate,
             "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $k_subscription_id),
 //            "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
-            "webhookUrl" => 'http://d38699244220.ngrok.io/wp-json/kudos/v1/mollie/subscription/webhook',
+            "webhookUrl" => 'http://07ca0d5d2d08.ngrok.io/wp-json/kudos/v1/mollie/subscription/webhook',
             "metadata" => [
                 "subscription_id" => $k_subscription_id
             ]

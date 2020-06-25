@@ -91,6 +91,35 @@ class Database_Object {
 	}
 
 	/**
+	 * Get results by $query_fields array
+	 *
+	 * @param array $query_fields // Key-value pair of fields to query e.g. ['email' => 'john.smith@gmail.com']
+	 * @param array $return_fields // Fields returned, defaults to all e.g. ['name', 'email']
+	 *
+	 * @return array|null
+	 *
+	 * @since   1.1.0
+	 */
+	public function get_all_by($query_fields, $return_fields=["*"]) {
+
+		$wpdb = $this->wpdb;
+		$columns = implode(', ', $return_fields);
+		$array = [];
+		foreach ($query_fields as $key=>$field) {
+			array_push($array, $wpdb->prepare(
+				"$key = %s", $field
+			));
+		}
+
+		$where = 'WHERE ' . implode(' AND ', $array);
+
+		return $wpdb->get_results("
+			SELECT $columns FROM $this->table
+			$where
+		");
+	}
+
+	/**
 	 * Get all results from table
 	 *
 	 * @param null|string $query Additional query string
@@ -109,5 +138,18 @@ class Database_Object {
 			SELECT * FROM $table
 			$query
 		", $format);
+	}
+
+	/**
+	 * Gets data for table view in admin
+	 *
+	 * @param null $search_custom_vars
+	 *
+	 * @return array|object|null
+	 */
+	public function get_table_data($search_custom_vars) {
+
+		return $this->get_all($search_custom_vars, ARRAY_A);
+
 	}
 }
