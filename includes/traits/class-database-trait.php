@@ -4,7 +4,7 @@ namespace Kudos;
 
 use wpdb;
 
-class Database_Object {
+trait Database_Trait {
 
 	/**
 	 * @var wpdb
@@ -21,9 +21,15 @@ class Database_Object {
 	 * @since   1.1.0
 	 */
 	public function __construct() {
+
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->table = $wpdb->prefix . static::TABLE;
+	}
+
+	public static function getTableName() {
+		global $wpdb;
+		return $wpdb->prefix . static::TABLE;
 	}
 
 	/**

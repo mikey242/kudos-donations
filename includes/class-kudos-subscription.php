@@ -4,7 +4,9 @@ namespace Kudos;
 
 use wpdb;
 
-class Kudos_Subscription extends Database_Object {
+class Kudos_Subscription {
+
+	use Database_Trait;
 
 	public const TABLE = "kudos_subscriptions";
 	/**

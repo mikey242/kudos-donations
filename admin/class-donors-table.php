@@ -2,7 +2,11 @@
 
 namespace Kudos;
 
-class Donors_Table extends Table_Object {
+use WP_List_Table;
+
+class Donors_Table extends WP_List_Table {
+
+	use Table_Trait;
 
 	/**
 	 * Class constructor
@@ -11,10 +15,8 @@ class Donors_Table extends Table_Object {
 	 */
 	public function __construct() {
 
-		global $wpdb;
-
 		parent::__construct( [
-			'table'    => $wpdb->prefix . Kudos_Donor::TABLE,
+			'table'    => Kudos_Donor::getTableName(),
 			'orderBy'  => 'donor_created',
 			'singular' => __( 'Donor', 'kudos-donations' ),
 			'plural'   => __( 'Donors', 'kudos-donations' ),

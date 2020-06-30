@@ -1,39 +1,8 @@
 <?php
 
-/*
- * https://gist.github.com/paulund/7659452
- * https://github.com/pmbaldha/WP-Custom-List-Table-With-Database-Example/blob/master/custom-list-table-db-example.php
- * https://github.com/collizo4sky/WP_List_Table-Class-Plugin-Example/blob/master/plugin.php
- */
-
 namespace Kudos;
 
-use WP_List_Table;
-
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-}
-
-class Table_Object extends WP_List_Table {
-
-	/**
-	 * Class constructor
-	 *
-	 * @param array $args
-	 *
-	 * @since      1.0.0
-	 */
-	public function __construct($args) {
-
-		parent::__construct( [
-			'table'    => $args['table'],
-			'orderBy'  => !empty($args['orderBy']) ? $args['orderBy'] : null,
-			'singular' => $args['singular'], //singular name of the listed records
-			'plural'   => $args['plural'], //plural name of the listed records
-			'ajax'     => false //does this table support ajax?
-		] );
-
-	}
+trait Table_Trait {
 
 	/**
 	 * Call this function where the table is to be displayed

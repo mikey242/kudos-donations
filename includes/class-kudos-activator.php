@@ -46,7 +46,7 @@ class Kudos_Activator {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = $wpdb->prefix . "kudos_transactions";  //get the database table prefix to create my new table
+		$table_name = Kudos_Transaction::getTableName();  //get the database table prefix to create my new table
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -76,7 +76,7 @@ class Kudos_Activator {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = $wpdb->prefix . "kudos_donors";  //get the database table prefix to create my new table
+		$table_name = Kudos_Donor::getTableName();  //get the database table prefix to create my new table
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -104,7 +104,7 @@ class Kudos_Activator {
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
-        $table_name = $wpdb->prefix . "kudos_subscriptions";  //get the database table prefix to create my new table
+        $table_name = Kudos_Subscription::getTableName();  //get the database table prefix to create my new table
 
         $sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,

@@ -2,7 +2,12 @@
 
 namespace Kudos;
 
-class Transactions_Table extends Table_Object {
+use WP_List_Table;
+
+class Transactions_Table extends WP_List_Table {
+
+	use Table_Trait;
+
 	/**
 	 * @var Kudos_Invoice
 	 */
@@ -17,10 +22,8 @@ class Transactions_Table extends Table_Object {
 
 		$this->invoice = new Kudos_Invoice();
 
-		global $wpdb;
-
 		parent::__construct( [
-			'table'    => $wpdb->prefix . Kudos_Transaction::TABLE,
+			'table'    => Kudos_Transaction::getTableName(),
 			'orderBy'  => 'transaction_created',
 			'singular' => __( 'Transaction', 'kudos-donations' ), //singular name of the listed records
 			'plural'   => __( 'Transactions', 'kudos-donations' ), //plural name of the listed records
@@ -380,7 +383,7 @@ class Transactions_Table extends Table_Object {
 		global $wpdb;
 
 		$result = $wpdb->delete(
-			$wpdb->prefix . Kudos_Transaction::TABLE,
+			Kudos_Transaction::getTableName(),
 			[ 'order_id' => $order_id ]
 		);
 

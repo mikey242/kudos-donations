@@ -2,7 +2,11 @@
 
 namespace Kudos;
 
-class Subscriptions_Table extends Table_Object {
+use WP_List_Table;
+
+class Subscriptions_Table extends WP_List_Table {
+
+	use Table_Trait;
 
 	/**
 	 * Class constructor
@@ -11,10 +15,8 @@ class Subscriptions_Table extends Table_Object {
 	 */
 	public function __construct() {
 
-		global $wpdb;
-
 		parent::__construct( [
-			'table'    => $wpdb->prefix . Kudos_Subscription::TABLE,
+			'table'    => Kudos_Subscription::getTableName(),
 			'orderBy'  => 'subscription_created',
 			'singular' => __( 'Subscription', 'kudos-donations' ),
 			'plural'   => __( 'Subscriptions', 'kudos-donations' ),
@@ -338,7 +340,7 @@ class Subscriptions_Table extends Table_Object {
 		if($subscription) {
 			global $wpdb;
 			$wpdb->delete(
-				$table = $wpdb->prefix . Kudos_Subscription::TABLE,
+				Kudos_Subscription::getTableName(),
 				[ 'subscription_id' => $subscription_id ]
 			);
 		}
