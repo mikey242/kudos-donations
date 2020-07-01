@@ -236,9 +236,10 @@ class Subscriptions_Table extends WP_List_Table {
 
 		$title = '<strong>' . date_i18n($item['subscription_created'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
 
-		$actions = [
-			'cancel' => sprintf( '<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'cancel', sanitize_text_field( $item['subscription_id'] ), $delete_nonce, __('Cancel', 'kudos-donations') ),
-		];
+		$actions = [];
+		if($item['status'] === 'active') {
+			$actions['cancel'] = sprintf( '<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'cancel', sanitize_text_field( $item['subscription_id'] ), $delete_nonce, __('Cancel', 'kudos-donations') );
+		}
 
 		return $title . $this->row_actions( $actions );
 	}
@@ -296,6 +297,9 @@ class Subscriptions_Table extends WP_List_Table {
 			case 'active':
 				$status = __('Active', 'kudos-donations');
 				break;
+			case 'cancelled':
+				$status = __('Cancelled', 'kudos-donations');
+				break;
 			default:
 				$status = $item['status'];
 		}
@@ -326,8 +330,8 @@ class Subscriptions_Table extends WP_List_Table {
 	public static function cancel_subscription( $subscription_id ) {
 
 		$mollie = new Kudos_Mollie();
-		$subscription = new Kudos_Subscription();
-		$customer = $subscription->get_by(['subscription_id' => $subscription_id]);
+		$kudos_subscription = new Kudos_Subscription();
+		$customer = $kudos_subscription->get_by(['subscription_id' => $subscription_id]);
 
 		if(empty($customer)) {
 			return;
@@ -338,11 +342,11 @@ class Subscriptions_Table extends WP_List_Table {
 		$subscription = $mollie->cancel_subscription($customer_id, $subscription_id);
 
 		if($subscription) {
-			global $wpdb;
-			$wpdb->delete(
-				Kudos_Subscription::getTableName(),
-				[ 'subscription_id' => $subscription_id ]
-			);
+			$kudos_subscription->update([
+				'status' => 'cancelled'
+			], [
+				'subscription_id' => $subscription_id
+			]);
 		}
 	}
 

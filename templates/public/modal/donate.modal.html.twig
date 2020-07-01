@@ -1,12 +1,12 @@
 {% extends 'public/modal/base.html.twig' %}
 {% set classes = 'kudos_form_modal' %}
+{% set premium = true %}
 
 {% block header %}
     {{ header }}
 {% endblock header %}
 
 {% block text %}
-    {{ text }}
 {% endblock text %}
 
 {% block footer %}
@@ -16,42 +16,142 @@
         <div class="form-tabs">
 
             {#   INITIAL FIELDS   #}
-            <fieldset class="form-tab form-tab-1 current-tab">
-                <label>
-                    <input class="kudos_field" name="return_url" type="hidden" value="{{ return_url }}">
-                </label>
+            <fieldset class="form-tab form-tab-initial current-tab">
+                <p class="kudos_modal_text">{{ text }}</p>
                 <label>
                     <input class="kudos_field" required type="text" min="1" name="value" placeholder="{{ __('Amount', 'kudos-donations')}} *" />
                 </label>
-                <label>
-                    <select required class="kudos_field" name="payment_frequency">
-                        <option value="oneoff">{{ __('Frequency: One-off', 'kudos-donations') }}</option>
-                        <option value="12 months">{{ __('Frequency: Yearly', 'kudos-donations') }}</option>
-                        <option value="1 month">{{ __('Frequency: Monthly', 'kudos-donations') }}</option>
-                    </select>
-                </label>
-                <div class="kudos_modal_buttons" style="text-align: center">
-                    <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
-                    <button name="kudos_submit" class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
-                </div>
-            </fieldset>
-
-            {#   SECOND TAB   #}
-            <fieldset class="form-tab form-tab-2">
                 <label>
                     <input class="kudos_field" {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') ~ ((name_required) ? ' *' : null) }}" />
                 </label>
                 <label>
                     <input class="kudos_field" {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') ~ ((email_required) ? ' *' : null) }}" />
                 </label>
+                <div class="kudos_input_group">
+                    <label>
+                        {{ __('One-off', 'kudos-donations') }}
+                        <input required checked type="radio" name="payment_frequency" value="oneoff" />
+                        <span class="checkmark"></span>
+                    </label>
+                    <label>
+                        {{ __('Recurring', 'kudos-donations') }}
+                        <input type="radio" name="payment_frequency" value="recurring" />
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div class="kudos_modal_buttons" style="text-align: center">
+                    <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+                    <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
+                </div>
+            </fieldset>
+
+            {#   PAYMENT FREQUENCY TAB   #}
+            <fieldset class="form-tab form-tab-frequency" data-requirements='{"payment_frequency":"recurring"}'>
+                <p class="kudos_modal_text">How often would you like to donate?</p>
                 <label>
-                    <input class="kudos_field" type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }}" />
+                    <select required id="recurring_length" class="kudos_field" name="recurring_length">
+                        <option value="" disabled selected>Recurring length</option>
+                        <option value="0">{{ __('Continuous', 'kudos-donations')}}</option>
+                        <option value="1">{{ __('Years', 'kudos-donations')}}: 1</option>
+                        <option value="2">{{ __('Years', 'kudos-donations')}}: 2</option>
+                        <option value="3">{{ __('Years', 'kudos-donations')}}: 3</option>
+                        <option value="4">{{ __('Years', 'kudos-donations')}}: 4</option>
+                        <option value="5">{{ __('Years', 'kudos-donations')}}: 5</option>
+                        <option value="6">{{ __('Years', 'kudos-donations')}}: 6</option>
+                        <option value="7">{{ __('Years', 'kudos-donations')}}: 7</option>
+                        <option value="8">{{ __('Years', 'kudos-donations')}}: 8</option>
+                        <option value="9">{{ __('Years', 'kudos-donations')}}: 9</option>
+                        <option value="10">{{ __('Years', 'kudos-donations')}}: 10</option>
+                    </select>
                 </label>
                 <label>
-                    <input class="kudos_field" type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }}" />
+                    <select required class="kudos_field" name="recurring_frequency">
+                        <option value="" disabled selected>Recurring frequency</option>
+                        <option value="12 months">{{ __('Frequency: Yearly', 'kudos-donations') }}</option>
+                        <option value="3 months">{{ __('Frequency: Quarterly', 'kudos-donations') }}</option>
+                        <option value="1 month">{{ __('Frequency: Monthly', 'kudos-donations') }}</option>
+                    </select>
+                </label>
+                <div class="kudos_modal_buttons" style="text-align: center">
+                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+                    <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
+                </div>
+            </fieldset>
+
+            {#   TAX AGREEMENT TAB   #}
+            {% if(premium) %}
+            <fieldset class="form-tab form-tab-tax" data-requirements='{"recurring_length": ["0", "5", "6", "7", "8", "9", "10"] }'>
+                <p class="kudos_modal_text">Do you want a tax deduction agreement?</p>
+                <div class="kudos_input_group">
+                    <label>
+                        {{ __('Yes', 'kudos-donations') }}
+                        <input required type="radio" name="tax_deduction" value="true" />
+                        <span class="checkmark"></span>
+                    </label>
+                    <label>
+                        {{ __('No', 'kudos-donations') }}
+                        <input checked type="radio" name="tax_deduction" value="false" />
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div class="kudos_modal_buttons" style="text-align: center">
+                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+                    <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
+                </div>
+            </fieldset>
+            {% endif %}
+
+            {#   INVOICE TAB   #}
+            {% if(premium) %}
+            <fieldset class="form-tab form-tab-invoice" data-requirements='{"payment_frequency":"oneoff"}'>
+                <p class="kudos_modal_text">Would you like an invoice?</p>
+                <div class="kudos_input_group">
+                    <label>
+                        {{ __('Yes', 'kudos-donations') }}
+                        <input required type="radio" name="invoice" value="yes" />
+                        <span class="checkmark"></span>
+                    </label>
+                    <label>
+                        {{ __('No', 'kudos-donations') }}
+                        <input checked type="radio" name="invoice" value="no" />
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div class="kudos_modal_buttons" style="text-align: center">
+                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+                    <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
+                </div>
+            </fieldset>
+            {% endif %}
+
+            {#   ADDRESS TAB   #}
+            <fieldset class="form-tab form-tab-address" data-requirements='{"invoice":"yes", "tax_deduction":"true"}'>
+                <label>
+                    <input required class="kudos_field" type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }} *" />
                 </label>
                 <label>
-                    <input class="kudos_field" type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }}" />
+                    <input required class="kudos_field" type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }} *" />
+                </label>
+                <label>
+                    <input required class="kudos_field" type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }} *" />
+                </label>
+                <label>
+                    <input required class="kudos_field" type="text" name="country" placeholder="{{ __('Country', 'kudos-donations') }} *" />
+                </label>
+                <div class="kudos_modal_buttons" style="text-align: center">
+                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
+                    <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
+                </div>
+            </fieldset>
+
+            {#   DONATE TAB   #}
+            <fieldset class="form-tab form-tab-address">
+                <label>
+                    <input required class="kudos_field" name="return_url" type="hidden" value="{{ return_url }}">
                 </label>
                 <div class="payment_by {{ vendor }}">
                     <small>

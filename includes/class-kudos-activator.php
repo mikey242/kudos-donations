@@ -112,6 +112,7 @@ class Kudos_Activator {
 		  value DECIMAL(7,2) NOT NULL,
 		  currency VARCHAR(255),
 		  frequency VARCHAR(255) NOT NULL,
+		  times VARCHAR(255) NOT NULL,
 		  customer_id VARCHAR(255),
 		  transaction_id VARCHAR(255),
 		  k_subscription_id VARCHAR(255),

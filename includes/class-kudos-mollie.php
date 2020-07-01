@@ -106,21 +106,21 @@ class Kudos_Mollie
 		return false;
 	}
 
-    /**
-     * Creates a payment and returns it as an object
-     *
-     * @param $value
-     * @param string $redirectUrl
-     * @param string|null $payment_frequency
-     * @param string|null $name
-     * @param string|null $email
-     *
-     * @param $customerId
-     *
-     * @return bool|object
-     * @since      1.0.0
-     */
-	public function create_payment($value, $payment_frequency, $redirectUrl, $name=null, $email=null, $customerId=null) {
+	/**
+	 * Creates a payment and returns it as an object
+	 *
+	 * @param $value
+	 * @param string $interval
+	 * @param string $times
+	 * @param string $redirectUrl
+	 * @param string|null $name
+	 * @param string|null $email
+	 * @param string|null $customerId
+	 *
+	 * @return bool|object
+	 * @since      1.0.0
+	 */
+	public function create_payment($value, $interval, $times, $redirectUrl, $name=null, $email=null, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
 		$order_id = 'kdo_'.time();
@@ -134,11 +134,15 @@ class Kudos_Mollie
 		}
 
 		// Set payment frequency
-		switch ($payment_frequency) {
+		switch ($interval) {
             case "12 months":
                 $frequency_text = __('Yearly', 'kudos-donations');
                 $sequenceType = 'first';
                 break;
+			case "3 months":
+				$frequency_text = __('Quarterly', 'kudos-donations');
+				$sequenceType = 'first';
+				break;
             case "1 month":
                 $frequency_text = __('Monthly', 'kudos-donations');
                 $sequenceType = 'first';
@@ -157,12 +161,13 @@ class Kudos_Mollie
 			"redirectUrl" => $redirectUrl,
 //			"webhookUrl" => rest_url('kudos/v1/mollie/payment/webhook'),
             "sequenceType" => $sequenceType,
-			"webhookUrl" => 'http://07ca0d5d2d08.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
+			"webhookUrl" => 'http://194e94884213.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
 			/* translators: %s: The order id */
 			"description" => sprintf(__("Kudos Donation (%s) - %s", 'kudos-donations'), $frequency_text, $order_id),
 			'metadata' => [
 				'order_id' => $order_id,
-				'payment_frequency' => $payment_frequency,
+				'interval' => $interval,
+				'times' => $times,
 				'email' => $email,
 				'name' => $name
 			]
@@ -216,7 +221,7 @@ class Kudos_Mollie
             "startDate" => $startDate,
             "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $k_subscription_id),
 //            "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
-            "webhookUrl" => 'http://07ca0d5d2d08.ngrok.io/wp-json/kudos/v1/mollie/subscription/webhook',
+            "webhookUrl" => 'http://194e94884213.ngrok.io/wp-json/kudos/v1/mollie/subscription/webhook',
             "metadata" => [
                 "subscription_id" => $k_subscription_id
             ]
@@ -233,7 +238,7 @@ class Kudos_Mollie
 
 	        if($subscription) {
 		        $kudos_subscription = new Kudos_Subscription();
-		        $kudos_subscription->insert_subscription($transaction->transaction_id, $customer_id, $interval, $value, $currency, $k_subscription_id, $subscription->id, $subscription->status);
+		        $kudos_subscription->insert_subscription($transaction->transaction_id, $customer_id, $interval, $times, $value, $currency, $k_subscription_id, $subscription->id, $subscription->status);
 		        return $subscription;
 	        }
 
@@ -437,7 +442,7 @@ class Kudos_Mollie
 
                 // Set up recurring payment if sequence is first
                 if($sequence_type === 'first') {
-                    return $this->create_subscription($transaction, $payment->metadata->payment_frequency);
+                    return $this->create_subscription($transaction, $payment->metadata->interval, $payment->metadata->times);
                 }
 			}
 		}

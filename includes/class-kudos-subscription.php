@@ -21,7 +21,8 @@ class Kudos_Subscription {
 	/**
 	 * @param string $transaction_id
 	 * @param string $customer_id
-	 * @param string $frequency
+	 * @param string $interval
+	 * @param string $times
 	 * @param string $value
 	 * @param string $currency
 	 * @param string $k_subscription_id
@@ -31,12 +32,13 @@ class Kudos_Subscription {
 	 * @return bool|false|int
 	 * @since   1.1.0
 	 */
-	public function insert_subscription($transaction_id, $customer_id, $frequency, $value, $currency, $k_subscription_id, $subscription_id, $status) {
+	public function insert_subscription($transaction_id, $customer_id, $interval, $times, $value, $currency, $k_subscription_id, $subscription_id, $status) {
 		return $this->insert([
 			'subscription_created' => current_time('mysql'),
 			'value' => $value,
 			'currency' => $currency,
-			'frequency' => $frequency,
+			'frequency' => $interval,
+			'times' => $times,
 			'subscription_id' => $subscription_id,
 			'k_subscription_id' => $k_subscription_id,
 			'transaction_id' => $transaction_id,

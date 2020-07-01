@@ -120,14 +120,19 @@ class Kudos_Public {
 
 		// Sanitize form fields
 		$value = intval($form['value']);
-		$payment_frequency = ($form['payment_frequency'] ? sanitize_text_field($form['payment_frequency']) : 'oneoff');
+		$payment_frequency = ($form['recurring_frequency'] ? sanitize_text_field($form['recurring_frequency']) : 'oneoff');
+		$interval = $form['recurring_frequency'];
+		$recurring_length = intval($form['recurring_length']);
 		$name = sanitize_text_field($form['name']);
 		$email = sanitize_email($form['email_address']);
 		$street = sanitize_text_field($form['street']);
 		$postcode = sanitize_text_field($form['postcode']);
 		$city = sanitize_text_field($form['city']);
+		$country = sanitize_text_field($form['country']);
 		$redirectUrl = sanitize_text_field($form['return_url']);
 		$customerId = null;
+
+		$times = (12/intval($interval)) * $recurring_length;
 
 		$mollie = new Kudos_Mollie();
 
@@ -141,6 +146,7 @@ class Kudos_Public {
 					'street' => $street,
 					'postcode' => $postcode,
 					'city' => $city,
+					'country' => $country
 				]);
 			} else {
 				$customer = $mollie->create_customer($email, $name);
@@ -150,7 +156,7 @@ class Kudos_Public {
 			$customerId = $donor->customer_id;
 		}
 
-		$payment = $mollie->create_payment($value, $payment_frequency, $redirectUrl, $name, $email, $customerId);
+		$payment = $mollie->create_payment($value, $payment_frequency, $times, $redirectUrl, $name, $email, $customerId);
 		if($payment) {
 			wp_send_json_success($payment->getCheckoutUrl());
 		}

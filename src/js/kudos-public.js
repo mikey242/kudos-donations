@@ -73,13 +73,23 @@ $(() => {
         let $current_tab = $(this).closest('.form-tab');
         let $modal = $(this).closest('.kudos_modal_container');
         let direction = $(this).data('direction');
-        let $next_tab = $current_tab.prev();
+        let $inputs = $current_tab.find(':input');
+
+        // Validate fields before proceeding
         if(direction === 'next') {
-            $next_tab = $current_tab.next();
-            $current_tab.find('input').validate();
-            if(!$current_tab.find('input').valid()) {
+            $inputs.validate();
+            if(!$inputs.valid()) {
                 return;
             }
+        }
+
+        // Calculate next tab
+        let $next_tab = $current_tab;
+        let change = false;
+        while(!change) {
+            $next_tab = (direction === 'next' ? $next_tab.next() : $next_tab.prev());
+            change = check_requirements($next_tab);
+            // console.log(change, $next_tab);
         }
 
         // Begin animation
@@ -143,6 +153,7 @@ $(() => {
                 $kudosFormModal.addClass('kudos_loading');
             },
             success: function (result) {
+                console.log(result)
                 if(result.success) {
                     $(location).attr('href', result.data);
                 } else {
@@ -156,3 +167,23 @@ $(() => {
         })
     })
 })
+
+// Checks the form tab data-requirements array against the current form values
+function check_requirements($next_tab) {
+    let formValues = $('form.kudos_form').find(':input').serializeArray();
+    let requirements = $next_tab.data('requirements');
+    let result = true;
+    if(requirements) {
+        result = false;
+        $next_tab.find(':input').attr('disabled', 'disabled');
+        for(const[key,value] of Object.entries(requirements)) {
+            formValues.filter(function (item) {
+                if (item.name === key && value.includes(item.value)) {
+                    result = true;
+                    $next_tab.find(':input').removeAttr('disabled');
+                }
+            })
+        }
+    }
+    return result;
+}

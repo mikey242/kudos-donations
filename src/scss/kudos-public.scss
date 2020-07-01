@@ -186,8 +186,48 @@ div[id^='kudos_modal-']  {
         @apply border-orange-500;
       }
 
-      &::placeholder {
+      &::placeholder,
+      option:disabled {
         @apply text-gray-500;
+      }
+    }
+
+    .kudos_input_group {
+      @apply block mt-4;
+
+      input[type="radio"]:not(:last-child),
+      input[type="checkbox"]:not(:last-child) {
+        @apply mr-2;
+
+        &:checked ~ .checkmark::before {
+          content: '';
+          background: green;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          border-radius: 9999px;
+
+          @apply w-2 h-2 absolute bg-orange-500;
+        }
+      }
+
+      label {
+        @apply cursor-pointer pl-5;
+      }
+
+      .checkmark {
+        @apply appearance-none absolute inline-block border-2 border-solid border-gray-300 cursor-pointer align-middle w-4 h-4 mr-2;
+
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        border-radius: 9999px;
+      }
+    }
+
+    input[type="radio"]:checked + label {
+      &::before {
+        @apply bg-orange-500;
       }
     }
 
