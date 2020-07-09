@@ -152,6 +152,7 @@ class Kudos_Donations {
 		$this->loader->add_action('admin_init', $plugin_admin, 'export_csv');
 		$this->loader->add_action('init', $plugin_admin, 'register_settings');
 		$this->loader->add_action('rest_api_init', $plugin_admin, 'register_routes');
+		$this->loader->add_action('admin_post_cancel_subscription', $plugin_admin, 'cancel_subscription');
 
 	}
 
@@ -173,7 +174,7 @@ class Kudos_Donations {
 		$this->loader->add_action('wp_ajax_create_payment', $plugin_public, 'create_payment');
 		$this->loader->add_action('rest_api_init', $plugin_public, 'register_routes');
 		$this->loader->add_action('init', $plugin_public, 'register_kudos');
-		$this->loader->add_action('wp_footer', $plugin_public, 'place_modal', 1000);
+		$this->loader->add_action('wp_footer', $plugin_public, 'place_message_modal', 1000);
 
 	}
 

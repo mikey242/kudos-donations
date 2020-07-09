@@ -138,6 +138,7 @@ class Subscriptions_Table extends WP_List_Table {
 		return [
 			'subscription_created'=>__('Date', 'kudos-donations'),
 			'frequency'=>__('Frequency', 'kudos-donations'),
+			'years' => __('Years', 'kudos-donations'),
 			'name' => __('Name', 'kudos-donations'),
 			'email'=>__('E-mail', 'kudos-donations'),
 			'value'=>__('Amount', 'kudos-donations'),
@@ -166,13 +167,19 @@ class Subscriptions_Table extends WP_List_Table {
 		$count = count($this->count_records('frequency', '12 months'));
 		$yearly_url = add_query_arg('frequency','12 months');
 		$class = ($current == '12 months' ? ' class="current"' :'');
-		$views['test'] = "<a href='{$yearly_url}' {$class} >". __('Yearly', 'kudos-donations') ." ($count)</a>";
+		$views['yearl'] = "<a href='{$yearly_url}' {$class} >". __('Yearly', 'kudos-donations') ." ($count)</a>";
+
+		//Quarterly link
+		$count = count($this->count_records('frequency', '3 months'));
+		$yearly_url = add_query_arg('frequency','3 months');
+		$class = ($current == '3 months' ? ' class="current"' :'');
+		$views['quarterly'] = "<a href='{$yearly_url}' {$class} >". __('Quarterly', 'kudos-donations') ." ($count)</a>";
 
 		//Monthly link
 		$count = count($this->count_records('frequency', '1 month'));
 		$monthly_url = add_query_arg('frequency','1 month');
 		$class = ($current == '1 month' ? ' class="current"' :'');
-		$views['live'] = "<a href='{$monthly_url}' {$class} >". __('Monthly', 'kudos-donations') ." ($count)</a>";
+		$views['monthly'] = "<a href='{$monthly_url}' {$class} >". __('Monthly', 'kudos-donations') ." ($count)</a>";
 		return $views;
 
 	}
@@ -205,6 +212,10 @@ class Subscriptions_Table extends WP_List_Table {
 			],
 			'value' => [
 				'value',
+				false
+			],
+			'status' => [
+				'status',
 				false
 			]
 		];
@@ -244,14 +255,23 @@ class Subscriptions_Table extends WP_List_Table {
 		return $title . $this->row_actions( $actions );
 	}
 
+	/**
+	 * @since      1.1.0
+	 * @param $item
+	 * @return string|void
+	 */
 	function column_frequency($item) {
-		switch ($item['frequency']) {
-			case '12 months':
-				return __('Yearly', 'kudos-donations');
-			case '1 month':
-				return __('Monthly', 'kudos-donations');
-		}
-		return false;
+		return get_frequency_name($item['frequency']);
+	}
+
+	/**
+	 * @since      1.1.0
+	 * @param $item
+	 * @return string|void
+	 */
+	function column_years($item) {
+
+		return ($item['years'] > 0 ? $item['years'] : __('Continuous', 'kudos-donations'));
 	}
 
 	/**
@@ -304,9 +324,7 @@ class Subscriptions_Table extends WP_List_Table {
 				$status = $item['status'];
 		}
 
-		$frequency = $item['frequency'] === 'test' ? ' ('. $item['frequency'] .')' : '';
-
-		return $status . ' ' . $frequency;
+		return $status;
 	}
 
 	/**
@@ -329,25 +347,9 @@ class Subscriptions_Table extends WP_List_Table {
 	 */
 	public static function cancel_subscription( $subscription_id ) {
 
-		$mollie = new Kudos_Mollie();
-		$kudos_subscription = new Kudos_Subscription();
-		$customer = $kudos_subscription->get_by(['subscription_id' => $subscription_id]);
+		$kudos_mollie = new Kudos_Mollie();
+		$kudos_mollie->cancel_subscription($subscription_id);
 
-		if(empty($customer)) {
-			return;
-		}
-
-		$customer_id = $customer->customer_id;
-
-		$subscription = $mollie->cancel_subscription($customer_id, $subscription_id);
-
-		if($subscription) {
-			$kudos_subscription->update([
-				'status' => 'cancelled'
-			], [
-				'subscription_id' => $subscription_id
-			]);
-		}
 	}
 
 	/**

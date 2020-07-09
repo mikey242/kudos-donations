@@ -299,9 +299,11 @@ class KudosAdmin extends Component {
 
             case 'advanced':
                 return (
-                    <DiagnosticsPanel
-                        {...this.state.diagnostics}
-                    />
+                    <Fragment>
+                        <DiagnosticsPanel
+                            {...this.state.diagnostics}
+                        />
+                    </Fragment>
                 )
         }
     }

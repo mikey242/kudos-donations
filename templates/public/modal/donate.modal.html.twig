@@ -73,7 +73,7 @@
                     </select>
                 </label>
                 <div class="kudos_modal_buttons" style="text-align: center">
-                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <p class="kudos_form_nav kudos_back" data-direction="back"></p>
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
                     <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
                 </div>
@@ -96,7 +96,7 @@
                     </label>
                 </div>
                 <div class="kudos_modal_buttons" style="text-align: center">
-                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <p class="kudos_form_nav kudos_back" data-direction="back"></p>
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
                     <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
                 </div>
@@ -120,7 +120,7 @@
                     </label>
                 </div>
                 <div class="kudos_modal_buttons" style="text-align: center">
-                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <p class="kudos_form_nav kudos_back" data-direction="back"></p>
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
                     <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
                 </div>
@@ -142,24 +142,31 @@
                     <input required class="kudos_field" type="text" name="country" placeholder="{{ __('Country', 'kudos-donations') }} *" />
                 </label>
                 <div class="kudos_modal_buttons" style="text-align: center">
-                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <p class="kudos_form_nav kudos_back" data-direction="back"></p>
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
                     <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
                 </div>
             </fieldset>
 
             {#   DONATE TAB   #}
-            <fieldset class="form-tab form-tab-address">
+            <fieldset class="form-tab form-tab-final">
                 <label>
                     <input required class="kudos_field" name="return_url" type="hidden" value="{{ return_url }}">
                 </label>
+                <p class="kudos_modal_text">By clicking donate you agree to the following payment:</p>
+                <div class="kudos_summary text-left">
+                    <p class="mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span id="summary_name"></span></p>
+                    <p class="mb-0"><strong>{{ __('Email', 'kudos-donations') }}: </strong><span id="summary_email"></span></p>
+                    <p class="mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong><span id="summary_value"></span></p>
+                    <p><strong>{{ __('Type', 'kudos-donations') }}: </strong><span id="summary_frequency"></span></p>
+                </div>
                 <div class="payment_by {{ vendor }}">
                     <small>
                         {{ payment_by }}
                     </small>
                 </div>
                 <div class="kudos_modal_buttons" style="text-align: center">
-                    <p class="kudos_form_nav kudos_back" data-direction="back"><</p>
+                    <p class="kudos_form_nav kudos_back" data-direction="back"></p>
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
                     <button name="kudos_submit" class="kudos_submit kudos_button" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
                 </div>

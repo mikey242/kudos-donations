@@ -85,6 +85,9 @@ class Kudos_Public {
 		wp_enqueue_script( $this->plugin_name . '-public', get_asset_url('kudos-public.js'), [ 'jquery', 'jquery-validate', 'micromodal' ], $this->version, true );
 		wp_localize_script( $this->plugin_name . '-public', 'kudos', [
 		        'ajaxurl' => admin_url('admin-ajax.php'),
+                'oneoff' => __('One-off', 'kudos-donations'),
+                'recurring' => __('Recurring', 'kudos-dontaions'),
+                'label_amount' => __('Amount', 'kudos-donations'),
                 'name_required' => __('Your name is required', 'kudos-donations'),
                 'email_required' => __('Your email is required', 'kudos-donations'),
                 'email_invalid' => __('Please enter a valid email', 'kudos-donations'),
@@ -121,8 +124,7 @@ class Kudos_Public {
 		// Sanitize form fields
 		$value = intval($form['value']);
 		$payment_frequency = ($form['recurring_frequency'] ? sanitize_text_field($form['recurring_frequency']) : 'oneoff');
-		$interval = $form['recurring_frequency'];
-		$recurring_length = intval($form['recurring_length']);
+		$recurring_length = ($form['recurring_length'] ? intval($form['recurring_length']) : 0);
 		$name = sanitize_text_field($form['name']);
 		$email = sanitize_email($form['email_address']);
 		$street = sanitize_text_field($form['street']);
@@ -131,8 +133,6 @@ class Kudos_Public {
 		$country = sanitize_text_field($form['country']);
 		$redirectUrl = sanitize_text_field($form['return_url']);
 		$customerId = null;
-
-		$times = (12/intval($interval)) * $recurring_length;
 
 		$mollie = new Kudos_Mollie();
 
@@ -156,7 +156,7 @@ class Kudos_Public {
 			$customerId = $donor->customer_id;
 		}
 
-		$payment = $mollie->create_payment($value, $payment_frequency, $times, $redirectUrl, $name, $email, $customerId);
+		$payment = $mollie->create_payment($value, $payment_frequency, $recurring_length, $redirectUrl, $name, $email, $customerId);
 		if($payment) {
 			wp_send_json_success($payment->getCheckoutUrl());
 		}
@@ -309,6 +309,8 @@ class Kudos_Public {
 	}
 
 	/**
+	 * Renders the kudos button and donation modals
+	 *
 	 * @param $attr
 	 *
 	 * @return bool|string
@@ -346,9 +348,7 @@ class Kudos_Public {
      *
      * @since   1.0.0
 	 */
-	public function place_modal() {
-
-		$test = new Kudos_Donor();
+	public function place_message_modal() {
 
 		$modal = new Kudos_Modal();
 

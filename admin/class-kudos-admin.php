@@ -2,6 +2,8 @@
 
 namespace Kudos;
 
+use Mollie\Api\Resources\Subscription;
+use Mollie_API_Object_Customer_Subscription;
 use WP_REST_Server;
 
 /**
@@ -147,6 +149,19 @@ class Kudos_Admin {
 
 		);
 		add_action( "admin_print_scripts-{$donors_page_hook_suffix}", [$this, 'kudos_subscriptions_page_assets'] );
+
+        // Add debug menu
+        if(WP_DEBUG) {
+	        add_submenu_page(
+		        'kudos-settings',
+		        'Kudos Debug',
+		        'Kudos Debug',
+		        'manage_options',
+		        'kudos-debug',
+		        [$this, 'kudos_debug']
+	        );
+        }
+
 	}
 
 	/**
@@ -353,6 +368,98 @@ class Kudos_Admin {
 
 		wp_send_json_success($response);
 		wp_die();
+	}
+
+	/**
+	 * Debug page render
+     *
+     * @since   1.1.0
+	 */
+	public function kudos_debug() {
+
+	    $kudos_donor = new Kudos_Donor();
+	    $kudos_mollie = new Kudos_Mollie();
+
+		echo '<div class="wrap">';
+
+	    $donors = $kudos_donor->get_all();
+
+	    if($donors) {
+            foreach($donors as $donor) {
+
+	            $subscriptions = $kudos_mollie->get_subscriptions($donor->customer_id);
+
+	            if(!count($subscriptions)) {
+	                continue;
+	            }
+
+	            echo "<h3><strong>" . $donor->email . "</strong> <span>(" . $donor->customer_id . ")</span></h3>";
+                echo "<form action=". admin_url( 'admin-post.php' ) ." method='post'>";
+                    wp_nonce_field('cancel_subscription', '_wpnonce');
+                    echo "<input type='hidden' name='action' value='cancel_subscription'>";
+                    echo "<input type='hidden' name='customerId' value='". $donor->customer_id ."'>";
+
+                /** @var Subscription $subscription */
+	            foreach ($subscriptions as $subscription) {
+                        echo "<table class='widefat'>";
+                            echo "<tbody>";
+
+                                echo "<tr>";
+                                    echo "<td class='row-title'>id</td>";
+                                    echo "<td>" . $subscription->id . "</td> ";
+                                echo "</tr>";
+
+                                echo "<tr class='alternate'>";
+                                    echo "<td class='row-title'>status</td>";
+                                    echo "<td>$subscription->status" . ($subscription->status !== 'canceled' ? " <button name='subscriptionId' type='submit' value='$subscription->id'>Cancel</button>" : "") . "</td>";
+                                echo "</tr>";
+
+                                echo "<tr>";
+                                    echo "<td class='row-title'>amount</td>";
+                                    echo "<td>" . $subscription->amount->value . "</td>";
+                                echo "</tr> ";
+
+                                echo "<tr class='alternate'>";
+                                    echo "<td class='row-title'>interval</td>";
+                                    echo "<td>" . $subscription->interval . "</td>";
+                                echo "</tr> ";
+
+                                echo "<tr>";
+                                    echo "<td class='row-title'>times</td>" ;
+                                    echo "<td>". $subscription->times . "</td>";
+                                echo "</tr>";
+
+                                echo "<tr class='alternate'>";
+                                    echo "<td class='row-title'>next payment</td>";
+                                    echo "<td>". ($subscription->nextPaymentDate ?? 'n/a') . "</td>";
+                                echo "</tr>";
+
+                                echo "<tr>";
+                                    echo "<td class='row-title'>webhookUrl</td>" ;
+                                    echo "<td>". $subscription->webhookUrl . "</td>";
+                                echo "</tr>";
+
+                            echo "</tbody>";
+                        echo "</table>";
+                        echo "<br class='clear'>";
+                    }
+                echo "</form>";
+            }
+	    }
+
+		echo '</div>';
+	}
+
+	public function cancel_subscription() {
+	    if(!wp_verify_nonce($_REQUEST['_wpnonce'], 'cancel_subscription')) {
+	        echo "Nope!";
+	        die;
+	    }
+	    $kudos_mollie = new Kudos_Mollie();
+	    $subscription = $kudos_mollie->cancel_subscription($_REQUEST['subscriptionId'], $_REQUEST['customerId']);
+	    if($subscription) {
+	        echo "Subscription canceled";
+	    }
 	}
 
 	/**

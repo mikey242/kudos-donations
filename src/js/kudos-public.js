@@ -1,7 +1,12 @@
 import $ from 'jquery'
 import MicroModal from "micromodal"
+import {dom, library} from "@fortawesome/fontawesome-svg-core"
+import {faChevronLeft} from "@fortawesome/free-solid-svg-icons"
 import validator from 'jquery-validation';
 import '../img/logo-colour-40.png' //used as email attachment
+
+library.add(faChevronLeft);
+dom.watch();
 
 $(() => {
     'use strict';
@@ -89,7 +94,10 @@ $(() => {
         while(!change) {
             $next_tab = (direction === 'next' ? $next_tab.next() : $next_tab.prev());
             change = check_requirements($next_tab);
-            // console.log(change, $next_tab);
+        }
+
+        if($next_tab.hasClass('form-tab-final')) {
+            create_summary($next_tab.find('.kudos_summary'));
         }
 
         // Begin animation
@@ -186,4 +194,20 @@ function check_requirements($next_tab) {
         }
     }
     return result;
+}
+
+function create_summary($target) {
+    let kudos = window.kudos;
+    let values = $('form.kudos_form').find(':input').serializeArray();
+    console.log(values);
+    let name = values.find(i => i.name === 'name').value;
+    let email = values.find(i => i.name === 'email_address').value;
+    let value = values.find(i =>i.name === 'value').value;
+    let frequency = values.find(i => i.name === "payment_frequency").value;
+    let type = (frequency === 'oneoff' ? kudos.oneoff : kudos.recurring);
+    $('#summary_name').text(name);
+    $('#summary_email').text(email);
+    $('#summary_value').text(value);
+    $('#summary_frequency').text(type);
+    // $target.html(summary);
 }

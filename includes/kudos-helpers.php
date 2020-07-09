@@ -62,9 +62,12 @@ function get_currency_symbol($currency) {
 
 /**
  * Lightens/darkens a given colour (hex format), returning the altered colour in hex format.7
+ *
  * @param string $hex Colour as hexadecimal (with or without hash);
+ * @param int $percent
+ *
+ * @return string Lightened/Darkened colour as hexadecimal (with hash);
  * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
- * @return string Lightened/Darkend colour as hexadecimal (with hash);
  */
 function color_luminance( $hex, $percent ) {
 
@@ -90,12 +93,12 @@ function color_luminance( $hex, $percent ) {
 /**
  * Returns a translated string of the sequence type
  *
+ * @since   1.1.0
  * @param $text
  *
  * @return string|void
- * @since   1.1.0
  */
-function sequence_type($text) {
+function get_sequence_type($text) {
 	switch ($text) {
 		case 'oneoff':
 			return __('One-off', 'kudos-donations');
@@ -104,4 +107,49 @@ function sequence_type($text) {
 		default:
 			return __('Recurring', 'kudos-donations');
 	}
+}
+
+/**
+ * Returns subscription frequency name based on number of months
+ *
+ * @since   1.1.0
+ * @param $frequency
+ *
+ * @return string|void
+ */
+function get_frequency_name($frequency) {
+	switch ($frequency) {
+		case '12 months':
+			return __('Yearly', 'kudos-donations');
+			break;
+		case '1 month':
+			return __('Monthly', 'kudos-donations');
+			break;
+		case '3 months':
+			return __('Quarterly', 'kudos-donations');
+			break;
+		case "oneoff":
+			return __('One-off', 'kudos-donations');
+			break;
+		default:
+			return $frequency;
+	}
+}
+
+/**
+ * Calculate how many years a subscription is running for
+ * This is based on the number of payments and the frequency.
+ *
+ * @param int $years
+ * @param string $frequency
+ *
+ * @return int|null
+ */
+function get_times_from_years($years, $frequency) {
+
+	if(!$years > 0) {
+		return null;
+	}
+
+	return (12/intval($frequency)) * $years - 1;
 }

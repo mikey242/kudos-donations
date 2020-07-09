@@ -59,7 +59,8 @@ class Kudos_Activator {
 		  sequence_type VARCHAR(255) NOT NULL,
 		  customer_id VARCHAR(255),
 		  order_id VARCHAR(255) NOT NULL,
-		  transaction_id VARCHAR(255),  
+		  transaction_id VARCHAR(255),
+		  subscription_id VARCHAR(255),
 		  PRIMARY KEY (id)
 		) $charset_collate;";
 
@@ -107,12 +108,12 @@ class Kudos_Activator {
         $table_name = Kudos_Subscription::getTableName();  //get the database table prefix to create my new table
 
         $sql = "CREATE TABLE $table_name (
-		  id mediumint(9) NOT NULL AUTO_INCREMENT,
+		  id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
           subscription_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  value DECIMAL(7,2) NOT NULL,
 		  currency VARCHAR(255),
 		  frequency VARCHAR(255) NOT NULL,
-		  times VARCHAR(255) NOT NULL,
+		  years MEDIUMINT(2) NOT NULL,
 		  customer_id VARCHAR(255),
 		  transaction_id VARCHAR(255),
 		  k_subscription_id VARCHAR(255),

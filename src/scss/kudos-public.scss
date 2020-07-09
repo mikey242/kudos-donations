@@ -5,7 +5,6 @@
 @import "partials/fonts";
 
 .kudos_modal {
-
   *,
   *::before,
   *::after {
@@ -17,13 +16,41 @@
   }
 
   position: absolute;
+
   p {
-    @apply mb-4;
+    @apply block;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  .payment_by {
+    @apply flex justify-end items-baseline mt-3 text-right;
+
+    &::before {
+      content: '';
+      width: 17px;
+      height: 20px;
+      background: url("../img/lock.svg") no-repeat center;
+      background-size: contain;
+      margin: auto 5px auto 0;
+    }
+
+    &.mollie {
+      &::after {
+        content: '';
+        width: 51px;
+        height: 15px;
+        background: url("../img/mollie.svg") no-repeat center left;
+        background-size: contain;
+        margin-left: 5px;
+      }
+    }
   }
 }
 
-div[id^='kudos_modal-']  {
-
+div[id^='kudos_modal-'] {
   @import "partials/buttons";
 
   *,
@@ -35,7 +62,7 @@ div[id^='kudos_modal-']  {
   display: none;
 
   p {
-    @apply text-lg text-gray-900 text-center;
+    @apply text-lg text-gray-900;
   }
 
   h2 {
@@ -130,6 +157,10 @@ div[id^='kudos_modal-']  {
     @apply text-center block font-normal;
   }
 
+  .kudos_modal_text {
+    @apply mb-4;
+  }
+
   .kudos_modal_content {
     @apply mt-4 block;
   }
@@ -192,6 +223,15 @@ div[id^='kudos_modal-']  {
       }
     }
 
+    label {
+      @apply w-full m-0;
+
+      &:not(:first-child) .kudos_field {
+        @apply mt-2;
+      }
+    }
+
+
     .kudos_input_group {
       @apply block mt-4;
 
@@ -231,42 +271,8 @@ div[id^='kudos_modal-']  {
       }
     }
 
-    label {
-      @apply w-full m-0;
-
-      &:not(:first-child) .kudos_field {
-        @apply mt-2;
-      }
-    }
-
     input.error {
       border: 2px solid theme('colors.red.500');
-    }
-  }
-}
-
-.kudos_modal {
-  .payment_by {
-    @apply flex justify-end items-baseline mt-3 text-right;
-
-    &::before {
-      content: '';
-      width: 17px;
-      height: 20px;
-      background: url("../img/lock.svg") no-repeat center;
-      background-size: contain;
-      margin: auto 5px auto 0;
-    }
-
-    &.mollie {
-      &::after {
-        content: '';
-        width: 51px;
-        height: 15px;
-        background: url("../img/mollie.svg") no-repeat center left;
-        background-size: contain;
-        margin-left: 5px;
-      }
     }
   }
 }
@@ -275,14 +281,21 @@ div[id^='kudos_modal-']  {
   @apply mt-8 block;
 
   .kudos_back {
-    @apply text-gray-500 text-2xl;
-
     position: absolute;
     bottom: 50%;
     left: 0;
     margin: 0;
-    transform: translateY(50%);
     cursor: pointer;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: url("../img/back-icon.svg") no-repeat center;
+      background-size: contain;
+      transform: translateY(-50%);
+    }
   }
 
   button:last-child {

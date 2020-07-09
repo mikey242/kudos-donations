@@ -358,7 +358,7 @@ class Transactions_Table extends WP_List_Table {
 	}
 
 	function column_type($item) {
-		return sequence_type($item['sequence_type']);
+		return get_sequence_type($item['sequence_type']);
 	}
 
 	/**

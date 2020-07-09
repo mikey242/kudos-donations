@@ -21,27 +21,15 @@ class Kudos_Transaction {
 	/**
 	 * Insert new transaction
 	 *
-	 * @param string $order_id
-	 * @param string $customer_id
-	 * @param string $value
-	 * @param string $currency
-	 * @param string $status
-	 * @param string $sequence_type
+	 * @param array $fields
 	 *
 	 * @return bool|false|int
 	 */
-	public function insert_transaction($order_id, $customer_id, $value, $currency, $status, $sequence_type) {
+	public function insert_transaction($fields) {
 
-		return $this->insert([
-			'transaction_created' => current_time('mysql'),
-			'value' => $value,
-			'currency' => $currency,
-			'status' => $status,
-			'mode' => get_option('_kudos_mollie_api_mode'),
-			'sequence_type' => $sequence_type,
-			'order_id' => $order_id,
-			'customer_id' => $customer_id
-		]);
+		$fields['transaction_created'] = current_time('mysql');
+
+		return $this->insert($fields);
 	}
 
 	/**
