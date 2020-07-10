@@ -134,16 +134,17 @@ class Kudos_Mollie
 		$currency = 'EUR';
 		$value = number_format($value, 2);
 
-		// Add order id if option to show message enabled
+		// Add order id query arg to return url if option to show message enabled
 		if(get_option('_kudos_return_message_enable')) {
 			$redirectUrl = add_query_arg('kudos_order_id', base64_encode($order_id), $redirectUrl);
-			$redirectUrl = add_query_arg('_wpnonce', wp_create_nonce('check_kudos_order-' . $order_id), $redirectUrl);
+			$redirectUrl = add_query_arg('kudos_token', wp_create_nonce('kudos_check_order-' . $order_id), $redirectUrl);
 		}
 
 		// Set payment frequency
 		$frequency_text = get_frequency_name($interval);
 		$sequenceType = ($interval === 'oneoff' ? 'oneoff' : 'first');
 
+		// Create payment settings
 		$paymentArray = [
 			"amount" => [
 				"currency" => $currency,
@@ -152,7 +153,7 @@ class Kudos_Mollie
 			"redirectUrl" => $redirectUrl,
 //			"webhookUrl" => rest_url('kudos/v1/mollie/payment/webhook'),
             "sequenceType" => $sequenceType,
-			"webhookUrl" => 'https://2744ce05c57f.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
+			"webhookUrl" => 'https://6fa9c2dd9c8d.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
 			/* translators: %s: The order id */
 			"description" => sprintf(__("Kudos Donation (%s) - %s", 'kudos-donations'), $frequency_text, $order_id),
 			'metadata' => [
@@ -172,8 +173,7 @@ class Kudos_Mollie
 		try {
 			$payment = $mollieApi->payments->create($paymentArray);
 
-			$transaction = $this->transaction;
-			$transaction->insert_transaction([
+			$this->transaction->insert_transaction([
 				'order_id' => $order_id,
 				'customer_id' => $customerId,
 				'value' => $value,
@@ -244,7 +244,7 @@ class Kudos_Mollie
 //            "startDate" => $startDate,  // Disable for test mode
             "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $k_subscription_id),
 //            "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
-            "webhookUrl" => 'https://2744ce05c57f.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
+            "webhookUrl" => 'https://6fa9c2dd9c8d.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
             "metadata" => [
                 "subscription_id" => $k_subscription_id
             ]
@@ -322,27 +322,34 @@ class Kudos_Mollie
 
 		if(!$customerId) {
 			$kudos_subscription = new Kudos_Subscription();
-			$customer = $kudos_subscription->get_by(['subscription_id' => $subscriptionId]);
+			$subscription = $kudos_subscription->get_by(['subscription_id' => $subscriptionId]);
 
-			if(empty($customer)) {
-				$this->logger->log("Could not find a customer for " . $subscriptionId, 'DEBUG', [$subscriptionId]);
+			if(empty($subscription)) {
+				$this->logger->log("Could not find subscription.", 'DEBUG', [$subscriptionId]);
 				return false;
 			}
 
-			$customerId = $customer->customer_id;
+			if($subscription->status !== 'active') {
+				$this->logger->log("Subscription already canceled.", 'DEBUG', [$subscriptionId]);
+				return false;
+			}
+
+			$customerId = $subscription->customer_id;
 		}
 
 		try {
 			$customer = $mollieApi->customers->get($customerId);
-			$this->logger->log($subscriptionId . " cancelled.", 'DEBUG', [$customerId, $subscriptionId]);
 			$subscription = $customer->cancelSubscription($subscriptionId);
 			if($subscription) {
+				$this->logger->log($subscriptionId . " cancelled.", 'DEBUG', [$customerId, $subscription]);
 				$kudos_subscription = $this->subscription;
 				$kudos_subscription->update([
 					'status' => 'cancelled'
 				], [
 					'subscription_id' => $subscription->id
 				]);
+
+				return true;
 			}
 		} catch (ApiException $e) {
 			$this->logger->log($e->getMessage(), 'CRITICAL', [$customerId, $subscriptionId]);

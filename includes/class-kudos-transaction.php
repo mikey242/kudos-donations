@@ -28,7 +28,6 @@ class Kudos_Transaction {
 	public function insert_transaction($fields) {
 
 		$fields['transaction_created'] = current_time('mysql');
-
 		return $this->insert($fields);
 	}
 

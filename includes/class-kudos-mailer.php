@@ -39,7 +39,7 @@ class Kudos_Mailer
 
 		$custom_smtp = get_option('_kudos_smtp_enable');
 
-		$phpmailer->SMTPDebug = (WP_DEBUG ? 0 : 0); //Alternative to above constant
+		$phpmailer->SMTPDebug = (WP_DEBUG ? 1 : 0); //Alternative to above constant
 
 		// Add logo as attachment
 		$phpmailer->addEmbeddedImage(get_asset_url('img/logo-colour-40.png', true), 'kudos-logo', 'kudos-logo.png');
@@ -78,15 +78,28 @@ class Kudos_Mailer
 
 		$invoice = $this->invoice->get_invoice($transaction->order_id, true);
 
-		$twig = new Kudos_Twig();
-		$body = $twig->render('emails/invoice.html.twig', [
+		// Create array of variables for use in twig template
+		$renderArray = [
 			'name' => !empty($transaction->name) ? $transaction->name : '',
 			'date' => $transaction->time,
-			'description' => __('One-off donation', 'kudos-donations'),
+			'description' => get_sequence_type($transaction->sequence_type),
 			'amount' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
 			'receipt_id' => $transaction->order_id,
 			'website_name' => get_bloginfo('name'),
-		]);
+		];
+
+		// Add a cancel subscription url if transaction associated with a subscription
+		if(!empty($transaction->subscription_id)) {
+			$subscription_id = $transaction->subscription_id;
+			$token = password_hash($transaction->customer_id, PASSWORD_DEFAULT);
+			$cancel_url = get_home_url();
+			$cancel_url = add_query_arg('kudos_token', $token, $cancel_url);
+			$cancel_url = add_query_arg('kudos_subscription_id', base64_encode($subscription_id), $cancel_url);
+			$renderArray['cancel_url'] = $cancel_url;
+		}
+
+		$twig = new Kudos_Twig();
+		$body = $twig->render('emails/invoice.html.twig', $renderArray);
 
 		self::send($transaction->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$invoice]);
 	}

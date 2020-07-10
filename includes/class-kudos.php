@@ -175,6 +175,8 @@ class Kudos_Donations {
 		$this->loader->add_action('rest_api_init', $plugin_public, 'register_routes');
 		$this->loader->add_action('init', $plugin_public, 'register_kudos');
 		$this->loader->add_action('wp_footer', $plugin_public, 'place_message_modal', 1000);
+		$this->loader->add_action('wp_footer', $plugin_public, 'get_cancel_vars', 1000);
+		$this->loader->add_action('query_vars', $plugin_public, 'register_vars');
 
 	}
 

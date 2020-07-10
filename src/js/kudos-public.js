@@ -199,7 +199,6 @@ function check_requirements($next_tab) {
 function create_summary($target) {
     let kudos = window.kudos;
     let values = $('form.kudos_form').find(':input').serializeArray();
-    console.log(values);
     let name = values.find(i => i.name === 'name').value;
     let email = values.find(i => i.name === 'email_address').value;
     let value = values.find(i =>i.name === 'value').value;

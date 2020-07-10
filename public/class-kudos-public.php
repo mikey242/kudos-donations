@@ -352,13 +352,65 @@ class Kudos_Public {
 
 		$modal = new Kudos_Modal();
 
+		$token = sanitize_text_field(get_query_var('kudos_token'));
+		$order_id = sanitize_text_field(get_query_var('kudos_order_id'));
+
 		// Message modal
-		if(!empty($_REQUEST['kudos_order_id']) && !empty($_REQUEST['_wpnonce'])) {
-			$order_id = base64_decode(sanitize_text_field($_REQUEST['kudos_order_id']));
-			if(wp_verify_nonce($_REQUEST['_wpnonce'],'check_kudos_order-' . $order_id)) {
+		if(!empty($order_id) && !empty($token)) {
+			$order_id = base64_decode(sanitize_text_field($order_id));
+			if(wp_verify_nonce($_REQUEST['kudos_token'],'kudos_check_order-' . $order_id)) {
 				$atts = $this->check_transaction($order_id);
 				echo $modal->get_message_modal($atts);
 			}
+		}
+	}
+
+	/**
+	 * @param $vars
+	 *
+	 * @return mixed
+	 * @since   1.1.0
+	 */
+	public function register_vars($vars) {
+
+		$vars[] = 'kudos_subscription_id';
+		$vars[] = 'kudos_order_id';
+		$vars[] = 'kudos_token';
+
+		return $vars;
+	}
+
+	/**
+	 * Checks for cancel subscription query vars and cancels subscription if valid
+	 *
+	 * @since   1.1.0
+	 */
+	public function get_cancel_vars() {
+
+		$subscription_id = sanitize_text_field(get_query_var('kudos_subscription_id'));
+		$token = sanitize_text_field(get_query_var('kudos_token'));
+		$kudos_modal = new Kudos_Modal();
+
+		if(!empty($token && !empty($subscription_id))) {
+
+			$subscription_id = base64_decode($subscription_id);
+			$kudos_subscription = new Kudos_Subscription();
+			$subscription = $kudos_subscription->get_by(['subscription_id' => $subscription_id]);
+
+			if($subscription && password_verify($subscription->customer_id, $token)) {
+				$kudos_mollie = new Kudos_Mollie();
+				if($kudos_mollie->cancel_subscription($subscription_id)) {
+					echo $kudos_modal->get_message_modal([
+						'header' => 'Subscription canceled',
+						'text' => 'We will no longer be taking payments for this subscription. Thank you for your contributions.'
+					]);
+					return;
+				}
+			}
+			echo $kudos_modal->get_message_modal([
+				'header' => 'Link expired',
+				'text' => 'Sorry, this link is no longer valid.'
+			]);
 		}
 	}
 }

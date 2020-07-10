@@ -44,11 +44,11 @@
     <p>{{ __('Thanks', 'kudos-donations') }},
         <br>{{ website_name }}</p>
     <!-- Cancel subscription -->
-    {% if subscription %}
+    {% if cancel_url %}
         <table class="body-sub" role="presentation">
             <tr>
                 <td>
-                    <p class="f-fallback sub">{{ __('Want to cancel your subscription?', 'kudos-donations') }} <a href="{{billing_url}}">{{ __('Click here', 'kudos-donations') }}</a>.</p>
+                    <p class="f-fallback sub">{{ __('Want to cancel your subscription?', 'kudos-donations') }} <a href="{{ cancel_url }}">{{ __('Click here', 'kudos-donations') }}</a>.</p>
                 </td>
             </tr>
         </table>
