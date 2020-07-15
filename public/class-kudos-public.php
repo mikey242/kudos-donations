@@ -420,4 +420,34 @@ class Kudos_Public {
 			]);
 		}
 	}
+
+	/**
+	 * Processes the transaction. Used by action scheduler via mollie class.
+	 *
+	 * @param $transaction
+	 *
+	 * @return bool
+	 * @since   1.1.0
+	 */
+	public static function process_transaction($transaction) {
+
+		// Cast transaction array as object
+		$transaction = (object) $transaction;
+
+		// Send email receipt on success
+		$mailer = new Kudos_Mailer();
+
+		// Create invoice
+		$kudos_invoice = new Kudos_Invoice();
+		$kudos_invoice->generate_invoice($transaction);
+
+		if($transaction->email) {
+
+			// Send email - email setting is checked in mailer
+			$mailer->send_invoice($transaction);
+
+		}
+
+		return true;
+	}
 }
