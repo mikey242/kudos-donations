@@ -526,21 +526,14 @@ class Kudos_Mollie
 		$mailer = new Kudos_Mailer();
 		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
 
-			// Get transaction
+			// Get transaction and schedule processing for later
 			$transaction = $this->transaction->get_transaction_by(['order_id' => $order_id]);
+			as_schedule_single_action(strtotime('+1 minute'), 'process_transaction_action', [$transaction]);
 
-			// Create invoice
-			$this->invoice->generate_invoice($transaction);
-
-			if($transaction->email) {
-
-                // Send email - email setting is checked in mailer
-				$mailer->send_invoice($transaction);
-
-                // Set up recurring payment if sequence is first
-                if($sequence_type === 'first') {
-                    return $this->create_subscription($transaction, $payment->mandateId, $payment->metadata->interval, $payment->metadata->years);
-                }
+			// Set up recurring payment if sequence is first
+			if($payment->sequenceType === 'first') {
+				$kudos_mollie = new Kudos_Mollie();
+				return $kudos_mollie->create_subscription($transaction, $payment->mandateId, $payment->metadata->interval, $payment->metadata->years);
 			}
 		}
 

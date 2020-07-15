@@ -94,6 +94,7 @@ class Kudos_Donations {
 	 */
 	private function load_dependencies() {
 
+		require_once KUDOS_DIR . '/libraries/action-scheduler/action-scheduler.php';
 		require_once KUDOS_DIR . 'includes/kudos-helpers.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-logger.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-loader.php';
@@ -177,6 +178,7 @@ class Kudos_Donations {
 		$this->loader->add_action('wp_footer', $plugin_public, 'place_message_modal', 1000);
 		$this->loader->add_action('wp_footer', $plugin_public, 'get_cancel_vars', 1000);
 		$this->loader->add_action('query_vars', $plugin_public, 'register_vars');
+		$this->loader->add_action( 'process_transaction_action', $plugin_public, 'process_transaction', 10, 1 );
 
 	}
 
