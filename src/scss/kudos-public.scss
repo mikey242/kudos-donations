@@ -241,7 +241,6 @@ div[id^='kudos_modal-'] {
 
         &:checked ~ .checkmark::before {
           content: '';
-          background: green;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
