@@ -166,6 +166,7 @@ class Transactions_Table extends WP_List_Table {
 			'type' => __('Type', 'kudos-donations'),
 			'status'=>__('Status', 'kudos-donations'),
 			'transaction_id'=>__('Transaction Id', 'kudos-donations'),
+			'button_name'=>__('Button Name', 'kudos-donations')
 		];
 	}
 
