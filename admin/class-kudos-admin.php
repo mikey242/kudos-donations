@@ -328,7 +328,7 @@ class Kudos_Admin {
 	}
 
 	/**
-	 * Exports transactions if request present.
+	 * Exports table data if request present.
      * Needs to be hooked to admin_init as it modifies headers.
      *
 	 * @since    1.0.1
@@ -345,6 +345,13 @@ class Kudos_Admin {
 		if(isset($_REQUEST['export_subscriptions'])) {
 
 			$table = new Subscriptions_Table();
+			$table->export();
+
+		}
+
+		if(isset($_REQUEST['export_donors'])) {
+
+			$table = new Donors_Table();
 			$table->export();
 
 		}
