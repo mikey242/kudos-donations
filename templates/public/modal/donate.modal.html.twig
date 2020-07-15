@@ -13,6 +13,9 @@
 
     <form class="kudos_form" action="">
         {{ nonce|raw }}
+        <input required class="kudos_field" name="return_url" type="hidden" value="{{ return_url }}">
+        <input required class="kudos_field" name="button_name" type="hidden" value="{{ button_name }}">
+
         <div class="form-tabs">
 
             {#   INITIAL FIELDS   #}

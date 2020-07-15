@@ -120,6 +120,7 @@ class Kudos_Mollie
 	 * @param string $interval
 	 * @param string $years
 	 * @param string $redirectUrl
+	 * @param string $button_name
 	 * @param string|null $name
 	 * @param string|null $email
 	 * @param string|null $customerId
@@ -127,7 +128,7 @@ class Kudos_Mollie
 	 * @return bool|object
 	 * @since      1.0.0
 	 */
-	public function create_payment($value, $interval, $years, $redirectUrl, $name=null, $email=null, $customerId=null) {
+	public function create_payment($value, $interval, $years, $redirectUrl, $button_name, $name=null, $email=null, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
 		$order_id = 'kdo_'.time();
@@ -153,7 +154,7 @@ class Kudos_Mollie
 			"redirectUrl" => $redirectUrl,
 //			"webhookUrl" => rest_url('kudos/v1/mollie/payment/webhook'),
             "sequenceType" => $sequenceType,
-			"webhookUrl" => 'https://6fa9c2dd9c8d.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
+			"webhookUrl" => 'https://4132e13ec61b.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
 			/* translators: %s: The order id */
 			"description" => sprintf(__("Kudos Donation (%s) - %s", 'kudos-donations'), $frequency_text, $order_id),
 			'metadata' => [
@@ -179,7 +180,8 @@ class Kudos_Mollie
 				'value' => $value,
 				'currency' => $currency,
 				'status' => $payment->status,
-				'sequence_type' => $payment->sequenceType
+				'sequence_type' => $payment->sequenceType,
+				'button_name' => $button_name
 			]);
 
 			return $payment;
@@ -244,7 +246,7 @@ class Kudos_Mollie
 //            "startDate" => $startDate,  // Disable for test mode
             "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $k_subscription_id),
 //            "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
-            "webhookUrl" => 'https://6fa9c2dd9c8d.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
+            "webhookUrl" => 'https://4132e13ec61b.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
             "metadata" => [
                 "subscription_id" => $k_subscription_id
             ]
@@ -478,7 +480,17 @@ class Kudos_Mollie
 		$note = sprintf(__( 'Webhook requested by %s.', 'kudos-donations' ),'Mollie');
 		$this->logger->log($note, 'INFO', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
 
+		// Kudos_Transaction class
 		$kudos_transaction = $this->transaction;
+
+		// Get local transaction if exists
+		$transaction = $kudos_transaction->get_transaction_by(['transaction_id' => $transaction_id]);
+
+		// If status exists and is set to paid then assume payment already handled
+		if(!empty($transaction) && $transaction->status === 'paid') {
+			$this->logger->log('Payment already handled, skipping', 'DEBUG', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
+			return $response;
+		}
 
 		if($sequence_type === 'recurring') {
 

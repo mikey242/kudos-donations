@@ -37,7 +37,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
     // Defining the edit interface
     edit: (props) => {
 
-        const {label, alignment, color, modalHeader, modalBody} = props.attributes;
+        const {label, alignment, color, modalHeader, modalBody, buttonName} = props.attributes;
 
         const colors = [
             { name: 'orange', color: '#ff9f1c' },
@@ -60,6 +60,10 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 
         const onChangeBody = (newBody) => {
             props.setAttributes({ modalBody: newBody })
+        };
+
+        const onChangeName = (newName) => {
+            props.setAttributes({ buttonName: newName })
         };
 
         const onChangeColor = (newColor) => {
@@ -106,6 +110,19 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
                                     clearable={false}
                                 />
                             </BaseControl>
+                        </PanelRow>
+                    </PanelBody>
+                    <PanelBody
+                        title={__('Other', 'kudos-donations')}
+                        initialOpen={true}
+                    >
+                        <PanelRow>
+                            <TextControl
+                                label={__("Button name", 'kudos-donations')}
+                                type={"text"}
+                                value={buttonName}
+                                onChange={onChangeName}
+                            />
                         </PanelRow>
                     </PanelBody>
                 </InspectorControls>

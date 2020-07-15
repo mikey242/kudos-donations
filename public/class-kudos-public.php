@@ -132,6 +132,7 @@ class Kudos_Public {
 		$city = sanitize_text_field($form['city']);
 		$country = sanitize_text_field($form['country']);
 		$redirectUrl = sanitize_text_field($form['return_url']);
+		$buttonName = sanitize_text_field($form['button_name']);
 		$customerId = null;
 
 		$mollie = new Kudos_Mollie();
@@ -156,7 +157,7 @@ class Kudos_Public {
 			$customerId = $donor->customer_id;
 		}
 
-		$payment = $mollie->create_payment($value, $payment_frequency, $recurring_length, $redirectUrl, $name, $email, $customerId);
+		$payment = $mollie->create_payment($value, $payment_frequency, $recurring_length, $redirectUrl, $buttonName, $name, $email, $customerId);
 		if($payment) {
 			wp_send_json_success($payment->getCheckoutUrl());
 		}
@@ -261,6 +262,7 @@ class Kudos_Public {
 			$atts = shortcode_atts(
 				[
 					'label' => '',
+					'button_name' => '',
 					'alignment' => '',
 					'modalHeader' => '',
 					'modalBody'  => ''
@@ -277,6 +279,10 @@ class Kudos_Public {
 			'editor_script' => $this->plugin_name . '-button-block',
 		    'render_callback' => [$this, 'kudos_render_callback'],
 		    'attributes' => [
+		    	'buttonName' => [
+		    	    'type' => 'string',
+				    'default' => null
+			    ],
 		        'label' => [
 					'type' => 'string',
 		            'default' => get_option('_kudos_button_label'),
@@ -323,6 +329,7 @@ class Kudos_Public {
 		$modalId = $modal->get_id();
 		$modal = $modal->get_payment_modal([
 			'header' => $attr['modalHeader'],
+			'button_name' => (!empty($attr['buttonName']) ? $attr['buttonName'] : get_the_title()),
 			'text' => $attr['modalBody'],
 			'color' => (!empty($attr['color']) ? $attr['color'] : null)
 		]);

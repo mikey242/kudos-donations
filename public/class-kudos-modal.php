@@ -82,6 +82,7 @@ class Kudos_Modal {
 	            'name_required' => get_option('_kudos_name_required'),
 	            'email_required' => get_option('_kudos_email_required'),
 	            'return_url' => $this->returnUrl,
+			    'button_name' => $atts['button_name'],
 		        'payment_by' => __('Secure payment by', 'kudos-donations'),
 		        'vendor' => (get_option('_kudos_payment_vendor') ? get_option('_kudos_payment_vendor') : 'mollie')
 		    ];
