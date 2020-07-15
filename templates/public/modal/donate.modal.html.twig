@@ -171,6 +171,9 @@
              background-color: {{ color_luminance(color, '-0.08') }};
              border-color: {{ color }};
          }
+        {{ '#' ~ modal_id }} .checkmark::before {
+            background-color: {{ color }};
+         }
     </style>
 
 {% endblock footer %}
