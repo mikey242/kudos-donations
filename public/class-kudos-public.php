@@ -123,8 +123,8 @@ class Kudos_Public {
 
 		// Sanitize form fields
 		$value = intval($form['value']);
-		$payment_frequency = ($form['recurring_frequency'] ? sanitize_text_field($form['recurring_frequency']) : 'oneoff');
-		$recurring_length = ($form['recurring_length'] ? intval($form['recurring_length']) : 0);
+		$payment_frequency = (isset($form['recurring_frequency']) ? sanitize_text_field($form['recurring_frequency']) : 'oneoff');
+		$recurring_length = (isset($form['recurring_length']) ? intval($form['recurring_length']) : 0);
 		$name = sanitize_text_field($form['name']);
 		$email = sanitize_email($form['email_address']);
 		$street = sanitize_text_field($form['street']);
