@@ -54,6 +54,15 @@ register_setting(
 
 register_setting(
 	'kudos_donations',
+	'_kudos_email_bcc',
+	[
+		'type'         => 'string',
+		'show_in_rest' => true,
+	]
+);
+
+register_setting(
+	'kudos_donations',
 	'_kudos_smtp_enable',
 	[
 		'type'         => 'boolean',

@@ -60,7 +60,7 @@ class Kudos_Mailer
 	}
 
 	/**
-	 * Sends an invoice to the customer
+	 * Sends receipt to the customer
 	 *
 	 * @since    1.1.0
 	 * @param object $transaction
@@ -72,14 +72,15 @@ class Kudos_Mailer
 			return;
 		}
 
-		$headers = [
-			"From: Kudos Donations <wordpress@iseard.media>"
-		];
+		$bcc = get_option('_kudos_email_bcc');
+
+		$headers[] = "From: Kudos Donations <wordpress@iseard.media>";
+		if(filter_var($bcc, FILTER_SANITIZE_EMAIL)) {
+			$headers[] = "bcc: " . get_option('_kudos_email_bcc');
+		}
 
 		// Get invoice if option enabled
-		if(get_option('_kudos_attach_invoice')) {
-			$invoice = $this->invoice->get_invoice($transaction->order_id, true);
-		}
+		$attachment = get_option('_kudos_attach_invoice') ? $this->invoice->get_invoice($transaction->operder_id, true) : null;
 
 		// Create array of variables for use in twig template
 		$renderArray = [
@@ -104,7 +105,7 @@ class Kudos_Mailer
 		$twig = new Kudos_Twig();
 		$body = $twig->render('emails/invoice.html.twig', $renderArray);
 
-		self::send($transaction->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$invoice]);
+		self::send($transaction->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$attachment]);
 	}
 
 	/**
