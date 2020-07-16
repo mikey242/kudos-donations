@@ -23,4 +23,15 @@ button.kudos_button {
       color: #fff;
     }
   }
+
+  &.kudos_submit {
+    &::before {
+      content: url("../img/lock-white.svg");
+      width: 10px;
+      height: auto;
+      //background: url("../img/lock-white.svg") no-repeat center;
+      background-size: contain;
+      margin: auto 5px auto 0;
+    }
+  }
 }

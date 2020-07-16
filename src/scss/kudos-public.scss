@@ -32,7 +32,7 @@
       content: '';
       width: 17px;
       height: 20px;
-      background: url("../img/lock.svg") no-repeat center;
+      background: url("../img/lock-gray.svg") no-repeat center;
       background-size: contain;
       margin: auto 5px auto 0;
     }
@@ -235,8 +235,26 @@ div[id^='kudos_modal-'] {
     .kudos_input_group {
       @apply block mt-4;
 
-      input[type="radio"]:not(:last-child),
-      input[type="checkbox"]:not(:last-child) {
+      .checkmark {
+        @apply appearance-none absolute inline-block border-2 border-solid border-gray-300 cursor-pointer align-middle w-4 h-4 mr-2;
+
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+      }
+
+      input[type="radio"] {
+        &:checked ~ .checkmark::before {
+          border-radius: 9999px;
+        }
+      }
+
+      input[type="radio"] ~ .checkmark {
+        border-radius: 9999px;
+      }
+
+      input[type="radio"],
+      input[type="checkbox"] {
         @apply mr-2;
 
         &:checked ~ .checkmark::before {
@@ -244,7 +262,6 @@ div[id^='kudos_modal-'] {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          border-radius: 9999px;
 
           @apply w-2 h-2 absolute bg-orange-500;
         }
@@ -252,15 +269,6 @@ div[id^='kudos_modal-'] {
 
       label {
         @apply cursor-pointer pl-5;
-      }
-
-      .checkmark {
-        @apply appearance-none absolute inline-block border-2 border-solid border-gray-300 cursor-pointer align-middle w-4 h-4 mr-2;
-
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-        border-radius: 9999px;
       }
     }
 
