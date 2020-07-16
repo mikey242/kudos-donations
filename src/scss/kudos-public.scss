@@ -25,6 +25,10 @@
     font-weight: bold;
   }
 
+  a {
+    text-decoration: underline;
+  }
+
   .payment_by {
     @apply flex justify-end items-baseline mt-3 text-right;
 

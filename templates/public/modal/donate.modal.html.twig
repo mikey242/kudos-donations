@@ -169,18 +169,24 @@
         }
         {{ '#' ~ modal_id }} .kudos_modal_buttons button.kudos_button {
              background-color: {{ color }};
-         }
+        }
         {{ '#' ~ modal_id }} .kudos_modal_buttons button.kudos_button:hover {
              background-color: {{ color_luminance(color, '-0.05') }};
-         }
+        }
         {{ '#' ~ modal_id }} .kudos_modal_buttons button.kudos_button.button-style-outline:hover {
              color: #fff;
              background-color: {{ color_luminance(color, '-0.08') }};
              border-color: {{ color }};
-         }
+        }
         {{ '#' ~ modal_id }} .checkmark::before {
             background-color: {{ color }};
-         }
+        }
+        {{ '#' ~ modal_id }} a {
+            color: {{ color }}
+        }
+        {{ '#' ~ modal_id }} a:hover {
+            color: {{ color_luminance(color, '-0.08') }}
+        }
     </style>
 
 {% endblock footer %}
