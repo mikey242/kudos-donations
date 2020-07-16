@@ -533,7 +533,8 @@ class Kudos_Mollie
 
 			// Get transaction and schedule processing for later
 			$transaction = $this->transaction->get_transaction_by(['order_id' => $order_id]);
-			as_schedule_single_action(strtotime('+1 minute'), 'process_transaction_action', [$transaction]);
+			$timestamp = (WP_DEBUG ? time() : '+1 minute');
+			as_schedule_single_action(strtotime($timestamp), 'process_transaction_action', [$transaction]);
 
 			// Set up recurring payment if sequence is first
 			if($payment->sequenceType === 'first') {
