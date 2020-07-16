@@ -26,10 +26,10 @@
                     <input class="kudos_field" required type="text" min="1" name="value" data-type='currency' placeholder="{{ __('Amount', 'kudos-donations')}} (€) *" />
                 </label>
                 <label>
-                    <input class="kudos_field" {{ (name_required ? 'required' : '')}} type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') ~ ((name_required) ? ' *' : null) }}" />
+                    <input class="kudos_field" required type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') }} *" />
                 </label>
                 <label>
-                    <input class="kudos_field" {{ (email_required ? 'required' : '')}} type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') ~ ((email_required) ? ' *' : null) }}" />
+                    <input class="kudos_field" required type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') }} *" />
                 </label>
                 <div class="kudos_input_group">
                     <label>
@@ -110,16 +110,16 @@
             {#   ADDRESS TAB   #}
             <fieldset class="form-tab form-tab-address">
                 <label>
-                    <input class="kudos_field" type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }}" />
+                    <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
                 </label>
                 <label>
-                    <input class="kudos_field" type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }}" />
+                    <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
                 </label>
                 <label>
-                    <input class="kudos_field" type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }}" />
+                    <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
                 </label>
                 <label>
-                    <input class="kudos_field" type="text" name="country" placeholder="{{ __('Country', 'kudos-donations') }}" />
+                    <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="country" placeholder="{{ __('Country', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
                 </label>
                 <div class="kudos_modal_buttons" style="text-align: center">
                     <p class="kudos_form_nav kudos_back" data-direction="back"></p>

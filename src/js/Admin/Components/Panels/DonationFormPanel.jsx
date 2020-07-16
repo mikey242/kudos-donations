@@ -16,18 +16,10 @@ const DonationFormPanel = props => {
         >
 
             <Checkbox
-                id='_kudos_email_required'
-                heading='Email'
+                id='_kudos_address_required'
+                heading='Address'
                 label='Required'
-                value={props.settings._kudos_email_required}
-                onChange={props.handleInputChange}
-            />
-
-            <Checkbox
-                id='_kudos_name_required'
-                heading='Name'
-                label='Required'
-                value={props.settings._kudos_name_required}
+                value={props.settings._kudos_address_required}
                 onChange={props.handleInputChange}
             />
 
