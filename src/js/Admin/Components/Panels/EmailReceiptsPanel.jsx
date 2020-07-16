@@ -1,10 +1,15 @@
+import {TextInput} from "../FormElements/TextInput";
+import {Toggle} from "../FormElements/Toggle"
+
 const { __ } = wp.i18n;
 
 const {
     PanelBody,
 } = wp.components;
 
-import {Toggle} from "../FormElements/Toggle"
+const {
+    Fragment
+} = wp.element;
 
 const EmailReceiptsPanel = props => {
 
@@ -21,6 +26,20 @@ const EmailReceiptsPanel = props => {
                 value={props.settings._kudos_email_receipt_enable}
                 onChange={props.handleInputChange}
             />
+
+            {props.settings._kudos_email_receipt_enable ? [
+
+                <Fragment key="_kudos_email_bcc">
+                    <TextInput
+                        id='_kudos_email_bcc'
+                        label="Send receipt copy to:"
+                        value={props.settings._kudos_email_bcc}
+                        disabled={props.isSaving}
+                        onChange={props.handleInputChange}
+                    />
+                </Fragment>
+
+            ]:''}
 
         </PanelBody>
     )

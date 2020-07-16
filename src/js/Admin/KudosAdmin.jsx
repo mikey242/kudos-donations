@@ -276,20 +276,6 @@ class KudosAdmin extends Component {
                     </Fragment>
                 )
 
-            case 'invoice':
-                return (
-                    <Fragment>
-                        <GenerateInvoicesPanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                        <InvoiceCompanyPanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                    </Fragment>
-                )
-
             case 'email':
 
                 return (
@@ -305,6 +291,20 @@ class KudosAdmin extends Component {
                         <TestEmailPanel
                             handleInputChange={this.handleInputChange}
                             showNotice={this.showNotice}
+                        />
+                    </Fragment>
+                )
+
+            case 'invoice':
+                return (
+                    <Fragment>
+                        <GenerateInvoicesPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <InvoiceCompanyPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
                         />
                     </Fragment>
                 )
@@ -362,14 +362,14 @@ class KudosAdmin extends Component {
                                 className: 'tab-customize',
                             },
                             {
-                                name: 'invoice',
-                                title: __('Invoice', 'kudos-donations'),
-                                className: 'tab-Invoice',
-                            },
-                            {
                                 name: 'email',
                                 title: __('Email', 'kudos-donations'),
                                 className: 'tab-email',
+                            },
+                            {
+                                name: 'invoice',
+                                title: __('Invoice', 'kudos-donations'),
+                                className: 'tab-Invoice',
                             },
                             {
                                 name: 'advanced',

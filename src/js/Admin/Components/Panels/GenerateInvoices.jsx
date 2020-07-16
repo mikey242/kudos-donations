@@ -1,5 +1,4 @@
 import {Toggle} from "../FormElements/Toggle"
-import {TextInput} from "../FormElements/TextInput"
 
 const { __ } = wp.i18n;
 
