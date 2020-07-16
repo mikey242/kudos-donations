@@ -6,7 +6,7 @@ const {
 
 import {Toggle} from "../FormElements/Toggle"
 
-const EmailReceipts = props => {
+const EmailReceiptsPanel = props => {
 
     return (
         <PanelBody
@@ -26,4 +26,4 @@ const EmailReceipts = props => {
     )
 }
 
-export {EmailReceipts}
+export {EmailReceiptsPanel}
