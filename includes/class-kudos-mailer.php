@@ -65,7 +65,7 @@ class Kudos_Mailer
 	 * @since    1.1.0
 	 * @param object $transaction
 	 */
-	public function send_invoice($transaction) {
+	public function send_receipt($transaction) {
 
 		// Check if setting enabled
 		if(!get_option('_kudos_email_receipt_enable')) {
@@ -76,7 +76,10 @@ class Kudos_Mailer
 			"From: Kudos Donations <wordpress@iseard.media>"
 		];
 
-		$invoice = $this->invoice->get_invoice($transaction->order_id, true);
+		// Get invoice if option enabled
+		if(get_option('_kudos_attach_invoice')) {
+			$invoice = $this->invoice->get_invoice($transaction->order_id, true);
+		}
 
 		// Create array of variables for use in twig template
 		$renderArray = [

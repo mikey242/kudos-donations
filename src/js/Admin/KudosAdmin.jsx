@@ -12,6 +12,7 @@ import {CustomReturnPanel} from "./Components/Panels/CustomReturnPanel"
 import {AVGPanel} from "./Components/Panels/AVGPanel"
 import {EmailReceiptsPanel} from "./Components/Panels/EmailReceiptsPanel"
 import {InvoiceCompanyPanel} from "./Components/Panels/InvoiceCompanyPanel"
+import {GenerateInvoicesPanel} from "./Components/Panels/GenerateInvoices"
 import {PrimaryButton} from "./Components/FormElements/PrimaryButton"
 import {DiagnosticsPanel} from "./Components/Panels/DiagnosticsPanel"
 
@@ -277,10 +278,16 @@ class KudosAdmin extends Component {
 
             case 'invoice':
                 return (
-                    <InvoiceCompanyPanel
-                        {...this.state}
-                        handleInputChange={this.handleInputChange}
-                    />
+                    <Fragment>
+                        <GenerateInvoicesPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <InvoiceCompanyPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
+                    </Fragment>
                 )
 
             case 'email':

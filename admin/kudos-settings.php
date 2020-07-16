@@ -263,3 +263,23 @@ register_setting(
 		'default'       => ''
 	]
 );
+
+register_setting(
+	'kudos_donations',
+	'_kudos_invoice_enable',
+	[
+		'type'          => 'boolean',
+		'show_in_rest'  => true,
+		'default'       => false
+	]
+);
+
+register_setting(
+	'kudos_donations',
+	'_kudos_attach_invoice',
+	[
+		'type'          => 'boolean',
+		'show_in_rest'  => true,
+		'default'       => false
+	]
+);

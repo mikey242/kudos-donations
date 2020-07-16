@@ -22,6 +22,10 @@ class Kudos_Invoice
 	private $twig;
 
 	const INVOICE_DIR = KUDOS_DIR . 'invoices/';
+	/**
+	 * @var bool|mixed|void
+	 */
+	private $enabled;
 
 	/**
 	 * Kudos_Invoice constructor.
@@ -33,6 +37,7 @@ class Kudos_Invoice
 		$this->twig = new Kudos_Twig();
 		$this->pdf = new Dompdf();
 		$this->pdf->setPaper('A4');
+		$this->enabled = get_option('_kudos_invoice_enable');
 
 		if(!file_exists(self::INVOICE_DIR)) {
 			wp_mkdir_p(self::INVOICE_DIR);
@@ -65,7 +70,7 @@ class Kudos_Invoice
 	 */
 	public function generate_invoice($transaction, $overwrite=false, $display=false) {
 
-		if(!$this->isWriteable()) {
+		if(!$this->enabled || !$this->isWriteable()) {
 			return false;
 		}
 

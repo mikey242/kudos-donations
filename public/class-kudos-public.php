@@ -446,7 +446,7 @@ class Kudos_Public {
 		if($transaction->email) {
 
 			// Send email - email setting is checked in mailer
-			$mailer->send_invoice($transaction);
+			$mailer->send_receipt($transaction);
 
 		}
 
