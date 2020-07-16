@@ -72,6 +72,12 @@ class Kudos_Modal {
 	 */
 	function get_payment_modal($atts=[]) {
 
+		$privacy_option = get_option("_kudos_privacy_link");
+		$privacy_link = __('I agree with the privacy policy.', "kudos-donations");
+		if($privacy_option) {
+			$privacy_link = sprintf(__('I agree with the %s', "kudos-donations"), '<a target="_blank" href='. get_option("_kudos_privacy_link") .'>'.__("privacy policy.", "kudos-donations"). '</a>');
+		}
+
 		if($this->ready) {
 		    $data = [
 	            'modal_id' => $this->id,
@@ -79,8 +85,8 @@ class Kudos_Modal {
                 'text' => !empty($atts['text']) ? $atts['text'] : get_option('_kudos_form_text'),
                 'color' => !empty($atts['color']) ? $atts['color'] : get_option('_kudos_button_color'),
 		        'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
-	            'name_required' => get_option('_kudos_name_required'),
-	            'email_required' => get_option('_kudos_email_required'),
+	            'address_required' => get_option('_kudos_address_required'),
+			    'privacy_link' => $privacy_link,
 	            'return_url' => $this->returnUrl,
 			    'button_name' => $atts['button_name'],
 		        'payment_by' => __('Secure payment by', 'kudos-donations'),

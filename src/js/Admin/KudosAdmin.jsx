@@ -9,7 +9,8 @@ import {TestEmailPanel} from "./Components/Panels/TestEmailPanel"
 import {MolliePanel} from "./Components/Panels/MolliePanel"
 import {DonationButtonPanel} from "./Components/Panels/DonationButtonPanel"
 import {CustomReturnPanel} from "./Components/Panels/CustomReturnPanel"
-import {EmailReceipts} from "./Components/Panels/EmailReceipts"
+import {AVGPanel} from "./Components/Panels/AVGPanel"
+import {EmailReceiptsPanel} from "./Components/Panels/EmailReceiptsPanel"
 import {InvoiceCompanyPanel} from "./Components/Panels/InvoiceCompanyPanel"
 import {PrimaryButton} from "./Components/FormElements/PrimaryButton"
 import {DiagnosticsPanel} from "./Components/Panels/DiagnosticsPanel"
@@ -267,6 +268,10 @@ class KudosAdmin extends Component {
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />
+                        <AVGPanel
+                            {...this.state}
+                            handleInputChange={this.handleInputChange}
+                        />
                     </Fragment>
                 )
 
@@ -282,7 +287,7 @@ class KudosAdmin extends Component {
 
                 return (
                     <Fragment>
-                        <EmailReceipts
+                        <EmailReceiptsPanel
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />

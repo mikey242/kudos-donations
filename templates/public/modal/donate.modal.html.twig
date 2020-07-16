@@ -137,10 +137,12 @@
                     <p class="mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong>€<span id="summary_value"></span></p>
                     <p><strong>{{ __('Type', 'kudos-donations') }}: </strong><span id="summary_frequency"></span></p>
                 </div>
-                <div class="payment_by {{ vendor }}">
-                    <small>
-                        {{ payment_by }}
-                    </small>
+                <div class="kudos_input_group">
+                    <label>
+                        {{ privacy_link | raw }}
+                        <input required type="checkbox" name="avg" value="true" />
+                        <span class="checkmark"></span>
+                    </label>
                 </div>
                 <div class="kudos_modal_buttons" style="text-align: center">
                     <p class="kudos_form_nav kudos_back" data-direction="back"></p>
