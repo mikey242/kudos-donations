@@ -1,7 +1,7 @@
 {% extends 'emails/base.html.twig' %}
 
 {% block preheader %}
-    {{ __('This is a receipt for your recent donation on', 'kudos-donations') }} {{ purchase_date | date('m/d/y') }}
+    {{ __('This is a receipt for your recent donation on', 'kudos-donations') }} {{ purchase_date | date('d/m/y') }}
 {% endblock preheader %}
 
 {% block body %}
@@ -12,7 +12,7 @@
             <td>
                 <h3>{{ __('Order ID', 'kudos-donations') }}: {{receipt_id}}</h3></td>
             <td>
-                <h3 class="align-right">{{ __('Date', 'kudos-donations') }}: {{date | date('m/d/y')}}</h3></td>
+                <h3 class="align-right">{{ __('Date', 'kudos-donations') }}: {{date | date('d/m/y')}}</h3></td>
         </tr>
         <tr>
             <td colspan="2">
