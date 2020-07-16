@@ -128,7 +128,7 @@
                 </div>
             </fieldset>
 
-            {#   DONATE TAB   #}
+            {#   FINAL TAB   #}
             <fieldset class="form-tab form-tab-final">
                 <p class="kudos_modal_text">{{ __('By clicking donate you agree to the following payment', 'kudos-donations') }}: </p>
                 <div class="kudos_summary text-left">
@@ -144,6 +144,11 @@
                         <span class="checkmark"></span>
                     </label>
                 </div>
+{#                <div class="payment_by {{ vendor }}">#}
+{#                    <small>#}
+{#                        {{ payment_by }}#}
+{#                    </small>#}
+{#                </div>#}
                 <div class="kudos_modal_buttons" style="text-align: center">
                     <p class="kudos_form_nav kudos_back" data-direction="back"></p>
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
