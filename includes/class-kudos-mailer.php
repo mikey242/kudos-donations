@@ -80,7 +80,7 @@ class Kudos_Mailer
 		}
 
 		// Get invoice if option enabled
-		$attachment = get_option('_kudos_attach_invoice') ? $this->invoice->get_invoice($transaction->operder_id, true) : null;
+		$attachment = (get_option('_kudos_attach_invoice') ? $this->invoice->get_invoice($transaction->order_id, true) : null);
 
 		// Create array of variables for use in twig template
 		$renderArray = [
