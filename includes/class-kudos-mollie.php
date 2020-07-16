@@ -164,7 +164,7 @@ class Kudos_Mollie
 		];
 
 		if(WP_DEBUG) {
-			$subscriptionArray['webhookUrl'] = 'https://092120b9a0a6.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+			$paymentArray['webhookUrl'] = 'https://092120b9a0a6.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 		}
 
 		// Link payment to customer if specified
@@ -188,7 +188,7 @@ class Kudos_Mollie
 			return $payment;
 
 		} catch (ApiException $e) {
-			$this->logger->log($e->getMessage(), 'CRITICAL');
+			$this->logger->log($e->getMessage(), 'CRITICAL', $paymentArray);
 			return false;
 		}
 
