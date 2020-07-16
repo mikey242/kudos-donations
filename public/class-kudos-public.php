@@ -373,6 +373,8 @@ class Kudos_Public {
 	}
 
 	/**
+	 * Register URL parameters
+	 *
 	 * @param $vars
 	 *
 	 * @return mixed
