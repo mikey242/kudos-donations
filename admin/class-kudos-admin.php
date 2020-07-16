@@ -3,7 +3,6 @@
 namespace Kudos;
 
 use Mollie\Api\Resources\Subscription;
-use Mollie_API_Object_Customer_Subscription;
 use WP_REST_Server;
 
 /**

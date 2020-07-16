@@ -6,8 +6,6 @@ use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
 use Mollie\Api\Resources\Customer;
-use Mollie\Api\Resources\Mandate;
-use Mollie\Api\Resources\MandateCollection;
 use Mollie\Api\Resources\Payment;
 use WP_Error;
 use WP_HTTP_Response;
@@ -152,9 +150,8 @@ class Kudos_Mollie
 				"value" => $value
 			],
 			"redirectUrl" => $redirectUrl,
-//			"webhookUrl" => rest_url('kudos/v1/mollie/payment/webhook'),
+			"webhookUrl" => rest_url('kudos/v1/mollie/payment/webhook'),
             "sequenceType" => $sequenceType,
-			"webhookUrl" => 'https://4132e13ec61b.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
 			/* translators: %s: The order id */
 			"description" => sprintf(__("Kudos Donation (%s) - %s", 'kudos-donations'), $frequency_text, $order_id),
 			'metadata' => [
@@ -165,6 +162,10 @@ class Kudos_Mollie
 				'name' => $name
 			]
 		];
+
+		if(WP_DEBUG) {
+			$subscriptionArray['webhookUrl'] = 'https://092120b9a0a6.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+		}
 
 		// Link payment to customer if specified
 		if($customerId) {
@@ -243,14 +244,18 @@ class Kudos_Mollie
             ],
 	        "mandateId" => $mandateId,
             "interval" => $interval,
-//            "startDate" => $startDate,  // Disable for test mode
+            "startDate" => $startDate,  // Disable for test mode
             "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $k_subscription_id),
-//            "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
-            "webhookUrl" => 'https://4132e13ec61b.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook',
+            "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
             "metadata" => [
                 "subscription_id" => $k_subscription_id
             ]
         ];
+
+        if(WP_DEBUG) {
+	        $subscriptionArray['webhookUrl'] = 'https://092120b9a0a6.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+	        unset($subscriptionArray['startDate']);  // Disable for test mode
+        }
 
         if($years && $years > 0) {
             $subscriptionArray["times"] = get_times_from_years($years, $interval);

@@ -2,7 +2,6 @@
 
 namespace Kudos;
 
-use Composer\DependencyResolver\Transaction;
 use Dompdf\Dompdf;
 use Throwable;
 
