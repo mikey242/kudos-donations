@@ -21,8 +21,8 @@ const CompletedPaymentPopup = props => {
 
             <Toggle
                 id='_kudos_return_message_enable'
-                label={'Show pop-up message when payment complete'}
-                help={'Enable this to show a pop-up thanking the customer for their donation.'}
+                label={__('Show pop-up message when payment complete', 'kudos-donations')}
+                help={__('Enable this to show a pop-up thanking the customer for their donation.', 'kudos-donations')}
                 value={props.settings._kudos_return_message_enable}
                 onChange={props.handleInputChange}
             />
@@ -32,16 +32,16 @@ const CompletedPaymentPopup = props => {
                 <Fragment key="_kudos_return_message_fields">
                     <TextInput
                         id='_kudos_return_message_header'
-                        label="Message header"
+                        label={__("Message header", 'kudos-donations')}
                         value={props.settings._kudos_return_message_header}
                         disabled={props.isSaving}
                         onChange={props.handleInputChange}
                     />
                     <TextInput
                         id='_kudos_return_message_text'
-                        label="Message text"
+                        label={__("Message text", 'kudos-donations')}
                         value={props.settings._kudos_return_message_text}
-                        placeHolder='Button label'
+                        placeHolder={__('Button label', 'kudos-donations')}
                         disabled={props.isSaving}
                         onChange={props.handleInputChange}
                     />

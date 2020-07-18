@@ -6,7 +6,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const { join, resolve } = require( 'path' );
 
-const env = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const PATHS = {
     src: join(__dirname, 'src'),
@@ -55,27 +55,38 @@ module.exports = {
     },
     optimization: {
         minimize: true,
-        minimizer: [new TerserPlugin({
-            extractComments: false,
-        })],
+        concatenateModules: false,
+        minimizer: [
+            new TerserPlugin({
+                terserOptions: {
+                    // mangle: false,
+                    mangle: {
+                        reserved: ['__', '_n', '_x', '_nx']
+                    },
+                    output: {
+                        comments: /translators:/i,
+                    },
+                },
+                extractComments: false,
+            })
+        ],
     },
     module: {
-        rules: [{
-            test: /.jsx?$/,
-            include: [
-                resolve(__dirname, 'src')
-            ],
-            exclude: [
-                resolve(__dirname, 'node_modules')
-            ],
-            loader: 'babel-loader',
-            options: {
-                plugins: ['lodash'],
-                presets: [
-                    ["@wordpress/default"],
-                    ['@babel/env', { 'targets': { 'node': 6 } }]
-                ]
-            },
+        rules: [
+            {
+                test: /.jsx?$/,
+                exclude: [
+                    resolve(__dirname, 'node_modules')
+                ],
+                loader: 'babel-loader',
+                options: {
+                    babelrc: false,
+                    plugins: [
+                        ['lodash'],
+                        [ "@wordpress/babel-plugin-makepot", { "output": "languages/kudos-admin.pot" } ]
+                    ],
+                    presets: ["@wordpress/default"]
+                },
             },
             {
                 test: /\.(sa|sc|c)ss$/,

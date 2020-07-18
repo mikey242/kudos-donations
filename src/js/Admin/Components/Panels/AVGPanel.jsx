@@ -16,7 +16,7 @@ const AVGPanel = props => {
 
             <TextInput
                 id='_kudos_privacy_link'
-                label='Privacy Policy URL'
+                label={__('Privacy Policy URL', 'kudos-donations')}
                 value={props.settings._kudos_privacy_link}
                 disabled={props.isSaving}
                 onChange={props.handleInputChange}

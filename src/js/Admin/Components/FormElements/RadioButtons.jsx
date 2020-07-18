@@ -11,7 +11,7 @@ const RadioButtons = props => {
         <PanelRow>
             <RadioControl
                 key={"key_" + props.id}
-                label={__(props.label, 'kudos-donations')}
+                label={props.label}
                 help={props.help}
                 selected={ props.selected }
                 options={props.children}

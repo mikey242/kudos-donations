@@ -17,7 +17,7 @@ const PrimaryButton = props => {
                 isBusy={props.isBusy}
                 onClick={props.onClick}
             >
-                {__(props.label, 'kudos-donations')}
+                {props.label}
             </Button>
         </PanelRow>
     )

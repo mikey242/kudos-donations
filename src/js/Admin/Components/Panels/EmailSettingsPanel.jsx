@@ -18,16 +18,16 @@ const EmailSettingsPanel = props => {
         <Fragment>
             <TextInput
                 id='_kudos_smtp_host'
-                label='Host'
-                help="Your email server's hostname"
+                label={__('Host', 'kudos-donations')}
+                help={__("Your email server's hostname", 'kudos-donations')}
                 value={props.settings._kudos_smtp_host}
                 placeholder='mail.host.com'
                 onChange={props.handleInputChange}
             />
             <RadioButtons
                 id='_kudos_smtp_encryption'
-                label='Encryption'
-                help='Choose your encryption type. Always use TLS or SSL if available.'
+                label={__('Encryption', 'kudos-donations')}
+                help={__('Choose your encryption type. Always use TLS or SSL if available.', 'kudos-donations')}
                 selected={props.settings._kudos_smtp_encryption}
                 onChange={props.handleInputChange}
             >
@@ -39,23 +39,23 @@ const EmailSettingsPanel = props => {
             </RadioButtons>
             <Checkbox
                 id='_kudos_smtp_autotls'
-                heading='Auto TLS'
-                label='Enable'
-                help='In most cases you will want this enabled. Disable for troubleshooting.'
+                heading={__('Auto TLS', 'kudos-donations')}
+                label={__('Enable', 'kudos-donations')}
+                help={__('In most cases you will want this enabled. Disable for troubleshooting.', 'kudos-donations')}
                 value={props.settings._kudos_smtp_autotls}
                 onChange={props.handleInputChange}
             />
             <TextInput
                 id='_kudos_smtp_username'
-                label='Username'
-                help="This is usually an email address"
+                label={__('Username', 'kudos-donations')}
+                help={__("This is usually an email address", 'kudos-donations')}
                 value={props.settings._kudos_smtp_username}
                 placeholder='user@domain.com'
                 onChange={props.handleInputChange}
             />
             <TextInput
                 id='_kudos_smtp_password'
-                label='Password'
+                label={__('Password', 'kudos-donations')}
                 type="password"
                 help=""
                 value={props.settings._kudos_smtp_password}
@@ -64,8 +64,8 @@ const EmailSettingsPanel = props => {
             />
             <TextInput
                 id='_kudos_smtp_port'
-                label='Port'
-                help="587 (TLS), 465 (SSL), 25 (Unencrypted)"
+                label={__('Port', 'kudos-donations')}
+                help={__("587 (TLS), 465 (SSL), 25 (Unencrypted)", 'kudos-donations')}
                 value={props.settings._kudos_smtp_port}
                 placeholder='587'
                 onChange={props.handleInputChange}

@@ -21,8 +21,8 @@ const CustomReturnPanel = props => {
 
             <Toggle
                 id='_kudos_custom_return_enable'
-                label={'Use custom return URL'}
-                help={'After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, enable this option.'}
+                label={__('Use custom return URL', 'kudos-donations')}
+                help={__('After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, enable this option.', 'kudos-donations')}
                 value={props.settings._kudos_custom_return_enable}
                 onChange={props.handleInputChange}
             />
@@ -33,8 +33,8 @@ const CustomReturnPanel = props => {
 
                     <TextInput
                         id='_kudos_custom_return_url'
-                        label="URL"
-                        help={'e.g https://mywebsite.com/thanks'}
+                        label={__("URL", 'kudos-donations')}
+                        help={__('e.g https://mywebsite.com/thanks', 'kudos-donations')}
                         value={props.settings._kudos_custom_return_url}
                         disabled={props.isSaving}
                         onChange={props.handleInputChange}

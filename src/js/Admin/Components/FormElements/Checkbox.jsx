@@ -11,9 +11,9 @@ const Checkbox = props => {
         <PanelRow>
             <CheckboxControl
                 key={"key_" + props.id}
-                heading={__(props.heading, 'kudos-donations')}
-                label={__(props.label, 'kudos-donations')}
-                help={__(props.help, 'kudos-donations')}
+                heading={props.heading}
+                label={props.label}
+                help={props.help}
                 checked={props.value || ''}
                 onChange={(value) => props.onChange(props.id, value)}
             />

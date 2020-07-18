@@ -17,7 +17,7 @@ const DonationFormPanel = props => {
 
             <Checkbox
                 id='_kudos_address_required'
-                heading='Address'
+                heading={__('Address', 'kudos-donations')}
                 label='Required'
                 value={props.settings._kudos_address_required}
                 onChange={props.handleInputChange}
@@ -25,7 +25,7 @@ const DonationFormPanel = props => {
 
             <TextInput
                 id='_kudos_form_header'
-                label="Payment form header"
+                label={__("Payment form header", 'kudos-donations')}
                 value={props.settings._kudos_form_header}
                 disabled={props.isSaving}
                 onChange={props.handleInputChange}
@@ -33,7 +33,7 @@ const DonationFormPanel = props => {
 
             <TextInput
                 id='_kudos_form_text'
-                label="Payment form text"
+                label={__("Payment form text", 'kudos-donations')}
                 value={props.settings._kudos_form_text}
                 disabled={props.isSaving}
                 onChange={props.handleInputChange}

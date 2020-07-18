@@ -39,18 +39,18 @@ const MolliePanel = props => {
 
             <TextInput
                 id='_kudos_mollie_test_api_key'
-                label="Test API Key"
+                label={__("Test API Key", 'kudos-donations')}
                 value={props.settings._kudos_mollie_test_api_key}
-                placeHolder='Mollie Test API Key'
+                placeHolder={__('Mollie Test API Key', 'kudos-donations')}
                 disabled={props.isSaving || props.settings._kudos_mollie_api_mode !== 'test'}
                 onChange={handleChange}
             />
 
             <TextInput
                 id='_kudos_mollie_live_api_key'
-                label="Mollie Live API Key"
+                label={__("Mollie Live API Key", 'kudos-donations')}
                 value={props.settings._kudos_mollie_live_api_key}
-                placeHolder='Mollie Live API Key'
+                placeHolder={__('Mollie Live API Key', 'kudos-donations')}
                 disabled={props.isSaving || props.settings._kudos_mollie_api_mode !== 'live'}
                 onChange={handleChange}
             />

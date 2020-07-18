@@ -15,14 +15,14 @@ const EmailReceiptsPanel = props => {
 
     return (
         <PanelBody
-            title={__('Email Receipts')}
+            title={__('Email Receipts', 'kudos-donations')}
             initialOpen={false}
         >
 
             <Toggle
                 id='_kudos_email_receipt_enable'
-                label={'Send email receipts'}
-                help={'Once a payment has been completed, you can automatically send an email receipt to the donor.'}
+                label={__('Send email receipts', 'kudos-donations')}
+                help={__('Once a payment has been completed, you can automatically send an email receipt to the donor.', 'kudos-donations')}
                 value={props.settings._kudos_email_receipt_enable}
                 onChange={props.handleInputChange}
             />
@@ -32,7 +32,7 @@ const EmailReceiptsPanel = props => {
                 <Fragment key="_kudos_email_bcc">
                     <TextInput
                         id='_kudos_email_bcc'
-                        label="Send receipt copy to:"
+                        label={__("Send receipt copy to:", 'kudos-donations')}
                         value={props.settings._kudos_email_bcc}
                         disabled={props.isSaving}
                         onChange={props.handleInputChange}

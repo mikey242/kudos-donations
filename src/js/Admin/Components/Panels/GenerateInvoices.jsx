@@ -20,8 +20,8 @@ const GenerateInvoicesPanel = props => {
 
             <Toggle
                 id='_kudos_invoice_enable'
-                label={'Generate invoices'}
-                help={'Disable this if your server has issues with PDF generation.'}
+                label={__('Generate invoices', 'kudos-donations')}
+                help={__('Disable this if your server has issues with PDF generation.', 'kudos-donations')}
                 value={props.settings._kudos_invoice_enable}
                 onChange={props.handleInputChange}
             />
@@ -32,8 +32,8 @@ const GenerateInvoicesPanel = props => {
 
                     <Toggle
                         id='_kudos_attach_invoice'
-                        label={'Attach to emails'}
-                        help={'When enabled, invoices will be attached to receipts emailed to donors.'}
+                        label={__('Attach to emails', 'kudos-donations')}
+                        help={__('When enabled, invoices will be attached to receipts emailed to donors.', 'kudos-donations')}
                         value={props.settings._kudos_attach_invoice}
                         onChange={props.handleInputChange}
                     />

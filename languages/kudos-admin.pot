@@ -40,7 +40,7 @@ msgid "Message text"
 msgstr ""
 
 #: src/js/Admin/Components/Panels/CompletedPaymentPopup.jsx:44
-#: src/js/Admin/Components/Panels/DonationButtonPanel.jsx:35
+#: src/js/Admin/Components/Panels/DonationButtonPanel.jsx:33
 msgid "Button label"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Diagnostics"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/DonationButtonPanel.jsx:21
+#: src/js/Admin/Components/Panels/DonationButtonPanel.jsx:19
 msgid "Donation Button"
 msgstr ""
 

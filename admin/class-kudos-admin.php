@@ -169,8 +169,11 @@ class Kudos_Admin {
 	 * @since   1.1.0
 	 */
 	public function kudos_settings_page_assets() {
-		wp_enqueue_script( $this->plugin_name . '-settings', get_asset_url('kudos-admin-settings.js'), [ 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-data' ], $this->version, true );
-		wp_localize_script($this->plugin_name . '-settings', 'kudos', [
+
+	    $handle = $this->plugin_name . '-settings';
+
+		wp_enqueue_script( $handle, get_asset_url('kudos-admin-settings.js'), [ 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-data' ], $this->version, true );
+		wp_localize_script($handle, 'kudos', [
 			'version' => KUDOS_VERSION,
 			'nonce'   => wp_create_nonce( 'wp_rest' ),
 			'checkApiUrl' => rest_url('kudos/v1/mollie/admin'),
@@ -178,7 +181,7 @@ class Kudos_Admin {
 			'getDiagnosticsUrl' => rest_url('kudos/v1/diagnostics'),
 			'ajaxurl' => admin_url('admin-ajax.php'),
 		]);
-		wp_set_script_translations( $this->plugin_name . '-settings', 'kudos-donations' );
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_DIR . 'languages');
 		wp_enqueue_style( 'kudos-donations-admin-react', get_asset_url('kudos-admin-settings.css'), [ 'wp-components' ], $this->version,'all' );
 	}
 

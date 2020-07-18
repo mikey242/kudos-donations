@@ -104,8 +104,12 @@ class Kudos_Public {
 	 * @since   1.0.0
 	 */
 	public function enqueue_block_assets() {
-		wp_enqueue_style( $this->plugin_name . '-button-block', get_asset_url('kudos-button-block.css'), [], $this->version, 'all' );
-		wp_enqueue_script($this->plugin_name . '-button-block', get_asset_url('kudos-button-block.js'), [ 'wp-i18n', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post', 'wp-api' ], $this->version, true );
+
+		$handle = $this->plugin_name . '-button-block';
+
+		wp_enqueue_style( $handle, get_asset_url('kudos-button-block.css'), [], $this->version, 'all' );
+		wp_enqueue_script($handle, get_asset_url('kudos-button-block.js'), [ 'wp-i18n', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post', 'wp-api' ], $this->version, true );
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_DIR . 'languages');
 	}
 
 	/**

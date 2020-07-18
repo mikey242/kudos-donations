@@ -5,22 +5,6 @@ namespace Kudos;
 class Kudos_Button {
 
 	/**
-	 * @var string|null
-	 */
-	private $redirectUrl;
-	/**
-	 * @var string|null
-	 */
-	private $label;
-	/**
-	 * @var string|null
-	 */
-	private $text;
-	/**
-	 * @var string|null
-	 */
-	private $header;
-	/**
 	 * @var bool
 	 */
 	private $ready;
@@ -40,6 +24,10 @@ class Kudos_Button {
 	 * @var mixed
 	 */
 	private $target;
+	/**
+	 * @var bool|mixed|void
+	 */
+	private $label;
 
 
 	/**

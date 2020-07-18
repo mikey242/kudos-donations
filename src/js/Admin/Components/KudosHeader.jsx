@@ -11,7 +11,7 @@ const KudosHeader = (props) => {
             <div className="dashboard-wrap flex items-center justify-between">
                 <div className="flex">
                     <img width="30" src={logo} alt="Kudos Logo"/>
-                    <h1>{__('Kudos Settings')}</h1>
+                    <h1>{__('Kudos Settings', 'kudos-donations')}</h1>
                 </div>
                 <div className="kudos-dashboard-header__right">
                     <span style={{textTransform: 'capitalize'}} className={

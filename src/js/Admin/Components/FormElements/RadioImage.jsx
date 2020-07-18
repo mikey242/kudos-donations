@@ -13,8 +13,8 @@ const RadioImage = props => {
         <PanelRow>
 
             <BaseControl
-                label={__(props.label, 'kudos-donations')}
-                help={__(props.help, 'kudos-donations')}
+                label={props.label}
+                help={props.help}
                 className={"components-kudos-radio-buttons" + (props.className ? ' ' + props.className : '')}
             >
                 <ButtonGroup>

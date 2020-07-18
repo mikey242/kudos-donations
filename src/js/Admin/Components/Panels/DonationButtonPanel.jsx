@@ -2,8 +2,6 @@ const { __ } = wp.i18n;
 
 const {
     PanelBody,
-    ColorPalette,
-    BaseControl
 } = wp.components;
 
 import {TextInput} from "../FormElements/TextInput"
@@ -30,9 +28,9 @@ const DonationButtonPanel = props => {
 
             <TextInput
                 id='_kudos_button_label'
-                label="Button label"
+                label={__("Button label", 'kudos-donations')}
                 value={props.settings._kudos_button_label}
-                placeHolder='Button label'
+                placeHolder={__('Button label', 'kudos-donations')}
                 disabled={props.isSaving}
                 onChange={props.handleInputChange}
             />
