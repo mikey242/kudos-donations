@@ -222,8 +222,8 @@ class Kudos_Admin {
 		if ('delete' === $table->current_action()) {
 			$message = __('Transaction deleted', 'kudos-donations');
 		} elseif ('bulk-delete' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
-			/* translators: %s: Number of transactions */
-			$message = sprintf(__('%s transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
+			/* translators: %: Number of transactions */
+			$message = sprintf(__('% transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
         }
 	    ?>
 	    <div class="wrap">
