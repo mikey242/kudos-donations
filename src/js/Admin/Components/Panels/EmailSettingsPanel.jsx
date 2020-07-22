@@ -48,6 +48,17 @@ const EmailSettingsPanel = ( props ) => {
 				onChange={ props.handleInputChange }
 			/>
 			<TextInput
+				id="_kudos_smtp_port"
+				label={ __( 'Port', 'kudos-donations' ) }
+				help={ __(
+					'587 (TLS), 465 (SSL), 25 (Unencrypted)',
+					'kudos-donations'
+				) }
+				value={ props.settings._kudos_smtp_port }
+				placeholder="587"
+				onChange={ props.handleInputChange }
+			/>
+			<TextInput
 				id="_kudos_smtp_username"
 				label={ __( 'Username', 'kudos-donations' ) }
 				help={ __(
@@ -68,14 +79,14 @@ const EmailSettingsPanel = ( props ) => {
 				onChange={ props.handleInputChange }
 			/>
 			<TextInput
-				id="_kudos_smtp_port"
-				label={ __( 'Port', 'kudos-donations' ) }
+				id="_kudos_smtp_from"
+				label={ __( 'From address', 'kudos-donations' ) }
 				help={ __(
-					'587 (TLS), 465 (SSL), 25 (Unencrypted)',
+					'The email address emails will appear to be sent from. Leave empty to use same as username.',
 					'kudos-donations'
 				) }
-				value={ props.settings._kudos_smtp_port }
-				placeholder="587"
+				value={ props.settings._kudos_smtp_from }
+				placeholder="user@domain.com"
 				onChange={ props.handleInputChange }
 			/>
 		</Fragment>
