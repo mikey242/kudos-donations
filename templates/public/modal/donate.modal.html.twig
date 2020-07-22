@@ -109,6 +109,7 @@
 
             {#   ADDRESS TAB   #}
             <fieldset class="form-tab form-tab-address">
+                <p class="kudos_modal_text">{{__('Please fill in you address', 'kudos-donations')}} {{ address_required ? null : '(' ~ __('optional', 'kudos-donations') ~ ')' }}</p>
                 <label>
                     <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
                 </label>
