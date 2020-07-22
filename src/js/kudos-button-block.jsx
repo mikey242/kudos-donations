@@ -138,7 +138,10 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 					>
 						<PanelRow>
 							<TextControl
-								label={ __( 'Button name', 'kudos-donations' ) }
+								label={ __(
+									'Donation label',
+									'kudos-donations'
+								) }
 								type={ 'text' }
 								value={ buttonName }
 								onChange={ onChangeName }

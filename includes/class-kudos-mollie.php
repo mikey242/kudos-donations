@@ -118,7 +118,7 @@ class Kudos_Mollie
 	 * @param string $interval
 	 * @param string $years
 	 * @param string $redirectUrl
-	 * @param string $button_name
+	 * @param string $donation_label
 	 * @param string|null $name
 	 * @param string|null $email
 	 * @param string|null $customerId
@@ -126,7 +126,7 @@ class Kudos_Mollie
 	 * @return bool|object
 	 * @since      1.0.0
 	 */
-	public function create_payment($value, $interval, $years, $redirectUrl, $button_name, $name=null, $email=null, $customerId=null) {
+	public function create_payment($value, $interval, $years, $redirectUrl, $donation_label, $name=null, $email=null, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
 		$order_id = 'kdo_'.time();
@@ -164,7 +164,7 @@ class Kudos_Mollie
 		];
 
 		if(WP_DEBUG) {
-			$paymentArray['webhookUrl'] = 'https://092120b9a0a6.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+			$paymentArray['webhookUrl'] = 'https://887dd64e4e2f.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 		}
 
 		// Link payment to customer if specified
@@ -182,7 +182,8 @@ class Kudos_Mollie
 				'currency' => $currency,
 				'status' => $payment->status,
 				'sequence_type' => $payment->sequenceType,
-				'button_name' => $button_name
+				'donation_label' => $donation_label,
+				'mode' => $this->apiMode
 			]);
 
 			return $payment;
@@ -253,7 +254,7 @@ class Kudos_Mollie
         ];
 
         if(WP_DEBUG) {
-	        $subscriptionArray['webhookUrl'] = 'https://092120b9a0a6.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+	        $subscriptionArray['webhookUrl'] = 'https://887dd64e4e2f.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 	        unset($subscriptionArray['startDate']);  // Disable for test mode
         }
 

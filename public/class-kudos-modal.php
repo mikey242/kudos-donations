@@ -88,7 +88,7 @@ class Kudos_Modal {
 	            'address_required' => get_option('_kudos_address_required'),
 			    'privacy_link' => $privacy_link,
 	            'return_url' => $this->returnUrl,
-			    'button_name' => $atts['button_name'],
+			    'donation_label' => $atts['donation_label'],
 		        'payment_by' => __('Secure payment by', 'kudos-donations'),
 		        'vendor' => (get_option('_kudos_payment_vendor') ? get_option('_kudos_payment_vendor') : 'mollie')
 		    ];

@@ -129,7 +129,7 @@ class Kudos_Public {
 		$city = sanitize_text_field($form['city']);
 		$country = sanitize_text_field($form['country']);
 		$redirectUrl = sanitize_text_field($form['return_url']);
-		$buttonName = sanitize_text_field($form['button_name']);
+		$buttonName = sanitize_text_field($form['donation_label']);
 		$customerId = null;
 
 		$mollie = new Kudos_Mollie();
@@ -259,7 +259,7 @@ class Kudos_Public {
 			$atts = shortcode_atts(
 				[
 					'label' => '',
-					'button_name' => '',
+					'donation_label' => '',
 					'alignment' => '',
 					'modalHeader' => '',
 					'modalBody'  => ''
@@ -326,7 +326,7 @@ class Kudos_Public {
 		$modalId = $modal->get_id();
 		$modal = $modal->get_payment_modal([
 			'header' => $attr['modalHeader'],
-			'button_name' => (!empty($attr['buttonName']) ? $attr['buttonName'] : get_the_title()),
+			'donation_label' => (!empty($attr['buttonName']) ? $attr['buttonName'] : get_the_title()),
 			'text' => $attr['modalBody'],
 			'color' => (!empty($attr['color']) ? $attr['color'] : null)
 		]);
