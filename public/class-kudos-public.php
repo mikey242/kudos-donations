@@ -80,22 +80,15 @@ class Kudos_Public {
 	 */
 	public function enqueue_scripts() {
 
+		$handle = $this->plugin_name . '-public';
+
 		wp_enqueue_script( 'micromodal', plugin_dir_url( __FILE__ ) . '../dist/js/vendor/micromodal.min.js', [], '0.4.6', true );
 		wp_enqueue_script( 'jquery-validate', plugin_dir_url( __FILE__ ) . '../dist/js/vendor/jquery.validate.min.js', [ 'jquery' ], '1.19.1', true );
-		wp_enqueue_script( $this->plugin_name . '-public', get_asset_url('kudos-public.js'), [ 'jquery', 'jquery-validate', 'micromodal' ], $this->version, true );
-		wp_localize_script( $this->plugin_name . '-public', 'kudos', [
+		wp_enqueue_script( $handle, get_asset_url('kudos-public.js'), ['jquery', 'micromodal', 'jquery-validate'], $this->version, true );
+		wp_localize_script( $handle, 'kudos', [
 		        'ajaxurl' => admin_url('admin-ajax.php'),
-                'oneoff' => __('One-off', 'kudos-donations'),
-                'recurring' => __('Recurring', 'kudos-dontaions'),
-                'label_amount' => __('Amount', 'kudos-donations'),
-                'name_required' => __('Your name is required', 'kudos-donations'),
-                'email_required' => __('Your email is required', 'kudos-donations'),
-                'email_invalid' => __('Please enter a valid email', 'kudos-donations'),
-                'value_required' => __('Donation amount is required', 'kudos-donations'),
-                'value_minimum' => __('Minimum donation is 1 euro', 'kudos-donations'),
-                'value_digits' => __('Only digits are valid', 'kudos-donations')
         ]);
-
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_DIR . 'languages');
 	}
 
 	/**
