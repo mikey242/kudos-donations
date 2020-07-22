@@ -17,6 +17,10 @@ class Kudos_Mailer
 	 * @var Kudos_Invoice
 	 */
 	private $invoice;
+	/**
+	 * @var bool|mixed|void
+	 */
+	private $from;
 
 	/**
 	 * Kudos_Mailer constructor.
@@ -26,6 +30,7 @@ class Kudos_Mailer
 	public function __construct() {
 		$this->logger = new Kudos_Logger();
 		$this->invoice = new Kudos_Invoice();
+		$this->from = "From: Kudos " . __('Donations', 'kudos-donations') . ' <' . (get_option('_kudos_smtp_from') ?: get_option('_kudos_smtp_username')) . '>';
 	}
 
 	/**
@@ -74,7 +79,7 @@ class Kudos_Mailer
 
 		$bcc = get_option('_kudos_email_bcc');
 
-		$headers[] = "From: Kudos Donations <wordpress@iseard.media>";
+		$headers[] = $this->from;
 		if(filter_var($bcc, FILTER_SANITIZE_EMAIL)) {
 			$headers[] = "bcc: " . get_option('_kudos_email_bcc');
 		}
@@ -127,11 +132,11 @@ class Kudos_Mailer
 		$twig = new Kudos_Twig();
 		$body = $twig->render('emails/test.html.twig', ['website_name' => get_bloginfo('name')]);
 
-		$headers = [
-			"From: Kudos Donations <wordpress@iseard.media>"
-		];
+		$headers[] = $this->from;
 
 		$result = self::send($email, __('Test email', 'kudos-donations'), $body, $headers);
+
+//		die($this->from);
 
 		if($result) {
 			/* translators: %s: API mode */
