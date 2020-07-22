@@ -84,11 +84,7 @@ module.exports = {
 				loader: 'babel-loader',
 				options: {
 					babelrc: false,
-					plugins: [
-						'lodash',
-						'@wordpress/babel-plugin-import-jsx-pragma',
-						'@babel/plugin-transform-react-jsx',
-					],
+					plugins: [ 'lodash' ],
 					presets: [ '@wordpress/default' ],
 				},
 			},
@@ -141,7 +137,9 @@ module.exports = {
 		new MiniCssExtractPlugin( {
 			filename: 'css/[name].[contenthash].css',
 		} ),
-		new CleanWebpackPlugin(),
+		new CleanWebpackPlugin({
+			cleanStaleWebpackAssets: false,
+		}),
 		new CopyWebpackPlugin( [ ...vendorCopies ] ),
 		new WebpackAssetsManifest(),
 	],
@@ -157,7 +155,10 @@ module.exports = {
  */
 function mapVendorCopies( buildTarget ) {
 	return Object.keys( vendors ).map( ( filename ) => ( {
-		from: join( __dirname, `node_modules/${ vendors[ filename ] }/${filename}` ),
+		from: join(
+			__dirname,
+			`node_modules/${ vendors[ filename ] }/${ filename }`
+		),
 		to: join( __dirname, `${ buildTarget }/js/vendor/${ filename }` ),
 	} ) );
 }
