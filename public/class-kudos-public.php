@@ -192,7 +192,8 @@ class Kudos_Public {
 				case 'paid':
 					$vars = [
 						'{{value}}' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
-						'{{name}}' => $transaction->name
+						'{{name}}' => $transaction->name,
+						'{{email}}' => $transaction->email
 					];
 					$return['header'] = strtr(get_option('_kudos_return_message_header'), $vars);
 					$return['text'] = strtr(get_option('_kudos_return_message_text'), $vars);
