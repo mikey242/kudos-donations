@@ -14,7 +14,7 @@ const MolliePanel = ( props ) => {
 	return (
 		<PanelBody
 			title={ __( 'Mollie', 'kudos-donations' ) }
-			initialOpen={ false }
+			initialOpen={ true }
 		>
 			<RadioImage
 				isPrimary
