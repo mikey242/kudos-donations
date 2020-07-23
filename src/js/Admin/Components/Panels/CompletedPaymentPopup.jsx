@@ -1,5 +1,6 @@
 import { Toggle } from '../FormElements/Toggle';
 import { TextInput } from '../FormElements/TextInput';
+import { Info } from '../FormElements/Info';
 
 const { __ } = wp.i18n;
 
@@ -57,6 +58,11 @@ const CompletedPaymentPopup = ( props ) => {
 								) }
 								disabled={ props.isSaving }
 								onChange={ props.handleInputChange }
+							/>
+							<Info
+								text={ __(
+									'You can use the following variables in the above fields: {{name}}, {{email}}, {{value}}'
+								) }
 							/>
 						</Fragment>,
 				  ]
