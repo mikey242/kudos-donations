@@ -69,7 +69,6 @@
 }
 
 #kudos-settings {
-
   .dashboard-wrap {
     margin-left: auto;
     margin-right: auto;
@@ -115,6 +114,17 @@
         @apply border-orange-500;
         box-shadow: 0 0 1px theme('colors.orange.500');
       }
+    }
+  }
+
+  .components-kudos-info {
+    * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .dashicon {
+      margin-right: 5px;
     }
   }
 
@@ -168,7 +178,6 @@
   }
 
   .kudos-tab-panel {
-
     .components-tab-panel__tabs {
       display: flex;
       justify-content: center;
