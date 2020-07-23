@@ -168,9 +168,9 @@ class Kudos_Mailer
 		$mail = wp_mail($to, $subject, $body, $headers, $attachment);
 
 		if($mail) {
-			$this->logger->log(sprintf(__('Email with subject "%s" sent to "%s"', 'kudos_donations'), $subject, $to));
+			$this->logger->info(sprintf(__('Email with subject "%s" sent to "%s"', 'kudos_donations'), $subject, $to));
 		} else {
-			$this->logger->log(sprintf(__('Email with subject "%s" failed to be sent to "%s"', 'kudos_donations'), $subject, $to), 'WARNING');
+			$this->logger->error(sprintf(__('Email with subject "%s" failed to be sent to "%s"', 'kudos_donations'), $subject, $to));
 		}
 
 		// Remove action to prevent conflict

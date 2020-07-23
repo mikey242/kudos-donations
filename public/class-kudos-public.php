@@ -114,7 +114,7 @@ class Kudos_Public {
 
 		parse_str($_REQUEST['form'], $form);
 		if(!wp_verify_nonce($form['_wpnonce'], 'kudos_submit')) {
-			$this->logger->log('wp_verify_nonce failed', 'CRITICAL');
+			$this->logger->critical('wp_verify_nonce failed', [$form]);
 			wp_send_json_error(['message' => __('Request invalid.', 'kudos-donations')]);
 		}
 

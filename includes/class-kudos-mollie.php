@@ -62,7 +62,7 @@ class Kudos_Mollie
 			try {
 				$this->mollieApi->setApiKey($this->apiKey);
 			} catch (ApiException $e) {
-				$this->logger->log($e->getMessage(), 'CRITICAL');
+				$this->logger->critical($e->getMessage(), 'CRITICAL');
 			}
 		}
 	}
@@ -87,7 +87,7 @@ class Kudos_Mollie
 			$mollieApi->setApiKey($apiKey);
 			$mollieApi->payments->page();
 		} catch ( ApiException $e) {
-			$this->logger->log($e->getMessage(), 'CRITICAL');
+			$this->logger->critical($e->getMessage());
 			return false;
 		}
 		return true;
@@ -106,7 +106,7 @@ class Kudos_Mollie
 		try {
 			return $mollieApi->payments->get($mollie_payment_id);
 		} catch (ApiException $e) {
-			$this->logger->log($e->getMessage(), 'CRITICAL');
+			$this->logger->critical($e->getMessage());
 		}
 		return false;
 	}
@@ -164,7 +164,7 @@ class Kudos_Mollie
 		];
 
 		if(WP_DEBUG) {
-			$paymentArray['webhookUrl'] = 'https://887dd64e4e2f.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+			$paymentArray['webhookUrl'] = 'https://26713be09117.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 		}
 
 		// Link payment to customer if specified
@@ -189,7 +189,7 @@ class Kudos_Mollie
 			return $payment;
 
 		} catch (ApiException $e) {
-			$this->logger->log($e->getMessage(), 'CRITICAL', $paymentArray);
+			$this->logger->critical($e->getMessage(), $paymentArray);
 			return false;
 		}
 
@@ -212,7 +212,7 @@ class Kudos_Mollie
 			$customer = $mollieApi->customers->get($customerId);
 			return $customer->subscriptions();
 		} catch (ApiException $e) {
-			$this->logger->log($e->getMessage(), 'CRITICAL');
+			$this->logger->critical($e->getMessage());
 			return false;
 		}
 
@@ -254,7 +254,7 @@ class Kudos_Mollie
         ];
 
         if(WP_DEBUG) {
-	        $subscriptionArray['webhookUrl'] = 'https://887dd64e4e2f.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+	        $subscriptionArray['webhookUrl'] = 'https://26713be09117.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 	        unset($subscriptionArray['startDate']);  // Disable for test mode
         }
 
@@ -268,7 +268,7 @@ class Kudos_Mollie
             $mandate = $mollieApi->mandates->getFor($customer, $mandateId);
 
 			if(!$mandate->status === 'pending' || !$mandate->status === 'valid') {
-				$this->logger->log('Cannot create subscription as customer has no valid mandates.', 'CRITICAL', [$customer_id]);
+				$this->logger->error('Cannot create subscription as customer has no valid mandates.', [$customer_id]);
 				return false;
 			}
 
@@ -283,7 +283,7 @@ class Kudos_Mollie
 	        return false;
 
         } catch (ApiException $e) {
-            $this->logger->log($e->getMessage(), 'CRITICAL', [$customer_id, $subscriptionArray]);
+            $this->logger->critical($e->getMessage(), [$customer_id, $subscriptionArray]);
             return false;
         }
     }
@@ -310,7 +310,7 @@ class Kudos_Mollie
 		try {
 			return $mollieApi->customers->create($customerArray);
 		} catch (ApiException $e) {
-			$this->logger->log($e->getMessage(), 'CRITICAL');
+			$this->logger->critical($e->getMessage());
 			return false;
 		}
 
@@ -333,12 +333,12 @@ class Kudos_Mollie
 			$subscription = $kudos_subscription->get_by(['subscription_id' => $subscriptionId]);
 
 			if(empty($subscription)) {
-				$this->logger->log("Could not find subscription.", 'DEBUG', [$subscriptionId]);
+				$this->logger->debug("Could not find subscription.", [$subscriptionId]);
 				return false;
 			}
 
 			if($subscription->status !== 'active') {
-				$this->logger->log("Subscription already canceled.", 'DEBUG', [$subscriptionId]);
+				$this->logger->debug("Subscription already canceled.", [$subscriptionId]);
 				return false;
 			}
 
@@ -349,7 +349,7 @@ class Kudos_Mollie
 			$customer = $mollieApi->customers->get($customerId);
 			$subscription = $customer->cancelSubscription($subscriptionId);
 			if($subscription) {
-				$this->logger->log($subscriptionId . " cancelled.", 'DEBUG', [$customerId, $subscription]);
+				$this->logger->debug($subscriptionId . " cancelled.", [$customerId, $subscription]);
 				$kudos_subscription = $this->subscription;
 				$kudos_subscription->update([
 					'status' => 'cancelled'
@@ -360,7 +360,7 @@ class Kudos_Mollie
 				return true;
 			}
 		} catch (ApiException $e) {
-			$this->logger->log($e->getMessage(), 'CRITICAL', [$customerId, $subscriptionId]);
+			$this->logger->critical($e->getMessage(), [$customerId, $subscriptionId]);
 			return false;
 		}
 
@@ -482,9 +482,7 @@ class Kudos_Mollie
 		$sequence_type = $payment->sequenceType;
 		$transaction_id = $payment->id;
 
-		/* translators: %s: Mollie */
-		$note = sprintf(__( 'Webhook requested by %s.', 'kudos-donations' ),'Mollie');
-		$this->logger->log($note, 'INFO', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
+		$this->logger->info('Webhook requested by Mollie.', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
 
 		// Kudos_Transaction class
 		$kudos_transaction = $this->transaction;
@@ -492,9 +490,9 @@ class Kudos_Mollie
 		// Get local transaction if exists
 		$transaction = $kudos_transaction->get_transaction_by(['transaction_id' => $transaction_id]);
 
-		// If status exists and is set to paid then assume payment already handled
-		if(!empty($transaction) && $transaction->status === 'paid') {
-			$this->logger->log('Payment already handled, skipping', 'DEBUG', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
+		// If status exists and is not set to open then assume payment already handled
+		if(!empty($transaction) && $transaction->status !== 'open') {
+			$this->logger->info('Payment already handled, skipping', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
 			return $response;
 		}
 
@@ -536,7 +534,7 @@ class Kudos_Mollie
 			$transaction = $this->transaction->get_transaction_by(['order_id' => $order_id]);
 			$timestamp = (WP_DEBUG ? time() : '+1 minute');
 			as_schedule_single_action(strtotime($timestamp), 'kudos_process_transaction_action', [$transaction]);
-
+			$this->logger->debug('kudos_process_transaction_action scheduled', [date('Y-m-d H:i:s', $timestamp)]);
 			// Set up recurring payment if sequence is first
 			if($payment->sequenceType === 'first') {
 				$kudos_mollie = new Kudos_Mollie();

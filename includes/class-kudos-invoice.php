@@ -116,7 +116,7 @@ class Kudos_Invoice
 			}
 
 		} catch (Throwable $e) {
-			$this->logger->log($e->getMessage(), 'CRITICAL');
+			$this->logger->critical($e->getMessage());
 			return false;
 		}
 
