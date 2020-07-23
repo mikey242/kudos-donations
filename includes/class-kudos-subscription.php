@@ -30,7 +30,7 @@ class Kudos_Subscription {
 	 * @param $status
 	 *
 	 * @return bool|false|int
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function insert_subscription($transaction_id, $customer_id, $interval, $years, $value, $currency, $k_subscription_id, $subscription_id, $status) {
 		return $this->insert([

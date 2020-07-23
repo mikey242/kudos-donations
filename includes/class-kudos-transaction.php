@@ -38,7 +38,7 @@ class Kudos_Transaction {
 	 * @param array $array
 	 *
 	 * @return false|int
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 *
 	 */
 	public function update_transaction($order_id, $array) {
@@ -50,7 +50,7 @@ class Kudos_Transaction {
 	 * Returns all transactions
 	 *
 	 * @return object|null
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function get_transactions() {
 

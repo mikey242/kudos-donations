@@ -11,7 +11,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Class constructor
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 */
 	public function __construct() {
 
@@ -28,7 +28,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Add extra markup in the toolbars before or after the list
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
 	 */
 	function extra_tablenav( $which ) {
@@ -52,7 +52,7 @@ class Donors_Table extends WP_List_Table {
 	 * Get the table data
 	 *
 	 * @return array
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 */
 	public function fetch_table_data() {
 		global $wpdb;
@@ -77,7 +77,7 @@ class Donors_Table extends WP_List_Table {
 	 *
 	 * @param array $rows
 	 * @return array
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function export_column_names($rows) {
 
@@ -122,7 +122,7 @@ class Donors_Table extends WP_List_Table {
 	 * Returns a list of columns to include in table
 	 *
 	 * @return array
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function column_names() {
 		return [
@@ -137,7 +137,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Define which columns are hidden
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @return array
 	 */
 	public function get_hidden_columns()
@@ -151,7 +151,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Define the sortable columns
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @return array
 	 */
 	public function get_sortable_columns()
@@ -171,7 +171,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Render the bulk edit checkbox
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
 	 */
@@ -204,7 +204,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Email column
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
 	 */
@@ -217,7 +217,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Address column
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
 	 */
@@ -235,7 +235,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Donations column
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
 	 */
@@ -260,7 +260,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Returns an associative array containing the bulk action
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @return array|string[]
 	 */
 	function get_bulk_actions() {
@@ -272,7 +272,7 @@ class Donors_Table extends WP_List_Table {
 	/**
 	 * Process cancel and bulk-cancel actions
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 */
 	public function process_bulk_action() {
 

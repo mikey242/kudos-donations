@@ -47,7 +47,7 @@ class Kudos_Invoice
 	/**
 	 * Checks if invoice file is writeable and returns true if it is
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 * @return bool
 	 */
 	public static function isWriteable() {
@@ -130,7 +130,7 @@ class Kudos_Invoice
 	 * @param bool $path
 	 *
 	 * @return bool|string
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function get_invoice($order_id, $path=false) {
 
@@ -150,7 +150,7 @@ class Kudos_Invoice
 	/**
 	 * Regenerates all paid invoices from the twig template
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public static function regenerate_invoices() {
 

@@ -317,7 +317,7 @@ class Kudos_Public {
 	 * @param $attr
 	 *
 	 * @return bool|string
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function kudos_render_callback($attr) {
 
@@ -375,7 +375,7 @@ class Kudos_Public {
 	 * @param $vars
 	 *
 	 * @return mixed
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function register_vars($vars) {
 
@@ -389,7 +389,7 @@ class Kudos_Public {
 	/**
 	 * Checks for cancel subscription query vars and cancels subscription if valid
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function get_cancel_vars() {
 
@@ -426,7 +426,7 @@ class Kudos_Public {
 	 * @param $transaction
 	 *
 	 * @return bool
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public static function process_transaction($transaction) {
 

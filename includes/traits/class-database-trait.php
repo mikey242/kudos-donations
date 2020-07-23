@@ -18,7 +18,7 @@ trait Database_Trait {
 	/**
 	 * Database object constructor.
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function __construct() {
 
@@ -40,7 +40,7 @@ trait Database_Trait {
 	 *
 	 * @return false|int
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function update($fields, $where) {
 		return $this->wpdb->update(
@@ -55,7 +55,7 @@ trait Database_Trait {
 	 * @param array $fields
 	 *
 	 * @return bool|false|int
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function insert($fields) {
 		return $this->wpdb->insert(
@@ -73,7 +73,7 @@ trait Database_Trait {
 	 *
 	 * @return object|null
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function get_by($query_fields, $return_fields=["*"], $before_where=null, $after_where=null) {
 
@@ -104,7 +104,7 @@ trait Database_Trait {
 	 *
 	 * @return array|null
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function get_all_by($query_fields, $return_fields=["*"]) {
 
@@ -134,7 +134,7 @@ trait Database_Trait {
 	 *
 	 * @return array|object|null
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function get_all($query=null, $format=OBJECT) {
 		$wpdb = $this->wpdb;

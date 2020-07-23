@@ -107,7 +107,7 @@ class Transactions_Table extends WP_List_Table {
 	 *
 	 * @param array $rows
 	 * @return array
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function export_column_names($rows) {
 
@@ -155,7 +155,7 @@ class Transactions_Table extends WP_List_Table {
 	 * Returns a list of columns to include in table
 	 *
 	 * @return array
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function column_names() {
 		return [

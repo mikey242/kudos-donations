@@ -183,7 +183,7 @@ class Kudos_Mailer
 	/**
 	 * REST route for checking API keys
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function register_send_test_email() {
 		register_rest_route('kudos/v1', 'email/test', [

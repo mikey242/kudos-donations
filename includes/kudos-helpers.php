@@ -93,7 +93,7 @@ function color_luminance( $hex, $percent ) {
 /**
  * Returns a translated string of the sequence type
  *
- * @since   1.1.0
+ * @since   2.0.0
  * @param $text
  *
  * @return string|void
@@ -112,7 +112,7 @@ function get_sequence_type($text) {
 /**
  * Returns subscription frequency name based on number of months
  *
- * @since   1.1.0
+ * @since   2.0.0
  * @param $frequency
  *
  * @return string|void

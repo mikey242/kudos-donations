@@ -11,7 +11,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Class constructor
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 */
 	public function __construct() {
 
@@ -28,7 +28,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Add extra markup in the toolbars before or after the list
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
 	 */
 	function extra_tablenav( $which ) {
@@ -53,7 +53,7 @@ class Subscriptions_Table extends WP_List_Table {
 	 * Get the table data
 	 *
 	 * @return array
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 */
 	public function fetch_table_data() {
 		global $wpdb;
@@ -87,7 +87,7 @@ class Subscriptions_Table extends WP_List_Table {
 	 *
 	 * @param array $rows
 	 * @return array
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function export_column_names($rows) {
 
@@ -132,7 +132,7 @@ class Subscriptions_Table extends WP_List_Table {
 	 * Returns a list of columns to include in table
 	 *
 	 * @return array
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function column_names() {
 		return [
@@ -150,7 +150,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Gets view data
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @return array
 	 */
 	protected function get_views() {
@@ -187,7 +187,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Define which columns are hidden
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @return array
 	 */
 	public function get_hidden_columns()
@@ -200,7 +200,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Define the sortable columns
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @return array
 	 */
 	public function get_sortable_columns()
@@ -224,7 +224,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Render the bulk edit checkbox
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
 	 */
@@ -237,7 +237,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Time (date) column
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item an array of DB data
 	 * @return string
 	 */
@@ -256,7 +256,7 @@ class Subscriptions_Table extends WP_List_Table {
 	}
 
 	/**
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param $item
 	 * @return string|void
 	 */
@@ -265,7 +265,7 @@ class Subscriptions_Table extends WP_List_Table {
 	}
 
 	/**
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param $item
 	 * @return string|void
 	 */
@@ -277,7 +277,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Email column
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
 	 */
@@ -290,7 +290,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Value (amount) column
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item
 	 * @return string|void
 	 */
@@ -306,7 +306,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Payment status column
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param array $item
 	 * @return string|void
 	 */
@@ -330,7 +330,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Returns an associative array containing the bulk action
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @return array|string[]
 	 */
 	function get_bulk_actions() {
@@ -342,7 +342,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Cancel a subscription.
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @param int $subscription_id order ID
 	 */
 	public static function cancel_subscription( $subscription_id ) {
@@ -355,7 +355,7 @@ class Subscriptions_Table extends WP_List_Table {
 	/**
 	 * Process cancel and bulk-cancel actions
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 */
 	public function process_bulk_action() {
 

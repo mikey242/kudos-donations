@@ -28,7 +28,7 @@ class Kudos_Donor {
 	 * @param string|null $country
 	 *
 	 * @return bool|false|int
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function insert_donor($email, $customer_id, $name=null, $street=null, $postcode=null, $city=null, $country=null) {
 
@@ -52,7 +52,7 @@ class Kudos_Donor {
 	 *
 	 * @return false|int
 	 *
-	 * * @since   1.1.0
+	 * * @since   2.0.0
 	 */
 	public function update_donor($email, $array) {
 

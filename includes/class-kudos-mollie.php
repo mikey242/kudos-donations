@@ -198,7 +198,7 @@ class Kudos_Mollie
 	/**
 	 * Returns all subscriptions for customer
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 * @param $customerId
 	 *
 	 * @return BaseCollection|bool
@@ -227,7 +227,7 @@ class Kudos_Mollie
 	 * @param $years
 	 *
 	 * @return bool|object
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 */
 	public function create_subscription($transaction, $mandateId, $interval, $years) {
 
@@ -293,7 +293,7 @@ class Kudos_Mollie
 	 * @param $name
 	 *
 	 * @return bool|object
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function create_customer($email, $name) {
 
@@ -389,7 +389,7 @@ class Kudos_Mollie
 	/**
 	 * REST route for checking API keys
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	function register_api_key_check() {
 		register_rest_route('kudos/v1', 'mollie/admin', [

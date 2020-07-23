@@ -39,7 +39,7 @@ trait Table_Trait {
 	 * @param null|string $value
 	 *
 	 * @return array|object|null
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function count_records( $column=null, $value=null ) {
 		global $wpdb;
@@ -62,7 +62,7 @@ trait Table_Trait {
 	/**
 	 * Columns to show
 	 *
-	 * @since      1.1.0
+	 * @since      2.0.0
 	 * @return array
 	 */
 	public function get_columns() {

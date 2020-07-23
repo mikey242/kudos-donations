@@ -62,7 +62,7 @@ class Kudos_Admin {
 	/**
 	 * Registers REST routes
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 * @return void
 	 */
 	public function register_routes() {
@@ -85,7 +85,7 @@ class Kudos_Admin {
 	/**
      * Create the Kudos Donations admin pages
      *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function kudos_add_menu_pages() {
 
@@ -166,7 +166,7 @@ class Kudos_Admin {
 	/**
      * Assets specific to the Kudos Settings page
      *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function kudos_settings_page_assets() {
 
@@ -188,7 +188,7 @@ class Kudos_Admin {
 	/**
 	 * Assets specific to the Kudos Transactions page
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function kudos_transactions_page_assets() {
 		wp_enqueue_script( $this->plugin_name . '-transactions', get_asset_url('kudos-admin-transactions.js'), [ 'jquery' ], $this->version, false );
@@ -200,7 +200,7 @@ class Kudos_Admin {
 	/**
 	 * Assets specific to the Kudos Subscriptions page
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 */
 	public function kudos_subscriptions_page_assets() {
 		wp_enqueue_script( $this->plugin_name . '-subscriptions', get_asset_url('kudos-admin-subscriptions.js'), [ 'jquery' ], $this->version, false );
@@ -362,7 +362,7 @@ class Kudos_Admin {
 	/**
 	 * Returns diagnostic information
 	 *
-	 * @since   1.1.0
+	 * @since   2.0.0
 	 * @return string
 	 */
 	public function diagnostics() {
@@ -382,7 +382,7 @@ class Kudos_Admin {
 	/**
 	 * Debug page render
      *
-     * @since   1.1.0
+     * @since   2.0.0
 	 */
 	public function kudos_debug() {
 
