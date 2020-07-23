@@ -235,6 +235,11 @@ div[id^='kudos_modal-'] {
       }
     }
 
+    input.error,
+    select.error,
+    input.error ~ .checkmark {
+      border: 2px solid theme('colors.red.500');
+    }
 
     .kudos_input_group {
       @apply block mt-4;
@@ -280,10 +285,6 @@ div[id^='kudos_modal-'] {
       &::before {
         @apply bg-orange-500;
       }
-    }
-
-    input.error {
-      border: 2px solid theme('colors.red.500');
     }
   }
 }
