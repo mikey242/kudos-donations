@@ -112,6 +112,7 @@ class Kudos_Invoice
 			}
 
 			if(file_put_contents($file, $pdf)) {
+				$this->logger->debug('Invoice successfully generated', ['file' => $file]);
 				return $file;
 			}
 
