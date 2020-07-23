@@ -22,6 +22,14 @@ const { Placeholder, Spinner, TabPanel } = wp.components;
 
 const { Component, Fragment } = wp.element;
 
+function getTabName() {
+	const searchParams = new URLSearchParams( window.location.search );
+	if ( searchParams.has( 'tabName' ) ) {
+		return searchParams.get( 'tabName' );
+	}
+	return 'mollie';
+}
+
 class KudosAdmin extends Component {
 	constructor() {
 		super( ...arguments );
@@ -36,6 +44,7 @@ class KudosAdmin extends Component {
 		this.checkApiKey = this.checkApiKey.bind( this );
 
 		this.state = {
+			tabName: getTabName(),
 			showNotice: false,
 			noticeMessage: '',
 			isMollieEdited: false,
@@ -353,7 +362,7 @@ class KudosAdmin extends Component {
 						this.changeTab( tab );
 					} }
 					activeClass="is-active"
-					initialTabName="mollie"
+					initialTabName={ this.state.tabName }
 					tabs={ [
 						{
 							name: 'mollie',
