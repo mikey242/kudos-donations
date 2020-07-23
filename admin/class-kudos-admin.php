@@ -154,7 +154,7 @@ class Kudos_Admin {
 	        add_submenu_page(
 		        'kudos-settings',
 		        'Kudos Debug',
-		        'Kudos Debug',
+		        'Debug',
 		        'manage_options',
 		        'kudos-debug',
 		        [$this, 'kudos_debug']
@@ -389,74 +389,141 @@ class Kudos_Admin {
 	    $kudos_donor = new Kudos_Donor();
 	    $kudos_mollie = new Kudos_Mollie();
 
-		echo '<div class="wrap">';
+		//Get the active tab from the $_GET param
+		$default_tab = null;
+		$tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
+		?>
 
-	    $donors = $kudos_donor->get_all();
+		<div class="wrap">
 
-	    if($donors) {
-            foreach($donors as $donor) {
+            <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
-	            $subscriptions = $kudos_mollie->get_subscriptions($donor->customer_id);
+            <nav class="nav-tab-wrapper">
+                <a href="?page=kudos-debug" class="nav-tab <?php if($tab===null):?>nav-tab-active<?php endif; ?>">Log</a>
+                <a href="?page=kudos-debug&tab=subscriptions" class="nav-tab <?php if($tab==='subscriptions'):?>nav-tab-active<?php endif; ?>">Subscriptions</a>
+            </nav>
 
-	            if(!count($subscriptions)) {
-	                continue;
-	            }
+            <div class="tab-content">
 
-	            echo "<h3><strong>" . $donor->email . "</strong> <span>(" . $donor->customer_id . ")</span></h3>";
-                echo "<form action=". admin_url( 'admin-post.php' ) ." method='post'>";
-                    wp_nonce_field('cancel_subscription', '_wpnonce');
-                    echo "<input type='hidden' name='action' value='cancel_subscription'>";
-                    echo "<input type='hidden' name='customerId' value='". $donor->customer_id ."'>";
+	        <?php
 
-                /** @var Subscription $subscription */
-	            foreach ($subscriptions as $subscription) {
-                        echo "<table class='widefat'>";
-                            echo "<tbody>";
+            switch($tab):
+                case 'subscriptions':
+                    $donors = $kudos_donor->get_all();
+                    if($donors) {
+                        foreach($donors as $donor) {
 
-                                echo "<tr>";
-                                    echo "<td class='row-title'>id</td>";
-                                    echo "<td>" . $subscription->id . "</td> ";
-                                echo "</tr>";
+                            $subscriptions = $kudos_mollie->get_subscriptions($donor->customer_id);
 
-                                echo "<tr class='alternate'>";
-                                    echo "<td class='row-title'>status</td>";
-                                    echo "<td>$subscription->status" . ($subscription->status !== 'canceled' ? " <button name='subscriptionId' type='submit' value='$subscription->id'>Cancel</button>" : "") . "</td>";
-                                echo "</tr>";
+                            if(!count($subscriptions)) {
+                                continue;
+                            }
 
-                                echo "<tr>";
-                                    echo "<td class='row-title'>amount</td>";
-                                    echo "<td>" . $subscription->amount->value . "</td>";
-                                echo "</tr> ";
+                            echo "<h3><strong>" . $donor->email . "</strong> <span>(" . $donor->customer_id . ")</span></h3>";
+                            echo "<form action=". admin_url( 'admin-post.php' ) ." method='post'>";
+                                wp_nonce_field('cancel_subscription', '_wpnonce');
+                                echo "<input type='hidden' name='action' value='cancel_subscription'>";
+                                echo "<input type='hidden' name='customerId' value='". $donor->customer_id ."'>";
 
-                                echo "<tr class='alternate'>";
-                                    echo "<td class='row-title'>interval</td>";
-                                    echo "<td>" . $subscription->interval . "</td>";
-                                echo "</tr> ";
+                            /** @var Subscription $subscription */
+                            foreach ($subscriptions as $subscription) {
+                                    echo "<table class='widefat'>";
+                                        echo "<tbody>";
 
-                                echo "<tr>";
-                                    echo "<td class='row-title'>times</td>" ;
-                                    echo "<td>". $subscription->times . "</td>";
-                                echo "</tr>";
+                                            echo "<tr>";
+                                                echo "<td class='row-title'>id</td>";
+                                                echo "<td>" . $subscription->id . "</td> ";
+                                            echo "</tr>";
 
-                                echo "<tr class='alternate'>";
-                                    echo "<td class='row-title'>next payment</td>";
-                                    echo "<td>". ($subscription->nextPaymentDate ?? 'n/a') . "</td>";
-                                echo "</tr>";
+                                            echo "<tr class='alternate'>";
+                                                echo "<td class='row-title'>status</td>";
+                                                echo "<td>$subscription->status" . ($subscription->status !== 'canceled' ? " <button name='subscriptionId' type='submit' value='$subscription->id'>Cancel</button>" : "") . "</td>";
+                                            echo "</tr>";
 
-                                echo "<tr>";
-                                    echo "<td class='row-title'>webhookUrl</td>" ;
-                                    echo "<td>". $subscription->webhookUrl . "</td>";
-                                echo "</tr>";
+                                            echo "<tr>";
+                                                echo "<td class='row-title'>amount</td>";
+                                                echo "<td>" . $subscription->amount->value . "</td>";
+                                            echo "</tr> ";
 
-                            echo "</tbody>";
-                        echo "</table>";
-                        echo "<br class='clear'>";
+                                            echo "<tr class='alternate'>";
+                                                echo "<td class='row-title'>interval</td>";
+                                                echo "<td>" . $subscription->interval . "</td>";
+                                            echo "</tr> ";
+
+                                            echo "<tr>";
+                                                echo "<td class='row-title'>times</td>" ;
+                                                echo "<td>". $subscription->times . "</td>";
+                                            echo "</tr>";
+
+                                            echo "<tr class='alternate'>";
+                                                echo "<td class='row-title'>next payment</td>";
+                                                echo "<td>". ($subscription->nextPaymentDate ?? 'n/a') . "</td>";
+                                            echo "</tr>";
+
+                                            echo "<tr>";
+                                                echo "<td class='row-title'>webhookUrl</td>" ;
+                                                echo "<td>". $subscription->webhookUrl . "</td>";
+                                            echo "</tr>";
+
+                                        echo "</tbody>";
+                                    echo "</table>";
+                                    echo "<br class='clear'>";
+                                }
+                            echo "</form>";
+                        }
                     }
-                echo "</form>";
-            }
-	    }
+                    break;
+	            default:
+                    $kudos_logger = new Kudos_Logger();
+                    $logArray = $kudos_logger->getAsArray();
+                    ?>
+                    <table class='form-table'><tbody>
+                        <tr>
+                            <th class='row-title'>Date</th>
+                            <th>Level</th>
+                            <th>Message</th>
+                        </tr>
+                    <?php foreach ($logArray as $key=>$log) {
 
-		echo '</div>';
+                            $level = $log['type'];
+	                        $style = 'border-left-width: 4px; border-left-style: solid;';
+
+                            switch ($level) {
+                                case 'CRITICAL':
+                                case 'ERROR':
+                                    $class = 'notice-error';
+                                    break;
+                                case 'DEBUG':
+                                    $class='';
+                                    $style='';
+                                    break;
+                                default:
+	                                $class = 'notice-' . strtolower( $level );
+                            }
+
+                        echo "<tr style='$style' class='". ($key %2===0 ? 'alternate' : null) ." $class'>";
+
+                            echo "<td>";
+                                echo($log['date']);
+                            echo "</td>";
+                            echo "<td>";
+                                echo($log['type']);
+                            echo "</td>";
+                            echo "<td>";
+                                echo($log['message']);
+                            echo "</td>";
+
+                        echo "</tr>";
+                    }
+                    echo "</tbody></table>";
+
+            endswitch;
+
+	    ?>
+        </div>
+
+		</div>
+        <?php
 	}
 
 	public function cancel_subscription() {
