@@ -195,7 +195,7 @@ class Donors_Table extends WP_List_Table {
 		$title = '<strong>' . date_i18n($item['donor_created'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
 
 		$actions = [
-			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['customer_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),
+			'delete' => sprintf( '<a href="?page=%s&action=%s&customer_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['customer_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),
 		];
 
 		return $title . $this->row_actions( $actions );
@@ -284,7 +284,7 @@ class Donors_Table extends WP_List_Table {
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
 					die();
 				} else {
-					self::cancel_subscription( sanitize_text_field( $_GET['customer_id'] ) );
+					self::delete_record('customer_id', sanitize_text_field( $_GET['customer_id'] ) );
 				}
 				break;
 
@@ -297,7 +297,7 @@ class Donors_Table extends WP_List_Table {
 				if(isset($_REQUEST['bulk-action'])) {
 					$cancel_ids = esc_sql( $_REQUEST['bulk-action']);
 					foreach ( $cancel_ids as $id ) {
-						self::cancel_subscription( $id );
+						self::delete_record('customer_id', $id );
 					}
 				}
 				break;
