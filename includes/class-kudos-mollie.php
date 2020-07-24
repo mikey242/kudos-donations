@@ -333,12 +333,12 @@ class Kudos_Mollie
 			$subscription = $kudos_subscription->get_by(['subscription_id' => $subscriptionId]);
 
 			if(empty($subscription)) {
-				$this->logger->debug("Could not find subscription.", [$subscriptionId]);
+				$this->logger->debug("Could not find subscription.", ['subscription_id' => $subscriptionId]);
 				return false;
 			}
 
 			if($subscription->status !== 'active') {
-				$this->logger->debug("Subscription already canceled.", [$subscriptionId]);
+				$this->logger->debug("Subscription already canceled.", ['subscription_id' => $subscriptionId]);
 				return false;
 			}
 
@@ -535,7 +535,7 @@ class Kudos_Mollie
 			$transaction = $this->transaction->get_transaction_by(['order_id' => $order_id]);
 			$timestamp = (WP_DEBUG ? time() : '+1 minute');
 			as_schedule_single_action(strtotime($timestamp), 'kudos_process_transaction_action', [$transaction]);
-			$this->logger->debug('kudos_process_transaction_action scheduled', [date('Y-m-d H:i:s', $timestamp)]);
+			$this->logger->debug('Action "kudos_process_transaction_action" scheduled', ['order_id' => $order_id, 'datetime' => date_i18n('Y-m-d H:i:s', $timestamp)]);
 			// Set up recurring payment if sequence is first
 			if($payment->sequenceType === 'first') {
 				$kudos_mollie = new Kudos_Mollie();
