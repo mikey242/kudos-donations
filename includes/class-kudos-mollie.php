@@ -181,9 +181,9 @@ class Kudos_Mollie
 				'value' => $value,
 				'currency' => $currency,
 				'status' => $payment->status,
+				'mode' => $payment->mode,
 				'sequence_type' => $payment->sequenceType,
 				'donation_label' => $donation_label,
-				'mode' => $this->apiMode
 			]);
 
 			return $payment;
@@ -511,6 +511,7 @@ class Kudos_Mollie
 				'sequence_type' => $sequence_type,
 				'transaction_id' => $payment->id,
 				'method' => $payment->method,
+				'mode' => $payment->mode,
 				'subscription_id' => $payment->subscriptionId
 			]);
 
