@@ -49,7 +49,17 @@ class Kudos_Logger extends Logger
 	 * @return bool|false|int
 	 * @since   2.0.0
 	 */
-	public function clearLogFile() {
+	public function clear() {
+
+		$file = self::LOG_FILE;
+
+		// Check nonce
+		$nonce = esc_attr( $_REQUEST['_wpnonce'] );
+		if ( ! wp_verify_nonce( $nonce, 'clear-' . basename($file) ) ) {
+			$this->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__]);
+			die();
+		}
+
 		if(!$this->isWriteable()) {
 			return false;
 		}
@@ -93,6 +103,32 @@ class Kudos_Logger extends Logger
 		preg_match_all($reg, $text, $matches,PREG_SET_ORDER, 0);
 		usort($matches, [$this, 'date_compare']);
 		return $matches;
+	}
+
+	/**
+	 * Downloads the log file
+	 *
+	 * @since   2.0.0
+	 */
+	public function download() {
+
+		$file = self::LOG_FILE;
+
+		// Check nonce
+		$nonce = esc_attr( $_REQUEST['_wpnonce'] );
+		if ( ! wp_verify_nonce( $nonce, 'download-' . basename($file) ) ) {
+			$this->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__]);
+			die();
+		}
+
+		header('Content-Description: File Transfer');
+		header('Content-Disposition: attachment; filename='.basename($file));
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($file));
+		header("Content-Type: text/plain");
+		readfile($file);
 	}
 
 	/**

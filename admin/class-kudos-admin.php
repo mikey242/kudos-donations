@@ -362,7 +362,7 @@ class Kudos_Admin {
 	}
 
 	/**
-	 * Exports table data if request present.
+	 * Actions triggered by request data in the admin.
      * Needs to be hooked to admin_init as it modifies headers.
      *
 	 * @since    1.0.1
@@ -382,7 +382,16 @@ class Kudos_Admin {
 		if(isset($_REQUEST['export_donors'])) {
 			$table = new Donors_Table();
 			$table->export();
+		}
 
+		if(isset($_REQUEST['clear_log'])) {
+		    $kudos_logger = new Kudos_Logger();
+		    $kudos_logger->clear();
+		}
+
+		if(isset($_REQUEST['download_log'])) {
+			$kudos_logger = new Kudos_Logger();
+			$kudos_logger->download();
 		}
 	}
 
@@ -501,9 +510,15 @@ class Kudos_Admin {
                     }
                     break;
 	            default:
+	                $file = Kudos_Logger::LOG_FILE;
                     $kudos_logger = new Kudos_Logger();
                     $logArray = $kudos_logger->getAsArray();
+                    $download_nonce = wp_create_nonce('download-' . basename($file));
+                    $clear_nonce = wp_create_nonce('clear-' . basename($file));
                     ?>
+                    <p>This logfile is located at <?php echo $file ?></p>
+                    <a href="/wp-admin/admin.php?page=kudos-debug&_wpnonce=<?php echo $clear_nonce ?>&clear_log" class="button action">Clear</a>
+                    <a href="/wp-admin/admin.php?page=kudos-debug&_wpnonce=<?php echo $download_nonce ?>&download_log" class="button action">Download</a>
                     <table class='form-table'><tbody>
                         <tr>
                             <th class='row-title'>Date</th>
