@@ -147,7 +147,7 @@ class Kudos_Admin {
 			[$this, 'donors_table']
 
 		);
-		add_action( "admin_print_scripts-{$donors_page_hook_suffix}", [$this, 'kudos_subscriptions_page_assets'] );
+		add_action( "admin_print_scripts-{$donors_page_hook_suffix}", [$this, 'kudos_donor_page_assets'] );
 
         // Add debug menu
         if(WP_DEBUG) {
@@ -206,6 +206,20 @@ class Kudos_Admin {
 		wp_enqueue_script( $this->plugin_name . '-subscriptions', get_asset_url('kudos-admin-subscriptions.js'), [ 'jquery' ], $this->version, false );
 		wp_localize_script($this->plugin_name . '-subscriptions', 'kudos', [
 			'confirmation' => __('Are you sure you want to cancel this subscription?', 'kudos-donations'),
+		]);
+	}
+
+	/**
+	 * Assets specific to the Kudos Donors page
+	 *
+	 * @since   2.0.0
+	 */
+	public function kudos_donor_page_assets() {
+
+		// Load table assets
+		$tableHandle = $this->kudos_table_page_assets();
+		wp_localize_script($tableHandle, 'kudos', [
+			'confirmation' => __('Are you sure you want to delete this donor?', 'kudos-donations'),
 		]);
 	}
 
@@ -299,8 +313,8 @@ class Kudos_Admin {
 		$table->prepare_items();
 		$message = '';
 
-		if ('cancel' === $table->current_action()) {
-			$message = __('Subscription cancelled', 'kudos-donations');
+		if ('delete' === $table->current_action()) {
+			$message = __('Donor deleted', 'kudos-donations');
 		} elseif ('bulk-cancel' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
 			/* translators: %s: Number of transactions */
 			$message = sprintf(__('%s donors(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
