@@ -150,7 +150,7 @@ class Kudos_Donations {
 
 		$this->loader->add_action('plugins_loaded', $this, 'version_check');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'kudos_add_menu_pages', 11);
-		$this->loader->add_action('admin_init', $plugin_admin, 'export_csv');
+		$this->loader->add_action('admin_init', $plugin_admin, 'admin_actions');
 		$this->loader->add_action('init', $plugin_admin, 'register_settings');
 		$this->loader->add_action('rest_api_init', $plugin_admin, 'register_routes');
 		$this->loader->add_action('admin_post_cancel_subscription', $plugin_admin, 'cancel_subscription');

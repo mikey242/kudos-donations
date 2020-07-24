@@ -367,24 +367,19 @@ class Kudos_Admin {
      *
 	 * @since    1.0.1
 	 */
-	public function export_csv() {
+	public function admin_actions() {
 
 	    if(isset($_REQUEST['export_transactions'])) {
-
 	        $table = new Transactions_Table();
 	        $table->export();
-
 	    }
 
 		if(isset($_REQUEST['export_subscriptions'])) {
-
 			$table = new Subscriptions_Table();
 			$table->export();
-
 		}
 
 		if(isset($_REQUEST['export_donors'])) {
-
 			$table = new Donors_Table();
 			$table->export();
 
