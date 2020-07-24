@@ -6,7 +6,9 @@ use WP_List_Table;
 
 class Transactions_Table extends WP_List_Table {
 
-	use Table_Trait;
+	use Table_Trait {
+		delete_record as trait_delete;
+	}
 
 	/**
 	 * @var Kudos_Invoice
@@ -377,16 +379,14 @@ class Transactions_Table extends WP_List_Table {
 	/**
 	 * Delete a transaction.
 	 *
-	 * @since      1.0.0
+	 * @param $column
 	 * @param int $order_id order ID
+	 *
+	 * @since      1.0.0
 	 */
-	public static function delete_transaction( $order_id ) {
-		global $wpdb;
+	protected function delete_record( $column, $order_id ) {
 
-		$result = $wpdb->delete(
-			Kudos_Transaction::getTableName(),
-			[ 'order_id' => $order_id ]
-		);
+		$result = $this->trait_delete($column, $order_id);
 
 		// Delete invoice if found
 		if($result) {
@@ -413,7 +413,7 @@ class Transactions_Table extends WP_List_Table {
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
 					die();
 				} else {
-					self::delete_transaction( sanitize_text_field( $_GET['transaction'] ) );
+					self::delete_record('order_id', sanitize_text_field( $_GET['transaction'] ) );
 				}
 				break;
 
