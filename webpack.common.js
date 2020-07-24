@@ -43,6 +43,7 @@ module.exports = {
 	},
 	externals: {
 		jquery: 'jQuery',
+		react: 'React',
 		lodash: 'lodash',
 		jqueryValidation: 'jquery-validation',
 		micromodal: 'MicroModal',
