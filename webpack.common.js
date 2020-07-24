@@ -25,8 +25,8 @@ module.exports = {
 		'kudos-admin-transactions': [
 			join( PATHS.src, '/js', '/kudos-admin-transactions.js' ),
 		],
-		'kudos-admin-subscriptions': [
-			join( PATHS.src, '/js', '/kudos-admin-subscriptions.js' ),
+		'kudos-admin-table': [
+			join( PATHS.src, '/js', '/kudos-admin-table.js' ),
 		],
 		'kudos-admin-settings': [
 			join( PATHS.src, '/js', '/kudos-admin-settings.jsx' ),
