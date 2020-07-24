@@ -516,7 +516,8 @@ class Kudos_Admin {
                     $download_nonce = wp_create_nonce('download-' . basename($file));
                     $clear_nonce = wp_create_nonce('clear-' . basename($file));
                     ?>
-                    <p>This logfile is located at <?php echo $file ?></p>
+                    <p>This logfile location: <?php echo $file ?></p>
+                    <p>Current filesize: <?php echo filesize($file) ?> bytes</p>
                     <a href="/wp-admin/admin.php?page=kudos-debug&_wpnonce=<?php echo $clear_nonce ?>&clear_log" class="button action">Clear</a>
                     <a href="/wp-admin/admin.php?page=kudos-debug&_wpnonce=<?php echo $download_nonce ?>&download_log" class="button action">Download</a>
                     <table class='form-table'><tbody>
