@@ -186,13 +186,29 @@ class Kudos_Admin {
 	}
 
 	/**
+	 * Assets specific to the Kudos Table pages
+     *
+     * @since 2.0.0
+	 */
+	private function kudos_table_page_assets() {
+
+	    $handle = $this->plugin_name . '-table';
+		wp_enqueue_script( $handle, get_asset_url('kudos-admin-table.js'), [ 'jquery' ], $this->version, false );
+        return $handle;
+    }
+
+	/**
 	 * Assets specific to the Kudos Transactions page
 	 *
 	 * @since   2.0.0
 	 */
 	public function kudos_transactions_page_assets() {
+
 		wp_enqueue_script( $this->plugin_name . '-transactions', get_asset_url('kudos-admin-transactions.js'), [ 'jquery' ], $this->version, false );
-		wp_localize_script($this->plugin_name . '-transactions', 'kudos', [
+
+		// Load table assets
+	    $tableHandle = $this->kudos_table_page_assets();
+		wp_localize_script($tableHandle, 'kudos', [
 			'confirmation' => __('Are you sure you want to delete this transaction?', 'kudos-donations'),
 		]);
 	}
@@ -203,8 +219,10 @@ class Kudos_Admin {
 	 * @since   2.0.0
 	 */
 	public function kudos_subscriptions_page_assets() {
-		wp_enqueue_script( $this->plugin_name . '-subscriptions', get_asset_url('kudos-admin-subscriptions.js'), [ 'jquery' ], $this->version, false );
-		wp_localize_script($this->plugin_name . '-subscriptions', 'kudos', [
+
+		// Load table assets
+		$tableHandle = $this->kudos_table_page_assets();
+		wp_localize_script($tableHandle, 'kudos', [
 			'confirmation' => __('Are you sure you want to cancel this subscription?', 'kudos-donations'),
 		]);
 	}

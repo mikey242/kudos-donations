@@ -6,12 +6,3 @@ import { faIdeal, faPaypal } from '@fortawesome/free-brands-svg-icons';
 
 library.add( faCreditCard, faIdeal, faPaypal, faFilePdf );
 dom.watch();
-
-$( () => {
-	'use strict';
-	$( '.row-actions .delete' ).click( function ( e ) {
-		if ( ! confirm( window.kudos.confirmation ) ) {
-			e.preventDefault();
-		}
-	} );
-} );
