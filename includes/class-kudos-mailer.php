@@ -108,7 +108,7 @@ class Kudos_Mailer
 		}
 
 		$twig = new Kudos_Twig();
-		$body = $twig->render('emails/invoice.html.twig', $renderArray);
+		$body = $twig->render('emails/receipt.html.twig', $renderArray);
 
 		self::send($transaction->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$attachment]);
 	}
