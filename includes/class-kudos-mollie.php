@@ -186,10 +186,11 @@ class Kudos_Mollie
 				'donation_label' => $donation_label,
 			]);
 
+			$this->logger->info('New payment created', ['oder_id' => $order_id, 'sequence_type' => $payment->sequenceType]);
 			return $payment;
 
 		} catch (ApiException $e) {
-			$this->logger->critical($e->getMessage(), $paymentArray);
+			$this->logger->critical($e->getMessage(), ['payment' => $paymentArray]);
 			return false;
 		}
 
@@ -349,7 +350,7 @@ class Kudos_Mollie
 			$customer = $mollieApi->customers->get($customerId);
 			$subscription = $customer->cancelSubscription($subscriptionId);
 			if($subscription) {
-				$this->logger->debug($subscriptionId . " cancelled.", [$customerId, $subscription]);
+				$this->logger->info( "Subscription cancelled.", ['customer_id' => $customerId, 'subscription_id' => $subscriptionId]);
 				$kudos_subscription = $this->subscription;
 				$kudos_subscription->update([
 					'status' => 'cancelled'
