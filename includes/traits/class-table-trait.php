@@ -191,4 +191,22 @@ trait Table_Trait {
 
 		return -$result;
 	}
+
+	/**
+	 * Delete record by id
+	 *
+	 * @param $column
+	 * @param $id
+	 * @return bool|false|int
+	 * @since   2.0.0
+	 */
+	protected function delete_record($column, $id)
+	{
+		global $wpdb;
+
+		return $wpdb->delete(
+			$this->_args['table'],
+			[ $column => $id ]
+		);
+	}
 }
