@@ -122,12 +122,12 @@ class Kudos_Logger extends Logger
 		}
 
 		header('Content-Description: File Transfer');
-		header('Content-Disposition: attachment; filename='.basename($file));
+		header('Content-Disposition: attachment; filename=kudos_' . sanitize_title(get_bloginfo('name')) . '_' . date('Y-m-d') . '.log');
+		header("Content-Type: text/plain");
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
 		header('Content-Length: ' . filesize($file));
-		header("Content-Type: text/plain");
 		readfile($file);
 	}
 
