@@ -63,7 +63,7 @@ class Kudos_Logger extends Logger
 		if(!$this->isWriteable()) {
 			return false;
 		}
-		return file_put_contents(self::LOG_FILE, '');
+		return file_put_contents($file, '');
 	}
 
 	/**
