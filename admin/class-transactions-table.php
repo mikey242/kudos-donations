@@ -272,7 +272,7 @@ class Transactions_Table extends WP_List_Table {
 	function column_transaction_created( $item ) {
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . date_i18n($item['transaction_created'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
+		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['transaction_created'])) . '</strong>';
 		$invoice = $this->invoice;
 		$pdf = $invoice->get_invoice($item['order_id']);
 

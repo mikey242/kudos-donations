@@ -546,7 +546,7 @@ class Kudos_Admin {
                         echo "<tr style='$style' class='". ($key %2===0 ? 'alternate' : null) ." $class'>";
 
                             echo "<td>";
-                                echo($log['date']);
+	                            echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($log['date']));
                             echo "</td>";
                             echo "<td>";
                                 echo($log['type']);

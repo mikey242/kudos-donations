@@ -192,7 +192,7 @@ class Donors_Table extends WP_List_Table {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . date_i18n($item['donor_created'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
+		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['donor_created'])) . '</strong>';
 
 		$actions = [
 			'delete' => sprintf( '<a href="?page=%s&action=%s&customer_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['customer_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),

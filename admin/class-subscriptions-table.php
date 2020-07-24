@@ -245,7 +245,7 @@ class Subscriptions_Table extends WP_List_Table {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . date_i18n($item['subscription_created'], get_option('date_format') . ' ' . get_option('time_format')) . '</strong>';
+		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['subscription_created'])) . '</strong>';
 
 		$actions = [];
 		if($item['status'] === 'active') {
