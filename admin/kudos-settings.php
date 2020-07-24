@@ -301,3 +301,15 @@ register_setting(
 		'default'       => false
 	]
 );
+
+// Advanced settings
+
+register_setting(
+	'kudos_donations',
+	'_kudos_debug_mode',
+	[
+		'type'          => 'boolean',
+		'show_in_rest'  => true,
+		'default'       => false
+	]
+);

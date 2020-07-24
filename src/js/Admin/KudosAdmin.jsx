@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 // Settings Panels
 import { DonationFormPanel } from './Components/Panels/DonationFormPanel';
@@ -15,11 +16,10 @@ import { InvoiceCompanyPanel } from './Components/Panels/InvoiceCompanyPanel';
 import { GenerateInvoicesPanel } from './Components/Panels/GenerateInvoices';
 import { PrimaryButton } from './Components/FormElements/PrimaryButton';
 import { DiagnosticsPanel } from './Components/Panels/DiagnosticsPanel';
+import { DebugModePanel } from './Components/Panels/DebugModePanel';
 
 const { __ } = wp.i18n;
-
 const { Placeholder, Spinner, TabPanel } = wp.components;
-
 const { Component, Fragment } = wp.element;
 
 function getTabName() {
@@ -326,6 +326,10 @@ class KudosAdmin extends Component {
 				return (
 					<Fragment>
 						<DiagnosticsPanel { ...this.state.diagnostics } />
+						<DebugModePanel
+							{ ...this.state }
+							handleInputChange={ this.handleInputChange }
+						/>
 					</Fragment>
 				);
 		}

@@ -150,7 +150,7 @@ class Kudos_Admin {
 		add_action( "admin_print_scripts-{$donors_page_hook_suffix}", [$this, 'kudos_donor_page_assets'] );
 
         // Add debug menu
-        if(WP_DEBUG) {
+        if(get_option('_kudos_debug_mode')) {
 	        add_submenu_page(
 		        'kudos-settings',
 		        'Kudos Debug',
