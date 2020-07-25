@@ -120,7 +120,9 @@ class Kudos_Admin {
 			__('Transactions', 'kudos-donations'),
 			'manage_options',
 			'kudos-transactions',
-			[$this, 'transactions_table']
+			function () {
+				require_once KUDOS_DIR . 'admin/partials/kudos-admin-transactions.php';
+			}
 
 		);
 		add_action( "admin_print_scripts-{$transactions_page_hook_suffix}", [$this, 'kudos_transactions_page_assets'] );
@@ -132,7 +134,9 @@ class Kudos_Admin {
 			__('Subscriptions', 'kudos-donations'),
 			'manage_options',
 			'kudos-subscriptions',
-			[$this, 'subscriptions_table']
+			function () {
+				require_once KUDOS_DIR . 'admin/partials/kudos-admin-subscriptions.php';
+			}
 
 		);
 		add_action( "admin_print_scripts-{$subscriptions_page_hook_suffix}", [$this, 'kudos_subscriptions_page_assets'] );
@@ -144,7 +148,9 @@ class Kudos_Admin {
 			__('Donors', 'kudos-donations'),
 			'manage_options',
 			'kudos-donors',
-			[$this, 'donors_table']
+			function () {
+				require_once KUDOS_DIR . 'admin/partials/kudos-admin-donors.php';
+			}
 
 		);
 		add_action( "admin_print_scripts-{$donors_page_hook_suffix}", [$this, 'kudos_donor_page_assets'] );
@@ -157,7 +163,9 @@ class Kudos_Admin {
 		        'Debug',
 		        'manage_options',
 		        'kudos-debug',
-		        [$this, 'kudos_debug']
+		        function () {
+			        require_once KUDOS_DIR . 'admin/partials/kudos-admin-debug.php';
+                }
 	        );
         }
 
@@ -242,126 +250,6 @@ class Kudos_Admin {
 	}
 
 	/**
-	 * Creates the transactions table
-     *
-	 * @since    1.0.0
-	 */
-	public function transactions_table() {
-	    $table = new Transactions_Table();
-	    $table->prepare_items();
-		$message = '';
-
-		if ('delete' === $table->current_action()) {
-			$message = __('Transaction deleted', 'kudos-donations');
-		} elseif ('bulk-delete' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
-			/* translators: %: Number of transactions */
-			$message = sprintf(__('% transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
-        }
-	    ?>
-	    <div class="wrap">
-		    <h1 class="wp-heading-inline"><?php _e('Transactions', 'kudos-donations'); ?></h1>
-		    <?php if (!empty($_REQUEST['s'])) { ?>
-            <span class="subtitle">
-                <?php
-                    /* translators: %s: Search term */
-                    printf(__('Search results for “%s”'), $_REQUEST['s'])
-                ?>
-            </span>
-            <?php } ?>
-            <p><?php _e("Your recent Kudos transactions",'kudos-donations');?></p>
-            <?php if($message) { ?>
-                <div class="updated below-h2" id="message"><p><?php echo esc_html($message); ?></p></div>
-            <?php } ?>
-            <form id="transactions-table" method="POST">
-            <?php
-                $table->display();
-            ?>
-            </form>
-	    </div>
-	    <?php
-    }
-
-	/**
-	 * Creates the subscriptions table
-	 *
-	 * @since    1.1.0
-	 */
-	public function subscriptions_table() {
-		$table = new Subscriptions_Table();
-		$table->prepare_items();
-		$message = '';
-
-		if ('cancel' === $table->current_action()) {
-			$message = __('Subscription cancelled', 'kudos-donations');
-		} elseif ('bulk-cancel' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
-			/* translators: %s: Number of transactions */
-			$message = sprintf(__('%s subscription(s) cancelled', 'kudos-donations'), count($_REQUEST['bulk-action']));
-		}
-		?>
-        <div class="wrap">
-            <h1 class="wp-heading-inline"><?php _e('Subscriptions', 'kudos-donations'); ?></h1>
-			<?php if (!empty($_REQUEST['s'])) { ?>
-                <span class="subtitle">
-                <?php
-                /* translators: %s: Search term */
-                printf(__('Search results for “%s”'), $_REQUEST['s'])
-                ?>
-            </span>
-			<?php } ?>
-            <p><?php _e("Your recent Kudos subscriptions",'kudos-donations');?></p>
-			<?php if($message) { ?>
-                <div class="updated below-h2" id="message"><p><?php echo esc_html($message); ?></p></div>
-			<?php } ?>
-            <form id="subscriptions-table" method="POST">
-				<?php
-				$table->display();
-				?>
-            </form>
-        </div>
-		<?php
-	}
-
-	/**
-	 * Creates the donors table
-	 *
-	 * @since    1.1.0
-	 */
-	public function donors_table() {
-		$table = new Donors_Table();
-		$table->prepare_items();
-		$message = '';
-
-		if ('delete' === $table->current_action()) {
-			$message = __('Donor deleted', 'kudos-donations');
-		} elseif ('bulk-cancel' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
-			/* translators: %s: Number of transactions */
-			$message = sprintf(__('%s donors(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
-		}
-		?>
-        <div class="wrap">
-            <h1 class="wp-heading-inline"><?php _e('Donors', 'kudos-donations'); ?></h1>
-			<?php if (!empty($_REQUEST['s'])) { ?>
-                <span class="subtitle">
-                <?php
-                /* translators: %s: Search term */
-                printf(__('Search results for “%s”'), $_REQUEST['s'])
-                ?>
-            </span>
-			<?php } ?>
-            <p><?php _e("Your recent Kudos donors",'kudos-donations');?></p>
-			<?php if($message) { ?>
-                <div class="updated below-h2" id="message"><p><?php echo esc_html($message); ?></p></div>
-			<?php } ?>
-            <form id="subscriptions-table" method="POST">
-				<?php
-				$table->display();
-				?>
-            </form>
-        </div>
-		<?php
-	}
-
-	/**
 	 * Actions triggered by request data in the admin.
      * Needs to be hooked to admin_init as it modifies headers.
      *
@@ -415,160 +303,6 @@ class Kudos_Admin {
 		wp_die();
 	}
 
-	/**
-	 * Debug page render
-     *
-     * @since   2.0.0
-	 */
-	public function kudos_debug() {
-
-	    $kudos_donor = new Kudos_Donor();
-	    $kudos_mollie = new Kudos_Mollie();
-
-		//Get the active tab from the $_GET param
-		$default_tab = null;
-		$tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
-		?>
-
-		<div class="wrap">
-
-            <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-
-            <nav class="nav-tab-wrapper">
-                <a href="?page=kudos-debug" class="nav-tab <?php if($tab===null):?>nav-tab-active<?php endif; ?>">Log</a>
-                <a href="?page=kudos-debug&tab=subscriptions" class="nav-tab <?php if($tab==='subscriptions'):?>nav-tab-active<?php endif; ?>">Subscriptions</a>
-            </nav>
-
-            <div class="tab-content">
-
-	        <?php
-
-            switch($tab):
-                case 'subscriptions':
-                    $donors = $kudos_donor->get_all();
-                    if($donors) {
-                        foreach($donors as $donor) {
-
-                            $subscriptions = $kudos_mollie->get_subscriptions($donor->customer_id);
-
-                            if(!count($subscriptions)) {
-                                continue;
-                            }
-
-                            echo "<h3><strong>" . $donor->email . "</strong> <span>(" . $donor->customer_id . ")</span></h3>";
-                            echo "<form action=". admin_url( 'admin-post.php' ) ." method='post'>";
-                                wp_nonce_field('cancel_subscription', '_wpnonce');
-                                echo "<input type='hidden' name='action' value='cancel_subscription'>";
-                                echo "<input type='hidden' name='customerId' value='". $donor->customer_id ."'>";
-
-                            /** @var Subscription $subscription */
-                            foreach ($subscriptions as $subscription) {
-                                    echo "<table class='widefat'>";
-                                        echo "<tbody>";
-
-                                            echo "<tr>";
-                                                echo "<td class='row-title'>id</td>";
-                                                echo "<td>" . $subscription->id . "</td> ";
-                                            echo "</tr>";
-
-                                            echo "<tr class='alternate'>";
-                                                echo "<td class='row-title'>status</td>";
-                                                echo "<td>$subscription->status" . ($subscription->status !== 'canceled' ? " <button name='subscriptionId' type='submit' value='$subscription->id'>Cancel</button>" : "") . "</td>";
-                                            echo "</tr>";
-
-                                            echo "<tr>";
-                                                echo "<td class='row-title'>amount</td>";
-                                                echo "<td>" . $subscription->amount->value . "</td>";
-                                            echo "</tr> ";
-
-                                            echo "<tr class='alternate'>";
-                                                echo "<td class='row-title'>interval</td>";
-                                                echo "<td>" . $subscription->interval . "</td>";
-                                            echo "</tr> ";
-
-                                            echo "<tr>";
-                                                echo "<td class='row-title'>times</td>" ;
-                                                echo "<td>". $subscription->times . "</td>";
-                                            echo "</tr>";
-
-                                            echo "<tr class='alternate'>";
-                                                echo "<td class='row-title'>next payment</td>";
-                                                echo "<td>". ($subscription->nextPaymentDate ?? 'n/a') . "</td>";
-                                            echo "</tr>";
-
-                                            echo "<tr>";
-                                                echo "<td class='row-title'>webhookUrl</td>" ;
-                                                echo "<td>". $subscription->webhookUrl . "</td>";
-                                            echo "</tr>";
-
-                                        echo "</tbody>";
-                                    echo "</table>";
-                                    echo "<br class='clear'>";
-                                }
-                            echo "</form>";
-                        }
-                    }
-                    break;
-	            default:
-	                $file = Kudos_Logger::LOG_FILE;
-                    $kudos_logger = new Kudos_Logger();
-                    $logArray = $kudos_logger->getAsArray();
-                    $download_nonce = wp_create_nonce('download-' . basename($file));
-                    $clear_nonce = wp_create_nonce('clear-' . basename($file));
-                    ?>
-                    <p>This logfile location: <?php echo $file ?></p>
-                    <p>Current filesize: <?php echo filesize($file) ?> bytes</p>
-                    <a href="/wp-admin/admin.php?page=kudos-debug&_wpnonce=<?php echo $clear_nonce ?>&clear_log" class="button action">Clear</a>
-                    <a href="/wp-admin/admin.php?page=kudos-debug&_wpnonce=<?php echo $download_nonce ?>&download_log" class="button action">Download</a>
-                    <table class='form-table'><tbody>
-                        <tr>
-                            <th class='row-title'>Date</th>
-                            <th>Level</th>
-                            <th>Message</th>
-                        </tr>
-                    <?php foreach ($logArray as $key=>$log) {
-
-                            $level = $log['type'];
-	                        $style = 'border-left-width: 4px; border-left-style: solid;';
-
-                            switch ($level) {
-                                case 'CRITICAL':
-                                case 'ERROR':
-                                    $class = 'notice-error';
-                                    break;
-                                case 'DEBUG':
-                                    $class='';
-                                    $style='';
-                                    break;
-                                default:
-	                                $class = 'notice-' . strtolower( $level );
-                            }
-
-                        echo "<tr style='$style' class='". ($key %2===0 ? 'alternate' : null) ." $class'>";
-
-                            echo "<td>";
-	                            echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($log['date']));
-                            echo "</td>";
-                            echo "<td>";
-                                echo($log['type']);
-                            echo "</td>";
-                            echo "<td>";
-                                echo($log['message']);
-                            echo "</td>";
-
-                        echo "</tr>";
-                    }
-                    echo "</tbody></table>";
-
-            endswitch;
-
-	    ?>
-        </div>
-
-		</div>
-        <?php
-	}
-
 	public function cancel_subscription() {
 	    if(!wp_verify_nonce($_REQUEST['_wpnonce'], 'cancel_subscription')) {
 	        echo "Nope!";
@@ -588,7 +322,7 @@ class Kudos_Admin {
 	 */
 	public function register_settings() {
 
-		require_once KUDOS_DIR . 'admin/kudos-settings.php';
+		require_once KUDOS_DIR . 'admin/partials/kudos-settings.php';
 
 	}
 
