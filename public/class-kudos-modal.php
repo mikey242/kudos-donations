@@ -85,7 +85,10 @@ class Kudos_Modal {
                 'text' => !empty($atts['text']) ? $atts['text'] : get_option('_kudos_form_text'),
                 'color' => !empty($atts['color']) ? $atts['color'] : get_option('_kudos_button_color'),
 		        'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
-	            'address_required' => get_option('_kudos_address_required'),
+	            'address' => [
+		    	    'enabled' => get_option('_kudos_address_enabled'),
+		    	    'required' => get_option('_kudos_address_required')
+				],
 			    'privacy_link' => $privacy_link,
 	            'return_url' => $this->returnUrl,
 			    'donation_label' => $atts['donation_label'],

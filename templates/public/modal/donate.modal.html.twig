@@ -108,19 +108,20 @@
             {% endif %}
 
             {#   ADDRESS TAB   #}
+            {% if(address.enabled) %}
             <fieldset class="form-tab form-tab-address">
-                <p class="kudos_modal_text">{{__('Please fill in you address', 'kudos-donations')}} {{ address_required ? null : '(' ~ __('optional', 'kudos-donations') ~ ')' }}</p>
+                <p class="kudos_modal_text">{{__('Please fill in you address', 'kudos-donations')}} {{ address.required ? null : '(' ~ __('optional', 'kudos-donations') ~ ')' }}</p>
                 <label>
-                    <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
+                    <input {{ address.required ? 'required' : null }} class="kudos_field" type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
                 </label>
                 <label>
-                    <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
+                    <input {{ address.required ? 'required' : null }} class="kudos_field" type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
                 </label>
                 <label>
-                    <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
+                    <input {{ address.required ? 'required' : null }} class="kudos_field" type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
                 </label>
                 <label>
-                    <input {{ address_required ? 'required' : null }} class="kudos_field" type="text" name="country" placeholder="{{ __('Country', 'kudos-donations') }} {{ address_required ? '*' : null }}" />
+                    <input {{ address.required ? 'required' : null }} class="kudos_field" type="text" name="country" placeholder="{{ __('Country', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
                 </label>
                 <div class="kudos_modal_buttons" style="text-align: center">
                     <p class="kudos_form_nav kudos_back" data-direction="back"></p>
@@ -128,6 +129,7 @@
                     <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
                 </div>
             </fieldset>
+            {% endif %}
 
             {#   FINAL TAB   #}
             <fieldset class="form-tab form-tab-final">

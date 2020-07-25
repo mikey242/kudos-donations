@@ -161,6 +161,16 @@ register_setting(
 
 register_setting(
 	'kudos_donations',
+	'_kudos_address_enabled',
+	[
+		'type'          => 'boolean',
+		'show_in_rest'  => true,
+		'default'       => true
+	]
+);
+
+register_setting(
+	'kudos_donations',
 	'_kudos_address_required',
 	[
 		'type'          => 'boolean',

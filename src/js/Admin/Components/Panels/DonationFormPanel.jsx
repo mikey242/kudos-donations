@@ -2,8 +2,8 @@ import { TextInput } from '../FormElements/TextInput';
 import { Checkbox } from '../FormElements/Checkbox';
 
 const { __ } = wp.i18n;
-
 const { PanelBody } = wp.components;
+const { Fragment } = wp.element;
 
 const DonationFormPanel = ( props ) => {
 	return (
@@ -12,12 +12,25 @@ const DonationFormPanel = ( props ) => {
 			initialOpen={ false }
 		>
 			<Checkbox
-				id="_kudos_address_required"
+				id="_kudos_address_enabled"
 				heading={ __( 'Address', 'kudos-donations' ) }
-				label="Required"
-				value={ props.settings._kudos_address_required }
+				label="Enabled"
+				value={ props.settings._kudos_address_enabled }
 				onChange={ props.handleInputChange }
 			/>
+
+			{ props.settings._kudos_address_enabled
+				? [
+						<Fragment key="_kudos_address_required">
+							<Checkbox
+								id="_kudos_address_required"
+								label="Required"
+								value={ props.settings._kudos_address_required }
+								onChange={ props.handleInputChange }
+							/>
+						</Fragment>,
+				  ]
+				: '' }
 
 			<TextInput
 				id="_kudos_form_header"
