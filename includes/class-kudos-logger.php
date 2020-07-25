@@ -79,7 +79,7 @@ class Kudos_Logger extends Logger
 	public function addRecord($level, $message, $context=[]) :bool {
 
 		// Don't log debug if not enabled
-		if($level === self::DEBUG && !get_option('_kudos_debug_mode')) {
+		if($level === self::DEBUG && !KUDOS_DEBUG) {
 			return false;
 		}
 
