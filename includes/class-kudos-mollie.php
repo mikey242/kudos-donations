@@ -164,7 +164,7 @@ class Kudos_Mollie
 		];
 
 		if(WP_DEBUG) {
-			$paymentArray['webhookUrl'] = 'https://26713be09117.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+			$paymentArray['webhookUrl'] = 'https://36f1fd3a6ec4.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 		}
 
 		// Link payment to customer if specified
@@ -255,7 +255,7 @@ class Kudos_Mollie
         ];
 
         if(WP_DEBUG) {
-	        $subscriptionArray['webhookUrl'] = 'https://26713be09117.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+	        $subscriptionArray['webhookUrl'] = 'https://36f1fd3a6ec4.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 	        unset($subscriptionArray['startDate']);  // Disable for test mode
         }
 
@@ -485,19 +485,22 @@ class Kudos_Mollie
 
 		$this->logger->info('Webhook requested by Mollie.', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
 
-		// Kudos_Transaction class
+		// Get transaction from database
 		$kudos_transaction = $this->transaction;
+		$order_id = $payment->metadata->order_id;
+		$transaction = $kudos_transaction->get_transaction_by(['order_id' => $order_id]);
 
-		// Get local transaction if exists
-		$transaction = $kudos_transaction->get_transaction_by(['transaction_id' => $transaction_id]);
+		// Check if transaction already exists
+		if($transaction) {
 
-		// If status exists and is not set to open then assume payment already handled
-		if(!empty($transaction) && $transaction->status !== 'open') {
-			$this->logger->info('Payment already handled, skipping', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
-			return $response;
-		}
+			// Update payment
+			$kudos_transaction->update_transaction($order_id, [
+				'status' => $status,
+				'transaction_id' => $transaction_id,
+				'method' => $payment->method
+			]);
 
-		if($sequence_type === 'recurring') {
+		} else {
 
 			// Insert payment
 			$order_id = $order_id = 'kdo_'.time();
@@ -516,32 +519,36 @@ class Kudos_Mollie
 				'subscription_id' => $payment->subscriptionId
 			]);
 
-
-		} else {
-
-			// Update payment.
-			$order_id = $payment->metadata->order_id;
-			$kudos_transaction->update_transaction($order_id, [
-				'status' => $status,
-				'transaction_id' => $transaction_id,
-				'method' => $payment->method
-			]);
 		}
 
 		// Send email receipt on success
-		$mailer = new Kudos_Mailer();
 		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
+
+			// If status exists and is not set to open then assume payment already handled
+			if(!empty($transaction) && $transaction->status !== 'open') {
+				$this->logger->info('Payment already handled, skipping', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
+				return $response;
+			}
 
 			// Get transaction and schedule processing for later
 			$transaction = $this->transaction->get_transaction_by(['order_id' => $order_id]);
 			$timestamp = (WP_DEBUG ? time() : '+1 minute');
 			as_schedule_single_action(strtotime($timestamp), 'kudos_process_transaction_action', [$transaction]);
 			$this->logger->debug('Action "kudos_process_transaction_action" scheduled', ['order_id' => $order_id, 'datetime' => date_i18n('Y-m-d H:i:s', $timestamp)]);
+
 			// Set up recurring payment if sequence is first
 			if($payment->sequenceType === 'first') {
 				$kudos_mollie = new Kudos_Mollie();
 				return $kudos_mollie->create_subscription($transaction, $payment->mandateId, $payment->metadata->interval, $payment->metadata->years);
 			}
+
+		} elseif ($payment->hasRefunds()) {
+			$this->logger->info('Payment (partially) refunded', ['transaction_id' => $transaction_id]);
+			$remaining = $payment->amountRemaining->value;
+			$kudos_transaction->update_transaction($order_id, [
+				'status' => 'refunded',
+				'value' => $remaining
+			]);
 		}
 
 		return $response;

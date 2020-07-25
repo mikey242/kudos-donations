@@ -342,6 +342,9 @@ class Transactions_Table extends WP_List_Table {
 			case 'failed':
 				$status = __('Failed', 'kudos-donations');
 				break;
+			case 'refunded':
+				$status = __('Refunded', 'kudos-donations');
+				break;
 			default:
 				$status = __('Unknown', 'kudos-donations');
 		}
