@@ -51,7 +51,13 @@ class Kudos_Twig
 		$this->twig->addFunction($get_text);
 
 		/**
-		 * Add color_luminance helper functions.
+		 * Add get_option function.
+		 */
+		$get_option = new TwigFunction('get_option', 'get_option');
+		$this->twig->addFunction($get_option);
+
+		/**
+		 * Add color_luminance helper function.
 		 */
 		$color_luminance = new TwigFunction('color_luminance', 'color_luminance');
 		$this->twig->addFunction($color_luminance);
