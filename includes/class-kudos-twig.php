@@ -45,7 +45,7 @@ class Kudos_Twig
 	public function initialize_twig_functions() {
 
 		/**
-		 * Add gettext __ functions.
+		 * Add gettext __ function.
 		 */
 		$get_text = new TwigFunction('__', '__');
 		$this->twig->addFunction($get_text);
