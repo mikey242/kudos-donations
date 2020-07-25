@@ -1,7 +1,7 @@
 === Kudos Donations ===
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, creditcard
-Requires at least: 4.7
+Requires at least: 5.0
 Tested up to: 5.4.1
 Requires PHP: 7.1
 Stable tag: 1.0.2
