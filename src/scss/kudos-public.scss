@@ -100,8 +100,6 @@ div[id^='kudos_modal-'] {
   }
 
   .kudos_modal_logo {
-    color: green;
-
     &::before {
       content: '';
       display: block;
@@ -277,7 +275,7 @@ div[id^='kudos_modal-'] {
       }
 
       label {
-        @apply cursor-pointer pl-5;
+        @apply cursor-pointer pl-5 text-gray-900;
       }
     }
 
