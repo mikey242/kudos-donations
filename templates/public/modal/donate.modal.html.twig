@@ -53,27 +53,27 @@
             <fieldset class="form-tab form-tab-frequency" data-requirements='{"payment_frequency":"recurring"}'>
                 <p class="kudos_modal_text">How often would you like to donate?</p>
                 <label>
-                    <select required id="recurring_length" class="kudos_field" name="recurring_length">
-                        <option value="" disabled selected>Recurring length</option>
-                        <option value="0">{{ __('Continuous', 'kudos-donations')}}</option>
-                        <option value="1">{{ __('Years', 'kudos-donations')}}: 1</option>
-                        <option value="2">{{ __('Years', 'kudos-donations')}}: 2</option>
-                        <option value="3">{{ __('Years', 'kudos-donations')}}: 3</option>
-                        <option value="4">{{ __('Years', 'kudos-donations')}}: 4</option>
-                        <option value="5">{{ __('Years', 'kudos-donations')}}: 5</option>
-                        <option value="6">{{ __('Years', 'kudos-donations')}}: 6</option>
-                        <option value="7">{{ __('Years', 'kudos-donations')}}: 7</option>
-                        <option value="8">{{ __('Years', 'kudos-donations')}}: 8</option>
-                        <option value="9">{{ __('Years', 'kudos-donations')}}: 9</option>
-                        <option value="10">{{ __('Years', 'kudos-donations')}}: 10</option>
+                    <select required class="kudos_field" name="recurring_frequency">
+                        <option value="" disabled selected>Payment frequency</option>
+                        <option value="12 months">{{ __('Yearly', 'kudos-donations') }}</option>
+                        <option value="3 months">{{ __('Quarterly', 'kudos-donations') }}</option>
+                        <option value="1 month">{{ __('Monthly', 'kudos-donations') }}</option>
                     </select>
                 </label>
                 <label>
-                    <select required class="kudos_field" name="recurring_frequency">
-                        <option value="" disabled selected>Recurring frequency</option>
-                        <option value="12 months">{{ __('Frequency: Yearly', 'kudos-donations') }}</option>
-                        <option value="3 months">{{ __('Frequency: Quarterly', 'kudos-donations') }}</option>
-                        <option value="1 month">{{ __('Frequency: Monthly', 'kudos-donations') }}</option>
+                    <select required id="recurring_length" class="kudos_field" name="recurring_length">
+                        <option value="" disabled selected>{{ __('Donation duration', ' kudos-donations') }}</option>
+                        <option value="0">{{ __('Continuous', 'kudos-donations')}}</option>
+                        <option value="1">1 {{ __('Year', 'kudos-donations')}}</option>
+                        <option value="2">2 {{ __('Years', 'kudos-donations')}}</option>
+                        <option value="3">3 {{ __('Years', 'kudos-donations')}}</option>
+                        <option value="4">4 {{ __('Years', 'kudos-donations')}}</option>
+                        <option value="5">5 {{ __('Years', 'kudos-donations')}}</option>
+                        <option value="6">6 {{ __('Years', 'kudos-donations')}}</option>
+                        <option value="7">7 {{ __('Years', 'kudos-donations')}}</option>
+                        <option value="8">8 {{ __('Years', 'kudos-donations')}}</option>
+                        <option value="9">9 {{ __('Years', 'kudos-donations')}}</option>
+                        <option value="10">10 {{ __('Years', 'kudos-donations')}}</option>
                     </select>
                 </label>
                 <div class="kudos_modal_buttons" style="text-align: center">
