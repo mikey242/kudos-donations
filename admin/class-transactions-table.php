@@ -432,7 +432,7 @@ class Transactions_Table extends WP_List_Table {
 
 					$delete_ids = esc_sql( $_REQUEST['bulk-action']);
 					foreach ( $delete_ids as $id ) {
-						self::delete_transaction( $id );
+						self::delete_record( 'order_id', $id );
 					}
 				}
 				break;
