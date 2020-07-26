@@ -5,6 +5,11 @@ namespace Kudos;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
+//PHP < 7.2 Define it as 0 so it does nothing
+if (!defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
+	define('JSON_INVALID_UTF8_SUBSTITUTE', 0);
+}
+
 class Kudos_Logger extends Logger
 {
 
@@ -70,13 +75,13 @@ class Kudos_Logger extends Logger
 	 * Add checks to parent function
 	 *
 	 * @param string $message
-	 * @param string $level
+	 * @param int $level
 	 * @param array $context
 	 *
 	 * @return bool
 	 * @since    2.0.0
 	 */
-	public function addRecord($level, $message, $context=[]) :bool {
+	public function addRecord(int $level, string $message, array $context=[]) :bool {
 
 		// Don't log debug if not enabled
 		if($level === self::DEBUG && !KUDOS_DEBUG) {
