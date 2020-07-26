@@ -21,7 +21,7 @@ trait Table_Trait {
 	 */
 	public function display() {
 		$this->views();
-		$this->search_box(__('Search ' . $this->_args['plural']), 'search_subscriptions');
+		$this->search_box(__('Search') . ' ' . $this->_args['plural'], 'search_subscriptions');
 		parent::display();
 	}
 
