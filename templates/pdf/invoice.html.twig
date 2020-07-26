@@ -8,6 +8,11 @@
     <table class="purchase" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
             <td>
+                <h1>{{ __('Invoice', 'kudos-donations') }}</h1>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <h2 style="margin-bottom:0">{{ company_name }}</h2>
                 <p>{{ company_address | nl2br}}</p>
             </td>
@@ -38,14 +43,18 @@
                     </tr>
                     <tr>
                         <td width="80%" class="purchase_item"><span class="f-fallback">{{description}}</span></td>
-                        <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">{{amount}}</span></td>
+                        <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">{{ currency_symbol }}{{amount}}</span></td>
+                    </tr>
+                    <tr>
+                        <td width="80%" class="purchase_item"><span class="f-fallback">{{__('VAT', 'kudos-donations')}} (0%)</span></td>
+                        <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">{{ currency_symbol }}0</span></td>
                     </tr>
                     <tr>
                         <td width="80%" class="purchase_footer" valign="middle">
                             <p class="f-fallback purchase_total purchase_total--label">{{ __('Total', 'kudos-donations') }}</p>
                         </td>
                         <td width="20%" class="purchase_footer" valign="middle">
-                            <p class="f-fallback purchase_total">{{amount}}</p>
+                            <p class="f-fallback purchase_total">{{ currency_symbol }}{{amount}}</p>
                         </td>
                     </tr>
                 </table>
