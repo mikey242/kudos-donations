@@ -13,7 +13,7 @@ import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
 import { AVGPanel } from './Components/Panels/AVGPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { InvoiceCompanyPanel } from './Components/Panels/InvoiceCompanyPanel';
-import { GenerateInvoicesPanel } from './Components/Panels/GenerateInvoices';
+import { GenerateInvoicesPanel } from './Components/Panels/GenerateInvoicesPanel';
 import { PrimaryButton } from './Components/FormElements/PrimaryButton';
 import { DiagnosticsPanel } from './Components/Panels/DiagnosticsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
