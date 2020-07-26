@@ -488,9 +488,8 @@ class Kudos_Mollie
 		// Get transaction from database
 		$kudos_transaction = $this->transaction;
 		$order_id = $payment->metadata->order_id;
-		$transaction = $kudos_transaction->get_transaction_by(['order_id' => $order_id]);
+		$transaction = $kudos_transaction->get_transaction_by(['order_id' => $order_id]) ?? $kudos_transaction->get_transaction_by(['transaction_id' => $transaction_id]);
 
-		// Check if transaction already exists
 		if($transaction) {
 
 			// Update payment
@@ -518,23 +517,21 @@ class Kudos_Mollie
 				'mode' => $payment->mode,
 				'subscription_id' => $payment->subscriptionId
 			]);
+			$transaction = $kudos_transaction->get_transaction_by(['order_id' => $order_id]);
 
 		}
 
-		// Send email receipt on success
 		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
 
-			// If status exists and is not set to open then assume payment already handled
-			if(!empty($transaction) && $transaction->status !== 'open') {
-				$this->logger->info('Payment already handled, skipping', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
-				return $response;
+			// Get schedule processing for later
+			if ( false === as_next_scheduled_action( 'kudos_process_transaction_action', [ $transaction ] ) ) {
+				$timestamp = (WP_DEBUG ? time() : '+1 minute');
+				as_schedule_single_action( strtotime( $timestamp ), 'kudos_process_transaction_action', [ $transaction ] );
+				$this->logger->debug( 'Action "kudos_process_transaction_action" scheduled', [
+					'order_id' => $order_id,
+					'datetime' => date_i18n( 'Y-m-d H:i:s', $timestamp )
+				] );
 			}
-
-			// Get transaction and schedule processing for later
-			$transaction = $this->transaction->get_transaction_by(['order_id' => $order_id]);
-			$timestamp = (WP_DEBUG ? time() : '+1 minute');
-			as_schedule_single_action(strtotime($timestamp), 'kudos_process_transaction_action', [$transaction]);
-			$this->logger->debug('Action "kudos_process_transaction_action" scheduled', ['order_id' => $order_id, 'datetime' => date_i18n('Y-m-d H:i:s', $timestamp)]);
 
 			// Set up recurring payment if sequence is first
 			if($payment->sequenceType === 'first') {
@@ -545,9 +542,11 @@ class Kudos_Mollie
 		} elseif ($payment->hasRefunds()) {
 			$this->logger->info('Payment (partially) refunded', ['transaction_id' => $transaction_id]);
 			$remaining = $payment->amountRemaining->value;
-			$kudos_transaction->update_transaction($order_id, [
+			$kudos_transaction->update([
 				'status' => 'refunded',
 				'value' => $remaining
+			], [
+				'transaction_id' => $transaction_id
 			]);
 		}
 
