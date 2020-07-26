@@ -167,6 +167,7 @@ class Transactions_Table extends WP_List_Table {
 			'value'=>__('Amount', 'kudos-donations'),
 			'type' => __('Type', 'kudos-donations'),
 			'status'=>__('Status', 'kudos-donations'),
+			'order_id'=>__('Order Id', 'kudos-donations'),
 			'transaction_id'=>__('Transaction Id', 'kudos-donations'),
 			'donation_label'=>__('Donation Label', 'kudos-donations')
 		];
@@ -212,7 +213,8 @@ class Transactions_Table extends WP_List_Table {
 	public function get_hidden_columns()
 	{
 		return [
-			'transaction_id'
+			'transaction_id',
+			'donation_label',
 		];
 	}
 
