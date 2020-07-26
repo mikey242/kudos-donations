@@ -2,7 +2,6 @@
 
 namespace Kudos;
 
-use Mollie\Api\Resources\Subscription;
 use WP_REST_Server;
 
 /**
