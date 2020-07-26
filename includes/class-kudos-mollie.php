@@ -129,7 +129,7 @@ class Kudos_Mollie
 	public function create_payment($value, $interval, $years, $redirectUrl, $donation_label, $name=null, $email=null, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
-		$order_id = 'kdo_'.time();
+		$order_id = generate_id('kdo_');
 		$currency = 'EUR';
 		$value = number_format($value, 2);
 
@@ -502,7 +502,7 @@ class Kudos_Mollie
 		} else {
 
 			// Insert payment
-			$order_id = $order_id = 'kdo_'.time();
+			$order_id = generate_id('kdo_');
 			$customer_id = $payment->customerId;
 			$amount = $payment->amount;
 			$kudos_transaction->insert_transaction([

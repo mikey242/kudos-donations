@@ -153,3 +153,15 @@ function get_times_from_years($years, $frequency) {
 
 	return (12/intval($frequency)) * $years - 1;
 }
+
+/**
+ * Generate a random and unique ID with specified prefix
+ *
+ * @param $prefix
+ * @param int $length
+ * @return string
+ * @since   2.0.0
+ */
+function generate_id( $prefix, $length=10 ) {
+	return $prefix . substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length);
+}
