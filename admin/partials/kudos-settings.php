@@ -323,3 +323,13 @@ register_setting(
 		'default'       => false
 	]
 );
+
+register_setting(
+	'kudos_donations',
+	'_kudos_action_scheduler',
+	[
+		'type'          => 'boolean',
+		'show_in_rest'  => true,
+		'default'       => true
+	]
+);

@@ -94,7 +94,10 @@ class Kudos_Donations {
 	 */
 	private function load_dependencies() {
 
-		require_once KUDOS_DIR . '/libraries/action-scheduler/action-scheduler.php';
+		if(get_option('_kudos_action_scheduler')) {
+			require_once KUDOS_DIR . '/libraries/action-scheduler/action-scheduler.php';
+		}
+
 		require_once KUDOS_DIR . 'includes/kudos-helpers.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-logger.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-loader.php';

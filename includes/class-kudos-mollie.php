@@ -524,13 +524,17 @@ class Kudos_Mollie
 		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
 
 			// Get schedule processing for later
-			if ( false === as_next_scheduled_action( 'kudos_process_transaction_action', [ $transaction ] ) ) {
-				$timestamp = (WP_DEBUG ? time() : '+1 minute');
-				as_schedule_single_action( strtotime( $timestamp ), 'kudos_process_transaction_action', [ $transaction ] );
-				$this->logger->debug( 'Action "kudos_process_transaction_action" scheduled', [
-					'order_id' => $order_id,
-					'datetime' => date_i18n( 'Y-m-d H:i:s', $timestamp )
-				] );
+			if(class_exists('ActionScheduler')) {
+				if ( false === as_next_scheduled_action( 'kudos_process_transaction_action', [ $transaction ] ) ) {
+					$timestamp = (WP_DEBUG ? time() : '+1 minute');
+					as_schedule_single_action( strtotime( $timestamp ), 'kudos_process_transaction_action', [ $transaction ] );
+					$this->logger->debug( 'Action "kudos_process_transaction_action" scheduled', [
+						'order_id' => $order_id,
+						'datetime' => date_i18n( 'Y-m-d H:i:s', $timestamp )
+					] );
+				}
+			} else {
+				Kudos_Public::process_transaction($transaction);
 			}
 
 			// Set up recurring payment if sequence is first

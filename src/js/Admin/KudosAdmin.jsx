@@ -17,6 +17,7 @@ import { GenerateInvoicesPanel } from './Components/Panels/GenerateInvoices';
 import { PrimaryButton } from './Components/FormElements/PrimaryButton';
 import { DiagnosticsPanel } from './Components/Panels/DiagnosticsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
+import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 
 const { __ } = wp.i18n;
 const { Placeholder, Spinner, TabPanel } = wp.components;
@@ -326,6 +327,10 @@ class KudosAdmin extends Component {
 				return (
 					<Fragment>
 						<DiagnosticsPanel { ...this.state.diagnostics } />
+						<ActionSchedulerPanel
+							{ ...this.state }
+							handleInputChange={ this.handleInputChange }
+						/>
 						<DebugModePanel
 							{ ...this.state }
 							handleInputChange={ this.handleInputChange }
