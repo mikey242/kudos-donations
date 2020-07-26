@@ -69,14 +69,14 @@ class Transactions_Table extends WP_List_Table {
 
 		$query = [];
 
-		$mode = (!empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : '');
+		$status = (!empty($_GET['status']) ? sanitize_text_field($_GET['status']) : '');
 		$customer_id = (!empty($_GET['customer_id']) ? sanitize_text_field($_GET['customer_id']) : '');
 
-		// Add mode if exist
-		if($mode) {
+		// Add status if exist
+		if($status) {
 			array_push($query, $wpdb->prepare(
-                "mode = %s", esc_sql($mode)
-            ));
+				"status = %s", esc_sql($status)
+			));
 		}
 
 		// Add donor if exist
@@ -118,7 +118,7 @@ class Transactions_Table extends WP_List_Table {
 		foreach (array_keys($rows[0]) as $header) {
 			switch ($header) {
 				case 'transaction_created':
-					$result = __('Date', 'kudos-donations');
+					$result = __('Date Added', 'kudos-donations');
 					break;
 				case 'name':
 					$result = __('Name', 'kudos-donations');
@@ -181,25 +181,32 @@ class Transactions_Table extends WP_List_Table {
 	 */
 	protected function get_views() {
 		$views = [];
-		$current = ( !empty($_GET['mode']) ? sanitize_text_field($_GET['mode']) : 'all');
+		$current = ( !empty($_GET['status']) ? sanitize_text_field($_GET['status']) : 'all');
 
 		//All link
 		$count = count($this->count_records());
 		$class = ($current == 'all' ? ' class="current"' :'');
-		$all_url = remove_query_arg('mode');
+		$all_url = remove_query_arg(['status', 'has_refunds']);
 		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') . " ($count)</a>";
 
-		//Test link
-		$count = count($this->count_records('mode', 'test'));
-		$test_url = add_query_arg('mode','test');
-		$class = ($current == 'test' ? ' class="current"' :'');
-		$views['test'] = "<a href='{$test_url}' {$class} >". __('Test', 'kudos-donations') ." ($count)</a>";
+		//Paid link
+		$count = count($this->count_records('status', 'paid'));
+		$paid_url = add_query_arg('status','paid');
+		$class = ($current == 'paid' ? ' class="current"' :'');
+		$views['paid'] = "<a href='{$paid_url}' {$class} >". __('Paid', 'kudos-donations') ." ($count)</a>";
 
-		//Live link
-		$count = count($this->count_records('mode', 'live'));
-		$live_url = add_query_arg('mode','live');
-		$class = ($current == 'live' ? ' class="current"' :'');
-		$views['live'] = "<a href='{$live_url}' {$class} >". __('Live', 'kudos-donations') ." ($count)</a>";
+		//Open link
+		$count = count($this->count_records('status', 'open'));
+		$open_url = add_query_arg('status','open');
+		$class = ($current == 'open' ? ' class="current"' :'');
+		$views['open'] = "<a href='{$open_url}' {$class} >". __('Open', 'kudos-donations') ." ($count)</a>";
+
+		//Canceled link
+		$count = count($this->count_records('status', 'canceled'));
+		$canceled_url = add_query_arg('status','canceled');
+		$class = ($current == 'canceled' ? ' class="current"' :'');
+		$views['canceled'] = "<a href='{$canceled_url}' {$class} >". __('Canceled', 'kudos-donations') ." ($count)</a>";
+
 		return $views;
 
 	}
@@ -318,6 +325,18 @@ class Transactions_Table extends WP_List_Table {
 
 	}
 
+
+	/**
+	 * Payment type column
+	 *
+	 * @param $item
+	 * @return string|void
+	 * @since 2.0.0
+	 */
+	function column_type($item) {
+		return get_sequence_type($item['sequence_type']);
+	}
+
 	/**
 	 * Payment status column
 	 *
@@ -344,9 +363,6 @@ class Transactions_Table extends WP_List_Table {
 			case 'failed':
 				$status = __('Failed', 'kudos-donations');
 				break;
-			case 'refunded':
-				$status = __('Refunded', 'kudos-donations');
-				break;
 			default:
 				$status = __('Unknown', 'kudos-donations');
 		}
@@ -354,19 +370,26 @@ class Transactions_Table extends WP_List_Table {
 		$invoice = $this->invoice;
 		$pdf = $invoice->get_invoice($item['order_id']);
 
-		$mode = $item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '';
-		$return = $status . ' ' . $mode;
+		$refunded = $item['has_refunds'] ? ' ( '. __('refunded', 'kudos-donations') .' ) ' : '';
 
 		// Return as link if pdf invoice present
 		if($pdf) {
-			return "<a href=$pdf>" . $status . $mode . " " . "<i class='far fa-file-pdf'></i></a>";
+			return "<a href=$pdf>" . $status . $refunded . " " . "<i class='far fa-file-pdf'></i></a>";
 		}
 
-		return $return;
+		return $status . ' ' . $refunded;
 	}
 
-	function column_type($item) {
-		return get_sequence_type($item['sequence_type']);
+
+	/**
+	 * Order Id column
+	 *
+	 * @param $item
+	 * @return string|void
+	 * @since 2.0.0
+	 */
+	function column_order_id($item) {
+		return $item['order_id'] . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '');
 	}
 
 	/**
