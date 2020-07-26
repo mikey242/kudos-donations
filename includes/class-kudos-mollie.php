@@ -547,7 +547,7 @@ class Kudos_Mollie
 			$this->logger->info('Payment (partially) refunded', ['transaction_id' => $transaction_id]);
 			$remaining = $payment->amountRemaining->value;
 			$kudos_transaction->update([
-				'status' => 'refunded',
+				'has_refunds' => true,
 				'value' => $remaining
 			], [
 				'transaction_id' => $transaction_id

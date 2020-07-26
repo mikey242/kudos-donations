@@ -61,6 +61,7 @@ class Kudos_Activator {
 		  order_id VARCHAR(255) NOT NULL,
 		  transaction_id VARCHAR(255),
 		  subscription_id VARCHAR(255),
+		  has_refunds BOOLEAN DEFAULT false,
 		  donation_label VARCHAR(255),
 		  PRIMARY KEY (id)
 		) $charset_collate;";
