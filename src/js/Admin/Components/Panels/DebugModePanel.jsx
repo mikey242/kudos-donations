@@ -7,7 +7,7 @@ const DebugModePanel = ( props ) => {
 	return (
 		<PanelBody
 			title={ __( 'Debug Mode', 'kudos-donations' ) }
-			initialOpen={ true }
+			initialOpen={ false }
 		>
 			<Toggle
 				id="_kudos_debug_mode"
