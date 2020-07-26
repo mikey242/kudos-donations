@@ -126,11 +126,11 @@ class Donors_Table extends WP_List_Table {
 	 */
 	public function column_names() {
 		return [
-			'donor_created'=>__('Date', 'kudos-donations'),
-			'name' => __('Name', 'kudos-donations'),
 			'email'=>__('E-mail', 'kudos-donations'),
+			'name' => __('Name', 'kudos-donations'),
 			'address' => __('Address', 'kudos-donations'),
-			'donations' => __('Donations', 'kudos-donations')
+			'donations' => __('Donations', 'kudos-donations'),
+			'donor_created'=>__('Date', 'kudos-donations')
 		];
 	}
 
@@ -190,15 +190,7 @@ class Donors_Table extends WP_List_Table {
 	 */
 	function column_donor_created( $item ) {
 
-		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
-
-		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['donor_created'])) . '</strong>';
-
-		$actions = [
-			'delete' => sprintf( '<a href="?page=%s&action=%s&customer_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['customer_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),
-		];
-
-		return $title . $this->row_actions( $actions );
+		return __('Added', 'kudos-donations') . '<br/>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['donor_created']));
 	}
 
 	/**
@@ -209,9 +201,18 @@ class Donors_Table extends WP_List_Table {
 	 * @return string
 	 */
 	function column_email( $item ) {
-		return sprintf(
+
+		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
+
+		$title = sprintf(
 			'<a href="mailto: %1$s" />%1$s</a>', $item['email']
 		);
+
+		$actions = [
+			'delete' => sprintf( '<a href="?page=%s&action=%s&customer_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['customer_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),
+		];
+
+		return $title . $this->row_actions( $actions );
 	}
 
 	/**
