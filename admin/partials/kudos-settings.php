@@ -165,7 +165,7 @@ register_setting(
 	[
 		'type'          => 'boolean',
 		'show_in_rest'  => true,
-		'default'       => true
+		'default'       => false
 	]
 );
 
@@ -175,7 +175,7 @@ register_setting(
 	[
 		'type'          => 'boolean',
 		'show_in_rest'  => true,
-		'default'       => false
+		'default'       => true
 	]
 );
 
@@ -298,7 +298,7 @@ register_setting(
 	[
 		'type'          => 'boolean',
 		'show_in_rest'  => true,
-		'default'       => false
+		'default'       => true
 	]
 );
 
