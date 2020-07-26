@@ -90,7 +90,7 @@ class Kudos_Mailer
 		// Create array of variables for use in twig template
 		$renderArray = [
 			'name' => !empty($transaction->name) ? $transaction->name : '',
-			'date' => $transaction->time,
+			'date' => $transaction->transaction_created,
 			'description' => get_sequence_type($transaction->sequence_type),
 			'amount' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
 			'receipt_id' => $transaction->order_id,
