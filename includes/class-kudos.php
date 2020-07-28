@@ -102,11 +102,11 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'includes/class-kudos-logger.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-loader.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-i18n.php';
-		require_once KUDOS_DIR . 'includes/traits/class-database-trait.php';
 		require_once KUDOS_DIR . 'includes/traits/class-table-trait.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-transaction.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-donor.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-subscription.php';
+		require_once KUDOS_DIR . 'includes/entity/class-kudos-entity.php';
+		require_once KUDOS_DIR . 'includes/entity/class-kudos-transaction.php';
+		require_once KUDOS_DIR . 'includes/entity/class-kudos-donor.php';
+		require_once KUDOS_DIR . 'includes/entity/class-kudos-subscription.php';
 		require_once KUDOS_DIR . 'admin/class-transactions-table.php';
 		require_once KUDOS_DIR . 'admin/class-subscriptions-table.php';
 		require_once KUDOS_DIR . 'admin/class-donors-table.php';

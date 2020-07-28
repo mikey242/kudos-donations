@@ -2,6 +2,10 @@
 
 namespace Kudos;
 
+use Kudos\Entity\Donor;
+use Kudos\Entity\Subscription;
+use Kudos\Entity\Transaction;
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -122,37 +126,40 @@ class Kudos_Public {
 		$value = intval($form['value']);
 		$payment_frequency = (isset($form['recurring_frequency']) ? sanitize_text_field($form['recurring_frequency']) : 'oneoff');
 		$recurring_length = (isset($form['recurring_length']) ? intval($form['recurring_length']) : 0);
-		$name = sanitize_text_field($form['name']);
-		$email = sanitize_email($form['email_address']);
-		$street = sanitize_text_field($form['street']);
-		$postcode = sanitize_text_field($form['postcode']);
-		$city = sanitize_text_field($form['city']);
-		$country = sanitize_text_field($form['country']);
-		$redirectUrl = sanitize_text_field($form['return_url']);
-		$buttonName = sanitize_text_field($form['donation_label']);
-		$customerId = null;
+		$name = isset($form['name']) ? sanitize_text_field($form['name']) : null;
+		$email = isset($form['email_address']) ? sanitize_email($form['email_address']) : null;
+		$street = isset($form['street']) ? sanitize_text_field($form['street']) : null;
+		$postcode = isset($form['postcode']) ? sanitize_text_field($form['postcode']) : null;
+		$city = isset($form['city']) ? sanitize_text_field($form['city']) : null;
+		$country = isset($form['country']) ? sanitize_text_field($form['country']) : null;
+		$redirectUrl = isset($form['return_url']) ? sanitize_text_field($form['return_url']) : null;
+		$buttonName = isset($form['donation_label']) ? sanitize_text_field($form['donation_label']) : null;
 
 		$mollie = new Kudos_Mollie();
+		$donor = new Donor();
 
 		// Get or create donor and fetch their Mollie customer id
 		if($email) {
-			$donorClass = new Kudos_Donor();
-			$donor = $donorClass->get_by(['email' => $email]);
-			if($donor) {
-				$donorClass->update_donor($email, [
-					'name' => $name,
-					'street' => $street,
-					'postcode' => $postcode,
-					'city' => $city,
-					'country' => $country
-				]);
-			} else {
-				$customer = $mollie->create_customer($email, $name);
-				$donorClass->insert_donor($email, $customer->id, $name, $street, $postcode, $city);
-				$donor = $donorClass->get_by(['email' => $email]);
-			}
-			$customerId = $donor->customer_id;
+			$donor->get_by(['email' => $email]);
 		}
+
+		if(empty($donor->fields['customer_id'])) {
+			$customer = $mollie->create_customer($email, $name);
+			$donor->set_fields([ 'customer_id' => $customer->id]);
+		}
+
+		$donor->set_fields([
+			'email' => $email,
+			'name' => $name,
+			'street' => $street,
+			'postcode' => $postcode,
+			'city' => $city,
+			'country' => $country,
+		]);
+
+		$donor->save();
+
+		$customerId = $donor->fields['customer_id'];
 
 		$payment = $mollie->create_payment($value, $payment_frequency, $recurring_length, $redirectUrl, $buttonName, $name, $email, $customerId);
 		if($payment) {
@@ -185,15 +192,16 @@ class Kudos_Public {
 
 		if($order_id) {
 
-			$transaction = new Kudos_Transaction();
-			$transaction = $transaction->get_transaction_by(['order_id' => $order_id]);
+			$transaction = new Transaction();
+			$transaction->get_by(['order_id' => $order_id]);
+			$donor = $transaction->get_donor();
 
-			switch($transaction->status) {
+			switch($transaction->fields['status']) {
 				case 'paid':
 					$vars = [
-						'{{value}}' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
-						'{{name}}' => $transaction->name,
-						'{{email}}' => $transaction->email
+						'{{value}}' => (!empty($transaction->fields['currency']) ? html_entity_decode(get_currency_symbol($transaction->fields['currency'])) : '') . number_format_i18n($transaction->fields['value'], 2),
+						'{{name}}' => $donor->fields['name'],
+						'{{email}}' => $donor->fields['email']
 					];
 					$return['header'] = strtr(get_option('_kudos_return_message_header'), $vars);
 					$return['text'] = strtr(get_option('_kudos_return_message_text'), $vars);
@@ -401,10 +409,10 @@ class Kudos_Public {
 		if(!empty($token && !empty($subscription_id))) {
 
 			$subscription_id = base64_decode($subscription_id);
-			$kudos_subscription = new Kudos_Subscription();
-			$subscription = $kudos_subscription->get_by(['subscription_id' => $subscription_id]);
+			$subscription = new Subscription();
+			$subscription->get_by(['subscription_id' => $subscription_id]);
 
-			if($subscription && password_verify($subscription->customer_id, $token)) {
+			if($subscription && password_verify($subscription->fields['customer_id'], $token)) {
 				$kudos_mollie = new Kudos_Mollie();
 				if($kudos_mollie->cancel_subscription($subscription_id)) {
 					echo $kudos_modal->get_message_modal([
@@ -424,24 +432,19 @@ class Kudos_Public {
 	/**
 	 * Processes the transaction. Used by action scheduler via mollie class.
 	 *
-	 * @param $transaction
+	 * @param Transaction $transaction
 	 *
 	 * @return bool
 	 * @since   2.0.0
 	 */
 	public static function process_transaction($transaction) {
 
-		// Cast transaction array as object
-		$transaction = (object) $transaction;
-
-		// Send email receipt on success
 		$mailer = new Kudos_Mailer();
+		$kudos_invoice = new Kudos_Invoice($transaction);
 
-		// Create invoice
-		$kudos_invoice = new Kudos_Invoice();
-		$kudos_invoice->generate_invoice($transaction);
+		$kudos_invoice->generate_invoice();
 
-		if($transaction->email) {
+		if($transaction->get_donor()->fields['email']) {
 
 			// Send email - email setting is checked in mailer
 			$mailer->send_receipt($transaction);

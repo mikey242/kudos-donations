@@ -2,6 +2,9 @@
 
 namespace Kudos;
 
+use Kudos\Table\Donors;
+use Kudos\Table\Subscriptions;
+use Kudos\Table\Transactions;
 use WP_REST_Server;
 
 /**
@@ -257,17 +260,17 @@ class Kudos_Admin {
 	public function admin_actions() {
 
 	    if(isset($_REQUEST['export_transactions'])) {
-	        $table = new Transactions_Table();
+	        $table = new Transactions();
 	        $table->export();
 	    }
 
 		if(isset($_REQUEST['export_subscriptions'])) {
-			$table = new Subscriptions_Table();
+			$table = new Subscriptions();
 			$table->export();
 		}
 
 		if(isset($_REQUEST['export_donors'])) {
-			$table = new Donors_Table();
+			$table = new Donors();
 			$table->export();
 		}
 

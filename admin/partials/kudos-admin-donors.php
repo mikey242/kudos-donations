@@ -1,6 +1,6 @@
 <?php
 
-use Kudos\Donors_Table;
+use Kudos\Table\Donors as Donors_Table;
 
 /**
  * Creates the donors table

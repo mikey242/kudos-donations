@@ -1,12 +1,20 @@
 <?php
 
-namespace Kudos;
+namespace Kudos\Table;
 
+use Kudos\Entity\Transaction;
 use WP_List_Table;
+use Kudos\Table_Trait;
+use Kudos\Entity\Donor;
 
-class Donors_Table extends WP_List_Table {
+class Donors extends WP_List_Table {
 
 	use Table_Trait;
+
+	/**
+	 * @var array
+	 */
+	private $export_columns;
 
 	/**
 	 * Class constructor
@@ -15,8 +23,17 @@ class Donors_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 
+		$this->export_columns = [
+			'name' => __('Name', 'kudos-donations'),
+			'email' => __('Email', 'kudos-donations'),
+			'street' => __('Street', 'kudos-donations'),
+			'postcode' => __('Postcode', 'kudos-donations'),
+			'city' => __('City', 'kudos-donations'),
+			'country' => __('Country', 'kudos-donations'),
+		];
+
 		parent::__construct( [
-			'table'    => Kudos_Donor::getTableName(),
+			'table'    => Donor::getTableName(),
 			'orderBy'  => 'donor_created',
 			'singular' => __( 'Donor', 'kudos-donations' ),
 			'plural'   => __( 'Donors', 'kudos-donations' ),
@@ -68,54 +85,7 @@ class Donors_Table extends WP_List_Table {
 			);
 		}
 
-		$subscription = new Kudos_Donor();
-		return $subscription->get_table_data($search_custom_vars);
-	}
-
-	/**
-	 * Column name translations used in export
-	 *
-	 * @param array $rows
-	 * @return array
-	 * @since   2.0.0
-	 */
-	public function export_column_names($rows) {
-
-		// Set header names
-		$headers = [];
-		foreach (array_keys($rows[0]) as $header) {
-			switch ($header) {
-				case 'donor_created':
-					$result = __('Date', 'kudos-donations');
-					break;
-				case 'name':
-					$result = __('Name', 'kudos-donations');
-					break;
-				case 'email':
-					$result = __('Email', 'kudos-donations');
-					break;
-				case 'value':
-					$result = __('Amount', 'kudos-donations');
-					break;
-				case 'status':
-					$result = __('Status', 'kudos-donations');
-					break;
-				case 'frequency':
-					$result = __('Frequency', 'kudos-donations');
-					break;
-				case 'mode':
-					$result = __('Mode', 'kudos-donations');
-					break;
-				case 'currency':
-					$result = __('Currency', 'kudos-donations');
-					break;
-				default:
-					$result = ucfirst($header);
-			}
-			array_push($headers, $result);
-		}
-
-		return $headers;
+		return Donor::get_table_data($search_custom_vars);
 	}
 
 	/**
@@ -242,17 +212,29 @@ class Donors_Table extends WP_List_Table {
 	 */
 	function column_donations( $item ) {
 
-		$kudos_transaction = new Kudos_Transaction();
-		$transactions = $kudos_transaction->get_all_by(['customer_id' => $item['customer_id']]);
+//		$donor = new Donor();
+//		$donor->get_by(['customer_id' => $item['customer_id']]);
+//		$transactions = $donor->get_transactions();
+
+		$transaction = new Transaction();
+		$transactions = $transaction->get_all(['customer_id' => $item['customer_id']]);
 
 		if($transactions) {
 			$number = count($transactions);
 			$total = 0;
+			/** @var Transaction $transaction */
 			foreach ($transactions as $transaction) {
-				$total = $total + $transaction->value;
+				if($transaction->fields['status'] === 'paid') {
+					$refunds = $transaction->get_refunds();
+					if ( $refunds ) {
+						$total = $total + $refunds['remaining'];
+					} else {
+						$total = $total + $transaction->fields['value'];
+					}
+				}
 			}
 
-			return '<a href="'. admin_url('admin.php?page=kudos-transactions&customer_id='. urlencode($item['customer_id']) .'') .'">' . $number . ' ( ' . get_currency_symbol($transactions[0]->currency) . $total . ' )' . '</a>';
+			return '<a href="'. admin_url('admin.php?page=kudos-transactions&customer_id='. urlencode($item['customer_id']) .'') .'">' . $number . ' ( ' . get_currency_symbol($transactions[0]->fields['currency']) . $total . ' )' . '</a>';
 		}
 
 		return false;

@@ -1,19 +1,22 @@
 <?php
 
-namespace Kudos;
+namespace Kudos\Table;
 
 use WP_List_Table;
+use Kudos\Kudos_Invoice;
+use Kudos\Table_Trait;
+use Kudos\Entity\Transaction;
 
-class Transactions_Table extends WP_List_Table {
+class Transactions extends WP_List_Table {
 
 	use Table_Trait {
 		delete_record as trait_delete;
 	}
 
 	/**
-	 * @var Kudos_Invoice
+	 * @var string[]
 	 */
-	private $invoice;
+	private $export_columns;
 
 	/**
 	 * Class constructor
@@ -22,16 +25,45 @@ class Transactions_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 
-		$this->invoice = new Kudos_Invoice();
+		add_filter('table_export_row', [$this, 'modify_export_data']);
+
+		$this->export_columns = [
+				'transaction_created' => __('Transaction created', 'kudos-donations'),
+				'currency' => __('Currency', 'kudos-donations'),
+				'value' => __('Amount', 'kudos-donations'),
+				'refunds' => __('Refunded', 'kudos-donations'),
+				'status' => __('Status', 'kudos-donations'),
+				'name' => __('Name', 'kudos-donations'),
+				'email' => __('Email', 'kudos-donations'),
+				'method' => __('Method', 'kudos-donations'),
+				'mode' => __('Mode', 'kudos-donations'),
+				'sequence_type' => __('Type', 'kudos-donations'),
+		];
 
 		parent::__construct( [
-			'table'    => Kudos_Transaction::getTableName(),
+			'table'    => Transaction::getTableName(),
 			'orderBy'  => 'transaction_created',
 			'singular' => __( 'Transaction', 'kudos-donations' ), //singular name of the listed records
 			'plural'   => __( 'Transactions', 'kudos-donations' ), //plural name of the listed records
 			'ajax'     => false //does this table support ajax?
 		] );
 
+	}
+
+	/**
+	 * Filter used to modify the exported data
+	 *
+	 * @param $row
+	 * @return mixed
+	 * @since   2.0.0
+	 */
+	function modify_export_data( $row ) {
+		if(is_serialized($row['refunds'])) {
+			$refunds = unserialize($row['refunds']);
+			$refunded = $refunds['refunded'];
+			$row['refunds'] = $refunded;
+		}
+		return $row;
 	}
 
 	/**
@@ -100,8 +132,7 @@ class Transactions_Table extends WP_List_Table {
 			$search_custom_vars = 'WHERE ' . implode(' AND ', $query);
 		}
 
-		$transaction = new Kudos_Transaction();
-		return $transaction->get_table_data($search_custom_vars);
+		return Transaction::get_table_data($search_custom_vars);
 	}
 
 	/**
@@ -116,9 +147,10 @@ class Transactions_Table extends WP_List_Table {
 		// Set header names
 		$headers = [];
 		foreach (array_keys($rows[0]) as $header) {
+
 			switch ($header) {
 				case 'transaction_created':
-					$result = __('Date Added', 'kudos-donations');
+					$result = __('Transaction created', 'kudos-donations');
 					break;
 				case 'name':
 					$result = __('Name', 'kudos-donations');
@@ -143,6 +175,9 @@ class Transactions_Table extends WP_List_Table {
 					break;
 				case 'sequenceType':
 					$result = __('Type', 'kudos-donations');
+					break;
+				case 'refunds':
+					$result = __('Refunded', 'kudos-donations');
 					break;
 				default:
 					$result = ucfirst($header);
@@ -186,7 +221,7 @@ class Transactions_Table extends WP_List_Table {
 		//All link
 		$count = count($this->count_records());
 		$class = ($current == 'all' ? ' class="current"' :'');
-		$all_url = remove_query_arg(['status', 'has_refunds']);
+		$all_url = remove_query_arg(['status']);
 		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') . " ($count)</a>";
 
 		//Paid link
@@ -206,6 +241,12 @@ class Transactions_Table extends WP_List_Table {
 		$canceled_url = add_query_arg('status','canceled');
 		$class = ($current == 'canceled' ? ' class="current"' :'');
 		$views['canceled'] = "<a href='{$canceled_url}' {$class} >". __('Canceled', 'kudos-donations') ." ($count)</a>";
+
+		//Canceled link
+		$count = count($this->count_records('status', 'expired'));
+		$expired_url = add_query_arg('status','expired');
+		$class = ($current == 'expired' ? ' class="current"' :'');
+		$views['expired'] = "<a href='{$expired_url}' {$class} >". __('Expired', 'kudos-donations') ." ($count)</a>";
 
 		return $views;
 
@@ -282,8 +323,7 @@ class Transactions_Table extends WP_List_Table {
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
 		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['transaction_created'])) . '</strong>';
-		$invoice = $this->invoice;
-		$pdf = $invoice->get_invoice($item['order_id']);
+		$pdf = Kudos_Invoice::get_invoice($item['order_id']);
 
 		$actions = [
 			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['order_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),
@@ -321,7 +361,14 @@ class Transactions_Table extends WP_List_Table {
 
 		$currency = !empty($item['currency']) ? get_currency_symbol($item['currency']) : '';
 
-		return '<i title="'.$item['method'].'" class="'. $icon .'"></i> '. $currency . ' ' . number_format_i18n($item['value'], 2);
+		$value = $item['value'];
+
+		if(is_serialized($item['refunds'])) {
+			$refund = unserialize($item['refunds']);
+			$value = $refund['remaining'];
+		}
+
+		return '<i title="'.$item['method'].'" class="'. $icon .'"></i> '. $currency . ' ' . number_format_i18n($value, 2);
 
 	}
 
@@ -367,17 +414,23 @@ class Transactions_Table extends WP_List_Table {
 				$status = __('Unknown', 'kudos-donations');
 		}
 
-		$invoice = $this->invoice;
-		$pdf = $invoice->get_invoice($item['order_id']);
+		$invoice = Kudos_Invoice::get_invoice($item['order_id']);
+		$refund = Kudos_Invoice::get_refund($item['order_id']);
 
-		$refunded = $item['has_refunds'] ? ' ( '. __('refunded', 'kudos-donations') .' ) ' : '';
+		$refunded = $item['refunds'] ? __('refunded', 'kudos-donations') : '';
+
+		$return = $status;
 
 		// Return as link if pdf invoice present
-		if($pdf) {
-			return "<a href=$pdf>" . $status . $refunded . " " . "<i class='far fa-file-pdf'></i></a>";
+		if($invoice) {
+			$return = "<a href=$invoice>" . $status . " " . "<i class='far fa-file-pdf'></i></a>";
 		}
 
-		return $status . ' ' . $refunded;
+		if($refund) {
+			$return .= "<br /><a href=$refund>" . $refunded . " " . "<i class='far fa-file-pdf'></i></a>";
+		}
+
+		return $return;
 	}
 
 
@@ -418,8 +471,7 @@ class Transactions_Table extends WP_List_Table {
 
 		// Delete invoice if found
 		if($result) {
-			$invoice = new Kudos_Invoice();
-			$file = $invoice->get_invoice($order_id, true);
+			$file = Kudos_Invoice::get_invoice($order_id, true);
 			if($file) {
 				unlink($file);
 			}

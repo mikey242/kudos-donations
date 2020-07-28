@@ -1,6 +1,6 @@
 <?php
 
-use Kudos\Transactions_Table;
+use Kudos\Table\Transactions as Transactions_Table;
 
 /**
  * Creates the transactions table

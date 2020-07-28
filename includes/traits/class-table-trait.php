@@ -69,7 +69,6 @@ trait Table_Trait {
 		$columns['cb'] = '<input type="checkbox" />';
 		return array_merge($columns, static::column_names());
 	}
-
 	/**
 	 * Exports all data to a csv file
 	 *
@@ -89,6 +88,11 @@ trait Table_Trait {
 			return;
 		}
 
+		// Remove rows not in export columns and rearrange order to match
+		foreach ($rows as $key=>$value) {
+			$rows[$key] = array_merge($this->export_columns, array_intersect_key($rows[$key], $this->export_columns));
+		}
+
 		$filename = "kudos_". __($this->_args['plural'], 'kudos-donations') ."-" . date( "Y-m-d_H-i", time() ) . '.csv';
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=$filename;");
@@ -98,12 +102,13 @@ trait Table_Trait {
 		$out = fopen( 'php://output', 'w' );
 
 		// Add headers
-		$headers = static::export_column_names($rows);
-		fputcsv($out, array_slice($headers, 1));
+		$headers = array_values($this->export_columns);
+		fputcsv($out, $headers);
 
 		// Add rows
 		foreach ( $rows as $row ) {
-			fputcsv( $out, array_slice($row, 1) );
+			$row = apply_filters('table_export_row', $row);
+			fputcsv( $out, $row);
 		}
 
 		// Close output

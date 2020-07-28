@@ -1,6 +1,6 @@
 <?php
 
-use Kudos\Subscriptions_Table;
+use Kudos\Table\Subscriptions as Subscriptions_Table;
 
 /**
  * Creates the subscriptions table

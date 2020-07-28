@@ -1,6 +1,6 @@
 <?php
 
-use Kudos\Kudos_Donor;
+use Kudos\Entity\Donor;
 use Kudos\Kudos_Logger;
 use Kudos\Kudos_Mollie;
 use Mollie\Api\Resources\Subscription;
@@ -11,7 +11,7 @@ use Mollie\Api\Resources\Subscription;
  * @since   2.0.0
  */
 
-$kudos_donor = new Kudos_Donor();
+$kudos_donor = new Donor();
 $kudos_mollie = new Kudos_Mollie();
 
 //Get the active tab from the $_GET param
@@ -45,10 +45,10 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                     ?>
 
                     <h3><strong><?php echo $donor->email ?></strong> <span>(<?php echo $donor->customer_id ?>)</span></h3>
-                    <form action="<?php admin_url( 'admin-post.php' ) ?> method='post'>">
+                    <form action="<?php echo admin_url( 'admin-post.php' ) ?>" method='post'>
                         <?php wp_nonce_field('cancel_subscription', '_wpnonce') ?>
                         <input type='hidden' name='action' value='cancel_subscription'>
-                        <input type='hidden' name='customerId' value='<?php $donor->customer_id ?>'>
+                        <input type='hidden' name='customerId' value='<?php echo $donor->customer_id ?>'>
 
                         <?php
                         /** @var Subscription $subscription */
@@ -68,7 +68,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                                     <td>
                                         <?php echo $subscription->status ?>
                                         <?php if($subscription->status !== 'canceled') :?>
-                                            <button name='subscriptionId' type='submit' value='$subscription->id'>Cancel</button></td>
+                                            <button name='subscriptionId' type='submit' value='<?php echo $subscription->id ?>'>Cancel</button></td>
                                         <?php endif; ?>
                                 </tr>
 

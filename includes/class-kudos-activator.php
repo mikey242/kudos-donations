@@ -2,6 +2,10 @@
 
 namespace Kudos;
 
+use Kudos\Entity\Donor;
+use Kudos\Entity\Subscription;
+use Kudos\Entity\Transaction;
+
 /**
  * Fired during plugin activation
  *
@@ -46,7 +50,7 @@ class Kudos_Activator {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = Kudos_Transaction::getTableName();  //get the database table prefix to create my new table
+		$table_name = Transaction::getTableName();  //get the database table prefix to create my new table
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -61,7 +65,7 @@ class Kudos_Activator {
 		  order_id VARCHAR(255) NOT NULL,
 		  transaction_id VARCHAR(255),
 		  subscription_id VARCHAR(255),
-		  has_refunds BOOLEAN DEFAULT false,
+		  refunds BLOB DEFAULT NULL,
 		  donation_label VARCHAR(255),
 		  PRIMARY KEY (id)
 		) $charset_collate;";
@@ -79,7 +83,7 @@ class Kudos_Activator {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = Kudos_Donor::getTableName();  //get the database table prefix to create my new table
+		$table_name = Donor::getTableName();  //get the database table prefix to create my new table
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -107,7 +111,7 @@ class Kudos_Activator {
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
-        $table_name = Kudos_Subscription::getTableName();  //get the database table prefix to create my new table
+        $table_name = Subscription::getTableName();  //get the database table prefix to create my new table
 
         $sql = "CREATE TABLE $table_name (
 		  id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
@@ -118,7 +122,6 @@ class Kudos_Activator {
 		  years MEDIUMINT(2) NOT NULL,
 		  customer_id VARCHAR(255),
 		  transaction_id VARCHAR(255),
-		  k_subscription_id VARCHAR(255),
 		  subscription_id VARCHAR(255),
 		  status VARCHAR(255),
 		  PRIMARY KEY (id)

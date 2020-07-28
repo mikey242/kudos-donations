@@ -1,12 +1,20 @@
 <?php
 
-namespace Kudos;
+namespace Kudos\Table;
 
+use Kudos\Kudos_Mollie;
 use WP_List_Table;
+use Kudos\Table_Trait;
+use Kudos\Entity\Subscription;
 
-class Subscriptions_Table extends WP_List_Table {
+class Subscriptions extends WP_List_Table {
 
 	use Table_Trait;
+
+	/**
+	 * @var array
+	 */
+	private $export_columns;
 
 	/**
 	 * Class constructor
@@ -15,8 +23,19 @@ class Subscriptions_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 
+		$this->export_columns = [
+				'subscription_created' => __('Date', 'kudos-donations'),
+				'name' => __('Name', 'kudos-donations'),
+				'email' => __('Email', 'kudos-donations'),
+				'value' => __('Amount', 'kudos-donations'),
+				'status' => __('Status', 'kudos-donations'),
+				'frequency' => __('Frequency', 'kudos-donations'),
+				'years' => __('Years', 'kudos-donations'),
+				'currency' => __('Currency', 'kudos-donations'),
+		];
+
 		parent::__construct( [
-			'table'    => Kudos_Subscription::getTableName(),
+			'table'    => Subscription::getTableName(),
 			'orderBy'  => 'subscription_created',
 			'singular' => __( 'Subscription', 'kudos-donations' ),
 			'plural'   => __( 'Subscriptions', 'kudos-donations' ),
@@ -78,54 +97,7 @@ class Subscriptions_Table extends WP_List_Table {
 			);
 		}
 
-		$subscription = new Kudos_Subscription();
-		return $subscription->get_table_data($search_custom_vars);
-	}
-
-	/**
-	 * Column name translations used in export
-	 *
-	 * @param array $rows
-	 * @return array
-	 * @since   2.0.0
-	 */
-	public function export_column_names($rows) {
-
-		// Set header names
-		$headers = [];
-		foreach (array_keys($rows[0]) as $header) {
-			switch ($header) {
-				case 'subscription_created':
-					$result = __('Date', 'kudos-donations');
-					break;
-				case 'name':
-					$result = __('Name', 'kudos-donations');
-					break;
-				case 'email':
-					$result = __('Email', 'kudos-donations');
-					break;
-				case 'value':
-					$result = __('Amount', 'kudos-donations');
-					break;
-				case 'status':
-					$result = __('Status', 'kudos-donations');
-					break;
-				case 'frequency':
-					$result = __('Frequency', 'kudos-donations');
-					break;
-				case 'mode':
-					$result = __('Mode', 'kudos-donations');
-					break;
-				case 'currency':
-					$result = __('Currency', 'kudos-donations');
-					break;
-				default:
-					$result = ucfirst($header);
-			}
-			array_push($headers, $result);
-		}
-
-		return $headers;
+		return Subscription::get_table_data($search_custom_vars);
 	}
 
 	/**
@@ -348,8 +320,10 @@ class Subscriptions_Table extends WP_List_Table {
 	public static function cancel_subscription( $subscription_id ) {
 
 		$kudos_mollie = new Kudos_Mollie();
-		$kudos_mollie->cancel_subscription($subscription_id);
-
+		if($kudos_mollie->cancel_subscription($subscription_id)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
