@@ -81,22 +81,22 @@ class Kudos_Mailer
 		}
 
 		// Get invoice if option enabled
-		$attachment = (get_option('_kudos_attach_invoice') ? Kudos_Invoice::get_invoice($transaction->fields['order_id'], true) : null);
+		$attachment = (get_option('_kudos_attach_invoice') ? Kudos_Invoice::get_invoice($transaction->order_id, true) : null);
 
 		// Create array of variables for use in twig template
 		$renderArray = [
-			'name' => !empty($transaction->fields['name']) ? $transaction->fields['name'] : '',
-			'date' => $transaction->fields['transaction_created'],
-			'description' => get_sequence_type($transaction->fields['sequence_type']),
-			'amount' => (!empty($transaction->fields['currency']) ? html_entity_decode(get_currency_symbol($transaction->fields['currency'])) : '') . number_format_i18n($transaction->fields['value'], 2),
-			'receipt_id' => $transaction->fields['order_id'],
+			'name' => $transaction->get_donor()->name ?? '',
+			'date' => $transaction->created,
+			'description' => get_sequence_type($transaction->sequence_type),
+			'amount' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
+			'receipt_id' => $transaction->order_id,
 			'website_name' => get_bloginfo('name'),
 		];
 
 		// Add a cancel subscription url if transaction associated with a subscription
-		if(!empty($transaction->fields['subscription_id'])) {
-			$subscription_id = $transaction->fields['subscription_id'];
-			$token = password_hash($transaction->fields['customer_id'], PASSWORD_DEFAULT);
+		if(!empty($transaction->subscription_id)) {
+			$subscription_id = $transaction->subscription_id;
+			$token = password_hash($transaction->customer_id, PASSWORD_DEFAULT);
 			$cancel_url = get_home_url();
 			$cancel_url = add_query_arg('kudos_token', $token, $cancel_url);
 			$cancel_url = add_query_arg('kudos_subscription_id', base64_encode($subscription_id), $cancel_url);
@@ -106,7 +106,7 @@ class Kudos_Mailer
 		$twig = new Kudos_Twig();
 		$body = $twig->render('emails/receipt.html.twig', $renderArray);
 
-		self::send($transaction->get_donor()->fields['email'], __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$attachment]);
+		self::send($transaction->get_donor()->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$attachment]);
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 use Kudos\Entity\Donor;
 use Kudos\Kudos_Logger;
+use Kudos\Kudos_Mapper;
 use Kudos\Kudos_Mollie;
 use Mollie\Api\Resources\Subscription;
 
@@ -33,7 +34,8 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
         <?php
         switch($tab):
         case 'subscriptions':
-            $donors = $kudos_donor->get_all();
+            $mapper = new Kudos_Mapper(Donor::class);
+            $donors = $mapper->get_all();
             if($donors) {
                 foreach($donors as $donor) {
 

@@ -2,9 +2,51 @@
 
 namespace Kudos\Entity;
 
+use DateTime;
 use Kudos\Entity;
 
 class Subscription extends Entity {
+
+	/**
+	 * @var DateTime;
+	 */
+	public $created;
+	/**
+	 * @var int
+	 */
+	public $value;
+	/**
+	 * @var string
+	 */
+	public $currency;
+	/**
+	 * @var string
+	 */
+	public $frequency;
+	/**
+	 * @var int
+	 */
+	public $years;
+	/**
+	 * @var string
+	 */
+	public $status;
+	/**
+	 * @var string
+	 */
+	public $customer_id;
+	/**
+	 * @var string
+	 */
+	public $transaction_id;
+	/**
+	 * @var string
+	 */
+	public $subscription_id;
+	/**
+	 * @var DateTime
+	 */
+	public $last_updated;
 
 	/**
 	 * Table name without prefix
@@ -19,7 +61,6 @@ class Subscription extends Entity {
 	 */
 	public function __construct($atts=null) {
 		parent::__construct($atts);
-		$this->fields['subscription_created'] = current_time('mysql');
 	}
 
 	/**

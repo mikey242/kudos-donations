@@ -94,11 +94,9 @@ class Kudos_Donations {
 	 */
 	private function load_dependencies() {
 
-		if(get_option('_kudos_action_scheduler')) {
-			require_once KUDOS_DIR . '/libraries/action-scheduler/action-scheduler.php';
-		}
-
+		require_once KUDOS_DIR . 'admin/partials/kudos-settings.php';
 		require_once KUDOS_DIR . 'includes/kudos-helpers.php';
+		require_once KUDOS_DIR . 'includes/class-kudos-mapper.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-logger.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-loader.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-i18n.php';
@@ -107,10 +105,10 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'includes/entity/class-kudos-transaction.php';
 		require_once KUDOS_DIR . 'includes/entity/class-kudos-donor.php';
 		require_once KUDOS_DIR . 'includes/entity/class-kudos-subscription.php';
+		require_once KUDOS_DIR . 'admin/class-kudos-admin.php';
 		require_once KUDOS_DIR . 'admin/class-transactions-table.php';
 		require_once KUDOS_DIR . 'admin/class-subscriptions-table.php';
 		require_once KUDOS_DIR . 'admin/class-donors-table.php';
-		require_once KUDOS_DIR . 'admin/class-kudos-admin.php';
 		require_once KUDOS_DIR . 'public/class-kudos-public.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-mollie.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-mailer.php';
@@ -118,6 +116,10 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'includes/class-kudos-invoice.php';
 		require_once KUDOS_DIR . 'public/class-kudos-button.php';
 		require_once KUDOS_DIR . 'public/class-kudos-modal.php';
+
+		if(get_option('_kudos_action_scheduler')) {
+			require_once KUDOS_DIR . '/libraries/action-scheduler/action-scheduler.php';
+		}
 
 		$this->loader = new Kudos_Loader();
 
@@ -154,7 +156,6 @@ class Kudos_Donations {
 		$this->loader->add_action('plugins_loaded', $this, 'version_check');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'kudos_add_menu_pages', 11);
 		$this->loader->add_action('admin_init', $plugin_admin, 'admin_actions');
-		$this->loader->add_action('init', $plugin_admin, 'register_settings');
 		$this->loader->add_action('rest_api_init', $plugin_admin, 'register_routes');
 		$this->loader->add_action('admin_post_cancel_subscription', $plugin_admin, 'cancel_subscription');
 

@@ -53,7 +53,7 @@ class Kudos_Invoice
 	/**
 	 * Kudos_Invoice constructor.
 	 *
-	 * @param Transaction $transaction
+	 * @param Transaction|object $transaction
 	 *
 	 * @since    1.1.0
 	 */
@@ -64,27 +64,27 @@ class Kudos_Invoice
 		$this->pdf = new Dompdf();
 		$this->pdf->setPaper('A4');
 		$this->enabled = get_option('_kudos_invoice_enable');
-		$this->id = $transaction->fields['id'] + 1000;
-		$this->order_id = $transaction->fields['order_id'];
-		$this->value = number_format_i18n($transaction->fields['value'], 2);
-		$this->sequence_type = $transaction->fields['sequence_type'];
+		$this->id = $transaction->id + 1000;
+		$this->order_id = $transaction->order_id;
+		$this->value = number_format_i18n($transaction->value, 2);
+		$this->sequence_type = $transaction->sequence_type;
 		$this->refunds = $transaction->get_refunds();
 
 		$donor = $transaction->get_donor();
 
 		$this->transactionArray = [
-			'date' => $transaction->fields['transaction_created'],
+			'date' => $transaction->transaction_created,
 			'order_id' => $this->order_id,
 			'logo' => 'data:image/svg+xml;base64,'. base64_encode('<svg xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 555 449"><defs/><path fill="#2ec4b6" d="M0-.003h130.458v448.355H.001z"/><path fill="#ff9f1c" d="M489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>'),
 			'logo_small' => 'data:image/svg+xml;base64,'. base64_encode('<svg viewBox="0 0 555 449" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" fill="#a8aaaf" stroke-linejoin="round" stroke-miterlimit="2"><path d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>'),
 			'company_name' => get_option('_kudos_invoice_company_name'),
 			'company_address' => get_option('_kudos_invoice_company_address'),
 			'vat_number' => get_option('_kudos_invoice_vat_number'),
-			'currency_symbol' => html_entity_decode(get_currency_symbol($transaction->fields['currency'])),
-			'donor_name' => $donor->fields['name'],
-			'donor_street' => $donor->fields['street'],
-			'donor_postcode' => $donor->fields['postcode'],
-			'donor_city' => $donor->fields['city'],
+			'currency_symbol' => html_entity_decode(get_currency_symbol($transaction->currency)),
+			'donor_name' => $donor->name,
+			'donor_street' => $donor->street,
+			'donor_postcode' => $donor->postcode,
+			'donor_city' => $donor->city,
 		];
 
 		if(!file_exists(self::INVOICE_DIR)) {
@@ -278,13 +278,13 @@ class Kudos_Invoice
 	 */
 	public static function regenerate_invoices() {
 
-		$transaction = new Transaction();
-		$transactions = $transaction->get_all();
+		$mapper = new Kudos_Mapper(Transaction::class);
+		$transactions = $mapper->get_all();
 		$n=0;
 
 		/** @var Transaction $transaction */
 		foreach ($transactions as $transaction) {
-			if($transaction->fields['status'] === 'paid') {
+			if($transaction->status === 'paid') {
 				$invoice = new Kudos_Invoice($transaction);
 				$invoice->generate_invoice(true) ? $n++ : null;
 			}

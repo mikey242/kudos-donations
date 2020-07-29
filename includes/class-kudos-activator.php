@@ -54,7 +54,8 @@ class Kudos_Activator {
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
-		  transaction_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  last_updated datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  value DECIMAL(7,2) NOT NULL,
 		  currency VARCHAR(255),
 		  status VARCHAR(255) DEFAULT 'open' NOT NULL,
@@ -87,7 +88,8 @@ class Kudos_Activator {
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
-		  donor_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  last_updated datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  email VARCHAR(320) NOT NULL,
 		  name VARCHAR(255) NOT NULL,
 		  street VARCHAR(255),
@@ -108,6 +110,7 @@ class Kudos_Activator {
      * @since    1.1.0
      */
     private static function create_subscriptions_table() {
+
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
@@ -115,7 +118,8 @@ class Kudos_Activator {
 
         $sql = "CREATE TABLE $table_name (
 		  id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-          subscription_created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+          created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+          last_updated datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  value DECIMAL(7,2) NOT NULL,
 		  currency VARCHAR(255),
 		  frequency VARCHAR(255) NOT NULL,
@@ -129,6 +133,7 @@ class Kudos_Activator {
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $sql );
+
     }
 
 	/**
@@ -140,24 +145,5 @@ class Kudos_Activator {
 
 		update_option('kudos_donations_version', KUDOS_VERSION);
 
-//		--- FOR FUTURE USE ---
-
-//		if(!get_option('_kudos_mollie_api_mode')) {
-//			$options = [
-//				'_kudos_mollie_api_mode' => 'test',
-//				'_kudos_button_style' => 'kudos_btn_primary',
-//				'_kudos_button_label' => __('Donate now', 'kudos-donations'),
-//				'_kudos_form_header' => __('Support us!', 'kudos-donations'),
-//				'_kudos_form_text' => __('Thank you for your donation. We appreciate your support!', 'kudos-donations'),
-//				'_kudos_return_message_enable' => 'yes',
-//				'_kudos_return_message_header' => __('Thank you!', 'kudos-donations'),
-//				/* translators: %s: Value of donation */
-//				'_kudos_return_message_text' => sprintf(__('Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations'), '{{value}}')
-//			];
-//
-//			foreach ($options as $option=>$value) {
-//				add_option($option, $value);
-//			}
-//		}
 	}
 }

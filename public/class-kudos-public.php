@@ -136,30 +136,35 @@ class Kudos_Public {
 		$buttonName = isset($form['donation_label']) ? sanitize_text_field($form['donation_label']) : null;
 
 		$mollie = new Kudos_Mollie();
-		$donor = new Donor();
+		$mapper = new Kudos_Mapper(Donor::class);
 
-		// Get or create donor and fetch their Mollie customer id
 		if($email) {
-			$donor->get_by(['email' => $email]);
+
+			// Search for existing donor
+			/** @var Donor $donor */
+			$donor = $mapper->get_by([ 'email' => $email]);
+
+			// Create new donor
+			if(NULL === $donor->customer_id) {
+				$donor = new Donor();
+				$customer = $mollie->create_customer($email, $name);
+				$donor->set_fields([ 'customer_id' => $customer->id]);
+			}
+
+			// Update new/existing donor
+			$donor->set_fields([
+				'email' => $email,
+				'name' => $name,
+				'street' => $street,
+				'postcode' => $postcode,
+				'city' => $city,
+				'country' => $country,
+			]);
+
+			$mapper->save($donor);
 		}
 
-		if(empty($donor->fields['customer_id'])) {
-			$customer = $mollie->create_customer($email, $name);
-			$donor->set_fields([ 'customer_id' => $customer->id]);
-		}
-
-		$donor->set_fields([
-			'email' => $email,
-			'name' => $name,
-			'street' => $street,
-			'postcode' => $postcode,
-			'city' => $city,
-			'country' => $country,
-		]);
-
-		$donor->save();
-
-		$customerId = $donor->fields['customer_id'];
+		$customerId = $donor->customer_id ?? null;
 
 		$payment = $mollie->create_payment($value, $payment_frequency, $recurring_length, $redirectUrl, $buttonName, $name, $email, $customerId);
 		if($payment) {
@@ -192,16 +197,22 @@ class Kudos_Public {
 
 		if($order_id) {
 
-			$transaction = new Transaction();
-			$transaction->get_by(['order_id' => $order_id]);
+			$mapper = new Kudos_Mapper(Transaction::class);
+			/** @var Transaction $transaction */
+			$transaction = $mapper->get_by([ 'order_id' => $order_id]);
+
+			if(NULL === $transaction) {
+				return false;
+			}
+
 			$donor = $transaction->get_donor();
 
-			switch($transaction->fields['status']) {
+			switch($transaction->status) {
 				case 'paid':
 					$vars = [
-						'{{value}}' => (!empty($transaction->fields['currency']) ? html_entity_decode(get_currency_symbol($transaction->fields['currency'])) : '') . number_format_i18n($transaction->fields['value'], 2),
-						'{{name}}' => $donor->fields['name'],
-						'{{email}}' => $donor->fields['email']
+						'{{value}}' => (!empty($transaction->currency) ? html_entity_decode(get_currency_symbol($transaction->currency)) : '') . number_format_i18n($transaction->value, 2),
+						'{{name}}' => $donor->name,
+						'{{email}}' => $donor->email
 					];
 					$return['header'] = strtr(get_option('_kudos_return_message_header'), $vars);
 					$return['text'] = strtr(get_option('_kudos_return_message_text'), $vars);
@@ -409,10 +420,11 @@ class Kudos_Public {
 		if(!empty($token && !empty($subscription_id))) {
 
 			$subscription_id = base64_decode($subscription_id);
-			$subscription = new Subscription();
-			$subscription->get_by(['subscription_id' => $subscription_id]);
+			$mapper = new Kudos_Mapper(Subscription::class);
+			/** @var Subscription $subscription */
+			$subscription = $mapper->get_by([ 'subscription_id' => $subscription_id]);
 
-			if($subscription && password_verify($subscription->fields['customer_id'], $token)) {
+			if($subscription && password_verify($subscription->customer_id, $token)) {
 				$kudos_mollie = new Kudos_Mollie();
 				if($kudos_mollie->cancel_subscription($subscription_id)) {
 					echo $kudos_modal->get_message_modal([
@@ -432,20 +444,26 @@ class Kudos_Public {
 	/**
 	 * Processes the transaction. Used by action scheduler via mollie class.
 	 *
-	 * @param Transaction $transaction
+	 * @param string $order_id
 	 *
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public static function process_transaction($transaction) {
+	public static function process_transaction($order_id) {
+
+		$logger = new Kudos_Logger();
+		$logger->debug('Processing transaction', [$order_id]);
+
+		$mapper = new Kudos_Mapper(Transaction::class);
+		/** @var Transaction $transaction */
+		$transaction = $mapper->get_by([ 'order_id' => $order_id]);
 
 		$mailer = new Kudos_Mailer();
 		$kudos_invoice = new Kudos_Invoice($transaction);
 
 		$kudos_invoice->generate_invoice();
 
-		if($transaction->get_donor()->fields['email']) {
-
+		if($transaction->get_donor()->email) {
 			// Send email - email setting is checked in mailer
 			$mailer->send_receipt($transaction);
 

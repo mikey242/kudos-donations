@@ -2,6 +2,8 @@
 
 namespace Kudos\Table;
 
+use Kudos\Entity\Donor;
+use Kudos\Kudos_Mapper;
 use Kudos\Kudos_Mollie;
 use WP_List_Table;
 use Kudos\Table_Trait;
@@ -15,6 +17,10 @@ class Subscriptions extends WP_List_Table {
 	 * @var array
 	 */
 	private $export_columns;
+	/**
+	 * @var Kudos_Mapper
+	 */
+	private $mapper;
 
 	/**
 	 * Class constructor
@@ -24,7 +30,7 @@ class Subscriptions extends WP_List_Table {
 	public function __construct() {
 
 		$this->export_columns = [
-				'subscription_created' => __('Date', 'kudos-donations'),
+				'created' => __('Date', 'kudos-donations'),
 				'name' => __('Name', 'kudos-donations'),
 				'email' => __('Email', 'kudos-donations'),
 				'value' => __('Amount', 'kudos-donations'),
@@ -34,9 +40,11 @@ class Subscriptions extends WP_List_Table {
 				'currency' => __('Currency', 'kudos-donations'),
 		];
 
+		$this->mapper = new Kudos_Mapper(Subscription::class);
+
 		parent::__construct( [
-			'table'    => Subscription::getTableName(),
-			'orderBy'  => 'subscription_created',
+			'table'    => $this->mapper->get_table_name(),
+			'orderBy'  => 'created',
 			'singular' => __( 'Subscription', 'kudos-donations' ),
 			'plural'   => __( 'Subscriptions', 'kudos-donations' ),
 			'ajax'     => false
@@ -97,7 +105,7 @@ class Subscriptions extends WP_List_Table {
 			);
 		}
 
-		return Subscription::get_table_data($search_custom_vars);
+		return $this->mapper->get_table_data($search_custom_vars, [Donor::getTableName(), 'customer_id']);
 	}
 
 	/**
@@ -108,7 +116,7 @@ class Subscriptions extends WP_List_Table {
 	 */
 	public function column_names() {
 		return [
-			'subscription_created'=>__('Date', 'kudos-donations'),
+			'created'=>__('Date', 'kudos-donations'),
 			'frequency'=>__('Frequency', 'kudos-donations'),
 			'years' => __('Years', 'kudos-donations'),
 			'name' => __('Name', 'kudos-donations'),
@@ -178,8 +186,8 @@ class Subscriptions extends WP_List_Table {
 	public function get_sortable_columns()
 	{
 		return [
-			'subscription_created' => [
-				'subscription_created',
+			'created' => [
+				'created',
 				false
 			],
 			'value' => [
@@ -213,11 +221,11 @@ class Subscriptions extends WP_List_Table {
 	 * @param array $item an array of DB data
 	 * @return string
 	 */
-	function column_subscription_created( $item ) {
+	function column_created( $item ) {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['subscription_created'])) . '</strong>';
+		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['created'])) . '</strong>';
 
 		$actions = [];
 		if($item['status'] === 'active') {

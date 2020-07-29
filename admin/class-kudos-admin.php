@@ -317,15 +317,4 @@ class Kudos_Admin {
 	    }
 	}
 
-	/**
-     * Register the plugin settings
-     *
-	 * @since    1.0.1
-	 */
-	public function register_settings() {
-
-		require_once KUDOS_DIR . 'admin/partials/kudos-settings.php';
-
-	}
-
 }

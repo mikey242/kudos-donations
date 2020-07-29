@@ -3,6 +3,7 @@
 namespace Kudos\Table;
 
 use Kudos\Entity\Transaction;
+use Kudos\Kudos_Mapper;
 use WP_List_Table;
 use Kudos\Table_Trait;
 use Kudos\Entity\Donor;
@@ -15,6 +16,10 @@ class Donors extends WP_List_Table {
 	 * @var array
 	 */
 	private $export_columns;
+	/**
+	 * @var Kudos_Mapper
+	 */
+	private $mapper;
 
 	/**
 	 * Class constructor
@@ -32,9 +37,11 @@ class Donors extends WP_List_Table {
 			'country' => __('Country', 'kudos-donations'),
 		];
 
+		$this->mapper = new Kudos_Mapper(Donor::class);
+
 		parent::__construct( [
-			'table'    => Donor::getTableName(),
-			'orderBy'  => 'donor_created',
+			'table'    => $this->mapper->get_table_name(),
+			'orderBy'  => 'created',
 			'singular' => __( 'Donor', 'kudos-donations' ),
 			'plural'   => __( 'Donors', 'kudos-donations' ),
 			'ajax'     => false
@@ -85,7 +92,7 @@ class Donors extends WP_List_Table {
 			);
 		}
 
-		return Donor::get_table_data($search_custom_vars);
+		return $this->mapper->get_table_data($search_custom_vars);
 	}
 
 	/**
@@ -100,7 +107,7 @@ class Donors extends WP_List_Table {
 			'name' => __('Name', 'kudos-donations'),
 			'address' => __('Address', 'kudos-donations'),
 			'donations' => __('Donations', 'kudos-donations'),
-			'donor_created'=>__('Date', 'kudos-donations')
+			'created'=>__('Date', 'kudos-donations')
 		];
 	}
 
@@ -127,8 +134,8 @@ class Donors extends WP_List_Table {
 	public function get_sortable_columns()
 	{
 		return [
-			'donor_created' => [
-				'donor_created',
+			'created' => [
+				'created',
 				false
 			],
 			'value' => [
@@ -158,9 +165,9 @@ class Donors extends WP_List_Table {
 	 * @param array $item an array of DB data
 	 * @return string
 	 */
-	function column_donor_created( $item ) {
+	function column_created( $item ) {
 
-		return __('Added', 'kudos-donations') . '<br/>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['donor_created']));
+		return __('Added', 'kudos-donations') . '<br/>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['created']));
 	}
 
 	/**
@@ -212,29 +219,25 @@ class Donors extends WP_List_Table {
 	 */
 	function column_donations( $item ) {
 
-//		$donor = new Donor();
-//		$donor->get_by(['customer_id' => $item['customer_id']]);
-//		$transactions = $donor->get_transactions();
-
-		$transaction = new Transaction();
-		$transactions = $transaction->get_all(['customer_id' => $item['customer_id']]);
+		$mapper = new Kudos_Mapper(Transaction::class);
+		$transactions = $mapper->get_all(['customer_id' => $item['customer_id']]);
 
 		if($transactions) {
 			$number = count($transactions);
 			$total = 0;
 			/** @var Transaction $transaction */
 			foreach ($transactions as $transaction) {
-				if($transaction->fields['status'] === 'paid') {
+				if($transaction->status === 'paid') {
 					$refunds = $transaction->get_refunds();
 					if ( $refunds ) {
 						$total = $total + $refunds['remaining'];
 					} else {
-						$total = $total + $transaction->fields['value'];
+						$total = $total + $transaction->value;
 					}
 				}
 			}
 
-			return '<a href="'. admin_url('admin.php?page=kudos-transactions&customer_id='. urlencode($item['customer_id']) .'') .'">' . $number . ' ( ' . get_currency_symbol($transactions[0]->fields['currency']) . $total . ' )' . '</a>';
+			return '<a href="'. admin_url('admin.php?page=kudos-transactions&customer_id='. urlencode($item['customer_id']) .'') .'">' . $number . ' ( ' . get_currency_symbol($transactions[0]->currency) . $total . ' )' . '</a>';
 		}
 
 		return false;

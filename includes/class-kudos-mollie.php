@@ -2,7 +2,6 @@
 
 namespace Kudos;
 
-use Kudos\Entity\Mapper;
 use Kudos\Entity\Subscription;
 use Kudos\Entity\Transaction;
 use Mollie\Api\Exceptions\ApiException;
@@ -152,7 +151,7 @@ class Kudos_Mollie
 		];
 
 		if(WP_DEBUG) {
-			$paymentArray['webhookUrl'] = 'https://ea4c3bc4351d.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+			$paymentArray['webhookUrl'] = 'https://b6740273c8e9.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 		}
 
 		// Link payment to customer if specified
@@ -174,7 +173,8 @@ class Kudos_Mollie
 				'donation_label' => $donation_label,
 			]);
 
-			$transaction->save();
+			$mapper = new Kudos_Mapper(Transaction::class);
+			$mapper->save($transaction);
 
 			$this->logger->info('New payment created', ['oder_id' => $order_id, 'sequence_type' => $payment->sequenceType]);
 			return $payment;
@@ -223,10 +223,10 @@ class Kudos_Mollie
 	public function create_subscription($transaction, $mandateId, $interval, $years) {
 
         $mollieApi = $this->mollieApi;
-        $customer_id = $transaction->fields['customer_id'];
+        $customer_id = $transaction->customer_id;
         $startDate = date("Y-m-d", strtotime("+" . $interval));
         $currency = 'EUR';
-        $value = number_format($transaction->fields['value'], 2);
+        $value = number_format($transaction->value, 2);
 
         $subscriptionArray = [
             "amount" => [
@@ -236,12 +236,12 @@ class Kudos_Mollie
 	        "mandateId" => $mandateId,
             "interval" => $interval,
             "startDate" => $startDate,  // Disable for test mode
-            "description" => sprintf(__('Kudos Subscription (%s)', 'kudos-donations'), $interval),
+            "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $transaction->order_id),
             "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
         ];
 
         if(WP_DEBUG) {
-	        $subscriptionArray['webhookUrl'] = 'https://ea4c3bc4351d.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+	        $subscriptionArray['webhookUrl'] = 'https://b6740273c8e9.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 	        unset($subscriptionArray['startDate']);  // Disable for test mode
         }
 
@@ -262,8 +262,9 @@ class Kudos_Mollie
 	        $subscription = $customer->createSubscription($subscriptionArray);
 
 	        if($subscription) {
+	        	$mapper = new Kudos_Mapper(Subscription::class);
 		        $kudos_subscription = new Subscription([
-			        'transaction_id' => $transaction->fields['transaction_id'],
+			        'transaction_id' => $transaction->transaction_id,
 			        'customer_id' => $customer_id,
 			        'frequency' => $interval,
 			        'years' => $years,
@@ -272,10 +273,11 @@ class Kudos_Mollie
 			        'subscription_id' => $subscription->id,
 			        'status' => $subscription->status
 		        ]);
-				$kudos_subscription->save();
+				$mapper->save($kudos_subscription);
 		        return $subscription;
 	        }
 
+	        $this->logger->error('Failed to create subscription', [$transaction]);
 	        return false;
 
         } catch (ApiException $e) {
@@ -323,22 +325,24 @@ class Kudos_Mollie
 	public function cancel_subscription($subscriptionId, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
-		$subscription = new Subscription();
+		$mapper = new Kudos_Mapper(Subscription::class);
+		$subscription = $mapper->get_by(['subscription_id' => $subscriptionId]);
 
 		if(!$customerId) {
-			$subscription->get_by(['subscription_id' => $subscriptionId]);
+			/** @var Subscription $subscription */
+			$subscription = $mapper->get_by([ 'subscription_id' => $subscriptionId]);
 
 			if(empty($subscription)) {
 				$this->logger->debug("Could not find subscription.", ['subscription_id' => $subscriptionId]);
 				return false;
 			}
 
-			if($subscription->fields['status'] !== 'active') {
+			if($subscription->status !== 'active') {
 				$this->logger->debug("Subscription already canceled.", ['subscription_id' => $subscriptionId]);
 				return false;
 			}
 
-			$customerId = $subscription->fields['customer_id'];
+			$customerId = $subscription->customer_id;
 		}
 
 		try {
@@ -352,7 +356,7 @@ class Kudos_Mollie
 					'status' => 'cancelled'
 				]);
 
-				$subscription->save();
+				$mapper->save($subscription);
 
 				return true;
 			}
@@ -486,11 +490,16 @@ class Kudos_Mollie
 		$this->logger->info('Webhook requested by Mollie.', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
 
 		// Get transaction from database
-		$transaction = new Transaction();
-		$transaction->get_by([
+		$mapper = new Kudos_Mapper(Transaction::class);
+		$transaction = $mapper->get_by([
 			'order_id' => $order_id,
 			'transaction_id' => $transaction_id
 		], 'OR');
+
+		// Create new transaction if none found
+		if(NULL === $transaction) {
+			$transaction = new Transaction();
+		}
 
 		// Update payment
 		$transaction->set_fields([
@@ -513,22 +522,21 @@ class Kudos_Mollie
 
 			// Get schedule processing for later
 			if(class_exists('ActionScheduler')) {
-				if ( false === as_next_scheduled_action( 'kudos_process_transaction_action', [ $transaction ] ) ) {
+				if ( false === as_next_scheduled_action( 'kudos_process_transaction_action', [$order_id] ) ) {
 					$timestamp = strtotime('+1 minute');
-					as_schedule_single_action( $timestamp, 'kudos_process_transaction_action', [ $transaction ] );
+					as_schedule_single_action( $timestamp, 'kudos_process_transaction_action', [$order_id] );
 					$this->logger->debug( 'Action "kudos_process_transaction_action" scheduled', [
-						'order_id' => $order_id,
 						'datetime' => date_i18n( 'Y-m-d H:i:s', $timestamp )
 					] );
 				}
 			} else {
-				Kudos_Public::process_transaction($transaction);
+				Kudos_Public::process_transaction($order_id);
 			}
 
 			// Set up recurring payment if sequence is first
 			if($payment->hasSequenceTypeFirst()) {
-				$kudos_mollie = new Kudos_Mollie();
-				$kudos_mollie->create_subscription($transaction, $payment->mandateId, $payment->metadata->interval, $payment->metadata->years);
+				$this->logger->debug('Creating subscription', [$transaction]);
+				$this->create_subscription($transaction, $payment->mandateId, $payment->metadata->interval, $payment->metadata->years);
 			}
 
 		} elseif ($payment->hasRefunds()) {
@@ -546,7 +554,8 @@ class Kudos_Mollie
 			$invoice->generate_refund();
 		}
 
-		$transaction->save();
+		// Save transaction to database
+		$mapper->save($transaction);
 
 		return $response;
 	}

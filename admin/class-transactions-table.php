@@ -2,6 +2,8 @@
 
 namespace Kudos\Table;
 
+use Kudos\Entity\Donor;
+use Kudos\Kudos_Mapper;
 use WP_List_Table;
 use Kudos\Kudos_Invoice;
 use Kudos\Table_Trait;
@@ -17,6 +19,10 @@ class Transactions extends WP_List_Table {
 	 * @var string[]
 	 */
 	private $export_columns;
+	/**
+	 * @var Kudos_Mapper
+	 */
+	private $mapper;
 
 	/**
 	 * Class constructor
@@ -26,9 +32,10 @@ class Transactions extends WP_List_Table {
 	public function __construct() {
 
 		add_filter('table_export_row', [$this, 'modify_export_data']);
+		$this->mapper = new Kudos_Mapper(Transaction::class);
 
 		$this->export_columns = [
-				'transaction_created' => __('Transaction created', 'kudos-donations'),
+				'created' => __('Transaction created', 'kudos-donations'),
 				'currency' => __('Currency', 'kudos-donations'),
 				'value' => __('Amount', 'kudos-donations'),
 				'refunds' => __('Refunded', 'kudos-donations'),
@@ -41,8 +48,8 @@ class Transactions extends WP_List_Table {
 		];
 
 		parent::__construct( [
-			'table'    => Transaction::getTableName(),
-			'orderBy'  => 'transaction_created',
+			'table'    => $this->mapper->get_table_name(),
+			'orderBy'  => 'created',
 			'singular' => __( 'Transaction', 'kudos-donations' ), //singular name of the listed records
 			'plural'   => __( 'Transactions', 'kudos-donations' ), //plural name of the listed records
 			'ajax'     => false //does this table support ajax?
@@ -103,6 +110,7 @@ class Transactions extends WP_List_Table {
 
 		$status = (!empty($_GET['status']) ? sanitize_text_field($_GET['status']) : '');
 		$customer_id = (!empty($_GET['customer_id']) ? sanitize_text_field($_GET['customer_id']) : '');
+		$table = $this->mapper->get_table_name();
 
 		// Add status if exist
 		if($status) {
@@ -114,7 +122,7 @@ class Transactions extends WP_List_Table {
 		// Add donor if exist
 		if($customer_id) {
 			array_push($query, $wpdb->prepare(
-				"d.customer_id = %s", esc_sql($customer_id)
+				"$table.customer_id = %s", esc_sql($customer_id)
 			));
 		}
 
@@ -132,60 +140,7 @@ class Transactions extends WP_List_Table {
 			$search_custom_vars = 'WHERE ' . implode(' AND ', $query);
 		}
 
-		return Transaction::get_table_data($search_custom_vars);
-	}
-
-	/**
-	 * Column name translations used in export
-	 *
-	 * @param array $rows
-	 * @return array
-	 * @since   2.0.0
-	 */
-	public function export_column_names($rows) {
-
-		// Set header names
-		$headers = [];
-		foreach (array_keys($rows[0]) as $header) {
-
-			switch ($header) {
-				case 'transaction_created':
-					$result = __('Transaction created', 'kudos-donations');
-					break;
-				case 'name':
-					$result = __('Name', 'kudos-donations');
-					break;
-				case 'email':
-					$result = __('Email', 'kudos-donations');
-					break;
-				case 'value':
-					$result = __('Amount', 'kudos-donations');
-					break;
-				case 'status':
-					$result = __('Status', 'kudos-donations');
-					break;
-				case 'method':
-					$result = __('Method', 'kudos-donations');
-					break;
-				case 'mode':
-					$result = __('Mode', 'kudos-donations');
-					break;
-				case 'currency':
-					$result = __('Currency', 'kudos-donations');
-					break;
-				case 'sequenceType':
-					$result = __('Type', 'kudos-donations');
-					break;
-				case 'refunds':
-					$result = __('Refunded', 'kudos-donations');
-					break;
-				default:
-					$result = ucfirst($header);
-			}
-			array_push($headers, $result);
-		}
-
-		return $headers;
+		return $this->mapper->get_table_data($search_custom_vars);
 	}
 
 	/**
@@ -196,7 +151,7 @@ class Transactions extends WP_List_Table {
 	 */
 	public function column_names() {
 		return [
-			'transaction_created'=>__('Date', 'kudos-donations'),
+			'created'=>__('Date', 'kudos-donations'),
 			'name'=>__('Name', 'kudos-donations'),
 			'email'=>__('E-mail', 'kudos-donations'),
 			'value'=>__('Amount', 'kudos-donations'),
@@ -261,7 +216,7 @@ class Transactions extends WP_List_Table {
 	public function get_hidden_columns()
 	{
 		return [
-			'transaction_id',
+			'order_id',
 			'donation_label',
 		];
 	}
@@ -275,8 +230,8 @@ class Transactions extends WP_List_Table {
 	public function get_sortable_columns()
 	{
 		return [
-			'transaction_created' => [
-				'transaction_created',
+			'created' => [
+				'created',
 				false
 			],
 			'value' => [
@@ -300,6 +255,22 @@ class Transactions extends WP_List_Table {
 	}
 
 	/**
+	 * Name column
+	 *
+	 * @since      2.0.0
+	 * @param array $item
+	 * @return string
+	 */
+	function column_name( $item ) {
+
+		$mapper = new Kudos_Mapper(Donor::class);
+		/** @var Donor $donor */
+		$donor = $mapper->get_by([ 'customer_id' => $item['customer_id']]);
+
+		return $donor->name;
+	}
+
+	/**
 	 * Email column
 	 *
 	 * @since      1.0.0
@@ -307,8 +278,13 @@ class Transactions extends WP_List_Table {
 	 * @return string
 	 */
 	function column_email( $item ) {
+
+		$mapper = new Kudos_Mapper(Donor::class);
+		/** @var Donor $donor */
+		$donor = $mapper->get_by([ 'customer_id' => $item['customer_id']]);
+
 		return sprintf(
-			'<a href="mailto: %1$s" />%1$s</a>', $item['email']
+			'<a href="mailto: %1$s" />%1$s</a>', $donor->email
 		);
 	}
 
@@ -319,10 +295,11 @@ class Transactions extends WP_List_Table {
 	 * @param array $item an array of DB data
 	 * @return string
 	 */
-	function column_transaction_created( $item ) {
+	function column_created( $item ) {
+
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['transaction_created'])) . '</strong>';
+		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['created'])) . '</strong>';
 		$pdf = Kudos_Invoice::get_invoice($item['order_id']);
 
 		$actions = [
@@ -417,17 +394,17 @@ class Transactions extends WP_List_Table {
 		$invoice = Kudos_Invoice::get_invoice($item['order_id']);
 		$refund = Kudos_Invoice::get_refund($item['order_id']);
 
-		$refunded = $item['refunds'] ? __('refunded', 'kudos-donations') : '';
+		$refunded = $item['refunds'] ? __('Refunded', 'kudos-donations') : '';
 
 		$return = $status;
 
 		// Return as link if pdf invoice present
 		if($invoice) {
-			$return = "<a href=$invoice>" . $status . " " . "<i class='far fa-file-pdf'></i></a>";
+			$return = "<a href=$invoice><i class='far fa-file-pdf'></i> " . $status . " " . "</a>";
 		}
 
 		if($refund) {
-			$return .= "<br /><a href=$refund>" . $refunded . " " . "<i class='far fa-file-pdf'></i></a>";
+			$return .= "| <a href=$refund>" . $refunded . " " . "</a>";
 		}
 
 		return $return;

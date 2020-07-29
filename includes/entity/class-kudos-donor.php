@@ -2,11 +2,50 @@
 
 namespace Kudos\Entity;
 
+use DateTime;
 use Kudos\Entity;
+use Kudos\Kudos_Mapper;
 
 class Donor extends Entity {
 
 	public const TABLE = "kudos_donors";
+	/**
+	 * @var DateTime
+	 */
+	public $created;
+	/**
+	 * @var string
+	 */
+	public $email;
+	/**
+	 * @var string
+	 */
+	public $name;
+	/**
+	 * @var string
+	 */
+	public $street;
+	/**
+	 * @var string
+	 */
+	public $postcode;
+	/**
+	 * @var string
+	 */
+	public $city;
+	/**
+	 * @var string
+	 */
+	public $country;
+	/**
+	 * @var string
+	 */
+	public $customer_id;
+	/**
+	 * @var DateTime
+	 */
+	public $last_updated;
+
 
 	/**
 	 * Add donor_created
@@ -16,17 +55,16 @@ class Donor extends Entity {
 	 */
 	public function __construct($atts=null) {
 		parent::__construct($atts);
-		$this->fields['donor_created'] = current_time('mysql');
 	}
 
 	/**
 	 * Gets all transactions for current user
 	 *
-	 * @return array|object
+	 * @return array|null
 	 */
 	public function get_transactions() {
-		$transaction = new Transaction();
-		return $transaction->get_all(['customer_id' => $this->fields['customer_id']]);
+		$mapper = new Kudos_Mapper(Transaction::class);
+		return $mapper->get_all(['customer_id' => $this->customer_id]);
 	}
 
 }
