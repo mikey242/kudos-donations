@@ -139,7 +139,7 @@ class Subscriptions extends WP_List_Table {
 
 		//All link
 		$count = count($this->count_records());
-		$class = ($current == 'all' ? ' class="current"' :'');
+		$class = ($current == 'all' && empty($_REQUEST['s']) ? ' class="current"' :'');
 		$all_url = remove_query_arg('frequency');
 		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') . " ($count)</a>";
 
@@ -223,13 +223,13 @@ class Subscriptions extends WP_List_Table {
 	 */
 	function column_created( $item ) {
 
-		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
+		$cancel_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
 		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['created'])) . '</strong>';
 
 		$actions = [];
 		if($item['status'] === 'active') {
-			$actions['cancel'] = sprintf( '<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'cancel', sanitize_text_field( $item['subscription_id'] ), $delete_nonce, __('Cancel', 'kudos-donations') );
+			$actions['cancel'] = sprintf( '<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'cancel', sanitize_text_field( $item['subscription_id'] ), $cancel_nonce, __('Cancel', 'kudos-donations') );
 		}
 
 		return $title . $this->row_actions( $actions );
@@ -322,8 +322,9 @@ class Subscriptions extends WP_List_Table {
 	/**
 	 * Cancel a subscription.
 	 *
-	 * @since      2.0.0
 	 * @param int $subscription_id order ID
+	 * @return bool
+	 * @since      2.0.0
 	 */
 	public static function cancel_subscription( $subscription_id ) {
 

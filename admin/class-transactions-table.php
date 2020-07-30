@@ -2,18 +2,16 @@
 
 namespace Kudos\Table;
 
+use WP_List_Table;
 use Kudos\Entity\Donor;
 use Kudos\Kudos_Mapper;
-use WP_List_Table;
 use Kudos\Kudos_Invoice;
 use Kudos\Table_Trait;
 use Kudos\Entity\Transaction;
 
 class Transactions extends WP_List_Table {
 
-	use Table_Trait {
-		delete_record as trait_delete;
-	}
+	use Table_Trait;
 
 	/**
 	 * @var string[]
@@ -104,6 +102,7 @@ class Transactions extends WP_List_Table {
 	 * @since      1.0.0
 	 */
 	public function fetch_table_data() {
+
 		global $wpdb;
 
 		$query = [];
@@ -130,8 +129,8 @@ class Transactions extends WP_List_Table {
 		if(!empty($_REQUEST['s'])) {
 			$search = esc_sql($_REQUEST['s']);
 			array_push($query, $wpdb->prepare(
-				'(`email` LIKE "%%%s%%") OR (`name` LIKE "%%%s%")',
-				$search, $search
+				'(`email` LIKE "%%%s%%") OR (`name` LIKE "%%%s%") OR (`order_id` LIKE "%%%s%")',
+				$search, $search, $search
 			));
 		}
 
@@ -140,7 +139,7 @@ class Transactions extends WP_List_Table {
 			$search_custom_vars = 'WHERE ' . implode(' AND ', $query);
 		}
 
-		return $this->mapper->get_table_data($search_custom_vars);
+		return $this->mapper->get_table_data($search_custom_vars, [Donor::getTableName(), 'customer_id']);
 	}
 
 	/**
@@ -175,8 +174,8 @@ class Transactions extends WP_List_Table {
 
 		//All link
 		$count = count($this->count_records());
-		$class = ($current == 'all' ? ' class="current"' :'');
-		$all_url = remove_query_arg(['status']);
+		$class = ($current == 'all' && empty($_REQUEST['s']) ? ' class="current"' :'');
+		$all_url = remove_query_arg(['status', 'customer_id']);
 		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') . " ($count)</a>";
 
 		//Paid link
@@ -216,7 +215,7 @@ class Transactions extends WP_List_Table {
 	public function get_hidden_columns()
 	{
 		return [
-			'order_id',
+			'transaction_id',
 			'donation_label',
 		];
 	}
@@ -255,22 +254,6 @@ class Transactions extends WP_List_Table {
 	}
 
 	/**
-	 * Name column
-	 *
-	 * @since      2.0.0
-	 * @param array $item
-	 * @return string
-	 */
-	function column_name( $item ) {
-
-		$mapper = new Kudos_Mapper(Donor::class);
-		/** @var Donor $donor */
-		$donor = $mapper->get_by([ 'customer_id' => $item['customer_id']]);
-
-		return $donor->name;
-	}
-
-	/**
 	 * Email column
 	 *
 	 * @since      1.0.0
@@ -278,13 +261,8 @@ class Transactions extends WP_List_Table {
 	 * @return string
 	 */
 	function column_email( $item ) {
-
-		$mapper = new Kudos_Mapper(Donor::class);
-		/** @var Donor $donor */
-		$donor = $mapper->get_by([ 'customer_id' => $item['customer_id']]);
-
 		return sprintf(
-			'<a href="mailto: %1$s" />%1$s</a>', $donor->email
+			'<a href="mailto: %1$s" />%1$s</a>', $item['email']
 		);
 	}
 
@@ -439,12 +417,12 @@ class Transactions extends WP_List_Table {
 	 *
 	 * @param $column
 	 * @param int $order_id order ID
-	 *
+	 * @return false|int
 	 * @since      1.0.0
 	 */
 	protected function delete_record( $column, $order_id ) {
 
-		$result = $this->trait_delete($column, $order_id);
+		$result = $this->mapper->delete($column, $order_id);
 
 		// Delete invoice if found
 		if($result) {
@@ -453,6 +431,8 @@ class Transactions extends WP_List_Table {
 				unlink($file);
 			}
 		}
+
+		return $result;
 	}
 
 	/**
