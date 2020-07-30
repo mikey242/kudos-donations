@@ -69,8 +69,18 @@ class Kudos_Admin {
 	 */
 	public function register_routes() {
 
-		// Mollie API key check
+		// Payment webhook
 		$mollie = new Kudos_Mollie();
+		register_rest_route( 'kudos/v1', 'mollie/payment/webhook', [
+			'methods' => 'POST',
+			'callback' => [$mollie, 'rest_api_mollie_webhook'],
+			'args' => [
+				'id' => [
+					'required' => true
+				]
+			]
+		] );
+
 		register_rest_route('kudos/v1', 'mollie/admin', [
 			'methods'   => WP_REST_Server::READABLE,
 			'callback'  => [$mollie, 'check_api_keys'],

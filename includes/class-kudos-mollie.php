@@ -150,7 +150,7 @@ class Kudos_Mollie
 		];
 
 		if(WP_DEBUG) {
-			$paymentArray['webhookUrl'] = 'https://ca5c8ba8e581.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+			$paymentArray['webhookUrl'] = 'https://97433fa27176.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 		}
 
 		// Link payment to customer if specified
@@ -240,7 +240,7 @@ class Kudos_Mollie
         ];
 
         if(WP_DEBUG) {
-	        $subscriptionArray['webhookUrl'] = 'https://ca5c8ba8e581.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+	        $subscriptionArray['webhookUrl'] = 'https://97433fa27176.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 	        unset($subscriptionArray['startDate']);  // Disable for test mode
         }
 
@@ -360,31 +360,13 @@ class Kudos_Mollie
 				return true;
 			}
 
+			return false;
+
 		} catch (ApiException $e) {
 			$this->logger->critical($e->getMessage(), [$customerId, $subscriptionId]);
 			return false;
 		}
 
-	}
-
-	/**
-	 * Register webhook using rest
-	 *
-	 * @since    1.0.0
-	 * @return void
-	 */
-	public function register_webhook() {
-
-	    // Payment webhook
-		register_rest_route( 'kudos/v1', 'mollie/payment/webhook', [
-			'methods' => 'POST',
-			'callback' => [$this, 'rest_api_mollie_webhook'],
-			'args' => [
-				'id' => [
-					'required' => true
-				]
-			]
-		] );
 	}
 
 	/**
