@@ -19,7 +19,7 @@ const DonationButtonPanel = ( props ) => {
 
 			<TextInput
 				id="_kudos_button_label"
-				label={ __( 'Button label', 'kudos-donations' ) }
+				label={ __( 'Button text', 'kudos-donations' ) }
 				value={ props.settings._kudos_button_label }
 				placeHolder={ __( 'Button label', 'kudos-donations' ) }
 				disabled={ props.isSaving }

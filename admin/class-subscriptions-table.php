@@ -3,11 +3,11 @@
 namespace Kudos\Table;
 
 use Kudos\Entity\Donor;
+use Kudos\Entity\Subscription;
 use Kudos\Kudos_Mapper;
 use Kudos\Kudos_Mollie;
-use WP_List_Table;
 use Kudos\Table_Trait;
-use Kudos\Entity\Subscription;
+use WP_List_Table;
 
 class Subscriptions extends WP_List_Table {
 

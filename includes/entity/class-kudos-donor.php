@@ -67,4 +67,8 @@ class Donor extends Entity {
 		return $mapper->get_all(['customer_id' => $this->customer_id]);
 	}
 
+	public function __toString() {
+		return $this->customer_id;
+	}
+
 }

@@ -84,6 +84,7 @@ class Transaction extends Entity {
 	 * @since   2.0.0
 	 */
 	public function get_donor() {
+
 		$mapper = new Kudos_Mapper(Donor::class);
 		return $mapper->get_by(['customer_id' => $this->customer_id]);
 	}

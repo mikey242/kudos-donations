@@ -12,7 +12,7 @@ const ColorPicker = ( props ) => {
 
 	return (
 		<BaseControl
-			label={ __( 'Color', 'kudos-donations' ) }
+			label={ __( 'Colour', 'kudos-donations' ) }
 			id={ _uniqueId( props.label ) }
 		>
 			<ColorPalette

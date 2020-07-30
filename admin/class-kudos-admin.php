@@ -71,16 +71,38 @@ class Kudos_Admin {
 
 		// Mollie API key check
 		$mollie = new Kudos_Mollie();
-		$mollie->register_api_key_check();
+		register_rest_route('kudos/v1', 'mollie/admin', [
+			'methods'   => WP_REST_Server::READABLE,
+			'callback'  => [$mollie, 'check_api_keys'],
+			'args' => [
+				'apiMode' => [
+					'required' => true
+				],
+				'testKey',
+				'liveKey'
+			]
+		]);
 
 		// Test Email
         $mailer = new Kudos_Mailer();
-        $mailer->register_send_test_email();
+		register_rest_route('kudos/v1', 'email/test', [
+			'methods'   => WP_REST_Server::CREATABLE,
+			'callback'  => [$mailer, 'send_test'],
+			'args' => [
+				'email' => [
+					'required' => true
+				]
+			]
+		]);
 
-        // Diagnostics
-		register_rest_route('kudos/v1', 'diagnostics', [
+		// View sample invoice
+		$invoice = new Kudos_Invoice();
+		register_rest_route('kudos/v1', 'preview-invoice', [
 			'methods'   => WP_REST_Server::READABLE,
-			'callback'  => [$this, 'diagnostics'],
+			'callback'  => [$invoice, 'view_sample_invoice'],
+			'permission_callback' => function ( ) {
+				return current_user_can( 'manage_options' );
+			},
 		]);
 	}
 
@@ -188,6 +210,7 @@ class Kudos_Admin {
 			'nonce'   => wp_create_nonce( 'wp_rest' ),
 			'checkApiUrl' => rest_url('kudos/v1/mollie/admin'),
 			'sendTestUrl' => rest_url('kudos/v1/email/test'),
+			'previewInvoiceUrl' => rest_url('kudos/v1/preview-invoice'),
 			'getDiagnosticsUrl' => rest_url('kudos/v1/diagnostics'),
 			'ajaxurl' => admin_url('admin-ajax.php'),
 		]);
@@ -243,6 +266,9 @@ class Kudos_Admin {
 	 * @since   2.0.0
 	 */
 	public function kudos_donor_page_assets() {
+
+		$invoice = new Kudos_Invoice();
+		$invoice->view_sample_invoice();
 
 		// Load table assets
 		$tableHandle = $this->kudos_table_page_assets();

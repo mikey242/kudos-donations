@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 // Settings Panels
-import { DonationFormPanel } from './Components/Panels/DonationFormPanel';
-import { CompletedPaymentPopup } from './Components/Panels/CompletedPaymentPopup';
+import { DonationModalPanel } from './Components/Panels/DonationModalPanel';
+import { CompletedPaymentModal } from './Components/Panels/CompletedPaymentModal';
 import { KudosNotice } from './Components/KudosNotice';
 import { KudosHeader } from './Components/KudosHeader';
 import { EmailSettingsPanel } from './Components/Panels/EmailSettingsPanel';
@@ -15,7 +15,6 @@ import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { InvoiceCompanyPanel } from './Components/Panels/InvoiceCompanyPanel';
 import { GenerateInvoicesPanel } from './Components/Panels/GenerateInvoicesPanel';
 import { PrimaryButton } from './Components/FormElements/PrimaryButton';
-import { DiagnosticsPanel } from './Components/Panels/DiagnosticsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 
@@ -60,7 +59,6 @@ class KudosAdmin extends Component {
 	componentDidMount() {
 		if ( false === this.state.isAPILoaded ) {
 			this.getSettings();
-			this.getDiagnostics();
 		}
 	}
 
@@ -123,30 +121,6 @@ class KudosAdmin extends Component {
 					checkingApi: false,
 					isAPISaving: false,
 				} );
-			} );
-		// .catch( ( error ) => {
-		// 	console.log( error );
-		// } );
-	}
-
-	getDiagnostics() {
-		axios
-			.get( window.kudos.getDiagnosticsUrl, {
-				headers: {
-					// eslint-disable-next-line no-undef
-					'X-WP-Nonce': wpApiSettings.nonce,
-				},
-			} )
-			.then( ( response ) => {
-				if ( response.data.success ) {
-					this.setState( {
-						diagnostics: {
-							...response.data.data,
-						},
-						checkingApi: false,
-						isAPISaving: false,
-					} );
-				}
 			} );
 		// .catch( ( error ) => {
 		// 	console.log( error );
@@ -272,11 +246,11 @@ class KudosAdmin extends Component {
 							{ ...this.state }
 							handleInputChange={ this.handleInputChange }
 						/>
-						<DonationFormPanel
+						<DonationModalPanel
 							{ ...this.state }
 							handleInputChange={ this.handleInputChange }
 						/>
-						<CompletedPaymentPopup
+						<CompletedPaymentModal
 							{ ...this.state }
 							handleInputChange={ this.handleInputChange }
 						/>
@@ -326,7 +300,6 @@ class KudosAdmin extends Component {
 			case 'advanced':
 				return (
 					<Fragment>
-						<DiagnosticsPanel { ...this.state.diagnostics } />
 						<ActionSchedulerPanel
 							{ ...this.state }
 							handleInputChange={ this.handleInputChange }

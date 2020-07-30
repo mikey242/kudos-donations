@@ -459,9 +459,8 @@ class Kudos_Public {
 		$transaction = $mapper->get_by([ 'order_id' => $order_id]);
 
 		$mailer = new Kudos_Mailer();
-		$kudos_invoice = new Kudos_Invoice($transaction);
-
-		$kudos_invoice->generate_invoice();
+		$kudos_invoice = new Kudos_Invoice();
+		$kudos_invoice->generate_invoice($transaction);
 
 		if($transaction->get_donor()->email) {
 			// Send email - email setting is checked in mailer

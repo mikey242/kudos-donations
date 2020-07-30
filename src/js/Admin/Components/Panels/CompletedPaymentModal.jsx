@@ -8,10 +8,10 @@ const { PanelBody } = wp.components;
 
 const { Fragment } = wp.element;
 
-const CompletedPaymentPopup = ( props ) => {
+const CompletedPaymentModal = ( props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Completed Payment Pop-up', 'kudos-donations' ) }
+			title={ __( 'Completed Payment Modal', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 			<Toggle
@@ -34,7 +34,7 @@ const CompletedPaymentPopup = ( props ) => {
 							<TextInput
 								id="_kudos_return_message_header"
 								label={ __(
-									'Message header',
+									'Header',
 									'kudos-donations'
 								) }
 								value={
@@ -46,7 +46,7 @@ const CompletedPaymentPopup = ( props ) => {
 							<TextInput
 								id="_kudos_return_message_text"
 								label={ __(
-									'Message text',
+									'Text',
 									'kudos-donations'
 								) }
 								value={
@@ -71,4 +71,4 @@ const CompletedPaymentPopup = ( props ) => {
 	);
 };
 
-export { CompletedPaymentPopup };
+export { CompletedPaymentModal };

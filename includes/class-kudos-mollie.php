@@ -13,7 +13,6 @@ use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
 use WP_REST_Response;
-use WP_REST_Server;
 
 class Kudos_Mollie
 {
@@ -389,25 +388,6 @@ class Kudos_Mollie
 	}
 
 	/**
-	 * REST route for checking API keys
-	 *
-	 * @since   2.0.0
-	 */
-	function register_api_key_check() {
-		register_rest_route('kudos/v1', 'mollie/admin', [
-			'methods'   => WP_REST_Server::READABLE,
-			'callback'  => [$this, 'check_api_keys'],
-			'args' => [
-				'apiMode' => [
-					'required' => true
-				],
-				'testKey',
-				'liveKey'
-			]
-		]);
-	}
-
-	/**
 	 * Check the Mollie Api key associated with the Api mode
 	 *
 	 * @param WP_REST_Request $request
@@ -550,8 +530,8 @@ class Kudos_Mollie
 			]);
 
 			// Process refund
-			$invoice = new Kudos_Invoice($transaction);
-			$invoice->generate_refund();
+			$invoice = new Kudos_Invoice();
+			$invoice->generate_refund($transaction);
 		}
 
 		// Save transaction to database

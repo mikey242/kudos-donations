@@ -2,11 +2,11 @@
 
 namespace Kudos\Table;
 
+use Kudos\Entity\Donor;
 use Kudos\Entity\Transaction;
 use Kudos\Kudos_Mapper;
-use WP_List_Table;
 use Kudos\Table_Trait;
-use Kudos\Entity\Donor;
+use WP_List_Table;
 
 class Donors extends WP_List_Table {
 

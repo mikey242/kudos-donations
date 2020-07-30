@@ -2,9 +2,7 @@ import axios from 'axios';
 import { PrimaryButton } from '../FormElements/PrimaryButton';
 
 const { __ } = wp.i18n;
-
 const { PanelRow, PanelBody, BaseControl } = wp.components;
-
 const { useState } = wp.element;
 
 const TestEmailPanel = ( props ) => {

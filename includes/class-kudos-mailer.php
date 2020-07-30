@@ -5,7 +5,6 @@ namespace Kudos;
 use Kudos\Entity\Transaction;
 use PHPMailer;
 use WP_REST_Request;
-use WP_REST_Server;
 
 class Kudos_Mailer
 {
@@ -174,23 +173,6 @@ class Kudos_Mailer
 
 		return $mail;
 
-	}
-
-	/**
-	 * REST route for checking API keys
-	 *
-	 * @since   2.0.0
-	 */
-	public function register_send_test_email() {
-		register_rest_route('kudos/v1', 'email/test', [
-			'methods'   => WP_REST_Server::CREATABLE,
-			'callback'  => [$this, 'send_test'],
-			'args' => [
-				'email' => [
-					'required' => true
-				]
-			]
-		]);
 	}
 
 }

@@ -4,6 +4,7 @@ namespace Kudos\Entity;
 
 use DateTime;
 use Kudos\Entity;
+use Kudos\Kudos_Mapper;
 
 class Subscription extends Entity {
 
@@ -47,6 +48,11 @@ class Subscription extends Entity {
 	 * @var DateTime
 	 */
 	public $last_updated;
+	/**
+	 * UNMAPPED
+	 * @var Donor
+	 */
+	public $donor;
 
 	/**
 	 * Table name without prefix
@@ -64,26 +70,18 @@ class Subscription extends Entity {
 	}
 
 	/**
-	 * Gets data for table view in admin
+	 * Gets donor associated with transaction
 	 *
-	 * @param null $search_custom_vars
-	 *
-	 * @return array|object|null
+	 * @return Donor|Entity|null
+	 * @since   2.0.0
 	 */
-	public static function get_table_data($search_custom_vars) {
+	public function get_donor() {
 
-		global $wpdb;
-		$donor_table = Donor::getTableName();
-		$subscription_table = $wpdb->prefix . self::TABLE;
+		if($this->donor) {
+			return $this->donor;
+		}
 
-		return $wpdb->get_results(
-			"SELECT 
-       					$subscription_table.*,
-       					$donor_table.*
-			FROM $subscription_table
-			LEFT JOIN $donor_table on $subscription_table.customer_id = $donor_table.customer_id
-			$search_custom_vars
-			", ARRAY_A
-		);
+		$mapper = new Kudos_Mapper(Donor::class);
+		return $mapper->get_by(['customer_id' => $this->customer_id]);
 	}
 }

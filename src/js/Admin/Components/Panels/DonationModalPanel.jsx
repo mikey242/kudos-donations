@@ -5,16 +5,16 @@ const { __ } = wp.i18n;
 const { PanelBody } = wp.components;
 const { Fragment } = wp.element;
 
-const DonationFormPanel = ( props ) => {
+const DonationModalPanel = ( props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Donation Form', 'kudos-donations' ) }
+			title={ __( 'Donation Modal', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 			<Checkbox
 				id="_kudos_address_enabled"
 				heading={ __( 'Address', 'kudos-donations' ) }
-				label="Enabled"
+				label="Enable address field"
 				value={ props.settings._kudos_address_enabled }
 				onChange={ props.handleInputChange }
 			/>
@@ -24,7 +24,7 @@ const DonationFormPanel = ( props ) => {
 						<Fragment key="_kudos_address_required">
 							<Checkbox
 								id="_kudos_address_required"
-								label="Required"
+								label="Address required"
 								value={ props.settings._kudos_address_required }
 								onChange={ props.handleInputChange }
 							/>
@@ -34,7 +34,7 @@ const DonationFormPanel = ( props ) => {
 
 			<TextInput
 				id="_kudos_form_header"
-				label={ __( 'Payment form header', 'kudos-donations' ) }
+				label={ __( 'Header', 'kudos-donations' ) }
 				value={ props.settings._kudos_form_header }
 				disabled={ props.isSaving }
 				onChange={ props.handleInputChange }
@@ -42,7 +42,7 @@ const DonationFormPanel = ( props ) => {
 
 			<TextInput
 				id="_kudos_form_text"
-				label={ __( 'Payment form text', 'kudos-donations' ) }
+				label={ __( 'Welcome text', 'kudos-donations' ) }
 				value={ props.settings._kudos_form_text }
 				disabled={ props.isSaving }
 				onChange={ props.handleInputChange }
@@ -51,4 +51,4 @@ const DonationFormPanel = ( props ) => {
 	);
 };
 
-export { DonationFormPanel };
+export { DonationModalPanel };

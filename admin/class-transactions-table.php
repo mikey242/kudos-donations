@@ -2,12 +2,12 @@
 
 namespace Kudos\Table;
 
-use WP_List_Table;
 use Kudos\Entity\Donor;
-use Kudos\Kudos_Mapper;
-use Kudos\Kudos_Invoice;
-use Kudos\Table_Trait;
 use Kudos\Entity\Transaction;
+use Kudos\Kudos_Invoice;
+use Kudos\Kudos_Mapper;
+use Kudos\Table_Trait;
+use WP_List_Table;
 
 class Transactions extends WP_List_Table {
 
