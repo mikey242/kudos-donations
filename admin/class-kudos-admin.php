@@ -305,7 +305,8 @@ class Kudos_Admin {
 		wp_die();
 	}
 
-	public function cancel_subscription() {
+	public function debug_cancel_subscription() {
+
 	    if(!wp_verify_nonce($_REQUEST['_wpnonce'], 'cancel_subscription')) {
 	        echo "Nope!";
 	        die;
@@ -313,8 +314,9 @@ class Kudos_Admin {
 	    $kudos_mollie = new Kudos_Mollie();
 	    $subscription = $kudos_mollie->cancel_subscription($_REQUEST['subscriptionId'], $_REQUEST['customerId']);
 	    if($subscription) {
-	        echo "Subscription canceled";
+		    wp_safe_redirect(admin_url( 'admin.php?page=kudos-debug&tab=subscriptions' ));
 	    }
+
 	}
 
 }
