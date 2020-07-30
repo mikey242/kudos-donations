@@ -47,7 +47,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
                     ?>
 
                     <h3><strong><?php echo $donor->email ?></strong> <span>(<?php echo $donor->customer_id ?>)</span></h3>
-                    <form action="<?php echo admin_url( 'admin-post.php' ) ?>" method='post'>
+                    <form action="<?php echo admin_url( 'admin-post.php?page=kudos-debug&tab=subscriptions' ) ?>" method='post'>
                         <?php wp_nonce_field('cancel_subscription', '_wpnonce') ?>
                         <input type='hidden' name='action' value='cancel_subscription'>
                         <input type='hidden' name='customerId' value='<?php echo $donor->customer_id ?>'>

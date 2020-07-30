@@ -32,6 +32,7 @@ class Kudos_Mapper {
 		$this->wpdb = $wpdb;
 		$this->set_repository($repository);
 		$this->logger = new Kudos_Logger();
+
 	}
 
 	/**
@@ -43,6 +44,7 @@ class Kudos_Mapper {
 	 * @since 2.0.0
 	 */
 	private function array_to_where($query_fields, $operator='AND') {
+
 		$wpdb = $this->wpdb;
 		$array = [];
 		foreach ($query_fields as $key=>$field) {
@@ -52,6 +54,7 @@ class Kudos_Mapper {
 		}
 
 		return 'WHERE ' . implode(' ' . $operator . ' ', $array);
+
 	}
 
 	/**
@@ -61,7 +64,9 @@ class Kudos_Mapper {
 	 * @since 2.0.0
 	 */
 	public function set_repository($class) {
+
 		$this->repository = $class;
+
 	}
 
 	/**
@@ -92,6 +97,25 @@ class Kudos_Mapper {
 			$table,
 			(array) $entity
 		);
+
+	}
+
+	/**
+	 * Deletes selected record
+	 *
+	 * @param string $column
+	 * @param $value
+	 * @return false|int
+	 */
+	public function delete($column, $value) {
+
+		$wpdb = $this->wpdb;
+
+		return $wpdb->delete(
+			$this->get_table_name(),
+			[ $column => $value ]
+		);
+
 	}
 
 	/**
@@ -105,7 +129,6 @@ class Kudos_Mapper {
 	public function get_by($query_fields, $operator='AND') {
 
 		if(NULL === $this->repository) {
-			$this->logger->debug('Unable to get results as repository not set', [$query_fields]);
 			return null;
 		}
 
@@ -191,11 +214,11 @@ class Kudos_Mapper {
 	 * Gets data for table view in admin
 	 *
 	 * @param string|null $search_custom_vars
-	 * @param array $join \\ e.g [wp_table_name => join_field]
+	 * @param array|null $join \\ e.g [wp_table_name => join_field] automatically prefixes duplicate column names with table name
 	 * @return array|null|false
 	 * @since   2.0.0
 	 */
-	public function get_table_data($search_custom_vars, $join=[]) {
+	public function get_table_data($search_custom_vars, $join=null) {
 
 		if(NULL === $this->repository) {
 			return false;
@@ -203,16 +226,29 @@ class Kudos_Mapper {
 
 		$wpdb = $this->wpdb;
 		$table = $this->get_table_name();
+		$join_column_names = '';
 
-		if($join) {
-			$join_esc = esc_sql($join);
-			$join_table = $join_esc[0];
-			$join_field = $join_esc[1];
+		if(!empty($join)) {
+			$join_table = $join[0];
+			$join_field = $join[1];
+			$join_columns = $wpdb->get_col("DESC {$join_table}", 0);
+			$table_columns = $wpdb->get_col("DESC {$table}", 0);
+
+			// Rename duplicate columns
+			foreach ($join_columns as $column_name) {
+				if(in_array($column_name, $table_columns)) {
+					$join_column_names .= $join_table . '.' . $column_name . ' as ' . $join_table. '_' . $column_name . ', ';
+				} else {
+					$join_column_names .= $join_table . '.' . $column_name . ', ';
+				}
+			}
+
+			$join_column_names = esc_sql(', ' . rtrim($join_column_names, ', '));
 			$search_custom_vars = " LEFT JOIN $join_table on $join_table.$join_field = $table.$join_field " . $search_custom_vars;
 		}
 
 		return $wpdb->get_results("
-			SELECT *
+			SELECT $table.* $join_column_names
 			FROM $table
 			$search_custom_vars
 		", ARRAY_A);

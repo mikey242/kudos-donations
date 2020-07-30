@@ -151,7 +151,7 @@ class Kudos_Mollie
 		];
 
 		if(WP_DEBUG) {
-			$paymentArray['webhookUrl'] = 'https://b6740273c8e9.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+			$paymentArray['webhookUrl'] = 'https://ca5c8ba8e581.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 		}
 
 		// Link payment to customer if specified
@@ -241,7 +241,7 @@ class Kudos_Mollie
         ];
 
         if(WP_DEBUG) {
-	        $subscriptionArray['webhookUrl'] = 'https://b6740273c8e9.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
+	        $subscriptionArray['webhookUrl'] = 'https://ca5c8ba8e581.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 	        unset($subscriptionArray['startDate']);  // Disable for test mode
         }
 

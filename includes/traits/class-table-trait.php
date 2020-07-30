@@ -21,7 +21,7 @@ trait Table_Trait {
 	 */
 	public function display() {
 		$this->views();
-		$this->search_box(__('Search') . ' ' . $this->_args['plural'], 'search_subscriptions');
+		$this->search_box(__('Search') . ' ' . $this->_args['plural'], 'search_records');
 		parent::display();
 	}
 
@@ -195,23 +195,5 @@ trait Table_Trait {
 		}
 
 		return -$result;
-	}
-
-	/**
-	 * Delete record by id
-	 *
-	 * @param $column
-	 * @param $id
-	 * @return bool|false|int
-	 * @since   2.0.0
-	 */
-	protected function delete_record($column, $id)
-	{
-		global $wpdb;
-
-		return $wpdb->delete(
-			$this->_args['table'],
-			[ $column => $id ]
-		);
 	}
 }

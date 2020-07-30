@@ -415,10 +415,9 @@ class Kudos_Public {
 
 		$subscription_id = sanitize_text_field(get_query_var('kudos_subscription_id'));
 		$token = sanitize_text_field(get_query_var('kudos_token'));
-		$kudos_modal = new Kudos_Modal();
 
 		if(!empty($token && !empty($subscription_id))) {
-
+			$kudos_modal = new Kudos_Modal();
 			$subscription_id = base64_decode($subscription_id);
 			$mapper = new Kudos_Mapper(Subscription::class);
 			/** @var Subscription $subscription */
@@ -439,6 +438,7 @@ class Kudos_Public {
 				'text' => 'Sorry, this link is no longer valid.'
 			]);
 		}
+
 	}
 
 	/**

@@ -73,12 +73,12 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{
-				enforce: 'pre',
-				exclude: /node_modules/,
-				test: /\.jsx$/,
-				loader: 'eslint-loader',
-			},
+			// {
+			// 	enforce: 'pre',
+			// 	exclude: /node_modules/,
+			// 	test: /\.jsx$/,
+			// 	loader: 'eslint-loader',
+			// },
 			{
 				test: /.jsx?$/,
 				exclude: [ resolve( __dirname, 'node_modules' ) ],
