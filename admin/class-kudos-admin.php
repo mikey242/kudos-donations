@@ -277,9 +277,6 @@ class Kudos_Admin {
 	 */
 	public function kudos_donor_page_assets() {
 
-		$invoice = new Kudos_Invoice();
-		$invoice->view_sample_invoice();
-
 		// Load table assets
 		$tableHandle = $this->kudos_table_page_assets();
 		wp_localize_script($tableHandle, 'kudos', [
