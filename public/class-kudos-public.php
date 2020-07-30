@@ -175,18 +175,6 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Registers the webhook url
-     *
-     * @since   1.0.0
-	 * @return void
-	 */
-	public function register_routes() {
-		// Mollie webhook
-		$mollie = new Kudos_Mollie();
-		$mollie->register_webhook();
-	}
-
-	/**
 	 * Check payment status based on local order_id
 	 *
 	 * @since   1.0.0
@@ -384,7 +372,9 @@ class Kudos_Public {
 			$order_id = base64_decode(sanitize_text_field($order_id));
 			if(wp_verify_nonce($_REQUEST['kudos_token'],'kudos_check_order-' . $order_id)) {
 				$atts = $this->check_transaction($order_id);
-				echo $modal->get_message_modal($atts);
+				if($atts) {
+					echo $modal->get_message_modal($atts);
+				}
 			}
 		}
 	}
