@@ -9,6 +9,11 @@ use Kudos\Kudos_Mapper;
 class Subscription extends Entity {
 
 	/**
+	 * Table name without prefix
+	 * @var string
+	 */
+	public const TABLE = "kudos_subscriptions";
+	/**
 	 * @var DateTime;
 	 */
 	public $created;
@@ -48,17 +53,6 @@ class Subscription extends Entity {
 	 * @var DateTime
 	 */
 	public $last_updated;
-	/**
-	 * UNMAPPED
-	 * @var Donor
-	 */
-	public $donor;
-
-	/**
-	 * Table name without prefix
-	 * @var string
-	 */
-	public const TABLE = "kudos_subscriptions";
 
 	/**
 	 * Subscription constructor.
@@ -66,7 +60,9 @@ class Subscription extends Entity {
 	 * @param null|array $atts
 	 */
 	public function __construct($atts=null) {
+
 		parent::__construct($atts);
+
 	}
 
 	/**
@@ -77,11 +73,8 @@ class Subscription extends Entity {
 	 */
 	public function get_donor() {
 
-		if($this->donor) {
-			return $this->donor;
-		}
-
 		$mapper = new Kudos_Mapper(Donor::class);
 		return $mapper->get_by(['customer_id' => $this->customer_id]);
+
 	}
 }
