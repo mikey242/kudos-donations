@@ -326,12 +326,11 @@ class Kudos_Mollie
 
 		$mollieApi = $this->mollieApi;
 		$mapper = new Kudos_Mapper(Subscription::class);
-		$subscription = $mapper->get_by(['subscription_id' => $subscriptionId]);
+
+		/** @var Subscription $subscription */
+		$subscription = $mapper->get_by([ 'subscription_id' => $subscriptionId]);
 
 		if(!$customerId) {
-			/** @var Subscription $subscription */
-			$subscription = $mapper->get_by([ 'subscription_id' => $subscriptionId]);
-
 			if(empty($subscription)) {
 				$this->logger->debug("Could not find subscription.", ['subscription_id' => $subscriptionId]);
 				return false;
@@ -352,11 +351,14 @@ class Kudos_Mollie
 			if($mollieSubscription) {
 
 				$this->logger->info( "Subscription cancelled.", ['customer_id' => $customerId, 'subscription_id' => $subscriptionId]);
-				$subscription->set_fields([
-					'status' => 'cancelled'
-				]);
 
-				$mapper->save($subscription);
+				if(NULL !== $subscription) {
+					$subscription->set_fields([
+						'status' => 'cancelled'
+					]);
+
+					$mapper->save($subscription);
+				}
 
 				return true;
 			}
