@@ -245,6 +245,7 @@ class Kudos_Public {
 	 * @return bool
 	 */
 	public static function ready() {
+
 		$apiConnected = get_option('_kudos_mollie_connected');
 		$apiMode = get_option('_kudos_mollie_api_mode');
 		$apiKey = get_option('_kudos_mollie_'.$apiMode.'_api_key');
@@ -252,6 +253,7 @@ class Kudos_Public {
 			return true;
 		}
 		return false;
+
 	}
 
 	/**
