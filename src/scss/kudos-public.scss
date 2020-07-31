@@ -5,9 +5,8 @@
 @import "partials/fonts";
 
 .kudos_modal {
-  *,
-  *::before,
-  *::after {
+  all: initial;
+  * {
     all: unset;
   }
 
@@ -212,7 +211,24 @@ div[id^='kudos_modal-'] {
     margin: 0;
     padding: 0;
 
-    .kudos_field {
+    label {
+      @apply inline-block m-0 cursor-pointer;
+
+      &:not(:first-child) {
+        @apply mt-2;
+      }
+    }
+
+    label.not-full {
+      @apply mr-2;
+    }
+
+    label:not(.not-full) {
+      @apply w-full;
+    }
+
+    input,
+    select {
       @apply appearance-none leading-normal bg-transparent border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-base text-gray-700;
 
       &:focus {
@@ -225,12 +241,9 @@ div[id^='kudos_modal-'] {
       }
     }
 
-    label {
-      @apply w-full m-0;
-
-      &:not(:first-child) .kudos_field {
-        @apply mt-2;
-      }
+    input[type="text"],
+    input[type="email"] {
+      cursor: text;
     }
 
     input.error,
@@ -239,51 +252,53 @@ div[id^='kudos_modal-'] {
       border: 2px solid theme('colors.red.500');
     }
 
-    .kudos_input_group {
-      @apply block mt-4;
+    input[type="checkbox"],
+    input[type="radio"] {
+      border: 1px solid #7e8993;
+      border-radius: 4px;
+      background: #fff;
+      color: #555;
+      clear: none;
+      cursor: pointer;
+      display: inline-block;
+      margin: -0.25em 0.25em 0 0;
+      line-height: 0;
+      height: 1em;
+      outline: 0;
+      padding: 0 !important;
+      text-align: center;
+      vertical-align: middle;
+      width: 1em;
+      min-width: 1em;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      transition: .05s border-color ease-in-out;
 
-      .checkmark {
-        @apply appearance-none absolute inline-block border-2 border-solid border-gray-300 cursor-pointer align-middle w-4 h-4 mr-2;
+      &:checked::before {
+        content: "";
+        position: relative;
+        margin: 0.1875em;
+        line-height: 1.14285714;
+        float: left;
 
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-      }
-
-      input[type="radio"] {
-        &:checked ~ .checkmark::before {
-          border-radius: 9999px;
-        }
-      }
-
-      input[type="radio"] ~ .checkmark {
-        border-radius: 9999px;
-      }
-
-      input[type="radio"],
-      input[type="checkbox"] {
-        @apply mr-2;
-
-        &:checked ~ .checkmark::before {
-          content: '';
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-
-          @apply w-2 h-2 absolute bg-orange-500;
-        }
-      }
-
-      label {
-        @apply cursor-pointer pl-5 text-gray-900;
+        @apply w-2 h-2;
       }
     }
 
-    input[type="radio"]:checked + label {
-      &::before {
-        @apply bg-orange-500;
+    input[type="radio"] {
+      border-radius: 50%;
+
+      &:checked::before {
+        border-radius: 50%;
       }
     }
+
+    //input[type="checkbox"]:checked::before {
+    //  content: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+CiAgPGRlZnMvPgogIDxwYXRoIGZpbGw9IiNmZjlmMWMiIGQ9Ik0xNC44MyA0Ljg5bDEuMzQuOTQtNS44MSA4LjM4SDkuMDJMNS43OCA5LjY3bDEuMzQtMS4yNSAyLjU3IDIuNHoiLz4KPC9zdmc+");
+    //  margin: -0.1875em 0 0 -0.25em;
+    //  height: 1.3125em;
+    //  width: 1.3125em;
+    //}
+
   }
 }
 
