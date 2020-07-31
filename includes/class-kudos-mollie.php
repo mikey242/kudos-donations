@@ -32,6 +32,10 @@ class Kudos_Mollie
 	 * @var mixed
 	 */
 	private $apiKey;
+	/**
+	 * @var string
+	 */
+	private $webHookUrl;
 
 
 	/**
@@ -44,6 +48,8 @@ class Kudos_Mollie
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = get_option('_kudos_mollie_api_mode');
 		$this->apiKey = get_option('_kudos_mollie_'.$this->apiMode.'_api_key');
+		$this->webHookUrl = WP_DEBUG ? $subscriptionArray['webhookUrl'] = 'https://ab8e8fef7258.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook' : rest_url('kudos/v1/mollie/payment/webhook');
+
 		if($this->apiKey) {
 			try {
 				$this->mollieApi->setApiKey($this->apiKey);
@@ -136,7 +142,7 @@ class Kudos_Mollie
 				"value" => $value
 			],
 			"redirectUrl" => $redirectUrl,
-			"webhookUrl" => rest_url('kudos/v1/mollie/payment/webhook'),
+			"webhookUrl" => $this->webHookUrl,
             "sequenceType" => $sequenceType,
 			/* translators: %s: The order id */
 			"description" => sprintf(__("Kudos Donation (%s) - %s", 'kudos-donations'), $frequency_text, $order_id),
@@ -148,10 +154,6 @@ class Kudos_Mollie
 				'name' => $name
 			]
 		];
-
-		if(WP_DEBUG) {
-			$paymentArray['webhookUrl'] = 'https://97433fa27176.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
-		}
 
 		// Link payment to customer if specified
 		if($customerId) {
@@ -232,15 +234,14 @@ class Kudos_Mollie
                 "value" => $value,
                 "currency" => $currency
             ],
+            "webhookUrl" => $this->webHookUrl,
 	        "mandateId" => $mandateId,
             "interval" => $interval,
             "startDate" => $startDate,  // Disable for test mode
             "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $transaction->order_id),
-            "webhookUrl" => rest_url('kudos/v1/mollie/subscription/webhook'),
         ];
 
         if(WP_DEBUG) {
-	        $subscriptionArray['webhookUrl'] = 'https://97433fa27176.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook';
 	        unset($subscriptionArray['startDate']);  // Disable for test mode
         }
 
