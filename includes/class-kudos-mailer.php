@@ -39,7 +39,8 @@ class Kudos_Mailer
 
 		$custom_smtp = get_option('_kudos_smtp_enable');
 
-		$phpmailer->SMTPDebug = (WP_DEBUG ? 1 : 0); //Alternative to above constant
+		// Toggle this on to enable PHPMailer's debug mode
+		$phpmailer->SMTPDebug = 0;
 
 		// Add logo as attachment
 		$phpmailer->addEmbeddedImage(get_asset_url('img/logo-colour-40.png', true), 'kudos-logo', 'kudos-logo.png');
