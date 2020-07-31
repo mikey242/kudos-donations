@@ -80,7 +80,7 @@ const TestEmailPanel = ( props ) => {
 			</PanelRow>
 
 			<PrimaryButton
-				label="Send"
+				label={isBusy ? __('Sending', 'kudos-donations') : __('Send', 'kudos-donations')}
 				disabled={ ! isEdited || isBusy }
 				isBusy={ isBusy }
 				onClick={ () => {

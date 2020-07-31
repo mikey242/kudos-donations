@@ -80,7 +80,9 @@ const GenerateInvoicesPanel = ( props ) => {
 									previewInvoice();
 								} }
 							>
-								{__('Preview invoice', 'kudos-donations')}
+								{
+									isBusy ?  __('Generating invoice', 'kudos-donations') : __('Preview invoice', 'kudos-donations')
+								}
 							</Button>
 						</PanelRow>
 					</Fragment>,
