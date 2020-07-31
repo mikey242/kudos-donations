@@ -29,7 +29,6 @@ class Kudos_Button {
 	 */
 	private $label;
 
-
 	/**
 	 * Kudos_Button constructor.
 	 *
