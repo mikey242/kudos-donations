@@ -32,7 +32,7 @@ const GenerateInvoicesPanel = ( props ) => {
 				const link = document.createElement('a');
 				setIsBusy(false);
 				link.href = url;
-				link.setAttribute('download', 'sample.pdf');
+				link.setAttribute('download', __('sample-invoice') + '.pdf');
 				document.body.appendChild(link);
 				link.click();
 			} ).catch(function (error) {
