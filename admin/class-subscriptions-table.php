@@ -147,7 +147,7 @@ class Subscriptions extends WP_List_Table {
 		$count = count($this->count_records('frequency', '12 months'));
 		$yearly_url = add_query_arg('frequency','12 months');
 		$class = ($current == '12 months' ? ' class="current"' :'');
-		$views['yearl'] = "<a href='{$yearly_url}' {$class} >". __('Yearly', 'kudos-donations') ." ($count)</a>";
+		$views['yearly'] = "<a href='{$yearly_url}' {$class} >". __('Yearly', 'kudos-donations') ." ($count)</a>";
 
 		//Quarterly link
 		$count = count($this->count_records('frequency', '3 months'));
