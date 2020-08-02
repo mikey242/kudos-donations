@@ -6,7 +6,10 @@
 
 .kudos_modal {
   all: initial;
-  * {
+
+  *,
+  *::before,
+  *::after {
     all: unset;
   }
 
