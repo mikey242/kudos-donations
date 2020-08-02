@@ -183,10 +183,9 @@ class Kudos_Invoice
 			return false;
 		}
 
-		$dompdf = $this->pdf;
-		$twig = $this->twig;
-
-		$file = self::INVOICE_DIR . 'refund-'. $transaction->order_id .'.pdf';
+		$file_name = 'refund-'. $transaction->order_id .'.pdf';
+		$file = self::INVOICE_DIR . $file_name;
+		$donor = $transaction->get_donor();
 
 		$refundArray = [
 			'id' => 'inv_' . ($transaction->id + 1000),
