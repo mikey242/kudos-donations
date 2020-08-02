@@ -115,14 +115,12 @@ div[id^='kudos_modal-'] {
   }
 
   .kudos_modal_close {
-    @apply text-black p-0 no-underline leading-normal font-normal;
+    span {
+      @apply text-2xl;
+    }
 
-    background: transparent;
-    border: 0;
-
-    &::before {
-      content: "\2715";
-      cursor: pointer;
+    &:hover {
+      @apply no-underline bg-transparent;
     }
   }
 
@@ -130,7 +128,6 @@ div[id^='kudos_modal-'] {
     @apply bg-white p-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden;
 
     z-index: 1050;
-    //transition: 0.6s ease all;
 
     &::before {
       content: '';
@@ -294,14 +291,6 @@ div[id^='kudos_modal-'] {
         border-radius: 50%;
       }
     }
-
-    //input[type="checkbox"]:checked::before {
-    //  content: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+CiAgPGRlZnMvPgogIDxwYXRoIGZpbGw9IiNmZjlmMWMiIGQ9Ik0xNC44MyA0Ljg5bDEuMzQuOTQtNS44MSA4LjM4SDkuMDJMNS43OCA5LjY3bDEuMzQtMS4yNSAyLjU3IDIuNHoiLz4KPC9zdmc+");
-    //  margin: -0.1875em 0 0 -0.25em;
-    //  height: 1.3125em;
-    //  width: 1.3125em;
-    //}
-
   }
 }
 
