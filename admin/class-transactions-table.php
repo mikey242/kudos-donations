@@ -108,8 +108,6 @@ class Transactions extends WP_List_Table {
 		$query = [];
 
 		$status = (!empty($_GET['status']) ? sanitize_text_field($_GET['status']) : '');
-		$customer_id = (!empty($_GET['customer_id']) ? sanitize_text_field($_GET['customer_id']) : '');
-		$table = $this->mapper->get_table_name();
 
 		// Add status if exist
 		if($status) {
@@ -118,19 +116,12 @@ class Transactions extends WP_List_Table {
 			));
 		}
 
-		// Add donor if exist
-		if($customer_id) {
-			array_push($query, $wpdb->prepare(
-				"$table.customer_id = %s", esc_sql($customer_id)
-			));
-		}
-
 		// Add search query if exist
 		if(!empty($_REQUEST['s'])) {
 			$search = esc_sql($_REQUEST['s']);
 			array_push($query, $wpdb->prepare(
-				'(`email` LIKE "%%%s%%") OR (`name` LIKE "%%%s%") OR (`order_id` LIKE "%%%s%")',
-				$search, $search, $search
+				'(`email` LIKE "%%%s%%") OR (`name` LIKE "%%%s%") OR (`order_id` LIKE "%%%s%") OR (`transaction_id` LIKE "%%%s%")',
+				$search, $search, $search, $search
 			));
 		}
 
@@ -172,33 +163,36 @@ class Transactions extends WP_List_Table {
 		$views = [];
 		$current = ( !empty($_GET['status']) ? sanitize_text_field($_GET['status']) : 'all');
 
+		// Remove search query from current url
+		$url = remove_query_arg('s');
+
 		//All link
 		$count = count($this->count_records());
 		$class = ($current == 'all' && empty($_REQUEST['s']) ? ' class="current"' :'');
-		$all_url = remove_query_arg(['status', 'customer_id']);
+		$all_url = remove_query_arg(['status'], $url);
 		$views['all'] = "<a href='{$all_url }' {$class} >". __('All', 'kudos-donations') . " ($count)</a>";
 
 		//Paid link
 		$count = count($this->count_records('status', 'paid'));
-		$paid_url = add_query_arg('status','paid');
+		$paid_url = add_query_arg('status','paid', $url);
 		$class = ($current == 'paid' ? ' class="current"' :'');
 		$views['paid'] = "<a href='{$paid_url}' {$class} >". __('Paid', 'kudos-donations') ." ($count)</a>";
 
 		//Open link
 		$count = count($this->count_records('status', 'open'));
-		$open_url = add_query_arg('status','open');
+		$open_url = add_query_arg('status','open', $url);
 		$class = ($current == 'open' ? ' class="current"' :'');
 		$views['open'] = "<a href='{$open_url}' {$class} >". __('Open', 'kudos-donations') ." ($count)</a>";
 
 		//Canceled link
 		$count = count($this->count_records('status', 'canceled'));
-		$canceled_url = add_query_arg('status','canceled');
+		$canceled_url = add_query_arg('status','canceled', $url);
 		$class = ($current == 'canceled' ? ' class="current"' :'');
 		$views['canceled'] = "<a href='{$canceled_url}' {$class} >". __('Canceled', 'kudos-donations') ." ($count)</a>";
 
 		//Canceled link
 		$count = count($this->count_records('status', 'expired'));
-		$expired_url = add_query_arg('status','expired');
+		$expired_url = add_query_arg('status','expired', $url);
 		$class = ($current == 'expired' ? ' class="current"' :'');
 		$views['expired'] = "<a href='{$expired_url}' {$class} >". __('Expired', 'kudos-donations') ." ($count)</a>";
 

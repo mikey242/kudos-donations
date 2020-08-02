@@ -237,7 +237,7 @@ class Donors extends WP_List_Table {
 				}
 			}
 
-			return '<a href="'. admin_url('admin.php?page=kudos-transactions&customer_id='. urlencode($item['customer_id']) .'') .'">' . $number . ' ( ' . get_currency_symbol($transactions[0]->currency) . $total . ' )' . '</a>';
+			return '<a href="'. admin_url('admin.php?page=kudos-transactions&s='. urlencode($item['email']) .'') .'">' . $number . ' ( ' . get_currency_symbol($transactions[0]->currency) . $total . ' )' . '</a>';
 		}
 
 		return false;
