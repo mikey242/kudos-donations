@@ -5,7 +5,7 @@ namespace Kudos\Table;
 use Kudos\Entity\Donor;
 use Kudos\Entity\Transaction;
 use Kudos\Kudos_Invoice;
-use Kudos\Kudos_Mapper;
+use Kudos\Mapper;
 use Kudos\Table_Trait;
 use WP_List_Table;
 
@@ -18,7 +18,7 @@ class Transactions extends WP_List_Table {
 	 */
 	private $export_columns;
 	/**
-	 * @var Kudos_Mapper
+	 * @var Mapper
 	 */
 	private $mapper;
 
@@ -30,7 +30,7 @@ class Transactions extends WP_List_Table {
 	public function __construct() {
 
 		add_filter('table_export_row', [$this, 'modify_export_data']);
-		$this->mapper = new Kudos_Mapper(Transaction::class);
+		$this->mapper = new Mapper(Transaction::class);
 
 		$this->export_columns = [
 				'created' => __('Transaction created', 'kudos-donations'),

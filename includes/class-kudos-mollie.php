@@ -14,7 +14,7 @@ use WP_HTTP_Response;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class Kudos_Mollie
+class Mollie
 {
 	/**
 	 * @var Kudos_Logger
@@ -174,7 +174,7 @@ class Kudos_Mollie
 				'donation_label' => $donation_label,
 			]);
 
-			$mapper = new Kudos_Mapper(Transaction::class);
+			$mapper = new Mapper(Transaction::class);
 			$mapper->save($transaction);
 
 			$this->logger->info('New payment created', ['oder_id' => $order_id, 'sequence_type' => $payment->sequenceType]);
@@ -262,7 +262,7 @@ class Kudos_Mollie
 	        $subscription = $customer->createSubscription($subscriptionArray);
 
 	        if($subscription) {
-	        	$mapper = new Kudos_Mapper(Subscription::class);
+	        	$mapper = new Mapper(Subscription::class);
 		        $kudos_subscription = new Subscription([
 			        'transaction_id' => $transaction->transaction_id,
 			        'customer_id' => $customer_id,
@@ -325,10 +325,10 @@ class Kudos_Mollie
 	public function cancel_subscription($subscriptionId, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
-		$mapper = new Kudos_Mapper(Subscription::class);
+		$mapper = new Mapper(Subscription::class);
 
 		/** @var Subscription $subscription */
-		$subscription = $mapper->get_by([ 'subscription_id' => $subscriptionId]);
+		$subscription = $mapper->get_one_by([ 'subscription_id' => $subscriptionId]);
 
 		if(!$customerId) {
 			if(empty($subscription)) {
@@ -455,8 +455,8 @@ class Kudos_Mollie
 		$this->logger->info('Webhook requested by Mollie.', ['transaction_id' => $id, 'status' => $status, 'sequence_type' => $sequence_type]);
 
 		// Get transaction from database
-		$mapper = new Kudos_Mapper(Transaction::class);
-		$transaction = $mapper->get_by([
+		$mapper = new Mapper(Transaction::class);
+		$transaction = $mapper->get_one_by([
 			'order_id' => $order_id,
 			'transaction_id' => $transaction_id
 		], 'OR');

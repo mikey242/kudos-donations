@@ -135,14 +135,14 @@ class Kudos_Public {
 		$redirectUrl = isset($form['return_url']) ? sanitize_text_field($form['return_url']) : null;
 		$buttonName = isset($form['donation_label']) ? sanitize_text_field($form['donation_label']) : null;
 
-		$mollie = new Kudos_Mollie();
-		$mapper = new Kudos_Mapper(Donor::class);
+		$mollie = new Mollie();
+		$mapper = new Mapper(Donor::class);
 
 		if($email) {
 
 			// Search for existing donor
 			/** @var Donor $donor */
-			$donor = $mapper->get_by([ 'email' => $email]);
+			$donor = $mapper->get_one_by([ 'email' => $email]);
 
 			// Create new donor
 			if(NULL === $donor->customer_id) {
@@ -185,9 +185,9 @@ class Kudos_Public {
 
 		if($order_id) {
 
-			$mapper = new Kudos_Mapper(Transaction::class);
+			$mapper = new Mapper(Transaction::class);
 			/** @var Transaction $transaction */
-			$transaction = $mapper->get_by([ 'order_id' => $order_id]);
+			$transaction = $mapper->get_one_by([ 'order_id' => $order_id]);
 
 			if(NULL === $transaction) {
 				return false;
@@ -331,6 +331,8 @@ class Kudos_Public {
 	 */
 	public function kudos_render_callback($attr) {
 
+		$mapper = new Mapper(Transaction::class);
+
 		// Create modal
 		$modal = new Kudos_Modal();
 		$modalId = $modal->get_id();
@@ -411,12 +413,12 @@ class Kudos_Public {
 		if(!empty($token && !empty($subscription_id))) {
 			$kudos_modal = new Kudos_Modal();
 			$subscription_id = base64_decode($subscription_id);
-			$mapper = new Kudos_Mapper(Subscription::class);
+			$mapper = new Mapper(Subscription::class);
 			/** @var Subscription $subscription */
-			$subscription = $mapper->get_by([ 'subscription_id' => $subscription_id]);
+			$subscription = $mapper->get_one_by([ 'subscription_id' => $subscription_id]);
 
 			if($subscription && password_verify($subscription->customer_id, $token)) {
-				$kudos_mollie = new Kudos_Mollie();
+				$kudos_mollie = new Mollie();
 				if($kudos_mollie->cancel_subscription($subscription_id)) {
 					echo $kudos_modal->get_message_modal([
 						'header' => 'Subscription canceled',
@@ -446,9 +448,9 @@ class Kudos_Public {
 		$logger = new Kudos_Logger();
 		$logger->debug('Processing transaction', [$order_id]);
 
-		$mapper = new Kudos_Mapper(Transaction::class);
+		$mapper = new Mapper(Transaction::class);
 		/** @var Transaction $transaction */
-		$transaction = $mapper->get_by([ 'order_id' => $order_id]);
+		$transaction = $mapper->get_one_by([ 'order_id' => $order_id]);
 
 		$mailer = new Kudos_Mailer();
 		$kudos_invoice = new Kudos_Invoice();

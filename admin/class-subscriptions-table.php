@@ -4,8 +4,8 @@ namespace Kudos\Table;
 
 use Kudos\Entity\Donor;
 use Kudos\Entity\Subscription;
-use Kudos\Kudos_Mapper;
-use Kudos\Kudos_Mollie;
+use Kudos\Mapper;
+use Kudos\Mollie;
 use Kudos\Table_Trait;
 use WP_List_Table;
 
@@ -18,7 +18,7 @@ class Subscriptions extends WP_List_Table {
 	 */
 	private $export_columns;
 	/**
-	 * @var Kudos_Mapper
+	 * @var Mapper
 	 */
 	private $mapper;
 
@@ -40,7 +40,7 @@ class Subscriptions extends WP_List_Table {
 				'currency' => __('Currency', 'kudos-donations'),
 		];
 
-		$this->mapper = new Kudos_Mapper(Subscription::class);
+		$this->mapper = new Mapper(Subscription::class);
 
 		parent::__construct( [
 			'table'    => $this->mapper->get_table_name(),
@@ -328,7 +328,7 @@ class Subscriptions extends WP_List_Table {
 	 */
 	public static function cancel_subscription( $subscription_id ) {
 
-		$kudos_mollie = new Kudos_Mollie();
+		$kudos_mollie = new Mollie();
 		if($kudos_mollie->cancel_subscription($subscription_id)) {
 			return true;
 		}

@@ -4,7 +4,7 @@ namespace Kudos\Entity;
 
 use DateTime;
 use Kudos\Entity;
-use Kudos\Kudos_Mapper;
+use Kudos\Mapper;
 
 class Donor extends Entity {
 
@@ -63,8 +63,8 @@ class Donor extends Entity {
 	 * @return array|null
 	 */
 	public function get_transactions() {
-		$mapper = new Kudos_Mapper(Transaction::class);
-		return $mapper->get_all(['customer_id' => $this->customer_id]);
+		$mapper = new Mapper(Transaction::class);
+		return $mapper->get_all_by([ 'customer_id' => $this->customer_id]);
 	}
 
 	public function __toString() {

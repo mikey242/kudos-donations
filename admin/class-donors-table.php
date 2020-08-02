@@ -4,7 +4,7 @@ namespace Kudos\Table;
 
 use Kudos\Entity\Donor;
 use Kudos\Entity\Transaction;
-use Kudos\Kudos_Mapper;
+use Kudos\Mapper;
 use Kudos\Table_Trait;
 use WP_List_Table;
 
@@ -17,7 +17,7 @@ class Donors extends WP_List_Table {
 	 */
 	private $export_columns;
 	/**
-	 * @var Kudos_Mapper
+	 * @var Mapper
 	 */
 	private $mapper;
 
@@ -37,7 +37,7 @@ class Donors extends WP_List_Table {
 			'country' => __('Country', 'kudos-donations'),
 		];
 
-		$this->mapper = new Kudos_Mapper(Donor::class);
+		$this->mapper = new Mapper(Donor::class);
 
 		parent::__construct( [
 			'table'    => $this->mapper->get_table_name(),
@@ -219,8 +219,8 @@ class Donors extends WP_List_Table {
 	 */
 	function column_donations( $item ) {
 
-		$mapper = new Kudos_Mapper(Transaction::class);
-		$transactions = $mapper->get_all(['customer_id' => $item['customer_id']]);
+		$mapper = new Mapper(Transaction::class);
+		$transactions = $mapper->get_all_by([ 'customer_id' => $item['customer_id']], OBJECT);
 
 		if($transactions) {
 			$number = count($transactions);

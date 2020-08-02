@@ -4,7 +4,7 @@ namespace Kudos\Entity;
 
 use DateTime;
 use Kudos\Entity;
-use Kudos\Kudos_Mapper;
+use Kudos\Mapper;
 
 class Subscription extends Entity {
 
@@ -73,8 +73,8 @@ class Subscription extends Entity {
 	 */
 	public function get_donor() {
 
-		$mapper = new Kudos_Mapper(Donor::class);
-		return $mapper->get_by(['customer_id' => $this->customer_id]);
+		$mapper = new Mapper(Donor::class);
+		return $mapper->get_one_by([ 'customer_id' => $this->customer_id]);
 
 	}
 }

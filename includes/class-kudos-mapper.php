@@ -4,7 +4,7 @@ namespace Kudos;
 
 use wpdb;
 
-class Kudos_Mapper {
+class Mapper {
 
 	/**
 	 * @var wpdb
@@ -126,7 +126,7 @@ class Kudos_Mapper {
 	 * @return Entity|null
 	 * @since   2.0.0
 	 */
-	public function get_by($query_fields, $operator='AND') {
+	public function get_one_by($query_fields, $operator='AND') {
 
 		if(NULL === $this->repository) {
 			return null;
@@ -156,7 +156,7 @@ class Kudos_Mapper {
 	 * @return array|null
 	 * @since   2.0.0
 	 */
-	public function get_all($query=null, $format=ARRAY_A) {
+	public function get_all_by($query=null, $format=ARRAY_A) {
 
 		if(NULL === $this->repository) {
 			return null;

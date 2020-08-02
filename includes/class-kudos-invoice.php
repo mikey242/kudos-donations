@@ -297,8 +297,8 @@ class Kudos_Invoice
 	 */
 	public static function regenerate_invoices() {
 
-		$mapper = new Kudos_Mapper(Transaction::class);
-		$transactions = $mapper->get_all();
+		$mapper = new Mapper(Transaction::class);
+		$transactions = $mapper->get_all_by();
 		$n=0;
 
 		/** @var Transaction $transaction */
