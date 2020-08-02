@@ -145,10 +145,10 @@ class Kudos_Public {
 			$donor = $mapper->get_one_by([ 'email' => $email]);
 
 			// Create new donor
-			if(NULL === $donor->customer_id) {
+			if(empty($donor->customer_id)) {
 				$donor = new Donor();
 				$customer = $mollie->create_customer($email, $name);
-				$donor->set_fields([ 'customer_id' => $customer->id]);
+				$donor->set_fields([ 'customer_id' => $customer->id ]);
 			}
 
 			// Update new/existing donor
