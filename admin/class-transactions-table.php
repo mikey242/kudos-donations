@@ -285,6 +285,19 @@ class Transactions extends WP_List_Table {
 	}
 
 	/**
+	 * Email column
+	 *
+	 * @since      1.0.0
+	 * @param array $item
+	 * @return string
+	 */
+	function column_email( $item ) {
+		return sprintf(
+			'<a href="mailto: %1$s" />%1$s</a>', $item['email']
+		);
+	}
+
+	/**
 	 * Value (amount) column
 	 *
 	 * @since      1.0.0
