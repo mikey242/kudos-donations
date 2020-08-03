@@ -47,10 +47,7 @@ class Subscriptions extends WP_List_Table {
 				'currency' => __('Currency', 'kudos-donations'),
 		];
 
-		$this->mapper = new Mapper(Subscription::class);
-
 		parent::__construct( [
-			'table'    => $this->mapper->get_table_name(),
 			'orderBy'  => 'created',
 			'singular' => __( 'Subscription', 'kudos-donations' ),
 			'plural'   => __( 'Subscriptions', 'kudos-donations' ),
@@ -90,10 +87,9 @@ class Subscriptions extends WP_List_Table {
 	 * @since      2.0.0
 	 */
 	public function fetch_table_data() {
+
 		global $wpdb;
-
 		$search_custom_vars = null;
-
 		$frequency = (!empty($_GET['frequency']) ? sanitize_text_field($_GET['frequency']) : '');
 
 		// Add frequency if exist
@@ -112,7 +108,17 @@ class Subscriptions extends WP_List_Table {
 			);
 		}
 
-		return $this->mapper->get_table_data($search_custom_vars, [Donor::getTableName(), 'customer_id']);
+		$table = $this->table;
+		$join_table = Donor::getTableName();
+
+		$search_custom_vars = " LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id " . $search_custom_vars;
+
+		return $wpdb->get_results("
+			SELECT $table.*, $join_table.name, $join_table.email
+			FROM $table
+			$search_custom_vars
+		", ARRAY_A);
+
 	}
 
 	/**

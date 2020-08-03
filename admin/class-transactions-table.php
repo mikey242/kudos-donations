@@ -51,7 +51,6 @@ class Transactions extends WP_List_Table {
 		];
 
 		parent::__construct( [
-			'table'    => $this->mapper->get_table_name(),
 			'orderBy'  => 'created',
 			'singular' => __( 'Transaction', 'kudos-donations' ), //singular name of the listed records
 			'plural'   => __( 'Transactions', 'kudos-donations' ), //plural name of the listed records
@@ -135,7 +134,18 @@ class Transactions extends WP_List_Table {
 			$search_custom_vars = 'WHERE ' . implode(' AND ', $query);
 		}
 
-		return $this->mapper->get_table_data($search_custom_vars, [Donor::getTableName(), 'customer_id']);
+
+		$table = $this->table;
+		$join_table = Donor::getTableName();
+
+		$search_custom_vars = " LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id " . $search_custom_vars;
+
+		return $wpdb->get_results("
+			SELECT $table.*, $join_table.name, $join_table.email
+			FROM $table
+			$search_custom_vars
+		", ARRAY_A);
+
 	}
 
 	/**
@@ -253,19 +263,6 @@ class Transactions extends WP_List_Table {
 	}
 
 	/**
-	 * Email column
-	 *
-	 * @since      1.0.0
-	 * @param array $item
-	 * @return string
-	 */
-	function column_email( $item ) {
-		return sprintf(
-			'<a href="mailto: %1$s" />%1$s</a>', $item['email']
-		);
-	}
-
-	/**
 	 * Time (date) column
 	 *
 	 * @since      1.0.0
@@ -317,8 +314,10 @@ class Transactions extends WP_List_Table {
 
 		$value = $item['value'];
 
-		if(is_serialized($item['refunds'])) {
-			$refund = unserialize($item['refunds']);
+		/** @var Transaction $transaction */
+		$transaction = $this->mapper->get_one_by([ 'transaction_id' => $item['transaction_id']]);
+		$refund = $transaction->get_refund();
+		if($refund) {
 			$value = $refund['remaining'];
 		}
 
@@ -330,7 +329,7 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Payment type column
 	 *
-	 * @param $item
+	 * @param array $item
 	 * @return string|void
 	 * @since 2.0.0
 	 */
@@ -391,7 +390,7 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Order Id column
 	 *
-	 * @param $item
+	 * @param array $item
 	 * @return string|void
 	 * @since 2.0.0
 	 */

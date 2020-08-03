@@ -44,10 +44,7 @@ class Donors extends WP_List_Table {
 			'country' => __('Country', 'kudos-donations'),
 		];
 
-		$this->mapper = new Mapper(Donor::class);
-
 		parent::__construct( [
-			'table'    => $this->mapper->get_table_name(),
 			'orderBy'  => 'created',
 			'singular' => __( 'Donor', 'kudos-donations' ),
 			'plural'   => __( 'Donors', 'kudos-donations' ),
@@ -99,7 +96,13 @@ class Donors extends WP_List_Table {
 			);
 		}
 
-		return $this->mapper->get_table_data($search_custom_vars);
+		$table = $this->table;
+
+		return $wpdb->get_results("
+			SELECT *
+			FROM $table
+			$search_custom_vars
+		", ARRAY_A);
 	}
 
 	/**

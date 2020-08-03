@@ -156,7 +156,7 @@ class Mapper {
 	 * @return array|null
 	 * @since   2.0.0
 	 */
-	public function get_all_by($query=null, $format=ARRAY_A) {
+	public function get_all_by($query=null, $format=OBJECT) {
 
 		if(NULL === $this->repository) {
 			return null;
@@ -172,7 +172,11 @@ class Mapper {
 		", $format);
 
 		if($results) {
-			return  $this->map_to_class($results);
+			if($format === 'OBJECT') {
+				return  $this->map_to_class($results);
+			}
+
+			return $results;
 		}
 
 		return null;
@@ -208,50 +212,5 @@ class Mapper {
 		}
 
 		return $this->repository::getTableName();
-	}
-
-	/**
-	 * Gets data for table view in admin
-	 *
-	 * @param string|null $search_custom_vars
-	 * @param array|null $join \\ e.g [wp_table_name => join_field] automatically prefixes duplicate column names with table name
-	 * @return array|null|false
-	 * @since   2.0.0
-	 */
-	public function get_table_data($search_custom_vars, $join=null) {
-
-		if(NULL === $this->repository) {
-			return false;
-		}
-
-		$wpdb = $this->wpdb;
-		$table = $this->get_table_name();
-		$join_column_names = '';
-
-		if(!empty($join)) {
-			$join_table = $join[0];
-			$join_field = $join[1];
-			$join_columns = $wpdb->get_col("DESC {$join_table}", 0);
-			$table_columns = $wpdb->get_col("DESC {$table}", 0);
-
-			// Rename duplicate columns
-			foreach ($join_columns as $column_name) {
-				if(in_array($column_name, $table_columns)) {
-					$join_column_names .= $join_table . '.' . $column_name . ' as ' . $join_table. '_' . $column_name . ', ';
-				} else {
-					$join_column_names .= $join_table . '.' . $column_name . ', ';
-				}
-			}
-
-			$join_column_names = esc_sql(', ' . rtrim($join_column_names, ', '));
-			$search_custom_vars = " LEFT JOIN $join_table on $join_table.$join_field = $table.$join_field " . $search_custom_vars;
-		}
-
-		return $wpdb->get_results("
-			SELECT $table.* $join_column_names
-			FROM $table
-			$search_custom_vars
-		", ARRAY_A);
-
 	}
 }
