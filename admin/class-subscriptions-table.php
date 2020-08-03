@@ -21,6 +21,10 @@ class Subscriptions extends WP_List_Table {
 	 * @var Mapper
 	 */
 	private $mapper;
+	/**
+	 * @var false|string
+	 */
+	private $table;
 
 	/**
 	 * Class constructor
@@ -28,6 +32,9 @@ class Subscriptions extends WP_List_Table {
 	 * @since      2.0.0
 	 */
 	public function __construct() {
+
+		$this->mapper = new Mapper(Subscription::class);
+		$this->table = $this->mapper->get_table_name();
 
 		$this->export_columns = [
 				'created' => __('Date', 'kudos-donations'),
