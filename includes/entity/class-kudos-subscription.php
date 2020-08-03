@@ -66,7 +66,7 @@ class Subscription extends Entity {
 	}
 
 	/**
-	 * Gets donor associated with transaction
+	 * Gets donor associated with subscription
 	 *
 	 * @return Donor|Entity|null
 	 * @since   2.0.0
