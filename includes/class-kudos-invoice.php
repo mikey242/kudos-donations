@@ -178,7 +178,7 @@ class Kudos_Invoice
 			return false;
 		}
 
-		$refunds = $transaction->get_refunds();
+		$refunds = $transaction->get_refund();
 		if(NULL == $refunds) {
 			return false;
 		}

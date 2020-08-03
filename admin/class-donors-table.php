@@ -238,7 +238,7 @@ class Donors extends WP_List_Table {
 			/** @var Transaction $transaction */
 			foreach ($transactions as $transaction) {
 				if($transaction->status === 'paid') {
-					$refunds = $transaction->get_refunds();
+					$refunds = $transaction->get_refund();
 					if ( $refunds ) {
 						$total = $total + $refunds['remaining'];
 					} else {

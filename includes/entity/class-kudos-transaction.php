@@ -92,11 +92,10 @@ class Transaction extends Entity {
 	/**
 	 * Returns unserialized array of refund data
 	 *
-	 * @return mixed
 	 * @since   2.0.0
 	 * @return array|false
 	 */
-	public function get_refunds() {
+	public function get_refund() {
 
 		$refunds = $this->refunds;
 		if(is_serialized($refunds)) {
