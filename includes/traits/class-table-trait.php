@@ -52,7 +52,7 @@ trait Table_Trait {
 			);
 		}
 
-		$table = $this->_args['table'];
+		$table = $this->table;
 		$query = "SELECT * FROM `$table`
 				  $search_custom_vars";
 

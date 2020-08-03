@@ -80,7 +80,6 @@ class Kudos_Activator {
 
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name = Transaction::getTableName();  //get the database table prefix to create my new table
-		$donor_table = Donor::getTableName();
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -92,7 +91,7 @@ class Kudos_Activator {
 		  method VARCHAR(255),
 		  mode VARCHAR(255) NOT NULL,
 		  sequence_type VARCHAR(255) NOT NULL,
-		  customer_id mediumint(9) NOT NULL,
+		  customer_id varchar(255) NOT NULL,
 		  order_id VARCHAR(255) NOT NULL,
 		  transaction_id VARCHAR(255),
 		  subscription_id VARCHAR(255),

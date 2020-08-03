@@ -48,7 +48,7 @@ class Mollie
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = get_option('_kudos_mollie_api_mode');
 		$this->apiKey = get_option('_kudos_mollie_'.$this->apiMode.'_api_key');
-		$this->webHookUrl = WP_DEBUG ? 'https://1d7cf7fde23b.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook' : rest_url('kudos/v1/mollie/payment/webhook');
+		$this->webHookUrl = WP_DEBUG ? 'https://afef49e233f0.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook' : rest_url('kudos/v1/mollie/payment/webhook');
 
 		if($this->apiKey) {
 			try {
