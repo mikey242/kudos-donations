@@ -96,8 +96,12 @@ class Kudos_Donations {
 
 		require_once KUDOS_DIR . 'admin/partials/kudos-settings.php';
 		require_once KUDOS_DIR . 'includes/kudos-helpers.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-mapper.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-logger.php';
+		require_once KUDOS_DIR . 'includes/services/class-kudos-mapper.php';
+		require_once KUDOS_DIR . 'includes/services/class-kudos-logger.php';
+		require_once KUDOS_DIR . 'includes/services/class-kudos-twig.php';
+		require_once KUDOS_DIR . 'includes/services/class-kudos-invoice.php';
+		require_once KUDOS_DIR . 'includes/services/class-kudos-mailer.php';
+		require_once KUDOS_DIR . 'includes/services/class-kudos-mollie.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-loader.php';
 		require_once KUDOS_DIR . 'includes/class-kudos-i18n.php';
 		require_once KUDOS_DIR . 'includes/traits/class-table-trait.php';
@@ -110,10 +114,6 @@ class Kudos_Donations {
 		require_once KUDOS_DIR . 'admin/class-subscriptions-table.php';
 		require_once KUDOS_DIR . 'admin/class-donors-table.php';
 		require_once KUDOS_DIR . 'public/class-kudos-public.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-mollie.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-mailer.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-twig.php';
-		require_once KUDOS_DIR . 'includes/class-kudos-invoice.php';
 		require_once KUDOS_DIR . 'public/class-kudos-button.php';
 		require_once KUDOS_DIR . 'public/class-kudos-modal.php';
 

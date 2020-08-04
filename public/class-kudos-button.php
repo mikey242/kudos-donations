@@ -2,6 +2,8 @@
 
 namespace Kudos;
 
+use Kudos\Service\Twig;
+
 class Kudos_Button {
 
 	/**
@@ -9,7 +11,7 @@ class Kudos_Button {
 	 */
 	private $ready;
 	/**
-	 * @var Kudos_Twig
+	 * @var Twig
 	 */
 	private $twig;
 	/**
@@ -38,7 +40,7 @@ class Kudos_Button {
 	public function __construct($atts=[]) {
 
 		$this->ready = Kudos_Public::ready();
-		$this->twig = new Kudos_Twig();
+		$this->twig = new Twig();
 		$this->label = !empty($atts['button']) ? $atts['button'] : get_option('_kudos_button_label');
 		$this->color = !empty($atts['color']) ? $atts['color'] : get_option('_kudos_button_color');
 		$this->alignment = !empty($atts['alignment']) ? $atts['alignment'] : 'left';

@@ -1,9 +1,9 @@
 <?php
 
 use Kudos\Entity\Donor;
-use Kudos\Kudos_Logger;
-use Kudos\Mapper;
-use Kudos\Mollie;
+use Kudos\Service\Logger;
+use Kudos\Service\Mapper;
+use Kudos\Service\Mollie;
 use Mollie\Api\Resources\Subscription;
 
 /**
@@ -109,8 +109,8 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
             }
             break;
         default:
-            $file = Kudos_Logger::LOG_FILE;
-            $kudos_logger = new Kudos_Logger();
+            $file = Logger::LOG_FILE;
+            $kudos_logger = new Logger();
             $logArray = $kudos_logger->getAsArray();
             $download_nonce = wp_create_nonce('download-' . basename($file));
             $clear_nonce = wp_create_nonce('clear-' . basename($file));

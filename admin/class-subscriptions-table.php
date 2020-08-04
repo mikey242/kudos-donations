@@ -4,8 +4,8 @@ namespace Kudos\Table;
 
 use Kudos\Entity\Donor;
 use Kudos\Entity\Subscription;
-use Kudos\Mapper;
-use Kudos\Mollie;
+use Kudos\Service\Mapper;
+use Kudos\Service\Mollie;
 use Kudos\Table_Trait;
 use WP_List_Table;
 

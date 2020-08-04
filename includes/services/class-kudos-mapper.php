@@ -1,7 +1,8 @@
 <?php
 
-namespace Kudos;
+namespace Kudos\Service;
 
+use Kudos\Entity;
 use wpdb;
 
 class Mapper {
@@ -15,7 +16,7 @@ class Mapper {
 	 */
 	protected $repository;
 	/**
-	 * @var Kudos_Logger
+	 * @var Logger
 	 */
 	private $logger;
 
@@ -31,7 +32,7 @@ class Mapper {
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->set_repository($repository);
-		$this->logger = new Kudos_Logger();
+		$this->logger = new Logger();
 
 	}
 

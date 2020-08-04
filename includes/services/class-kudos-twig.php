@@ -1,20 +1,20 @@
 <?php
 
-namespace Kudos;
+namespace Kudos\Service;
 
 use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
 
-class Kudos_Twig
+class Twig
 {
 	/**
 	 * @var Environment
 	 */
 	private $twig;
 	/**
-	 * @var Kudos_Logger
+	 * @var Logger
 	 */
 	private $logger;
 
@@ -32,7 +32,7 @@ class Kudos_Twig
 		$this->twig = new Environment($loader, [
 			'cache' => $cache,
 		]);
-		$this->logger = new Kudos_Logger();
+		$this->logger = new Logger();
 		$this->initialize_twig_functions();
 	}
 

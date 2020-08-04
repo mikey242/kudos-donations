@@ -4,7 +4,7 @@ namespace Kudos\Table;
 
 use Kudos\Entity\Donor;
 use Kudos\Entity\Transaction;
-use Kudos\Mapper;
+use Kudos\Service\Mapper;
 use Kudos\Table_Trait;
 use WP_List_Table;
 

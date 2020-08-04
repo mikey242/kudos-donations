@@ -1,16 +1,16 @@
 <?php
 
-namespace Kudos;
+namespace Kudos\Service;
 
 use Dompdf\Dompdf;
 use Kudos\Entity\Transaction;
 use Throwable;
 
-class Kudos_Invoice
+class Invoice
 {
 	const INVOICE_DIR = KUDOS_DIR . 'invoices/';
 	/**
-	 * @var Kudos_Logger
+	 * @var Logger
 	 */
 	private $logger;
 	/**
@@ -18,7 +18,7 @@ class Kudos_Invoice
 	 */
 	private $pdf;
 	/**
-	 * @var Kudos_Twig
+	 * @var Twig
 	 */
 	private $twig;
 	/**
@@ -45,8 +45,8 @@ class Kudos_Invoice
 	 */
 	public function __construct() {
 
-		$this->logger = new Kudos_Logger();
-		$this->twig = new Kudos_Twig();
+		$this->logger = new Logger();
+		$this->twig = new Twig();
 		$this->pdf = new Dompdf();
 		$this->pdf->setPaper('A4');
 		$this->enabled = get_option('_kudos_invoice_enable');
@@ -303,7 +303,7 @@ class Kudos_Invoice
 		/** @var Transaction $transaction */
 		foreach ($transactions as $transaction) {
 			if($transaction->status === 'paid') {
-				$invoice = new Kudos_Invoice();
+				$invoice = new Invoice();
 				$invoice->generate_invoice($transaction, true) ? $n++ : null;
 			}
 		}

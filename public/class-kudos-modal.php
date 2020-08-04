@@ -2,6 +2,9 @@
 
 namespace Kudos;
 
+use Kudos\Service\Twig;
+use Kudos\Service\Logger;
+
 class Kudos_Modal {
 
 	/**
@@ -9,11 +12,11 @@ class Kudos_Modal {
 	 */
 	private $ready;
 	/**
-	 * @var Kudos_Logger
+	 * @var Logger
 	 */
 	private $logger;
 	/**
-	 * @var Kudos_Twig
+	 * @var Twig
 	 */
 	private $twig;
 	/**
@@ -32,9 +35,9 @@ class Kudos_Modal {
 	 */
 	public function __construct() {
 
-	    $this->logger = new Kudos_Logger();
+	    $this->logger = new Logger();
 	    $this->returnUrl = Kudos_Public::get_return_url();
-	    $this->twig = new Kudos_Twig();
+	    $this->twig = new Twig();
 	    $this->id = uniqid('kudos_modal-');
 
     }

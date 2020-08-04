@@ -4,7 +4,9 @@ namespace Kudos\Entity;
 
 use DateTime;
 use Kudos\Entity;
-use Kudos\Mapper;
+use Kudos\Service\Logger;
+use Kudos\Service\Mapper;
+use Throwable;
 
 class Donor extends Entity {
 

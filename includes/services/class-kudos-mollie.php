@@ -1,9 +1,10 @@
 <?php
 
-namespace Kudos;
+namespace Kudos\Service;
 
 use Kudos\Entity\Subscription;
 use Kudos\Entity\Transaction;
+use Kudos\Kudos_Public;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
@@ -17,7 +18,7 @@ use WP_REST_Response;
 class Mollie
 {
 	/**
-	 * @var Kudos_Logger
+	 * @var Logger
 	 */
 	private $logger;
 	/**
@@ -44,7 +45,8 @@ class Mollie
 	 * @since      1.0.0
 	 */
 	public function __construct() {
-		$this->logger = new Kudos_Logger();
+
+		$this->logger = new Logger();
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = get_option('_kudos_mollie_api_mode');
 		$this->apiKey = get_option('_kudos_mollie_'.$this->apiMode.'_api_key');
@@ -515,7 +517,7 @@ class Mollie
 			]);
 
 			// Process refund
-			$invoice = new Kudos_Invoice();
+			$invoice = new Invoice();
 			$invoice->generate_refund($transaction);
 		}
 

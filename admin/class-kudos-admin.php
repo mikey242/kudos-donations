@@ -2,6 +2,10 @@
 
 namespace Kudos;
 
+use Kudos\Service\Invoice;
+use Kudos\Service\Logger;
+use Kudos\Service\Mailer;
+use Kudos\Service\Mollie;
 use Kudos\Table\Donors;
 use Kudos\Table\Subscriptions;
 use Kudos\Table\Transactions;
@@ -94,7 +98,7 @@ class Kudos_Admin {
 		]);
 
 		// Test Email
-        $mailer = new Kudos_Mailer();
+        $mailer = new Mailer();
 		register_rest_route('kudos/v1', 'email/test', [
 			'methods'   => WP_REST_Server::CREATABLE,
 			'callback'  => [$mailer, 'send_test'],
@@ -106,7 +110,7 @@ class Kudos_Admin {
 		]);
 
 		// View sample invoice
-		$invoice = new Kudos_Invoice();
+		$invoice = new Invoice();
 		register_rest_route('kudos/v1', 'preview-invoice', [
 			'methods'   => WP_REST_Server::READABLE,
 			'callback'  => [$invoice, 'view_sample_invoice'],
@@ -308,12 +312,12 @@ class Kudos_Admin {
 		}
 
 		if(isset($_REQUEST['clear_log'])) {
-		    $kudos_logger = new Kudos_Logger();
+		    $kudos_logger = new Logger();
 		    $kudos_logger->clear();
 		}
 
 		if(isset($_REQUEST['download_log'])) {
-			$kudos_logger = new Kudos_Logger();
+			$kudos_logger = new Logger();
 			$kudos_logger->download();
 		}
 	}
@@ -329,8 +333,8 @@ class Kudos_Admin {
 	    $response = [
 	        'phpVersion' => phpversion(),
             'mbstring' => extension_loaded('mbstring'),
-            'invoiceWriteable'  => Kudos_Invoice::isWriteable(),
-            'logWriteable'  => Kudos_Logger::isWriteable(),
+            'invoiceWriteable'  => Invoice::isWriteable(),
+            'logWriteable'  => Logger::isWriteable(),
             'permalinkStructure' => get_option( 'permalink_structure' )
         ];
 

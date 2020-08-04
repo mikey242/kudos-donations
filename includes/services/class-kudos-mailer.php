@@ -1,16 +1,16 @@
 <?php
 
-namespace Kudos;
+namespace Kudos\Service;
 
 use Kudos\Entity\Transaction;
 use PHPMailer;
 use WP_REST_Request;
 
-class Kudos_Mailer
+class Mailer
 {
 
 	/**
-	 * @var Kudos_Logger
+	 * @var Logger
 	 */
 	private $logger;
 	/**
@@ -19,12 +19,12 @@ class Kudos_Mailer
 	private $from;
 
 	/**
-	 * Kudos_Mailer constructor.
+	 * Mailer constructor.
 	 *
 	 * @since    1.1.0
 	 */
 	public function __construct() {
-		$this->logger = new Kudos_Logger();
+		$this->logger = new Logger();
 		$this->from = "From: Kudos " . __('Donations', 'kudos-donations') . ' <' . (get_option('_kudos_smtp_from') ?: get_option('_kudos_smtp_username')) . '>';
 	}
 
@@ -81,7 +81,7 @@ class Kudos_Mailer
 		}
 
 		// Get invoice if option enabled
-		$attachment = (get_option('_kudos_attach_invoice') ? Kudos_Invoice::get_invoice($transaction->order_id, true) : null);
+		$attachment = (get_option('_kudos_attach_invoice') ? Invoice::get_invoice($transaction->order_id, true) : null);
 
 		// Create array of variables for use in twig template
 		$renderArray = [
@@ -103,7 +103,7 @@ class Kudos_Mailer
 			$renderArray['cancel_url'] = $cancel_url;
 		}
 
-		$twig = new Kudos_Twig();
+		$twig = new Twig();
 		$body = $twig->render('emails/receipt.html.twig', $renderArray);
 
 		self::send($transaction->get_donor()->email, __('Kudos Donation Receipt', 'kudos-donations'), $body, $headers, [$attachment]);
@@ -125,7 +125,7 @@ class Kudos_Mailer
 
 		$email = sanitize_email($request['email']);
 
-		$twig = new Kudos_Twig();
+		$twig = new Twig();
 		$body = $twig->render('emails/test.html.twig', ['website_name' => get_bloginfo('name')]);
 
 		$headers[] = $this->from;

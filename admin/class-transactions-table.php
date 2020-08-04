@@ -4,8 +4,8 @@ namespace Kudos\Table;
 
 use Kudos\Entity\Donor;
 use Kudos\Entity\Transaction;
-use Kudos\Kudos_Invoice;
-use Kudos\Mapper;
+use Kudos\Service\Invoice;
+use Kudos\Service\Mapper;
 use Kudos\Table_Trait;
 use WP_List_Table;
 
@@ -274,7 +274,7 @@ class Transactions extends WP_List_Table {
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
 		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['created'])) . '</strong>';
-		$pdf = Kudos_Invoice::get_invoice($item['order_id']);
+		$pdf = Invoice::get_invoice($item['order_id']);
 
 		$actions = [
 			'delete' => sprintf( '<a href="?page=%s&action=%s&transaction=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['order_id'] ), $delete_nonce, __('Delete', 'kudos-donations') ),
@@ -380,8 +380,8 @@ class Transactions extends WP_List_Table {
 				$status = __('Unknown', 'kudos-donations');
 		}
 
-		$invoice = Kudos_Invoice::get_invoice($item['order_id']);
-		$refund = Kudos_Invoice::get_refund($item['order_id']);
+		$invoice = Invoice::get_invoice($item['order_id']);
+		$refund = Invoice::get_refund($item['order_id']);
 
 		$refunded = $item['refunds'] ? __('Refunded', 'kudos-donations') : '';
 
@@ -437,7 +437,7 @@ class Transactions extends WP_List_Table {
 
 		// Delete invoice if found
 		if($result) {
-			$file = Kudos_Invoice::get_invoice($order_id, true);
+			$file = Invoice::get_invoice($order_id, true);
 			if($file) {
 				unlink($file);
 			}
@@ -481,7 +481,7 @@ class Transactions extends WP_List_Table {
 				break;
 
 			case 'regenerate-invoices':
-				Kudos_Invoice::regenerate_invoices();
+				Invoice::regenerate_invoices();
 		}
 	}
 }

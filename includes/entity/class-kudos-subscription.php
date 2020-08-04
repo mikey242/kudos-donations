@@ -4,7 +4,7 @@ namespace Kudos\Entity;
 
 use DateTime;
 use Kudos\Entity;
-use Kudos\Mapper;
+use Kudos\Service\Mapper;
 
 class Subscription extends Entity {
 

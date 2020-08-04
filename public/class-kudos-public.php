@@ -5,6 +5,11 @@ namespace Kudos;
 use Kudos\Entity\Donor;
 use Kudos\Entity\Subscription;
 use Kudos\Entity\Transaction;
+use Kudos\Service\Invoice;
+use Kudos\Service\Logger;
+use Kudos\Service\Mailer;
+use Kudos\Service\Mapper;
+use Kudos\Service\Mollie;
 
 /**
  * The public-facing functionality of the plugin.
@@ -46,7 +51,7 @@ class Kudos_Public {
 	private $version;
 
 	/**
-	 * @var Kudos_Logger
+	 * @var Logger
 	 *
 	 * @since   1.0.0
 	 */
@@ -63,7 +68,7 @@ class Kudos_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		$this->logger = new Kudos_Logger();
+		$this->logger = new Logger();
 	}
 
 	/**
@@ -445,15 +450,15 @@ class Kudos_Public {
 	 */
 	public static function process_transaction($order_id) {
 
-		$logger = new Kudos_Logger();
+		$logger = new Logger();
 		$logger->debug('Processing transaction', [$order_id]);
 
 		$mapper = new Mapper(Transaction::class);
 		/** @var Transaction $transaction */
 		$transaction = $mapper->get_one_by([ 'order_id' => $order_id]);
 
-		$mailer = new Kudos_Mailer();
-		$kudos_invoice = new Kudos_Invoice();
+		$mailer = new Mailer();
+		$kudos_invoice = new Invoice();
 		$kudos_invoice->generate_invoice($transaction);
 
 		if($transaction->get_donor()->email) {

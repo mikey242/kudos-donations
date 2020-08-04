@@ -5,6 +5,7 @@ namespace Kudos;
 use Kudos\Entity\Donor;
 use Kudos\Entity\Subscription;
 use Kudos\Entity\Transaction;
+use Kudos\Service\Logger;
 
 /**
  * Fired during plugin activation
@@ -34,7 +35,7 @@ class Kudos_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-		Kudos_Logger::init();
+		Logger::init();
 		self::create_donors_table();
 		self::create_transactions_table();
 		self::create_subscriptions_table();
