@@ -3,6 +3,7 @@
         "mollie/mollie-api-php": "2.21.*",
         "monolog/monolog": "^2.0",
         "twig/twig": "^2.0",
-        "dompdf/dompdf": "^0.8.5"
+        "dompdf/dompdf": "^0.8.5",
+        "ext-json": "*"
     }
 }
