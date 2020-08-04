@@ -95,8 +95,12 @@ class Mailer
 
 		// Add a cancel subscription url if transaction associated with a subscription
 		if(!empty($transaction->subscription_id)) {
+			$mapper = new Mapper();
+			$donor = $transaction->get_donor();
+			$secret = $donor->create_secret('+1 week');
+			$mapper->save($donor);
 			$subscription_id = $transaction->subscription_id;
-			$token = password_hash($transaction->customer_id, PASSWORD_DEFAULT);
+			$token = password_hash($secret, PASSWORD_DEFAULT);
 			$cancel_url = get_home_url();
 			$cancel_url = add_query_arg('kudos_token', $token, $cancel_url);
 			$cancel_url = add_query_arg('kudos_subscription_id', base64_encode($subscription_id), $cancel_url);

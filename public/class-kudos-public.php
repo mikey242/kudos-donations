@@ -413,7 +413,7 @@ class Kudos_Public {
 	public function get_cancel_vars() {
 
 		$subscription_id = sanitize_text_field(get_query_var('kudos_subscription_id'));
-		$token = sanitize_text_field(get_query_var('kudos_token'));
+		$token = get_query_var('kudos_token');  // Don't sanitize!
 
 		if(!empty($token && !empty($subscription_id))) {
 			$kudos_modal = new Kudos_Modal();
@@ -421,8 +421,9 @@ class Kudos_Public {
 			$mapper = new Mapper(Subscription::class);
 			/** @var Subscription $subscription */
 			$subscription = $mapper->get_one_by([ 'subscription_id' => $subscription_id]);
+			$donor = $subscription->get_donor();
 
-			if($subscription && password_verify($subscription->customer_id, $token)) {
+			if($subscription && $donor->verify_secret($token)) {
 				$kudos_mollie = new Mollie();
 				if($kudos_mollie->cancel_subscription($subscription_id)) {
 					echo $kudos_modal->get_message_modal([
