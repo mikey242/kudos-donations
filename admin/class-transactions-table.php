@@ -328,7 +328,7 @@ class Transactions extends WP_List_Table {
 		$value = $item['value'];
 
 		/** @var Transaction $transaction */
-		$transaction = $this->mapper->get_one_by([ 'transaction_id' => $item['transaction_id']]);
+		$transaction = $this->mapper->get_one_by([ 'order_id' => $item['order_id']]);
 		$refund = $transaction->get_refund();
 		if($refund) {
 			$value = $refund['remaining'];
