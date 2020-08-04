@@ -1,0 +1,10 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block preheader %}
+    {{ pre_header }}
+{% endblock preheader %}
+
+{% block body %}
+    <h1>{{ header }}</h1>
+    <p>{{ message}}</p>
+{% endblock body %}

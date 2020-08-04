@@ -78,8 +78,8 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Add extra markup in the toolbars before or after the list
 	 *
-	 * @since      1.0.0
 	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
+	 * @since   1.0.0
 	 */
 	function extra_tablenav( $which ) {
 		if ( $which == "top" ){
@@ -103,7 +103,7 @@ class Transactions extends WP_List_Table {
 	 * Get the table data
 	 *
 	 * @return array
-	 * @since      1.0.0
+	 * @since   1.0.0
 	 */
 	public function fetch_table_data() {
 
@@ -171,8 +171,8 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Gets view data
 	 *
-	 * @since      1.0.0
 	 * @return array
+	 * @since   1.0.0
 	 */
 	protected function get_views() {
 		$views = [];
@@ -218,8 +218,8 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Define which columns are hidden
 	 *
-	 * @since      1.0.0
 	 * @return array
+	 * @since   1.0.0
 	 */
 	public function get_hidden_columns()
 	{
@@ -232,8 +232,8 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Define the sortable columns
 	 *
-	 * @since      1.0.0
 	 * @return array
+	 * @since   1.0.0
 	 */
 	public function get_sortable_columns()
 	{
@@ -252,9 +252,9 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Render the bulk edit checkbox
 	 *
-	 * @since      1.0.0
 	 * @param array $item
 	 * @return string
+	 * @since   1.0.0
 	 */
 	function column_cb( $item ) {
 		return sprintf(
@@ -265,9 +265,9 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Time (date) column
 	 *
-	 * @since      1.0.0
 	 * @param array $item an array of DB data
 	 * @return string
+	 * @since   1.0.0
 	 */
 	function column_created( $item ) {
 
@@ -285,11 +285,34 @@ class Transactions extends WP_List_Table {
 	}
 
 	/**
+	 * Name column
+	 *
+	 * @param $item
+	 * @return string|null
+	 * @since   2.0.0
+	 */
+	function column_name($item) {
+		/** @var Transaction $transaction */
+		$transaction = $this->mapper->get_one_by(['customer_id' => $item['customer_id']]);
+		$donor = $transaction->get_donor();
+
+		if($donor) {
+			$email = $donor->email;
+			return sprintf(
+				"<a href='%s' />%s</a>", admin_url(sprintf("admin.php?page=kudos-donors&s=%s", $email)), $item['name']
+			);
+		}
+
+		return null;
+
+	}
+
+	/**
 	 * Email column
 	 *
-	 * @since      1.0.0
 	 * @param array $item
 	 * @return string
+	 * @since   1.0.0
 	 */
 	function column_email( $item ) {
 		return sprintf(
@@ -300,9 +323,9 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Value (amount) column
 	 *
-	 * @since      1.0.0
 	 * @param array $item
 	 * @return string|void
+	 * @since   1.0.0
 	 */
 	function column_value($item)
 	{
@@ -344,7 +367,7 @@ class Transactions extends WP_List_Table {
 	 *
 	 * @param array $item
 	 * @return string|void
-	 * @since 2.0.0
+	 * @since   2.0.0
 	 */
 	function column_type($item) {
 		return get_sequence_type($item['sequence_type']);
@@ -353,9 +376,9 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Payment status column
 	 *
-	 * @since      1.0.0
 	 * @param array $item
 	 * @return string|void
+	 * @since   1.0.0
 	 */
 	function column_status($item)
 	{
@@ -405,7 +428,7 @@ class Transactions extends WP_List_Table {
 	 *
 	 * @param array $item
 	 * @return string|void
-	 * @since 2.0.0
+	 * @since   2.0.0
 	 */
 	function column_order_id($item) {
 		return $item['order_id'] . ($item['mode'] === 'test' ? ' ('. $item['mode'] .')' : '');
@@ -414,8 +437,8 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Returns an associative array containing the bulk action
 	 *
-	 * @since      1.0.0
-	 * @return array|string[]
+	 * @return array|string
+	 * @since   1.0.0
 	 */
 	function get_bulk_actions() {
 		return [
@@ -429,7 +452,7 @@ class Transactions extends WP_List_Table {
 	 * @param $column
 	 * @param int $order_id order ID
 	 * @return false|int
-	 * @since      1.0.0
+	 * @since   1.0.0
 	 */
 	protected function delete_record( $column, $order_id ) {
 
@@ -449,7 +472,7 @@ class Transactions extends WP_List_Table {
 	/**
 	 * Process delete and bulk-delete actions
 	 *
-	 * @since      1.0.0
+	 * @since   1.0.0
 	 */
 	public function process_bulk_action() {
 

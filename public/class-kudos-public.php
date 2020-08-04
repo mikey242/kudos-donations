@@ -425,11 +425,12 @@ class Kudos_Public {
 		$token = get_query_var('kudos_token');  // Don't sanitize!
 
 		if(!empty($token && !empty($subscription_id))) {
+
 			$kudos_modal = new Kudos_Modal();
 			$subscription_id = base64_decode($subscription_id);
 			$mapper = new Mapper(Subscription::class);
 			/** @var Subscription $subscription */
-			$subscription = $mapper->get_one_by([ 'subscription_id' => $subscription_id]);
+			$subscription = $mapper->get_one_by(['subscription_id' => $subscription_id]);
 			$donor = $subscription->get_donor();
 
 			if($subscription && $donor->verify_secret($token)) {
@@ -442,6 +443,7 @@ class Kudos_Public {
 					return;
 				}
 			}
+
 			echo $kudos_modal->get_message_modal([
 				'header' => 'Link expired',
 				'text' => 'Sorry, this link is no longer valid.'

@@ -283,7 +283,7 @@ class Invoice
 
 		if(file_exists($file)) {
 			if(!$path) {
-				return plugin_dir_url( dirname( __FILE__ ) ) . 'invoices/' . $filename;
+				return plugin_dir_url(  self::INVOICE_DIR  ) . 'invoices/' . $filename;
 			}
 			return $file;
 		}

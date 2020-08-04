@@ -130,13 +130,16 @@ class Mailer
 		$email = sanitize_email($request['email']);
 
 		$twig = new Twig();
-		$body = $twig->render('emails/test.html.twig', ['website_name' => get_bloginfo('name')]);
+		$body = $twig->render('emails/message.html.twig', [
+			'pre_header' => __('Test Email', 'kudos-donations'),
+			'header' => __('It worked!', 'kudos-donations'),
+			'message' => __('Looks like your email settings are set up correctly :-)', 'kudos-donations'),
+			'website_name' => get_bloginfo('name')
+		]);
 
 		$headers[] = $this->from;
 
 		$result = self::send($email, __('Test email', 'kudos-donations'), $body, $headers);
-
-//		die($this->from);
 
 		if($result) {
 			/* translators: %s: API mode */

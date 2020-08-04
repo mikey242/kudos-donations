@@ -29,7 +29,7 @@ class Subscriptions extends WP_List_Table {
 	/**
 	 * Class constructor
 	 *
-	 * @since      2.0.0
+	 * @since   2.0.0
 	 */
 	public function __construct() {
 
@@ -59,7 +59,7 @@ class Subscriptions extends WP_List_Table {
 	/**
 	 * Add extra markup in the toolbars before or after the list
 	 *
-	 * @since      2.0.0
+	 * @since   2.0.0
 	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
 	 */
 	function extra_tablenav( $which ) {
@@ -265,6 +265,29 @@ class Subscriptions extends WP_List_Table {
 	function column_years($item) {
 
 		return ($item['years'] > 0 ? $item['years'] : __('Continuous', 'kudos-donations'));
+	}
+
+	/**
+	 * Name column
+	 *
+	 * @param $item
+	 * @return string|null
+	 * @since   2.0.0
+	 */
+	function column_name($item) {
+		/** @var Subscription $subscription */
+		$subscription = $this->mapper->get_one_by(['customer_id' => $item['customer_id']]);
+		$donor = $subscription->get_donor();
+
+		if($donor) {
+			$email = $donor->email;
+			return sprintf(
+				"<a href='%s' />%s</a>", admin_url(sprintf("admin.php?page=kudos-donors&s=%s", $email)), $item['name']
+			);
+		}
+
+		return null;
+
 	}
 
 	/**

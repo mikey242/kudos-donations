@@ -28,7 +28,7 @@ class Donors extends WP_List_Table {
 	/**
 	 * Class constructor
 	 *
-	 * @since      2.0.0
+	 * @since   2.0.0
 	 */
 	public function __construct() {
 
@@ -56,8 +56,8 @@ class Donors extends WP_List_Table {
 	/**
 	 * Add extra markup in the toolbars before or after the list
 	 *
-	 * @since      2.0.0
 	 * @param string $which, helps you decide if you add the markup after (bottom) or before (top) the list
+	 * @since   2.0.0
 	 */
 	function extra_tablenav( $which ) {
 
@@ -80,7 +80,7 @@ class Donors extends WP_List_Table {
 	 * Get the table data
 	 *
 	 * @return array
-	 * @since      2.0.0
+	 * @since   2.0.0
 	 */
 	public function fetch_table_data() {
 		global $wpdb;
@@ -124,8 +124,8 @@ class Donors extends WP_List_Table {
 	/**
 	 * Define which columns are hidden
 	 *
-	 * @since      2.0.0
 	 * @return array
+	 * @since   2.0.0
 	 */
 	public function get_hidden_columns()
 	{
@@ -138,8 +138,8 @@ class Donors extends WP_List_Table {
 	/**
 	 * Define the sortable columns
 	 *
-	 * @since      2.0.0
 	 * @return array
+	 * @since   2.0.0
 	 */
 	public function get_sortable_columns()
 	{
@@ -158,9 +158,9 @@ class Donors extends WP_List_Table {
 	/**
 	 * Render the bulk edit checkbox
 	 *
-	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
+	 * @since   2.0.0
 	 */
 	function column_cb( $item ) {
 		return sprintf(
@@ -171,9 +171,9 @@ class Donors extends WP_List_Table {
 	/**
 	 * Time (date) column
 	 *
-	 * @since      1.0.0
 	 * @param array $item an array of DB data
 	 * @return string
+	 * @since   1.0.0
 	 */
 	function column_created( $item ) {
 
@@ -183,9 +183,9 @@ class Donors extends WP_List_Table {
 	/**
 	 * Email column
 	 *
-	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
+	 * @since   2.0.0
 	 */
 	function column_email( $item ) {
 
@@ -205,9 +205,9 @@ class Donors extends WP_List_Table {
 	/**
 	 * Address column
 	 *
-	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
+	 * @since   2.0.0
 	 */
 	function column_address( $item ) {
 
@@ -223,9 +223,9 @@ class Donors extends WP_List_Table {
 	/**
 	 * Donations column
 	 *
-	 * @since      2.0.0
 	 * @param array $item
 	 * @return string
+	 * @since   2.0.0
 	 */
 	function column_donations( $item ) {
 
@@ -254,10 +254,23 @@ class Donors extends WP_List_Table {
 	}
 
 	/**
+	 * Delete a donor.
+	 *
+	 * @param $column
+	 * @param int $customer_id
+	 * @return false|int
+	 * @since   1.0.0
+	 */
+	protected function delete_record( $column, $customer_id ) {
+
+		return $this->mapper->delete($column, $customer_id);
+	}
+
+	/**
 	 * Returns an associative array containing the bulk action
 	 *
-	 * @since      2.0.0
-	 * @return array|string[]
+	 * @return array|string
+	 * @since   2.0.0
 	 */
 	function get_bulk_actions() {
 		return [
@@ -268,7 +281,7 @@ class Donors extends WP_List_Table {
 	/**
 	 * Process cancel and bulk-cancel actions
 	 *
-	 * @since      2.0.0
+	 * @since   2.0.0
 	 */
 	public function process_bulk_action() {
 
