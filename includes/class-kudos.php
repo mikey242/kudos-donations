@@ -182,6 +182,7 @@ class Kudos_Donations {
 		$this->loader->add_action('wp_footer', $plugin_public, 'get_cancel_vars', 1000);
 		$this->loader->add_action('query_vars', $plugin_public, 'register_vars');
 		$this->loader->add_action( 'kudos_process_transaction_action', $plugin_public, 'process_transaction', 10, 1 );
+		$this->loader->add_action( 'kudos_remove_secret_action', $plugin_public, 'remove_donor_secret', 10, 1 );
 
 	}
 

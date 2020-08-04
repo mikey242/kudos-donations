@@ -64,6 +64,7 @@ class Kudos_Activator {
 		  city VARCHAR(255),
 		  country VARCHAR(255),
 		  customer_id VARCHAR(255),
+		  secret VARCHAR(255),
 		  PRIMARY KEY (id)
 		) $charset_collate";
 

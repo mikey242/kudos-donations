@@ -469,4 +469,22 @@ class Kudos_Public {
 
 		return true;
 	}
+
+	/**
+	 * Remove secret key associated with donor
+	 *
+	 * @param $customer_id
+	 * @return bool|int
+	 * @since   2.0.0
+	 */
+	public static function remove_donor_secret($customer_id) {
+		if($customer_id) {
+			$mapper = new Mapper(Donor::class);
+			/** @var Donor $donor */
+			$donor = $mapper->get_one_by(['customer_id' => $customer_id]);
+			$donor->clear_secret();
+			return $mapper->save($donor);
+		}
+		return false;
+	}
 }
