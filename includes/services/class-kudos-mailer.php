@@ -6,8 +6,7 @@ use Kudos\Entity\Transaction;
 use PHPMailer;
 use WP_REST_Request;
 
-class Mailer
-{
+class Mailer {
 
 	/**
 	 * @var Logger
@@ -114,32 +113,23 @@ class Mailer
 	}
 
 	/**
-	 * Sends a test email to specified email address
+	 * Sends a test email using send_message
 	 *
 	 * @param WP_REST_Request $request
-	 *
 	 * @return bool
 	 * @since    1.1.0
 	 */
-	public function send_test(WP_REST_Request $request) {
+	public function send_test($request) {
 
 		if(empty($request['email'])) {
 			wp_send_json_error(__('Please provide an email address.', 'kudos_donations'));
 		}
 
 		$email = sanitize_email($request['email']);
+		$header = __('It worked!', 'kudos-donations');
+		$message = __('Looks like your email settings are set up correctly :-)', 'kudos-donations');
 
-		$twig = new Twig();
-		$body = $twig->render('emails/message.html.twig', [
-			'pre_header' => __('Test Email', 'kudos-donations'),
-			'header' => __('It worked!', 'kudos-donations'),
-			'message' => __('Looks like your email settings are set up correctly :-)', 'kudos-donations'),
-			'website_name' => get_bloginfo('name')
-		]);
-
-		$headers[] = $this->from;
-
-		$result = self::send($email, __('Test email', 'kudos-donations'), $body, $headers);
+		$result = $this->send_message($email, $header, $message);
 
 		if($result) {
 			/* translators: %s: API mode */
@@ -150,6 +140,31 @@ class Mailer
 		}
 
 		return $result;
+
+	}
+
+	/**
+	 * Sends a message using the message template
+	 *
+	 * @param string $email
+	 * @param string $header
+	 * @param string $message
+	 *
+	 * @return bool
+	 * @since   2.0.0
+	 */
+	public function send_message($email, $header, $message) {
+
+		$twig = new Twig();
+		$body = $twig->render('emails/message.html.twig', [
+			'header' => $header,
+			'message' => $message,
+			'website_name' => get_bloginfo('name')
+		]);
+
+		$headers[] = $this->from;
+
+		return self::send($email, $header, $body, $headers);
 	}
 
 	/**
