@@ -80,4 +80,5 @@ function run_kudos() {
 	$plugin->run();
 
 }
+
 run_kudos();

@@ -165,7 +165,6 @@ class Kudos_Public {
 				'city' => $city,
 				'country' => $country,
 			]);
-
 			$mapper->save($donor);
 		}
 

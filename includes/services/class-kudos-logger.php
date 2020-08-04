@@ -141,8 +141,8 @@ class Logger extends Monolog
 	 *
 	 * @param $a
 	 * @param $b
-	 * @since   2.0.0
 	 * @return false|int
+	 * @since   2.0.0
 	 */
 	private function date_compare($a, $b) {
 		$t1 = strtotime($a['date']);

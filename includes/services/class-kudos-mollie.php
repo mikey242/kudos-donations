@@ -58,13 +58,13 @@ class Mollie
 				$this->logger->critical($e->getMessage());
 			}
 		}
+
 	}
 
 	/**
 	 * Checks the provided api key by attempting to get associated payments
 	 *
-	 * @param $apiKey
-	 *
+	 * @param string $apiKey
 	 * @return bool
 	 * @since      1.0.0
 	 */
@@ -83,7 +83,9 @@ class Mollie
 			$this->logger->critical($e->getMessage());
 			return false;
 		}
+
 		return true;
+
 	}
 
 	/**
@@ -95,13 +97,16 @@ class Mollie
 	 * @since      1.0.0
 	 */
 	public function get_payment($mollie_payment_id) {
+
 		$mollieApi = $this->mollieApi;
 		try {
 			return $mollieApi->payments->get($mollie_payment_id);
 		} catch (ApiException $e) {
 			$this->logger->critical($e->getMessage());
 		}
+
 		return false;
+
 	}
 
 	/**
@@ -191,10 +196,9 @@ class Mollie
 	/**
 	 * Returns all subscriptions for customer
 	 *
-	 * @since   2.0.0
 	 * @param $customerId
-	 *
 	 * @return BaseCollection|bool
+	 * @since   2.0.0
 	 */
 	public function get_subscriptions($customerId) {
 
@@ -217,7 +221,6 @@ class Mollie
 	 * @param $mandateId
 	 * @param $interval
 	 * @param $years
-	 *
 	 * @return bool|object
 	 * @since      2.0.0
 	 */
@@ -283,12 +286,12 @@ class Mollie
             $this->logger->critical($e->getMessage(), [$customer_id, $subscriptionArray]);
             return false;
         }
+
     }
 
 	/**
 	 * @param $email
 	 * @param $name
-	 *
 	 * @return bool|object
 	 * @since   2.0.0
 	 */
@@ -318,8 +321,8 @@ class Mollie
 	 *
 	 * @param $subscriptionId
 	 * @param null|string $customerId
-	 *
 	 * @return bool
+	 * @since   2.0.0
 	 */
 	public function cancel_subscription($subscriptionId, $customerId=null) {
 
@@ -375,10 +378,9 @@ class Mollie
 	 * Check the Mollie Api key associated with the Api mode
 	 *
 	 * @param WP_REST_Request $request
-	 *
 	 * @since    1.1.0
 	 */
-	public function check_api_keys(WP_REST_Request $request) {
+	public function check_api_keys($request) {
 
 		$mode = sanitize_text_field($request['apiMode']);
 		$apiKey = sanitize_text_field($request[$mode . 'Key']);
@@ -409,11 +411,10 @@ class Mollie
 	 * Mollie webhook action
 	 *
 	 * @param WP_REST_Request $request
-	 *
 	 * @return mixed|WP_Error|WP_HTTP_Response|WP_REST_Response
 	 * @since    1.0.0
 	 */
-	public function rest_api_mollie_webhook( WP_REST_Request $request ) {
+	public function rest_api_mollie_webhook( $request ) {
 
 	    // ID is case sensitive e.g: tr_Tb6UdQP523
 		$id = sanitize_text_field($request->get_param( 'id' ));

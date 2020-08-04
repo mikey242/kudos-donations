@@ -10,8 +10,8 @@
  * @source https://danielshaw.co.nz/wordpress-cache-busting-json-hash-map/
  * @param string $asset e.g style.css
  * @param bool $path
- *
  * @return string
+ * @since   1.0.0
  */
 
 function get_asset_url( $asset, $path=false ) {
@@ -32,9 +32,9 @@ function get_asset_url( $asset, $path=false ) {
 /**
  * Converts three letter currency code into a symbol
  *
- * @since      1.0.2
  * @param $currency
  * @return string
+ * @since      1.0.2
  */
 function get_currency_symbol($currency) {
 
@@ -65,9 +65,9 @@ function get_currency_symbol($currency) {
  *
  * @param string $hex Colour as hexadecimal (with or without hash);
  * @param int $percent
- *
  * @return string Lightened/Darkened colour as hexadecimal (with hash);
  * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
+ * @sice    1.0.2
  */
 function color_luminance( $hex, $percent ) {
 
@@ -93,10 +93,9 @@ function color_luminance( $hex, $percent ) {
 /**
  * Returns a translated string of the sequence type
  *
- * @since   2.0.0
  * @param $text
- *
  * @return string|void
+ * @since   2.0.0
  */
 function get_sequence_type($text) {
 	switch ($text) {
@@ -112,10 +111,9 @@ function get_sequence_type($text) {
 /**
  * Returns subscription frequency name based on number of months
  *
- * @since   2.0.0
  * @param $frequency
- *
  * @return string|void
+ * @since   2.0.0
  */
 function get_frequency_name($frequency) {
 	switch ($frequency) {
@@ -142,8 +140,8 @@ function get_frequency_name($frequency) {
  *
  * @param int $years
  * @param string $frequency
- *
  * @return int|null
+ * @since   2.0.0
  */
 function get_times_from_years($years, $frequency) {
 

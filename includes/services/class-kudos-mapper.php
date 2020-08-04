@@ -24,7 +24,6 @@ class Mapper {
 	 * Entity object constructor.
 	 *
 	 * @param Entity|string|null $repository
-	 *
 	 * @since   2.0.0
 	 */
 	public function __construct($repository=null) {
@@ -107,6 +106,7 @@ class Mapper {
 	 * @param string $column
 	 * @param $value
 	 * @return false|int
+	 * @since   2.0.0
 	 */
 	public function delete($column, $value) {
 
@@ -143,6 +143,7 @@ class Mapper {
 		");
 
 		if($result) {
+			// Return result as Entity specified in repository
 			return new $this->repository($result);
 		}
 
