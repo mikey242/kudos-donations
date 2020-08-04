@@ -56,4 +56,12 @@ class Entity {
 		global $wpdb;
 		return $wpdb->prefix . static::TABLE;
 	}
+
+	/**
+	 * @return string
+	 * @since   2.0.0
+	 */
+	public function __toString() {
+		return (string) $this->id;
+	}
 }
