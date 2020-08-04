@@ -36,7 +36,7 @@ const TestEmailPanel = ( props ) => {
 			.post(
 				window.kudos.sendTestUrl,
 				{
-					email,
+					email
 				},
 				{
 					headers: {
@@ -46,6 +46,7 @@ const TestEmailPanel = ( props ) => {
 				}
 			)
 			.then( ( response ) => {
+				console.log(response);
 				props.showNotice( response.data.data );
 				setIsBusy( false );
 			} );
