@@ -8,7 +8,6 @@ use Kudos\Kudos_Public;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
-use Mollie\Api\Resources\Customer;
 use Mollie\Api\Resources\Payment;
 use WP_Error;
 use WP_HTTP_Response;
@@ -202,7 +201,6 @@ class Mollie
 		$mollieApi = $this->mollieApi;
 
 		try {
-			/** @var Customer $customer */
 			$customer = $mollieApi->customers->get($customerId);
 			return $customer->subscriptions();
 		} catch (ApiException $e) {
@@ -252,7 +250,6 @@ class Mollie
         }
 
         try {
-            /** @var Customer $customer */
             $customer = $mollieApi->customers->get($customer_id);
             $mandate = $mollieApi->mandates->getFor($customer, $mandateId);
 
