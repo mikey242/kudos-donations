@@ -163,7 +163,7 @@ class Kudos_Public {
 				'street' => $street,
 				'postcode' => $postcode,
 				'city' => $city,
-				'country' => $country,
+				'country' => $country
 			]);
 			$mapper->save($donor);
 		}
@@ -335,7 +335,17 @@ class Kudos_Public {
 	 */
 	public function kudos_render_callback($attr) {
 
-		$mapper = new Mapper(Transaction::class);
+//		$mapper = new Mapper(Donor::class);
+//		/** @var Donor $donor */
+//		$donor = $mapper->get_one_by([ 'id' => 2]);
+//		echo password_verify($donor->secret, '$2y$10$eO.r88QGJLAmXsYXMqk8N.O.IriM8ZPvU9R4j46s5ml8bA3/WpKnO');
+//		$secret = $donor->create_secret();
+//		$mapper->save($donor);
+//
+//		$token = password_hash($secret, PASSWORD_DEFAULT);
+//		$cancel_url = get_home_url();
+//		$cancel_url = add_query_arg('kudos_token', $token, $cancel_url);
+//		echo $cancel_url;
 
 		// Create modal
 		$modal = new Kudos_Modal();
