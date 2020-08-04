@@ -292,18 +292,16 @@ class Transactions extends WP_List_Table {
 	 * @since   2.0.0
 	 */
 	function column_name($item) {
-		/** @var Transaction $transaction */
-		$transaction = $this->mapper->get_one_by(['customer_id' => $item['customer_id']]);
-		$donor = $transaction->get_donor();
 
-		if($donor) {
-			$email = $donor->email;
+		$email = $item['email'];
+
+		if($email) {
 			return sprintf(
 				"<a href='%s' />%s</a>", admin_url(sprintf("admin.php?page=kudos-donors&s=%s", $email)), $item['name']
 			);
 		}
 
-		return null;
+		return $item['name'];
 
 	}
 
