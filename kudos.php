@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 define( 'KUDOS_VERSION', '2.0.0' );
-define('KUDOS_DIR', plugin_dir_path(__FILE__));
+define('KUDOS_DIR', dirname(__FILE__) . '/');
 define('KUDOS_DEBUG', get_option('_kudos_debug_mode'));
 
 /**
