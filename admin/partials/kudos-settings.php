@@ -209,6 +209,28 @@ register_setting(
 	]
 );
 
+// Donation amount settings
+
+register_setting(
+	'kudos_donations',
+	'_kudos_amount_type',
+	[
+		'type'          => 'string',
+		'show_in_rest'  => true,
+		'default'       => 'open'
+	]
+);
+
+register_setting(
+	'kudos_donations',
+	'_kudos_fixed_amounts',
+	[
+		'type'          => 'string',
+		'show_in_rest'  => true,
+		'default'       => '5, 10, 20, 50'
+	]
+);
+
 // Completed payment settings
 
 register_setting(
@@ -331,5 +353,17 @@ register_setting(
 		'type'          => 'boolean',
 		'show_in_rest'  => true,
 		'default'       => true
+	]
+);
+
+// Subscription level
+
+register_setting(
+	'kudos_donations',
+	'_kudos_subscription_level',
+	[
+		'type'          => 'integer',
+		'show_in_rest'  => true,
+		'default'       => 1
 	]
 );

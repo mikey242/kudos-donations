@@ -1,6 +1,26 @@
 <?php
 
 /**
+ * Gets url Mollie will use to return customer to after payment complete
+ *
+ * @since   1.0.0
+ * @return string|void
+ */
+function get_return_url() {
+
+	$use_custom = get_option('_kudos_custom_return_enable');
+	$custom_url = esc_url(get_option('_kudos_custom_return_url'));
+	if($use_custom && $custom_url) {
+		return $custom_url;
+	} else {
+		$returnUrl = is_ssl() ? 'https://' : 'http://';
+		$returnUrl .= $_SERVER['HTTP_HOST'] . parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
+		return $returnUrl;
+	}
+
+}
+
+/**
  * Serve plugin assets via a hashed filename.
  *
  * Checks for a hashed filename as a value in a JSON object.
@@ -13,7 +33,6 @@
  * @return string
  * @since   1.0.0
  */
-
 function get_asset_url( $asset, $path=false ) {
 
 	$map = KUDOS_DIR . 'dist/manifest.json';

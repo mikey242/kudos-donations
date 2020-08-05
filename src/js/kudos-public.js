@@ -180,7 +180,7 @@ $( () => {
 			dataType: 'json',
 			url: kudos.ajaxurl,
 			data: {
-				action: 'create_payment',
+				action: 'submit_payment',
 				form: $( e.currentTarget ).serialize(),
 			},
 			beforeSend() {

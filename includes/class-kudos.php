@@ -175,8 +175,8 @@ class Kudos_Donations {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action( 'enqueue_block_assets', $plugin_public, 'enqueue_block_assets' );
-		$this->loader->add_action('wp_ajax_nopriv_create_payment', $plugin_public, 'create_payment');
-		$this->loader->add_action('wp_ajax_create_payment', $plugin_public, 'create_payment');
+		$this->loader->add_action('wp_ajax_nopriv_submit_payment', $plugin_public, 'submit_payment');
+		$this->loader->add_action('wp_ajax_submit_payment', $plugin_public, 'submit_payment');
 		$this->loader->add_action('init', $plugin_public, 'register_kudos');
 		$this->loader->add_action('wp_footer', $plugin_public, 'place_message_modal', 1000);
 		$this->loader->add_action('wp_footer', $plugin_public, 'get_cancel_vars', 1000);

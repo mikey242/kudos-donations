@@ -342,6 +342,11 @@ class Kudos_Admin {
 		wp_die();
 	}
 
+	/**
+	 * Function used by debug menu to cancel subscriptions
+	 *
+	 * @since   2.0.0
+	 */
 	public function debug_cancel_subscription() {
 
 	    if(!wp_verify_nonce($_REQUEST['_wpnonce'], 'cancel_subscription')) {
@@ -355,5 +360,4 @@ class Kudos_Admin {
 	    }
 
 	}
-
 }

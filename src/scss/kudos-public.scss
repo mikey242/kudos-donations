@@ -291,6 +291,30 @@ div[id^='kudos_modal-'] {
         border-radius: 50%;
       }
     }
+
+    div.kudos_amounts {
+      @apply bg-white flex -mx-2;
+
+      .kudos_radio_amount {
+        @apply w-1/4 px-2 m-0;
+
+        input:checked + label {
+          @apply text-white;
+
+          border-color: transparent;
+        }
+
+        label {
+          @apply py-3 text-center block border-solid border-2 border-solid border-gray-300;
+        }
+      }
+
+      input {
+        position: absolute;
+        margin: 0;
+        z-index: -1;
+      }
+    }
   }
 }
 

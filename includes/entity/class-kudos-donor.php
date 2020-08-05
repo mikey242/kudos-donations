@@ -77,7 +77,6 @@ class Donor extends Entity {
 	 * Set the donor's secret
 	 *
 	 * @param string $timeout
-	 *
 	 * @return string
 	 * @since   2.0.0
 	 */

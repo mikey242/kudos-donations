@@ -175,7 +175,6 @@ class Mailer {
 	 * @param string $body
 	 * @param array $headers
 	 * @param array $attachment
-	 *
 	 * @return bool
 	 * @since    1.1.0
 	 */

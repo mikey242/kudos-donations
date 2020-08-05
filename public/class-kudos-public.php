@@ -119,7 +119,7 @@ class Kudos_Public {
 	 *
 	 * @since   1.0.0
 	 */
-	public function create_payment() {
+	public function submit_payment() {
 
 		parse_str($_REQUEST['form'], $form);
 		if(!wp_verify_nonce($form['_wpnonce'], 'kudos_submit')) {
@@ -225,24 +225,6 @@ class Kudos_Public {
 	}
 
 	/**
-	 * Gets url Mollie will use to return customer to after payment complete
-	 *
-	 * @since   1.0.0
-	 * @return string|void
-	 */
-	public static function get_return_url() {
-		$use_custom = get_option('_kudos_custom_return_enable');
-		$custom_url = esc_url(get_option('_kudos_custom_return_url'));
-		if($use_custom && $custom_url) {
-			return $custom_url;
-		} else {
-			$returnUrl = is_ssl() ? 'https://' : 'http://';
-			$returnUrl .= $_SERVER['HTTP_HOST'] . parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
-			return $returnUrl;
-		}
-	}
-
-	/**
 	 * Checks if required settings are saved before displaying button or modal
 	 *
 	 * @since   1.0.0
@@ -328,24 +310,11 @@ class Kudos_Public {
 	/**
 	 * Renders the kudos button and donation modals
 	 *
-	 * @param $attr
-	 *
+	 * @param array $attr
 	 * @return bool|string
 	 * @since   2.0.0
 	 */
 	public function kudos_render_callback($attr) {
-
-//		$mapper = new Mapper(Donor::class);
-//		/** @var Donor $donor */
-//		$donor = $mapper->get_one_by([ 'id' => 2]);
-//		echo password_verify($donor->secret, '$2y$10$eO.r88QGJLAmXsYXMqk8N.O.IriM8ZPvU9R4j46s5ml8bA3/WpKnO');
-//		$secret = $donor->create_secret();
-//		$mapper->save($donor);
-//
-//		$token = password_hash($secret, PASSWORD_DEFAULT);
-//		$cancel_url = get_home_url();
-//		$cancel_url = add_query_arg('kudos_token', $token, $cancel_url);
-//		echo $cancel_url;
 
 		// Create modal
 		$modal = new Kudos_Modal();
@@ -380,8 +349,6 @@ class Kudos_Public {
 	 */
 	public function place_message_modal() {
 
-		$modal = new Kudos_Modal();
-
 		$token = sanitize_text_field(get_query_var('kudos_token'));
 		$order_id = sanitize_text_field(get_query_var('kudos_order_id'));
 
@@ -391,6 +358,7 @@ class Kudos_Public {
 			if(wp_verify_nonce($_REQUEST['kudos_token'],'kudos_check_order-' . $order_id)) {
 				$atts = $this->check_transaction($order_id);
 				if($atts) {
+					$modal = new Kudos_Modal();
 					echo $modal->get_message_modal($atts);
 				}
 			}
@@ -412,6 +380,7 @@ class Kudos_Public {
 		$vars[] = 'kudos_token';
 
 		return $vars;
+
 	}
 
 	/**
@@ -456,7 +425,6 @@ class Kudos_Public {
 	 * Processes the transaction. Used by action scheduler via mollie class.
 	 *
 	 * @param string $order_id
-	 *
 	 * @return bool
 	 * @since   2.0.0
 	 */
@@ -480,16 +448,18 @@ class Kudos_Public {
 		}
 
 		return true;
+
 	}
 
 	/**
 	 * Remove secret key associated with donor
 	 *
-	 * @param $customer_id
+	 * @param string $customer_id
 	 * @return bool|int
 	 * @since   2.0.0
 	 */
 	public static function remove_donor_secret($customer_id) {
+
 		if($customer_id) {
 			$mapper = new Mapper(Donor::class);
 			/** @var Donor $donor */
@@ -498,5 +468,6 @@ class Kudos_Public {
 			return $mapper->save($donor);
 		}
 		return false;
+
 	}
 }

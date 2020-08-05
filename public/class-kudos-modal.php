@@ -36,7 +36,7 @@ class Kudos_Modal {
 	public function __construct() {
 
 	    $this->logger = new Logger();
-	    $this->returnUrl = Kudos_Public::get_return_url();
+	    $this->returnUrl = get_return_url();
 	    $this->twig = new Twig();
 	    $this->id = uniqid('kudos_modal-');
 
@@ -91,6 +91,10 @@ class Kudos_Modal {
 	            'enabled' => get_option('_kudos_address_enabled'),
 	            'required' => get_option('_kudos_address_required')
 			],
+		    'amount' => [
+		        'type'  => get_option('_kudos_amount_type'),
+			    'fixed_values' =>explode(',', get_option('_kudos_fixed_amounts'))
+		    ],
 		    'privacy_link' => $privacy_link,
             'return_url' => $this->returnUrl,
 		    'donation_label' => $atts['donation_label'],

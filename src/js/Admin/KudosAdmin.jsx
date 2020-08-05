@@ -17,6 +17,7 @@ import { GenerateInvoicesPanel } from './Components/Panels/GenerateInvoicesPanel
 import { PrimaryButton } from './Components/FormElements/PrimaryButton';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
+import {DonationAmountPanel} from "./Components/Panels/DonationAmountPanel"
 
 const { __ } = wp.i18n;
 const { Placeholder, Spinner, TabPanel } = wp.components;
@@ -247,6 +248,10 @@ class KudosAdmin extends Component {
 							handleInputChange={ this.handleInputChange }
 						/>
 						<DonationModalPanel
+							{ ...this.state }
+							handleInputChange={ this.handleInputChange }
+						/>
+						<DonationAmountPanel
 							{ ...this.state }
 							handleInputChange={ this.handleInputChange }
 						/>
