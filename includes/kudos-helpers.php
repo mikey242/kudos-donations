@@ -182,3 +182,13 @@ function get_times_from_years($years, $frequency) {
 function generate_id( $prefix=null, $length=10 ) {
 	return $prefix . substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length);
 }
+
+/**
+ * Use Settings class wrapper to get setting
+ *
+ * @param $setting
+ * @return false|mixed|void
+ */
+function get_kudos_setting($setting) {
+	return Settings::get_setting($setting);
+}

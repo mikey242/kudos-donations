@@ -2,6 +2,8 @@
 
 namespace Kudos;
 
+use Settings;
+
 /**
  * The file that defines the core plugin class
  *
@@ -94,7 +96,11 @@ class Kudos_Donations {
 	 */
 	private function load_dependencies() {
 
-		require_once KUDOS_DIR . 'admin/partials/kudos-settings.php';
+		require_once KUDOS_DIR . 'admin/class-kudos-settings.php';
+
+		// Let's register the settings immediately
+		Settings::register_settings();
+
 		require_once KUDOS_DIR . 'includes/kudos-helpers.php';
 		require_once KUDOS_DIR . 'includes/services/class-kudos-mapper.php';
 		require_once KUDOS_DIR . 'includes/services/class-kudos-logger.php';

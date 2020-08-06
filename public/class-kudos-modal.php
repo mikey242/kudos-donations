@@ -88,12 +88,12 @@ class Kudos_Modal {
             'color' => !empty($atts['color']) ? $atts['color'] : get_option('_kudos_button_color'),
 	        'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
             'address' => [
-	            'enabled' => get_option('_kudos_address_enabled'),
-	            'required' => get_option('_kudos_address_required')
+	            'enabled' => get_kudos_setting('_kudos_address_enabled'),
+	            'required' => get_kudos_setting('_kudos_address_required')
 			],
 		    'amount' => [
-		        'type'  => get_option('_kudos_amount_type'),
-			    'fixed_values' =>explode(',', get_option('_kudos_fixed_amounts'))
+		        'type'  => get_kudos_setting('_kudos_amount_type'),
+			    'fixed_values' =>explode(',', get_kudos_setting('_kudos_fixed_amounts'))
 		    ],
 		    'privacy_link' => $privacy_link,
             'return_url' => $this->returnUrl,
