@@ -56,6 +56,10 @@ class Kudos_Public {
 	 * @since   1.0.0
 	 */
 	private $logger;
+	/**
+	 * @var Mollie
+	 */
+	private $mollie;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -68,6 +72,7 @@ class Kudos_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->mollie = Mollie::factory();
 		$this->logger = new Logger();
 	}
 
@@ -140,7 +145,7 @@ class Kudos_Public {
 		$redirectUrl = isset($form['return_url']) ? sanitize_text_field($form['return_url']) : null;
 		$buttonName = isset($form['donation_label']) ? sanitize_text_field($form['donation_label']) : null;
 
-		$mollie = new Mollie();
+		$mollie = $this->mollie;
 		$mapper = new Mapper(Donor::class);
 
 		if($email) {
@@ -403,7 +408,7 @@ class Kudos_Public {
 			$donor = $subscription->get_donor();
 
 			if($subscription && $donor->verify_secret($token)) {
-				$kudos_mollie = new Mollie();
+				$kudos_mollie = $this->mollie;
 				if($kudos_mollie->cancel_subscription($subscription_id)) {
 					echo $kudos_modal->get_message_modal([
 						'header' => 'Subscription canceled',

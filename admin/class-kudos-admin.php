@@ -74,7 +74,7 @@ class Kudos_Admin {
 	public function register_routes() {
 
 		// Payment webhook
-		$mollie = new Mollie();
+		$mollie = Mollie::factory();
 		register_rest_route( 'kudos/v1', 'mollie/payment/webhook', [
 			'methods' => 'POST',
 			'callback' => [$mollie, 'rest_api_mollie_webhook'],
@@ -351,7 +351,7 @@ class Kudos_Admin {
 	        echo "Nope!";
 	        die;
 	    }
-	    $kudos_mollie = new Mollie();
+	    $kudos_mollie = Mollie::factory();
 	    $subscription = $kudos_mollie->cancel_subscription($_REQUEST['subscriptionId'], $_REQUEST['customerId']);
 	    if($subscription) {
 		    wp_safe_redirect(admin_url( 'admin.php?page=kudos-debug&tab=subscriptions' ));

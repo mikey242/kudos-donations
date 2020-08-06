@@ -62,6 +62,26 @@ class Mollie
 	}
 
 	/**
+	 * The mollie class factory. In most cases this
+	 * should be used instead of instantiating the object
+	 * directly.
+	 *
+	 * @return Mollie
+	 * @since   2.0.0
+	 */
+	public static function factory() {
+
+		static $instance = false;
+
+		if(!$instance) {
+			$instance = new self;
+		}
+
+		return $instance;
+
+	}
+
+	/**
 	 * Checks the provided api key by attempting to get associated payments
 	 *
 	 * @param string $apiKey
@@ -99,6 +119,7 @@ class Mollie
 	public function get_payment($mollie_payment_id) {
 
 		$mollieApi = $this->mollieApi;
+
 		try {
 			return $mollieApi->payments->get($mollie_payment_id);
 		} catch (ApiException $e) {
