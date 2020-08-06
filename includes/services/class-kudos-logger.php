@@ -54,18 +54,19 @@ class Logger extends Monolog
 	 * @return bool|false|int
 	 * @since   2.0.0
 	 */
-	public function clear() {
+	public static function clear() {
 
 		$file = self::LOG_FILE;
 
 		// Check nonce
 		$nonce = esc_attr( $_REQUEST['_wpnonce'] );
 		if ( ! wp_verify_nonce( $nonce, 'clear-' . basename($file) ) ) {
-			$this->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__]);
+			$logger = new self;
+			$logger->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__]);
 			die();
 		}
 
-		if(!$this->isWriteable()) {
+		if(!self::isWriteable()) {
 			return false;
 		}
 		return file_put_contents($file, '');
@@ -115,14 +116,15 @@ class Logger extends Monolog
 	 *
 	 * @since   2.0.0
 	 */
-	public function download() {
+	public static function download() {
 
 		$file = self::LOG_FILE;
 
 		// Check nonce
 		$nonce = esc_attr( $_REQUEST['_wpnonce'] );
 		if ( ! wp_verify_nonce( $nonce, 'download-' . basename($file) ) ) {
-			$this->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__]);
+			$logger = new self;
+			$logger->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__]);
 			die();
 		}
 
