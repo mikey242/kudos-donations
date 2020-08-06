@@ -82,7 +82,7 @@ class Twig
 		try {
 			return $this->twig->render( $template, $array );
 		} catch (Throwable $e ) {
-			$this->logger->critical($e->getMessage());
+			$this->logger->critical($e->getMessage(), [$template]);
 			return false;
 		}
 	}
