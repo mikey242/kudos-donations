@@ -403,6 +403,8 @@ class Mollie
 	 */
 	public function check_api_keys($request) {
 
+		update_option('_kudos_mollie_connected', 0);
+
 		$mode = sanitize_text_field($request['apiMode']);
 		$apiKey = sanitize_text_field($request[$mode . 'Key']);
 
@@ -412,7 +414,7 @@ class Mollie
 			wp_send_json_error( sprintf(__("%s API key should begin with \"%s\".", 'kudos-donations'), ucfirst($mode), $mode . '_'));
 		}
 
-		// Test api key
+		// Test the api key
 		$result = $this->check_api_key($apiKey);
 
 		if($result) {
@@ -423,7 +425,6 @@ class Mollie
 			wp_send_json_success(sprintf(__("%s API key connection was successful!", 'kudos-donations'), ucfirst($mode)));
 		} else {
 			/* translators: %s: API mode */
-			update_option('_kudos_mollie_connected', 0);
 			wp_send_json_error( sprintf(__("Error connecting with Mollie, please check the %s API key and try again.", 'kudos-donations'), ucfirst($mode)));
 		}
 	}
