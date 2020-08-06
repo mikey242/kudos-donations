@@ -30,11 +30,11 @@ const DonationAmountPanel = ( props ) => {
             >
                 { [
                     { value: 'fixed', content: 'Fixed' },
-                    { value: 'open', content: 'Open' },
+                    { value: 'open', content: 'Open' }
                 ] }
             </RadioImage>
 
-            { props.settings._kudos_amount_type === 'fixed'
+            { props.settings._kudos_amount_type !== 'open'
                 ? [
                     <Fragment key="_kudos_fixed_amounts">
                         <TextInput
