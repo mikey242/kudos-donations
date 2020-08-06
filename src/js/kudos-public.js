@@ -44,6 +44,7 @@ $( () => {
 	} );
 
 	if ( $kudosButtons.length ) {
+
 		// Setup button action
 		$kudosButtons.each( function () {
 			$( this ).click( function () {
@@ -107,7 +108,8 @@ $( () => {
 		}
 
 		if ( $next_tab.hasClass( 'form-tab-final' ) ) {
-			createSummary( $next_tab.find( '.kudos_summary' ) );
+			let id = $(this).closest('.kudos_modal').attr('id');
+			createSummary( '#' + id );
 		}
 
 		// Begin animation
@@ -224,8 +226,8 @@ function checkRequirements( $nextTab ) {
 	return result;
 }
 
-function createSummary() {
-	const values = $( 'form.kudos_form' ).find( ':input' ).serializeArray();
+function createSummary(id) {
+	const values = $( id ).find( ':input' ).serializeArray();
 	const name = values.find( ( i ) => i.name === 'name' ).value;
 	const email = values.find( ( i ) => i.name === 'email_address' ).value;
 	const value = values.find( ( i ) => i.name === 'value' ).value;
@@ -235,8 +237,8 @@ function createSummary() {
 		frequency === 'oneoff'
 			? __( 'One-off', 'kudos-donations' )
 			: __( 'Recurring', 'kudos-dontaions' );
-	$( '#summary_name' ).text( name );
-	$( '#summary_email' ).text( email );
-	$( '#summary_value' ).text( value );
-	$( '#summary_frequency' ).text( type );
+	$( id + ' ' + '.summary_name' ).text( name );
+	$( id + ' ' + '.summary_email' ).text( email );
+	$( id + ' ' + '.summary_value' ).text( value );
+	$( id + ' ' + '.summary_frequency' ).text( type );
 }

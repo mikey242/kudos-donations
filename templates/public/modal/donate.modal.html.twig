@@ -23,20 +23,21 @@
             <fieldset class="form-tab form-tab-initial current-tab">
                 <p class="kudos_modal_text">{{ text }}</p>
 
-                {% if amount.type == 'open' %}
-                    <label>
-                        <input required type="text" min="1" name="value" data-type='currency' placeholder="{{ __('Amount', 'kudos-donations')}} (€) *" />
-                    </label>
-
-                {% elseif amount.type == 'fixed' %}
+                {% if amount.type != 'open' %}
                     <div class="kudos_amounts">
                         {% for key,value in amount.fixed_values %}
                             <div class="kudos_radio_amount">
-                                <input id="amount-{{ key }}" required checked type="radio" name="value" value={{ value }} />
-                                <label for="amount-{{ key }}">{{ value }}</label>
+                                <input id="amount-{{ modal_id }}-{{ key }}" {{ key==0 ? 'checked' : '' }} type="radio" name="value" value={{ value }} />
+                                <label for="amount-{{ modal_id }}-{{ key }}">€{{ value }}</label>
                             </div>
                         {% endfor %}
                     </div>
+                {% endif %}
+
+                {% if amount.type != 'fixed' %}
+                    <label>
+                        <input required type="text" min="1" name="value" data-type='currency' placeholder="{{ __('Amount', 'kudos-donations')}} (€) *" />
+                    </label>
                 {% endif %}
 
                 <label>
@@ -71,7 +72,7 @@
                     </select>
                 </label>
                 <label>
-                    <select required id="recurring_length" name="recurring_length">
+                    <select required name="recurring_length">
                         <option value="" disabled selected>{{ __('Donation duration', ' kudos-donations') }}</option>
                         <option value="0">{{ __('Continuous', 'kudos-donations')}}</option>
                         <option value="1">1 {{ __('Year', 'kudos-donations')}}</option>
@@ -143,10 +144,10 @@
             <fieldset class="form-tab form-tab-final">
                 <p class="kudos_modal_text">{{ __('By clicking donate you agree to the following payment', 'kudos-donations') }}: </p>
                 <div class="kudos_summary text-left">
-                    <p class="mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span id="summary_name"></span></p>
-                    <p class="mb-0"><strong>{{ __('Email', 'kudos-donations') }}: </strong><span id="summary_email"></span></p>
-                    <p class="mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong>€<span id="summary_value"></span></p>
-                    <p><strong>{{ __('Type', 'kudos-donations') }}: </strong><span id="summary_frequency"></span></p>
+                    <p class="mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span class="summary_name"></span></p>
+                    <p class="mb-0"><strong>{{ __('Email', 'kudos-donations') }}: </strong><span class="summary_email"></span></p>
+                    <p class="mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong>€<span class="summary_value"></span></p>
+                    <p><strong>{{ __('Type', 'kudos-donations') }}: </strong><span class="summary_frequency"></span></p>
                 </div>
                 <label>
                     <input required type="checkbox" name="avg" value="true" />
