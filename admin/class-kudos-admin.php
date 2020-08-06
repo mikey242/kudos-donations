@@ -312,13 +312,11 @@ class Kudos_Admin {
 		}
 
 		if(isset($_REQUEST['clear_log'])) {
-		    $kudos_logger = new Logger();
-		    $kudos_logger->clear();
+		    Logger::clear();
 		}
 
 		if(isset($_REQUEST['download_log'])) {
-			$kudos_logger = new Logger();
-			$kudos_logger->download();
+			Logger::download();
 		}
 	}
 
