@@ -305,7 +305,7 @@ div[id^='kudos_modal-'] {
         }
 
         label {
-          @apply py-3 text-center block border-solid border-2 border-solid border-gray-300;
+          @apply py-3 rounded text-center block border-solid border-2 border-solid border-gray-300;
         }
       }
 
