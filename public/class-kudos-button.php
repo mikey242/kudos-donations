@@ -63,7 +63,7 @@ class Kudos_Button {
 			];
 			$out = $this->twig->render('public/kudos.button.html.twig', $data);
 		} elseif(is_user_logged_in()) {
-			$out = "<a href=". esc_url( admin_url('?page=kudos-settings')) .">" . __('Mollie not connected', 'kudos-donations') . "</a>";
+			$out = "<a href=". esc_url( admin_url('admin.php?page=kudos-settings')) .">" . __('Mollie not connected', 'kudos-donations') . "</a>";
 		} else {
 			$out='';
 		}
