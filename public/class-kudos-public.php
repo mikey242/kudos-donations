@@ -291,11 +291,15 @@ class Kudos_Public {
 		        ],
 				'color' => [
 					'type' => 'string',
-		            'default' => get_option('_kudos_button_color')
+		            'default' => get_kudos_option('theme_color')
+		        ],
+				'modal_header' => [
+					'type' => 'string',
+		            'default' => get_kudos_option('modal_header')
 		        ],
 				'modalHeader' => [
 					'type' => 'string',
-		            'default' => get_option('_kudos_form_header')
+		            'default' => get_kudos_option('welcome_text')
 		        ],
 				'modalBody' => [
 					'type' => 'string',
