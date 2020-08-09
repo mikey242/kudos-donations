@@ -19,10 +19,6 @@ class Kudos_Button {
 	 */
 	private $alignment;
 	/**
-	 * @var bool|mixed|void
-	 */
-	private $color;
-	/**
 	 * @var mixed
 	 */
 	private $target;
@@ -35,38 +31,33 @@ class Kudos_Button {
 	 * Kudos_Button constructor.
 	 *
 	 * @since    1.0.0
-	 * @param array|null $atts
+	 * @param array $atts
 	 */
-	public function __construct($atts=[]) {
+	public function __construct($atts) {
 
-		$this->ready = Kudos_Public::ready();
 		$this->twig = new Twig();
-		$this->label = !empty($atts['button']) ? $atts['button'] : get_option('_kudos_button_label');
-		$this->color = !empty($atts['color']) ? $atts['color'] : get_option('_kudos_button_color');
-		$this->alignment = !empty($atts['alignment']) ? $atts['alignment'] : 'left';
-		$this->target = $atts['target'];
+		$this->label = $atts['button_label'];
+		$this->alignment = $atts['alignment'];
+		$this->target = $atts['modal_id'];
 	}
 
 	/**
+	 * Get the button markup
+	 *
 	 * @since    1.0.0
 	 * @param bool $echo
 	 * @return string|void
 	 */
 	public function get_button($echo=true) {
 
-		if($this->ready) {
-			$data = [
-				'color' => $this->color,
-				'alignment' => $this->alignment,
-				'label' => $this->label,
-				'target' => $this->target
-			];
-			$out = $this->twig->render('public/kudos.button.html.twig', $data);
-		} elseif(is_user_logged_in()) {
-			$out = "<a href=". esc_url( admin_url('admin.php?page=kudos-settings')) .">" . __('Mollie not connected', 'kudos-donations') . "</a>";
-		} else {
-			$out='';
-		}
+		$data = [
+			'color' => get_kudos_option('theme_color'),
+			'alignment' => $this->alignment,
+			'label' => $this->label,
+			'target' => $this->target
+		];
+
+		$out = $this->twig->render('public/kudos.button.html.twig', $data);
 
 		if($echo) {
 			echo $out;

@@ -188,7 +188,8 @@ function generate_id( $prefix=null, $length=10 ) {
  *
  * @param $setting
  * @return false|mixed|void
+ * @since   2.0.0
  */
-function get_kudos_setting($setting) {
+function get_kudos_option($setting) {
 	return Settings::get_setting($setting);
 }

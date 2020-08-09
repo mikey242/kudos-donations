@@ -1,14 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 // Settings Panels
-import { DonationModalPanel } from './Components/Panels/DonationModalPanel';
-import { CompletedPaymentModal } from './Components/Panels/CompletedPaymentModal';
 import { KudosNotice } from './Components/KudosNotice';
 import { KudosHeader } from './Components/KudosHeader';
+import { DonationModalPanel } from './Components/Panels/DonationModalPanel';
+import { CompletedPaymentModal } from './Components/Panels/CompletedPaymentModal';
 import { EmailSettingsPanel } from './Components/Panels/EmailSettingsPanel';
 import { TestEmailPanel } from './Components/Panels/TestEmailPanel';
 import { MolliePanel } from './Components/Panels/MolliePanel';
-import { DonationButtonPanel } from './Components/Panels/DonationButtonPanel';
 import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
 import { AVGPanel } from './Components/Panels/AVGPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
@@ -17,7 +16,7 @@ import { GenerateInvoicesPanel } from './Components/Panels/GenerateInvoicesPanel
 import { PrimaryButton } from './Components/FormElements/PrimaryButton';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
-import {DonationAmountPanel} from "./Components/Panels/DonationAmountPanel"
+import { ThemePanel } from "./Components/Panels/ThemePanel";
 
 const { __ } = wp.i18n;
 const { Placeholder, Spinner, TabPanel } = wp.components;
@@ -243,15 +242,11 @@ class KudosAdmin extends Component {
 			case 'customize':
 				return (
 					<Fragment>
-						<DonationButtonPanel
+						<ThemePanel
 							{ ...this.state }
 							handleInputChange={ this.handleInputChange }
 						/>
 						<DonationModalPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<DonationAmountPanel
 							{ ...this.state }
 							handleInputChange={ this.handleInputChange }
 						/>

@@ -1,15 +1,12 @@
 /**
  * Internal block libraries
  */
-
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 const {
 	PanelBody,
-	PanelRow,
-	ColorPalette,
-	BaseControl,
 	TextControl,
+	RadioControl,
 } = wp.components;
 const {
 	RichText,
@@ -17,6 +14,8 @@ const {
 	AlignmentToolbar,
 	InspectorControls,
 } = wp.blockEditor;
+
+const { Fragment } = wp.element;
 
 import logo from '../img/logo-colour.svg';
 
@@ -47,106 +46,118 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			alignment: 'center',
 		},
 	},
+
 	// Defining the edit interface
 	edit: ( props ) => {
 		const {
-			label,
+			button_label,
 			alignment,
-			color,
-			modalHeader,
-			modalBody,
-			buttonName,
+			modal_header,
+			welcome_text,
+			donation_label,
+			amount_type,
+			fixed_amounts,
 		} = props.attributes;
 
-		const colors = [
-			{ name: 'orange', color: '#ff9f1c' },
-			{ name: 'green', color: '#2ec4b6' },
-		];
-
-		const onChangeLabel = ( newLabel ) => {
-			props.setAttributes( { label: newLabel } );
+		const onChangeButtonLabel = ( newValue ) => {
+			props.setAttributes( { button_label: newValue } );
 		};
 
-		const onChangeAlignment = ( newAlignment ) => {
+		const onChangeAlignment = ( newValue ) => {
 			props.setAttributes( {
-				alignment: newAlignment === undefined ? 'none' : newAlignment,
+				alignment: newValue === undefined ? 'none' : newValue,
 			} );
 		};
 
-		const onChangeHeader = ( newHeader ) => {
-			props.setAttributes( { modalHeader: newHeader } );
+		const onChangeHeader = ( newValue ) => {
+			props.setAttributes( { modal_header: newValue } );
 		};
 
-		const onChangeBody = ( newBody ) => {
-			props.setAttributes( { modalBody: newBody } );
+		const onChangeBody = ( newValue ) => {
+			props.setAttributes( { welcome_text: newValue } );
 		};
 
-		const onChangeName = ( newName ) => {
-			props.setAttributes( { buttonName: newName } );
+		const onChangeDonationLabel = ( newValue ) => {
+			props.setAttributes( { donation_label: newValue } );
 		};
 
-		const onChangeColor = ( newColor ) => {
-			props.setAttributes( { color: newColor } );
+		const onChangeAmountType = ( newValue ) => {
+			props.setAttributes( { amount_type: newValue } );
+		};
+
+		const onChangeFixedAmounts = ( newValue ) => {
+			props.setAttributes( { fixed_amounts: newValue } );
 		};
 
 		return (
 			<div>
 				<InspectorControls>
+
 					<PanelBody
-						title={ __( 'Donation form', 'kudos-donations' ) }
-						initialOpen={ true }
+						title={ __( 'Modal (pop-up)', 'kudos-donations' ) }
+						initialOpen={ false }
 					>
-						<PanelRow>
-							<TextControl
-								label={ __( 'Header text', 'kudos-donations' ) }
-								type={ 'text' }
-								value={ modalHeader }
-								onChange={ onChangeHeader }
-							/>
-						</PanelRow>
-						<PanelRow>
-							<TextControl
-								label={ __( 'Body text', 'kudos-donations' ) }
-								type={ 'text' }
-								value={ modalBody }
-								onChange={ onChangeBody }
-							/>
-						</PanelRow>
+						<TextControl
+							label={ __( 'Header', 'kudos-donations' ) }
+							type={ 'text' }
+							value={ modal_header }
+							onChange={ onChangeHeader }
+						/>
+
+						<TextControl
+							label={ __( 'Welcome text', 'kudos-donations' ) }
+							type={ 'text' }
+							value={ welcome_text }
+							onChange={ onChangeBody }
+						/>
+
 					</PanelBody>
+
 					<PanelBody
-						title={ __( 'Button style', 'kudos-donations' ) }
-						initialOpen={ true }
+						title={ __( 'Donation amount', 'kudos-donations' ) }
+						initialOpen={ false }
 					>
-						<PanelRow>
-							<BaseControl
-								label={ __( 'Background', 'kudos-donations' ) }
-								id={ 'background' }
-							>
-								<ColorPalette
-									colors={ colors }
-									value={ color }
-									onChange={ onChangeColor }
-									disableCustomColors
-									clearable={ false }
-								/>
-							</BaseControl>
-						</PanelRow>
+						<RadioControl
+							label={ __( 'Type', 'kudos-donations' ) }
+							help={__("The type of donation amount available", 'kudos-donations')}
+							selected={ amount_type }
+							options={ [
+								{ label: 'Open', value: 'open' },
+								{ label: 'Fixed', value: 'fixed' },
+							] }
+							onChange={ onChangeAmountType }
+						/>
+
+						{ amount_type !== 'open'
+							? [
+
+						<Fragment key="_kudos_fixed_amounts">
+							<TextControl
+								label={ __(	'Amounts:',	'kudos-donations' ) }
+								help={ __( 'Enter a comma separated list of values to use.', 'kudos-donations' ) }
+								value={ fixed_amounts }
+								onChange={ onChangeFixedAmounts }
+							/>
+						</Fragment>
+
+							]
+						: '' }
+
 					</PanelBody>
+
 					<PanelBody
 						title={ __( 'Other', 'kudos-donations' ) }
-						initialOpen={ true }
+						initialOpen={ false }
 					>
-						<PanelRow>
-							<TextControl
-								label={ __(
-									'Donation label',
-									'kudos-donations'
-								) }
-								type={ 'text' }
-								value={ buttonName }
-								onChange={ onChangeName }
-							/>
-						</PanelRow>
+						<TextControl
+							label={ __(
+								'Donation label',
+								'kudos-donations'
+							) }
+							type={ 'text' }
+							value={ donation_label }
+							onChange={ onChangeDonationLabel }
+						/>
 					</PanelBody>
 				</InspectorControls>
 
@@ -164,7 +175,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 				>
 					<RichText
 						className={ 'kudos_button kudos_button_donate' }
-						style={ { backgroundColor: color } }
+						style={ { backgroundColor: kudos.theme_color } }
 						formattingControls={ [
 							'bold',
 							'italic',
@@ -172,8 +183,8 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 							'strikethrough',
 						] }
 						tagName="button"
-						onChange={ onChangeLabel }
-						value={ label }
+						onChange={ onChangeButtonLabel }
+						value={ button_label }
 					/>
 				</div>
 			</div>

@@ -27,6 +27,10 @@ class Kudos_Modal {
 	 * @var string
 	 */
 	private $id;
+	/**
+	 * @var false|mixed|void
+	 */
+	private $color;
 
 	/**
 	 * Kudos_Modal constructor.
@@ -35,6 +39,7 @@ class Kudos_Modal {
 	 */
 	public function __construct() {
 
+		$this->color = get_kudos_option('theme_color');
 	    $this->logger = new Logger();
 	    $this->returnUrl = get_return_url();
 	    $this->twig = new Twig();
@@ -49,16 +54,16 @@ class Kudos_Modal {
 	/**
 	 * Get message modal markup
 	 *
-	 * @param array $atts
-	 *
+	 * @param $atts
 	 * @return string|bool
 	 * @since      1.0.0
 	 */
-	function get_message_modal($atts=[]) {
+	function get_message_modal($atts) {
 
 		    $data = [
 			    'header' => $atts['header'],
 			    'text' => $atts['text'],
+			    'color' => $this->color
 		    ];
 
 		    return $this->twig->render('/public/modal/message.modal.html.twig', $data);
@@ -68,38 +73,38 @@ class Kudos_Modal {
 	 * Get payment modal markup
 	 *
 	 * @param array $atts
-	 *
 	 * @return bool
 	 * @since    1.0.0
 	 */
 	function get_payment_modal($atts) {
 
-		$privacy_option = get_option("_kudos_privacy_link");
+		$privacy_option = get_kudos_option("privacy_link");
 		$privacy_link = __('I agree with the privacy policy.', "kudos-donations");
 		if($privacy_option) {
-			$privacy_link = sprintf(__('I agree with the %s', "kudos-donations"), '<a target="_blank" href='. get_option("_kudos_privacy_link") .'>'.__("privacy policy", "kudos-donations"). '</a>.');
+			$privacy_link = sprintf(__('I agree with the %s', "kudos-donations"), '<a target="_blank" href=' . get_kudos_option("privacy_link") . '>' . __("privacy policy", "kudos-donations") . '</a>.');
 		}
-
 
 	    $data = [
             'modal_id' => $this->id,
-            'header' => !empty($atts['header']) ? $atts['header'] : get_option('_kudos_form_header'),
-            'text' => !empty($atts['text']) ? $atts['text'] : get_option('_kudos_form_text'),
-            'color' => !empty($atts['color']) ? $atts['color'] : get_option('_kudos_button_color'),
-	        'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
-            'address' => [
-	            'enabled' => get_kudos_setting('_kudos_address_enabled'),
-	            'required' => get_kudos_setting('_kudos_address_required')
-			],
-		    'amount' => [
-		        'type'  => get_kudos_setting('_kudos_amount_type'),
-			    'fixed_values' =>explode(',', get_kudos_setting('_kudos_fixed_amounts'))
-		    ],
-		    'privacy_link' => $privacy_link,
+            'color' => $this->color,
             'return_url' => $this->returnUrl,
+            'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
+            'privacy_link' => $privacy_link,
+            'header' => $atts['modal_header'],
+            'text' => $atts['welcome_text'],
+		    'amount' => [
+		        'type'  => $atts['amount_type'],
+			    'fixed_values' =>explode(',', $atts['fixed_amounts'])
+		    ],
 		    'donation_label' => $atts['donation_label'],
 	        'payment_by' => __('Secure payment by', 'kudos-donations'),
-	        'vendor' => (get_option('_kudos_payment_vendor') ? get_option('_kudos_payment_vendor') : 'mollie')
+
+		    // Global settings
+	        'vendor' => get_kudos_option('payment_vendor'),
+            'address' => [
+				'enabled' => get_kudos_option('address_enabled'),
+				'required' => get_kudos_option('address_required')
+			]
 	    ];
 
 		return $this->twig->render('/public/modal/donate.modal.html.twig', $data);

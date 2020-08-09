@@ -51,12 +51,6 @@ class Kudos_Public {
 	private $version;
 
 	/**
-	 * @var Logger
-	 *
-	 * @since   1.0.0
-	 */
-	private $logger;
-	/**
 	 * @var Mollie
 	 */
 	private $mollie;
@@ -73,7 +67,6 @@ class Kudos_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->mollie = Mollie::factory();
-		$this->logger = new Logger();
 	}
 
 	/**
@@ -116,7 +109,65 @@ class Kudos_Public {
 
 		wp_enqueue_style( $handle, get_asset_url('kudos-button-block.css'), [], $this->version, 'all' );
 		wp_enqueue_script($handle, get_asset_url('kudos-button-block.js'), [ 'wp-i18n', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post', 'wp-api' ], $this->version, true );
+		wp_localize_script($handle, 'kudos', [
+			'theme_color' => get_kudos_option('theme_color')
+		]);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_DIR . 'languages');
+	}
+
+	/**
+	 * Add styles to header based on theme
+	 *
+	 * @since 2.0.0
+	 */
+	public function add_kudos_styles() {
+
+		$color = get_kudos_option('theme_color');
+		$color_dark = color_luminance($color, '-0.05');
+		$color_darker = color_luminance($color, '-0.08');
+
+		echo "<style>
+
+		div[id^='kudos_modal-'].kudos_modal input:focus {
+			border-color: $color
+        }
+        div[id^='kudos_modal-'].kudos_modal select:focus {
+			border-color: $color
+         }
+        div[id^='kudos_modal-'].kudos_modal button.kudos_button.button-style-outline {
+			background-color: transparent;
+             color: $color;
+             border-color: $color
+        }
+        div[id^='kudos_modal-'].kudos_modal button.kudos_button {
+			background-color: $color;
+        }
+        div[id^='kudos_modal-'].kudos_modal button.kudos_button:hover {
+			background-color: $color_dark;
+        }
+        div[id^='kudos_modal-'].kudos_modal button.kudos_button.button-style-outline:hover {
+			color: #fff;
+			background-color: $color_darker;
+            border-color: $color;
+        }
+        div[id^='kudos_modal-'].kudos_modal input[type='radio']::before {
+			background-color: $color;
+        }
+        div[id^='kudos_modal-'].kudos_modal .kudos_radio_amount input:checked ~ label {
+			background-color: $color;
+         }
+        div[id^='kudos_modal-'].kudos_modal input[type='checkbox']::before {
+			background-color: $color;
+        }
+        div[id^='kudos_modal-'].kudos_modal a {
+			color: $color
+		}
+        div[id^='kudos_modal-'].kudos_modal a:hover {
+			color: $color_darker
+		}
+		
+		</style>";
+
 	}
 
 	/**
@@ -128,7 +179,8 @@ class Kudos_Public {
 
 		parse_str($_REQUEST['form'], $form);
 		if(!wp_verify_nonce($form['_wpnonce'], 'kudos_submit')) {
-			$this->logger->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__, 'formData' => $form]);
+			$logger = new Logger();
+			$logger->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__, 'formData' => $form]);
 			wp_send_json_error(['message' => __('Request invalid.', 'kudos-donations')]);
 		}
 
@@ -240,9 +292,11 @@ class Kudos_Public {
 		$apiConnected = get_option('_kudos_mollie_connected');
 		$apiMode = get_option('_kudos_mollie_api_mode');
 		$apiKey = get_option('_kudos_mollie_'.$apiMode.'_api_key');
+
 		if($apiKey && $apiConnected) {
 			return true;
 		}
+
 		return false;
 
 	}
@@ -259,11 +313,14 @@ class Kudos_Public {
 
 			$atts = shortcode_atts(
 				[
-					'label' => '',
-					'donation_label' => '',
-					'alignment' => '',
-					'modalHeader' => '',
-					'modalBody'  => ''
+					'button_label'      => get_kudos_option('button_label'),
+					'color'             => get_kudos_option('theme_color'),
+					'modal_header'      => get_kudos_option('modal_header'),
+					'welcome_text'      => get_kudos_option('welcome_text'),
+					'amount_type'       => get_kudos_option('amount_type'),
+					'fixed_amounts'     => get_kudos_option('fixed_amounts'),
+					'donation_label'    => '',
+					'alignment'         => 'none',
 				],
 				$atts,
 				'kudos'
@@ -277,13 +334,13 @@ class Kudos_Public {
 			'editor_script' => $this->plugin_name . '-button-block',
 		    'render_callback' => [$this, 'kudos_render_callback'],
 		    'attributes' => [
-		    	'buttonName' => [
+		    	'button_label' => [
 		    	    'type' => 'string',
-				    'default' => null
+				    'default' => get_kudos_option('button_label')
 			    ],
-		        'label' => [
+		        'donation_label' => [
 					'type' => 'string',
-		            'default' => get_option('_kudos_button_label'),
+		            'default' => '',
 		        ],
 				'alignment' => [
 					'type' => 'string',
@@ -297,14 +354,18 @@ class Kudos_Public {
 					'type' => 'string',
 		            'default' => get_kudos_option('modal_header')
 		        ],
-				'modalHeader' => [
+				'welcome_text' => [
 					'type' => 'string',
 		            'default' => get_kudos_option('welcome_text')
 		        ],
-				'modalBody' => [
-					'type' => 'string',
-		            'default' => get_option('_kudos_form_text')
-		        ],
+			    'amount_type' => [
+			    	'type' => 'string',
+				    'default' => get_kudos_option('amount_type')
+			    ],
+			    'fixed_amounts' => [
+			    	'type' => 'string',
+				    'default' => get_kudos_option('fixed_amounts')
+			    ],
 				'id' => [
 					'type' => 'string',
 		            'source' => 'attribute',
@@ -325,30 +386,29 @@ class Kudos_Public {
 	 */
 	public function kudos_render_callback($attr) {
 
-		// Create modal
-		$modal = new Kudos_Modal();
-		$modalId = $modal->get_id();
-		$modal = $modal->get_payment_modal([
-			'header' => $attr['modalHeader'],
-			'donation_label' => (!empty($attr['buttonName']) ? $attr['buttonName'] : get_the_title()),
-			'text' => $attr['modalBody'],
-			'color' => (!empty($attr['color']) ? $attr['color'] : null)
-		]);
+		if(self::ready()) {
 
-		// Create button
-		$button = new Kudos_Button([
-			'button' => $attr['label'],
-			'alignment' => $attr['alignment'],
-			'color' => (!empty($attr['color']) ? $attr['color'] : null),
-			'target' => $modalId
-		]);
+			// Create modal
+			$modal = new Kudos_Modal();
+			$attr['modal_id'] = $modal->get_id();
+			$modal = $modal->get_payment_modal($attr);
 
-		// Return only if modal and button not empty
-		if(!empty($modal) && !empty($button)) {
-			return $button->get_button(false) . $modal;
+			// Create button
+			$button = new Kudos_Button($attr);
+
+			// Return only if modal and button not empty
+			if(!empty($modal) && !empty($button)) {
+				return $button->get_button(false) . $modal;
+			}
+
+			return false;
+
+		} elseif(is_user_logged_in()) {
+			echo "<a href=". esc_url( admin_url('admin.php?page=kudos-settings')) .">" . __('Mollie not connected', 'kudos-donations') . "</a>";
 		}
 
 		return false;
+
 	}
 
 	/**
@@ -378,7 +438,6 @@ class Kudos_Public {
 	 * Register URL parameters
 	 *
 	 * @param $vars
-	 *
 	 * @return mixed
 	 * @since   2.0.0
 	 */

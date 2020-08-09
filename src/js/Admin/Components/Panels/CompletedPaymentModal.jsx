@@ -11,7 +11,7 @@ const { Fragment } = wp.element;
 const CompletedPaymentModal = ( props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Completed Payment Modal', 'kudos-donations' ) }
+			title={ __( 'Completed Payment', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 			<Toggle

@@ -1,10 +1,9 @@
-import _uniqueId from 'lodash/uniqueId';
-
 const { __ } = wp.i18n;
 
 const { ColorPalette, BaseControl } = wp.components;
 
 const ColorPicker = ( props ) => {
+
 	const colors = [
 		{ name: 'orange', color: '#ff9f1c' },
 		{ name: 'green', color: '#2ec4b6' },
@@ -13,7 +12,6 @@ const ColorPicker = ( props ) => {
 	return (
 		<BaseControl
 			label={ __( 'Colour', 'kudos-donations' ) }
-			id={ _uniqueId( props.label ) }
 		>
 			<ColorPalette
 				colors={ colors }
