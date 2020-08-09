@@ -7,10 +7,6 @@ const { Fragment } = wp.element;
 
 const DonationAmountPanel = ( props ) => {
 
-    if(!props.settings._kudos_subscription_level >= 1) {
-        return null;
-    }
-
     return (
         <PanelBody
             title={ __( 'Donation Amount', 'kudos-donations' ) }

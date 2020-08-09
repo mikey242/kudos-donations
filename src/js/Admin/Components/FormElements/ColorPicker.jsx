@@ -16,11 +16,10 @@ const ColorPicker = ( props ) => {
 			id={ _uniqueId( props.label ) }
 		>
 			<ColorPalette
-				key={ 'key_' + props.id }
 				colors={ colors }
 				value={ props.value }
 				onChange={ ( value ) => props.onChange( props.id, value ) }
-				disableCustomColors
+				disableCustomColors={ props.disableCustomColors }
 				clearable={ false }
 			/>
 		</BaseControl>
