@@ -206,7 +206,6 @@ class Kudos_Admin {
                 }
 	        );
         }
-
 	}
 
 	/**
@@ -225,7 +224,6 @@ class Kudos_Admin {
 			'checkApiUrl' => rest_url('kudos/v1/mollie/admin'),
 			'sendTestUrl' => rest_url('kudos/v1/email/test'),
 			'previewInvoiceUrl' => rest_url('kudos/v1/preview-invoice'),
-			'getDiagnosticsUrl' => rest_url('kudos/v1/diagnostics'),
 			'ajaxurl' => admin_url('admin-ajax.php'),
 		]);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_DIR . 'languages');
