@@ -208,7 +208,7 @@ $( () => {
 
 // Checks the form tab data-requirements array against the current form values
 function checkRequirements( $nextTab ) {
-	const formValues = $( 'form.kudos_form' ).find( ':input' ).serializeArray();
+	const formValues = $nextTab.closest('form.kudos_form').find( ':input' ).serializeArray();
 	const requirements = $nextTab.data( 'requirements' );
 	let result = true;
 	if ( requirements ) {
