@@ -5,6 +5,7 @@ namespace Kudos\Service;
 use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class Twig
@@ -34,6 +35,22 @@ class Twig
 		]);
 		$this->logger = new Logger();
 		$this->initialize_twig_functions();
+		$this->initialize_twig_filters();
+	}
+
+	/**
+	 * Initialize additional twig filters
+	 *
+	 * @since 2.0.0
+	 */
+	public function initialize_twig_filters() {
+
+		/**
+		 * Add the WordPress apply_filters filter.
+		 */
+		$apply_filter = new TwigFilter('apply_filters', 'apply_filters');
+		$this->twig->addFilter($apply_filter);
+
 	}
 
 	/**
