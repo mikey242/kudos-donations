@@ -24,7 +24,7 @@ class Mailer {
 	 */
 	public function __construct() {
 		$this->logger = new Logger();
-		$this->from = "From: Kudos " . __('Donations', 'kudos-donations') . ' <' . (get_option('_kudos_smtp_from') ?: get_option('_kudos_smtp_username')) . '>';
+		$this->from = "From: Kudos " . __('Donations', 'kudos-donations') . ' <' . (get_kudos_option('smtp_from') ?: get_kudos_option('smtp_username')) . '>';
 	}
 
 	/**
@@ -36,8 +36,6 @@ class Mailer {
 	 */
 	public function init($phpmailer) {
 
-		$custom_smtp = get_option('_kudos_smtp_enable');
-
 		// Toggle this on to enable PHPMailer's debug mode
 		$phpmailer->SMTPDebug = 0;
 
@@ -45,22 +43,22 @@ class Mailer {
 		$phpmailer->addEmbeddedImage(get_asset_url('img/logo-colour-40.png', true), 'kudos-logo', 'kudos-logo.png');
 
 		// Add custom config if enabled
-		if($custom_smtp) {
+		if(get_kudos_option('smtp_enable')) {
 			$phpmailer->isSMTP();
 			$phpmailer->isHTML(true);
-			$phpmailer->Host = get_option('_kudos_smtp_host');
-			$phpmailer->SMTPAutoTLS = get_option('_kudos_smtp_autotls');
+			$phpmailer->Host = get_kudos_option('smtp_host');
+			$phpmailer->SMTPAutoTLS = get_kudos_option('smtp_autotls');
 			$phpmailer->SMTPAuth = true;
-			$phpmailer->SMTPSecure = get_option('_kudos_smtp_encryption');
-			$phpmailer->Username = get_option('_kudos_smtp_username');
-			$phpmailer->Password = get_option('_kudos_smtp_password');
-			$phpmailer->Port = get_option('_kudos_smtp_port');
+			$phpmailer->SMTPSecure = get_kudos_option('smtp_encryption');
+			$phpmailer->Username = get_kudos_option('smtp_username');
+			$phpmailer->Password = get_kudos_option('smtp_password');
+			$phpmailer->Port = get_kudos_option('smtp_port');
 		}
 
 	}
 
 	/**
-	 * Sends receipt to the customer
+	 * Sends receipt to the donor
 	 *
 	 * @since    1.1.0
 	 * @param Transaction $transaction
@@ -68,19 +66,19 @@ class Mailer {
 	public function send_receipt($transaction) {
 
 		// Check if setting enabled
-		if(!get_option('_kudos_email_receipt_enable')) {
+		if(!get_kudos_option('email_receipt_enable')) {
 			return;
 		}
 
-		$bcc = get_option('_kudos_email_bcc');
+		$bcc = get_kudos_option('email_bcc');
 
 		$headers[] = $this->from;
 		if(filter_var($bcc, FILTER_SANITIZE_EMAIL)) {
-			$headers[] = "bcc: " . get_option('_kudos_email_bcc');
+			$headers[] = "bcc: " . get_kudos_option('email_bcc');
 		}
 
 		// Get invoice if option enabled
-		$attachment = (get_option('_kudos_attach_invoice') ? Invoice::get_invoice($transaction->order_id, true) : null);
+		$attachment = (get_kudos_option('attach_invoice') ? Invoice::get_invoice($transaction->order_id, true) : null);
 
 		// Create array of variables for use in twig template
 		$renderArray = [
