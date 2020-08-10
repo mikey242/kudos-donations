@@ -33,9 +33,10 @@ class Transactions extends WP_List_Table {
 	 */
 	public function __construct() {
 
-		add_filter('table_export_row', [$this, 'modify_export_data']);
 		$this->mapper = new Mapper(Transaction::class);
 		$this->table = $this->mapper->get_table_name();
+
+		add_filter('kudos_table_export_row' . $this->table, [$this, 'modify_export_data']);
 
 		$this->export_columns = [
 				'created' => __('Transaction created', 'kudos-donations'),

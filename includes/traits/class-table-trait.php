@@ -53,7 +53,7 @@ trait Table_Trait {
 		}
 
 		$table = $this->table;
-		$query = "SELECT * FROM `$table`
+		$query = "SELECT * FROM $table
 				  $search_custom_vars";
 
 		return $wpdb->get_results($query, ARRAY_A);
@@ -107,7 +107,7 @@ trait Table_Trait {
 
 		// Add rows
 		foreach ( $rows as $row ) {
-			$row = apply_filters('table_export_row', $row);
+			$row = apply_filters("kudos_table_export_row" . $this->table, $row);
 			fputcsv( $out, $row);
 		}
 
