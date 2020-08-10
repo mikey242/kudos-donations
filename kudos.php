@@ -35,8 +35,8 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 define( 'KUDOS_VERSION', '2.0.0' );
-define('KUDOS_DIR', dirname(__FILE__) . '/');
-define('KUDOS_DEBUG', get_option('_kudos_debug_mode'));
+define( 'KUDOS_DIR', dirname(__FILE__) . '/' );
+define( 'KUDOS_DEBUG', get_option('_kudos_debug_mode') );
 
 /**
  * The code that runs during plugin activation.

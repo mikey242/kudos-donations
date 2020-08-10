@@ -164,6 +164,7 @@ class KudosAdmin extends Component {
 		} );
 	}
 
+	// Update all settings
 	updateAll( showNotice = true ) {
 		this.setState( { isAPISaving: true } );
 
@@ -210,6 +211,7 @@ class KudosAdmin extends Component {
 			} );
 	}
 
+	// Update an individual setting
 	updateSetting( option, value ) {
 		this.setState( { isAPISaving: true } );
 
@@ -240,6 +242,7 @@ class KudosAdmin extends Component {
 				);
 
 			case 'customize':
+
 				return (
 					<Fragment>
 						<ThemePanel
