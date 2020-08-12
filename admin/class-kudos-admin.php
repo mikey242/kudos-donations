@@ -2,7 +2,6 @@
 
 namespace Kudos;
 
-use Kudos\Service\Invoice;
 use Kudos\Service\Logger;
 use Kudos\Service\Mailer;
 use Kudos\Service\Mollie;
@@ -107,16 +106,6 @@ class Kudos_Admin {
 					'required' => true
 				]
 			]
-		]);
-
-		// View sample invoice
-		$invoice = new Invoice();
-		register_rest_route('kudos/v1', 'preview-invoice', [
-			'methods'   => WP_REST_Server::READABLE,
-			'callback'  => [$invoice, 'view_sample_invoice'],
-			'permission_callback' => function ( ) {
-				return current_user_can( 'manage_options' );
-			},
 		]);
 	}
 
@@ -223,7 +212,6 @@ class Kudos_Admin {
 			'nonce'   => wp_create_nonce( 'wp_rest' ),
 			'checkApiUrl' => rest_url('kudos/v1/mollie/admin'),
 			'sendTestUrl' => rest_url('kudos/v1/email/test'),
-			'previewInvoiceUrl' => rest_url('kudos/v1/preview-invoice'),
 			'ajaxurl' => admin_url('admin-ajax.php'),
 		]);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_DIR . 'languages');
@@ -316,26 +304,6 @@ class Kudos_Admin {
 		if(isset($_REQUEST['download_log'])) {
 			Logger::download();
 		}
-	}
-
-	/**
-	 * Returns diagnostic information
-	 *
-	 * @since   2.0.0
-	 * @return string
-	 */
-	public function diagnostics() {
-
-	    $response = [
-	        'phpVersion' => phpversion(),
-            'mbstring' => extension_loaded('mbstring'),
-            'invoiceWriteable'  => Invoice::isWriteable(),
-            'logWriteable'  => Logger::isWriteable(),
-            'permalinkStructure' => get_option( 'permalink_structure' )
-        ];
-
-		wp_send_json_success($response);
-		wp_die();
 	}
 
 	/**

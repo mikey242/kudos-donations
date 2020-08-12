@@ -1,7 +1,9 @@
-import { Checkbox } from '../FormElements/Checkbox';
-
 const { __ } = wp.i18n;
-const { PanelBody } = wp.components;
+const {
+	PanelBody,
+	PanelRow,
+	CheckboxControl
+} = wp.components;
 const { Fragment } = wp.element;
 
 const DonationModalPanel = ( props ) => {
@@ -10,23 +12,26 @@ const DonationModalPanel = ( props ) => {
 			title={ __( 'Donation Form', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
-			<Checkbox
-				id="_kudos_address_enabled"
-				heading={ __( 'Address', 'kudos-donations' ) }
-				label="Enable address field"
-				value={ props.settings._kudos_address_enabled }
-				onChange={ props.handleInputChange }
-			/>
+
+			<PanelRow>
+				<CheckboxControl
+					heading={ __( 'Address', 'kudos-donations' ) }
+					label="Enable address field"
+					checked={ props.settings._kudos_address_enabled || '' }
+					onChange={ ( value ) => props.handleInputChange( '_kudos_address_enabled', value ) }
+				/>
+			</PanelRow>
 
 			{ props.settings._kudos_address_enabled
 				? [
-						<Fragment key="_kudos_address_required">
-							<Checkbox
-								id="_kudos_address_required"
-								label="Address required"
-								value={ props.settings._kudos_address_required }
-								onChange={ props.handleInputChange }
-							/>
+						<Fragment>
+							<PanelRow>
+								<CheckboxControl
+									label="Address required"
+									checked={ props.settings._kudos_address_required || '' }
+									onChange={ ( value ) => props.handleInputChange( '_kudos_address_required', value ) }
+								/>
+							</PanelRow>
 						</Fragment>,
 				  ]
 				: '' }

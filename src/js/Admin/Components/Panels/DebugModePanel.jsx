@@ -1,7 +1,9 @@
-import { Toggle } from '../FormElements/Toggle';
-
 const { __ } = wp.i18n;
-const { PanelBody } = wp.components;
+const {
+	PanelBody,
+	PanelRow,
+	ToggleControl
+} = wp.components;
 
 const DebugModePanel = ( props ) => {
 	return (
@@ -9,16 +11,19 @@ const DebugModePanel = ( props ) => {
 			title={ __( 'Debug Mode', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
-			<Toggle
-				id="_kudos_debug_mode"
-				label={ __( 'Enable debug mode', 'kudos-donations' ) }
-				help={ __(
-					'This will enable the debug logging and a debug menu found under Kudos.',
-					'kudos-donations'
-				) }
-				value={ props.settings._kudos_debug_mode }
-				onChange={ props.handleInputChange }
-			/>
+
+			<PanelRow>
+				<ToggleControl
+					label={ __( 'Enable debug mode', 'kudos-donations' ) }
+					help={ __(
+						'This will enable the debug logging and a debug menu found under Kudos.',
+						'kudos-donations'
+					) }
+					checked={ props.settings._kudos_debug_mode || '' }
+					onChange={ () => props.handleInputChange( "_kudos_debug_mode", ! props.settings._kudos_debug_mode ) }
+				/>
+			</PanelRow>
+
 		</PanelBody>
 	);
 };

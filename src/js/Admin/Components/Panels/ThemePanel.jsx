@@ -1,8 +1,10 @@
 const { __ } = wp.i18n;
 
-const { PanelBody } = wp.components;
-
-import { ColorPicker } from '../FormElements/ColorPicker';
+const {
+	PanelBody,
+	BaseControl,
+	ColorPalette
+} = wp.components;
 
 const ThemePanel = (props ) => {
 
@@ -16,13 +18,20 @@ const ThemePanel = (props ) => {
 			title={ __( 'Theme Colour', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
-			<ColorPicker
+
+			<BaseControl
 				id="_kudos_theme_color"
-				colors={ colors }
-				value={ props.settings._kudos_theme_color }
-				onChange={ props.handleInputChange }
-				disableCustomColors
-			/>
+				label={ __( 'Colour', 'kudos-donations' ) }
+			>
+				<ColorPalette
+					id="_kudos_theme_color"
+					colors={ colors }
+					value={ props.settings._kudos_theme_color }
+					onChange={ ( value ) => props.handleInputChange( '_kudos_theme_color', value ) }
+					disableCustomColors={ true }
+					clearable={ false }
+				/>
+			</BaseControl>
 
 		</PanelBody>
 	);

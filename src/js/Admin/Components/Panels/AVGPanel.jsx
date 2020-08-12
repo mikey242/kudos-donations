@@ -1,8 +1,11 @@
-import { TextInput } from '../FormElements/TextInput';
-
 const { __ } = wp.i18n;
 
-const { PanelBody } = wp.components;
+const {
+	PanelBody,
+	PanelRow,
+	BaseControl,
+	TextControl
+} = wp.components;
 
 const AVGPanel = ( props ) => {
 	return (
@@ -10,13 +13,22 @@ const AVGPanel = ( props ) => {
 			title={ __( 'AVG', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
-			<TextInput
-				id="_kudos_privacy_link"
-				label={ __( 'Privacy Policy URL', 'kudos-donations' ) }
-				value={ props.settings._kudos_privacy_link }
-				disabled={ props.isSaving }
-				onChange={ props.handleInputChange }
-			/>
+			<PanelRow>
+				<BaseControl
+					id={ "_kudos_privacy_link" }
+					label={ __( 'Privacy Policy URL', 'kudos-donations' ) }
+				>
+					<TextControl
+						id={ "_kudos_privacy_link" }
+						type={ 'text' }
+						value={ props.settings._kudos_privacy_link || '' }
+						placeholder={ props.placeholder }
+						disabled={ props.isSaving }
+						onChange={ ( value ) => props.handleInputChange( "_kudos_privacy_link", value ) }
+					/>
+				</BaseControl>
+			</PanelRow>
+
 		</PanelBody>
 	);
 };

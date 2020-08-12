@@ -1,11 +1,17 @@
 import axios from 'axios';
-import { PrimaryButton } from '../FormElements/PrimaryButton';
 
 const { __ } = wp.i18n;
-const { PanelRow, PanelBody, BaseControl } = wp.components;
+const {
+	PanelRow,
+	PanelBody,
+	BaseControl,
+	TextControl,
+	Button
+} = wp.components;
 const { useState } = wp.element;
 
 const TestEmailPanel = ( props ) => {
+
 	const [ isEdited, setIsEdited ] = useState( false );
 	const [ email, setEmail ] = useState( '' );
 	const [ isBusy, setIsBusy ] = useState( false );
@@ -57,6 +63,7 @@ const TestEmailPanel = ( props ) => {
 			title={ __( 'Send Test Email', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
+
 			<PanelRow>
 				<BaseControl
 					label={ __( 'Email address', 'kudos-donations' ) }
@@ -66,8 +73,8 @@ const TestEmailPanel = ( props ) => {
 						'kudos-donations'
 					) }
 				>
-					<input
-						key={ 'key_test_email_text' }
+					<TextControl
+						id={ 'test_email_address' }
 						type={ 'text' }
 						value={ email }
 						placeholder={ __(
@@ -75,19 +82,24 @@ const TestEmailPanel = ( props ) => {
 							'kudos-donations'
 						) }
 						disabled={ props.disabled }
-						onChange={ ( e ) => handleChange( e.target.value ) }
+						onChange={ ( email ) => handleChange(email) }
 					/>
 				</BaseControl>
 			</PanelRow>
 
-			<PrimaryButton
-				label={isBusy ? __('Sending', 'kudos-donations') : __('Send', 'kudos-donations')}
-				disabled={ ! isEdited || isBusy }
-				isBusy={ isBusy }
-				onClick={ () => {
-					sendTest( email );
-				} }
-			/>
+			<PanelRow>
+				<Button
+					isPrimary
+					disabled={ ! isEdited || isBusy }
+					isBusy={ isBusy }
+					onClick={ () => {
+						sendTest( email );
+					} }
+				>
+					{isBusy ? __('Sending', 'kudos-donations') : __('Send', 'kudos-donations')}
+				</Button>
+			</PanelRow>
+
 		</PanelBody>
 	);
 };

@@ -11,15 +11,18 @@ import { MolliePanel } from './Components/Panels/MolliePanel';
 import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
 import { AVGPanel } from './Components/Panels/AVGPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
-import { InvoiceCompanyPanel } from './Components/Panels/InvoiceCompanyPanel';
-import { GenerateInvoicesPanel } from './Components/Panels/GenerateInvoicesPanel';
-import { PrimaryButton } from './Components/FormElements/PrimaryButton';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
 
 const { __ } = wp.i18n;
-const { Placeholder, Spinner, TabPanel } = wp.components;
+const {
+	PanelRow,
+	Button,
+	Placeholder,
+	Spinner,
+	TabPanel
+} = wp.components;
 const { Component, Fragment } = wp.element;
 
 function getTabName() {
@@ -54,6 +57,8 @@ class KudosAdmin extends Component {
 			checkingApi: false,
 			settings: {},
 		};
+
+		this.tabs = {};
 	}
 
 	componentDidMount() {
@@ -122,9 +127,6 @@ class KudosAdmin extends Component {
 					isAPISaving: false,
 				} );
 			} );
-		// .catch( ( error ) => {
-		// 	console.log( error );
-		// } );
 	}
 
 	handleInputChange( option, value ) {
@@ -231,89 +233,12 @@ class KudosAdmin extends Component {
 	}
 
 	renderTab( tab ) {
-		switch ( tab.name ) {
-			case 'mollie':
-				return (
-					<MolliePanel
-						{ ...this.state }
-						mollieChanged={ this.mollieChanged }
-						handleInputChange={ this.handleInputChange }
-					/>
-				);
 
-			case 'customize':
+		const showTab = this.tabs.find(item => item.name === tab.name)
 
-				return (
-					<Fragment>
-						<ThemePanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<DonationModalPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<CompletedPaymentModal
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<CustomReturnPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<AVGPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-					</Fragment>
-				);
-
-			case 'email':
-				return (
-					<Fragment>
-						<EmailReceiptsPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<EmailSettingsPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<TestEmailPanel
-							handleInputChange={ this.handleInputChange }
-							showNotice={ this.showNotice }
-						/>
-					</Fragment>
-				);
-
-			case 'invoice':
-				return (
-					<Fragment>
-						<GenerateInvoicesPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<InvoiceCompanyPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-					</Fragment>
-				);
-
-			case 'advanced':
-				return (
-					<Fragment>
-						<ActionSchedulerPanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-						<DebugModePanel
-							{ ...this.state }
-							handleInputChange={ this.handleInputChange }
-						/>
-					</Fragment>
-				);
-		}
+		return(
+			showTab.content
+		)
 	}
 
 	render() {
@@ -324,6 +249,92 @@ class KudosAdmin extends Component {
 				</Placeholder>
 			);
 		}
+
+		this.tabs = wp.hooks.applyFilters('kudos_admin_menu_tabs', [
+			{
+				name: 'mollie',
+				title: 'Mollie',
+				className: 'tab-mollie',
+				content: [
+					<MolliePanel
+						{ ...this.state }
+						mollieChanged={ this.mollieChanged }
+						handleInputChange={ this.handleInputChange }
+					/>
+				]
+			},
+			{
+				name: 'customize',
+				title: 'Customize',
+				className: 'tab-customize',
+				content: [
+					<Fragment>
+						<ThemePanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<DonationModalPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<CompletedPaymentModal
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<CustomReturnPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<AVGPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+					</Fragment>
+				]
+			},
+			{
+				name: 'email',
+				title: 'Email',
+				className: 'tab-email',
+				content: [
+					<Fragment>
+						<EmailReceiptsPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<EmailSettingsPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<TestEmailPanel
+							handleInputChange={this.handleInputChange}
+							showNotice={this.showNotice}
+						/>
+					</Fragment>
+				]
+			},
+			{
+				name: 'advanced',
+				title: 'Advanced',
+				className: 'tab-advanced',
+				content: [
+					<Fragment>
+						<ActionSchedulerPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<DebugModePanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+					</Fragment>
+				]
+			}
+
+		], this.state, this.handleInputChange);
+
+		let tabsArray = Object.entries(this.tabs);
+
 		return (
 			<Fragment>
 				<KudosNotice
@@ -348,33 +359,12 @@ class KudosAdmin extends Component {
 					} }
 					activeClass="is-active"
 					initialTabName={ this.state.tabName }
-					tabs={ [
-						{
-							name: 'mollie',
-							title: 'Mollie',
-							className: 'tab-mollie',
-						},
-						{
-							name: 'customize',
-							title: __( 'Customize', 'kudos-donations' ),
-							className: 'tab-customize',
-						},
-						{
-							name: 'email',
-							title: __( 'Email', 'kudos-donations' ),
-							className: 'tab-email',
-						},
-						{
-							name: 'invoice',
-							title: __( 'Invoice', 'kudos-donations' ),
-							className: 'tab-Invoice',
-						},
-						{
-							name: 'advanced',
-							title: __( 'Advanced', 'kudos-donations' ),
-							className: 'tab-advanced',
-						},
-					] }
+					tabs={
+						tabsArray.map((tab)=>{
+							tab = tab[1];
+							return tab;
+						})
+					}
 				>
 					{ ( tab ) => {
 						return (
@@ -383,19 +373,24 @@ class KudosAdmin extends Component {
 								key="kudos-settings"
 							>
 								{ this.renderTab( tab ) }
-								<PrimaryButton
-									className={ 'justify-center' }
-									label="Save"
-									disabled={
-										this.state.isSaving ||
-										! this.state.isEdited
-									}
-									isBusy={
-										this.state.isSaving ||
-										this.state.checkingApi
-									}
-									onClick={ this.updateAll }
-								/>
+
+								<PanelRow className={ 'justify-center' }>
+									<Button
+										isPrimary
+										disabled={
+											this.state.isSaving ||
+											! this.state.isEdited
+										}
+										isBusy={
+											this.state.isSaving ||
+											this.state.checkingApi
+										}
+										onClick={ this.updateAll }
+									>
+										{ __('Save', 'kudos-donations') }
+									</Button>
+								</PanelRow>
+
 							</div>
 						);
 					} }

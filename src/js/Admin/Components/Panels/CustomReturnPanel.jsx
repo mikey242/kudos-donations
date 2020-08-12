@@ -1,11 +1,12 @@
-import { Toggle } from '../FormElements/Toggle';
-import { TextInput } from '../FormElements/TextInput';
-
 const { __ } = wp.i18n;
 
-const { PanelBody } = wp.components;
-
-const { Fragment } = wp.element;
+const {
+	PanelBody,
+	PanelRow,
+	BaseControl,
+	TextControl,
+	ToggleControl
+} = wp.components;
 
 const CustomReturnPanel = ( props ) => {
 	return (
@@ -13,34 +14,41 @@ const CustomReturnPanel = ( props ) => {
 			title={ __( 'Custom Return URL', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
-			<Toggle
-				id="_kudos_custom_return_enable"
-				label={ __( 'Use custom return URL', 'kudos-donations' ) }
-				help={ __(
-					'After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, enable this option.',
-					'kudos-donations'
-				) }
-				value={ props.settings._kudos_custom_return_enable }
-				onChange={ props.handleInputChange }
-			/>
+
+			<PanelRow>
+				<ToggleControl
+					label={ __( 'Use custom return URL', 'kudos-donations' ) }
+					help={ __(
+						'After payment the customer is returned to the page where they clicked on the donation button. To use a different return URL, enable this option.',
+						'kudos-donations'
+					) }
+					checked={ props.settings._kudos_custom_return_enable || '' }
+					onChange={ () => props.handleInputChange( "_kudos_custom_return_enable", ! props.settings._kudos_custom_return_enable ) }
+				/>
+			</PanelRow>
 
 			{ props.settings._kudos_custom_return_enable
 				? [
-						<Fragment key="_kudos_custom_return_fields">
-							<TextInput
-								id="_kudos_custom_return_url"
-								label={ __( 'URL', 'kudos-donations' ) }
-								help={ __(
-									'e.g https://mywebsite.com/thanks',
-									'kudos-donations'
-								) }
-								value={
-									props.settings._kudos_custom_return_url
-								}
+
+					<PanelRow>
+						<BaseControl
+							id={ "_kudos_custom_return_url" }
+							label={ __( 'URL', 'kudos-donations' ) }
+							help={ __(
+								'e.g https://mywebsite.com/thanks',
+								'kudos-donations'
+							) }
+						>
+							<TextControl
+								id={ "_kudos_custom_return_url" }
+								type={ 'text' }
+								value={ props.settings._kudos_custom_return_url || '' }
 								disabled={ props.isSaving }
-								onChange={ props.handleInputChange }
+								onChange={ ( value ) => props.handleInputChange( "_kudos_custom_return_url", value ) }
 							/>
-						</Fragment>,
+						</BaseControl>
+					</PanelRow>
+
 				  ]
 				: '' }
 		</PanelBody>
