@@ -2,7 +2,7 @@
 
 namespace Kudos\Service;
 
-use Settings;
+use Kudos\Helpers\Settings;
 
 /**
  * Fired during plugin deactivation

@@ -5,7 +5,7 @@ namespace Kudos\Service;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Settings;
+use Kudos\Helpers\Settings;
 
 /**
  * Fired during plugin activation
