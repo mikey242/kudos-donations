@@ -143,7 +143,7 @@ class Admin {
 			'manage_options',
 			'kudos-transactions',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/admin/partials/kudos-admin-transactions.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-transactions.php';
 			}
 
 		);
@@ -157,7 +157,7 @@ class Admin {
 			'manage_options',
 			'kudos-subscriptions',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/admin/partials/kudos-admin-subscriptions.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-subscriptions.php';
 			}
 
 		);
@@ -171,7 +171,7 @@ class Admin {
 			'manage_options',
 			'kudos-donors',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/admin/partials/kudos-admin-donors.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-donors.php';
 			}
 
 		);
@@ -198,7 +198,7 @@ class Admin {
 		        'manage_options',
 		        'kudos-debug',
 		        function () {
-			        require_once KUDOS_PLUGIN_DIR . '/app/admin/partials/kudos-admin-debug.php';
+			        require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-debug.php';
                 }
 	        );
         }
