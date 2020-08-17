@@ -12,7 +12,7 @@ import { TestEmailPanel } from './Components/Panels/TestEmailPanel';
 import { MollieApiKeys } from './Components/Panels/MollieApiKeys';
 import { MollieApiMode } from './Components/Panels/MollieApiMode';
 import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
-import { AVGPanel } from './Components/Panels/AVGPanel';
+import { PrivacyPolicyPanel } from './Components/Panels/PrivacyPolicyPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
@@ -296,7 +296,7 @@ class KudosAdmin extends Component {
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
-						<AVGPanel
+						<PrivacyPolicyPanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>

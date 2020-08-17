@@ -1,15 +1,15 @@
 const {__} = wp.i18n;
 const { PanelBody, TextControl} = wp.components;
 
-const AVGPanel = ( props ) => {
+const PrivacyPolicyPanel = (props ) => {
 	return (
 		<PanelBody
-			title={ __( 'AVG', 'kudos-donations' ) }
+			title={ __( 'Privacy Policy', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 
 			<TextControl
-				label={ __( 'Privacy Policy URL', 'kudos-donations' ) }
+				label={ __( 'URL', 'kudos-donations' ) }
 				type={ 'text' }
 				value={ props.settings._kudos_privacy_link || '' }
 				placeholder={ props.placeholder }
@@ -21,4 +21,4 @@ const AVGPanel = ( props ) => {
 	);
 };
 
-export { AVGPanel };
+export { PrivacyPolicyPanel };
