@@ -2,7 +2,6 @@ const { Snackbar } = wp.components;
 
 const Notice = ( props ) => {
 	if ( props.showNotice ) {
-		console.log(props.message);
 		return (
 			<div className="components-snackbar-list components-editor-notices__snackbar">
 				<Snackbar
