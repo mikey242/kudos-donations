@@ -2,9 +2,6 @@
 
 namespace Kudos\Admin;
 
-use Kudos\Admin\Table\DonorsTable;
-use Kudos\Admin\Table\SubscriptionsTable;
-use Kudos\Admin\Table\TransactionsTable;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
