@@ -96,10 +96,6 @@ trait TableTrait {
 
 	}
 
-	public function modify_export_data($row) {
-		return $row;
-	}
-
 	/**
 	 * Define what data to show on each column of the table
 	 *
