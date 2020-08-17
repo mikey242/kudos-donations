@@ -89,7 +89,7 @@ class ActionScheduler_AdminView extends ActionScheduler_AdminView_Deprecated {
 	}
 
 	/**
-	 * Renders the Admin UI
+	 * Renders the Settings UI
 	 */
 	public function render_admin_ui() {
 		$table = $this->get_list_table();

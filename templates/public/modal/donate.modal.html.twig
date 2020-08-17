@@ -23,7 +23,7 @@
             <fieldset class="form-tab form-tab-initial current-tab">
                 <p class="kudos_modal_text">{{ text }}</p>
 
-                {% if amount.type != 'open' %}
+                {% if amount.type == 'fixed' %}
                     <div class="kudos_amounts">
                         {% for key,value in amount.fixed_values %}
                             <div class="kudos_radio_amount">
@@ -34,7 +34,7 @@
                     </div>
                 {% endif %}
 
-                {% if amount.type != 'fixed' %}
+                {% if amount.type == 'open' %}
                     <label>
                         <input required type="text" min="1" name="value" data-type='currency' placeholder="{{ __('Amount', 'kudos-donations')}} (€) *" />
                     </label>
@@ -119,7 +119,7 @@
             {#   ADDRESS TAB   #}
             {% if(address.enabled) %}
             <fieldset class="form-tab form-tab-address">
-                <p class="kudos_modal_text">{{__('Please fill in you address', 'kudos-donations')}} {{ address.required ? null : '(' ~ __('optional', 'kudos-donations') ~ ')' }}</p>
+                <p class="kudos_modal_text">{{ 'kudos_modal_address_text' | apply_filters(__('Please fill in you address', 'kudos-donations') )}} {{ address.required ? null : '(' ~ __('optional', 'kudos-donations') ~ ')' }}</p>
                 <label>
                     <input {{ address.required ? 'required' : null }} type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
                 </label>

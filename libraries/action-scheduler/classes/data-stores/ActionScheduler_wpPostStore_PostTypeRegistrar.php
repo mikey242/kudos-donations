@@ -29,7 +29,7 @@ class ActionScheduler_wpPostStore_PostTypeRegistrar {
 			'labels' => array(
 				'name' => __( 'Scheduled Actions', 'action-scheduler' ),
 				'singular_name' => __( 'Scheduled Action', 'action-scheduler' ),
-				'menu_name' => _x( 'Scheduled Actions', 'Admin menu name', 'action-scheduler' ),
+				'menu_name' => _x( 'Scheduled Actions', 'Settings menu name', 'action-scheduler' ),
 				'add_new' => __( 'Add', 'action-scheduler' ),
 				'add_new_item' => __( 'Add New Scheduled Action', 'action-scheduler' ),
 				'edit' => __( 'Edit', 'action-scheduler' ),
@@ -47,4 +47,3 @@ class ActionScheduler_wpPostStore_PostTypeRegistrar {
 		return $args;
 	}
 }
- 

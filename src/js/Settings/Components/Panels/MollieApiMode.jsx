@@ -1,0 +1,60 @@
+const { __ } = wp.i18n;
+const { BaseControl, ButtonGroup, Button, PanelBody, PanelRow } = wp.components;
+
+const MollieApiMode = ( props ) => {
+	
+	const handleChange = ( id, value ) => {
+		props.mollieChanged();
+		props.handleInputChange( id, value );
+	};
+
+	const selected = props.settings._kudos_mollie_api_mode;
+
+	return (
+		<PanelBody
+			title={ __( 'API Mode', 'kudos-donations' ) }
+			initialOpen={ true }
+		>
+
+			<BaseControl
+				id="_kudos_mollie_api_mode"
+				label={ __( 'Mode', 'kudos-donations' ) }
+				help={ __(
+					'When using Kudos Donations for the first time, the payment mode is set to "Test". Check that the configuration is working correctly. Once you are ready to receive live payments you can switch the mode to "Live".',
+					'kudos-donations'
+				) }
+				className={ 'components-kudos-radio-buttons components-kudos-toggle' }
+			>
+				<PanelRow>
+					<ButtonGroup>
+						<Button
+							isPrimary={ 'test' === selected }
+							isSecondary={ 'test' !== selected }
+							// disabled={ 'test' === selected }
+							isPressed={ 'test' === selected }
+							onClick={ () =>
+								handleChange( '_kudos_mollie_api_mode', 'test' )
+							}
+						>
+							{ 'Test' }
+						</Button>
+						<Button
+							isPrimary={ 'live' === selected }
+							isSecondary={ 'live' !== selected }
+							// disabled={ 'live' === selected }
+							isPressed={ 'live' === selected }
+							onClick={ () =>
+								handleChange( '_kudos_mollie_api_mode', 'live' )
+							}
+						>
+							{ 'Live' }
+						</Button>
+					</ButtonGroup>
+				</PanelRow>
+			</BaseControl>
+
+		</PanelBody>
+	);
+};
+
+export { MollieApiMode };

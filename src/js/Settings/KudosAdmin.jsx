@@ -1,0 +1,418 @@
+// https://www.codeinwp.com/blog/plugin-options-page-gutenberg/
+// https://github.com/HardeepAsrani/my-awesome-plugin/
+
+import axios from 'axios';
+// Settings Panels
+import { Notice } from './Components/Notice';
+import { Header } from './Components/Header';
+import { DonationModalPanel } from './Components/Panels/DonationModalPanel';
+import { CompletedPaymentModal } from './Components/Panels/CompletedPaymentModal';
+import { EmailSettingsPanel } from './Components/Panels/EmailSettingsPanel';
+import { TestEmailPanel } from './Components/Panels/TestEmailPanel';
+import { MollieApiKeys } from './Components/Panels/MollieApiKeys';
+import { MollieApiMode } from './Components/Panels/MollieApiMode';
+import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
+import { AVGPanel } from './Components/Panels/AVGPanel';
+import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
+import { DebugModePanel } from './Components/Panels/DebugModePanel';
+import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
+import { ThemePanel } from "./Components/Panels/ThemePanel";
+
+const { __ } = wp.i18n;
+
+const {
+	Panel,
+	PanelRow,
+	Button,
+	Spinner,
+	TabPanel
+} = wp.components;
+
+const { Component, Fragment } = wp.element;
+
+function getTabName() {
+	const searchParams = new URLSearchParams( window.location.search );
+	if ( searchParams.has( 'tabName' ) ) {
+		return searchParams.get( 'tabName' );
+	}
+	return 'mollie';
+}
+
+class KudosAdmin extends Component {
+	constructor() {
+		super( ...arguments );
+
+		this.changeTab = this.changeTab.bind( this );
+		this.updateSetting = this.updateSetting.bind( this );
+		this.updateAll = this.updateAll.bind( this );
+		this.handleInputChange = this.handleInputChange.bind( this );
+		this.mollieChanged = this.mollieChanged.bind( this );
+		this.showNotice = this.showNotice.bind( this );
+		this.hideNotice = this.hideNotice.bind( this );
+		this.checkApiKey = this.checkApiKey.bind( this );
+
+		this.state = {
+			tabName: getTabName(),
+			showNotice: false,
+			noticeMessage: '',
+			isMollieEdited: false,
+			isEdited: false,
+			isAPILoaded: false,
+			isAPISaving: false,
+			checkingApi: false,
+			settings: {},
+		};
+
+		this.tabs = {};
+	}
+
+	componentDidMount() {
+		if ( false === this.state.isAPILoaded ) {
+			this.getSettings();
+		}
+	}
+
+	mollieChanged() {
+		this.setState( {
+			isMollieEdited: true,
+			settings: {
+				_kudos_mollie_connected: false,
+			},
+		} );
+	}
+
+	changeTab() {
+		this.getSettings();
+	}
+
+	checkApiKey() {
+		this.setState( {
+			checkingApi: true,
+			isAPISaving: true,
+		} );
+
+		// Create form data from current state
+		// eslint-disable-next-line no-undef
+		const formData = new FormData();
+		formData.append( 'action', 'check_mollie_connection' );
+		formData.append(
+			'apiMode',
+			this.state.settings._kudos_mollie_api_mode
+		);
+		formData.append(
+			'testKey',
+			this.state.settings._kudos_mollie_test_api_key
+		);
+		formData.append(
+			'liveKey',
+			this.state.settings._kudos_mollie_live_api_key
+		);
+
+		// Perform Get request
+		axios
+			.get( window.kudos.checkApiUrl, {
+				headers: {
+					// eslint-disable-next-line no-undef
+					'X-WP-Nonce': wpApiSettings.nonce,
+				},
+				params: {
+					apiMode: this.state.settings._kudos_mollie_api_mode,
+					testKey: this.state.settings._kudos_mollie_test_api_key,
+					liveKey: this.state.settings._kudos_mollie_live_api_key,
+				},
+			} )
+			.then( ( response ) => {
+				this.showNotice( response.data.data );
+				this.setState( {
+					settings: {
+						...this.state.settings,
+						_kudos_mollie_connected: response.data.success,
+					},
+					checkingApi: false,
+					isAPISaving: false,
+				} );
+			} );
+	}
+
+	handleInputChange( option, value ) {
+		this.setState( {
+			isEdited: true,
+			settings: {
+				...this.state.settings,
+				[ option ]: value,
+			},
+		} );
+	}
+
+	showNotice( message ) {
+		// this.hideNotice();
+		this.setState( {
+			showNotice: true,
+			noticeMessage: message,
+		} );
+	}
+
+	hideNotice() {
+		this.setState( {
+			showNotice: false,
+		} );
+	}
+
+	getSettings() {
+		wp.api.loadPromise.then( () => {
+			this.settings = new wp.api.models.Settings();
+			this.settings.fetch().then( ( response ) => {
+				this.setState( {
+					settings: { ...response },
+					isAPILoaded: true,
+					showNotice: false,
+				} );
+			} );
+		} );
+	}
+
+	// Update all settings
+	updateAll( showNotice = true ) {
+		this.setState( { isAPISaving: true } );
+
+		// Delete empty settings keys
+		for ( const key in this.state.settings ) {
+			if ( this.state.settings[ key ] === null ) {
+				delete this.state.settings[ key ];
+			}
+		}
+
+		//Create WordPress settings model
+		const model = new wp.api.models.Settings( {
+			...this.state.settings,
+		} );
+
+		//Save to database
+		model
+			.save()
+			.then( ( response ) => {
+				// Commit state
+				this.setState( {
+					settings: {
+						...response,
+					},
+					isEdited: false,
+					isAPISaving: false,
+				} );
+				if ( showNotice ) {
+					this.showNotice(
+						__( 'Setting(s) updated', 'kudos-donations' )
+					);
+				}
+				if ( this.state.isMollieEdited ) {
+					this.checkApiKey();
+					this.setState( {
+						isMollieEdited: false,
+					} );
+				}
+			} )
+			.fail( ( response ) => {
+				if ( showNotice ) {
+					this.showNotice( response.statusText );
+				}
+			} );
+	}
+
+	// Update an individual setting
+	updateSetting( option, value ) {
+		this.setState( { isAPISaving: true } );
+
+		//Create WordPress settings model
+		const model = new wp.api.models.Settings( {
+			[ option ]: value,
+		} );
+
+		//Save to database
+		model.save().then( ( response ) => {
+			// Commit state
+			this.setState( {
+				[ option ]: response[ option ],
+				isAPISaving: false,
+			} );
+		} );
+	}
+
+	renderTab( tab ) {
+
+		const showTab = this.tabs.find(item => item.name === tab.name)
+
+		return(
+			showTab.content
+		)
+	}
+
+	render() {
+
+		if ( ! this.state.isAPILoaded ) {
+			return (
+				<Spinner />
+			)
+		}
+
+		this.tabs = wp.hooks.applyFilters('kudos_admin_settings_tabs', [
+			{
+				name: 'mollie',
+				title: 'Mollie',
+				className: 'tab-mollie',
+				content: [
+					<Fragment>
+						<MollieApiMode
+							{ ...this.state }
+							mollieChanged={ this.mollieChanged }
+							handleInputChange={ this.handleInputChange }
+						/>
+						<MollieApiKeys
+							{ ...this.state }
+							mollieChanged={ this.mollieChanged }
+							handleInputChange={ this.handleInputChange }
+						/>
+					</Fragment>
+				]
+			},
+			{
+				name: 'customize',
+				title: 'Customize',
+				className: 'tab-customize',
+				content: [
+					<Fragment>
+						<ThemePanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<DonationModalPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<CompletedPaymentModal
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<CustomReturnPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<AVGPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+					</Fragment>
+				]
+			},
+			{
+				name: 'email',
+				title: 'Email',
+				className: 'tab-email',
+				content: [
+					<Fragment>
+						<EmailReceiptsPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<EmailSettingsPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<TestEmailPanel
+							handleInputChange={this.handleInputChange}
+							showNotice={this.showNotice}
+						/>
+					</Fragment>
+				]
+			},
+			{
+				name: 'advanced',
+				title: 'Advanced',
+				className: 'tab-advanced',
+				content: [
+					<Fragment>
+						<ActionSchedulerPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<DebugModePanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+					</Fragment>
+				]
+			}
+
+		], this.state, this.handleInputChange);
+
+		let tabsArray = Object.entries(this.tabs);
+
+		return (
+			<Fragment>
+				<Notice
+					showNotice={ this.state.showNotice }
+					hideNotice={ this.hideNotice }
+					message={this.state.noticeMessage}
+				/>
+
+				<Header
+					apiConnected={ this.state.settings._kudos_mollie_connected }
+					apiMode={ this.state.settings._kudos_mollie_api_mode }
+					isMollieEdited={ this.state.isMollieEdited }
+					checkingApi={ this.state.checkingApi }
+				/>
+
+				<TabPanel
+					className="kudos-tab-panel"
+					onSelect={ ( tab ) => {
+						this.changeTab( tab );
+					} }
+					activeClass="is-active"
+					initialTabName={ this.state.tabName }
+					tabs={
+						tabsArray.map((tab)=>{
+							tab = tab[1];
+							return tab;
+						})
+					}
+				>
+					{ ( tab ) => {
+						return (
+							<div
+								className="kudos-settings-main dashboard-wrap"
+								key="kudos-settings"
+							>
+								<Panel>
+
+									{ this.renderTab( tab ) }
+
+								</Panel>
+
+								
+								<PanelRow className={ 'justify-center' }>
+										<Button
+											isPrimary
+											isLarge
+											disabled={
+												this.state.isSaving ||
+												! this.state.isEdited
+											}
+											isBusy={
+												this.state.isSaving ||
+												this.state.checkingApi
+											}
+											onClick={ this.updateAll }
+										>
+											{ __('Save', 'kudos-donations') }
+										</Button>
+									</PanelRow>
+
+							</div>
+						);
+					} }
+				</TabPanel>
+			</Fragment>
+		);
+	}
+}
+
+export { KudosAdmin };

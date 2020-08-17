@@ -3,12 +3,10 @@ button.kudos_button {
   //  all: unset;
   //}
 
-  @apply bg-orange-500;
-
   &:hover,
   &:focus,
   &:active {
-    @apply text-white no-underline shadow-none bg-orange-700;
+    @apply text-white no-underline shadow-none;
   }
 
   @apply font-sans w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
@@ -29,7 +27,6 @@ button.kudos_button {
       content: url("../img/lock-white.svg");
       width: 10px;
       height: auto;
-      //background: url("../img/lock-white.svg") no-repeat center;
       background-size: contain;
       margin: auto 5px auto 0;
     }

@@ -131,7 +131,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 						{ amount_type !== 'open'
 							? [
 
-						<Fragment key="_kudos_fixed_amounts">
+						<Fragment>
 							<TextControl
 								label={ __(	'Amounts:',	'kudos-donations' ) }
 								help={ __( 'Enter a comma separated list of values to use.', 'kudos-donations' ) }

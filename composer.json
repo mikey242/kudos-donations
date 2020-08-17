@@ -3,7 +3,18 @@
         "mollie/mollie-api-php": "2.21.*",
         "monolog/monolog": "^2.0",
         "twig/twig": "^2.0",
-        "dompdf/dompdf": "^0.8.5",
-        "ext-json": "*"
+        "ext-json": "*",
+        "php": ">=7.1"
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "rm -rf vendor/mollie/mollie-api-php/examples vendor/sabberworm/php-css-parser/tests vendor/twig/twig/doc"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "Kudos\\" : "app/"
+        }
     }
+
 }

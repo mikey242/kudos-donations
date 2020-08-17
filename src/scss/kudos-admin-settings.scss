@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --wp-admin-theme-color: theme('colors.orange.500');
+  --wp-admin-theme-color-darker-10: theme('colors.orange.500');
+  --wp-admin-theme-color-darker-20: theme('colors.orange.700')
+}
+
+.components-radio-control__input::before,
+.components-circular-option-picker__option::after {
+  box-sizing: border-box;
+}
+
+.components-base-control {
+  margin-bottom: 24px;
+
+  &:last-child {
+    margin-bottom: 8px;
+  }
+}
+
 #wpcontent {
   padding-left: 0;
 }
@@ -65,6 +84,12 @@
 }
 
 #kudos-settings {
+  .components-spinner {
+    left: 50%;
+    top: 50%;
+    position: absolute;
+  }
+
   .dashboard-wrap {
     margin-left: auto;
     margin-right: auto;
@@ -72,81 +97,25 @@
     width: 100%;
   }
 
-  // Inputs
+  .kudos-admin-info {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  textarea {
-    @apply py-2;
-    &:focus {
-      @apply border-orange-500;
-      box-shadow: 0 0 0 1px theme('colors.orange.500');
-    }
-  }
-
-  input{
-    &[type="text"],
-    &[type="password"]{
-      @apply block w-full rounded py-2;
-      &:focus {
-        @apply border-orange-500;
-        box-shadow: 0 0 0 1px theme('colors.orange.500');
-      }
-    }
-
-    &[type="checkbox"] {
-      &:checked {
-        @apply bg-orange-500 border border-orange-500;
-      }
-      &:focus {
-        @apply border-orange-500;
-        box-shadow: 0 0 2px theme('colors.orange.500');
-      }
-    }
-
-    &[type="radio"] {
-      &::before {
-        box-sizing: border-box;
-      }
-      &:checked {
-        @apply bg-orange-500;
-      }
-      &:focus {
-        @apply border-orange-500;
-        box-shadow: 0 0 1px theme('colors.orange.500');
-      }
+    .dashicon {
+      margin-right: 5px;
     }
   }
 
   // WordPress Components
 
-  .components-panel__body {
-    background: #fff;
-    border: 1px solid #e2e4e7;
-
-    &:first-child {
-      margin: 25px 0 0 0;
-    }
-  }
-
-  .components-base-control {
-    @apply w-full;
-  }
-
-  .components-base-control__label {
-    @apply appearance-none block font-semibold w-full rounded py-3;
+  .components-button.is-primary {
+    @apply bg-orange-500;
   }
 
   .components-base-control__help {
     @apply mt-4 mb-0;
-  }
-
-  .components-form-toggle.is-checked {
-    .components-form-toggle__track {
-      @apply bg-orange-500;
-    }
-  }
-
-  .components-external-link {
-    @apply text-orange-500 font-bold;
   }
 
   .components-snackbar {
@@ -173,7 +142,6 @@
       box-shadow: 0 1px 0 rgba(213, 213, 213, 0.5), 0 1px 2px #eee;
 
       .components-button.is-active {
-        box-shadow: inset 0 -3px theme('colors.orange.500');
         font-weight: 600;
         position: relative;
       }
@@ -183,7 +151,6 @@
         border: none;
         border-radius: 0;
         height: 50px;
-        box-shadow: none;
         cursor: pointer;
         display: inline-block;
         padding: 3px 15px;
@@ -194,63 +161,9 @@
         transition: box-shadow .1s linear;
       }
     }
-  }
-
-  // Custom components
-  .components-kudos-radio-buttons {
-    .components-button-group {
-      button {
-        @apply p-2 h-auto relative shadow-none;
-        border-radius: 0;
-        min-height: 36px;
-
-        &:disabled {
-          @apply opacity-100;
-        }
-      }
-
-      .components-button.is-primary {
-        @apply bg-transparent text-orange-700 py-2 px-4 border border-solid border-orange-500;
-        &.is-pressed {
-          color: #fff;
-          @apply bg-orange-500 font-semibold;
-        }
-        &:focus {
-          @apply shadow-none;
-        }
-      }
-    }
-
-    &.component-kudos-images {
-      .is-pressed {
-        filter: drop-shadow(5px 5px 0px #7e8993);
-      }
+    .components-tab-panel__tab-content {
+      margin-top: 25px;
     }
   }
 
-  .components-placeholder {
-    background: #f6f6f6;
-
-    .components-placeholder__fieldset {
-      justify-content: center;
-    }
-  }
-
-  .components-button.is-primary {
-    color: #fff;
-    @apply bg-orange-500 border-none text-white font-bold py-2 px-4;
-    &:focus {
-      @apply shadow-none;
-    }
-    &:hover {
-      @apply bg-orange-700;
-    }
-    &:disabled {
-      @apply text-orange-200;
-    }
-    &.is-busy {
-      background-image: linear-gradient(-45deg, theme('colors.orange.200') 28%, theme('colors.orange.500') 28%, theme('colors.orange.500') 72%, theme('colors.orange.200') 72%);
-      border-color: rgb(0, 124, 186);
-    }
-  }
 }
