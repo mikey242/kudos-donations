@@ -147,7 +147,9 @@ class ActivatorService {
 	private static function set_defaults() {
 
 		update_option('_kudos_donations_version', KUDOS_VERSION);
-		Settings::add_defaults();
+
+		$settings = new Settings();
+		$settings->add_defaults();
 
 	}
 }

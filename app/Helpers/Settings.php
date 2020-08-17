@@ -10,16 +10,16 @@ class Settings {
 	 * Settings configuration
 	 * @var array
 	 */
-	private static $settings;
+	private $settings;
 
 	/**
-	 * Settings init.
+	 * Settings class constructor.
 	 *
 	 * @since   2.0.0
 	 */
-	private static function init() {
+	public function __construct() {
 
-		self::$settings = apply_filters('kudos_register_settings', [
+		$this->settings = apply_filters('kudos_register_settings', [
 			'mollie_connected' => [
 				'type'         => 'boolean',
 				'show_in_rest' => true,
@@ -154,8 +154,7 @@ class Settings {
 	}
 
 	/**
-	 * Gets the setting from the database, if no setting available
-	 * then returns default value.
+	 * Gets the setting from the database
 	 *
 	 * @param $name
 	 * @return false|mixed|void
@@ -173,16 +172,15 @@ class Settings {
 	 *
 	 * @since   2.0.0
 	 */
-	public static function register_settings() {
+	public function register_settings() {
 
-		self::init();
-
-		foreach (self::$settings as $name=>$setting) {
+		foreach ($this->settings as $name=>$setting) {
 			register_setting(
 				'kudos_donations',
 				self::PREFIX . $name, $setting
 			);
 		}
+
 	}
 
 	/**
@@ -190,11 +188,9 @@ class Settings {
 	 *
 	 * @since 2.0.0
 	 */
-	public static function add_defaults() {
+	public function add_defaults() {
 
-		self::init();
-
-		foreach (self::$settings as $name=>$setting) {
+		foreach ($this->settings as $name=>$setting) {
 			add_option(self::PREFIX . $name, $setting['default'] ?? '');
 		}
 
@@ -205,11 +201,9 @@ class Settings {
 	 *
 	 * @since 2.0.0
 	 */
-	public static function remove_settings() {
+	public function remove_settings() {
 
-		self::init();
-
-		foreach ( self::$settings as $key=>$setting ) {
+		foreach ( $this->settings as $key=>$setting ) {
 			delete_option($key);
 		}
 

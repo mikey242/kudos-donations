@@ -30,7 +30,8 @@ class DeactivatorService {
 	public static function deactivate() {
 
 		// Clean-up settings from database
-		Settings::remove_settings();
+		$settings = new Settings();
+		$settings->remove_settings();
 
 	}
 

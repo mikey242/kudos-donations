@@ -327,7 +327,8 @@ class Admin {
 	 */
 	public function register_settings() {
 
-		Settings::register_settings();
+		$settings = new Settings();
+		$settings->register_settings();
 
 	}
 }
