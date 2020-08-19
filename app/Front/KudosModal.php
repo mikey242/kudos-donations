@@ -41,12 +41,7 @@ class KudosModal {
 	    $this->logger = new LoggerService();
 	    $this->returnUrl = Utils::get_return_url();
 	    $this->twig = new TwigService();
-	    $this->id = uniqid('kudos_modal-');
 
-    }
-
-    public function get_id() {
-		return $this->id;
     }
 
 	/**

@@ -380,17 +380,12 @@ class Front {
 
 		if(self::ready()) {
 
-			// Create modal
-			$modal = new KudosModal();
-			$attr['modal_id'] = $modal->get_id();
-			$modal = $modal->get_payment_modal($attr);
-
 			// Create button
 			$button = new KudosButton($attr);
 
 			// Return only if modal and button not empty
-			if(!empty($modal) && !empty($button)) {
-				return $button->get_button(false) . $modal;
+			if(!empty($button)) {
+				$button->get_button();
 			}
 
 			return false;
