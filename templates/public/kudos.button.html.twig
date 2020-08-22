@@ -1,7 +1,5 @@
 <div class="has-text-align-{{ alignment }}">
-    <button style="background-color: {{color}}" class='kudos_button kudos_button_donate' data-target="{{ modal_id }}">
+    <button style="background-color: {{color}}" class='kudos_button kudos_button_donate' data-target="{{ target }}">
         {{ label | raw }}
     </button>
 </div>
-
-{{ include('/public/modal/donate.modal.html.twig') }}

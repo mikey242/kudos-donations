@@ -4,17 +4,14 @@
 
 @import "partials/fonts";
 
-.kudos_modal {
+div[id^=kudos_modal-] {
+
   all: initial;
 
   *,
   *::before,
   *::after {
-    all: unset;
-  }
-
-  style {
-    display: none;
+    all: initial;
   }
 
   position: absolute;
@@ -57,6 +54,7 @@
 }
 
 div[id^='kudos_modal-'] {
+
   @import "partials/buttons";
 
   *,
@@ -115,6 +113,7 @@ div[id^='kudos_modal-'] {
   }
 
   .kudos_modal_close {
+    cursor: pointer;
     span {
       @apply text-2xl;
     }
@@ -211,8 +210,12 @@ div[id^='kudos_modal-'] {
     margin: 0;
     padding: 0;
 
+    fieldset {
+      @apply m-0 p-0 border-0;
+    }
+
     label {
-      @apply inline-block m-0 cursor-pointer;
+      @apply inline-block m-0 cursor-pointer font-normal;
 
       &:not(:first-child) {
         @apply mt-2;
@@ -293,7 +296,7 @@ div[id^='kudos_modal-'] {
     }
 
     div.kudos_amounts {
-      @apply bg-white flex -mx-2;
+      @apply bg-white flex flex-wrap -mx-2;
 
       .kudos_radio_amount {
         @apply w-1/4 px-2 m-0;
@@ -316,32 +319,33 @@ div[id^='kudos_modal-'] {
       }
     }
   }
-}
 
-.kudos_modal_buttons {
-  @apply mt-8 block;
+  .kudos_modal_buttons {
+    @apply mt-8 block;
 
-  .kudos_back {
-    position: absolute;
-    bottom: 50%;
-    left: 0;
-    margin: 0;
-    cursor: pointer;
-
-    &::before {
-      content: '';
+    .kudos_back {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background: url("../img/back-icon.svg") no-repeat center;
-      background-size: contain;
-      transform: translateY(-50%);
+      bottom: 50%;
+      left: 0;
+      margin: 0;
+      cursor: pointer;
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: url("../img/back-icon.svg") no-repeat center;
+        background-size: contain;
+        transform: translateY(-50%);
+      }
+    }
+
+    button:last-child {
+      @apply ml-3;
     }
   }
 
-  button:last-child {
-    @apply ml-3;
-  }
 }
 
 .kudos_modal[aria-hidden="false"] .kudos_modal_overlay {

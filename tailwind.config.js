@@ -50,5 +50,8 @@ module.exports = {
   plugins: [],
   corePlugins: {
     preflight: false
+  },
+  future: {
+    removeDeprecatedGapUtilities: true,
   }
 }

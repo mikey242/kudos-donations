@@ -127,8 +127,8 @@ class Front {
          }
         div[id^='kudos_modal-'].kudos_modal button.kudos_button.button-style-outline {
 			background-color: transparent;
-             color: $color;
-             border-color: $color
+			color: $color;
+			border-color: $color
         }
         div[id^='kudos_modal-'].kudos_modal button.kudos_button {
 			background-color: $color;
@@ -380,12 +380,14 @@ class Front {
 
 		if(self::ready()) {
 
-			// Create button
+			// Create button and modal
 			$button = new KudosButton($attr);
+			$modal = $button->get_donate_modal(false);
+
 
 			// Return only if modal and button not empty
-			if(!empty($button)) {
-				$button->get_button();
+			if(!empty($modal) && !empty($button)) {
+				return $button->get_button(false) . $modal;
 			}
 
 			return false;
