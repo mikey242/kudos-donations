@@ -217,13 +217,15 @@ class SubscriptionsTable extends WP_List_Table {
 	 */
 	function column_created( $item ) {
 
-		$cancel_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
+		$action_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
 		$title = '<strong>' . date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($item['created'])) . '</strong>';
 
 		$actions = [];
 		if($item['status'] === 'active') {
-			$actions['cancel'] = sprintf( '<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'cancel', sanitize_text_field( $item['subscription_id'] ), $cancel_nonce, __('Cancel', 'kudos-donations') );
+			$actions['cancel'] = sprintf( '<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'cancel', sanitize_text_field( $item['subscription_id'] ), $action_nonce, __('Cancel', 'kudos-donations') );
+		} else {
+			$actions['delete'] = sprintf( '<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'delete', sanitize_text_field( $item['subscription_id'] ), $action_nonce, __('Delete', 'kudos-donations') );
 		}
 
 		return $title . $this->row_actions( $actions );
@@ -331,6 +333,7 @@ class SubscriptionsTable extends WP_List_Table {
 	function get_bulk_actions() {
 		return [
 			'bulk-cancel'   => __('Cancel', 'kudos-donations'),
+			'bulk-delete'   => __('Delete', 'kudos-donations')
 		];
 	}
 
@@ -348,6 +351,20 @@ class SubscriptionsTable extends WP_List_Table {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Delete a subscription.
+	 *
+	 * @param $column
+	 * @param int $subscription_id
+	 * @return false|int
+	 * @since   1.0.0
+	 */
+	protected function delete_record( $column, $subscription_id ) {
+
+		return $this->mapper->delete($column, $subscription_id);
+
 	}
 
 	/**
@@ -369,6 +386,15 @@ class SubscriptionsTable extends WP_List_Table {
 				}
 				break;
 
+			case 'delete':
+				// In our file that handles the request, verify the nonce.
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
+					die();
+				} else {
+					self::delete_record('subscription_id', sanitize_text_field( $_GET['subscription_id'] ) );
+				}
+				break;
+
 			case 'bulk-cancel':
 				// In our file that handles the request, verify the nonce.
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
@@ -379,6 +405,20 @@ class SubscriptionsTable extends WP_List_Table {
 					$cancel_ids = esc_sql( $_REQUEST['bulk-action']);
 					foreach ( $cancel_ids as $id ) {
 						self::cancel_subscription( $id );
+					}
+				}
+				break;
+
+			case 'bulk-delete':
+				// In our file that handles the request, verify the nonce.
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
+					die();
+				}
+
+				if(isset($_REQUEST['bulk-action'])) {
+					$cancel_ids = esc_sql( $_REQUEST['bulk-action']);
+					foreach ( $cancel_ids as $id ) {
+						self::delete_record('subscription_id', $id );
 					}
 				}
 				break;
