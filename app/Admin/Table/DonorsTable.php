@@ -246,6 +246,7 @@ class DonorsTable extends WP_List_Table {
 	protected function delete_record( $column, $customer_id ) {
 
 		return $this->mapper->delete($column, $customer_id);
+
 	}
 
 	/**
