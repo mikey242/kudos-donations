@@ -18,10 +18,6 @@ class KudosModal {
 	 */
 	private $twig;
 	/**
-	 * @var string|void
-	 */
-	private $returnUrl;
-	/**
 	 * @var false|mixed|void
 	 */
 	private $color;
@@ -36,7 +32,6 @@ class KudosModal {
 		$this->logger = new LoggerService();
 		$this->twig = new TwigService();
 		$this->color = Settings::get_setting('theme_color');
-	    $this->returnUrl = Utils::get_return_url();
 
     }
 
@@ -90,6 +85,7 @@ class KudosModal {
 
 			// Global settings
 			'vendor' => Settings::get_setting('payment_vendor'),
+			'subscriptions' => Settings::get_setting('subscription_enabled'),
 			'address' => [
 				'enabled' => Settings::get_setting('address_enabled'),
 				'required' => Settings::get_setting('address_required')
