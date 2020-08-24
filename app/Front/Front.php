@@ -382,7 +382,7 @@ class Front {
 
 			// Create button and modal
 			$button = new KudosButton($attr);
-			$modal = $button->get_donate_modal(false);
+			$modal = $button->get_donate_modal();
 
 
 			// Return only if modal and button not empty

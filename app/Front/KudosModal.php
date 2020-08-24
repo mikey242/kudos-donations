@@ -22,10 +22,6 @@ class KudosModal {
 	 */
 	private $returnUrl;
 	/**
-	 * @var string
-	 */
-	private $id;
-	/**
 	 * @var false|mixed|void
 	 */
 	private $color;
@@ -37,10 +33,10 @@ class KudosModal {
 	 */
 	public function __construct() {
 
+		$this->logger = new LoggerService();
+		$this->twig = new TwigService();
 		$this->color = Settings::get_setting('theme_color');
-	    $this->logger = new LoggerService();
 	    $this->returnUrl = Utils::get_return_url();
-	    $this->twig = new TwigService();
 
     }
 
@@ -72,11 +68,12 @@ class KudosModal {
 	/**
 	 * Get the donate modal markup
 	 *
-	 * @since    1.0.0
+	 * @param $data
 	 * @param bool $echo
 	 * @return string|void
+	 * @since    1.0.0
 	 */
-	public function get_donate_modal($echo=true) {
+	public function get_donate_modal($data, $echo=false) {
 
 		$privacy_option = Settings::get_setting("privacy_link");
 		$privacy_link = __('I agree with the privacy policy.', "kudos-donations");
@@ -84,19 +81,11 @@ class KudosModal {
 			$privacy_link = sprintf(__('I agree with the %s', "kudos-donations"), '<a target="_blank" href=' . Settings::get_setting("privacy_link") . '>' . __("privacy policy", "kudos-donations") . '</a>.');
 		}
 
-		$data = [
-			'modal_id' => $this->id,
+		$data = array_merge($data, [
 			'color' => $this->color,
 			'return_url' => Utils::get_return_url(),
 			'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
 			'privacy_link' => $privacy_link,
-			'header' => $this->header,
-			'text' => $this->text,
-			'amount' => [
-				'type'  => $this->amount_type,
-				'fixed_values' =>explode(',', $this->fixed_amounts)
-			],
-			'donation_label' => $atts['donation_label'] ?? get_the_title(),
 			'payment_by' => __('Secure payment by', 'kudos-donations'),
 
 			// Global settings
@@ -105,7 +94,7 @@ class KudosModal {
 				'enabled' => Settings::get_setting('address_enabled'),
 				'required' => Settings::get_setting('address_required')
 			]
-		];
+		]);
 
 		$out = $this->twig->render('/public/modal/donate.modal.html.twig', $data);
 
