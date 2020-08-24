@@ -1,17 +1,17 @@
 const { __ } = wp.i18n;
 const { CheckboxControl, PanelBody, PanelRow } = wp.components;
 
-const DonationModalPanel = ( props ) => {
+const AddressFieldPanel = (props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Donation Form', 'kudos-donations' ) }
+			title={ __( 'Address Field', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 
 			<PanelRow>
 
 				<CheckboxControl
-					label="Enable address field"
+					label="Enable"
 					checked={ props.settings._kudos_address_enabled || '' }
 					onChange={ ( value ) => props.handleInputChange( '_kudos_address_enabled', value ) }
 				/>
@@ -24,7 +24,7 @@ const DonationModalPanel = ( props ) => {
 					<PanelRow>
 
 						<CheckboxControl
-							label="Address required"
+							label="Required"
 							checked={ props.settings._kudos_address_required || '' }
 							onChange={ ( value ) => props.handleInputChange( '_kudos_address_required', value ) }
 						/>
@@ -36,4 +36,4 @@ const DonationModalPanel = ( props ) => {
 	);
 };
 
-export { DonationModalPanel };
+export { AddressFieldPanel };

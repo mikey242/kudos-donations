@@ -5,7 +5,7 @@ import axios from 'axios';
 // Settings Panels
 import { Notice } from './Components/Notice';
 import { Header } from './Components/Header';
-import { DonationModalPanel } from './Components/Panels/DonationModalPanel';
+import { AddressFieldPanel } from './Components/Panels/AddressFieldPanel';
 import { CompletedPaymentModal } from './Components/Panels/CompletedPaymentModal';
 import { EmailSettingsPanel } from './Components/Panels/EmailSettingsPanel';
 import { TestEmailPanel } from './Components/Panels/TestEmailPanel';
@@ -285,7 +285,7 @@ class KudosAdmin extends Component {
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
-						<DonationModalPanel
+						<AddressFieldPanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
