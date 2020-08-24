@@ -83,19 +83,24 @@ class DonorEntity extends AbstractEntity {
 
 		$logger = new LoggerService();
 
-		if(class_exists('ActionScheduler')) {
-			// Remove existing action if exists
-			as_unschedule_action('kudos_remove_secret_action', [$this->customer_id]);
-			$timestamp = strtotime($timeout);
-			// Create new action to remove secret
-			as_schedule_single_action( $timestamp, 'kudos_remove_secret_action', [$this->customer_id] );
-			$logger->debug( 'Action "kudos_remove_secret_action" scheduled', [
-				'datetime' => date_i18n( 'Y-m-d H:i:s', $timestamp )
-			] );
-		}
-
 		try {
+
+			if(class_exists('ActionScheduler')) {
+
+				// Remove existing action if exists
+				as_unschedule_action('kudos_remove_secret_action', [$this->customer_id]);
+				$timestamp = strtotime($timeout);
+
+				// Create new action to remove secret
+				as_schedule_single_action( $timestamp, 'kudos_remove_secret_action', [$this->customer_id] );
+				$logger->debug( 'Action "kudos_remove_secret_action" scheduled', [
+					'datetime' => date_i18n( 'Y-m-d H:i:s', $timestamp )
+				] );
+
+			}
+
 			$this->secret = bin2hex(random_bytes(10));
+
 		} catch (Throwable $e) {
 			$logger->error('Unable to create secret for user. ' . $e->getMessage() , ['id' => $this->id]);
 		}
