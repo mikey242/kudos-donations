@@ -17,6 +17,7 @@ import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
+import {SubscriptionPanel} from "./Components/Panels/SubscriptionPanel"
 
 const { __ } = wp.i18n;
 
@@ -285,6 +286,10 @@ class KudosAdmin extends Component {
 							handleInputChange={this.handleInputChange}
 						/>
 						<DonationModalPanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<SubscriptionPanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>

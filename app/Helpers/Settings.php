@@ -102,6 +102,11 @@ class Settings {
 				'show_in_rest'  => true,
 				'default'       => true
 			],
+			'subscription_enabled' => [
+				'type'          => 'boolean',
+				'show_in_rest'  => true,
+				'default'       => true
+			],
 			'privacy_link' => [
 				'type'          => 'string',
 				'show_in_rest'  => true,

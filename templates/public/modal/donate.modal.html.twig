@@ -46,14 +46,20 @@
                 <label>
                     <input required type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') }} *" />
                 </label>
-                <label class="not-full">
-                    <input required checked type="radio" name="payment_frequency" value="oneoff" />
-                    {{ __('One-off', 'kudos-donations') }}
-                </label>
-                <label class="not-full">
-                    <input type="radio" name="payment_frequency" value="recurring" />
-                    {{ __('Recurring', 'kudos-donations') }}
-                </label>
+
+                {% if(subscriptions) %}
+                    <label class="not-full">
+                        <input required checked type="radio" name="payment_frequency" value="oneoff" />
+                        {{ __('One-off', 'kudos-donations') }}
+                    </label>
+                    <label class="not-full">
+                        <input {{ subscriptions ? '' : 'hidden' }} type="radio" name="payment_frequency" value="recurring" />
+                        {{ __('Recurring', 'kudos-donations') }}
+                    </label>
+                {% else %}
+                    <input required checked type="hidden" name="payment_frequency" value="oneoff" />
+                {% endif %}
+
                 <div class="kudos_modal_buttons" style="text-align: center">
                     <button class="button-style-outline kudos_button" type="button" data-micromodal-close aria-label="{{ __('Cancel', 'kudos-donations') }}">{{ __('Cancel', 'kudos-donations') }}</button>
                     <button class="kudos_button kudos_form_nav" data-direction="next" type="button" aria-label="{{ __('Next', 'kudos-donations') }}">{{ __('Next', 'kudos-donations') }}</button>
