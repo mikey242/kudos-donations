@@ -392,11 +392,10 @@ class KudosAdmin extends Component {
 
 								</Panel>
 
-								
+
 								<PanelRow className={ 'justify-center' }>
 										<Button
 											isPrimary
-											isLarge
 											disabled={
 												this.state.isSaving ||
 												! this.state.isEdited

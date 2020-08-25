@@ -1,5 +1,5 @@
 const { __ } = wp.i18n;
-const { CheckboxControl, PanelBody, PanelRow } = wp.components;
+const { ToggleControl, PanelBody, PanelRow } = wp.components;
 
 const SubscriptionPanel = (props ) => {
 
@@ -11,7 +11,7 @@ const SubscriptionPanel = (props ) => {
 
             <PanelRow>
 
-                <CheckboxControl
+                <ToggleControl
                     label="Enable"
                     help={ __(
                         'Allows donors to donate automatically at regular intervals.',

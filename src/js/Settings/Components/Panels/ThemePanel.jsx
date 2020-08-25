@@ -17,6 +17,7 @@ const ThemePanel = (props ) => {
 			<BaseControl
 				id="_kudos_theme_color"
 				label={ __( 'Colour', 'kudos-donations' ) }
+				help={__('Set the colour for the Kudos button and the pop-up modal')}
 			>
 				<ColorPalette
 					id="_kudos_theme_color"
