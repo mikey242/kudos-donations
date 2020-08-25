@@ -251,7 +251,7 @@ class Admin {
 		// Load table assets
 	    $tableHandle = $this->kudos_table_page_assets();
 		wp_localize_script($tableHandle, 'kudos', [
-			'confirmation' => __('Are you sure you want to delete this transaction?', 'kudos-donations'),
+			'confirmationDelete' => __('Are you sure you want to delete this transaction?', 'kudos-donations'),
 		]);
 	}
 
@@ -265,7 +265,8 @@ class Admin {
 		// Load table assets
 		$tableHandle = $this->kudos_table_page_assets();
 		wp_localize_script($tableHandle, 'kudos', [
-			'confirmation' => __('Are you sure you want to cancel this subscription?', 'kudos-donations'),
+			'confirmationCancel' => __('Are you sure you want to cancel this subscription?', 'kudos-donations'),
+			'confirmationDelete' => __('Are you sure you want to delete this subscription?', 'kudos-donations'),
 		]);
 	}
 
@@ -279,7 +280,7 @@ class Admin {
 		// Load table assets
 		$tableHandle = $this->kudos_table_page_assets();
 		wp_localize_script($tableHandle, 'kudos', [
-			'confirmation' => __('Are you sure you want to delete this donor?', 'kudos-donations'),
+			'confirmationDelete' => __('Are you sure you want to delete this donor?', 'kudos-donations'),
 		]);
 	}
 
