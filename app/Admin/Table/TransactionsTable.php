@@ -190,7 +190,7 @@ class TransactionsTable extends WP_List_Table {
 	{
 		return [
 			'transaction_id',
-			'donation_label',
+//			'donation_label',
 		];
 
 	}
@@ -210,6 +210,10 @@ class TransactionsTable extends WP_List_Table {
 			],
 			'value' => [
 				'value',
+				false
+			],
+			'donation_label' => [
+				'donation_label',
 				false
 			]
 		];

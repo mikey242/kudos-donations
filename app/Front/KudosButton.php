@@ -48,6 +48,10 @@ class KudosButton {
 	 * @var string
 	 */
 	private $fixed_amounts;
+	/**
+	 * @var string
+	 */
+	private $donation_label;
 
 	/**
 	 * KudosButton constructor.
@@ -66,6 +70,7 @@ class KudosButton {
 		$this->alignment = $atts['alignment'];
 		$this->amount_type = $atts['amount_type'];
 		$this->fixed_amounts = $atts['fixed_amounts'];
+		$this->donation_label = $atts['donation_label'] ?? get_the_title();
 		$this->id = uniqid('kudos_modal-');
 
 	}
@@ -113,7 +118,7 @@ class KudosButton {
 				'type'  => $this->amount_type,
 				'fixed_values' =>explode(',', $this->fixed_amounts)
 			],
-			'donation_label' => $atts['donation_label'] ?? get_the_title(),
+			'donation_label' => $this->donation_label,
 			'payment_by' => __('Secure payment by', 'kudos-donations'),
 		];
 

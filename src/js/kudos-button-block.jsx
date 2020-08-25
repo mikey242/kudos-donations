@@ -154,6 +154,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 								'Donation label',
 								'kudos-donations'
 							) }
+							help={__('Give this donation button a label so you can identify it on the transactions page', 'kudos-donations')}
 							type={ 'text' }
 							value={ donation_label }
 							onChange={ onChangeDonationLabel }
