@@ -3,13 +3,12 @@ import logo from '../../../img/logo-colour.svg'
 const { __ } = wp.i18n;
 
 const Header = ( props ) => {
+
 	let status;
 
-	if ( props.isMollieEdited ) {
-		status = 'unknown';
-	} else if ( props.checkingApi ) {
+	if ( props.checkingApi ) {
 		status = 'checking';
-	} else if ( props.apiConnected && ! props.isMollieEdited ) {
+	} else if ( props.apiConnected ) {
 		status = 'connected';
 	} else if ( ! props.apiConnected ) {
 		status = 'not-connected';
@@ -27,10 +26,7 @@ const Header = ( props ) => {
 						style={ { textTransform: 'capitalize' } }
 						className={ 'kudos-api-status ' + status }
 					>
-						{ status +
-							( props.isMollieEdited
-								? ''
-								: ' (' + props.apiMode + ')' ) }
+						{ status }
 					</span>
 					<span className="kudos-version">
 						{ window.kudos.version }
