@@ -13,6 +13,10 @@ const SubscriptionPanel = (props ) => {
 
                 <CheckboxControl
                     label="Enable"
+                    help={ __(
+                        'Allows donors to donate automatically at regular intervals.',
+                        'kudos-donations'
+                    ) }
                     checked={ props.settings._kudos_subscription_enabled || '' }
                     onChange={ ( value ) => props.handleInputChange( '_kudos_subscription_enabled', value ) }
                 />
