@@ -48,14 +48,16 @@
                 </label>
 
                 {% if(subscriptions) %}
-                    <label class="not-full">
-                        <input required checked type="radio" name="payment_frequency" value="oneoff" />
-                        {{ __('One-off', 'kudos-donations') }}
-                    </label>
-                    <label class="not-full">
-                        <input {{ subscriptions ? '' : 'hidden' }} type="radio" name="payment_frequency" value="recurring" />
-                        {{ __('Recurring', 'kudos-donations') }}
-                    </label>
+                    <div class="radio-group">
+                        <label class="not-full">
+                            <input required checked type="radio" name="payment_frequency" value="oneoff" />
+                            {{ __('One-off', 'kudos-donations') }}
+                        </label>
+                        <label class="not-full">
+                            <input {{ subscriptions ? '' : 'hidden' }} type="radio" name="payment_frequency" value="recurring" />
+                            {{ __('Recurring', 'kudos-donations') }}
+                        </label>
+                    </div>
                 {% else %}
                     <input required checked type="hidden" name="payment_frequency" value="oneoff" />
                 {% endif %}

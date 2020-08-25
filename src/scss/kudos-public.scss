@@ -218,12 +218,12 @@ div[id^='kudos_modal-'] {
       @apply inline-block m-0 cursor-pointer font-normal;
 
       &:not(:first-child) {
-        @apply mt-2;
+        @apply mt-3;
       }
     }
 
     label.not-full {
-      @apply mr-2;
+      @apply mr-2 mt-2;
     }
 
     label:not(.not-full) {
@@ -293,6 +293,10 @@ div[id^='kudos_modal-'] {
       &:checked::before {
         border-radius: 50%;
       }
+    }
+
+    div.radio-group {
+      @apply flex justify-center items-center mt-4;
     }
 
     div.kudos_amounts {
