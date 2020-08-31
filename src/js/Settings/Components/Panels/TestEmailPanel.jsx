@@ -45,10 +45,14 @@ const TestEmailPanel = ( props ) => {
 					},
 				}
 			)
-			.then( ( response ) => {
+			.then( response => {
 				props.showNotice( response.data.data );
 				setIsBusy( false );
-			} );
+			} )
+			.catch(error => {
+				props.showNotice( error.response.statusText );
+				setIsBusy( false );
+			});
 	};
 
 	return (
