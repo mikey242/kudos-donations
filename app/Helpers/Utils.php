@@ -14,6 +14,7 @@ class Utils {
 
 		$use_custom = get_option('_kudos_custom_return_enable');
 		$custom_url = esc_url(get_option('_kudos_custom_return_url'));
+
 		if($use_custom && $custom_url) {
 			return $custom_url;
 		} else {
@@ -37,7 +38,7 @@ class Utils {
 	 * @return string
 	 * @since   1.0.0
 	 */
-	public static function get_asset_url( $asset, $path=false ) {
+	public static function get_asset_url( string $asset, bool $path=false ) {
 
 		$map = KUDOS_PLUGIN_DIR . '/dist/manifest.json';
 		$hash = file_exists( $map ) ? json_decode( file_get_contents( $map ), true ) : [];
@@ -55,11 +56,11 @@ class Utils {
 	/**
 	 * Converts three letter currency code into a symbol
 	 *
-	 * @param $currency
+	 * @param string $currency
 	 * @return string
 	 * @since      1.0.2
 	 */
-	public static function get_currency_symbol($currency) {
+	public static function get_currency_symbol( string $currency) {
 
 		$currency = strtoupper($currency);
 
@@ -84,18 +85,18 @@ class Utils {
 	}
 
 	/**
-	 * Lightens/darkens a given colour (hex format), returning the altered colour in hex format.7
+	 * Lightens/darkens a given colour (hex format), returning the altered colour in hex format.
 	 *
+	 * @source https://gist.github.com/stephenharris/5532899
 	 * @param string $hex Colour as hexadecimal (with or without hash);
-	 * @param int $percent
+	 * @param string $percent
 	 * @return string Lightened/Darkened colour as hexadecimal (with hash);
 	 * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
 	 * @sice    1.0.2
 	 */
-	public static function color_luminance( $hex, $percent ) {
+	public static function color_luminance( string $hex, string $percent ) {
 
 		// validate hex string
-
 		$hex = preg_replace( '/[^0-9a-f]/i', '', $hex );
 		$new_hex = '#';
 
@@ -121,6 +122,7 @@ class Utils {
 	 * @since   2.0.0
 	 */
 	public static function get_sequence_type($text) {
+
 		switch ($text) {
 			case 'oneoff':
 				return __('One-off', 'kudos-donations');
@@ -129,16 +131,18 @@ class Utils {
 			default:
 				return __('Recurring', 'kudos-donations');
 		}
+
 	}
 
 	/**
 	 * Returns subscription frequency name based on number of months
 	 *
-	 * @param $frequency
+	 * @param string $frequency
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	public static function get_frequency_name($frequency) {
+	public static function get_frequency_name( string $frequency) {
+
 		switch ($frequency) {
 			case '12 months':
 				return __('Yearly', 'kudos-donations');
@@ -155,6 +159,7 @@ class Utils {
 			default:
 				return $frequency;
 		}
+
 	}
 
 	/**
@@ -166,13 +171,14 @@ class Utils {
 	 * @return int|null
 	 * @since   2.0.0
 	 */
-	public static function get_times_from_years($years, $frequency) {
+	public static function get_times_from_years( int $years, string $frequency ) {
 
 		if(!$years > 0) {
 			return null;
 		}
 
 		return (12/intval($frequency)) * $years - 1;
+
 	}
 
 	/**
@@ -184,7 +190,9 @@ class Utils {
 	 * @since   2.0.0
 	 */
 	public static function generate_id( $prefix=null, $length=10 ) {
+
 		return $prefix . substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length);
+
 	}
 
 }

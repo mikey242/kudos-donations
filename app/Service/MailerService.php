@@ -5,7 +5,8 @@ namespace Kudos\Service;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 use WP_REST_Request;
 
 class MailerService extends AbstractService {
@@ -32,10 +33,10 @@ class MailerService extends AbstractService {
 	 * is enabled.
 	 *
 	 * @param PHPMailer $phpmailer
-	 * @throws PHPMailer\PHPMailer\Exception
+	 * @throws Exception;
 	 * @since    1.1.0
 	 */
-	public function init($phpmailer) {
+	public function init( PHPMailer $phpmailer) {
 
 		// Toggle this on to enable PHPMailer's debug mode
 		$phpmailer->SMTPDebug = 0;
@@ -62,10 +63,9 @@ class MailerService extends AbstractService {
 	 * Sends receipt to the donor
 	 *
 	 * @param TransactionEntity $transaction
-	 *
 	 * @since    1.1.0
 	 */
-	public function send_receipt($transaction) {
+	public function send_receipt( TransactionEntity $transaction ) {
 
 		// Check if setting enabled
 		if(!Settings::get_setting('email_receipt_enable')) {
@@ -119,7 +119,7 @@ class MailerService extends AbstractService {
 	 * @return bool
 	 * @since    1.1.0
 	 */
-	public function send_test($request) {
+	public function send_test( WP_REST_Request $request) {
 
 		if(empty($request['email'])) {
 			wp_send_json_error(__('Please provide an email address.', 'kudos_donations'));
@@ -149,11 +149,10 @@ class MailerService extends AbstractService {
 	 * @param string $email
 	 * @param string $header
 	 * @param string $message
-	 *
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public function send_message($email, $header, $message) {
+	public function send_message( string $email, string $header, string $message ) {
 
 		$twig = new TwigService();
 		$body = $twig->render('emails/message.html.twig', [
@@ -178,7 +177,7 @@ class MailerService extends AbstractService {
 	 * @return bool
 	 * @since    1.1.0
 	 */
-	private function send($to, $subject, $body, $headers=[], $attachment=[]) {
+	private function send( string $to, string $subject, string $body, array $headers=[], array $attachment=[]) {
 
 		// Use hook to modify existing config
 		add_action('phpmailer_init', [$this, 'init']);

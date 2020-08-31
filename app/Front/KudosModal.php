@@ -39,11 +39,12 @@ class KudosModal {
 	/**
 	 * Get message modal markup
 	 *
-	 * @param $atts
+	 * @param array $atts
+	 *
 	 * @return string|bool
 	 * @since      1.0.0
 	 */
-	public function get_message_modal($atts) {
+	public function get_message_modal( array $atts) {
 
 		    $data = [
 			    'header' => $atts['header'],
@@ -57,12 +58,13 @@ class KudosModal {
 	/**
 	 * Get the donate modal markup
 	 *
-	 * @param $data
+	 * @param array $data
 	 * @param bool $echo
+	 *
 	 * @return string|void
 	 * @since    1.0.0
 	 */
-	public function get_donate_modal($data, $echo=false) {
+	public function get_donate_modal( array $data, $echo=false) {
 
 		$privacy_option = Settings::get_setting("privacy_link");
 		$privacy_link = __('I agree with the privacy policy.', "kudos-donations");

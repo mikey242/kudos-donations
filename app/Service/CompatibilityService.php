@@ -63,12 +63,12 @@ class CompatibilityService {
     }
 
 	/**
-     * Add to notices array
-     *
-	 * @param $notice
-     * @since 2.0.0
+	 * Add to notices array
+	 *
+	 * @param string $notice
+	 * @since 2.0.0
 	 */
-	public function add_notice($notice) {
+	public function add_notice( string $notice) {
 
 	    $this->notices[] = $notice;
 

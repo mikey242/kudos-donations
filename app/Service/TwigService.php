@@ -105,13 +105,13 @@ class TwigService {
 	/**
 	 * Render the provided template
 	 *
-	 * @since    1.0.0
-	 * @param $template
+	 * @param string $template
 	 * @param array $array
 	 *
 	 * @return bool
+	 * @since    1.0.0
 	 */
-	public function render($template, $array=[]) {
+	public function render(string $template, $array=[]) {
 
 		try {
 			return $this->twig->render( $template, $array );

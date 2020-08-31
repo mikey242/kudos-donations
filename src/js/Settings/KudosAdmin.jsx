@@ -242,7 +242,7 @@ class KudosAdmin extends Component {
 
 		const showTab = this.tabs.find(item => item.name === tab.name)
 
-		return(
+		return (
 			showTab.content
 		)
 	}
@@ -382,33 +382,29 @@ class KudosAdmin extends Component {
 				>
 					{ ( tab ) => {
 						return (
-							<div
-								className="kudos-settings-main dashboard-wrap"
-								key="kudos-settings"
-							>
+							<div className="kudos-settings-main dashboard-wrap">
+
 								<Panel>
-
 									{ this.renderTab( tab ) }
-
 								</Panel>
 
 
 								<PanelRow className={ 'justify-center' }>
-										<Button
-											isPrimary
-											disabled={
-												this.state.isSaving ||
-												! this.state.isEdited
-											}
-											isBusy={
-												this.state.isSaving ||
-												this.state.checkingApi
-											}
-											onClick={ this.updateAll }
-										>
-											{ __('Save', 'kudos-donations') }
-										</Button>
-									</PanelRow>
+									<Button
+										isPrimary
+										disabled={
+											this.state.isSaving ||
+											! this.state.isEdited
+										}
+										isBusy={
+											this.state.isSaving ||
+											this.state.checkingApi
+										}
+										onClick={ this.updateAll }
+									>
+										{ __('Save', 'kudos-donations') }
+									</Button>
+								</PanelRow>
 
 							</div>
 						);

@@ -12,8 +12,8 @@ if (!defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
 
 class LoggerService extends Monolog {
 
-	const LOG_DIR = KUDOS_STORAGE_DIR . '/logs/';
-	const LOG_FILE = self::LOG_DIR . 'kudos.log';
+	const LOG_DIR = KUDOS_STORAGE_DIR . '/logs';
+	const LOG_FILE = self::LOG_DIR . '/kudos.log';
 
 	/**
 	 * Kudos_Logger constructor.
@@ -157,12 +157,12 @@ class LoggerService extends Monolog {
 	/**
 	 * Compares dates to sort log
 	 *
-	 * @param $a
-	 * @param $b
+	 * @param array $a
+	 * @param array $b
 	 * @return false|int
 	 * @since   2.0.0
 	 */
-	private function date_compare($a, $b) {
+	private function date_compare( array $a, array $b ) {
 
 		$t1 = strtotime($a['date']);
 		$t2 = strtotime($b['date']);

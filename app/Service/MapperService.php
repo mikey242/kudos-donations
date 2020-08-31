@@ -38,12 +38,12 @@ class MapperService {
 	/**
 	 * Converts an associative array into a query string
 	 *
-	 * @param $query_fields
+	 * @param array $query_fields
 	 * @param string $operator Accepts AND or OR
 	 * @return string
 	 * @since 2.0.0
 	 */
-	private function array_to_where($query_fields, $operator='AND') {
+	private function array_to_where( array $query_fields, string $operator='AND') {
 
 		$wpdb = $this->wpdb;
 		$array = [];
@@ -104,11 +104,12 @@ class MapperService {
 	 * Deletes selected record
 	 *
 	 * @param string $column
-	 * @param $value
+	 * @param string $value
+	 *
 	 * @return false|int
 	 * @since   2.0.0
 	 */
-	public function delete($column, $value) {
+	public function delete( string $column, string $value ) {
 
 		$wpdb = $this->wpdb;
 
@@ -127,7 +128,7 @@ class MapperService {
 	 * @return AbstractEntity|null
 	 * @since   2.0.0
 	 */
-	public function get_one_by($query_fields, $operator='AND') {
+	public function get_one_by( array $query_fields, string $operator='AND') {
 
 		if(NULL === $this->repository) {
 			return null;
@@ -153,7 +154,7 @@ class MapperService {
 	/**
 	 * Get all results from table
 	 *
-	 * @param $query
+	 * @param string|null $query
 	 * @param string $format
 	 * @return array|null
 	 * @since   2.0.0

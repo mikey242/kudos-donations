@@ -2,7 +2,6 @@
 
 namespace Kudos\Front;
 
-use Kudos\Helpers\Settings;
 use Kudos\Service\LoggerService;
 use Kudos\Service\TwigService;
 
@@ -52,10 +51,10 @@ class KudosButton {
 	/**
 	 * KudosButton constructor.
 	 *
-	 * @since    1.0.0
 	 * @param array $atts
+	 * @since    1.0.0
 	 */
-	public function __construct($atts) {
+	public function __construct( array $atts) {
 
 		$this->twig = new TwigService();
 		$this->logger = new LoggerService();
@@ -77,7 +76,7 @@ class KudosButton {
 	 * @param bool $echo
 	 * @return string|void
 	 */
-	public function get_button($echo=true) {
+	public function get_button(bool $echo=true) {
 
 		$data = [
 			'alignment' => $this->alignment,

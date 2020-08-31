@@ -76,11 +76,13 @@ class KudosDonations {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
+
 		if ( defined( 'KUDOS_VERSION' ) ) {
 			$this->version = KUDOS_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
+
 		$this->plugin_name = 'kudos-donations';
 		$this->loader = new LoaderService();
 		$this->set_locale();
@@ -163,7 +165,9 @@ class KudosDonations {
 	 * @since    1.0.0
 	 */
 	public function run() {
+
 		$this->loader->run();
+
 	}
 
 	/**
@@ -174,17 +178,21 @@ class KudosDonations {
 	 * @return    string    The name of the plugin.
 	 */
 	public function get_plugin_name() {
+
 		return $this->plugin_name;
+
 	}
 
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
-	 * @return    Loader    Orchestrates the hooks of the plugin.
-	 *@since     1.0.0
+	 * @return LoaderService Orchestrates the hooks of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_loader() {
+
 		return $this->loader;
+
 	}
 
 	/**
@@ -194,7 +202,9 @@ class KudosDonations {
 	 * @return    string    The version number of the plugin.
 	 */
 	public function get_version() {
+
 		return $this->version;
+
 	}
 
 	/**
@@ -208,7 +218,6 @@ class KudosDonations {
 		$db_version = get_option('_kudos_donations_version');
 
 		if($db_version !== $this->get_version()) {
-			require_once KUDOS_PLUGIN_DIR . '/includes/Service/ActivatorService.php';
 			ActivatorService::activate();
 		}
 	}

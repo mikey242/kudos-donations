@@ -47,11 +47,12 @@ class Front {
 	/**
 	 * Initialize the class and set its properties.
 	 *
+	 * @param string $plugin_name The name of the plugin.
+	 * @param string $version The version of this plugin.
+	 *
 	 * @since   1.0.0
-	 * @param      string    $plugin_name       The name of the plugin.
-	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( string $plugin_name, string $version ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
@@ -107,7 +108,7 @@ class Front {
 	}
 
 	/**
-	 * Add styles to header based on theme
+	 * Add root styles to header based on theme
 	 *
 	 * @since 2.0.0
 	 */
@@ -163,7 +164,7 @@ class Front {
 
 			// Search for existing donor
 			/** @var DonorEntity $donor */
-			$donor = $mapper->get_one_by([ 'email' => $email]);
+			$donor = $mapper->get_one_by([ 'email' => $email ]);
 
 			// Create new donor
 			if(empty($donor->customer_id)) {
@@ -198,11 +199,11 @@ class Front {
 	/**
 	 * Check payment status based on local order_id
 	 *
+	 * @param string $order_id
+	 * @return bool | array
 	 * @since   1.0.0
-	 * @param $order_id
-	 * @return bool | string
 	 */
-	public function check_transaction($order_id) {
+	public function check_transaction( string $order_id) {
 
 		if($order_id) {
 
@@ -341,10 +342,10 @@ class Front {
 	 * Renders the kudos button and donation modals
 	 *
 	 * @param array $attr
-	 * @return bool|string
+	 * @return string|null
 	 * @since   2.0.0
 	 */
-	public function kudos_render_callback($attr) {
+	public function kudos_render_callback( array $attr) {
 
 		if(self::ready()) {
 
@@ -358,13 +359,13 @@ class Front {
 				return $button->get_button(false) . $modal;
 			}
 
-			return false;
+			return null;
 
 		} elseif(is_user_logged_in() && !is_admin()) {
 			echo "<a href=". esc_url( admin_url('admin.php?page=kudos-settings')) .">" . __('Mollie not connected', 'kudos-donations') . "</a>";
 		}
 
-		return false;
+		return null;
 
 	}
 
@@ -453,7 +454,7 @@ class Front {
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public static function process_transaction($order_id) {
+	public static function process_transaction( string $order_id) {
 
 		$logger = new LoggerService();
 
@@ -486,7 +487,7 @@ class Front {
 	 * @return bool|int
 	 * @since   2.0.0
 	 */
-	public static function remove_donor_secret($customer_id) {
+	public static function remove_donor_secret( string $customer_id) {
 
 		if($customer_id) {
 			$mapper = new MapperService(DonorEntity::class);

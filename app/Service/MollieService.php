@@ -46,7 +46,7 @@ class MollieService extends AbstractService {
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = Settings::get_setting('mollie_api_mode');
 		$this->apiKey = Settings::get_setting('mollie_'.$this->apiMode.'_api_key');
-		$this->webHookUrl = WP_DEBUG ? 'https://15f9c50f2b85.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook' : rest_url('kudos/v1/mollie/payment/webhook');
+		$this->webHookUrl = WP_DEBUG ? 'https://b6ce7dfc6e4c.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook' : rest_url('kudos/v1/mollie/payment/webhook');
 
 		if($this->apiKey) {
 			try {
@@ -87,7 +87,7 @@ class MollieService extends AbstractService {
 	 * @return bool
 	 * @since      1.0.0
 	 */
-	public function test_api_connection($apiKey) {
+	public function test_api_connection( string $apiKey) {
 
 		if(!$apiKey) {
 			return false;
@@ -110,12 +110,11 @@ class MollieService extends AbstractService {
 	/**
 	 * Gets specified payment
 	 *
-	 * @param $mollie_payment_id
-	 *
+	 * @param string $mollie_payment_id
 	 * @return bool|Payment
 	 * @since      1.0.0
 	 */
-	public function get_payment($mollie_payment_id) {
+	public function get_payment( string $mollie_payment_id ) {
 
 		$mollieApi = $this->mollieApi;
 
@@ -132,7 +131,7 @@ class MollieService extends AbstractService {
 	/**
 	 * Creates a payment and returns it as an object
 	 *
-	 * @param $value
+	 * @param string $value
 	 * @param string $interval
 	 * @param string $years
 	 * @param string $redirectUrl
@@ -144,7 +143,7 @@ class MollieService extends AbstractService {
 	 * @return bool|object
 	 * @since      1.0.0
 	 */
-	public function create_payment($value, $interval, $years, $redirectUrl, $donation_label, $name=null, $email=null, $customerId=null) {
+	public function create_payment( string $value, string $interval, string $years, string $redirectUrl, string $donation_label, $name=null, $email=null, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
 		$order_id = Utils::generate_id('kdo_');
@@ -216,11 +215,11 @@ class MollieService extends AbstractService {
 	/**
 	 * Returns all subscriptions for customer
 	 *
-	 * @param $customerId
+	 * @param string $customerId
 	 * @return BaseCollection|bool
 	 * @since   2.0.0
 	 */
-	public function get_subscriptions($customerId) {
+	public function get_subscriptions( string $customerId) {
 
 		$mollieApi = $this->mollieApi;
 
@@ -238,14 +237,14 @@ class MollieService extends AbstractService {
 	 * Create a subscription
 	 *
 	 * @param TransactionEntity $transaction
-	 * @param $mandateId
-	 * @param $interval
-	 * @param $years
+	 * @param string $mandateId
+	 * @param string $interval
+	 * @param string $years
 	 *
 	 * @return bool|object
 	 * @since      2.0.0
 	 */
-	public function create_subscription($transaction, $mandateId, $interval, $years) {
+	public function create_subscription( TransactionEntity $transaction, string $mandateId, string $interval, string $years ) {
 
         $mollieApi = $this->mollieApi;
         $customer_id = $transaction->customer_id;
@@ -311,12 +310,13 @@ class MollieService extends AbstractService {
     }
 
 	/**
-	 * @param $email
-	 * @param $name
+	 * @param string $email
+	 * @param string $name
+	 *
 	 * @return bool|object
 	 * @since   2.0.0
 	 */
-	public function create_customer($email, $name) {
+	public function create_customer( string $email, string $name ) {
 
 		$mollieApi = $this->mollieApi;
 
@@ -340,12 +340,13 @@ class MollieService extends AbstractService {
 	/**
 	 * Cancel the specified subscription
 	 *
-	 * @param $subscriptionId
+	 * @param string $subscriptionId
 	 * @param null|string $customerId
+	 *
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public function cancel_subscription($subscriptionId, $customerId=null) {
+	public function cancel_subscription( string $subscriptionId, $customerId=null) {
 
 		$mollieApi = $this->mollieApi;
 		$mapper = new MapperService(SubscriptionEntity::class);
@@ -399,9 +400,10 @@ class MollieService extends AbstractService {
 	 * Check the Mollie Api key associated with the Api mode
 	 *
 	 * @param WP_REST_Request $request
+	 *
 	 * @since    1.1.0
 	 */
-	public function check_api_keys($request) {
+	public function check_api_keys( WP_REST_Request $request) {
 
 		update_option('_kudos_mollie_connected', 0);
 
@@ -433,10 +435,11 @@ class MollieService extends AbstractService {
 	 * Mollie webhook action
 	 *
 	 * @param WP_REST_Request $request
+	 *
 	 * @return mixed|WP_Error|WP_HTTP_Response|WP_REST_Response
 	 * @since    1.0.0
 	 */
-	public function rest_api_mollie_webhook( $request ) {
+	public function rest_api_mollie_webhook( WP_REST_Request $request ) {
 
 	    // ID is case sensitive e.g: tr_Tb6UdQP523
 		$id = sanitize_text_field($request->get_param( 'id' ));
