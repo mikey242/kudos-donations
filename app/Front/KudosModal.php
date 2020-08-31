@@ -17,10 +17,6 @@ class KudosModal {
 	 * @var TwigService
 	 */
 	private $twig;
-	/**
-	 * @var false|mixed|void
-	 */
-	private $color;
 
 	/**
 	 * Kudos_Modal constructor.
@@ -31,7 +27,6 @@ class KudosModal {
 
 		$this->logger = new LoggerService();
 		$this->twig = new TwigService();
-		$this->color = Settings::get_setting('theme_color');
 
     }
 
@@ -53,7 +48,6 @@ class KudosModal {
 		    $data = [
 			    'header' => $atts['header'],
 			    'text' => $atts['text'],
-			    'color' => $this->color
 		    ];
 
 		    return $this->get_modal('/public/modal/message.modal.html.twig', $data);
@@ -77,7 +71,6 @@ class KudosModal {
 		}
 
 		$data = array_merge($data, [
-			'color' => $this->color,
 			'return_url' => Utils::get_return_url(),
 			'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
 			'privacy_link' => $privacy_link,

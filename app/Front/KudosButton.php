@@ -25,10 +25,6 @@ class KudosButton {
 	 */
 	private $id;
 	/**
-	 * @var false|mixed|void
-	 */
-	private $color;
-	/**
 	 * @var LoggerService
 	 */
 	private $logger;
@@ -65,7 +61,6 @@ class KudosButton {
 		$this->logger = new LoggerService();
 		$this->header = $atts['modal_header'];
 		$this->text = $atts['welcome_text'];
-		$this->color = Settings::get_setting('theme_color');
 		$this->label = $atts['button_label'];
 		$this->alignment = $atts['alignment'];
 		$this->amount_type = $atts['amount_type'];
@@ -85,7 +80,6 @@ class KudosButton {
 	public function get_button($echo=true) {
 
 		$data = [
-			'color' => Settings::get_setting('theme_color'),
 			'alignment' => $this->alignment,
 			'label' => $this->label,
 			'target' => $this->id

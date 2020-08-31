@@ -1,21 +1,38 @@
-button.kudos_button {
+.kudos_button {
 
   &:hover,
   &:focus,
   &:active {
-    @apply text-white no-underline shadow-none;
+    @apply bg-orange-500 text-white no-underline shadow-none;
+    background-color: var(--kudos-theme-color);
   }
 
-  @apply font-sans w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
+  &:hover {
+    @apply bg-orange-700;
+
+    background-color: var(--kudos-theme-color-dark);
+  }
+
+  @apply bg-orange-500 font-sans w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
 
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  background-color: var(--kudos-theme-color);
 
   &.button-style-outline {
+    @apply text-orange-500 border-orange-500;
+
     border-width: 1px;
     border-style: solid;
+    background-color: transparent;
+    color: var(--kudos-theme-color);
+    border-color: var(--kudos-theme-color);
 
     &:hover {
+      @apply bg-orange-700 border-orange-500;
+
       color: #fff;
+      background-color: var(--kudos-theme-color-dark);
+      border-color: var(--kudos-theme-color);
     }
   }
 

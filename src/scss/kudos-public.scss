@@ -14,48 +14,10 @@ div[id^=kudos_modal-] {
     all: initial;
   }
 
-  position: absolute;
-
-  p {
-    @apply block;
-  }
-
-  strong {
-    font-weight: bold;
-  }
-
-  a {
-    text-decoration: underline;
-  }
-
-  .payment_by {
-    @apply flex justify-end items-baseline mt-3 text-right;
-
-    &::before {
-      content: '';
-      width: 17px;
-      height: 20px;
-      background: url("../img/lock-gray.svg") no-repeat center;
-      background-size: contain;
-      margin: auto 5px auto 0;
-    }
-
-    &.mollie {
-      &::after {
-        content: '';
-        width: 51px;
-        height: 15px;
-        background: url("../img/mollie.svg") no-repeat center left;
-        background-size: contain;
-        margin-left: 5px;
-      }
-    }
-  }
-}
-
-div[id^='kudos_modal-'] {
-
   @import "partials/buttons";
+
+  position: absolute;
+  display: none;
 
   *,
   *::before,
@@ -63,10 +25,26 @@ div[id^='kudos_modal-'] {
     @apply font-sans box-border text-base leading-normal opacity-100 relative;
   }
 
-  display: none;
+  strong {
+    font-weight: bold;
+  }
+
+  a {
+    @apply text-orange-500;
+
+    text-decoration: underline;
+    color: var(--kudos-theme-color);
+
+    &:hover {
+      @apply text-orange-700;
+
+      color: var(--kudos-theme-color-darker);
+      cursor: pointer;
+    }
+  }
 
   p {
-    @apply text-lg text-gray-900;
+    @apply block text-lg text-gray-900;
   }
 
   h2 {
@@ -113,9 +91,9 @@ div[id^='kudos_modal-'] {
   }
 
   .kudos_modal_close {
-    cursor: pointer;
     span {
       @apply text-2xl;
+      cursor: pointer;
     }
 
     &:hover {
@@ -236,6 +214,7 @@ div[id^='kudos_modal-'] {
 
       &:focus {
         @apply border-orange-500 outline-none;
+        border-color: var(--kudos-theme-color);
       }
 
       &::placeholder,
@@ -277,13 +256,14 @@ div[id^='kudos_modal-'] {
       transition: .05s border-color ease-in-out;
 
       &:checked::before {
+        @apply w-2 h-2 bg-orange-500;
+
         content: "";
         position: relative;
         margin: 0.1875em;
         line-height: 1.14285714;
         float: left;
-
-        @apply w-2 h-2;
+        background-color: var(--kudos-theme-color);
       }
     }
 
@@ -306,9 +286,10 @@ div[id^='kudos_modal-'] {
         @apply w-1/4 px-2 m-0;
 
         input:checked + label {
-          @apply text-white;
+          @apply text-white bg-orange-500;
 
           border-color: transparent;
+          background-color: var(--kudos-theme-color);
         }
 
         label {
@@ -332,10 +313,10 @@ div[id^='kudos_modal-'] {
       bottom: 50%;
       left: 0;
       margin: 0;
-      cursor: pointer;
 
       &::before {
         content: '';
+        cursor: pointer;
         position: absolute;
         width: 20px;
         height: 20px;

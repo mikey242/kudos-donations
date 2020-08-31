@@ -111,7 +111,7 @@ class Front {
 	 *
 	 * @since 2.0.0
 	 */
-	public function add_kudos_styles() {
+	public function add_kudos_root_styles() {
 
 		$color = Settings::get_setting('theme_color');
 		$color_dark = Utils::color_luminance($color, '-0.05');
@@ -119,42 +119,10 @@ class Front {
 
 		echo "<style>
 
-		div[id^='kudos_modal-'].kudos_modal input:focus {
-			border-color: $color
-        }
-        div[id^='kudos_modal-'].kudos_modal select:focus {
-			border-color: $color
-         }
-        div[id^='kudos_modal-'].kudos_modal button.kudos_button.button-style-outline {
-			background-color: transparent;
-			color: $color;
-			border-color: $color
-        }
-        div[id^='kudos_modal-'].kudos_modal button.kudos_button {
-			background-color: $color;
-        }
-        div[id^='kudos_modal-'].kudos_modal button.kudos_button:hover {
-			background-color: $color_dark;
-        }
-        div[id^='kudos_modal-'].kudos_modal button.kudos_button.button-style-outline:hover {
-			color: #fff;
-			background-color: $color_darker;
-            border-color: $color;
-        }
-        div[id^='kudos_modal-'].kudos_modal input[type='radio']::before {
-			background-color: $color;
-        }
-        div[id^='kudos_modal-'].kudos_modal .kudos_radio_amount input:checked ~ label {
-			background-color: $color;
-         }
-        div[id^='kudos_modal-'].kudos_modal input[type='checkbox']::before {
-			background-color: $color;
-        }
-        div[id^='kudos_modal-'].kudos_modal a {
-			color: $color
-		}
-        div[id^='kudos_modal-'].kudos_modal a:hover {
-			color: $color_darker
+		:root {
+			--kudos-theme-color: $color;
+			--kudos-theme-color-dark: $color_dark;
+			--kudos-theme-color-darker: $color_darker;
 		}
 		
 		</style>";

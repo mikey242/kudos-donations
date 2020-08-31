@@ -148,7 +148,7 @@ class KudosDonations {
 		$this->loader->add_action('wp_ajax_nopriv_submit_payment', $plugin_public, 'submit_payment');
 		$this->loader->add_action('wp_ajax_submit_payment', $plugin_public, 'submit_payment');
 		$this->loader->add_action('init', $plugin_public, 'register_kudos');
-		$this->loader->add_action('wp_head', $plugin_public, 'add_kudos_styles');
+		$this->loader->add_action('wp_head', $plugin_public, 'add_kudos_root_styles');
 		$this->loader->add_action('wp_footer', $plugin_public, 'place_message_modal', 1000);
 		$this->loader->add_action('wp_footer', $plugin_public, 'get_cancel_vars', 1000);
 		$this->loader->add_action('query_vars', $plugin_public, 'register_vars');
