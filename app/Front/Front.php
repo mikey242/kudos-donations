@@ -424,24 +424,31 @@ class Front {
 			$kudos_modal = new KudosModal();
 			$subscription_id = base64_decode($subscription_id);
 			$mapper = new MapperService(SubscriptionEntity::class);
+
 			/** @var SubscriptionEntity $subscription */
 			$subscription = $mapper->get_one_by(['subscription_id' => $subscription_id]);
+
+			// Bail if no subscription found
+			if(NULL === $subscription) {
+				return;
+			}
+
 			$donor = $subscription->get_donor();
 
-			if($subscription && $donor->verify_secret($token)) {
+			if($donor->verify_secret($token)) {
 				$kudos_mollie = MollieService::factory();
 				if($kudos_mollie->cancel_subscription($subscription_id)) {
 					echo $kudos_modal->get_message_modal([
-						'header' => 'Subscription canceled',
-						'text' => 'We will no longer be taking payments for this subscription. Thank you for your contributions.'
+						'header' => __('Subscription canceled', 'kudos-donations'),
+						'text' => __('We will no longer be taking payments for this subscription. Thank you for your contributions.', 'kudos-donations')
 					]);
 					return;
 				}
 			}
 
 			echo $kudos_modal->get_message_modal([
-				'header' => 'Link expired',
-				'text' => 'Sorry, this link is no longer valid.'
+				'header' => __('Link expired', 'kudos-donations'),
+				'text' => __('Sorry, this link is no longer valid.', 'kudos-donations')
 			]);
 		}
 
