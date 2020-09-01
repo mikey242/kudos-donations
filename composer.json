@@ -6,6 +6,9 @@
         "ext-json": "*",
         "php": ">=7.1"
     },
+    "require-dev": {
+        "vlucas/phpdotenv": "^5.1"
+    },
     "scripts": {
         "post-update-cmd": [
             "rm -rf vendor/mollie/mollie-api-php/examples vendor/sabberworm/php-css-parser/tests vendor/twig/twig/doc"

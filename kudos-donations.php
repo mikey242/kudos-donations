@@ -8,6 +8,11 @@ use Kudos\Service\DeactivatorService;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+if(class_exists(\Dotenv\Dotenv::class)) {
+	$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+	$dotenv->load();
+}
+
 /**
  * The plugin bootstrap file
  *

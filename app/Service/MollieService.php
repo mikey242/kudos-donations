@@ -45,7 +45,7 @@ class MollieService extends AbstractService {
 		$this->mollieApi = new MollieApiClient();
 		$this->apiMode = Settings::get_setting('mollie_api_mode');
 		$this->apiKey = Settings::get_setting('mollie_'.$this->apiMode.'_api_key');
-		$this->webHookUrl = WP_DEBUG ? 'https://b6ce7dfc6e4c.eu.ngrok.io/wp-json/kudos/v1/mollie/payment/webhook' : rest_url('kudos/v1/mollie/payment/webhook');
+		$this->webHookUrl = $_ENV['WEBHOOK_URL'] ?? rest_url('kudos/v1/mollie/payment/webhook');
 
 		if($this->apiKey) {
 			try {

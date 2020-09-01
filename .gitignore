@@ -6,4 +6,5 @@ docker/wordpress/
 cache
 invoices
 .idea
+.env
 EXPORT
