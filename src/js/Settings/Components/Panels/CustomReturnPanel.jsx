@@ -20,8 +20,7 @@ const CustomReturnPanel = ( props ) => {
 				onChange={ () => props.handleInputChange( "_kudos_custom_return_enable", ! props.settings._kudos_custom_return_enable ) }
 			/>
 
-			{ props.settings._kudos_custom_return_enable
-				? [
+			{ props.settings._kudos_custom_return_enable ?
 
 					<TextControl
 						label={ __( 'URL', 'kudos-donations' ) }
@@ -35,8 +34,7 @@ const CustomReturnPanel = ( props ) => {
 						onChange={ ( value ) => props.handleInputChange( "_kudos_custom_return_url", value ) }
 					/>
 
-				  ]
-				: '' }
+			: '' }
 				
 		</PanelBody>
 	);
