@@ -22,17 +22,17 @@ const CustomReturnPanel = ( props ) => {
 
 			{ props.settings._kudos_custom_return_enable ?
 
-					<TextControl
-						label={ __( 'URL', 'kudos-donations' ) }
-						help={ __(
-							'e.g https://mywebsite.com/thanks',
-							'kudos-donations'
-						) }
-						type={ 'text' }
-						value={ props.settings._kudos_custom_return_url || '' }
-						disabled={ props.isSaving }
-						onChange={ ( value ) => props.handleInputChange( "_kudos_custom_return_url", value ) }
-					/>
+				<TextControl
+					label={ __( 'URL', 'kudos-donations' ) }
+					help={ __(
+						'e.g https://mywebsite.com/thanks',
+						'kudos-donations'
+					) }
+					type={ 'text' }
+					value={ props.settings._kudos_custom_return_url || '' }
+					disabled={ props.isSaving }
+					onChange={ ( value ) => props.handleInputChange( "_kudos_custom_return_url", value ) }
+				/>
 
 			: '' }
 				
