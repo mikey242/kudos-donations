@@ -4,7 +4,6 @@ namespace Kudos\Service;
 
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Front\Front;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Mollie\Api\Exceptions\ApiException;
@@ -506,6 +505,19 @@ class MollieService extends AbstractService {
 			'subscription_id' => $payment->subscriptionId
 		]);
 
+		// Add refund if present
+		if($payment->hasRefunds()) {
+			$transaction->set_fields([
+				'refunds' => serialize([
+					'refunded' => $payment->getAmountRefunded(),
+					'remaining' => $payment->getAmountRemaining()
+				]),
+			]);
+
+			$this->logger->info('Payment (partially) refunded', [$transaction]);
+			do_action('kudos_mollie_refund', $order_id);
+		}
+
 		// Save transaction to database
 		$mapper->save($transaction);
 
@@ -521,7 +533,7 @@ class MollieService extends AbstractService {
 					] );
 				}
 			} else {
-				Front::process_transaction($order_id);
+				do_action('kudos_process_transaction_action', $order_id);
 			}
 
 			// Set up recurring payment if sequence is first
@@ -530,20 +542,6 @@ class MollieService extends AbstractService {
 				$this->create_subscription($transaction, $payment->mandateId, $payment->metadata->interval, $payment->metadata->years);
 			}
 
-		} elseif ($payment->hasRefunds()) {
-			$this->logger->info('Payment (partially) refunded', [$transaction]);
-
-			// Update transaction
-			$refunded = $payment->getAmountRefunded();
-			$remaining = $payment->getAmountRemaining();
-			$transaction->set_fields([
-				'refunds' => serialize(['refunded' => $refunded, 'remaining' => $remaining]),
-			]);
-
-			// Save transaction to database
-			$mapper->save($transaction);
-
-			do_action('kudos_mollie_refund', $order_id);
 		}
 
 		// Return response to Mollie
