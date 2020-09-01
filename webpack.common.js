@@ -54,7 +54,7 @@ module.exports = {
 		filename: 'js/[name].[contenthash].js',
 	},
 	optimization: {
-		minimize: NODE_ENV !== 'dev',
+		minimize: NODE_ENV === 'prod',
 		concatenateModules: false,
 		minimizer: [
 			new TerserPlugin( {
@@ -150,7 +150,6 @@ module.exports = {
  * Maps vendors to copy commands for the CopyWebpackPlugin.
  *
  * @source https://github.com/WordPress/wordpress-develop/blob/master/tools/webpack/packages.js
- * @param {Object} vendors     Vendors to include in the vendor folder.
  * @param {string} buildTarget The folder in which to build the packages.
  * @return {Object[]} Copy object suitable for the CopyWebpackPlugin.
  */
