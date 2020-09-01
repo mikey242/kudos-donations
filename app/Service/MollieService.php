@@ -260,11 +260,11 @@ class MollieService extends AbstractService {
             "webhookUrl" => $this->webHookUrl,
 	        "mandateId" => $mandateId,
             "interval" => $interval,
-            "startDate" => $startDate,  // Disable for test mode
+            "startDate" => $startDate,
             "description" => sprintf(__('Kudos Subscription (%s) - %s', 'kudos-donations'), $interval, $transaction->order_id),
         ];
 
-        if(WP_DEBUG) {
+        if($transaction->mode === "test") {
 	        unset($subscriptionArray['startDate']);  // Disable for test mode
         }
 
