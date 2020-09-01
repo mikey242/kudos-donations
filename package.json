@@ -7,7 +7,8 @@
     "start": "cross-env NODE_ENV=dev webpack --config webpack.dev.js",
     "build": "cross-env NODE_ENV=prod webpack --config webpack.prod.js",
     "build:production": "cross-env NODE_ENV=prod webpack --env.NODE_ENV=local --env.production --progress --config webpack.prod.js && composer update && composer install --no-dev --optimize-autoloader",
-    "export": "rm -rf EXPORT && mkdir -p EXPORT/kudos-donations/ && cp -r {assets,libraries,languages,templates,vendor,app,dist,index.php,uninstall.php,kudos-donations.php,readme.txt} ./EXPORT/kudos-donations/ && rm -rf ./EXPORT/kudos-donations/libraries/action-scheduler/{docs,tests}"
+    "export": "rm -rf EXPORT && mkdir -p EXPORT/kudos-donations/ && cp -r {assets,libraries,languages,templates,vendor,app,dist,index.php,uninstall.php,kudos-donations.php,readme.txt} ./EXPORT/kudos-donations/ && rm -rf ./EXPORT/kudos-donations/libraries/action-scheduler/{docs,tests}",
+    "export:noassets": "rm -rf EXPORT && mkdir -p EXPORT/kudos-donations/ && cp -r {libraries,languages,templates,vendor,app,dist,index.php,uninstall.php,kudos-donations.php,readme.txt} ./EXPORT/kudos-donations/ && rm -rf ./EXPORT/kudos-donations/libraries/action-scheduler/{docs,tests}"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
