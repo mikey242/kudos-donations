@@ -2,7 +2,8 @@ vendor
 dist
 logs
 node_modules
-/docker/wordpress/
+docker/wordpress/
 cache
 invoices
 .idea
+EXPORT
