@@ -128,19 +128,17 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 							onChange={ onChangeAmountType }
 						/>
 
-						{ amount_type !== 'open'
-							? [
+						{ amount_type !== 'open' ?
 
-						<Fragment>
-							<TextControl
-								label={ __(	'Amounts:',	'kudos-donations' ) }
-								help={ __( 'Enter a comma separated list of values to use.', 'kudos-donations' ) }
-								value={ fixed_amounts }
-								onChange={ onChangeFixedAmounts }
-							/>
-						</Fragment>
+							<Fragment>
+								<TextControl
+									label={ __(	'Amounts:',	'kudos-donations' ) }
+									help={ __( 'Enter a comma separated list of values to use.', 'kudos-donations' ) }
+									value={ fixed_amounts }
+									onChange={ onChangeFixedAmounts }
+								/>
+							</Fragment>
 
-							]
 						: '' }
 
 					</PanelBody>
