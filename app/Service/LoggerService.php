@@ -12,8 +12,8 @@ if (!defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
 
 class LoggerService extends Monolog {
 
-	const LOG_DIR = KUDOS_STORAGE_DIR . '/logs';
-	const LOG_FILE = self::LOG_DIR . '/kudos.log';
+	const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
+	const LOG_FILE = self::LOG_DIR . 'kudos.log';
 
 	/**
 	 * Kudos_Logger constructor.
@@ -144,13 +144,14 @@ class LoggerService extends Monolog {
 
 		header('Content-Description: File Transfer');
 		header('Content-Disposition: attachment; filename=kudos_' . sanitize_title(get_bloginfo('name')) . '_' . date('Y-m-d') . '.log');
-		header("Content-Type: text/plain");
+		header("Content-Type: application/octet-stream");
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
 		header('Content-Length: ' . filesize($file));
 
 		readfile($file);
+		exit;
 
 	}
 
