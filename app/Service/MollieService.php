@@ -459,9 +459,6 @@ class MollieService extends AbstractService {
 		/** @var Payment $payment */
 		$payment = $this->get_payment($id);
 
-		// Create action
-		do_action('kudos_mollie_webhook', $payment);
-
 		if ( null === $payment ) {
 			/**
 			 *
@@ -474,6 +471,9 @@ class MollieService extends AbstractService {
 		}
 
 		$this->logger->info('Webhook requested by Mollie.', ['transaction_id' => $id, 'status' => $payment->status, 'sequence_type' => $payment->sequenceType]);
+
+		// Create webhook action
+		do_action('kudos_mollie_webhook', $payment);
 
 		$transaction_id = $payment->id;
 		$order_id = $payment->metadata->order_id ?? Utils::generate_id('kdo_');
@@ -506,6 +506,9 @@ class MollieService extends AbstractService {
 			'subscription_id' => $payment->subscriptionId
 		]);
 
+		// Save transaction to database
+		$mapper->save($transaction);
+
 		if($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
 
 			// Get schedule processing for later
@@ -537,11 +540,11 @@ class MollieService extends AbstractService {
 				'refunds' => serialize(['refunded' => $refunded, 'remaining' => $remaining]),
 			]);
 
+			// Save transaction to database
+			$mapper->save($transaction);
+
 			do_action('kudos_mollie_refund', $order_id);
 		}
-
-		// Save transaction to database
-		$mapper->save($transaction);
 
 		// Return response to Mollie
 		return $response;

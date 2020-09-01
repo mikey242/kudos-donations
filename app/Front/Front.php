@@ -475,7 +475,7 @@ class Front {
 
 		$mapper = new MapperService(TransactionEntity::class);
 		/** @var TransactionEntity $transaction */
-		$transaction = $mapper->get_one_by([ 'order_id' => $order_id]);
+		$transaction = $mapper->get_one_by([ 'order_id' => $order_id ]);
 
 		if($transaction->get_donor()->email) {
 			// Send email - email setting is checked in mailer
