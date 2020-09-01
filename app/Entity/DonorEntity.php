@@ -85,6 +85,7 @@ class DonorEntity extends AbstractEntity {
 
 		try {
 
+			// Schedule for secret to be removed after timeout
 			if(class_exists('ActionScheduler')) {
 
 				// Remove existing action if exists
@@ -99,7 +100,10 @@ class DonorEntity extends AbstractEntity {
 
 			}
 
-			$this->secret = bin2hex(random_bytes(10));
+			// Create secret if none set
+			if(NULL === $this->secret) {
+				$this->secret = bin2hex(random_bytes(10));
+			}
 
 		} catch (Throwable $e) {
 			$logger->error('Unable to create secret for user. ' . $e->getMessage() , ['id' => $this->id]);
@@ -113,15 +117,25 @@ class DonorEntity extends AbstractEntity {
 	 * Verify donor's secret
 	 *
 	 * @param string $hash
+	 *
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public function verify_secret($hash) {
+	public function verify_secret( string $hash) {
+
 		return password_verify($this->secret, $hash);
+
 	}
 
+	/**
+	 * Clears the donor's secret
+	 *
+	 * @since   2.0.0
+	 */
 	public function clear_secret() {
+
 		$this->secret = '';
+
 	}
 
 }
