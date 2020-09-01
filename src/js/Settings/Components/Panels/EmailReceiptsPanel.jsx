@@ -18,21 +18,18 @@ const EmailReceiptsPanel = ( props ) => {
 				onChange={ () => props.handleInputChange( "_kudos_email_receipt_enable", ! props.settings._kudos_email_receipt_enable ) }
 			/>
 
-			{ props.settings._kudos_email_receipt_enable
-				? [
+			{ props.settings._kudos_email_receipt_enable ?
 
+				<TextControl
+					label={ __( 'Send receipt copy to:', 'kudos-donations' ) }
+					type={ 'text' }
+					value={ props.settings._kudos_email_bcc || '' }
+					placeholder={ props.placeholder }
+					disabled={ props.isSaving }
+					onChange={ ( value ) => props.handleInputChange( "_kudos_email_bcc", value ) }
+				/>
 
-					<TextControl
-						label={ __( 'Send receipt copy to:', 'kudos-donations' ) }
-						type={ 'text' }
-						value={ props.settings._kudos_email_bcc || '' }
-						placeholder={ props.placeholder }
-						disabled={ props.isSaving }
-						onChange={ ( value ) => props.handleInputChange( "_kudos_email_bcc", value ) }
-					/>
-
-				  ]
-				: '' }
+			: '' }
 		</PanelBody>
 	);
 };

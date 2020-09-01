@@ -18,20 +18,20 @@ const AddressFieldPanel = (props ) => {
 
 			</PanelRow>
 
-			{ props.settings._kudos_address_enabled
-				? [
+			{ props.settings._kudos_address_enabled ?
 
-					<PanelRow>
+				<PanelRow>
 
-						<CheckboxControl
-							label="Required"
-							checked={ props.settings._kudos_address_required || '' }
-							onChange={ ( value ) => props.handleInputChange( '_kudos_address_required', value ) }
-						/>
+					<CheckboxControl
+						label="Required"
+						checked={ props.settings._kudos_address_required || '' }
+						onChange={ ( value ) => props.handleInputChange( '_kudos_address_required', value ) }
+					/>
 
-					</PanelRow>
-				  ]
-				: '' }
+				</PanelRow>
+
+			: '' }
+
 		</PanelBody>
 	);
 };

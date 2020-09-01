@@ -23,37 +23,38 @@ const CompletedPaymentModal = ( props ) => {
 				onChange={ () => props.handleInputChange( "_kudos_return_message_enable", ! props.settings._kudos_return_message_enable ) }
 			/>
 
-			{ props.settings._kudos_return_message_enable
-				? [
-					<Fragment>
+			{ props.settings._kudos_return_message_enable ?
 
-						<TextControl
-							label={ __( 'Header', 'kudos-donations'	) }
-							type={ 'text' }
-							value={ props.settings._kudos_return_message_header || '' }
-							disabled={ props.isSaving }
-							onChange={ ( value ) => props.handleInputChange( "_kudos_return_message_header", value ) }
-						/>
+				<Fragment>
 
-						<TextControl
-							label={ __( 'Text', 'kudos-donations' ) }
-							type={ 'text' }
-							value={ props.settings._kudos_return_message_text || '' }
-							placeholder={ __(
-								'Button label',
-								'kudos-donations'
-							) }
-							disabled={ props.isSaving }
-							onChange={ ( value ) => props.handleInputChange( "_kudos_return_message_text", value ) }
-						/>
+					<TextControl
+						label={ __( 'Header', 'kudos-donations'	) }
+						type={ 'text' }
+						value={ props.settings._kudos_return_message_header || '' }
+						disabled={ props.isSaving }
+						onChange={ ( value ) => props.handleInputChange( "_kudos_return_message_header", value ) }
+					/>
 
-						<Info>
-							{ __( 'You can use the following variables in the above fields: {{name}}, {{email}}, {{value}}', 'kudos-donations') }
-						</Info>
+					<TextControl
+						label={ __( 'Text', 'kudos-donations' ) }
+						type={ 'text' }
+						value={ props.settings._kudos_return_message_text || '' }
+						placeholder={ __(
+							'Button label',
+							'kudos-donations'
+						) }
+						disabled={ props.isSaving }
+						onChange={ ( value ) => props.handleInputChange( "_kudos_return_message_text", value ) }
+					/>
 
-					</Fragment>
-				  ]
-				: '' }
+					<Info>
+						{ __( 'You can use the following variables in the above fields: {{name}}, {{email}}, {{value}}', 'kudos-donations') }
+					</Info>
+
+				</Fragment>
+
+			: '' }
+
 		</PanelBody>
 	);
 };

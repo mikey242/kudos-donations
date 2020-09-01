@@ -260,7 +260,7 @@ class KudosAdmin extends Component {
 				name: 'mollie',
 				title: 'Mollie',
 				className: 'tab-mollie',
-				content: [
+				content:
 					<Fragment>
 						<MollieApiMode
 							{ ...this.state }
@@ -273,13 +273,13 @@ class KudosAdmin extends Component {
 							handleInputChange={ this.handleInputChange }
 						/>
 					</Fragment>
-				]
+
 			},
 			{
 				name: 'customize',
 				title: 'Customize',
 				className: 'tab-customize',
-				content: [
+				content:
 					<Fragment>
 						<ThemePanel
 							{...this.state}
@@ -306,13 +306,12 @@ class KudosAdmin extends Component {
 							handleInputChange={this.handleInputChange}
 						/>
 					</Fragment>
-				]
 			},
 			{
 				name: 'email',
 				title: 'Email',
 				className: 'tab-email',
-				content: [
+				content:
 					<Fragment>
 						<EmailReceiptsPanel
 							{...this.state}
@@ -327,13 +326,12 @@ class KudosAdmin extends Component {
 							showNotice={this.showNotice}
 						/>
 					</Fragment>
-				]
 			},
 			{
 				name: 'advanced',
 				title: 'Advanced',
 				className: 'tab-advanced',
-				content: [
+				content:
 					<Fragment>
 						<ActionSchedulerPanel
 							{...this.state}
@@ -344,7 +342,6 @@ class KudosAdmin extends Component {
 							handleInputChange={this.handleInputChange}
 						/>
 					</Fragment>
-				]
 			}
 
 		], this.state, this.handleInputChange);
