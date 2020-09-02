@@ -67,6 +67,7 @@ class Front {
 	public function enqueue_styles() {
 
 		wp_enqueue_style( $this->plugin_name . '-public', Utils::get_asset_url('kudos-public.css'), [], $this->version, 'all' );
+		echo $this->get_kudos_root_styles();
 
 	}
 
@@ -111,14 +112,15 @@ class Front {
 	 * Add root styles to header based on theme
 	 *
 	 * @since 2.0.0
+	 * @return string
 	 */
-	public function add_kudos_root_styles() {
+	public function get_kudos_root_styles() {
 
 		$color = Settings::get_setting('theme_color');
 		$color_dark = Utils::color_luminance($color, '-0.05');
 		$color_darker = Utils::color_luminance($color, '-0.08');
 
-		echo "<style>
+		return "<style>
 
 		:root {
 			--kudos-theme-color: $color;
