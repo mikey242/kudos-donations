@@ -159,7 +159,7 @@ class Settings {
 	}
 
 	/**
-	 * Gets the setting from the database
+	 * Returns setting value
 	 *
 	 * @param $name
 	 * @return false|mixed|void
@@ -167,7 +167,6 @@ class Settings {
 	 */
 	public static function get_setting($name) {
 
-		// Get option from database
 		return get_option(self::PREFIX . $name);
 
 	}
@@ -202,7 +201,7 @@ class Settings {
 	}
 
 	/**
-	 * Removes settings from database
+	 * Removes all settings from database
 	 *
 	 * @since 2.0.0
 	 */
