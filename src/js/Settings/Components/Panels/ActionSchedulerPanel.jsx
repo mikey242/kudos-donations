@@ -3,7 +3,6 @@ const {PanelBody, ToggleControl} = wp.components;
 
 const ActionSchedulerPanel = ( props ) => {
     return (
-
         <PanelBody
             title={ __( 'Action Scheduler', 'kudos-donations' ) }
             initialOpen={ false }

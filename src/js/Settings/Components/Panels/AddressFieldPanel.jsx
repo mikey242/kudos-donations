@@ -1,5 +1,5 @@
 const { __ } = wp.i18n;
-const { CheckboxControl, PanelBody, PanelRow } = wp.components;
+const { PanelBody, CheckboxControl, PanelRow } = wp.components;
 
 const AddressFieldPanel = (props ) => {
 	return (

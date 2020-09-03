@@ -1,10 +1,9 @@
 const {__} = wp.i18n;
-const {PanelBody, TextControl, ToggleControl} = wp.components;
+const { PanelBody, TextControl, ToggleControl} = wp.components;
 
 const CustomReturnPanel = ( props ) => {
 
 	return (
-
 		<PanelBody
 			title={ __( 'Custom Return URL', 'kudos-donations' ) }
 			initialOpen={ false }

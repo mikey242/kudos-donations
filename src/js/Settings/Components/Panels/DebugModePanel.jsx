@@ -1,5 +1,5 @@
 const {__} = wp.i18n;
-const {PanelBody, ToggleControl} = wp.components;
+const { PanelBody, ToggleControl } = wp.components;
 
 const DebugModePanel = ( props ) => {
 	return (

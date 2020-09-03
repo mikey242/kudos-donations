@@ -1,9 +1,10 @@
+import {Info} from "../Info"
+
 const {__} = wp.i18n;
 const { PanelBody, TextControl, ToggleControl } = wp.components;
 const { Fragment } = wp.element;
-import {Info} from "../Info"
 
-const CompletedPaymentModal = ( props ) => {
+const CompletedPaymentPanel = (props ) => {
 	return (
 		<PanelBody
 			title={ __( 'Completed Payment', 'kudos-donations' ) }
@@ -59,4 +60,4 @@ const CompletedPaymentModal = ( props ) => {
 	);
 };
 
-export { CompletedPaymentModal };
+export { CompletedPaymentPanel };

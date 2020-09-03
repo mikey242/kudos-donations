@@ -1,5 +1,5 @@
 const { __ } = wp.i18n;
-const { BaseControl, ColorPalette, PanelBody } = wp.components;
+const { PanelBody, BaseControl, ColorPalette } = wp.components;
 
 const ThemePanel = (props ) => {
 
@@ -24,7 +24,7 @@ const ThemePanel = (props ) => {
 					colors={ colors }
 					value={ props.settings._kudos_theme_color }
 					onChange={ ( value ) => props.handleInputChange( '_kudos_theme_color', value ) }
-					disableCustomColors={ true }
+					disableCustomColors={ !props.settings._kudos_custom_theme_color }
 					clearable={ false }
 				/>
 			</BaseControl>

@@ -1,7 +1,7 @@
 const { __ } = wp.i18n;
-const { BaseControl, ButtonGroup, Button, PanelBody, PanelRow } = wp.components;
+const { PanelBody, BaseControl, ButtonGroup, Button, PanelRow } = wp.components;
 
-const MollieApiMode = ( props ) => {
+const MollieApiModePanel = (props ) => {
 	
 	const handleChange = ( id, value ) => {
 		props.mollieChanged();
@@ -14,6 +14,7 @@ const MollieApiMode = ( props ) => {
 		<PanelBody
 			title={ __( 'API Mode', 'kudos-donations' ) }
 			initialOpen={ true }
+			{...props}
 		>
 
 			<BaseControl
@@ -57,4 +58,4 @@ const MollieApiMode = ( props ) => {
 	);
 };
 
-export { MollieApiMode };
+export { MollieApiModePanel };

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const  { __ } = wp.i18n;
-const { Button, PanelBody, PanelRow, TextControl } = wp.components;
+const { PanelBody, Button, PanelRow, TextControl } = wp.components;
 const { useState } = wp.element;
 
 const TestEmailPanel = ( props ) => {

@@ -1,5 +1,5 @@
 const { __ } = wp.i18n;
-const { ToggleControl, PanelBody, PanelRow } = wp.components;
+const { PanelBody, ToggleControl, PanelRow } = wp.components;
 
 const SubscriptionPanel = (props ) => {
 

@@ -1,7 +1,7 @@
 const { __ } = wp.i18n;
 const {
-	CheckboxControl,
 	PanelBody,
+	CheckboxControl,
 	RadioControl,
 	TextControl,
 	ToggleControl
