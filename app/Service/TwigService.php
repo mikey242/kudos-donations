@@ -11,7 +11,7 @@ use Twig\TwigFunction;
 
 class TwigService {
 
-	const CACHE_DIR = KUDOS_STORAGE_DIR . '/twig/cache/';
+	const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
 
 	/**
 	 * @var Environment
@@ -49,7 +49,14 @@ class TwigService {
 	 */
 	public static function init() {
 
-		wp_mkdir_p(self::CACHE_DIR);
+		$logger = new LoggerService();
+
+		if(wp_mkdir_p(self::CACHE_DIR)) {
+			$logger->info('Twig cache directory created successfully');
+			return;
+		}
+
+		$logger->error('Unable to create Kudos Donations Twig cache directory', [self::CACHE_DIR]);
 
 	}
 

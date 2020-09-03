@@ -28,11 +28,8 @@ class DeactivatorService {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
-		// Clean-up settings from database
-		$settings = new Settings();
-		$settings->remove_settings();
-
+		$logger = new LoggerService();
+		$logger->info('Kudos Donations plugin deactivated');
 	}
 
 }

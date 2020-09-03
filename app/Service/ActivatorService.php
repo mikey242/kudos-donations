@@ -37,6 +37,9 @@ class ActivatorService {
 		self::create_subscriptions_table();
 		self::set_defaults();
 
+		$logger = new LoggerService();
+		$logger->info('Kudos Donations plugin activated');
+
 	}
 
 	/**

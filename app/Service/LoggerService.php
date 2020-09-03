@@ -34,7 +34,14 @@ class LoggerService extends Monolog {
 	 */
 	public static function init() {
 
-		wp_mkdir_p(self::LOG_DIR);
+		$logger = new LoggerService();
+
+		if(wp_mkdir_p(self::LOG_DIR)) {
+			$logger->info('Log directory created successfully');
+			return;
+		}
+
+		error_log('Unable to create Kudos Donations log directory: ' . self::LOG_DIR);
 
 	}
 
