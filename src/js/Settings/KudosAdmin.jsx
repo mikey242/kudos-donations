@@ -6,18 +6,19 @@ import axios from 'axios';
 import { Notice } from './Components/Notice';
 import { Header } from './Components/Header';
 import { AddressFieldPanel } from './Components/Panels/AddressFieldPanel';
-import { CompletedPaymentModal } from './Components/Panels/CompletedPaymentModal';
+import { CompletedPaymentPanel } from './Components/Panels/CompletedPaymentPanel';
 import { EmailSettingsPanel } from './Components/Panels/EmailSettingsPanel';
 import { TestEmailPanel } from './Components/Panels/TestEmailPanel';
-import { MollieApiKeys } from './Components/Panels/MollieApiKeys';
-import { MollieApiMode } from './Components/Panels/MollieApiMode';
+import { MollieApiKeysPanel } from './Components/Panels/MollieApiKeysPanel';
+import { MollieApiModePanel } from './Components/Panels/MollieApiModePanel';
 import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
 import { PrivacyPolicyPanel } from './Components/Panels/PrivacyPolicyPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
-import {SubscriptionPanel} from "./Components/Panels/SubscriptionPanel"
+import { SubscriptionPanel } from "./Components/Panels/SubscriptionPanel"
+import { capitalizeFirstLetter } from "./Helpers/Util";
 
 const { __ } = wp.i18n;
 
@@ -28,8 +29,9 @@ const {
 	Spinner,
 	TabPanel
 } = wp.components;
-
 const { Component, Fragment } = wp.element;
+const { applyFilters } = wp.hooks;
+const { withFilters } = wp.components;
 
 function getTabName() {
 	const searchParams = new URLSearchParams( window.location.search );
@@ -238,42 +240,34 @@ class KudosAdmin extends Component {
 		} );
 	}
 
-	renderTab( tab ) {
-
-		const showTab = this.tabs.find(item => item.name === tab.name)
-
-		return (
-			showTab.content
-		)
-	}
-
 	render() {
 
+		// Show spinner if not yet loaded
 		if ( ! this.state.isAPILoaded ) {
 			return (
 				<Spinner />
 			)
 		}
 
-		this.tabs = wp.hooks.applyFilters('kudos_admin_settings_tabs', [
+		// Define tabs and panels
+		this.tabs = applyFilters('kudos.settings.registerTabs', [
 			{
 				name: 'mollie',
 				title: 'Mollie',
 				className: 'tab-mollie',
 				content:
 					<Fragment>
-						<MollieApiMode
-							{ ...this.state }
-							mollieChanged={ this.mollieChanged }
-							handleInputChange={ this.handleInputChange }
+						<MollieApiModePanel
+								{...this.state}
+								mollieChanged={ this.mollieChanged }
+								handleInputChange={ this.handleInputChange }
 						/>
-						<MollieApiKeys
-							{ ...this.state }
-							mollieChanged={ this.mollieChanged }
-							handleInputChange={ this.handleInputChange }
+						<MollieApiKeysPanel
+								{...this.state}
+								mollieChanged={ this.mollieChanged }
+								handleInputChange={ this.handleInputChange }
 						/>
 					</Fragment>
-
 			},
 			{
 				name: 'customize',
@@ -293,7 +287,7 @@ class KudosAdmin extends Component {
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
-						<CompletedPaymentModal
+						<CompletedPaymentPanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
@@ -346,10 +340,9 @@ class KudosAdmin extends Component {
 
 		], this.state, this.handleInputChange);
 
-		let tabsArray = Object.entries(this.tabs);
-
 		return (
 			<Fragment>
+
 				<Notice
 					showNotice={ this.state.showNotice }
 					hideNotice={ this.hideNotice }
@@ -371,41 +364,45 @@ class KudosAdmin extends Component {
 					activeClass="is-active"
 					initialTabName={ this.state.tabName }
 					tabs={
-						tabsArray.map((tab)=>{
+						Object.entries(this.tabs).map((tab) => {
 							tab = tab[1];
 							return tab;
 						})
 					}
 				>
-					{ ( tab ) => {
-						return (
-							<div className="kudos-settings-main dashboard-wrap">
+					{
+						( tab ) => {
 
-								<Panel>
-									{ this.renderTab( tab ) }
-								</Panel>
+							return (
 
+								<div className="kudos-settings-main dashboard-wrap">
 
-								<PanelRow className={ 'justify-center' }>
-									<Button
-										isPrimary
-										disabled={
-											this.state.isSaving ||
-											! this.state.isEdited
-										}
-										isBusy={
-											this.state.isSaving ||
-											this.state.checkingApi
-										}
-										onClick={ this.updateAll }
-									>
-										{ __('Save', 'kudos-donations') }
-									</Button>
-								</PanelRow>
+									<Panel>
+										{tab.content}
+									</Panel>
 
-							</div>
-						);
-					} }
+									<PanelRow className={'justify-center'}>
+										<Button
+											isPrimary
+											disabled={
+												this.state.isSaving ||
+												!this.state.isEdited
+											}
+											isBusy={
+												this.state.isSaving ||
+												this.state.checkingApi
+											}
+											onClick={this.updateAll}
+										>
+											{__('Save', 'kudos-donations')}
+										</Button>
+									</PanelRow>
+								</div>
+							)
+						}
+
+					}
+
 				</TabPanel>
 			</Fragment>
 		);
