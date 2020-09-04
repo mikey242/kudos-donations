@@ -2,10 +2,15 @@
 
 namespace Kudos\Admin;
 
+use Kudos\Entity\DonorEntity;
+use Kudos\Entity\SubscriptionEntity;
+use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
+use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MailerService;
+use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
 use WP_REST_Server;
 
@@ -293,12 +298,64 @@ class Admin {
 	 */
 	public function admin_actions() {
 
-		if(isset($_REQUEST['clear_log'])) {
-		    LoggerService::clear();
-		}
+		if(isset($_REQUEST['kudos_action'])) {
 
-		if(isset($_REQUEST['download_log'])) {
-			LoggerService::download();
+			$action = $_REQUEST['kudos_action'];
+			$nonce = esc_attr( $_REQUEST['_wpnonce'] );
+
+			// Check nonce
+			if ( ! wp_verify_nonce( $nonce, $action ) ) die();
+
+			switch ($action) {
+
+				case 'kudos_log_download':
+
+					LoggerService::download();
+					break;
+
+				case 'kudos_log_clear':
+
+					if(LoggerService::clear() === 0) {
+                        new AdminNotice('success', __('Log cleared', 'kudos-donations'));
+					}
+
+					break;
+
+				case 'kudos_clear_settings':
+
+					$settings = new Settings();
+					$settings->remove_settings();
+					$settings->add_defaults();
+					break;
+
+				case 'kudos_clear_transactions':
+
+					$mapper = new MapperService(TransactionEntity::class);
+					$records = $mapper->delete_all();
+					if($records) {
+						new AdminNotice('success', sprintf(__('Deleted %s transactions(s)', 'kudos-donations'), $records));
+					}
+
+					break;
+
+				case 'kudos_clear_donors':
+
+					$mapper = new MapperService(DonorEntity::class);
+					$records = $mapper->delete_all();
+					if($records) {
+						new AdminNotice('success', sprintf(__('Deleted %s donors(s)', 'kudos-donations'), $records));
+					}
+					break;
+
+				case 'kudos_clear_subscriptions':
+
+					$mapper = new MapperService(SubscriptionEntity::class);
+					$records = $mapper->delete_all();
+					if($records) {
+						new AdminNotice('success', sprintf(__('Deleted %s subscriptions(s)', 'kudos-donations'), $records));
+					}
+					break;
+			}
 		}
 
 	}
