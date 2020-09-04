@@ -390,4 +390,17 @@ class Admin {
 		$settings->register_settings();
 
 	}
+
+	/**
+	 * Logs nonce failures
+	 *
+	 * @param $nonce
+	 * @param $action
+	 */
+	public function nonce_fail($nonce, $action) {
+
+		$logger = new LoggerService();
+		$logger->warning('Nonce verification failed', ['nonce' => $nonce, 'action' => $action]);
+
+	}
 }

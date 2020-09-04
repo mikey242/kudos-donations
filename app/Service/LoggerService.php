@@ -141,14 +141,6 @@ class LoggerService extends Monolog {
 
 		$file = self::LOG_FILE;
 
-		// Check nonce
-		$nonce = esc_attr( $_REQUEST['_wpnonce'] );
-		if ( ! wp_verify_nonce( $nonce, 'download-' . basename($file) ) ) {
-			$logger = new self;
-			$logger->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__]);
-			die();
-		}
-
 		header('Content-Description: File Transfer');
 		header('Content-Disposition: attachment; filename=kudos_' . sanitize_title(get_bloginfo('name')) . '_' . date('Y-m-d') . '.log');
 		header("Content-Type: application/octet-stream");
