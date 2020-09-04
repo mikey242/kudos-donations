@@ -69,21 +69,11 @@ class LoggerService extends Monolog {
 	 */
 	public static function clear() {
 
-		$file = self::LOG_FILE;
-
-		// Check nonce
-		$nonce = esc_attr( $_REQUEST['_wpnonce'] );
-		if ( ! wp_verify_nonce( $nonce, 'clear-' . basename($file) ) ) {
-			$logger = new self;
-			$logger->warning('Nonce verification failed', ['method' => __METHOD__,'class' => __CLASS__]);
-			die();
-		}
-
 		if(!self::isWriteable()) {
 			return false;
 		}
 
-		return file_put_contents($file, '');
+		return file_put_contents(self::LOG_FILE, '');
 
 	}
 
