@@ -41,7 +41,8 @@ class CompatibilityService {
 
 		/* Check if any errors were thrown, enqueue them and exit early */
 		if ( sizeof( $this->notices ) > 0 ) {
-			add_action( 'admin_notices', [ $this, 'display_notices' ] );
+		    $notice = $this->build_notice();
+		    new AdminNotice('error', $notice['error'], $notice['details']);
 
 			return false;
 		}
@@ -115,26 +116,23 @@ class CompatibilityService {
 
 
 	/**
-	 * Helper function to easily display error messages
+	 * Helper function to build the messages
 	 *
-	 * @return void
+	 * @return array
 	 *
 	 * @since 2.0.0
 	 */
-	public function display_notices() {
-		?>
-		<div class="error">
-			<p><strong><?php esc_html_e( 'Kudos Donations Installation Problem', 'kudos-donations' ); ?></strong></p>
+	public function build_notice() {
 
-			<p><?php esc_html_e( 'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:', 'kudos-donations' ); ?></p>
-			<ul style="padding-bottom: 0.5em">
-				<?php foreach ( $this->notices as $notice ): ?>
-					<li style="padding-left: 20px;list-style: inside"><?php echo $notice; ?></li>
-				<?php endforeach; ?>
-			</ul>
-		</div>
-		<?php
+			$notice['error'] = __( 'Kudos Donations Installation Problem', 'kudos-donations' );
+            $notice['details'] = "<p>". __( 'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:', 'kudos-donations' ) ."</p>";
+			$notice['details'] .= "<ul style='padding-bottom: 0.5em'>";
+				foreach ( $this->notices as $error ):
+					$notice['details'] .= "<li style='padding-left: 20px;list-style: inside'>". $error ."</li>";
+				endforeach;
+			$notice['details'] .= "</ul>";
+
+			return $notice;
 	}
-
 
 }
