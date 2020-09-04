@@ -13,7 +13,7 @@ use Mollie\Api\Resources\Subscription;
  */
 
 //Get the active tab from the $_GET param
-$default_tab = 'actions';
+$default_tab = 'log';
 $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
 
 ?>
@@ -23,8 +23,8 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
     <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
     <nav class="nav-tab-wrapper">
-        <a href="?page=kudos-debug&tab=actions" class="nav-tab <?php if($tab==='actions'):?>nav-tab-active<?php endif; ?>">Actions</a>
         <a href="?page=kudos-debug&tab=log" class="nav-tab <?php if($tab==='log'):?>nav-tab-active<?php endif; ?>">Log</a>
+        <a href="?page=kudos-debug&tab=actions" class="nav-tab <?php if($tab==='actions'):?>nav-tab-active<?php endif; ?>">Actions</a>
         <a href="?page=kudos-debug&tab=subscriptions" class="nav-tab <?php if($tab==='subscriptions'):?>nav-tab-active<?php endif; ?>">Subscriptions</a>
     </nav>
 
