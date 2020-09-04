@@ -219,7 +219,7 @@ class Admin {
 
 	    $handle = $this->plugin_name . '-settings';
 
-		wp_enqueue_script( $handle, Utils::get_asset_url('kudos-admin-settings.js'), [ 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-data' ], $this->version, true );
+		wp_enqueue_script( $handle, Utils::get_asset_url('kudos-admin-settings.js'), [ 'wp-api', 'wp-i18n', 'wp-components', 'wp-element' ], $this->version, true );
 		wp_localize_script($handle, 'kudos', [
 			'version' => KUDOS_VERSION,
 			'nonce'   => wp_create_nonce( 'wp_rest' ),
@@ -228,7 +228,7 @@ class Admin {
 			'ajaxurl' => admin_url('admin-ajax.php'),
 		]);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
-		wp_enqueue_style( 'kudos-donations-admin-react', Utils::get_asset_url('kudos-admin-settings.css'), [ 'wp-components', 'wp-edit-blocks' ], $this->version,'all' );
+		wp_enqueue_style( 'kudos-donations-admin-react', Utils::get_asset_url('kudos-admin-settings.css'), [ 'wp-components' ], $this->version,'all' );
 
 		do_action('kudos_admin_settings_page_assets', $handle);
 	}
