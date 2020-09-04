@@ -121,6 +121,32 @@ class MapperService {
 	}
 
 	/**
+	 * Deletes all the records for the current repository
+	 *
+	 * @return int|false
+	 * @since 2.0.0
+	 */
+	public function delete_all() {
+
+		if(NULL === $this->repository) {
+			return null;
+		}
+
+		$records = $this->get_all_by();
+
+		if($records) {
+			$total=0;
+			foreach ($records as $record) {
+				$this->delete('id', $record->id) ? $total++ : null;
+			}
+			return $total;
+		}
+
+		return false;
+
+	}
+
+	/**
 	 * Get row by $query_fields array
 	 *
 	 * @param array $query_fields // Key-value pair of fields to query e.g. ['email' => 'john.smith@gmail.com']
