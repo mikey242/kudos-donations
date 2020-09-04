@@ -73,6 +73,8 @@ class TransactionsTable extends WP_List_Table {
 		global $wpdb;
 
 		$query = [];
+		$table = $wpdb->prefix . $this->table;
+		$join_table = DonorEntity::getTableName();
 
 		$status = (!empty($_GET['status']) ? sanitize_text_field($_GET['status']) : '');
 
@@ -86,19 +88,15 @@ class TransactionsTable extends WP_List_Table {
 		// Add search query if exist
 		if(!empty($_REQUEST['s'])) {
 			$search = esc_sql($_REQUEST['s']);
-			array_push($query, $wpdb->prepare(
-				'(`email` LIKE "%%%s%%") OR (`name` LIKE "%%%s%") OR (`order_id` LIKE "%%%s%") OR (`transaction_id` LIKE "%%%s%")',
-				$search, $search, $search, $search
-			));
+			array_push($query,
+				"(${join_table}.email LIKE '${search}') OR (${join_table}.name LIKE '${search}') OR (order_id LIKE '${search}') OR (transaction_id LIKE '${search}')"
+			);
 		}
 
 		$search_custom_vars = null;
 		if($query) {
 			$search_custom_vars = 'WHERE ' . implode(' AND ', $query);
 		}
-
-		$table = $wpdb->prefix . $this->table;
-		$join_table = DonorEntity::getTableName();
 
 		$search_custom_vars = " LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id " . $search_custom_vars;
 

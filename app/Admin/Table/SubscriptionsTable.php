@@ -70,6 +70,8 @@ class SubscriptionsTable extends WP_List_Table {
 	public function fetch_table_data() {
 
 		global $wpdb;
+		$table = $wpdb->prefix . $this->table;
+		$join_table = DonorEntity::getTableName();
 		$search_custom_vars = null;
 		$frequency = (!empty($_GET['frequency']) ? sanitize_text_field($_GET['frequency']) : '');
 
@@ -83,14 +85,8 @@ class SubscriptionsTable extends WP_List_Table {
 		// Add search query if exist
 		if(!empty($_REQUEST['s'])) {
 			$search = esc_sql($_REQUEST['s']);
-			$search_custom_vars .= $wpdb->prepare(
-				($search_custom_vars ? " AND" : " WHERE") . " (`email` LIKE '%%%s%%') OR (`name` LIKE '%%%s%')",
-				$search, $search
-			);
+			$search_custom_vars .= ($search_custom_vars ? " AND" : " WHERE") . " (${join_table}.email LIKE '${search}') OR (${join_table}.name LIKE '${search}')";
 		}
-
-		$table = $wpdb->prefix . $this->table;
-		$join_table = DonorEntity::getTableName();
 
 		$search_custom_vars = " LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id " . $search_custom_vars;
 

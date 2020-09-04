@@ -72,10 +72,7 @@ class DonorsTable extends WP_List_Table {
 		// Add search query if exist
 		if(!empty($_REQUEST['s'])) {
 			$search = esc_sql($_REQUEST['s']);
-			$search_custom_vars .= $wpdb->prepare(
-				($search_custom_vars ? " AND" : " WHERE") . " (`email` LIKE '%%%s%%') OR (`name` LIKE '%%%s%')",
-				$search, $search
-			);
+			$search_custom_vars .= ($search_custom_vars ? " AND" : " WHERE") . " (email LIKE '${search}') OR (name LIKE '${search}')";
 		}
 
 		$table = $this->table;
