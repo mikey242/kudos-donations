@@ -9,7 +9,10 @@
 }
 
 .components-radio-control__input::before,
-.components-circular-option-picker__option::after {
+.components-circular-option-picker__option::after,
+.components-modal__frame *,
+.components-modal__frame ::after,
+.components-modal__frame ::before {
   box-sizing: border-box;
 }
 

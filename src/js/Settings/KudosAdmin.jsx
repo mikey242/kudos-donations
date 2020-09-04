@@ -18,7 +18,7 @@ import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
 import { SubscriptionPanel } from "./Components/Panels/SubscriptionPanel"
-import { capitalizeFirstLetter } from "./Helpers/Util";
+import { IntroGuide } from "./Components/IntroGuide";
 
 const { __ } = wp.i18n;
 
@@ -31,7 +31,6 @@ const {
 } = wp.components;
 const { Component, Fragment } = wp.element;
 const { applyFilters } = wp.hooks;
-const { withFilters } = wp.components;
 
 function getTabName() {
 	const searchParams = new URLSearchParams( window.location.search );
@@ -341,7 +340,13 @@ class KudosAdmin extends Component {
 		], this.state, this.handleInputChange);
 
 		return (
+
 			<Fragment>
+
+				<IntroGuide
+					open={this.state.settings._kudos_show_intro}
+					saveSetting={this.updateSetting}
+				/>
 
 				<Notice
 					showNotice={ this.state.showNotice }

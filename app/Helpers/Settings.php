@@ -20,6 +20,11 @@ class Settings {
 	public function __construct() {
 
 		$this->settings = apply_filters('kudos_register_settings', [
+			'show_intro' => [
+				'type'          => 'boolean',
+				'show_in_rest'  => true,
+				'default'       => true
+			],
 			'mollie_connected' => [
 				'type'         => 'boolean',
 				'show_in_rest' => true,
