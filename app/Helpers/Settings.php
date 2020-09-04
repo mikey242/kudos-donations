@@ -207,8 +207,8 @@ class Settings {
 	 */
 	public function remove_settings() {
 
-		foreach ( $this->settings as $key=>$setting ) {
-			delete_option($key);
+		foreach ($this->settings as $key=>$setting ) {
+			delete_option(self::PREFIX . $key);
 		}
 
 	}
