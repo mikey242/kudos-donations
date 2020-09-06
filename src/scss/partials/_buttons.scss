@@ -7,13 +7,18 @@
     background-color: var(--kudos-theme-color);
   }
 
+  &:focus {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--kudos-theme-color);
+    outline: 1px solid transparent;
+  }
+
   &:hover {
     @apply bg-orange-700;
 
     background-color: var(--kudos-theme-color-dark);
   }
 
-  @apply bg-orange-500 font-sans w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
+  @apply bg-orange-500 font-sans w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 m-1 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
 
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   background-color: var(--kudos-theme-color);
