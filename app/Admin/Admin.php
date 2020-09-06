@@ -355,27 +355,18 @@ class Admin {
 						new AdminNotice('success', sprintf(__('Deleted %s subscriptions(s)', 'kudos-donations'), $records));
 					}
 					break;
+
+				case 'kudos_cancel_subscription':
+
+					$mollie = MollieService::factory();
+//					$subscription = $mollie->cancel_subscription($_REQUEST['subscriptionId'], $_REQUEST['customerId']);
+					$subscription = true;
+					if($subscription) {
+						new AdminNotice('success', __('Subscription cancelled', 'kudos-donations'));
+					}
+					break;
 			}
 		}
-
-	}
-
-	/**
-	 * Function used by debug menu to cancel subscriptions
-	 *
-	 * @since   2.0.0
-	 */
-	public function debug_cancel_subscription() {
-
-	    if(!wp_verify_nonce($_REQUEST['_wpnonce'], 'cancel_subscription')) {
-	        echo "Nope!";
-	        die;
-	    }
-	    $mollie = MollieService::factory();
-	    $subscription = $mollie->cancel_subscription($_REQUEST['subscriptionId'], $_REQUEST['customerId']);
-	    if($subscription) {
-		    wp_safe_redirect(admin_url( 'admin.php?page=kudos-debug&tab=subscriptions' ));
-	    }
 
 	}
 

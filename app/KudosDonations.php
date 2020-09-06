@@ -130,7 +130,6 @@ class KudosDonations {
 		$this->loader->add_action('rest_api_init', $plugin_admin, 'register_routes');
 		$this->loader->add_action('rest_api_init', $plugin_admin, 'register_settings');
 		$this->loader->add_action('wp_verify_nonce_failed', $plugin_admin, 'nonce_fail', 10, 2);
-		$this->loader->add_action('admin_post_cancel_subscription', $plugin_admin, 'debug_cancel_subscription');
 
 	}
 
