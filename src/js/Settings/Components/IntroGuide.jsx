@@ -1,30 +1,34 @@
-const { Guide, GuidePage } = wp.components;
+const { Guide } = wp.components;
 const { useState } = wp.element;
 const { __ } = wp.i18n;
 
 const IntroGuide = ( props ) => {
 
-        const [ isOpen, setIsOpen ] = useState( props.open );
+    const [ isOpen, setIsOpen ] = useState( props.open );
 
-        const handleClose = () => {
-            setIsOpen(false)
+    if ( ! isOpen ) {
+        return null;
+    }
+
+    const handleClose = () => {
+        setIsOpen(false)
+        if(props.saveSetting) {
             props.saveSetting('_kudos_show_intro', false)
         }
+    }
 
-        if ( ! isOpen ) {
-            return null;
-        }
-
-        return (
-            <Guide
-                onFinish={ () => handleClose() }
-            >
-                <GuidePage>
-                    <img alt="" width="600" src="https://gitlab.iseard.media/michael/kudos-donations/-/raw/master/assets/demo-1.gif" />
-
-                </GuidePage>
-            </Guide>
-        );
+    return (
+        <Guide
+            onFinish={ () => handleClose() }
+            pages={[
+                {
+                    image: <img alt="" width="600" src="https://gitlab.iseard.media/michael/kudos-donations/-/raw/master/assets/demo-1.gif" />,
+                    content: <h1 className="intro-guide__heading">Welcome!</h1>
+                }
+            ]}
+        >
+        </Guide>
+    );
 
 };
 
