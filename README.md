@@ -11,7 +11,7 @@
 
 Use the [yarn](https://yarnpkg.com/) and [composer](https://getcomposer.org/) package managers to install the required dependencies.
 
-###Build
+### Build
 
 ````bash
 # install dependencies
@@ -25,7 +25,7 @@ yarn run start
 yarn run build
 ````
 
-###Docker
+### Docker
 
 Included is a docker environment used for development of the plugin. This environment includes the following containers:
 - WordPress - The WordPress software
