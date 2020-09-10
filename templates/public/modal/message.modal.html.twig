@@ -1,16 +1,11 @@
 {% extends 'public/modal/base.html.twig' %}
 {% set modal_id = 'kudos_modal-message' %}
 
-{% block header %}
-    {{ header }}
-{% endblock header %}
+{% block content %}
+    {{ include('/public/modal/partials/_title.html.twig', {title: title}) }}
+    {{ include('/public/modal/partials/_text.html.twig', {text: text}) }}
 
-{% block text %}
-    {{ text }}
-{% endblock text %}
-
-{% block footer %}
     <div class="kudos_modal_buttons" style="text-align: right; display: block">
         <button class="kudos_button" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>
     </div>
-{% endblock footer %}
+{% endblock content %}

@@ -2,14 +2,7 @@
 {% set classes = 'kudos_form_modal' %}
 {% set premium = false %}
 
-{% block header %}
-    {{ header }}
-{% endblock header %}
-
-{% block text %}
-{% endblock text %}
-
-{% block footer %}
+{% block content %}
 
     <form class="kudos_form" action="">
 
@@ -21,7 +14,8 @@
 
             {#   INITIAL FIELDS   #}
             <fieldset class="form-tab form-tab-initial current-tab">
-                <p class="kudos_modal_text">{{ text }}</p>
+                {{ include('/public/modal/partials/_title.html.twig', {title: title}) }}
+                {{ include('/public/modal/partials/_text.html.twig', {text: text}) }}
 
                 {% if amount.type == 'fixed' %}
                     <div class="kudos_amounts">
@@ -70,10 +64,12 @@
 
             {#   PAYMENT FREQUENCY TAB   #}
             <fieldset class="form-tab form-tab-frequency" data-requirements='{"payment_frequency":"recurring"}'>
-                <p class="kudos_modal_text">How often would you like to donate?</p>
+                {{ include('/public/modal/partials/_title.html.twig', {title: __('Subscription', 'kudos-donations')}) }}
+                {{ include('/public/modal/partials/_text.html.twig', {text: __('How often would you like to donate?', 'kudos-donations')}) }}
+
                 <label>
                     <select required name="recurring_frequency">
-                        <option value="" disabled selected>Payment frequency</option>
+                        <option value="" disabled selected>{{ __('Payment frequency', 'kudos-donations') }}</option>
                         <option value="12 months">{{ __('Yearly', 'kudos-donations') }}</option>
                         <option value="3 months">{{ __('Quarterly', 'kudos-donations') }}</option>
                         <option value="1 month">{{ __('Monthly', 'kudos-donations') }}</option>
@@ -105,7 +101,9 @@
             {#   TAX AGREEMENT TAB   #}
             {% if(premium) %}
             <fieldset class="form-tab form-tab-tax" data-requirements='{"recurring_length": ["0", "5", "6", "7", "8", "9", "10"] }'>
-                <p class="kudos_modal_text">Do you want a tax deduction agreement?</p>
+                {{ include('/public/modal/partials/_title.html.twig', {title: __('Tax Agreement', 'kudos-donations')}) }}
+                {{ include('/public/modal/partials/_text.html.twig', {text: __('Do you want a tax deduction agreement?', 'kudos-donations')}) }}
+
                 <div class="kudos_input_group">
                     <label>
                         {{ __('Yes', 'kudos-donations') }}
@@ -127,7 +125,9 @@
             {#   ADDRESS TAB   #}
             {% if(address.enabled) %}
             <fieldset class="form-tab form-tab-address">
-                <p class="kudos_modal_text">{{ 'kudos_modal_address_text' | apply_filters(__('Please fill in you address', 'kudos-donations') )}} {{ address.required ? null : '(' ~ __('optional', 'kudos-donations') ~ ')' }}</p>
+                {{ include('/public/modal/partials/_title.html.twig', {title: __('Address', 'kudos-donations')}) }}
+                {{ include('/public/modal/partials/_text.html.twig', {text: __('Please fill in you address', 'kudos-donations') ~ (address.required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') }) }}
+
                 <label>
                     <input {{ address.required ? 'required' : null }} type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
                 </label>
@@ -150,7 +150,9 @@
 
             {#   FINAL TAB   #}
             <fieldset class="form-tab form-tab-final">
-                <p class="kudos_modal_text">{{ __('By clicking donate you agree to the following payment', 'kudos-donations') }}: </p>
+                {{ include('/public/modal/partials/_title.html.twig', {title: __('Payment', 'kudos-donations')}) }}
+                {{ include('/public/modal/partials/_text.html.twig', {text: __('By clicking donate you agree to the following payment', 'kudos-donations') ~ (address.required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') }) }}
+
                 <div class="kudos_summary text-left">
                     <p class="mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span class="summary_name"></span></p>
                     <p class="mb-0"><strong>{{ __('Email', 'kudos-donations') }}: </strong><span class="summary_email"></span></p>
@@ -170,4 +172,4 @@
         </div>
     </form>
 
-{% endblock footer %}
+{% endblock content %}
