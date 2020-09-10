@@ -1,10 +1,13 @@
 module.exports = {
-  purge: [
-    './src/js/**/*.js',
-    './src/js/**/*.jsx',
-    './public/**/*.php',
-    './templates/**/*.twig'
-  ],
+  purge: {
+    enabled: process.env.NODE_ENV === 'prod',
+    content: [
+      './src/js/**/*.js',
+      './src/js/**/*.jsx',
+      './public/**/*.php',
+      './templates/**/*.twig'
+    ]
+  },
   theme: {
     fontSize: {
       'base': '16px',
@@ -29,8 +32,10 @@ module.exports = {
       '0': '0'
     },
     borderRadius: {
+      'none': '0',
       'default': '0.25em', //'4px'
       'lg': '0.5em', //'8px'
+      'full': '9999px'
     },
     extend: {
       colors: {
