@@ -86,7 +86,7 @@ class MapperService {
 		if($entity->id) {
 			return $wpdb->update(
 				$table,
-				(array) $entity,
+				array_filter($entity->toArray(), [$this, 'remove_empty']),
 				['id' => $entity->id]
 			);
 		}
@@ -95,7 +95,7 @@ class MapperService {
 		$entity->created = current_time('mysql');
 		return $wpdb->insert(
 			$table,
-			(array) $entity
+			array_filter($entity->toArray(), [$this, 'remove_empty'])
 		);
 
 	}
@@ -241,5 +241,16 @@ class MapperService {
 		}
 
 		return $this->repository::getTableName();
+	}
+
+	/**
+	 * Removes empty values from array
+	 *
+	 * @param $value
+	 * @return bool
+	 * @since 2.0.0
+	 */
+	private function remove_empty($value) {
+		return !is_null($value) && $value !== '';
 	}
 }
