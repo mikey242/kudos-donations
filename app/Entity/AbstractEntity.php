@@ -28,7 +28,7 @@ abstract class AbstractEntity {
 	 */
 	public function __construct($atts=null) {
 
-		if(null !== $atts) {
+		if(NULL !== $atts) {
 			$this->set_fields($atts);
 		}
 
@@ -61,6 +61,16 @@ abstract class AbstractEntity {
 		global $wpdb;
 		return $wpdb->prefix . static::TABLE;
 
+	}
+
+	/**
+	 * Returns class as an array using type casting
+	 *
+	 * @return array
+	 * @since 2.0.0
+	 */
+	public function toArray() {
+		return (array) $this;
 	}
 
 	/**
