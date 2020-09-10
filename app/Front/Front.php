@@ -371,16 +371,18 @@ class Front {
 	}
 
 	/**
-	 * Places message modal on page if conditions are met
-     *
-     * @since   1.0.0
+	 * Handles the various query variables and shows relevant modals
+	 *
+	 * @since 2.0.0
 	 */
-	public function place_message_modal() {
+	public function handle_query_variables() {
 
-		$token = sanitize_text_field(get_query_var('kudos_token'));
+		// Query variables
+		$token = get_query_var('kudos_token');  // Don't sanitize!
 		$order_id = sanitize_text_field(get_query_var('kudos_order_id'));
+		$subscription_id = sanitize_text_field(get_query_var('kudos_subscription_id'));
 
-		// Message modal
+		// Return message modal
 		if(!empty($order_id) && !empty($token)) {
 			$order_id = base64_decode(sanitize_text_field($order_id));
 			if(wp_verify_nonce($_REQUEST['kudos_token'],'kudos_check_order-' . $order_id)) {
@@ -391,10 +393,42 @@ class Front {
 				}
 			}
 		}
+
+		// Cancel subscription modal
+		if(!empty($token && !empty($subscription_id))) {
+
+			$subscription_id = base64_decode($subscription_id);
+			$mapper = new MapperService(SubscriptionEntity::class);
+
+			/** @var SubscriptionEntity $subscription */
+			$subscription = $mapper->get_one_by(['subscription_id' => $subscription_id]);
+
+			// Bail if no subscription found
+			if(NULL === $subscription) return;
+
+			$modal = new KudosModal();
+			$donor = $subscription->get_donor();
+
+			if($donor->verify_secret($token)) {
+				$kudos_mollie = MollieService::factory();
+				if($kudos_mollie->cancel_subscription($subscription_id)) {
+					echo $modal->get_message_modal([
+						'title' => __('Subscription canceled', 'kudos-donations'),
+						'text' => __('We will no longer be taking payments for this subscription. Thank you for your contributions.', 'kudos-donations')
+					]);
+					return;
+				}
+			}
+
+			echo $modal->get_message_modal([
+				'title' => __('Link expired', 'kudos-donations'),
+				'text' => __('Sorry, this link is no longer valid.', 'kudos-donations')
+			]);
+		}
 	}
 
 	/**
-	 * Register URL parameters
+	 * Register query parameters
 	 *
 	 * @param $vars
 	 * @return mixed
@@ -407,51 +441,6 @@ class Front {
 		$vars[] = 'kudos_token';
 
 		return $vars;
-
-	}
-
-	/**
-	 * Checks for cancel subscription query vars and cancels subscription if valid
-	 *
-	 * @since   2.0.0
-	 */
-	public function get_cancel_vars() {
-
-		$subscription_id = sanitize_text_field(get_query_var('kudos_subscription_id'));
-		$token = get_query_var('kudos_token');  // Don't sanitize!
-
-		if(!empty($token && !empty($subscription_id))) {
-
-			$kudos_modal = new KudosModal();
-			$subscription_id = base64_decode($subscription_id);
-			$mapper = new MapperService(SubscriptionEntity::class);
-
-			/** @var SubscriptionEntity $subscription */
-			$subscription = $mapper->get_one_by(['subscription_id' => $subscription_id]);
-
-			// Bail if no subscription found
-			if(NULL === $subscription) {
-				return;
-			}
-
-			$donor = $subscription->get_donor();
-
-			if($donor->verify_secret($token)) {
-				$kudos_mollie = MollieService::factory();
-				if($kudos_mollie->cancel_subscription($subscription_id)) {
-					echo $kudos_modal->get_message_modal([
-						'header' => __('Subscription canceled', 'kudos-donations'),
-						'text' => __('We will no longer be taking payments for this subscription. Thank you for your contributions.', 'kudos-donations')
-					]);
-					return;
-				}
-			}
-
-			echo $kudos_modal->get_message_modal([
-				'header' => __('Link expired', 'kudos-donations'),
-				'text' => __('Sorry, this link is no longer valid.', 'kudos-donations')
-			]);
-		}
 
 	}
 
