@@ -47,11 +47,11 @@
     color: #999;
     margin-left: 15px;
     &:before {
+      @apply rounded-full;
       content: '';
       display: inline-block;
       width: 15px;
       height: 15px;
-      border-radius: 50%;
       vertical-align: middle;
       margin-right: 5px;
       background: #999;
@@ -78,9 +78,9 @@
   }
 
   .kudos-version {
+    @apply rounded-lg;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 10px;
     margin-left: 15px;
     font-weight: bold;
   }
@@ -152,7 +152,6 @@
       .components-button {
         background: transparent;
         border: none;
-        border-radius: 0;
         height: 50px;
         cursor: pointer;
         display: inline-block;
