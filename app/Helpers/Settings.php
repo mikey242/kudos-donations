@@ -123,7 +123,7 @@ class Settings {
 				'show_in_rest'  => true,
 				'default'       => true
 			],
-			'return_message_header' => [
+			'return_message_title' => [
 				'type'          => 'string',
 				'show_in_rest'  => true,
 				'default'       => __('Thank you!', 'kudos-donations'),

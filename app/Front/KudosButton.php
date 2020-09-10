@@ -30,7 +30,7 @@ class KudosButton {
 	/**
 	 * @var string
 	 */
-	private $header;
+	private $title;
 	/**
 	 * @var string
 	 */
@@ -58,7 +58,7 @@ class KudosButton {
 
 		$this->twig = new TwigService();
 		$this->logger = new LoggerService();
-		$this->header = $atts['modal_header'];
+		$this->title = $atts['modal_title'];
 		$this->text = $atts['welcome_text'];
 		$this->label = $atts['button_label'];
 		$this->alignment = $atts['alignment'];
@@ -105,7 +105,7 @@ class KudosButton {
 
 		$data = [
 			'modal_id' => $this->id,
-			'header' => $this->header,
+			'title' => $this->title,
 			'text' => $this->text,
 			'amount' => [
 				'type'  => $this->amount_type,

@@ -47,7 +47,7 @@ class KudosModal {
 	public function get_message_modal( array $atts) {
 
 		    $data = [
-			    'header' => $atts['header'],
+			    'title' => $atts['title'],
 			    'text' => $atts['text'],
 		    ];
 
