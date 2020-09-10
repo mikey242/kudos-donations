@@ -182,6 +182,7 @@ class Front {
 				'city' => $city,
 				'country' => $country
 			]);
+
 			$mapper->save($donor);
 		}
 
@@ -224,14 +225,14 @@ class Front {
 						'{{name}}' => $donor->name,
 						'{{email}}' => $donor->email
 					];
-					$return['header'] = strtr(Settings::get_setting('return_message_header'), $vars);
+					$return['title'] = strtr(Settings::get_setting('return_message_title'), $vars);
 					$return['text'] = strtr(Settings::get_setting('return_message_text'), $vars);
 					break;
 				case 'canceled':
-					$return['header'] = __('Payment canceled', 'kudos-donations');
+					$return['title'] = __('Payment canceled', 'kudos-donations');
 	                break;
 				default:
-					$return['header'] = __('Thanks', 'kudos-donations');
+					$return['title'] = __('Thanks', 'kudos-donations');
 					$return['text'] = __('Your donation will be processed soon.', 'kudos-donations');
 					break;
 			}
@@ -276,7 +277,7 @@ class Front {
 				[
 					'button_label'      => __('Donate now', 'kudos-donations'),
 					'color'             => Settings::get_setting('theme_color'),
-					'modal_header'      => __('Support us!', 'kudos-donations'),
+					'modal_title'      => __('Support us!', 'kudos-donations'),
 					'welcome_text'      => __('Thank you for your donation. We appreciate your support!', 'kudos-donations'),
 					'amount_type'       => 'open',
 					'fixed_amounts'     => '5, 10, 20, 50',
@@ -311,7 +312,7 @@ class Front {
 					'type' => 'string',
 		            'default' => Settings::get_setting('theme_color')
 		        ],
-				'modal_header' => [
+				'modal_title' => [
 					'type' => 'string',
 		            'default' => __('Support us!', 'kudos-donations')
 		        ],
