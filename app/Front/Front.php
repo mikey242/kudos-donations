@@ -146,16 +146,16 @@ class Front {
 
 		// Sanitize form fields
 		$value = intval($form['value']);
-		$payment_frequency = (isset($form['recurring_frequency']) ? sanitize_text_field($form['recurring_frequency']) : 'oneoff');
-		$recurring_length = (isset($form['recurring_length']) ? intval($form['recurring_length']) : 0);
-		$name = isset($form['name']) ? sanitize_text_field($form['name']) : null;
-		$email = isset($form['email_address']) ? sanitize_email($form['email_address']) : null;
-		$street = isset($form['street']) ? sanitize_text_field($form['street']) : null;
-		$postcode = isset($form['postcode']) ? sanitize_text_field($form['postcode']) : null;
-		$city = isset($form['city']) ? sanitize_text_field($form['city']) : null;
-		$country = isset($form['country']) ? sanitize_text_field($form['country']) : null;
-		$redirectUrl = isset($form['return_url']) ? sanitize_text_field($form['return_url']) : null;
-		$buttonName = isset($form['donation_label']) ? sanitize_text_field($form['donation_label']) : null;
+		$payment_frequency = (!empty($form['recurring_frequency']) ? sanitize_text_field($form['recurring_frequency']) : 'oneoff');
+		$recurring_length = (!empty($form['recurring_length']) ? intval($form['recurring_length']) : 0);
+		$name = !empty($form['name']) ? sanitize_text_field($form['name']) : null;
+		$email = !empty($form['email_address']) ? sanitize_email($form['email_address']) : null;
+		$street = !empty($form['street']) ? sanitize_text_field($form['street']) : null;
+		$postcode = !empty($form['postcode']) ? sanitize_text_field($form['postcode']) : null;
+		$city = !empty($form['city']) ? sanitize_text_field($form['city']) : null;
+		$country = !empty($form['country']) ? sanitize_text_field($form['country']) : null;
+		$redirectUrl = !empty($form['return_url']) ? sanitize_text_field($form['return_url']) : null;
+		$buttonName = !empty($form['donation_label']) ? sanitize_text_field($form['donation_label']) : null;
 
 		$mollie = MollieService::factory();
 		$mapper = new MapperService(DonorEntity::class);
