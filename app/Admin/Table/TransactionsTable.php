@@ -436,19 +436,17 @@ class TransactionsTable extends WP_List_Table {
 		switch ($this->current_action()) {
 
 			case 'delete':
-				// In our file that handles the request, verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				} else {
-					self::delete_record('order_id', sanitize_text_field( $_GET['transaction'] ) );
-				}
+
+				// Verify the nonce.
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) die();
+
+				self::delete_record('order_id', sanitize_text_field( $_GET['transaction'] ) );
 				break;
 
 			case 'bulk-delete':
-				// In our file that handles the request, verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
+
+				// Verify the nonce.
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) die();
 
 				if(isset($_REQUEST['bulk-action'])) {
 

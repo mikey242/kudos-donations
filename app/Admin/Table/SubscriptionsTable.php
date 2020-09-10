@@ -374,28 +374,25 @@ class SubscriptionsTable extends WP_List_Table {
 		switch ($this->current_action()) {
 
 			case 'cancel':
-				// In our file that handles the request, verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				} else {
-					self::cancel_subscription( sanitize_text_field( $_GET['subscription_id'] ) );
-				}
+
+				// Verify the nonce.
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) die();
+
+				self::cancel_subscription( sanitize_text_field( $_GET['subscription_id'] ) );
 				break;
 
 			case 'delete':
-				// In our file that handles the request, verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				} else {
-					self::delete_record('subscription_id', sanitize_text_field( $_GET['subscription_id'] ) );
-				}
+
+				// Verify the nonce.
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) die();
+
+				self::delete_record('subscription_id', sanitize_text_field( $_GET['subscription_id'] ) );
 				break;
 
 			case 'bulk-cancel':
-				// In our file that handles the request, verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
+
+				// Verify the nonce.
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) die();
 
 				if(isset($_REQUEST['bulk-action'])) {
 					$cancel_ids = esc_sql( $_REQUEST['bulk-action']);
@@ -406,10 +403,9 @@ class SubscriptionsTable extends WP_List_Table {
 				break;
 
 			case 'bulk-delete':
-				// In our file that handles the request, verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
+
+				// Verify the nonce.
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) die();
 
 				if(isset($_REQUEST['bulk-action'])) {
 					$cancel_ids = esc_sql( $_REQUEST['bulk-action']);
