@@ -22,16 +22,19 @@ composer install
 yarn run start
 
 # build assets for export
-yarn run build
+yarn run build:production
+
+# export plugin to EXPORT folder and produce installable zip
+yarn export:noassets
 ````
 
 ### Docker
 
 Included is a docker environment used for development of the plugin. This environment includes the following containers:
-- WordPress - The WordPress software
-- MariaDB - Database container
-- Adminer - A web interface for manipulating the database
-- ngrok - Makes local environment accessible publicly (useful for Mollie webhooks)
+- WordPress - The WordPress software.
+- MariaDB - Database container.
+- Adminer - A web interface for manipulating the database.
+- ngrok - Makes local environment accessible publicly (useful for Mollie webhooks).
 
 To use the included docker environment run the following from the docker sub-folder:
 ````bash
@@ -48,7 +51,7 @@ Once up and running you can access the various containers from these addresses:
 ## Credits
 This software uses the following open source packages:
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework.
-- [Mollie API](https://github.com/mollie/mollie-api-php) - Mollie API client for PHP
+- [Mollie API](https://github.com/mollie/mollie-api-php) - Mollie API client for PHP.
 - [Micromodal](https://micromodal.now.sh/) - A lightweight, configurable and a11y-enabled modal library written in pure JavaScript.
 - [jQuery Validation](https://github.com/jquery-validation/jquery-validation) - Provides drop-in validation for your existing forms. 
 - [Twig](https://twig.symfony.com/) - A modern template engine for PHP.
