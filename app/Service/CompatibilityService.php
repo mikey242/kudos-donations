@@ -42,7 +42,7 @@ class CompatibilityService {
 		/* Check if any errors were thrown, enqueue them and exit early */
 		if ( sizeof( $this->notices ) > 0 ) {
 		    $notice = $this->build_notice();
-		    new AdminNotice('error', $notice['error'], $notice['details']);
+		    new AdminNotice($notice['error'], 'error', $notice['details']);
 
 			return false;
 		}

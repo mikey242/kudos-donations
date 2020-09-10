@@ -20,6 +20,10 @@ class AdminNotice {
 	 * @var string|null
 	 */
 	private $extra;
+	/**
+	 * @var bool|null
+	 */
+	private $isDismissible;
 
 	/**
 	 * AdminNotice constructor.
@@ -27,18 +31,31 @@ class AdminNotice {
 	 * @param string $type
 	 * @param string $notice
 	 * @param string|null $extra
+	 * @param bool $isDismissible
 	 */
-	function __construct( string $type, string $notice, $extra=null ) {
+	function __construct( string $notice, string $type='success', $extra=null, $isDismissible=true ) {
 
 		$this->notice = $notice;
 		$this->type = $type;
 		$this->extra = $extra;
+		$this->isDismissible = $isDismissible;
 
 		add_action( 'admin_notices', [ $this, 'render' ] );
 
 	}
 
+	/**
+	 * Outputs the notice
+	 */
 	function render() {
-		printf( '<div class="notice notice-%s"><p>%s</p> %s</div>', $this->type , $this->notice, $this->extra );
+
+		printf( '
+			<div class="notice notice-%s %s"><p>%s</p>%s</div>',
+			$this->type,
+			$this->isDismissible ? 'is-dismissible' : null,
+			$this->notice,
+			$this->extra
+		);
+
 	}
 }

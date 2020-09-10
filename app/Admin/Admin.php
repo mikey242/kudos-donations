@@ -316,7 +316,7 @@ class Admin {
 				case 'kudos_log_clear':
 
 					if(LoggerService::clear() === 0) {
-                        new AdminNotice('success', __('Log cleared', 'kudos-donations'));
+                        new AdminNotice(__('Log cleared', 'kudos-donations'));
 					}
 
 					break;
@@ -333,7 +333,7 @@ class Admin {
 					$mapper = new MapperService(TransactionEntity::class);
 					$records = $mapper->delete_all();
 					if($records) {
-						new AdminNotice('success', sprintf(__('Deleted %s transactions(s)', 'kudos-donations'), $records));
+						new AdminNotice(sprintf(__('Deleted %s transactions(s)', 'kudos-donations'), $records));
 					}
 
 					break;
@@ -343,7 +343,7 @@ class Admin {
 					$mapper = new MapperService(DonorEntity::class);
 					$records = $mapper->delete_all();
 					if($records) {
-						new AdminNotice('success', sprintf(__('Deleted %s donors(s)', 'kudos-donations'), $records));
+						new AdminNotice(sprintf(__('Deleted %s donors(s)', 'kudos-donations'), $records));
 					}
 					break;
 
@@ -352,7 +352,7 @@ class Admin {
 					$mapper = new MapperService(SubscriptionEntity::class);
 					$records = $mapper->delete_all();
 					if($records) {
-						new AdminNotice('success', sprintf(__('Deleted %s subscriptions(s)', 'kudos-donations'), $records));
+						new AdminNotice(sprintf(__('Deleted %s subscriptions(s)', 'kudos-donations'), $records));
 					}
 					break;
 
@@ -362,7 +362,7 @@ class Admin {
 //					$subscription = $mollie->cancel_subscription($_REQUEST['subscriptionId'], $_REQUEST['customerId']);
 					$subscription = true;
 					if($subscription) {
-						new AdminNotice('success', __('Subscription cancelled', 'kudos-donations'));
+						new AdminNotice(__('Subscription cancelled', 'kudos-donations'));
 					}
 					break;
 			}
