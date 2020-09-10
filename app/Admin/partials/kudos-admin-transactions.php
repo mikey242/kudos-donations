@@ -1,6 +1,7 @@
 <?php
 
 use Kudos\Admin\Table\TransactionsTable;
+use Kudos\Service\AdminNotice;
 
 /**
  * Creates the transactions table
@@ -10,31 +11,33 @@ use Kudos\Admin\Table\TransactionsTable;
 
 $table = new TransactionsTable();
 $table->prepare_items();
-$message = '';
+$action = $table->current_action();
 
-if ('delete' === $table->current_action()) {
-	$message = __('Transaction deleted', 'kudos-donations');
-} elseif ('bulk-delete' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
-	/* translators: %: Number of transactions */
-	$message = sprintf(__('%s transaction(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
+switch ($action) {
+	case 'delete':
+		$message = __('Transaction deleted', 'kudos-donations');
+		break;
+	case 'bulk-delete':
+		$message = sprintf(__('%s transactions(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
+		break;
 }
+
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php _e('Transactions', 'kudos-donations'); ?></h1>
 	<?php if (!empty($_REQUEST['s'])) { ?>
 		<span class="subtitle">
-                <?php
+            <?php
                 /* translators: %s: Search term */
                 printf(__('Search results for “%s”'), $_REQUEST['s'])
-                ?>
-            </span>
+            ?>
+        </span>
 	<?php } ?>
-	<?php if($message) { ?>
-		<div class="updated below-h2" id="message"><p><?php echo esc_html($message); ?></p></div>
-	<?php } ?>
+	<?php if(isset($message)) {
+        $notice = new AdminNotice(esc_html($message));
+        $notice->render();
+	} ?>
 	<form id="transactions-table" method="POST">
-		<?php
-		$table->display();
-		?>
+		<?php $table->display(); ?>
 	</form>
 </div>

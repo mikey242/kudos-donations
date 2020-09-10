@@ -1,6 +1,7 @@
 <?php
 
 use Kudos\Admin\Table\DonorsTable;
+use Kudos\Service\AdminNotice;
 
 /**
  * Creates the donors table
@@ -10,14 +11,17 @@ use Kudos\Admin\Table\DonorsTable;
 
 $table = new DonorsTable();
 $table->prepare_items();
-$message = '';
+$action = $table->current_action();
 
-if ('delete' === $table->current_action()) {
-	$message = __('Donor deleted', 'kudos-donations');
-} elseif ('bulk-cancel' === $table->current_action() && isset($_REQUEST['bulk-action'])) {
-	/* translators: %s: Number of transactions */
-	$message = sprintf(__('%s donors(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
+switch ($action) {
+	case 'delete':
+		$message = __('Donor deleted', 'kudos-donations');
+		break;
+	case 'bulk-delete':
+		$message = sprintf(__('%s donor(s) deleted', 'kudos-donations'), count($_REQUEST['bulk-action']));
+		break;
 }
+
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php _e('Donors', 'kudos-donations'); ?></h1>
@@ -29,9 +33,10 @@ if ('delete' === $table->current_action()) {
                 ?>
             </span>
 	<?php } ?>
-	<?php if($message) { ?>
-		<div class="updated below-h2" id="message"><p><?php echo esc_html($message); ?></p></div>
-	<?php } ?>
+	<?php if(isset($message)) {
+		$notice = new AdminNotice(esc_html($message));
+		$notice->render();
+	} ?>
 	<form id="subscriptions-table" method="POST">
 		<?php
 		$table->display();
