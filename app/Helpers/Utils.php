@@ -146,16 +146,12 @@ class Utils {
 		switch ($frequency) {
 			case '12 months':
 				return __('Yearly', 'kudos-donations');
-				break;
 			case '1 month':
 				return __('Monthly', 'kudos-donations');
-				break;
 			case '3 months':
 				return __('Quarterly', 'kudos-donations');
-				break;
 			case "oneoff":
 				return __('One-off', 'kudos-donations');
-				break;
 			default:
 				return $frequency;
 		}
