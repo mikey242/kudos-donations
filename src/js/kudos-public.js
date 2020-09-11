@@ -19,6 +19,13 @@ $( () => {
 	$.validator.setDefaults( {
 		ignore: [],
 		errorElement: 'small',
+		errorPlacement: (error, element) => {
+			if(element.attr("type") === 'checkbox') {
+				error.insertAfter(element.parent())
+			} else {
+				error.insertAfter(element);
+			}
+		},
 		rules: {
 			value: {
 				digits: true,
