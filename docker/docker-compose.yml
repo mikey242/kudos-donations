@@ -2,7 +2,11 @@ version: "3.3"
 
 services:
   wordpress:
-    build: .
+    build:
+      context: .
+      args:
+        PHP_VERSION: 7.2
+        WORDPRESS_VERSION: 5.4
     container_name: wordpress-kudos
     volumes:
       - ./wordpress:/var/www/html

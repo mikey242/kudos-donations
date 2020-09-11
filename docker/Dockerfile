@@ -1,4 +1,7 @@
-FROM wordpress:5.3-php7.1
+ARG PHP_VERSION
+ARG WORDPRESS_VERSION
+
+FROM wordpress:${WORDPRESS_VERSION}-php${PHP_VERSION}
 
 WORKDIR /var/www/html
 
