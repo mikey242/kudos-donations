@@ -46,13 +46,13 @@ class KudosModal {
 	 */
 	public function get_message_modal( array $atts) {
 
-		    $data = [
-		    	'modal_id' => uniqid('kudos_modal-message-'),
-			    'title' => $atts['title'],
-			    'text' => $atts['text'],
-		    ];
+	    $data = [
+	        'modal_id' => uniqid('kudos_modal-message-'),
+		    'title' => $atts['title'],
+		    'text' => $atts['text'],
+	    ];
 
-		    return $this->get_modal('/public/modal/message.modal.html.twig', $data);
+	    return $this->get_modal('/public/modal/message.modal.html.twig', $data);
 
     }
 
@@ -81,7 +81,9 @@ class KudosModal {
 
 			// Global settings
 			'vendor' => Settings::get_setting('payment_vendor'),
-			'subscriptions' => Settings::get_setting('subscription_enabled'),
+			'subscription' => [
+				'enabled' => Settings::get_setting('subscription_enabled')
+			],
 			'address' => [
 				'enabled' => Settings::get_setting('address_enabled'),
 				'required' => Settings::get_setting('address_required')
