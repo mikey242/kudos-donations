@@ -1,11 +1,14 @@
 <fieldset class="form-tab form-tab-{{ class ?: block('title')|slugify }}" data-requirements={{ requirements }}>
 
+    {% set _title = block('title') %}
+    {% set _text = block('text') %}
+
     {% embed '/public/modal/partials/_header.html.twig' %}
         {% block title %}
-            {{ title }}
+            {{ _title }}
         {% endblock %}
         {% block text %}
-            {{ text }}
+            {{ _text }}
         {% endblock %}
     {% endembed %}
 
