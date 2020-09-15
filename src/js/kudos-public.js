@@ -256,9 +256,9 @@ function createSummary(id) {
 	if(frequency === 'recurring') {
 		const recurring_frequency = values.find( ( i ) => i.name === 'recurring_frequency' ).value;
 		const recurring_length = values.find( ( i ) => i.name === 'recurring_length' ).value;
-		const length = $(id + " option[value='"+ recurring_length +"']")[0].text;
-		const frequency = $(id + " option[value='"+ recurring_frequency +"']")[0].text;
-		type = __('Recurring', 'kudos-dontaions') + " ( " + frequency + ' / ' + length + " )";
+		const length = $(id + " [name='recurring_length'] option[value='"+ recurring_length +"']")[0].text;
+		const frequency = $(id + " [name='recurring_frequency'] option[value='"+ recurring_frequency +"']")[0].text;
+		type = __('Recurring', 'kudos-donations') + " ( " + frequency + ' / ' + length + " )";
 	} else {
 		type = __('One-off', 'kudos-donations');
 	}
