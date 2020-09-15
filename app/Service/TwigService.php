@@ -74,6 +74,12 @@ class TwigService {
 		$apply_filter = new TwigFilter('apply_filters', 'apply_filters');
 		$this->twig->addFilter($apply_filter);
 
+		/**
+		 * Add the WordPress sanitize_title filter.
+		 */
+		$slugify = new TwigFilter('slugify', 'sanitize_title');
+		$this->twig->addFilter($slugify);
+
 	}
 
 	/**
