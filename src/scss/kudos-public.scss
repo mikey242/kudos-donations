@@ -131,6 +131,29 @@ div[id^=kudos_modal-] {
   .kudos_modal_content {
     @apply mt-4 block;
   }
+
+  .kudos_modal_buttons {
+    @apply mt-8 block;
+
+    .kudos_back {
+      @apply absolute m-0 left-0;
+      bottom: 50%;
+
+      &::after {
+        @apply absolute cursor-pointer bg-contain rounded-full;
+        content: '';
+        width: 20px;
+        height: 20px;
+        background: url("../img/back-icon.svg") no-repeat center;
+        transform: translateY(-50%);
+      }
+    }
+
+    button:last-child {
+      @apply ml-3;
+    }
+  }
+
 }
 
 .kudos_form_modal {
@@ -159,6 +182,11 @@ div[id^=kudos_modal-] {
 
   .form-tabs {
     @apply block;
+
+    // Hide back button on first tab
+    .form-tab:first-of-type .kudos_form_nav.kudos_back {
+      display: none;
+    }
   }
 
   .form-tab {
@@ -305,27 +333,9 @@ div[id^=kudos_modal-] {
     }
   }
 
-  .kudos_modal_buttons {
-    @apply mt-8 block;
-
-    .kudos_back {
-      @apply absolute m-0 left-0;
-
-      bottom: 50%;
-
-      &::before {
-        @apply absolute cursor-pointer bg-contain;
-        content: '';
-        width: 20px;
-        height: 20px;
-        background: url("../img/back-icon.svg") no-repeat center;
-        transform: translateY(-50%);
-      }
-    }
-
-    button:last-child {
-      @apply ml-3;
-    }
+  .kudos_summary {
+    @apply block bg-gray-300 p-2 border-0 border-solid border-t-2 border-orange-500;
+    border-color: var(--kudos-theme-color);
   }
 
 }
