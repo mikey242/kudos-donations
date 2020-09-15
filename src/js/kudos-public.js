@@ -82,11 +82,9 @@ $( () => {
 	}
 
 	// Show message modal if exists
-	if ( $( '#kudos_modal-message' ).length ) {
-		MicroModal.show( 'kudos_modal-message', {
-			awaitCloseAnimation: true,
-			awaitOpenAnimation: true,
-		} );
+	let messages = $('.kudos_message_modal').toArray();
+	if ( messages.length ) {
+		handleMessages(messages);
 	}
 
 	// Multi step form navigation
@@ -233,19 +231,47 @@ function checkRequirements( $nextTab ) {
 	return result;
 }
 
+// Create the summary at the end of the form before submitting
 function createSummary(id) {
-	const values = $( id ).find( ':input' ).serializeArray();
+	const form = $( id ).find( 'form' );
+	const values = form.serializeArray();
 	const name = values.find( ( i ) => i.name === 'name' ).value;
 	const email = values.find( ( i ) => i.name === 'email_address' ).value;
 	const value = values.find( ( i ) => i.name === 'value' ).value;
-	const frequency = values.find( ( i ) => i.name === 'payment_frequency' )
-		.value;
-	const type =
-		frequency === 'oneoff'
-			? __( 'One-off', 'kudos-donations' )
-			: __( 'Recurring', 'kudos-dontaions' );
+	const frequency = values.find( ( i ) => i.name === 'payment_frequency' ).value;
+	let type;
+
+	if(frequency === 'recurring') {
+		const recurring_frequency = values.find( ( i ) => i.name === 'recurring_frequency' ).value;
+		const recurring_length = values.find( ( i ) => i.name === 'recurring_length' ).value;
+		const length = $(id + " option[value='"+ recurring_length +"']")[0].text;
+		const frequency = $(id + " option[value='"+ recurring_frequency +"']")[0].text;
+		type = __('Recurring', 'kudos-dontaions') + " ( " + frequency + ' / ' + length + " )";
+	} else {
+		type = __('One-off', 'kudos-donations');
+	}
+
 	$( id + ' ' + '.summary_name' ).text( name );
 	$( id + ' ' + '.summary_email' ).text( email );
 	$( id + ' ' + '.summary_value' ).text( value );
 	$( id + ' ' + '.summary_frequency' ).text( type );
+}
+
+// Handles the messages by showing the modals in order
+function handleMessages(messages) {
+
+	let showMessage = () => {
+		MicroModal.show( messages[0].id, {
+			onClose: () => {
+				messages.shift();
+				if(messages.length) {
+					showMessage();
+				}
+			},
+			awaitCloseAnimation: true,
+			awaitOpenAnimation: true,
+		} );
+	}
+
+	showMessage();
 }
