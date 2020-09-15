@@ -15,6 +15,15 @@ $( () => {
 	const $kudosButtons = $( '.kudos_button_donate' );
 	let animating = false;
 
+	// Custom validation method to check subscription
+	$.validator.addMethod('totalPayments', (value, element) => {
+		let frequency = $('[name="recurring_frequency"]').val()
+		if (frequency) {
+			return 12/parseInt(frequency) * value !== 1;
+		}
+		return true;
+	})
+
 	// Set validation defaults
 	$.validator.setDefaults( {
 		ignore: [],
@@ -30,6 +39,9 @@ $( () => {
 			value: {
 				digits: true,
 			},
+			recurring_length: {
+				totalPayments: true
+			}
 		},
 		messages: {
 			name: {
@@ -40,13 +52,13 @@ $( () => {
 				email: __( 'Please enter a valid email', 'kudos-donations' ),
 			},
 			value: {
-				required: __(
-					'Donation amount is required',
-					'kudos-donations'
-				),
+				required: __( 'Donation amount is required', 'kudos-donations' ),
 				min: __( 'Minimum donation is 1 euro', 'kudos-donations' ),
 				digits: __( 'Only digits are valid', 'kudos-donations' ),
 			},
+			recurring_length: {
+				totalPayments: __( 'Subscriptions must be more than one payment', 'kudos-donations' )
+			}
 		},
 	} );
 
@@ -92,8 +104,8 @@ $( () => {
 		if ( animating ) return false;
 		const $current_tab = $( this ).closest( '.form-tab' );
 		const $modal = $( this ).closest( '.kudos_modal_container' );
-		const direction = $( this ).data( 'direction' );
 		const $inputs = $current_tab.find( ':input' );
+		const direction = $( this ).data( 'direction' );
 
 		// Validate fields before proceeding
 		if ( direction === 'next' ) {
