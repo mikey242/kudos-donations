@@ -492,6 +492,27 @@ class MollieService extends AbstractService {
 			]);
 		}
 
+		// Add refund if present
+		if($payment->hasRefunds()) {
+
+			$transaction->set_fields([
+				'refunds' => serialize([
+					'refunded' => $payment->getAmountRefunded(),
+					'remaining' => $payment->getAmountRemaining()
+				]),
+			]);
+
+			$this->logger->info('Payment (partially) refunded', [$transaction]);
+			do_action('kudos_mollie_refund', $order_id);
+
+		} else {
+			// Check if status is the same (in case of multiple webhook calls)
+			if($transaction->status === $payment->status) {
+				$this->logger->debug(__('Duplicate webhook detected. Ignoring.'), [$transaction]);
+				return $response;
+			}
+		}
+
 		// Update payment
 		$transaction->set_fields([
 			'status' => $payment->status,
@@ -504,19 +525,6 @@ class MollieService extends AbstractService {
 			'mode' => $payment->mode,
 			'subscription_id' => $payment->subscriptionId
 		]);
-
-		// Add refund if present
-		if($payment->hasRefunds()) {
-			$transaction->set_fields([
-				'refunds' => serialize([
-					'refunded' => $payment->getAmountRefunded(),
-					'remaining' => $payment->getAmountRemaining()
-				]),
-			]);
-
-			$this->logger->info('Payment (partially) refunded', [$transaction]);
-			do_action('kudos_mollie_refund', $order_id);
-		}
 
 		// Save transaction to database
 		$mapper->save($transaction);
