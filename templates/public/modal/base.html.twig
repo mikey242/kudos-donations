@@ -1,14 +1,16 @@
-<div id="{{ modal_id }}" class="kudos_modal {{ classes }}" aria-hidden="true">
+<div id="{{ modal_id ?: 'kudos_modal-1' }}" class="kudos_modal {{ classes }}" aria-hidden="true">
     <div class="kudos_modal_overlay" tabindex="-1">
         <div class="kudos_modal_container" role="dialog" aria-modal="true" aria-labelledby="kudos_modal_title">
             <header class="kudos_modal_header">
                 <div class="kudos_modal_logo"></div>
-                <button class="kudos_modal_close" aria-hidden="true" data-micromodal-close aria-label="Close modal">
+                <button class="kudos_modal_close" aria-hidden="true" data-custom-close="{{ modal_id }}" aria-label="Close modal">
                     &times;
                 </button>
             </header>
             <div class="kudos_modal_content">
-                    <p class="kudos_modal_text"><small class="kudos_error_message error"></small></p>
+                    <p class="kudos_modal_text">
+                        <small class="kudos_error_message error"></small>
+                    </p>
                     {% block content %}
                     {% endblock content %}
             </div>

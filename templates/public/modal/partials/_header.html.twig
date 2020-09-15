@@ -1,0 +1,12 @@
+
+{% if(block('title')) %}
+<h2 class="kudos_modal_title">
+    {% block title %}{% endblock %}
+</h2>
+{% endif %}
+
+{% if(block('text')) %}
+<p class="kudos_modal_text">
+    {% block text %}{% endblock %}
+</p>
+{% endif %}

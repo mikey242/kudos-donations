@@ -1,11 +1,17 @@
 {% extends 'public/modal/base.html.twig' %}
-{% set modal_id = 'kudos_modal-message' %}
+{% set classes = 'kudos_message_modal' %}
 
 {% block content %}
-    {{ include('/public/modal/partials/_title.html.twig', {title: title}) }}
-    {{ include('/public/modal/partials/_text.html.twig', {text: text}) }}
+    {% embed '/public/modal/partials/_header.html.twig' %}
+        {% block title %}
+            {{ title }}
+        {% endblock %}
+        {% block text %}
+            {{ text }}
+        {% endblock %}
+    {% endembed %}
 
-    <div class="kudos_modal_buttons" style="text-align: right; display: block">
-        <button class="kudos_button" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>
+    <div class="kudos_modal_buttons" style="text-align: right">
+        <button class="kudos_button button-primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>
     </div>
 {% endblock content %}

@@ -1,0 +1,26 @@
+<fieldset class="form-tab form-tab-{{ class ?: block('title')|slugify }}" data-requirements={{ requirements }}>
+
+    {% embed '/public/modal/partials/_header.html.twig' %}
+        {% block title %}
+            {{ title }}
+        {% endblock %}
+        {% block text %}
+            {{ text }}
+        {% endblock %}
+    {% endembed %}
+
+    {% block body %}{% endblock %}
+
+    <div class="kudos_modal_buttons" style="text-align: center">
+        {% block nav_buttons %}
+            <button type="button" class="kudos_form_nav kudos_back" aria-label="{{ __('Previous tab', 'kudos-donations') }}" data-direction="back"> </button>
+            <button type="button" class="button-style-outline kudos_button" aria-label="{{ __('Cancel', 'kudos-donations') }}" data-micromodal-close>{{ __('Cancel', 'kudos-donations') }}</button>
+            {% block next_button %}
+                <button type="button" class="kudos_button button-primary kudos_form_nav kudos_next" aria-label="{{ __('Next tab', 'kudos-donations') }}" data-direction="next">
+                    {{ __('Next', 'kudos-donations') }}
+                </button>
+            {% endblock %}
+        {% endblock %}
+    </div>
+
+</fieldset>
