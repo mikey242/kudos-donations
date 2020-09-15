@@ -47,6 +47,7 @@ class KudosModal {
 	public function get_message_modal( array $atts) {
 
 		    $data = [
+		    	'modal_id' => uniqid('kudos_modal-message-'),
 			    'title' => $atts['title'],
 			    'text' => $atts['text'],
 		    ];
