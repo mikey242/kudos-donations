@@ -440,7 +440,7 @@ class MollieService extends AbstractService {
 	 */
 	public function rest_api_mollie_webhook( WP_REST_Request $request ) {
 
-	    // ID is case sensitive e.g: tr_Tb6UdQP523
+	    // ID is case sensitive (e.g: tr_HUW39xpdFN)
 		$id = sanitize_text_field($request->get_param( 'id' ));
 
 		/**
@@ -455,25 +455,26 @@ class MollieService extends AbstractService {
 
 		$response->add_link( 'self', rest_url( $request->get_route() ) );
 
-		/** @var Payment $payment */
+		/**
+		 * Get the payment object from Mollie
+		 * @var Payment $payment
+		 */
 		$payment = $this->get_payment($id);
-
-		if ( null === $payment ) {
-			/**
-			 *
-			 * To not leak any information to malicious third parties, it is recommended
-			 * to return a 200 OK response even if the ID is not known to your system.
-			 *
-			 * @link https://docs.mollie.com/guides/webhooks#how-to-handle-unknown-ids
-			 */
-			return $response;
-		}
-
 		$this->logger->info('Webhook requested by Mollie.', ['transaction_id' => $id, 'status' => $payment->status, 'sequence_type' => $payment->sequenceType]);
 
-		// Create webhook action
+		/**
+		 *
+		 * To not leak any information to malicious third parties, it is recommended
+		 * to return a 200 OK response even if the ID is not known to your system.
+		 *
+		 * @link https://docs.mollie.com/guides/webhooks#how-to-handle-unknown-ids
+		 */
+		if ( NULL === $payment ) return $response;
+
+		//Create webhook action
 		do_action('kudos_mollie_webhook', $payment);
 
+		//Get required data from payment object
 		$transaction_id = $payment->id;
 		$order_id = $payment->metadata->order_id ?? Utils::generate_id('kdo_');
 		$amount = $payment->amount;
@@ -503,7 +504,7 @@ class MollieService extends AbstractService {
 			]);
 
 			$this->logger->info('Payment (partially) refunded', [$transaction]);
-			do_action('kudos_mollie_refund', $order_id);
+			do_action('kudos_process_refund', $order_id);
 
 		} else {
 			// Check if status is the same (in case of multiple webhook calls)
@@ -533,15 +534,15 @@ class MollieService extends AbstractService {
 
 			// Get schedule processing for later
 			if(class_exists('ActionScheduler')) {
-				if ( false === as_next_scheduled_action( 'kudos_process_transaction_action', [$order_id] ) ) {
+				if ( false === as_next_scheduled_action( 'kudos_process_paid_transaction', [$order_id] ) ) {
 					$timestamp = strtotime('+1 minute');
-					as_schedule_single_action( $timestamp, 'kudos_process_transaction_action', [$order_id] );
-					$this->logger->debug( 'Action "kudos_process_transaction_action" scheduled', [
+					as_schedule_single_action( $timestamp, 'kudos_process_paid_transaction', [$order_id] );
+					$this->logger->debug( 'Action "kudos_process_paid_transaction" scheduled', [
 						'datetime' => date_i18n( 'Y-m-d H:i:s', $timestamp )
 					] );
 				}
 			} else {
-				do_action('kudos_process_transaction_action', $order_id);
+				do_action('kudos_process_paid_transaction', $order_id);
 			}
 
 			// Set up recurring payment if sequence is first
@@ -552,7 +553,6 @@ class MollieService extends AbstractService {
 
 		}
 
-		// Return response to Mollie
 		return $response;
 	}
 }
