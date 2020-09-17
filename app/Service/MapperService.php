@@ -84,6 +84,7 @@ class MapperService {
 
 		// If we have an id, then update row
 		if($entity->id) {
+			$this->logger->debug('Updating entity.', [$entity]);
 			return $wpdb->update(
 				$table,
 				array_filter($entity->toArray(), [$this, 'remove_empty']),
@@ -93,6 +94,7 @@ class MapperService {
 
 		// Otherwise insert new row
 		$entity->created = current_time('mysql');
+		$this->logger->debug('Creating entity.', [$entity]);
 		return $wpdb->insert(
 			$table,
 			array_filter($entity->toArray(), [$this, 'remove_empty'])
