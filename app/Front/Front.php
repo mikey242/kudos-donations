@@ -454,14 +454,13 @@ class Front {
 	public static function process_transaction( string $order_id) {
 
 		$logger = new LoggerService();
+		$logger->debug('Processing transaction', [$order_id]);
 
+		// Bail if no order ID
 		if(NULL === $order_id) {
 			$logger->error('Order id not provided to process_transaction function.');
+			return false;
 		}
-
-		do_action('kudos_process_transaction', $order_id);
-
-		$logger->debug('Processing transaction', [$order_id]);
 
 		$mapper = new MapperService(TransactionEntity::class);
 		/** @var TransactionEntity $transaction */
