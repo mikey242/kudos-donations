@@ -66,14 +66,15 @@ class TransactionEntity extends AbstractEntity {
 	public $last_updated;
 
 	/**
-	 * Add donor_created
+	 * Transaction constructor
 	 *
 	 * @param null|array $atts
+	 *
 	 * @since   2.0.0
 	 */
-	public function __construct($atts=null) {
+	public function __construct( $atts = null ) {
 
-		parent::__construct($atts);
+		parent::__construct( $atts );
 
 	}
 
@@ -85,23 +86,25 @@ class TransactionEntity extends AbstractEntity {
 	 */
 	public function get_donor() {
 
-		$mapper = new MapperService(DonorEntity::class);
-		return $mapper->get_one_by([ 'customer_id' => $this->customer_id]);
+		$mapper = new MapperService( DonorEntity::class );
+
+		return $mapper->get_one_by( [ 'customer_id' => $this->customer_id ] );
 
 	}
 
 	/**
 	 * Returns unserialized array of refund data
 	 *
-	 * @since   2.0.0
 	 * @return array|false
+	 * @since   2.0.0
 	 */
 	public function get_refund() {
 
 		$refunds = $this->refunds;
-		if(is_serialized($refunds)) {
-			return unserialize($refunds);
+		if ( is_serialized( $refunds ) ) {
+			return unserialize( $refunds );
 		}
+
 		return false;
 
 	}

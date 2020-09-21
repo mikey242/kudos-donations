@@ -50,13 +50,13 @@ class SubscriptionEntity extends AbstractEntity {
 	public $last_updated;
 
 	/**
-	 * Subscription constructor.
+	 * Subscription constructor
 	 *
 	 * @param null|array $atts
 	 */
-	public function __construct($atts=null) {
+	public function __construct( $atts = null ) {
 
-		parent::__construct($atts);
+		parent::__construct( $atts );
 
 	}
 
@@ -68,8 +68,9 @@ class SubscriptionEntity extends AbstractEntity {
 	 */
 	public function get_donor() {
 
-		$mapper = new MapperService(DonorEntity::class);
-		return $mapper->get_one_by([ 'customer_id' => $this->customer_id]);
+		$mapper = new MapperService( DonorEntity::class );
+
+		return $mapper->get_one_by( [ 'customer_id' => $this->customer_id ] );
 
 	}
 }

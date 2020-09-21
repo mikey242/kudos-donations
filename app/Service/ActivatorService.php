@@ -38,7 +38,7 @@ class ActivatorService {
 		self::set_defaults();
 
 		$logger = new LoggerService();
-		$logger->info('Kudos Donations plugin activated');
+		$logger->info( 'Kudos Donations plugin activated' );
 
 	}
 
@@ -52,7 +52,7 @@ class ActivatorService {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = DonorEntity::getTableName();  //get the database table prefix to create my new table
+		$table_name      = DonorEntity::getTableName();  //get the database table prefix to create my new table
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -84,7 +84,7 @@ class ActivatorService {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = TransactionEntity::getTableName();  //get the database table prefix to create my new table
+		$table_name      = TransactionEntity::getTableName();  //get the database table prefix to create my new table
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -110,19 +110,19 @@ class ActivatorService {
 
 	}
 
-    /**
-     * Creates the subscription table
-     *
-     * @since    1.1.0
-     */
-    private static function create_subscriptions_table() {
+	/**
+	 * Creates the subscription table
+	 *
+	 * @since    1.1.0
+	 */
+	private static function create_subscriptions_table() {
 
-        global $wpdb;
+		global $wpdb;
 
-        $charset_collate = $wpdb->get_charset_collate();
-        $table_name = SubscriptionEntity::getTableName();  //get the database table prefix to create my new table
+		$charset_collate = $wpdb->get_charset_collate();
+		$table_name      = SubscriptionEntity::getTableName();  //get the database table prefix to create my new table
 
-        $sql = "CREATE TABLE $table_name (
+		$sql = "CREATE TABLE $table_name (
 		  id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
           created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
           last_updated datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
@@ -137,10 +137,10 @@ class ActivatorService {
 		  PRIMARY KEY (id)
 		) $charset_collate";
 
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-        dbDelta( $sql );
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 
-    }
+	}
 
 	/**
 	 * Adds default options if not already set
@@ -149,7 +149,7 @@ class ActivatorService {
 	 */
 	private static function set_defaults() {
 
-		update_option('_kudos_donations_version', KUDOS_VERSION);
+		update_option( '_kudos_donations_version', KUDOS_VERSION );
 
 		$settings = new Settings();
 		$settings->add_defaults();

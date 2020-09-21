@@ -2,8 +2,6 @@
 
 namespace Kudos\Service;
 
-use Kudos\Helpers\Settings;
-
 /**
  * Fired during plugin deactivation
  *
@@ -29,7 +27,7 @@ class DeactivatorService {
 	 */
 	public static function deactivate() {
 		$logger = new LoggerService();
-		$logger->info('Kudos Donations plugin deactivated');
+		$logger->info( 'Kudos Donations plugin deactivated' );
 	}
 
 }

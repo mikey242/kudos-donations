@@ -20,21 +20,15 @@ class KudosModal {
 
 	/**
 	 * Kudos_Modal constructor.
-     *
+	 *
 	 * @since      1.0.0
 	 */
 	public function __construct() {
 
 		$this->logger = new LoggerService();
-		$this->twig = new TwigService();
+		$this->twig   = new TwigService();
 
-    }
-
-    private function get_modal($template, $data) {
-
-	    return $this->twig->render($template, $data);
-
-    }
+	}
 
 	/**
 	 * Get message modal markup
@@ -44,17 +38,23 @@ class KudosModal {
 	 * @return string|bool
 	 * @since      1.0.0
 	 */
-	public function get_message_modal( array $atts) {
+	public function get_message_modal( array $atts ) {
 
-	    $data = [
-	        'modal_id' => uniqid('kudos_modal-message-'),
-		    'title' => $atts['title'],
-		    'text' => $atts['text'],
-	    ];
+		$data = [
+			'modal_id' => uniqid( 'kudos_modal-message-' ),
+			'title'    => $atts['title'],
+			'text'     => $atts['text'],
+		];
 
-	    return $this->get_modal('/public/modal/message.modal.html.twig', $data);
+		return $this->get_modal( '/public/modal/message.modal.html.twig', $data );
 
-    }
+	}
+
+	private function get_modal( $template, $data ) {
+
+		return $this->twig->render( $template, $data );
+
+	}
 
 	/**
 	 * Get the donate modal markup
@@ -65,34 +65,37 @@ class KudosModal {
 	 * @return string|void
 	 * @since    1.0.0
 	 */
-	public function get_donate_modal( array $data, $echo=false) {
+	public function get_donate_modal( array $data, $echo = false ) {
 
-		$privacy_option = Settings::get_setting("privacy_link");
-		$privacy_link = __('I agree with the privacy policy.', "kudos-donations");
-		if($privacy_option) {
-			$privacy_link = sprintf(__('I agree with the %s', "kudos-donations"), '<a target="_blank" href=' . Settings::get_setting("privacy_link") . '>' . __("privacy policy", "kudos-donations") . '</a>.');
+		$privacy_option = Settings::get_setting( "privacy_link" );
+		$privacy_link   = __( 'I agree with the privacy policy.', "kudos-donations" );
+		if ( $privacy_option ) {
+			$privacy_link = sprintf( __( 'I agree with the %s', "kudos-donations" ),
+				'<a target="_blank" href=' . Settings::get_setting( "privacy_link" ) . '>' . __( "privacy policy",
+					"kudos-donations" ) . '</a>.' );
 		}
 
-		$data = array_merge($data, [
-			'return_url' => Utils::get_return_url(),
-			'nonce' => wp_nonce_field('kudos_submit', '_wpnonce', true, false),
-			'privacy_link' => $privacy_link,
-			'payment_by' => __('Secure payment by', 'kudos-donations'),
+		$data = array_merge( $data,
+			[
+				'return_url'   => Utils::get_return_url(),
+				'nonce'        => wp_nonce_field( 'kudos_submit', '_wpnonce', true, false ),
+				'privacy_link' => $privacy_link,
+				'payment_by'   => __( 'Secure payment by', 'kudos-donations' ),
 
-			// Global settings
-			'vendor' => Settings::get_setting('payment_vendor'),
-			'subscription' => [
-				'enabled' => Settings::get_setting('subscription_enabled')
-			],
-			'address' => [
-				'enabled' => Settings::get_setting('address_enabled'),
-				'required' => Settings::get_setting('address_required')
-			]
-		]);
+				// Global settings
+				'vendor'       => Settings::get_setting( 'payment_vendor' ),
+				'subscription' => [
+					'enabled' => Settings::get_setting( 'subscription_enabled' ),
+				],
+				'address'      => [
+					'enabled'  => Settings::get_setting( 'address_enabled' ),
+					'required' => Settings::get_setting( 'address_required' ),
+				],
+			] );
 
-		$out = $this->twig->render('/public/modal/donate.modal.html.twig', $data);
+		$out = $this->twig->render( '/public/modal/donate.modal.html.twig', $data );
 
-		if($echo) {
+		if ( $echo ) {
 			echo $out;
 		}
 

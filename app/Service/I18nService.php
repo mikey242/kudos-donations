@@ -38,5 +38,4 @@ class I18nService {
 	}
 
 
-
 }

@@ -32,7 +32,7 @@ abstract class AbstractService {
 
 		static $instance = false;
 
-		if(!$instance) {
+		if ( ! $instance ) {
 			$instance = new static;
 		}
 

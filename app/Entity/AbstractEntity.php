@@ -26,10 +26,10 @@ abstract class AbstractEntity {
 	 *
 	 * @since   2.0.0
 	 */
-	public function __construct($atts=null) {
+	public function __construct( $atts = null ) {
 
-		if(NULL !== $atts) {
-			$this->set_fields($atts);
+		if ( null !== $atts ) {
+			$this->set_fields( $atts );
 		}
 
 	}
@@ -38,12 +38,13 @@ abstract class AbstractEntity {
 	 * Set class properties based on array values
 	 *
 	 * @param $atts
+	 *
 	 * @since   2.0.0
 	 */
-	public function set_fields($atts) {
+	public function set_fields( $atts ) {
 
-		foreach ($atts as $property => $value) {
-			if(property_exists($this, $property)) {
+		foreach ( $atts as $property => $value ) {
+			if ( property_exists( $this, $property ) ) {
 				$this->$property = $value;
 			}
 		}
@@ -59,6 +60,7 @@ abstract class AbstractEntity {
 	public static function getTableName() {
 
 		global $wpdb;
+
 		return $wpdb->prefix . static::TABLE;
 
 	}

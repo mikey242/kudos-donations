@@ -7,19 +7,20 @@ class Utils {
 	/**
 	 * Gets url Mollie will use to return customer to after payment complete
 	 *
-	 * @since   1.0.0
 	 * @return string|void
+	 * @since   1.0.0
 	 */
 	public static function get_return_url() {
 
-		$use_custom = get_option('_kudos_custom_return_enable');
-		$custom_url = esc_url(get_option('_kudos_custom_return_url'));
+		$use_custom = get_option( '_kudos_custom_return_enable' );
+		$custom_url = esc_url( get_option( '_kudos_custom_return_url' ) );
 
-		if($use_custom && $custom_url) {
+		if ( $use_custom && $custom_url ) {
 			return $custom_url;
 		} else {
 			$returnUrl = is_ssl() ? 'https://' : 'http://';
 			$returnUrl .= $_SERVER['HTTP_HOST'] . parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
+
 			return $returnUrl;
 		}
 
@@ -35,18 +36,20 @@ class Utils {
 	 * @source https://danielshaw.co.nz/wordpress-cache-busting-json-hash-map/
 	 * @param string $asset e.g style.css
 	 * @param bool $path
+	 *
 	 * @return string
 	 * @since   1.0.0
 	 */
-	public static function get_asset_url( string $asset, bool $path=false ) {
+	public static function get_asset_url( string $asset, bool $path = false ) {
 
-		$map = KUDOS_PLUGIN_DIR . '/dist/manifest.json';
+		$map  = KUDOS_PLUGIN_DIR . '/dist/manifest.json';
 		$hash = file_exists( $map ) ? json_decode( file_get_contents( $map ), true ) : [];
 
 		if ( array_key_exists( $asset, $hash ) ) {
-			if(!$path) {
+			if ( ! $path ) {
 				return KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ];
 			}
+
 			return KUDOS_PLUGIN_DIR . '/dist/' . $hash[ $asset ];
 		}
 
@@ -57,14 +60,15 @@ class Utils {
 	 * Converts three letter currency code into a symbol
 	 *
 	 * @param string $currency
+	 *
 	 * @return string
 	 * @since      1.0.2
 	 */
-	public static function get_currency_symbol( string $currency) {
+	public static function get_currency_symbol( string $currency ) {
 
-		$currency = strtoupper($currency);
+		$currency = strtoupper( $currency );
 
-		switch ($currency) {
+		switch ( $currency ) {
 			case 'EUR':
 				$symbol = '&#8364;';
 				break;
@@ -90,6 +94,7 @@ class Utils {
 	 * @source https://gist.github.com/stephenharris/5532899
 	 * @param string $hex Colour as hexadecimal (with or without hash);
 	 * @param string $percent
+	 *
 	 * @return string Lightened/Darkened colour as hexadecimal (with hash);
 	 * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
 	 * @sice    1.0.2
@@ -97,7 +102,7 @@ class Utils {
 	public static function color_luminance( string $hex, string $percent ) {
 
 		// validate hex string
-		$hex = preg_replace( '/[^0-9a-f]/i', '', $hex );
+		$hex     = preg_replace( '/[^0-9a-f]/i', '', $hex );
 		$new_hex = '#';
 
 		if ( strlen( $hex ) < 6 ) {
@@ -105,10 +110,10 @@ class Utils {
 		}
 
 		// convert to decimal and change luminosity
-		for ($i = 0; $i < 3; $i++) {
-			$dec = hexdec( substr( $hex, $i*2, 2 ) );
-			$dec = min( max( 0, $dec + $dec * $percent ), 255 );
-			$new_hex .= str_pad( dechex( $dec ) , 2, 0, STR_PAD_LEFT );
+		for ( $i = 0; $i < 3; $i ++ ) {
+			$dec     = hexdec( substr( $hex, $i * 2, 2 ) );
+			$dec     = min( max( 0, $dec + $dec * $percent ), 255 );
+			$new_hex .= str_pad( dechex( $dec ), 2, 0, STR_PAD_LEFT );
 		}
 
 		return $new_hex;
@@ -118,18 +123,19 @@ class Utils {
 	 * Returns a translated string of the sequence type
 	 *
 	 * @param $text
+	 *
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	public static function get_sequence_type($text) {
+	public static function get_sequence_type( $text ) {
 
-		switch ($text) {
+		switch ( $text ) {
 			case 'oneoff':
-				return __('One-off', 'kudos-donations');
+				return __( 'One-off', 'kudos-donations' );
 			case 'first':
-				return __('Recurring (first payment)', 'kudos-donations');
+				return __( 'Recurring (first payment)', 'kudos-donations' );
 			default:
-				return __('Recurring', 'kudos-donations');
+				return __( 'Recurring', 'kudos-donations' );
 		}
 
 	}
@@ -138,20 +144,21 @@ class Utils {
 	 * Returns subscription frequency name based on number of months
 	 *
 	 * @param string $frequency
+	 *
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	public static function get_frequency_name( string $frequency) {
+	public static function get_frequency_name( string $frequency ) {
 
-		switch ($frequency) {
+		switch ( $frequency ) {
 			case '12 months':
-				return __('Yearly', 'kudos-donations');
+				return __( 'Yearly', 'kudos-donations' );
 			case '1 month':
-				return __('Monthly', 'kudos-donations');
+				return __( 'Monthly', 'kudos-donations' );
 			case '3 months':
-				return __('Quarterly', 'kudos-donations');
+				return __( 'Quarterly', 'kudos-donations' );
 			case "oneoff":
-				return __('One-off', 'kudos-donations');
+				return __( 'One-off', 'kudos-donations' );
 			default:
 				return $frequency;
 		}
@@ -164,16 +171,17 @@ class Utils {
 	 *
 	 * @param int $years
 	 * @param string $frequency
+	 *
 	 * @return int|null
 	 * @since   2.0.0
 	 */
 	public static function get_times_from_years( int $years, string $frequency ) {
 
-		if(!$years > 0) {
+		if ( ! $years > 0 ) {
 			return null;
 		}
 
-		return (12/intval($frequency)) * $years - 1;
+		return ( 12 / intval( $frequency ) ) * $years - 1;
 
 	}
 
@@ -182,12 +190,13 @@ class Utils {
 	 *
 	 * @param string|null $prefix
 	 * @param int $length
+	 *
 	 * @return string
 	 * @since   2.0.0
 	 */
-	public static function generate_id( $prefix=null, $length=10 ) {
+	public static function generate_id( $prefix = null, $length = 10 ) {
 
-		return $prefix . substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length);
+		return $prefix . substr( base_convert( sha1( uniqid( mt_rand() ) ), 16, 36 ), 0, $length );
 
 	}
 

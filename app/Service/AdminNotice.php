@@ -33,11 +33,11 @@ class AdminNotice {
 	 * @param string|null $extra
 	 * @param bool $isDismissible
 	 */
-	function __construct( string $notice, string $type='success', $extra=null, $isDismissible=true ) {
+	function __construct( string $notice, string $type = 'success', $extra = null, $isDismissible = true ) {
 
-		$this->notice = $notice;
-		$this->type = $type;
-		$this->extra = $extra;
+		$this->notice        = $notice;
+		$this->type          = $type;
+		$this->extra         = $extra;
 		$this->isDismissible = $isDismissible;
 
 		add_action( 'admin_notices', [ $this, 'render' ] );

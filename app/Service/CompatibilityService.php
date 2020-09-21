@@ -37,12 +37,12 @@ class CompatibilityService {
 	public function init() {
 
 		/* Check minimum requirements are met */
-        $this->run_tests();
+		$this->run_tests();
 
 		/* Check if any errors were thrown, enqueue them and exit early */
 		if ( sizeof( $this->notices ) > 0 ) {
-		    $notice = $this->build_notice();
-		    new AdminNotice($notice['error'], 'error', $notice['details']);
+			$notice = $this->build_notice();
+			new AdminNotice( $notice['error'], 'error', $notice['details'] );
 
 			return false;
 		}
@@ -53,27 +53,15 @@ class CompatibilityService {
 
 	/**
 	 * Run the specified tests
-     *
-     * @since 2.0.0
+	 *
+	 * @since 2.0.0
 	 */
 	private function run_tests() {
 
 		$this->check_wordpress_version();
 		$this->check_php();
 
-    }
-
-	/**
-	 * Add to notices array
-	 *
-	 * @param string $notice
-	 * @since 2.0.0
-	 */
-	public function add_notice( string $notice) {
-
-	    $this->notices[] = $notice;
-
-    }
+	}
 
 	/**
 	 * Check if WordPress version is compatible
@@ -87,7 +75,8 @@ class CompatibilityService {
 
 		/* WordPress version not compatible */
 		if ( ! version_compare( $wp_version, $this->required_wp_version, '>=' ) ) {
-			$this->notices[] = sprintf( esc_html__( 'WordPress Version %1$s is required.', 'kudos-donations' ), $this->required_wp_version );
+			$this->notices[] = sprintf( esc_html__( 'WordPress Version %1$s is required.', 'kudos-donations' ),
+				$this->required_wp_version );
 
 			return false;
 		}
@@ -106,14 +95,18 @@ class CompatibilityService {
 
 		/* Check PHP version is compatible */
 		if ( ! version_compare( phpversion(), $this->required_php_version, '>=' ) ) {
-			$this->notices[] = sprintf( esc_html__( 'You are running an %1$soutdated version of PHP%2$s (%3$s). Kudos Donations requires at least PHP %4$s to work. Contact your web hosting provider to update.', 'kudos-donations' ), '<a href="https://wordpress.org/support/update-php/">', '</a>', phpversion(), $this->required_php_version);
+			$this->notices[] = sprintf( esc_html__( 'You are running an %1$soutdated version of PHP%2$s (%3$s). Kudos Donations requires at least PHP %4$s to work. Contact your web hosting provider to update.',
+				'kudos-donations' ),
+				'<a href="https://wordpress.org/support/update-php/">',
+				'</a>',
+				phpversion(),
+				$this->required_php_version );
 
 			return false;
 		}
 
 		return true;
 	}
-
 
 	/**
 	 * Helper function to build the messages
@@ -124,15 +117,29 @@ class CompatibilityService {
 	 */
 	public function build_notice() {
 
-			$notice['error'] = __( 'Kudos Donations Installation Problem', 'kudos-donations' );
-            $notice['details'] = "<p>". __( 'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:', 'kudos-donations' ) ."</p>";
-			$notice['details'] .= "<ul style='padding-bottom: 0.5em'>";
-				foreach ( $this->notices as $error ):
-					$notice['details'] .= "<li style='padding-left: 20px;list-style: inside'>". $error ."</li>";
-				endforeach;
-			$notice['details'] .= "</ul>";
+		$notice['error']   = __( 'Kudos Donations Installation Problem', 'kudos-donations' );
+		$notice['details'] = "<p>" . __( 'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:',
+				'kudos-donations' ) . "</p>";
+		$notice['details'] .= "<ul style='padding-bottom: 0.5em'>";
+		foreach ( $this->notices as $error ):
+			$notice['details'] .= "<li style='padding-left: 20px;list-style: inside'>" . $error . "</li>";
+		endforeach;
+		$notice['details'] .= "</ul>";
 
-			return $notice;
+		return $notice;
+	}
+
+	/**
+	 * Add to notices array
+	 *
+	 * @param string $notice
+	 *
+	 * @since 2.0.0
+	 */
+	public function add_notice( string $notice ) {
+
+		$this->notices[] = $notice;
+
 	}
 
 }

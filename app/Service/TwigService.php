@@ -29,56 +29,16 @@ class TwigService {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct($templates_dir=KUDOS_PLUGIN_DIR . '/templates/') {
+	public function __construct( $templates_dir = KUDOS_PLUGIN_DIR . '/templates/' ) {
 
-		$loader = new FilesystemLoader($templates_dir);
-		$cache = (KUDOS_DEBUG ? false : self::CACHE_DIR);
-		$this->twig = new Environment($loader, [
+		$loader       = new FilesystemLoader( $templates_dir );
+		$cache        = ( KUDOS_DEBUG ? false : self::CACHE_DIR );
+		$this->twig   = new Environment( $loader, [
 			'cache' => $cache,
-		]);
+		] );
 		$this->logger = new LoggerService();
 		$this->initialize_twig_functions();
 		$this->initialize_twig_filters();
-
-	}
-
-	/**
-	 * Create the twig cache directory
-	 *
-	 * @since    2.0.0
-	 */
-	public static function init() {
-
-		$logger = new LoggerService();
-
-		if(wp_mkdir_p(self::CACHE_DIR)) {
-			$logger->info('Twig cache directory created successfully');
-			return;
-		}
-
-		$logger->error('Unable to create Kudos Donations Twig cache directory', [self::CACHE_DIR]);
-
-	}
-
-
-	/**
-	 * Initialize additional twig filters
-	 *
-	 * @since 2.0.0
-	 */
-	public function initialize_twig_filters() {
-
-		/**
-		 * Add the WordPress apply_filters filter.
-		 */
-		$apply_filter = new TwigFilter('apply_filters', 'apply_filters');
-		$this->twig->addFilter($apply_filter);
-
-		/**
-		 * Add the WordPress sanitize_title filter.
-		 */
-		$slugify = new TwigFilter('slugify', 'sanitize_title');
-		$this->twig->addFilter($slugify);
 
 	}
 
@@ -93,26 +53,66 @@ class TwigService {
 		/**
 		 * Add gettext __ function.
 		 */
-		$get_text = new TwigFunction('__', '__');
-		$this->twig->addFunction($get_text);
+		$get_text = new TwigFunction( '__', '__' );
+		$this->twig->addFunction( $get_text );
 
 		/**
 		 * Add get_option function.
 		 */
-		$get_option = new TwigFunction('get_option', 'get_option');
-		$this->twig->addFunction($get_option);
+		$get_option = new TwigFunction( 'get_option', 'get_option' );
+		$this->twig->addFunction( $get_option );
 
 		/**
 		 * Add color_luminance helper function.
 		 */
-		$color_luminance = new TwigFunction('color_luminance', [Utils::class, 'color_luminance']);
-		$this->twig->addFunction($color_luminance);
+		$color_luminance = new TwigFunction( 'color_luminance', [ Utils::class, 'color_luminance' ] );
+		$this->twig->addFunction( $color_luminance );
 
 		/**
 		 * Add get_asset function.
 		 */
-		$get_asset = new TwigFunction('get_asset', [Utils::class, 'get_asset_url']);
-		$this->twig->addFunction($get_asset);
+		$get_asset = new TwigFunction( 'get_asset', [ Utils::class, 'get_asset_url' ] );
+		$this->twig->addFunction( $get_asset );
+	}
+
+	/**
+	 * Initialize additional twig filters
+	 *
+	 * @since 2.0.0
+	 */
+	public function initialize_twig_filters() {
+
+		/**
+		 * Add the WordPress apply_filters filter.
+		 */
+		$apply_filter = new TwigFilter( 'apply_filters', 'apply_filters' );
+		$this->twig->addFilter( $apply_filter );
+
+		/**
+		 * Add the WordPress sanitize_title filter.
+		 */
+		$slugify = new TwigFilter( 'slugify', 'sanitize_title' );
+		$this->twig->addFilter( $slugify );
+
+	}
+
+	/**
+	 * Create the twig cache directory
+	 *
+	 * @since    2.0.0
+	 */
+	public static function init() {
+
+		$logger = new LoggerService();
+
+		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
+			$logger->info( 'Twig cache directory created successfully' );
+
+			return;
+		}
+
+		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ self::CACHE_DIR ] );
+
 	}
 
 	/**
@@ -124,12 +124,13 @@ class TwigService {
 	 * @return bool
 	 * @since    1.0.0
 	 */
-	public function render(string $template, $array=[]) {
+	public function render( string $template, $array = [] ) {
 
 		try {
 			return $this->twig->render( $template, $array );
-		} catch (Throwable $e ) {
-			$this->logger->critical($e->getMessage(), [$template]);
+		} catch ( Throwable $e ) {
+			$this->logger->critical( $e->getMessage(), [ $template ] );
+
 			return false;
 		}
 
