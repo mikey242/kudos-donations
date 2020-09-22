@@ -8,7 +8,7 @@
   &:focus,
   &:active {
     @apply bg-orange-500 text-white no-underline shadow-none;
-    background-color: var(--kudos-theme-color);
+    background-color: var(--kudos-theme-color) !important;
   }
 
   &:focus {
@@ -16,12 +16,13 @@
     outline: 1px solid transparent;
   }
 
-  &.button-primary {
+  &.kudos_button_primary {
     @apply bg-orange-500;
     background-color: var(--kudos-theme-color);
+
     &:hover {
       @apply bg-orange-700;
-      background-color: var(--kudos-theme-color-dark);
+      background-color: var(--kudos-theme-color-dark) !important;
     }
   }
 

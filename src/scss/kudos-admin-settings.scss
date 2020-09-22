@@ -37,7 +37,7 @@
 .kudos-dashboard-header {
   padding: 20px 10px;
   background-color: #ffffff;
-  box-shadow: 0 1px 0 rgba(213,213,213,0.5),0 1px 2px #eee;
+  box-shadow: 0 1px 0 rgba(213, 213, 213, 0.5), 0 1px 2px #eee;
 
   img {
     margin-right: 15px;
@@ -46,6 +46,7 @@
   .kudos-api-status {
     color: #999;
     margin-left: 15px;
+
     &:before {
       @apply rounded-full;
       content: '';
@@ -62,6 +63,7 @@
 
     &.connected {
       color: green;
+
       &:before {
         background: #35ac35;
         border-color: #90ee90;
@@ -70,6 +72,7 @@
 
     &.not-connected {
       color: red;
+
       &:before {
         background: red;
         border-color: lightcoral;
@@ -163,6 +166,7 @@
         transition: box-shadow .1s linear;
       }
     }
+
     .components-tab-panel__tab-content {
       margin-top: 25px;
     }

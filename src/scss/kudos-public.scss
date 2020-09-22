@@ -16,12 +16,12 @@ div[id^=kudos_modal-] {
 
   @import "partials/buttons";
 
-  @apply absolute hidden;
+  @apply hidden;
 
   *,
   *::before,
   *::after {
-    @apply font-sans box-border text-base leading-normal opacity-100 relative;
+    @apply font-sans box-border text-base leading-normal opacity-100;
   }
 
   strong {
@@ -46,14 +46,6 @@ div[id^=kudos_modal-] {
     @apply block text-lg text-gray-900;
   }
 
-  h2 {
-    @apply font-serif text-4xl m-0 mb-2 text-gray-900 block text-center;
-  }
-
-  button {
-    cursor: pointer;
-  }
-
   small {
     font-size: 80%;
     font-weight: 400;
@@ -64,16 +56,6 @@ div[id^=kudos_modal-] {
 
       color: theme('colors.red.500');
     }
-  }
-
-  .kudos_modal_overlay {
-    @apply flex justify-center items-center fixed top-0 left-0 w-full h-full bg-modal;
-
-    z-index: 1050;
-  }
-
-  .kudos_modal_header {
-    @apply flex items-center justify-between;
   }
 
   .kudos_modal_logo {
@@ -90,17 +72,12 @@ div[id^=kudos_modal-] {
   }
 
   .kudos_modal_close {
-    @apply text-2xl cursor-pointer;
-
     &:hover {
       @apply no-underline bg-transparent;
     }
   }
 
   .kudos_modal_container {
-    @apply bg-white p-8 rounded-lg max-h-screen max-w-lg relative overflow-hidden ;
-
-    z-index: 1050;
 
     &::before {
       @apply w-full h-full bg-white top-0 left-0 absolute;
@@ -119,25 +96,9 @@ div[id^=kudos_modal-] {
     @apply block overflow-x-hidden overflow-y-auto;
   }
 
-  .kudos_modal_title,
-  .kudos_modal_text {
-    @apply text-center block font-normal;
-  }
-
-  .kudos_modal_text {
-    @apply mb-4;
-  }
-
-  .kudos_modal_content {
-    @apply mt-4 block;
-  }
-
   .kudos_modal_buttons {
-    @apply mt-8 block;
 
     .kudos_back {
-      @apply absolute m-0 left-0;
-      bottom: 50%;
 
       &::after {
         @apply absolute cursor-pointer bg-contain rounded-full;
@@ -158,14 +119,8 @@ div[id^=kudos_modal-] {
 
 .kudos_form_modal {
   .kudos_spinner {
-    @apply hidden absolute;
-    width: 36px;
-    height: 36px;
-    top: 50%;
-    left: 50%;
-    margin-left: -18px;
-    margin-top: -18px;
-    z-index: 999;
+    @apply hidden;
+    background-image: url("../img/logo-black.svg");
   }
 
   &.kudos_loading {
@@ -175,13 +130,11 @@ div[id^=kudos_modal-] {
 
     .kudos_spinner {
       @apply block bg-contain bg-no-repeat;
-      background-image: url("../img/logo-black.svg");
       animation: loader-spin 2s infinite;
     }
   }
 
   .form-tabs {
-    @apply block;
 
     // Hide back button on first tab
     .form-tab:first-of-type .kudos_form_nav.kudos_back {
@@ -190,34 +143,29 @@ div[id^=kudos_modal-] {
   }
 
   .form-tab {
-    @apply hidden w-full relative;
+    @apply hidden;
     &.current-tab {
       @apply block;
     }
   }
 
   .kudos_form {
-    @apply m-0 p-0;
 
-    fieldset {
-      @apply m-0 p-0 border-0;
-    }
-
-    label {
-      @apply inline-block m-0 cursor-pointer font-normal;
-
-      &:not(:first-child) {
-        @apply mt-3;
-      }
-    }
-
-    label.not-full {
-      @apply mr-2 mt-2;
-    }
-
-    label:not(.not-full) {
-      @apply w-full;
-    }
+    //label {
+    //  @apply inline-block m-0 cursor-pointer font-normal;
+    //
+    //  &:not(:first-child) {
+    //    @apply mt-3;
+    //  }
+    //}
+    //
+    //label.not-full {
+    //  @apply mr-2 mt-2;
+    //}
+    //
+    //label:not(.not-full) {
+    //  @apply w-full;
+    //}
 
     input,
     select {
@@ -250,12 +198,12 @@ div[id^=kudos_modal-] {
       padding: 0 !important;
       vertical-align: middle;
       min-width: 1em;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
       transition: .05s border-color ease-in-out;
       -webkit-appearance: none;
 
       &:focus {
-        box-shadow: 0 0 0 2px #fff,0 0 0 3.5px var(--kudos-theme-color);
+        box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--kudos-theme-color);
         outline: 2px solid transparent;
       }
 
@@ -334,7 +282,6 @@ div[id^=kudos_modal-] {
   }
 
   .kudos_summary {
-    @apply block bg-gray-300 p-2 border-0 border-solid border-t-2 border-orange-500;
     border-color: var(--kudos-theme-color);
   }
 
@@ -375,7 +322,7 @@ div[id^=kudos_modal-] {
 }
 
 @keyframes tabIn {
-  0%{
+  0% {
     display: none;
     opacity: 0;
   }
@@ -390,21 +337,37 @@ div[id^=kudos_modal-] {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes slideIn {
-  from { transform: translateY(15%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(15%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideOut {
-  from { transform: translateY(0); }
-  to { transform: translateY(-10%); }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10%);
+  }
 }
