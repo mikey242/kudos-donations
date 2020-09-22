@@ -1,4 +1,5 @@
 module.exports = {
+  important: true,
   purge: {
     enabled: process.env.NODE_ENV === 'prod',
     content: [
@@ -31,11 +32,20 @@ module.exports = {
       '1': '0.25em',
       '0': '0'
     },
+    inset: {
+      '0': '0',
+      'auto': 'auto',
+      '1/2': '50%'
+    },
     borderRadius: {
       'none': '0',
       'default': '0.25em', //'4px'
       'lg': '0.5em', //'8px'
       'full': '9999px'
+    },
+    zIndex: {
+      '1' : 1,
+      '1050': 1050
     },
     extend: {
       colors: {
