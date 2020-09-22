@@ -220,6 +220,7 @@ class Front {
 				'theme_color' => Settings::get_setting( 'theme_color' ),
 			] );
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
+		echo $this->get_kudos_root_styles();
 
 	}
 
