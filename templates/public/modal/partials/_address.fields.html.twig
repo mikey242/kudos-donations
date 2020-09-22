@@ -1,0 +1,8 @@
+{% import "/public/modal/macros/form.html.twig" as forms %}
+
+{% set required = (address.required ? 'required' : null) %}
+
+{{ forms.input('street', __('Street', 'kudos-donations'), 'text', required) }}
+{{ forms.input('postcode', __('Postcode', 'kudos-donations'), 'text', required) }}
+{{ forms.input('city', __('City', 'kudos-donations'), 'text', required) }}
+{{ forms.input('country', __('Country', 'kudos-donations'), 'text', required) }}

@@ -1,0 +1,28 @@
+{% macro input(name, placeholder, type="text", required=true, extra="") %}
+    <label class="inline-block cursor-pointer font-normal mr-2 mt-2 w-full">
+        <input {{ required ? 'required' : '' }} type="{{ type }}" name="{{ name }}" placeholder="{{ placeholder ~ (required ?  ' *' : '') }}" {{ extra }} />
+        {{ type == 'radio' ? placeholder : '' }}
+    </label>
+{% endmacro %}
+
+{% macro radio(name, options, selected, required=true) %}
+    <div class="radio-group">
+        {% for value, label in options %}
+            <label class="inline-block cursor-pointer font-normal mr-2 mt-2">
+                <input {{ required ? 'required' : '' }} {{ selected == value ? 'checked' : '' }} value="{{ value }}" type="radio" name="{{ name }}" />
+                {{ label }}
+            </label>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro select(name, placeholder, options, required=true) %}
+    <label class="inline-block cursor-pointer font-normal mr-2 mt-2 w-full">
+        <select {{ required ? 'required' : '' }} name="{{ name }}">
+            <option value="" disabled selected>{{ placeholder }}</option>
+            {% for value, text in options %}
+                <option value="{{ value }}">{{ text }}</option>
+            {% endfor %}
+        </select>
+    </label>
+{% endmacro %}

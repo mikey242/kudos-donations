@@ -4,57 +4,20 @@
 
 {% block content %}
 
-    <form class="kudos_form" action="">
+    <form class="kudos_form m-0 p-0" action="">
 
         {{ nonce|raw }}
         <input required name="return_url" type="hidden" value="{{ return_url }}">
         <input name="donation_label" type="hidden" value="{{ donation_label }}">
 
-        <div class="form-tabs">
+        <div class="form-tabs block">
 
             {#   INITIAL FIELDS   #}
             {% embed '/public/modal/partials/_tab.html.twig' %}
                 {% block title %}{{ title }}{% endblock %}
                 {% block text %}{{ text }}{% endblock %}
                 {% block body %}
-                    {% if amount.type == 'fixed' %}
-                        <div class="kudos_amounts">
-                            {% for key,value in amount.fixed_values %}
-                                <div class="kudos_radio_amount">
-                                    <input id="amount-{{ modal_id }}-{{ key }}" {{ key==0 ? 'checked' : '' }} type="radio" name="value" value={{ value }} />
-                                    <label for="amount-{{ modal_id }}-{{ key }}">€{{ value }}</label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    {% if amount.type == 'open' %}
-                        <label>
-                            <input required type="text" min="1" name="value" data-type='currency' placeholder="{{ __('Amount', 'kudos-donations')}} (€) *" />
-                        </label>
-                    {% endif %}
-
-                    <label>
-                        <input required type="text" name="name" placeholder="{{ __('Name', 'kudos-donations') }} *" />
-                    </label>
-                    <label>
-                        <input required type="email" name="email_address" placeholder="{{ __('E-mail address', 'kudos-donations') }} *" />
-                    </label>
-
-                    {% if(subscription.enabled) %}
-                        <div class="radio-group">
-                            <label class="not-full">
-                                <input required checked type="radio" name="payment_frequency" value="oneoff" />
-                                {{ __('One-off', 'kudos-donations') }}
-                            </label>
-                            <label class="not-full">
-                                <input type="radio" name="payment_frequency" value="recurring" />
-                                {{ __('Recurring', 'kudos-donations') }}
-                            </label>
-                        </div>
-                    {% else %}
-                        <input required checked type="hidden" name="payment_frequency" value="oneoff" />
-                    {% endif %}
+                    {% include('/public/modal/partials/_initial.fields.html.twig') %}
                 {% endblock %}
             {% endembed %}
 
@@ -63,30 +26,7 @@
                 {% block title %}{{ __('Subscription', 'kudos-donations') }}{% endblock %}
                 {% block text %}{{ __('How often would you like to donate?', 'kudos-donations') }}{% endblock %}
                 {% block body %}
-                    <label>
-                        <select required name="recurring_frequency">
-                            <option value="" disabled selected>{{ __('Payment frequency', 'kudos-donations') }}</option>
-                            <option value="12 months">{{ __('Yearly', 'kudos-donations') }}</option>
-                            <option value="3 months">{{ __('Quarterly', 'kudos-donations') }}</option>
-                            <option value="1 month">{{ __('Monthly', 'kudos-donations') }}</option>
-                        </select>
-                    </label>
-                    <label>
-                        <select required name="recurring_length">
-                            <option value="" disabled selected>{{ __('Donation duration', ' kudos-donations') }}</option>
-                            <option value="0">{{ __('Continuous', 'kudos-donations')}}</option>
-                            <option value="1">1 {{ __('Year', 'kudos-donations')}}</option>
-                            <option value="2">2 {{ __('Years', 'kudos-donations')}}</option>
-                            <option value="3">3 {{ __('Years', 'kudos-donations')}}</option>
-                            <option value="4">4 {{ __('Years', 'kudos-donations')}}</option>
-                            <option value="5">5 {{ __('Years', 'kudos-donations')}}</option>
-                            <option value="6">6 {{ __('Years', 'kudos-donations')}}</option>
-                            <option value="7">7 {{ __('Years', 'kudos-donations')}}</option>
-                            <option value="8">8 {{ __('Years', 'kudos-donations')}}</option>
-                            <option value="9">9 {{ __('Years', 'kudos-donations')}}</option>
-                            <option value="10">10 {{ __('Years', 'kudos-donations')}}</option>
-                        </select>
-                    </label>
+                    {% include('/public/modal/partials/_subscription.fields.html.twig') %}
                 {% endblock %}
             {% endembed %}
 
@@ -96,18 +36,7 @@
                     {% block title %}{{ __('Address', 'kudos-donations') }}{% endblock %}
                     {% block text %}{{ __('Please fill in you address', 'kudos-donations') ~ (address.required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') }}{% endblock %}
                     {% block body %}
-                        <label>
-                            <input {{ address.required ? 'required' : null }} type="text" name="street" placeholder="{{ __('Street', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
-                        </label>
-                        <label>
-                            <input {{ address.required ? 'required' : null }} type="text" name="postcode" placeholder="{{ __('Postcode', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
-                        </label>
-                        <label>
-                            <input {{ address.required ? 'required' : null }} type="text" name="city" placeholder="{{ __('City', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
-                        </label>
-                        <label>
-                            <input {{ address.required ? 'required' : null }} type="text" name="country" placeholder="{{ __('Country', 'kudos-donations') }} {{ address.required ? '*' : null }}" />
-                        </label>
+                        {% include('/public/modal/partials/_address.fields.html.twig') %}
                     {% endblock %}
                 {% endembed %}
             {% endif %}
@@ -117,7 +46,7 @@
                 {% block title %}{{ __('Payment', 'kudos-donations') }}{% endblock %}
                 {% block text %}{{ __('By clicking donate you agree to the following payment', 'kudos-donations') }}{% endblock %}
                 {% block body %}
-                    <div class="kudos_summary text-left">
+                    <div class="kudos_summary text-left block bg-gray-300 p-2 border-0 border-solid border-t-2 border-orange-500">
                         <p class="mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span class="summary_name"></span></p>
                         <p class="mb-0"><strong>{{ __('Email', 'kudos-donations') }}: </strong><span class="summary_email"></span></p>
                         <p class="mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong>€<span class="summary_value"></span></p>
@@ -129,11 +58,13 @@
                     </label>
                 {% endblock %}
                 {% block next_button %}
-                    <button name="kudos_submit" class="kudos_submit button-primary kudos_button" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
+                    <button name="kudos_submit" class="kudos_submit kudos_button_primary kudos_button" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
                 {% endblock %}
             {% endembed %}
 
         </div>
     </form>
+
+    <i class="kudos_spinner absolute top-1/2 left-1/2 w-8 h-8 -ml-4 -mt-4 z-1"></i>
 
 {% endblock content %}

@@ -1,4 +1,4 @@
-<fieldset class="form-tab form-tab-{{ class ?: block('title')|slugify }}" data-requirements={{ requirements }}>
+<fieldset class="form-tab form-tab-{{ class ?: block('title')|slugify }} w-full relative m-0 p-0 border-0" data-requirements={{ requirements }}>
 
     {% set _title = block('title') %}
     {% set _text = block('text') %}
@@ -14,12 +14,12 @@
 
     {% block body %}{% endblock %}
 
-    <div class="kudos_modal_buttons" style="text-align: center">
+    <div class="kudos_modal_buttons mt-8 block text-center relative">
         {% block nav_buttons %}
-            <button type="button" class="kudos_form_nav kudos_back" aria-label="{{ __('Previous tab', 'kudos-donations') }}" data-direction="back"> </button>
+            <button type="button" class="kudos_form_nav kudos_back absolute m-0 left-0 bottom-1/2" aria-label="{{ __('Previous tab', 'kudos-donations') }}" data-direction="back"> </button>
             <button type="button" class="button-style-outline kudos_button" aria-label="{{ __('Cancel', 'kudos-donations') }}" data-micromodal-close>{{ __('Cancel', 'kudos-donations') }}</button>
             {% block next_button %}
-                <button type="button" class="kudos_button button-primary kudos_form_nav kudos_next" aria-label="{{ __('Next tab', 'kudos-donations') }}" data-direction="next">
+                <button type="button" class="kudos_button kudos_button_primary kudos_form_nav kudos_next" aria-label="{{ __('Next tab', 'kudos-donations') }}" data-direction="next">
                     {{ __('Next', 'kudos-donations') }}
                 </button>
             {% endblock %}

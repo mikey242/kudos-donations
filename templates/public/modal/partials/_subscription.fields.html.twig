@@ -1,0 +1,21 @@
+{% import "/public/modal/macros/form.html.twig" as forms %}
+
+{{ forms.select('recurring_frequency', __('Payment frequency', 'kudos-donations'), {
+    '12 months': __('Yearly', 'kudos-donations'),
+    '3 months': __('Quarterly', 'kudos-donations'),
+    '1 month': __('Monthly', 'kudos-donations')
+} ) }}
+
+{{ forms.select('recurring_length', __('Donation duration', 'kudos-donations'), {
+    '0': __('Continuous', 'kudos-donations'),
+    '1': 1 ~ ' ' ~ __('Year', 'kudos-donations'),
+    '2': 2 ~ ' ' ~ __('Years', 'kudos-donations'),
+    '3': 3 ~ ' ' ~ __('Years', 'kudos-donations'),
+    '4': 4 ~ ' ' ~ __('Years', 'kudos-donations'),
+    '5': 5 ~ ' ' ~ __('Years', 'kudos-donations'),
+    '6': 6 ~ ' ' ~ __('Years', 'kudos-donations'),
+    '7': 7 ~ ' ' ~ __('Years', 'kudos-donations'),
+    '8': 8 ~ ' ' ~ __('Years', 'kudos-donations'),
+    '9': 9 ~ ' ' ~ __('Years', 'kudos-donations'),
+    '10': 10 ~ ' ' ~ __('Years', 'kudos-donations'),
+} ) }}
