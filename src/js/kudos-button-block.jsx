@@ -173,7 +173,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 					}
 				>
 					<RichText
-						className={ 'kudos_button kudos_button_donate' }
+						className={ 'kudos_button kudos_button_primary kudos_button_donate' }
 						style={ { backgroundColor: kudos.theme_color } }
 						formattingControls={ [
 							'bold',
