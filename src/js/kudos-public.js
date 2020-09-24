@@ -100,7 +100,7 @@ $( () => {
 	}
 
 	// Multi step form navigation
-	$( '.kudos_form_nav' ).on( 'click', function () {
+	$( '.kudos_modal [data-direction]' ).on( 'click', function () {
 		if ( animating ) return false;
 		const $current_tab = $( this ).closest( '.form-tab' );
 		const $modal = $( this ).closest( '.kudos_modal_container' );

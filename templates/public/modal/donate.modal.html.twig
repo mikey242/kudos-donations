@@ -17,8 +17,35 @@
                 {% block title %}{{ title }}{% endblock %}
                 {% block text %}{{ text }}{% endblock %}
                 {% block body %}
-                    {% include('/public/modal/partials/_initial.fields.html.twig') %}
+                    {% from "/public/modal/macros/form.html.twig" import text, radio %}
+                    {% if amount.type == 'fixed' %}
+                        <div class="kudos_amounts kd-bg-white kd-flex kd-flex-wrap kd--mx-2">
+                            {% for key,value in amount.fixed_values %}
+                                <div class="kudos_radio_amount kd-w-1/4 kd-px-2 kd-m-0">
+                                    <input class="focus:kd-outline-none focus:kd-shadow-none kd-absolute kd-m-0 kd--z-1" id="amount-{{ modal_id }}-{{ key }}" {{ key==0 ? 'checked' : '' }} type="radio" name="value" value={{ value }} />
+                                    <label class="kd-transition-shadow kd-transition-colors kd-duration-150 kd-ease-in-out kd-py-3 kd-rounded kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-solid kd-border-gray-300" for="amount-{{ modal_id }}-{{ key }}">€{{ value }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if amount.type == 'open' %}
+                        {{ text('value', __('Amount (€)', 'kudos-donations'), 'text', true, {'min': '1', 'data-type': 'currency'}) }}
+                    {% endif %}
+
+                    {{ text('name', __('Name', 'kudos-donations')) }}
+                    {{ text('email_address', __('E-mail address', 'kudos-donations'), 'email') }}
+
+                    {% if(subscription.enabled) %}
+                        {{ radio('payment_frequency', {
+                            'oneoff': __('One-off', 'kudos-donations'),
+                            'recurring': __('Recurring', 'kudos-donations')
+                        }, 'oneoff') }}
+                    {% else %}
+                        <input required checked type="hidden" name="payment_frequency" value="oneoff" />
+                    {% endif %}
                 {% endblock %}
+                {% block back_button %}{% endblock %}
             {% endembed %}
 
             {#   PAYMENT FREQUENCY TAB   #}
@@ -26,7 +53,27 @@
                 {% block title %}{{ __('Subscription', 'kudos-donations') }}{% endblock %}
                 {% block text %}{{ __('How often would you like to donate?', 'kudos-donations') }}{% endblock %}
                 {% block body %}
-                    {% include('/public/modal/partials/_subscription.fields.html.twig') %}
+                    {% from "/public/modal/macros/form.html.twig" import select %}
+
+                    {{ select('recurring_frequency', __('Payment frequency', 'kudos-donations'), {
+                        '12 months': __('Yearly', 'kudos-donations'),
+                        '3 months': __('Quarterly', 'kudos-donations'),
+                        '1 month': __('Monthly', 'kudos-donations')
+                    } ) }}
+
+                    {{ select('recurring_length', __('Donation duration', 'kudos-donations'), {
+                        '0': __('Continuous', 'kudos-donations'),
+                        '1': 1 ~ ' ' ~ __('Year', 'kudos-donations'),
+                        '2': 2 ~ ' ' ~ __('Years', 'kudos-donations'),
+                        '3': 3 ~ ' ' ~ __('Years', 'kudos-donations'),
+                        '4': 4 ~ ' ' ~ __('Years', 'kudos-donations'),
+                        '5': 5 ~ ' ' ~ __('Years', 'kudos-donations'),
+                        '6': 6 ~ ' ' ~ __('Years', 'kudos-donations'),
+                        '7': 7 ~ ' ' ~ __('Years', 'kudos-donations'),
+                        '8': 8 ~ ' ' ~ __('Years', 'kudos-donations'),
+                        '9': 9 ~ ' ' ~ __('Years', 'kudos-donations'),
+                        '10': 10 ~ ' ' ~ __('Years', 'kudos-donations'),
+                    } ) }}
                 {% endblock %}
             {% endembed %}
 
@@ -36,35 +83,42 @@
                     {% block title %}{{ __('Address', 'kudos-donations') }}{% endblock %}
                     {% block text %}{{ __('Please fill in you address', 'kudos-donations') ~ (address.required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') }}{% endblock %}
                     {% block body %}
-                        {% include('/public/modal/partials/_address.fields.html.twig') %}
+                        {% from "/public/modal/macros/form.html.twig" import text %}
+
+                        {% set required = (address.required ? 'required' : null) %}
+
+                        {{ text('street', __('Street', 'kudos-donations'), 'text', required) }}
+                        {{ text('postcode', __('Postcode', 'kudos-donations'), 'text', required) }}
+                        {{ text('city', __('City', 'kudos-donations'), 'text', required) }}
+                        {{ text('country', __('Country', 'kudos-donations'), 'text', required) }}
                     {% endblock %}
                 {% endembed %}
             {% endif %}
 
             {#   FINAL TAB   #}
             {% embed '/public/modal/partials/_tab.html.twig' with { class: 'final' } %}
+                {% from "/public/modal/macros/buttons.html.twig" import button %}
                 {% block title %}{{ __('Payment', 'kudos-donations') }}{% endblock %}
                 {% block text %}{{ __('By clicking donate you agree to the following payment', 'kudos-donations') }}{% endblock %}
                 {% block body %}
-                    <div class="kudos_summary text-left block bg-gray-300 p-2 border-0 border-solid border-t-2 border-orange-500">
-                        <p class="mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span class="summary_name"></span></p>
-                        <p class="mb-0"><strong>{{ __('Email', 'kudos-donations') }}: </strong><span class="summary_email"></span></p>
-                        <p class="mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong>€<span class="summary_value"></span></p>
+                    {% from "/public/modal/macros/form.html.twig" import checkbox %}
+
+                    <div class="kudos_summary kd-text-left kd-block kd-bg-gray-300 kd-p-2 kd-border-0 kd-border-solid kd-border-t-2 kd-border-theme">
+                        <p class="kd-block kd-mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span class="summary_name"></span></p>
+                        <p class="kd-block kd-mb-0"><strong>{{ __('Email', 'kudos-donations') }}: </strong><span class="summary_email"></span></p>
+                        <p class="kd-block kd-mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong>€<span class="summary_value"></span></p>
                         <p><strong>{{ __('Type', 'kudos-donations') }}: </strong><span class="summary_frequency"></span></p>
                     </div>
-                    <label>
-                        <input required type="checkbox" name="avg" value="true" />
-                        {{ privacy_link | raw }}
-                    </label>
+                    {{ checkbox('avg', privacy_link) }}
                 {% endblock %}
                 {% block next_button %}
-                    <button name="kudos_submit" class="kudos_submit kudos_button_primary kudos_button" type="submit" aria-label="{{ __('Donate', 'kudos-donations') }}">{{ __('Donate', 'kudos-donations') }}</button>
+                    {{ button(__('Donate', 'kudos-donations'), 'primary', 'submit', {'class': 'kudos_submit kd-ml-3'}) }}
                 {% endblock %}
             {% endembed %}
 
         </div>
     </form>
 
-    <i class="kudos_spinner absolute top-1/2 left-1/2 w-8 h-8 -ml-4 -mt-4 z-1"></i>
+    <i class="kudos_spinner kd-bg-logo-black kd-animate-spin kd-hidden kd-bg-contain kd-bg-no-repeat kd-absolute kd-top-1/2 kd-left-1/2 kd-w-8 kd-h-8 kd--ml-4 kd--mt-4 kd-z-1"></i>
 
 {% endblock content %}

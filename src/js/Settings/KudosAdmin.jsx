@@ -386,7 +386,7 @@ class KudosAdmin extends Component {
 										{tab.content}
 									</Panel>
 
-									<PanelRow className={'justify-center'}>
+									<PanelRow className={'kd-justify-center'}>
 										<Button
 											isPrimary
 											disabled={

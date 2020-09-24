@@ -1,27 +1,24 @@
-<fieldset class="form-tab form-tab-{{ class ?: block('title')|slugify }} w-full relative m-0 p-0 border-0" data-requirements={{ requirements }}>
+{% from "/public/modal/macros/buttons.html.twig" import button %}
+{% from "/public/modal/macros/text.html.twig" import title, paragraph %}
+
+<fieldset class="form-tab form-tab-{{ class ?: block('title')|slugify }} kd-hidden kd-w-full kd-relative kd-m-0 kd-p-0 kd-border-0" data-requirements={{ requirements }}>
 
     {% set _title = block('title') %}
     {% set _text = block('text') %}
 
-    {% embed '/public/modal/partials/_header.html.twig' %}
-        {% block title %}
-            {{ _title }}
-        {% endblock %}
-        {% block text %}
-            {{ _text }}
-        {% endblock %}
-    {% endembed %}
+    {{ title(block('title')) }}
+    {{ paragraph(block('text')) }}
 
     {% block body %}{% endblock %}
 
-    <div class="kudos_modal_buttons mt-8 block text-center relative">
+    <div class="kudos_modal_buttons kd-mt-8 kd-block kd-text-center kd-relative">
         {% block nav_buttons %}
-            <button type="button" class="kudos_form_nav kudos_back absolute m-0 left-0 bottom-1/2" aria-label="{{ __('Previous tab', 'kudos-donations') }}" data-direction="back"> </button>
-            <button type="button" class="button-style-outline kudos_button" aria-label="{{ __('Cancel', 'kudos-donations') }}" data-micromodal-close>{{ __('Cancel', 'kudos-donations') }}</button>
+            {% block back_button %}
+                <button type="button" class="kudos_form_nav kudos_back kd-absolute kd-m-0 kd-left-0 kd-bottom-1/2" aria-label="{{ __('Previous tab', 'kudos-donations') }}" data-direction="back"> </button>
+            {% endblock %}
+            {{ button(__('Cancel', 'kudos-donations'), 'outline', 'button', {'data-micromodal-close': ''}) }}
             {% block next_button %}
-                <button type="button" class="kudos_button kudos_button_primary kudos_form_nav kudos_next" aria-label="{{ __('Next tab', 'kudos-donations') }}" data-direction="next">
-                    {{ __('Next', 'kudos-donations') }}
-                </button>
+                {{ button(__('Next', 'kudos-donations'), 'primary', 'button', {'data-direction': 'next', 'class' : 'kd-ml-3'} ) }}
             {% endblock %}
         {% endblock %}
     </div>

@@ -1,54 +1,9 @@
-.kudos_button {
-
-  @apply font-sans w-auto h-auto inline-flex items-center text-center text-white select-none py-3 px-5 m-1 normal-case no-underline leading-normal font-normal rounded-lg border-none cursor-pointer shadow-none;
-
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
-  &:hover,
-  &:focus,
-  &:active {
-    @apply bg-orange-500 text-white no-underline shadow-none;
-    background-color: var(--kudos-theme-color) !important;
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--kudos-theme-color);
-    outline: 1px solid transparent;
-  }
-
-  &.kudos_button_primary {
-    @apply bg-orange-500;
-    background-color: var(--kudos-theme-color);
-
-    &:hover {
-      @apply bg-orange-700;
-      background-color: var(--kudos-theme-color-dark) !important;
-    }
-  }
-
-  &.button-style-outline {
-    @apply text-orange-500 border-orange-500;
-    border-width: 1px;
-    border-style: solid;
-    background-color: transparent;
-    color: var(--kudos-theme-color);
-    border-color: var(--kudos-theme-color);
-
-    &:hover {
-      @apply bg-orange-700 border-orange-500;
-      color: #fff;
-      background-color: var(--kudos-theme-color-dark);
-      border-color: var(--kudos-theme-color);
-    }
-  }
-
-  &.kudos_submit {
-    &::before {
-      content: url("../img/lock-white.svg");
-      width: 10px;
-      height: auto;
-      background-size: contain;
-      margin: auto 5px auto 0;
-    }
+.kudos_submit {
+  &::before {
+    content: url("../img/lock-white.svg");
+    width: 10px;
+    height: auto;
+    background-size: contain;
+    margin: auto 5px auto 0;
   }
 }

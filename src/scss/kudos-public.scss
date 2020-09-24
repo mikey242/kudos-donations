@@ -16,69 +16,22 @@ div[id^=kudos_modal-] {
 
   @import "partials/buttons";
 
-  @apply hidden;
-
   *,
   *::before,
   *::after {
     @apply font-sans box-border text-base leading-normal opacity-100;
   }
 
-  strong {
-    font-weight: bold;
-  }
-
-  a {
-    @apply text-orange-500;
-
-    text-decoration: underline;
-    color: var(--kudos-theme-color);
-
-    &:hover {
-      @apply text-orange-700;
-
-      color: var(--kudos-theme-color-darker);
-      cursor: pointer;
-    }
-  }
-
-  p {
-    @apply block text-lg text-gray-900;
-  }
-
-  small {
-    font-size: 80%;
-    font-weight: 400;
-    @apply text-gray-600;
-
-    &.error {
-      @apply relative;
-
-      color: theme('colors.red.500');
-    }
-  }
-
   .kudos_modal_logo {
     &::before {
+      @apply block bg-logo-color bg-no-repeat bg-contain bg-center;
       content: '';
-      display: block;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-image: url("../img/logo-colour.svg");
-      background-position: center;
       width: 40px;
       height: 40px;
     }
   }
 
-  .kudos_modal_close {
-    &:hover {
-      @apply no-underline bg-transparent;
-    }
-  }
-
   .kudos_modal_container {
-
     &::before {
       @apply w-full h-full bg-white top-0 left-0 absolute;
       content: '';
@@ -87,13 +40,8 @@ div[id^=kudos_modal-] {
     }
   }
 
-  .kudos_modal .kudos_modal_container,
-  .kudos_modal .kudos_modal_overlay {
-    will-change: transform;
-  }
-
   &.is-open {
-    @apply block overflow-x-hidden overflow-y-auto;
+    @apply block overflow-x-hidden overflow-y-auto #{!important};
   }
 
   .kudos_modal_buttons {
@@ -109,19 +57,10 @@ div[id^=kudos_modal-] {
         transform: translateY(-50%);
       }
     }
-
-    button:last-child {
-      @apply ml-3;
-    }
   }
-
 }
 
 .kudos_form_modal {
-  .kudos_spinner {
-    @apply hidden;
-    background-image: url("../img/logo-black.svg");
-  }
 
   &.kudos_loading {
     .kudos_modal_container::before {
@@ -129,90 +68,24 @@ div[id^=kudos_modal-] {
     }
 
     .kudos_spinner {
-      @apply block bg-contain bg-no-repeat;
-      animation: loader-spin 2s infinite;
+      @apply block #{!important};
     }
   }
 
-  .form-tabs {
-
-    // Hide back button on first tab
-    .form-tab:first-of-type .kudos_form_nav.kudos_back {
-      display: none;
-    }
-  }
-
-  .form-tab {
-    @apply hidden;
-    &.current-tab {
-      @apply block;
-    }
+  .form-tab.current-tab {
+    @apply block #{!important};
   }
 
   .kudos_form {
 
-    //label {
-    //  @apply inline-block m-0 cursor-pointer font-normal;
-    //
-    //  &:not(:first-child) {
-    //    @apply mt-3;
-    //  }
-    //}
-    //
-    //label.not-full {
-    //  @apply mr-2 mt-2;
-    //}
-    //
-    //label:not(.not-full) {
-    //  @apply w-full;
-    //}
-
-    input,
-    select {
-      @apply appearance-none leading-normal bg-transparent border-2 border-solid border-gray-300 rounded w-full py-2 px-3 text-base text-gray-700;
-
-      transition: border-color 0.15s ease-in-out;
-
-      &:focus {
-        @apply border-orange-500 outline-none;
-        border-color: var(--kudos-theme-color);
-        outline: 1px solid transparent;
-      }
-
-      &::placeholder,
-      option:disabled {
-        @apply text-gray-500;
-      }
-    }
-
-    input[type="text"],
-    input[type="email"] {
-      @apply cursor-text;
+    small.error {
+      @apply mt-1 block text-sm text-red-500;
     }
 
     input[type="checkbox"],
     input[type="radio"] {
-      @apply inline-block border-orange-500 w-4 h-4 mx-1 my-0 border border-solid bg-white cursor-pointer leading-none outline-none text-center clear-none;
 
-      border-color: var(--kudos-theme-color-darker);
-      padding: 0 !important;
-      vertical-align: middle;
-      min-width: 1em;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-      transition: .05s border-color ease-in-out;
-      -webkit-appearance: none;
-
-      &:focus {
-        box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--kudos-theme-color);
-        outline: 2px solid transparent;
-      }
-
-      &:checked {
-        @apply bg-orange-500;
-
-        background: var(--kudos-theme-color);
-
-        &::before {
+      &:checked::before {
           @apply relative float-left bg-white;
           content: "";
           width: 6px;
@@ -220,12 +93,10 @@ div[id^=kudos_modal-] {
           position: relative;
           margin: 4px 0 0 4px;
           line-height: 1.14285714;
-        }
       }
     }
 
     input[type="radio"] {
-      @apply rounded-full;
 
       &:checked::before {
         @apply rounded-full;
@@ -235,56 +106,27 @@ div[id^=kudos_modal-] {
     input.error,
     select.error,
     input.error ~ .checkmark {
-      @apply border-red-500;
-    }
-
-    div.radio-group {
-      @apply flex justify-center items-center mt-4;
-    }
-
-    div.kudos_amounts {
-      @apply bg-white flex flex-wrap -mx-2;
-
-      input {
-        @apply absolute m-0;
-
-        z-index: -1;
-      }
+      @apply border-red-500 #{!important};
     }
 
     .kudos_radio_amount {
-      @apply w-1/4 px-2 m-0;
-
-      label {
-        transition: box-shadow 0.15s ease-in-out;
-      }
 
       input {
         &:checked + label {
-          @apply text-white bg-orange-500 border-transparent;
+          @apply text-white border-transparent #{!important};
 
           background-color: var(--kudos-theme-color);
         }
 
         &:focus {
-          @apply shadow-none;
           + label {
             box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--kudos-theme-color);
             outline: 2px solid transparent;
           }
         }
       }
-
-      label {
-        @apply py-3 rounded text-center block border-2 border-solid border-gray-300;
-      }
     }
   }
-
-  .kudos_summary {
-    border-color: var(--kudos-theme-color);
-  }
-
 }
 
 .kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
@@ -304,22 +146,6 @@ div[id^=kudos_modal-] {
 }
 
 // Animations
-
-@keyframes loader-spin {
-  0% {
-    transform: rotate(0);
-    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-  }
-
-  50% {
-    transform: rotate(900deg);
-    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-  }
-
-  100% {
-    transform: rotate(1800deg);
-  }
-}
 
 @keyframes tabIn {
   0% {

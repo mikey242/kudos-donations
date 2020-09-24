@@ -173,7 +173,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 					}
 				>
 					<RichText
-						className={ 'kudos_button kudos_button_primary kudos_button_donate' }
+						className={ 'kd-transition-shadow kd-transition-colors kd-duration-150 kd-ease-in-out focus:kd-shadow-focus focus:kd-outline-none kd-font-sans kd-text-center kd-text-white kd-leading-normal kd-font-normal kd-normal-case kd-no-underline kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none kd-border-none kd-bg-theme hover:kd-bg-theme-dark kudos_button_donate' }
 						style={ { backgroundColor: kudos.theme_color } }
 						formattingControls={ [
 							'bold',

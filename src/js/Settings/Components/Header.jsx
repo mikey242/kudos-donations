@@ -16,8 +16,8 @@ const Header = ( props ) => {
 
 	return (
 		<div className="kudos-dashboard-header">
-			<div className="dashboard-wrap flex items-center justify-between">
-				<div className="flex">
+			<div className="dashboard-wrap kd-flex kd-items-center kd-justify-between">
+				<div className="kd-flex">
 					<img width="30" src={ logo } alt="Kudos Logo" />
 					<h1>{ __( 'Kudos Settings', 'kudos-donations' ) }</h1>
 				</div>

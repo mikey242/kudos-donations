@@ -1,0 +1,35 @@
+{% macro button(label, style='primary', type='button', atts={}) %}
+
+    {% set transition = 'kd-transition-shadow kd-transition-colors kd-duration-150 kd-ease-in-out' %}
+    {% set focus = 'focus:kd-shadow-focus focus:kd-outline-none' %}
+    {% set text = 'kd-font-sans kd-text-center kd-text-white kd-leading-normal kd-font-normal kd-normal-case kd-no-underline' %}
+    {% set generic = 'kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none' %}
+    {% set extra = '' %}
+
+    {% if 'outline' == style %}
+        {% set style = 'kd-text-theme kd-border kd-border-solid kd-border-theme kd-bg-transparent hover:kd-bg-theme-dark hover:kd-text-white' %}
+    {% endif %}
+    {% if 'primary' == style %}
+        {% set style = 'kd-border-none kd-bg-theme hover:kd-bg-theme-dark' %}
+    {% endif %}
+
+    {% if atts.class is defined %}
+        {% set extra = atts.class %}
+    {% endif %}
+
+    {% set styles = [transition, focus, text, generic, style, extra] | join(' ') %}
+
+    <button
+        type="button"
+        class="{{ styles }}"
+        aria-label="{{ label }}"
+        {% for key, value in atts %}
+            {% if 'class' != key %}
+                {{ key ~ '=' ~ value }}
+            {% endif %}
+        {% endfor %}
+    >
+        {{ label }}
+    </button>
+
+{% endmacro %}

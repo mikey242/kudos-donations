@@ -1,17 +1,15 @@
 {% extends 'public/modal/base.html.twig' %}
 {% set classes = 'kudos_message_modal' %}
+{% from "/public/modal/macros/buttons.html.twig" import button %}
+{% from "/public/modal/macros/text.html.twig" import title, paragraph %}
 
 {% block content %}
-    {% embed '/public/modal/partials/_header.html.twig' %}
-        {% block title %}
-            {{ title }}
-        {% endblock %}
-        {% block text %}
-            {{ text }}
-        {% endblock %}
-    {% endembed %}
 
-    <div class="kudos_modal_buttons mt-8 block text-right">
-        <button class="kudos_button kudos_button_primary" type="button" data-micromodal-close aria-label="Close this dialog window">Ok</button>
+    {{ title(title) }}
+    {{ paragraph(text) }}
+
+    <div class="kudos_modal_buttons kd-mt-8 kd-block kd-text-right">
+        {{ button(__('Ok', 'kudos-donations'), 'primary', 'button', {'data-micromodal-close': ''}) }}
     </div>
+
 {% endblock content %}

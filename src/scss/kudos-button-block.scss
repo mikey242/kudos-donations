@@ -3,11 +3,10 @@
 @tailwind utilities;
 
 @import "partials/fonts";
-@import "partials/buttons";
 
 button.kudos_button_donate {
 
-  font-size: 18px;
+  //font-size: 18px;
 
   &:before {
     content: '';

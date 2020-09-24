@@ -71,7 +71,7 @@ class KudosModal {
 		$privacy_link   = __( 'I agree with the privacy policy.', "kudos-donations" );
 		if ( $privacy_option ) {
 			$privacy_link = sprintf( __( 'I agree with the %s', "kudos-donations" ),
-				'<a target="_blank" href=' . Settings::get_setting( "privacy_link" ) . '>' . __( "privacy policy",
+				'<a class="kd-text-theme hover:kd-text-theme-dark kd-underline kd-cursor-pointer" target="_blank" href=' . Settings::get_setting( "privacy_link" ) . '>' . __( "privacy policy",
 					"kudos-donations" ) . '</a>.' );
 		}
 

@@ -1,5 +1,5 @@
+{% from "/public/modal/macros/buttons.html.twig" import button %}
+
 <div class="has-text-align-{{ alignment }}">
-    <button class='kudos_button kudos_button_primary kudos_button_donate' data-target="{{ target }}">
-        {{ label | raw }}
-    </button>
+    {{ button(label|raw, 'primary', 'button', {'data-target': target, 'class': 'kudos_button_donate' }) }}
 </div>
