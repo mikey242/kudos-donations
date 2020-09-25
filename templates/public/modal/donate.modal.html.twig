@@ -25,7 +25,7 @@
                                 <div class="kudos_radio_amount kd-w-1/4 kd-px-2 kd-m-0">
                                     <input class="focus:kd-outline-none focus:kd-shadow-none kd-absolute kd-m-0 kd--z-1"
                                            id="amount-{{ modal_id }}-{{ key }}" {{ key==0 ? 'checked' : '' }}
-                                           type="radio" name="value" value={{ value }}/>
+                                           type="radio" name="value" value="{{ value }}"/>
                                     <label class="kd-transition-shadow kd-transition-colors kd-duration-150 kd-ease-in-out kd-py-3 kd-rounded kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-solid kd-border-gray-300"
                                            for="amount-{{ modal_id }}-{{ key }}">€{{ value }}</label>
                                 </div>
