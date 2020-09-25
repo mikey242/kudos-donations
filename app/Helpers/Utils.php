@@ -93,30 +93,34 @@ class Utils {
 	 *
 	 * @source https://gist.github.com/stephenharris/5532899
 	 * @param string $hex Colour as hexadecimal (with or without hash);
-	 * @param string $percent
+	 * @param float $percent
 	 *
 	 * @return string Lightened/Darkened colour as hexadecimal (with hash);
 	 * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
 	 * @sice    1.0.2
 	 */
-	public static function color_luminance( string $hex, string $percent ) {
+	public static function color_luminance( string $hex, float $percent ) {
 
-		// validate hex string
-		$hex     = preg_replace( '/[^0-9a-f]/i', '', $hex );
-		$new_hex = '#';
+		// Remove leading '#' if present
+		$hex = ltrim($hex, '#');
 
-		if ( strlen( $hex ) < 6 ) {
+		// Expand to 6 character hex code (e.g. FFF -> FFFFFF)
+		if ( strlen( $hex ) == 3 ) {
 			$hex = $hex[0] + $hex[0] + $hex[1] + $hex[1] + $hex[2] + $hex[2];
 		}
 
-		// convert to decimal and change luminosity
-		for ( $i = 0; $i < 3; $i ++ ) {
-			$dec     = hexdec( substr( $hex, $i * 2, 2 ) );
-			$dec     = min( max( 0, $dec + $dec * $percent ), 255 );
-			$new_hex .= str_pad( dechex( $dec ), 2, 0, STR_PAD_LEFT );
+		// Convert to decimal
+		$hex = array_map('hexdec', str_split($hex, 2));
+
+		// Change luminosity of decimal colour
+		foreach ( $hex as & $color ) {
+			$adjustableLimit = $percent < 0 ? $color : 255 - $color;
+			$adjustAmount = ceil($adjustableLimit * $percent);
+
+			$color = str_pad(dechex($color + $adjustAmount), 2, '0', STR_PAD_LEFT);
 		}
 
-		return $new_hex;
+		return '#' . implode($hex);
 	}
 
 	/**
