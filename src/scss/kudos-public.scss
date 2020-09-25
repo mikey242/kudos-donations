@@ -5,7 +5,6 @@
 @import "partials/fonts";
 
 div[id^=kudos_modal-] {
-
   all: initial;
 
   *,
@@ -43,9 +42,7 @@ div[id^=kudos_modal-] {
   }
 
   .kudos_modal_buttons {
-
     .kudos_back {
-
       &::after {
         @apply absolute cursor-pointer bg-contain rounded-full;
         content: '';
@@ -59,7 +56,6 @@ div[id^=kudos_modal-] {
 }
 
 .kudos_form_modal {
-
   &.kudos_loading {
     .kudos_modal_container::before {
       z-index: 1;
@@ -75,14 +71,12 @@ div[id^=kudos_modal-] {
   }
 
   .kudos_form {
-
     small.error {
       @apply mt-1 block text-sm text-red-500;
     }
 
     input[type="checkbox"],
     input[type="radio"] {
-
       &:checked::before {
           @apply relative float-left bg-white;
           content: "";
@@ -95,7 +89,6 @@ div[id^=kudos_modal-] {
     }
 
     input[type="radio"] {
-
       &:checked::before {
         @apply rounded-full;
       }
@@ -108,7 +101,6 @@ div[id^=kudos_modal-] {
     }
 
     .kudos_radio_amount {
-
       input {
         &:checked + label {
           @apply text-white border-transparent #{!important};
@@ -137,71 +129,22 @@ div[id^=kudos_modal-] {
   }
 }
 
-.kudos_modal[aria-hidden="false"] .kudos_modal_overlay {
-  animation: fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
-}
-
-.kudos_modal[aria-hidden="false"] .kudos_modal_container {
-  animation: slideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
-}
-
-.kudos_modal[aria-hidden="true"] .kudos_modal_overlay {
-  animation: fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
-}
-
-.kudos_modal[aria-hidden="true"] .kudos_modal_container {
-  animation: slideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
-}
-
-// Animations
-
-@keyframes tabIn {
-  0% {
-    display: none;
-    opacity: 0;
+.kudos_modal[aria-hidden="false"] {
+  .kudos_modal_overlay {
+    @apply animate-fade-in;
   }
-  1% {
-    display: block;
-    opacity: 0;
-  }
-  100% {
-    display: block;
-    opacity: 1;
+
+  .kudos_modal_container {
+    @apply animate-slide-in;
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+.kudos_modal[aria-hidden="true"] {
+  .kudos_modal_overlay {
+    @apply animate-fade-out;
   }
-  to {
-    opacity: 1;
-  }
-}
 
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(15%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideOut {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-10%);
+  .kudos_modal_container {
+    @apply animate-slide-out;
   }
 }
