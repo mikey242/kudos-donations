@@ -1,6 +1,6 @@
 {% macro input(name, label, value=null, type='text', required=true, atts={}) %}
 
-    {% set styles = ['kd-ease-in-out kd-border-solid kd-cursor-pointer kd-placeholder-gray-500 focus:kd-outline-none'] %}
+    {% set styles = ['kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-placeholder-gray-500 focus:kd-outline-none'] %}
 
     {% if ( 'text' == type or 'email' == type ) %}
         {% set focus = 'focus:kd-border-theme' %}
@@ -11,7 +11,7 @@
     {% if ( 'radio' == type or 'checkbox' == type ) %}
         {% set checked = 'checked:kd-bg-theme' %}
         {% set focus = 'focus:kd-shadow-focus' %}
-        {% set generic = 'kd-transition-colors kd-duration-75 kd-bg-white kd-shadow-inner kd-border kd-border-theme kd-inline-block kd-w-4 kd-h-4 kd-mx-1 kd-my-0 kd-p-0 kd-align-middle kd-min-w-1 kd-leading-none kd-outline-none kd-text-center kd-clear-none' %}
+        {% set generic = 'kd-duration-75 kd-bg-white kd-shadow-inner kd-border kd-border-theme kd-inline-block kd-w-4 kd-h-4 kd-mx-1 kd-my-0 kd-p-0 kd-align-middle kd-min-w-1 kd-leading-none kd-outline-none kd-text-center kd-clear-none' %}
         {% set styles = styles | merge([ checked, focus, generic ]) %}
     {% endif %}
 
