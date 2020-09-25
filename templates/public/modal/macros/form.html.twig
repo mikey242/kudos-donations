@@ -17,14 +17,14 @@
 
     {% if 'radio' == type %}
         {% set generic = 'kd-rounded-full' %}
-        {% set styles = styles | merge([ generic ])  %}
+        {% set styles = styles | merge([ generic ]) %}
     {% endif %}
 
     <input class="{{ styles | join(' ') }}"
-           {{ required ? 'required' : '' }}
+            {{ required ? 'required' : '' }}
            type="{{ type }}"
            name="{{ name }}"
-           {{ value ? 'value=' ~ value : '' }}
+            {{ value ? 'value=' ~ value : '' }}
            placeholder="{{ label ~ (required ?  ' *' : '') }}"
             {% for key, value in atts %}
                 {{ key ~ '=' ~ value }}
@@ -40,8 +40,8 @@
 {% endmacro %}
 
 {% macro radio(name, options, selected, required=true) %}
-        {% from _self import input %}
-        <div class="kd-flex kd-justify-center kd-items-center kd-mt-4">
+    {% from _self import input %}
+    <div class="kd-flex kd-justify-center kd-items-center kd-mt-4">
         {% for value, label in options %}
             <label class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
                 {{ input(name, '', value, 'radio', required, { (selected == value ? 'checked' : '' ) : ''}) }}

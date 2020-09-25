@@ -1,7 +1,9 @@
 {% from "/public/modal/macros/buttons.html.twig" import button %}
 {% from "/public/modal/macros/text.html.twig" import title, paragraph %}
 
-<fieldset class="form-tab form-tab-{{ class ?: block('title')|slugify }} kd-hidden kd-w-full kd-relative kd-m-0 kd-p-0 kd-border-0" data-requirements={{ requirements }}>
+<fieldset
+        class="form-tab form-tab-{{ class ?: block('title')|slugify }} kd-hidden kd-w-full kd-relative kd-m-0 kd-p-0 kd-border-0"
+        data-requirements={{ requirements }}>
 
     {% set _title = block('title') %}
     {% set _text = block('text') %}
@@ -14,7 +16,8 @@
     <div class="kudos_modal_buttons kd-mt-8 kd-block kd-text-center kd-relative">
         {% block nav_buttons %}
             {% block back_button %}
-                <button type="button" class="kudos_form_nav kudos_back kd-absolute kd-m-0 kd-left-0 kd-bottom-1/2" aria-label="{{ __('Previous tab', 'kudos-donations') }}" data-direction="back"> </button>
+                <button type="button" class="kudos_form_nav kudos_back kd-absolute kd-m-0 kd-left-0 kd-bottom-1/2"
+                        aria-label="{{ __('Previous tab', 'kudos-donations') }}" data-direction="back"></button>
             {% endblock %}
             {{ button(__('Cancel', 'kudos-donations'), 'outline', 'button', {'data-micromodal-close': ''}) }}
             {% block next_button %}
