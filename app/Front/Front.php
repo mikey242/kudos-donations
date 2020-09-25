@@ -141,8 +141,8 @@ class Front {
 	public function get_kudos_root_styles() {
 
 		$color        = Settings::get_setting( 'theme_color' );
-		$color_dark   = Utils::color_luminance( $color, '-0.05' );
-		$color_darker = Utils::color_luminance( $color, '-0.08' );
+		$color_dark   = Utils::color_luminance( $color, '-0.06' );
+		$color_darker = Utils::color_luminance( $color, '-0.09' );
 
 		return "<style>
 
