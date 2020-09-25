@@ -14,8 +14,6 @@ div[id^=kudos_modal-] {
     all: initial;
   }
 
-  @import "partials/buttons";
-
   *,
   *::before,
   *::after {
@@ -124,6 +122,16 @@ div[id^=kudos_modal-] {
             outline: 2px solid transparent;
           }
         }
+      }
+    }
+
+    .kudos_submit {
+      &::before {
+        content: url("../img/lock-white.svg");
+        width: 10px;
+        height: auto;
+        background-size: contain;
+        margin: auto 5px auto 0;
       }
     }
   }
