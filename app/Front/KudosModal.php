@@ -67,19 +67,11 @@ class KudosModal {
 	 */
 	public function get_donate_modal( array $data, $echo = false ) {
 
-		$privacy_option = Settings::get_setting( "privacy_link" );
-		$privacy_link   = __( 'I agree with the privacy policy.', "kudos-donations" );
-		if ( $privacy_option ) {
-			$privacy_link = sprintf( __( 'I agree with the %s', "kudos-donations" ),
-				'<a class="kd-text-theme hover:kd-text-theme-dark kd-underline kd-cursor-pointer" target="_blank" href=' . Settings::get_setting( "privacy_link" ) . '>' . __( "privacy policy",
-					"kudos-donations" ) . '</a>.' );
-		}
-
 		$data = array_merge( $data,
 			[
 				'return_url'   => Utils::get_return_url(),
 				'nonce'        => wp_nonce_field( 'kudos_submit', '_wpnonce', true, false ),
-				'privacy_link' => $privacy_link,
+				'privacy_link' => Settings::get_setting( "privacy_link" ),
 				'payment_by'   => __( 'Secure payment by', 'kudos-donations' ),
 
 				// Global settings

@@ -109,7 +109,11 @@
                         <p class="kd-block kd-mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong>€<span class="summary_value"></span></p>
                         <p><strong>{{ __('Type', 'kudos-donations') }}: </strong><span class="summary_frequency"></span></p>
                     </div>
-                    {{ checkbox('avg', privacy_link) }}
+                    {{ checkbox('avg',
+                        privacy_link
+                            ? __( 'I agree with the %s ', "kudos-donations" ) | format('<a class="kd-text-theme hover:kd-text-theme-dark kd-shadow-none kd-underline kd-cursor-pointer" target="_blank" href=%s>%s</a>.' | format(privacy_link ,__( "privacy policy","kudos-donations" )))
+                            : __( 'I agree with the privacy policy.', "kudos-donations" )
+                    ) }}
                 {% endblock %}
                 {% block next_button %}
                     {{ button(__('Donate', 'kudos-donations'), 'primary', 'submit', {'class': 'kudos_submit kd-ml-3'}) }}
