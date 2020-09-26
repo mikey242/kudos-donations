@@ -43,13 +43,13 @@ div[id^=kudos_modal-] {
 
   .kudos_modal_buttons {
     .kudos_back {
-      &::after {
-        @apply absolute cursor-pointer bg-contain rounded-full;
+      &::before {
+        @apply absolute cursor-pointer bg-contain bg-no-repeat;
         content: '';
+        transform: translateY(-50%);
         width: 20px;
         height: 20px;
-        background: url("../img/back-icon.svg") no-repeat center;
-        transform: translateY(-50%);
+        background-image: url("../img/back-icon.svg");
       }
     }
   }
