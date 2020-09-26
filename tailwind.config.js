@@ -19,8 +19,8 @@ module.exports = {
       '4xl': '2.25em', //'36px'
     },
     fontFamily: {
-      sans: ['Merriweather Sans Light', 'Century Gothic', 'sans-serif'],
-      serif: ['Elephant Regular', 'Times New Roman', 'serif']
+      sans: ['montserratregular', 'Century Gothic', 'sans-serif'],
+      serif: ['libre_baskervillebold', 'Times New Roman', 'serif']
     },
     boxShadow: {
       none: 'none',
