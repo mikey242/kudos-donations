@@ -27,7 +27,7 @@
                 {{ key ~ '=' ~ value }}
             {% endfor %}
     >
-        {{ label }}
+        {{ label|raw }}
     </button>
 
 {% endmacro %}
