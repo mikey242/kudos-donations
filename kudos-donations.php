@@ -8,7 +8,10 @@ use Kudos\Service\DeactivatorService;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-if(class_exists(\Dotenv\Dotenv::class)) {
+/**
+ * Load .env file if present
+ */
+if(class_exists(\Dotenv\Dotenv::class) && file_exists(__DIR__ . '/.env')) {
 	$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 	$dotenv->load();
 }
