@@ -82,7 +82,7 @@
 
   .kudos-tab-panel {
     .components-tab-panel__tabs {
-      @apply flex justify-center bg-white shadow;
+      @apply flex justify-center bg-white shadow-sm;
 
       .components-button.is-active {
         @apply relative font-semibold;
