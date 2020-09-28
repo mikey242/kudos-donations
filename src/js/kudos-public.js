@@ -56,8 +56,15 @@ $( () => {
 				min: __( 'Minimum donation is 1 euro', 'kudos-donations' ),
 				digits: __( 'Only digits are valid', 'kudos-donations' ),
 			},
+			recurring_frequency: {
+				required: __('Please select a payment frequency', 'kudos-donations')
+			},
 			recurring_length: {
+				required: __('Please select a payment duration', 'kudos-donations'),
 				totalPayments: __( 'Subscriptions must be more than one payment', 'kudos-donations' )
+			},
+			avg: {
+				required: __('You must agree to our privacy policy before donating', 'kudos-donations')
 			}
 		},
 	} );
