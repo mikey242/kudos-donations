@@ -22,6 +22,7 @@ const EmailReceiptsPanel = ( props ) => {
 
 				<TextControl
 					label={ __( 'Send receipt copy to:', 'kudos-donations' ) }
+					help={ __( 'Leave blank to disable.', 'kudos-donations' ) }
 					type={ 'text' }
 					value={ props.settings._kudos_email_bcc || '' }
 					placeholder={ props.placeholder }
