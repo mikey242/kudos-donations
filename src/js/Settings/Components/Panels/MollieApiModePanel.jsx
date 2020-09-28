@@ -1,5 +1,7 @@
+import {Btn} from "../Btn"
+
 const { __ } = wp.i18n;
-const { PanelBody, BaseControl, ButtonGroup, Button, PanelRow } = wp.components;
+const { PanelBody, BaseControl, ButtonGroup, PanelRow } = wp.components;
 
 const MollieApiModePanel = (props ) => {
 	
@@ -28,7 +30,7 @@ const MollieApiModePanel = (props ) => {
 			>
 				<PanelRow>
 					<ButtonGroup>
-						<Button
+						<Btn
 							isPrimary={ 'test' === selected }
 							isSecondary={ 'test' !== selected }
 							// disabled={ 'test' === selected }
@@ -38,8 +40,8 @@ const MollieApiModePanel = (props ) => {
 							}
 						>
 							{ 'Test' }
-						</Button>
-						<Button
+						</Btn>
+						<Btn
 							isPrimary={ 'live' === selected }
 							isSecondary={ 'live' !== selected }
 							// disabled={ 'live' === selected }
@@ -49,7 +51,7 @@ const MollieApiModePanel = (props ) => {
 							}
 						>
 							{ 'Live' }
-						</Button>
+						</Btn>
 					</ButtonGroup>
 				</PanelRow>
 			</BaseControl>

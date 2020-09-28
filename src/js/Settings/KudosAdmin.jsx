@@ -19,13 +19,13 @@ import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
 import { SubscriptionPanel } from "./Components/Panels/SubscriptionPanel"
 import { IntroGuide } from "./Components/IntroGuide";
+import {Btn} from "./Components/Btn";
 
 const { __ } = wp.i18n;
 
 const {
 	Panel,
 	PanelRow,
-	Button,
 	Spinner,
 	TabPanel
 } = wp.components;
@@ -387,7 +387,7 @@ class KudosAdmin extends Component {
 									</Panel>
 
 									<PanelRow className={'kd-justify-center'}>
-										<Button
+										<Btn
 											isPrimary
 											disabled={
 												this.state.isSaving ||
@@ -400,7 +400,7 @@ class KudosAdmin extends Component {
 											onClick={this.updateAll}
 										>
 											{__('Save', 'kudos-donations')}
-										</Button>
+										</Btn>
 									</PanelRow>
 								</div>
 							)
