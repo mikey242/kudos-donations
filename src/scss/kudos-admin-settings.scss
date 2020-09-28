@@ -35,30 +35,14 @@
 }
 
 .kudos-dashboard-header {
-  padding: 20px 10px;
-  background-color: #ffffff;
-  box-shadow: 0 1px 0 rgba(213, 213, 213, 0.5), 0 1px 2px #eee;
-
-  img {
-    margin-right: 15px;
-  }
 
   .kudos-api-status {
-    color: #999;
-    margin-left: 15px;
 
     &:before {
-      @apply rounded-full;
+      @apply rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 bg-gray-500;
       content: '';
-      display: inline-block;
       width: 15px;
       height: 15px;
-      vertical-align: middle;
-      margin-right: 5px;
-      background: #999;
-      border-width: 2px;
-      border-style: solid;
-      border-color: #ccc;
     }
 
     &.connected {
@@ -79,96 +63,40 @@
       }
     }
   }
-
-  .kudos-version {
-    @apply rounded-lg;
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin-left: 15px;
-    font-weight: bold;
-  }
 }
 
 #kudos-settings {
-  .components-spinner {
-    left: 50%;
-    top: 50%;
-    position: absolute;
-  }
-
-  .dashboard-wrap {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 750px;
-    width: 100%;
-  }
-
-  .kudos-admin-info {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .dashicon {
-      margin-right: 5px;
-    }
-  }
 
   // WordPress Components
-
-  .components-button.is-primary {
-    @apply bg-orange-500;
-  }
-
   .components-base-control__help {
     @apply mt-4 mb-0;
   }
 
   .components-snackbar {
-    position: fixed;
-    bottom: 20px;
-    padding-left: 16px;
-    margin-left: 20px;
-    padding-right: 16px;
-    z-index: 1;
-    opacity: 0;
-    transition: 0.2s opacity ease;
-    width: auto;
+    @apply fixed px-4 ml-5 mb-5 w-auto z-1 opacity-0 bottom-0;
 
     &.notification-shown {
-      opacity: 1;
+      @apply opacity-100;
     }
   }
 
   .kudos-tab-panel {
     .components-tab-panel__tabs {
-      display: flex;
-      justify-content: center;
-      background: #fff;
-      box-shadow: 0 1px 0 rgba(213, 213, 213, 0.5), 0 1px 2px #eee;
+      @apply flex justify-center bg-white shadow;
 
       .components-button.is-active {
-        font-weight: 600;
-        position: relative;
+        @apply relative font-semibold;
       }
 
       .components-button {
-        background: transparent;
-        border: none;
+        @apply text-gray-800 inline-block bg-transparent border-none cursor-pointer py-1 px-5 ml-0 font-normal transition-shadow duration-100 ease-linear;
         height: 50px;
-        cursor: pointer;
-        display: inline-block;
-        padding: 3px 15px;
-        margin-left: 0;
-        font-weight: 400;
-        color: #191e23;
         outline-offset: -1px;
-        transition: box-shadow .1s linear;
       }
     }
 
     .components-tab-panel__tab-content {
-      margin-top: 25px;
+      @apply mt-8;
     }
   }
 

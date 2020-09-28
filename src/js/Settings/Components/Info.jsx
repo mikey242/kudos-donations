@@ -6,7 +6,7 @@ const Info = ( props ) => {
 
         <PanelRow>
 
-            <div className="kudos-admin-info">
+            <div className="kudos-admin-info kd-flex kd-items-center kd-justify-center">
                 <Dashicon icon={ props.icon ?? "info" } />
                     <i>{ props.children }</i>
             </div>

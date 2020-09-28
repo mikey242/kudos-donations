@@ -11,6 +11,14 @@ module.exports = {
     ]
   },
   theme: {
+    container: {
+      center: true,
+      screens: {
+        sm: "100%",
+        md: "100%",
+        lg: "768px",
+      }
+    },
     fontSize: {
       base: '16px',
       sm: '0.875em',
@@ -21,10 +29,6 @@ module.exports = {
     fontFamily: {
       sans: ['montserratregular', 'Century Gothic', 'sans-serif'],
       serif: ['libre_baskervillebold', 'Times New Roman', 'serif']
-    },
-    boxShadow: {
-      none: 'none',
-      focus: '0 0 0 1px #fff, 0 0 0 3px var(--kudos-theme-color)'
     },
     maxWidth: {
       lg: '32em',
@@ -82,7 +86,7 @@ module.exports = {
         'theme-darker': "var(--kudos-theme-color-darker)"
       },
       boxShadow: {
-        focus: '0 0 0 2px #fff, 0 0 0 3.5px var(--kudos-theme-color)'
+        focus: '0 0 0 2px #fff, 0 0 0 3.5px var(--kudos-theme-color)',
       },
       keyframes: {
         spin: {

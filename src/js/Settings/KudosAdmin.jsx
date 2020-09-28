@@ -244,7 +244,9 @@ class KudosAdmin extends Component {
 		// Show spinner if not yet loaded
 		if ( ! this.state.isAPILoaded ) {
 			return (
-				<Spinner />
+				<div className="kd-absolute kd-inset-0 kd-flex kd-items-center kd-justify-center">
+					<Spinner />
+				</div>
 			)
 		}
 
@@ -380,7 +382,7 @@ class KudosAdmin extends Component {
 
 							return (
 
-								<div className="kudos-settings-main dashboard-wrap">
+								<div className="kudos-settings-main dashboard-wrap kd-mx-auto kd-container">
 
 									<Panel>
 										{tab.content}
