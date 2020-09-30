@@ -21,24 +21,10 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 * Buttons and form can be configured all at once or individually
 * View all your transactions from the WordPress dashboard
 
-= Shortcode =
+= View information
 
-~~~~
-//Use the default settings
-[kudos]
-
-//Customise button text
-[kudos button="Help us out!"]
-
-//Customise header text
-[kudos header="Support our cause"]
-
-//Customise message text
-[kudos body="Thank you for donating to this project. We really appreciate your support."]
-
-//A fully customised button and text would look like this
-[kudos button="Help us out!" header="Support our cause" body="Thank you for donating to this project. We really appreciate your support."]
-~~~~
+= Recurring Payments =
+Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments based on the donors preferences. Subscriptions can even be be managed from the WordPress dashboard.
 
 = Source =
 The Git repository for this plugin can be found [here](https://gitlab.iseard.media/michael/kudos-donations).
@@ -65,6 +51,14 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 5. Transactions screen
 
 == Changelog ==
+
+= 2.0.0 =
+* *Plugin completely rewritten*
+* Significantly reduced size and speed
+* Brand new settings page built on React
+* Ability for customers to create subscriptions
+* Ability to switch between open and fixed donation amounts
+* Action scheduler integration for quicker payments/emails
 
 = 1.1.0 =
 * *Added* - Email receipts - You can now configure email server settings and enable automatic email receipts
