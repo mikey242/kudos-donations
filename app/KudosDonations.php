@@ -89,7 +89,7 @@ class KudosDonations {
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
-		if ( Settings::get_setting( 'action_scheduler' ) ) {
+		if ( Settings::get_setting( 'action_scheduler' ) && file_exists(KUDOS_PLUGIN_DIR . '/libraries/action-scheduler/action-scheduler.php') ) {
 			require_once( KUDOS_PLUGIN_DIR . '/libraries/action-scheduler/action-scheduler.php' );
 		}
 
