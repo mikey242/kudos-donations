@@ -1,329 +1,1079 @@
+#, fuzzy
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=utf-8\n"
-"X-Generator: babel-plugin-makepot\n"
+"Project-Id-Version: Kudos Donations\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
+"POT-Creation-Date: 2020-09-30 11:39+0200\n"
+"PO-Revision-Date: 2020-09-30 11:29+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: kudos-donations.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+"X-Poedit-SearchPathExcluded-2: node_modules\n"
+"X-Poedit-SearchPathExcluded-3: EXPORT\n"
+"X-Poedit-SearchPathExcluded-4: docker\n"
+"X-Poedit-SearchPathExcluded-5: libraries\n"
 
-#: src/js/Admin/Components/FormElements/ColorPicker.jsx:18
-msgid "Color"
+#: app/Admin/Admin.php:139 app/Admin/Admin.php:140
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Kudos"
 msgstr ""
 
-#: src/js/Admin/Components/KudosHeader.jsx:14
+#. translators: %s: Plugin name
+#: app/Admin/Admin.php:153
+#, php-format
+msgid "%s Transactions"
+msgstr ""
+
+#: app/Admin/Admin.php:154 app/Admin/Table/TransactionsTable.php:46
+#: app/Admin/partials/kudos-admin-transactions.php:28
+msgid "Transactions"
+msgstr ""
+
+#. translators: %s: Plugin name
+#: app/Admin/Admin.php:168
+#, php-format
+msgid "%s Subscriptions"
+msgstr ""
+
+#: app/Admin/Admin.php:169 app/Admin/Table/SubscriptionsTable.php:45
+#: app/Admin/partials/kudos-admin-subscriptions.php:36
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Subscriptions"
+msgstr ""
+
+#. translators: %s: Plugin name
+#: app/Admin/Admin.php:183
+#, php-format
+msgid "%s Donors"
+msgstr ""
+
+#: app/Admin/Admin.php:184 app/Admin/Table/DonorsTable.php:42
+#: app/Admin/partials/kudos-admin-donors.php:28
+msgid "Donors"
+msgstr ""
+
+#: app/Admin/Admin.php:196
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
 msgid "Kudos Settings"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/AVGPanel.jsx:13
-msgid "AVG"
+#: app/Admin/Admin.php:197
+msgid "Settings"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/AVGPanel.jsx:19
-msgid "Privacy Policy URL"
+#: app/Admin/Admin.php:272
+msgid "Are you sure you want to delete this transaction?"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CompletedPaymentPopup.jsx:18
-msgid "Completed Payment Pop-up"
+#: app/Admin/Admin.php:305
+msgid "Are you sure you want to cancel this subscription?"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CompletedPaymentPopup.jsx:24
-msgid "Show pop-up message when payment complete"
+#: app/Admin/Admin.php:306
+msgid "Are you sure you want to delete this subscription?"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CompletedPaymentPopup.jsx:25
-msgid "Enable this to show a pop-up thanking the customer for their donation."
+#: app/Admin/Admin.php:322
+msgid "Are you sure you want to delete this donor?"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CompletedPaymentPopup.jsx:35
-msgid "Message header"
+#: app/Admin/Admin.php:354
+msgid "Log cleared"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CompletedPaymentPopup.jsx:42
-msgid "Message text"
+#. translators: %s: Number of records.
+#: app/Admin/Admin.php:372
+#, php-format
+msgid "Deleted %s transactions(s)"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CompletedPaymentPopup.jsx:44
-#: src/js/Admin/Components/Panels/DonationButtonPanel.jsx:35
-msgid "Button label"
+#. translators: %s: Number of records.
+#: app/Admin/Admin.php:383
+#, php-format
+msgid "Deleted %s donors(s)"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CustomReturnPanel.jsx:18
-msgid "Custom Return URL"
+#. translators: %s: Number of records.
+#: app/Admin/Admin.php:393
+#, php-format
+msgid "Deleted %s subscriptions(s)"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CustomReturnPanel.jsx:24
-msgid "Use custom return URL"
+#: app/Admin/Admin.php:402 app/Admin/partials/kudos-admin-subscriptions.php:18
+msgid "Subscription cancelled"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/CustomReturnPanel.jsx:25
-msgid ""
-"After payment the customer is returned to the page where they clicked on "
-"the donation button. To use a different return URL, enable this option."
-msgstr ""
-
-#: src/js/Admin/Components/Panels/CustomReturnPanel.jsx:36
-msgid "URL"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/CustomReturnPanel.jsx:37
-msgid "e.g https://mywebsite.com/thanks"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/DiagnosticsPanel.jsx:12
-msgid "Diagnostics"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/DonationButtonPanel.jsx:21
-msgid "Donation Button"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/DonationFormPanel.jsx:14
-msgid "Donation Form"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/DonationFormPanel.jsx:20
-#: src/js/Admin/Components/Panels/InvoiceCompanyPanel.jsx:28
-msgid "Address"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/DonationFormPanel.jsx:28
-msgid "Payment form header"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/DonationFormPanel.jsx:36
-msgid "Payment form text"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailReceiptsPanel.jsx:18
-msgid "Email Receipts"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailReceiptsPanel.jsx:24
-msgid "Send email receipts"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailReceiptsPanel.jsx:25
-msgid ""
-"Once a payment has been completed, you can automatically send an email "
-"receipt to the donor."
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailReceiptsPanel.jsx:35
-msgid "Send receipt copy to:"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:21
-msgid "Host"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:22
-msgid "Your email server's hostname"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:29
-msgid "Encryption"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:30
-msgid "Choose your encryption type. Always use TLS or SSL if available."
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:35
-msgid "None"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:36
-msgid "SSL"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:37
-msgid "TLS"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:42
-msgid "Auto TLS"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:43
-msgid "Enable"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:44
-msgid "In most cases you will want this enabled. Disable for troubleshooting."
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:50
-msgid "Username"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:51
-msgid "This is usually an email address"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:58
-msgid "Password"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:67
-msgid "Port"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:68
-msgid "587 (TLS), 465 (SSL), 25 (Unencrypted)"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/EmailSettingsPanel.jsx:82
-msgid "Email Settings"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/GenerateInvoices.jsx:17
-msgid "Generate Invoices"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/GenerateInvoices.jsx:23
-msgid "Generate invoices"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/GenerateInvoices.jsx:24
-msgid "Disable this if your server has issues with PDF generation."
-msgstr ""
-
-#: src/js/Admin/Components/Panels/GenerateInvoices.jsx:35
-msgid "Attach to emails"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/GenerateInvoices.jsx:36
-msgid "When enabled, invoices will be attached to receipts emailed to donors."
-msgstr ""
-
-#: src/js/Admin/Components/Panels/InvoiceCompanyPanel.jsx:14
-msgid "Company Details"
-msgstr ""
-
-#: src/js/Admin/Components/Panels/InvoiceCompanyPanel.jsx:20
+#: app/Admin/Table/DonorsTable.php:31 app/Admin/Table/DonorsTable.php:97
+#: app/Admin/Table/SubscriptionsTable.php:33
+#: app/Admin/Table/SubscriptionsTable.php:114
+#: app/Admin/Table/TransactionsTable.php:36
+#: app/Admin/Table/TransactionsTable.php:124
+#: templates/public/modal/donate.modal.html.twig:40
+#: templates/public/modal/donate.modal.html.twig:112
 msgid "Name"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/InvoiceCompanyPanel.jsx:36
-msgid "VAT Number"
+#: app/Admin/Table/DonorsTable.php:32 app/Admin/Table/SubscriptionsTable.php:34
+#: app/Admin/Table/TransactionsTable.php:37
+#: templates/public/modal/donate.modal.html.twig:114
+msgid "Email"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/MolliePanel.jsx:21
-msgid "Mollie"
+#: app/Admin/Table/DonorsTable.php:33
+#: templates/public/modal/donate.modal.html.twig:95
+msgid "Street"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/MolliePanel.jsx:30
-msgid "Mollie API Mode"
+#: app/Admin/Table/DonorsTable.php:34
+#: templates/public/modal/donate.modal.html.twig:96
+msgid "Postcode"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/MolliePanel.jsx:31
+#: app/Admin/Table/DonorsTable.php:35
+#: templates/public/modal/donate.modal.html.twig:97
+msgid "City"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:36
+#: templates/public/modal/donate.modal.html.twig:98
+msgid "Country"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:41
+msgid "Donor"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:56 app/Admin/Table/SubscriptionsTable.php:59
+#: app/Admin/Table/TransactionsTable.php:60
+msgid "Search"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:96
+#: app/Admin/Table/SubscriptionsTable.php:115
+#: app/Admin/Table/TransactionsTable.php:125
+msgid "E-mail"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:98
+#: templates/public/modal/donate.modal.html.twig:88
+msgid "Address"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:99 app/Service/MailerService.php:26
+msgid "Donations"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:100
+#: app/Admin/Table/SubscriptionsTable.php:32
+#: app/Admin/Table/SubscriptionsTable.php:111
+#: app/Admin/Table/TransactionsTable.php:123
+#: templates/emails/receipt.html.twig:15
+msgid "Date"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:161
+msgid "Added"
+msgstr ""
+
+#: app/Admin/Table/DonorsTable.php:189 app/Admin/Table/DonorsTable.php:256
+#: app/Admin/Table/SubscriptionsTable.php:201
+#: app/Admin/Table/SubscriptionsTable.php:316
+#: app/Admin/Table/TransactionsTable.php:216
+#: app/Admin/Table/TransactionsTable.php:377
+msgid "Delete"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:35
+#: app/Admin/Table/SubscriptionsTable.php:116
+#: app/Admin/Table/TransactionsTable.php:33
+#: app/Admin/Table/TransactionsTable.php:126
+#: templates/emails/receipt.html.twig:25
+#: templates/public/modal/donate.modal.html.twig:116
+msgid "Amount"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:36
+#: app/Admin/Table/SubscriptionsTable.php:117
+#: app/Admin/Table/TransactionsTable.php:35
+#: app/Admin/Table/TransactionsTable.php:128
+msgid "Status"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:37
+#: app/Admin/Table/SubscriptionsTable.php:112
+msgid "Frequency"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:38
+#: app/Admin/Table/SubscriptionsTable.php:113
+#: templates/public/modal/donate.modal.html.twig:72
+#: templates/public/modal/donate.modal.html.twig:73
+#: templates/public/modal/donate.modal.html.twig:74
+#: templates/public/modal/donate.modal.html.twig:75
+#: templates/public/modal/donate.modal.html.twig:76
+#: templates/public/modal/donate.modal.html.twig:77
+#: templates/public/modal/donate.modal.html.twig:78
+#: templates/public/modal/donate.modal.html.twig:79
+#: templates/public/modal/donate.modal.html.twig:80
+msgid "Years"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:39
+#: app/Admin/Table/TransactionsTable.php:32
+msgid "Currency"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:44
+#: templates/public/modal/donate.modal.html.twig:58
+msgid "Subscription"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:118
+msgid "Subscription Id"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:194
+#: app/Admin/Table/SubscriptionsTable.php:315
+#: templates/public/modal/embeds/_tab.html.twig:22
+msgid "Cancel"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:225
+#: templates/public/modal/donate.modal.html.twig:70
+msgid "Continuous"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:295
+msgid "Active"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:298
+msgid "Cancelled"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:429
+#: app/Admin/Table/TransactionsTable.php:461
+msgid "All"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:435 app/Helpers/Utils.php:159
+#: templates/public/modal/donate.modal.html.twig:64
+msgid "Yearly"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:441 app/Helpers/Utils.php:163
+#: templates/public/modal/donate.modal.html.twig:65
+msgid "Quarterly"
+msgstr ""
+
+#: app/Admin/Table/SubscriptionsTable.php:448 app/Helpers/Utils.php:161
+#: templates/public/modal/donate.modal.html.twig:66
+msgid "Monthly"
+msgstr ""
+
+#. translators: %s: Name of record type (e.g transactions)
+#: app/Admin/Table/TableTrait.php:32
+#, php-format
+msgid "No %s found."
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:31
+msgid "Transaction created"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:34
+msgid "Refunded"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:38
+msgid "Method"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:39
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Mode"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:40
+#: app/Admin/Table/TransactionsTable.php:127
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+#: templates/public/modal/donate.modal.html.twig:118
+msgid "Type"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:45
+msgid "Transaction"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:129
+msgid "Order Id"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:130
+msgid "Transaction Id"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:131
+msgid "Donation Label"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:332
+#: app/Admin/Table/TransactionsTable.php:467
+msgid "Paid"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:335
+#: app/Admin/Table/TransactionsTable.php:473
+msgid "Open"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:338
+#: app/Admin/Table/TransactionsTable.php:486
+msgid "Expired"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:341
+#: app/Admin/Table/TransactionsTable.php:479
+msgid "Canceled"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:344
+msgid "Failed"
+msgstr ""
+
+#: app/Admin/Table/TransactionsTable.php:347
+msgid "Unknown"
+msgstr ""
+
+#: app/Admin/partials/kudos-admin-donors.php:18
+msgid "Donor deleted"
+msgstr ""
+
+#. translators: %s: Number of records
+#: app/Admin/partials/kudos-admin-donors.php:22
+#, php-format
+msgid "%s donor(s) deleted"
+msgstr ""
+
+#. translators: %s: Search term
+#: app/Admin/partials/kudos-admin-donors.php:33
+#: app/Admin/partials/kudos-admin-subscriptions.php:41
+#: app/Admin/partials/kudos-admin-transactions.php:33
+#, php-format
+msgid "Search results for “%s”"
+msgstr ""
+
+#: app/Admin/partials/kudos-admin-subscriptions.php:21
+msgid "Subscription deleted"
+msgstr ""
+
+#. translators: %s: Number of records
+#: app/Admin/partials/kudos-admin-subscriptions.php:25
+#, php-format
+msgid "%s subscription(s) cancelled"
+msgstr ""
+
+#. translators: %s: Number of records
+#: app/Admin/partials/kudos-admin-subscriptions.php:30
+#, php-format
+msgid "%s subscription(s) deleted"
+msgstr ""
+
+#: app/Admin/partials/kudos-admin-transactions.php:18
+msgid "Transaction deleted"
+msgstr ""
+
+#. translators: %s: Number of records
+#: app/Admin/partials/kudos-admin-transactions.php:22
+#, php-format
+msgid "%s transactions(s) deleted"
+msgstr ""
+
+#: app/Front/Front.php:236
+msgid "Request invalid."
+msgstr ""
+
+#: app/Front/Front.php:296
+msgid "Error creating Mollie payment. Please try again later."
+msgstr ""
+
+#: app/Front/Front.php:315 app/Front/Front.php:340
+msgid "Donate now"
+msgstr ""
+
+#: app/Front/Front.php:317 app/Front/Front.php:356
+msgid "Support us!"
+msgstr ""
+
+#: app/Front/Front.php:318 app/Front/Front.php:360
+msgid "Thank you for your donation. We appreciate your support!"
+msgstr ""
+
+#: app/Front/Front.php:407
+msgid "Mollie not connected"
+msgstr ""
+
+#: app/Front/Front.php:480
+msgid "Subscription canceled"
+msgstr ""
+
+#: app/Front/Front.php:481
+msgid ""
+"We will no longer be taking payments for this subscription. Thank you for "
+"your contributions."
+msgstr ""
+
+#: app/Front/Front.php:490
+msgid "Link expired"
+msgstr ""
+
+#: app/Front/Front.php:491
+msgid "Sorry, this link is no longer valid."
+msgstr ""
+
+#: app/Front/Front.php:530
+msgid "Payment canceled"
+msgstr ""
+
+#: app/Front/Front.php:533 templates/emails/receipt.html.twig:45
+msgid "Thanks"
+msgstr ""
+
+#: app/Front/Front.php:534
+msgid "Your donation will be processed soon."
+msgstr ""
+
+#: app/Front/KudosButton.php:117 app/Front/KudosModal.php:75
+msgid "Secure payment by"
+msgstr ""
+
+#: app/Helpers/Settings.php:130
+msgid "Thank you!"
+msgstr ""
+
+#. translators: %s: Value of donation.
+#: app/Helpers/Settings.php:137
+#, php-format
+msgid "Many thanks for your donation of %s. We appreciate your support."
+msgstr ""
+
+#: app/Helpers/Utils.php:138 app/Helpers/Utils.php:165
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:270
+#: templates/public/modal/donate.modal.html.twig:45
+msgid "One-off"
+msgstr ""
+
+#: app/Helpers/Utils.php:140
+msgid "Recurring (first payment)"
+msgstr ""
+
+#: app/Helpers/Utils.php:142 dist/js/kudos-public.8392c73e6e1d82d7038b.js:1
+#: src/js/kudos-public.js:268 templates/public/modal/donate.modal.html.twig:46
+msgid "Recurring"
+msgstr ""
+
+#. translators: %1$s: WordPress version number.
+#: app/Service/CompatibilityService.php:79
+#, php-format
+msgid "WordPress Version %1$s is required."
+msgstr ""
+
+#. translators:
+#. %1$s: Opening link tag.
+#. %2$s: Closing link tag.
+#. %3$s: Current PHP version.
+#. %4$s: Required PHP version.
+#.
+#: app/Service/CompatibilityService.php:105
+#, php-format
+msgid ""
+"You are running an %1$soutdated version of PHP%2$s (%3$s). Kudos Donations "
+"requires at least PHP %4$s to work. Contact your web hosting provider to "
+"update."
+msgstr ""
+
+#: app/Service/CompatibilityService.php:127
+msgid "Kudos Donations Installation Problem"
+msgstr ""
+
+#: app/Service/CompatibilityService.php:128
+msgid ""
+"The minimum requirements for Kudos Donations have not been met. Please fix "
+"the issue(s) below to continue:"
+msgstr ""
+
+#: app/Service/MailerService.php:121
+msgid "Kudos Donation Receipt"
+msgstr ""
+
+#: app/Service/MailerService.php:146
+#, php-format
+msgid "Email with subject \"%s\" sent to \"%s\""
+msgstr ""
+
+#: app/Service/MailerService.php:150
+#, php-format
+msgid "Email with subject \"%s\" failed to be sent to \"%s\""
+msgstr ""
+
+#: app/Service/MailerService.php:173
+msgid "Please provide an email address."
+msgstr ""
+
+#: app/Service/MailerService.php:177
+msgid "It worked!"
+msgstr ""
+
+#: app/Service/MailerService.php:178
+msgid "Looks like your email settings are set up correctly :-)"
+msgstr ""
+
+#. translators: %s: API mode
+#: app/Service/MailerService.php:184
+#, php-format
+msgid "Email sent to %s."
+msgstr ""
+
+#. translators: %s: API mode
+#: app/Service/MailerService.php:187
+msgid "Error sending email, please check the settings and try again."
+msgstr ""
+
+#. translators: %s: The order id
+#: app/Service/MollieService.php:136
+#, php-format
+msgid "Kudos Donation (%1$s) - %2$s"
+msgstr ""
+
+#. translators: %s: API mode
+#: app/Service/MollieService.php:316
+#, php-format
+msgid "%1$s API key should begin with %2$s"
+msgstr ""
+
+#. translators: %s: API mode
+#: app/Service/MollieService.php:329
+#, php-format
+msgid "%s API key connection was successful!"
+msgstr ""
+
+#. translators: %s: API mode
+#: app/Service/MollieService.php:333
+#, php-format
+msgid ""
+"Error connecting with Mollie, please check the %s API key and try again."
+msgstr ""
+
+#. translators:
+#. %1$s: Subscription interval.
+#. %2$s: Order id.
+#.
+#: app/Service/MollieService.php:562
+#, php-format
+msgid "Kudos Subscription (%1$s) - %2$s"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Setting(s) updated"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Save"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Address Field"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Completed Payment"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Show pop-up message when payment complete"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Enable this to show a pop-up thanking the customer for their donation."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Title"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Text"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Button label"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid ""
+"You can use the following variables in the above fields: {{name}}, "
+"{{email}}, {{value}}"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Email Settings"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Host"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Your email server's hostname"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Encryption"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Choose your encryption type. Always use TLS or SSL if available."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "None"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "SSL"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "TLS"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Enable Auto TLS"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "In most cases you will want this enabled. Disable for troubleshooting."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Port"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "587 (TLS), 465 (SSL), 25 (Unencrypted)"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Username"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "This is usually an email address"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Password"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "From address"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid ""
+"The email address emails will appear to be sent from. Leave empty to use "
+"same as username."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Invalid email address"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Send Test Email"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Email address"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Make sure you save any changes beforehand."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "user@domain.com"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Sending"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "API Keys"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Test API Key"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Begins with \"test_\""
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Live API Key"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Begins with \"live_\""
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Get API Key(s)"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "API Mode"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
 msgid ""
 "When using Kudos Donations for the first time, the payment mode is set to "
 "\"Test\". Check that the configuration is working correctly. Once you are "
 "ready to receive live payments you can switch the mode to \"Live\"."
 msgstr ""
 
-#: src/js/Admin/Components/Panels/MolliePanel.jsx:42
-msgid "Test API Key"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Custom Return URL"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/MolliePanel.jsx:44
-msgid "Mollie Test API Key"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Use custom return URL"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/MolliePanel.jsx:53
-msgid "Mollie Live API Key"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid ""
+"After payment the customer is returned to the page where they clicked on the "
+"donation button. To use a different return URL, enable this option."
 msgstr ""
 
-#: src/js/Admin/Components/Panels/MolliePanel.jsx:60
-msgid "Get API Key(s)"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "URL"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/TestEmailPanel.jsx:37
-msgid "Invalid email address"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "e.g https://mywebsite.com/thanks"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/TestEmailPanel.jsx:60
-msgid "Send Test Email"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Privacy Policy"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/TestEmailPanel.jsx:66
-msgid "Email address"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Email Receipts"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/TestEmailPanel.jsx:67
-msgid "Make sure you save any changes beforehand."
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Send email receipts"
 msgstr ""
 
-#: src/js/Admin/Components/Panels/TestEmailPanel.jsx:73
-msgid "user@domain.com"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid ""
+"Once a payment has been completed, you can automatically send an email "
+"receipt to the donor."
 msgstr ""
 
-#: src/js/Admin/KudosAdmin.jsx:203
-msgid "Setting(s) updated"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Send receipt copy to:"
 msgstr ""
 
-#: src/js/Admin/KudosAdmin.jsx:361
-msgid "Customize"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Leave blank to disable."
 msgstr ""
 
-#: src/js/Admin/KudosAdmin.jsx:366
-msgid "Email"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Debug Mode"
 msgstr ""
 
-#: src/js/Admin/KudosAdmin.jsx:371
-msgid "Invoice"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Enable debug mode"
 msgstr ""
 
-#: src/js/Admin/KudosAdmin.jsx:376
-msgid "Advanced"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "This will enable the debug logging and a debug menu found under Kudos."
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:103
-msgid "Background"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Action Scheduler"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:116
-msgid "Other"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Enable action scheduler"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:121
-msgid "Button name"
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid ""
+"In most cases this should be left on, only disable this if you are "
+"experiencing issues with emails and invoices not working."
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:18
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Theme Colour"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Colour"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Set the colour for the Kudos button and the pop-up modal"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.b93ccba21e8ada8ebe76.js:1
+msgid "Allows donors to donate automatically at regular intervals."
+msgstr ""
+
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
 msgid "Kudos Button"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:20
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
 msgid "Adds a Kudos donate button to your post or page."
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:27
-msgid "Kudos"
-msgstr ""
-
-#: src/js/kudos-button-block.jsx:28
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
 msgid "Button"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:29
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+#: templates/public/modal/donate.modal.html.twig:128
 msgid "Donate"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:33
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
 msgid "Donate now!"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:77
-msgid "Donation form"
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Modal (pop-up)"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:82
-msgid "Header text"
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Header"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:90
-msgid "Body text"
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Welcome text"
 msgstr ""
 
-#: src/js/kudos-button-block.jsx:98
-msgid "Button style"
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Donation amount"
 msgstr ""
+
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "The type of donation amount available"
+msgstr ""
+
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Amounts:"
+msgstr ""
+
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Enter a comma separated list of values to use."
+msgstr ""
+
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Other"
+msgstr ""
+
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid "Donation label"
+msgstr ""
+
+#: dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
+msgid ""
+"Give this donation button a label so you can identify it on the transactions "
+"page"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:48
+msgid "Your name is required"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:51
+msgid "Your email is required"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:52
+msgid "Please enter a valid email"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:55
+msgid "Donation amount is required"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:56
+msgid "Minimum donation is 1 euro"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:57
+msgid "Only digits are valid"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:60
+msgid "Please select a payment frequency"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:63
+msgid "Please select a payment duration"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:64
+msgid "Subscriptions must be more than one payment"
+msgstr ""
+
+#: dist/js/kudos-public.8392c73e6e1d82d7038b.js:1 src/js/kudos-public.js:67
+msgid "You must agree to our privacy policy before donating"
+msgstr ""
+
+#: templates/emails/base.html.twig:451
+msgid "All rights reserved."
+msgstr ""
+
+#: templates/emails/receipt.html.twig:4
+msgid "This is a receipt for your recent donation on"
+msgstr ""
+
+#: templates/emails/receipt.html.twig:8
+msgid "Hi"
+msgstr ""
+
+#: templates/emails/receipt.html.twig:9
+msgid "Thanks for your donation. This email is a receipt for your records."
+msgstr ""
+
+#: templates/emails/receipt.html.twig:13
+msgid "Order ID"
+msgstr ""
+
+#: templates/emails/receipt.html.twig:22
+msgid "Description"
+msgstr ""
+
+#: templates/emails/receipt.html.twig:35
+msgid "Total"
+msgstr ""
+
+#: templates/emails/receipt.html.twig:52
+msgid "Want to cancel your subscription?"
+msgstr ""
+
+#: templates/emails/receipt.html.twig:53
+msgid "Click here"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:37
+msgid "Amount (€)"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:41
+msgid "E-mail address"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:59
+msgid "How often would you like to donate?"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:63
+msgid "Payment frequency"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:69
+msgid "Donation duration"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:71
+msgid "Year"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:89
+msgid "Please fill in you address"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:89
+msgid "optional"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:106
+msgid "Payment"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:107
+msgid "By clicking donate you agree to the following payment"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:123
+#, php-format
+msgid "I agree with the %s "
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:123
+msgid "privacy policy"
+msgstr ""
+
+#: templates/public/modal/donate.modal.html.twig:124
+msgid "I agree with the privacy policy."
+msgstr ""
+
+#: templates/public/modal/embeds/_tab.html.twig:20
+msgid "Previous tab"
+msgstr ""
+
+#: templates/public/modal/embeds/_tab.html.twig:24
+msgid "Next"
+msgstr ""
+
+#: templates/public/modal/message.modal.html.twig:12
+msgid "Ok"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Kudos Donations"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://gitlab.iseard.media/michael/kudos-donations"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Add a donation button to any page on your website. Easy & fast setup. Works "
+"with Mollie payments."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Iseard Media"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://iseard.media"
+msgstr ""
+
+#~ msgid "Send"
+#~ msgstr "Versturen"
