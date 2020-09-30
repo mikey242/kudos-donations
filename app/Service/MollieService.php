@@ -46,6 +46,7 @@ class MollieService extends AbstractService {
 		$this->apiMode    = Settings::get_setting( 'mollie_api_mode' );
 		$this->apiKey     = Settings::get_setting( 'mollie_' . $this->apiMode . '_api_key' );
 		$this->webHookUrl = $_ENV['WEBHOOK_URL'] ?? rest_url( 'kudos/v1/mollie/payment/webhook' );
+		$this->logger     = new LoggerService();
 
 		if ( $this->apiKey ) {
 			try {
