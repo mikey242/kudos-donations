@@ -368,6 +368,7 @@ class Admin {
 					$mapper  = new MapperService( TransactionEntity::class );
 					$records = $mapper->delete_all();
 					if ( $records ) {
+						/* translators: %s: Number of records. */
 						new AdminNotice( sprintf( __( 'Deleted %s transactions(s)', 'kudos-donations' ), $records ) );
 					}
 
@@ -378,6 +379,7 @@ class Admin {
 					$mapper  = new MapperService( DonorEntity::class );
 					$records = $mapper->delete_all();
 					if ( $records ) {
+						/* translators: %s: Number of records. */
 						new AdminNotice( sprintf( __( 'Deleted %s donors(s)', 'kudos-donations' ), $records ) );
 					}
 					break;
@@ -387,6 +389,7 @@ class Admin {
 					$mapper  = new MapperService( SubscriptionEntity::class );
 					$records = $mapper->delete_all();
 					if ( $records ) {
+						/* translators: %s: Number of records. */
 						new AdminNotice( sprintf( __( 'Deleted %s subscriptions(s)', 'kudos-donations' ), $records ) );
 					}
 					break;

@@ -18,6 +18,7 @@ switch ( $action ) {
 		$message = __( 'Donor deleted', 'kudos-donations' );
 		break;
 	case 'bulk-delete':
+		/* translators: %s: Number of records */
 		$message = sprintf( __( '%s donor(s) deleted', 'kudos-donations' ), count( $_REQUEST['bulk-action'] ) );
 		break;
 }

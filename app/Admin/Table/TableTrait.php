@@ -28,6 +28,7 @@ trait TableTrait {
 	 */
 	public function no_items() {
 
+		/* translators: %s: Name of record type (e.g transactions) */
 		printf( __( 'No %s found.', 'kudos-donations' ), $this->_args['singular'] );
 
 	}

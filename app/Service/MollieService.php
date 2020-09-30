@@ -554,7 +554,11 @@ class MollieService extends AbstractService {
 			"mandateId"   => $mandateId,
 			"interval"    => $interval,
 			"startDate"   => $startDate,
-			"description" => sprintf( __( 'Kudos Subscription (%s) - %s', 'kudos-donations' ),
+			/* translators:
+				%1$s: Subscription interval.
+				%2$s: Order id.
+			*/
+			"description" => sprintf( __( 'Kudos Subscription (%1$s) - %2$s', 'kudos-donations' ),
 				$interval,
 				$transaction->order_id ),
 		];

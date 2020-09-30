@@ -133,6 +133,7 @@ class Settings {
 				'return_message_text'   => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
+					/* translators: %s: Value of donation. */
 					'default'           => sprintf( __( 'Many thanks for your donation of %s. We appreciate your support.',
 						'kudos-donations' ),
 						'{{value}}' ),
