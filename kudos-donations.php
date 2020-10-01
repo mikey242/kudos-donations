@@ -9,14 +9,6 @@ use Kudos\Service\DeactivatorService;
 require_once __DIR__ . '/vendor/autoload.php';
 
 /**
- * Load .env file if present
- */
-if(class_exists(\Dotenv\Dotenv::class) && file_exists(__DIR__ . '/.env')) {
-	$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
-	$dotenv->load();
-}
-
-/**
  * The plugin bootstrap file
  *
  * This file is read by WordPress to generate the plugin information in the plugin
@@ -42,6 +34,12 @@ if(class_exists(\Dotenv\Dotenv::class) && file_exists(__DIR__ . '/.env')) {
  * Text Domain:       kudos-donations
  * Domain Path:       /languages
  */
+
+// Load .env file if present
+if(class_exists(\Dotenv\Dotenv::class) && file_exists(__DIR__ . '/.env')) {
+	$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+	$dotenv->load();
+}
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
