@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, creditcard
 Requires at least: 5.4
 Tested up to: 5.5.1
 Requires PHP: 7.1
-Stable tag: 1.0.2
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,19 +16,20 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 * Smart and modern design
 * Connect with Mollie for secure payments by credit card, iDEAL and many others
-* Automated invoice emails with PDF attachments
+* Automated email receipts
 * Use the provided Gutenberg block or shortcode to place your button
 * Buttons and form can be configured all at once or individually
 * View all your transactions from the WordPress dashboard
 
-= View information
+= Dashboard Features =
+Change a wealth of options from the settings page. You can configure the look and feel of the donation form, enable subscriptions, configuring email receipts and change text and colours.
+View all your donations right from the dashboard. You can see the status of all payments, manage subscriptions and view donor information all from their respective pages.
 
 = Recurring Payments =
-Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments based on the donors preferences. Subscriptions can even be be managed from the WordPress dashboard.
+Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie based on the donors preferences. Of course you can also disable this and use only one-off payments if you prefer.
 
 = Source =
 The Git repository for this plugin can be found [here](https://gitlab.iseard.media/michael/kudos-donations).
-
 
 == Installation ==
 
@@ -51,6 +52,9 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 5. Transactions screen
 
 == Changelog ==
+
+= 2.0.1 =
+* Add ability to clear twig cache from the debug menu
 
 = 2.0.0 =
 * *Plugin completely rewritten*
