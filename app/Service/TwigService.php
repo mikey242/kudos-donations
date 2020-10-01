@@ -2,7 +2,10 @@
 
 namespace Kudos\Service;
 
+use FilesystemIterator;
 use Kudos\Helpers\Utils;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Throwable;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -32,7 +35,7 @@ class TwigService {
 	public function __construct( $templates_dir = KUDOS_PLUGIN_DIR . '/templates/' ) {
 
 		$loader       = new FilesystemLoader( $templates_dir );
-		$cache        = ( KUDOS_DEBUG ? false : self::CACHE_DIR );
+		$cache        = self::CACHE_DIR;
 		$this->twig   = new Environment( $loader, [
 			'cache' => $cache,
 		] );
@@ -134,5 +137,23 @@ class TwigService {
 			return false;
 		}
 
+	}
+
+	/**
+	 * Clears the twig cache
+	 *
+	 * @return bool
+	 */
+	public function clearCache() {
+
+		$di = new RecursiveDirectoryIterator(self::CACHE_DIR, FilesystemIterator::SKIP_DOTS);
+		$ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
+		$files=0;
+		$folders = 0;
+		foreach ( $ri as $file ) {
+			$file->isDir() ? $files++ && rmdir($file) : $folders++ && unlink($file);
+		}
+		$this->logger->debug('Twig cache cleared', ['files' => $files, 'folders' => $folders]);
+		return true;
 	}
 }

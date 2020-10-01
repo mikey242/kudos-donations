@@ -51,6 +51,15 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
                 <hr/>
 
+                <p>This will clear the twig cache.</p>
+                <form action="<?php echo $url ?>" method='post'>
+					<?php wp_nonce_field( 'kudos_clear_cache', '_wpnonce' ) ?>
+                    <input type='hidden' name='kudos_action' value='kudos_clear_cache'>
+                    <input class="button-secondary" type='submit' value='Clear cache'>
+                </form>
+
+                <hr/>
+
                 <p>Remove all transactions</p>
                 <form action="<?php echo admin_url( 'admin.php?page=kudos-debug' ) ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_transactions', '_wpnonce' ) ?>

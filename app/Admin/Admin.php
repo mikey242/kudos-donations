@@ -12,6 +12,7 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MailerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
+use Kudos\Service\TwigService;
 use WP_REST_Server;
 
 /**
@@ -361,6 +362,14 @@ class Admin {
 					$settings = new Settings();
 					$settings->remove_settings();
 					$settings->add_defaults();
+					break;
+
+				case 'kudos_clear_cache':
+
+					$twig = new TwigService();
+					if($twig->clearCache()) {
+						new AdminNotice( __( 'Cache cleared', 'kudos-donations' ) );
+					}
 					break;
 
 				case 'kudos_clear_transactions':
