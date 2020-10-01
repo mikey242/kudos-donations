@@ -34,6 +34,9 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
     <div class="tab-content">
 
 		<?php
+
+        $url = admin_url( 'admin.php?page=kudos-debug&tab=actions' );
+
 		switch ( $tab ):
 			case 'actions':
 				?>
@@ -43,7 +46,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
                 <hr/>
 
                 <p>This will remove all the settings from the database and reset them back to default.</p>
-                <form action="<?php echo admin_url( 'admin.php?page=kudos-debug' ) ?>" method='post'>
+                <form action="<?php echo $url ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_settings', '_wpnonce' ) ?>
                     <input type='hidden' name='kudos_action' value='kudos_clear_settings'>
                     <input class="button-secondary" type='submit' value='Clear settings'>
@@ -61,7 +64,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
                 <hr/>
 
                 <p>Remove all transactions</p>
-                <form action="<?php echo admin_url( 'admin.php?page=kudos-debug' ) ?>" method='post'>
+                <form action="<?php echo $url ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_transactions', '_wpnonce' ) ?>
                     <input type='hidden' name='kudos_action' value='kudos_clear_transactions'>
                     <input class="button-secondary" type='submit' value='Delete all transactions'>
@@ -70,7 +73,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
                 <hr/>
 
                 <p>Remove all donors</p>
-                <form action="<?php echo admin_url( 'admin.php?page=kudos-debug' ) ?>" method='post'>
+                <form action="<?php echo $url ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_donors', '_wpnonce' ) ?>
                     <input type='hidden' name='kudos_action' value='kudos_clear_donors'>
                     <input class="button-secondary" type='submit' value='Delete all donors'>
@@ -79,7 +82,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
                 <hr/>
 
                 <p>Remove all subscriptions</p>
-                <form action="<?php echo admin_url( 'admin.php?page=kudos-debug' ) ?>" method='post'>
+                <form action="<?php echo $url ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_subscriptions', '_wpnonce' ) ?>
                     <input type='hidden' name='kudos_action' value='kudos_clear_subscriptions'>
                     <input class="button-secondary" type='submit' value='Delete all subscriptions'>
@@ -102,14 +105,14 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
                 <p>This logfile location: <?php echo $file ?></p>
                 <p>Current filesize: <?php echo filesize( $file ) ?> bytes</p>
 
-                <form style="display:inline-block;" action="<?php echo admin_url( 'admin.php?page=kudos-debug' ) ?>"
+                <form style="display:inline-block;" action="<?php echo $url ?>"
                       method='post'>
 					<?php wp_nonce_field( 'kudos_log_clear', '_wpnonce' ) ?>
                     <input type='hidden' name='kudos_action' value='kudos_log_clear'>
                     <input class="button-secondary" type='submit' value='Clear'>
                 </form>
 
-                <form style="display:inline-block;" action="<?php echo admin_url( 'admin.php?page=kudos-debug' ) ?>"
+                <form style="display:inline-block;" action="<?php echo $url ?>"
                       method='post'>
 					<?php wp_nonce_field( 'kudos_log_download', '_wpnonce' ) ?>
                     <input type='hidden' name='kudos_action' value='kudos_log_download'>
