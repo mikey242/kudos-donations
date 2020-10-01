@@ -345,10 +345,10 @@ class KudosAdmin extends Component {
 
 			<Fragment>
 
-				<IntroGuide
-					open={this.state.settings._kudos_show_intro}
-					saveSetting={this.updateSetting}
-				/>
+				{/*<IntroGuide*/}
+				{/*	open={this.state.settings._kudos_show_intro}*/}
+				{/*	saveSetting={this.updateSetting}*/}
+				{/*/>*/}
 
 				<Notice
 					showNotice={ this.state.showNotice }
