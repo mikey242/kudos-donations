@@ -9,10 +9,9 @@ services:
         WORDPRESS_VERSION: 5.4
     container_name: wordpress-kudos
     volumes:
-      - ./wordpress:/var/www/html
+      - ${WORDPRESS_DIR:-./wordpress}:/var/www/html
       - ./xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ../:/var/www/html/wp-content/plugins/kudos-donations
-      - ../../kudos-premium:/var/www/html/wp-content/plugins/kudos-premium
     ports:
       - "8080:80"
     restart: always
