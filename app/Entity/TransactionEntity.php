@@ -55,7 +55,7 @@ class TransactionEntity extends AbstractEntity {
 	/**
 	 * @var string
 	 */
-	public $donation_label;
+	public $campaign_label;
 	/**
 	 * @var string
 	 */

@@ -54,7 +54,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			alignment,
 			modal_header,
 			welcome_text,
-			donation_label,
+			campaign_label,
 			amount_type,
 			fixed_amounts,
 		} = props.attributes;
@@ -78,7 +78,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 		};
 
 		const onChangeDonationLabel = ( newValue ) => {
-			props.setAttributes( { donation_label: newValue } );
+			props.setAttributes( { campaign_label: newValue } );
 		};
 
 		const onChangeAmountType = ( newValue ) => {
@@ -144,17 +144,17 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 					</PanelBody>
 
 					<PanelBody
-						title={ __( 'Other', 'kudos-donations' ) }
+						title={ __( 'Campaign', 'kudos-donations' ) }
 						initialOpen={ false }
 					>
 						<TextControl
 							label={ __(
-								'Donation label',
+								'Campaign label',
 								'kudos-donations'
 							) }
 							help={__('Give this donation button a label so you can identify it on the transactions page', 'kudos-donations')}
 							type={ 'text' }
-							value={ donation_label }
+							value={ campaign_label }
 							onChange={ onChangeDonationLabel }
 						/>
 					</PanelBody>

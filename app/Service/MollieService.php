@@ -87,7 +87,7 @@ class MollieService extends AbstractService {
 	 * @param string $interval
 	 * @param string $years
 	 * @param string $redirectUrl
-	 * @param string $donation_label
+	 * @param string|null $campaign_label
 	 * @param string|null $name
 	 * @param string|null $email
 	 * @param string|null $customerId
@@ -100,10 +100,10 @@ class MollieService extends AbstractService {
 		string $interval,
 		string $years,
 		string $redirectUrl,
-		string $donation_label,
-		$name = null,
-		$email = null,
-		$customerId = null
+		string $campaign_label = null,
+		string $name = null,
+		string $email = null,
+		string $customerId = null
 	) {
 
 		$mollieApi = $this->mollieApi;
