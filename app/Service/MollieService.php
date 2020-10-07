@@ -46,7 +46,6 @@ class MollieService extends AbstractService {
 		$this->apiMode    = Settings::get_setting( 'mollie_api_mode' );
 		$this->apiKey     = Settings::get_setting( 'mollie_' . $this->apiMode . '_api_key' );
 		$this->webHookUrl = $_ENV['WEBHOOK_URL'] ?? rest_url( 'kudos/v1/mollie/payment/webhook' );
-		$this->logger     = new LoggerService();
 
 		if ( $this->apiKey ) {
 			try {
@@ -137,11 +136,12 @@ class MollieService extends AbstractService {
 				$frequency_text,
 				$order_id ),
 			'metadata'     => [
-				'order_id' => $order_id,
-				'interval' => $interval,
-				'years'    => $years,
-				'email'    => $email,
-				'name'     => $name,
+				'order_id'       => $order_id,
+				'interval'       => $interval,
+				'years'          => $years,
+				'email'          => $email,
+				'name'           => $name,
+				'campaign_label' => $campaign_label,
 			],
 		];
 
@@ -161,7 +161,7 @@ class MollieService extends AbstractService {
 				'status'         => $payment->status,
 				'mode'           => $payment->mode,
 				'sequence_type'  => $payment->sequenceType,
-				'donation_label' => $donation_label,
+				'campaign_label' => $campaign_label,
 			] );
 
 			$mapper = new MapperService( TransactionEntity::class );
@@ -467,6 +467,29 @@ class MollieService extends AbstractService {
 			'subscription_id' => $payment->subscriptionId,
 		] );
 
+		// Add campaign label to recurring payments
+		if($payment->hasSequenceTypeRecurring()) {
+			$subscription_id = $payment->subscriptionId;
+			$customer_id = $payment->customerId;
+
+			try {
+
+				$customer = $this->mollieApi->customers->get($customer_id);
+				$subscription_meta = $customer->getSubscription($subscription_id)->metadata;
+				if(array_key_exists('campaign_label', $subscription_meta)) {
+					$campaign_label = $subscription_meta->campaign_label;
+					$transaction->set_fields([
+						'campaign_label' => $campaign_label
+					]);
+				} else {
+					$this->logger->info('No campaign label found for recurring payment', ['customer_id' => $customer_id, 'subscription_id' => $subscription_id]);
+				}
+
+			} catch (ApiException $e) {
+				$this->logger->warning($e->getMessage());
+			}
+		}
+
 		// Save transaction to database
 		$mapper->save( $transaction );
 
@@ -562,6 +585,9 @@ class MollieService extends AbstractService {
 			"description" => sprintf( __( 'Kudos Subscription (%1$s) - %2$s', 'kudos-donations' ),
 				$interval,
 				$transaction->order_id ),
+			"metadata"    => [
+				"campaign_label" => $transaction->campaign_label
+			]
 		];
 
 		if ( $transaction->mode === "test" ) {
