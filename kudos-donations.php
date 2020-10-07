@@ -1,23 +1,7 @@
 <?php
-
-namespace Kudos;
-
-use Kudos\Service\ActivatorService;
-use Kudos\Service\CompatibilityService;
-use Kudos\Service\DeactivatorService;
-
-require_once __DIR__ . '/vendor/autoload.php';
-
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also app all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
- *
  * @link              https://www.linkedin.com/in/michael-iseard/
- * @since             1.0.0
+ * @author            Michael Iseard
  * @package           Kudos-Donations
  *
  * @wordpress-plugin
@@ -34,6 +18,14 @@ require_once __DIR__ . '/vendor/autoload.php';
  * Text Domain:       kudos-donations
  * Domain Path:       /languages
  */
+
+namespace Kudos;
+
+use Kudos\Service\ActivatorService;
+use Kudos\Service\CompatibilityService;
+use Kudos\Service\DeactivatorService;
+
+require_once __DIR__ . '/vendor/autoload.php';
 
 // Load .env file if present
 if(class_exists(\Dotenv\Dotenv::class) && file_exists(__DIR__ . '/.env')) {
