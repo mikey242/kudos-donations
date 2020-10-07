@@ -91,7 +91,7 @@ class TransactionsTable extends WP_List_Table {
 		if ( ! empty( $_REQUEST['s'] ) ) {
 			$search = esc_sql( $_REQUEST['s'] );
 			array_push( $query,
-				"(${join_table}.email LIKE '${search}') OR (${join_table}.name LIKE '${search}') OR (order_id LIKE '${search}') OR (transaction_id LIKE '${search}')"
+				"(${join_table}.email LIKE '${search}') OR (${join_table}.name LIKE '${search}') OR (order_id LIKE '${search}') OR (transaction_id LIKE '${search}') OR (campaign_label LIKE '${search}')"
 			);
 		}
 
@@ -126,9 +126,9 @@ class TransactionsTable extends WP_List_Table {
 			'value'          => __( 'Amount', 'kudos-donations' ),
 			'type'           => __( 'Type', 'kudos-donations' ),
 			'status'         => __( 'Status', 'kudos-donations' ),
-			'order_id'       => __( 'Order Id', 'kudos-donations' ),
+			'order_id'       => __( 'Order ID', 'kudos-donations' ),
 			'transaction_id' => __( 'Transaction Id', 'kudos-donations' ),
-			'donation_label' => __( 'Donation Label', 'kudos-donations' ),
+			'campaign_label' => __( 'Campaign Label', 'kudos-donations' ),
 		];
 
 	}
@@ -142,7 +142,7 @@ class TransactionsTable extends WP_List_Table {
 	public function get_hidden_columns() {
 		return [
 			'transaction_id',
-//			'donation_label',
+//			'campaign_label',
 		];
 
 	}
@@ -164,8 +164,8 @@ class TransactionsTable extends WP_List_Table {
 				'value',
 				false,
 			],
-			'donation_label' => [
-				'donation_label',
+			'campaign_label' => [
+				'campaign_label',
 				false,
 			],
 		];
@@ -362,6 +362,22 @@ class TransactionsTable extends WP_List_Table {
 	function column_order_id( array $item ) {
 
 		return $item['order_id'] . ( $item['mode'] === 'test' ? ' (' . $item['mode'] . ')' : '' );
+
+	}
+
+	/**
+	 * Return campaign label as a search link
+	 *
+	 * @param array $item
+	 * @return string
+	 * @since 2.0.2
+	 */
+	function column_campaign_label( array $item ) {
+
+		return sprintf('<a href=%1$s>%2$s</a>',
+			sprintf(admin_url( 'admin.php?page=kudos-transactions&s=%s'), urlencode( $item['campaign_label'] ) ),
+			$item['campaign_label']
+		);
 
 	}
 
