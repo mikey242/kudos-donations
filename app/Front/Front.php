@@ -74,7 +74,7 @@ class Front {
 
 		// Bail if no order ID
 		if ( null === $order_id ) {
-			$logger->error( 'Order id not provided to process_transaction function.' );
+			$logger->error( 'Order ID not provided to process_transaction function.' );
 
 			return false;
 		}
@@ -246,8 +246,8 @@ class Front {
 		$postcode          = ! empty( $form['postcode'] ) ? sanitize_text_field( $form['postcode'] ) : null;
 		$city              = ! empty( $form['city'] ) ? sanitize_text_field( $form['city'] ) : null;
 		$country           = ! empty( $form['country'] ) ? sanitize_text_field( $form['country'] ) : null;
-		$redirectUrl       = ! empty( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
-		$buttonName        = ! empty( $form['donation_label'] ) ? sanitize_text_field( $form['donation_label'] ) : null;
+		$redirect_url       = ! empty( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
+		$campaign_label        = ! empty( $form['campaign_label'] ) ? sanitize_text_field( $form['campaign_label'] ) : null;
 
 		$mollie = MollieService::factory();
 		$mapper = new MapperService( DonorEntity::class );
@@ -283,8 +283,8 @@ class Front {
 		$payment = $mollie->create_payment( $value,
 			$payment_frequency,
 			$recurring_length,
-			$redirectUrl,
-			$buttonName,
+			$redirect_url,
+			$campaign_label,
 			$name,
 			$email,
 			$customerId );
