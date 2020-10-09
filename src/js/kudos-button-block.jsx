@@ -132,7 +132,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 
 							<Fragment>
 								<TextControl
-									label={ __(	'Amounts:',	'kudos-donations' ) }
+									label={ __(	'Amounts',	'kudos-donations' ) + ':' }
 									help={ __( 'Enter a comma separated list of values to use.', 'kudos-donations' ) }
 									value={ fixed_amounts }
 									onChange={ onChangeFixedAmounts }

@@ -34,7 +34,7 @@
                     {% endif %}
 
                     {% if amount.type == 'open' %}
-                        {{ text('value', __('Amount (€)', 'kudos-donations'), 'text', true, {'min': '1', 'data-type': 'currency'}) }}
+                        {{ text('value', __('Amount', 'kudos-donations') ~ ' (€)', 'text', true, {'min': '1', 'data-type': 'currency'}) }}
                     {% endif %}
 
                     {{ text('name', __('Name', 'kudos-donations')) }}
