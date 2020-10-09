@@ -24,8 +24,8 @@ yarn run start
 # build assets for export
 yarn run build:production
 
-# export plugin to EXPORT folder and produce installable zip
-yarn export:noassets
+# export plugin to KUDOS_EXPORT folder and produce installable zip
+yarn export
 ````
 
 ### Docker
