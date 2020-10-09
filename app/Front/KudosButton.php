@@ -107,8 +107,8 @@ class KudosButton {
 
 		$data = [
 			'modal_id'       => $this->id,
-			'title'          => $this->title,
-			'text'           => $this->text,
+			'modal_title'    => $this->title,
+			'modal_text'           => $this->text,
 			'amount'         => [
 				'type'         => $this->amount_type,
 				'fixed_values' => explode( ',', $this->fixed_amounts ),

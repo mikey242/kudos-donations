@@ -52,7 +52,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 		const {
 			button_label,
 			alignment,
-			modal_header,
+			modal_title,
 			welcome_text,
 			campaign_label,
 			amount_type,
@@ -70,7 +70,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 		};
 
 		const onChangeHeader = ( newValue ) => {
-			props.setAttributes( { modal_header: newValue } );
+			props.setAttributes( { modal_title: newValue } );
 		};
 
 		const onChangeBody = ( newValue ) => {
@@ -100,7 +100,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 						<TextControl
 							label={ __( 'Header', 'kudos-donations' ) }
 							type={ 'text' }
-							value={ modal_header }
+							value={ modal_title }
 							onChange={ onChangeHeader }
 						/>
 

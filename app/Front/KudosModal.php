@@ -42,8 +42,8 @@ class KudosModal {
 
 		$data = [
 			'modal_id' => uniqid( 'kudos_modal-message-' ),
-			'title'    => $atts['title'],
-			'text'     => $atts['text'],
+			'modal_title'    => $atts['modal_title'],
+			'modal_text'     => $atts['modal_text'],
 		];
 
 		return $this->get_modal( '/public/modal/message.modal.html.twig', $data );

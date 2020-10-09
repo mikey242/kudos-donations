@@ -5,8 +5,8 @@
 
 {% block content %}
 
-    {{ title(title) }}
-    {{ paragraph(text) }}
+    {{ title(modal_title) }}
+    {{ paragraph(modal_text) }}
 
     <div class="kudos_modal_buttons kd-mt-8 kd-block kd-text-right">
         {{ button(__('Ok', 'kudos-donations'), 'primary', 'button', {'data-micromodal-close': ''}) }}

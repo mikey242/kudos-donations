@@ -477,8 +477,8 @@ class Front {
 				$kudos_mollie = MollieService::factory();
 				if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
 					echo $modal->get_message_modal( [
-						'title' => __( 'Subscription cancelled', 'kudos-donations' ),
-						'text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
+						'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
+						'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
 							'kudos-donations' ),
 					] );
 
@@ -487,8 +487,8 @@ class Front {
 			}
 
 			echo $modal->get_message_modal( [
-				'title' => __( 'Link expired', 'kudos-donations' ),
-				'text'  => __( 'Sorry, this link is no longer valid.', 'kudos-donations' ),
+				'modal_title' => __( 'Link expired', 'kudos-donations' ),
+				'modal_text'  => __( 'Sorry, this link is no longer valid.', 'kudos-donations' ),
 			] );
 		}
 	}
@@ -523,15 +523,15 @@ class Front {
 						'{{name}}'  => $donor->name,
 						'{{email}}' => $donor->email,
 					];
-					$return['title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
-					$return['text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
+					$return['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
+					$return['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
 					break;
 				case 'canceled':
-					$return['title'] = __( 'Payment cancelled', 'kudos-donations' );
+					$return['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
 					break;
 				default:
-					$return['title'] = __( 'Thanks', 'kudos-donations' );
-					$return['text']  = __( 'Your donation will be processed soon.', 'kudos-donations' );
+					$return['modal_title'] = __( 'Thanks', 'kudos-donations' );
+					$return['modal_text']  = __( 'Your donation will be processed soon.', 'kudos-donations' );
 					break;
 			}
 
