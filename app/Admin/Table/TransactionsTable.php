@@ -492,7 +492,7 @@ class TransactionsTable extends WP_List_Table {
 		$count             = count( $this->count_records( 'status', 'canceled' ) );
 		$canceled_url      = add_query_arg( 'status', 'canceled', $url );
 		$class             = ( $current == 'canceled' ? ' class="current"' : '' );
-		$views['canceled'] = "<a href='{$canceled_url}' {$class} >" . __( 'Canceled',
+		$views['canceled'] = "<a href='{$canceled_url}' {$class} >" . __( 'Cancelled',
 				'kudos-donations' ) . " ($count)</a>";
 
 		//Canceled link
