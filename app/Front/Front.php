@@ -246,8 +246,8 @@ class Front {
 		$postcode          = ! empty( $form['postcode'] ) ? sanitize_text_field( $form['postcode'] ) : null;
 		$city              = ! empty( $form['city'] ) ? sanitize_text_field( $form['city'] ) : null;
 		$country           = ! empty( $form['country'] ) ? sanitize_text_field( $form['country'] ) : null;
-		$redirect_url       = ! empty( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
-		$campaign_label        = ! empty( $form['campaign_label'] ) ? sanitize_text_field( $form['campaign_label'] ) : null;
+		$redirect_url      = ! empty( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
+		$campaign_label    = ! empty( $form['campaign_label'] ) ? sanitize_text_field( $form['campaign_label'] ) : null;
 
 		$mollie = MollieService::factory();
 		$mapper = new MapperService( DonorEntity::class );
@@ -517,7 +517,7 @@ class Front {
 
 			switch ( $transaction->status ) {
 				case 'paid':
-					$vars            = [
+					$vars                  = [
 						'{{value}}' => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
 								2 ),
 						'{{name}}'  => $donor->name,
