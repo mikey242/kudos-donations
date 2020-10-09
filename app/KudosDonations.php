@@ -106,9 +106,8 @@ class KudosDonations {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new I18nService();
-
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		$i18n = new I18nService();
+		$this->loader->add_action( 'init', $i18n, 'load_plugin_textdomain' );
 
 	}
 
