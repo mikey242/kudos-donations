@@ -128,7 +128,7 @@ class TransactionsTable extends WP_List_Table {
 			'status'         => __( 'Status', 'kudos-donations' ),
 			'order_id'       => __( 'Order ID', 'kudos-donations' ),
 			'transaction_id' => __( 'Transaction Id', 'kudos-donations' ),
-			'campaign_label' => __( 'Campaign Label', 'kudos-donations' ),
+			'campaign_label' => __( 'Campaign', 'kudos-donations' ),
 		];
 
 	}
