@@ -51,7 +51,7 @@ module.exports = {
 	output: {
 		path: PATHS.dist,
 		publicPath: '/wp-content/plugins/kudos-donations/dist/',
-		filename: 'js/[name].[contenthash].js',
+		filename: 'js/[name].js',
 	},
 	optimization: {
 		minimize: NODE_ENV === 'prod',
@@ -114,7 +114,7 @@ module.exports = {
 					{
 						loader: 'file-loader',
 						options: {
-							name: '[name].[contenthash].[ext]',
+							name: '[name].[ext]',
 							outputPath: './img/',
 						},
 					},
@@ -136,7 +136,7 @@ module.exports = {
 	},
 	plugins: [
 		new MiniCssExtractPlugin( {
-			filename: 'css/[name].[contenthash].css',
+			filename: 'css/[name].css',
 		} ),
 		new CleanWebpackPlugin({
 			cleanStaleWebpackAssets: false,
