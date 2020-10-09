@@ -12,7 +12,7 @@ use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class TwigService {
+class TwigService extends AbstractService {
 
 	const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
 
@@ -20,28 +20,62 @@ class TwigService {
 	 * @var Environment
 	 */
 	private $twig;
+
 	/**
-	 * @var LoggerService
+	 * @var array
 	 */
-	private $logger;
+	private $templates_dir;
+
+	/**
+	 * @var array
+	 */
+	private $options;
 
 	/**
 	 * Twig constructor
 	 *
-	 * @param string $templates_dir
+	 * @param array $templates_dir
+	 * @param array $options
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct( $templates_dir = KUDOS_PLUGIN_DIR . '/templates/' ) {
+	public function __construct( $templates_dir=[], $options=[] ) {
 
-		$loader       = new FilesystemLoader( $templates_dir );
-		$cache        = self::CACHE_DIR;
-		$this->twig   = new Environment( $loader, [
-			'cache' => $cache,
-		] );
-		$this->logger = new LoggerService();
-		$this->initialize_twig_functions();
-		$this->initialize_twig_filters();
+		parent::__construct();
+
+		$this->templates_dir = $templates_dir;
+		$this->templates_dir[] = KUDOS_PLUGIN_DIR . '/templates/';
+		$this->options = $options;
+		$this->options['cache'] = self::CACHE_DIR;
+		$this->initializeTwig();
+		$this->initializeTwigFunctions();
+		$this->initializeTwigFilters();
+
+	}
+
+	/**
+	 * Create the twig cache directory
+	 *
+	 * @since    2.0.0
+	 */
+	public static function initCache() {
+
+		$logger = new LoggerService();
+
+		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
+			$logger->info( 'Twig cache directory created successfully' );
+
+			return;
+		}
+
+		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ self::CACHE_DIR ] );
+
+	}
+
+	public function initializeTwig() {
+
+		$loader       = new FilesystemLoader( $this->templates_dir );
+		$this->twig   = new Environment( $loader, $this->options );
 
 	}
 
@@ -51,7 +85,7 @@ class TwigService {
 	 * @since    1.0.0
 	 * @source https://wordpress.stackexchange.com/questions/287988/use-str-to-translate-strings-symfony-twig
 	 */
-	public function initialize_twig_functions() {
+	public function initializeTwigFunctions() {
 
 		/**
 		 * Add gettext __ function.
@@ -83,7 +117,7 @@ class TwigService {
 	 *
 	 * @since 2.0.0
 	 */
-	public function initialize_twig_filters() {
+	public function initializeTwigFilters() {
 
 		/**
 		 * Add the WordPress apply_filters filter.
@@ -96,25 +130,6 @@ class TwigService {
 		 */
 		$slugify = new TwigFilter( 'slugify', 'sanitize_title' );
 		$this->twig->addFilter( $slugify );
-
-	}
-
-	/**
-	 * Create the twig cache directory
-	 *
-	 * @since    2.0.0
-	 */
-	public static function init() {
-
-		$logger = new LoggerService();
-
-		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
-			$logger->info( 'Twig cache directory created successfully' );
-
-			return;
-		}
-
-		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ self::CACHE_DIR ] );
 
 	}
 

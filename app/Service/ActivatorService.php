@@ -31,7 +31,7 @@ class ActivatorService {
 	public static function activate() {
 
 		LoggerService::init();
-		TwigService::init();
+		TwigService::initCache();
 		self::create_donors_table();
 		self::create_transactions_table();
 		self::create_subscriptions_table();
