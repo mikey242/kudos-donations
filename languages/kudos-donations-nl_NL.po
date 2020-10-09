@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-09 13:17+0200\n"
-"PO-Revision-Date: 2020-10-09 13:18+0200\n"
+"POT-Creation-Date: 2020-10-09 14:35+0200\n"
+"PO-Revision-Date: 2020-10-09 14:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -271,6 +271,7 @@ msgstr "Actief"
 
 #: app/Admin/Table/SubscriptionsTable.php:298
 #: app/Admin/Table/TransactionsTable.php:341
+#: app/Admin/Table/TransactionsTable.php:495
 msgid "Cancelled"
 msgstr "Geannuleerd"
 
@@ -313,9 +314,8 @@ msgid "Method"
 msgstr "Methode"
 
 #: app/Admin/Table/TransactionsTable.php:39 dist/js/kudos-admin-settings.js:1
-#, fuzzy
 msgid "Mode"
-msgstr "Modus"
+msgstr "Status"
 
 #: app/Admin/Table/TransactionsTable.php:40
 #: app/Admin/Table/TransactionsTable.php:127 dist/js/kudos-button-block.js:1
@@ -363,11 +363,6 @@ msgstr "Mislukt"
 #: app/Admin/Table/TransactionsTable.php:347
 msgid "Unknown"
 msgstr "Onbekend"
-
-#: app/Admin/Table/TransactionsTable.php:495
-#: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:305
-msgid "Canceled"
-msgstr "Geannuleerd"
 
 #: app/Admin/partials/kudos-admin-donors.php:18
 msgid "Donor deleted"
@@ -454,8 +449,6 @@ msgid "Sorry, this link is no longer valid."
 msgstr "Deze link is niet langer geldig."
 
 #: app/Front/Front.php:530
-#, fuzzy
-#| msgid "Payment canceled"
 msgid "Payment cancelled"
 msgstr "Betaling geannuleerd"
 
@@ -614,15 +607,12 @@ msgid "Mollie"
 msgstr "Mollie"
 
 #: dist/js/kudos-admin-settings.js:1
-#, fuzzy
 msgid "Customize"
-msgstr "Aanpassen"
+msgstr "Customizer"
 
 #: dist/js/kudos-admin-settings.js:1
-#, fuzzy
-#| msgid "Canceled"
 msgid "Advanced"
-msgstr "Geannuleerd"
+msgstr "Geavanceerd"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Save"
@@ -644,6 +634,10 @@ msgstr "niet-verbonden"
 #: dist/js/kudos-admin-settings.js:1
 msgid "Address Field"
 msgstr "Adresveld"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Enable"
+msgstr "Inschakelen"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Completed Payment"
@@ -684,14 +678,12 @@ msgid "Email Settings"
 msgstr "E-mail Instellingen"
 
 #: dist/js/kudos-admin-settings.js:1
-#, fuzzy
 msgid "Use custom email settings"
 msgstr "Aangepaste e-mailinstellingen gebruiken"
 
 #: dist/js/kudos-admin-settings.js:1
-#, fuzzy
 msgid "Enable this to use your own SMTP server settings."
-msgstr "Schakel dit in om uw eigen SMTP-serverinstellingen te gebruiken."
+msgstr "Schakel dit in om je eigen SMTP-serverinstellingen te gebruiken."
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Host"
@@ -816,7 +808,7 @@ msgstr "API-sleutel(s) ophalen"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "API Mode"
-msgstr "API Modus"
+msgstr "API Status"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid ""
@@ -1585,6 +1577,10 @@ msgstr "In afwachting"
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:303
 msgid "In-progress"
 msgstr "Bezig"
+
+#: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:305
+msgid "Canceled"
+msgstr "Geannuleerd"
 
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:67
 msgid "Database error."
