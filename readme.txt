@@ -53,6 +53,9 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 == Changelog ==
 
+= 2.0.3 =
+* Fix translations
+
 = 2.0.2 =
 * Add ability to search by campaign in transactions table
 * Update Dutch translation
