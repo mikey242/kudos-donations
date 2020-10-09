@@ -1,5 +1,5 @@
 const { __ } = wp.i18n;
-const { PanelBody, CheckboxControl, PanelRow } = wp.components;
+const { PanelBody, ToggleControl, CheckboxControl, PanelRow } = wp.components;
 
 const AddressFieldPanel = (props ) => {
 	return (
@@ -10,8 +10,8 @@ const AddressFieldPanel = (props ) => {
 
 			<PanelRow>
 
-				<CheckboxControl
-					label="Enable"
+				<ToggleControl
+					label={__("Enable", 'kudos-donations')}
 					checked={ props.settings._kudos_address_enabled || '' }
 					onChange={ ( value ) => props.handleInputChange( '_kudos_address_enabled', value ) }
 				/>

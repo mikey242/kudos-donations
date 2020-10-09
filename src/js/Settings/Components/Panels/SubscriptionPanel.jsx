@@ -12,7 +12,7 @@ const SubscriptionPanel = (props ) => {
             <PanelRow>
 
                 <ToggleControl
-                    label="Enable"
+                    label={__("Enable", 'kudos-donations')}
                     help={ __(
                         'Allows donors to donate automatically at regular intervals.',
                         'kudos-donations'
