@@ -338,7 +338,7 @@ class TransactionsTable extends WP_List_Table {
 				$status = __( 'Expired', 'kudos-donations' );
 				break;
 			case 'canceled':
-				$status = __( 'Canceled', 'kudos-donations' );
+				$status = __( 'Cancelled', 'kudos-donations' );
 				break;
 			case 'failed':
 				$status = __( 'Failed', 'kudos-donations' );

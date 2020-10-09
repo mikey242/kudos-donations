@@ -477,7 +477,7 @@ class Front {
 				$kudos_mollie = MollieService::factory();
 				if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
 					echo $modal->get_message_modal( [
-						'title' => __( 'Subscription canceled', 'kudos-donations' ),
+						'title' => __( 'Subscription cancelled', 'kudos-donations' ),
 						'text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
 							'kudos-donations' ),
 					] );
@@ -527,7 +527,7 @@ class Front {
 					$return['text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
 					break;
 				case 'canceled':
-					$return['title'] = __( 'Payment canceled', 'kudos-donations' );
+					$return['title'] = __( 'Payment cancelled', 'kudos-donations' );
 					break;
 				default:
 					$return['title'] = __( 'Thanks', 'kudos-donations' );
