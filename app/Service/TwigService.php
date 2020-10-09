@@ -46,7 +46,7 @@ class TwigService extends AbstractService {
 		$this->templates_dir = $templates_dir;
 		$this->templates_dir[] = KUDOS_PLUGIN_DIR . '/templates/';
 		$this->options = $options;
-		$this->options['cache'] = self::CACHE_DIR;
+		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
 		$this->initializeTwig();
 		$this->initializeTwigFunctions();
 		$this->initializeTwigFilters();
