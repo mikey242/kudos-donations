@@ -143,11 +143,11 @@ class MailerService extends AbstractService {
 		$mail = wp_mail( $to, $subject, $body, $headers, $attachment );
 
 		if ( $mail ) {
-			$this->logger->info( sprintf( __( 'Email with subject "%s" sent to "%s"', 'kudos-donations' ),
+			$this->logger->info( sprintf( 'Email with subject "%s" sent to "%s"',
 				$subject,
 				$to ) );
 		} else {
-			$this->logger->error( sprintf( __( 'Email with subject "%s" failed to be sent to "%s"', 'kudos-donations' ),
+			$this->logger->error( sprintf( 'Email with subject "%s" failed to be sent to "%s"',
 				$subject,
 				$to ) );
 		}
