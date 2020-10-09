@@ -7,9 +7,10 @@
     "start": "cross-env NODE_ENV=dev webpack --config webpack.dev.js",
     "build": "cross-env NODE_ENV=prod webpack --config webpack.prod.js",
     "build:production": "cross-env NODE_ENV=prod webpack --env.NODE_ENV=local --env.production --progress --config webpack.prod.js && composer update && composer install --no-dev --optimize-autoloader",
-    "make-pot": "wp i18n make-pot . --exclude='EXPORT, libraries, docker'",
-    "export": "rm -rf EXPORT && mkdir -p EXPORT/kudos-donations/ && cp -r {assets,libraries,languages,templates,vendor,app,dist,index.php,uninstall.php,kudos-donations.php,readme.txt} ./EXPORT/kudos-donations/ && rm -rf ./EXPORT/kudos-donations/libraries/action-scheduler/{docs,tests}",
-    "export:noassets": "rm -rf EXPORT && mkdir -p EXPORT/kudos-donations/ && cp -r {libraries,languages,templates,vendor,app,dist,index.php,uninstall.php,kudos-donations.php,readme.txt} ./EXPORT/kudos-donations/ && rm -rf ./EXPORT/kudos-donations/libraries/action-scheduler/{docs,tests} && cd EXPORT && zip -qrD9 kudos-donations.zip kudos-donations"
+    "make-pot": "wp i18n make-pot . --exclude='libraries, docker'",
+    "make-json": "wp i18n make-json languages/ --no-purge",
+    "export": "rm -rf ../KUDOS-EXPORT && mkdir -p ../KUDOS-EXPORT/kudos-donations/ && cp -r {assets,libraries,languages,templates,vendor,app,dist,index.php,uninstall.php,kudos-donations.php,readme.txt} ../KUDOS-EXPORT/kudos-donations/ && rm -rf ../KUDOS-EXPORT/kudos-donations/libraries/action-scheduler/{docs,tests}",
+    "export:noassets": "rm -rf ../KUDOS-EXPORT &&  mkdir -p ../KUDOS-EXPORT/kudos-donations/ && cp -r {libraries,languages,templates,vendor,app,dist,index.php,uninstall.php,kudos-donations.php,readme.txt} ../KUDOS-EXPORT/kudos-donations/ && rm -rf ../KUDOS-EXPORT/kudos-donations/libraries/action-scheduler/{docs,tests} && cd ../KUDOS-EXPORT && zip -qrD9 kudos-donations.zip kudos-donations"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
