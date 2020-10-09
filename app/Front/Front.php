@@ -424,11 +424,7 @@ class Front {
 		$apiMode      = Settings::get_setting( 'mollie_api_mode' );
 		$apiKey       = Settings::get_setting( 'mollie_' . $apiMode . '_api_key' );
 
-		if ( $apiKey && $apiConnected ) {
-			return true;
-		}
-
-		return false;
+		return ( $apiKey && $apiConnected );
 
 	}
 
