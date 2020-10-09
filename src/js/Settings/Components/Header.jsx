@@ -5,13 +5,17 @@ const { __ } = wp.i18n;
 const Header = ( props ) => {
 
 	let status;
+	let statusClass;
 
 	if ( props.checkingApi ) {
-		status = 'checking';
+		statusClass = 'checking';
+		status = __('checking', 'kudos-donations');
 	} else if ( props.apiConnected ) {
-		status = 'connected';
+		statusClass = 'connected';
+		status = __('connected', 'kudos-donations');
 	} else if ( ! props.apiConnected ) {
-		status = 'not-connected';
+		statusClass = 'not-connected';
+		status = __('not-connected', 'kudos-donations');
 	}
 
 	return (
@@ -24,7 +28,7 @@ const Header = ( props ) => {
 				<div className="kudos-dashboard-header__right">
 					<span
 						style={ { textTransform: 'capitalize' } }
-						className={ 'kudos-api-status ' + status + ' kd-text-gray-600 kd-ml-4' }
+						className={ 'kudos-api-status ' + statusClass + ' kd-text-gray-600 kd-ml-4' }
 					>
 						{ status }
 					</span>

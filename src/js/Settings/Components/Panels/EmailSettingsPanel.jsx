@@ -12,11 +12,11 @@ const {Fragment} = wp.element;
 const EmailSettingsPanel = ( props ) => {
 
 	return (
-		<PanelBody title={ __( 'Email Settings' ) } initialOpen={ false }>
+		<PanelBody title={ __( 'Email Settings', 'kudos-donations' ) } initialOpen={ false }>
 
 			<ToggleControl
-				label={ 'Use custom email settings' }
-				help={ 'Enable this to use your own SMTP server settings.' }
+				label={ __('Use custom email settings', 'kudos-donations') }
+				help={ __('Enable this to use your own SMTP server settings.', 'kudos-donations') }
 				checked={ props.settings._kudos_smtp_enable || '' }
 				onChange={ () => props.handleInputChange( "_kudos_smtp_enable", ! props.settings._kudos_smtp_enable ) }
 			/>

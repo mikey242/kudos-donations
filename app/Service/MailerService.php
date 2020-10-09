@@ -143,11 +143,11 @@ class MailerService extends AbstractService {
 		$mail = wp_mail( $to, $subject, $body, $headers, $attachment );
 
 		if ( $mail ) {
-			$this->logger->info( sprintf( __( 'Email with subject "%s" sent to "%s"', 'kudos_donations' ),
+			$this->logger->info( sprintf( __( 'Email with subject "%s" sent to "%s"', 'kudos-donations' ),
 				$subject,
 				$to ) );
 		} else {
-			$this->logger->error( sprintf( __( 'Email with subject "%s" failed to be sent to "%s"', 'kudos_donations' ),
+			$this->logger->error( sprintf( __( 'Email with subject "%s" failed to be sent to "%s"', 'kudos-donations' ),
 				$subject,
 				$to ) );
 		}
@@ -170,7 +170,7 @@ class MailerService extends AbstractService {
 	public function send_test( WP_REST_Request $request ) {
 
 		if ( empty( $request['email'] ) ) {
-			wp_send_json_error( __( 'Please provide an email address.', 'kudos_donations' ) );
+			wp_send_json_error( __( 'Please provide an email address.', 'kudos-donations' ) );
 		}
 
 		$email   = sanitize_email( $request['email'] );

@@ -254,7 +254,7 @@ class KudosAdmin extends Component {
 		this.tabs = applyFilters('kudos.settings.registerTabs', [
 			{
 				name: 'mollie',
-				title: 'Mollie',
+				title: __('Mollie', 'kudos-donations'),
 				className: 'tab-mollie',
 				content:
 					<Fragment>
@@ -272,7 +272,7 @@ class KudosAdmin extends Component {
 			},
 			{
 				name: 'customize',
-				title: 'Customize',
+				title: __('Customize', 'kudos-donations'),
 				className: 'tab-customize',
 				content:
 					<Fragment>
@@ -304,7 +304,7 @@ class KudosAdmin extends Component {
 			},
 			{
 				name: 'email',
-				title: 'Email',
+				title: __('Email', 'kudos-donations'),
 				className: 'tab-email',
 				content:
 					<Fragment>
@@ -324,7 +324,7 @@ class KudosAdmin extends Component {
 			},
 			{
 				name: 'advanced',
-				title: 'Advanced',
+				title: __('Advanced', 'kudos-donations'),
 				className: 'tab-advanced',
 				content:
 					<Fragment>
