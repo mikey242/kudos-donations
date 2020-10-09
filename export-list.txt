@@ -1,0 +1,10 @@
+libraries
+languages
+templates
+vendor
+app
+dist
+index.php
+uninstall.php
+kudos-donations.php
+readme.txt
