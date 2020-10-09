@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Kudos Donations\n"
-"POT-Creation-Date: 2020-10-07 15:23+0200\n"
-"PO-Revision-Date: 2020-10-07 15:21+0200\n"
+"POT-Creation-Date: 2020-10-09 13:17+0200\n"
+"PO-Revision-Date: 2020-10-09 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,237 +22,176 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
 "X-Poedit-SearchPathExcluded-2: node_modules\n"
+"X-Poedit-SearchPathExcluded-3: src\n"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:140
-#: EXPORT/kudos-donations/app/Admin/Admin.php:141
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
 #: app/Admin/Admin.php:140 app/Admin/Admin.php:141
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Kudos"
 msgstr ""
 
 #. translators: %s: Plugin name
-#: EXPORT/kudos-donations/app/Admin/Admin.php:154 app/Admin/Admin.php:154
+#: app/Admin/Admin.php:154
 #, php-format
 msgid "%s Transactions"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:155
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:46
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-transactions.php:28
 #: app/Admin/Admin.php:155 app/Admin/Table/TransactionsTable.php:46
 #: app/Admin/partials/kudos-admin-transactions.php:28
 msgid "Transactions"
 msgstr ""
 
 #. translators: %s: Plugin name
-#: EXPORT/kudos-donations/app/Admin/Admin.php:169 app/Admin/Admin.php:169
+#: app/Admin/Admin.php:169
 #, php-format
 msgid "%s Subscriptions"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:170
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:45
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:36
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
 #: app/Admin/Admin.php:170 app/Admin/Table/SubscriptionsTable.php:45
 #: app/Admin/partials/kudos-admin-subscriptions.php:36
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Subscriptions"
 msgstr ""
 
 #. translators: %s: Plugin name
-#: EXPORT/kudos-donations/app/Admin/Admin.php:184 app/Admin/Admin.php:184
+#: app/Admin/Admin.php:184
 #, php-format
 msgid "%s Donors"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:185
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:42
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-donors.php:28
 #: app/Admin/Admin.php:185 app/Admin/Table/DonorsTable.php:42
 #: app/Admin/partials/kudos-admin-donors.php:28
 msgid "Donors"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:197
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: app/Admin/Admin.php:197
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: app/Admin/Admin.php:197 dist/js/kudos-admin-settings.js:1
 msgid "Kudos Settings"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:198 app/Admin/Admin.php:198
+#: app/Admin/Admin.php:198
 msgid "Settings"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:273 app/Admin/Admin.php:273
+#: app/Admin/Admin.php:273
 msgid "Are you sure you want to delete this transaction?"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:306 app/Admin/Admin.php:306
+#: app/Admin/Admin.php:306
 msgid "Are you sure you want to cancel this subscription?"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:307 app/Admin/Admin.php:307
+#: app/Admin/Admin.php:307
 msgid "Are you sure you want to delete this subscription?"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:323 app/Admin/Admin.php:323
+#: app/Admin/Admin.php:323
 msgid "Are you sure you want to delete this donor?"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:355 app/Admin/Admin.php:355
+#: app/Admin/Admin.php:355
 msgid "Log cleared"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:371 app/Admin/Admin.php:371
+#: app/Admin/Admin.php:371
 msgid "Cache cleared"
 msgstr ""
 
 #. translators: %s: Number of records.
-#: EXPORT/kudos-donations/app/Admin/Admin.php:381 app/Admin/Admin.php:381
+#: app/Admin/Admin.php:381
 #, php-format
 msgid "Deleted %s transactions(s)"
 msgstr ""
 
 #. translators: %s: Number of records.
-#: EXPORT/kudos-donations/app/Admin/Admin.php:392 app/Admin/Admin.php:392
+#: app/Admin/Admin.php:392
 #, php-format
 msgid "Deleted %s donors(s)"
 msgstr ""
 
 #. translators: %s: Number of records.
-#: EXPORT/kudos-donations/app/Admin/Admin.php:402 app/Admin/Admin.php:402
+#: app/Admin/Admin.php:402
 #, php-format
 msgid "Deleted %s subscriptions(s)"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:411
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:18
 #: app/Admin/Admin.php:411 app/Admin/partials/kudos-admin-subscriptions.php:18
+#: app/Front/Front.php:480
 msgid "Subscription cancelled"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:31
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:97
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:33
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:114
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:36
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:124
 #: app/Admin/Table/DonorsTable.php:31 app/Admin/Table/DonorsTable.php:97
 #: app/Admin/Table/SubscriptionsTable.php:33
 #: app/Admin/Table/SubscriptionsTable.php:114
 #: app/Admin/Table/TransactionsTable.php:36
 #: app/Admin/Table/TransactionsTable.php:124
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:40
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:112
 #: templates/public/modal/donate.modal.html.twig:40
 #: templates/public/modal/donate.modal.html.twig:112
 msgid "Name"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:32
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:34
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:37
 #: app/Admin/Table/DonorsTable.php:32 app/Admin/Table/SubscriptionsTable.php:34
-#: app/Admin/Table/TransactionsTable.php:37
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:114
+#: app/Admin/Table/TransactionsTable.php:37 dist/js/kudos-admin-settings.js:1
 #: templates/public/modal/donate.modal.html.twig:114
 msgid "Email"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:33
 #: app/Admin/Table/DonorsTable.php:33
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:95
 #: templates/public/modal/donate.modal.html.twig:95
 msgid "Street"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:34
 #: app/Admin/Table/DonorsTable.php:34
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:96
 #: templates/public/modal/donate.modal.html.twig:96
 msgid "Postcode"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:35
 #: app/Admin/Table/DonorsTable.php:35
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:97
 #: templates/public/modal/donate.modal.html.twig:97
 msgid "City"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:36
 #: app/Admin/Table/DonorsTable.php:36
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:98
 #: templates/public/modal/donate.modal.html.twig:98
 msgid "Country"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:41
 #: app/Admin/Table/DonorsTable.php:41
 msgid "Donor"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:56
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:59
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:60
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:672
 #: app/Admin/Table/DonorsTable.php:56 app/Admin/Table/SubscriptionsTable.php:59
 #: app/Admin/Table/TransactionsTable.php:60
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:672
 msgid "Search"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:96
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:115
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:125
 #: app/Admin/Table/DonorsTable.php:96
 #: app/Admin/Table/SubscriptionsTable.php:115
 #: app/Admin/Table/TransactionsTable.php:125
 msgid "E-mail"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:98
 #: app/Admin/Table/DonorsTable.php:98
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:88
 #: templates/public/modal/donate.modal.html.twig:88
 msgid "Address"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:99
-#: EXPORT/kudos-donations/app/Service/MailerService.php:26
 #: app/Admin/Table/DonorsTable.php:99 app/Service/MailerService.php:26
 msgid "Donations"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:100
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:32
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:111
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:123
 #: app/Admin/Table/DonorsTable.php:100
 #: app/Admin/Table/SubscriptionsTable.php:32
 #: app/Admin/Table/SubscriptionsTable.php:111
 #: app/Admin/Table/TransactionsTable.php:123
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:15
 #: templates/emails/receipt.html.twig:15
 msgid "Date"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:161
 #: app/Admin/Table/DonorsTable.php:161
 msgid "Added"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:189
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:256
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:201
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:316
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:216
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:377
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:92
-#: app/Admin/Table/DonorsTable.php:189 app/Admin/Table/DonorsTable.php:257
+#: app/Admin/Table/DonorsTable.php:189 app/Admin/Table/DonorsTable.php:256
 #: app/Admin/Table/SubscriptionsTable.php:201
 #: app/Admin/Table/SubscriptionsTable.php:316
 #: app/Admin/Table/TransactionsTable.php:216
@@ -261,27 +200,16 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:35
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:116
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:33
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:126
 #: app/Admin/Table/SubscriptionsTable.php:35
 #: app/Admin/Table/SubscriptionsTable.php:116
 #: app/Admin/Table/TransactionsTable.php:33
 #: app/Admin/Table/TransactionsTable.php:126
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:25
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:116
 #: templates/emails/receipt.html.twig:25
+#: templates/public/modal/donate.modal.html.twig:37
 #: templates/public/modal/donate.modal.html.twig:116
 msgid "Amount"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:36
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:117
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:35
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:128
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:144
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:97
 #: app/Admin/Table/SubscriptionsTable.php:36
 #: app/Admin/Table/SubscriptionsTable.php:117
 #: app/Admin/Table/TransactionsTable.php:35
@@ -291,26 +219,13 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:37
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:112
 #: app/Admin/Table/SubscriptionsTable.php:37
 #: app/Admin/Table/SubscriptionsTable.php:112
 msgid "Frequency"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:38
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:113
 #: app/Admin/Table/SubscriptionsTable.php:38
 #: app/Admin/Table/SubscriptionsTable.php:113
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:72
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:73
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:74
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:75
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:76
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:77
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:78
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:79
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:80
 #: templates/public/modal/donate.modal.html.twig:72
 #: templates/public/modal/donate.modal.html.twig:73
 #: templates/public/modal/donate.modal.html.twig:74
@@ -323,200 +238,146 @@ msgstr ""
 msgid "Years"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:39
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:32
 #: app/Admin/Table/SubscriptionsTable.php:39
 #: app/Admin/Table/TransactionsTable.php:32
 msgid "Currency"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:44
 #: app/Admin/Table/SubscriptionsTable.php:44
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:58
 #: templates/public/modal/donate.modal.html.twig:58
 msgid "Subscription"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:118
 #: app/Admin/Table/SubscriptionsTable.php:118
 msgid "Subscription Id"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:194
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:315
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:133
 #: app/Admin/Table/SubscriptionsTable.php:194
 #: app/Admin/Table/SubscriptionsTable.php:315
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:133
-#: EXPORT/kudos-donations/templates/public/modal/embeds/_tab.html.twig:22
 #: templates/public/modal/embeds/_tab.html.twig:22
 msgid "Cancel"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:225
 #: app/Admin/Table/SubscriptionsTable.php:225
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:70
 #: templates/public/modal/donate.modal.html.twig:70
 msgid "Continuous"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:295
 #: app/Admin/Table/SubscriptionsTable.php:295
 msgid "Active"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:298
 #: app/Admin/Table/SubscriptionsTable.php:298
+#: app/Admin/Table/TransactionsTable.php:341
 msgid "Cancelled"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:429
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:461
 #: app/Admin/Table/SubscriptionsTable.php:429
 #: app/Admin/Table/TransactionsTable.php:477
 msgid "All"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:435
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:159
 #: app/Admin/Table/SubscriptionsTable.php:435 app/Helpers/Utils.php:159
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:64
 #: templates/public/modal/donate.modal.html.twig:64
 msgid "Yearly"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:441
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:163
 #: app/Admin/Table/SubscriptionsTable.php:441 app/Helpers/Utils.php:163
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:65
 #: templates/public/modal/donate.modal.html.twig:65
 msgid "Quarterly"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:448
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:161
 #: app/Admin/Table/SubscriptionsTable.php:448 app/Helpers/Utils.php:161
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:66
 #: templates/public/modal/donate.modal.html.twig:66
 msgid "Monthly"
 msgstr ""
 
 #. translators: %s: Name of record type (e.g transactions)
-#: EXPORT/kudos-donations/app/Admin/Table/TableTrait.php:32
 #: app/Admin/Table/TableTrait.php:32
 #, php-format
 msgid "No %s found."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:31
 #: app/Admin/Table/TransactionsTable.php:31
 msgid "Transaction created"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:34
 #: app/Admin/Table/TransactionsTable.php:34
 msgid "Refunded"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:38
 #: app/Admin/Table/TransactionsTable.php:38
 msgid "Method"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:39
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: app/Admin/Table/TransactionsTable.php:39
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: app/Admin/Table/TransactionsTable.php:39 dist/js/kudos-admin-settings.js:1
 msgid "Mode"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:40
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:127
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
 #: app/Admin/Table/TransactionsTable.php:40
-#: app/Admin/Table/TransactionsTable.php:127
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:118
+#: app/Admin/Table/TransactionsTable.php:127 dist/js/kudos-button-block.js:1
 #: templates/public/modal/donate.modal.html.twig:118
 msgid "Type"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:45
 #: app/Admin/Table/TransactionsTable.php:45
 msgid "Transaction"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:129
-msgid "Order Id"
+#: app/Admin/Table/TransactionsTable.php:129
+#: templates/emails/receipt.html.twig:13
+msgid "Order ID"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:130
 #: app/Admin/Table/TransactionsTable.php:130
 msgid "Transaction Id"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:131
-msgid "Donation Label"
+#: app/Admin/Table/TransactionsTable.php:131 dist/js/kudos-button-block.js:1
+msgid "Campaign"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:332
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:467
 #: app/Admin/Table/TransactionsTable.php:332
 #: app/Admin/Table/TransactionsTable.php:483
 msgid "Paid"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:335
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:473
 #: app/Admin/Table/TransactionsTable.php:335
 #: app/Admin/Table/TransactionsTable.php:489
 msgid "Open"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:338
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:486
 #: app/Admin/Table/TransactionsTable.php:338
 #: app/Admin/Table/TransactionsTable.php:502
 msgid "Expired"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:341
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:479
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:305
-#: app/Admin/Table/TransactionsTable.php:341
-#: app/Admin/Table/TransactionsTable.php:495
-#: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:305
-msgid "Canceled"
-msgstr ""
-
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:344
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:304
 #: app/Admin/Table/TransactionsTable.php:344
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:304
 msgid "Failed"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:347
 #: app/Admin/Table/TransactionsTable.php:347
 msgid "Unknown"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-donors.php:18
+#: app/Admin/Table/TransactionsTable.php:495
+#: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:305
+msgid "Canceled"
+msgstr ""
+
 #: app/Admin/partials/kudos-admin-donors.php:18
 msgid "Donor deleted"
 msgstr ""
 
 #. translators: %s: Number of records
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-donors.php:22
 #: app/Admin/partials/kudos-admin-donors.php:22
 #, php-format
 msgid "%s donor(s) deleted"
 msgstr ""
 
 #. translators: %s: Search term
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-donors.php:33
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:41
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-transactions.php:33
 #: app/Admin/partials/kudos-admin-donors.php:33
 #: app/Admin/partials/kudos-admin-subscriptions.php:41
 #: app/Admin/partials/kudos-admin-transactions.php:33
@@ -524,142 +385,111 @@ msgstr ""
 msgid "Search results for “%s”"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:21
 #: app/Admin/partials/kudos-admin-subscriptions.php:21
 msgid "Subscription deleted"
 msgstr ""
 
 #. translators: %s: Number of records
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:25
 #: app/Admin/partials/kudos-admin-subscriptions.php:25
 #, php-format
 msgid "%s subscription(s) cancelled"
 msgstr ""
 
 #. translators: %s: Number of records
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:30
 #: app/Admin/partials/kudos-admin-subscriptions.php:30
 #, php-format
 msgid "%s subscription(s) deleted"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-transactions.php:18
 #: app/Admin/partials/kudos-admin-transactions.php:18
 msgid "Transaction deleted"
 msgstr ""
 
 #. translators: %s: Number of records
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-transactions.php:22
 #: app/Admin/partials/kudos-admin-transactions.php:22
 #, php-format
 msgid "%s transactions(s) deleted"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:236 app/Front/Front.php:236
+#: app/Front/Front.php:236
 msgid "Request invalid."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:296 app/Front/Front.php:296
+#: app/Front/Front.php:296
 msgid "Error creating Mollie payment. Please try again later."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:315
-#: EXPORT/kudos-donations/app/Front/Front.php:340 app/Front/Front.php:315
-#: app/Front/Front.php:340
+#: app/Front/Front.php:315 app/Front/Front.php:340
 msgid "Donate now"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:317
-#: EXPORT/kudos-donations/app/Front/Front.php:356 app/Front/Front.php:317
-#: app/Front/Front.php:356
+#: app/Front/Front.php:317 app/Front/Front.php:356
 msgid "Support us!"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:318
-#: EXPORT/kudos-donations/app/Front/Front.php:360 app/Front/Front.php:318
-#: app/Front/Front.php:360
+#: app/Front/Front.php:318 app/Front/Front.php:360
 msgid "Thank you for your donation. We appreciate your support!"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:407 app/Front/Front.php:407
+#: app/Front/Front.php:407
 msgid "Mollie not connected"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:480 app/Front/Front.php:480
-msgid "Subscription canceled"
-msgstr ""
-
-#: EXPORT/kudos-donations/app/Front/Front.php:481 app/Front/Front.php:481
+#: app/Front/Front.php:481
 msgid ""
 "We will no longer be taking payments for this subscription. Thank you for "
 "your contributions."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:490 app/Front/Front.php:490
+#: app/Front/Front.php:490
 msgid "Link expired"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:491 app/Front/Front.php:491
+#: app/Front/Front.php:491
 msgid "Sorry, this link is no longer valid."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:530 app/Front/Front.php:530
-msgid "Payment canceled"
+#: app/Front/Front.php:530
+msgid "Payment cancelled"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:533 app/Front/Front.php:533
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:45
-#: templates/emails/receipt.html.twig:45
+#: app/Front/Front.php:533 templates/emails/receipt.html.twig:45
 msgid "Thanks"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/Front.php:534 app/Front/Front.php:534
+#: app/Front/Front.php:534
 msgid "Your donation will be processed soon."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Front/KudosButton.php:117
-#: EXPORT/kudos-donations/app/Front/KudosModal.php:75
 #: app/Front/KudosButton.php:117 app/Front/KudosModal.php:75
 msgid "Secure payment by"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Helpers/Settings.php:130
 #: app/Helpers/Settings.php:130
 msgid "Thank you!"
 msgstr ""
 
 #. translators: %s: Value of donation.
-#: EXPORT/kudos-donations/app/Helpers/Settings.php:137
 #: app/Helpers/Settings.php:137
 #, php-format
 msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:138
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:165
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
 #: app/Helpers/Utils.php:138 app/Helpers/Utils.php:165
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:270
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:45
-#: templates/public/modal/donate.modal.html.twig:45
+#: dist/js/kudos-public.js:1 templates/public/modal/donate.modal.html.twig:45
 msgid "One-off"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:140 app/Helpers/Utils.php:140
+#: app/Helpers/Utils.php:140
 msgid "Recurring (first payment)"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:142
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: app/Helpers/Utils.php:142 dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: src/js/kudos-public.js:268
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:46
+#: app/Helpers/Utils.php:142 dist/js/kudos-public.js:1
 #: templates/public/modal/donate.modal.html.twig:46
 msgid "Recurring"
 msgstr ""
 
 #. translators: %1$s: WordPress version number.
-#: EXPORT/kudos-donations/app/Service/CompatibilityService.php:79
 #: app/Service/CompatibilityService.php:79
 #, php-format
 msgid "WordPress Version %1$s is required."
@@ -671,7 +501,6 @@ msgstr ""
 #. %3$s: Current PHP version.
 #. %4$s: Required PHP version.
 #.
-#: EXPORT/kudos-donations/app/Service/CompatibilityService.php:105
 #: app/Service/CompatibilityService.php:105
 #, php-format
 msgid ""
@@ -680,86 +509,72 @@ msgid ""
 "update."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Service/CompatibilityService.php:127
 #: app/Service/CompatibilityService.php:127
 msgid "Kudos Donations Installation Problem"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Service/CompatibilityService.php:128
 #: app/Service/CompatibilityService.php:128
 msgid ""
 "The minimum requirements for Kudos Donations have not been met. Please fix "
 "the issue(s) below to continue:"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:121
 #: app/Service/MailerService.php:121
 msgid "Kudos Donation Receipt"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:146
 #: app/Service/MailerService.php:146
 #, php-format
 msgid "Email with subject \"%s\" sent to \"%s\""
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:150
 #: app/Service/MailerService.php:150
 #, php-format
 msgid "Email with subject \"%s\" failed to be sent to \"%s\""
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:173
 #: app/Service/MailerService.php:173
 msgid "Please provide an email address."
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:177
 #: app/Service/MailerService.php:177
 msgid "It worked!"
 msgstr ""
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:178
 #: app/Service/MailerService.php:178
 msgid "Looks like your email settings are set up correctly :-)"
 msgstr ""
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MailerService.php:184
 #: app/Service/MailerService.php:184
 #, php-format
 msgid "Email sent to %s."
 msgstr ""
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MailerService.php:187
 #: app/Service/MailerService.php:187
 msgid "Error sending email, please check the settings and try again."
 msgstr ""
 
 #. translators: %s: The order id
-#: EXPORT/kudos-donations/app/Service/MollieService.php:136
 #: app/Service/MollieService.php:135
 #, php-format
 msgid "Kudos Donation (%1$s) - %2$s"
 msgstr ""
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MollieService.php:316
 #: app/Service/MollieService.php:316
 #, php-format
 msgid "%1$s API key should begin with %2$s"
 msgstr ""
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MollieService.php:329
 #: app/Service/MollieService.php:329
 #, php-format
 msgid "%s API key connection was successful!"
 msgstr ""
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MollieService.php:333
 #: app/Service/MollieService.php:333
 #, php-format
 msgid ""
@@ -770,475 +585,408 @@ msgstr ""
 #. %1$s: Subscription interval.
 #. %2$s: Order id.
 #.
-#: EXPORT/kudos-donations/app/Service/MollieService.php:562
 #: app/Service/MollieService.php:585
 #, php-format
 msgid "Kudos Subscription (%1$s) - %2$s"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Setting(s) updated"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
+msgid "Mollie"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Customize"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Advanced"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Save"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
+msgid "checking"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "connected"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "not-connected"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Address Field"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Completed Payment"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Show pop-up message when payment complete"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Enable this to show a pop-up thanking the customer for their donation."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Title"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Text"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Button label"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "You can use the following variables in the above fields: {{name}}, "
 "{{email}}, {{value}}"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Email Settings"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
+msgid "Use custom email settings"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Enable this to use your own SMTP server settings."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Host"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Your email server's hostname"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Encryption"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Choose your encryption type. Always use TLS or SSL if available."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "None"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "SSL"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "TLS"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Enable Auto TLS"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "In most cases you will want this enabled. Disable for troubleshooting."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Port"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "587 (TLS), 465 (SSL), 25 (Unencrypted)"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Username"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "This is usually an email address"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Password"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "From address"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "The email address emails will appear to be sent from. Leave empty to use "
 "same as username."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Invalid email address"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Send Test Email"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Email address"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Make sure you save any changes beforehand."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "user@domain.com"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Sending"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "API Keys"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Test API Key"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Begins with \"test_\""
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Live API Key"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Begins with \"live_\""
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Get API Key(s)"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "API Mode"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "When using Kudos Donations for the first time, the payment mode is set to "
 "\"Test\". Check that the configuration is working correctly. Once you are "
 "ready to receive live payments you can switch the mode to \"Live\"."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Custom Return URL"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Use custom return URL"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "After payment the customer is returned to the page where they clicked on the "
 "donation button. To use a different return URL, enable this option."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "URL"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "e.g https://mywebsite.com/thanks"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Privacy Policy"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Email Receipts"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Send email receipts"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "Once a payment has been completed, you can automatically send an email "
 "receipt to the donor."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Send receipt copy to:"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Leave blank to disable."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Debug Mode"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Enable debug mode"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "This will enable the debug logging and a debug menu found under Kudos."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:102
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:102
 msgid "Action Scheduler"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Enable action scheduler"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "In most cases this should be left on, only disable this if you are "
 "experiencing issues with emails and invoices not working."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Theme Colour"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Colour"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Set the colour for the Kudos button and the pop-up modal"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Allows donors to donate automatically at regular intervals."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Kudos Button"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Adds a Kudos donate button to your post or page."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Button"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:128
+#: dist/js/kudos-button-block.js:1
 #: templates/public/modal/donate.modal.html.twig:128
 msgid "Donate"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Donate now!"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Modal (pop-up)"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Header"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Welcome text"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Donation amount"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "The type of donation amount available"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-msgid "Amounts:"
+#: dist/js/kudos-button-block.js:1
+msgid "Amounts"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Enter a comma separated list of values to use."
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-msgid "Other"
+#: dist/js/kudos-button-block.js:1
+msgid "Campaign label"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-msgid "Donation label"
-msgstr ""
-
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid ""
 "Give this donation button a label so you can identify it on the transactions "
 "page"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:48
+#: dist/js/kudos-public.js:1
 msgid "Your name is required"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:51
+#: dist/js/kudos-public.js:1
 msgid "Your email is required"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:52
+#: dist/js/kudos-public.js:1
 msgid "Please enter a valid email"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:55
+#: dist/js/kudos-public.js:1
 msgid "Donation amount is required"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:56
+#: dist/js/kudos-public.js:1
 msgid "Minimum donation is 1 euro"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:57
+#: dist/js/kudos-public.js:1
 msgid "Only digits are valid"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:60
+#: dist/js/kudos-public.js:1
 msgid "Please select a payment frequency"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:63
+#: dist/js/kudos-public.js:1
 msgid "Please select a payment duration"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:64
+#: dist/js/kudos-public.js:1
 msgid "Subscriptions must be more than one payment"
 msgstr ""
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:67
+#: dist/js/kudos-public.js:1
 msgid "You must agree to our privacy policy before donating"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ActionFactory.php:161
 #: libraries/action-scheduler/classes/ActionScheduler_ActionFactory.php:161
 msgid "Invalid action - must be a recurring action."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:60
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:75
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:76
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:89
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:19
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:30
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:60
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:75
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:76
@@ -1248,18 +996,15 @@ msgstr ""
 msgid "Scheduled Actions"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:127
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:127
 msgid "About"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:129
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:129
 #, php-format
 msgid "About Action Scheduler %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:131
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:131
 msgid ""
 "Action Scheduler is a scalable, traceable job queue for background "
@@ -1268,93 +1013,72 @@ msgid ""
 "scheduled to run on a recurring schedule."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:139
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:139
 msgid "Columns"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:141
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:141
 msgid "Scheduled Action Columns"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:143
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:96
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:143
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:96
 msgid "Hook"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:143
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:143
 msgid "Name of the action hook that will be triggered."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:144
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:144
 msgid "Action statuses are Pending, Complete, Canceled, Failed"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:145
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:98
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:145
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:98
 msgid "Arguments"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:145
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:145
 msgid "Optional data array passed to the action hook."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:146
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:99
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:146
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:99
 msgid "Group"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:146
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:146
 msgid "Optional action group."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:147
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:100
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:147
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:100
 msgid "Recurrence"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:147
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:147
 msgid "The action's schedule frequency."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:148
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:148
 msgid "Scheduled"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:148
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:148
 msgid "The date/time the action is/was scheduled to run."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:149
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:102
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:149
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:102
 msgid "Log"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:149
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:149
 msgid "Activity log for the action."
 msgstr ""
 
 #. translators: %d: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_DataController.php:133
 #: libraries/action-scheduler/classes/ActionScheduler_DataController.php:133
 #, php-format
 msgid "Stopped the insanity for %d second"
@@ -1362,20 +1086,17 @@ msgid_plural "Stopped the insanity for %d seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_DataController.php:137
 #: libraries/action-scheduler/classes/ActionScheduler_DataController.php:137
 msgid "Attempting to reduce used memory..."
 msgstr ""
 
 #. translators: 1: action ID 2: schedule
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_InvalidActionException.php:21
 #: libraries/action-scheduler/classes/ActionScheduler_InvalidActionException.php:21
 #, php-format
 msgid "Action [%1$s] has an invalid schedule: %2$s"
 msgstr ""
 
 #. translators: 1: action ID 2: arguments
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_InvalidActionException.php:40
 #: libraries/action-scheduler/classes/ActionScheduler_InvalidActionException.php:40
 #, php-format
 msgid ""
@@ -1383,33 +1104,27 @@ msgid ""
 "$args = %2$s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:101
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:101
 msgid "Scheduled Date"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:122
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:122
 msgid "Claim ID"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:129
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:129
 msgid "Run"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:130
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:130
 msgid "Process the action now as if it were run as part of a queue"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:134
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:134
 msgid "Cancel the action now to avoid it being run in future"
 msgstr ""
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:144
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:144
 #, php-format
 msgid "%s year"
@@ -1418,7 +1133,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:149
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:149
 #, php-format
 msgid "%s month"
@@ -1427,7 +1141,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:154
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:154
 #, php-format
 msgid "%s week"
@@ -1436,7 +1149,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:159
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:159
 #, php-format
 msgid "%s day"
@@ -1445,7 +1157,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:164
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:164
 #, php-format
 msgid "%s hour"
@@ -1454,7 +1165,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:169
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:169
 #, php-format
 msgid "%s minute"
@@ -1463,7 +1173,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:174
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:174
 #, php-format
 msgid "%s second"
@@ -1471,31 +1180,26 @@ msgid_plural "%s seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:201
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:201
 msgid "Now!"
 msgstr ""
 
 #. translators: %s: time interval
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:237
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:237
 #, php-format
 msgid "Every %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:243
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:243
 msgid "Non-repeating"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:341
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:341
 msgid ""
 "It appears one or more database tables were missing. Attempting to re-create "
 "the missing table(s)."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:358
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:358
 #, php-format
 msgid ""
@@ -1508,7 +1212,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: process URL
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:374
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:374
 #, php-format
 msgid ""
@@ -1517,73 +1220,62 @@ msgid ""
 msgstr ""
 
 #. translators: %d: seconds
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:377
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:377
 #, php-format
 msgid "The next queue will begin processing in approximately %d seconds."
 msgstr ""
 
 #. translators: %s: action HTML
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:398
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:398
 #, php-format
 msgid "Successfully executed action: %s"
 msgstr ""
 
 #. translators: %s: action HTML
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:402
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:402
 #, php-format
 msgid "Successfully canceled action: %s"
 msgstr ""
 
 #. translators: %s: action HTML
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:406
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:406
 #, php-format
 msgid "Successfully processed change for action: %s"
 msgstr ""
 
 #. translators: 1: action HTML 2: action ID 3: error message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:412
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:412
 #, php-format
 msgid "Could not process change for action: \"%1$s\" (ID: %2$d). Error: %3$s"
 msgstr ""
 
 #. translators: %s: date interval
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:458
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:458
 #, php-format
 msgid " (%s ago)"
 msgstr ""
 
 #. translators: %s: date interval
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:461
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:461
 #, php-format
 msgid " (%s)"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:610
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:610
 msgid "Search hook, args and claim ID"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_QueueRunner.php:192
 #: libraries/action-scheduler/classes/ActionScheduler_QueueRunner.php:192
 msgid "Every minute"
 msgstr ""
 
 #. translators: %s: date interval
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:103
 #: libraries/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:103
 #, php-format
 msgid "This data will be deleted in %s."
 msgstr ""
 
 #. translators: 1: next cleanup message 2: github issue URL
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:108
 #: libraries/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:108
 #, php-format
 msgid ""
@@ -1592,63 +1284,51 @@ msgid ""
 "more &raquo;</a>"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:102
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:102
 msgid "This section shows details of Action Scheduler."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:105
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:105
 msgid "Version:"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:109
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:109
 msgid "Data store:"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:113
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:113
 msgid "Action Status"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:115
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:115
 msgid "Count"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:116
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:116
 msgid "Oldest Scheduled Date"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:117
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:117
 msgid "Newest Scheduled Date"
 msgstr ""
 
 #. translators: %s php class name
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:33
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ProgressBar.php:47
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:33
 #: libraries/action-scheduler/classes/WP_CLI/ProgressBar.php:47
 #, php-format
 msgid "The %s class can only be run within WP CLI."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:59
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:59
 msgid ""
 "There are too many concurrent batches, but the run is forced to continue."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:61
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:61
 msgid "There are too many concurrent batches."
 msgstr ""
 
 #. translators: %d: amount of actions
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:93
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:93
 #, php-format
 msgid "Running %d action"
@@ -1656,34 +1336,29 @@ msgid_plural "Running %d actions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:113
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:113
 msgid "The claim has been lost. Aborting current batch."
 msgstr ""
 
 #. translators: %s refers to the action ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:138
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:138
 #, php-format
 msgid "Started processing action %s"
 msgstr ""
 
 #. translators: 1: action ID 2: hook name
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:155
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:155
 #, php-format
 msgid "Completed processing action %1$s with hook: %2$s"
 msgstr ""
 
 #. translators: 1: action ID 2: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:170
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:170
 #, php-format
 msgid "Error processing action %1$s: %2$s"
 msgstr ""
 
 #. translators: %d refers to how many scheduled taks were found to run
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:100
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:100
 #, php-format
 msgid "Found %d scheduled task"
@@ -1692,7 +1367,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d refers to the total number of batches executed
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:117
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:117
 #, php-format
 msgid "%d batch executed."
@@ -1701,14 +1375,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s refers to the exception error message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:136
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:136
 #, php-format
 msgid "There was an error running the action scheduler: %s"
 msgstr ""
 
 #. translators: %d refers to the total number of taskes completed
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:153
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:153
 #, php-format
 msgid "%d scheduled task completed."
@@ -1716,125 +1388,104 @@ msgid_plural "%d scheduled tasks completed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler.php:195
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler.php:195
 #, php-format
 msgid "%s() was called before the Action Scheduler data store was initialized"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:467
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:467
 msgid "Filter"
 msgstr ""
 
 #. translators: %s: search query
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:567
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:567
 #, php-format
 msgid "Search results for \"%s\""
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:72
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:72
 msgid "action created"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:76
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBLogger.php:134
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:76
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBLogger.php:134
 msgid "action canceled"
 msgstr ""
 
 #. translators: %s: context
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:82
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:82
 #, php-format
 msgid "action started via %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:84
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:84
 msgid "action started"
 msgstr ""
 
 #. translators: %s: context
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:92
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:92
 #, php-format
 msgid "action complete via %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:94
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:94
 msgid "action complete"
 msgstr ""
 
 #. translators: 1: context 2: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:102
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:102
 #, php-format
 msgid "action failed via %1$s: %2$s"
 msgstr ""
 
 #. translators: %s: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:105
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:105
 #, php-format
 msgid "action failed: %s"
 msgstr ""
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:112
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:112
 #, php-format
 msgid "action timed out after %s seconds"
 msgstr ""
 
 #. translators: 1: error message 2: filename 3: line
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:118
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:118
 #, php-format
 msgid "unexpected shutdown: PHP Fatal error %1$s in %2$s on line %3$s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:123
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:123
 msgid "action reset"
 msgstr ""
 
 #. translators: %s: context
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:129
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:129
 #, php-format
 msgid "action ignored via %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:131
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:131
 msgid "action ignored"
 msgstr ""
 
 #. translators: %s: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:146
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:146
 #, php-format
 msgid "There was a failure fetching this action: %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:148
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:148
 msgid "There was a failure fetching this action"
 msgstr ""
 
 #. translators: %s: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:156
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:156
 #, php-format
 msgid "There was a failure scheduling the next instance of this action: %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:227
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:227
 #, php-format
 msgid ""
@@ -1843,30 +1494,23 @@ msgid ""
 "JSON."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:301
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:301
 msgid "Complete"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:302
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:302
 msgid "Pending"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:303
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:303
 msgid "In-progress"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:67
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:67
 msgid "Database error."
 msgstr ""
 
 #. translators: %s: error message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:75
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:25
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/ActionScheduler_DBStoreMigrator.php:44
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:75
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:25
 #: libraries/action-scheduler/classes/migration/ActionScheduler_DBStoreMigrator.php:44
@@ -1874,21 +1518,11 @@ msgstr ""
 msgid "Error saving action: %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:268
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:268
 msgid "Invalid value for select or count parameter. Cannot query actions."
 msgstr ""
 
 #. translators: %s: action ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:458
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:548
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:580
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:777
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:819
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:457
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:468
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:495
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:773
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:458
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:548
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:580
@@ -1903,79 +1537,64 @@ msgid "Unidentified action %s"
 msgstr ""
 
 #. translators: %s: group name
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:661
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:627
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:661
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:627
 #, php-format
 msgid "The group \"%s\" does not exist."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:675
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:607
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:675
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:607
 msgid "Unable to claim actions. Database error."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:838
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:740
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:838
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:740
 msgid "Invalid action ID. No status found."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:840
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:840
 msgid "Unknown status found for action."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:62
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:62
 msgid "Unable to save action."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:283
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:283
 msgid "Invalid schedule. Cannot save action."
 msgstr ""
 
 #. translators: %s: claim ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:689
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:689
 #, php-format
 msgid "Unable to unlock claim %s. Database error."
 msgstr ""
 
 #. translators: %s: action ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:704
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:704
 #, php-format
 msgid "Unable to unlock claim on action %s. Database error."
 msgstr ""
 
 #. translators: %s: action ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:716
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:716
 #, php-format
 msgid "Unable to mark failure on action %s. Database error."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:840
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:840
 #, php-format
 msgid ""
 "%s Support for strings longer than this will be removed in a future version."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:36
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:36
 msgctxt "post"
 msgid "Failed"
 msgstr ""
 
 #. translators: %s: count
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:38
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:38
 #, php-format
 msgid "Failed <span class=\"count\">(%s)</span>"
@@ -1983,14 +1602,12 @@ msgid_plural "Failed <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:51
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:51
 msgctxt "post"
 msgid "In-Progress"
 msgstr ""
 
 #. translators: %s: count
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:53
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:53
 #, php-format
 msgid "In-Progress <span class=\"count\">(%s)</span>"
@@ -1998,101 +1615,81 @@ msgid_plural "In-Progress <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:20
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:20
 msgid "Scheduled actions are hooks triggered on a cetain date and time."
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:31
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:31
 msgid "Scheduled Action"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:32
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:32
 msgctxt "Settings menu name"
 msgid "Scheduled Actions"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:33
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:33
 msgid "Add"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:34
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:34
 msgid "Add New Scheduled Action"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:35
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:35
 msgid "Edit"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:36
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:36
 msgid "Edit Scheduled Action"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:37
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:37
 msgid "New Scheduled Action"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:38
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:39
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:38
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:39
 msgid "View Action"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:40
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:40
 msgid "Search Scheduled Actions"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:41
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:41
 msgid "No actions found"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:42
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:42
 msgid "No actions found in trash"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_TaxonomyRegistrar.php:14
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_TaxonomyRegistrar.php:14
 msgid "Action Group"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/ActionMigrator.php:95
 #: libraries/action-scheduler/classes/migration/ActionMigrator.php:95
 #, php-format
 msgid "Unable to remove source migrated action %s"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Config.php:52
 #: libraries/action-scheduler/classes/migration/Config.php:52
 msgid "Source store must be configured before running a migration"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Config.php:74
 #: libraries/action-scheduler/classes/migration/Config.php:74
 msgid "Source logger must be configured before running a migration"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Config.php:96
 #: libraries/action-scheduler/classes/migration/Config.php:96
 msgid "Destination store must be configured before running a migration"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Config.php:118
 #: libraries/action-scheduler/classes/migration/Config.php:118
 msgid "Destination logger must be configured before running a migration"
 msgstr ""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Controller.php:142
 #: libraries/action-scheduler/classes/migration/Controller.php:142
 msgid ""
 "Action Scheduler migration in progress. The list of scheduled actions may be "
@@ -2100,7 +1697,6 @@ msgid ""
 msgstr ""
 
 #. translators: %d: amount of actions
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Runner.php:82
 #: libraries/action-scheduler/classes/migration/Runner.php:82
 #, php-format
 msgid "Migrating %d action"
@@ -2109,144 +1705,100 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: source action ID 2: source store class 3: destination action ID 4: destination store class
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Runner.php:107
 #: libraries/action-scheduler/classes/migration/Runner.php:107
 #, php-format
 msgid "Migrated action with ID %1$d in %2$s to ID %3$d in %4$s"
 msgstr ""
 
-#: app/Admin/Table/TransactionsTable.php:129
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:13
-#: templates/emails/receipt.html.twig:13
-msgid "Order ID"
-msgstr ""
-
-#: app/Admin/Table/TransactionsTable.php:131
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-msgid "Campaign Label"
-msgstr ""
-
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-msgid "Campaign"
-msgstr ""
-
-#: EXPORT/kudos-donations/templates/emails/base.html.twig:451
 #: templates/emails/base.html.twig:451
 msgid "All rights reserved."
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:4
 #: templates/emails/receipt.html.twig:4
 msgid "This is a receipt for your recent donation on"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:8
 #: templates/emails/receipt.html.twig:8
 msgid "Hi"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:9
 #: templates/emails/receipt.html.twig:9
 msgid "Thanks for your donation. This email is a receipt for your records."
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:22
 #: templates/emails/receipt.html.twig:22
 msgid "Description"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:35
 #: templates/emails/receipt.html.twig:35
 msgid "Total"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:52
 #: templates/emails/receipt.html.twig:52
 msgid "Want to cancel your subscription?"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:53
 #: templates/emails/receipt.html.twig:53
 msgid "Click here"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:37
-#: templates/public/modal/donate.modal.html.twig:37
-msgid "Amount (€)"
-msgstr ""
-
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:41
 #: templates/public/modal/donate.modal.html.twig:41
 msgid "E-mail address"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:59
 #: templates/public/modal/donate.modal.html.twig:59
 msgid "How often would you like to donate?"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:63
 #: templates/public/modal/donate.modal.html.twig:63
 msgid "Payment frequency"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:69
 #: templates/public/modal/donate.modal.html.twig:69
 msgid "Donation duration"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:71
 #: templates/public/modal/donate.modal.html.twig:71
 msgid "Year"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:89
 #: templates/public/modal/donate.modal.html.twig:89
 msgid "Please fill in you address"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:89
 #: templates/public/modal/donate.modal.html.twig:89
 msgid "optional"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:106
 #: templates/public/modal/donate.modal.html.twig:106
 msgid "Payment"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:107
 #: templates/public/modal/donate.modal.html.twig:107
 msgid "By clicking donate you agree to the following payment"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:123
 #: templates/public/modal/donate.modal.html.twig:123
 #, php-format
 msgid "I agree with the %s "
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:123
 #: templates/public/modal/donate.modal.html.twig:123
 msgid "privacy policy"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:124
 #: templates/public/modal/donate.modal.html.twig:124
 msgid "I agree with the privacy policy."
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/embeds/_tab.html.twig:20
 #: templates/public/modal/embeds/_tab.html.twig:20
 msgid "Previous tab"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/embeds/_tab.html.twig:24
 #: templates/public/modal/embeds/_tab.html.twig:24
 msgid "Next"
 msgstr ""
 
-#: EXPORT/kudos-donations/templates/public/modal/message.modal.html.twig:12
 #: templates/public/modal/message.modal.html.twig:12
 msgid "Ok"
 msgstr ""

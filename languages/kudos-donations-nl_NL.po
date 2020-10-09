@@ -1,253 +1,198 @@
-# Translation of Plugins - Kudos Donations - Stable (latest release) in Dutch
-# This file is distributed under the same license as the Plugins - Kudos Donations - Stable (latest release) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Plugins - Kudos Donations - Stable (latest release)\n"
-"POT-Creation-Date: 2020-10-07 15:23+0200\n"
-"PO-Revision-Date: 2020-10-07 15:43+0200\n"
+"Project-Id-Version: Kudos Donations\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-09 13:17+0200\n"
+"PO-Revision-Date: 2020-10-09 13:18+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: nl\n"
+"Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Poedit 2.4.1\n"
-"X-Poedit-Basepath: ../Projects/kudos-donations\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: kudos-donations.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
+"X-Poedit-SearchPathExcluded-2: docker\n"
+"X-Poedit-SearchPathExcluded-3: src\n"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:140
-#: EXPORT/kudos-donations/app/Admin/Admin.php:141
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
 #: app/Admin/Admin.php:140 app/Admin/Admin.php:141
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Kudos"
 msgstr "Kudos"
 
 #. translators: %s: Plugin name
-#: EXPORT/kudos-donations/app/Admin/Admin.php:154 app/Admin/Admin.php:154
+#: app/Admin/Admin.php:154
 #, php-format
 msgid "%s Transactions"
 msgstr "%s Transacties"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:155
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:46
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-transactions.php:28
 #: app/Admin/Admin.php:155 app/Admin/Table/TransactionsTable.php:46
 #: app/Admin/partials/kudos-admin-transactions.php:28
 msgid "Transactions"
 msgstr "Transacties"
 
 #. translators: %s: Plugin name
-#: EXPORT/kudos-donations/app/Admin/Admin.php:169 app/Admin/Admin.php:169
+#: app/Admin/Admin.php:169
 #, php-format
 msgid "%s Subscriptions"
 msgstr "%s abonnementen"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:170
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:45
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:36
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
 #: app/Admin/Admin.php:170 app/Admin/Table/SubscriptionsTable.php:45
 #: app/Admin/partials/kudos-admin-subscriptions.php:36
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Subscriptions"
 msgstr "Abonnementen"
 
 #. translators: %s: Plugin name
-#: EXPORT/kudos-donations/app/Admin/Admin.php:184 app/Admin/Admin.php:184
+#: app/Admin/Admin.php:184
 #, php-format
 msgid "%s Donors"
 msgstr "%s Donateurs"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:185
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:42
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-donors.php:28
 #: app/Admin/Admin.php:185 app/Admin/Table/DonorsTable.php:42
 #: app/Admin/partials/kudos-admin-donors.php:28
 msgid "Donors"
 msgstr "Donateurs"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:197
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: app/Admin/Admin.php:197
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: app/Admin/Admin.php:197 dist/js/kudos-admin-settings.js:1
 msgid "Kudos Settings"
 msgstr "Kudos Instellingen"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:198 app/Admin/Admin.php:198
+#: app/Admin/Admin.php:198
 msgid "Settings"
 msgstr "Instellingen"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:273 app/Admin/Admin.php:273
+#: app/Admin/Admin.php:273
 msgid "Are you sure you want to delete this transaction?"
 msgstr "Weet je zeker dat je deze transactie wilt verwijderen?"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:306 app/Admin/Admin.php:306
+#: app/Admin/Admin.php:306
 msgid "Are you sure you want to cancel this subscription?"
 msgstr "Weet je zeker dat je je abonnement wilt opzeggen?"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:307 app/Admin/Admin.php:307
+#: app/Admin/Admin.php:307
 msgid "Are you sure you want to delete this subscription?"
 msgstr "Weet je zeker dat je dit abonnement wilt verwijderen?"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:323 app/Admin/Admin.php:323
+#: app/Admin/Admin.php:323
 msgid "Are you sure you want to delete this donor?"
 msgstr "Weet je zeker dat je deze donateur wilt verwijderen?"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:355 app/Admin/Admin.php:355
+#: app/Admin/Admin.php:355
 msgid "Log cleared"
 msgstr "Log gewist"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:371 app/Admin/Admin.php:371
+#: app/Admin/Admin.php:371
 msgid "Cache cleared"
 msgstr "Cache gewist"
 
 #. translators: %s: Number of records.
-#: EXPORT/kudos-donations/app/Admin/Admin.php:381 app/Admin/Admin.php:381
+#: app/Admin/Admin.php:381
 #, php-format
 msgid "Deleted %s transactions(s)"
 msgstr "%s transactie(s) verwijderd"
 
 #. translators: %s: Number of records.
-#: EXPORT/kudos-donations/app/Admin/Admin.php:392 app/Admin/Admin.php:392
+#: app/Admin/Admin.php:392
 #, php-format
 msgid "Deleted %s donors(s)"
 msgstr "%s donateur(s) verwijderd"
 
 #. translators: %s: Number of records.
-#: EXPORT/kudos-donations/app/Admin/Admin.php:402 app/Admin/Admin.php:402
+#: app/Admin/Admin.php:402
 #, php-format
 msgid "Deleted %s subscriptions(s)"
 msgstr "%s abonnement(en) verwijderd"
 
-#: EXPORT/kudos-donations/app/Admin/Admin.php:411
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:18
 #: app/Admin/Admin.php:411 app/Admin/partials/kudos-admin-subscriptions.php:18
+#: app/Front/Front.php:480
 msgid "Subscription cancelled"
 msgstr "Abonnement geannuleerd"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:31
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:97
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:33
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:114
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:36
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:124
 #: app/Admin/Table/DonorsTable.php:31 app/Admin/Table/DonorsTable.php:97
 #: app/Admin/Table/SubscriptionsTable.php:33
 #: app/Admin/Table/SubscriptionsTable.php:114
 #: app/Admin/Table/TransactionsTable.php:36
 #: app/Admin/Table/TransactionsTable.php:124
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:40
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:112
 #: templates/public/modal/donate.modal.html.twig:40
 #: templates/public/modal/donate.modal.html.twig:112
 msgid "Name"
 msgstr "Naam"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:32
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:34
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:37
 #: app/Admin/Table/DonorsTable.php:32 app/Admin/Table/SubscriptionsTable.php:34
-#: app/Admin/Table/TransactionsTable.php:37
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:114
+#: app/Admin/Table/TransactionsTable.php:37 dist/js/kudos-admin-settings.js:1
 #: templates/public/modal/donate.modal.html.twig:114
 msgid "Email"
 msgstr "E-mail"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:33
 #: app/Admin/Table/DonorsTable.php:33
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:95
 #: templates/public/modal/donate.modal.html.twig:95
 msgid "Street"
 msgstr "Straat"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:34
 #: app/Admin/Table/DonorsTable.php:34
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:96
 #: templates/public/modal/donate.modal.html.twig:96
 msgid "Postcode"
 msgstr "Postcode"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:35
 #: app/Admin/Table/DonorsTable.php:35
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:97
 #: templates/public/modal/donate.modal.html.twig:97
 msgid "City"
 msgstr "Stad"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:36
 #: app/Admin/Table/DonorsTable.php:36
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:98
 #: templates/public/modal/donate.modal.html.twig:98
 msgid "Country"
 msgstr "Land"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:41
 #: app/Admin/Table/DonorsTable.php:41
 msgid "Donor"
 msgstr "Donateur"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:56
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:59
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:60
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:672
 #: app/Admin/Table/DonorsTable.php:56 app/Admin/Table/SubscriptionsTable.php:59
 #: app/Admin/Table/TransactionsTable.php:60
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:672
 msgid "Search"
 msgstr "Zoeken"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:96
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:115
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:125
 #: app/Admin/Table/DonorsTable.php:96
 #: app/Admin/Table/SubscriptionsTable.php:115
 #: app/Admin/Table/TransactionsTable.php:125
 msgid "E-mail"
 msgstr "E-mail"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:98
 #: app/Admin/Table/DonorsTable.php:98
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:88
 #: templates/public/modal/donate.modal.html.twig:88
 msgid "Address"
 msgstr "Adres"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:99
-#: EXPORT/kudos-donations/app/Service/MailerService.php:26
 #: app/Admin/Table/DonorsTable.php:99 app/Service/MailerService.php:26
 msgid "Donations"
 msgstr "Donaties"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:100
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:32
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:111
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:123
 #: app/Admin/Table/DonorsTable.php:100
 #: app/Admin/Table/SubscriptionsTable.php:32
 #: app/Admin/Table/SubscriptionsTable.php:111
 #: app/Admin/Table/TransactionsTable.php:123
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:15
 #: templates/emails/receipt.html.twig:15
 msgid "Date"
 msgstr "Datum"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:161
 #: app/Admin/Table/DonorsTable.php:161
 msgid "Added"
 msgstr "Toegevoegd"
 
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:189
-#: EXPORT/kudos-donations/app/Admin/Table/DonorsTable.php:256
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:201
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:316
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:216
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:377
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:92
-#: app/Admin/Table/DonorsTable.php:189 app/Admin/Table/DonorsTable.php:257
+#: app/Admin/Table/DonorsTable.php:189 app/Admin/Table/DonorsTable.php:256
 #: app/Admin/Table/SubscriptionsTable.php:201
 #: app/Admin/Table/SubscriptionsTable.php:316
 #: app/Admin/Table/TransactionsTable.php:216
@@ -256,27 +201,16 @@ msgstr "Toegevoegd"
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:35
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:116
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:33
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:126
 #: app/Admin/Table/SubscriptionsTable.php:35
 #: app/Admin/Table/SubscriptionsTable.php:116
 #: app/Admin/Table/TransactionsTable.php:33
 #: app/Admin/Table/TransactionsTable.php:126
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:25
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:116
 #: templates/emails/receipt.html.twig:25
+#: templates/public/modal/donate.modal.html.twig:37
 #: templates/public/modal/donate.modal.html.twig:116
 msgid "Amount"
 msgstr "Bedrag"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:36
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:117
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:35
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:128
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:144
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:97
 #: app/Admin/Table/SubscriptionsTable.php:36
 #: app/Admin/Table/SubscriptionsTable.php:117
 #: app/Admin/Table/TransactionsTable.php:35
@@ -286,26 +220,13 @@ msgstr "Bedrag"
 msgid "Status"
 msgstr "Status"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:37
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:112
 #: app/Admin/Table/SubscriptionsTable.php:37
 #: app/Admin/Table/SubscriptionsTable.php:112
 msgid "Frequency"
 msgstr "Frequentie"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:38
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:113
 #: app/Admin/Table/SubscriptionsTable.php:38
 #: app/Admin/Table/SubscriptionsTable.php:113
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:72
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:73
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:74
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:75
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:76
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:77
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:78
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:79
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:80
 #: templates/public/modal/donate.modal.html.twig:72
 #: templates/public/modal/donate.modal.html.twig:73
 #: templates/public/modal/donate.modal.html.twig:74
@@ -318,200 +239,147 @@ msgstr "Frequentie"
 msgid "Years"
 msgstr "Jaren"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:39
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:32
 #: app/Admin/Table/SubscriptionsTable.php:39
 #: app/Admin/Table/TransactionsTable.php:32
 msgid "Currency"
 msgstr "Valuta"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:44
 #: app/Admin/Table/SubscriptionsTable.php:44
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:58
 #: templates/public/modal/donate.modal.html.twig:58
 msgid "Subscription"
 msgstr "Abonnement"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:118
 #: app/Admin/Table/SubscriptionsTable.php:118
 msgid "Subscription Id"
 msgstr "Abonnement Id"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:194
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:315
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:133
 #: app/Admin/Table/SubscriptionsTable.php:194
 #: app/Admin/Table/SubscriptionsTable.php:315
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:133
-#: EXPORT/kudos-donations/templates/public/modal/embeds/_tab.html.twig:22
 #: templates/public/modal/embeds/_tab.html.twig:22
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:225
 #: app/Admin/Table/SubscriptionsTable.php:225
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:70
 #: templates/public/modal/donate.modal.html.twig:70
 msgid "Continuous"
 msgstr "Doorlopend"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:295
 #: app/Admin/Table/SubscriptionsTable.php:295
 msgid "Active"
 msgstr "Actief"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:298
 #: app/Admin/Table/SubscriptionsTable.php:298
+#: app/Admin/Table/TransactionsTable.php:341
 msgid "Cancelled"
 msgstr "Geannuleerd"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:429
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:461
 #: app/Admin/Table/SubscriptionsTable.php:429
 #: app/Admin/Table/TransactionsTable.php:477
 msgid "All"
 msgstr "Alles"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:435
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:159
 #: app/Admin/Table/SubscriptionsTable.php:435 app/Helpers/Utils.php:159
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:64
 #: templates/public/modal/donate.modal.html.twig:64
 msgid "Yearly"
 msgstr "Jaarlijks"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:441
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:163
 #: app/Admin/Table/SubscriptionsTable.php:441 app/Helpers/Utils.php:163
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:65
 #: templates/public/modal/donate.modal.html.twig:65
 msgid "Quarterly"
 msgstr "Kwartaal"
 
-#: EXPORT/kudos-donations/app/Admin/Table/SubscriptionsTable.php:448
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:161
 #: app/Admin/Table/SubscriptionsTable.php:448 app/Helpers/Utils.php:161
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:66
 #: templates/public/modal/donate.modal.html.twig:66
 msgid "Monthly"
 msgstr "Maandelijks"
 
 #. translators: %s: Name of record type (e.g transactions)
-#: EXPORT/kudos-donations/app/Admin/Table/TableTrait.php:32
 #: app/Admin/Table/TableTrait.php:32
 #, php-format
 msgid "No %s found."
 msgstr "Geen %s gevonden."
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:31
 #: app/Admin/Table/TransactionsTable.php:31
 msgid "Transaction created"
 msgstr "Transactie aangemaakt"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:34
 #: app/Admin/Table/TransactionsTable.php:34
 msgid "Refunded"
 msgstr "Terugbetaald"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:38
 #: app/Admin/Table/TransactionsTable.php:38
 msgid "Method"
 msgstr "Methode"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:39
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: app/Admin/Table/TransactionsTable.php:39
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: app/Admin/Table/TransactionsTable.php:39 dist/js/kudos-admin-settings.js:1
+#, fuzzy
 msgid "Mode"
-msgstr "Status"
+msgstr "Modus"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:40
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:127
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
 #: app/Admin/Table/TransactionsTable.php:40
-#: app/Admin/Table/TransactionsTable.php:127
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:118
+#: app/Admin/Table/TransactionsTable.php:127 dist/js/kudos-button-block.js:1
 #: templates/public/modal/donate.modal.html.twig:118
 msgid "Type"
 msgstr "Type"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:45
 #: app/Admin/Table/TransactionsTable.php:45
 msgid "Transaction"
 msgstr "Transactie"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:129
-msgid "Order Id"
-msgstr "Order Id"
+#: app/Admin/Table/TransactionsTable.php:129
+#: templates/emails/receipt.html.twig:13
+msgid "Order ID"
+msgstr "Order ID"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:130
 #: app/Admin/Table/TransactionsTable.php:130
 msgid "Transaction Id"
 msgstr "Transactie Id"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:131
-msgid "Donation Label"
-msgstr "Donatielabel"
+#: app/Admin/Table/TransactionsTable.php:131 dist/js/kudos-button-block.js:1
+msgid "Campaign"
+msgstr "Campagne"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:332
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:467
 #: app/Admin/Table/TransactionsTable.php:332
 #: app/Admin/Table/TransactionsTable.php:483
 msgid "Paid"
 msgstr "Betaald"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:335
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:473
 #: app/Admin/Table/TransactionsTable.php:335
 #: app/Admin/Table/TransactionsTable.php:489
 msgid "Open"
 msgstr "Open"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:338
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:486
 #: app/Admin/Table/TransactionsTable.php:338
 #: app/Admin/Table/TransactionsTable.php:502
 msgid "Expired"
 msgstr "Niet meer geldig"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:341
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:479
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:305
-#: app/Admin/Table/TransactionsTable.php:341
-#: app/Admin/Table/TransactionsTable.php:495
-#: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:305
-msgid "Canceled"
-msgstr "Geannuleerd"
-
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:344
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:304
 #: app/Admin/Table/TransactionsTable.php:344
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:304
 msgid "Failed"
 msgstr "Mislukt"
 
-#: EXPORT/kudos-donations/app/Admin/Table/TransactionsTable.php:347
 #: app/Admin/Table/TransactionsTable.php:347
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-donors.php:18
+#: app/Admin/Table/TransactionsTable.php:495
+#: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:305
+msgid "Canceled"
+msgstr "Geannuleerd"
+
 #: app/Admin/partials/kudos-admin-donors.php:18
 msgid "Donor deleted"
 msgstr "Donateur verwijderd"
 
 #. translators: %s: Number of records
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-donors.php:22
 #: app/Admin/partials/kudos-admin-donors.php:22
 #, php-format
 msgid "%s donor(s) deleted"
 msgstr "%s donateur(s) verwijderd"
 
 #. translators: %s: Search term
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-donors.php:33
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:41
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-transactions.php:33
 #: app/Admin/partials/kudos-admin-donors.php:33
 #: app/Admin/partials/kudos-admin-subscriptions.php:41
 #: app/Admin/partials/kudos-admin-transactions.php:33
@@ -519,72 +387,57 @@ msgstr "%s donateur(s) verwijderd"
 msgid "Search results for “%s”"
 msgstr "Zoekresultaten voor '%s'"
 
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:21
 #: app/Admin/partials/kudos-admin-subscriptions.php:21
 msgid "Subscription deleted"
 msgstr "Abonnement verwijderd"
 
 #. translators: %s: Number of records
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:25
 #: app/Admin/partials/kudos-admin-subscriptions.php:25
 #, php-format
 msgid "%s subscription(s) cancelled"
 msgstr "%s abonnement(en) geannuleerd"
 
 #. translators: %s: Number of records
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-subscriptions.php:30
 #: app/Admin/partials/kudos-admin-subscriptions.php:30
 #, php-format
 msgid "%s subscription(s) deleted"
 msgstr "%s abonnement(en) verwijderd"
 
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-transactions.php:18
 #: app/Admin/partials/kudos-admin-transactions.php:18
 msgid "Transaction deleted"
 msgstr "Transactie verwijderd"
 
 #. translators: %s: Number of records
-#: EXPORT/kudos-donations/app/Admin/partials/kudos-admin-transactions.php:22
 #: app/Admin/partials/kudos-admin-transactions.php:22
 #, php-format
 msgid "%s transactions(s) deleted"
 msgstr "%s transactie(s) verwijderd"
 
-#: EXPORT/kudos-donations/app/Front/Front.php:236 app/Front/Front.php:236
+#: app/Front/Front.php:236
 msgid "Request invalid."
 msgstr "Verzoek is ongeldig."
 
-#: EXPORT/kudos-donations/app/Front/Front.php:296 app/Front/Front.php:296
+#: app/Front/Front.php:296
 msgid "Error creating Mollie payment. Please try again later."
 msgstr "Fout bij het maken van een Mollie-betaling. Probeer het later opnieuw."
 
-#: EXPORT/kudos-donations/app/Front/Front.php:315
-#: EXPORT/kudos-donations/app/Front/Front.php:340 app/Front/Front.php:315
-#: app/Front/Front.php:340
+#: app/Front/Front.php:315 app/Front/Front.php:340
 msgid "Donate now"
 msgstr "Doneer nu"
 
-#: EXPORT/kudos-donations/app/Front/Front.php:317
-#: EXPORT/kudos-donations/app/Front/Front.php:356 app/Front/Front.php:317
-#: app/Front/Front.php:356
+#: app/Front/Front.php:317 app/Front/Front.php:356
 msgid "Support us!"
 msgstr "Steun ons!"
 
-#: EXPORT/kudos-donations/app/Front/Front.php:318
-#: EXPORT/kudos-donations/app/Front/Front.php:360 app/Front/Front.php:318
-#: app/Front/Front.php:360
+#: app/Front/Front.php:318 app/Front/Front.php:360
 msgid "Thank you for your donation. We appreciate your support!"
 msgstr "Bedankt voor je donatie. Wij waarderen je steun enorm!"
 
-#: EXPORT/kudos-donations/app/Front/Front.php:407 app/Front/Front.php:407
+#: app/Front/Front.php:407
 msgid "Mollie not connected"
 msgstr "Mollie niet gekoppeld"
 
-#: EXPORT/kudos-donations/app/Front/Front.php:480 app/Front/Front.php:480
-msgid "Subscription canceled"
-msgstr "Abonnement geannuleerd"
-
-#: EXPORT/kudos-donations/app/Front/Front.php:481 app/Front/Front.php:481
+#: app/Front/Front.php:481
 msgid ""
 "We will no longer be taking payments for this subscription. Thank you for "
 "your contributions."
@@ -592,71 +445,57 @@ msgstr ""
 "Geen betalingen worden meer verwerkt als onderdeel van dit abonnement. "
 "Bedankt voor je bijdrage."
 
-#: EXPORT/kudos-donations/app/Front/Front.php:490 app/Front/Front.php:490
+#: app/Front/Front.php:490
 msgid "Link expired"
 msgstr "Koppeling verlopen"
 
-#: EXPORT/kudos-donations/app/Front/Front.php:491 app/Front/Front.php:491
+#: app/Front/Front.php:491
 msgid "Sorry, this link is no longer valid."
 msgstr "Deze link is niet langer geldig."
 
-#: EXPORT/kudos-donations/app/Front/Front.php:530 app/Front/Front.php:530
-msgid "Payment canceled"
+#: app/Front/Front.php:530
+#, fuzzy
+#| msgid "Payment canceled"
+msgid "Payment cancelled"
 msgstr "Betaling geannuleerd"
 
-#: EXPORT/kudos-donations/app/Front/Front.php:533 app/Front/Front.php:533
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:45
-#: templates/emails/receipt.html.twig:45
+#: app/Front/Front.php:533 templates/emails/receipt.html.twig:45
 msgid "Thanks"
 msgstr "Bedankt"
 
-#: EXPORT/kudos-donations/app/Front/Front.php:534 app/Front/Front.php:534
+#: app/Front/Front.php:534
 msgid "Your donation will be processed soon."
 msgstr "Je donatie wordt zo snel mogelijk verwerkt."
 
-#: EXPORT/kudos-donations/app/Front/KudosButton.php:117
-#: EXPORT/kudos-donations/app/Front/KudosModal.php:75
 #: app/Front/KudosButton.php:117 app/Front/KudosModal.php:75
 msgid "Secure payment by"
 msgstr "Veilige betaling door"
 
-#: EXPORT/kudos-donations/app/Helpers/Settings.php:130
 #: app/Helpers/Settings.php:130
 msgid "Thank you!"
 msgstr "Bedankt!"
 
 #. translators: %s: Value of donation.
-#: EXPORT/kudos-donations/app/Helpers/Settings.php:137
 #: app/Helpers/Settings.php:137
 #, php-format
 msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr "Bedankt voor je donatie van %s. Wij waarderen je steun enorm."
 
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:138
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:165
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
 #: app/Helpers/Utils.php:138 app/Helpers/Utils.php:165
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:270
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:45
-#: templates/public/modal/donate.modal.html.twig:45
+#: dist/js/kudos-public.js:1 templates/public/modal/donate.modal.html.twig:45
 msgid "One-off"
 msgstr "Eenmalig"
 
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:140 app/Helpers/Utils.php:140
+#: app/Helpers/Utils.php:140
 msgid "Recurring (first payment)"
 msgstr "Terugkerende (eerste betaling)"
 
-#: EXPORT/kudos-donations/app/Helpers/Utils.php:142
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: app/Helpers/Utils.php:142 dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: src/js/kudos-public.js:268
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:46
+#: app/Helpers/Utils.php:142 dist/js/kudos-public.js:1
 #: templates/public/modal/donate.modal.html.twig:46
 msgid "Recurring"
 msgstr "Periodiek"
 
 #. translators: %1$s: WordPress version number.
-#: EXPORT/kudos-donations/app/Service/CompatibilityService.php:79
 #: app/Service/CompatibilityService.php:79
 #, php-format
 msgid "WordPress Version %1$s is required."
@@ -668,7 +507,6 @@ msgstr "WordPress-versie %1$s is vereist."
 #. %3$s: Current PHP version.
 #. %4$s: Required PHP version.
 #.
-#: EXPORT/kudos-donations/app/Service/CompatibilityService.php:105
 #: app/Service/CompatibilityService.php:105
 #, php-format
 msgid ""
@@ -680,12 +518,10 @@ msgstr ""
 "vereist ten minste PHP %4$s om te werken. Neem contact op met je hosting "
 "provider om dit bij te werken."
 
-#: EXPORT/kudos-donations/app/Service/CompatibilityService.php:127
 #: app/Service/CompatibilityService.php:127
 msgid "Kudos Donations Installation Problem"
 msgstr "Kudos Donations Installatie Probleem"
 
-#: EXPORT/kudos-donations/app/Service/CompatibilityService.php:128
 #: app/Service/CompatibilityService.php:128
 msgid ""
 "The minimum requirements for Kudos Donations have not been met. Please fix "
@@ -694,47 +530,39 @@ msgstr ""
 "Aan de minimumeisen voor Kudos Donations is niet voldaan. Los onderstaand(e) "
 "proble(e)m(en) op om door te gaan:"
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:121
 #: app/Service/MailerService.php:121
 msgid "Kudos Donation Receipt"
 msgstr "Kudos Donatie Ontvangstbewijs"
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:146
 #: app/Service/MailerService.php:146
 #, php-format
 msgid "Email with subject \"%s\" sent to \"%s\""
 msgstr "E-mail met onderwerp \"%s\" verzonden naar \"%s\""
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:150
 #: app/Service/MailerService.php:150
 #, php-format
 msgid "Email with subject \"%s\" failed to be sent to \"%s\""
 msgstr "E-mail met onderwerp \"%s\" kan niet worden verzonden naar \"%s\""
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:173
 #: app/Service/MailerService.php:173
 msgid "Please provide an email address."
 msgstr "Geef een e-mailadres op."
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:177
 #: app/Service/MailerService.php:177
 msgid "It worked!"
 msgstr "Het heeft gewerkt!"
 
-#: EXPORT/kudos-donations/app/Service/MailerService.php:178
 #: app/Service/MailerService.php:178
 msgid "Looks like your email settings are set up correctly :-)"
 msgstr "Het lijkt erop dat je e-mailinstellingen correct zijn ingesteld :-)"
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MailerService.php:184
 #: app/Service/MailerService.php:184
 #, php-format
 msgid "Email sent to %s."
 msgstr "E-mail verzonden naar %s."
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MailerService.php:187
 #: app/Service/MailerService.php:187
 msgid "Error sending email, please check the settings and try again."
 msgstr ""
@@ -742,28 +570,24 @@ msgstr ""
 "opnieuw."
 
 #. translators: %s: The order id
-#: EXPORT/kudos-donations/app/Service/MollieService.php:136
 #: app/Service/MollieService.php:135
 #, php-format
 msgid "Kudos Donation (%1$s) - %2$s"
 msgstr "Kudos Donation (%1$s) - %2$s"
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MollieService.php:316
 #: app/Service/MollieService.php:316
 #, php-format
 msgid "%1$s API key should begin with %2$s"
 msgstr "%1$s API sleutel moet beginnen met %2$s"
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MollieService.php:329
 #: app/Service/MollieService.php:329
 #, php-format
 msgid "%s API key connection was successful!"
 msgstr "%s API key verbinding is succesvol!"
 
 #. translators: %s: API mode
-#: EXPORT/kudos-donations/app/Service/MollieService.php:333
 #: app/Service/MollieService.php:333
 #, php-format
 msgid ""
@@ -776,61 +600,78 @@ msgstr ""
 #. %1$s: Subscription interval.
 #. %2$s: Order id.
 #.
-#: EXPORT/kudos-donations/app/Service/MollieService.php:562
 #: app/Service/MollieService.php:585
 #, php-format
 msgid "Kudos Subscription (%1$s) - %2$s"
 msgstr "Kudos Abonnement (%1$s) - %2$s"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Setting(s) updated"
 msgstr "Instelling(en) bijgewerkt"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
+msgid "Mollie"
+msgstr "Mollie"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+msgid "Customize"
+msgstr "Aanpassen"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Canceled"
+msgid "Advanced"
+msgstr "Geannuleerd"
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Save"
 msgstr "Opslaan"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+msgid "checking"
+msgstr "controleren"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "connected"
+msgstr "verbonden"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "not-connected"
+msgstr "niet-verbonden"
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Address Field"
 msgstr "Adresveld"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Completed Payment"
 msgstr "Afgeronde betaling"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Show pop-up message when payment complete"
 msgstr "Laat een pop-up zien wanneer de betaling voltooid is"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Enable this to show a pop-up thanking the customer for their donation."
 msgstr ""
 "Selecteer dit veld om een 'Bedankt' pop-up te laten zien na betaling van de "
 "donatie."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Title"
 msgstr "Titel"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Text"
 msgstr "Tekst"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Button label"
 msgstr "Knop tekst"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "You can use the following variables in the above fields: {{name}}, "
 "{{email}}, {{value}}"
@@ -838,91 +679,86 @@ msgstr ""
 "Je kunt de volgende variabelen in bovenstaande velden gebruiken: {{name}}, "
 "{{email}}, {{value}}"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Email Settings"
 msgstr "E-mail Instellingen"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+msgid "Use custom email settings"
+msgstr "Aangepaste e-mailinstellingen gebruiken"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+msgid "Enable this to use your own SMTP server settings."
+msgstr "Schakel dit in om uw eigen SMTP-serverinstellingen te gebruiken."
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Host"
 msgstr "Host"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Your email server's hostname"
 msgstr "De hostnaam van je e-mail server"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Description"
 msgid "Encryption"
-msgstr "Versleuteling"
+msgstr "Omschrijving"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Choose your encryption type. Always use TLS or SSL if available."
 msgstr ""
 "Kies je versleutelingstype. Gebruik altijd TLS of SSL indien beschikbaar."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "None"
 msgstr "Geen"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "SSL"
 msgstr "SSL"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "TLS"
 msgstr "TLS"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Enable Auto TLS"
 msgstr "Automatische TLS inschakelen"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "In most cases you will want this enabled. Disable for troubleshooting."
 msgstr ""
 "In de meeste gevallen wil je dat dit is ingeschakeld. Schakel uit voor het "
 "oplossen van problemen."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Port"
 msgstr "Poort"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "587 (TLS), 465 (SSL), 25 (Unencrypted)"
 msgstr "587 (TLS), 465 (SSL), 25 (onversleuteld)"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "This is usually an email address"
 msgstr "Dit is meestal een e-mailadres"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "From address"
 msgstr "Van adres"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "The email address emails will appear to be sent from. Leave empty to use "
 "same as username."
@@ -930,73 +766,59 @@ msgstr ""
 "De e-mails lijken te worden verzonden vanuit. Laat leeg om hetzelfde te "
 "gebruiken als de gebruikersnaam."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Invalid email address"
 msgstr "Ongeldig e-mailadres"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Send Test Email"
 msgstr "Verstuur een test e-mail"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Email address"
 msgstr "E-mailadres"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Make sure you save any changes beforehand."
 msgstr "Zorg ervoor dat je wijzigingen opslaat."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "user@domain.com"
 msgstr "user@domain.com"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Sending"
 msgstr "Bezig met versturen"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "API Keys"
 msgstr "API-sleutels"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Test API Key"
 msgstr "Test API-sleutel"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Begins with \"test_\""
 msgstr "Begint met \"test_\""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Live API Key"
 msgstr "Live API-sleutel"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Begins with \"live_\""
 msgstr "Begint met \"live_\""
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Get API Key(s)"
 msgstr "API-sleutel(s) ophalen"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "API Mode"
 msgstr "API Modus"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "When using Kudos Donations for the first time, the payment mode is set to "
 "\"Test\". Check that the configuration is working correctly. Once you are "
@@ -1006,18 +828,15 @@ msgstr ""
 "betalingsmodus op 'Test'. Controleer of de configuratie correct werkt. Zodra "
 "je klaar bent om live-betalingen te ontvangen, schakel de modus naar 'Live'."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Custom Return URL"
 msgstr "Aangepaste Retour-URL"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Use custom return URL"
 msgstr "Gebruik een aangepaste retour-URL"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "After payment the customer is returned to the page where they clicked on the "
 "donation button. To use a different return URL, enable this option."
@@ -1026,33 +845,27 @@ msgstr ""
 "de donatieknop heeft geklikt. Als je een andere retour-URL wilt gebruiken, "
 "schakel deze optie in."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "URL"
 msgstr "URL"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "e.g https://mywebsite.com/thanks"
-msgstr "bijv. https://mywebsite.com/thanks"
+msgstr "bijv. https://mijnwebsit.nl/bedankt"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Privacy Policy"
 msgstr "Privacybeleid"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Email Receipts"
 msgstr "E-mail Ontvangstbewijzen"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Send email receipts"
 msgstr "E-mailontvangstbewijzen verzenden"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "Once a payment has been completed, you can automatically send an email "
 "receipt to the donor."
@@ -1060,47 +873,38 @@ msgstr ""
 "Wanneer een betaling is voltooid, kun je automatisch een ontvangstbewijs per "
 "e-mail naar de donateur sturen."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Send receipt copy to:"
 msgstr "Verzend een kopie naar:"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Leave blank to disable."
 msgstr "Laat leeg om uit te schakelen."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Debug Mode"
 msgstr "Debug modus"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Enable debug mode"
 msgstr "Schakel foutopsporingsmodus in"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "This will enable the debug logging and a debug menu found under Kudos."
 msgstr ""
 "Hiermee activeer je het logboek en debugmenu dat onder Kudos kan worden "
 "gevonden."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:102
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:102
 msgid "Action Scheduler"
 msgstr "Actieplanner"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Enable action scheduler"
 msgstr "Actieplanner inschakelen"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid ""
 "In most cases this should be left on, only disable this if you are "
 "experiencing issues with emails and invoices not working."
@@ -1108,101 +912,79 @@ msgstr ""
 "Laat in de meeste gevallen aan staan. Alleen uitschakelen als je problemen "
 "ondervindt met het verzenden van e-mails en facturen."
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Theme Colour"
 msgstr "Themakleur"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Colour"
 msgstr "Kleur"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Set the colour for the Kudos button and the pop-up modal"
 msgstr "Stel de kleur in van de Kudos-knop en de pop-up modal"
 
-#: EXPORT/kudos-donations/dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
-#: dist/js/kudos-admin-settings.a759cb7c1dd71f58e2c3.js:1
+#: dist/js/kudos-admin-settings.js:1
 msgid "Allows donors to donate automatically at regular intervals."
 msgstr ""
 "Geeft donateurs de mogelijkheid om op regelmatige tijdstippen automatisch te "
 "doneren."
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Kudos Button"
 msgstr "Kudos Knop"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Adds a Kudos donate button to your post or page."
 msgstr "Voeg een Kudos donatieknop toe aan een bericht of pagina."
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Button"
 msgstr "Knop"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:128
+#: dist/js/kudos-button-block.js:1
 #: templates/public/modal/donate.modal.html.twig:128
 msgid "Donate"
 msgstr "Doneer"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Donate now!"
 msgstr "Doneer nu!"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Modal (pop-up)"
 msgstr "Modal (pop-up)"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Header"
 msgstr "Header"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Welcome text"
 msgstr "Welkomsttekst"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Donation amount"
 msgstr "Donatiebedrag"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "The type of donation amount available"
 msgstr "Het soort donatiebedrag beschikbaar"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-msgid "Amounts:"
-msgstr "Bedragen:"
+#: dist/js/kudos-button-block.js:1
+msgid "Amounts"
+msgstr "Bedragen"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid "Enter a comma separated list of values to use."
 msgstr ""
 "Voer hier een kommagescheiden lijst met waarden in die je wilt gebruiken."
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-msgid "Other"
-msgstr "Andere"
+#: dist/js/kudos-button-block.js:1
+msgid "Campaign label"
+msgstr "Campagne label"
 
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-msgid "Donation label"
-msgstr "Donatielabel"
-
-#: EXPORT/kudos-donations/dist/js/kudos-button-block.a16f138f75fe39337b0d.js:1
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
+#: dist/js/kudos-button-block.js:1
 msgid ""
 "Give this donation button a label so you can identify it on the transactions "
 "page"
@@ -1210,67 +992,50 @@ msgstr ""
 "Geef deze donatieknop een label zodat je deze kunt identificeren op de "
 "transactiepagina"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:48
+#: dist/js/kudos-public.js:1
 msgid "Your name is required"
 msgstr "Vul je naam in"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:51
+#: dist/js/kudos-public.js:1
 msgid "Your email is required"
 msgstr "Vul je e-mailadres in"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:52
+#: dist/js/kudos-public.js:1
 msgid "Please enter a valid email"
 msgstr "Vul een geldig e-mailadres in"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:55
+#: dist/js/kudos-public.js:1
 msgid "Donation amount is required"
 msgstr "Donatiebedrag is vereist"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:56
+#: dist/js/kudos-public.js:1
 msgid "Minimum donation is 1 euro"
 msgstr "Minimale donatie is 1 euro"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:57
+#: dist/js/kudos-public.js:1
 msgid "Only digits are valid"
 msgstr "Alleen cijfers zijn geldig"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:60
+#: dist/js/kudos-public.js:1
 msgid "Please select a payment frequency"
-msgstr "Selecteer betalingsfrequentie"
+msgstr "Betalingsfrequentie"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:63
+#: dist/js/kudos-public.js:1
 msgid "Please select a payment duration"
 msgstr "Selecteer betalingsduur"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:64
+#: dist/js/kudos-public.js:1
 msgid "Subscriptions must be more than one payment"
 msgstr "Abonnementen bestaan uit meer dan één betaling"
 
-#: EXPORT/kudos-donations/dist/js/kudos-public.e8635ed29053de6cdfc8.js:1
-#: dist/js/kudos-public.e8635ed29053de6cdfc8.js:1 src/js/kudos-public.js:67
+#: dist/js/kudos-public.js:1
 msgid "You must agree to our privacy policy before donating"
 msgstr "Ga akkoord met ons privacybeleid voordat je doneert"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ActionFactory.php:161
 #: libraries/action-scheduler/classes/ActionScheduler_ActionFactory.php:161
 msgid "Invalid action - must be a recurring action."
 msgstr "Ongeldige actie - moet een terugkerende actie zijn."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:60
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:75
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:76
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:89
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:19
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:30
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:60
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:75
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:76
@@ -1280,18 +1045,15 @@ msgstr "Ongeldige actie - moet een terugkerende actie zijn."
 msgid "Scheduled Actions"
 msgstr "Geplande acties"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:127
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:127
 msgid "About"
 msgstr "Over"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:129
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:129
 #, php-format
 msgid "About Action Scheduler %s"
 msgstr "Over Action Scheduler %s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:131
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:131
 msgid ""
 "Action Scheduler is a scalable, traceable job queue for background "
@@ -1305,93 +1067,72 @@ msgstr ""
 "toekomst moet worden uitgevoerd. Geplande acties kunnen ook gepland worden "
 "om in een terugkerend schema te worden uitgevoerd."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:139
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:139
 msgid "Columns"
 msgstr "Kolommen"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:141
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:141
 msgid "Scheduled Action Columns"
 msgstr "Geplande actie-kolommen"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:143
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:96
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:143
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:96
 msgid "Hook"
 msgstr "Hook"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:143
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:143
 msgid "Name of the action hook that will be triggered."
 msgstr "Naam van de actie-hook die wordt geactiveerd."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:144
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:144
 msgid "Action statuses are Pending, Complete, Canceled, Failed"
 msgstr "Actie statussen zijn in Behandeling, Voltooid, Geannuleerd, Mislukt"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:145
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:98
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:145
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:98
 msgid "Arguments"
 msgstr "Argumenten"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:145
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:145
 msgid "Optional data array passed to the action hook."
 msgstr "Optionele gegevensreeks doorgegeven aan de actie-hook."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:146
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:99
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:146
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:99
 msgid "Group"
 msgstr "Groep"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:146
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:146
 msgid "Optional action group."
 msgstr "Optionele actiegroep."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:147
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:100
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:147
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:100
 msgid "Recurrence"
 msgstr "Herhaling"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:147
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:147
 msgid "The action's schedule frequency."
 msgstr "Het aantal keren dat de actie is gepland."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:148
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:148
 msgid "Scheduled"
 msgstr "Ingepland"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:148
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:148
 msgid "The date/time the action is/was scheduled to run."
 msgstr "De datum/tijd waarop de actie gepland is/was om uit te voeren."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:149
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:102
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:149
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:102
 msgid "Log"
 msgstr "Logboek"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_AdminView.php:149
 #: libraries/action-scheduler/classes/ActionScheduler_AdminView.php:149
 msgid "Activity log for the action."
 msgstr "Activiteitenlog voor de actie."
 
 #. translators: %d: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_DataController.php:133
 #: libraries/action-scheduler/classes/ActionScheduler_DataController.php:133
 #, php-format
 msgid "Stopped the insanity for %d second"
@@ -1399,20 +1140,17 @@ msgid_plural "Stopped the insanity for %d seconds"
 msgstr[0] "De waanzin is voor %d seconde gestopt"
 msgstr[1] "De waanzin is voor %d secondes gestopt"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_DataController.php:137
 #: libraries/action-scheduler/classes/ActionScheduler_DataController.php:137
 msgid "Attempting to reduce used memory..."
 msgstr "Poging om gebruikt geheugen te verminderen ..."
 
 #. translators: 1: action ID 2: schedule
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_InvalidActionException.php:21
 #: libraries/action-scheduler/classes/ActionScheduler_InvalidActionException.php:21
 #, php-format
 msgid "Action [%1$s] has an invalid schedule: %2$s"
 msgstr "Actie [%1$s] heeft een ongeldig schema: %2$s"
 
 #. translators: 1: action ID 2: arguments
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_InvalidActionException.php:40
 #: libraries/action-scheduler/classes/ActionScheduler_InvalidActionException.php:40
 #, php-format
 msgid ""
@@ -1422,36 +1160,30 @@ msgstr ""
 "Actie [%1$s] heeft ongeldige argumenten. Het kan niet door JSON worden "
 "gedecodeerd naar een array. $ args = %2$s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:101
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:101
 msgid "Scheduled Date"
 msgstr "Geplande datum"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:122
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:122
 msgid "Claim ID"
 msgstr "Claim-ID"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:129
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:129
 msgid "Run"
 msgstr "Uitvoeren"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:130
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:130
 msgid "Process the action now as if it were run as part of a queue"
 msgstr ""
 "Verwerk de actie nu alsof deze wordt uitgevoerd als onderdeel van een "
 "wachtrij"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:134
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:134
 msgid "Cancel the action now to avoid it being run in future"
 msgstr ""
 "Annuleer de actie nu om te voorkomen dat deze in de toekomst wordt uitgevoerd"
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:144
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:144
 #, php-format
 msgid "%s year"
@@ -1460,7 +1192,6 @@ msgstr[0] "%s jaar"
 msgstr[1] "%s jaren"
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:149
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:149
 #, php-format
 msgid "%s month"
@@ -1469,7 +1200,6 @@ msgstr[0] "%s maand"
 msgstr[1] "%s maanden"
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:154
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:154
 #, php-format
 msgid "%s week"
@@ -1478,7 +1208,6 @@ msgstr[0] "%s week"
 msgstr[1] "%s weken"
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:159
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:159
 #, php-format
 msgid "%s day"
@@ -1487,7 +1216,6 @@ msgstr[0] "%s dag"
 msgstr[1] "%s dagen"
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:164
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:164
 #, php-format
 msgid "%s hour"
@@ -1496,7 +1224,6 @@ msgstr[0] "%s uur"
 msgstr[1] "%s uren"
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:169
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:169
 #, php-format
 msgid "%s minute"
@@ -1505,7 +1232,6 @@ msgstr[0] "%s minuut"
 msgstr[1] "%s minuten"
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:174
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:174
 #, php-format
 msgid "%s second"
@@ -1513,24 +1239,20 @@ msgid_plural "%s seconds"
 msgstr[0] "%s seconde"
 msgstr[1] "%s seconden"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:201
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:201
 msgid "Now!"
 msgstr "Nu!"
 
 #. translators: %s: time interval
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:237
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:237
 #, php-format
 msgid "Every %s"
 msgstr "Elke %s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:243
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:243
 msgid "Non-repeating"
 msgstr "Niet-herhalend"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:341
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:341
 msgid ""
 "It appears one or more database tables were missing. Attempting to re-create "
@@ -1539,7 +1261,6 @@ msgstr ""
 "Het lijkt erop dat er een of meer databasetabellen ontbreken. Er wordt "
 "geprobeerd de ontbrekende tabellen opnieuw aan te maken."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:358
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:358
 #, php-format
 msgid ""
@@ -1558,7 +1279,6 @@ msgstr[1] ""
 "zijn voltooid."
 
 #. translators: %s: process URL
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:374
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:374
 #, php-format
 msgid ""
@@ -1569,35 +1289,30 @@ msgstr ""
 "worden uitgevoerd weergeven;</a>"
 
 #. translators: %d: seconds
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:377
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:377
 #, php-format
 msgid "The next queue will begin processing in approximately %d seconds."
 msgstr "De volgende wachtrij begint over circa %d seconden met verwerken."
 
 #. translators: %s: action HTML
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:398
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:398
 #, php-format
 msgid "Successfully executed action: %s"
 msgstr "Actie succesvol uitgevoerd: %s"
 
 #. translators: %s: action HTML
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:402
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:402
 #, php-format
 msgid "Successfully canceled action: %s"
 msgstr "Actie is geannuleerd: %s"
 
 #. translators: %s: action HTML
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:406
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:406
 #, php-format
 msgid "Successfully processed change for action: %s"
 msgstr "Wijziging voor actie verwerkt: %s"
 
 #. translators: 1: action HTML 2: action ID 3: error message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:412
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:412
 #, php-format
 msgid "Could not process change for action: \"%1$s\" (ID: %2$d). Error: %3$s"
@@ -1605,38 +1320,32 @@ msgstr ""
 "Kan wijziging niet verwerken van actie: \"%1$s\" (ID: %2$d). Fout: %3$s"
 
 #. translators: %s: date interval
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:458
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:458
 #, php-format
 msgid " (%s ago)"
 msgstr " (%s geleden)"
 
 #. translators: %s: date interval
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:461
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:461
 #, php-format
 msgid " (%s)"
 msgstr " (%s)"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_ListTable.php:610
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:610
 msgid "Search hook, args and claim ID"
 msgstr "Zoek hook, args en claim ID"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_QueueRunner.php:192
 #: libraries/action-scheduler/classes/ActionScheduler_QueueRunner.php:192
 msgid "Every minute"
 msgstr "Elke minuut"
 
 #. translators: %s: date interval
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:103
 #: libraries/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:103
 #, php-format
 msgid "This data will be deleted in %s."
 msgstr "Deze gegevens worden verwijderd over %s."
 
 #. translators: 1: next cleanup message 2: github issue URL
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:108
 #: libraries/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:108
 #, php-format
 msgid ""
@@ -1648,51 +1357,41 @@ msgstr ""
 "echter niet-gekoppelde invoeringen in de tabel Reacties in WordPress. %1$s "
 "<a href=\"%2$s\">Meer informatie;</a>"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:102
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:102
 msgid "This section shows details of Action Scheduler."
 msgstr "Deze sectie laat de details van de Actieplanner zien."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:105
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:105
 msgid "Version:"
 msgstr "Versie:"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:109
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:109
 msgid "Data store:"
 msgstr "Data opslag:"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:113
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:113
 msgid "Action Status"
 msgstr "Actie status"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:115
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:115
 msgid "Count"
 msgstr "Aantal"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:116
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:116
 msgid "Oldest Scheduled Date"
 msgstr "Oudste geplande datum"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:117
 #: libraries/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:117
 msgid "Newest Scheduled Date"
 msgstr "Nieuwste geplande datum"
 
 #. translators: %s php class name
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:33
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ProgressBar.php:47
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:33
 #: libraries/action-scheduler/classes/WP_CLI/ProgressBar.php:47
 #, php-format
 msgid "The %s class can only be run within WP CLI."
 msgstr "De klasse %s kan alleen worden uitgevoerd binnen WP CLI."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:59
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:59
 msgid ""
 "There are too many concurrent batches, but the run is forced to continue."
@@ -1700,13 +1399,11 @@ msgstr ""
 "Er zijn te veel batches tegelijk, maar de uitvoering wordt gedwongen door te "
 "gaan."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:61
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:61
 msgid "There are too many concurrent batches."
 msgstr "Er zijn te veel batches tegelijk."
 
 #. translators: %d: amount of actions
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:93
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:93
 #, php-format
 msgid "Running %d action"
@@ -1714,34 +1411,29 @@ msgid_plural "Running %d actions"
 msgstr[0] "%d actie uitvoeren"
 msgstr[1] "%d acties uitvoeren"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:113
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:113
 msgid "The claim has been lost. Aborting current batch."
 msgstr "De claim is verloren gegaan. Huidige batch afbreken."
 
 #. translators: %s refers to the action ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:138
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:138
 #, php-format
 msgid "Started processing action %s"
 msgstr "Verwerking van actie %s begonnen"
 
 #. translators: 1: action ID 2: hook name
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:155
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:155
 #, php-format
 msgid "Completed processing action %1$s with hook: %2$s"
 msgstr "Voltooide verwerkingsactie %1$s met hook: %2$s"
 
 #. translators: 1: action ID 2: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:170
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:170
 #, php-format
 msgid "Error processing action %1$s: %2$s"
 msgstr "Fout bij verwerken van actie %1$s: %2$s"
 
 #. translators: %d refers to how many scheduled taks were found to run
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:100
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:100
 #, php-format
 msgid "Found %d scheduled task"
@@ -1750,7 +1442,6 @@ msgstr[0] "%d geplande taak gevonden"
 msgstr[1] "%d geplande taken gevonden"
 
 #. translators: %d refers to the total number of batches executed
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:117
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:117
 #, php-format
 msgid "%d batch executed."
@@ -1759,14 +1450,12 @@ msgstr[0] "%d batch uitgevoerd."
 msgstr[1] "%d batches uitgevoerd."
 
 #. translators: %s refers to the exception error message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:136
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:136
 #, php-format
 msgid "There was an error running the action scheduler: %s"
 msgstr "Er is een fout opgetreden bij het uitvoeren van de actieplanner: %s"
 
 #. translators: %d refers to the total number of taskes completed
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:153
 #: libraries/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:153
 #, php-format
 msgid "%d scheduled task completed."
@@ -1774,120 +1463,100 @@ msgid_plural "%d scheduled tasks completed."
 msgstr[0] "%d geplande taak voltooid."
 msgstr[1] "%d geplande taken voltooid."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler.php:195
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler.php:195
 #, php-format
 msgid "%s() was called before the Action Scheduler data store was initialized"
 msgstr ""
 "%s() werd opgeroepen voordat de Actieplanner-gegevensopslag was gestart"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:467
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:467
 msgid "Filter"
 msgstr "Filter"
 
 #. translators: %s: search query
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:567
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:567
 #, php-format
 msgid "Search results for \"%s\""
 msgstr "Zoekresultaten voor \"%s\""
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:72
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:72
 msgid "action created"
 msgstr "actie aangemaakt"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:76
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBLogger.php:134
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:76
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBLogger.php:134
 msgid "action canceled"
 msgstr "actie geannuleerd"
 
 #. translators: %s: context
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:82
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:82
 #, php-format
 msgid "action started via %s"
 msgstr "actie gestart via %s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:84
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:84
 msgid "action started"
 msgstr "actie is begonnen"
 
 #. translators: %s: context
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:92
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:92
 #, php-format
 msgid "action complete via %s"
 msgstr "actie voltooid via %s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:94
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:94
 msgid "action complete"
 msgstr "actie voltooid"
 
 #. translators: 1: context 2: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:102
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:102
 #, php-format
 msgid "action failed via %1$s: %2$s"
 msgstr "actie mislukt via %1$s: %2$s"
 
 #. translators: %s: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:105
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:105
 #, php-format
 msgid "action failed: %s"
 msgstr "actie mislukt: %s"
 
 #. translators: %s: amount of time
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:112
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:112
 #, php-format
 msgid "action timed out after %s seconds"
 msgstr "time-out opgetreden na %s seconden"
 
 #. translators: 1: error message 2: filename 3: line
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:118
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:118
 #, php-format
 msgid "unexpected shutdown: PHP Fatal error %1$s in %2$s on line %3$s"
 msgstr "onverwacht afgesloten: Fatale PHP-fout %1$s in %2$s op de lijn %3$s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:123
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:123
 msgid "action reset"
 msgstr "actie reset"
 
 #. translators: %s: context
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:129
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:129
 #, php-format
 msgid "action ignored via %s"
 msgstr "actie genegeerd via %s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:131
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:131
 msgid "action ignored"
 msgstr "actie genegeerd"
 
 #. translators: %s: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:146
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:146
 #, php-format
 msgid "There was a failure fetching this action: %s"
 msgstr "Er is een fout opgetreden bij het ophalen van deze actie: %s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:148
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:148
 msgid "There was a failure fetching this action"
 msgstr "Er was een fout bij het ophalen van deze actie"
 
 #. translators: %s: exception message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:156
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:156
 #, php-format
 msgid "There was a failure scheduling the next instance of this action: %s"
@@ -1895,7 +1564,6 @@ msgstr ""
 "Er is een fout opgetreden bij het plannen van de volgende keer dat deze "
 "actie wordt uitgevoerd: %s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:227
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:227
 #, php-format
 msgid ""
@@ -1906,30 +1574,23 @@ msgstr ""
 "ActionScheduler_Action::$args te lang. Om de args-kolom te kunnen indexeren, "
 "mogen actie-args niet meer dan %d tekens bevatten wanneer gecodeerd als JSON."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:301
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:301
 msgid "Complete"
 msgstr "Voltooid"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:302
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:302
 msgid "Pending"
 msgstr "In afwachting"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:303
 #: libraries/action-scheduler/classes/abstracts/ActionScheduler_Store.php:303
 msgid "In-progress"
 msgstr "Bezig"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:67
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:67
 msgid "Database error."
 msgstr "Database-fout."
 
 #. translators: %s: error message
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:75
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:25
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/ActionScheduler_DBStoreMigrator.php:44
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:75
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:25
 #: libraries/action-scheduler/classes/migration/ActionScheduler_DBStoreMigrator.php:44
@@ -1937,7 +1598,6 @@ msgstr "Database-fout."
 msgid "Error saving action: %s"
 msgstr "Fout bij opslaan van actie: %s"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:268
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:268
 msgid "Invalid value for select or count parameter. Cannot query actions."
 msgstr ""
@@ -1945,15 +1605,6 @@ msgstr ""
 "aanvragen."
 
 #. translators: %s: action ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:458
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:548
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:580
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:777
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:819
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:457
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:468
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:495
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:773
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:458
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:548
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:580
@@ -1968,65 +1619,52 @@ msgid "Unidentified action %s"
 msgstr "Niet-geïdentificeerde actie %s"
 
 #. translators: %s: group name
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:661
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:627
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:661
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:627
 #, php-format
 msgid "The group \"%s\" does not exist."
 msgstr "De groep \"%s\" bestaat niet."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:675
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:607
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:675
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:607
 msgid "Unable to claim actions. Database error."
 msgstr "Kan acties niet claimen. Databank fout."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:838
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:740
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:838
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:740
 msgid "Invalid action ID. No status found."
 msgstr "Ongeldige actie-ID. Geen status gevonden."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:840
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:840
 msgid "Unknown status found for action."
 msgstr "Onbekende status gevonden voor actie."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:62
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:62
 msgid "Unable to save action."
 msgstr "Kan actie niet opslaan."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:283
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:283
 msgid "Invalid schedule. Cannot save action."
 msgstr "Ongeldig schema. Kan actie niet opslaan."
 
 #. translators: %s: claim ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:689
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:689
 #, php-format
 msgid "Unable to unlock claim %s. Database error."
 msgstr "Kan claim %s niet ontgrendelen. Databank fout."
 
 #. translators: %s: action ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:704
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:704
 #, php-format
 msgid "Unable to unlock claim on action %s. Database error."
 msgstr "Kan claim voor actie %s niet ontgrendelen. Databank fout."
 
 #. translators: %s: action ID
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:716
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:716
 #, php-format
 msgid "Unable to mark failure on action %s. Database error."
 msgstr "Kan fout bij actie %s niet markeren. Databank fout."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:840
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:840
 #, php-format
 msgid ""
@@ -2035,14 +1673,12 @@ msgstr ""
 "%s Ondersteuning voor tekenreeksen langer dan deze, wordt in een toekomstige "
 "versie verwijderd."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:36
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:36
 msgctxt "post"
 msgid "Failed"
 msgstr "Mislukt"
 
 #. translators: %s: count
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:38
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:38
 #, php-format
 msgid "Failed <span class=\"count\">(%s)</span>"
@@ -2050,14 +1686,12 @@ msgid_plural "Failed <span class=\"count\">(%s)</span>"
 msgstr[0] "Bezig <span class=\"count\">(%s)</span>"
 msgstr[1] "Bezig <span class=\"count\">(%s)</span>"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:51
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:51
 msgctxt "post"
 msgid "In-Progress"
 msgstr "Bezig"
 
 #. translators: %s: count
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:53
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:53
 #, php-format
 msgid "In-Progress <span class=\"count\">(%s)</span>"
@@ -2065,108 +1699,88 @@ msgid_plural "In-Progress <span class=\"count\">(%s)</span>"
 msgstr[0] "Bezig <span class=\"count\">(%s)</span>"
 msgstr[1] "Bezig <span class=\"count\">(%s)</span>"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:20
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:20
 msgid "Scheduled actions are hooks triggered on a cetain date and time."
 msgstr ""
 "Geplande acties zijn hooks die op een bepaalde datum en tijd worden "
 "geactiveerd."
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:31
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:31
 msgid "Scheduled Action"
 msgstr "Geplande actie"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:32
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:32
 msgctxt "Settings menu name"
 msgid "Scheduled Actions"
 msgstr "Geplande acties"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:33
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:33
 msgid "Add"
 msgstr "Voeg toe"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:34
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:34
 msgid "Add New Scheduled Action"
 msgstr "Nieuwe geplande actie toevoegen"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:35
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:35
 msgid "Edit"
 msgstr "Bewerken"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:36
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:36
 msgid "Edit Scheduled Action"
 msgstr "Geplande actie bewerken"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:37
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:37
 msgid "New Scheduled Action"
 msgstr "Nieuwe geplande actie"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:38
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:39
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:38
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:39
 msgid "View Action"
 msgstr "Actie bekijken"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:40
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:40
 msgid "Search Scheduled Actions"
 msgstr "Zoek geplande acties"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:41
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:41
 msgid "No actions found"
 msgstr "Geen acties gevonden"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:42
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:42
 msgid "No actions found in trash"
 msgstr "Geen acties gevonden in prullenbak"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_TaxonomyRegistrar.php:14
 #: libraries/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_TaxonomyRegistrar.php:14
 msgid "Action Group"
 msgstr "Actiegroep"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/ActionMigrator.php:95
 #: libraries/action-scheduler/classes/migration/ActionMigrator.php:95
 #, php-format
 msgid "Unable to remove source migrated action %s"
 msgstr "Kan bron gemigreerde actie %s niet verwijderen"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Config.php:52
 #: libraries/action-scheduler/classes/migration/Config.php:52
 msgid "Source store must be configured before running a migration"
 msgstr ""
 "Bronopslag moet worden geconfigureerd voordat een migratie wordt uitgevoerd"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Config.php:74
 #: libraries/action-scheduler/classes/migration/Config.php:74
 msgid "Source logger must be configured before running a migration"
 msgstr ""
 "Bronopslag moet worden geconfigureerd voordat een migratie wordt uitgevoerd"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Config.php:96
 #: libraries/action-scheduler/classes/migration/Config.php:96
 msgid "Destination store must be configured before running a migration"
 msgstr ""
 "Bestemmingsopslag moet worden geconfigureerd voordat een migratie wordt "
 "uitgevoerd"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Config.php:118
 #: libraries/action-scheduler/classes/migration/Config.php:118
 msgid "Destination logger must be configured before running a migration"
 msgstr ""
 "Bestemming logger moet geconfigureerd worden voordat er gemigreerd wordt"
 
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Controller.php:142
 #: libraries/action-scheduler/classes/migration/Controller.php:142
 msgid ""
 "Action Scheduler migration in progress. The list of scheduled actions may be "
@@ -2176,7 +1790,6 @@ msgstr ""
 "kan onvolledig zijn."
 
 #. translators: %d: amount of actions
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Runner.php:82
 #: libraries/action-scheduler/classes/migration/Runner.php:82
 #, php-format
 msgid "Migrating %d action"
@@ -2185,146 +1798,102 @@ msgstr[0] "%d actie migreren"
 msgstr[1] "%d acties migreren"
 
 #. translators: 1: source action ID 2: source store class 3: destination action ID 4: destination store class
-#: EXPORT/kudos-donations/libraries/action-scheduler/classes/migration/Runner.php:107
 #: libraries/action-scheduler/classes/migration/Runner.php:107
 #, php-format
 msgid "Migrated action with ID %1$d in %2$s to ID %3$d in %4$s"
 msgstr "Gemigreerde actie met ID %1$d in %2$s naar ID %3$d in %4$s"
 
-#: app/Admin/Table/TransactionsTable.php:129
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:13
-#: templates/emails/receipt.html.twig:13
-msgid "Order ID"
-msgstr "Order ID"
-
-#: app/Admin/Table/TransactionsTable.php:131
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-msgid "Campaign Label"
-msgstr "Campagne label"
-
-#: dist/js/kudos-button-block.55ce30432443761e7b4f.js:1
-msgid "Campaign"
-msgstr "Campagne"
-
-#: EXPORT/kudos-donations/templates/emails/base.html.twig:451
 #: templates/emails/base.html.twig:451
 msgid "All rights reserved."
 msgstr "Alle rechten voorbehouden."
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:4
 #: templates/emails/receipt.html.twig:4
 msgid "This is a receipt for your recent donation on"
 msgstr "Dit is een ontvangstbewijs voor je recente donatie op"
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:8
 #: templates/emails/receipt.html.twig:8
 msgid "Hi"
 msgstr "Hallo"
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:9
 #: templates/emails/receipt.html.twig:9
 msgid "Thanks for your donation. This email is a receipt for your records."
 msgstr ""
 "Bedankt voor je donatie. Deze e-mail is een ontvangstbewijs voor je "
 "administratie."
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:22
 #: templates/emails/receipt.html.twig:22
 msgid "Description"
 msgstr "Omschrijving"
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:35
 #: templates/emails/receipt.html.twig:35
 msgid "Total"
 msgstr "Totaal"
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:52
 #: templates/emails/receipt.html.twig:52
 msgid "Want to cancel your subscription?"
 msgstr "Wil je je abonnement opzeggen?"
 
-#: EXPORT/kudos-donations/templates/emails/receipt.html.twig:53
 #: templates/emails/receipt.html.twig:53
 msgid "Click here"
 msgstr "Klik hier"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:37
-#: templates/public/modal/donate.modal.html.twig:37
-msgid "Amount (€)"
-msgstr "Bedrag (€)"
-
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:41
 #: templates/public/modal/donate.modal.html.twig:41
 msgid "E-mail address"
 msgstr "E-mailadres"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:59
 #: templates/public/modal/donate.modal.html.twig:59
 msgid "How often would you like to donate?"
 msgstr "Hoe vaak wil je doneren?"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:63
 #: templates/public/modal/donate.modal.html.twig:63
 msgid "Payment frequency"
 msgstr "Betalingsfrequentie"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:69
 #: templates/public/modal/donate.modal.html.twig:69
 msgid "Donation duration"
 msgstr "Donatieduur"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:71
 #: templates/public/modal/donate.modal.html.twig:71
 msgid "Year"
 msgstr "Jaar"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:89
 #: templates/public/modal/donate.modal.html.twig:89
 msgid "Please fill in you address"
 msgstr "Vul je e-mailadres in"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:89
 #: templates/public/modal/donate.modal.html.twig:89
 msgid "optional"
 msgstr "optioneel"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:106
 #: templates/public/modal/donate.modal.html.twig:106
 msgid "Payment"
 msgstr "Betaling"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:107
 #: templates/public/modal/donate.modal.html.twig:107
 msgid "By clicking donate you agree to the following payment"
 msgstr "Door op doneren te klikken ga je akkoord met de volgende betaling"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:123
 #: templates/public/modal/donate.modal.html.twig:123
 #, php-format
 msgid "I agree with the %s "
 msgstr "Ik ben het eens met het %s "
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:123
 #: templates/public/modal/donate.modal.html.twig:123
 msgid "privacy policy"
 msgstr "privacybeleid"
 
-#: EXPORT/kudos-donations/templates/public/modal/donate.modal.html.twig:124
 #: templates/public/modal/donate.modal.html.twig:124
 msgid "I agree with the privacy policy."
 msgstr "Ik ben het eens met het privacybeleid."
 
-#: EXPORT/kudos-donations/templates/public/modal/embeds/_tab.html.twig:20
 #: templates/public/modal/embeds/_tab.html.twig:20
 msgid "Previous tab"
 msgstr "Vorig tabblad"
 
-#: EXPORT/kudos-donations/templates/public/modal/embeds/_tab.html.twig:24
 #: templates/public/modal/embeds/_tab.html.twig:24
 msgid "Next"
 msgstr "Volgende"
 
-#: EXPORT/kudos-donations/templates/public/modal/message.modal.html.twig:12
 #: templates/public/modal/message.modal.html.twig:12
 msgid "Ok"
 msgstr "OK"
