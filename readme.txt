@@ -54,7 +54,9 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 == Changelog ==
 
 = 2.0.3 =
+* Fix modal header not showing correct text
 * Fix translations
+* Fix debug actions not redirecting to correct tab
 
 = 2.0.2 =
 * Add ability to search by campaign in transactions table
