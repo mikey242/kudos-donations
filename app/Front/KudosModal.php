@@ -31,6 +31,20 @@ class KudosModal {
 	}
 
 	/**
+	 * Renders the modal using twig
+	 *
+	 * @param string $template
+	 * @param array $data
+	 *
+	 * @return bool
+	 */
+	private function render_modal( string $template, array $data ) {
+
+		return $this->twig->render( $template, $data );
+
+	}
+
+	/**
 	 * Get message modal markup
 	 *
 	 * @param array $atts
@@ -46,13 +60,7 @@ class KudosModal {
 			'modal_text'     => $atts['modal_text'],
 		];
 
-		return $this->get_modal( '/public/modal/message.modal.html.twig', $data );
-
-	}
-
-	private function get_modal( $template, $data ) {
-
-		return $this->twig->render( $template, $data );
+		return $this->render_modal( '/public/modal/message.modal.html.twig', $data );
 
 	}
 
@@ -65,17 +73,16 @@ class KudosModal {
 	 * @return string|void
 	 * @since    1.0.0
 	 */
-	public function get_donate_modal( array $data, $echo = false ) {
+	public function get_donate_modal( array $data, bool $echo = false ) {
 
 		$data = array_merge( $data,
 			[
 				'return_url'   => Utils::get_return_url(),
 				'nonce'        => wp_nonce_field( 'kudos_submit', '_wpnonce', true, false ),
-				'privacy_link' => Settings::get_setting( "privacy_link" ),
-				'payment_by'   => __( 'Secure payment by', 'kudos-donations' ),
 
 				// Global settings
 				'vendor'       => Settings::get_setting( 'payment_vendor' ),
+				'privacy_link' => Settings::get_setting( "privacy_link" ),
 				'subscription' => [
 					'enabled' => Settings::get_setting( 'subscription_enabled' ),
 				],
@@ -87,9 +94,7 @@ class KudosModal {
 
 		$out = $this->twig->render( '/public/modal/donate.modal.html.twig', $data );
 
-		if ( $echo ) {
-			echo $out;
-		}
+		if ( $echo ) echo $out;
 
 		return $out;
 
