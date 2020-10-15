@@ -2,6 +2,7 @@
  * Internal block libraries
  */
 const { __ } = wp.i18n;
+const { Component } = wp.element;
 const { registerBlockType } = wp.blocks;
 const {
 	PanelBody,
@@ -48,146 +49,173 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 	},
 
 	// Defining the edit interface
-	edit: ( props ) => {
-		const {
-			button_label,
-			alignment,
-			modal_title,
-			welcome_text,
-			campaign_label,
-			amount_type,
-			fixed_amounts,
-		} = props.attributes;
+	edit: class extends Component {
 
-		const onChangeButtonLabel = ( newValue ) => {
-			props.setAttributes( { button_label: newValue } );
+		constructor() {
+			super();
+			this.onChangeButtonLabel = this.onChangeButtonLabel.bind(this);
+			this.onChangeAlignment = this.onChangeAlignment.bind(this);
+			this.onChangeHeader = this.onChangeHeader.bind(this);
+			this.onChangeBody = this.onChangeBody.bind(this);
+			this.onChangeCampaignLabel = this.onChangeCampaignLabel.bind(this);
+			this.onChangeAmountType = this.onChangeAmountType.bind(this);
+			this.onChangeFixedAmounts = this.onChangeFixedAmounts.bind(this);
+			this.state = {
+				isAPILoaded: false,
+			};
+		}
+
+		componentDidMount() {
+			if ( false === this.state.isAPILoaded ) {
+				this.getSettings();
+			}
+		}
+
+		getSettings() {
+			wp.api.loadPromise.then( () => {
+				this.settings = new wp.api.models.Settings();
+				this.settings.fetch().then( ( response ) => {
+					this.setState( {
+						settings: { ...response },
+						isAPILoaded: true,
+						showNotice: false,
+					} );
+				} );
+			} );
+		}
+
+		onChangeButtonLabel( newValue ) {
+			this.props.setAttributes( { button_label: newValue } );
 		};
 
-		const onChangeAlignment = ( newValue ) => {
-			props.setAttributes( {
+		onChangeAlignment( newValue ) {
+			this.props.setAttributes( {
 				alignment: newValue === undefined ? 'none' : newValue,
 			} );
 		};
 
-		const onChangeHeader = ( newValue ) => {
-			props.setAttributes( { modal_title: newValue } );
+		onChangeHeader( newValue ) {
+			this.props.setAttributes( { modal_title: newValue } );
 		};
 
-		const onChangeBody = ( newValue ) => {
-			props.setAttributes( { welcome_text: newValue } );
+		onChangeBody( newValue ) {
+			this.props.setAttributes( { welcome_text: newValue } );
 		};
 
-		const onChangeCampaignLabel = ( newValue ) => {
-			props.setAttributes( { campaign_label: newValue } );
+		onChangeCampaignLabel( newValue ) {
+			this.props.setAttributes( { campaign_label: newValue } );
 		};
 
-		const onChangeAmountType = ( newValue ) => {
-			props.setAttributes( { amount_type: newValue } );
+		onChangeAmountType( newValue ) {
+			this.props.setAttributes( { amount_type: newValue } );
 		};
 
-		const onChangeFixedAmounts = ( newValue ) => {
-			props.setAttributes( { fixed_amounts: newValue } );
+		onChangeFixedAmounts( newValue ) {
+			this.props.setAttributes( { fixed_amounts: newValue } );
 		};
 
-		return (
-			<div>
-				<InspectorControls>
+		render() {
+			console.log(this.props)
+			return (
+				<div>
+					<InspectorControls>
 
-					<PanelBody
-						title={ __( 'Modal (pop-up)', 'kudos-donations' ) }
-						initialOpen={ false }
-					>
-						<TextControl
-							label={ __( 'Header', 'kudos-donations' ) }
-							type={ 'text' }
-							value={ modal_title }
-							onChange={ onChangeHeader }
+						<PanelBody
+							title={ __( 'Modal (pop-up)', 'kudos-donations' ) }
+							initialOpen={ false }
+						>
+							<TextControl
+								label={ __( 'Header', 'kudos-donations' ) }
+								type={ 'text' }
+								value={ this.props.attributes.modal_title }
+								onChange={ this.onChangeHeader }
+							/>
+
+							<TextControl
+								label={ __( 'Welcome text', 'kudos-donations' ) }
+								type={ 'text' }
+								value={ this.props.attributes.welcome_text }
+								onChange={ this.onChangeBody }
+							/>
+
+						</PanelBody>
+
+						<PanelBody
+							title={ __( 'Donation amount', 'kudos-donations' ) }
+							initialOpen={ false }
+						>
+							<RadioControl
+								label={ __( 'Type', 'kudos-donations' ) }
+								help={__("The type of donation amount available", 'kudos-donations')}
+								selected={ this.props.attributes.amount_type }
+								options={ [
+									{ label: 'Open', value: 'open' },
+									{ label: 'Fixed', value: 'fixed' },
+								] }
+								onChange={ this.onChangeAmountType }
+							/>
+
+							{ this.props.attributes.amount_type !== 'open' ?
+
+								<Fragment>
+									<TextControl
+										label={ __(	'Amounts',	'kudos-donations' ) + ':' }
+										help={ __( 'Enter a comma separated list of values to use.', 'kudos-donations' ) }
+										value={ this.props.attributes.fixed_amounts }
+										onChange={ this.onChangeFixedAmounts }
+									/>
+								</Fragment>
+
+								: '' }
+
+						</PanelBody>
+
+						<PanelBody
+							title={ __( 'Campaign', 'kudos-donations' ) }
+							initialOpen={ false }
+						>
+							<TextControl
+								label={ __(
+									'Campaign label',
+									'kudos-donations'
+								) }
+								help={__('Give this donation button a label so you can identify it on the transactions page', 'kudos-donations')}
+								type={ 'text' }
+								value={ this.props.attributes.campaign_label }
+								onChange={ this.onChangeCampaignLabel }
+							/>
+						</PanelBody>
+					</InspectorControls>
+
+					<BlockControls>
+						<AlignmentToolbar
+							value={ this.props.attributes.alignment }
+							onChange={ this.onChangeAlignment }
 						/>
+					</BlockControls>
 
-						<TextControl
-							label={ __( 'Welcome text', 'kudos-donations' ) }
-							type={ 'text' }
-							value={ welcome_text }
-							onChange={ onChangeBody }
-						/>
-
-					</PanelBody>
-
-					<PanelBody
-						title={ __( 'Donation amount', 'kudos-donations' ) }
-						initialOpen={ false }
+					<div
+						className={
+							this.props.attributes.className + ' has-text-align-' + this.props.attributes.alignment
+						}
 					>
-						<RadioControl
-							label={ __( 'Type', 'kudos-donations' ) }
-							help={__("The type of donation amount available", 'kudos-donations')}
-							selected={ amount_type }
-							options={ [
-								{ label: 'Open', value: 'open' },
-								{ label: 'Fixed', value: 'fixed' },
+						<RichText
+							className={ 'kd-transition kd-duration-150 kd-ease-in-out focus:kd-shadow-focus focus:kd-outline-none kd-font-sans kd-text-center kd-text-white kd-leading-normal kd-font-normal kd-normal-case kd-no-underline kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none kd-border-none kd-bg-theme hover:kd-bg-theme-dark kudos_button_donate' }
+							style={ { backgroundColor: kudos.theme_color } }
+							formattingControls={ [
+								'bold',
+								'italic',
+								'text-color',
+								'strikethrough',
 							] }
-							onChange={ onChangeAmountType }
+							tagName="button"
+							onChange={ this.onChangeButtonLabel }
+							value={ this.props.attributes.button_label }
 						/>
-
-						{ amount_type !== 'open' ?
-
-							<Fragment>
-								<TextControl
-									label={ __(	'Amounts',	'kudos-donations' ) + ':' }
-									help={ __( 'Enter a comma separated list of values to use.', 'kudos-donations' ) }
-									value={ fixed_amounts }
-									onChange={ onChangeFixedAmounts }
-								/>
-							</Fragment>
-
-						: '' }
-
-					</PanelBody>
-
-					<PanelBody
-						title={ __( 'Campaign', 'kudos-donations' ) }
-						initialOpen={ false }
-					>
-						<TextControl
-							label={ __(
-								'Campaign label',
-								'kudos-donations'
-							) }
-							help={__('Give this donation button a label so you can identify it on the transactions page', 'kudos-donations')}
-							type={ 'text' }
-							value={ campaign_label }
-							onChange={ onChangeCampaignLabel }
-						/>
-					</PanelBody>
-				</InspectorControls>
-
-				<BlockControls>
-					<AlignmentToolbar
-						value={ alignment }
-						onChange={ onChangeAlignment }
-					/>
-				</BlockControls>
-
-				<div
-					className={
-						props.className + ' has-text-align-' + alignment
-					}
-				>
-					<RichText
-						className={ 'kd-transition kd-duration-150 kd-ease-in-out focus:kd-shadow-focus focus:kd-outline-none kd-font-sans kd-text-center kd-text-white kd-leading-normal kd-font-normal kd-normal-case kd-no-underline kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none kd-border-none kd-bg-theme hover:kd-bg-theme-dark kudos_button_donate' }
-						style={ { backgroundColor: kudos.theme_color } }
-						formattingControls={ [
-							'bold',
-							'italic',
-							'text-color',
-							'strikethrough',
-						] }
-						tagName="button"
-						onChange={ onChangeButtonLabel }
-						value={ button_label }
-					/>
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
 	},
 
 	// Defining the front-end interface
