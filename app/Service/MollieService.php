@@ -305,7 +305,7 @@ class MollieService extends AbstractService {
 	 */
 	public function check_api_keys( WP_REST_Request $request ) {
 
-		update_option( '_kudos_mollie_connected', 0 );
+		Settings::update_setting( 'mollie_connected', 0 );
 
 		$mode   = sanitize_text_field( $request['apiMode'] );
 		$apiKey = sanitize_text_field( $request[ $mode . 'Key' ] );
@@ -322,9 +322,9 @@ class MollieService extends AbstractService {
 		$result = $this->test_api_connection( $apiKey );
 
 		if ( $result ) {
-			update_option( '_kudos_mollie_' . $mode . '_api_key', $apiKey );
-			update_option( '_kudos_mollie_api_mode', $mode );
-			update_option( '_kudos_mollie_connected', 1 );
+			Settings::update_setting( 'mollie_' . $mode . '_api_key', $apiKey );
+			Settings::update_setting( 'mollie_api_mode', $mode );
+			Settings::update_setting( 'mollie_connected', 1 );
 			/* translators: %s: API mode */
 			wp_send_json_success( sprintf( __( "%s API key connection was successful!", 'kudos-donations' ),
 				ucfirst( $mode ) ) );

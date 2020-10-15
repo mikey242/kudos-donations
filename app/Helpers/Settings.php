@@ -192,6 +192,21 @@ class Settings {
 	}
 
 	/**
+	 * Update specified setting
+	 *
+	 * @param $name
+	 * @param $value
+	 *
+	 * @return bool
+	 * @since 2.0.4
+	 */
+	public static function update_setting( $name, $value ) {
+
+		return update_option( self::PREFIX . $name, $value );
+
+	}
+
+	/**
 	 * Register all the settings
 	 *
 	 * @since   2.0.0
