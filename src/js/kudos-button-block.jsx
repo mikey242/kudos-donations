@@ -5,9 +5,12 @@ const { __ } = wp.i18n;
 const { Component } = wp.element;
 const { registerBlockType } = wp.blocks;
 const {
+	Button,
 	PanelBody,
 	TextControl,
 	RadioControl,
+	SelectControl,
+	Spinner
 } = wp.components;
 const {
 	RichText,
@@ -61,6 +64,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			this.onChangeAmountType = this.onChangeAmountType.bind(this);
 			this.onChangeFixedAmounts = this.onChangeFixedAmounts.bind(this);
 			this.state = {
+				settings: {},
 				isAPILoaded: false,
 			};
 		}
@@ -84,6 +88,31 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			} );
 		}
 
+		// Update an individual setting
+		updateSetting( option, value ) {
+
+			//Create WordPress settings model
+			const model = new wp.api.models.Settings( {
+				[ option ]: value,
+			} );
+
+			//Save to database
+			model.save().then( ( response ) => {
+				// Commit state
+				this.setState( {
+					settings: {
+						[ option ]: response[ option ]
+					},
+				} );
+			} );
+		}
+
+		addCampaignLabel(label) {
+			let current = this.state.settings._kudos_campaign_labels;
+			this.updateSetting('_kudos_campaign_labels', _.union(current, [ label ]));
+			this.onChangeCampaignLabel(label);
+		};
+
 		onChangeButtonLabel( newValue ) {
 			this.props.setAttributes( { button_label: newValue } );
 		};
@@ -106,6 +135,10 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			this.props.setAttributes( { campaign_label: newValue } );
 		};
 
+		onChangeNewCampaignLabel( newValue ) {
+			this.props.setAttributes( { new_campaign_label: newValue } );
+		};
+
 		onChangeAmountType( newValue ) {
 			this.props.setAttributes( { amount_type: newValue } );
 		};
@@ -115,8 +148,16 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 		};
 
 		render() {
-			console.log(this.props)
+
+			// Show spinner if not yet loaded
+			if ( ! this.state.isAPILoaded ) {
+				return (
+					<Spinner />
+				)
+			}
+
 			return (
+
 				<div>
 					<InspectorControls>
 
@@ -174,16 +215,42 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 							title={ __( 'Campaign', 'kudos-donations' ) }
 							initialOpen={ false }
 						>
-							<TextControl
-								label={ __(
-									'Campaign label',
-									'kudos-donations'
-								) }
-								help={__('Give this donation button a label so you can identify it on the transactions page', 'kudos-donations')}
-								type={ 'text' }
+
+							<SelectControl
+								label={ __( 'Campaign label', 'kudos-donations' ) }
+								help={__('Select an existing campaign label so you can identify it on the transactions page', 'kudos-donations')}
 								value={ this.props.attributes.campaign_label }
 								onChange={ this.onChangeCampaignLabel }
+								options={
+									Object.values(this.state.settings._kudos_campaign_labels).map((value) => {
+										return {
+											'label': value,
+											'value': value
+										}
+									})
+								}
 							/>
+
+							<TextControl
+								label={ __(
+									'Add campaign',
+									'kudos-donations'
+								) }
+								id={'kudos_new_campaign'}
+								className={'kd-inline'}
+								type={ 'text' }
+								value={ this.state.newLabel }
+								onChange={ (newLabel) => this.setState({newLabel}) }
+							/>
+
+							<Button
+								label={ __('Add campaign', 'kudos-donations') }
+								isSecondary
+								isSmall
+								onClick={
+									() => this.addCampaignLabel(document.getElementById('kudos_new_campaign').value)
+								}
+							>{__('Add campaign', 'kudos-donations')}</Button>
 						</PanelBody>
 					</InspectorControls>
 

@@ -163,8 +163,18 @@ class Settings {
 					'show_in_rest' => true,
 					'default'      => true,
 				],
-			] );
-
+				'campaign_labels'       => [
+					'type'         => 'array',
+					'show_in_rest' => [
+						'schema' => [
+							'items' => [
+								'type' => 'string',
+							],
+						],
+					],
+				],
+			]
+		);
 	}
 
 	/**
@@ -172,7 +182,7 @@ class Settings {
 	 *
 	 * @param $name
 	 *
-	 * @return false|mixed|void
+	 * @return mixed
 	 * @since   2.0.0
 	 */
 	public static function get_setting( $name ) {
