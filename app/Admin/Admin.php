@@ -192,6 +192,20 @@ class Admin {
 		);
 		add_action( "admin_print_scripts-{$donors_page_hook_suffix}", [ $this, 'kudos_donor_page_assets' ] );
 
+		$campaigns_page_hook_suffix = add_submenu_page(
+			'kudos-transactions',
+			/* translators: %s: Plugin name */
+			sprintf( __( '%s Campaigns', 'kudos-donations' ), 'Kudos' ),
+			__( 'Campaigns', 'kudos-donations' ),
+			'manage_options',
+			'kudos-campaigns',
+			function () {
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-campaigns.php';
+			}
+
+		);
+		add_action( "admin_print_scripts-{$campaigns_page_hook_suffix}", [ $this, 'kudos_campaign_page_assets' ] );
+
 		$settings_page_hook_suffix = add_submenu_page(
 			'kudos-transactions',
 			__( 'Kudos Settings', 'kudos-donations' ),
@@ -314,6 +328,22 @@ class Admin {
 	 * @since   2.0.0
 	 */
 	public function kudos_donor_page_assets() {
+
+		// Load table assets
+		$tableHandle = $this->kudos_table_page_assets();
+		wp_localize_script( $tableHandle,
+			'kudos',
+			[
+				'confirmationDelete' => __( 'Are you sure you want to delete this donor?', 'kudos-donations' ),
+			] );
+	}
+
+	/**
+	 * Assets specific to the Kudos Campaigns page
+	 *
+	 * @since   2.0.0
+	 */
+	public function kudos_campaign_page_assets() {
 
 		// Load table assets
 		$tableHandle = $this->kudos_table_page_assets();

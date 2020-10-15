@@ -164,12 +164,21 @@ class Settings {
 					'default'      => true,
 				],
 				'campaign_labels'       => [
-					'type'         => 'array',
+					'type'         => 'object',
 					'show_in_rest' => [
 						'schema' => [
+							'type' => 'array',
 							'items' => [
-								'type' => 'string',
-							],
+								'type' => 'object',
+								'properties' => [
+									'date' => [
+										'type' => 'string'
+									],
+									'label' => [
+										'type' => 'string'
+									]
+								],
+							]
 						],
 					],
 				],

@@ -109,7 +109,12 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 
 		addCampaignLabel(label) {
 			let current = this.state.settings._kudos_campaign_labels;
-			this.updateSetting('_kudos_campaign_labels', _.union(current, [ label ]));
+			// this.updateSetting('_kudos_campaign_labels', _.union(current, [ label ]));
+			let combined = _.union(current,[{
+				date: new Date(),
+				label: label
+			}]);
+			this.updateSetting('_kudos_campaign_labels', _.uniq(combined, 'label') );
 			this.onChangeCampaignLabel(label);
 		};
 
@@ -224,8 +229,8 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 								options={
 									Object.values(this.state.settings._kudos_campaign_labels).map((value) => {
 										return {
-											'label': value,
-											'value': value
+											'label': value.label,
+											'value': value.label
 										}
 									})
 								}
