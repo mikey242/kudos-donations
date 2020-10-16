@@ -53,6 +53,10 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 == Changelog ==
 
+= 2.0.4 =
+* Added campaigns table
+* New campaign block settings allows you to select previous campaigns or add new one
+
 = 2.0.3 =
 * Fix modal header not showing correct text
 * Fix translations
