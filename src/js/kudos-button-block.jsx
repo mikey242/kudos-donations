@@ -229,7 +229,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 								options={
 									Object.values(this.state.settings._kudos_campaign_labels).map((value) => {
 										return {
-											'label': value.label,
+											'label': value.label.toUpperCase(),
 											'value': value.label
 										}
 									})
