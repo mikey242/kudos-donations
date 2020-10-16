@@ -206,7 +206,7 @@ class KudosDonations {
 
 	/**
 	 * Checks plugin version stored in database and runs activation
-	 * hook if different.
+	 * method if different.
 	 *
 	 * @since 1.0.2
 	 */
@@ -215,7 +215,7 @@ class KudosDonations {
 		$db_version = get_option( '_kudos_donations_version' );
 
 		if ( $db_version !== $this->get_version() ) {
-			ActivatorService::activate();
+			ActivatorService::activate($db_version);
 		}
 	}
 
