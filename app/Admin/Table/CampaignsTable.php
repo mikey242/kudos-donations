@@ -66,6 +66,7 @@ class CampaignsTable extends WP_List_Table {
 
 		$mapper    = $this->mapper;
 		$campaigns = Settings::get_setting( 'campaign_labels' );
+		if(!$campaigns) return [];
 
 		// Add search query if exist
 		if ( ! empty( $_REQUEST['s'] ) ) {
