@@ -115,10 +115,14 @@ class MapperService {
 	/**
 	 * Get all results from table
 	 *
-	 * @param string|null $query
-	 * @param string $format
+	 * @param array|null $query Array of columns and their values. The array is converted to
+	 *                          a MYSQL WHERE statement as "key = value". If no value is
+	 *                          specified it uses "key IS NOT NULL". If array is empty it
+	 *                          returns all values in table.
+	 * @param string $format Specifies the return format. Defaults to OBJECT but can also
+	 *                          be ARRAY_A.
 	 *
-	 * @return array|null
+	 * @return array|object|null
 	 * @since   2.0.0
 	 */
 	public function get_all_by( $query = null, $format = OBJECT ) {
@@ -177,11 +181,17 @@ class MapperService {
 		$wpdb  = $this->wpdb;
 		$array = [];
 		foreach ( $query_fields as $key => $field ) {
-			array_push( $array,
-				$wpdb->prepare(
-					"$key = %s",
-					$field
-				) );
+			if ( empty( $key ) ) {
+				array_push( $array,
+					"$field IS NOT NULL"
+				);
+			} else {
+				array_push( $array,
+					$wpdb->prepare(
+						"$key = %s",
+						$field
+					) );
+			}
 		}
 
 		return 'WHERE ' . implode( ' ' . $operator . ' ', $array );
