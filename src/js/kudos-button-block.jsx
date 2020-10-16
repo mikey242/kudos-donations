@@ -108,8 +108,8 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 		}
 
 		addCampaignLabel(label) {
+			label = label.toLowerCase()
 			let current = this.state.settings._kudos_campaign_labels;
-			// this.updateSetting('_kudos_campaign_labels', _.union(current, [ label ]));
 			let combined = _.union(current,[{
 				date: new Date(),
 				label: label
