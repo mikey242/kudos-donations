@@ -156,12 +156,12 @@ class CampaignsTable extends WP_List_Table {
 	 * @return string
 	 * @since   2.0.4
 	 */
-//	function column_cb( $item ) {
-//		return sprintf(
-//			'<input type="checkbox" name="bulk-action[]" value="%s" />',
-//			$item['campaign_label']
-//		);
-//	}
+	function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="bulk-action[]" value="%s" />',
+			$item['label']
+		);
+	}
 
 	/**
 	 * Time (date) column
@@ -173,9 +173,20 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	function column_date( array $item ) {
 
+		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
+
+		$actions = [
+			'delete' => sprintf( '<a href="?page=%s&action=%s&label=%s&_wpnonce=%s">%s</a>',
+				esc_attr( $_REQUEST['page'] ),
+				'delete',
+				sanitize_text_field( $item['label'] ),
+				$delete_nonce,
+				__( 'Delete', 'kudos-donations' ) ),
+		];
+
 		return __( 'Added',
 				'kudos-donations' ) . '<br/>' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-				strtotime( $item['date'] ) );
+				strtotime( $item['date'] ) ) . $this->row_actions($actions);
 	}
 
 	/**
@@ -222,7 +233,7 @@ class CampaignsTable extends WP_List_Table {
 					die();
 				}
 
-				self::delete_record( 'customer_id', intval( $_GET['customer_id'] ) );
+				self::delete_record( sanitize_text_field( $_GET['label'] ) );
 				break;
 
 			case 'bulk-delete':
@@ -233,9 +244,9 @@ class CampaignsTable extends WP_List_Table {
 				}
 
 				if ( isset( $_REQUEST['bulk-action'] ) ) {
-					$cancel_ids = esc_sql( $_REQUEST['bulk-action'] );
-					foreach ( $cancel_ids as $id ) {
-						self::delete_record( 'customer_id', (int) $id );
+					$labels = esc_sql( $_REQUEST['bulk-action'] );
+					foreach ( $labels as $label ) {
+						self::delete_record( sanitize_text_field($label) );
 					}
 				}
 				break;
@@ -243,17 +254,21 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Delete a donor.
+	 * Delete a campaign.
 	 *
-	 * @param $column
-	 * @param int $customer_id
+	 * @param string $label
 	 *
-	 * @return false|int
+	 * @return bool
 	 * @since   2.0.4
 	 */
-	protected function delete_record( $column, int $customer_id ) {
+	protected function delete_record( string $label ) {
 
-		return $this->mapper->delete( $column, $customer_id );
+		$labels = Settings::get_setting('campaign_labels');
+		$labels = array_filter($labels, function ($a) use ($label) {
+			return !in_array($label, $a);
+		});
+
+		return Settings::update_setting('campaign_labels', $labels);
 
 	}
 }
