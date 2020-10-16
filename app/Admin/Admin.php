@@ -350,7 +350,10 @@ class Admin {
 		wp_localize_script( $tableHandle,
 			'kudos',
 			[
-				'confirmationDelete' => __( 'Are you sure you want to delete this donor?', 'kudos-donations' ),
+				'confirmationDelete' => __(
+					'Are you sure you want to delete this campaign? This will not remove any transactions',
+					'kudos-donations'
+				),
 			] );
 	}
 
