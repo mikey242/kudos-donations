@@ -190,6 +190,33 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
+	 * Label column
+	 *
+	 * @param $item
+	 * @return string
+	 * @since 2.0.4
+	 */
+	function column_label( $item ) {
+
+		return strtoupper($item['label']);
+
+	}
+
+	/**
+	 * Transactions column
+	 *
+	 * @param $item
+	 * @return string
+	 * @since 2.0.4
+	 */
+	function column_transactions($item) {
+		return sprintf('<a href=%1$s>%2$s</a>',
+			sprintf(admin_url( 'admin.php?page=kudos-transactions&s=%s'), urlencode( $item['label'] ) ),
+			strtoupper($item['transactions'])
+		);
+	}
+
+	/**
 	 * Total column
 	 *
 	 * @param array $item
