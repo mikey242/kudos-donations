@@ -164,7 +164,7 @@ class Settings {
 					'default'      => true,
 				],
 				'campaign_labels'       => [
-					'type'         => 'object',
+					'type'         => 'array',
 					'show_in_rest' => [
 						'schema' => [
 							'type' => 'array',
