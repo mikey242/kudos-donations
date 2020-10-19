@@ -101,7 +101,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				}
 
 				$kudos_logger = new LoggerService();
-				$logArray     = $kudos_logger->getAsArray();
+				$logArray     = $kudos_logger->get_as_array();
 				?>
 
                 <p>This logfile location: <?php echo $file ?></p>
