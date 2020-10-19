@@ -60,7 +60,9 @@ class DonorEntity extends AbstractEntity {
 	 * @since   2.0.0
 	 */
 	public function __construct( $atts = null ) {
+
 		parent::__construct( $atts );
+
 	}
 
 	/**

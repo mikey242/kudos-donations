@@ -74,7 +74,7 @@ class TransactionsTable extends WP_List_Table {
 
 		$query      = [];
 		$table      = $wpdb->prefix . $this->table;
-		$join_table = DonorEntity::getTableName();
+		$join_table = DonorEntity::get_table_name();
 
 		$status = ( ! empty( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '' );
 

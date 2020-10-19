@@ -57,7 +57,7 @@ abstract class AbstractEntity {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	public static function getTableName() {
+	public static function get_table_name() {
 
 		global $wpdb;
 
@@ -71,8 +71,10 @@ abstract class AbstractEntity {
 	 * @return array
 	 * @since 2.0.0
 	 */
-	public function toArray() {
+	public function to_array() {
+
 		return (array) $this;
+
 	}
 
 	/**

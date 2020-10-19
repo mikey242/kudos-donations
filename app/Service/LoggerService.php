@@ -54,7 +54,7 @@ class LoggerService extends Monolog {
 	 */
 	public static function clear() {
 
-		if ( ! self::isWriteable() ) {
+		if ( ! self::is_writeable() ) {
 			return false;
 		}
 
@@ -68,7 +68,7 @@ class LoggerService extends Monolog {
 	 * @return bool
 	 * @since   1.0.1
 	 */
-	private static function isWriteable() {
+	private static function is_writeable() {
 
 		if ( is_writable( self::LOG_DIR ) ) {
 			return true;
@@ -118,7 +118,7 @@ class LoggerService extends Monolog {
 		}
 
 		// Check ig log is writeable before proceeding
-		if ( ! $this->isWriteable() ) {
+		if ( ! $this->is_writeable() ) {
 			return false;
 		}
 
@@ -131,7 +131,7 @@ class LoggerService extends Monolog {
 	 * @return array|false
 	 * @since   2.0.0
 	 */
-	public function getAsArray() {
+	public function get_as_array() {
 
 		if ( file_exists( self::LOG_FILE ) ) {
 			$reg  = '/^\[(?<date>.*)\]\s(?<env>\w+)\.(?<type>\w+):(?<message>.*)/m';

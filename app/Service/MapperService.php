@@ -60,7 +60,7 @@ class MapperService {
 	public function save( $entity ) {
 
 		$wpdb                 = $this->wpdb;
-		$table                = $entity::getTableName();
+		$table                = $entity::get_table_name();
 		$entity->last_updated = current_time( 'mysql' );
 
 		// If we have an id, then update row
@@ -69,7 +69,7 @@ class MapperService {
 
 			return $wpdb->update(
 				$table,
-				array_filter( $entity->toArray(), [ $this, 'remove_empty' ] ),
+				array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ),
 				[ 'id' => $entity->id ]
 			);
 		}
@@ -164,7 +164,7 @@ class MapperService {
 			return false;
 		}
 
-		return $this->repository::getTableName();
+		return $this->repository::get_table_name();
 	}
 
 	/**
@@ -253,7 +253,7 @@ class MapperService {
 
 		$wpdb  = $this->wpdb;
 		$where = $this->array_to_where( $query_fields, $operator );
-		$table = $this->repository::getTableName();
+		$table = $this->repository::get_table_name();
 
 		$result = $wpdb->get_row( "
 			SELECT * FROM $table
@@ -277,6 +277,8 @@ class MapperService {
 	 * @since 2.0.0
 	 */
 	private function remove_empty( $value ) {
+
 		return ! is_null( $value ) && $value !== '';
+
 	}
 }

@@ -71,7 +71,7 @@ class SubscriptionsTable extends WP_List_Table {
 
 		global $wpdb;
 		$table              = $wpdb->prefix . $this->table;
-		$join_table         = DonorEntity::getTableName();
+		$join_table         = DonorEntity::get_table_name();
 		$search_custom_vars = null;
 		$frequency          = ( ! empty( $_GET['frequency'] ) ? sanitize_text_field( $_GET['frequency'] ) : '' );
 
