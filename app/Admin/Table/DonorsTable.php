@@ -274,7 +274,7 @@ class DonorsTable extends WP_List_Table {
 					die();
 				}
 
-				self::delete_record( 'customer_id', intval( $_GET['customer_id'] ) );
+				self::delete_record( 'customer_id', esc_sql( $_GET['customer_id'] ) );
 				break;
 
 			case 'bulk-delete':
@@ -287,7 +287,7 @@ class DonorsTable extends WP_List_Table {
 				if ( isset( $_REQUEST['bulk-action'] ) ) {
 					$cancel_ids = esc_sql( $_REQUEST['bulk-action'] );
 					foreach ( $cancel_ids as $id ) {
-						self::delete_record( 'customer_id', (int) $id );
+						self::delete_record( 'customer_id', $id );
 					}
 				}
 				break;
@@ -298,12 +298,12 @@ class DonorsTable extends WP_List_Table {
 	 * Delete a donor.
 	 *
 	 * @param $column
-	 * @param int $customer_id
+	 * @param string $customer_id
 	 *
 	 * @return false|int
 	 * @since   1.0.0
 	 */
-	protected function delete_record( $column, int $customer_id ) {
+	protected function delete_record( $column, string $customer_id ) {
 
 		return $this->mapper->delete( $column, $customer_id );
 
