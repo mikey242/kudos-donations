@@ -67,21 +67,35 @@ class MapperService {
 		if ( $entity->id ) {
 			$this->logger->debug( 'Updating entity.', [ $entity ] );
 
-			return $wpdb->update(
+			$result = $wpdb->update(
 				$table,
 				array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ),
 				[ 'id' => $entity->id ]
 			);
+
+			if($result) {
+				do_action( $entity::TABLE . '_update', 'id', $entity->id );
+			}
+
+			return $result;
 		}
 
 		// Otherwise insert new row
 		$entity->created = current_time( 'mysql' );
+
+		$result = $wpdb->insert(
+			$table,
+			array_filter( $entity->to_array(), [ $this, 'remove_empty' ] )
+		);
+		$entity->id = $wpdb->insert_id;
 		$this->logger->debug( 'Creating entity.', [ $entity ] );
 
-		return $wpdb->insert(
-			$table,
-			array_filter( $entity->toArray(), [ $this, 'remove_empty' ] )
-		);
+		// If successful log and do action
+		if ($result) {
+			do_action( $entity::TABLE . '_add', 'id', $entity->id );
+		}
+
+		return $result;
 
 	}
 
