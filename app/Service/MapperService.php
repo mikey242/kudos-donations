@@ -233,7 +233,7 @@ class MapperService {
 	/**
 	 * Deletes selected record
 	 *
-	 * @param string $column
+	 * @param string $column Column name to search for value
 	 * @param string $value
 	 *
 	 * @return false|int
@@ -259,8 +259,9 @@ class MapperService {
 	/**
 	 * Get row by $query_fields array
 	 *
-	 * @param array $query_fields // Key-value pair of fields to query e.g. ['email' => 'john.smith@gmail.com']
-	 * @param string $operator // AND or OR
+	 * @param array $query_fields Key-value pair of fields to query
+	 *                            e.g. ['email' => 'john.smith@gmail.com']
+	 * @param string $operator Operator to use to join array items. Can be AND or OR.
 	 *
 	 * @return AbstractEntity|null
 	 * @since   2.0.0
