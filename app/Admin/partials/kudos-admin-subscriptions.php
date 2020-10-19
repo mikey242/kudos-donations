@@ -21,13 +21,14 @@ switch ( $action ) {
 		$message = __( 'Subscription deleted', 'kudos-donations' );
 		break;
 	case 'bulk-cancel':
+		$records = count( $_REQUEST['bulk-action']);
 		/* translators: %s: Number of records */
-		$message = sprintf( __( '%s subscription(s) cancelled', 'kudos-donations' ),
-			count( $_REQUEST['bulk-action'] ) );
+		$message = sprintf( _n( 'Cancelled %s subscription', 'Cancelled %s subscriptions', $records, 'kudos-donations' ), $records );
 		break;
 	case 'bulk-delete':
 		/* translators: %s: Number of records */
-		$message = sprintf( __( '%s subscription(s) deleted', 'kudos-donations' ), count( $_REQUEST['bulk-action'] ) );
+        $records = count( $_REQUEST['bulk-action']);
+        $message = sprintf( _n( 'Deleted %s subscription', 'Deleted %s subscriptions', $records, 'kudos-donations' ), $records );
 		break;
 }
 

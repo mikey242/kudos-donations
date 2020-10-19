@@ -411,7 +411,7 @@ class Admin {
 					$records = $mapper->delete_all();
 					if ( $records ) {
 						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( __( 'Deleted %s transactions(s)', 'kudos-donations' ), $records ) );
+						new AdminNotice( sprintf( _n( 'Deleted %s transaction', 'Deleted %s transactions', $records, 'kudos-donations' ), $records ) );
 					}
 
 					break;
@@ -422,7 +422,7 @@ class Admin {
 					$records = $mapper->delete_all();
 					if ( $records ) {
 						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( __( 'Deleted %s donors(s)', 'kudos-donations' ), $records ) );
+						new AdminNotice( sprintf( _n( 'Deleted %s donor', 'Deleted %s donors', $records, 'kudos-donations' ), $records ) );
 					}
 					break;
 
@@ -432,7 +432,7 @@ class Admin {
 					$records = $mapper->delete_all();
 					if ( $records ) {
 						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( __( 'Deleted %s subscriptions(s)', 'kudos-donations' ), $records ) );
+						new AdminNotice( sprintf( _n( 'Deleted %s subscription', 'Deleted %s subscriptions', $records, 'kudos-donations' ), $records ) );
 					}
 					break;
 
