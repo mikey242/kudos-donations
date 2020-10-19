@@ -18,7 +18,6 @@ import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
 import { SubscriptionPanel } from "./Components/Panels/SubscriptionPanel"
-import { IntroGuide } from "./Components/IntroGuide";
 import {Btn} from "./Components/Btn";
 
 const { __ } = wp.i18n;
@@ -344,11 +343,6 @@ class KudosAdmin extends Component {
 		return (
 
 			<Fragment>
-
-				{/*<IntroGuide*/}
-				{/*	open={this.state.settings._kudos_show_intro}*/}
-				{/*	saveSetting={this.updateSetting}*/}
-				{/*/>*/}
 
 				<Notice
 					showNotice={ this.state.showNotice }
