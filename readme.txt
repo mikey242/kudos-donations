@@ -53,6 +53,11 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 == Changelog ==
 
+= 2.0.5 =
+* Added more Dutch translations
+* Fixed error deleting donors
+* Add more hooks
+
 = 2.0.4 =
 * Added campaigns table
 * New campaign block settings allows you to select previous campaigns or add new one
