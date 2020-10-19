@@ -118,7 +118,7 @@ class MailerService extends AbstractService {
 		$body = $twig->render( 'emails/receipt.html.twig', $renderArray );
 
 		$this->send( $transaction->get_donor()->email,
-			__( 'Kudos Donation Receipt', 'kudos-donations' ),
+			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
 			$headers,
 			$attachments );
