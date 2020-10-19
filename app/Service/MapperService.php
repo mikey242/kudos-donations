@@ -74,7 +74,7 @@ class MapperService {
 			);
 
 			if ( $result ) {
-				do_action( $entity::TABLE . '_update', 'id', $entity->id );
+				do_action( $entity::TABLE . '_updated', 'id', $entity->id );
 			}
 
 			return $result;
@@ -92,7 +92,7 @@ class MapperService {
 
 		// If successful log and do action
 		if ( $result ) {
-			do_action( $entity::TABLE . '_add', 'id', $entity->id );
+			do_action( $entity::TABLE . '_added', 'id', $entity->id );
 		}
 
 		return $result;
