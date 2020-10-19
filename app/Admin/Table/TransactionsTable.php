@@ -445,14 +445,7 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function delete_record( $column, string $order_id ) {
 
-		$result = $this->mapper->delete( $column, $order_id );
-
-		// Add action if transaction deleted
-		if ( $result ) {
-			do_action( 'kudos_delete_transaction', $order_id );
-		}
-
-		return $result;
+		return $this->mapper->delete( $column, $order_id );
 
 	}
 

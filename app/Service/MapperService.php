@@ -229,10 +229,16 @@ class MapperService {
 
 		$wpdb = $this->wpdb;
 
-		return $wpdb->delete(
+		$deleted = $wpdb->delete(
 			$this->get_table_name(),
 			[ $column => $value ]
 		);
+
+		if($deleted) {
+			do_action( $this->repository::TABLE . '_delete', $column, $value );
+		}
+
+		return $deleted;
 
 	}
 
