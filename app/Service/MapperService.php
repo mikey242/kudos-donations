@@ -285,6 +285,8 @@ class MapperService {
 			return new $this->repository( $result );
 		}
 
+		$this->logger->warning( "Could not find records in " . $this->repository::get_table_name(), [ 'query' => $where ] );
+
 		return null;
 	}
 
