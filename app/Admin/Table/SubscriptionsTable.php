@@ -389,7 +389,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 */
 	public static function cancel_subscription( string $subscription_id ) {
 
-		$kudos_mollie = new MollieService();
+		$kudos_mollie = MollieService::factory();
 		if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
 			return true;
 		}
