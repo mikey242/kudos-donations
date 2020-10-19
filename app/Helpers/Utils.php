@@ -102,7 +102,7 @@ class Utils {
 	public static function color_luminance( string $hex, float $percent ) {
 
 		// Remove leading '#' if present
-		$hex = ltrim($hex, '#');
+		$hex = ltrim( $hex, '#' );
 
 		// Expand to 6 character hex code (e.g. FFF -> FFFFFF)
 		if ( strlen( $hex ) == 3 ) {
@@ -110,17 +110,17 @@ class Utils {
 		}
 
 		// Convert to decimal
-		$hex = array_map('hexdec', str_split($hex, 2));
+		$hex = array_map( 'hexdec', str_split( $hex, 2 ) );
 
 		// Change luminosity of decimal colour
 		foreach ( $hex as & $color ) {
 			$adjustableLimit = $percent < 0 ? $color : 255 - $color;
-			$adjustAmount = ceil($adjustableLimit * $percent);
+			$adjustAmount    = ceil( $adjustableLimit * $percent );
 
-			$color = str_pad(dechex($color + $adjustAmount), 2, '0', STR_PAD_LEFT);
+			$color = str_pad( dechex( $color + $adjustAmount ), 2, '0', STR_PAD_LEFT );
 		}
 
-		return '#' . implode($hex);
+		return '#' . implode( $hex );
 	}
 
 	/**

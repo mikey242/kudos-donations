@@ -35,11 +35,11 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 		<?php
 
-		$url = admin_url( 'admin.php?page=kudos-debug' );
+		$url            = admin_url( 'admin.php?page=kudos-debug' );
 
 		switch ( $tab ):
 			case 'actions':
-			    $url = add_query_arg('tab', 'actions', $url);
+				$url = add_query_arg( 'tab', 'actions', $url );
 				?>
                 <p>Please use the following actions only if you are having issues. Remember to backup your data before
                     performing any of these actions.</p>
@@ -92,8 +92,8 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				break;
 
 			case 'log':
-				$url = add_query_arg('tab', 'log', $url);
-				$file = LoggerService::LOG_FILE;
+				$url = add_query_arg( 'tab', 'log', $url );
+				$file   = LoggerService::LOG_FILE;
 
 				// Quit if file does not exist
 				if ( ! file_exists( $file ) ) {

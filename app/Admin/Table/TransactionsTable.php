@@ -369,14 +369,15 @@ class TransactionsTable extends WP_List_Table {
 	 * Return campaign label as a search link
 	 *
 	 * @param array $item
+	 *
 	 * @return string
 	 * @since 2.0.2
 	 */
 	function column_campaign_label( array $item ) {
 
-		return sprintf('<a href=%1$s>%2$s</a>',
-			sprintf(admin_url( 'admin.php?page=kudos-transactions&s=%s'), urlencode( $item['campaign_label'] ) ),
-			strtoupper($item['campaign_label'])
+		return sprintf( '<a href=%1$s>%2$s</a>',
+			sprintf( admin_url( 'admin.php?page=kudos-transactions&s=%s' ), urlencode( $item['campaign_label'] ) ),
+			strtoupper( $item['campaign_label'] )
 		);
 
 	}

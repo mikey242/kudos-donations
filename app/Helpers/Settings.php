@@ -167,18 +167,18 @@ class Settings {
 					'type'         => 'array',
 					'show_in_rest' => [
 						'schema' => [
-							'type' => 'array',
+							'type'  => 'array',
 							'items' => [
-								'type' => 'object',
+								'type'       => 'object',
 								'properties' => [
-									'date' => [
-										'type' => 'string'
+									'date'  => [
+										'type' => 'string',
 									],
 									'label' => [
-										'type' => 'string'
-									]
+										'type' => 'string',
+									],
 								],
-							]
+							],
 						],
 					],
 				],

@@ -468,25 +468,26 @@ class MollieService extends AbstractService {
 		] );
 
 		// Add campaign label to recurring payments
-		if($payment->hasSequenceTypeRecurring()) {
+		if ( $payment->hasSequenceTypeRecurring() ) {
 			$subscription_id = $payment->subscriptionId;
-			$customer_id = $payment->customerId;
+			$customer_id     = $payment->customerId;
 
 			try {
 
-				$customer = $this->mollieApi->customers->get($customer_id);
-				$subscription_meta = $customer->getSubscription($subscription_id)->metadata;
-				if(array_key_exists('campaign_label', $subscription_meta)) {
+				$customer          = $this->mollieApi->customers->get( $customer_id );
+				$subscription_meta = $customer->getSubscription( $subscription_id )->metadata;
+				if ( array_key_exists( 'campaign_label', $subscription_meta ) ) {
 					$campaign_label = $subscription_meta->campaign_label;
-					$transaction->set_fields([
-						'campaign_label' => $campaign_label
-					]);
+					$transaction->set_fields( [
+						'campaign_label' => $campaign_label,
+					] );
 				} else {
-					$this->logger->info('No campaign label found for recurring payment', ['customer_id' => $customer_id, 'subscription_id' => $subscription_id]);
+					$this->logger->info( 'No campaign label found for recurring payment',
+						[ 'customer_id' => $customer_id, 'subscription_id' => $subscription_id ] );
 				}
 
-			} catch (ApiException $e) {
-				$this->logger->warning($e->getMessage());
+			} catch ( ApiException $e ) {
+				$this->logger->warning( $e->getMessage() );
 			}
 		}
 
@@ -586,8 +587,8 @@ class MollieService extends AbstractService {
 				$interval,
 				$transaction->order_id ),
 			"metadata"    => [
-				"campaign_label" => $transaction->campaign_label
-			]
+				"campaign_label" => $transaction->campaign_label,
+			],
 		];
 
 		if ( $transaction->mode === "test" ) {

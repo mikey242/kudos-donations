@@ -39,13 +39,13 @@ class TwigService extends AbstractService {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct( $templates_dir=[], $options=[] ) {
+	public function __construct( $templates_dir = [], $options = [] ) {
 
 		parent::__construct();
 
-		$this->templates_dir = $templates_dir;
-		$this->templates_dir[] = KUDOS_PLUGIN_DIR . '/templates/';
-		$this->options = $options;
+		$this->templates_dir    = $templates_dir;
+		$this->templates_dir[]  = KUDOS_PLUGIN_DIR . '/templates/';
+		$this->options          = $options;
 		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
 		$this->initializeTwig();
 		$this->initializeTwigFunctions();
@@ -53,29 +53,10 @@ class TwigService extends AbstractService {
 
 	}
 
-	/**
-	 * Create the twig cache directory
-	 *
-	 * @since    2.0.0
-	 */
-	public static function initCache() {
-
-		$logger = new LoggerService();
-
-		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
-			$logger->info( 'Twig cache directory created successfully' );
-
-			return;
-		}
-
-		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ self::CACHE_DIR ] );
-
-	}
-
 	public function initializeTwig() {
 
-		$loader       = new FilesystemLoader( $this->templates_dir );
-		$this->twig   = new Environment( $loader, $this->options );
+		$loader     = new FilesystemLoader( $this->templates_dir );
+		$this->twig = new Environment( $loader, $this->options );
 
 	}
 
@@ -134,6 +115,25 @@ class TwigService extends AbstractService {
 	}
 
 	/**
+	 * Create the twig cache directory
+	 *
+	 * @since    2.0.0
+	 */
+	public static function initCache() {
+
+		$logger = new LoggerService();
+
+		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
+			$logger->info( 'Twig cache directory created successfully' );
+
+			return;
+		}
+
+		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ self::CACHE_DIR ] );
+
+	}
+
+	/**
 	 * Render the provided template
 	 *
 	 * @param string $template
@@ -161,14 +161,15 @@ class TwigService extends AbstractService {
 	 */
 	public function clearCache() {
 
-		$di = new RecursiveDirectoryIterator(self::CACHE_DIR, FilesystemIterator::SKIP_DOTS);
-		$ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
-		$files=0;
+		$di      = new RecursiveDirectoryIterator( self::CACHE_DIR, FilesystemIterator::SKIP_DOTS );
+		$ri      = new RecursiveIteratorIterator( $di, RecursiveIteratorIterator::CHILD_FIRST );
+		$files   = 0;
 		$folders = 0;
 		foreach ( $ri as $file ) {
-			$file->isDir() ? $files++ && rmdir($file) : $folders++ && unlink($file);
+			$file->isDir() ? $files ++ && rmdir( $file ) : $folders ++ && unlink( $file );
 		}
-		$this->logger->debug('Twig cache cleared', ['files' => $files, 'folders' => $folders]);
+		$this->logger->debug( 'Twig cache cleared', [ 'files' => $files, 'folders' => $folders ] );
+
 		return true;
 	}
 }

@@ -27,9 +27,10 @@ class ActivatorService {
 	 * Runs all activation functions
 	 *
 	 * @param $old_version
+	 *
 	 * @since    1.0.0
 	 */
-	public static function activate($old_version = null) {
+	public static function activate( $old_version = null ) {
 
 		$logger = new LoggerService();
 
@@ -40,10 +41,12 @@ class ActivatorService {
 		self::create_subscriptions_table();
 		self::set_defaults();
 
-		if ( $old_version && version_compare($old_version, '2.0.4', '<' ) ) {
-			$logger->info('Upgrading to version 2.0.4', ['previous_version' => $old_version]);
+		if ( $old_version && version_compare( $old_version, '2.0.4', '<' ) ) {
+			$logger->info( 'Upgrading to version 2.0.4', [ 'previous_version' => $old_version ] );
 			$result = UpdateService::sync_campaign_labels();
-			if($result) $logger->info('Updated campaign labels from transactions');
+			if ( $result ) {
+				$logger->info( 'Updated campaign labels from transactions' );
+			}
 		}
 
 		$logger->info( 'Kudos Donations plugin activated' );

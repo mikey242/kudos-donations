@@ -83,7 +83,7 @@ class KudosDonations {
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
-		if ( Settings::get_setting( 'action_scheduler' ) && file_exists(KUDOS_PLUGIN_DIR . '/libraries/action-scheduler/action-scheduler.php') ) {
+		if ( Settings::get_setting( 'action_scheduler' ) && file_exists( KUDOS_PLUGIN_DIR . '/libraries/action-scheduler/action-scheduler.php' ) ) {
 			require_once( KUDOS_PLUGIN_DIR . '/libraries/action-scheduler/action-scheduler.php' );
 		}
 
@@ -209,7 +209,7 @@ class KudosDonations {
 		$db_version = get_option( '_kudos_donations_version' );
 
 		if ( $db_version !== $this->get_version() ) {
-			ActivatorService::activate($db_version);
+			ActivatorService::activate( $db_version );
 		}
 	}
 

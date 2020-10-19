@@ -31,20 +31,6 @@ class KudosModal {
 	}
 
 	/**
-	 * Renders the modal using twig
-	 *
-	 * @param string $template
-	 * @param array $data
-	 *
-	 * @return bool
-	 */
-	private function render_modal( string $template, array $data ) {
-
-		return $this->twig->render( $template, $data );
-
-	}
-
-	/**
 	 * Get message modal markup
 	 *
 	 * @param array $atts
@@ -55,12 +41,26 @@ class KudosModal {
 	public function get_message_modal( array $atts ) {
 
 		$data = [
-			'modal_id' => uniqid( 'kudos_modal-message-' ),
-			'modal_title'    => $atts['modal_title'],
-			'modal_text'     => $atts['modal_text'],
+			'modal_id'    => uniqid( 'kudos_modal-message-' ),
+			'modal_title' => $atts['modal_title'],
+			'modal_text'  => $atts['modal_text'],
 		];
 
 		return $this->render_modal( '/public/modal/message.modal.html.twig', $data );
+
+	}
+
+	/**
+	 * Renders the modal using twig
+	 *
+	 * @param string $template
+	 * @param array $data
+	 *
+	 * @return bool
+	 */
+	private function render_modal( string $template, array $data ) {
+
+		return $this->twig->render( $template, $data );
 
 	}
 
@@ -94,7 +94,9 @@ class KudosModal {
 
 		$out = $this->twig->render( '/public/modal/donate.modal.html.twig', $data );
 
-		if ( $echo ) echo $out;
+		if ( $echo ) {
+			echo $out;
+		}
 
 		return $out;
 

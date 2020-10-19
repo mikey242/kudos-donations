@@ -73,7 +73,7 @@ class MapperService {
 				[ 'id' => $entity->id ]
 			);
 
-			if($result) {
+			if ( $result ) {
 				do_action( $entity::TABLE . '_update', 'id', $entity->id );
 			}
 
@@ -83,7 +83,7 @@ class MapperService {
 		// Otherwise insert new row
 		$entity->created = current_time( 'mysql' );
 
-		$result = $wpdb->insert(
+		$result     = $wpdb->insert(
 			$table,
 			array_filter( $entity->to_array(), [ $this, 'remove_empty' ] )
 		);
@@ -91,7 +91,7 @@ class MapperService {
 		$this->logger->debug( 'Creating entity.', [ $entity ] );
 
 		// If successful log and do action
-		if ($result) {
+		if ( $result ) {
 			do_action( $entity::TABLE . '_add', 'id', $entity->id );
 		}
 
@@ -248,7 +248,7 @@ class MapperService {
 			[ $column => $value ]
 		);
 
-		if($deleted) {
+		if ( $deleted ) {
 			do_action( $this->repository::TABLE . '_delete', $column, $value );
 		}
 

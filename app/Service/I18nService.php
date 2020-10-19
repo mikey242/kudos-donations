@@ -25,5 +25,4 @@ class I18nService extends AbstractService {
 	}
 
 
-
 }

@@ -18,9 +18,10 @@ switch ( $action ) {
 		$message = __( 'Transaction deleted', 'kudos-donations' );
 		break;
 	case 'bulk-delete':
-	    $records = count( $_REQUEST['bulk-action'] );
+		$records = count( $_REQUEST['bulk-action'] );
 		/* translators: %s: Number of records */
-		$message = sprintf( _n( 'Deleted %s transaction', 'Deleted %s transactions', $records, 'kudos-donations' ), $records );
+		$message = sprintf( _n( 'Deleted %s transaction', 'Deleted %s transactions', $records, 'kudos-donations' ),
+			$records );
 		break;
 }
 

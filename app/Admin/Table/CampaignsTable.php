@@ -66,7 +66,9 @@ class CampaignsTable extends WP_List_Table {
 
 		$mapper    = $this->mapper;
 		$campaigns = Settings::get_setting( 'campaign_labels' );
-		if(!$campaigns) return [];
+		if ( ! $campaigns ) {
+			return [];
+		}
 
 		// Add search query if exist
 		if ( ! empty( $_REQUEST['s'] ) ) {
@@ -186,19 +188,20 @@ class CampaignsTable extends WP_List_Table {
 
 		return __( 'Added',
 				'kudos-donations' ) . '<br/>' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-				strtotime( $item['date'] ) ) . $this->row_actions($actions);
+				strtotime( $item['date'] ) ) . $this->row_actions( $actions );
 	}
 
 	/**
 	 * Label column
 	 *
 	 * @param $item
+	 *
 	 * @return string
 	 * @since 2.0.4
 	 */
 	function column_label( $item ) {
 
-		return strtoupper($item['label']);
+		return strtoupper( $item['label'] );
 
 	}
 
@@ -206,13 +209,14 @@ class CampaignsTable extends WP_List_Table {
 	 * Transactions column
 	 *
 	 * @param $item
+	 *
 	 * @return string
 	 * @since 2.0.4
 	 */
-	function column_transactions($item) {
-		return sprintf('<a href=%1$s>%2$s</a>',
-			sprintf(admin_url( 'admin.php?page=kudos-transactions&s=%s'), urlencode( $item['label'] ) ),
-			strtoupper($item['transactions'])
+	function column_transactions( $item ) {
+		return sprintf( '<a href=%1$s>%2$s</a>',
+			sprintf( admin_url( 'admin.php?page=kudos-transactions&s=%s' ), urlencode( $item['label'] ) ),
+			strtoupper( $item['transactions'] )
 		);
 	}
 
@@ -273,7 +277,7 @@ class CampaignsTable extends WP_List_Table {
 				if ( isset( $_REQUEST['bulk-action'] ) ) {
 					$labels = esc_sql( $_REQUEST['bulk-action'] );
 					foreach ( $labels as $label ) {
-						self::delete_record( sanitize_text_field($label) );
+						self::delete_record( sanitize_text_field( $label ) );
 					}
 				}
 				break;
@@ -290,12 +294,13 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function delete_record( string $label ) {
 
-		$labels = Settings::get_setting('campaign_labels');
-		$labels = array_filter($labels, function ($a) use ($label) {
-			return !in_array($label, $a);
-		});
+		$labels = Settings::get_setting( 'campaign_labels' );
+		$labels = array_filter( $labels,
+			function ( $a ) use ( $label ) {
+				return ! in_array( $label, $a );
+			} );
 
-		return Settings::update_setting('campaign_labels', $labels);
+		return Settings::update_setting( 'campaign_labels', $labels );
 
 	}
 }

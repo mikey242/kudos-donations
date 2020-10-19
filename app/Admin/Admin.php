@@ -68,6 +68,22 @@ class Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 
+		add_action( 'kudos_transactions_update',
+			function ( $column, $value ) {
+				$logger = new LoggerService();
+				$logger->debug( 'kudos_transactions_update', [ $column, $value ] );
+			},
+			10,
+			3 );
+
+		add_action( 'kudos_donors_add',
+			function ( $column, $value ) {
+				$logger = new LoggerService();
+				$logger->debug( 'kudos_donors_add', [ $column, $value ] );
+			},
+			10,
+			3 );
+
 	}
 
 	/**
@@ -400,7 +416,7 @@ class Admin {
 				case 'kudos_clear_cache':
 
 					$twig = new TwigService();
-					if($twig->clearCache()) {
+					if ( $twig->clearCache() ) {
 						new AdminNotice( __( 'Cache cleared', 'kudos-donations' ) );
 					}
 					break;
@@ -411,7 +427,11 @@ class Admin {
 					$records = $mapper->delete_all();
 					if ( $records ) {
 						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( _n( 'Deleted %s transaction', 'Deleted %s transactions', $records, 'kudos-donations' ), $records ) );
+						new AdminNotice( sprintf( _n( 'Deleted %s transaction',
+							'Deleted %s transactions',
+							$records,
+							'kudos-donations' ),
+							$records ) );
 					}
 
 					break;
@@ -422,7 +442,11 @@ class Admin {
 					$records = $mapper->delete_all();
 					if ( $records ) {
 						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( _n( 'Deleted %s donor', 'Deleted %s donors', $records, 'kudos-donations' ), $records ) );
+						new AdminNotice( sprintf( _n( 'Deleted %s donor',
+							'Deleted %s donors',
+							$records,
+							'kudos-donations' ),
+							$records ) );
 					}
 					break;
 
@@ -432,14 +456,19 @@ class Admin {
 					$records = $mapper->delete_all();
 					if ( $records ) {
 						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( _n( 'Deleted %s subscription', 'Deleted %s subscriptions', $records, 'kudos-donations' ), $records ) );
+						new AdminNotice( sprintf( _n( 'Deleted %s subscription',
+							'Deleted %s subscriptions',
+							$records,
+							'kudos-donations' ),
+							$records ) );
 					}
 					break;
 
 				case 'kudos_cancel_subscription':
 
 					$mollie       = MollieService::factory();
-					$subscription = $mollie->cancel_subscription( $_REQUEST['subscriptionId'], $_REQUEST['customerId'] );
+					$subscription = $mollie->cancel_subscription( $_REQUEST['subscriptionId'],
+						$_REQUEST['customerId'] );
 					if ( $subscription ) {
 						new AdminNotice( __( 'Subscription cancelled', 'kudos-donations' ) );
 					}
