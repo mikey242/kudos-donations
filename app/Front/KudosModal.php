@@ -26,7 +26,7 @@ class KudosModal {
 	public function __construct() {
 
 		$this->logger = new LoggerService();
-		$this->twig   = new TwigService();
+		$this->twig   = TwigService::factory();
 
 	}
 

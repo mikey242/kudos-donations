@@ -114,7 +114,7 @@ class MailerService extends AbstractService {
 			$renderArray['cancel_url'] = $cancel_url;
 		}
 
-		$twig = new TwigService();
+		$twig = TwigService::factory();
 		$body = $twig->render( 'emails/receipt.html.twig', $renderArray );
 
 		$this->send( $transaction->get_donor()->email,
@@ -204,7 +204,7 @@ class MailerService extends AbstractService {
 	 */
 	public function send_message( string $email, string $header, string $message ) {
 
-		$twig = new TwigService();
+		$twig = TwigService::factory();
 		$body = $twig->render( 'emails/message.html.twig',
 			[
 				'header'       => $header,

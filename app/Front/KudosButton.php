@@ -57,7 +57,7 @@ class KudosButton {
 	 */
 	public function __construct( array $atts ) {
 
-		$this->twig           = new TwigService();
+		$this->twig           = TwigService::factory();
 		$this->logger         = new LoggerService();
 		$this->title          = $atts['modal_title'];
 		$this->text           = $atts['welcome_text'];

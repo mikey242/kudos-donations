@@ -128,7 +128,7 @@ class Admin {
 			] );
 
 		// Test Email
-		$mailer = new MailerService();
+		$mailer = MailerService::factory();
 		register_rest_route( 'kudos/v1',
 			'email/test',
 			[
@@ -415,7 +415,7 @@ class Admin {
 
 				case 'kudos_clear_cache':
 
-					$twig = new TwigService();
+					$twig = TwigService::factory();
 					if ( $twig->clearCache() ) {
 						new AdminNotice( __( 'Cache cleared', 'kudos-donations' ) );
 					}
