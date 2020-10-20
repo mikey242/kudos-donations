@@ -81,7 +81,7 @@ class TransactionEntity extends AbstractEntity {
 	/**
 	 * Gets donor associated with transaction
 	 *
-	 * @return EntityInterface|null
+	 * @return EntityInterface|DonorEntity null
 	 * @since   2.0.0
 	 */
 	public function get_donor() {
