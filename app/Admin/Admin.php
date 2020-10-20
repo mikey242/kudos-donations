@@ -498,8 +498,11 @@ class Admin {
 	 */
 	public function nonce_fail( $nonce, $action ) {
 
-		$logger = new LoggerService();
-		$logger->warning( 'Nonce verification failed', [ 'nonce' => $nonce, 'action' => $action ] );
+		// Check if action is a kudos action then log if true
+		if(substr($action, 0, 6) === "kudos_" ) {
+			$logger = new LoggerService();
+			$logger->warning( 'Nonce verification failed', [ 'nonce' => $nonce, 'action' => $action ] );
+		}
 
 	}
 }
