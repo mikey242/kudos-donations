@@ -208,6 +208,10 @@ class DonorsTable extends WP_List_Table {
 			$item['country'],
 		];
 
+		$address = array_map(function ($item) {
+			return stripslashes($item);
+		}, $address);
+
 		return implode( '<br/>', $address );
 	}
 
