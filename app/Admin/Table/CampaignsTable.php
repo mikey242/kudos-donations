@@ -82,7 +82,7 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$label = $campaign['label'];
 
-			$transactions = $mapper->get_all_by( [ 'campaign_label' => $label ], OBJECT );
+			$transactions = $mapper->get_all_by( [ 'campaign_label' => $label ] );
 
 			$campaigns[ $key ]['transactions'] = 0;
 			$campaigns[ $key ]['total']        = 0;

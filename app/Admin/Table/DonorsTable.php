@@ -222,7 +222,7 @@ class DonorsTable extends WP_List_Table {
 	function column_donations( array $item ) {
 
 		$mapper       = new MapperService( TransactionEntity::class );
-		$transactions = $mapper->get_all_by( [ 'customer_id' => $item['customer_id'] ], OBJECT );
+		$transactions = $mapper->get_all_by( [ 'customer_id' => $item['customer_id'] ] );
 
 		if ( $transactions ) {
 			$number = count( $transactions );

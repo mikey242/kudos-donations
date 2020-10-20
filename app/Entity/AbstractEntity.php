@@ -4,7 +4,7 @@ namespace Kudos\Entity;
 
 use DateTime;
 
-abstract class AbstractEntity {
+abstract class AbstractEntity implements EntityInterface {
 
 	/**
 	 * @var int
@@ -37,11 +37,11 @@ abstract class AbstractEntity {
 	/**
 	 * Set class properties based on array values
 	 *
-	 * @param $atts
+	 * @param array $atts
 	 *
 	 * @since   2.0.0
 	 */
-	public function set_fields( $atts ) {
+	public function set_fields( array $atts ) {
 
 		foreach ( $atts as $property => $value ) {
 			if ( property_exists( $this, $property ) ) {
@@ -54,14 +54,15 @@ abstract class AbstractEntity {
 	/**
 	 * Returns the table name associated with Entity
 	 *
+	 * @param bool $prefix Whether to return the prefix or not
 	 * @return string
 	 * @since   2.0.0
 	 */
-	public static function get_table_name() {
+	public static function get_table_name($prefix = true) {
 
 		global $wpdb;
 
-		return $wpdb->prefix . static::TABLE;
+		return $prefix ? $wpdb->prefix . static::TABLE : static::TABLE;
 
 	}
 

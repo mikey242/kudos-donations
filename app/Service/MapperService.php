@@ -3,9 +3,13 @@
 namespace Kudos\Service;
 
 use Kudos\Entity\AbstractEntity;
+use Kudos\Entity\EntityInterface;
+use Kudos\Exceptions\MapperException;
+use ReflectionClass;
+use ReflectionException;
 use wpdb;
 
-class MapperService {
+class MapperService extends AbstractService {
 
 	/**
 	 * @var wpdb
@@ -15,37 +19,61 @@ class MapperService {
 	 * @var AbstractEntity
 	 */
 	protected $repository;
-	/**
-	 * @var LoggerService
-	 */
-	private $logger;
 
 	/**
 	 * Entity object constructor.
 	 *
-	 * @param AbstractEntity|string|null $repository
+	 * @param EntityInterface|null $repository
 	 *
 	 * @since   2.0.0
 	 */
 	public function __construct( $repository = null ) {
 
+		parent::__construct();
+
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$this->set_repository( $repository );
-		$this->logger = new LoggerService();
+		if ( null !== $repository ) {
+			$this->set_repository( $repository );
+		}
 
 	}
 
 	/**
 	 * Specify the repository to use
 	 *
-	 * @param AbstractEntity|string $class
-	 *
+	 * @param string $class
 	 * @since 2.0.0
 	 */
-	public function set_repository( $class ) {
+	public function set_repository( string $class ) {
 
-		$this->repository = $class;
+		try {
+			$reflection = new ReflectionClass( $class );
+			if($reflection->implementsInterface('Kudos\Entity\EntityInterface')) {
+				$this->repository = $class;
+			} else {
+				throw new MapperException('Repository must implement Kudos\Entity\EntityInterface', 0, $class);
+			}
+		} catch ( ReflectionException | MapperException $e ) {
+			$this->logger->error("Could not set repository", ["message" => $e->getMessage()]);
+		}
+
+	}
+
+	/**
+	 * Gets the current repository
+	 *
+	 * @return AbstractEntity
+	 * @throws MapperException
+	 * @since 2.0.5
+	 */
+	public function get_repository() {
+
+		if ( NULL === $this->repository ) {
+			throw new MapperException( "No repository specified" );
+		}
+
+		return $this->repository;
 
 	}
 
@@ -53,11 +81,12 @@ class MapperService {
 	 * Commit Entity to database
 	 *
 	 * @param AbstractEntity $entity
+	 * @param bool $ignore_empty
 	 *
 	 * @return bool|false|int
 	 * @since   2.0.0
 	 */
-	public function save( $entity ) {
+	public function save( AbstractEntity $entity, $ignore_empty = true ) {
 
 		$wpdb                 = $this->wpdb;
 		$table                = $entity::get_table_name();
@@ -69,7 +98,7 @@ class MapperService {
 
 			$result = $wpdb->update(
 				$table,
-				array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ),
+				$ignore_empty ? array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ) : $entity->to_array(),
 				[ 'id' => $entity->id ]
 			);
 
@@ -90,7 +119,7 @@ class MapperService {
 		$entity->id = $wpdb->insert_id;
 		$this->logger->debug( 'Creating entity.', [ $entity ] );
 
-		// If successful log and do action
+		// If successful do action
 		if ( $result ) {
 			do_action( $entity::TABLE . '_added', 'id', $entity->id );
 		}
@@ -106,10 +135,6 @@ class MapperService {
 	 * @since 2.0.0
 	 */
 	public function delete_all() {
-
-		if ( null === $this->repository ) {
-			return null;
-		}
 
 		$records = $this->get_all_by();
 
@@ -127,41 +152,74 @@ class MapperService {
 	}
 
 	/**
+	 * Get row by $query_fields array
+	 *
+	 * @param array $query_fields Key-value pair of fields to query
+	 *                            e.g. ['email' => 'john.smith@gmail.com']
+	 * @param string $operator Operator to use to join array items. Can be AND or OR.
+	 *
+	 * @return EntityInterface|null
+	 * @since   2.0.0
+	 */
+	public function get_one_by( array $query_fields, string $operator = 'AND' ) {
+
+		try {
+			$where = $this->array_to_where( $query_fields, $operator );
+			$table = $this->get_table_name();
+			$result = $this->wpdb->get_row( "
+			SELECT * FROM $table
+			$where
+		",
+				ARRAY_A );
+
+			if ( $result ) {
+				// Return result as Entity specified in repository
+				return new $this->repository( $result );
+			}
+
+			throw new MapperException("No result found for query", 0, $this->repository);
+
+		} catch ( MapperException $e ) {
+			$this->logger->warning( 'Failed to get record.', [ "message" => $e->getMessage(), "query_fields" => $query_fields ] );
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get all results from table
 	 *
-	 * @param array|null $query Array of columns and their values. The array is converted to
+	 * @param array|null $query_fields Array of columns and their values. The array is converted to
 	 *                          a MYSQL WHERE statement as "key = value". If no value is
 	 *                          specified it uses "key IS NOT NULL". If array is empty it
 	 *                          returns all values in table.
-	 * @param string $format Specifies the return format. Defaults to OBJECT but can also
-	 *                          be ARRAY_A.
 	 *
 	 * @return array|object|null
 	 * @since   2.0.0
 	 */
-	public function get_all_by( $query = null, $format = OBJECT ) {
+	public function get_all_by( $query_fields = null ) {
 
-		if ( null === $this->repository ) {
-			return null;
-		}
+		try {
+			$wpdb         = $this->wpdb;
+			$table        = $this->get_table_name();
+			$query_string = $query_fields ? $this->array_to_where( $query_fields ) : null;
 
-		$wpdb         = $this->wpdb;
-		$table        = $this->get_table_name();
-		$query_string = $query ? $this->array_to_where( $query ) : null;
-
-		$results = $wpdb->get_results( "
+			$results = $wpdb->get_results( "
 			SELECT * FROM $table
 			$query_string
 		",
-			$format );
+				ARRAY_A );
 
-		if ( $results ) {
-			if ( $format === 'OBJECT' ) {
+			if ( NULL !== $results ) {
 				return $this->map_to_class( $results );
 			}
 
-			return $results;
+			throw new MapperException("No results found for query", 0, $this->repository);
+
+		} catch ( MapperException $e ) {
+			$this->logger->warning( 'Failed to get records.', [ "message" => $e->getMessage(), "query_fields" => $query_fields ] );
 		}
+
 
 		return null;
 	}
@@ -169,22 +227,21 @@ class MapperService {
 	/**
 	 * Returns current repository table name
 	 *
+	 * @param bool $prefix Whether to return the prefix or not
 	 * @return string|false
+	 * @throws MapperException
 	 * @since   2.0.0
 	 */
-	public function get_table_name() {
+	public function get_table_name($prefix = true) {
 
-		if ( null === $this->repository ) {
-			return false;
-		}
+		return $this->get_repository()::get_table_name($prefix);
 
-		return $this->repository::get_table_name();
 	}
 
 	/**
 	 * Converts an associative array into a query string
 	 *
-	 * @param array $query_fields
+	 * @param array $query_fields Array of key (column) and value pairs
 	 * @param string $operator Accepts AND or OR
 	 *
 	 * @return string
@@ -192,42 +249,33 @@ class MapperService {
 	 */
 	private function array_to_where( array $query_fields, string $operator = 'AND' ) {
 
-		$wpdb  = $this->wpdb;
-		$array = [];
-		foreach ( $query_fields as $key => $field ) {
-			if ( empty( $key ) ) {
-				array_push( $array,
-					"$field IS NOT NULL"
-				);
+		array_walk($query_fields, function (&$field, $key) {
+			if(empty($key)) {
+				$field = sprintf("%s IS NOT NULL", esc_sql($field));
 			} else {
-				array_push( $array,
-					$wpdb->prepare(
-						"$key = %s",
-						$field
-					) );
+				$field = sprintf("%s = '%s'", $key, esc_sql($field));
 			}
-		}
+		});
 
-		return 'WHERE ' . implode( ' ' . $operator . ' ', $array );
+		return 'WHERE ' . implode( ' ' . $operator . ' ', $query_fields );
 
 	}
 
 	/**
-	 * Maps array of standard objects to Entity class
+	 * Maps array of current repository objects to instance
+	 * of current repository
 	 *
 	 * @param $results
 	 *
 	 * @return array
 	 * @since   2.0.0
 	 */
-	private function map_to_class( $results ) {
+	private function map_to_class( array $results ) {
 
-		$array = [];
-		foreach ( $results as $result ) {
-			$array[] = new $this->repository( $result );
-		}
+		return array_map( function ( $result ) {
+			return new $this->repository( $result );
+		}, $results );
 
-		return $array;
 	}
 
 	/**
@@ -243,52 +291,22 @@ class MapperService {
 
 		$wpdb = $this->wpdb;
 
-		$deleted = $wpdb->delete(
-			$this->get_table_name(),
-			[ $column => $value ]
-		);
+		try {
+			$deleted = $wpdb->delete(
+				$this->get_table_name(),
+				[ $column => $value ]
+			);
+			if ( $deleted ) {
+				do_action( $this->get_table_name(false) . '_delete', $column, $value );
+			}
 
-		if ( $deleted ) {
-			do_action( $this->repository::TABLE . '_delete', $column, $value );
+			return $deleted;
+		} catch ( MapperException $e ) {
+			$this->logger->error( 'Unable to delete record.', [ $e->getMessage() ] );
 		}
 
-		return $deleted;
+		return false;
 
-	}
-
-	/**
-	 * Get row by $query_fields array
-	 *
-	 * @param array $query_fields Key-value pair of fields to query
-	 *                            e.g. ['email' => 'john.smith@gmail.com']
-	 * @param string $operator Operator to use to join array items. Can be AND or OR.
-	 *
-	 * @return AbstractEntity|null
-	 * @since   2.0.0
-	 */
-	public function get_one_by( array $query_fields, string $operator = 'AND' ) {
-
-		if ( null === $this->repository ) {
-			return null;
-		}
-
-		$wpdb  = $this->wpdb;
-		$where = $this->array_to_where( $query_fields, $operator );
-		$table = $this->repository::get_table_name();
-
-		$result = $wpdb->get_row( "
-			SELECT * FROM $table
-			$where
-		" );
-
-		if ( $result ) {
-			// Return result as Entity specified in repository
-			return new $this->repository( $result );
-		}
-
-		$this->logger->warning( "Could not find records in " . $this->repository::get_table_name(), [ 'query' => $where ] );
-
-		return null;
 	}
 
 	/**

@@ -63,7 +63,7 @@ class SubscriptionEntity extends AbstractEntity {
 	/**
 	 * Gets donor associated with subscription
 	 *
-	 * @return DonorEntity|AbstractEntity|null
+	 * @return EntityInterface|null
 	 * @since   2.0.0
 	 */
 	public function get_donor() {

@@ -257,6 +257,7 @@ class MollieService extends AbstractService {
 
 			if ( $subscription->status !== 'active' ) {
 				$this->logger->debug( "Subscription already cancelled.", [ 'subscription_id' => $subscriptionId ] );
+
 				return false;
 			}
 

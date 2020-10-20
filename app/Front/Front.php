@@ -505,7 +505,7 @@ class Front {
 			/** @var TransactionEntity $transaction */
 			$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
 
-			if ( null === $transaction ) {
+			if ( NULL === $transaction ) {
 				return false;
 			}
 
