@@ -54,8 +54,9 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 == Changelog ==
 
 = 2.0.5 =
-* Added more Dutch translations
 * Fixed error deleting donors
+* Improve debug logging
+* Added more Dutch translations
 * Add more hooks
 
 = 2.0.4 =
