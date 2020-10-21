@@ -4,7 +4,6 @@ namespace Service;
 
 use Kudos\Entity\TransactionEntity;
 use Kudos\Exceptions\MapperException;
-use Kudos\KudosDonations;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
 use ReflectionException;
