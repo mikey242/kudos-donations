@@ -376,7 +376,7 @@ class TransactionsTable extends WP_List_Table {
 	function column_campaign_label( array $item ) {
 
 		return sprintf( '<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-transactions&s=%s' ), urlencode( $item['campaign_label'] ) ),
+			sprintf( admin_url( 'admin.php?page=kudos-campaigns&s=%s' ), urlencode( $item['campaign_label'] ) ),
 			strtoupper( $item['campaign_label'] )
 		);
 
