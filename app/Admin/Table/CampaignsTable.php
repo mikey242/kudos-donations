@@ -72,7 +72,7 @@ class CampaignsTable extends WP_List_Table {
 
 		// Add search query if exist
 		if ( ! empty( $_REQUEST['s'] ) ) {
-			$search    = esc_sql( $_REQUEST['s'] );
+			$search    = strtolower(esc_sql( $_REQUEST['s'] ));
 			$campaigns = array_filter( $campaigns,
 				function ( $value ) use ( $search ) {
 					return in_array( $search, $value );
