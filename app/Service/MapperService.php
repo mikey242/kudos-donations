@@ -34,7 +34,11 @@ class MapperService extends AbstractService {
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		if ( null !== $repository ) {
-			$this->set_repository( $repository );
+			try {
+				$this->set_repository( $repository );
+			} catch ( ReflectionException | MapperException $e ) {
+				$this->logger->error( "Could not set repository", [ "message" => $e->getMessage() ] );
+			}
 		}
 
 	}
@@ -43,19 +47,18 @@ class MapperService extends AbstractService {
 	 * Specify the repository to use
 	 *
 	 * @param string $class
+	 *
+	 * @throws MapperException
+	 * @throws ReflectionException
 	 * @since 2.0.0
 	 */
 	public function set_repository( string $class ) {
 
-		try {
-			$reflection = new ReflectionClass( $class );
-			if($reflection->implementsInterface('Kudos\Entity\EntityInterface')) {
-				$this->repository = $class;
-			} else {
-				throw new MapperException('Repository must implement Kudos\Entity\EntityInterface', 0, $class);
-			}
-		} catch ( ReflectionException | MapperException $e ) {
-			$this->logger->error("Could not set repository", ["message" => $e->getMessage()]);
+		$reflection = new ReflectionClass( $class );
+		if ( $reflection->implementsInterface( 'Kudos\Entity\EntityInterface' ) ) {
+			$this->repository = $class;
+		} else {
+			throw new MapperException( 'Repository must implement Kudos\Entity\EntityInterface', 0, $class );
 		}
 
 	}
@@ -64,14 +67,18 @@ class MapperService extends AbstractService {
 	 * Gets the current repository
 	 *
 	 * @return AbstractEntity
-	 * @throws MapperException
 	 * @since 2.0.5
 	 */
 	public function get_repository() {
 
-		if ( NULL === $this->repository ) {
-			throw new MapperException( "No repository specified" );
+		try {
+			if ( null === $this->repository ) {
+				throw new MapperException( "No repository specified" );
+			}
+		} catch ( MapperException $e ) {
+			$this->logger->warning( 'Failed to get repository.', [ "message" => $e->getMessage() ] );
 		}
+
 
 		return $this->repository;
 
@@ -81,39 +88,40 @@ class MapperService extends AbstractService {
 	 * Commit Entity to database
 	 *
 	 * @param AbstractEntity $entity
-	 * @param bool $ignore_empty
 	 *
-	 * @return bool|false|int
+	 * @return false|int
 	 * @since   2.0.0
 	 */
-	public function save( AbstractEntity $entity, $ignore_empty = true ) {
+	public function save( AbstractEntity $entity ) {
 
-		$wpdb                 = $this->wpdb;
-		$table                = $entity::get_table_name();
 		$entity->last_updated = current_time( 'mysql' );
 
 		// If we have an id, then update row
 		if ( $entity->id ) {
-			$this->logger->debug( 'Updating entity.', [ $entity ] );
-
-			$result = $wpdb->update(
-				$table,
-				$ignore_empty ? array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ) : $entity->to_array(),
-				[ 'id' => $entity->id ]
-			);
-
-			if ( $result ) {
-				do_action( $entity::TABLE . '_updated', 'id', $entity->id );
-			}
-
-			return $result;
+			return $this->update_record( $entity->id, $entity );
 		}
+
+		return $this->add_record( $entity );
+
+	}
+
+	/**
+	 * Adds new record to the database
+	 *
+	 * @param $entity
+	 *
+	 * @return bool|int
+	 */
+	private function add_record( $entity ) {
+
+		$wpdb       = $this->wpdb;
+		$table_name = $entity::get_table_name();
 
 		// Otherwise insert new row
 		$entity->created = current_time( 'mysql' );
 
 		$result     = $wpdb->insert(
-			$table,
+			$table_name,
 			array_filter( $entity->to_array(), [ $this, 'remove_empty' ] )
 		);
 		$entity->id = $wpdb->insert_id;
@@ -121,11 +129,39 @@ class MapperService extends AbstractService {
 
 		// If successful do action
 		if ( $result ) {
-			do_action( $entity::TABLE . '_added', 'id', $entity->id );
+			do_action( $entity::get_table_name( false ) . '_added', 'id', $entity->id );
 		}
 
 		return $result;
 
+	}
+
+	/**
+	 * Updates existing record
+	 *
+	 * @param $id // The id of the entity
+	 * @param $entity // An instance of EntityInterface
+	 *
+	 * @return bool|int
+	 */
+	private function update_record( $id, $entity ) {
+
+		$wpdb       = $this->wpdb;
+		$table_name = $entity::get_table_name();
+
+		$this->logger->debug( 'Updating entity.', [ $entity ] );
+
+		$result = $wpdb->update(
+			$table_name,
+			array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ),
+			[ 'id' => $id ]
+		);
+
+		if ( $result ) {
+			do_action( $entity::get_table_name( false ) . '_updated', 'id', $id );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -164,8 +200,8 @@ class MapperService extends AbstractService {
 	public function get_one_by( array $query_fields, string $operator = 'AND' ) {
 
 		try {
-			$where = $this->array_to_where( $query_fields, $operator );
-			$table = $this->get_table_name();
+			$where  = $this->array_to_where( $query_fields, $operator );
+			$table  = $this->get_table_name();
 			$result = $this->wpdb->get_row( "
 			SELECT * FROM $table
 			$where
@@ -177,10 +213,11 @@ class MapperService extends AbstractService {
 				return new $this->repository( $result );
 			}
 
-			throw new MapperException("No result found for query", 0, $this->repository);
+			throw new MapperException( "No result found for query", 0, $this->repository );
 
 		} catch ( MapperException $e ) {
-			$this->logger->warning( 'Failed to get record.', [ "message" => $e->getMessage(), "query_fields" => $query_fields ] );
+			$this->logger->warning( 'Failed to get record.',
+				[ "message" => $e->getMessage(), "query_fields" => $query_fields ] );
 		}
 
 		return null;
@@ -190,9 +227,9 @@ class MapperService extends AbstractService {
 	 * Get all results from table
 	 *
 	 * @param array|null $query_fields Array of columns and their values. The array is converted to
-	 *                          a MYSQL WHERE statement as "key = value". If no value is
-	 *                          specified it uses "key IS NOT NULL". If array is empty it
-	 *                          returns all values in table.
+	 *                                 a MYSQL WHERE statement as "key = value". If no value is
+	 *                                 specified it uses "key IS NOT NULL". If array is empty it
+	 *                                 returns all values in table.
 	 *
 	 * @return array|object|null
 	 * @since   2.0.0
@@ -210,14 +247,15 @@ class MapperService extends AbstractService {
 		",
 				ARRAY_A );
 
-			if ( NULL !== $results ) {
+			if ( !empty($results) ) {
 				return $this->map_to_class( $results );
 			}
 
-			throw new MapperException("No results found for query", 0, $this->repository);
+			throw new MapperException( "No results found for query", 0, $this->repository );
 
 		} catch ( MapperException $e ) {
-			$this->logger->warning( 'Failed to get records.', [ "message" => $e->getMessage(), "query_fields" => $query_fields ] );
+			$this->logger->warning( 'Failed to get records.',
+				[ "message" => $e->getMessage(), "query_fields" => $query_fields ] );
 		}
 
 
@@ -228,13 +266,13 @@ class MapperService extends AbstractService {
 	 * Returns current repository table name
 	 *
 	 * @param bool $prefix Whether to return the prefix or not
+	 *
 	 * @return string|false
-	 * @throws MapperException
 	 * @since   2.0.0
 	 */
-	public function get_table_name($prefix = true) {
+	public function get_table_name( $prefix = true ) {
 
-		return $this->get_repository()::get_table_name($prefix);
+		return $this->get_repository()::get_table_name( $prefix );
 
 	}
 
@@ -249,13 +287,14 @@ class MapperService extends AbstractService {
 	 */
 	private function array_to_where( array $query_fields, string $operator = 'AND' ) {
 
-		array_walk($query_fields, function (&$field, $key) {
-			if(empty($key)) {
-				$field = sprintf("%s IS NOT NULL", esc_sql($field));
-			} else {
-				$field = sprintf("%s = '%s'", $key, esc_sql($field));
-			}
-		});
+		array_walk( $query_fields,
+			function ( &$field, $key ) {
+				if ( empty( $key ) ) {
+					$field = sprintf( "%s IS NOT NULL", esc_sql( $field ) );
+				} else {
+					$field = sprintf( "%s = '%s'", $key, esc_sql( $field ) );
+				}
+			} );
 
 		return 'WHERE ' . implode( ' ' . $operator . ' ', $query_fields );
 
@@ -274,7 +313,8 @@ class MapperService extends AbstractService {
 
 		return array_map( function ( $result ) {
 			return new $this->repository( $result );
-		}, $results );
+		},
+			$results );
 
 	}
 
@@ -291,21 +331,16 @@ class MapperService extends AbstractService {
 
 		$wpdb = $this->wpdb;
 
-		try {
 			$deleted = $wpdb->delete(
 				$this->get_table_name(),
 				[ $column => $value ]
 			);
+
 			if ( $deleted ) {
-				do_action( $this->get_table_name(false) . '_delete', $column, $value );
+				do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 			}
 
-			return $deleted;
-		} catch ( MapperException $e ) {
-			$this->logger->error( 'Unable to delete record.', [ $e->getMessage() ] );
-		}
-
-		return false;
+		return $deleted;
 
 	}
 
