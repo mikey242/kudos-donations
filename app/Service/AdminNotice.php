@@ -32,6 +32,7 @@ class AdminNotice {
 	 * @param string $notice
 	 * @param string|null $extra
 	 * @param bool $isDismissible
+	 * @since 2.0.0
 	 */
 	function __construct( string $notice, string $type = 'success', $extra = null, $isDismissible = true ) {
 
@@ -46,6 +47,8 @@ class AdminNotice {
 
 	/**
 	 * Outputs the notice
+	 *
+	 * @since 2.0.0
 	 */
 	function render() {
 
