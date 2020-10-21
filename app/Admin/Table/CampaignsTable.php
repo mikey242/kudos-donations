@@ -88,6 +88,7 @@ class CampaignsTable extends WP_List_Table {
 			$campaigns[ $key ]['total']        = 0;
 			if ( $transactions ) {
 				$total = 0;
+				/** @var TransactionEntity $transaction */
 				foreach ( $transactions as $transaction ) {
 					if ( $transaction->status === 'paid' ) {
 						$refunds = $transaction->get_refund();
@@ -98,9 +99,10 @@ class CampaignsTable extends WP_List_Table {
 						}
 					}
 				}
-				$campaigns[ $key ]['transactions'] = count( $transactions );
-				$campaigns[ $key ]['currency']     = $transactions[0]->currency;
-				$campaigns[ $key ]['total']        = $total;
+				$campaigns[ $key ]['last_donation'] = end($transactions)->created;
+				$campaigns[ $key ]['transactions']  = count( $transactions );
+				$campaigns[ $key ]['currency']      = $transactions[0]->currency;
+				$campaigns[ $key ]['total']         = $total;
 			}
 		}
 
@@ -119,6 +121,7 @@ class CampaignsTable extends WP_List_Table {
 			'label'        => __( 'Label', 'kudos-donations' ),
 			'transactions' => __( 'Transactions', 'kudos-donations' ),
 			'total'        => __( 'Total', 'kudos-donations' ),
+			'last_donation' => __('Last Donation', 'kudos-donations')
 		];
 	}
 
@@ -147,6 +150,14 @@ class CampaignsTable extends WP_List_Table {
 				'date',
 				false,
 			],
+			'total' => [
+				'total',
+				false
+			],
+			'last_donation' => [
+				'last_donation',
+				false
+			]
 		];
 	}
 
@@ -186,9 +197,9 @@ class CampaignsTable extends WP_List_Table {
 				__( 'Delete', 'kudos-donations' ) ),
 		];
 
-		return __( 'Added',
-				'kudos-donations' ) . '<br/>' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-				strtotime( $item['date'] ) ) . $this->row_actions( $actions );
+		return __( 'Added', 'kudos-donations' ) . '<br/>' .
+                date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['date'] ) ) . '<br/>' .
+		        $this->row_actions( $actions );
 	}
 
 	/**
@@ -233,6 +244,19 @@ class CampaignsTable extends WP_List_Table {
 		$total    = $item['total'];
 
 		return $currency . ' ' . number_format_i18n( $total, 2 );
+	}
+
+	/**
+	 * Shows the date of the last translation
+	 *
+	 * @param array $item
+	 * @return string
+	 * @since 2.0.5
+	 */
+	function column_last_donation( array $item ) {
+
+		return date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['last_donation'] ) );
+
 	}
 
 	/**
