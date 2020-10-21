@@ -13,7 +13,7 @@ class DonorEntity extends AbstractEntity {
 	 * Table name without prefix
 	 * @var string
 	 */
-	public const TABLE = "kudos_donors";
+	protected const TABLE = "kudos_donors";
 	/**
 	 * @var string
 	 */

@@ -25,7 +25,7 @@ class DonorsTable extends WP_List_Table {
 	public function __construct() {
 
 		$this->mapper = new MapperService( DonorEntity::class );
-		$this->table  = $this->mapper->get_table_name();
+		$this->table  = DonorEntity::get_table_name();
 
 		$this->export_columns = [
 			'name'     => __( 'Name', 'kudos-donations' ),

@@ -53,7 +53,7 @@ trait TableTrait {
 			);
 		}
 
-		$table = $wpdb->prefix . $this->table;
+		$table = $this->table;
 		$query = "SELECT * FROM $table
 				  $search_custom_vars";
 

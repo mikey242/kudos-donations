@@ -11,7 +11,7 @@ class TransactionEntity extends AbstractEntity {
 	 * Table name without prefix
 	 * @var string
 	 */
-	public const TABLE = "kudos_transactions";
+	protected const TABLE = "kudos_transactions";
 	/**
 	 * @var int
 	 */

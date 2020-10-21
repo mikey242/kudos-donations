@@ -26,7 +26,7 @@ class SubscriptionsTable extends WP_List_Table {
 	public function __construct() {
 
 		$this->mapper = new MapperService( SubscriptionEntity::class );
-		$this->table  = SubscriptionEntity::TABLE;
+		$this->table  = SubscriptionEntity::get_table_name();
 
 		$this->export_columns = [
 			'created'   => __( 'Date', 'kudos-donations' ),
@@ -70,7 +70,7 @@ class SubscriptionsTable extends WP_List_Table {
 	public function fetch_table_data() {
 
 		global $wpdb;
-		$table              = $wpdb->prefix . $this->table;
+		$table              = $this->table;
 		$join_table         = DonorEntity::get_table_name();
 		$search_custom_vars = null;
 		$frequency          = ( ! empty( $_GET['frequency'] ) ? sanitize_text_field( $_GET['frequency'] ) : '' );

@@ -11,7 +11,7 @@ class SubscriptionEntity extends AbstractEntity {
 	 * Table name without prefix
 	 * @var string
 	 */
-	public const TABLE = "kudos_subscriptions";
+	protected const TABLE = "kudos_subscriptions";
 	/**
 	 * @var int
 	 */

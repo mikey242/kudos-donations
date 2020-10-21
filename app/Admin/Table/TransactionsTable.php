@@ -25,7 +25,7 @@ class TransactionsTable extends WP_List_Table {
 	public function __construct() {
 
 		$this->mapper = new MapperService( TransactionEntity::class );
-		$this->table  = TransactionEntity::TABLE;
+		$this->table  = TransactionEntity::get_table_name();
 
 		$this->export_columns = [
 			'created'       => __( 'Transaction created', 'kudos-donations' ),
@@ -73,7 +73,7 @@ class TransactionsTable extends WP_List_Table {
 		global $wpdb;
 
 		$query      = [];
-		$table      = $wpdb->prefix . $this->table;
+		$table      = $this->table;
 		$join_table = DonorEntity::get_table_name();
 
 		$status = ( ! empty( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '' );
@@ -206,7 +206,7 @@ class TransactionsTable extends WP_List_Table {
 
 		$order_id = $item['order_id'];
 
-		$actions = apply_filters( TransactionEntity::TABLE . "_actions",
+		$actions = apply_filters( TransactionEntity::get_table_name(false) . "_actions",
 			[
 				'delete' => sprintf( '<a href="?page=%s&action=%s&order_id=%s&_wpnonce=%s">%s</a>',
 					esc_attr( $_REQUEST['page'] ),
