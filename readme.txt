@@ -55,6 +55,7 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 = 2.0.5 =
 * Fixed error deleting donors
+* Fix slashes appearing in address
 * Improve debug logging
 * Added more Dutch translations
 * Add more hooks
