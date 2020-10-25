@@ -68,13 +68,14 @@ class MailerService extends AbstractService {
 	 *
 	 * @param TransactionEntity $transaction
 	 *
+	 * @return bool|void
 	 * @since    1.1.0
 	 */
 	public function send_receipt( TransactionEntity $transaction ) {
 
 		// Check if setting enabled
 		if ( ! Settings::get_setting( 'email_receipt_enable' ) ) {
-			return;
+			return false;
 		}
 
 		$bcc = Settings::get_setting( 'email_bcc' );
@@ -117,7 +118,7 @@ class MailerService extends AbstractService {
 		$twig = TwigService::factory();
 		$body = $twig->render( 'emails/receipt.html.twig', $renderArray );
 
-		$this->send( $transaction->get_donor()->email,
+		return $this->send( $transaction->get_donor()->email,
 			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
 			$headers,
