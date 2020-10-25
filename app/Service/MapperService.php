@@ -87,20 +87,24 @@ class MapperService extends AbstractService {
 	/**
 	 * Commit Entity to database
 	 *
-	 * @param AbstractEntity $entity
+	 * @param EntityInterface $entity
+	 *
+	 * @param bool $ignore_null Whether or not to remove NULL or empty fields from
+	 *                          the save query.
 	 *
 	 * @return false|int
 	 * @since   2.0.0
 	 */
-	public function save( AbstractEntity $entity ) {
+	public function save( EntityInterface $entity, bool $ignore_null = true ) {
 
 		$entity->last_updated = date('Y-m-d H:i:s', time());
 
 		// If we have an id, then update row
 		if ( $entity->id ) {
-			return $this->update_record( $entity->id, $entity );
+			return $this->update_record( $entity, $ignore_null );
 		}
 
+		// Otherwise create new record
 		return $this->add_record( $entity );
 
 	}
@@ -122,7 +126,7 @@ class MapperService extends AbstractService {
 
 		$result     = $wpdb->insert(
 			$table_name,
-			array_filter( $entity->to_array(), [ $this, 'remove_empty' ] )
+			$entity->to_array()
 		);
 		$entity->id = $wpdb->insert_id;
 		$this->logger->debug( 'Creating entity.', [ $entity ] );
@@ -139,21 +143,22 @@ class MapperService extends AbstractService {
 	/**
 	 * Updates existing record
 	 *
-	 * @param $id // The id of the entity
-	 * @param $entity // An instance of EntityInterface
+	 * @param EntityInterface $entity // An instance of EntityInterface
+	 * @param bool $ignore_null
 	 *
 	 * @return bool|int
 	 */
-	private function update_record( $id, $entity ) {
+	private function update_record( EntityInterface $entity, bool $ignore_null ) {
 
 		$wpdb       = $this->wpdb;
 		$table_name = $entity::get_table_name();
+		$id         = $entity->id;
 
 		$this->logger->debug( 'Updating entity.', [ $entity ] );
 
 		$result = $wpdb->update(
 			$table_name,
-			array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ),
+			$ignore_null ? array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ) : $entity->to_array(),
 			[ 'id' => $id ]
 		);
 
@@ -194,30 +199,22 @@ class MapperService extends AbstractService {
 	 *                            e.g. ['email' => 'john.smith@gmail.com']
 	 * @param string $operator Operator to use to join array items. Can be AND or OR.
 	 *
-	 * @return EntityInterface|null
+	 * @return AbstractEntity|null
 	 * @since   2.0.0
 	 */
 	public function get_one_by( array $query_fields, string $operator = 'AND' ) {
 
-		try {
-			$where  = $this->array_to_where( $query_fields, $operator );
-			$table  = $this->get_table_name();
-			$result = $this->wpdb->get_row( "
+
+		$where  = $this->array_to_where( $query_fields, $operator );
+		$table  = $this->get_table_name();
+		$result = $this->wpdb->get_row( "
 			SELECT * FROM $table
-			$where
-		",
-				ARRAY_A );
+			$where",
+			ARRAY_A );
 
-			if ( $result ) {
-				// Return result as Entity specified in repository
-				return new $this->repository( $result );
-			}
-
-			throw new MapperException( "No result found for query", 0, $this->repository );
-
-		} catch ( MapperException $e ) {
-			$this->logger->warning( 'Failed to get record.',
-				[ "message" => $e->getMessage(), "query_fields" => $query_fields ] );
+		if ( $result ) {
+			// Return result as Entity specified in repository
+			return new $this->repository( $result );
 		}
 
 		return null;
@@ -247,7 +244,7 @@ class MapperService extends AbstractService {
 		",
 				ARRAY_A );
 
-			if ( !empty($results) ) {
+			if ( ! empty( $results ) ) {
 				return $this->map_to_class( $results );
 			}
 
@@ -331,14 +328,14 @@ class MapperService extends AbstractService {
 
 		$wpdb = $this->wpdb;
 
-			$deleted = $wpdb->delete(
-				$this->get_table_name(),
-				[ $column => $value ]
-			);
+		$deleted = $wpdb->delete(
+			$this->get_table_name(),
+			[ $column => $value ]
+		);
 
-			if ( $deleted ) {
-				do_action( $this->get_table_name( false ) . '_delete', $column, $value );
-			}
+		if ( $deleted ) {
+			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
+		}
 
 		return $deleted;
 
