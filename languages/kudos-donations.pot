@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Kudos Donations\n"
-"POT-Creation-Date: 2020-10-19 15:16+0200\n"
+"POT-Creation-Date: 2020-10-25 15:40+0100\n"
 "PO-Revision-Date: 2020-10-09 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -24,98 +24,98 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-2: node_modules\n"
 "X-Poedit-SearchPathExcluded-3: src\n"
 
-#: app/Admin/Admin.php:150 app/Admin/Admin.php:151
+#: app/Admin/Admin.php:156 app/Admin/Admin.php:157
 #: dist/js/kudos-button-block.js:1
 msgid "Kudos"
 msgstr ""
 
 #. translators: %s: Plugin name
-#: app/Admin/Admin.php:164
+#: app/Admin/Admin.php:170
 #, php-format
 msgid "%s Transactions"
 msgstr ""
 
-#: app/Admin/Admin.php:165 app/Admin/Table/CampaignsTable.php:118
+#: app/Admin/Admin.php:171 app/Admin/Table/CampaignsTable.php:122
 #: app/Admin/Table/TransactionsTable.php:46
-#: app/Admin/partials/kudos-admin-transactions.php:29
+#: app/Admin/partials/kudos-admin-transactions.php:30
 msgid "Transactions"
 msgstr ""
 
 #. translators: %s: Plugin name
-#: app/Admin/Admin.php:179
+#: app/Admin/Admin.php:185
 #, php-format
 msgid "%s Subscriptions"
 msgstr ""
 
-#: app/Admin/Admin.php:180 app/Admin/Table/SubscriptionsTable.php:45
-#: app/Admin/partials/kudos-admin-subscriptions.php:37
+#: app/Admin/Admin.php:186 app/Admin/Table/SubscriptionsTable.php:45
+#: app/Admin/partials/kudos-admin-subscriptions.php:42
 #: dist/js/kudos-admin-settings.js:1
 msgid "Subscriptions"
 msgstr ""
 
 #. translators: %s: Plugin name
-#: app/Admin/Admin.php:194
+#: app/Admin/Admin.php:200
 #, php-format
 msgid "%s Donors"
 msgstr ""
 
-#: app/Admin/Admin.php:195 app/Admin/Table/DonorsTable.php:42
+#: app/Admin/Admin.php:201 app/Admin/Table/DonorsTable.php:42
 #: app/Admin/partials/kudos-admin-donors.php:29
 msgid "Donors"
 msgstr ""
 
 #. translators: %s: Plugin name
-#: app/Admin/Admin.php:208
+#: app/Admin/Admin.php:214
 #, php-format
 msgid "%s Campaigns"
 msgstr ""
 
-#: app/Admin/Admin.php:209 app/Admin/Table/CampaignsTable.php:40
-#: app/Admin/partials/kudos-admin-campaigns.php:29
+#: app/Admin/Admin.php:215 app/Admin/Table/CampaignsTable.php:40
+#: app/Admin/partials/kudos-admin-campaigns.php:30
 msgid "Campaigns"
 msgstr ""
 
-#: app/Admin/Admin.php:221 dist/js/kudos-admin-settings.js:1
+#: app/Admin/Admin.php:227 dist/js/kudos-admin-settings.js:1
 msgid "Kudos Settings"
 msgstr ""
 
-#: app/Admin/Admin.php:222
+#: app/Admin/Admin.php:228
 msgid "Settings"
 msgstr ""
 
-#: app/Admin/Admin.php:297
+#: app/Admin/Admin.php:303
 msgid "Are you sure you want to delete this transaction?"
 msgstr ""
 
-#: app/Admin/Admin.php:330
+#: app/Admin/Admin.php:336
 msgid "Are you sure you want to cancel this subscription?"
 msgstr ""
 
-#: app/Admin/Admin.php:331
+#: app/Admin/Admin.php:337
 msgid "Are you sure you want to delete this subscription?"
 msgstr ""
 
-#: app/Admin/Admin.php:347
+#: app/Admin/Admin.php:353
 msgid "Are you sure you want to delete this donor?"
 msgstr ""
 
-#: app/Admin/Admin.php:364
+#: app/Admin/Admin.php:370
 msgid ""
 "Are you sure you want to delete this campaign? This will not remove any "
 "transactions"
 msgstr ""
 
-#: app/Admin/Admin.php:398
+#: app/Admin/Admin.php:404
 msgid "Log cleared"
 msgstr ""
 
-#: app/Admin/Admin.php:414
+#: app/Admin/Admin.php:420
 msgid "Cache cleared"
 msgstr ""
 
 #. translators: %s: Number of records.
 #. translators: %s: Number of records
-#: app/Admin/Admin.php:424 app/Admin/partials/kudos-admin-transactions.php:23
+#: app/Admin/Admin.php:430 app/Admin/partials/kudos-admin-transactions.php:23
 #, php-format
 msgid "Deleted %s transaction"
 msgid_plural "Deleted %s transactions"
@@ -124,7 +124,7 @@ msgstr[1] ""
 
 #. translators: %s: Number of records.
 #. translators: %s: Number of records
-#: app/Admin/Admin.php:435 app/Admin/partials/kudos-admin-donors.php:23
+#: app/Admin/Admin.php:445 app/Admin/partials/kudos-admin-donors.php:23
 #, php-format
 msgid "Deleted %s donor"
 msgid_plural "Deleted %s donors"
@@ -132,20 +132,20 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: Number of records.
-#: app/Admin/Admin.php:445 app/Admin/partials/kudos-admin-subscriptions.php:31
+#: app/Admin/Admin.php:459 app/Admin/partials/kudos-admin-subscriptions.php:35
 #, php-format
 msgid "Deleted %s subscription"
 msgid_plural "Deleted %s subscriptions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: app/Admin/Admin.php:454 app/Admin/partials/kudos-admin-subscriptions.php:18
-#: app/Front/Front.php:476
+#: app/Admin/Admin.php:473 app/Admin/partials/kudos-admin-subscriptions.php:18
+#: app/Front/Front.php:452
 msgid "Subscription cancelled"
 msgstr ""
 
 #: app/Admin/Table/CampaignsTable.php:31 app/Admin/Table/DonorsTable.php:31
-#: app/Admin/Table/DonorsTable.php:97 app/Admin/Table/SubscriptionsTable.php:33
+#: app/Admin/Table/DonorsTable.php:98 app/Admin/Table/SubscriptionsTable.php:33
 #: app/Admin/Table/SubscriptionsTable.php:114
 #: app/Admin/Table/TransactionsTable.php:36
 #: app/Admin/Table/TransactionsTable.php:124
@@ -166,7 +166,7 @@ msgstr ""
 msgid "Street"
 msgstr ""
 
-#: app/Admin/Table/CampaignsTable.php:34 app/Admin/Table/CampaignsTable.php:119
+#: app/Admin/Table/CampaignsTable.php:34 app/Admin/Table/CampaignsTable.php:123
 #: templates/emails/receipt.html.twig:35
 msgid "Total"
 msgstr ""
@@ -183,7 +183,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: app/Admin/Table/CampaignsTable.php:116 app/Admin/Table/DonorsTable.php:100
+#: app/Admin/Table/CampaignsTable.php:120 app/Admin/Table/DonorsTable.php:101
 #: app/Admin/Table/SubscriptionsTable.php:32
 #: app/Admin/Table/SubscriptionsTable.php:111
 #: app/Admin/Table/TransactionsTable.php:123
@@ -191,22 +191,26 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: app/Admin/Table/CampaignsTable.php:117
+#: app/Admin/Table/CampaignsTable.php:121
 msgid "Label"
 msgstr ""
 
-#: app/Admin/Table/CampaignsTable.php:184
-#: app/Admin/Table/CampaignsTable.php:242 app/Admin/Table/DonorsTable.php:189
-#: app/Admin/Table/DonorsTable.php:256
+#: app/Admin/Table/CampaignsTable.php:124
+msgid "Last Donation"
+msgstr ""
+
+#: app/Admin/Table/CampaignsTable.php:197
+#: app/Admin/Table/CampaignsTable.php:270 app/Admin/Table/DonorsTable.php:190
+#: app/Admin/Table/DonorsTable.php:261
 #: app/Admin/Table/SubscriptionsTable.php:201
 #: app/Admin/Table/SubscriptionsTable.php:316
 #: app/Admin/Table/TransactionsTable.php:216
-#: app/Admin/Table/TransactionsTable.php:393
+#: app/Admin/Table/TransactionsTable.php:394
 #: libraries/action-scheduler/classes/ActionScheduler_ListTable.php:92
 msgid "Delete"
 msgstr ""
 
-#: app/Admin/Table/CampaignsTable.php:187 app/Admin/Table/DonorsTable.php:161
+#: app/Admin/Table/CampaignsTable.php:200 app/Admin/Table/DonorsTable.php:162
 msgid "Added"
 msgstr ""
 
@@ -229,18 +233,18 @@ msgstr ""
 msgid "Donor"
 msgstr ""
 
-#: app/Admin/Table/DonorsTable.php:96
+#: app/Admin/Table/DonorsTable.php:97
 #: app/Admin/Table/SubscriptionsTable.php:115
 #: app/Admin/Table/TransactionsTable.php:125
 msgid "E-mail"
 msgstr ""
 
-#: app/Admin/Table/DonorsTable.php:98
+#: app/Admin/Table/DonorsTable.php:99
 #: templates/public/modal/donate.modal.html.twig:88
 msgid "Address"
 msgstr ""
 
-#: app/Admin/Table/DonorsTable.php:99
+#: app/Admin/Table/DonorsTable.php:100
 msgid "Donations"
 msgstr ""
 
@@ -314,12 +318,12 @@ msgstr ""
 
 #: app/Admin/Table/SubscriptionsTable.php:298
 #: app/Admin/Table/TransactionsTable.php:341
-#: app/Admin/Table/TransactionsTable.php:488
+#: app/Admin/Table/TransactionsTable.php:489
 msgid "Cancelled"
 msgstr ""
 
 #: app/Admin/Table/SubscriptionsTable.php:429
-#: app/Admin/Table/TransactionsTable.php:470
+#: app/Admin/Table/TransactionsTable.php:471
 msgid "All"
 msgstr ""
 
@@ -380,17 +384,17 @@ msgid "Transaction Id"
 msgstr ""
 
 #: app/Admin/Table/TransactionsTable.php:332
-#: app/Admin/Table/TransactionsTable.php:476
+#: app/Admin/Table/TransactionsTable.php:477
 msgid "Paid"
 msgstr ""
 
 #: app/Admin/Table/TransactionsTable.php:335
-#: app/Admin/Table/TransactionsTable.php:482
+#: app/Admin/Table/TransactionsTable.php:483
 msgid "Open"
 msgstr ""
 
 #: app/Admin/Table/TransactionsTable.php:338
-#: app/Admin/Table/TransactionsTable.php:495
+#: app/Admin/Table/TransactionsTable.php:496
 msgid "Expired"
 msgstr ""
 
@@ -421,8 +425,8 @@ msgstr ""
 
 #. translators: %s: Search term
 #: app/Admin/partials/kudos-admin-donors.php:34
-#: app/Admin/partials/kudos-admin-subscriptions.php:42
-#: app/Admin/partials/kudos-admin-transactions.php:34
+#: app/Admin/partials/kudos-admin-subscriptions.php:47
+#: app/Admin/partials/kudos-admin-transactions.php:35
 #, php-format
 msgid "Search results for “%s”"
 msgstr ""
@@ -443,53 +447,53 @@ msgstr[1] ""
 msgid "Transaction deleted"
 msgstr ""
 
-#: app/Front/Front.php:236
+#: app/Front/Front.php:213
 msgid "Request invalid."
 msgstr ""
 
-#: app/Front/Front.php:296
+#: app/Front/Front.php:273
 msgid "Error creating Mollie payment. Please try again later."
 msgstr ""
 
-#: app/Front/Front.php:315 app/Front/Front.php:340
+#: app/Front/Front.php:292 app/Front/Front.php:317
 msgid "Donate now"
 msgstr ""
 
-#: app/Front/Front.php:317 app/Front/Front.php:356
+#: app/Front/Front.php:294 app/Front/Front.php:333
 msgid "Support us!"
 msgstr ""
 
-#: app/Front/Front.php:318 app/Front/Front.php:360
+#: app/Front/Front.php:295 app/Front/Front.php:337
 msgid "Thank you for your donation. We appreciate your support!"
 msgstr ""
 
-#: app/Front/Front.php:407
+#: app/Front/Front.php:384
 msgid "Mollie not connected"
 msgstr ""
 
-#: app/Front/Front.php:477
+#: app/Front/Front.php:453
 msgid ""
 "We will no longer be taking payments for this subscription. Thank you for "
 "your contributions."
 msgstr ""
 
-#: app/Front/Front.php:486
+#: app/Front/Front.php:462
 msgid "Link expired"
 msgstr ""
 
-#: app/Front/Front.php:487
+#: app/Front/Front.php:463
 msgid "Sorry, this link is no longer valid."
 msgstr ""
 
-#: app/Front/Front.php:526
+#: app/Front/Front.php:502
 msgid "Payment cancelled"
 msgstr ""
 
-#: app/Front/Front.php:529 templates/emails/receipt.html.twig:45
+#: app/Front/Front.php:505 templates/emails/receipt.html.twig:45
 msgid "Thanks"
 msgstr ""
 
-#: app/Front/Front.php:530
+#: app/Front/Front.php:506
 msgid "Your donation will be processed soon."
 msgstr ""
 
@@ -552,34 +556,34 @@ msgid ""
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-#: app/Service/MailerService.php:26
+#: app/Service/MailerService.php:27
 msgid "Kudos Donations"
 msgstr ""
 
-#: app/Service/MailerService.php:121
+#: app/Service/MailerService.php:123
 msgid "Donation Receipt"
 msgstr ""
 
-#: app/Service/MailerService.php:173
+#: app/Service/MailerService.php:175
 msgid "Please provide an email address."
 msgstr ""
 
-#: app/Service/MailerService.php:177
+#: app/Service/MailerService.php:179
 msgid "It worked!"
 msgstr ""
 
-#: app/Service/MailerService.php:178
+#: app/Service/MailerService.php:180
 msgid "Looks like your email settings are set up correctly :-)"
 msgstr ""
 
 #. translators: %s: API mode
-#: app/Service/MailerService.php:184
+#: app/Service/MailerService.php:186
 #, php-format
 msgid "Email sent to %s."
 msgstr ""
 
 #. translators: %s: API mode
-#: app/Service/MailerService.php:187
+#: app/Service/MailerService.php:189
 msgid "Error sending email, please check the settings and try again."
 msgstr ""
 
@@ -590,19 +594,19 @@ msgid "Kudos Donation (%1$s) - %2$s"
 msgstr ""
 
 #. translators: %s: API mode
-#: app/Service/MollieService.php:316
+#: app/Service/MollieService.php:314
 #, php-format
 msgid "%1$s API key should begin with %2$s"
 msgstr ""
 
 #. translators: %s: API mode
-#: app/Service/MollieService.php:329
+#: app/Service/MollieService.php:327
 #, php-format
 msgid "%s API key connection was successful!"
 msgstr ""
 
 #. translators: %s: API mode
-#: app/Service/MollieService.php:333
+#: app/Service/MollieService.php:331
 #, php-format
 msgid ""
 "Error connecting with Mollie, please check the %s API key and try again."
@@ -612,7 +616,7 @@ msgstr ""
 #. %1$s: Subscription interval.
 #. %2$s: Order id.
 #.
-#: app/Service/MollieService.php:585
+#: app/Service/MollieService.php:584
 #, php-format
 msgid "Kudos Subscription (%1$s) - %2$s"
 msgstr ""
