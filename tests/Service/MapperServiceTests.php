@@ -9,7 +9,7 @@ use Kudos\Service\MollieService;
 use ReflectionException;
 use WP_UnitTestCase;
 
-class MapperServiceTest extends WP_UnitTestCase {
+class MapperServiceTests extends WP_UnitTestCase {
 
 	public function test_can_instantiate_with_no_parameters() {
 
@@ -81,13 +81,16 @@ class MapperServiceTest extends WP_UnitTestCase {
 
 	}
 
-	public function test_save_entity() {
+	public function test_save_new_entity() {
 
 		$entity = new TransactionEntity([
 			'currency' => 'EUR',
+			'customer_id' => 'cst_1234',
+			'mode' => 'test',
+			'sequence_type' => 'oneoff',
 			'value' => 20,
 			'status' => 'open',
-			'transactions_id' => 't_12345',
+			'transaction_id' => 't_12345',
 			'order_id' => 'kdo_12345',
 		]);
 		$mapper = new MapperService();
@@ -97,14 +100,106 @@ class MapperServiceTest extends WP_UnitTestCase {
 
 	}
 
+	public function test_update_entity() {
+
+		$mapper = new MapperService(TransactionEntity::class);
+
+		$entity = new TransactionEntity([
+			'currency' => 'EUR',
+			'customer_id' => 'cst_1234',
+			'mode' => 'test',
+			'sequence_type' => 'oneoff',
+			'value' => 20,
+			'status' => 'open',
+			'transaction_id' => 't_12345',
+			'order_id' => 'kdo_12345',
+		]);
+		$mapper->save($entity);
+
+		/** @var TransactionEntity $transaction */
+		$transaction = $mapper->get_one_by([ 'order_id' => 'kdo_12345']);
+		$transaction->set_fields([
+			'mode' => 'live',
+			'customer_id' => NULL
+		]);
+		$mapper->save($transaction);
+
+		$transaction = $mapper->get_one_by(['order_id' => 'kdo_12345']);
+
+		$this->assertEquals('live', $transaction->mode );
+		$this->assertEquals('cst_1234', $transaction->customer_id );
+
+	}
+
+	public function test_update_entity_keep_null() {
+
+		$mapper = new MapperService(TransactionEntity::class);
+
+		$entity = new TransactionEntity([
+			'currency' => 'EUR',
+			'customer_id' => 'cst_1234',
+			'mode' => 'test',
+			'sequence_type' => 'oneoff',
+			'value' => 20,
+			'status' => 'open',
+			'transaction_id' => 't_12345',
+			'order_id' => 'kdo_12345',
+		]);
+		$mapper->save($entity);
+
+		/** @var TransactionEntity $transaction */
+		$transaction = $mapper->get_one_by([ 'order_id' => 'kdo_12345']);
+		$transaction->set_fields([
+			'mode' => 'live',
+			'customer_id' => NULL,
+			'currency' => '',
+
+		]);
+		$mapper->save($transaction, false);
+
+		$transaction = $mapper->get_one_by(['order_id' => 'kdo_12345']);
+
+		$this->assertEquals('live', $transaction->mode );
+		$this->assertEquals('', $transaction->customer_id );
+		$this->assertEquals('', $transaction->currency );
+
+	}
+
+	public function test_invalid_properties_ignored() {
+
+		$entity = new TransactionEntity([
+			'currency' => 'EUR',
+			'customer_id' => 'cst_1234',
+			'mode' => 'test',
+			'invalid_property' => 'ignore me',
+			'sequence_type' => 'oneoff',
+			'value' => 20,
+			'status' => 'open',
+			'transaction_id' => 't_12345',
+			'order_id' => 'kdo_12345',
+		]);
+		$mapper = new MapperService(TransactionEntity::class);
+		$mapper->save($entity);
+
+		/** @var TransactionEntity $transaction */
+		$transaction = $mapper->get_one_by([ 'order_id' => 'kdo_12345']);
+
+		$this->assertEquals('t_12345', $transaction->transaction_id );
+
+	}
+
 	public function test_get_one_no_result() {
 
 		$mapper = new MapperService(TransactionEntity::class);
 		$entity = new TransactionEntity([
-			'order_id' => 'kdo_12345',
 			'currency' => 'EUR',
+			'customer_id' => 'cst_1234',
+			'mode' => 'test',
+			'sequence_type' => 'oneoff',
 			'value' => 20,
-			'status' => 'open'
+			'status' => 'open',
+			'transaction_id' => 't_12345',
+			'order_id' => 'kdo_12345',
 		]);
 		$mapper->save($entity);
 
@@ -118,10 +213,14 @@ class MapperServiceTest extends WP_UnitTestCase {
 
 		$mapper = new MapperService(TransactionEntity::class);
 		$entity = new TransactionEntity([
-			'order_id' => 'kdo_12345',
 			'currency' => 'EUR',
+			'customer_id' => 'cst_1234',
+			'mode' => 'test',
+			'sequence_type' => 'oneoff',
 			'value' => 20,
-			'status' => 'open'
+			'status' => 'open',
+			'transaction_id' => 't_12345',
+			'order_id' => 'kdo_12345',
 		]);
 		$mapper->save($entity);
 
