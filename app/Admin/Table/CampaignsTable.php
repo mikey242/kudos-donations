@@ -198,7 +198,7 @@ class CampaignsTable extends WP_List_Table {
 		];
 
 		return __( 'Added', 'kudos-donations' ) . '<br/>' .
-                date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['date'] ) ) . '<br/>' .
+                wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['date'] ) ) . '<br/>' .
 		        $this->row_actions( $actions );
 	}
 
@@ -255,7 +255,7 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	function column_last_donation( array $item ) {
 
-		return isset($item['last_donation']) ? date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['last_donation'] ) ) : '';
+		return isset($item['last_donation']) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['last_donation'] ) ) : '';
 
 	}
 

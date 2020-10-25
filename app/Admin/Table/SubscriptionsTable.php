@@ -181,7 +181,7 @@ class SubscriptionsTable extends WP_List_Table {
 
 		$action_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+		$title = '<strong>' . wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 				strtotime( $item['created'] ) ) . '</strong>';
 
 		$actions = [];

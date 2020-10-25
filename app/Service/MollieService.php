@@ -501,7 +501,7 @@ class MollieService extends AbstractService {
 					as_schedule_single_action( $timestamp, 'kudos_process_paid_transaction', [ $order_id ] );
 					$this->logger->debug( 'Action "kudos_process_paid_transaction" scheduled',
 						[
-							'datetime' => date_i18n( 'Y-m-d H:i:s', $timestamp ),
+							'datetime' => wp_date( 'Y-m-d H:i:s', $timestamp ),
 						] );
 				}
 			} else {

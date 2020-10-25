@@ -94,7 +94,7 @@ class MapperService extends AbstractService {
 	 */
 	public function save( AbstractEntity $entity ) {
 
-		$entity->last_updated = current_time( 'mysql' );
+		$entity->last_updated = date('Y-m-d H:i:s', time());
 
 		// If we have an id, then update row
 		if ( $entity->id ) {
@@ -118,7 +118,7 @@ class MapperService extends AbstractService {
 		$table_name = $entity::get_table_name();
 
 		// Otherwise insert new row
-		$entity->created = current_time( 'mysql' );
+		$entity->created = date('Y-m-d H:i:s', time());
 
 		$result     = $wpdb->insert(
 			$table_name,

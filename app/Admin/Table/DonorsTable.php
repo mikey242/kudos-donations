@@ -65,6 +65,7 @@ class DonorsTable extends WP_List_Table {
 	 * @since   2.0.0
 	 */
 	public function fetch_table_data() {
+
 		global $wpdb;
 
 		$search_custom_vars = null;
@@ -159,7 +160,7 @@ class DonorsTable extends WP_List_Table {
 	function column_created( array $item ) {
 
 		return __( 'Added',
-				'kudos-donations' ) . '<br/>' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+				'kudos-donations' ) . '<br/>' . wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 				strtotime( $item['created'] ) );
 	}
 
