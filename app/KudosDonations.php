@@ -3,6 +3,9 @@
 namespace Kudos;
 
 use Kudos\Admin\Admin;
+use Kudos\Entity\DonorEntity;
+use Kudos\Entity\SubscriptionEntity;
+use Kudos\Entity\TransactionEntity;
 use Kudos\Front\Front;
 use Kudos\Helpers\Settings;
 use Kudos\Service\ActivatorService;
@@ -171,7 +174,11 @@ class KudosDonations {
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'handle_query_variables', 1000 );
 		$this->loader->add_action( 'query_vars', $plugin_public, 'register_vars' );
 		$this->loader->add_action( 'kudos_process_paid_transaction', $plugin_public, 'process_transaction', 10, 1 );
-		$this->loader->add_action( 'kudos_remove_secret_action', $plugin_public, 'remove_donor_secret', 10, 1 );
+
+		// Entity Hooks
+		TransactionEntity::create_hooks();
+		DonorEntity::create_hooks();
+		SubscriptionEntity::create_hooks();
 
 	}
 

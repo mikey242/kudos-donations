@@ -113,6 +113,7 @@ class ActivatorService {
 		  subscription_id VARCHAR(255),
 		  refunds BLOB DEFAULT NULL,
 		  campaign_label VARCHAR(255),
+		  secret VARCHAR(255),
 		  PRIMARY KEY (id)
 		) $charset_collate;";
 
@@ -145,6 +146,7 @@ class ActivatorService {
 		  transaction_id VARCHAR(255),
 		  subscription_id VARCHAR(255),
 		  status VARCHAR(255),
+		  secret VARCHAR(255),		  
 		  PRIMARY KEY (id)
 		) $charset_collate";
 

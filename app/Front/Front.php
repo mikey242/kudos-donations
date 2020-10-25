@@ -94,29 +94,6 @@ class Front {
 	}
 
 	/**
-	 * Remove secret key associated with donor
-	 *
-	 * @param string $customer_id
-	 *
-	 * @return bool|int
-	 * @since   2.0.0
-	 */
-	public static function remove_donor_secret( string $customer_id ) {
-
-		if ( $customer_id ) {
-			$mapper = new MapperService( DonorEntity::class );
-			/** @var DonorEntity $donor */
-			$donor = $mapper->get_one_by( [ 'customer_id' => $customer_id ] );
-			$donor->clear_secret();
-
-			return $mapper->save( $donor );
-		}
-
-		return false;
-
-	}
-
-	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
 	 * @since   1.0.0
@@ -467,9 +444,8 @@ class Front {
 			}
 
 			$modal = new KudosModal();
-			$donor = $subscription->get_donor();
 
-			if ( $donor->verify_secret( $token ) ) {
+			if ( $subscription->verify_secret( $token ) ) {
 				$kudos_mollie = MollieService::factory();
 				if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
 					echo $modal->get_message_modal( [
