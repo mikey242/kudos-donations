@@ -2,6 +2,7 @@
 
 namespace Kudos\Service;
 
+use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
@@ -101,18 +102,18 @@ class MailerService extends AbstractService {
 
 		// Add a cancel subscription url if transaction associated with a subscription
 		if ( ! empty( $transaction->subscription_id ) ) {
-			$mapper = new MapperService();
-			$donor  = $transaction->get_donor();
-			$secret = $donor->create_secret( '+1 week' );
-			$mapper->save( $donor );
-			$subscription_id           = $transaction->subscription_id;
-			$token                     = password_hash( $secret, PASSWORD_DEFAULT );
+			$mapper = new MapperService(SubscriptionEntity::class);
+			$subscription_id = $transaction->subscription_id;
+			/** @var SubscriptionEntity $subscription */
+			$subscription              = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
+			$token                     = $subscription->create_secret( '+1 week' );
 			$cancel_url                = get_home_url();
 			$cancel_url                = add_query_arg( 'kudos_token', $token, $cancel_url );
 			$cancel_url                = add_query_arg( 'kudos_subscription_id',
 				base64_encode( $subscription_id ),
 				$cancel_url );
 			$renderArray['cancel_url'] = $cancel_url;
+			$mapper->save($subscription);
 		}
 
 		$twig = TwigService::factory();
