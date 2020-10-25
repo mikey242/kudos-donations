@@ -153,7 +153,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
                             class='<?php echo ( $key % 2 === 0 ? 'alternate ' : null ) . $class ?>'>
 
                             <td>
-								<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+								<?php echo wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 									strtotime( $log['date'] ) ); ?>
                             </td>
                             <td>
