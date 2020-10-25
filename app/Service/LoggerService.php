@@ -2,6 +2,7 @@
 
 namespace Kudos\Service;
 
+use DateTimeZone;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as Monolog;
 
@@ -22,8 +23,12 @@ class LoggerService extends Monolog {
 	 */
 	public function __construct() {
 
-		parent::__construct( 'kudos' );
-		$this->pushHandler( new StreamHandler( self::LOG_FILE ) );
+		parent::__construct(
+			'kudos',
+			[new StreamHandler( self::LOG_FILE )],
+			[],
+			new DateTimeZone(wp_timezone_string())
+		);
 
 	}
 
