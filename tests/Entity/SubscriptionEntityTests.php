@@ -15,11 +15,15 @@ class SubscriptionEntityTests extends WP_UnitTestCase {
 
 		$mapper->save(new DonorEntity([
 			'customer_id' => 12345,
+			'email' => 'test@email.com',
 			'name' => 'Michael'
 		]));
 
 		$subscription = new SubscriptionEntity([
 			'customer_id' => 12345,
+			'value' => 20,
+			'frequency' => '12 months',
+			'years' => 3
 		]);
 		$mapper->save($subscription);
 

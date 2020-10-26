@@ -15,11 +15,17 @@ class TransactionEntityTests extends WP_UnitTestCase {
 
 		$mapper->save(new DonorEntity([
 			'customer_id' => 12345,
+			'email' => 'test@email.com',
 			'name' => 'Michael'
 		]));
 
 		$transaction = new TransactionEntity([
 			'customer_id' => 12345,
+			'order_id' => 'kdo_12345',
+			'value' => 20,
+			'status' => 'open',
+			'mode' => 'test',
+			'sequence_type' => 'oneoff'
 		]);
 		$mapper->save($transaction);
 

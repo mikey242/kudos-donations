@@ -6,7 +6,6 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Exceptions\MapperException;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
-use ReflectionException;
 use WP_UnitTestCase;
 
 class MapperServiceTests extends WP_UnitTestCase {
@@ -47,19 +46,6 @@ class MapperServiceTests extends WP_UnitTestCase {
 
 	/**
 	 * @throws MapperException
-	 * @throws ReflectionException
-	 */
-	public function test_set_repository_throws_reflection_exception() {
-
-		$this->expectException(ReflectionException::class);
-		$mapper = new MapperService();
-		$mapper->set_repository('InvalidClass');
-
-	}
-
-	/**
-	 * @throws MapperException
-	 * @throws ReflectionException
 	 */
 	public function test_set_repository_throws_mapper_exception() {
 
@@ -71,7 +57,6 @@ class MapperServiceTests extends WP_UnitTestCase {
 
 	/**
 	 * @throws MapperException
-	 * @throws ReflectionException
 	 */
 	public function test_set_and_get_repository_works_for_entity() {
 
@@ -96,7 +81,7 @@ class MapperServiceTests extends WP_UnitTestCase {
 		$mapper = new MapperService();
 		$save = $mapper->save($entity);
 
-		$this->assertEquals(1, $save );
+		$this->assertNotFalse($save );
 
 	}
 
@@ -162,6 +147,25 @@ class MapperServiceTests extends WP_UnitTestCase {
 		$this->assertEquals('live', $transaction->mode );
 		$this->assertEquals('', $transaction->customer_id );
 		$this->assertEquals('', $transaction->currency );
+
+	}
+
+	public function test_entity_missing_required_properties_on_save() {
+
+		$entity = new TransactionEntity([
+			'currency' => 'EUR',
+			'customer_id' => 'cst_1234',
+			'mode' => 'test',
+			'invalid_property' => 'ignore me',
+			'sequence_type' => 'oneoff',
+			// 'value' => 20, // Required and disabled
+			'status' => 'open',
+			'transaction_id' => 't_12345',
+			'order_id' => 'kdo_12345',
+		]);
+		$mapper = new MapperService(TransactionEntity::class);
+		$save = $mapper->save($entity);
+		$this->assertFalse($save);
 
 	}
 
