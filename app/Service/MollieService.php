@@ -110,14 +110,6 @@ class MollieService extends AbstractService {
 		$currency  = 'EUR';
 		$value     = number_format( $value, 2 );
 
-		// Add order id query arg to return url if option to show message enabled
-		if ( get_option( '_kudos_return_message_enable' ) ) {
-			$redirectUrl = add_query_arg( 'kudos_order_id', base64_encode( $order_id ), $redirectUrl );
-			$redirectUrl = add_query_arg( 'kudos_token',
-				wp_create_nonce( 'kudos_check_order-' . $order_id ),
-				$redirectUrl );
-		}
-
 		// Set payment frequency
 		$frequency_text = Utils::get_frequency_name( $interval );
 		$sequenceType   = ( $interval === 'oneoff' ? 'oneoff' : 'first' );
@@ -165,7 +157,19 @@ class MollieService extends AbstractService {
 			] );
 
 			$mapper = new MapperService( TransactionEntity::class );
-			$mapper->save( $transaction );
+			$mapper->save($transaction);
+
+			// Add order id query arg to return url if option to show message enabled
+			if ( get_option( '_kudos_return_message_enable' ) ) {
+				$redirectUrl = add_query_arg( [
+					'kudos_action' => 'order_complete',
+					'kudos_order_id' => $order_id,
+					'kudos_token' => $transaction->create_secret()
+				], $redirectUrl);
+				$payment->redirectUrl = $redirectUrl;
+				$payment->update();
+				$mapper->save($transaction);
+			}
 
 			$this->logger->info( 'New payment created',
 				[ 'oder_id' => $order_id, 'sequence_type' => $payment->sequenceType ] );
