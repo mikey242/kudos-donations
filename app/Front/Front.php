@@ -412,56 +412,68 @@ class Front {
 	 */
 	public function handle_query_variables() {
 
-		// Query variables
-		$token           = get_query_var( 'kudos_token' );  // Don't sanitize!
-		$order_id        = sanitize_text_field( get_query_var( 'kudos_order_id' ) );
-		$subscription_id = sanitize_text_field( get_query_var( 'kudos_subscription_id' ) );
+		if ( isset( $_REQUEST['kudos_action'] ) && - 1 != $_REQUEST['kudos_action'] ) {
 
-		// Return message modal
-		if ( ! empty( $order_id ) && ! empty( $token ) ) {
-			$order_id = base64_decode( sanitize_text_field( $order_id ) );
-			if ( wp_verify_nonce( $_REQUEST['kudos_token'], 'kudos_check_order-' . $order_id ) ) {
-				$atts = $this->check_transaction( $order_id );
-				if ( $atts ) {
-					$modal = new KudosModal();
-					echo $modal->get_message_modal( $atts );
-				}
+			$action = sanitize_text_field($_REQUEST['kudos_action']);
+			$token  = sanitize_text_field(get_query_var( 'kudos_token' ));
+
+			switch ( $action ) {
+
+				case 'order_complete':
+					$order_id = sanitize_text_field( get_query_var( 'kudos_order_id' ) );
+					// Return message modal
+					if ( ! empty( $order_id ) && ! empty( $token ) ) {
+						$order_id    = sanitize_text_field( $order_id );
+						$mapper      = new MapperService( TransactionEntity::class );
+						$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
+						if ( $transaction && $transaction->verify_secret( $token ) ) {
+							$atts = $this->check_transaction( $order_id );
+							if ( $atts ) {
+								$modal = new KudosModal();
+								echo $modal->get_message_modal( $atts );
+							}
+						}
+					}
+					break;
+
+				case 'cancel_subscription':
+					$subscription_id = sanitize_text_field( get_query_var( 'kudos_subscription_id' ) );
+					// Cancel subscription modal
+					if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
+
+						$mapper = new MapperService( SubscriptionEntity::class );
+
+						/** @var SubscriptionEntity $subscription */
+						$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
+
+						// Bail if no subscription found
+						if ( null === $subscription ) {
+							return;
+						}
+
+						$modal = new KudosModal();
+
+						if ( $subscription->verify_secret( $token ) ) {
+							$kudos_mollie = MollieService::factory();
+							if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
+								echo $modal->get_message_modal( [
+									'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
+									'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
+										'kudos-donations' ),
+								] );
+
+								return;
+							}
+						}
+
+						echo $modal->get_message_modal( [
+							'modal_title' => __( 'Link expired', 'kudos-donations' ),
+							'modal_text'  => __( 'Sorry, this link is no longer valid.', 'kudos-donations' ),
+						] );
+					}
+					break;
 			}
-		}
 
-		// Cancel subscription modal
-		if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
-
-			$subscription_id = base64_decode( $subscription_id );
-			$mapper          = new MapperService( SubscriptionEntity::class );
-
-			/** @var SubscriptionEntity $subscription */
-			$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
-
-			// Bail if no subscription found
-			if ( null === $subscription ) {
-				return;
-			}
-
-			$modal = new KudosModal();
-
-			if ( $subscription->verify_secret( $token ) ) {
-				$kudos_mollie = MollieService::factory();
-				if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
-					echo $modal->get_message_modal( [
-						'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
-						'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
-							'kudos-donations' ),
-					] );
-
-					return;
-				}
-			}
-
-			echo $modal->get_message_modal( [
-				'modal_title' => __( 'Link expired', 'kudos-donations' ),
-				'modal_text'  => __( 'Sorry, this link is no longer valid.', 'kudos-donations' ),
-			] );
 		}
 	}
 
