@@ -113,7 +113,7 @@ abstract class AbstractEntity implements EntityInterface {
 			}
 
 			// Schedule for secret to be removed after timeout
-			if ( class_exists( 'ActionScheduler' ) ) {
+			if ( class_exists( 'ActionScheduler' ) && $this->id ) {
 
 				// Remove existing action if exists
 				as_unschedule_action( $table . "_remove_secret_action", [ $this->id ] );
