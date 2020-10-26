@@ -40,7 +40,6 @@ class MapperService extends AbstractService {
 				$this->logger->error( "Could not set repository", [ "message" => $e->getMessage() ] );
 			}
 		}
-
 	}
 
 	/**
@@ -49,16 +48,19 @@ class MapperService extends AbstractService {
 	 * @param string $class
 	 *
 	 * @throws MapperException
-	 * @throws ReflectionException
 	 * @since 2.0.0
 	 */
 	public function set_repository( string $class ) {
 
-		$reflection = new ReflectionClass( $class );
-		if ( $reflection->implementsInterface( 'Kudos\Entity\EntityInterface' ) ) {
-			$this->repository = $class;
-		} else {
-			throw new MapperException( 'Repository must implement Kudos\Entity\EntityInterface', 0, $class );
+		try {
+			$reflection = new ReflectionClass( $class );
+			if ( $reflection->implementsInterface( 'Kudos\Entity\EntityInterface' ) ) {
+				$this->repository = $class;
+			} else {
+				throw new MapperException( 'Repository must implement Kudos\Entity\EntityInterface', 0, $class );
+			}
+		} catch (ReflectionException $e) {
+			$this->logger->error($e->getMessage());
 		}
 
 	}
@@ -72,13 +74,12 @@ class MapperService extends AbstractService {
 	public function get_repository() {
 
 		try {
-			if ( null === $this->repository ) {
+			if ( NULL === $this->repository ) {
 				throw new MapperException( "No repository specified" );
 			}
 		} catch ( MapperException $e ) {
 			$this->logger->warning( 'Failed to get repository.', [ "message" => $e->getMessage() ] );
 		}
-
 
 		return $this->repository;
 
@@ -92,12 +93,13 @@ class MapperService extends AbstractService {
 	 * @param bool $ignore_null Whether or not to remove NULL or empty fields from
 	 *                          the save query.
 	 *
-	 * @return false|int
+	 * @return false|int Returns the id of the record if successful
+	 *                  and false if not
 	 * @since   2.0.0
 	 */
 	public function save( EntityInterface $entity, bool $ignore_null = true ) {
 
-		$entity->last_updated = date('Y-m-d H:i:s', time());
+		$entity->last_updated = date( 'Y-m-d H:i:s', time() );
 
 		// If we have an id, then update row
 		if ( $entity->id ) {
@@ -114,7 +116,8 @@ class MapperService extends AbstractService {
 	 *
 	 * @param $entity
 	 *
-	 * @return bool|int
+	 * @return false|int Returns the id of the record if successful
+	 *                  and false if not
 	 */
 	private function add_record( $entity ) {
 
@@ -122,18 +125,21 @@ class MapperService extends AbstractService {
 		$table_name = $entity::get_table_name();
 
 		// Otherwise insert new row
-		$entity->created = date('Y-m-d H:i:s', time());
+		$entity->created = date( 'Y-m-d H:i:s', time() );
 
 		$result     = $wpdb->insert(
 			$table_name,
 			$entity->to_array()
 		);
-		$entity->id = $wpdb->insert_id;
+		$id         = $wpdb->insert_id;
+		$entity->id = $id;
 		$this->logger->debug( 'Creating entity.', [ $entity ] );
 
 		// If successful do action
 		if ( $result ) {
-			do_action( $entity::get_table_name( false ) . '_added', 'id', $entity->id );
+			do_action( $entity::get_table_name( false ) . '_added', 'id', $id );
+
+			return $id;
 		}
 
 		return $result;
@@ -146,7 +152,8 @@ class MapperService extends AbstractService {
 	 * @param EntityInterface $entity // An instance of EntityInterface
 	 * @param bool $ignore_null
 	 *
-	 * @return bool|int
+	 * @return false|int Returns the id of the record if successful
+	 *                  and false if not
 	 */
 	private function update_record( EntityInterface $entity, bool $ignore_null ) {
 
@@ -158,12 +165,14 @@ class MapperService extends AbstractService {
 
 		$result = $wpdb->update(
 			$table_name,
-			$ignore_null ? array_filter( $entity->to_array(), [ $this, 'remove_empty' ] ) : $entity->to_array(),
+			$ignore_null ? array_filter( $entity->to_array(), [$this, 'remove_empty'] ) : $entity->to_array(),
 			[ 'id' => $id ]
 		);
 
 		if ( $result ) {
 			do_action( $entity::get_table_name( false ) . '_updated', 'id', $id );
+
+			return $id;
 		}
 
 		return $result;
@@ -172,7 +181,8 @@ class MapperService extends AbstractService {
 	/**
 	 * Deletes all the records for the current repository
 	 *
-	 * @return int|false
+	 * @return bool|int Returns the number of records deleted if successful
+	 *                  and false if not
 	 * @since 2.0.0
 	 */
 	public function delete_all() {
