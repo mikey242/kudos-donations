@@ -170,7 +170,7 @@ abstract class AbstractEntity implements EntityInterface {
 			}
 			$entity->clear_secret();
 
-			return $mapper->save( $entity );
+			return $mapper->save( $entity, false );
 		}
 
 		return false;
