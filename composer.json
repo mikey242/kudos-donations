@@ -4,7 +4,8 @@
         "monolog/monolog": "^2.0",
         "twig/twig": "^2.0",
         "ext-json": "*",
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "woocommerce/action-scheduler": "^3.1"
     },
     "require-dev": {
         "vlucas/phpdotenv": "^5.1",
