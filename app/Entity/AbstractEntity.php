@@ -25,7 +25,7 @@ abstract class AbstractEntity implements EntityInterface {
 	/**
 	 * @var string
 	 */
-	public $secret;
+	protected $secret;
 
 	/**
 	 * Entity object constructor.
@@ -147,7 +147,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 */
 	public function clear_secret() {
 
-		$this->secret = null;
+		$this->secret = NULL;
 
 	}
 
@@ -198,7 +198,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 */
 	public function to_array() {
 
-		return (array) $this;
+		return get_object_vars($this);
 
 	}
 
