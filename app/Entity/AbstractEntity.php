@@ -107,6 +107,11 @@ abstract class AbstractEntity implements EntityInterface {
 
 		try {
 
+			// Create secret if none set
+			if ( NULL === $this->secret ) {
+				$this->secret = bin2hex( random_bytes( 10 ) );
+			}
+
 			// Schedule for secret to be removed after timeout
 			if ( class_exists( 'ActionScheduler' ) ) {
 
