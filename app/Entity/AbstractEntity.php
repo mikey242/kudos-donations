@@ -116,11 +116,11 @@ abstract class AbstractEntity implements EntityInterface {
 			if ( class_exists( 'ActionScheduler' ) && $this->id ) {
 
 				// Remove existing action if exists
-				as_unschedule_action( $table . "_remove_secret_action", [ $this->id ] );
+				as_unschedule_action( $table . "_remove_secret_action", [ $this->secret ] );
 				$timestamp = strtotime( $timeout );
 
 				// Create new action to remove secret
-				as_schedule_single_action( $timestamp, $table . "_remove_secret_action", [ $this->id ] );
+				as_schedule_single_action( $timestamp, $table . "_remove_secret_action", [ $this->secret ] );
 				$logger->debug( sprintf( "Action %s_remove_secret_action scheduled", $table ),
 					[
 						'datetime' => wp_date( 'Y-m-d H:i:s', $timestamp ),
@@ -160,16 +160,16 @@ abstract class AbstractEntity implements EntityInterface {
 	 * Removes the secret for the current entity where
 	 * it matches the provided id
 	 *
-	 * @param $id
+	 * @param $secret
 	 *
 	 * @return bool|int
 	 */
-	public static function remove_secret_action( $id ) {
+	public static function remove_secret_action( $secret ) {
 
-		if ( $id ) {
+		if ( $secret ) {
 			$mapper = new MapperService( static::class );
 			/** @var AbstractEntity $entity */
-			$entity = $mapper->get_one_by( [ 'id' => $id ] );
+			$entity = $mapper->get_one_by( [ 'secret' => $secret ] );
 			if ( ! $entity ) {
 				return false;
 			}
