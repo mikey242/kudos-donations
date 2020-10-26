@@ -127,12 +127,7 @@ abstract class AbstractEntity implements EntityInterface {
 					] );
 			}
 
-			// Create secret if none set
-			if ( null === $this->secret ) {
-				$this->secret = bin2hex( random_bytes( 10 ) );
-			}
-
-			return password_hash( $this->secret, PASSWORD_DEFAULT );
+			return wp_hash_password( $this->secret );
 
 		} catch ( Throwable $e ) {
 
@@ -191,7 +186,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 */
 	public function verify_secret( string $hash ) {
 
-		return password_verify( $this->secret, $hash );
+		return wp_check_password( $this->secret, $hash );
 
 	}
 
