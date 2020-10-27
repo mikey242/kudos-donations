@@ -36,7 +36,7 @@ class MapperService extends AbstractService {
 		if ( null !== $repository ) {
 			try {
 				$this->set_repository( $repository );
-			} catch ( ReflectionException | MapperException $e ) {
+			} catch ( MapperException $e ) {
 				$this->logger->error( "Could not set repository", [ "message" => $e->getMessage() ] );
 			}
 		}
