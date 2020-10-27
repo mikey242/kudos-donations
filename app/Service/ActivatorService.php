@@ -32,9 +32,9 @@ class ActivatorService {
 	 */
 	public static function activate( $old_version = null ) {
 
-		$logger = new LoggerService();
+		$logger = LoggerService::factory();
 
-		LoggerService::init();
+		$logger::init();
 		TwigService::initCache();
 		self::create_donors_table();
 		self::create_transactions_table();

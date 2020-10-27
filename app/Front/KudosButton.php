@@ -2,7 +2,6 @@
 
 namespace Kudos\Front;
 
-use Kudos\Service\LoggerService;
 use Kudos\Service\TwigService;
 
 class KudosButton {
@@ -23,10 +22,6 @@ class KudosButton {
 	 * @var string
 	 */
 	private $id;
-	/**
-	 * @var LoggerService
-	 */
-	private $logger;
 	/**
 	 * @var string
 	 */
@@ -58,7 +53,6 @@ class KudosButton {
 	public function __construct( array $atts ) {
 
 		$this->twig           = TwigService::factory();
-		$this->logger         = new LoggerService();
 		$this->title          = $atts['modal_title'];
 		$this->text           = $atts['welcome_text'];
 		$this->label          = $atts['button_label'];

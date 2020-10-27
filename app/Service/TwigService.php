@@ -121,7 +121,7 @@ class TwigService extends AbstractService {
 	 */
 	public static function initCache() {
 
-		$logger = new LoggerService();
+		$logger = LoggerService::factory();
 
 		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
 			$logger->info( 'Twig cache directory created successfully' );

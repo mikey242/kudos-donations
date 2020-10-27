@@ -100,7 +100,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 					return;
 				}
 
-				$kudos_logger = new LoggerService();
+				$kudos_logger = LoggerService::factory();
 				$logArray     = $kudos_logger->get_as_array();
 				?>
 

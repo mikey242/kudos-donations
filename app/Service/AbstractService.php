@@ -16,7 +16,7 @@ abstract class AbstractService {
 	 */
 	public function __construct() {
 
-		$this->logger = new LoggerService();
+		$this->logger = LoggerService::factory();
 
 	}
 

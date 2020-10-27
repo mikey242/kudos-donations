@@ -4,15 +4,10 @@ namespace Kudos\Front;
 
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use Kudos\Service\LoggerService;
 use Kudos\Service\TwigService;
 
 class KudosModal {
 
-	/**
-	 * @var LoggerService
-	 */
-	private $logger;
 	/**
 	 * @var TwigService
 	 */
@@ -25,7 +20,6 @@ class KudosModal {
 	 */
 	public function __construct() {
 
-		$this->logger = new LoggerService();
 		$this->twig   = TwigService::factory();
 
 	}

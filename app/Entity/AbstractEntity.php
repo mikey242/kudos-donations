@@ -68,7 +68,7 @@ abstract class AbstractEntity implements EntityInterface {
 					throw new EntityException( 'Property does not exist!', 0, $property, static::class );
 				}
 			} catch ( EntityException $e ) {
-				$logger = new LoggerService();
+				$logger = LoggerService::factory();
 				$logger->warning( 'Error setting property.', [ "message" => $e->getMessage() ] );
 
 			}
@@ -102,7 +102,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 */
 	public function create_secret( $timeout = '+10 minutes' ) {
 
-		$logger = new LoggerService();
+		$logger = LoggerService::factory();
 		$table  = static::get_table_name( false );
 
 		try {

@@ -69,7 +69,7 @@ class Front {
 	 */
 	public static function process_transaction( string $order_id ) {
 
-		$logger = new LoggerService();
+		$logger = LoggerService::factory();
 		$logger->debug( 'Processing transaction', [ $order_id ] );
 
 		// Bail if no order ID

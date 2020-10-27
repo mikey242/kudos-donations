@@ -39,15 +39,31 @@ class LoggerService extends Monolog {
 	 */
 	public static function init() {
 
-		$logger = new LoggerService();
-
 		if ( wp_mkdir_p( self::LOG_DIR ) ) {
-			$logger->info( 'Log directory created successfully' );
-
 			return;
 		}
 
 		error_log( 'Unable to create Kudos Donations log directory: ' . self::LOG_DIR );
+
+	}
+
+	/**
+	 * The class factory. In most cases this
+	 * should be used instead of instantiating the object
+	 * directly.
+	 *
+	 * @return static
+	 * @since   2.0.0
+	 */
+	public static function factory() {
+
+		static $instance = false;
+
+		if ( ! $instance ) {
+			$instance = new static;
+		}
+
+		return $instance;
 
 	}
 

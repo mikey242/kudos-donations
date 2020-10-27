@@ -26,8 +26,9 @@ class DeactivatorService {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-		$logger = new LoggerService();
-		$logger->info( 'Kudos Donations plugin deactivated' );
+
+		LoggerService::factory()->info( 'Kudos Donations plugin deactivated' );
+
 	}
 
 }

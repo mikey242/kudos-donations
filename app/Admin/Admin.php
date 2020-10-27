@@ -70,7 +70,7 @@ class Admin {
 
 		add_action( 'kudos_transactions_update',
 			function ( $column, $value ) {
-				$logger = new LoggerService();
+				$logger = LoggerService::factory();
 				$logger->debug( 'kudos_transactions_update', [ $column, $value ] );
 			},
 			10,
@@ -78,7 +78,7 @@ class Admin {
 
 		add_action( 'kudos_donors_add',
 			function ( $column, $value ) {
-				$logger = new LoggerService();
+				$logger = LoggerService::factory();
 				$logger->debug( 'kudos_donors_add', [ $column, $value ] );
 			},
 			10,
@@ -500,7 +500,7 @@ class Admin {
 
 		// Check if action is a kudos action then log if true
 		if(substr($action, 0, 6) === "kudos_" ) {
-			$logger = new LoggerService();
+			$logger = LoggerService::factory();
 			$logger->warning( 'Nonce verification failed', [ 'nonce' => $nonce, 'action' => $action ] );
 		}
 
