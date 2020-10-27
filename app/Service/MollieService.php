@@ -60,26 +60,6 @@ class MollieService extends AbstractService {
 	}
 
 	/**
-	 * The mollie class factory. In most cases this
-	 * should be used instead of instantiating the object
-	 * directly.
-	 *
-	 * @return MollieService
-	 * @since   2.0.0
-	 */
-	public static function factory() {
-
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self;
-		}
-
-		return $instance;
-
-	}
-
-	/**
 	 * Creates a payment and returns it as an object
 	 *
 	 * @param string $value
