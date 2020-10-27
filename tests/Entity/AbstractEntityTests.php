@@ -5,6 +5,7 @@ namespace Entity;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Service\MailerService;
 use Kudos\Service\MapperService;
 use WP_UnitTestCase;
 
@@ -15,6 +16,24 @@ class AbstractEntityTests extends WP_UnitTestCase {
 		$this->assertEquals(10, has_action('kudos_donors_remove_secret_action', ['Kudos\Entity\DonorEntity','remove_secret_action']));
 		$this->assertEquals(10, has_action('kudos_transactions_remove_secret_action', ['Kudos\Entity\TransactionEntity','remove_secret_action']));
 		$this->assertEquals(10, has_action('kudos_subscriptions_remove_secret_action', ['Kudos\Entity\SubscriptionEntity','remove_secret_action']));
+
+	}
+
+	public function test_factory_method() {
+
+		$object1 = MailerService::factory();
+		$object2 = MailerService::factory();
+		$id1 = spl_object_hash($object1);
+		$id2 = spl_object_hash($object2);
+
+		$this->assertEquals($id1, $id2);
+
+		$object3 = new MailerService();
+		$object4 = new MailerService();
+		$id3 = spl_object_hash($object3);
+		$id4 = spl_object_hash($object4);
+
+		$this->assertNotEquals($id3, $id4);
 
 	}
 
