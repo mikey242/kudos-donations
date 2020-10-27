@@ -69,10 +69,10 @@ class MailerService extends AbstractService {
 	 *
 	 * @param TransactionEntity $transaction
 	 *
-	 * @return bool|void
+	 * @return bool
 	 * @since    1.1.0
 	 */
-	public function send_receipt( TransactionEntity $transaction ) {
+	public function send_receipt( TransactionEntity $transaction ) : bool {
 
 		// Check if setting enabled
 		if ( ! Settings::get_setting( 'email_receipt_enable' ) ) {

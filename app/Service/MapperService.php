@@ -16,18 +16,18 @@ class MapperService extends AbstractService {
 	 */
 	protected $wpdb;
 	/**
-	 * @var AbstractEntity
+	 * @var string
 	 */
 	protected $repository;
 
 	/**
 	 * Entity object constructor.
 	 *
-	 * @param EntityInterface|null $repository
+	 * @param string |null $repository
 	 *
 	 * @since   2.0.0
 	 */
-	public function __construct( $repository = null ) {
+	public function __construct( string $repository = null ) {
 
 		parent::__construct();
 
