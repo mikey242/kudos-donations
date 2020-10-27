@@ -103,7 +103,7 @@ class KudosDonations {
 	 */
 	private function set_locale() {
 
-		$i18n = new I18nService();
+		$i18n = I18nService::factory();
 		$this->loader->add_action( 'init', $i18n, 'load_plugin_textdomain' );
 
 	}
