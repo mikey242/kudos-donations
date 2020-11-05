@@ -259,7 +259,7 @@ class SubscriptionsTable extends WP_List_Table {
 		if ( $email ) {
 			return sprintf(
 				'<a href="%s" />%s</a>',
-				admin_url( sprintf( 'admin.php?page=kudos-donors&s=%s', $email ) ),
+				admin_url( sprintf( 'admin.php?page=kudos-donors&search-field=email&s=%s', $email ) ),
 				$item['name']
 			);
 		}

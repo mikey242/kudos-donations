@@ -247,7 +247,7 @@ class DonorsTable extends WP_List_Table {
 				}
 			}
 
-			return '<a href="' . admin_url( 'admin.php?page=kudos-transactions&s=' . rawurlencode( $item['email'] ) . '' ) . '">
+			return '<a href="' . admin_url( 'admin.php?page=kudos-transactions&search-field=email&s=' . rawurlencode( $item['email'] ) . '' ) . '">
 						' . $number . ' ( ' . Utils::get_currency_symbol( $transactions[0]->currency ) . $total . ' )' .
 					'</a>';
 		}

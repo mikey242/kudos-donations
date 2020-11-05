@@ -298,7 +298,7 @@ class TransactionsTable extends WP_List_Table {
 		if ( $email ) {
 			return sprintf(
 				"<a href='%s' />%s</a>",
-				admin_url( sprintf( 'admin.php?page=kudos-donors&s=%s', $email ) ),
+				admin_url( sprintf( 'admin.php?page=kudos-donors&search-field=email&s=%s', $email ) ),
 				$item['name']
 			);
 		}
@@ -441,7 +441,7 @@ class TransactionsTable extends WP_List_Table {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-campaigns&s=%s' ), rawurlencode( $item['campaign_label'] ) ),
+			sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=label&s=%s' ), rawurlencode( $item['campaign_label'] ) ),
 			strtoupper( $item['campaign_label'] )
 		);
 
