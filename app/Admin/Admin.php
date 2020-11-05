@@ -13,6 +13,7 @@ use Kudos\Service\MailerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
 use Kudos\Service\TwigService;
+use Kudos\Service\UpdateService;
 use WP_REST_Server;
 
 /**
@@ -475,6 +476,12 @@ class Admin {
 						new AdminNotice( __( 'Subscription cancelled', 'kudos-donations' ) );
 					}
 					break;
+
+				case 'kudos_sync_campaigns':
+					$result = UpdateService::sync_campaign_labels();
+					if ( $result ) {
+						new AdminNotice( __( 'Campaign labels updated', 'kudos-donations' ) );
+					}
 			}
 		}
 
