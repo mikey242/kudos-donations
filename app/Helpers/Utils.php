@@ -18,10 +18,9 @@ class Utils {
 		if ( $use_custom && $custom_url ) {
 			return $custom_url;
 		} else {
-			$returnUrl = is_ssl() ? 'https://' : 'http://';
-			$returnUrl .= $_SERVER['HTTP_HOST'] . parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
-			return $returnUrl;
+			return home_url( $request_uri );
 		}
 
 	}
