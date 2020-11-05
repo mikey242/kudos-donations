@@ -2,7 +2,7 @@
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, creditcard
 Requires at least: 5.4
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 7.1
 Stable tag: 2.0.3
 License: GPLv2 or later
@@ -55,11 +55,14 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 = 2.0.5 =
 * Fixed error deleting donors
-* Added 'Last Donation' column to campaign table
 * Fix slashes appearing in address
-* Improve debug logging
-* Added more Dutch translations
+* Add select column for table search
+* Add 'Last Donation' column to campaign table
+* Add debug option to sync campaigns
+* Add more Dutch translations
 * Add more hooks
+* Use object cache for database queries
+* Improve debug logging
 
 = 2.0.4 =
 * Added campaigns table
