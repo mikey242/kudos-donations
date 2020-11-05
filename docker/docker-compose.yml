@@ -29,6 +29,12 @@ services:
         define('WP_DEBUG_LOG', true);
         define('FS_METHOD','direct');
         define('SCRIPT_DEBUG', true);
+        $$redis_server = array(
+            'host'     => 'redis',
+            'port'     => 6379,
+            'auth'     => ${REDIS_PASSWORD:-123},
+            'database' => 0, // Optionally use a specific numeric Redis database. Default is 0.
+        );
 
   db:
     image: mariadb:10.5
@@ -64,6 +70,14 @@ services:
     environment:
       NGROK_PORT: wordpress:80
       NGROK_REGION: eu
+
+  redis:
+    image: redis:alpine
+    container_name: redis-kudos
+    restart: always
+    networks:
+      - default
+    command: redis-server --requirepass ${REDIS_PASSWORD:-123}
 
 volumes:
   db_data:
