@@ -17,16 +17,22 @@ class TwigService extends AbstractService {
 	const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
 
 	/**
+	 * Twig environment.
+	 *
 	 * @var Environment
 	 */
 	private $twig;
 
 	/**
+	 * Directories where templates are stored.
+	 *
 	 * @var array
 	 */
 	private $templates_dir;
 
 	/**
+	 * Twig options
+	 *
 	 * @var array
 	 */
 	private $options;
@@ -34,12 +40,12 @@ class TwigService extends AbstractService {
 	/**
 	 * Twig constructor
 	 *
-	 * @param array $templates_dir
-	 * @param array $options
+	 * @param array $templates_dir Templates directory array.
+	 * @param array $options Twig options.
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct( $templates_dir = [], $options = [] ) {
+	public function __construct( array $templates_dir = [], array $options = [] ) {
 
 		parent::__construct();
 
@@ -47,13 +53,16 @@ class TwigService extends AbstractService {
 		$this->templates_dir[]  = KUDOS_PLUGIN_DIR . '/templates/';
 		$this->options          = $options;
 		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
-		$this->initializeTwig();
-		$this->initializeTwigFunctions();
-		$this->initializeTwigFilters();
+		$this->initialize_twig();
+		$this->initialize_twig_functions();
+		$this->initialize_twig_filters();
 
 	}
 
-	public function initializeTwig() {
+	/**
+	 * Initialize environment and loaders
+	 */
+	public function initialize_twig() {
 
 		$loader     = new FilesystemLoader( $this->templates_dir );
 		$this->twig = new Environment( $loader, $this->options );
@@ -66,7 +75,7 @@ class TwigService extends AbstractService {
 	 * @since    1.0.0
 	 * @source https://wordpress.stackexchange.com/questions/287988/use-str-to-translate-strings-symfony-twig
 	 */
-	public function initializeTwigFunctions() {
+	public function initialize_twig_functions() {
 
 		/**
 		 * Add gettext __ function.
@@ -98,7 +107,7 @@ class TwigService extends AbstractService {
 	 *
 	 * @since 2.0.0
 	 */
-	public function initializeTwigFilters() {
+	public function initialize_twig_filters() {
 
 		/**
 		 * Add the WordPress apply_filters filter.
@@ -136,8 +145,8 @@ class TwigService extends AbstractService {
 	/**
 	 * Render the provided template
 	 *
-	 * @param string $template
-	 * @param array $array
+	 * @param string $template Template file (.html.twig).
+	 * @param array  $array Array to pass to template.
 	 *
 	 * @return bool
 	 * @since    1.0.0
@@ -168,7 +177,13 @@ class TwigService extends AbstractService {
 		foreach ( $ri as $file ) {
 			$file->isDir() ? $files ++ && rmdir( $file ) : $folders ++ && unlink( $file );
 		}
-		$this->logger->debug( 'Twig cache cleared', [ 'files' => $files, 'folders' => $folders ] );
+		$this->logger->debug(
+			'Twig cache cleared',
+			[
+				'files'   => $files,
+				'folders' => $folders,
+			]
+		);
 
 		return true;
 	}

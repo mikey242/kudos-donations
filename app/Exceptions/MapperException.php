@@ -6,8 +6,9 @@ use Throwable;
 
 class MapperException extends AbstractException {
 
-	protected $raisedAt;
 	/**
+	 * Repository
+	 *
 	 * @var string
 	 */
 	protected $repository;
@@ -15,16 +16,16 @@ class MapperException extends AbstractException {
 	/**
 	 * MapperException constructor.
 	 *
-	 * @param string $message
-	 * @param int $code
-	 * @param string|null $repository
-	 * @param Throwable|null $previous
+	 * @param string         $message Exception message.
+	 * @param int            $code Exception code.
+	 * @param string|null    $repository Repository.
+	 * @param Throwable|null $previous The previous throwable used for the exception chaining.
 	 */
-	public function __construct( $message = "", $code = 0, $repository = null, Throwable $previous = null ) {
+	public function __construct( $message = '', $code = 0, $repository = null, Throwable $previous = null ) {
 
-		if (!empty($repository)) {
-			$this->repository = (string)$repository;
-			$message .= ". Repository: {$this->repository}";
+		if ( ! empty( $repository ) ) {
+			$this->repository = (string) $repository;
+			$message         .= ". Repository: {$this->repository}";
 		}
 
 		parent::__construct( $message, $code, $previous );

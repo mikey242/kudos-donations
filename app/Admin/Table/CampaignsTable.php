@@ -13,6 +13,8 @@ class CampaignsTable extends WP_List_Table {
 	use TableTrait;
 
 	/**
+	 * Instance of the MapperService.
+	 *
 	 * @var MapperService
 	 */
 	private $mapper;
@@ -34,12 +36,14 @@ class CampaignsTable extends WP_List_Table {
 			'total'        => __( 'Total', 'kudos-donations' ),
 		];
 
-		parent::__construct( [
-			'orderBy'  => 'date',
-			'singular' => __( 'Campaign', 'kudos-donations' ),
-			'plural'   => __( 'Campaigns', 'kudos-donations' ),
-			'ajax'     => false,
-		] );
+		parent::__construct(
+			[
+				'orderBy'  => 'date',
+				'singular' => __( 'Campaign', 'kudos-donations' ),
+				'plural'   => __( 'Campaigns', 'kudos-donations' ),
+				'ajax'     => false,
+			]
+		);
 
 	}
 
@@ -90,7 +94,7 @@ class CampaignsTable extends WP_List_Table {
 				$total = 0;
 				/** @var TransactionEntity $transaction */
 				foreach ( $transactions as $transaction ) {
-					if ( $transaction->status === 'paid' ) {
+					if ( 'paid' === $transaction->status ) {
 						$refunds = $transaction->get_refund();
 						if ( $refunds ) {
 							$total = $total + $refunds['remaining'];
@@ -99,7 +103,7 @@ class CampaignsTable extends WP_List_Table {
 						}
 					}
 				}
-				$campaigns[ $key ]['last_donation'] = end($transactions)->created;
+				$campaigns[ $key ]['last_donation'] = end( $transactions )->created;
 				$campaigns[ $key ]['transactions']  = count( $transactions );
 				$campaigns[ $key ]['currency']      = $transactions[0]->currency;
 				$campaigns[ $key ]['total']         = $total;
@@ -117,11 +121,11 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function column_names() {
 		return [
-			'date'         => __( 'Date', 'kudos-donations' ),
-			'label'        => __( 'Label', 'kudos-donations' ),
-			'transactions' => __( 'Transactions', 'kudos-donations' ),
-			'total'        => __( 'Total', 'kudos-donations' ),
-			'last_donation' => __('Last Donation', 'kudos-donations')
+			'date'          => __( 'Date', 'kudos-donations' ),
+			'label'         => __( 'Label', 'kudos-donations' ),
+			'transactions'  => __( 'Transactions', 'kudos-donations' ),
+			'total'         => __( 'Total', 'kudos-donations' ),
+			'last_donation' => __( 'Last Donation', 'kudos-donations' ),
 		];
 	}
 
@@ -146,30 +150,30 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return [
-			'date' => [
+			'date'          => [
 				'date',
 				false,
 			],
-			'total' => [
+			'total'         => [
 				'total',
-				false
+				false,
 			],
 			'last_donation' => [
 				'last_donation',
-				false
-			]
+				false,
+			],
 		];
 	}
 
 	/**
 	 * Render the bulk edit checkbox
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since   2.0.4
 	 */
-	function column_cb( $item ) {
+	protected function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="bulk-action[]" value="%s" />',
 			$item['label']
@@ -179,38 +183,40 @@ class CampaignsTable extends WP_List_Table {
 	/**
 	 * Time (date) column
 	 *
-	 * @param array $item an array of DB data
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since   2.0.4
 	 */
-	function column_date( array $item ) {
+	protected function column_date( array $item ) {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
 		$actions = [
-			'delete' => sprintf( '<a href="?page=%s&action=%s&label=%s&_wpnonce=%s">%s</a>',
+			'delete' => sprintf(
+				'<a href="?page=%s&action=%s&label=%s&_wpnonce=%s">%s</a>',
 				esc_attr( $_REQUEST['page'] ),
 				'delete',
 				sanitize_text_field( $item['label'] ),
 				$delete_nonce,
-				__( 'Delete', 'kudos-donations' ) ),
+				__( 'Delete', 'kudos-donations' )
+			),
 		];
 
 		return __( 'Added', 'kudos-donations' ) . '<br/>' .
-                wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['date'] ) ) . '<br/>' .
-		        $this->row_actions( $actions );
+			wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['date'] ) ) . '<br/>' .
+			$this->row_actions( $actions );
 	}
 
 	/**
 	 * Label column
 	 *
-	 * @param $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since 2.0.4
 	 */
-	function column_label( $item ) {
+	protected function column_label( array $item ) {
 
 		return strtoupper( $item['label'] );
 
@@ -219,43 +225,48 @@ class CampaignsTable extends WP_List_Table {
 	/**
 	 * Transactions column
 	 *
-	 * @param $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since 2.0.4
 	 */
-	function column_transactions( $item ) {
-		return sprintf( '<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-transactions&s=%s' ), urlencode( $item['label'] ) ),
+	protected function column_transactions( array $item ) {
+
+		return sprintf(
+			'<a href=%1$s>%2$s</a>',
+			sprintf( admin_url( 'admin.php?page=kudos-transactions&s=%s' ), rawurlencode( $item['label'] ) ),
 			strtoupper( $item['transactions'] )
 		);
+
 	}
 
 	/**
 	 * Total column
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since 2.0.4
 	 */
-	function column_total( array $item ) {
+	protected function column_total( array $item ) {
+
 		$currency = ! empty( $item['currency'] ) ? Utils::get_currency_symbol( $item['currency'] ) : '';
 		$total    = $item['total'];
 
 		return $currency . ' ' . number_format_i18n( $total, 2 );
+
 	}
 
 	/**
 	 * Shows the date of the last translation
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 * @return string
 	 * @since 2.0.5
 	 */
-	function column_last_donation( array $item ) {
+	protected function column_last_donation( array $item ) {
 
-		return isset($item['last_donation']) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['last_donation'] ) ) : '';
+		return isset( $item['last_donation'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['last_donation'] ) ) : '';
 
 	}
 
@@ -265,7 +276,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return array|string
 	 * @since   2.0.4
 	 */
-	function get_bulk_actions() {
+	protected function get_bulk_actions() {
 		return [
 			'bulk-delete' => __( 'Delete', 'kudos-donations' ),
 		];
@@ -278,28 +289,29 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function process_bulk_action() {
 
-		//Detect when a bulk action is being triggered...
+		// Detect when a bulk action is being triggered.
 		switch ( $this->current_action() ) {
 
 			case 'delete':
-
 				// In our file that handles the request, verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['singular'] ) ) {
 					die();
 				}
 
-				self::delete_record( sanitize_text_field( $_GET['label'] ) );
+				if ( isset( $_GET['label'] ) ) {
+					self::delete_record( sanitize_text_field( wp_unslash( $_GET['label'] ) ) );
+				}
+
 				break;
 
 			case 'bulk-delete':
-
 				// In our file that handles the request, verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['plural'] ) ) {
 					die();
 				}
 
 				if ( isset( $_REQUEST['bulk-action'] ) ) {
-					$labels = esc_sql( $_REQUEST['bulk-action'] );
+					$labels = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
 					foreach ( $labels as $label ) {
 						self::delete_record( sanitize_text_field( $label ) );
 					}
@@ -311,7 +323,7 @@ class CampaignsTable extends WP_List_Table {
 	/**
 	 * Delete a campaign.
 	 *
-	 * @param string $label
+	 * @param string $label The campaign label.
 	 *
 	 * @return bool
 	 * @since   2.0.4
@@ -319,10 +331,12 @@ class CampaignsTable extends WP_List_Table {
 	protected function delete_record( string $label ) {
 
 		$labels = Settings::get_setting( 'campaign_labels' );
-		$labels = array_filter( $labels,
+		$labels = array_filter(
+			$labels,
 			function ( $a ) use ( $label ) {
-				return ! in_array( $label, $a );
-			} );
+				return ! in_array( $label, $a, true );
+			}
+		);
 
 		return Settings::update_setting( 'campaign_labels', $labels );
 

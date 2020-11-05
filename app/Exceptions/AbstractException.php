@@ -10,22 +10,24 @@ use Throwable;
 abstract class AbstractException extends Exception {
 
 	/**
+	 * DateTime that exception made
+	 *
 	 * @var DateTimeImmutable
 	 */
-	protected $raisedAt;
+	protected $raised_at;
 
 	/**
 	 * MapperException constructor.
 	 *
-	 * @param string $message
-	 * @param int $code
-	 * @param Throwable|null $previous
+	 * @param string         $message Exception message.
+	 * @param int            $code Exception code.
+	 * @param Throwable|null $previous The previous throwable used for the exception chaining.
 	 */
-	public function __construct( $message = "", $code = 0, Throwable $previous = null ) {
+	public function __construct( $message = '', $code = 0, Throwable $previous = null ) {
 
-		$this->raisedAt = new DateTimeImmutable();
-		$formattedRaisedAt = $this->raisedAt->format(DateTime::ISO8601);
-		$message = "[{$formattedRaisedAt}] " . $message;
+		$this->raised_at     = new DateTimeImmutable();
+		$formatted_raised_at = $this->raised_at->format( DateTime::ISO8601 );
+		$message             = "[{$formatted_raised_at}] " . $message;
 
 		parent::__construct( $message, $code, $previous );
 	}

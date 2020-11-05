@@ -34,16 +34,18 @@ class Utils {
 	 * Fallback: the default asset name will be passed through.
 	 *
 	 * @source https://danielshaw.co.nz/wordpress-cache-busting-json-hash-map/
-	 * @param string $asset e.g style.css
-	 * @param bool $path
+	 * @param string $asset e.g style.css.
+	 * @param bool   $path Whether to return the path or url.
 	 *
 	 * @return string
 	 * @since   1.0.0
 	 */
 	public static function get_asset_url( string $asset, bool $path = false ) {
 
-		$map  = KUDOS_PLUGIN_DIR . '/dist/manifest.json';
-		$hash = file_exists( $map ) ? json_decode( file_get_contents( $map ), true ) : [];
+		$map      = KUDOS_PLUGIN_URL . 'dist/manifest.json';
+		$request  = wp_remote_get( $map );
+		$response = wp_remote_retrieve_body( $request );
+		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
 
 		if ( array_key_exists( $asset, $hash ) ) {
 			if ( ! $path ) {
@@ -59,7 +61,7 @@ class Utils {
 	/**
 	 * Converts three letter currency code into a symbol
 	 *
-	 * @param string $currency
+	 * @param string $currency Three letter currency code (EUR, GBP, USD).
 	 *
 	 * @return string
 	 * @since      1.0.2
@@ -92,8 +94,8 @@ class Utils {
 	 * Lightens/darkens a given colour (hex format), returning the altered colour in hex format.
 	 *
 	 * @source https://gist.github.com/stephenharris/5532899
-	 * @param string $hex Colour as hexadecimal (with or without hash);
-	 * @param float $percent
+	 * @param string $hex Colour as hexadecimal (with or without hash).
+	 * @param float  $percent Percentage to modify the luminance by.
 	 *
 	 * @return string Lightened/Darkened colour as hexadecimal (with hash);
 	 * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
@@ -101,23 +103,23 @@ class Utils {
 	 */
 	public static function color_luminance( string $hex, float $percent ) {
 
-		// Remove leading '#' if present
+		// Remove leading '#' if present.
 		$hex = ltrim( $hex, '#' );
 
-		// Expand to 6 character hex code (e.g. FFF -> FFFFFF)
-		if ( strlen( $hex ) == 3 ) {
+		// Expand to 6 character hex code (e.g. FFF -> FFFFFF).
+		if ( strlen( $hex ) === 3 ) {
 			$hex = $hex[0] + $hex[0] + $hex[1] + $hex[1] + $hex[2] + $hex[2];
 		}
 
-		// Convert to decimal
+		// Convert to decimal.
 		$hex = array_map( 'hexdec', str_split( $hex, 2 ) );
 
-		// Change luminosity of decimal colour
+		// Change luminosity of decimal colour.
 		foreach ( $hex as & $color ) {
-			$adjustableLimit = $percent < 0 ? $color : 255 - $color;
-			$adjustAmount    = ceil( $adjustableLimit * $percent );
+			$adjustable_limit = $percent < 0 ? $color : 255 - $color;
+			$adjust_amount    = ceil( $adjustable_limit * $percent );
 
-			$color = str_pad( dechex( $color + $adjustAmount ), 2, '0', STR_PAD_LEFT );
+			$color = str_pad( dechex( $color + $adjust_amount ), 2, '0', STR_PAD_LEFT );
 		}
 
 		return '#' . implode( $hex );
@@ -126,12 +128,12 @@ class Utils {
 	/**
 	 * Returns a translated string of the sequence type
 	 *
-	 * @param $text
+	 * @param string $text Mollie sequence type code.
 	 *
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	public static function get_sequence_type( $text ) {
+	public static function get_sequence_type( string $text ) {
 
 		switch ( $text ) {
 			case 'oneoff':
@@ -147,7 +149,7 @@ class Utils {
 	/**
 	 * Returns subscription frequency name based on number of months
 	 *
-	 * @param string $frequency
+	 * @param string $frequency Mollie frequency code.
 	 *
 	 * @return string|void
 	 * @since   2.0.0
@@ -161,7 +163,7 @@ class Utils {
 				return __( 'Monthly', 'kudos-donations' );
 			case '3 months':
 				return __( 'Quarterly', 'kudos-donations' );
-			case "oneoff":
+			case 'oneoff':
 				return __( 'One-off', 'kudos-donations' );
 			default:
 				return $frequency;
@@ -173,8 +175,8 @@ class Utils {
 	 * Calculate how many years a subscription is running for
 	 * This is based on the number of payments and the frequency.
 	 *
-	 * @param int $years
-	 * @param string $frequency
+	 * @param int    $years Number of years as an integer.
+	 * @param string $frequency Frequency.
 	 *
 	 * @return int|null
 	 * @since   2.0.0
@@ -192,15 +194,15 @@ class Utils {
 	/**
 	 * Generate a random and unique ID with specified prefix
 	 *
-	 * @param string|null $prefix
-	 * @param int $length
+	 * @param string|null $prefix Prefix for id.
+	 * @param int         $length Return value length (minus prefix).
 	 *
 	 * @return string
 	 * @since   2.0.0
 	 */
 	public static function generate_id( $prefix = null, $length = 10 ) {
 
-		return $prefix . substr( base_convert( sha1( uniqid( mt_rand() ) ), 16, 36 ), 0, $length );
+		return $prefix . substr( base_convert( sha1( uniqid( wp_rand() ) ), 16, 36 ), 0, $length );
 
 	}
 

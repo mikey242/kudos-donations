@@ -26,7 +26,7 @@ class ActivatorService {
 	/**
 	 * Runs all activation functions
 	 *
-	 * @param $old_version
+	 * @param string|null $old_version Previous version of plugin.
 	 *
 	 * @since    1.0.0
 	 */
@@ -63,7 +63,7 @@ class ActivatorService {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name      = DonorEntity::get_table_name();  //get the database table prefix to create my new table
+		$table_name      = DonorEntity::get_table_name();
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -80,7 +80,7 @@ class ActivatorService {
 		  PRIMARY KEY (id)
 		) $charset_collate";
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
 	}
@@ -95,7 +95,7 @@ class ActivatorService {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name      = TransactionEntity::get_table_name();  //get the database table prefix to create my new table
+		$table_name      = TransactionEntity::get_table_name();
 
 		$sql = "CREATE TABLE $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -117,7 +117,7 @@ class ActivatorService {
 		  PRIMARY KEY (id)
 		) $charset_collate;";
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
 	}
@@ -132,7 +132,7 @@ class ActivatorService {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name      = SubscriptionEntity::get_table_name();  //get the database table prefix to create my new table
+		$table_name      = SubscriptionEntity::get_table_name();
 
 		$sql = "CREATE TABLE $table_name (
 		  id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
@@ -150,7 +150,7 @@ class ActivatorService {
 		  PRIMARY KEY (id)
 		) $charset_collate";
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
 	}

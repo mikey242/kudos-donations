@@ -62,7 +62,7 @@ class Front {
 	/**
 	 * Processes the transaction. Used by action scheduler via mollie class.
 	 *
-	 * @param string $order_id
+	 * @param string $order_id Kudos order id.
 	 *
 	 * @return bool
 	 * @since   2.0.0
@@ -72,7 +72,7 @@ class Front {
 		$logger = LoggerService::factory();
 		$logger->debug( 'Processing transaction', [ $order_id ] );
 
-		// Bail if no order ID
+		// Bail if no order ID.
 		if ( null === $order_id ) {
 			$logger->error( 'Order ID not provided to process_transaction function.' );
 
@@ -84,7 +84,7 @@ class Front {
 		$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
 
 		if ( $transaction->get_donor()->email ) {
-			// Send email - email setting is checked in mailer
+			// Send email - email setting is checked in mailer.
 			$mailer = MailerService::factory();
 			$mailer->send_receipt( $transaction );
 		}
@@ -100,11 +100,13 @@ class Front {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name . '-public',
+		wp_enqueue_style(
+			$this->plugin_name . '-public',
 			Utils::get_asset_url( 'kudos-public.css' ),
 			[],
 			$this->version,
-			'all' );
+			'all'
+		);
 		echo $this->get_kudos_root_styles();
 
 	}
@@ -142,26 +144,34 @@ class Front {
 
 		$handle = $this->plugin_name . '-public';
 
-		wp_enqueue_script( 'micromodal',
+		wp_enqueue_script(
+			'micromodal',
 			plugin_dir_url( __FILE__ ) . '../../dist/js/vendor/micromodal.min.js',
 			[],
 			'0.4.6',
-			true );
-		wp_enqueue_script( 'jquery-validate',
+			true
+		);
+		wp_enqueue_script(
+			'jquery-validate',
 			plugin_dir_url( __FILE__ ) . '../../dist/js/vendor/jquery.validate.min.js',
 			[ 'jquery' ],
 			'1.19.1',
-			true );
-		wp_enqueue_script( $handle,
+			true
+		);
+		wp_enqueue_script(
+			$handle,
 			Utils::get_asset_url( 'kudos-public.js' ),
 			[ 'jquery', 'micromodal', 'jquery-validate' ],
 			$this->version,
-			true );
-		wp_localize_script( $handle,
+			true
+		);
+		wp_localize_script(
+			$handle,
 			'kudos',
 			[
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			] );
+			]
+		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 
 	}
@@ -176,7 +186,8 @@ class Front {
 		$handle = $this->plugin_name . '-button-block';
 
 		wp_enqueue_style( $handle, Utils::get_asset_url( 'kudos-button-block.css' ), [], $this->version, 'all' );
-		wp_enqueue_script( $handle,
+		wp_enqueue_script(
+			$handle,
 			Utils::get_asset_url( 'kudos-button-block.js' ),
 			[
 				'wp-i18n',
@@ -190,12 +201,15 @@ class Front {
 				'wp-api',
 			],
 			$this->version,
-			true );
-		wp_localize_script( $handle,
+			true
+		);
+		wp_localize_script(
+			$handle,
 			'kudos',
 			[
 				'theme_color' => Settings::get_setting( 'theme_color' ),
-			] );
+			]
+		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 		echo $this->get_kudos_root_styles();
 
@@ -208,71 +222,82 @@ class Front {
 	 */
 	public function submit_payment() {
 
-		parse_str( $_REQUEST['form'], $form );
+		if ( ! isset( $_REQUEST['form'] ) ) {
+			wp_send_json_error( [ 'message' => __( 'Form data not found', 'kudos-donations' ) ] );
+		}
+
+		parse_str( wp_unslash( $_REQUEST['form'] ), $form );
+
 		if ( ! wp_verify_nonce( $form['_wpnonce'], 'kudos_submit' ) ) {
 			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
 		}
 
-		// Sanitize form fields
+		// Sanitize form fields.
 		$value             = intval( $form['value'] );
-		$payment_frequency = ( ! empty( $form['recurring_frequency'] ) ? sanitize_text_field( $form['recurring_frequency'] ) : 'oneoff' );
-		$recurring_length  = ( ! empty( $form['recurring_length'] ) ? intval( $form['recurring_length'] ) : 0 );
-		$name              = ! empty( $form['name'] ) ? sanitize_text_field( $form['name'] ) : null;
-		$email             = ! empty( $form['email_address'] ) ? sanitize_email( $form['email_address'] ) : null;
-		$street            = ! empty( $form['street'] ) ? sanitize_text_field( $form['street'] ) : null;
-		$postcode          = ! empty( $form['postcode'] ) ? sanitize_text_field( $form['postcode'] ) : null;
-		$city              = ! empty( $form['city'] ) ? sanitize_text_field( $form['city'] ) : null;
-		$country           = ! empty( $form['country'] ) ? sanitize_text_field( $form['country'] ) : null;
-		$redirect_url      = ! empty( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
-		$campaign_label    = ! empty( $form['campaign_label'] ) ? sanitize_text_field( $form['campaign_label'] ) : null;
+		$payment_frequency = isset( $form['recurring_frequency'] ) ? sanitize_text_field( $form['recurring_frequency'] ) : 'oneoff';
+		$recurring_length  = isset( $form['recurring_length'] ) ? intval( $form['recurring_length'] ) : 0;
+		$name              = isset( $form['name'] ) ? sanitize_text_field( $form['name'] ) : null;
+		$email             = isset( $form['email_address'] ) ? sanitize_email( $form['email_address'] ) : null;
+		$street            = isset( $form['street'] ) ? sanitize_text_field( $form['street'] ) : null;
+		$postcode          = isset( $form['postcode'] ) ? sanitize_text_field( $form['postcode'] ) : null;
+		$city              = isset( $form['city'] ) ? sanitize_text_field( $form['city'] ) : null;
+		$country           = isset( $form['country'] ) ? sanitize_text_field( $form['country'] ) : null;
+		$redirect_url      = isset( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
+		$campaign_label    = isset( $form['campaign_label'] ) ? sanitize_text_field( $form['campaign_label'] ) : null;
 
 		$mollie = MollieService::factory();
 		$mapper = new MapperService( DonorEntity::class );
 
 		if ( $email ) {
 
-			// Search for existing donor
+			// Search for existing donor.
 			/** @var DonorEntity $donor */
 			$donor = $mapper->get_one_by( [ 'email' => $email ] );
 
-			// Create new donor
+			// Create new donor.
 			if ( empty( $donor->customer_id ) ) {
 				$donor    = new DonorEntity();
 				$customer = $mollie->create_customer( $email, $name );
 				$donor->set_fields( [ 'customer_id' => $customer->id ] );
 			}
 
-			// Update new/existing donor
-			$donor->set_fields( [
-				'email'    => $email,
-				'name'     => $name,
-				'street'   => $street,
-				'postcode' => $postcode,
-				'city'     => $city,
-				'country'  => $country,
-			] );
+			// Update new/existing donor.
+			$donor->set_fields(
+				[
+					'email'    => $email,
+					'name'     => $name,
+					'street'   => $street,
+					'postcode' => $postcode,
+					'city'     => $city,
+					'country'  => $country,
+				]
+			);
 
 			$mapper->save( $donor );
 		}
 
-		$customerId = $donor->customer_id ?? null;
+		$customer_id = $donor->customer_id ?? null;
 
-		$payment = $mollie->create_payment( $value,
+		$payment = $mollie->create_payment(
+			$value,
 			$payment_frequency,
 			$recurring_length,
 			$redirect_url,
 			$campaign_label,
 			$name,
 			$email,
-			$customerId );
+			$customer_id
+		);
+
 		if ( $payment ) {
 			wp_send_json_success( $payment->getCheckoutUrl() );
 		}
 
-		wp_send_json_error( [
-			'message' => __( 'Error creating Mollie payment. Please try again later.',
-				'kudos-donations' ),
-		] );
+		wp_send_json_error(
+			[
+				'message' => __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' ),
+			]
+		);
 
 	}
 
@@ -283,8 +308,9 @@ class Front {
 	 */
 	public function register_kudos() {
 
-		// Add shortcode
-		add_shortcode( 'kudos',
+		// Add shortcode.
+		add_shortcode(
+			'kudos',
 			function ( $atts ) {
 
 				$atts = shortcode_atts(
@@ -292,8 +318,7 @@ class Front {
 						'button_label'   => __( 'Donate now', 'kudos-donations' ),
 						'color'          => Settings::get_setting( 'theme_color' ),
 						'modal_title'    => __( 'Support us!', 'kudos-donations' ),
-						'welcome_text'   => __( 'Thank you for your donation. We appreciate your support!',
-							'kudos-donations' ),
+						'welcome_text'   => __( 'Thank you for your donation. We appreciate your support!', 'kudos-donations' ),
 						'amount_type'    => 'open',
 						'fixed_amounts'  => '5, 10, 20, 50',
 						'campaign_label' => null,
@@ -304,10 +329,12 @@ class Front {
 				);
 
 				return $this->kudos_render_callback( $atts );
-			} );
+			}
+		);
 
-		// Register kudos button block
-		register_block_type( 'iseardmedia/kudos-button',
+		// Register kudos button block.
+		register_block_type(
+			'iseardmedia/kudos-button',
 			[
 				'editor_script'   => $this->plugin_name . '-button-block',
 				'render_callback' => [ $this, 'kudos_render_callback' ],
@@ -353,13 +380,14 @@ class Front {
 						'attribute' => 'data-target',
 					],
 				],
-			] );
+			]
+		);
 	}
 
 	/**
 	 * Renders the kudos button and donation modals
 	 *
-	 * @param array $attr
+	 * @param array $attr Array of kudos button/modal attributes.
 	 *
 	 * @return string|null
 	 * @since   2.0.0
@@ -368,12 +396,12 @@ class Front {
 
 		if ( self::ready() ) {
 
-			// Create button and modal
+			// Create button and modal.
 			$button = new KudosButton( $attr );
 			$modal  = $button->get_donate_modal();
 
 
-			// Return only if modal and button not empty
+			// Return only if modal and button not empty.
 			if ( ! empty( $modal ) && ! empty( $button ) ) {
 				return $button->get_button( false ) . $modal;
 			}
@@ -381,8 +409,12 @@ class Front {
 			return null;
 
 		} elseif ( is_user_logged_in() && ! is_admin() ) {
-			echo "<a href=" . esc_url( admin_url( 'admin.php?page=kudos-settings' ) ) . ">" . __( 'Mollie not connected',
-					'kudos-donations' ) . "</a>";
+
+			printf(
+				'<a href="%s">%s</a>',
+				esc_url( admin_url( 'admin.php?page=kudos-settings' ) ),
+				esc_attr__( 'Mollie not connected', 'kudos-donations' )
+			);
 		}
 
 		return null;
@@ -397,11 +429,11 @@ class Front {
 	 */
 	public static function ready() {
 
-		$apiConnected = Settings::get_setting( 'mollie_connected' );
-		$apiMode      = Settings::get_setting( 'mollie_api_mode' );
-		$apiKey       = Settings::get_setting( 'mollie_' . $apiMode . '_api_key' );
+		$api_connected = Settings::get_setting( 'mollie_connected' );
+		$api_mode      = Settings::get_setting( 'mollie_api_mode' );
+		$api_key       = Settings::get_setting( 'mollie_' . $api_mode . '_api_key' );
 
-		return ( $apiKey && $apiConnected );
+		return ( $api_key && $api_connected );
 
 	}
 
@@ -412,16 +444,16 @@ class Front {
 	 */
 	public function handle_query_variables() {
 
-		if ( isset( $_REQUEST['kudos_action'] ) && - 1 != $_REQUEST['kudos_action'] ) {
+		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
 
-			$action = sanitize_text_field($_REQUEST['kudos_action']);
-			$token  = sanitize_text_field(get_query_var( 'kudos_token' ));
+			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
+			$token  = sanitize_text_field( get_query_var( 'kudos_token' ) );
 
 			switch ( $action ) {
 
 				case 'order_complete':
 					$order_id = sanitize_text_field( get_query_var( 'kudos_order_id' ) );
-					// Return message modal
+					// Return message modal.
 					if ( ! empty( $order_id ) && ! empty( $token ) ) {
 						$order_id    = sanitize_text_field( $order_id );
 						$mapper      = new MapperService( TransactionEntity::class );
@@ -438,7 +470,7 @@ class Front {
 
 				case 'cancel_subscription':
 					$subscription_id = sanitize_text_field( get_query_var( 'kudos_subscription_id' ) );
-					// Cancel subscription modal
+					// Cancel subscription modal.
 					if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
 
 						$mapper = new MapperService( SubscriptionEntity::class );
@@ -446,7 +478,7 @@ class Front {
 						/** @var SubscriptionEntity $subscription */
 						$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
 
-						// Bail if no subscription found
+						// Bail if no subscription found.
 						if ( null === $subscription ) {
 							return;
 						}
@@ -456,31 +488,33 @@ class Front {
 						if ( $subscription->verify_secret( $token ) ) {
 							$kudos_mollie = MollieService::factory();
 							if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
-								echo $modal->get_message_modal( [
-									'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
-									'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
-										'kudos-donations' ),
-								] );
+								echo $modal->get_message_modal(
+									[
+										'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
+										'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.', 'kudos-donations' ),
+									]
+								);
 
 								return;
 							}
 						}
 
-						echo $modal->get_message_modal( [
-							'modal_title' => __( 'Link expired', 'kudos-donations' ),
-							'modal_text'  => __( 'Sorry, this link is no longer valid.', 'kudos-donations' ),
-						] );
+						echo $modal->get_message_modal(
+							[
+								'modal_title' => __( 'Link expired', 'kudos-donations' ),
+								'modal_text'  => __( 'Sorry, this link is no longer valid.', 'kudos-donations' ),
+							]
+						);
 					}
 					break;
 			}
-
 		}
 	}
 
 	/**
 	 * Check payment status based on local order_id
 	 *
-	 * @param string $order_id
+	 * @param string $order_id Kudos order id.
 	 *
 	 * @return bool | array
 	 * @since   1.0.0
@@ -493,7 +527,7 @@ class Front {
 			/** @var TransactionEntity $transaction */
 			$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
 
-			if ( NULL === $transaction ) {
+			if ( null === $transaction ) {
 				return false;
 			}
 
@@ -502,24 +536,23 @@ class Front {
 			switch ( $transaction->status ) {
 				case 'paid':
 					$vars                  = [
-						'{{value}}' => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
-								2 ),
+						'{{value}}' => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value, 2 ),
 						'{{name}}'  => $donor->name,
 						'{{email}}' => $donor->email,
 					];
-					$return['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
-					$return['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
+					$atts['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
+					$atts['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
 					break;
 				case 'canceled':
-					$return['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
+					$atts['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
 					break;
 				default:
-					$return['modal_title'] = __( 'Thanks', 'kudos-donations' );
-					$return['modal_text']  = __( 'Your donation will be processed soon.', 'kudos-donations' );
+					$atts['modal_title'] = __( 'Thanks', 'kudos-donations' );
+					$atts['modal_text']  = __( 'Your donation will be processed soon.', 'kudos-donations' );
 					break;
 			}
 
-			return $return;
+			return $atts;
 		}
 
 		return false;
@@ -528,12 +561,12 @@ class Front {
 	/**
 	 * Register query parameters
 	 *
-	 * @param $vars
+	 * @param array $vars Current query vars.
 	 *
 	 * @return mixed
 	 * @since   2.0.0
 	 */
-	public function register_vars( $vars ) {
+	public function register_vars( array $vars ) {
 
 		$vars[] = 'kudos_subscription_id';
 		$vars[] = 'kudos_order_id';

@@ -87,7 +87,7 @@ class KudosDonations {
 		$this->define_public_hooks();
 
 		if ( Settings::get_setting( 'action_scheduler' ) ) {
-			require_once( KUDOS_PLUGIN_DIR . '/vendor/woocommerce/action-scheduler/action-scheduler.php' );
+			require_once KUDOS_PLUGIN_DIR . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 		}
 
 	}
@@ -175,7 +175,7 @@ class KudosDonations {
 		$this->loader->add_action( 'query_vars', $plugin_public, 'register_vars' );
 		$this->loader->add_action( 'kudos_process_paid_transaction', $plugin_public, 'process_transaction', 10, 1 );
 
-		// Entity Hooks
+		// Entity Hooks.
 		TransactionEntity::create_hooks();
 		DonorEntity::create_hooks();
 		SubscriptionEntity::create_hooks();

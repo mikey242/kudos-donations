@@ -40,12 +40,14 @@ class TransactionsTable extends WP_List_Table {
 			'sequence_type' => __( 'Type', 'kudos-donations' ),
 		];
 
-		parent::__construct( [
-			'orderBy'  => 'created',
-			'singular' => __( 'Transaction', 'kudos-donations' ), //singular name of the listed records
-			'plural'   => __( 'Transactions', 'kudos-donations' ), //plural name of the listed records
-			'ajax'     => false //does this table support ajax?
-		] );
+		parent::__construct(
+			[
+				'orderBy'  => 'created',
+				'singular' => __( 'Transaction', 'kudos-donations' ),
+				'plural'   => __( 'Transactions', 'kudos-donations' ),
+				'ajax'     => false,
+			]
+		);
 
 	}
 
@@ -142,7 +144,6 @@ class TransactionsTable extends WP_List_Table {
 	public function get_hidden_columns() {
 		return [
 			'transaction_id',
-//			'campaign_label',
 		];
 
 	}
@@ -175,7 +176,7 @@ class TransactionsTable extends WP_List_Table {
 	/**
 	 * Render the bulk edit checkbox
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since   1.0.0
@@ -190,32 +191,95 @@ class TransactionsTable extends WP_List_Table {
 	}
 
 	/**
+	 * Process delete and bulk-delete actions
+	 *
+	 * @since   1.0.0
+	 */
+	public function process_bulk_action() {
+
+		// Detect when a bulk action is being triggered.
+		switch ( $this->current_action() ) {
+
+			case 'delete':
+				// Verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['singular'] ) ) {
+					die();
+				}
+
+				if ( isset( $_GET['order_id'] ) ) {
+					self::delete_record( 'order_id', sanitize_text_field( wp_unslash( $_GET['order_id'] ) ) );
+				}
+
+				break;
+
+			case 'bulk-delete':
+				// Verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['plural'] ) ) {
+					die();
+				}
+
+				if ( isset( $_REQUEST['bulk-action'] ) ) {
+
+					$order_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
+					foreach ( $order_ids as $id ) {
+						self::delete_record( 'order_id', sanitize_text_field( $id ) );
+					}
+				}
+				break;
+		}
+
+	}
+
+	/**
+	 * Delete a transaction.
+	 *
+	 * @param string $column Column name to search.
+	 * @param string $order_id Value to search for.
+	 *
+	 * @return false|int
+	 * @since   1.0.0
+	 */
+	protected function delete_record( string $column, string $order_id ) {
+
+		return $this->mapper->delete( $column, $order_id );
+
+	}
+
+	/**
 	 * Time (date) column
 	 *
-	 * @param array $item an array of DB data
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since   1.0.0
 	 */
-	function column_created( array $item ) {
+	protected function column_created( array $item ) {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
-		$title = '<strong>' . wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-				strtotime( $item['created'] ) ) . '</strong>';
+		$title = '<strong>' .
+		         wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			         strtotime( $item['created'] ) ) .
+		         '</strong>';
 
 		$order_id = $item['order_id'];
 
-		$actions = apply_filters( TransactionEntity::get_table_name(false) . "_actions",
+		$actions = apply_filters(
+			TransactionEntity::get_table_name( false ) . '_actions',
 			[
-				'delete' => sprintf( '<a href="?page=%s&action=%s&order_id=%s&_wpnonce=%s">%s</a>',
+				'delete' => sprintf(
+					'<a href="?page=%s&action=%s&order_id=%s&_wpnonce=%s">%s</a>',
 					esc_attr( $_REQUEST['page'] ),
 					'delete',
 					$order_id,
 					$delete_nonce,
-					__( 'Delete', 'kudos-donations' ) ),
+					__( 'Delete', 'kudos-donations' )
+				),
 			],
-			$order_id );
+			$order_id
+		);
 
 		return $title . $this->row_actions( $actions );
 
@@ -224,53 +288,57 @@ class TransactionsTable extends WP_List_Table {
 	/**
 	 * Name column
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string|null
 	 * @since   2.0.0
 	 */
-	function column_name( array $item ) {
+	protected function column_name( array $item ) {
 
-		$email = $item['email'];
+		$email = isset($item['email']) ? $item['email'] : null ;
 
 		if ( $email ) {
 			return sprintf(
 				"<a href='%s' />%s</a>",
-				admin_url( sprintf( "admin.php?page=kudos-donors&s=%s", $email ) ),
+				admin_url( sprintf( 'admin.php?page=kudos-donors&s=%s', $email ) ),
 				$item['name']
 			);
 		}
 
-		return $item['name'];
+		return isset($item['name']) ? $item['name'] : '';
 
 	}
 
 	/**
 	 * Email column
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since   1.0.0
 	 */
-	function column_email( array $item ) {
+	protected function column_email( array $item ) {
 
-		return sprintf(
-			'<a href="mailto: %1$s" />%1$s</a>',
-			$item['email']
-		);
+		if(isset($item['email'])) {
+			return sprintf(
+				'<a href="mailto: %1$s" />%1$s</a>',
+				$item['email']
+			);
+		}
+
+		return '';
 
 	}
 
 	/**
 	 * Value (amount) column
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string|void
 	 * @since   1.0.0
 	 */
-	function column_value( array $item ) {
+	protected function column_value( array $item ) {
 
 		switch ( $item['method'] ) {
 			case 'ideal':
@@ -291,27 +359,25 @@ class TransactionsTable extends WP_List_Table {
 
 		$value = $item['value'];
 
-		/** @var TransactionEntity $transaction */
-		$transaction = $this->mapper->get_one_by( [ 'order_id' => $item['order_id'] ] );
-		$refund      = $transaction->get_refund();
-		if ( $refund ) {
-			$value = $refund['remaining'];
+		if ( $item['refunds'] ) {
+			$refund = json_decode( $item['refunds'] );
+			$value = json_last_error() == JSON_ERROR_NONE ? $refund->remaining : '';
 		}
 
-		return '<i title="' . $item['method'] . '" class="' . $icon . '"></i> ' . $currency . ' ' . number_format_i18n( $value,
-				2 );
+		return '<i title="' . $item['method'] . '" class="' . $icon . '"></i> ' .
+		       $currency . ' ' . number_format_i18n( $value, 2 );
 
 	}
 
 	/**
 	 * Payment type column
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	function column_type( array $item ) {
+	protected function column_type( array $item ) {
 
 		return Utils::get_sequence_type( $item['sequence_type'] );
 
@@ -320,12 +386,12 @@ class TransactionsTable extends WP_List_Table {
 	/**
 	 * Payment status column
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string|void
 	 * @since   1.0.0
 	 */
-	function column_status( array $item ) {
+	protected function column_status( array $item ) {
 
 		switch ( $item['status'] ) {
 			case 'paid':
@@ -354,29 +420,30 @@ class TransactionsTable extends WP_List_Table {
 	/**
 	 * Order Id column
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	function column_order_id( array $item ) {
+	protected function column_order_id( array $item ) {
 
-		return $item['order_id'] . ( $item['mode'] === 'test' ? ' (' . $item['mode'] . ')' : '' );
+		return $item['order_id'] . ( 'test' === $item['mode'] ? ' (' . $item['mode'] . ')' : '' );
 
 	}
 
 	/**
 	 * Return campaign label as a search link
 	 *
-	 * @param array $item
+	 * @param array $item Array of results.
 	 *
 	 * @return string
 	 * @since 2.0.2
 	 */
-	function column_campaign_label( array $item ) {
+	protected function column_campaign_label( array $item ) {
 
-		return sprintf( '<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-campaigns&s=%s' ), urlencode( $item['campaign_label'] ) ),
+		return sprintf(
+			'<a href=%1$s>%2$s</a>',
+			sprintf( admin_url( 'admin.php?page=kudos-campaigns&s=%s' ), rawurlencode( $item['campaign_label'] ) ),
 			strtoupper( $item['campaign_label'] )
 		);
 
@@ -388,65 +455,11 @@ class TransactionsTable extends WP_List_Table {
 	 * @return array|string
 	 * @since   1.0.0
 	 */
-	function get_bulk_actions() {
+	protected function get_bulk_actions() {
 
 		return [
 			'bulk-delete' => __( 'Delete', 'kudos-donations' ),
 		];
-
-	}
-
-	/**
-	 * Process delete and bulk-delete actions
-	 *
-	 * @since   1.0.0
-	 */
-	public function process_bulk_action() {
-
-		//Detect when a bulk action is being triggered...
-		switch ( $this->current_action() ) {
-
-			case 'delete':
-
-				// Verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				}
-
-				self::delete_record( 'order_id', sanitize_text_field( $_GET['order_id'] ) );
-				break;
-
-			case 'bulk-delete':
-
-				// Verify the nonce.
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
-
-				if ( isset( $_REQUEST['bulk-action'] ) ) {
-
-					$delete_ids = esc_sql( $_REQUEST['bulk-action'] );
-					foreach ( $delete_ids as $id ) {
-						self::delete_record( 'order_id', sanitize_text_field( $id ) );
-					}
-				}
-				break;
-		}
-
-	}
-
-	/**
-	 * Delete a transaction.
-	 *
-	 * @param $column
-	 * @param string $order_id order ID
-	 *
-	 * @return false|int
-	 * @since   1.0.0
-	 */
-	protected function delete_record( $column, string $order_id ) {
-
-		return $this->mapper->delete( $column, $order_id );
 
 	}
 
@@ -461,38 +474,38 @@ class TransactionsTable extends WP_List_Table {
 		$views   = [];
 		$current = ( ! empty( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all' );
 
-		// Remove search query from current url
+		// Remove search query from current url.
 		$url = remove_query_arg( 's' );
 
-		//All link
-		$count        = count( $this->count_records() );
-		$class        = ( $current == 'all' && empty( $_REQUEST['s'] ) ? ' class="current"' : '' );
+		// All link.
+		$count        = count( $this->mapper->get_all_by() );
+		$class        = ( 'all' === $current && empty( $_REQUEST['s'] ) ? ' class="current"' : '' );
 		$all_url      = remove_query_arg( [ 'status' ], $url );
 		$views['all'] = "<a href='{$all_url }' {$class} >" . __( 'All', 'kudos-donations' ) . " ($count)</a>";
 
-		//Paid link
-		$count         = count( $this->count_records( 'status', 'paid' ) );
+		// Paid link.
+		$count         = count( $this->mapper->get_all_by( [ 'status' => 'paid' ] ) );
 		$paid_url      = add_query_arg( 'status', 'paid', $url );
-		$class         = ( $current == 'paid' ? ' class="current"' : '' );
+		$class         = ( 'paid' === $current ? ' class="current"' : '' );
 		$views['paid'] = "<a href='{$paid_url}' {$class} >" . __( 'Paid', 'kudos-donations' ) . " ($count)</a>";
 
-		//Open link
-		$count         = count( $this->count_records( 'status', 'open' ) );
+		// Open link.
+		$count         = count( $this->mapper->get_all_by( [ 'status' => 'open' ] ) );
 		$open_url      = add_query_arg( 'status', 'open', $url );
-		$class         = ( $current == 'open' ? ' class="current"' : '' );
+		$class         = ( 'open' === $current ? ' class="current"' : '' );
 		$views['open'] = "<a href='{$open_url}' {$class} >" . __( 'Open', 'kudos-donations' ) . " ($count)</a>";
 
-		//Canceled link
-		$count             = count( $this->count_records( 'status', 'canceled' ) );
+		// Canceled link.
+		$count             = count( $this->mapper->get_all_by( [ 'status' => 'canceled' ] ) );
 		$canceled_url      = add_query_arg( 'status', 'canceled', $url );
-		$class             = ( $current == 'canceled' ? ' class="current"' : '' );
+		$class             = ( 'canceled' === $current ? ' class="current"' : '' );
 		$views['canceled'] = "<a href='{$canceled_url}' {$class} >" . __( 'Cancelled',
 				'kudos-donations' ) . " ($count)</a>";
 
-		//Canceled link
-		$count            = count( $this->count_records( 'status', 'expired' ) );
+		// Canceled link.
+		$count            = count( $this->mapper->get_all_by( [ 'status' => 'expired' ] ) );
 		$expired_url      = add_query_arg( 'status', 'expired', $url );
-		$class            = ( $current == 'expired' ? ' class="current"' : '' );
+		$class            = ( 'expired' === $current ? ' class="current"' : '' );
 		$views['expired'] = "<a href='{$expired_url}' {$class} >" . __( 'Expired',
 				'kudos-donations' ) . " ($count)</a>";
 

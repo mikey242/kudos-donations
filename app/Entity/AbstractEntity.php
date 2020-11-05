@@ -11,18 +11,26 @@ use Throwable;
 abstract class AbstractEntity implements EntityInterface {
 
 	/**
+	 * The entities database id
+	 *
 	 * @var int
 	 */
 	public $id;
 	/**
+	 * The date first entered into database
+	 *
 	 * @var DateTime
 	 */
 	public $created;
 	/**
+	 * The date the entity was last changed
+	 *
 	 * @var DateTime
 	 */
 	public $last_updated;
 	/**
+	 * The entities secret
+	 *
 	 * @var string
 	 */
 	protected $secret;
@@ -30,7 +38,7 @@ abstract class AbstractEntity implements EntityInterface {
 	/**
 	 * Entity object constructor.
 	 *
-	 * @param null|array $atts
+	 * @param null|array $atts Array of entities properties and values.
 	 *
 	 * @since   2.0.0
 	 */
@@ -42,19 +50,24 @@ abstract class AbstractEntity implements EntityInterface {
 
 	}
 
+	/**
+	 * Create the hooks associated with the child entity.
+	 */
 	public static function create_hooks() {
 
-		add_action( static::get_table_name( false ) . "_remove_secret_action",
-			[ static::class, "remove_secret_action" ],
+		add_action(
+			static::get_table_name( false ) . '_remove_secret_action',
+			[ static::class, 'remove_secret_action' ],
 			10,
-			2 );
+			2
+		);
 
 	}
 
 	/**
 	 * Set class properties based on array values
 	 *
-	 * @param array $atts
+	 * @param array $atts Array of entities properties and values.
 	 *
 	 * @since   2.0.0
 	 */
@@ -72,14 +85,13 @@ abstract class AbstractEntity implements EntityInterface {
 				$logger->warning( 'Error setting property.', [ "message" => $e->getMessage() ] );
 
 			}
-
 		}
 	}
 
 	/**
 	 * Returns the table name associated with Entity
 	 *
-	 * @param bool $prefix Whether to return the prefix or not
+	 * @param bool $prefix Whether to return the prefix or not.
 	 *
 	 * @return string
 	 * @since   2.0.0
@@ -95,7 +107,7 @@ abstract class AbstractEntity implements EntityInterface {
 	/**
 	 * Set the donor's secret
 	 *
-	 * @param string $timeout
+	 * @param string $timeout How long the secret should be kept in the database for.
 	 *
 	 * @return string|false
 	 * @since   2.0.0
@@ -107,32 +119,34 @@ abstract class AbstractEntity implements EntityInterface {
 
 		try {
 
-			// Create secret if none set
-			if ( NULL === $this->secret ) {
+			// Create secret if none set.
+			if ( null === $this->secret ) {
 				$this->secret = bin2hex( random_bytes( 10 ) );
 			}
 
-			// Schedule for secret to be removed after timeout
+			// Schedule for secret to be removed after timeout.
 			if ( class_exists( 'ActionScheduler' ) && $this->id ) {
 
-				// Remove existing action if exists
-				as_unschedule_action( $table . "_remove_secret_action", [ $this->secret ] );
+				// Remove existing action if exists.
+				as_unschedule_action( $table . '_remove_secret_action', [ $this->secret ] );
 				$timestamp = strtotime( $timeout );
 
-				// Create new action to remove secret
-				as_schedule_single_action( $timestamp, $table . "_remove_secret_action", [ $this->secret ] );
-				$logger->debug( sprintf( "Action %s_remove_secret_action scheduled", $table ),
-					[
-						'datetime' => wp_date( 'Y-m-d H:i:s', $timestamp ),
-					] );
+				// Create new action to remove secret.
+				as_schedule_single_action( $timestamp, $table . '_remove_secret_action', [ $this->secret ] );
+				$logger->debug(
+					sprintf( 'Action %s_remove_secret_action scheduled', $table ),
+					[ 'datetime' => wp_date( 'Y-m-d H:i:s', $timestamp ) ]
+				);
 			}
 
 			return wp_hash_password( $this->secret );
 
 		} catch ( Throwable $e ) {
 
-			$logger->error( sprintf( 'Unable to create secret for %s. ', $table ) . $e->getMessage(),
-				[ 'id' => $this->id ] );
+			$logger->error(
+				sprintf( 'Unable to create secret for %s. ', $table ) . $e->getMessage(),
+				[ 'id' => $this->id ]
+			);
 
 			return false;
 
@@ -147,7 +161,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 */
 	public function clear_secret() {
 
-		$this->secret = NULL;
+		$this->secret = null;
 
 	}
 
@@ -155,11 +169,11 @@ abstract class AbstractEntity implements EntityInterface {
 	 * Removes the secret for the current entity where
 	 * it matches the provided id
 	 *
-	 * @param $secret
+	 * @param string $secret The secret as stored in the database.
 	 *
 	 * @return bool|int
 	 */
-	public static function remove_secret_action( $secret ) {
+	public static function remove_secret_action( string $secret ) {
 
 		if ( $secret ) {
 			$mapper = new MapperService( static::class );
@@ -179,7 +193,7 @@ abstract class AbstractEntity implements EntityInterface {
 	/**
 	 * Verify donor's secret
 	 *
-	 * @param string $hash
+	 * @param string $hash Hashed version of secret.
 	 *
 	 * @return bool
 	 * @since   2.0.0
@@ -198,11 +212,13 @@ abstract class AbstractEntity implements EntityInterface {
 	 */
 	public function to_array() {
 
-		return get_object_vars($this);
+		return get_object_vars( $this );
 
 	}
 
 	/**
+	 * Returns the object as a string.
+	 *
 	 * @return string
 	 * @since   2.0.0
 	 */

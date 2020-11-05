@@ -7,38 +7,56 @@ use Kudos\Service\TwigService;
 class KudosButton {
 
 	/**
+	 * Instance of TwigService
+	 *
 	 * @var TwigService
 	 */
 	private $twig;
 	/**
+	 * Text alignment
+	 *
 	 * @var mixed|string
 	 */
 	private $alignment;
 	/**
+	 * Button label
+	 *
 	 * @var bool|mixed|void
 	 */
 	private $label;
 	/**
+	 * Button id
+	 *
 	 * @var string
 	 */
 	private $id;
 	/**
+	 * Modal title
+	 *
 	 * @var string
 	 */
 	private $title;
 	/**
+	 * Modal text
+	 *
 	 * @var string
 	 */
 	private $text;
 	/**
+	 * Donation amount selection type
+	 *
 	 * @var string
 	 */
 	private $amount_type;
 	/**
+	 * Fixed amount list (5, 10, 15)
+	 *
 	 * @var string
 	 */
 	private $fixed_amounts;
 	/**
+	 * Campaign label
+	 *
 	 * @var string
 	 */
 	private $campaign_label;
@@ -46,7 +64,7 @@ class KudosButton {
 	/**
 	 * KudosButton constructor.
 	 *
-	 * @param array $atts
+	 * @param array $atts Array of above attributes.
 	 *
 	 * @since    1.0.0
 	 */
@@ -67,7 +85,7 @@ class KudosButton {
 	/**
 	 * Get the button markup
 	 *
-	 * @param bool $echo
+	 * @param bool $echo Whether to echo result or not.
 	 *
 	 * @return string|void
 	 * @since    1.0.0
@@ -117,4 +135,3 @@ class KudosButton {
 
 
 }
-

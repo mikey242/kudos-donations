@@ -5,6 +5,8 @@ namespace Kudos\Service;
 abstract class AbstractService {
 
 	/**
+	 * Instance of LoggerService
+	 *
 	 * @var LoggerService
 	 */
 	protected $logger;
@@ -33,7 +35,7 @@ abstract class AbstractService {
 		static $instance = false;
 
 		if ( ! $instance ) {
-			$instance = new static;
+			$instance = new static();
 		}
 
 		return $instance;

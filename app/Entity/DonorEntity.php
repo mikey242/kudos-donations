@@ -2,61 +2,58 @@
 
 namespace Kudos\Entity;
 
-use DateTime;
 use Kudos\Service\MapperService;
 
 class DonorEntity extends AbstractEntity {
 
 	/**
 	 * Table name without prefix
+	 *
 	 * @var string
 	 */
-	protected const TABLE = "kudos_donors";
+	protected const TABLE = 'kudos_donors';
 	/**
+	 * Email address of donor. Used as a unique identifier
+	 *
 	 * @var string
 	 */
 	public $email;
 	/**
+	 * Donor's name
+	 *
 	 * @var string
 	 */
 	public $name;
 	/**
+	 * Address: Street name
+	 *
 	 * @var string
 	 */
 	public $street;
 	/**
+	 * * Address: Postcode
+	 *
 	 * @var string
 	 */
 	public $postcode;
 	/**
+	 * * Address: City
+	 *
 	 * @var string
 	 */
 	public $city;
 	/**
+	 * Address: Country
+	 *
 	 * @var string
 	 */
 	public $country;
 	/**
+	 * The customer id used by mollie
+	 *
 	 * @var string
 	 */
 	public $customer_id;
-	/**
-	 * @var DateTime
-	 */
-	public $last_updated;
-
-	/**
-	 * DonorEntity constructor
-	 *
-	 * @param $atts
-	 *
-	 * @since   2.0.0
-	 */
-	public function __construct( $atts = null ) {
-
-		parent::__construct( $atts );
-
-	}
 
 	/**
 	 * Gets all transactions for current user

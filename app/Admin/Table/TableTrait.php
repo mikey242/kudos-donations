@@ -11,12 +11,16 @@ namespace Kudos\Admin\Table;
 trait TableTrait {
 
 	/**
+	 * The table name.
+	 *
 	 * @var false|string
 	 */
 	public $table;
 
 
 	/**
+	 * Array of column names and their names on export.
+	 *
 	 * @var array
 	 */
 	public $export_columns;
@@ -29,50 +33,22 @@ trait TableTrait {
 	public function no_items() {
 
 		/* translators: %s: Name of record type (e.g transactions) */
-		printf( __( 'No %s found.', 'kudos-donations' ), $this->_args['singular'] );
-
-	}
-
-	/**
-	 * @param null|string $column
-	 * @param null|string $value
-	 *
-	 * @return array|object|null
-	 * @since   2.0.0
-	 */
-	public function count_records( $column = null, $value = null ) {
-
-		global $wpdb;
-
-		$search_custom_vars = '';
-
-		if ( $column && $value ) {
-			$search_custom_vars = $wpdb->prepare(
-				"WHERE " . $column . " = %s",
-				esc_sql( $value )
-			);
-		}
-
-		$table = $this->table;
-		$query = "SELECT * FROM $table
-				  $search_custom_vars";
-
-		return $wpdb->get_results( $query, ARRAY_A );
+		printf( esc_html__( 'No %s found.', 'kudos-donations' ), esc_attr( $this->_args['plural'] ) );
 
 	}
 
 	/**
 	 * Add extra markup in the toolbars before or after the list
 	 *
-	 * @param string $which helps you decide if you add the markup after (bottom) or before (top) the list
+	 * @param string $which helps you decide if you add the markup after (bottom) or before (top) the list.
 	 *
 	 * @since   1.0.0
 	 */
-	function extra_tablenav( $which ) {
+	protected function extra_tablenav( $which ) {
 
-		if ( $which == "top" ) {
+		if ( 'top' === $which ) {
 			if ( $this->has_items() ) {
-				echo apply_filters( 'kudos_table_tablenav_top', '', $this->_args );
+				echo esc_attr( apply_filters( 'kudos_table_tablenav_top', '', $this->_args ) );
 			}
 		}
 
@@ -81,8 +57,8 @@ trait TableTrait {
 	/**
 	 * Define what data to show on each column of the table
 	 *
-	 * @param array $item Data
-	 * @param string $column_name - Current column name
+	 * @param array  $item Data.
+	 * @param string $column_name Current column name.
 	 *
 	 * @return mixed
 	 * @since      1.0.0
@@ -99,9 +75,9 @@ trait TableTrait {
 	 * @return void
 	 * @since      1.0.0
 	 */
-	function prepare_items() {
+	public function prepare_items() {
 
-		// Process bulk action if any
+		// Process bulk action if any.
 		static::process_bulk_action();
 
 		$columns               = $this->get_columns();
@@ -116,11 +92,13 @@ trait TableTrait {
 		$current_page   = $this->get_pagenum();
 		$this->items    = array_slice( $table_data, ( ( $current_page - 1 ) * $items_per_page ), $items_per_page );
 		$total_items    = count( $table_data );
-		$this->set_pagination_args( [
-			'total_items' => count( $this->items ),
-			'per_page'    => $items_per_page,
-			'total_pages' => ceil( $total_items / $items_per_page ),
-		] );
+		$this->set_pagination_args(
+			[
+				'total_items' => count( $this->items ),
+				'per_page'    => $items_per_page,
+				'total_pages' => ceil( $total_items / $items_per_page ),
+			]
+		);
 
 	}
 
@@ -149,31 +127,31 @@ trait TableTrait {
 	/**
 	 * Allows you to sort the data by the variables set in the $_GET
 	 *
-	 * @param $a
-	 * @param $b
+	 * @param array $a First array.
+	 * @param array $b Second array.
 	 *
 	 * @return Mixed
 	 * @since      1.0.0
 	 */
-	private function sort_data( $a, $b ) {
+	private function sort_data( array $a, array $b ) {
 
-		// Set defaults
-		$orderBy = $this->_args['orderBy'] ?? 'time';
-		$order   = $this->_args['order'] ?? 'desc';
+		// Set defaults.
+		$order_by = $this->_args['orderBy'] ?? 'time';
+		$order    = $this->_args['order'] ?? 'desc';
 
-		// If orderBy is set, use this as the sort column
+		// If orderBy is set, use this as the sort column.
 		if ( ! empty( $_GET['orderby'] ) ) {
-			$orderBy = $_GET['orderby'];
+			$order_by = $_GET['orderby'];
 		}
 
-		// If order is set use this as the order
+		// If order is set use this as the order.
 		if ( ! empty( $_GET['order'] ) ) {
 			$order = sanitize_text_field( $_GET['order'] );
 		}
 
-		$result = strcmp( $a[ $orderBy ], $b[ $orderBy ] );
+		$result = strcmp( $a[ $order_by ], $b[ $order_by ] );
 
-		if ( $order === 'asc' ) {
+		if ( 'asc' === $order ) {
 			return $result;
 		}
 

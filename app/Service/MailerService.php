@@ -13,6 +13,8 @@ use WP_REST_Request;
 class MailerService extends AbstractService {
 
 	/**
+	 * From header
+	 *
 	 * @var bool|mixed|void
 	 */
 	private $from;
@@ -24,8 +26,8 @@ class MailerService extends AbstractService {
 	 */
 	public function __construct() {
 
-		$from_name  = apply_filters( 'kudos_email_from_name', __( "Kudos Donations", 'kudos-donations' ) );
-		$this->from = "From: $from_name " . ' <' . ( Settings::get_setting( 'smtp_from' ) ?: Settings::get_setting( 'smtp_username' ) ) . '>';
+		$from_name  = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
+		$this->from = "From: $from_name " . ' <' . ( Settings::get_setting( 'smtp_from' ) ?? Settings::get_setting( 'smtp_username' ) ) . '>';
 		parent::__construct();
 
 	}
@@ -34,22 +36,24 @@ class MailerService extends AbstractService {
 	 * Initializes the mailer by modifying default config if setting
 	 * is enabled.
 	 *
-	 * @param PHPMailer $phpmailer
+	 * @param PHPMailer $phpmailer PHPMailer instance.
 	 *
-	 * @throws Exception;
+	 * @throws Exception From PHPMailer.
 	 * @since    1.1.0
 	 */
 	public function init( PHPMailer $phpmailer ) {
 
-		// Toggle this on to enable PHPMailer's debug mode
+		// Toggle this on to enable PHPMailer's debug mode.
 		$phpmailer->SMTPDebug = 0;
 
-		// Add logo as attachment
-		$phpmailer->addEmbeddedImage( Utils::get_asset_url( 'img/logo-colour-40.png', true ),
+		// Add logo as attachment.
+		$phpmailer->addEmbeddedImage(
+			Utils::get_asset_url( 'img/logo-colour-40.png', true ),
 			'kudos-logo',
-			'kudos-logo.png' );
+			'kudos-logo.png'
+		);
 
-		// Add custom config if enabled
+		// Add custom config if enabled.
 		if ( Settings::get_setting( 'smtp_enable' ) ) {
 			$phpmailer->isSMTP();
 			$phpmailer->isHTML( true );
@@ -67,14 +71,14 @@ class MailerService extends AbstractService {
 	/**
 	 * Sends receipt to the donor
 	 *
-	 * @param TransactionEntity $transaction
+	 * @param TransactionEntity $transaction TransactionEntity object.
 	 *
 	 * @return bool
 	 * @since    1.1.0
 	 */
 	public function send_receipt( TransactionEntity $transaction ) : bool {
 
-		// Check if setting enabled
+		// Check if setting enabled.
 		if ( ! Settings::get_setting( 'email_receipt_enable' ) ) {
 			return false;
 		}
@@ -83,79 +87,78 @@ class MailerService extends AbstractService {
 
 		$headers[] = $this->from;
 		if ( filter_var( $bcc, FILTER_SANITIZE_EMAIL ) ) {
-			$headers[] = "bcc: " . Settings::get_setting( 'email_bcc' );
+			$headers[] = 'bcc: ' . Settings::get_setting( 'email_bcc' );
 		}
 
-		// Assign attachment
+		// Assign attachment.
 		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction->order_id );
 
-		// Create array of variables for use in twig template
-		$renderArray = [
+		// Create array of variables for use in twig template.
+		$render_array = [
 			'name'         => $transaction->get_donor()->name ?? '',
 			'date'         => $transaction->created,
 			'description'  => Utils::get_sequence_type( $transaction->sequence_type ),
-			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
-					2 ),
+			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value, 2 ),
 			'receipt_id'   => $transaction->order_id,
 			'website_name' => get_bloginfo( 'name' ),
 		];
 
-		// Add a cancel subscription url if transaction associated with a subscription
+		// Add a cancel subscription url if transaction associated with a subscription.
 		if ( ! empty( $transaction->subscription_id ) ) {
 			$mapper          = new MapperService( SubscriptionEntity::class );
 			$subscription_id = $transaction->subscription_id;
 			/** @var SubscriptionEntity $subscription */
-			$subscription              = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
-			$token                     = $subscription->create_secret( '+1 week' );
-			$cancel_url                = add_query_arg( [
-				'kudos_action'          => 'cancel_subscription',
-				'kudos_token'           => $token,
-				'kudos_subscription_id' => $subscription_id,
-			],
-				get_home_url() );
-			$renderArray['cancel_url'] = $cancel_url;
+			$subscription               = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
+			$token                      = $subscription->create_secret( '+1 week' );
+			$cancel_url                 = add_query_arg(
+				[
+					'kudos_action'          => 'cancel_subscription',
+					'kudos_token'           => $token,
+					'kudos_subscription_id' => $subscription_id,
+				],
+				get_home_url()
+			);
+			$render_array['cancel_url'] = $cancel_url;
 			$mapper->save( $subscription );
 		}
 
 		$twig = TwigService::factory();
-		$body = $twig->render( 'emails/receipt.html.twig', $renderArray );
+		$body = $twig->render( 'emails/receipt.html.twig', $render_array );
 
-		return $this->send( $transaction->get_donor()->email,
+		return $this->send(
+			$transaction->get_donor()->email,
 			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
 			$headers,
-			$attachments );
+			$attachments
+		);
 	}
 
 	/**
 	 * Email send function
 	 *
-	 * @param string $to
-	 * @param string $subject
-	 * @param string $body
-	 * @param array $headers
-	 * @param array $attachment
+	 * @param string     $to Recipient email address.
+	 * @param string     $subject Email subject line.
+	 * @param string     $body Body of email.
+	 * @param array      $headers Email headers.
+	 * @param array|null $attachment Attachment.
 	 *
 	 * @return bool
 	 * @since    1.1.0
 	 */
 	private function send( string $to, string $subject, string $body, array $headers = [], array $attachment = [] ) {
 
-		// Use hook to modify existing config
+		// Use hook to modify existing config.
 		add_action( 'phpmailer_init', [ $this, 'init' ] );
 		$mail = wp_mail( $to, $subject, $body, $headers, $attachment );
 
 		if ( $mail ) {
-			$this->logger->info( sprintf( 'Email with subject "%s" sent to "%s"',
-				$subject,
-				$to ) );
+			$this->logger->info( sprintf( 'Email with subject "%s" sent to "%s"', $subject, $to ) );
 		} else {
-			$this->logger->error( sprintf( 'Email with subject "%s" failed to be sent to "%s"',
-				$subject,
-				$to ) );
+			$this->logger->error( sprintf( 'Email with subject "%s" failed to be sent to "%s"', $subject, $to ) );
 		}
 
-		// Remove action to prevent conflict
+		// Remove action to prevent conflict.
 		remove_action( 'phpmailer_init', [ $this, 'init' ] );
 
 		return $mail;
@@ -165,7 +168,7 @@ class MailerService extends AbstractService {
 	/**
 	 * Sends a test email using send_message
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request Request array.
 	 *
 	 * @return bool
 	 * @since    1.1.0
@@ -184,11 +187,10 @@ class MailerService extends AbstractService {
 
 		if ( $result ) {
 			/* translators: %s: API mode */
-			wp_send_json_success( sprintf( __( "Email sent to %s.", 'kudos-donations' ), $email ) );
+			wp_send_json_success( sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) );
 		} else {
 			/* translators: %s: API mode */
-			wp_send_json_error( __( "Error sending email, please check the settings and try again.",
-				'kudos-donations' ) );
+			wp_send_json_error( __( 'Error sending email, please check the settings and try again.', 'kudos-donations' ) );
 		}
 
 		return $result;
@@ -198,9 +200,9 @@ class MailerService extends AbstractService {
 	/**
 	 * Sends a message using the message template
 	 *
-	 * @param string $email
-	 * @param string $header
-	 * @param string $message
+	 * @param string $email Email address.
+	 * @param string $header Email headers.
+	 * @param string $message Email body.
 	 *
 	 * @return bool
 	 * @since   2.0.0
@@ -208,12 +210,14 @@ class MailerService extends AbstractService {
 	public function send_message( string $email, string $header, string $message ) {
 
 		$twig = TwigService::factory();
-		$body = $twig->render( 'emails/message.html.twig',
+		$body = $twig->render(
+			'emails/message.html.twig',
 			[
 				'header'       => $header,
 				'message'      => $message,
 				'website_name' => get_bloginfo( 'name' ),
-			] );
+			]
+		);
 
 		$headers[] = $this->from;
 

@@ -8,6 +8,7 @@ class Settings {
 
 	/**
 	 * Settings configuration
+	 *
 	 * @var array
 	 */
 	private $settings;
@@ -19,7 +20,8 @@ class Settings {
 	 */
 	public function __construct() {
 
-		$this->settings = apply_filters( 'kudos_register_settings',
+		$this->settings = apply_filters(
+			'kudos_register_settings',
 			[
 				'show_intro'            => [
 					'type'         => 'boolean',
@@ -133,10 +135,11 @@ class Settings {
 				'return_message_text'   => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
-					/* translators: %s: Value of donation. */
-					'default'           => sprintf( __( 'Many thanks for your donation of %s. We appreciate your support.',
-						'kudos-donations' ),
-						'{{value}}' ),
+					'default'           => sprintf(
+						/* translators: %s: Value of donation. */
+						__( 'Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations' ),
+						'{{value}}'
+					),
 					'sanitize_callback' => 'sanitize_text_field',
 				],
 				'custom_return_enable'  => [
@@ -189,12 +192,12 @@ class Settings {
 	/**
 	 * Returns setting value
 	 *
-	 * @param $name
+	 * @param string $name Setting name.
 	 *
 	 * @return mixed
 	 * @since   2.0.0
 	 */
-	public static function get_setting( $name ) {
+	public static function get_setting( string $name ) {
 
 		return get_option( self::PREFIX . $name );
 
@@ -203,13 +206,13 @@ class Settings {
 	/**
 	 * Update specified setting
 	 *
-	 * @param $name
-	 * @param $value
+	 * @param string $name Setting name.
+	 * @param mixed  $value Setting value.
 	 *
 	 * @return bool
 	 * @since 2.0.4
 	 */
-	public static function update_setting( $name, $value ) {
+	public static function update_setting( string $name, $value ) {
 
 		return update_option( self::PREFIX . $name, $value );
 

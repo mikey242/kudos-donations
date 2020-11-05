@@ -68,22 +68,6 @@ class Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 
-		add_action( 'kudos_transactions_update',
-			function ( $column, $value ) {
-				$logger = LoggerService::factory();
-				$logger->debug( 'kudos_transactions_update', [ $column, $value ] );
-			},
-			10,
-			3 );
-
-		add_action( 'kudos_donors_add',
-			function ( $column, $value ) {
-				$logger = LoggerService::factory();
-				$logger->debug( 'kudos_donors_add', [ $column, $value ] );
-			},
-			10,
-			3 );
-
 	}
 
 	/**
@@ -94,9 +78,10 @@ class Admin {
 	 */
 	public function register_routes() {
 
-		// Payment webhook
+		// Payment webhook.
 		$mollie = MollieService::factory();
-		register_rest_route( 'kudos/v1',
+		register_rest_route(
+			'kudos/v1',
 			'mollie/payment/webhook',
 			[
 				'methods'             => 'POST',
@@ -107,10 +92,12 @@ class Admin {
 					],
 				],
 				'permission_callback' => '__return_true',
-			] );
+			]
+		);
 
-		// Test Mollie API keys
-		register_rest_route( 'kudos/v1',
+		// Test Mollie API keys.
+		register_rest_route(
+			'kudos/v1',
 			'mollie/admin',
 			[
 				'methods'             => WP_REST_Server::READABLE,
@@ -125,11 +112,13 @@ class Admin {
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},
-			] );
+			]
+		);
 
-		// Test Email
+		// Test Email.
 		$mailer = MailerService::factory();
-		register_rest_route( 'kudos/v1',
+		register_rest_route(
+			'kudos/v1',
 			'email/test',
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -142,7 +131,8 @@ class Admin {
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},
-			] );
+			]
+		);
 	}
 
 	/**
@@ -158,9 +148,9 @@ class Admin {
 			'manage_options',
 			'kudos-transactions',
 			false,
-			'data:image/svg+xml;base64,' . base64_encode( '
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>
-            ' )
+			'data:image/svg+xml;base64,' . base64_encode(
+				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>'
+			)
 
 		);
 
@@ -176,8 +166,7 @@ class Admin {
 			}
 
 		);
-		add_action( "admin_print_scripts-{$transactions_page_hook_suffix}",
-			[ $this, 'kudos_transactions_page_assets' ] );
+		add_action( "admin_print_scripts-{$transactions_page_hook_suffix}", [ $this, 'kudos_transactions_page_assets' ] );
 
 		$subscriptions_page_hook_suffix = add_submenu_page(
 			'kudos-transactions',
@@ -191,8 +180,7 @@ class Admin {
 			}
 
 		);
-		add_action( "admin_print_scripts-{$subscriptions_page_hook_suffix}",
-			[ $this, 'kudos_subscriptions_page_assets' ] );
+		add_action( "admin_print_scripts-{$subscriptions_page_hook_suffix}", [ $this, 'kudos_subscriptions_page_assets' ] );
 
 		$donors_page_hook_suffix = add_submenu_page(
 			'kudos-transactions',
@@ -234,7 +222,7 @@ class Admin {
 		);
 		add_action( "admin_print_scripts-{$settings_page_hook_suffix}", [ $this, 'kudos_settings_page_assets' ] );
 
-		// Add debug menu
+		// Add debug menu.
 		if ( KUDOS_DEBUG ) {
 			add_submenu_page(
 				'kudos-transactions',
@@ -258,12 +246,15 @@ class Admin {
 
 		$handle = $this->plugin_name . '-settings';
 
-		wp_enqueue_script( $handle,
+		wp_enqueue_script(
+			$handle,
 			Utils::get_asset_url( 'kudos-admin-settings.js' ),
 			[ 'wp-api', 'wp-i18n', 'wp-components', 'wp-element' ],
 			$this->version,
-			true );
-		wp_localize_script( $handle,
+			true
+		);
+		wp_localize_script(
+			$handle,
 			'kudos',
 			[
 				'version'     => KUDOS_VERSION,
@@ -271,13 +262,16 @@ class Admin {
 				'checkApiUrl' => rest_url( 'kudos/v1/mollie/admin' ),
 				'sendTestUrl' => rest_url( 'kudos/v1/email/test' ),
 				'ajaxurl'     => admin_url( 'admin-ajax.php' ),
-			] );
+			]
+		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
-		wp_enqueue_style( 'kudos-donations-admin-react',
+		wp_enqueue_style(
+			'kudos-donations-admin-react',
 			Utils::get_asset_url( 'kudos-admin-settings.css' ),
 			[ 'wp-components' ],
 			$this->version,
-			'all' );
+			'all'
+		);
 
 		do_action( 'kudos_admin_settings_page_assets', $handle );
 	}
@@ -289,19 +283,23 @@ class Admin {
 	 */
 	public function kudos_transactions_page_assets() {
 
-		wp_enqueue_script( $this->plugin_name . '-transactions',
+		wp_enqueue_script(
+			$this->plugin_name . '-transactions',
 			Utils::get_asset_url( 'kudos-admin-transactions.js' ),
 			[ 'jquery' ],
 			$this->version,
-			false );
+			false
+		);
 
-		// Load table assets
-		$tableHandle = $this->kudos_table_page_assets();
-		wp_localize_script( $tableHandle,
+		// Load table assets.
+		$table_handle = $this->kudos_table_page_assets();
+		wp_localize_script(
+			$table_handle,
 			'kudos',
 			[
 				'confirmationDelete' => __( 'Are you sure you want to delete this transaction?', 'kudos-donations' ),
-			] );
+			]
+		);
 	}
 
 	/**
@@ -312,11 +310,13 @@ class Admin {
 	private function kudos_table_page_assets() {
 
 		$handle = $this->plugin_name . '-table';
-		wp_enqueue_script( $handle,
+		wp_enqueue_script(
+			$handle,
 			Utils::get_asset_url( 'kudos-admin-table.js' ),
 			[ 'jquery' ],
 			$this->version,
-			false );
+			false
+		);
 
 		return $handle;
 	}
@@ -328,14 +328,16 @@ class Admin {
 	 */
 	public function kudos_subscriptions_page_assets() {
 
-		// Load table assets
-		$tableHandle = $this->kudos_table_page_assets();
-		wp_localize_script( $tableHandle,
+		// Load table assets.
+		$table_handle = $this->kudos_table_page_assets();
+		wp_localize_script(
+			$table_handle,
 			'kudos',
 			[
 				'confirmationCancel' => __( 'Are you sure you want to cancel this subscription?', 'kudos-donations' ),
 				'confirmationDelete' => __( 'Are you sure you want to delete this subscription?', 'kudos-donations' ),
-			] );
+			]
+		);
 	}
 
 	/**
@@ -345,13 +347,15 @@ class Admin {
 	 */
 	public function kudos_donor_page_assets() {
 
-		// Load table assets
-		$tableHandle = $this->kudos_table_page_assets();
-		wp_localize_script( $tableHandle,
+		// Load table assets.
+		$table_handle = $this->kudos_table_page_assets();
+		wp_localize_script(
+			$table_handle,
 			'kudos',
 			[
 				'confirmationDelete' => __( 'Are you sure you want to delete this donor?', 'kudos-donations' ),
-			] );
+			]
+		);
 	}
 
 	/**
@@ -361,16 +365,18 @@ class Admin {
 	 */
 	public function kudos_campaign_page_assets() {
 
-		// Load table assets
-		$tableHandle = $this->kudos_table_page_assets();
-		wp_localize_script( $tableHandle,
+		// Load table assets.
+		$table_handle = $this->kudos_table_page_assets();
+		wp_localize_script(
+			$table_handle,
 			'kudos',
 			[
 				'confirmationDelete' => __(
 					'Are you sure you want to delete this campaign? This will not remove any transactions',
 					'kudos-donations'
 				),
-			] );
+			]
+		);
 	}
 
 	/**
@@ -383,10 +389,10 @@ class Admin {
 
 		if ( isset( $_REQUEST['kudos_action'] ) ) {
 
-			$action = $_REQUEST['kudos_action'];
-			$nonce  = esc_attr( $_REQUEST['_wpnonce'] );
+			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
+			$nonce  = wp_unslash( $_REQUEST['_wpnonce'] );
 
-			// Check nonce
+			// Check nonce.
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {
 				die();
 			}
@@ -394,12 +400,10 @@ class Admin {
 			switch ( $action ) {
 
 				case 'kudos_log_download':
-
 					LoggerService::download();
 					break;
 
 				case 'kudos_log_clear':
-
 					if ( LoggerService::clear() === 0 ) {
 						new AdminNotice( __( 'Log cleared', 'kudos-donations' ) );
 					}
@@ -407,14 +411,12 @@ class Admin {
 					break;
 
 				case 'kudos_clear_settings':
-
 					$settings = new Settings();
 					$settings->remove_settings();
 					$settings->add_defaults();
 					break;
 
 				case 'kudos_clear_cache':
-
 					$twig = TwigService::factory();
 					if ( $twig->clearCache() ) {
 						new AdminNotice( __( 'Cache cleared', 'kudos-donations' ) );
@@ -422,53 +424,53 @@ class Admin {
 					break;
 
 				case 'kudos_clear_transactions':
-
 					$mapper  = new MapperService( TransactionEntity::class );
 					$records = $mapper->delete_all();
 					if ( $records ) {
-						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( _n( 'Deleted %s transaction',
-							'Deleted %s transactions',
-							$records,
-							'kudos-donations' ),
-							$records ) );
+						new AdminNotice(
+							sprintf(
+							/* translators: %s: Number of records. */
+								_n( 'Deleted %s transaction', 'Deleted %s transactions', $records, 'kudos-donations' ),
+								$records
+							)
+						);
 					}
 
 					break;
 
 				case 'kudos_clear_donors':
-
 					$mapper  = new MapperService( DonorEntity::class );
 					$records = $mapper->delete_all();
 					if ( $records ) {
-						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( _n( 'Deleted %s donor',
-							'Deleted %s donors',
-							$records,
-							'kudos-donations' ),
-							$records ) );
+						new AdminNotice(
+							sprintf(
+							/* translators: %s: Number of records. */
+								_n( 'Deleted %s donor', 'Deleted %s donors', $records, 'kudos-donations' ),
+								$records
+							)
+						);
 					}
 					break;
 
 				case 'kudos_clear_subscriptions':
-
 					$mapper  = new MapperService( SubscriptionEntity::class );
 					$records = $mapper->delete_all();
 					if ( $records ) {
-						/* translators: %s: Number of records. */
-						new AdminNotice( sprintf( _n( 'Deleted %s subscription',
-							'Deleted %s subscriptions',
-							$records,
-							'kudos-donations' ),
-							$records ) );
+						new AdminNotice(
+							sprintf(
+							/* translators: %s: Number of records. */
+								_n( 'Deleted %s subscription', 'Deleted %s subscriptions', $records, 'kudos-donations' ),
+								$records
+							)
+						);
 					}
 					break;
 
 				case 'kudos_cancel_subscription':
-
-					$mollie       = MollieService::factory();
-					$subscription = $mollie->cancel_subscription( $_REQUEST['subscriptionId'],
-						$_REQUEST['customerId'] );
+					$mollie          = MollieService::factory();
+					$subscription_id = isset( $_REQUEST['subscriptionId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subscriptionId'] ) ) : '';
+					$customer_id     = isset( $_REQUEST['customerId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['customerId'] ) ) : '';
+					$subscription    = $mollie->cancel_subscription( $subscription_id, $customer_id );
 					if ( $subscription ) {
 						new AdminNotice( __( 'Subscription cancelled', 'kudos-donations' ) );
 					}
@@ -493,13 +495,13 @@ class Admin {
 	/**
 	 * Logs nonce failures
 	 *
-	 * @param $nonce
-	 * @param $action
+	 * @param string $nonce The nonce value.
+	 * @param string $action The action.
 	 */
-	public function nonce_fail( $nonce, $action ) {
+	public function nonce_fail( string $nonce, string $action ) {
 
-		// Check if action is a kudos action then log if true
-		if(substr($action, 0, 6) === "kudos_" ) {
+		// Check if action is a kudos action then log if true.
+		if ( 'kudos_' === substr( $action, 0, 6 ) ) {
 			$logger = LoggerService::factory();
 			$logger->warning( 'Nonce verification failed', [ 'nonce' => $nonce, 'action' => $action ] );
 		}

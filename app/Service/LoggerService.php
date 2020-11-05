@@ -6,14 +6,14 @@ use DateTimeZone;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as Monolog;
 
-//PHP < 7.2 Define it as 0 so it does nothing
+// PHP < 7.2 Define it as 0 so it does nothing.
 if ( ! defined( 'JSON_INVALID_UTF8_SUBSTITUTE' ) ) {
 	define( 'JSON_INVALID_UTF8_SUBSTITUTE', 0 );
 }
 
 class LoggerService extends Monolog {
 
-	const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
+	const LOG_DIR  = KUDOS_STORAGE_DIR . 'logs/';
 	const LOG_FILE = self::LOG_DIR . 'kudos.log';
 
 	/**
@@ -25,9 +25,9 @@ class LoggerService extends Monolog {
 
 		parent::__construct(
 			'kudos',
-			[new StreamHandler( self::LOG_FILE )],
+			[ new StreamHandler( self::LOG_FILE ) ],
 			[],
-			new DateTimeZone(wp_timezone_string())
+			new DateTimeZone( wp_timezone_string() )
 		);
 
 	}
@@ -42,8 +42,6 @@ class LoggerService extends Monolog {
 		if ( wp_mkdir_p( self::LOG_DIR ) ) {
 			return;
 		}
-
-		error_log( 'Unable to create Kudos Donations log directory: ' . self::LOG_DIR );
 
 	}
 
@@ -60,7 +58,7 @@ class LoggerService extends Monolog {
 		static $instance = false;
 
 		if ( ! $instance ) {
-			$instance = new static;
+			$instance = new static();
 		}
 
 		return $instance;
@@ -109,8 +107,8 @@ class LoggerService extends Monolog {
 		$file = self::LOG_FILE;
 
 		header( 'Content-Description: File Transfer' );
-		header( 'Content-Disposition: attachment; filename=kudos_' . sanitize_title( get_bloginfo( 'name' ) ) . '_' . date( 'Y-m-d' ) . '.log' );
-		header( "Content-Type: application/octet-stream" );
+		header( 'Content-Disposition: attachment; filename=kudos_' . sanitize_title( get_bloginfo( 'name' ) ) . '_' . gmdate( 'Y-m-d' ) . '.log' );
+		header( 'Content-Type: application/octet-stream' );
 		header( 'Expires: 0' );
 		header( 'Cache-Control: must-revalidate' );
 		header( 'Pragma: public' );
@@ -124,21 +122,21 @@ class LoggerService extends Monolog {
 	/**
 	 * Add checks to parent function
 	 *
-	 * @param string $message
-	 * @param int $level
-	 * @param array $context
+	 * @param int    $level Log level.
+	 * @param string $message Message to record.
+	 * @param array  $context Context array.
 	 *
 	 * @return bool
 	 * @since    2.0.0
 	 */
 	public function addRecord( int $level, string $message, array $context = [] ): bool {
 
-		// Don't log debug if not enabled
-		if ( $level === self::DEBUG && ! KUDOS_DEBUG ) {
+		// Don't log debug if not enabled.
+		if ( self::DEBUG === $level && ! KUDOS_DEBUG ) {
 			return false;
 		}
 
-		// Check ig log is writeable before proceeding
+		// Check ig log is writeable before proceeding.
 		if ( ! $this->is_writeable() ) {
 			return false;
 		}
@@ -170,8 +168,8 @@ class LoggerService extends Monolog {
 	/**
 	 * Compares dates to sort log
 	 *
-	 * @param array $a
-	 * @param array $b
+	 * @param array $a First array.
+	 * @param array $b Second array.
 	 *
 	 * @return false|int
 	 * @since   2.0.0
