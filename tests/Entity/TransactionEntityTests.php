@@ -39,26 +39,13 @@ class TransactionEntityTests extends WP_UnitTestCase {
 	public function test_get_refund() {
 
 		$transaction = new TransactionEntity([
-			'refunds' => serialize([
+			'refunds' => json_encode([
 				'refunded' => 5,
 				'remaining' => 20
 			])
 		]);
 
-		$this->assertEquals( 20, $transaction->get_refund()['remaining']);
-
-	}
-
-	public function test_get_refund_not_serialized() {
-
-		$transaction = new TransactionEntity([
-			'refunds' => [
-				'refunded' => 5,
-				'remaining' => 20
-			]
-		]);
-
-		$this->assertFalse($transaction->get_refund());
+		$this->assertEquals( 20, $transaction->get_refund()->remaining);
 
 	}
 

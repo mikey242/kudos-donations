@@ -109,8 +109,12 @@ class TransactionEntity extends AbstractEntity {
 	public function get_refund() {
 
 		$refunds = $this->refunds;
-		if ( is_serialized( $refunds ) ) {
-			return unserialize( $refunds );
+
+		if($refunds) {
+			$result = json_decode( $refunds );
+			if(json_last_error() == JSON_ERROR_NONE) {
+				return $result;
+			}
 		}
 
 		return false;
