@@ -1,5 +1,7 @@
 <?php
 /**
+ * Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
+ *
  * @link              https://www.linkedin.com/in/michael-iseard/
  * @author            Michael Iseard
  * @package           Kudos-Donations
@@ -27,9 +29,9 @@ use Kudos\Service\DeactivatorService;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// Load .env file if present
-if(class_exists(\Dotenv\Dotenv::class) && file_exists(__DIR__ . '/.env')) {
-	$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+// Load .env file if present.
+if ( class_exists( \Dotenv\Dotenv::class ) && file_exists( __DIR__ . '/.env' ) ) {
+	$dotenv = \Dotenv\Dotenv::createImmutable( __DIR__ );
 	$dotenv->load();
 }
 
@@ -39,11 +41,11 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 define( 'KUDOS_VERSION', '2.0.5' );
-define( 'KUDOS_PLUGIN_DIR', dirname(__FILE__) );
+define( 'KUDOS_PLUGIN_DIR', dirname( __FILE__ ) );
 define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
-define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/');
-define( 'KUDOS_DEBUG', get_option('_kudos_debug_mode') );
+define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
+define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
 
 /**
  * The code that runs during plugin activation.
@@ -64,7 +66,7 @@ function deactivate_kudos() {
 }
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate_kudos' );
-register_deactivation_hook( __FILE__,  __NAMESPACE__ . '\deactivate_kudos' );
+register_deactivation_hook( __FILE__, __NAMESPACE__ . '\deactivate_kudos' );
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -89,7 +91,7 @@ function run_kudos() {
 
 	$continue = $compatibility->init();
 
-	if($continue) {
+	if ( $continue ) {
 		$plugin = new KudosDonations();
 		$plugin->run();
 	}
