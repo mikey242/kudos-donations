@@ -26,6 +26,13 @@ trait TableTrait {
 	public $export_columns;
 
 	/**
+	 * Array of column values and names to use in search.
+	 *
+	 * @var array
+	 */
+	private $search_columns;
+
+	/**
 	 * Message to show when no transactions available
 	 *
 	 * @since      1.0.0
@@ -116,6 +123,19 @@ trait TableTrait {
 
 	}
 
+	public function get_search_data() {
+
+		$search = null;
+
+		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && array_key_exists( $_REQUEST['search-field'], $this->column_names() ) ) {
+			$search['term'] = strtolower( esc_attr( wp_unslash( $_REQUEST['s'] ) ) );
+			$search['field'] = esc_attr( wp_unslash( $_REQUEST['search-field'] ) );
+		}
+
+		return $search;
+
+	}
+
 	/**
 	 * Get the table data
 	 *
@@ -123,6 +143,52 @@ trait TableTrait {
 	 * @since   1.0.0
 	 */
 	abstract public function fetch_table_data();
+
+	/**
+	 * Displays the search box.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param string $text     The 'submit' button label.
+	 * @param string $input_id ID attribute value for the search input field.
+	 */
+	public function search_box( $text, $input_id ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+			return;
+		}
+		$input_id = $input_id . '-search-input';
+		$search_field = $this->get_search_data()['field'];
+
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['order'] ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['detached'] ) ) {
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		}
+		?>
+
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<label for="search-field-selector" class="screen-reader-text"><?php _e('Select search field', 'kudos-donations') ?>></label>
+			<select name="search-field" style="vertical-align: baseline" id="search-field-selector">
+				<option value="-1"><?php _e('Search field', 'kudos-donations') ?></option>
+				<?php
+				foreach ($this->search_columns as $value=>$label) {
+					echo "<option ". ($value === $search_field ? "selected" : '') ." value=$value>$label</option>";
+				}
+				?>
+			</select>
+			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
+		</p>
+		<?php
+	}
 
 	/**
 	 * Allows you to sort the data by the variables set in the $_GET

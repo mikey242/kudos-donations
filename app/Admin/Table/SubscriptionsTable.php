@@ -28,6 +28,12 @@ class SubscriptionsTable extends WP_List_Table {
 		$this->mapper = new MapperService( SubscriptionEntity::class );
 		$this->table  = SubscriptionEntity::get_table_name();
 
+		$this->search_columns = [
+			'name' => __('Name', 'kudos-donations'),
+			'email' => __('Email', 'kudos-donations'),
+			'frequency' => __('Frequency', 'kudos-donations'),
+		];
+
 		$this->export_columns = [
 			'created'   => __( 'Date', 'kudos-donations' ),
 			'name'      => __( 'Name', 'kudos-donations' ),
@@ -71,34 +77,36 @@ class SubscriptionsTable extends WP_List_Table {
 	 */
 	public function fetch_table_data() {
 
-		global $wpdb;
-		$table              = $this->table;
-		$join_table         = DonorEntity::get_table_name();
-		$search_custom_vars = null;
-		$frequency          = ( ! empty( $_GET['frequency'] ) ? sanitize_text_field( $_GET['frequency'] ) : '' );
+		$frequency = ( isset( $_GET['frequency'] ) ? sanitize_text_field( $_GET['frequency'] ) : '' );
+		$search = $this->get_search_data();
 
-		// Add frequency if exist
+		// Base data
+		$table = $this->table;
+		$join_table = DonorEntity::get_table_name();
+		$query = "
+			SELECT ${table}.*, ${join_table}.name, ${join_table}.email FROM ${table}
+			LEFT JOIN ${join_table} on ${join_table}.customer_id = ${table}.customer_id
+		";
+
+		// Where clause
 		if ( $frequency ) {
-			$search_custom_vars = $wpdb->prepare(
-				"WHERE frequency = %s",
-				esc_sql( $frequency )
-			);
+			global $wpdb;
+			$where[] = $wpdb->prepare("
+				${table}.frequency = %s
+			", $frequency);
 		}
 
-		// Add search query if exist
-		if ( ! empty( $_REQUEST['s'] ) ) {
-			$search             = esc_sql( $_REQUEST['s'] );
-			$search_custom_vars .= ( $search_custom_vars ? " AND" : " WHERE" ) . " (${join_table}.email LIKE '${search}') OR (${join_table}.name LIKE '${search}')";
+		if($search) {
+			global $wpdb;
+			$where[] = $wpdb->prepare("
+				${search['field']} = %s
+			", $search['term']);
 		}
 
-		$search_custom_vars = " LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id " . $search_custom_vars;
+		$where = ! empty( $where ) ? 'WHERE ' . implode(" AND ", $where) : '';
+		$query = $query . $where;
 
-		return $wpdb->get_results( "
-			SELECT $table.*, $join_table.name, $join_table.email
-			FROM $table
-			$search_custom_vars
-		",
-			ARRAY_A );
+		return $this->mapper->get_results($query);
 
 	}
 

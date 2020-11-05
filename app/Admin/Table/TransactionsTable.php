@@ -27,6 +27,12 @@ class TransactionsTable extends WP_List_Table {
 		$this->mapper = new MapperService( TransactionEntity::class );
 		$this->table  = TransactionEntity::get_table_name();
 
+		$this->search_columns = [
+			'name' => __('Name', 'kudos-donations'),
+			'email' => __('Email', 'kudos-donations'),
+			'order_id' => __( 'Order ID', 'kudos-donations'),
+		];
+
 		$this->export_columns = [
 			'created'       => __( 'Transaction created', 'kudos-donations' ),
 			'currency'      => __( 'Currency', 'kudos-donations' ),
@@ -72,44 +78,36 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	public function fetch_table_data() {
 
-		global $wpdb;
+		$view   = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '';
+		$search = $this->get_search_data();
 
-		$query      = [];
-		$table      = $this->table;
+		// Base data
+		$table = $this->table;
 		$join_table = DonorEntity::get_table_name();
+		$query = "
+			SELECT ${table}.*, ${join_table}.name, ${join_table}.email FROM ${table}
+			LEFT JOIN ${join_table} on ${join_table}.customer_id = ${table}.customer_id
+		";
 
-		$status = ( ! empty( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '' );
-
-		// Add status if exist
-		if ( $status ) {
-			array_push( $query,
-				$wpdb->prepare(
-					"status = %s",
-					esc_sql( $status )
-				) );
+		// Where clause
+		if($view) {
+			global $wpdb;
+			$where[] = $wpdb->prepare("
+				${table}.status = %s
+			", $view);
 		}
 
-		// Add search query if exist
-		if ( ! empty( $_REQUEST['s'] ) ) {
-			$search = esc_sql( $_REQUEST['s'] );
-			array_push( $query,
-				"(${join_table}.email LIKE '${search}') OR (${join_table}.name LIKE '${search}') OR (order_id LIKE '${search}') OR (transaction_id LIKE '${search}') OR (campaign_label LIKE '${search}')"
-			);
+		if($search) {
+			global $wpdb;
+			$where[] = $wpdb->prepare("
+				${search['field']} LIKE %s
+			", $search['term']);
 		}
 
-		$search_custom_vars = null;
-		if ( $query ) {
-			$search_custom_vars = 'WHERE ' . implode( ' AND ', $query );
-		}
+		$where = ! empty( $where ) ? 'WHERE ' . implode(" AND ", $where) : '';
+		$query = $query . $where;
 
-		$search_custom_vars = " LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id " . $search_custom_vars;
-
-		return $wpdb->get_results( "
-			SELECT $table.*, $join_table.name, $join_table.email
-			FROM $table
-			$search_custom_vars
-		",
-			ARRAY_A );
+		return $this->mapper->get_results($query);
 
 	}
 

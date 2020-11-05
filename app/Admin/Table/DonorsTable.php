@@ -29,6 +29,13 @@ class DonorsTable extends WP_List_Table {
 		$this->mapper = new MapperService( DonorEntity::class );
 		$this->table  = DonorEntity::get_table_name();
 
+		$this->search_columns = [
+			'name' => __('Name', 'kudos-donations'),
+			'email' => __('Email', 'kudos-donations'),
+			'address' => __('Address', 'kudos-donations'),
+			'order_id' => __('Order ID', 'kudos-donations'),
+		];
+
 		$this->export_columns = [
 			'name'     => __( 'Name', 'kudos-donations' ),
 			'email'    => __( 'Email', 'kudos-donations' ),
@@ -70,24 +77,12 @@ class DonorsTable extends WP_List_Table {
 	 */
 	public function fetch_table_data() {
 
-		global $wpdb;
+		$search = $this->get_search_data();
+		$donors = $this->mapper->get_all_by( [$search['field'] => $search['term']], 'AND' );
+		return array_map(function ( $donor ) {
+			return $donor->to_array();
+		}, $donors);
 
-		$search_custom_vars = null;
-
-		// Add search query if exist
-		if ( ! empty( $_REQUEST['s'] ) ) {
-			$search             = esc_sql( $_REQUEST['s'] );
-			$search_custom_vars .= ( $search_custom_vars ? " AND" : " WHERE" ) . " (email LIKE '${search}') OR (name LIKE '${search}')";
-		}
-
-		$table = $this->table;
-
-		return $wpdb->get_results( "
-			SELECT *
-			FROM $table
-			$search_custom_vars
-		",
-			ARRAY_A );
 	}
 
 	/**

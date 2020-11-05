@@ -29,6 +29,10 @@ class CampaignsTable extends WP_List_Table {
 		$this->mapper = new MapperService( TransactionEntity::class );
 		$this->table  = $this->mapper->get_table_name();
 
+		$this->search_columns = [
+			'label' => __('Label', 'kudos-donations')
+		];
+
 		$this->export_columns = [
 			'date'         => __( 'Name', 'kudos-donations' ),
 			'label'        => __( 'Email', 'kudos-donations' ),
@@ -69,18 +73,21 @@ class CampaignsTable extends WP_List_Table {
 	public function fetch_table_data() {
 
 		$mapper    = $this->mapper;
+		$search = $this->get_search_data();
+
 		$campaigns = Settings::get_setting( 'campaign_labels' );
 		if ( ! $campaigns ) {
 			return [];
 		}
 
-		// Add search query if exist
-		if ( ! empty( $_REQUEST['s'] ) ) {
-			$search    = strtolower(esc_sql( $_REQUEST['s'] ));
-			$campaigns = array_filter( $campaigns,
+		// Add search query if exist.
+		if ( $search ) {
+			$campaigns = array_filter(
+				$campaigns,
 				function ( $value ) use ( $search ) {
-					return in_array( $search, $value );
-				} );
+					return $value[$search['field']] === $search['term'];
+				}
+			);
 		}
 
 		foreach ( $campaigns as $key => $campaign ) {
@@ -97,7 +104,7 @@ class CampaignsTable extends WP_List_Table {
 					if ( 'paid' === $transaction->status ) {
 						$refunds = $transaction->get_refund();
 						if ( $refunds ) {
-							$total = $total + $refunds['remaining'];
+							$total = $total + $refunds->remaining;
 						} else {
 							$total = $total + $transaction->value;
 						}
