@@ -30,7 +30,7 @@ class CampaignsTable extends WP_List_Table {
 		$this->table  = $this->mapper->get_table_name();
 
 		$this->search_columns = [
-			'label' => __('Label', 'kudos-donations')
+			'label' => __( 'Label', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -72,7 +72,7 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function fetch_table_data() {
 
-		$mapper    = $this->mapper;
+		$mapper = $this->mapper;
 		$search = $this->get_search_data();
 
 		$campaigns = Settings::get_setting( 'campaign_labels' );
@@ -85,7 +85,7 @@ class CampaignsTable extends WP_List_Table {
 			$campaigns = array_filter(
 				$campaigns,
 				function ( $value ) use ( $search ) {
-					return $value[$search['field']] === $search['term'];
+					return $value[ $search['field'] ] === $search['term'];
 				}
 			);
 		}
@@ -173,6 +173,68 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
+	 * Process cancel and bulk-cancel actions
+	 *
+	 * @since   2.0.4
+	 */
+	public function process_bulk_action() {
+
+		// Detect when a bulk action is being triggered.
+		switch ( $this->current_action() ) {
+
+			case 'delete':
+				// In our file that handles the request, verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['singular'] ) ) {
+					die();
+				}
+
+				if ( isset( $_GET['label'] ) ) {
+					self::delete_record( sanitize_text_field( wp_unslash( $_GET['label'] ) ) );
+				}
+
+				break;
+
+			case 'bulk-delete':
+				// In our file that handles the request, verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['plural'] ) ) {
+					die();
+				}
+
+				if ( isset( $_REQUEST['bulk-action'] ) ) {
+					$labels = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
+					foreach ( $labels as $label ) {
+						self::delete_record( sanitize_text_field( $label ) );
+					}
+				}
+				break;
+		}
+	}
+
+	/**
+	 * Delete a campaign.
+	 *
+	 * @param string $label The campaign label.
+	 *
+	 * @return bool
+	 * @since   2.0.4
+	 */
+	protected function delete_record( string $label ) {
+
+		$labels = Settings::get_setting( 'campaign_labels' );
+		$labels = array_filter(
+			$labels,
+			function ( $a ) use ( $label ) {
+				return ! in_array( $label, $a, true );
+			}
+		);
+
+		return Settings::update_setting( 'campaign_labels', $labels );
+
+	}
+
+	/**
 	 * Render the bulk edit checkbox
 	 *
 	 * @param array $item Array of results.
@@ -211,8 +273,9 @@ class CampaignsTable extends WP_List_Table {
 		];
 
 		return __( 'Added', 'kudos-donations' ) . '<br/>' .
-			wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['date'] ) ) . '<br/>' .
-			$this->row_actions( $actions );
+		       wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			       strtotime( $item['date'] ) ) . '<br/>' .
+		       $this->row_actions( $actions );
 	}
 
 	/**
@@ -268,12 +331,14 @@ class CampaignsTable extends WP_List_Table {
 	 * Shows the date of the last translation
 	 *
 	 * @param array $item Array of results.
+	 *
 	 * @return string
 	 * @since 2.0.5
 	 */
 	protected function column_last_donation( array $item ) {
 
-		return isset( $item['last_donation'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['last_donation'] ) ) : '';
+		return isset( $item['last_donation'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			strtotime( $item['last_donation'] ) ) : '';
 
 	}
 
@@ -287,65 +352,5 @@ class CampaignsTable extends WP_List_Table {
 		return [
 			'bulk-delete' => __( 'Delete', 'kudos-donations' ),
 		];
-	}
-
-	/**
-	 * Process cancel and bulk-cancel actions
-	 *
-	 * @since   2.0.4
-	 */
-	public function process_bulk_action() {
-
-		// Detect when a bulk action is being triggered.
-		switch ( $this->current_action() ) {
-
-			case 'delete':
-				// In our file that handles the request, verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				}
-
-				if ( isset( $_GET['label'] ) ) {
-					self::delete_record( sanitize_text_field( wp_unslash( $_GET['label'] ) ) );
-				}
-
-				break;
-
-			case 'bulk-delete':
-				// In our file that handles the request, verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
-
-				if ( isset( $_REQUEST['bulk-action'] ) ) {
-					$labels = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
-					foreach ( $labels as $label ) {
-						self::delete_record( sanitize_text_field( $label ) );
-					}
-				}
-				break;
-		}
-	}
-
-	/**
-	 * Delete a campaign.
-	 *
-	 * @param string $label The campaign label.
-	 *
-	 * @return bool
-	 * @since   2.0.4
-	 */
-	protected function delete_record( string $label ) {
-
-		$labels = Settings::get_setting( 'campaign_labels' );
-		$labels = array_filter(
-			$labels,
-			function ( $a ) use ( $label ) {
-				return ! in_array( $label, $a, true );
-			}
-		);
-
-		return Settings::update_setting( 'campaign_labels', $labels );
-
 	}
 }

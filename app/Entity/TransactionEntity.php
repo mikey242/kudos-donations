@@ -94,7 +94,7 @@ class TransactionEntity extends AbstractEntity {
 	public function get_donor() {
 
 		$mapper = new MapperService( DonorEntity::class );
-		$donor = $mapper->get_one_by( [ 'customer_id' => $this->customer_id ] );
+		$donor  = $mapper->get_one_by( [ 'customer_id' => $this->customer_id ] );
 
 		return $donor ?? null;
 
@@ -110,9 +110,9 @@ class TransactionEntity extends AbstractEntity {
 
 		$refunds = $this->refunds;
 
-		if($refunds) {
+		if ( $refunds ) {
 			$result = json_decode( $refunds );
-			if(json_last_error() == JSON_ERROR_NONE) {
+			if ( json_last_error() == JSON_ERROR_NONE ) {
 				return $result;
 			}
 		}

@@ -460,7 +460,10 @@ class Admin {
 						new AdminNotice(
 							sprintf(
 							/* translators: %s: Number of records. */
-								_n( 'Deleted %s subscription', 'Deleted %s subscriptions', $records, 'kudos-donations' ),
+								_n( 'Deleted %s subscription',
+									'Deleted %s subscriptions',
+									$records,
+									'kudos-donations' ),
 								$records
 							)
 						);

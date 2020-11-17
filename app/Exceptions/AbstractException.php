@@ -19,8 +19,8 @@ abstract class AbstractException extends Exception {
 	/**
 	 * MapperException constructor.
 	 *
-	 * @param string         $message Exception message.
-	 * @param int            $code Exception code.
+	 * @param string $message Exception message.
+	 * @param int $code Exception code.
 	 * @param Throwable|null $previous The previous throwable used for the exception chaining.
 	 */
 	public function __construct( $message = '', $code = 0, Throwable $previous = null ) {

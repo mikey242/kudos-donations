@@ -4,6 +4,8 @@ namespace Kudos\Entity;
 
 use DateTime;
 use Kudos\Exceptions\EntityException;
+use Kudos\Helpers\Utils;
+use Kudos\Service\HookService;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Throwable;
@@ -51,20 +53,6 @@ abstract class AbstractEntity implements EntityInterface {
 	}
 
 	/**
-	 * Create the hooks associated with the child entity.
-	 */
-	public static function create_hooks() {
-
-		add_action(
-			static::get_table_name( false ) . '_remove_secret_action',
-			[ static::class, 'remove_secret_action' ],
-			10,
-			2
-		);
-
-	}
-
-	/**
 	 * Set class properties based on array values
 	 *
 	 * @param array $atts Array of entities properties and values.
@@ -89,6 +77,20 @@ abstract class AbstractEntity implements EntityInterface {
 	}
 
 	/**
+	 * Create the hooks associated with the child entity.
+	 */
+	public static function create_hooks() {
+
+		add_action(
+			static::get_table_name( false ) . '_remove_secret_action',
+			[ static::class, 'remove_secret_action' ],
+			10,
+			2
+		);
+
+	}
+
+	/**
 	 * Returns the table name associated with Entity
 	 *
 	 * @param bool $prefix Whether to return the prefix or not.
@@ -101,67 +103,6 @@ abstract class AbstractEntity implements EntityInterface {
 		global $wpdb;
 
 		return $prefix ? $wpdb->prefix . static::TABLE : static::TABLE;
-
-	}
-
-	/**
-	 * Set the donor's secret
-	 *
-	 * @param string $timeout How long the secret should be kept in the database for.
-	 *
-	 * @return string|false
-	 * @since   2.0.0
-	 */
-	public function create_secret( $timeout = '+10 minutes' ) {
-
-		$logger = LoggerService::factory();
-		$table  = static::get_table_name( false );
-
-		try {
-
-			// Create secret if none set.
-			if ( null === $this->secret ) {
-				$this->secret = bin2hex( random_bytes( 10 ) );
-			}
-
-			// Schedule for secret to be removed after timeout.
-			if ( class_exists( 'ActionScheduler' ) && $this->id ) {
-
-				// Remove existing action if exists.
-				as_unschedule_action( $table . '_remove_secret_action', [ $this->secret ] );
-				$timestamp = strtotime( $timeout );
-
-				// Create new action to remove secret.
-				as_schedule_single_action( $timestamp, $table . '_remove_secret_action', [ $this->secret ] );
-				$logger->debug(
-					sprintf( 'Action %s_remove_secret_action scheduled', $table ),
-					[ 'datetime' => wp_date( 'Y-m-d H:i:s', $timestamp ) ]
-				);
-			}
-
-			return wp_hash_password( $this->secret );
-
-		} catch ( Throwable $e ) {
-
-			$logger->error(
-				sprintf( 'Unable to create secret for %s. ', $table ) . $e->getMessage(),
-				[ 'id' => $this->id ]
-			);
-
-			return false;
-
-		}
-
-	}
-
-	/**
-	 * Clears the Entities secret
-	 *
-	 * @since   2.0.0
-	 */
-	public function clear_secret() {
-
-		$this->secret = null;
 
 	}
 
@@ -188,6 +129,54 @@ abstract class AbstractEntity implements EntityInterface {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Clears the Entities secret
+	 *
+	 * @since   2.0.0
+	 */
+	public function clear_secret() {
+
+		$this->secret = null;
+
+	}
+
+	/**
+	 * Set the donor's secret
+	 *
+	 * @param string $timeout How long the secret should be kept in the database for.
+	 *
+	 * @return string|false
+	 * @since   2.0.0
+	 */
+	public function create_secret( $timeout = '+10 minutes' ) {
+
+		$logger = LoggerService::factory();
+		$table  = static::get_table_name( false );
+
+		try {
+
+			// Create secret if none set.
+			if ( null === $this->secret ) {
+				$this->secret = bin2hex( random_bytes( 10 ) );
+			}
+
+			Utils::schedule_action(strtotime( $timeout ), $table . '_remove_secret_action', [ $this->secret ], true );
+
+			return wp_hash_password( $this->secret );
+
+		} catch ( Throwable $e ) {
+
+			$logger->error(
+				sprintf( 'Unable to create secret for %s. ', $table ) . $e->getMessage(),
+				[ 'id' => $this->id ]
+			);
+
+			return false;
+
+		}
+
 	}
 
 	/**

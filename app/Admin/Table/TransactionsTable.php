@@ -28,9 +28,9 @@ class TransactionsTable extends WP_List_Table {
 		$this->table  = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
-			'name' => __('Name', 'kudos-donations'),
-			'email' => __('Email', 'kudos-donations'),
-			'order_id' => __( 'Order ID', 'kudos-donations'),
+			'name'     => __( 'Name', 'kudos-donations' ),
+			'email'    => __( 'Email', 'kudos-donations' ),
+			'order_id' => __( 'Order ID', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -82,32 +82,34 @@ class TransactionsTable extends WP_List_Table {
 		$search = $this->get_search_data();
 
 		// Base data
-		$table = $this->table;
+		$table      = $this->table;
 		$join_table = DonorEntity::get_table_name();
-		$query = "
+		$query      = "
 			SELECT ${table}.*, ${join_table}.name, ${join_table}.email FROM ${table}
 			LEFT JOIN ${join_table} on ${join_table}.customer_id = ${table}.customer_id
 		";
 
 		// Where clause
-		if($view) {
+		if ( $view ) {
 			global $wpdb;
-			$where[] = $wpdb->prepare("
+			$where[] = $wpdb->prepare( "
 				${table}.status = %s
-			", $view);
+			",
+				$view );
 		}
 
-		if($search) {
+		if ( $search ) {
 			global $wpdb;
-			$where[] = $wpdb->prepare("
+			$where[] = $wpdb->prepare( "
 				${search['field']} LIKE %s
-			", $search['term']);
+			",
+				$search['term'] );
 		}
 
-		$where = ! empty( $where ) ? 'WHERE ' . implode(" AND ", $where) : '';
+		$where = ! empty( $where ) ? 'WHERE ' . implode( " AND ", $where ) : '';
 		$query = $query . $where;
 
-		return $this->mapper->get_results($query);
+		return $this->mapper->get_results( $query );
 
 	}
 
@@ -293,7 +295,7 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_name( array $item ) {
 
-		$email = isset($item['email']) ? $item['email'] : null ;
+		$email = isset( $item['email'] ) ? $item['email'] : null;
 
 		if ( $email ) {
 			return sprintf(
@@ -303,7 +305,7 @@ class TransactionsTable extends WP_List_Table {
 			);
 		}
 
-		return isset($item['name']) ? $item['name'] : '';
+		return isset( $item['name'] ) ? $item['name'] : '';
 
 	}
 
@@ -317,7 +319,7 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_email( array $item ) {
 
-		if(isset($item['email'])) {
+		if ( isset( $item['email'] ) ) {
 			return sprintf(
 				'<a href="mailto: %1$s" />%1$s</a>',
 				$item['email']
@@ -359,7 +361,7 @@ class TransactionsTable extends WP_List_Table {
 
 		if ( $item['refunds'] ) {
 			$refund = json_decode( $item['refunds'] );
-			$value = json_last_error() == JSON_ERROR_NONE ? $refund->remaining : '';
+			$value  = json_last_error() == JSON_ERROR_NONE ? $refund->remaining : '';
 		}
 
 		return '<i title="' . $item['method'] . '" class="' . $icon . '"></i> ' .
@@ -441,7 +443,8 @@ class TransactionsTable extends WP_List_Table {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=label&s=%s' ), rawurlencode( $item['campaign_label'] ) ),
+			sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=label&s=%s' ),
+				rawurlencode( $item['campaign_label'] ) ),
 			strtoupper( $item['campaign_label'] )
 		);
 

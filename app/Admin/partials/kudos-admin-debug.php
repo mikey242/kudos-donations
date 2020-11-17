@@ -1,6 +1,7 @@
 <?php
 
 use Kudos\Entity\DonorEntity;
+use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
@@ -24,25 +25,115 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 	<nav class="nav-tab-wrapper">
 		<a href="?page=kudos-debug&tab=log"
-			class="nav-tab <?php echo ( 'log' === $tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
+		   class="nav-tab <?php echo ( 'log' === $tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
 		<a href="?page=kudos-debug&tab=actions"
-			class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
+		   class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
 		<a href="?page=kudos-debug&tab=subscriptions"
-			class="nav-tab <?php echo ( 'subscriptions' === $tab ) ? 'nav-tab-active' : ''; ?>">Subscriptions</a>
+		   class="nav-tab <?php echo ( 'subscriptions' === $tab ) ? 'nav-tab-active' : ''; ?>">Subscriptions</a>
+		<a href="?page=kudos-debug&tab=hooks"
+		   class="nav-tab <?php echo ( 'hooks' === $tab ) ? 'nav-tab-active' : ''; ?>">Hooks</a>
 	</nav>
 
 	<div class="tab-content">
 
 		<?php
 
-		$url = admin_url( 'admin.php?page=kudos-debug' );
+		$url            = admin_url( 'admin.php?page=kudos-debug' );
 
 		switch ( $tab ) :
+
+			case 'log':
+				$url = add_query_arg( 'tab', 'log', $url );
+				$file   = LoggerService::LOG_FILE;
+
+				// Quit if file does not exist.
+				if ( ! file_exists( $file ) ) {
+					return;
+				}
+
+				$kudos_logger = LoggerService::factory();
+				$log_array    = $kudos_logger->get_as_array();
+				?>
+
+				<p>This logfile location: <?php echo esc_url( $file ); ?></p>
+				<p>Current filesize: <?php echo esc_attr( filesize( $file ) ); ?> bytes</p>
+
+				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
+				      method='post'>
+					<?php wp_nonce_field( 'kudos_log_clear', '_wpnonce' ); ?>
+					<input type='hidden' name='kudos_action' value='kudos_log_clear'>
+					<input class="button-secondary" type='submit' value='Clear'>
+				</form>
+
+				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
+				      method='post'>
+					<?php wp_nonce_field( 'kudos_log_download', '_wpnonce' ); ?>
+					<input type='hidden' name='kudos_action' value='kudos_log_download'>
+					<input class="button-secondary" type='submit' value='Download'>
+				</form>
+
+				<table class='form-table'>
+					<tbody>
+					<tr>
+						<th class='row-title'>Date</th>
+						<th>Level</th>
+						<th>Message</th>
+					</tr>
+
+					<?php
+					foreach ( $log_array as $key => $log ) {
+
+						$level = $log['type'];
+						$style = 'border-left-width: 4px; border-left-style: solid;';
+
+						switch ( $level ) {
+							case 'CRITICAL':
+							case 'ERROR':
+								$class = 'notice-error';
+								break;
+							case 'DEBUG':
+								$class = '';
+								$style = '';
+								break;
+							default:
+								$class = 'notice-' . strtolower( $level );
+						}
+						?>
+
+						<tr style='<?php echo esc_attr( $style ); ?>'
+						    class='<?php echo esc_attr( ( 0 === $key % 2 ? 'alternate ' : null ) . $class ); ?>'>
+
+							<td>
+								<?php
+								echo esc_textarea(
+									wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+										strtotime( $log['date'] ) )
+								);
+								?>
+							</td>
+							<td>
+								<?php echo esc_attr( $log['type'] ); ?>
+							</td>
+							<td>
+								<?php echo( esc_textarea( $log['message'] ) ); ?>
+							</td>
+
+						</tr>
+
+					<?php } ?>
+
+					</tbody>
+				</table>
+
+				<?php
+
+				break;
+
 			case 'actions':
 				$url = add_query_arg( 'tab', 'actions', $url );
 				?>
 				<p>Please use the following actions only if you are having issues. Remember to backup your data before
-				performing any of these actions.</p>
+					performing any of these actions.</p>
 				<hr/>
 
 				<p>This will remove all the settings from the database and reset them back to default.</p>
@@ -101,92 +192,6 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				<?php
 				break;
 
-			case 'log':
-				$url  = add_query_arg( 'tab', 'log', $url );
-				$file = LoggerService::LOG_FILE;
-
-				// Quit if file does not exist.
-				if ( ! file_exists( $file ) ) {
-					return;
-				}
-
-				$kudos_logger = LoggerService::factory();
-				$log_array    = $kudos_logger->get_as_array();
-				?>
-
-				<p>This logfile location: <?php echo esc_url( $file ); ?></p>
-				<p>Current filesize: <?php echo esc_attr( filesize( $file ) ); ?> bytes</p>
-
-				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
-				method='post'>
-					<?php wp_nonce_field( 'kudos_log_clear', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_log_clear'>
-					<input class="button-secondary" type='submit' value='Clear'>
-				</form>
-
-				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
-				method='post'>
-					<?php wp_nonce_field( 'kudos_log_download', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_log_download'>
-					<input class="button-secondary" type='submit' value='Download'>
-				</form>
-
-				<table class='form-table'>
-					<tbody>
-						<tr>
-							<th class='row-title'>Date</th>
-							<th>Level</th>
-							<th>Message</th>
-						</tr>
-
-						<?php
-						foreach ( $log_array as $key => $log ) {
-
-							$level = $log['type'];
-							$style = 'border-left-width: 4px; border-left-style: solid;';
-
-							switch ( $level ) {
-								case 'CRITICAL':
-								case 'ERROR':
-									$class = 'notice-error';
-									break;
-								case 'DEBUG':
-									$class = '';
-									$style = '';
-									break;
-								default:
-									$class = 'notice-' . strtolower( $level );
-							}
-							?>
-
-						<tr style='<?php echo esc_attr( $style ); ?>'
-						class='<?php echo esc_attr( ( 0 === $key % 2 ? 'alternate ' : null ) . $class ); ?>'>
-
-							<td>
-							<?php
-								echo esc_textarea(
-									wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $log['date'] ) )
-								);
-							?>
-							</td>
-							<td>
-								<?php echo esc_attr( $log['type'] ); ?>
-							</td>
-							<td>
-								<?php echo( esc_textarea( $log['message'] ) ); ?>
-							</td>
-
-						</tr>
-
-					<?php } ?>
-
-					</tbody>
-				</table>
-
-				<?php
-
-				break;
-
 			case 'subscriptions':
 				$mapper = new MapperService( DonorEntity::class );
 				$donors = $mapper->get_all_by();
@@ -202,72 +207,79 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 						?>
 
 						<h3><strong><?php echo esc_attr( $donor->email ); ?></strong>
-						<span>(<?php echo esc_attr( $donor->customer_id ); ?>)</span></h3>
+							<span>(<?php echo esc_attr( $donor->customer_id ); ?>)</span></h3>
 						<form action="<?php echo esc_url( admin_url( 'admin.php?page=kudos-debug&tab=subscriptions' ) ); ?>"
-						method='post'>
+						      method='post'>
 							<?php wp_nonce_field( 'kudos_cancel_subscription', '_wpnonce' ); ?>
 							<input type='hidden' name='kudos_action' value='kudos_cancel_subscription'>
-							<input type='hidden' name='customerId' value='<?php echo esc_attr( $donor->customer_id ); ?>'>
+							<input type='hidden' name='customerId'
+							       value='<?php echo esc_attr( $donor->customer_id ); ?>'>
 
 							<?php
 							/** @var Subscription $subscription */
 							foreach ( $subscriptions as $subscription ) {
 								?>
 
-							<table class='widefat'>
-							<tbody>
+								<table class='widefat'>
+									<tbody>
 
-								<tr>
-								<td class='row-title'>id</td>
-								<td><?php echo esc_attr( $subscription->id ); ?></td>
-								</tr>
+									<tr>
+										<td class='row-title'>id</td>
+										<td><?php echo esc_attr( $subscription->id ); ?></td>
+									</tr>
 
-								<tr class='alternate'>
-									<td class='row-title'>status</td>
-									<td>
-										<?php echo esc_attr( $subscription->status ); ?>
-										<?php if ( 'canceled' !== $subscription->status ) : ?>
-										<button name='subscriptionId' type='submit'
-											value='<?php echo esc_attr( $subscription->id ); ?>'>Cancel
-										</button>
-									</td>
-									<?php endif; ?>
-								</tr>
+									<tr class='alternate'>
+										<td class='row-title'>status</td>
+										<td>
+											<?php echo esc_attr( $subscription->status ); ?>
+											<?php if ( 'canceled' !== $subscription->status ) : ?>
+											<button name='subscriptionId' type='submit'
+											        value='<?php echo esc_attr( $subscription->id ); ?>'>Cancel
+											</button>
+										</td>
+										<?php endif; ?>
+									</tr>
 
-								<tr>
-									<td class='row-title'>amount</td>
-									<td><?php echo esc_attr( $subscription->amount->value ); ?></td>
-								</tr>
+									<tr>
+										<td class='row-title'>amount</td>
+										<td><?php echo esc_attr( $subscription->amount->value ); ?></td>
+									</tr>
 
-								<tr class='alternate'>
-									<td class='row-title'>interval</td>
-									<td><?php echo esc_attr( $subscription->interval ); ?></td>
-								</tr>
+									<tr class='alternate'>
+										<td class='row-title'>interval</td>
+										<td><?php echo esc_attr( $subscription->interval ); ?></td>
+									</tr>
 
-								<tr>
-									<td class='row-title'>times</td>
-									<td><?php echo esc_attr( $subscription->times ); ?></td>
-								</tr>
+									<tr>
+										<td class='row-title'>times</td>
+										<td><?php echo esc_attr( $subscription->times ); ?></td>
+									</tr>
 
-								<tr class='alternate'>
-									<td class='row-title'>next payment</td>
-									<td><?php echo esc_attr( $subscription->nextPaymentDate ?? 'n/a' ); ?></td>
-								</tr>
+									<tr class='alternate'>
+										<td class='row-title'>next payment</td>
+										<td><?php echo esc_attr( $subscription->nextPaymentDate ?? 'n/a' ); ?></td>
+									</tr>
 
-								<tr>
-									<td class='row-title'>webhookUrl</td>
-									<td><?php echo esc_attr( $subscription->webhookUrl ); ?></td>
-								</tr>
+									<tr>
+										<td class='row-title'>webhookUrl</td>
+										<td><?php echo esc_attr( $subscription->webhookUrl ); ?></td>
+									</tr>
 
-							</tbody>
-							</table>
-							<br class='clear'>
-						<?php } ?>
+									</tbody>
+								</table>
+								<br class='clear'>
+							<?php } ?>
 						</form>
 						<?php
 					}
 				}
 
+				break;
+
+			case 'hooks':
+				echo '<pre>';
+					Utils::print_filters_for('kudos_transactions_remove_secret_action');
+				echo '</pre>';
 				break;
 
 		endswitch;

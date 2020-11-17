@@ -36,10 +36,11 @@ class AdminNotice {
 	/**
 	 * AdminNotice constructor.
 	 *
-	 * @param string      $notice Message to be displayed.
-	 * @param string      $type Notice type (success, warning etc.).
+	 * @param string $notice Message to be displayed.
+	 * @param string $type Notice type (success, warning etc.).
 	 * @param string|null $extra Extra content for after message.
-	 * @param bool        $is_dismissible Whether the notice can be dismissed or not.
+	 * @param bool $is_dismissible Whether the notice can be dismissed or not.
+	 *
 	 * @since 2.0.0
 	 */
 	public function __construct( string $notice, string $type = 'success', $extra = null, $is_dismissible = true ) {

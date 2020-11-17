@@ -5,6 +5,15 @@ namespace Kudos\Entity;
 interface EntityInterface {
 
 	/**
+	 * Returns the name of the table
+	 *
+	 * @param bool $prefix Whether to prepend the prefix or not.
+	 *
+	 * @return string
+	 */
+	public static function get_table_name( bool $prefix = true );
+
+	/**
 	 * Set the entity properties.
 	 *
 	 * @param array $fields Array of entity properties and values.
@@ -12,14 +21,6 @@ interface EntityInterface {
 	 * @return mixed
 	 */
 	public function set_fields( array $fields );
-
-	/**
-	 * Returns the name of the table
-	 *
-	 * @param bool $prefix Whether to prepend the prefix or not.
-	 * @return string
-	 */
-	public static function get_table_name( bool $prefix = true );
 
 	/**
 	 * Converts entity object to an array

@@ -146,7 +146,7 @@ class TwigService extends AbstractService {
 	 * Render the provided template
 	 *
 	 * @param string $template Template file (.html.twig).
-	 * @param array  $array Array to pass to template.
+	 * @param array $array Array to pass to template.
 	 *
 	 * @return bool
 	 * @since    1.0.0

@@ -76,7 +76,7 @@ class MailerService extends AbstractService {
 	 * @return bool
 	 * @since    1.1.0
 	 */
-	public function send_receipt( TransactionEntity $transaction ) : bool {
+	public function send_receipt( TransactionEntity $transaction ): bool {
 
 		// Check if setting enabled.
 		if ( ! Settings::get_setting( 'email_receipt_enable' ) ) {
@@ -98,7 +98,8 @@ class MailerService extends AbstractService {
 			'name'         => $transaction->get_donor()->name ?? '',
 			'date'         => $transaction->created,
 			'description'  => Utils::get_sequence_type( $transaction->sequence_type ),
-			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value, 2 ),
+			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
+					2 ),
 			'receipt_id'   => $transaction->order_id,
 			'website_name' => get_bloginfo( 'name' ),
 		];
@@ -137,10 +138,10 @@ class MailerService extends AbstractService {
 	/**
 	 * Email send function
 	 *
-	 * @param string     $to Recipient email address.
-	 * @param string     $subject Email subject line.
-	 * @param string     $body Body of email.
-	 * @param array      $headers Email headers.
+	 * @param string $to Recipient email address.
+	 * @param string $subject Email subject line.
+	 * @param string $body Body of email.
+	 * @param array $headers Email headers.
 	 * @param array|null $attachment Attachment.
 	 *
 	 * @return bool
@@ -190,7 +191,8 @@ class MailerService extends AbstractService {
 			wp_send_json_success( sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) );
 		} else {
 			/* translators: %s: API mode */
-			wp_send_json_error( __( 'Error sending email, please check the settings and try again.', 'kudos-donations' ) );
+			wp_send_json_error( __( 'Error sending email, please check the settings and try again.',
+				'kudos-donations' ) );
 		}
 
 		return $result;

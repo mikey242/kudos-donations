@@ -13,7 +13,7 @@ if ( ! defined( 'JSON_INVALID_UTF8_SUBSTITUTE' ) ) {
 
 class LoggerService extends Monolog {
 
-	const LOG_DIR  = KUDOS_STORAGE_DIR . 'logs/';
+	const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
 	const LOG_FILE = self::LOG_DIR . 'kudos.log';
 
 	/**
@@ -122,9 +122,9 @@ class LoggerService extends Monolog {
 	/**
 	 * Add checks to parent function
 	 *
-	 * @param int    $level Log level.
+	 * @param int $level Log level.
 	 * @param string $message Message to record.
-	 * @param array  $context Context array.
+	 * @param array $context Context array.
 	 *
 	 * @return bool
 	 * @since    2.0.0

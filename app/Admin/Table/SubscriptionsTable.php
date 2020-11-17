@@ -29,9 +29,9 @@ class SubscriptionsTable extends WP_List_Table {
 		$this->table  = SubscriptionEntity::get_table_name();
 
 		$this->search_columns = [
-			'name' => __('Name', 'kudos-donations'),
-			'email' => __('Email', 'kudos-donations'),
-			'frequency' => __('Frequency', 'kudos-donations'),
+			'name'      => __( 'Name', 'kudos-donations' ),
+			'email'     => __( 'Email', 'kudos-donations' ),
+			'frequency' => __( 'Frequency', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -78,12 +78,12 @@ class SubscriptionsTable extends WP_List_Table {
 	public function fetch_table_data() {
 
 		$frequency = ( isset( $_GET['frequency'] ) ? sanitize_text_field( $_GET['frequency'] ) : '' );
-		$search = $this->get_search_data();
+		$search    = $this->get_search_data();
 
 		// Base data
-		$table = $this->table;
+		$table      = $this->table;
 		$join_table = DonorEntity::get_table_name();
-		$query = "
+		$query      = "
 			SELECT ${table}.*, ${join_table}.name, ${join_table}.email FROM ${table}
 			LEFT JOIN ${join_table} on ${join_table}.customer_id = ${table}.customer_id
 		";
@@ -91,22 +91,24 @@ class SubscriptionsTable extends WP_List_Table {
 		// Where clause
 		if ( $frequency ) {
 			global $wpdb;
-			$where[] = $wpdb->prepare("
+			$where[] = $wpdb->prepare( "
 				${table}.frequency = %s
-			", $frequency);
+			",
+				$frequency );
 		}
 
-		if($search) {
+		if ( $search ) {
 			global $wpdb;
-			$where[] = $wpdb->prepare("
+			$where[] = $wpdb->prepare( "
 				${search['field']} = %s
-			", $search['term']);
+			",
+				$search['term'] );
 		}
 
-		$where = ! empty( $where ) ? 'WHERE ' . implode(" AND ", $where) : '';
+		$where = ! empty( $where ) ? 'WHERE ' . implode( " AND ", $where ) : '';
 		$query = $query . $where;
 
-		return $this->mapper->get_results($query);
+		return $this->mapper->get_results( $query );
 
 	}
 
@@ -165,6 +167,108 @@ class SubscriptionsTable extends WP_List_Table {
 	}
 
 	/**
+	 * Process cancel and bulk-cancel actions
+	 *
+	 * @since      2.0.0
+	 */
+	public function process_bulk_action() {
+
+		// Detect when a bulk action is being triggered.
+		switch ( $this->current_action() ) {
+
+			case 'cancel':
+				// Verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['singular'] ) ) {
+					die();
+				}
+
+				if ( isset( $_GET['subscription_id'] ) ) {
+					self::cancel_subscription( sanitize_text_field( wp_unslash( $_GET['subscription_id'] ) ) );
+				}
+
+				break;
+
+			case 'delete':
+				// Verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['singular'] ) ) {
+					die();
+				}
+
+				if ( isset( $_GET['subscription_id'] ) ) {
+					self::delete_record( 'subscription_id',
+						sanitize_text_field( wp_unslash( $_GET['subscription_id'] ) ) );
+				}
+
+				break;
+
+			case 'bulk-cancel':
+				// Verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['plural'] ) ) {
+					die();
+				}
+
+				if ( isset( $_REQUEST['bulk-action'] ) ) {
+					$customer_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
+					foreach ( $customer_ids as $id ) {
+						self::cancel_subscription( $id );
+					}
+				}
+				break;
+
+			case 'bulk-delete':
+				// Verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['plural'] ) ) {
+					die();
+				}
+
+				if ( isset( $_REQUEST['bulk-action'] ) ) {
+					$customer_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
+					foreach ( $customer_ids as $id ) {
+						self::delete_record( 'subscription_id', sanitize_text_field( $id ) );
+					}
+				}
+				break;
+		}
+	}
+
+	/**
+	 * Cancel a subscription.
+	 *
+	 * @param string $subscription_id order ID.
+	 *
+	 * @return bool
+	 * @since      2.0.0
+	 */
+	public static function cancel_subscription( string $subscription_id ) {
+
+		$kudos_mollie = MollieService::factory();
+		if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Delete a subscription.
+	 *
+	 * @param string $column Column name to search.
+	 * @param string $subscription_id Value to search for.
+	 *
+	 * @return false|int
+	 * @since   1.0.0
+	 */
+	protected function delete_record( string $column, string $subscription_id ) {
+
+		return $this->mapper->delete( $column, $subscription_id );
+
+	}
+
+	/**
 	 * Render the bulk edit checkbox
 	 *
 	 * @param array $item Array of results.
@@ -192,8 +296,9 @@ class SubscriptionsTable extends WP_List_Table {
 		$action_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
 		$title = '<strong>' .
-					wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['created'] ) ) .
-				'</strong>';
+		         wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			         strtotime( $item['created'] ) ) .
+		         '</strong>';
 
 		$actions = [];
 		if ( 'active' === $item['status'] ) {
@@ -337,103 +442,6 @@ class SubscriptionsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Process cancel and bulk-cancel actions
-	 *
-	 * @since      2.0.0
-	 */
-	public function process_bulk_action() {
-
-		// Detect when a bulk action is being triggered.
-		switch ( $this->current_action() ) {
-
-			case 'cancel':
-				// Verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				}
-
-				if ( isset( $_GET['subscription_id'] ) ) {
-					self::cancel_subscription( sanitize_text_field( wp_unslash( $_GET['subscription_id'] ) ) );
-				}
-
-				break;
-
-			case 'delete':
-				// Verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				}
-
-				if ( isset( $_GET['subscription_id'] ) ) {
-					self::delete_record( 'subscription_id', sanitize_text_field( wp_unslash( $_GET['subscription_id'] ) ) );
-				}
-
-				break;
-
-			case 'bulk-cancel':
-				// Verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
-
-				if ( isset( $_REQUEST['bulk-action'] ) ) {
-					$customer_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
-					foreach ( $customer_ids as $id ) {
-						self::cancel_subscription( $id );
-					}
-				}
-				break;
-
-			case 'bulk-delete':
-				// Verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
-
-				if ( isset( $_REQUEST['bulk-action'] ) ) {
-					$customer_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
-					foreach ( $customer_ids as $id ) {
-						self::delete_record( 'subscription_id', sanitize_text_field( $id ) );
-					}
-				}
-				break;
-		}
-	}
-
-	/**
-	 * Cancel a subscription.
-	 *
-	 * @param string $subscription_id order ID.
-	 *
-	 * @return bool
-	 * @since      2.0.0
-	 */
-	public static function cancel_subscription( string $subscription_id ) {
-
-		$kudos_mollie = MollieService::factory();
-		if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Delete a subscription.
-	 *
-	 * @param string $column Column name to search.
-	 * @param string $subscription_id Value to search for.
-	 *
-	 * @return false|int
-	 * @since   1.0.0
-	 */
-	protected function delete_record( string $column, string $subscription_id ) {
-
-		return $this->mapper->delete( $column, $subscription_id );
-
-	}
-
-	/**
 	 * Gets view data
 	 *
 	 * @return array
@@ -459,13 +467,15 @@ class SubscriptionsTable extends WP_List_Table {
 		$count              = count( $this->mapper->get_all_by( [ 'frequency' => '3 months' ] ) );
 		$class              = ( '3 months' === $current ? ' class="current"' : '' );
 		$yearly_url         = add_query_arg( 'frequency', '3 months' );
-		$views['quarterly'] = "<a href='{$yearly_url}' {$class} >" . __( 'Quarterly', 'kudos-donations' ) . " ($count)</a>";
+		$views['quarterly'] = "<a href='{$yearly_url}' {$class} >" . __( 'Quarterly',
+				'kudos-donations' ) . " ($count)</a>";
 
 		// Monthly link.
 		$count            = count( $this->mapper->get_all_by( [ 'frequency' => '1 month' ] ) );
 		$class            = ( '1 month' === $current ? ' class="current"' : '' );
 		$monthly_url      = add_query_arg( 'frequency', '1 month' );
-		$views['monthly'] = "<a href='{$monthly_url}' {$class} >" . __( 'Monthly', 'kudos-donations' ) . " ($count)</a>";
+		$views['monthly'] = "<a href='{$monthly_url}' {$class} >" . __( 'Monthly',
+				'kudos-donations' ) . " ($count)</a>";
 
 		return $views;
 

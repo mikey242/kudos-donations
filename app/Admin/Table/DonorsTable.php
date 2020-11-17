@@ -30,10 +30,10 @@ class DonorsTable extends WP_List_Table {
 		$this->table  = DonorEntity::get_table_name();
 
 		$this->search_columns = [
-			'name' => __('Name', 'kudos-donations'),
-			'email' => __('Email', 'kudos-donations'),
-			'address' => __('Address', 'kudos-donations'),
-			'order_id' => __('Order ID', 'kudos-donations'),
+			'name'     => __( 'Name', 'kudos-donations' ),
+			'email'    => __( 'Email', 'kudos-donations' ),
+			'address'  => __( 'Address', 'kudos-donations' ),
+			'order_id' => __( 'Order ID', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -78,10 +78,12 @@ class DonorsTable extends WP_List_Table {
 	public function fetch_table_data() {
 
 		$search = $this->get_search_data();
-		$donors = $this->mapper->get_all_by( [$search['field'] => $search['term']], 'AND' );
-		return array_map(function ( $donor ) {
+		$donors = $this->mapper->get_all_by( [ $search['field'] => $search['term'] ], 'AND' );
+
+		return array_map( function ( $donor ) {
 			return $donor->to_array();
-		}, $donors);
+		},
+			$donors );
 
 	}
 
@@ -134,6 +136,61 @@ class DonorsTable extends WP_List_Table {
 	}
 
 	/**
+	 * Process cancel and bulk-cancel actions
+	 *
+	 * @since   2.0.0
+	 */
+	public function process_bulk_action() {
+
+		// Detect when a bulk action is being triggered.
+		switch ( $this->current_action() ) {
+
+			case 'delete':
+				// In our file that handles the request, verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['singular'] ) ) {
+					die();
+				}
+
+				if ( isset( $_GET['customer_id'] ) ) {
+					self::delete_record( 'customer_id', sanitize_text_field( wp_unslash( $_GET['customer_id'] ) ) );
+				}
+
+				break;
+
+			case 'bulk-delete':
+				// In our file that handles the request, verify the nonce.
+				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+						'bulk-' . $this->_args['plural'] ) ) {
+					die();
+				}
+
+				if ( isset( $_REQUEST['bulk-action'] ) ) {
+					$donor_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
+					foreach ( $donor_ids as $id ) {
+						self::delete_record( 'customer_id', $id );
+					}
+				}
+				break;
+		}
+	}
+
+	/**
+	 * Delete a donor.
+	 *
+	 * @param string $column Column name to search.
+	 * @param string $customer_id Value to search for.
+	 *
+	 * @return false|int
+	 * @since   1.0.0
+	 */
+	protected function delete_record( string $column, string $customer_id ) {
+
+		return $this->mapper->delete( $column, $customer_id );
+
+	}
+
+	/**
 	 * Render the bulk edit checkbox
 	 *
 	 * @param array $item Array of results.
@@ -159,7 +216,8 @@ class DonorsTable extends WP_List_Table {
 	protected function column_created( array $item ) {
 
 		return __( 'Added', 'kudos-donations' ) . '<br/>' .
-				wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item['created'] ) );
+		       wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			       strtotime( $item['created'] ) );
 	}
 
 	/**
@@ -249,7 +307,7 @@ class DonorsTable extends WP_List_Table {
 
 			return '<a href="' . admin_url( 'admin.php?page=kudos-transactions&search-field=email&s=' . rawurlencode( $item['email'] ) . '' ) . '">
 						' . $number . ' ( ' . Utils::get_currency_symbol( $transactions[0]->currency ) . $total . ' )' .
-					'</a>';
+			       '</a>';
 		}
 
 		return false;
@@ -265,58 +323,5 @@ class DonorsTable extends WP_List_Table {
 		return [
 			'bulk-delete' => __( 'Delete', 'kudos-donations' ),
 		];
-	}
-
-	/**
-	 * Process cancel and bulk-cancel actions
-	 *
-	 * @since   2.0.0
-	 */
-	public function process_bulk_action() {
-
-		// Detect when a bulk action is being triggered.
-		switch ( $this->current_action() ) {
-
-			case 'delete':
-				// In our file that handles the request, verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				}
-
-				if ( isset( $_GET['customer_id'] ) ) {
-					self::delete_record( 'customer_id', sanitize_text_field( wp_unslash( $_GET['customer_id'] ) ) );
-				}
-
-				break;
-
-			case 'bulk-delete':
-				// In our file that handles the request, verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
-
-				if ( isset( $_REQUEST['bulk-action'] ) ) {
-					$donor_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
-					foreach ( $donor_ids as $id ) {
-						self::delete_record( 'customer_id', $id );
-					}
-				}
-				break;
-		}
-	}
-
-	/**
-	 * Delete a donor.
-	 *
-	 * @param string $column Column name to search.
-	 * @param string $customer_id Value to search for.
-	 *
-	 * @return false|int
-	 * @since   1.0.0
-	 */
-	protected function delete_record( string $column, string $customer_id ) {
-
-		return $this->mapper->delete( $column, $customer_id );
-
 	}
 }

@@ -50,7 +50,7 @@ class KudosModal {
 	 * Renders the modal using twig
 	 *
 	 * @param string $template Template file to use.
-	 * @param array  $data Array of data for template.
+	 * @param array $data Array of data for template.
 	 *
 	 * @return bool
 	 */
@@ -64,7 +64,7 @@ class KudosModal {
 	 * Get the donate modal markup
 	 *
 	 * @param array $data Array of data for template.
-	 * @param bool  $echo Whether to echo result or not.
+	 * @param bool $echo Whether to echo result or not.
 	 *
 	 * @return string|void
 	 * @since    1.0.0

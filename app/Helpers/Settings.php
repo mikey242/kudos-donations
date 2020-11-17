@@ -136,7 +136,7 @@ class Settings {
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => sprintf(
-						/* translators: %s: Value of donation. */
+					/* translators: %s: Value of donation. */
 						__( 'Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations' ),
 						'{{value}}'
 					),
@@ -207,7 +207,7 @@ class Settings {
 	 * Update specified setting
 	 *
 	 * @param string $name Setting name.
-	 * @param mixed  $value Setting value.
+	 * @param mixed $value Setting value.
 	 *
 	 * @return bool
 	 * @since 2.0.4

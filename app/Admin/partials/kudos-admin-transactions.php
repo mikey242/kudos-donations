@@ -20,18 +20,20 @@ switch ( $table_action ) {
 		break;
 	case 'bulk-delete':
 		$message = sprintf(
-			/* translators: %s: Number of records */
+		/* translators: %s: Number of records */
 			_n( 'Deleted %s transaction', 'Deleted %s transactions', $records, 'kudos-donations' ),
 			$records
 		);
 		break;
 }
 
+echo get_search_query();
+
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php esc_attr_e( 'Transactions', 'kudos-donations' ); ?></h1>
 	<?php if ( isset( $_REQUEST['s'] ) ) { ?>
-	<span class="subtitle">
+		<span class="subtitle">
 		<?php
 		/* translators: %s: Search term */
 		printf( __( 'Search results for “%s”' ), $_REQUEST['s'] )
@@ -45,6 +47,6 @@ switch ( $table_action ) {
 	}
 	?>
 	<form id="transactions-table" method="POST">
-	<?php $table->display(); ?>
+		<?php $table->display(); ?>
 	</form>
 </div>

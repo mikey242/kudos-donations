@@ -318,7 +318,8 @@ class Front {
 						'button_label'   => __( 'Donate now', 'kudos-donations' ),
 						'color'          => Settings::get_setting( 'theme_color' ),
 						'modal_title'    => __( 'Support us!', 'kudos-donations' ),
-						'welcome_text'   => __( 'Thank you for your donation. We appreciate your support!', 'kudos-donations' ),
+						'welcome_text'   => __( 'Thank you for your donation. We appreciate your support!',
+							'kudos-donations' ),
 						'amount_type'    => 'open',
 						'fixed_amounts'  => '5, 10, 20, 50',
 						'campaign_label' => null,
@@ -491,7 +492,8 @@ class Front {
 								echo $modal->get_message_modal(
 									[
 										'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
-										'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.', 'kudos-donations' ),
+										'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
+											'kudos-donations' ),
 									]
 								);
 
@@ -535,8 +537,9 @@ class Front {
 
 			switch ( $transaction->status ) {
 				case 'paid':
-					$vars                  = [
-						'{{value}}' => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value, 2 ),
+					$vars                = [
+						'{{value}}' => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
+								2 ),
 						'{{name}}'  => $donor->name,
 						'{{email}}' => $donor->email,
 					];

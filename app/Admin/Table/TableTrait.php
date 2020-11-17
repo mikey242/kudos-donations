@@ -45,26 +45,9 @@ trait TableTrait {
 	}
 
 	/**
-	 * Add extra markup in the toolbars before or after the list
-	 *
-	 * @param string $which helps you decide if you add the markup after (bottom) or before (top) the list.
-	 *
-	 * @since   1.0.0
-	 */
-	protected function extra_tablenav( $which ) {
-
-		if ( 'top' === $which ) {
-			if ( $this->has_items() ) {
-				echo esc_attr( apply_filters( 'kudos_table_tablenav_top', '', $this->_args ) );
-			}
-		}
-
-	}
-
-	/**
 	 * Define what data to show on each column of the table
 	 *
-	 * @param array  $item Data.
+	 * @param array $item Data.
 	 * @param string $column_name Current column name.
 	 *
 	 * @return mixed
@@ -123,19 +106,6 @@ trait TableTrait {
 
 	}
 
-	public function get_search_data() {
-
-		$search = null;
-
-		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && array_key_exists( $_REQUEST['search-field'], $this->column_names() ) ) {
-			$search['term'] = strtolower( esc_attr( wp_unslash( $_REQUEST['s'] ) ) );
-			$search['field'] = esc_attr( wp_unslash( $_REQUEST['search-field'] ) );
-		}
-
-		return $search;
-
-	}
-
 	/**
 	 * Get the table data
 	 *
@@ -147,16 +117,17 @@ trait TableTrait {
 	/**
 	 * Displays the search box.
 	 *
+	 * @param string $text The 'submit' button label.
+	 * @param string $input_id ID attribute value for the search input field.
+	 *
 	 * @since 3.1.0
 	 *
-	 * @param string $text     The 'submit' button label.
-	 * @param string $input_id ID attribute value for the search input field.
 	 */
 	public function search_box( $text, $input_id ) {
 		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
 			return;
 		}
-		$input_id = $input_id . '-search-input';
+		$input_id     = $input_id . '-search-input';
 		$search_field = $this->get_search_data()['field'];
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
@@ -175,19 +146,52 @@ trait TableTrait {
 
 		<p class="search-box">
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<label for="search-field-selector" class="screen-reader-text"><?php _e('Select search field', 'kudos-donations') ?>></label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
+			       value="<?php _admin_search_query(); ?>"/>
+			<label for="search-field-selector" class="screen-reader-text"><?php _e( 'Select search field',
+					'kudos-donations' ) ?>></label>
 			<select name="search-field" style="vertical-align: baseline" id="search-field-selector">
-				<option value="-1"><?php _e('Search field', 'kudos-donations') ?></option>
+				<option value="-1"><?php _e( 'Search field', 'kudos-donations' ) ?></option>
 				<?php
-				foreach ($this->search_columns as $value=>$label) {
-					echo "<option ". ($value === $search_field ? "selected" : '') ." value=$value>$label</option>";
+				foreach ( $this->search_columns as $value => $label ) {
+					echo "<option " . ( $value === $search_field ? "selected" : '' ) . " value=$value>$label</option>";
 				}
 				?>
 			</select>
 			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
 		</p>
 		<?php
+	}
+
+	public function get_search_data() {
+
+		$search = null;
+
+		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && array_key_exists( $_REQUEST['search-field'],
+				$this->column_names() ) ) {
+			$search['term']  = strtolower( esc_attr( wp_unslash( $_REQUEST['s'] ) ) );
+			$search['field'] = esc_attr( wp_unslash( $_REQUEST['search-field'] ) );
+		}
+
+		return $search;
+
+	}
+
+	/**
+	 * Add extra markup in the toolbars before or after the list
+	 *
+	 * @param string $which helps you decide if you add the markup after (bottom) or before (top) the list.
+	 *
+	 * @since   1.0.0
+	 */
+	protected function extra_tablenav( $which ) {
+
+		if ( 'top' === $which ) {
+			if ( $this->has_items() ) {
+				echo esc_attr( apply_filters( 'kudos_table_tablenav_top', '', $this->_args ) );
+			}
+		}
+
 	}
 
 	/**

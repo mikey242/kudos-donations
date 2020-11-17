@@ -42,7 +42,6 @@ class MollieService extends AbstractService {
 	 */
 	private $webhook_url;
 
-
 	/**
 	 * Mollie constructor.
 	 *
@@ -70,10 +69,10 @@ class MollieService extends AbstractService {
 	/**
 	 * Creates a payment and returns it as an object
 	 *
-	 * @param string      $value Value of payment.
-	 * @param string      $interval Interval of payment (oneoff, first, recurring).
-	 * @param string      $years Number of years for subscription.
-	 * @param string      $redirect_url URL to redirect customer to on payment completion.
+	 * @param string $value Value of payment.
+	 * @param string $interval Interval of payment (oneoff, first, recurring).
+	 * @param string $years Number of years for subscription.
+	 * @param string $redirect_url URL to redirect customer to on payment completion.
 	 * @param string|null $campaign_label Campaign name to associate payment to.
 	 * @param string|null $name Name of donor.
 	 * @param string|null $email Email of donor.
@@ -112,7 +111,7 @@ class MollieService extends AbstractService {
 			'webhookUrl'   => $this->webhook_url,
 			'sequenceType' => $sequence_type,
 			'description'  => sprintf(
-				/* translators: %s: The order id */
+			/* translators: %s: The order id */
 				__( 'Kudos Donation (%1$s) - %2$s', 'kudos-donations' ),
 				$frequency_text,
 				$order_id
@@ -239,7 +238,7 @@ class MollieService extends AbstractService {
 	/**
 	 * Cancel the specified subscription
 	 *
-	 * @param string      $subscription_id Mollie subscription id.
+	 * @param string $subscription_id Mollie subscription id.
 	 * @param null|string $customer_id Mollie customer id.
 	 *
 	 * @return bool
@@ -318,7 +317,7 @@ class MollieService extends AbstractService {
 		// Check that the api key corresponds to the mode.
 		if ( substr( $api_key, 0, 4 ) !== $mode ) {
 			wp_send_json_error(
-				/* translators: %s: API mode */
+			/* translators: %s: API mode */
 				sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ), ucfirst( $mode ), $mode . '_' )
 			);
 		}
@@ -337,7 +336,9 @@ class MollieService extends AbstractService {
 		} else {
 			wp_send_json_error(
 			/* translators: %s: API mode */
-				sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.', 'kudos-donations' ), ucfirst( $mode ) )
+				sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.',
+					'kudos-donations' ),
+					ucfirst( $mode ) )
 			);
 		}
 	}
@@ -407,7 +408,7 @@ class MollieService extends AbstractService {
 			[
 				'transaction_id' => $id,
 				'status'         => $payment->status,
-				'sequence_type'  => $payment->sequenceType
+				'sequence_type'  => $payment->sequenceType,
 			]
 		);
 
@@ -525,20 +526,7 @@ class MollieService extends AbstractService {
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 
 			// Get schedule processing for later.
-			if ( class_exists( 'ActionScheduler' ) ) {
-				if ( false === as_next_scheduled_action( 'kudos_process_paid_transaction', [ $order_id ] ) ) {
-					$timestamp = strtotime( '+1 minute' );
-					as_schedule_single_action( $timestamp, 'kudos_process_paid_transaction', [ $order_id ] );
-					$this->logger->debug(
-						'Action "kudos_process_paid_transaction" scheduled',
-						[
-							'datetime' => wp_date( 'Y-m-d H:i:s', $timestamp ),
-						]
-					);
-				}
-			} else {
-				do_action( 'kudos_process_paid_transaction', $order_id );
-			}
+			Utils::schedule_action(strtotime( '+1 minute' ), 'kudos_process_paid_transaction', [$order_id]);
 
 			// Set up recurring payment if sequence is first.
 			if ( $payment->hasSequenceTypeFirst() ) {
@@ -582,9 +570,9 @@ class MollieService extends AbstractService {
 	 * Create a subscription
 	 *
 	 * @param TransactionEntity $transaction Transaction object.
-	 * @param string            $mandate_id Mollie mandate id.
-	 * @param string            $interval Subscription interval.
-	 * @param string            $years Number of years for subscription.
+	 * @param string $mandate_id Mollie mandate id.
+	 * @param string $interval Subscription interval.
+	 * @param string $years Number of years for subscription.
 	 *
 	 * @return bool|object
 	 * @since      2.0.0
