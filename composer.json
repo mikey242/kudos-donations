@@ -1,15 +1,17 @@
 {
     "require": {
-        "mollie/mollie-api-php": "2.23.*",
+        "mollie/mollie-api-php": "2.24.*",
         "monolog/monolog": "^2.0",
         "twig/twig": "^2.0",
         "ext-json": "*",
-        "php": ">=7.1",
+        "php": ">=7.2",
         "woocommerce/action-scheduler": "^3.1"
     },
     "require-dev": {
         "vlucas/phpdotenv": "^5.1",
-        "phpunit/phpunit": "7.*"
+        "phpunit/phpunit": "7.*",
+        "wp-coding-standards/wpcs": "^2.3",
+        "squizlabs/php_codesniffer": "^3.5"
     },
     "scripts": {
         "post-update-cmd": [
