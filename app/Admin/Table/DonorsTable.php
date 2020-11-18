@@ -78,7 +78,9 @@ class DonorsTable extends WP_List_Table {
 	public function fetch_table_data() {
 
 		$search = $this->get_search_data();
-		$donors = $this->mapper->get_all_by( [ $search['field'] => $search['term'] ], 'AND' );
+		$search_field = isset($search['field']) ? $search['field'] : null;
+		$search_term = isset($search['term']) ? $search['term'] : null;
+		$donors = $this->mapper->get_all_by( [ $search_field => $search_term ], 'AND' );
 
 		return array_map( function ( $donor ) {
 			return $donor->to_array();

@@ -124,11 +124,10 @@ trait TableTrait {
 	 *
 	 */
 	public function search_box( $text, $input_id ) {
+
 		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
 			return;
 		}
-		$input_id     = $input_id . '-search-input';
-		$search_field = $this->get_search_data()['field'];
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
@@ -142,6 +141,10 @@ trait TableTrait {
 		if ( ! empty( $_REQUEST['detached'] ) ) {
 			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
 		}
+
+		$input_id     = $input_id . '-search-input';
+		$search_data = $this->get_search_data();
+		$search_field = $search_data ? $search_data['field'] : null;
 		?>
 
 		<p class="search-box">
@@ -167,8 +170,7 @@ trait TableTrait {
 
 		$search = null;
 
-		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && array_key_exists( $_REQUEST['search-field'],
-				$this->column_names() ) ) {
+		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && array_key_exists( $_REQUEST['search-field'], $this->column_names() ) ) {
 			$search['term']  = strtolower( esc_attr( wp_unslash( $_REQUEST['s'] ) ) );
 			$search['field'] = esc_attr( wp_unslash( $_REQUEST['search-field'] ) );
 		}
