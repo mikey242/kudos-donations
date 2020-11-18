@@ -1,7 +1,6 @@
 <?php
 
 use Kudos\Entity\DonorEntity;
-use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
@@ -30,8 +29,6 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 		   class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
 		<a href="?page=kudos-debug&tab=subscriptions"
 		   class="nav-tab <?php echo ( 'subscriptions' === $tab ) ? 'nav-tab-active' : ''; ?>">Subscriptions</a>
-		<a href="?page=kudos-debug&tab=hooks"
-		   class="nav-tab <?php echo ( 'hooks' === $tab ) ? 'nav-tab-active' : ''; ?>">Hooks</a>
 	</nav>
 
 	<div class="tab-content">
@@ -274,12 +271,6 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 					}
 				}
 
-				break;
-
-			case 'hooks':
-				echo '<pre>';
-					Utils::print_filters_for('kudos_transactions_remove_secret_action');
-				echo '</pre>';
 				break;
 
 		endswitch;
