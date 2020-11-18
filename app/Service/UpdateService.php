@@ -23,6 +23,10 @@ class UpdateService {
 			return false;
 		}
 
+		$transactions = array_filter($transactions, function ($transaction) {
+			return ! empty($transaction->campaign_label);
+		});
+
 		// Sort transactions by date, ensures oldest dates used.
 		usort(
 			$transactions,
