@@ -53,6 +53,10 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 == Changelog ==
 
+= 2.0.6 =
+* Update TailwindCSS to 2.0.1
+* Fix unknown index errors on tables
+
 = 2.0.5 =
 * Fixed error deleting donors
 * Fix slashes appearing in address
