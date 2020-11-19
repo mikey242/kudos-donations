@@ -11,7 +11,7 @@ button.kudos_button_donate {
   &:before {
     content: '';
 
-    @apply bg-logo-white bg-contain bg-no-repeat bg-center transition-transform ease-in-out duration-500 mr-3;
+    @apply kd-bg-logo-white kd-bg-contain kd-bg-no-repeat kd-bg-center kd-transition-transform kd-ease-in-out kd-duration-500 kd-mr-3;
 
     width: 25px;
     height: 25px;
@@ -19,7 +19,7 @@ button.kudos_button_donate {
 
   &:hover {
     &:before {
-      @apply transform -rotate-90;
+      @apply kd-transform kd--rotate-90;
     }
   }
 }

@@ -39,7 +39,7 @@
   .kudos-api-status {
 
     &:before {
-      @apply rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 bg-gray-500;
+      @apply kd-rounded-full kd-inline-block kd-align-middle kd-mr-2 kd-border-2 kd-border-solid kd-border-gray-300 kd-bg-gray-500;
       content: '';
       width: 15px;
       height: 15px;
@@ -69,34 +69,34 @@
 
   // WordPress Components
   .components-base-control__help {
-    @apply mt-4 mb-0;
+    @apply kd-mt-4 kd-mb-0;
   }
 
   .components-snackbar {
-    @apply fixed px-4 ml-5 mb-5 w-auto z-1 opacity-0 bottom-0;
+    @apply kd-fixed kd-px-4 kd-ml-5 kd-mb-5 kd-w-auto kd-z-1 kd-opacity-0 kd-bottom-0;
 
     &.notification-shown {
-      @apply opacity-100;
+      @apply kd-opacity-100;
     }
   }
 
   .kudos-tab-panel {
     .components-tab-panel__tabs {
-      @apply flex justify-center bg-white shadow-sm;
+      @apply kd-flex kd-justify-center kd-bg-white kd-shadow-sm;
 
       .components-button.is-active {
-        @apply relative font-semibold;
+        @apply kd-relative kd-font-semibold;
       }
 
       .components-button {
-        @apply text-gray-800 inline-block bg-transparent border-none cursor-pointer py-1 px-5 ml-0 font-normal transition-shadow duration-100 ease-linear;
+        @apply kd-text-gray-800 kd-inline-block kd-bg-transparent kd-border-none kd-cursor-pointer kd-py-1 kd-px-5 kd-ml-0 kd-font-normal kd-transition-shadow kd-duration-100 kd-ease-linear;
         height: 50px;
         outline-offset: -1px;
       }
     }
 
     .components-tab-panel__tab-content {
-      @apply mt-8;
+      @apply kd-mt-8;
     }
   }
 

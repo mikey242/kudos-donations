@@ -16,12 +16,12 @@ div[id^=kudos_modal-] {
   *,
   *::before,
   *::after {
-    @apply font-sans box-border text-base leading-normal opacity-100;
+    @apply kd-font-sans kd-box-border kd-text-base kd-leading-normal kd-opacity-100;
   }
 
   .kudos_modal_logo {
     &::before {
-      @apply block bg-logo-color bg-no-repeat bg-contain bg-center;
+      @apply kd-block kd-bg-logo-color kd-bg-no-repeat kd-bg-contain kd-bg-center;
       content: '';
       width: 40px;
       height: 40px;
@@ -30,7 +30,7 @@ div[id^=kudos_modal-] {
 
   .kudos_modal_container {
     &::before {
-      @apply w-full h-full bg-white top-0 left-0 absolute;
+      @apply kd-w-full kd-h-full kd-bg-white kd-top-0 kd-left-0 kd-absolute;
       content: '';
       z-index: -1;
       opacity: 0.7;
@@ -38,13 +38,13 @@ div[id^=kudos_modal-] {
   }
 
   &.is-open {
-    @apply block overflow-x-hidden overflow-y-auto #{!important};
+    @apply kd-block kd-overflow-x-hidden kd-overflow-y-auto #{!important};
   }
 
   .kudos_modal_buttons {
     .kudos_back {
       &::before {
-        @apply absolute cursor-pointer bg-contain bg-no-repeat;
+        @apply kd-absolute kd-cursor-pointer kd-bg-contain kd-bg-no-repeat;
         content: '';
         transform: translateY(-50%);
         width: 20px;
@@ -62,23 +62,23 @@ div[id^=kudos_modal-] {
     }
 
     .kudos_spinner {
-      @apply block #{!important};
+      @apply kd-block #{!important};
     }
   }
 
   .form-tab.current-tab {
-    @apply block #{!important};
+    @apply kd-block #{!important};
   }
 
   .kudos_form {
     small.error {
-      @apply mt-1 block text-sm text-red-500;
+      @apply kd-mt-1 kd-block kd-text-sm kd-text-red-500;
     }
 
     input[type="checkbox"],
     input[type="radio"] {
       &:checked::before {
-          @apply relative float-left bg-white;
+          @apply kd-relative kd-float-left kd-bg-white;
           content: "";
           width: 6px;
           height: 6px;
@@ -90,20 +90,20 @@ div[id^=kudos_modal-] {
 
     input[type="radio"] {
       &:checked::before {
-        @apply rounded-full;
+        @apply kd-rounded-full;
       }
     }
 
     input.error,
     select.error,
     input.error ~ .checkmark {
-      @apply border-red-500 #{!important};
+      @apply kd-border-red-500 #{!important};
     }
 
     .kudos_radio_amount {
       input {
         &:checked + label {
-          @apply text-white border-transparent #{!important};
+          @apply kd-text-white kd-border-transparent #{!important};
 
           background-color: var(--kudos-theme-color);
         }
@@ -131,20 +131,20 @@ div[id^=kudos_modal-] {
 
 .kudos_modal[aria-hidden="false"] {
   .kudos_modal_overlay {
-    @apply animate-fade-in;
+    @apply kd-animate-fade-in;
   }
 
   .kudos_modal_container {
-    @apply animate-slide-in;
+    @apply kd-animate-slide-in;
   }
 }
 
 .kudos_modal[aria-hidden="true"] {
   .kudos_modal_overlay {
-    @apply animate-fade-out;
+    @apply kd-animate-fade-out;
   }
 
   .kudos_modal_container {
-    @apply animate-slide-out;
+    @apply kd-animate-slide-out;
   }
 }
