@@ -75,6 +75,10 @@
 
     input[type="checkbox"],
     input[type="radio"] {
+
+      vertical-align: middle !important;
+      margin-top: -1px !important;
+
       &:checked::before {
           @apply kd-relative kd-float-left kd-bg-white;
           content: "";
