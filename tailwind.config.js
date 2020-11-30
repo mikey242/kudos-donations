@@ -1,15 +1,12 @@
 module.exports = {
   prefix: 'kd-',
   important: true,
-  purge: {
-    enabled: process.env.NODE_ENV === 'prod',
-    content: [
-      './src/js/**/*.js',
-      './src/js/**/*.jsx',
-      './public/**/*.php',
-      './templates/**/*.twig'
-    ]
-  },
+  purge:  [
+    './src/js/**/*.js',
+    './src/js/**/*.jsx',
+    './public/**/*.php',
+    './templates/**/*.twig'
+  ],
   theme: {
     container: {
       center: true,
@@ -54,7 +51,7 @@ module.exports = {
     },
     borderRadius: {
       none: '0',
-      default: '0.25em', //'4px'
+      DEFAULT: '0.25em', //'4px'
       lg: '0.5em', //'8px'
       full: '9999px'
     },

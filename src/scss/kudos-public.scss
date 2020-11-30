@@ -4,19 +4,17 @@
 
 @import "partials/fonts";
 
-div[id^=kudos_modal-] {
+.kudos_modal {
   all: initial;
 
   *,
   *::before,
   *::after {
     all: initial;
-  }
-
-  *,
-  *::before,
-  *::after {
-    @apply kd-font-sans kd-box-border kd-text-base kd-leading-normal kd-opacity-100;
+    font-family: montserratregular,Century Gothic,sans-serif;
+    font-size: 16px;
+    opacity: 1;
+    @apply kd-box-border kd-leading-normal;
   }
 
   .kudos_modal_logo {
