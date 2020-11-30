@@ -2,11 +2,8 @@ const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
 const WebpackAssetsManifest = require( 'webpack-assets-manifest' );
 const svgToMiniDataURI = require( 'mini-svg-data-uri' );
-const TerserPlugin = require( 'terser-webpack-plugin' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const { join, resolve } = require( 'path' );
-
-const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const PATHS = {
 	src: join( __dirname, 'src' ),
@@ -53,32 +50,14 @@ module.exports = {
 		publicPath: '/wp-content/plugins/kudos-donations/dist/',
 		filename: 'js/[name].js',
 	},
-	optimization: {
-		minimize: NODE_ENV === 'prod',
-		concatenateModules: false,
-		minimizer: [
-			new TerserPlugin( {
-				terserOptions: {
-					// mangle: false,
-					mangle: {
-						reserved: [ '__', '_n', '_x', '_nx' ],
-					},
-					output: {
-						comments: /translators:/i,
-					},
-				},
-				extractComments: false,
-			} ),
-		],
-	},
 	module: {
 		rules: [
-			// {
-			// 	enforce: 'pre',
-			// 	exclude: /node_modules/,
-			// 	test: /\.jsx$/,
-			// 	loader: 'eslint-loader',
-			// },
+			{
+				enforce: 'pre',
+				exclude: /node_modules/,
+				test: /\.jsx$/,
+				loader: 'eslint-loader',
+			},
 			{
 				test: /.jsx?$/,
 				exclude: [ resolve( __dirname, 'node_modules' ) ],
