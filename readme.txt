@@ -54,8 +54,9 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 == Changelog ==
 
 = 2.0.6 =
-* Update TailwindCSS to 2.0.1
 * Fix unknown index errors on tables
+* Fix 'Sync campaign labels' action adding blank campaigns
+* Update TailwindCSS to 2.0.1
 
 = 2.0.5 =
 * Fixed error deleting donors
