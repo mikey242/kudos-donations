@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, creditcard
 Requires at least: 5.4
 Tested up to: 5.5.3
 Requires PHP: 7.1
-Stable tag: 2.0.5
+Stable tag: 2.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,18 +12,28 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 == Description ==
 
-*Kudos Donations* allows you to add a donate button anywhere on your website. Once a user clicks this button they will be greeted with a configurable pop-up window, where they can enter their details and how much they would like to donate. Features of this plugin include:
+= A modern donation plugin with lots of option =
 
-* Smart and modern design
-* Connect with Mollie for secure payments by credit card, iDEAL and many others
-* Automated email receipts
-* Use the provided Gutenberg block or shortcode to place your button
-* Buttons and form can be configured all at once or individually
-* View all your transactions from the WordPress dashboard
+*Kudos Donations* allows you to add a donate button anywhere on your website. Once a user clicks this button they will be greeted with a pop-up window where they can enter their details and how much they would like to donate.
 
-= Dashboard Features =
-Change a wealth of options from the settings page. You can configure the look and feel of the donation form, enable subscriptions, configuring email receipts and change text and colours.
-View all your donations right from the dashboard. You can see the status of all payments, manage subscriptions and view donor information all from their respective pages.
+= Features and highlights =
+
+* Smart and modern design.
+* Can add as many different buttons as you like.
+* Connect with Mollie for secure payments by credit card, iDEAL and many others.
+* Toggle Automated email receipts.
+* Use custom email server settings.
+* Gutenberg block or shortcode to place your button.
+* Configure the donation form, button and thank you message.
+* Choose a colour scheme.
+* Toggle and customize the thank you message.
+* View and manage individual transactions, subscriptions, donors and campaigns.
+
+= Easy to use =
+Just enter your API key from Mollie, then add one or more buttons anywhere on you website. Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
+
+= Campaign Labels =
+You can now assign a campaign label to each donation button. This allows you to group and track donations made.
 
 = Recurring Payments =
 Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie based on the donors preferences. Of course you can also disable this and use only one-off payments if you prefer.
@@ -39,9 +49,17 @@ The Git repository for this plugin can be found [here](https://gitlab.iseard.med
 
 == Frequently Asked Questions ==
 
+= Is Kudos Donations free? =
+
+Yes, Kudos Donations is a free plugin. A premium upgrade will be available soon that adds more features.
+
 = What vendors can I use with this plugin? =
 
 This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wide range of payment methods such as iDeal, Credit Card and PayPal. For a full list of payment methods please check out [this link](https://www.mollie.com/en/payments).
+
+= How much does Mollie cost? =
+
+Mollie registration is free and you only pay a small fee per transaction. See [here](https://www.mollie.com/pricing) for details.
 
 == Screenshots ==
 
