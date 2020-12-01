@@ -63,11 +63,10 @@ Mollie registration is free and you only pay a small fee per transaction. See [h
 
 == Screenshots ==
 
-1. Kudos modal
-2. Thank you pop-up
+1. Donation form
+2. Kudos Donations button block
 3. Settings page
-4. The Kudos block
-5. Transactions screen
+4. Automated email receipt
 
 == Changelog ==
 
@@ -75,6 +74,7 @@ Mollie registration is free and you only pay a small fee per transaction. See [h
 * Fix unknown index errors on tables
 * Fix 'Sync campaign labels' action adding blank campaigns
 * Update TailwindCSS to 2.0.1
+* Update Dutch translations
 
 = 2.0.5 =
 * Fixed error deleting donors
