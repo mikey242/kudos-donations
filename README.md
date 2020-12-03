@@ -38,7 +38,7 @@ Included is a docker environment used for development of the plugin. This enviro
 
 To use the included docker environment run the following from the docker sub-folder:
 ````bash
-docker-composer up -d
+docker-compose up -d
 ````
 
 Once up and running you can access the various containers from these addresses:
