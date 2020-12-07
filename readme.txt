@@ -70,6 +70,12 @@ Mollie registration is free and you only pay a small fee per transaction. See [h
 
 == Changelog ==
 
+= 2.0.7 =
+* Campaign label no longer defaults to page/post title
+* Improve look of fixed amount buttons (now limited to 4)
+* Text changes
+* Minor bug fixes
+
 = 2.0.6 =
 * Fix unknown index errors on tables
 * Fix 'Sync campaign labels' action adding blank campaigns
