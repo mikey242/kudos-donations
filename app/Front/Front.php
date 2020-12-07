@@ -321,7 +321,7 @@ class Front {
 							'kudos-donations' ),
 						'amount_type'    => 'open',
 						'fixed_amounts'  => '5, 10, 20, 50',
-						'campaign_label' => null,
+						'campaign_label' => '',
 						'alignment'      => 'none',
 					],
 					$atts,
@@ -345,7 +345,7 @@ class Front {
 					],
 					'campaign_label' => [
 						'type'    => 'string',
-						'default' => null,
+						'default' => '',
 					],
 					'alignment'      => [
 						'type'    => 'string',

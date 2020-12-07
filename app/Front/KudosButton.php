@@ -77,7 +77,7 @@ class KudosButton {
 		$this->alignment      = $atts['alignment'];
 		$this->amount_type    = $atts['amount_type'];
 		$this->fixed_amounts  = $atts['fixed_amounts'];
-		$this->campaign_label = $atts['campaign_label'] ?? get_the_title();
+		$this->campaign_label = $atts['campaign_label'];
 		$this->id             = uniqid( 'kudos_modal-' );
 
 	}

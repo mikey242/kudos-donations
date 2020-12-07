@@ -224,7 +224,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 							<SelectControl
 								label={ __( 'Campaign label', 'kudos-donations' ) }
 								help={__('Select an existing campaign label so you can identify it on the transactions page', 'kudos-donations')}
-								value={ this.props.attributes.campaign_label }
+								value={ this.props.attributes.campaign_label ?? '' }
 								onChange={ this.onChangeCampaignLabel }
 								options={
 									Object.values(this.state.settings._kudos_campaign_labels).map((value) => {
