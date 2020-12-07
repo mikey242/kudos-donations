@@ -149,7 +149,10 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 		};
 
 		onChangeFixedAmounts( newValue ) {
-			this.props.setAttributes( { fixed_amounts: newValue } );
+			let valuesArray = newValue.split(',');
+			if(valuesArray.length <= 4) {
+				this.props.setAttributes( { fixed_amounts: newValue } );
+			}
 		};
 
 		render() {
@@ -206,7 +209,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 								<Fragment>
 									<TextControl
 										label={ __(	'Amounts',	'kudos-donations' ) + ':' }
-										help={ __( 'Enter a comma separated list of values to use.', 'kudos-donations' ) }
+										help={ __( 'Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations' ) }
 										value={ this.props.attributes.fixed_amounts }
 										onChange={ this.onChangeFixedAmounts }
 									/>
