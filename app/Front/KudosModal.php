@@ -52,9 +52,9 @@ class KudosModal {
 	 * @param string $template Template file to use.
 	 * @param array $data Array of data for template.
 	 *
-	 * @return bool
+	 * @return bool|string
 	 */
-	private function render_modal( string $template, array $data ) {
+	private function render_modal( string $template, array $data ): string {
 
 		return $this->twig->render( $template, $data );
 
@@ -69,7 +69,7 @@ class KudosModal {
 	 * @return string|void
 	 * @since    1.0.0
 	 */
-	public function get_donate_modal( array $data, bool $echo = false ) {
+	public function get_donate_modal( array $data, bool $echo = false ): string {
 
 		$data = array_merge(
 			$data,
@@ -90,7 +90,7 @@ class KudosModal {
 			]
 		);
 
-		$out = $this->twig->render( '/public/modal/donate.modal.html.twig', $data );
+		$out = $this->render_modal( '/public/modal/donate.modal.html.twig', $data );
 
 		if ( $echo ) {
 			echo $out;
