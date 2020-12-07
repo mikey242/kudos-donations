@@ -148,7 +148,7 @@ class TwigService extends AbstractService {
 	 * @param string $template Template file (.html.twig).
 	 * @param array $array Array to pass to template.
 	 *
-	 * @return bool
+	 * @return string|bool
 	 * @since    1.0.0
 	 */
 	public function render( string $template, $array = [] ) {
