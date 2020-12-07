@@ -151,7 +151,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 		onChangeFixedAmounts( newValue ) {
 			let valuesArray = newValue.split(',');
 			if(valuesArray.length <= 4) {
-				this.props.setAttributes( { fixed_amounts: newValue } );
+				this.props.setAttributes( { fixed_amounts: newValue.replace(/[^,0-9]/g, '') } );
 			}
 		};
 
