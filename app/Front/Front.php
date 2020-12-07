@@ -317,7 +317,7 @@ class Front {
 					[
 						'button_label'   => __( 'Donate now', 'kudos-donations' ),
 						'modal_title'    => __( 'Support us!', 'kudos-donations' ),
-						'welcome_text'   => __( 'Thank you for your donation. We appreciate your support!',
+						'welcome_text'   => __( 'Your support is greatly appreciated and will help to keep us going.',
 							'kudos-donations' ),
 						'amount_type'    => 'open',
 						'fixed_amounts'  => '5, 10, 20, 50',
@@ -357,7 +357,7 @@ class Front {
 					],
 					'welcome_text'   => [
 						'type'    => 'string',
-						'default' => __( 'Thank you for your donation. We appreciate your support!',
+						'default' => __( 'Your support is greatly appreciated and will help to keep us going.',
 							'kudos-donations' ),
 					],
 					'amount_type'    => [
