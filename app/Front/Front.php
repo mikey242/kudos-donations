@@ -316,7 +316,6 @@ class Front {
 				$atts = shortcode_atts(
 					[
 						'button_label'   => __( 'Donate now', 'kudos-donations' ),
-						'color'          => Settings::get_setting( 'theme_color' ),
 						'modal_title'    => __( 'Support us!', 'kudos-donations' ),
 						'welcome_text'   => __( 'Thank you for your donation. We appreciate your support!',
 							'kudos-donations' ),
@@ -351,10 +350,6 @@ class Front {
 					'alignment'      => [
 						'type'    => 'string',
 						'default' => 'none',
-					],
-					'color'          => [
-						'type'    => 'string',
-						'default' => Settings::get_setting( 'theme_color' ),
 					],
 					'modal_title'    => [
 						'type'    => 'string',
