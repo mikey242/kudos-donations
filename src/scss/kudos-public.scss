@@ -85,6 +85,10 @@
           margin: 4px 0 0 4px;
           line-height: 1.14285714;
       }
+
+      &:checked::after {
+        display:none; // Fix for Twenty Twenty-One theme
+      }
     }
 
     input[type="radio"] {

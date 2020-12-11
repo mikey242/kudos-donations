@@ -2,7 +2,7 @@
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, creditcard
 Requires at least: 5.4
-Tested up to: 5.5.3
+Tested up to: 5.6
 Requires PHP: 7.1
 Stable tag: 2.0.6
 License: GPLv2 or later
@@ -73,7 +73,8 @@ Mollie registration is free and you only pay a small fee per transaction. See [h
 = 2.0.7 =
 * Campaign label no longer defaults to page/post title
 * Improve look of fixed amount buttons (now limited to 4)
-* Fix REST_API error for mollie/admin
+* Fix REST_API error for mollie/admin in WordPress 5.6
+* Fix some visual changes introduced in Twenty Twenty-One
 * Text changes
 * Minor bug fixes
 
