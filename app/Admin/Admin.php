@@ -107,8 +107,6 @@ class Admin {
 					'apiMode' => [
 						'required' => true,
 					],
-					'testKey',
-					'liveKey',
 				],
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
