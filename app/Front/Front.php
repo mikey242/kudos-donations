@@ -407,7 +407,7 @@ class Front {
 		} elseif ( is_user_logged_in() && ! is_admin() ) {
 
 			printf(
-				'<a href="%s">%s</a>',
+				'<p><a href="%s">%s</a></p>',
 				esc_url( admin_url( 'admin.php?page=kudos-settings' ) ),
 				esc_attr__( 'Mollie not connected', 'kudos-donations' )
 			);
