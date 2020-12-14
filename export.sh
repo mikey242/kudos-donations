@@ -11,7 +11,6 @@ cp -R $(<export-list.txt) ../KUDOS_EXPORT/kudos-donations/ && \
 # Remove unnecessary files
 echo "Cleaning up"
 cd ../KUDOS_EXPORT || exit
-rm -rf kudos-donations/libraries/action-scheduler/{docs,tests}
 rm kudos-donations/languages/*.json
 # Generating translations
 echo "Generating translations"
