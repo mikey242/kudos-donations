@@ -39,9 +39,9 @@ class Utils {
 	 * @return string
 	 * @since   1.0.0
 	 */
-	public static function get_asset_url( string $asset, bool $path = false ) {
+	public static function get_asset_url( string $asset, bool $path = false ): string {
 
-		$map      = KUDOS_PLUGIN_URL . 'dist/manifest.json';
+		$map      = KUDOS_PLUGIN_URL . 'dist/assets-manifest.json';
 		$request  = wp_remote_get( $map );
 		$response = wp_remote_retrieve_body( $request );
 		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
