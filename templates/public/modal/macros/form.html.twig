@@ -1,6 +1,6 @@
 {% macro input(name, label, value=null, type='text', required=true, atts={}) %}
 
-    {% set styles = ['kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-placeholder-gray-500 focus:kd-outline-none'] %}
+    {% set styles = ['kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-m-0 kd-placeholder-gray-500 focus:kd-outline-none'] %}
 
     {% if ( 'text' == type or 'email' == type ) %}
         {% set focus = 'focus:kd-border-theme' %}
