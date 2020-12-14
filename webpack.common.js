@@ -2,7 +2,8 @@ const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
 const WebpackAssetsManifest = require( 'webpack-assets-manifest' );
 const svgToMiniDataURI = require( 'mini-svg-data-uri' );
-const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const CopyPlugin = require("copy-webpack-plugin");
+const ESLintPlugin = require('eslint-webpack-plugin');
 const { join, resolve } = require( 'path' );
 
 const PATHS = {
@@ -52,12 +53,6 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{
-				enforce: 'pre',
-				exclude: /node_modules/,
-				test: /\.jsx$/,
-				loader: 'eslint-loader',
-			},
 			{
 				test: /.jsx?$/,
 				exclude: [ resolve( __dirname, 'node_modules' ) ],
@@ -114,13 +109,16 @@ module.exports = {
 		extensions: [ '.json', '.js', '.jsx' ],
 	},
 	plugins: [
+		// new ESLintPlugin(),
 		new MiniCssExtractPlugin( {
 			filename: 'css/[name].css',
 		} ),
 		new CleanWebpackPlugin({
 			cleanStaleWebpackAssets: false,
 		}),
-		new CopyWebpackPlugin( [ ...vendorCopies ] ),
+		new CopyPlugin({
+			patterns: [ ...vendorCopies]
+		}),
 		new WebpackAssetsManifest(),
 	],
 };
