@@ -168,7 +168,7 @@ class TwigService extends AbstractService {
 	 *
 	 * @return bool
 	 */
-	public function clearCache() {
+	public function clearCache(): bool {
 
 		$di      = new RecursiveDirectoryIterator( self::CACHE_DIR, FilesystemIterator::SKIP_DOTS );
 		$ri      = new RecursiveIteratorIterator( $di, RecursiveIteratorIterator::CHILD_FIRST );

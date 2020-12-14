@@ -67,7 +67,7 @@ class Front {
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public static function process_transaction( string $order_id ) {
+	public static function process_transaction( string $order_id ): bool {
 
 		$logger = LoggerService::factory();
 		$logger->debug( 'Processing transaction', [ $order_id ] );
@@ -117,7 +117,7 @@ class Front {
 	 * @return string
 	 * @since 2.0.0
 	 */
-	public function get_kudos_root_styles() {
+	public function get_kudos_root_styles(): string {
 
 		$color        = Settings::get_setting( 'theme_color' );
 		$color_dark   = Utils::color_luminance( $color, '-0.06' );
@@ -388,7 +388,7 @@ class Front {
 	 * @return string|null
 	 * @since   2.0.0
 	 */
-	public function kudos_render_callback( array $attr ) {
+	public function kudos_render_callback( array $attr ): ?string {
 
 		if ( self::ready() ) {
 
@@ -423,7 +423,7 @@ class Front {
 	 * @return bool
 	 * @since   1.0.0
 	 */
-	public static function ready() {
+	public static function ready(): bool {
 
 		$api_connected = Settings::get_setting( 'mollie_connected' );
 		$api_mode      = Settings::get_setting( 'mollie_api_mode' );
@@ -561,10 +561,10 @@ class Front {
 	 *
 	 * @param array $vars Current query vars.
 	 *
-	 * @return mixed
+	 * @return array
 	 * @since   2.0.0
 	 */
-	public function register_vars( array $vars ) {
+	public function register_vars( array $vars ): array {
 
 		$vars[] = 'kudos_subscription_id';
 		$vars[] = 'kudos_order_id';

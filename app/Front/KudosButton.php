@@ -90,7 +90,7 @@ class KudosButton {
 	 * @return string|void
 	 * @since    1.0.0
 	 */
-	public function get_button( bool $echo = true ) {
+	public function get_button( bool $echo = true ): string {
 
 		$data = [
 			'alignment' => $this->alignment,
@@ -113,7 +113,7 @@ class KudosButton {
 	 * @return string|void
 	 * @since    1.0.0
 	 */
-	public function get_donate_modal() {
+	public function get_donate_modal(): string {
 
 		$modal = new KudosModal();
 
