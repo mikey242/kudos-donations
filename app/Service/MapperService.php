@@ -237,7 +237,7 @@ class MapperService extends AbstractService {
 	 * @return AbstractEntity|null
 	 * @since   2.0.0
 	 */
-	public function get_one_by( array $query_fields, string $operator = 'AND' ) {
+	public function get_one_by( array $query_fields, string $operator = 'AND' ): ?AbstractEntity {
 
 		$query_string = $this->array_to_where( $query_fields, $operator );
 		$table        = $this->get_table_name();
@@ -262,7 +262,7 @@ class MapperService extends AbstractService {
 	 * @return string
 	 * @since 2.0.0
 	 */
-	private function array_to_where( array $query_fields, string $operator = 'AND' ) {
+	private function array_to_where( array $query_fields, string $operator = 'AND' ): string {
 
 		$wpdb = $this->wpdb;
 
@@ -368,7 +368,7 @@ class MapperService extends AbstractService {
 	 * @return array
 	 * @since   2.0.0
 	 */
-	private function map_to_class( array $results ) {
+	private function map_to_class( array $results ): array {
 
 		return array_map(
 			function ( $result ) {
@@ -430,7 +430,7 @@ class MapperService extends AbstractService {
 	 * @return bool
 	 * @since 2.0.0
 	 */
-	private function remove_empty( ?string $value ) {
+	private function remove_empty( ?string $value ): bool {
 
 		return ! is_null( $value ) && '' !== $value;
 
