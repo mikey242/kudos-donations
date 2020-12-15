@@ -59,7 +59,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				      method='post'>
 					<?php wp_nonce_field( 'kudos_log_clear', '_wpnonce' ); ?>
 					<input type='hidden' name='kudos_action' value='kudos_log_clear'>
-					<input class="button-secondary" type='submit' value='Clear'>
+					<input class="button-secondary confirm" type='submit' value='Clear'>
 				</form>
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
@@ -137,7 +137,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_settings', '_wpnonce' ); ?>
 					<input type='hidden' name='kudos_action' value='kudos_clear_settings'>
-					<input class="button-secondary" type='submit' value='Clear settings'>
+					<input class="button-secondary confirm" type='submit' value='Clear settings'>
 				</form>
 
 				<hr/>
@@ -146,7 +146,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_cache', '_wpnonce' ); ?>
 					<input type='hidden' name='kudos_action' value='kudos_clear_cache'>
-					<input class="button-secondary" type='submit' value='Clear cache'>
+					<input class="button-secondary confirm" type='submit' value='Clear cache'>
 				</form>
 
 				<hr/>
@@ -155,7 +155,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_transactions', '_wpnonce' ); ?>
 					<input type='hidden' name='kudos_action' value='kudos_clear_transactions'>
-					<input class="button-secondary" type='submit' value='Delete all transactions'>
+					<input class="button-secondary confirm" type='submit' value='Delete all transactions'>
 				</form>
 
 				<hr/>
@@ -164,7 +164,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_donors', '_wpnonce' ); ?>
 					<input type='hidden' name='kudos_action' value='kudos_clear_donors'>
-					<input class="button-secondary" type='submit' value='Delete all donors'>
+					<input class="button-secondary confirm" type='submit' value='Delete all donors'>
 				</form>
 
 				<hr/>
@@ -173,7 +173,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_clear_subscriptions', '_wpnonce' ); ?>
 					<input type='hidden' name='kudos_action' value='kudos_clear_subscriptions'>
-					<input class="button-secondary" type='submit' value='Delete all subscriptions'>
+					<input class="button-secondary confirm" type='submit' value='Delete all subscriptions'>
 				</form>
 
 				<hr/>
@@ -182,7 +182,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_sync_campaigns', '_wpnonce' ); ?>
 					<input type='hidden' name='kudos_action' value='kudos_sync_campaigns'>
-					<input class="button-secondary" type='submit' value='Sync campaign labels'>
+					<input class="button-secondary confirm" type='submit' value='Sync campaign labels'>
 				</form>
 
 				<hr />

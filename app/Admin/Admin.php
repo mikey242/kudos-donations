@@ -224,7 +224,7 @@ class Admin {
 
 		// Add debug menu.
 		if ( KUDOS_DEBUG ) {
-			add_submenu_page(
+			$debug_page_hook_suffix = add_submenu_page(
 				'kudos-transactions',
 				'Kudos Debug',
 				'Debug',
@@ -234,6 +234,22 @@ class Admin {
 					require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-debug.php';
 				}
 			);
+			add_action( "admin_print_scripts-{$debug_page_hook_suffix}", function() {
+				?>
+				<script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        let buttons = document.querySelectorAll('input[type="submit"].confirm');
+                        for(let i = 0; i < buttons.length; i++) {
+                            buttons[i].addEventListener('click', function (e) {
+                                if ( ! confirm( '<?php _e('Are you sure?', 'kudos-donations') ?>' ) ) {
+                                    e.preventDefault();
+                                }
+                            })
+                        }
+                    });
+				</script>
+				<?php
+			} );
 		}
 	}
 
@@ -307,7 +323,7 @@ class Admin {
 	 *
 	 * @since 2.0.0
 	 */
-	private function kudos_table_page_assets() {
+	private function kudos_table_page_assets(): string {
 
 		$handle = $this->plugin_name . '-table';
 		wp_enqueue_script(
@@ -493,6 +509,8 @@ class Admin {
 					foreach ([SubscriptionEntity::get_table_name(), TransactionEntity::get_table_name(), DonorEntity::get_table_name()] as $table) {
 						$mapper->delete_table($table);
 					}
+					ActivatorService::activate();
+					new AdminNotice( __( 'Database re-created', 'kudos-donations' ) );
 			}
 		}
 
