@@ -123,7 +123,7 @@ class KudosButton {
 			'modal_text'     => $this->text,
 			'amount'         => [
 				'type'         => $this->amount_type,
-				'fixed_values' => explode( ',', $this->fixed_amounts ),
+				'fixed_amounts' => array_slice(explode( ',', $this->fixed_amounts ),0, 4),
 			],
 			'campaign_label' => $this->campaign_label,
 			'payment_by'     => __( 'Secure payment by', 'kudos-donations' ),

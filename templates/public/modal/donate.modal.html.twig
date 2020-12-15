@@ -20,9 +20,9 @@
                     {% from "/public/modal/macros/form.html.twig" import text, radio %}
 
                     {% if amount.type == 'fixed' %}
-                        {% set length = amount.fixed_values|length %}
+                        {% set length = amount.fixed_amounts|length %}
                         <div class="kudos_amounts kd-bg-white kd-flex kd-flex-wrap kd--mx-2">
-                            {% for key,value in amount.fixed_values %}
+                            {% for key,value in amount.fixed_amounts %}
                                 <div class="kudos_radio_amount {{ (length == 1 ? 'kd-w-full' : length == 2 ? 'kd-w-1/2' : length == 3 ? 'kd-w-1/3' : length == 4 ? 'kd-w-1/4' : '') }} kd-px-2 kd-m-0">
                                     <input class="focus:kd-outline-none focus:kd-shadow-none kd-absolute kd-m-0 kd--z-1"
                                            id="amount-{{ modal_id }}-{{ key }}" {{ key==0 ? 'checked' : '' }}
