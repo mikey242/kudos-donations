@@ -7,6 +7,7 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
+use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MailerService;
@@ -482,6 +483,15 @@ class Admin {
 					$result = UpdateService::sync_campaign_labels();
 					if ( $result ) {
 						new AdminNotice( __( 'Campaign labels updated', 'kudos-donations' ) );
+					} else {
+						new AdminNotice( __( 'No additional campaigns found', 'kudos-donations' ), 'info' );
+					}
+					break;
+
+				case 'kudos_recreate_database':
+					$mapper = new MapperService();
+					foreach ([SubscriptionEntity::get_table_name(), TransactionEntity::get_table_name(), DonorEntity::get_table_name()] as $table) {
+						$mapper->delete_table($table);
 					}
 			}
 		}
