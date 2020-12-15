@@ -1,6 +1,6 @@
 {
     "require": {
-        "mollie/mollie-api-php": "2.24.*",
+        "mollie/mollie-api-php": "^2.27.0",
         "monolog/monolog": "^2.0",
         "twig/twig": "^2.0",
         "ext-json": "*",

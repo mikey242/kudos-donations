@@ -244,7 +244,7 @@ class MollieService extends AbstractService {
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public function cancel_subscription( string $subscription_id, $customer_id = null ) {
+	public function cancel_subscription( string $subscription_id, $customer_id = null ): bool {
 
 		$mollie_api = $this->mollie_api;
 		$mapper     = new MapperService( SubscriptionEntity::class );
@@ -351,7 +351,7 @@ class MollieService extends AbstractService {
 	 * @return bool
 	 * @since      1.0.0
 	 */
-	public function test_api_connection( string $api_key ) {
+	public function test_api_connection( string $api_key ): bool {
 
 		if ( ! $api_key ) {
 			return false;
