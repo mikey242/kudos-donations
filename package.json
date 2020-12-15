@@ -21,8 +21,8 @@
     "@wordpress/babel-preset-default": "^4.19.0",
     "@wordpress/browserslist-config": "^2.7.0",
     "@wordpress/eslint-plugin": "^7.3.0",
-    "autoprefixer": "^9.7.6",
-    "babel-loader": "^8.2.1",
+    "autoprefixer": "^10.1.0",
+    "babel-loader": "^8.2.2",
     "babel-plugin-lodash": "^3.3.4",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^7.0.0",
@@ -49,18 +49,18 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.28",
-    "@fortawesome/free-brands-svg-icons": "^5.13.0",
-    "@fortawesome/free-regular-svg-icons": "^5.13.0",
-    "@fortawesome/free-solid-svg-icons": "^5.13.0",
-    "axios": "^0.19.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-brands-svg-icons": "^5.15.1",
+    "@fortawesome/free-regular-svg-icons": "^5.15.1",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "axios": "^0.21.0",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
-    "jquery-validation": "^1.19.1",
-    "lodash": "^4.17.15",
+    "jquery-validation": "1.19.2",
+    "lodash": "^4.17.20",
     "micromodal": "^0.4.6",
     "parsley": "^0.1.0",
     "stylelint-config-recommended": "^3.0.0",
-    "tailwindcss": "^2.0.1"
+    "tailwindcss": "^2.0.2"
   }
 }
