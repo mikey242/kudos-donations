@@ -29,7 +29,9 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 * View and manage individual transactions, subscriptions, donors and campaigns from the admin menu.
 
 = Easy to use =
-Just enter your API key from Mollie, then add one or more buttons anywhere on you website. Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
+Just enter your API key from Mollie, then add one or more buttons anywhere on you website. You can add a button using either the provided *Kudos Button* block or with a shortcode. Please see the FAQ below for shortcode use.
+
+Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
 
 = Campaign Labels =
 Assign a campaign label to each donation button to group and track donations made. This is useful for seeing the effectiveness of different buttons or tracking donations made to different donation campaigns.
@@ -67,6 +69,32 @@ Mollie is available to anyone with a registered company.
 = Can I use Kudos Donations in my country? =
 
 You can use this plugin in any country that is supported by Mollie. For a complete list please see [here](https://help.mollie.com/hc/articles/115002116105-Can-I-use-Mollies-services-in-my-country-)
+
+= How do I use the shortcode? =
+
+For general information on how to use shortcodes, please visit [this page](https://codex.wordpress.org/shortcode).
+
+To get started add the Kudos Donations shortcode:
+
+~~~
+[kudos]
+~~~
+
+Here is a list of the shortcode attributes:
+
+* *button_label* = The label to display for the button
+* *alignment* = Button alignment (left, center, right).
+* *modal_title* = The welcome title for the popup
+* *modal_text* = The welcome text for the popup
+* *amount_type* = Either 'fixed' or 'open'
+* *fixed_amounts* = Comma separated list of amounts to use (5,10,15,20). Maximum 4 values.
+* *campaign_label* = Name of the campaign to use for this button.
+
+e.g:
+
+~~~~
+[kudos button_label="Donate now" modal_title="Support us!" modal_text="Your support is greatly appreciated and will help to keep us going." amount_type="fixed" fixed_amounts="5,10,15,20"]
+~~~~
 
 == Screenshots ==
 
