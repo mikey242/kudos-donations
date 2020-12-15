@@ -52,7 +52,7 @@ The Git repository for this plugin can be found [here](https://gitlab.iseard.med
 
 = Is Kudos Donations free? =
 
-Yes, Kudos Donations is a free plugin. A premium upgrade will be available soon that adds more features.
+Yes, Kudos Donations is a free open-source plugin.
 
 = Which payment methods are supported? =
 
@@ -108,6 +108,7 @@ e.g:
 = 2.0.8 =
 * Add 'Recreate database' action to debug menu
 * Add confirmation pop-up to debug actions
+* Update libraries
 * Minor bug fixes
 
 = 2.0.7 =
