@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-15 13:31+0100\n"
-"PO-Revision-Date: 2020-12-15 13:32+0100\n"
+"PO-Revision-Date: 2020-12-15 14:07+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -684,14 +684,11 @@ msgid "Enable action scheduler"
 msgstr "Actieplanner inschakelen"
 
 #: dist/js/kudos-admin-settings.js:1
-#, fuzzy
-#| msgid ""
-#| "In most cases you will want this enabled. Disable for troubleshooting."
 msgid ""
 "In most cases this should be left on. Can be disabled for troubleshooting."
 msgstr ""
-"In de meeste gevallen wil je dat dit is ingeschakeld. Schakel uit voor het "
-"oplossen van problemen."
+"Laat dit in de meeste gevallen aan staan. Kan uitgeschakeld worden voor "
+"troubleshooting."
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Address Field"
