@@ -11,7 +11,7 @@ const ActionSchedulerPanel = ( props ) => {
             <ToggleControl
                 label={ __( 'Enable action scheduler', 'kudos-donations' ) }
                 help={ __(
-                    'In most cases this should be left on, only disable this if you know what you are doing.',
+                    'In most cases this should be left on. Can be disabled for troubleshooting.',
                     'kudos-donations'
                 ) }
                 checked={ props.settings._kudos_action_scheduler || '' }
