@@ -17,6 +17,9 @@ module.exports = merge(common, {
                     output: {
                         comments: /translators:/i,
                     },
+                    compress: {
+                        drop_console: true,
+                    },
                 },
                 extractComments: false,
             } ),
