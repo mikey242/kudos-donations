@@ -17,24 +17,25 @@
                 {% block title %}{{ modal_title }}{% endblock %}
                 {% block text %}{{ modal_text }}{% endblock %}
                 {% block body %}
-                    {% from "/public/modal/macros/form.html.twig" import text, radio %}
+                    {% from "/public/modal/macros/form.html.twig" import input_group, radio_buttons, text, radio %}
 
-                    {% if amount.type == 'fixed' %}
-                        {% set length = amount.fixed_amounts|length %}
-                        <div class="kudos_amounts kd-bg-white kd-flex kd-flex-wrap kd--mx-2">
-                            {% for key,value in amount.fixed_amounts %}
-                                <div class="kudos_radio_amount {{ (length == 1 ? 'kd-w-full' : length == 2 ? 'kd-w-1/2' : length == 3 ? 'kd-w-1/3' : length == 4 ? 'kd-w-1/4' : '') }} kd-px-2 kd-m-0">
-                                    <input class="focus:kd-outline-none focus:kd-shadow-none kd-absolute kd-m-0 kd--z-1"
-                                           id="amount-{{ modal_id }}-{{ key }}" {{ key==0 ? 'checked' : '' }}
-                                           type="radio" name="value" value="{{ value|replace({' ':''}) }}"/>
-                                    <label class="kd-m-0 kd-transition-shadow kd-transition-colors kd-duration-150 kd-ease-in-out kd-py-3 kd-rounded kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-solid kd-border-gray-300"
-                                           for="amount-{{ modal_id }}-{{ key }}">€{{ value }}</label>
-                                </div>
-                            {% endfor %}
-                        </div>
+                    {% if ( amount.type != 'open' ) %}
+                        {{ radio_buttons(amount.fixed_amounts, 'amount-' ~ modal_id ) }}
+                    {% endif %}
+
+                    {% if amount.type == 'both' %}
+                        {{ input_group(
+                            '',
+                            __('Other', 'kudos-donations'),
+                            __('Amount', 'kudos-donations') ~ ' (€)',
+                            {
+                                'input': { 'id': 'value_open','min': '1', 'data-type': 'currency'  }
+                            }
+                        ) }}
                     {% endif %}
 
                     {% if amount.type == 'open' %}
+{#                        {% macro text(name, label, type, required=true, atts) %}#}
                         {{ text('value', __('Amount', 'kudos-donations') ~ ' (€)', 'text', true, {'min': '1', 'data-type': 'currency'}) }}
                     {% endif %}
 

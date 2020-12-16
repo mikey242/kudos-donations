@@ -70,7 +70,13 @@
 
   .kudos_form {
     small.error {
-      @apply kd-mt-1 kd-block kd-text-sm kd-text-red-500;
+      @apply kd-order-last kd-mt-1 kd-block kd-text-sm kd-text-red-500;
+    }
+
+    input[type="text"]:required {
+      &::placeholder {
+        @apply kd-font-bold;
+      }
     }
 
     input[type="checkbox"],
@@ -108,7 +114,6 @@
       input {
         &:checked + label {
           @apply kd-text-white kd-border-transparent #{!important};
-
           background-color: var(--kudos-theme-color);
         }
 
@@ -118,6 +123,13 @@
             outline: 2px solid transparent;
           }
         }
+      }
+    }
+
+    .kudos_input_group {
+      input:required ~ label {
+          @apply kd-text-white kd-border-transparent #{!important};
+          background-color: var(--kudos-theme-color);
       }
     }
 

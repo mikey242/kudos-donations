@@ -200,6 +200,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 								options={ [
 									{ label: 'Open', value: 'open' },
 									{ label: 'Fixed', value: 'fixed' },
+									{ label: 'Both', value: 'both' },
 								] }
 								onChange={ this.onChangeAmountType }
 							/>
