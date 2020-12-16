@@ -126,7 +126,7 @@
       }
     }
 
-    .kudos_input_group {
+    .kd-input-group {
       input:required ~ label {
           @apply kd-text-white kd-border-transparent #{'!important'};
           background-color: var(--kudos-theme-color);

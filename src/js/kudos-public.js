@@ -30,7 +30,7 @@ $(() => {
         errorElement: 'small',
         onfocusout: false,
         errorPlacement: (error, element) => {
-            if (element.attr("type") === 'checkbox' || element.attr('id') === 'value_open') {
+            if (element.attr("type") === 'checkbox' || element.hasClass('kd-input-group-input')) {
                 error.insertAfter(element.parent())
             } else {
                 error.insertAfter(element)
