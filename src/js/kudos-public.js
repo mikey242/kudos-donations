@@ -99,10 +99,12 @@ $(() => {
 
         // Setup button action
         $kudosButtons.each(function () {
-            $(this).click(function () {
-                const $target = $(this).data('target')
-                if ($target) {
-                    MicroModal.show($target, {
+
+            const target = $(this).data('target')
+
+            $(this).on('click', function () {
+                if (target) {
+                    MicroModal.show(target, {
                         onShow(modal) {
                             $(modal)
                                 .find('.kudos_error_message')
@@ -270,7 +272,7 @@ function checkRequirements($nextTab) {
             formValues.filter(function (item) {
                 if (item.name === key && value.includes(item.value)) {
                     result = true
-                    $nextTab.find(':input').removeAttr('disabled')
+                    $nextTab.find(':input').attr('disabled', false)
                 }
             })
         }
