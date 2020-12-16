@@ -24,18 +24,14 @@
                     {% endif %}
 
                     {% if amount.type == 'both' %}
-                        {{ input_group(
-                            '',
-                            __('Other', 'kudos-donations'),
-                            __('Amount', 'kudos-donations') ~ ' (€)',
+                        {{ input_group( '', __('Other', 'kudos-donations'), __('Amount', 'kudos-donations') ~ ' (€)',
                             {
-                                'input': { 'id': 'value_open','min': '1', 'data-type': 'currency'  }
+                                'input': { 'id': 'value_open-' ~ modal_id,'min': '1', 'data-type': 'currency'  }
                             }
                         ) }}
                     {% endif %}
 
                     {% if amount.type == 'open' %}
-{#                        {% macro text(name, label, type, required=true, atts) %}#}
                         {{ text('value', __('Amount', 'kudos-donations') ~ ' (€)', 'text', true, {'min': '1', 'data-type': 'currency'}) }}
                     {% endif %}
 

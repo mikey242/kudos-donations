@@ -13,9 +13,6 @@ $(() => {
 
     const $body = $('body')
     const $kudosButtons = $('.kudos_button_donate')
-    const $textValue = $('#value_open')
-    let $textLabel = $('#value_open + label')
-    const $radioValues = $('input[type="radio"][name="value"]')
     let animating = false
 
     // Custom validation method to check subscription
@@ -29,7 +26,7 @@ $(() => {
 
     // Set validation defaults
     $.validator.setDefaults({
-        ignore: ':disabled',
+        ignore: [],
         errorElement: 'small',
         onfocusout: false,
         errorPlacement: (error, element) => {
@@ -78,25 +75,6 @@ $(() => {
 
     if ($kudosButtons.length) {
 
-        // Set input attributes when 'both' amount type is used
-        if($textValue.length) {
-
-            $textValue.on('input', function () {
-                $textValue.attr({'required': true, 'name': 'value'})
-                $radioValues.each(function (i, e) {
-                    $(e).removeAttr('checked')
-                })
-            })
-
-            $radioValues.each(function (i, e) {
-                $(e).on('change', function () {
-                    $textValue.attr({'required': false, 'name': ''})
-                    $textValue.valid()
-                    $textValue.val('')
-                })
-            })
-        }
-
         // Setup button action
         $kudosButtons.each(function () {
 
@@ -117,8 +95,11 @@ $(() => {
                                 $('fieldset:first-child').addClass(
                                     'current-tab'
                                 )
-								$($radioValues[0]).attr('checked', true)
-                                $textValue.attr({'required': false, 'name': ''})
+                                let $amountInput = $form.find('[id^=value_open-kudos_modal]')
+                                let $amountRadios = $form.find('[id^=amount-kudos_modal]')
+                                toggleAmount($amountInput, $amountRadios);
+								$($amountRadios[0]).prop('checked', true)
+                                $amountInput.attr({'required': false, 'name': ''})
                                 $form.validate().resetForm()
                                 $form[0].reset()
                             }
@@ -323,4 +304,23 @@ function handleMessages(messages) {
     }
 
     showMessage()
+}
+
+// Set input attributes when 'both' amount type is used
+function toggleAmount($amountInput, $amountRadios) {
+
+    $amountInput.on('input', function () {
+        $amountInput.attr({'required': true, 'name': 'value'})
+        $amountRadios.each(function (i, e) {
+            $(e).prop('checked', false)
+        })
+    })
+
+    $amountRadios.each(function (i, e) {
+        $(e).on('change', function () {
+            $amountInput.attr({'required': false, 'name': ''})
+            $amountInput.valid()
+            $amountInput.val('')
+        })
+    })
 }
