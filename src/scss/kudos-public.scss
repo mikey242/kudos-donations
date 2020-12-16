@@ -36,7 +36,7 @@
   }
 
   &.is-open {
-    @apply kd-block kd-overflow-x-hidden kd-overflow-y-auto #{!important};
+    @apply kd-block kd-overflow-x-hidden kd-overflow-y-auto #{'!important'};
   }
 
   .kudos_modal_buttons {
@@ -60,12 +60,12 @@
     }
 
     .kudos_spinner {
-      @apply kd-block #{!important};
+      @apply kd-block #{'!important'};
     }
   }
 
   .form-tab.current-tab {
-    @apply kd-block #{!important};
+    @apply kd-block #{'!important'};
   }
 
   .kudos_form {
@@ -106,14 +106,14 @@
     input.error,
     select.error,
     input.error ~ .checkmark {
-      @apply kd-border-red-500 #{!important};
+      @apply kd-border-red-500 #{'!important'};
     }
 
     .kudos_radio_amount {
-      min-width: 65px #{!important};
+      min-width: 65px #{'!important'};
       input {
         &:checked + label {
-          @apply kd-text-white kd-border-transparent #{!important};
+          @apply kd-text-white kd-border-transparent #{'!important'};
           background-color: var(--kudos-theme-color);
         }
 
@@ -128,7 +128,7 @@
 
     .kudos_input_group {
       input:required ~ label {
-          @apply kd-text-white kd-border-transparent #{!important};
+          @apply kd-text-white kd-border-transparent #{'!important'};
           background-color: var(--kudos-theme-color);
       }
     }
