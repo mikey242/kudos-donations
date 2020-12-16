@@ -43,6 +43,9 @@ $(() => {
             value: {
                 digits: true,
             },
+            email_address: {
+                email: true
+            },
             recurring_length: {
                 totalPayments: true
             }
