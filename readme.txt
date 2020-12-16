@@ -105,6 +105,11 @@ e.g:
 
 == Changelog ==
 
+= 2.0.9 =
+* Add option to select 'both' for amount type
+* Fix email address not validating correctly
+* Fix various jQuery deprecations
+
 = 2.0.8 =
 * Add 'Recreate database' action to debug menu
 * Add confirmation pop-up to debug actions
