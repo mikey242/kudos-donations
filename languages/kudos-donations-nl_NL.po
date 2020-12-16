@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 18:47+0100\n"
-"PO-Revision-Date: 2020-12-16 18:47+0100\n"
+"POT-Creation-Date: 2020-12-16 19:07+0100\n"
+"PO-Revision-Date: 2020-12-16 19:08+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -176,8 +176,8 @@ msgstr "Label"
 #: app/Admin/Table/TransactionsTable.php:31
 #: app/Admin/Table/TransactionsTable.php:42
 #: app/Admin/Table/TransactionsTable.php:126
-#: templates/public/modal/donate.modal.html.twig:39
-#: templates/public/modal/donate.modal.html.twig:111
+#: templates/public/modal/donate.modal.html.twig:38
+#: templates/public/modal/donate.modal.html.twig:110
 msgid "Name"
 msgstr "Naam"
 
@@ -186,12 +186,12 @@ msgstr "Naam"
 #: app/Admin/Table/SubscriptionsTable.php:40
 #: app/Admin/Table/TransactionsTable.php:32
 #: app/Admin/Table/TransactionsTable.php:43 dist/js/kudos-admin-settings.js:1
-#: templates/public/modal/donate.modal.html.twig:113
+#: templates/public/modal/donate.modal.html.twig:112
 msgid "Email"
 msgstr "E-mail"
 
 #: app/Admin/Table/CampaignsTable.php:39 app/Admin/Table/DonorsTable.php:42
-#: templates/public/modal/donate.modal.html.twig:94
+#: templates/public/modal/donate.modal.html.twig:93
 msgid "Street"
 msgstr "Straat"
 
@@ -238,7 +238,7 @@ msgid "Added"
 msgstr "Toegevoegd"
 
 #: app/Admin/Table/DonorsTable.php:35 app/Admin/Table/DonorsTable.php:102
-#: templates/public/modal/donate.modal.html.twig:87
+#: templates/public/modal/donate.modal.html.twig:86
 msgid "Address"
 msgstr "Adres"
 
@@ -249,17 +249,17 @@ msgid "Order ID"
 msgstr "Order ID"
 
 #: app/Admin/Table/DonorsTable.php:43
-#: templates/public/modal/donate.modal.html.twig:95
+#: templates/public/modal/donate.modal.html.twig:94
 msgid "Postcode"
 msgstr "Postcode"
 
 #: app/Admin/Table/DonorsTable.php:44
-#: templates/public/modal/donate.modal.html.twig:96
+#: templates/public/modal/donate.modal.html.twig:95
 msgid "City"
 msgstr "Stad"
 
 #: app/Admin/Table/DonorsTable.php:45
-#: templates/public/modal/donate.modal.html.twig:97
+#: templates/public/modal/donate.modal.html.twig:96
 msgid "Country"
 msgstr "Land"
 
@@ -289,8 +289,8 @@ msgstr "Frequentie"
 #: app/Admin/Table/TransactionsTable.php:128
 #: templates/emails/receipt.html.twig:25
 #: templates/public/modal/donate.modal.html.twig:27
-#: templates/public/modal/donate.modal.html.twig:36
-#: templates/public/modal/donate.modal.html.twig:115
+#: templates/public/modal/donate.modal.html.twig:35
+#: templates/public/modal/donate.modal.html.twig:114
 msgid "Amount"
 msgstr "Bedrag"
 
@@ -303,15 +303,6 @@ msgstr "Status"
 
 #: app/Admin/Table/SubscriptionsTable.php:44
 #: app/Admin/Table/SubscriptionsTable.php:125
-#: templates/public/modal/donate.modal.html.twig:71
-#: templates/public/modal/donate.modal.html.twig:72
-#: templates/public/modal/donate.modal.html.twig:73
-#: templates/public/modal/donate.modal.html.twig:74
-#: templates/public/modal/donate.modal.html.twig:75
-#: templates/public/modal/donate.modal.html.twig:76
-#: templates/public/modal/donate.modal.html.twig:77
-#: templates/public/modal/donate.modal.html.twig:78
-#: templates/public/modal/donate.modal.html.twig:79
 msgid "Years"
 msgstr "Jaren"
 
@@ -321,7 +312,7 @@ msgid "Currency"
 msgstr "Valuta"
 
 #: app/Admin/Table/SubscriptionsTable.php:51
-#: templates/public/modal/donate.modal.html.twig:57
+#: templates/public/modal/donate.modal.html.twig:56
 msgid "Subscription"
 msgstr "Abonnement"
 
@@ -336,7 +327,7 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #: app/Admin/Table/SubscriptionsTable.php:349
-#: templates/public/modal/donate.modal.html.twig:69
+#: templates/public/modal/donate.modal.html.twig:68
 msgid "Continuous"
 msgstr "Doorlopend"
 
@@ -356,17 +347,17 @@ msgid "All"
 msgstr "Alles"
 
 #: app/Admin/Table/SubscriptionsTable.php:464 app/Helpers/Utils.php:160
-#: templates/public/modal/donate.modal.html.twig:63
+#: templates/public/modal/donate.modal.html.twig:62
 msgid "Yearly"
 msgstr "Jaarlijks"
 
 #: app/Admin/Table/SubscriptionsTable.php:470 app/Helpers/Utils.php:164
-#: templates/public/modal/donate.modal.html.twig:64
+#: templates/public/modal/donate.modal.html.twig:63
 msgid "Quarterly"
 msgstr "Kwartaal"
 
 #: app/Admin/Table/SubscriptionsTable.php:477 app/Helpers/Utils.php:162
-#: templates/public/modal/donate.modal.html.twig:65
+#: templates/public/modal/donate.modal.html.twig:64
 msgid "Monthly"
 msgstr "Maandelijks"
 
@@ -402,7 +393,7 @@ msgstr "Status"
 
 #: app/Admin/Table/TransactionsTable.php:46
 #: app/Admin/Table/TransactionsTable.php:129 dist/js/kudos-button-block.js:1
-#: templates/public/modal/donate.modal.html.twig:117
+#: templates/public/modal/donate.modal.html.twig:116
 msgid "Type"
 msgstr "Type"
 
@@ -549,7 +540,7 @@ msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr "Bedankt voor je donatie van %s. Wij waarderen je steun enorm."
 
 #: app/Helpers/Utils.php:139 app/Helpers/Utils.php:166
-#: dist/js/kudos-public.js:1 templates/public/modal/donate.modal.html.twig:44
+#: dist/js/kudos-public.js:1 templates/public/modal/donate.modal.html.twig:43
 msgid "One-off"
 msgstr "Eenmalig"
 
@@ -558,7 +549,7 @@ msgid "Recurring (first payment)"
 msgstr "Terugkerende (eerste betaling)"
 
 #: app/Helpers/Utils.php:143 dist/js/kudos-public.js:1
-#: templates/public/modal/donate.modal.html.twig:45
+#: templates/public/modal/donate.modal.html.twig:44
 msgid "Recurring"
 msgstr "Periodiek"
 
@@ -996,7 +987,7 @@ msgid "Button"
 msgstr "Knop"
 
 #: dist/js/kudos-button-block.js:1
-#: templates/public/modal/donate.modal.html.twig:127
+#: templates/public/modal/donate.modal.html.twig:126
 msgid "Donate"
 msgstr "Doneer"
 
@@ -1123,52 +1114,64 @@ msgstr "Klik hier"
 msgid "Other"
 msgstr "Anders"
 
-#: templates/public/modal/donate.modal.html.twig:40
+#: templates/public/modal/donate.modal.html.twig:39
 msgid "E-mail address"
 msgstr "E-mailadres"
 
-#: templates/public/modal/donate.modal.html.twig:58
+#: templates/public/modal/donate.modal.html.twig:57
 msgid "How often would you like to donate?"
 msgstr "Hoe vaak wil je doneren?"
 
-#: templates/public/modal/donate.modal.html.twig:62
+#: templates/public/modal/donate.modal.html.twig:61
 msgid "Payment frequency"
 msgstr "Betalingsfrequentie"
 
-#: templates/public/modal/donate.modal.html.twig:68
+#: templates/public/modal/donate.modal.html.twig:67
 msgid "Donation duration"
 msgstr "Donatieduur"
 
-#: templates/public/modal/donate.modal.html.twig:70
-msgid "Year"
-msgstr "Jaar"
+#: templates/public/modal/donate.modal.html.twig:69
+msgid "year"
+msgstr "jaar"
 
-#: templates/public/modal/donate.modal.html.twig:88
+#: templates/public/modal/donate.modal.html.twig:70
+#: templates/public/modal/donate.modal.html.twig:71
+#: templates/public/modal/donate.modal.html.twig:72
+#: templates/public/modal/donate.modal.html.twig:73
+#: templates/public/modal/donate.modal.html.twig:74
+#: templates/public/modal/donate.modal.html.twig:75
+#: templates/public/modal/donate.modal.html.twig:76
+#: templates/public/modal/donate.modal.html.twig:77
+#: templates/public/modal/donate.modal.html.twig:78
+msgid "years"
+msgstr "jaren"
+
+#: templates/public/modal/donate.modal.html.twig:87
 msgid "Please fill in you address"
 msgstr "Vul je e-mailadres in"
 
-#: templates/public/modal/donate.modal.html.twig:88
+#: templates/public/modal/donate.modal.html.twig:87
 msgid "optional"
 msgstr "optioneel"
 
-#: templates/public/modal/donate.modal.html.twig:105
+#: templates/public/modal/donate.modal.html.twig:104
 msgid "Payment"
 msgstr "Betaling"
 
-#: templates/public/modal/donate.modal.html.twig:106
+#: templates/public/modal/donate.modal.html.twig:105
 msgid "By clicking donate you agree to the following payment"
 msgstr "Door op doneren te klikken ga je akkoord met de volgende betaling"
 
-#: templates/public/modal/donate.modal.html.twig:122
+#: templates/public/modal/donate.modal.html.twig:121
 #, php-format
 msgid "I agree with the %s "
 msgstr "Ik ben het eens met het %s "
 
-#: templates/public/modal/donate.modal.html.twig:122
+#: templates/public/modal/donate.modal.html.twig:121
 msgid "privacy policy"
 msgstr "privacybeleid"
 
-#: templates/public/modal/donate.modal.html.twig:123
+#: templates/public/modal/donate.modal.html.twig:122
 msgid "I agree with the privacy policy."
 msgstr "Ik ben het eens met het privacybeleid."
 
