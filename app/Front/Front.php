@@ -11,6 +11,7 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MailerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
+use Mollie\Api\Resources\Payment;
 
 /**
  * The public-facing functionality of the plugin.
@@ -278,7 +279,7 @@ class Front {
 
 		$customer_id = $donor->customer_id ?? null;
 
-		$payment = $mollie->create_payment(
+		$result = $mollie->create_payment(
 			$value,
 			$payment_frequency,
 			$recurring_length,
@@ -289,13 +290,19 @@ class Front {
 			$customer_id
 		);
 
-		if ( $payment ) {
-			wp_send_json_success( $payment->getCheckoutUrl() );
+		if ( $result instanceof Payment ) {
+			wp_send_json_success( $result->getCheckoutUrl() );
+		}
+
+		$message = __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' );
+
+		if(current_user_can('administrator') && KUDOS_DEBUG) {
+			$message = $result['message'];
 		}
 
 		wp_send_json_error(
 			[
-				'message' => __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' ),
+				'message' => $message,
 			]
 		);
 

@@ -78,7 +78,7 @@ class MollieService extends AbstractService {
 	 * @param string|null $email Email of donor.
 	 * @param string|null $customer_id Mollie customer id.
 	 *
-	 * @return bool|object
+	 * @return array|object
 	 * @since      1.0.0
 	 */
 	public function create_payment(
@@ -174,8 +174,9 @@ class MollieService extends AbstractService {
 
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
-
-			return false;
+			$return['success'] = false;
+			$return['message'] = $e->getMessage();
+			return $return;
 		}
 
 	}
