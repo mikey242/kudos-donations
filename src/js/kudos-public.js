@@ -224,7 +224,6 @@ $(() => {
                 $kudosFormModal.addClass('kudos_loading')
             },
             success(result) {
-                console.log(result)
                 if (result.success) {
                     $(location).attr('href', result.data)
                 } else {
