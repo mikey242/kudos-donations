@@ -5,6 +5,7 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
 use Mollie\Api\Resources\Subscription;
+use Mollie\Api\Resources\SubscriptionCollection;
 
 /**
  * Debug page render
@@ -207,7 +208,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 						$subscriptions = $kudos_mollie->get_subscriptions( $donor->customer_id );
 
-						if ( ! count( $subscriptions ) ) {
+						if ( !($subscriptions instanceof SubscriptionCollection) || !$subscriptions->count() ) {
 							continue;
 						}
 						?>
