@@ -14,6 +14,6 @@ cd ../KUDOS_EXPORT || exit
 rm kudos-donations/languages/*.json
 # Generating translations
 echo "Generating translations"
-wp i18n make-json kudos-donations/languages/
+wp i18n make-json kudos-donations/languages/ --no-purge
 # Creating kudos-donations.zip
 zip -qrD9 kudos-donations.zip kudos-donations
