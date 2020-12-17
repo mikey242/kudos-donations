@@ -1,4 +1,3 @@
-libraries
 languages
 templates
 vendor
