@@ -86,7 +86,7 @@ Here is a list of the shortcode attributes:
 * *alignment* = Button alignment (left, center, right).
 * *modal_title* = The welcome title for the popup
 * *modal_text* = The welcome text for the popup
-* *amount_type* = Either 'fixed' or 'open'
+* *amount_type* = Can be 'fixed', 'open' or 'both'
 * *fixed_amounts* = Comma separated list of amounts to use (5,10,15,20). Maximum 4 values.
 * *campaign_label* = Name of the campaign to use for this button.
 
