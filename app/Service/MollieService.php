@@ -8,8 +8,8 @@ use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
-use Mollie\Api\Resources\BaseCollection;
 use Mollie\Api\Resources\Payment;
+use Mollie\Api\Resources\SubscriptionCollection;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
@@ -186,7 +186,7 @@ class MollieService extends AbstractService {
 	 *
 	 * @param string $customer_id Mollie customer id.
 	 *
-	 * @return BaseCollection|bool
+	 * @return SubscriptionCollection|false
 	 * @since   2.0.0
 	 */
 	public function get_subscriptions( string $customer_id ) {
