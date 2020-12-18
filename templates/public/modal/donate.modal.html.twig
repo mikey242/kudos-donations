@@ -112,7 +112,9 @@
                         </p>
                     </div>
                     {{ checkbox('avg',
-                        __( 'I agree with the %s', "kudos-donations" ) | format('<a class="kd-text-theme hover:kd-text-theme-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' | format(privacy_link ,__( "privacy policy","kudos-donations" )))
+                        __( 'I agree with the %s', "kudos-donations" ) | format(
+                            privacy_link    ? '<a class="kd-text-theme hover:kd-text-theme-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' | format(privacy_link ,__( "privacy policy","kudos-donations" ))
+                                            : __( "privacy policy","kudos-donations" ))
                     ) }}
                 {% endblock %}
                 {% block next_button %}
