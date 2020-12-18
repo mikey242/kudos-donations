@@ -67,7 +67,7 @@
                     {% set length = { 0: __('Continuous', 'kudos-donations') } %}
                     {% for i in 1..10 %}
                         {% set length = length | merge({
-                            (i): _n( '%s year', '%s years', i, 'kudos-donations' )|format(i)
+                            (i): _n( '%u year', '%u years', i, 'kudos-donations' )|format(i)
                         }) %}
                     {% endfor %}
                     {{ select('recurring_length', __('Donation duration', 'kudos-donations'), length ) }}

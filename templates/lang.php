@@ -29,7 +29,7 @@ __('Yearly', 'kudos-donations');
 __('Quarterly', 'kudos-donations');
 __('Monthly', 'kudos-donations');
 __('Continuous', 'kudos-donations');
-_n_noop( '%s post', '%s posts', 'text-domain' );
+_n_noop( '%u year', '%u years', 'kudos-donations' );
 __('Donation duration', 'kudos-donations');
 __('Address', 'kudos-donations');
 __('Please fill in you address', 'kudos-donations');
