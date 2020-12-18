@@ -95,7 +95,7 @@ class MollieService extends AbstractService {
 		$mollie_api = $this->mollie_api;
 		$order_id   = Utils::generate_id( 'kdo_' );
 		$currency   = 'EUR';
-		$value      = number_format( $value, 2 );
+		$value      = number_format( $value, 2, '.', '' );
 
 		// Set payment frequency.
 		$frequency_text = Utils::get_frequency_name( $interval );
