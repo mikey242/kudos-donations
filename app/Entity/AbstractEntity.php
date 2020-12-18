@@ -5,7 +5,6 @@ namespace Kudos\Entity;
 use DateTime;
 use Kudos\Exceptions\EntityException;
 use Kudos\Helpers\Utils;
-use Kudos\Service\HookService;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Throwable;
@@ -98,7 +97,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	public static function get_table_name( bool $prefix = true ) {
+	public static function get_table_name( bool $prefix = true ): string {
 
 		global $wpdb;
 
@@ -187,7 +186,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public function verify_secret( string $hash ) {
+	public function verify_secret( string $hash ): bool {
 
 		return wp_check_password( $this->secret, $hash );
 
@@ -199,7 +198,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 * @return array
 	 * @since 2.0.0
 	 */
-	public function to_array() {
+	public function to_array(): array {
 
 		return get_object_vars( $this );
 
@@ -211,7 +210,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	public function __toString() {
+	public function __toString(): string {
 
 		return (string) $this->id;
 
