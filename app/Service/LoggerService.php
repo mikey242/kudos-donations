@@ -3,6 +3,7 @@
 namespace Kudos\Service;
 
 use DateTimeZone;
+use Kudos\Helpers\Utils;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as Monolog;
 
@@ -40,6 +41,7 @@ class LoggerService extends Monolog {
 	public static function init() {
 
 		if ( wp_mkdir_p( self::LOG_DIR ) ) {
+			Utils::schedule_recurring_action(strtotime( 'tomorrow' ), DAY_IN_SECONDS, 'kudos_clear_log');
 			return;
 		}
 
@@ -87,7 +89,7 @@ class LoggerService extends Monolog {
 	 * @return bool
 	 * @since   1.0.1
 	 */
-	private static function is_writeable() {
+	private static function is_writeable(): bool {
 
 		if ( is_writable( self::LOG_DIR ) ) {
 			return true;

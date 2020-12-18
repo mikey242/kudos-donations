@@ -10,6 +10,7 @@ use Kudos\Front\Front;
 use Kudos\Helpers\Settings;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\I18nService;
+use Kudos\Service\LoggerService;
 
 /**
  * The file that defines the core plugin class
@@ -88,6 +89,7 @@ class KudosDonations {
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 		$this->define_entity_hooks();
+		$this->define_logger_hooks();
 
 	}
 
@@ -120,6 +122,18 @@ class KudosDonations {
 		add_action( SubscriptionEntity::get_table_name(false) . '_remove_secret_action', [SubscriptionEntity::class, 'remove_secret_action'], 10, 2 );
 
 	}
+
+	/**
+	 * Register LoggerService related hooks.
+	 *
+	 * @since 2.0.9
+	 */
+	private function define_logger_hooks() {
+
+		add_action( 'kudos_clear_log', [LoggerService::class, 'clear'] );
+
+	}
+
 
 	/**
 	 * Register all of the hooks related to the admin area functionality

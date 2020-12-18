@@ -108,6 +108,7 @@ e.g:
 = 2.0.9 =
 * Add option to select 'both' for amount type
 * Workaround to fix missing translations from translate.wordpress.org
+* Log is now cleared every midnight
 * Fix issues with payments over 999
 * Fix email address not validating correctly
 * Fix various jQuery deprecations

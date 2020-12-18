@@ -13,7 +13,7 @@ class UpdateService {
 	 * @return bool
 	 * @since 2.0.4
 	 */
-	public static function sync_campaign_labels() {
+	public static function sync_campaign_labels(): bool {
 
 		$mapper = new MapperService( TransactionEntity::class );
 
