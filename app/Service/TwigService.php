@@ -8,6 +8,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Throwable;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -53,7 +54,9 @@ class TwigService extends AbstractService {
 		$this->templates_dir[]  = KUDOS_PLUGIN_DIR . '/templates/';
 		$this->options          = $options;
 		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
+		$this->options['debug'] = KUDOS_DEBUG;
 		$this->initialize_twig();
+		$this->initialize_twig_extensions();
 		$this->initialize_twig_functions();
 		$this->initialize_twig_filters();
 
@@ -70,6 +73,16 @@ class TwigService extends AbstractService {
 	}
 
 	/**
+	 * Initialize additional twig extensions
+	 */
+	public function initialize_twig_extensions() {
+
+		if(KUDOS_DEBUG) {
+			$this->twig->addExtension(new DebugExtension());
+		}
+	}
+
+	/**
 	 * Initialize additional twig functions
 	 *
 	 * @since    1.0.0
@@ -81,6 +94,12 @@ class TwigService extends AbstractService {
 		 * Add gettext __ function.
 		 */
 		$get_text = new TwigFunction( '__', '__' );
+		$this->twig->addFunction( $get_text );
+
+		/**
+		 * Add gettext _n function.
+		 */
+		$get_text = new TwigFunction( '_n', '_n' );
 		$this->twig->addFunction( $get_text );
 
 		/**
