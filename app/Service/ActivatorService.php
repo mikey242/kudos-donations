@@ -24,7 +24,7 @@ use Kudos\Helpers\Settings;
 class ActivatorService {
 
 	/**
-	 * Runs all activation functions
+	 * Runs all activation functions.
 	 *
 	 * @param string|null $old_version Previous version of plugin.
 	 *
@@ -35,7 +35,8 @@ class ActivatorService {
 		$logger = LoggerService::factory();
 
 		$logger::init();
-		TwigService::initCache();
+		$twig = new TwigService();
+		$twig->initCache();
 		self::create_donors_table();
 		self::create_transactions_table();
 		self::create_subscriptions_table();

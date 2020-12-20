@@ -112,6 +112,7 @@ e.g:
 * Fix issues with payments over 999
 * Fix email address not validating correctly
 * Fix various jQuery deprecations
+* Fix twig cache issue by clearing cache on activation
 
 = 2.0.8 =
 * Add 'Recreate database' action to debug menu
