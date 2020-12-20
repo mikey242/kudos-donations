@@ -105,7 +105,7 @@ e.g:
 
 == Changelog ==
 
-= 2.0.9 =
+= 2.1.0 =
 * Add option to select 'both' for amount type
 * Workaround to fix missing translations from translate.wordpress.org
 * Log is now cleared every midnight
