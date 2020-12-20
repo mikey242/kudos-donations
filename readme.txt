@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.4
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 2.0.8
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,7 +85,7 @@ Here is a list of the shortcode attributes:
 * *button_label* = The label to display for the button
 * *alignment* = Button alignment (left, center, right).
 * *modal_title* = The welcome title for the popup
-* *modal_text* = The welcome text for the popup
+* *welcome_text* = The welcome text for the popup
 * *amount_type* = Can be 'fixed', 'open' or 'both'
 * *fixed_amounts* = Comma separated list of amounts to use (5,10,15,20). Maximum 4 values.
 * *campaign_label* = Name of the campaign to use for this button.
