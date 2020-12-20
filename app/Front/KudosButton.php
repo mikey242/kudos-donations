@@ -116,13 +116,14 @@ class KudosButton {
 	public function get_donate_modal(): string {
 
 		$modal = new KudosModal();
+		$allowed_types = ['fixed', 'open', 'both'];
 
 		$data = [
 			'modal_id'       => $this->id,
 			'modal_title'    => $this->title,
 			'modal_text'     => $this->text,
 			'amount'         => [
-				'type'         => $this->amount_type,
+				'type'         => in_array( $this->amount_type, $allowed_types, true ) ? $this->amount_type : 'open',
 				'fixed_amounts' => array_slice(explode( ',', $this->fixed_amounts ),0, 4),
 			],
 			'campaign_label' => $this->campaign_label,
