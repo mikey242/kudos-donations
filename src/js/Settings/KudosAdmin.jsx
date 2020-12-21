@@ -15,7 +15,6 @@ import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
 import { PrivacyPolicyPanel } from './Components/Panels/PrivacyPolicyPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
-import { ActionSchedulerPanel } from './Components/Panels/ActionSchedulerPanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
 import { SubscriptionPanel } from "./Components/Panels/SubscriptionPanel"
 import {Btn} from "./Components/Btn";
@@ -327,10 +326,6 @@ class KudosAdmin extends Component {
 				className: 'tab-advanced',
 				content:
 					<Fragment>
-						<ActionSchedulerPanel
-							{...this.state}
-							handleInputChange={this.handleInputChange}
-						/>
 						<DebugModePanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}

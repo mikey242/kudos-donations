@@ -161,11 +161,6 @@ class Settings {
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'action_scheduler'      => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => true,
-				],
 				'campaign_labels'       => [
 					'type'         => 'array',
 					'show_in_rest' => [
