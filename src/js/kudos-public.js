@@ -71,7 +71,8 @@ $(() => {
                 required: __('You must agree to our privacy policy before donating', 'kudos-donations')
             }
         },
-    })
+    });
+    $.validator.messages.required = __("This field is required", 'kudos-donations');
 
     if ($kudosButtons.length) {
 

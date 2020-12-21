@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Kudos Donations\n"
-"POT-Creation-Date: 2020-12-18 12:30+0100\n"
+"POT-Creation-Date: 2020-12-21 16:11+0100\n"
 "PO-Revision-Date: 2020-10-09 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -521,7 +521,7 @@ msgstr ""
 msgid "Your donation will be processed soon."
 msgstr ""
 
-#: app/Front/KudosButton.php:129
+#: app/Front/KudosButton.php:130
 msgid "Secure payment by"
 msgstr ""
 
@@ -656,24 +656,15 @@ msgid "not-connected"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Action Scheduler"
-msgstr ""
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Enable action scheduler"
-msgstr ""
-
-#: dist/js/kudos-admin-settings.js:1
-msgid ""
-"In most cases this should be left on. Can be disabled for troubleshooting."
-msgstr ""
-
-#: dist/js/kudos-admin-settings.js:1
 msgid "Address Field"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Enable"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Required"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -952,7 +943,7 @@ msgid "Button"
 msgstr ""
 
 #: dist/js/kudos-button-block.js:1 templates/lang.php:49
-#: templates/public/modal/donate.modal.html.twig:119
+#: templates/public/modal/donate.modal.html.twig:121
 msgid "Donate"
 msgstr ""
 
@@ -1000,6 +991,10 @@ msgstr ""
 
 #: dist/js/kudos-button-block.js:1
 msgid "Add campaign"
+msgstr ""
+
+#: dist/js/kudos-public.js:1
+msgid "This field is required"
 msgstr ""
 
 #: dist/js/kudos-public.js:1
@@ -1114,12 +1109,13 @@ msgstr ""
 msgid "By clicking donate you agree to the following payment"
 msgstr ""
 
-#: templates/lang.php:46
+#: templates/lang.php:46 templates/public/modal/donate.modal.html.twig:115
 #, php-format
-msgid "I agree with the %s "
+msgid "I agree with the %s"
 msgstr ""
 
-#: templates/lang.php:47 templates/public/modal/donate.modal.html.twig:115
+#: templates/lang.php:47 templates/public/modal/donate.modal.html.twig:116
+#: templates/public/modal/donate.modal.html.twig:117
 msgid "privacy policy"
 msgstr ""
 
@@ -1137,11 +1133,6 @@ msgstr ""
 
 #: templates/lang.php:57 templates/public/modal/embeds/_tab.html.twig:24
 msgid "Next"
-msgstr ""
-
-#: templates/public/modal/donate.modal.html.twig:115
-#, php-format
-msgid "I agree with the %s"
 msgstr ""
 
 #. Plugin URI of the plugin/theme

@@ -23,7 +23,7 @@ const AddressFieldPanel = (props ) => {
 				<PanelRow>
 
 					<CheckboxControl
-						label="Required"
+						label={__("Required", "kudos-donations")}
 						checked={ props.settings._kudos_address_required || '' }
 						onChange={ ( value ) => props.handleInputChange( '_kudos_address_required', value ) }
 					/>

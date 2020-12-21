@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-18 12:30+0100\n"
-"PO-Revision-Date: 2020-12-18 12:30+0100\n"
+"POT-Creation-Date: 2020-12-21 16:10+0100\n"
+"PO-Revision-Date: 2020-12-21 16:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -526,7 +526,7 @@ msgstr "Bedankt"
 msgid "Your donation will be processed soon."
 msgstr "Je donatie wordt zo snel mogelijk verwerkt."
 
-#: app/Front/KudosButton.php:129
+#: app/Front/KudosButton.php:130
 msgid "Secure payment by"
 msgstr "Veilige betaling door"
 
@@ -670,27 +670,16 @@ msgid "not-connected"
 msgstr "niet-verbonden"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Action Scheduler"
-msgstr "Actieplanner"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Enable action scheduler"
-msgstr "Actieplanner inschakelen"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid ""
-"In most cases this should be left on. Can be disabled for troubleshooting."
-msgstr ""
-"Laat dit in de meeste gevallen aan staan. Kan uitgeschakeld worden voor "
-"troubleshooting."
-
-#: dist/js/kudos-admin-settings.js:1
 msgid "Address Field"
 msgstr "Adresveld"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Enable"
 msgstr "Inschakelen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Required"
+msgstr "Verplicht"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Completed Payment"
@@ -989,7 +978,7 @@ msgid "Button"
 msgstr "Knop"
 
 #: dist/js/kudos-button-block.js:1 templates/lang.php:49
-#: templates/public/modal/donate.modal.html.twig:119
+#: templates/public/modal/donate.modal.html.twig:121
 msgid "Donate"
 msgstr "Doneer"
 
@@ -1041,6 +1030,10 @@ msgstr ""
 #: dist/js/kudos-button-block.js:1
 msgid "Add campaign"
 msgstr "Campagne toevoegen"
+
+#: dist/js/kudos-public.js:1
+msgid "This field is required"
+msgstr "Dit veld is verplicht"
 
 #: dist/js/kudos-public.js:1
 msgid "Your name is required"
@@ -1156,12 +1149,13 @@ msgstr "Betaling"
 msgid "By clicking donate you agree to the following payment"
 msgstr "Door op doneren te klikken ga je akkoord met de volgende betaling"
 
-#: templates/lang.php:46
+#: templates/lang.php:46 templates/public/modal/donate.modal.html.twig:115
 #, php-format
-msgid "I agree with the %s "
-msgstr "Ik ben het eens met het %s "
+msgid "I agree with the %s"
+msgstr "Ik ben het eens met het %s"
 
-#: templates/lang.php:47 templates/public/modal/donate.modal.html.twig:115
+#: templates/lang.php:47 templates/public/modal/donate.modal.html.twig:116
+#: templates/public/modal/donate.modal.html.twig:117
 msgid "privacy policy"
 msgstr "privacybeleid"
 
@@ -1180,11 +1174,6 @@ msgstr "Vorig tabblad"
 #: templates/lang.php:57 templates/public/modal/embeds/_tab.html.twig:24
 msgid "Next"
 msgstr "Volgende"
-
-#: templates/public/modal/donate.modal.html.twig:115
-#, php-format
-msgid "I agree with the %s"
-msgstr "Ik ben het eens met het %s"
 
 #. Plugin URI of the plugin/theme
 msgid "https://gitlab.iseard.media/michael/kudos-donations"
@@ -1205,3 +1194,18 @@ msgstr "Iseard Media"
 #. Author URI of the plugin/theme
 msgid "https://iseard.media"
 msgstr "https://iseard.media"
+
+#~ msgid "Action Scheduler"
+#~ msgstr "Actieplanner"
+
+#~ msgid "Enable action scheduler"
+#~ msgstr "Actieplanner inschakelen"
+
+#~ msgid ""
+#~ "In most cases this should be left on. Can be disabled for troubleshooting."
+#~ msgstr ""
+#~ "Laat dit in de meeste gevallen aan staan. Kan uitgeschakeld worden voor "
+#~ "troubleshooting."
+
+#~ msgid "I agree with the %s "
+#~ msgstr "Ik ben het eens met het %s "
