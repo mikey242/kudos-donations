@@ -38,13 +38,17 @@ class LoggerService extends Monolog {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function init() {
+	public function init() {
 
 		if ( wp_mkdir_p( self::LOG_DIR ) ) {
-			Utils::schedule_recurring_action(strtotime( 'tomorrow' ), DAY_IN_SECONDS, 'kudos_clear_log');
+			$this->info( 'Log directory created successfully' );
+			Utils::schedule_recurring_action(
+				strtotime( 'tomorrow' ),
+				WEEK_IN_SECONDS,
+				'kudos_clear_log'
+			);
 			return;
 		}
-
 	}
 
 	/**

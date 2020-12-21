@@ -147,7 +147,7 @@ class TwigService extends AbstractService {
 	 *
 	 * @since    2.0.0
 	 */
-	public function initCache() {
+	public function init() {
 
 		$logger = $this->logger;
 
