@@ -43,7 +43,7 @@ __('By clicking donate you agree to the following payment', 'kudos-donations');
 __('Name', 'kudos-donations');
 __('Amount', 'kudos-donations');
 __('Type', 'kudos-donations');
-__( 'I agree with the %s ', "kudos-donations" );
+__( 'I agree with the %s', "kudos-donations" );
 __( "privacy policy","kudos-donations" );
 __( 'I agree with the privacy policy.', "kudos-donations" );
 __('Donate', 'kudos-donations');
