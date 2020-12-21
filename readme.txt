@@ -105,6 +105,11 @@ e.g:
 
 == Changelog ==
 
+= 2.1.1 =
+* Fix missing Dutch translations
+* Fix error scheduling kudos_clear_log action
+* Remove unnecessary option to disable Action Scheduler
+
 = 2.1.0 =
 * Add option to select 'both' for amount type
 * Workaround to fix missing translations from translate.wordpress.org
