@@ -28,6 +28,7 @@ use Kudos\Service\CompatibilityService;
 use Kudos\Service\DeactivatorService;
 
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 
 // Load .env file if present.
 if ( class_exists( \Dotenv\Dotenv::class ) && file_exists( __DIR__ . '/.env' ) ) {

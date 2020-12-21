@@ -7,7 +7,6 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Front\Front;
-use Kudos\Helpers\Settings;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\I18nService;
 use Kudos\Service\LoggerService;
@@ -71,10 +70,6 @@ class KudosDonations {
 		}
 
 		$this->plugin_name = 'kudos-donations';
-
-		if ( Settings::get_setting( 'action_scheduler' ) ) {
-			require_once KUDOS_PLUGIN_DIR . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
-		}
 
 	}
 
@@ -198,7 +193,7 @@ class KudosDonations {
 	 * @return    string    The version number of the plugin.
 	 * @since     1.0.0
 	 */
-	public function get_version() {
+	public function get_version(): string {
 
 		return $this->version;
 
