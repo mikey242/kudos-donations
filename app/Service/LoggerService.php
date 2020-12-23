@@ -42,11 +42,6 @@ class LoggerService extends Monolog {
 
 		if ( wp_mkdir_p( self::LOG_DIR ) ) {
 			$this->info( 'Log directory created successfully' );
-			Utils::schedule_recurring_action(
-				strtotime( 'tomorrow' ),
-				WEEK_IN_SECONDS,
-				'kudos_clear_log'
-			);
 			return;
 		}
 	}

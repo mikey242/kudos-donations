@@ -23,6 +23,7 @@
 
 namespace Kudos;
 
+use Kudos\Helpers\Utils;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\CompatibilityService;
 use Kudos\Service\DeactivatorService;
@@ -54,6 +55,11 @@ define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
  */
 function activate_kudos() {
 	require_once KUDOS_PLUGIN_DIR . '/app/Service/ActivatorService.php';
+	Utils::schedule_recurring_action(
+		strtotime( 'tomorrow' ),
+		WEEK_IN_SECONDS,
+		'kudos_clear_log'
+	);
 	ActivatorService::activate();
 }
 
@@ -86,10 +92,8 @@ require KUDOS_PLUGIN_DIR . '/app/KudosDonations.php';
  */
 function run_kudos() {
 
-	require KUDOS_PLUGIN_DIR . '/app/Service/CompatibilityService.php';
-
+	// Check compatibility and run kudos if OK
 	$compatibility = new CompatibilityService();
-
 	$continue = $compatibility->init();
 
 	if ( $continue ) {
