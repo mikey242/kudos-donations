@@ -42,12 +42,21 @@ class ActivatorService {
 		self::create_subscriptions_table();
 		self::set_defaults();
 
-		if ( $old_version && version_compare( $old_version, '2.0.4', '<' ) ) {
-			$logger->info( 'Upgrading to version 2.0.4', [ 'previous_version' => $old_version ] );
-			$result = UpdateService::sync_campaign_labels();
-			if ( $result ) {
-				$logger->info( 'Updated campaign labels from transactions' );
+		if ( $old_version ) {
+
+			if ( version_compare( $old_version, '2.1.1', '<' ) ) {
+				$logger->info( 'Upgrading to version 2.1.1', [ 'previous_version' => $old_version ] );
+				Settings::remove_setting('action_scheduler');
 			}
+
+			if ( version_compare( $old_version, '2.0.4', '<' ) ) {
+				$logger->info( 'Upgrading to version 2.0.4', [ 'previous_version' => $old_version ] );
+				$result = UpdateService::sync_campaign_labels();
+				if ( $result ) {
+					$logger->info( 'Updated campaign labels from transactions' );
+				}
+			}
+
 		}
 
 		$logger->info( 'Kudos Donations plugin activated' );
