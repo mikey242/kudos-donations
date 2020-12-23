@@ -75,7 +75,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return array
 	 * @since      2.0.0
 	 */
-	public function fetch_table_data() {
+	public function fetch_table_data(): array {
 
 		$frequency = ( isset( $_GET['frequency'] ) ? sanitize_text_field( $_GET['frequency'] ) : '' );
 		$search    = $this->get_search_data();
@@ -118,7 +118,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.0
 	 */
-	public function column_names() {
+	public function column_names(): array {
 		return [
 			'created'         => __( 'Date', 'kudos-donations' ),
 			'frequency'       => __( 'Frequency', 'kudos-donations' ),
@@ -137,7 +137,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return array
 	 * @since      2.0.0
 	 */
-	public function get_hidden_columns() {
+	public function get_hidden_columns(): array {
 		return [
 			'subscription_id',
 		];
@@ -149,7 +149,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return array
 	 * @since      2.0.0
 	 */
-	public function get_sortable_columns() {
+	public function get_sortable_columns(): array {
 		return [
 			'created' => [
 				'created',
@@ -243,7 +243,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return bool
 	 * @since      2.0.0
 	 */
-	public static function cancel_subscription( string $subscription_id ) {
+	public static function cancel_subscription( string $subscription_id ): bool {
 
 		$kudos_mollie = MollieService::factory();
 		if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
@@ -276,7 +276,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return string
 	 * @since      2.0.0
 	 */
-	protected function column_cb( $item ) {
+	protected function column_cb( $item ): string {
 		return sprintf(
 			'<input type="checkbox" name="bulk-action[]" value="%s" />',
 			$item['subscription_id']
@@ -291,7 +291,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return string
 	 * @since      2.0.0
 	 */
-	protected function column_created( array $item ) {
+	protected function column_created( array $item ): string {
 
 		$action_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
@@ -332,7 +332,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return string|void
 	 * @since      2.0.0
 	 */
-	protected function column_frequency( array $item ) {
+	protected function column_frequency( array $item ): string {
 		return Utils::get_frequency_name( $item['frequency'] );
 	}
 
@@ -344,7 +344,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return string|void
 	 * @since      2.0.0
 	 */
-	protected function column_years( array $item ) {
+	protected function column_years( array $item ): string {
 
 		return ( $item['years'] > 0 ? $item['years'] : __( 'Continuous', 'kudos-donations' ) );
 	}
@@ -357,7 +357,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return string|null
 	 * @since   2.0.0
 	 */
-	protected function column_name( array $item ) {
+	protected function column_name( array $item ): ?string {
 
 		$email = $item['email'];
 
@@ -381,7 +381,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return string
 	 * @since      2.0.0
 	 */
-	protected function column_email( array $item ) {
+	protected function column_email( array $item ): string {
 		return sprintf(
 			'<a href="mailto: %1$s" />%1$s</a>',
 			$item['email']
@@ -396,7 +396,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return string|void
 	 * @since      2.0.0
 	 */
-	protected function column_value( array $item ) {
+	protected function column_value( array $item ): string {
 
 		$currency = ! empty( $item['currency'] ) ? Utils::get_currency_symbol( $item['currency'] ) : '';
 
@@ -412,7 +412,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return string|void
 	 * @since      2.0.0
 	 */
-	protected function column_status( array $item ) {
+	protected function column_status( array $item ): string {
 
 		switch ( $item['status'] ) {
 			case 'active':
@@ -434,7 +434,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return array|string[]
 	 * @since      2.0.0
 	 */
-	protected function get_bulk_actions() {
+	protected function get_bulk_actions(): array {
 		return [
 			'bulk-cancel' => __( 'Cancel', 'kudos-donations' ),
 			'bulk-delete' => __( 'Delete', 'kudos-donations' ),
@@ -447,7 +447,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @return array
 	 * @since      2.0.0
 	 */
-	protected function get_views() {
+	protected function get_views(): array {
 		$views   = [];
 		$current = ( ! empty( $_GET['frequency'] ) ? sanitize_text_field( $_GET['frequency'] ) : 'all' );
 

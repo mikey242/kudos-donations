@@ -181,7 +181,7 @@ class KudosDonations {
 	 * @return    string    The name of the plugin.
 	 * @since     1.0.0
 	 */
-	public function get_plugin_name() {
+	public function get_plugin_name(): string {
 
 		return $this->plugin_name;
 

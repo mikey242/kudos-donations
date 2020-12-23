@@ -147,7 +147,7 @@ class MailerService extends AbstractService {
 	 * @return bool
 	 * @since    1.1.0
 	 */
-	private function send( string $to, string $subject, string $body, array $headers = [], array $attachment = [] ) {
+	private function send( string $to, string $subject, string $body, array $headers = [], array $attachment = [] ): bool {
 
 		// Use hook to modify existing config.
 		add_action( 'phpmailer_init', [ $this, 'init' ] );
@@ -174,7 +174,7 @@ class MailerService extends AbstractService {
 	 * @return bool
 	 * @since    1.1.0
 	 */
-	public function send_test( WP_REST_Request $request ) {
+	public function send_test( WP_REST_Request $request ): bool {
 
 		if ( empty( $request['email'] ) ) {
 			wp_send_json_error( __( 'Please provide an email address.', 'kudos-donations' ) );
@@ -209,7 +209,7 @@ class MailerService extends AbstractService {
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public function send_message( string $email, string $header, string $message ) {
+	public function send_message( string $email, string $header, string $message ): bool {
 
 		$twig = TwigService::factory();
 		$body = $twig->render(

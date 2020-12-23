@@ -207,7 +207,7 @@ class Settings {
 	 * @return bool
 	 * @since 2.0.4
 	 */
-	public static function update_setting( string $name, $value ) {
+	public static function update_setting( string $name, $value ): bool {
 
 		return update_option( self::PREFIX . $name, $value );
 
@@ -251,7 +251,7 @@ class Settings {
 	public function remove_settings() {
 
 		foreach ( $this->settings as $key => $setting ) {
-			delete_option( self::PREFIX . $key );
+			self::remove_setting( $key );
 		}
 
 	}

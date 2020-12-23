@@ -60,7 +60,7 @@ class DonorEntity extends AbstractEntity {
 	 *
 	 * @return array|null
 	 */
-	public function get_transactions() {
+	public function get_transactions(): ?array {
 
 		$mapper = new MapperService( TransactionEntity::class );
 

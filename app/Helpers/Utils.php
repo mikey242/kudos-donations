@@ -10,7 +10,7 @@ class Utils {
 	 * @return string|void
 	 * @since   1.0.0
 	 */
-	public static function get_return_url() {
+	public static function get_return_url(): string {
 
 		$use_custom = get_option( '_kudos_custom_return_enable' );
 		$custom_url = esc_url( get_option( '_kudos_custom_return_url' ) );
@@ -65,7 +65,7 @@ class Utils {
 	 * @return string
 	 * @since      1.0.2
 	 */
-	public static function get_currency_symbol( string $currency ) {
+	public static function get_currency_symbol( string $currency ): string {
 
 		$currency = strtoupper( $currency );
 
@@ -100,7 +100,7 @@ class Utils {
 	 * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
 	 * @sice    1.0.2
 	 */
-	public static function color_luminance( string $hex, float $percent ) {
+	public static function color_luminance( string $hex, float $percent ): string {
 
 		// Remove leading '#' if present.
 		$hex = ltrim( $hex, '#' );
@@ -132,7 +132,7 @@ class Utils {
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	public static function get_sequence_type( string $text ) {
+	public static function get_sequence_type( string $text ): string {
 
 		switch ( $text ) {
 			case 'oneoff':
@@ -153,7 +153,7 @@ class Utils {
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	public static function get_frequency_name( string $frequency ) {
+	public static function get_frequency_name( string $frequency ): string {
 
 		switch ( $frequency ) {
 			case '12 months':
@@ -199,7 +199,7 @@ class Utils {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	public static function generate_id( $prefix = null, $length = 10 ) {
+	public static function generate_id( $prefix = null, $length = 10 ): string {
 
 		return $prefix . substr( base_convert( sha1( uniqid( wp_rand() ) ), 16, 36 ), 0, $length );
 

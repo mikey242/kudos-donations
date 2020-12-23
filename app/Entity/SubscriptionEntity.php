@@ -67,7 +67,7 @@ class SubscriptionEntity extends AbstractEntity {
 	 * @return EntityInterface|null
 	 * @since   2.0.0
 	 */
-	public function get_donor() {
+	public function get_donor(): ?EntityInterface {
 
 		$mapper = new MapperService( DonorEntity::class );
 

@@ -75,7 +75,7 @@ class DonorsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.0
 	 */
-	public function fetch_table_data() {
+	public function fetch_table_data(): array {
 
 		$search = $this->get_search_data();
 		$search_field = isset($search['field']) ? $search['field'] : null;
@@ -95,7 +95,7 @@ class DonorsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.0
 	 */
-	public function column_names() {
+	public function column_names(): array {
 		return [
 			'email'     => __( 'E-mail', 'kudos-donations' ),
 			'name'      => __( 'Name', 'kudos-donations' ),
@@ -111,7 +111,7 @@ class DonorsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.0
 	 */
-	public function get_hidden_columns() {
+	public function get_hidden_columns(): array {
 		return [
 			'subscription_id',
 			'id',
@@ -124,7 +124,7 @@ class DonorsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.0
 	 */
-	public function get_sortable_columns() {
+	public function get_sortable_columns(): array {
 		return [
 			'created' => [
 				'created',
@@ -200,7 +200,7 @@ class DonorsTable extends WP_List_Table {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	protected function column_cb( $item ) {
+	protected function column_cb( $item ): string {
 		return sprintf(
 			'<input type="checkbox" name="bulk-action[]" value="%s" />',
 			$item['customer_id']
@@ -215,7 +215,7 @@ class DonorsTable extends WP_List_Table {
 	 * @return string
 	 * @since   1.0.0
 	 */
-	protected function column_created( array $item ) {
+	protected function column_created( array $item ): string {
 
 		return __( 'Added', 'kudos-donations' ) . '<br/>' .
 		       wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
@@ -230,7 +230,7 @@ class DonorsTable extends WP_List_Table {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	protected function column_email( array $item ) {
+	protected function column_email( array $item ): string {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
@@ -261,7 +261,7 @@ class DonorsTable extends WP_List_Table {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	protected function column_address( array $item ) {
+	protected function column_address( array $item ): string {
 
 		$address = [
 			$item['street'],

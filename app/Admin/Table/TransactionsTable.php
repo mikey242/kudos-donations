@@ -76,7 +76,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return array
 	 * @since   1.0.0
 	 */
-	public function fetch_table_data() {
+	public function fetch_table_data(): array {
 
 		$view   = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '';
 		$search = $this->get_search_data();
@@ -119,7 +119,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.0
 	 */
-	public function column_names() {
+	public function column_names(): array {
 
 		return [
 			'created'        => __( 'Date', 'kudos-donations' ),
@@ -141,7 +141,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return array
 	 * @since   1.0.0
 	 */
-	public function get_hidden_columns() {
+	public function get_hidden_columns(): array {
 		return [
 			'transaction_id',
 		];
@@ -154,7 +154,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return array
 	 * @since   1.0.0
 	 */
-	public function get_sortable_columns() {
+	public function get_sortable_columns(): array {
 
 		return [
 			'created'        => [
@@ -181,7 +181,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string
 	 * @since   1.0.0
 	 */
-	function column_cb( $item ) {
+	function column_cb( $item ): string {
 
 		return sprintf(
 			'<input type="checkbox" name="bulk-action[]" value="%s" />',
@@ -255,7 +255,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string
 	 * @since   1.0.0
 	 */
-	protected function column_created( array $item ) {
+	protected function column_created( array $item ): string {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
@@ -293,7 +293,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string|null
 	 * @since   2.0.0
 	 */
-	protected function column_name( array $item ) {
+	protected function column_name( array $item ): ?string {
 
 		$email = isset( $item['email'] ) ? $item['email'] : null;
 
@@ -317,7 +317,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string
 	 * @since   1.0.0
 	 */
-	protected function column_email( array $item ) {
+	protected function column_email( array $item ): string {
 
 		if ( isset( $item['email'] ) ) {
 			return sprintf(
@@ -338,7 +338,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string|void
 	 * @since   1.0.0
 	 */
-	protected function column_value( array $item ) {
+	protected function column_value( array $item ): string {
 
 		switch ( $item['method'] ) {
 			case 'ideal':
@@ -377,7 +377,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	protected function column_type( array $item ) {
+	protected function column_type( array $item ): string {
 
 		return Utils::get_sequence_type( $item['sequence_type'] );
 
@@ -391,7 +391,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string|void
 	 * @since   1.0.0
 	 */
-	protected function column_status( array $item ) {
+	protected function column_status( array $item ): string {
 
 		switch ( $item['status'] ) {
 			case 'paid':
@@ -425,7 +425,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string|void
 	 * @since   2.0.0
 	 */
-	protected function column_order_id( array $item ) {
+	protected function column_order_id( array $item ): string {
 
 		return $item['order_id'] . ( 'test' === $item['mode'] ? ' (' . $item['mode'] . ')' : '' );
 
@@ -439,7 +439,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string
 	 * @since 2.0.2
 	 */
-	protected function column_campaign_label( array $item ) {
+	protected function column_campaign_label( array $item ): string {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
@@ -470,7 +470,7 @@ class TransactionsTable extends WP_List_Table {
 	 * @return array
 	 * @since   1.0.0
 	 */
-	protected function get_views() {
+	protected function get_views(): array {
 
 		$views   = [];
 		$current = ( ! empty( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all' );

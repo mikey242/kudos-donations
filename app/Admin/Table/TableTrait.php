@@ -98,7 +98,7 @@ trait TableTrait {
 	 * @return array
 	 * @since      2.0.0
 	 */
-	public function get_columns() {
+	public function get_columns(): array {
 
 		$columns['cb'] = '<input type="checkbox" />';
 
@@ -112,7 +112,7 @@ trait TableTrait {
 	 * @return array
 	 * @since   1.0.0
 	 */
-	abstract public function fetch_table_data();
+	abstract public function fetch_table_data(): array;
 
 	/**
 	 * Displays the search box.
@@ -121,7 +121,6 @@ trait TableTrait {
 	 * @param string $input_id ID attribute value for the search input field.
 	 *
 	 * @since 3.1.0
-	 *
 	 */
 	public function search_box( $text, $input_id ) {
 
@@ -166,7 +165,7 @@ trait TableTrait {
 		<?php
 	}
 
-	public function get_search_data() {
+	public function get_search_data(): ?array {
 
 		$search = null;
 
@@ -205,7 +204,7 @@ trait TableTrait {
 	 * @return Mixed
 	 * @since      1.0.0
 	 */
-	private function sort_data( array $a, array $b ) {
+	private function sort_data( array $a, array $b ): int {
 
 		// Set defaults.
 		$order_by = $this->_args['orderBy'] ?? 'time';

@@ -11,7 +11,7 @@ interface EntityInterface {
 	 *
 	 * @return string
 	 */
-	public static function get_table_name( bool $prefix = true );
+	public static function get_table_name( bool $prefix = true ): string;
 
 	/**
 	 * Set the entity properties.
@@ -27,13 +27,13 @@ interface EntityInterface {
 	 *
 	 * @return array
 	 */
-	public function to_array();
+	public function to_array(): array;
 
 	/**
 	 * Returns the entity as a string
 	 *
 	 * @return string
 	 */
-	public function __toString();
+	public function __toString(): string;
 
 }

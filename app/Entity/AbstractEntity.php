@@ -54,13 +54,13 @@ abstract class AbstractEntity implements EntityInterface {
 	/**
 	 * Set class properties based on array values
 	 *
-	 * @param array $atts Array of entities properties and values.
+	 * @param array $fields Array of entities properties and values.
 	 *
 	 * @since   2.0.0
 	 */
-	public function set_fields( array $atts ) {
+	public function set_fields( array $fields ) {
 
-		foreach ( $atts as $property => $value ) {
+		foreach ( $fields as $property => $value ) {
 			try {
 				if ( property_exists( static::class, $property ) ) {
 					$this->$property = $value;

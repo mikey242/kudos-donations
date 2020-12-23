@@ -70,7 +70,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.4
 	 */
-	public function fetch_table_data() {
+	public function fetch_table_data(): array {
 
 		$mapper = $this->mapper;
 		$search = $this->get_search_data();
@@ -126,7 +126,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.4
 	 */
-	public function column_names() {
+	public function column_names(): array {
 		return [
 			'date'          => __( 'Date', 'kudos-donations' ),
 			'label'         => __( 'Label', 'kudos-donations' ),
@@ -142,7 +142,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.4
 	 */
-	public function get_hidden_columns() {
+	public function get_hidden_columns(): array {
 		return [
 			'subscription_id',
 			'id',
@@ -155,7 +155,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return array
 	 * @since   2.0.4
 	 */
-	public function get_sortable_columns() {
+	public function get_sortable_columns(): array {
 		return [
 			'date'          => [
 				'date',
@@ -220,7 +220,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return bool
 	 * @since   2.0.4
 	 */
-	protected function delete_record( string $label ) {
+	protected function delete_record( string $label ): bool {
 
 		$labels = Settings::get_setting( 'campaign_labels' );
 		$labels = array_filter(
@@ -242,7 +242,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return string
 	 * @since   2.0.4
 	 */
-	protected function column_cb( $item ) {
+	protected function column_cb( $item ): string {
 		return sprintf(
 			'<input type="checkbox" name="bulk-action[]" value="%s" />',
 			$item['label']
@@ -257,7 +257,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return string
 	 * @since   2.0.4
 	 */
-	protected function column_date( array $item ) {
+	protected function column_date( array $item ): string {
 
 		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
 
@@ -286,7 +286,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return string
 	 * @since 2.0.4
 	 */
-	protected function column_label( array $item ) {
+	protected function column_label( array $item ): string {
 
 		return strtoupper( $item['label'] );
 
@@ -300,7 +300,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return string
 	 * @since 2.0.4
 	 */
-	protected function column_transactions( array $item ) {
+	protected function column_transactions( array $item ): string {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
@@ -318,7 +318,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return string
 	 * @since 2.0.4
 	 */
-	protected function column_total( array $item ) {
+	protected function column_total( array $item ): string {
 
 		$currency = ! empty( $item['currency'] ) ? Utils::get_currency_symbol( $item['currency'] ) : '';
 		$total    = $item['total'];
@@ -335,7 +335,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return string
 	 * @since 2.0.5
 	 */
-	protected function column_last_donation( array $item ) {
+	protected function column_last_donation( array $item ): string {
 
 		return isset( $item['last_donation'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 			strtotime( $item['last_donation'] ) ) : '';

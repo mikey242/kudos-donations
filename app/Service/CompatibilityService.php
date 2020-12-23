@@ -34,7 +34,7 @@ class CompatibilityService {
 	 * @return bool
 	 * @since 2.0.0
 	 */
-	public function init() {
+	public function init(): bool {
 
 		/* Check minimum requirements are met */
 		$this->run_tests();
@@ -69,7 +69,7 @@ class CompatibilityService {
 	 * @return boolean Whether compatible or not
 	 * @since 2.0.0
 	 */
-	public function check_wordpress_version() {
+	public function check_wordpress_version(): bool {
 
 		global $wp_version;
 
@@ -92,7 +92,7 @@ class CompatibilityService {
 	 * @return boolean Whether compatible or not
 	 * @since 2.0.0
 	 */
-	public function check_php() {
+	public function check_php(): bool {
 
 		/* Check PHP version is compatible */
 		if ( ! version_compare( phpversion(), $this->required_php_version, '>=' ) ) {
@@ -122,7 +122,7 @@ class CompatibilityService {
 	 *
 	 * @since 2.0.0
 	 */
-	public function build_notice() {
+	public function build_notice(): array {
 
 		$notice['error']   = __( 'Kudos Donations Installation Problem', 'kudos-donations' );
 		$notice['details'] = "<p>" . __( 'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:',
