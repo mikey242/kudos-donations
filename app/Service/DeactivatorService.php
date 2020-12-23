@@ -27,7 +27,7 @@ class DeactivatorService {
 	 */
 	public static function deactivate() {
 
-		LoggerService::factory()->info( 'Kudos Donations plugin deactivated' );
+		as_unschedule_action('kudos_clear_log');
 
 	}
 
