@@ -27,8 +27,6 @@ class DeactivatorService {
 	 */
 	public static function deactivate() {
 
-		as_unschedule_action('kudos_clear_log');
-
 	}
 
 }

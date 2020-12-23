@@ -107,7 +107,6 @@ e.g:
 
 = 2.1.1 =
 * Fix missing Dutch translations
-* Fix error scheduling kudos_clear_log action
 * Remove unnecessary option to disable Action Scheduler
 
 = 2.1.0 =
