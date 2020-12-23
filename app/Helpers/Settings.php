@@ -244,6 +244,20 @@ class Settings {
 	}
 
 	/**
+	 * Remove specified setting from database
+	 *
+	 * @param string $name
+	 *
+	 * @return bool
+	 * @since 2.1.1
+	 */
+	public static function remove_setting( string $name): bool {
+
+		return delete_option( self::PREFIX . $name );
+
+	}
+
+	/**
 	 * Removes all settings from database
 	 *
 	 * @since 2.0.0
