@@ -3,14 +3,14 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Kudos Donations\n"
-"POT-Creation-Date: 2020-12-21 16:11+0100\n"
+"POT-Creation-Date: 2021-01-02 13:40+0100\n"
 "PO-Revision-Date: 2020-10-09 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: kudos-donations.php\n"
@@ -174,8 +174,7 @@ msgstr ""
 #: app/Admin/Table/TransactionsTable.php:31
 #: app/Admin/Table/TransactionsTable.php:42
 #: app/Admin/Table/TransactionsTable.php:126 templates/lang.php:21
-#: templates/lang.php:43 templates/public/modal/donate.modal.html.twig:38
-#: templates/public/modal/donate.modal.html.twig:105
+#: templates/lang.php:43
 msgid "Name"
 msgstr ""
 
@@ -188,12 +187,12 @@ msgid "Email"
 msgstr ""
 
 #: app/Admin/Table/CampaignsTable.php:39 app/Admin/Table/DonorsTable.php:42
-#: templates/lang.php:37 templates/public/modal/donate.modal.html.twig:88
+#: templates/lang.php:37
 msgid "Street"
 msgstr ""
 
 #: app/Admin/Table/CampaignsTable.php:40 app/Admin/Table/CampaignsTable.php:134
-#: templates/lang.php:13 templates/emails/receipt.html.twig:35
+#: templates/lang.php:13
 msgid "Total"
 msgstr ""
 
@@ -212,7 +211,6 @@ msgstr ""
 #: app/Admin/Table/SubscriptionsTable.php:38
 #: app/Admin/Table/SubscriptionsTable.php:123
 #: app/Admin/Table/TransactionsTable.php:125 templates/lang.php:10
-#: templates/emails/receipt.html.twig:15
 msgid "Date"
 msgstr ""
 
@@ -235,28 +233,24 @@ msgid "Added"
 msgstr ""
 
 #: app/Admin/Table/DonorsTable.php:35 app/Admin/Table/DonorsTable.php:102
-#: templates/lang.php:34 templates/public/modal/donate.modal.html.twig:81
+#: templates/lang.php:34
 msgid "Address"
 msgstr ""
 
 #: app/Admin/Table/DonorsTable.php:36 app/Admin/Table/TransactionsTable.php:33
 #: app/Admin/Table/TransactionsTable.php:131 templates/lang.php:9
-#: templates/emails/receipt.html.twig:13
 msgid "Order ID"
 msgstr ""
 
 #: app/Admin/Table/DonorsTable.php:43 templates/lang.php:38
-#: templates/public/modal/donate.modal.html.twig:89
 msgid "Postcode"
 msgstr ""
 
 #: app/Admin/Table/DonorsTable.php:44 templates/lang.php:39
-#: templates/public/modal/donate.modal.html.twig:90
 msgid "City"
 msgstr ""
 
 #: app/Admin/Table/DonorsTable.php:45 templates/lang.php:40
-#: templates/public/modal/donate.modal.html.twig:91
 msgid "Country"
 msgstr ""
 
@@ -285,10 +279,6 @@ msgstr ""
 #: app/Admin/Table/TransactionsTable.php:39
 #: app/Admin/Table/TransactionsTable.php:128 templates/lang.php:12
 #: templates/lang.php:20 templates/lang.php:44
-#: templates/emails/receipt.html.twig:25
-#: templates/public/modal/donate.modal.html.twig:27
-#: templates/public/modal/donate.modal.html.twig:35
-#: templates/public/modal/donate.modal.html.twig:109
 msgid "Amount"
 msgstr ""
 
@@ -310,7 +300,6 @@ msgid "Currency"
 msgstr ""
 
 #: app/Admin/Table/SubscriptionsTable.php:51 templates/lang.php:25
-#: templates/public/modal/donate.modal.html.twig:56
 msgid "Subscription"
 msgstr ""
 
@@ -319,13 +308,11 @@ msgid "Subscription Id"
 msgstr ""
 
 #: app/Admin/Table/SubscriptionsTable.php:311
-#: app/Admin/Table/SubscriptionsTable.php:439 templates/lang.php:55
-#: templates/public/modal/embeds/_tab.html.twig:22
+#: app/Admin/Table/SubscriptionsTable.php:439 templates/lang.php:54
 msgid "Cancel"
 msgstr ""
 
 #: app/Admin/Table/SubscriptionsTable.php:349 templates/lang.php:31
-#: templates/public/modal/donate.modal.html.twig:67
 msgid "Continuous"
 msgstr ""
 
@@ -345,17 +332,17 @@ msgid "All"
 msgstr ""
 
 #: app/Admin/Table/SubscriptionsTable.php:464 app/Helpers/Utils.php:160
-#: templates/lang.php:28 templates/public/modal/donate.modal.html.twig:62
+#: templates/lang.php:28
 msgid "Yearly"
 msgstr ""
 
 #: app/Admin/Table/SubscriptionsTable.php:470 app/Helpers/Utils.php:164
-#: templates/lang.php:29 templates/public/modal/donate.modal.html.twig:63
+#: templates/lang.php:29
 msgid "Quarterly"
 msgstr ""
 
 #: app/Admin/Table/SubscriptionsTable.php:477 app/Helpers/Utils.php:162
-#: templates/lang.php:30 templates/public/modal/donate.modal.html.twig:64
+#: templates/lang.php:30
 msgid "Monthly"
 msgstr ""
 
@@ -365,11 +352,11 @@ msgstr ""
 msgid "No %s found."
 msgstr ""
 
-#: app/Admin/Table/TableTrait.php:154
+#: app/Admin/Table/TableTrait.php:153
 msgid "Select search field"
 msgstr ""
 
-#: app/Admin/Table/TableTrait.php:157
+#: app/Admin/Table/TableTrait.php:156
 msgid "Search field"
 msgstr ""
 
@@ -391,7 +378,7 @@ msgstr ""
 
 #: app/Admin/Table/TransactionsTable.php:46
 #: app/Admin/Table/TransactionsTable.php:129 dist/js/kudos-button-block.js:1
-#: templates/lang.php:45 templates/public/modal/donate.modal.html.twig:111
+#: templates/lang.php:45
 msgid "Type"
 msgstr ""
 
@@ -513,7 +500,6 @@ msgid "Payment cancelled"
 msgstr ""
 
 #: app/Front/Front.php:555 templates/lang.php:14
-#: templates/emails/receipt.html.twig:45
 msgid "Thanks"
 msgstr ""
 
@@ -537,7 +523,6 @@ msgstr ""
 
 #: app/Helpers/Utils.php:139 app/Helpers/Utils.php:166
 #: dist/js/kudos-public.js:1 templates/lang.php:23
-#: templates/public/modal/donate.modal.html.twig:43
 msgid "One-off"
 msgstr ""
 
@@ -546,7 +531,6 @@ msgid "Recurring (first payment)"
 msgstr ""
 
 #: app/Helpers/Utils.php:143 dist/js/kudos-public.js:1 templates/lang.php:24
-#: templates/public/modal/donate.modal.html.twig:44
 msgid "Recurring"
 msgstr ""
 
@@ -580,7 +564,6 @@ msgid ""
 "the issue(s) below to continue:"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
 #: app/Service/MailerService.php:29
 msgid "Kudos Donations"
 msgstr ""
@@ -867,11 +850,11 @@ msgid ""
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Privacy Policy"
+msgid "Allows donors to donate automatically at regular intervals."
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Allows donors to donate automatically at regular intervals."
+msgid "Terms and Conditions"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -942,8 +925,7 @@ msgstr ""
 msgid "Button"
 msgstr ""
 
-#: dist/js/kudos-button-block.js:1 templates/lang.php:49
-#: templates/public/modal/donate.modal.html.twig:121
+#: dist/js/kudos-button-block.js:1 templates/lang.php:48
 msgid "Donate"
 msgstr ""
 
@@ -994,10 +976,6 @@ msgid "Add campaign"
 msgstr ""
 
 #: dist/js/kudos-public.js:1
-msgid "This field is required"
-msgstr ""
-
-#: dist/js/kudos-public.js:1
 msgid "Your name is required"
 msgstr ""
 
@@ -1034,121 +1012,101 @@ msgid "Subscriptions must be more than one payment"
 msgstr ""
 
 #: dist/js/kudos-public.js:1
-msgid "You must agree to our privacy policy before donating"
+msgid "You must agree to our terms and conditions before donating"
 msgstr ""
 
-#: templates/lang.php:3 templates/emails/base.html.twig:451
+#: dist/js/kudos-public.js:1
+msgid "This field is required"
+msgstr ""
+
+#: templates/lang.php:3
 msgid "All rights reserved."
 msgstr ""
 
-#: templates/lang.php:6 templates/emails/receipt.html.twig:4
+#: templates/lang.php:6
 msgid "This is a receipt for your recent donation on"
 msgstr ""
 
-#: templates/lang.php:7 templates/emails/receipt.html.twig:8
+#: templates/lang.php:7
 msgid "Hi"
 msgstr ""
 
-#: templates/lang.php:8 templates/emails/receipt.html.twig:9
+#: templates/lang.php:8
 msgid "Thanks for your donation. This email is a receipt for your records."
 msgstr ""
 
-#: templates/lang.php:11 templates/emails/receipt.html.twig:22
+#: templates/lang.php:11
 msgid "Description"
 msgstr ""
 
-#: templates/lang.php:15 templates/emails/receipt.html.twig:52
+#: templates/lang.php:15
 msgid "Want to cancel your subscription?"
 msgstr ""
 
-#: templates/lang.php:16 templates/emails/receipt.html.twig:53
+#: templates/lang.php:16
 msgid "Click here"
 msgstr ""
 
-#: templates/lang.php:19 templates/public/modal/donate.modal.html.twig:27
+#: templates/lang.php:19
 msgid "Other"
 msgstr ""
 
-#: templates/lang.php:22 templates/public/modal/donate.modal.html.twig:39
-#: templates/public/modal/donate.modal.html.twig:107
+#: templates/lang.php:22
 msgid "E-mail address"
 msgstr ""
 
-#: templates/lang.php:26 templates/public/modal/donate.modal.html.twig:57
+#: templates/lang.php:26
 msgid "How often would you like to donate?"
 msgstr ""
 
-#: templates/lang.php:27 templates/public/modal/donate.modal.html.twig:61
+#: templates/lang.php:27
 msgid "Payment frequency"
 msgstr ""
 
-#: templates/lang.php:32 templates/public/modal/donate.modal.html.twig:70
+#: templates/lang.php:32
 #, php-format
 msgid "%u year"
 msgid_plural "%u years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/lang.php:33 templates/public/modal/donate.modal.html.twig:73
+#: templates/lang.php:33
 msgid "Donation duration"
 msgstr ""
 
-#: templates/lang.php:35 templates/public/modal/donate.modal.html.twig:82
+#: templates/lang.php:35
 msgid "Please fill in you address"
 msgstr ""
 
-#: templates/lang.php:36 templates/public/modal/donate.modal.html.twig:82
+#: templates/lang.php:36
 msgid "optional"
 msgstr ""
 
-#: templates/lang.php:41 templates/public/modal/donate.modal.html.twig:99
+#: templates/lang.php:41
 msgid "Payment"
 msgstr ""
 
-#: templates/lang.php:42 templates/public/modal/donate.modal.html.twig:100
+#: templates/lang.php:42
 msgid "By clicking donate you agree to the following payment"
 msgstr ""
 
-#: templates/lang.php:46 templates/public/modal/donate.modal.html.twig:115
+#: templates/lang.php:46
 #, php-format
 msgid "I agree with the %s"
 msgstr ""
 
-#: templates/lang.php:47 templates/public/modal/donate.modal.html.twig:116
-#: templates/public/modal/donate.modal.html.twig:117
-msgid "privacy policy"
+#: templates/lang.php:47
+msgid "terms and conditions"
 msgstr ""
 
-#: templates/lang.php:48
-msgid "I agree with the privacy policy."
-msgstr ""
-
-#: templates/lang.php:52 templates/public/modal/message.modal.html.twig:12
+#: templates/lang.php:51
 msgid "Ok"
 msgstr ""
 
-#: templates/lang.php:56 templates/public/modal/embeds/_tab.html.twig:20
+#: templates/lang.php:55
 msgid "Previous tab"
 msgstr ""
 
-#: templates/lang.php:57 templates/public/modal/embeds/_tab.html.twig:24
+#: templates/lang.php:56
 msgid "Next"
-msgstr ""
-
-#. Plugin URI of the plugin/theme
-msgid "https://gitlab.iseard.media/michael/kudos-donations"
-msgstr ""
-
-#. Description of the plugin/theme
-msgid ""
-"Add a donation button to any page on your website. Easy & fast setup. Works "
-"with Mollie payments."
-msgstr ""
-
-#. Author of the plugin/theme
-msgid "Iseard Media"
-msgstr ""
-
-#. Author URI of the plugin/theme
-msgid "https://iseard.media"
 msgstr ""

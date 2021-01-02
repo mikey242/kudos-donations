@@ -68,7 +68,7 @@ $(() => {
                 totalPayments: __('Subscriptions must be more than one payment', 'kudos-donations')
             },
             avg: {
-                required: __('You must agree to our privacy policy before donating', 'kudos-donations')
+                required: __('You must agree to our terms and conditions before donating', 'kudos-donations')
             }
         },
     });
