@@ -62,6 +62,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			this.onChangeBody = this.onChangeBody.bind(this);
 			this.onChangeCampaignLabel = this.onChangeCampaignLabel.bind(this);
 			this.onChangeAmountType = this.onChangeAmountType.bind(this);
+			this.onChangeDonationType = this.onChangeDonationType.bind(this);
 			this.onChangeFixedAmounts = this.onChangeFixedAmounts.bind(this);
 			this.state = {
 				settings: {},
@@ -148,6 +149,10 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			this.props.setAttributes( { amount_type: newValue } );
 		};
 
+		onChangeDonationType( newValue ) {
+			this.props.setAttributes( { donation_type: newValue } );
+		};
+
 		onChangeFixedAmounts( newValue ) {
 			let valuesArray = newValue.split(',');
 			if(valuesArray.length <= 4) {
@@ -198,9 +203,9 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 								help={__("The type of donation amount available", 'kudos-donations')}
 								selected={ this.props.attributes.amount_type }
 								options={ [
-									{ label: 'Open', value: 'open' },
-									{ label: 'Fixed', value: 'fixed' },
-									{ label: 'Both', value: 'both' },
+									{ label: __('Open', 'kudos-donations'), value: 'open' },
+									{ label: __('Fixed', 'kudos-donations'), value: 'fixed' },
+									{ label: __('Both', 'kudos-donations'), value: 'both' },
 								] }
 								onChange={ this.onChangeAmountType }
 							/>
@@ -217,6 +222,23 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 								</Fragment>
 
 								: '' }
+
+						</PanelBody>
+
+						<PanelBody
+							title={ __( 'Donation type', 'kudos-donations' ) }
+							initialOpen={ false }
+						>
+							<RadioControl
+								// label={ __( 'Type', 'kudos-donations' ) }
+								selected={ this.props.attributes.donation_type }
+								options={ [
+									{ label: __('One-off', 'kudos-donations'), value: 'oneoff' },
+									{ label: __('Subscription', 'kudos-donations'), value: 'recurring' },
+									{ label: __('Both', 'kudos-donations'), value: 'open' },
+								] }
+								onChange={ this.onChangeDonationType }
+							/>
 
 						</PanelBody>
 

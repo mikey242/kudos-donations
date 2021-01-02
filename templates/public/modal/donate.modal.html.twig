@@ -38,13 +38,15 @@
                     {{ text('name', __('Name', 'kudos-donations')) }}
                     {{ text('email_address', __('E-mail address', 'kudos-donations'), 'email') }}
 
-                    {% if(subscription.enabled) %}
+                    {% if(donation_type == 'oneoff') %}
+                        <input required checked type="hidden" name="payment_frequency" value="oneoff"/>
+                    {% elseif(donation_type == 'recurring') %}
+                        <input required checked type="hidden" name="payment_frequency" value="recurring"/>
+                    {% else %}
                         {{ radio('payment_frequency', {
                             'oneoff': __('One-off', 'kudos-donations'),
                             'recurring': __('Recurring', 'kudos-donations')
                         }, 'oneoff') }}
-                    {% else %}
-                        <input required checked type="hidden" name="payment_frequency" value="oneoff"/>
                     {% endif %}
 
                 {% endblock %}

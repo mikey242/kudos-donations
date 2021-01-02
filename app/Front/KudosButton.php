@@ -60,6 +60,10 @@ class KudosButton {
 	 * @var string
 	 */
 	private $campaign_label;
+	/**
+	 * @var mixed
+	 */
+	private $donation_type;
 
 	/**
 	 * KudosButton constructor.
@@ -76,6 +80,7 @@ class KudosButton {
 		$this->label          = $atts['button_label'];
 		$this->alignment      = $atts['alignment'];
 		$this->amount_type    = $atts['amount_type'];
+		$this->donation_type  = $atts['donation_type'];
 		$this->fixed_amounts  = $atts['fixed_amounts'];
 		$this->campaign_label = $atts['campaign_label'];
 		$this->id             = uniqid( 'kudos_modal-' );
@@ -126,6 +131,7 @@ class KudosButton {
 				'type'         => in_array( $this->amount_type, $allowed_types, true ) ? $this->amount_type : 'open',
 				'fixed_amounts' => array_slice(explode( ',', $this->fixed_amounts ),0, 4),
 			],
+			'donation_type' => $this->donation_type,
 			'campaign_label' => $this->campaign_label,
 			'payment_by'     => __( 'Secure payment by', 'kudos-donations' ),
 		];
