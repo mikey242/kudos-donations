@@ -14,7 +14,7 @@ const MollieApiModePanel = (props ) => {
 
 	return (
 		<PanelBody
-			title={ __( 'API Mode', 'kudos-donations' ) }
+			title={ __( 'API mode', 'kudos-donations' ) }
 			initialOpen={ true }
 			{...props}
 		>
@@ -31,9 +31,9 @@ const MollieApiModePanel = (props ) => {
 				<PanelRow>
 					<ButtonGroup>
 						<Btn
+							className="kd-rounded-l-sm"
 							isPrimary={ 'test' === selected }
 							isSecondary={ 'test' !== selected }
-							// disabled={ 'test' === selected }
 							isPressed={ 'test' === selected }
 							onClick={ () =>
 								handleChange( '_kudos_mollie_api_mode', 'test' )
@@ -42,6 +42,7 @@ const MollieApiModePanel = (props ) => {
 							{ 'Test' }
 						</Btn>
 						<Btn
+							className="kd-rounded-r-sm"
 							isPrimary={ 'live' === selected }
 							isSecondary={ 'live' !== selected }
 							// disabled={ 'live' === selected }

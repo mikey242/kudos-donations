@@ -5,7 +5,7 @@ const CustomReturnPanel = ( props ) => {
 
 	return (
 		<PanelBody
-			title={ __( 'Custom Return URL', 'kudos-donations' ) }
+			title={ __( 'Custom return URL', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 

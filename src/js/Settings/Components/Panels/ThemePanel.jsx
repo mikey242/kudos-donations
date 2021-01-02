@@ -10,7 +10,7 @@ const ThemePanel = (props ) => {
 
 	return (
 		<PanelBody
-			title={ __( 'Theme Colour', 'kudos-donations' ) }
+			title={ __( 'Theme colour', 'kudos-donations' ) }
 			initialOpen={ true }
 		>
 

@@ -12,7 +12,7 @@ const {Fragment} = wp.element;
 const EmailSettingsPanel = ( props ) => {
 
 	return (
-		<PanelBody title={ __( 'Email Settings', 'kudos-donations' ) } initialOpen={ false }>
+		<PanelBody title={ __( 'Email settings', 'kudos-donations' ) } initialOpen={ false }>
 
 			<ToggleControl
 				label={ __('Use custom email settings', 'kudos-donations') }

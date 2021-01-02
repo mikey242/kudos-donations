@@ -4,7 +4,7 @@ const { PanelBody, ToggleControl } = wp.components;
 const DebugModePanel = ( props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Debug Mode', 'kudos-donations' ) }
+			title={ __( 'Debug mode', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 			

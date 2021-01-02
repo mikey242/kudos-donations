@@ -4,7 +4,7 @@ const { PanelBody, TextControl, ToggleControl } = wp.components;
 const EmailReceiptsPanel = ( props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Email Receipts', 'kudos-donations' ) }
+			title={ __( 'Email receipts', 'kudos-donations' ) }
 			initialOpen={ true }
 		>
 

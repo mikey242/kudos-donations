@@ -4,7 +4,7 @@ const { PanelBody, TextControl} = wp.components;
 const TermsPanel = (props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Terms and Conditions', 'kudos-donations' ) }
+			title={ __( 'Terms and conditions', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 

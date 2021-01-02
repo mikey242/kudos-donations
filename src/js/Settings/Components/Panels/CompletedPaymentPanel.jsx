@@ -7,7 +7,7 @@ const { Fragment } = wp.element;
 const CompletedPaymentPanel = (props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Completed Payment', 'kudos-donations' ) }
+			title={ __( 'Completed payment', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 

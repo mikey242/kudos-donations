@@ -4,7 +4,7 @@ const { PanelBody, ToggleControl, CheckboxControl, PanelRow } = wp.components;
 const AddressFieldPanel = (props ) => {
 	return (
 		<PanelBody
-			title={ __( 'Address Field', 'kudos-donations' ) }
+			title={ __( 'Address field', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 

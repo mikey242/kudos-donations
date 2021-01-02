@@ -57,7 +57,7 @@ const TestEmailPanel = ( props ) => {
 
 	return (
 		<PanelBody
-			title={ __( 'Send Test Email', 'kudos-donations' ) }
+			title={ __( 'Send test email', 'kudos-donations' ) }
 			initialOpen={ false }
 		>
 
