@@ -3,7 +3,6 @@
 namespace Kudos\Service;
 
 use DateTimeZone;
-use Kudos\Helpers\Utils;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as Monolog;
 
