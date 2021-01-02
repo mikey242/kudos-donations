@@ -43,10 +43,9 @@ __('By clicking donate you agree to the following payment', 'kudos-donations');
 __('Name', 'kudos-donations');
 __('Amount', 'kudos-donations');
 __('Type', 'kudos-donations');
-__( 'I agree with the %s', "kudos-donations" );
-__( "privacy policy","kudos-donations" );
-__( 'I agree with the privacy policy.', "kudos-donations" );
-__('Donate', 'kudos-donations');
+__( 'I agree with the %s', 'kudos-donations' );
+__( 'terms and conditions','kudos-donations' );
+__( 'Donate', 'kudos-donations' );
 
 // Template: "templates/public/modal/message.modal.html.twig"
 __( 'Ok', 'kudos-donations' );

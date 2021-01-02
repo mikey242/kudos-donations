@@ -12,7 +12,7 @@ import { TestEmailPanel } from './Components/Panels/TestEmailPanel';
 import { MollieApiKeysPanel } from './Components/Panels/MollieApiKeysPanel';
 import { MollieApiModePanel } from './Components/Panels/MollieApiModePanel';
 import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
-import { PrivacyPolicyPanel } from './Components/Panels/PrivacyPolicyPanel';
+import { TermsPanel } from './Components/Panels/TermsPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
@@ -294,7 +294,7 @@ class KudosAdmin extends Component {
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
-						<PrivacyPolicyPanel
+						<TermsPanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>

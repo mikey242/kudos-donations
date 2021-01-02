@@ -115,7 +115,7 @@ class Settings {
 					'show_in_rest' => true,
 					'default'      => true,
 				],
-				'privacy_link'          => [
+				'terms_link'            => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => null,

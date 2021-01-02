@@ -44,6 +44,15 @@ class ActivatorService {
 
 		if ( $old_version ) {
 
+			if ( version_compare( $old_version, '2.1.2', '<' ) ) {
+				$link = Settings::get_setting('privacy_link');
+
+				if($link) {
+					Settings::update_setting('terms_link', $link);
+					Settings::remove_setting('privacy_link');
+				}
+			}
+
 			if ( version_compare( $old_version, '2.1.1', '<' ) ) {
 				$logger->info( 'Upgrading to version 2.1.1', [ 'previous_version' => $old_version ] );
 				Settings::remove_setting('action_scheduler');

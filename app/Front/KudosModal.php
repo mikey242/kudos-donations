@@ -79,7 +79,7 @@ class KudosModal {
 
 				// Global settings.
 				'vendor'       => Settings::get_setting( 'payment_vendor' ),
-				'privacy_link' => Settings::get_setting( "privacy_link" ),
+				'terms_link' => Settings::get_setting( 'terms_link' ),
 				'subscription' => [
 					'enabled' => Settings::get_setting( 'subscription_enabled' ),
 				],

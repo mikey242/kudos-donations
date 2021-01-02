@@ -111,11 +111,14 @@
                         <p><strong>{{ __('Type', 'kudos-donations') }}: </strong><span class="summary_frequency"></span>
                         </p>
                     </div>
-                    {{ checkbox('avg',
-                        __( 'I agree with the %s', "kudos-donations" ) | format(
-                            privacy_link    ? '<a class="kd-text-theme hover:kd-text-theme-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' | format(privacy_link ,__( "privacy policy","kudos-donations" ))
-                                            : __( "privacy policy","kudos-donations" ))
-                    ) }}
+
+                    {% if (terms_link) %}
+                    {{ checkbox('avg', __( 'I agree with the %s', 'kudos-donations' ) |
+                        format( '<a class="kd-text-theme hover:kd-text-theme-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' |
+                            format( terms_link ,__( 'terms and conditions', 'kudos-donations' ) )
+                    )) }}
+                    {% endif %}
+
                 {% endblock %}
                 {% block next_button %}
                     {{ button(__('Donate', 'kudos-donations'), 'primary', 'submit', {'class': 'kudos_submit kd-ml-3'}) }}
