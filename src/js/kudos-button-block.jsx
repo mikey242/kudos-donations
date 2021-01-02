@@ -230,12 +230,11 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 							initialOpen={ false }
 						>
 							<RadioControl
-								// label={ __( 'Type', 'kudos-donations' ) }
 								selected={ this.props.attributes.donation_type }
 								options={ [
 									{ label: __('One-off', 'kudos-donations'), value: 'oneoff' },
 									{ label: __('Subscription', 'kudos-donations'), value: 'recurring' },
-									{ label: __('Both', 'kudos-donations'), value: 'open' },
+									{ label: __('Both', 'kudos-donations'), value: 'both' },
 								] }
 								onChange={ this.onChangeDonationType }
 							/>

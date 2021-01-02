@@ -327,7 +327,7 @@ class Front {
 						'welcome_text'   => __( 'Your support is greatly appreciated and will help to keep us going.',
 							'kudos-donations' ),
 						'amount_type'    => 'open',
-						'donation_type'  => 'open',
+						'donation_type'  => 'both',
 						'fixed_amounts'  => '5, 10, 20, 50',
 						'campaign_label' => '',
 						'alignment'      => 'none',
@@ -374,7 +374,7 @@ class Front {
 					],
 					'donation_type'    => [
 						'type'    => 'string',
-						'default' => 'open',
+						'default' => 'both',
 					],
 					'fixed_amounts'  => [
 						'type'    => 'string',
