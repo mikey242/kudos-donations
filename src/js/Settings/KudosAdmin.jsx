@@ -16,8 +16,7 @@ import { TermsPanel } from './Components/Panels/TermsPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
-import { SubscriptionPanel } from "./Components/Panels/SubscriptionPanel"
-import {Btn} from "./Components/Btn";
+import { Btn } from "./Components/Btn";
 
 const { __ } = wp.i18n;
 
@@ -279,10 +278,6 @@ class KudosAdmin extends Component {
 							handleInputChange={this.handleInputChange}
 						/>
 						<AddressFieldPanel
-							{...this.state}
-							handleInputChange={this.handleInputChange}
-						/>
-						<SubscriptionPanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
