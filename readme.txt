@@ -105,6 +105,8 @@ e.g:
 
 == Changelog ==
 
+= 2.1.2 =
+
 = 2.1.1 =
 * Fix missing Dutch translations
 * Remove unnecessary option to disable Action Scheduler
