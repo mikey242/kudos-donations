@@ -46,6 +46,7 @@ class ActivatorService {
 
 			if ( version_compare( $old_version, '2.1.2', '<' ) ) {
 				$link = Settings::get_setting('privacy_link');
+				Settings::remove_setting('subscription_enabled');
 
 				if($link) {
 					Settings::update_setting('terms_link', $link);
