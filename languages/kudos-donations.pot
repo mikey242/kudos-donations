@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Kudos Donations\n"
-"POT-Creation-Date: 2021-01-02 13:40+0100\n"
+"POT-Creation-Date: 2021-01-02 14:47+0100\n"
 "PO-Revision-Date: 2020-10-09 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -50,7 +50,6 @@ msgstr ""
 
 #: app/Admin/Admin.php:175 app/Admin/Table/SubscriptionsTable.php:52
 #: app/Admin/partials/kudos-admin-subscriptions.php:42
-#: dist/js/kudos-admin-settings.js:1
 msgid "Subscriptions"
 msgstr ""
 
@@ -146,7 +145,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: app/Admin/Admin.php:494 app/Admin/partials/kudos-admin-subscriptions.php:19
-#: app/Front/Front.php:496
+#: app/Front/Front.php:501
 msgid "Subscription cancelled"
 msgstr ""
 
@@ -299,7 +298,8 @@ msgstr ""
 msgid "Currency"
 msgstr ""
 
-#: app/Admin/Table/SubscriptionsTable.php:51 templates/lang.php:25
+#: app/Admin/Table/SubscriptionsTable.php:51 dist/js/kudos-button-block.js:1
+#: templates/lang.php:25
 msgid "Subscription"
 msgstr ""
 
@@ -396,7 +396,7 @@ msgid "Paid"
 msgstr ""
 
 #: app/Admin/Table/TransactionsTable.php:401
-#: app/Admin/Table/TransactionsTable.php:497
+#: app/Admin/Table/TransactionsTable.php:497 dist/js/kudos-button-block.js:1
 msgid "Open"
 msgstr ""
 
@@ -465,64 +465,65 @@ msgstr ""
 msgid "Error creating Mollie payment. Please try again later."
 msgstr ""
 
-#: app/Front/Front.php:325 app/Front/Front.php:351
+#: app/Front/Front.php:325 app/Front/Front.php:352
 msgid "Donate now"
 msgstr ""
 
-#: app/Front/Front.php:326 app/Front/Front.php:363
+#: app/Front/Front.php:326 app/Front/Front.php:364
 msgid "Support us!"
 msgstr ""
 
-#: app/Front/Front.php:327 app/Front/Front.php:367
+#: app/Front/Front.php:327 app/Front/Front.php:368
 msgid "Your support is greatly appreciated and will help to keep us going."
 msgstr ""
 
-#: app/Front/Front.php:419
+#: app/Front/Front.php:424
 msgid "Mollie not connected"
 msgstr ""
 
-#: app/Front/Front.php:497
+#: app/Front/Front.php:502
 msgid ""
 "We will no longer be taking payments for this subscription. Thank you for "
 "your contributions."
 msgstr ""
 
-#: app/Front/Front.php:508
+#: app/Front/Front.php:513
 msgid "Link expired"
 msgstr ""
 
-#: app/Front/Front.php:509
+#: app/Front/Front.php:514
 msgid "Sorry, this link is no longer valid."
 msgstr ""
 
-#: app/Front/Front.php:552
+#: app/Front/Front.php:557
 msgid "Payment cancelled"
 msgstr ""
 
-#: app/Front/Front.php:555 templates/lang.php:14
+#: app/Front/Front.php:560 templates/lang.php:14
 msgid "Thanks"
 msgstr ""
 
-#: app/Front/Front.php:556
+#: app/Front/Front.php:561
 msgid "Your donation will be processed soon."
 msgstr ""
 
-#: app/Front/KudosButton.php:130
+#: app/Front/KudosButton.php:136
 msgid "Secure payment by"
 msgstr ""
 
-#: app/Helpers/Settings.php:132
+#: app/Helpers/Settings.php:127
 msgid "Thank you!"
 msgstr ""
 
 #. translators: %s: Value of donation.
-#: app/Helpers/Settings.php:140
+#: app/Helpers/Settings.php:135
 #, php-format
 msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr ""
 
 #: app/Helpers/Utils.php:139 app/Helpers/Utils.php:166
-#: dist/js/kudos-public.js:1 templates/lang.php:23
+#: dist/js/kudos-button-block.js:1 dist/js/kudos-public.js:1
+#: templates/lang.php:23
 msgid "One-off"
 msgstr ""
 
@@ -639,7 +640,7 @@ msgid "not-connected"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Address Field"
+msgid "Address field"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -651,7 +652,7 @@ msgid "Required"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Completed Payment"
+msgid "Completed payment"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -681,7 +682,7 @@ msgid ""
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Custom Return URL"
+msgid "Custom return URL"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -703,7 +704,7 @@ msgid "e.g https://mywebsite.com/thanks"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Debug Mode"
+msgid "Debug mode"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -715,7 +716,7 @@ msgid "This will enable the debug logging and a debug menu found under Kudos."
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Email Receipts"
+msgid "Email receipts"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -737,7 +738,7 @@ msgid "Leave blank to disable."
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Email Settings"
+msgid "Email settings"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -815,7 +816,7 @@ msgid ""
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "API Keys"
+msgid "API keys"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -839,7 +840,7 @@ msgid "Get API Key(s)"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "API Mode"
+msgid "API mode"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -850,11 +851,7 @@ msgid ""
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Allows donors to donate automatically at regular intervals."
-msgstr ""
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Terms and Conditions"
+msgid "Terms and conditions"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -862,7 +859,7 @@ msgid "Invalid email address"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Send Test Email"
+msgid "Send test email"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -882,7 +879,7 @@ msgid "Sending"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Theme Colour"
+msgid "Theme colour"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
@@ -954,11 +951,23 @@ msgid "The type of donation amount available"
 msgstr ""
 
 #: dist/js/kudos-button-block.js:1
+msgid "Fixed"
+msgstr ""
+
+#: dist/js/kudos-button-block.js:1
+msgid "Both"
+msgstr ""
+
+#: dist/js/kudos-button-block.js:1
 msgid "Amounts"
 msgstr ""
 
 #: dist/js/kudos-button-block.js:1
 msgid "Enter a comma separated list of values to use. Maximum of four numbers."
+msgstr ""
+
+#: dist/js/kudos-button-block.js:1
+msgid "Donation type"
 msgstr ""
 
 #: dist/js/kudos-button-block.js:1
