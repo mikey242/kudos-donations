@@ -82,11 +82,12 @@ To get started add the Kudos Donations shortcode:
 
 Here is a list of the shortcode attributes:
 
-* *button_label* = The label to display for the button
+* *button_label* = The label to display for the button.
 * *alignment* = Button alignment (left, center, right).
-* *modal_title* = The welcome title for the popup
-* *welcome_text* = The welcome text for the popup
-* *amount_type* = Can be 'fixed', 'open' or 'both'
+* *modal_title* = The welcome title for the popup.
+* *welcome_text* = The welcome text for the popup.
+* *amount_type* = Can be 'fixed', 'open' or 'both'. Default is 'open'.
+* *donation_type = Can be 'oneoff', 'recurring' or 'both'. Default is 'both'.
 * *fixed_amounts* = Comma separated list of amounts to use (5,10,15,20). Maximum 4 values.
 * *campaign_label* = Name of the campaign to use for this button.
 
@@ -106,6 +107,10 @@ e.g:
 == Changelog ==
 
 = 2.1.2 =
+* Add ability to change donation type (subscription, one-off or both) to each button
+* Terms and conditions checkbox not shown if no URL provided in settings
+* Remove hook for clearing log as this did not work consistently
+* Various text/translation fixes
 
 = 2.1.1 =
 * Fix missing Dutch translations
