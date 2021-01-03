@@ -37,7 +37,7 @@ const ImportSettingsPanel = (props) => {
                     className={ "is-primary" }
                     onChange={ (e) => importSettings(e) }
                 >
-                    Upload
+                    { __('Upload', 'kudos-donations') }
                 </FormFileUpload>
             </BaseControl>
         </PanelBody>
