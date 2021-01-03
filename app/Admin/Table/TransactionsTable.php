@@ -28,9 +28,10 @@ class TransactionsTable extends WP_List_Table {
 		$this->table  = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
-			'name'     => __( 'Name', 'kudos-donations' ),
-			'email'    => __( 'Email', 'kudos-donations' ),
-			'order_id' => __( 'Order ID', 'kudos-donations' ),
+			'name'              => __( 'Name', 'kudos-donations' ),
+			'email'             => __( 'Email', 'kudos-donations' ),
+			'campaign_label'    => __( 'Campaign', 'kudos-donations' ),
+			'order_id'          => __( 'Order ID', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [

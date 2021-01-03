@@ -304,7 +304,7 @@ class CampaignsTable extends WP_List_Table {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-transactions&s=%s' ), rawurlencode( $item['label'] ) ),
+			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_label&s=%s' ), rawurlencode( $item['label'] ) ),
 			strtoupper( $item['transactions'] )
 		);
 

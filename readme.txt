@@ -111,6 +111,7 @@ e.g:
 * Add ability to export/import settings
 * Terms and conditions checkbox not shown if no URL provided in settings
 * Remove hook for clearing log as this did not work consistently
+* Fix transactions link on campaigns page
 * Various text/translation fixes
 
 = 2.1.1 =
