@@ -108,7 +108,7 @@ e.g:
 
 = 2.1.2 =
 * Add ability to change donation type (subscription, one-off or both) to each button
-* Add ability to export/import the settings
+* Add ability to export/import settings
 * Terms and conditions checkbox not shown if no URL provided in settings
 * Remove hook for clearing log as this did not work consistently
 * Various text/translation fixes
