@@ -1,7 +1,7 @@
 const { __ } = wp.i18n;
 const { PanelBody, ExternalLink, PanelRow, TextControl } = wp.components;
 
-const MollieApiKeysPanel = (props ) => {
+const MollieApiKeysPanel = ( props ) => {
 	
 	const handleChange = ( id, value ) => {
 		props.mollieChanged();

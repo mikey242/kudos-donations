@@ -17,6 +17,8 @@ import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
 import { Btn } from "./Components/Btn";
+import { ExportSettingsPanel } from "./Components/Panels/ExportSettingsPanel"
+import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
 
 const { __ } = wp.i18n;
 
@@ -161,8 +163,14 @@ class KudosAdmin extends Component {
 		wp.api.loadPromise.then( () => {
 			this.settings = new wp.api.models.Settings();
 			this.settings.fetch().then( ( response ) => {
+				const settings = Object.keys(response)
+					.filter(key => key.startsWith('_kudos'))
+					.reduce((obj, key) => {
+						obj[key] = response[key]
+						return obj
+					}, {})
 				this.setState( {
-					settings: { ...response },
+					settings: { ...settings },
 					isAPILoaded: true,
 					showNotice: false,
 				} );
@@ -323,6 +331,13 @@ class KudosAdmin extends Component {
 					<Fragment>
 						<DebugModePanel
 							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+						<ExportSettingsPanel
+							{...this.state}
+						/>
+						<ImportSettingsPanel
+							updateAll={this.updateAll}
 							handleInputChange={this.handleInputChange}
 						/>
 					</Fragment>
