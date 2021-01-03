@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-02 15:06+0100\n"
-"PO-Revision-Date: 2021-01-02 15:09+0100\n"
+"POT-Creation-Date: 2021-01-03 15:01+0100\n"
+"PO-Revision-Date: 2021-01-03 15:01+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -846,6 +846,38 @@ msgstr ""
 "gebruiken als de gebruikersnaam."
 
 #: dist/js/kudos-admin-settings.js:1
+msgid "Export settings"
+msgstr "Export instellingen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"Warning: this file will contain sensitive information and should be kept "
+"safe."
+msgstr ""
+"Waarschuwing: dit bestand bevat gevoelige informatie en moet veilig worden "
+"bewaard."
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "kudos-settings"
+msgstr "kudos-instellingen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Download settings as JSON"
+msgstr "Download instellingen als JSON"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Import settings"
+msgstr "Instellingen importeren"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Warning: this will overwrite your current settings."
+msgstr "Waarschuwing: dit zal alle huidige instellingen overschrijven."
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Upload"
+msgstr "Upload"
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "API keys"
 msgstr "API-sleutels"
 
@@ -888,6 +920,14 @@ msgid "Terms and conditions"
 msgstr "Algemene voorwaarden"
 
 #: dist/js/kudos-admin-settings.js:1
+msgid ""
+"The url containing your terms and conditions for the donation. If this is "
+"left blank then the 'I agree' checkbox on the form will not be shown."
+msgstr ""
+"De url naar de donatievoorwaarden. Laat dit leeg om het selectievakje 'Ik ga "
+"akkoord' op het formulier niet weer te gegeven."
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Invalid email address"
 msgstr "Ongeldig e-mailadres"
 
@@ -920,8 +960,8 @@ msgid "Colour"
 msgstr "Kleur"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Set the colour for the Kudos button and the pop-up modal"
-msgstr "Stel de kleur in van de Kudos-knop en de pop-up modal"
+msgid "Set the colour for the Kudos button and the pop-up modal."
+msgstr "Stel de kleur in van de Kudos-knop en de pop-up modal."
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Setting(s) updated"

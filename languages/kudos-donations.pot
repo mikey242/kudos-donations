@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Kudos Donations\n"
-"POT-Creation-Date: 2021-01-02 14:47+0100\n"
+"POT-Creation-Date: 2021-01-03 15:01+0100\n"
 "PO-Revision-Date: 2020-10-09 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -816,6 +816,36 @@ msgid ""
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
+msgid "Export settings"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"Warning: this file will contain sensitive information and should be kept "
+"safe."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "kudos-settings"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Download settings as JSON"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Import settings"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Warning: this will overwrite your current settings."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Upload"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "API keys"
 msgstr ""
 
@@ -855,6 +885,12 @@ msgid "Terms and conditions"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
+msgid ""
+"The url containing your terms and conditions for the donation. If this is "
+"left blank then the 'I agree' checkbox on the form will not be shown."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Invalid email address"
 msgstr ""
 
@@ -887,7 +923,7 @@ msgid "Colour"
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Set the colour for the Kudos button and the pop-up modal"
+msgid "Set the colour for the Kudos button and the pop-up modal."
 msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
