@@ -87,7 +87,7 @@ Here is a list of the shortcode attributes:
 * *modal_title* = The welcome title for the popup.
 * *welcome_text* = The welcome text for the popup.
 * *amount_type* = Can be 'fixed', 'open' or 'both'. Default is 'open'.
-* *donation_type = Can be 'oneoff', 'recurring' or 'both'. Default is 'both'.
+* *donation_type* = Can be 'oneoff', 'recurring' or 'both'. Default is 'both'.
 * *fixed_amounts* = Comma separated list of amounts to use (5,10,15,20). Maximum 4 values.
 * *campaign_label* = Name of the campaign to use for this button.
 
