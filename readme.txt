@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.4
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 2.1.1
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,7 +106,7 @@ e.g:
 
 == Changelog ==
 
-= 2.1.2 =
+= 2.2.0 =
 * Add ability to change donation type (subscription, one-off or both) to each button
 * Add ability to export/import settings
 * Terms and conditions checkbox not shown if no URL provided in settings
