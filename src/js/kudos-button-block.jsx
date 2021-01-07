@@ -5,10 +5,7 @@ const { __ } = wp.i18n;
 const { Component } = wp.element;
 const { registerBlockType } = wp.blocks;
 const {
-	Button,
 	PanelBody,
-	TextControl,
-	RadioControl,
 	SelectControl,
 	Spinner
 } = wp.components;
@@ -18,8 +15,6 @@ const {
 	AlignmentToolbar,
 	InspectorControls,
 } = wp.blockEditor;
-
-const { Fragment } = wp.element;
 
 import logo from '../img/logo-colour.svg';
 
@@ -58,12 +53,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			super();
 			this.onChangeButtonLabel = this.onChangeButtonLabel.bind(this);
 			this.onChangeAlignment = this.onChangeAlignment.bind(this);
-			this.onChangeHeader = this.onChangeHeader.bind(this);
-			this.onChangeBody = this.onChangeBody.bind(this);
 			this.onChangeCampaignLabel = this.onChangeCampaignLabel.bind(this);
-			this.onChangeAmountType = this.onChangeAmountType.bind(this);
-			this.onChangeDonationType = this.onChangeDonationType.bind(this);
-			this.onChangeFixedAmounts = this.onChangeFixedAmounts.bind(this);
 			this.state = {
 				settings: {},
 				isAPILoaded: false,
@@ -108,17 +98,6 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			} );
 		}
 
-		addCampaignLabel(label) {
-			label = label.toLowerCase()
-			let current = this.state.settings._kudos_campaign_labels;
-			let combined = _.union(current,[{
-				date: new Date(),
-				label: label
-			}]);
-			this.updateSetting('_kudos_campaign_labels', _.uniq(combined, 'label') );
-			this.onChangeCampaignLabel(label);
-		};
-
 		onChangeButtonLabel( newValue ) {
 			this.props.setAttributes( { button_label: newValue } );
 		};
@@ -129,35 +108,8 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			} );
 		};
 
-		onChangeHeader( newValue ) {
-			this.props.setAttributes( { modal_title: newValue } );
-		};
-
-		onChangeBody( newValue ) {
-			this.props.setAttributes( { welcome_text: newValue } );
-		};
-
 		onChangeCampaignLabel( newValue ) {
-			this.props.setAttributes( { campaign_label: newValue } );
-		};
-
-		onChangeNewCampaignLabel( newValue ) {
-			this.props.setAttributes( { new_campaign_label: newValue } );
-		};
-
-		onChangeAmountType( newValue ) {
-			this.props.setAttributes( { amount_type: newValue } );
-		};
-
-		onChangeDonationType( newValue ) {
-			this.props.setAttributes( { donation_type: newValue } );
-		};
-
-		onChangeFixedAmounts( newValue ) {
-			let valuesArray = newValue.split(',');
-			if(valuesArray.length <= 4) {
-				this.props.setAttributes( { fixed_amounts: newValue.replace(/[^,0-9]/g, '') } );
-			}
+			this.props.setAttributes( { campaign_id: newValue } );
 		};
 
 		render() {
@@ -175,112 +127,25 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 					<InspectorControls>
 
 						<PanelBody
-							title={ __( 'Modal (pop-up)', 'kudos-donations' ) }
-							initialOpen={ false }
-						>
-							<TextControl
-								label={ __( 'Header', 'kudos-donations' ) }
-								type={ 'text' }
-								value={ this.props.attributes.modal_title }
-								onChange={ this.onChangeHeader }
-							/>
-
-							<TextControl
-								label={ __( 'Welcome text', 'kudos-donations' ) }
-								type={ 'text' }
-								value={ this.props.attributes.welcome_text }
-								onChange={ this.onChangeBody }
-							/>
-
-						</PanelBody>
-
-						<PanelBody
-							title={ __( 'Donation amount', 'kudos-donations' ) }
-							initialOpen={ false }
-						>
-							<RadioControl
-								label={ __( 'Type', 'kudos-donations' ) }
-								help={__("The type of donation amount available", 'kudos-donations')}
-								selected={ this.props.attributes.amount_type }
-								options={ [
-									{ label: __('Open', 'kudos-donations'), value: 'open' },
-									{ label: __('Fixed', 'kudos-donations'), value: 'fixed' },
-									{ label: __('Both', 'kudos-donations'), value: 'both' },
-								] }
-								onChange={ this.onChangeAmountType }
-							/>
-
-							{ this.props.attributes.amount_type !== 'open' ?
-
-								<Fragment>
-									<TextControl
-										label={ __(	'Amounts',	'kudos-donations' ) + ':' }
-										help={ __( 'Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations' ) }
-										value={ this.props.attributes.fixed_amounts }
-										onChange={ this.onChangeFixedAmounts }
-									/>
-								</Fragment>
-
-								: '' }
-
-						</PanelBody>
-
-						<PanelBody
-							title={ __( 'Donation type', 'kudos-donations' ) }
-							initialOpen={ false }
-						>
-							<RadioControl
-								selected={ this.props.attributes.donation_type }
-								options={ [
-									{ label: __('One-off', 'kudos-donations'), value: 'oneoff' },
-									{ label: __('Subscription', 'kudos-donations'), value: 'recurring' },
-									{ label: __('Both', 'kudos-donations'), value: 'both' },
-								] }
-								onChange={ this.onChangeDonationType }
-							/>
-
-						</PanelBody>
-
-						<PanelBody
 							title={ __( 'Campaign', 'kudos-donations' ) }
 							initialOpen={ false }
 						>
 
 							<SelectControl
-								label={ __( 'Campaign label', 'kudos-donations' ) }
-								help={__('Select an existing campaign label so you can identify it on the transactions page', 'kudos-donations')}
-								value={ this.props.attributes.campaign_label ?? '' }
+								label={ __( 'Select campaign', 'kudos-donations' ) }
+								help={__('Select your donation form', 'kudos-donations')}
+								value={ this.props.attributes.campaign_id ?? '' }
 								onChange={ this.onChangeCampaignLabel }
 								options={
-									Object.values(this.state.settings._kudos_campaign_labels).map((value) => {
+									Object.values(this.state.settings._kudos_campaigns).map((value) => {
 										return {
-											'label': value.label.toUpperCase(),
-											'value': value.label
+											'label': value.name,
+											'value': value.slug
 										}
 									})
 								}
 							/>
 
-							<TextControl
-								label={ __(
-									'Add campaign',
-									'kudos-donations'
-								) }
-								id={'kudos_new_campaign'}
-								className={'kd-inline'}
-								type={ 'text' }
-								value={ this.state.newLabel }
-								onChange={ (newLabel) => this.setState({newLabel}) }
-							/>
-
-							<Button
-								label={ __('Add campaign', 'kudos-donations') }
-								isSecondary
-								isSmall
-								onClick={
-									() => this.addCampaignLabel(document.getElementById('kudos_new_campaign').value)
-								}
-							>{__('Add campaign', 'kudos-donations')}</Button>
 						</PanelBody>
 					</InspectorControls>
 

@@ -315,6 +315,9 @@ class Front {
 	 */
 	public function register_kudos() {
 
+		$campaigns = Settings::get_setting('campaigns');
+		$default_campaign = !empty($campaigns) ? $campaigns[0]['slug'] : '';
+
 		// Add shortcode.
 		add_shortcode(
 			'kudos',
@@ -330,6 +333,7 @@ class Front {
 						'donation_type'  => 'both',
 						'fixed_amounts'  => '5, 10, 20, 50',
 						'campaign_label' => '',
+						'campaign_id' => '',
 						'alignment'      => 'none',
 					],
 					$atts,
@@ -351,34 +355,13 @@ class Front {
 						'type'    => 'string',
 						'default' => __( 'Donate now', 'kudos-donations' ),
 					],
-					'campaign_label' => [
+					'campaign_id' => [
 						'type'    => 'string',
-						'default' => '',
+						'default' => $default_campaign,
 					],
 					'alignment'      => [
 						'type'    => 'string',
 						'default' => 'none',
-					],
-					'modal_title'    => [
-						'type'    => 'string',
-						'default' => __( 'Support us!', 'kudos-donations' ),
-					],
-					'welcome_text'   => [
-						'type'    => 'string',
-						'default' => __( 'Your support is greatly appreciated and will help to keep us going.',
-							'kudos-donations' ),
-					],
-					'amount_type'    => [
-						'type'    => 'string',
-						'default' => 'open',
-					],
-					'donation_type'    => [
-						'type'    => 'string',
-						'default' => 'both',
-					],
-					'fixed_amounts'  => [
-						'type'    => 'string',
-						'default' => '5, 10, 20, 50',
 					],
 					'id'             => [
 						'type'      => 'string',

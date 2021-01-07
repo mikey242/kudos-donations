@@ -2,6 +2,7 @@
 
 namespace Kudos\Front;
 
+use Kudos\Helpers\Settings;
 use Kudos\Service\TwigService;
 
 class KudosButton {
@@ -66,6 +67,11 @@ class KudosButton {
 	private $donation_type;
 
 	/**
+	 * @var array
+	 */
+	private $address;
+
+	/**
 	 * KudosButton constructor.
 	 *
 	 * @param array $atts Array of above attributes.
@@ -75,15 +81,28 @@ class KudosButton {
 	public function __construct( array $atts ) {
 
 		$this->twig           = TwigService::factory();
-		$this->title          = $atts['modal_title'];
-		$this->text           = $atts['welcome_text'];
+		$this->id             = uniqid( 'kudos_modal-' );
 		$this->label          = $atts['button_label'];
 		$this->alignment      = $atts['alignment'];
-		$this->amount_type    = $atts['amount_type'];
-		$this->donation_type  = $atts['donation_type'];
-		$this->fixed_amounts  = $atts['fixed_amounts'];
-		$this->campaign_label = $atts['campaign_label'];
-		$this->id             = uniqid( 'kudos_modal-' );
+
+//		 wp_die(var_dump($atts));
+
+		if(!empty($atts['campaign_id'])) {
+
+			$campaign = Settings::get_campaign($atts['campaign_id']);
+
+			$this->address = [
+				'enabled' => !empty($campaign['address_enabled']) ?? false,
+			    'required' => !empty($campaign['address_required']) ?? false
+			];
+
+			$this->donation_type  = isset($campaign['donation_type']) ? $campaign['donation_type'] : 'both';
+			$this->title          = isset($campaign['modal_title']) ? $campaign['modal_title'] : '' ;
+			$this->text           = isset($campaign['welcome_text']) ? $campaign['welcome_text'] : '' ;
+			$this->amount_type    = isset($campaign['amount_type']) ? $campaign['amount_type'] : '' ;
+			$this->fixed_amounts  = isset($campaign['fixed_amounts']) ? $campaign['fixed_amounts'] : '' ;
+
+		}
 
 	}
 
@@ -131,6 +150,7 @@ class KudosButton {
 				'type'         => in_array( $this->amount_type, $allowed_types, true ) ? $this->amount_type : 'open',
 				'fixed_amounts' => array_slice(explode( ',', $this->fixed_amounts ),0, 4),
 			],
+			'address'      => $this->address,
 			'donation_type' => $this->donation_type,
 			'campaign_label' => $this->campaign_label,
 			'payment_by'     => __( 'Secure payment by', 'kudos-donations' ),

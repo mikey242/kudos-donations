@@ -19,6 +19,7 @@ import { ThemePanel } from "./Components/Panels/ThemePanel";
 import { Btn } from "./Components/Btn";
 import { ExportSettingsPanel } from "./Components/Panels/ExportSettingsPanel"
 import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
+import {CampaignsPanel} from "./Components/Panels/CampaignsPanel"
 
 const { __ } = wp.i18n;
 
@@ -238,7 +239,9 @@ class KudosAdmin extends Component {
 		model.save().then( ( response ) => {
 			// Commit state
 			this.setState( {
-				[ option ]: response[ option ],
+				settings: {
+					...response
+				},
 				isAPISaving: false,
 			} );
 		} );
@@ -272,6 +275,20 @@ class KudosAdmin extends Component {
 								{...this.state}
 								mollieChanged={ this.mollieChanged }
 								handleInputChange={ this.handleInputChange }
+						/>
+					</Fragment>
+			},
+			{
+				name: 'campaigns',
+				title: __('Campaigns', 'kudos-donations'),
+				className: 'tab-campaigns',
+				content:
+					<Fragment>
+						<CampaignsPanel
+							{...this.state}
+							handleInputChange={ this.handleInputChange }
+							showNotice={ this.showNotice }
+							updateSetting={ this.updateSetting }
 						/>
 					</Fragment>
 			},

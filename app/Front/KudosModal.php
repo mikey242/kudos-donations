@@ -80,10 +80,6 @@ class KudosModal {
 				// Global settings.
 				'vendor'       => Settings::get_setting( 'payment_vendor' ),
 				'terms_link' => Settings::get_setting( 'terms_link' ),
-				'address'      => [
-					'enabled'  => Settings::get_setting( 'address_enabled' ),
-					'required' => Settings::get_setting( 'address_required' ),
-				],
 			]
 		);
 
