@@ -21,7 +21,7 @@ const CampaignsPanel = (props ) => {
         }
 
         // Bail if duplicate found
-        if(current.find( x => x.name.toLowerCase() === name.toLowerCase() )) {
+        if(current.find( x => x.name.toLowerCase() === name.toLowerCase().trim() )) {
             props.showNotice(__('Duplicate campaign name', 'kudos-donations'))
             return;
         }
