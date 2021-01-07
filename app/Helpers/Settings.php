@@ -156,7 +156,7 @@ class Settings {
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'campaign_labels'       => [
+				'campaigns'        => [
 					'type'         => 'array',
 					'show_in_rest' => [
 						'schema' => [
@@ -164,19 +164,78 @@ class Settings {
 							'items' => [
 								'type'       => 'object',
 								'properties' => [
-									'date'  => [
+									'slug' => [
+										'type' => 'string'
+									],
+									'name' => [
+										'type' => 'string'
+									],
+									'modal_title' => [
+										'type' => 'string'
+									],
+									'welcome_text' => [
 										'type' => 'string',
 									],
-									'label' => [
+									'address_enabled'  => [
+										'type' => 'boolean',
+									],
+									'address_required' => [
+										'type' => 'boolean',
+									],
+									'amount_type'   => [
+										'type' => 'string',
+									],
+									'fixed_amounts' => [
+										'type' => 'string',
+									],
+									'donation_type'    => [
 										'type' => 'string',
 									],
 								],
 							],
 						],
 					],
+					'sanitize_callback' => [$this, 'sanitize_campaigns'],
 				],
 			]
 		);
+	}
+
+	/**
+	 * Sanitize the various setting fields in the donation form array
+	 *
+	 * @param $forms
+	 *
+	 * @return array
+	 * @since 2.3.0
+	 */
+	public static function sanitize_campaigns($forms): array {
+
+		//Define the array for the updated options
+		$output = [];
+
+		// Loop through each of the options sanitizing the data
+		foreach ($forms as $key=>$form) {
+
+			foreach ($form as $option=>$value) {
+				switch ($option) {
+					case 'address_enabled':
+					case 'address_required':
+					case 'amount_type':
+					case 'donation_type':
+						$output[$key][$option] = sanitize_key($value);
+						break;
+					case 'slug':
+						$output[$key][$option] = sanitize_title($value);
+						break;
+					default:
+						$output[$key][$option] = sanitize_text_field($value);
+				}
+			}
+
+		}
+
+		return $output;
 	}
 
 	/**
@@ -190,6 +249,26 @@ class Settings {
 	public static function get_setting( string $name ) {
 
 		return get_option( self::PREFIX . $name );
+
+	}
+
+	/**
+	 * Gets the campaign by slug name
+	 *
+	 * @param string $slug
+	 *
+	 * @return array|null
+	 */
+	public static function get_campaign( string $slug ): ?array {
+
+		$forms = self::get_setting('campaigns');
+		$key = array_search($slug, array_column($forms, 'slug'));
+
+		if(is_int($key)) {
+			return $forms[$key];
+		}
+
+		return null;
 
 	}
 
@@ -239,20 +318,6 @@ class Settings {
 	}
 
 	/**
-	 * Remove specified setting from database
-	 *
-	 * @param string $name
-	 *
-	 * @return bool
-	 * @since 2.1.1
-	 */
-	public static function remove_setting( string $name): bool {
-
-		return delete_option( self::PREFIX . $name );
-
-	}
-
-	/**
 	 * Removes all settings from database
 	 *
 	 * @since 2.0.0
@@ -262,6 +327,20 @@ class Settings {
 		foreach ( $this->settings as $key => $setting ) {
 			self::remove_setting( $key );
 		}
+
+	}
+
+	/**
+	 * Remove specified setting from database
+	 *
+	 * @param string $name
+	 *
+	 * @return bool
+	 * @since 2.1.1
+	 */
+	public static function remove_setting( string $name ): bool {
+
+		return delete_option( self::PREFIX . $name );
 
 	}
 
