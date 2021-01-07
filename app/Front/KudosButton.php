@@ -85,24 +85,21 @@ class KudosButton {
 		$this->label          = $atts['button_label'];
 		$this->alignment      = $atts['alignment'];
 
-//		 wp_die(var_dump($atts));
-
-		if(!empty($atts['campaign_id'])) {
-
+		if(isset($atts['campaign_id'])) {
 			$campaign = Settings::get_campaign($atts['campaign_id']);
-
-			$this->address = [
-				'enabled' => !empty($campaign['address_enabled']) ?? false,
-			    'required' => !empty($campaign['address_required']) ?? false
-			];
-
-			$this->donation_type  = isset($campaign['donation_type']) ? $campaign['donation_type'] : 'both';
-			$this->title          = isset($campaign['modal_title']) ? $campaign['modal_title'] : '' ;
-			$this->text           = isset($campaign['welcome_text']) ? $campaign['welcome_text'] : '' ;
-			$this->amount_type    = isset($campaign['amount_type']) ? $campaign['amount_type'] : '' ;
-			$this->fixed_amounts  = isset($campaign['fixed_amounts']) ? $campaign['fixed_amounts'] : '' ;
-
 		}
+
+		$this->address = [
+			'enabled' => !empty($campaign['address_enabled']) ?? false,
+		    'required' => !empty($campaign['address_required']) ?? false
+		];
+
+		$this->donation_type  = isset($campaign['donation_type']) ? $campaign['donation_type'] : 'both';
+		$this->title          = isset($campaign['modal_title']) ? $campaign['modal_title'] : '' ;
+		$this->text           = isset($campaign['welcome_text']) ? $campaign['welcome_text'] : '' ;
+		$this->amount_type    = isset($campaign['amount_type']) ? $campaign['amount_type'] : '' ;
+		$this->fixed_amounts  = isset($campaign['fixed_amounts']) ? $campaign['fixed_amounts'] : '' ;
+
 
 	}
 
