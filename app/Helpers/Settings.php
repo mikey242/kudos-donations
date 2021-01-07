@@ -264,6 +264,7 @@ class Settings {
 		$forms = self::get_setting('campaigns');
 		$key = array_search($slug, array_column($forms, 'slug'));
 
+		// Check if key is an index and if so return index from forms
 		if(is_int($key)) {
 			return $forms[$key];
 		}

@@ -134,15 +134,18 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 							<SelectControl
 								label={ __( 'Select campaign', 'kudos-donations' ) }
 								help={__('Select your donation form', 'kudos-donations')}
-								value={ this.props.attributes.campaign_id ?? '' }
+								value={ this.props.attributes.campaign_id }
 								onChange={ this.onChangeCampaignLabel }
 								options={
-									Object.values(this.state.settings._kudos_campaigns).map((value) => {
-										return {
-											'label': value.name,
-											'value': value.slug
-										}
-									})
+										[{'label': 'Not set', 'value': ''}].concat(
+											Object.values(this.state.settings._kudos_campaigns).map( value => {
+												return {
+													'label': value.name,
+													'value': value.slug
+												}
+											})
+										)
+
 								}
 							/>
 
@@ -181,7 +184,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 	},
 
 	// Defining the front-end interface
-	save: () => {
+	save: (e) => {
 		return null;
 	},
 } );

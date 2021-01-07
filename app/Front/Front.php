@@ -315,9 +315,6 @@ class Front {
 	 */
 	public function register_kudos() {
 
-		$campaigns = Settings::get_setting('campaigns');
-		$default_campaign = !empty($campaigns) ? $campaigns[0]['slug'] : '';
-
 		// Add shortcode.
 		add_shortcode(
 			'kudos',
@@ -357,7 +354,7 @@ class Front {
 					],
 					'campaign_id' => [
 						'type'    => 'string',
-						'default' => $default_campaign,
+						'default' => '',
 					],
 					'alignment'      => [
 						'type'    => 'string',
@@ -385,27 +382,29 @@ class Front {
 	 */
 	public function kudos_render_callback( array $attr ): ?string {
 
-		if ( self::ready() ) {
+		$status = self::ready();
 
-			// Create button and modal.
-			$button = new KudosButton( $attr );
-			$modal  = $button->get_donate_modal();
+		if ( isset($status['error']) ) {
+			if ( is_user_logged_in() && ! is_admin() ) {
+				$out = '';
+				foreach ( $status['messages'] as $message ) {
+					$out .= "<p>$message</p>";
+				}
 
-
-			// Return only if modal and button not empty.
-			if ( ! empty( $modal ) && ! empty( $button ) ) {
-				return $button->get_button( false ) . $modal;
+				return $out;
 			}
 
 			return null;
+		}
 
-		} elseif ( is_user_logged_in() && ! is_admin() ) {
+		// Create button and modal.
+		$button = new KudosButton( $attr );
+		$modal  = $button->get_donate_modal();
 
-			printf(
-				'<p><a href="%s">%s</a></p>',
-				esc_url( admin_url( 'admin.php?page=kudos-settings' ) ),
-				esc_attr__( 'Mollie not connected', 'kudos-donations' )
-			);
+
+		// Return only if modal and button not empty.
+		if ( ! empty( $modal ) && ! empty( $button ) ) {
+			return $button->get_button( false ) . $modal;
 		}
 
 		return null;
@@ -415,16 +414,24 @@ class Front {
 	/**
 	 * Checks if required settings are saved before displaying button or modal
 	 *
-	 * @return bool
+	 * @return array
 	 * @since   1.0.0
 	 */
-	public static function ready(): bool {
+	public static function ready(): array {
 
 		$api_connected = Settings::get_setting( 'mollie_connected' );
 		$api_mode      = Settings::get_setting( 'mollie_api_mode' );
 		$api_key       = Settings::get_setting( 'mollie_' . $api_mode . '_api_key' );
+		$campaigns     = Settings::get_setting( 'campaigns' );
 
-		return ( $api_key && $api_connected );
+		$return = [];
+
+		if(!$api_key || !$api_connected || !$campaigns) $return['error'] = true;
+
+		if(!$api_connected) $return['messages'][] = __( 'Mollie not connected', 'kudos-donations' );
+		if(!$campaigns) $return['messages'][] = __( 'No campaigns found', 'kudos-donations' );
+
+		return $return;
 
 	}
 
