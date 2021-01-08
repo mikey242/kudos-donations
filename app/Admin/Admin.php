@@ -2,6 +2,7 @@
 
 namespace Kudos\Admin;
 
+use Kudos\Entity\CampaignEntity;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
@@ -13,6 +14,7 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MailerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
+use Kudos\Service\RestMapperService;
 use Kudos\Service\TwigService;
 use Kudos\Service\UpdateService;
 use WP_REST_Server;

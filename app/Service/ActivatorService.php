@@ -2,6 +2,7 @@
 
 namespace Kudos\Service;
 
+use Kudos\Entity\CampaignEntity;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
@@ -168,6 +169,37 @@ class ActivatorService {
 		  status VARCHAR(255),
 		  secret VARCHAR(255),		  
 		  PRIMARY KEY (id)
+		) $charset_collate";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+
+	}
+
+	/**
+	 * Creates the subscription table
+	 *
+	 * @since    1.1.0
+	 */
+	private static function create_campaigns_table() {
+
+		global $wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+		$table_name      = CampaignEntity::get_table_name();
+
+		$sql = "CREATE TABLE $table_name (
+	      id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+		  slug VARCHAR(255),
+		  name VARCHAR(255),
+		  modal_title VARCHAR(255),
+		  welcome_text VARCHAR(255),
+		  donation_type VARCHAR(255),
+		  amount_type VARCHAR(255),
+		  fixed_amounts VARCHAR(255),
+		  protected BIT,
+	      secret VARCHAR(255),
+	      PRIMARY KEY (id)
 		) $charset_collate";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
