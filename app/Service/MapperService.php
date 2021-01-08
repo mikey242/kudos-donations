@@ -7,6 +7,7 @@ use Kudos\Entity\EntityInterface;
 use Kudos\Exceptions\MapperException;
 use ReflectionClass;
 use ReflectionException;
+use WP_REST_Response;
 use wpdb;
 
 class MapperService extends AbstractService {

@@ -191,6 +191,9 @@ class Settings {
 									'donation_type'    => [
 										'type' => 'string',
 									],
+									'protected' => [
+										'type' => 'boolean'
+									]
 								],
 							],
 						],
@@ -216,11 +219,13 @@ class Settings {
 
 		// Loop through each of the options sanitizing the data
 		foreach ($forms as $key=>$form) {
-
 			foreach ($form as $option=>$value) {
+
 				switch ($option) {
-					case 'address_enabled':
-					case 'address_required':
+					case 'modal_title':
+					case 'welcome_text':
+						$output[$key][$option] = sanitize_text_field($value);
+						break;
 					case 'amount_type':
 					case 'donation_type':
 						$output[$key][$option] = sanitize_key($value);
@@ -229,10 +234,9 @@ class Settings {
 						$output[$key][$option] = sanitize_title($value);
 						break;
 					default:
-						$output[$key][$option] = sanitize_text_field($value);
+						$output[$key][$option] = $value;
 				}
 			}
-
 		}
 
 		return $output;
@@ -313,8 +317,24 @@ class Settings {
 	public function add_defaults() {
 
 		foreach ( $this->settings as $name => $setting ) {
-			add_option( self::PREFIX . $name, $setting['default'] ?? '' );
+			if(isset($setting['default'])) {
+				add_option( self::PREFIX . $name, $setting['default']);
+			}
 		}
+
+		$default_campaign[0] = [
+			'slug' => 'kudos_default_campaign',
+			'name' => 'Default',
+			'modal_title' => 'Hello',
+			'welcome_text' => 'Welcome text',
+			'address_required' => true,
+			'amount_type'   => 'both',
+			'fixed_amounts' => '1,5,20,50,100',
+			'donation_type'    => 'both',
+			'protected'      => true
+		];
+
+		add_option(self::PREFIX . 'campaigns', $default_campaign);
 
 	}
 

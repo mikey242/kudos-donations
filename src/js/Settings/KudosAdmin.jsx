@@ -1,7 +1,6 @@
 // https://www.codeinwp.com/blog/plugin-options-page-gutenberg/
 // https://github.com/HardeepAsrani/my-awesome-plugin/
 
-import axios from 'axios';
 // Settings Panels
 import { Notice } from './Components/Notice';
 import { Header } from './Components/Header';
@@ -19,7 +18,7 @@ import { ThemePanel } from "./Components/Panels/ThemePanel";
 import { Btn } from "./Components/Btn";
 import { ExportSettingsPanel } from "./Components/Panels/ExportSettingsPanel"
 import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
-import {CampaignsPanel} from "./Components/Panels/CampaignsPanel"
+import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
 
 const { __ } = wp.i18n;
 
@@ -62,6 +61,7 @@ class KudosAdmin extends Component {
 			isAPILoaded: false,
 			isAPISaving: false,
 			checkingApi: false,
+			campaigns: [],
 			settings: {},
 		};
 
@@ -110,30 +110,27 @@ class KudosAdmin extends Component {
 			this.state.settings._kudos_mollie_live_api_key
 		);
 
-		// Perform Get request
-		axios
-			.get( window.kudos.checkApiUrl, {
-				headers: {
-					// eslint-disable-next-line no-undef
-					'X-WP-Nonce': wpApiSettings.nonce,
-				},
-				params: {
-					apiMode: this.state.settings._kudos_mollie_api_mode,
-					testKey: this.state.settings._kudos_mollie_test_api_key,
-					liveKey: this.state.settings._kudos_mollie_live_api_key,
-				},
-			} )
-			.then( ( response ) => {
-				this.showNotice( response.data.data );
+		const requestOptions = {
+			method: 'GET',
+			// eslint-disable-next-line no-undef
+			headers: { 'X-WP-Nonce': wpApiSettings.nonce, },
+		};
+
+		const requestUrl = window.kudos.checkApiUrl+`?apiMode=${this.state.settings._kudos_mollie_api_mode}&testKey=${this.state.settings._kudos_mollie_test_api_key}&liveKey=${this.state.settings._kudos_mollie_live_api_key}`
+
+		fetch( requestUrl, requestOptions)
+			.then(response => response.json())
+			.then((response) => {
+				this.showNotice( response.data );
 				this.setState( {
 					settings: {
 						...this.state.settings,
-						_kudos_mollie_connected: response.data.success,
+						_kudos_mollie_connected: response.success,
 					},
 					checkingApi: false,
 					isAPISaving: false,
 				} );
-			} );
+			});
 	}
 
 	handleInputChange( option, value ) {
@@ -147,7 +144,6 @@ class KudosAdmin extends Component {
 	}
 
 	showNotice( message ) {
-		// this.hideNotice();
 		this.setState( {
 			showNotice: true,
 			noticeMessage: message,
@@ -158,6 +154,18 @@ class KudosAdmin extends Component {
 		this.setState( {
 			showNotice: false,
 		} );
+	}
+
+	getCampaigns() {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json' },
+		};
+		fetch('/wp-json/kudos/v1/campaign/all', requestOptions)
+			.then(response => response.json())
+			.then(posts => this.setState({
+				campaigns: JSON.parse(posts.body_response)
+			}));
 	}
 
 	getSettings() {
@@ -284,7 +292,7 @@ class KudosAdmin extends Component {
 				className: 'tab-campaigns',
 				content:
 					<Fragment>
-						<CampaignsPanel
+						<AddCampaignPanel
 							{...this.state}
 							handleInputChange={ this.handleInputChange }
 							showNotice={ this.showNotice }
