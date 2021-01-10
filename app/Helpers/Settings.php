@@ -164,6 +164,9 @@ class Settings {
 							'items' => [
 								'type'       => 'object',
 								'properties' => [
+									'id'   => [
+										'type' => 'int'
+									],
 									'slug' => [
 										'type' => 'string'
 									],
@@ -219,6 +222,9 @@ class Settings {
 
 		// Loop through each of the options sanitizing the data
 		foreach ($forms as $key=>$form) {
+
+			if(!array_search('id', $form)) $output[$key]['id'] = uniqid('kc_');
+
 			foreach ($form as $option=>$value) {
 
 				switch ($option) {
@@ -253,27 +259,6 @@ class Settings {
 	public static function get_setting( string $name ) {
 
 		return get_option( self::PREFIX . $name );
-
-	}
-
-	/**
-	 * Gets the campaign by slug name
-	 *
-	 * @param string $slug
-	 *
-	 * @return array|null
-	 */
-	public static function get_campaign( string $slug ): ?array {
-
-		$forms = self::get_setting('campaigns');
-		$key = array_search($slug, array_column($forms, 'slug'));
-
-		// Check if key is an index and if so return index from forms
-		if(is_int($key)) {
-			return $forms[$key];
-		}
-
-		return null;
 
 	}
 
@@ -321,20 +306,6 @@ class Settings {
 				add_option( self::PREFIX . $name, $setting['default']);
 			}
 		}
-
-		$default_campaign[0] = [
-			'slug' => 'kudos_default_campaign',
-			'name' => 'Default',
-			'modal_title' => 'Hello',
-			'welcome_text' => 'Welcome text',
-			'address_required' => true,
-			'amount_type'   => 'both',
-			'fixed_amounts' => '1,5,20,50,100',
-			'donation_type'    => 'both',
-			'protected'      => true
-		];
-
-		add_option(self::PREFIX . 'campaigns', $default_campaign);
 
 	}
 

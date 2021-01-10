@@ -6,6 +6,7 @@ use Kudos\Entity\CampaignEntity;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 
 /**
@@ -218,6 +219,7 @@ class ActivatorService {
 
 		$settings = new Settings();
 		$settings->add_defaults();
+		Campaigns::add_default();
 
 	}
 }

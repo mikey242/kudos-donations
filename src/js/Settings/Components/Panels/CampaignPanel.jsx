@@ -1,11 +1,20 @@
 const { __ } = wp.i18n;
-const { CheckboxControl, PanelBody, BaseControl, RadioControl, ToggleControl, TextControl, Button } = wp.components;
+const { useState } = wp.element;
+const {
+    BaseControl,
+    Button,
+    CheckboxControl,
+    ClipboardButton,
+    Flex,
+    PanelBody,
+    RadioControl,
+    TextControl,
+    ToggleControl
+} = wp.components;
 
 const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleInputChange, allowDelete = false } ) => {
 
-    const saveCampaigns = () => {
-        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-    }
+    const [ hasCopied, setHasCopied ] = useState( false )
 
     const removeCampaign = ( slug ) => {
         let current = settings._kudos_campaigns
@@ -35,7 +44,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                     value={ campaign.modal_title || '' }
                     onChange={ (value) => {
                         campaign.modal_title = value
-                        saveCampaigns()
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     } }
                 />
 
@@ -47,7 +56,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                     value={ campaign.welcome_text || '' }
                     onChange={ (value) => {
                         campaign.welcome_text = value
-                        saveCampaigns()
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     } }
                 />
 
@@ -64,7 +73,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                     checked={ campaign.address_enabled || '' }
                     onChange={ (value) => {
                         campaign.address_enabled = value
-                        saveCampaigns()
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     } }
                 />
 
@@ -75,7 +84,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                         checked={ campaign.address_required || '' }
                         onChange={ (value) => {
                             campaign.address_required = value
-                            saveCampaigns()
+                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                         }}
                     />
 
@@ -98,7 +107,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                     ] }
                     onChange={ (value) => {
                         campaign.donation_type = value
-                        saveCampaigns()
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
 
@@ -114,7 +123,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                 ] }
                 onChange={ (value) => {
                     campaign.amount_type = value
-                    saveCampaigns()
+                    handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                 }}
             />
 
@@ -130,25 +139,41 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                         if(valuesArray.length <= 4) {
                             campaign.fixed_amounts = value.replace(/[^,0-9]/g, '')
                         }
-                        saveCampaigns()
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
 
                 : '' }
 
-            { allowDelete ?
+            <Flex>
 
-            <Button
-                isSecondary
-                isSmall
-                onClick={
-                    () => removeCampaign( campaign.slug )
-                }
-            >
-                { __('Delete', 'kudos-donations') + ' ' + campaign.name }
-            </Button>
+                <ClipboardButton
+                    isPrimary
+                    isSmall
+                    text={'[kudos campaign_id="' + campaign.slug + '"]'}
+                    onCopy={ () => setHasCopied( true ) }
+                    onFinishCopy={ () => setHasCopied( false ) }
+                >
+                    { hasCopied ? 'Copied!' : 'Copy Shortcode' }
+                </ClipboardButton>
 
-            : '' }
+                { allowDelete ?
+
+                <Button
+                    isSecondary
+                    isSmall
+                    onClick={
+                        () => {
+                            if (window.confirm(__('Are you sure you wish to delete this campaign?', 'kudos-donations'))) removeCampaign( campaign.slug )
+                        }
+                    }
+                >
+                    { __('Delete', 'kudos-donations') + ' ' + campaign.name }
+                </Button>
+
+                : '' }
+
+            </Flex>
 
         </PanelBody>
     )

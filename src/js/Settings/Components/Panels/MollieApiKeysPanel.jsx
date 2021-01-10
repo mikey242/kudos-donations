@@ -11,7 +11,7 @@ const MollieApiKeysPanel = ( props ) => {
 	return (
 		<PanelBody
 			title={ __( 'API keys', 'kudos-donations' ) }
-			initialOpen={ true }
+			opened={ true }
 		>
 
 			<TextControl

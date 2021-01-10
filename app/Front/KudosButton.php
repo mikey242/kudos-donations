@@ -2,7 +2,7 @@
 
 namespace Kudos\Front;
 
-use Kudos\Helpers\Settings;
+use Kudos\Helpers\Campaigns;
 use Kudos\Service\TwigService;
 
 class KudosButton {
@@ -62,7 +62,7 @@ class KudosButton {
 	 */
 	private $campaign_label;
 	/**
-	 * @var mixed
+	 * @var string
 	 */
 	private $donation_type;
 
@@ -85,21 +85,21 @@ class KudosButton {
 		$this->label          = $atts['button_label'];
 		$this->alignment      = $atts['alignment'];
 
-		if(isset($atts['campaign_id'])) {
-			$campaign = Settings::get_campaign($atts['campaign_id']);
-		}
+		// Set campaign according to atts and if none found or empty then set as default
+		if(!empty($atts['campaign_id'])) $campaign = Campaigns::get_campaign($atts['campaign_id']);
+		if(empty($campaign)) $campaign = Campaigns::get_campaign('default');
 
 		$this->address = [
 			'enabled' => !empty($campaign['address_enabled']) ?? false,
 		    'required' => !empty($campaign['address_required']) ?? false
 		];
 
-		$this->donation_type  = isset($campaign['donation_type']) ? $campaign['donation_type'] : 'both';
-		$this->title          = isset($campaign['modal_title']) ? $campaign['modal_title'] : '' ;
-		$this->text           = isset($campaign['welcome_text']) ? $campaign['welcome_text'] : '' ;
-		$this->amount_type    = isset($campaign['amount_type']) ? $campaign['amount_type'] : '' ;
-		$this->fixed_amounts  = isset($campaign['fixed_amounts']) ? $campaign['fixed_amounts'] : '' ;
-
+		$this->campaign_label = !empty($campaign['id']) ? $campaign['id'] : 'default';
+		$this->donation_type  = !empty($campaign['donation_type']) ? $campaign['donation_type'] : 'both';
+		$this->title          = !empty($campaign['modal_title']) ? $campaign['modal_title'] : '' ;
+		$this->text           = !empty($campaign['welcome_text']) ? $campaign['welcome_text'] : '' ;
+		$this->amount_type    = !empty($campaign['amount_type']) ? $campaign['amount_type'] : '' ;
+		$this->fixed_amounts  = !empty($campaign['fixed_amounts']) ? $campaign['fixed_amounts'] : '' ;
 
 	}
 
