@@ -15,7 +15,7 @@ const MollieApiModePanel = (props ) => {
 	return (
 		<PanelBody
 			title={ __( 'API mode', 'kudos-donations' ) }
-			initialOpen={ true }
+			opened={ true }
 			{...props}
 		>
 

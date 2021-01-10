@@ -4,7 +4,6 @@
 // Settings Panels
 import { Notice } from './Components/Notice';
 import { Header } from './Components/Header';
-import { AddressFieldPanel } from './Components/Panels/AddressFieldPanel';
 import { CompletedPaymentPanel } from './Components/Panels/CompletedPaymentPanel';
 import { EmailSettingsPanel } from './Components/Panels/EmailSettingsPanel';
 import { TestEmailPanel } from './Components/Panels/TestEmailPanel';
@@ -307,10 +306,6 @@ class KudosAdmin extends Component {
 				content:
 					<Fragment>
 						<ThemePanel
-							{...this.state}
-							handleInputChange={this.handleInputChange}
-						/>
-						<AddressFieldPanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>

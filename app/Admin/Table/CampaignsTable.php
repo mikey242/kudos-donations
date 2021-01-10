@@ -3,6 +3,7 @@
 namespace Kudos\Admin\Table;
 
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
@@ -34,7 +35,6 @@ class CampaignsTable extends WP_List_Table {
 		];
 
 		$this->export_columns = [
-			'date'         => __( 'Name', 'kudos-donations' ),
 			'label'        => __( 'Email', 'kudos-donations' ),
 			'transactions' => __( 'Street', 'kudos-donations' ),
 			'total'        => __( 'Total', 'kudos-donations' ),
@@ -42,7 +42,7 @@ class CampaignsTable extends WP_List_Table {
 
 		parent::__construct(
 			[
-				'orderBy'  => 'date',
+				'orderBy'  => 'slug',
 				'singular' => __( 'Campaign', 'kudos-donations' ),
 				'plural'   => __( 'Campaigns', 'kudos-donations' ),
 				'ajax'     => false,
@@ -75,7 +75,7 @@ class CampaignsTable extends WP_List_Table {
 		$mapper = $this->mapper;
 		$search = $this->get_search_data();
 
-		$campaigns = Settings::get_setting( 'campaign_labels' );
+		$campaigns = Settings::get_setting( 'campaigns' );
 		if ( ! $campaigns ) {
 			return [];
 		}
@@ -91,10 +91,11 @@ class CampaignsTable extends WP_List_Table {
 		}
 
 		foreach ( $campaigns as $key => $campaign ) {
-			$label = $campaign['label'];
+			$id = $campaign['id'];
 
-			$transactions = $mapper->get_all_by( [ 'campaign_label' => $label ] );
+			$transactions = $mapper->get_all_by( [ 'campaign_label' => $id ] );
 
+//			$campaigns[ $key ]['date'] = date("r",hexdec(substr($id,3,8)));
 			$campaigns[ $key ]['transactions'] = 0;
 			$campaigns[ $key ]['total']        = 0;
 			if ( $transactions ) {
@@ -128,7 +129,6 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function column_names(): array {
 		return [
-			'date'          => __( 'Date', 'kudos-donations' ),
 			'label'         => __( 'Label', 'kudos-donations' ),
 			'transactions'  => __( 'Transactions', 'kudos-donations' ),
 			'total'         => __( 'Total', 'kudos-donations' ),
@@ -245,7 +245,7 @@ class CampaignsTable extends WP_List_Table {
 	protected function column_cb( $item ): string {
 		return sprintf(
 			'<input type="checkbox" name="bulk-action[]" value="%s" />',
-			$item['label']
+			$item['name']
 		);
 	}
 
@@ -259,23 +259,9 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function column_date( array $item ): string {
 
-		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
-
-		$actions = [
-			'delete' => sprintf(
-				'<a href="?page=%s&action=%s&label=%s&_wpnonce=%s">%s</a>',
-				esc_attr( $_REQUEST['page'] ),
-				'delete',
-				sanitize_text_field( $item['label'] ),
-				$delete_nonce,
-				__( 'Delete', 'kudos-donations' )
-			),
-		];
-
 		return __( 'Added', 'kudos-donations' ) . '<br/>' .
 		       wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			       strtotime( $item['date'] ) ) . '<br/>' .
-		       $this->row_actions( $actions );
+			       strtotime( $item['date'] ) );
 	}
 
 	/**
@@ -288,7 +274,7 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function column_label( array $item ): string {
 
-		return strtoupper( $item['label'] );
+		return $item['name'];
 
 	}
 
@@ -304,7 +290,7 @@ class CampaignsTable extends WP_List_Table {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_label&s=%s' ), rawurlencode( $item['label'] ) ),
+			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_label&s=%s' ), rawurlencode( $item['slug'] ) ),
 			strtoupper( $item['transactions'] )
 		);
 

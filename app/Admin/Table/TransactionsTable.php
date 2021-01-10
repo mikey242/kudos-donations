@@ -4,6 +4,7 @@ namespace Kudos\Admin\Table;
 
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use WP_List_Table;
@@ -446,7 +447,7 @@ class TransactionsTable extends WP_List_Table {
 			'<a href=%1$s>%2$s</a>',
 			sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=label&s=%s' ),
 				rawurlencode( $item['campaign_label'] ) ),
-			strtoupper( $item['campaign_label'] )
+			Campaigns::get_campaign( $item['campaign_label'], 'id' )['name'] ?? $item['campaign_label']
 		);
 
 	}

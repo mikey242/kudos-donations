@@ -1,31 +1,37 @@
 import { CampaignPanel } from "./CampaignPanel"
 
 const { __, sprintf } = wp.i18n;
-const { PanelBody, BaseControl, TextControl, Button } = wp.components;
+const { PanelBody, TextControl, Button } = wp.components;
 const { useState } = wp.element;
 
 const AddCampaignPanel = ( props ) => {
 
     const [ addFormValue, setAddFormValue ] = useState('');
+    const [ buttonDisabled, setButtonDisabled ] = useState(true);
+    let current = props.settings._kudos_campaigns;
+
+    const isValid = ( value ) => {
+
+        if( '' === value.trim() || current.find( x => x.name.toLowerCase() === value.toLowerCase().trim() ) ) {
+            setButtonDisabled(true)
+            return false;
+        }
+
+        return true
+
+    }
+
+    const updateValue = ( value ) => {
+
+        setAddFormValue( value );
+        setButtonDisabled(!isValid(value));
+
+    }
 
     const addCampaign = ( name ) => {
 
-        let current = props.settings._kudos_campaigns;
-
-        // Bail if name is empty
-        if( '' === name.trim() ) {
-            props.showNotice(__('Campaign name empty.', 'kudos-donations'))
-            return;
-        }
-
-        // Bail if duplicate found
-        if(current.find( x => x.name.toLowerCase() === name.toLowerCase().trim() )) {
-            props.showNotice(__('Duplicate campaign name', 'kudos-donations'))
-            return;
-        }
-
         // Add new campaign with defaults to top of array using unshift
-        current.unshift({
+        current.push({
             slug: name,
             name: name,
             modal_title: __( 'Support us!', 'kudos-donations' ),
@@ -43,35 +49,35 @@ const AddCampaignPanel = ( props ) => {
     return (
         <div>
             <PanelBody
-                title={ __( 'Campaigns', 'kudos-donations' ) }
-                initialOpen={ true }
+                title={ __( 'Add a campaign', 'kudos-donations' ) }
+                opened={ true }
             >
 
-                <BaseControl
+                <TextControl
+                    label={ __(
+                        'Campaign name',
+                        'kudos-donations'
+                    ) }
                     help={__("Give your campaign a unique name to identify it.", 'kudos-donations')}
-                >
-                    <TextControl
-                        label={ __(
-                            'Add campaign',
-                            'kudos-donations'
-                        ) }
-                        id={'kudos_new_campaign'}
-                        className={'kd-inline'}
-                        type={ 'text' }
-                        value={ addFormValue }
-                        onChange={ (newValue) => setAddFormValue( newValue ) }
-                    />
+                    id={'kudos_new_campaign'}
+                    className={'kd-inline'}
+                    type={ 'text' }
+                    value={ addFormValue }
+                    onChange={ (newValue) => updateValue( newValue ) }
+                />
 
-                    <Button
-                        isPrimary
-                        isSmall
-                        onClick={
-                            () => addCampaign(document.getElementById('kudos_new_campaign').value)
-                        }
-                    >
-                        {__('Add campaign', 'kudos-donations')}
-                    </Button>
-                </BaseControl>
+                <br/>
+
+                <Button
+                    isPrimary
+                    isSmall
+                    disabled={ buttonDisabled }
+                    onClick={
+                        () => addCampaign(document.getElementById('kudos_new_campaign').value)
+                    }
+                >
+                    {__('Add campaign', 'kudos-donations')}
+                </Button>
 
             </PanelBody>
 
@@ -79,7 +85,7 @@ const AddCampaignPanel = ( props ) => {
 
                 return(
                     <CampaignPanel
-                        key={ form.name }
+                        key={ form.slug }
                         allowDelete={ !form.protected }
                         settings={ props.settings }
                         campaign={ props.settings._kudos_campaigns[i] }
