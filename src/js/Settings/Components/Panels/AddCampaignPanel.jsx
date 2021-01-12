@@ -1,38 +1,28 @@
-import { CampaignPanel } from "./CampaignPanel"
+import {CampaignPanel} from "./CampaignPanel"
 
 const { __, sprintf } = wp.i18n;
 const { PanelBody, TextControl, Button } = wp.components;
 const { useState } = wp.element;
 
-const AddCampaignPanel = ( props ) => {
+const AddCampaignPanel = ({settings, showNotice, updateSetting, handleInputChange} ) => {
 
     const [ addFormValue, setAddFormValue ] = useState('');
     const [ buttonDisabled, setButtonDisabled ] = useState(true);
-    let current = props.settings._kudos_campaigns;
+    let current = settings._kudos_campaigns;
 
-    const isValid = ( value ) => {
-
-        if( '' === value.trim() || current.find( x => x.name.toLowerCase() === value.toLowerCase().trim() ) ) {
-            setButtonDisabled(true)
-            return false;
-        }
-
-        return true
-
+    const isCampaignNameValid = ( name ) => {
+        return !('' === name.trim() || settings._kudos_campaigns.find(x => x.name.toLowerCase() === name.toLowerCase().trim()));
     }
 
     const updateValue = ( value ) => {
-
         setAddFormValue( value );
-        setButtonDisabled(!isValid(value));
-
+        setButtonDisabled(!isCampaignNameValid(value));
     }
 
     const addCampaign = ( name ) => {
 
         // Add new campaign with defaults to top of array using unshift
         current.push({
-            slug: name,
             name: name,
             modal_title: __( 'Support us!', 'kudos-donations' ),
             welcome_text: __( 'Your support is greatly appreciated and will help to keep us going.', 'kudos-donations' ),
@@ -42,8 +32,9 @@ const AddCampaignPanel = ( props ) => {
         })
 
         // Save changes and show notice
-        props.updateSetting('_kudos_campaigns', current );
-        props.showNotice( sprintf(__('Added campaign "%s".', 'kudos-donations'), name) )
+        updateSetting('_kudos_campaigns');
+        setButtonDisabled(true);
+        showNotice( sprintf(__('Added campaign "%s".', 'kudos-donations'), name) )
     };
 
     return (
@@ -81,22 +72,22 @@ const AddCampaignPanel = ( props ) => {
 
             </PanelBody>
 
-            { props.settings._kudos_campaigns.map((form, i) => {
+            { settings._kudos_campaigns.map((campaign, i) => {
 
                 return(
                     <CampaignPanel
-                        key={ form.slug }
-                        allowDelete={ !form.protected }
-                        settings={ props.settings }
-                        campaign={ props.settings._kudos_campaigns[i] }
-                        updateSetting={ props.updateSetting }
-                        showNotice={ props.showNotice }
-                        handleInputChange={ props.handleInputChange }
+                        key={ 'campaign_' + i }
+                        allowDelete={ !campaign.protected }
+                        settings={ settings }
+                        campaign={ settings._kudos_campaigns[i] }
+                        isCampaignNameValid={ isCampaignNameValid }
+                        updateSetting={ updateSetting }
+                        showNotice={ showNotice }
+                        handleInputChange={ handleInputChange }
                     />
                 )
 
             })}
-
         </div>
     );
 };

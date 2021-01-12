@@ -233,13 +233,13 @@ class KudosAdmin extends Component {
 			} );
 	}
 
-	// Update an individual setting
+	// Update an individual setting, uses current state if value not specified
 	updateSetting( option, value ) {
 		this.setState( { isAPISaving: true } );
 
 		//Create WordPress settings model
 		const model = new wp.api.models.Settings( {
-			[ option ]: value,
+			[ option ]: value ?? this.state.settings[option],
 		} );
 
 		//Save to database
@@ -292,9 +292,10 @@ class KudosAdmin extends Component {
 				content:
 					<Fragment>
 						<AddCampaignPanel
-							{...this.state}
-							handleInputChange={ this.handleInputChange }
+							isCampaignNameValid={ this.isCampaignNameValid }
+							settings={ this.state.settings }
 							showNotice={ this.showNotice }
+							handleInputChange={ this.handleInputChange }
 							updateSetting={ this.updateSetting }
 						/>
 					</Fragment>

@@ -5,6 +5,7 @@ namespace Kudos\Front;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
@@ -329,8 +330,7 @@ class Front {
 						'amount_type'    => 'open',
 						'donation_type'  => 'both',
 						'fixed_amounts'  => '5, 10, 20, 50',
-						'campaign_label' => '',
-						'campaign_id' => '',
+						'campaign'       => 'default',
 						'alignment'      => 'none',
 					],
 					$atts,
@@ -352,9 +352,9 @@ class Front {
 						'type'    => 'string',
 						'default' => __( 'Donate now', 'kudos-donations' ),
 					],
-					'campaign_id' => [
+					'campaign' => [
 						'type'    => 'string',
-						'default' => '',
+						'default' => 'default',
 					],
 					'alignment'      => [
 						'type'    => 'string',
@@ -375,19 +375,19 @@ class Front {
 	/**
 	 * Renders the kudos button and donation modals
 	 *
-	 * @param array $attr Array of kudos button/modal attributes.
+	 * @param array $atts Array of kudos button/modal attributes.
 	 *
 	 * @return string|null
 	 * @since   2.0.0
 	 */
-	public function kudos_render_callback( array $attr ): ?string {
+	public function kudos_render_callback( array $atts ): ?string {
 
+		// Check if ready to go and if not return error messages
 		$status = self::ready();
-
-		if ( isset($status['error']) ) {
+		if ( isset($status['error_messages']) ) {
 			if ( is_user_logged_in() && ! is_admin() ) {
 				$out = '';
-				foreach ( $status['messages'] as $message ) {
+				foreach ( $status['error_messages'] as $message ) {
 					$out .= "<p>$message</p>";
 				}
 
@@ -397,8 +397,19 @@ class Front {
 			return null;
 		}
 
+		// Set campaign according to atts and if none found then set as default
+		$campaigns = new Campaigns();
+		if(!empty($atts['campaign'])) {
+			$campaign = $campaigns->get_campaign($atts['campaign']);
+		}
+
+		if(empty($campaign)) {
+			$campaign = $campaigns->get_campaign('default');
+		}
+		$atts = wp_parse_args($campaign, $atts);
+
 		// Create button and modal.
-		$button = new KudosButton( $attr );
+		$button = new KudosButton( $atts );
 		$modal  = $button->get_donate_modal();
 
 
@@ -426,10 +437,8 @@ class Front {
 
 		$return = [];
 
-		if(!$api_key || !$api_connected || !$campaigns) $return['error'] = true;
-
-		if(!$api_connected) $return['messages'][] = __( 'Mollie not connected', 'kudos-donations' );
-		if(!$campaigns) $return['messages'][] = __( 'No campaigns found', 'kudos-donations' );
+		if(!$api_connected || !$api_key) $return['error_messages'][] = __( 'Mollie not connected', 'kudos-donations' );
+		if(!$campaigns) $return['error_messages'][] = __( 'No campaigns found', 'kudos-donations' );
 
 		return $return;
 

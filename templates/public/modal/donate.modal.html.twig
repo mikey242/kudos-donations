@@ -19,11 +19,11 @@
                 {% block body %}
                     {% from "/public/modal/macros/form.html.twig" import input_group, radio_buttons, text, radio %}
 
-                    {% if ( amount.type != 'open' ) %}
-                        {{ radio_buttons(amount.fixed_amounts, 'amount-' ~ modal_id ) }}
+                    {% if ( amount_type != 'open' ) %}
+                        {{ radio_buttons(fixed_amounts, 'amount-' ~ modal_id ) }}
                     {% endif %}
 
-                    {% if amount.type == 'both' %}
+                    {% if amount_type == 'both' %}
                         {{ input_group( '', __('Other', 'kudos-donations'), __('Amount', 'kudos-donations') ~ ' (€)',
                             {
                                 'input': { 'id': 'value_open-' ~ modal_id,'min': '1', 'data-type': 'currency'  }
@@ -31,7 +31,7 @@
                         ) }}
                     {% endif %}
 
-                    {% if amount.type == 'open' %}
+                    {% if amount_type == 'open' %}
                         {{ text('value', __('Amount', 'kudos-donations') ~ ' (€)', 'text', true, {'min': '1', 'data-type': 'currency'}) }}
                     {% endif %}
 
@@ -78,14 +78,14 @@
             {% endembed %}
 
             {# ADDRESS TAB #}
-            {% if(address.enabled) %}
+            {% if(address_enabled) %}
                 {% embed '/public/modal/embeds/_tab.html.twig' %}
                     {% block title %}{{ __('Address', 'kudos-donations') }}{% endblock %}
-                    {% block text %}{{ __('Please fill in you address', 'kudos-donations') ~ (address.required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') }}{% endblock %}
+                    {% block text %}{{ __('Please fill in you address', 'kudos-donations') ~ (address_required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') }}{% endblock %}
                     {% block body %}
                         {% from "/public/modal/macros/form.html.twig" import text %}
 
-                        {% set required = (address.required ? 'required' : null) %}
+                        {% set required = (address_required ? 'required' : null) %}
 
                         {{ text('street', __('Street', 'kudos-donations'), 'text', required) }}
                         {{ text('postcode', __('Postcode', 'kudos-donations'), 'text', required) }}

@@ -17,6 +17,10 @@ class TransactionsTable extends WP_List_Table {
 	 * @var MapperService
 	 */
 	private $mapper;
+	/**
+	 * @var Campaigns
+	 */
+	private $campaigns;
 
 	/**
 	 * Class constructor
@@ -27,6 +31,7 @@ class TransactionsTable extends WP_List_Table {
 
 		$this->mapper = new MapperService( TransactionEntity::class );
 		$this->table  = TransactionEntity::get_table_name();
+		$this->campaigns = new Campaigns();
 
 		$this->search_columns = [
 			'name'              => __( 'Name', 'kudos-donations' ),
@@ -443,11 +448,15 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_campaign_label( array $item ): string {
 
+		$campaign_name = $this->campaigns->get_campaign(
+			$item['campaign_label'] )['name']
+            ?? $item['campaign_label'];
+
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=label&s=%s' ),
-				rawurlencode( $item['campaign_label'] ) ),
-			Campaigns::get_campaign( $item['campaign_label'], 'id' )['name'] ?? $item['campaign_label']
+			sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=name&s=%s' ),
+				rawurlencode( $campaign_name ) ),
+			$campaign_name
 		);
 
 	}

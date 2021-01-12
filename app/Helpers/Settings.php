@@ -167,9 +167,6 @@ class Settings {
 									'id'   => [
 										'type' => 'int'
 									],
-									'slug' => [
-										'type' => 'string'
-									],
 									'name' => [
 										'type' => 'string'
 									],
@@ -201,51 +198,10 @@ class Settings {
 							],
 						],
 					],
-					'sanitize_callback' => [$this, 'sanitize_campaigns'],
+					'sanitize_callback' => [Campaigns::class, 'sanitize_campaigns'],
 				],
 			]
 		);
-	}
-
-	/**
-	 * Sanitize the various setting fields in the donation form array
-	 *
-	 * @param $forms
-	 *
-	 * @return array
-	 * @since 2.3.0
-	 */
-	public static function sanitize_campaigns($forms): array {
-
-		//Define the array for the updated options
-		$output = [];
-
-		// Loop through each of the options sanitizing the data
-		foreach ($forms as $key=>$form) {
-
-			if(!array_search('id', $form)) $output[$key]['id'] = uniqid('kc_');
-
-			foreach ($form as $option=>$value) {
-
-				switch ($option) {
-					case 'modal_title':
-					case 'welcome_text':
-						$output[$key][$option] = sanitize_text_field($value);
-						break;
-					case 'amount_type':
-					case 'donation_type':
-						$output[$key][$option] = sanitize_key($value);
-						break;
-					case 'slug':
-						$output[$key][$option] = sanitize_title($value);
-						break;
-					default:
-						$output[$key][$option] = $value;
-				}
-			}
-		}
-
-		return $output;
 	}
 
 	/**
