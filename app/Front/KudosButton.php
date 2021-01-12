@@ -2,7 +2,6 @@
 
 namespace Kudos\Front;
 
-use Kudos\Helpers\Campaigns;
 use Kudos\Service\TwigService;
 
 class KudosButton {
@@ -24,7 +23,7 @@ class KudosButton {
 	 *
 	 * @var bool|mixed|void
 	 */
-	private $label;
+	private $button_label;
 	/**
 	 * Button id
 	 *
@@ -36,13 +35,13 @@ class KudosButton {
 	 *
 	 * @var string
 	 */
-	private $title;
+	private $modal_title;
 	/**
 	 * Modal text
 	 *
 	 * @var string
 	 */
-	private $text;
+	private $welcome_text;
 	/**
 	 * Donation amount selection type
 	 *
@@ -65,11 +64,14 @@ class KudosButton {
 	 * @var string
 	 */
 	private $donation_type;
-
 	/**
-	 * @var array
+	 * @var bool
 	 */
-	private $address;
+	private $address_enabled;
+	/**
+	 * @var bool
+	 */
+	private $address_required;
 
 	/**
 	 * KudosButton constructor.
@@ -80,26 +82,14 @@ class KudosButton {
 	 */
 	public function __construct( array $atts ) {
 
-		$this->twig           = TwigService::factory();
-		$this->id             = uniqid( 'kudos_modal-' );
-		$this->label          = $atts['button_label'];
-		$this->alignment      = $atts['alignment'];
+		$this->twig             = TwigService::factory();
+		$this->id               = uniqid( 'kudos_modal-' );
 
-		// Set campaign according to atts and if none found or empty then set as default
-		if(!empty($atts['campaign_id'])) $campaign = Campaigns::get_campaign($atts['campaign_id']);
-		if(empty($campaign)) $campaign = Campaigns::get_campaign('default');
-
-		$this->address = [
-			'enabled' => !empty($campaign['address_enabled']) ?? false,
-		    'required' => !empty($campaign['address_required']) ?? false
-		];
-
-		$this->campaign_label = !empty($campaign['id']) ? $campaign['id'] : 'default';
-		$this->donation_type  = !empty($campaign['donation_type']) ? $campaign['donation_type'] : 'both';
-		$this->title          = !empty($campaign['modal_title']) ? $campaign['modal_title'] : '' ;
-		$this->text           = !empty($campaign['welcome_text']) ? $campaign['welcome_text'] : '' ;
-		$this->amount_type    = !empty($campaign['amount_type']) ? $campaign['amount_type'] : '' ;
-		$this->fixed_amounts  = !empty($campaign['fixed_amounts']) ? $campaign['fixed_amounts'] : '' ;
+		foreach ( $atts as $property => $value ) {
+			if ( property_exists( static::class, $property ) ) {
+				$this->$property = $value;
+			}
+		}
 
 	}
 
@@ -115,7 +105,7 @@ class KudosButton {
 
 		$data = [
 			'alignment' => $this->alignment,
-			'label'     => $this->label,
+			'label'     => $this->button_label,
 			'target'    => $this->id,
 		];
 
@@ -140,17 +130,16 @@ class KudosButton {
 		$allowed_types = ['fixed', 'open', 'both'];
 
 		$data = [
-			'modal_id'       => $this->id,
-			'modal_title'    => $this->title,
-			'modal_text'     => $this->text,
-			'amount'         => [
-				'type'         => in_array( $this->amount_type, $allowed_types, true ) ? $this->amount_type : 'open',
-				'fixed_amounts' => array_slice(explode( ',', $this->fixed_amounts ),0, 4),
-			],
-			'address'      => $this->address,
-			'donation_type' => $this->donation_type,
-			'campaign_label' => $this->campaign_label,
-			'payment_by'     => __( 'Secure payment by', 'kudos-donations' ),
+			'modal_id'          => $this->id,
+			'modal_title'       => $this->modal_title,
+			'modal_text'        => $this->welcome_text,
+			'amount_type'       => in_array( $this->amount_type, $allowed_types, true ) ? $this->amount_type : 'open',
+			'fixed_amounts'     => array_slice(explode( ',', $this->fixed_amounts ),0, 4),
+			'address_enabled'   => $this->address_enabled,
+			'address_required'  => $this->address_required,
+			'donation_type'     => $this->donation_type,
+			'campaign_label'    => $this->campaign_label,
+			'payment_by'        => __( 'Secure payment by', 'kudos-donations' ),
 		];
 
 		return $modal->get_donate_modal( $data );

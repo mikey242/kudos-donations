@@ -53,7 +53,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			super();
 			this.onChangeButtonLabel = this.onChangeButtonLabel.bind(this);
 			this.onChangeAlignment = this.onChangeAlignment.bind(this);
-			this.onChangeCampaignLabel = this.onChangeCampaignLabel.bind(this);
+			this.onChangeCampaign = this.onChangeCampaign.bind(this);
 			this.state = {
 				settings: {},
 				isAPILoaded: false,
@@ -108,8 +108,8 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			} );
 		};
 
-		onChangeCampaignLabel( newValue ) {
-			this.props.setAttributes( { campaign_id: newValue } );
+		onChangeCampaign( newValue ) {
+			this.props.setAttributes( { campaign: newValue } );
 		};
 
 		render() {
@@ -134,19 +134,26 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 							<SelectControl
 								label={ __( 'Select campaign', 'kudos-donations' ) }
 								help={__('Select your donation form', 'kudos-donations')}
-								value={ this.props.attributes.campaign_id || 'default' }
-								onChange={ this.onChangeCampaignLabel }
+								value={ this.props.attributes.campaign || 'default' }
+								onChange={ this.onChangeCampaign }
 								options={
+									[{
+										value: null,
+										label: this.state.settings._kudos_campaigns && this.state.settings._kudos_campaigns.length ? __('Select a campaign', 'kudos-donations') : __('No campaigns found', 'kudos-donations'),
+										disabled: true
+									}].concat(
 									Object.values(this.state.settings._kudos_campaigns).map( value => {
 										return {
-											'label': value.name,
-											'value': value.slug
+											label: value.name, value: value.id, disabled: false
 										}
-									})
+									}))
 								}
 							/>
 
+							<a href="admin.php?page=kudos-settings&tabName=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
+
 						</PanelBody>
+
 					</InspectorControls>
 
 					<BlockControls>

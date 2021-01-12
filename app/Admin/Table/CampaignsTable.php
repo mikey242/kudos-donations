@@ -19,6 +19,10 @@ class CampaignsTable extends WP_List_Table {
 	 * @var MapperService
 	 */
 	private $mapper;
+	/**
+	 * @var Campaigns
+	 */
+	private $campaigns;
 
 	/**
 	 * Class constructor
@@ -29,20 +33,21 @@ class CampaignsTable extends WP_List_Table {
 
 		$this->mapper = new MapperService( TransactionEntity::class );
 		$this->table  = $this->mapper->get_table_name();
+		$this->campaigns = new Campaigns();
 
 		$this->search_columns = [
-			'label' => __( 'Label', 'kudos-donations' ),
+			'name' => __( 'Name', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
-			'label'        => __( 'Email', 'kudos-donations' ),
+			'name'        => __( 'Email', 'kudos-donations' ),
 			'transactions' => __( 'Street', 'kudos-donations' ),
 			'total'        => __( 'Total', 'kudos-donations' ),
 		];
 
 		parent::__construct(
 			[
-				'orderBy'  => 'slug',
+				'orderBy'  => 'date',
 				'singular' => __( 'Campaign', 'kudos-donations' ),
 				'plural'   => __( 'Campaigns', 'kudos-donations' ),
 				'ajax'     => false,
@@ -75,17 +80,15 @@ class CampaignsTable extends WP_List_Table {
 		$mapper = $this->mapper;
 		$search = $this->get_search_data();
 
-		$campaigns = Settings::get_setting( 'campaigns' );
+		$campaigns = $this->campaigns->get_all();
 		if ( ! $campaigns ) {
 			return [];
 		}
 
 		// Add search query if exist.
 		if ( $search ) {
-			$campaigns = array_filter(
-				$campaigns,
-				function ( $value ) use ( $search ) {
-					return $value[ $search['field'] ] === $search['term'];
+			$campaigns = array_filter( $campaigns, function ( $value ) use ( $search ) {
+					return (strtolower($value[ $search['field'] ]) == strtolower($search['term']));
 				}
 			);
 		}
@@ -95,7 +98,7 @@ class CampaignsTable extends WP_List_Table {
 
 			$transactions = $mapper->get_all_by( [ 'campaign_label' => $id ] );
 
-//			$campaigns[ $key ]['date'] = date("r",hexdec(substr($id,3,8)));
+			$campaigns[ $key ]['date'] = date("r",hexdec(substr($id,3,8)));
 			$campaigns[ $key ]['transactions'] = 0;
 			$campaigns[ $key ]['total']        = 0;
 			if ( $transactions ) {
@@ -129,7 +132,8 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function column_names(): array {
 		return [
-			'label'         => __( 'Label', 'kudos-donations' ),
+			'date'          => __('Date', 'kudos-donations'),
+			'name'         => __( 'Name', 'kudos-donations' ),
 			'transactions'  => __( 'Transactions', 'kudos-donations' ),
 			'total'         => __( 'Total', 'kudos-donations' ),
 			'last_donation' => __( 'Last Donation', 'kudos-donations' ),
@@ -144,6 +148,7 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function get_hidden_columns(): array {
 		return [
+			'date',
 			'subscription_id',
 			'id',
 		];
@@ -170,46 +175,6 @@ class CampaignsTable extends WP_List_Table {
 				false,
 			],
 		];
-	}
-
-	/**
-	 * Process cancel and bulk-cancel actions
-	 *
-	 * @since   2.0.4
-	 */
-	public function process_bulk_action() {
-
-		// Detect when a bulk action is being triggered.
-		switch ( $this->current_action() ) {
-
-			case 'delete':
-				// In our file that handles the request, verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['singular'] ) ) {
-					die();
-				}
-
-				if ( isset( $_GET['label'] ) ) {
-					self::delete_record( sanitize_text_field( wp_unslash( $_GET['label'] ) ) );
-				}
-
-				break;
-
-			case 'bulk-delete':
-				// In our file that handles the request, verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
-
-				if ( isset( $_REQUEST['bulk-action'] ) ) {
-					$labels = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
-					foreach ( $labels as $label ) {
-						self::delete_record( sanitize_text_field( $label ) );
-					}
-				}
-				break;
-		}
 	}
 
 	/**
@@ -272,7 +237,7 @@ class CampaignsTable extends WP_List_Table {
 	 * @return string
 	 * @since 2.0.4
 	 */
-	protected function column_label( array $item ): string {
+	protected function column_name( array $item ): string {
 
 		return $item['name'];
 
@@ -290,7 +255,7 @@ class CampaignsTable extends WP_List_Table {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_label&s=%s' ), rawurlencode( $item['slug'] ) ),
+			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_label&s=%s' ), rawurlencode( $item['id'] ) ),
 			strtoupper( $item['transactions'] )
 		);
 
@@ -326,17 +291,5 @@ class CampaignsTable extends WP_List_Table {
 		return isset( $item['last_donation'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 			strtotime( $item['last_donation'] ) ) : '';
 
-	}
-
-	/**
-	 * Returns an associative array containing the bulk action
-	 *
-	 * @return array|string
-	 * @since   2.0.4
-	 */
-	protected function get_bulk_actions() {
-		return [
-			'bulk-delete' => __( 'Delete', 'kudos-donations' ),
-		];
 	}
 }

@@ -1,3 +1,5 @@
+import { RenameModal } from '../RenameModal';
+
 const { __ } = wp.i18n;
 const { useState } = wp.element;
 const {
@@ -6,22 +8,24 @@ const {
     CheckboxControl,
     ClipboardButton,
     Flex,
+    FlexItem,
+    FlexBlock,
     PanelBody,
     RadioControl,
     TextControl,
     ToggleControl
 } = wp.components;
 
-const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleInputChange, allowDelete = false } ) => {
+const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleInputChange, isCampaignNameValid, allowDelete = false } ) => {
 
     const [ hasCopied, setHasCopied ] = useState( false )
 
-    const removeCampaign = ( slug ) => {
+    const removeCampaign = ( id ) => {
         let current = settings._kudos_campaigns
         let updated = current.filter( function (value) {
-            return value.slug !== slug
+            return value.id !== id
         } )
-        updateSetting('_kudos_campaigns', _.uniq(updated, 'slug') )
+        updateSetting('_kudos_campaigns', _.uniq(updated, 'id') )
         showNotice( __('Campaign deleted.', 'kudos-donations') )
     }
 
@@ -32,7 +36,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
         >
 
             <BaseControl
-                id={ campaign.slug + "-modal-text" }
+                id={ campaign.id + "-modal-text" }
                 help={'Customize the text of the form'}
             >
 
@@ -63,7 +67,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
             </BaseControl>
 
             <BaseControl
-                id={ campaign.slug + "-address" }
+                id={ campaign.id + "-address" }
                 label="Address"
                 help={'Configure the address fields'}
             >
@@ -93,7 +97,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
             </BaseControl>
 
             <BaseControl
-                id={ campaign.slug + "-donation-type" }
+                id={ campaign.id + "-donation-type" }
                 label="Donation type"
                 help={'Set the donation type available'}
             >
@@ -147,15 +151,25 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
 
             <Flex>
 
-                <ClipboardButton
-                    isPrimary
-                    isSmall
-                    text={'[kudos campaign_id="' + campaign.slug + '"]'}
-                    onCopy={ () => setHasCopied( true ) }
-                    onFinishCopy={ () => setHasCopied( false ) }
-                >
-                    { hasCopied ? 'Copied!' : 'Copy Shortcode' }
-                </ClipboardButton>
+                <FlexBlock>
+                    <ClipboardButton
+                        isPrimary
+                        isSmall
+                        text={'[kudos campaign="' + campaign.id + '"]'}
+                        onCopy={ () => setHasCopied( true ) }
+                        onFinishCopy={ () => setHasCopied( false ) }
+                    >
+                        { hasCopied ? 'Copied!' : 'Copy Shortcode' }
+                    </ClipboardButton>
+                </FlexBlock>
+
+                <FlexItem>
+                    <RenameModal
+                        campaign={ campaign }
+                        updateSetting={ updateSetting }
+                        isCampaignNameValid={ isCampaignNameValid }
+                    />
+                </FlexItem>
 
                 { allowDelete ?
 
@@ -164,11 +178,11 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                     isSmall
                     onClick={
                         () => {
-                            if (window.confirm(__('Are you sure you wish to delete this campaign?', 'kudos-donations'))) removeCampaign( campaign.slug )
+                            if (window.confirm(__('Are you sure you wish to delete this campaign?', 'kudos-donations'))) removeCampaign( campaign.id )
                         }
                     }
                 >
-                    { __('Delete', 'kudos-donations') + ' ' + campaign.name }
+                    { __('Delete', 'kudos-donations') }
                 </Button>
 
                 : '' }
