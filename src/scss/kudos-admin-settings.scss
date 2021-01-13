@@ -8,17 +8,24 @@
   --wp-admin-theme-color-darker-20: theme('colors.orange.700')
 }
 
+.kudos-welcome-guide {
+  width: 312px;
+}
+
 .components-radio-control__input::before,
 .components-circular-option-picker__option::after,
 .components-modal__frame *,
 .components-modal__frame ::after,
 .components-modal__frame ::before {
-  box-sizing: border-box;
+  box-sizing: inherit;
 }
 
 .components-base-control {
-  margin-bottom: 24px;
+  @apply kd-mb-4;
+}
 
+.components-panel__body>.components-base-control {
+  @apply kd-pb-3;
   &:last-child {
     margin-bottom: 8px;
   }
@@ -69,7 +76,7 @@
 
   // WordPress Components
   .components-base-control__help {
-    @apply kd-mt-4 kd-mb-0;
+    @apply kd-mt-4 kd-mb-0 kd-italic;
   }
 
   .components-snackbar {

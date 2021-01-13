@@ -4,7 +4,6 @@ namespace Kudos\Admin\Table;
 
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Campaigns;
-use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use WP_List_Table;
@@ -96,7 +95,7 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$id = $campaign['id'];
 
-			$transactions = $mapper->get_all_by( [ 'campaign_label' => $id ] );
+			$transactions = $mapper->get_all_by( [ 'campaign_id' => $id ] );
 
 			$campaigns[ $key ]['date'] = date("r",hexdec(substr($id,3,8)));
 			$campaigns[ $key ]['transactions'] = 0;
@@ -178,28 +177,6 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Delete a campaign.
-	 *
-	 * @param string $label The campaign label.
-	 *
-	 * @return bool
-	 * @since   2.0.4
-	 */
-	protected function delete_record( string $label ): bool {
-
-		$labels = Settings::get_setting( 'campaign_labels' );
-		$labels = array_filter(
-			$labels,
-			function ( $a ) use ( $label ) {
-				return ! in_array( $label, $a, true );
-			}
-		);
-
-		return Settings::update_setting( 'campaign_labels', $labels );
-
-	}
-
-	/**
 	 * Render the bulk edit checkbox
 	 *
 	 * @param array $item Array of results.
@@ -255,7 +232,7 @@ class CampaignsTable extends WP_List_Table {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_label&s=%s' ), rawurlencode( $item['id'] ) ),
+			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_id&s=%s' ), rawurlencode( $item['id'] ) ),
 			strtoupper( $item['transactions'] )
 		);
 
@@ -289,7 +266,7 @@ class CampaignsTable extends WP_List_Table {
 	protected function column_last_donation( array $item ): string {
 
 		return isset( $item['last_donation'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			strtotime( $item['last_donation'] ) ) : '';
+			strtotime( $item['last_donation'] ) ) : sprintf("<i>%s</i>", __('None yet', 'kudos-donations'));
 
 	}
 }

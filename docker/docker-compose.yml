@@ -59,18 +59,6 @@ services:
     depends_on:
       - db
 
-  ngrok:
-    image: wernight/ngrok
-    container_name: ngrok-kudos
-    restart: always
-    ports:
-      - "4040:4040"
-    depends_on:
-      - wordpress
-    environment:
-      NGROK_PORT: wordpress:80
-      NGROK_REGION: eu
-
   redis:
     image: redis:alpine
     container_name: redis-kudos

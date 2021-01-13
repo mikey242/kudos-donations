@@ -59,7 +59,7 @@ class KudosButton {
 	 *
 	 * @var string
 	 */
-	private $campaign_label;
+	private $campaign_id;
 	/**
 	 * @var string
 	 */
@@ -138,7 +138,7 @@ class KudosButton {
 			'address_enabled'   => $this->address_enabled,
 			'address_required'  => $this->address_required,
 			'donation_type'     => $this->donation_type,
-			'campaign_label'    => $this->campaign_label,
+			'campaign_id'       => $this->campaign_id,
 			'payment_by'        => __( 'Secure payment by', 'kudos-donations' ),
 		];
 

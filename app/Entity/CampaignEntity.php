@@ -55,7 +55,7 @@ class CampaignEntity extends AbstractEntity {
 
 		$mapper = new MapperService( TransactionEntity::class );
 
-		return $mapper->get_all_by( [ 'campaign_label' => $this->slug ] );
+		return $mapper->get_all_by( [ 'campaign' => $this->slug ] );
 
 	}
 

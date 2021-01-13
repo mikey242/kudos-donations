@@ -77,7 +77,7 @@ class TransactionEntity extends AbstractEntity {
 	 *
 	 * @var string
 	 */
-	public $campaign_label;
+	public $campaign_id;
 	/**
 	 * Refunds serialized array
 	 *

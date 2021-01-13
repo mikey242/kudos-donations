@@ -2,7 +2,6 @@
 
 namespace Kudos\Admin;
 
-use Kudos\Entity\CampaignEntity;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
@@ -14,9 +13,7 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MailerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
-use Kudos\Service\RestMapperService;
 use Kudos\Service\TwigService;
-use Kudos\Service\UpdateService;
 use WP_REST_Server;
 
 /**
@@ -494,15 +491,6 @@ class Admin {
 					$subscription    = $mollie->cancel_subscription( $subscription_id, $customer_id );
 					if ( $subscription ) {
 						new AdminNotice( __( 'Subscription cancelled', 'kudos-donations' ) );
-					}
-					break;
-
-				case 'kudos_sync_campaigns':
-					$result = UpdateService::sync_campaign_labels();
-					if ( $result ) {
-						new AdminNotice( __( 'Campaign labels updated', 'kudos-donations' ) );
-					} else {
-						new AdminNotice( __( 'No additional campaigns found', 'kudos-donations' ), 'info' );
 					}
 					break;
 

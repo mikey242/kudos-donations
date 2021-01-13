@@ -18,6 +18,7 @@ import { Btn } from "./Components/Btn";
 import { ExportSettingsPanel } from "./Components/Panels/ExportSettingsPanel"
 import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
 import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
+import {IntroGuide} from "./Components/IntroGuide"
 
 const { __ } = wp.i18n;
 
@@ -403,6 +404,11 @@ class KudosAdmin extends Component {
 							return (
 
 								<div className="kudos-settings-main dashboard-wrap kd-mx-auto kd-container">
+
+									<IntroGuide
+										show={this.state.settings._kudos_show_intro}
+										updateSetting={this.updateSetting}
+									/>
 
 									<Panel>
 										{tab.content}
