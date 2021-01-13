@@ -245,7 +245,7 @@ class Front {
 		$city              = isset( $form['city'] ) ? sanitize_text_field( $form['city'] ) : null;
 		$country           = isset( $form['country'] ) ? sanitize_text_field( $form['country'] ) : null;
 		$redirect_url      = isset( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
-		$campaign_label    = isset( $form['campaign_label'] ) ? sanitize_text_field( $form['campaign_label'] ) : null;
+		$campaign_id       = isset( $form['campaign_id'] ) ? sanitize_text_field( $form['campaign_id'] ) : null;
 
 		$mollie = MollieService::factory();
 		$mapper = new MapperService( DonorEntity::class );
@@ -285,7 +285,7 @@ class Front {
 			$payment_frequency,
 			$recurring_length,
 			$redirect_url,
-			$campaign_label,
+			$campaign_id,
 			$name,
 			$email,
 			$customer_id
@@ -330,7 +330,7 @@ class Front {
 						'amount_type'    => 'open',
 						'donation_type'  => 'both',
 						'fixed_amounts'  => '5, 10, 20, 50',
-						'campaign'       => 'default',
+						'campaign_id'       => 'default',
 						'alignment'      => 'none',
 					],
 					$atts,
@@ -352,7 +352,7 @@ class Front {
 						'type'    => 'string',
 						'default' => __( 'Donate now', 'kudos-donations' ),
 					],
-					'campaign' => [
+					'campaign_id' => [
 						'type'    => 'string',
 						'default' => 'default',
 					],
@@ -399,8 +399,8 @@ class Front {
 
 		// Set campaign according to atts and if none found then set as default
 		$campaigns = new Campaigns();
-		if(!empty($atts['campaign'])) {
-			$campaign = $campaigns->get_campaign($atts['campaign']);
+		if(!empty($atts['campaign_id'])) {
+			$campaign = $campaigns->get_campaign($atts['campaign_id']);
 		}
 
 		if(empty($campaign)) {
@@ -539,7 +539,11 @@ class Front {
 				return false;
 			}
 
-			$donor = $transaction->get_donor();
+			/** @var DonorEntity $donor */
+			$donor     = $transaction->get_donor();
+			$campaigns = new Campaigns();
+			$campaign = $campaigns->get_campaign($transaction->campaign_id);
+			$campaign_name = !empty($campaign['name']) ? $campaign['name'] : '';
 
 			switch ( $transaction->status ) {
 				case 'paid':
@@ -548,6 +552,7 @@ class Front {
 								2 ),
 						'{{name}}'  => $donor->name,
 						'{{email}}' => $donor->email,
+						'{{campaign}}' => $campaign_name
 					];
 					$atts['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
 					$atts['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );

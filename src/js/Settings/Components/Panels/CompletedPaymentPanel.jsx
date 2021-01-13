@@ -49,7 +49,7 @@ const CompletedPaymentPanel = (props ) => {
 					/>
 
 					<Info>
-						{ __( 'You can use the following variables in the above fields: {{name}}, {{email}}, {{value}}', 'kudos-donations') }
+						{ __( 'You can use the following variables in the above fields: {{name}}, {{email}}, {{value}}, {{campaign}}', 'kudos-donations') }
 					</Info>
 
 				</Fragment>

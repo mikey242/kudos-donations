@@ -73,7 +73,7 @@ class MollieService extends AbstractService {
 	 * @param string $interval Interval of payment (oneoff, first, recurring).
 	 * @param string $years Number of years for subscription.
 	 * @param string $redirect_url URL to redirect customer to on payment completion.
-	 * @param string|null $campaign_label Campaign name to associate payment to.
+	 * @param string|null $campaign_id Campaign name to associate payment to.
 	 * @param string|null $name Name of donor.
 	 * @param string|null $email Email of donor.
 	 * @param string|null $customer_id Mollie customer id.
@@ -86,7 +86,7 @@ class MollieService extends AbstractService {
 		string $interval,
 		string $years,
 		string $redirect_url,
-		string $campaign_label = null,
+		string $campaign_id = null,
 		string $name = null,
 		string $email = null,
 		string $customer_id = null
@@ -122,7 +122,7 @@ class MollieService extends AbstractService {
 				'years'          => $years,
 				'email'          => $email,
 				'name'           => $name,
-				'campaign_label' => $campaign_label,
+				'campaign_id'    => $campaign_id,
 			],
 		];
 
@@ -143,7 +143,7 @@ class MollieService extends AbstractService {
 					'status'         => $payment->status,
 					'mode'           => $payment->mode,
 					'sequence_type'  => $payment->sequenceType,
-					'campaign_label' => $campaign_label,
+					'campaign_id' => $campaign_id,
 				]
 			);
 
@@ -500,11 +500,11 @@ class MollieService extends AbstractService {
 			try {
 				$customer          = $this->mollie_api->customers->get( $customer_id );
 				$subscription_meta = $customer->getSubscription( $subscription_id )->metadata;
-				if ( array_key_exists( 'campaign_label', $subscription_meta ) ) {
-					$campaign_label = $subscription_meta->campaign_label;
+				if ( array_key_exists( 'campaign_id', $subscription_meta ) ) {
+					$campaign_id = $subscription_meta->campaign_id;
 					$transaction->set_fields(
 						[
-							'campaign_label' => $campaign_label,
+							'campaign_id' => $campaign_id,
 						]
 					);
 				} else {
@@ -607,7 +607,7 @@ class MollieService extends AbstractService {
 				$transaction->order_id
 			),
 			'metadata'    => [
-				'campaign_label' => $transaction->campaign_label,
+				'campaign_id' => $transaction->campaign_id,
 			],
 		];
 

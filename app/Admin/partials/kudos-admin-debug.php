@@ -177,15 +177,6 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 					<input class="button-secondary confirm" type='submit' value='Delete all subscriptions'>
 				</form>
 
-				<hr/>
-
-				<p>This will add missing campaign labels from transactions</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_sync_campaigns', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_sync_campaigns'>
-					<input class="button-secondary confirm" type='submit' value='Sync campaign labels'>
-				</form>
-
 				<hr />
 
 				<p>This will <strong>delete all Kudos data</strong> and recreate the database</p>

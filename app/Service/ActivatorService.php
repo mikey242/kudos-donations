@@ -39,12 +39,14 @@ class ActivatorService {
 		$twig = new TwigService();
 		$twig->init();
 
-		self::create_donors_table();
-		self::create_transactions_table();
-		self::create_subscriptions_table();
-		self::set_defaults();
-
 		if ( $old_version ) {
+
+			if ( version_compare( $old_version, '2.3.0', '<' ) ) {
+				global $wpdb;
+				$table = TransactionEntity::get_table_name();
+				$wpdb->query("ALTER TABLE $table RENAME COLUMN `campaign_label` TO `campaign_id`");
+				Settings::update_setting('show_intro', 1);
+			}
 
 			if ( version_compare( $old_version, '2.2.0', '<' ) ) {
 				$link = Settings::get_setting('privacy_link');
@@ -61,15 +63,12 @@ class ActivatorService {
 				Settings::remove_setting('action_scheduler');
 			}
 
-			if ( version_compare( $old_version, '2.0.4', '<' ) ) {
-				$logger->info( 'Upgrading to version 2.0.4', [ 'previous_version' => $old_version ] );
-				$result = UpdateService::sync_campaign_labels();
-				if ( $result ) {
-					$logger->info( 'Updated campaign labels from transactions' );
-				}
-			}
-
 		}
+
+		self::create_donors_table();
+		self::create_transactions_table();
+		self::create_subscriptions_table();
+		self::set_defaults();
 
 		$logger->info( 'Kudos Donations plugin activated' );
 
@@ -134,7 +133,7 @@ class ActivatorService {
 		  transaction_id VARCHAR(255),
 		  subscription_id VARCHAR(255),
 		  refunds BLOB DEFAULT NULL,
-		  campaign_label VARCHAR(255),
+		  campaign VARCHAR(255),
 		  secret VARCHAR(255),
 		  PRIMARY KEY (id)
 		) $charset_collate;";

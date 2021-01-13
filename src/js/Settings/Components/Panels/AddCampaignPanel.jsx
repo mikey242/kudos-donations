@@ -38,7 +38,7 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting, handleInputChang
     };
 
     return (
-        <div>
+        <>
             <PanelBody
                 title={ __( 'Add a campaign', 'kudos-donations' ) }
                 opened={ true }
@@ -51,13 +51,10 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting, handleInputChang
                     ) }
                     help={__("Give your campaign a unique name to identify it.", 'kudos-donations')}
                     id={'kudos_new_campaign'}
-                    className={'kd-inline'}
                     type={ 'text' }
                     value={ addFormValue }
                     onChange={ (newValue) => updateValue( newValue ) }
                 />
-
-                <br/>
 
                 <Button
                     isPrimary
@@ -88,7 +85,7 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting, handleInputChang
                 )
 
             })}
-        </div>
+        </>
     );
 };
 

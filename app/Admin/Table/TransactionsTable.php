@@ -36,7 +36,7 @@ class TransactionsTable extends WP_List_Table {
 		$this->search_columns = [
 			'name'              => __( 'Name', 'kudos-donations' ),
 			'email'             => __( 'Email', 'kudos-donations' ),
-			'campaign_label'    => __( 'Campaign', 'kudos-donations' ),
+			'campaign_id'       => __( 'Campaign', 'kudos-donations' ),
 			'order_id'          => __( 'Order ID', 'kudos-donations' ),
 		];
 
@@ -137,7 +137,7 @@ class TransactionsTable extends WP_List_Table {
 			'status'         => __( 'Status', 'kudos-donations' ),
 			'order_id'       => __( 'Order ID', 'kudos-donations' ),
 			'transaction_id' => __( 'Transaction Id', 'kudos-donations' ),
-			'campaign_label' => __( 'Campaign', 'kudos-donations' ),
+			'campaign_id'    => __( 'Campaign', 'kudos-donations' ),
 		];
 
 	}
@@ -172,8 +172,8 @@ class TransactionsTable extends WP_List_Table {
 				'value',
 				false,
 			],
-			'campaign_label' => [
-				'campaign_label',
+			'campaign_id' => [
+				'campaign_id',
 				false,
 			],
 		];
@@ -446,11 +446,11 @@ class TransactionsTable extends WP_List_Table {
 	 * @return string
 	 * @since 2.0.2
 	 */
-	protected function column_campaign_label( array $item ): string {
+	protected function column_campaign_id( array $item ): string {
 
 		$campaign_name = $this->campaigns->get_campaign(
-			$item['campaign_label'] )['name']
-            ?? $item['campaign_label'];
+			$item['campaign_id'] )['name']
+            ?? $item['campaign_id'];
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
