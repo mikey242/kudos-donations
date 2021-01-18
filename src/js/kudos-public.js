@@ -196,50 +196,62 @@ $(() => {
     })
 
     // Check form before submit
-    $body.on('click', '.kudos_submit', function (e) {
-        e.preventDefault()
-        const $form = $(this.form)
-        $form.validate()
-        if ($form.valid()) {
-            $form.submit()
-        }
-    })
+    // $body.on('click', '.kudos_submit', function (e) {
+    //     e.preventDefault()
+    //     const $form = $(this.form)
+    //     $form.validate()
+    //     if ($form.valid()) {
+    //         $form.submit()
+    //     }
+    // })
+
+    // document.querySelectorAll('.kudos_submit').forEach((button) => button.addEventListener('click', (e) => {
+    //     e.preventDefault()
+    //     console.log(this, e)
+    // }))
 
     // Submit donation form action
-    $body.on('submit', 'form.kudos_form', function (e) {
-        e.preventDefault()
-        const $kudosFormModal = $(this).closest('.kudos_form_modal')
-        const $kudosErrorMessage = $kudosFormModal.find(
-            '.kudos_error_message'
-        )
+    document.querySelectorAll('form.kudos_form').forEach((form) => {
+        // console.log(form.currentTarget)
 
-        $.ajax({
-            method: 'post',
-            dataType: 'json',
-            url: kudos.ajaxurl,
-            data: {
-                action: 'submit_payment',
-                form: $(e.currentTarget).serialize(),
-            },
-            beforeSend() {
-                $kudosFormModal.addClass('kudos_loading')
-            },
-            success(result) {
-                if (result.success) {
-                    $(location).attr('href', result.data)
-                } else {
-                    $kudosErrorMessage.text(result.data.message)
-                    $kudosFormModal
-                        .removeClass('kudos_loading')
-                        .addClass('error')
-                }
-            },
-            error(error) {
-                console.log('error', error)
-            },
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+            $(e.currentTarget).validate()
+            if($(e.currentTarget).valid()) {
+
+                const modal = form.closest('.kudos_form_modal')
+                const error = modal.querySelector('.kudos_error_message')
+                const formData  = new FormData(e.target);
+
+                const request = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ form: Object.fromEntries(formData) } )
+                };
+
+                modal.classList.add('kudos_loading')
+                submitPayment(kudos.createPaymentUrl, request).then((result) => {
+                    console.log(result)
+                    if(result.success) {
+                        window.location.href = result.data
+                    } else {
+                        error.innerHTML = result.data.message
+                        modal.classList.add('error')
+                        modal.classList.remove('kudos_loading')
+                    }
+                })
+
+            }
         })
     })
 })
+
+function submitPayment(url, request) {
+    return fetch(url, request)
+        .then(response => response.json());
+}
 
 // Checks the form tab data-requirements array against the current form values
 function checkRequirements($nextTab) {

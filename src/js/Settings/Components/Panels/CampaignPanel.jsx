@@ -31,7 +31,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
 
     return (
         <PanelBody
-            title={ __('Campaign', 'kudos-donations') + ' - ' + campaign.name }
+            title={ campaign.name }
             initialOpen={ false }
         >
 

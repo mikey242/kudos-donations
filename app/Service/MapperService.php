@@ -2,12 +2,11 @@
 
 namespace Kudos\Service;
 
+use Exception;
 use Kudos\Entity\AbstractEntity;
 use Kudos\Entity\EntityInterface;
-use Kudos\Exceptions\MapperException;
 use ReflectionClass;
 use ReflectionException;
-use WP_REST_Response;
 use wpdb;
 
 class MapperService extends AbstractService {
@@ -41,7 +40,7 @@ class MapperService extends AbstractService {
 		if ( null !== $repository ) {
 			try {
 				$this->set_repository( $repository );
-			} catch ( MapperException $e ) {
+			} catch ( Exception $e ) {
 				$this->logger->error( 'Could not set repository', [ 'message' => $e->getMessage() ] );
 			}
 		}
@@ -210,7 +209,7 @@ class MapperService extends AbstractService {
 	 *
 	 * @param string $class Class of repository to use.
 	 *
-	 * @throws MapperException
+	 * @throws Exception
 	 * @since 2.0.0
 	 */
 	public function set_repository( string $class ) {
@@ -220,7 +219,7 @@ class MapperService extends AbstractService {
 			if ( $reflection->implementsInterface( 'Kudos\Entity\EntityInterface' ) ) {
 				$this->repository = $class;
 			} else {
-				throw new MapperException( 'Repository must implement Kudos\Entity\EntityInterface', 0, $class );
+				throw new Exception( 'Repository must implement Kudos\Entity\EntityInterface', 0 );
 			}
 		} catch ( ReflectionException $e ) {
 			$this->logger->error( $e->getMessage() );

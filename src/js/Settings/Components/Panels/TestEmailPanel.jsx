@@ -4,21 +4,22 @@ const { useState } = wp.element;
 
 const TestEmailPanel = ( props ) => {
 
-	const [ isEdited, setIsEdited ] = useState( false );
+	const [ buttonDisabled, setButtonDisabled ] = useState(true);
 	const [ email, setEmail ] = useState( '' );
 	const [ isBusy, setIsBusy ] = useState( false );
 
-	const validateEmail = () => {
-		const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,6})?$/;
+	const handleChange = ( value ) => {
+		setEmail( value );
+		setButtonDisabled(!validateEmail(value));
+	}
+
+	const validateEmail = (email) => {
+		const emailReg = /^[\w-.]+@([\w-]+\.)+[\w-]{2,6}$/;
 		return emailReg.test( email );
 	};
 
-	const handleChange = ( value ) => {
-		setIsEdited( true );
-		setEmail( value );
-	};
-
 	const sendTest = () => {
+
 		setIsBusy( true );
 
 		if ( ! validateEmail( email ) ) {
@@ -76,7 +77,8 @@ const TestEmailPanel = ( props ) => {
 			<PanelRow>
 				<Button
 					isPrimary
-					disabled={ ! isEdited || isBusy }
+					isSmall
+					disabled={ buttonDisabled || isBusy }
 					isBusy={ isBusy }
 					onClick={ () => {
 						sendTest( email );

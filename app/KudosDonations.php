@@ -9,6 +9,8 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Front\Front;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\I18nService;
+use Kudos\Service\MollieService;
+use Kudos\Service\RestService;
 
 /**
  * The file that defines the core plugin class
@@ -81,6 +83,8 @@ class KudosDonations {
 
 		$this->set_locale();
 		$this->define_admin_hooks();
+		$this->define_rest_hooks();
+		$this->define_mollie_hooks();
 		$this->define_public_hooks();
 		$this->define_entity_hooks();
 
@@ -116,6 +120,32 @@ class KudosDonations {
 
 	}
 
+	/**
+	 * Initialize rest service and register routes.
+
+	 * @since 2.3.0
+	 */
+	private function define_rest_hooks() {
+
+		$rest = new RestService();
+
+		add_action( 'rest_api_init', [$rest, 'register_routes'] );
+
+	}
+
+	/**
+	 * Define mollie related hooks.
+	 *
+	 * @since 2.3.0
+	 */
+	private function define_mollie_hooks() {
+
+		add_action( 'kudos_process_paid_transaction', [MollieService::class, 'process_transaction'], 10, 1 );
+		add_action( 'wp_ajax_nopriv_submit_payment', [MollieService::factory(), 'submit_payment'] );
+		add_action( 'wp_ajax_submit_payment', [MollieService::factory(), 'submit_payment'] );
+
+	}
+
 
 	/**
 	 * Register all of the hooks related to the admin area functionality
@@ -132,7 +162,6 @@ class KudosDonations {
 		add_action( 'admin_menu', [$plugin_admin, 'kudos_add_menu_pages'], 11 );
 		add_action( 'admin_init', [$plugin_admin, 'admin_actions'] );
 		add_action( 'admin_init', [$plugin_admin, 'register_settings'] );
-		add_action( 'rest_api_init', [$plugin_admin, 'register_routes'] );
 		add_action( 'rest_api_init', [$plugin_admin, 'register_settings'] );
 		add_action( 'wp_verify_nonce_failed', [$plugin_admin, 'nonce_fail'], 10, 2 );
 
@@ -152,12 +181,9 @@ class KudosDonations {
 		add_action( 'wp_enqueue_scripts', [$plugin_public, 'enqueue_styles'], 9999 );
 		add_action( 'wp_enqueue_scripts', [$plugin_public, 'enqueue_scripts'] );
 		add_action( 'enqueue_block_assets', [$plugin_public, 'enqueue_block_assets'] );
-		add_action( 'wp_ajax_nopriv_submit_payment', [$plugin_public, 'submit_payment'] );
-		add_action( 'wp_ajax_submit_payment', [$plugin_public, 'submit_payment'] );
 		add_action( 'init', [$plugin_public, 'register_kudos'] );
 		add_action( 'wp_footer', [$plugin_public, 'handle_query_variables'], 1000 );
 		add_action( 'query_vars', [$plugin_public, 'register_vars'] );
-		add_action( 'kudos_process_paid_transaction', [$plugin_public, 'process_transaction'], 10, 1 );
 
 	}
 

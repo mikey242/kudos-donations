@@ -19,6 +19,7 @@ import { ExportSettingsPanel } from "./Components/Panels/ExportSettingsPanel"
 import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
 import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
 import {IntroGuide} from "./Components/IntroGuide"
+import {CampaignPanel} from "./Components/Panels/CampaignPanel"
 
 const { __ } = wp.i18n;
 
@@ -51,6 +52,7 @@ class KudosAdmin extends Component {
 		this.showNotice = this.showNotice.bind( this );
 		this.hideNotice = this.hideNotice.bind( this );
 		this.checkApiKey = this.checkApiKey.bind( this );
+		this.isCampaignNameValid = this.isCampaignNameValid.bind( this )
 
 		this.state = {
 			tabName: getTabName(),
@@ -255,6 +257,10 @@ class KudosAdmin extends Component {
 		} );
 	}
 
+	isCampaignNameValid( name ) {
+		return !('' === name.trim() || this.state.settings._kudos_campaigns.find(x => x.name.toLowerCase() === name.toLowerCase().trim()));
+	}
+
 	render() {
 
 		// Show spinner if not yet loaded
@@ -273,7 +279,7 @@ class KudosAdmin extends Component {
 				title: __('Mollie', 'kudos-donations'),
 				className: 'tab-mollie',
 				content:
-					<Fragment>
+					<Panel>
 						<MollieApiModePanel
 								{...this.state}
 								mollieChanged={ this.mollieChanged }
@@ -284,14 +290,15 @@ class KudosAdmin extends Component {
 								mollieChanged={ this.mollieChanged }
 								handleInputChange={ this.handleInputChange }
 						/>
-					</Fragment>
+					</Panel>
 			},
 			{
 				name: 'campaigns',
 				title: __('Campaigns', 'kudos-donations'),
 				className: 'tab-campaigns',
 				content:
-					<Fragment>
+				<Fragment>
+					<Panel>
 						<AddCampaignPanel
 							isCampaignNameValid={ this.isCampaignNameValid }
 							settings={ this.state.settings }
@@ -299,14 +306,37 @@ class KudosAdmin extends Component {
 							handleInputChange={ this.handleInputChange }
 							updateSetting={ this.updateSetting }
 						/>
-					</Fragment>
+					</Panel>
+					<br/>
+					<Panel
+						header={__('Campaigns', 'kudos-donations')}
+					>
+						{ this.state.settings._kudos_campaigns.map((campaign, i) => {
+
+							return(
+								<CampaignPanel
+									key={ 'campaign_' + i }
+									allowDelete={ !campaign.protected }
+									settings={ this.state.settings }
+									campaign={ this.state.settings._kudos_campaigns[i] }
+									isCampaignNameValid={ this.isCampaignNameValid }
+									updateSetting={ this.updateSetting }
+									showNotice={ this.showNotice }
+									handleInputChange={ this.handleInputChange }
+								/>
+							)
+
+						})}
+					</Panel>
+
+				</Fragment>
 			},
 			{
 				name: 'customize',
 				title: __('Customize', 'kudos-donations'),
 				className: 'tab-customize',
 				content:
-					<Fragment>
+					<Panel>
 						<ThemePanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
@@ -323,14 +353,14 @@ class KudosAdmin extends Component {
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
-					</Fragment>
+					</Panel>
 			},
 			{
 				name: 'email',
 				title: __('Email', 'kudos-donations'),
 				className: 'tab-email',
 				content:
-					<Fragment>
+					<Panel>
 						<EmailReceiptsPanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
@@ -343,14 +373,14 @@ class KudosAdmin extends Component {
 							handleInputChange={this.handleInputChange}
 							showNotice={this.showNotice}
 						/>
-					</Fragment>
+					</Panel>
 			},
 			{
 				name: 'advanced',
 				title: __('Advanced', 'kudos-donations'),
 				className: 'tab-advanced',
 				content:
-					<Fragment>
+					<Panel>
 						<DebugModePanel
 							{...this.state}
 							handleInputChange={this.handleInputChange}
@@ -362,7 +392,7 @@ class KudosAdmin extends Component {
 							updateAll={this.updateAll}
 							handleInputChange={this.handleInputChange}
 						/>
-					</Fragment>
+					</Panel>
 			}
 
 		], this.state, this.handleInputChange);
@@ -410,9 +440,7 @@ class KudosAdmin extends Component {
 										updateSetting={this.updateSetting}
 									/>
 
-									<Panel>
-										{tab.content}
-									</Panel>
+									{tab.content}
 
 									<PanelRow className={'kd-justify-center'}>
 										<Btn
