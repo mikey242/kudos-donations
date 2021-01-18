@@ -10,11 +10,10 @@ use Kudos\Helpers\Utils;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
-use Kudos\Service\MailerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
+use Kudos\Service\RestService;
 use Kudos\Service\TwigService;
-use WP_REST_Server;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -72,69 +71,6 @@ class Admin {
 	}
 
 	/**
-	 * Registers REST routes
-	 *
-	 * @return void
-	 * @since   2.0.0
-	 */
-	public function register_routes() {
-
-		// Payment webhook.
-		$mollie = MollieService::factory();
-		register_rest_route(
-			'kudos/v1',
-			'mollie/payment/webhook',
-			[
-				'methods'             => 'POST',
-				'callback'            => [ $mollie, 'rest_api_mollie_webhook' ],
-				'args'                => [
-					'id' => [
-						'required' => true,
-					],
-				],
-				'permission_callback' => '__return_true',
-			]
-		);
-
-		// Test Mollie API keys.
-		register_rest_route(
-			'kudos/v1',
-			'mollie/admin',
-			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $mollie, 'check_api_keys' ],
-				'args'                => [
-					'apiMode' => [
-						'required' => true,
-					],
-				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
-			]
-		);
-
-		// Test Email.
-		$mailer = MailerService::factory();
-		register_rest_route(
-			'kudos/v1',
-			'email/test',
-			[
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $mailer, 'send_test' ],
-				'args'                => [
-					'email' => [
-						'required' => true,
-					],
-				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
-			]
-		);
-	}
-
-	/**
 	 * Create the Kudos Donations admin pages
 	 *
 	 * @since   2.0.0
@@ -143,7 +79,7 @@ class Admin {
 
 		add_menu_page(
 			__( 'Kudos', 'kudos-donations' ),
-			__( 'Kudos', 'kudos-donations' ),
+			__( 'Donations', 'kudos-donations' ),
 			'manage_options',
 			'kudos-transactions',
 			false,
@@ -273,9 +209,8 @@ class Admin {
 			'kudos',
 			[
 				'version'     => KUDOS_VERSION,
-				'nonce'       => wp_create_nonce( 'wp_rest' ),
-				'checkApiUrl' => rest_url( 'kudos/v1/mollie/admin' ),
-				'sendTestUrl' => rest_url( 'kudos/v1/email/test' ),
+				'checkApiUrl' => rest_url( RestService::NAMESPACE . '/mollie/check-api' ),
+				'sendTestUrl' => rest_url( RestService::NAMESPACE . '/email/test' ),
 				'ajaxurl'     => admin_url( 'admin-ajax.php' ),
 			]
 		);

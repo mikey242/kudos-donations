@@ -3,7 +3,6 @@
 namespace Kudos\Entity;
 
 use DateTime;
-use Kudos\Exceptions\EntityException;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
@@ -61,16 +60,11 @@ abstract class AbstractEntity implements EntityInterface {
 	public function set_fields( array $fields ) {
 
 		foreach ( $fields as $property => $value ) {
-			try {
-				if ( property_exists( static::class, $property ) ) {
-					$this->$property = $value;
-				} else {
-					throw new EntityException( 'Property does not exist!', 0, $property, static::class );
-				}
-			} catch ( EntityException $e ) {
+			if ( property_exists( static::class, $property ) ) {
+				$this->$property = $value;
+			} else {
 				$logger = LoggerService::factory();
 				$logger->warning( 'Error setting property.', [ "message" => $e->getMessage() ] );
-
 			}
 		}
 	}

@@ -1,18 +1,12 @@
-import {CampaignPanel} from "./CampaignPanel"
-
 const { __, sprintf } = wp.i18n;
 const { PanelBody, TextControl, Button } = wp.components;
 const { useState } = wp.element;
 
-const AddCampaignPanel = ({settings, showNotice, updateSetting, handleInputChange} ) => {
+const AddCampaignPanel = ({ settings, showNotice, updateSetting, isCampaignNameValid } ) => {
 
     const [ addFormValue, setAddFormValue ] = useState('');
     const [ buttonDisabled, setButtonDisabled ] = useState(true);
     let current = settings._kudos_campaigns;
-
-    const isCampaignNameValid = ( name ) => {
-        return !('' === name.trim() || settings._kudos_campaigns.find(x => x.name.toLowerCase() === name.toLowerCase().trim()));
-    }
 
     const updateValue = ( value ) => {
         setAddFormValue( value );
@@ -38,7 +32,6 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting, handleInputChang
     };
 
     return (
-        <>
             <PanelBody
                 title={ __( 'Add a campaign', 'kudos-donations' ) }
                 opened={ true }
@@ -66,26 +59,7 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting, handleInputChang
                 >
                     {__('Add campaign', 'kudos-donations')}
                 </Button>
-
             </PanelBody>
-
-            { settings._kudos_campaigns.map((campaign, i) => {
-
-                return(
-                    <CampaignPanel
-                        key={ 'campaign_' + i }
-                        allowDelete={ !campaign.protected }
-                        settings={ settings }
-                        campaign={ settings._kudos_campaigns[i] }
-                        isCampaignNameValid={ isCampaignNameValid }
-                        updateSetting={ updateSetting }
-                        showNotice={ showNotice }
-                        handleInputChange={ handleInputChange }
-                    />
-                )
-
-            })}
-        </>
     );
 };
 

@@ -75,7 +75,6 @@ class KudosModal {
 			$data,
 			[
 				'return_url'   => Utils::get_return_url(),
-				'nonce'        => wp_nonce_field( 'kudos_submit', '_wpnonce', true, false ),
 
 				// Global settings.
 				'vendor'       => Settings::get_setting( 'payment_vendor' ),

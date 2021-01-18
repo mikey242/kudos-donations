@@ -88,7 +88,7 @@ class Campaigns {
 		// Loop through each of the options sanitizing the data
 		foreach ($campaigns as $key=>$form) {
 
-			if(!array_search('id', $form)) $output[$key]['id'] = strtoupper(uniqid('kc_'));
+			if(!array_search('id', $form)) $output[$key]['id'] = strtoupper(uniqid('kdc_'));
 
 			foreach ($form as $option=>$value) {
 

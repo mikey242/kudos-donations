@@ -20,7 +20,7 @@
     {% set styles = [transition, focus, text, generic, style, extra] | join(' ') %}
 
     <button
-            type="button"
+            type={{ type }}
             class="{{ styles }}"
             aria-label="{{ label }}"
             {% for key, value in atts %}

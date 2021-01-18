@@ -8,11 +8,9 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use Kudos\Service\LoggerService;
-use Kudos\Service\MailerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\MollieService;
-use Mollie\Api\Resources\Payment;
+use Kudos\Service\RestService;
 
 /**
  * The public-facing functionality of the plugin.
@@ -58,40 +56,6 @@ class Front {
 
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
-
-	}
-
-	/**
-	 * Processes the transaction. Used by action scheduler via mollie class.
-	 *
-	 * @param string $order_id Kudos order id.
-	 *
-	 * @return bool
-	 * @since   2.0.0
-	 */
-	public static function process_transaction( string $order_id ): bool {
-
-		$logger = LoggerService::factory();
-		$logger->debug( 'Processing transaction', [ $order_id ] );
-
-		// Bail if no order ID.
-		if ( null === $order_id ) {
-			$logger->error( 'Order ID not provided to process_transaction function.' );
-
-			return false;
-		}
-
-		$mapper = new MapperService( TransactionEntity::class );
-		/** @var TransactionEntity $transaction */
-		$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
-
-		if ( $transaction->get_donor()->email ) {
-			// Send email - email setting is checked in mailer.
-			$mailer = MailerService::factory();
-			$mailer->send_receipt( $transaction );
-		}
-
-		return true;
 
 	}
 
@@ -171,7 +135,8 @@ class Front {
 			$handle,
 			'kudos',
 			[
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'ajaxurl'           => admin_url( 'admin-ajax.php' ),
+				'createPaymentUrl'  => rest_url( RestService::NAMESPACE . '/mollie/payment/create' ),
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
@@ -214,98 +179,6 @@ class Front {
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 		echo $this->get_kudos_root_styles();
-
-	}
-
-	/**
-	 * Creates a payment with Mollie.
-	 *
-	 * @since   1.0.0
-	 */
-	public function submit_payment() {
-
-		if ( ! isset( $_REQUEST['form'] ) ) {
-			wp_send_json_error( [ 'message' => __( 'Form data not found', 'kudos-donations' ) ] );
-		}
-
-		parse_str( wp_unslash( $_REQUEST['form'] ), $form );
-
-		if ( ! wp_verify_nonce( $form['_wpnonce'], 'kudos_submit' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
-		}
-
-		// Sanitize form fields.
-		$value             = intval( $form['value'] );
-		$payment_frequency = isset( $form['recurring_frequency'] ) ? sanitize_text_field( $form['recurring_frequency'] ) : 'oneoff';
-		$recurring_length  = isset( $form['recurring_length'] ) ? intval( $form['recurring_length'] ) : 0;
-		$name              = isset( $form['name'] ) ? sanitize_text_field( $form['name'] ) : null;
-		$email             = isset( $form['email_address'] ) ? sanitize_email( $form['email_address'] ) : null;
-		$street            = isset( $form['street'] ) ? sanitize_text_field( $form['street'] ) : null;
-		$postcode          = isset( $form['postcode'] ) ? sanitize_text_field( $form['postcode'] ) : null;
-		$city              = isset( $form['city'] ) ? sanitize_text_field( $form['city'] ) : null;
-		$country           = isset( $form['country'] ) ? sanitize_text_field( $form['country'] ) : null;
-		$redirect_url      = isset( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
-		$campaign_id       = isset( $form['campaign_id'] ) ? sanitize_text_field( $form['campaign_id'] ) : null;
-
-		$mollie = MollieService::factory();
-		$mapper = new MapperService( DonorEntity::class );
-
-		if ( $email ) {
-
-			// Search for existing donor.
-			/** @var DonorEntity $donor */
-			$donor = $mapper->get_one_by( [ 'email' => $email ] );
-
-			// Create new donor.
-			if ( empty( $donor->customer_id ) ) {
-				$donor    = new DonorEntity();
-				$customer = $mollie->create_customer( $email, $name );
-				$donor->set_fields( [ 'customer_id' => $customer->id ] );
-			}
-
-			// Update new/existing donor.
-			$donor->set_fields(
-				[
-					'email'    => $email,
-					'name'     => $name,
-					'street'   => $street,
-					'postcode' => $postcode,
-					'city'     => $city,
-					'country'  => $country,
-				]
-			);
-
-			$mapper->save( $donor );
-		}
-
-		$customer_id = $donor->customer_id ?? null;
-
-		$result = $mollie->create_payment(
-			$value,
-			$payment_frequency,
-			$recurring_length,
-			$redirect_url,
-			$campaign_id,
-			$name,
-			$email,
-			$customer_id
-		);
-
-		if ( $result instanceof Payment ) {
-			wp_send_json_success( $result->getCheckoutUrl() );
-		}
-
-		$message = __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' );
-
-		if(current_user_can('administrator') && KUDOS_DEBUG) {
-			$message = $result['message'];
-		}
-
-		wp_send_json_error(
-			[
-				'message' => $message,
-			]
-		);
 
 	}
 

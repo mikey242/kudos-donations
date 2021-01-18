@@ -2,6 +2,7 @@
 
 namespace Kudos\Service;
 
+use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
@@ -52,7 +53,7 @@ class MollieService extends AbstractService {
 		$this->mollie_api  = new MollieApiClient();
 		$this->api_mode    = Settings::get_setting( 'mollie_api_mode' );
 		$this->api_key     = Settings::get_setting( 'mollie_' . $this->api_mode . '_api_key' );
-		$this->webhook_url = $_ENV['WEBHOOK_URL'] ?? rest_url( 'kudos/v1/mollie/payment/webhook' );
+		$this->webhook_url = $_ENV['WEBHOOK_URL'] ?? rest_url( RestService::NAMESPACE . '/mollie/payment/webhook' );
 
 		if ( $this->api_key ) {
 			try {
@@ -543,6 +544,128 @@ class MollieService extends AbstractService {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Creates a payment with Mollie.
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @since   1.0.0
+	 */
+	public function submit_payment(WP_REST_Request $request) {
+
+		$form = [];
+		foreach ($request['form'] as $field=>$value) {
+			$form[$field] = $value;
+		}
+
+		// Sanitize form fields.
+		$value             = intval( $form['value'] );
+		$payment_frequency = isset( $form['recurring_frequency'] ) ? sanitize_text_field( $form['recurring_frequency'] ) : 'oneoff';
+		$recurring_length  = isset( $form['recurring_length'] ) ? intval( $form['recurring_length'] ) : 0;
+		$name              = isset( $form['name'] ) ? sanitize_text_field( $form['name'] ) : null;
+		$email             = isset( $form['email_address'] ) ? sanitize_email( $form['email_address'] ) : null;
+		$street            = isset( $form['street'] ) ? sanitize_text_field( $form['street'] ) : null;
+		$postcode          = isset( $form['postcode'] ) ? sanitize_text_field( $form['postcode'] ) : null;
+		$city              = isset( $form['city'] ) ? sanitize_text_field( $form['city'] ) : null;
+		$country           = isset( $form['country'] ) ? sanitize_text_field( $form['country'] ) : null;
+		$redirect_url      = isset( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
+		$campaign_id       = isset( $form['campaign_id'] ) ? sanitize_text_field( $form['campaign_id'] ) : null;
+
+		$mapper = new MapperService( DonorEntity::class );
+
+		if ( $email ) {
+
+			// Search for existing donor.
+			/** @var DonorEntity $donor */
+			$donor = $mapper->get_one_by( [ 'email' => $email ] );
+
+			// Create new donor.
+			if ( empty( $donor->customer_id ) ) {
+				$donor    = new DonorEntity();
+				$customer = $this->create_customer( $email, $name );
+				$donor->set_fields( [ 'customer_id' => $customer->id ] );
+			}
+
+			// Update new/existing donor.
+			$donor->set_fields(
+				[
+					'email'    => $email,
+					'name'     => $name,
+					'street'   => $street,
+					'postcode' => $postcode,
+					'city'     => $city,
+					'country'  => $country,
+				]
+			);
+
+			$mapper->save( $donor );
+		}
+
+		$customer_id = $donor->customer_id ?? null;
+
+		$result = $this->create_payment(
+			$value,
+			$payment_frequency,
+			$recurring_length,
+			$redirect_url,
+			$campaign_id,
+			$name,
+			$email,
+			$customer_id
+		);
+
+		if ( $result instanceof Payment ) {
+			wp_send_json_success( $result->getCheckoutUrl() );
+		}
+
+		$message = __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' );
+
+		if(current_user_can('administrator') && KUDOS_DEBUG) {
+			$message = $result['message'];
+		}
+
+		wp_send_json_error(
+			[
+				'message' => $message,
+			]
+		);
+
+	}
+
+	/**
+	 * Processes the transaction. Used by action scheduler.
+	 *
+	 * @param string $order_id Kudos order id.
+	 *
+	 * @return bool
+	 * @since   2.0.0
+	 */
+	public static function process_transaction( string $order_id ): bool {
+
+		$logger = LoggerService::factory();
+		$logger->debug( 'Processing transaction', [ $order_id ] );
+
+		// Bail if no order ID.
+		if ( null === $order_id ) {
+			$logger->error( 'Order ID not provided to process_transaction function.' );
+
+			return false;
+		}
+
+		$mapper = new MapperService( TransactionEntity::class );
+		/** @var TransactionEntity $transaction */
+		$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
+
+		if ( $transaction->get_donor()->email ) {
+			// Send email - email setting is checked in mailer.
+			$mailer = MailerService::factory();
+			$mailer->send_receipt( $transaction );
+		}
+
+		return true;
+
 	}
 
 	/**
