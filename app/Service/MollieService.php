@@ -555,6 +555,7 @@ class MollieService extends AbstractService {
 	 */
 	public function submit_payment(WP_REST_Request $request) {
 
+		// Verify nonce
 		if ( ! wp_verify_nonce( $request->get_header('X-WP-Nonce'), 'wp_rest' ) ) {
 			wp_send_json_error( [
 				'message' => __( 'Request invalid.', 'kudos-donations' )
@@ -617,21 +618,17 @@ class MollieService extends AbstractService {
 			$customer_id
 		);
 
+		// Return checkout url if payment successfully created in Mollie
 		if ( $result instanceof Payment ) {
 			wp_send_json_success( $result->getCheckoutUrl() );
 		}
 
-		$message = __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' );
+		// If payment not created by Mollie return an error message
+		$message = current_user_can('administrator') && KUDOS_DEBUG ? $result['message'] : __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' );
 
-		if(current_user_can('administrator') && KUDOS_DEBUG) {
-			$message = $result['message'];
-		}
-
-		wp_send_json_error(
-			[
-				'message' => $message,
-			]
-		);
+		wp_send_json_error([
+			'message' => $message,
+		]);
 
 	}
 
