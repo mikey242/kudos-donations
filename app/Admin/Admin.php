@@ -452,20 +452,4 @@ class Admin {
 		$settings->register_settings();
 
 	}
-
-	/**
-	 * Logs nonce failures
-	 *
-	 * @param string $nonce The nonce value.
-	 * @param string $action The action.
-	 */
-	public function nonce_fail( string $nonce, string $action ) {
-
-		// Check if action is a kudos action then log if true.
-//		if ( 'kudos_' === substr( $action, 0, 6 ) ) {
-			$logger = LoggerService::factory();
-			$logger->warning( 'Nonce verification failed', [ 'nonce' => $nonce, 'action' => $action ] );
-//		}
-
-	}
 }

@@ -163,7 +163,6 @@ class KudosDonations {
 		add_action( 'admin_init', [$plugin_admin, 'admin_actions'] );
 		add_action( 'admin_init', [$plugin_admin, 'register_settings'] );
 		add_action( 'rest_api_init', [$plugin_admin, 'register_settings'] );
-		add_action( 'wp_verify_nonce_failed', [$plugin_admin, 'nonce_fail'], 10, 2 );
 
 	}
 
