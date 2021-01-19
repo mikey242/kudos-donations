@@ -11,7 +11,6 @@ dom.watch()
 $(() => {
     'use strict'
 
-    const $body = $('body')
     const $kudosButtons = $('.kudos_button_donate')
     let animating = false
 
@@ -197,7 +196,6 @@ $(() => {
 
     // Submit donation form action
     document.querySelectorAll('form.kudos_form').forEach((form) => {
-        console.log(form)
 
         form.addEventListener('submit', (e) => {
             e.preventDefault()
@@ -207,8 +205,6 @@ $(() => {
                 const modal = form.closest('.kudos_form_modal')
                 const error = modal.querySelector('.kudos_error_message')
                 const formData  = new FormData(e.target);
-                // formData.append('_wpnonce', kudos._wpnonce);
-
                 const request = {
                     method: 'POST',
                     headers: {
@@ -220,7 +216,6 @@ $(() => {
 
                 modal.classList.add('kudos_loading')
                 submitPayment(kudos.createPaymentUrl, request).then((result) => {
-                    console.log(result)
                     if(result.success) {
                         window.location.href = result.data
                     } else {
