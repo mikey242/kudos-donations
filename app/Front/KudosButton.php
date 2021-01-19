@@ -29,7 +29,7 @@ class KudosButton {
 	 *
 	 * @var string
 	 */
-	private $id;
+	private $target_id;
 	/**
 	 * Modal title
 	 *
@@ -83,7 +83,7 @@ class KudosButton {
 	public function __construct( array $atts ) {
 
 		$this->twig             = TwigService::factory();
-		$this->id               = uniqid( 'kudos_modal-' );
+		$this->target_id        = uniqid('kudos_modal-');
 
 		foreach ( $atts as $property => $value ) {
 			if ( property_exists( static::class, $property ) ) {
@@ -106,7 +106,7 @@ class KudosButton {
 		$data = [
 			'alignment' => $this->alignment,
 			'label'     => $this->button_label,
-			'target'    => $this->id,
+			'target'    => $this->target_id,
 		];
 
 		$out = $this->twig->render( 'public/kudos.button.html.twig', $data );
@@ -126,11 +126,11 @@ class KudosButton {
 	 */
 	public function get_donate_modal(): string {
 
-		$modal = new KudosModal();
+		$modal = new KudosModal($this->target_id);
 		$allowed_types = ['fixed', 'open', 'both'];
 
 		$data = [
-			'modal_id'          => $this->id,
+			'modal_id'          => $this->target_id,
 			'modal_title'       => $this->modal_title,
 			'modal_text'        => $this->welcome_text,
 			'amount_type'       => in_array( $this->amount_type, $allowed_types, true ) ? $this->amount_type : 'open',

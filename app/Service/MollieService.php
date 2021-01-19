@@ -555,23 +555,24 @@ class MollieService extends AbstractService {
 	 */
 	public function submit_payment(WP_REST_Request $request) {
 
-		$form = [];
-		foreach ($request['form'] as $field=>$value) {
-			$form[$field] = $value;
+		if ( ! wp_verify_nonce( $request->get_header('X-WP-Nonce'), 'wp_rest' ) ) {
+			wp_send_json_error( [
+				'message' => __( 'Request invalid.', 'kudos-donations' )
+			] );
 		}
 
 		// Sanitize form fields.
-		$value             = intval( $form['value'] );
-		$payment_frequency = isset( $form['recurring_frequency'] ) ? sanitize_text_field( $form['recurring_frequency'] ) : 'oneoff';
-		$recurring_length  = isset( $form['recurring_length'] ) ? intval( $form['recurring_length'] ) : 0;
-		$name              = isset( $form['name'] ) ? sanitize_text_field( $form['name'] ) : null;
-		$email             = isset( $form['email_address'] ) ? sanitize_email( $form['email_address'] ) : null;
-		$street            = isset( $form['street'] ) ? sanitize_text_field( $form['street'] ) : null;
-		$postcode          = isset( $form['postcode'] ) ? sanitize_text_field( $form['postcode'] ) : null;
-		$city              = isset( $form['city'] ) ? sanitize_text_field( $form['city'] ) : null;
-		$country           = isset( $form['country'] ) ? sanitize_text_field( $form['country'] ) : null;
-		$redirect_url      = isset( $form['return_url'] ) ? sanitize_text_field( $form['return_url'] ) : null;
-		$campaign_id       = isset( $form['campaign_id'] ) ? sanitize_text_field( $form['campaign_id'] ) : null;
+		$value             = intval( $request['value'] );
+		$payment_frequency = isset( $request['recurring_frequency'] ) ? sanitize_text_field( $request['recurring_frequency'] ) : 'oneoff';
+		$recurring_length  = isset( $request['recurring_length'] ) ? intval( $request['recurring_length'] ) : 0;
+		$name              = isset( $request['name'] ) ? sanitize_text_field( $request['name'] ) : null;
+		$email             = isset( $request['email_address'] ) ? sanitize_email( $request['email_address'] ) : null;
+		$street            = isset( $request['street'] ) ? sanitize_text_field( $request['street'] ) : null;
+		$postcode          = isset( $request['postcode'] ) ? sanitize_text_field( $request['postcode'] ) : null;
+		$city              = isset( $request['city'] ) ? sanitize_text_field( $request['city'] ) : null;
+		$country           = isset( $request['country'] ) ? sanitize_text_field( $request['country'] ) : null;
+		$redirect_url      = isset( $request['return_url'] ) ? sanitize_text_field( $request['return_url'] ) : null;
+		$campaign_id       = isset( $request['campaign_id'] ) ? sanitize_text_field( $request['campaign_id'] ) : null;
 
 		$mapper = new MapperService( DonorEntity::class );
 

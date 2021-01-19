@@ -195,24 +195,9 @@ $(() => {
         )
     })
 
-    // Check form before submit
-    // $body.on('click', '.kudos_submit', function (e) {
-    //     e.preventDefault()
-    //     const $form = $(this.form)
-    //     $form.validate()
-    //     if ($form.valid()) {
-    //         $form.submit()
-    //     }
-    // })
-
-    // document.querySelectorAll('.kudos_submit').forEach((button) => button.addEventListener('click', (e) => {
-    //     e.preventDefault()
-    //     console.log(this, e)
-    // }))
-
     // Submit donation form action
     document.querySelectorAll('form.kudos_form').forEach((form) => {
-        // console.log(form.currentTarget)
+        console.log(form)
 
         form.addEventListener('submit', (e) => {
             e.preventDefault()
@@ -222,13 +207,15 @@ $(() => {
                 const modal = form.closest('.kudos_form_modal')
                 const error = modal.querySelector('.kudos_error_message')
                 const formData  = new FormData(e.target);
+                // formData.append('_wpnonce', kudos._wpnonce);
 
                 const request = {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-WP-Nonce': kudos._wpnonce
                     },
-                    body: JSON.stringify({ form: Object.fromEntries(formData) } )
+                    body: JSON.stringify(Object.fromEntries(formData) )
                 };
 
                 modal.classList.add('kudos_loading')
@@ -248,7 +235,7 @@ $(() => {
     })
 })
 
-function submitPayment(url, request) {
+const submitPayment = async (url, request) => {
     return fetch(url, request)
         .then(response => response.json());
 }

@@ -15,6 +15,7 @@
 
     {% if atts.class is defined %}
         {% set extra = atts.class %}
+        {% set atts = atts | filter((v, k) => k != 'class') %}
     {% endif %}
 
     {% set styles = [transition, focus, text, generic, style, extra] | join(' ') %}
