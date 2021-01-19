@@ -42,11 +42,6 @@ class RestService {
 			'mollie/payment/create' => [
 				'methods'             => 'POST',
 				'callback'            => [ $this->mollie, 'submit_payment' ],
-				'args'                => [
-					'form' => [
-						'required' => true,
-					],
-				],
 				'permission_callback' => '__return_true',
 			],
 
