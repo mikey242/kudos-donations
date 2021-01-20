@@ -79,25 +79,6 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 			} );
 		}
 
-		// Update an individual setting
-		updateSetting( option, value ) {
-
-			//Create WordPress settings model
-			const model = new wp.api.models.Settings( {
-				[ option ]: value,
-			} );
-
-			//Save to database
-			model.save().then( ( response ) => {
-				// Commit state
-				this.setState( {
-					settings: {
-						[ option ]: response[ option ]
-					},
-				} );
-			} );
-		}
-
 		onChangeButtonLabel( newValue ) {
 			this.props.setAttributes( { button_label: newValue } );
 		};
@@ -109,7 +90,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 		};
 
 		onChangeCampaign( newValue ) {
-			this.props.setAttributes( { campaign: newValue } );
+			this.props.setAttributes( { campaign_id: newValue } );
 		};
 
 		render() {
@@ -134,7 +115,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 							<SelectControl
 								label={ __( 'Select campaign', 'kudos-donations' ) }
 								help={__('Select your donation form', 'kudos-donations')}
-								value={ this.props.attributes.campaign || 'default' }
+								value={ this.props.attributes.campaign_id }
 								onChange={ this.onChangeCampaign }
 								options={
 									[{
@@ -183,7 +164,7 @@ export default registerBlockType( 'iseardmedia/kudos-button', {
 						/>
 					</div>
 				</div>
-			);
+			)
 		}
 	},
 
