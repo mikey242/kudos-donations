@@ -33,8 +33,8 @@ Just enter your API key from Mollie, then add one or more buttons anywhere on yo
 
 Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
 
-= Campaign Labels =
-Assign a campaign label to each donation button to group and track donations made. This is useful for seeing the effectiveness of different buttons or tracking donations made to different donation campaigns.
+= Campaigns =
+Assign a campaign to each donation button to group and track donations made. This is useful for tracking donations made to different donation campaigns and easily applying configurations to buttons.
 
 = Recurring Payments =
 Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie. You can also disable this and use only one-off payments if you prefer.
@@ -82,19 +82,12 @@ To get started add the Kudos Donations shortcode:
 
 Here is a list of the shortcode attributes:
 
-* *button_label* = The label to display for the button.
-* *alignment* = Button alignment (left, center, right).
-* *modal_title* = The welcome title for the popup.
-* *welcome_text* = The welcome text for the popup.
-* *amount_type* = Can be 'fixed', 'open' or 'both'. Default is 'open'.
-* *donation_type* = Can be 'oneoff', 'recurring' or 'both'. Default is 'both'.
-* *fixed_amounts* = Comma separated list of amounts to use (5,10,15,20). Maximum 4 values.
-* *campaign_label* = Name of the campaign to use for this button.
+* *campaign_id* = Id of the campaign to use for this button.
 
 e.g:
 
 ~~~~
-[kudos button_label="Donate now" modal_title="Support us!" modal_text="Your support is greatly appreciated and will help to keep us going." amount_type="fixed" fixed_amounts="5,10,15,20"]
+[kudos campaign_id="default"]
 ~~~~
 
 == Screenshots ==
@@ -105,6 +98,12 @@ e.g:
 4. Automated email receipt
 
 == Changelog ==
+
+= 2.3.0 =
+* Reworked campaigns, greatly simplifying shortcodes
+* Switch to REST api to create transactions
+* Added welcome guide when settings page first visited
+* Add "Show welcome guide" link to allow re-viewing
 
 = 2.2.0 =
 * Add ability to change donation type (subscription, one-off or both) to each button
