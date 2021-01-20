@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import axios from 'axios'
 import MicroModal from 'micromodal'
 import {dom, library} from '@fortawesome/fontawesome-svg-core'
 import {faChevronLeft} from '@fortawesome/free-solid-svg-icons'
@@ -205,35 +206,27 @@ $(() => {
                 const modal = form.closest('.kudos_form_modal')
                 const error = modal.querySelector('.kudos_error_message')
                 const formData  = new FormData(e.target);
-                const request = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-WP-Nonce': kudos._wpnonce
-                    },
-                    body: JSON.stringify(Object.fromEntries(formData) )
-                };
 
                 modal.classList.add('kudos_loading')
-                submitPayment(kudos.createPaymentUrl, request).then((result) => {
-                    if(result.success) {
-                        window.location.href = result.data
+
+                axios.post(kudos.createPaymentUrl, JSON.stringify(Object.fromEntries(formData)), {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-WP-Noncse': kudos._wpnonce
+                    }
+                }).then((result)=> {
+                    if(result.data.success) {
+                        window.location.href = result.data.data
                     } else {
                         error.innerHTML = result.data.message
                         modal.classList.add('error')
                         modal.classList.remove('kudos_loading')
                     }
                 })
-
             }
         })
     })
 })
-
-const submitPayment = async (url, request) => {
-    return fetch(url, request)
-        .then(response => response.json());
-}
 
 // Checks the form tab data-requirements array against the current form values
 function checkRequirements($nextTab) {
