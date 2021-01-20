@@ -204,7 +204,7 @@ class Front {
 						'amount_type'    => 'open',
 						'donation_type'  => 'both',
 						'fixed_amounts'  => '5, 10, 20, 50',
-						'campaign_id'       => 'default',
+						'campaign_id'    => 'default',
 						'alignment'      => 'none',
 					],
 					$atts,
@@ -280,6 +280,8 @@ class Front {
 		if(empty($campaign)) {
 			$campaign = $campaigns->get_campaign('default');
 		}
+
+		// Add campaign config to atts
 		$atts = wp_parse_args($campaign, $atts);
 
 		// Create button and modal.
