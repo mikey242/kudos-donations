@@ -8,8 +8,9 @@
   --wp-admin-theme-color-darker-20: theme('colors.orange.700')
 }
 
-.kudos-welcome-guide {
-  width: 312px;
+.kudos-intro-guide {
+  overflow: visible;
+  width: 352px;
 }
 
 .components-radio-control__input::before,
