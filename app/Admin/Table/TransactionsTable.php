@@ -29,15 +29,15 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	public function __construct() {
 
-		$this->mapper = new MapperService( TransactionEntity::class );
-		$this->table  = TransactionEntity::get_table_name();
+		$this->mapper    = new MapperService( TransactionEntity::class );
+		$this->table     = TransactionEntity::get_table_name();
 		$this->campaigns = new Campaigns();
 
 		$this->search_columns = [
-			'name'              => __( 'Name', 'kudos-donations' ),
-			'email'             => __( 'Email', 'kudos-donations' ),
-			'campaign_id'       => __( 'Campaign', 'kudos-donations' ),
-			'order_id'          => __( 'Order ID', 'kudos-donations' ),
+			'name'        => __( 'Name', 'kudos-donations' ),
+			'email'       => __( 'Email', 'kudos-donations' ),
+			'campaign_id' => __( 'Campaign', 'kudos-donations' ),
+			'order_id'    => __( 'Order ID', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -164,11 +164,11 @@ class TransactionsTable extends WP_List_Table {
 	public function get_sortable_columns(): array {
 
 		return [
-			'created'        => [
+			'created'     => [
 				'created',
 				false,
 			],
-			'value'          => [
+			'value'       => [
 				'value',
 				false,
 			],
@@ -449,8 +449,8 @@ class TransactionsTable extends WP_List_Table {
 	protected function column_campaign_id( array $item ): string {
 
 		$campaign_name = $this->campaigns->get_campaign(
-			$item['campaign_id'] )['name']
-            ?? $item['campaign_id'];
+				$item['campaign_id'] )['name']
+		                 ?? $item['campaign_id'];
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',

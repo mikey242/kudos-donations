@@ -44,23 +44,23 @@ class ActivatorService {
 			if ( version_compare( $old_version, '2.3.0', '<' ) ) {
 				global $wpdb;
 				$table = TransactionEntity::get_table_name();
-				$wpdb->query("ALTER TABLE $table RENAME COLUMN `campaign_label` TO `campaign_id`");
-				Settings::update_setting('show_intro', 1);
+				$wpdb->query( "ALTER TABLE $table RENAME COLUMN `campaign_label` TO `campaign_id`" );
+				Settings::update_setting( 'show_intro', 1 );
 			}
 
 			if ( version_compare( $old_version, '2.2.0', '<' ) ) {
-				$link = Settings::get_setting('privacy_link');
-				Settings::remove_setting('subscription_enabled');
+				$link = Settings::get_setting( 'privacy_link' );
+				Settings::remove_setting( 'subscription_enabled' );
 
-				if($link) {
-					Settings::update_setting('terms_link', $link);
-					Settings::remove_setting('privacy_link');
+				if ( $link ) {
+					Settings::update_setting( 'terms_link', $link );
+					Settings::remove_setting( 'privacy_link' );
 				}
 			}
 
 			if ( version_compare( $old_version, '2.1.1', '<' ) ) {
 				$logger->info( 'Upgrading to version 2.1.1', [ 'previous_version' => $old_version ] );
-				Settings::remove_setting('action_scheduler');
+				Settings::remove_setting( 'action_scheduler' );
 			}
 
 		}
@@ -177,6 +177,23 @@ class ActivatorService {
 	}
 
 	/**
+	 * Adds default options if not already set
+	 *
+	 * @since    1.0.0
+	 */
+	private static function set_defaults() {
+
+		update_option( '_kudos_donations_version', KUDOS_VERSION );
+
+		$settings = new Settings();
+		$settings->add_defaults();
+
+		$campaigns = new Campaigns();
+		$campaigns->add_default();
+
+	}
+
+	/**
 	 * Creates the subscription table
 	 *
 	 * @since    1.1.0
@@ -204,23 +221,6 @@ class ActivatorService {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
-
-	}
-
-	/**
-	 * Adds default options if not already set
-	 *
-	 * @since    1.0.0
-	 */
-	private static function set_defaults() {
-
-		update_option( '_kudos_donations_version', KUDOS_VERSION );
-
-		$settings = new Settings();
-		$settings->add_defaults();
-
-		$campaigns = new Campaigns();
-		$campaigns->add_default();
 
 	}
 }

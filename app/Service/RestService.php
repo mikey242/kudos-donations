@@ -34,10 +34,10 @@ class RestService {
 	 */
 	public function __construct() {
 
-		$this->mailer    = MailerService::factory();
-		$this->mollie    = MollieService::factory();
+		$this->mailer = MailerService::factory();
+		$this->mollie = MollieService::factory();
 
-		$this->routes    = [
+		$this->routes = [
 
 			'mollie/payment/create' => [
 				'methods'             => 'POST',

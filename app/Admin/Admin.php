@@ -113,7 +113,8 @@ class Admin {
 			}
 
 		);
-		add_action( "admin_print_scripts-{$transactions_page_hook_suffix}", [ $this, 'kudos_transactions_page_assets' ] );
+		add_action( "admin_print_scripts-{$transactions_page_hook_suffix}",
+			[ $this, 'kudos_transactions_page_assets' ] );
 
 		$subscriptions_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
@@ -127,7 +128,8 @@ class Admin {
 			}
 
 		);
-		add_action( "admin_print_scripts-{$subscriptions_page_hook_suffix}", [ $this, 'kudos_subscriptions_page_assets' ] );
+		add_action( "admin_print_scripts-{$subscriptions_page_hook_suffix}",
+			[ $this, 'kudos_subscriptions_page_assets' ] );
 
 		$donors_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
@@ -169,22 +171,23 @@ class Admin {
 					require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-debug.php';
 				}
 			);
-			add_action( "admin_print_scripts-{$debug_page_hook_suffix}", function() {
-				?>
-				<script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        let buttons = document.querySelectorAll('input[type="submit"].confirm');
-                        for(let i = 0; i < buttons.length; i++) {
-                            buttons[i].addEventListener('click', function (e) {
-                                if ( ! confirm( '<?php _e('Are you sure?', 'kudos-donations') ?>' ) ) {
-                                    e.preventDefault();
-                                }
-                            })
-                        }
-                    });
-				</script>
-				<?php
-			} );
+			add_action( "admin_print_scripts-{$debug_page_hook_suffix}",
+				function () {
+					?>
+					<script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            let buttons = document.querySelectorAll('input[type="submit"].confirm')
+                            for (let i = 0; i < buttons.length; i++) {
+                                buttons[i].addEventListener('click', function (e) {
+                                    if (!confirm('<?php _e( 'Are you sure?', 'kudos-donations' ) ?>')) {
+                                        e.preventDefault()
+                                    }
+                                })
+                            }
+                        })
+					</script>
+					<?php
+				} );
 		}
 	}
 
@@ -431,8 +434,14 @@ class Admin {
 
 				case 'kudos_recreate_database':
 					$mapper = new MapperService();
-					foreach ([SubscriptionEntity::get_table_name(), TransactionEntity::get_table_name(), DonorEntity::get_table_name()] as $table) {
-						$mapper->delete_table($table);
+					foreach (
+						[
+							SubscriptionEntity::get_table_name(),
+							TransactionEntity::get_table_name(),
+							DonorEntity::get_table_name(),
+						] as $table
+					) {
+						$mapper->delete_table( $table );
 					}
 					ActivatorService::activate();
 					new AdminNotice( __( 'Database re-created', 'kudos-donations' ) );
