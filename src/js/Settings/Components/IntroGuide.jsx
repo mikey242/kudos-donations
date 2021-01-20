@@ -1,26 +1,23 @@
-import live from "../../../img/guide-live.png"
-import intro from "../../../img/guide-intro.png"
+import live from "../../../img/guide-test-live.png"
+import mollie from "../../../img/guide-mollie-api.png"
+import intro from "../../../img/guide-welcome.png"
 
 const { __ } = wp.i18n;
 const { Guide } = wp.components;
-const { useState } = wp.element;
 
 const IntroGuide = ({ show, updateSetting } ) => {
 
-    const [ isOpen, setIsOpen ] = useState( show );
-
-    if ( ! isOpen ) {
+    if ( ! show ) {
         return null;
     }
 
     const closeModal = () => {
-        setIsOpen(false)
         updateSetting('_kudos_show_intro', false)
     }
 
     return (
         <Guide
-            className={"kudos-welcome-guide"}
+            className={"kudos-intro-guide"}
             onFinish={ () => closeModal() }
             pages={ [
                 {
@@ -33,7 +30,7 @@ const IntroGuide = ({ show, updateSetting } ) => {
                     ,
                 },
                 {
-                    image: <img src={intro} />,
+                    image: <img src={mollie} />,
                     content:
                         <div className="kd-p-4">
                             <h1 className="kd-leading-normal">Connect with Mollie</h1>
