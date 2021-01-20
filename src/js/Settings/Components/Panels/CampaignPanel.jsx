@@ -157,7 +157,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                     <ClipboardButton
                         isPrimary
                         isSmall
-                        text={'[kudos campaign="' + campaign.id + '"]'}
+                        text={'[kudos campaign_id="' + campaign.id + '"]'}
                         onCopy={ () => setHasCopied( true ) }
                         onFinishCopy={ () => setHasCopied( false ) }
                     >
