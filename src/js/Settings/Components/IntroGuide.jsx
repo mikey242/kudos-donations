@@ -1,6 +1,8 @@
-import live from "../../../img/guide-test-live.png"
-import mollie from "../../../img/guide-mollie-api.png"
 import intro from "../../../img/guide-welcome.png"
+import mollie from "../../../img/guide-mollie-api.png"
+import campaign from "../../../img/guide-campaign.png"
+import button from "../../../img/guide-button.png"
+import live from "../../../img/guide-test-live.png"
 
 const { __ } = wp.i18n;
 const { Guide } = wp.components;
@@ -40,7 +42,7 @@ const IntroGuide = ({ show, updateSetting } ) => {
                     ,
                 },
                 {
-                    image: <img src={intro} />,
+                    image: <img src={campaign} />,
                     content:
                         <div className="kd-p-4">
                             <h1 className="kd-leading-normal">Set up a campaign</h1>
@@ -50,7 +52,7 @@ const IntroGuide = ({ show, updateSetting } ) => {
                     ,
                 },
                 {
-                    image: <img src={intro} />,
+                    image: <img src={button} />,
                     content:
                         <div className="kd-p-4">
                             <h1 className="kd-leading-normal">Place a button</h1>
