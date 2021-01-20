@@ -156,24 +156,24 @@ class Settings {
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'campaigns'        => [
-					'type'         => 'array',
-					'show_in_rest' => [
+				'campaigns'             => [
+					'type'              => 'array',
+					'show_in_rest'      => [
 						'schema' => [
 							'type'  => 'array',
 							'items' => [
 								'type'       => 'object',
 								'properties' => [
-									'id'   => [
-										'type' => 'int'
+									'id'               => [
+										'type' => 'int',
 									],
-									'name' => [
-										'type' => 'string'
+									'name'             => [
+										'type' => 'string',
 									],
-									'modal_title' => [
-										'type' => 'string'
+									'modal_title'      => [
+										'type' => 'string',
 									],
-									'welcome_text' => [
+									'welcome_text'     => [
 										'type' => 'string',
 									],
 									'address_enabled'  => [
@@ -182,23 +182,23 @@ class Settings {
 									'address_required' => [
 										'type' => 'boolean',
 									],
-									'amount_type'   => [
+									'amount_type'      => [
 										'type' => 'string',
 									],
-									'fixed_amounts' => [
+									'fixed_amounts'    => [
 										'type' => 'string',
 									],
 									'donation_type'    => [
 										'type' => 'string',
 									],
-									'protected' => [
-										'type' => 'boolean'
-									]
+									'protected'        => [
+										'type' => 'boolean',
+									],
 								],
 							],
 						],
 					],
-					'sanitize_callback' => [Campaigns::class, 'sanitize_campaigns'],
+					'sanitize_callback' => [ Campaigns::class, 'sanitize_campaigns' ],
 				],
 			]
 		);
@@ -258,8 +258,8 @@ class Settings {
 	public function add_defaults() {
 
 		foreach ( $this->settings as $name => $setting ) {
-			if(isset($setting['default'])) {
-				add_option( self::PREFIX . $name, $setting['default']);
+			if ( isset( $setting['default'] ) ) {
+				add_option( self::PREFIX . $name, $setting['default'] );
 			}
 		}
 

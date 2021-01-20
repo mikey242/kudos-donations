@@ -30,8 +30,8 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function __construct() {
 
-		$this->mapper = new MapperService( TransactionEntity::class );
-		$this->table  = $this->mapper->get_table_name();
+		$this->mapper    = new MapperService( TransactionEntity::class );
+		$this->table     = $this->mapper->get_table_name();
 		$this->campaigns = new Campaigns();
 
 		$this->search_columns = [
@@ -39,7 +39,7 @@ class CampaignsTable extends WP_List_Table {
 		];
 
 		$this->export_columns = [
-			'name'        => __( 'Email', 'kudos-donations' ),
+			'name'         => __( 'Email', 'kudos-donations' ),
 			'transactions' => __( 'Street', 'kudos-donations' ),
 			'total'        => __( 'Total', 'kudos-donations' ),
 		];
@@ -86,8 +86,9 @@ class CampaignsTable extends WP_List_Table {
 
 		// Add search query if exist.
 		if ( $search ) {
-			$campaigns = array_filter( $campaigns, function ( $value ) use ( $search ) {
-					return (strtolower($value[ $search['field'] ]) == strtolower($search['term']));
+			$campaigns = array_filter( $campaigns,
+				function ( $value ) use ( $search ) {
+					return ( strtolower( $value[ $search['field'] ] ) == strtolower( $search['term'] ) );
 				}
 			);
 		}
@@ -97,7 +98,7 @@ class CampaignsTable extends WP_List_Table {
 
 			$transactions = $mapper->get_all_by( [ 'campaign_id' => $id ] );
 
-			$campaigns[ $key ]['date'] = date("r",hexdec(substr($id,3,8)));
+			$campaigns[ $key ]['date']         = date( "r", hexdec( substr( $id, 3, 8 ) ) );
 			$campaigns[ $key ]['transactions'] = 0;
 			$campaigns[ $key ]['total']        = 0;
 			if ( $transactions ) {
@@ -131,8 +132,8 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function column_names(): array {
 		return [
-			'date'          => __('Date', 'kudos-donations'),
-			'name'         => __( 'Name', 'kudos-donations' ),
+			'date'          => __( 'Date', 'kudos-donations' ),
+			'name'          => __( 'Name', 'kudos-donations' ),
 			'transactions'  => __( 'Transactions', 'kudos-donations' ),
 			'total'         => __( 'Total', 'kudos-donations' ),
 			'last_donation' => __( 'Last Donation', 'kudos-donations' ),
@@ -232,7 +233,8 @@ class CampaignsTable extends WP_List_Table {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_id&s=%s' ), rawurlencode( $item['id'] ) ),
+			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_id&s=%s' ),
+				rawurlencode( $item['id'] ) ),
 			strtoupper( $item['transactions'] )
 		);
 
@@ -266,7 +268,7 @@ class CampaignsTable extends WP_List_Table {
 	protected function column_last_donation( array $item ): string {
 
 		return isset( $item['last_donation'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			strtotime( $item['last_donation'] ) ) : sprintf("<i>%s</i>", __('None yet', 'kudos-donations'));
+			strtotime( $item['last_donation'] ) ) : sprintf( "<i>%s</i>", __( 'None yet', 'kudos-donations' ) );
 
 	}
 }

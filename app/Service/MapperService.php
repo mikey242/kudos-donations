@@ -415,7 +415,7 @@ class MapperService extends AbstractService {
 	 * @return bool|int
 	 * @since 2.0.8
 	 */
-	public function delete_table($table_name) {
+	public function delete_table( $table_name ) {
 
 		return $this->wpdb->query(
 			"DROP TABLE IF EXISTS ${table_name}"

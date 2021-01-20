@@ -142,7 +142,7 @@ trait TableTrait {
 		}
 
 		$input_id     = $input_id . '-search-input';
-		$search_data = $this->get_search_data();
+		$search_data  = $this->get_search_data();
 		$search_field = $search_data ? $search_data['field'] : null;
 		?>
 
@@ -169,7 +169,8 @@ trait TableTrait {
 
 		$search = null;
 
-		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && array_key_exists( $_REQUEST['search-field'], $this->column_names() ) ) {
+		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && array_key_exists( $_REQUEST['search-field'],
+				$this->column_names() ) ) {
 			$search['term']  = strtolower( esc_attr( wp_unslash( $_REQUEST['s'] ) ) );
 			$search['field'] = esc_attr( wp_unslash( $_REQUEST['search-field'] ) );
 		}

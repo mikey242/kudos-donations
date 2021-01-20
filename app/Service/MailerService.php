@@ -147,7 +147,13 @@ class MailerService extends AbstractService {
 	 * @return bool
 	 * @since    1.1.0
 	 */
-	private function send( string $to, string $subject, string $body, array $headers = [], array $attachment = [] ): bool {
+	private function send(
+		string $to,
+		string $subject,
+		string $body,
+		array $headers = [],
+		array $attachment = []
+	): bool {
 
 		// Use hook to modify existing config.
 		add_action( 'phpmailer_init', [ $this, 'init' ] );

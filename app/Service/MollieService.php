@@ -68,117 +68,36 @@ class MollieService extends AbstractService {
 	}
 
 	/**
-	 * Creates a payment and returns it as an object
+	 * Processes the transaction. Used by action scheduler.
 	 *
-	 * @param string $value Value of payment.
-	 * @param string $interval Interval of payment (oneoff, first, recurring).
-	 * @param string $years Number of years for subscription.
-	 * @param string $redirect_url URL to redirect customer to on payment completion.
-	 * @param string|null $campaign_id Campaign name to associate payment to.
-	 * @param string|null $name Name of donor.
-	 * @param string|null $email Email of donor.
-	 * @param string|null $customer_id Mollie customer id.
+	 * @param string $order_id Kudos order id.
 	 *
-	 * @return array|object
-	 * @since      1.0.0
+	 * @return bool
+	 * @since   2.0.0
 	 */
-	public function create_payment(
-		string $value,
-		string $interval,
-		string $years,
-		string $redirect_url,
-		string $campaign_id = null,
-		string $name = null,
-		string $email = null,
-		string $customer_id = null
-	) {
+	public static function process_transaction( string $order_id ): bool {
 
-		$mollie_api = $this->mollie_api;
-		$order_id   = Utils::generate_id( 'kdo_' );
-		$currency   = 'EUR';
-		$value      = number_format( $value, 2, '.', '' );
+		$logger = LoggerService::factory();
+		$logger->debug( 'Processing transaction', [ $order_id ] );
 
-		// Set payment frequency.
-		$frequency_text = Utils::get_frequency_name( $interval );
-		$sequence_type  = ( 'oneoff' === $interval ? 'oneoff' : 'first' );
+		// Bail if no order ID.
+		if ( null === $order_id ) {
+			$logger->error( 'Order ID not provided to process_transaction function.' );
 
-		// Create payment settings.
-		$payment_array = [
-			"amount"       => [
-				'currency' => $currency,
-				'value'    => $value,
-			],
-			'redirectUrl'  => $redirect_url,
-			'webhookUrl'   => $this->webhook_url,
-			'sequenceType' => $sequence_type,
-			'description'  => sprintf(
-			/* translators: %s: The order id */
-				__( 'Kudos Donation (%1$s) - %2$s', 'kudos-donations' ),
-				$frequency_text,
-				$order_id
-			),
-			'metadata'     => [
-				'order_id'       => $order_id,
-				'interval'       => $interval,
-				'years'          => $years,
-				'email'          => $email,
-				'name'           => $name,
-				'campaign_id'    => $campaign_id,
-			],
-		];
-
-		// Link payment to customer if specified.
-		if ( $customer_id ) {
-			$payment_array['customerId'] = $customer_id;
+			return false;
 		}
 
-		try {
-			$payment = $mollie_api->payments->create( $payment_array );
+		$mapper = new MapperService( TransactionEntity::class );
+		/** @var TransactionEntity $transaction */
+		$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
 
-			$transaction = new TransactionEntity(
-				[
-					'order_id'       => $order_id,
-					'customer_id'    => $customer_id,
-					'value'          => $value,
-					'currency'       => $currency,
-					'status'         => $payment->status,
-					'mode'           => $payment->mode,
-					'sequence_type'  => $payment->sequenceType,
-					'campaign_id' => $campaign_id,
-				]
-			);
-
-			$mapper = new MapperService( TransactionEntity::class );
-			$mapper->save( $transaction );
-
-			// Add order id query arg to return url if option to show message enabled.
-			if ( get_option( '_kudos_return_message_enable' ) ) {
-				$redirect_url         = add_query_arg(
-					[
-						'kudos_action'   => 'order_complete',
-						'kudos_order_id' => $order_id,
-						'kudos_token'    => $transaction->create_secret(),
-					],
-					$redirect_url
-				);
-				$payment->redirectUrl = $redirect_url;
-				$payment->update();
-				$mapper->save( $transaction );
-			}
-
-			$this->logger->info(
-				'New payment created',
-				[ 'oder_id' => $order_id, 'sequence_type' => $payment->sequenceType ]
-			);
-
-			return $payment;
-
-		} catch ( ApiException $e ) {
-			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
-			$return['success'] = false;
-			$return['message'] = $e->getMessage();
-			return $return;
+		if ( $transaction->get_donor()->email ) {
+			// Send email - email setting is checked in mailer.
+			$mailer = MailerService::factory();
+			$mailer->send_receipt( $transaction );
 		}
+
+		return true;
 
 	}
 
@@ -198,37 +117,6 @@ class MollieService extends AbstractService {
 			$customer = $mollie_api->customers->get( $customer_id );
 
 			return $customer->subscriptions();
-		} catch ( ApiException $e ) {
-			$this->logger->critical( $e->getMessage() );
-
-			return false;
-		}
-
-	}
-
-	/**
-	 * Create a Mollie customer.
-	 *
-	 * @param string $email Donor email address.
-	 * @param string $name Donor name.
-	 *
-	 * @return bool|object
-	 * @since   2.0.0
-	 */
-	public function create_customer( string $email, string $name ) {
-
-		$mollie_api = $this->mollie_api;
-
-		$customer_array = [
-			'email' => $email,
-		];
-
-		if ( $name ) {
-			$customer_array['name'] = $name;
-		}
-
-		try {
-			return $mollie_api->customers->create( $customer_array );
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 
@@ -528,7 +416,7 @@ class MollieService extends AbstractService {
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 
 			// Get schedule processing for later.
-			Utils::schedule_action(strtotime( '+1 minute' ), 'kudos_process_paid_transaction', [$order_id]);
+			Utils::schedule_action( strtotime( '+1 minute' ), 'kudos_process_paid_transaction', [ $order_id ] );
 
 			// Set up recurring payment if sequence is first.
 			if ( $payment->hasSequenceTypeFirst() ) {
@@ -544,126 +432,6 @@ class MollieService extends AbstractService {
 		}
 
 		return $response;
-	}
-
-	/**
-	 * Creates a payment with Mollie.
-	 *
-	 * @param WP_REST_Request $request
-	 *
-	 * @since   1.0.0
-	 */
-	public function submit_payment(WP_REST_Request $request) {
-
-		// Verify nonce
-		if ( ! wp_verify_nonce( $request->get_header('X-WP-Nonce'), 'wp_rest' ) ) {
-			wp_send_json_error( [
-				'message' => __( 'Request invalid.', 'kudos-donations' )
-			] );
-		}
-
-		// Sanitize form fields.
-		$value             = intval( $request['value'] );
-		$payment_frequency = isset( $request['recurring_frequency'] ) ? sanitize_text_field( $request['recurring_frequency'] ) : 'oneoff';
-		$recurring_length  = isset( $request['recurring_length'] ) ? intval( $request['recurring_length'] ) : 0;
-		$name              = isset( $request['name'] ) ? sanitize_text_field( $request['name'] ) : null;
-		$email             = isset( $request['email_address'] ) ? sanitize_email( $request['email_address'] ) : null;
-		$street            = isset( $request['street'] ) ? sanitize_text_field( $request['street'] ) : null;
-		$postcode          = isset( $request['postcode'] ) ? sanitize_text_field( $request['postcode'] ) : null;
-		$city              = isset( $request['city'] ) ? sanitize_text_field( $request['city'] ) : null;
-		$country           = isset( $request['country'] ) ? sanitize_text_field( $request['country'] ) : null;
-		$redirect_url      = isset( $request['return_url'] ) ? sanitize_text_field( $request['return_url'] ) : null;
-		$campaign_id       = isset( $request['campaign_id'] ) ? sanitize_text_field( $request['campaign_id'] ) : null;
-
-		$mapper = new MapperService( DonorEntity::class );
-
-		if ( $email ) {
-
-			// Search for existing donor.
-			/** @var DonorEntity $donor */
-			$donor = $mapper->get_one_by( [ 'email' => $email ] );
-
-			// Create new donor.
-			if ( empty( $donor->customer_id ) ) {
-				$donor    = new DonorEntity();
-				$customer = $this->create_customer( $email, $name );
-				$donor->set_fields( [ 'customer_id' => $customer->id ] );
-			}
-
-			// Update new/existing donor.
-			$donor->set_fields(
-				[
-					'email'    => $email,
-					'name'     => $name,
-					'street'   => $street,
-					'postcode' => $postcode,
-					'city'     => $city,
-					'country'  => $country,
-				]
-			);
-
-			$mapper->save( $donor );
-		}
-
-		$customer_id = $donor->customer_id ?? null;
-
-		$result = $this->create_payment(
-			$value,
-			$payment_frequency,
-			$recurring_length,
-			$redirect_url,
-			$campaign_id,
-			$name,
-			$email,
-			$customer_id
-		);
-
-		// Return checkout url if payment successfully created in Mollie
-		if ( $result instanceof Payment ) {
-			wp_send_json_success( $result->getCheckoutUrl() );
-		}
-
-		// If payment not created by Mollie return an error message
-		$message = current_user_can('administrator') && KUDOS_DEBUG ? $result['message'] : __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' );
-
-		wp_send_json_error([
-			'message' => $message,
-		]);
-
-	}
-
-	/**
-	 * Processes the transaction. Used by action scheduler.
-	 *
-	 * @param string $order_id Kudos order id.
-	 *
-	 * @return bool
-	 * @since   2.0.0
-	 */
-	public static function process_transaction( string $order_id ): bool {
-
-		$logger = LoggerService::factory();
-		$logger->debug( 'Processing transaction', [ $order_id ] );
-
-		// Bail if no order ID.
-		if ( null === $order_id ) {
-			$logger->error( 'Order ID not provided to process_transaction function.' );
-
-			return false;
-		}
-
-		$mapper = new MapperService( TransactionEntity::class );
-		/** @var TransactionEntity $transaction */
-		$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
-
-		if ( $transaction->get_donor()->email ) {
-			// Send email - email setting is checked in mailer.
-			$mailer = MailerService::factory();
-			$mailer->send_receipt( $transaction );
-		}
-
-		return true;
-
 	}
 
 	/**
@@ -782,6 +550,240 @@ class MollieService extends AbstractService {
 			$this->logger->critical( $e->getMessage(), [ $customer_id, $subscription_array ] );
 
 			return false;
+		}
+
+	}
+
+	/**
+	 * Creates a payment with Mollie.
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @since   1.0.0
+	 */
+	public function submit_payment( WP_REST_Request $request ) {
+
+		// Verify nonce
+		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
+			wp_send_json_error( [
+				'message' => __( 'Request invalid.', 'kudos-donations' ),
+			] );
+		}
+
+		// Sanitize form fields.
+		$value             = intval( $request['value'] );
+		$payment_frequency = isset( $request['recurring_frequency'] ) ? sanitize_text_field( $request['recurring_frequency'] ) : 'oneoff';
+		$recurring_length  = isset( $request['recurring_length'] ) ? intval( $request['recurring_length'] ) : 0;
+		$name              = isset( $request['name'] ) ? sanitize_text_field( $request['name'] ) : null;
+		$email             = isset( $request['email_address'] ) ? sanitize_email( $request['email_address'] ) : null;
+		$street            = isset( $request['street'] ) ? sanitize_text_field( $request['street'] ) : null;
+		$postcode          = isset( $request['postcode'] ) ? sanitize_text_field( $request['postcode'] ) : null;
+		$city              = isset( $request['city'] ) ? sanitize_text_field( $request['city'] ) : null;
+		$country           = isset( $request['country'] ) ? sanitize_text_field( $request['country'] ) : null;
+		$redirect_url      = isset( $request['return_url'] ) ? sanitize_text_field( $request['return_url'] ) : null;
+		$campaign_id       = isset( $request['campaign_id'] ) ? sanitize_text_field( $request['campaign_id'] ) : null;
+
+		$mapper = new MapperService( DonorEntity::class );
+
+		if ( $email ) {
+
+			// Search for existing donor.
+			/** @var DonorEntity $donor */
+			$donor = $mapper->get_one_by( [ 'email' => $email ] );
+
+			// Create new donor.
+			if ( empty( $donor->customer_id ) ) {
+				$donor    = new DonorEntity();
+				$customer = $this->create_customer( $email, $name );
+				$donor->set_fields( [ 'customer_id' => $customer->id ] );
+			}
+
+			// Update new/existing donor.
+			$donor->set_fields(
+				[
+					'email'    => $email,
+					'name'     => $name,
+					'street'   => $street,
+					'postcode' => $postcode,
+					'city'     => $city,
+					'country'  => $country,
+				]
+			);
+
+			$mapper->save( $donor );
+		}
+
+		$customer_id = $donor->customer_id ?? null;
+
+		$result = $this->create_payment(
+			$value,
+			$payment_frequency,
+			$recurring_length,
+			$redirect_url,
+			$campaign_id,
+			$name,
+			$email,
+			$customer_id
+		);
+
+		// Return checkout url if payment successfully created in Mollie
+		if ( $result instanceof Payment ) {
+			wp_send_json_success( $result->getCheckoutUrl() );
+		}
+
+		// If payment not created by Mollie return an error message
+		$message = current_user_can( 'administrator' ) && KUDOS_DEBUG ? $result['message'] : __( 'Error creating Mollie payment. Please try again later.',
+			'kudos-donations' );
+
+		wp_send_json_error( [
+			'message' => $message,
+		] );
+
+	}
+
+	/**
+	 * Create a Mollie customer.
+	 *
+	 * @param string $email Donor email address.
+	 * @param string $name Donor name.
+	 *
+	 * @return bool|object
+	 * @since   2.0.0
+	 */
+	public function create_customer( string $email, string $name ) {
+
+		$mollie_api = $this->mollie_api;
+
+		$customer_array = [
+			'email' => $email,
+		];
+
+		if ( $name ) {
+			$customer_array['name'] = $name;
+		}
+
+		try {
+			return $mollie_api->customers->create( $customer_array );
+		} catch ( ApiException $e ) {
+			$this->logger->critical( $e->getMessage() );
+
+			return false;
+		}
+
+	}
+
+	/**
+	 * Creates a payment and returns it as an object
+	 *
+	 * @param string $value Value of payment.
+	 * @param string $interval Interval of payment (oneoff, first, recurring).
+	 * @param string $years Number of years for subscription.
+	 * @param string $redirect_url URL to redirect customer to on payment completion.
+	 * @param string|null $campaign_id Campaign name to associate payment to.
+	 * @param string|null $name Name of donor.
+	 * @param string|null $email Email of donor.
+	 * @param string|null $customer_id Mollie customer id.
+	 *
+	 * @return array|object
+	 * @since      1.0.0
+	 */
+	public function create_payment(
+		string $value,
+		string $interval,
+		string $years,
+		string $redirect_url,
+		string $campaign_id = null,
+		string $name = null,
+		string $email = null,
+		string $customer_id = null
+	) {
+
+		$mollie_api = $this->mollie_api;
+		$order_id   = Utils::generate_id( 'kdo_' );
+		$currency   = 'EUR';
+		$value      = number_format( $value, 2, '.', '' );
+
+		// Set payment frequency.
+		$frequency_text = Utils::get_frequency_name( $interval );
+		$sequence_type  = ( 'oneoff' === $interval ? 'oneoff' : 'first' );
+
+		// Create payment settings.
+		$payment_array = [
+			"amount"       => [
+				'currency' => $currency,
+				'value'    => $value,
+			],
+			'redirectUrl'  => $redirect_url,
+			'webhookUrl'   => $this->webhook_url,
+			'sequenceType' => $sequence_type,
+			'description'  => sprintf(
+			/* translators: %s: The order id */
+				__( 'Kudos Donation (%1$s) - %2$s', 'kudos-donations' ),
+				$frequency_text,
+				$order_id
+			),
+			'metadata'     => [
+				'order_id'    => $order_id,
+				'interval'    => $interval,
+				'years'       => $years,
+				'email'       => $email,
+				'name'        => $name,
+				'campaign_id' => $campaign_id,
+			],
+		];
+
+		// Link payment to customer if specified.
+		if ( $customer_id ) {
+			$payment_array['customerId'] = $customer_id;
+		}
+
+		try {
+			$payment = $mollie_api->payments->create( $payment_array );
+
+			$transaction = new TransactionEntity(
+				[
+					'order_id'      => $order_id,
+					'customer_id'   => $customer_id,
+					'value'         => $value,
+					'currency'      => $currency,
+					'status'        => $payment->status,
+					'mode'          => $payment->mode,
+					'sequence_type' => $payment->sequenceType,
+					'campaign_id'   => $campaign_id,
+				]
+			);
+
+			$mapper = new MapperService( TransactionEntity::class );
+			$mapper->save( $transaction );
+
+			// Add order id query arg to return url if option to show message enabled.
+			if ( get_option( '_kudos_return_message_enable' ) ) {
+				$redirect_url         = add_query_arg(
+					[
+						'kudos_action'   => 'order_complete',
+						'kudos_order_id' => $order_id,
+						'kudos_token'    => $transaction->create_secret(),
+					],
+					$redirect_url
+				);
+				$payment->redirectUrl = $redirect_url;
+				$payment->update();
+				$mapper->save( $transaction );
+			}
+
+			$this->logger->info(
+				'New payment created',
+				[ 'oder_id' => $order_id, 'sequence_type' => $payment->sequenceType ]
+			);
+
+			return $payment;
+
+		} catch ( ApiException $e ) {
+			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
+			$return['success'] = false;
+			$return['message'] = $e->getMessage();
+
+			return $return;
 		}
 
 	}

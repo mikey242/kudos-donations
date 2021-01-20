@@ -155,7 +155,7 @@ abstract class AbstractEntity implements EntityInterface {
 				$this->secret = bin2hex( random_bytes( 10 ) );
 			}
 
-			Utils::schedule_action(strtotime( $timeout ), $table . '_remove_secret_action', [ $this->secret ], true );
+			Utils::schedule_action( strtotime( $timeout ), $table . '_remove_secret_action', [ $this->secret ], true );
 
 			return wp_hash_password( $this->secret );
 

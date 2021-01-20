@@ -135,9 +135,9 @@ class Front {
 			$handle,
 			'kudos',
 			[
-				'ajaxurl'           => admin_url( 'admin-ajax.php' ),
-				'_wpnonce'          => wp_create_nonce('wp_rest'),
-				'createPaymentUrl'  => rest_url( RestService::NAMESPACE . '/mollie/payment/create' ),
+				'ajaxurl'          => admin_url( 'admin-ajax.php' ),
+				'_wpnonce'         => wp_create_nonce( 'wp_rest' ),
+				'createPaymentUrl' => rest_url( RestService::NAMESPACE . '/mollie/payment/create' ),
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
@@ -197,15 +197,15 @@ class Front {
 
 				$atts = shortcode_atts(
 					[
-						'button_label'   => __( 'Donate now', 'kudos-donations' ),
-						'modal_title'    => __( 'Support us!', 'kudos-donations' ),
-						'welcome_text'   => __( 'Your support is greatly appreciated and will help to keep us going.',
+						'button_label'  => __( 'Donate now', 'kudos-donations' ),
+						'modal_title'   => __( 'Support us!', 'kudos-donations' ),
+						'welcome_text'  => __( 'Your support is greatly appreciated and will help to keep us going.',
 							'kudos-donations' ),
-						'amount_type'    => 'open',
-						'donation_type'  => 'both',
-						'fixed_amounts'  => '5, 10, 20, 50',
-						'campaign_id'    => 'default',
-						'alignment'      => 'none',
+						'amount_type'   => 'open',
+						'donation_type' => 'both',
+						'fixed_amounts' => '5, 10, 20, 50',
+						'campaign_id'   => 'default',
+						'alignment'     => 'none',
 					],
 					$atts,
 					'kudos'
@@ -222,19 +222,19 @@ class Front {
 				'editor_script'   => $this->plugin_name . '-button-block',
 				'render_callback' => [ $this, 'kudos_render_callback' ],
 				'attributes'      => [
-					'button_label'   => [
+					'button_label' => [
 						'type'    => 'string',
 						'default' => __( 'Donate now', 'kudos-donations' ),
 					],
-					'campaign_id' => [
+					'campaign_id'  => [
 						'type'    => 'string',
 						'default' => 'default',
 					],
-					'alignment'      => [
+					'alignment'    => [
 						'type'    => 'string',
 						'default' => 'none',
 					],
-					'id'             => [
+					'id'           => [
 						'type'      => 'string',
 						'source'    => 'attribute',
 						'default'   => 'kudos_modal-1',
@@ -258,7 +258,7 @@ class Front {
 
 		// Check if ready to go and if not return error messages
 		$status = self::ready();
-		if ( isset($status['error_messages']) ) {
+		if ( isset( $status['error_messages'] ) ) {
 			if ( is_user_logged_in() && ! is_admin() ) {
 				$out = '';
 				foreach ( $status['error_messages'] as $message ) {
@@ -273,16 +273,16 @@ class Front {
 
 		// Set campaign according to atts and if none found then set as default
 		$campaigns = new Campaigns();
-		if(!empty($atts['campaign_id'])) {
-			$campaign = $campaigns->get_campaign($atts['campaign_id']);
+		if ( ! empty( $atts['campaign_id'] ) ) {
+			$campaign = $campaigns->get_campaign( $atts['campaign_id'] );
 		}
 
-		if(empty($campaign)) {
-			$campaign = $campaigns->get_campaign('default');
+		if ( empty( $campaign ) ) {
+			$campaign = $campaigns->get_campaign( 'default' );
 		}
 
 		// Add campaign config to atts
-		$atts = wp_parse_args($campaign, $atts);
+		$atts = wp_parse_args( $campaign, $atts );
 
 		// Create button and modal.
 		$button = new KudosButton( $atts );
@@ -291,7 +291,7 @@ class Front {
 
 		// Return only if modal and button not empty.
 		if ( ! empty( $modal ) && ! empty( $button ) ) {
-			return $button->get_button( false ) . $modal;
+			return $button->get_button() . $modal;
 		}
 
 		return null;
@@ -313,8 +313,12 @@ class Front {
 
 		$return = [];
 
-		if(!$api_connected || !$api_key) $return['error_messages'][] = __( 'Mollie not connected', 'kudos-donations' );
-		if(!$campaigns) $return['error_messages'][] = __( 'No campaigns found', 'kudos-donations' );
+		if ( ! $api_connected || ! $api_key ) {
+			$return['error_messages'][] = __( 'Mollie not connected', 'kudos-donations' );
+		}
+		if ( ! $campaigns ) {
+			$return['error_messages'][] = __( 'No campaigns found', 'kudos-donations' );
+		}
 
 		return $return;
 
@@ -416,19 +420,19 @@ class Front {
 			}
 
 			/** @var DonorEntity $donor */
-			$donor     = $transaction->get_donor();
-			$campaigns = new Campaigns();
-			$campaign = $campaigns->get_campaign($transaction->campaign_id);
-			$campaign_name = !empty($campaign['name']) ? $campaign['name'] : '';
+			$donor         = $transaction->get_donor();
+			$campaigns     = new Campaigns();
+			$campaign      = $campaigns->get_campaign( $transaction->campaign_id );
+			$campaign_name = ! empty( $campaign['name'] ) ? $campaign['name'] : '';
 
 			switch ( $transaction->status ) {
 				case 'paid':
 					$vars                = [
-						'{{value}}' => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
+						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
 								2 ),
-						'{{name}}'  => $donor->name,
-						'{{email}}' => $donor->email,
-						'{{campaign}}' => $campaign_name
+						'{{name}}'     => $donor->name,
+						'{{email}}'    => $donor->email,
+						'{{campaign}}' => $campaign_name,
 					];
 					$atts['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
 					$atts['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );

@@ -33,19 +33,6 @@ class LoggerService extends Monolog {
 	}
 
 	/**
-	 * Create the log directory
-	 *
-	 * @since    1.0.0
-	 */
-	public function init() {
-
-		if ( wp_mkdir_p( self::LOG_DIR ) ) {
-			$this->info( 'Log directory created successfully' );
-			return;
-		}
-	}
-
-	/**
 	 * The class factory. In most cases this
 	 * should be used instead of instantiating the object
 	 * directly.
@@ -117,6 +104,20 @@ class LoggerService extends Monolog {
 		readfile( $file );
 		exit;
 
+	}
+
+	/**
+	 * Create the log directory
+	 *
+	 * @since    1.0.0
+	 */
+	public function init() {
+
+		if ( wp_mkdir_p( self::LOG_DIR ) ) {
+			$this->info( 'Log directory created successfully' );
+
+			return;
+		}
 	}
 
 	/**

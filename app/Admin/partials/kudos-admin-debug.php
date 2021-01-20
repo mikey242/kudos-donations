@@ -177,7 +177,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 					<input class="button-secondary confirm" type='submit' value='Delete all subscriptions'>
 				</form>
 
-				<hr />
+				<hr/>
 
 				<p>This will <strong>delete all Kudos data</strong> and recreate the database</p>
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
@@ -199,7 +199,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 						$subscriptions = $kudos_mollie->get_subscriptions( $donor->customer_id );
 
-						if ( !($subscriptions instanceof SubscriptionCollection) || !$subscriptions->count() ) {
+						if ( ! ( $subscriptions instanceof SubscriptionCollection ) || ! $subscriptions->count() ) {
 							continue;
 						}
 						?>

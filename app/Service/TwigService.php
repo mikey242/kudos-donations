@@ -77,8 +77,8 @@ class TwigService extends AbstractService {
 	 */
 	public function initialize_twig_extensions() {
 
-		if(KUDOS_DEBUG) {
-			$this->twig->addExtension(new DebugExtension());
+		if ( KUDOS_DEBUG ) {
+			$this->twig->addExtension( new DebugExtension() );
 		}
 	}
 
@@ -154,31 +154,11 @@ class TwigService extends AbstractService {
 		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
 			$logger->info( 'Twig cache directory created successfully' );
 			$this->clearCache();
+
 			return;
 		}
 
 		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ self::CACHE_DIR ] );
-
-	}
-
-	/**
-	 * Render the provided template
-	 *
-	 * @param string $template Template file (.html.twig).
-	 * @param array $array Array to pass to template.
-	 *
-	 * @return string|bool
-	 * @since    1.0.0
-	 */
-	public function render( string $template, $array = [] ) {
-
-		try {
-			return $this->twig->render( $template, $array );
-		} catch ( Throwable $e ) {
-			$this->logger->critical( $e->getMessage(), [ $template, $e->getLine() ] );
-
-			return false;
-		}
 
 	}
 
@@ -205,5 +185,26 @@ class TwigService extends AbstractService {
 		);
 
 		return true;
+	}
+
+	/**
+	 * Render the provided template
+	 *
+	 * @param string $template Template file (.html.twig).
+	 * @param array $array Array to pass to template.
+	 *
+	 * @return string|bool
+	 * @since    1.0.0
+	 */
+	public function render( string $template, $array = [] ) {
+
+		try {
+			return $this->twig->render( $template, $array );
+		} catch ( Throwable $e ) {
+			$this->logger->critical( $e->getMessage(), [ $template, $e->getLine() ] );
+
+			return false;
+		}
+
 	}
 }

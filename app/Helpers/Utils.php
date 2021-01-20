@@ -215,12 +215,12 @@ class Utils {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function schedule_action( int $timestamp, string $hook, array $args=[], bool $overwrite=false ) {
+	public static function schedule_action( int $timestamp, string $hook, array $args = [], bool $overwrite = false ) {
 
 		if ( class_exists( 'ActionScheduler' ) ) {
 
 			if ( $overwrite ) {
-				as_unschedule_action($hook, $args);
+				as_unschedule_action( $hook, $args );
 			}
 
 			if ( false === as_next_scheduled_action( $hook, $args ) ) {
@@ -244,12 +244,18 @@ class Utils {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function schedule_recurring_action( int $timestamp, int $interval, string $hook, array $args=[], bool $overwrite=false ) {
+	public static function schedule_recurring_action(
+		int $timestamp,
+		int $interval,
+		string $hook,
+		array $args = [],
+		bool $overwrite = false
+	) {
 
 		if ( class_exists( 'ActionScheduler' ) ) {
 
 			if ( $overwrite ) {
-				as_unschedule_action($hook, $args);
+				as_unschedule_action( $hook, $args );
 			}
 
 			if ( false === as_next_scheduled_action( $hook, $args ) ) {
