@@ -25,16 +25,17 @@ const IntroGuide = ({ show, updateSetting } ) => {
                 {
                     image: <img src={intro} />,
                     content:
-                    <div className="kd-p-4">
-                        <h1 className="kd-leading-normal">Welcome to Kudos Donations</h1>
-                        <p>It is easy to get started with Kudos Donations. Complete these simple steps to get your donations started.</p>
+                    <div className="kd-intro-container">
+                        <h1 className="kd-leading-normal">{__('Welcome to Kudos Donations', 'kudos-donations')}</h1>
+                        <p>It is easy to get started with Kudos Donations.</p>
+                        <p>Complete these simple steps to get your donations started.</p>
                     </div>
                     ,
                 },
                 {
                     image: <img src={mollie} />,
                     content:
-                        <div className="kd-p-4">
+                        <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">Connect with Mollie</h1>
                             <p>Log-in to your Mollie account and grab your <a target="_blank" href="https://mollie.com/dashboard/developers/api-keys">api keys</a>.</p>
                             <p>Make sure you get both your <strong>test</strong> and <strong>live</strong> api keys. Then enter them in the relevant fields.</p>
@@ -44,28 +45,30 @@ const IntroGuide = ({ show, updateSetting } ) => {
                 {
                     image: <img src={campaign} />,
                     content:
-                        <div className="kd-p-4">
+                        <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">Set up a campaign</h1>
                             <p>Visit the <strong>Campaigns</strong> tab and either create a new campaign or edit the default one. </p>
-                            <p>Don't forget to click <strong>Copy shortcode</strong> at the bottom of your campaign.</p>
+                            <p>If you need it, don't forget to click <strong>Copy shortcode</strong> at the bottom of your campaign.</p>
                         </div>
                     ,
                 },
                 {
                     image: <img src={button} />,
                     content:
-                        <div className="kd-p-4">
+                        <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">Place a button</h1>
-                            <p>Using the Kudos Donations block or shortcode, place the button anywhere on your website. If using the block, you will need to select the campaign you want it to use.</p>
+                            <p>Using the Kudos Button block or shortcode, place the button anywhere on your website.</p>
+                            <p>If using the block, you will need to select the campaign you created.</p>
                         </div>
                     ,
                 },
                 {
                     image: <img src={live} />,
                     content:
-                        <div className="kd-p-4">
+                        <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">Test and go Live</h1>
                             <p>With the API mode still on <strong>Test</strong> make a payment using your button. If it all looks good then you can switch to <strong>Live</strong>.</p>
+                            <p>For more information visit our <a target="_blank" href="https://kudosdonations.com/faq/">F.A.Q</a>.</p>
                         </div>
                     ,
                 },

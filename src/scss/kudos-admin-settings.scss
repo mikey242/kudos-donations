@@ -11,6 +11,10 @@
 .kudos-intro-guide {
   overflow: visible;
   width: 352px;
+
+  .kd-intro-container {
+    padding: 0 32px;
+  }
 }
 
 .components-radio-control__input::before,
