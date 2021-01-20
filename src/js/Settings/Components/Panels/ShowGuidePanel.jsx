@@ -5,7 +5,7 @@ const ShowGuidePanel = ( { handleInputChange } ) => {
 
     return (
         <PanelBody
-            title={ __( 'Show guide', 'kudos-donations' ) }
+            title={ __( 'Welcome guide', 'kudos-donations' ) }
             initialOpen={ false }
         >
             <BaseControl
@@ -18,7 +18,7 @@ const ShowGuidePanel = ( { handleInputChange } ) => {
                         handleInputChange('_kudos_show_intro', true);
                     } }
                 >
-                    { __( 'Show guide', 'kudos-donations' ) }
+                    { __( 'Show welcome guide', 'kudos-donations' ) }
                 </Button>
             </BaseControl>
         </PanelBody>
