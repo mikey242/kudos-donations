@@ -53,6 +53,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "axios": "^0.21.1",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
     "jquery-validation": "1.19.2",

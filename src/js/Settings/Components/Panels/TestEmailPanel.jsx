@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const  { __ } = wp.i18n;
 const { PanelBody, Button, PanelRow, TextControl } = wp.components;
 const { useState } = wp.element;
@@ -18,7 +20,7 @@ const TestEmailPanel = ( props ) => {
 		return emailReg.test( email );
 	};
 
-	const sendTest = () => {
+	const sendTest = ( email ) => {
 
 		setIsBusy( true );
 
@@ -30,26 +32,27 @@ const TestEmailPanel = ( props ) => {
 			return;
 		}
 
-		const requestOptions = {
-			method: 'POST',
-			// eslint-disable-next-line no-undef
-			headers: {
-				'X-WP-Nonce': wpApiSettings.nonce,
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ email: email })
-		};
-
-		fetch(window.kudos.sendTestUrl, requestOptions)
-			.then(response => response.json())
-			.then((response) => {
-				props.showNotice( response.data );
+		// Perform Post request
+		axios
+			.post(
+				window.kudos.sendTestUrl,
+				{ email },
+				{
+					headers: {
+						// eslint-disable-next-line no-undef
+						'X-WP-Nonce': wpApiSettings.nonce,
+						'Content-Type': 'application/json'
+					},
+				}
+			)
+			.then( response => {
+				props.showNotice( response.data.data );
 				setIsBusy( false );
-			})
-			.catch((error) => {
+			} )
+			.catch(error => {
 				props.showNotice( error.response.statusText );
 				setIsBusy( false );
-			})
+			});
 	};
 
 	return (
