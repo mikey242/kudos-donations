@@ -81,7 +81,7 @@ class Admin {
 			__( 'Kudos', 'kudos-donations' ),
 			__( 'Donations', 'kudos-donations' ),
 			'manage_options',
-			'kudos-transactions',
+			'kudos-settings',
 			false,
 			'data:image/svg+xml;base64,' . base64_encode(
 				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>'
@@ -89,8 +89,20 @@ class Admin {
 
 		);
 
+		$settings_page_hook_suffix = add_submenu_page(
+			'kudos-settings',
+			__( 'Kudos Settings', 'kudos-donations' ),
+			__( 'Settings', 'kudos-donations' ),
+			'manage_options',
+			'kudos-settings',
+			function () {
+				echo '<div id="kudos-settings"></div>';
+			}
+		);
+		add_action( "admin_print_scripts-{$settings_page_hook_suffix}", [ $this, 'kudos_settings_page_assets' ] );
+
 		$transactions_page_hook_suffix = add_submenu_page(
-			'kudos-transactions',
+			'kudos-settings',
 			/* translators: %s: Plugin name */
 			sprintf( __( '%s Transactions', 'kudos-donations' ), 'Kudos' ),
 			__( 'Transactions', 'kudos-donations' ),
@@ -104,7 +116,7 @@ class Admin {
 		add_action( "admin_print_scripts-{$transactions_page_hook_suffix}", [ $this, 'kudos_transactions_page_assets' ] );
 
 		$subscriptions_page_hook_suffix = add_submenu_page(
-			'kudos-transactions',
+			'kudos-settings',
 			/* translators: %s: Plugin name */
 			sprintf( __( '%s Subscriptions', 'kudos-donations' ), 'Kudos' ),
 			__( 'Subscriptions', 'kudos-donations' ),
@@ -118,7 +130,7 @@ class Admin {
 		add_action( "admin_print_scripts-{$subscriptions_page_hook_suffix}", [ $this, 'kudos_subscriptions_page_assets' ] );
 
 		$donors_page_hook_suffix = add_submenu_page(
-			'kudos-transactions',
+			'kudos-settings',
 			/* translators: %s: Plugin name */
 			sprintf( __( '%s Donors', 'kudos-donations' ), 'Kudos' ),
 			__( 'Donors', 'kudos-donations' ),
@@ -132,7 +144,7 @@ class Admin {
 		add_action( "admin_print_scripts-{$donors_page_hook_suffix}", [ $this, 'kudos_donor_page_assets' ] );
 
 		$campaigns_page_hook_suffix = add_submenu_page(
-			'kudos-transactions',
+			'kudos-settings',
 			/* translators: %s: Plugin name */
 			sprintf( __( '%s Campaigns', 'kudos-donations' ), 'Kudos' ),
 			__( 'Campaigns', 'kudos-donations' ),
@@ -145,22 +157,10 @@ class Admin {
 		);
 		add_action( "admin_print_scripts-{$campaigns_page_hook_suffix}", [ $this, 'kudos_campaign_page_assets' ] );
 
-		$settings_page_hook_suffix = add_submenu_page(
-			'kudos-transactions',
-			__( 'Kudos Settings', 'kudos-donations' ),
-			__( 'Settings', 'kudos-donations' ),
-			'manage_options',
-			'kudos-settings',
-			function () {
-				echo '<div id="kudos-settings"></div>';
-			}
-		);
-		add_action( "admin_print_scripts-{$settings_page_hook_suffix}", [ $this, 'kudos_settings_page_assets' ] );
-
 		// Add debug menu.
 		if ( KUDOS_DEBUG ) {
 			$debug_page_hook_suffix = add_submenu_page(
-				'kudos-transactions',
+				'kudos-settings',
 				'Kudos Debug',
 				'Debug',
 				'manage_options',
