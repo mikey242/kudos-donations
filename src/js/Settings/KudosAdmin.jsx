@@ -20,6 +20,7 @@ import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
 import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
 import {IntroGuide} from "./Components/IntroGuide"
 import {CampaignPanel} from "./Components/Panels/CampaignPanel"
+import {ShowGuidePanel} from "./Components/Panels/ShowGuidePanel"
 
 const { __ } = wp.i18n;
 
@@ -136,6 +137,7 @@ class KudosAdmin extends Component {
 	}
 
 	handleInputChange( option, value ) {
+		console.log(option, value)
 		this.setState( {
 			isEdited: true,
 			settings: {
@@ -385,6 +387,9 @@ class KudosAdmin extends Component {
 							{...this.state}
 							handleInputChange={this.handleInputChange}
 						/>
+						<ShowGuidePanel
+							handleInputChange={this.handleInputChange}
+						/>
 						<ExportSettingsPanel
 							{...this.state}
 						/>
@@ -400,6 +405,11 @@ class KudosAdmin extends Component {
 		return (
 
 			<Fragment>
+
+				<IntroGuide
+					show={this.state.settings._kudos_show_intro}
+					updateSetting={this.updateSetting}
+				/>
 
 				<Notice
 					showNotice={ this.state.showNotice }
@@ -434,11 +444,6 @@ class KudosAdmin extends Component {
 							return (
 
 								<div className="kudos-settings-main dashboard-wrap kd-mx-auto kd-container">
-
-									<IntroGuide
-										show={this.state.settings._kudos_show_intro}
-										updateSetting={this.updateSetting}
-									/>
 
 									{tab.content}
 
