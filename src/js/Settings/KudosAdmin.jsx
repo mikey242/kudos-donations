@@ -23,6 +23,7 @@ import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
 import {IntroGuide} from "./Components/IntroGuide"
 import {CampaignPanel} from "./Components/Panels/CampaignPanel"
 import {ShowGuidePanel} from "./Components/Panels/ShowGuidePanel"
+import { getTabName, updateQueryStringParameter } from "./Helpers/Util"
 
 const { __ } = wp.i18n;
 
@@ -50,7 +51,7 @@ class KudosAdmin extends Component {
 		this.isCampaignNameValid = this.isCampaignNameValid.bind( this )
 
 		this.state = {
-			tabName: this.getTabName(),
+			tabName: getTabName(),
 			showNotice: false,
 			noticeMessage: '',
 			isMollieEdited: false,
@@ -82,24 +83,7 @@ class KudosAdmin extends Component {
 
 	changeTab( tab ) {
 		this.getSettings();
-		this.updateQueryStringParameter('tabName', tab)
-	}
-
-	getTabName() {
-		const searchParams = new URLSearchParams( window.location.search );
-		if ( searchParams.has( 'tabName' ) ) {
-			return searchParams.get( 'tabName' );
-		}
-		return 'mollie';
-	}
-
-	updateQueryStringParameter(key, value) {
-		if ('URLSearchParams' in window) {
-			let searchParams = new URLSearchParams(window.location.search)
-			searchParams.set(key, value);
-			let newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
-			history.pushState(null, '', newRelativePathQuery);
-		}
+		updateQueryStringParameter('tabName', tab)
 	}
 
 	checkApiKey() {
@@ -152,7 +136,6 @@ class KudosAdmin extends Component {
 	}
 
 	handleInputChange( option, value ) {
-		console.log(option, value)
 		this.setState( {
 			isEdited: true,
 			settings: {
@@ -408,11 +391,6 @@ class KudosAdmin extends Component {
 		return (
 
 			<Fragment>
-
-				<IntroGuide
-					show={this.state.settings._kudos_show_intro}
-					updateSetting={this.updateSetting}
-				/>
 
 				<Notice
 					showNotice={ this.state.showNotice }
