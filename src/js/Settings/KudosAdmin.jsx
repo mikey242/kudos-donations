@@ -35,14 +35,6 @@ const {
 const { Component, Fragment } = wp.element;
 const { applyFilters } = wp.hooks;
 
-function getTabName() {
-	const searchParams = new URLSearchParams( window.location.search );
-	if ( searchParams.has( 'tabName' ) ) {
-		return searchParams.get( 'tabName' );
-	}
-	return 'mollie';
-}
-
 class KudosAdmin extends Component {
 	constructor() {
 		super( ...arguments );
@@ -58,7 +50,7 @@ class KudosAdmin extends Component {
 		this.isCampaignNameValid = this.isCampaignNameValid.bind( this )
 
 		this.state = {
-			tabName: getTabName(),
+			tabName: this.getTabName(),
 			showNotice: false,
 			noticeMessage: '',
 			isMollieEdited: false,
@@ -88,8 +80,26 @@ class KudosAdmin extends Component {
 		} );
 	}
 
-	changeTab() {
+	changeTab( tab ) {
 		this.getSettings();
+		this.updateQueryStringParameter('tabName', tab)
+	}
+
+	getTabName() {
+		const searchParams = new URLSearchParams( window.location.search );
+		if ( searchParams.has( 'tabName' ) ) {
+			return searchParams.get( 'tabName' );
+		}
+		return 'mollie';
+	}
+
+	updateQueryStringParameter(key, value) {
+		if ('URLSearchParams' in window) {
+			let searchParams = new URLSearchParams(window.location.search)
+			searchParams.set(key, value);
+			let newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
+			history.pushState(null, '', newRelativePathQuery);
+		}
 	}
 
 	checkApiKey() {
