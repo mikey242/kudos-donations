@@ -28,7 +28,7 @@
                 {{ key ~ '=' ~ value }}
             {% endfor %}
     >
-        {{ label|raw }}
+        {{ label | wp_kses_post }}
     </button>
 
 {% endmacro %}
