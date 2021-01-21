@@ -9,6 +9,7 @@ const Btn = ( props ) => {
             isPrimary={ props.isPrimary }
             isSecondary={ props.isSecondary }
             isPressed={ props.isPressed }
+            disabled={ props.disabled }
             onClick={ () =>
                 props.onClick()
             }
