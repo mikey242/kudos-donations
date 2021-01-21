@@ -1,5 +1,3 @@
-import { RenameModal } from '../RenameModal';
-
 const { __ } = wp.i18n;
 const { useState } = wp.element;
 const {
@@ -8,7 +6,6 @@ const {
     CheckboxControl,
     ClipboardButton,
     Flex,
-    FlexItem,
     FlexBlock,
     PanelBody,
     RadioControl,
@@ -41,8 +38,19 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
             >
 
                 <TextControl
+                    label={ __( 'Name', 'kudos-donations' ) }
+                    id={ 'campaign_name' + '-' + campaign.id }
+                    type={ 'text' }
+                    value={ campaign.name || '' }
+                    onChange={ (value) => {
+                        campaign.name = value
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                    } }
+                />
+
+                <TextControl
                     label={ __( 'Header', 'kudos-donations' ) }
-                    id={ 'modal_title' + '-' + campaign.name }
+                    id={ 'modal_title' + '-' + campaign.id }
                     type={ 'text' }
                     value={ campaign.modal_title || '' }
                     onChange={ (value) => {
@@ -53,7 +61,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
 
                 <TextControl
                     label={ __( 'Welcome text', 'kudos-donations' ) }
-                    id={ 'welcome_text' + '-' + campaign.name }
+                    id={ 'welcome_text' + '-' + campaign.id }
                     type={ 'text' }
                     value={ campaign.welcome_text || '' }
                     onChange={ (value) => {
@@ -151,6 +159,8 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
 
             </BaseControl>
 
+            <pre><code>[kudos campaign_id={campaign.id}]</code></pre>
+
             <Flex>
 
                 <FlexBlock>
@@ -164,14 +174,6 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                         { hasCopied ? 'Copied!' : 'Copy Shortcode' }
                     </ClipboardButton>
                 </FlexBlock>
-
-                <FlexItem>
-                    <RenameModal
-                        campaign={ campaign }
-                        updateSetting={ updateSetting }
-                        isCampaignNameValid={ isCampaignNameValid }
-                    />
-                </FlexItem>
 
                 { allowDelete ?
 
