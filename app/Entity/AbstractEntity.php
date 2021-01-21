@@ -64,7 +64,7 @@ abstract class AbstractEntity implements EntityInterface {
 				$this->$property = $value;
 			} else {
 				$logger = LoggerService::factory();
-				$logger->warning( 'Error setting property.', [ "message" => $e->getMessage() ] );
+				$logger->warning( 'Error setting property.', [ "property" => $property ] );
 			}
 		}
 	}
