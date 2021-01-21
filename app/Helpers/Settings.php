@@ -165,7 +165,7 @@ class Settings {
 								'type'       => 'object',
 								'properties' => [
 									'id'               => [
-										'type' => 'int',
+										'type' => 'string',
 									],
 									'name'             => [
 										'type' => 'string',

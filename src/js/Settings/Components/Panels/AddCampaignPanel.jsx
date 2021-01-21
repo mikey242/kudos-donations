@@ -2,7 +2,7 @@ const { __, sprintf } = wp.i18n;
 const { PanelBody, TextControl, Button } = wp.components;
 const { useState } = wp.element;
 
-const AddCampaignPanel = ({ settings, showNotice, updateSetting, isCampaignNameValid } ) => {
+const AddCampaignPanel = ({ settings, showNotice, updateSetting } ) => {
 
     const [ addFormValue, setAddFormValue ] = useState('');
     const [ buttonDisabled, setButtonDisabled ] = useState(true);
@@ -11,6 +11,10 @@ const AddCampaignPanel = ({ settings, showNotice, updateSetting, isCampaignNameV
     const updateValue = ( value ) => {
         setAddFormValue( value );
         setButtonDisabled(!isCampaignNameValid(value));
+    }
+
+    const isCampaignNameValid = ( name ) => {
+        return !('' === name.trim());
     }
 
     const addCampaign = ( name ) => {

@@ -245,10 +245,6 @@ class KudosAdmin extends Component {
 		} );
 	}
 
-	isCampaignNameValid( name ) {
-		return !('' === name.trim() || this.state.settings._kudos_campaigns.find(x => x.name.toLowerCase() === name.toLowerCase().trim()));
-	}
-
 	render() {
 
 		// Show spinner if not yet loaded
