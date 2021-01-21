@@ -451,6 +451,12 @@ class KudosAdmin extends Component {
 					}
 
 				</TabPanel>
+
+				<IntroGuide
+					show={this.state.settings._kudos_show_intro}
+					updateSetting={this.updateSetting}
+				/>
+
 			</Fragment>
 		);
 	}
