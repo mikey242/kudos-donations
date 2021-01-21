@@ -448,16 +448,18 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_campaign_id( array $item ): string {
 
-		$campaign_name = $this->campaigns->get_campaign(
-				$item['campaign_id'] )['name']
-		                 ?? $item['campaign_id'];
+		$campaign_name = $this->campaigns->get_campaign($item['campaign_id'] )['name'];
 
-		return sprintf(
-			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=name&s=%s' ),
+		if($campaign_name) {
+			return sprintf(
+				'<a href=%1$s>%2$s</a>',
+				sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=name&s=%s' ),
 				rawurlencode( $campaign_name ) ),
-			$campaign_name
-		);
+				$campaign_name
+			);
+		}
+
+		return $item['campaign_id'];
 
 	}
 
