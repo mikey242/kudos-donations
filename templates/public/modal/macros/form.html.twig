@@ -60,7 +60,7 @@
     {% from _self import input %}
     <label class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
         {{ input(name, label, value, 'checkbox', required) }}
-        {{ label | raw }}
+        {{ label | wp_kses_post }}
     </label>
 {% endmacro %}
 
