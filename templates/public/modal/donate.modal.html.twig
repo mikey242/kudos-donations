@@ -13,8 +13,8 @@
 
             {# INITIAL FIELDS #}
             {% embed '/public/modal/embeds/_tab.html.twig' %}
-                {% block title %}{{ modal_title | raw }}{% endblock %}
-                {% block text %}{{ modal_text | raw }}{% endblock %}
+                {% block title %}{{ modal_title }}{% endblock %}
+                {% block text %}{{ modal_text }}{% endblock %}
                 {% block body %}
                     {% from "/public/modal/macros/form.html.twig" import input_group, radio_buttons, text, radio %}
 
