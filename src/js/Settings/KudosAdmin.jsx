@@ -16,7 +16,6 @@ import { TermsPanel } from './Components/Panels/TermsPanel';
 import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
 import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
-import { Btn } from "./Components/Btn";
 import { ExportSettingsPanel } from "./Components/Panels/ExportSettingsPanel"
 import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
 import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
@@ -29,9 +28,8 @@ const { __ } = wp.i18n;
 
 const {
 	Panel,
-	PanelRow,
 	Spinner,
-	TabPanel
+	TabPanel,
 } = wp.components;
 const { Component, Fragment } = wp.element;
 const { applyFilters } = wp.hooks;
@@ -48,7 +46,6 @@ class KudosAdmin extends Component {
 		this.showNotice = this.showNotice.bind( this );
 		this.hideNotice = this.hideNotice.bind( this );
 		this.checkApiKey = this.checkApiKey.bind( this );
-		this.isCampaignNameValid = this.isCampaignNameValid.bind( this )
 
 		this.state = {
 			tabName: getTabName(),
@@ -82,7 +79,7 @@ class KudosAdmin extends Component {
 	}
 
 	changeTab( tab ) {
-		this.getSettings();
+		// this.getSettings();
 		updateQueryStringParameter('tabName', tab)
 	}
 
@@ -395,58 +392,35 @@ class KudosAdmin extends Component {
 				/>
 
 				<Header
-					apiConnected={ this.state.settings._kudos_mollie_connected }
-					apiMode={ this.state.settings._kudos_mollie_api_mode }
-					isMollieEdited={ this.state.isMollieEdited }
-					checkingApi={ this.state.checkingApi }
+					{...this.state}
+					updateAll={this.updateAll}
 				/>
 
-				<TabPanel
-					className="kudos-tab-panel"
-					onSelect={ ( tab ) => {
-						this.changeTab( tab );
-					} }
-					activeClass="is-active"
-					initialTabName={ this.state.tabName }
-					tabs={
-						Object.entries(this.tabs).map((tab) => {
-							tab = tab[1];
-							return tab;
-						})
-					}
-				>
-					{
-						( tab ) => {
+						<TabPanel
+							className="kudos-tab-panel kd-mx-auto kd-mt-5 kd-container"
+							onSelect={ ( tab ) => {
+								this.changeTab( tab );
+							} }
+							activeClass="is-active"
+							initialTabName={ this.state.tabName }
+							tabs={
+								Object.entries(this.tabs).map((tab) => {
+									tab = tab[1];
+									return tab;
+								})
+							}
+						>
+							{ ( tab ) => {
+								return (
+									<div className="kudos-settings-main">
 
-							return (
+										{tab.content}
 
-								<div className="kudos-settings-main dashboard-wrap kd-mx-auto kd-container">
+									</div>
+								)
+							}}
+						</TabPanel>
 
-									{tab.content}
-
-									<PanelRow className={'kd-justify-center'}>
-										<Btn
-											isPrimary
-											disabled={
-												this.state.isSaving ||
-												!this.state.isEdited
-											}
-											isBusy={
-												this.state.isSaving ||
-												this.state.checkingApi
-											}
-											onClick={this.updateAll}
-										>
-											{__('Save', 'kudos-donations')}
-										</Btn>
-									</PanelRow>
-								</div>
-							)
-						}
-
-					}
-
-				</TabPanel>
 
 				<IntroGuide
 					show={this.state.settings._kudos_show_intro}

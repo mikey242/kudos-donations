@@ -48,6 +48,8 @@
 
 .kudos-dashboard-header {
 
+  top: 32px;
+
   .kudos-api-status {
 
     &:before {
@@ -93,22 +95,23 @@
   }
 
   .kudos-tab-panel {
+
     .components-tab-panel__tabs {
-      @apply kd-flex kd-justify-center kd-bg-white kd-shadow-sm;
+      @apply kd-flex kd-justify-center kd-bg-white kd-border-solid kd-border kd-border-gray-300;
 
       .components-button.is-active {
         @apply kd-relative kd-font-semibold;
       }
 
       .components-button {
-        @apply kd-text-gray-800 kd-inline-block kd-bg-transparent kd-border-none kd-cursor-pointer kd-py-1 kd-px-5 kd-ml-0 kd-font-normal kd-transition-shadow kd-duration-100 kd-ease-linear;
+        @apply kd-text-gray-800 kd-inline-block kd-bg-transparent kd-border-none kd-cursor-pointer kd-py-1 kd-px-5 kd-ml-0 kd-text-lg kd-transition-shadow kd-duration-100 kd-ease-linear;
         height: 50px;
         outline-offset: -1px;
       }
     }
 
     .components-tab-panel__tab-content {
-      @apply kd-mt-8;
+      @apply kd-mt-5;
     }
   }
 
