@@ -184,6 +184,24 @@ class Front {
 	}
 
 	/**
+	 * Register query parameters
+	 *
+	 * @param array $vars Current query vars.
+	 *
+	 * @return array
+	 * @since   2.0.0
+	 */
+	public function register_vars( array $vars ): array {
+
+		$vars[] = 'kudos_subscription_id';
+		$vars[] = 'kudos_order_id';
+		$vars[] = 'kudos_token';
+
+		return $vars;
+
+	}
+
+	/**
 	 * Creates and registers the [kudos] shortcode and block
 	 *
 	 * @since   1.0.0
@@ -450,23 +468,5 @@ class Front {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Register query parameters
-	 *
-	 * @param array $vars Current query vars.
-	 *
-	 * @return array
-	 * @since   2.0.0
-	 */
-	public function register_vars( array $vars ): array {
-
-		$vars[] = 'kudos_subscription_id';
-		$vars[] = 'kudos_order_id';
-		$vars[] = 'kudos_token';
-
-		return $vars;
-
 	}
 }
