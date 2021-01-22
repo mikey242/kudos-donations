@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 
-const { render } = wp.element;
+const {render} = wp.element
 
 /**
  * Internal dependencies
@@ -10,4 +10,4 @@ const { render } = wp.element;
 import {KudosAdmin} from './Settings/KudosAdmin'
 // import '../scss/kudos-admin-settings.scss';
 
-render( <KudosAdmin />, document.getElementById( 'kudos-settings' ) );
+render(<KudosAdmin/>, document.getElementById('kudos-settings'))

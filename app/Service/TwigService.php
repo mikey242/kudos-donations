@@ -144,10 +144,10 @@ class TwigService extends AbstractService {
 		 * Add the WordPress wp_kses_post function filter.
 		 * @link https://developer.wordpress.org/reference/functions/wp_kses_post/
 		 */
-		$wp_kses_post = new TwigFilter('wp_kses_post', function($string) {
-			return wp_kses_post($string);
+		$wp_kses_post = new TwigFilter( 'wp_kses_post', function ( $string ) {
+			return wp_kses_post( $string );
 
-		}, ['is_safe' => ['html']]);
+		}, [ 'is_safe' => [ 'html' ] ] );
 		$this->twig->addFilter( $wp_kses_post );
 
 	}
