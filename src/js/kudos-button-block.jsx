@@ -16,7 +16,7 @@ const {
 	InspectorControls,
 } = wp.blockEditor;
 
-import logo from '../img/logo-colour.svg';
+import logo from '../img/logo-colour.svg'
 
 /**
  * Register block
