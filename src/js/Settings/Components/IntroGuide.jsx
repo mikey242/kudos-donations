@@ -4,13 +4,13 @@ import campaign from "../../../img/guide-campaign.png"
 import button from "../../../img/guide-button.png"
 import live from "../../../img/guide-test-live.png"
 
-const { __ } = wp.i18n;
-const { Guide, ExternalLink } = wp.components;
+const {__} = wp.i18n
+const {Guide, ExternalLink} = wp.components
 
-const IntroGuide = ({ show, updateSetting } ) => {
+const IntroGuide = ({show, updateSetting}) => {
 
-    if ( ! show ) {
-        return null;
+    if (!show) {
+        return null
     }
 
     const closeModal = () => {
@@ -20,31 +20,32 @@ const IntroGuide = ({ show, updateSetting } ) => {
     return (
         <Guide
             className={"kudos-intro-guide"}
-            onFinish={ () => closeModal() }
-            pages={ [
+            onFinish={() => closeModal()}
+            pages={[
                 {
-                    image: <img alt="Intro graphic" src={intro} />,
+                    image: <img alt="Intro graphic" src={intro}/>,
                     content:
-                    <div className="kd-intro-container">
-                        <h1 className="kd-leading-normal">{__('Welcome to Kudos Donations', 'kudos-donations')}</h1>
-                        <p>{__('It is easy to get started with Kudos Donations.', 'kudos-donations')}</p>
-                        <p>{__('Complete these simple steps to get your donations started.', 'kudos-donations')}</p>
-                    </div>
+                        <div className="kd-intro-container">
+                            <h1 className="kd-leading-normal">{__('Welcome to Kudos Donations', 'kudos-donations')}</h1>
+                            <p>{__('It is easy to get started with Kudos Donations.', 'kudos-donations')}</p>
+                            <p>{__('Complete these simple steps to get your donations started.', 'kudos-donations')}</p>
+                        </div>
                     ,
                 },
                 {
-                    image: <img alt="Mollie API key graphic" src={mollie} />,
+                    image: <img alt="Mollie API key graphic" src={mollie}/>,
                     content:
                         <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">{__('Connect with Mollie', 'kudos-donations')}</h1>
                             <p>{__('Login to your Mollie account and grab your api keys.', 'kudos-donations')}</p>
                             <p>{__('Make sure you get both your test and live api keys. Then enter them under the Mollie tab.', 'kudos-donations')}</p>
-                            <ExternalLink href="https://mollie.com/dashboard/developers/api-keys">{__('Mollie dashboard', 'kudos-donations')}</ExternalLink>
+                            <ExternalLink
+                                href="https://mollie.com/dashboard/developers/api-keys">{__('Mollie dashboard', 'kudos-donations')}</ExternalLink>
                         </div>
                     ,
                 },
                 {
-                    image: <img alt="Campaign graphic" src={campaign} />,
+                    image: <img alt="Campaign graphic" src={campaign}/>,
                     content:
                         <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">{__('Set up a campaign', 'kudos-donations')}</h1>
@@ -54,7 +55,7 @@ const IntroGuide = ({ show, updateSetting } ) => {
                     ,
                 },
                 {
-                    image: <img alt="Kudos Donations button graphic" src={button} />,
+                    image: <img alt="Kudos Donations button graphic" src={button}/>,
                     content:
                         <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">{__('Place a button', 'kudos-donations')}</h1>
@@ -64,7 +65,7 @@ const IntroGuide = ({ show, updateSetting } ) => {
                     ,
                 },
                 {
-                    image: <img alt="Switch for live mode" src={live} />,
+                    image: <img alt="Switch for live mode" src={live}/>,
                     content:
                         <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">{__('Test and go Live', 'kudos-donations')}</h1>
@@ -74,9 +75,9 @@ const IntroGuide = ({ show, updateSetting } ) => {
                         </div>
                     ,
                 },
-            ] }
+            ]}
         />
-    );
-};
+    )
+}
 
-export { IntroGuide };
+export {IntroGuide}

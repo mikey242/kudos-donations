@@ -32,8 +32,8 @@ class Campaigns {
 		foreach ( $campaigns as $key => $form ) {
 
 			if ( ! array_search( 'id', $form ) ) {
-				$campaigns = new Campaigns();
-				$output[ $key ]['id'] = $campaigns->generate_id($form['name']);
+				$campaigns            = new Campaigns();
+				$output[ $key ]['id'] = $campaigns->generate_id( $form['name'] );
 			}
 
 			foreach ( $form as $option => $value ) {
@@ -65,18 +65,19 @@ class Campaigns {
 	 */
 	public function generate_id( string $name ): string {
 
-		$id = sanitize_title($name);
+		$id        = sanitize_title( $name );
 		$campaigns = $this->campaigns;
-		$ids = array_map(function ($campaign) {
+		$ids       = array_map( function ( $campaign ) {
 			return $campaign['id'];
-		}, $campaigns);
+		},
+			$campaigns );
 
 		// If current id exists in array, iterate $n until it it unique
-		$n = 1;
+		$n      = 1;
 		$new_id = $id;
-		while(in_array($new_id, $ids)) {
+		while ( in_array( $new_id, $ids ) ) {
 			$new_id = $id . '-' . $n;
-			$n++;
+			$n ++;
 		}
 
 		// Return new id
@@ -93,8 +94,9 @@ class Campaigns {
 		$default_campaign[0] = [
 			'id'               => 'default',
 			'name'             => 'Default',
-			'modal_title'      => __('Support us!', 'kudos-donations'),
-			'welcome_text'     => __('Your support is greatly appreciated and will help to keep us going.', 'kudos-donations'),
+			'modal_title'      => __( 'Support us!', 'kudos-donations' ),
+			'welcome_text'     => __( 'Your support is greatly appreciated and will help to keep us going.',
+				'kudos-donations' ),
 			'address_required' => true,
 			'amount_type'      => 'both',
 			'fixed_amounts'    => '1,5,20,50',

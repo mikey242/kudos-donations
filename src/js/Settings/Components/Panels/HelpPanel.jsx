@@ -1,6 +1,6 @@
 import logo from '../../../../img/full-logo-green.svg'
 
-const { __ } = wp.i18n;
+const {__} = wp.i18n
 const {
     PanelBody,
     Button,
@@ -8,9 +8,9 @@ const {
     FlexItem,
     FlexBlock,
     Icon
-} = wp.components;
+} = wp.components
 
-const HelpPanel = ( { updateSetting } ) => {
+const HelpPanel = ({updateSetting}) => {
 
     const door = () => (
         <Icon
@@ -23,7 +23,7 @@ const HelpPanel = ( { updateSetting } ) => {
                 </svg>
             }
         />
-    );
+    )
 
     const question = () => (
         <Icon
@@ -36,7 +36,7 @@ const HelpPanel = ( { updateSetting } ) => {
                 </svg>
             }
         />
-    );
+    )
 
     const quill = () => (
         <Icon
@@ -49,13 +49,13 @@ const HelpPanel = ( { updateSetting } ) => {
                 </svg>
             }
         />
-    );
+    )
 
     return (
         <PanelBody>
-            <h2>{ __( 'Need some assistance?', 'kudos-donations' ) }</h2>
+            <h2>{__('Need some assistance?', 'kudos-donations')}</h2>
 
-            <p>{ __( "Don't hesitate to get in touch if you need any help or have a suggestion. ", 'kudos-donations' ) }</p>
+            <p>{__("Don't hesitate to get in touch if you need any help or have a suggestion. ", 'kudos-donations')}</p>
 
             <Flex>
                 <FlexBlock>
@@ -63,11 +63,11 @@ const HelpPanel = ( { updateSetting } ) => {
                         isSecondary
                         className={"kd-mr-2"}
                         icon={door}
-                        onClick={ () => {
-                            updateSetting('_kudos_show_intro', true);
-                        } }
+                        onClick={() => {
+                            updateSetting('_kudos_show_intro', true)
+                        }}
                     >
-                        { __( 'Show welcome guide', 'kudos-donations' ) }
+                        {__('Show welcome guide', 'kudos-donations')}
                     </Button>
                     <Button
                         isSecondary
@@ -76,7 +76,7 @@ const HelpPanel = ( { updateSetting } ) => {
                         href="https://kudosdonations.com/faq/"
                         icon={question}
                     >
-                        { __( 'Visit our F.A.Q', 'kudos-donations' ) }
+                        {__('Visit our F.A.Q', 'kudos-donations')}
                     </Button>
                     <Button
                         isSecondary
@@ -84,15 +84,15 @@ const HelpPanel = ( { updateSetting } ) => {
                         target="_blank"
                         icon={quill}
                     >
-                        { __( 'Leave a review', 'kudos-donations' ) }
+                        {__('Leave a review', 'kudos-donations')}
                     </Button>
                 </FlexBlock>
                 <FlexItem>
-                    <img width="140" src={ logo } className="kd-mr-4" alt="Kudos Logo" />
+                    <img width="140" src={logo} className="kd-mr-4" alt="Kudos Logo"/>
                 </FlexItem>
             </Flex>
         </PanelBody>
-    );
-};
+    )
+}
 
-export { HelpPanel };
+export {HelpPanel}

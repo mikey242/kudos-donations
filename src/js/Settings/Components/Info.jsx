@@ -1,20 +1,20 @@
-const { PanelRow, Dashicon } = wp.components;
+const {PanelRow, Dashicon} = wp.components
 
-const Info = ( props ) => {
+const Info = (props) => {
 
     return (
 
         <PanelRow>
 
             <div className="kudos-admin-info kd-flex kd-items-center kd-justify-center">
-                <Dashicon icon={ props.icon ?? "info" } />
-                    <i>{ props.children }</i>
+                <Dashicon icon={props.icon ?? "info"}/>
+                <i>{props.children}</i>
             </div>
 
         </PanelRow>
 
-    );
+    )
 
-};
+}
 
-export { Info };
+export {Info}

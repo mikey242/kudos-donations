@@ -71,8 +71,8 @@ $(() => {
                 required: __('You must agree to our terms and conditions before donating', 'kudos-donations')
             }
         },
-    });
-    $.validator.messages.required = __("This field is required", 'kudos-donations');
+    })
+    $.validator.messages.required = __("This field is required", 'kudos-donations')
 
     if ($kudosButtons.length) {
 
@@ -98,8 +98,8 @@ $(() => {
                                 )
                                 let $amountInput = $form.find('[id^=value_open-kudos_modal]')
                                 let $amountRadios = $form.find('[id^=amount-kudos_modal]')
-                                toggleAmount($amountInput, $amountRadios);
-								$($amountRadios[0]).prop('checked', true)
+                                toggleAmount($amountInput, $amountRadios)
+                                $($amountRadios[0]).prop('checked', true)
                                 $amountInput.attr({'required': false, 'name': ''})
                                 $form.validate().resetForm()
                                 $form[0].reset()
@@ -201,11 +201,11 @@ $(() => {
         form.addEventListener('submit', (e) => {
             e.preventDefault()
             $(e.currentTarget).validate()
-            if($(e.currentTarget).valid()) {
+            if ($(e.currentTarget).valid()) {
 
                 const modal = form.closest('.kudos_form_modal')
                 const error = modal.querySelector('.kudos_error_message')
-                const formData  = new FormData(e.target);
+                const formData = new FormData(e.target)
 
                 modal.classList.add('kudos_loading')
 
@@ -214,8 +214,8 @@ $(() => {
                         'Content-Type': 'application/json',
                         'X-WP-Noncse': kudos._wpnonce
                     }
-                }).then((result)=> {
-                    if(result.data.success) {
+                }).then((result) => {
+                    if (result.data.success) {
                         window.location.href = result.data.data
                     } else {
                         error.innerHTML = result.data.message
