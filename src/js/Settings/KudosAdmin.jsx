@@ -1,29 +1,29 @@
 // https://www.codeinwp.com/blog/plugin-options-page-gutenberg/
 // https://github.com/HardeepAsrani/my-awesome-plugin/
 
-import axios from 'axios';
+import axios from 'axios'
 
 // Settings Panels
-import { Notice } from './Components/Notice';
-import { Header } from './Components/Header';
-import { CompletedPaymentPanel } from './Components/Panels/CompletedPaymentPanel';
-import { EmailSettingsPanel } from './Components/Panels/EmailSettingsPanel';
-import { TestEmailPanel } from './Components/Panels/TestEmailPanel';
-import { MollieApiKeysPanel } from './Components/Panels/MollieApiKeysPanel';
-import { MollieApiModePanel } from './Components/Panels/MollieApiModePanel';
-import { CustomReturnPanel } from './Components/Panels/CustomReturnPanel';
-import { TermsPanel } from './Components/Panels/TermsPanel';
-import { EmailReceiptsPanel } from './Components/Panels/EmailReceiptsPanel';
-import { DebugModePanel } from './Components/Panels/DebugModePanel';
-import { ThemePanel } from "./Components/Panels/ThemePanel";
-import { ExportSettingsPanel } from "./Components/Panels/ExportSettingsPanel"
-import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
-import { AddCampaignPanel } from "./Components/Panels/AddCampaignPanel"
-import { IntroGuide } from "./Components/IntroGuide"
-import { CampaignPanel } from "./Components/Panels/CampaignPanel"
-import { getTabName, updateQueryStringParameter } from "./Helpers/Util"
-import { HelpPanel } from "./Components/Panels/HelpPanel"
-import { PanelTitle } from "./Components/PanelTitle"
+import {Notice} from './Components/Notice'
+import {Header} from './Components/Header'
+import {CompletedPaymentPanel} from './Components/Panels/CompletedPaymentPanel'
+import {EmailSettingsPanel} from './Components/Panels/EmailSettingsPanel'
+import {TestEmailPanel} from './Components/Panels/TestEmailPanel'
+import {MollieApiKeysPanel} from './Components/Panels/MollieApiKeysPanel'
+import {MollieApiModePanel} from './Components/Panels/MollieApiModePanel'
+import {CustomReturnPanel} from './Components/Panels/CustomReturnPanel'
+import {TermsPanel} from './Components/Panels/TermsPanel'
+import {EmailReceiptsPanel} from './Components/Panels/EmailReceiptsPanel'
+import {DebugModePanel} from './Components/Panels/DebugModePanel'
+import {ThemePanel} from "./Components/Panels/ThemePanel"
+import {ExportSettingsPanel} from "./Components/Panels/ExportSettingsPanel"
+import {ImportSettingsPanel} from "./Components/Panels/ImportSettingsPanel"
+import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
+import {IntroGuide} from "./Components/IntroGuide"
+import {CampaignPanel} from "./Components/Panels/CampaignPanel"
+import {getTabName, updateQueryStringParameter} from "./Helpers/Util"
+import {HelpPanel} from "./Components/Panels/HelpPanel"
+import {PanelTitle} from "./Components/PanelTitle"
 
 const { __ } = wp.i18n;
 

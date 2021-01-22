@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const  { __ } = wp.i18n;
 const { PanelBody, Button, PanelRow, TextControl } = wp.components;

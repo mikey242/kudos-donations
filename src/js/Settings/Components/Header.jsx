@@ -1,5 +1,5 @@
 import logo from '../../../img/logo-colour.svg'
-import { Btn } from "./Btn"
+import {Btn} from "./Btn"
 
 const { __ } = wp.i18n;
 const { Flex, FlexItem } = wp.components;
