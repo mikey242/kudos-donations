@@ -104,7 +104,7 @@ e.g:
 * Improved settings page
 * Switch to REST api to create transactions
 * Added welcome guide when settings page first visited
-* Add "Show welcome guide" link to allow re-viewing
+* Added "Help" tab to settings page with useful links
 
 = 2.2.0 =
 * Add ability to change donation type (subscription, one-off or both) to each button
