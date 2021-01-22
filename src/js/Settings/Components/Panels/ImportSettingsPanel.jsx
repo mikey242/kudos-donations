@@ -34,7 +34,7 @@ const ImportSettingsPanel = (props) => {
             >
                 <FormFileUpload
                     accept="text/*"
-                    className={ "is-primary is-small" }
+                    className={ "is-secondary" }
                     onChange={ (e) => importSettings(e) }
                 >
                     { __('Upload', 'kudos-donations') }

@@ -263,6 +263,9 @@ class Settings {
 			}
 		}
 
+		$campaigns = new Campaigns();
+		$campaigns->add_default();
+
 	}
 
 	/**

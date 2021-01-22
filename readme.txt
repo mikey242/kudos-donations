@@ -100,7 +100,7 @@ e.g:
 == Changelog ==
 
 = 2.3.0 =
-* Reworked campaigns, greatly simplifying shortcodes
+* Reworked campaigns, greatly simplifying shortcodes and configuration
 * Improved settings page
 * Switch to REST api to create transactions
 * Added welcome guide when settings page first visited

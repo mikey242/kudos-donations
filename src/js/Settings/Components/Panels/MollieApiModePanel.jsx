@@ -13,11 +13,7 @@ const MollieApiModePanel = (props ) => {
 	const selected = props.settings._kudos_mollie_api_mode;
 
 	return (
-		<PanelBody
-			title={ __( 'API mode', 'kudos-donations' ) }
-			opened={ true }
-			{...props}
-		>
+		<PanelBody>
 
 			<BaseControl
 				id="_kudos_mollie_api_mode"
@@ -31,7 +27,7 @@ const MollieApiModePanel = (props ) => {
 				<PanelRow>
 					<ButtonGroup>
 						<Btn
-							className="kd-rounded-l-sm"
+							className="kd-rounded-l-sm kd-shadow-button-group"
 							isPrimary={ 'test' === selected }
 							isSecondary={ 'test' !== selected }
 							isPressed={ 'test' === selected }
@@ -42,10 +38,9 @@ const MollieApiModePanel = (props ) => {
 							{ 'Test' }
 						</Btn>
 						<Btn
-							className="kd-rounded-r-sm"
+							className="kd-rounded-r-sm kd-shadow-button-group"
 							isPrimary={ 'live' === selected }
 							isSecondary={ 'live' !== selected }
-							// disabled={ 'live' === selected }
 							isPressed={ 'live' === selected }
 							onClick={ () =>
 								handleChange( '_kudos_mollie_api_mode', 'live' )

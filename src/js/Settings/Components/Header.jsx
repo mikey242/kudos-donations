@@ -1,12 +1,10 @@
 import logo from '../../../img/logo-colour.svg'
-import {Btn} from "./Btn"
+import { Btn } from "./Btn"
 
 const { __ } = wp.i18n;
-const {Flex, FlexItem} = wp.components;
+const { Flex, FlexItem } = wp.components;
 
 const Header = ( props ) => {
-
-	console.log(props.isEdited)
 
 	let status;
 	let statusClass;
@@ -23,7 +21,7 @@ const Header = ( props ) => {
 	}
 
 	return (
-		<div className="kudos-dashboard-header kd-sticky kd-w-full kd-shadow-sm kd-z-1 kd-bg-white kd-py-5">
+		<div className="kudos-dashboard-header kd-sticky kd-w-full kd-border-solid kd-border kd-border-gray-300 kd-z-1 kd-bg-white kd-py-3">
 			<Flex className="kd-container kd-items-center kd-justify-between">
 				<FlexItem className="kd-flex">
 					<img width="30" src={ logo } className="kd-mr-4" alt="Kudos Logo" />

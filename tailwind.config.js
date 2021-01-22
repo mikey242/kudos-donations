@@ -85,6 +85,7 @@ module.exports = {
       },
       boxShadow: {
         focus: '0 0 0 2px #fff, 0 0 0 3.5px var(--kudos-theme-color)',
+        'button-group': 'inset 0 0 0 1px var(--wp-admin-theme-color);'
       },
       keyframes: {
         spin: {

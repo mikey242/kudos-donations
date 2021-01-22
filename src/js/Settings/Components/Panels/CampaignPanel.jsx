@@ -6,6 +6,7 @@ const {
     CheckboxControl,
     ClipboardButton,
     Flex,
+    FlexItem,
     FlexBlock,
     PanelBody,
     RadioControl,
@@ -78,6 +79,9 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                 help={'Configure the address fields'}
             >
 
+                <Flex>
+
+                <FlexItem>
                 <ToggleControl
                     label={__("Enabled", 'kudos-donations')}
                     checked={ campaign.address_enabled || '' }
@@ -86,9 +90,11 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                         handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     } }
                 />
+                </FlexItem>
 
                 { campaign.address_enabled ?
 
+                    <FlexBlock>
                     <CheckboxControl
                         label={__("Required", "kudos-donations")}
                         checked={ campaign.address_required || '' }
@@ -97,8 +103,11 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
                             handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                         }}
                     />
+                    </FlexBlock>
 
                     : ''}
+
+                </Flex>
 
             </BaseControl>
 
@@ -159,7 +168,7 @@ const CampaignPanel = ( { settings, campaign, showNotice, updateSetting, handleI
 
             </BaseControl>
 
-            <pre><code>[kudos campaign_id={campaign.id}]</code></pre>
+
 
             <Flex>
 

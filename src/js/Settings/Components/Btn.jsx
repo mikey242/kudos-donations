@@ -5,7 +5,7 @@ const Btn = ( props ) => {
     return (
 
         <Button
-            className={ props.isPrimary ? "kd-bg-orange-500 " : "" + props.className }
+            className={ (props.isPrimary ? "kd-bg-orange-500 " : "") + props.className }
             isPrimary={ props.isPrimary }
             isSecondary={ props.isSecondary }
             isPressed={ props.isPressed }

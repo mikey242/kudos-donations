@@ -18,11 +18,12 @@ import { DebugModePanel } from './Components/Panels/DebugModePanel';
 import { ThemePanel } from "./Components/Panels/ThemePanel";
 import { ExportSettingsPanel } from "./Components/Panels/ExportSettingsPanel"
 import { ImportSettingsPanel } from "./Components/Panels/ImportSettingsPanel"
-import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
-import {IntroGuide} from "./Components/IntroGuide"
-import {CampaignPanel} from "./Components/Panels/CampaignPanel"
-import {ShowGuidePanel} from "./Components/Panels/ShowGuidePanel"
+import { AddCampaignPanel } from "./Components/Panels/AddCampaignPanel"
+import { IntroGuide } from "./Components/IntroGuide"
+import { CampaignPanel } from "./Components/Panels/CampaignPanel"
 import { getTabName, updateQueryStringParameter } from "./Helpers/Util"
+import { HelpPanel } from "./Components/Panels/HelpPanel"
+import { PanelTitle } from "./Components/PanelTitle"
 
 const { __ } = wp.i18n;
 
@@ -64,6 +65,11 @@ class KudosAdmin extends Component {
 	}
 
 	componentDidMount() {
+		window.onbeforeunload = (e) => {
+			if(this.state.isEdited) {
+				e.preventDefault()
+			}
+		}
 		if ( false === this.state.isAPILoaded ) {
 			this.getSettings();
 		}
@@ -279,6 +285,7 @@ class KudosAdmin extends Component {
 				className: 'tab-campaigns',
 				content:
 				<Fragment>
+					<PanelTitle label="Add Campaign"/>
 					<Panel>
 						<AddCampaignPanel
 							isCampaignNameValid={ this.isCampaignNameValid }
@@ -289,9 +296,8 @@ class KudosAdmin extends Component {
 						/>
 					</Panel>
 					<br/>
-					<Panel
-						header={__('Campaigns', 'kudos-donations')}
-					>
+					<PanelTitle label="Existing campaigns"/>
+					<Panel>
 						{ this.state.settings._kudos_campaigns.map((campaign, i) => {
 
 							return(
@@ -362,19 +368,27 @@ class KudosAdmin extends Component {
 				className: 'tab-advanced',
 				content:
 					<Panel>
-						<DebugModePanel
-							{...this.state}
-							handleInputChange={this.handleInputChange}
-						/>
-						<ShowGuidePanel
-							handleInputChange={this.handleInputChange}
-						/>
 						<ExportSettingsPanel
 							{...this.state}
 						/>
 						<ImportSettingsPanel
 							updateAll={this.updateAll}
 							handleInputChange={this.handleInputChange}
+						/>
+						<DebugModePanel
+							{...this.state}
+							handleInputChange={this.handleInputChange}
+						/>
+					</Panel>
+			},
+			{
+				name: 'help',
+				title: __('Help', 'kudos-donations'),
+				className: 'tab-help',
+				content:
+					<Panel>
+						<HelpPanel
+							updateSetting={this.updateSetting}
 						/>
 					</Panel>
 			}
