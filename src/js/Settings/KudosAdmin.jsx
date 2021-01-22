@@ -296,7 +296,7 @@ class KudosAdmin extends Component {
                             />
                         </Panel>
                         <br/>
-                        <PanelTitle label="Existing campaigns"/>
+                        <PanelTitle label="Campaigns"/>
                         <Panel>
                             {this.state.settings._kudos_campaigns.map((campaign, i) => {
 

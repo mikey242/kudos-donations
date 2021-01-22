@@ -39,7 +39,7 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting}) => {
         <PanelBody>
             <TextControl
                 label={__(
-                    'New campaign name',
+                    'Campaign name',
                     'kudos-donations'
                 )}
                 help={__("Give your campaign a unique name to identify it.", 'kudos-donations')}
