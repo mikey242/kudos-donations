@@ -181,8 +181,7 @@ const CampaignPanel = ({
 
                 <FlexBlock>
                     <ClipboardButton
-                        isPrimary
-                        isSmall
+                        isSecondary
                         text={'[kudos campaign_id="' + campaign.id + '"]'}
                         onCopy={() => setHasCopied(true)}
                         onFinishCopy={() => setHasCopied(false)}
@@ -194,7 +193,7 @@ const CampaignPanel = ({
                 {allowDelete ?
 
                     <Button
-                        isSecondary
+                        isLink
                         isSmall
                         onClick={
                             () => {
@@ -202,7 +201,7 @@ const CampaignPanel = ({
                             }
                         }
                     >
-                        {__('Delete', 'kudos-donations')}
+                        {__('Delete campaign', 'kudos-donations')}
                     </Button>
 
                     : ''}
