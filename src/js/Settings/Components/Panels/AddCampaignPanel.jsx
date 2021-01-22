@@ -1,5 +1,5 @@
 const { __, sprintf } = wp.i18n;
-const { PanelBody, TextControl, Button } = wp.components;
+const { PanelBody, PanelHeader, TextControl, Button } = wp.components;
 const { useState } = wp.element;
 
 const AddCampaignPanel = ({ settings, showNotice, updateSetting } ) => {
@@ -36,14 +36,10 @@ const AddCampaignPanel = ({ settings, showNotice, updateSetting } ) => {
     };
 
     return (
-            <PanelBody
-                title={ __( 'Add a campaign', 'kudos-donations' ) }
-                opened={ true }
-            >
-
+            <PanelBody>
                 <TextControl
                     label={ __(
-                        'Campaign name',
+                        'New campaign name',
                         'kudos-donations'
                     ) }
                     help={__("Give your campaign a unique name to identify it.", 'kudos-donations')}
@@ -54,8 +50,7 @@ const AddCampaignPanel = ({ settings, showNotice, updateSetting } ) => {
                 />
 
                 <Button
-                    isPrimary
-                    isSmall
+                    isSecondary
                     disabled={ buttonDisabled }
                     onClick={
                         () => addCampaign(document.getElementById('kudos_new_campaign').value)

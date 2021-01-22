@@ -86,6 +86,11 @@
     @apply kd-mt-4 kd-mb-0 kd-italic;
   }
 
+  .components-tab-panel__tabs,
+  .components-panel {
+    @apply kd-border-solid kd-border kd-border-gray-300;
+  }
+
   .components-snackbar {
     @apply kd-fixed kd-px-4 kd-ml-5 kd-mb-5 kd-w-auto kd-z-1 kd-opacity-0 kd-bottom-0;
 
@@ -97,14 +102,14 @@
   .kudos-tab-panel {
 
     .components-tab-panel__tabs {
-      @apply kd-flex kd-justify-center kd-bg-white kd-border-solid kd-border kd-border-gray-300;
+      @apply kd-flex kd-justify-center kd-bg-white;
 
       .components-button.is-active {
         @apply kd-relative kd-font-semibold;
       }
 
       .components-button {
-        @apply kd-text-gray-800 kd-inline-block kd-bg-transparent kd-border-none kd-cursor-pointer kd-py-1 kd-px-5 kd-ml-0 kd-text-lg kd-transition-shadow kd-duration-100 kd-ease-linear;
+        @apply kd-text-gray-800 kd-inline-block kd-bg-transparent kd-border-none kd-cursor-pointer kd-py-1 kd-px-5 kd-ml-0 kd-transition-shadow kd-duration-100 kd-ease-linear;
         height: 50px;
         outline-offset: -1px;
       }

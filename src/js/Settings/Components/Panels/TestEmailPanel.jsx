@@ -79,8 +79,7 @@ const TestEmailPanel = ( props ) => {
 
 			<PanelRow>
 				<Button
-					isPrimary
-					isSmall
+					isSecondary
 					disabled={ buttonDisabled || isBusy }
 					isBusy={ isBusy }
 					onClick={ () => {
