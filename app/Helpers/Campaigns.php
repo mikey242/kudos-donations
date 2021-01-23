@@ -33,7 +33,11 @@ class Campaigns {
 
 			if ( ! array_search( 'id', $form ) ) {
 				$campaigns            = new Campaigns();
-				$output[ $key ]['id'] = $campaigns->generate_id( $form['name'] );
+				if(count($campaigns->get_all())) {
+					$output[ $key ]['id'] = $campaigns->generate_id( $form['name'] );
+				} else {
+					$output[ $key ]['id'] = 'default';
+				}
 			}
 
 			foreach ( $form as $option => $value ) {
