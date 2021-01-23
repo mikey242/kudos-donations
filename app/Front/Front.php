@@ -275,12 +275,12 @@ class Front {
 	public function kudos_render_callback( array $atts ): ?string {
 
 		// Check if ready to go and if not return error messages
-		$status = self::ready();
-		if ( isset( $status['error_messages'] ) ) {
+		$status = self::ready($atts);
+		if ( count( $status ) ) {
 			if ( is_user_logged_in() && ! is_admin() ) {
 				$out = '';
-				foreach ( $status['error_messages'] as $message ) {
-					$out .= "<p>$message</p>";
+				foreach ( $status as $message ) {
+					$out .= "<p class='kd-my-0 kd-italic kd-text-orange-700'>$message</p>";
 				}
 
 				return $out;
@@ -319,23 +319,36 @@ class Front {
 	/**
 	 * Checks if required settings are saved before displaying button or modal
 	 *
+	 * @param $atts array
+	 *
 	 * @return array
 	 * @since   1.0.0
 	 */
-	public static function ready(): array {
+	public static function ready( array $atts ): array {
 
 		$api_connected = Settings::get_setting( 'mollie_connected' );
 		$api_mode      = Settings::get_setting( 'mollie_api_mode' );
 		$api_key       = Settings::get_setting( 'mollie_' . $api_mode . '_api_key' );
-		$campaigns     = Settings::get_setting( 'campaigns' );
+		$campaigns     = new Campaigns();
 
 		$return = [];
 
-		if ( ! $api_connected || ! $api_key ) {
-			$return['error_messages'][] = __( 'Mollie not connected', 'kudos-donations' );
+		if ( ! $api_connected && ! $api_key ) {
+			$return[] = __( 'Mollie not connected', 'kudos-donations' );
 		}
-		if ( ! $campaigns ) {
-			$return['error_messages'][] = __( 'No campaigns found', 'kudos-donations' );
+
+		if ( $campaigns->get_all() ) {
+			if(!empty($atts['campaign_id'])) {
+				$campaign = $campaigns->get_campaign($atts['campaign_id']);
+				if(!$campaign) {
+					$return[] = sprintf(__( 'Campaign "%s" not found.', 'kudos-donations' ), $atts['campaign_id']);
+					return $return;
+				}
+			} else {
+				$return[] = __( 'No campaign configured for this button.', 'kudos-donations' );
+			}
+		} else {
+			$return[] = __( 'No campaigns found', 'kudos-donations' );
 		}
 
 		return $return;
