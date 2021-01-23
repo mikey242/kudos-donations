@@ -115,7 +115,7 @@ export default registerBlockType('iseardmedia/kudos-button', {
                             <SelectControl
                                 label={__('Select campaign', 'kudos-donations')}
                                 help={__('Select your donation form', 'kudos-donations')}
-                                value={this.props.attributes.campaign_id}
+                                value={this.props.attributes.campaign_id || null}
                                 onChange={this.onChangeCampaign}
                                 options={
                                     [{
