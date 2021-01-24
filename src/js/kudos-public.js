@@ -212,7 +212,7 @@ $(() => {
                 axios.post(kudos.createPaymentUrl, JSON.stringify(Object.fromEntries(formData)), {
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-WP-Noncse': kudos._wpnonce
+                        'X-WP-Nonce': kudos._wpnonce
                     }
                 }).then((result) => {
                     if (result.data.success) {
