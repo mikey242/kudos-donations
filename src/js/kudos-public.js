@@ -218,7 +218,7 @@ $(() => {
                     if (result.data.success) {
                         window.location.href = result.data.data
                     } else {
-                        error.innerHTML = result.data.message
+                        error.innerHTML = result.data.data.message
                         modal.classList.add('error')
                         modal.classList.remove('kudos_loading')
                     }
