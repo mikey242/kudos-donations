@@ -4,9 +4,6 @@ const {__} = wp.i18n
 const {
     PanelBody,
     Button,
-    Flex,
-    FlexItem,
-    FlexBlock,
     Icon
 } = wp.components
 
@@ -57,8 +54,8 @@ const HelpPanel = ({updateSetting}) => {
 
             <p>{__("Don't hesitate to get in touch if you need any help or have a suggestion. ", 'kudos-donations')}</p>
 
-            <Flex>
-                <FlexBlock>
+            <div className="kd-flex">
+                <div className="kd-flex-grow">
                     <Button
                         isSecondary
                         className={"kd-mr-2"}
@@ -86,11 +83,11 @@ const HelpPanel = ({updateSetting}) => {
                     >
                         {__('Leave a review', 'kudos-donations')}
                     </Button>
-                </FlexBlock>
-                <FlexItem>
+                </div>
+                <div>
                     <img width="140" src={logo} className="kd-mr-4" alt="Kudos Logo"/>
-                </FlexItem>
-            </Flex>
+                </div>
+            </div>
         </PanelBody>
     )
 }
