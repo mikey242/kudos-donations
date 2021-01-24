@@ -5,9 +5,6 @@ const {
     Button,
     CheckboxControl,
     ClipboardButton,
-    Flex,
-    FlexItem,
-    FlexBlock,
     PanelBody,
     RadioControl,
     TextControl,
@@ -20,7 +17,6 @@ const CampaignPanel = ({
                            showNotice,
                            updateSetting,
                            handleInputChange,
-                           isCampaignNameValid,
                            allowDelete = false
                        }) => {
 
@@ -87,35 +83,30 @@ const CampaignPanel = ({
                 help={'Configure the address fields'}
             >
 
-                <Flex>
 
-                    <FlexItem>
-                        <ToggleControl
-                            label={__("Enabled", 'kudos-donations')}
-                            checked={campaign.address_enabled || ''}
-                            onChange={(value) => {
-                                campaign.address_enabled = value
-                                handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                            }}
-                        />
-                    </FlexItem>
+
+                    <ToggleControl
+                        label={__("Enabled", 'kudos-donations')}
+                        checked={campaign.address_enabled || ''}
+                        onChange={(value) => {
+                            campaign.address_enabled = value
+                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                        }}
+                    />
 
                     {campaign.address_enabled ?
 
-                        <FlexBlock>
-                            <CheckboxControl
-                                label={__("Required", "kudos-donations")}
-                                checked={campaign.address_required || ''}
-                                onChange={(value) => {
-                                    campaign.address_required = value
-                                    handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                                }}
-                            />
-                        </FlexBlock>
+                        <CheckboxControl
+                            label={__("Required", "kudos-donations")}
+                            checked={campaign.address_required || ''}
+                            onChange={(value) => {
+                                campaign.address_required = value
+                                handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                            }}
+                        />
 
                         : ''}
 
-                </Flex>
 
             </BaseControl>
 
@@ -177,9 +168,9 @@ const CampaignPanel = ({
             </BaseControl>
 
 
-            <Flex>
+            <div className="kd-flex">
 
-                <FlexBlock>
+                <div>
                     <ClipboardButton
                         isSecondary
                         text={'[kudos campaign_id="' + campaign.id + '"]'}
@@ -188,7 +179,7 @@ const CampaignPanel = ({
                     >
                         {hasCopied ? 'Copied!' : 'Copy Shortcode'}
                     </ClipboardButton>
-                </FlexBlock>
+                </div>
 
                 {allowDelete ?
 
@@ -206,7 +197,7 @@ const CampaignPanel = ({
 
                     : ''}
 
-            </Flex>
+            </div>
 
         </PanelBody>
     )
