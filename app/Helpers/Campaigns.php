@@ -122,7 +122,7 @@ class Campaigns {
 	 * @return array|null
 	 * @since 2.3.0
 	 */
-	public function get_campaign( string $value ): ?array {
+	public function get_campaign( ?string $value ): ?array {
 
 		$campaigns = $this->campaigns;
 		$key       = array_search( $value, array_column( $campaigns, 'id' ) );

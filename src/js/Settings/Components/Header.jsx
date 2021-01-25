@@ -21,7 +21,7 @@ const Header = (props) => {
 
     return (
         <div
-            className="kudos-dashboard-header kd-sticky kd-w-full kd-border-solid kd-border kd-border-gray-300 kd-z-1 kd-bg-white kd-py-3">
+            className="kudos-dashboard-header kd-sticky kd-border-solid kd-border kd-border-gray-300 kd-z-1 kd-bg-white kd-py-3">
             <div className="kd-container kd-flex kd-items-center kd-justify-between">
                 <div className="kd-flex">
                     <img width="30" src={logo} className="kd-mr-4" alt="Kudos Logo"/>

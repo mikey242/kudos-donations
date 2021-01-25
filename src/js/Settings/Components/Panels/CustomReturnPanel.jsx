@@ -1,14 +1,11 @@
 const {__} = wp.i18n
-const {PanelBody, TextControl, ToggleControl} = wp.components
+const {CardBody, TextControl, ToggleControl} = wp.components
 
 const CustomReturnPanel = (props) => {
 
     return (
-        <PanelBody
-            title={__('Custom return URL', 'kudos-donations')}
-            initialOpen={false}
-        >
-
+        <CardBody size="medium">
+            <p><strong>{__('Custom return URL', 'kudos-donations')}</strong></p>
             <ToggleControl
                 label={__('Use custom return URL', 'kudos-donations')}
                 help={__(
@@ -34,8 +31,7 @@ const CustomReturnPanel = (props) => {
                 />
 
                 : ''}
-
-        </PanelBody>
+        </CardBody>
     )
 }
 

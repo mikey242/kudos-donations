@@ -15,39 +15,26 @@ class RestService {
 	 */
 	private $routes;
 	/**
-	 * Our Mailer service
-	 *
-	 * @var false|MailerService
-	 */
-	private $mailer;
-	/**
-	 * Our Mollie service
-	 *
-	 * @var false|MollieService
-	 */
-	private $mollie;
-
-	/**
 	 * Rest service constructor.
 	 *
 	 * @since    2.3.0
 	 */
 	public function __construct() {
 
-		$this->mailer = MailerService::factory();
-		$this->mollie = MollieService::factory();
+		$mailer = MailerService::factory();
+		$payment = PaymentService::factory();
 
 		$this->routes = [
 
 			'mollie/payment/create' => [
 				'methods'             => 'POST',
-				'callback'            => [ $this->mollie, 'submit_payment' ],
+				'callback'            => [ $payment, 'submit_payment' ],
 				'permission_callback' => '__return_true',
 			],
 
 			'mollie/payment/webhook' => [
 				'methods'             => 'POST',
-				'callback'            => [ $this->mollie, 'rest_api_mollie_webhook' ],
+				'callback'            => [ $payment, 'handle_webhook' ],
 				'args'                => [
 					'id' => [
 						'required' => true,
@@ -58,7 +45,7 @@ class RestService {
 
 			'mollie/check-api' => [
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this->mollie, 'check_api_keys' ],
+				'callback'            => [ $payment, 'check_api_keys' ],
 				'args'                => [
 					'apiMode' => [
 						'required' => true,
@@ -71,7 +58,7 @@ class RestService {
 
 			'email/test' => [
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $this->mailer, 'send_test' ],
+				'callback'            => [ $mailer, 'send_test' ],
 				'args'                => [
 					'email' => [
 						'required' => true,

@@ -1,12 +1,11 @@
+import {SettingCard} from "../SettingCard"
+
 const {__} = wp.i18n
-const {PanelBody, TextControl, ToggleControl} = wp.components
+const {TextControl, ToggleControl} = wp.components
 
 const EmailReceiptsPanel = (props) => {
     return (
-        <PanelBody
-            title={__('Email receipts', 'kudos-donations')}
-            initialOpen={true}
-        >
+        <SettingCard title={__('Email receipts', 'kudos-donations')}>
 
             <ToggleControl
                 label={__('Send email receipts', 'kudos-donations')}
@@ -31,7 +30,7 @@ const EmailReceiptsPanel = (props) => {
                 />
 
                 : ''}
-        </PanelBody>
+        </SettingCard>
     )
 }
 

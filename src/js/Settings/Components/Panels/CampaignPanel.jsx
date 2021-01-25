@@ -11,14 +11,7 @@ const {
     ToggleControl
 } = wp.components
 
-const CampaignPanel = ({
-                           settings,
-                           campaign,
-                           showNotice,
-                           updateSetting,
-                           handleInputChange,
-                           allowDelete = false
-                       }) => {
+const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleInputChange, allowDelete = false}) => {
 
     const [hasCopied, setHasCopied] = useState(false)
 
@@ -39,7 +32,6 @@ const CampaignPanel = ({
 
             <BaseControl
                 id={campaign.id + "-modal-text"}
-                help={'Customize the text of the form'}
             >
 
                 <TextControl
@@ -84,28 +76,27 @@ const CampaignPanel = ({
             >
 
 
+                <ToggleControl
+                    label={__("Enabled", 'kudos-donations')}
+                    checked={campaign.address_enabled || ''}
+                    onChange={(value) => {
+                        campaign.address_enabled = value
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                    }}
+                />
 
-                    <ToggleControl
-                        label={__("Enabled", 'kudos-donations')}
-                        checked={campaign.address_enabled || ''}
+                {campaign.address_enabled ?
+
+                    <CheckboxControl
+                        label={__("Required", "kudos-donations")}
+                        checked={campaign.address_required || ''}
                         onChange={(value) => {
-                            campaign.address_enabled = value
+                            campaign.address_required = value
                             handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                         }}
                     />
 
-                    {campaign.address_enabled ?
-
-                        <CheckboxControl
-                            label={__("Required", "kudos-donations")}
-                            checked={campaign.address_required || ''}
-                            onChange={(value) => {
-                                campaign.address_required = value
-                                handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                            }}
-                        />
-
-                        : ''}
+                    : ''}
 
 
             </BaseControl>
@@ -147,28 +138,30 @@ const CampaignPanel = ({
                     }}
                 />
 
+            </BaseControl>
+
                 {campaign.amount_type !== 'open' ?
 
-                    <TextControl
-                        label={__('Amounts', 'kudos-donations') + ':'}
-                        id={'fixed_amounts' + '-' + campaign.name}
-                        help={__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}
-                        value={campaign.fixed_amounts || ''}
-                        onChange={(value) => {
-                            let valuesArray = value.split(',')
-                            if (valuesArray.length <= 4) {
-                                campaign.fixed_amounts = value.replace(/[^,0-9]/g, '')
-                            }
-                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                        }}
-                    />
+                    <BaseControl>
+                        <TextControl
+                            label={__('Amounts', 'kudos-donations') + ':'}
+                            id={'fixed_amounts' + '-' + campaign.name}
+                            help={__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}
+                            value={campaign.fixed_amounts || ''}
+                            onChange={(value) => {
+                                let valuesArray = value.split(',')
+                                if (valuesArray.length <= 4) {
+                                    campaign.fixed_amounts = value.replace(/[^,0-9]/g, '')
+                                }
+                                handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                            }}
+                        />
+                    </BaseControl>
 
                     : ''}
 
-            </BaseControl>
 
-
-            <div className="kd-flex">
+            <div className="kd-flex kd-justify-between">
 
                 <div>
                     <ClipboardButton

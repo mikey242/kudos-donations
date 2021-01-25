@@ -9,7 +9,7 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Front\Front;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\I18nService;
-use Kudos\Service\MollieService;
+use Kudos\Service\PaymentService;
 use Kudos\Service\RestService;
 
 /**
@@ -169,9 +169,9 @@ class KudosDonations {
 	 */
 	private function define_mollie_hooks() {
 
-		add_action( 'kudos_process_paid_transaction', [ MollieService::class, 'process_transaction' ], 10, 1 );
-		add_action( 'wp_ajax_nopriv_submit_payment', [ MollieService::factory(), 'submit_payment' ] );
-		add_action( 'wp_ajax_submit_payment', [ MollieService::factory(), 'submit_payment' ] );
+		add_action( 'kudos_process_paid_transaction', [ PaymentService::class, 'process_transaction' ], 10, 1 );
+		add_action( 'wp_ajax_nopriv_submit_payment', [ PaymentService::factory(), 'submit_payment' ] );
+		add_action( 'wp_ajax_submit_payment', [ PaymentService::factory(), 'submit_payment' ] );
 
 	}
 

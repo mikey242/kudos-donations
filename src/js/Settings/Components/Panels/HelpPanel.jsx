@@ -1,8 +1,8 @@
 import logo from '../../../../img/full-logo-green.svg'
+import {SettingCard} from "../SettingCard"
 
 const {__} = wp.i18n
 const {
-    PanelBody,
     Button,
     Icon
 } = wp.components
@@ -48,14 +48,46 @@ const HelpPanel = ({updateSetting}) => {
         />
     )
 
-    return (
-        <PanelBody>
-            <h2>{__('Need some assistance?', 'kudos-donations')}</h2>
+    const help = () => (
+        <Icon
+            size="16"
+            icon={
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 640 512">
+                    <path fill="currentColor"
+                          d="M488 192H336v56c0 39.7-32.3 72-72 72s-72-32.3-72-72V126.4l-64.9 39C107.8 176.9 96 197.8 96 220.2v47.3l-80 46.2C.7 322.5-4.6 342.1 4.3 357.4l80 138.6c8.8 15.3 28.4 20.5 43.7 11.7L231.4 448H368c35.3 0 64-28.7 64-64h16c17.7 0 32-14.3 32-32v-64h8c13.3 0 24-10.7 24-24v-48c0-13.3-10.7-24-24-24zm147.7-37.4L555.7 16C546.9.7 527.3-4.5 512 4.3L408.6 64H306.4c-12 0-23.7 3.4-33.9 9.7L239 94.6c-9.4 5.8-15 16.1-15 27.1V248c0 22.1 17.9 40 40 40s40-17.9 40-40v-88h184c30.9 0 56 25.1 56 56v28.5l80-46.2c15.3-8.9 20.5-28.4 11.7-43.7z"/>
+                </svg>
+            }
+        />
+    )
 
+    return (
+        <SettingCard>
+            <h2>{__('Share the love', 'kudos-donations')}</h2>
+
+            <Button
+                isSecondary
+                href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
+                target="_blank"
+                icon={quill}
+            >
+                {__('Leave a review', 'kudos-donations')}
+            </Button>
+
+            <h2>{__('Need some assistance?', 'kudos-donations')}</h2>
             <p>{__("Don't hesitate to get in touch if you need any help or have a suggestion. ", 'kudos-donations')}</p>
 
             <div className="kd-flex">
                 <div className="kd-flex-grow">
+                    <Button
+                        isSecondary
+                        className={"kd-mr-2"}
+                        href="https://wordpress.org/support/plugin/kudos-donations/"
+                        target="_blank"
+                        icon={help}
+                    >
+                        {__('Support forums', 'kudos-donations')}
+                    </Button>
                     <Button
                         isSecondary
                         className={"kd-mr-2"}
@@ -75,20 +107,12 @@ const HelpPanel = ({updateSetting}) => {
                     >
                         {__('Visit our F.A.Q', 'kudos-donations')}
                     </Button>
-                    <Button
-                        isSecondary
-                        href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
-                        target="_blank"
-                        icon={quill}
-                    >
-                        {__('Leave a review', 'kudos-donations')}
-                    </Button>
                 </div>
                 <div>
                     <img width="140" src={logo} className="kd-mr-4" alt="Kudos Logo"/>
                 </div>
             </div>
-        </PanelBody>
+        </SettingCard>
     )
 }
 
