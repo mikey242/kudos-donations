@@ -23,11 +23,12 @@ import {IntroGuide} from "./Components/IntroGuide"
 import {CampaignPanel} from "./Components/Panels/CampaignPanel"
 import {getTabName, updateQueryStringParameter} from "./Helpers/Util"
 import {HelpPanel} from "./Components/Panels/HelpPanel"
-import {PanelTitle} from "./Components/PanelTitle"
 
 const {__} = wp.i18n
 
 const {
+    Card,
+    CardDivider,
     Panel,
     Spinner,
     TabPanel,
@@ -266,18 +267,19 @@ class KudosAdmin extends Component {
                 title: __('Mollie', 'kudos-donations'),
                 className: 'tab-mollie',
                 content:
-                    <Panel>
+                    <Card>
                         <MollieApiModePanel
                             {...this.state}
                             mollieChanged={this.mollieChanged}
                             handleInputChange={this.handleInputChange}
                         />
+                        <CardDivider/>
                         <MollieApiKeysPanel
                             {...this.state}
                             mollieChanged={this.mollieChanged}
                             handleInputChange={this.handleInputChange}
                         />
-                    </Panel>
+                    </Card>
             },
             {
                 name: 'campaigns',
@@ -285,8 +287,7 @@ class KudosAdmin extends Component {
                 className: 'tab-campaigns',
                 content:
                     <Fragment>
-                        <PanelTitle label="Add Campaign"/>
-                        <Panel>
+                        <Card>
                             <AddCampaignPanel
                                 isCampaignNameValid={this.isCampaignNameValid}
                                 settings={this.state.settings}
@@ -294,9 +295,8 @@ class KudosAdmin extends Component {
                                 handleInputChange={this.handleInputChange}
                                 updateSetting={this.updateSetting}
                             />
-                        </Panel>
+                        </Card>
                         <br/>
-                        <PanelTitle label="Campaigns"/>
                         <Panel>
                             {this.state.settings._kudos_campaigns.map((campaign, i) => {
 
@@ -323,74 +323,81 @@ class KudosAdmin extends Component {
                 title: __('Customize', 'kudos-donations'),
                 className: 'tab-customize',
                 content:
-                    <Panel>
+                    <Card>
                         <ThemePanel
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />
+                        <CardDivider/>
                         <CompletedPaymentPanel
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />
+                        <CardDivider/>
                         <CustomReturnPanel
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />
+                        <CardDivider/>
                         <TermsPanel
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />
-                    </Panel>
+                    </Card>
             },
             {
                 name: 'email',
                 title: __('Email', 'kudos-donations'),
                 className: 'tab-email',
                 content:
-                    <Panel>
+                    <Card>
                         <EmailReceiptsPanel
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />
+                        <CardDivider/>
                         <EmailSettingsPanel
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />
+                        <CardDivider/>
                         <TestEmailPanel
                             handleInputChange={this.handleInputChange}
                             showNotice={this.showNotice}
                         />
-                    </Panel>
+                    </Card>
             },
             {
                 name: 'advanced',
                 title: __('Advanced', 'kudos-donations'),
                 className: 'tab-advanced',
                 content:
-                    <Panel>
+                    <Card>
                         <ExportSettingsPanel
                             {...this.state}
                         />
+                        <CardDivider/>
                         <ImportSettingsPanel
                             updateAll={this.updateAll}
                             handleInputChange={this.handleInputChange}
                         />
+                        <CardDivider/>
                         <DebugModePanel
                             {...this.state}
                             handleInputChange={this.handleInputChange}
                         />
-                    </Panel>
+                    </Card>
             },
             {
                 name: 'help',
                 title: __('Help', 'kudos-donations'),
                 className: 'tab-help',
                 content:
-                    <Panel>
+                    <Card>
                         <HelpPanel
                             updateSetting={this.updateSetting}
                         />
-                    </Panel>
+                    </Card>
             }
 
         ], this.state, this.handleInputChange)

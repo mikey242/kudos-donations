@@ -1,14 +1,10 @@
 /* eslint-disable */
-const tailwindcss = require('tailwindcss');
 
-const cssnano = require('cssnano')({
-    preset: 'default'
-});
-
+// postcss.config.js
 module.exports = {
-    plugins: [
-        require('autoprefixer'),
-        tailwindcss('./tailwind.config.js'),
-        ...[cssnano]
-    ]
+    plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+        cssnano: { preset: 'default' }
+    }
 }

@@ -9,7 +9,7 @@ use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
-use Kudos\Service\MollieService;
+use Kudos\Service\PaymentService;
 use Kudos\Service\RestService;
 
 /**
@@ -404,8 +404,8 @@ class Front {
 						$modal = new KudosModal();
 
 						if ( $subscription->verify_secret( $token ) ) {
-							$kudos_mollie = MollieService::factory();
-							if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
+							$payment_service = PaymentService::factory();
+							if ( $payment_service->cancel_subscription( $subscription_id ) ) {
 								echo $modal->get_message_modal(
 									[
 										'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),

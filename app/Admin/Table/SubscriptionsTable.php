@@ -6,7 +6,7 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
-use Kudos\Service\MollieService;
+use Kudos\Service\PaymentService;
 use WP_List_Table;
 
 class SubscriptionsTable extends WP_List_Table {
@@ -245,8 +245,8 @@ class SubscriptionsTable extends WP_List_Table {
 	 */
 	public static function cancel_subscription( string $subscription_id ): bool {
 
-		$kudos_mollie = MollieService::factory();
-		if ( $kudos_mollie->cancel_subscription( $subscription_id ) ) {
+		$payment_service = PaymentService::factory();
+		if ( $payment_service->cancel_subscription( $subscription_id ) ) {
 			return true;
 		}
 

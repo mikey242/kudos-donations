@@ -2,9 +2,7 @@ module.exports = {
   prefix: 'kd-',
   important: true,
   purge:  [
-    './src/js/**/*.js',
-    './src/js/**/*.jsx',
-    './public/**/*.php',
+    './src/js/**/*.{js,jsx}',
     './templates/**/*.twig'
   ],
   theme: {

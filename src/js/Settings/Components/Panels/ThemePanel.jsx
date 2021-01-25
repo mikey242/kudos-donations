@@ -1,5 +1,7 @@
+import {SettingCard} from "../SettingCard"
+
 const {__} = wp.i18n
-const {PanelBody, BaseControl, ColorPalette} = wp.components
+const { BaseControl, ColorPalette } = wp.components
 
 const ThemePanel = (props) => {
 
@@ -9,11 +11,8 @@ const ThemePanel = (props) => {
     ]
 
     return (
-        <PanelBody
-            title={__('Theme colour', 'kudos-donations')}
-            initialOpen={true}
-        >
 
+        <SettingCard title={"Theme Colour"}>
             <BaseControl
                 id="_kudos_theme_color"
                 label={__('Colour', 'kudos-donations')}
@@ -28,8 +27,7 @@ const ThemePanel = (props) => {
                     clearable={false}
                 />
             </BaseControl>
-
-        </PanelBody>
+        </SettingCard>
     )
 }
 

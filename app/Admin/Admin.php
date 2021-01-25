@@ -11,7 +11,7 @@ use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
-use Kudos\Service\MollieService;
+use Kudos\Service\PaymentService;
 use Kudos\Service\RestService;
 use Kudos\Service\TwigService;
 
@@ -423,10 +423,10 @@ class Admin {
 					break;
 
 				case 'kudos_cancel_subscription':
-					$mollie          = MollieService::factory();
-					$subscription_id = isset( $_REQUEST['subscriptionId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subscriptionId'] ) ) : '';
-					$customer_id     = isset( $_REQUEST['customerId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['customerId'] ) ) : '';
-					$subscription    = $mollie->cancel_subscription( $subscription_id, $customer_id );
+					$payment_service    = PaymentService::factory();
+					$subscription_id    = isset( $_REQUEST['subscriptionId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subscriptionId'] ) ) : '';
+					$customer_id        = isset( $_REQUEST['customerId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['customerId'] ) ) : '';
+					$subscription       = $payment_service->cancel_subscription( $subscription_id, $customer_id );
 					if ( $subscription ) {
 						new AdminNotice( __( 'Subscription cancelled', 'kudos-donations' ) );
 					}

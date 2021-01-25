@@ -1,13 +1,12 @@
+import {SettingCard} from "../SettingCard"
+
 const {__} = wp.i18n
-const {PanelBody, ToggleControl} = wp.components
+const {ToggleControl} = wp.components
 
 const DebugModePanel = (props) => {
 
     return (
-        <PanelBody
-            title={__('Debug mode', 'kudos-donations')}
-            initialOpen={false}
-        >
+        <SettingCard title={__('Debug mode', 'kudos-donations')}>
 
             <ToggleControl
                 label={__('Enable debug mode', 'kudos-donations')}
@@ -19,7 +18,7 @@ const DebugModePanel = (props) => {
                 onChange={() => props.handleInputChange("_kudos_debug_mode", !props.settings._kudos_debug_mode)}
             />
 
-        </PanelBody>
+        </SettingCard>
     )
 }
 

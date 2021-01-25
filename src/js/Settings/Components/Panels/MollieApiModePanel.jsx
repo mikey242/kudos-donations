@@ -1,7 +1,8 @@
 import {Btn} from "../Btn"
+import {SettingCard} from "../SettingCard"
 
 const {__} = wp.i18n
-const {PanelBody, BaseControl, ButtonGroup, PanelRow} = wp.components
+const {BaseControl, ButtonGroup, PanelRow} = wp.components
 
 const MollieApiModePanel = (props) => {
 
@@ -13,7 +14,7 @@ const MollieApiModePanel = (props) => {
     const selected = props.settings._kudos_mollie_api_mode
 
     return (
-        <PanelBody>
+        <SettingCard title={__('Api Mode', 'kudos-donations')}>
 
             <BaseControl
                 id="_kudos_mollie_api_mode"
@@ -52,7 +53,7 @@ const MollieApiModePanel = (props) => {
                 </PanelRow>
             </BaseControl>
 
-        </PanelBody>
+        </SettingCard>
     )
 }
 

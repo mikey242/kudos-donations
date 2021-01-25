@@ -1,5 +1,7 @@
+import {SettingCard} from "../SettingCard"
+
 const {__} = wp.i18n
-const {PanelBody, FormFileUpload, BaseControl} = wp.components
+const {FormFileUpload, BaseControl} = wp.components
 
 const ImportSettingsPanel = (props) => {
 
@@ -24,10 +26,7 @@ const ImportSettingsPanel = (props) => {
 
 
     return (
-        <PanelBody
-            title={__('Import settings', 'kudos-donations')}
-            initialOpen={false}
-        >
+        <SettingCard title={__('Import settings', 'kudos-donations')}>
             <BaseControl
                 id="import-1"
                 help={__('Warning: this will overwrite your current settings.', 'kudos-donations')}
@@ -40,7 +39,7 @@ const ImportSettingsPanel = (props) => {
                     {__('Upload', 'kudos-donations')}
                 </FormFileUpload>
             </BaseControl>
-        </PanelBody>
+        </SettingCard>
     )
 }
 

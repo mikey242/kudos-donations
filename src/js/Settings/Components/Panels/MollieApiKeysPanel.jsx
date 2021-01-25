@@ -1,5 +1,7 @@
+import {SettingCard} from "../SettingCard"
+
 const {__} = wp.i18n
-const {PanelBody, ExternalLink, PanelRow, TextControl} = wp.components
+const {ExternalLink, PanelRow, TextControl} = wp.components
 
 const MollieApiKeysPanel = (props) => {
 
@@ -9,7 +11,7 @@ const MollieApiKeysPanel = (props) => {
     }
 
     return (
-        <PanelBody>
+        <SettingCard title={__('Api Keys', 'kudos-donations')}>
 
             <TextControl
                 key={"_kudos_mollie_test_api_key"}
@@ -34,7 +36,7 @@ const MollieApiKeysPanel = (props) => {
                     {__('Get API Key(s)', 'kudos-donations')}
                 </ExternalLink>
             </PanelRow>
-        </PanelBody>
+        </SettingCard>
     )
 }
 

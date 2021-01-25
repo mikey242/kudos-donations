@@ -1,5 +1,7 @@
+import {SettingCard} from "../SettingCard"
+
 const {__} = wp.i18n
-const {PanelBody, Button, BaseControl} = wp.components
+const {Button, BaseControl} = wp.components
 
 const ExportSettingsPanel = (props) => {
 
@@ -19,10 +21,7 @@ const ExportSettingsPanel = (props) => {
 
 
     return (
-        <PanelBody
-            title={__('Export settings', 'kudos-donations')}
-            initialOpen={false}
-        >
+        <SettingCard title={__('Export settings', 'kudos-donations')}>
             <BaseControl
                 id="export-1"
                 help={__('Warning: this file will contain sensitive information and should be kept safe.', 'kudos-donations')}
@@ -36,7 +35,7 @@ const ExportSettingsPanel = (props) => {
                     {__('Download settings as JSON', 'kudos-donations')}
                 </Button>
             </BaseControl>
-        </PanelBody>
+        </SettingCard>
     )
 }
 

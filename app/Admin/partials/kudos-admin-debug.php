@@ -1,11 +1,6 @@
 <?php
 
-use Kudos\Entity\DonorEntity;
 use Kudos\Service\LoggerService;
-use Kudos\Service\MapperService;
-use Kudos\Service\MollieService;
-use Mollie\Api\Resources\Subscription;
-use Mollie\Api\Resources\SubscriptionCollection;
 
 /**
  * Debug page render
@@ -28,8 +23,6 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 		   class="nav-tab <?php echo ( 'log' === $tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
 		<a href="?page=kudos-debug&tab=actions"
 		   class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
-		<a href="?page=kudos-debug&tab=subscriptions"
-		   class="nav-tab <?php echo ( 'subscriptions' === $tab ) ? 'nav-tab-active' : ''; ?>">Subscriptions</a>
 	</nav>
 
 	<div class="tab-content">
@@ -188,90 +181,6 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 
 				<?php
-				break;
-
-			case 'subscriptions':
-				$mapper = new MapperService( DonorEntity::class );
-				$donors = $mapper->get_all_by();
-				if ( $donors ) {
-					$kudos_mollie = MollieService::factory();
-					foreach ( $donors as $donor ) {
-
-						$subscriptions = $kudos_mollie->get_subscriptions( $donor->customer_id );
-
-						if ( ! ( $subscriptions instanceof SubscriptionCollection ) || ! $subscriptions->count() ) {
-							continue;
-						}
-						?>
-
-						<h3><strong><?php echo esc_attr( $donor->email ); ?></strong>
-							<span>(<?php echo esc_attr( $donor->customer_id ); ?>)</span></h3>
-						<form action="<?php echo esc_url( admin_url( 'admin.php?page=kudos-debug&tab=subscriptions' ) ); ?>"
-						      method='post'>
-							<?php wp_nonce_field( 'kudos_cancel_subscription', '_wpnonce' ); ?>
-							<input type='hidden' name='kudos_action' value='kudos_cancel_subscription'>
-							<input type='hidden' name='customerId'
-							       value='<?php echo esc_attr( $donor->customer_id ); ?>'>
-
-							<?php
-							/** @var Subscription $subscription */
-							foreach ( $subscriptions as $subscription ) {
-								?>
-
-								<table class='widefat'>
-									<tbody>
-
-									<tr>
-										<td class='row-title'>id</td>
-										<td><?php echo esc_attr( $subscription->id ); ?></td>
-									</tr>
-
-									<tr class='alternate'>
-										<td class='row-title'>status</td>
-										<td>
-											<?php echo esc_attr( $subscription->status ); ?>
-											<?php if ( 'canceled' !== $subscription->status ) : ?>
-											<button name='subscriptionId' type='submit'
-											        value='<?php echo esc_attr( $subscription->id ); ?>'>Cancel
-											</button>
-										</td>
-										<?php endif; ?>
-									</tr>
-
-									<tr>
-										<td class='row-title'>amount</td>
-										<td><?php echo esc_attr( $subscription->amount->value ); ?></td>
-									</tr>
-
-									<tr class='alternate'>
-										<td class='row-title'>interval</td>
-										<td><?php echo esc_attr( $subscription->interval ); ?></td>
-									</tr>
-
-									<tr>
-										<td class='row-title'>times</td>
-										<td><?php echo esc_attr( $subscription->times ); ?></td>
-									</tr>
-
-									<tr class='alternate'>
-										<td class='row-title'>next payment</td>
-										<td><?php echo esc_attr( $subscription->nextPaymentDate ?? 'n/a' ); ?></td>
-									</tr>
-
-									<tr>
-										<td class='row-title'>webhookUrl</td>
-										<td><?php echo esc_attr( $subscription->webhookUrl ); ?></td>
-									</tr>
-
-									</tbody>
-								</table>
-								<br class='clear'>
-							<?php } ?>
-						</form>
-						<?php
-					}
-				}
-
 				break;
 
 		endswitch;

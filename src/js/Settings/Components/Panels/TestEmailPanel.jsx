@@ -1,7 +1,8 @@
 import axios from 'axios'
+import {SettingCard} from "../SettingCard"
 
 const {__} = wp.i18n
-const {PanelBody, Button, PanelRow, TextControl} = wp.components
+const {Button, PanelRow, TextControl} = wp.components
 const {useState} = wp.element
 
 const TestEmailPanel = (props) => {
@@ -56,10 +57,7 @@ const TestEmailPanel = (props) => {
     }
 
     return (
-        <PanelBody
-            title={__('Send test email', 'kudos-donations')}
-            initialOpen={false}
-        >
+        <SettingCard title={__('Send test email', 'kudos-donations')}>
 
             <TextControl
                 label={__('Email address', 'kudos-donations')}
@@ -90,7 +88,7 @@ const TestEmailPanel = (props) => {
                 </Button>
             </PanelRow>
 
-        </PanelBody>
+        </SettingCard>
     )
 }
 

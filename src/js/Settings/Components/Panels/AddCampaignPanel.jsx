@@ -1,6 +1,8 @@
-const {__, sprintf} = wp.i18n
-const {PanelBody, PanelHeader, TextControl, Button} = wp.components
-const {useState} = wp.element
+import {SettingCard} from "../SettingCard"
+
+const { __, sprintf } = wp.i18n
+const { Button, TextControl } = wp.components
+const { useState } = wp.element
 
 const AddCampaignPanel = ({settings, showNotice, updateSetting}) => {
 
@@ -10,11 +12,7 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting}) => {
 
     const updateValue = (value) => {
         setAddFormValue(value)
-        setButtonDisabled(!isCampaignNameValid(value))
-    }
-
-    const isCampaignNameValid = (name) => {
-        return !('' === name.trim())
+        setButtonDisabled( '' === value.trim() )
     }
 
     const addCampaign = (name) => {
@@ -36,7 +34,7 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting}) => {
     }
 
     return (
-        <PanelBody>
+        <SettingCard title="Add Campaign">
             <TextControl
                 label={__(
                     'Campaign name',
@@ -58,7 +56,7 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting}) => {
             >
                 {__('Add campaign', 'kudos-donations')}
             </Button>
-        </PanelBody>
+        </SettingCard>
     )
 }
 

@@ -1,12 +1,11 @@
+import {SettingCard} from "../SettingCard"
+
 const {__} = wp.i18n
-const {PanelBody, TextControl} = wp.components
+const {TextControl} = wp.components
 
 const TermsPanel = (props) => {
     return (
-        <PanelBody
-            title={__('Terms and conditions', 'kudos-donations')}
-            initialOpen={false}
-        >
+        <SettingCard title={__('Terms and conditions', 'kudos-donations')}>
 
             <TextControl
                 label={__('URL', 'kudos-donations')}
@@ -18,7 +17,7 @@ const TermsPanel = (props) => {
                 onChange={(value) => props.handleInputChange('_kudos_terms_link', value)}
             />
 
-        </PanelBody>
+        </SettingCard>
     )
 }
 
