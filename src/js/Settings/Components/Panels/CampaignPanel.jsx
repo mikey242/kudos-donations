@@ -13,7 +13,7 @@ const {
     ToggleControl
 } = wp.components
 
-const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleInputChange, allowDelete = false}) => {
+const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleInputChange, isOpen=false, allowDelete = false}) => {
 
     const [hasCopied, setHasCopied] = useState(false)
 
@@ -32,9 +32,7 @@ const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleIn
             initialOpen={false}
         >
 
-            <BaseControl
-                id={campaign.id + "-modal-text"}
-            >
+            <BaseControl>
 
                 <TextControl
                     label={__('Name', 'kudos-donations')}
@@ -72,7 +70,6 @@ const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleIn
             </BaseControl>
 
             <BaseControl
-                id={campaign.id + "-address"}
                 label="Address"
             >
 
@@ -103,8 +100,7 @@ const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleIn
             </BaseControl>
 
             <BaseControl
-                id={campaign.id + "-donation-type"}
-                label="Donation type"
+                label={__("Donation type", 'kudos-donations')}
 
             >
 
