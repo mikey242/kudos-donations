@@ -295,42 +295,46 @@ class Front {
 	 */
 	public function kudos_render_callback( array $atts ): ?string {
 
-		// Check if ready to go and if not return error messages
-		$status = self::ready($atts);
-		if ( count( $status ) ) {
-			if ( is_user_logged_in() && ! is_admin() ) {
-				$out = '';
-				foreach ( $status as $message ) {
-					$out .= "<p class='kd-my-0 kd-italic kd-text-orange-700'>$message</p>";
+		$messages=[];
+		if(self::api_ready()) {
+
+			// Set campaign according to atts
+			if ( ! empty( $atts['campaign_id'] ) ) {
+
+				$campaigns = new Campaigns();
+				$campaign = $campaigns->get_campaign( $atts['campaign_id'] );
+
+				if ( ! empty( $campaign ) ) {
+
+					// Add campaign config to atts.
+					$atts = wp_parse_args( $campaign, $atts );
+
+					// Create button and modal.
+					$button = new KudosButton( $atts );
+					$modal  = $button->get_donate_modal();
+
+					// Return only if modal and button not empty.
+					if ( ! empty( $modal ) && ! empty( $button ) ) {
+						return $button->get_button() . $modal;
+					}
+
+				} else {
+					$messages[] = 'Campaign "' . $atts['campaign_id'] . '" not found';
 				}
-
-				return $out;
+			} else {
+				$messages[] = "No campaign specified";
 			}
-
-			return null;
+		} else {
+			$messages[] = sprintf(__( '%s not connected', 'kudos-donations' ), ucfirst(Settings::get_setting('payment_vendor')));
 		}
 
-		// Set campaign according to atts and if none found then set as default
-		$campaigns = new Campaigns();
-		if ( ! empty( $atts['campaign_id'] ) ) {
-			$campaign = $campaigns->get_campaign( $atts['campaign_id'] );
-		}
-
-		if ( empty( $campaign ) ) {
-			$campaign = $campaigns->get_campaign( 'default' );
-		}
-
-		// Add campaign config to atts
-		$atts = wp_parse_args( $campaign, $atts );
-
-		// Create button and modal.
-		$button = new KudosButton( $atts );
-		$modal  = $button->get_donate_modal();
-
-
-		// Return only if modal and button not empty.
-		if ( ! empty( $modal ) && ! empty( $button ) ) {
-			return $button->get_button() . $modal;
+		// Output error messages if any and if admin
+		if ( count( $messages ) && is_user_logged_in() && ! is_admin()  ) {
+			return implode(
+				array_map(function ($message) {
+					return "<p class='kd-my-0 kd-italic kd-text-orange-700'>Kudos - $message</p>";
+				}, $messages)
+			);
 		}
 
 		return null;
