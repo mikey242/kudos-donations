@@ -295,6 +295,7 @@ class KudosAdmin extends Component {
                     <EmailTab
                         settings={this.state.settings}
                         handleInputChange={this.handleInputChange}
+                        showNotice={this.showNotice}
                     />
             },
             {
