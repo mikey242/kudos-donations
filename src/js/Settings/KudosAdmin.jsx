@@ -6,30 +6,18 @@ import axios from 'axios'
 // Settings Panels
 import {Notice} from './Components/Notice'
 import {Header} from './Components/Header'
-import {CompletedPaymentPanel} from './Components/Panels/CompletedPaymentPanel'
-import {EmailSettingsPanel} from './Components/Panels/EmailSettingsPanel'
-import {TestEmailPanel} from './Components/Panels/TestEmailPanel'
-import {MollieApiKeysPanel} from './Components/Panels/MollieApiKeysPanel'
-import {MollieApiModePanel} from './Components/Panels/MollieApiModePanel'
-import {CustomReturnPanel} from './Components/Panels/CustomReturnPanel'
-import {TermsPanel} from './Components/Panels/TermsPanel'
-import {EmailReceiptsPanel} from './Components/Panels/EmailReceiptsPanel'
-import {DebugModePanel} from './Components/Panels/DebugModePanel'
-import {ThemePanel} from "./Components/Panels/ThemePanel"
-import {ExportSettingsPanel} from "./Components/Panels/ExportSettingsPanel"
-import {ImportSettingsPanel} from "./Components/Panels/ImportSettingsPanel"
-import {AddCampaignPanel} from "./Components/Panels/AddCampaignPanel"
 import {IntroGuide} from "./Components/IntroGuide"
-import {CampaignPanel} from "./Components/Panels/CampaignPanel"
 import {getTabName, updateQueryStringParameter} from "./Helpers/Util"
-import {HelpPanel} from "./Components/Panels/HelpPanel"
+import {MollieTab} from "./Components/Tabs/MollieTab"
+import {CampaignsTab} from "./Components/Tabs/CampaignsTab"
+import {CustomizeTab} from "./Components/Tabs/CustomizeTab"
+import {EmailTab} from "./Components/Tabs/EmailTab"
+import {AdvancedTab} from "./Components/Tabs/AdvancedTab"
+import {HelpTab} from "./Components/Tabs/HelpTab"
 
 const {__} = wp.i18n
 
 const {
-    Card,
-    CardDivider,
-    Panel,
     Spinner,
     TabPanel,
 } = wp.components
@@ -267,137 +255,62 @@ class KudosAdmin extends Component {
                 title: __('Mollie', 'kudos-donations'),
                 className: 'tab-mollie',
                 content:
-                    <Card>
-                        <MollieApiModePanel
-                            {...this.state}
-                            mollieChanged={this.mollieChanged}
-                            handleInputChange={this.handleInputChange}
-                        />
-                        <CardDivider/>
-                        <MollieApiKeysPanel
-                            {...this.state}
-                            mollieChanged={this.mollieChanged}
-                            handleInputChange={this.handleInputChange}
-                        />
-                    </Card>
+                    <MollieTab
+                        settings={this.state.settings}
+                        mollieChanged={this.mollieChanged}
+                        handleInputChange={this.handleInputChange}
+                    />
             },
             {
                 name: 'campaigns',
                 title: __('Campaigns', 'kudos-donations'),
                 className: 'tab-campaigns',
                 content:
-                    <Fragment>
-                        <Card>
-                            <AddCampaignPanel
-                                isCampaignNameValid={this.isCampaignNameValid}
-                                settings={this.state.settings}
-                                showNotice={this.showNotice}
-                                handleInputChange={this.handleInputChange}
-                                updateSetting={this.updateSetting}
-                            />
-                        </Card>
-                        <br/>
-                        <Panel>
-                            {this.state.settings._kudos_campaigns.map((campaign, i) => {
-
-                                return (
-                                    <CampaignPanel
-                                        key={'campaign_' + i}
-                                        allowDelete={!campaign.protected}
-                                        settings={this.state.settings}
-                                        campaign={this.state.settings._kudos_campaigns[i]}
-                                        isCampaignNameValid={this.isCampaignNameValid}
-                                        updateSetting={this.updateSetting}
-                                        showNotice={this.showNotice}
-                                        handleInputChange={this.handleInputChange}
-                                    />
-                                )
-
-                            })}
-                        </Panel>
-
-                    </Fragment>
+                    <CampaignsTab
+                        settings={this.state.settings}
+                        showNotice={this.showNotice}
+                        handleInputChange={this.handleInputChange}
+                        updateSetting={this.updateSetting}
+                    />
             },
             {
                 name: 'customize',
                 title: __('Customize', 'kudos-donations'),
                 className: 'tab-customize',
                 content:
-                    <Card>
-                        <ThemePanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                        <CardDivider/>
-                        <CompletedPaymentPanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                        <CardDivider/>
-                        <CustomReturnPanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                        <CardDivider/>
-                        <TermsPanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                    </Card>
+                    <CustomizeTab
+                        settings={this.state.settings}
+                        handleInputChange={this.handleInputChange}
+                    />
             },
             {
                 name: 'email',
                 title: __('Email', 'kudos-donations'),
                 className: 'tab-email',
                 content:
-                    <Card>
-                        <EmailReceiptsPanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                        <CardDivider/>
-                        <EmailSettingsPanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                        <CardDivider/>
-                        <TestEmailPanel
-                            handleInputChange={this.handleInputChange}
-                            showNotice={this.showNotice}
-                        />
-                    </Card>
+                    <EmailTab
+                        settings={this.state.settings}
+                        handleInputChange={this.handleInputChange}
+                    />
             },
             {
                 name: 'advanced',
                 title: __('Advanced', 'kudos-donations'),
                 className: 'tab-advanced',
                 content:
-                    <Card>
-                        <ExportSettingsPanel
-                            {...this.state}
-                        />
-                        <CardDivider/>
-                        <ImportSettingsPanel
-                            updateAll={this.updateAll}
-                            handleInputChange={this.handleInputChange}
-                        />
-                        <CardDivider/>
-                        <DebugModePanel
-                            {...this.state}
-                            handleInputChange={this.handleInputChange}
-                        />
-                    </Card>
+                    <AdvancedTab
+                        settings={this.state.settings}
+                        handleInputChange={this.handleInputChange}
+                    />
             },
             {
                 name: 'help',
                 title: __('Help', 'kudos-donations'),
                 className: 'tab-help',
                 content:
-                    <Card>
-                        <HelpPanel
-                            updateSetting={this.updateSetting}
-                        />
-                    </Card>
+                    <HelpTab
+                        updateSetting={this.updateSetting}
+                    />
             }
 
         ], this.state, this.handleInputChange)
