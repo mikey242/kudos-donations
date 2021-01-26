@@ -264,28 +264,27 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_created( array $item ): string {
 
-		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
-
 		$title = '<strong>' .
-		         wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+	                wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 			         strtotime( $item['created'] ) ) .
 		         '</strong>';
 
-		$order_id = $item['order_id'];
+		$url = add_query_arg([
+			'page' => esc_attr( $_REQUEST['page'] ),
+			'action' => 'delete',
+			'order_id' => $item['order_id'],
+			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] )
+		]);
 
 		$actions = apply_filters(
 			TransactionEntity::get_table_name( false ) . '_actions',
 			[
 				'delete' => sprintf(
-					'<a href="?page=%s&action=%s&order_id=%s&_wpnonce=%s">%s</a>',
-					esc_attr( $_REQUEST['page'] ),
-					'delete',
-					$order_id,
-					$delete_nonce,
+					"<a href=$url>%s</a>",
 					__( 'Delete', 'kudos-donations' )
 				),
 			],
-			$order_id
+			$item['order_id']
 		);
 
 		return $title . $this->row_actions( $actions );
@@ -418,6 +417,10 @@ class TransactionsTable extends WP_List_Table {
 				break;
 			default:
 				$status = __( 'Unknown', 'kudos-donations' );
+		}
+
+		if($item['refunds']) {
+			$status .= ' (' . __('Refunded', 'kudos-donations') . ')';
 		}
 
 		return apply_filters( 'kudos_transactions_column_status', $status, $item['order_id'] );
