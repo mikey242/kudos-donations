@@ -13,14 +13,14 @@ const EmailTab = (props) => {
                 handleInputChange={props.handleInputChange}
             />
             <CardDivider/>
-            <EmailSettingsPanel
-                settings={props.settings}
-                handleInputChange={props.handleInputChange}
-            />
-            <CardDivider/>
             <TestEmailPanel
                 handleInputChange={props.handleInputChange}
                 showNotice={props.showNotice}
+            />
+            <CardDivider/>
+            <EmailSettingsPanel
+                settings={props.settings}
+                handleInputChange={props.handleInputChange}
             />
         </Card>
     )
