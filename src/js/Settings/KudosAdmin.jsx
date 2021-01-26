@@ -217,7 +217,7 @@ class KudosAdmin extends Component {
     }
 
     // Update an individual setting, uses current state if value not specified
-    updateSetting(option, value, noticeText=__('Setting updated', 'kudos-donations')) {
+    updateSetting(option, value, showNotice=false, noticeText=__('Setting updated', 'kudos-donations')) {
         this.setState({isAPISaving: true})
 
         //Create WordPress settings model

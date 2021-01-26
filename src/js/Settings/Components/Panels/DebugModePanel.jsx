@@ -18,6 +18,7 @@ const DebugModePanel = (props) => {
                 onChange={() => props.updateSetting(
                     "_kudos_debug_mode",
                     !props.settings._kudos_debug_mode,
+                    true,
                     !props.settings._kudos_debug_mode ? 'Debug mode enabled' : 'Debug mode disabled'
                 )}
             />

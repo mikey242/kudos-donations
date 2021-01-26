@@ -93,7 +93,7 @@ const HelpPanel = ({updateSetting}) => {
                         className={"kd-mr-2"}
                         icon={door}
                         onClick={() => {
-                            updateSetting('_kudos_show_intro', true)
+                            updateSetting('_kudos_show_intro', true, false)
                         }}
                     >
                         {__('Show welcome guide', 'kudos-donations')}
