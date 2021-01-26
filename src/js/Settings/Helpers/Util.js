@@ -8,12 +8,12 @@ export function camelize(str) {
     }).replace(/\s+/g, '')
 }
 
-export function getTabName() {
+export function getQueryVar(key, fallback=null) {
     const searchParams = new URLSearchParams(window.location.search)
-    if (searchParams.has('tabName')) {
-        return searchParams.get('tabName')
+    if (searchParams.has(key)) {
+        return searchParams.get(key)
     }
-    return 'mollie'
+    return fallback
 }
 
 export function updateQueryStringParameter(key, value) {
