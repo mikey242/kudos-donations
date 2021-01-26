@@ -10,7 +10,7 @@ use WP_REST_Response;
 
 abstract class AbstractVendor extends AbstractService {
 
-	const REST_NAMESPACE = 'kudos/v1';
+	const REST_NAMESPACE = 'kudos/v1/';
 	const VENDOR_NAME = 'abstract';
 	const WEBHOOK_ROUTE = 'abstract';
 	const PAYMENT_ROUTE = 'abstract';
