@@ -28,7 +28,7 @@ const AddCampaignPanel = ({settings, updateSetting}) => {
         })
 
         // Save changes and show notice
-        updateSetting('_kudos_campaigns', null, sprintf(__('Added campaign "%s".', 'kudos-donations'), name))
+        updateSetting('_kudos_campaigns', null, true, sprintf(__('Added campaign "%s".', 'kudos-donations'), name))
         setButtonDisabled(true)
     }
 
