@@ -217,7 +217,7 @@ class KudosAdmin extends Component {
     }
 
     // Update an individual setting, uses current state if value not specified
-    updateSetting(option, value) {
+    updateSetting(option, value, noticeText=__('Setting updated', 'kudos-donations')) {
         this.setState({isAPISaving: true})
 
         //Create WordPress settings model
@@ -234,6 +234,11 @@ class KudosAdmin extends Component {
                 },
                 isAPISaving: false,
             })
+            if (showNotice) {
+                this.showNotice(
+                    noticeText
+                )
+            }
         })
     }
 
@@ -268,7 +273,6 @@ class KudosAdmin extends Component {
                 content:
                     <CampaignsTab
                         settings={this.state.settings}
-                        showNotice={this.showNotice}
                         handleInputChange={this.handleInputChange}
                         updateSetting={this.updateSetting}
                     />
@@ -301,6 +305,7 @@ class KudosAdmin extends Component {
                     <AdvancedTab
                         settings={this.state.settings}
                         handleInputChange={this.handleInputChange}
+                        updateSetting={this.updateSetting}
                         updateAll={this.updateAll}
                     />
             },

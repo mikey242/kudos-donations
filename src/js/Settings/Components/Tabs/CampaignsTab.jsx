@@ -14,7 +14,6 @@ const CampaignsTab = (props) => {
             <Card>
                 <AddCampaignPanel
                     settings={props.settings}
-                    showNotice={props.showNotice}
                     handleInputChange={props.handleInputChange}
                     updateSetting={props.updateSetting}
                 />
@@ -31,7 +30,6 @@ const CampaignsTab = (props) => {
                             settings={props.settings}
                             campaign={props.settings._kudos_campaigns[i]}
                             updateSetting={props.updateSetting}
-                            showNotice={props.showNotice}
                             handleInputChange={props.handleInputChange}
                         />
                     )

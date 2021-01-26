@@ -1,7 +1,7 @@
 import {SettingCard} from "../SettingCard"
 
 const {__} = wp.i18n
-const {ToggleControl} = wp.components
+const {Button, ToggleControl} = wp.components
 
 const DebugModePanel = (props) => {
 
@@ -15,8 +15,17 @@ const DebugModePanel = (props) => {
                     'kudos-donations'
                 )}
                 checked={props.settings._kudos_debug_mode || ''}
-                onChange={() => props.handleInputChange("_kudos_debug_mode", !props.settings._kudos_debug_mode)}
+                onChange={() => props.updateSetting("_kudos_debug_mode", !props.settings._kudos_debug_mode, true)}
             />
+
+            {props.settings._kudos_debug_mode ?
+                <Button
+                    isLink
+                    href={'admin.php?page=kudos-debug'}
+                >
+                    {__('Visit the debug page', 'kudos-donations')}
+                </Button>
+            : ''}
 
         </SettingCard>
     )
