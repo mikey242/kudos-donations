@@ -13,6 +13,7 @@ use Mollie\Api\Resources\Payment;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
+use WP_REST_Server;
 
 class PaymentService extends AbstractService {
 
@@ -22,9 +23,9 @@ class PaymentService extends AbstractService {
 	private $vendor;
 
 	/**
-	 * Mollie constructor.
+	 * Payment service constructor.
 	 *
-	 * @since      1.0.0
+	 * @since      2.3.0
 	 */
 	public function __construct() {
 
@@ -42,12 +43,56 @@ class PaymentService extends AbstractService {
 	}
 
 	/**
+	 * Register the vendor's rest routes
+	 *
+	 * @since 2.3.0
+	 */
+	public function register_rest_routes() {
+
+		$routes = [
+			$this->vendor::PAYMENT_ROUTE => [
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'submit_payment' ],
+				'permission_callback' => '__return_true',
+			],
+
+			$this->vendor::WEBHOOK_ROUTE => [
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'handle_webhook' ],
+				'args'                => [
+					'id' => [
+						'required' => true,
+					],
+				],
+				'permission_callback' => '__return_true',
+			],
+
+			$this->vendor::TEST_API => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'check_api_keys' ],
+				'args'                => [
+					'apiMode' => [
+						'required' => true,
+					],
+				],
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+			]
+		];
+
+		foreach ( $routes as $key => $route ) {
+			register_rest_route( $this->vendor::REST_NAMESPACE, $key, $route );
+		}
+	}
+
+	/**
 	 * Processes the transaction. Used by action scheduler.
 	 *
 	 * @param string $order_id Kudos order id.
 	 *
 	 * @return bool
-	 * @since   2.0.0
+	 * @since   2.3.0
 	 */
 	public static function process_transaction( string $order_id ): bool {
 
@@ -80,7 +125,7 @@ class PaymentService extends AbstractService {
 	 *
 	 * @param WP_REST_Request $request
 	 *
-	 * @since   1.0.0
+	 * @since   2.3.0
 	 */
 	public function submit_payment( WP_REST_Request $request ) {
 
@@ -170,7 +215,7 @@ class PaymentService extends AbstractService {
 	 * @param null|string $customer_id Mollie customer id.
 	 *
 	 * @return bool
-	 * @since   2.0.0
+	 * @since   2.3.0
 	 */
 	public function cancel_subscription( string $subscription_id, $customer_id = null ): bool {
 
@@ -214,7 +259,7 @@ class PaymentService extends AbstractService {
 	 * @param string|null $customer_id Mollie customer id.
 	 *
 	 * @return array|object
-	 * @since      1.0.0
+	 * @since      2.3.0
 	 */
 	public function create_payment(
 		string $value,
@@ -243,7 +288,7 @@ class PaymentService extends AbstractService {
 				'value'    => $value,
 			],
 			'redirectUrl'  => $redirect_url,
-			'webhookUrl'   => $_ENV['WEBHOOK_URL'] ?? rest_url( RestService::NAMESPACE . '/mollie/payment/webhook' ),
+			'webhookUrl'   => $_ENV['WEBHOOK_URL'] ?? rest_url( $this->vendor::REST_NAMESPACE . $this->vendor::WEBHOOK_ROUTE ),
 			'sequenceType' => $sequence_type,
 			'description'  => sprintf(
 			/* translators: %s: The order id */
@@ -314,7 +359,7 @@ class PaymentService extends AbstractService {
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 *
-	 * @since    1.1.0
+	 * @since    2.3.0
 	 */
 	public function check_api_keys( WP_REST_Request $request ) {
 
@@ -358,7 +403,7 @@ class PaymentService extends AbstractService {
 	 * @param WP_REST_Request $request Request array.
 	 *
 	 * @return WP_Error|WP_REST_Response
-	 * @since    1.0.0
+	 * @since    2.3.0
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
 
