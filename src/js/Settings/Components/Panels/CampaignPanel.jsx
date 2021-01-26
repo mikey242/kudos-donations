@@ -22,13 +22,13 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
         let updated = current.filter(function (value) {
             return value.id !== id
         })
-        updateSetting('_kudos_campaigns', _.uniq(updated, 'id'), __('Campaign deleted.', 'kudos-donations'))
+        updateSetting('_kudos_campaigns', _.uniq(updated, 'id'), true, __('Campaign deleted.', 'kudos-donations'))
     }
 
     return (
         <PanelBody
             title={campaign.name}
-            initialOpen={false}
+            initialOpen={isOpen}
         >
 
             <BaseControl>

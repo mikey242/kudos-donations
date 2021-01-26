@@ -7,7 +7,7 @@ const {Card, Panel} = wp.components
 
 const CampaignsTab = (props) => {
 
-    const campaignId = getQueryVar('campaignId')
+    const campaignId = getQueryVar('campaign_id')
 
     return (
         <Fragment>
