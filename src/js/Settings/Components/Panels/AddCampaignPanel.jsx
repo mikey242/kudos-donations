@@ -4,7 +4,7 @@ const { __, sprintf } = wp.i18n
 const { Button, TextControl } = wp.components
 const { useState } = wp.element
 
-const AddCampaignPanel = ({settings, showNotice, updateSetting}) => {
+const AddCampaignPanel = ({settings, updateSetting}) => {
 
     const [addFormValue, setAddFormValue] = useState('')
     const [buttonDisabled, setButtonDisabled] = useState(true)
@@ -28,9 +28,8 @@ const AddCampaignPanel = ({settings, showNotice, updateSetting}) => {
         })
 
         // Save changes and show notice
-        updateSetting('_kudos_campaigns')
+        updateSetting('_kudos_campaigns', null, sprintf(__('Added campaign "%s".', 'kudos-donations'), name))
         setButtonDisabled(true)
-        showNotice(sprintf(__('Added campaign "%s".', 'kudos-donations'), name))
     }
 
     return (

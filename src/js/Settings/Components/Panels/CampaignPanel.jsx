@@ -13,7 +13,7 @@ const {
     ToggleControl
 } = wp.components
 
-const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleInputChange, isOpen=false, allowDelete = false}) => {
+const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, isOpen=false, allowDelete = false}) => {
 
     const [hasCopied, setHasCopied] = useState(false)
 
@@ -22,8 +22,7 @@ const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleIn
         let updated = current.filter(function (value) {
             return value.id !== id
         })
-        updateSetting('_kudos_campaigns', _.uniq(updated, 'id'))
-        showNotice(__('Campaign deleted.', 'kudos-donations'))
+        updateSetting('_kudos_campaigns', _.uniq(updated, 'id'), __('Campaign deleted.', 'kudos-donations'))
     }
 
     return (

@@ -19,7 +19,7 @@ const AdvancedTab = (props) => {
             <CardDivider/>
             <DebugModePanel
                 settings={props.settings}
-                handleInputChange={props.handleInputChange}
+                updateSetting={props.updateSetting}
             />
         </Card>
     )
