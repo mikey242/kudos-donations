@@ -40,6 +40,14 @@ switch ( $table_action ) {
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php esc_attr_e( 'Subscriptions', 'kudos-donations' ); ?></h1>
+	<?php if ( isset( $_REQUEST['s'] ) ) { ?>
+		<span class="subtitle">
+			<?php
+			/* translators: %s: Search term */
+			printf( __( 'Search results for “%s”' ), $_REQUEST['s'] )
+			?>
+		</span>
+	<?php } ?>
 	<?php
 	if ( isset( $message ) ) {
 		$notice = new AdminNotice( esc_html( $message ) );

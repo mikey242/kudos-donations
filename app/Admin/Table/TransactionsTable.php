@@ -280,7 +280,8 @@ class TransactionsTable extends WP_List_Table {
 			TransactionEntity::get_table_name( false ) . '_actions',
 			[
 				'delete' => sprintf(
-					"<a href=$url>%s</a>",
+					'<a href="%s">%s</a>',
+					$url,
 					__( 'Delete', 'kudos-donations' )
 				),
 			],

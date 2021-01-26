@@ -310,7 +310,8 @@ class SubscriptionsTable extends WP_List_Table {
 				'action' => 'cancel',
 			], $url);
 			$actions['cancel'] = sprintf(
-				"<a href=$url>%s</a>",
+				'<a href="%s">%s</a>',
+				$url,
 				__( 'Cancel', 'kudos-donations' )
 			);
 		} else {
@@ -318,7 +319,8 @@ class SubscriptionsTable extends WP_List_Table {
 				'action' => 'delete',
 			], $url);
 			$actions['cancel'] = sprintf(
-				"<a href=$url>%s</a>",
+				'<a href=%s>%s</a>',
+				$url,
 				__( 'Delete', 'kudos-donations' )
 			);
 		}
