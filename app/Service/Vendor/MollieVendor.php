@@ -19,10 +19,25 @@ use WP_REST_Response;
 
 class MollieVendor extends AbstractVendor {
 
+	/**
+	 * This is the name of the vendor as it will appear in the logs
+	 */
 	const VENDOR_NAME = 'Mollie';
-	const WEBHOOK_ROUTE = 'mollie/payment/webhook';
-	const PAYMENT_ROUTE = 'mollie/payment/create';
-	const TEST_API = 'mollie/check-api';
+
+	/**
+	 * The route used for the webhook
+	 */
+	const WEBHOOK_ROUTE = '/mollie/payment/webhook';
+
+	/**
+	 * New payment rest route
+	 */
+	const PAYMENT_ROUTE = '/mollie/payment/create';
+
+	/**
+	 * Rest route used for checking if api key is valid
+	 */
+	const TEST_API = '/mollie/check-api';
 
 	/**
 	 * Instance of MollieApiClient
