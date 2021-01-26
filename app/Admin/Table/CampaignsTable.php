@@ -217,7 +217,20 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function column_name( array $item ): string {
 
-		return $item['name'];
+		$url = add_query_arg([
+			'page'  => 'kudos-settings',
+			'tab_name' => 'campaigns',
+			'campaign_id' => $item['id']
+		], admin_url());
+
+		$actions = [
+			'edit' => sprintf(
+				"<a href=$url>%s</a>",
+				__( 'Edit', 'kudos-donations' )
+			),
+		];
+
+		return $item['name'] . $this->row_actions( $actions );
 
 	}
 
