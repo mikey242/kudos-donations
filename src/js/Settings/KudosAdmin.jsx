@@ -38,7 +38,7 @@ class KudosAdmin extends Component {
         this.checkApiKey = this.checkApiKey.bind(this)
 
         this.state = {
-            tabName: getQueryVar('tabName', 'mollie'),
+            tabName: getQueryVar('tab_name', 'mollie'),
             showNotice: false,
             noticeMessage: '',
             isMollieEdited: false,
