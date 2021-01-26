@@ -1,3 +1,5 @@
+import {Info} from "../Info"
+
 const {__} = wp.i18n
 const {useState} = wp.element
 const {
@@ -145,7 +147,7 @@ const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleIn
                         <TextControl
                             label={__('Amounts', 'kudos-donations') + ':'}
                             id={'fixed_amounts' + '-' + campaign.name}
-                            help={__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}
+                            // help={__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}
                             value={campaign.fixed_amounts || ''}
                             onChange={(value) => {
                                 let valuesArray = value.split(',')
@@ -155,6 +157,9 @@ const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleIn
                                 handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                             }}
                         />
+                        <Info>
+                            {__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}
+                        </Info>
                     </BaseControl>
 
                     : ''}
