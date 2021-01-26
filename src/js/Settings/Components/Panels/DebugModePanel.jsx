@@ -15,7 +15,11 @@ const DebugModePanel = (props) => {
                     'kudos-donations'
                 )}
                 checked={props.settings._kudos_debug_mode || ''}
-                onChange={() => props.updateSetting("_kudos_debug_mode", !props.settings._kudos_debug_mode, true)}
+                onChange={() => props.updateSetting(
+                    "_kudos_debug_mode",
+                    !props.settings._kudos_debug_mode,
+                    !props.settings._kudos_debug_mode ? 'Debug mode enabled' : 'Debug mode disabled'
+                )}
             />
 
             {props.settings._kudos_debug_mode ?
