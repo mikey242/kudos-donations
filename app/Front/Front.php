@@ -184,6 +184,27 @@ class Front {
 	}
 
 	/**
+	 * Checks if required api settings are saved before displaying button
+	 *
+	 * @return bool
+	 * @since   1.0.0
+	 */
+	public static function api_ready(): bool {
+
+		$vendor         = Settings::get_setting( 'payment_vendor' );
+		$api_connected  = Settings::get_setting( $vendor . '_connected' );
+		$api_mode       = Settings::get_setting( $vendor . '_api_mode' );
+		$api_key        = Settings::get_setting( $vendor . '_' . $api_mode . '_api_key' );
+
+		if ( ! $api_connected && ! $api_key ) {
+			return false;
+		}
+
+		return true;
+
+	}
+
+	/**
 	 * Register query parameters
 	 *
 	 * @param array $vars Current query vars.
@@ -313,45 +334,6 @@ class Front {
 		}
 
 		return null;
-
-	}
-
-	/**
-	 * Checks if required settings are saved before displaying button or modal
-	 *
-	 * @param $atts array
-	 *
-	 * @return array
-	 * @since   1.0.0
-	 */
-	public static function ready( array $atts ): array {
-
-		$api_connected = Settings::get_setting( 'mollie_connected' );
-		$api_mode      = Settings::get_setting( 'mollie_api_mode' );
-		$api_key       = Settings::get_setting( 'mollie_' . $api_mode . '_api_key' );
-		$campaigns     = new Campaigns();
-
-		$return = [];
-
-		if ( ! $api_connected && ! $api_key ) {
-			$return[] = __( 'Mollie not connected', 'kudos-donations' );
-		}
-
-		if ( $campaigns->get_all() ) {
-			if(!empty($atts['campaign_id'])) {
-				$campaign = $campaigns->get_campaign($atts['campaign_id']);
-				if(!$campaign) {
-					$return[] = sprintf(__( 'Campaign "%s" not found.', 'kudos-donations' ), $atts['campaign_id']);
-					return $return;
-				}
-			} else {
-				$return[] = __( 'No campaign configured for this button.', 'kudos-donations' );
-			}
-		} else {
-			$return[] = __( 'No campaigns found', 'kudos-donations' );
-		}
-
-		return $return;
 
 	}
 
