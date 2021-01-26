@@ -10,7 +10,7 @@ use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
-use Kudos\Service\RestService;
+use Kudos\Service\Vendor\MollieVendor;
 
 /**
  * The public-facing functionality of the plugin.
@@ -137,7 +137,7 @@ class Front {
 			[
 				'ajaxurl'          => admin_url( 'admin-ajax.php' ),
 				'_wpnonce'         => wp_create_nonce( 'wp_rest' ),
-				'createPaymentUrl' => rest_url( RestService::NAMESPACE . '/mollie/payment/create' ),
+				'createPaymentUrl' => rest_url( MollieVendor::REST_NAMESPACE . MollieVendor::PAYMENT_ROUTE ),
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
@@ -153,7 +153,7 @@ class Front {
 
 		$handle = $this->plugin_name . '-button-block';
 
-		wp_enqueue_style( $handle, Utils::get_asset_url( 'kudos-button-block.css' ), [], $this->version, 'all' );
+		wp_enqueue_style( $handle, Utils::get_asset_url( 'kudos-button-block.css' ), [], $this->version);
 		wp_enqueue_script(
 			$handle,
 			Utils::get_asset_url( 'kudos-button-block.js' ),
