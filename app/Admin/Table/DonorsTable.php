@@ -232,7 +232,12 @@ class DonorsTable extends WP_List_Table {
 	 */
 	protected function column_email( array $item ): string {
 
-		$delete_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
+		$url = add_query_arg([
+			'page'  => esc_attr($_REQUEST['page']),
+			'action' => 'delete',
+			'customer_id' => sanitize_text_field( $item['customer_id'] ),
+			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] )
+		]);
 
 		$title = sprintf(
 			'<a href="mailto: %1$s" />%1$s</a>',
@@ -241,11 +246,8 @@ class DonorsTable extends WP_List_Table {
 
 		$actions = [
 			'delete' => sprintf(
-				'<a href="?page=%s&action=%s&customer_id=%s&_wpnonce=%s">%s</a>',
-				esc_attr( $_REQUEST['page'] ),
-				'delete',
-				sanitize_text_field( $item['customer_id'] ),
-				$delete_nonce,
+				'<a href="%s">%s</a>',
+				$url,
 				__( 'Delete', 'kudos-donations' )
 			),
 		];

@@ -293,30 +293,32 @@ class SubscriptionsTable extends WP_List_Table {
 	 */
 	protected function column_created( array $item ): string {
 
-		$action_nonce = wp_create_nonce( 'bulk-' . $this->_args['singular'] );
-
 		$title = '<strong>' .
 		         wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 			         strtotime( $item['created'] ) ) .
 		         '</strong>';
 
+		$url = add_query_arg([
+			'page' => esc_attr( $_REQUEST['page'] ),
+			'subscription_id' => sanitize_text_field( $item['subscription_id'] ),
+			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] )
+		]);
+
 		$actions = [];
 		if ( 'active' === $item['status'] ) {
+			$url = add_query_arg([
+				'action' => 'cancel',
+			], $url);
 			$actions['cancel'] = sprintf(
-				'<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>',
-				esc_attr( $_REQUEST['page'] ),
-				'cancel',
-				sanitize_text_field( $item['subscription_id'] ),
-				$action_nonce,
+				"<a href=$url>%s</a>",
 				__( 'Cancel', 'kudos-donations' )
 			);
 		} else {
-			$actions['delete'] = sprintf(
-				'<a href="?page=%s&action=%s&subscription_id=%s&_wpnonce=%s">%s</a>',
-				esc_attr( $_REQUEST['page'] ),
-				'delete',
-				sanitize_text_field( $item['subscription_id'] ),
-				$action_nonce,
+			$url = add_query_arg([
+				'action' => 'delete',
+			], $url);
+			$actions['cancel'] = sprintf(
+				"<a href=$url>%s</a>",
 				__( 'Delete', 'kudos-donations' )
 			);
 		}
