@@ -72,7 +72,6 @@ const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleIn
             <BaseControl
                 id={campaign.id + "-address"}
                 label="Address"
-                help={'Configure the address fields'}
             >
 
 
@@ -104,7 +103,7 @@ const CampaignPanel = ({ settings, campaign, showNotice, updateSetting, handleIn
             <BaseControl
                 id={campaign.id + "-donation-type"}
                 label="Donation type"
-                help={'Set the donation type available'}
+
             >
 
                 <RadioControl
