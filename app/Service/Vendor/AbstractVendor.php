@@ -11,31 +11,6 @@ use WP_REST_Response;
 abstract class AbstractVendor extends AbstractService {
 
 	/**
-	 * Namespace used for registering the routes
-	 */
-	const REST_NAMESPACE = 'kudos/v1';
-
-	/**
-	 * This is the name of the vendor as it will appear in the logs
-	 */
-	const VENDOR_NAME = 'Mollie';
-
-	/**
-	 * The route used for the webhook
-	 */
-	const WEBHOOK_ROUTE = '/mollie/payment/webhook';
-
-	/**
-	 * New payment rest route
-	 */
-	const PAYMENT_ROUTE = '/mollie/payment/create';
-
-	/**
-	 * Rest route used for checking if api key is valid
-	 */
-	const TEST_API = '/mollie/check-api';
-
-	/**
 	 * @param TransactionEntity $transaction,
 	 * @param string $mandate_id,
 	 * @param string $interval,

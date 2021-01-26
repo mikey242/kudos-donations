@@ -136,7 +136,7 @@ class Front {
 			'kudos',
 			[
 				'_wpnonce'         => wp_create_nonce( 'wp_rest' ),
-				'createPaymentUrl' => rest_url( MollieVendor::REST_NAMESPACE . MollieVendor::PAYMENT_ROUTE ),
+				'createPaymentUrl' => rest_url( PaymentService::REST_NAMESPACE . PaymentService::PAYMENT_ROUTE ),
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );

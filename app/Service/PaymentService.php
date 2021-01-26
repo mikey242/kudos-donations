@@ -18,6 +18,26 @@ use WP_REST_Server;
 class PaymentService extends AbstractService {
 
 	/**
+	 * Namespace used for registering the routes
+	 */
+	const REST_NAMESPACE = 'kudos/v1';
+
+	/**
+	 * The route used for payment webhook
+	 */
+	const WEBHOOK_ROUTE = '/payment/webhook';
+
+	/**
+	 * New payment route
+	 */
+	const PAYMENT_ROUTE = '/payment/create';
+
+	/**
+	 * Rest route used for checking if api key is valid
+	 */
+	const TEST_API = '/check-api';
+
+	/**
 	 * @var AbstractVendor
 	 */
 	private $vendor;
@@ -50,13 +70,13 @@ class PaymentService extends AbstractService {
 	public function register_rest_routes() {
 
 		$routes = [
-			$this->vendor::PAYMENT_ROUTE => [
+			self::PAYMENT_ROUTE => [
 				'methods'             => 'POST',
 				'callback'            => [ $this, 'submit_payment' ],
 				'permission_callback' => '__return_true',
 			],
 
-			$this->vendor::WEBHOOK_ROUTE => [
+			self::WEBHOOK_ROUTE => [
 				'methods'             => 'POST',
 				'callback'            => [ $this, 'handle_webhook' ],
 				'args'                => [
@@ -67,7 +87,7 @@ class PaymentService extends AbstractService {
 				'permission_callback' => '__return_true',
 			],
 
-			$this->vendor::TEST_API => [
+			self::TEST_API => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'check_api_keys' ],
 				'args'                => [
@@ -82,7 +102,7 @@ class PaymentService extends AbstractService {
 		];
 
 		foreach ( $routes as $key => $route ) {
-			register_rest_route( $this->vendor::REST_NAMESPACE, $key, $route );
+			register_rest_route( self::REST_NAMESPACE, $key, $route );
 		}
 	}
 
@@ -279,7 +299,6 @@ class PaymentService extends AbstractService {
 		// Set payment frequency.
 		$frequency_text = Utils::get_frequency_name( $interval );
 		$sequence_type  = 'oneoff' === $interval ? 'oneoff' : 'first';
-		$this->logger->debug($sequence_type);
 
 		// Create payment settings.
 		$payment_array = [
@@ -288,7 +307,7 @@ class PaymentService extends AbstractService {
 				'value'    => $value,
 			],
 			'redirectUrl'  => $redirect_url,
-			'webhookUrl'   => $_ENV['WEBHOOK_URL'] ?? rest_url( $this->vendor::REST_NAMESPACE . $this->vendor::WEBHOOK_ROUTE ),
+			'webhookUrl'   => $_ENV['WEBHOOK_URL'] ?? rest_url( self::REST_NAMESPACE . self::WEBHOOK_ROUTE ),
 			'sequenceType' => $sequence_type,
 			'description'  => sprintf(
 			/* translators: %s: The order id */

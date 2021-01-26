@@ -211,7 +211,7 @@ class Admin {
 			'kudos',
 			[
 				'version'     => KUDOS_VERSION,
-				'checkApiUrl' => rest_url( 'kudos/v1' . '/mollie/check-api' ),
+				'checkApiUrl' => rest_url( 'kudos/v1' . '/check-api' ),
 				'sendTestUrl' => rest_url( 'kudos/v1' . '/email/test' ),
 				'ajaxurl'     => admin_url( 'admin-ajax.php' ),
 			]
