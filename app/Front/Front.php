@@ -135,7 +135,6 @@ class Front {
 			$handle,
 			'kudos',
 			[
-				'ajaxurl'          => admin_url( 'admin-ajax.php' ),
 				'_wpnonce'         => wp_create_nonce( 'wp_rest' ),
 				'createPaymentUrl' => rest_url( MollieVendor::REST_NAMESPACE . MollieVendor::PAYMENT_ROUTE ),
 			]
