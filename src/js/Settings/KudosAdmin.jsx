@@ -7,7 +7,7 @@ import axios from 'axios'
 import {Notice} from './Components/Notice'
 import {Header} from './Components/Header'
 import {IntroGuide} from "./Components/IntroGuide"
-import {getTabName, updateQueryStringParameter} from "./Helpers/Util"
+import {getQueryVar, updateQueryStringParameter} from "./Helpers/Util"
 import {MollieTab} from "./Components/Tabs/MollieTab"
 import {CampaignsTab} from "./Components/Tabs/CampaignsTab"
 import {CustomizeTab} from "./Components/Tabs/CustomizeTab"
@@ -38,7 +38,7 @@ class KudosAdmin extends Component {
         this.checkApiKey = this.checkApiKey.bind(this)
 
         this.state = {
-            tabName: getTabName(),
+            tabName: getQueryVar('tabName', 'mollie'),
             showNotice: false,
             noticeMessage: '',
             isMollieEdited: false,
@@ -47,7 +47,7 @@ class KudosAdmin extends Component {
             isAPISaving: false,
             checkingApi: false,
             campaigns: [],
-            settings: {},
+            settings: {}
         }
 
         this.tabs = {}
@@ -301,6 +301,7 @@ class KudosAdmin extends Component {
                     <AdvancedTab
                         settings={this.state.settings}
                         handleInputChange={this.handleInputChange}
+                        updateAll={this.updateAll}
                     />
             },
             {
