@@ -20,7 +20,7 @@ use WP_REST_Response;
 class MollieVendor extends AbstractVendor {
 
 	const VENDOR_NAME = 'Mollie';
-	const WEBHOOK_ROUTE = '/mollie/payment/webhook';
+	const WEBHOOK_ROUTE = 'mollie/payment/webhook';
 	const PAYMENT_ROUTE = 'mollie/payment/create';
 	const TEST_API = 'mollie/check-api';
 
