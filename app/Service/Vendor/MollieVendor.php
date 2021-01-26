@@ -7,6 +7,7 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
+use Kudos\Service\PaymentService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\Customer;
@@ -23,21 +24,6 @@ class MollieVendor extends AbstractVendor {
 	 * This is the name of the vendor as it will appear in the logs
 	 */
 	const VENDOR_NAME = 'Mollie';
-
-	/**
-	 * The route used for the webhook
-	 */
-	const WEBHOOK_ROUTE = '/mollie/payment/webhook';
-
-	/**
-	 * New payment rest route
-	 */
-	const PAYMENT_ROUTE = '/mollie/payment/create';
-
-	/**
-	 * Rest route used for checking if api key is valid
-	 */
-	const TEST_API = '/mollie/check-api';
 
 	/**
 	 * Instance of MollieApiClient
@@ -285,7 +271,7 @@ class MollieVendor extends AbstractVendor {
 				'value'    => $value,
 				'currency' => $currency,
 			],
-			'webhookUrl'  => $_ENV['WEBHOOK_URL'] ?? rest_url( self::REST_NAMESPACE . self::WEBHOOK_ROUTE ),
+			'webhookUrl'  => $_ENV['WEBHOOK_URL'] ?? rest_url( PaymentService::REST_NAMESPACE . PaymentService::WEBHOOK_ROUTE ),
 			'mandateId'   => $mandate_id,
 			'interval'    => $interval,
 			'startDate'   => $start_date,
