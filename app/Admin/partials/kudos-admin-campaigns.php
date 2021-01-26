@@ -46,9 +46,7 @@ switch ( $table_action ) {
 	?>
 	<form id="subscriptions-table" method="POST">
 		<?php
-		printf( '<p>' . __( 'Click <a href="%s">here</a> to edit and delete your campaigns' ) . '</p>',
-			admin_url( 'admin.php?page=kudos-settings&tabName=campaigns' ));
-		$table->display();
+			$table->display();
 		?>
 	</form>
 </div>
