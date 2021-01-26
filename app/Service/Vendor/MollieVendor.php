@@ -7,7 +7,6 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
-use Kudos\Service\RestService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\Customer;
@@ -21,6 +20,9 @@ use WP_REST_Response;
 class MollieVendor extends AbstractVendor {
 
 	const VENDOR_NAME = 'Mollie';
+	const WEBHOOK_ROUTE = '/mollie/payment/webhook';
+	const PAYMENT_ROUTE = 'mollie/payment/create';
+	const TEST_API = 'mollie/check-api';
 
 	/**
 	 * Instance of MollieApiClient
@@ -268,7 +270,7 @@ class MollieVendor extends AbstractVendor {
 				'value'    => $value,
 				'currency' => $currency,
 			],
-			'webhookUrl'  => $_ENV['WEBHOOK_URL'] ?? rest_url( RestService::NAMESPACE . '/mollie/payment/webhook' ),
+			'webhookUrl'  => $_ENV['WEBHOOK_URL'] ?? rest_url( self::REST_NAMESPACE . self::WEBHOOK_ROUTE ),
 			'mandateId'   => $mandate_id,
 			'interval'    => $interval,
 			'startDate'   => $start_date,
