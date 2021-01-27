@@ -202,7 +202,7 @@ class KudosDonations {
 	 */
 	private function define_entity_hooks() {
 
-		// Action triggered by Action Scheduler to remove the entity secret
+		// Action triggered by Action Scheduler to remove the entity secret.
 		add_action( TransactionEntity::get_table_name( false ) . '_remove_secret_action',
 			[ TransactionEntity::class, 'remove_secret_action' ],
 			10,

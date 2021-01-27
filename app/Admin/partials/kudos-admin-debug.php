@@ -29,13 +29,13 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 		<?php
 
-		$url            = admin_url( 'admin.php?page=kudos-debug' );
+		$url          = admin_url( 'admin.php?page=kudos-debug' );
 
 		switch ( $tab ) :
 
 			case 'log':
 				$url = add_query_arg( 'tab', 'log', $url );
-				$file   = LoggerService::LOG_FILE;
+				$file = LoggerService::LOG_FILE;
 
 				// Quit if file does not exist.
 				if ( ! file_exists( $file ) ) {

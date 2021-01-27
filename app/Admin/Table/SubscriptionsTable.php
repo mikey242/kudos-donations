@@ -80,7 +80,7 @@ class SubscriptionsTable extends WP_List_Table {
 		$frequency = ( isset( $_GET['frequency'] ) ? sanitize_text_field( $_GET['frequency'] ) : '' );
 		$search    = $this->get_search_data();
 
-		// Base data
+		// Base data.
 		$table      = $this->table;
 		$join_table = DonorEntity::get_table_name();
 		$query      = "
@@ -88,7 +88,7 @@ class SubscriptionsTable extends WP_List_Table {
 			LEFT JOIN ${join_table} on ${join_table}.customer_id = ${table}.customer_id
 		";
 
-		// Where clause
+		// Where clause.
 		if ( $frequency ) {
 			global $wpdb;
 			$where[] = $wpdb->prepare( "
@@ -298,26 +298,28 @@ class SubscriptionsTable extends WP_List_Table {
 			         strtotime( $item['created'] ) ) .
 		         '</strong>';
 
-		$url = add_query_arg([
-			'page' => esc_attr( $_REQUEST['page'] ),
+		$url = add_query_arg( [
+			'page'            => esc_attr( $_REQUEST['page'] ),
 			'subscription_id' => sanitize_text_field( $item['subscription_id'] ),
-			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] )
-		]);
+			'_wpnonce'        => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
+		] );
 
 		$actions = [];
 		if ( 'active' === $item['status'] ) {
-			$url = add_query_arg([
+			$url               = add_query_arg( [
 				'action' => 'cancel',
-			], $url);
+			],
+				$url );
 			$actions['cancel'] = sprintf(
 				'<a href="%s">%s</a>',
 				$url,
 				__( 'Cancel', 'kudos-donations' )
 			);
 		} else {
-			$url = add_query_arg([
+			$url               = add_query_arg( [
 				'action' => 'delete',
-			], $url);
+			],
+				$url );
 			$actions['cancel'] = sprintf(
 				'<a href=%s>%s</a>',
 				$url,
