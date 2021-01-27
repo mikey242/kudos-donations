@@ -56,8 +56,10 @@
     https://github.com/PHPCompatibility/PHPCompatibility
     -->
     <!--
-    <config name="testVersion" value="5.2-"/>
-    <rule ref="PHPCompatibilityWP"/>
+    <config name="testVersion" value="7.2-"/>
+    <rule ref="PHPCompatibilityWP">
+        <include-pattern>*\.php$</include-pattern>
+    </rule>
     -->
 
     <!--
