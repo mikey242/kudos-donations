@@ -31,7 +31,9 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
             initialOpen={isOpen}
         >
 
-            <BaseControl>
+            <BaseControl
+                help={__('Ensure that this is a unique name to make it easy to identify in the transactions page.', 'kudos-donations')}
+            >
 
                 <TextControl
                     label={__('Name', 'kudos-donations')}
@@ -43,6 +45,9 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
                         handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
+
+            </BaseControl>
+            <BaseControl>
 
                 <TextControl
                     label={__('Header', 'kudos-donations')}
@@ -69,12 +74,12 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
             </BaseControl>
 
             <BaseControl
-                label="Address"
+                label={__('Address Field', 'kudos-donations')}
+                help={__('Whether to show the address fields or not.', 'kudos-donations')}
             >
 
-
                 <ToggleControl
-                    label={__("Enabled", 'kudos-donations')}
+                    label={__('Enabled', 'kudos-donations')}
                     checked={campaign.address_enabled || ''}
                     onChange={(value) => {
                         campaign.address_enabled = value
@@ -100,7 +105,7 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
 
             <BaseControl
                 label={__("Donation type", 'kudos-donations')}
-
+                help={__('The donation type of the form, set to "both" to allow donor to choose.', 'kudos-donations')}
             >
 
                 <RadioControl
@@ -118,10 +123,12 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
 
             </BaseControl>
 
-            <BaseControl>
+            <BaseControl
+                label={__('Amount type', 'kudos-donations')}
+                help={__('Configure the amount type for this form. When set to "Fixed" or "Both" you will need to configure the amounts below.', 'kudos-donations')}
+            >
 
                 <RadioControl
-                    label={__('Amount type', 'kudos-donations')}
                     selected={campaign.amount_type || 'both'}
                     options={[
                         {label: __('Open', 'kudos-donations'), value: 'open'},
@@ -162,16 +169,16 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
 
             <div className="kd-flex kd-justify-between">
 
-                <div>
-                    <ClipboardButton
-                        isSecondary
-                        text={'[kudos campaign_id="' + campaign.id + '"]'}
-                        onCopy={() => setHasCopied(true)}
-                        onFinishCopy={() => setHasCopied(false)}
-                    >
-                        {hasCopied ? 'Copied!' : 'Copy Shortcode'}
-                    </ClipboardButton>
-                </div>
+                <ClipboardButton
+                    className="kd-mt-5"
+                    isSecondary
+                    text={'[kudos campaign_id="' + campaign.id + '"]'}
+                    onCopy={() => setHasCopied(true)}
+                    onFinishCopy={() => setHasCopied(false)}
+                >
+                    {hasCopied ? 'Copied!' : 'Copy Shortcode'}
+                </ClipboardButton>
+
 
                 {allowDelete ?
 

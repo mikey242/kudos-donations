@@ -24,13 +24,6 @@
   box-sizing: inherit;
 }
 
-.components-panel__body>.components-base-control {
-  @apply kd-pb-3 kd-mb-4;
-  &:last-child {
-    margin-bottom: 8px;
-  }
-}
-
 #wpcontent {
   padding-left: 0;
 }
@@ -81,6 +74,11 @@
     &:focus {
       @apply kd-outline-none kd-shadow-inner kd-border-orange-700;
     }
+  }
+
+  // Base-control Labels
+  .components-base-control__label {
+    @apply kd-inline-block kd-mb-2;
   }
 
   // Help
