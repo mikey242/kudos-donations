@@ -16,7 +16,7 @@ export function getQueryVar(key, fallback=null) {
     return fallback
 }
 
-export function updateQueryStringParameter(key, value) {
+export function updateQueryParameter(key, value) {
     if ('URLSearchParams' in window) {
         let searchParams = new URLSearchParams(window.location.search)
         searchParams.set(key, value)

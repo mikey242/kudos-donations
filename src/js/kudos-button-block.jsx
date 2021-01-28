@@ -131,7 +131,7 @@ export default registerBlockType('iseardmedia/kudos-button', {
                                 }
                             />
 
-                            <a href="admin.php?page=kudos-settings&tabName=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
+                            <a href="admin.php?page=kudos-settings&tab_name=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
 
                         </PanelBody>
 

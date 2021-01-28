@@ -1,147 +1,164 @@
 import {Info} from "../Info"
+import {SettingCard} from "../SettingCard"
 
 const {__} = wp.i18n
-const {useState} = wp.element
+const {useState, useEffect} = wp.element
 const {
     BaseControl,
     Button,
+    CardDivider,
+    CardHeader,
+    CardFooter,
     CheckboxControl,
     ClipboardButton,
-    PanelBody,
     RadioControl,
     TextControl,
     ToggleControl
 } = wp.components
 
-const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, isOpen=false, allowDelete = false}) => {
+const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, allowDelete = false}) => {
 
     const [hasCopied, setHasCopied] = useState(false)
 
-    const removeCampaign = (id) => {
-        let current = settings._kudos_campaigns
-        let updated = current.filter(function (value) {
-            return value.id !== id
-        })
-        updateSetting('_kudos_campaigns', _.uniq(updated, 'id'), true, __('Campaign deleted.', 'kudos-donations'))
-    }
+    useEffect(() => {
+        setHasCopied(false)
+    }, [campaign])
 
     return (
-        <PanelBody
-            title={campaign.name}
-            initialOpen={isOpen}
-        >
+        <div id={"campaign-" + campaign.id}>
+            <CardHeader>
+                <h3>{__('Campaign details', 'kudos-donations')}</h3>
+                <ClipboardButton
+                    className="kd-mt-5"
+                    isSecondary
+                    text={'[kudos campaign_id="' + campaign.id + '"]'}
+                    onClick={() => setHasCopied(true)}
+                    onCopy={() => setHasCopied(true)}
+                    onFinishCopy={() => setHasCopied(false)}
+                >
+                    {hasCopied ? __('Copied!', 'kudos-donations') : __('Copy Shortcode', 'kudos-donations')}
+                </ClipboardButton>
+            </CardHeader>
+            <SettingCard title={__('Name', 'kudos-donations')}>
 
-            <BaseControl
-                help={__('Ensure that this is a unique name to make it easy to identify in the transactions page.', 'kudos-donations')}
-            >
-
-                <TextControl
-                    label={__('Name', 'kudos-donations')}
-                    id={'campaign_name' + '-' + campaign.id}
-                    type={'text'}
-                    value={campaign.name || ''}
-                    onChange={(value) => {
-                        campaign.name = value
-                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                    }}
-                />
-
-            </BaseControl>
-            <BaseControl>
-
-                <TextControl
-                    label={__('Header', 'kudos-donations')}
-                    id={'modal_title' + '-' + campaign.id}
-                    type={'text'}
-                    value={campaign.modal_title || ''}
-                    onChange={(value) => {
-                        campaign.modal_title = value
-                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                    }}
-                />
-
-                <TextControl
-                    label={__('Welcome text', 'kudos-donations')}
-                    id={'welcome_text' + '-' + campaign.id}
-                    type={'text'}
-                    value={campaign.welcome_text || ''}
-                    onChange={(value) => {
-                        campaign.welcome_text = value
-                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                    }}
-                />
-
-            </BaseControl>
-
-            <BaseControl
-                label={__('Address Field', 'kudos-donations')}
-                help={__('Whether to show the address fields or not.', 'kudos-donations')}
-            >
-
-                <ToggleControl
-                    label={__('Enabled', 'kudos-donations')}
-                    checked={campaign.address_enabled || ''}
-                    onChange={(value) => {
-                        campaign.address_enabled = value
-                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                    }}
-                />
-
-                {campaign.address_enabled ?
-
-                    <CheckboxControl
-                        label={__("Required", "kudos-donations")}
-                        checked={campaign.address_required || ''}
+                <BaseControl
+                    help={__('Ensure that this is a unique name to make it easy to identify in the transactions page.', 'kudos-donations')}
+                >
+                    <TextControl
+                        id={'campaign_name' + '-' + campaign.id}
+                        type={'text'}
+                        value={campaign.name || ''}
                         onChange={(value) => {
-                            campaign.address_required = value
+                            campaign.name = value
+                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                        }}
+                    />
+                </BaseControl>
+            </SettingCard>
+
+            <CardDivider/>
+
+            <SettingCard title={__('Header', 'kudos-donations')}>
+                    <TextControl
+                        id={'modal_title' + '-' + campaign.id}
+                        type={'text'}
+                        value={campaign.modal_title || ''}
+                        onChange={(value) => {
+                            campaign.modal_title = value
+                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                        }}
+                    />
+            </SettingCard>
+
+            <CardDivider/>
+
+            <SettingCard title={__('Welcome text', 'kudos-donations')}>
+                    <TextControl
+                        id={'welcome_text' + '-' + campaign.id}
+                        type={'text'}
+                        value={campaign.welcome_text || ''}
+                        onChange={(value) => {
+                            campaign.welcome_text = value
+                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                        }}
+                    />
+            </SettingCard>
+
+            <CardDivider/>
+
+            <SettingCard title={__('Address Field', 'kudos-donations')}>
+                <BaseControl
+                    help={__('Whether to show the address fields or not.', 'kudos-donations')}
+                >
+                    <ToggleControl
+                        label={__('Enabled', 'kudos-donations')}
+                        checked={campaign.address_enabled || ''}
+                        onChange={(value) => {
+                            campaign.address_enabled = value
                             handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                         }}
                     />
 
-                    : ''}
+                    {campaign.address_enabled ?
 
+                        <CheckboxControl
+                            label={__('Required', "kudos-donations")}
+                            checked={campaign.address_required || ''}
+                            onChange={(value) => {
+                                campaign.address_required = value
+                                handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                            }}
+                        />
 
-            </BaseControl>
+                        : ''}
 
-            <BaseControl
-                label={__("Donation type", 'kudos-donations')}
-                help={__('The donation type of the form, set to "both" to allow donor to choose.', 'kudos-donations')}
-            >
+                </BaseControl>
+            </SettingCard>
 
-                <RadioControl
-                    selected={campaign.donation_type || 'both'}
-                    options={[
-                        {label: __('One-off', 'kudos-donations'), value: 'oneoff'},
-                        {label: __('Subscription', 'kudos-donations'), value: 'recurring'},
-                        {label: __('Both', 'kudos-donations'), value: 'both'},
-                    ]}
-                    onChange={(value) => {
-                        campaign.donation_type = value
-                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                    }}
-                />
+            <CardDivider/>
 
-            </BaseControl>
+            <SettingCard title={__('Donation type', 'kudos-donations')}>
+                <BaseControl
+                    help={__('The donation type of the form, set to "both" to allow donor to choose.', 'kudos-donations')}
+                >
 
-            <BaseControl
-                label={__('Amount type', 'kudos-donations')}
-                help={__('Configure the amount type for this form. When set to "Fixed" or "Both" you will need to configure the amounts below.', 'kudos-donations')}
-            >
+                    <RadioControl
+                        selected={campaign.donation_type || 'both'}
+                        options={[
+                            {label: __('One-off', 'kudos-donations'), value: 'oneoff'},
+                            {label: __('Subscription', 'kudos-donations'), value: 'recurring'},
+                            {label: __('Both', 'kudos-donations'), value: 'both'},
+                        ]}
+                        onChange={(value) => {
+                            campaign.donation_type = value
+                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                        }}
+                    />
 
-                <RadioControl
-                    selected={campaign.amount_type || 'both'}
-                    options={[
-                        {label: __('Open', 'kudos-donations'), value: 'open'},
-                        {label: __('Fixed', 'kudos-donations'), value: 'fixed'},
-                        {label: __('Both', 'kudos-donations'), value: 'both'},
-                    ]}
-                    onChange={(value) => {
-                        campaign.amount_type = value
-                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                    }}
-                />
+                </BaseControl>
+            </SettingCard>
 
-            </BaseControl>
+            <CardDivider/>
+
+            <SettingCard title={__('Amount type', 'kudos-donations')}>
+                <BaseControl
+                    help={__('Configure the amount type for this form. When set to "Fixed" or "Both" you will need to configure the amounts below.', 'kudos-donations')}
+                >
+
+                    <RadioControl
+                        selected={campaign.amount_type || 'both'}
+                        options={[
+                            {label: __('Open', 'kudos-donations'), value: 'open'},
+                            {label: __('Fixed', 'kudos-donations'), value: 'fixed'},
+                            {label: __('Both', 'kudos-donations'), value: 'both'},
+                        ]}
+                        onChange={(value) => {
+                            campaign.amount_type = value
+                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                        }}
+                    />
+
+                </BaseControl>
 
                 {campaign.amount_type !== 'open' ?
 
@@ -165,21 +182,9 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
                     </BaseControl>
 
                     : ''}
+            </SettingCard>
 
-
-            <div className="kd-flex kd-justify-between">
-
-                <ClipboardButton
-                    className="kd-mt-5"
-                    isSecondary
-                    text={'[kudos campaign_id="' + campaign.id + '"]'}
-                    onCopy={() => setHasCopied(true)}
-                    onFinishCopy={() => setHasCopied(false)}
-                >
-                    {hasCopied ? 'Copied!' : 'Copy Shortcode'}
-                </ClipboardButton>
-
-
+            <CardFooter>
                 {allowDelete ?
 
                     <Button
@@ -195,10 +200,8 @@ const CampaignPanel = ({ settings, campaign, updateSetting, handleInputChange, i
                     </Button>
 
                     : ''}
-
-            </div>
-
-        </PanelBody>
+            </CardFooter>
+        </div>
     )
 }
 

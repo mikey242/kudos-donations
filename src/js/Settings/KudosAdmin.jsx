@@ -7,7 +7,7 @@ import axios from 'axios'
 import {Notice} from './Components/Notice'
 import {Header} from './Components/Header'
 import {IntroGuide} from "./Components/IntroGuide"
-import {getQueryVar, updateQueryStringParameter} from "./Helpers/Util"
+import {getQueryVar, updateQueryParameter} from "./Helpers/Util"
 import {MollieTab} from "./Components/Tabs/MollieTab"
 import {CampaignsTab} from "./Components/Tabs/CampaignsTab"
 import {CustomizeTab} from "./Components/Tabs/CustomizeTab"
@@ -75,7 +75,7 @@ class KudosAdmin extends Component {
 
     changeTab(tab) {
         // this.getSettings();
-        updateQueryStringParameter('tabName', tab)
+        updateQueryParameter('tab_name', tab)
     }
 
     checkApiKey() {
