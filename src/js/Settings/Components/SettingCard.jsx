@@ -4,7 +4,7 @@ const SettingCard = ({ title, children }) => {
 
     return (
         <CardBody size="medium">
-            <h4 className="kd-mb-5">{title}</h4>
+            <h3 className="kd-mb-5">{title}</h3>
             { children }
         </CardBody>
     )

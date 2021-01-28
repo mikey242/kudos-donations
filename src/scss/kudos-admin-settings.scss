@@ -105,13 +105,19 @@
   }
 }
 
-//.components-text-control__input,
-//.components-input-control__backdrop {
-//  @apply kd-appearance-none kd-px-4 kd-py-3 kd-border kd-border-gray-300;
-//  &:focus {
-//    @apply kd-outline-none kd-shadow-inner kd-border-orange-700;
-//  }
-//}
+.kudos-campaign-selector {
+  .components-base-control__field {
+    @apply kd-m-0;
+  }
+}
+
+.components-text-control__input,
+.components-input-control__backdrop {
+  @apply kd-appearance-none kd-px-4 kd-py-3 kd-border kd-border-gray-300;
+  &:focus {
+    @apply kd-outline-none kd-shadow-inner kd-border-orange-700;
+  }
+}
 
 //.intro-guide__heading {
 //  margin: 0 0 16px;
