@@ -67,71 +67,53 @@
   }
 }
 
-#kudos-settings {
+// Tab panel
+.kudos-tab-panel {
+  .components-tab-panel__tabs {
+    @apply kd-flex kd-justify-center kd-bg-white;
 
-  .components-text-control__input {
-    @apply kd-appearance-none kd-px-4 kd-py-3 kd-border kd-border-gray-400;
-    &:focus {
-      @apply kd-outline-none kd-shadow-inner kd-border-orange-700;
+    .components-button.is-active {
+      @apply kd-relative kd-font-semibold;
+    }
+    .components-button {
+      @apply kd-text-gray-800 kd-inline-block kd-bg-transparent kd-border-none kd-cursor-pointer kd-py-1 kd-px-5 kd-ml-0 kd-transition-shadow kd-duration-100 kd-ease-linear;
+      height: 50px;
+      outline-offset: -1px;
     }
   }
-
-  // Base-control Labels
-  .components-base-control__label {
-    @apply kd-inline-block kd-mb-2;
+  .components-tab-panel__tab-content {
+    @apply kd-mt-5;
   }
-
-  // Help
-  .components-base-control__help {
-    @apply kd-mt-2 kd-italic;
-  }
-
-   // Tab panel
-  .components-tab-panel__tabs,
-  .components-card {
-    @apply kd-border-solid kd-border kd-border-gray-300 kd-rounded;
-  }
-  //
-  //.components-panel__body {
-  //  @apply kd-border-t-0 kd-border-gray-200
-  //}
-  //
-  //.components-panel > .components-panel__body:first-child {
-  //  margin-top: 0 !important;
-  //}
-
-  // Notification
-  .components-snackbar {
-    @apply kd-fixed kd-px-4 kd-ml-5 kd-mb-5 kd-w-auto kd-z-1 kd-opacity-0 kd-bottom-0;
-    &.notification-shown {
-      @apply kd-opacity-100;
-    }
-  }
-
-  .kudos-tab-panel {
-
-    .components-tab-panel__tabs {
-      @apply kd-flex kd-justify-center kd-bg-white;
-
-      .components-button.is-active {
-        @apply kd-relative kd-font-semibold;
-      }
-
-      .components-button {
-        @apply kd-text-gray-800 kd-inline-block kd-bg-transparent kd-border-none kd-cursor-pointer kd-py-1 kd-px-5 kd-ml-0 kd-transition-shadow kd-duration-100 kd-ease-linear;
-        height: 50px;
-        outline-offset: -1px;
-      }
-    }
-
-    .components-tab-panel__tab-content {
-      @apply kd-mt-5;
-    }
-  }
-
 }
 
-.intro-guide__heading {
-  margin: 0 0 16px;
-  padding: 0 32px;
+ // Cards and tab panel
+.components-tab-panel__tabs,
+.components-card {
+  @apply kd-border-solid kd-border kd-border-gray-300 kd-rounded;
 }
+
+// Help
+.components-base-control__help {
+  @apply kd-mt-2 kd-italic;
+}
+
+// Notification
+.components-snackbar {
+  @apply kd-fixed kd-px-4 kd-ml-5 kd-mb-5 kd-w-auto kd-z-1 kd-opacity-0 kd-bottom-0;
+  &.notification-shown {
+    @apply kd-opacity-100;
+  }
+}
+
+//.components-text-control__input,
+//.components-input-control__backdrop {
+//  @apply kd-appearance-none kd-px-4 kd-py-3 kd-border kd-border-gray-300;
+//  &:focus {
+//    @apply kd-outline-none kd-shadow-inner kd-border-orange-700;
+//  }
+//}
+
+//.intro-guide__heading {
+//  margin: 0 0 16px;
+//  padding: 0 32px;
+//}

@@ -1,4 +1,4 @@
-const {Card, CardBody} = wp.components
+const {CardBody} = wp.components
 
 const SettingCard = ({ title, children }) => {
 
