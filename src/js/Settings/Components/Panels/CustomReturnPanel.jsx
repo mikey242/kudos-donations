@@ -1,11 +1,12 @@
+import {SettingCard} from "../SettingCard"
+
 const {__} = wp.i18n
 const {CardBody, TextControl, ToggleControl} = wp.components
 
 const CustomReturnPanel = (props) => {
 
     return (
-        <CardBody size="medium">
-            <p><strong>{__('Custom return URL', 'kudos-donations')}</strong></p>
+        <SettingCard title={__('Custom return URL', 'kudos-donations')}>
             <ToggleControl
                 label={__('Use custom return URL', 'kudos-donations')}
                 help={__(
@@ -31,7 +32,7 @@ const CustomReturnPanel = (props) => {
                 />
 
                 : ''}
-        </CardBody>
+        </SettingCard>
     )
 }
 

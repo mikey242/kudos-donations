@@ -198,7 +198,7 @@ class Settings {
 							],
 						],
 					],
-					'sanitize_callback' => [ Campaigns::class, 'sanitize_campaigns' ],
+					'sanitize_callback' => [ new Campaigns(), 'sanitize_campaigns' ],
 				],
 			]
 		);

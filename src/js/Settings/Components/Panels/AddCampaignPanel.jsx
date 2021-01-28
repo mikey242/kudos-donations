@@ -1,6 +1,6 @@
 import {SettingCard} from "../SettingCard"
 
-const { __, sprintf } = wp.i18n
+const { __ } = wp.i18n
 const { Button, TextControl } = wp.components
 const { useState } = wp.element
 
@@ -31,7 +31,10 @@ const AddCampaignPanel = ({addCampaign}) => {
                 isSecondary
                 disabled={buttonDisabled}
                 onClick={
-                    () => addCampaign(document.getElementById('kudos_new_campaign').value)
+                    () =>  {
+                        addCampaign(document.getElementById('kudos_new_campaign').value)
+                        setButtonDisabled(true)
+                    }
                 }
             >
                 {__('Add campaign', 'kudos-donations')}

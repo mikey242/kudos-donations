@@ -10,7 +10,6 @@ use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
-use Kudos\Service\Vendor\MollieVendor;
 
 /**
  * The public-facing functionality of the plugin.
@@ -236,12 +235,6 @@ class Front {
 				$atts = shortcode_atts(
 					[
 						'button_label'  => __( 'Donate now', 'kudos-donations' ),
-						'modal_title'   => __( 'Support us!', 'kudos-donations' ),
-						'welcome_text'  => __( 'Your support is greatly appreciated and will help to keep us going.',
-							'kudos-donations' ),
-						'amount_type'   => 'open',
-						'donation_type' => 'both',
-						'fixed_amounts' => '5, 10, 20, 50',
 						'campaign_id'   => 'default',
 						'alignment'     => 'none',
 					],
@@ -294,46 +287,32 @@ class Front {
 	 */
 	public function kudos_render_callback( array $atts ): ?string {
 
-		$messages=[];
+		// Continue only if payment API ready
 		if(self::api_ready()) {
 
 			// Set campaign according to atts
+			$campaigns = new Campaigns();
 			if ( ! empty( $atts['campaign_id'] ) ) {
-
-				$campaigns = new Campaigns();
 				$campaign = $campaigns->get_campaign( $atts['campaign_id'] );
-
-				if ( ! empty( $campaign ) ) {
-
-					// Add campaign config to atts.
-					$atts = wp_parse_args( $campaign, $atts );
-
-					// Create button and modal.
-					$button = new KudosButton( $atts );
-					$modal  = $button->get_donate_modal();
-
-					// Return only if modal and button not empty.
-					if ( ! empty( $modal ) && ! empty( $button ) ) {
-						return $button->get_button() . $modal;
-					}
-
-				} else {
-					$messages[] = 'Campaign "' . $atts['campaign_id'] . '" not found';
-				}
-			} else {
-				$messages[] = "No campaign specified";
 			}
-		} else {
-			$messages[] = sprintf(__( '%s not connected', 'kudos-donations' ), ucfirst(Settings::get_setting('payment_vendor')));
-		}
 
-		// Output error messages if any and if admin
-		if ( count( $messages ) && is_user_logged_in() && ! is_admin()  ) {
-			return implode(
-				array_map(function ($message) {
-					return "<p class='kd-my-0 kd-italic kd-text-orange-700'>Kudos - $message</p>";
-				}, $messages)
-			);
+			// Bail if no campaign found
+			if ( empty( $campaign ) ) {
+				return null;
+			}
+
+			// Add campaign config to atts
+			$atts = wp_parse_args( $campaign, $atts );
+
+			// Create button and modal.
+			$button = new KudosButton( $atts );
+			$modal  = $button->get_donate_modal();
+
+			// Return only if modal and button not empty.
+			if ( ! empty( $modal ) && ! empty( $button ) ) {
+				return $button->get_button() . $modal;
+			}
+
 		}
 
 		return null;
