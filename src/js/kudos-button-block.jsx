@@ -115,11 +115,13 @@ export default registerBlockType('iseardmedia/kudos-button', {
                             <SelectControl
                                 label={__('Select campaign', 'kudos-donations')}
                                 help={__('Select your donation form', 'kudos-donations')}
-                                value={this.props.attributes.campaign_id || null}
+                                value={
+                                    this.state.settings._kudos_campaigns.find((campaign) => this.props.attributes.campaign_id === campaign.id) ?? ''
+                                }
                                 onChange={this.onChangeCampaign}
                                 options={
                                     [{
-                                        value: null,
+                                        value: '',
                                         label: this.state.settings._kudos_campaigns && this.state.settings._kudos_campaigns.length ? __('Select a campaign', 'kudos-donations') : __('No campaigns found', 'kudos-donations'),
                                         disabled: true
                                     }].concat(

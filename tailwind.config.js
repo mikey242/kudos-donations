@@ -27,6 +27,7 @@ module.exports = {
     },
     maxWidth: {
       lg: '32em',
+      max: 'max-content'
     },
     minWidth: {
       0: '0',

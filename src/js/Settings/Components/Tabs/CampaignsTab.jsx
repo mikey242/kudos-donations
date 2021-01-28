@@ -1,7 +1,7 @@
 import {AddCampaignPanel} from "../Panels/AddCampaignPanel"
 import {CampaignPanel} from "../Panels/CampaignPanel"
 import {SettingCard} from "../SettingCard"
-import {getQueryVar, updateQueryParameter} from "../../Helpers/Util"
+import {getQueryVar} from "../../Helpers/Util"
 
 const {__} = wp.i18n
 const {useState, Fragment} = wp.element
@@ -12,13 +12,13 @@ const CampaignsTab = (props) => {
     let campaigns = props.settings._kudos_campaigns
 
     const [campaign, setCampaign] = useState(() => {
-            let index = campaigns.findIndex(element => element.id === getQueryVar('campaign_id'))
-            return index >= 0 ? index : ''
+        let index = campaigns.findIndex(element => element.id === getQueryVar('campaign_id'))
+        return index >= 0 ? index : ''
     })
 
-    const changeCampaign = (value) => {
-        setCampaign(value)
-        updateQueryParameter('campaign_id', campaigns[value].id)
+    const updateCampaign = (value) => {
+        let campaign = value >= 0 ? value : ''
+        setCampaign(campaign)
     }
 
     const addCampaign = (name) => {
@@ -34,13 +34,13 @@ const CampaignsTab = (props) => {
 
         // Save changes
         props.updateSetting('_kudos_campaigns', null, true, sprintf(__('Added campaign "%s".', 'kudos-donations'), name))
-        setCampaign(campaigns.length - 1)
+        updateCampaign(campaigns.length - 1)
     }
 
     const removeCampaign = (id) => {
         let updated = campaigns.filter(value => value.id !== id)
-        changeCampaign(campaigns.length - 2)
         props.updateSetting('_kudos_campaigns', _.uniq(updated, 'id'), true, __('Campaign deleted.', 'kudos-donations'))
+        updateCampaign(campaigns.length - 2)
     }
 
     return (
@@ -56,10 +56,10 @@ const CampaignsTab = (props) => {
 
                 <SettingCard title={__('Edit campaign:', 'kudos-donations')}>
                     <SelectControl
-                        className="kd-block"
+                        className="kd-max-w-max"
                         value={campaign}
                         onChange={(value) =>
-                            changeCampaign(value)
+                            updateCampaign(value)
                         }
                         options={
                             [{
@@ -80,7 +80,7 @@ const CampaignsTab = (props) => {
 
             <br/>
 
-            { campaign !== null && campaign !== '' ?
+            { typeof campaigns[campaign] !== 'undefined' ?
 
                 <Card>
 

@@ -29,7 +29,6 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
             <CardHeader>
                 <h3>{__('Campaign details', 'kudos-donations')}</h3>
                 <ClipboardButton
-                    className="kd-mt-5"
                     isSecondary
                     text={'[kudos campaign_id="' + campaign.id + '"]'}
                     onClick={() => setHasCopied(true)}
@@ -59,29 +58,29 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
             <CardDivider/>
 
             <SettingCard title={__('Header', 'kudos-donations')}>
-                    <TextControl
-                        id={'modal_title' + '-' + campaign.id}
-                        type={'text'}
-                        value={campaign.modal_title || ''}
-                        onChange={(value) => {
-                            campaign.modal_title = value
-                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                        }}
-                    />
+                <TextControl
+                    id={'modal_title' + '-' + campaign.id}
+                    type={'text'}
+                    value={campaign.modal_title || ''}
+                    onChange={(value) => {
+                        campaign.modal_title = value
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                    }}
+                />
             </SettingCard>
 
             <CardDivider/>
 
             <SettingCard title={__('Welcome text', 'kudos-donations')}>
-                    <TextControl
-                        id={'welcome_text' + '-' + campaign.id}
-                        type={'text'}
-                        value={campaign.welcome_text || ''}
-                        onChange={(value) => {
-                            campaign.welcome_text = value
-                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                        }}
-                    />
+                <TextControl
+                    id={'welcome_text' + '-' + campaign.id}
+                    type={'text'}
+                    value={campaign.welcome_text || ''}
+                    onChange={(value) => {
+                        campaign.welcome_text = value
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                    }}
+                />
             </SettingCard>
 
             <CardDivider/>
@@ -184,9 +183,8 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                     : ''}
             </SettingCard>
 
-            <CardFooter>
-                {allowDelete ?
-
+            {allowDelete ?
+                <CardFooter>
                     <Button
                         isLink
                         isSmall
@@ -196,11 +194,10 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                             }
                         }
                     >
-                        {__('Delete campaign', 'kudos-donations')}
+                        {__('Delete campaign:', 'kudos-donations') + " " + campaign.name}
                     </Button>
-
-                    : ''}
-            </CardFooter>
+                </CardFooter>
+                : ''}
         </div>
     )
 }

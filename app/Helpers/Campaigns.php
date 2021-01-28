@@ -23,7 +23,7 @@ class Campaigns {
 	 * @return array
 	 * @since 2.3.0
 	 */
-	public static function sanitize_campaigns( $campaigns ): array {
+	public function sanitize_campaigns( $campaigns ): array {
 
 		//Define the array for the updated options
 		$output = [];
@@ -32,12 +32,7 @@ class Campaigns {
 		foreach ( $campaigns as $key => $form ) {
 
 			if ( ! array_search( 'id', $form ) ) {
-				$campaigns            = new Campaigns();
-				if(count($campaigns->get_all())) {
-					$output[ $key ]['id'] = $campaigns->generate_id( $form['name'] );
-				} else {
-					$output[ $key ]['id'] = 'default';
-				}
+				$output[ $key ]['id'] = $this->generate_id( $form['name'] );
 			}
 
 			foreach ( $form as $option => $value ) {
@@ -117,7 +112,7 @@ class Campaigns {
 	/**
 	 * Gets the campaign by specified column (e.g slug)
 	 *
-	 * @param string $value
+	 * @param string|null $value
 	 *
 	 * @return array|null
 	 * @since 2.3.0
@@ -125,7 +120,7 @@ class Campaigns {
 	public function get_campaign( ?string $value ): ?array {
 
 		$campaigns = $this->campaigns;
-		$key       = array_search( $value, array_column( $campaigns, 'id' ) );
+		$key       = array_search( $value, array_column( (array)$campaigns, 'id' ) );
 
 		// Check if key is an index and if so return index from forms
 		if ( is_int( $key ) ) {
