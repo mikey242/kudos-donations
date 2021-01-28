@@ -7,7 +7,6 @@ const {
     BaseControl,
     Button,
     CardDivider,
-    CardHeader,
     CardFooter,
     CheckboxControl,
     ClipboardButton,
@@ -26,18 +25,6 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
     return (
         <div id={"campaign-" + campaign.id}>
-            <CardHeader>
-                <h3>{__('Campaign details', 'kudos-donations')}</h3>
-                <ClipboardButton
-                    isSecondary
-                    text={'[kudos campaign_id="' + campaign.id + '"]'}
-                    onClick={() => setHasCopied(true)}
-                    onCopy={() => setHasCopied(true)}
-                    onFinishCopy={() => setHasCopied(false)}
-                >
-                    {hasCopied ? __('Copied!', 'kudos-donations') : __('Copy Shortcode', 'kudos-donations')}
-                </ClipboardButton>
-            </CardHeader>
             <SettingCard title={__('Name', 'kudos-donations')}>
 
                 <BaseControl
@@ -183,21 +170,33 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                     : ''}
             </SettingCard>
 
-            {allowDelete ?
+
                 <CardFooter>
-                    <Button
-                        isLink
-                        isSmall
-                        onClick={
-                            () => {
-                                if (window.confirm(__('Are you sure you wish to delete this campaign?', 'kudos-donations'))) removeCampaign(campaign.id)
-                            }
-                        }
+                    <ClipboardButton
+                        isSecondary
+                        text={'[kudos campaign_id="' + campaign.id + '"]'}
+                        onClick={() => setHasCopied(true)}
+                        onCopy={() => setHasCopied(true)}
+                        onFinishCopy={() => setHasCopied(false)}
                     >
-                        {__('Delete campaign:', 'kudos-donations') + " " + campaign.name}
-                    </Button>
+                        {hasCopied ? __('Copied!', 'kudos-donations') : __('Copy Shortcode', 'kudos-donations')}
+                    </ClipboardButton>
+
+                    {allowDelete ?
+                        <Button
+                            isLink
+                            isSmall
+                            onClick={
+                                () => {
+                                    if (window.confirm(__('Are you sure you wish to delete this campaign?', 'kudos-donations'))) removeCampaign(campaign.id)
+                                }
+                            }
+                        >
+                            {__('Delete campaign:', 'kudos-donations') + " " + campaign.name}
+                        </Button>
+                    : ''}
+
                 </CardFooter>
-                : ''}
         </div>
     )
 }

@@ -1,11 +1,10 @@
 import {AddCampaignPanel} from "../Panels/AddCampaignPanel"
 import {CampaignPanel} from "../Panels/CampaignPanel"
-import {SettingCard} from "../SettingCard"
 import {getQueryVar} from "../../Helpers/Util"
 
 const {__} = wp.i18n
 const {useState, Fragment} = wp.element
-const {Card, CardDivider, SelectControl} = wp.components
+const {Card, CardHeader, CardDivider, SelectControl} = wp.components
 
 const CampaignsTab = (props) => {
 
@@ -53,36 +52,41 @@ const CampaignsTab = (props) => {
                 />
 
                 <CardDivider/>
-
-                <SettingCard title={__('Edit campaign:', 'kudos-donations')}>
-                    <SelectControl
-                        className="kd-max-w-max"
-                        value={campaign}
-                        onChange={(value) =>
-                            updateCampaign(value)
-                        }
-                        options={
-                            [{
-                                value: '',
-                                label: __('Select a campaign', 'kudos-donations'),
-                                disabled: true
-                            }].concat(
-                            campaigns.map((campaign, i) => {
-                                return {
-                                    value: i, label: campaign.name
-                                }
-                            })
-                            )
-                        }
-                    />
-                </SettingCard>
             </Card>
 
             <br/>
 
-            { typeof campaigns[campaign] !== 'undefined' ?
-
                 <Card>
+
+                    <CardHeader>
+                        <h3>{__('Campaign details', 'kudos-donations')}</h3>
+                        <div className="kudos-campaign-selector">
+                        <SelectControl
+                            label={__('Select a campaign:', 'kudos-donations')}
+                            labelPosition="side"
+                            value={campaign}
+                            onChange={(value) =>
+                                updateCampaign(value)
+                            }
+                            options={
+                                [{
+                                    value: '',
+                                    label: __('Select a campaign', 'kudos-donations'),
+                                    disabled: true
+                                }].concat(
+                                    campaigns.map((campaign, i) => {
+                                        return {
+                                            value: i, label: campaign.name
+                                        }
+                                    })
+                                )
+                            }
+                        />
+                        </div>
+
+                    </CardHeader>
+
+                    { typeof campaigns[campaign] !== 'undefined' ?
 
                     <CampaignPanel
                         allowDelete={!campaigns[campaign].protected}
@@ -92,9 +96,9 @@ const CampaignsTab = (props) => {
                         handleInputChange={props.handleInputChange}
                     />
 
-                </Card>
+                    : null}
 
-            : null}
+                </Card>
 
         </Fragment>
     )
