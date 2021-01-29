@@ -1,4 +1,4 @@
-import {AddCampaignPanel} from "../Panels/AddCampaignPanel"
+import {NewCampaignPanel} from "../Panels/NewCampaignPanel"
 import {CampaignPanel} from "../Panels/CampaignPanel"
 import {getQueryVar} from "../../Helpers/Util"
 
@@ -21,7 +21,7 @@ const CampaignsTab = (props) => {
     }
 
     const addCampaign = (name) => {
-        // Add new campaign with defaults
+        // Add new campaign with defaults. Slug is generated server-side in sanitize callback.
         campaigns.push({
             name: name,
             modal_title: __('Support us!', 'kudos-donations'),
@@ -37,7 +37,10 @@ const CampaignsTab = (props) => {
     }
 
     const removeCampaign = (id) => {
+        // Remove where id = provided is
         let updated = campaigns.filter(value => value.id !== id)
+
+        // Save changes
         props.updateSetting('_kudos_campaigns', _.uniq(updated, 'id'), true, __('Campaign deleted.', 'kudos-donations'))
         updateCampaign(campaigns.length - 2)
     }
@@ -45,7 +48,7 @@ const CampaignsTab = (props) => {
     return (
         <Fragment>
             <Card>
-                <AddCampaignPanel
+                <NewCampaignPanel
                     settings={props.settings}
                     handleInputChange={props.handleInputChange}
                     addCampaign={addCampaign}
