@@ -1,3 +1,4 @@
+import logo from '../img/logo-colour.svg'
 /**
  * Internal block libraries
  */
@@ -7,7 +8,6 @@ const {registerBlockType} = wp.blocks
 const {
     PanelBody,
     SelectControl,
-    Spinner
 } = wp.components
 const {
     RichText,
@@ -15,8 +15,6 @@ const {
     AlignmentToolbar,
     InspectorControls,
 } = wp.blockEditor
-
-import logo from '../img/logo-colour.svg'
 
 /**
  * Register block
@@ -55,28 +53,20 @@ export default registerBlockType('iseardmedia/kudos-button', {
             this.onChangeAlignment = this.onChangeAlignment.bind(this)
             this.onChangeCampaign = this.onChangeCampaign.bind(this)
             this.state = {
-                settings: {},
-                isAPILoaded: false,
+                campaigns:
+                    [{
+                        value: '',
+                        label: '',
+                        disabled: true
+                    }]
+
+                ,
+                selectedCampaign: ''
             }
         }
 
         componentDidMount() {
-            if (false === this.state.isAPILoaded) {
-                this.getSettings()
-            }
-        }
-
-        getSettings() {
-            wp.api.loadPromise.then(() => {
-                this.settings = new wp.api.models.Settings()
-                this.settings.fetch().then((response) => {
-                    this.setState({
-                        settings: {...response},
-                        isAPILoaded: true,
-                        showNotice: false,
-                    })
-                })
-            })
+            this.getCampaigns()
         }
 
         onChangeButtonLabel(newValue) {
@@ -91,16 +81,28 @@ export default registerBlockType('iseardmedia/kudos-button', {
 
         onChangeCampaign(newValue) {
             this.props.setAttributes({campaign_id: newValue})
+            this.setState({
+                selectedCampaign: newValue
+            })
+        };
+
+        getCampaignName(value) {
+            let campaign = this.state.campaigns.find(campaign => campaign.value === value)
+            return campaign ? campaign.value ? campaign.label : '' : 'Unknown (' + value + ')'
+        }
+
+        getCampaigns() {
+             wp.api.loadPromise.then(() => {
+                 new wp.api.models.Settings().fetch().then((response) => {
+                     let options = response._kudos_campaigns.map(campaign => ({value: campaign.id, label: campaign.name}))
+                     this.setState({
+                         campaigns: [...this.state.campaigns,...options],
+                     })
+                })
+            })
         };
 
         render() {
-
-            // Show spinner if not yet loaded
-            if (!this.state.isAPILoaded) {
-                return (
-                    <Spinner/>
-                )
-            }
 
             return (
 
@@ -111,28 +113,13 @@ export default registerBlockType('iseardmedia/kudos-button', {
                             title={__('Campaign', 'kudos-donations')}
                             initialOpen={false}
                         >
-
+                            <p><strong>Current campaign: {this.getCampaignName(this.props.attributes.campaign_id)}</strong></p>
                             <SelectControl
-                                label={__('Select campaign', 'kudos-donations')}
-                                help={__('Select your donation form', 'kudos-donations')}
-                                value={
-                                    this.state.settings._kudos_campaigns.find((campaign) => this.props.attributes.campaign_id === campaign.id) ?? ''
-                                }
+                                label={__('Select a campaign', 'kudos-donations')}
+                                value={ this.state.selectedCampaign }
                                 onChange={this.onChangeCampaign}
-                                options={
-                                    [{
-                                        value: '',
-                                        label: this.state.settings._kudos_campaigns && this.state.settings._kudos_campaigns.length ? __('Select a campaign', 'kudos-donations') : __('No campaigns found', 'kudos-donations'),
-                                        disabled: true
-                                    }].concat(
-                                        Object.values(this.state.settings._kudos_campaigns).map(value => {
-                                            return {
-                                                label: value.name, value: value.id, disabled: false
-                                            }
-                                        }))
-                                }
+                                options={ this.state.campaigns }
                             />
-
                             <a href="admin.php?page=kudos-settings&tab_name=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
 
                         </PanelBody>
@@ -171,7 +158,7 @@ export default registerBlockType('iseardmedia/kudos-button', {
     },
 
     // Defining the front-end interface
-    save: (e) => {
+    save: () => {
         return null
     },
 })
