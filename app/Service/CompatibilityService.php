@@ -10,7 +10,7 @@ class CompatibilityService {
 	 * @var string
 	 * @since 2.0.0
 	 */
-	public $required_wp_version = '5.4';
+	public $required_wp_version = '5.5';
 
 	/**
 	 * The plugin's required PHP version
@@ -97,15 +97,13 @@ class CompatibilityService {
 		/* Check PHP version is compatible */
 		if ( ! version_compare( phpversion(), $this->required_php_version, '>=' ) ) {
 			/* translators:
-				%1$s: Opening link tag.
-				%2$s: Closing link tag.
-				%3$s: Current PHP version.
-				%4$s: Required PHP version.
+				%1$s: Support URL.
+				%2$s: Current PHP version.
+				%3$s: Required PHP version.
 			*/
-			$this->notices[] = sprintf( esc_html__( 'You are running an %1$soutdated version of PHP%2$s (%3$s). Kudos Donations requires at least PHP %4$s to work. Contact your web hosting provider to update.',
+			$this->notices[] = sprintf( __( 'You are running an <a href="%1$s">outdated version of PHP</a> (%2$s). Kudos Donations requires at least PHP %3$s to work. Contact your web hosting provider to update.',
 				'kudos-donations' ),
-				'<a href="https://wordpress.org/support/update-php/">',
-				'</a>',
+				"https://wordpress.org/support/update-php/",
 				phpversion(),
 				$this->required_php_version );
 
