@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-03 15:01+0100\n"
-"PO-Revision-Date: 2021-01-03 15:01+0100\n"
+"POT-Creation-Date: 2021-01-29 17:05+0100\n"
+"PO-Revision-Date: 2021-01-29 17:05+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -25,85 +25,89 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-2: docker\n"
 "X-Poedit-SearchPathExcluded-3: src\n"
 
-#: app/Admin/Admin.php:146 app/Admin/Admin.php:147
-#: dist/js/kudos-button-block.js:1
+#: app/Admin/Admin.php:80 dist/js/kudos-button-block.js:1
 msgid "Kudos"
 msgstr "Kudos"
 
+#: app/Admin/Admin.php:81 app/Admin/Table/DonorsTable.php:103
+msgid "Donations"
+msgstr "Donaties"
+
+#: app/Admin/Admin.php:93
+msgid "Kudos Settings"
+msgstr "Kudos Instellingen"
+
+#: app/Admin/Admin.php:94
+msgid "Settings"
+msgstr "Instellingen"
+
 #. translators: %s: Plugin name
-#: app/Admin/Admin.php:160
+#: app/Admin/Admin.php:106
 #, php-format
 msgid "%s Transactions"
 msgstr "%s Transacties"
 
-#: app/Admin/Admin.php:161 app/Admin/Table/CampaignsTable.php:133
-#: app/Admin/Table/TransactionsTable.php:53
+#: app/Admin/Admin.php:107 app/Admin/Table/CampaignsTable.php:137
+#: app/Admin/Table/TransactionsTable.php:60
 #: app/Admin/partials/kudos-admin-transactions.php:34
 msgid "Transactions"
 msgstr "Transacties"
 
 #. translators: %s: Plugin name
-#: app/Admin/Admin.php:174
+#: app/Admin/Admin.php:121
 #, php-format
 msgid "%s Subscriptions"
 msgstr "%s abonnementen"
 
-#: app/Admin/Admin.php:175 app/Admin/Table/SubscriptionsTable.php:52
+#: app/Admin/Admin.php:122 app/Admin/Table/SubscriptionsTable.php:52
 #: app/Admin/partials/kudos-admin-subscriptions.php:42
 msgid "Subscriptions"
 msgstr "Abonnementen"
 
 #. translators: %s: Plugin name
-#: app/Admin/Admin.php:188
+#: app/Admin/Admin.php:136
 #, php-format
 msgid "%s Donors"
 msgstr "%s Donateurs"
 
-#: app/Admin/Admin.php:189 app/Admin/Table/DonorsTable.php:52
+#: app/Admin/Admin.php:137 app/Admin/Table/DonorsTable.php:52
 #: app/Admin/partials/kudos-admin-donors.php:29
 msgid "Donors"
 msgstr "Donateurs"
 
 #. translators: %s: Plugin name
-#: app/Admin/Admin.php:202
+#: app/Admin/Admin.php:150
 #, php-format
 msgid "%s Campaigns"
 msgstr "%s Campagnes"
 
-#: app/Admin/Admin.php:203 app/Admin/Table/CampaignsTable.php:47
+#: app/Admin/Admin.php:151 app/Admin/Table/CampaignsTable.php:51
 #: app/Admin/partials/kudos-admin-campaigns.php:32
+#: dist/js/kudos-admin-settings.js:1
 msgid "Campaigns"
 msgstr "Campagnes"
 
-#: app/Admin/Admin.php:215 dist/js/kudos-admin-settings.js:1
-msgid "Kudos Settings"
-msgstr "Kudos Instellingen"
-
-#: app/Admin/Admin.php:216
-msgid "Settings"
-msgstr "Instellingen"
-
-#: app/Admin/Admin.php:244
+#: app/Admin/Admin.php:181
 msgid "Are you sure?"
 msgstr "Weet je het zeker?"
 
-#: app/Admin/Admin.php:316
+#: app/Admin/Admin.php:252
 msgid "Are you sure you want to delete this transaction?"
 msgstr "Weet je zeker dat je deze transactie wilt verwijderen?"
 
-#: app/Admin/Admin.php:353
+#: app/Admin/Admin.php:289
 msgid "Are you sure you want to cancel this subscription?"
 msgstr "Weet je zeker dat je je abonnement wilt opzeggen?"
 
-#: app/Admin/Admin.php:354
+#: app/Admin/Admin.php:290
 msgid "Are you sure you want to delete this subscription?"
 msgstr "Weet je zeker dat je dit abonnement wilt verwijderen?"
 
-#: app/Admin/Admin.php:372
+#: app/Admin/Admin.php:308
 msgid "Are you sure you want to delete this donor?"
 msgstr "Weet je zeker dat je deze donateur wilt verwijderen?"
 
-#: app/Admin/Admin.php:391
+#: app/Admin/Admin.php:327
 msgid ""
 "Are you sure you want to delete this campaign? This will not remove any "
 "transactions"
@@ -111,17 +115,17 @@ msgstr ""
 "Weet je zeker dat je deze campagne wilt verwijderen? Dit zal geen "
 "transacties verwijderen"
 
-#: app/Admin/Admin.php:424
+#: app/Admin/Admin.php:360
 msgid "Log cleared"
 msgstr "Log gewist"
 
-#: app/Admin/Admin.php:438
+#: app/Admin/Admin.php:374
 msgid "Cache cleared"
 msgstr "Cache gewist"
 
 #. translators: %s: Number of records.
 #. translators: %s: Number of records
-#: app/Admin/Admin.php:449 app/Admin/partials/kudos-admin-transactions.php:24
+#: app/Admin/Admin.php:385 app/Admin/partials/kudos-admin-transactions.php:24
 #, php-format
 msgid "Deleted %s transaction"
 msgid_plural "Deleted %s transactions"
@@ -130,7 +134,7 @@ msgstr[1] "%s transacties verwijderd"
 
 #. translators: %s: Number of records.
 #. translators: %s: Number of records
-#: app/Admin/Admin.php:464 app/Admin/partials/kudos-admin-donors.php:23
+#: app/Admin/Admin.php:400 app/Admin/partials/kudos-admin-donors.php:23
 #, php-format
 msgid "Deleted %s donor"
 msgid_plural "Deleted %s donors"
@@ -139,107 +143,97 @@ msgstr[1] "%s donateurs verwijderd"
 
 #. translators: %s: Number of records.
 #. translators: %s: Number of records
-#: app/Admin/Admin.php:478 app/Admin/partials/kudos-admin-subscriptions.php:34
+#: app/Admin/Admin.php:414 app/Admin/partials/kudos-admin-subscriptions.php:34
 #, php-format
 msgid "Deleted %s subscription"
 msgid_plural "Deleted %s subscriptions"
 msgstr[0] "%s abonnement verwijderd"
 msgstr[1] "%s abonnementen verwijderd"
 
-#: app/Admin/Admin.php:494 app/Admin/partials/kudos-admin-subscriptions.php:19
-#: app/Front/Front.php:501
+#: app/Admin/Admin.php:430 app/Admin/partials/kudos-admin-subscriptions.php:19
+#: app/Front/Front.php:375
 msgid "Subscription cancelled"
 msgstr "Abonnement geannuleerd"
 
-#: app/Admin/Admin.php:501
-msgid "Campaign labels updated"
-msgstr "Campagnelabels bijgewerkt"
-
-#: app/Admin/Admin.php:503
-msgid "No additional campaigns found"
-msgstr "Geen extra campagnes gevonden"
-
-#: app/Admin/Admin.php:513
+#: app/Admin/Admin.php:446
 msgid "Database re-created"
 msgstr "Database opnieuw gemaakt"
 
-#: app/Admin/Table/CampaignsTable.php:33 app/Admin/Table/CampaignsTable.php:132
-msgid "Label"
-msgstr "Label"
-
-#: app/Admin/Table/CampaignsTable.php:37 app/Admin/Table/DonorsTable.php:33
-#: app/Admin/Table/DonorsTable.php:40 app/Admin/Table/DonorsTable.php:101
+#: app/Admin/Table/CampaignsTable.php:38 app/Admin/Table/CampaignsTable.php:136
+#: app/Admin/Table/DonorsTable.php:33 app/Admin/Table/DonorsTable.php:40
+#: app/Admin/Table/DonorsTable.php:101
 #: app/Admin/Table/SubscriptionsTable.php:32
 #: app/Admin/Table/SubscriptionsTable.php:39
 #: app/Admin/Table/SubscriptionsTable.php:126
-#: app/Admin/Table/TransactionsTable.php:31
-#: app/Admin/Table/TransactionsTable.php:42
-#: app/Admin/Table/TransactionsTable.php:126 templates/lang.php:21
-#: templates/lang.php:43
+#: app/Admin/Table/TransactionsTable.php:37
+#: app/Admin/Table/TransactionsTable.php:49
+#: app/Admin/Table/TransactionsTable.php:133 dist/js/kudos-admin-settings.js:1
+#: templates/lang.php:21 templates/lang.php:43
 msgid "Name"
 msgstr "Naam"
 
-#: app/Admin/Table/CampaignsTable.php:38 app/Admin/Table/DonorsTable.php:34
+#: app/Admin/Table/CampaignsTable.php:42 app/Admin/Table/DonorsTable.php:34
 #: app/Admin/Table/DonorsTable.php:41 app/Admin/Table/SubscriptionsTable.php:33
 #: app/Admin/Table/SubscriptionsTable.php:40
-#: app/Admin/Table/TransactionsTable.php:32
-#: app/Admin/Table/TransactionsTable.php:43 dist/js/kudos-admin-settings.js:1
+#: app/Admin/Table/TransactionsTable.php:38
+#: app/Admin/Table/TransactionsTable.php:50 dist/js/kudos-admin-settings.js:1
 msgid "Email"
 msgstr "E-mail"
 
-#: app/Admin/Table/CampaignsTable.php:39 app/Admin/Table/DonorsTable.php:42
+#: app/Admin/Table/CampaignsTable.php:43 app/Admin/Table/DonorsTable.php:42
 #: templates/lang.php:37
 msgid "Street"
 msgstr "Straat"
 
-#: app/Admin/Table/CampaignsTable.php:40 app/Admin/Table/CampaignsTable.php:134
+#: app/Admin/Table/CampaignsTable.php:44 app/Admin/Table/CampaignsTable.php:138
 #: templates/lang.php:13
 msgid "Total"
 msgstr "Totaal"
 
-#: app/Admin/Table/CampaignsTable.php:46
-#: app/Admin/Table/TransactionsTable.php:133 dist/js/kudos-button-block.js:1
+#: app/Admin/Table/CampaignsTable.php:50
+#: app/Admin/Table/TransactionsTable.php:39
+#: app/Admin/Table/TransactionsTable.php:140 dist/js/kudos-button-block.js:1
 msgid "Campaign"
 msgstr "Campagne"
 
-#: app/Admin/Table/CampaignsTable.php:62 app/Admin/Table/DonorsTable.php:67
+#: app/Admin/Table/CampaignsTable.php:66 app/Admin/Table/DonorsTable.php:67
 #: app/Admin/Table/SubscriptionsTable.php:67
-#: app/Admin/Table/TransactionsTable.php:68
+#: app/Admin/Table/TransactionsTable.php:75
 msgid "Search"
 msgstr "Zoeken"
 
-#: app/Admin/Table/CampaignsTable.php:131 app/Admin/Table/DonorsTable.php:104
+#: app/Admin/Table/CampaignsTable.php:135 app/Admin/Table/DonorsTable.php:104
 #: app/Admin/Table/SubscriptionsTable.php:38
 #: app/Admin/Table/SubscriptionsTable.php:123
-#: app/Admin/Table/TransactionsTable.php:125 templates/lang.php:10
+#: app/Admin/Table/TransactionsTable.php:132 templates/lang.php:10
 msgid "Date"
 msgstr "Datum"
 
-#: app/Admin/Table/CampaignsTable.php:135
+#: app/Admin/Table/CampaignsTable.php:139
 msgid "Last Donation"
 msgstr "Laatste donatie"
 
-#: app/Admin/Table/CampaignsTable.php:271
-#: app/Admin/Table/CampaignsTable.php:353 app/Admin/Table/DonorsTable.php:249
-#: app/Admin/Table/DonorsTable.php:326
-#: app/Admin/Table/SubscriptionsTable.php:320
-#: app/Admin/Table/SubscriptionsTable.php:440
-#: app/Admin/Table/TransactionsTable.php:278
-#: app/Admin/Table/TransactionsTable.php:462
-msgid "Delete"
-msgstr "Verwijderen"
-
-#: app/Admin/Table/CampaignsTable.php:275 app/Admin/Table/DonorsTable.php:220
+#: app/Admin/Table/CampaignsTable.php:205 app/Admin/Table/DonorsTable.php:220
 msgid "Added"
 msgstr "Toegevoegd"
+
+#: app/Admin/Table/CampaignsTable.php:230
+msgid "Edit"
+msgstr ""
+
+#: app/Admin/Table/CampaignsTable.php:285
+#, fuzzy
+#| msgid "None"
+msgid "None yet"
+msgstr "Geen"
 
 #: app/Admin/Table/DonorsTable.php:35 app/Admin/Table/DonorsTable.php:102
 #: templates/lang.php:34
 msgid "Address"
 msgstr "Adres"
 
-#: app/Admin/Table/DonorsTable.php:36 app/Admin/Table/TransactionsTable.php:33
-#: app/Admin/Table/TransactionsTable.php:131 templates/lang.php:9
+#: app/Admin/Table/DonorsTable.php:36 app/Admin/Table/TransactionsTable.php:40
+#: app/Admin/Table/TransactionsTable.php:138 templates/lang.php:9
 msgid "Order ID"
 msgstr "Order ID"
 
@@ -261,13 +255,17 @@ msgstr "Donateur"
 
 #: app/Admin/Table/DonorsTable.php:100
 #: app/Admin/Table/SubscriptionsTable.php:127
-#: app/Admin/Table/TransactionsTable.php:127
+#: app/Admin/Table/TransactionsTable.php:134
 msgid "E-mail"
 msgstr "E-mail"
 
-#: app/Admin/Table/DonorsTable.php:103
-msgid "Donations"
-msgstr "Donaties"
+#: app/Admin/Table/DonorsTable.php:251 app/Admin/Table/DonorsTable.php:328
+#: app/Admin/Table/SubscriptionsTable.php:326
+#: app/Admin/Table/SubscriptionsTable.php:446
+#: app/Admin/Table/TransactionsTable.php:285
+#: app/Admin/Table/TransactionsTable.php:479
+msgid "Delete"
+msgstr "Verwijderen"
 
 #: app/Admin/Table/SubscriptionsTable.php:34
 #: app/Admin/Table/SubscriptionsTable.php:43
@@ -277,16 +275,16 @@ msgstr "Frequentie"
 
 #: app/Admin/Table/SubscriptionsTable.php:41
 #: app/Admin/Table/SubscriptionsTable.php:128
-#: app/Admin/Table/TransactionsTable.php:39
-#: app/Admin/Table/TransactionsTable.php:128 templates/lang.php:12
+#: app/Admin/Table/TransactionsTable.php:46
+#: app/Admin/Table/TransactionsTable.php:135 templates/lang.php:12
 #: templates/lang.php:20 templates/lang.php:44
 msgid "Amount"
 msgstr "Bedrag"
 
 #: app/Admin/Table/SubscriptionsTable.php:42
 #: app/Admin/Table/SubscriptionsTable.php:129
-#: app/Admin/Table/TransactionsTable.php:41
-#: app/Admin/Table/TransactionsTable.php:130
+#: app/Admin/Table/TransactionsTable.php:48
+#: app/Admin/Table/TransactionsTable.php:137
 msgid "Status"
 msgstr "Status"
 
@@ -296,11 +294,11 @@ msgid "Years"
 msgstr "Jaren"
 
 #: app/Admin/Table/SubscriptionsTable.php:45
-#: app/Admin/Table/TransactionsTable.php:38
+#: app/Admin/Table/TransactionsTable.php:45
 msgid "Currency"
 msgstr "Valuta"
 
-#: app/Admin/Table/SubscriptionsTable.php:51 dist/js/kudos-button-block.js:1
+#: app/Admin/Table/SubscriptionsTable.php:51 dist/js/kudos-admin-settings.js:1
 #: templates/lang.php:25
 msgid "Subscription"
 msgstr "Abonnement"
@@ -309,41 +307,41 @@ msgstr "Abonnement"
 msgid "Subscription Id"
 msgstr "Abonnement Id"
 
-#: app/Admin/Table/SubscriptionsTable.php:311
-#: app/Admin/Table/SubscriptionsTable.php:439 templates/lang.php:54
+#: app/Admin/Table/SubscriptionsTable.php:316
+#: app/Admin/Table/SubscriptionsTable.php:445 templates/lang.php:54
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: app/Admin/Table/SubscriptionsTable.php:349 templates/lang.php:31
+#: app/Admin/Table/SubscriptionsTable.php:355 templates/lang.php:31
 msgid "Continuous"
 msgstr "Doorlopend"
 
-#: app/Admin/Table/SubscriptionsTable.php:419
+#: app/Admin/Table/SubscriptionsTable.php:425
 msgid "Active"
 msgstr "Actief"
 
-#: app/Admin/Table/SubscriptionsTable.php:422
-#: app/Admin/Table/TransactionsTable.php:407
-#: app/Admin/Table/TransactionsTable.php:503
+#: app/Admin/Table/SubscriptionsTable.php:428
+#: app/Admin/Table/TransactionsTable.php:414
+#: app/Admin/Table/TransactionsTable.php:520
 msgid "Cancelled"
 msgstr "Geannuleerd"
 
-#: app/Admin/Table/SubscriptionsTable.php:458
-#: app/Admin/Table/TransactionsTable.php:485
+#: app/Admin/Table/SubscriptionsTable.php:464
+#: app/Admin/Table/TransactionsTable.php:502
 msgid "All"
 msgstr "Alles"
 
-#: app/Admin/Table/SubscriptionsTable.php:464 app/Helpers/Utils.php:160
+#: app/Admin/Table/SubscriptionsTable.php:470 app/Helpers/Utils.php:160
 #: templates/lang.php:28
 msgid "Yearly"
 msgstr "Jaarlijks"
 
-#: app/Admin/Table/SubscriptionsTable.php:470 app/Helpers/Utils.php:164
+#: app/Admin/Table/SubscriptionsTable.php:476 app/Helpers/Utils.php:164
 #: templates/lang.php:29
 msgid "Quarterly"
 msgstr "Kwartaal"
 
-#: app/Admin/Table/SubscriptionsTable.php:477 app/Helpers/Utils.php:162
+#: app/Admin/Table/SubscriptionsTable.php:483 app/Helpers/Utils.php:162
 #: templates/lang.php:30
 msgid "Monthly"
 msgstr "Maandelijks"
@@ -362,56 +360,56 @@ msgstr "Zoekveld selecteren"
 msgid "Search field"
 msgstr "Zoek veld"
 
-#: app/Admin/Table/TransactionsTable.php:37
+#: app/Admin/Table/TransactionsTable.php:44
 msgid "Transaction created"
 msgstr "Transactie aangemaakt"
 
-#: app/Admin/Table/TransactionsTable.php:40
+#: app/Admin/Table/TransactionsTable.php:47
+#: app/Admin/Table/TransactionsTable.php:424
 msgid "Refunded"
 msgstr "Terugbetaald"
 
-#: app/Admin/Table/TransactionsTable.php:44
+#: app/Admin/Table/TransactionsTable.php:51
 msgid "Method"
 msgstr "Methode"
 
-#: app/Admin/Table/TransactionsTable.php:45 dist/js/kudos-admin-settings.js:1
+#: app/Admin/Table/TransactionsTable.php:52 dist/js/kudos-admin-settings.js:1
 msgid "Mode"
 msgstr "Status"
 
-#: app/Admin/Table/TransactionsTable.php:46
-#: app/Admin/Table/TransactionsTable.php:129 dist/js/kudos-button-block.js:1
-#: templates/lang.php:45
+#: app/Admin/Table/TransactionsTable.php:53
+#: app/Admin/Table/TransactionsTable.php:136 templates/lang.php:45
 msgid "Type"
 msgstr "Type"
 
-#: app/Admin/Table/TransactionsTable.php:52
+#: app/Admin/Table/TransactionsTable.php:59
 msgid "Transaction"
 msgstr "Transactie"
 
-#: app/Admin/Table/TransactionsTable.php:132
+#: app/Admin/Table/TransactionsTable.php:139
 msgid "Transaction Id"
 msgstr "Transactie Id"
 
-#: app/Admin/Table/TransactionsTable.php:398
-#: app/Admin/Table/TransactionsTable.php:491
+#: app/Admin/Table/TransactionsTable.php:405
+#: app/Admin/Table/TransactionsTable.php:508
 msgid "Paid"
 msgstr "Betaald"
 
-#: app/Admin/Table/TransactionsTable.php:401
-#: app/Admin/Table/TransactionsTable.php:497 dist/js/kudos-button-block.js:1
+#: app/Admin/Table/TransactionsTable.php:408
+#: app/Admin/Table/TransactionsTable.php:514 dist/js/kudos-admin-settings.js:1
 msgid "Open"
 msgstr "Eigen keuze"
 
-#: app/Admin/Table/TransactionsTable.php:404
-#: app/Admin/Table/TransactionsTable.php:510
+#: app/Admin/Table/TransactionsTable.php:411
+#: app/Admin/Table/TransactionsTable.php:527
 msgid "Expired"
 msgstr "Niet meer geldig"
 
-#: app/Admin/Table/TransactionsTable.php:410
+#: app/Admin/Table/TransactionsTable.php:417
 msgid "Failed"
 msgstr "Mislukt"
 
-#: app/Admin/Table/TransactionsTable.php:413
+#: app/Admin/Table/TransactionsTable.php:420
 msgid "Unknown"
 msgstr "Onbekend"
 
@@ -430,6 +428,7 @@ msgstr[1] "%s campagnes verwijderd"
 #. translators: %s: Search term
 #: app/Admin/partials/kudos-admin-campaigns.php:37
 #: app/Admin/partials/kudos-admin-donors.php:34
+#: app/Admin/partials/kudos-admin-subscriptions.php:47
 #: app/Admin/partials/kudos-admin-transactions.php:39
 #, php-format
 msgid "Search results for “%s”"
@@ -455,36 +454,11 @@ msgstr[1] "%s abonnementen geannuleerd"
 msgid "Transaction deleted"
 msgstr "Transactie verwijderd"
 
-#: app/Front/Front.php:227
-msgid "Form data not found"
-msgstr "Formuliergegevens niet gevonden"
-
-#: app/Front/Front.php:233
-msgid "Request invalid."
-msgstr "Verzoek is ongeldig."
-
-#: app/Front/Front.php:297
-msgid "Error creating Mollie payment. Please try again later."
-msgstr "Fout bij het maken van een Mollie-betaling. Probeer het later opnieuw."
-
-#: app/Front/Front.php:325 app/Front/Front.php:352
+#: app/Front/Front.php:237 app/Front/Front.php:258
 msgid "Donate now"
 msgstr "Doneer nu"
 
-#: app/Front/Front.php:326 app/Front/Front.php:364
-msgid "Support us!"
-msgstr "Steun ons!"
-
-#: app/Front/Front.php:327 app/Front/Front.php:368
-msgid "Your support is greatly appreciated and will help to keep us going."
-msgstr ""
-"Jouw support wordt zeer gewaardeerd en helpt ons om een verschil te maken."
-
-#: app/Front/Front.php:424
-msgid "Mollie not connected"
-msgstr "Mollie niet gekoppeld"
-
-#: app/Front/Front.php:502
+#: app/Front/Front.php:376
 msgid ""
 "We will no longer be taking payments for this subscription. Thank you for "
 "your contributions."
@@ -492,29 +466,38 @@ msgstr ""
 "Geen betalingen worden meer verwerkt als onderdeel van dit abonnement. "
 "Bedankt voor je bijdrage."
 
-#: app/Front/Front.php:513
+#: app/Front/Front.php:387
 msgid "Link expired"
 msgstr "Koppeling verlopen"
 
-#: app/Front/Front.php:514
+#: app/Front/Front.php:388
 msgid "Sorry, this link is no longer valid."
 msgstr "Deze link is niet langer geldig."
 
-#: app/Front/Front.php:557
+#: app/Front/Front.php:436
 msgid "Payment cancelled"
 msgstr "Betaling geannuleerd"
 
-#: app/Front/Front.php:560 templates/lang.php:14
+#: app/Front/Front.php:439 templates/lang.php:14
 msgid "Thanks"
 msgstr "Bedankt"
 
-#: app/Front/Front.php:561
+#: app/Front/Front.php:440
 msgid "Your donation will be processed soon."
 msgstr "Je donatie wordt zo snel mogelijk verwerkt."
 
-#: app/Front/KudosButton.php:136
+#: app/Front/KudosButton.php:135
 msgid "Secure payment by"
 msgstr "Veilige betaling door"
+
+#: app/Helpers/Campaigns.php:96 dist/js/kudos-admin-settings.js:1
+msgid "Support us!"
+msgstr "Steun ons!"
+
+#: app/Helpers/Campaigns.php:97 dist/js/kudos-admin-settings.js:1
+msgid "Your support is greatly appreciated and will help to keep us going."
+msgstr ""
+"Jouw support wordt zeer gewaardeerd en helpt ons om een verschil te maken."
 
 #: app/Helpers/Settings.php:127
 msgid "Thank you!"
@@ -527,7 +510,7 @@ msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr "Bedankt voor je donatie van %s. Wij waarderen je steun enorm."
 
 #: app/Helpers/Utils.php:139 app/Helpers/Utils.php:166
-#: dist/js/kudos-button-block.js:1 dist/js/kudos-public.js:1
+#: dist/js/kudos-admin-settings.js:1 dist/js/kudos-public.js:1
 #: templates/lang.php:23
 msgid "One-off"
 msgstr "Eenmalig"
@@ -547,27 +530,30 @@ msgid "WordPress Version %1$s is required."
 msgstr "WordPress-versie %1$s is vereist."
 
 #. translators:
-#. %1$s: Opening link tag.
-#. %2$s: Closing link tag.
-#. %3$s: Current PHP version.
-#. %4$s: Required PHP version.
+#. %1$s: Support URL.
+#. %2$s: Current PHP version.
+#. %3$s: Required PHP version.
 #.
-#: app/Service/CompatibilityService.php:105
-#, php-format
+#: app/Service/CompatibilityService.php:104
+#, fuzzy, php-format
+#| msgid ""
+#| "You are running an %1$soutdated version of PHP%2$s (%3$s). Kudos "
+#| "Donations requires at least PHP %4$s to work. Contact your web hosting "
+#| "provider to update."
 msgid ""
-"You are running an %1$soutdated version of PHP%2$s (%3$s). Kudos Donations "
-"requires at least PHP %4$s to work. Contact your web hosting provider to "
-"update."
+"You are running an <a href=\"%1$s\">outdated version of PHP</a> (%2$s). "
+"Kudos Donations requires at least PHP %3$s to work. Contact your web hosting "
+"provider to update."
 msgstr ""
 "Je gebruikt een %1$soutdated versie van PHP%2$s (%3$s). Kudos Donations "
 "vereist ten minste PHP %4$s om te werken. Neem contact op met je hosting "
 "provider om dit bij te werken."
 
-#: app/Service/CompatibilityService.php:127
+#: app/Service/CompatibilityService.php:125
 msgid "Kudos Donations Installation Problem"
 msgstr "Kudos Donations Installatie Probleem"
 
-#: app/Service/CompatibilityService.php:128
+#: app/Service/CompatibilityService.php:126
 msgid ""
 "The minimum requirements for Kudos Donations have not been met. Please fix "
 "the issue(s) below to continue:"
@@ -575,59 +561,67 @@ msgstr ""
 "Aan de minimumeisen voor Kudos Donations is niet voldaan. Los onderstaand(e) "
 "proble(e)m(en) op om door te gaan:"
 
-#: app/Service/MailerService.php:29
+#: app/Service/MailerService.php:30 dist/js/kudos-admin-settings.js:1
 msgid "Kudos Donations"
 msgstr "Kudos Donations"
 
-#: app/Service/MailerService.php:131
+#: app/Service/MailerService.php:151
 msgid "Donation Receipt"
 msgstr "Donatie Ontvangstbewijs"
 
-#: app/Service/MailerService.php:180
+#: app/Service/MailerService.php:206
 msgid "Please provide an email address."
 msgstr "Geef een e-mailadres op."
 
-#: app/Service/MailerService.php:184
+#: app/Service/MailerService.php:210
 msgid "It worked!"
 msgstr "Het heeft gewerkt!"
 
-#: app/Service/MailerService.php:185
+#: app/Service/MailerService.php:211
 msgid "Looks like your email settings are set up correctly :-)"
 msgstr "Het lijkt erop dat je e-mailinstellingen correct zijn ingesteld :-)"
 
 #. translators: %s: API mode
-#: app/Service/MailerService.php:191
+#: app/Service/MailerService.php:217
 #, php-format
 msgid "Email sent to %s."
 msgstr "E-mail verzonden naar %s."
 
 #. translators: %s: API mode
-#: app/Service/MailerService.php:194
+#: app/Service/MailerService.php:220
 msgid "Error sending email, please check the settings and try again."
 msgstr ""
 "Fout bij het verzenden van e-mail, controleer de instellingen en probeer het "
 "opnieuw."
 
+#: app/Service/PaymentService.php:155
+msgid "Request invalid."
+msgstr "Verzoek is ongeldig."
+
+#: app/Service/PaymentService.php:222
+msgid "Error creating Mollie payment. Please try again later."
+msgstr "Fout bij het maken van een Mollie-betaling. Probeer het later opnieuw."
+
 #. translators: %s: The order id
-#: app/Service/MollieService.php:115
+#: app/Service/PaymentService.php:314
 #, php-format
 msgid "Kudos Donation (%1$s) - %2$s"
 msgstr "Kudos Donation (%1$s) - %2$s"
 
 #. translators: %s: API mode
-#: app/Service/MollieService.php:322
+#: app/Service/PaymentService.php:394
 #, php-format
 msgid "%1$s API key should begin with %2$s"
 msgstr "%1$s API sleutel moet beginnen met %2$s"
 
 #. translators: %s: API mode
-#: app/Service/MollieService.php:335
+#: app/Service/PaymentService.php:407
 #, php-format
 msgid "%s API key connection was successful!"
 msgstr "%s API key verbinding is succesvol!"
 
 #. translators: %s: API mode
-#: app/Service/MollieService.php:340
+#: app/Service/PaymentService.php:412
 #, php-format
 msgid ""
 "Error connecting with Mollie, please check the %s API key and try again."
@@ -636,7 +630,7 @@ msgstr ""
 "probeer het nogmaals."
 
 #. translators: %1$s: Subscription interval. %2$s: Order id.
-#: app/Service/MollieService.php:605
+#: app/Service/Vendor/MollieVendor.php:280
 #, php-format
 msgid "Kudos Subscription (%1$s) - %2$s"
 msgstr "Kudos Abonnement (%1$s) - %2$s"
@@ -654,16 +648,198 @@ msgid "not-connected"
 msgstr "niet-verbonden"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Address field"
+msgid "Save"
+msgstr "Opslaan"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Kudos Donations"
+msgid "Welcome to Kudos Donations"
+msgstr "Kudos Donations"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "It is easy to get started with Kudos Donations."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Complete these simple steps to get your donations started."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Connect with Mollie"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Login to your Mollie account and grab your api keys."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"Make sure you get both your test and live api keys. Then enter them under "
+"the Mollie tab."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Mollie dashboard"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Deleted %s campaign"
+#| msgid_plural "Deleted %s campaigns"
+msgid "Set up a campaign"
+msgstr "%s campagne verwijderd"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"Visit the Campaigns tab and either create a new campaign or edit the default "
+"one."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"If you need it, don't forget to click \"Copy shortcode\" at the bottom of "
+"your campaign."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Place a button"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"Using the Kudos Button block or shortcode, place the button anywhere on your "
+"website."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "If using the block, you will need to select the campaign you created."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Test and go Live"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"With the API mode still on \"Test\" make a payment using your button. If it "
+"all looks good then you can switch to \"Live\"."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Good luck with your campaign!"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid ""
+#| "Select an existing campaign label so you can identify it on the "
+#| "transactions page"
+msgid ""
+"Ensure that this is a unique name to make it easy to identify in the "
+"transactions page."
+msgstr ""
+"Selecteer een bestaand campagnelabel zodat je deze kunt identificeren op de "
+"transactiepagina"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Text"
+msgstr "Tekst"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Header"
+msgstr "Header"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Shown at the top of the form."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Welcome text"
+msgstr "Welkomsttekst"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Shown just under the header."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Address field"
+msgid "Address Field"
 msgstr "Adresveld"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Enable"
+msgid "Whether to show the address fields or not."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Enable"
+msgid "Enabled"
 msgstr "Inschakelen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Make the address required."
+msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Required"
 msgstr "Verplicht"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Donation type"
+msgstr "Donatie soort"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"The donation type of the form, set to \"both\" to allow donor to choose."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Both"
+msgstr "Beide"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Amount"
+msgid "Amount type"
+msgstr "Bedrag"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"Configure the amount type for this form. When set to \"Fixed\" or \"Both\" "
+"you will need to configure the amounts below."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Fixed"
+msgstr "Vaste bedragen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Amounts"
+msgstr "Bedragen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Enter a comma separated list of values to use. Maximum of four numbers."
+msgstr ""
+"Voer hier een kommagescheiden lijst in met waarden die je wilt gebruiken."
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Copied!"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Are you sure you want to delete this transaction?"
+msgid "Are you sure you wish to delete this campaign?"
+msgstr "Weet je zeker dat je deze transactie wilt verwijderen?"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Deleted %s campaign"
+#| msgid_plural "Deleted %s campaigns"
+msgid "Delete campaign:"
+msgstr "%s campagne verwijderd"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Completed payment"
@@ -684,17 +860,17 @@ msgid "Title"
 msgstr "Titel"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Text"
-msgstr "Tekst"
-
-#: dist/js/kudos-admin-settings.js:1
 msgid "Button label"
 msgstr "Knop tekst"
 
 #: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid ""
+#| "You can use the following variables in the above fields: {{name}}, "
+#| "{{email}}, {{value}}"
 msgid ""
 "You can use the following variables in the above fields: {{name}}, "
-"{{email}}, {{value}}"
+"{{email}}, {{value}}, {{campaign}}"
 msgstr ""
 "Je kunt de volgende variabelen in bovenstaande velden gebruiken: {{name}}, "
 "{{email}}, {{value}}"
@@ -739,6 +915,87 @@ msgstr ""
 "gevonden."
 
 #: dist/js/kudos-admin-settings.js:1
+msgid "Visit the debug page"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Authentication"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "This is usually an email address"
+msgstr "Dit is meestal een e-mailadres"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "This password will be stored as plain text in the database."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Email settings"
+msgstr "E-mail instellingen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Use custom email settings"
+msgstr "Aangepaste e-mailinstellingen gebruiken"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Enable this to use your own SMTP server settings."
+msgstr "Schakel dit in om je eigen SMTP-serverinstellingen te gebruiken."
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Encryption"
+msgstr "Versleuteling"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Choose your encryption type. Always use TLS or SSL if available."
+msgstr ""
+"Kies je versleutelingstype. Gebruik altijd TLS of SSL indien beschikbaar."
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "None"
+msgstr "Geen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "SSL"
+msgstr "SSL"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "TLS"
+msgstr "TLS"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Enable Auto TLS"
+msgid "Auto TLS"
+msgstr "Automatische TLS inschakelen"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "In most cases you will want this enabled. Disable for troubleshooting."
+msgstr ""
+"In de meeste gevallen wil je dat dit is ingeschakeld. Schakel uit voor het "
+"oplossen van problemen."
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "From address"
+msgstr "Van adres"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"The email address emails will appear to be sent from. Leave empty to use "
+"same as username."
+msgstr ""
+"De e-mails lijken te worden verzonden vanuit. Laat leeg om hetzelfde te "
+"gebruiken als de gebruikersnaam."
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Email receipts"
 msgstr "E-mail ontvangstbewijzen"
 
@@ -763,16 +1020,8 @@ msgid "Leave blank to disable."
 msgstr "Laat leeg om uit te schakelen."
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Email settings"
-msgstr "E-mail instellingen"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Use custom email settings"
-msgstr "Aangepaste e-mailinstellingen gebruiken"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Enable this to use your own SMTP server settings."
-msgstr "Schakel dit in om je eigen SMTP-serverinstellingen te gebruiken."
+msgid "Server"
+msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Host"
@@ -783,67 +1032,12 @@ msgid "Your email server's hostname"
 msgstr "De hostnaam van je e-mail server"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Encryption"
-msgstr "Versleuteling"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Choose your encryption type. Always use TLS or SSL if available."
-msgstr ""
-"Kies je versleutelingstype. Gebruik altijd TLS of SSL indien beschikbaar."
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "None"
-msgstr "Geen"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "SSL"
-msgstr "SSL"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "TLS"
-msgstr "TLS"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Enable Auto TLS"
-msgstr "Automatische TLS inschakelen"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "In most cases you will want this enabled. Disable for troubleshooting."
-msgstr ""
-"In de meeste gevallen wil je dat dit is ingeschakeld. Schakel uit voor het "
-"oplossen van problemen."
-
-#: dist/js/kudos-admin-settings.js:1
 msgid "Port"
 msgstr "Poort"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "587 (TLS), 465 (SSL), 25 (Unencrypted)"
 msgstr "587 (TLS), 465 (SSL), 25 (onversleuteld)"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Username"
-msgstr "Gebruikersnaam"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "This is usually an email address"
-msgstr "Dit is meestal een e-mailadres"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Password"
-msgstr "Wachtwoord"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "From address"
-msgstr "Van adres"
-
-#: dist/js/kudos-admin-settings.js:1
-msgid ""
-"The email address emails will appear to be sent from. Leave empty to use "
-"same as username."
-msgstr ""
-"De e-mails lijken te worden verzonden vanuit. Laat leeg om hetzelfde te "
-"gebruiken als de gebruikersnaam."
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Export settings"
@@ -866,6 +1060,37 @@ msgid "Download settings as JSON"
 msgstr "Download instellingen als JSON"
 
 #: dist/js/kudos-admin-settings.js:1
+msgid "Share the love"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Leave a review"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Need some assistance?"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid ""
+"Don't hesitate to get in touch if you need any help or have a suggestion. "
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Support us!"
+msgid "Support forums"
+msgstr "Steun ons!"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Show welcome guide"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Visit our F.A.Q"
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Import settings"
 msgstr "Instellingen importeren"
 
@@ -878,8 +1103,8 @@ msgid "Upload"
 msgstr "Upload"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "API keys"
-msgstr "API-sleutels"
+msgid "Api Keys"
+msgstr ""
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Test API Key"
@@ -902,8 +1127,10 @@ msgid "Get API Key(s)"
 msgstr "API-sleutel(s) ophalen"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "API mode"
-msgstr "API status"
+#, fuzzy
+#| msgid "Mode"
+msgid "Api Mode"
+msgstr "Status"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid ""
@@ -916,6 +1143,26 @@ msgstr ""
 "je klaar bent om live-betalingen te ontvangen, schakel de modus naar 'Live'."
 
 #: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Campaign"
+msgid "New Campaign"
+msgstr "Campagne"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Campaign label"
+msgid "Campaign name"
+msgstr "Campagne label"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Give your campaign a unique name to identify it."
+msgstr ""
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Add campaign"
+msgstr "Campagne toevoegen"
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Terms and conditions"
 msgstr "Algemene voorwaarden"
 
@@ -926,10 +1173,6 @@ msgid ""
 msgstr ""
 "De url naar de donatievoorwaarden. Laat dit leeg om het selectievakje 'Ik ga "
 "akkoord' op het formulier niet weer te gegeven."
-
-#: dist/js/kudos-admin-settings.js:1
-msgid "Invalid email address"
-msgstr "Ongeldig e-mailadres"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Send test email"
@@ -948,12 +1191,12 @@ msgid "user@domain.com"
 msgstr "user@domain.com"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Sending"
-msgstr "Bezig met versturen"
+msgid "Invalid email address"
+msgstr "Ongeldig e-mailadres"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Theme colour"
-msgstr "Themakleur"
+msgid "Sending"
+msgstr "Bezig met versturen"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Colour"
@@ -964,7 +1207,45 @@ msgid "Set the colour for the Kudos button and the pop-up modal."
 msgstr "Stel de kleur in van de Kudos-knop en de pop-up modal."
 
 #: dist/js/kudos-admin-settings.js:1
+#, fuzzy, javascript-format
+#| msgid "Add campaign"
+msgid "Added campaign \"%s\"."
+msgstr "Campagne toevoegen"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Campaign deleted"
+msgid "Campaign details"
+msgstr "Campagne verwijderd"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Deleted %s campaign"
+#| msgid_plural "Deleted %s campaigns"
+msgid "Select a campaign:"
+msgstr "%s campagne verwijderd"
+
+#: dist/js/kudos-admin-settings.js:1 dist/js/kudos-button-block.js:1
+#, fuzzy
+#| msgid "Deleted %s campaign"
+#| msgid_plural "Deleted %s campaigns"
+msgid "Select a campaign"
+msgstr "%s campagne verwijderd"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Campaign deleted"
+msgid "Campaign deleted."
+msgstr "Campagne verwijderd"
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Setting(s) updated"
+msgstr "Instelling(en) bijgewerkt"
+
+#: dist/js/kudos-admin-settings.js:1
+#, fuzzy
+#| msgid "Setting(s) updated"
+msgid "Setting updated"
 msgstr "Instelling(en) bijgewerkt"
 
 #: dist/js/kudos-admin-settings.js:1
@@ -980,8 +1261,8 @@ msgid "Advanced"
 msgstr "Geavanceerd"
 
 #: dist/js/kudos-admin-settings.js:1
-msgid "Save"
-msgstr "Opslaan"
+msgid "Help"
+msgstr ""
 
 #: dist/js/kudos-button-block.js:1
 msgid "Kudos Button"
@@ -1004,61 +1285,8 @@ msgid "Donate now!"
 msgstr "Doneer nu!"
 
 #: dist/js/kudos-button-block.js:1
-msgid "Modal (pop-up)"
-msgstr "Modal (pop-up)"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Header"
-msgstr "Header"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Welcome text"
-msgstr "Welkomsttekst"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Donation amount"
-msgstr "Donatiebedrag"
-
-#: dist/js/kudos-button-block.js:1
-msgid "The type of donation amount available"
-msgstr "Het soort donatiebedrag beschikbaar"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Fixed"
-msgstr "Vaste bedragen"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Both"
-msgstr "Beide"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Amounts"
-msgstr "Bedragen"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Enter a comma separated list of values to use. Maximum of four numbers."
+msgid "Create a new campaign here"
 msgstr ""
-"Voer hier een kommagescheiden lijst in met waarden die je wilt gebruiken."
-
-#: dist/js/kudos-button-block.js:1
-msgid "Donation type"
-msgstr "Donatie soort"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Campaign label"
-msgstr "Campagne label"
-
-#: dist/js/kudos-button-block.js:1
-msgid ""
-"Select an existing campaign label so you can identify it on the transactions "
-"page"
-msgstr ""
-"Selecteer een bestaand campagnelabel zodat je deze kunt identificeren op de "
-"transactiepagina"
-
-#: dist/js/kudos-button-block.js:1
-msgid "Add campaign"
-msgstr "Campagne toevoegen"
 
 #: dist/js/kudos-public.js:1
 msgid "Your name is required"
