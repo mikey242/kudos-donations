@@ -1,7 +1,8 @@
 import {SettingCard} from "../SettingCard"
 
 const {__} = wp.i18n
-const {CardBody, TextControl, ToggleControl} = wp.components
+const {TextControl, ToggleControl} = wp.components
+const {Fragment} = wp.element
 
 const CustomReturnPanel = (props) => {
 
@@ -18,22 +19,26 @@ const CustomReturnPanel = (props) => {
             />
 
             {props.settings._kudos_custom_return_enable ?
-
-                <TextControl
-                    label={__('URL', 'kudos-donations')}
-                    help={__(
-                        'e.g https://mywebsite.com/thanks',
-                        'kudos-donations'
-                    )}
-                    type={'text'}
-                    value={props.settings._kudos_custom_return_url || ''}
-                    disabled={props.isSaving}
-                    onChange={(value) => props.handleInputChange("_kudos_custom_return_url", value)}
-                />
-
+                <Fragment>
+                    <br/>
+                    <TextControl
+                        label={__('URL', 'kudos-donations')}
+                        help={__(
+                            'e.g https://mywebsite.com/thanks',
+                            'kudos-donations'
+                        )}
+                        type={'text'}
+                        value={props.settings._kudos_custom_return_url || ''}
+                        disabled={props.isSaving}
+                        onChange={(value) => props.handleInputChange("_kudos_custom_return_url", value)}
+                    />
+                </Fragment>
                 : ''}
         </SettingCard>
     )
 }
 
-export {CustomReturnPanel}
+export
+{
+    CustomReturnPanel
+}

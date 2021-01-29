@@ -32,7 +32,7 @@ const CompletedPaymentPanel = (props) => {
                         disabled={props.isSaving}
                         onChange={(value) => props.handleInputChange("_kudos_return_message_title", value)}
                     />
-
+                    <br/>
                     <TextControl
                         label={__('Text', 'kudos-donations')}
                         type={'text'}
