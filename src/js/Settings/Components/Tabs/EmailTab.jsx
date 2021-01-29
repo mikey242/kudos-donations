@@ -1,27 +1,50 @@
-import {EmailReceiptsPanel} from "../Panels/EmailReceiptsPanel"
-import {EmailSettingsPanel} from "../Panels/EmailSettingsPanel"
+import {EmailCustomPanel} from "../Panels/EmailCustomPanel"
 import {TestEmailPanel} from "../Panels/TestEmailPanel"
+import {EmailServerPanel} from "../Panels/EmailServerPanel"
+import {EmailEncryptionPanel} from "../Panels/EmailEncryptionPanel"
+import {EmailAuthenticationPanel} from "../Panels/EmailAuthenticationPanel"
+import {EmailFromPanel} from "../Panels/EmailFromPanel"
 
 const {Card, CardDivider} = wp.components
+const {Fragment} = wp.element
 
 const EmailTab = (props) => {
 
     return (
         <Card>
-            <EmailReceiptsPanel
-                settings={props.settings}
-                handleInputChange={props.handleInputChange}
-            />
-            <CardDivider/>
             <TestEmailPanel
                 handleInputChange={props.handleInputChange}
                 showNotice={props.showNotice}
             />
             <CardDivider/>
-            <EmailSettingsPanel
+            <EmailCustomPanel
                 settings={props.settings}
                 handleInputChange={props.handleInputChange}
             />
+            {props.settings._kudos_smtp_enable ?
+                <Fragment>
+                    <CardDivider/>
+                    <EmailServerPanel
+                        settings={props.settings}
+                        handleInputChange={props.handleInputChange}
+                    />
+                    <CardDivider/>
+                    <EmailEncryptionPanel
+                    settings={props.settings}
+                    handleInputChange={props.handleInputChange}
+                    />
+                    <CardDivider/>
+                    <EmailAuthenticationPanel
+                    settings={props.settings}
+                    handleInputChange={props.handleInputChange}
+                    />
+                    <CardDivider/>
+                    <EmailFromPanel
+                    settings={props.settings}
+                    handleInputChange={props.handleInputChange}
+                    />
+                </Fragment>
+            : ''}
         </Card>
     )
 }
