@@ -4,7 +4,7 @@ const { __ } = wp.i18n
 const { Button, TextControl } = wp.components
 const { useState } = wp.element
 
-const AddCampaignPanel = ({addCampaign}) => {
+const NewCampaignPanel = ({addCampaign}) => {
 
     const [addFormValue, setAddFormValue] = useState('')
     const [buttonDisabled, setButtonDisabled] = useState(true)
@@ -43,4 +43,4 @@ const AddCampaignPanel = ({addCampaign}) => {
     )
 }
 
-export {AddCampaignPanel}
+export {NewCampaignPanel}
