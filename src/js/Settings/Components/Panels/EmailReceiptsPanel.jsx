@@ -2,6 +2,7 @@ import {SettingCard} from "../SettingCard"
 
 const {__} = wp.i18n
 const {TextControl, ToggleControl} = wp.components
+const {Fragment} = wp.element
 
 const EmailReceiptsPanel = (props) => {
     return (
@@ -18,16 +19,18 @@ const EmailReceiptsPanel = (props) => {
             />
 
             {props.settings._kudos_email_receipt_enable ?
-
-                <TextControl
-                    label={__('Send receipt copy to:', 'kudos-donations')}
-                    help={__('Leave blank to disable.', 'kudos-donations')}
-                    type={'text'}
-                    value={props.settings._kudos_email_bcc || ''}
-                    placeholder={props.placeholder}
-                    disabled={props.isSaving}
-                    onChange={(value) => props.handleInputChange("_kudos_email_bcc", value)}
-                />
+                <Fragment>
+                    <br/>
+                    <TextControl
+                        label={__('Send receipt copy to:', 'kudos-donations')}
+                        help={__('Leave blank to disable.', 'kudos-donations')}
+                        type={'text'}
+                        value={props.settings._kudos_email_bcc || ''}
+                        placeholder={props.placeholder}
+                        disabled={props.isSaving}
+                        onChange={(value) => props.handleInputChange("_kudos_email_bcc", value)}
+                    />
+                </Fragment>
 
                 : ''}
         </SettingCard>

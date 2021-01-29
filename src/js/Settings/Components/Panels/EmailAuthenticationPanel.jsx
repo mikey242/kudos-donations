@@ -21,6 +21,10 @@ const EmailAuthenticationPanel = (props) => {
             />
             <TextControl
                 label={__('Password', 'kudos-donations')}
+                help={__(
+                    'This password will be stored as plain text in the database.',
+                    'kudos-donations'
+                )}
                 type="password"
                 value={props.settings._kudos_smtp_password || ''}
                 placeholder="*****"
