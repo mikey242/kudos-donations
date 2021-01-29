@@ -44,9 +44,10 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
             <CardDivider/>
 
-            <SettingCard title={__('Header', 'kudos-donations')}>
+            <SettingCard title={__('Text', 'kudos-donations')}>
                 <TextControl
                     id={'modal_title' + '-' + campaign.id}
+                    label={__('Header', 'kudos-donations')}
                     type={'text'}
                     value={campaign.modal_title || ''}
                     onChange={(value) => {
@@ -54,13 +55,9 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
-            </SettingCard>
-
-            <CardDivider/>
-
-            <SettingCard title={__('Welcome text', 'kudos-donations')}>
                 <TextControl
                     id={'welcome_text' + '-' + campaign.id}
+                    label={__('Welcome text', 'kudos-donations')}
                     type={'text'}
                     value={campaign.welcome_text || ''}
                     onChange={(value) => {
@@ -73,10 +70,9 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
             <CardDivider/>
 
             <SettingCard title={__('Address Field', 'kudos-donations')}>
-                <BaseControl
-                    help={__('Whether to show the address fields or not.', 'kudos-donations')}
-                >
+
                     <ToggleControl
+                        help={__('Whether to show the address fields or not.', 'kudos-donations')}
                         label={__('Enabled', 'kudos-donations')}
                         checked={campaign.address_enabled || ''}
                         onChange={(value) => {
@@ -85,9 +81,11 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         }}
                     />
 
+
                     {campaign.address_enabled ?
 
                         <CheckboxControl
+                            help={__('Make the address required.', 'kudos-donations')}
                             label={__('Required', "kudos-donations")}
                             checked={campaign.address_required || ''}
                             onChange={(value) => {
@@ -98,7 +96,6 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
                         : ''}
 
-                </BaseControl>
             </SettingCard>
 
             <CardDivider/>
