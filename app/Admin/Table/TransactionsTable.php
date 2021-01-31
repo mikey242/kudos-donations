@@ -34,11 +34,11 @@ class TransactionsTable extends WP_List_Table {
 		$this->campaigns = new Campaigns();
 
 		$this->search_columns = [
-			'name'          => __( 'Name', 'kudos-donations' ),
-			'email'         => __( 'Email', 'kudos-donations' ),
-			'campaign_id'   => __( 'Campaign', 'kudos-donations' ),
-			'order_id'      => __( 'Order ID', 'kudos-donations' ),
-			'customer_id'   => __( 'Customer ID', 'kudos-donations' ),
+			'name'        => __( 'Name', 'kudos-donations' ),
+			'email'       => __( 'Email', 'kudos-donations' ),
+			'campaign_id' => __( 'Campaign', 'kudos-donations' ),
+			'order_id'    => __( 'Order ID', 'kudos-donations' ),
+			'customer_id' => __( 'Customer ID', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -116,7 +116,7 @@ class TransactionsTable extends WP_List_Table {
 		}
 
 		$having = ! empty( $having ) ? 'HAVING ' . implode( " AND ", $having ) : '';
-		$query = $query . $having;
+		$query  = $query . $having;
 
 		return $this->mapper->get_results( $query );
 
@@ -154,7 +154,7 @@ class TransactionsTable extends WP_List_Table {
 	public function get_hidden_columns(): array {
 		return [
 			'transaction_id',
-			'customer_id'
+			'customer_id',
 		];
 
 	}
@@ -269,16 +269,16 @@ class TransactionsTable extends WP_List_Table {
 	protected function column_created( array $item ): string {
 
 		$title = '<strong>' .
-	                wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+		         wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 			         strtotime( $item['created'] ) ) .
 		         '</strong>';
 
-		$url = add_query_arg([
-			'page' => esc_attr( $_REQUEST['page'] ),
-			'action' => 'delete',
-			'id' => $item['id'],
-			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] )
-		]);
+		$url = add_query_arg( [
+			'page'     => esc_attr( $_REQUEST['page'] ),
+			'action'   => 'delete',
+			'id'       => $item['id'],
+			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
+		] );
 
 		$actions = apply_filters(
 			TransactionEntity::get_table_name( false ) . '_actions',
@@ -424,8 +424,8 @@ class TransactionsTable extends WP_List_Table {
 				$status = __( 'Unknown', 'kudos-donations' );
 		}
 
-		if($item['refunds']) {
-			$status .= ' (' . __('Refunded', 'kudos-donations') . ')';
+		if ( $item['refunds'] ) {
+			$status .= ' (' . __( 'Refunded', 'kudos-donations' ) . ')';
 		}
 
 		return apply_filters( 'kudos_transactions_column_status', $status, $item['order_id'] );

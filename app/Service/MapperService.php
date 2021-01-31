@@ -194,6 +194,7 @@ class MapperService extends AbstractService {
 
 		if ( null === $this->repository ) {
 			$this->logger->warning( 'Failed to get repository.' );
+
 			return null;
 		}
 

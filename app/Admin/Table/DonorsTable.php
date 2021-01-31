@@ -30,11 +30,11 @@ class DonorsTable extends WP_List_Table {
 		$this->table  = DonorEntity::get_table_name();
 
 		$this->search_columns = [
-			'name'          => __( 'Name', 'kudos-donations' ),
-			'email'         => __( 'Email', 'kudos-donations' ),
-			'address'       => __( 'Address', 'kudos-donations' ),
-			'order_id'      => __( 'Order ID', 'kudos-donations' ),
-			'customer_id'   => __( 'Customer ID', 'kudos-donations' ),
+			'name'        => __( 'Name', 'kudos-donations' ),
+			'email'       => __( 'Email', 'kudos-donations' ),
+			'address'     => __( 'Address', 'kudos-donations' ),
+			'order_id'    => __( 'Order ID', 'kudos-donations' ),
+			'customer_id' => __( 'Customer ID', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -98,13 +98,13 @@ class DonorsTable extends WP_List_Table {
 	 */
 	public function column_names(): array {
 		return [
-			'email'         => __( 'E-mail', 'kudos-donations' ),
-			'name'          => __( 'Name', 'kudos-donations' ),
-			'address'       => __( 'Address', 'kudos-donations' ),
-			'donations'     => __( 'Donations', 'kudos-donations' ),
-			'mode'          => __( 'Mode', 'kudos-donations' ),
-			'customer_id'   => __( 'Customer ID', 'kudos-donations' ),
-			'created'       => __( 'Date', 'kudos-donations' ),
+			'email'       => __( 'E-mail', 'kudos-donations' ),
+			'name'        => __( 'Name', 'kudos-donations' ),
+			'address'     => __( 'Address', 'kudos-donations' ),
+			'donations'   => __( 'Donations', 'kudos-donations' ),
+			'mode'        => __( 'Mode', 'kudos-donations' ),
+			'customer_id' => __( 'Customer ID', 'kudos-donations' ),
+			'created'     => __( 'Date', 'kudos-donations' ),
 		];
 	}
 
@@ -235,12 +235,12 @@ class DonorsTable extends WP_List_Table {
 	 */
 	protected function column_email( array $item ): string {
 
-		$url = add_query_arg([
-			'page'  => esc_attr($_REQUEST['page']),
-			'action' => 'delete',
-			'id' => sanitize_text_field( $item['id'] ),
-			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] )
-		]);
+		$url = add_query_arg( [
+			'page'     => esc_attr( $_REQUEST['page'] ),
+			'action'   => 'delete',
+			'id'       => sanitize_text_field( $item['id'] ),
+			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
+		] );
 
 		$title = sprintf(
 			'<a href="mailto: %1$s" />%1$s</a>',

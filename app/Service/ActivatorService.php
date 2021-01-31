@@ -50,15 +50,15 @@ class ActivatorService {
 				Settings::update_setting( 'show_intro', 1 );
 
 				// Apply mode to Donors
-				$mapper = new MapperService(DonorEntity::class);
+				$mapper = new MapperService( DonorEntity::class );
 				$donors = $mapper->get_all_by();
 				/** @var DonorEntity $donor */
-				foreach ($donors as $donor) {
+				foreach ( $donors as $donor ) {
 					$transactions = $donor->get_transactions();
-					if($transactions) {
-						$donor->set_fields(['mode' => $transactions[0]->mode]);
+					if ( $transactions ) {
+						$donor->set_fields( [ 'mode' => $transactions[0]->mode ] );
 					}
-					$mapper->save($donor);
+					$mapper->save( $donor );
 				}
 			}
 

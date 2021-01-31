@@ -64,10 +64,11 @@ abstract class AbstractEntity implements EntityInterface {
 				$this->$property = $value;
 			} else {
 				$logger = LoggerService::factory();
-				$logger->warning( 'Error setting property.', [
-					"property" => $property,
-					"entity"    => static::class
-				] );
+				$logger->warning( 'Error setting property.',
+					[
+						"property" => $property,
+						"entity"   => static::class,
+					] );
 			}
 		}
 	}

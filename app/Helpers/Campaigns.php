@@ -123,7 +123,7 @@ class Campaigns {
 	public function get_campaign( ?string $value ): ?array {
 
 		$campaigns = $this->campaigns;
-		$key       = array_search( $value, array_column( (array)$campaigns, 'id' ) );
+		$key       = array_search( $value, array_column( (array) $campaigns, 'id' ) );
 
 		// Check if key is an index and if so return index from forms
 		if ( is_int( $key ) ) {
@@ -138,16 +138,17 @@ class Campaigns {
 	 * Gets total value paid for campaign
 	 *
 	 * @param string $campaign_id
+	 *
 	 * @return float|int
 	 */
 	public function get_campaign_total( string $campaign_id ) {
 
-		$mapper = new MapperService(TransactionEntity::class);
-		$transactions = $mapper->get_all_by([
-			'campaign_id' => $campaign_id
-		]);
+		$mapper       = new MapperService( TransactionEntity::class );
+		$transactions = $mapper->get_all_by( [
+			'campaign_id' => $campaign_id,
+		] );
 
-		return array_sum(array_map(function ($transaction) {
+		return array_sum( array_map( function ( $transaction ) {
 			if ( 'paid' === $transaction->status ) {
 				$refunds = $transaction->get_refund();
 				if ( $refunds ) {
@@ -156,8 +157,10 @@ class Campaigns {
 					return $transaction->value;
 				}
 			}
+
 			return 0;
-		}, (array) $transactions));
+		},
+			(array) $transactions ) );
 
 	}
 

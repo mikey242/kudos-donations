@@ -11,9 +11,9 @@ use WP_REST_Response;
 abstract class AbstractVendor extends AbstractService {
 
 	/**
-	 * @param TransactionEntity $transaction,
-	 * @param string $mandate_id,
-	 * @param string $interval,
+	 * @param TransactionEntity $transaction ,
+	 * @param string $mandate_id ,
+	 * @param string $interval ,
 	 * @param string $years
 	 */
 	abstract public function create_subscription(
@@ -27,6 +27,7 @@ abstract class AbstractVendor extends AbstractService {
 	 * Returns all subscriptions for customer
 	 *
 	 * @param string $customer_id customer id.
+	 *
 	 * @since   2.0.0
 	 */
 	abstract public function get_subscriptions( string $customer_id );
@@ -36,6 +37,7 @@ abstract class AbstractVendor extends AbstractService {
 	 *
 	 * @param string $subscription_id subscription id.
 	 * @param null|string $customer_id customer id.
+	 *
 	 * @return bool
 	 */
 	abstract public function cancel_subscription( string $subscription_id, $customer_id = null ): bool;
@@ -93,7 +95,7 @@ abstract class AbstractVendor extends AbstractService {
 	 *
 	 * @return string
 	 */
-	abstract public function get_api_mode():string;
+	abstract public function get_api_mode(): string;
 
 	/**
 	 * Returns the vendor name as a string

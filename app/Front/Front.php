@@ -151,7 +151,7 @@ class Front {
 
 		$handle = $this->plugin_name . '-button-block';
 
-		wp_enqueue_style( $handle, Utils::get_asset_url( 'kudos-button-block.css' ), [], $this->version);
+		wp_enqueue_style( $handle, Utils::get_asset_url( 'kudos-button-block.css' ), [], $this->version );
 		wp_enqueue_script(
 			$handle,
 			Utils::get_asset_url( 'kudos-button-block.js' ),
@@ -189,10 +189,10 @@ class Front {
 	 */
 	public static function api_ready(): bool {
 
-		$vendor         = Settings::get_setting( 'payment_vendor' );
-		$api_connected  = Settings::get_setting( $vendor . '_connected' );
-		$api_mode       = Settings::get_setting( $vendor . '_api_mode' );
-		$api_key        = Settings::get_setting( $vendor . '_' . $api_mode . '_api_key' );
+		$vendor        = Settings::get_setting( 'payment_vendor' );
+		$api_connected = Settings::get_setting( $vendor . '_connected' );
+		$api_mode      = Settings::get_setting( $vendor . '_api_mode' );
+		$api_key       = Settings::get_setting( $vendor . '_' . $api_mode . '_api_key' );
 
 		if ( ! $api_connected && ! $api_key ) {
 			return false;
@@ -234,9 +234,9 @@ class Front {
 
 				$atts = shortcode_atts(
 					[
-						'button_label'  => __( 'Donate now', 'kudos-donations' ),
-						'campaign_id'   => 'default',
-						'alignment'     => 'none',
+						'button_label' => __( 'Donate now', 'kudos-donations' ),
+						'campaign_id'  => 'default',
+						'alignment'    => 'none',
 					],
 					$atts,
 					'kudos'
@@ -288,7 +288,7 @@ class Front {
 	public function kudos_render_callback( array $atts ): ?string {
 
 		// Continue only if payment API ready
-		if(self::api_ready()) {
+		if ( self::api_ready() ) {
 
 			// Set campaign according to atts
 			$campaigns = new Campaigns();
