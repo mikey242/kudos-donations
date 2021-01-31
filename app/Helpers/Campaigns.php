@@ -2,6 +2,9 @@
 
 namespace Kudos\Helpers;
 
+use Kudos\Entity\TransactionEntity;
+use Kudos\Service\MapperService;
+
 class Campaigns {
 
 	/**
@@ -128,6 +131,33 @@ class Campaigns {
 		}
 
 		return null;
+
+	}
+
+	/**
+	 * Gets total value paid for campaign
+	 *
+	 * @param string $campaign_id
+	 * @return float|int
+	 */
+	public function get_campaign_total( string $campaign_id ) {
+
+		$mapper = new MapperService(TransactionEntity::class);
+		$transactions = $mapper->get_all_by([
+			'campaign_id' => $campaign_id
+		]);
+
+		return array_sum(array_map(function ($transaction) {
+			if ( 'paid' === $transaction->status ) {
+				$refunds = $transaction->get_refund();
+				if ( $refunds ) {
+					return $refunds->remaining;
+				} else {
+					return $transaction->value;
+				}
+			}
+			return 0;
+		}, (array) $transactions));
 
 	}
 

@@ -100,24 +100,11 @@ class CampaignsTable extends WP_List_Table {
 
 			$campaigns[ $key ]['date']         = date( "r", hexdec( substr( $id, 3, 8 ) ) );
 			$campaigns[ $key ]['transactions'] = 0;
-			$campaigns[ $key ]['total']        = 0;
+			$campaigns[ $key ]['total'] = $this->campaigns->get_campaign_total($id);
 			if ( $transactions ) {
-				$total = 0;
-				/** @var TransactionEntity $transaction */
-				foreach ( $transactions as $transaction ) {
-					if ( 'paid' === $transaction->status ) {
-						$refunds = $transaction->get_refund();
-						if ( $refunds ) {
-							$total = $total + $refunds->remaining;
-						} else {
-							$total = $total + $transaction->value;
-						}
-					}
-				}
 				$campaigns[ $key ]['last_donation'] = end( $transactions )->created;
 				$campaigns[ $key ]['transactions']  = count( $transactions );
 				$campaigns[ $key ]['currency']      = $transactions[0]->currency;
-				$campaigns[ $key ]['total']         = $total;
 			}
 		}
 
