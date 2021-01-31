@@ -76,7 +76,7 @@ const HelpPanel = ({updateSetting}) => {
             </Button>
 
             <h2>{__('Need some assistance?', 'kudos-donations')}</h2>
-            <p>{__("Don't hesitate to get in touch if you need any help or have a suggestion. ", 'kudos-donations')}</p>
+            <p>{__("Don't hesitate to get in touch if you need any help or have a suggestion.", 'kudos-donations')}</p>
 
             <div className="kd-flex">
                 <div className="kd-flex-grow">
