@@ -81,6 +81,7 @@ class Settings {
 				'smtp_from'             => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
+					'default'           => null,
 					'sanitize_callback' => 'sanitize_email',
 				],
 				'smtp_username'         => [
