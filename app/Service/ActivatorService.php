@@ -41,6 +41,21 @@ class ActivatorService {
 
 		if ( $old_version ) {
 
+            if ( version_compare( $old_version, '2.1.1', '<' ) ) {
+                $logger->info( 'Upgrading to version 2.1.1', [ 'previous_version' => $old_version ] );
+                Settings::remove_setting( 'action_scheduler' );
+            }
+
+            if ( version_compare( $old_version, '2.2.0', '<' ) ) {
+                $link = Settings::get_setting( 'privacy_link' );
+                Settings::remove_setting( 'subscription_enabled' );
+
+                if ( $link ) {
+                    Settings::update_setting( 'terms_link', $link );
+                    Settings::remove_setting( 'privacy_link' );
+                }
+            }
+
 			if ( version_compare( $old_version, '2.3.0', '<' ) ) {
 				global $wpdb;
 
@@ -62,21 +77,6 @@ class ActivatorService {
 					}
 					$mapper->save( $donor );
 				}
-			}
-
-			if ( version_compare( $old_version, '2.2.0', '<' ) ) {
-				$link = Settings::get_setting( 'privacy_link' );
-				Settings::remove_setting( 'subscription_enabled' );
-
-				if ( $link ) {
-					Settings::update_setting( 'terms_link', $link );
-					Settings::remove_setting( 'privacy_link' );
-				}
-			}
-
-			if ( version_compare( $old_version, '2.1.1', '<' ) ) {
-				$logger->info( 'Upgrading to version 2.1.1', [ 'previous_version' => $old_version ] );
-				Settings::remove_setting( 'action_scheduler' );
 			}
 
 		}
