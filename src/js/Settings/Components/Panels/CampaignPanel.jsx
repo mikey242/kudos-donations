@@ -68,7 +68,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
                 <ToggleControl
                     help={__('Whether to show the address fields or not.', 'kudos-donations')}
-                    label={__('Enabled', 'kudos-donations')}
+                    label={ campaign.address_enabled ? __('Enabled', 'kudos-donations') : __('Disabled', 'kudos-donations')}
                     checked={campaign.address_enabled || ''}
                     onChange={(value) => {
                         campaign.address_enabled = value
