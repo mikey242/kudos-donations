@@ -30,10 +30,11 @@ class DonorsTable extends WP_List_Table {
 		$this->table  = DonorEntity::get_table_name();
 
 		$this->search_columns = [
-			'name'     => __( 'Name', 'kudos-donations' ),
-			'email'    => __( 'Email', 'kudos-donations' ),
-			'address'  => __( 'Address', 'kudos-donations' ),
-			'order_id' => __( 'Order ID', 'kudos-donations' ),
+			'name'          => __( 'Name', 'kudos-donations' ),
+			'email'         => __( 'Email', 'kudos-donations' ),
+			'address'       => __( 'Address', 'kudos-donations' ),
+			'order_id'      => __( 'Order ID', 'kudos-donations' ),
+			'customer_id'   => __( 'Customer ID', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -97,12 +98,13 @@ class DonorsTable extends WP_List_Table {
 	 */
 	public function column_names(): array {
 		return [
-			'email'     => __( 'E-mail', 'kudos-donations' ),
-			'name'      => __( 'Name', 'kudos-donations' ),
-			'address'   => __( 'Address', 'kudos-donations' ),
-			'donations' => __( 'Donations', 'kudos-donations' ),
-			'mode'      => __( 'Mode', 'kudos-donations' ),
-			'created'   => __( 'Date', 'kudos-donations' ),
+			'email'         => __( 'E-mail', 'kudos-donations' ),
+			'name'          => __( 'Name', 'kudos-donations' ),
+			'address'       => __( 'Address', 'kudos-donations' ),
+			'donations'     => __( 'Donations', 'kudos-donations' ),
+			'mode'          => __( 'Mode', 'kudos-donations' ),
+			'customer_id'   => __( 'Customer ID', 'kudos-donations' ),
+			'created'       => __( 'Date', 'kudos-donations' ),
 		];
 	}
 
@@ -310,7 +312,7 @@ class DonorsTable extends WP_List_Table {
 				}
 			}
 
-			return '<a href="' . admin_url( 'admin.php?page=kudos-transactions&search-field=email&s=' . rawurlencode( $item['email'] ) . '' ) . '">
+			return '<a href="' . admin_url( 'admin.php?page=kudos-transactions&search-field=customer_id&s=' . rawurlencode( $item['customer_id'] ) . '' ) . '">
 						' . $number . ' ( ' . Utils::get_currency_symbol( $transactions[0]->currency ) . $total . ' )' .
 			       '</a>';
 		}

@@ -365,12 +365,12 @@ class SubscriptionsTable extends WP_List_Table {
 	 */
 	protected function column_name( array $item ): ?string {
 
-		$email = $item['email'];
+		$customer_id = $item['customer_id'];
 
-		if ( $email ) {
+		if ( $customer_id ) {
 			return sprintf(
 				'<a href="%s" />%s</a>',
-				admin_url( sprintf( 'admin.php?page=kudos-donors&search-field=email&s=%s', $email ) ),
+				admin_url( sprintf( 'admin.php?page=kudos-donors&search-field=customer_id&s=%s', $customer_id ) ),
 				$item['name']
 			);
 		}
