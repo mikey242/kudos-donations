@@ -12,7 +12,7 @@ const CampaignsTab = (props) => {
 
     const [campaign, setCampaign] = useState(() => {
         let index = campaigns.findIndex(element => element.id === getQueryVar('campaign_id'))
-        return index >= 0 ? index : ''
+        return index >= 0 ? index : campaigns[0] ? 0 : ''
     })
 
     const updateCampaign = (value) => {
