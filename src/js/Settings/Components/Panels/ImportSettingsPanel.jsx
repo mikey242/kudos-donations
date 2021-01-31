@@ -29,7 +29,7 @@ const ImportSettingsPanel = (props) => {
         <SettingCard title={__('Import settings', 'kudos-donations')}>
             <BaseControl
                 id="import-1"
-                help={__('Warning: this will overwrite your current settings.', 'kudos-donations')}
+                help={__('Note: this will overwrite your current settings.', 'kudos-donations')}
             >
                 <FormFileUpload
                     accept="text/*"

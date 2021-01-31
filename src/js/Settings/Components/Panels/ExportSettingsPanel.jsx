@@ -24,7 +24,7 @@ const ExportSettingsPanel = (props) => {
         <SettingCard title={__('Export settings', 'kudos-donations')}>
             <BaseControl
                 id="export-1"
-                help={__('Warning: this file will contain sensitive information and should be kept safe.', 'kudos-donations')}
+                help={__('Note: this file will contain sensitive information and should be kept safe.', 'kudos-donations')}
             >
                 <Button
                     isLink

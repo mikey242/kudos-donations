@@ -10,7 +10,7 @@ const CompletedPaymentPanel = (props) => {
         <SettingCard title={__('Completed payment', 'kudos-donations')}>
                 <ToggleControl
                     label={__(
-                        'Show pop-up message when payment complete',
+                        'Show pop-up message when payment complete.',
                         'kudos-donations'
                     )}
                     help={__(

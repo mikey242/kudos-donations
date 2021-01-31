@@ -6,7 +6,7 @@ const {ToggleControl} = wp.components
 const EmailCustomPanel = (props) => {
 
     return (
-        <SettingCard title={__('Email settings', 'kudos-donations')} initialOpen={false}>
+        <SettingCard title={__('SMTP settings', 'kudos-donations')} initialOpen={false}>
 
             <ToggleControl
                 label={__('Use custom email settings', 'kudos-donations')}

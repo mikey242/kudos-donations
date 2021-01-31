@@ -10,7 +10,7 @@ const EmailAuthenticationPanel = (props) => {
             <TextControl
                 label={__('Username', 'kudos-donations')}
                 help={__(
-                    'This is usually an email address',
+                    'This is usually an email address.',
                     'kudos-donations'
                 )}
                 type={'text'}

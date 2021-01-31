@@ -12,7 +12,7 @@ const ThemePanel = (props) => {
 
     return (
 
-        <SettingCard title={"Theme Colour"}>
+        <SettingCard title={"Theme colour"}>
             <BaseControl
                 id="_kudos_theme_color"
                 label={__('Colour', 'kudos-donations')}

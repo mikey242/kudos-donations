@@ -28,7 +28,7 @@ const IntroGuide = ({show, updateSetting}) => {
                         <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">{__('Welcome to Kudos Donations', 'kudos-donations')}</h1>
                             <p>{__('It is easy to get started with Kudos Donations.', 'kudos-donations')}</p>
-                            <p>{__('Complete these simple steps to get your donations started.', 'kudos-donations')}</p>
+                            <p>{__('Complete these simple steps to set up your first donation campaign.', 'kudos-donations')}</p>
                         </div>
                     ,
                 },
@@ -59,8 +59,8 @@ const IntroGuide = ({show, updateSetting}) => {
                     content:
                         <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">{__('Place a button', 'kudos-donations')}</h1>
-                            <p>{__('Using the Kudos Button block or shortcode, place the button anywhere on your website.', 'kudos-donations')}</p>
-                            <p>{__('If using the block, you will need to select the campaign you created.', 'kudos-donations')}</p>
+                            <p>{__('Use the Kudos Button block or shortcode to place the button anywhere on your website.', 'kudos-donations')}</p>
+                            <p>{__('If using the block, select the desired campaign in the block side bar.', 'kudos-donations')}</p>
                         </div>
                     ,
                 },
