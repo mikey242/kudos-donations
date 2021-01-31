@@ -34,10 +34,11 @@ class TransactionsTable extends WP_List_Table {
 		$this->campaigns = new Campaigns();
 
 		$this->search_columns = [
-			'name'        => __( 'Name', 'kudos-donations' ),
-			'email'       => __( 'Email', 'kudos-donations' ),
-			'campaign_id' => __( 'Campaign', 'kudos-donations' ),
-			'order_id'    => __( 'Order ID', 'kudos-donations' ),
+			'name'          => __( 'Name', 'kudos-donations' ),
+			'email'         => __( 'Email', 'kudos-donations' ),
+			'campaign_id'   => __( 'Campaign', 'kudos-donations' ),
+			'order_id'      => __( 'Order ID', 'kudos-donations' ),
+			'customer_id'   => __( 'Customer ID', 'kudos-donations' ),
 		];
 
 		$this->export_columns = [
@@ -92,14 +93,15 @@ class TransactionsTable extends WP_List_Table {
 		$table      = $this->table;
 		$join_table = DonorEntity::get_table_name();
 		$query      = "
-			SELECT ${table}.*, ${join_table}.name, ${join_table}.email FROM ${table}
+			SELECT ${table}.*, ${join_table}.name, ${join_table}.email, ${join_table}.customer_id ${join_table}
+			FROM ${table}
 			LEFT JOIN ${join_table} on ${join_table}.customer_id = ${table}.customer_id
 		";
 
-		// Where clause
+		// Having clause
 		if ( $view ) {
 			global $wpdb;
-			$where[] = $wpdb->prepare( "
+			$having[] = $wpdb->prepare( "
 				${table}.status = %s
 			",
 				$view );
@@ -107,14 +109,14 @@ class TransactionsTable extends WP_List_Table {
 
 		if ( $search ) {
 			global $wpdb;
-			$where[] = $wpdb->prepare( "
+			$having[] = $wpdb->prepare( "
 				${search['field']} LIKE %s
 			",
 				$search['term'] );
 		}
 
-		$where = ! empty( $where ) ? 'WHERE ' . implode( " AND ", $where ) : '';
-		$query = $query . $where;
+		$having = ! empty( $having ) ? 'HAVING ' . implode( " AND ", $having ) : '';
+		$query = $query . $having;
 
 		return $this->mapper->get_results( $query );
 
@@ -138,6 +140,7 @@ class TransactionsTable extends WP_List_Table {
 			'order_id'       => __( 'Order ID', 'kudos-donations' ),
 			'transaction_id' => __( 'Transaction Id', 'kudos-donations' ),
 			'campaign_id'    => __( 'Campaign', 'kudos-donations' ),
+			'customer_id'    => __( 'Customer ID', 'kudos-donations' ),
 		];
 
 	}
@@ -151,6 +154,7 @@ class TransactionsTable extends WP_List_Table {
 	public function get_hidden_columns(): array {
 		return [
 			'transaction_id',
+			'customer_id'
 		];
 
 	}
@@ -302,12 +306,12 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_name( array $item ): ?string {
 
-		$email = isset( $item['email'] ) ? $item['email'] : null;
+		$customer_id = isset( $item['customer_id'] ) ? $item['customer_id'] : null;
 
-		if ( $email ) {
+		if ( $customer_id ) {
 			return sprintf(
 				"<a href='%s' />%s</a>",
-				admin_url( sprintf( 'admin.php?page=kudos-donors&search-field=email&s=%s', $email ) ),
+				admin_url( sprintf( 'admin.php?page=kudos-donors&search-field=customer_id&s=%s', $customer_id ) ),
 				$item['name']
 			);
 		}
