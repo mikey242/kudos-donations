@@ -98,7 +98,7 @@
             {% embed '/public/modal/embeds/_tab.html.twig' with { class: 'final' } %}
                 {% from "/public/modal/macros/buttons.html.twig" import button %}
                 {% block title %}{{ __('Payment', 'kudos-donations') }}{% endblock %}
-                {% block text %}{{ __('By clicking donate you agree to the following payment', 'kudos-donations') }}{% endblock %}
+                {% block text %}{{ __('By clicking donate you agree to the following payment:', 'kudos-donations') }}{% endblock %}
                 {% block body %}
                     {% from "/public/modal/macros/form.html.twig" import checkbox %}
 
