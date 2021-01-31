@@ -71,6 +71,7 @@ class Settings {
 				'smtp_encryption'       => [
 					'type'         => 'string',
 					'show_in_rest' => true,
+					'default'      => 'tls'
 				],
 				'smtp_autotls'          => [
 					'type'         => 'boolean',
