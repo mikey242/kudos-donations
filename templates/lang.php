@@ -39,7 +39,7 @@ __('Postcode', 'kudos-donations');
 __('City', 'kudos-donations');
 __('Country', 'kudos-donations');
 __('Payment', 'kudos-donations');
-__('By clicking donate you agree to the following payment', 'kudos-donations');
+__('By clicking donate you agree to the following payment:', 'kudos-donations');
 __('Name', 'kudos-donations');
 __('Amount', 'kudos-donations');
 __('Type', 'kudos-donations');
