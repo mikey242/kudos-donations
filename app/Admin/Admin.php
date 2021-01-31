@@ -229,6 +229,25 @@ class Admin {
 	}
 
 	/**
+	 * Assets common to all Kudos Table pages
+	 *
+	 * @since 2.0.0
+	 */
+	private function kudos_table_page_assets(): string {
+
+		$handle = $this->plugin_name . '-table';
+		wp_enqueue_script(
+			$handle,
+			Utils::get_asset_url( 'kudos-admin-table.js' ),
+			[ 'jquery' ],
+			$this->version,
+			false
+		);
+
+		return $handle;
+	}
+
+	/**
 	 * Assets specific to the Kudos Transactions page
 	 *
 	 * @since   2.0.0
@@ -252,25 +271,6 @@ class Admin {
 				'confirmationDelete' => __( 'Are you sure you want to delete this transaction?', 'kudos-donations' ),
 			]
 		);
-	}
-
-	/**
-	 * Assets specific to the Kudos Table pages
-	 *
-	 * @since 2.0.0
-	 */
-	private function kudos_table_page_assets(): string {
-
-		$handle = $this->plugin_name . '-table';
-		wp_enqueue_script(
-			$handle,
-			Utils::get_asset_url( 'kudos-admin-table.js' ),
-			[ 'jquery' ],
-			$this->version,
-			false
-		);
-
-		return $handle;
 	}
 
 	/**
@@ -305,7 +305,7 @@ class Admin {
 			$table_handle,
 			'kudos',
 			[
-				'confirmationDelete' => __( 'Are you sure you want to delete this donor?', 'kudos-donations' ),
+				'confirmationDelete' => __( 'Are you sure you want to delete this donor?', 'kudos-donations' ) ,
 			]
 		);
 	}
