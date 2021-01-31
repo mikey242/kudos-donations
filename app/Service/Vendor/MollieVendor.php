@@ -51,9 +51,9 @@ class MollieVendor extends AbstractVendor {
 	 */
 	public function __construct() {
 
-		$this->mollie_api      = new MollieApiClient();
-		$this->api_mode        = Settings::get_setting( 'mollie_api_mode' );
-		$this->api_key         = Settings::get_setting( 'mollie_' . $this->api_mode . '_api_key' );
+		$this->mollie_api = new MollieApiClient();
+		$this->api_mode   = Settings::get_setting( 'mollie_api_mode' );
+		$this->api_key    = Settings::get_setting( 'mollie_' . $this->api_mode . '_api_key' );
 
 		if ( $this->api_key ) {
 			try {
@@ -186,7 +186,7 @@ class MollieVendor extends AbstractVendor {
 	public function create_customer( string $email, string $name ) {
 
 		$customer_array = [
-			'email' => $email
+			'email' => $email,
 		];
 
 		if ( $name ) {
@@ -238,6 +238,7 @@ class MollieVendor extends AbstractVendor {
 		} catch ( ApiException $e ) {
 
 			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
+
 			return false;
 
 		}
@@ -294,12 +295,12 @@ class MollieVendor extends AbstractVendor {
 			$subscription_array['times'] = Utils::get_times_from_years( $years, $interval );
 		}
 
-		$customer = $this->get_customer( $customer_id );
-		$valid_mandate = $this->check_mandate($customer, $mandate_id);
+		$customer      = $this->get_customer( $customer_id );
+		$valid_mandate = $this->check_mandate( $customer, $mandate_id );
 
 		// Create subscription if valid mandate found
 		if ( $valid_mandate ) {
-			$subscription =  $customer->createSubscription( $subscription_array );
+			$subscription = $customer->createSubscription( $subscription_array );
 			if ( $subscription ) {
 				$mapper             = new MapperService( SubscriptionEntity::class );
 				$kudos_subscription = new SubscriptionEntity(
@@ -343,7 +344,7 @@ class MollieVendor extends AbstractVendor {
 	 */
 	private function check_mandate( Customer $customer, string $mandate_id ): bool {
 
-		$mandate = $customer->getMandate($mandate_id);
+		$mandate = $customer->getMandate( $mandate_id );
 
 		if ( $mandate->isValid() || $mandate->isPending() ) {
 			return true;
@@ -473,8 +474,8 @@ class MollieVendor extends AbstractVendor {
 
 		// Add campaign label to recurring payments.
 		if ( $payment->hasSequenceTypeRecurring() ) {
-			$subscription_id = $payment->subscriptionId;
-			$customer_id     = $payment->customerId;
+			$subscription_id   = $payment->subscriptionId;
+			$customer_id       = $payment->customerId;
 			$customer          = $this->get_customer( $customer_id );
 			$subscription_meta = $customer->getSubscription( $subscription_id )->metadata;
 			if ( array_key_exists( 'campaign_id', $subscription_meta ) ) {
@@ -522,7 +523,7 @@ class MollieVendor extends AbstractVendor {
 	 *
 	 * @return string
 	 */
-	public function get_api_mode():string {
+	public function get_api_mode(): string {
 
 		return $this->api_mode;
 

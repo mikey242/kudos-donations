@@ -299,9 +299,9 @@ class SubscriptionsTable extends WP_List_Table {
 		         '</strong>';
 
 		$url = add_query_arg( [
-			'page'            => esc_attr( $_REQUEST['page'] ),
-			'id' => sanitize_text_field( $item['id'] ),
-			'_wpnonce'        => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
+			'page'     => esc_attr( $_REQUEST['page'] ),
+			'id'       => sanitize_text_field( $item['id'] ),
+			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
 		] );
 
 		$actions = [];

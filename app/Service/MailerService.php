@@ -38,18 +38,20 @@ class MailerService extends AbstractService {
 	 */
 	public function register_rest_routes() {
 
-		register_rest_route('kudos/v1', 'email/test', [
-			'methods'             => WP_REST_Server::CREATABLE,
-			'callback'            => [ $this, 'send_test' ],
-			'args'                => [
-				'email' => [
-					'required' => true,
+		register_rest_route( 'kudos/v1',
+			'email/test',
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'send_test' ],
+				'args'                => [
+					'email' => [
+						'required' => true,
+					],
 				],
-			],
-			'permission_callback' => function () {
-				return current_user_can( 'manage_options' );
-			},
-		]);
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+			] );
 	}
 
 	/**

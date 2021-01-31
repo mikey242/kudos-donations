@@ -100,7 +100,7 @@ class CampaignsTable extends WP_List_Table {
 
 			$campaigns[ $key ]['date']         = date( "r", hexdec( substr( $id, 3, 8 ) ) );
 			$campaigns[ $key ]['transactions'] = 0;
-			$campaigns[ $key ]['total'] = $this->campaigns->get_campaign_total($id);
+			$campaigns[ $key ]['total']        = $this->campaigns->get_campaign_total( $id );
 			if ( $transactions ) {
 				$campaigns[ $key ]['last_donation'] = end( $transactions )->created;
 				$campaigns[ $key ]['transactions']  = count( $transactions );
@@ -204,11 +204,12 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function column_name( array $item ): string {
 
-		$url = add_query_arg([
-			'page'  => 'kudos-settings',
-			'tab_name' => 'campaigns',
-			'campaign_id' => $item['id']
-		], admin_url());
+		$url = add_query_arg( [
+			'page'        => 'kudos-settings',
+			'tab_name'    => 'campaigns',
+			'campaign_id' => $item['id'],
+		],
+			admin_url() );
 
 		$actions = [
 			'edit' => sprintf(

@@ -305,7 +305,7 @@ class Admin {
 			$table_handle,
 			'kudos',
 			[
-				'confirmationDelete' => __( 'Are you sure you want to delete this donor?', 'kudos-donations' ) ,
+				'confirmationDelete' => __( 'Are you sure you want to delete this donor?', 'kudos-donations' ),
 			]
 		);
 	}
@@ -422,10 +422,10 @@ class Admin {
 					break;
 
 				case 'kudos_cancel_subscription':
-					$payment_service    = PaymentService::factory();
-					$subscription_id    = isset( $_REQUEST['subscriptionId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subscriptionId'] ) ) : '';
-					$customer_id        = isset( $_REQUEST['customerId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['customerId'] ) ) : '';
-					$subscription       = $payment_service->cancel_subscription( $subscription_id, $customer_id );
+					$payment_service = PaymentService::factory();
+					$subscription_id = isset( $_REQUEST['subscriptionId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subscriptionId'] ) ) : '';
+					$customer_id     = isset( $_REQUEST['customerId'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['customerId'] ) ) : '';
+					$subscription    = $payment_service->cancel_subscription( $subscription_id, $customer_id );
 					if ( $subscription ) {
 						new AdminNotice( __( 'Subscription cancelled', 'kudos-donations' ) );
 					}

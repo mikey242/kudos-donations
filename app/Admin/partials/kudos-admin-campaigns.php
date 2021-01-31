@@ -46,7 +46,7 @@ switch ( $table_action ) {
 	?>
 	<form id="subscriptions-table" method="POST">
 		<?php
-			$table->display();
+		$table->display();
 		?>
 	</form>
 </div>

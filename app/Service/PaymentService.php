@@ -51,13 +51,13 @@ class PaymentService extends AbstractService {
 
 		parent::__construct();
 
-		switch (Settings::get_setting('payment_vendor')) {
+		switch ( Settings::get_setting( 'payment_vendor' ) ) {
 			case 'mollie':
 				$this->vendor = MollieVendor::factory();
 				break;
 			default:
 				$this->vendor = MollieVendor::factory();
-				$this->logger->critical('No payment vendor specified. Using Mollie.');
+				$this->logger->critical( 'No payment vendor specified. Using Mollie.' );
 		}
 
 	}
@@ -98,7 +98,7 @@ class PaymentService extends AbstractService {
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},
-			]
+			],
 		];
 
 		foreach ( $routes as $key => $route ) {
@@ -152,8 +152,8 @@ class PaymentService extends AbstractService {
 		// Verify nonce
 		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			wp_send_json_error( [
-				'message'   => __( 'Request invalid.', 'kudos-donations' ),
-				'nonce'     => $request->get_header('X-WP-Nonce')
+				'message' => __( 'Request invalid.', 'kudos-donations' ),
+				'nonce'   => $request->get_header( 'X-WP-Nonce' ),
 			] );
 		}
 
@@ -176,24 +176,24 @@ class PaymentService extends AbstractService {
 
 			// Search for existing donor based on email and mode.
 			/** @var DonorEntity $donor */
-			$donor = $mapper->get_one_by([
+			$donor = $mapper->get_one_by( [
 				'email' => $email,
-				'mode'  => $this->vendor->get_api_mode()
+				'mode'  => $this->vendor->get_api_mode(),
 			] );
 
 			// Create new donor if none found.
 			if ( empty( $donor->customer_id ) ) {
 				$donor    = new DonorEntity();
 				$customer = $this->vendor->create_customer( $email, $name );
-				$donor->set_fields( ['customer_id' => $customer->id ] );
+				$donor->set_fields( [ 'customer_id' => $customer->id ] );
 			}
 
 			// Update new/existing donor.
 			$donor->set_fields(
 				[
 					'email'    => $email,
-					'mode'     => $this->vendor->get_api_mode(),
 					'name'     => $name,
+					'mode'     => $this->vendor->get_api_mode(),
 					'street'   => $street,
 					'postcode' => $postcode,
 					'city'     => $city,
@@ -243,14 +243,14 @@ class PaymentService extends AbstractService {
 	 */
 	public function cancel_subscription( string $subscription_id, $customer_id = null ): bool {
 
-		$mapper     = new MapperService( SubscriptionEntity::class );
+		$mapper = new MapperService( SubscriptionEntity::class );
 
 		/** @var SubscriptionEntity $subscription */
 		$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
 
 		if ( $subscription ) {
 
-			$this->vendor->cancel_subscription($subscription_id, $customer_id);
+			$this->vendor->cancel_subscription( $subscription_id, $customer_id );
 
 			$this->logger->info(
 				'Subscription cancelled.',
@@ -296,9 +296,9 @@ class PaymentService extends AbstractService {
 		string $customer_id = null
 	) {
 
-		$order_id   = Utils::generate_id( 'kdo_' );
-		$currency   = 'EUR';
-		$value      = number_format( $value, 2, '.', '' );
+		$order_id = Utils::generate_id( 'kdo_' );
+		$currency = 'EUR';
+		$value    = number_format( $value, 2, '.', '' );
 
 		// Set payment frequency.
 		$frequency_text = Utils::get_frequency_name( $interval );
@@ -430,7 +430,7 @@ class PaymentService extends AbstractService {
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
 
-		return $this->vendor->rest_webhook($request);
+		return $this->vendor->rest_webhook( $request );
 
 	}
 }
