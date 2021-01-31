@@ -37,8 +37,8 @@ const IntroGuide = ({show, updateSetting}) => {
                     content:
                         <div className="kd-intro-container">
                             <h1 className="kd-leading-normal">{__('Connect with Mollie', 'kudos-donations')}</h1>
-                            <p>{__('Login to your Mollie account and grab your api keys.', 'kudos-donations')}</p>
-                            <p>{__('Make sure you get both your test and live api keys. Then enter them under the Mollie tab.', 'kudos-donations')}</p>
+                            <p>{__('Login to your Mollie account and grab your API keys.', 'kudos-donations')}</p>
+                            <p>{__('Make sure you get both your test and live API keys. Then enter them under the Mollie tab.', 'kudos-donations')}</p>
                             <ExternalLink
                                 href="https://mollie.com/dashboard/developers/api-keys">{__('Mollie dashboard', 'kudos-donations')}</ExternalLink>
                         </div>
