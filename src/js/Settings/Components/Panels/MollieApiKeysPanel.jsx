@@ -11,11 +11,11 @@ const MollieApiKeysPanel = (props) => {
     }
 
     return (
-        <SettingCard title={__('Api Keys', 'kudos-donations')}>
+        <SettingCard title={__('API keys', 'kudos-donations')}>
 
             <TextControl
                 key={"_kudos_mollie_test_api_key"}
-                label={__('Test API Key', 'kudos-donations')}
+                label={__('Test API key', 'kudos-donations')}
                 value={props.settings._kudos_mollie_test_api_key || ''}
                 placeholder={__('Begins with "test_"', 'kudos-donations')}
                 disabled={props.isSaving}
@@ -24,7 +24,7 @@ const MollieApiKeysPanel = (props) => {
 
             <TextControl
                 key={"_kudos_mollie_live_api_key"}
-                label={__('Live API Key', 'kudos-donations')}
+                label={__('Live API key', 'kudos-donations')}
                 value={props.settings._kudos_mollie_live_api_key || ''}
                 placeholder={__('Begins with "live_"', 'kudos-donations')}
                 disabled={props.isSaving}
@@ -33,7 +33,7 @@ const MollieApiKeysPanel = (props) => {
 
             <PanelRow>
                 <ExternalLink href="https://mollie.com/dashboard/developers/api-keys">
-                    {__('Get API Key(s)', 'kudos-donations')}
+                    {__('Get API key(s)', 'kudos-donations')}
                 </ExternalLink>
             </PanelRow>
         </SettingCard>

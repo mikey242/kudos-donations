@@ -14,7 +14,7 @@ const MollieApiModePanel = (props) => {
     const selected = props.settings._kudos_mollie_api_mode
 
     return (
-        <SettingCard title={__('Api Mode', 'kudos-donations')}>
+        <SettingCard title={__('API mode', 'kudos-donations')}>
 
             <BaseControl
                 id="_kudos_mollie_api_mode"

@@ -32,7 +32,7 @@ const CampaignsTab = (props) => {
         })
 
         // Save changes
-        props.updateSetting('_kudos_campaigns', null, true, sprintf(__('Added campaign "%s".', 'kudos-donations'), name))
+        props.updateSetting('_kudos_campaigns', null, true, sprintf(__('Added campaign "%s"', 'kudos-donations'), name))
         updateCampaign(campaigns.length - 1)
     }
 
@@ -41,7 +41,7 @@ const CampaignsTab = (props) => {
         let updated = campaigns.filter(value => value.id !== id)
 
         // Save changes
-        props.updateSetting('_kudos_campaigns', _.uniq(updated, 'id'), true, __('Campaign deleted.', 'kudos-donations'))
+        props.updateSetting('_kudos_campaigns', _.uniq(updated, 'id'), true, __('Campaign deleted', 'kudos-donations'))
         updateCampaign(campaigns.length - 2)
     }
 

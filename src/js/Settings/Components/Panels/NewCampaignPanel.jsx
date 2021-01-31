@@ -15,7 +15,7 @@ const NewCampaignPanel = ({addCampaign}) => {
     }
 
     return (
-        <SettingCard title={__('New Campaign', 'kudos-donations')}>
+        <SettingCard title={__('New campaign', 'kudos-donations')}>
             <TextControl
                 label={__(
                     'Campaign name',

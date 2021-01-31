@@ -64,6 +64,7 @@ const HelpPanel = ({updateSetting}) => {
     return (
         <SettingCard>
             <h2>{__('Share the love', 'kudos-donations')}</h2>
+            <p>{__('Do you like using Kudos? Please let us know your thoughts.', 'kudos-donations')}</p>
 
             <Button
                 isSecondary
