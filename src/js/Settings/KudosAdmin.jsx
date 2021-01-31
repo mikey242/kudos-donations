@@ -74,7 +74,6 @@ class KudosAdmin extends Component {
     }
 
     changeTab(tab) {
-        // this.getSettings();
         updateQueryParameter('tab_name', tab)
     }
 
