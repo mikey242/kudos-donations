@@ -73,12 +73,6 @@
       @apply kd-order-last kd-mt-1 kd-block kd-text-sm kd-text-red-500;
     }
 
-    input[type="text"]:required {
-      &::placeholder {
-        @apply kd-font-bold;
-      }
-    }
-
     input[type="checkbox"],
     input[type="radio"] {
 
