@@ -157,8 +157,8 @@ class DonorsTable extends WP_List_Table {
 					die();
 				}
 
-				if ( isset( $_GET['customer_id'] ) ) {
-					self::delete_record( 'customer_id', sanitize_text_field( wp_unslash( $_GET['customer_id'] ) ) );
+				if ( isset( $_GET['id'] ) ) {
+					self::delete_record( 'id', sanitize_text_field( wp_unslash( $_GET['id'] ) ) );
 				}
 
 				break;
@@ -173,7 +173,7 @@ class DonorsTable extends WP_List_Table {
 				if ( isset( $_REQUEST['bulk-action'] ) ) {
 					$donor_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
 					foreach ( $donor_ids as $id ) {
-						self::delete_record( 'customer_id', $id );
+						self::delete_record( 'id', $id );
 					}
 				}
 				break;
@@ -184,14 +184,14 @@ class DonorsTable extends WP_List_Table {
 	 * Delete a donor.
 	 *
 	 * @param string $column Column name to search.
-	 * @param string $customer_id Value to search for.
+	 * @param string $id Value to search for.
 	 *
 	 * @return false|int
 	 * @since   1.0.0
 	 */
-	protected function delete_record( string $column, string $customer_id ) {
+	protected function delete_record( string $column, string $id ) {
 
-		return $this->mapper->delete( $column, $customer_id );
+		return $this->mapper->delete( $column, $id );
 
 	}
 
@@ -206,7 +206,7 @@ class DonorsTable extends WP_List_Table {
 	protected function column_cb( $item ): string {
 		return sprintf(
 			'<input type="checkbox" name="bulk-action[]" value="%s" />',
-			$item['customer_id']
+			$item['id']
 		);
 	}
 
@@ -238,7 +238,7 @@ class DonorsTable extends WP_List_Table {
 		$url = add_query_arg([
 			'page'  => esc_attr($_REQUEST['page']),
 			'action' => 'delete',
-			'customer_id' => sanitize_text_field( $item['customer_id'] ),
+			'id' => sanitize_text_field( $item['id'] ),
 			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] )
 		]);
 
