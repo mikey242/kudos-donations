@@ -192,12 +192,9 @@ class MapperService extends AbstractService {
 	 */
 	public function get_repository() {
 
-		try {
-			if ( null === $this->repository ) {
-				throw new MapperException( 'No repository specified' );
-			}
-		} catch ( MapperException $e ) {
-			$this->logger->warning( 'Failed to get repository.', [ 'message' => $e->getMessage() ] );
+		if ( null === $this->repository ) {
+			$this->logger->warning( 'Failed to get repository.' );
+			return null;
 		}
 
 		return $this->repository;

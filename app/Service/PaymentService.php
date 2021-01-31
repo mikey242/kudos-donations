@@ -174,21 +174,25 @@ class PaymentService extends AbstractService {
 
 		if ( $email ) {
 
-			// Search for existing donor.
+			// Search for existing donor based on email and mode.
 			/** @var DonorEntity $donor */
-			$donor = $mapper->get_one_by( [ 'email' => $email ] );
+			$donor = $mapper->get_one_by([
+				'email' => $email,
+				'mode'  => $this->vendor->get_api_mode()
+			] );
 
-			// Create new donor.
+			// Create new donor if none found.
 			if ( empty( $donor->customer_id ) ) {
 				$donor    = new DonorEntity();
 				$customer = $this->vendor->create_customer( $email, $name );
-				$donor->set_fields( [ 'customer_id' => $customer->id ] );
+				$donor->set_fields( ['customer_id' => $customer->id ] );
 			}
 
 			// Update new/existing donor.
 			$donor->set_fields(
 				[
 					'email'    => $email,
+					'mode'     => $this->vendor->get_api_mode(),
 					'name'     => $name,
 					'street'   => $street,
 					'postcode' => $postcode,

@@ -101,6 +101,7 @@ class DonorsTable extends WP_List_Table {
 			'name'      => __( 'Name', 'kudos-donations' ),
 			'address'   => __( 'Address', 'kudos-donations' ),
 			'donations' => __( 'Donations', 'kudos-donations' ),
+			'mode'      => __( 'Mode', 'kudos-donations' ),
 			'created'   => __( 'Date', 'kudos-donations' ),
 		];
 	}

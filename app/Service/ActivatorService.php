@@ -43,9 +43,23 @@ class ActivatorService {
 
 			if ( version_compare( $old_version, '2.3.0', '<' ) ) {
 				global $wpdb;
-				$table = TransactionEntity::get_table_name();
-				$wpdb->query( "ALTER TABLE $table RENAME COLUMN `campaign_label` TO `campaign_id`" );
+
+				// Rename setting
+				$transaction_table = TransactionEntity::get_table_name();
+				$wpdb->query( "ALTER TABLE $transaction_table RENAME COLUMN `campaign_label` TO `campaign_id`" );
 				Settings::update_setting( 'show_intro', 1 );
+
+				// Apply mode to Donors
+				$mapper = new MapperService(DonorEntity::class);
+				$donors = $mapper->get_all_by();
+				/** @var DonorEntity $donor */
+				foreach ($donors as $donor) {
+					$transactions = $donor->get_transactions();
+					if($transactions) {
+						$donor->set_fields(['mode' => $transactions[0]->mode]);
+					}
+					$mapper->save($donor);
+				}
 			}
 
 			if ( version_compare( $old_version, '2.2.0', '<' ) ) {
@@ -98,6 +112,7 @@ class ActivatorService {
 		  country VARCHAR(255),
 		  customer_id VARCHAR(255),
 		  secret VARCHAR(255),
+		  mode VARCHAR(45) NOT NULL,
 		  PRIMARY KEY (id)
 		) $charset_collate";
 

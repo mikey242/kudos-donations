@@ -18,6 +18,13 @@ class DonorEntity extends AbstractEntity {
 	 * @var string
 	 */
 	public $email;
+
+	/**
+	 * API Mode used to create donor.
+	 *
+	 * @var string
+	 */
+	public $mode;
 	/**
 	 * Donor's name
 	 *
