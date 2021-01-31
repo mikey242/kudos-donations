@@ -28,7 +28,8 @@ class MailerService extends AbstractService {
 	public function __construct() {
 
 		$from_name  = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
-		$this->from = "From: $from_name " . ' <' . ( Settings::get_setting( 'smtp_from' ) ?? Settings::get_setting( 'smtp_username' ) ) . '>';
+		$from_address = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
+		$this->from = "From: $from_name " . ' <' . $from_address . '>';
 		parent::__construct();
 
 	}
