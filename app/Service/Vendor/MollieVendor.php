@@ -186,7 +186,7 @@ class MollieVendor extends AbstractVendor {
 	public function create_customer( string $email, string $name ) {
 
 		$customer_array = [
-			'email' => $email,
+			'email' => $email
 		];
 
 		if ( $name ) {
@@ -226,7 +226,7 @@ class MollieVendor extends AbstractVendor {
 	 *
 	 * @param array $payment_array Parameters to pass to mollie to create a payment.
 	 *
-	 * @return false|Payment
+	 * @return bool|Payment
 	 * @since      1.0.0
 	 */
 	public function create_payment( array $payment_array ): ?Payment {
@@ -515,5 +515,16 @@ class MollieVendor extends AbstractVendor {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Returns the api mode
+	 *
+	 * @return string
+	 */
+	public function get_api_mode():string {
+
+		return $this->api_mode;
+
 	}
 }

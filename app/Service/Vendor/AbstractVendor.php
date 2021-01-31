@@ -58,7 +58,7 @@ abstract class AbstractVendor extends AbstractService {
 	abstract public function get_payment( string $mollie_payment_id );
 
 	/**
-	 * Create a Mollie customer.
+	 * Create a customer.
 	 *
 	 * @param string $email Donor email address.
 	 * @param string $name Donor name.
@@ -66,7 +66,7 @@ abstract class AbstractVendor extends AbstractService {
 	abstract public function create_customer( string $email, string $name );
 
 	/**
-	 * Get the customer from Mollie
+	 * Get the customer
 	 *
 	 * @param $customer_id
 	 */
@@ -80,13 +80,20 @@ abstract class AbstractVendor extends AbstractService {
 	abstract public function create_payment( array $payment_array );
 
 	/**
-	 * Mollie webhook action
+	 * Vendor webhook action
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 *
 	 * @return WP_Error|WP_REST_Response
 	 */
 	abstract public function rest_webhook( WP_REST_Request $request );
+
+	/**
+	 * Vendor API mode
+	 *
+	 * @return string
+	 */
+	abstract public function get_api_mode():string;
 
 	/**
 	 * Returns the vendor name as a string
