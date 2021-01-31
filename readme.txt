@@ -1,10 +1,10 @@
 === Kudos Donations - Easy donations and payments with Mollie ===
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
-Requires at least: 5.4
+Requires at least: 5.5
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ Just enter your API key from Mollie, then add one or more buttons anywhere on yo
 Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
 
 = Campaigns =
-Create and assign a campaign to each donation button to group and track donations. This is useful for tracking donations made to different donation campaigns and easily applying configurations to buttons.
+Create campaigns to easily group and track donations made by your donors. Each campaign can have a unique configuration which can be changed from the settings page and automatically applied to all your buttons.
 
 = Recurring Payments =
 Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie. You can also disable this and use only one-off payments if you prefer.
@@ -106,7 +106,8 @@ e.g:
 * Switch to REST api to create transactions
 * Added welcome guide when settings page first visited
 * Added "Help" tab to settings page with useful links
-* Fix issue with email used in test mode not working in live
+* Fixed issue with email used in test mode not working in live
+* Fixed issue with email when "From address" left blank
 
 = 2.2.0 =
 * Add ability to change donation type (subscription, one-off or both) to each button
