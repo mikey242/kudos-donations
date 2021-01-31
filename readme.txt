@@ -34,7 +34,7 @@ Just enter your API key from Mollie, then add one or more buttons anywhere on yo
 Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
 
 = Campaigns =
-Assign a campaign to each donation button to group and track donations made. This is useful for tracking donations made to different donation campaigns and easily applying configurations to buttons.
+Create and assign a campaign to each donation button to group and track donations. This is useful for tracking donations made to different donation campaigns and easily applying configurations to buttons.
 
 = Recurring Payments =
 Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie. You can also disable this and use only one-off payments if you prefer.
@@ -82,12 +82,13 @@ To get started add the Kudos Donations shortcode:
 
 Here is a list of the shortcode attributes:
 
+* *button_label* = The label to display for the button.
 * *campaign_id* = Id of the campaign to use for this button.
 
 e.g:
 
 ~~~~
-[kudos campaign_id="default"]
+[kudos button_label="Donate now" campaign_id="default"]
 ~~~~
 
 == Screenshots ==
@@ -105,6 +106,7 @@ e.g:
 * Switch to REST api to create transactions
 * Added welcome guide when settings page first visited
 * Added "Help" tab to settings page with useful links
+* Fix issue with email used in test mode not working in live
 
 = 2.2.0 =
 * Add ability to change donation type (subscription, one-off or both) to each button
