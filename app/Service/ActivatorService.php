@@ -50,6 +50,8 @@ class ActivatorService {
 				Settings::update_setting( 'show_intro', 1 );
 
 				// Apply mode to Donors
+				$donor_table = DonorEntity::get_table_name();
+				$wpdb->query("ALTER TABLE $donor_table ADD `mode` VARCHAR(45) NOT NULL");
 				$mapper = new MapperService( DonorEntity::class );
 				$donors = $mapper->get_all_by();
 				/** @var DonorEntity $donor */
