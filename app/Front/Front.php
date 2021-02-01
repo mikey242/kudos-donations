@@ -374,7 +374,7 @@ class Front {
 									[
 										'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
 										'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
-											'kudos-donations' ),
+										'kudos-donations' ),
 									]
 								);
 

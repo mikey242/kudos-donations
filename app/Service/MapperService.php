@@ -5,6 +5,7 @@ namespace Kudos\Service;
 use Exception;
 use Kudos\Entity\AbstractEntity;
 use Kudos\Entity\EntityInterface;
+use Kudos\Helpers\Settings;
 use ReflectionClass;
 use ReflectionException;
 use wpdb;
@@ -156,6 +157,11 @@ class MapperService extends AbstractService {
 	 * @since 2.0.5
 	 */
 	private function get_cache_incrementer( $refresh = false ) {
+
+		// Override refresh with setting
+		if(Settings::get_setting('disable_object_cache')) {
+			$refresh = true;
+		}
 
 		$key   = 'kudos';
 		$group = $this->get_table_name( false );

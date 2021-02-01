@@ -158,6 +158,11 @@ class Settings {
 					'show_in_rest' => true,
 					'default'      => false,
 				],
+				'disable_object_cache'     => [
+					'type'         => 'boolean',
+					'show_in_rest' => true,
+					'default'      => false,
+				],
 				'campaigns'             => [
 					'type'              => 'array',
 					'show_in_rest'      => [

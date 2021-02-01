@@ -102,7 +102,9 @@ e.g:
 
 = 2.3.1 =
 * Display campaign_id in campaign header on settings page
-* Fix various missing translations caused by terser compression
+* Fix issues with canceling subscriptions
+* Fix various missing translations caused by webpack compression
+* Various other minor fixes
 
 = 2.3.0 =
 * Reworked campaigns, greatly simplifying shortcodes and configuration
