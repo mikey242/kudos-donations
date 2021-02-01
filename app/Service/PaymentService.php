@@ -246,15 +246,19 @@ class PaymentService extends AbstractService {
 
 			if($result) {
 
-				$this->logger->info(
-					'Subscription cancelled.',
-					[ 'customer_id' => $customer_id, 'subscription_id' => $subscription_id ]
-				);
-
+				// Update entity with canceled status
 				$subscription->set_fields(
 					[
 						'status' => 'cancelled',
 					]
+				);
+
+				// Save changes to subscription entity.
+				$mapper->save( $subscription );
+
+				$this->logger->info(
+					'Subscription cancelled.',
+					[ 'customer_id' => $customer_id, 'subscription_id' => $subscription_id ]
 				);
 
 				return true;

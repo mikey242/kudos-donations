@@ -235,11 +235,7 @@ class SubscriptionsTable extends WP_List_Table {
 		/** @var SubscriptionEntity $subscription */
 		$subscription    = $mapper->get_one_by(['id' => $id]);
 		$subscription_id = $subscription->subscription_id;
-		if ( $payment_service->cancel_subscription( $subscription_id ) ) {
-			return true;
-		}
-
-		return false;
+		return $payment_service->cancel_subscription( $subscription_id );
 	}
 
 	/**
