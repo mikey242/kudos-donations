@@ -56,7 +56,7 @@ class DonorEntity extends AbstractEntity {
 	 */
 	public $country;
 	/**
-	 * The customer id used by mollie
+	 * The customer id used by vendor
 	 *
 	 * @var string
 	 */
