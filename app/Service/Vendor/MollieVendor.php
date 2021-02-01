@@ -405,7 +405,7 @@ class MollieVendor extends AbstractVendor {
 		}
 
 		//Create webhook action.
-		do_action( 'kudos_mollie_webhook', $payment );
+		do_action( 'kudos_mollie_webhook_requested', $payment );
 
 		//Get required data from payment object.
 		$transaction_id = $payment->id;
@@ -433,6 +433,8 @@ class MollieVendor extends AbstractVendor {
 
 		// Add refund if present.
 		if ( $payment->hasRefunds() ) {
+
+			do_action( 'kudos_mollie_refund', $order_id );
 
 			$transaction->set_fields(
 				[
@@ -502,7 +504,8 @@ class MollieVendor extends AbstractVendor {
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 
 			// Get schedule processing for later.
-			Utils::schedule_action( strtotime( '+1 minute' ), 'kudos_process_paid_transaction', [ $order_id ] );
+			Utils::schedule_action( strtotime( '+1 minute' ), 'kudos_mollie_paid_email', [ $order_id ] );
+
 			// Set up recurring payment if sequence is first.
 			if ( $payment->hasSequenceTypeFirst() ) {
 				$this->logger->debug( 'Creating subscription', [ $transaction ] );

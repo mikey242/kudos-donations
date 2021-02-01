@@ -169,7 +169,7 @@ class KudosDonations {
 	 */
 	private function define_mollie_hooks() {
 
-		add_action( 'kudos_process_paid_transaction', [ PaymentService::class, 'process_transaction' ], 10, 1 );
+		add_action( 'kudos_mollie_paid_email', [ PaymentService::class, 'process_transaction' ], 10, 1 );
 		add_action( 'wp_ajax_nopriv_submit_payment', [ PaymentService::factory(), 'submit_payment' ] );
 		add_action( 'wp_ajax_submit_payment', [ PaymentService::factory(), 'submit_payment' ] );
 
