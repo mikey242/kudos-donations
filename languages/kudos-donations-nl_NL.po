@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-31 18:39+0100\n"
-"PO-Revision-Date: 2021-01-31 18:39+0100\n"
+"POT-Creation-Date: 2021-02-01 10:26+0100\n"
+"PO-Revision-Date: 2021-02-01 10:26+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -504,12 +504,12 @@ msgstr "Steun ons!"
 msgid "Your support is greatly appreciated and will help to keep us going."
 msgstr "Jouw steun wordt zeer gewaardeerd."
 
-#: app/Helpers/Settings.php:128
+#: app/Helpers/Settings.php:129
 msgid "Thank you!"
 msgstr "Bedankt!"
 
 #. translators: %s: Value of donation.
-#: app/Helpers/Settings.php:136
+#: app/Helpers/Settings.php:137
 #, php-format
 msgid "Many thanks for your donation of %s. We appreciate your support."
 msgstr "Bedankt voor je donatie van %s. Wij waarderen je steun enorm."
@@ -566,30 +566,30 @@ msgstr ""
 msgid "Kudos Donations"
 msgstr "Kudos Donations"
 
-#: app/Service/MailerService.php:153
+#: app/Service/MailerService.php:154
 msgid "Donation Receipt"
 msgstr "Donatie Ontvangstbewijs"
 
-#: app/Service/MailerService.php:208
+#: app/Service/MailerService.php:209
 msgid "Please provide an email address."
 msgstr "Geef een e-mailadres op."
 
-#: app/Service/MailerService.php:212
+#: app/Service/MailerService.php:213
 msgid "It worked!"
 msgstr "Het werkt!"
 
-#: app/Service/MailerService.php:213
+#: app/Service/MailerService.php:214
 msgid "Looks like your email settings are set up correctly :-)"
 msgstr "Het lijkt erop dat je e-mailinstellingen correct zijn ingesteld :-)"
 
 #. translators: %s: API mode
-#: app/Service/MailerService.php:219
+#: app/Service/MailerService.php:220
 #, php-format
 msgid "Email sent to %s."
 msgstr "E-mail verzonden naar %s."
 
 #. translators: %s: API mode
-#: app/Service/MailerService.php:222
+#: app/Service/MailerService.php:223
 msgid "Error sending email, please check the settings and try again."
 msgstr ""
 "Fout bij het verzenden van e-mail, controleer de instellingen en probeer het "
@@ -834,6 +834,10 @@ msgstr ""
 #: dist/js/kudos-admin-settings.js:1
 msgid "Copied!"
 msgstr "Gekopieerd!"
+
+#: dist/js/kudos-admin-settings.js:1
+msgid "Copy Shortcode"
+msgstr "Kopieer shortcode"
 
 #: dist/js/kudos-admin-settings.js:1
 msgid "Are you sure you wish to delete this campaign?"
@@ -1190,6 +1194,10 @@ msgid "Sending"
 msgstr "Bezig met versturen"
 
 #: dist/js/kudos-admin-settings.js:1
+msgid "Send"
+msgstr "Versturen"
+
+#: dist/js/kudos-admin-settings.js:1
 msgid "Colour"
 msgstr "Kleur"
 
@@ -1399,12 +1407,6 @@ msgstr "Vorig tabblad"
 #: templates/lang.php:56
 msgid "Next"
 msgstr "Volgende"
-
-#~ msgid "Copy Shortcode"
-#~ msgstr "Kopieer shortcode"
-
-#~ msgid "Send"
-#~ msgstr "Versturen"
 
 #~ msgid "Email settings"
 #~ msgstr "E-mail instellingen"
