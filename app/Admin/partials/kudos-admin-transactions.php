@@ -32,7 +32,7 @@ echo get_search_query();
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php esc_attr_e( 'Transactions', 'kudos-donations' ); ?></h1>
-	<?php if ( isset( $_REQUEST['s'] ) ) { ?>
+	<?php if ( !empty( $_REQUEST['s'] ) ) { ?>
 		<span class="subtitle">
 			<?php
 			/* translators: %s: Search term */

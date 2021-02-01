@@ -40,7 +40,7 @@ switch ( $table_action ) {
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php esc_attr_e( 'Subscriptions', 'kudos-donations' ); ?></h1>
-	<?php if ( isset( $_REQUEST['s'] ) ) { ?>
+	<?php if ( !empty( $_REQUEST['s'] ) ) { ?>
 		<span class="subtitle">
 			<?php
 			/* translators: %s: Search term */
