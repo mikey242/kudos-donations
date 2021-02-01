@@ -18,6 +18,7 @@ module.exports = merge(common, {
                         comments: /translators:/i,
                     },
                     compress: {
+                        conditionals: false, // Needed to prevent __() functions in ternary from being combined
                         drop_console: true,
                     },
                 },
