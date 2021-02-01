@@ -116,13 +116,8 @@ class PaymentService extends AbstractService {
 	 */
 	public static function process_transaction( string $order_id ): bool {
 
-		$logger = LoggerService::factory();
-		$logger->debug( 'Processing transaction', [ $order_id ] );
-
 		// Bail if no order ID.
 		if ( null === $order_id ) {
-			$logger->error( 'Order ID not provided to process_transaction function.' );
-
 			return false;
 		}
 
@@ -222,12 +217,9 @@ class PaymentService extends AbstractService {
 			wp_send_json_success( $result->getCheckoutUrl() );
 		}
 
-		// If payment not created by Mollie return an error message
-		$message = current_user_can( 'administrator' ) && KUDOS_DEBUG ? $result['message'] : __( 'Error creating Mollie payment. Please try again later.',
-			'kudos-donations' );
-
+		// If payment not created return an error message
 		wp_send_json_error( [
-			'message' => $message,
+			'message' => __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' ),
 		] );
 
 	}
@@ -282,7 +274,7 @@ class PaymentService extends AbstractService {
 	 * @param string|null $email Email of donor.
 	 * @param string|null $customer_id Mollie customer id.
 	 *
-	 * @return array|object
+	 * @return false|object
 	 * @since      2.3.0
 	 */
 	public function create_payment(
@@ -335,6 +327,9 @@ class PaymentService extends AbstractService {
 		}
 
 		$payment = $this->vendor->create_payment( $payment_array );
+		if(null === $payment) {
+			return false;
+		}
 
 		$transaction = new TransactionEntity(
 			[
