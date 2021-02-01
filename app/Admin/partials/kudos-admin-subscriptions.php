@@ -21,13 +21,6 @@ switch ( $table_action ) {
 	case 'delete':
 		$message = __( 'Subscription deleted', 'kudos-donations' );
 		break;
-	case 'bulk-cancel':
-		$message = sprintf(
-		/* translators: %s: Number of records */
-			_n( 'Cancelled %s subscription', 'Cancelled %s subscriptions', $records, 'kudos-donations' ),
-			$records
-		);
-		break;
 	case 'bulk-delete':
 		$message = sprintf(
 		/* translators: %s: Number of records */

@@ -167,7 +167,7 @@ class SubscriptionsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Process cancel and bulk-cancel actions
+	 * Process delete, cancel and bulk-delete actions
 	 *
 	 * @since      2.0.0
 	 */
@@ -201,21 +201,6 @@ class SubscriptionsTable extends WP_List_Table {
 						sanitize_text_field( wp_unslash( $_GET['id'] ) ) );
 				}
 
-				break;
-
-			case 'bulk-cancel':
-				// Verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['plural'] ) ) {
-					die();
-				}
-
-				if ( isset( $_REQUEST['bulk-action'] ) ) {
-					$customer_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
-					foreach ( $customer_ids as $id ) {
-						self::cancel_subscription( $id );
-					}
-				}
 				break;
 
 			case 'bulk-delete':
