@@ -104,20 +104,16 @@ class MollieVendor extends AbstractVendor {
 
 		// Get customer id from subscription if not provided
 		if ( ! $customer_id ) {
-
-			$mapper     = new MapperService( SubscriptionEntity::class );
+			// Get the subscription from the database
+			$mapper = new MapperService( SubscriptionEntity::class );
 			/** @var SubscriptionEntity $subscription */
 			$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
-
-			if ( empty( $subscription ) ) {
-				return false;
-			}
-
-			if ( 'active' !== $subscription->status ) {
-				return false;
-			}
-
 			$customer_id = $subscription->customer_id;
+		}
+
+		// Bail if no subscription found locally or if not active
+		if ( empty( $subscription ) || 'active' !== $subscription->status ) {
+			return false;
 		}
 
 		$customer = $this->get_customer( $customer_id );
@@ -125,10 +121,11 @@ class MollieVendor extends AbstractVendor {
 		try {
 
 			$response = $customer->cancelSubscription( $subscription_id );
-			/** @var Subscription $response */
-			return ($response->status === 'canceled');
 
-		} catch (ApiException $e) {
+			/** @var Subscription $response */
+			return ( $response->status === 'canceled' );
+
+		} catch ( ApiException $e ) {
 
 			$this->logger->critical( $e->getMessage() );
 			return false;
@@ -426,7 +423,7 @@ class MollieVendor extends AbstractVendor {
 		$amount         = $payment->amount;
 
 		// Get transaction from database.
-		$mapper      = new MapperService( TransactionEntity::class );
+		$mapper = new MapperService( TransactionEntity::class );
 		/** @var TransactionEntity $transaction */
 		$transaction = $mapper->get_one_by(
 			[
@@ -438,9 +435,9 @@ class MollieVendor extends AbstractVendor {
 
 		// Create new transaction if none found.
 		if ( null === $transaction ) {
-			$transaction = new TransactionEntity([
+			$transaction = new TransactionEntity( [
 				'order_id' => $order_id,
-			]);
+			] );
 		}
 
 		// Add refund if present.
