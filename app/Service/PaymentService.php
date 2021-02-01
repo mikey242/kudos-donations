@@ -242,20 +242,24 @@ class PaymentService extends AbstractService {
 
 		if ( $subscription ) {
 
-			$this->vendor->cancel_subscription( $subscription_id, $customer_id );
+			$result = $this->vendor->cancel_subscription( $subscription_id, $customer_id );
 
-			$this->logger->info(
-				'Subscription cancelled.',
-				[ 'customer_id' => $customer_id, 'subscription_id' => $subscription_id ]
-			);
+			if($result) {
 
-			$subscription->set_fields(
-				[
-					'status' => 'cancelled',
-				]
-			);
+				$this->logger->info(
+					'Subscription cancelled.',
+					[ 'customer_id' => $customer_id, 'subscription_id' => $subscription_id ]
+				);
 
-			return $mapper->save( $subscription ) > 1;
+				$subscription->set_fields(
+					[
+						'status' => 'cancelled',
+					]
+				);
+
+				return true;
+			}
+
 		}
 
 		return false;

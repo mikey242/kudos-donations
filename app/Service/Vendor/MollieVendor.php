@@ -105,13 +105,15 @@ class MollieVendor extends AbstractVendor {
 		// Get customer id from subscription if not provided
 		if ( ! $customer_id ) {
 
+			$mapper     = new MapperService( SubscriptionEntity::class );
+			/** @var SubscriptionEntity $subscription */
+			$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
+
 			if ( empty( $subscription ) ) {
 				return false;
 			}
 
 			if ( 'active' !== $subscription->status ) {
-				$this->logger->debug( 'Subscription already cancelled.', [ 'subscription_id' => $subscription_id ] );
-
 				return false;
 			}
 
@@ -119,8 +121,10 @@ class MollieVendor extends AbstractVendor {
 		}
 
 		$customer = $this->get_customer( $customer_id );
+		/** @var Subscription $response */
+		$response = $customer->cancelSubscription( $subscription_id );
 
-		return $customer->cancelSubscription( $subscription_id );
+		return ($response->status === 'canceled');
 	}
 
 	/**
@@ -226,7 +230,7 @@ class MollieVendor extends AbstractVendor {
 	 *
 	 * @param array $payment_array Parameters to pass to mollie to create a payment.
 	 *
-	 * @return bool|Payment
+	 * @return null|Payment
 	 * @since      1.0.0
 	 */
 	public function create_payment( array $payment_array ): ?Payment {
@@ -239,7 +243,7 @@ class MollieVendor extends AbstractVendor {
 
 			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
 
-			return false;
+			return null;
 
 		}
 
@@ -414,6 +418,7 @@ class MollieVendor extends AbstractVendor {
 
 		// Get transaction from database.
 		$mapper      = new MapperService( TransactionEntity::class );
+		/** @var TransactionEntity $transaction */
 		$transaction = $mapper->get_one_by(
 			[
 				'order_id'       => $order_id,
@@ -424,11 +429,9 @@ class MollieVendor extends AbstractVendor {
 
 		// Create new transaction if none found.
 		if ( null === $transaction ) {
-			$transaction = new TransactionEntity(
-				[
-					'order_id' => $order_id,
-				]
-			);
+			$transaction = new TransactionEntity([
+				'order_id' => $order_id,
+			]);
 		}
 
 		// Add refund if present.
@@ -448,13 +451,10 @@ class MollieVendor extends AbstractVendor {
 			);
 
 			$this->logger->info( 'Payment refunded', [ $transaction ] );
-			do_action( 'kudos_process_refund', $order_id );
 
 		} else {
 			// Check if status is the same (in case of multiple webhook calls).
 			if ( $transaction->status === $payment->status ) {
-				$this->logger->debug( 'Duplicate webhook detected. Ignoring.', [ $transaction ] );
-
 				return $response;
 			}
 		}
@@ -474,8 +474,9 @@ class MollieVendor extends AbstractVendor {
 			]
 		);
 
-		// Add campaign label to recurring payments.
+		// Add campaign id to recurring payments.
 		if ( $payment->hasSequenceTypeRecurring() ) {
+
 			$subscription_id   = $payment->subscriptionId;
 			$customer_id       = $payment->customerId;
 			$customer          = $this->get_customer( $customer_id );

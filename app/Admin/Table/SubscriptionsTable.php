@@ -183,8 +183,8 @@ class SubscriptionsTable extends WP_List_Table {
 					die();
 				}
 
-				if ( isset( $_GET['subscription_id'] ) ) {
-					self::cancel_subscription( sanitize_text_field( wp_unslash( $_GET['subscription_id'] ) ) );
+				if ( isset( $_GET['id'] ) ) {
+					self::cancel_subscription( sanitize_text_field( wp_unslash( $_GET['id'] ) ) );
 				}
 
 				break;
@@ -196,7 +196,7 @@ class SubscriptionsTable extends WP_List_Table {
 					die();
 				}
 
-				if ( isset( $_GET['subscription_id'] ) ) {
+				if ( isset( $_GET['id'] ) ) {
 					self::delete_record( 'id',
 						sanitize_text_field( wp_unslash( $_GET['id'] ) ) );
 				}
@@ -223,14 +223,18 @@ class SubscriptionsTable extends WP_List_Table {
 	/**
 	 * Cancel a subscription.
 	 *
-	 * @param string $subscription_id order ID.
+	 * @param string $id order ID.
 	 *
 	 * @return bool
 	 * @since      2.0.0
 	 */
-	public static function cancel_subscription( string $subscription_id ): bool {
+	public static function cancel_subscription( string $id ): bool {
 
 		$payment_service = PaymentService::factory();
+		$mapper = new MapperService(SubscriptionEntity::class);
+		/** @var SubscriptionEntity $subscription */
+		$subscription    = $mapper->get_one_by(['id' => $id]);
+		$subscription_id = $subscription->subscription_id;
 		if ( $payment_service->cancel_subscription( $subscription_id ) ) {
 			return true;
 		}
@@ -427,7 +431,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 */
 	protected function get_bulk_actions(): array {
 		return [
-			'bulk-cancel' => __( 'Cancel', 'kudos-donations' ),
 			'bulk-delete' => __( 'Delete', 'kudos-donations' ),
 		];
 	}
