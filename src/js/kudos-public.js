@@ -85,9 +85,13 @@ $(() => {
                 if (target) {
                     MicroModal.show(target, {
                         onShow(modal) {
+
+                            // Clear error message
                             $(modal)
                                 .find('.kudos_error_message')
                                 .text('')
+
+                            // Reset and config form
                             const $form = $(modal).find('.kudos_form')
                             if ($form.length) {
                                 $('fieldset.current-tab').removeClass(
@@ -103,6 +107,14 @@ $(() => {
                                 $amountInput.attr({'required': false, 'name': ''})
                                 $form.validate().resetForm()
                                 $form[0].reset()
+                            }
+
+                            // Progress bar
+                            let progressBar = modal.querySelector('.kudos-campaign-progress')
+                            if(progressBar) {
+                                let percent = progressBar.dataset.percent / 100
+                                let bar = progressBar.querySelector('.kudos-progress-bar')
+                                setTimeout(() => bar.style.transform = "scaleX(" + percent + ")", 500)
                             }
                         },
                         awaitCloseAnimation: true,
