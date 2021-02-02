@@ -66,12 +66,14 @@ class KudosModal {
 	 */
 	public function get_donate_modal( array $data ): string {
 
+		// Merge global settings with provided data
 		$data = array_merge( $data,
 			[
 				'return_url' => Utils::get_return_url(),
 				'vendor'     => Settings::get_setting( 'payment_vendor' ),
 				'terms_link' => Settings::get_setting( 'terms_link' ),
-			] );
+			]
+		);
 
 		return $this->twig->render( '/public/modal/donate.modal.html.twig', $data );
 
