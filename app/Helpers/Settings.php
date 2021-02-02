@@ -177,6 +177,9 @@ class Settings {
 									'name'             => [
 										'type' => 'string',
 									],
+									'campaign_goal'    => [
+										'type'  => 'string'
+									],
 									'modal_title'      => [
 										'type' => 'string',
 									],

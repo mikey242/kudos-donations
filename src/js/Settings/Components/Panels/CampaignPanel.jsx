@@ -34,6 +34,18 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
+
+                <TextControl
+                    label={__('Goal', 'kudos-donations')}
+                    help={__('Set a goal for your campaign.', 'kudos-donations')}
+                    type={'number'}
+                    value={campaign.campaign_goal || ''}
+                    onChange={(value) => {
+                        campaign.campaign_goal = value
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                    }}
+                />
+
             </SettingCard>
 
             <CardDivider/>

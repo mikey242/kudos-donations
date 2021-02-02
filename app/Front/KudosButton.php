@@ -63,6 +63,14 @@ class KudosButton {
 	/**
 	 * @var string
 	 */
+	private $campaign_goal;
+	/**
+	 * @var string
+	 */
+	private $campaign_total;
+	/**
+	 * @var string
+	 */
 	private $donation_type;
 	/**
 	 * @var bool
@@ -150,6 +158,8 @@ class KudosButton {
 			'address_required' => $this->address_required,
 			'donation_type'    => $this->donation_type,
 			'campaign_id'      => $this->campaign_id,
+			'campaign_goal'    => $this->campaign_goal,
+			'campaign_total'   => $this->campaign_total,
 			'payment_by'       => __( 'Secure payment by', 'kudos-donations' ),
 		];
 

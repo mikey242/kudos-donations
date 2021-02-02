@@ -1,0 +1,7 @@
+{% macro progress(total, current, height='35px') %}
+    {% set percent = (current / total) * 100 %}
+    <div class="kudos-campaign-progress kd-flex kd-relative kd-shadow-inner kd-my-4 kd-overflow-hidden kd-bg-gray-200 kd-rounded kd-w-full" style="height: {{ height }}">
+        <div class="kd-flex kd-px-2 kd-min-w-min kd-justify-center kd-items-center kd-bg-green-500 kd-text-white kd-text-center" style="width:{{ percent }}%">{{ percent | round }}%</div>
+        <div class="kd-absolute kd-top-1/2 kd-right-0 kd-mr-2" style="transform: translateY(-50%)">{{ __('Goal', 'kudos-donations') }}: €{{ total }}</div>
+    </div>
+{% endmacro %}

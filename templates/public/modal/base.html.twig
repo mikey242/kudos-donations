@@ -5,6 +5,8 @@
              role="dialog" aria-modal="true" aria-labelledby="kudos_modal_title">
             <header class="kudos_modal_header kd-flex kd-items-center kd-justify-between">
                 <div class="kudos_modal_logo"></div>
+                {% block header %}
+                {% endblock header %}
                 <button class="kudos_modal_close hover:kd-no-underline hover:kd-bg-transparent kd-text-2xl kd-cursor-pointer"
                         aria-hidden="true" data-micromodal-close aria-label="Close modal">
                     &times;

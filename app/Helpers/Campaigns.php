@@ -141,7 +141,7 @@ class Campaigns {
 	 *
 	 * @return float|int
 	 */
-	public function get_campaign_total( string $campaign_id ) {
+	public static function get_campaign_total( string $campaign_id ) {
 
 		$mapper       = new MapperService( TransactionEntity::class );
 		$transactions = $mapper->get_all_by( [
@@ -159,8 +159,7 @@ class Campaigns {
 			}
 
 			return 0;
-		},
-			(array) $transactions ) );
+		},(array) $transactions ) );
 
 	}
 

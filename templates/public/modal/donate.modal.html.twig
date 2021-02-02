@@ -2,6 +2,15 @@
 {% set classes = 'kudos_form_modal' %}
 {% set premium = false %}
 
+{% block header %}
+    {% if campaign_goal > 0 and campaign_total > 0 %}
+        <div class="kd-w-full kd-mx-5">
+        {% from "/public/modal/macros/progress.html.twig" import progress %}
+        {{ progress(campaign_goal, campaign_total) }}
+        </div>
+    {% endif %}
+{% endblock header %}
+
 {% block content %}
 
     <form class="kudos_form m-0 p-0" action="">
