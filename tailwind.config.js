@@ -32,6 +32,7 @@ module.exports = {
     minWidth: {
       0: '0',
       1: '1em',
+      min: 'min-content',
       full: '100%',
     },
     spacing: {
