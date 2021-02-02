@@ -95,28 +95,24 @@ class MollieVendor extends AbstractVendor {
 	 * Cancel the specified subscription
 	 *
 	 * @param string $subscription_id Mollie subscription id.
-	 * @param null|string $customer_id Mollie customer id.
 	 *
 	 * @return bool
 	 * @since   2.0.0
 	 */
-	public function cancel_subscription( string $subscription_id, $customer_id = null ): bool {
+	public function cancel_subscription( string $subscription_id ): bool {
 
-		// Get customer id from subscription if not provided
-		if ( ! $customer_id ) {
-			// Get the subscription from the database
-			$mapper = new MapperService( SubscriptionEntity::class );
-			/** @var SubscriptionEntity $subscription */
-			$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
-			$customer_id = $subscription->customer_id;
-		}
-
-		// Bail if no subscription found locally or if not active
-		if ( empty( $subscription ) || 'active' !== $subscription->status ) {
-			return false;
-		}
+		// Get the subscription from the database
+		$mapper = new MapperService( SubscriptionEntity::class );
+		/** @var SubscriptionEntity $subscription */
+		$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
+		$customer_id = $subscription->customer_id;
 
 		$customer = $this->get_customer( $customer_id );
+
+		// Bail if no subscription found locally or if not active
+		if ( empty( $subscription ) || 'active' !== $subscription->status || null === $customer ) {
+			return false;
+		}
 
 		try {
 

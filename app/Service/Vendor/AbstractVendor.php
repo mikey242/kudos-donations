@@ -36,11 +36,10 @@ abstract class AbstractVendor extends AbstractService {
 	 * Cancel the specified subscription
 	 *
 	 * @param string $subscription_id subscription id.
-	 * @param null|string $customer_id customer id.
 	 *
 	 * @return bool
 	 */
-	abstract public function cancel_subscription( string $subscription_id, $customer_id = null ): bool;
+	abstract public function cancel_subscription( string $subscription_id ): bool;
 
 	/**
 	 * Checks the provided api key by attempting to get associated payments

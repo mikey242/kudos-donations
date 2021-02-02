@@ -227,13 +227,12 @@ class PaymentService extends AbstractService {
 	/**
 	 * Cancel the specified subscription
 	 *
-	 * @param string $subscription_id Mollie subscription id.
-	 * @param null|string $customer_id Mollie customer id.
+	 * @param string $subscription_id Id of subscription to cancel.
 	 *
 	 * @return bool
 	 * @since   2.3.0
 	 */
-	public function cancel_subscription( string $subscription_id, $customer_id = null ): bool {
+	public function cancel_subscription( string $subscription_id ): bool {
 
 		$mapper = new MapperService( SubscriptionEntity::class );
 
@@ -242,7 +241,7 @@ class PaymentService extends AbstractService {
 
 		if ( $subscription ) {
 
-			$result = $this->vendor->cancel_subscription( $subscription_id, $customer_id );
+			$result = $this->vendor->cancel_subscription( $subscription_id );
 
 			if($result) {
 
@@ -258,7 +257,7 @@ class PaymentService extends AbstractService {
 
 				$this->logger->info(
 					'Subscription cancelled.',
-					[ 'customer_id' => $customer_id, 'subscription_id' => $subscription_id ]
+					[ 'subscription_id' => $subscription_id ]
 				);
 
 				return true;
