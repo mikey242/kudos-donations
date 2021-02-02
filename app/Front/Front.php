@@ -294,6 +294,7 @@ class Front {
 			$campaigns = new Campaigns();
 			if ( ! empty( $atts['campaign_id'] ) ) {
 				$campaign = $campaigns->get_campaign( $atts['campaign_id'] );
+				$campaign['campaign_total'] = $campaigns::get_campaign_total($atts['campaign_id']);
 			}
 
 			// Bail if no campaign found
@@ -304,14 +305,9 @@ class Front {
 			// Add campaign config to atts
 			$atts = wp_parse_args( $campaign, $atts );
 
-			// Create button and modal.
+			// Generate markup.
 			$button = new KudosButton( $atts );
-			$modal  = $button->get_donate_modal();
-
-			// Return only if modal and button not empty.
-			if ( ! empty( $modal ) && ! empty( $button ) ) {
-				return $button->get_button() . $modal;
-			}
+			return $button->get_markup();
 
 		}
 
@@ -423,11 +419,10 @@ class Front {
 			switch ( $transaction->status ) {
 				case 'paid':
 					$vars                = [
-						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
-								2 ),
+						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,2 ),
 						'{{name}}'     => $donor->name,
 						'{{email}}'    => $donor->email,
-						'{{campaign}}' => $campaign_name,
+						'{{campaign}}' => $campaign_name
 					];
 					$atts['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
 					$atts['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
