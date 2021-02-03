@@ -24,8 +24,9 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
     return (
         <div id={"campaign-" + campaign.id}>
-            <SettingCard title={__('Name', 'kudos-donations')}>
+            <SettingCard title={__('General', 'kudos-donations')} id="campaignPanel">
                 <TextControl
+                    label={__('Name', 'kudos-donations')}
                     help={__('Ensure that this is a unique name to make it easy to identify in the transactions page.', 'kudos-donations')}
                     type={'text'}
                     value={campaign.name || ''}
@@ -37,14 +38,26 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
                 <TextControl
                     label={__('Goal', 'kudos-donations')}
-                    help={__('Set a goal for your campaign.', 'kudos-donations')}
-                    type={'number'}
+                    help={__('Set a numeric goal for your campaign.', 'kudos-donations')}
+                    type='number'
                     value={campaign.campaign_goal || ''}
                     onChange={(value) => {
                         campaign.campaign_goal = value
                         handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
+
+                { settings._kudos_premium ?
+                    <CheckboxControl
+                        help={__('Displays a campaign progress bar at the top of the donate pop-up.', 'kudos-donations')}
+                        label={__('Display progress bar', "kudos-donations")}
+                        checked={campaign.show_progress || ''}
+                        onChange={(value) => {
+                            campaign.show_progress = value
+                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                        }}
+                    />
+                : ''}
 
             </SettingCard>
 
@@ -87,7 +100,6 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
-
 
                 {campaign.address_enabled ?
                     <Fragment>
