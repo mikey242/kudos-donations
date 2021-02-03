@@ -97,10 +97,25 @@ class Settings {
 					'type'         => 'string',
 					'show_in_rest' => true,
 				],
-				'theme_color'           => [
-					'type'         => 'string',
-					'show_in_rest' => true,
-					'default'      => '#ff9f1c',
+				'theme_colors'           => [
+					'type'              => 'object',
+					'show_in_rest'      => [
+						'schema' => [
+							'type'  => 'object',
+							'properties' => [
+								'primary' => [
+									'type' => 'string'
+								],
+								'secondary' => [
+									'type' => 'string'
+								],
+							]
+						]
+					],
+					'default' => [
+						'primary' => '#ff9f1c',
+						'secondary' => '#2ec4b6'
+					]
 				],
 				'address_enabled'       => [
 					'type'         => 'boolean',

@@ -83,10 +83,12 @@ class Front {
 	 */
 	public function get_kudos_root_styles(): string {
 
-		$primary          = Settings::get_setting( 'theme_color' );
+		$theme_colours    = Settings::get_setting( 'theme_colors' );
+
+		$primary          = isset($theme_colours['primary']) ? $theme_colours['primary'] : '#ff9f1c';
 		$primary_dark     = Utils::color_luminance( $primary, '-0.06' );
 		$primary_darker   = Utils::color_luminance( $primary, '-0.09' );
-		$secondary        = '#2ec4b6';
+		$secondary        = isset($theme_colours['secondary']) ? $theme_colours['secondary'] : '#2ec4b6';
 		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
@@ -178,7 +180,7 @@ class Front {
 			$handle,
 			'kudos',
 			[
-				'theme_color' => Settings::get_setting( 'theme_color' ),
+				'color_primary' => Settings::get_setting( 'color_primary' ),
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );

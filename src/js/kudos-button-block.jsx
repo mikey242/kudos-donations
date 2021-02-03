@@ -140,7 +140,7 @@ export default registerBlockType('iseardmedia/kudos-button', {
                     >
                         <RichText
                             className={'kd-transition kd-duration-150 kd-ease-in-out focus:kd-shadow-focus focus:kd-outline-none kd-font-sans kd-text-center kd-text-white kd-leading-normal kd-text-base kd-font-normal kd-normal-case kd-no-underline kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none kd-border-none kd-bg-primary hover:kd-bg-primary-dark kudos_button_donate'}
-                            style={{backgroundColor: kudos.theme_color}}
+                            style={{backgroundColor: kudos.color_primary}}
                             formattingControls={[
                                 'bold',
                                 'italic',

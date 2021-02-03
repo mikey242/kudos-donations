@@ -79,6 +79,13 @@ class ActivatorService {
 				}
 			}
 
+			if ( version_compare( $old_version, '2.3.2', '<' ) ) {
+
+				// Setting now replaced by 'theme_colors'
+				Settings::remove_setting( 'theme_color' );
+
+			}
+
 		}
 
 		self::create_donors_table();
