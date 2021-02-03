@@ -77,7 +77,7 @@ $(() => {
     if ($kudosButtons.length) {
 
         // Setup button action
-        $kudosButtons.each(function () {
+        $kudosButtons.each(function (e) {
 
             const target = $(this).data('target')
 
@@ -85,6 +85,10 @@ $(() => {
                 if (target) {
                     MicroModal.show(target, {
                         onShow(modal) {
+
+                            // Create and dispatch event
+                            const modalEvent = new CustomEvent('kudosShowModal', {detail: modal})
+                            window.dispatchEvent(modalEvent)
 
                             // Clear error message
                             $(modal)
@@ -108,14 +112,11 @@ $(() => {
                                 $form.validate().resetForm()
                                 $form[0].reset()
                             }
-
-                            // Progress bar
-                            let progressBar = modal.querySelector('.kudos-campaign-progress')
-                            if(progressBar) {
-                                let percent = progressBar.dataset.percent / 100
-                                let bar = progressBar.querySelector('.kudos-progress-bar')
-                                setTimeout(() => bar.style.transform = "scaleX(" + percent + ")", 500)
-                            }
+                        },
+                        onClose(modal) {
+                            // Create and dispatch event
+                            const modalEvent = new CustomEvent('kudosCloseModal', {detail: modal})
+                            window.dispatchEvent(modalEvent)
                         },
                         awaitCloseAnimation: true,
                     })
