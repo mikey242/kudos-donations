@@ -108,12 +108,12 @@
       input {
         &:checked + label {
           @apply kd-text-white kd-border-transparent #{'!important'};
-          background-color: var(--kudos-theme-color);
+          background-color: var(--kudos-theme-primary);
         }
 
         &:focus {
           + label {
-            box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--kudos-theme-color);
+            box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--kudos-theme-primary);
             outline: 2px solid transparent;
           }
         }
@@ -123,7 +123,7 @@
     .kd-input-group {
       input:required ~ label {
           @apply kd-text-white kd-border-transparent #{'!important'};
-          background-color: var(--kudos-theme-color);
+          background-color: var(--kudos-theme-primary);
       }
     }
 

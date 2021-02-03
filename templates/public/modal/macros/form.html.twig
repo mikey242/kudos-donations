@@ -8,15 +8,15 @@
     {% endif %}
 
     {% if ( 'text' == type or 'email' == type ) %}
-        {% set focus = 'focus:kd-border-theme' %}
-        {% set generic = 'kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-theme kd-transition-colors kd-duration-150 kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700' %}
+        {% set focus = 'focus:kd-border-primary' %}
+        {% set generic = 'kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-duration-150 kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700' %}
         {% set styles = styles | merge([ focus, generic ]) %}
     {% endif %}
 
     {% if ( 'radio' == type or 'checkbox' == type ) %}
-        {% set checked = 'checked:kd-bg-theme' %}
+        {% set checked = 'checked:kd-bg-primary' %}
         {% set focus = 'focus:kd-shadow-focus' %}
-        {% set generic = 'kd-duration-75 kd-bg-white kd-shadow-inner kd-border kd-border-theme kd-inline-block kd-w-4 kd-h-4 kd-m-2 kd-p-0 kd-align-middle kd-min-w-1 kd-leading-none kd-outline-none kd-text-center kd-clear-none' %}
+        {% set generic = 'kd-duration-75 kd-bg-white kd-shadow-inner kd-border kd-border-primary kd-inline-block kd-w-4 kd-h-4 kd-m-2 kd-p-0 kd-align-middle kd-min-w-1 kd-leading-none kd-outline-none kd-text-center kd-clear-none' %}
         {% set styles = styles | merge([ checked, focus, generic ]) %}
     {% endif %}
 
@@ -66,7 +66,7 @@
 
 {% macro select(name, placeholder, options, required=true) %}
     <label class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
-        <select class="kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-theme kd-transition-colors kd-duration-150 kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700"
+        <select class="kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-duration-150 kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700"
                 {{ required ? 'required' : '' }}
                 name="{{ name }}">
             <option value=""

@@ -1,10 +1,12 @@
 module.exports = {
   prefix: 'kd-',
   important: true,
-  purge:  [
-    './src/js/**/*.{js,jsx}',
-    './templates/**/*.twig'
-  ],
+  purge: {
+    content: [
+      './src/js/**/*.{js,jsx}',
+      './templates/**/*.twig'
+    ]
+},
   theme: {
     container: {
       center: true,
@@ -32,7 +34,6 @@ module.exports = {
     minWidth: {
       0: '0',
       1: '1em',
-      min: 'min-content',
       full: '100%',
     },
     spacing: {
@@ -75,16 +76,16 @@ module.exports = {
           700: '#f58d00',
         },
         green: {
-          500: '#2ec4b6',
+          500: '#',
           700: '#2bb9ac',
         },
         modal: '#1a202ccc',
-        theme: "var(--kudos-theme-color)",
-        'theme-dark': "var(--kudos-theme-color-dark)",
-        'theme-darker': "var(--kudos-theme-color-darker)"
+        primary: "var(--kudos-theme-primary)",
+        'primary-dark': "var(--kudos-theme-primary-dark)",
+        'primary-darker': "var(--kudos-theme-primary-darker)"
       },
       boxShadow: {
-        focus: '0 0 0 2px #fff, 0 0 0 3.5px var(--kudos-theme-color)',
+        focus: '0 0 0 2px #fff, 0 0 0 3.5px var(--kudos-theme-primary)',
         'button-group': 'inset 0 0 0 1px var(--wp-admin-theme-color);'
       },
       keyframes: {

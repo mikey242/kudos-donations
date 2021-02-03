@@ -7,10 +7,10 @@
     {% set extra = '' %}
 
     {% if 'outline' == style %}
-        {% set style = 'kd-text-theme kd-border kd-border-solid kd-border-theme kd-bg-transparent hover:kd-bg-theme-dark hover:kd-text-white' %}
+        {% set style = 'kd-text-primary kd-border kd-border-solid kd-border-primary kd-bg-transparent hover:kd-bg-primary-dark hover:kd-text-white' %}
     {% endif %}
     {% if 'primary' == style %}
-        {% set style = 'kd-border-none kd-bg-theme hover:kd-bg-theme-dark' %}
+        {% set style = 'kd-border-none kd-bg-primary hover:kd-bg-primary-dark' %}
     {% endif %}
 
     {% if atts.class is defined %}
