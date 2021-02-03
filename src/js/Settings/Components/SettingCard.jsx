@@ -1,9 +1,9 @@
 const {CardBody} = wp.components
 const {applyFilters} = wp.hooks
 
-const SettingCard = ({ title, children, id }) => {
+const SettingCard = (props) => {
 
-    let filtered = applyFilters('kudos.settings.settingCard.' + id, {title: title, children: children})
+    let filtered = applyFilters('kudos.settings.settingCard.' + props.id, {...props})
 
     return (
         <CardBody size="medium">
