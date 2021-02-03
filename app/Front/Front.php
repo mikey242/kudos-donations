@@ -84,16 +84,22 @@ class Front {
 	 */
 	public function get_kudos_root_styles(): string {
 
-		$color        = Settings::get_setting( 'theme_color' );
-		$color_dark   = Utils::color_luminance( $color, '-0.06' );
-		$color_darker = Utils::color_luminance( $color, '-0.09' );
+		$primary          = Settings::get_setting( 'theme_color' );
+		$primary_dark     = Utils::color_luminance( $primary, '-0.06' );
+		$primary_darker   = Utils::color_luminance( $primary, '-0.09' );
+		$secondary        = '#2ec4b6';
+		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
+		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
 		return "<style>
 
 		:root {
-			--kudos-theme-color: $color;
-			--kudos-theme-color-dark: $color_dark;
-			--kudos-theme-color-darker: $color_darker;
+			--kudos-theme-primary: $primary;
+			--kudos-theme-primary-dark: $primary_dark;
+			--kudos-theme-primary-darker: $primary_darker;
+			--kudos-theme-secondary: $secondary;
+			--kudos-theme-secondary-dark: $secondary_dark;
+			--kudos-theme-secondary-darker: $secondary_darker;
 		}
 		
 		</style>";
