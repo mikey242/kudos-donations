@@ -190,7 +190,7 @@ trait TableTrait {
 
 		if ( 'top' === $which ) {
 			if ( $this->has_items() ) {
-				echo esc_attr( apply_filters( 'kudos_table_tablenav_top', '', $this->_args ) );
+				echo wp_kses_post( apply_filters( 'kudos_table_tablenav_top', '', $this->_args ) );
 			}
 		}
 
