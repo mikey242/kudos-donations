@@ -12,9 +12,8 @@ const ThemePanel = (props) => {
 
     return (
 
-        <SettingCard title={"Theme colour"}>
+        <SettingCard title={"Theme colour"} id="themeColor">
             <BaseControl
-                id="_kudos_theme_color"
                 label={__('Colour', 'kudos-donations')}
                 help={__('Set the colour for the Kudos button and the pop-up modal.', 'kudos-donations')}
             >
@@ -23,7 +22,7 @@ const ThemePanel = (props) => {
                     colors={colors}
                     value={props.settings._kudos_theme_color}
                     onChange={(value) => props.handleInputChange('_kudos_theme_color', value)}
-                    disableCustomColors={!props.settings._kudos_custom_theme_color}
+                    disableCustomColors={true}
                     clearable={false}
                 />
             </BaseControl>
