@@ -52,7 +52,7 @@ class KudosModal {
 			'modal_text'  => isset( $atts['modal_text'] ) ? $atts['modal_text'] : '',
 		];
 
-		return $this->twig->render( '/public/modal/message.modal.html.twig', $data );
+		return $this->twig->render( '/public/modal/message.modal.html.twig', apply_filters( 'kudos_message_modal_data', $data ) );
 
 	}
 
@@ -75,7 +75,7 @@ class KudosModal {
 			]
 		);
 
-		return $this->twig->render( '/public/modal/donate.modal.html.twig', $data );
+		return $this->twig->render( '/public/modal/donate.modal.html.twig', apply_filters( 'kudos_donate_modal_data', $data ));
 
 	}
 }
