@@ -507,7 +507,7 @@ class MollieVendor extends AbstractVendor {
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 
 			// Get schedule processing for later.
-			Utils::schedule_action( strtotime( '+1 minute' ), 'kudos_mollie_paid_email', [ $order_id ] );
+			Utils::schedule_action( strtotime( '+1 minute' ), 'kudos_mollie_transaction_paid', [ $order_id ] );
 
 			// Set up recurring payment if sequence is first.
 			if ( $payment->hasSequenceTypeFirst() ) {
