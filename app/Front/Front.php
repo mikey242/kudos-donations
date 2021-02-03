@@ -69,8 +69,7 @@ class Front {
 			$this->plugin_name . '-public',
 			Utils::get_asset_url( 'kudos-public.css' ),
 			[],
-			$this->version,
-			'all'
+			$this->version
 		);
 		echo $this->get_kudos_root_styles();
 
@@ -299,8 +298,8 @@ class Front {
 			// Set campaign according to atts
 			$campaigns = new Campaigns();
 			if ( ! empty( $atts['campaign_id'] ) ) {
-				$campaign = $campaigns->get_campaign( $atts['campaign_id'] );
-				$campaign['total'] = $campaigns::get_campaign_total($atts['campaign_id']);
+				$campaign          = $campaigns->get_campaign( $atts['campaign_id'] );
+				$campaign['total'] = $campaigns::get_campaign_total( $atts['campaign_id'] );
 			}
 
 			// Bail if no campaign found
@@ -376,7 +375,7 @@ class Front {
 									[
 										'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
 										'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
-										'kudos-donations' ),
+											'kudos-donations' ),
 									]
 								);
 
@@ -425,7 +424,7 @@ class Front {
 			switch ( $transaction->status ) {
 				case 'paid':
 					$vars                = [
-						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,2 ),
+						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value, 2 ),
 						'{{name}}'     => $donor->name,
 						'{{email}}'    => $donor->email,
 						'{{campaign}}' => $campaign_name
