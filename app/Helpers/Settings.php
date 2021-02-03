@@ -180,6 +180,9 @@ class Settings {
 									'campaign_goal'    => [
 										'type'  => 'string'
 									],
+									'show_progress'    => [
+										'type'  => 'boolean'
+									],
 									'modal_title'      => [
 										'type' => 'string',
 									],
