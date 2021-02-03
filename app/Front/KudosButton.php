@@ -31,55 +31,9 @@ class KudosButton {
 	 */
 	private $target_id;
 	/**
-	 * Modal title
-	 *
-	 * @var string
+	 * @var array
 	 */
-	private $modal_title;
-	/**
-	 * Modal text
-	 *
-	 * @var string
-	 */
-	private $welcome_text;
-	/**
-	 * Donation amount selection type
-	 *
-	 * @var string
-	 */
-	private $amount_type;
-	/**
-	 * Fixed amount list (5, 10, 15)
-	 *
-	 * @var string
-	 */
-	private $fixed_amounts;
-	/**
-	 * Campaign label
-	 *
-	 * @var string
-	 */
-	private $campaign_id;
-	/**
-	 * @var string
-	 */
-	private $campaign_goal;
-	/**
-	 * @var string
-	 */
-	private $campaign_total;
-	/**
-	 * @var string
-	 */
-	private $donation_type;
-	/**
-	 * @var bool
-	 */
-	private $address_enabled;
-	/**
-	 * @var bool
-	 */
-	private $address_required;
+	private $campaign;
 
 	/**
 	 * KudosButton constructor.
@@ -150,16 +104,7 @@ class KudosButton {
 
 		$data = [
 			'modal_id'         => $this->target_id,
-			'modal_title'      => $this->modal_title,
-			'modal_text'       => $this->welcome_text,
-			'amount_type'      => $this->amount_type,
-			'fixed_amounts'    => array_slice( explode( ',', $this->fixed_amounts ), 0, 4 ),
-			'address_enabled'  => $this->address_enabled,
-			'address_required' => $this->address_required,
-			'donation_type'    => $this->donation_type,
-			'campaign_id'      => $this->campaign_id,
-			'campaign_goal'    => $this->campaign_goal,
-			'campaign_total'   => $this->campaign_total,
+			'campaign'         => $this->campaign,
 			'payment_by'       => __( 'Secure payment by', 'kudos-donations' ),
 		];
 

@@ -3,12 +3,7 @@
 {% set premium = false %}
 
 {% block header %}
-    {% if campaign_goal > 0 and campaign_total > 0 %}
-        <div class="kd-w-full kd-mx-5">
-        {% from "/public/modal/macros/progress.html.twig" import progress %}
-        {{ progress(campaign_goal, campaign_total) }}
-        </div>
-    {% endif %}
+    {{ header|raw }}
 {% endblock header %}
 
 {% block content %}
@@ -16,22 +11,22 @@
     <form class="kudos_form m-0 p-0" action="">
 
         <input required name="return_url" type="hidden" value="{{ return_url }}">
-        <input name="campaign_id" type="hidden" value="{{ campaign_id }}">
+        <input name="campaign_id" type="hidden" value="{{ campaign.id }}">
 
         <div class="form-tabs block">
 
             {# INITIAL FIELDS #}
             {% embed '/public/modal/embeds/_tab.html.twig' %}
-                {% block title %}{{ modal_title }}{% endblock %}
-                {% block text %}{{ modal_text }}{% endblock %}
+                {% block title %}{{ campaign.modal_title }}{% endblock %}
+                {% block text %}{{ campaign.welcome_text }}{% endblock %}
                 {% block body %}
                     {% from "/public/modal/macros/form.html.twig" import input_group, radio_buttons, text, radio %}
 
-                    {% if ( amount_type != 'open' ) %}
-                        {{ radio_buttons(fixed_amounts, 'amount-' ~ modal_id ) }}
+                    {% if ( campaign.amount_type != 'open' ) %}
+                        {{ radio_buttons(campaign.fixed_amounts|split(','), 'amount-' ~ modal_id ) }}
                     {% endif %}
 
-                    {% if amount_type == 'both' %}
+                    {% if campaign.amount_type == 'both' %}
                         {{ input_group( '', __('Other', 'kudos-donations'), __('Amount', 'kudos-donations') ~ ' (€)',
                             {
                                 'input': { 'id': 'value_open-' ~ modal_id,'min': '1', 'data-type': 'currency'  }
@@ -39,16 +34,16 @@
                         ) }}
                     {% endif %}
 
-                    {% if amount_type == 'open' %}
+                    {% if campaign.amount_type == 'open' %}
                         {{ text('value', __('Amount', 'kudos-donations') ~ ' (€)', 'text', true, {'min': '1', 'data-type': 'currency'}) }}
                     {% endif %}
 
                     {{ text('name', __('Name', 'kudos-donations')) }}
                     {{ text('email_address', __('E-mail address', 'kudos-donations'), 'email') }}
 
-                    {% if(donation_type == 'oneoff') %}
+                    {% if(campaign.donation_type == 'oneoff') %}
                         <input required checked type="hidden" name="payment_frequency" value="oneoff"/>
-                    {% elseif(donation_type == 'recurring') %}
+                    {% elseif(campaign.donation_type == 'recurring') %}
                         <input required checked type="hidden" name="payment_frequency" value="recurring"/>
                     {% else %}
                         {{ radio('payment_frequency', {
