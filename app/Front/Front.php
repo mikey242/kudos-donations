@@ -294,7 +294,7 @@ class Front {
 			$campaigns = new Campaigns();
 			if ( ! empty( $atts['campaign_id'] ) ) {
 				$campaign = $campaigns->get_campaign( $atts['campaign_id'] );
-				$campaign['campaign_total'] = $campaigns::get_campaign_total($atts['campaign_id']);
+				$campaign['total'] = $campaigns::get_campaign_total($atts['campaign_id']);
 			}
 
 			// Bail if no campaign found
@@ -303,7 +303,7 @@ class Front {
 			}
 
 			// Add campaign config to atts
-			$atts = wp_parse_args( $campaign, $atts );
+			$atts['campaign'] = $campaign;
 
 			// Generate markup.
 			$button = new KudosButton( $atts );
