@@ -39,8 +39,9 @@ class CampaignsTable extends WP_List_Table {
 		];
 
 		$this->export_columns = [
-			'name'         => __( 'Email', 'kudos-donations' ),
-			'transactions' => __( 'Street', 'kudos-donations' ),
+			'name'         => __( 'Name', 'kudos-donations' ),
+			'transactions' => __( 'Transactions', 'kudos-donations' ),
+			'goal'         => __( 'Goal', 'kudos-donations' ),
 			'total'        => __( 'Total', 'kudos-donations' ),
 		];
 
@@ -76,7 +77,6 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function fetch_table_data(): array {
 
-		$mapper = $this->mapper;
 		$search = $this->get_search_data();
 
 		$campaigns = $this->campaigns->get_all();
@@ -123,6 +123,7 @@ class CampaignsTable extends WP_List_Table {
 			'name'          => __( 'Name', 'kudos-donations' ),
 			'transactions'  => __( 'Transactions', 'kudos-donations' ),
 			'total'         => __( 'Total', 'kudos-donations' ),
+			'goal'          => __( 'Goal', 'kudos-donations' ),
 			'last_donation' => __( 'Last Donation', 'kudos-donations' ),
 		];
 	}
@@ -256,6 +257,23 @@ class CampaignsTable extends WP_List_Table {
 		$total    = $item['total'];
 
 		return $currency . ' ' . number_format_i18n( $total, 2 );
+
+	}
+
+	/**
+	 * Goal column
+	 *
+	 * @param array $item Array of results.
+	 *
+	 * @return string
+	 * @since 2.3.2
+	 */
+	protected function column_goal( array $item ): string {
+
+		$currency = ! empty( $item['currency'] ) ? Utils::get_currency_symbol( $item['currency'] ) : '';
+		$total    = $item['goal'];
+
+		return $currency . ' ' . ( is_numeric( $total ) ? number_format_i18n( $total, 2 ) : '' );
 
 	}
 
