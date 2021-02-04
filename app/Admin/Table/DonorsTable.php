@@ -44,6 +44,7 @@ class DonorsTable extends WP_List_Table {
 			'postcode' => __( 'Postcode', 'kudos-donations' ),
 			'city'     => __( 'City', 'kudos-donations' ),
 			'country'  => __( 'Country', 'kudos-donations' ),
+			'mode'     => __( 'Mode', 'kudos-donations' )
 		];
 
 		parent::__construct(
