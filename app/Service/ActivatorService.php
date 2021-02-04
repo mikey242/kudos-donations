@@ -40,56 +40,7 @@ class ActivatorService {
 		$twig->init();
 
 		if ( $old_version ) {
-
-            if ( version_compare( $old_version, '2.1.1', '<' ) ) {
-                $logger->info( 'Upgrading to version 2.1.1', [ 'previous_version' => $old_version ] );
-                Settings::remove_setting( 'action_scheduler' );
-            }
-
-            if ( version_compare( $old_version, '2.2.0', '<' ) ) {
-                $link = Settings::get_setting( 'privacy_link' );
-                Settings::remove_setting( 'subscription_enabled' );
-
-                if ( $link ) {
-                    Settings::update_setting( 'terms_link', $link );
-                    Settings::remove_setting( 'privacy_link' );
-                }
-            }
-
-			if ( version_compare( $old_version, '2.3.0', '<' ) ) {
-				global $wpdb;
-
-				// Rename setting
-				$transaction_table = TransactionEntity::get_table_name();
-				$wpdb->query( "ALTER TABLE $transaction_table RENAME COLUMN `campaign_label` TO `campaign_id`" );
-				Settings::update_setting( 'show_intro', 1 );
-
-				// Apply mode to Donors
-				$donor_table = DonorEntity::get_table_name();
-				$wpdb->query("ALTER TABLE $donor_table ADD `mode` VARCHAR(45) NOT NULL");
-				$mapper = new MapperService( DonorEntity::class );
-				$donors = $mapper->get_all_by();
-				/** @var DonorEntity $donor */
-				foreach ( $donors as $donor ) {
-					$transactions = $donor->get_transactions();
-					if ( $transactions ) {
-						$donor->set_fields( [ 'mode' => $transactions[0]->mode ] );
-					}
-					$mapper->save( $donor );
-				}
-			}
-
-			if ( version_compare( $old_version, '2.3.2', '<' ) ) {
-
-				// Setting now replaced by 'theme_colors'
-				$old_color = Settings::get_setting('theme_color');
-				$new_colors = Settings::get_setting('theme_colors');
-				$new_colors['primary'] = $old_color;
-				Settings::update_setting('theme_colors', $new_colors);
-				Settings::remove_setting( 'theme_color' );
-
-			}
-
+			self::run_migrations($old_version);
 		}
 
 		self::create_donors_table();
@@ -98,6 +49,65 @@ class ActivatorService {
 		self::set_defaults();
 
 		$logger->info( 'Kudos Donations plugin activated' );
+
+	}
+
+	/**
+	 * Run migrations if upgrading
+	 *
+	 * @param string $old_version
+	 *
+	 * @since 2.3.2
+	 */
+	public static function run_migrations( string $old_version ) {
+
+		if ( version_compare( $old_version, '2.1.1', '<' ) ) {
+			Settings::remove_setting( 'action_scheduler' );
+		}
+
+		if ( version_compare( $old_version, '2.2.0', '<' ) ) {
+			$link = Settings::get_setting( 'privacy_link' );
+			Settings::remove_setting( 'subscription_enabled' );
+
+			if ( $link ) {
+				Settings::update_setting( 'terms_link', $link );
+				Settings::remove_setting( 'privacy_link' );
+			}
+		}
+
+		if ( version_compare( $old_version, '2.3.0', '<' ) ) {
+			global $wpdb;
+
+			// Rename setting
+			$transaction_table = TransactionEntity::get_table_name();
+			$wpdb->query( "ALTER TABLE $transaction_table RENAME COLUMN `campaign_label` TO `campaign_id`" );
+			Settings::update_setting( 'show_intro', 1 );
+
+			// Apply mode to Donors
+			$donor_table = DonorEntity::get_table_name();
+			$wpdb->query("ALTER TABLE $donor_table ADD `mode` VARCHAR(45) NOT NULL");
+			$mapper = new MapperService( DonorEntity::class );
+			$donors = $mapper->get_all_by();
+			/** @var DonorEntity $donor */
+			foreach ( $donors as $donor ) {
+				$transactions = $donor->get_transactions();
+				if ( $transactions ) {
+					$donor->set_fields( [ 'mode' => $transactions[0]->mode ] );
+				}
+				$mapper->save( $donor );
+			}
+		}
+
+		if ( version_compare( $old_version, '2.3.2', '<' ) ) {
+
+			// Setting now replaced by 'theme_colors'
+			$old_color = Settings::get_setting('theme_color');
+			$new_colors = Settings::get_setting('theme_colors');
+			$new_colors['primary'] = $old_color;
+			Settings::update_setting('theme_colors', $new_colors);
+			Settings::remove_setting( 'theme_color' );
+
+		}
 
 	}
 
