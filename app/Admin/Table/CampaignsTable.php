@@ -96,16 +96,16 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$id = $campaign['id'];
 
-			$transactions = $mapper->get_all_by( [ 'campaign_id' => $id ] );
+			$campaign_total = $this->campaigns::get_campaign_stats( $id );
 
-			$campaigns[ $key ]['date']         = date( "r", hexdec( substr( $id, 3, 8 ) ) );
-			$campaigns[ $key ]['transactions'] = 0;
-			$campaigns[ $key ]['total']        = $this->campaigns::get_campaign_total( $id );
-			if ( $transactions ) {
-				$campaigns[ $key ]['last_donation'] = end( $transactions )->created;
-				$campaigns[ $key ]['transactions']  = count( $transactions );
-				$campaigns[ $key ]['currency']      = $transactions[0]->currency;
-			}
+			$campaigns[ $key ]['date']          = date( "r", hexdec( substr( $id, 3, 8 ) ) );
+			$campaigns[ $key ]['transactions']  = 0;
+			$campaigns[ $key ]['goal']          = $campaign['campaign_goal'];
+			$campaigns[ $key ]['total']         = 0;
+			$campaigns[ $key ]['currency']      = 'EUR';
+			$campaigns[ $key ]['total']         = $campaign_total['total'];
+			$campaigns[ $key ]['last_donation'] = $campaign_total['last_donation'];
+			$campaigns[ $key ]['transactions']  = $campaign_total['count'];
 		}
 
 		return $campaigns;

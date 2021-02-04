@@ -301,7 +301,7 @@ class Front {
 			$campaigns = new Campaigns();
 			if ( ! empty( $atts['campaign_id'] ) ) {
 				$campaign          = $campaigns->get_campaign( $atts['campaign_id'] );
-				$campaign['total'] = $campaigns::get_campaign_total( $atts['campaign_id'] );
+				$campaign['total'] = $campaigns::get_campaign_stats( $atts['campaign_id'] )['total'];
 			}
 
 			// Bail if no campaign found

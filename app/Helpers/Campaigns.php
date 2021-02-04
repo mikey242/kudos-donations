@@ -135,31 +135,47 @@ class Campaigns {
 	}
 
 	/**
-	 * Gets total value paid for campaign
+	 * Gets transaction stats for campaign
 	 *
 	 * @param string $campaign_id
 	 *
-	 * @return float|int
+	 * @return array
 	 */
-	public static function get_campaign_total( string $campaign_id ) {
+	public static function get_campaign_stats( string $campaign_id ): ?array {
 
 		$mapper       = new MapperService( TransactionEntity::class );
 		$transactions = $mapper->get_all_by( [
 			'campaign_id' => $campaign_id,
 		] );
 
-		return array_sum( array_map( function ( $transaction ) {
-			if ( 'paid' === $transaction->status ) {
-				$refunds = $transaction->get_refund();
-				if ( $refunds ) {
-					return $refunds->remaining;
-				} else {
-					return $transaction->value;
+		if ( $transactions ) {
+			$values = array_map( function ( $transaction ) {
+				if ( 'paid' === $transaction->status ) {
+					$refunds = $transaction->get_refund();
+					if ( $refunds ) {
+						return $refunds->remaining;
+					} else {
+						return $transaction->value;
+					}
 				}
-			}
 
-			return 0;
-		},(array) $transactions ) );
+				return 0;
+			},
+				$transactions );
+
+			return [
+				'count'         => count( $values ),
+				'total'         => array_sum( $values ),
+				'last_donation' => end( $transactions )->created,
+			];
+		}
+
+		return [
+			'count' => 0,
+			'total' => 0,
+			'last_donation' => '',
+		];
+
 
 	}
 
