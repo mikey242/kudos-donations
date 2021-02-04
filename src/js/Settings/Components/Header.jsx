@@ -10,13 +10,13 @@ const Header = (props) => {
 
     if (props.checkingApi) {
         statusClass = 'checking'
-        status = __('checking', 'kudos-donations')
+        status = __('Checking', 'kudos-donations')
     } else if (props.settings._kudos_mollie_connected) {
         statusClass = 'connected'
-        status = __('connected', 'kudos-donations')
+        status = __('Mollie connected', 'kudos-donations')
     } else if (!props.settings._kudos_mollie_connected) {
         statusClass = 'not-connected'
-        status = __('not-connected', 'kudos-donations')
+        status = __('Not connected', 'kudos-donations')
     }
 
     return (
@@ -33,7 +33,6 @@ const Header = (props) => {
                 </div>
                 <div className="kd-flex kd-items-center">
 					<span
-                        style={{textTransform: 'capitalize'}}
                         className={'kudos-api-status ' + statusClass + ' kd-text-gray-600 kd-mr-4'}
                     >
 						{status}
