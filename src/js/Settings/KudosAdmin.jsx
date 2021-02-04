@@ -319,7 +319,7 @@ class KudosAdmin extends Component {
                     />
             }
 
-        ], this.state, this.handleInputChange)
+        ], this.state, this.handleInputChange, this.showNotice)
 
         return (
 
