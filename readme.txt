@@ -100,6 +100,11 @@ e.g:
 
 == Changelog ==
 
+= 2.3.2 =
+* Add 'goal' to campaigns
+* Further improvements to subscription cancellation
+* Update hooks and filters
+
 = 2.3.1 =
 * Display campaign_id in campaign header on settings page
 * Fix issues with canceling subscriptions
