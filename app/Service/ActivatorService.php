@@ -82,6 +82,10 @@ class ActivatorService {
 			if ( version_compare( $old_version, '2.3.2', '<' ) ) {
 
 				// Setting now replaced by 'theme_colors'
+				$old_color = Settings::get_setting('theme_color');
+				$new_colors = Settings::get_setting('theme_colors');
+				$new_colors['primary'] = $old_color;
+				Settings::update_setting('theme_colors', $new_colors);
 				Settings::remove_setting( 'theme_color' );
 
 			}
