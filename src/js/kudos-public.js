@@ -181,6 +181,9 @@ $(() => {
                 duration,
                 easing: 'linear',
                 complete() {
+                    let page = $modal.attr('data-page')
+                    let newPage = (direction === 'next' ? +page + 1 : +page - 1)
+                    $modal.attr('data-page', newPage)
                     $current_tab.removeClass('current-tab')
                     $next_tab.addClass('current-tab')
                     $modal.animate(
