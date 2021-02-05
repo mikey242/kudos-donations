@@ -87,32 +87,6 @@ class Campaigns {
 	}
 
 	/**
-	 * Adds default campaign is no campaigns found
-	 *
-	 * @since 2.3.0
-	 */
-	public function add_default() {
-
-		$default_campaign[0] = [
-			'id'               => 'default',
-			'name'             => 'Default',
-			'modal_title'      => __( 'Support us!', 'kudos-donations' ),
-			'welcome_text'     => __( 'Your support is greatly appreciated and will help to keep us going.',
-				'kudos-donations' ),
-			'address_required' => true,
-			'amount_type'      => 'both',
-			'fixed_amounts'    => '1,5,20,50',
-			'donation_type'    => 'both',
-			'protected'        => true,
-		];
-
-		if ( empty( $this->campaigns ) ) {
-			update_option( Settings::PREFIX . 'campaigns', $default_campaign );
-		}
-
-	}
-
-	/**
 	 * Gets the campaign by specified column (e.g slug)
 	 *
 	 * @param string|null $value
@@ -171,8 +145,8 @@ class Campaigns {
 		}
 
 		return [
-			'count' => 0,
-			'total' => 0,
+			'count'         => 0,
+			'total'         => 0,
 			'last_donation' => '',
 		];
 
