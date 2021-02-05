@@ -35,7 +35,7 @@ class Campaigns {
 		foreach ( $campaigns as $key => $form ) {
 
 			if ( ! array_search( 'id', $form ) ) {
-				$output[ $key ]['id'] = $this->generate_id( $form['name'] );
+				$output[ $key ]['id']   = $this->generate_id( $form['name'] );
 			}
 
 			foreach ( $form as $option => $value ) {

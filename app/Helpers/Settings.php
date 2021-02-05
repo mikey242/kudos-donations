@@ -99,7 +99,7 @@ class Settings {
 				],
 				'theme_colors'          => [
 					'type'         => 'object',
-					'default'      =>  [
+					'default'      => [
 						'primary'   => '#ff9f1c',
 						'secondary' => '#2ec4b6',
 					],
@@ -115,7 +115,7 @@ class Settings {
 								],
 							],
 						],
-					]
+					],
 				],
 				'address_enabled'       => [
 					'type'         => 'boolean',
@@ -226,7 +226,7 @@ class Settings {
 							],
 						],
 					],
-					'default' => [
+					'default'           => [
 						0 => [
 							'id'               => 'default',
 							'name'             => 'Default',
@@ -236,6 +236,7 @@ class Settings {
 							'address_required' => true,
 							'amount_type'      => 'both',
 							'fixed_amounts'    => '1,5,20,50',
+							'campaign_goal'    => '',
 							'donation_type'    => 'both',
 							'protected'        => true,
 						],

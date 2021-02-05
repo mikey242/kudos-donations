@@ -98,13 +98,11 @@ class CampaignsTable extends WP_List_Table {
 
 			$campaign_total = $this->campaigns::get_campaign_stats( $id );
 
-			$campaigns[ $key ]['date']          = date( "r", hexdec( substr( $id, 3, 8 ) ) );
-			$campaigns[ $key ]['transactions']  = 0;
-			$campaigns[ $key ]['goal']          = $campaign['campaign_goal'];
+			$campaigns[ $key ]['date']          = $campaign_total['last_donation'];
+			$campaigns[ $key ]['goal']          = !empty($campaign['campaign_goal']) ? $campaign['campaign_goal'] : null;
 			$campaigns[ $key ]['total']         = 0;
 			$campaigns[ $key ]['currency']      = 'EUR';
 			$campaigns[ $key ]['total']         = $campaign_total['total'];
-			$campaigns[ $key ]['last_donation'] = $campaign_total['last_donation'];
 			$campaigns[ $key ]['transactions']  = $campaign_total['count'];
 		}
 
@@ -119,12 +117,11 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function column_names(): array {
 		return [
-			'date'          => __( 'Date', 'kudos-donations' ),
 			'name'          => __( 'Name', 'kudos-donations' ),
 			'transactions'  => __( 'Transactions', 'kudos-donations' ),
 			'total'         => __( 'Total', 'kudos-donations' ),
 			'goal'          => __( 'Goal', 'kudos-donations' ),
-			'last_donation' => __( 'Last Donation', 'kudos-donations' ),
+			'date'          => __( 'Last donation', 'kudos-donations' ),
 		];
 	}
 
@@ -136,7 +133,6 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function get_hidden_columns(): array {
 		return [
-			'date',
 			'subscription_id',
 			'id',
 		];
@@ -156,10 +152,6 @@ class CampaignsTable extends WP_List_Table {
 			],
 			'total'         => [
 				'total',
-				false,
-			],
-			'last_donation' => [
-				'last_donation',
 				false,
 			],
 		];
@@ -190,9 +182,9 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function column_date( array $item ): string {
 
-		return __( 'Added', 'kudos-donations' ) . '<br/>' .
-		       wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			       strtotime( $item['date'] ) );
+		return isset( $item['date'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			strtotime( $item['date'] ) ) : sprintf( "<i>%s</i>", __( 'None yet', 'kudos-donations' ) );
+
 	}
 
 	/**
@@ -273,22 +265,7 @@ class CampaignsTable extends WP_List_Table {
 		$currency = ! empty( $item['currency'] ) ? Utils::get_currency_symbol( $item['currency'] ) : '';
 		$total    = $item['goal'];
 
-		return $currency . ' ' . ( is_numeric( $total ) ? number_format_i18n( $total, 2 ) : '' );
-
-	}
-
-	/**
-	 * Shows the date of the last translation
-	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
-	 * @since 2.0.5
-	 */
-	protected function column_last_donation( array $item ): string {
-
-		return isset( $item['last_donation'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			strtotime( $item['last_donation'] ) ) : sprintf( "<i>%s</i>", __( 'None yet', 'kudos-donations' ) );
+		return $total ? $currency . ' ' . ( is_numeric( $total ) ? number_format_i18n( $total, 2 ) : '' ) : '';
 
 	}
 }
