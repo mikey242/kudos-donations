@@ -97,24 +97,24 @@ class Settings {
 					'type'         => 'string',
 					'show_in_rest' => true,
 				],
-				'theme_colors'           => [
-					'type'              => 'object',
-					'show_in_rest'      => [
+				'theme_colors'          => [
+					'type'         => 'object',
+					'default'      =>  [
+						'primary'   => '#ff9f1c',
+						'secondary' => '#2ec4b6',
+					],
+					'show_in_rest' => [
 						'schema' => [
-							'type'  => 'object',
+							'type'       => 'object',
 							'properties' => [
-								'primary' => [
-									'type' => 'string'
+								'primary'   => [
+									'type' => 'string',
 								],
 								'secondary' => [
-									'type' => 'string'
+									'type' => 'string',
 								],
-							]
-						]
-					],
-					'default' => [
-						'primary' => '#ff9f1c',
-						'secondary' => '#2ec4b6'
+							],
+						],
 					]
 				],
 				'address_enabled'       => [
@@ -173,7 +173,7 @@ class Settings {
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'disable_object_cache'     => [
+				'disable_object_cache'  => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => false,
@@ -193,10 +193,10 @@ class Settings {
 										'type' => 'string',
 									],
 									'campaign_goal'    => [
-										'type'  => 'string'
+										'type' => 'string',
 									],
 									'show_progress'    => [
-										'type'  => 'boolean'
+										'type' => 'boolean',
 									],
 									'modal_title'      => [
 										'type' => 'string',
@@ -224,6 +224,20 @@ class Settings {
 									],
 								],
 							],
+						],
+					],
+					'default' => [
+						0 => [
+							'id'               => 'default',
+							'name'             => 'Default',
+							'modal_title'      => __( 'Support us!', 'kudos-donations' ),
+							'welcome_text'     => __( 'Your support is greatly appreciated and will help to keep us going.',
+								'kudos-donations' ),
+							'address_required' => true,
+							'amount_type'      => 'both',
+							'fixed_amounts'    => '1,5,20,50',
+							'donation_type'    => 'both',
+							'protected'        => true,
 						],
 					],
 					'sanitize_callback' => [ new Campaigns(), 'sanitize_campaigns' ],
@@ -290,9 +304,6 @@ class Settings {
 				add_option( self::PREFIX . $name, $setting['default'] );
 			}
 		}
-
-		$campaigns = new Campaigns();
-		$campaigns->add_default();
 
 	}
 
