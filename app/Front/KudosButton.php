@@ -68,7 +68,7 @@ class KudosButton {
 		$modal = $this->get_donate_modal();
 
 		if ( ! empty( $modal ) && ! empty( $button ) ) {
-			return $this->get_button() . $this->get_donate_modal();
+			return $button . $modal;
 		}
 
 		return null;
