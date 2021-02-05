@@ -226,9 +226,6 @@ class ActivatorService {
 		$settings = new Settings();
 		$settings->add_defaults();
 
-		$campaigns = new Campaigns();
-		$campaigns->add_default();
-
 	}
 
 	/**
