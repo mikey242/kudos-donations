@@ -90,6 +90,7 @@
 
                         {% set required = (campaign.address_required ? 'required' : null) %}
 
+                        {{ text('business_name', __('Business name', 'kudos-donations'), 'text', false) }}
                         {{ text('street', __('Street', 'kudos-donations'), 'text', required) }}
                         {{ text('postcode', __('Postcode', 'kudos-donations'), 'text', required) }}
                         {{ text('city', __('City', 'kudos-donations'), 'text', required) }}
@@ -109,7 +110,8 @@
                     <div class="kudos_summary kd-text-left kd-block kd-bg-gray-200 kd-p-2 kd-border-0 kd-border-solid kd-border-t-2 kd-border-theme">
                         <p class="kd-block kd-mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span
                                     class="summary_name"></span></p>
-                        <p class="kd-block kd-mb-0"><strong>{{ __('E-mail address', 'kudos-donations') }}: </strong><span
+                        <p class="kd-block kd-mb-0"><strong>{{ __('E-mail address', 'kudos-donations') }}
+                                : </strong><span
                                     class="summary_email"></span></p>
                         <p class="kd-block kd-mb-0"><strong>{{ __('Amount', 'kudos-donations') }}: </strong>€<span
                                     class="summary_value"></span></p>
@@ -118,10 +120,10 @@
                     </div>
 
                     {% if (terms_link) %}
-                    {{ checkbox('avg', __( 'I agree with the %s', 'kudos-donations' ) |
-                        format( '<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' |
-                            format( terms_link , __( 'terms and conditions', 'kudos-donations' ) )
-                    )) }}
+                        {{ checkbox('avg', __( 'I agree with the %s', 'kudos-donations' ) |
+                            format( '<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' |
+                                format( terms_link , __( 'terms and conditions', 'kudos-donations' ) )
+                            )) }}
                     {% endif %}
 
                 {% endblock %}

@@ -32,6 +32,12 @@ class DonorEntity extends AbstractEntity {
 	 */
 	public $name;
 	/**
+	 * Business name
+	 *
+	 * @var string
+	 */
+	public $business_name;
+	/**
 	 * Address: Street name
 	 *
 	 * @var string

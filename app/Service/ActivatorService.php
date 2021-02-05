@@ -2,11 +2,9 @@
 
 namespace Kudos\Service;
 
-use Kudos\Entity\CampaignEntity;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 
 /**
@@ -40,7 +38,7 @@ class ActivatorService {
 		$twig->init();
 
 		if ( $old_version ) {
-			self::run_migrations($old_version);
+			self::run_migrations( $old_version );
 		}
 
 		self::create_donors_table();
@@ -85,7 +83,7 @@ class ActivatorService {
 
 			// Apply mode to Donors
 			$donor_table = DonorEntity::get_table_name();
-			$wpdb->query("ALTER TABLE $donor_table ADD `mode` VARCHAR(45) NOT NULL");
+			$wpdb->query( "ALTER TABLE $donor_table ADD `mode` VARCHAR(45) NOT NULL" );
 			$mapper = new MapperService( DonorEntity::class );
 			$donors = $mapper->get_all_by();
 			/** @var DonorEntity $donor */
@@ -101,10 +99,10 @@ class ActivatorService {
 		if ( version_compare( $old_version, '2.3.2', '<' ) ) {
 
 			// Setting now replaced by 'theme_colors'
-			$old_color = Settings::get_setting('theme_color');
-			$new_colors = Settings::get_setting('theme_colors');
+			$old_color             = Settings::get_setting( 'theme_color' );
+			$new_colors            = Settings::get_setting( 'theme_colors' );
 			$new_colors['primary'] = $old_color;
-			Settings::update_setting('theme_colors', $new_colors);
+			Settings::update_setting( 'theme_colors', $new_colors );
 			Settings::remove_setting( 'theme_color' );
 
 		}
@@ -129,6 +127,7 @@ class ActivatorService {
 		  last_updated datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  email VARCHAR(320) NOT NULL,
 		  name VARCHAR(255) NOT NULL,
+		  business_name VARCHAR(255) NOT NULL,
 		  street VARCHAR(255),
 		  postcode VARCHAR(255),
 		  city VARCHAR(255),
@@ -225,37 +224,6 @@ class ActivatorService {
 
 		$settings = new Settings();
 		$settings->add_defaults();
-
-	}
-
-	/**
-	 * Creates the subscription table
-	 *
-	 * @since    1.1.0
-	 */
-	private static function create_campaigns_table() {
-
-		global $wpdb;
-
-		$charset_collate = $wpdb->get_charset_collate();
-		$table_name      = CampaignEntity::get_table_name();
-
-		$sql = "CREATE TABLE $table_name (
-	      id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-		  slug VARCHAR(255),
-		  name VARCHAR(255),
-		  modal_title VARCHAR(255),
-		  welcome_text VARCHAR(255),
-		  donation_type VARCHAR(255),
-		  amount_type VARCHAR(255),
-		  fixed_amounts VARCHAR(255),
-		  protected BIT,
-	      secret VARCHAR(255),
-	      PRIMARY KEY (id)
-		) $charset_collate";
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $sql );
 
 	}
 }

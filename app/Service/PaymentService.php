@@ -157,6 +157,7 @@ class PaymentService extends AbstractService {
 		$payment_frequency = isset( $request['recurring_frequency'] ) ? sanitize_text_field( $request['recurring_frequency'] ) : 'oneoff';
 		$recurring_length  = isset( $request['recurring_length'] ) ? intval( $request['recurring_length'] ) : 0;
 		$name              = isset( $request['name'] ) ? sanitize_text_field( $request['name'] ) : null;
+		$business_name     = isset( $request['business_name'] ) ? sanitize_text_field( $request['business_name'] ) : null;
 		$email             = isset( $request['email_address'] ) ? sanitize_email( $request['email_address'] ) : null;
 		$street            = isset( $request['street'] ) ? sanitize_text_field( $request['street'] ) : null;
 		$postcode          = isset( $request['postcode'] ) ? sanitize_text_field( $request['postcode'] ) : null;
@@ -186,13 +187,14 @@ class PaymentService extends AbstractService {
 			// Update new/existing donor.
 			$donor->set_fields(
 				[
-					'email'    => $email,
-					'name'     => $name,
-					'mode'     => $this->vendor->get_api_mode(),
-					'street'   => $street,
-					'postcode' => $postcode,
-					'city'     => $city,
-					'country'  => $country,
+					'email'         => $email,
+					'name'          => $name,
+					'business_name' => $business_name,
+					'mode'          => $this->vendor->get_api_mode(),
+					'street'        => $street,
+					'postcode'      => $postcode,
+					'city'          => $city,
+					'country'       => $country,
 				]
 			);
 
@@ -243,7 +245,7 @@ class PaymentService extends AbstractService {
 
 			$result = $this->vendor->cancel_subscription( $subscription_id );
 
-			if($result) {
+			if ( $result ) {
 
 				// Update entity with canceled status
 				$subscription->set_fields(
@@ -334,7 +336,7 @@ class PaymentService extends AbstractService {
 		}
 
 		$payment = $this->vendor->create_payment( $payment_array );
-		if(null === $payment) {
+		if ( null === $payment ) {
 			return false;
 		}
 

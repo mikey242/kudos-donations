@@ -270,6 +270,7 @@ class DonorsTable extends WP_List_Table {
 	protected function column_address( array $item ): string {
 
 		$address = [
+			$item['business_name'],
 			$item['street'],
 			$item['postcode'] . ' ' . $item['city'],
 			$item['country'],
