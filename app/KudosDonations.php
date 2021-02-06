@@ -9,8 +9,8 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Front\Front;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\I18nService;
-use Kudos\Service\MailerService;
 use Kudos\Service\PaymentService;
+use Kudos\Service\RestRouteService;
 
 /**
  * The file that defines the core plugin class
@@ -157,8 +157,7 @@ class KudosDonations {
 	 */
 	private function define_rest_hooks() {
 
-		add_action( 'rest_api_init', [ new PaymentService(), 'register_rest_routes' ] );
-		add_action( 'rest_api_init', [ new MailerService(), 'register_rest_routes' ] );
+		add_action( 'rest_api_init', [ new RestRouteService(), 'register_all' ] );
 
 	}
 

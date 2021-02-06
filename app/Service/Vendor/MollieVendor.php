@@ -7,7 +7,7 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
-use Kudos\Service\PaymentService;
+use Kudos\Service\RestRouteService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\Customer;
@@ -278,7 +278,7 @@ class MollieVendor extends AbstractVendor {
 				'value'    => $value,
 				'currency' => $currency,
 			],
-			'webhookUrl'  => $_ENV['WEBHOOK_URL'] ?? rest_url( PaymentService::REST_NAMESPACE . PaymentService::WEBHOOK_ROUTE ),
+			'webhookUrl'  => $_ENV['WEBHOOK_URL'] ?? rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK ),
 			'mandateId'   => $mandate_id,
 			'interval'    => $interval,
 			'startDate'   => $start_date,

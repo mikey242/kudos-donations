@@ -102,7 +102,7 @@ e.g:
 
 = 2.3.4 =
 * Add 'Business name' to address fields
-* Fix campaign table warning
+* Fix campaign table warnings
 
 = 2.3.3 =
 * Fix address fields not showing

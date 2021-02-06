@@ -13,29 +13,8 @@ use Mollie\Api\Resources\Payment;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
-use WP_REST_Server;
 
 class PaymentService extends AbstractService {
-
-	/**
-	 * Namespace used for registering the routes
-	 */
-	const REST_NAMESPACE = 'kudos/v1';
-
-	/**
-	 * The route used for payment webhook
-	 */
-	const WEBHOOK_ROUTE = '/payment/webhook';
-
-	/**
-	 * New payment route
-	 */
-	const PAYMENT_ROUTE = '/payment/create';
-
-	/**
-	 * Rest route used for checking if api key is valid
-	 */
-	const TEST_API = '/check-api';
 
 	/**
 	 * @var AbstractVendor
@@ -60,50 +39,6 @@ class PaymentService extends AbstractService {
 				$this->logger->critical( 'No payment vendor specified. Using Mollie.' );
 		}
 
-	}
-
-	/**
-	 * Register the vendor's rest routes
-	 *
-	 * @since 2.3.0
-	 */
-	public function register_rest_routes() {
-
-		$routes = [
-			self::PAYMENT_ROUTE => [
-				'methods'             => 'POST',
-				'callback'            => [ $this, 'submit_payment' ],
-				'permission_callback' => '__return_true',
-			],
-
-			self::WEBHOOK_ROUTE => [
-				'methods'             => 'POST',
-				'callback'            => [ $this, 'handle_webhook' ],
-				'args'                => [
-					'id' => [
-						'required' => true,
-					],
-				],
-				'permission_callback' => '__return_true',
-			],
-
-			self::TEST_API => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'check_api_keys' ],
-				'args'                => [
-					'apiMode' => [
-						'required' => true,
-					],
-				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
-			],
-		];
-
-		foreach ( $routes as $key => $route ) {
-			register_rest_route( self::REST_NAMESPACE, $key, $route );
-		}
 	}
 
 	/**
@@ -312,7 +247,7 @@ class PaymentService extends AbstractService {
 				'value'    => $value,
 			],
 			'redirectUrl'  => $redirect_url,
-			'webhookUrl'   => $_ENV['WEBHOOK_URL'] ?? rest_url( self::REST_NAMESPACE . self::WEBHOOK_ROUTE ),
+			'webhookUrl'   => $_ENV['WEBHOOK_URL'] ?? rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK ),
 			'sequenceType' => $sequence_type,
 			'description'  => sprintf(
 			/* translators: %s: The order id */

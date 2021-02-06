@@ -10,6 +10,7 @@ use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
+use Kudos\Service\RestRouteService;
 
 /**
  * The public-facing functionality of the plugin.
@@ -142,7 +143,7 @@ class Front {
 			'kudos',
 			[
 				'_wpnonce'         => wp_create_nonce( 'wp_rest' ),
-				'createPaymentUrl' => rest_url( PaymentService::REST_NAMESPACE . PaymentService::PAYMENT_ROUTE ),
+				'createPaymentUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_CREATE ),
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );

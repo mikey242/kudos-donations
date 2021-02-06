@@ -9,7 +9,6 @@ use Kudos\Helpers\Utils;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_REST_Request;
-use WP_REST_Server;
 
 class MailerService extends AbstractService {
 
@@ -32,27 +31,6 @@ class MailerService extends AbstractService {
 		$this->from = "From: $from_name " . ' <' . $from_address . '>';
 		parent::__construct();
 
-	}
-
-	/**
-	 * Register the mailer rest routes.
-	 */
-	public function register_rest_routes() {
-
-		register_rest_route( 'kudos/v1',
-			'email/test',
-			[
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $this, 'send_test' ],
-				'args'                => [
-					'email' => [
-						'required' => true,
-					],
-				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
-			] );
 	}
 
 	/**

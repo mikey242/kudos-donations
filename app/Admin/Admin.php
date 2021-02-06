@@ -11,6 +11,7 @@ use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
+use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
 
 /**
@@ -210,8 +211,8 @@ class Admin {
 			'kudos',
 			[
 				'version'     => KUDOS_VERSION,
-				'checkApiUrl' => rest_url( 'kudos/v1' . '/check-api' ),
-				'sendTestUrl' => rest_url( 'kudos/v1' . '/email/test' ),
+				'checkApiUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_TEST ),
+				'sendTestUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::EMAIL_TEST ),
 				'ajaxurl'     => admin_url( 'admin-ajax.php' ),
 			]
 		);
