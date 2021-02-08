@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {SettingCard} from "../SettingCard"
+import {ButtonIcon} from "../ButtonIcon"
 
 const {__} = wp.i18n
 const {Button, PanelRow, TextControl} = wp.components
@@ -80,6 +81,7 @@ const TestEmailPanel = (props) => {
                     isSecondary
                     disabled={buttonDisabled || isBusy}
                     isBusy={isBusy}
+                    icon={(<ButtonIcon icon='envelope' />)}
                     onClick={() => {
                         sendTest(email)
                     }}

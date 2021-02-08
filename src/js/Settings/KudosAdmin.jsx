@@ -12,7 +12,6 @@ import {MollieTab} from "./Components/Tabs/MollieTab"
 import {CampaignsTab} from "./Components/Tabs/CampaignsTab"
 import {CustomizeTab} from "./Components/Tabs/CustomizeTab"
 import {EmailTab} from "./Components/Tabs/EmailTab"
-import {AdvancedTab} from "./Components/Tabs/AdvancedTab"
 import {HelpTab} from "./Components/Tabs/HelpTab"
 
 const {__} = wp.i18n
@@ -298,23 +297,12 @@ class KudosAdmin extends Component {
                     />
             },
             {
-                name: 'advanced',
-                title: __('Advanced', 'kudos-donations'),
-                className: 'tab-advanced',
-                content:
-                    <AdvancedTab
-                        settings={this.state.settings}
-                        handleInputChange={this.handleInputChange}
-                        updateSetting={this.updateSetting}
-                        updateAll={this.updateAll}
-                    />
-            },
-            {
                 name: 'help',
                 title: __('Help', 'kudos-donations'),
                 className: 'tab-help',
                 content:
                     <HelpTab
+                        settings={this.state.settings}
                         updateSetting={this.updateSetting}
                     />
             }

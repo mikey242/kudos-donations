@@ -1,4 +1,5 @@
 import {SettingCard} from "../SettingCard"
+import {ButtonIcon} from "../ButtonIcon"
 
 const { __ } = wp.i18n
 const { Button, TextControl } = wp.components
@@ -30,6 +31,7 @@ const NewCampaignPanel = ({addCampaign}) => {
             <Button
                 isSecondary
                 disabled={buttonDisabled}
+                icon={(<ButtonIcon icon='add' />)}
                 onClick={
                     () =>  {
                         addCampaign(document.getElementById('kudos_new_campaign').value)

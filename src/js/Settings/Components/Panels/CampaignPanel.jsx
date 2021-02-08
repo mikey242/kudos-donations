@@ -1,5 +1,6 @@
 import {Info} from "../Info"
 import {SettingCard} from "../SettingCard"
+import {ButtonIcon} from "../ButtonIcon"
 
 const {__} = wp.i18n
 const {useState, useEffect, Fragment} = wp.element
@@ -46,18 +47,6 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
-
-                { settings._kudos_premium ?
-                    <CheckboxControl
-                        help={__('Displays a campaign progress bar at the top of the donate pop-up.', 'kudos-donations')}
-                        label={__('Display progress bar', "kudos-donations")}
-                        checked={campaign.show_progress || ''}
-                        onChange={(value) => {
-                            campaign.show_progress = value
-                            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                        }}
-                    />
-                : ''}
 
             </SettingCard>
 
@@ -183,6 +172,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
             <CardFooter>
                 <ClipboardButton
                     isSecondary
+                    icon={(<ButtonIcon icon='copy'/>)}
                     text={'[kudos campaign_id="' + campaign.id + '"]'}
                     onClick={() => setHasCopied(true)}
                     onCopy={() => setHasCopied(true)}

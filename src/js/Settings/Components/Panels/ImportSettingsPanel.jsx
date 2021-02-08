@@ -1,4 +1,5 @@
 import {SettingCard} from "../SettingCard"
+import {ButtonIcon} from "../ButtonIcon"
 
 const {__} = wp.i18n
 const {FormFileUpload, BaseControl} = wp.components
@@ -33,6 +34,7 @@ const ImportSettingsPanel = (props) => {
             >
                 <FormFileUpload
                     accept="text/*"
+                    icon={(<ButtonIcon icon='upload'/>)}
                     className={"is-secondary"}
                     onChange={(e) => importSettings(e)}
                 >
