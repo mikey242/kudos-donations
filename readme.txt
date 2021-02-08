@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.5
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ e.g:
 = 2.3.4 =
 * Add 'Business name' to address fields
 * Fix campaign table warnings
+* Combine Advanced/Help settings tabs
+* Minor improvements to Mollie settings
+* Improvements to REST routes
 
 = 2.3.3 =
 * Fix address fields not showing
