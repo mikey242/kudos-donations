@@ -98,12 +98,11 @@ class CampaignsTable extends WP_List_Table {
 
 			$campaign_total = $this->campaigns::get_campaign_stats( $id );
 
-			$campaigns[ $key ]['date']          = $campaign_total['last_donation'];
-			$campaigns[ $key ]['goal']          = !empty($campaign['campaign_goal']) ? $campaign['campaign_goal'] : null;
-			$campaigns[ $key ]['total']         = 0;
-			$campaigns[ $key ]['currency']      = 'EUR';
-			$campaigns[ $key ]['total']         = $campaign_total['total'];
-			$campaigns[ $key ]['transactions']  = $campaign_total['count'];
+			$campaigns[ $key ]['currency']     = 'EUR';
+			$campaigns[ $key ]['date']         = isset( $campaign_total['last_donation'] ) ? $campaign_total['last_donation'] : null;
+			$campaigns[ $key ]['goal']         = isset( $campaign['campaign_goal'] ) ? $campaign['campaign_goal'] : null;
+			$campaigns[ $key ]['total']        = isset( $campaign_total['total'] ) ? $campaign_total['total'] : null;
+			$campaigns[ $key ]['transactions'] = isset( $campaign_total['count'] ) ? $campaign_total['count'] : null;
 		}
 
 		return $campaigns;
@@ -117,11 +116,11 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function column_names(): array {
 		return [
-			'name'          => __( 'Name', 'kudos-donations' ),
-			'transactions'  => __( 'Transactions', 'kudos-donations' ),
-			'total'         => __( 'Total', 'kudos-donations' ),
-			'goal'          => __( 'Goal', 'kudos-donations' ),
-			'date'          => __( 'Last donation', 'kudos-donations' ),
+			'name'         => __( 'Name', 'kudos-donations' ),
+			'transactions' => __( 'Transactions', 'kudos-donations' ),
+			'total'        => __( 'Total', 'kudos-donations' ),
+			'goal'         => __( 'Goal', 'kudos-donations' ),
+			'date'         => __( 'Last donation', 'kudos-donations' ),
 		];
 	}
 
@@ -146,11 +145,11 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function get_sortable_columns(): array {
 		return [
-			'date'          => [
+			'date'  => [
 				'date',
 				false,
 			],
-			'total'         => [
+			'total' => [
 				'total',
 				false,
 			],
@@ -182,7 +181,7 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function column_date( array $item ): string {
 
-		return isset( $item['date'] ) ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+		return $item['date'] ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 			strtotime( $item['date'] ) ) : sprintf( "<i>%s</i>", __( 'None yet', 'kudos-donations' ) );
 
 	}

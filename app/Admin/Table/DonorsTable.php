@@ -44,7 +44,7 @@ class DonorsTable extends WP_List_Table {
 			'postcode' => __( 'Postcode', 'kudos-donations' ),
 			'city'     => __( 'City', 'kudos-donations' ),
 			'country'  => __( 'Country', 'kudos-donations' ),
-			'mode'     => __( 'Mode', 'kudos-donations' )
+			'mode'     => __( 'Mode', 'kudos-donations' ),
 		];
 
 		parent::__construct(
@@ -80,9 +80,9 @@ class DonorsTable extends WP_List_Table {
 	public function fetch_table_data(): array {
 
 		$search       = $this->get_search_data();
-		$search_field = isset( $search['field'] ) ? $search['field'] : null;
-		$search_term  = isset( $search['term'] ) ? $search['term'] : null;
-		$donors       = $this->mapper->get_all_by( [ $search_field => $search_term ], 'AND' );
+		$search_field = ! empty( $search['field'] ) ? $search['field'] : null;
+		$search_term  = ! empty( $search['term'] ) ? $search['term'] : null;
+		$donors       = $this->mapper->get_all_by( [ $search_field => $search_term ] );
 
 		return array_map( function ( $donor ) {
 			return $donor->to_array();
