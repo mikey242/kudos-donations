@@ -18,7 +18,6 @@ const MollieApiModePanel = (props) => {
 
             <BaseControl
                 id="_kudos_mollie_api_mode"
-                label={__('Mode', 'kudos-donations')}
                 help={__(
                     'When using Kudos Donations for the first time, the payment mode is set to "Test". Check that the configuration is working correctly. Once you are ready to receive live payments you can switch the mode to "Live".',
                     'kudos-donations'

@@ -15,7 +15,10 @@ const MollieApiKeysPanel = (props) => {
 
             <TextControl
                 key={"_kudos_mollie_test_api_key"}
-                label={__('Test API key', 'kudos-donations')}
+                type={'password'}
+                onFocus={e => e.target.type = 'text'}
+                onBlur={e => e.target.type = 'password'}
+                label={__('Test key', 'kudos-donations')}
                 value={props.settings._kudos_mollie_test_api_key || ''}
                 placeholder={__('Begins with "test_"', 'kudos-donations')}
                 disabled={props.isSaving}
@@ -24,7 +27,10 @@ const MollieApiKeysPanel = (props) => {
 
             <TextControl
                 key={"_kudos_mollie_live_api_key"}
-                label={__('Live API key', 'kudos-donations')}
+                type={'password'}
+                onFocus={e => e.target.type = 'text'}
+                onBlur={e => e.target.type = 'password'}
+                label={__('Live key', 'kudos-donations')}
                 value={props.settings._kudos_mollie_live_api_key || ''}
                 placeholder={__('Begins with "live_"', 'kudos-donations')}
                 disabled={props.isSaving}
