@@ -100,6 +100,9 @@ e.g:
 
 == Changelog ==
 
+= 2.3.5 =
+* Fix settings import
+
 = 2.3.4 =
 * Add 'Business name' to address fields
 * Fix campaign table warnings

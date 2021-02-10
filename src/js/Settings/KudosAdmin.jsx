@@ -303,6 +303,8 @@ class KudosAdmin extends Component {
                 content:
                     <HelpTab
                         settings={this.state.settings}
+                        handleInputChange={this.handleInputChange}
+                        updateAll={this.updateAll}
                         updateSetting={this.updateSetting}
                     />
             }
