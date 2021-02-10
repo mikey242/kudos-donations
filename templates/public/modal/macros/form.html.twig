@@ -37,10 +37,10 @@
     />
 {% endmacro %}
 
-{% macro text(name, label, type, required=true, atts) %}
+{% macro text(name, label, type='text', required=true, atts) %}
     {% from _self import input %}
     <label class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
-        {{ input(name, label, null, 'text', required, '', atts) }}
+        {{ input(name, label, null, type, required, '', atts) }}
     </label>
 {% endmacro %}
 
