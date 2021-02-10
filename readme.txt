@@ -102,6 +102,7 @@ e.g:
 
 = 2.3.5 =
 * Fix settings import
+* Update TailwindCSS to 2.0.3
 
 = 2.3.4 =
 * Add 'Business name' to address fields
