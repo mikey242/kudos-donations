@@ -25,7 +25,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
     return (
         <div id={"campaign-" + campaign.id}>
-            <SettingCard title={__('General', 'kudos-donations')} id="campaignPanel">
+            <SettingCard title={__('General', 'kudos-donations')} id="campaignPanel" settings={settings} campaign={campaign} handleInputChange={handleInputChange}>
                 <TextControl
                     label={__('Name', 'kudos-donations')}
                     help={__('Ensure that this is a unique name to make it easy to identify in the transactions page.', 'kudos-donations')}
