@@ -2,6 +2,7 @@ import logo from '../../../img/logo-colour.svg'
 import {Btn} from "./Btn"
 
 const {__} = wp.i18n
+const {applyFilters} = wp.hooks
 
 const Header = (props) => {
 
@@ -28,7 +29,7 @@ const Header = (props) => {
                     <h1>{__('Kudos Donations', 'kudos-donations')}</h1>
                     <span
                         className="kudos-version kd-self-center kd-font-bold kd-rounded-lg kd-p-3 kd-ml-4 kd-border kd-border-solid kd-border-gray-400">
-						{window.kudos.version}
+						{ applyFilters('kudos.settings.headerVersion', window.kudos.version) }
 					</span>
                 </div>
                 <div className="kd-flex kd-items-center">
