@@ -107,6 +107,15 @@ class ActivatorService {
 
 		}
 
+		if ( version_compare( $old_version, '2.3.7', '<' ) ) {
+
+			// Change business_name to allow NULL
+			global $wpdb;
+			$donor_table = DonorEntity::get_table_name();
+			$wpdb->query( "ALTER TABLE $donor_table MODIFY `business_name` VARCHAR(255)" );
+
+		}
+
 	}
 
 	/**
@@ -127,7 +136,7 @@ class ActivatorService {
 		  last_updated datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  email VARCHAR(320) NOT NULL,
 		  name VARCHAR(255) NOT NULL,
-		  business_name VARCHAR(255) NOT NULL,
+		  business_name VARCHAR(255),
 		  street VARCHAR(255),
 		  postcode VARCHAR(255),
 		  city VARCHAR(255),
