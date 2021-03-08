@@ -101,7 +101,10 @@ e.g:
 == Changelog ==
 
 = 2.3.7 =
-* Fix empty business name not working
+* Add separate "privacy policy" option
+* Update Mollie API client
+* Fix translation error
+* Fix incorrect business name database constraint
 
 = 2.3.6 =
 * Compatibility with WordPress 5.7
