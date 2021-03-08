@@ -10,7 +10,9 @@ use Kudos\Service\MapperService;
 use Kudos\Service\RestRouteService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
+use Mollie\Api\Resources\BaseCollection;
 use Mollie\Api\Resources\Customer;
+use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
@@ -357,6 +359,29 @@ class MollieVendor extends AbstractVendor {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Gets a list of payment methods for the current Mollie account
+	 *
+	 * @param string $sequenceType Default is 'recurring'
+	 *
+	 * @return BaseCollection|MethodCollection|null
+	 */
+	public function get_payment_methods($sequenceType='recurring') {
+
+		try {
+
+			return $this->mollie_api->methods->allActive([
+				'sequenceType' => $sequenceType,
+			]);
+
+		} catch (ApiException $e) {
+			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
+
+			return null;
+		}
+
 	}
 
 	/**
