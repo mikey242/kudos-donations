@@ -326,6 +326,7 @@ class PaymentService extends AbstractService {
 	public function check_api_keys( WP_REST_Request $request ) {
 
 		Settings::update_setting( 'mollie_connected', 0 );
+		Settings::update_setting('mollie_recurring_enabled', 0);
 
 		$mode    = sanitize_text_field( $request['apiMode'] );
 		$api_key = sanitize_text_field( $request[ $mode . 'Key' ] );
@@ -345,6 +346,7 @@ class PaymentService extends AbstractService {
 			Settings::update_setting( 'mollie_' . $mode . '_api_key', $api_key );
 			Settings::update_setting( 'mollie_api_mode', $mode );
 			Settings::update_setting( 'mollie_connected', 1 );
+			Settings::update_setting('mollie_recurring_enabled', $this->vendor->get_payment_methods()->count > 0 ?? 0);
 			wp_send_json_success(
 			/* translators: %s: API mode */
 				sprintf( __( '%s API key connection was successful!', 'kudos-donations' ), ucfirst( $mode ) )
