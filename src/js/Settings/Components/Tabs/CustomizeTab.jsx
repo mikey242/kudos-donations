@@ -2,6 +2,7 @@ import {ThemePanel} from "../Panels/ThemePanel"
 import {CompletedPaymentPanel} from "../Panels/CompletedPaymentPanel"
 import {CustomReturnPanel} from "../Panels/CustomReturnPanel"
 import {TermsPanel} from "../Panels/TermsPanel"
+import {PrivacyPanel} from "../Panels/PrivacyPanel"
 
 const {Card, CardDivider} = wp.components
 
@@ -20,6 +21,11 @@ const CustomizeTab = (props) => {
             />
             <CardDivider/>
             <CustomReturnPanel
+                settings={props.settings}
+                handleInputChange={props.handleInputChange}
+            />
+            <CardDivider/>
+            <PrivacyPanel
                 settings={props.settings}
                 handleInputChange={props.handleInputChange}
             />

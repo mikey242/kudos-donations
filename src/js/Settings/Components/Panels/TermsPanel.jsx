@@ -9,7 +9,7 @@ const TermsPanel = (props) => {
 
             <TextControl
                 label={__('URL', 'kudos-donations')}
-                help={__('The url containing your terms and conditions for the donation. If this is left blank then the \'I agree\' checkbox on the form will not be shown.', 'kudos-donations')}
+                help={__('The url containing your terms and conditions for the donation. Leave empty to disable.', 'kudos-donations')}
                 type={'text'}
                 value={props.settings._kudos_terms_link || ''}
                 placeholder={props.placeholder}

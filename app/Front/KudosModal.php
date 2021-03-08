@@ -52,7 +52,8 @@ class KudosModal {
 			'modal_text'  => isset( $atts['modal_text'] ) ? $atts['modal_text'] : '',
 		];
 
-		return $this->twig->render( '/public/modal/message.modal.html.twig', apply_filters( 'kudos_message_modal_data', $data ) );
+		return $this->twig->render( '/public/modal/message.modal.html.twig',
+			apply_filters( 'kudos_message_modal_data', $data ) );
 
 	}
 
@@ -69,13 +70,15 @@ class KudosModal {
 		// Merge global settings with provided data
 		$data = array_merge( $data,
 			[
-				'return_url' => Utils::get_return_url(),
-				'vendor'     => Settings::get_setting( 'payment_vendor' ),
-				'terms_link' => Settings::get_setting( 'terms_link' ),
+				'return_url'   => Utils::get_return_url(),
+				'vendor'       => Settings::get_setting( 'payment_vendor' ),
+				'terms_link'   => Settings::get_setting( 'terms_link' ),
+				'privacy_link' => Settings::get_setting( 'privacy_link' ),
 			]
 		);
 
-		return $this->twig->render( '/public/modal/donate.modal.html.twig', apply_filters( 'kudos_donate_modal_data', $data ));
+		return $this->twig->render( '/public/modal/donate.modal.html.twig',
+			apply_filters( 'kudos_donate_modal_data', $data ) );
 
 	}
 }

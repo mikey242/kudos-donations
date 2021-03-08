@@ -120,9 +120,16 @@
                     </div>
 
                     {% if (terms_link) %}
-                        {{ checkbox('avg', __( 'I agree with the %s', 'kudos-donations' ) |
+                        {{ checkbox('terms', __( 'I agree with the %s', 'kudos-donations' ) |
                             format( '<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' |
                                 format( terms_link , __( 'terms and conditions', 'kudos-donations' ) )
+                            )) }}
+                    {% endif %}
+
+                    {% if (privacy_link) %}
+                        {{ checkbox('privacy', __( 'I agree with the %s', 'kudos-donations' ) |
+                            format( '<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' |
+                                format( terms_link , __( 'privacy policy', 'kudos-donations' ) )
                             )) }}
                     {% endif %}
 

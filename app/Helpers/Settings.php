@@ -133,6 +133,12 @@ class Settings {
 					'default'           => null,
 					'sanitize_callback' => 'esc_url_raw',
 				],
+				'privacy_link'          => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'default'           => null,
+					'sanitize_callback' => 'esc_url_raw',
+				],
 				'return_message_enable' => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
