@@ -288,6 +288,31 @@ class Settings {
 	}
 
 	/**
+	 * Updates specific values in serialized settings array
+	 * e.g update_array('my_setting', ['enabled' => false])
+	 *
+	 * @param string $name // Setting array name
+	 * @param array $value // Array of name=>values in setting to update
+	 *
+	 * @return bool
+	 * @since 2.3.8
+	 */
+	public static function update_array( string $name, array $value ): bool {
+
+		// Grab current data
+		$current = static::get_setting( $name );
+		if ( ! is_array( $current ) ) {
+			return false;
+		}
+
+		// Merge provided data and current data then update setting
+		$new = wp_parse_args( $value, $current );
+
+		return static::update_setting( $name, $new );
+
+	}
+
+	/**
 	 * Register all the settings
 	 *
 	 * @since   2.0.0
