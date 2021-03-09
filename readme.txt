@@ -100,6 +100,9 @@ e.g:
 
 == Changelog ==
 
+= 2.3.8 =
+* Fix critical error when incorrect API key format used
+
 = 2.3.7 =
 * Add separate "privacy policy" option
 * Update Mollie API client
