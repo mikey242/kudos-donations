@@ -10,6 +10,8 @@ const MollieApiKeysPanel = (props) => {
         props.handleInputChange(id, value)
     }
 
+    const vendorMollie = props.settings._kudos_vendor_mollie
+
     return (
         <SettingCard title={__('API keys', 'kudos-donations')}>
 
@@ -19,10 +21,10 @@ const MollieApiKeysPanel = (props) => {
                 onFocus={e => e.target.type = 'text'}
                 onBlur={e => e.target.type = 'password'}
                 label={__('Test key', 'kudos-donations')}
-                value={props.settings._kudos_mollie_test_api_key || ''}
+                value={vendorMollie['test_key'] || ''}
                 placeholder={__('Begins with "test_"', 'kudos-donations')}
                 disabled={props.isSaving}
-                onChange={(value) => handleChange("_kudos_mollie_test_api_key", value)}
+                onChange={(value) => handleChange('_kudos_vendor_mollie', {...vendorMollie, test_key: value })}
             />
 
             <TextControl
@@ -31,10 +33,10 @@ const MollieApiKeysPanel = (props) => {
                 onFocus={e => e.target.type = 'text'}
                 onBlur={e => e.target.type = 'password'}
                 label={__('Live key', 'kudos-donations')}
-                value={props.settings._kudos_mollie_live_api_key || ''}
+                value={vendorMollie['live_key'] || ''}
                 placeholder={__('Begins with "live_"', 'kudos-donations')}
                 disabled={props.isSaving}
-                onChange={(value) => handleChange("_kudos_mollie_live_api_key", value)}
+                onChange={(value) => handleChange('_kudos_vendor_mollie', {...vendorMollie, live_key: value })}
             />
 
             <PanelRow>

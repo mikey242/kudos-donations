@@ -12,10 +12,10 @@ const Header = (props) => {
     if (props.checkingApi) {
         statusClass = 'checking'
         status = __('Checking', 'kudos-donations')
-    } else if (props.settings._kudos_mollie_connected) {
+    } else if (props.settings._kudos_vendor_mollie['connected']) {
         statusClass = 'connected'
         status = __('Mollie connected', 'kudos-donations')
-    } else if (!props.settings._kudos_mollie_connected) {
+    } else if (!props.settings._kudos_vendor_mollie['connected']) {
         statusClass = 'not-connected'
         status = __('Not connected', 'kudos-donations')
     }

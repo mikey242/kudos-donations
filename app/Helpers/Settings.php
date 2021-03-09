@@ -23,86 +23,93 @@ class Settings {
 		$this->settings = apply_filters(
 			'kudos_register_settings',
 			[
-				'show_intro'               => [
+				'show_intro'    => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => true,
 				],
-				'mollie_connected'         => [
+				'vendor_mollie' => [
+					'type'         => 'object',
+					'default'      => [
+						'connected' => false,
+						'recurring' => false,
+						'mode'      => 'test',
+						'test_key'  => '',
+						'live_key'  => '',
+					],
+					'show_in_rest' => [
+						'schema' => [
+							'type'       => 'object',
+							'properties' => [
+								'connected' => [
+									'type' => 'boolean',
+								],
+								'recurring' => [
+									'type' => 'boolean',
+								],
+								'mode'      => [
+									'type' => 'string',
+								],
+								'test_key'  => [
+									'type' => 'string',
+								],
+								'live_key'  => [
+									'type' => 'string',
+								],
+							],
+						],
+					],
+				],
+				'email_receipt_enable'  => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'mollie_api_mode'          => [
-					'type'         => 'string',
-					'show_in_rest' => true,
-					'default'      => 'test',
-				],
-				'mollie_test_api_key'      => [
-					'type'              => 'string',
-					'show_in_rest'      => true,
-					'sanitize_callback' => 'sanitize_text_field',
-				],
-				'mollie_live_api_key'      => [
-					'type'              => 'string',
-					'show_in_rest'      => true,
-					'sanitize_callback' => 'sanitize_text_field',
-				],
-				'mollie_recurring_enabled' => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => false,
-				],
-				'email_receipt_enable'     => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => false,
-				],
-				'email_bcc'                => [
+				'email_bcc'             => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_email',
 				],
-				'smtp_enable'              => [
+				'smtp_enable'           => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'smtp_host'                => [
+				'smtp_host'             => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'smtp_encryption'          => [
+				'smtp_encryption'       => [
 					'type'         => 'string',
 					'show_in_rest' => true,
 					'default'      => 'tls',
 				],
-				'smtp_autotls'             => [
+				'smtp_autotls'          => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => true,
 				],
-				'smtp_from'                => [
+				'smtp_from'             => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => null,
 					'sanitize_callback' => 'sanitize_email',
 				],
-				'smtp_username'            => [
+				'smtp_username'         => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'smtp_password'            => [
+				'smtp_password'         => [
 					'type'         => 'string',
 					'show_in_rest' => true,
 				],
-				'smtp_port'                => [
+				'smtp_port'             => [
 					'type'         => 'string',
 					'show_in_rest' => true,
 				],
-				'theme_colors'             => [
+				'theme_colors'          => [
 					'type'         => 'object',
 					'default'      => [
 						'primary'   => '#ff9f1c',
@@ -122,40 +129,40 @@ class Settings {
 						],
 					],
 				],
-				'address_enabled'          => [
+				'address_enabled'       => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'address_required'         => [
+				'address_required'      => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => true,
 				],
-				'terms_link'               => [
+				'terms_link'            => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => null,
 					'sanitize_callback' => 'esc_url_raw',
 				],
-				'privacy_link'             => [
+				'privacy_link'          => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => null,
 					'sanitize_callback' => 'esc_url_raw',
 				],
-				'return_message_enable'    => [
+				'return_message_enable' => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => true,
 				],
-				'return_message_title'     => [
+				'return_message_title'  => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => __( 'Thank you!', 'kudos-donations' ),
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'return_message_text'      => [
+				'return_message_text'   => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => sprintf(
@@ -165,31 +172,31 @@ class Settings {
 					),
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'custom_return_enable'     => [
+				'custom_return_enable'  => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'custom_return_url'        => [
+				'custom_return_url'     => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'esc_url_raw',
 				],
-				'payment_vendor'           => [
+				'payment_vendor'        => [
 					'type'    => 'string',
 					'default' => 'mollie',
 				],
-				'debug_mode'               => [
+				'debug_mode'            => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'disable_object_cache'     => [
+				'disable_object_cache'  => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => false,
 				],
-				'campaigns'                => [
+				'campaigns'             => [
 					'type'              => 'array',
 					'show_in_rest'      => [
 						'schema' => [

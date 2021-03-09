@@ -11,7 +11,8 @@ const MollieApiModePanel = (props) => {
         props.handleInputChange(id, value)
     }
 
-    const selected = props.settings._kudos_mollie_api_mode
+    const vendorMollie = props.settings._kudos_vendor_mollie
+    const selected = vendorMollie['mode']
 
     return (
         <SettingCard title={__('API mode', 'kudos-donations')}>
@@ -32,7 +33,7 @@ const MollieApiModePanel = (props) => {
                             isSecondary={'test' !== selected}
                             isPressed={'test' === selected}
                             onClick={() =>
-                                handleChange('_kudos_mollie_api_mode', 'test')
+                                handleChange('_kudos_vendor_mollie', {...vendorMollie, mode: 'test' })
                             }
                         >
                             {'Test'}
@@ -43,7 +44,7 @@ const MollieApiModePanel = (props) => {
                             isSecondary={'live' !== selected}
                             isPressed={'live' === selected}
                             onClick={() =>
-                                handleChange('_kudos_mollie_api_mode', 'live')
+                                handleChange('_kudos_vendor_mollie', {...vendorMollie, mode: 'live' })
                             }
                         >
                             {'Live'}

@@ -84,12 +84,12 @@ class Front {
 	 */
 	public function get_kudos_root_styles(): string {
 
-		$theme_colours    = Settings::get_setting( 'theme_colors' );
+		$theme_colours = Settings::get_setting( 'theme_colors' );
 
-		$primary          = isset($theme_colours['primary']) ? $theme_colours['primary'] : '#ff9f1c';
+		$primary          = isset( $theme_colours['primary'] ) ? $theme_colours['primary'] : '#ff9f1c';
 		$primary_dark     = Utils::color_luminance( $primary, '-0.06' );
 		$primary_darker   = Utils::color_luminance( $primary, '-0.09' );
-		$secondary        = isset($theme_colours['secondary']) ? $theme_colours['secondary'] : '#2ec4b6';
+		$secondary        = isset( $theme_colours['secondary'] ) ? $theme_colours['secondary'] : '#2ec4b6';
 		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
@@ -197,12 +197,13 @@ class Front {
 	 */
 	public static function api_ready(): bool {
 
-		$vendor        = Settings::get_setting( 'payment_vendor' );
-		$api_connected = Settings::get_setting( $vendor . '_connected' );
-		$api_mode      = Settings::get_setting( $vendor . '_api_mode' );
-		$api_key       = Settings::get_setting( $vendor . '_' . $api_mode . '_api_key' );
+		$vendor    = Settings::get_setting( 'payment_vendor' );
+		$settings  = Settings::get_setting( 'vendor_' . $vendor );
+		$connected = $settings['connected'];
+		$mode      = $settings['mode'];
+		$key       = isset( $settings[ $mode . '_key' ] ) ? $settings[ $mode . '_key' ] : null;
 
-		if ( ! $api_connected && ! $api_key ) {
+		if ( ! $connected || ! $key ) {
 			return false;
 		}
 
@@ -315,6 +316,7 @@ class Front {
 
 			// Generate markup.
 			$button = new KudosButton( $atts );
+
 			return $button->get_markup();
 
 		}
@@ -427,10 +429,11 @@ class Front {
 			switch ( $transaction->status ) {
 				case 'paid':
 					$vars                = [
-						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value, 2 ),
+						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
+								2 ),
 						'{{name}}'     => $donor->name,
 						'{{email}}'    => $donor->email,
-						'{{campaign}}' => $campaign_name
+						'{{campaign}}' => $campaign_name,
 					];
 					$atts['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
 					$atts['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );

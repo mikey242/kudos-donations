@@ -67,7 +67,10 @@ class KudosAdmin extends Component {
         this.setState({
             isMollieEdited: true,
             settings: {
-                _kudos_mollie_connected: false,
+                _kudos_vendor_mollie: {
+                    ...this.state.settings._kudos_vendor_mollie,
+                    connected: false
+                }
             },
         })
     }
@@ -82,23 +85,6 @@ class KudosAdmin extends Component {
             isAPISaving: true,
         })
 
-        // Create form data from current state
-        // eslint-disable-next-line no-undef
-        const formData = new FormData()
-        formData.append('action', 'check_mollie_connection')
-        formData.append(
-            'apiMode',
-            this.state.settings._kudos_mollie_api_mode
-        )
-        formData.append(
-            'testKey',
-            this.state.settings._kudos_mollie_test_api_key
-        )
-        formData.append(
-            'liveKey',
-            this.state.settings._kudos_mollie_live_api_key
-        )
-
         // Perform Get request
         axios
             .get(window.kudos.checkApiUrl, {
@@ -107,17 +93,19 @@ class KudosAdmin extends Component {
                     'X-WP-Nonce': wpApiSettings.nonce,
                 },
                 params: {
-                    apiMode: this.state.settings._kudos_mollie_api_mode,
-                    testKey: this.state.settings._kudos_mollie_test_api_key,
-                    liveKey: this.state.settings._kudos_mollie_live_api_key,
+                    apiMode: this.state.settings._kudos_vendor_mollie['mode'],
+                    testKey: this.state.settings._kudos_vendor_mollie['test_key'],
+                    liveKey: this.state.settings._kudos_vendor_mollie['live_key'],
                 },
             })
             .then((response) => {
                 this.showNotice(response.data.data)
                 this.setState({
                     settings: {
-                        ...this.state.settings,
-                        _kudos_mollie_connected: response.data.success,
+                        _kudos_vendor_mollie: {
+                            ...this.state.settings._kudos_vendor_mollie,
+                            connected: response.data.success
+                        }
                     },
                     checkingApi: false,
                     isAPISaving: false,
