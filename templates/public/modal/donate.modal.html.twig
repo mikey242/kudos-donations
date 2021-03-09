@@ -120,17 +120,13 @@
                     </div>
 
                     {% if (privacy_link) %}
-                        {{ checkbox('privacy', __( 'I agree with the %s', 'kudos-donations' ) |
-                            format( '<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' |
-                                format( terms_link , __( 'privacy policy', 'kudos-donations' ) )
-                            )) }}
+                        {{ checkbox('privacy', __( 'I agree with the %s privacy policy %s.', 'kudos-donations' ) |
+                            format('<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~privacy_link~' >', '</a>')) }}
                     {% endif %}
 
                     {% if (terms_link) %}
-                        {{ checkbox('terms', __( 'I agree with the %s', 'kudos-donations' ) |
-                            format( '<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href=%s>%s</a>.' |
-                                format( terms_link , __( 'terms and conditions', 'kudos-donations' ) )
-                            )) }}
+                        {{ checkbox('terms', __( 'I agree with the %s terms and conditions %s.', 'kudos-donations' ) |
+                            format( '<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')) }}
                     {% endif %}
 
                 {% endblock %}
