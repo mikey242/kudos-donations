@@ -116,6 +116,24 @@ class ActivatorService {
 
 		}
 
+		if ( version_compare( $old_version, '2.3.8', '<' ) ) {
+
+			// Setting now replaced by single 'vendor_mollie' setting
+			if(Settings::update_setting( 'vendor_mollie', [
+				'connected' => Settings::get_setting( 'mollie_connected' ),
+				'recurring' => Settings::get_setting( 'mollie_recurring_enabled' ),
+				'mode'      => Settings::get_setting('mollie_api_mode'),
+				'test_key'  => Settings::get_setting( 'mollie_test_api_key' ),
+				'live_key'  => Settings::get_setting( 'mollie_live_api_key' ),
+			])) {
+				Settings::remove_setting( 'mollie_connected' );
+				Settings::remove_setting( 'mollie_recurring_enabled' );
+				Settings::remove_setting( 'mollie_api_mode' );
+				Settings::remove_setting( 'mollie_test_api_key' );
+				Settings::remove_setting( 'mollie_live_api_key' );
+			};
+		}
+
 	}
 
 	/**
