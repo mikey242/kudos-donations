@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.5
 Tested up to: 5.7
 Requires PHP: 7.1
-Stable tag: 2.3.7
+Stable tag: 2.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,8 +100,12 @@ e.g:
 
 == Changelog ==
 
-= 2.3.8 =
+= 2.3.9 =
 * Fix critical error when incorrect API key format used
+* Mollie settings moved to serialized array
+
+= 2.3.8 =
+* Allow more flexibility in translation of 'I agree' boxes
 
 = 2.3.7 =
 * Add separate "privacy policy" option
