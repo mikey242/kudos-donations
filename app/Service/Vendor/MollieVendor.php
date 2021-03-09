@@ -53,6 +53,8 @@ class MollieVendor extends AbstractVendor {
 	 */
 	public function __construct() {
 
+		parent::__construct();
+
 		$this->mollie_api = new MollieApiClient();
 
 		$settings = Settings::get_setting('vendor_mollie');
@@ -67,9 +69,6 @@ class MollieVendor extends AbstractVendor {
 				$this->logger->critical( $e->getMessage() );
 			}
 		}
-
-		parent::__construct();
-
 	}
 
 	/**
