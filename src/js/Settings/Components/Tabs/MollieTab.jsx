@@ -10,6 +10,7 @@ const MollieTab = (props) => {
             <MollieApiModePanel
                 settings={props.settings}
                 mollieChanged={props.mollieChanged}
+                checkApiKey={props.checkApiKey}
                 handleInputChange={props.handleInputChange}
             />
             <CardDivider/>

@@ -57,10 +57,10 @@ class MollieVendor extends AbstractVendor {
 
 		$this->mollie_api = new MollieApiClient();
 
-		$settings = Settings::get_setting('vendor_mollie');
+		$settings = Settings::get_setting( 'vendor_mollie' );
 
-		$this->api_mode   = $settings['mode'];
-		$this->api_key    = isset($settings[ $this->api_mode . '_key' ]) ? $settings[ $this->api_mode . '_key' ] : '';
+		$this->api_mode = $settings['mode'];
+		$this->api_key  = isset( $settings[ $this->api_mode . '_key' ] ) ? $settings[ $this->api_mode . '_key' ] : '';
 
 		if ( $this->api_key ) {
 			try {
@@ -109,7 +109,7 @@ class MollieVendor extends AbstractVendor {
 		$mapper = new MapperService( SubscriptionEntity::class );
 		/** @var SubscriptionEntity $subscription */
 		$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
-		$customer_id = $subscription->customer_id;
+		$customer_id  = $subscription->customer_id;
 
 		$customer = $this->get_customer( $customer_id );
 
@@ -128,6 +128,7 @@ class MollieVendor extends AbstractVendor {
 		} catch ( ApiException $e ) {
 
 			$this->logger->critical( $e->getMessage() );
+
 			return false;
 
 		}
@@ -141,7 +142,7 @@ class MollieVendor extends AbstractVendor {
 	 * @return bool
 	 * @since      1.0.0
 	 */
-	public function test_api_connection( string $api_key ): bool {
+	public function refresh_api_connection( string $api_key ): bool {
 
 		if ( ! $api_key ) {
 			return false;
@@ -370,15 +371,15 @@ class MollieVendor extends AbstractVendor {
 	 *
 	 * @return BaseCollection|MethodCollection|null
 	 */
-	public function get_payment_methods($sequenceType='recurring') {
+	public function get_payment_methods( $sequenceType = 'recurring' ) {
 
 		try {
 
-			return $this->mollie_api->methods->allActive([
+			return $this->mollie_api->methods->allActive( [
 				'sequenceType' => $sequenceType,
-			]);
+			] );
 
-		} catch (ApiException $e) {
+		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
 
 			return null;

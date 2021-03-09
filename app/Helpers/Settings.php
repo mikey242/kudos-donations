@@ -255,7 +255,7 @@ class Settings {
 							'amount_type'      => 'both',
 							'fixed_amounts'    => '1,5,20,50',
 							'campaign_goal'    => '',
-							'donation_type'    => 'both',
+							'donation_type'    => 'oneoff',
 							'protected'        => true,
 						],
 					],

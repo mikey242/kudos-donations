@@ -10,6 +10,7 @@ const {
     CardFooter,
     CheckboxControl,
     ClipboardButton,
+    Disabled,
     RadioControl,
     TextControl,
     ToggleControl
@@ -22,6 +23,21 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
     useEffect(() => {
         setHasCopied(false)
     }, [campaign])
+
+    let donation_type = <RadioControl
+        selected={campaign.donation_type || 'both'}
+        disabled={settings._kudos_vendor_mollie.recurring ? null : true}
+        help={__('The donation type of the form, set to "both" to allow donor to choose.', 'kudos-donations')}
+        options={[
+            {label: __('One-off', 'kudos-donations'), value: 'oneoff'},
+            {label: __('Subscription', 'kudos-donations'), value: 'recurring'},
+            {label: __('Both', 'kudos-donations'), value: 'both'},
+        ]}
+        onChange={(value) => {
+            campaign.donation_type = value
+            handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+        }}
+    />
 
     return (
         <div id={"campaign-" + campaign.id}>
@@ -111,19 +127,14 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
             <SettingCard title={__('Donation type', 'kudos-donations')}>
 
-                <RadioControl
-                    selected={campaign.donation_type || 'both'}
-                    help={__('The donation type of the form, set to "both" to allow donor to choose.', 'kudos-donations')}
-                    options={[
-                        {label: __('One-off', 'kudos-donations'), value: 'oneoff'},
-                        {label: __('Subscription', 'kudos-donations'), value: 'recurring'},
-                        {label: __('Both', 'kudos-donations'), value: 'both'},
-                    ]}
-                    onChange={(value) => {
-                        campaign.donation_type = value
-                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
-                    }}
-                />
+                {(!settings._kudos_vendor_mollie.recurring) ?
+                <Disabled>
+                    {donation_type}
+                    <Info level="warning">
+                        {__('You need to enable SEPA Direct Debit or Credit card in your Mollie account to use supscription payments', 'kudos-donations')}
+                    </Info>
+                </Disabled>
+                : donation_type }
 
             </SettingCard>
 

@@ -66,12 +66,6 @@ class KudosAdmin extends Component {
     mollieChanged() {
         this.setState({
             isMollieEdited: true,
-            settings: {
-                _kudos_vendor_mollie: {
-                    ...this.state.settings._kudos_vendor_mollie,
-                    connected: false
-                }
-            },
         })
     }
 
@@ -79,7 +73,8 @@ class KudosAdmin extends Component {
         updateQueryParameter('tab_name', tab)
     }
 
-    checkApiKey() {
+    checkApiKey(callback) {
+
         this.setState({
             checkingApi: true,
             isAPISaving: true,
@@ -99,17 +94,24 @@ class KudosAdmin extends Component {
                 },
             })
             .then((response) => {
-                this.showNotice(response.data.data)
+                this.showNotice(response.data.data.message)
                 this.setState({
-                    settings: {
-                        _kudos_vendor_mollie: {
-                            ...this.state.settings._kudos_vendor_mollie,
-                            connected: response.data.success
-                        }
-                    },
                     checkingApi: false,
                     isAPISaving: false,
                 })
+                if(response.data.success) {
+                    this.setState({
+                        settings: {
+                            ...this.state.settings,
+                            _kudos_vendor_mollie: {
+                                ...response.data.data.setting
+                            }
+                        }
+                    })
+                }
+                if(typeof callback === "function") {
+                    callback()
+                }
             })
     }
 
@@ -249,6 +251,8 @@ class KudosAdmin extends Component {
                     <MollieTab
                         settings={this.state.settings}
                         mollieChanged={this.mollieChanged}
+                        showNotice={this.showNotice}
+                        checkApiKey={this.checkApiKey}
                         handleInputChange={this.handleInputChange}
                     />
             },

@@ -49,7 +49,7 @@ abstract class AbstractVendor extends AbstractService {
 	 * @return bool
 	 * @since      1.0.0
 	 */
-	abstract public function test_api_connection( string $api_key ): bool;
+	abstract public function refresh_api_connection( string $api_key ): bool;
 
 	/**
 	 * Gets specified payment

@@ -116,7 +116,7 @@ class ActivatorService {
 
 		}
 
-		if ( version_compare( $old_version, '2.3.8', '<' ) ) {
+		if ( version_compare( $old_version, '2.3.9', '<' ) ) {
 
 			// Setting now replaced by single 'vendor_mollie' setting
 			if(Settings::update_setting( 'vendor_mollie', [

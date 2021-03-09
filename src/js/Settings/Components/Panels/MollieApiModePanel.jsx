@@ -1,18 +1,27 @@
 import {Btn} from "../Btn"
 import {SettingCard} from "../SettingCard"
+import {ButtonIcon} from "../ButtonIcon"
 
 const {__} = wp.i18n
-const {BaseControl, ButtonGroup, PanelRow} = wp.components
+const {BaseControl, Button, ButtonGroup, PanelRow} = wp.components
+const {useState} = wp.element
 
 const MollieApiModePanel = (props) => {
+
+    const [isBusy, setIsBusy] = useState(false)
+
+    const vendorMollie = props.settings._kudos_vendor_mollie
+    const selected = vendorMollie['mode']
 
     const handleChange = (id, value) => {
         props.mollieChanged()
         props.handleInputChange(id, value)
     }
 
-    const vendorMollie = props.settings._kudos_vendor_mollie
-    const selected = vendorMollie['mode']
+    const refresh = () => {
+        setIsBusy(true)
+        props.checkApiKey(() => setIsBusy(false))
+    }
 
     return (
         <SettingCard title={__('API mode', 'kudos-donations')}>
@@ -51,6 +60,18 @@ const MollieApiModePanel = (props) => {
                         </Btn>
                     </ButtonGroup>
                 </PanelRow>
+            </BaseControl>
+
+            <BaseControl
+                help={__("Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or Credit Card.", 'kudos-donations')}
+            >
+            <Button
+                isLink
+                icon={(<ButtonIcon icon='sync' className={(isBusy ? 'kd-animate-spin' : '')}/>)}
+                onClick={() => refresh()}
+            >
+                {__('Refresh API', 'kudos-donations')}
+            </Button>
             </BaseControl>
 
         </SettingCard>
