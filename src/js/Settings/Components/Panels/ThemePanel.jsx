@@ -8,6 +8,9 @@ const ThemePanel = (props) => {
     const colors = [
         {name: 'orange', color: '#ff9f1c'},
         {name: 'green', color: '#2ec4b6'},
+        {name: 'red', color: '#FF595E'},
+        {name: 'blue', color: '#1982C4'},
+        {name: 'pink', color: '#F46197'}
     ]
 
     return (
