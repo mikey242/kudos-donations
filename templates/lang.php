@@ -45,7 +45,6 @@ __('Amount', 'kudos-donations');
 __('Type', 'kudos-donations');
 __( 'I agree with the %s privacy policy %s.', 'kudos-donations' );
 __( 'I agree with the %s terms and conditions %s.', 'kudos-donations' );
-__( 'terms and conditions', 'kudos-donations' );
 __( 'Donate', 'kudos-donations' );
 
 // Template: "templates/public/modal/message.modal.html.twig"
