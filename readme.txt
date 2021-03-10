@@ -37,7 +37,7 @@ Need a Mollie account? Visit their website to [get started](https://www.mollie.c
 Create campaigns to easily group and track donations made by your donors. Each campaign can have a unique configuration which can be changed from the settings page and automatically applied to all your buttons.
 
 = Recurring Payments =
-Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie. You can also disable this and use only one-off payments if you prefer.
+Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie. Remember to check that your Mollie account meets the [conditions for recurring payments](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
 
 = Source =
 The Git repository for this plugin can be found [here](https://gitlab.iseard.media/michael/kudos-donations).
@@ -56,7 +56,15 @@ Yes, Kudos Donations is a free open-source plugin.
 
 = Which payment methods are supported? =
 
-This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wide range of payment methods such as iDeal, Credit Card and PayPal. For a full list of payment methods please check out [this link](https://www.mollie.com/en/payments).
+This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wide range of payment methods such as iDeal, credit card and PayPal. For a full list of payment methods please check out [this link](https://www.mollie.com/en/payments).
+
+= How can I use recurring payments?
+
+I order to use recurring payments Mollie requires that you have either SEPA Direct Debit OR credit card payment methods enabled on your account. For more information visit [this link](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
+
+= I've enabled the required recurring payment methods but I still cannot use recurring.
+
+If you modified your Mollie account after adding it to Kudos Donations your will need to re-sync the settings. To do this visit the Mollie tab under the settings page and click the "Refresh API" link.
 
 = How much does Mollie cost? =
 
@@ -77,7 +85,7 @@ For general information on how to use shortcodes, please visit [this page](https
 To get started add the Kudos Donations shortcode:
 
 ~~~
-[kudos]
+[kudos campaign_id="default"]
 ~~~
 
 Here is a list of the shortcode attributes:
@@ -100,9 +108,13 @@ e.g:
 
 == Changelog ==
 
-= 2.3.9 =
+= 2.4.0 =
+* Add API check for Mollie recurring payments ability. Please see [here](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-) for more detail.
+* Add additional theme colours
+* Change default donation type to oneoff
+* Improve campaign settings sanitization
 * Fix critical error when incorrect API key format used
-* Mollie settings moved to serialized array
+* Move Mollie settings to serialized array
 
 = 2.3.8 =
 * Allow more flexibility in translation of 'I agree' boxes
