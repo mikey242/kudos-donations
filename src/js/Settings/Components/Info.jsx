@@ -13,10 +13,10 @@ const Info = ({level="info", children}) => {
     }
 
     return (
-        <div className={"kd-flex kd-items-center kd-justify-start " + text}>
+        <span className={"kd-flex kd-items-center kd-justify-start " + text}>
             <Dashicon className="kd-mr-1" icon={icon}/>
             <i>{children}</i>
-        </div>
+        </span>
     )
 
 }
