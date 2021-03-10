@@ -218,7 +218,7 @@ class PaymentService extends AbstractService {
 	 * @param string|null $email Email of donor.
 	 * @param string|null $customer_id Mollie customer id.
 	 *
-	 * @return false|object
+	 * @return false|Payment
 	 * @since      2.3.0
 	 */
 	public function create_payment(
@@ -319,11 +319,9 @@ class PaymentService extends AbstractService {
 	/**
 	 * Check the vendor api key key associated with the mode
 	 *
-	 * @param WP_REST_Request $request Request array.
-	 *
 	 * @since    2.3.0
 	 */
-	public function check_api_keys( WP_REST_Request $request ) {
+	public function check_api_keys() {
 
 		Settings::update_array( 'vendor_mollie',
 			[
@@ -331,46 +329,54 @@ class PaymentService extends AbstractService {
 				'recurring' => false,
 			] );
 
-		$mode    = sanitize_text_field( $request['apiMode'] );
-		$api_key = sanitize_text_field( $request[ $mode . 'Key' ] );
+		$current = Settings::get_current_vendor_settings();
+		$mode    = $current['mode'];
+		$api_key = $current[ $mode . '_key' ];
 
 		// Check that the api key corresponds to the mode.
 		if ( substr( $api_key, 0, 4 ) !== $mode ) {
 			wp_send_json_error(
-			/* translators: %s: API mode */
-				sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ), ucfirst( $mode ), $mode . '_' )
+				[
+					/* translators: %s: API mode */
+					'message' => sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ), ucfirst( $mode ), $mode . '_' ),
+					'setting' => $current
+				]
 			);
 		}
 
 		// Test the api key.
 		$result = $this->vendor->refresh_api_connection( $api_key );
 
+		// Update settings.
+		Settings::update_array( 'vendor_mollie',
+			[
+				'connected' => $result,
+				'recurring' => $this->vendor->can_use_recurring(),
+			] );
+
+		// Send results to JS.
 		if ( $result ) {
-			Settings::update_array( 'vendor_mollie',
-				[
-					'mode'         => $mode,
-					$mode . '_key' => $api_key,
-					'connected'    => 1,
-					'recurring'    => $this->vendor->get_payment_methods()->count > 0 ?? 0,
-				] );
 			wp_send_json_success(
 				[
+					'message' =>
 					/* translators: %s: API mode */
-					'message' => sprintf( __( '%s API key connection was successful!', 'kudos-donations' ),
-						ucfirst( $mode ) ),
-					'setting' => Settings::get_setting( 'vendor_mollie' ),
-				]
-			);
-		} else {
-			wp_send_json_error(
-				[
-					/* translators: %s: API mode */
-					'message' => sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.',
-						'kudos-donations' ),
-						ucfirst( $mode ) ),
+						sprintf( __( '%s API key connection was successful!', 'kudos-donations' ),
+							ucfirst( $mode ) ),
+					'setting' => Settings::get_current_vendor_settings(),
 				]
 			);
 		}
+
+		wp_send_json_error(
+			[
+				/* translators: %s: API mode */
+				'message' => sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.',
+					'kudos-donations' ),
+					ucfirst( $mode ) ),
+				'setting' => Settings::get_current_vendor_settings(),
+			]
+		);
+
 	}
 
 	/**

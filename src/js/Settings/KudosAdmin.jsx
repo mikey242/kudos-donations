@@ -87,28 +87,23 @@ class KudosAdmin extends Component {
                     // eslint-disable-next-line no-undef
                     'X-WP-Nonce': wpApiSettings.nonce,
                 },
-                params: {
-                    apiMode: this.state.settings._kudos_vendor_mollie['mode'],
-                    testKey: this.state.settings._kudos_vendor_mollie['test_key'],
-                    liveKey: this.state.settings._kudos_vendor_mollie['live_key'],
-                },
             })
             .then((response) => {
+
                 this.showNotice(response.data.data.message)
+
+                // Update state
                 this.setState({
                     checkingApi: false,
                     isAPISaving: false,
-                })
-                if(response.data.success) {
-                    this.setState({
-                        settings: {
-                            ...this.state.settings,
-                            _kudos_vendor_mollie: {
-                                ...response.data.data.setting
-                            }
+                    settings: {
+                        ...this.state.settings,
+                        _kudos_vendor_mollie: {
+                            ...response.data.data.setting
                         }
-                    })
-                }
+                    }
+                })
+
                 if(typeof callback === "function") {
                     callback()
                 }

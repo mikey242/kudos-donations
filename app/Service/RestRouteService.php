@@ -76,11 +76,6 @@ class RestRouteService {
 			self::PAYMENT_TEST => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $payment, 'check_api_keys' ],
-				'args'                => [
-					'apiMode' => [
-						'required' => true,
-					],
-				],
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},

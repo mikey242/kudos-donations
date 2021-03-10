@@ -41,7 +41,7 @@
                     {{ text('name', __('Name', 'kudos-donations')) }}
                     {{ text('email_address', __('E-mail address', 'kudos-donations'), 'email') }}
 
-                    {% if(campaign.donation_type == 'oneoff') %}
+                    {% if (campaign.donation_type == 'oneoff' or recurring_allowed == false) %}
                         <input required checked type="hidden" name="payment_frequency" value="oneoff"/>
                     {% elseif(campaign.donation_type == 'recurring') %}
                         <input required checked type="hidden" name="payment_frequency" value="recurring"/>
@@ -107,7 +107,7 @@
                 {% block body %}
                     {% from "/public/modal/macros/form.html.twig" import checkbox %}
 
-                    <div class="kudos_summary kd-text-left kd-block kd-bg-gray-200 kd-p-2 kd-border-0 kd-border-solid kd-border-t-2 kd-border-theme">
+                    <div class="kudos_summary kd-text-left kd-block kd-bg-gray-200 kd-p-2 kd-border-0 kd-border-solid kd-border-t-2 kd-border-primary">
                         <p class="kd-block kd-mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span
                                     class="summary_name"></span></p>
                         <p class="kd-block kd-mb-0"><strong>{{ __('E-mail address', 'kudos-donations') }}
@@ -121,12 +121,12 @@
 
                     {% if (privacy_link) %}
                         {{ checkbox('privacy', __( 'I agree with the %s privacy policy %s.', 'kudos-donations' ) |
-                            format('<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~privacy_link~' >', '</a>')) }}
+                            format('<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~privacy_link~' >', '</a>')) }}
                     {% endif %}
 
                     {% if (terms_link) %}
                         {{ checkbox('terms', __( 'I agree with the %s terms and conditions %s.', 'kudos-donations' ) |
-                            format( '<a class="kd-text-theme hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')) }}
+                            format( '<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')) }}
                     {% endif %}
 
                 {% endblock %}

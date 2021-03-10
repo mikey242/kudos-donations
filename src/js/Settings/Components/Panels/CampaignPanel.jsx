@@ -19,15 +19,18 @@ const {
 const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, allowDelete = false}) => {
 
     const [hasCopied, setHasCopied] = useState(false)
+    let recurring_allowed = settings._kudos_vendor_mollie.recurring
 
     useEffect(() => {
         setHasCopied(false)
     }, [campaign])
 
     let donation_type = <RadioControl
-        selected={campaign.donation_type || 'both'}
-        disabled={settings._kudos_vendor_mollie.recurring ? null : true}
-        help={__('The donation type of the form, set to "both" to allow donor to choose.', 'kudos-donations')}
+        selected={!recurring_allowed ? 'oneoff' : campaign.donation_type || 'oneoff'}
+        help={recurring_allowed ?
+            __('The donation type of the form, set to "both" to allow donor to choose.', 'kudos-donations') :
+            <Info level="warning">{__('You need to enable SEPA Direct Debit or credit card in your Mollie account to use subscription payments.', 'kudos-donations')}</Info>
+        }
         options={[
             {label: __('One-off', 'kudos-donations'), value: 'oneoff'},
             {label: __('Subscription', 'kudos-donations'), value: 'recurring'},
@@ -39,9 +42,17 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
         }}
     />
 
+    if (!recurring_allowed) {
+        donation_type =
+            <Disabled>
+                {donation_type}
+            </Disabled>
+    }
+
     return (
         <div id={"campaign-" + campaign.id}>
-            <SettingCard title={__('General', 'kudos-donations')} id="campaignPanel" settings={settings} campaign={campaign} handleInputChange={handleInputChange}>
+            <SettingCard title={__('General', 'kudos-donations')} id="campaignPanel" settings={settings}
+                         campaign={campaign} handleInputChange={handleInputChange}>
                 <TextControl
                     label={__('Name', 'kudos-donations')}
                     help={__('Ensure that this is a unique name to make it easy to identify in the transactions page.', 'kudos-donations')}
@@ -98,7 +109,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
                 <ToggleControl
                     help={__('Whether to show the address fields or not.', 'kudos-donations')}
-                    label={ campaign.address_enabled ? __('Enabled', 'kudos-donations') : __('Disabled', 'kudos-donations')}
+                    label={campaign.address_enabled ? __('Enabled', 'kudos-donations') : __('Disabled', 'kudos-donations')}
                     checked={campaign.address_enabled || ''}
                     onChange={(value) => {
                         campaign.address_enabled = value
@@ -126,16 +137,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
             <CardDivider/>
 
             <SettingCard title={__('Donation type', 'kudos-donations')}>
-
-                {(!settings._kudos_vendor_mollie.recurring) ?
-                <Disabled>
-                    {donation_type}
-                    <Info level="warning">
-                        {__('You need to enable SEPA Direct Debit or Credit card in your Mollie account to use supscription payments', 'kudos-donations')}
-                    </Info>
-                </Disabled>
-                : donation_type }
-
+                {donation_type}
             </SettingCard>
 
             <CardDivider/>
@@ -161,7 +163,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         <TextControl
                             label={__('Amounts', 'kudos-donations') + ':'}
                             id={'fixed_amounts' + '-' + campaign.name}
-                            // help={__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}
+                            help={<Info>{__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}</Info>}
                             value={campaign.fixed_amounts || ''}
                             onChange={(value) => {
                                 let valuesArray = value.split(',')
@@ -171,9 +173,6 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                                 handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                             }}
                         />
-                        <Info>
-                            {__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}
-                        </Info>
                     </Fragment>
 
                     : ''}

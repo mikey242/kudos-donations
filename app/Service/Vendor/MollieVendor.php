@@ -26,6 +26,7 @@ class MollieVendor extends AbstractVendor {
 	 * This is the name of the vendor as it will appear in the logs
 	 */
 	const VENDOR_NAME = 'Mollie';
+	const VENDOR_SLUG = 'mollie';
 
 	/**
 	 * Instance of MollieApiClient
@@ -365,13 +366,25 @@ class MollieVendor extends AbstractVendor {
 	}
 
 	/**
+	 * Uses get_payment_methods to determine if account can receive recurring payments.
+	 *
+	 * @return bool
+	 * @since 2.3.9
+	 */
+	public function can_use_recurring(): bool {
+
+		return $this->get_payment_methods('recurring')->count > 0;
+
+	}
+
+	/**
 	 * Gets a list of payment methods for the current Mollie account
 	 *
-	 * @param string $sequenceType Default is 'recurring'
+	 * @param string $sequenceType Default is 'oneoff'
 	 *
 	 * @return BaseCollection|MethodCollection|null
 	 */
-	public function get_payment_methods( $sequenceType = 'recurring' ) {
+	private function get_payment_methods( $sequenceType = 'oneoff' ) {
 
 		try {
 
@@ -380,7 +393,7 @@ class MollieVendor extends AbstractVendor {
 			] );
 
 		} catch ( ApiException $e ) {
-			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
+			$this->logger->critical( $e->getMessage() );
 
 			return null;
 		}

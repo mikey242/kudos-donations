@@ -237,6 +237,7 @@ class Settings {
 									'donation_type'    => [
 										'type' => 'string',
 									],
+									// Deprecated: do not use
 									'protected'        => [
 										'type' => 'boolean',
 									],
@@ -256,13 +257,23 @@ class Settings {
 							'fixed_amounts'    => '1,5,20,50',
 							'campaign_goal'    => '',
 							'donation_type'    => 'oneoff',
-							'protected'        => true,
 						],
 					],
 					'sanitize_callback' => [ new Campaigns(), 'sanitize_campaigns' ],
 				],
 			]
 		);
+	}
+
+	/**
+	 * Gets the settings for the current vendor
+	 *
+	 * @return mixed
+	 */
+	public static function get_current_vendor_settings() {
+
+		return self::get_setting('vendor_' . self::get_setting('payment_vendor'));
+
 	}
 
 	/**
@@ -307,15 +318,14 @@ class Settings {
 	public static function update_array( string $name, array $value ): bool {
 
 		// Grab current data
-		$current = static::get_setting( $name );
+		$current = self::get_setting( $name );
 		if ( ! is_array( $current ) ) {
 			return false;
 		}
 
 		// Merge provided data and current data then update setting
 		$new = wp_parse_args( $value, $current );
-
-		return static::update_setting( $name, $new );
+		return self::update_setting( $name, $new );
 
 	}
 

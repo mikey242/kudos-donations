@@ -62,17 +62,20 @@ const MollieApiModePanel = (props) => {
                 </PanelRow>
             </BaseControl>
 
-            <BaseControl
-                help={__("Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or Credit Card.", 'kudos-donations')}
-            >
-            <Button
-                isLink
-                icon={(<ButtonIcon icon='sync' className={(isBusy ? 'kd-animate-spin' : '')}/>)}
-                onClick={() => refresh()}
-            >
-                {__('Refresh API', 'kudos-donations')}
-            </Button>
-            </BaseControl>
+            { vendorMollie.connected ?
+                <BaseControl
+                    help={__("Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.", 'kudos-donations')}
+                >
+                <Button
+                    isLink
+                    icon={(<ButtonIcon icon='sync' className={(isBusy ? 'kd-animate-spin' : '')}/>)}
+                    onClick={() => refresh()}
+                >
+                    {__('Refresh API', 'kudos-donations')}
+                </Button>
+                </BaseControl>
+            : '' }
+
 
         </SettingCard>
     )
