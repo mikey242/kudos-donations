@@ -19,7 +19,7 @@
 
   .kudos_modal_logo {
     &::before {
-      @apply kd-block kd-bg-logo-color kd-bg-no-repeat kd-bg-contain kd-bg-center;
+      @apply kd-block kd-bg-logo-color kd-bg-no-repeat kd-bg-contain kd-bg-center kd-cursor-pointer;
       content: '';
       width: 40px;
       height: 40px;
