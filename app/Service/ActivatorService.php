@@ -6,6 +6,7 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
+use Kudos\Service\Vendor\MollieVendor;
 
 /**
  * Fired during plugin activation
@@ -116,12 +117,14 @@ class ActivatorService {
 
 		}
 
-		if ( version_compare( $old_version, '2.3.9', '<' ) ) {
+		if ( version_compare( $old_version, '2.4.0', '<' ) ) {
+
+			$mollie = new MollieVendor();
 
 			// Setting now replaced by single 'vendor_mollie' setting
 			if(Settings::update_setting( 'vendor_mollie', [
 				'connected' => Settings::get_setting( 'mollie_connected' ),
-				'recurring' => Settings::get_setting( 'mollie_recurring_enabled' ),
+				'recurring' => $mollie->can_use_recurring(),
 				'mode'      => Settings::get_setting('mollie_api_mode'),
 				'test_key'  => Settings::get_setting( 'mollie_test_api_key' ),
 				'live_key'  => Settings::get_setting( 'mollie_live_api_key' ),
