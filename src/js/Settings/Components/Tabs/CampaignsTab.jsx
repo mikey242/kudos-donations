@@ -95,7 +95,7 @@ const CampaignsTab = (props) => {
                     { typeof campaigns[campaign] !== 'undefined' ?
 
                         <CampaignPanel
-                            allowDelete={!campaigns[campaign].protected}
+                            allowDelete={campaign !== 0}
                             settings={props.settings}
                             campaign={campaigns[campaign]}
                             removeCampaign={removeCampaign}
