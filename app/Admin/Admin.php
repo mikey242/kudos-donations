@@ -159,35 +159,33 @@ class Admin {
 		add_action( "admin_print_scripts-{$campaigns_page_hook_suffix}", [ $this, 'kudos_campaign_page_assets' ] );
 
 		// Add debug menu.
-		if ( KUDOS_DEBUG ) {
-			$debug_page_hook_suffix = add_submenu_page(
-				'kudos-settings',
-				'Kudos Debug',
-				'Debug',
-				'manage_options',
-				'kudos-debug',
-				function () {
-					require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-debug.php';
-				}
-			);
-			add_action( "admin_print_scripts-{$debug_page_hook_suffix}",
-				function () {
-					?>
-					<script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            let buttons = document.querySelectorAll('input[type="submit"].confirm')
-                            for (let i = 0; i < buttons.length; i++) {
-                                buttons[i].addEventListener('click', function (e) {
-                                    if (!confirm('<?php _e( 'Are you sure?', 'kudos-donations' ) ?>')) {
-                                        e.preventDefault()
-                                    }
-                                })
-                            }
-                        })
-					</script>
-					<?php
-				} );
-		}
+		$debug_page_hook_suffix = add_submenu_page(
+			KUDOS_DEBUG ? 'kudos-settings' : null,
+			'Kudos Debug',
+			'Debug',
+			'manage_options',
+			'kudos-debug',
+			function () {
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-debug.php';
+			}
+		);
+		add_action( "admin_print_scripts-{$debug_page_hook_suffix}",
+			function () {
+				?>
+				<script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        let buttons = document.querySelectorAll('button[type="submit"].confirm')
+                        for (let i = 0; i < buttons.length; i++) {
+                            buttons[i].addEventListener('click', function (e) {
+                                if (!confirm('<?php _e( 'Are you sure?', 'kudos-donations' ) ?>')) {
+                                    e.preventDefault()
+                                }
+                            })
+                        }
+                    })
+				</script>
+				<?php
+			} );
 	}
 
 	/**
@@ -345,7 +343,7 @@ class Admin {
 			$nonce  = wp_unslash( $_REQUEST['_wpnonce'] );
 
 			// Check nonce.
-			if ( ! wp_verify_nonce( $nonce, $action ) ) {
+			if ( ! wp_verify_nonce( $nonce, 'kudos_debug_action' ) ) {
 				die();
 			}
 
@@ -362,7 +360,19 @@ class Admin {
 
 					break;
 
-				case 'kudos_clear_settings':
+				case 'kudos_clear_mollie':
+					$settings = new Settings();
+					$settings->remove_setting('vendor_mollie');
+					$settings->add_defaults();
+					break;
+
+				case 'kudos_clear_campaigns':
+					$settings = new Settings();
+					$settings->remove_setting('campaigns');
+					$settings->add_defaults();
+					break;
+
+				case 'kudos_clear_all':
 					$settings = new Settings();
 					$settings->remove_settings();
 					$settings->add_defaults();
