@@ -373,7 +373,15 @@ class MollieVendor extends AbstractVendor {
 	 */
 	public function can_use_recurring(): bool {
 
-		return $this->get_payment_methods('recurring')->count > 0;
+		$methods = $this->get_payment_methods( [
+				'sequenceType' => 'recurring',
+			] );
+
+		if ($methods) {
+			return $methods->count > 0;
+		}
+
+		return false;
 
 	}
 
