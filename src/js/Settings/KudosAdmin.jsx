@@ -110,9 +110,9 @@ class KudosAdmin extends Component {
             })
     }
 
-    handleInputChange(option, value) {
+    handleInputChange(option, value, isEdited=true) {
         this.setState({
-            isEdited: true,
+            isEdited: isEdited,
             settings: {
                 ...this.state.settings,
                 [option]: value,
