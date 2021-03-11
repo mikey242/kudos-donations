@@ -331,13 +331,15 @@ class Settings {
 
 		// Grab current data
 		$current = self::get_setting( $name );
-		if ( ! is_array( $current ) ) {
-			return false;
+
+		// Check if setting is either an array or null
+		if(is_array($current) || !null) {
+			// Merge provided data and current data then update setting
+			$new = wp_parse_args( $value, $current );
+			return self::update_setting( $name, $new );
 		}
 
-		// Merge provided data and current data then update setting
-		$new = wp_parse_args( $value, $current );
-		return self::update_setting( $name, $new );
+		return false;
 
 	}
 
