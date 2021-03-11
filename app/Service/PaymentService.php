@@ -338,8 +338,10 @@ class PaymentService extends AbstractService {
 			wp_send_json_error(
 				[
 					/* translators: %s: API mode */
-					'message' => sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ), ucfirst( $mode ), $mode . '_' ),
-					'setting' => $current
+					'message' => sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ),
+						ucfirst( $mode ),
+						$mode . '_' ),
+					'setting' => $current,
 				]
 			);
 		}
@@ -350,8 +352,15 @@ class PaymentService extends AbstractService {
 		// Update settings.
 		Settings::update_array( 'vendor_mollie',
 			[
-				'connected' => $result,
-				'recurring' => $this->vendor->can_use_recurring(),
+				'connected'       => $result,
+				'recurring'       => $this->vendor->can_use_recurring(),
+				'payment_methods' => array_map( function ( $method ) {
+					return [
+						'id'     => $method->id,
+						'status' => $method->status,
+					];
+				},
+					(array) $this->vendor->get_payment_methods() ),
 			] );
 
 		// Send results to JS.

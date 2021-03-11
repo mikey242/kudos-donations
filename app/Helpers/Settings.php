@@ -23,19 +23,20 @@ class Settings {
 		$this->settings = apply_filters(
 			'kudos_register_settings',
 			[
-				'show_intro'    => [
+				'show_intro'            => [
 					'type'         => 'boolean',
 					'show_in_rest' => true,
 					'default'      => true,
 				],
-				'vendor_mollie' => [
+				'vendor_mollie'         => [
 					'type'         => 'object',
 					'default'      => [
-						'connected' => false,
-						'recurring' => false,
-						'mode'      => 'test',
-						'test_key'  => '',
-						'live_key'  => '',
+						'connected'       => false,
+						'recurring'       => false,
+						'mode'            => 'test',
+						'payment_methods' => [],
+						'test_key'        => '',
+						'live_key'        => '',
 					],
 					'show_in_rest' => [
 						'schema' => [
@@ -49,6 +50,17 @@ class Settings {
 								],
 								'mode'      => [
 									'type' => 'string',
+								],
+								'payment_methods' => [
+									'type' => 'array',
+									'items' => [
+										'id' => [
+											'type' => 'string'
+										],
+										'status' => [
+											'type' => 'string'
+										]
+									]
 								],
 								'test_key'  => [
 									'type' => 'string',
@@ -272,7 +284,7 @@ class Settings {
 	 */
 	public static function get_current_vendor_settings() {
 
-		return self::get_setting('vendor_' . self::get_setting('payment_vendor'));
+		return self::get_setting( 'vendor_' . self::get_setting( 'payment_vendor' ) );
 
 	}
 
