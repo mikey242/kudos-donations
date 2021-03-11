@@ -37,16 +37,19 @@ class ActivatorService {
 		$logger->init();
 		$twig = new TwigService();
 		$twig->init();
+		$settings = new Settings();
+		$settings->register_settings();
 
 		if ( $old_version ) {
 			self::run_migrations( $old_version );
 		}
 
+		$settings->add_defaults();
 		self::create_donors_table();
 		self::create_transactions_table();
 		self::create_subscriptions_table();
-		self::set_defaults();
 
+		update_option( '_kudos_donations_version', KUDOS_VERSION );
 		$logger->info( 'Kudos Donations plugin activated' );
 
 	}
@@ -59,6 +62,10 @@ class ActivatorService {
 	 * @since 2.3.2
 	 */
 	public static function run_migrations( string $old_version ) {
+
+		$logger = new LoggerService();
+		$logger->info( 'Upgrade detected, running migrations.',
+			[ 'old_version' => $old_version, 'new_version' => KUDOS_VERSION ] );
 
 		if ( version_compare( $old_version, '2.1.1', '<' ) ) {
 			Settings::remove_setting( 'action_scheduler' );
@@ -98,44 +105,42 @@ class ActivatorService {
 		}
 
 		if ( version_compare( $old_version, '2.3.2', '<' ) ) {
-
 			// Setting now replaced by 'theme_colors'
 			$old_color             = Settings::get_setting( 'theme_color' );
 			$new_colors            = Settings::get_setting( 'theme_colors' );
 			$new_colors['primary'] = $old_color;
 			Settings::update_setting( 'theme_colors', $new_colors );
 			Settings::remove_setting( 'theme_color' );
-
 		}
 
 		if ( version_compare( $old_version, '2.3.7', '<' ) ) {
-
 			// Change business_name to allow NULL
 			global $wpdb;
 			$donor_table = DonorEntity::get_table_name();
 			$wpdb->query( "ALTER TABLE $donor_table MODIFY `business_name` VARCHAR(255)" );
-
 		}
 
 		if ( version_compare( $old_version, '2.4.0', '<' ) ) {
-
 			// Setting now replaced by single 'vendor_mollie' setting.
-			if(Settings::update_setting( 'vendor_mollie', [
+			$mollie = new MollieVendor();
+			$connected = Settings::get_setting( 'mollie_connected' );
+			Settings::update_array( 'vendor_mollie',
+				[
 
-				'connected' => Settings::get_setting( 'mollie_connected' ),
-				'mode'      => Settings::get_setting('mollie_api_mode'),
-				'test_key'  => Settings::get_setting( 'mollie_test_api_key' ),
-				'live_key'  => Settings::get_setting( 'mollie_live_api_key' ),
+					'connected' => $connected,
+					'mode'      => ! empty( Settings::get_setting( 'mollie_api_mode' ) ) ? Settings::get_setting( 'mollie_api_mode' ) : 'test',
+					'test_key'  => (string) Settings::get_setting( 'mollie_test_api_key' ),
+					'live_key'  => (string) Settings::get_setting( 'mollie_live_api_key' ),
+					'recurring' => $connected ? $mollie->can_use_recurring() : false
 
-			])) {
+				] );
 
-				// Remove old settings fields.
-				Settings::remove_setting( 'mollie_connected' );
-				Settings::remove_setting( 'mollie_api_mode' );
-				Settings::remove_setting( 'mollie_test_api_key' );
-				Settings::remove_setting( 'mollie_live_api_key' );
-
-			};
+			// Remove old settings fields.
+			Settings::remove_setting( 'mollie_connected' );
+			Settings::remove_setting( 'mollie_api_mode' );
+			Settings::remove_setting( 'mollie_test_api_key' );
+			Settings::remove_setting( 'mollie_live_api_key' );
+			Settings::remove_setting( 'campaign_labels' );
 		}
 
 	}
@@ -241,20 +246,6 @@ class ActivatorService {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
-
-	}
-
-	/**
-	 * Adds default options if not already set
-	 *
-	 * @since    1.0.0
-	 */
-	private static function set_defaults() {
-
-		update_option( '_kudos_donations_version', KUDOS_VERSION );
-
-		$settings = new Settings();
-		$settings->add_defaults();
 
 	}
 }
