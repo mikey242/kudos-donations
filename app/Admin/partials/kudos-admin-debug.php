@@ -51,16 +51,13 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
 				      method='post'>
-					<?php wp_nonce_field( 'kudos_log_clear', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_log_clear'>
-					<input class="button-secondary confirm" type='submit' value='Clear'>
-				</form>
-
-				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
-				      method='post'>
-					<?php wp_nonce_field( 'kudos_log_download', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_log_download'>
-					<input class="button-secondary" type='submit' value='Download'>
+					<?php wp_nonce_field( 'kudos_debug_action' ); ?>
+					<button class="button-secondary confirm" name='kudos_action' type='submit' value='kudos_log_clear'>
+						Clear
+					</button>
+					<button class="button-secondary" name='kudos_action' type='submit' value='kudos_log_download'>
+						Download
+					</button>
 				</form>
 
 				<table class='form-table'>
@@ -127,56 +124,60 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 					performing any of these actions.</p>
 				<hr/>
 
-				<p>This will remove all the settings from the database and reset them back to default.</p>
+				<p>This will clear the selected settings from the database and reset them back to default.</p>
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_clear_settings', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_clear_settings'>
-					<input class="button-secondary confirm" type='submit' value='Clear settings'>
-				</form>
+					<?php wp_nonce_field( 'kudos_debug_action' ); ?>
+					<button type='submit' class="button-secondary confirm" name='kudos_action'
+					        value='kudos_clear_mollie'>
+						Reset Mollie settings
+					</button>
+					<button type='submit' class="button-secondary confirm" name='kudos_action'
+					        value='kudos_clear_campaigns'>
+						Reset campaigns settings
+					</button>
+					<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_clear_all'>
+						Reset all settings
+					</button>
 
-				<hr/>
+					<hr/>
 
-				<p>This will clear the twig cache.</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_clear_cache', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_clear_cache'>
-					<input class="button-secondary confirm" type='submit' value='Clear cache'>
-				</form>
+					<p>This will clear the twig cache.</p>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_clear_cache'>Clear cache
+					</button>
 
-				<hr/>
+					<hr/>
 
-				<p>Remove all transactions</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_clear_transactions', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_clear_transactions'>
-					<input class="button-secondary confirm" type='submit' value='Delete all transactions'>
-				</form>
+					<p>Remove all transactions</p>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_clear_transactions'>Delete all
+						transactions
+					</button>
 
-				<hr/>
+					<hr/>
 
-				<p>Remove all donors</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_clear_donors', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_clear_donors'>
-					<input class="button-secondary confirm" type='submit' value='Delete all donors'>
-				</form>
+					<p>Remove all donors</p>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_clear_donors'>Delete all
+						donors
+					</button>
 
-				<hr/>
+					<hr/>
 
-				<p>Remove all subscriptions</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_clear_subscriptions', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_clear_subscriptions'>
-					<input class="button-secondary confirm" type='submit' value='Delete all subscriptions'>
-				</form>
+					<p>Remove all subscriptions</p>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_clear_subscriptions'>Delete all
+						subscriptions
+					</button>
 
-				<hr/>
+					<hr/>
 
-				<p>This will <strong>delete all Kudos data</strong> and recreate the database</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_recreate_database', '_wpnonce' ); ?>
-					<input type='hidden' name='kudos_action' value='kudos_recreate_database'>
-					<input class="button-secondary confirm" type='submit' value='Recreate database'>
+					<p>This will <strong>delete all Kudos data</strong> and recreate the database</p>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_recreate_database'>Recreate
+						database
+					</button>
+
 				</form>
 
 
