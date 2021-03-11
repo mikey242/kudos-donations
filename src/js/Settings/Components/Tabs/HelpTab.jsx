@@ -13,7 +13,7 @@ const HelpTab = (props) => {
         <Fragment>
             <Card>
                 <HelpPanel
-                    updateSetting={props.updateSetting}
+                    handleInputChange={props.handleInputChange}
                 />
             </Card>
             <br/>

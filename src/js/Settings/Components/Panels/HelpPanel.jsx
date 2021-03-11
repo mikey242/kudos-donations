@@ -7,7 +7,7 @@ const {
     Button,
 } = wp.components
 
-const HelpPanel = ({updateSetting}) => {
+const HelpPanel = ({handleInputChange}) => {
 
     return (
         <SettingCard>
@@ -42,7 +42,7 @@ const HelpPanel = ({updateSetting}) => {
                         className={"kd-mr-2"}
                         icon={(<ButtonIcon icon='door'/>)}
                         onClick={() => {
-                            updateSetting('_kudos_show_intro', true, false)
+                            handleInputChange('_kudos_show_intro', true, false)
                         }}
                     >
                         {__('Show welcome guide', 'kudos-donations')}
