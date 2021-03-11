@@ -60,7 +60,7 @@ class MollieVendor extends AbstractVendor {
 
 		$settings = Settings::get_setting( 'vendor_mollie' );
 
-		$this->api_mode = $settings['mode'];
+		$this->api_mode = isset( $settings['mode'] ) ? $settings['mode'] : '';
 		$this->api_key  = isset( $settings[ $this->api_mode . '_key' ] ) ? $settings[ $this->api_mode . '_key' ] : '';
 
 		if ( $this->api_key ) {
@@ -380,17 +380,15 @@ class MollieVendor extends AbstractVendor {
 	/**
 	 * Gets a list of payment methods for the current Mollie account
 	 *
-	 * @param string $sequenceType Default is 'oneoff'
+	 * @param array $options https://docs.mollie.com/reference/v2/methods-api/list-methods
 	 *
 	 * @return BaseCollection|MethodCollection|null
 	 */
-	private function get_payment_methods( $sequenceType = 'oneoff' ) {
+	public function get_payment_methods( $options = [] ) {
 
 		try {
 
-			return $this->mollie_api->methods->allActive( [
-				'sequenceType' => $sequenceType,
-			] );
+			return $this->mollie_api->methods->allActive( $options );
 
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
