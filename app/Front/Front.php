@@ -197,8 +197,7 @@ class Front {
 	 */
 	public static function api_ready(): bool {
 
-		$vendor    = Settings::get_setting( 'payment_vendor' );
-		$settings  = Settings::get_setting( 'vendor_' . $vendor );
+		$settings  = Settings::get_current_vendor_settings();
 		$connected = $settings['connected'];
 		$mode      = $settings['mode'];
 		$key       = isset( $settings[ $mode . '_key' ] ) ? $settings[ $mode . '_key' ] : null;
