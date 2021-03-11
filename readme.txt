@@ -60,7 +60,7 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 = How can I use recurring payments?
 
-I order to use recurring payments Mollie requires that you have either SEPA Direct Debit OR credit card payment methods enabled on your account. For more information visit [this link](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
+In order to use recurring payments Mollie requires that you have either SEPA Direct Debit OR credit card payment methods enabled on your account. For more information visit [this link](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
 
 = I've enabled the required recurring payment methods but I still cannot use recurring.
 
@@ -106,6 +106,11 @@ e.g:
 3. Settings page
 4. Automated email receipt
 
+== Upgrade Notice ==
+= 2.4.0=
+You will need to click the "Refresh API" button on the Mollie tab to enable recurring payments.
+
+
 == Changelog ==
 
 = 2.4.0 =
@@ -115,6 +120,7 @@ e.g:
 * Improve campaign settings sanitization
 * Fix critical error when incorrect API key format used
 * Move Mollie settings to serialized array
+* Added more debug actions / debug page now accessible without being enabled
 
 = 2.3.8 =
 * Allow more flexibility in translation of 'I agree' boxes
