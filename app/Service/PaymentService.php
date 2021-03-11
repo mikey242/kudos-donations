@@ -352,19 +352,25 @@ class PaymentService extends AbstractService {
 		// Update settings.
 		Settings::update_array( 'vendor_mollie',
 			[
-				'connected'       => $result,
-				'recurring'       => $this->vendor->can_use_recurring(),
-				'payment_methods' => array_map( function ( $method ) {
-					return [
-						'id'     => $method->id,
-						'status' => $method->status,
-					];
-				},
-					(array) $this->vendor->get_payment_methods() ),
+				'connected' => $result,
 			] );
 
 		// Send results to JS.
 		if ( $result ) {
+
+			// Update vendor settings
+			Settings::update_array( 'vendor_mollie',
+				[
+					'recurring' => $this->vendor->can_use_recurring(),
+					'payment_methods' => array_map( function ( $method ) {
+						return [
+							'id'     => $method->id,
+							'status' => $method->status,
+						];
+					},
+						(array) $this->vendor->get_payment_methods() ),
+				] );
+
 			wp_send_json_success(
 				[
 					'message' =>
