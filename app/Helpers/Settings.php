@@ -71,6 +71,20 @@ class Settings {
 										]
 									]
 								],
+								'payment_methods' => [
+									'type'  => 'array',
+									'items' => [
+										'type'       => 'object',
+										'properties' => [
+											'id'     => [
+												'type' => 'string',
+											],
+											'status' => [
+												'type' => 'string',
+											],
+										],
+									],
+								],
 							],
 						],
 					],
