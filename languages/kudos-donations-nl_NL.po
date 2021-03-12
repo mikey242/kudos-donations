@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-12 11:22+0100\n"
-"PO-Revision-Date: 2021-03-12 11:23+0100\n"
+"POT-Creation-Date: 2021-03-12 11:45+0100\n"
+"PO-Revision-Date: 2021-03-12 11:48+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -84,7 +84,7 @@ msgstr "%s Campagnes"
 
 #: app/Admin/Admin.php:151 app/Admin/Table/CampaignsTable.php:52
 #: app/Admin/partials/kudos-admin-campaigns.php:32
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Campaigns"
 msgstr "Campagnes"
 
@@ -125,7 +125,6 @@ msgid "Cache cleared"
 msgstr "Cache gewist"
 
 #. translators: %s: Number of records.
-#. translators: %s: Number of records
 #: app/Admin/Admin.php:395 app/Admin/partials/kudos-admin-transactions.php:24
 #, php-format
 msgid "Deleted %s transaction"
@@ -134,7 +133,6 @@ msgstr[0] "%s transactie verwijderd"
 msgstr[1] "%s transacties verwijderd"
 
 #. translators: %s: Number of records.
-#. translators: %s: Number of records
 #: app/Admin/Admin.php:410 app/Admin/partials/kudos-admin-donors.php:23
 #, php-format
 msgid "Deleted %s donor"
@@ -143,7 +141,6 @@ msgstr[0] "%s donateur verwijderd"
 msgstr[1] "%s donateurs verwijderd"
 
 #. translators: %s: Number of records.
-#. translators: %s: Number of records
 #: app/Admin/Admin.php:424 app/Admin/partials/kudos-admin-subscriptions.php:27
 #, php-format
 msgid "Deleted %s subscription"
@@ -164,7 +161,7 @@ msgstr "Database opnieuw gemaakt"
 #: app/Admin/Table/TransactionsTable.php:37
 #: app/Admin/Table/TransactionsTable.php:50
 #: app/Admin/Table/TransactionsTable.php:135 dist/js/kudos-admin-settings.js:1
-#: templates/lang.php:21 templates/lang.php:43
+#: templates/lang.php:21 templates/lang.php:44
 msgid "Name"
 msgstr "Naam"
 
@@ -206,12 +203,12 @@ msgstr "Bewerk"
 #: app/Admin/Table/SubscriptionsTable.php:33
 #: app/Admin/Table/SubscriptionsTable.php:40
 #: app/Admin/Table/TransactionsTable.php:38
-#: app/Admin/Table/TransactionsTable.php:51 dist/js/kudos-admin-settings.js:1
+#: app/Admin/Table/TransactionsTable.php:51 dist/js/kudos-admin-settings.js:3
 msgid "Email"
 msgstr "E-mail"
 
 #: app/Admin/Table/DonorsTable.php:35 app/Admin/Table/DonorsTable.php:104
-#: templates/lang.php:34
+#: templates/lang.php:35
 msgid "Address"
 msgstr "Adres"
 
@@ -226,19 +223,19 @@ msgstr "Order ID"
 msgid "Customer ID"
 msgstr "Klant ID"
 
-#: app/Admin/Table/DonorsTable.php:43 templates/lang.php:37
+#: app/Admin/Table/DonorsTable.php:43 templates/lang.php:38
 msgid "Street"
 msgstr "Straat"
 
-#: app/Admin/Table/DonorsTable.php:44 templates/lang.php:38
+#: app/Admin/Table/DonorsTable.php:44 templates/lang.php:39
 msgid "Postcode"
 msgstr "Postcode"
 
-#: app/Admin/Table/DonorsTable.php:45 templates/lang.php:39
+#: app/Admin/Table/DonorsTable.php:45 templates/lang.php:40
 msgid "City"
 msgstr "Stad"
 
-#: app/Admin/Table/DonorsTable.php:46 templates/lang.php:40
+#: app/Admin/Table/DonorsTable.php:46 templates/lang.php:41
 msgid "Country"
 msgstr "Land"
 
@@ -286,7 +283,7 @@ msgstr "Frequentie"
 #: app/Admin/Table/SubscriptionsTable.php:128
 #: app/Admin/Table/TransactionsTable.php:47
 #: app/Admin/Table/TransactionsTable.php:137 templates/lang.php:12
-#: templates/lang.php:20 templates/lang.php:44
+#: templates/lang.php:20 templates/lang.php:45
 msgid "Amount"
 msgstr "Bedrag"
 
@@ -316,7 +313,7 @@ msgstr "Abonnement"
 msgid "Subscription Id"
 msgstr "Abonnement Id"
 
-#: app/Admin/Table/SubscriptionsTable.php:301 templates/lang.php:54
+#: app/Admin/Table/SubscriptionsTable.php:301 templates/lang.php:57
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -382,7 +379,7 @@ msgid "Method"
 msgstr "Methode"
 
 #: app/Admin/Table/TransactionsTable.php:54
-#: app/Admin/Table/TransactionsTable.php:138 templates/lang.php:45
+#: app/Admin/Table/TransactionsTable.php:138 templates/lang.php:46
 msgid "Type"
 msgstr "Type"
 
@@ -418,7 +415,7 @@ msgid "Unknown"
 msgstr "Onbekend"
 
 #: app/Admin/partials/kudos-admin-campaigns.php:18
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Campaign deleted"
 msgstr "Campagne verwijderd"
 
@@ -490,16 +487,6 @@ msgstr "Je donatie wordt zo snel mogelijk verwerkt."
 #: app/Front/KudosButton.php:108
 msgid "Secure payment by"
 msgstr "Veilige betaling door"
-
-#: app/Front/KudosModal.php:80 templates/lang.php:46
-#, php-format
-msgid "I agree with the %1$s privacy policy %2$s."
-msgstr "Ik ben het eens met het %1s privacybeleid %2s."
-
-#: app/Front/KudosModal.php:81 templates/lang.php:47
-#, php-format
-msgid "I agree with the %1$s terms and conditions %2$s."
-msgstr "Ik ben het eens met de %s algemene voorwaarden %s."
 
 #: app/Helpers/Settings.php:174
 msgid "Thank you!"
@@ -1240,40 +1227,41 @@ msgstr "Versturen"
 msgid "Set the colour for the Kudos button and the pop-up modal."
 msgstr "Stel de kleur in van de Kudos-knop en de pop-up modal."
 
-#: dist/js/kudos-admin-settings.js:1
+#. translators: %s: Name of campaign added.
+#: dist/js/kudos-admin-settings.js:3
 #, javascript-format
 msgid "Added campaign \"%s\""
 msgstr "Campagne toegevoegd: \"%s\""
 
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Campaign details"
 msgstr "Campagne gegevens"
 
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Select a campaign:"
 msgstr "Kies een campagne:"
 
-#: dist/js/kudos-admin-settings.js:1 dist/js/kudos-button-block.js:1
+#: dist/js/kudos-admin-settings.js:3 dist/js/kudos-button-block.js:1
 msgid "Select a campaign"
 msgstr "Kies een campagne"
 
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Setting(s) updated"
 msgstr "Instelling(en) bijgewerkt"
 
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Setting updated"
 msgstr "Instelling bijgewerkt"
 
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Mollie"
 msgstr "Mollie"
 
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Customize"
 msgstr "Customizer"
 
-#: dist/js/kudos-admin-settings.js:1
+#: dist/js/kudos-admin-settings.js:3
 msgid "Help"
 msgstr "Help"
 
@@ -1289,7 +1277,7 @@ msgstr "Voeg een Kudos donatieknop toe aan een bericht of pagina."
 msgid "Button"
 msgstr "Knop"
 
-#: dist/js/kudos-button-block.js:1 templates/lang.php:48
+#: dist/js/kudos-button-block.js:1 templates/lang.php:51
 msgid "Donate"
 msgstr "Doneer"
 
@@ -1395,42 +1383,55 @@ msgstr "Hoe vaak wil je doneren?"
 msgid "Payment frequency"
 msgstr "Betalingsfrequentie"
 
-#: templates/lang.php:32
+#. translators: %u: Number of years
+#: templates/lang.php:33
 #, php-format
 msgid "%u year"
 msgid_plural "%u years"
 msgstr[0] "%u jaar"
 msgstr[1] "%u jaar"
 
-#: templates/lang.php:33
+#: templates/lang.php:34
 msgid "Donation duration"
 msgstr "Donatieduur"
 
-#: templates/lang.php:35
+#: templates/lang.php:36
 msgid "Please fill in you address"
 msgstr "Vul je e-mailadres in"
 
-#: templates/lang.php:36
+#: templates/lang.php:37
 msgid "optional"
 msgstr "optioneel"
 
-#: templates/lang.php:41
+#: templates/lang.php:42
 msgid "Payment"
 msgstr "Betaling"
 
-#: templates/lang.php:42
+#: templates/lang.php:43
 msgid "By clicking donate you agree to the following payment:"
 msgstr "Door op doneren te klikken ga je akkoord met de volgende betaling:"
 
-#: templates/lang.php:51
+#. translators: %1$s: Opening a tag, %2$s: Closing a tag
+#: templates/lang.php:48
+#, php-format
+msgid "I agree with the %1$s privacy policy %2$s."
+msgstr "Ik ben het eens met het %1s privacybeleid %2s."
+
+#. translators: %1$s: Opening a tag, %2$s: Closing a tag
+#: templates/lang.php:50
+#, php-format
+msgid "I agree with the %1$s terms and conditions %2$s."
+msgstr "Ik ben het eens met de %s algemene voorwaarden %s."
+
+#: templates/lang.php:54
 msgid "Ok"
 msgstr "OK"
 
-#: templates/lang.php:55
+#: templates/lang.php:58
 msgid "Previous tab"
 msgstr "Vorig tabblad"
 
-#: templates/lang.php:56
+#: templates/lang.php:59
 msgid "Next"
 msgstr "Volgende"
 

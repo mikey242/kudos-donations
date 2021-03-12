@@ -29,6 +29,7 @@ __('Yearly', 'kudos-donations');
 __('Quarterly', 'kudos-donations');
 __('Monthly', 'kudos-donations');
 __('Continuous', 'kudos-donations');
+/* translators: %u: Number of years */
 _n_noop( '%u year', '%u years', 'kudos-donations' );
 __('Donation duration', 'kudos-donations');
 __('Address', 'kudos-donations');
@@ -43,7 +44,9 @@ __('By clicking donate you agree to the following payment:', 'kudos-donations');
 __('Name', 'kudos-donations');
 __('Amount', 'kudos-donations');
 __('Type', 'kudos-donations');
+/* translators: %1$s: Opening a tag, %2$s: Closing a tag */
 __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' );
+/* translators: %1$s: Opening a tag, %2$s: Closing a tag */
 __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' );
 __( 'Donate', 'kudos-donations' );
 

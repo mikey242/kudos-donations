@@ -32,6 +32,7 @@ const CampaignsTab = (props) => {
         })
 
         // Save changes
+        /* translators: %s: Name of campaign added. */
         props.updateSetting('_kudos_campaigns', null, true, sprintf(__('Added campaign "%s"', 'kudos-donations'), name))
         updateCampaign(campaigns.length - 1)
     }
