@@ -131,7 +131,6 @@ class ActivatorService {
 					'mode'      => ! empty( Settings::get_setting( 'mollie_api_mode' ) ) ? Settings::get_setting( 'mollie_api_mode' ) : 'test',
 					'test_key'  => (string) Settings::get_setting( 'mollie_test_api_key' ),
 					'live_key'  => (string) Settings::get_setting( 'mollie_live_api_key' ),
-					'recurring' => $connected ? $mollie->can_use_recurring() : false
 
 				] );
 
