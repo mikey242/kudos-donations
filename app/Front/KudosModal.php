@@ -68,14 +68,17 @@ class KudosModal {
 	public function get_donate_modal( array $data ): string {
 
 		$vendor_settings = Settings::get_current_vendor_settings();
+		$link_classes = "kd-text-primary hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1";
+		$privacy_link = Settings::get_setting('privacy_link');
+		$terms_link = Settings::get_setting( 'terms_link' );
 
 		// Merge global settings with provided data
 		$data = array_merge( $data,
 			[
 				'return_url'        => Utils::get_return_url(),
 				'vendor'            => Settings::get_setting( 'payment_vendor' ),
-				'terms_link'        => Settings::get_setting( 'terms_link' ),
-				'privacy_link'      => Settings::get_setting( 'privacy_link' ),
+				'privacy_link'      => sprintf(__( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' ),"<a class='$link_classes' target='_blank' href='$privacy_link' >", "</a>"),
+				'terms_link'        => sprintf(__( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' ),"<a class='$link_classes' target='_blank' href='$terms_link' >", "</a>"),
 				'recurring_allowed' => isset( $vendor_settings['recurring'] ) ? $vendor_settings['recurring'] : false,
 			]
 		);
