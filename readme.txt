@@ -119,6 +119,7 @@ You will need to click the "Refresh API" button on the Mollie tab to enable recu
 * Change default donation type to oneoff
 * Improve campaign settings sanitization
 * Fix critical error when incorrect API key format used
+* Fix minor theme inconsistencies
 * Move Mollie settings to serialized array
 * Added more debug actions / debug page now accessible without being enabled
 
