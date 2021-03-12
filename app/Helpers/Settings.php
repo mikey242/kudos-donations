@@ -51,22 +51,25 @@ class Settings {
 								'mode'      => [
 									'type' => 'string',
 								],
-								'payment_methods' => [
-									'type' => 'array',
-									'items' => [
-										'id' => [
-											'type' => 'string'
-										],
-										'status' => [
-											'type' => 'string'
-										]
-									]
-								],
 								'test_key'  => [
 									'type' => 'string',
 								],
 								'live_key'  => [
 									'type' => 'string',
+								],
+								'payment_methods' => [
+									'type' => 'array',
+									'items' => [
+										'type' => 'object',
+										'properties' => [
+											'id' => [
+												'type' => 'string'
+											],
+											'status' => [
+												'type' => 'string'
+											]
+										]
+									]
 								],
 							],
 						],
