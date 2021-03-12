@@ -15,7 +15,7 @@ const ThemePanel = (props) => {
 
     return (
 
-        <SettingCard title={"Theme colour"} id="themeColor" {...props}>
+        <SettingCard title={__("Theme colour", 'kudos-donations')} id="themeColor" {...props}>
             <BaseControl
                 help={__('Set the colour for the Kudos button and the pop-up modal.', 'kudos-donations')}
             >
