@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kudos Donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-11 13:20+0100\n"
-"PO-Revision-Date: 2021-03-11 13:20+0100\n"
+"POT-Creation-Date: 2021-03-12 11:22+0100\n"
+"PO-Revision-Date: 2021-03-12 11:23+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -443,7 +443,7 @@ msgstr "Zoekresultaten voor '%s'"
 msgid "Donor deleted"
 msgstr "Donateur verwijderd"
 
-#: app/Admin/partials/kudos-admin-subscriptions.php:19 app/Front/Front.php:381
+#: app/Admin/partials/kudos-admin-subscriptions.php:19 app/Front/Front.php:380
 msgid "Subscription cancelled"
 msgstr "Abonnement geannuleerd"
 
@@ -455,11 +455,11 @@ msgstr "Abonnement verwijderd"
 msgid "Transaction deleted"
 msgstr "Transactie verwijderd"
 
-#: app/Front/Front.php:246 app/Front/Front.php:267
+#: app/Front/Front.php:245 app/Front/Front.php:266
 msgid "Donate now"
 msgstr "Doneer nu"
 
-#: app/Front/Front.php:382
+#: app/Front/Front.php:381
 msgid ""
 "We will no longer be taking payments for this subscription. Thank you for "
 "your contributions."
@@ -467,29 +467,39 @@ msgstr ""
 "Geen betalingen worden meer verwerkt als onderdeel van dit abonnement. "
 "Bedankt voor je bijdrage."
 
-#: app/Front/Front.php:393
+#: app/Front/Front.php:392
 msgid "Link expired"
 msgstr "Koppeling verlopen"
 
-#: app/Front/Front.php:394
+#: app/Front/Front.php:393
 msgid "Sorry, this link is no longer valid."
 msgstr "Deze link is niet langer geldig."
 
-#: app/Front/Front.php:442
+#: app/Front/Front.php:441
 msgid "Payment cancelled"
 msgstr "Betaling geannuleerd"
 
-#: app/Front/Front.php:445 templates/lang.php:14
+#: app/Front/Front.php:444 templates/lang.php:14
 msgid "Thanks"
 msgstr "Bedankt"
 
-#: app/Front/Front.php:446
+#: app/Front/Front.php:445
 msgid "Your donation will be processed soon."
 msgstr "Je donatie wordt zo snel mogelijk verwerkt."
 
 #: app/Front/KudosButton.php:108
 msgid "Secure payment by"
 msgstr "Veilige betaling door"
+
+#: app/Front/KudosModal.php:80 templates/lang.php:46
+#, php-format
+msgid "I agree with the %1$s privacy policy %2$s."
+msgstr "Ik ben het eens met het %1s privacybeleid %2s."
+
+#: app/Front/KudosModal.php:81 templates/lang.php:47
+#, php-format
+msgid "I agree with the %1$s terms and conditions %2$s."
+msgstr "Ik ben het eens met de %s algemene voorwaarden %s."
 
 #: app/Helpers/Settings.php:174
 msgid "Thank you!"
@@ -1412,16 +1422,6 @@ msgstr "Betaling"
 msgid "By clicking donate you agree to the following payment:"
 msgstr "Door op doneren te klikken ga je akkoord met de volgende betaling:"
 
-#: templates/lang.php:46
-#, php-format
-msgid "I agree with the %s privacy policy %s."
-msgstr "Ik ben het eens met het %s privacybeleid %s."
-
-#: templates/lang.php:47
-#, php-format
-msgid "I agree with the %s terms and conditions %s."
-msgstr "Ik ben het eens met de %s algemene voorwaarden %s."
-
 #: templates/lang.php:51
 msgid "Ok"
 msgstr "OK"
@@ -1433,3 +1433,12 @@ msgstr "Vorig tabblad"
 #: templates/lang.php:56
 msgid "Next"
 msgstr "Volgende"
+
+#, fuzzy, php-format
+#~| msgid "I agree with the %1s privacy policy %2s."
+#~ msgid "I agree with the %s privacy policy %s."
+#~ msgstr "Ik ben het eens met het %1s privacybeleid %2s."
+
+#, php-format
+#~ msgid "I agree with the %s terms and conditions %s."
+#~ msgstr "Ik ben het eens met de %s algemene voorwaarden %s."

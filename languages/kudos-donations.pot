@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Kudos Donations\n"
-"POT-Creation-Date: 2021-03-11 13:19+0100\n"
+"POT-Creation-Date: 2021-03-12 11:23+0100\n"
 "PO-Revision-Date: 2020-10-09 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -441,7 +441,7 @@ msgstr ""
 msgid "Donor deleted"
 msgstr ""
 
-#: app/Admin/partials/kudos-admin-subscriptions.php:19 app/Front/Front.php:381
+#: app/Admin/partials/kudos-admin-subscriptions.php:19 app/Front/Front.php:380
 msgid "Subscription cancelled"
 msgstr ""
 
@@ -453,38 +453,48 @@ msgstr ""
 msgid "Transaction deleted"
 msgstr ""
 
-#: app/Front/Front.php:246 app/Front/Front.php:267
+#: app/Front/Front.php:245 app/Front/Front.php:266
 msgid "Donate now"
 msgstr ""
 
-#: app/Front/Front.php:382
+#: app/Front/Front.php:381
 msgid ""
 "We will no longer be taking payments for this subscription. Thank you for "
 "your contributions."
 msgstr ""
 
-#: app/Front/Front.php:393
+#: app/Front/Front.php:392
 msgid "Link expired"
 msgstr ""
 
-#: app/Front/Front.php:394
+#: app/Front/Front.php:393
 msgid "Sorry, this link is no longer valid."
 msgstr ""
 
-#: app/Front/Front.php:442
+#: app/Front/Front.php:441
 msgid "Payment cancelled"
 msgstr ""
 
-#: app/Front/Front.php:445 templates/lang.php:14
+#: app/Front/Front.php:444 templates/lang.php:14
 msgid "Thanks"
 msgstr ""
 
-#: app/Front/Front.php:446
+#: app/Front/Front.php:445
 msgid "Your donation will be processed soon."
 msgstr ""
 
 #: app/Front/KudosButton.php:108
 msgid "Secure payment by"
+msgstr ""
+
+#: app/Front/KudosModal.php:80 templates/lang.php:46
+#, php-format
+msgid "I agree with the %1$s privacy policy %2$s."
+msgstr ""
+
+#: app/Front/KudosModal.php:81 templates/lang.php:47
+#, php-format
+msgid "I agree with the %1$s terms and conditions %2$s."
 msgstr ""
 
 #: app/Helpers/Settings.php:174
@@ -1350,16 +1360,6 @@ msgstr ""
 
 #: templates/lang.php:42
 msgid "By clicking donate you agree to the following payment:"
-msgstr ""
-
-#: templates/lang.php:46
-#, php-format
-msgid "I agree with the %s privacy policy %s."
-msgstr ""
-
-#: templates/lang.php:47
-#, php-format
-msgid "I agree with the %s terms and conditions %s."
 msgstr ""
 
 #: templates/lang.php:51
