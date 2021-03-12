@@ -120,15 +120,13 @@
                     </div>
 
                     {% if (privacy_link) %}
-                        {{ checkbox('privacy', __( 'I agree with the %1$s privacy policy %1$s.', 'kudos-donations' ) |
+                        {{ checkbox('privacy', __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' ) |
                             format('<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~privacy_link~' >', '</a>')) }}
-                        {{ checkbox('privacy', privacy_link) }}
                     {% endif %}
 
                     {% if (terms_link) %}
-                        {{ checkbox('terms', __( 'I agree with the %1$s terms and conditions %1$s.', 'kudos-donations' ) |
+                        {{ checkbox('terms', __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' ) |
                             format( '<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')) }}
-                        {{ checkbox('terms', terms_link) }}
                     {% endif %}
 
                 {% endblock %}
