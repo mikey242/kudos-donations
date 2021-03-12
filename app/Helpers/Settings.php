@@ -24,9 +24,10 @@ class Settings {
 			'kudos_register_settings',
 			[
 				'show_intro'            => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => true,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'vendor_mollie'         => [
 					'type'         => 'object',
@@ -42,34 +43,20 @@ class Settings {
 						'schema' => [
 							'type'       => 'object',
 							'properties' => [
-								'connected' => [
+								'connected'       => [
 									'type' => 'boolean',
 								],
-								'recurring' => [
+								'recurring'       => [
 									'type' => 'boolean',
 								],
-								'mode'      => [
+								'mode'            => [
 									'type' => 'string',
 								],
-								'test_key'  => [
+								'test_key'        => [
 									'type' => 'string',
 								],
-								'live_key'  => [
+								'live_key'        => [
 									'type' => 'string',
-								],
-								'payment_methods' => [
-									'type' => 'array',
-									'items' => [
-										'type' => 'object',
-										'properties' => [
-											'id' => [
-												'type' => 'string'
-											],
-											'status' => [
-												'type' => 'string'
-											]
-										]
-									]
 								],
 								'payment_methods' => [
 									'type'  => 'array',
@@ -90,9 +77,10 @@ class Settings {
 					],
 				],
 				'email_receipt_enable'  => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => false,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'email_bcc'             => [
 					'type'              => 'string',
@@ -100,9 +88,10 @@ class Settings {
 					'sanitize_callback' => 'sanitize_email',
 				],
 				'smtp_enable'           => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => false,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'smtp_host'             => [
 					'type'              => 'string',
@@ -110,14 +99,16 @@ class Settings {
 					'sanitize_callback' => 'sanitize_text_field',
 				],
 				'smtp_encryption'       => [
-					'type'         => 'string',
-					'show_in_rest' => true,
-					'default'      => 'tls',
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'default'           => 'tls',
+					'sanitize_callback' => 'sanitize_text_field',
 				],
 				'smtp_autotls'          => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => true,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'smtp_from'             => [
 					'type'              => 'string',
@@ -135,8 +126,8 @@ class Settings {
 					'show_in_rest' => true,
 				],
 				'smtp_port'             => [
-					'type'         => 'string',
-					'show_in_rest' => true,
+					'type'              => 'string',
+					'show_in_rest'      => true,
 				],
 				'theme_colors'          => [
 					'type'         => 'object',
@@ -159,14 +150,16 @@ class Settings {
 					],
 				],
 				'address_enabled'       => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => false,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'address_required'      => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => true,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'terms_link'            => [
 					'type'              => 'string',
@@ -181,9 +174,10 @@ class Settings {
 					'sanitize_callback' => 'esc_url_raw',
 				],
 				'return_message_enable' => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => true,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'return_message_title'  => [
 					'type'              => 'string',
@@ -202,9 +196,10 @@ class Settings {
 					'sanitize_callback' => 'sanitize_text_field',
 				],
 				'custom_return_enable'  => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => false,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'custom_return_url'     => [
 					'type'              => 'string',
@@ -216,14 +211,16 @@ class Settings {
 					'default' => 'mollie',
 				],
 				'debug_mode'            => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => false,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'disable_object_cache'  => [
-					'type'         => 'boolean',
-					'show_in_rest' => true,
-					'default'      => false,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'campaigns'             => [
 					'type'              => 'array',
@@ -350,9 +347,10 @@ class Settings {
 		$current = self::get_setting( $name );
 
 		// Check if setting is either an array or null
-		if(is_array($current) || !null) {
+		if ( is_array( $current ) || ! null ) {
 			// Merge provided data and current data then update setting
 			$new = wp_parse_args( $value, $current );
+
 			return self::update_setting( $name, $new );
 		}
 
