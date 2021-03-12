@@ -22,7 +22,7 @@ const EmailServerPanel = (props) => {
                     '587 (TLS), 465 (SSL), 25 (Unencrypted)',
                     'kudos-donations'
                 )}
-                type={'text'}
+                type={'number'}
                 value={props.settings._kudos_smtp_port || ''}
                 placeholder="587"
                 disabled={props.isSaving}
