@@ -162,7 +162,7 @@ class TwigService extends AbstractService {
 		$logger = $this->logger;
 
 		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
-			$logger->info( 'Twig cache directory created successfully' );
+			$logger->info( 'Twig cache directory created successfully', [self::CACHE_DIR] );
 			$this->clearCache();
 
 			return;
@@ -211,7 +211,7 @@ class TwigService extends AbstractService {
 		try {
 			return $this->twig->render( $template, $array );
 		} catch ( Throwable $e ) {
-			$this->logger->critical( $e->getMessage(), [ $template, $e->getLine() ] );
+			$this->logger->critical( $e->getMessage(), [ 'template' => $template, 'line' => $e->getLine() ] );
 
 			return false;
 		}

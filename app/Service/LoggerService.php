@@ -114,7 +114,7 @@ class LoggerService extends Monolog {
 	public function init() {
 
 		if ( wp_mkdir_p( self::LOG_DIR ) ) {
-			$this->info( 'Log directory created successfully' );
+			$this->info( 'Log directory created successfully', [self::LOG_DIR] );
 
 			return;
 		}

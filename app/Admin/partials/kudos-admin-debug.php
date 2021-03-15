@@ -80,8 +80,7 @@ $tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 								$class = 'notice-error';
 								break;
 							case 'DEBUG':
-								$class = '';
-								$style = '';
+								$class = 'notice-debug';
 								break;
 							default:
 								$class = 'notice-' . strtolower( $level );

@@ -49,7 +49,7 @@ class ActivatorService {
 		self::create_subscriptions_table();
 
 		update_option( '_kudos_donations_version', KUDOS_VERSION );
-		$logger->info( 'Kudos Donations plugin activated' );
+		$logger->info( 'Kudos Donations plugin activated', ['version' => KUDOS_VERSION] );
 
 	}
 
