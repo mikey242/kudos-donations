@@ -28,41 +28,36 @@ class Campaigns {
 	 */
 	public function sanitize_campaigns( $campaigns ): array {
 
-		// Define the array for the updated options
-		$output = [];
-
 		// Loop through each of the options sanitizing the data
-		foreach ( $campaigns as $key => $form ) {
+		foreach ( $campaigns as $key => &$form ) {
 
 			if ( ! array_search( 'id', $form ) ) {
-				$output[ $key ]['id'] = $this->generate_id( $form['name'] );
+				$form['id'] = $this->generate_id( $form['name'] );
 			}
 
-			foreach ( $form as $option => $value ) {
+			foreach ( $form as $option => &$value ) {
 
 				switch ( $option ) {
 					case 'name':
 					case 'modal_title':
 					case 'welcome_text':
 					case 'fixed_amounts':
-						$output[ $key ][ $option ] = sanitize_text_field( $value );
+						$value = sanitize_text_field( $value );
 						break;
 					case 'amount_type':
 					case 'donation_type':
-						$output[ $key ][ $option ] = sanitize_key( $value );
+						$value = sanitize_key( $value );
 						break;
 					case 'address_enabled':
 					case 'address_required':
 					case 'show_progress':
-						$output[ $key ][ $option ] = rest_sanitize_boolean( $value );
+						$value = rest_sanitize_boolean( $value );
 						break;
-					default:
-						$output[ $key ][ $option ] = $value;
 				}
 			}
 		}
 
-		return $output;
+		return $campaigns;
 	}
 
 	/**
