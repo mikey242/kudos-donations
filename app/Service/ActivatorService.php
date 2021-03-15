@@ -6,7 +6,6 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
-use Kudos\Service\Vendor\MollieVendor;
 
 /**
  * Fired during plugin activation
@@ -122,13 +121,12 @@ class ActivatorService {
 
 		if ( version_compare( $old_version, '2.4.0', '<' ) ) {
 			// Setting now replaced by single 'vendor_mollie' setting.
-			$mollie = new MollieVendor();
 			$connected = Settings::get_setting( 'mollie_connected' );
 			Settings::update_array( 'vendor_mollie',
 				[
 
-					'connected' => $connected,
-					'mode'      => ! empty( Settings::get_setting( 'mollie_api_mode' ) ) ? Settings::get_setting( 'mollie_api_mode' ) : 'test',
+					'connected' => (bool) $connected,
+					'mode'      => ! empty( Settings::get_setting( 'mollie_api_mode' ) ) ? (string) Settings::get_setting( 'mollie_api_mode' ) : 'test',
 					'test_key'  => (string) Settings::get_setting( 'mollie_test_api_key' ),
 					'live_key'  => (string) Settings::get_setting( 'mollie_live_api_key' ),
 
@@ -140,6 +138,15 @@ class ActivatorService {
 			Settings::remove_setting( 'mollie_test_api_key' );
 			Settings::remove_setting( 'mollie_live_api_key' );
 			Settings::remove_setting( 'campaign_labels' );
+		}
+
+		if ( version_compare( $old_version, '2.4.1', '<' ) ) {
+			// Cast connected variable as boolean
+			$vendor_settings = Settings::get_setting('vendor_mollie');
+			$connected = !empty($vendor_settings['connected']) ? (bool) $vendor_settings['connected'] : false;
+			Settings::update_array('vendor_mollie', [
+				'connected' => $connected
+			]);
 		}
 
 	}
