@@ -127,8 +127,9 @@ class Settings {
 					'show_in_rest' => true,
 				],
 				'smtp_port'             => [
-					'type'              => 'string',
+					'type'              => 'number',
 					'show_in_rest'      => true,
+					'sanitize_callback' => 'intval'
 				],
 				'theme_colors'          => [
 					'type'         => 'object',
@@ -149,6 +150,7 @@ class Settings {
 							],
 						],
 					],
+					'sanitize_callback' => [$this, 'recursive_sanitize_text_field']
 				],
 				'address_enabled'       => [
 					'type'              => 'boolean',
