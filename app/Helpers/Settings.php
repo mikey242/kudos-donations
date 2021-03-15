@@ -75,6 +75,7 @@ class Settings {
 							],
 						],
 					],
+					'sanitize_callback' => [ $this, 'sanitize_vendor' ],
 				],
 				'email_receipt_enable'  => [
 					'type'              => 'boolean',
@@ -289,6 +290,33 @@ class Settings {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Sanitize vendor settings.
+	 *
+	 * @param $settings
+	 * @return mixed
+	 * @since 2.4.2
+	 */
+	public static function sanitize_vendor($settings) {
+		foreach ($settings as $setting=>&$value) {
+			switch ($setting) {
+				case 'connected':
+				case 'recurring':
+					$value = rest_sanitize_boolean($value);
+					break;
+				case 'live_key':
+				case 'test_key':
+				case 'mode':
+					$value = sanitize_text_field($value);
+					break;
+				case 'payment_methods':
+					$value = self::recursive_sanitize_text_field($value);
+					break;
+			}
+		}
+		return $settings;
 	}
 
 	/**
