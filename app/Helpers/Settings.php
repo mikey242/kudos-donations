@@ -445,4 +445,23 @@ class Settings {
 
 	}
 
+	/**
+	 * Method to recursively sanitize all text fields in an array.
+	 *
+	 * @param array $array Array of values to sanitize
+	 * @return mixed
+	 * @since 2.4.2
+	 * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
+	 */
+	public static function recursive_sanitize_text_field( array $array ): array {
+		foreach ( $array as $key => &$value ) {
+			if ( is_array( $value ) ) {
+				$value = self::recursive_sanitize_text_field( $value );
+			} else {
+				$value = sanitize_text_field( $value );
+			}
+		}
+		return $array;
+	}
+
 }
