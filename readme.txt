@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.5
 Tested up to: 5.7
 Requires PHP: 7.1
-Stable tag: 2.3.8
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,9 @@ You will need to click the "Refresh API" button on the Mollie tab to enable recu
 
 
 == Changelog ==
+
+= 2.4.1 =
+* Fix migration issue with Mollie connected status
 
 = 2.4.0 =
 * Add API check for Mollie recurring payments ability. Please see [here](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-) for more detail.
