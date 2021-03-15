@@ -1,7 +1,7 @@
 import {SettingCard} from "../SettingCard"
 
 const {__} = wp.i18n
-const { BaseControl, ColorPalette } = wp.components
+const {BaseControl, ColorPalette} = wp.components
 
 const ThemePanel = (props) => {
 
