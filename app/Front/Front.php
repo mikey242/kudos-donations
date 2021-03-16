@@ -211,24 +211,6 @@ class Front {
 	}
 
 	/**
-	 * Register query parameters
-	 *
-	 * @param array $vars Current query vars.
-	 *
-	 * @return array
-	 * @since   2.0.0
-	 */
-	public function register_vars( array $vars ): array {
-
-		$vars[] = 'kudos_subscription_id';
-		$vars[] = 'kudos_order_id';
-		$vars[] = 'kudos_token';
-
-		return $vars;
-
-	}
-
-	/**
 	 * Creates and registers the [kudos] shortcode and block
 	 *
 	 * @since   1.0.0
@@ -334,15 +316,14 @@ class Front {
 		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
 
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
-			$token  = sanitize_text_field( get_query_var( 'kudos_token' ) );
+			$token  = sanitize_text_field( wp_unslash($_REQUEST[ 'kudos_token' ] ));
 
 			switch ( $action ) {
 
 				case 'order_complete':
-					$order_id = sanitize_text_field( get_query_var( 'kudos_order_id' ) );
+					$order_id = sanitize_text_field( $_REQUEST['kudos_order_id'] );
 					// Return message modal.
 					if ( ! empty( $order_id ) && ! empty( $token ) ) {
-						$order_id    = sanitize_text_field( $order_id );
 						$mapper      = new MapperService( TransactionEntity::class );
 						$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
 						if ( $transaction && $transaction->verify_secret( $token ) ) {
@@ -356,7 +337,7 @@ class Front {
 					break;
 
 				case 'cancel_subscription':
-					$subscription_id = sanitize_text_field( get_query_var( 'kudos_subscription_id' ) );
+					$subscription_id = sanitize_text_field( $_REQUEST[ 'kudos_subscription_id' ] );
 					// Cancel subscription modal.
 					if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
 

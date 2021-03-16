@@ -190,7 +190,6 @@ class KudosDonations {
 		add_action( 'enqueue_block_assets', [ $plugin_public, 'enqueue_block_assets' ] );
 		add_action( 'init', [ $plugin_public, 'register_kudos' ] );
 		add_action( 'wp_footer', [ $plugin_public, 'handle_query_variables' ], 1000 );
-		add_action( 'query_vars', [ $plugin_public, 'register_vars' ] );
 
 	}
 
