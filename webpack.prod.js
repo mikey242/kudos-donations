@@ -10,7 +10,6 @@ module.exports = merge(common, {
         minimizer: [
             new TerserPlugin( {
                 terserOptions: {
-                    // mangle: false,
                     mangle: {
                         reserved: [ '__', '_n', '_x', '_nx' ],
                     },
