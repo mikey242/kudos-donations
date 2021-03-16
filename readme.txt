@@ -115,6 +115,7 @@ You will need to click the "Refresh API" button on the Mollie tab to enable recu
 
 = 2.4.2 =
 * Improve settings sanitization
+* Fix query var handling for front-end kudos_action
 * Logging improvements
 * Upgrade Twig to 2.14.4
 
