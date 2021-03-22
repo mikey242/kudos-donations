@@ -106,12 +106,11 @@ e.g:
 3. Settings page
 4. Automated email receipt
 
-== Upgrade Notice ==
-= 2.4.0=
-You will need to click the "Refresh API" button on the Mollie tab to enable recurring payments.
-
-
 == Changelog ==
+
+= 2.4.3 =
+* Increase CSS selector specificity to prevent clashes with theme/plugins
+* Reduce number of css files and overall size
 
 = 2.4.2 =
 * Improve settings sanitization
