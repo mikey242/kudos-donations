@@ -36,6 +36,7 @@
     "mini-svg-data-uri": "^1.2.3",
     "node-sass": "^5.0.0",
     "postcss": "^8.2.4",
+    "postcss-add-root-selector": "^1.0.3",
     "postcss-loader": "^4.2.0",
     "sass-loader": "^10.1.0",
     "stylelint": "^13.8.0",
