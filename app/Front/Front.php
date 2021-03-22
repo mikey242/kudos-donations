@@ -60,7 +60,7 @@ class Front {
 	}
 
 	/**
-	 * Register the stylesheets for the public-facing side of the site.
+	 * Register public facing stylesheets.
 	 *
 	 * @since   1.0.0
 	 */
@@ -159,7 +159,7 @@ class Front {
 
 		$handle = $this->plugin_name . '-button-block';
 
-		wp_enqueue_style( $handle, Utils::get_asset_url( 'kudos-button-block.css' ), [], $this->version );
+		wp_enqueue_style( $this->plugin_name . '-public', Utils::get_asset_url( 'kudos-public.css' ), [], $this->version );
 		wp_enqueue_script(
 			$handle,
 			Utils::get_asset_url( 'kudos-button-block.js' ),
