@@ -101,19 +101,28 @@ $(() => {
                             // Reset and config form
                             const $form = $(modal).find('.kudos_form')
                             if ($form.length) {
+
+                                // Switch back to first tab
                                 $('fieldset.current-tab').removeClass(
                                     'current-tab'
                                 )
                                 $('fieldset:first-child').addClass(
                                     'current-tab'
                                 )
+
+                                // Reset amounts
                                 let $amountInput = $form.find('[id^=value_open-kudos_modal]')
                                 let $amountRadios = $form.find('[id^=amount-kudos_modal]')
                                 toggleAmount($amountInput, $amountRadios)
                                 $($amountRadios[0]).prop('checked', true)
                                 $amountInput.attr({'required': false, 'name': ''})
+
+                                // Clear all values
                                 $form.validate().resetForm()
                                 $form[0].reset()
+
+                                // Set first input as focus
+                                $form.find('input[name="value"]:first').focus()
                             }
                         },
                         onClose(modal) {
