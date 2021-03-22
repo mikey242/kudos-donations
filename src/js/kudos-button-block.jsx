@@ -135,7 +135,7 @@ export default registerBlockType('iseardmedia/kudos-button', {
 
                     <div
                         className={
-                            this.props.attributes.className + ' has-text-align-' + this.props.attributes.alignment
+                            'kudos-donations ' + (this.props.attributes.className ?? '') + ' has-text-align-' + this.props.attributes.alignment
                         }
                     >
                         <RichText
