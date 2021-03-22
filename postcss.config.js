@@ -1,10 +1,12 @@
-/* eslint-disable */
-
-// postcss.config.js
 module.exports = {
-    plugins: {
-        tailwindcss: {},
-        autoprefixer: {},
-        cssnano: { preset: 'default' }
-    }
+    plugins: [
+        require('postcss-nesting'),
+        require('tailwindcss'),
+        require('postcss-add-root-selector')({
+            rootSelector: '.kudos-donations',
+            include: ['kudos-public.scss']
+        }),
+        require('autoprefixer'),
+        require('cssnano'),
+    ]
 }
