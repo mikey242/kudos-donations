@@ -109,8 +109,10 @@ e.g:
 == Changelog ==
 
 = 2.4.3 =
-* Increase CSS selector specificity to prevent clashes with theme/plugins
+* Increase CSS selector specificity to help prevent clashes with theme/plugins
 * Reduce number of css files and overall size
+* First value field now in focus when modal opened
+* Upgrade jquery-validation to 1.19.3 - fixes deprecation warnings
 
 = 2.4.2 =
 * Improve settings sanitization
