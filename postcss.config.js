@@ -1,6 +1,5 @@
 module.exports = {
     plugins: [
-        require('postcss-nesting'),
         require('tailwindcss'),
         require('postcss-add-root-selector')({
             rootSelector: '.kudos-donations',
