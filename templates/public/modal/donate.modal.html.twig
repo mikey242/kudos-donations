@@ -133,6 +133,12 @@
                 {% block next_button %}
                     {{ button(__('Donate', 'kudos-donations'), 'primary', 'submit', {'class': 'kudos_submit kd-ml-3'}) }}
                 {% endblock %}
+
+                {% block footer %}
+                    <div class="kd-secure-mollie kd-flex kd-items-center kd-justify-center kd-text-xs kd-leading-loose kd-text-gray-500">
+                        {{ __( 'Secure payment by', 'kudos-donations' ) }}
+                    </div>
+                {% endblock %}
             {% endembed %}
 
         </div>
