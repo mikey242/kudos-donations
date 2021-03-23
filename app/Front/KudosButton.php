@@ -36,6 +36,11 @@ class KudosButton {
 	private $campaign;
 
 	/**
+	 * @var string
+	 */
+	private $type;
+
+	/**
 	 * KudosButton constructor.
 	 *
 	 * @param array $atts Array of above attributes.
@@ -65,10 +70,11 @@ class KudosButton {
 	public function get_markup(): ?string {
 
 		$button = $this->get_button();
-		$modal = $this->get_donate_modal();
+		$modal  = $this->get_donate_modal();
+		$type   = in_array( $this->type, [ 'shortcode', 'block' ] ) ? $this->type : null;
 
 		if ( ! empty( $modal ) && ! empty( $button ) ) {
-			return '<div class="kudos-donations">' . $button . $modal . '</div>';
+			return '<div class="kudos-donations" data-type="' . $type . '">' . $button . $modal . '</div>';
 		}
 
 		return null;
@@ -103,9 +109,8 @@ class KudosButton {
 		$modal = new KudosModal( $this->target_id );
 
 		$data = [
-			'modal_id'         => $this->target_id,
-			'campaign'         => $this->campaign,
-			'payment_by'       => __( 'Secure payment by', 'kudos-donations' ),
+			'modal_id'   => $this->target_id,
+			'campaign'   => $this->campaign,
 		];
 
 		return $modal->get_donate_modal( $data );

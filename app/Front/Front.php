@@ -63,10 +63,11 @@ class Front {
 	 * Add root styles to header based on theme
 	 *
 	 * @param bool $echo // Whether to echo the styles instead of returning a string.
+	 *
 	 * @return string|void
 	 * @since 2.0.0
 	 */
-	public function get_kudos_root_styles( $echo=true ): string {
+	public function get_kudos_root_styles( $echo = true ): string {
 
 		$theme_colours = Settings::get_setting( 'theme_colors' );
 
@@ -90,7 +91,7 @@ class Front {
 		
 		</style>";
 
-		if($echo) {
+		if ( $echo ) {
 			echo $out;
 		}
 
@@ -229,7 +230,9 @@ class Front {
 					'kudos'
 				);
 
-				return $this->kudos_render_callback( $atts );
+				$atts['type'] = 'shortcode';
+
+				return $this->kudos_render_callback( $atts, 'shortcode' );
 			}
 		);
 
@@ -251,6 +254,10 @@ class Front {
 					'alignment'    => [
 						'type'    => 'string',
 						'default' => 'none',
+					],
+					'type' => [
+						'type' => 'string',
+						'default' => 'block'
 					]
 				],
 			]
@@ -261,11 +268,12 @@ class Front {
 	 * Renders the kudos button and donation modals
 	 *
 	 * @param array $atts Array of kudos button/modal attributes.
+	 * @param string|null $type Type of button used (block/shortcode)
 	 *
 	 * @return string|null
 	 * @since   2.0.0
 	 */
-	public function kudos_render_callback( array $atts ): ?string {
+	public function kudos_render_callback( array $atts, $type = null ): ?string {
 
 		// Continue only if payment API ready
 		if ( self::api_ready() ) {
