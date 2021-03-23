@@ -62,10 +62,11 @@ class Front {
 	/**
 	 * Add root styles to header based on theme
 	 *
-	 * @return string
+	 * @param bool $echo // Whether to echo the styles instead of returning a string.
+	 * @return string|void
 	 * @since 2.0.0
 	 */
-	public function get_kudos_root_styles(): string {
+	public function get_kudos_root_styles( $echo=true ): string {
 
 		$theme_colours = Settings::get_setting( 'theme_colors' );
 
@@ -76,7 +77,7 @@ class Front {
 		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
-		return "<style>
+		$out = "<style>
 
 		:root {
 			--kudos-theme-primary: $primary;
@@ -89,10 +90,16 @@ class Front {
 		
 		</style>";
 
+		if($echo) {
+			echo $out;
+		}
+
+		return $out;
+
 	}
 
 	/**
-	 * Register the JavaScript for the public-facing side of the site.
+	 * Register the JavaScript for the public-facing side of the plugin.
 	 *
 	 * @since   1.0.0
 	 */
@@ -111,7 +118,7 @@ class Front {
 			'jquery-validate',
 			plugin_dir_url( __FILE__ ) . '../../dist/js/vendor/jquery.validate.min.js',
 			[ 'jquery' ],
-			'1.19.1',
+			'1.19.3',
 			true
 		);
 		wp_enqueue_script(
@@ -140,9 +147,14 @@ class Front {
 	 */
 	public function enqueue_block_assets() {
 
-		$handle = $this->plugin_name . '-button-block';
+		// Enqueue public css
+		wp_enqueue_style( $this->plugin_name . '-public',
+			Utils::get_asset_url( 'kudos-public.css' ),
+			[],
+			$this->version );
 
-		wp_enqueue_style( $this->plugin_name . '-public', Utils::get_asset_url( 'kudos-public.css' ), [], $this->version );
+		// Enqueue block specific js
+		$handle = $this->plugin_name . '-button-block';
 		wp_enqueue_script(
 			$handle,
 			Utils::get_asset_url( 'kudos-button-block.js' ),
@@ -168,7 +180,9 @@ class Front {
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
-		echo $this->get_kudos_root_styles();
+
+		// Output root styles
+		$this->get_kudos_root_styles();
 
 	}
 
@@ -292,7 +306,7 @@ class Front {
 		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
 
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
-			$token  = sanitize_text_field( wp_unslash($_REQUEST[ 'kudos_token' ] ));
+			$token  = sanitize_text_field( wp_unslash( $_REQUEST['kudos_token'] ) );
 
 			switch ( $action ) {
 
@@ -313,7 +327,7 @@ class Front {
 					break;
 
 				case 'cancel_subscription':
-					$subscription_id = sanitize_text_field( $_REQUEST[ 'kudos_subscription_id' ] );
+					$subscription_id = sanitize_text_field( $_REQUEST['kudos_subscription_id'] );
 					// Cancel subscription modal.
 					if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
 
