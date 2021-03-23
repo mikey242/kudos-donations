@@ -254,14 +254,7 @@ class Front {
 					'alignment'    => [
 						'type'    => 'string',
 						'default' => 'none',
-					],
-					'id'           => [
-						'type'      => 'string',
-						'source'    => 'attribute',
-						'default'   => 'kudos_modal-1',
-						'selector'  => 'button.kudos_button',
-						'attribute' => 'data-target',
-					],
+					]
 				],
 			]
 		);
