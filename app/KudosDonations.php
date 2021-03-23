@@ -185,7 +185,6 @@ class KudosDonations {
 
 		$plugin_public = new Front( $this->get_plugin_name(), $this->get_version() );
 
-		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'enqueue_styles' ], 9999 );
 		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'enqueue_scripts' ] );
 		add_action( 'enqueue_block_assets', [ $plugin_public, 'enqueue_block_assets' ] );
 		add_action( 'init', [ $plugin_public, 'register_kudos' ] );

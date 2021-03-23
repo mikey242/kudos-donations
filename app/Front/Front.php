@@ -60,23 +60,6 @@ class Front {
 	}
 
 	/**
-	 * Register public facing stylesheets.
-	 *
-	 * @since   1.0.0
-	 */
-	public function enqueue_styles() {
-
-		wp_enqueue_style(
-			$this->plugin_name . '-public',
-			Utils::get_asset_url( 'kudos-public.css' ),
-			[],
-			$this->version
-		);
-		echo $this->get_kudos_root_styles();
-
-	}
-
-	/**
 	 * Add root styles to header based on theme
 	 *
 	 * @return string
