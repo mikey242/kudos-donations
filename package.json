@@ -57,7 +57,7 @@
     "axios": "^0.21.1",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
-    "jquery-validation": "1.19.2",
+    "jquery-validation": "1.19.3",
     "lodash": "^4.17.20",
     "micromodal": "^0.4.6",
     "parsley": "^0.1.0",
