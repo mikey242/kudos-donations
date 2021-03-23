@@ -52,8 +52,8 @@ class KudosModal {
 			'modal_text'  => isset( $atts['modal_text'] ) ? $atts['modal_text'] : '',
 		];
 
-		return $this->twig->render( '/public/modal/message.modal.html.twig',
-			apply_filters( 'kudos_message_modal_data', $data ) );
+		return '<div class="kudos-donations">' . $this->twig->render( '/public/modal/message.modal.html.twig',
+				apply_filters( 'kudos_message_modal_data', $data ) ) . '</div>';
 
 	}
 
@@ -74,7 +74,7 @@ class KudosModal {
 			[
 				'return_url'        => Utils::get_return_url(),
 				'vendor'            => Settings::get_setting( 'payment_vendor' ),
-				'privacy_link'      => Settings::get_setting('privacy_link'),
+				'privacy_link'      => Settings::get_setting( 'privacy_link' ),
 				'terms_link'        => Settings::get_setting( 'terms_link' ),
 				'recurring_allowed' => isset( $vendor_settings['recurring'] ) ? $vendor_settings['recurring'] : false,
 			]

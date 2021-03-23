@@ -78,8 +78,9 @@ class Utils {
 		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
 
 		if ( array_key_exists( $asset, $hash ) ) {
-				$asset_request = wp_remote_get(KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ]);
-				return wp_remote_retrieve_body( $asset_request );
+			$asset_request = wp_remote_get( KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ] );
+
+			return wp_remote_retrieve_body( $asset_request );
 		}
 
 		return $asset;
