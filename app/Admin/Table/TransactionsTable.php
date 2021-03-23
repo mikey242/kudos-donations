@@ -232,7 +232,6 @@ class TransactionsTable extends WP_List_Table {
 				}
 
 				if ( isset( $_REQUEST['bulk-action'] ) ) {
-
 					$order_ids = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['bulk-action'] ) );
 					foreach ( $order_ids as $id ) {
 						self::delete_record( 'id', sanitize_text_field( $id ) );
