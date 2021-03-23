@@ -155,6 +155,20 @@
         margin: auto 5px auto 0;
       }
     }
+
+    .kd-secure-mollie {
+      &::after {
+        content: '';
+        @apply kd-ml-2;
+        background-image: url("../img/mollie.svg");
+        width: 40px;
+        height: 12px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center center;
+        margin-bottom: 4px;
+      }
+    }
   }
 }
 

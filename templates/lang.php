@@ -49,6 +49,7 @@ __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' );
 /* translators: %1$s: Opening a tag, %2$s: Closing a tag */
 __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' );
 __( 'Donate', 'kudos-donations' );
+__( 'Secure payment by', 'kudos-donations' );
 
 // Template: "templates/public/modal/message.modal.html.twig"
 __( 'Ok', 'kudos-donations' );

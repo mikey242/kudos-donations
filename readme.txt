@@ -111,6 +111,7 @@ e.g:
 = 2.4.3 =
 * Increase CSS selector specificity to help prevent clashes with theme/plugins
 * Reduce number of css files and overall size
+* Add "Secure payment by Mollie" to payment page
 * First value field now in focus when modal opened
 * Upgrade jquery-validation to 1.19.3 - fixes deprecation warnings
 
