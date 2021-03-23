@@ -219,8 +219,7 @@ class Admin {
 			'kudos-donations-admin-react',
 			Utils::get_asset_url( 'kudos-admin-settings.css' ),
 			[ 'wp-components' ],
-			$this->version,
-			'all'
+			$this->version
 		);
 
 		do_action( 'kudos_admin_settings_page_assets', $handle );
