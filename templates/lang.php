@@ -33,7 +33,7 @@ __('Continuous', 'kudos-donations');
 _n_noop( '%u year', '%u years', 'kudos-donations' );
 __('Donation duration', 'kudos-donations');
 __('Address', 'kudos-donations');
-__('Please fill in you address', 'kudos-donations');
+__('Please fill in your address', 'kudos-donations');
 __('optional', 'kudos-donations');
 __('Street', 'kudos-donations');
 __('Postcode', 'kudos-donations');
