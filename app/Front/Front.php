@@ -196,8 +196,8 @@ class Front {
 	public static function api_ready(): bool {
 
 		$settings  = Settings::get_current_vendor_settings();
-		$connected = $settings['connected'];
-		$mode      = $settings['mode'];
+		$connected = isset( $settings['connected'] ) ? $settings['connected'] : false;
+		$mode      = isset( $settings['mode'] ) ? $settings['mode'] : '';
 		$key       = isset( $settings[ $mode . '_key' ] ) ? $settings[ $mode . '_key' ] : null;
 
 		if ( ! $connected || ! $key ) {
