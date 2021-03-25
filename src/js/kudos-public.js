@@ -1,15 +1,12 @@
 import $ from 'jquery'
 import axios from 'axios'
 import MicroModal from 'micromodal'
-import {dom, library} from '@fortawesome/fontawesome-svg-core'
-import {faChevronLeft} from '@fortawesome/free-solid-svg-icons'
 import 'jquery-validation'
 import '../img/logo-colour-40.png' //used as email attachment
 const {__} = wp.i18n
-library.add(faChevronLeft)
-dom.watch()
 
 $(() => {
+
     'use strict'
 
     const $kudosButtons = $('.kudos_button_donate')
