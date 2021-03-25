@@ -110,8 +110,9 @@ e.g:
 
 = 2.4.4 =
 * Accessibility improvements
+* Improve javascript to avoid conflicts
 * Reduce size of public-facing javascript file
-* Minor typo corrections
+* Correct typo on address slide
 
 = 2.4.3 =
 * Increase CSS selector specificity to help prevent clashes with theme/plugins
