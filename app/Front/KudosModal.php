@@ -2,11 +2,15 @@
 
 namespace Kudos\Front;
 
+use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\TwigService;
 
 class KudosModal {
+
+	const MESSAGE_TEMPLATE = '/public/modal/message.modal.html.twig';
+	const DONATE_TEMPLATE = '/public/modal/donate.modal.html.twig';
 
 	/**
 	 * Instance of twig service.
@@ -23,6 +27,20 @@ class KudosModal {
 	private $modal_id;
 
 	/**
+	 * The template file to use.
+	 *
+	 * @var string
+	 */
+	private $template;
+
+	/**
+	 * The data to pass to the current template.
+	 *
+	 * @var array
+	 */
+	private $data;
+
+	/**
 	 * KudosModal constructor.
 	 *
 	 * @param string|null $modal_id string
@@ -37,41 +55,62 @@ class KudosModal {
 	}
 
 	/**
-	 * Get message modal markup
+	 * Returns the markup for the current modal.
 	 *
-	 * @param array $atts Message modal attributes.
-	 *
-	 * @return string|bool
-	 * @since      1.0.0
+	 * @return string
 	 */
-	public function get_message_modal( array $atts ): string {
+	private function get_markup(): string {
 
-		$data = [
-			'modal_id'    => 'kudos_modal-message-' . $this->modal_id,
-			'modal_title' => isset( $atts['modal_title'] ) ? $atts['modal_title'] : '',
-			'modal_text'  => isset( $atts['modal_text'] ) ? $atts['modal_text'] : '',
-		];
-
-		return '<div class="kudos-donations">' . $this->twig->render( '/public/modal/message.modal.html.twig',
-				apply_filters( 'kudos_message_modal_data', $data ) ) . '</div>';
+		return $this->twig->render( $this->template, $this->data );
 
 	}
 
 	/**
-	 * Get the donate modal markup
+	 * Get message modal markup.
 	 *
-	 * @param array $data Array of data for template.
+	 * @param string $title
+	 * @param string $message
 	 *
-	 * @return string|void
+	 * @return string
+	 * @since      1.0.0
+	 */
+	public function create_message_modal( string $title, string $message ): string {
+
+		$this->template = self::MESSAGE_TEMPLATE;
+
+		apply_filters( 'kudos_message_modal_data',
+			$this->data = [
+				'modal_id'    => 'kudos_modal-message-' . $this->modal_id,
+				'modal_title' => $title ?? '',
+				'modal_text'  => $message ?? '',
+			] );
+
+		return Front::kudos_render($this->get_markup());
+
+	}
+
+	/**
+	 * Get the donate modal markup.
+	 *
+	 * @param string $campaign_id Campaign id to create modal for.
+	 *
+	 * @return string
 	 * @since    1.0.0
 	 */
-	public function get_donate_modal( array $data ): string {
+	public function create_donate_modal( string $campaign_id ): string {
 
+		$this->template  = self::DONATE_TEMPLATE;
 		$vendor_settings = Settings::get_current_vendor_settings();
 
+		$campaigns         = new Campaigns();
+		$campaign          = $campaigns->get_campaign( $campaign_id );
+		$campaign['total'] = $campaigns::get_campaign_stats( $campaign_id )['total'];
+
 		// Merge global settings with provided data
-		$data = array_merge( $data,
-			[
+		apply_filters( 'kudos_donate_modal_data',
+			$this->data = [
+				'modal_id'          => $this->modal_id,
+				'campaign'          => $campaign,
 				'return_url'        => Utils::get_return_url(),
 				'vendor'            => Settings::get_setting( 'payment_vendor' ),
 				'privacy_link'      => Settings::get_setting( 'privacy_link' ),
@@ -80,8 +119,7 @@ class KudosModal {
 			]
 		);
 
-		return $this->twig->render( '/public/modal/donate.modal.html.twig',
-			apply_filters( 'kudos_donate_modal_data', $data ) );
+		return $this->get_markup();
 
 	}
 }

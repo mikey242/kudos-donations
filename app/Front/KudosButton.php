@@ -31,14 +31,17 @@ class KudosButton {
 	 */
 	private $target_id;
 	/**
-	 * @var array
+	 * @var string
 	 */
-	private $campaign;
-
+	private $campaign_id;
 	/**
 	 * @var string
 	 */
 	private $type;
+	/**
+	 * @var KudosModal
+	 */
+	private $modal;
 
 	/**
 	 * KudosButton constructor.
@@ -51,6 +54,7 @@ class KudosButton {
 
 		$this->twig      = TwigService::factory();
 		$this->target_id = uniqid( 'kudos_modal-' );
+		$this->modal     = new KudosModal( $this->target_id );
 
 		// Assign atts to properties
 		foreach ( $atts as $property => $value ) {
@@ -69,53 +73,22 @@ class KudosButton {
 	 */
 	public function get_markup(): ?string {
 
-		$button = $this->get_button();
-		$modal  = $this->get_donate_modal();
-		$type   = in_array( $this->type, [ 'shortcode', 'block' ] ) ? $this->type : null;
+		$button = $this->twig->render( 'public/kudos.button.html.twig',
+			[
+				'alignment' => $this->alignment,
+				'label'     => $this->button_label,
+				'target'    => $this->target_id,
+				'type'      => in_array( $this->type, [ 'shortcode', 'block' ] ) ? $this->type : null,
+			] );
 
-		if ( ! empty( $modal ) && ! empty( $button ) ) {
-			return '<div class="kudos-donations" data-type="' . $type . '">' . $button . $modal . '</div>';
+		$modal = $this->campaign_id ? $this->modal->create_donate_modal( $this->campaign_id ) : null;
+
+		if ( ! empty( $button ) && ! empty( $modal ) ) {
+			return $button . $modal;
 		}
 
 		return null;
 
 	}
-
-	/**
-	 * Get the button markup
-	 *
-	 * @return string|void
-	 * @since    1.0.0
-	 */
-	private function get_button(): string {
-
-		$data = [
-			'alignment' => $this->alignment,
-			'label'     => $this->button_label,
-			'target'    => $this->target_id,
-		];
-
-		return $this->twig->render( 'public/kudos.button.html.twig', $data );
-	}
-
-	/**
-	 * Get the donate modal markup
-	 *
-	 * @return string|void
-	 * @since    1.0.0
-	 */
-	private function get_donate_modal(): string {
-
-		$modal = new KudosModal( $this->target_id );
-
-		$data = [
-			'modal_id'   => $this->target_id,
-			'campaign'   => $this->campaign,
-		];
-
-		return $modal->get_donate_modal( $data );
-
-	}
-
 
 }

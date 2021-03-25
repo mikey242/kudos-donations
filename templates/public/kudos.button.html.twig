@@ -1,5 +1,5 @@
 {% from "/public/modal/macros/buttons.html.twig" import button %}
 
-<div class="has-text-align-{{ alignment }}">
+<div class="has-text-align-{{ alignment }}" data-type="{{ type }}">
     {{ button(label, 'primary', 'button', {'data-target': target, 'class': 'kd-font-sans kudos_button_donate' }) }}
 </div>

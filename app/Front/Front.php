@@ -232,7 +232,7 @@ class Front {
 
 				$atts['type'] = 'shortcode';
 
-				return $this->kudos_render_callback( $atts, 'shortcode' );
+				return $this->kudos_render_callback( $atts );
 			}
 		);
 
@@ -255,10 +255,10 @@ class Front {
 						'type'    => 'string',
 						'default' => 'none',
 					],
-					'type' => [
-						'type' => 'string',
-						'default' => 'block'
-					]
+					'type'         => [
+						'type'    => 'string',
+						'default' => 'block',
+					],
 				],
 			]
 		);
@@ -267,41 +267,34 @@ class Front {
 	/**
 	 * Renders the kudos button and donation modals
 	 *
-	 * @param array $atts Array of kudos button/modal attributes.
-	 * @param string|null $type Type of button used (block/shortcode)
+	 * @param array $atts Array of Kudos button/modal attributes.
 	 *
 	 * @return string|null
 	 * @since   2.0.0
 	 */
-	public function kudos_render_callback( array $atts, $type = null ): ?string {
+	public function kudos_render_callback( array $atts ): ?string {
 
-		// Continue only if payment API ready
+		// Continue only if payment API ready.
 		if ( self::api_ready() ) {
-
-			// Set campaign according to atts
-			$campaigns = new Campaigns();
-			if ( ! empty( $atts['campaign_id'] ) ) {
-				$campaign          = $campaigns->get_campaign( $atts['campaign_id'] );
-				$campaign['total'] = $campaigns::get_campaign_stats( $atts['campaign_id'] )['total'];
-			}
-
-			// Bail if no campaign found
-			if ( empty( $campaign ) ) {
-				return null;
-			}
-
-			// Add campaign config to atts
-			$atts['campaign'] = $campaign;
 
 			// Generate markup.
 			$button = new KudosButton( $atts );
-
-			return $button->get_markup();
+			return $this->kudos_render($button->get_markup());
 
 		}
 
 		return null;
 
+	}
+
+	/**
+	 * Generates output wrapped in div with required class.
+	 *
+	 * @param string $child Child elements to include within div
+	 * @return string
+	 */
+	public static function kudos_render(string $child) : string {
+		return '<div class="kudos-donations">' . $child . '</div>';
 	}
 
 	/**
@@ -328,7 +321,7 @@ class Front {
 							$atts = $this->check_transaction( $order_id );
 							if ( $atts ) {
 								$modal = new KudosModal();
-								echo $modal->get_message_modal( $atts );
+								echo $modal->create_message_modal( $atts['modal_title'], $atts['modal_text'] );
 							}
 						}
 					}
@@ -354,23 +347,19 @@ class Front {
 						if ( $subscription->verify_secret( $token ) ) {
 							$payment_service = PaymentService::factory();
 							if ( $payment_service->cancel_subscription( $subscription_id ) ) {
-								echo $modal->get_message_modal(
-									[
-										'modal_title' => __( 'Subscription cancelled', 'kudos-donations' ),
-										'modal_text'  => __( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
-											'kudos-donations' ),
-									]
+								echo $modal->create_message_modal(
+									__( 'Subscription cancelled', 'kudos-donations' ),
+									__( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
+										'kudos-donations' )
 								);
 
 								return;
 							}
 						}
 
-						echo $modal->get_message_modal(
-							[
-								'modal_title' => __( 'Link expired', 'kudos-donations' ),
-								'modal_text'  => __( 'Sorry, this link is no longer valid.', 'kudos-donations' ),
-							]
+						echo $modal->create_message_modal(
+							__( 'Link expired', 'kudos-donations' ),
+							__( 'Sorry, this link is no longer valid.', 'kudos-donations' )
 						);
 					}
 					break;
