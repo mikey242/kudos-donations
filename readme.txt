@@ -108,6 +108,11 @@ e.g:
 
 == Changelog ==
 
+= 2.4.4 =
+* Accessibility improvements
+* Reduce size of public-facing javascript file
+* Minor typo corrections
+
 = 2.4.3 =
 * Increase CSS selector specificity to help prevent clashes with theme/plugins
 * Reduce number of css files and overall size
