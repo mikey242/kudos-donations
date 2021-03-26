@@ -3,7 +3,7 @@ import MicroModal from 'micromodal'
 import 'jquery-validation'
 import '../img/logo-colour-40.png' //used as email attachment
 
-(($) => {
+jQuery(document).ready(($) => {
 
     'use strict'
     const {__} = wp.i18n
@@ -14,7 +14,7 @@ import '../img/logo-colour-40.png' //used as email attachment
         let animating = false
 
         // Custom validation method to check subscription
-        $.validator.addMethod('totalPayments', (value, element) => {
+        $.validator.addMethod('totalPayments', (value) => {
             let frequency = $('[name="recurring_frequency"]').val()
             if (frequency) {
                 return 12 / parseInt(frequency) * value !== 1
@@ -75,10 +75,12 @@ import '../img/logo-colour-40.png' //used as email attachment
         })
         $.validator.messages.required = __("This field is required", 'kudos-donations')
 
+        console.log($.validator)
+
         if ($kudosButtons.length) {
 
             // Setup button action
-            $kudosButtons.each(function (e) {
+            $kudosButtons.each(function () {
 
                 const target = $(this).data('target')
 
@@ -339,4 +341,4 @@ import '../img/logo-colour-40.png' //used as email attachment
         showMessage()
     }
 
-})(jQuery)
+})
