@@ -49,7 +49,7 @@ class MailerService extends AbstractService {
 
 		// Add logo as attachment.
 		$phpmailer->addEmbeddedImage(
-			Utils::get_asset_url( 'img/logo-colour-40.png', true ),
+			Utils::get_asset_location( 'img/logo-colour-40.png', true ),
 			'kudos-logo',
 			'kudos-logo.png'
 		);

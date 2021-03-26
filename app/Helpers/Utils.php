@@ -39,7 +39,7 @@ class Utils {
 	 * @return string
 	 * @since   1.0.0
 	 */
-	public static function get_asset_url( string $asset, bool $path = false ): string {
+	public static function get_asset_location( string $asset, bool $path = false ): string {
 
 		$map      = KUDOS_PLUGIN_URL . 'dist/assets-manifest.json';
 		$request  = wp_remote_get( $map );

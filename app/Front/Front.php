@@ -124,7 +124,7 @@ class Front {
 		);
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( 'kudos-public.js' ),
+			Utils::get_asset_location( 'kudos-public.js' ),
 			[ 'jquery', 'micromodal', 'jquery-validate' ],
 			$this->version,
 			true
@@ -150,7 +150,7 @@ class Front {
 
 		// Enqueue public css
 		wp_enqueue_style( $this->plugin_name . '-public',
-			Utils::get_asset_url( 'kudos-public.css' ),
+			Utils::get_asset_location( 'kudos-public.css' ),
 			[],
 			$this->version );
 
@@ -158,7 +158,7 @@ class Front {
 		$handle = $this->plugin_name . '-button-block';
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( 'kudos-button-block.js' ),
+			Utils::get_asset_location( 'kudos-button-block.js' ),
 			[
 				'wp-i18n',
 				'wp-edit-post',
