@@ -162,13 +162,13 @@ class TwigService extends AbstractService {
 		$logger = $this->logger;
 
 		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
-			$logger->info( 'Twig cache directory created successfully', [self::CACHE_DIR] );
+			$logger->info( 'Twig cache directory created successfully', [ 'location' => self::CACHE_DIR ] );
 			$this->clearCache();
 
 			return;
 		}
 
-		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ self::CACHE_DIR ] );
+		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ 'location' => self::CACHE_DIR ] );
 
 	}
 

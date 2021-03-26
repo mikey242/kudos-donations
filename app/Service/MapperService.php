@@ -95,7 +95,7 @@ class MapperService extends AbstractService {
 		$table_name = $entity::get_table_name();
 		$id         = $entity->id;
 
-		$this->logger->debug( 'Updating entity.', [ $entity ] );
+		$this->logger->debug( 'Updating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
 
 		$result = $wpdb->update(
 			$table_name,
@@ -134,7 +134,7 @@ class MapperService extends AbstractService {
 
 		$id         = $wpdb->insert_id;
 		$entity->id = $id;
-		$this->logger->debug( 'Creating entity.', [ $entity ] );
+		$this->logger->debug( 'Creating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
 
 		// If successful do action.
 		if ( $result ) {
@@ -159,7 +159,7 @@ class MapperService extends AbstractService {
 	private function get_cache_incrementer( $refresh = false ) {
 
 		// Override refresh with setting
-		if(Settings::get_setting('disable_object_cache')) {
+		if ( Settings::get_setting( 'disable_object_cache' ) ) {
 			$refresh = true;
 		}
 
@@ -348,7 +348,7 @@ class MapperService extends AbstractService {
 	 * @return array|object|null
 	 * @since   2.0.0
 	 */
-	public function get_all_by( array $query_fields = null, string $operator = 'AND' ) {
+	public function get_all_by( array $query_fields = null, string $operator = 'AND' ): ?array {
 
 		$table        = $this->get_table_name();
 		$query_string = $query_fields ? $this->array_to_where( $query_fields, $operator ) : null;
@@ -404,6 +404,7 @@ class MapperService extends AbstractService {
 		if ( $deleted ) {
 			// Invalidate cache if database updated
 			$this->get_cache_incrementer( true );
+			$this->logger->info( 'Deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		}
 

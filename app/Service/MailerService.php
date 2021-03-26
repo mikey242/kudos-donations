@@ -26,9 +26,9 @@ class MailerService extends AbstractService {
 	 */
 	public function __construct() {
 
-		$from_name  = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
+		$from_name    = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
 		$from_address = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
-		$this->from = "From: $from_name " . ' <' . $from_address . '>';
+		$this->from   = "From: $from_name " . ' <' . $from_address . '>';
 		parent::__construct();
 
 	}
@@ -161,9 +161,9 @@ class MailerService extends AbstractService {
 		$mail = wp_mail( $to, $subject, $body, $headers, $attachment );
 
 		if ( $mail ) {
-			$this->logger->info( sprintf( 'Email with subject "%s" sent to "%s"', $subject, $to ) );
+			$this->logger->info( 'Email sent successfully.', [ 'to' => $to, 'subject' => $subject ] );
 		} else {
-			$this->logger->error( sprintf( 'Email with subject "%s" failed to be sent to "%s"', $subject, $to ) );
+			$this->logger->error( 'Error sending email.', [ 'to' => $to, 'subject' => $subject ] );
 		}
 
 		// Remove action to prevent conflict.
