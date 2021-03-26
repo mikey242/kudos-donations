@@ -108,6 +108,9 @@ e.g:
 
 == Changelog ==
 
+= 2.4.5 =
+* More logging improvements
+
 = 2.4.4 =
 * Accessibility improvements
 * Improve javascript to avoid conflicts
