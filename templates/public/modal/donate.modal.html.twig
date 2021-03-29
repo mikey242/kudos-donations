@@ -20,7 +20,7 @@
                 {% block title %}{{ campaign.modal_title }}{% endblock %}
                 {% block text %}{{ campaign.welcome_text }}{% endblock %}
                 {% block body %}
-                    {% from "/public/modal/macros/form.html.twig" import input_group, radio_buttons, text, radio %}
+                    {% from "/public/macros/form.html.twig" import input_group, radio_buttons, text, radio %}
 
                     {% if ( campaign.amount_type != 'open' ) %}
                         {{ radio_buttons(campaign.fixed_amounts|split(','), 'amount-' ~ modal_id ) }}
@@ -61,7 +61,7 @@
                 {% block title %}{{ __('Subscription', 'kudos-donations') }}{% endblock %}
                 {% block text %}{{ __('How often would you like to donate?', 'kudos-donations') }}{% endblock %}
                 {% block body %}
-                    {% from "/public/modal/macros/form.html.twig" import select %}
+                    {% from "/public/macros/form.html.twig" import select %}
 
                     {{ select('recurring_frequency', __('Payment frequency', 'kudos-donations'), {
                         '12 months': __('Yearly', 'kudos-donations'),
@@ -86,7 +86,7 @@
                     {% block title %}{{ __('Address', 'kudos-donations') }}{% endblock %}
                     {% block text %}{{ __('Please fill in your address', 'kudos-donations') ~ (campaign.address_required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') }}{% endblock %}
                     {% block body %}
-                        {% from "/public/modal/macros/form.html.twig" import text %}
+                        {% from "/public/macros/form.html.twig" import text %}
 
                         {% set required = (campaign.address_required ? 'required' : null) %}
 
@@ -101,11 +101,11 @@
 
             {# FINAL TAB #}
             {% embed '/public/modal/embeds/_tab.html.twig' with { class: 'final' } %}
-                {% from "/public/modal/macros/buttons.html.twig" import button %}
+                {% from "/public/macros/buttons.html.twig" import button %}
                 {% block title %}{{ __('Payment', 'kudos-donations') }}{% endblock %}
                 {% block text %}{{ __('By clicking donate you agree to the following payment:', 'kudos-donations') }}{% endblock %}
                 {% block body %}
-                    {% from "/public/modal/macros/form.html.twig" import checkbox %}
+                    {% from "/public/macros/form.html.twig" import checkbox %}
 
                     <div class="kudos_summary kd-text-left kd-block kd-bg-gray-200 kd-p-2 kd-border-0 kd-border-solid kd-border-t-2 kd-border-primary">
                         <p class="kd-block kd-mb-0"><strong>{{ __('Name', 'kudos-donations') }}: </strong><span
@@ -140,10 +140,7 @@
                     </div>
                 {% endblock %}
             {% endembed %}
-
         </div>
     </form>
-
-    <i class="kudos_spinner kd-bg-logo-black kd-animate-spin kd-hidden kd-bg-contain kd-bg-no-repeat kd-absolute kd-top-1/2 kd-left-1/2 kd-w-8 kd-h-8 kd--ml-4 kd--mt-4 kd-z-1"></i>
 
 {% endblock content %}

@@ -15,6 +15,9 @@ __( 'Thanks', 'kudos-donations' );
 __( 'Want to cancel your subscription?', 'kudos-donations' ); 
 __( 'Click here', 'kudos-donations' );
 
+// Template: "templates/public/modal/base.modal.html.twig"
+__('Visit Kudos Donations', 'kudos-donations');
+
 // Template: "templates/public/modal/donate.modal.html.twig"
 __('Other', 'kudos-donations');
 __('Amount', 'kudos-donations');

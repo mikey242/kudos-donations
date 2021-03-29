@@ -1,0 +1,12 @@
+.kd-logo-animate {
+
+  &:hover {
+    .kd-logo {
+      transform: rotate(-90deg);
+
+      .kd-logo-heart {
+        transform: rotateX(180deg);
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 @tailwind components;
 @tailwind utilities;
+@import "partials/animation";
 
 :root {
   --wp-admin-theme-color: theme('colors.orange.500');
@@ -119,8 +120,3 @@
     @apply kd-outline-none kd-shadow-inner kd-border-orange-700;
   }
 }
-
-//.intro-guide__heading {
-//  margin: 0 0 16px;
-//  padding: 0 32px;
-//}
