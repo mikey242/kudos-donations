@@ -23,10 +23,9 @@ use WP_REST_Response;
 class MollieVendor extends AbstractVendor {
 
 	/**
-	 * This is the name of the vendor as it will appear in the logs
+	 * This is the name of the vendor as displayed to the user.
 	 */
 	const VENDOR_NAME = 'Mollie';
-	const VENDOR_SLUG = 'mollie';
 
 	/**
 	 * Instance of MollieApiClient
@@ -70,6 +69,10 @@ class MollieVendor extends AbstractVendor {
 				$this->logger->critical( $e->getMessage() );
 			}
 		}
+	}
+
+	public static function get_vendor_name(): string {
+		return static::VENDOR_NAME;
 	}
 
 	/**

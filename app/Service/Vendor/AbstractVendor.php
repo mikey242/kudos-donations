@@ -11,6 +11,13 @@ use WP_REST_Response;
 abstract class AbstractVendor extends AbstractService {
 
 	/**
+	 * Returns the name of the vendor.
+	 *
+	 * @return string
+	 */
+	abstract public static function get_vendor_name():string;
+
+	/**
 	 * @param TransactionEntity $transaction ,
 	 * @param string $mandate_id ,
 	 * @param string $interval ,
