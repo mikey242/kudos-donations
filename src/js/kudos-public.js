@@ -75,8 +75,6 @@ jQuery(document).ready(($) => {
         })
         $.validator.messages.required = __("This field is required", 'kudos-donations')
 
-        console.log($.validator)
-
         if ($kudosButtons.length) {
 
             // Setup button action
