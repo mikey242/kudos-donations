@@ -1,3 +1,5 @@
+echo "Building"
+yarn run build:production
 echo "Exporting"
 # Remove existing export folder
 echo "Creating KUDOS_EXPORT folder"
