@@ -41,7 +41,6 @@
     "sass-loader": "^10.1.0",
     "stylelint": "^13.8.0",
     "stylelint-config-standard": "^20.0.0",
-    "svg-inline-loader": "^0.8.2",
     "terser-webpack-plugin": "^5.0.3",
     "url-loader": "^4.1.0",
     "webpack": "^5.0.0",
