@@ -108,6 +108,12 @@ e.g:
 
 == Changelog ==
 
+= 2.4.6 =
+* Add error message if campaign not found or Mollie not connected. Displayed on front end and only to admins
+* Fix subscriptions with a total of 1 payment from being created when using multiple buttons per page
+* Minor logo changes
+* Update dependencies
+
 = 2.4.5 =
 * Fix clash with jQuery
 * More logging improvements
