@@ -14,8 +14,9 @@ jQuery(document).ready(($) => {
         let animating = false
 
         // Custom validation method to check subscription
-        $.validator.addMethod('totalPayments', (value) => {
-            let frequency = $('[name="recurring_frequency"]').val()
+        $.validator.addMethod('totalPayments', (value, element) => {
+            let form = element.closest('form')
+            let frequency = $(form).find('[name="recurring_frequency"]').val()
             if (frequency) {
                 return 12 / parseInt(frequency) * value !== 1
             }
