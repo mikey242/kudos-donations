@@ -6,4 +6,7 @@ docker/wordpress/
 cache
 invoices
 .idea
-/.env
+*.iml
+.env
+yarn-error.log
+yarn.lock
