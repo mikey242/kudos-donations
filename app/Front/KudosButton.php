@@ -2,6 +2,7 @@
 
 namespace Kudos\Front;
 
+use Exception;
 use Kudos\Service\TwigService;
 
 class KudosButton {
@@ -35,10 +36,6 @@ class KudosButton {
 	 */
 	private $campaign_id;
 	/**
-	 * @var string
-	 */
-	private $type;
-	/**
 	 * @var KudosModal
 	 */
 	private $modal;
@@ -48,6 +45,7 @@ class KudosButton {
 	 *
 	 * @param array $atts Array of above attributes.
 	 *
+	 * @throws Exception
 	 * @since    1.0.0
 	 */
 	public function __construct( array $atts ) {
@@ -73,21 +71,24 @@ class KudosButton {
 	 */
 	public function get_markup(): ?string {
 
+		try {
+			$modal = $this->modal->create_donate_modal( $this->campaign_id );
+		} catch ( Exception $e ) {
+			if ( current_user_can( 'manage_options' ) ) {
+				return '<p>' . $e->getMessage() . '</p>';
+			}
+
+			return null;
+		}
+
 		$button = $this->twig->render( 'public/kudos.button.html.twig',
 			[
 				'alignment' => $this->alignment,
 				'label'     => $this->button_label,
 				'target'    => $this->target_id,
-				'type'      => in_array( $this->type, [ 'shortcode', 'block' ] ) ? $this->type : null,
 			] );
 
-		$modal = $this->campaign_id ? $this->modal->create_donate_modal( $this->campaign_id ) : null;
-
-		if ( ! empty( $button ) && ! empty( $modal ) ) {
-			return $button . $modal;
-		}
-
-		return null;
+		return $button . $modal;
 
 	}
 

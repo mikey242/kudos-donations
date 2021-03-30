@@ -30,14 +30,56 @@ class PaymentService extends AbstractService {
 
 		parent::__construct();
 
+		$vendor       = $this::get_current_vendor_class();
+		$this->vendor = call_user_func( [ $vendor, 'factory' ] );
+
+	}
+
+	/**
+	 * Returns current vendor class.
+	 *
+	 * @return AbstractVendor
+	 */
+	private static function get_current_vendor_class(): string {
 		switch ( Settings::get_setting( 'payment_vendor' ) ) {
 			case 'mollie':
-				$this->vendor = MollieVendor::factory();
+				return MollieVendor::class;
 				break;
 			default:
-				$this->vendor = MollieVendor::factory();
-				$this->logger->critical( 'No payment vendor specified. Using Mollie.' );
+				$logger = new LoggerService();
+				$logger->critical( 'No payment vendor specified. Using Mollie.' );
+
+				return MollieVendor::class;
 		}
+	}
+
+	/**
+	 * Returns the name of the current vendor.
+	 *
+	 * @return mixed
+	 */
+	public static function get_vendor_name() {
+		return static::get_current_vendor_class()::get_vendor_name();
+	}
+
+	/**
+	 * Checks if required api settings are saved before displaying button
+	 *
+	 * @return bool
+	 * @since   2.4.6
+	 */
+	public static function is_api_ready(): bool {
+
+		$settings  = Settings::get_current_vendor_settings();
+		$connected = isset( $settings['connected'] ) ? $settings['connected'] : false;
+		$mode      = isset( $settings['mode'] ) ? $settings['mode'] : '';
+		$key       = isset( $settings[ $mode . '_key' ] ) ? $settings[ $mode . '_key' ] : null;
+
+		if ( ! $connected || ! $key ) {
+			return false;
+		}
+
+		return true;
 
 	}
 
@@ -361,7 +403,7 @@ class PaymentService extends AbstractService {
 			// Update vendor settings
 			Settings::update_array( 'vendor_mollie',
 				[
-					'recurring' => $this->vendor->can_use_recurring(),
+					'recurring'       => $this->vendor->can_use_recurring(),
 					'payment_methods' => array_map( function ( $method ) {
 						return [
 							'id'     => $method->id,

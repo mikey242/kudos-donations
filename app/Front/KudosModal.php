@@ -2,6 +2,7 @@
 
 namespace Kudos\Front;
 
+use Exception;
 use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
@@ -85,7 +86,7 @@ class KudosModal {
 				'modal_text'  => $message ?? '',
 			] );
 
-		return Front::kudos_render($this->get_markup());
+		return Front::kudos_render( $this->get_markup() );
 
 	}
 
@@ -95,16 +96,23 @@ class KudosModal {
 	 * @param string $campaign_id Campaign id to create modal for.
 	 *
 	 * @return string
+	 * @throws Exception
 	 * @since    1.0.0
 	 */
-	public function create_donate_modal( string $campaign_id ): string {
+	public function create_donate_modal( string $campaign_id ): ?string {
 
+		$campaigns       = new Campaigns();
+		$campaign        = $campaigns->get_campaign( $campaign_id );
+
+		// Check if there is a campaign, otherwise throw an exception.
+		if ( empty( $campaign ) ) {
+			/* translators: %s: Campaign id */
+			throw new Exception( sprintf( __( 'Campaign "%s" not found.', 'kudos-donations' ), $campaign_id ) );
+		}
+
+		$campaign['total'] = $campaigns::get_campaign_stats( $campaign_id )['total'];
 		$this->template  = self::DONATE_TEMPLATE;
 		$vendor_settings = Settings::get_current_vendor_settings();
-
-		$campaigns         = new Campaigns();
-		$campaign          = $campaigns->get_campaign( $campaign_id );
-		$campaign['total'] = $campaigns::get_campaign_stats( $campaign_id )['total'];
 
 		// Merge global settings with provided data
 		apply_filters( 'kudos_donate_modal_data',

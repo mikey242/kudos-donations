@@ -2,6 +2,7 @@
 
 namespace Kudos\Front;
 
+use Exception;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
@@ -188,27 +189,6 @@ class Front {
 	}
 
 	/**
-	 * Checks if required api settings are saved before displaying button
-	 *
-	 * @return bool
-	 * @since   1.0.0
-	 */
-	public static function api_ready(): bool {
-
-		$settings  = Settings::get_current_vendor_settings();
-		$connected = isset( $settings['connected'] ) ? $settings['connected'] : false;
-		$mode      = isset( $settings['mode'] ) ? $settings['mode'] : '';
-		$key       = isset( $settings[ $mode . '_key' ] ) ? $settings[ $mode . '_key' ] : null;
-
-		if ( ! $connected || ! $key ) {
-			return false;
-		}
-
-		return true;
-
-	}
-
-	/**
 	 * Creates and registers the [kudos] shortcode and block
 	 *
 	 * @since   1.0.0
@@ -229,8 +209,6 @@ class Front {
 					$atts,
 					'kudos'
 				);
-
-				$atts['type'] = 'shortcode';
 
 				return $this->kudos_render_callback( $atts );
 			}
@@ -255,10 +233,6 @@ class Front {
 						'type'    => 'string',
 						'default' => 'none',
 					],
-					'type'         => [
-						'type'    => 'string',
-						'default' => 'block',
-					],
 				],
 			]
 		);
@@ -274,15 +248,29 @@ class Front {
 	 */
 	public function kudos_render_callback( array $atts ): ?string {
 
-		// Continue only if payment API ready.
-		if ( self::api_ready() ) {
+		try {
+
+			// Check if the current vendor is connected, otherwise throw an exception.
+			if ( ! PaymentService::is_api_ready() ) {
+				throw new Exception( sprintf( __( "%s not connected.", 'kudos-donations' ),
+					PaymentService::get_vendor_name() ) );
+			}
 
 			// Generate markup.
 			$button = new KudosButton( $atts );
-			return $this->kudos_render($button->get_markup());
+			$markup = $button->get_markup();
+			if ( $markup ) {
+				return $this->kudos_render( $markup );
+			}
+		} catch ( Exception $e ) {
 
+			// Display error message if thrown thrown.
+			if ( current_user_can( 'manage_options' ) ) {
+				return '<p>' . $e->getMessage() . '</p>';
+			}
 		}
 
+		// Nothing displayed to visitors if there is a problem.
 		return null;
 
 	}
@@ -291,9 +279,10 @@ class Front {
 	 * Generates output wrapped in div with required class.
 	 *
 	 * @param string $child Child elements to include within div
+	 *
 	 * @return string
 	 */
-	public static function kudos_render(string $child) : string {
+	public static function kudos_render( string $child ): string {
 		return '<div class="kudos-donations">' . $child . '</div>';
 	}
 
