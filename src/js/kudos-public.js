@@ -32,7 +32,8 @@ jQuery(document).ready(($) => {
                 if (element.attr("type") === 'checkbox' || element.hasClass('kd-input-group-input')) {
                     error.insertAfter(element.parent())
                 } else {
-                    error.insertAfter(element)
+
+                    error.appendTo(element.closest('label'))
                 }
             },
             rules: {
