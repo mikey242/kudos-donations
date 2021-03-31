@@ -109,6 +109,10 @@ e.g:
 
 == Changelog ==
 
+= 2.4.7 =
+* Fix logo not appearing correctly on some themes
+* Fade campaign details when adding/saving campaign
+
 = 2.4.6 =
 * Add error message if campaign not found or Mollie not connected, displayed on front end and only to admins
 * Add icon to 'select' form elements
