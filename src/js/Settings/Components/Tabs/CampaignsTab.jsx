@@ -26,7 +26,7 @@ const CampaignsTab = (props) => {
             name: name,
             modal_title: __('Support us!', 'kudos-donations'),
             welcome_text: __('Your support is greatly appreciated and will help to keep us going.', 'kudos-donations'),
-            donation_type: 'both',
+            donation_type: 'oneoff',
             amount_type: 'both',
             fixed_amounts: '5,10,20,50'
         })
