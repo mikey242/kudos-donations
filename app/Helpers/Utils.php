@@ -297,4 +297,21 @@ class Utils {
 
 	}
 
+	/**
+	 * Returns human readable filesize from given bytes.
+	 *
+	 * @param int $bytes Size of file in bytes. Usually the value returned from filesize().
+	 * @param int $decimals Number of decimal places to return.
+	 *
+	 * @return string
+	 * @link https://www.php.net/manual/en/function.filesize.php
+	 * @since 2.4.6
+	 */
+	public static function human_filesize( int $bytes, int $decimals = 2 ): string {
+		$sz     = 'BKMGTP';
+		$factor = floor( ( strlen( $bytes ) - 1 ) / 3 );
+
+		return sprintf( "%.{$decimals}f", $bytes / pow( 1024, $factor ) ) . @$sz[ $factor ];
+	}
+
 }
