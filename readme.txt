@@ -111,8 +111,9 @@ e.g:
 
 = 2.4.6 =
 * Add error message if campaign not found or Mollie not connected, displayed on front end and only to admins
+* Add icon to dropdown elements
 * Fix subscriptions with a total of 1 payment from being created when using multiple buttons per page
-* Minor logo changes
+* Tweak logo animation
 * Update dependencies
 
 = 2.4.5 =
