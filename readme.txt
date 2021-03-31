@@ -111,9 +111,10 @@ e.g:
 
 = 2.4.6 =
 * Add error message if campaign not found or Mollie not connected, displayed on front end and only to admins
-* Add icon to dropdown elements
-* Fix campaign id changing
-* Fix subscriptions with a total of 1 payment from being created when using multiple buttons per page
+* Add icon to 'select' form elements
+* Fix campaign id sometimes changing on save
+* Fix subscriptions allowing a total of 1 payment being created when using multiple buttons per page
+* Change new campaign donation type to 'One-off'
 * Tweak logo animation
 * Update dependencies
 
