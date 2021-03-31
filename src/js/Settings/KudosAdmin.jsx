@@ -260,6 +260,7 @@ class KudosAdmin extends Component {
                         settings={this.state.settings}
                         handleInputChange={this.handleInputChange}
                         updateSetting={this.updateSetting}
+                        isAPISaving={this.state.isAPISaving}
                     />
             },
             {

@@ -59,7 +59,13 @@ const CampaignsTab = (props) => {
 
             <br/>
 
-                <Card>
+                <Card className="kd-transition-opacity" style={
+                    props.isAPISaving ? {
+                        opacity: 0.5,
+                        pointerEvents: 'none',
+                        userSelect: 'none'
+                    } : {}
+                }>
                     <CardHeader>
                         <div>
                             <h3>{__('Campaign details', 'kudos-donations')}</h3>
