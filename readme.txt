@@ -102,9 +102,10 @@ e.g:
 == Screenshots ==
 
 1. Donation form
-2. Kudos Donations button block
+2. Recurring/Subscription payments
 3. Settings page
-4. Automated email receipt
+4. Kudos Donations button block
+5. Automated email receipt
 
 == Changelog ==
 
