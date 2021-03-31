@@ -281,6 +281,7 @@ class Settings {
 							'modal_title'      => __( 'Support us!', 'kudos-donations' ),
 							'welcome_text'     => __( 'Your support is greatly appreciated and will help to keep us going.',
 								'kudos-donations' ),
+							'address_enabled'  => false,
 							'address_required' => true,
 							'amount_type'      => 'both',
 							'fixed_amounts'    => '1,5,20,50',

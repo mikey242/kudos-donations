@@ -19,7 +19,7 @@ class Campaigns {
 	}
 
 	/**
-	 * Sanitize the various setting fields in the donation form array
+	 * Sanitize the various setting fields in the donation form array.
 	 *
 	 * @param $campaigns
 	 *
@@ -28,10 +28,10 @@ class Campaigns {
 	 */
 	public function sanitize_campaigns( $campaigns ): array {
 
-		// Loop through each of the options sanitizing the data
+		// Loop through each of the campaigns sanitizing the data.
 		foreach ( $campaigns as $key => &$form ) {
 
-			if ( ! array_search( 'id', $form ) ) {
+			if ( ! isset( $form['id'] ) ) {
 				$form['id'] = $this->generate_id( $form['name'] );
 			}
 
