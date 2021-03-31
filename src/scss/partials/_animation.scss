@@ -5,6 +5,7 @@
       transform: rotate(-90deg);
 
       .kd-logo-heart {
+        backface-visibility: visible;
         transform: rotateX(180deg);
       }
     }
