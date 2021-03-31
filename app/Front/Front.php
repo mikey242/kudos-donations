@@ -61,7 +61,7 @@ class Front {
 	}
 
 	/**
-	 * Add root styles to header based on theme
+	 * Add root styles to header based on theme.
 	 *
 	 * @param bool $echo // Whether to echo the styles instead of returning a string.
 	 *
@@ -252,6 +252,7 @@ class Front {
 
 			// Check if the current vendor is connected, otherwise throw an exception.
 			if ( ! PaymentService::is_api_ready() ) {
+				/* translators: %s: Payment vendor (e.g. Mollie). */
 				throw new Exception( sprintf( __( "%s not connected.", 'kudos-donations' ),
 					PaymentService::get_vendor_name() ) );
 			}
