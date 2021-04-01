@@ -1,4 +1,6 @@
 <?php
+// Language file for Wordpress to pick-up translations. This file is not used directly by the plugin.
+
 // Template: "templates/emails/base.html.twig"
 __( 'All rights reserved.', 'kudos-donations' );
 
@@ -17,6 +19,7 @@ __( 'Click here', 'kudos-donations' );
 
 // Template: "templates/public/modal/base.modal.html.twig"
 __('Visit Kudos Donations', 'kudos-donations');
+__('Close', 'kudos-donations');
 
 // Template: "templates/public/modal/donate.modal.html.twig"
 __('Other', 'kudos-donations');
