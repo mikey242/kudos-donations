@@ -60,16 +60,11 @@ module.exports = {
     },
     zIndex: {
       '-1': -1,
+      0: 0,
       1 : 1,
       1050: 1050
     },
     extend: {
-      backgroundImage: theme => ({
-        'logo-black': 'url("../img/logo-black.svg")',
-        'logo-white': 'url("../img/logo-white.svg")',
-        'logo-color': 'url("../img/logo-colour.svg")',
-        'back-icon': 'url("../img/back-icon.svg")'
-      }),
       colors: {
         orange: {
           200: '#ffd59c',
@@ -86,7 +81,6 @@ module.exports = {
         'primary-darker': "var(--kudos-theme-primary-darker)"
       },
       boxShadow: {
-        focus: '0 0 0 2px #fff, 0 0 0 3.5px var(--kudos-theme-primary)',
         'button-group': 'inset 0 0 0 1px var(--wp-admin-theme-color);'
       },
       keyframes: {
