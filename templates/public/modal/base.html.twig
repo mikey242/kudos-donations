@@ -7,7 +7,8 @@
              class="kudos_modal_container kd-bg-white kd-p-8 kd-rounded-lg kd-max-h-screen kd-max-w-lg kd-relative kd-overflow-hidden"
              role="dialog" aria-modal="true" aria-labelledby="kudos_modal_title">
             <header class="kudos_modal_header kd-flex kd-items-center kd-justify-between">
-                <a target="_blank" title="{{ __('Visit Kudos Donations', 'kudos-donations') }}" class="kd-cursor-pointer kd-flex kd-logo-animate" href="https://kudosdonations.com">
+                <a target="_blank" title="{{ __('Visit Kudos Donations', 'kudos-donations') }}"
+                   class="kd-cursor-pointer kd-flex kd-logo-animate" href="https://kudosdonations.com">
                     <span class="kd-mr-3 kd-inline-block" style="width: 30px; height: 25px; cursor: inherit">
                         {{ logo('color') }}
                     </span>
@@ -15,8 +16,9 @@
                 {% block header %}
                 {% endblock header %}
                 <input type="button"
-                       class="kudos_modal_close hover:kd-no-underline hover:kd-bg-transparent focus:kd-shadow-focus focus:kd-outline-none kd-text-2xl kd-cursor-pointer"
-                       aria-hidden="true" data-micromodal-close aria-label="Close modal" value="&times;">
+                       class="kudos_modal_close kd-w-5 kd-h-5 kd-text-center kd-transition-shadow kd-ring-primary kd-rounded focus:kd-ring-2 kd-ring-offset-2 kd-text-2xl kd-cursor-pointer"
+                       aria-hidden="true" data-micromodal-close aria-label="Close modal"
+                       title="{{ __('Close', 'kudos-donations') }}" value="&times;">
             </header>
             <div class="kd-mt-4 kd-block">
                 <p class="kd-text-center kd-block kd-font-normal kd-mb-4">

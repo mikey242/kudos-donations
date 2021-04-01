@@ -10,20 +10,11 @@
   *:not(path),
   *::before,
   *::after {
-    all: unset;
+    all: initial;
     font-family: montserratregular, Century Gothic, sans-serif;
     font-size: 16px;
     opacity: 1;
     @apply kd-box-border kd-leading-normal;
-  }
-
-  .kudos_modal_logo {
-    &::before {
-      @apply kd-block kd-bg-logo-color kd-bg-no-repeat kd-bg-contain kd-bg-center kd-cursor-pointer;
-      content: '';
-      width: 40px;
-      height: 40px;
-    }
   }
 
   .kudos_modal_container {
@@ -37,23 +28,6 @@
 
   &.is-open {
     @apply kd-block kd-overflow-x-hidden kd-overflow-y-auto #{'!important'};
-  }
-
-  .kudos_modal_buttons {
-    .kudos_back {
-      &::before {
-        @apply kd-absolute kd-cursor-pointer kd-bg-contain kd-bg-no-repeat kd-bg-center;
-        content: '';
-        transform: translateY(-50%);
-        width: 20px;
-        height: 20px;
-        background-image: url("../img/back-icon.svg");
-      }
-
-      &:focus::before {
-        @apply kd-shadow-focus;
-      }
-    }
   }
 }
 
@@ -118,8 +92,7 @@
 
         &:focus {
           + label {
-            box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--kudos-theme-primary);
-            outline: 2px solid transparent;
+            @apply kd-ring-primary kd-ring-2 kd-ring-offset-2;
           }
         }
       }

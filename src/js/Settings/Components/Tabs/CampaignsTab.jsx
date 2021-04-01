@@ -53,19 +53,14 @@ const CampaignsTab = (props) => {
                     settings={props.settings}
                     handleInputChange={props.handleInputChange}
                     addCampaign={addCampaign}
+                    isAPISaving={props.isAPISaving}
                 />
                 <CardDivider/>
             </Card>
 
             <br/>
 
-                <Card className="kd-transition-opacity" style={
-                    props.isAPISaving ? {
-                        opacity: 0.5,
-                        pointerEvents: 'none',
-                        userSelect: 'none'
-                    } : {}
-                }>
+                <Card>
                     <CardHeader>
                         <div>
                             <h3>{__('Campaign details', 'kudos-donations')}</h3>

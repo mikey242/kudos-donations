@@ -9,13 +9,13 @@
 
     {% if ( 'text' == type or 'email' == type ) %}
         {% set focus = 'focus:kd-border-primary' %}
-        {% set generic = 'kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-duration-150 kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700' %}
+        {% set generic = 'kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700' %}
         {% set styles = styles | merge([ focus, generic ]) %}
     {% endif %}
 
     {% if ( 'radio' == type or 'checkbox' == type ) %}
         {% set checked = 'checked:kd-bg-primary' %}
-        {% set focus = 'focus:kd-shadow-focus' %}
+        {% set focus = 'kd-ring-primary focus:kd-ring-2 kd-ring-offset-2' %}
         {% set generic = 'kd-duration-75 kd-bg-white kd-shadow-inner kd-border kd-border-primary kd-inline-block kd-w-4 kd-h-4 kd-m-2 kd-p-0 kd-align-middle kd-min-w-1 kd-leading-none kd-outline-none kd-text-center kd-clear-none' %}
         {% set styles = styles | merge([ checked, focus, generic ]) %}
     {% endif %}
@@ -67,7 +67,7 @@
 {% macro select(name, placeholder, options, required=true) %}
     <label class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
         <span class="kd-relative">
-            <select class="kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-duration-150 kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700"
+            <select class="kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700"
                     {{ required ? 'required' : '' }}
                     name="{{ name }}">
                 <option value=""
@@ -90,7 +90,7 @@
     {% from _self import input %}
     <div class="kd-input-group kd-w-full kd-mt-2 kd-flex">
         {{ input(name, placeholder, null, 'text', false, 'kd-input-group-input kd-order-2 kd-flex-grow kd-min-w-0 kd-rounded-l-none', atts.input) }}
-        <label class="kd-flex-shrink-0 kd-order-1 kd-m-0 kd-transition-shadow kd-transition-colors kd-duration-150 kd-ease-in-out kd-py-2 kd-px-3 kd-rounded-l kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-r-0 kd-border-solid kd-border-gray-300 kd-text-gray-500"
+        <label class="kd-flex-shrink-0 kd-order-1 kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-px-3 kd-rounded-l kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-r-0 kd-border-solid kd-border-gray-300 kd-text-gray-500"
                for={{ atts.input.id }}>
             {{ label }}
         </label>
@@ -105,7 +105,7 @@
                 <input class="focus:kd-outline-none focus:kd-shadow-none kd-absolute kd-m-0 kd--z-1"
                        id="{{ input_id }}-{{ key }}" {{ key==0 ? 'checked' : '' }}
                        type="radio" name="value" value="{{ value|replace({' ':''}) }}"/>
-                <label class="kd-m-0 kd-transition-shadow kd-transition-colors kd-duration-150 kd-ease-in-out kd-py-2 kd-rounded kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-solid kd-border-gray-300"
+                <label class="kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-rounded kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-solid kd-border-gray-300"
                        for="{{ input_id }}-{{ key }}">€{{ value }}</label>
             </div>
         {% endfor %}

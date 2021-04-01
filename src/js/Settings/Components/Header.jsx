@@ -1,4 +1,3 @@
-import logo from '../../../img/logo-colour.svg'
 import {Btn} from "./Btn"
 
 const {__} = wp.i18n
@@ -53,11 +52,11 @@ const Header = (props) => {
                     <Btn
                         isPrimary
                         disabled={
-                            props.isSaving ||
+                            props.isAPISaving ||
                             !props.isEdited
                         }
                         isBusy={
-                            props.isSaving ||
+                            props.isAPISaving ||
                             props.checkingApi
                         }
                         onClick={props.updateAll}
