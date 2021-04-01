@@ -111,7 +111,9 @@ e.g:
 
 = 2.4.7 =
 * Fix logo not appearing correctly on some themes
-* Fade campaign details when adding/saving campaign
+* Fix some buttons on settings page not animating when busy
+* Revert to using css rule 'initial' instead of 'unset' to avoid style clashes
+* Various visual tweaks to the donation form
 
 = 2.4.6 =
 * Add error message if campaign not found or Mollie not connected, displayed on front end and only to admins
