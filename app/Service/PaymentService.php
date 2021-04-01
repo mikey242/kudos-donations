@@ -44,11 +44,9 @@ class PaymentService extends AbstractService {
 		switch ( Settings::get_setting( 'payment_vendor' ) ) {
 			case 'mollie':
 				return MollieVendor::class;
-				break;
 			default:
 				$logger = new LoggerService();
 				$logger->critical( 'No payment vendor specified. Using Mollie.' );
-
 				return MollieVendor::class;
 		}
 	}
