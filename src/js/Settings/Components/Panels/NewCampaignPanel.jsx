@@ -1,18 +1,18 @@
 import {SettingCard} from "../SettingCard"
 import {ButtonIcon} from "../ButtonIcon"
 
-const { __ } = wp.i18n
-const { Button, TextControl } = wp.components
-const { useState } = wp.element
+const {__} = wp.i18n
+const {Button, TextControl} = wp.components
+const {useState} = wp.element
 
-const NewCampaignPanel = ({addCampaign}) => {
+const NewCampaignPanel = ({addCampaign, isAPISaving}) => {
 
     const [addFormValue, setAddFormValue] = useState('')
     const [buttonDisabled, setButtonDisabled] = useState(true)
 
     const updateValue = (value) => {
         setAddFormValue(value)
-        setButtonDisabled( '' === value.trim() )
+        setButtonDisabled('' === value.trim())
     }
 
     return (
@@ -31,9 +31,10 @@ const NewCampaignPanel = ({addCampaign}) => {
             <Button
                 isSecondary
                 disabled={buttonDisabled}
-                icon={(<ButtonIcon icon='add' />)}
+                isBusy={isAPISaving}
+                icon={(<ButtonIcon icon='add'/>)}
                 onClick={
-                    () =>  {
+                    () => {
                         addCampaign(document.getElementById('kudos_new_campaign').value)
                         setButtonDisabled(true)
                     }
