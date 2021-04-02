@@ -1,6 +1,7 @@
 .kd-logo-animate {
 
-  &:hover {
+  &:hover,
+  &:focus {
     .kd-logo {
       transform: rotate(-90deg);
 
