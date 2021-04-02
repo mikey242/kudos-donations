@@ -33,19 +33,19 @@
 
 {% endmacro %}
 
-{% macro icon(label, icon) %}
+{% macro icon(icon, label, size=6) %}
 
     {% if 'back' == icon %}
-        {% set path = "M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" %}
+        {% set path = "M15 19l-7-7 7-7" %}
         {% set atts = "data-direction='back'" %}
     {% elseif 'close' == icon %}
-        {% set path = "M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" %}
+        {% set path = "M6 18L18 6M6 6l12 12" %}
         {% set atts = "data-micromodal-close" %}
     {% endif %}
 
     <button type="button" class="kd-text-primary kd-z-1 hover:kd-text-primary-dark kd-transition-shadow kd-ease-in-out kd-rounded-full kd-bg-transparent kd-cursor-pointer focus:kd-ring-2 kd-ring-primary kd-ring-offset-2"
             aria-label="{{ label }}" title="{{ label }}" {{ atts }}>
-        <svg class="kd-h-6 kd-w-6 kd-block kd-cursor-pointer kd-relative kd--z-1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none">
+        <svg class="kd-h-{{ size }} kd-w-{{ size }} kd-block kd-cursor-pointer kd-relative kd--z-1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ path }}" />
         </svg>
     </button>
