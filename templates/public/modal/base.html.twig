@@ -1,4 +1,5 @@
 {% from "/public/macros/logo.html.twig" import logo %}
+{% from "/public/macros/buttons.html.twig" import icon %}
 
 <div id="{{ modal_id ?: 'kudos_modal-1' }}" class="kudos_modal {{ classes }} kd-absolute kd-hidden" aria-hidden="true">
     <div class="kudos_modal_overlay kd-flex kd-justify-center kd-items-center kd-fixed kd-top-0 kd-left-0 kd-w-full kd-h-full kd-bg-modal kd-z-1050"
@@ -15,10 +16,7 @@
                 </a>
                 {% block header %}
                 {% endblock header %}
-                <input type="button"
-                       class="kudos_modal_close kd-w-5 kd-h-5 kd-text-center kd-transition-shadow kd-ring-primary kd-rounded focus:kd-ring-2 kd-ring-offset-2 kd-text-2xl kd-cursor-pointer"
-                       aria-hidden="true" data-micromodal-close aria-label="Close modal"
-                       title="{{ __('Close', 'kudos-donations') }}" value="&times;">
+                {{ icon(__('Close modal', 'kudos-donations'), 'close') }}
             </header>
             <div class="kd-mt-4 kd-block">
                 <p class="kd-text-center kd-block kd-font-normal kd-mb-4">

@@ -1,4 +1,4 @@
-{% from "/public/macros/buttons.html.twig" import button %}
+{% from "/public/macros/buttons.html.twig" import button, icon %}
 {% from "/public/macros/text.html.twig" import title, paragraph %}
 
 <fieldset
@@ -16,13 +16,9 @@
     <div class="kudos_modal_buttons kd-mt-8 kd-block kd-text-center kd-relative">
         {% block nav_buttons %}
             {% block back_button %}
-                <button type="button" class="kd-absolute kd-transition-shadow kd-ease-in-out kd-rounded kd-left-0 kd-bottom-1/2 kd-transform kd-translate-y-1/2 kd-absolute kd-bg-transparent kd-cursor-pointer kd-ring-primary focus:kd-ring-2 kd-ring-offset-2"
-                        aria-label="{{ __('Previous tab', 'kudos-donations') }}" data-direction="back">
-                    <svg class="kd-h-5 kd-w-5 kd-block kd-cursor-pointer" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-                        <path d="M34.52,239.03L228.87,44.69C238.24,35.32 253.44,35.32 262.81,44.69L285.48,67.36C294.84,76.72 294.85,91.88 285.52,101.26L131.49,256L285.51,410.75C294.85,420.13 294.83,435.29 285.47,444.65L262.8,467.32C253.43,476.69 238.23,476.69 228.86,467.32L34.52,272.97C25.15,263.6 25.15,248.4 34.52,239.03Z"
-                              style="fill:rgb(26,32,44);fill-rule:nonzero;"/>
-                    </svg>
-                </button>
+                <div class="kd-absolute kd-left-0 kd-bottom-1/2 kd-transform kd-translate-y-1/2">
+                    {{ icon(__('Previous tab', 'kudos-donations'), 'back') }}
+                </div>
             {% endblock %}
             {{ button(__('Cancel', 'kudos-donations'), 'outline', 'button', {'data-micromodal-close': ''}) }}
             {% block next_button %}

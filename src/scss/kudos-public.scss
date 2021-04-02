@@ -7,7 +7,7 @@
 
 [id^=kudos_modal-].kudos_modal {
 
-  *:not(path),
+  *:not(path):not(svg),
   *::before,
   *::after {
     all: initial;
