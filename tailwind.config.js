@@ -99,12 +99,12 @@ module.exports = {
           '100%': { opacity: 0 }
         },
         slideIn: {
-          '0%': { transform: 'translateY(15%)' },
-          '100%': { transform: 'translateY(0)' }
+          '0%': { transform: 'rotate(-1deg) translateY(2%)' },
+          '100%': { transform: 'rotate(0) translateY(0)' }
         },
         slideOut: {
           '0%': { transform: 'translateY(0)' },
-          '100%': { transform: 'translateY(-10%)' }
+          '100%': { transform: 'rotate(-1deg) translateY(2%)' }
         }
       },
       animation: {
