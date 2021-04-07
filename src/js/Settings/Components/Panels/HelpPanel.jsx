@@ -58,7 +58,9 @@ const HelpPanel = ({handleInputChange}) => {
                     </Button>
                 </div>
                 <div>
-                    <img width="140" src={logo} className="kd-mr-4" alt="Kudos Logo"/>
+                    <a target="_blank" title={__('Visit Kudos Donations', 'kudos-donations')} className="kd-block" href="https://kudosdonations.com">
+                        <img width="140" src={logo} className="kd-mr-4" alt="Kudos Logo"/>
+                    </a>
                 </div>
             </div>
         </SettingCard>
