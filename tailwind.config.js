@@ -85,7 +85,7 @@ module.exports = {
         'button-group': 'inset 0 0 0 1px var(--wp-admin-theme-color);'
       },
       keyframes: {
-        spin: {
+        loaderSpin: {
           '0%': { transform: 'rotate(0)', 'animation-timing-function': 'cubic-bezier(0.55, 0.055, 0.675, 0.19)' },
           '50%': { transform: 'rotate(900deg)', 'animation-timing-function': 'cubic-bezier(0.215, 0.61, 0.355, 1)' },
           '100%': { transform: 'rotate(1800deg)' }
@@ -99,16 +99,16 @@ module.exports = {
           '100%': { opacity: 0 }
         },
         slideIn: {
-          '0%': { transform: 'rotate(-1deg) translateY(2%)' },
-          '100%': { transform: 'rotate(0) translateY(0)' }
+          '0%': { transform: 'rotate(-0.5deg) translate(2%, 2%)' },
+          '100%': { transform: 'rotate(0) translate(0)' }
         },
         slideOut: {
           '0%': { transform: 'translateY(0)' },
-          '100%': { transform: 'rotate(-1deg) translateY(2%)' }
+          '100%': { transform: 'rotate(-0.5deg) translate(2%, 2%)' }
         }
       },
       animation: {
-        spin: 'spin 2s infinite',
+        'loader-spin': 'loaderSpin 2s infinite',
         'fade-in': 'fadeIn 0.3s cubic-bezier(0, 0, 0.2, 1)',
         'fade-out': 'fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1)',
         'slide-in': 'slideIn 0.3s cubic-bezier(0, 0, 0.2, 1)',
