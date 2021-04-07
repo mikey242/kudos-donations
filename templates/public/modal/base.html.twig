@@ -1,4 +1,4 @@
-{% from "/public/macros/logo.html.twig" import logo %}
+{% from "/public/macros/kudos.logo.html.twig" import logo %}
 {% from "/public/macros/buttons.html.twig" import icon %}
 
 <div id="{{ modal_id ?: 'kudos_modal-1' }}" class="kudos_modal {{ classes }} kd-absolute kd-hidden" aria-hidden="true">
@@ -21,8 +21,8 @@
                 </p>
                 {% block content %}
                 {% endblock content %}
-                <i class="kudos_spinner kd-animate-spin kd-hidden kd-bg-contain kd-absolute kd-top-1/2 kd-left-1/2 kd-w-8 kd-h-8 kd--ml-4 kd--mt-4 kd-z-1">
-                    {{ logo('black') }}
+                <i class="kd-spinner kd-animate-loader-spin kd-hidden kd-bg-contain kd-absolute kd-top-1/2 kd-left-1/2 kd-w-8 kd-h-8 kd--ml-4 kd--mt-4 kd-z-1">
+                    {{ logo('black', 'black', '30px') }}
                 </i>
             </div>
         </div>

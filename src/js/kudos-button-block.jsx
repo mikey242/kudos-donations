@@ -1,4 +1,6 @@
 import logo from '../img/logo-colour.svg'
+import {KudosLogo} from "./Settings/Components/KudosLogo"
+
 /**
  * Internal block libraries
  */
@@ -6,6 +8,7 @@ const {__} = wp.i18n
 const {Component} = wp.element
 const {registerBlockType} = wp.blocks
 const {
+    Button,
     PanelBody,
     SelectControl,
 } = wp.components
@@ -92,12 +95,15 @@ export default registerBlockType('iseardmedia/kudos-button', {
         }
 
         getCampaigns() {
-             wp.api.loadPromise.then(() => {
-                 new wp.api.models.Settings().fetch().then((response) => {
-                     let options = response._kudos_campaigns.map(campaign => ({value: campaign.id, label: campaign.name}))
-                     this.setState({
-                         campaigns: [...this.state.campaigns,...options],
-                     })
+            wp.api.loadPromise.then(() => {
+                new wp.api.models.Settings().fetch().then((response) => {
+                    let options = response._kudos_campaigns.map(campaign => ({
+                        value: campaign.id,
+                        label: campaign.name
+                    }))
+                    this.setState({
+                        campaigns: [...this.state.campaigns, ...options],
+                    })
                 })
             })
         };
@@ -113,12 +119,13 @@ export default registerBlockType('iseardmedia/kudos-button', {
                             title={__('Campaign', 'kudos-donations')}
                             initialOpen={false}
                         >
-                            <p><strong>Current campaign: {this.getCampaignName(this.props.attributes.campaign_id)}</strong></p>
+                            <p><strong>Current
+                                campaign: {this.getCampaignName(this.props.attributes.campaign_id)}</strong></p>
                             <SelectControl
                                 label={__('Select a campaign', 'kudos-donations')}
-                                value={ this.state.selectedCampaign }
+                                value={this.state.selectedCampaign}
                                 onChange={this.onChangeCampaign}
-                                options={ this.state.campaigns }
+                                options={this.state.campaigns}
                             />
                             <a href="admin.php?page=kudos-settings&tab_name=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
 
@@ -138,19 +145,27 @@ export default registerBlockType('iseardmedia/kudos-button', {
                             'kudos-donations ' + (this.props.attributes.className ?? '') + ' has-text-align-' + this.props.attributes.alignment
                         }
                     >
-                        <RichText
-                            className={'kd-transition kd-ease-in-out focus:kd-shadow-focus focus:kd-outline-none kd-font-sans kd-text-center kd-text-white kd-leading-normal kd-text-base kd-font-normal kd-normal-case kd-no-underline kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none kd-border-none kd-bg-primary hover:kd-bg-primary-dark kudos_button_donate'}
-                            style={{backgroundColor: kudos.color_primary}}
-                            formattingControls={[
-                                'bold',
-                                'italic',
-                                'text-color',
-                                'strikethrough',
-                            ]}
-                            tagName="button"
-                            onChange={this.onChangeButtonLabel}
-                            value={this.props.attributes.button_label}
-                        />
+                        <Button
+                            className={'kd-transition kd-logo-animate kd-ease-in-out focus:kd-shadow-focus focus:kd-outline-none kd-font-sans kd-text-center kd-text-white kd-leading-normal kd-text-base kd-font-normal kd-normal-case kd-no-underline kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none kd-border-none kd-bg-primary hover:kd-bg-primary-dark kudos_button_donate'}>
+                            <div className='kd-mr-3 kd-flex'>
+                                <KudosLogo
+                                    lineColor='currentColor'
+                                    heartColor='currentColor'
+                                />
+                            </div>
+                            <RichText
+                                style={{backgroundColor: kudos.color_primary}}
+                                formattingControls={[
+                                    'bold',
+                                    'italic',
+                                    'text-color',
+                                    'strikethrough',
+                                ]}
+                                // tagName="button"
+                                onChange={this.onChangeButtonLabel}
+                                value={this.props.attributes.button_label}
+                            />
+                        </Button>
                     </div>
                 </div>
             )
