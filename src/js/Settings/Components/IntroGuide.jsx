@@ -71,7 +71,7 @@ const IntroGuide = ({show, updateSetting}) => {
                             <h1 className="kd-leading-normal">{__('Test and go Live', 'kudos-donations')}</h1>
                             <p>{__('With the API mode still on "Test" make a payment using your button. If it all looks good then you can switch to "Live".', 'kudos-donations')}</p>
                             <p>{__('Good luck with your campaign!', 'kudos-donations')}</p>
-                            <p><ExternalLink href="https://kudosdonations.com/faq/">Visit our F.A.Q</ExternalLink></p>
+                            <p><ExternalLink href="https://kudosdonations.com/faq/">{__('Visit our F.A.Q', 'kudos-donations')}</ExternalLink></p>
                         </div>
                     ,
                 },
