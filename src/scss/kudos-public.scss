@@ -32,12 +32,12 @@
 }
 
 .kudos_form_modal {
-  &.kudos_loading {
+  &.kd-is-loading {
     .kudos_modal_container::before {
       z-index: 1;
     }
 
-    .kudos_spinner {
+    .kd-spinner {
       @apply kd-block #{'!important'};
     }
   }
