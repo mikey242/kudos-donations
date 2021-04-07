@@ -122,7 +122,7 @@ jQuery(document).ready(($) => {
                                     $form[0].reset()
 
                                     // Set first input as focus
-                                    $form.find('input[name="value"]:first').focus()
+                                    $form.find('input[name="value"]:first').trigger('focus')
                                 }
                             },
                             onClose(modal) {
@@ -146,6 +146,7 @@ jQuery(document).ready(($) => {
         // Multi step form navigation
         $('.kudos_modal [data-direction]').on('click', function () {
             if (animating) return false
+            // Cache selectors
             const $current_tab = $(this).closest('.form-tab')
             const $modal = $(this).closest('.kudos_modal_container')
             const $inputs = $current_tab.find(':input')
@@ -235,7 +236,7 @@ jQuery(document).ready(($) => {
                     const error = modal.querySelector('.kudos_error_message')
                     const formData = new FormData(e.target)
 
-                    modal.classList.add('kudos_loading')
+                    modal.classList.add('kd-is-loading')
 
                     axios.post(kudos.createPaymentUrl, JSON.stringify(Object.fromEntries(formData)), {
                         headers: {
@@ -248,7 +249,7 @@ jQuery(document).ready(($) => {
                         } else {
                             error.innerHTML = result.data.data.message
                             modal.classList.add('error')
-                            modal.classList.remove('kudos_loading')
+                            modal.classList.remove('kd-is-loading')
                         }
                     })
                 }
