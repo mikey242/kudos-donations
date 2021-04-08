@@ -1,4 +1,5 @@
 module.exports = {
+  mode: 'jit',
   prefix: 'kd-',
   important: true,
   purge: {
@@ -115,13 +116,6 @@ module.exports = {
         'slide-out': 'slideOut 0.3s cubic-bezier(0, 0, 0.2, 1)'
       }
     },
-  },
-  variants: {
-    backgroundColor: ['hover', 'checked'],
-    borderColor: ['focus'],
-    textColor: ['hover'],
-    boxShadow: ['focus'],
-    outline: ['focus']
   },
   plugins: [],
   corePlugins: {
