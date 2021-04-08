@@ -420,7 +420,7 @@ class MollieVendor extends AbstractVendor {
 	public function rest_webhook( WP_REST_Request $request ) {
 
 		// ID is case sensitive (e.g: tr_HUW39xpdFN).
-		$id = sanitize_text_field( $request->get_param( 'id' ) );
+		$id = $request->get_param( 'id' );
 
 		/**
 		 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
