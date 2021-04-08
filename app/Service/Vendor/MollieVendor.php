@@ -435,7 +435,7 @@ class MollieVendor extends AbstractVendor {
 		$response->add_link( 'self', rest_url( $request->get_route() ) );
 
 		/**
-		 * Get the payment object from Mollie
+		 * Get the payment object from Mollie.
 		 *
 		 * @var Payment $payment Mollie payment object.
 		 */
@@ -502,7 +502,7 @@ class MollieVendor extends AbstractVendor {
 				]
 			);
 
-			$this->logger->info( 'Payment refunded', [ $transaction ] );
+			$this->logger->info( 'Payment refunded.', [ 'transaction' => $transaction ] );
 
 		} else {
 			// Check if status is the same (in case of multiple webhook calls).
@@ -556,7 +556,7 @@ class MollieVendor extends AbstractVendor {
 
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 
-			// Get schedule processing for later.
+			// Schedule processing for later.
 			Utils::schedule_action( strtotime( '+1 minute' ), 'kudos_mollie_transaction_paid', [ $order_id ] );
 
 			// Set up recurring payment if sequence is first.
