@@ -56,10 +56,10 @@
     </div>
 {% endmacro %}
 
-{% macro checkbox(name, label, value='true', required=true) %}
+{% macro checkbox(name, label, required=true) %}
     {% from _self import input %}
     <label class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
-        {{ input(name, label, value, 'checkbox', required) }}
+        {{ input(name, label, 'true', 'checkbox', required) }}
         {{ label | wp_kses_post }}
     </label>
 {% endmacro %}
