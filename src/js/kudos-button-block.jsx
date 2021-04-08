@@ -1,5 +1,5 @@
 import logo from '../img/logo-colour.svg'
-import {KudosLogo} from "./Settings/Components/KudosLogo"
+import {KudosButton} from "./Settings/Components/KudosButton"
 
 /**
  * Internal block libraries
@@ -140,33 +140,20 @@ export default registerBlockType('iseardmedia/kudos-button', {
                         />
                     </BlockControls>
 
-                    <div
-                        className={
-                            'kudos-donations ' + (this.props.attributes.className ?? '') + ' has-text-align-' + this.props.attributes.alignment
-                        }
-                    >
-                        <Button
-                            className={'kd-transition kd-logo-animate kd-ease-in-out focus:kd-shadow-focus focus:kd-outline-none kd-font-sans kd-text-center kd-text-white kd-leading-normal kd-text-base kd-font-normal kd-normal-case kd-no-underline kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none kd-border-none kd-bg-primary hover:kd-bg-primary-dark kudos_button_donate'}>
-                            <div className='kd-mr-3 kd-flex'>
-                                <KudosLogo
-                                    lineColor='currentColor'
-                                    heartColor='currentColor'
-                                />
-                            </div>
-                            <RichText
-                                style={{backgroundColor: kudos.color_primary}}
-                                formattingControls={[
-                                    'bold',
-                                    'italic',
-                                    'text-color',
-                                    'strikethrough',
-                                ]}
-                                // tagName="button"
-                                onChange={this.onChangeButtonLabel}
-                                value={this.props.attributes.button_label}
-                            />
-                        </Button>
-                    </div>
+                    <KudosButton
+                        className={(this.props.attributes.className ?? '') + ' has-text-align-' + this.props.attributes.alignment}>
+                        <RichText
+                            formattingControls={[
+                                'bold',
+                                'italic',
+                                'text-color',
+                                'strikethrough',
+                            ]}
+                            onChange={this.onChangeButtonLabel}
+                            value={this.props.attributes.button_label}
+                        />
+                    </KudosButton>
+
                 </div>
             )
         }
