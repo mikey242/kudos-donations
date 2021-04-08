@@ -110,6 +110,7 @@ e.g:
 == Changelog ==
 
 = 2.4.8 =
+* Change 'country' field to drop-down select
 * Change 'back' and 'close' icon colors on modal to grey
 * Switch to using sanitize_callbacks to sanitize all rest data
 * Upgrade TailwindCSS to 2.1.1
