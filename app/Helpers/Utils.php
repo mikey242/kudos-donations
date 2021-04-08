@@ -314,4 +314,20 @@ class Utils {
 		return sprintf( "%.{$decimals}f", $bytes / pow( 1024, $factor ) ) . @$sz[ $factor ];
 	}
 
+	/**
+	 * Uses regex that accepts any word character or hyphen in last name.
+	 *
+	 * @param $name
+	 * @source https://stackoverflow.com/questions/13637145/split-text-string-into-first-and-last-name-in-php
+	 *
+	 * @return array
+	 */
+	public static function split_name( $name ): array {
+		$name       = trim( $name );
+		$last_name  = ( strpos( $name, ' ' ) === false ) ? '' : preg_replace( '#.*\s([\w-]*)$#', '$1', $name );
+		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
+
+		return array( $first_name, $last_name );
+	}
+
 }
