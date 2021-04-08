@@ -375,9 +375,7 @@
                             format( '<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')) }}
                     {% endif %}
 
-                    {% if(newsletter_enabled) %}
-                        {{ checkbox('newsletter', __( 'Yes, I would like to recieve your newsletter.', 'kudos-donations' ), true, false) }}
-                    {% endif %}
+                    {{ do_action('kudos_donate_modal_final_extra') }}
 
                 {% endblock %}
                 {% block next_button %}
