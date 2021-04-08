@@ -127,19 +127,24 @@ class PaymentService extends AbstractService {
 			] );
 		}
 
-		// Sanitize form fields.
-		$value             = intval( $request['value'] );
-		$payment_frequency = isset( $request['recurring_frequency'] ) ? sanitize_text_field( $request['recurring_frequency'] ) : 'oneoff';
-		$recurring_length  = isset( $request['recurring_length'] ) ? intval( $request['recurring_length'] ) : 0;
-		$name              = isset( $request['name'] ) ? sanitize_text_field( $request['name'] ) : null;
-		$business_name     = isset( $request['business_name'] ) ? sanitize_text_field( $request['business_name'] ) : null;
-		$email             = isset( $request['email_address'] ) ? sanitize_email( $request['email_address'] ) : null;
-		$street            = isset( $request['street'] ) ? sanitize_text_field( $request['street'] ) : null;
-		$postcode          = isset( $request['postcode'] ) ? sanitize_text_field( $request['postcode'] ) : null;
-		$city              = isset( $request['city'] ) ? sanitize_text_field( $request['city'] ) : null;
-		$country           = isset( $request['country'] ) ? sanitize_text_field( $request['country'] ) : null;
-		$redirect_url      = isset( $request['return_url'] ) ? sanitize_text_field( $request['return_url'] ) : null;
-		$campaign_id       = isset( $request['campaign_id'] ) ? sanitize_text_field( $request['campaign_id'] ) : null;
+		$values = $request->get_json_params();
+
+		// Add submit action and pass form data.
+		do_action('kudos_submit_payment_data', $values);
+
+		// Assign form fields.
+		$value             = $values['value'];
+		$payment_frequency = isset( $values['recurring_frequency'] ) ? $values['recurring_frequency'] : 'oneoff';
+		$recurring_length  = isset( $values['recurring_length'] ) ? $values['recurring_length'] : 0;
+		$name              = isset( $values['name'] ) ? $values['name'] : null;
+		$business_name     = isset( $values['business_name'] ) ? $values['business_name'] : null;
+		$email             = isset( $values['email_address'] ) ? $values['email_address'] : null;
+		$street            = isset( $values['street'] ) ? $values['street'] : null;
+		$postcode          = isset( $values['postcode'] ) ? $values['postcode'] : null;
+		$city              = isset( $values['city'] ) ? $values['city'] : null;
+		$country           = isset( $values['country'] ) ? $values['country'] : null;
+		$redirect_url      = isset( $values['return_url'] ) ? $values['return_url'] : null;
+		$campaign_id       = isset( $values['campaign_id'] ) ? $values['campaign_id'] : null;
 
 		$mapper = new MapperService( DonorEntity::class );
 
@@ -178,6 +183,8 @@ class PaymentService extends AbstractService {
 
 		$customer_id = $donor->customer_id ?? null;
 
+		do_action('kudos_payment_submit_successful', $values);
+
 		$result = $this->create_payment(
 			$value,
 			$payment_frequency,
@@ -191,6 +198,7 @@ class PaymentService extends AbstractService {
 
 		// Return checkout url if payment successfully created in Mollie
 		if ( $result instanceof Payment ) {
+			do_action('kudos_payment_submit_successful', $values);
 			wp_send_json_success( $result->getCheckoutUrl() );
 		}
 

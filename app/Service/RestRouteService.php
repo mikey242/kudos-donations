@@ -60,6 +60,73 @@ class RestRouteService {
 				'methods'             => 'POST',
 				'callback'            => [ $payment, 'submit_payment' ],
 				'permission_callback' => '__return_true',
+				'args'                => [
+					'return_url'        => [
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'campaign_id'       => [
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'value'             => [
+						'type'              => 'integer',
+						'required'          => true,
+						'sanitize_callback' => 'absint',
+					],
+					'name'              => [
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'email_address'     => [
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_email',
+					],
+					'payment_frequency' => [
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'business_name'     => [
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'street'            => [
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'postcode'          => [
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'city'              => [
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'country'           => [
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'privacy'           => [
+						'type'              => 'boolean',
+						'required'          => false,
+						'sanitize_callback' => 'rest_sanitize_boolean',
+					],
+					'terms'             => [
+						'type'              => 'boolean',
+						'required'          => false,
+						'sanitize_callback' => 'rest_sanitize_boolean',
+					],
+				],
 			],
 
 			self::PAYMENT_WEBHOOK => [
@@ -67,7 +134,9 @@ class RestRouteService {
 				'callback'            => [ $payment, 'handle_webhook' ],
 				'args'                => [
 					'id' => [
+						'type'     => 'string',
 						'required' => true,
+						'sanitize_callback' => 'sanitize_text_field'
 					],
 				],
 				'permission_callback' => '__return_true',
@@ -99,7 +168,9 @@ class RestRouteService {
 				'callback'            => [ $mailer, 'send_test' ],
 				'args'                => [
 					'email' => [
+						'type'     => 'string',
 						'required' => true,
+						'sanitize_callback' => 'sanitize_email'
 					],
 				],
 				'permission_callback' => function () {
@@ -117,8 +188,8 @@ class RestRouteService {
 	public function register_all() {
 
 		foreach ( $this->routes as $service ) {
-			foreach ( $service as $key => $route ) {
-				register_rest_route( self::NAMESPACE, $key, $route );
+			foreach ( $service as $route => $args ) {
+				register_rest_route( self::NAMESPACE, $route, $args );
 			}
 		}
 
