@@ -8,6 +8,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Throwable;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
@@ -29,7 +30,7 @@ class TwigService extends AbstractService {
 	 *
 	 * @var array
 	 */
-	private $templates_dir;
+	private $template_paths;
 
 	/**
 	 * Twig options
@@ -41,20 +42,20 @@ class TwigService extends AbstractService {
 	/**
 	 * Twig constructor
 	 *
-	 * @param array $templates_dir Templates directory array.
+	 * @param array $template_paths Templates directory array.
 	 * @param array $options Twig options.
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct( array $templates_dir = [], array $options = [] ) {
+	public function __construct( array $template_paths = [], array $options = [] ) {
 
 		parent::__construct();
 
-		$this->templates_dir    = $templates_dir;
-		$this->templates_dir[]  = KUDOS_PLUGIN_DIR . '/templates/';
-		$this->options          = $options;
-		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
-		$this->options['debug'] = KUDOS_DEBUG;
+		$this->template_paths[]        = KUDOS_PLUGIN_DIR . '/templates/'; // Always add main template directory to paths.
+		$this->template_paths['extra'] = $template_paths; // Add extra under '@extra' namespace.
+		$this->options                 = $options;
+		$this->options['cache']        = KUDOS_DEBUG ? false : self::CACHE_DIR;
+		$this->options['debug']        = KUDOS_DEBUG;
 		$this->initialize_twig();
 		$this->initialize_twig_extensions();
 		$this->initialize_twig_functions();
@@ -67,7 +68,18 @@ class TwigService extends AbstractService {
 	 */
 	public function initialize_twig() {
 
-		$loader     = new FilesystemLoader( $this->templates_dir );
+		$loader = new FilesystemLoader();
+		foreach ( $this->template_paths as $namespace => $path ) {
+			if ( is_string( $namespace ) ) {
+				$loader->setPaths( $path, $namespace );
+			} else {
+				try {
+					$loader->addPath( $path );
+				} catch (LoaderError $e) {
+					$this->logger->error($e->getMessage());
+				}
+			}
+		}
 		$this->twig = new Environment( $loader, $this->options );
 
 	}
@@ -119,6 +131,12 @@ class TwigService extends AbstractService {
 		 */
 		$get_asset = new TwigFunction( 'get_asset', [ Utils::class, 'get_asset_url' ] );
 		$this->twig->addFunction( $get_asset );
+
+		/**
+		 * Add do_action function.
+		 */
+		$do_action = new TwigFunction( 'do_action', 'do_action' );
+		$this->twig->addFunction( $do_action );
 	}
 
 	/**
