@@ -79,8 +79,8 @@ class KudosModal {
 
 		$this->template = self::MESSAGE_TEMPLATE;
 
-		apply_filters( 'kudos_message_modal_data',
-			$this->data = [
+		$this->data = apply_filters( 'kudos_message_modal_data',
+			[
 				'modal_id'    => 'kudos_modal-message-' . $this->modal_id,
 				'modal_title' => $title ?? '',
 				'modal_text'  => $message ?? '',
@@ -101,8 +101,8 @@ class KudosModal {
 	 */
 	public function create_donate_modal( string $campaign_id ): ?string {
 
-		$campaigns       = new Campaigns();
-		$campaign        = $campaigns->get_campaign( $campaign_id );
+		$campaigns = new Campaigns();
+		$campaign  = $campaigns->get_campaign( $campaign_id );
 
 		// Check if there is a campaign, otherwise throw an exception.
 		if ( empty( $campaign ) ) {
@@ -111,12 +111,12 @@ class KudosModal {
 		}
 
 		$campaign['total'] = $campaigns::get_campaign_stats( $campaign_id )['total'];
-		$this->template  = self::DONATE_TEMPLATE;
-		$vendor_settings = Settings::get_current_vendor_settings();
+		$this->template    = self::DONATE_TEMPLATE;
+		$vendor_settings   = Settings::get_current_vendor_settings();
 
 		// Merge global settings with provided data
-		apply_filters( 'kudos_donate_modal_data',
-			$this->data = [
+		$this->data = apply_filters( 'kudos_donate_modal_data',
+			[
 				'modal_id'          => $this->modal_id,
 				'campaign'          => $campaign,
 				'return_url'        => Utils::get_return_url(),

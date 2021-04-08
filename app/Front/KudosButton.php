@@ -82,11 +82,12 @@ class KudosButton {
 		}
 
 		$button = $this->twig->render( 'public/kudos.button.html.twig',
+			apply_filters( 'kudos_donate_button_data',
 			[
 				'alignment' => $this->alignment,
 				'label'     => $this->button_label,
 				'target'    => $this->target_id,
-			] );
+			] ));
 
 		return $button . $modal;
 
