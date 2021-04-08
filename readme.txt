@@ -109,6 +109,11 @@ e.g:
 
 == Changelog ==
 
+= 2.4.8 =
+* Change 'back' and 'close' icon colors on modal to grey
+* Switch to using sanitize_callbacks to sanitize all rest data
+* Upgrade TailwindCSS to 2.1.1
+
 = 2.4.7 =
 * Various visual tweaks to the donation form
 * Add 'backface-visibility' css rule to logo to ensure it remains visible when animating
