@@ -47,7 +47,7 @@ class RestRouteService {
 	}
 
 	/**
-	 * Payment service routes
+	 * Payment service routes.
 	 *
 	 * @since 2.3.4
 	 */

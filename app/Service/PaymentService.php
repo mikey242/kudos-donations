@@ -443,7 +443,7 @@ class PaymentService extends AbstractService {
 	}
 
 	/**
-	 * Webhook handler
+	 * Webhook handler. Passes request to rest_webhook method of current vendor.
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 *
