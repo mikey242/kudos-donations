@@ -13,7 +13,7 @@ if ( ! defined( 'JSON_INVALID_UTF8_SUBSTITUTE' ) ) {
 
 class LoggerService extends Monolog {
 
-	const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
+	const LOG_DIR = KUDOS_STORAGE['dir'] . 'logs/';
 	const LOG_FILE = self::LOG_DIR . 'kudos.log';
 
 	/**

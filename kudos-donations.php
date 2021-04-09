@@ -42,10 +42,8 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 define( 'KUDOS_VERSION', '2.4.8' );
-define( 'KUDOS_PLUGIN_DIR', dirname( __FILE__ ) );
-define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
-define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
+define( 'KUDOS_PLUGIN', [ 'url' => plugin_dir_url( __FILE__ ), 'dir' => dirname( __FILE__ ) ] );
+define( 'KUDOS_STORAGE', [ 'url' => wp_upload_dir()['baseurl'] . '/kudos-donations/', 'dir' => wp_upload_dir()['basedir'] . '/kudos-donations/' ] );
 define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
 
 /**
@@ -53,7 +51,7 @@ define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
  * This action is documented in app/Service/ActivatorService.php
  */
 function activate_kudos() {
-	require_once KUDOS_PLUGIN_DIR . '/app/Service/ActivatorService.php';
+	require_once KUDOS_PLUGIN['dir'] . '/app/Service/ActivatorService.php';
 	ActivatorService::activate();
 }
 
@@ -62,7 +60,7 @@ function activate_kudos() {
  * This action is documented in app/Service/DeactivatorService.php
  */
 function deactivate_kudos() {
-	require_once KUDOS_PLUGIN_DIR . '/app/Service/DeactivatorService.php';
+	require_once KUDOS_PLUGIN['dir'] . '/app/Service/DeactivatorService.php';
 	DeactivatorService::deactivate();
 }
 
@@ -73,7 +71,7 @@ register_deactivation_hook( __FILE__, __NAMESPACE__ . '\deactivate_kudos' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require KUDOS_PLUGIN_DIR . '/app/KudosDonations.php';
+require KUDOS_PLUGIN['dir'] . '/app/KudosDonations.php';
 
 /**
  * Begins execution of the plugin.

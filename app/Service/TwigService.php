@@ -16,7 +16,7 @@ use Twig\TwigFunction;
 
 class TwigService extends AbstractService {
 
-	const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
+	const CACHE_DIR = KUDOS_STORAGE['dir'] . 'twig/cache/';
 
 	/**
 	 * Twig environment.
@@ -51,7 +51,7 @@ class TwigService extends AbstractService {
 
 		parent::__construct();
 
-		$this->template_paths[]        = KUDOS_PLUGIN_DIR . '/templates/'; // Always add main template directory to paths.
+		$this->template_paths[]        = KUDOS_PLUGIN['dir'] . '/templates/'; // Always add main template directory to paths.
 		$this->template_paths['extra'] = $template_paths; // Add extra under '@extra' namespace.
 		$this->options                 = $options;
 		$this->options['cache']        = KUDOS_DEBUG ? false : self::CACHE_DIR;

@@ -125,7 +125,7 @@ class Front {
 		);
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_location( 'kudos-public.js' ),
+			Utils::get_asset_url( 'kudos-public.js' ),
 			[ 'jquery', 'micromodal', 'jquery-validate' ],
 			$this->version,
 			true
@@ -138,7 +138,7 @@ class Front {
 				'createPaymentUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_CREATE ),
 			]
 		);
-		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN['dir'] . '/languages' );
 
 	}
 
@@ -151,7 +151,7 @@ class Front {
 
 		// Enqueue public css
 		wp_enqueue_style( $this->plugin_name . '-public',
-			Utils::get_asset_location( 'kudos-public.css' ),
+			Utils::get_asset_url( 'kudos-public.css' ),
 			[],
 			$this->version );
 
@@ -159,7 +159,7 @@ class Front {
 		$handle = $this->plugin_name . '-button-block';
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_location( 'kudos-button-block.js' ),
+			Utils::get_asset_url( 'kudos-button-block.js' ),
 			[
 				'wp-i18n',
 				'wp-edit-post',
@@ -181,7 +181,7 @@ class Front {
 				'color_primary' => Settings::get_setting( 'color_primary' ),
 			]
 		);
-		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN['dir'] . '/languages' );
 
 		// Output root styles
 		$this->get_kudos_root_styles();

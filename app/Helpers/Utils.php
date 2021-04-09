@@ -5,7 +5,7 @@ namespace Kudos\Helpers;
 class Utils {
 
 	/**
-	 * Gets url Mollie will use to return customer to after payment complete
+	 * Gets url Mollie will use to return customer to after payment complete.
 	 *
 	 * @return string|void
 	 * @since   1.0.0
@@ -33,25 +33,48 @@ class Utils {
 	 * Fallback: the default asset name will be passed through.
 	 *
 	 * @source https://danielshaw.co.nz/wordpress-cache-busting-json-hash-map/
-	 * @param string $asset e.g style.css.
-	 * @param bool $path Whether to return the path or url.
+	 * @param string $url e.g style.css.
 	 *
-	 * @return string
+	 * @return array
 	 * @since   1.0.0
 	 */
-	public static function get_asset_location( string $asset, bool $path = false ): string {
-
-		$map      = KUDOS_PLUGIN_URL . 'dist/assets-manifest.json';
+	private static function get_asset_manifest( string $url ): array {
+		$map      = $url . 'dist/assets-manifest.json';
 		$request  = wp_remote_get( $map );
 		$response = wp_remote_retrieve_body( $request );
-		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
 
+		return ! empty( $response ) ? json_decode( $response, true ) : [];
+	}
+
+	/**
+	 * Uses manifest to get asset URL.
+	 *
+	 * @param string $asset
+	 * @param array $base
+	 *
+	 * @return string
+	 */
+	public static function get_asset_url( string $asset, array $base = KUDOS_PLUGIN ): string {
+		$hash = self::get_asset_manifest( $base['url'] );
 		if ( array_key_exists( $asset, $hash ) ) {
-			if ( ! $path ) {
-				return KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ];
-			}
+			return $base['url'] . 'dist/' . $hash[ $asset ];
+		}
 
-			return KUDOS_PLUGIN_DIR . '/dist/' . $hash[ $asset ];
+		return $asset;
+	}
+
+	/**
+	 * Uses manifest to get asset path.
+	 *
+	 * @param string $asset
+	 * @param array $base
+	 *
+	 * @return string
+	 */
+	public static function get_asset_path( string $asset, array $base = KUDOS_PLUGIN ): string {
+		$hash = self::get_asset_manifest( $base['url'] );
+		if ( array_key_exists( $asset, $hash ) ) {
+			return $base['dir'] . '/dist/' . $hash[ $asset ];
 		}
 
 		return $asset;
@@ -72,13 +95,13 @@ class Utils {
 	 */
 	public static function get_asset_content( string $asset ): string {
 
-		$map      = KUDOS_PLUGIN_URL . 'dist/assets-manifest.json';
+		$map      = KUDOS_PLUGIN['url'] . 'dist/assets-manifest.json';
 		$request  = wp_remote_get( $map );
 		$response = wp_remote_retrieve_body( $request );
 		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
 
 		if ( array_key_exists( $asset, $hash ) ) {
-			$asset_request = wp_remote_get( KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ] );
+			$asset_request = wp_remote_get( KUDOS_PLUGIN['url'] . 'dist/' . $hash[ $asset ] );
 
 			return wp_remote_retrieve_body( $asset_request );
 		}
