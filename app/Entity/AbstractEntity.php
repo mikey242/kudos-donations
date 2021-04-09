@@ -80,9 +80,7 @@ abstract class AbstractEntity implements EntityInterface {
 
 		add_action(
 			static::get_table_name( false ) . '_remove_secret_action',
-			[ static::class, 'remove_secret_action' ],
-			10,
-			2
+			[ static::class, 'remove_secret_action' ]
 		);
 
 	}
