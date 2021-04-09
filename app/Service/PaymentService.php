@@ -83,6 +83,18 @@ class PaymentService extends AbstractService {
 	}
 
 	/**
+	 * Schedules processing of successful transaction.
+	 *
+	 * @param string $order_id
+	 */
+	public static function schedule_process_transaction( string $order_id ) {
+		Utils::schedule_action(
+			strtotime( '+1 minute' ),
+			'kudos_process_' . strtolower( self::get_vendor_name() ) . '_transaction',
+			[ $order_id ] );
+	}
+
+	/**
 	 * Processes the transaction. Used by action scheduler.
 	 *
 	 * @param string $order_id Kudos order id.
