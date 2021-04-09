@@ -123,7 +123,7 @@ class KudosModal {
 				'vendor'            => Settings::get_setting( 'payment_vendor' ),
 				'privacy_link'      => Settings::get_setting( 'privacy_link' ),
 				'terms_link'        => Settings::get_setting( 'terms_link' ),
-				'recurring_allowed' => isset( $vendor_settings['recurring'] ) ? $vendor_settings['recurring'] : false,
+				'recurring_allowed' => $vendor_settings['recurring'] ?? false,
 			]
 		);
 

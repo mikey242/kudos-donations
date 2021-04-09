@@ -11,7 +11,7 @@ use Kudos\Service\LoggerService;
 
 // Get the active tab from the $_GET param.
 $default_tab = 'log';
-$tab         = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
+$tab         = $_GET['tab'] ?? $default_tab;
 
 ?>
 

@@ -69,9 +69,9 @@ class PaymentService extends AbstractService {
 	public static function is_api_ready(): bool {
 
 		$settings  = Settings::get_current_vendor_settings();
-		$connected = isset( $settings['connected'] ) ? $settings['connected'] : false;
-		$mode      = isset( $settings['mode'] ) ? $settings['mode'] : '';
-		$key       = isset( $settings[ $mode . '_key' ] ) ? $settings[ $mode . '_key' ] : null;
+		$connected = $settings['connected'] ?? false;
+		$mode      = $settings['mode'] ?? '';
+		$key       = $settings[ $mode . '_key' ] ?? null;
 
 		if ( ! $connected || ! $key ) {
 			return false;
@@ -134,17 +134,17 @@ class PaymentService extends AbstractService {
 
 		// Assign form fields.
 		$value             = $values['value'];
-		$payment_frequency = isset( $values['recurring_frequency'] ) ? $values['recurring_frequency'] : 'oneoff';
-		$recurring_length  = isset( $values['recurring_length'] ) ? $values['recurring_length'] : 0;
-		$name              = isset( $values['name'] ) ? $values['name'] : null;
-		$business_name     = isset( $values['business_name'] ) ? $values['business_name'] : null;
-		$email             = isset( $values['email_address'] ) ? $values['email_address'] : null;
-		$street            = isset( $values['street'] ) ? $values['street'] : null;
-		$postcode          = isset( $values['postcode'] ) ? $values['postcode'] : null;
-		$city              = isset( $values['city'] ) ? $values['city'] : null;
-		$country           = isset( $values['country'] ) ? $values['country'] : null;
-		$redirect_url      = isset( $values['return_url'] ) ? $values['return_url'] : null;
-		$campaign_id       = isset( $values['campaign_id'] ) ? $values['campaign_id'] : null;
+		$payment_frequency = $values['recurring_frequency'] ?? 'oneoff';
+		$recurring_length  = $values['recurring_length'] ?? 0;
+		$name              = $values['name'] ?? null;
+		$business_name     = $values['business_name'] ?? null;
+		$email             = $values['email_address'] ?? null;
+		$street            = $values['street'] ?? null;
+		$postcode          = $values['postcode'] ?? null;
+		$city              = $values['city'] ?? null;
+		$country           = $values['country'] ?? null;
+		$redirect_url      = $values['return_url'] ?? null;
+		$campaign_id       = $values['campaign_id'] ?? null;
 
 		$mapper = new MapperService( DonorEntity::class );
 

@@ -305,7 +305,7 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_name( array $item ): ?string {
 
-		$customer_id = isset( $item['customer_id'] ) ? $item['customer_id'] : null;
+		$customer_id = $item['customer_id'] ?? null;
 
 		if ( $customer_id ) {
 			return sprintf(
@@ -315,7 +315,7 @@ class TransactionsTable extends WP_List_Table {
 			);
 		}
 
-		return isset( $item['name'] ) ? $item['name'] : '';
+		return $item['name'] ?? '';
 
 	}
 

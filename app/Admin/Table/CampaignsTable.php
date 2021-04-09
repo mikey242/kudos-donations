@@ -99,10 +99,10 @@ class CampaignsTable extends WP_List_Table {
 			$campaign_total = $this->campaigns::get_campaign_stats( $id );
 
 			$campaigns[ $key ]['currency']     = 'EUR';
-			$campaigns[ $key ]['date']         = isset( $campaign_total['last_donation'] ) ? $campaign_total['last_donation'] : null;
-			$campaigns[ $key ]['goal']         = isset( $campaign['campaign_goal'] ) ? $campaign['campaign_goal'] : null;
-			$campaigns[ $key ]['total']        = isset( $campaign_total['total'] ) ? $campaign_total['total'] : null;
-			$campaigns[ $key ]['transactions'] = isset( $campaign_total['count'] ) ? $campaign_total['count'] : null;
+			$campaigns[ $key ]['date']         = $campaign_total['last_donation'] ?? null;
+			$campaigns[ $key ]['goal']         = $campaign['campaign_goal'] ?? null;
+			$campaigns[ $key ]['total']        = $campaign_total['total'] ?? null;
+			$campaigns[ $key ]['transactions'] = $campaign_total['count'] ?? null;
 		}
 
 		return $campaigns;
