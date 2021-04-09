@@ -444,6 +444,8 @@ class Admin {
 					ActivatorService::activate();
 					new AdminNotice( __( 'Database re-created', 'kudos-donations' ) );
 			}
+
+			do_action( 'kudos_admin_actions_extra', $action );
 		}
 
 	}
