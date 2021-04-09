@@ -8,7 +8,6 @@ const {__} = wp.i18n
 const {Component} = wp.element
 const {registerBlockType} = wp.blocks
 const {
-    Button,
     PanelBody,
     SelectControl,
 } = wp.components
