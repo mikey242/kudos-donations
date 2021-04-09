@@ -216,7 +216,7 @@ class Admin {
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 		wp_enqueue_style(
-			'kudos-donations-admin-react',
+			$handle,
 			Utils::get_asset_location( 'kudos-admin-settings.css' ),
 			[ 'wp-components' ],
 			$this->version
