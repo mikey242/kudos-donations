@@ -206,6 +206,8 @@ $tab         = $_GET['tab'] ?? $default_tab;
 					</button>
 				</form>
 
+				<?php do_action( 'kudos_debug_menu_actions_extra', $url ); ?>
+
 
 				<?php
 				break;
