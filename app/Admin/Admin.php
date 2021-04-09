@@ -342,7 +342,7 @@ class Admin {
 			$nonce  = wp_unslash( $_REQUEST['_wpnonce'] );
 
 			// Check nonce.
-			if ( ! wp_verify_nonce( $nonce, 'kudos_debug_action' ) ) {
+			if ( ! wp_verify_nonce( $nonce, $action ) ) {
 				die();
 			}
 

@@ -52,10 +52,14 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
 				      method='post'>
-					<?php wp_nonce_field( 'kudos_debug_action' ); ?>
+					<?php wp_nonce_field( 'kudos_log_clear' ); ?>
 					<button class="button-secondary confirm" name='kudos_action' type='submit' value='kudos_log_clear'>
 						Clear
 					</button>
+				</form>
+				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
+				      method='post'>
+					<?php wp_nonce_field( 'kudos_log_download' ); ?>
 					<button class="button-secondary" name='kudos_action' type='submit' value='kudos_log_download'>
 						Download
 					</button>
@@ -125,59 +129,81 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<hr/>
 
 				<p>This will clear the selected settings from the database and reset them back to default.</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_debug_action' ); ?>
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+					<?php wp_nonce_field( 'kudos_clear_mollie' ); ?>
 					<button type='submit' class="button-secondary confirm" name='kudos_action'
 					        value='kudos_clear_mollie'>
 						Reset Mollie settings
 					</button>
+				</form>
+
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+					<?php wp_nonce_field( 'kudos_clear_campaigns' ); ?>
 					<button type='submit' class="button-secondary confirm" name='kudos_action'
 					        value='kudos_clear_campaigns'>
 						Reset campaigns settings
 					</button>
+				</form>
+
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+					<?php wp_nonce_field( 'kudos_clear_all' ); ?>
 					<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_clear_all'>
 						Reset all settings
 					</button>
+				</form>
 
-					<hr/>
+				<hr/>
 
-					<p>This will clear the twig cache.</p>
+				<p>This will clear the twig cache.</p>
+				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+					<?php wp_nonce_field( 'kudos_clear_cache' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_clear_cache'>Clear cache
 					</button>
+				</form>
 
-					<hr/>
+				<hr/>
 
-					<p>Remove all transactions</p>
+				<p>Remove all transactions</p>
+				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+					<?php wp_nonce_field( 'kudos_clear_transactions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_clear_transactions'>Delete all
 						transactions
 					</button>
+				</form>
 
-					<hr/>
+				<hr/>
 
-					<p>Remove all donors</p>
+				<p>Remove all donors</p>
+				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+					<?php wp_nonce_field( 'kudos_clear_donors' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_clear_donors'>Delete all
 						donors
 					</button>
+				</form>
 
-					<hr/>
+				<hr/>
 
-					<p>Remove all subscriptions</p>
+				<p>Remove all subscriptions</p>
+				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+					<?php wp_nonce_field( 'kudos_clear_subscriptions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_clear_subscriptions'>Delete all
 						subscriptions
 					</button>
+				</form>
 
-					<hr/>
+				<hr/>
 
-					<p>This will <strong>delete all Kudos data</strong> and recreate the database</p>
+				<p>This will <strong>delete all Kudos data</strong> and recreate the database</p>
+				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+					<?php wp_nonce_field( 'kudos_recreate_database' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_recreate_database'>Recreate
 						database
 					</button>
-
 				</form>
 
 
