@@ -56,6 +56,7 @@ This software uses the following open source packages:
 - [jQuery Validation](https://github.com/jquery-validation/jquery-validation) - Provides drop-in validation for your existing forms. 
 - [Twig](https://twig.symfony.com/) - A modern template engine for PHP.
 - [WordPress Plugin Boilerplate](https://github.com/DevinVinson/WordPress-Plugin-Boilerplate) -  A foundation for WordPress Plugin Development.
+- [ActionScheduler](https://actionscheduler.org/) - WordPress Job Queue with Background Processing
 - [Webpack](https://webpack.js.org/) - Module bundler.
 - [Babel](https://github.com/babel/babel-loader) - A compiler for writing next generation JavaScript.
 - [PostCSS](https://github.com/postcss/postcss-loader) - A tool for transforming CSS with JavaScript.
