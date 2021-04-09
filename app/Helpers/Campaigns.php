@@ -29,7 +29,7 @@ class Campaigns {
 	public function sanitize_campaigns( $campaigns ): array {
 
 		// Loop through each of the campaigns sanitizing the data.
-		foreach ( $campaigns as $key => &$form ) {
+		foreach ( $campaigns as &$form ) {
 
 			if ( ! isset( $form['id'] ) ) {
 				$form['id'] = $this->generate_id( $form['name'] );

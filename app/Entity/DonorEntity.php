@@ -71,13 +71,15 @@ class DonorEntity extends AbstractEntity {
 	/**
 	 * Gets all transactions for current user
 	 *
-	 * @return array|null
+	 * @return TransactionEntity|null
 	 */
-	public function get_transactions(): ?array {
+	public function get_transactions(): ?TransactionEntity {
 
 		$mapper = new MapperService( TransactionEntity::class );
+		/** @var TransactionEntity $transactions */
+		$transactions = $mapper->get_all_by( [ 'customer_id' => $this->customer_id ] );
 
-		return $mapper->get_all_by( [ 'customer_id' => $this->customer_id ] );
+		return $transactions ?? null;
 
 	}
 

@@ -193,7 +193,7 @@ class MapperService extends AbstractService {
 	/**
 	 * Gets the current repository
 	 *
-	 * @return string
+	 * @return EntityInterface
 	 * @since 2.0.5
 	 */
 	public function get_repository(): ?string {
@@ -245,9 +245,9 @@ class MapperService extends AbstractService {
 
 		$query_string = $this->array_to_where( $query_fields, $operator );
 		$table        = $this->get_table_name();
-		$query        = "SELECT ${table}.* FROM ${table} $query_string LIMIT 1";
+		$query        = "SELECT $table.* FROM $table $query_string LIMIT 1";
 
-		$result = $this->get_results( $query, ARRAY_A );
+		$result = $this->get_results( $query );
 
 		if ( $result ) {
 			// Return result as Entity specified in repository.
@@ -277,7 +277,7 @@ class MapperService extends AbstractService {
 					$field = $wpdb->prepare( '%s IS NOT NULL', $field );
 				} else {
 					$key   = esc_sql( $key );
-					$field = $wpdb->prepare( "${key} = %s", $field );
+					$field = $wpdb->prepare( "$key = %s", $field );
 				}
 			}
 		);
@@ -325,7 +325,9 @@ class MapperService extends AbstractService {
 		if ( $records ) {
 			$total = 0;
 			foreach ( $records as $record ) {
-				$this->delete( 'id', $record->id ) ? $total ++ : null;
+				if ( $this->delete( 'id', $record->id ) ) {
+					$total ++;
+				}
 			}
 
 			return $total;
@@ -354,7 +356,7 @@ class MapperService extends AbstractService {
 		$query_string = $query_fields ? $this->array_to_where( $query_fields, $operator ) : null;
 		$query        = "SELECT $table.* FROM $table $query_string";
 
-		$results = $this->get_results( $query, ARRAY_A );
+		$results = $this->get_results( $query );
 
 		if ( ! empty( $results ) ) {
 			return $this->map_to_class( $results );
@@ -423,7 +425,7 @@ class MapperService extends AbstractService {
 	public function delete_table( $table_name ) {
 
 		return $this->wpdb->query(
-			"DROP TABLE IF EXISTS ${table_name}"
+			"DROP TABLE IF EXISTS $table_name"
 		);
 	}
 

@@ -84,15 +84,15 @@ class SubscriptionsTable extends WP_List_Table {
 		$table      = $this->table;
 		$join_table = DonorEntity::get_table_name();
 		$query      = "
-			SELECT ${table}.*, ${join_table}.name, ${join_table}.email FROM ${table}
-			LEFT JOIN ${join_table} on ${join_table}.customer_id = ${table}.customer_id
+			SELECT $table.*, $join_table.name, $join_table.email FROM $table
+			LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id
 		";
 
 		// Where clause.
 		if ( $frequency ) {
 			global $wpdb;
 			$where[] = $wpdb->prepare( "
-				${table}.frequency = %s
+				$table.frequency = %s
 			",
 				$frequency );
 		}
@@ -445,26 +445,26 @@ class SubscriptionsTable extends WP_List_Table {
 		$count        = count( $this->mapper->get_all_by() );
 		$class        = ( 'all' === $current && empty( $_REQUEST['s'] ) ? ' class="current"' : '' );
 		$all_url      = remove_query_arg( 'frequency' );
-		$views['all'] = "<a href='{$all_url }' {$class} >" . __( 'All', 'kudos-donations' ) . " ($count)</a>";
+		$views['all'] = "<a href='$all_url' $class >" . __( 'All', 'kudos-donations' ) . " ($count)</a>";
 
 		// Yearly link.
 		$count           = count( $this->mapper->get_all_by( [ 'frequency' => '12 months' ] ) );
 		$class           = ( '12 months' === $current ? ' class="current"' : '' );
 		$yearly_url      = add_query_arg( 'frequency', '12 months' );
-		$views['yearly'] = "<a href='{$yearly_url}' {$class} >" . __( 'Yearly', 'kudos-donations' ) . " ($count)</a>";
+		$views['yearly'] = "<a href='$yearly_url' $class >" . __( 'Yearly', 'kudos-donations' ) . " ($count)</a>";
 
 		// Quarterly link.
 		$count              = count( $this->mapper->get_all_by( [ 'frequency' => '3 months' ] ) );
 		$class              = ( '3 months' === $current ? ' class="current"' : '' );
 		$yearly_url         = add_query_arg( 'frequency', '3 months' );
-		$views['quarterly'] = "<a href='{$yearly_url}' {$class} >" . __( 'Quarterly',
+		$views['quarterly'] = "<a href='$yearly_url' $class >" . __( 'Quarterly',
 				'kudos-donations' ) . " ($count)</a>";
 
 		// Monthly link.
 		$count            = count( $this->mapper->get_all_by( [ 'frequency' => '1 month' ] ) );
 		$class            = ( '1 month' === $current ? ' class="current"' : '' );
 		$monthly_url      = add_query_arg( 'frequency', '1 month' );
-		$views['monthly'] = "<a href='{$monthly_url}' {$class} >" . __( 'Monthly',
+		$views['monthly'] = "<a href='$monthly_url' $class >" . __( 'Monthly',
 				'kudos-donations' ) . " ($count)</a>";
 
 		return $views;

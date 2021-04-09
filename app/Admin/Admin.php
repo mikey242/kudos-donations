@@ -98,7 +98,7 @@ class Admin {
 				echo '<div id="kudos-settings"></div>';
 			}
 		);
-		add_action( "admin_print_scripts-{$settings_page_hook_suffix}", [ $this, 'kudos_settings_page_assets' ] );
+		add_action( "admin_print_scripts-$settings_page_hook_suffix", [ $this, 'kudos_settings_page_assets' ] );
 
 		$transactions_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
@@ -112,7 +112,7 @@ class Admin {
 			}
 
 		);
-		add_action( "admin_print_scripts-{$transactions_page_hook_suffix}",
+		add_action( "admin_print_scripts-$transactions_page_hook_suffix",
 			[ $this, 'kudos_transactions_page_assets' ] );
 
 		$subscriptions_page_hook_suffix = add_submenu_page(
@@ -127,7 +127,7 @@ class Admin {
 			}
 
 		);
-		add_action( "admin_print_scripts-{$subscriptions_page_hook_suffix}",
+		add_action( "admin_print_scripts-$subscriptions_page_hook_suffix",
 			[ $this, 'kudos_subscriptions_page_assets' ] );
 
 		$donors_page_hook_suffix = add_submenu_page(
@@ -142,7 +142,7 @@ class Admin {
 			}
 
 		);
-		add_action( "admin_print_scripts-{$donors_page_hook_suffix}", [ $this, 'kudos_donor_page_assets' ] );
+		add_action( "admin_print_scripts-$donors_page_hook_suffix", [ $this, 'kudos_donor_page_assets' ] );
 
 		$campaigns_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
@@ -156,7 +156,7 @@ class Admin {
 			}
 
 		);
-		add_action( "admin_print_scripts-{$campaigns_page_hook_suffix}", [ $this, 'kudos_campaign_page_assets' ] );
+		add_action( "admin_print_scripts-$campaigns_page_hook_suffix", [ $this, 'kudos_campaign_page_assets' ] );
 
 		// Add debug menu.
 		$debug_page_hook_suffix = add_submenu_page(
@@ -169,7 +169,7 @@ class Admin {
 				require_once KUDOS_PLUGIN['dir'] . '/app/Admin/partials/kudos-admin-debug.php';
 			}
 		);
-		add_action( "admin_print_scripts-{$debug_page_hook_suffix}",
+		add_action( "admin_print_scripts-$debug_page_hook_suffix",
 			function () {
 				?>
 				<script>

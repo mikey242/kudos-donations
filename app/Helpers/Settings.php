@@ -457,7 +457,7 @@ class Settings {
 	 * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
 	 */
 	public static function recursive_sanitize_text_field( array $array ): array {
-		foreach ( $array as $key => &$value ) {
+		foreach ( $array as &$value ) {
 			if ( is_array( $value ) ) {
 				$value = self::recursive_sanitize_text_field( $value );
 			} else {

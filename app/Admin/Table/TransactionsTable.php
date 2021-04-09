@@ -93,16 +93,16 @@ class TransactionsTable extends WP_List_Table {
 		$table      = $this->table;
 		$join_table = DonorEntity::get_table_name();
 		$query      = "
-			SELECT ${table}.*, ${join_table}.name, ${join_table}.email, ${join_table}.customer_id ${join_table}
-			FROM ${table}
-			LEFT JOIN ${join_table} on ${join_table}.customer_id = ${table}.customer_id
+			SELECT $table.*, $join_table.name, $join_table.email, $join_table.customer_id $join_table
+			FROM $table
+			LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id
 		";
 
 		// Having clause
 		if ( $view ) {
 			global $wpdb;
 			$having[] = $wpdb->prepare( "
-				${table}.status = %s
+				$table.status = %s
 			",
 				$view );
 		}
@@ -502,32 +502,32 @@ class TransactionsTable extends WP_List_Table {
 		$count        = count( $this->mapper->get_all_by() );
 		$class        = ( 'all' === $current && empty( $_REQUEST['s'] ) ? ' class="current"' : '' );
 		$all_url      = remove_query_arg( [ 'status' ], $url );
-		$views['all'] = "<a href='{$all_url }' {$class} >" . __( 'All', 'kudos-donations' ) . " ($count)</a>";
+		$views['all'] = "<a href='$all_url' $class >" . __( 'All', 'kudos-donations' ) . " ($count)</a>";
 
 		// Paid link.
 		$count         = count( $this->mapper->get_all_by( [ 'status' => 'paid' ] ) );
 		$paid_url      = add_query_arg( 'status', 'paid', $url );
 		$class         = ( 'paid' === $current ? ' class="current"' : '' );
-		$views['paid'] = "<a href='{$paid_url}' {$class} >" . __( 'Paid', 'kudos-donations' ) . " ($count)</a>";
+		$views['paid'] = "<a href='$paid_url' $class >" . __( 'Paid', 'kudos-donations' ) . " ($count)</a>";
 
 		// Open link.
 		$count         = count( $this->mapper->get_all_by( [ 'status' => 'open' ] ) );
 		$open_url      = add_query_arg( 'status', 'open', $url );
 		$class         = ( 'open' === $current ? ' class="current"' : '' );
-		$views['open'] = "<a href='{$open_url}' {$class} >" . __( 'Open', 'kudos-donations' ) . " ($count)</a>";
+		$views['open'] = "<a href='$open_url' $class >" . __( 'Open', 'kudos-donations' ) . " ($count)</a>";
 
 		// Canceled link.
 		$count             = count( $this->mapper->get_all_by( [ 'status' => 'canceled' ] ) );
 		$canceled_url      = add_query_arg( 'status', 'canceled', $url );
 		$class             = ( 'canceled' === $current ? ' class="current"' : '' );
-		$views['canceled'] = "<a href='{$canceled_url}' {$class} >" . __( 'Cancelled',
+		$views['canceled'] = "<a href='$canceled_url' $class >" . __( 'Cancelled',
 				'kudos-donations' ) . " ($count)</a>";
 
 		// Canceled link.
 		$count            = count( $this->mapper->get_all_by( [ 'status' => 'expired' ] ) );
 		$expired_url      = add_query_arg( 'status', 'expired', $url );
 		$class            = ( 'expired' === $current ? ' class="current"' : '' );
-		$views['expired'] = "<a href='{$expired_url}' {$class} >" . __( 'Expired',
+		$views['expired'] = "<a href='$expired_url' $class >" . __( 'Expired',
 				'kudos-donations' ) . " ($count)</a>";
 
 		return $views;

@@ -55,7 +55,7 @@ class LoggerService extends Monolog {
 	/**
 	 * Clears the log file
 	 *
-	 * @return bool|false|int
+	 * @return bool|int
 	 * @since   2.0.0
 	 */
 	public static function clear() {
@@ -115,8 +115,6 @@ class LoggerService extends Monolog {
 
 		if ( wp_mkdir_p( self::LOG_DIR ) ) {
 			$this->info( 'Log directory created successfully', [ 'location' => self::LOG_DIR ] );
-
-			return;
 		}
 
 	}
@@ -157,7 +155,7 @@ class LoggerService extends Monolog {
 		if ( file_exists( self::LOG_FILE ) ) {
 			$reg  = '/^\[(?<date>.*)\]\s(?<env>\w+)\.(?<type>\w+):(?<message>.*)/m';
 			$text = file_get_contents( self::LOG_FILE );
-			preg_match_all( $reg, $text, $matches, PREG_SET_ORDER, 0 );
+			preg_match_all( $reg, $text, $matches, PREG_SET_ORDER );
 			usort( $matches, [ $this, 'date_compare' ] );
 
 			return $matches;
