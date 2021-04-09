@@ -109,11 +109,13 @@ e.g:
 
 == Changelog ==
 
-= 2.4.8 =
+= 2.5.0 =
 * Change 'country' field to drop-down select
 * Change 'back' and 'close' icon colors on modal to grey
-* Switch to using sanitize_callbacks to sanitize all rest data
 * Upgrade TailwindCSS to 2.1.1
+* Upgrade from Twig 2 to Twig 3
+* Change minimum PHP version to 7.2
+* Switch to using sanitize_callbacks to sanitize all rest data
 
 = 2.4.7 =
 * Various visual tweaks to the donation form
