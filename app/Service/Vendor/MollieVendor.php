@@ -59,8 +59,8 @@ class MollieVendor extends AbstractVendor {
 
 		$settings = Settings::get_setting( 'vendor_mollie' );
 
-		$this->api_mode = isset( $settings['mode'] ) ? $settings['mode'] : '';
-		$this->api_key  = isset( $settings[ $this->api_mode . '_key' ] ) ? $settings[ $this->api_mode . '_key' ] : '';
+		$this->api_mode = $settings['mode'] ?? '';
+		$this->api_key  = $settings[ $this->api_mode . '_key' ] ?? '';
 
 		if ( $this->api_key ) {
 			try {
