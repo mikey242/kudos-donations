@@ -122,20 +122,10 @@ class MollieVendor extends AbstractVendor {
 			return false;
 		}
 
-		try {
+		$response = $customer->cancelSubscription( $subscription_id );
 
-			$response = $customer->cancelSubscription( $subscription_id );
-
-			/** @var Subscription $response */
-			return ( $response->status === 'canceled' );
-
-		} catch ( ApiException $e ) {
-
-			$this->logger->critical( $e->getMessage() );
-
-			return false;
-
-		}
+		/** @var Subscription $response */
+		return ( $response->status === 'canceled' );
 	}
 
 	/**
