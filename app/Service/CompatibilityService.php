@@ -18,7 +18,7 @@ class CompatibilityService {
 	 * @var string
 	 * @since 2.0.0
 	 */
-	public $required_php_version = '7.1';
+	public $required_php_version = '7.2';
 
 	/**
 	 * Holds any blocker error messages stopping plugin running
