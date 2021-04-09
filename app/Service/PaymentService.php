@@ -130,7 +130,7 @@ class PaymentService extends AbstractService {
 		$values = $request->get_json_params();
 
 		// Add submit action and pass form data.
-		do_action('kudos_submit_payment_data', $values);
+		do_action('kudos_submit_payment', $values);
 
 		// Assign form fields.
 		$value             = $values['value'];

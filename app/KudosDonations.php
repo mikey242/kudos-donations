@@ -7,6 +7,7 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Front\Front;
+use Kudos\Helpers\Utils;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\I18nService;
 use Kudos\Service\PaymentService;
@@ -168,7 +169,10 @@ class KudosDonations {
 	 */
 	private function define_mollie_hooks() {
 
-		add_action( 'kudos_mollie_transaction_paid', [ PaymentService::class, 'process_transaction' ], 10, 1 );
+		add_action( 'kudos_mollie_transaction_paid', function($order_id) {
+			Utils::schedule_action( strtotime( '+1 minute' ), 'kudos_process_mollie_transaction', [ $order_id ] );
+		}, 10, 1 );
+		add_action( 'kudos_process_mollie_transaction', [ PaymentService::class, 'process_transaction' ], 10, 1 );
 
 	}
 
