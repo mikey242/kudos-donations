@@ -89,7 +89,7 @@ class Campaigns {
 	}
 
 	/**
-	 * Gets the campaign by specified column (e.g slug)
+	 * Gets the campaign by specified column (e.g id)
 	 *
 	 * @param string|null $value
 	 *
