@@ -6,7 +6,7 @@ services:
       context: .
       args:
         PHP_VERSION: 7.2
-        WORDPRESS_VERSION: 5.4
+        WORDPRESS_VERSION: 5.5
     container_name: wordpress-kudos
     volumes:
       - ${WORDPRESS_DIR:-./wordpress}:/var/www/html
