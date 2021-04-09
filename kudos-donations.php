@@ -88,7 +88,7 @@ function run_kudos() {
 
 	// Check compatibility and run kudos if OK
 	$compatibility = new CompatibilityService();
-	$continue = $compatibility->init();
+	$continue      = $compatibility->init();
 
 	if ( $continue ) {
 		$plugin = new KudosDonations();

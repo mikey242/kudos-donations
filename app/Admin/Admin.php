@@ -70,7 +70,7 @@ class Admin {
 	}
 
 	/**
-	 * Create the Kudos Donations admin pages
+	 * Create the Kudos Donations admin pages.
 	 *
 	 * @since   2.0.0
 	 */
@@ -189,7 +189,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets specific to the Kudos Settings page
+	 * Assets specific to the Kudos Settings page.
 	 *
 	 * @since   2.0.0
 	 */
@@ -226,7 +226,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets common to all Kudos Table pages
+	 * Assets common to all Kudos Table pages.
 	 *
 	 * @since 2.0.0
 	 */
@@ -245,7 +245,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets specific to the Kudos Transactions page
+	 * Assets specific to the Kudos Transactions page.
 	 *
 	 * @since   2.0.0
 	 */
@@ -271,7 +271,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets specific to the Kudos Subscriptions page
+	 * Assets specific to the Kudos Subscriptions page.
 	 *
 	 * @since   2.0.0
 	 */
@@ -290,7 +290,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets specific to the Kudos Donors page
+	 * Assets specific to the Kudos Donors page.
 	 *
 	 * @since   2.0.0
 	 */
@@ -308,7 +308,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets specific to the Kudos Campaigns page
+	 * Assets specific to the Kudos Campaigns page.
 	 *
 	 * @since   2.0.0
 	 */
@@ -361,13 +361,13 @@ class Admin {
 
 				case 'kudos_clear_mollie':
 					$settings = new Settings();
-					$settings->remove_setting('vendor_mollie');
+					$settings->remove_setting( 'vendor_mollie' );
 					$settings->add_defaults();
 					break;
 
 				case 'kudos_clear_campaigns':
 					$settings = new Settings();
-					$settings->remove_setting('campaigns');
+					$settings->remove_setting( 'campaigns' );
 					$settings->add_defaults();
 					break;
 
@@ -449,7 +449,7 @@ class Admin {
 	}
 
 	/**
-	 * Register the kudos settings
+	 * Register the kudos settings.
 	 *
 	 * @since 2.0.0
 	 */

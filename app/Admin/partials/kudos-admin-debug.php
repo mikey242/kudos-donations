@@ -48,7 +48,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				?>
 
 				<p>This logfile location: <?php echo esc_url( $file ); ?></p>
-				<p>Current filesize: <?php echo Utils::human_filesize((int) filesize( $file )); ?></p>
+				<p>Current filesize: <?php echo Utils::human_filesize( (int) filesize( $file ) ); ?></p>
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
 				      method='post'>

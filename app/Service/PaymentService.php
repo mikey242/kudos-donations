@@ -54,9 +54,9 @@ class PaymentService extends AbstractService {
 	/**
 	 * Returns the name of the current vendor.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	public static function get_vendor_name() {
+	public static function get_vendor_name(): string {
 		return static::get_current_vendor_class()::get_vendor_name();
 	}
 
@@ -130,7 +130,7 @@ class PaymentService extends AbstractService {
 		$values = $request->get_json_params();
 
 		// Add submit action and pass form data.
-		do_action('kudos_submit_payment', $values);
+		do_action( 'kudos_submit_payment', $values );
 
 		// Assign form fields.
 		$value             = $values['value'];
@@ -183,7 +183,7 @@ class PaymentService extends AbstractService {
 
 		$customer_id = $donor->customer_id ?? null;
 
-		do_action('kudos_payment_submit_successful', $values);
+		do_action( 'kudos_payment_submit_successful', $values );
 
 		$result = $this->create_payment(
 			$value,
@@ -198,7 +198,7 @@ class PaymentService extends AbstractService {
 
 		// Return checkout url if payment successfully created in Mollie
 		if ( $result instanceof Payment ) {
-			do_action('kudos_payment_submit_successful', $values);
+			do_action( 'kudos_payment_submit_successful', $values );
 			wp_send_json_success( $result->getCheckoutUrl() );
 		}
 

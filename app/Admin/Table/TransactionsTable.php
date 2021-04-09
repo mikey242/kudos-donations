@@ -473,10 +473,10 @@ class TransactionsTable extends WP_List_Table {
 	/**
 	 * Returns an associative array containing the bulk action
 	 *
-	 * @return array|string
+	 * @return array
 	 * @since   1.0.0
 	 */
-	protected function get_bulk_actions() {
+	protected function get_bulk_actions(): array {
 
 		return [
 			'bulk-delete' => __( 'Delete', 'kudos-donations' ),

@@ -143,7 +143,7 @@ class ActivatorService {
 		if ( version_compare( $old_version, '2.4.1', '<' ) ) {
 			// Cast connected variable as boolean
 			$vendor_settings = Settings::get_setting('vendor_mollie');
-			$connected = !empty($vendor_settings['connected']) ? (bool) $vendor_settings['connected'] : false;
+			$connected = ! empty( $vendor_settings['connected'] ) && $vendor_settings['connected'];
 			Settings::update_array('vendor_mollie', [
 				'connected' => $connected
 			]);

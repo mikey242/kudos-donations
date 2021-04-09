@@ -181,10 +181,10 @@ class MapperService extends AbstractService {
 	 *
 	 * @param bool $prefix Whether to return the prefix or not.
 	 *
-	 * @return string|false
+	 * @return string
 	 * @since   2.0.0
 	 */
-	public function get_table_name( $prefix = true ) {
+	public function get_table_name( $prefix = true ): string {
 
 		return $this->get_repository()::get_table_name( $prefix );
 
@@ -193,10 +193,10 @@ class MapperService extends AbstractService {
 	/**
 	 * Gets the current repository
 	 *
-	 * @return AbstractEntity|string
+	 * @return string
 	 * @since 2.0.5
 	 */
-	public function get_repository() {
+	public function get_repository(): ?string {
 
 		if ( null === $this->repository ) {
 			$this->logger->warning( 'Failed to get repository.' );
