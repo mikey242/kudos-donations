@@ -46,7 +46,8 @@ class PaymentService extends AbstractService {
 				return MollieVendor::class;
 			default:
 				$logger = new LoggerService();
-				$logger->critical( 'No payment vendor specified. Using Mollie.' );
+				$logger->warning( 'No payment vendor specified. Using Mollie.' );
+
 				return MollieVendor::class;
 		}
 	}
