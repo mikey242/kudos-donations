@@ -253,7 +253,6 @@ class Utils {
 			}
 
 			if ( false === as_next_scheduled_action( $hook, $args ) ) {
-
 				as_schedule_single_action( $timestamp, $hook, $args );
 			}
 		} else {
