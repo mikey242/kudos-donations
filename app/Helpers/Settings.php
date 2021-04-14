@@ -152,18 +152,6 @@ class Settings {
 					],
 					'sanitize_callback' => [$this, 'recursive_sanitize_text_field']
 				],
-				'address_enabled'       => [
-					'type'              => 'boolean',
-					'show_in_rest'      => true,
-					'default'           => false,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				'address_required'      => [
-					'type'              => 'boolean',
-					'show_in_rest'      => true,
-					'default'           => true,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
 				'terms_link'            => [
 					'type'              => 'string',
 					'show_in_rest'      => true,

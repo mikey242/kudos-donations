@@ -141,7 +141,7 @@ class ActivatorService {
 		}
 
 		if ( version_compare( $old_version, '2.4.1', '<' ) ) {
-			// Cast connected variable as boolean
+			// Cast connected variable as boolean.
 			$vendor_settings = Settings::get_setting('vendor_mollie');
 			$connected = ! empty( $vendor_settings['connected'] ) && $vendor_settings['connected'];
 			Settings::update_array('vendor_mollie', [
@@ -150,10 +150,14 @@ class ActivatorService {
 		}
 
 		if ( version_compare( $old_version, '2.5.0', '<' ) ) {
-			// Add message field to transactions
+			// Add message field to transactions.
 			global $wpdb;
 			$transaction_table = TransactionEntity::get_table_name();
 			$wpdb->query( "ALTER TABLE $transaction_table ADD `message` VARCHAR(255)" );
+
+			// Remove unused settings.
+			Settings::remove_setting('address_enabled');
+			Settings::remove_setting('address_required');
 		}
 
 	}
