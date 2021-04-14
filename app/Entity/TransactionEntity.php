@@ -84,6 +84,12 @@ class TransactionEntity extends AbstractEntity {
 	 * @var string
 	 */
 	public $refunds;
+	/**
+	 * Message
+	 *
+	 * @var string
+	 */
+	public $message;
 
 	/**
 	 * Gets donor associated with transaction

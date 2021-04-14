@@ -149,6 +149,13 @@ class ActivatorService {
 			]);
 		}
 
+		if ( version_compare( $old_version, '2.5.0', '<' ) ) {
+			// Add message field to transactions
+			global $wpdb;
+			$transaction_table = TransactionEntity::get_table_name();
+			$wpdb->query( "ALTER TABLE $transaction_table ADD `message` VARCHAR(255)" );
+		}
+
 	}
 
 	/**
@@ -213,6 +220,7 @@ class ActivatorService {
 		  subscription_id VARCHAR(255),
 		  refunds BLOB DEFAULT NULL,
 		  campaign_id VARCHAR(255),
+		  message VARCHAR(255),
 		  secret VARCHAR(255),
 		  PRIMARY KEY (id)
 		) $charset_collate;";
