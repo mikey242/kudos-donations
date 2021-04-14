@@ -108,7 +108,7 @@ class Admin {
 			'manage_options',
 			'kudos-transactions',
 			function () {
-				require_once KUDOS_PLUGIN['dir'] . '/app/Admin/partials/kudos-admin-transactions.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-transactions.php';
 			}
 
 		);
@@ -123,7 +123,7 @@ class Admin {
 			'manage_options',
 			'kudos-subscriptions',
 			function () {
-				require_once KUDOS_PLUGIN['dir'] . '/app/Admin/partials/kudos-admin-subscriptions.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-subscriptions.php';
 			}
 
 		);
@@ -138,7 +138,7 @@ class Admin {
 			'manage_options',
 			'kudos-donors',
 			function () {
-				require_once KUDOS_PLUGIN['dir'] . '/app/Admin/partials/kudos-admin-donors.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-donors.php';
 			}
 
 		);
@@ -152,7 +152,7 @@ class Admin {
 			'manage_options',
 			'kudos-campaigns',
 			function () {
-				require_once KUDOS_PLUGIN['dir'] . '/app/Admin/partials/kudos-admin-campaigns.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-campaigns.php';
 			}
 
 		);
@@ -166,7 +166,7 @@ class Admin {
 			'manage_options',
 			'kudos-debug',
 			function () {
-				require_once KUDOS_PLUGIN['dir'] . '/app/Admin/partials/kudos-admin-debug.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-debug.php';
 			}
 		);
 		add_action( "admin_print_scripts-$debug_page_hook_suffix",
@@ -214,7 +214,7 @@ class Admin {
 				'ajaxurl'     => admin_url( 'admin-ajax.php' ),
 			]
 		);
-		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN['dir'] . '/languages' );
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 		wp_enqueue_style(
 			$handle,
 			Utils::get_asset_url( 'kudos-admin-settings.css' ),

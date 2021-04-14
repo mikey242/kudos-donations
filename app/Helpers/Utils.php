@@ -50,14 +50,14 @@ class Utils {
 	 * Uses manifest to get asset URL.
 	 *
 	 * @param string $asset
-	 * @param array $base
+	 * @param string $url
 	 *
 	 * @return string
 	 */
-	public static function get_asset_url( string $asset, array $base = KUDOS_PLUGIN ): string {
-		$hash = self::get_asset_manifest( $base['url'] );
+	public static function get_asset_url( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
+		$hash = self::get_asset_manifest( $url );
 		if ( array_key_exists( $asset, $hash ) ) {
-			return $base['url'] . 'dist/' . $hash[ $asset ];
+			return $url . 'dist/' . $hash[ $asset ];
 		}
 
 		return $asset;
@@ -67,14 +67,14 @@ class Utils {
 	 * Uses manifest to get asset path.
 	 *
 	 * @param string $asset
-	 * @param array $base
+	 * @param string $url
 	 *
 	 * @return string
 	 */
-	public static function get_asset_path( string $asset, array $base = KUDOS_PLUGIN ): string {
-		$hash = self::get_asset_manifest( $base['url'] );
+	public static function get_asset_path( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
+		$hash = self::get_asset_manifest( $url );
 		if ( array_key_exists( $asset, $hash ) ) {
-			return $base['dir'] . '/dist/' . $hash[ $asset ];
+			return KUDOS_PLUGIN_DIR . '/dist/' . $hash[ $asset ];
 		}
 
 		return $asset;
@@ -95,13 +95,13 @@ class Utils {
 	 */
 	public static function get_asset_content( string $asset ): string {
 
-		$map      = KUDOS_PLUGIN['url'] . 'dist/assets-manifest.json';
+		$map      = KUDOS_PLUGIN_URL . 'dist/assets-manifest.json';
 		$request  = wp_remote_get( $map );
 		$response = wp_remote_retrieve_body( $request );
 		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
 
 		if ( array_key_exists( $asset, $hash ) ) {
-			$asset_request = wp_remote_get( KUDOS_PLUGIN['url'] . 'dist/' . $hash[ $asset ] );
+			$asset_request = wp_remote_get( KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ] );
 
 			return wp_remote_retrieve_body( $asset_request );
 		}

@@ -138,7 +138,7 @@ class Front {
 				'createPaymentUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_CREATE ),
 			]
 		);
-		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN['dir'] . '/languages' );
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 
 	}
 
@@ -181,7 +181,7 @@ class Front {
 				'color_primary' => Settings::get_setting( 'color_primary' ),
 			]
 		);
-		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN['dir'] . '/languages' );
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 
 		// Output root styles
 		$this->get_kudos_root_styles();
