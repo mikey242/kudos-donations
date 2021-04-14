@@ -1,4 +1,3 @@
-{% from "/public/macros/kudos.logo.html.twig" import logo %}
 {% from "/public/macros/buttons.html.twig" import icon %}
 
 <div id="{{ modal_id ?: 'kudos_modal-1' }}" class="kudos_modal {{ classes }} kd-absolute kd-hidden" aria-hidden="true">
@@ -8,9 +7,12 @@
              class="kudos_modal_container kd-bg-white kd-p-8 kd-rounded-lg kd-max-h-screen kd-max-w-lg kd-relative kd-overflow-hidden kd-origin-right"
              role="dialog" aria-modal="true" aria-labelledby="kudos_modal_title">
             <header class="kudos_modal_header kd-flex kd-items-center kd-justify-between">
-                <span class="kd-mr-3 kd-inline-block kd-flex" title="Kudos Donations" style="cursor: inherit">
-                     {{ logo('#2ec4b6', '#ff9f1c') }}
-                </span>
+
+                    <span class="kd-mr-3 kd-inline-block kd-flex" title="Kudos Donations">
+                        {% if(logo_url) %}
+                            <img alt="Logo" class="kd-h-6" src="{{ logo_url }}">
+                        {% endif %}
+                    </span>
                 {% block header %}
                 {% endblock header %}
                 {{ icon('close', __('Close modal', 'kudos-donations'), 5) }}
@@ -22,7 +24,7 @@
                 {% block content %}
                 {% endblock content %}
                 <i class="kd-spinner kd-animate-loader-spin kd-hidden kd-bg-contain kd-absolute kd-top-1/2 kd-left-1/2 kd-w-8 kd-h-8 kd--ml-4 kd--mt-4 kd-z-1">
-                    {{ logo('black', 'black', '30px') }}
+                    {{ spinner | raw }}
                 </i>
             </div>
         </div>
