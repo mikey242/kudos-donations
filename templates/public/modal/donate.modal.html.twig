@@ -3,7 +3,7 @@
 {% set premium = false %}
 
 {% block header %}
-    {{ header|raw }}
+    {{ do_action('kudos_donate_modal_header', campaign) }}
 {% endblock header %}
 
 {% block content %}
