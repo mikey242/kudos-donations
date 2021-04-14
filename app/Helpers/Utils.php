@@ -2,6 +2,8 @@
 
 namespace Kudos\Helpers;
 
+use Kudos\Service\TwigService;
+
 class Utils {
 
 	/**
@@ -350,6 +352,88 @@ class Utils {
 		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
 
 		return array( $first_name, $last_name );
+	}
+
+	/**
+	 * Returns the Kudos logo SVG markup.
+	 *
+	 * @param string|null $color
+	 * @param int $width
+	 *
+	 * @return string|null
+	 */
+	public static function get_kudos_logo_markup( string $color = null, int $width = 24 ): ?string {
+
+		$twig = new TwigService();
+
+		if ( $color ) {
+			$lineColor  = $color;
+			$heartColor = $color;
+		} else {
+			$lineColor  = '#2ec4b6';
+			$heartColor = '#ff9f1c';
+		}
+
+		return apply_filters( 'kudos_get_kudos_logo',
+			$twig->render( 'public/logo.html.twig',
+				[
+					'width'      => $width,
+					'lineColor'  => $lineColor,
+					'heartColor' => $heartColor,
+				] ),
+			$width );
+	}
+
+	/**
+	 * Returns the Kudos logo url.
+	 *
+	 * @param int $height The height of the image to be returned.
+	 *
+	 * @return string|null
+	 */
+	public static function get_logo_url( int $height = 24 ): ?string {
+
+		return apply_filters( 'kudos_get_logo_url',
+			self::get_data_uri( self::get_asset_url( 'img/logo-colour.svg' ) ),
+			$height );
+
+	}
+
+	/**
+	 * Returns an image's base64 encoded data URI for use in 'src' attribute.
+	 *
+	 * @param string $image_url Url of image to be encoded.
+	 *
+	 * @return string
+	 * @link https://www.genieblog.ch/blog/en/2018/how-to-encode-an-svg-for-the-src-attribute-using-php/
+	 *
+	 */
+	public static function get_data_uri( string $image_url ): string {
+
+		// Get the filetype of supplied image URL.
+		$filetype = pathinfo( $image_url, PATHINFO_EXTENSION );
+
+		// Get the contents of the file.
+		$request  = wp_remote_get( $image_url );
+		$response = wp_remote_retrieve_body( $request );
+
+		// Return data URI if there is data.
+		if ( $response ) {
+
+			/*
+			 * Don't base64 encode svg.
+			 * @link https://css-tricks.com/probably-dont-base64-svg/
+			 */
+			if ( 'svg' === $filetype ) {
+				return 'data:image/svg+xml,' . rawurlencode( $response );
+			}
+
+			// All other image types get base64 encoded.
+			return 'data:image/' . $filetype . ';base64,' . base64_encode( $response );
+		}
+
+		// Return url if nothing found.
+		return $image_url;
 	}
 
 }

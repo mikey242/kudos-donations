@@ -1,7 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
-const svgToMiniDataURI = require('mini-svg-data-uri')
 const CopyPlugin = require("copy-webpack-plugin")
 const ESLintPlugin = require('eslint-webpack-plugin')
 const {join, resolve} = require('path')
@@ -72,15 +71,7 @@ module.exports = {
                 ],
             },
             {
-                test: /\.svg$/i,
-                loader: 'url-loader',
-                options: {
-                    generator: (content) =>
-                        svgToMiniDataURI(content.toString()),
-                },
-            },
-            {
-                test: /\.(png|jpe?g|gif)$/i,
+                test: /\.(png|jpe?g|gif|svg)$/i,
                 use: [
                     {
                         loader: 'file-loader',

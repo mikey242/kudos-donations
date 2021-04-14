@@ -124,6 +124,8 @@ class KudosModal {
 				'privacy_link'      => Settings::get_setting( 'privacy_link' ),
 				'terms_link'        => Settings::get_setting( 'terms_link' ),
 				'recurring_allowed' => $vendor_settings['recurring'] ?? false,
+				'logo_url'          => Utils::get_logo_url(),
+				'spinner'           => Utils::get_kudos_logo_markup( 'black', 30 ),
 			]
 		);
 

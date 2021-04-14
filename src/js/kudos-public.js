@@ -1,7 +1,8 @@
 import axios from 'axios'
 import MicroModal from 'micromodal'
 import 'jquery-validation'
-import '../img/logo-colour-40.png' //used as email attachment
+import '../img/logo-colour-40.png' // used as email attachment
+import '../img/logo-colour.svg' // used for logo on modal
 
 jQuery(document).ready(($) => {
 
@@ -311,11 +312,13 @@ jQuery(document).ready(($) => {
             $amountInput.attr({'required': true, 'name': 'value'})
             $amountRadios.each(function (i, e) {
                 $(e).prop('checked', false)
+                $(e).attr({'name': ''})
             })
         })
 
         $amountRadios.each(function (i, e) {
             $(e).on('change', function () {
+                $(e).attr({'name': 'value'})
                 $amountInput.attr({'required': false, 'name': ''})
                 $amountInput.valid()
                 $amountInput.val('')
