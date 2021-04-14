@@ -60,53 +60,53 @@ const CampaignsTab = (props) => {
 
             <br/>
 
-                <Card>
-                    <CardHeader>
-                        <div>
-                            <h3>{__('Campaign details', 'kudos-donations')}</h3>
-                            { typeof campaigns[campaign] !== 'undefined' ?
-                                <span>campaign_id: <strong>{ campaigns[campaign].id }</strong></span>
+            <Card>
+                <CardHeader>
+                    <div>
+                        <h3>{__('Campaign details', 'kudos-donations')}</h3>
+                        {typeof campaigns[campaign] !== 'undefined' ?
+                            <span>campaign_id: <strong>{campaigns[campaign].id}</strong></span>
                             : ''}
-                        </div>
-                        <div className="kudos-campaign-selector">
-                            <SelectControl
-                                label={__('Select a campaign:', 'kudos-donations')}
-                                labelPosition="side"
-                                value={campaign}
-                                onChange={(value) =>
-                                    updateCampaign(value)
-                                }
-                                options={
-                                    [{
-                                        value: '',
-                                        label: __('Select a campaign', 'kudos-donations'),
-                                        disabled: true
-                                    }].concat(
-                                        campaigns.map((campaign, i) => {
-                                            return {
-                                                value: i, label: campaign.name
-                                            }
-                                        })
-                                    )
-                                }
-                            />
-                        </div>
-
-                    </CardHeader>
-
-                    { typeof campaigns[campaign] !== 'undefined' ?
-
-                        <CampaignPanel
-                            allowDelete={campaign !== 0}
-                            settings={props.settings}
-                            campaign={campaigns[campaign]}
-                            removeCampaign={removeCampaign}
-                            handleInputChange={props.handleInputChange}
+                    </div>
+                    <div className="kudos-campaign-selector">
+                        <SelectControl
+                            label={__('Select a campaign:', 'kudos-donations')}
+                            labelPosition="side"
+                            value={campaign}
+                            onChange={(value) =>
+                                updateCampaign(value)
+                            }
+                            options={
+                                [{
+                                    value: '',
+                                    label: __('Select a campaign', 'kudos-donations'),
+                                    disabled: true
+                                }].concat(
+                                    campaigns.map((campaign, i) => {
+                                        return {
+                                            value: i, label: campaign.name
+                                        }
+                                    })
+                                )
+                            }
                         />
+                    </div>
+
+                </CardHeader>
+
+                {typeof campaigns[campaign] !== 'undefined' ?
+
+                    <CampaignPanel
+                        allowDelete={campaign !== 0}
+                        settings={props.settings}
+                        campaign={campaigns[campaign]}
+                        removeCampaign={removeCampaign}
+                        handleInputChange={props.handleInputChange}
+                    />
 
                     : null}
 
-                </Card>
+            </Card>
 
         </Fragment>
     )

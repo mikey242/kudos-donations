@@ -104,13 +104,13 @@ class KudosAdmin extends Component {
                     }
                 })
 
-                if(typeof callback === "function") {
+                if (typeof callback === "function") {
                     callback()
                 }
             })
     }
 
-    handleInputChange(option, value, isEdited=true) {
+    handleInputChange(option, value, isEdited = true) {
         this.setState({
             isEdited: isEdited,
             settings: {
@@ -200,7 +200,7 @@ class KudosAdmin extends Component {
     }
 
     // Update an individual setting, uses current state if value not specified
-    updateSetting(option, value, showNotice=false, noticeText=__('Setting updated', 'kudos-donations')) {
+    updateSetting(option, value, showNotice = false, noticeText = __('Setting updated', 'kudos-donations')) {
         this.setState({isAPISaving: true})
 
         //Create WordPress settings model

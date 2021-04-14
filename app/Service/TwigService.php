@@ -75,8 +75,8 @@ class TwigService extends AbstractService {
 			} else {
 				try {
 					$loader->addPath( $path );
-				} catch (LoaderError $e) {
-					$this->logger->error($e->getMessage());
+				} catch ( LoaderError $e ) {
+					$this->logger->error( $e->getMessage() );
 				}
 			}
 		}
