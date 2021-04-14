@@ -6,11 +6,6 @@ use DateTimeZone;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as Monolog;
 
-// PHP < 7.2 Define it as 0 so it does nothing.
-if ( ! defined( 'JSON_INVALID_UTF8_SUBSTITUTE' ) ) {
-	define( 'JSON_INVALID_UTF8_SUBSTITUTE', 0 );
-}
-
 class LoggerService extends Monolog {
 
 	const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
