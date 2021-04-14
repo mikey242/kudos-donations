@@ -80,7 +80,8 @@ module.exports = {
                 modal: '#1a202ccc',
                 primary: "var(--kudos-theme-primary)",
                 'primary-dark': "var(--kudos-theme-primary-dark)",
-                'primary-darker': "var(--kudos-theme-primary-darker)"
+                'primary-darker': "var(--kudos-theme-primary-darker)",
+                secondary: "var(--kudos-theme-secondary)"
             },
             boxShadow: {
                 'button-group': 'inset 0 0 0 1px var(--wp-admin-theme-color);'
