@@ -74,7 +74,7 @@ module.exports = {
                     700: '#f58d00',
                 },
                 green: {
-                    500: '#',
+                    500: '#2ec4b6',
                     700: '#2bb9ac',
                 },
                 modal: '#1a202ccc',
