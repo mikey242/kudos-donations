@@ -8,7 +8,7 @@
     {% set _title = block('title') %}
     {% set _text = block('text') %}
 
-    {{ title(block('title')) }}
+    <legend class="kd-block kd-m-auto">{{ title(block('title')) }}</legend>
     {{ paragraph(block('text')) }}
 
     {% block body %}{% endblock %}
