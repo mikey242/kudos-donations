@@ -132,7 +132,7 @@ class PaymentService extends AbstractService {
 	 */
 	public function submit_payment( WP_REST_Request $request ) {
 
-		// Verify nonce
+		// Verify nonce.
 		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			wp_send_json_error( [
 				'message' => __( 'Request invalid.', 'kudos-donations' ),
@@ -156,6 +156,7 @@ class PaymentService extends AbstractService {
 		$postcode          = $values['postcode'] ?? null;
 		$city              = $values['city'] ?? null;
 		$country           = $values['country'] ?? null;
+		$message           = $values['message'] ?? null;
 		$redirect_url      = $values['return_url'] ?? null;
 		$campaign_id       = $values['campaign_id'] ?? null;
 
@@ -177,7 +178,7 @@ class PaymentService extends AbstractService {
 				$donor->set_fields( [ 'customer_id' => $customer->id ] );
 			}
 
-			// Update new/existing donor.
+			// Update donor.
 			$donor->set_fields(
 				[
 					'email'         => $email,
@@ -206,7 +207,8 @@ class PaymentService extends AbstractService {
 			$campaign_id,
 			$name,
 			$email,
-			$customer_id
+			$customer_id,
+			$message
 		);
 
 		// Return checkout url if payment successfully created in Mollie
@@ -278,6 +280,7 @@ class PaymentService extends AbstractService {
 	 * @param string|null $name Name of donor.
 	 * @param string|null $email Email of donor.
 	 * @param string|null $customer_id Mollie customer id.
+	 * @param string|null $message Message left by donor.
 	 *
 	 * @return false|Payment
 	 * @since      2.3.0
@@ -290,7 +293,8 @@ class PaymentService extends AbstractService {
 		string $campaign_id = null,
 		string $name = null,
 		string $email = null,
-		string $customer_id = null
+		string $customer_id = null,
+		string $message = null
 	) {
 
 		$order_id = Utils::generate_id( 'kdo_' );
@@ -346,10 +350,11 @@ class PaymentService extends AbstractService {
 				'mode'          => $payment->mode,
 				'sequence_type' => $payment->sequenceType,
 				'campaign_id'   => $campaign_id,
+				'message'       => $message,
 			]
 		);
 
-		// Commit transaction to database
+		// Commit transaction to database.
 		$mapper = new MapperService( TransactionEntity::class );
 		$mapper->save( $transaction );
 
@@ -378,7 +383,7 @@ class PaymentService extends AbstractService {
 	}
 
 	/**
-	 * Check the vendor api key key associated with the mode
+	 * Check the vendor api key key associated with the mode.
 	 *
 	 * @since    2.3.0
 	 */
@@ -419,7 +424,7 @@ class PaymentService extends AbstractService {
 		// Send results to JS.
 		if ( $result ) {
 
-			// Update vendor settings
+			// Update vendor settings.
 			Settings::update_array( 'vendor_mollie',
 				[
 					'recurring'       => $this->vendor->can_use_recurring(),

@@ -140,6 +140,7 @@ class TransactionsTable extends WP_List_Table {
 			'order_id'       => __( 'Order ID', 'kudos-donations' ),
 			'transaction_id' => __( 'Transaction Id', 'kudos-donations' ),
 			'campaign_id'    => __( 'Campaign', 'kudos-donations' ),
+			'message'        => __( 'Message', 'kudos-donations' ),
 			'customer_id'    => __( 'Customer ID', 'kudos-donations' ),
 		];
 
@@ -155,8 +156,8 @@ class TransactionsTable extends WP_List_Table {
 		return [
 			'transaction_id',
 			'customer_id',
+			'order_id',
 		];
-
 	}
 
 	/**

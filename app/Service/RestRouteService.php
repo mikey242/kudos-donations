@@ -116,6 +116,11 @@ class RestRouteService {
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
+					'message'           => [
+						'type'              => 'string',
+						'required'          => 'false',
+						'sanitize_callback' => 'sanitize_text_field',
+					],
 					'privacy'           => [
 						'type'              => 'boolean',
 						'required'          => false,
@@ -134,9 +139,9 @@ class RestRouteService {
 				'callback'            => [ $payment, 'handle_webhook' ],
 				'args'                => [
 					'id' => [
-						'type'     => 'string',
-						'required' => true,
-						'sanitize_callback' => 'sanitize_text_field'
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 				'permission_callback' => '__return_true',
@@ -168,9 +173,9 @@ class RestRouteService {
 				'callback'            => [ $mailer, 'send_test' ],
 				'args'                => [
 					'email' => [
-						'type'     => 'string',
-						'required' => true,
-						'sanitize_callback' => 'sanitize_email'
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_email',
 					],
 				],
 				'permission_callback' => function () {

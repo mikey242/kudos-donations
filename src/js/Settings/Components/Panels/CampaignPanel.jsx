@@ -29,7 +29,8 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
         selected={!recurring_allowed ? 'oneoff' : campaign.donation_type || 'oneoff'}
         help={recurring_allowed ?
             __('The donation type of the form, set to "both" to allow donor to choose.', 'kudos-donations') :
-            <Info level="warning">{__('You need to enable SEPA Direct Debit or credit card in your Mollie account to use subscription payments.', 'kudos-donations')}</Info>
+            <Info
+                level="warning">{__('You need to enable SEPA Direct Debit or credit card in your Mollie account to use subscription payments.', 'kudos-donations')}</Info>
         }
         options={[
             {label: __('One-off', 'kudos-donations'), value: 'oneoff'},
@@ -67,7 +68,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                 <TextControl
                     label={__('Goal', 'kudos-donations')}
                     help={__('Set a numeric goal for your campaign.', 'kudos-donations')}
-                    type='number'
+                    type="number"
                     value={campaign.campaign_goal || ''}
                     onChange={(value) => {
                         campaign.campaign_goal = value
@@ -105,7 +106,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
             <CardDivider/>
 
-            <SettingCard title={__('Address Field', 'kudos-donations')}>
+            <SettingCard title={__('Address field', 'kudos-donations')}>
 
                 <ToggleControl
                     help={__('Whether to show the address fields or not.', 'kudos-donations')}
@@ -132,6 +133,20 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                     </Fragment>
                     : ''}
 
+            </SettingCard>
+
+            <CardDivider/>
+
+            <SettingCard title={__('Message field')}>
+                <ToggleControl
+                    help={__('Allow donors to leave a message with their donation.', 'kudos-donations')}
+                    label={campaign.message_enabled ? __('Enabled', 'kudos-donations') : __('Disabled', 'kudos-donations')}
+                    checked={campaign.message_enabled || ''}
+                    onChange={(value) => {
+                        campaign.message_enabled = value
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                    }}
+                />
             </SettingCard>
 
             <CardDivider/>
@@ -163,7 +178,8 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         <TextControl
                             label={__('Amounts', 'kudos-donations') + ':'}
                             id={'fixed_amounts' + '-' + campaign.name}
-                            help={<Info>{__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}</Info>}
+                            help={
+                                <Info>{__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}</Info>}
                             value={campaign.fixed_amounts || ''}
                             onChange={(value) => {
                                 let valuesArray = value.split(',')
@@ -182,7 +198,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
             <CardFooter>
                 <ClipboardButton
                     isSecondary
-                    icon={(<ButtonIcon icon='copy'/>)}
+                    icon={(<ButtonIcon icon="copy"/>)}
                     text={'[kudos campaign_id="' + campaign.id + '"]'}
                     onClick={() => setHasCopied(true)}
                     onCopy={() => setHasCopied(true)}

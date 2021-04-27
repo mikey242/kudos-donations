@@ -63,7 +63,7 @@ class Front {
 	/**
 	 * Add root styles to header based on theme.
 	 *
-	 * @param bool $echo // Whether to echo the styles instead of returning a string.
+	 * @param bool $echo Whether to echo the styles instead of returning a string.
 	 *
 	 * @return string|void
 	 * @since 2.0.0
@@ -279,7 +279,7 @@ class Front {
 	/**
 	 * Generates output wrapped in div with required class.
 	 *
-	 * @param string $child Child elements to include within div
+	 * @param string $child Child elements to include within div.
 	 *
 	 * @return string
 	 */
@@ -288,7 +288,7 @@ class Front {
 	}
 
 	/**
-	 * Handles the various query variables and shows relevant modals
+	 * Handles the various query variables and shows relevant modals.
 	 *
 	 * @since 2.0.0
 	 */

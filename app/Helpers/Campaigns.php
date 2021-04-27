@@ -51,6 +51,7 @@ class Campaigns {
 					case 'address_enabled':
 					case 'address_required':
 					case 'show_progress':
+					case 'message_enabled':
 						$value = rest_sanitize_boolean( $value );
 						break;
 				}

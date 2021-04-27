@@ -30,8 +30,8 @@ class Settings {
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'vendor_mollie'         => [
-					'type'         => 'object',
-					'default'      => [
+					'type'              => 'object',
+					'default'           => [
 						'connected'       => false,
 						'recurring'       => false,
 						'mode'            => 'test',
@@ -39,7 +39,7 @@ class Settings {
 						'test_key'        => '',
 						'live_key'        => '',
 					],
-					'show_in_rest' => [
+					'show_in_rest'      => [
 						'schema' => [
 							'type'       => 'object',
 							'properties' => [
@@ -129,15 +129,15 @@ class Settings {
 				'smtp_port'             => [
 					'type'              => 'number',
 					'show_in_rest'      => true,
-					'sanitize_callback' => 'intval'
+					'sanitize_callback' => 'intval',
 				],
 				'theme_colors'          => [
-					'type'         => 'object',
-					'default'      => [
+					'type'              => 'object',
+					'default'           => [
 						'primary'   => '#ff9f1c',
 						'secondary' => '#2ec4b6',
 					],
-					'show_in_rest' => [
+					'show_in_rest'      => [
 						'schema' => [
 							'type'       => 'object',
 							'properties' => [
@@ -150,7 +150,7 @@ class Settings {
 							],
 						],
 					],
-					'sanitize_callback' => [$this, 'recursive_sanitize_text_field']
+					'sanitize_callback' => [ $this, 'recursive_sanitize_text_field' ],
 				],
 				'terms_link'            => [
 					'type'              => 'string',
@@ -225,13 +225,10 @@ class Settings {
 										'type' => 'string',
 									],
 									'name'             => [
-										'type' => 'string',
+										'type'              => 'string',
 									],
 									'campaign_goal'    => [
 										'type' => 'string',
-									],
-									'show_progress'    => [
-										'type' => 'boolean',
 									],
 									'modal_title'      => [
 										'type' => 'string',
@@ -243,6 +240,9 @@ class Settings {
 										'type' => 'boolean',
 									],
 									'address_required' => [
+										'type' => 'boolean',
+									],
+									'message_enabled'  => [
 										'type' => 'boolean',
 									],
 									'amount_type'      => [
@@ -258,6 +258,9 @@ class Settings {
 									'protected'        => [
 										'type' => 'boolean',
 									],
+									'show_progress'    => [
+										'type' => 'boolean',
+									],
 								],
 							],
 						],
@@ -271,6 +274,7 @@ class Settings {
 								'kudos-donations' ),
 							'address_enabled'  => false,
 							'address_required' => true,
+							'message_enabled'  => false,
 							'amount_type'      => 'both',
 							'fixed_amounts'    => '1,5,20,50',
 							'campaign_goal'    => '',
@@ -287,26 +291,28 @@ class Settings {
 	 * Sanitize vendor settings.
 	 *
 	 * @param $settings
+	 *
 	 * @return mixed
 	 * @since 2.4.2
 	 */
-	public static function sanitize_vendor($settings) {
-		foreach ($settings as $setting=>&$value) {
-			switch ($setting) {
+	public static function sanitize_vendor( $settings ) {
+		foreach ( $settings as $setting => &$value ) {
+			switch ( $setting ) {
 				case 'connected':
 				case 'recurring':
-					$value = rest_sanitize_boolean($value);
+					$value = rest_sanitize_boolean( $value );
 					break;
 				case 'live_key':
 				case 'test_key':
 				case 'mode':
-					$value = sanitize_text_field($value);
+					$value = sanitize_text_field( $value );
 					break;
 				case 'payment_methods':
-					$value = self::recursive_sanitize_text_field($value);
+					$value = self::recursive_sanitize_text_field( $value );
 					break;
 			}
 		}
+
 		return $settings;
 	}
 
@@ -440,6 +446,7 @@ class Settings {
 	 * Method to recursively sanitize all text fields in an array.
 	 *
 	 * @param array $array Array of values to sanitize
+	 *
 	 * @return mixed
 	 * @since 2.4.2
 	 * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
@@ -452,6 +459,7 @@ class Settings {
 				$value = sanitize_text_field( $value );
 			}
 		}
+
 		return $array;
 	}
 

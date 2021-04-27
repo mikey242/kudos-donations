@@ -84,7 +84,7 @@
             {% if(campaign.address_enabled) %}
                 {% embed '/public/modal/embeds/_tab.html.twig' %}
                     {% block title %}{{ __('Address', 'kudos-donations') }}{% endblock %}
-                    {% block text %}{{ __('Please fill in your address', 'kudos-donations') ~ (campaign.address_required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') }}{% endblock %}
+                    {% block text %}{{ __('Please fill in your address', 'kudos-donations') ~ (campaign.address_required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') ~ '.' }}{% endblock %}
                     {% block body %}
                         {% from "/public/macros/form.html.twig" import text, select %}
 
@@ -340,6 +340,20 @@
                             "ZM": __("Zambia", "kudos-donations"),
                             "ZW": __("Zimbabwe", "kudos-donations"),
                         }, required ) }}
+
+                    {% endblock %}
+                {% endembed %}
+            {% endif %}
+
+            {# MESSAGE TAB #}
+            {% if(campaign.message_enabled) %}
+                {% embed '/public/modal/embeds/_tab.html.twig' %}
+                    {% block title %}{{ __('Message', 'kudos-donations') }}{% endblock %}
+                    {% block text %}{{ __('Leave a message (optional).', 'kudos-donations') }}{% endblock %}
+                    {% block body %}
+                        {% from "/public/macros/form.html.twig" import text_area %}
+
+                        {{ text_area('message', __('Your message (255 character limit).', 'kudos-donations'), false) }}
 
                     {% endblock %}
                 {% endembed %}
