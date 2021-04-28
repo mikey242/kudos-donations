@@ -178,8 +178,6 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         <TextControl
                             label={__('Amounts', 'kudos-donations') + ':'}
                             id={'fixed_amounts' + '-' + campaign.name}
-                            help={
-                                <Info>{__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}</Info>}
                             value={campaign.fixed_amounts || ''}
                             onChange={(value) => {
                                 let valuesArray = value.split(',')
@@ -189,6 +187,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                                 handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                             }}
                         />
+                        <Info>{__('Enter a comma separated list of values to use. Maximum of four numbers.', 'kudos-donations')}</Info>
                     </Fragment>
 
                     : ''}
