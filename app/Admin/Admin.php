@@ -130,7 +130,6 @@ class Admin {
 
 		add_action( "load-$transactions_page_hook_suffix", [ $this, 'prepare_transactions_page' ] );
 
-
 		/*
 		 * Subscription page.
 		 */
@@ -167,7 +166,6 @@ class Admin {
 
 		add_action( "load-$donors_page_hook_suffix", [ $this, 'prepare_donors_page' ] );
 
-
 		/*
 		 * Campaign page.
 		 */
@@ -185,7 +183,6 @@ class Admin {
 		);
 
 		add_action( "load-$campaigns_page_hook_suffix", [ $this, 'prepare_campaigns_page' ] );
-
 
 		/*
 		 * Debug page.

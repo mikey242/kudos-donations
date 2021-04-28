@@ -149,13 +149,13 @@ class Front {
 	 */
 	public function enqueue_block_assets() {
 
-		// Enqueue public css
+		// Enqueue public css.
 		wp_enqueue_style( $this->plugin_name . '-public',
 			Utils::get_asset_url( 'kudos-public.css' ),
 			[],
 			$this->version );
 
-		// Enqueue block specific js
+		// Enqueue block specific js.
 		$handle = $this->plugin_name . '-button-block';
 		wp_enqueue_script(
 			$handle,
@@ -183,7 +183,7 @@ class Front {
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 
-		// Output root styles
+		// Output root styles.
 		$this->get_kudos_root_styles();
 
 	}
