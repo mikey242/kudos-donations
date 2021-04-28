@@ -114,10 +114,10 @@ e.g:
 * Change 'country' field to drop-down select
 * Change 'back' and 'close' icon colors on modal to grey
 * Fix missing screen options pull-down on table pages
-* Upgrade TailwindCSS to 2.1.1
+* Upgrade TailwindCSS to 2.1.2
 * Upgrade from Twig 2 to Twig 3
 * Change minimum PHP version to 7.2
-* Switch from node-sass to Dart
+* Switch from node-sass to Dart Sass
 * Switch to using sanitize_callbacks to sanitize all rest data
 
 = 2.4.7 =
