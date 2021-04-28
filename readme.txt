@@ -113,6 +113,7 @@ e.g:
 * Add optional "message" field to donation form. This can be enabled per campaign under "Campaign details".
 * Change 'country' field to drop-down select
 * Change 'back' and 'close' icon colors on modal to grey
+* Fix missing screen options pull-down on table pages
 * Upgrade TailwindCSS to 2.1.1
 * Upgrade from Twig 2 to Twig 3
 * Change minimum PHP version to 7.2
