@@ -4,7 +4,7 @@
   "description": " Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.",
   "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack --config webpack.dev.js",
+    "start": "cross-env NODE_ENV=development webpack --config webpack.dev.js & lt -p 80",
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
     "build:production": "cross-env NODE_ENV=production webpack --progress --config webpack.prod.js && composer install --no-dev --optimize-autoloader",
     "make-pot": "wp i18n make-pot . --exclude='docker, src'",
