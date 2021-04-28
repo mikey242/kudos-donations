@@ -516,7 +516,7 @@ class MollieVendor extends AbstractVendor {
 			$customer_id       = $payment->customerId;
 			$customer          = $this->get_customer( $customer_id );
 			$subscription_meta = $customer->getSubscription( $subscription_id )->metadata;
-			if ( array_key_exists( 'campaign_id', $subscription_meta ) ) {
+			if ( isset( $subscription_meta['campaign_id'] ) ) {
 				$campaign_id = $subscription_meta->campaign_id;
 				$transaction->set_fields(
 					[

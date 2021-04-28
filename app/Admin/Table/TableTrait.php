@@ -168,8 +168,7 @@ trait TableTrait {
 
 		$search = null;
 
-		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && array_key_exists( $_REQUEST['search-field'],
-				$this->column_names() ) ) {
+		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && isset( $this->column_names()[$_REQUEST['search-field']]) ) {
 			$search['term']  = strtolower( esc_attr( wp_unslash( $_REQUEST['s'] ) ) );
 			$search['field'] = esc_attr( wp_unslash( $_REQUEST['search-field'] ) );
 		}

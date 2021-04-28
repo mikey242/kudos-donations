@@ -58,7 +58,7 @@ class Utils {
 	 */
 	public static function get_asset_url( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
-		if ( array_key_exists( $asset, $hash ) ) {
+		if ( isset( $hash[$asset] ) ) {
 			return $url . 'dist/' . $hash[ $asset ];
 		}
 
@@ -75,7 +75,7 @@ class Utils {
 	 */
 	public static function get_asset_path( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
-		if ( array_key_exists( $asset, $hash ) ) {
+		if ( isset( $hash[$asset] ) ) {
 			return KUDOS_PLUGIN_DIR . '/dist/' . $hash[ $asset ];
 		}
 
@@ -102,7 +102,7 @@ class Utils {
 		$response = wp_remote_retrieve_body( $request );
 		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
 
-		if ( array_key_exists( $asset, $hash ) ) {
+		if ( isset( $hash[$asset] ) ) {
 			$asset_request = wp_remote_get( KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ] );
 
 			return wp_remote_retrieve_body( $asset_request );
