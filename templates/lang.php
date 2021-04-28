@@ -21,7 +21,7 @@ __( 'Click here', 'kudos-donations' );
 __('Visit Kudos Donations', 'kudos-donations');
 __('Close', 'kudos-donations');
 
-// Template: "templates/public/modal/donate.modal.html.twig"
+// Template: "templates/public/forms/donate.form.html.twig"
 __('Other', 'kudos-donations');
 __('Amount', 'kudos-donations');
 __('Name', 'kudos-donations');
@@ -56,6 +56,9 @@ __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' );
 __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' );
 __( 'Donate', 'kudos-donations' );
 __( 'Secure payment by', 'kudos-donations' );
+__('Message', 'kudos-donations');
+__('Leave a message (optional).', 'kudos-donations');
+__('Your message (255 character limit).', 'kudos-donations');
 
 // Template: "templates/public/modal/message.modal.html.twig"
 __( 'Ok', 'kudos-donations' );
