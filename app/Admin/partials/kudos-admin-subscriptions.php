@@ -1,6 +1,5 @@
 <?php
 
-use Kudos\Admin\Table\SubscriptionsTable;
 use Kudos\Service\AdminNotice;
 
 /**
@@ -9,9 +8,7 @@ use Kudos\Service\AdminNotice;
  * @since    1.1.0
  */
 
-$table = new SubscriptionsTable();
-$table->prepare_items();
-$table_action = $table->current_action();
+$table_action = $this->table->current_action();
 $records      = isset( $_REQUEST['bulk-action'] ) ? count( $_REQUEST['bulk-action'] ) : 0;
 
 switch ( $table_action ) {
@@ -33,7 +30,7 @@ switch ( $table_action ) {
 ?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php esc_attr_e( 'Subscriptions', 'kudos-donations' ); ?></h1>
-	<?php if ( !empty( $_REQUEST['s'] ) ) { ?>
+	<?php if ( ! empty( $_REQUEST['s'] ) ) { ?>
 		<span class="subtitle">
 			<?php
 			/* translators: %s: Search term */
@@ -48,6 +45,6 @@ switch ( $table_action ) {
 	}
 	?>
 	<form id="subscriptions-table" method="POST">
-		<?php $table->display(); ?>
+		<?php $this->table->display(); ?>
 	</form>
 </div>

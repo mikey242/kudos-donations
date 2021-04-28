@@ -1,6 +1,5 @@
 <?php
 
-use Kudos\Admin\Table\TransactionsTable;
 use Kudos\Service\AdminNotice;
 
 /**
@@ -9,9 +8,7 @@ use Kudos\Service\AdminNotice;
  * @since    1.0.0
  */
 
-$table = new TransactionsTable();
-$table->prepare_items();
-$table_action = $table->current_action();
+$table_action = $this->table->current_action();
 $records      = isset( $_REQUEST['bulk-action'] ) ? count( $_REQUEST['bulk-action'] ) : 0;
 
 switch ( $table_action ) {
@@ -26,13 +23,11 @@ switch ( $table_action ) {
 		);
 		break;
 }
-
-echo get_search_query();
-
 ?>
+
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php esc_attr_e( 'Transactions', 'kudos-donations' ); ?></h1>
-	<?php if ( !empty( $_REQUEST['s'] ) ) { ?>
+	<?php if ( ! empty( $_REQUEST['s'] ) ) { ?>
 		<span class="subtitle">
 			<?php
 			/* translators: %s: Search term */
@@ -47,6 +42,6 @@ echo get_search_query();
 	}
 	?>
 	<form id="transactions-table" method="POST">
-		<?php $table->display(); ?>
+		<?php $this->table->display(); ?>
 	</form>
 </div>

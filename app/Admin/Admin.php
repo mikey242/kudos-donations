@@ -2,6 +2,10 @@
 
 namespace Kudos\Admin;
 
+use Kudos\Admin\Table\CampaignsTable;
+use Kudos\Admin\Table\DonorsTable;
+use Kudos\Admin\Table\SubscriptionsTable;
+use Kudos\Admin\Table\TransactionsTable;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
@@ -13,6 +17,7 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
+use WP_List_Table;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -53,6 +58,10 @@ class Admin {
 	 * @var      string $version The current version of this plugin.
 	 */
 	private $version;
+	/**
+	 * @var WP_List_Table
+	 */
+	private $table;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -88,6 +97,9 @@ class Admin {
 
 		);
 
+		/*
+		 * Settings page.
+		 */
 		$settings_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
 			__( 'Kudos Settings', 'kudos-donations' ),
@@ -98,8 +110,12 @@ class Admin {
 				echo '<div id="kudos-settings"></div>';
 			}
 		);
-		add_action( "admin_print_scripts-$settings_page_hook_suffix", [ $this, 'kudos_settings_page_assets' ] );
 
+		add_action( "load-$settings_page_hook_suffix", [ $this, 'prepare_settings_page' ] );
+
+		/*
+		 * Transaction page.
+		 */
 		$transactions_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
 			/* translators: %s: Plugin name */
@@ -108,13 +124,16 @@ class Admin {
 			'manage_options',
 			'kudos-transactions',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-transactions.php';
+				include_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-transactions.php';
 			}
-
 		);
-		add_action( "admin_print_scripts-$transactions_page_hook_suffix",
-			[ $this, 'kudos_transactions_page_assets' ] );
 
+		add_action( "load-$transactions_page_hook_suffix", [ $this, 'prepare_transactions_page' ] );
+
+
+		/*
+		 * Subscription page.
+		 */
 		$subscriptions_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
 			/* translators: %s: Plugin name */
@@ -123,13 +142,16 @@ class Admin {
 			'manage_options',
 			'kudos-subscriptions',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-subscriptions.php';
+				include_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-subscriptions.php';
 			}
-
 		);
-		add_action( "admin_print_scripts-$subscriptions_page_hook_suffix",
-			[ $this, 'kudos_subscriptions_page_assets' ] );
 
+		add_action( "load-$subscriptions_page_hook_suffix", [ $this, 'prepare_subscriptions_page' ] );
+
+
+		/*
+		 * Donor page.
+		 */
 		$donors_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
 			/* translators: %s: Plugin name */
@@ -138,12 +160,17 @@ class Admin {
 			'manage_options',
 			'kudos-donors',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-donors.php';
+				include_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-donors.php';
 			}
 
 		);
-		add_action( "admin_print_scripts-$donors_page_hook_suffix", [ $this, 'kudos_donor_page_assets' ] );
 
+		add_action( "load-$donors_page_hook_suffix", [ $this, 'prepare_donors_page' ] );
+
+
+		/*
+		 * Campaign page.
+		 */
 		$campaigns_page_hook_suffix = add_submenu_page(
 			'kudos-settings',
 			/* translators: %s: Plugin name */
@@ -152,13 +179,17 @@ class Admin {
 			'manage_options',
 			'kudos-campaigns',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-campaigns.php';
+				include_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-campaigns.php';
 			}
 
 		);
-		add_action( "admin_print_scripts-$campaigns_page_hook_suffix", [ $this, 'kudos_campaign_page_assets' ] );
 
-		// Add debug menu.
+		add_action( "load-$campaigns_page_hook_suffix", [ $this, 'prepare_campaigns_page' ] );
+
+
+		/*
+		 * Debug page.
+		 */
 		$debug_page_hook_suffix = add_submenu_page(
 			KUDOS_DEBUG ? 'kudos-settings' : null,
 			'Kudos Debug',
@@ -189,11 +220,55 @@ class Admin {
 	}
 
 	/**
-	 * Assets specific to the Kudos Settings page.
+	 * Hook settings page assets.
+	 */
+	public function prepare_settings_page() {
+		add_action( 'admin_enqueue_scripts', [ $this, 'settings_page_assets' ] );
+	}
+
+	/**
+	 * Hook assets and prepare the table for screen options.
+	 */
+	public function prepare_transactions_page() {
+		add_action( "admin_enqueue_scripts", [ $this, "transactions_page_assets" ] );
+		$this->table = new TransactionsTable();
+		$this->table->prepare_items();
+	}
+
+	/**
+	 * Hook assets and prepare the table for screen options.
+	 */
+	public function prepare_subscriptions_page() {
+		add_action( "admin_enqueue_scripts", [ $this, 'subscriptions_page_assets' ] );
+		$this->table = new SubscriptionsTable();
+		$this->table->prepare_items();
+
+	}
+
+	/**
+	 * Hook assets and prepare the table for screen options.
+	 */
+	public function prepare_donors_page() {
+		add_action( "admin_enqueue_scripts", [ $this, 'donor_page_assets' ] );
+		$this->table = new DonorsTable();
+		$this->table->prepare_items();
+	}
+
+	/**
+	 * Hook assets and prepare the table for screen options.
+	 */
+	public function prepare_campaigns_page() {
+		add_action( "admin_enqueue_scripts", [ $this, 'campaign_page_assets' ] );
+		$this->table = new CampaignsTable();
+		$this->table->prepare_items();
+	}
+
+	/**
+	 * Assets specific to the Settings page.
 	 *
 	 * @since   2.0.0
 	 */
-	public function kudos_settings_page_assets() {
+	public function settings_page_assets() {
 
 		$handle = $this->plugin_name . '-settings';
 
@@ -226,11 +301,11 @@ class Admin {
 	}
 
 	/**
-	 * Assets common to all Kudos Table pages.
+	 * Assets common to all Table pages.
 	 *
 	 * @since 2.0.0
 	 */
-	private function kudos_table_page_assets(): string {
+	private function table_page_assets(): string {
 
 		$handle = $this->plugin_name . '-table';
 		wp_enqueue_script(
@@ -249,7 +324,7 @@ class Admin {
 	 *
 	 * @since   2.0.0
 	 */
-	public function kudos_transactions_page_assets() {
+	public function transactions_page_assets() {
 
 		wp_enqueue_script(
 			$this->plugin_name . '-transactions',
@@ -260,7 +335,7 @@ class Admin {
 		);
 
 		// Load table assets.
-		$table_handle = $this->kudos_table_page_assets();
+		$table_handle = $this->table_page_assets();
 		wp_localize_script(
 			$table_handle,
 			'kudos',
@@ -275,10 +350,10 @@ class Admin {
 	 *
 	 * @since   2.0.0
 	 */
-	public function kudos_subscriptions_page_assets() {
+	public function subscriptions_page_assets() {
 
 		// Load table assets.
-		$table_handle = $this->kudos_table_page_assets();
+		$table_handle = $this->table_page_assets();
 		wp_localize_script(
 			$table_handle,
 			'kudos',
@@ -294,10 +369,10 @@ class Admin {
 	 *
 	 * @since   2.0.0
 	 */
-	public function kudos_donor_page_assets() {
+	public function donor_page_assets() {
 
 		// Load table assets.
-		$table_handle = $this->kudos_table_page_assets();
+		$table_handle = $this->table_page_assets();
 		wp_localize_script(
 			$table_handle,
 			'kudos',
@@ -312,10 +387,10 @@ class Admin {
 	 *
 	 * @since   2.0.0
 	 */
-	public function kudos_campaign_page_assets() {
+	public function campaign_page_assets() {
 
 		// Load table assets.
-		$table_handle = $this->kudos_table_page_assets();
+		$table_handle = $this->table_page_assets();
 		wp_localize_script(
 			$table_handle,
 			'kudos',

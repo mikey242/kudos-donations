@@ -67,13 +67,11 @@ trait TableTrait {
 	 */
 	public function prepare_items() {
 
+		// Get table columns (includes sortable and hidden)
+		$this->_column_headers = static::get_column_info();
+
 		// Process bulk action if any.
 		static::process_bulk_action();
-
-		$columns               = $this->get_columns();
-		$hidden                = static::get_hidden_columns();
-		$sortable              = $this->get_sortable_columns();
-		$this->_column_headers = [ $columns, $hidden, $sortable ];
 
 		$table_data = static::fetch_table_data();
 		usort( $table_data, [ &$this, 'sort_data' ] );
