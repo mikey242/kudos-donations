@@ -109,13 +109,21 @@ e.g:
 
 == Changelog ==
 
+= 2.5.1 =
+* Add missing translation function calls
+* Fix payment cancelled message not appearing
+* Improve subscription cancellation logic
+* Replace deprecated array_key_exists function
+* Various minor visual tweaks
+
 = 2.5.0 =
 * Add optional "message" field to donation form. This can be enabled per campaign under "Campaign details".
 * Change 'country' field to drop-down select
 * Change 'back' and 'close' icon colors on modal to grey
 * Fix missing screen options pull-down on table pages
 * Upgrade TailwindCSS to 2.1.2
-* Upgrade from Twig 2 to Twig 3
+* Upgrade Twig 2 to Twig 3
+* Upgrade Mollie API client to 2.31.1
 * Change minimum PHP version to 7.2
 * Switch from node-sass to Dart Sass
 * Switch to using sanitize_callbacks to sanitize all rest data
