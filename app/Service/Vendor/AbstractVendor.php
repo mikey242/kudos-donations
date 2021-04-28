@@ -2,6 +2,7 @@
 
 namespace Kudos\Service\Vendor;
 
+use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Service\AbstractService;
 use WP_Error;
@@ -42,11 +43,11 @@ abstract class AbstractVendor extends AbstractService {
 	/**
 	 * Cancel the specified subscription
 	 *
-	 * @param string $subscription_id subscription id.
+	 * @param SubscriptionEntity $subscription subscription row id.
 	 *
 	 * @return bool
 	 */
-	abstract public function cancel_subscription( string $subscription_id ): bool;
+	abstract public function cancel_subscription( SubscriptionEntity $subscription ): bool;
 
 	/**
 	 * Checks the provided api key by attempting to get associated payments

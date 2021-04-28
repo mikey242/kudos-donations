@@ -227,42 +227,38 @@ class PaymentService extends AbstractService {
 	/**
 	 * Cancel the specified subscription
 	 *
-	 * @param string $subscription_id Id of subscription to cancel.
+	 * @param string $id subscription row ID.
 	 *
 	 * @return bool
 	 * @since   2.3.0
 	 */
-	public function cancel_subscription( string $subscription_id ): bool {
+	public function cancel_subscription( string $id ): bool {
 
 		$mapper = new MapperService( SubscriptionEntity::class );
 
+		// Get subscription entity from supplied row id.
 		/** @var SubscriptionEntity $subscription */
-		$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
+		$subscription = $mapper->get_one_by( [ 'id' => $id ] );
 
-		if ( $subscription ) {
+		// Cancel subscription with vendor.
+		$result = $subscription ?? $this->vendor->cancel_subscription( $subscription );
 
-			$result = $this->vendor->cancel_subscription( $subscription_id );
+		if ( $result ) {
 
-			if ( $result ) {
+			// Update entity with canceled status.
+			$subscription->set_fields( [
+				'status' => 'cancelled',
+			] );
 
-				// Update entity with canceled status
-				$subscription->set_fields(
-					[
-						'status' => 'cancelled',
-					]
-				);
+			// Save changes to subscription entity.
+			$mapper->save( $subscription );
 
-				// Save changes to subscription entity.
-				$mapper->save( $subscription );
+			$this->logger->info(
+				'Subscription cancelled.',
+				[ 'id' => $subscription->id ]
+			);
 
-				$this->logger->info(
-					'Subscription cancelled.',
-					[ 'subscription_id' => $subscription_id ]
-				);
-
-				return true;
-			}
-
+			return true;
 		}
 
 		return false;
@@ -285,7 +281,8 @@ class PaymentService extends AbstractService {
 	 * @return false|Payment
 	 * @since      2.3.0
 	 */
-	public function create_payment(
+	public
+	function create_payment(
 		string $value,
 		string $interval,
 		string $years,
@@ -387,7 +384,8 @@ class PaymentService extends AbstractService {
 	 *
 	 * @since    2.3.0
 	 */
-	public function check_api_keys() {
+	public
+	function check_api_keys() {
 
 		Settings::update_array( 'vendor_mollie',
 			[
@@ -468,7 +466,10 @@ class PaymentService extends AbstractService {
 	 * @return WP_Error|WP_REST_Response
 	 * @since    2.3.0
 	 */
-	public function handle_webhook( WP_REST_Request $request ) {
+	public
+	function handle_webhook(
+		WP_REST_Request $request
+	) {
 
 		return $this->vendor->rest_webhook( $request );
 

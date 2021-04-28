@@ -48,8 +48,6 @@ class MollieVendor extends AbstractVendor {
 
 	/**
 	 * Mollie constructor.
-	 *
-	 * @since      1.0.0
 	 */
 	public function __construct() {
 
@@ -81,7 +79,6 @@ class MollieVendor extends AbstractVendor {
 	 * @param string $customer_id Mollie customer id.
 	 *
 	 * @return SubscriptionCollection|false
-	 * @since   2.0.0
 	 */
 	public function get_subscriptions( string $customer_id ) {
 
@@ -102,26 +99,23 @@ class MollieVendor extends AbstractVendor {
 	/**
 	 * Cancel the specified subscription
 	 *
-	 * @param string $subscription_id Mollie subscription id.
+	 * @param SubscriptionEntity $subscription Instance of SubscriptionEntity.
 	 *
 	 * @return bool
-	 * @since   2.0.0
 	 */
-	public function cancel_subscription( string $subscription_id ): bool {
+	public function cancel_subscription( SubscriptionEntity $subscription ): bool {
 
-		// Get the subscription from the database
-		$mapper = new MapperService( SubscriptionEntity::class );
-		/** @var SubscriptionEntity $subscription */
-		$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
 		$customer_id  = $subscription->customer_id;
+		$subscription_id = $subscription->subscription_id;
 
 		$customer = $this->get_customer( $customer_id );
 
-		// Bail if no subscription found locally or if not active
-		if ( empty( $subscription ) || 'active' !== $subscription->status || null === $customer ) {
+		// Bail if no subscription found locally or if not active.
+		if ( 'active' !== $subscription->status || null === $customer ) {
 			return false;
 		}
 
+		// Cancel the subscription via Mollie's API.
 		$response = $customer->cancelSubscription( $subscription_id );
 
 		/** @var Subscription $response */
@@ -134,7 +128,7 @@ class MollieVendor extends AbstractVendor {
 	 * @param string $api_key API key to test.
 	 *
 	 * @return bool
-	 * @since      1.0.0
+
 	 */
 	public function refresh_api_connection( string $api_key ): bool {
 
@@ -163,7 +157,7 @@ class MollieVendor extends AbstractVendor {
 	 * @param string $mollie_payment_id Mollie payment id.
 	 *
 	 * @return bool|Payment
-	 * @since      1.0.0
+
 	 */
 	public function get_payment( string $mollie_payment_id ) {
 
@@ -186,7 +180,6 @@ class MollieVendor extends AbstractVendor {
 	 * @param string $name Donor name.
 	 *
 	 * @return bool|Customer
-	 * @since   2.0.0
 	 */
 	public function create_customer( string $email, string $name ) {
 
@@ -232,7 +225,7 @@ class MollieVendor extends AbstractVendor {
 	 * @param array $payment_array Parameters to pass to mollie to create a payment.
 	 *
 	 * @return null|Payment
-	 * @since      1.0.0
+
 	 */
 	public function create_payment( array $payment_array ): ?Payment {
 

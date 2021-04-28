@@ -223,7 +223,7 @@ class SubscriptionsTable extends WP_List_Table {
 	/**
 	 * Cancel a subscription.
 	 *
-	 * @param string $id order ID.
+	 * @param string $id subscription row ID.
 	 *
 	 * @return bool
 	 * @since      2.0.0
@@ -231,11 +231,7 @@ class SubscriptionsTable extends WP_List_Table {
 	public static function cancel_subscription( string $id ): bool {
 
 		$payment_service = PaymentService::factory();
-		$mapper = new MapperService(SubscriptionEntity::class);
-		/** @var SubscriptionEntity $subscription */
-		$subscription    = $mapper->get_one_by(['id' => $id]);
-		$subscription_id = $subscription->subscription_id;
-		return $payment_service->cancel_subscription( $subscription_id );
+		return $payment_service->cancel_subscription( $id );
 	}
 
 	/**
