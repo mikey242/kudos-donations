@@ -70,12 +70,12 @@ class KudosModal {
 	 * Get message modal markup.
 	 *
 	 * @param string $title
-	 * @param string $message
+	 * @param string|null $message
 	 *
 	 * @return string
 	 * @since      1.0.0
 	 */
-	public function create_message_modal( string $title, string $message ): string {
+	public function create_message_modal( string $title, string $message=null ): string {
 
 		$this->template = self::MESSAGE_TEMPLATE;
 
