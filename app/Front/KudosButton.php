@@ -88,11 +88,9 @@ class KudosButton {
 					'alignment' => $this->alignment,
 					'label'     => $this->button_label,
 					'target'    => $this->target_id,
-					'logo'      => Utils::get_kudos_logo_markup( 'white' ),
+					'logo'      => apply_filters( 'kudos_get_button_logo', Utils::get_kudos_logo_markup( 'white' ) ),
 				] ) );
 
 		return $button . $modal;
-
 	}
-
 }
