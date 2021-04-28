@@ -70,7 +70,7 @@ class Front {
 	 */
 	public function get_kudos_root_styles( $echo = true ): string {
 
-		$theme_colours = Settings::get_setting( 'theme_colors' );
+		$theme_colours = apply_filters('kudos_theme_colors', Settings::get_setting( 'theme_colors' ));
 
 		$primary          = $theme_colours['primary'] ?? '#ff9f1c';
 		$primary_dark     = Utils::color_luminance( $primary, '-0.06' );
