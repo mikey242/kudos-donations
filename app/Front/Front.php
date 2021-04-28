@@ -397,6 +397,7 @@ class Front {
 					break;
 				case 'canceled':
 					$atts['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
+					$atts['modal_text'] = __( 'You have not been charged for this transaction.', 'kudos-donations' );
 					break;
 				default:
 					$atts['modal_title'] = __( 'Thanks', 'kudos-donations' );
