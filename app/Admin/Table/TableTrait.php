@@ -2,7 +2,7 @@
 
 namespace Kudos\Admin\Table;
 
-/*
+/**
  * @link https://gist.github.com/paulund/7659452
  * @link https://github.com/pmbaldha/WP-Custom-List-Table-With-Database-Example/blob/master/custom-list-table-db-example.php
  * @link https://github.com/collizo4sky/WP_List_Table-Class-Plugin-Example/blob/master/plugin.php
