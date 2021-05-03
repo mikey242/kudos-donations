@@ -112,7 +112,7 @@ class Utils {
 	}
 
 	/**
-	 * Converts three letter currency code into a symbol
+	 * Converts three letter currency code into a symbol.
 	 *
 	 * @param string $currency Three letter currency code (EUR, GBP, USD).
 	 *
@@ -179,7 +179,7 @@ class Utils {
 	}
 
 	/**
-	 * Returns a translated string of the sequence type
+	 * Returns a translated string of the sequence type.
 	 *
 	 * @param string $text Mollie sequence type code.
 	 *
@@ -225,7 +225,7 @@ class Utils {
 	}
 
 	/**
-	 * Calculate how many years a subscription is running for
+	 * Calculate how many years a subscription is running for.
 	 * This is based on the number of payments and the frequency.
 	 *
 	 * @param int $years Number of years as an integer.
@@ -245,7 +245,7 @@ class Utils {
 	}
 
 	/**
-	 * Generate a random and unique ID with specified prefix
+	 * Generate a random and unique ID with specified prefix.
 	 *
 	 * @param string|null $prefix Prefix for id.
 	 * @param int $length Return value length (minus prefix).
@@ -260,7 +260,7 @@ class Utils {
 	}
 
 	/**
-	 * Schedules an action using action scheduler
+	 * Schedules an action using action scheduler.
 	 *
 	 * @param int $timestamp Timestamp of when to run the action.
 	 * @param string $hook The name of the WordPress action that is being registered.
@@ -287,7 +287,7 @@ class Utils {
 	}
 
 	/**
-	 * Schedules a recurring action using action scheduler
+	 * Schedules a recurring action using action scheduler.
 	 *
 	 * @param int $timestamp Timestamp of when to run the action.
 	 * @param int $interval How long to wait between runs.
@@ -355,7 +355,7 @@ class Utils {
 	}
 
 	/**
-	 * Returns the Kudos logo SVG markup.
+	 * Returns the kudos logo SVG markup.
 	 *
 	 * @param string|null $color
 	 * @param int $width

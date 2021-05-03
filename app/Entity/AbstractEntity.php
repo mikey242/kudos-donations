@@ -38,11 +38,11 @@ abstract class AbstractEntity implements EntityInterface {
 	/**
 	 * Entity object constructor.
 	 *
-	 * @param null|array $atts Array of entities properties and values.
+	 * @param array|null $atts Array of entities properties and values.
 	 *
 	 * @since   2.0.0
 	 */
-	public function __construct( $atts = null ) {
+	public function __construct( array $atts = null ) {
 
 		if ( null !== $atts ) {
 			$this->set_fields( $atts );

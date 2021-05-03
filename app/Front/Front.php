@@ -30,7 +30,6 @@ class Front {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since   1.0.0
 	 * @access   private
 	 * @var      string $plugin_name The ID of this plugin.
 	 */
@@ -39,7 +38,6 @@ class Front {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since   1.0.0
 	 * @access   private
 	 * @var      string $version The current version of this plugin.
 	 */
@@ -51,7 +49,6 @@ class Front {
 	 * @param string $plugin_name The name of the plugin.
 	 * @param string $version The version of this plugin.
 	 *
-	 * @since   1.0.0
 	 */
 	public function __construct( string $plugin_name, string $version ) {
 
@@ -65,8 +62,6 @@ class Front {
 	 *
 	 * @param bool $echo Whether to echo the styles instead of returning a string.
 	 *
-	 * @return string|void
-	 * @since 2.0.0
 	 */
 	public function get_kudos_root_styles( $echo = true ): string {
 
@@ -102,8 +97,6 @@ class Front {
 
 	/**
 	 * Register the JavaScript for the public-facing side of the plugin.
-	 *
-	 * @since   1.0.0
 	 */
 	public function enqueue_scripts() {
 
@@ -144,8 +137,6 @@ class Front {
 
 	/**
 	 * Register the assets used for blocks.
-	 *
-	 * @since   1.0.0
 	 */
 	public function enqueue_block_assets() {
 
@@ -189,9 +180,7 @@ class Front {
 	}
 
 	/**
-	 * Creates and registers the [kudos] shortcode and block
-	 *
-	 * @since   1.0.0
+	 * Creates and registers the [kudos] shortcode and block.
 	 */
 	public function register_kudos() {
 
@@ -239,12 +228,11 @@ class Front {
 	}
 
 	/**
-	 * Renders the kudos button and donation modals
+	 * Renders the kudos button and donation modals.
 	 *
 	 * @param array $atts Array of Kudos button/modal attributes.
 	 *
 	 * @return string|null
-	 * @since   2.0.0
 	 */
 	public function kudos_render_callback( array $atts ): ?string {
 
@@ -289,8 +277,6 @@ class Front {
 
 	/**
 	 * Handles the various query variables and shows relevant modals.
-	 *
-	 * @since 2.0.0
 	 */
 	public function handle_query_variables() {
 
@@ -363,7 +349,6 @@ class Front {
 	 * @param string $order_id Kudos order id.
 	 *
 	 * @return bool | array
-	 * @since   1.0.0
 	 */
 	public function check_transaction( string $order_id ) {
 

@@ -7,7 +7,7 @@ class Settings {
 	const PREFIX = '_kudos_';
 
 	/**
-	 * Settings configuration
+	 * Settings configuration.
 	 *
 	 * @var array
 	 */
@@ -16,7 +16,6 @@ class Settings {
 	/**
 	 * Settings class constructor.
 	 *
-	 * @since   2.0.0
 	 */
 	public function __construct() {
 
@@ -293,7 +292,6 @@ class Settings {
 	 * @param $settings
 	 *
 	 * @return mixed
-	 * @since 2.4.2
 	 */
 	public static function sanitize_vendor( $settings ) {
 		foreach ( $settings as $setting => &$value ) {
@@ -357,14 +355,13 @@ class Settings {
 	}
 
 	/**
-	 * Updates specific values in serialized settings array
-	 * e.g update_array('my_setting', ['enabled' => false])
+	 * Updates specific values in serialized settings array.
+	 * e.g update_array('my_setting', ['enabled' => false]).
 	 *
 	 * @param string $name // Setting array name
-	 * @param array $value // Array of name=>values in setting to update
+	 * @param array $value // Array of name=>values in setting to update.
 	 *
 	 * @return bool
-	 * @since 2.3.8
 	 */
 	public static function update_array( string $name, array $value ): bool {
 
@@ -384,9 +381,7 @@ class Settings {
 	}
 
 	/**
-	 * Register all the settings
-	 *
-	 * @since   2.0.0
+	 * Register all the settings.
 	 */
 	public function register_settings() {
 
@@ -401,9 +396,7 @@ class Settings {
 	}
 
 	/**
-	 * Add the settings to the database
-	 *
-	 * @since 2.0.0
+	 * Add the settings to the database.
 	 */
 	public function add_defaults() {
 
@@ -416,9 +409,7 @@ class Settings {
 	}
 
 	/**
-	 * Removes all settings from database
-	 *
-	 * @since 2.0.0
+	 * Removes all settings from database.
 	 */
 	public function remove_settings() {
 
@@ -429,12 +420,11 @@ class Settings {
 	}
 
 	/**
-	 * Remove specified setting from database
+	 * Remove specified setting from database.
 	 *
 	 * @param string $name
 	 *
 	 * @return bool
-	 * @since 2.1.1
 	 */
 	public static function remove_setting( string $name ): bool {
 
@@ -445,10 +435,9 @@ class Settings {
 	/**
 	 * Method to recursively sanitize all text fields in an array.
 	 *
-	 * @param array $array Array of values to sanitize
+	 * @param array $array Array of values to sanitize.
 	 *
 	 * @return mixed
-	 * @since 2.4.2
 	 * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
 	 */
 	public static function recursive_sanitize_text_field( array $array ): array {
