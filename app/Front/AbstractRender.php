@@ -54,10 +54,13 @@ abstract class AbstractRender {
 
 	}
 
-	public function render(): string {
+	/**
+	 * @return string|null
+	 */
+	public function render(): ?string {
 
-		$id ='kudos-donations-' . $this->id;
-
+		// Container ID cannot be same as object ID.
+		$id ='kudos-donations-' . Utils::generate_id();
 		return '<div class="kudos-donations" id="' . $id . '">' . $this->get_markup() . '</div>';
 	}
 
