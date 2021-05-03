@@ -230,7 +230,6 @@ class TwigService extends AbstractService {
 			return $this->twig->render( $template, $array );
 		} catch ( Throwable $e ) {
 			$this->logger->critical( $e->getMessage(), [ 'template' => $template, 'line' => $e->getLine() ] );
-
 			return false;
 		}
 

@@ -140,7 +140,8 @@ export default registerBlockType('iseardmedia/kudos-button', {
                     </BlockControls>
 
                     <KudosButton
-                        className={(this.props.attributes.className ?? '') + ' has-text-align-' + this.props.attributes.alignment}>
+                        className={(this.props.attributes.className ?? '') + ' has-text-align-' + this.props.attributes.alignment}
+                    >
                         <RichText
                             formattingControls={[
                                 'bold',

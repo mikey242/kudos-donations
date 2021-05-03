@@ -58,7 +58,7 @@ class Utils {
 	 */
 	public static function get_asset_url( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
-		if ( isset( $hash[$asset] ) ) {
+		if ( isset( $hash[ $asset ] ) ) {
 			return $url . 'dist/' . $hash[ $asset ];
 		}
 
@@ -75,7 +75,7 @@ class Utils {
 	 */
 	public static function get_asset_path( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
-		if ( isset( $hash[$asset] ) ) {
+		if ( isset( $hash[ $asset ] ) ) {
 			return KUDOS_PLUGIN_DIR . '/dist/' . $hash[ $asset ];
 		}
 
@@ -102,7 +102,7 @@ class Utils {
 		$response = wp_remote_retrieve_body( $request );
 		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
 
-		if ( isset( $hash[$asset] ) ) {
+		if ( isset( $hash[ $asset ] ) ) {
 			$asset_request = wp_remote_get( KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ] );
 
 			return wp_remote_retrieve_body( $asset_request );
@@ -200,7 +200,7 @@ class Utils {
 	}
 
 	/**
-	 * Returns subscription frequency name based on number of months
+	 * Returns subscription frequency name based on number of months.
 	 *
 	 * @param string $frequency Mollie frequency code.
 	 *
@@ -253,7 +253,7 @@ class Utils {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	public static function generate_id( $prefix = null, $length = 10 ): string {
+	public static function generate_id( string $prefix = null, int $length = 10 ): string {
 
 		return $prefix . substr( base_convert( sha1( uniqid( wp_rand() ) ), 16, 36 ), 0, $length );
 
