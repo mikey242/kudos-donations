@@ -113,8 +113,8 @@ jQuery(document).ready(($) => {
                                     )
 
                                     // Reset amounts
-                                    let $amountInput = $form.find('[id^=amount-open-kudos_modal]')
-                                    let $amountRadios = $form.find('[id^=amount-fixed-kudos_modal]')
+                                    let $amountInput = $form.find('[id^=amount-open-]')
+                                    let $amountRadios = $form.find('[id^=amount-fixed-]')
                                     toggleAmount($amountInput, $amountRadios)
                                     $($amountRadios[0]).prop('checked', true)
                                     $amountInput.attr({'required': false, 'name': ''})
@@ -230,7 +230,7 @@ jQuery(document).ready(($) => {
             )
         })
 
-        // Submit donation form action
+        // Submit donation form action.
         document.querySelectorAll('form.kudos-form').forEach((form) => {
 
             // Prevent form submit on enter.
