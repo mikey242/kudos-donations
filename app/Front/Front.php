@@ -6,9 +6,9 @@ use Exception;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Campaigns;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
+use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
@@ -17,7 +17,6 @@ use Kudos\Service\RestRouteService;
  * The public-facing functionality of the plugin.
  *
  * @link    https://www.linkedin.com/in/michael-iseard/
- * @since   1.0.0
  */
 
 /**
@@ -65,7 +64,7 @@ class Front {
 	 */
 	public function get_kudos_root_styles( $echo = true ): string {
 
-		$theme_colours = apply_filters('kudos_theme_colors', Settings::get_setting( 'theme_colors' ));
+		$theme_colours = apply_filters( 'kudos_theme_colors', Settings::get_setting( 'theme_colors' ) );
 
 		$primary          = $theme_colours['primary'] ?? '#ff9f1c';
 		$primary_dark     = Utils::color_luminance( $primary, '-0.06' );
@@ -246,11 +245,10 @@ class Front {
 			}
 
 			// Generate markup.
-			$button = new KudosButton( $atts );
-			$markup = $button->get_markup();
-			if ( $markup ) {
-				return $this->kudos_render( $markup );
-			}
+			$button = new KudosButton($atts);
+			return $button->render();
+
+
 		} catch ( Exception $e ) {
 
 			// Display error message if thrown thrown.
@@ -262,17 +260,6 @@ class Front {
 		// Nothing displayed to visitors if there is a problem.
 		return null;
 
-	}
-
-	/**
-	 * Generates output wrapped in div with required class.
-	 *
-	 * @param string $child Child elements to include within div.
-	 *
-	 * @return string
-	 */
-	public static function kudos_render( string $child ): string {
-		return '<div class="kudos-donations">' . $child . '</div>';
 	}
 
 	/**
@@ -297,7 +284,8 @@ class Front {
 							$atts = $this->check_transaction( $order_id );
 							if ( $atts ) {
 								$modal = new KudosModal();
-								echo $modal->create_message_modal( $atts['modal_title'], $atts['modal_text'] );
+								$modal->create_message_modal( $atts['modal_title'],$atts['modal_text'] );
+								echo $modal->render();
 							}
 						}
 					}
@@ -323,20 +311,22 @@ class Front {
 						if ( $subscription->verify_secret( $token ) ) {
 							$payment_service = PaymentService::factory();
 							if ( $payment_service->cancel_subscription( $subscription_id ) ) {
-								echo $modal->create_message_modal(
+								$modal->create_message_modal(
 									__( 'Subscription cancelled', 'kudos-donations' ),
 									__( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
 										'kudos-donations' )
 								);
+								echo $modal->render();
 
 								return;
 							}
 						}
 
-						echo $modal->create_message_modal(
+						$modal->create_message_modal(
 							__( 'Link expired', 'kudos-donations' ),
 							__( 'Sorry, this link is no longer valid.', 'kudos-donations' )
 						);
+						$modal->render();
 					}
 					break;
 			}
@@ -363,10 +353,16 @@ class Front {
 			}
 
 			/** @var DonorEntity $donor */
-			$donor         = $transaction->get_donor();
-			$campaigns     = new Campaigns();
-			$campaign      = $campaigns->get_campaign( $transaction->campaign_id );
-			$campaign_name = ! empty( $campaign['name'] ) ? $campaign['name'] : '';
+			$donor = $transaction->get_donor();
+
+			try {
+				$campaign = Settings::get_campaign( $transaction->campaign_id );
+			} catch ( Exception $e ) {
+				$logger = LoggerService::factory();
+				$logger->warning( 'Error checking transaction: ' . $e->getMessage() );
+			}
+
+			$campaign_name = $campaign['name'] ?? '';
 
 			switch ( $transaction->status ) {
 				case 'paid':
@@ -382,7 +378,7 @@ class Front {
 					break;
 				case 'canceled':
 					$atts['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
-					$atts['modal_text'] = __( 'You have not been charged for this transaction.', 'kudos-donations' );
+					$atts['modal_text']  = __( 'You have not been charged for this transaction.', 'kudos-donations' );
 					break;
 				default:
 					$atts['modal_title'] = __( 'Thanks', 'kudos-donations' );
