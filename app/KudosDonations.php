@@ -38,7 +38,6 @@ class KudosDonations {
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
@@ -47,7 +46,6 @@ class KudosDonations {
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string $version The current version of the plugin.
 	 */
@@ -60,7 +58,6 @@ class KudosDonations {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    1.0.0
 	 */
 	public function __construct() {
 
@@ -77,7 +74,6 @@ class KudosDonations {
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *
-	 * @since    1.0.0
 	 */
 	public function run() {
 
@@ -96,7 +92,6 @@ class KudosDonations {
 	 * Uses the Kudos_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
-	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function set_locale() {
@@ -111,7 +106,6 @@ class KudosDonations {
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
@@ -130,7 +124,6 @@ class KudosDonations {
 	 * Register all of the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   private
 	 */
 	private function define_public_hooks() {
