@@ -8,6 +8,7 @@ const KudosButton = ({children, className, color}) => {
 
     return (
         <div
+            id={'kudos-donations-' + Math.random().toString(36).substr(2, 9)}
             className={"kudos-donations " + className}
         >
             <Button

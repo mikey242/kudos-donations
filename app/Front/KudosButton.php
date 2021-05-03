@@ -4,42 +4,39 @@ namespace Kudos\Front;
 
 use Exception;
 use Kudos\Helpers\Utils;
-use Kudos\Service\TwigService;
 
-class KudosButton {
+class KudosButton extends AbstractRender {
+
+	const TEMPLATE = 'public/kudos.button.html.twig';
 
 	/**
-	 * Instance of TwigService
-	 *
-	 * @var TwigService
-	 */
-	private $twig;
-	/**
-	 * Text alignment
+	 * Text alignment.
 	 *
 	 * @var mixed|string
 	 */
-	private $alignment;
+	protected $alignment;
 	/**
-	 * Button label
+	 * Button label.
 	 *
 	 * @var bool|mixed|void
 	 */
-	private $button_label;
-	/**
-	 * Modal id
-	 *
-	 * @var string
-	 */
-	private $target_id;
+	protected $button_label;
 	/**
 	 * @var string
 	 */
-	private $campaign_id;
+	protected $campaign_id;
 	/**
 	 * @var KudosModal
 	 */
-	private $modal;
+	protected $modal;
+	/**
+	 * @var mixed|void
+	 */
+	protected $logo;
+	/**
+	 * @var KudosForm
+	 */
+	protected $form;
 
 	/**
 	 * KudosButton constructor.
@@ -51,46 +48,32 @@ class KudosButton {
 	 */
 	public function __construct( array $atts ) {
 
-		$this->twig      = TwigService::factory();
-		$this->target_id = uniqid( 'kudos_modal-' );
-		$this->modal     = new KudosModal( $this->target_id );
+		parent::__construct();
 
-		// Assign atts to properties
+		$this->template = self::TEMPLATE;
+		$this->logo = apply_filters( 'kudos_get_button_logo', Utils::get_kudos_logo_markup( 'white' ) );
+
+		// Assign button atts to properties.
 		foreach ( $atts as $property => $value ) {
 			if ( property_exists( static::class, $property ) ) {
 				$this->$property = $value;
 			}
 		}
 
+		// Generate associated form and modal.
+		$this->create_modal();
+
 	}
 
 	/**
-	 * Gets the button and modal markup.
+	 * Creates the donation modal and assigns it the form as content.
 	 *
-	 * @return string|null
-	 * @since 2.3.2
+	 * @throws \Exception
 	 */
-	public function get_markup(): ?string {
+	private function create_modal() {
 
-		try {
-			$modal = $this->modal->create_donate_modal( $this->campaign_id );
-		} catch ( Exception $e ) {
-			if ( current_user_can( 'manage_options' ) ) {
-				return '<p>' . $e->getMessage() . '</p>';
-			}
-
-			return null;
-		}
-
-		$button = $this->twig->render( 'public/kudos.button.html.twig',
-			apply_filters( 'kudos_donate_button_data',
-				[
-					'alignment' => $this->alignment,
-					'label'     => $this->button_label,
-					'target'    => $this->target_id,
-					'logo'      => apply_filters( 'kudos_get_button_logo', Utils::get_kudos_logo_markup( 'white' ) ),
-				] ) );
-
-		return $button . $modal;
+		$form = new KudosForm($this->campaign_id);
+		$this->modal = new KudosModal($this->id);
+		$this->modal->create_donate_modal($form);
 	}
 }
