@@ -104,16 +104,16 @@ jQuery(document).ready(($) => {
                                 if ($form.length) {
 
                                     // Switch back to first tab
-                                    $('fieldset.current-tab').removeClass(
-                                        'current-tab'
+                                    $form.find('fieldset').addClass(
+                                        'kd-hidden'
                                     )
-                                    $('fieldset:first-child').addClass(
-                                        'current-tab'
+                                    $('fieldset:first-child').removeClass(
+                                        'kd-hidden'
                                     )
 
                                     // Reset amounts
-                                    let $amountInput = $form.find('[id^=value_open-kudos_modal]')
-                                    let $amountRadios = $form.find('[id^=amount-kudos_modal]')
+                                    let $amountInput = $form.find('[id^=amount-open-kudos_modal]')
+                                    let $amountRadios = $form.find('[id^=amount-fixed-kudos_modal]')
                                     toggleAmount($amountInput, $amountRadios)
                                     $($amountRadios[0]).prop('checked', true)
                                     $amountInput.attr({'required': false, 'name': ''})
@@ -144,8 +144,13 @@ jQuery(document).ready(($) => {
             handleMessages(messages)
         }
 
+        // Hide field
+        $('input[name="donation"]').each(function () {
+            $(this).closest('label').css('display', 'none')
+        })
+
         // Multi step form navigation
-        $('.kudos_modal [data-direction]').on('click', function () {
+        $('.kudos_form [data-direction]').on('click', function () {
             if (animating) return false
             // Cache selectors
             const $current_tab = $(this).closest('.form-tab')
@@ -165,8 +170,7 @@ jQuery(document).ready(($) => {
             let $next_tab = $current_tab
             let change = false
             while (!change) {
-                $next_tab =
-                    direction === 'next' ? $next_tab.next() : $next_tab.prev()
+                $next_tab = direction === 'next' ? $next_tab.next() : $next_tab.prev()
                 change = checkRequirements($next_tab)
             }
 
@@ -198,8 +202,8 @@ jQuery(document).ready(($) => {
                         let page = $modal.attr('data-page')
                         let newPage = (direction === 'next' ? +page + 1 : +page - 1)
                         $modal.attr('data-page', newPage)
-                        $current_tab.removeClass('current-tab')
-                        $next_tab.addClass('current-tab')
+                        $current_tab.addClass('kd-hidden')
+                        $next_tab.removeClass('kd-hidden')
                         $modal.animate(
                             {opacity: 1},
                             {
@@ -230,6 +234,7 @@ jQuery(document).ready(($) => {
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault()
+
                 $(e.currentTarget).validate()
                 if ($(e.currentTarget).valid()) {
 

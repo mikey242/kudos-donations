@@ -5,7 +5,7 @@
 @import "partials/fonts";
 @import "partials/animation";
 
-[id^=kudos_modal-].kudos_modal {
+.kudos_modal {
 
   *:not(path):not(svg),
   *::before,
@@ -41,92 +41,88 @@
       @apply kd-block #{'!important'};
     }
   }
+}
 
-  .form-tab.current-tab {
-    @apply kd-block #{'!important'};
+form[id^="kudos-form"] {
+  small.error {
+    @apply kd-order-last kd-mt-1 kd-block kd-text-sm kd-text-red-500;
   }
 
-  .kudos_form {
-    small.error {
-      @apply kd-order-last kd-mt-1 kd-block kd-text-sm kd-text-red-500;
+  input[type="checkbox"],
+  input[type="radio"] {
+
+    &:checked::before {
+      @apply kd-relative kd-float-left kd-bg-white;
+      content: "";
+      width: 6px;
+      height: 6px;
+      position: relative;
+      margin: 4px 0 0 4px;
+      line-height: 1.14285714;
     }
 
-    input[type="checkbox"],
-    input[type="radio"] {
-
-      &:checked::before {
-        @apply kd-relative kd-float-left kd-bg-white;
-        content: "";
-        width: 6px;
-        height: 6px;
-        position: relative;
-        margin: 4px 0 0 4px;
-        line-height: 1.14285714;
-      }
-
-      &:checked::after {
-        display: none; // Fix for Twenty Twenty-One theme
-      }
+    &:checked::after {
+      display: none; // Fix for Twenty Twenty-One theme
     }
+  }
 
-    input[type="radio"] {
-      &:checked::before {
-        @apply kd-rounded-full;
-      }
+  input[type="radio"] {
+    &:checked::before {
+      @apply kd-rounded-full;
     }
+  }
 
-    input.error,
-    select.error,
-    input.error ~ .checkmark {
-      @apply kd-border-red-500 #{'!important'};
-    }
+  input.error,
+  select.error,
+  input.error ~ .checkmark {
+    @apply kd-border-red-500 #{'!important'};
+  }
 
-    .kudos_radio_amount {
-      min-width: 65px #{'!important'};
+  .kudos_radio_amount {
+    min-width: 65px #{'!important'};
 
-      input {
-        &:checked + label {
-          @apply kd-text-white kd-border-transparent #{'!important'};
-          background-color: var(--kudos-theme-primary);
-        }
-
-        &:focus {
-          + label {
-            @apply kd-ring-primary kd-ring-2 kd-ring-offset-2;
-          }
-        }
-      }
-    }
-
-    .kd-input-group {
-      input:required ~ label {
+    input {
+      &:checked + label {
         @apply kd-text-white kd-border-transparent #{'!important'};
         background-color: var(--kudos-theme-primary);
       }
-    }
 
-    .kudos_submit {
-      &::before {
-        content: url("../img/lock-white.svg");
-        width: 10px;
-        height: auto;
-        background-size: contain;
-        margin: auto 5px auto 0;
+      &:focus {
+        + label {
+          @apply kd-ring-primary kd-ring-2 kd-ring-offset-2;
+        }
       }
     }
+  }
 
-    .kd-secure-mollie {
-      &::after {
-        content: '';
-        @apply kd-ml-2;
-        background-image: url("../img/mollie.svg");
-        width: 40px;
-        height: 12px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center center;
-        margin-bottom: 4px;
-      }
+  .kd-input-group {
+    input:required ~ label {
+      @apply kd-text-white kd-border-transparent #{'!important'};
+      background-color: var(--kudos-theme-primary);
+    }
+  }
+
+  .kudos_submit {
+    &::before {
+      content: url("../img/lock-white.svg");
+      width: 10px;
+      height: auto;
+      background-size: contain;
+      margin: auto 5px auto 0;
+    }
+  }
+
+  .kd-secure-mollie {
+    &::after {
+      content: '';
+      @apply kd-ml-2;
+      background-image: url("../img/mollie.svg");
+      width: 40px;
+      height: 12px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      margin-bottom: 4px;
     }
   }
 }

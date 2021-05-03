@@ -1,5 +1,5 @@
 {% extends 'public/modal/base.html.twig' %}
-{% set classes = 'kudos_form_modal' %}
+{% set class = 'kudos_form_modal' %}
 {% set premium = false %}
 
 {% block header %}
@@ -8,6 +8,6 @@
 
 {% block content %}
 
-    {% include 'public/forms/donate.form.html.twig' %}
+    {{ content | raw }}
 
 {% endblock content %}
