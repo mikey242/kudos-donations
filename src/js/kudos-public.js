@@ -91,8 +91,9 @@ jQuery(document).ready(($) => {
                             onShow(modal) {
 
                                 // Create and dispatch event
-                                const modalEvent = new CustomEvent('kudosShowModal', {detail: modal})
-                                window.dispatchEvent(modalEvent)
+                                window.dispatchEvent(
+                                    new CustomEvent('kudosShowModal', {detail: modal})
+                                )
 
                                 // Clear error message
                                 $(modal)
@@ -100,7 +101,7 @@ jQuery(document).ready(($) => {
                                     .text('')
 
                                 // Reset and config form
-                                const $form = $(modal).find('.kudos_form')
+                                const $form = $(modal).find('.kudos-form')
                                 if ($form.length) {
 
                                     // Switch back to first tab
@@ -139,7 +140,7 @@ jQuery(document).ready(($) => {
         }
 
         // Show message modal if exists
-        let messages = $('.kudos_message_modal').toArray()
+        let messages = $('.kudos-message-modal').toArray()
         if (messages.length) {
             handleMessages(messages)
         }
@@ -150,11 +151,11 @@ jQuery(document).ready(($) => {
         })
 
         // Multi step form navigation
-        $('.kudos_form [data-direction]').on('click', function () {
+        $('.kudos-form [data-direction]').on('click', function () {
             if (animating) return false
             // Cache selectors
             const $current_tab = $(this).closest('.form-tab')
-            const $modal = $(this).closest('.kudos_modal_container')
+            const $modal = $(this).closest('.kudos-modal-container')
             const $inputs = $current_tab.find(':input')
             const direction = $(this).data('direction')
 
@@ -230,7 +231,7 @@ jQuery(document).ready(($) => {
         })
 
         // Submit donation form action
-        document.querySelectorAll('form.kudos_form').forEach((form) => {
+        document.querySelectorAll('form.kudos-form').forEach((form) => {
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault()
@@ -238,7 +239,7 @@ jQuery(document).ready(($) => {
                 $(e.currentTarget).validate()
                 if ($(e.currentTarget).valid()) {
 
-                    const modal = form.closest('.kudos_form_modal')
+                    const modal = form.closest('.kudos-form-modal')
                     const error = modal.querySelector('.kudos_error_message')
                     const formData = new FormData(e.target)
 
@@ -266,7 +267,7 @@ jQuery(document).ready(($) => {
 
     // Checks the form tab data-requirements array against the current form values
     function checkRequirements($nextTab) {
-        const formValues = $nextTab.closest('form.kudos_form').find(':input').serializeArray()
+        const formValues = $nextTab.closest('form.kudos-form').find(':input').serializeArray()
         const requirements = $nextTab.data('requirements')
         let result = true
         if (requirements) {

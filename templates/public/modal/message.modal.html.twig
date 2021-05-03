@@ -1,5 +1,5 @@
 {% extends 'public/modal/base.html.twig' %}
-{% set class = 'kudos_message_modal' %}
+{% set class = 'kudos-message-modal' %}
 {% from "/public/macros/buttons.html.twig" import button %}
 {% from "/public/macros/text.html.twig" import title, paragraph %}
 
@@ -8,7 +8,7 @@
     {{ title(modal_title) }}
     {{ paragraph(modal_text) }}
 
-    <div class="kudos_modal_buttons kd-mt-8 kd-block kd-text-right">
+    <div class="kudos-modal-buttons kd-mt-8 kd-block kd-text-right">
         {{ button(__('Ok', 'kudos-donations'), 'primary', 'button', {'data-micromodal-close': ''}) }}
     </div>
 
