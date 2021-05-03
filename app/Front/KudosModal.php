@@ -3,6 +3,7 @@
 namespace Kudos\Front;
 
 use \Exception;
+use Kudos\Helpers\Utils;
 
 class KudosModal extends AbstractRender {
 
@@ -21,6 +22,10 @@ class KudosModal extends AbstractRender {
 	 * @var string|null
 	 */
 	protected $content;
+	/**
+	 * @var string|null
+	 */
+	protected $spinner;
 
 	/**
 	 * KudosModal constructor.
@@ -31,8 +36,8 @@ class KudosModal extends AbstractRender {
 
 		parent::__construct($id);
 
-		// Set default template as MESSAGE_TEMPLATE.
 		$this->template = self::MESSAGE_TEMPLATE;
+		$this->spinner = Utils::get_kudos_logo_markup( 'black', 30 );
 
 	}
 
