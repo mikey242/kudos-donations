@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.5
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 2.4.7
+Stable tag: 2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,13 @@ e.g:
 5. Automated email receipt
 
 == Changelog ==
+
+= 2.5.2 =
+* Add additional spam prevention mechanism
+* Add more missing translation function calls
+* Fix uncaught exception on transactions table if campaign empty
+* Fix empty line in address if no business name (Donors table)
+* DEV: Rewrite button, modal and form classes for easier use
 
 = 2.5.1 =
 * Add missing translation function calls
@@ -299,7 +306,7 @@ e.g:
 
 = 2.0.0 =
 * *Plugin completely rewritten*
-* Significantly reduced size and speed
+* Significantly reduced size and increased speed
 * Brand new settings page built on React
 * Ability for customers to create subscriptions
 * Ability to switch between open and fixed donation amounts
