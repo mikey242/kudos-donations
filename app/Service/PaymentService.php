@@ -142,6 +142,12 @@ class PaymentService extends AbstractService {
 
 		$values = $request->get_json_params();
 
+		// Check field.
+		if ( !empty( $values['donation'] ) ) {
+			$this->logger->info( 'Bot detected rejecting form.' );
+			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
+		}
+
 		// Add submit action and pass form data.
 		do_action( 'kudos_submit_payment', $values );
 
