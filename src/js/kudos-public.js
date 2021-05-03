@@ -175,7 +175,7 @@ jQuery(document).ready(($) => {
             }
 
             if ($next_tab.hasClass('form-tab-final')) {
-                let id = $(this).closest('.kudos_modal').attr('id')
+                let id = $(this).closest('.kudos-modal').attr('id')
                 createSummary('#' + id)
             }
 

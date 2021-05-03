@@ -5,7 +5,7 @@
 @import "partials/fonts";
 @import "partials/animation";
 
-.kudos_modal {
+.kudos-modal {
 
   *:not(path):not(svg),
   *::before,
@@ -29,9 +29,7 @@
   &.is-open {
     @apply kd-block kd-overflow-x-hidden kd-overflow-y-auto #{'!important'};
   }
-}
 
-.kudos_form_modal {
   &.kd-is-loading {
     .kudos_modal_container::before {
       z-index: 1;
@@ -127,7 +125,7 @@ form[id^="kudos-form"] {
   }
 }
 
-.kudos_modal[aria-hidden="false"] {
+.kudos-modal[aria-hidden="false"] {
   .kudos_modal_overlay {
     @apply kd-animate-fade-in;
   }
@@ -137,7 +135,7 @@ form[id^="kudos-form"] {
   }
 }
 
-.kudos_modal[aria-hidden="true"] {
+.kudos-modal[aria-hidden="true"] {
   .kudos_modal_overlay {
     @apply kd-animate-fade-out;
   }
