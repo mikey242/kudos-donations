@@ -233,6 +233,14 @@ jQuery(document).ready(($) => {
         // Submit donation form action
         document.querySelectorAll('form.kudos-form').forEach((form) => {
 
+            // Prevent form submit on enter.
+            form.onkeydown = function (e) {
+                if(13 === e.keyCode) {
+                    e.preventDefault()
+                    $(e.target).closest('fieldset').find('[data-direction="next"]').click()
+                }
+            }
+
             form.addEventListener('submit', (e) => {
                 e.preventDefault()
 
