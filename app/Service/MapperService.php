@@ -406,9 +406,11 @@ class MapperService extends AbstractService {
 		if ( $deleted ) {
 			// Invalidate cache if database updated
 			$this->get_cache_incrementer( true );
-			$this->logger->info( 'Deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
+			$this->logger->info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		}
+
+		$this->logger->debug('Error deleting record.', ['table' => $this->get_table_name(), $column => $value]);
 
 		return $deleted;
 
