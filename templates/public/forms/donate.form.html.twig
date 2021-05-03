@@ -20,14 +20,14 @@
 
                 {# Fixed amount fields #}
                 {% if ( amount_type != 'open' ) %}
-                    {{ radio_buttons(fixed_amounts|split(','), 'amount-fixed-' ~ form_id ) }}
+                    {{ radio_buttons(fixed_amounts|split(','), 'amount-fixed-' ~ id ) }}
                 {% endif %}
 
                 {# Open amount field with "Other" label #}
                 {% if amount_type == 'both' %}
                     {{ input_group( '', __('Other', 'kudos-donations'), __('Amount', 'kudos-donations') ~ ' (€)',
                         {
-                            'input': { 'id': 'amount-open-' ~ form_id,'min': '1', 'data-type': 'currency'  }
+                            'input': { 'id': 'amount-open-' ~ id,'min': '1', 'data-type': 'currency'  }
                         }
                     ) }}
                 {% endif %}
