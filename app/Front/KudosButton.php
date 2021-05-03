@@ -3,6 +3,7 @@
 namespace Kudos\Front;
 
 use Exception;
+use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 
 class KudosButton extends AbstractRender {
@@ -73,7 +74,15 @@ class KudosButton extends AbstractRender {
 	private function create_modal() {
 
 		$form = new KudosForm($this->campaign_id);
-		$this->modal = new KudosModal($this->id);
-		$this->modal->create_donate_modal($form);
+		$modal = new KudosModal($this->id);
+		$modal->create_donate_modal($form);
+
+		if(Settings::get_setting('donate_modal_in_footer')) {
+			add_action('wp_footer', function () use ($modal) {
+				echo $modal->render();
+			});
+		} else {
+			$this->modal = $modal;
+		}
 	}
 }

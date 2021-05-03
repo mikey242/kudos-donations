@@ -35,7 +35,7 @@ class KudosModal extends AbstractRender {
 	public function __construct( string $id = null ) {
 
 		parent::__construct($id);
-
+		
 		$this->template = self::MESSAGE_TEMPLATE;
 		$this->spinner = Utils::get_kudos_logo_markup( 'black', 30 );
 

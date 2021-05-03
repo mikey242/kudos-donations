@@ -208,6 +208,12 @@ class Settings {
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
+				'donate_modal_in_footer'   => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
 				'disable_object_cache'  => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
