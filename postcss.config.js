@@ -2,7 +2,7 @@ module.exports = {
     plugins: [
         require('tailwindcss'),
         require('postcss-add-root-selector')({
-            rootSelector: '.kudos-donations',
+            rootSelector: '[id^=kudos-donations-]',
             include: ['kudos-public.scss']
         }),
         require('autoprefixer'),
