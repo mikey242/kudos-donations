@@ -200,11 +200,18 @@ jQuery(document).ready(($) => {
                     duration,
                     easing: 'linear',
                     complete() {
+                        // Prepare tab props.
                         let page = $modal.attr('data-page')
                         let newPage = (direction === 'next' ? +page + 1 : +page - 1)
                         $modal.attr('data-page', newPage)
                         $current_tab.addClass('kd-hidden')
                         $next_tab.removeClass('kd-hidden')
+
+                        // Select first input on tab.
+                        let $first = $next_tab.find(':input:first')
+                        $first.trigger('focus')
+
+                        // Begin animating.
                         $modal.animate(
                             {opacity: 1},
                             {
@@ -235,7 +242,7 @@ jQuery(document).ready(($) => {
 
             // Prevent form submit on enter.
             form.onkeydown = function (e) {
-                if(13 === e.keyCode) {
+                if (13 === e.keyCode) {
                     e.preventDefault()
                     $(e.target).closest('fieldset').find('[data-direction="next"]').click()
                 }
