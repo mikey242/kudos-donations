@@ -3,7 +3,7 @@
 namespace Kudos\Admin\Table;
 
 use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Campaigns;
+use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use WP_List_Table;
@@ -18,21 +18,14 @@ class CampaignsTable extends WP_List_Table {
 	 * @var MapperService
 	 */
 	private $mapper;
-	/**
-	 * @var Campaigns
-	 */
-	private $campaigns;
 
 	/**
-	 * Class constructor
-	 *
-	 * @since   2.0.4
+	 * Class constructor.
 	 */
 	public function __construct() {
 
 		$this->mapper    = new MapperService( TransactionEntity::class );
 		$this->table     = $this->mapper->get_table_name();
-		$this->campaigns = new Campaigns();
 
 		$this->search_columns = [
 			'name' => __( 'Name', 'kudos-donations' ),
@@ -57,9 +50,7 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Call this function where the table is to be displayed
-	 *
-	 * @since      2.0.4
+	 * Call this function where the table is to be displayed.
 	 */
 	public function display() {
 
@@ -70,16 +61,15 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Get the table data
+	 * Get the table data.
 	 *
 	 * @return array
-	 * @since   2.0.4
 	 */
 	public function fetch_table_data(): array {
 
 		$search = $this->get_search_data();
 
-		$campaigns = $this->campaigns->get_all();
+		$campaigns = Settings::get_setting('campaigns');
 		if ( ! $campaigns ) {
 			return [];
 		}
@@ -96,7 +86,7 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$id = $campaign['id'];
 
-			$campaign_total = $this->campaigns::get_campaign_stats( $id );
+			$campaign_total = $this->get_campaign_stats( $id );
 
 			$campaigns[ $key ]['currency']     = 'EUR';
 			$campaigns[ $key ]['date']         = $campaign_total['last_donation'] ?? null;
@@ -112,7 +102,6 @@ class CampaignsTable extends WP_List_Table {
 	 * Returns a list of columns to include in table
 	 *
 	 * @return array
-	 * @since   2.0.4
 	 */
 	public function column_names(): array {
 		return [
@@ -125,10 +114,9 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Define which columns are hidden
+	 * Define which columns are hidden.
 	 *
 	 * @return array
-	 * @since   2.0.4
 	 */
 	public function get_hidden_columns(): array {
 		return [
@@ -138,10 +126,9 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Define the sortable columns
+	 * Define the sortable columns.
 	 *
 	 * @return array
-	 * @since   2.0.4
 	 */
 	public function get_sortable_columns(): array {
 		return [
@@ -157,12 +144,55 @@ class CampaignsTable extends WP_List_Table {
 	}
 
 	/**
+	 * Gets transaction stats for campaign.
+	 *
+	 * @param string $campaign_id
+	 *
+	 * @return array
+	 */
+	public function get_campaign_stats( string $campaign_id ): ?array {
+
+		$mapper       = $this->mapper;
+		$transactions = $mapper->get_all_by( [
+			'campaign_id' => $campaign_id,
+		] );
+
+		if ( $transactions ) {
+			$values = array_map( function ( $transaction ) {
+				if ( 'paid' === $transaction->status ) {
+					$refunds = $transaction->get_refund();
+					if ( $refunds ) {
+						return $refunds->remaining;
+					} else {
+						return $transaction->value;
+					}
+				}
+
+				return 0;
+			},
+				$transactions );
+
+			return [
+				'count'         => count( $values ),
+				'total'         => array_sum( $values ),
+				'last_donation' => end( $transactions )->created,
+			];
+		}
+
+		return [
+			'count'         => 0,
+			'total'         => 0,
+			'last_donation' => '',
+		];
+
+	}
+
+	/**
 	 * Render the bulk edit checkbox
 	 *
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   2.0.4
 	 */
 	protected function column_cb( $item ): string {
 		return sprintf(
@@ -177,7 +207,6 @@ class CampaignsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   2.0.4
 	 */
 	protected function column_date( array $item ): string {
 

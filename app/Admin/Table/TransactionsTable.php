@@ -2,9 +2,10 @@
 
 namespace Kudos\Admin\Table;
 
+use Exception;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Campaigns;
+use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use WP_List_Table;
@@ -17,10 +18,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @var MapperService
 	 */
 	private $mapper;
-	/**
-	 * @var Campaigns
-	 */
-	private $campaigns;
 
 	/**
 	 * Class constructor
@@ -31,7 +28,6 @@ class TransactionsTable extends WP_List_Table {
 
 		$this->mapper    = new MapperService( TransactionEntity::class );
 		$this->table     = TransactionEntity::get_table_name();
-		$this->campaigns = new Campaigns();
 
 		$this->search_columns = [
 			'name'        => __( 'Name', 'kudos-donations' ),
@@ -456,7 +452,11 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_campaign_id( array $item ): string {
 
-		$campaign = $this->campaigns->get_campaign( $item['campaign_id'] );
+		try {
+			$campaign = Settings::get_campaign( $item['campaign_id'] );
+		} catch ( Exception $e) {
+			return $e->getMessage();
+		}
 
 		if ( $campaign ) {
 			return sprintf(

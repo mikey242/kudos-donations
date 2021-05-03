@@ -2,6 +2,8 @@
 
 namespace Kudos\Helpers;
 
+use Exception;
+
 class Settings {
 
 	const PREFIX = '_kudos_';
@@ -224,7 +226,7 @@ class Settings {
 										'type' => 'string',
 									],
 									'name'             => [
-										'type'              => 'string',
+										'type' => 'string',
 									],
 									'campaign_goal'    => [
 										'type' => 'string',
@@ -280,7 +282,7 @@ class Settings {
 							'donation_type'    => 'oneoff',
 						],
 					],
-					'sanitize_callback' => [ new Campaigns(), 'sanitize_campaigns' ],
+					'sanitize_callback' => [ $this, 'sanitize_campaigns' ],
 				],
 			]
 		);
@@ -294,6 +296,7 @@ class Settings {
 	 * @return mixed
 	 */
 	public static function sanitize_vendor( $settings ) {
+
 		foreach ( $settings as $setting => &$value ) {
 			switch ( $setting ) {
 				case 'connected':
@@ -315,7 +318,51 @@ class Settings {
 	}
 
 	/**
-	 * Gets the settings for the current vendor
+	 * Sanitize the various setting fields in the donation form array.
+	 *
+	 * @param $campaigns
+	 *
+	 * @return array
+	 */
+	public function sanitize_campaigns( $campaigns ): array {
+
+		// Loop through each of the campaigns.
+		foreach ( $campaigns as &$form ) {
+
+			// Generate a unique campaign ID if none yet.
+			if ( ! isset( $form['id'] ) ) {
+				$form['id'] = $this->generate_campaign_id( $form['name'] );
+			}
+
+			// Loop through fields and sanitize.
+			foreach ( $form as $option => &$value ) {
+
+				switch ( $option ) {
+					case 'name':
+					case 'modal_title':
+					case 'welcome_text':
+					case 'fixed_amounts':
+						$value = sanitize_text_field( $value );
+						break;
+					case 'amount_type':
+					case 'donation_type':
+						$value = sanitize_key( $value );
+						break;
+					case 'address_enabled':
+					case 'address_required':
+					case 'show_progress':
+					case 'message_enabled':
+						$value = rest_sanitize_boolean( $value );
+						break;
+				}
+			}
+		}
+
+		return $campaigns;
+	}
+
+	/**
+	 * Gets the settings for the current vendor.
 	 *
 	 * @return mixed
 	 */
@@ -326,12 +373,11 @@ class Settings {
 	}
 
 	/**
-	 * Returns setting value
+	 * Returns setting value.
 	 *
 	 * @param string $name Setting name.
 	 *
 	 * @return mixed
-	 * @since   2.0.0
 	 */
 	public static function get_setting( string $name ) {
 
@@ -340,13 +386,12 @@ class Settings {
 	}
 
 	/**
-	 * Update specified setting
+	 * Update specified setting.
 	 *
 	 * @param string $name Setting name.
 	 * @param mixed $value Setting value.
 	 *
 	 * @return bool
-	 * @since 2.0.4
 	 */
 	public static function update_setting( string $name, $value ): bool {
 
@@ -365,12 +410,12 @@ class Settings {
 	 */
 	public static function update_array( string $name, array $value ): bool {
 
-		// Grab current data
+		// Grab current data.
 		$current = self::get_setting( $name );
 
-		// Check if setting is either an array or null
+		// Check if setting is either an array or null.
 		if ( is_array( $current ) || ! null ) {
-			// Merge provided data and current data then update setting
+			// Merge provided data and current data then update setting.
 			$new = wp_parse_args( $value, $current );
 
 			return self::update_setting( $name, $new );
@@ -441,6 +486,7 @@ class Settings {
 	 * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
 	 */
 	public static function recursive_sanitize_text_field( array $array ): array {
+
 		foreach ( $array as &$value ) {
 			if ( is_array( $value ) ) {
 				$value = self::recursive_sanitize_text_field( $value );
@@ -450,6 +496,58 @@ class Settings {
 		}
 
 		return $array;
+
+	}
+
+	/**
+	 * Generates a unique ID in the form of a slug for the campaign.
+	 *
+	 * @param $name string User provided name for the campaign.
+	 *
+	 * @return string
+	 */
+	private function generate_campaign_id( string $name ): string {
+
+		$id        = sanitize_title( $name );
+		$campaigns = $this->get_setting( 'campaigns' );
+		$ids       = array_map( function ( $campaign ) {
+			return $campaign['id'];
+		},
+			$campaigns );
+
+		// If current id exists in array, iterate $n until it is unique.
+		$n      = 1;
+		$new_id = $id;
+		while ( in_array( $new_id, $ids ) ) {
+			$new_id = $id . '-' . $n;
+			$n ++;
+		}
+
+		// Return new id.
+		return $new_id;
+	}
+
+	/**
+	 * Gets the campaign by specified column (e.g id)
+	 *
+	 * @param string|null $value
+	 *
+	 * @return array|null
+	 * @throws Exception
+	 */
+	public static function get_campaign( ?string $value ): ?array {
+
+		$campaigns = self::get_setting( 'campaigns' );
+		$key       = array_search( $value, array_column( (array) $campaigns, 'id' ) );
+
+		// Check if key is an index and if so return index from forms.
+		if ( is_int( $key ) ) {
+			return $campaigns[ $key ];
+		}
+
+		/* translators: %s: Campaign id */
+		throw new Exception( sprintf( __( 'Campaign "%s" not found.', 'kudos-donations' ), $value ) );
+
 	}
 
 }
