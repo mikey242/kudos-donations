@@ -77,6 +77,7 @@ class KudosButton extends AbstractRender {
 		$modal = new KudosModal($this->id);
 		$modal->create_donate_modal($form);
 
+		// If setting enabled, place the modal in the footer.
 		if(Settings::get_setting('donate_modal_in_footer')) {
 			add_action('wp_footer', function () use ($modal) {
 				echo $modal->render();
