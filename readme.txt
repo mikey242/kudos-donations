@@ -112,6 +112,8 @@ e.g:
 = 2.5.2 =
 * Add additional spam prevention mechanism
 * Add more missing translation function calls
+* Add option to place donate modal markup in footer
+* Pressing enter on form now same as clicking 'next' button
 * Fix uncaught exception on transactions table if campaign empty
 * Fix empty line in address if no business name (Donors table)
 * DEV: Rewrite button, modal and form classes for easier use
