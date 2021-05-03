@@ -276,12 +276,9 @@ class DonorsTable extends WP_List_Table {
 			$item['country'],
 		];
 
-		$address = array_map(
-			function ( $item ) {
-				return wp_unslash( $item );
-			},
-			$address
-		);
+		$address = array_filter($address, function ($item) {
+			return !empty($item) ? wp_unslash($item) : null;
+		});
 
 		return implode( '<br/>', $address );
 	}
