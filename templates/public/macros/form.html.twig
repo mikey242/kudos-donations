@@ -1,6 +1,6 @@
 {% macro input(name, label, value=null, type='text', required=true, class='', atts={}) %}
 
-    {% set styles = ['kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-m-0 kd-placeholder-gray-500 focus:kd-outline-none'] | merge([class, atts.class]) %}
+    {% set styles = ['kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-text-left kd-m-0 kd-placeholder-gray-500 focus:kd-outline-none'] | merge([class, atts.class]) %}
 
     {# Remove class from atts #}
     {% if (atts|length) %}
