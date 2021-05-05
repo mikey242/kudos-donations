@@ -11,7 +11,7 @@ const RenderModalFooter = (props) => {
             <ToggleControl
                 label={__('Render donate modal in footer', 'kudos-donations')}
                 help={__(
-                    'This will place the donate form modal in the footer.',
+                    'When enabled the donation modal HTML will be placed in the footer instead of in the content.',
                     'kudos-donations'
                 )}
                 checked={props.settings._kudos_donate_modal_in_footer || ''}
