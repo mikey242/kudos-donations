@@ -1,99 +1,111 @@
-{% macro input(name, label, value=null, type='text', required=true, class='', atts={}) %}
+{% macro text(props) %}
 
-    {% set styles = ['kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-text-left kd-m-0 kd-placeholder-gray-500 focus:kd-outline-none'] | merge([class, atts.class]) %}
+    {% set global = 'kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-text-left kd-m-0 kd-placeholder-gray-500' %}
+    {% set focus = 'focus:kd-outline-none focus:kd-border-primary' %}
+    {% set generic = 'kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700' %}
+    {% set styles = [] | merge([ global, focus, generic ]) %}
 
-    {# Remove class from atts #}
-    {% if (atts|length) %}
-        {% set atts = atts | filter((v, k) => k != 'class') %}
-    {% endif %}
-
-    {% if ( 'text' == type or 'email' == type or 'textarea' == type ) %}
-        {% set focus = 'focus:kd-border-primary' %}
-        {% set generic = 'kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700' %}
-        {% set styles = styles | merge([ focus, generic ]) %}
-    {% endif %}
-
-    {% if ( 'radio' == type or 'checkbox' == type ) %}
-        {% set checked = 'checked:kd-bg-primary' %}
-        {% set focus = 'kd-ring-primary focus:kd-ring-2 kd-ring-offset-2' %}
-        {% set generic = 'kd-duration-75 kd-bg-white kd-shadow-inner kd-border kd-border-primary kd-inline-block kd-w-4 kd-h-4 kd-m-2 kd-p-0 kd-align-middle kd-min-w-1 kd-leading-none kd-outline-none kd-text-center kd-clear-none' %}
-        {% set styles = styles | merge([ checked, focus, generic ]) %}
-    {% endif %}
-
-    {% if 'radio' == type %}
-        {% set generic = 'kd-rounded-full' %}
-        {% set styles = styles | merge([ generic ]) %}
-    {% endif %}
-
-    {% set class = styles | join(' ') %}
-    {% set required = required ? 'required' : '' %}
-    {% set value = value ? 'value=' ~ value : '' %}
-
-    {% if 'textarea' == type %}
-
-        <textarea {{ required }} class="{{ class }}" name="{{ name }}" placeholder="{{ label }}" maxlength="255" rows="4" cols="50" {{ atts }}></textarea>
-
-    {% else %}
-        <input class="{{ class }}"
-                {{ required }}
-               type="{{ type }}"
-               name="{{ name }}"
-                {{ value }}
-               placeholder="{{ label }}"
-                {% for key, value in atts %}
+    <label for="{{ props.id }}" class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
+        <input
+                name="{{ props.name }}"
+                id="{{ props.id }}"
+                placeholder="{{ props.label }}"
+                type="{{ props.type ?? 'text' }}"
+                class="{{ styles | join(' ') }}"
+                {{ ('true' == props.required|default('true') ? "required" : '') }}
+                {% for key, value in props.atts %}
                     {{ key ~ '=' ~ value }}
                 {% endfor %}
         />
-    {% endif %}
-
-{% endmacro %}
-
-{% macro text(name, label, type='text', required=true, atts) %}
-    {% from _self import input %}
-    <label class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
-        {{ input(name, label, null, type, required, '', atts) }}
     </label>
 {% endmacro %}
 
-{% macro text_area(name, label, required=true, atts) %}
-    {% from _self import input %}
+{% macro text_area(props) %}
+
+    {% set global = 'kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-text-left kd-m-0 kd-placeholder-gray-500' %}
+    {% set focus = 'focus:kd-outline-none focus:kd-border-primary' %}
+    {% set generic = 'kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700' %}
+    {% set styles = [] | merge([ global, focus, generic ]) %}
+
     <label class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
-        {{ input(name, label, null, 'textarea', required, '', atts) }}
+
+        <textarea
+                name="{{ props.name }}"
+                id="{{ props.id }}"
+                placeholder="{{ props.label }}"
+                class="{{ styles | join(' ') }}"
+                maxlength="255"
+                rows="4" cols="50"
+                {{ ('true' == props.required|default('true') ? "required" : '') }}
+                {% for key, value in props.atts %}
+                    {{ key ~ '=' ~ value }}
+                {% endfor %}
+        ></textarea>
+
     </label>
 {% endmacro %}
 
-{% macro radio(name, options, selected, required=true) %}
-    {% from _self import input %}
+{% macro radio(props) %}
+
+    {% set global = 'kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-text-left kd-m-0 kd-placeholder-gray-500' %}
+    {% set checked = 'checked:kd-bg-primary' %}
+    {% set focus = 'focus:kd-outline-none kd-ring-primary focus:kd-ring-2 kd-ring-offset-2' %}
+    {% set generic = 'kd-rounded-full kd-duration-75 kd-bg-white kd-shadow-inner kd-border kd-border-primary kd-inline-block kd-w-4 kd-h-4 kd-m-2 kd-p-0 kd-align-middle kd-min-w-1 kd-leading-none kd-outline-none kd-text-center kd-clear-none' %}
+    {% set styles = [] | merge([ global, checked, focus, generic ]) %}
+
     <div class="kd-flex kd-justify-center kd-items-center kd-mt-4">
-        {% for value, label in options %}
-            <label class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-3 kd-mt-2">
-                {{ input(name, '', value, 'radio', required, '', { (selected == value ? 'checked' : '' ) : ''}) }}
+        {% for value, label in props.options %}
+            {% set id = props.id ~ '-' ~ value %}
+            <label for="{{ id }}" class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-3 kd-mt-2">
+                <input
+                        name="{{ props.name }}"
+                        id="{{ id }}"
+                        class="{{ styles | join(' ') }}"
+                        value="{{ value }}"
+                        type="radio"
+                        {{ ( props.selected == value ? 'checked' : '' ) }}
+                />
                 {{ label }}
             </label>
         {% endfor %}
     </div>
 {% endmacro %}
 
-{% macro checkbox(name, label, required=true) %}
-    {% from _self import input %}
-    <label class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
-        {{ input(name, label, 'true', 'checkbox', required) }}
-        {{ label | wp_kses_post }}
+{% macro checkbox(props) %}
+
+    {% set global = 'kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-text-left kd-m-0 kd-placeholder-gray-500' %}
+    {% set checked = 'checked:kd-bg-primary' %}
+    {% set focus = 'focus:kd-outline-none kd-ring-primary focus:kd-ring-2 kd-ring-offset-2' %}
+    {% set generic = 'kd-duration-75 kd-bg-white kd-shadow-inner kd-border kd-border-primary kd-inline-block kd-w-4 kd-h-4 kd-m-2 kd-p-0 kd-align-middle kd-min-w-1 kd-leading-none kd-outline-none kd-text-center kd-clear-none' %}
+    {% set styles = [] | merge([ global, checked, focus, generic ]) %}
+
+    <label for="{{ props.id }}" class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
+        <input
+                name="{{ props.name }}"
+                id="{{ props.id }}"
+                class="{{ styles | join(' ') }}"
+                value="true"
+                type="checkbox"
+                {{ ('true' == props.required|default('true') ? "required" : '') }}
+        />
+        {{ props.label | wp_kses_post }}
     </label>
 {% endmacro %}
 
-{% macro select(name, placeholder, options, required=true) %}
-    <label class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
+{% macro select(props) %}
+
+    <label for="{{ props.id }}" class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
         <span class="kd-relative">
-            <select class="kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700"
-                    {{ required ? 'required' : '' }}
-                    name="{{ name }}">
+            <select id="{{ props.id }}"
+                    class="kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700"
+                    {{ 'true' == props.required|default('true') ? 'required' : '' }}
+                    name="{{ props.name }}">
                 <option value=""
                         disabled
                         selected>
-                    {{ placeholder }}
+                    {{ props.placeholder }}
                 </option>
-                {% for value, text in options %}
+                {% for value, text in props.options %}
                     <option value="{{ value }}">{{ text }}</option>
                 {% endfor %}
             </select>
@@ -107,27 +119,43 @@
     </label>
 {% endmacro %}
 
-{% macro input_group(name, label, placeholder, atts={}) %}
-    {% from _self import input %}
+{% macro input_group(props) %}
+
+    {% set global = 'kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-text-left kd-m-0 kd-placeholder-gray-500' %}
+    {% set focus = 'focus:kd-outline-none focus:kd-border-primary' %}
+    {% set generic = 'kd-input-group-input kd-order-2 kd-flex-grow kd-min-w-0 kd-rounded-l-none kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700' %}
+    {% set styles = [] | merge([ global, focus, generic ]) %}
+
     <div class="kd-input-group kd-w-full kd-mt-2 kd-flex">
-        {{ input(name, placeholder, null, 'text', false, 'kd-input-group-input kd-order-2 kd-flex-grow kd-min-w-0 kd-rounded-l-none', atts.input) }}
+        <input
+                name="{{ props.name }}"
+                id="{{ props.id }}"
+                placeholder="{{ props.placeholder }}"
+                type="text"
+                class="{{ styles | join(' ') }}"
+                {{ ('true' == props.required|default('true') ? "required" : '') }}
+                {% for key, value in props.atts %}
+                    {{ key ~ '=' ~ value }}
+                {% endfor %}
+        />
         <label class="kd-flex-shrink-0 kd-order-1 kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-px-3 kd-rounded-l kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-r-0 kd-border-solid kd-border-gray-300 kd-text-gray-500"
-               for={{ atts.input.id }}>
-            {{ label }}
+               for={{ props.id }}>
+            {{ props.label }}
         </label>
     </div>
 {% endmacro %}
 
-{% macro radio_buttons(array, input_id) %}
-    {% set length = array|length %}
+{% macro radio_buttons(props) %}
+
+    {% set length = props.options|length %}
     <div class="kd-radio-buttons kd-flex kd-flex-wrap kd--mx-2">
-        {% for key,value in array %}
+        {% for key,value in props.options %}
             <div class="kudos-radio-amount {{ (length == 1 ? 'kd-w-full' : length == 2 ? 'kd-w-1/2' : length == 3 ? 'kd-w-1/3' : length == 4 ? 'kd-w-1/4' : '') }} kd-px-2 kd-m-0">
                 <input class="focus:kd-outline-none focus:kd-shadow-none kd-absolute kd-opacity-0 kd-m-0 kd--z-1"
-                       id="{{ input_id }}-{{ key }}" {{ key==0 ? 'checked' : '' }}
-                       type="radio" name="value" value="{{ value|replace({' ':''}) }}"/>
+                       id="{{ props.id }}-{{ key }}" {{ key==0 ? 'checked' : '' }}
+                       type="radio" name="{{ props.name }}" value="{{ value|replace({' ':''}) }}"/>
                 <label class="kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-rounded kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-solid kd-border-gray-300"
-                       for="{{ input_id }}-{{ key }}">€{{ value }}</label>
+                       for="{{ props.id }}-{{ key }}">€{{ value }}</label>
             </div>
         {% endfor %}
     </div>

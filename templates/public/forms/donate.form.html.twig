@@ -1,4 +1,4 @@
-<form id="kudos-form-{{ id }}" class="kudos-form m-0 p-0" action="">
+<form id="kudos-form-{{ id }}" class="kudos-form m-0 p-0" action="/">
 
     <input required name="return_url" type="hidden" value="{{ return_url }}">
     <input name="campaign_id" type="hidden" value="{{ campaign_id }}">
@@ -20,28 +20,49 @@
 
                 {# Fixed amount fields #}
                 {% if ( amount_type != 'open' ) %}
-                    {{ radio_buttons(fixed_amounts|split(','), 'amount-fixed-' ~ id ) }}
+                    {{ radio_buttons({
+                        name: 'value',
+                        options: fixed_amounts|split(','),
+                        id: 'value-fixed-' ~ id
+                    }) }}
                 {% endif %}
 
                 {# Open amount field with "Other" label #}
                 {% if amount_type == 'both' %}
-                    {{ input_group( '', __('Other', 'kudos-donations'), __('Amount', 'kudos-donations') ~ ' (€)',
-                        {
-                            'input': { 'id': 'amount-open-' ~ id,'min': '1', 'data-type': 'currency'  }
-                        }
-                    ) }}
+                    {{ input_group({
+                        name: 'value',
+                        required: 'false',
+                        id: 'value-open-both-' ~ id,
+                        label: __('Other', 'kudos-donations'),
+                        placeholder: __('Amount', 'kudos-donations') ~ ' (€)',
+                        atts: { 'min': '1', 'data-type': 'currency'  }
+                    }) }}
                 {% endif %}
 
                 {# Open amount field #}
                 {% if amount_type == 'open' %}
-                    {{ text('value', __('Amount', 'kudos-donations') ~ ' (€)', 'text', true, {'min': '1', 'data-type': 'currency'}) }}
+                    {{ text({
+                        name: 'value',
+                        label: __('Amount', 'kudos-donations') ~ ' (€)',
+                        id: 'value-open-' ~ id,
+                        atts: {'min': '1', 'data-type': 'currency'}
+                    }) }}
                 {% endif %}
 
                 {# Name field #}
-                {{ text('name', __('Name', 'kudos-donations')) }}
+                {{ text({
+                    name: 'name',
+                    label: __('Name', 'kudos-donations'),
+                    id: 'name-' ~ id
+                }) }}
 
                 {# Email field #}
-                {{ text('email_address', __('E-mail address', 'kudos-donations'), 'email') }}
+                {{ text({
+                    name: 'email_address',
+                    label: __('E-mail address', 'kudos-donations'),
+                    id: 'email-' ~ id,
+                    type: 'email'
+                }) }}
 
                 {# Payment frequency fields #}
                 {% if (frequency == 'oneoff' or recurring_allowed == false) %}
@@ -49,10 +70,15 @@
                 {% elseif(frequency == 'recurring') %}
                     <input required checked type="hidden" name="payment_frequency" value="recurring"/>
                 {% else %}
-                    {{ radio('payment_frequency', {
-                        'oneoff': __('One-off', 'kudos-donations'),
-                        'recurring': __('Recurring', 'kudos-donations')
-                    }, 'oneoff') }}
+                    {{ radio({
+                        name: 'payment_frequency',
+                        id: 'payment_frequency-' ~ id,
+                        options: {
+                            'oneoff': __('One-off', 'kudos-donations'),
+                            'recurring': __('Recurring', 'kudos-donations')
+                        },
+                        selected: 'oneoff'
+                    }) }}
                 {% endif %}
 
             {% endblock %}
@@ -66,19 +92,31 @@
             {% block body %}
                 {% from "/public/macros/form.html.twig" import select %}
 
-                {{ select('recurring_frequency', __('Payment frequency', 'kudos-donations'), {
-                    '12 months': __('Yearly', 'kudos-donations'),
-                    '3 months': __('Quarterly', 'kudos-donations'),
-                    '1 month': __('Monthly', 'kudos-donations')
-                } ) }}
+                {# Recurring payment frequency #}
+                {{ select({
+                    name: 'recurring_frequency',
+                    id: 'recurring_frequency-' ~ id,
+                    placeholder: __('Payment frequency', 'kudos-donations'),
+                    options: {
+                        '12 months': __('Yearly', 'kudos-donations'),
+                        '3 months': __('Quarterly', 'kudos-donations'),
+                        '1 month': __('Monthly', 'kudos-donations')
+                    }
+                }) }}
 
+                {# Recurring payment length #}
                 {% set length = { 0: __('Continuous', 'kudos-donations') } %}
                 {% for i in 1..10 %}
                     {% set length = length | merge({
                         (i): _n( '%u year', '%u years', i, 'kudos-donations' )|format(i)
                     }) %}
                 {% endfor %}
-                {{ select('recurring_length', __('Donation duration', 'kudos-donations'), length ) }}
+                {{ select({
+                    name: 'recurring_length',
+                    id: 'recurring_length-' ~ id,
+                    placeholder: __('Donation duration', 'kudos-donations'),
+                    options: length
+                }) }}
 
             {% endblock %}
         {% endembed %}
@@ -91,13 +129,13 @@
                 {% block body %}
                     {% from "/public/macros/form.html.twig" import text, select %}
 
-                    {% set required = (address_required ? 'required' : null) %}
+                    {% set required = (address_required ? 'true' : 'false') %}
 
-                    {{ text('business_name', __('Business name', 'kudos-donations'), 'text', false) }}
-                    {{ text('street', __('Street', 'kudos-donations'), 'text', required) }}
-                    {{ text('postcode', __('Postcode', 'kudos-donations'), 'text', required) }}
-                    {{ text('city', __('City', 'kudos-donations'), 'text', required) }}
-                    {{ select('country', __('Country', 'kudos-donations'), {
+                    {{ text({ name: 'business_name', id: 'business_name-' ~ id, label: __('Business name', 'kudos-donations'), required: 'false' }) }}
+                    {{ text({ name: 'street', id: 'street-' ~ id, label: __('Street', 'kudos-donations'), required: required }) }}
+                    {{ text({ name: 'postcode', id: 'postcode-' ~ id, label: __('Postcode', 'kudos-donations'), required: required }) }}
+                    {{ text({ name: 'city', id: 'city-' ~ id, label: __('City', 'kudos-donations'), required: required }) }}
+                    {{ select({ name: 'country', id: 'country-' ~ id, placeholder: __('Country', 'kudos-donations'), options: {
                         "AF": __("Afghanistan", "kudos-donations"),
                         "AX": __("Åland Islands", "kudos-donations"),
                         "AL": __("Albania", "kudos-donations"),
@@ -342,7 +380,7 @@
                         "YE": __("Yemen", "kudos-donations"),
                         "ZM": __("Zambia", "kudos-donations"),
                         "ZW": __("Zimbabwe", "kudos-donations"),
-                    }, required ) }}
+                    }, required: required }) }}
 
                 {% endblock %}
             {% endembed %}
@@ -356,7 +394,12 @@
                 {% block body %}
                     {% from "/public/macros/form.html.twig" import text_area %}
 
-                    {{ text_area('message', __( 'Your message (255 character limit).', 'kudos-donations' ), false) }}
+                    {{ text_area({
+                        name: 'message',
+                        id: 'message-' ~ id,
+                        label: __( 'Your message (255 character limit).', 'kudos-donations' ),
+                        required: 'false'
+                    }) }}
 
                 {% endblock %}
             {% endembed %}
@@ -383,13 +426,19 @@
                 </div>
 
                 {% if (privacy_link) %}
-                    {{ checkbox('privacy', __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' ) |
-                        format('<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~privacy_link~' >', '</a>')) }}
+                    {{ checkbox({
+                        name: 'privacy',
+                        id: 'privacy-' ~ id,
+                        label: __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' ) | format('<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~privacy_link~' >', '</a>')
+                    }) }}
                 {% endif %}
 
                 {% if (terms_link) %}
-                    {{ checkbox('terms', __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' ) |
-                        format( '<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')) }}
+                    {{ checkbox({
+                        name: 'terms',
+                        id: 'terms-' ~ id,
+                        label: __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' ) | format( '<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')
+                    }) }}
                 {% endif %}
 
                 {{ do_action('kudos_donate_modal_final_extra') }}

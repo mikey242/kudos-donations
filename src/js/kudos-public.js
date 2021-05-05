@@ -113,8 +113,8 @@ jQuery(document).ready(($) => {
                                     )
 
                                     // Reset amounts
-                                    let $amountInput = $form.find('[id^=amount-open-]')
-                                    let $amountRadios = $form.find('[id^=amount-fixed-]')
+                                    let $amountInput = $form.find('[id^=value-open-both-]')
+                                    let $amountRadios = $form.find('[id^=value-fixed-]')
                                     toggleAmount($amountInput, $amountRadios)
                                     $($amountRadios[0]).prop('checked', true)
                                     $amountInput.attr({'required': false, 'name': ''})
