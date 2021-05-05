@@ -69,7 +69,7 @@ class KudosButton extends AbstractRender {
 	/**
 	 * Creates the donation modal and assigns it the form as content.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	private function create_modal() {
 
@@ -81,7 +81,7 @@ class KudosButton extends AbstractRender {
 		if(Settings::get_setting('donate_modal_in_footer')) {
 			add_action('wp_footer', function () use ($modal) {
 				echo $modal->render();
-			});
+			}, 1000);
 		} else {
 			$this->modal = $modal;
 		}
