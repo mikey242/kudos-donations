@@ -80,7 +80,7 @@ You can use this plugin in any country that is supported by Mollie. For a comple
 
 = How do I use the shortcode? =
 
-For general information on how to use shortcodes, please visit [this page](https://codex.wordpress.org/shortcode).
+There is a handy "Copy shortcode" button at the bottom of the campaign settings page that will copy the shortcode into your clipboard.
 
 To get started add the Kudos Donations shortcode:
 
@@ -99,6 +99,12 @@ e.g:
 ~~~~
 [kudos alignment="right" button_label="Donate now" campaign_id="default"]
 ~~~~
+
+For general information on how to use shortcodes, please visit [this page](https://codex.wordpress.org/shortcode).
+
+= The donation modal (pop-up) does not appear correctly. =
+
+This can occur as a result of a conflict with your theme or another plugin and the solution can be different for each website. A quick and easy fix to try is to enable the "Modal in footer" option under the help tab in settings.
 
 == Screenshots ==
 
