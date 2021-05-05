@@ -82,6 +82,11 @@
       outline-offset: -1px;
     }
   }
+
+  .components-base-control__field {
+    @apply kd-mb-4;
+  }
+
   .components-tab-panel__tab-content {
     @apply kd-mt-5;
   }
