@@ -81,7 +81,7 @@ const TestEmailPanel = (props) => {
                     isSecondary
                     disabled={buttonDisabled || isBusy}
                     isBusy={isBusy}
-                    icon={(<ButtonIcon icon='envelope' />)}
+                    icon={(<ButtonIcon icon="envelope"/>)}
                     onClick={() => {
                         sendTest(email)
                     }}
