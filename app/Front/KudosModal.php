@@ -26,6 +26,10 @@ class KudosModal extends AbstractRender {
 	 * @var string|null
 	 */
 	protected $spinner;
+	/**
+	 * @var string|null
+	 */
+	protected $logo_url;
 
 	/**
 	 * KudosModal constructor.
@@ -37,6 +41,7 @@ class KudosModal extends AbstractRender {
 		parent::__construct($id);
 		
 		$this->template = self::MESSAGE_TEMPLATE;
+		$this->logo_url = Utils::get_logo_url();
 		$this->spinner = Utils::get_kudos_logo_markup( 'black', 30 );
 
 	}
