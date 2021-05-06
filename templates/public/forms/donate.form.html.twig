@@ -43,7 +43,8 @@
                 {% if amount_type == 'open' %}
                     {{ text({
                         name: 'value',
-                        label: __('Amount', 'kudos-donations') ~ ' (€)',
+                        required: true,
+                        placeholder: __('Amount', 'kudos-donations') ~ ' (€)',
                         id: 'value-open-' ~ id,
                         atts: {'min': '1', 'data-type': 'currency'}
                     }) }}
@@ -52,14 +53,16 @@
                 {# Name field #}
                 {{ text({
                     name: 'name',
-                    label: __('Name', 'kudos-donations'),
+                    required: true,
+                    placeholder: __('Name', 'kudos-donations'),
                     id: 'name-' ~ id
                 }) }}
 
                 {# Email field #}
                 {{ text({
                     name: 'email_address',
-                    label: __('E-mail address', 'kudos-donations'),
+                    required: true,
+                    placeholder: __('E-mail address', 'kudos-donations'),
                     id: 'email-' ~ id,
                     type: 'email'
                 }) }}
@@ -96,6 +99,7 @@
                 {{ select({
                     name: 'recurring_frequency',
                     id: 'recurring_frequency-' ~ id,
+                    required: true,
                     placeholder: __('Payment frequency', 'kudos-donations'),
                     options: {
                         '12 months': __('Yearly', 'kudos-donations'),
@@ -114,6 +118,7 @@
                 {{ select({
                     name: 'recurring_length',
                     id: 'recurring_length-' ~ id,
+                    required: true,
                     placeholder: __('Donation duration', 'kudos-donations'),
                     options: length
                 }) }}
@@ -129,12 +134,10 @@
                 {% block body %}
                     {% from "/public/macros/form.html.twig" import text, select %}
 
-                    {% set required = (address_required ? 'true' : 'false') %}
-
-                    {{ text({ name: 'business_name', id: 'business_name-' ~ id, label: __('Business name', 'kudos-donations'), required: 'false' }) }}
-                    {{ text({ name: 'street', id: 'street-' ~ id, label: __('Street', 'kudos-donations'), required: required }) }}
-                    {{ text({ name: 'postcode', id: 'postcode-' ~ id, label: __('Postcode', 'kudos-donations'), required: required }) }}
-                    {{ text({ name: 'city', id: 'city-' ~ id, label: __('City', 'kudos-donations'), required: required }) }}
+                    {{ text({ name: 'business_name', id: 'business_name-' ~ id, placeholder: __('Business name', 'kudos-donations'), required: false }) }}
+                    {{ text({ name: 'street', id: 'street-' ~ id, placeholder: __('Street', 'kudos-donations'), required: address_required }) }}
+                    {{ text({ name: 'postcode', id: 'postcode-' ~ id, placeholder: __('Postcode', 'kudos-donations'), required: address_required }) }}
+                    {{ text({ name: 'city', id: 'city-' ~ id, placeholder: __('City', 'kudos-donations'), required: address_required }) }}
                     {{ select({ name: 'country', id: 'country-' ~ id, placeholder: __('Country', 'kudos-donations'), options: {
                         "AF": __("Afghanistan", "kudos-donations"),
                         "AX": __("Åland Islands", "kudos-donations"),
@@ -380,7 +383,7 @@
                         "YE": __("Yemen", "kudos-donations"),
                         "ZM": __("Zambia", "kudos-donations"),
                         "ZW": __("Zimbabwe", "kudos-donations"),
-                    }, required: required }) }}
+                    }, required: address_required }) }}
 
                 {% endblock %}
             {% endembed %}
@@ -397,8 +400,7 @@
                     {{ text_area({
                         name: 'message',
                         id: 'message-' ~ id,
-                        label: __( 'Your message (255 character limit).', 'kudos-donations' ),
-                        required: 'false'
+                        placeholder: __( 'Your message (255 character limit).', 'kudos-donations' )
                     }) }}
 
                 {% endblock %}
@@ -429,6 +431,7 @@
                     {{ checkbox({
                         name: 'privacy',
                         id: 'privacy-' ~ id,
+                        required: true,
                         label: __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' ) | format('<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~privacy_link~' >', '</a>')
                     }) }}
                 {% endif %}
@@ -437,6 +440,7 @@
                     {{ checkbox({
                         name: 'terms',
                         id: 'terms-' ~ id,
+                        required: true,
                         label: __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' ) | format( '<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')
                     }) }}
                 {% endif %}
