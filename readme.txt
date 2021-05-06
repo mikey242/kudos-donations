@@ -116,14 +116,15 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
-= 2.5.2 =
-* Add additional spam prevention mechanism
+= 2.5.5 =
+* Add an additional spam prevention mechanism
 * Add more missing translation function calls
 * Add option to place donate modal markup in footer
+* Add asterisk to required fields
+* Accessibility improvements
 * Pressing enter on form now same as clicking 'next' button
 * Fix uncaught exception on transactions table if campaign empty
 * Fix empty line in address if no business name (Donors table)
-* DEV: Rewrite button, modal and form classes for easier use
 
 = 2.5.1 =
 * Add missing translation function calls
