@@ -73,7 +73,7 @@ class KudosButton extends AbstractRender {
 	 */
 	private function create_modal() {
 
-		$form = new KudosForm($this->campaign_id);
+		$form = new KudosForm($this->campaign_id, $this->id);
 		$modal = new KudosModal($this->id);
 		$modal->create_donate_modal($form);
 
