@@ -67,12 +67,13 @@ class KudosForm extends AbstractRender {
 	 * KudosForm constructor.
 	 *
 	 * @param string $campaign_id
+	 * @param string|null $id
 	 *
 	 * @throws Exception
 	 */
-	public function __construct( string $campaign_id ) {
+	public function __construct( string $campaign_id, string $id=null ) {
 
-		parent::__construct();
+		parent::__construct($id);
 
 		// Configure global properties.
 		$this->template          = self::TEMPLATE;
@@ -91,9 +92,9 @@ class KudosForm extends AbstractRender {
 		$this->amount_type      = $campaign['amount_type'] ?? '';
 		$this->fixed_amounts    = $campaign['fixed_amounts'] ?? '';
 		$this->frequency        = $campaign['donation_type'] ?? '';
-		$this->address_enabled  = isset( $campaign['address_enabled'] ) ?? '';
-		$this->address_required = isset( $campaign['address_required'] ) ?? '';
-		$this->message_enabled  = isset( $campaign['message_enabled'] ) ?? '';
+		$this->address_enabled  = $campaign['address_enabled'] ?? '';
+		$this->address_required = $campaign['address_required'] ?? '';
+		$this->message_enabled  = $campaign['message_enabled'] ?? '';
 	}
 
 }
