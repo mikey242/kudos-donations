@@ -1,15 +1,20 @@
 {% from "/public/macros/buttons.html.twig" import button, icon %}
-{% from "/public/macros/text.html.twig" import title, paragraph %}
 
 <fieldset
         class="form-tab form-tab-{{ tabClass ?: block('title')|slugify }} kd-w-full kd-relative kd-m-0 kd-p-0 kd-border-0 {{ isVisible ? '' : 'kd-hidden' }}"
         data-requirements={{ requirements }}>
 
-    {% set _title = block('title') %}
     {% set _text = block('text') %}
 
-    <legend class="kd-block kd-m-auto">{{ title(block('title')) }}</legend>
-    {{ paragraph(block('text')) }}
+    <legend class="kd-block kd-m-auto">
+        <h2 class="kudos_modal_title kd-font-normal kd-font-serif kd-text-4xl kd-m-0 kd-mb-2 kd-text-gray-900 kd-block kd-text-center">
+            {% block title %}{% endblock %}
+        </h2>
+    </legend>
+
+    <p class="kd-text-lg kd-text-gray-900 kd-text-center kd-block kd-font-normal kd-mb-4">
+        {% block text %}{% endblock %}
+    </p>
 
     {% block body %}{% endblock %}
 

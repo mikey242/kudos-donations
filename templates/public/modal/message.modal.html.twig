@@ -1,12 +1,16 @@
 {% extends 'public/modal/base.html.twig' %}
-{% set class = 'kudos-message-modal' %}
+{% set title = __('Message dialog', 'kudos-donations') %}
 {% from "/public/macros/buttons.html.twig" import button %}
-{% from "/public/macros/text.html.twig" import title, paragraph %}
 
 {% block content %}
 
-    {{ title(modal_title) }}
-    {{ paragraph(modal_text) }}
+    <h2 class="kudos_modal_title kd-font-normal kd-font-serif kd-text-4xl kd-m-0 kd-mb-2 kd-text-gray-900 kd-block kd-text-center">
+        {{ modal_title }}
+    </h2>
+
+    <p class="kd-text-lg kd-text-gray-900 kd-text-center kd-block kd-font-normal kd-mb-4">
+        {{ modal_text }}
+    </p>
 
     <div class="kudos-modal-buttons kd-mt-8 kd-block kd-text-right">
         {{ button(__('Ok', 'kudos-donations'), 'primary', 'button', {'data-micromodal-close': ''}) }}

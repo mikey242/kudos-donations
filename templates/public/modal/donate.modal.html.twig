@@ -1,6 +1,5 @@
 {% extends 'public/modal/base.html.twig' %}
-{% set class = 'kudos-form-modal' %}
-{% set premium = false %}
+{% set title = __('Donation form dialog', 'kudos-donations') %}
 
 {% block header %}
     {{ do_action('kudos_donate_modal_header', campaign) }}
@@ -10,4 +9,7 @@
 
     {{ content | raw }}
 
+    <i class="kd-spinner kd-animate-loader-spin kd-hidden kd-bg-contain kd-absolute kd-top-1/2 kd-left-1/2 kd-w-8 kd-h-8 kd--ml-4 kd--mt-4 kd-z-1">
+        {{ spinner | raw }}
+    </i>
 {% endblock content %}

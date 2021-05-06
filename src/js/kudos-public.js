@@ -30,12 +30,7 @@ jQuery(document).ready(($) => {
             errorElement: 'small',
             onfocusout: false,
             errorPlacement: (error, element) => {
-                if (element.attr("type") === 'checkbox' || element.hasClass('kd-input-group-input')) {
-                    error.insertAfter(element.parent())
-                } else {
-
-                    error.appendTo(element.closest('label'))
-                }
+                error.insertAfter(element.parent())
             },
             rules: {
                 value: {
@@ -254,7 +249,7 @@ jQuery(document).ready(($) => {
                 $(e.currentTarget).validate()
                 if ($(e.currentTarget).valid()) {
 
-                    const modal = form.closest('.kudos-form-modal')
+                    const modal = form.closest('.kudos-modal')
                     const error = modal.querySelector('.kudos_error_message')
                     const formData = new FormData(e.target)
 

@@ -2,7 +2,6 @@
 
 namespace Kudos\Front;
 
-use \Exception;
 use Kudos\Helpers\Utils;
 
 class KudosModal extends AbstractRender {
@@ -30,6 +29,10 @@ class KudosModal extends AbstractRender {
 	 * @var string|null
 	 */
 	protected $logo_url;
+	/**
+	 * @var string
+	 */
+	protected $class;
 
 	/**
 	 * KudosModal constructor.
@@ -42,7 +45,6 @@ class KudosModal extends AbstractRender {
 		
 		$this->template = self::MESSAGE_TEMPLATE;
 		$this->logo_url = Utils::get_logo_url();
-		$this->spinner = Utils::get_kudos_logo_markup( 'black', 30 );
 
 	}
 
@@ -55,6 +57,9 @@ class KudosModal extends AbstractRender {
 	public function create_message_modal( string $title, string $message = null ) {
 
 		$this->template = self::MESSAGE_TEMPLATE;
+		$this->class = 'kudos-message-modal';
+
+		// Template specific atts
 		$this->modal_title = $title ?? '';
 		$this->modal_text = $message ?? '';
 
@@ -64,14 +69,15 @@ class KudosModal extends AbstractRender {
 	 * Get the donate modal markup.
 	 *
 	 * @param KudosForm $form
-	 *
-	 * @throws Exception
-	 * @since    1.0.0
 	 */
 	public function create_donate_modal( KudosForm $form ) {
 
 		$this->template = self::DONATE_TEMPLATE;
-		$this->content = $form->get_markup();
+		$this->class = 'kudos-donate-modal';
+
+		// Template specific atts.
+		$this->content = $form;
+		$this->spinner = Utils::get_kudos_logo_markup( 'black', 30 );
 
 	}
 }
