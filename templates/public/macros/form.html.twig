@@ -1,40 +1,19 @@
+{# String base inputs (text, email, number #}
 {% macro input(props) %}
-
-    {% set global = 'kd-leading-normal kd-ease-in-out kd-border-solid kd-cursor-text kd-text-left kd-m-0 kd-placeholder-gray-500' %}
-    {% set transition = 'kd-transition kd-transition-colors kd-ease-in-out kd-duration-75' %}
-    {% set generic = 'kd-appearance-none kd-bg-transparent kd-border-gray-300 kd-border-solid kd-text-base kd-text-gray-700' %}
-    {% set focus = 'focus:kd-outline-none focus:kd-border-primary' %}
-    {% set styles = [] | merge([ global, generic, focus, props.class ]) %}
-
-    <input
-            name="{{ props.name }}"
-            class="{{ styles | join(' ') }}"
-            id="{{ props.id }}"
-            type="{{ props.type ?? 'text' }}"
-            placeholder="{{ props.placeholder ? props.placeholder ~ (props.required ? ' *') }}"
-    {{ (props.required ? "required") }}
-    {% for attr, value in props.atts %}
-        {% if value %}
-            {{ attr }}="{{ value }}"
-        {% endif %}
-    {% endfor %}
-    />
-{% endmacro %}
-
-{% macro text(props) %}
-    {% from _self import input %}
+    {% from _self import build_input %}
 
     {% set props = props|merge({
         class: "kd-border-2 kd-py-2 kd-px-3 kd-rounded kd-w-full"
     }) %}
 
     <label for="{{ props.id }}" class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
-        {{ input(props) }}
+        {{ build_input(props) }}
     </label>
 {% endmacro %}
 
+{# Radio inputs #}
 {% macro radio(props) %}
-    {% from _self import input %}
+    {% from _self import build_input %}
 
     {% set props = props|merge({
         type: 'radio',
@@ -52,15 +31,16 @@
             }) %}
             <label for="{{ newProps.id }}"
                    class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
-                {{ input(newProps) }}
+                {{ build_input(newProps) }}
                 {{ label }} {{ ('true' == required ? ' *') }}
             </label>
         {% endfor %}
     </div>
 {% endmacro %}
 
+{# Checkbox input #}
 {% macro checkbox(props) %}
-    {% from _self import input %}
+    {% from _self import build_input %}
 
     {% set props = props|merge({
         type: 'checkbox',
@@ -69,18 +49,20 @@
     }) %}
 
     <label for="{{ props.id }}" class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
-        {{ input(props) }}
+        {{ build_input(props) }}
         {{ props.label | wp_kses_post }} {{ ('true' == required ? ' *') }}
     </label>
 {% endmacro %}
 
+{# Input group, uses label #}
 {% macro input_group(props) %}
-    {% from _self import input %}
+    {% from _self import build_input %}
 
     <div class="kd-input-group kd-w-full kd-mt-2 kd-flex">
 
-        {{ input(props|merge({
-            class: 'kd-input-group-input kd-order-2 kd-flex-grow kd-rounded-l-none kd-border-2 kd-py-2 kd-px-3 kd-rounded'
+        {{ build_input(props|merge({
+            class: 'kd-input-group-input kd-order-2 kd-flex-grow kd-rounded-l-none kd-border-2 kd-py-2 kd-px-3 kd-rounded',
+            type: props.type
         })) }}
 
         <label class="kd-flex-shrink-0 kd-order-1 kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-px-3 kd-rounded-l kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-r-0 kd-border-solid kd-border-gray-300 kd-text-gray-500"
@@ -90,14 +72,15 @@
     </div>
 {% endmacro %}
 
+{# Radio inputs #}
 {% macro radio_buttons(props) %}
-    {% from _self import input %}
+    {% from _self import build_input %}
     {% set length = props.options|length %}
 
     <div class="kd-radio-buttons kd-flex kd-flex-wrap kd--mx-2">
         {% for key,value in props.options %}
             <div class="kudos-radio-amount {{ (length == 1 ? 'kd-w-full' : length == 2 ? 'kd-w-1/2' : length == 3 ? 'kd-w-1/3' : length == 4 ? 'kd-w-1/4' : '') }} kd-px-2 kd-m-0">
-                {{ input(props|merge({
+                {{ build_input(props|merge({
                     id: props.id ~ '-' ~ key,
                     type: 'radio',
                     class: 'kd-opacity-0 focus:kd-shadow-none kd-absolute kd--z-1',
@@ -113,6 +96,7 @@
     </div>
 {% endmacro %}
 
+{# Select box #}
 {% macro select(props) %}
     <label for="{{ props.id }}" class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
         <span class="kd-relative">
@@ -139,6 +123,7 @@
     </label>
 {% endmacro %}
 
+{# Text area element #}
 {% macro text_area(props) %}
     <label for="{{ props.id }}" class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
         <textarea
@@ -156,4 +141,33 @@
                 {% endfor %}
         ></textarea>
     </label>
+{% endmacro %}
+
+
+{#
+    Builder macro used for above macros, not to be called directly.
+#}
+{% macro build_input(props) %}
+
+    {# Common styles #}
+    {% set global = 'kd-leading-normal kd-ease-in-out kd-border-solid kd-cursor-text kd-text-left kd-m-0 kd-placeholder-gray-500' %}
+    {% set transition = 'kd-transition kd-transition-colors kd-ease-in-out kd-duration-75' %}
+    {% set generic = 'kd-appearance-none kd-bg-transparent kd-border-gray-300 kd-border-solid kd-text-base kd-text-gray-700' %}
+    {% set focus = 'focus:kd-outline-none focus:kd-border-primary' %}
+    {% set styles = [] | merge([ global, generic, focus, props.class ]) %}
+
+    {# Build input element #}
+    <input
+            name="{{ props.name }}"
+            class="{{ styles | join(' ') }}"
+            id="{{ props.id }}"
+            type="{{ props.type ?? 'text' }}"
+            placeholder="{{ props.placeholder ? props.placeholder ~ (props.required ? ' *') }}"
+    {{ (props.required ? "required") }}
+    {% for attr, value in props.atts %}
+        {% if value %}
+            {{ attr }}="{{ value }}"
+        {% endif %}
+    {% endfor %}
+    />
 {% endmacro %}
