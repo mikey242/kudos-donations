@@ -68,3 +68,9 @@ __( 'Ok', 'kudos-donations' );
 __( 'Cancel', 'kudos-donations' );
 __( 'Previous tab', 'kudos-donations' );
 __( 'Next', 'kudos-donations' );
+
+// Template: "templates/public/modal/donate.modal.html.twig"
+__('Donation form dialog', 'kudos-donations');
+
+// Template: "templates/public/modal/message.modal.html.twig"
+__('Message dialogue', 'kudos-donations');
