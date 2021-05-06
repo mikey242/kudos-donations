@@ -1,13 +1,49 @@
+{#
+Builder macro used for above macros, not to be called directly.
+#}
+{% macro build_input(props) %}
+
+    {# Common styles #}
+    {% set global = 'kd-leading-normal kd-ease-in-out kd-border-solid kd-cursor-text kd-text-left kd-m-0 kd-placeholder-gray-500' %}
+    {% set transition = 'kd-transition kd-transition-colors kd-ease-in-out kd-duration-75' %}
+    {% set generic = 'kd-appearance-none kd-bg-transparent kd-border-gray-300 kd-border-solid kd-text-base kd-text-gray-700' %}
+    {% set focus = 'focus:kd-outline-none focus:kd-border-primary' %}
+    {% set styles = [] | merge([ global, generic, focus, props.class ]) %}
+
+    {# Build input element #}
+    <input
+            name="{{ props.name }}"
+            class="{{ styles | join(' ') }}"
+            aria-label="{{ props.ariaLabel ?? props.placeholder ?? props.label }}"
+        {% if props.id %}
+            id="{{ props.id }}"
+        {% endif %}
+            type="{{ props.type ?? 'text' }}"
+        {% if props.placeholder %}
+                placeholder="{{ props.placeholder ? props.placeholder ~ (props.required ? ' *') }}"
+        {% endif %}
+    {{ (props.required ? "required") }}
+    {% for attr, value in props.atts %}
+        {% if value %}
+            {{ attr }}="{{ value }}"
+        {% endif %}
+    {% endfor %}
+    />
+{% endmacro %}
+
 {# String base inputs (text, email, number #}
 {% macro input(props) %}
     {% from _self import build_input %}
 
     {% set props = props|merge({
-        class: "kd-border-2 kd-py-2 kd-px-3 kd-rounded kd-w-full"
+        class: "kd-order-1 kd-border-2 kd-py-2 kd-px-3 kd-rounded kd-w-full" ~ (props.label ? " kd-rounded-l-none")
     }) %}
 
-    <label for="{{ props.id }}" class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
+    <label class="kd-flex kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
         {{ build_input(props) }}
+        {% if props.label %}
+            <span class="kd-text-gray-500 kd-flex-shrink-0 kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-px-3 kd-rounded-l kd-block kd-border-2 kd-border-r-0 kd-border-solid kd-border-gray-300">{{ props.label }}</span>
+        {% endif %}
     </label>
 {% endmacro %}
 
@@ -23,14 +59,13 @@
     <div class="kd-flex kd-justify-center kd-items-center kd-mt-4">
         {% for value, label in props.options %}
             {% set newProps = props|merge({
-                id: props.id ~ '-' ~ value,
                 atts: {
                     value: value,
                     checked: (props.selected == value ? true : false)
                 }
             }) %}
-            <label for="{{ newProps.id }}"
-                   class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
+            <label
+                    class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
                 {{ build_input(newProps) }}
                 {{ label }} {{ ('true' == required ? ' *') }}
             </label>
@@ -48,28 +83,10 @@
         value: 'true'
     }) %}
 
-    <label for="{{ props.id }}" class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
+    <label class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
         {{ build_input(props) }}
         {{ props.label | wp_kses_post }} {{ ('true' == required ? ' *') }}
     </label>
-{% endmacro %}
-
-{# Input group, uses label #}
-{% macro input_group(props) %}
-    {% from _self import build_input %}
-
-    <div class="kd-input-group kd-w-full kd-mt-2 kd-flex">
-
-        {{ build_input(props|merge({
-            class: 'kd-input-group-input kd-order-2 kd-flex-grow kd-rounded-l-none kd-border-2 kd-py-2 kd-px-3 kd-rounded',
-            type: props.type
-        })) }}
-
-        <label class="kd-flex-shrink-0 kd-order-1 kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-px-3 kd-rounded-l kd-cursor-pointer kd-text-center kd-block kd-border-2 kd-border-r-0 kd-border-solid kd-border-gray-300 kd-text-gray-500"
-               for={{ props.id }}>
-            {{ props.label }}
-        </label>
-    </div>
 {% endmacro %}
 
 {# Radio inputs #}
@@ -98,29 +115,32 @@
 
 {# Select box #}
 {% macro select(props) %}
-    <label for="{{ props.id }}" class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
-        <span class="kd-relative">
-            <select id="{{ props.id }}"
-                    class="kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700"
-                    {{ (props.required ? "required") }}
-                    name="{{ props.name }}">
-                <option value=""
-                        disabled
-                        selected>
-                    {{ props.placeholder ? props.placeholder ~ (props.required ? ' *') }}
-                </option>
-                {% for value, text in props.options %}
-                    <option value="{{ value }}">{{ text }}</option>
-                {% endfor %}
-            </select>
-            <svg class="kd-h-5 kd-w-5 kd-text-gray-500 kd-absolute kd-right-0 kd-mr-3 kd-bottom-1/2 kd-transform kd-translate-y-1/2"
-                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd"
-                      d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                      clip-rule="evenodd"/>
-            </svg>
-        </span>
-    </label>
+    <span class="kd-relative">
+        <label class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
+                <select
+                        class="kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid focus:kd-border-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700"
+                        {{ (props.required ? "required") }}
+                        name="{{ props.name }}"
+                        aria-label="{{ props.placeholder ?? props.label }}"
+                >
+                    <option value=""
+                            disabled
+                            selected>
+                        {{ props.placeholder ? props.placeholder ~ (props.required ? ' *') }}
+                    </option>
+                    {% for value, text in props.options %}
+                        <option value="{{ value }}">{{ text }}</option>
+                    {% endfor %}
+                </select>
+                <svg class="kd-h-5 kd-w-5 kd-text-gray-500 kd-absolute kd-right-0 kd-mr-3 kd-bottom-1/2 kd-transform kd-translate-y-1/2"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                          clip-rule="evenodd"/>
+                </svg>
+
+        </label>
+    </span>
 {% endmacro %}
 
 {# Text area element #}
@@ -128,8 +148,8 @@
     <label for="{{ props.id }}" class="kd-inline-block kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
         <textarea
                 name="{{ props.name }}"
-                id="{{ props.id }}"
                 placeholder="{{ props.placeholder }}"
+                aria-label="{{ props.placeholder ?? props.label }}"
                 class="kd-cursor-text kd-appearance-none kd-leading-normal kd-bg-transparent kd-border-gray-300 kd-border-2 kd-border-solid kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-base kd-text-gray-700 focus:kd-outline-none focus:kd-border-primary kd-leading-normal kd-ease-in-out kd-border-solid kd-cursor-pointer kd-text-left kd-m-0 kd-placeholder-gray-500 kd-transition kd-transition-colors kd-ease-in-out kd-duration-75"
                 maxlength="255"
                 rows="4" cols="50"
@@ -141,33 +161,4 @@
                 {% endfor %}
         ></textarea>
     </label>
-{% endmacro %}
-
-
-{#
-    Builder macro used for above macros, not to be called directly.
-#}
-{% macro build_input(props) %}
-
-    {# Common styles #}
-    {% set global = 'kd-leading-normal kd-ease-in-out kd-border-solid kd-cursor-text kd-text-left kd-m-0 kd-placeholder-gray-500' %}
-    {% set transition = 'kd-transition kd-transition-colors kd-ease-in-out kd-duration-75' %}
-    {% set generic = 'kd-appearance-none kd-bg-transparent kd-border-gray-300 kd-border-solid kd-text-base kd-text-gray-700' %}
-    {% set focus = 'focus:kd-outline-none focus:kd-border-primary' %}
-    {% set styles = [] | merge([ global, generic, focus, props.class ]) %}
-
-    {# Build input element #}
-    <input
-            name="{{ props.name }}"
-            class="{{ styles | join(' ') }}"
-            id="{{ props.id }}"
-            type="{{ props.type ?? 'text' }}"
-            placeholder="{{ props.placeholder ? props.placeholder ~ (props.required ? ' *') }}"
-    {{ (props.required ? "required") }}
-    {% for attr, value in props.atts %}
-        {% if value %}
-            {{ attr }}="{{ value }}"
-        {% endif %}
-    {% endfor %}
-    />
 {% endmacro %}

@@ -93,12 +93,12 @@ form[id^="kudos-form"] {
     }
   }
 
-  .kd-input-group {
-    input:required ~ label {
-      @apply kd-text-white kd-border-transparent #{'!important'};
-      background-color: var(--kudos-theme-primary);
-    }
+
+  input[name="value"]:required + span {
+    @apply kd-text-white kd-border-transparent #{'!important'};
+    background-color: var(--kudos-theme-primary);
   }
+
 
   .kudos_submit {
     &::before {

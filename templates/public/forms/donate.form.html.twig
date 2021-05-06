@@ -12,7 +12,7 @@
             {% block body %}
                 {% from "/public/macros/form.html.twig" import input_group, radio_buttons, input, radio %}
 
-                {# Spam protection #}
+                {# Rudimentary spam protection #}
                 <label class="kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
                     <input class="kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-m-0 kd-placeholder-gray-500 focus:kd-outline-none"
                            type="number" name="donation" placeholder="Your donation">
@@ -29,9 +29,9 @@
 
                 {# Open amount field with "Other" label #}
                 {% if amount_type == 'both' %}
-                    {{ input_group({
+                    {{ input({
                         name: 'value',
-                        required: 'false',
+                        required: false,
                         id: 'value-open-both-' ~ id,
                         label: __('Other', 'kudos-donations'),
                         placeholder: __('Amount', 'kudos-donations') ~ ' (€)',
@@ -45,7 +45,6 @@
                         name: 'value',
                         required: true,
                         placeholder: __('Amount', 'kudos-donations') ~ ' (€)',
-                        id: 'value-open-' ~ id,
                         atts: {'min': '1', 'data-type': 'currency'}
                     }) }}
                 {% endif %}
@@ -55,7 +54,6 @@
                     name: 'name',
                     required: true,
                     placeholder: __('Name', 'kudos-donations'),
-                    id: 'name-' ~ id
                 }) }}
 
                 {# Email field #}
@@ -63,7 +61,6 @@
                     name: 'email_address',
                     required: true,
                     placeholder: __('E-mail address', 'kudos-donations'),
-                    id: 'email-' ~ id,
                     type: 'email'
                 }) }}
 
@@ -75,7 +72,6 @@
                 {% else %}
                     {{ radio({
                         name: 'payment_frequency',
-                        id: 'payment_frequency-' ~ id,
                         options: {
                             'oneoff': __('One-off', 'kudos-donations'),
                             'recurring': __('Recurring', 'kudos-donations')
@@ -98,7 +94,6 @@
                 {# Recurring payment frequency #}
                 {{ select({
                     name: 'recurring_frequency',
-                    id: 'recurring_frequency-' ~ id,
                     required: true,
                     placeholder: __('Payment frequency', 'kudos-donations'),
                     options: {
@@ -117,7 +112,6 @@
                 {% endfor %}
                 {{ select({
                     name: 'recurring_length',
-                    id: 'recurring_length-' ~ id,
                     required: true,
                     placeholder: __('Donation duration', 'kudos-donations'),
                     options: length
@@ -134,11 +128,11 @@
                 {% block body %}
                     {% from "/public/macros/form.html.twig" import input, select %}
 
-                    {{ input({ name: 'business_name', id: 'business_name-' ~ id, placeholder: __('Business name', 'kudos-donations'), required: false }) }}
-                    {{ input({ name: 'street', id: 'street-' ~ id, placeholder: __('Street', 'kudos-donations'), required: address_required }) }}
-                    {{ input({ name: 'postcode', id: 'postcode-' ~ id, placeholder: __('Postcode', 'kudos-donations'), required: address_required }) }}
-                    {{ input({ name: 'city', id: 'city-' ~ id, placeholder: __('City', 'kudos-donations'), required: address_required }) }}
-                    {{ select({ name: 'country', id: 'country-' ~ id, placeholder: __('Country', 'kudos-donations'), options: {
+                    {{ input({ name: 'business_name', placeholder: __('Business name', 'kudos-donations'), required: false }) }}
+                    {{ input({ name: 'street', placeholder: __('Street', 'kudos-donations'), required: address_required }) }}
+                    {{ input({ name: 'postcode', placeholder: __('Postcode', 'kudos-donations'), required: address_required }) }}
+                    {{ input({ name: 'city', placeholder: __('City', 'kudos-donations'), required: address_required }) }}
+                    {{ select({ name: 'country', placeholder: __('Country', 'kudos-donations'), options: {
                         "AF": __("Afghanistan", "kudos-donations"),
                         "AX": __("Åland Islands", "kudos-donations"),
                         "AL": __("Albania", "kudos-donations"),
@@ -399,7 +393,6 @@
 
                     {{ text_area({
                         name: 'message',
-                        id: 'message-' ~ id,
                         placeholder: __( 'Your message (255 character limit).', 'kudos-donations' )
                     }) }}
 
@@ -430,8 +423,8 @@
                 {% if (privacy_link) %}
                     {{ checkbox({
                         name: 'privacy',
-                        id: 'privacy-' ~ id,
                         required: true,
+                        ariaLabel: __( 'I agree with the privacy policy.', 'kudos-donations' ),
                         label: __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' ) | format('<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~privacy_link~' >', '</a>')
                     }) }}
                 {% endif %}
@@ -439,8 +432,8 @@
                 {% if (terms_link) %}
                     {{ checkbox({
                         name: 'terms',
-                        id: 'terms-' ~ id,
                         required: true,
+                        ariaLabel: __( 'I agree with the terms and conditions.', 'kudos-donations' ),
                         label: __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' ) | format( '<a class="kd-text-primary hover:kd-text-primary-dark kd-shadow-none focus:kd-underline kd-cursor-pointer kd-ml-1" target="_blank" href='~terms_link~'>', '</a>')
                     }) }}
                 {% endif %}
