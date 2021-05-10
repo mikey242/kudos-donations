@@ -103,7 +103,7 @@ jQuery(document).ready(($) => {
                                     $form.find('fieldset').addClass(
                                         'kd-hidden'
                                     )
-                                    $('fieldset:first-child').removeClass(
+                                    $form.find('fieldset').first().removeClass(
                                         'kd-hidden'
                                     )
 

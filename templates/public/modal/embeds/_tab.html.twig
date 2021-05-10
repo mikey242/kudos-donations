@@ -1,7 +1,7 @@
 {% from "/public/macros/buttons.html.twig" import button, icon %}
 
 <fieldset
-        class="form-tab form-tab-{{ tabClass ?: block('title')|slugify }} kd-w-full kd-relative kd-m-0 kd-p-0 kd-border-0 {{ isVisible ? '' : 'kd-hidden' }}"
+        class="form-tab form-tab-{{ tabClass ?: block('title')|slugify }} kd-block kd-w-full kd-relative kd-m-0 kd-p-0 kd-border-0 {{ isVisible ? '' : 'kd-hidden' }}"
         data-requirements={{ requirements }}>
 
     {% set _text = block('text') %}
@@ -32,6 +32,6 @@
         {% endblock %}
     </div>
 
-    <div class="kd-block kd-mt-2">{% block footer %}{% endblock %}</div>
+    {% block footer %}{% endblock %}
 
 </fieldset>

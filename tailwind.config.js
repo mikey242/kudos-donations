@@ -9,14 +9,6 @@ module.exports = {
         ]
     },
     theme: {
-        container: {
-            center: true,
-            screens: {
-                sm: "100%",
-                md: "100%",
-                lg: "768px",
-            }
-        },
         fontSize: {
             base: '16px',
             xs: '0.75em',
@@ -31,7 +23,6 @@ module.exports = {
         },
         maxWidth: {
             lg: '32em',
-            max: 'max-content'
         },
         minWidth: {
             0: '0',

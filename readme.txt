@@ -117,12 +117,12 @@ This can occur as a result of a conflict with your theme or another plugin and t
 == Changelog ==
 
 = 2.5.5 =
-* Add an additional spam prevention mechanism
-* Add more missing translation function calls
+* Accessibility improvements
+* Improve look and use on mobile
 * Add option to place donate modal markup in footer
 * Add asterisk to required fields
-* Accessibility improvements
 * Pressing enter on form now same as clicking 'next' button
+* Add more missing translation function calls
 * Fix uncaught exception on transactions table if campaign empty
 * Fix empty line in address if no business name (Donors table)
 
