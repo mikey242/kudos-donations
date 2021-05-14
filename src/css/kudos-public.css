@@ -1,0 +1,138 @@
+@import "partials/_animation.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: "libre_baskervillebold";
+        src: url("../fonts/librebaskerville-bold-webfont.woff2") format("woff2"), url("../fonts/librebaskerville-bold-webfont.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: "montserratregular";
+        src: url("../fonts/montserrat-regular-webfont.woff2") format("woff2"), url("../fonts/montserrat-regular-webfont.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+    }
+}
+
+.kudos-modal *:not(path):not(svg),
+.kudos-modal *::before,
+.kudos-modal *::after {
+    all: initial;
+    font-size: inherit;
+    opacity: 1;
+    @apply kd-font-sans kd-box-border kd-leading-normal;
+}
+.kudos-modal ::placeholder {
+    @apply kd-font-sans;
+}
+.kudos-modal .kudos-modal-container::before {
+    @apply kd-w-full kd-h-full kd-bg-white kd-top-0 kd-left-0 kd-absolute;
+    content: "";
+    z-index: -1;
+    opacity: 0.7;
+}
+.kudos-modal.is-open {
+    @apply kd-block kd-overflow-x-hidden kd-overflow-y-auto !important;
+}
+.kudos-modal.kd-is-loading .kudos-modal-container::before {
+    z-index: 1;
+}
+.kudos-modal.kd-is-loading .kd-spinner {
+    @apply kd-block !important;
+}
+
+form[id^=kudos-form] small.error {
+    @apply kd-order-last kd-mt-1 kd-block kd-text-sm kd-text-red-500;
+}
+form[id^=kudos-form] input[type=checkbox]:checked::before,
+form[id^=kudos-form] input[type=radio]:checked::before {
+    @apply kd-relative kd-float-left kd-bg-white;
+    content: "";
+    width: 0.375em;
+    height: 0.375em;
+    position: relative;
+    margin: 0.25em 0 0 0.25em;
+    line-height: 1.14285714;
+}
+form[id^=kudos-form] input[type=checkbox]:checked::after,
+form[id^=kudos-form] input[type=radio]:checked::after {
+    display: none;
+}
+form[id^=kudos-form] input[type=radio]:checked::before {
+    @apply kd-rounded-full;
+}
+form[id^=kudos-form] input.error,
+form[id^=kudos-form] select.error,
+form[id^=kudos-form] input.error ~ .checkmark {
+    @apply kd-border-red-500 !important;
+}
+form[id^=kudos-form] .kudos-radio-amount {
+    min-width: 65px !important;
+}
+form[id^=kudos-form] .kudos-radio-amount input:checked + label {
+    @apply kd-text-white kd-border-transparent !important;
+    background-color: var(--kudos-theme-primary);
+}
+form[id^=kudos-form] .kudos-radio-amount input:focus + label {
+    @apply kd-ring-primary kd-ring-2 kd-ring-offset-2;
+}
+form[id^=kudos-form] input[name=value]:required + span {
+    @apply kd-text-white kd-border-transparent !important;
+    background-color: var(--kudos-theme-primary);
+}
+form[id^=kudos-form] .kudos_submit::before {
+    content: url("../img/lock-white.svg");
+    width: 10px;
+    height: auto;
+    background-size: contain;
+    margin: auto 5px auto 0;
+}
+form[id^=kudos-form] .kd-secure-mollie::after {
+    content: "";
+    @apply kd-ml-2;
+    background-image: url("../img/mollie.svg");
+    width: 40px;
+    height: 12px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-bottom: 4px;
+}
+
+.kudos-modal[aria-hidden=false] .kudos-modal-overlay {
+    @apply kd-animate-fade-in;
+}
+.kudos-modal[aria-hidden=false] .kudos-modal-container {
+    @apply kd-animate-slide-in;
+}
+
+.kudos-modal[aria-hidden=true] .kudos-modal-overlay {
+    @apply kd-animate-fade-out;
+}
+.kudos-modal[aria-hidden=true] .kudos-modal-container {
+    @apply kd-animate-slide-out;
+}
+
+/* Base */
+:root {
+    --kudos-screen: xs;
+}
+
+/* 'xs' and up */
+@screen xs {
+    :root {
+        --kudos-screen: sm;
+    }
+}
+
+/* 'sm' and up */
+@screen sm {
+    :root {
+        --kudos-screen: md;
+    }
+}

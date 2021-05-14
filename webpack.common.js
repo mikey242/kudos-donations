@@ -27,14 +27,14 @@ module.exports = {
         ],
         'kudos-admin-settings': [
             join(PATHS.src, '/js', '/kudos-admin-settings.jsx'),
-            join(PATHS.src, '/scss', '/kudos-admin-settings.scss'),
+            join(PATHS.src, '/css', '/kudos-admin-settings.css'),
         ],
         'kudos-button-block': [
             join(PATHS.src, '/js', '/kudos-button-block.jsx'),
         ],
         'kudos-public': [
             join(PATHS.src, '/js', '/kudos-public.js'),
-            join(PATHS.src, '/scss', '/kudos-public.scss'),
+            join(PATHS.src, '/css', '/kudos-public.css'),
         ],
     },
     externals: {
@@ -62,12 +62,9 @@ module.exports = {
                 },
             },
             {
-                test: /\.(sa|sc|c)ss$/,
+                test: /.s?css$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'postcss-loader',
-                    'sass-loader',
+                    MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'
                 ],
             },
             {
@@ -76,7 +73,7 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                            name: '[name].[ext]',
+                            name: '[name].[hash].[ext]',
                             outputPath: './img/',
                         },
                     },
@@ -87,7 +84,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     limit: 4096,
-                    name: '[name].[ext]',
+                    name: '[name].[hash].[ext]',
                     outputPath: './fonts/',
                 },
             },
@@ -97,7 +94,6 @@ module.exports = {
         extensions: ['.json', '.js', '.jsx'],
     },
     plugins: [
-        // new ESLintPlugin(),
         new MiniCssExtractPlugin({
             filename: 'css/[name].css',
         }),
