@@ -74,11 +74,11 @@
 
     {% set props = props|merge({
         type: 'checkbox',
-        class: 'checked:kd-bg-primary kd-shadow-inner kd-border kd-border-primary kd-ring-primary focus:kd-ring-2 kd-ring-offset-2 kd-inline-block kd-w-4 kd-h-4 kd-m-2',
+        class: 'kd-align-middle checked:kd-bg-primary kd-shadow-inner kd-border kd-border-primary kd-ring-primary focus:kd-ring-2 kd-ring-offset-2 kd-inline-block kd-w-4 kd-h-4 kd-m-2',
         value: 'true'
     }) %}
 
-    <label class="kd-flex kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
+    <label class="kd-inline-block kd-items-center kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2">
         {{ build_input(props) }}
         {{ props.label | wp_kses_post }} {{ ('true' == required ? ' *') }}
     </label>
