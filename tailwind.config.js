@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
     mode: 'jit',
     prefix: 'kd-',
@@ -9,6 +11,10 @@ module.exports = {
         ]
     },
     theme: {
+        screens: {
+            'xs': '475px',
+            ...defaultTheme.screens
+        },
         fontSize: {
             base: '16px',
             xs: '0.75em',
@@ -46,9 +52,9 @@ module.exports = {
         },
         borderRadius: {
             none: '0',
-            DEFAULT: '0.25em', //'4px'
+            DEFAULT: '0.25em',
             sm: '2px',
-            lg: '0.5em', //'8px'
+            lg: '0.5em',
             full: '9999px'
         },
         zIndex: {
