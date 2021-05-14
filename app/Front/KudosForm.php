@@ -8,7 +8,7 @@ use Kudos\Helpers\Utils;
 
 class KudosForm extends AbstractRender {
 
-	const TEMPLATE = '/public/forms/donate.form.html.twig';
+	const TEMPLATE = 'public/forms/donate.form.html.twig';
 
 	/**
 	 * @var string

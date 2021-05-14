@@ -6,8 +6,8 @@ use Kudos\Helpers\Utils;
 
 class KudosModal extends AbstractRender {
 
-	const MESSAGE_TEMPLATE = '/public/modal/message.modal.html.twig';
-	const DONATE_TEMPLATE = '/public/modal/donate.modal.html.twig';
+	const MESSAGE_TEMPLATE = 'public/modal/message.modal.html.twig';
+	const DONATE_TEMPLATE = 'public/modal/donate.modal.html.twig';
 
 	/**
 	 * @var string
