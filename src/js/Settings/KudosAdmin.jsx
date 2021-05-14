@@ -315,7 +315,7 @@ class KudosAdmin extends Component {
                 />
 
                 <TabPanel
-                    className={"kudos-tab-panel kd-mx-auto kd-mt-5 kd-container" + (this.state.isAPISaving ? " api-saving" : "")}
+                    className={"kudos-tab-panel kd-mx-auto kd-mt-5 kd-w-[768px]" + (this.state.isAPISaving ? " api-saving" : "")}
                     onSelect={(tab) => {
                         this.changeTab(tab)
                     }}
