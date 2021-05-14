@@ -116,7 +116,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
-= 2.5.5 =
+= 2.6.0 =
 * Accessibility improvements
 * Improve look and use on mobile
 * Add option to place donate modal markup in footer
