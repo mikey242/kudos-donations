@@ -1,18 +1,28 @@
+import _ from 'lodash'
 import axios from 'axios'
 import MicroModal from 'micromodal'
 import 'jquery-validation'
 import '../img/logo-colour-40.png' // used as email attachment
-import '../img/logo-colour.svg' // used for logo on modal
+import '../img/logo-colour.svg'
 
 jQuery(document).ready(($) => {
 
     'use strict'
     const {__} = wp.i18n
+    let screenSize
 
     $(() => {
 
         const $kudosButtons = $('.kudos_button_donate')
         let animating = false
+
+        // Set screen size on load
+        updateScreenSize()
+
+        // Update screen size on window resize
+        $(window).on('resize', _.debounce(function () {
+            updateScreenSize()
+        }, 100))
 
         // Custom validation method to check subscription
         $.validator.addMethod('totalPayments', (value, element) => {
@@ -127,6 +137,7 @@ jQuery(document).ready(($) => {
                                 const modalEvent = new CustomEvent('kudosCloseModal', {detail: modal})
                                 window.dispatchEvent(modalEvent)
                             },
+                            awaitOpenAnimation: true,
                             awaitCloseAnimation: true,
                         })
                     }
@@ -146,90 +157,29 @@ jQuery(document).ready(($) => {
         })
 
         // Multi step form navigation
-        $('.kudos-form [data-direction]').on('click', function () {
-            if (animating) return false
-            // Cache selectors
-            const $current_tab = $(this).closest('.form-tab')
-            const $modal = $(this).closest('.kudos-modal-container')
-            const $inputs = $current_tab.find(':input')
-            const direction = $(this).data('direction')
+        document.querySelectorAll('.kudos-form [data-direction]').forEach((button) => {
+            button.addEventListener('click', (e) => {
 
-            // Validate fields before proceeding
-            if (direction === 'next') {
-                $inputs.validate()
-                if (!$inputs.valid()) {
-                    return
+                // Stop if already busy swapping tabs
+                if (animating) return false
+
+                // Cache selectors
+                const currentTab = button.closest('.form-tab')
+                const inputs = currentTab.elements
+
+                // Check direction
+                const direction = button.dataset.direction
+                if ('next' === direction) {
+                    $(inputs).validate()
+                    if (!$(inputs).valid()) {
+                        return false
+                    }
                 }
-            }
 
-            // Calculate next tab
-            let $next_tab = $current_tab
-            let change = false
-            while (!change) {
-                $next_tab = direction === 'next' ? $next_tab.next() : $next_tab.prev()
-                change = checkRequirements($next_tab)
-            }
-
-            if ($next_tab.hasClass('form-tab-final')) {
-                let id = $(this).closest('.kudos-modal').attr('id')
-                createSummary('#' + id)
-            }
-
-            // Begin animation
-            animating = true
-            const offset = 25
-            const duration = 150
-            $modal.animate(
-                {opacity: 0},
-                {
-                    step(now) {
-                        const position = (1 - now) * offset
-                        $modal.css({
-                            transform:
-                                'translateX(' +
-                                (direction === 'next' ? '-' : '') +
-                                position +
-                                'px)',
-                        })
-                    },
-                    duration,
-                    easing: 'linear',
-                    complete() {
-                        // Prepare tab props.
-                        let page = $modal.attr('data-page')
-                        let newPage = (direction === 'next' ? +page + 1 : +page - 1)
-                        $modal.attr('data-page', newPage)
-                        $current_tab.addClass('kd-hidden')
-                        $next_tab.removeClass('kd-hidden')
-
-                        // Select first input on tab.
-                        let $first = $next_tab.find(':input:first')
-                        $first.trigger('focus')
-
-                        // Begin animating.
-                        $modal.animate(
-                            {opacity: 1},
-                            {
-                                step(now) {
-                                    const position = (1 - now) * offset
-                                    $modal.css({
-                                        transform:
-                                            'translateX(' +
-                                            (direction === 'next' ? '' : '-') +
-                                            position +
-                                            'px)',
-                                    })
-                                },
-                                duration,
-                                easing: 'linear',
-                                complete() {
-                                    animating = false
-                                },
-                            }
-                        )
-                    },
-                }
-            )
+                changeTab(currentTab, direction, () => {
+                    animating = false
+                })
+            })
         })
 
         // Submit donation form action.
@@ -244,7 +194,10 @@ jQuery(document).ready(($) => {
             }
 
             form.addEventListener('submit', (e) => {
+
                 e.preventDefault()
+
+                console.log($(e.currentTarget).valid())
 
                 $(e.currentTarget).validate()
                 if ($(e.currentTarget).valid()) {
@@ -275,21 +228,108 @@ jQuery(document).ready(($) => {
 
     })
 
+    function changeTab(currentTab, direction, callback) {
+
+        // Get element to animate
+        let animate = currentTab.closest('.kudos-modal-container')
+        if ('xs' === screenSize) {
+            animate = currentTab.closest('form')
+        }
+
+        // Calculate direction
+        let targetTab = currentTab
+        let change = false
+        while (!change) {
+            targetTab = direction === 'next' ? targetTab.nextElementSibling : targetTab.previousElementSibling
+            change = checkRequirements(targetTab)
+        }
+
+        // Show summary if next tab is final
+        if (null === targetTab.nextElementSibling) {
+            createSummary('#' + currentTab.closest('.kudos-modal').id)
+        }
+
+        const offset = 25
+        const duration = 150
+        $(animate).animate(
+            {opacity: 0},
+            {
+                step(now) {
+                    const position = (1 - now) * offset
+                    $(animate).css({
+                        transform:
+                            'translateX(' +
+                            (direction === 'next' ? '-' : '') +
+                            position +
+                            'px)',
+                    })
+                },
+                duration,
+                easing: 'linear',
+                complete() {
+                    // Prepare tab props.
+                    currentTab.classList.add('kd-hidden')
+                    targetTab.classList.remove('kd-hidden')
+
+                    // Select first input on tab.
+                    let first = targetTab.elements[0]
+                    first.focus()
+
+                    // Begin animating.
+                    $(animate).animate(
+                        {opacity: 1},
+                        {
+                            step(now) {
+                                const position = (1 - now) * offset
+                                $(animate).css({
+                                    transform:
+                                        'translateX(' +
+                                        (direction === 'next' ? '' : '-') +
+                                        position +
+                                        'px)',
+                                })
+                            },
+                            duration,
+                            easing: 'linear',
+                            complete() {
+                                callback()
+                            },
+                        }
+                    )
+                },
+            }
+        )
+    }
+
     // Checks the form tab data-requirements array against the current form values
-    function checkRequirements($nextTab) {
-        const formValues = $nextTab.closest('form.kudos-form').find(':input').serializeArray()
-        const requirements = $nextTab.data('requirements')
+    function checkRequirements(targetTab) {
+
+        // Cache selectors
+        const form = targetTab.closest('form')
+
+        // Get form data and next tab requirements
+        const formData = new FormData(form)
+        const requirements = targetTab.dataset.requirements
+        const inputs = targetTab.elements
+
+        // Check if next tab meets requirements
         let result = true
         if (requirements) {
             result = false
-            $nextTab.find(':input').attr('disabled', 'disabled')
-            for (const [key, value] of Object.entries(requirements)) {
-                formValues.filter(function (item) {
-                    if (item.name === key && value.includes(item.value)) {
+            // Disabled all inputs to prevent submission
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].setAttribute("disabled", "")
+            }
+            for (const [reqName, reqValue] of Object.entries(JSON.parse(requirements))) {
+                for (const [inputName, inputValue] of formData.entries()) {
+                    if (inputName === reqName && reqValue.includes(inputValue)) {
                         result = true
-                        $nextTab.find(':input').attr('disabled', false)
+                        // Re-enable inputs if tab used
+                        for (let i = 0; i < inputs.length; i++) {
+                            inputs[i].removeAttribute("disabled", false)
+                        }
                     }
-                })
+                }
             }
         }
         return result
@@ -359,6 +399,10 @@ jQuery(document).ready(($) => {
         }
 
         showMessage()
+    }
+
+    function updateScreenSize() {
+        screenSize = getComputedStyle(document.documentElement).getPropertyValue('--kudos-screen')
     }
 
 })
