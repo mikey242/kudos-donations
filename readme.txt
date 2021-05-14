@@ -119,7 +119,8 @@ This can occur as a result of a conflict with your theme or another plugin and t
 = 2.6.0 =
 * Accessibility improvements
 * Improve look and use on mobile
-* Add option to place donate modal markup in footer
+* Increase size on larger screens
+* Add option to place donate modal markup in footer (for compatibility troubleshooting)
 * Add asterisk to required fields
 * Pressing enter on form now same as clicking 'next' button
 * Add more missing translation function calls
