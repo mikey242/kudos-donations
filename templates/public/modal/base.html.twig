@@ -1,11 +1,11 @@
 {% from "public/macros/buttons.html.twig" import icon %}
 
-<div id="kudos-modal-{{ id }}" class="kudos-modal {{ class }} kd-absolute kd-hidden kd-z-1050 kd-text-[16px] xl:kd-text-[18px] 2xl:kd-text-[20px]"
+<div id="kudos-modal-{{ id }}" class="kudos-modal {{ class }} kd-absolute kd-hidden kd-z-1050 kd-text-[16px] xl:kd-text-[18px] 2xl:kd-text-[18px]"
      role="dialog" aria-hidden="true" aria-modal="true" aria-label="{{ title }}">
     <div class="kudos-modal-overlay kd-flex kd-justify-center kd-items-center kd-fixed kd-top-0 kd-left-0 kd-w-full kd-h-full kd-bg-[#1a202ccc]"
          tabindex="-1">
         <div data-page="1"
-             class="kudos-modal-container kd-bg-white kd-p-8 kd-rounded-lg kd-w-full kd-max-h-screen sm:kd-w-3/4 md:kd-w-2/4 kd-max-w-lg kd-relative kd-overflow-auto sm:kd-overflow-hidden kd-origin-right">
+             class="kudos-modal-container kd-bg-white kd-p-8 xs:kd-rounded-lg kd-w-full kd-h-full xs:kd-h-auto lg:kd-w-2/4 kd-max-w-lg kd-relative kd-overflow-auto xs:kd-overflow-hidden kd-origin-right">
             <div class="kudos_modal_header kd-flex kd-items-center kd-justify-between">
                     <span class="kd-mr-3 kd-inline-block kd-flex" title="Kudos Donations">
                         {% if(logo_url) %}

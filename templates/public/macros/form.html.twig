@@ -92,7 +92,7 @@
     <div class="kd-radio-buttons kd-flex kd-flex-row kd-flex-wrap kd--mx-2">
         {% for key,value in props.options %}
             {% set id = props.atts.id ~ '-' ~ key %}
-            <div class="kudos-radio-amount kd-w-2/4 kd-mt-2 sm:kd-mb-0 {{ (length == 1 ? 'sm:kd-w-full' : length == 2 ? 'sm:kd-w-2/4' : length == 3 ? 'sm:kd-w-1/3' : length == 4 ? 'sm:kd-w-1/4' : '') }} kd-px-2 kd-m-0">
+            <div class="kudos-radio-amount kd-w-2/4 kd-mt-2 xs:kd-mb-0 {{ (length == 1 ? 'xs:kd-w-full' : length == 2 ? 'xs:kd-w-2/4' : length == 3 ? 'xs:kd-w-1/3' : length == 4 ? 'xs:kd-w-1/4' : '') }} kd-px-2 kd-m-0">
                 {{ build_input(props|merge({
                     type: 'radio',
                     class: 'kd-opacity-0 focus:kd-shadow-none kd-absolute kd--z-1',
