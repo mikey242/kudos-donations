@@ -2,7 +2,7 @@
 
 <fieldset
         class="form-tab form-tab-{{ tabClass ?: block('title')|slugify }} kd-block kd-w-full kd-relative kd-m-0 kd-p-0 kd-border-0 {{ isVisible ? '' : 'kd-hidden' }}"
-        data-requirements={{ requirements }}>
+        data-requirements="{{ requirements }}">
 
     {% set _text = block('text') %}
 
