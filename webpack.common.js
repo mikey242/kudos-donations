@@ -1,8 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const WebpackAssetsManifest = require('webpack-assets-manifest')
 const CopyPlugin = require("copy-webpack-plugin")
-const ESLintPlugin = require('eslint-webpack-plugin')
 const {join, resolve} = require('path')
 
 const PATHS = {
