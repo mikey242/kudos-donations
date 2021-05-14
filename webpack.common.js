@@ -47,7 +47,8 @@ module.exports = {
     output: {
         path: PATHS.dist,
         publicPath: '/wp-content/plugins/kudos-donations/dist/',
-        filename: 'js/[name].js',
+        filename: 'js/[name].[hash].js',
+        clean: true
     },
     module: {
         rules: [
@@ -95,10 +96,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: 'css/[name].css',
-        }),
-        new CleanWebpackPlugin({
-            cleanStaleWebpackAssets: false,
+            filename: 'css/[name].[hash].css',
         }),
         new CopyPlugin({
             patterns: [...vendorCopies]

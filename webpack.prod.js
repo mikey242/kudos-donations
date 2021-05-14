@@ -5,8 +5,8 @@ const common = require('./webpack.common.js');
 module.exports = merge(common, {
     mode: 'production',
     optimization: {
-        minimize: true,
         concatenateModules: false,
+        minimize: true,
         minimizer: [
             new TerserPlugin( {
                 terserOptions: {
