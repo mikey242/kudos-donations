@@ -18,8 +18,8 @@ __( 'Want to cancel your subscription?', 'kudos-donations' );
 __( 'Click here', 'kudos-donations' );
 
 // Template: "templates/public/modal/base.modal.html.twig"
-__( 'Visit Kudos Donations', 'kudos-donations' );
 __( 'Close', 'kudos-donations' );
+__( 'Close modal', 'kudos-donations' );
 
 // Template: "templates/public/forms/donate.form.html.twig"
 __( 'Other', 'kudos-donations' );
@@ -41,7 +41,7 @@ __( 'Donation duration', 'kudos-donations' );
 __( 'Address', 'kudos-donations' );
 __( 'Please fill in your address', 'kudos-donations' );
 __( 'optional', 'kudos-donations' );
-__('Business name', 'kudos-donations');
+__( 'Business name', 'kudos-donations' );
 __( 'Street', 'kudos-donations' );
 __( 'Postcode', 'kudos-donations' );
 __( 'City', 'kudos-donations' );
@@ -53,16 +53,16 @@ __( 'Amount', 'kudos-donations' );
 __( 'Type', 'kudos-donations' );
 /* translators: %1$s: Opening a tag, %2$s: Closing a tag */
 __( 'I agree with the %1$s privacy policy %2$s.', 'kudos-donations' );
-__('I agree with the privacy policy.', 'kudos-donations');
+__( 'I agree with the privacy policy.', 'kudos-donations' );
 /* translators: %1$s: Opening a tag, %2$s: Closing a tag */
 __( 'I agree with the %1$s terms and conditions %2$s.', 'kudos-donations' );
-__('I agree with the terms and conditions.', 'kudos-donations');
+__( 'I agree with the terms and conditions.', 'kudos-donations' );
 __( 'Donate', 'kudos-donations' );
 __( 'Secure payment by', 'kudos-donations' );
 __( 'Message', 'kudos-donations' );
 __( 'Leave a message (optional).', 'kudos-donations' );
 __( 'Your message (255 character limit).', 'kudos-donations' );
-__('Custom amount', 'kudos-donations');
+__( 'Custom amount', 'kudos-donations' );
 
 // Template: "templates/public/modal/message.modal.html.twig"
 __( 'Ok', 'kudos-donations' );
@@ -71,9 +71,3 @@ __( 'Ok', 'kudos-donations' );
 __( 'Cancel', 'kudos-donations' );
 __( 'Previous tab', 'kudos-donations' );
 __( 'Next', 'kudos-donations' );
-
-// Template: "templates/public/modal/donate.modal.html.twig"
-__('Donation form dialog', 'kudos-donations');
-
-// Template: "templates/public/modal/message.modal.html.twig"
-__('Message dialogue', 'kudos-donations');
