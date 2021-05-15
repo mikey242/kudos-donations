@@ -76,6 +76,7 @@ class KudosModal extends AbstractRender {
 		$this->class = 'kudos-donate-modal';
 
 		// Template specific atts.
+		$this->modal_title = $form->get_welcome_title();
 		$this->content = $form;
 		$this->spinner = Utils::get_kudos_logo_markup( 'black', 30 );
 

@@ -97,4 +97,13 @@ class KudosForm extends AbstractRender {
 		$this->message_enabled  = $campaign['message_enabled'] ?? '';
 	}
 
+	/**
+	 * Returns welcome text string.
+	 *
+	 * @return string
+	 */
+	public function get_welcome_title(): string {
+		return $this->welcome_title;
+	}
+
 }
