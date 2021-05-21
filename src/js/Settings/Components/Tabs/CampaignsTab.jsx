@@ -1,6 +1,6 @@
 import {NewCampaignPanel} from "../Panels/NewCampaignPanel"
 import {CampaignPanel} from "../Panels/CampaignPanel"
-import {getQueryVar} from "../../Helpers/Util"
+import {getQueryVar} from "../../../Helpers/Util"
 
 const {__} = wp.i18n
 const {useState, Fragment} = wp.element

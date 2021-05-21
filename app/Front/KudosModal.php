@@ -33,6 +33,10 @@ class KudosModal extends AbstractRender {
 	 * @var string
 	 */
 	protected $class;
+	/**
+	 * @var array
+	 */
+	protected $campaign;
 
 	/**
 	 * KudosModal constructor.
@@ -41,8 +45,8 @@ class KudosModal extends AbstractRender {
 	 */
 	public function __construct( string $id = null ) {
 
-		parent::__construct($id);
-		
+		parent::__construct( $id );
+
 		$this->template = self::MESSAGE_TEMPLATE;
 		$this->logo_url = Utils::get_logo_url();
 
@@ -57,11 +61,11 @@ class KudosModal extends AbstractRender {
 	public function create_message_modal( string $title, string $message = null ) {
 
 		$this->template = self::MESSAGE_TEMPLATE;
-		$this->class = 'kudos-message-modal';
+		$this->class    = 'kudos-message-modal';
 
 		// Template specific atts
 		$this->modal_title = $title ?? '';
-		$this->modal_text = $message ?? '';
+		$this->modal_text  = $message ?? '';
 
 	}
 
@@ -73,12 +77,12 @@ class KudosModal extends AbstractRender {
 	public function create_donate_modal( KudosForm $form ) {
 
 		$this->template = self::DONATE_TEMPLATE;
-		$this->class = 'kudos-donate-modal';
+		$this->class    = 'kudos-donate-modal';
 
 		// Template specific atts.
 		$this->modal_title = $form->get_welcome_title();
-		$this->content = $form;
-		$this->spinner = Utils::get_kudos_logo_markup( 'black', 30 );
+		$this->content     = $form;
+		$this->spinner     = Utils::get_kudos_logo_markup( 'black', 30 );
 
 	}
 }

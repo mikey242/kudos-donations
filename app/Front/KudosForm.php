@@ -62,6 +62,18 @@ class KudosForm extends AbstractRender {
 	 * @var string
 	 */
 	protected $terms_link;
+	/**
+	 * @var mixed|string
+	 */
+	protected $campaign_goal;
+	/**
+	 * @var mixed|string
+	 */
+	protected $show_progress;
+	/**
+	 * @var array|null
+	 */
+	protected $campaign_stats;
 
 	/**
 	 * KudosForm constructor.
@@ -71,9 +83,9 @@ class KudosForm extends AbstractRender {
 	 *
 	 * @throws Exception
 	 */
-	public function __construct( string $campaign_id, string $id=null ) {
+	public function __construct( string $campaign_id, string $id = null ) {
 
-		parent::__construct($id);
+		parent::__construct( $id );
 
 		// Configure global properties.
 		$this->template          = self::TEMPLATE;
@@ -87,8 +99,11 @@ class KudosForm extends AbstractRender {
 		$campaign = Settings::get_campaign( $campaign_id );
 
 		// Set campaign properties.
+		$this->campaign_stats   = Settings::get_campaign_stats( $this->campaign_id );
 		$this->welcome_title    = $campaign['modal_title'] ?? '';
 		$this->welcome_text     = $campaign['welcome_text'] ?? '';
+		$this->campaign_goal    = $campaign['campaign_goal'] ?? '';
+		$this->show_progress    = $campaign['show_progress'] ?? '';
 		$this->amount_type      = $campaign['amount_type'] ?? '';
 		$this->fixed_amounts    = $campaign['fixed_amounts'] ?? '';
 		$this->frequency        = $campaign['donation_type'] ?? '';
@@ -104,6 +119,22 @@ class KudosForm extends AbstractRender {
 	 */
 	public function get_welcome_title(): string {
 		return $this->welcome_title;
+	}
+
+	/**
+	 * Returns campaign details.
+	 * @return array
+	 */
+	public function get_campaign_details(): array {
+
+		$stats = Settings::get_campaign_stats( $this->campaign_id );
+
+		return array_merge( [
+			'id'       => $this->campaign_id,
+			'goal'     => $this->campaign_goal,
+			'progress' => $this->show_progress,
+		],
+			$stats );
 	}
 
 }

@@ -156,7 +156,7 @@ class MapperService extends AbstractService {
 	 * @return mixed
 	 * @since 2.0.5
 	 */
-	private function get_cache_incrementer( $refresh = false ) {
+	private function get_cache_incrementer( bool $refresh = false ) {
 
 		// Override refresh with setting
 		if ( Settings::get_setting( 'disable_object_cache' ) ) {
@@ -184,7 +184,7 @@ class MapperService extends AbstractService {
 	 * @return string
 	 * @since   2.0.0
 	 */
-	public function get_table_name( $prefix = true ): string {
+	public function get_table_name( bool $prefix = true ): string {
 
 		return $this->get_repository()::get_table_name( $prefix );
 
@@ -295,7 +295,7 @@ class MapperService extends AbstractService {
 	 * @return mixed|object|array|bool|null
 	 * @since 2.0.5
 	 */
-	public function get_results( $query, $output = ARRAY_A ) {
+	public function get_results( $query, string $output = ARRAY_A ) {
 
 		$wpdb        = $this->wpdb;
 		$cache_key   = 'get_results-' . md5( $query );

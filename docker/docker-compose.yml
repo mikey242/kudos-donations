@@ -12,6 +12,9 @@ services:
       - ${WORDPRESS_DIR:-./wordpress}:/var/www/html
       - ./xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ../:/var/www/html/wp-content/plugins/kudos-donations:ro
+      - ../../kudos-premium:/var/www/html/wp-content/plugins/kudos-premium:ro
+      - ../../kudos-website:/var/www/html/wp-content/themes/kudos-website:ro
+      - ../../podiumnoord-website:/var/www/html/wp-content/themes/podiumnoord-website:ro
     ports:
       - "80:80"
     restart: always

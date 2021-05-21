@@ -8,7 +8,7 @@ export function camelize(str) {
     }).replace(/\s+/g, '')
 }
 
-export function getQueryVar(key, fallback=null) {
+export function getQueryVar(key, fallback = null) {
     const searchParams = new URLSearchParams(window.location.search)
     if (searchParams.has(key)) {
         return searchParams.get(key)
@@ -23,4 +23,12 @@ export function updateQueryParameter(key, value) {
         let newRelativePathQuery = window.location.pathname + '?' + searchParams.toString()
         history.replaceState(null, '', newRelativePathQuery)
     }
+}
+
+export function getStyle(style) {
+    return getComputedStyle(document.documentElement).getPropertyValue(style)
+}
+
+export function setAttributes(el, attrs) {
+    Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value))
 }

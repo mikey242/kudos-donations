@@ -76,6 +76,16 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                     }}
                 />
 
+                <ToggleControl
+                    help={__('Show goal progression.', 'kudos-donations')}
+                    label={campaign.show_progress ? __('Enabled', 'kudos-donations') : __('Disabled', 'kudos-donations')}
+                    checked={campaign.show_progress || ''}
+                    onChange={(value) => {
+                        campaign.show_progress = value
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                    }}
+                />
+
             </SettingCard>
 
             <CardDivider/>

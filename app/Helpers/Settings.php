@@ -3,6 +3,8 @@
 namespace Kudos\Helpers;
 
 use Exception;
+use Kudos\Entity\TransactionEntity;
+use Kudos\Service\MapperService;
 
 class Settings {
 
@@ -24,13 +26,13 @@ class Settings {
 		$this->settings = apply_filters(
 			'kudos_register_settings',
 			[
-				'show_intro'            => [
+				'show_intro'             => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'vendor_mollie'         => [
+				'vendor_mollie'          => [
 					'type'              => 'object',
 					'default'           => [
 						'connected'       => false,
@@ -78,61 +80,61 @@ class Settings {
 					],
 					'sanitize_callback' => [ $this, 'sanitize_vendor' ],
 				],
-				'email_receipt_enable'  => [
+				'email_receipt_enable'   => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'email_bcc'             => [
+				'email_bcc'              => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_email',
 				],
-				'smtp_enable'           => [
+				'smtp_enable'            => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'smtp_host'             => [
+				'smtp_host'              => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'smtp_encryption'       => [
+				'smtp_encryption'        => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => 'tls',
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'smtp_autotls'          => [
+				'smtp_autotls'           => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'smtp_from'             => [
+				'smtp_from'              => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => null,
 					'sanitize_callback' => 'sanitize_email',
 				],
-				'smtp_username'         => [
+				'smtp_username'          => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'smtp_password'         => [
+				'smtp_password'          => [
 					'type'         => 'string',
 					'show_in_rest' => true,
 				],
-				'smtp_port'             => [
+				'smtp_port'              => [
 					'type'              => 'number',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'intval',
 				],
-				'theme_colors'          => [
+				'theme_colors'           => [
 					'type'              => 'object',
 					'default'           => [
 						'primary'   => '#ff9f1c',
@@ -153,31 +155,31 @@ class Settings {
 					],
 					'sanitize_callback' => [ $this, 'recursive_sanitize_text_field' ],
 				],
-				'terms_link'            => [
+				'terms_link'             => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => null,
 					'sanitize_callback' => 'esc_url_raw',
 				],
-				'privacy_link'          => [
+				'privacy_link'           => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => null,
 					'sanitize_callback' => 'esc_url_raw',
 				],
-				'return_message_enable' => [
+				'return_message_enable'  => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'return_message_title'  => [
+				'return_message_title'   => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => __( 'Thank you!', 'kudos-donations' ),
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'return_message_text'   => [
+				'return_message_text'    => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'default'           => sprintf(
@@ -187,40 +189,40 @@ class Settings {
 					),
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'custom_return_enable'  => [
+				'custom_return_enable'   => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'custom_return_url'     => [
+				'custom_return_url'      => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'esc_url_raw',
 				],
-				'payment_vendor'        => [
+				'payment_vendor'         => [
 					'type'    => 'string',
 					'default' => 'mollie',
 				],
-				'debug_mode'            => [
+				'debug_mode'             => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'donate_modal_in_footer'   => [
+				'donate_modal_in_footer' => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'disable_object_cache'  => [
+				'disable_object_cache'   => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'campaigns'             => [
+				'campaigns'              => [
 					'type'              => 'array',
 					'show_in_rest'      => [
 						'schema' => [
@@ -261,11 +263,11 @@ class Settings {
 									'donation_type'    => [
 										'type' => 'string',
 									],
-									// Deprecated: do not use
-									'protected'        => [
+									'show_progress'    => [
 										'type' => 'boolean',
 									],
-									'show_progress'    => [
+									// Deprecated: do not use
+									'protected'        => [
 										'type' => 'boolean',
 									],
 								],
@@ -285,6 +287,7 @@ class Settings {
 							'amount_type'      => 'both',
 							'fixed_amounts'    => '1,5,20,50',
 							'campaign_goal'    => '',
+							'show_progress'    => false,
 							'donation_type'    => 'oneoff',
 						],
 					],
@@ -553,6 +556,50 @@ class Settings {
 
 		/* translators: %s: Campaign id */
 		throw new Exception( sprintf( __( 'Campaign "%s" not found.', 'kudos-donations' ), $value ) );
+
+	}
+
+	/**
+	 * Gets transaction stats for campaign.
+	 *
+	 * @param string $campaign_id
+	 *
+	 * @return array
+	 */
+	public static function get_campaign_stats( string $campaign_id ): ?array {
+
+		$mapper       = new MapperService( TransactionEntity::class );
+		$transactions = $mapper->get_all_by( [
+			'campaign_id' => $campaign_id,
+		] );
+
+		if ( $transactions ) {
+			$values = array_map( function ( $transaction ) {
+				if ( 'paid' === $transaction->status ) {
+					$refunds = $transaction->get_refund();
+					if ( $refunds ) {
+						return $refunds->remaining;
+					} else {
+						return $transaction->value;
+					}
+				}
+
+				return 0;
+			},
+				$transactions );
+
+			return [
+				'count'         => count( $values ),
+				'total'         => array_sum( $values ),
+				'last_donation' => end( $transactions )->created,
+			];
+		}
+
+		return [
+			'count'         => 0,
+			'total'         => 0,
+			'last_donation' => '',
+		];
 
 	}
 

@@ -1,11 +1,13 @@
 {% extends 'public/modal/base.html.twig' %}
+{% from "public/macros/progress.bar.html.twig" import progress %}
 
 {% block header %}
-    {{ do_action('kudos_donate_modal_header', campaign) }}
+    {% if campaign.progress %}
+{#        {{ progress(campaign) }}#}
+    {% endif %}
 {% endblock header %}
 
 {% block content %}
-
     {{ content | raw }}
 
     <i class="kd-spinner kd-animate-loader-spin kd-hidden kd-bg-contain kd-absolute kd-top-1/2 kd-left-1/2 kd-w-8 kd-h-8 kd--ml-4 kd--mt-4 kd-z-1">

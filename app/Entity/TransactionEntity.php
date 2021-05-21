@@ -92,7 +92,7 @@ class TransactionEntity extends AbstractEntity {
 	public $message;
 
 	/**
-	 * Gets donor associated with transaction
+	 * Gets donor associated with transaction.
 	 *
 	 * @return DonorEntity|null
 	 * @since   2.0.0
@@ -108,7 +108,7 @@ class TransactionEntity extends AbstractEntity {
 	}
 
 	/**
-	 * Returns unserialized array of refund data
+	 * Returns unserialized array of refund data.
 	 *
 	 * @return object|false
 	 * @since   2.0.0

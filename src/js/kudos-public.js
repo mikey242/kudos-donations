@@ -4,24 +4,34 @@ import MicroModal from 'micromodal'
 import 'jquery-validation'
 import '../img/logo-colour-40.png' // used as email attachment
 import '../img/logo-colour.svg'
+import {getStyle} from "./Helpers/Util"
+import {
+    animateProgressBar,
+    checkRequirements,
+    createSummary,
+    handleMessages,
+    resetProgressBar,
+    toggleAmount
+} from "./Helpers/Modal"
+
+const {__} = wp.i18n
 
 jQuery(document).ready(($) => {
 
     'use strict'
-    const {__} = wp.i18n
     let screenSize
 
     $(() => {
 
-        const $kudosButtons = $('.kudos_button_donate')
+        const kudosButtons = document.querySelectorAll('.kudos_button_donate')
         let animating = false
 
         // Set screen size on load
-        updateScreenSize()
+        screenSize = getStyle('--kudos-screen')
 
         // Update screen size on window resize
         $(window).on('resize', _.debounce(function () {
-            updateScreenSize()
+            screenSize = getStyle('--kudos-screen')
         }, 100))
 
         // Custom validation method to check subscription
@@ -83,58 +93,58 @@ jQuery(document).ready(($) => {
         })
         $.validator.messages.required = __("This field is required", 'kudos-donations')
 
-        if ($kudosButtons.length) {
+        if (kudosButtons.length) {
 
             // Setup button action
-            $kudosButtons.each(function () {
+            kudosButtons.forEach((e) => {
 
-                const target = $(this).data('target')
+                const target = e.dataset.target
 
-                $(this).on('click', function () {
+                e.addEventListener('click', () => {
                     if (target) {
                         MicroModal.show(target, {
                             onShow(modal) {
 
                                 // Create and dispatch event
-                                window.dispatchEvent(
-                                    new CustomEvent('kudosShowModal', {detail: modal})
-                                )
+                                window.dispatchEvent( new CustomEvent('kudosShowModal', {detail: modal}) )
+
+                                // Animate progress bar
+                                animateProgressBar(modal)
 
                                 // Clear error message
-                                $(modal)
-                                    .find('.kudos_error_message')
-                                    .text('')
+                                modal.querySelector('.kudos_error_message').innerHTML = ""
 
                                 // Reset and config form
-                                const $form = $(modal).find('.kudos-form')
-                                if ($form.length) {
+                                const form = modal.querySelector('.kudos-form')
+                                if (form.length) {
 
                                     // Switch back to first tab
-                                    $form.find('fieldset').addClass(
-                                        'kd-hidden'
-                                    )
-                                    $form.find('fieldset').first().removeClass(
-                                        'kd-hidden'
-                                    )
+                                    form.querySelectorAll('fieldset').forEach((e) => {
+                                        e.classList.add('kd-hidden')
+                                    })
+                                    form.querySelector('fieldset').classList.remove('kd-hidden')
+                                    modal.querySelector('.kudos-modal-container').dataset.currentTab = 'initial'
 
                                     // Reset amounts
-                                    let $amountInput = $form.find('[id^=value-open-both-]')
-                                    let $amountRadios = $form.find('[id^=value-fixed-]')
-                                    toggleAmount($amountInput, $amountRadios)
-                                    $($amountRadios[0]).prop('checked', true)
-                                    $amountInput.attr({'required': false, 'name': ''})
+                                    let amountInput = form.querySelector('[id^=value-open-both-]')
+                                    let amountRadios = form.querySelectorAll('[id^=value-fixed-]')
+                                    toggleAmount(amountInput, amountRadios)
+                                    amountRadios[0].checked = true
+                                    amountInput.removeAttribute('required')
+                                    amountInput.setAttribute('name', '')
 
-                                    // Clear all values
-                                    $form.validate().resetForm()
-                                    $form[0].reset()
+                                    // Clear all form values
+                                    $(form).validate().resetForm()
+                                    form.reset()
 
                                     // Set first input as focus
-                                    $form.find('input[name="value"]:first').trigger('focus')
+                                    form.querySelector('input[name="value"]').focus()
                                 }
                             },
                             onClose(modal) {
                                 // Create and dispatch event
                                 const modalEvent = new CustomEvent('kudosCloseModal', {detail: modal})
+                                resetProgressBar(modal)
                                 window.dispatchEvent(modalEvent)
                             },
                             awaitOpenAnimation: true,
@@ -146,14 +156,14 @@ jQuery(document).ready(($) => {
         }
 
         // Show message modal if exists
-        let messages = $('.kudos-message-modal').toArray()
+        let messages = document.querySelectorAll('.kudos-message-modal')
         if (messages.length) {
-            handleMessages(messages)
+            handleMessages(Array.from(messages))
         }
 
-        // Hide field
-        $('input[name="donation"]').each(function () {
-            $(this).closest('label').css('display', 'none')
+        // Hide honeypot field
+        document.querySelectorAll('input[name="donation"]').forEach((e) => {
+            e.closest('label').classList.add('kd-hidden')
         })
 
         // Multi step form navigation
@@ -197,8 +207,6 @@ jQuery(document).ready(($) => {
 
                 e.preventDefault()
 
-                console.log($(e.currentTarget).valid())
-
                 $(e.currentTarget).validate()
                 if ($(e.currentTarget).valid()) {
 
@@ -230,8 +238,10 @@ jQuery(document).ready(($) => {
 
     function changeTab(currentTab, direction, callback) {
 
+        let container = currentTab.closest('.kudos-modal-container')
+
         // Get element to animate
-        let animate = currentTab.closest('.kudos-modal-container')
+        let animate = container
         if ('xs' === screenSize) {
             animate = currentTab.closest('form')
         }
@@ -246,7 +256,7 @@ jQuery(document).ready(($) => {
 
         // Show summary if next tab is final
         if (null === targetTab.nextElementSibling) {
-            createSummary('#' + currentTab.closest('.kudos-modal').id)
+            createSummary(currentTab.closest('form').id)
         }
 
         const offset = 25
@@ -270,6 +280,7 @@ jQuery(document).ready(($) => {
                     // Prepare tab props.
                     currentTab.classList.add('kd-hidden')
                     targetTab.classList.remove('kd-hidden')
+                    container.dataset.currentTab = targetTab.dataset.name
 
                     // Select first input on tab.
                     let first = targetTab.elements[0]
@@ -299,110 +310,6 @@ jQuery(document).ready(($) => {
                 },
             }
         )
-    }
-
-    // Checks the form tab data-requirements array against the current form values
-    function checkRequirements(targetTab) {
-
-        // Cache selectors
-        const form = targetTab.closest('form')
-
-        // Get form data and next tab requirements
-        const formData = new FormData(form)
-        const requirements = targetTab.dataset.requirements
-        const inputs = targetTab.elements
-
-        // Check if next tab meets requirements
-        let result = true
-        if (requirements) {
-            result = false
-            // Disabled all inputs to prevent submission
-            for (let i = 0; i < inputs.length; i++) {
-                inputs[i].setAttribute("disabled", "")
-            }
-            for (const [reqName, reqValue] of Object.entries(JSON.parse(requirements))) {
-                for (const [inputName, inputValue] of formData.entries()) {
-                    if (inputName === reqName && reqValue.includes(inputValue)) {
-                        result = true
-                        // Re-enable inputs if tab used
-                        for (let i = 0; i < inputs.length; i++) {
-                            inputs[i].removeAttribute("disabled", false)
-                        }
-                    }
-                }
-            }
-        }
-        return result
-    }
-
-    // Create the summary at the end of the form before submitting
-    function createSummary(id) {
-        const form = $(id).find('form')
-        const values = form.serializeArray()
-        const name = values.find((i) => i.name === 'name').value
-        const email = values.find((i) => i.name === 'email_address').value
-        const value = values.find((i) => i.name === 'value').value
-        const frequency = values.find((i) => i.name === 'payment_frequency').value
-        let type
-
-        if (frequency === 'recurring') {
-            const recurring_frequency = values.find((i) => i.name === 'recurring_frequency').value
-            const recurring_length = values.find((i) => i.name === 'recurring_length').value
-            const length = $(id + " [name='recurring_length'] option[value='" + recurring_length + "']")[0].text
-            const frequency = $(id + " [name='recurring_frequency'] option[value='" + recurring_frequency + "']")[0].text
-            type = __('Recurring', 'kudos-donations') + " ( " + frequency + ' / ' + length + " )"
-        } else {
-            type = __('One-off', 'kudos-donations')
-        }
-
-        $(id + ' ' + '.summary_name').text(name)
-        $(id + ' ' + '.summary_email').text(email)
-        $(id + ' ' + '.summary_value').text(value)
-        $(id + ' ' + '.summary_frequency').text(type)
-    }
-
-    // Set input attributes when 'both' amount type is used
-    function toggleAmount($amountInput, $amountRadios) {
-
-        $amountInput.on('input', function () {
-            $amountInput.attr({'required': true, 'name': 'value'})
-            $amountRadios.each(function (i, e) {
-                $(e).prop('checked', false)
-                $(e).attr({'name': ''})
-            })
-        })
-
-        $amountRadios.each(function (i, e) {
-            $(e).on('change', function () {
-                $(e).attr({'name': 'value'})
-                $amountInput.attr({'required': false, 'name': ''})
-                $amountInput.valid()
-                $amountInput.val('')
-            })
-        })
-    }
-
-    // Handles the messages by showing the modals in order
-    function handleMessages(messages) {
-
-        let showMessage = () => {
-            MicroModal.show(messages[0].id, {
-                onClose: () => {
-                    messages.shift()
-                    if (messages.length) {
-                        showMessage()
-                    }
-                },
-                awaitCloseAnimation: true,
-                awaitOpenAnimation: true,
-            })
-        }
-
-        showMessage()
-    }
-
-    function updateScreenSize() {
-        screenSize = getComputedStyle(document.documentElement).getPropertyValue('--kudos-screen')
     }
 
 })

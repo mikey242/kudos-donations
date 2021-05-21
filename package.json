@@ -57,6 +57,7 @@
     "lodash": "^4.17.20",
     "micromodal": "^0.4.6",
     "parsley": "^0.1.0",
+    "party-js": "^2.0.1",
     "sass": "^1.32.11",
     "stylelint-config-recommended": "^3.0.0",
     "tailwindcss": "^2.1.1"

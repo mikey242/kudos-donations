@@ -86,7 +86,7 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$id = $campaign['id'];
 
-			$campaign_total = $this->get_campaign_stats( $id );
+			$campaign_total = Settings::get_campaign_stats( $id );
 
 			$campaigns[ $key ]['currency']     = 'EUR';
 			$campaigns[ $key ]['date']         = $campaign_total['last_donation'] ?? null;
@@ -141,50 +141,6 @@ class CampaignsTable extends WP_List_Table {
 				false,
 			],
 		];
-	}
-
-	/**
-	 * Gets transaction stats for campaign.
-	 *
-	 * @param string $campaign_id
-	 *
-	 * @return array
-	 */
-	public function get_campaign_stats( string $campaign_id ): ?array {
-
-		$mapper       = $this->mapper;
-		$transactions = $mapper->get_all_by( [
-			'campaign_id' => $campaign_id,
-		] );
-
-		if ( $transactions ) {
-			$values = array_map( function ( $transaction ) {
-				if ( 'paid' === $transaction->status ) {
-					$refunds = $transaction->get_refund();
-					if ( $refunds ) {
-						return $refunds->remaining;
-					} else {
-						return $transaction->value;
-					}
-				}
-
-				return 0;
-			},
-				$transactions );
-
-			return [
-				'count'         => count( $values ),
-				'total'         => array_sum( $values ),
-				'last_donation' => end( $transactions )->created,
-			];
-		}
-
-		return [
-			'count'         => 0,
-			'total'         => 0,
-			'last_donation' => '',
-		];
-
 	}
 
 	/**
