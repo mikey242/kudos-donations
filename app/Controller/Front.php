@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Front;
+namespace Kudos\Controller;
 
 use Exception;
 use Kudos\Entity\DonorEntity;
@@ -245,7 +245,7 @@ class Front {
 			}
 
 			// Generate markup.
-			$button = new KudosButton($atts);
+			$button = new ButtonController($atts);
 			return $button->render();
 
 
@@ -283,7 +283,7 @@ class Front {
 						if ( $transaction && $transaction->verify_secret( $token ) ) {
 							$atts = $this->check_transaction( $order_id );
 							if ( $atts ) {
-								$modal = new KudosModal();
+								$modal = new ModalController();
 								$modal->create_message_modal( $atts['modal_title'],$atts['modal_text'] );
 								echo $modal->render();
 							}
@@ -306,7 +306,7 @@ class Front {
 							return;
 						}
 
-						$modal = new KudosModal();
+						$modal = new ModalController();
 
 						if ( $subscription->verify_secret( $token ) ) {
 							$payment_service = PaymentService::factory();

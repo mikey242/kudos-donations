@@ -1,12 +1,12 @@
 <?php
 
-namespace Kudos\Front;
+namespace Kudos\Controller;
 
 use Exception;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 
-class KudosButton extends AbstractRender {
+class ButtonController extends AbstractController {
 
 	const TEMPLATE = 'public/kudos.button.html.twig';
 
@@ -27,7 +27,7 @@ class KudosButton extends AbstractRender {
 	 */
 	protected $campaign_id;
 	/**
-	 * @var KudosModal
+	 * @var ModalController
 	 */
 	protected $modal;
 	/**
@@ -35,7 +35,7 @@ class KudosButton extends AbstractRender {
 	 */
 	protected $logo;
 	/**
-	 * @var KudosForm
+	 * @var FormController
 	 */
 	protected $form;
 
@@ -73,8 +73,8 @@ class KudosButton extends AbstractRender {
 	 */
 	private function create_modal() {
 
-		$form = new KudosForm($this->campaign_id, $this->id);
-		$modal = new KudosModal($this->id);
+		$form = new FormController($this->campaign_id, $this->id);
+		$modal = new ModalController($this->id);
 		$modal->create_donate_modal($form);
 
 		// If setting enabled, place the modal in the footer.

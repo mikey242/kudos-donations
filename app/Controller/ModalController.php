@@ -1,10 +1,10 @@
 <?php
 
-namespace Kudos\Front;
+namespace Kudos\Controller;
 
 use Kudos\Helpers\Utils;
 
-class KudosModal extends AbstractRender {
+class ModalController extends AbstractController {
 
 	const MESSAGE_TEMPLATE = 'public/modal/message.modal.html.twig';
 	const DONATE_TEMPLATE = 'public/modal/donate.modal.html.twig';
@@ -72,9 +72,9 @@ class KudosModal extends AbstractRender {
 	/**
 	 * Get the donate modal markup.
 	 *
-	 * @param KudosForm $form
+	 * @param FormController $form
 	 */
-	public function create_donate_modal( KudosForm $form ) {
+	public function create_donate_modal( FormController $form ) {
 
 		$this->template = self::DONATE_TEMPLATE;
 		$this->class    = 'kudos-donate-modal';

@@ -1,11 +1,11 @@
 <?php
 
-namespace Kudos\Front;
+namespace Kudos\Controller;
 
 use Kudos\Helpers\Utils;
 use Kudos\Service\TwigService;
 
-abstract class AbstractRender {
+abstract class AbstractController {
 
 	/**
 	 * The id of the element.

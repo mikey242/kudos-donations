@@ -1,12 +1,12 @@
 <?php
 
-namespace Kudos\Front;
+namespace Kudos\Controller;
 
 use Exception;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 
-class KudosForm extends AbstractRender {
+class FormController extends AbstractController {
 
 	const TEMPLATE = 'public/forms/donate.form.html.twig';
 
@@ -123,6 +123,7 @@ class KudosForm extends AbstractRender {
 
 	/**
 	 * Returns campaign details.
+	 *
 	 * @return array
 	 */
 	public function get_campaign_details(): array {

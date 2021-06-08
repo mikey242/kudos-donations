@@ -6,9 +6,8 @@ use Kudos\Admin\Admin;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Front\Front;
+use Kudos\Controller\Front;
 use Kudos\Service\ActivatorService;
-use Kudos\Service\I18nService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
 
