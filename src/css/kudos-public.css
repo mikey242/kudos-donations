@@ -92,17 +92,6 @@ form[id^=kudos-form] .kudos_submit::before {
     margin: auto 5px auto 0;
 }
 
-form[id^=kudos-form] .kd-secure-mollie::after {
-    content: "" !important;
-    background-image: url("../img/mollie.svg");
-    width: 40px;
-    height: 12px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin-bottom: 4px;
-}
-
 .kudos-modal[aria-hidden=false] .kudos-modal-overlay {
     @apply kd-animate-fade-in;
 }
