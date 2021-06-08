@@ -116,6 +116,14 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 2.7.0 =
+* Add goal progression to campaigns. Disabled by default, this can be enabled per campaign and shows a percentage bar of how much the campaign has already raised as well as how much the currently selected amount will progress the campaign.
+* Improve navigation buttons on mobile
+* Upgrade TailwindCSS to 2.1.4
+* Upgrade Mollie API client to 2.32.0 (reduces plugin filesize)
+* Upgrade Action Scheduler to 3.2.0
+* Fix amount not resetting if Amount type "Open" selected
+
 = 2.6.0 =
 * Improve look and use on mobile
 * Increase size on larger screens
