@@ -77,7 +77,7 @@
 
 .components-tab-panel__tabs,
 .components-card {
-    @apply kd-border-solid kd-border kd-border-gray-300 kd-rounded;
+    @apply kd-border-solid kd-border-1 kd-border-gray-300 kd-rounded;
 }
 
 .components-radio-control .components-base-control__help,
