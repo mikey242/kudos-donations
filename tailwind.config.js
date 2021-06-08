@@ -57,6 +57,12 @@ module.exports = {
             lg: '0.5em',
             full: '9999px'
         },
+        borderWidth: {
+            DEFAULT: '2px',
+            '0': '0',
+            '1': '1px',
+            '2': '2px',
+        },
         zIndex: {
             '-1': -1,
             0: 0,
