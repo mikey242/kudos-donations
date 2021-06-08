@@ -1,9 +1,9 @@
 {% macro button(label, style='primary', type='button', atts={}) %}
 
     {% set transition = 'kd-transition kd-ease-in-out' %}
-    {% set focus = 'focus:kd-ring-primary focus:kd-ring-2 focus:kd-ring-offset-2' %}
+    {% set focus = 'focus:kd-ring-primary focus:kd-ring focus:kd-ring-offset-2' %}
     {% set text = 'kd-text-center kd-text-white kd-leading-normal kd-font-normal kd-normal-case kd-no-underline' %}
-    {% set generic = 'kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-m-1 kd-rounded-lg kd-cursor-pointer kd-shadow-none' %}
+    {% set generic = 'kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-rounded-lg kd-cursor-pointer kd-shadow-none' %}
     {% set extra = '' %}
 
     {% if 'outline' == style %}
@@ -31,30 +31,4 @@
         {{ label | wp_kses_post }}
     </button>
 
-{% endmacro %}
-
-{% macro icon(icon, label, size) %}
-
-    {% if 'back' == icon %}
-        {% set path = "M15 19l-7-7 7-7" %}
-        {% set atts = "data-direction='back'" %}
-    {% elseif 'close' == icon %}
-        {% set path = "M6 18L18 6M6 6l12 12" %}
-        {% set atts = "data-micromodal-close" %}
-    {% endif %}
-
-    {% set width = "kd-w-6" %}
-
-    {% if size == 5 %}
-        {% set width = "kd-w-5" %}
-    {% elseif size == 6 %}
-        {% set width = "kd-w-6" %}
-    {% endif %}
-
-    <button type="button" class="kd-text-gray-500 kd-z-1 hover:kd-text-primary-dark kd-transition-shadow kd-ease-in-out kd-rounded-full kd-bg-transparent kd-cursor-pointer focus:kd-ring-2 kd-ring-primary kd-ring-offset-2"
-            aria-label="{{ label }}" title="{{ label }}" {{ atts }}>
-        <svg class="{{ width }} kd-block kd-cursor-pointer kd-relative kd--z-1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ path }}" />
-        </svg>
-    </button>
 {% endmacro %}

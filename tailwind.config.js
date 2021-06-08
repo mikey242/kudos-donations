@@ -1,4 +1,6 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const svgToDataUri = require('mini-svg-data-uri')
+const {colors, spacing} = defaultTheme
 
 module.exports = {
     mode: 'jit',
@@ -89,6 +91,42 @@ module.exports = {
             boxShadow: {
                 'button-group': 'inset 0 0 0 1px var(--wp-admin-theme-color);'
             },
+            backgroundImage: theme => ({
+                'back-button': `url("${svgToDataUri(
+                    `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="${theme(
+                        'colors.gray.500',
+                        colors.gray[500]
+                    )}" fill="none">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>`
+                )}")`,
+                'close-button': `url("${svgToDataUri(
+                    `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="${theme(
+                        'colors.gray.500',
+                        colors.gray[500]
+                    )}" fill="none">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>`
+                )}")`,
+                'radio-checked': `url("${svgToDataUri(
+                    `<svg viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="3"/></svg>`
+                )}")`,
+                'checkbox-checked': `url("${svgToDataUri(
+                    `<svg viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"/></svg>`
+                )}")`,
+                'select': `url("${svgToDataUri(
+                    `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="${theme(
+                        'colors.gray.500',
+                        colors.gray[500]
+                    )}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
+                )}")`,
+            }),
+            backgroundPosition: {
+                'right-2': `right ${spacing[2]} center`
+            },
+            ringWidth: {
+                'DEFAULT': '2px',
+            },
             keyframes: {
                 loaderSpin: {
                     '0%': {
@@ -124,10 +162,9 @@ module.exports = {
                 'fade-out': 'fadeOut 0.3s cubic-bezier(0, 0, 0.2, 1)',
                 'slide-in': 'slideIn 0.3s cubic-bezier(0, 0, 0.2, 1)',
                 'slide-out': 'slideOut 0.3s cubic-bezier(0, 0, 0.2, 1)'
-            }
+            },
         },
     },
-    plugins: [],
     corePlugins: {
         preflight: false
     }

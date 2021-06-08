@@ -1,5 +1,3 @@
-{% from "public/macros/buttons.html.twig" import icon %}
-
 <div id="kudos-modal-{{ id }}" class="kudos-modal {{ class }} kd-absolute kd-hidden kd-z-1050 kd-text-[16px] xl:kd-text-[18px] 2xl:kd-text-[18px]"
      role="dialog" aria-hidden="true" aria-modal="true" aria-label="{{ modal_title }}">
     <div class="kudos-modal-overlay kd-flex kd-justify-center kd-items-center kd-fixed kd-top-0 kd-left-0 kd-w-full kd-h-full kd-bg-[#1a202ccc]"
@@ -14,7 +12,11 @@
                     </span>
                 {% block header %}
                 {% endblock header %}
-                {{ icon('close', __('Close modal', 'kudos-donations'), 5) }}
+                <span
+                    class="focus:kd-ring hover:kd-text-primary-dark kd-hidden xs:kd-inline kd-transition-shadow kd-ease-in-out kd-ring-primary kd-ring-offset-2 kd-rounded-full kd-bg-close-button kd-w-5 kd-h-5 kd-cursor-pointer kd-self-center"
+                    data-micromodal-close
+                    title="{{ __('Previous tab', 'kudos-donations') }}"
+                ></span>
             </div>
             <div class="kd-mt-4 kd-block">
                 <p class="kd-text-center kd-block kd-font-normal kd-mb-4">
