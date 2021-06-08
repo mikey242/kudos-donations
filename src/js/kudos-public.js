@@ -145,10 +145,11 @@ jQuery(document).ready(($) => {
                                 }
                             },
                             onClose(modal) {
+                                setTimeout(() => {
+                                    resetProgressBar(modal)
+                                }, 300)
                                 // Create and dispatch event
-                                const modalEvent = new CustomEvent('kudosCloseModal', {detail: modal})
-                                resetProgressBar(modal)
-                                window.dispatchEvent(modalEvent)
+                                window.dispatchEvent(new CustomEvent('kudosCloseModal', {detail: modal}))
                             },
                             awaitOpenAnimation: true,
                             awaitCloseAnimation: true,
