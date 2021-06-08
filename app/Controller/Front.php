@@ -51,7 +51,7 @@ class Front {
 	 * @param bool $echo Whether to echo the styles instead of returning a string.
 	 *
 	 */
-	public function get_kudos_root_styles( $echo = true ): string {
+	public function get_kudos_root_styles( bool $echo = true ): string {
 
 		$theme_colours = apply_filters( 'kudos_theme_colors', Settings::get_setting( 'theme_colors' ) );
 
