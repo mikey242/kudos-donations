@@ -19,13 +19,13 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 = Features and highlights =
 
 * Smart and modern design.
+* One-off or recurring payments.
 * Can add as many different buttons as you like.
 * Connect with Mollie for secure payments by credit card, iDEAL and [many others](https://www.mollie.com/payments).
 * Toggle Automated email receipts.
-* Use custom SMTP email settings.
 * Gutenberg block or shortcode to place your button virtually anywhere.
 * Customize the donation form, button and thank you message.
-* Choose a colour scheme.
+* Set a goal and allow donors to see progression.
 * View and manage individual transactions, subscriptions, donors and campaigns from the admin menu.
 
 = Easy to use =
