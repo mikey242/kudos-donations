@@ -77,28 +77,11 @@ class KudosDonations {
 	 */
 	public function run() {
 
-		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_rest_hooks();
 		$this->define_payment_hooks();
 		$this->define_public_hooks();
 		$this->define_entity_hooks();
-
-	}
-
-	/**
-	 * Define the locale for this plugin for internationalization.
-	 *
-	 * Uses the Kudos_i18n class in order to set the domain and to register the hook
-	 * with WordPress.
-	 *
-	 * @access   private
-	 */
-	private function set_locale() {
-
-		$i18n = I18nService::factory();
-
-		add_action( 'init', [ $i18n, 'load_plugin_textdomain' ] );
 
 	}
 
