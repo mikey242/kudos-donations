@@ -146,7 +146,7 @@ export function animateProgressBar(modal) {
             // Check that a value field has changed
             if ("value" === e.target.name) {
                 let value = Number.isInteger(parseFloat(form.value.value)) ? parseFloat(form.value.value) : 0
-                let newPercent = Math.round(value / (goal - total) * 100)
+                let newPercent = value / (goal - total) * 100
                 // Limit percentage to 100
                 newPercent = newPercent > 100 ? 100 : newPercent
                 extra.style.transform = 'scaleX(' + newPercent + '%)'
