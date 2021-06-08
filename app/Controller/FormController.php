@@ -74,6 +74,10 @@ class FormController extends AbstractController {
 	 * @var array|null
 	 */
 	protected $campaign_stats;
+	/**
+	 * @var mixed
+	 */
+	protected $vendor_name;
 
 	/**
 	 * KudosForm constructor.
@@ -94,6 +98,7 @@ class FormController extends AbstractController {
 		$this->privacy_link      = Settings::get_setting( 'privacy_link' );
 		$this->terms_link        = Settings::get_setting( 'terms_link' );
 		$this->recurring_allowed = isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false;
+		$this->vendor_name       = Settings::get_setting( 'payment_vendor' );
 
 		// Get campaign settings array.
 		$campaign = Settings::get_campaign( $campaign_id );

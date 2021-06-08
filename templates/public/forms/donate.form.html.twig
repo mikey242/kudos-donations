@@ -457,8 +457,9 @@
 
         {% block footer %}
             <div class="kd-block kd-mt-2">
-                <div class="kd-secure-mollie kd-flex kd-items-center kd-justify-center kd-text-xs kd-leading-loose kd-text-gray-500">
+                <div class="kd-flex kd-items-center kd-justify-center kd-text-xs kd-leading-loose kd-text-gray-500">
                     {{ __( 'Secure payment by', 'kudos-donations' ) }}
+                    <div class="kd-secure-{{ vendor_name }} kd-flex kd-ml-2"></div>
                 </div>
             </div>
         {% endblock %}
