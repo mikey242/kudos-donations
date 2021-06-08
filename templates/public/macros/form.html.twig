@@ -47,7 +47,7 @@
 
     {% set props = props|merge({
         type: 'radio',
-        class: 'checked:kd-bg-radio-checked checked:kd-bg-primary kd-rounded-full kd-border-primary kd-inline-block kd-w-4 kd-h-4 kd-m-2 kd-p-0 focus:kd-ring-primary focus:kd-ring kd-ring-offset-2',
+        class: 'checked:kd-bg-radio-checked checked:kd-bg-primary kd-transition kd-ease-in-out kd-rounded-full kd-border-primary kd-inline-block kd-w-4 kd-h-4 kd-m-2 kd-p-0 focus:kd-ring-primary focus:kd-ring kd-ring-offset-2',
     }) %}
 
     <div class="kd-flex kd-justify-center kd-items-center kd-mt-4">
@@ -74,7 +74,7 @@
 
     {% set props = props|merge({
         type: 'checkbox',
-        class: 'checked:kd-bg-checkbox-checked checked:kd-bg-primary kd-align-middle kd-shadow-inner kd-border-primary kd-ring-primary focus:kd-ring kd-ring-offset-2 kd-inline-block kd-w-4 kd-h-4 kd-m-2',
+        class: 'checked:kd-bg-checkbox-checked checked:kd-bg-primary kd-transition kd-ease-in-out kd-align-middle kd-shadow-inner kd-border-primary kd-ring-primary focus:kd-ring kd-ring-offset-2 kd-inline-block kd-w-4 kd-h-4 kd-m-2',
         value: 'true'
     }) %}
 
