@@ -21,7 +21,7 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class MollieVendorInterface extends AbstractService implements VendorInterface {
+class MollieVendor extends AbstractService implements VendorInterface {
 
 	/**
 	 * This is the name of the vendor as displayed to the user.
