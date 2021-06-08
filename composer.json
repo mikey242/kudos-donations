@@ -20,7 +20,7 @@
   },
   "scripts": {
     "post-update-cmd": [
-      "rm -rf vendor/mollie/mollie-api-php/examples vendor/sabberworm/php-css-parser/tests vendor/twig/twig/doc"
+      "rm -rf vendor/mollie/mollie-api-php/examples vendor/sabberworm/php-css-parser/tests vendor/twig/twig/doc vendor/woocommerce/action-scheduler/action-scheduler.zip"
     ]
   },
   "autoload": {
