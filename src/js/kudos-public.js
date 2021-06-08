@@ -128,10 +128,13 @@ jQuery(document).ready(($) => {
                                     // Reset amounts
                                     let amountInput = form.querySelector('[id^=value-open-both-]')
                                     let amountRadios = form.querySelectorAll('[id^=value-fixed-]')
-                                    toggleAmount(amountInput, amountRadios)
-                                    amountRadios[0].checked = true
-                                    amountInput.removeAttribute('required')
-                                    amountInput.setAttribute('name', '')
+
+                                    if(amountInput && amountRadios) {
+                                        toggleAmount(amountInput, amountRadios)
+                                        amountRadios[0].checked = true
+                                        amountInput.removeAttribute('required')
+                                        amountInput.setAttribute('name', '')
+                                    }
 
                                     // Clear all form values
                                     $(form).validate().resetForm()
