@@ -7,8 +7,8 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use Kudos\Service\Vendor\AbstractVendor;
-use Kudos\Service\Vendor\MollieVendor;
+use Kudos\Service\Vendor\VendorInterface;
+use Kudos\Service\Vendor\MollieVendorInterface;
 use Mollie\Api\Resources\Payment;
 use WP_Error;
 use WP_REST_Request;
@@ -17,7 +17,7 @@ use WP_REST_Response;
 class PaymentService extends AbstractService {
 
 	/**
-	 * @var AbstractVendor
+	 * @var VendorInterface
 	 */
 	private $vendor;
 
@@ -38,17 +38,17 @@ class PaymentService extends AbstractService {
 	/**
 	 * Returns current vendor class.
 	 *
-	 * @return AbstractVendor
+	 * @return VendorInterface
 	 */
 	private static function get_current_vendor_class(): string {
 		switch ( Settings::get_setting( 'payment_vendor' ) ) {
 			case 'mollie':
-				return MollieVendor::class;
+				return MollieVendorInterface::class;
 			default:
 				$logger = new LoggerService();
 				$logger->warning( 'No payment vendor specified. Using Mollie.' );
 
-				return MollieVendor::class;
+				return MollieVendorInterface::class;
 		}
 	}
 
@@ -143,7 +143,7 @@ class PaymentService extends AbstractService {
 		$values = $request->get_json_params();
 
 		// Check field.
-		if ( !empty( $values['donation'] ) ) {
+		if ( ! empty( $values['donation'] ) ) {
 			$this->logger->info( 'Bot detected rejecting form.' );
 			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
 		}
@@ -390,8 +390,7 @@ class PaymentService extends AbstractService {
 	 *
 	 * @since    2.3.0
 	 */
-	public
-	function check_api_keys() {
+	public function check_api_keys() {
 
 		Settings::update_array( 'vendor_mollie',
 			[
@@ -436,6 +435,7 @@ class PaymentService extends AbstractService {
 						return [
 							'id'     => $method->id,
 							'status' => $method->status,
+							'maximumAmount' => (array) $method->maximumAmount
 						];
 					},
 						(array) $this->vendor->get_payment_methods() ),

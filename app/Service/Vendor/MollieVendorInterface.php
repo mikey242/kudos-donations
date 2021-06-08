@@ -6,6 +6,7 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
+use Kudos\Service\AbstractService;
 use Kudos\Service\MapperService;
 use Kudos\Service\RestRouteService;
 use Mollie\Api\Exceptions\ApiException;
@@ -20,7 +21,7 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class MollieVendor extends AbstractVendor {
+class MollieVendorInterface extends AbstractService implements VendorInterface {
 
 	/**
 	 * This is the name of the vendor as displayed to the user.
@@ -378,7 +379,7 @@ class MollieVendor extends AbstractVendor {
 	 *
 	 * @return BaseCollection|MethodCollection|null
 	 */
-	public function get_payment_methods( $options = [] ) {
+	public function get_payment_methods( array $options = [] ) {
 
 		try {
 
@@ -566,5 +567,14 @@ class MollieVendor extends AbstractVendor {
 
 		return $this->api_mode;
 
+	}
+
+	/**
+	 * Returns the vendor name.
+	 *
+	 * @return string
+	 */
+	public function __toString(): string {
+		return self::get_vendor_name();
 	}
 }
