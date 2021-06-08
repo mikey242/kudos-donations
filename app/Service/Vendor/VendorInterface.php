@@ -18,6 +18,13 @@ interface VendorInterface {
 	public static function get_vendor_name():string;
 
 	/**
+	 * Check the vendor api key key associated with the mode. Sends a JSON response.
+	 *
+	 * @return mixed
+	 */
+	public function check_api_keys();
+
+	/**
 	 * @param TransactionEntity $transaction ,
 	 * @param string $mandate_id ,
 	 * @param string $interval ,

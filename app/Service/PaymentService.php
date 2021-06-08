@@ -23,8 +23,6 @@ class PaymentService extends AbstractService {
 
 	/**
 	 * Payment service constructor.
-	 *
-	 * @since      2.3.0
 	 */
 	public function __construct() {
 
@@ -41,6 +39,7 @@ class PaymentService extends AbstractService {
 	 * @return VendorInterface
 	 */
 	private static function get_current_vendor_class(): string {
+
 		switch ( Settings::get_setting( 'payment_vendor' ) ) {
 			case 'mollie':
 				return MollieVendor::class;
@@ -50,6 +49,7 @@ class PaymentService extends AbstractService {
 
 				return MollieVendor::class;
 		}
+
 	}
 
 	/**
@@ -58,14 +58,24 @@ class PaymentService extends AbstractService {
 	 * @return string
 	 */
 	public static function get_vendor_name(): string {
+
 		return static::get_current_vendor_class()::get_vendor_name();
+
+	}
+
+	/**
+	 * Check the vendor api key key associated with the mode. Sends a JSON response.
+	 */
+	public function check_api_keys() {
+
+		$this->vendor->check_api_keys();
+
 	}
 
 	/**
 	 * Checks if required api settings are saved before displaying button
 	 *
 	 * @return bool
-	 * @since   2.4.6
 	 */
 	public static function is_api_ready(): bool {
 
@@ -88,10 +98,12 @@ class PaymentService extends AbstractService {
 	 * @param string $order_id
 	 */
 	public static function schedule_process_transaction( string $order_id ) {
+
 		Utils::schedule_action(
 			strtotime( '+1 minute' ),
 			'kudos_process_' . strtolower( self::get_vendor_name() ) . '_transaction',
 			[ $order_id ] );
+
 	}
 
 	/**
@@ -100,7 +112,6 @@ class PaymentService extends AbstractService {
 	 * @param string $order_id Kudos order id.
 	 *
 	 * @return bool
-	 * @since   2.3.0
 	 */
 	public static function process_transaction( string $order_id ): bool {
 
@@ -128,7 +139,6 @@ class PaymentService extends AbstractService {
 	 *
 	 * @param WP_REST_Request $request
 	 *
-	 * @since   2.3.0
 	 */
 	public function submit_payment( WP_REST_Request $request ) {
 
@@ -236,7 +246,6 @@ class PaymentService extends AbstractService {
 	 * @param string $id subscription row ID.
 	 *
 	 * @return bool
-	 * @since   2.3.0
 	 */
 	public function cancel_subscription( string $id ): bool {
 
@@ -285,10 +294,8 @@ class PaymentService extends AbstractService {
 	 * @param string|null $message Message left by donor.
 	 *
 	 * @return false|Payment
-	 * @since      2.3.0
 	 */
-	public
-	function create_payment(
+	public function create_payment(
 		string $value,
 		string $interval,
 		string $years,
@@ -386,96 +393,13 @@ class PaymentService extends AbstractService {
 	}
 
 	/**
-	 * Check the vendor api key key associated with the mode.
-	 *
-	 * @since    2.3.0
-	 */
-	public function check_api_keys() {
-
-		Settings::update_array( 'vendor_mollie',
-			[
-				'connected' => false,
-				'recurring' => false,
-			] );
-
-		$current = Settings::get_current_vendor_settings();
-		$mode    = $current['mode'];
-		$api_key = $current[ $mode . '_key' ];
-
-		// Check that the api key corresponds to the mode.
-		if ( substr( $api_key, 0, 4 ) !== $mode ) {
-			wp_send_json_error(
-				[
-					/* translators: %s: API mode */
-					'message' => sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ),
-						ucfirst( $mode ),
-						$mode . '_' ),
-					'setting' => $current,
-				]
-			);
-		}
-
-		// Test the api key.
-		$result = $this->vendor->refresh_api_connection( $api_key );
-
-		// Update settings.
-		Settings::update_array( 'vendor_mollie',
-			[
-				'connected' => $result,
-			] );
-
-		// Send results to JS.
-		if ( $result ) {
-
-			// Update vendor settings.
-			Settings::update_array( 'vendor_mollie',
-				[
-					'recurring'       => $this->vendor->can_use_recurring(),
-					'payment_methods' => array_map( function ( $method ) {
-						return [
-							'id'     => $method->id,
-							'status' => $method->status,
-							'maximumAmount' => (array) $method->maximumAmount
-						];
-					},
-						(array) $this->vendor->get_payment_methods() ),
-				] );
-
-			wp_send_json_success(
-				[
-					'message' =>
-					/* translators: %s: API mode */
-						sprintf( __( '%s API key connection was successful!', 'kudos-donations' ),
-							ucfirst( $mode ) ),
-					'setting' => Settings::get_current_vendor_settings(),
-				]
-			);
-		}
-
-		wp_send_json_error(
-			[
-				/* translators: %s: API mode */
-				'message' => sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.',
-					'kudos-donations' ),
-					ucfirst( $mode ) ),
-				'setting' => Settings::get_current_vendor_settings(),
-			]
-		);
-
-	}
-
-	/**
 	 * Webhook handler. Passes request to rest_webhook method of current vendor.
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 *
 	 * @return WP_Error|WP_REST_Response
-	 * @since    2.3.0
 	 */
-	public
-	function handle_webhook(
-		WP_REST_Request $request
-	) {
+	public function handle_webhook( WP_REST_Request $request ) {
 
 		return $this->vendor->rest_webhook( $request );
 

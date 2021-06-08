@@ -33,17 +33,17 @@ class MollieVendor extends AbstractService implements VendorInterface {
 	 *
 	 * @var MollieApiClient
 	 */
-	private $mollie_api;
+	private $api_client;
 	/**
 	 * The API mode (test or live)
 	 *
-	 * @var mixed
+	 * @var string
 	 */
 	private $api_mode;
 	/**
 	 * The API key to use
 	 *
-	 * @var mixed
+	 * @var string
 	 */
 	private $api_key;
 
@@ -54,16 +54,15 @@ class MollieVendor extends AbstractService implements VendorInterface {
 
 		parent::__construct();
 
-		$this->mollie_api = new MollieApiClient();
-
 		$settings = Settings::get_setting( 'vendor_mollie' );
 
+		$this->api_client = new MollieApiClient();
 		$this->api_mode = $settings['mode'] ?? '';
 		$this->api_key  = $settings[ $this->api_mode . '_key' ] ?? '';
 
 		if ( $this->api_key ) {
 			try {
-				$this->mollie_api->setApiKey( $this->api_key );
+				$this->api_client->setApiKey( $this->api_key );
 			} catch ( ApiException $e ) {
 				$this->logger->critical( $e->getMessage() );
 			}
@@ -75,6 +74,81 @@ class MollieVendor extends AbstractService implements VendorInterface {
 	}
 
 	/**
+	 * Check the Mollie api key key associated with the mode. Sends a JSON response.
+	 */
+	public function check_api_keys() {
+
+		Settings::update_array( 'vendor_mollie',
+			[
+				'connected' => false,
+				'recurring' => false,
+			] );
+
+		$mode    = $this->api_mode;
+		$api_key = $this->api_key;
+
+		// Check that the api key corresponds to the mode.
+		if ( substr( $api_key, 0, 4 ) !== $mode ) {
+			wp_send_json_error(
+				[
+					/* translators: %s: API mode */
+					'message' => sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ),
+						ucfirst( $mode ),
+						$mode . '_' ),
+					'setting' => Settings::get_setting( 'vendor_mollie' ),
+				]
+			);
+		}
+
+		// Test the api key.
+		$result = $this->refresh_api_connection( $api_key );
+
+		// Update settings.
+		Settings::update_array( 'vendor_mollie',
+			[
+				'connected' => $result,
+			] );
+
+		// Send result as JSON response.
+		if ( $result ) {
+
+			// Update vendor settings.
+			Settings::update_array( 'vendor_mollie',
+				[
+					'recurring'       => $this->can_use_recurring(),
+					'payment_methods' => array_map( function ( $method ) {
+						return [
+							'id'            => $method->id,
+							'status'        => $method->status,
+							'maximumAmount' => (array) $method->maximumAmount,
+						];
+					},
+						(array) $this->get_payment_methods() ),
+				] );
+
+			wp_send_json_success(
+				[
+					'message' =>
+					/* translators: %s: API mode */
+						sprintf( __( '%s API key connection was successful!', 'kudos-donations' ),
+							ucfirst( $mode ) ),
+					'setting' => Settings::get_setting( 'vendor_mollie' ),
+				]
+			);
+		}
+
+		wp_send_json_error(
+			[
+				/* translators: %s: API mode */
+				'message' => sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.',
+					'kudos-donations' ),
+					ucfirst( $mode ) ),
+				'setting' => Settings::get_setting( 'vendor_mollie' ),
+			]
+		);
+	}
+
+	/**
 	 * Returns all subscriptions for customer
 	 *
 	 * @param string $customer_id Mollie customer id.
@@ -83,7 +157,7 @@ class MollieVendor extends AbstractService implements VendorInterface {
 	 */
 	public function get_subscriptions( string $customer_id ) {
 
-		$mollie_api = $this->mollie_api;
+		$mollie_api = $this->api_client;
 
 		try {
 			$customer = $mollie_api->customers->get( $customer_id );
@@ -139,7 +213,7 @@ class MollieVendor extends AbstractService implements VendorInterface {
 
 		try {
 			// Perform test call to verify api key.
-			$mollie_api = $this->mollie_api;
+			$mollie_api = $this->api_client;
 			$mollie_api->setApiKey( $api_key );
 			$mollie_api->payments->page();
 		} catch ( ApiException $e ) {
@@ -162,7 +236,7 @@ class MollieVendor extends AbstractService implements VendorInterface {
 	 */
 	public function get_payment( string $mollie_payment_id ) {
 
-		$mollie_api = $this->mollie_api;
+		$mollie_api = $this->api_client;
 
 		try {
 			return $mollie_api->payments->get( $mollie_payment_id );
@@ -193,7 +267,7 @@ class MollieVendor extends AbstractService implements VendorInterface {
 		}
 
 		try {
-			return $this->mollie_api->customers->create( $customer_array );
+			return $this->api_client->customers->create( $customer_array );
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 
@@ -211,7 +285,7 @@ class MollieVendor extends AbstractService implements VendorInterface {
 	public function get_customer( $customer_id ): ?Customer {
 
 		try {
-			return $this->mollie_api->customers->get( $customer_id );
+			return $this->api_client->customers->get( $customer_id );
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 
@@ -232,7 +306,7 @@ class MollieVendor extends AbstractService implements VendorInterface {
 
 		try {
 
-			return $this->mollie_api->payments->create( $payment_array );
+			return $this->api_client->payments->create( $payment_array );
 
 		} catch ( ApiException $e ) {
 
@@ -383,7 +457,7 @@ class MollieVendor extends AbstractService implements VendorInterface {
 
 		try {
 
-			return $this->mollie_api->methods->allActive( $options );
+			return $this->api_client->methods->allActive( $options );
 
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
