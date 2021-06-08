@@ -13,17 +13,6 @@ use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
 
-/**
- * The public-facing functionality of the plugin.
- *
- * @link    https://www.linkedin.com/in/michael-iseard/
- */
-
-/**
- * The public-facing functionality of the plugin.
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the public-facing stylesheet and JavaScript.
- */
 class Front {
 
 	/**
