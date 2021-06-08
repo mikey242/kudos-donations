@@ -4,7 +4,7 @@ import MicroModal from 'micromodal'
 import 'jquery-validation'
 import '../img/logo-colour-40.png' // used as email attachment
 import '../img/logo-colour.svg'
-import {getStyle} from "./Helpers/Util"
+import {getStyle} from "./Helpers/util"
 import {
     animateProgressBar,
     checkRequirements,
@@ -12,7 +12,7 @@ import {
     handleMessages,
     resetProgressBar,
     toggleAmount
-} from "./Helpers/Modal"
+} from "./Helpers/modal"
 
 const {__} = wp.i18n
 

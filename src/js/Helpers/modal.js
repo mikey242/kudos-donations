@@ -123,15 +123,17 @@ export function animateProgressBar(modal) {
         // Limit percentage to 100
         percent = percent > 100 ? 100 : percent
 
-        // Set bar width a minimum of 10 percent
-        bar.style.width = Math.max(percent, 10) + '%'
+        // Set bar width a minimum of 10 percent if more than 0
+        if(percent > 0) {
+            bar.style.width = Math.max(percent, 10) + '%'
+        }
 
         // Animate bar after after 500ms followed by adding text in another 500ms
         setTimeout(() => {
             barInner.classList.remove('kd-scale-x-0')
             barInner.classList.add('kd-scale-x-100')
             setTimeout(() => {
-                text.innerHTML = percent + '%'
+                text.innerHTML = percent + '% (€' + total + ')'
                 text.style.opacity = '1'
                 form.dispatchEvent(new Event('change'))
                 confetti(percent)

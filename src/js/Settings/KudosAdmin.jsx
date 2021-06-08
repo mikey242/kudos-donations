@@ -7,7 +7,7 @@ import axios from 'axios'
 import {Notice} from './Components/Notice'
 import {Header} from './Components/Header'
 import {IntroGuide} from "./Components/IntroGuide"
-import {getQueryVar, updateQueryParameter} from "../Helpers/Util"
+import {getQueryVar, updateQueryParameter} from "../Helpers/util"
 import {MollieTab} from "./Components/Tabs/MollieTab"
 import {CampaignsTab} from "./Components/Tabs/CampaignsTab"
 import {CustomizeTab} from "./Components/Tabs/CustomizeTab"
