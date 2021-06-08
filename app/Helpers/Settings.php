@@ -66,11 +66,22 @@ class Settings {
 									'items' => [
 										'type'       => 'object',
 										'properties' => [
-											'id'     => [
+											'id'            => [
 												'type' => 'string',
 											],
-											'status' => [
+											'status'        => [
 												'type' => 'string',
+											],
+											'maximumAmount' => [
+												'type'       => 'object',
+												'properties' => [
+													'value'    => [
+														'type' => 'string',
+													],
+													'currency' => [
+														'type' => 'string',
+													],
+												],
 											],
 										],
 									],
