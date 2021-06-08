@@ -45,7 +45,7 @@ module.exports = {
     output: {
         path: PATHS.dist,
         publicPath: '/wp-content/plugins/kudos-donations/dist/',
-        filename: 'js/[name].[hash].js',
+        filename: 'js/[name].[contenthash].js',
         clean: true
     },
     module: {
@@ -72,7 +72,7 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                            name: '[name].[hash].[ext]',
+                            name: '[name].[contenthash].[ext]',
                             outputPath: './img/',
                         },
                     },
@@ -83,7 +83,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     limit: 4096,
-                    name: '[name].[hash].[ext]',
+                    name: '[name].[contenthash].[ext]',
                     outputPath: './fonts/',
                 },
             },
@@ -94,7 +94,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: 'css/[name].[hash].css',
+            filename: 'css/[name].[contenthash].css',
         }),
         new CopyPlugin({
             patterns: [...vendorCopies]
