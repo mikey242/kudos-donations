@@ -452,7 +452,9 @@
 
         {% endblock %}
         {% block next_button %}
-            {{ button(__('Donate', 'kudos-donations'), 'primary', 'submit', {'class': 'kudos_submit kd-ml-3'}) }}
+            {{ button(__('Donate', 'kudos-donations'), 'primary', 'submit', {
+                'class': 'kudos_submit kd-bg-lock kd-bg-no-repeat kd-bg-8 kd-bg-left-2 kd-pl-[2.5em] kd-ml-3'
+            }) }}
         {% endblock %}
 
         {% block footer %}

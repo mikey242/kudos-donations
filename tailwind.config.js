@@ -53,6 +53,10 @@ module.exports = {
             auto: 'auto',
             '1/2': '50%'
         },
+        backgroundSize: {
+            'contain': 'contain',
+            '8': '2em'
+        },
         borderRadius: {
             none: '0',
             DEFAULT: '0.25em',
@@ -124,9 +128,13 @@ module.exports = {
                 'vendor-mollie': `url("${svgToDataUri(
                     `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 677 200"><defs/><g fill="#000"><path fill-rule="evenodd" d="M286.3 65.3a67.4 67.4 0 10.2 134.9 67.4 67.4 0 00-.2-134.9zm0 102.8a35.5 35.5 0 11.1-70.9 35.5 35.5 0 010 71z" clip-rule="evenodd"/><path d="M510.4 42a21 21 0 100-42 21 21 0 000 42z"/><path fill-rule="evenodd" d="M148.8 65.4c-1.7-.2-3.4-.2-5.1-.2A58.5 58.5 0 00101 83.6a58.5 58.5 0 00-101 40v73.7h31.5v-72.8a27.9 27.9 0 0126.6-27.2 26.6 26.6 0 0126.5 26.5v73.5h32.2v-73a27.8 27.8 0 0126.7-27 26.6 26.6 0 0126.6 26.3v73.7h32.2v-72.8a59.8 59.8 0 00-15.4-40 57.4 57.4 0 00-38-19.1z" clip-rule="evenodd"/><path d="M403.3 3.1H371v194.3h32.2zm61.6 0h-32.2v194.3h32.2zm61.6 65.4h-32.2v128.8h32.2z"/><path fill-rule="evenodd" d="M677 129.6a64.4 64.4 0 00-63.8-64.4h-.8a67.2 67.2 0 00-47 114.7c12.9 12.9 29.8 20 47.9 20a67.8 67.8 0 0058-33l1.6-2.6-26.6-13-1.4 2a36.2 36.2 0 01-65.9-9h98zm-65-35.2c14.7 0 27.8 9.7 32.4 23.4h-64.9A34.4 34.4 0 01612 94.4z" clip-rule="evenodd"/></g></svg>`
                 )}")`,
+                'lock':`url("${svgToDataUri(
+                    `<svg width="100" height="100" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round"><path d="M313.5 228L300.8 228 300.8 189.8C300.8 145.2 264.5 109 220 109 175.5 109 139.3 145.2 139.3 189.8L139.3 228 126.5 228C112.4 228 101 239.4 101 253.5L101 355.5C101 369.6 112.4 381 126.5 381L313.5 381C327.6 381 339 369.6 339 355.5L339 253.5C339 239.4 327.6 228 313.5 228ZM258.3 228L181.8 228 181.8 189.8C181.8 168.7 198.9 151.5 220 151.5 241.1 151.5 258.3 168.7 258.3 189.8L258.3 228Z" fill="white"/></svg>`
+                )}")`,
             }),
             backgroundPosition: {
-                'right-2': `right ${spacing[2]} center`
+                'right-2': `right 0.5em center`,
+                'left-2': `left 0.5em center`
             },
             ringWidth: {
                 'DEFAULT': '2px',
