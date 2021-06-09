@@ -110,9 +110,10 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 1. Donation form
 2. Recurring/Subscription payments
-3. Settings page
-4. Kudos Donations button block
-5. Automated email receipt
+3. Goal progression
+4. Settings page
+5. Kudos Donations button block
+6. Automated email receipt
 
 == Changelog ==
 
