@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.5
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 2.6.0
+Stable tag: 2.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -116,6 +116,11 @@ This can occur as a result of a conflict with your theme or another plugin and t
 6. Automated email receipt
 
 == Changelog ==
+
+= 2.7.1 =
+* Allow adding additional funds to campaign. Useful if you receive donations for your campaign outside of Kudos.
+* Move goal icon in front of goal amount
+* Update Mollie API client to 2.32.2
 
 = 2.7.0 =
 * Add goal progression to campaigns. Disabled by default, this can be enabled per campaign and shows a percentage bar of how much the campaign has already raised as well as how much the currently selected amount will progress the campaign.
