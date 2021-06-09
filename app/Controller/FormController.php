@@ -102,9 +102,15 @@ class FormController extends AbstractController {
 
 		// Get campaign settings array.
 		$campaign = Settings::get_campaign( $campaign_id );
+		$campaign_stats = Settings::get_campaign_stats( $this->campaign_id );
+
+		// Add additional funds if any.
+		if(!empty($campaign['additional_funds'])) {
+			$campaign_stats['total'] += $campaign['additional_funds'];
+		}
 
 		// Set campaign properties.
-		$this->campaign_stats   = Settings::get_campaign_stats( $this->campaign_id );
+		$this->campaign_stats   = $campaign_stats;
 		$this->welcome_title    = $campaign['modal_title'] ?? '';
 		$this->welcome_text     = $campaign['welcome_text'] ?? '';
 		$this->campaign_goal    = $campaign['campaign_goal'] ?? '';
@@ -124,23 +130,6 @@ class FormController extends AbstractController {
 	 */
 	public function get_welcome_title(): string {
 		return $this->welcome_title;
-	}
-
-	/**
-	 * Returns campaign details.
-	 *
-	 * @return array
-	 */
-	public function get_campaign_details(): array {
-
-		$stats = Settings::get_campaign_stats( $this->campaign_id );
-
-		return array_merge( [
-			'id'       => $this->campaign_id,
-			'goal'     => $this->campaign_goal,
-			'progress' => $this->show_progress,
-		],
-			$stats );
 	}
 
 }

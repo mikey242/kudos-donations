@@ -250,6 +250,9 @@ class Settings {
 									'campaign_goal'    => [
 										'type' => 'string',
 									],
+									'additional_funds' => [
+										'type' => 'string',
+									],
 									'modal_title'      => [
 										'type' => 'string',
 									],
@@ -298,6 +301,7 @@ class Settings {
 							'amount_type'      => 'both',
 							'fixed_amounts'    => '1,5,20,50',
 							'campaign_goal'    => '',
+							'additional_funds' => '',
 							'show_progress'    => false,
 							'donation_type'    => 'oneoff',
 						],

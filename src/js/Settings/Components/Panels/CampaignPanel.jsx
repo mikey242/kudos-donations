@@ -65,8 +65,13 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                     }}
                 />
 
+            </SettingCard>
+
+            <CardDivider/>
+
+            <SettingCard title={__('Goal', 'kudos-donations')}>
                 <TextControl
-                    label={__('Goal', 'kudos-donations')}
+                    label={__('Target amount', 'kudos-donations')}
                     help={__('Set a numeric goal for your campaign.', 'kudos-donations')}
                     type="number"
                     value={campaign.campaign_goal || ''}
@@ -76,8 +81,19 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                     }}
                 />
 
+                <TextControl
+                    label={__('Additional funds', 'kudos-donations')}
+                    help={__('Add additional funds for your campaign to count towards the total. This will only be used to show progress to your donors.', 'kudos-donations')}
+                    type="number"
+                    value={campaign.additional_funds || ''}
+                    onChange={(value) => {
+                        campaign.additional_funds = value
+                        handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
+                    }}
+                />
+
                 <ToggleControl
-                    help={__('Show goal progression.', 'kudos-donations')}
+                    help={__('Show goal progression on donation form.', 'kudos-donations')}
                     label={campaign.show_progress ? __('Enabled', 'kudos-donations') : __('Disabled', 'kudos-donations')}
                     checked={campaign.show_progress || ''}
                     onChange={(value) => {
@@ -85,7 +101,6 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
                         handleInputChange('_kudos_campaigns', settings._kudos_campaigns)
                     }}
                 />
-
             </SettingCard>
 
             <CardDivider/>
