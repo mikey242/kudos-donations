@@ -141,7 +141,9 @@ jQuery(document).ready(($) => {
                                     form.reset()
 
                                     // Set first input as focus
-                                    form.querySelector('input[name="value"]').focus()
+                                    if('xs' !== screenSize ) {
+                                        form.querySelector('input[name="value"]').focus()
+                                    }
                                 }
                             },
                             onClose(modal) {
@@ -287,8 +289,10 @@ jQuery(document).ready(($) => {
                     container.dataset.currentTab = targetTab.dataset.name
 
                     // Select first input on tab.
-                    let first = targetTab.elements[0]
-                    first.focus()
+                    if('xs' !== screenSize ) {
+                        let first = targetTab.elements[0]
+                        first.focus()
+                    }
 
                     // Begin animating.
                     $(animate).animate(
