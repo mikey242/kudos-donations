@@ -92,7 +92,7 @@ Here is a list of the shortcode attributes:
 
 * *button_label* = The label to display for the button.
 * *campaign_id* = Id of the campaign to use for this button.
-* *alignment=* = Alignment of the button within container. Can be "center", "left" or "right"
+* *alignment* = Alignment of the button within container. Can be "center", "left" or "right"
 
 e.g:
 
