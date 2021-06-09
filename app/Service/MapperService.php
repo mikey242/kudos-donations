@@ -4,10 +4,7 @@ namespace Kudos\Service;
 
 use Exception;
 use Kudos\Entity\AbstractEntity;
-use Kudos\Entity\EntityInterface;
 use Kudos\Helpers\Settings;
-use ReflectionClass;
-use ReflectionException;
 use wpdb;
 
 class MapperService extends AbstractService {
@@ -50,7 +47,7 @@ class MapperService extends AbstractService {
 	/**
 	 * Commit Entity to database
 	 *
-	 * @param EntityInterface $entity Instance of EntityInterface to save.
+	 * @param AbstractEntity $entity Instance of AbstractEntity to save.
 	 *
 	 * @param bool $ignore_null Whether or not to remove NULL or empty fields from
 	 *                          the save query.
@@ -59,7 +56,7 @@ class MapperService extends AbstractService {
 	 *                   and false if not
 	 * @since   2.0.0
 	 */
-	public function save( EntityInterface $entity, bool $ignore_null = true ) {
+	public function save( AbstractEntity $entity, bool $ignore_null = true ) {
 
 		$entity->last_updated = gmdate( 'Y-m-d H:i:s', time() );
 
@@ -83,13 +80,13 @@ class MapperService extends AbstractService {
 	/**
 	 * Updates existing record
 	 *
-	 * @param EntityInterface $entity An instance of EntityInterface.
+	 * @param AbstractEntity $entity An instance of AbstractEntity.
 	 * @param bool $ignore_null Whether to ignore null properties.
 	 *
 	 * @return false|int Returns the id of the record if successful
 	 *                  and false if not
 	 */
-	private function update_record( EntityInterface $entity, bool $ignore_null ) {
+	private function update_record( AbstractEntity $entity, bool $ignore_null ) {
 
 		$wpdb       = $this->wpdb;
 		$table_name = $entity::get_table_name();
@@ -115,12 +112,12 @@ class MapperService extends AbstractService {
 	/**
 	 * Adds new record to the database
 	 *
-	 * @param EntityInterface $entity Instance of EntityInterface to add.
+	 * @param AbstractEntity $entity Instance of AbstractEntity to add.
 	 *
 	 * @return false|int Returns the id of the record if successful
 	 *                   and false if not
 	 */
-	private function add_record( EntityInterface $entity ) {
+	private function add_record( AbstractEntity $entity ) {
 
 		$wpdb       = $this->wpdb;
 		$table_name = $entity::get_table_name();
@@ -186,6 +183,7 @@ class MapperService extends AbstractService {
 	 */
 	public function get_table_name( bool $prefix = true ): string {
 
+//		wp_die(var_dump($this->get_repository()));
 		return $this->get_repository()::get_table_name( $prefix );
 
 	}
@@ -193,7 +191,7 @@ class MapperService extends AbstractService {
 	/**
 	 * Gets the current repository
 	 *
-	 * @return EntityInterface
+	 * @return AbstractEntity
 	 * @since 2.0.5
 	 */
 	public function get_repository(): ?string {
@@ -218,15 +216,10 @@ class MapperService extends AbstractService {
 	 */
 	public function set_repository( string $class ) {
 
-		try {
-			$reflection = new ReflectionClass( $class );
-			if ( $reflection->implementsInterface( 'Kudos\Entity\EntityInterface' ) ) {
-				$this->repository = $class;
-			} else {
-				throw new Exception( 'Repository must implement Kudos\Entity\EntityInterface', 0 );
-			}
-		} catch ( ReflectionException $e ) {
-			$this->logger->error( $e->getMessage() );
+		if ( is_subclass_of($class, AbstractEntity::class) ) {
+			$this->repository = $class;
+		} else {
+			throw new Exception( 'Repository must be a valid entity', 0 );
 		}
 
 	}
@@ -410,7 +403,7 @@ class MapperService extends AbstractService {
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		}
 
-		$this->logger->debug('Error deleting record.', ['table' => $this->get_table_name(), $column => $value]);
+		$this->logger->debug( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
 
 		return $deleted;
 

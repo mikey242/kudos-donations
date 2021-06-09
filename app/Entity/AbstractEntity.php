@@ -8,7 +8,7 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Throwable;
 
-abstract class AbstractEntity implements EntityInterface {
+abstract class AbstractEntity {
 
 	/**
 	 * The entities database id
@@ -145,7 +145,7 @@ abstract class AbstractEntity implements EntityInterface {
 	 * @return string|false
 	 * @since   2.0.0
 	 */
-	public function create_secret( $timeout = '+10 minutes' ) {
+	public function create_secret( string $timeout = '+10 minutes' ) {
 
 		$logger = LoggerService::factory();
 		$table  = static::get_table_name( false );
