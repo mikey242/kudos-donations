@@ -9,8 +9,8 @@
                     <div class="kd-left-0 kd-transition-opacity kd-absolute kd-flex kd-items-center kd-justify-center kd-w-full"
                          style="opacity: 0"></div>
                 </div>
-                <div class="kudos-progress-extra kd-origin-bottom-left kd-h-full kd-w-full kd-bg-green-500 kd-opacity-30"
-                     style="transform: scaleX(0)"></div>
+                <div class="kudos-progress-extra kd-h-full kd-w-full kd-bg-green-500 kd-opacity-30"
+                     style="transform: scaleX(0); transform-origin: left;"></div> {# Using kd-origin-left does not work on Chrome for some reason #}
                 <div class="kudos-progress-total kd-flex kd-items-center kd-absolute kd-top-1/2 kd-right-0 kd-mr-2 kd-transform kd--translate-y-2/4">
                     <span>€{{ goal }}</span>
 
