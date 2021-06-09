@@ -21,8 +21,6 @@ class MailerService extends AbstractService {
 
 	/**
 	 * Mailer constructor.
-	 *
-	 * @since    1.1.0
 	 */
 	public function __construct() {
 
@@ -40,7 +38,6 @@ class MailerService extends AbstractService {
 	 * @param PHPMailer $phpmailer PHPMailer instance.
 	 *
 	 * @throws Exception From PHPMailer.
-	 * @since    1.1.0
 	 */
 	public function init( PHPMailer $phpmailer ) {
 
@@ -75,7 +72,6 @@ class MailerService extends AbstractService {
 	 * @param TransactionEntity $transaction TransactionEntity object.
 	 *
 	 * @return bool
-	 * @since    1.1.0
 	 */
 	public function send_receipt( TransactionEntity $transaction ): bool {
 
@@ -137,7 +133,7 @@ class MailerService extends AbstractService {
 	}
 
 	/**
-	 * Email send function
+	 * Email send function.
 	 *
 	 * @param string $to Recipient email address.
 	 * @param string $subject Email subject line.
@@ -174,12 +170,11 @@ class MailerService extends AbstractService {
 	}
 
 	/**
-	 * Sends a test email using send_message
+	 * Sends a test email using send_message.
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 *
 	 * @return bool
-	 * @since    1.1.0
 	 */
 	public function send_test( WP_REST_Request $request ): bool {
 
@@ -214,7 +209,6 @@ class MailerService extends AbstractService {
 	 * @param string $message Email body.
 	 *
 	 * @return bool
-	 * @since   2.0.0
 	 */
 	public function send_message( string $email, string $header, string $message ): bool {
 
