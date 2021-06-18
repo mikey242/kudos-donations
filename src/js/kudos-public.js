@@ -23,7 +23,7 @@ jQuery(document).ready(($) => {
 
     $(() => {
 
-        const kudosButtons = document.querySelectorAll('.kudos_button_donate')
+        const kudosButtons = document.querySelectorAll('.kudos-button-donate')
         let animating = false
 
         // Set screen size on load
