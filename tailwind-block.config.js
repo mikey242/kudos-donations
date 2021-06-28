@@ -6,40 +6,14 @@ const plugin = require('tailwindcss/plugin')
 module.exports = {
     mode: 'jit',
     prefix: 'kd-',
-    important: true,
     purge: {
         enabled: true,
         content: [
-            './src/js/**/*.{js,jsx}',
-            './templates/**/*.twig',
+            './templates/button/*.twig',
             './safelist.txt'
         ],
     },
     theme: {
-        screens: {
-            'xs': '475px',
-            ...defaultTheme.screens
-        },
-        fontSize: {
-            base: '16px',
-            xs: '0.75em',
-            sm: '0.875em',
-            lg: '1.125em', //'18px'
-            '2xl': '1.5em',
-            '4xl': '2.25em', //'36px'
-        },
-        fontFamily: {
-            sans: ['montserratregular', 'Century Gothic', 'sans-serif'],
-            serif: ['libre_baskervillebold', 'Times New Roman', 'serif']
-        },
-        maxWidth: {
-            lg: '32em',
-        },
-        minWidth: {
-            0: '0',
-            1: '1em',
-            full: '100%',
-        },
         spacing: {
             8: '2em',
             6: '1.5em',
@@ -49,22 +23,6 @@ module.exports = {
             2: '0.5em',
             1: '0.25em',
             0: '0'
-        },
-        inset: {
-            0: '0',
-            auto: 'auto',
-            '1/2': '50%'
-        },
-        backgroundSize: {
-            'contain': 'contain',
-            '8': '2em'
-        },
-        borderRadius: {
-            none: '0',
-            DEFAULT: '0.25em',
-            sm: '2px',
-            lg: '0.5em',
-            full: '9999px'
         },
         borderWidth: {
             DEFAULT: '2px',
