@@ -2,11 +2,11 @@ import {NewCampaignPanel} from "../Panels/NewCampaignPanel"
 import {CampaignPanel} from "../Panels/CampaignPanel"
 import {getQueryVar} from "../../../Helpers/util"
 
-const {__} = wp.i18n
-const {useState, Fragment} = wp.element
-const {Card, CardHeader, CardDivider, SelectControl} = wp.components
-
 const CampaignsTab = (props) => {
+
+    const {__} = wp.i18n
+    const {useState, Fragment} = wp.element
+    const {Card, CardHeader, CardDivider, SelectControl} = wp.components
 
     let campaigns = props.settings._kudos_campaigns
 

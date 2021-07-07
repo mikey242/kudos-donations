@@ -4,8 +4,8 @@
             <div data-total="{{ total }}" data-goal="{{ goal }}"
                  class="kudos-campaign-progress kd-flex kd-relative kd-shadow-inner kd-my-5 kd-overflow-hidden kd-bg-gray-200 kd-rounded kd-w-full"
                  style="height: 35px">
-                <div class="kudos-progress-bar kd-flex kd-flex-shrink-0 kd-justify-center kd-items-center">
-                    <div class="kudos-progress-inner kd-transition-transform kd-duration-1000 kd-ease-in-out kd-scale-x-0 kd-h-full kd-w-full kd-bg-green-500" style="transform-origin: left"></div>
+                <div class="kudos-progress-bar kd-flex kd-flex-shrink-0 kd-justify-center kd-items-center" style="width: {{ (total/goal) * 100 }}%;">
+                    <div class="kudos-progress-inner kd-transition-transform kd-duration-1000 kd-ease-in-out kd-scale-x-100 kd-h-full kd-w-full kd-bg-green-500" style="transform-origin: left"></div>
                     <div class="kd-left-0 kd-transition-opacity kd-absolute kd-flex kd-items-center kd-justify-center kd-w-full"
                          style="opacity: 0"></div>
                 </div>

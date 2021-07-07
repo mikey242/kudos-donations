@@ -1,9 +1,9 @@
 import {SettingCard} from "../SettingCard"
 
-const {__} = wp.i18n
-const {ExternalLink, PanelRow, TextControl} = wp.components
-
 const MollieApiKeysPanel = (props) => {
+
+    const {__} = wp.i18n
+    const {ExternalLink, PanelRow, TextControl} = wp.components
 
     const handleChange = (id, value) => {
         props.mollieChanged()

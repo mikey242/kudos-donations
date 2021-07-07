@@ -55,9 +55,7 @@ This software uses the following open source packages:
 - [Twig](https://twig.symfony.com/) - A modern template engine for PHP.
 - [WordPress Plugin Boilerplate](https://github.com/DevinVinson/WordPress-Plugin-Boilerplate) -  A foundation for WordPress Plugin Development.
 - [ActionScheduler](https://actionscheduler.org/) - WordPress Job Queue with Background Processing.
-- [Webpack](https://webpack.js.org/) - Module bundler.
-- [Babel](https://github.com/babel/babel-loader) - A compiler for writing next generation JavaScript.
-- [PostCSS](https://github.com/postcss/postcss-loader) - A tool for transforming CSS with JavaScript.
+- [Laravel Mix](https://laravel-mix.com/) - An elegant wrapper around Webpack for the 80% use case.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

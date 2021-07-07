@@ -224,7 +224,7 @@ class TwigService extends AbstractService {
 	 * @return string|bool
 	 * @since    1.0.0
 	 */
-	public function render( string $template, $array = [] ) {
+	public function render( string $template, array $array = [] ) {
 
 		try {
 			return $this->twig->render( $template, $array );

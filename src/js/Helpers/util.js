@@ -32,3 +32,13 @@ export function getStyle(style) {
 export function setAttributes(el, attrs) {
     Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value))
 }
+
+export function isVisible(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}

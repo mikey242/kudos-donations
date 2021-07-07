@@ -4,7 +4,6 @@ const {applyFilters} = wp.hooks
 
 const SettingCard = (props) => {
 
-
     return (
         applyFilters('kudos.settings.settingCard.' + props.id,
             <Fragment>

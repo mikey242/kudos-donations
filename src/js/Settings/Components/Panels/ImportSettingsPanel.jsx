@@ -1,10 +1,10 @@
 import {SettingCard} from "../SettingCard"
 import {ButtonIcon} from "../ButtonIcon"
 
-const {__} = wp.i18n
-const {FormFileUpload, BaseControl} = wp.components
-
 const ImportSettingsPanel = (props) => {
+
+    const {__} = wp.i18n
+    const {FormFileUpload, BaseControl} = wp.components
 
     const importSettings = (e) => {
 

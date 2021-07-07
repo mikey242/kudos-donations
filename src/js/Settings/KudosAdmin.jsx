@@ -15,7 +15,6 @@ import {EmailTab} from "./Components/Tabs/EmailTab"
 import {HelpTab} from "./Components/Tabs/HelpTab"
 
 const {__} = wp.i18n
-
 const {
     Spinner,
     TabPanel,

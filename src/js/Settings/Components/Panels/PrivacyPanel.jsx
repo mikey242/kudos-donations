@@ -1,9 +1,10 @@
 import {SettingCard} from "../SettingCard"
 
-const {__} = wp.i18n
-const {TextControl} = wp.components
-
 const PrivacyPanel = (props) => {
+
+    const {__} = wp.i18n
+    const {TextControl} = wp.components
+
     return (
         <SettingCard title={__('Privacy policy', 'kudos-donations')}>
 

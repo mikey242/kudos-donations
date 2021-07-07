@@ -3,10 +3,10 @@
 
     {# Common styles #}
     {% set global = 'kd-appearance-none kd-m-0 kd-text-left kd-placeholder-gray-500 kd-border kd-border-solid kd-border-gray-300' %}
-    {% set transition = 'kd-transition kd-transition-colors kd-ease-in-out kd-duration-75' %}
+    {% set transition = 'kd-transition kd-ease-in-out kd-duration-75' %}
     {% set generic = 'kd-text-gray-700' %}
     {% set focus = 'focus:kd-border-primary focus:kd-outline-none' %}
-    {% set styles = [] | merge([ global, generic, focus, props.class ]) %}
+    {% set styles = [] | merge([ global, transition, generic, focus, props.class ]) %}
 
     {# Build input element #}
     <input
@@ -36,7 +36,7 @@
     <label class="kd-flex kd-cursor-pointer kd-font-normal kd-mt-2 kd-w-full">
         {{ build_input(props) }}
         {% if props.label %}
-            <span class="kd-text-gray-500 kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-px-3 kd-rounded-l kd-block kd-border kd-border-r-0 kd-border-solid kd-border-gray-300">{{ props.label }}</span>
+            <span class="kd-break-normal kd-text-gray-500 kd-m-0 kd-transition-shadow kd-transition-colors kd-ease-in-out kd-py-2 kd-px-3 kd-rounded-l kd-block kd-border kd-border-r-0 kd-border-solid kd-border-gray-300">{{ props.label }}</span>
         {% endif %}
     </label>
 {% endmacro %}
@@ -114,7 +114,7 @@
 
         <label class="kd-inline-block kd-relative kd-cursor-pointer kd-font-normal kd-mt-2 kd-w-full">
                 <select
-                        class="kd-bg-select kd-bg-no-repeat kd-bg-right-2 kd-border-gray-300 kd-border kd-border-solid focus:kd-border-primary focus:kd-ring-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-gray-700"
+                        class="kd-bg-select kd-bg-no-repeat kd-appearance-none kd-bg-right-2 kd-border-gray-300 kd-border kd-border-solid focus:kd-border-primary focus:kd-ring-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-gray-700"
                         {{ (props.required ? "required") }}
                         name="{{ props.name }}"
                         aria-label="{{ props.placeholder ?? props.label }}"

@@ -2,28 +2,30 @@ import _ from 'lodash'
 import axios from 'axios'
 import MicroModal from 'micromodal'
 import 'jquery-validation'
-import '../img/logo-colour-40.png' // used as email attachment
-import '../img/logo-colour.svg'
-import {getStyle} from "./Helpers/util"
+import '../images/logo-colour-40.png' // used as email attachment
+import '../images/logo-colour.svg'
+import {getStyle, isVisible} from "./Helpers/util"
+import {handleMessages} from "./Helpers/modal"
+
 import {
     animateProgressBar,
     checkRequirements,
     createSummary,
-    handleMessages,
-    resetProgressBar,
-    toggleAmount
-} from "./Helpers/modal"
-
-const {__} = wp.i18n
+    resetForm,
+    resetProgressBar, valueChange,
+} from "./Helpers/form"
 
 jQuery(document).ready(($) => {
+
+    const {__} = wp.i18n
 
     'use strict'
     let screenSize
 
     $(() => {
 
-        const kudosButtons = document.querySelectorAll('.kudos-button-donate')
+        const kudosButtons = document.querySelectorAll('[data-kudos-target]')
+        const kudosForms = document.querySelectorAll('form.kudos-form')
         let animating = false
 
         // Set screen size on load
@@ -91,57 +93,40 @@ jQuery(document).ready(($) => {
                 }
             },
         })
-        $.validator.messages.required = __("This field is required", 'kudos-donations')
+        $.validator.messages.required = __('This field is required', 'kudos-donations')
 
         if (kudosButtons.length) {
 
             // Setup button action
             kudosButtons.forEach((e) => {
 
-                const target = e.dataset.target
+                const target = e.dataset.kudosTarget
 
                 e.addEventListener('click', () => {
                     if (target) {
                         MicroModal.show(target, {
                             onShow(modal) {
 
+                                const form = modal.querySelector('.kudos-form')
+
                                 // Create and dispatch event
-                                window.dispatchEvent( new CustomEvent('kudosShowModal', {detail: modal}) )
+                                window.dispatchEvent(new CustomEvent('kudosShowModal', {detail: modal}))
 
                                 // Animate progress bar
-                                animateProgressBar(modal)
+                                animateProgressBar(form)
 
                                 // Clear error message
-                                modal.querySelector('.kudos_error_message').innerHTML = ""
+                                form.querySelector('.kudos_error_message').innerHTML = ""
 
                                 // Reset and config form
-                                const form = modal.querySelector('.kudos-form')
                                 if (form.length) {
 
-                                    // Switch back to first tab
-                                    form.querySelectorAll('fieldset').forEach((e) => {
-                                        e.classList.add('kd-hidden')
-                                    })
-                                    form.querySelector('fieldset').classList.remove('kd-hidden')
                                     modal.querySelector('.kudos-modal-container').dataset.currentTab = 'initial'
-
-                                    // Reset amounts
-                                    let amountInput = form.querySelector('[id^=value-open-both-]')
-                                    let amountRadios = form.querySelectorAll('[id^=value-fixed-]')
-
-                                    if(amountInput && amountRadios) {
-                                        toggleAmount(amountInput, amountRadios)
-                                        amountRadios[0].checked = true
-                                        amountInput.removeAttribute('required')
-                                        amountInput.setAttribute('name', '')
-                                    }
-
-                                    // Clear all form values
+                                    resetForm(form)
                                     $(form).validate().resetForm()
-                                    form.reset()
 
                                     // Set first input as focus
-                                    if('xs' !== screenSize ) {
+                                    if ('xs' !== screenSize) {
                                         form.querySelector('input[name="value"]').focus()
                                     }
                                 }
@@ -161,29 +146,37 @@ jQuery(document).ready(($) => {
             })
         }
 
-        // Show message modal if exists
+        // Configure forms.
+        if (kudosForms) {
+            kudosForms.forEach((form) => {
+                resetForm(form)
+                valueChange(form)
+            })
+        }
+
+        // Show message modal if exists.
         let messages = document.querySelectorAll('.kudos-message-modal')
         if (messages.length) {
             handleMessages(Array.from(messages))
         }
 
-        // Hide honeypot field
+        // Hide honeypot field.
         document.querySelectorAll('input[name="donation"]').forEach((e) => {
             e.closest('label').classList.add('kd-hidden')
         })
 
-        // Multi step form navigation
+        // Multi step form navigation.
         document.querySelectorAll('.kudos-form [data-direction]').forEach((button) => {
             button.addEventListener('click', (e) => {
 
-                // Stop if already busy swapping tabs
+                // Stop if already busy swapping tabs.
                 if (animating) return false
 
-                // Cache selectors
+                // Cache selectors.
                 const currentTab = button.closest('.form-tab')
                 const inputs = currentTab.elements
 
-                // Check direction
+                // Check direction.
                 const direction = button.dataset.direction
                 if ('next' === direction) {
                     $(inputs).validate()
@@ -216,11 +209,10 @@ jQuery(document).ready(($) => {
                 $(e.currentTarget).validate()
                 if ($(e.currentTarget).valid()) {
 
-                    const modal = form.closest('.kudos-modal')
-                    const error = modal.querySelector('.kudos_error_message')
+                    const error = form.querySelector('.kudos_error_message')
                     const formData = new FormData(e.target)
 
-                    modal.classList.add('kd-is-loading')
+                    form.classList.add('kd-is-loading')
 
                     axios.post(kudos.createPaymentUrl, JSON.stringify(Object.fromEntries(formData)), {
                         headers: {
@@ -232,8 +224,8 @@ jQuery(document).ready(($) => {
                             window.location.href = result.data.data
                         } else {
                             error.innerHTML = result.data.data.message
-                            modal.classList.add('error')
-                            modal.classList.remove('kd-is-loading')
+                            form.classList.add('error')
+                            form.classList.remove('kd-is-loading')
                         }
                     })
                 }
@@ -244,7 +236,7 @@ jQuery(document).ready(($) => {
 
     function changeTab(currentTab, direction, callback) {
 
-        let container = currentTab.closest('.kudos-modal-container')
+        let container = currentTab.closest('.kudos-modal-container') ?? currentTab.closest('form')
 
         // Get element to animate
         let animate = container
@@ -261,7 +253,7 @@ jQuery(document).ready(($) => {
         }
 
         // Show summary if next tab is final
-        if (null === targetTab.nextElementSibling) {
+        if ('FIELDSET' !== targetTab.nextElementSibling.tagName) {
             createSummary(currentTab.closest('form').id)
         }
 
@@ -289,7 +281,7 @@ jQuery(document).ready(($) => {
                     container.dataset.currentTab = targetTab.dataset.name
 
                     // Select first input on tab.
-                    if('xs' !== screenSize ) {
+                    if ('xs' !== screenSize) {
                         let first = targetTab.elements[0]
                         first.focus()
                     }

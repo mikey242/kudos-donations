@@ -1,4 +1,4 @@
-import logo from '../img/logo-colour.svg'
+import logo from '../images/logo-colour.svg'
 import {KudosButton} from "./Settings/Components/KudosButton"
 
 /**
@@ -10,6 +10,7 @@ const {registerBlockType} = wp.blocks
 const {
     PanelBody,
     SelectControl,
+    RadioControl
 } = wp.components
 const {
     RichText,
@@ -54,6 +55,7 @@ export default registerBlockType('iseardmedia/kudos-button', {
             this.onChangeButtonLabel = this.onChangeButtonLabel.bind(this)
             this.onChangeAlignment = this.onChangeAlignment.bind(this)
             this.onChangeCampaign = this.onChangeCampaign.bind(this)
+            this.onChangeType = this.onChangeType.bind(this)
             this.state = {
                 campaigns:
                     [{
@@ -87,6 +89,11 @@ export default registerBlockType('iseardmedia/kudos-button', {
                 selectedCampaign: newValue
             })
         };
+
+        onChangeType(newValue) {
+            console.log(newValue)
+            this.props.setAttributes({type: newValue})
+        }
 
         getCampaignName(value) {
             let campaign = this.state.campaigns.find(campaign => campaign.value === value)
@@ -127,6 +134,22 @@ export default registerBlockType('iseardmedia/kudos-button', {
                                 options={this.state.campaigns}
                             />
                             <a href="admin.php?page=kudos-settings&tab_name=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
+
+                        </PanelBody>
+
+                        <PanelBody
+                            title={__('Options', 'kudos-donations')}
+                            initialOpen={false}
+                        >
+                            <RadioControl
+                                label={__('Display type', 'kudos-donations')}
+                                selected={this.props.attributes.type}
+                                options={[
+                                    {label: __('Button', 'kudos-donations'), value: 'button'},
+                                    {label: __('Form', 'kudos-donations'), value: 'form'}
+                                ]}
+                                onChange={this.onChangeType}
+                            />
 
                         </PanelBody>
 

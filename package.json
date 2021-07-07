@@ -1,6 +1,6 @@
 {
   "name": "kudos-donations",
-  "version": "2.7.5",
+  "version": "2.8.0",
   "description": " Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.",
   "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
@@ -9,7 +9,7 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "production": "mix --production",
-    "make-pot": "wp i18n make-pot . --exclude='docker, src'",
+    "make-pot": "wp i18n make-pot . --exclude='docker, src, node_modules'",
     "make-json": "wp i18n make-json languages/ --no-purge",
     "export": "composer install --no-dev --optimize-autoloader && ./export.sh"
   },
@@ -20,27 +20,23 @@
     "@babel/preset-react": "^7.14.5",
     "@wordpress/babel-preset-default": "^4.19.0",
     "@wordpress/browserslist-config": "^2.7.0",
-    "@wordpress/eslint-plugin": "^7.3.0",
-    "cross-env": "^7.0.3",
+    "browser-sync": "^2.27.3",
+    "browser-sync-webpack-plugin": "^2.3.0",
     "laravel-mix": "^6.0.25",
-    "postcss": "^8.2.4",
-    "postcss-loader": "^4.2.0",
-    "postcss-prefixwrap": "^1.23.0"
+    "mini-svg-data-uri": "^1.3.3",
+    "postcss-loader": "^6.1.0",
+    "postcss-prefixwrap": "^1.23.0",
+    "tailwindcss": "^2.2.4"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@tailwindcss/forms": "^0.3.3",
     "axios": "^0.21.1",
-    "install": "^0.13.0",
     "jquery-validation": "1.19.3",
     "lodash": "^4.17.20",
     "micromodal": "^0.4.6",
-    "parsley": "^0.1.0",
-    "party-js": "^2.0.1",
-    "stylelint-config-recommended": "^3.0.0",
-    "tailwindcss": "^2.2"
+    "party-js": "^2.0.1"
   }
 }

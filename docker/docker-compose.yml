@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        PHP_VERSION: 7.2
+        PHP_VERSION: 7.4
         WORDPRESS_VERSION: 5.5
     container_name: wordpress-kudos
     volumes:
@@ -15,6 +15,7 @@ services:
       - ../../kudos-premium:/var/www/html/wp-content/plugins/kudos-premium:ro
       - ../../kudos-website:/var/www/html/wp-content/themes/kudos-website:ro
       - ../../podiumnoord-website:/var/www/html/wp-content/themes/podiumnoord-website:ro
+      - ../../ldgl-theme:/var/www/html/wp-content/themes/ldgl-theme
     ports:
       - "80:80"
     restart: always

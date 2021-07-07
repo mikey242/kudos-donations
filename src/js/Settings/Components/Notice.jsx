@@ -1,6 +1,7 @@
-const {Snackbar} = wp.components
-
 const Notice = (props) => {
+
+    const {Snackbar} = wp.components
+
     if (props.showNotice) {
         return (
             <div className="components-snackbar-list components-editor-notices__snackbar">

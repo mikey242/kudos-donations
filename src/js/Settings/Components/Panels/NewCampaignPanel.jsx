@@ -1,11 +1,11 @@
 import {SettingCard} from "../SettingCard"
 import {ButtonIcon} from "../ButtonIcon"
 
-const {__} = wp.i18n
-const {Button, TextControl} = wp.components
-const {useState} = wp.element
-
 const NewCampaignPanel = ({addCampaign, isAPISaving}) => {
+
+    const {__} = wp.i18n
+    const {Button, TextControl} = wp.components
+    const {useState} = wp.element
 
     const [addFormValue, setAddFormValue] = useState('')
     const [buttonDisabled, setButtonDisabled] = useState(true)

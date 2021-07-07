@@ -1,10 +1,10 @@
 import {SettingCard} from "../SettingCard"
 
-const {__} = wp.i18n
-const {TextControl, ToggleControl} = wp.components
-const {Fragment} = wp.element
-
 const CustomReturnPanel = (props) => {
+
+    const {__} = wp.i18n
+    const {TextControl, ToggleControl} = wp.components
+    const {Fragment} = wp.element
 
     return (
         <SettingCard title={__('Custom return URL', 'kudos-donations')}>

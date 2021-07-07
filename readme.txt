@@ -93,6 +93,7 @@ Here is a list of the shortcode attributes:
 * *button_label* = The label to display for the button.
 * *campaign_id* = Id of the campaign to use for this button.
 * *alignment* = Alignment of the button within container. Can be "center", "left" or "right"
+* *type* = Whether to show as a button with pop-up or just the form. Can be "button" or "form"
 
 e.g:
 
@@ -117,10 +118,14 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
-= 2.7.1 =
+= 2.7.5 =
+* *NEW* You can now add a donation form without using a button or popup. This can be selected in the side panel when placing a Kudos block, or if using the shortcode by adding the attribute type="form".
 * Allow adding additional funds to campaign. Useful if you receive donations for your campaign outside of Kudos.
 * Move goal icon in front of goal amount
-* Update Mollie API client to 2.32.2
+* Add ability to chose custom theme color
+* Update Mollie API client to 2.36.1
+* Update ActionScheduler to 3.2.1
+* Update TailwindCSS to 2.2.4
 
 = 2.7.0 =
 * Add goal progression to campaigns. Disabled by default, this can be enabled per campaign and shows a percentage bar of how much the campaign has already raised as well as how much the currently selected amount will progress the campaign.

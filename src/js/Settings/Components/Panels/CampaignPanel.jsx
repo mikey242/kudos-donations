@@ -2,21 +2,21 @@ import {Info} from "../Info"
 import {SettingCard} from "../SettingCard"
 import {ButtonIcon} from "../ButtonIcon"
 
-const {__} = wp.i18n
-const {useState, useEffect, Fragment} = wp.element
-const {
-    Button,
-    CardDivider,
-    CardFooter,
-    CheckboxControl,
-    ClipboardButton,
-    Disabled,
-    RadioControl,
-    TextControl,
-    ToggleControl
-} = wp.components
-
 const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, allowDelete = false}) => {
+
+    const {__} = wp.i18n
+    const {useState, useEffect, Fragment} = wp.element
+    const {
+        Button,
+        CardDivider,
+        CardFooter,
+        CheckboxControl,
+        ClipboardButton,
+        Disabled,
+        RadioControl,
+        TextControl,
+        ToggleControl
+    } = wp.components
 
     const [hasCopied, setHasCopied] = useState(false)
     let recurring_allowed = settings._kudos_vendor_mollie.recurring

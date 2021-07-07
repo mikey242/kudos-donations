@@ -1,7 +1,0 @@
-.kd-logo-animate:hover .kd-logo {
-    transform: rotate(-90deg);
-}
-.kd-logo-animate:hover .kd-logo .kd-logo-heart {
-    backface-visibility: visible;
-    transform: rotateX(180deg);
-}

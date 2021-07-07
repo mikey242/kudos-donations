@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Controller;
+namespace Kudos\Front;
 
 use Exception;
 use Kudos\Entity\DonorEntity;
@@ -8,6 +8,10 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
+use Kudos\Model\ButtonModel;
+use Kudos\Model\FormModel;
+use Kudos\Model\MessageModel;
+use Kudos\Model\ModalModel;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
@@ -91,26 +95,13 @@ class Front {
 		$handle = $this->plugin_name . '-public';
 
 		wp_enqueue_script(
-			'micromodal',
-			plugin_dir_url( __FILE__ ) . '../../dist/js/vendor/micromodal.min.js',
-			[],
-			'0.4.6',
-			true
-		);
-		wp_enqueue_script(
-			'jquery-validate',
-			plugin_dir_url( __FILE__ ) . '../../dist/js/vendor/jquery.validate.min.js',
-			[ 'jquery' ],
-			'1.19.3',
-			true
-		);
-		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( 'kudos-public.js' ),
-			[ 'jquery', 'micromodal', 'jquery-validate' ],
+			Utils::get_asset_url( '/js/kudos-public.js' ),
+			[ 'jquery', 'lodash' ],
 			$this->version,
 			true
 		);
+
 		wp_localize_script(
 			$handle,
 			'kudos',
@@ -119,6 +110,7 @@ class Front {
 				'createPaymentUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_CREATE ),
 			]
 		);
+
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 
 	}
@@ -128,17 +120,19 @@ class Front {
 	 */
 	public function enqueue_block_assets() {
 
-		// Enqueue public css.
-		wp_enqueue_style( $this->plugin_name . '-public',
-			Utils::get_asset_url( 'kudos-public.css' ),
-			[],
-			$this->version );
+		$handle = $this->plugin_name . '-block';
 
 		// Enqueue block specific js.
-		$handle = $this->plugin_name . '-button-block';
+		wp_enqueue_style(
+			$handle,
+			Utils::get_asset_url( '/css/kudos-public.css' ),
+			[],
+			$this->version
+		);
+
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( 'kudos-button-block.js' ),
+			Utils::get_asset_url( '/js/kudos-button-block.js' ),
 			[
 				'wp-i18n',
 				'wp-edit-post',
@@ -182,6 +176,7 @@ class Front {
 						'button_label' => __( 'Donate now', 'kudos-donations' ),
 						'campaign_id'  => 'default',
 						'alignment'    => 'none',
+						'type'         => 'button',
 					],
 					$atts,
 					'kudos'
@@ -210,6 +205,10 @@ class Front {
 						'type'    => 'string',
 						'default' => 'none',
 					],
+					'type'         => [
+						'type'    => 'string',
+						'default' => 'button',
+					],
 				],
 			]
 		);
@@ -233,14 +232,24 @@ class Front {
 					PaymentService::get_vendor_name() ) );
 			}
 
-			// Generate markup.
-			$button = new ButtonController($atts);
-			return $button->render();
+			// Create the form based on campaign id.
+			$form = new FormModel( $atts['campaign_id'] );
+
+			// If type set and true then return form.
+			if ( isset( $atts['type'] ) && $atts['type'] === 'form' ) {
+				return $form;
+			}
+
+			// Otherwise create modal and button and return their html.
+			$modal  = new ModalModel( $form->render() );
+			$button = new ButtonModel( $atts, $modal->get_id() );
+
+			return $button->render() . $modal->render();
 
 
 		} catch ( Exception $e ) {
 
-			// Display error message if thrown thrown.
+			// Display error message if thrown and user is admin.
 			if ( current_user_can( 'manage_options' ) ) {
 				return '<p>' . $e->getMessage() . '</p>';
 			}
@@ -249,6 +258,23 @@ class Front {
 		// Nothing displayed to visitors if there is a problem.
 		return null;
 
+	}
+
+	/**
+	 * Create message modal with supplied header and body text.
+	 *
+	 * @param string $header The header text.
+	 * @param string $body The body text.
+	 *
+	 * @return \Kudos\Model\ModalModel
+	 */
+	private function create_message_modal( string $header, string $body ): ModalModel {
+
+		$message = new MessageModel( $header, $body );
+		$modal   = new ModalModel( $message );
+		$modal->set_class( 'kudos-message-modal' );
+
+		return $modal;
 	}
 
 	/**
@@ -272,9 +298,7 @@ class Front {
 						if ( $transaction && $transaction->verify_secret( $token ) ) {
 							$atts = $this->check_transaction( $order_id );
 							if ( $atts ) {
-								$modal = new ModalController();
-								$modal->create_message_modal( $atts['modal_title'],$atts['modal_text'] );
-								echo $modal->render();
+								echo $this->create_message_modal( $atts['modal_title'], $atts['modal_text'] );
 							}
 						}
 					}
@@ -295,27 +319,23 @@ class Front {
 							return;
 						}
 
-						$modal = new ModalController();
-
 						if ( $subscription->verify_secret( $token ) ) {
 							$payment_service = PaymentService::factory();
 							if ( $payment_service->cancel_subscription( $subscription_id ) ) {
-								$modal->create_message_modal(
+								echo $this->create_message_modal(
 									__( 'Subscription cancelled', 'kudos-donations' ),
 									__( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
 										'kudos-donations' )
 								);
-								echo $modal->render();
 
 								return;
 							}
 						}
 
-						$modal->create_message_modal(
+						echo $this->create_message_modal(
 							__( 'Link expired', 'kudos-donations' ),
 							__( 'Sorry, this link is no longer valid.', 'kudos-donations' )
 						);
-						$modal->render();
 					}
 					break;
 			}

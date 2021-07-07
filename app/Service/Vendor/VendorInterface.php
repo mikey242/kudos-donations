@@ -73,6 +73,13 @@ interface VendorInterface {
 	public function get_payment( string $mollie_payment_id );
 
 	/**
+	 * Returns the vendors webhook url.
+	 *
+	 * @return string
+	 */
+	public static function get_webhook_url(): string;
+
+	/**
 	 * Create a customer.
 	 *
 	 * @param string $email Donor email address.

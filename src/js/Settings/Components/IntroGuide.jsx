@@ -1,13 +1,13 @@
-import intro from "../../../img/guide-welcome.png"
-import mollie from "../../../img/guide-mollie-api.png"
-import campaign from "../../../img/guide-campaign.png"
-import button from "../../../img/guide-button.png"
-import live from "../../../img/guide-test-live.png"
-
-const {__} = wp.i18n
-const {Guide, ExternalLink} = wp.components
+import intro from "../../../images/guide-welcome.png"
+import mollie from "../../../images/guide-mollie-api.png"
+import campaign from "../../../images/guide-campaign.png"
+import button from "../../../images/guide-button.png"
+import live from "../../../images/guide-test-live.png"
 
 const IntroGuide = ({show, updateSetting}) => {
+
+    const {__} = wp.i18n
+    const {Guide, ExternalLink} = wp.components
 
     if (!show) {
         return null

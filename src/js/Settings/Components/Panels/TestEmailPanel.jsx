@@ -2,11 +2,11 @@ import axios from 'axios'
 import {SettingCard} from "../SettingCard"
 import {ButtonIcon} from "../ButtonIcon"
 
-const {__} = wp.i18n
-const {Button, PanelRow, TextControl} = wp.components
-const {useState} = wp.element
-
 const TestEmailPanel = (props) => {
+
+    const {__} = wp.i18n
+    const {Button, PanelRow, TextControl} = wp.components
+    const {useState} = wp.element
 
     const [buttonDisabled, setButtonDisabled] = useState(true)
     const [email, setEmail] = useState('')

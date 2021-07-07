@@ -10,7 +10,7 @@
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
- * Version:           2.7.1
+ * Version:           2.8.0
  * Author:            Iseard Media
  * Author URI:        https://iseard.media
  * Requires at least: 5.5
@@ -23,30 +23,63 @@
 
 namespace Kudos;
 
+use DI\ContainerBuilder;
+use Dotenv\Dotenv;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\CompatibilityService;
 use Kudos\Service\DeactivatorService;
-
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
-
-// Load .env file if present.
-if ( class_exists( \Dotenv\Dotenv::class ) && file_exists( __DIR__ . '/.env' ) ) {
-	$dotenv = \Dotenv\Dotenv::createImmutable( __DIR__ );
-	$dotenv->load();
-}
+use Kudos\Service\LoggerService;
+use Mollie\Api\MollieApiClient;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
+use function DI\get;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'KUDOS_VERSION', '2.7.1' );
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+
+/**
+ * Load the .env file if present.
+ *
+ * @link https://github.com/vlucas/phpdotenv
+ */
+if ( class_exists( Dotenv::class ) ) {
+	$dotenv = Dotenv::createImmutable( __DIR__ );
+	$dotenv->safeLoad();
+}
+
+/**
+ * Define all the Kudos Donations constants for use throughout the plugin.
+ */
+define( 'KUDOS_VERSION', '2.8.0' );
 define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'KUDOS_PLUGIN_DIR', dirname( __FILE__ ) );
-define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/');
-define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/');
+define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
+define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
 define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
+
+/**
+ * Check if we are in development mode and if so replace the default
+ * error handler with a more developer friendly one.
+ *
+ * @link https://github.com/filp/whoops
+ */
+if ( class_exists( Run::class ) && ( $_ENV['WP_ENV'] ?? '' ) === 'development' ) {
+
+	$run     = new Run();
+	$handler = new PrettyPageHandler;
+
+	// Set the title of the error page:
+	$handler->setPageTitle( "Whoops! There was a problem." );
+	$run->pushHandler( $handler );
+
+	// Register the handler with PHP, and you're set!
+	$run->register();
+}
 
 /**
  * The code that runs during plugin activation.
@@ -70,8 +103,8 @@ register_activation_hook( __FILE__, __NAMESPACE__ . '\activate_kudos' );
 register_deactivation_hook( __FILE__, __NAMESPACE__ . '\deactivate_kudos' );
 
 /**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
+ * The core plugin class that is used to define admin-specific hooks
+ * and public-facing site hooks.
  */
 require KUDOS_PLUGIN_DIR . '/app/KudosDonations.php';
 
@@ -81,20 +114,16 @@ require KUDOS_PLUGIN_DIR . '/app/KudosDonations.php';
  * Since everything within the plugin is registered via hooks,
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
- *
- * @since    1.0.0
  */
 function run_kudos() {
 
 	// Check compatibility and run kudos if OK
 	$compatibility = new CompatibilityService();
-	$continue      = $compatibility->init();
 
-	if ( $continue ) {
+	if ( $compatibility->init() ) {
 		$plugin = new KudosDonations();
 		$plugin->run();
 	}
-
 }
 
 run_kudos();

@@ -41,7 +41,7 @@ class Utils {
 	 * @since   1.0.0
 	 */
 	private static function get_asset_manifest( string $url ): array {
-		$map      = $url . 'dist/assets-manifest.json';
+		$map      = $url . 'dist/mix-manifest.json';
 		$request  = wp_remote_get( $map );
 		$response = wp_remote_retrieve_body( $request );
 
@@ -59,10 +59,10 @@ class Utils {
 	public static function get_asset_url( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
 		if ( isset( $hash[ $asset ] ) ) {
-			return $url . 'dist/' . $hash[ $asset ];
+			return $url . 'dist/' . ltrim($hash[ $asset ], '/');
 		}
 
-		return $asset;
+		return $url . 'dist/' . ltrim($asset, '/');
 	}
 
 	/**
@@ -76,10 +76,10 @@ class Utils {
 	public static function get_asset_path( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
 		if ( isset( $hash[ $asset ] ) ) {
-			return KUDOS_PLUGIN_DIR . '/dist/' . $hash[ $asset ];
+			return KUDOS_PLUGIN_DIR . '/dist' . ltrim($hash[ $asset ], '/');
 		}
 
-		return $asset;
+		return KUDOS_PLUGIN_DIR . '/dist' . ltrim($asset, '/');
 	}
 
 	/**
@@ -97,7 +97,7 @@ class Utils {
 	 */
 	public static function get_asset_content( string $asset ): string {
 
-		$map      = KUDOS_PLUGIN_URL . 'dist/assets-manifest.json';
+		$map      = KUDOS_PLUGIN_URL . 'dist/mix-manifest.json';
 		$request  = wp_remote_get( $map );
 		$response = wp_remote_retrieve_body( $request );
 		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
@@ -394,7 +394,7 @@ class Utils {
 	public static function get_logo_url( int $height = 24 ): ?string {
 
 		return apply_filters( 'kudos_get_logo_url',
-			self::get_data_uri( self::get_asset_url( 'img/logo-colour.svg' ) ),
+			self::get_data_uri( self::get_asset_url( 'images/logo-colour.svg' ) ),
 			$height );
 
 	}

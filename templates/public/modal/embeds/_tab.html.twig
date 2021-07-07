@@ -17,10 +17,10 @@
     </p>
 
     {% block body %}{% endblock %}
-    <div class="kudos-modal-buttons kd-mt-8 kd-flex kd-justify-center kd-relative">
+    <div class="kudos-modal-buttons kd-mt-8 kd-flex kd-justify-between kd-relative">
         {% block back_button %}
             <span
-                class="focus:kd-ring hover:kd-text-primary-dark kd-hidden xs:kd-inline kd-absolute kd-transition-shadow kd-ease-in-out kd-ring-primary kd-ring-offset-2 kd-rounded-full kd-bg-back-button kd-w-5 kd-h-5 kd-cursor-pointer kd-self-center kd-left-0 kd-bottom-1/2 kd-translate-y-1/2"
+                class="focus:kd-ring hover:kd-text-primary-dark kd-hidden xs:kd-inline kd-transition-shadow kd-ease-in-out kd-ring-primary kd-ring-offset-2 kd-rounded-full kd-bg-back-button kd-w-5 kd-h-5 kd-cursor-pointer kd-self-center"
                 data-direction="back"
                 title="{{ __('Previous tab', 'kudos-donations') }}"
                 tabindex="0"
@@ -32,17 +32,10 @@
             }) }}
         {% endblock %}
 
-        {% block cancel_button %}
-        {{ button(__('Cancel', 'kudos-donations'), 'outline', 'button', {
-            'data-micromodal-close': '',
-
-        }) }}
-        {% endblock %}
-
         {% block next_button %}
             {{ button(__('Next', 'kudos-donations'), 'primary', 'button', {
                 'data-direction': 'next',
-                'class' : 'kd-ml-3'
+                'class' : 'kd-ml-auto kd-bg-next kd-bg-no-repeat kd-bg-8 kd-bg-right-2 kd-pr-[2.5em]'
             } ) }}
         {% endblock %}
     </div>

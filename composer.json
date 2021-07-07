@@ -9,14 +9,16 @@
     "twig/twig": "^3.0",
     "ext-json": "*",
     "php": "7.2||^8.0",
-    "woocommerce/action-scheduler": "^3.1"
+    "woocommerce/action-scheduler": "^3.1",
+    "php-di/php-di": "^6.3"
   },
   "require-dev": {
     "vlucas/phpdotenv": "^5.1",
     "wp-coding-standards/wpcs": "^2.3",
     "squizlabs/php_codesniffer": "^3.5",
     "phpcompatibility/phpcompatibility-wp": "*",
-    "phpcompatibility/php-compatibility": "^9.3"
+    "phpcompatibility/php-compatibility": "^9.3",
+    "filp/whoops": "^2.13"
   },
   "scripts": {
     "post-update-cmd": [

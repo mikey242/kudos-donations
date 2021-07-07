@@ -1,10 +1,10 @@
 import {Btn} from "./Btn"
 import {KudosLogo} from "./KudosLogo"
 
-const {__} = wp.i18n
-const {applyFilters} = wp.hooks
-
 const Header = (props) => {
+
+    const {__} = wp.i18n
+    const {applyFilters} = wp.hooks
 
     let status
     let statusClass

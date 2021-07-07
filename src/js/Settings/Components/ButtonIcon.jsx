@@ -2,7 +2,6 @@ const {Icon} = wp.components
 
 const ButtonIcon = (props) => {
 
-
     const icon = () => {
         switch (props.icon) {
             case 'copy':

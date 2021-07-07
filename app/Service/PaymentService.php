@@ -7,8 +7,8 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use Kudos\Service\Vendor\VendorInterface;
 use Kudos\Service\Vendor\MollieVendor;
+use Kudos\Service\Vendor\VendorInterface;
 use Mollie\Api\Resources\Payment;
 use WP_Error;
 use WP_REST_Request;
@@ -73,7 +73,7 @@ class PaymentService extends AbstractService {
 	}
 
 	/**
-	 * Checks if required api settings are saved before displaying button
+	 * Checks if required api settings are saved before displaying button.
 	 *
 	 * @return bool
 	 */
@@ -322,7 +322,7 @@ class PaymentService extends AbstractService {
 				'value'    => $value,
 			],
 			'redirectUrl'  => $redirect_url,
-			'webhookUrl'   => $_ENV['WEBHOOK_URL'] ?? rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK ),
+			'webhookUrl'   => $this->vendor->get_webhook_url(),
 			'sequenceType' => $sequence_type,
 			'description'  => sprintf(
 			/* translators: %s: The order id */

@@ -1,9 +1,9 @@
 import {SettingCard} from "../SettingCard"
 
-const {__} = wp.i18n
-const {BaseControl, ColorPalette} = wp.components
-
 const ThemePanel = (props) => {
+
+    const {__} = wp.i18n
+    const {BaseControl, ColorPalette, ColorIndicator} = wp.components
 
     const colors = [
         {name: 'orange', color: '#ff9f1c'},
@@ -17,6 +17,12 @@ const ThemePanel = (props) => {
 
         <SettingCard title={__("Theme colour", 'kudos-donations')} id="themeColor" {...props}>
             <BaseControl
+                label={
+                    <div className={"kd-mb-5 kd-flex"}>
+                        {__('Selected color', 'kudos-donations') + ':'}
+                        <ColorIndicator colorValue={props.settings._kudos_theme_colors.primary}/>
+                    </div>
+                }
                 help={__('Set the colour for the Kudos button and the pop-up modal.', 'kudos-donations')}
             >
                 <ColorPalette
@@ -24,7 +30,7 @@ const ThemePanel = (props) => {
                     colors={colors}
                     value={props.settings._kudos_theme_colors.primary}
                     onChange={(value) => props.handleInputChange('_kudos_theme_colors', {primary: value})}
-                    disableCustomColors={true}
+                    disableCustomColors={false}
                     clearable={false}
                 />
             </BaseControl>

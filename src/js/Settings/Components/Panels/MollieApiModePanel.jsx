@@ -2,11 +2,11 @@ import {Btn} from "../Btn"
 import {SettingCard} from "../SettingCard"
 import {ButtonIcon} from "../ButtonIcon"
 
-const {__} = wp.i18n
-const {BaseControl, Button, ButtonGroup, PanelRow} = wp.components
-const {useState} = wp.element
-
 const MollieApiModePanel = (props) => {
+
+    const {__} = wp.i18n
+    const {BaseControl, Button, ButtonGroup, PanelRow} = wp.components
+    const {useState} = wp.element
 
     const [isBusy, setIsBusy] = useState(false)
 

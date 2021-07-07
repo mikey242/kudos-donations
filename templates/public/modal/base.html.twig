@@ -1,9 +1,14 @@
-<div id="kudos-modal-{{ id }}" class="kudos-modal {{ class }} kd-absolute kd-hidden kd-z-1050 kd-text-[16px] xl:kd-text-[18px] 2xl:kd-text-[18px]"
+{% extends 'public/base.html.twig' %}
+
+{% block main %}
+<div id="kudos-modal-{{ id }}"
+     class="kudos-modal {{ class }} kd-absolute kd-hidden kd-z-1050 kd-text-[16px] xl:kd-text-[18px] 2xl:kd-text-[18px]"
      role="dialog" aria-hidden="true" aria-modal="true" aria-label="{{ modal_title }}">
     <div class="kudos-modal-overlay kd-flex kd-justify-center kd-items-center kd-fixed kd-top-0 kd-left-0 kd-w-full kd-h-full kd-bg-[#1a202ccc]"
          tabindex="-1">
         <div data-page="1"
-             class="kudos-modal-container kd-bg-white kd-p-8 xs:kd-rounded-lg kd-w-full kd-h-full xs:kd-h-auto lg:kd-w-2/4 kd-max-w-lg kd-relative kd-overflow-auto xs:kd-overflow-hidden kd-origin-right">
+             class="kudos-modal-container kd-bg-white kd-p-8 xs:kd-rounded-lg kd-w-full kd-h-full xs:kd-h-auto lg:kd-w-2/4 kd-max-w-lg kd-relative kd-overflow-auto xs:kd-overflow-hidden kd-origin-right
+                    before:kd-w-full before:kd-h-full before:kd-bg-white before:kd-top-0 before:kd-left-0 before:kd-absolute before:kd--z-1 before:kd-opacity-70">
             <div class="kudos_modal_header kd-flex kd-items-center kd-justify-between">
                     <span class="kd-mr-3 kd-inline-block kd-flex" title="Kudos Donations">
                         {% if(logo_url) %}
@@ -13,18 +18,16 @@
                 {% block header %}
                 {% endblock header %}
                 <span
-                    class="focus:kd-ring hover:kd-text-primary-dark kd-hidden xs:kd-inline kd-transition-shadow kd-ease-in-out kd-ring-primary kd-ring-offset-2 kd-rounded-full kd-bg-close-button kd-w-5 kd-h-5 kd-cursor-pointer kd-self-center"
-                    data-micromodal-close
-                    title="{{ __('Previous tab', 'kudos-donations') }}"
+                        class="focus:kd-ring hover:kd-text-primary-dark kd-hidden xs:kd-inline kd-transition-shadow kd-ease-in-out kd-ring-primary kd-ring-offset-2 kd-rounded-full kd-bg-close-button kd-w-5 kd-h-5 kd-cursor-pointer kd-self-center"
+                        data-micromodal-close
+                        title="{{ __('Previous tab', 'kudos-donations') }}"
                 ></span>
             </div>
             <div class="kd-mt-4 kd-block">
-                <p class="kd-text-center kd-block kd-font-normal kd-mb-4">
-                    <small class="kudos_error_message kd-text-sm kd-text-red-500"></small>
-                </p>
                 {% block content %}
                 {% endblock content %}
             </div>
         </div>
     </div>
 </div>
+{% endblock %}

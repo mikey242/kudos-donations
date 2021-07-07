@@ -1,11 +1,12 @@
 import {Info} from "../Info"
 import {SettingCard} from "../SettingCard"
 
-const {__} = wp.i18n
-const {TextControl, ToggleControl} = wp.components
-const {Fragment} = wp.element
-
 const CompletedPaymentPanel = (props) => {
+
+    const {__} = wp.i18n
+    const {TextControl, ToggleControl} = wp.components
+    const {Fragment} = wp.element
+
     return (
         <SettingCard title={__('Completed payment', 'kudos-donations')}>
                 <ToggleControl

@@ -1,9 +1,9 @@
 import {SettingCard} from "../SettingCard"
 
-const {__} = wp.i18n
-const {ToggleControl} = wp.components
-
 const RenderModalFooter = (props) => {
+
+    const {__} = wp.i18n
+    const {ToggleControl} = wp.components
 
     return (
         <SettingCard title={__('Modal in footer', 'kudos-donations')}>

@@ -345,7 +345,7 @@ class MollieVendor extends AbstractService implements VendorInterface {
 				'value'    => $value,
 				'currency' => $currency,
 			],
-			'webhookUrl'  => $_ENV['WEBHOOK_URL'] ?? rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK ),
+			'webhookUrl'  => $this->get_webhook_url(),
 			'mandateId'   => $mandate_id,
 			'interval'    => $interval,
 			'startDate'   => $start_date,
@@ -650,5 +650,22 @@ class MollieVendor extends AbstractService implements VendorInterface {
 	 */
 	public function __toString(): string {
 		return self::get_vendor_name();
+	}
+
+	/**
+	 * Returns the Mollie Rest URL.
+	 *
+	 * @return string
+	 */
+	public static function get_webhook_url(): string {
+		$route = RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK;
+
+		// Use APP_URL if defined in .env file.
+		if(isset($_ENV['APP_URL'])) {
+			return $_ENV['APP_URL'] . 'wp-json/' . $route;
+		}
+
+		// Otherwise return normal rest URL.
+		return rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK );
 	}
 }

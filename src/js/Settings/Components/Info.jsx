@@ -1,7 +1,6 @@
-const {Dashicon} = wp.components
-
 const Info = ({level="info", children}) => {
 
+    const {Dashicon} = wp.components
     let text = 'kd-text-gray-500'
     let icon = 'info'
 

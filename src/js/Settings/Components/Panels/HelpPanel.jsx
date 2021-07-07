@@ -1,13 +1,11 @@
-import logo from '../../../../img/full-logo-green.svg'
+import logo from '../../../../images/full-logo-green.svg'
 import {SettingCard} from "../SettingCard"
 import {ButtonIcon} from "../ButtonIcon"
 
-const {__} = wp.i18n
-const {
-    Button,
-} = wp.components
-
 const HelpPanel = ({handleInputChange}) => {
+
+    const {__} = wp.i18n
+    const {Button} = wp.components
 
     return (
         <SettingCard>

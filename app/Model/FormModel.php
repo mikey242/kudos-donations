@@ -1,12 +1,12 @@
 <?php
 
-namespace Kudos\Controller;
+namespace Kudos\Model;
 
 use Exception;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 
-class FormController extends AbstractController {
+class FormModel extends AbstractModel {
 
 	const TEMPLATE = 'public/forms/donate.form.html.twig';
 
@@ -71,25 +71,35 @@ class FormController extends AbstractController {
 	 */
 	protected $show_progress;
 	/**
-	 * @var array|null
+	 * @var string
 	 */
 	protected $campaign_stats;
 	/**
 	 * @var mixed
 	 */
 	protected $vendor_name;
+	/**
+	 * @var mixed|string
+	 */
+	protected $button_label;
+	/**
+	 * @var string|null
+	 */
+	protected $spinner;
 
 	/**
 	 * KudosForm constructor.
 	 *
 	 * @param string $campaign_id
-	 * @param string|null $id
 	 *
 	 * @throws Exception
 	 */
-	public function __construct( string $campaign_id, string $id = null ) {
+	public function __construct( string $campaign_id ) {
 
-		parent::__construct( $id );
+		parent::__construct();
+
+		// Throws exception if campaign not found.
+		$campaign = Settings::get_campaign( $campaign_id );
 
 		// Configure global properties.
 		$this->template          = self::TEMPLATE;
@@ -99,18 +109,11 @@ class FormController extends AbstractController {
 		$this->terms_link        = Settings::get_setting( 'terms_link' );
 		$this->recurring_allowed = isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false;
 		$this->vendor_name       = Settings::get_setting( 'payment_vendor' );
-
-		// Get campaign settings array.
-		$campaign = Settings::get_campaign( $campaign_id );
-		$campaign_stats = Settings::get_campaign_stats( $this->campaign_id );
-
-		// Add additional funds if any.
-		if(!empty($campaign['additional_funds'])) {
-			$campaign_stats['total'] += $campaign['additional_funds'];
-		}
+		$this->spinner     = Utils::get_kudos_logo_markup( 'black', 30 );
 
 		// Set campaign properties.
-		$this->campaign_stats   = $campaign_stats;
+		$this->campaign_stats   = Settings::get_campaign_stats( $campaign_id );
+		$this->button_label     = $campaign['button_label'] ?? '';
 		$this->welcome_title    = $campaign['modal_title'] ?? '';
 		$this->welcome_text     = $campaign['welcome_text'] ?? '';
 		$this->campaign_goal    = $campaign['campaign_goal'] ?? '';
@@ -124,12 +127,10 @@ class FormController extends AbstractController {
 	}
 
 	/**
-	 * Returns welcome text string.
-	 *
-	 * @return string
+	 * @return mixed|string
 	 */
-	public function get_welcome_title(): string {
-		return $this->welcome_title;
+	public function get_button_label() {
+		return $this->button_label;
 	}
 
 }

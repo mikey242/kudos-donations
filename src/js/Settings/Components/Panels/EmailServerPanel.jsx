@@ -1,9 +1,9 @@
 import {SettingCard} from "../SettingCard"
 
-const {__} = wp.i18n
-const { TextControl } = wp.components
-
 const EmailServerPanel = (props) => {
+
+    const {__} = wp.i18n
+    const {TextControl} = wp.components
 
     return (
         <SettingCard title={__('Server', 'kudos-donations')}>
@@ -32,4 +32,4 @@ const EmailServerPanel = (props) => {
     )
 }
 
-export { EmailServerPanel }
+export {EmailServerPanel}

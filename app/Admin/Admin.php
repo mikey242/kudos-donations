@@ -269,9 +269,16 @@ class Admin {
 
 		$handle = $this->plugin_name . '-settings';
 
+		wp_enqueue_style(
+			$handle,
+			Utils::get_asset_url( '/css/kudos-admin-settings.css' ),
+			[ 'wp-components' ],
+			$this->version
+		);
+
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( 'kudos-admin-settings.js' ),
+			Utils::get_asset_url( '/js/kudos-admin-settings.js' ),
 			[ 'wp-api', 'wp-i18n', 'wp-components', 'wp-element' ],
 			$this->version,
 			true
@@ -287,12 +294,6 @@ class Admin {
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
-		wp_enqueue_style(
-			$handle,
-			Utils::get_asset_url( 'kudos-admin-settings.css' ),
-			[ 'wp-components' ],
-			$this->version
-		);
 
 		do_action( 'kudos_admin_settings_page_assets', $handle );
 	}
@@ -305,9 +306,10 @@ class Admin {
 	private function table_page_assets(): string {
 
 		$handle = $this->plugin_name . '-table';
+
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( 'kudos-admin-table.js' ),
+			Utils::get_asset_url( '/js/kudos-admin-table.js' ),
 			[ 'jquery' ],
 			$this->version,
 			false
@@ -325,7 +327,7 @@ class Admin {
 
 		wp_enqueue_script(
 			$this->plugin_name . '-transactions',
-			Utils::get_asset_url( 'kudos-admin-transactions.js' ),
+			Utils::get_asset_url( '/js/kudos-admin-transactions.js' ),
 			[ 'jquery' ],
 			$this->version,
 			false

@@ -2,11 +2,12 @@
 
 namespace Kudos;
 
+use DI\Container;
 use Kudos\Admin\Admin;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Controller\Front;
+use Kudos\Front\Front;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;

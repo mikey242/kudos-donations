@@ -107,6 +107,9 @@ module.exports = {
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>`
                 )}")`,
+                'next': `url("${svgToDataUri(
+                    `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><defs/><path fill="white" d="M224.3 273l-136 136a23.9 23.9 0 01-33.9 0l-22.6-22.6a23.9 23.9 0 010-33.9l96.4-96.4-96.4-96.4a23.9 23.9 0 010-33.9L54.3 103a23.9 23.9 0 0133.9 0l136 136a24 24 0 01.1 34z"/></svg>`
+                )}")`,
                 'close-button': `url("${svgToDataUri(
                     `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="${theme(
                         'colors.gray.500',
