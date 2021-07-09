@@ -43,8 +43,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 					return;
 				}
 
-				$kudos_logger = LoggerService::factory();
-				$log_array    = $kudos_logger->get_as_array();
+				$log_array = LoggerService::get_as_array();
 				?>
 
 				<p>This logfile location: <?php echo esc_url( $file ); ?></p>

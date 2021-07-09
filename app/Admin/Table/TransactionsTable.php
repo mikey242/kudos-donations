@@ -8,7 +8,7 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
-use WP_List_Table;
+use \WP_List_Table;
 
 class TransactionsTable extends WP_List_Table {
 
@@ -21,13 +21,12 @@ class TransactionsTable extends WP_List_Table {
 
 	/**
 	 * Class constructor
-	 *
-	 * @since      1.0.0
 	 */
-	public function __construct() {
+	public function __construct( MapperService $mapper_service ) {
 
-		$this->mapper    = new MapperService( TransactionEntity::class );
-		$this->table     = TransactionEntity::get_table_name();
+		$this->mapper = $mapper_service;
+		$this->mapper->set_repository( TransactionEntity::class );
+		$this->table = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
 			'name'        => __( 'Name', 'kudos-donations' ),
@@ -63,8 +62,6 @@ class TransactionsTable extends WP_List_Table {
 
 	/**
 	 * Call this function where the table is to be displayed
-	 *
-	 * @since      1.0.0
 	 */
 	public function display() {
 
@@ -78,7 +75,6 @@ class TransactionsTable extends WP_List_Table {
 	 * Get the table data
 	 *
 	 * @return array
-	 * @since   1.0.0
 	 */
 	public function fetch_table_data(): array {
 
@@ -122,7 +118,6 @@ class TransactionsTable extends WP_List_Table {
 	 * Returns a list of columns to include in table
 	 *
 	 * @return array
-	 * @since   2.0.0
 	 */
 	public function column_names(): array {
 
@@ -146,7 +141,6 @@ class TransactionsTable extends WP_List_Table {
 	 * Define which columns are hidden
 	 *
 	 * @return array
-	 * @since   1.0.0
 	 */
 	public function get_hidden_columns(): array {
 		return [
@@ -160,7 +154,6 @@ class TransactionsTable extends WP_List_Table {
 	 * Define the sortable columns
 	 *
 	 * @return array
-	 * @since   1.0.0
 	 */
 	public function get_sortable_columns(): array {
 
@@ -187,7 +180,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   1.0.0
 	 */
 	function column_cb( $item ): string {
 
@@ -201,7 +193,6 @@ class TransactionsTable extends WP_List_Table {
 	/**
 	 * Process delete and bulk-delete actions
 	 *
-	 * @since   1.0.0
 	 */
 	public function process_bulk_action() {
 
@@ -246,7 +237,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param string $id Value to search for.
 	 *
 	 * @return false|int
-	 * @since   1.0.0
 	 */
 	protected function delete_record( string $column, string $id ) {
 
@@ -260,7 +250,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   1.0.0
 	 */
 	protected function column_created( array $item ): string {
 
@@ -298,7 +287,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string|null
-	 * @since   2.0.0
 	 */
 	protected function column_name( array $item ): ?string {
 
@@ -322,7 +310,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   1.0.0
 	 */
 	protected function column_email( array $item ): string {
 
@@ -343,7 +330,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string|void
-	 * @since   1.0.0
 	 */
 	protected function column_value( array $item ): string {
 
@@ -382,7 +368,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string|void
-	 * @since   2.0.0
 	 */
 	protected function column_type( array $item ): string {
 
@@ -396,7 +381,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string|void
-	 * @since   1.0.0
 	 */
 	protected function column_status( array $item ): string {
 
@@ -434,7 +418,6 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string|void
-	 * @since   2.0.0
 	 */
 	protected function column_order_id( array $item ): string {
 
@@ -448,13 +431,12 @@ class TransactionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since 2.0.2
 	 */
 	protected function column_campaign_id( array $item ): string {
 
 		try {
 			$campaign = Settings::get_campaign( $item['campaign_id'] );
-		} catch ( Exception $e) {
+		} catch ( Exception $e ) {
 			return $e->getMessage();
 		}
 
@@ -475,7 +457,6 @@ class TransactionsTable extends WP_List_Table {
 	 * Returns an associative array containing the bulk action
 	 *
 	 * @return array
-	 * @since   1.0.0
 	 */
 	protected function get_bulk_actions(): array {
 
@@ -489,7 +470,6 @@ class TransactionsTable extends WP_List_Table {
 	 * Gets view data
 	 *
 	 * @return array
-	 * @since   1.0.0
 	 */
 	protected function get_views(): array {
 

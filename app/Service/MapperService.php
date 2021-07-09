@@ -7,7 +7,7 @@ use Kudos\Entity\AbstractEntity;
 use Kudos\Helpers\Settings;
 use wpdb;
 
-class MapperService extends AbstractService {
+class MapperService {
 
 	/**
 	 * WordPress database global
@@ -21,27 +21,24 @@ class MapperService extends AbstractService {
 	 * @var string
 	 */
 	protected $repository;
+	/**
+	 * @var \Kudos\Service\LoggerService
+	 */
+	private $logger;
 
 	/**
 	 * Entity object constructor.
 	 *
-	 * @param string |null $repository Repository class.
+	 * @param \Kudos\Service\LoggerService $logger_service
 	 *
 	 * @since   2.0.0
 	 */
-	public function __construct( string $repository = null ) {
-
-		parent::__construct();
+	public function __construct( LoggerService $logger_service) {
 
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		if ( null !== $repository ) {
-			try {
-				$this->set_repository( $repository );
-			} catch ( Exception $e ) {
-				$this->logger->error( 'Could not set repository', [ 'message' => $e->getMessage() ] );
-			}
-		}
+		$this->logger = $logger_service;
+
 	}
 
 	/**
@@ -92,7 +89,7 @@ class MapperService extends AbstractService {
 		$table_name = $entity::get_table_name();
 		$id         = $entity->id;
 
-		$this->logger->debug( 'Updating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
+		LoggerService::debug( 'Updating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
 
 		$result = $wpdb->update(
 			$table_name,
@@ -131,7 +128,7 @@ class MapperService extends AbstractService {
 
 		$id         = $wpdb->insert_id;
 		$entity->id = $id;
-		$this->logger->debug( 'Creating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
+		LoggerService::debug( 'Creating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
 
 		// If successful do action.
 		if ( $result ) {
@@ -197,7 +194,7 @@ class MapperService extends AbstractService {
 	public function get_repository(): ?string {
 
 		if ( null === $this->repository ) {
-			$this->logger->warning( 'Failed to get repository.' );
+			LoggerService::warning( 'Failed to get repository.' );
 
 			return null;
 		}
@@ -210,16 +207,13 @@ class MapperService extends AbstractService {
 	 * Specify the repository to use
 	 *
 	 * @param string $class Class of repository to use.
-	 *
-	 * @throws Exception
-	 * @since 2.0.0
 	 */
 	public function set_repository( string $class ) {
 
-		if ( is_subclass_of($class, AbstractEntity::class) ) {
+		if ( is_subclass_of( $class, AbstractEntity::class ) ) {
 			$this->repository = $class;
 		} else {
-			throw new Exception( 'Repository must be a valid entity', 0 );
+			LoggerService::error( 'Could not set repository', [ 'message' => $e->getMessage() ] );
 		}
 
 	}
@@ -399,11 +393,11 @@ class MapperService extends AbstractService {
 		if ( $deleted ) {
 			// Invalidate cache if database updated
 			$this->get_cache_incrementer( true );
-			$this->logger->info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
+			LoggerService::info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		}
 
-		$this->logger->debug( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
+		LoggerService::debug( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
 
 		return $deleted;
 

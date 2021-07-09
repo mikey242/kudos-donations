@@ -4,6 +4,7 @@ namespace Kudos\Helpers;
 
 use Exception;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 
 class Settings {
@@ -583,7 +584,8 @@ class Settings {
 	 */
 	public static function get_campaign_stats( string $campaign_id ): ?array {
 
-		$mapper       = new MapperService( TransactionEntity::class );
+		$mapper       = new MapperService(new LoggerService());
+		$mapper->set_repository(TransactionEntity::class);
 		$transactions = $mapper->get_all_by( [
 			'campaign_id' => $campaign_id,
 		] );

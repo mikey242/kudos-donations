@@ -76,10 +76,10 @@ class Utils {
 	public static function get_asset_path( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
 		if ( isset( $hash[ $asset ] ) ) {
-			return KUDOS_PLUGIN_DIR . '/dist' . ltrim($hash[ $asset ], '/');
+			return KUDOS_PLUGIN_DIR . '/dist/' . ltrim($hash[ $asset ], '/');
 		}
 
-		return KUDOS_PLUGIN_DIR . '/dist' . ltrim($asset, '/');
+		return KUDOS_PLUGIN_DIR . '/dist/' . ltrim($asset, '/');
 	}
 
 	/**
@@ -255,7 +255,7 @@ class Utils {
 	 */
 	public static function generate_id( string $prefix = null, int $length = 10 ): string {
 
-		return $prefix . substr( base_convert( sha1( uniqid( wp_rand() ) ), 16, 36 ), 0, $length );
+		return $prefix . substr( base_convert( sha1( uniqid( rand() ) ), 16, 36 ), 0, $length );
 
 	}
 

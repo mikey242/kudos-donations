@@ -24,17 +24,33 @@ use Kudos\Helpers\Settings;
 class ActivatorService {
 
 	/**
+	 * @var \Kudos\Service\LoggerService
+	 */
+	private $logger;
+	/**
+	 * @var \Kudos\Service\TwigService
+	 */
+	private $twig;
+
+	public function __construct(LoggerService $logger, TwigService $twig) {
+		
+		$this->logger = $logger;
+		$this->twig = $twig;
+		
+	}
+
+	/**
 	 * Runs all activation functions.
 	 *
 	 * @param string|null $old_version Previous version of plugin.
 	 *
 	 * @since    1.0.0
 	 */
-	public static function activate( $old_version = null ) {
+	public function activate( string $old_version = null ) {
 
-		$logger = new LoggerService();
+		$logger = $this->logger;
 		$logger->init();
-		$twig = new TwigService();
+		$twig = $this->twig;
 		$twig->init();
 		$settings = new Settings();
 		$settings->register_settings();

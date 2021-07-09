@@ -17,7 +17,6 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
-use WP_List_Table;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -44,7 +43,6 @@ class Admin {
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   private
 	 * @var      string $plugin_name The ID of this plugin.
 	 */
@@ -53,13 +51,17 @@ class Admin {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @since    1.0.0
 	 * @access   private
 	 * @var      string $version The current version of this plugin.
 	 */
 	private $version;
+
 	/**
-	 * @var WP_List_Table
+	 * @var MapperService
+	 */
+	private $mapper_service;
+	/**
+	 * @var TransactionsTable
 	 */
 	private $table;
 
@@ -68,20 +70,21 @@ class Admin {
 	 *
 	 * @param string $plugin_name The name of this plugin.
 	 * @param string $version The version of this plugin.
-	 *
-	 * @since    1.0.0
 	 */
-	public function __construct( string $plugin_name, string $version ) {
+	public function __construct(
+		string $plugin_name,
+		string $version,
+		MapperService $mapper_service
+	) {
 
-		$this->plugin_name = $plugin_name;
-		$this->version     = $version;
+		$this->plugin_name         = $plugin_name;
+		$this->version             = $version;
+		$this->mapper_service      = $mapper_service;
 
 	}
 
 	/**
 	 * Create the Kudos Donations admin pages.
-	 *
-	 * @since   2.0.0
 	 */
 	public function kudos_add_menu_pages() {
 
@@ -228,7 +231,7 @@ class Admin {
 	 */
 	public function prepare_transactions_page() {
 		add_action( "admin_enqueue_scripts", [ $this, "transactions_page_assets" ] );
-		$this->table = new TransactionsTable();
+		$this->table = new TransactionsTable( $this->mapper_service );
 		$this->table->prepare_items();
 	}
 
@@ -237,9 +240,8 @@ class Admin {
 	 */
 	public function prepare_subscriptions_page() {
 		add_action( "admin_enqueue_scripts", [ $this, 'subscriptions_page_assets' ] );
-		$this->table = new SubscriptionsTable();
+		$this->table = new SubscriptionsTable($this->mapper_service);
 		$this->table->prepare_items();
-
 	}
 
 	/**
@@ -247,7 +249,7 @@ class Admin {
 	 */
 	public function prepare_donors_page() {
 		add_action( "admin_enqueue_scripts", [ $this, 'donor_page_assets' ] );
-		$this->table = new DonorsTable();
+		$this->table = new DonorsTable($this->mapper_service);
 		$this->table->prepare_items();
 	}
 
@@ -256,14 +258,12 @@ class Admin {
 	 */
 	public function prepare_campaigns_page() {
 		add_action( "admin_enqueue_scripts", [ $this, 'campaign_page_assets' ] );
-		$this->table = new CampaignsTable();
+		$this->table = new CampaignsTable($this->mapper_service);
 		$this->table->prepare_items();
 	}
 
 	/**
 	 * Assets specific to the Settings page.
-	 *
-	 * @since   2.0.0
 	 */
 	public function settings_page_assets() {
 
@@ -287,7 +287,7 @@ class Admin {
 			$handle,
 			'kudos',
 			[
-				'version'     => KUDOS_VERSION,
+				'version'     => $this->version,
 				'checkApiUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_TEST ),
 				'sendTestUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::EMAIL_TEST ),
 				'ajaxurl'     => admin_url( 'admin-ajax.php' ),
@@ -300,8 +300,6 @@ class Admin {
 
 	/**
 	 * Assets common to all Table pages.
-	 *
-	 * @since 2.0.0
 	 */
 	private function table_page_assets(): string {
 
@@ -320,8 +318,6 @@ class Admin {
 
 	/**
 	 * Assets specific to the Kudos Transactions page.
-	 *
-	 * @since   2.0.0
 	 */
 	public function transactions_page_assets() {
 
@@ -346,8 +342,6 @@ class Admin {
 
 	/**
 	 * Assets specific to the Kudos Subscriptions page.
-	 *
-	 * @since   2.0.0
 	 */
 	public function subscriptions_page_assets() {
 
@@ -365,8 +359,6 @@ class Admin {
 
 	/**
 	 * Assets specific to the Kudos Donors page.
-	 *
-	 * @since   2.0.0
 	 */
 	public function donor_page_assets() {
 
@@ -383,8 +375,6 @@ class Admin {
 
 	/**
 	 * Assets specific to the Kudos Campaigns page.
-	 *
-	 * @since   2.0.0
 	 */
 	public function campaign_page_assets() {
 
@@ -405,8 +395,6 @@ class Admin {
 	/**
 	 * Actions triggered by request data in the admin.
 	 * Needs to be hooked to admin_init as it modifies headers.
-	 *
-	 * @since    1.0.1
 	 */
 	public function admin_actions() {
 
@@ -526,8 +514,6 @@ class Admin {
 
 	/**
 	 * Register the kudos settings.
-	 *
-	 * @since 2.0.0
 	 */
 	public function register_settings() {
 

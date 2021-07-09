@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        PHP_VERSION: 7.4
+        PHP_VERSION: 7.2
         WORDPRESS_VERSION: 5.5
     container_name: wordpress-kudos
     volumes:

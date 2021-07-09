@@ -6,7 +6,7 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
-use WP_List_Table;
+use \WP_List_Table;
 
 class DonorsTable extends WP_List_Table {
 
@@ -24,10 +24,11 @@ class DonorsTable extends WP_List_Table {
 	 *
 	 * @since   2.0.0
 	 */
-	public function __construct() {
+	public function __construct( MapperService $mapper_service ) {
 
-		$this->mapper = new MapperService( DonorEntity::class );
-		$this->table  = DonorEntity::get_table_name();
+		$this->mapper = $mapper_service;
+		$this->mapper->set_repository( DonorEntity::class );
+		$this->table = DonorEntity::get_table_name();
 
 		$this->search_columns = [
 			'name'        => __( 'Name', 'kudos-donations' ),
@@ -276,9 +277,10 @@ class DonorsTable extends WP_List_Table {
 			$item['country'],
 		];
 
-		$address = array_filter($address, function ($item) {
-			return !empty($item) ? wp_unslash($item) : null;
-		});
+		$address = array_filter( $address,
+			function ( $item ) {
+				return ! empty( $item ) ? wp_unslash( $item ) : null;
+			} );
 
 		return implode( '<br/>', $address );
 	}
@@ -293,7 +295,8 @@ class DonorsTable extends WP_List_Table {
 	 */
 	protected function column_donations( array $item ) {
 
-		$mapper       = new MapperService( TransactionEntity::class );
+		$mapper       = $this->mapper;
+		$mapper->set_repository(TransactionEntity::class);
 		$transactions = $mapper->get_all_by( [ 'customer_id' => $item['customer_id'] ] );
 
 		if ( $transactions ) {

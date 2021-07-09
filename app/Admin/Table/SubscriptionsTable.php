@@ -23,9 +23,10 @@ class SubscriptionsTable extends WP_List_Table {
 	 *
 	 * @since   2.0.0
 	 */
-	public function __construct() {
+	public function __construct(MapperService $mapper_service) {
 
-		$this->mapper = new MapperService( SubscriptionEntity::class );
+		$this->mapper = $mapper_service;
+		$this->mapper->set_repository(SubscriptionEntity::class);
 		$this->table  = SubscriptionEntity::get_table_name();
 
 		$this->search_columns = [

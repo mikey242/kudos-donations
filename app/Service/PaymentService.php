@@ -14,22 +14,30 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class PaymentService extends AbstractService {
+class PaymentService {
 
 	/**
 	 * @var VendorInterface
 	 */
 	private $vendor;
+	/**
+	 * @var \Kudos\Service\MailerService
+	 */
+	private $mailer_service;
+	/**
+	 * @var \Kudos\Service\MapperService
+	 */
+	private $mapper_service;
 
 	/**
 	 * Payment service constructor.
 	 */
-	public function __construct() {
-
-		parent::__construct();
+	public function __construct(MapperService $mapper_service, MailerService $mailer_service) {
 
 		$vendor       = $this::get_current_vendor_class();
-		$this->vendor = call_user_func( [ $vendor, 'factory' ] );
+		$this->vendor = new $vendor;
+		$this->mapper_service = $mapper_service;
+		$this->mailer_service = $mailer_service;
 
 	}
 
@@ -113,20 +121,22 @@ class PaymentService extends AbstractService {
 	 *
 	 * @return bool
 	 */
-	public static function process_transaction( string $order_id ): bool {
+	public function process_transaction( string $order_id ): bool {
 
 		// Bail if no order ID.
 		if ( null === $order_id ) {
 			return false;
 		}
 
-		$mapper = new MapperService( TransactionEntity::class );
+		$mapper = $this->mapper_service;
+		$mailer = $this->mailer_service;
+
+		$mapper->set_repository( TransactionEntity::class );
 		/** @var TransactionEntity $transaction */
 		$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
 
 		if ( $transaction->get_donor()->email ) {
 			// Send email - email setting is checked in mailer.
-			$mailer = MailerService::factory();
 			$mailer->send_receipt( $transaction );
 		}
 

@@ -2,15 +2,10 @@
 
 namespace Kudos;
 
-use DI\Container;
 use Kudos\Admin\Admin;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Front\Front;
-use Kudos\Service\ActivatorService;
-use Kudos\Service\PaymentService;
-use Kudos\Service\RestRouteService;
 
 /**
  * The file that defines the core plugin class
@@ -19,7 +14,6 @@ use Kudos\Service\RestRouteService;
  * public-facing side of the site and the admin area.
  *
  * @link       https://www.linkedin.com/in/michael-iseard/
- * @since      1.0.0
  *
  * @package    Kudos-Donations
  * @subpackage Kudos/includes
@@ -28,7 +22,6 @@ use Kudos\Service\RestRouteService;
 /**
  * The core plugin class.
  *
- * @since      1.0.0
  * @package    Kudos-Donations
  * @subpackage Kudos/includes
  * @author     Michael Iseard <michael@iseard.media>
@@ -52,6 +45,13 @@ class KudosDonations {
 	protected $version;
 
 	/**
+	 * The container property.
+	 *
+	 * @var
+	 */
+	protected $container;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -59,21 +59,16 @@ class KudosDonations {
 	 * the public-facing side of the site.
 	 *
 	 */
-	public function __construct() {
+	public function __construct( $container, $version, $plugin_name ) {
 
-		if ( defined( 'KUDOS_VERSION' ) ) {
-			$this->version = KUDOS_VERSION;
-		} else {
-			$this->version = '1.0.0';
-		}
-
-		$this->plugin_name = 'kudos-donations';
+		$this->container = $container;
+		$this->version = $version;
+		$this->plugin_name = $plugin_name;
 
 	}
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
-	 *
 	 */
 	public function run() {
 
@@ -82,6 +77,8 @@ class KudosDonations {
 		$this->define_payment_hooks();
 		$this->define_public_hooks();
 		$this->define_entity_hooks();
+
+		add_action( 'plugins_loaded', [ $this, 'version_check' ] );
 
 	}
 
@@ -93,9 +90,8 @@ class KudosDonations {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = $this->container->get( 'Admin' );
 
-		add_action( 'plugins_loaded', [ $this, 'version_check' ] );
 		add_action( 'admin_menu', [ $plugin_admin, 'kudos_add_menu_pages' ], 11 );
 		add_action( 'admin_init', [ $plugin_admin, 'admin_actions' ] );
 		add_action( 'admin_init', [ $plugin_admin, 'register_settings' ] );
@@ -111,7 +107,7 @@ class KudosDonations {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Front( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = $this->container->get( 'Front' );
 
 		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'enqueue_scripts' ] );
 		add_action( 'enqueue_block_assets', [ $plugin_public, 'enqueue_block_assets' ] );
@@ -122,31 +118,29 @@ class KudosDonations {
 
 	/**
 	 * Initialize rest service and register routes.
-	 *
-	 * @since 2.3.0
 	 */
 	private function define_rest_hooks() {
 
-		add_action( 'rest_api_init', [ new RestRouteService(), 'register_all' ] );
+		$rest_service = $this->container->get( 'RestRouteService' );
+
+		add_action( 'rest_api_init', [ $rest_service, 'register_all' ] );
 
 	}
 
 	/**
 	 * Define mollie related hooks.
-	 *
-	 * @since 2.3.0
 	 */
 	private function define_payment_hooks() {
 
-		add_action( 'kudos_mollie_transaction_paid', [ PaymentService::class, 'schedule_process_transaction' ] );
-		add_action( 'kudos_process_mollie_transaction', [ PaymentService::class, 'process_transaction' ] );
+		$payment_service = $this->container->get( 'PaymentService' );
+
+		add_action( 'kudos_mollie_transaction_paid', [ $payment_service, 'schedule_process_transaction' ] );
+		add_action( 'kudos_process_mollie_transaction', [ $payment_service, 'process_transaction' ] );
 
 	}
 
 	/**
 	 * Register all the entity related hooks.
-	 *
-	 * @since 2.0.5
 	 */
 	private function define_entity_hooks() {
 
@@ -165,7 +159,6 @@ class KudosDonations {
 	 * WordPress and to define internationalization functionality.
 	 *
 	 * @return    string    The name of the plugin.
-	 * @since     1.0.0
 	 */
 	public function get_plugin_name(): string {
 
@@ -177,7 +170,6 @@ class KudosDonations {
 	 * Retrieve the version number of the plugin.
 	 *
 	 * @return    string    The version number of the plugin.
-	 * @since     1.0.0
 	 */
 	public function get_version(): string {
 
@@ -188,15 +180,14 @@ class KudosDonations {
 	/**
 	 * Checks plugin version stored in database and runs activation
 	 * method if different.
-	 *
-	 * @since 1.0.2
 	 */
 	public function version_check() {
 
 		$db_version = get_option( '_kudos_donations_version' );
 
-		if ( $db_version !== $this->get_version() ) {
-			ActivatorService::activate( $db_version );
+		if ( $db_version !== KUDOS_VERSION ) {
+			$this->container->get( 'ActivatorService' )
+                ->activate( $db_version );
 		}
 	}
 

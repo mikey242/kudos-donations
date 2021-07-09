@@ -14,7 +14,7 @@ use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class TwigService extends AbstractService {
+class TwigService {
 
 	const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
 
@@ -48,8 +48,6 @@ class TwigService extends AbstractService {
 	 * @since    1.0.0
 	 */
 	public function __construct( array $template_paths = [], array $options = [] ) {
-
-		parent::__construct();
 
 		$this->template_paths[]        = KUDOS_PLUGIN_DIR . '/templates/'; // Always add main template directory to paths.
 		$this->template_paths['extra'] = $template_paths; // Add extra under '@extra' namespace.

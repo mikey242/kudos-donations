@@ -22,10 +22,11 @@ class CampaignsTable extends WP_List_Table {
 	/**
 	 * Class constructor.
 	 */
-	public function __construct() {
+	public function __construct( MapperService $mapper_service ) {
 
-		$this->mapper    = new MapperService( TransactionEntity::class );
-		$this->table     = $this->mapper->get_table_name();
+		$this->mapper = $mapper_service;
+		$this->mapper->set_repository( TransactionEntity::class );
+		$this->table = $this->mapper->get_table_name();
 
 		$this->search_columns = [
 			'name' => __( 'Name', 'kudos-donations' ),
@@ -69,7 +70,7 @@ class CampaignsTable extends WP_List_Table {
 
 		$search = $this->get_search_data();
 
-		$campaigns = Settings::get_setting('campaigns');
+		$campaigns = Settings::get_setting( 'campaigns' );
 		if ( ! $campaigns ) {
 			return [];
 		}

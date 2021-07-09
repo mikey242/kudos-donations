@@ -1,11 +1,11 @@
 <?php
 
-namespace Kudos\Model;
+namespace Kudos\Controller;
 
 use Kudos\Helpers\Utils;
 use Kudos\Service\TwigService;
 
-abstract class AbstractModel {
+class Controller {
 
 	/**
 	 * The id of the element.
@@ -20,14 +20,18 @@ abstract class AbstractModel {
 	 * @var
 	 */
 	protected $template;
+	/**
+	 * @var TwigService
+	 */
+	private $twig_service;
 
 	/**
 	 * AbstractRender constructor.
 	 */
-	public function __construct() {
-
+	public function __construct( TwigService $twig_service ) {
+		$this->twig_service = $twig_service;
 		$this->container_id = Utils::generate_id();
-
+		$this->template     = static::TEMPLATE;
 	}
 
 	/**
@@ -46,8 +50,9 @@ abstract class AbstractModel {
 	 *
 	 * @return string|null
 	 */
-	public function render( array $atts = null): ?string {
-		$twig = TwigService::factory();
+	public function render( array $atts = null ): ?string {
+		$twig = $this->twig_service;
+
 		return $twig->render( $this->template, $atts ?? $this->to_array() );
 	}
 

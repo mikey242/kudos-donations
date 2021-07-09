@@ -1,10 +1,11 @@
 <?php
 
-namespace Kudos\Model;
+namespace Kudos\Controller;
 
 use Kudos\Helpers\Utils;
+use Kudos\Service\TwigService;
 
-class ButtonModel extends AbstractModel {
+class ButtonController extends Controller {
 
 	const TEMPLATE = 'public/button/kudos.button.html.twig';
 
@@ -35,24 +36,22 @@ class ButtonModel extends AbstractModel {
 
 	/**
 	 * Button constructor.
-	 *
-	 * @param array $atts Array of above attributes.
-	 * @param string $target Target modal id.
-	 *
-	 * @since    1.0.0
 	 */
-	public function __construct( array $atts, string $target ) {
+	public function __construct(TwigService $twig_service) {
 
-		parent::__construct();
+		parent::__construct($twig_service);
 
-		$this->template = self::TEMPLATE;
 		$this->logo     = apply_filters( 'kudos_get_button_logo', Utils::get_kudos_logo_markup( 'white' ) );
-		$this->target = $target;
 
-		// Assign button atts to properties.
+	}
+
+	public function set_atts( array $atts ) {
 		$this->alignment    = $atts['alignment'] ?? '';
 		$this->button_label = $atts['button_label'] ?? '';
+	}
 
+	public function set_target( string $target ) {
+		$this->target = $target;
 	}
 
 	/**

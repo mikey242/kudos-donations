@@ -1,8 +1,10 @@
 <?php
 
-namespace Kudos\Model;
+namespace Kudos\Controller;
 
-class MessageModel extends AbstractModel {
+use Kudos\Service\TwigService;
+
+class MessageController extends Controller {
 
 	const TEMPLATE = 'public/modal/embeds/_message.html.twig';
 
@@ -17,17 +19,18 @@ class MessageModel extends AbstractModel {
 
 	/**
 	 * Creates a message modal.
-	 *
-	 * @param $title
-	 * @param $body
 	 */
-	public function __construct($title, $body) {
+	public function __construct(TwigService $twig_service) {
 
-		parent::__construct();
+		parent::__construct($twig_service);
 
-		$this->template    = self::TEMPLATE;
+	}
+
+	public function set_title($title) {
 		$this->header_text = $title;
-		$this->body_text   = $body;
+	}
 
+	public function set_body($body) {
+		$this->body_text = $body;
 	}
 }

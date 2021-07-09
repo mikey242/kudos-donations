@@ -35,11 +35,22 @@ class RestRouteService {
 	 * @var array[]
 	 */
 	private $routes;
+	/**
+	 * @var PaymentService
+	 */
+	private $payment_service;
+	/**
+	 * @var MailerService
+	 */
+	private $mailer_service;
 
 	/**
 	 * RestRoutesService constructor.
 	 */
-	public function __construct() {
+	public function __construct(PaymentService $payment_service, MailerService $mailer_service) {
+
+		$this->payment_service = $payment_service;
+		$this->mailer_service = $mailer_service;
 
 		$this->payment_service();
 		$this->mailer_service();
@@ -53,7 +64,7 @@ class RestRouteService {
 	 */
 	private function payment_service() {
 
-		$payment = new PaymentService();
+		$payment = $this->payment_service;
 
 		$this->routes[] = [
 			self::PAYMENT_CREATE => [
@@ -165,7 +176,7 @@ class RestRouteService {
 	 */
 	private function mailer_service() {
 
-		$mailer = new MailerService();
+		$mailer = $this->mailer_service;
 
 		$this->routes[] = [
 			self::EMAIL_TEST => [

@@ -29,10 +29,12 @@ use Kudos\Service\ActivatorService;
 use Kudos\Service\CompatibilityService;
 use Kudos\Service\DeactivatorService;
 use Kudos\Service\LoggerService;
-use Mollie\Api\MollieApiClient;
+use Kudos\Service\TwigService;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
-use function DI\get;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -83,19 +85,16 @@ if ( class_exists( Run::class ) && ( $_ENV['WP_ENV'] ?? '' ) === 'development' )
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in app/Service/ActivatorService.php
  */
 function activate_kudos() {
-	require_once KUDOS_PLUGIN_DIR . '/app/Service/ActivatorService.php';
-	ActivatorService::activate();
+	$activator = new ActivatorService( new LoggerService(), new TwigService() );
+	$activator->activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in app/Service/DeactivatorService.php
  */
 function deactivate_kudos() {
-	require_once KUDOS_PLUGIN_DIR . '/app/Service/DeactivatorService.php';
 	DeactivatorService::deactivate();
 }
 
@@ -115,15 +114,30 @@ require KUDOS_PLUGIN_DIR . '/app/KudosDonations.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  */
-function run_kudos() {
+function run_kudos_donations() {
 
 	// Check compatibility and run kudos if OK
 	$compatibility = new CompatibilityService();
 
 	if ( $compatibility->init() ) {
-		$plugin = new KudosDonations();
+
+//		$container = new \Symfony\Component\DependencyInjection\ContainerBuilder();
+//		$loader = new PhpFileLoader($container, new FileLocator(KUDOS_PLUGIN_DIR . '/app/'));
+//		$loader->load('services.php');
+
+		// Create our container for dependency injection.
+		$builder = new ContainerBuilder();
+		$builder->useAutowiring(true);
+		$builder->addDefinitions( KUDOS_PLUGIN_DIR . '/app/config.php' );
+		if($_ENV['WP_ENV'] !== 'development') {
+			$builder->enableCompilation(KUDOS_STORAGE_DIR . '/php-di/cache');
+		}
+		$container = $builder->build();
+
+		// Create and run our main plugin class.
+		$plugin = new KudosDonations( $container, KUDOS_VERSION, 'kudos-donations' );
 		$plugin->run();
 	}
 }
 
-run_kudos();
+run_kudos_donations();

@@ -10,7 +10,7 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_REST_Request;
 
-class MailerService extends AbstractService {
+class MailerService {
 
 	/**
 	 * From header
@@ -18,16 +18,25 @@ class MailerService extends AbstractService {
 	 * @var bool|mixed|void
 	 */
 	private $from;
+	/**
+	 * @var TwigService
+	 */
+	private $twig_service;
+	/**
+	 * @var MapperService
+	 */
+	private $mapper_service;
 
 	/**
 	 * Mailer constructor.
 	 */
-	public function __construct() {
+	public function __construct( TwigService $twig_service, MapperService $mapper_service) {
 
-		$from_name    = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
-		$from_address = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
-		$this->from   = "From: $from_name " . ' <' . $from_address . '>';
-		parent::__construct();
+		$from_name          = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
+		$from_address       = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
+		$this->from         = "From: $from_name " . ' <' . $from_address . '>';
+		$this->twig_service = $twig_service;
+		$this->mapper_service = $mapper_service;
 
 	}
 
@@ -46,7 +55,7 @@ class MailerService extends AbstractService {
 
 		// Add logo as attachment.
 		$phpmailer->addEmbeddedImage(
-			Utils::get_asset_path( 'img/logo-colour-40.png' ),
+			Utils::get_asset_path( 'images/logo-colour-40.png' ),
 			'kudos-logo',
 			'kudos-logo.png'
 		);
@@ -63,7 +72,6 @@ class MailerService extends AbstractService {
 			$phpmailer->Password    = Settings::get_setting( 'smtp_password' );
 			$phpmailer->Port        = Settings::get_setting( 'smtp_port' );
 		}
-
 	}
 
 	/**
@@ -103,7 +111,8 @@ class MailerService extends AbstractService {
 
 		// Add a cancel subscription url if transaction associated with a subscription.
 		if ( ! empty( $transaction->subscription_id ) ) {
-			$mapper          = new MapperService( SubscriptionEntity::class );
+			$mapper = $this->mapper_service;
+			$mapper->set_repository( SubscriptionEntity::class );
 			$subscription_id = $transaction->subscription_id;
 			/** @var SubscriptionEntity $subscription */
 			$subscription               = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
@@ -120,7 +129,7 @@ class MailerService extends AbstractService {
 			$mapper->save( $subscription );
 		}
 
-		$twig = TwigService::factory();
+		$twig = $this->twig_service;
 		$body = $twig->render( 'emails/receipt.html.twig', $render_array );
 
 		return $this->send(
@@ -212,7 +221,7 @@ class MailerService extends AbstractService {
 	 */
 	public function send_message( string $email, string $header, string $message ): bool {
 
-		$twig = TwigService::factory();
+		$twig = $this->twig_service;
 		$body = $twig->render(
 			'emails/message.html.twig',
 			[

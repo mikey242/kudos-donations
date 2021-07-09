@@ -21,7 +21,7 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class MollieVendor extends AbstractService implements VendorInterface {
+class MollieVendor implements VendorInterface {
 
 	/**
 	 * This is the name of the vendor as displayed to the user.
@@ -51,8 +51,6 @@ class MollieVendor extends AbstractService implements VendorInterface {
 	 * Mollie constructor.
 	 */
 	public function __construct() {
-
-		parent::__construct();
 
 		$settings = Settings::get_setting( 'vendor_mollie' );
 

@@ -43,7 +43,7 @@ class AdminNotice {
 	 *
 	 * @since 2.0.0
 	 */
-	public function __construct( string $notice, string $type = 'success', $extra = null, $is_dismissible = true ) {
+	public function __construct( string $notice, string $type = 'success', string $extra = null, bool $is_dismissible = true ) {
 
 		$this->notice         = $notice;
 		$this->type           = $type;

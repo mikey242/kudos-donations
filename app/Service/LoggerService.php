@@ -145,13 +145,13 @@ class LoggerService extends Monolog {
 	 * @return array|false
 	 * @since   2.0.0
 	 */
-	public function get_as_array() {
+	public static function get_as_array() {
 
 		if ( file_exists( self::LOG_FILE ) ) {
 			$reg  = '/^\[(?<date>.*)\]\s(?<env>\w+)\.(?<type>\w+):(?<message>.*)/m';
 			$text = file_get_contents( self::LOG_FILE );
 			preg_match_all( $reg, $text, $matches, PREG_SET_ORDER );
-			usort( $matches, [ $this, 'date_compare' ] );
+			usort( $matches, [ static::class, 'date_compare' ] );
 
 			return $matches;
 		}
@@ -169,7 +169,7 @@ class LoggerService extends Monolog {
 	 * @return false|int
 	 * @since   2.0.0
 	 */
-	private function date_compare( array $a, array $b ) {
+	private static function date_compare( array $a, array $b ) {
 
 		$t1 = strtotime( $a['date'] );
 		$t2 = strtotime( $b['date'] );

@@ -1,10 +1,11 @@
 <?php
 
-namespace Kudos\Model;
+namespace Kudos\Controller;
 
 use Kudos\Helpers\Utils;
+use Kudos\Service\TwigService;
 
-class ModalModel extends AbstractModel {
+class ModalController extends Controller {
 
 	const TEMPLATE = 'public/modal/modal.html.twig';
 
@@ -30,25 +31,17 @@ class ModalModel extends AbstractModel {
 	/**
 	 * Modal constructor.
 	 */
-	public function __construct($html, $id = null) {
+	public function __construct(TwigService $twig_service) {
 
-		parent::__construct();
+		parent::__construct($twig_service);
 
-		$this->id = $id ?? Utils::generate_id();
 		$this->logo_url = Utils::get_logo_url();
 		$this->class = 'kudos-donate-modal';
-		$this->template = self::TEMPLATE;
-		$this->html = $html;
 
 	}
 
-	/**
-	 * Returns the modal id.
-	 *
-	 * @return mixed|string
-	 */
-	public function get_id() {
-		return $this->id;
+	public function set_content($html) {
+		$this->html = $html;
 	}
 
 	/**

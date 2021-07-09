@@ -1,12 +1,13 @@
 <?php
 
-namespace Kudos\Model;
+namespace Kudos\Controller;
 
 use Exception;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
+use Kudos\Service\TwigService;
 
-class FormModel extends AbstractModel {
+class FormController extends Controller {
 
 	const TEMPLATE = 'public/forms/donate.form.html.twig';
 
@@ -89,29 +90,30 @@ class FormModel extends AbstractModel {
 
 	/**
 	 * KudosForm constructor.
-	 *
-	 * @param string $campaign_id
-	 *
-	 * @throws Exception
 	 */
-	public function __construct( string $campaign_id ) {
+	public function __construct( TwigService $twig_service ) {
 
-		parent::__construct();
-
-		// Throws exception if campaign not found.
-		$campaign = Settings::get_campaign( $campaign_id );
+		parent::__construct( $twig_service );
 
 		// Configure global properties.
-		$this->template          = self::TEMPLATE;
-		$this->campaign_id       = $campaign_id;
 		$this->return_url        = Utils::get_return_url();
 		$this->privacy_link      = Settings::get_setting( 'privacy_link' );
 		$this->terms_link        = Settings::get_setting( 'terms_link' );
 		$this->recurring_allowed = isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false;
 		$this->vendor_name       = Settings::get_setting( 'payment_vendor' );
-		$this->spinner     = Utils::get_kudos_logo_markup( 'black', 30 );
+		$this->spinner           = Utils::get_kudos_logo_markup( 'black', 30 );
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function set_campaign( $campaign_id ) {
+
+		// Throws exception if campaign not found.
+		$campaign = Settings::get_campaign( $campaign_id );
 
 		// Set campaign properties.
+		$this->campaign_id      = $campaign_id;
 		$this->campaign_stats   = Settings::get_campaign_stats( $campaign_id );
 		$this->button_label     = $campaign['button_label'] ?? '';
 		$this->welcome_title    = $campaign['modal_title'] ?? '';
@@ -124,13 +126,6 @@ class FormModel extends AbstractModel {
 		$this->address_enabled  = $campaign['address_enabled'] ?? '';
 		$this->address_required = $campaign['address_required'] ?? '';
 		$this->message_enabled  = $campaign['message_enabled'] ?? '';
-	}
-
-	/**
-	 * @return mixed|string
-	 */
-	public function get_button_label() {
-		return $this->button_label;
 	}
 
 }
