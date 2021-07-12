@@ -54,21 +54,12 @@ abstract class AbstractEntity {
 	 * Set class properties based on array values
 	 *
 	 * @param array $fields Array of entities properties and values.
-	 *
-	 * @since   2.0.0
 	 */
 	public function set_fields( array $fields ) {
 
 		foreach ( $fields as $property => $value ) {
 			if ( property_exists( static::class, $property ) ) {
 				$this->$property = $value;
-			} else {
-				$logger = LoggerService::factory();
-				$logger->warning( 'Error setting property.',
-					[
-						"property" => $property,
-						"entity"   => static::class,
-					] );
 			}
 		}
 	}
@@ -86,12 +77,11 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Returns the table name associated with Entity
+	 * Returns the table name associated with Entity.
 	 *
 	 * @param bool $prefix Whether to return the prefix or not.
 	 *
 	 * @return string
-	 * @since   2.0.0
 	 */
 	public static function get_table_name( bool $prefix = true ): string {
 
@@ -112,9 +102,11 @@ abstract class AbstractEntity {
 	public static function remove_secret_action( string $secret ) {
 
 		if ( $secret ) {
-			$mapper = new MapperService( static::class );
+			$mapper = new MapperService(new LoggerService());
 			/** @var AbstractEntity $entity */
-			$entity = $mapper->get_one_by( [ 'secret' => $secret ] );
+			$entity = $mapper
+				->get_repository(static::class)
+				->get_one_by( [ 'secret' => $secret ] );
 			if ( ! $entity ) {
 				return false;
 			}
@@ -143,34 +135,22 @@ abstract class AbstractEntity {
 	 * @param string $timeout How long the secret should be kept in the database for.
 	 *
 	 * @return string|false
+	 * @throws \Exception
 	 * @since   2.0.0
 	 */
 	public function create_secret( string $timeout = '+10 minutes' ) {
 
-		$logger = LoggerService::factory();
-		$table  = static::get_table_name( false );
+		$table = static::get_table_name( false );
 
-		try {
-
-			// Create secret if none set.
-			if ( null === $this->secret ) {
-				$this->secret = bin2hex( random_bytes( 10 ) );
-			}
-
-			Utils::schedule_action( strtotime( $timeout ), $table . '_remove_secret_action', [ $this->secret ], true );
-
-			return wp_hash_password( $this->secret );
-
-		} catch ( Throwable $e ) {
-
-			$logger->error(
-				sprintf( 'Unable to create secret for %s. ', $table ) . $e->getMessage(),
-				[ 'id' => $this->id ]
-			);
-
-			return false;
-
+		// Create secret if none set.
+		if ( null === $this->secret ) {
+			$this->secret = bin2hex( random_bytes( 10 ) );
 		}
+
+		Utils::schedule_action( strtotime( $timeout ), $table . '_remove_secret_action', [ $this->secret ], true );
+
+		return wp_hash_password( $this->secret );
+
 
 	}
 

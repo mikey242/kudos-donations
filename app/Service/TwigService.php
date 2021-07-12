@@ -38,27 +38,26 @@ class TwigService {
 	 * @var array
 	 */
 	private $options;
+	/**
+	 * @var \Kudos\Service\LoggerService
+	 */
+	private $logger;
 
 	/**
 	 * Twig constructor
 	 *
-	 * @param array $template_paths Templates directory array.
-	 * @param array $options Twig options.
-	 *
-	 * @since    1.0.0
+	 * @param \Kudos\Service\LoggerService $logger_service
 	 */
-	public function __construct( array $template_paths = [], array $options = [] ) {
+	public function __construct( LoggerService $logger_service ) {
 
+		$this->logger                  = $logger_service;
 		$this->template_paths[]        = KUDOS_PLUGIN_DIR . '/templates/'; // Always add main template directory to paths.
-		$this->template_paths['extra'] = $template_paths; // Add extra under '@extra' namespace.
-		$this->options                 = $options;
 		$this->options['cache']        = KUDOS_DEBUG ? false : self::CACHE_DIR;
 		$this->options['debug']        = KUDOS_DEBUG;
 		$this->initialize_twig();
 		$this->initialize_twig_extensions();
 		$this->initialize_twig_functions();
 		$this->initialize_twig_filters();
-
 	}
 
 	/**
@@ -95,7 +94,6 @@ class TwigService {
 	/**
 	 * Initialize additional twig functions
 	 *
-	 * @since    1.0.0
 	 * @source https://wordpress.stackexchange.com/questions/287988/use-str-to-translate-strings-symfony-twig
 	 */
 	public function initialize_twig_functions() {
@@ -139,15 +137,15 @@ class TwigService {
 
 	/**
 	 * Initialize additional twig filters
-	 *
-	 * @since 2.0.0
 	 */
 	public function initialize_twig_filters() {
 
 		/**
 		 * Add the WordPress apply_filters filter.
 		 */
-		$apply_filter = new TwigFilter( 'apply_filters', 'apply_filters' );
+		$apply_filter = new TwigFilter( 'apply_filters', function ($string, $filter) {
+			return apply_filters($filter, $string);
+		} );
 		$this->twig->addFilter( $apply_filter );
 
 		/**
@@ -170,8 +168,6 @@ class TwigService {
 
 	/**
 	 * Create the twig cache directory
-	 *
-	 * @since    2.0.0
 	 */
 	public function init() {
 
@@ -220,7 +216,6 @@ class TwigService {
 	 * @param array $array Array to pass to template.
 	 *
 	 * @return string|bool
-	 * @since    1.0.0
 	 */
 	public function render( string $template, array $array = [] ) {
 
@@ -228,8 +223,8 @@ class TwigService {
 			return $this->twig->render( $template, $array );
 		} catch ( Throwable $e ) {
 			$this->logger->critical( $e->getMessage(), [ 'template' => $template, 'line' => $e->getLine() ] );
+
 			return false;
 		}
-
 	}
 }

@@ -28,11 +28,6 @@ use Dotenv\Dotenv;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\CompatibilityService;
 use Kudos\Service\DeactivatorService;
-use Kudos\Service\LoggerService;
-use Kudos\Service\TwigService;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
@@ -75,11 +70,11 @@ if ( class_exists( Run::class ) && ( $_ENV['WP_ENV'] ?? '' ) === 'development' )
 	$run     = new Run();
 	$handler = new PrettyPageHandler;
 
-	// Set the title of the error page:
+	// Set the title of the error page.
 	$handler->setPageTitle( "Whoops! There was a problem." );
 	$run->pushHandler( $handler );
 
-	// Register the handler with PHP, and you're set!
+	// Register the handler with PHP.
 	$run->register();
 }
 
@@ -87,7 +82,7 @@ if ( class_exists( Run::class ) && ( $_ENV['WP_ENV'] ?? '' ) === 'development' )
  * The code that runs during plugin activation.
  */
 function activate_kudos() {
-	$activator = new ActivatorService( new LoggerService(), new TwigService() );
+	$activator = new ActivatorService();
 	$activator->activate();
 }
 
@@ -120,10 +115,6 @@ function run_kudos_donations() {
 	$compatibility = new CompatibilityService();
 
 	if ( $compatibility->init() ) {
-
-//		$container = new \Symfony\Component\DependencyInjection\ContainerBuilder();
-//		$loader = new PhpFileLoader($container, new FileLocator(KUDOS_PLUGIN_DIR . '/app/'));
-//		$loader->load('services.php');
 
 		// Create our container for dependency injection.
 		$builder = new ContainerBuilder();

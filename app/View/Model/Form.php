@@ -1,13 +1,12 @@
 <?php
 
-namespace Kudos\Controller;
+namespace Kudos\View\Model;
 
 use Exception;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use Kudos\Service\TwigService;
 
-class FormController extends Controller {
+class Form extends AbstractModel {
 
 	const TEMPLATE = 'public/forms/donate.form.html.twig';
 
@@ -20,7 +19,7 @@ class FormController extends Controller {
 	 */
 	protected $recurring_allowed;
 	/**
-	 * @var array
+	 * @var string
 	 */
 	protected $campaign_id;
 	/**
@@ -91,9 +90,9 @@ class FormController extends Controller {
 	/**
 	 * KudosForm constructor.
 	 */
-	public function __construct( TwigService $twig_service ) {
+	public function __construct() {
 
-		parent::__construct( $twig_service );
+		parent::__construct();
 
 		// Configure global properties.
 		$this->return_url        = Utils::get_return_url();
@@ -101,7 +100,7 @@ class FormController extends Controller {
 		$this->terms_link        = Settings::get_setting( 'terms_link' );
 		$this->recurring_allowed = isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false;
 		$this->vendor_name       = Settings::get_setting( 'payment_vendor' );
-		$this->spinner           = Utils::get_kudos_logo_markup( 'black', 30 );
+//		$this->spinner           = $this->get_kudos_logo_markup( 'black', 30 );
 	}
 
 	/**
@@ -114,7 +113,6 @@ class FormController extends Controller {
 
 		// Set campaign properties.
 		$this->campaign_id      = $campaign_id;
-		$this->campaign_stats   = Settings::get_campaign_stats( $campaign_id );
 		$this->button_label     = $campaign['button_label'] ?? '';
 		$this->welcome_title    = $campaign['modal_title'] ?? '';
 		$this->welcome_text     = $campaign['welcome_text'] ?? '';
@@ -126,6 +124,13 @@ class FormController extends Controller {
 		$this->address_enabled  = $campaign['address_enabled'] ?? '';
 		$this->address_required = $campaign['address_required'] ?? '';
 		$this->message_enabled  = $campaign['message_enabled'] ?? '';
+	}
+
+	/**
+	 * @param array $campaign_stats
+	 */
+	public function set_campaign_stats(array $campaign_stats) {
+		$this->campaign_stats = $campaign_stats;
 	}
 
 }

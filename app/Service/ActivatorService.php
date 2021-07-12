@@ -6,6 +6,7 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
+use Kudos\Helpers\WpDb;
 
 /**
  * Fired during plugin activation
@@ -31,11 +32,21 @@ class ActivatorService {
 	 * @var \Kudos\Service\TwigService
 	 */
 	private $twig;
+	/**
+	 * @var \Kudos\Service\MapperService
+	 */
+	private $mapper;
+	/**
+	 * @var \Kudos\Helpers\WpDb|\wpdb
+	 */
+	private $wpdb;
 
-	public function __construct(LoggerService $logger, TwigService $twig) {
-		
-		$this->logger = $logger;
-		$this->twig = $twig;
+	public function __construct() {
+
+		$this->logger = new LoggerService();
+		$this->wpdb = new WpDb();
+		$this->twig = new TwigService($this->logger);
+		$this->mapper = new MapperService($this->logger, $this->wpdb);
 		
 	}
 
@@ -76,9 +87,11 @@ class ActivatorService {
 	 *
 	 * @since 2.3.2
 	 */
-	public static function run_migrations( string $old_version ) {
+	private function run_migrations( string $old_version ) {
 
-		$logger = new LoggerService();
+		$logger = $this->logger;
+		$wpdb = $this->wpdb;
+
 		$logger->info( 'Upgrade detected, running migrations.',
 			[ 'old_version' => $old_version, 'new_version' => KUDOS_VERSION ] );
 
@@ -97,7 +110,6 @@ class ActivatorService {
 		}
 
 		if ( version_compare( $old_version, '2.3.0', '<' ) ) {
-			global $wpdb;
 
 			// Rename setting
 			$transaction_table = TransactionEntity::get_table_name();
@@ -107,15 +119,16 @@ class ActivatorService {
 			// Apply mode to Donors
 			$donor_table = DonorEntity::get_table_name();
 			$wpdb->query( "ALTER TABLE $donor_table ADD `mode` VARCHAR(45) NOT NULL" );
-			$mapper = new MapperService( DonorEntity::class );
-			$donors = $mapper->get_all_by();
+			$donors = $this->mapper
+				->get_repository(DonorEntity::class)
+				->get_all_by();
 			/** @var DonorEntity $donor */
 			foreach ( $donors as $donor ) {
 				$transactions = $donor->get_transactions();
 				if ( $transactions ) {
 					$donor->set_fields( [ 'mode' => $transactions[0]->mode ] );
 				}
-				$mapper->save( $donor );
+				$this->mapper->save( $donor );
 			}
 		}
 
@@ -130,7 +143,6 @@ class ActivatorService {
 
 		if ( version_compare( $old_version, '2.3.7', '<' ) ) {
 			// Change business_name to allow NULL
-			global $wpdb;
 			$donor_table = DonorEntity::get_table_name();
 			$wpdb->query( "ALTER TABLE $donor_table MODIFY `business_name` VARCHAR(255)" );
 		}
@@ -167,7 +179,6 @@ class ActivatorService {
 
 		if ( version_compare( $old_version, '2.5.0', '<' ) ) {
 			// Add message field to transactions.
-			global $wpdb;
 			$transaction_table = TransactionEntity::get_table_name();
 			$wpdb->query( "ALTER TABLE $transaction_table ADD `message` VARCHAR(255)" );
 
@@ -183,9 +194,9 @@ class ActivatorService {
 	 *
 	 * @since    1.1.0
 	 */
-	private static function create_donors_table() {
+	private function create_donors_table() {
 
-		global $wpdb;
+		$wpdb = $this->wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name      = DonorEntity::get_table_name();
@@ -217,9 +228,9 @@ class ActivatorService {
 	 *
 	 * @since    1.0.0
 	 */
-	private static function create_transactions_table() {
+	private function create_transactions_table() {
 
-		global $wpdb;
+		$wpdb = $this->wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name      = TransactionEntity::get_table_name();
@@ -255,9 +266,9 @@ class ActivatorService {
 	 *
 	 * @since    1.1.0
 	 */
-	private static function create_subscriptions_table() {
+	private function create_subscriptions_table() {
 
-		global $wpdb;
+		$wpdb = $this->wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name      = SubscriptionEntity::get_table_name();

@@ -1,11 +1,11 @@
 <?php
 
-namespace Kudos\Admin;
+namespace Kudos\Controller;
 
-use Kudos\Admin\Table\CampaignsTable;
-use Kudos\Admin\Table\DonorsTable;
-use Kudos\Admin\Table\SubscriptionsTable;
-use Kudos\Admin\Table\TransactionsTable;
+use Kudos\Controller\Table\CampaignsTable;
+use Kudos\Controller\Table\DonorsTable;
+use Kudos\Controller\Table\SubscriptionsTable;
+use Kudos\Controller\Table\TransactionsTable;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
@@ -15,6 +15,7 @@ use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
+use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
 
@@ -59,11 +60,27 @@ class Admin {
 	/**
 	 * @var MapperService
 	 */
-	private $mapper_service;
+	private $mapper;
 	/**
 	 * @var TransactionsTable
 	 */
 	private $table;
+	/**
+	 * @var \Kudos\Service\TwigService
+	 */
+	private $twig;
+	/**
+	 * @var \Kudos\Service\PaymentService
+	 */
+	private $payment;
+	/**
+	 * @var \Kudos\Helpers\Settings
+	 */
+	private $settings;
+	/**
+	 * @var \Kudos\Service\ActivatorService
+	 */
+	private $activator;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -74,12 +91,20 @@ class Admin {
 	public function __construct(
 		string $plugin_name,
 		string $version,
-		MapperService $mapper_service
+		MapperService $mapper,
+		TwigService $twig,
+		PaymentService $payment,
+		ActivatorService $activator,
+		Settings $settings
 	) {
 
-		$this->plugin_name         = $plugin_name;
-		$this->version             = $version;
-		$this->mapper_service      = $mapper_service;
+		$this->plugin_name = $plugin_name;
+		$this->version     = $version;
+		$this->mapper      = $mapper;
+		$this->twig        = $twig;
+		$this->payment     = $payment;
+		$this->activator = $activator;
+		$this->settings    = $settings;
 
 	}
 
@@ -127,7 +152,7 @@ class Admin {
 			'manage_options',
 			'kudos-transactions',
 			function () {
-				include_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-transactions.php';
+				include_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-transactions.php';
 			}
 		);
 
@@ -144,7 +169,7 @@ class Admin {
 			'manage_options',
 			'kudos-subscriptions',
 			function () {
-				include_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-subscriptions.php';
+				include_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-subscriptions.php';
 			}
 		);
 
@@ -162,7 +187,7 @@ class Admin {
 			'manage_options',
 			'kudos-donors',
 			function () {
-				include_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-donors.php';
+				include_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-donors.php';
 			}
 
 		);
@@ -180,7 +205,7 @@ class Admin {
 			'manage_options',
 			'kudos-campaigns',
 			function () {
-				include_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-campaigns.php';
+				include_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-campaigns.php';
 			}
 
 		);
@@ -197,7 +222,7 @@ class Admin {
 			'manage_options',
 			'kudos-debug',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/Admin/partials/kudos-admin-debug.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-debug.php';
 			}
 		);
 		add_action( "admin_print_scripts-$debug_page_hook_suffix",
@@ -231,7 +256,7 @@ class Admin {
 	 */
 	public function prepare_transactions_page() {
 		add_action( "admin_enqueue_scripts", [ $this, "transactions_page_assets" ] );
-		$this->table = new TransactionsTable( $this->mapper_service );
+		$this->table = new TransactionsTable( $this->mapper );
 		$this->table->prepare_items();
 	}
 
@@ -240,7 +265,7 @@ class Admin {
 	 */
 	public function prepare_subscriptions_page() {
 		add_action( "admin_enqueue_scripts", [ $this, 'subscriptions_page_assets' ] );
-		$this->table = new SubscriptionsTable($this->mapper_service);
+		$this->table = new SubscriptionsTable( $this->mapper, $this->payment );
 		$this->table->prepare_items();
 	}
 
@@ -249,7 +274,7 @@ class Admin {
 	 */
 	public function prepare_donors_page() {
 		add_action( "admin_enqueue_scripts", [ $this, 'donor_page_assets' ] );
-		$this->table = new DonorsTable($this->mapper_service);
+		$this->table = new DonorsTable( $this->mapper );
 		$this->table->prepare_items();
 	}
 
@@ -258,7 +283,7 @@ class Admin {
 	 */
 	public function prepare_campaigns_page() {
 		add_action( "admin_enqueue_scripts", [ $this, 'campaign_page_assets' ] );
-		$this->table = new CampaignsTable($this->mapper_service);
+		$this->table = new CampaignsTable( $this->mapper, $this->settings );
 		$this->table->prepare_items();
 	}
 
@@ -408,6 +433,8 @@ class Admin {
 				die();
 			}
 
+			$settings = $this->settings;
+
 			switch ( $action ) {
 
 				case 'kudos_log_download':
@@ -422,33 +449,30 @@ class Admin {
 					break;
 
 				case 'kudos_clear_mollie':
-					$settings = new Settings();
 					$settings->remove_setting( 'vendor_mollie' );
 					$settings->add_defaults();
 					break;
 
 				case 'kudos_clear_campaigns':
-					$settings = new Settings();
 					$settings->remove_setting( 'campaigns' );
 					$settings->add_defaults();
 					break;
 
 				case 'kudos_clear_all':
-					$settings = new Settings();
 					$settings->remove_settings();
 					$settings->add_defaults();
 					break;
 
 				case 'kudos_clear_cache':
-					$twig = TwigService::factory();
-					if ( $twig->clearCache() ) {
+					if ( $this->twig->clearCache() ) {
 						new AdminNotice( __( 'Cache cleared', 'kudos-donations' ) );
 					}
 					break;
 
 				case 'kudos_clear_transactions':
-					$mapper  = new MapperService( TransactionEntity::class );
-					$records = $mapper->delete_all();
+					$records = $this->mapper
+						->get_repository( TransactionEntity::class )
+						->delete_all();
 					if ( $records ) {
 						new AdminNotice(
 							sprintf(
@@ -462,8 +486,9 @@ class Admin {
 					break;
 
 				case 'kudos_clear_donors':
-					$mapper  = new MapperService( DonorEntity::class );
-					$records = $mapper->delete_all();
+					$records = $this->mapper
+						->get_repository( DonorEntity::class )
+						->delete_all();
 					if ( $records ) {
 						new AdminNotice(
 							sprintf(
@@ -476,8 +501,9 @@ class Admin {
 					break;
 
 				case 'kudos_clear_subscriptions':
-					$mapper  = new MapperService( SubscriptionEntity::class );
-					$records = $mapper->delete_all();
+					$records = $this->mapper
+						->get_repository( SubscriptionEntity::class )
+						->delete_all();
 					if ( $records ) {
 						new AdminNotice(
 							sprintf(
@@ -493,7 +519,6 @@ class Admin {
 					break;
 
 				case 'kudos_recreate_database':
-					$mapper = new MapperService();
 					foreach (
 						[
 							SubscriptionEntity::get_table_name(),
@@ -501,9 +526,10 @@ class Admin {
 							DonorEntity::get_table_name(),
 						] as $table
 					) {
-						$mapper->delete_table( $table );
+						$this->mapper->delete_table( $table );
 					}
-					ActivatorService::activate();
+					$activator = $this->activator;
+					$activator->activate();
 					new AdminNotice( __( 'Database re-created', 'kudos-donations' ) );
 			}
 
@@ -517,7 +543,7 @@ class Admin {
 	 */
 	public function register_settings() {
 
-		$settings = new Settings();
+		$settings = $this->settings;
 		$settings->register_settings();
 
 	}

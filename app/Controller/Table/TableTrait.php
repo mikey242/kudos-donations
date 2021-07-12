@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Admin\Table;
+namespace Kudos\Controller\Table;
 
 /**
  * @link https://gist.github.com/paulund/7659452

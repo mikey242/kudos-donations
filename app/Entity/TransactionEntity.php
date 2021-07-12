@@ -92,22 +92,6 @@ class TransactionEntity extends AbstractEntity {
 	public $message;
 
 	/**
-	 * Gets donor associated with transaction.
-	 *
-	 * @return DonorEntity|null
-	 * @since   2.0.0
-	 */
-	public function get_donor(): ?DonorEntity {
-
-		$mapper = new MapperService( DonorEntity::class );
-		/** @var DonorEntity $donor */
-		$donor = $mapper->get_one_by( [ 'customer_id' => $this->customer_id ] );
-
-		return $donor ?? null;
-
-	}
-
-	/**
 	 * Returns unserialized array of refund data.
 	 *
 	 * @return object|false

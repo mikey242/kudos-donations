@@ -1,7 +1,7 @@
 <?php
 
-use Kudos\Admin\Admin;
-use Kudos\Front\Front;
+use Kudos\Controller\Admin;
+use Kudos\Controller\Front;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;

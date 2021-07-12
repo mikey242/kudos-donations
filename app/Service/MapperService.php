@@ -2,47 +2,43 @@
 
 namespace Kudos\Service;
 
-use Exception;
 use Kudos\Entity\AbstractEntity;
 use Kudos\Helpers\Settings;
-use wpdb;
+use Kudos\Helpers\WpDb;
 
 class MapperService {
 
 	/**
-	 * WordPress database global
-	 *
-	 * @var wpdb
-	 */
-	protected $wpdb;
-	/**
 	 * Repository class
 	 *
-	 * @var string
+	 * @var AbstractEntity
 	 */
 	protected $repository;
 	/**
 	 * @var \Kudos\Service\LoggerService
 	 */
 	private $logger;
+	/**
+	 * @var \Kudos\Helpers\WpDb|\wpdb
+	 */
+	private $wpdb;
 
 	/**
 	 * Entity object constructor.
 	 *
 	 * @param \Kudos\Service\LoggerService $logger_service
-	 *
-	 * @since   2.0.0
+	 * @param \Kudos\Helpers\WpDb $wpdb
 	 */
-	public function __construct( LoggerService $logger_service) {
+	public function __construct( LoggerService $logger_service, WpDb $wpdb) {
 
 		global $wpdb;
-		$this->wpdb = $wpdb;
+		$this->wpdb   = $wpdb;
 		$this->logger = $logger_service;
 
 	}
 
 	/**
-	 * Commit Entity to database
+	 * Commit Entity to database.
 	 *
 	 * @param AbstractEntity $entity Instance of AbstractEntity to save.
 	 *
@@ -50,8 +46,7 @@ class MapperService {
 	 *                          the save query.
 	 *
 	 * @return false|int Returns the id of the record if successful
-	 *                   and false if not
-	 * @since   2.0.0
+	 *                   and false if not.
 	 */
 	public function save( AbstractEntity $entity, bool $ignore_null = true ) {
 
@@ -65,7 +60,7 @@ class MapperService {
 			$result = $this->add_record( $entity );
 		}
 
-		// Invalidate cache if database updated
+		// Invalidate cache if database updated.
 		if ( $result ) {
 			$this->get_cache_incrementer( true );
 		}
@@ -81,7 +76,7 @@ class MapperService {
 	 * @param bool $ignore_null Whether to ignore null properties.
 	 *
 	 * @return false|int Returns the id of the record if successful
-	 *                  and false if not
+	 *                  and false if not.
 	 */
 	private function update_record( AbstractEntity $entity, bool $ignore_null ) {
 
@@ -89,7 +84,7 @@ class MapperService {
 		$table_name = $entity::get_table_name();
 		$id         = $entity->id;
 
-		LoggerService::debug( 'Updating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
+		$this->logger->debug( 'Updating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
 
 		$result = $wpdb->update(
 			$table_name,
@@ -128,7 +123,7 @@ class MapperService {
 
 		$id         = $wpdb->insert_id;
 		$entity->id = $id;
-		LoggerService::debug( 'Creating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
+		$this->logger->debug( 'Creating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
 
 		// If successful do action.
 		if ( $result ) {
@@ -148,7 +143,6 @@ class MapperService {
 	 * @param false $refresh Whether or not to invalidate cache.
 	 *
 	 * @return mixed
-	 * @since 2.0.5
 	 */
 	private function get_cache_incrementer( bool $refresh = false ) {
 
@@ -176,46 +170,28 @@ class MapperService {
 	 * @param bool $prefix Whether to return the prefix or not.
 	 *
 	 * @return string
-	 * @since   2.0.0
 	 */
 	public function get_table_name( bool $prefix = true ): string {
 
-//		wp_die(var_dump($this->get_repository()));
-		return $this->get_repository()::get_table_name( $prefix );
+		return $this->repository::get_table_name( $prefix );
 
 	}
 
 	/**
-	 * Gets the current repository
+	 * Gets the current repository.
 	 *
-	 * @return AbstractEntity
-	 * @since 2.0.5
-	 */
-	public function get_repository(): ?string {
-
-		if ( null === $this->repository ) {
-			LoggerService::warning( 'Failed to get repository.' );
-
-			return null;
-		}
-
-		return $this->repository;
-
-	}
-
-	/**
-	 * Specify the repository to use
+	 * @param string $class
 	 *
-	 * @param string $class Class of repository to use.
+	 * @return \Kudos\Service\MapperService|null
 	 */
-	public function set_repository( string $class ) {
+	public function get_repository( string $class): ?MapperService {
 
 		if ( is_subclass_of( $class, AbstractEntity::class ) ) {
 			$this->repository = $class;
-		} else {
-			LoggerService::error( 'Could not set repository', [ 'message' => $e->getMessage() ] );
+			return $this;
 		}
 
+		return null;
 	}
 
 	/**
@@ -226,7 +202,6 @@ class MapperService {
 	 * @param string $operator Operator to use to join array items. Can be AND or OR.
 	 *
 	 * @return AbstractEntity|null
-	 * @since   2.0.0
 	 */
 	public function get_one_by( array $query_fields, string $operator = 'AND' ): ?AbstractEntity {
 
@@ -245,13 +220,12 @@ class MapperService {
 	}
 
 	/**
-	 * Converts an associative array into a query string
+	 * Converts an associative array into a query string.
 	 *
 	 * @param array $query_fields Array of key (column) and value pairs.
 	 * @param string $operator Accepts AND or OR.
 	 *
 	 * @return string
-	 * @since 2.0.0
 	 */
 	private function array_to_where( array $query_fields, string $operator = 'AND' ): string {
 
@@ -270,17 +244,15 @@ class MapperService {
 		);
 
 		return 'WHERE ' . implode( ' ' . $operator . ' ', $query_fields );
-
 	}
 
 	/**
-	 * Gets query results from cache or database
+	 * Gets query results from cache or database.
 	 *
 	 * @param $query
 	 * @param string $output
 	 *
 	 * @return mixed|object|array|bool|null
-	 * @since 2.0.5
 	 */
 	public function get_results( $query, string $output = ARRAY_A ) {
 
@@ -303,7 +275,6 @@ class MapperService {
 	 *
 	 * @return bool|int Returns the number of records deleted if successful
 	 *                  and false if not
-	 * @since 2.0.0
 	 */
 	public function delete_all() {
 
@@ -335,7 +306,6 @@ class MapperService {
 	 * @param string $operator AND or OR.
 	 *
 	 * @return array|object|null
-	 * @since   2.0.0
 	 */
 	public function get_all_by( array $query_fields = null, string $operator = 'AND' ): ?array {
 
@@ -359,7 +329,6 @@ class MapperService {
 	 * @param array $results Array of properties and values to map.
 	 *
 	 * @return array
-	 * @since   2.0.0
 	 */
 	private function map_to_class( array $results ): array {
 
@@ -379,7 +348,6 @@ class MapperService {
 	 * @param string $value Value to search for.
 	 *
 	 * @return false|int
-	 * @since   2.0.0
 	 */
 	public function delete( string $column, string $value ) {
 
@@ -393,11 +361,11 @@ class MapperService {
 		if ( $deleted ) {
 			// Invalidate cache if database updated
 			$this->get_cache_incrementer( true );
-			LoggerService::info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
+			$this->logger->info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		}
 
-		LoggerService::debug( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
+		$this->logger->debug( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
 
 		return $deleted;
 
@@ -409,7 +377,6 @@ class MapperService {
 	 * @param $table_name
 	 *
 	 * @return bool|int
-	 * @since 2.0.8
 	 */
 	public function delete_table( $table_name ) {
 
@@ -424,7 +391,6 @@ class MapperService {
 	 * @param string|null $value Array value to check.
 	 *
 	 * @return bool
-	 * @since 2.0.0
 	 */
 	private function remove_empty( ?string $value ): bool {
 

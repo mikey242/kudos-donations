@@ -47,6 +47,14 @@
     display: none;
 }
 
+.kd-logo-animate:hover .kd-logo {
+    @apply kd--rotate-90 !important;
+}
+.kd-logo-animate:hover .kd-logo .kd-logo-heart {
+    backface-visibility: visible;
+    @apply kd-rotate-x-180 !important;
+}
+
 form[id^=kudos-form] small.error {
     @apply kd-order-last kd-mt-1 kd-block kd-text-sm kd-text-red-500;
 }

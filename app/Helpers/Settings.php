@@ -4,7 +4,6 @@ namespace Kudos\Helpers;
 
 use Exception;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 
 class Settings {
@@ -17,13 +16,18 @@ class Settings {
 	 * @var array
 	 */
 	private $settings;
+	/**
+	 * @var \Kudos\Service\MapperService
+	 */
+	private $mapper;
 
 	/**
 	 * Settings class constructor.
 	 *
 	 */
-	public function __construct() {
+	public function __construct( MapperService $mapper ) {
 
+		$this->mapper   = $mapper;
 		$this->settings = apply_filters(
 			'kudos_register_settings',
 			[
@@ -222,7 +226,7 @@ class Settings {
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'donate_modal_in_footer' => [
+				'modal_in_footer' => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
@@ -320,7 +324,7 @@ class Settings {
 	 *
 	 * @return mixed
 	 */
-	public static function sanitize_vendor( $settings ) {
+	public function sanitize_vendor( $settings ) {
 
 		foreach ( $settings as $setting => &$value ) {
 			switch ( $setting ) {
@@ -394,26 +398,24 @@ class Settings {
 	public static function get_current_vendor_settings() {
 
 		return self::get_setting( 'vendor_' . self::get_setting( 'payment_vendor' ) );
-
 	}
 
 	/**
 	 * Returns setting value.
 	 *
-	 * @param string $name Setting name.
+	 * @param string $name Setting name without prefix.
 	 *
 	 * @return mixed
 	 */
 	public static function get_setting( string $name ) {
 
 		return get_option( self::PREFIX . $name );
-
 	}
 
 	/**
 	 * Update specified setting.
 	 *
-	 * @param string $name Setting name.
+	 * @param string $name Setting name without prefix.
 	 * @param mixed $value Setting value.
 	 *
 	 * @return bool
@@ -421,15 +423,14 @@ class Settings {
 	public static function update_setting( string $name, $value ): bool {
 
 		return update_option( self::PREFIX . $name, $value );
-
 	}
 
 	/**
 	 * Updates specific values in serialized settings array.
 	 * e.g update_array('my_setting', ['enabled' => false]).
 	 *
-	 * @param string $name // Setting array name
-	 * @param array $value // Array of name=>values in setting to update.
+	 * @param string $name Setting array name without prefix.
+	 * @param array $value Array of name=>values in setting to update.
 	 *
 	 * @return bool
 	 */
@@ -447,7 +448,6 @@ class Settings {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -462,7 +462,6 @@ class Settings {
 				$setting
 			);
 		}
-
 	}
 
 	/**
@@ -475,7 +474,6 @@ class Settings {
 				add_option( self::PREFIX . $name, $setting['default'] );
 			}
 		}
-
 	}
 
 	/**
@@ -486,7 +484,6 @@ class Settings {
 		foreach ( $this->settings as $key => $setting ) {
 			self::remove_setting( $key );
 		}
-
 	}
 
 	/**
@@ -499,7 +496,6 @@ class Settings {
 	public static function remove_setting( string $name ): bool {
 
 		return delete_option( self::PREFIX . $name );
-
 	}
 
 	/**
@@ -510,7 +506,7 @@ class Settings {
 	 * @return mixed
 	 * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
 	 */
-	public static function recursive_sanitize_text_field( array $array ): array {
+	public function recursive_sanitize_text_field( array $array ): array {
 
 		foreach ( $array as &$value ) {
 			if ( is_array( $value ) ) {
@@ -521,7 +517,6 @@ class Settings {
 		}
 
 		return $array;
-
 	}
 
 	/**
@@ -553,7 +548,7 @@ class Settings {
 	}
 
 	/**
-	 * Gets the campaign by specified column (e.g id)
+	 * Gets the campaign by specified column (e.g id).
 	 *
 	 * @param string|null $value
 	 *
@@ -572,7 +567,6 @@ class Settings {
 
 		/* translators: %s: Campaign id */
 		throw new Exception( sprintf( __( 'Campaign "%s" not found.', 'kudos-donations' ), $value ) );
-
 	}
 
 	/**
@@ -582,13 +576,12 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	public static function get_campaign_stats( string $campaign_id ): ?array {
+	public function get_campaign_stats( string $campaign_id ): ?array {
 
-		$mapper       = new MapperService(new LoggerService());
-		$mapper->set_repository(TransactionEntity::class);
-		$transactions = $mapper->get_all_by( [
-			'campaign_id' => $campaign_id,
-		] );
+		$mapper       = $this->mapper;
+		$transactions = $mapper
+			->get_repository( TransactionEntity::class )
+			->get_all_by( [ 'campaign_id' => $campaign_id, ] );
 
 		if ( $transactions ) {
 			$values = array_map( function ( $transaction ) {
@@ -612,12 +605,12 @@ class Settings {
 			];
 		}
 
+		// No transactions found.
 		return [
 			'count'         => 0,
 			'total'         => 0,
 			'last_donation' => '',
 		];
-
 	}
 
 }

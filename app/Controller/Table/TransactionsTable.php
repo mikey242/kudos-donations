@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Admin\Table;
+namespace Kudos\Controller\Table;
 
 use Exception;
 use Kudos\Entity\DonorEntity;
@@ -25,7 +25,6 @@ class TransactionsTable extends WP_List_Table {
 	public function __construct( MapperService $mapper_service ) {
 
 		$this->mapper = $mapper_service;
-		$this->mapper->set_repository( TransactionEntity::class );
 		$this->table = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
@@ -110,7 +109,9 @@ class TransactionsTable extends WP_List_Table {
 		$having = ! empty( $having ) ? 'HAVING ' . implode( " AND ", $having ) : '';
 		$query  = $query . $having;
 
-		return $this->mapper->get_results( $query );
+		return $this->mapper
+			->get_repository(TransactionEntity::class)
+			->get_results( $query );
 
 	}
 
@@ -240,7 +241,9 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function delete_record( string $column, string $id ) {
 
-		return $this->mapper->delete( $column, $id );
+		return $this->mapper
+			->get_repository(TransactionEntity::class)
+			->delete( $column, $id );
 
 	}
 

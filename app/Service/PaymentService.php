@@ -10,6 +10,7 @@ use Kudos\Helpers\Utils;
 use Kudos\Service\Vendor\MollieVendor;
 use Kudos\Service\Vendor\VendorInterface;
 use Mollie\Api\Resources\Payment;
+use Mpdf\Tag\S;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -28,16 +29,25 @@ class PaymentService {
 	 * @var \Kudos\Service\MapperService
 	 */
 	private $mapper_service;
+	/**
+	 * @var \Kudos\Service\LoggerService
+	 */
+	private $logger;
 
 	/**
 	 * Payment service constructor.
 	 */
-	public function __construct(MapperService $mapper_service, MailerService $mailer_service) {
+	public function __construct(
+		MapperService $mapper_service,
+		MailerService $mailer_service,
+		LoggerService $logger_service
+	) {
 
-		$vendor       = $this::get_current_vendor_class();
-		$this->vendor = new $vendor;
+		$vendor               = $this::get_current_vendor_class();
+		$this->vendor         = new $vendor($mapper_service, $logger_service);
 		$this->mapper_service = $mapper_service;
 		$this->mailer_service = $mailer_service;
+		$this->logger         = $logger_service;
 
 	}
 
@@ -131,11 +141,19 @@ class PaymentService {
 		$mapper = $this->mapper_service;
 		$mailer = $this->mailer_service;
 
-		$mapper->set_repository( TransactionEntity::class );
+		// Get transaction.
 		/** @var TransactionEntity $transaction */
-		$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
+		$transaction = $this->mapper_service
+			->get_repository( TransactionEntity::class )
+			->get_one_by( [ 'order_id' => $order_id ] );
 
-		if ( $transaction->get_donor()->email ) {
+		//  Get donor.
+		/** @var DonorEntity $donor */
+		$donor = $this->mapper_service
+			->get_repository(DonorEntity::class)
+			->get_one_by([ 'customer_id' => $transaction->customer_id ]);
+
+		if ( $donor->email ) {
 			// Send email - email setting is checked in mailer.
 			$mailer->send_receipt( $transaction );
 		}
@@ -186,13 +204,14 @@ class PaymentService {
 		$redirect_url      = $values['return_url'] ?? null;
 		$campaign_id       = $values['campaign_id'] ?? null;
 
-		$mapper = new MapperService( DonorEntity::class );
+		$mapper = $this->mapper_service;
 
 		if ( $email ) {
 
 			// Search for existing donor based on email and mode.
 			/** @var DonorEntity $donor */
-			$donor = $mapper->get_one_by( [
+			$donor = $mapper->get_repository( DonorEntity::class )
+				->get_one_by( [
 				'email' => $email,
 				'mode'  => $this->vendor->get_api_mode(),
 			] );
@@ -259,11 +278,13 @@ class PaymentService {
 	 */
 	public function cancel_subscription( string $id ): bool {
 
-		$mapper = new MapperService( SubscriptionEntity::class );
+		$mapper = $this->mapper_service;
 
 		// Get subscription entity from supplied row id.
 		/** @var SubscriptionEntity $subscription */
-		$subscription = $mapper->get_one_by( [ 'id' => $id ] );
+		$subscription = $mapper
+			->get_repository(SubscriptionEntity::class)
+			->get_one_by( [ 'id' => $id ] );
 
 		// Cancel subscription with vendor.
 		$result = $subscription ?? $this->vendor->cancel_subscription( $subscription );
@@ -375,7 +396,7 @@ class PaymentService {
 		);
 
 		// Commit transaction to database.
-		$mapper = new MapperService( TransactionEntity::class );
+		$mapper = $this->mapper_service;
 		$mapper->save( $transaction );
 
 		// Add order id query arg to return url if option to show message enabled.

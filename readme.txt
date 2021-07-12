@@ -2,7 +2,7 @@
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.5
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 7.2
 Stable tag: 2.7.0
 License: GPLv2 or later
@@ -118,11 +118,13 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
-= 2.7.5 =
+= 2.8.0 =
 * *NEW* You can now add a donation form without using a button or popup. This can be selected in the side panel when placing a Kudos block, or if using the shortcode by adding the attribute type="form".
-* Allow adding additional funds to campaign. Useful if you receive donations for your campaign outside of Kudos.
-* Move goal icon in front of goal amount
-* Add ability to chose custom theme color
+* *NEW* Allow adding additional funds to campaign. Useful if you receive donations for your campaign outside of Kudos.
+* *NEW* Add ability to choose custom theme color.
+* Implementation of dependency injection using PHP-DI. This will result in faster, cleaner, easier to maintain code.
+* Use Laravel-Mix for building assets.
+* Move goal icon in front of goal amount.
 * Update Mollie API client to 2.36.1
 * Update ActionScheduler to 3.2.1
 * Update TailwindCSS to 2.2.4

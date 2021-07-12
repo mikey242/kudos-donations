@@ -1,11 +1,8 @@
 <?php
 
-namespace Kudos\Controller;
+namespace Kudos\View\Model;
 
-use Kudos\Helpers\Utils;
-use Kudos\Service\TwigService;
-
-class ButtonController extends Controller {
+class Button extends AbstractModel {
 
 	const TEMPLATE = 'public/button/kudos.button.html.twig';
 
@@ -37,11 +34,11 @@ class ButtonController extends Controller {
 	/**
 	 * Button constructor.
 	 */
-	public function __construct(TwigService $twig_service) {
+	public function __construct() {
 
-		parent::__construct($twig_service);
+		parent::__construct();
 
-		$this->logo     = apply_filters( 'kudos_get_button_logo', Utils::get_kudos_logo_markup( 'white' ) );
+//		$this->logo = apply_filters( 'kudos_get_button_logo', $this->get_kudos_logo_markup( 'white' ) );
 
 	}
 

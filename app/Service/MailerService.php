@@ -2,6 +2,7 @@
 
 namespace Kudos\Service;
 
+use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
@@ -98,9 +99,15 @@ class MailerService {
 		// Assign attachment.
 		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction->order_id );
 
+		// Get donor details.
+		$mapper = $this->mapper_service;
+		$mapper->set_repository(DonorEntity::class);
+		/** @var DonorEntity $donor */
+		$donor = $mapper->get_one_by([ 'customer_id' => $transaction->customer_id ]);
+
 		// Create array of variables for use in twig template.
 		$render_array = [
-			'name'         => $transaction->get_donor()->name ?? '',
+			'name'         => $donor->name ?? '',
 			'date'         => $transaction->created,
 			'description'  => Utils::get_sequence_type( $transaction->sequence_type ),
 			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
@@ -133,7 +140,7 @@ class MailerService {
 		$body = $twig->render( 'emails/receipt.html.twig', $render_array );
 
 		return $this->send(
-			$transaction->get_donor()->email,
+			$donor->email,
 			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
 			$headers,

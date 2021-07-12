@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Admin\Table;
+namespace Kudos\Controller\Table;
 
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
@@ -17,17 +17,19 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @var MapperService
 	 */
 	private $mapper;
+	/**
+	 * @var \Kudos\Service\PaymentService
+	 */
+	private $payment;
 
 	/**
 	 * Class constructor
-	 *
-	 * @since   2.0.0
 	 */
-	public function __construct(MapperService $mapper_service) {
+	public function __construct(MapperService $mapper_service, PaymentService $payment_service) {
 
 		$this->mapper = $mapper_service;
-		$this->mapper->set_repository(SubscriptionEntity::class);
 		$this->table  = SubscriptionEntity::get_table_name();
+		$this->payment = $payment_service;
 
 		$this->search_columns = [
 			'name'      => __( 'Name', 'kudos-donations' ),
@@ -59,8 +61,6 @@ class SubscriptionsTable extends WP_List_Table {
 
 	/**
 	 * Call this function where the table is to be displayed
-	 *
-	 * @since      1.0.0
 	 */
 	public function display() {
 
@@ -74,7 +74,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * Get the table data
 	 *
 	 * @return array
-	 * @since      2.0.0
 	 */
 	public function fetch_table_data(): array {
 
@@ -109,7 +108,9 @@ class SubscriptionsTable extends WP_List_Table {
 		$where = ! empty( $where ) ? 'WHERE ' . implode( " AND ", $where ) : '';
 		$query = $query . $where;
 
-		return $this->mapper->get_results( $query );
+		return $this->mapper
+			->get_repository(SubscriptionEntity::class)
+			->get_results( $query );
 
 	}
 
@@ -117,7 +118,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * Returns a list of columns to include in table
 	 *
 	 * @return array
-	 * @since   2.0.0
 	 */
 	public function column_names(): array {
 		return [
@@ -136,7 +136,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * Define which columns are hidden.
 	 *
 	 * @return array
-	 * @since      2.0.0
 	 */
 	public function get_hidden_columns(): array {
 		return [
@@ -148,7 +147,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * Define the sortable columns.
 	 *
 	 * @return array
-	 * @since      2.0.0
 	 */
 	public function get_sortable_columns(): array {
 		return [
@@ -185,7 +183,7 @@ class SubscriptionsTable extends WP_List_Table {
 				}
 
 				if ( isset( $_GET['id'] ) ) {
-					self::cancel_subscription( sanitize_text_field( wp_unslash( $_GET['id'] ) ) );
+					$this->cancel_subscription( sanitize_text_field( wp_unslash( $_GET['id'] ) ) );
 				}
 
 				break;
@@ -227,11 +225,10 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @param string $id subscription row ID.
 	 *
 	 * @return bool
-	 * @since      2.0.0
 	 */
-	public static function cancel_subscription( string $id ): bool {
+	public function cancel_subscription( string $id ): bool {
 
-		$payment_service = PaymentService::factory();
+		$payment_service = $this->payment;
 		return $payment_service->cancel_subscription( $id );
 	}
 
@@ -242,11 +239,12 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @param string $id Value to search for.
 	 *
 	 * @return false|int
-	 * @since   1.0.0
 	 */
 	protected function delete_record( string $column, string $id ) {
 
-		return $this->mapper->delete( $column, $id );
+		return $this->mapper
+			->get_repository(SubscriptionEntity::class)
+			->delete( $column, $id );
 
 	}
 

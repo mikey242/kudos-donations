@@ -2,8 +2,6 @@
 
 namespace Kudos\Helpers;
 
-use Kudos\Service\TwigService;
-
 class Utils {
 
 	/**
@@ -352,36 +350,6 @@ class Utils {
 		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
 
 		return array( $first_name, $last_name );
-	}
-
-	/**
-	 * Returns the kudos logo SVG markup.
-	 *
-	 * @param string|null $color
-	 * @param int $width
-	 *
-	 * @return string|null
-	 */
-	public static function get_kudos_logo_markup( string $color = null, int $width = 24 ): ?string {
-
-		$twig = new TwigService();
-
-		if ( $color ) {
-			$lineColor  = $color;
-			$heartColor = $color;
-		} else {
-			$lineColor  = '#2ec4b6';
-			$heartColor = '#ff9f1c';
-		}
-
-		return apply_filters( 'kudos_get_kudos_logo',
-			$twig->render( 'public/logo.html.twig',
-				[
-					'width'      => $width,
-					'lineColor'  => $lineColor,
-					'heartColor' => $heartColor,
-				] ),
-			$width );
 	}
 
 	/**

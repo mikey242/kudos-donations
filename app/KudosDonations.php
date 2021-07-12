@@ -2,7 +2,6 @@
 
 namespace Kudos;
 
-use Kudos\Admin\Admin;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Admin\Table;
+namespace Kudos\Controller\Table;
 
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
@@ -18,15 +18,19 @@ class CampaignsTable extends WP_List_Table {
 	 * @var MapperService
 	 */
 	private $mapper;
+	/**
+	 * @var \Kudos\Helpers\Settings
+	 */
+	private $settings;
 
 	/**
 	 * Class constructor.
 	 */
-	public function __construct( MapperService $mapper_service ) {
+	public function __construct( MapperService $mapper_service, Settings $settings) {
 
 		$this->mapper = $mapper_service;
-		$this->mapper->set_repository( TransactionEntity::class );
-		$this->table = $this->mapper->get_table_name();
+		$this->settings = $settings;
+		$this->table = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
 			'name' => __( 'Name', 'kudos-donations' ),
@@ -87,7 +91,7 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$id = $campaign['id'];
 
-			$campaign_total = Settings::get_campaign_stats( $id );
+			$campaign_total = $this->settings->get_campaign_stats( $id );
 
 			$campaigns[ $key ]['currency']     = 'EUR';
 			$campaigns[ $key ]['date']         = $campaign_total['last_donation'] ?? null;

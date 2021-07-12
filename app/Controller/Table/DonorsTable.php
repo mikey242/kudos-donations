@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Admin\Table;
+namespace Kudos\Controller\Table;
 
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\TransactionEntity;
@@ -27,8 +27,7 @@ class DonorsTable extends WP_List_Table {
 	public function __construct( MapperService $mapper_service ) {
 
 		$this->mapper = $mapper_service;
-		$this->mapper->set_repository( DonorEntity::class );
-		$this->table = DonorEntity::get_table_name();
+		$this->table  = DonorEntity::get_table_name();
 
 		$this->search_columns = [
 			'name'        => __( 'Name', 'kudos-donations' ),
@@ -83,7 +82,9 @@ class DonorsTable extends WP_List_Table {
 		$search       = $this->get_search_data();
 		$search_field = ! empty( $search['field'] ) ? $search['field'] : null;
 		$search_term  = ! empty( $search['term'] ) ? $search['term'] : null;
-		$donors       = $this->mapper->get_all_by( [ $search_field => $search_term ] );
+		$donors       = $this->mapper
+			->get_repository( DonorEntity::class )
+			->get_all_by( [ $search_field => $search_term ] );
 
 		return array_map( function ( $donor ) {
 			return $donor->to_array();
@@ -193,7 +194,9 @@ class DonorsTable extends WP_List_Table {
 	 */
 	protected function delete_record( string $column, string $id ) {
 
-		return $this->mapper->delete( $column, $id );
+		return $this->mapper
+			->get_repository(DonorEntity::class)
+			->delete( $column, $id );
 
 	}
 
@@ -295,9 +298,9 @@ class DonorsTable extends WP_List_Table {
 	 */
 	protected function column_donations( array $item ) {
 
-		$mapper       = $this->mapper;
-		$mapper->set_repository(TransactionEntity::class);
-		$transactions = $mapper->get_all_by( [ 'customer_id' => $item['customer_id'] ] );
+		$transactions = $this->mapper
+			->get_repository(TransactionEntity::class)
+			->get_all_by( [ 'customer_id' => $item['customer_id'] ] );
 
 		if ( $transactions ) {
 			$number = count( $transactions );

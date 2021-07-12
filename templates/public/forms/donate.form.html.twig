@@ -475,6 +475,9 @@
         {% endembed %}
         <i class="kd-spinner kd-animate-loader-spin kd-hidden kd-bg-contain kd-absolute kd-top-1/2 kd-left-1/2 kd-w-8 kd-h-8 kd--ml-4 kd--mt-4 kd-z-1">
             {{ spinner | raw }}
+            {% apply apply_filters('kudos_get_spinner_logo') | raw %}
+                {% include 'public/logo.html.twig' with {heartColor: '#000000', lineColor: '#000000'} %}
+            {% endapply %}
         </i>
         <div class="kd-loading-overlay kd-hidden kd-absolute kd-w-full kd-h-full kd-top-0 kd-left-0 kd-bg-white"></div>
     </form>

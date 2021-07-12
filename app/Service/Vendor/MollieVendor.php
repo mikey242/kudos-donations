@@ -6,7 +6,7 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use Kudos\Service\AbstractService;
+use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\RestRouteService;
 use Mollie\Api\Exceptions\ApiException;
@@ -46,11 +46,22 @@ class MollieVendor implements VendorInterface {
 	 * @var string
 	 */
 	private $api_key;
+	/**
+	 * @var \Kudos\Service\LoggerService
+	 */
+	private $logger;
+	/**
+	 * @var \Kudos\Service\MapperService
+	 */
+	private $mapper;
 
 	/**
 	 * Mollie constructor.
 	 */
-	public function __construct() {
+	public function __construct(MapperService $mapper_service, LoggerService $logger_service) {
+
+		$this->logger = $logger_service;
+		$this->mapper = $mapper_service;
 
 		$settings = Settings::get_setting( 'vendor_mollie' );
 
@@ -373,7 +384,6 @@ class MollieVendor implements VendorInterface {
 		if ( $valid_mandate ) {
 			$subscription = $customer->createSubscription( $subscription_array );
 			if ( $subscription ) {
-				$mapper             = new MapperService( SubscriptionEntity::class );
 				$kudos_subscription = new SubscriptionEntity(
 					[
 						'transaction_id'  => $transaction->transaction_id,
@@ -386,7 +396,7 @@ class MollieVendor implements VendorInterface {
 						'status'          => $subscription->status,
 					]
 				);
-				$mapper->save( $kudos_subscription );
+				$this->mapper->save( $kudos_subscription );
 
 				return $subscription;
 			}
@@ -525,9 +535,10 @@ class MollieVendor implements VendorInterface {
 		$amount         = $payment->amount;
 
 		// Get transaction from database.
-		$mapper = new MapperService( TransactionEntity::class );
 		/** @var TransactionEntity $transaction */
-		$transaction = $mapper->get_one_by(
+		$transaction = $this->mapper
+			->get_repository(TransactionEntity::class)
+			->get_one_by(
 			[
 				'order_id'       => $order_id,
 				'transaction_id' => $transaction_id,
@@ -608,7 +619,7 @@ class MollieVendor implements VendorInterface {
 		}
 
 		// Save transaction to database.
-		$mapper->save( $transaction );
+		$this->mapper->save( $transaction );
 
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 

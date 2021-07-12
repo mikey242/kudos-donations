@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Front;
+namespace Kudos\Controller;
 
 use Exception;
 use Kudos\Entity\DonorEntity;
@@ -8,15 +8,15 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use Kudos\Controller\ButtonController;
-use Kudos\Controller\FormController;
-use Kudos\Controller\MessageController;
-use Kudos\Controller\ModalController;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
+use Kudos\View\Model\Button;
+use Kudos\View\Model\Form;
+use Kudos\View\Model\Message;
+use Kudos\View\Model\Modal;
 
 class Front {
 
@@ -38,19 +38,23 @@ class Front {
 	/**
 	 * @var LoggerService
 	 */
-	private $logger_service;
+	private $logger;
 	/**
 	 * @var PaymentService
 	 */
-	private $payment_service;
+	private $payment;
 	/**
 	 * @var TwigService
 	 */
-	private $twig_service;
+	private $twig;
 	/**
 	 * @var MapperService
 	 */
-	private $mapper_service;
+	private $mapper;
+	/**
+	 * @var \Kudos\Helpers\Settings
+	 */
+	private $settings;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -62,18 +66,20 @@ class Front {
 	public function __construct(
 		string $plugin_name,
 		string $version,
-		LoggerService $logger_service,
-		PaymentService $payment_service,
-		TwigService $twig_service,
-		MapperService $mapper_service
+		LoggerService $logger,
+		PaymentService $payment,
+		TwigService $twig,
+		MapperService $mapper,
+		Settings $settings
 	) {
 
-		$this->plugin_name     = $plugin_name;
-		$this->version         = $version;
-		$this->logger_service  = $logger_service;
-		$this->payment_service = $payment_service;
-		$this->twig_service    = $twig_service;
-		$this->mapper_service  = $mapper_service;
+		$this->plugin_name = $plugin_name;
+		$this->version     = $version;
+		$this->logger      = $logger;
+		$this->payment     = $payment;
+		$this->twig        = $twig;
+		$this->mapper      = $mapper;
+		$this->settings    = $settings;
 
 	}
 
@@ -254,15 +260,18 @@ class Front {
 		try {
 
 			// Check if the current vendor is connected, otherwise throw an exception.
-			if ( ! $this->payment_service::is_api_ready() ) {
+			if ( ! $this->payment::is_api_ready() ) {
 				/* translators: %s: Payment vendor (e.g. Mollie). */
 				throw new Exception( sprintf( __( "%s not connected.", 'kudos-donations' ),
-					$this->payment_service::get_vendor_name() ) );
+					$this->payment::get_vendor_name() ) );
 			}
 
+			// Twig service.
+			$twig = $this->twig;
+
 			// Create the form based on campaign id.
-			$form = new FormController( $this->twig_service );
-			$form->set_campaign( $atts['campaign_id'] );
+			$form = $this->create_form( $atts['campaign_id'] );
+			$form = $this->twig->render( Form::TEMPLATE, $form->to_array() );
 
 			// If type set and true then return form.
 			if ( isset( $atts['type'] ) && $atts['type'] === 'form' ) {
@@ -270,13 +279,14 @@ class Front {
 			}
 
 			// Otherwise create modal and button and return their html.
-			$modal = new ModalController( $this->twig_service );
-			$modal->set_content( $form->render() );
-			$button = new ButtonController( $this->twig_service );
+			$modal = new Modal();
+			$modal->set_content( $form );
+			$button = new Button();
 			$button->set_atts( $atts );
 			$button->set_target( $modal->get_container_id() );
 
-			return $button->render() . $modal->render();
+			return $twig->render( Button::TEMPLATE, $button->to_array() ) .
+			       $this->render_modal( $modal );
 
 
 		} catch ( Exception $e ) {
@@ -293,23 +303,65 @@ class Front {
 	}
 
 	/**
+	 * Wrapper for rendering a modal. Places markup in footer if setting enabled.
+	 *
+	 * @param $modal
+	 *
+	 * @return string|null
+	 */
+	private function render_modal( $modal ): ?string {
+
+		// Get markup for modal.
+		$modal = $this->twig->render( Modal::TEMPLATE, $modal->to_array() );
+
+		// Place markup in footer if setting enabled.
+		if ( Settings::get_setting( 'modal_in_footer' ) ) {
+			add_action( 'wp_footer',
+				function () use ( $modal ) {
+					echo $modal;
+				} );
+
+			// No need to return anything.
+			return null;
+		} else {
+
+			// Otherwise return the modal.
+			return $modal;
+		}
+	}
+
+	/**
+	 * Builds the form object from supplied campaign_id.
+	 *
+	 * @throws Exception
+	 */
+	private function create_form( $campaign_id ): Form {
+		$form = new Form();
+		$form->set_campaign( $campaign_id );
+		$campaign_stats = $this->settings->get_campaign_stats( $campaign_id );
+		$form->set_campaign_stats( $campaign_stats );
+
+		return $form;
+	}
+
+	/**
 	 * Create message modal with supplied header and body text.
 	 *
 	 * @param string $header The header text.
 	 * @param string $body The body text.
 	 *
-	 * @return ModalController
+	 * @return string
 	 */
-	private function create_message_modal( string $header, string $body ): ModalController {
+	private function create_message_modal( string $header, string $body ): ?string {
 
-		$message = new MessageController( $this->twig_service );
+		$message = new Message();
 		$message->set_title( $header );
 		$message->set_body( $body );
-		$modal = new ModalController( $this->twig_service );
-		$modal->set_content( $message );
+		$modal = new Modal();
+		$modal->set_content( $this->twig->render( Message::TEMPLATE, $message->to_array() ) );
 		$modal->set_class( 'kudos-message-modal' );
 
-		return $modal;
+		return $this->twig->render(Modal::TEMPLATE, $modal->to_array());
 	}
 
 	/**
@@ -328,9 +380,10 @@ class Front {
 					$order_id = sanitize_text_field( $_REQUEST['kudos_order_id'] );
 					// Return message modal.
 					if ( ! empty( $order_id ) && ! empty( $token ) ) {
-						$mapper = $this->mapper_service;
-						$mapper->set_repository( TransactionEntity::class );
-						$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
+						$transaction = $this->mapper
+							->get_repository( TransactionEntity::class )
+							->get_one_by( [ 'order_id' => $order_id ] );
+
 						if ( $transaction && $transaction->verify_secret( $token ) ) {
 							$atts = $this->check_transaction( $order_id );
 							if ( $atts ) {
@@ -345,11 +398,10 @@ class Front {
 					// Cancel subscription modal.
 					if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
 
-						$mapper = $this->mapper_service;
-						$mapper->set_repository( SubscriptionEntity::class );
-
 						/** @var SubscriptionEntity $subscription */
-						$subscription = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
+						$subscription = $this->mapper
+							->get_repository( SubscriptionEntity::class )
+							->get_one_by( [ 'subscription_id' => $subscription_id ] );
 
 						// Bail if no subscription found.
 						if ( null === $subscription ) {
@@ -357,8 +409,7 @@ class Front {
 						}
 
 						if ( $subscription->verify_secret( $token ) ) {
-							$payment_service = $this->payment_service;
-							if ( $payment_service->cancel_subscription( $subscription_id ) ) {
+							if ( $this->payment->cancel_subscription( $subscription_id ) ) {
 								echo $this->create_message_modal(
 									__( 'Subscription cancelled', 'kudos-donations' ),
 									__( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
@@ -380,6 +431,34 @@ class Front {
 	}
 
 	/**
+	 * Returns the kudos logo SVG markup.
+	 *
+	 * @param string|null $color
+	 * @param int $width
+	 *
+	 * @return string|null
+	 */
+	public function get_kudos_logo_markup( string $color = null, int $width = 24 ): ?string {
+
+		if ( $color ) {
+			$lineColor  = $color;
+			$heartColor = $color;
+		} else {
+			$lineColor  = '#2ec4b6';
+			$heartColor = '#ff9f1c';
+		}
+
+		return apply_filters( 'kudos_get_kudos_logo',
+			$this->twig->render( 'public/logo.html.twig',
+				[
+					'width'      => $width,
+					'lineColor'  => $lineColor,
+					'heartColor' => $heartColor,
+				] ),
+			$width );
+	}
+
+	/**
 	 * Check payment status based on local order_id
 	 *
 	 * @param string $order_id Kudos order id.
@@ -390,22 +469,26 @@ class Front {
 
 		if ( $order_id ) {
 
-			$mapper = $this->mapper_service;
-				$mapper->set_repository( TransactionEntity::class );
+			$mapper = $this->mapper;
+
 			/** @var TransactionEntity $transaction */
-			$transaction = $mapper->get_one_by( [ 'order_id' => $order_id ] );
+			$transaction = $mapper
+				->get_repository( TransactionEntity::class )
+				->get_one_by( [ 'order_id' => $order_id ] );
 
 			if ( null === $transaction ) {
 				return false;
 			}
 
 			/** @var DonorEntity $donor */
-			$donor = $transaction->get_donor();
+			$donor = $mapper
+				->get_repository( DonorEntity::class )
+				->get_one_by( [ 'customer_id' => $transaction->customer_id ] );
 
 			try {
 				$campaign = Settings::get_campaign( $transaction->campaign_id );
 			} catch ( Exception $e ) {
-				$logger = $this->logger_service;
+				$logger = $this->logger;
 				$logger->warning( 'Error checking transaction: ' . $e->getMessage() );
 			}
 
