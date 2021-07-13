@@ -310,7 +310,7 @@ class Front {
 		$modal = $this->twig->render( Modal::TEMPLATE, $modal->to_array() );
 
 		// Place markup in footer if setting enabled.
-		if ( Settings::get_setting( 'modal_in_footer' ) ) {
+		if ( Settings::get_setting( 'donate_modal_in_footer' ) ) {
 			add_action( 'wp_footer',
 				function () use ( $modal ) {
 					echo $modal;

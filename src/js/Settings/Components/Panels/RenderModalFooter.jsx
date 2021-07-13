@@ -14,8 +14,8 @@ const RenderModalFooter = (props) => {
                     'When enabled the donation modal HTML will be placed in the footer instead of in the content.',
                     'kudos-donations'
                 )}
-                checked={props.settings._kudos_modal_in_footer || ''}
-                onChange={() => props.handleInputChange("_kudos_modal_in_footer", !props.settings._kudos_modal_in_footer)}
+                checked={props.settings._kudos_donate_modal_in_footer || ''}
+                onChange={() => props.handleInputChange("_kudos_donate_modal_in_footer", !props.settings._kudos_donate_modal_in_footer)}
             />
 
         </SettingCard>
