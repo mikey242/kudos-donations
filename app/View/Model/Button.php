@@ -35,11 +35,7 @@ class Button extends AbstractModel {
 	 * Button constructor.
 	 */
 	public function __construct() {
-
 		parent::__construct();
-
-//		$this->logo = apply_filters( 'kudos_get_button_logo', $this->get_kudos_logo_markup( 'white' ) );
-
 	}
 
 	public function set_atts( array $atts ) {
