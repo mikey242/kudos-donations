@@ -120,7 +120,7 @@ function run_kudos_donations() {
 		$builder = new ContainerBuilder();
 		$builder->useAutowiring(true);
 		$builder->addDefinitions( KUDOS_PLUGIN_DIR . '/app/config.php' );
-		if($_ENV['WP_ENV'] !== 'development') {
+		if(isset($_ENV['WP_ENV']) && $_ENV['WP_ENV']  !== 'development') {
 			$builder->enableCompilation(KUDOS_STORAGE_DIR . '/php-di/cache');
 		}
 		$container = $builder->build();
