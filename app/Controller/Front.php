@@ -328,12 +328,25 @@ class Front {
 	/**
 	 * Builds the form object from supplied campaign_id.
 	 *
+	 * @param $campaign_id
+	 *
+	 * @return Form
 	 * @throws Exception
 	 */
 	private function create_form( $campaign_id ): Form {
 		$form = new Form();
-		$form->set_campaign( $campaign_id );
+		$campaign = $this->settings::get_campaign( $campaign_id );
 		$campaign_stats = $this->settings->get_campaign_stats( $campaign_id );
+
+		// Set campaign.
+		$form->set_campaign( $campaign );
+
+		// Add additional funds if any.
+		if(!empty($campaign['additional_funds'])) {
+			$campaign_stats['total'] += $campaign['additional_funds'];
+		}
+
+		// Set campaign stats.
 		$form->set_campaign_stats( $campaign_stats );
 
 		return $form;

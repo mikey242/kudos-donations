@@ -100,19 +100,15 @@ class Form extends AbstractModel {
 		$this->terms_link        = Settings::get_setting( 'terms_link' );
 		$this->recurring_allowed = isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false;
 		$this->vendor_name       = Settings::get_setting( 'payment_vendor' );
-//		$this->spinner           = $this->get_kudos_logo_markup( 'black', 30 );
 	}
 
 	/**
-	 * @throws Exception
+	 * Set the campaign properties.
 	 */
-	public function set_campaign( $campaign_id ) {
-
-		// Throws exception if campaign not found.
-		$campaign = Settings::get_campaign( $campaign_id );
+	public function set_campaign( $campaign ) {
 
 		// Set campaign properties.
-		$this->campaign_id      = $campaign_id;
+		$this->campaign_id      = $campaign['id'];
 		$this->button_label     = $campaign['button_label'] ?? '';
 		$this->welcome_title    = $campaign['modal_title'] ?? '';
 		$this->welcome_text     = $campaign['welcome_text'] ?? '';
