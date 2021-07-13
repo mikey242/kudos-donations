@@ -8,7 +8,7 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
-use \WP_List_Table;
+use WP_List_Table;
 
 class TransactionsTable extends WP_List_Table {
 

@@ -10,7 +10,6 @@ use Kudos\Helpers\Utils;
 use Kudos\Service\Vendor\MollieVendor;
 use Kudos\Service\Vendor\VendorInterface;
 use Mollie\Api\Resources\Payment;
-use Mpdf\Tag\S;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

@@ -52,7 +52,7 @@ class Front {
 	 */
 	private $mapper;
 	/**
-	 * @var \Kudos\Helpers\Settings
+	 * @var Settings
 	 */
 	private $settings;
 
@@ -88,6 +88,7 @@ class Front {
 	 *
 	 * @param bool $echo Whether to echo the styles instead of returning a string.
 	 *
+	 * @return string
 	 */
 	public function get_kudos_root_styles( bool $echo = true ): string {
 
@@ -100,7 +101,7 @@ class Front {
 		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
-		$out = "<style>
+		return "<style>
 
 		:root {
 			--kudos-theme-primary: $primary;
@@ -112,12 +113,6 @@ class Front {
 		}
 		
 		</style>";
-
-		if ( $echo ) {
-			echo $out;
-		}
-
-		return $out;
 
 	}
 
@@ -191,7 +186,7 @@ class Front {
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 
 		// Output root styles.
-		$this->get_kudos_root_styles();
+		echo $this->get_kudos_root_styles();
 
 	}
 

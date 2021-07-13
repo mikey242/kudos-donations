@@ -6,7 +6,6 @@ use DateTime;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
-use Throwable;
 
 abstract class AbstractEntity {
 
