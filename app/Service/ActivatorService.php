@@ -25,21 +25,25 @@ use Kudos\Helpers\WpDb;
 class ActivatorService {
 
 	/**
-	 * @var \Kudos\Service\LoggerService
+	 * @var LoggerService
 	 */
 	private $logger;
 	/**
-	 * @var \Kudos\Service\TwigService
+	 * @var TwigService
 	 */
 	private $twig;
 	/**
-	 * @var \Kudos\Service\MapperService
+	 * @var MapperService
 	 */
 	private $mapper;
 	/**
-	 * @var \Kudos\Helpers\WpDb|\wpdb
+	 * @var WpDb|\wpdb
 	 */
 	private $wpdb;
+	/**
+	 * @var Settings
+	 */
+	private $settings;
 
 	public function __construct() {
 
@@ -47,7 +51,8 @@ class ActivatorService {
 		$this->wpdb = new WpDb();
 		$this->twig = new TwigService($this->logger);
 		$this->mapper = new MapperService($this->logger, $this->wpdb);
-		
+		$this->settings = new Settings($this->mapper);
+
 	}
 
 	/**
@@ -63,7 +68,7 @@ class ActivatorService {
 		$logger->init();
 		$twig = $this->twig;
 		$twig->init();
-		$settings = new Settings();
+		$settings = $this->settings;
 		$settings->register_settings();
 
 		if ( $old_version ) {
@@ -91,21 +96,22 @@ class ActivatorService {
 
 		$logger = $this->logger;
 		$wpdb = $this->wpdb;
+		$settings = $this->settings;
 
 		$logger->info( 'Upgrade detected, running migrations.',
 			[ 'old_version' => $old_version, 'new_version' => KUDOS_VERSION ] );
 
 		if ( version_compare( $old_version, '2.1.1', '<' ) ) {
-			Settings::remove_setting( 'action_scheduler' );
+			$settings::remove_setting( 'action_scheduler' );
 		}
 
 		if ( version_compare( $old_version, '2.2.0', '<' ) ) {
-			$link = Settings::get_setting( 'privacy_link' );
-			Settings::remove_setting( 'subscription_enabled' );
+			$link = $settings::get_setting( 'privacy_link' );
+			$settings::remove_setting( 'subscription_enabled' );
 
 			if ( $link ) {
-				Settings::update_setting( 'terms_link', $link );
-				Settings::remove_setting( 'privacy_link' );
+				$settings::update_setting( 'terms_link', $link );
+				$settings::remove_setting( 'privacy_link' );
 			}
 		}
 
@@ -114,7 +120,7 @@ class ActivatorService {
 			// Rename setting
 			$transaction_table = TransactionEntity::get_table_name();
 			$wpdb->query( "ALTER TABLE $transaction_table RENAME COLUMN `campaign_label` TO `campaign_id`" );
-			Settings::update_setting( 'show_intro', 1 );
+			$settings::update_setting( 'show_intro', 1 );
 
 			// Apply mode to Donors
 			$donor_table = DonorEntity::get_table_name();
@@ -134,11 +140,11 @@ class ActivatorService {
 
 		if ( version_compare( $old_version, '2.3.2', '<' ) ) {
 			// Setting now replaced by 'theme_colors'
-			$old_color             = Settings::get_setting( 'theme_color' );
-			$new_colors            = Settings::get_setting( 'theme_colors' );
+			$old_color             = $settings::get_setting( 'theme_color' );
+			$new_colors            = $settings::get_setting( 'theme_colors' );
 			$new_colors['primary'] = $old_color;
-			Settings::update_setting( 'theme_colors', $new_colors );
-			Settings::remove_setting( 'theme_color' );
+			$settings::update_setting( 'theme_colors', $new_colors );
+			$settings::remove_setting( 'theme_color' );
 		}
 
 		if ( version_compare( $old_version, '2.3.7', '<' ) ) {
@@ -149,30 +155,30 @@ class ActivatorService {
 
 		if ( version_compare( $old_version, '2.4.0', '<' ) ) {
 			// Setting now replaced by single 'vendor_mollie' setting.
-			$connected = Settings::get_setting( 'mollie_connected' );
-			Settings::update_array( 'vendor_mollie',
+			$connected = $settings::get_setting( 'mollie_connected' );
+			$settings::update_array( 'vendor_mollie',
 				[
 
 					'connected' => (bool) $connected,
-					'mode'      => ! empty( Settings::get_setting( 'mollie_api_mode' ) ) ? (string) Settings::get_setting( 'mollie_api_mode' ) : 'test',
-					'test_key'  => (string) Settings::get_setting( 'mollie_test_api_key' ),
-					'live_key'  => (string) Settings::get_setting( 'mollie_live_api_key' ),
+					'mode'      => ! empty( $settings::get_setting( 'mollie_api_mode' ) ) ? (string) $settings::get_setting( 'mollie_api_mode' ) : 'test',
+					'test_key'  => (string) $settings::get_setting( 'mollie_test_api_key' ),
+					'live_key'  => (string) $settings::get_setting( 'mollie_live_api_key' ),
 
 				] );
 
 			// Remove old settings fields.
-			Settings::remove_setting( 'mollie_connected' );
-			Settings::remove_setting( 'mollie_api_mode' );
-			Settings::remove_setting( 'mollie_test_api_key' );
-			Settings::remove_setting( 'mollie_live_api_key' );
-			Settings::remove_setting( 'campaign_labels' );
+			$settings::remove_setting( 'mollie_connected' );
+			$settings::remove_setting( 'mollie_api_mode' );
+			$settings::remove_setting( 'mollie_test_api_key' );
+			$settings::remove_setting( 'mollie_live_api_key' );
+			$settings::remove_setting( 'campaign_labels' );
 		}
 
 		if ( version_compare( $old_version, '2.4.1', '<' ) ) {
 			// Cast connected variable as boolean.
-			$vendor_settings = Settings::get_setting('vendor_mollie');
+			$vendor_settings = $settings::get_setting('vendor_mollie');
 			$connected = ! empty( $vendor_settings['connected'] ) && $vendor_settings['connected'];
-			Settings::update_array('vendor_mollie', [
+			$settings::update_array('vendor_mollie', [
 				'connected' => $connected
 			]);
 		}
@@ -183,8 +189,8 @@ class ActivatorService {
 			$wpdb->query( "ALTER TABLE $transaction_table ADD `message` VARCHAR(255)" );
 
 			// Remove unused settings.
-			Settings::remove_setting('address_enabled');
-			Settings::remove_setting('address_required');
+			$settings::remove_setting('address_enabled');
+			$settings::remove_setting('address_required');
 		}
 
 	}
