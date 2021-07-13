@@ -1,4 +1,5 @@
 import party from "party-js"
+import {isVisible} from "./util"
 
 export function resetForm(form) {
 
@@ -27,12 +28,12 @@ export function resetForm(form) {
 
 // Set form height according to highest tab.
 export function setFormHeight(form) {
-    if(!form.closest('.kudos-modal')) {
+    if (!form.closest('.kudos-modal')) {
         let tabs = form.querySelectorAll('fieldset')
         let array = Array.from(tabs).map(tab => {
             return tab.offsetHeight
         })
-        let max = Math.max.apply(Math,array)
+        let max = Math.max.apply(Math, array)
 
         form.style.minHeight = max + 'px'
     }
@@ -127,7 +128,7 @@ export function animateProgressBar(form) {
 
     let progressBar = form.querySelector('.kudos-campaign-progress')
 
-    if (progressBar && !progressBar.classList.contains('kd-progress-animated')) {
+    if (progressBar) {
 
         let goal = parseFloat(progressBar.dataset.goal)
         let total = parseFloat(progressBar.dataset.total)
@@ -143,7 +144,7 @@ export function animateProgressBar(form) {
         percent = percent > 100 ? 100 : percent
 
         // Set bar width a minimum of 10 percent if more than 0
-        if(percent > 0) {
+        if (percent > 0) {
             bar.style.width = Math.max(percent, 10) + '%'
         }
 
@@ -190,9 +191,9 @@ export function valueChange(form) {
 }
 
 // Resets the progress bar values of the supplied modal
-export function resetProgressBar(modal) {
+export function resetProgressBar(form) {
 
-    let progressBar = modal.querySelector('.kudos-campaign-progress')
+    let progressBar = form.querySelector('.kudos-campaign-progress')
 
     if (progressBar) {
         // Cache selectors
@@ -206,5 +207,16 @@ export function resetProgressBar(modal) {
         extra.style.transform = 'scaleX(0)'
         text.innerHTML = ''
         text.style.opacity = '0'
+    }
+}
+
+export function animateInView(form) {
+    if (!form.classList.contains('kd-progress-animated')) {
+        if (isVisible(form)) {
+            form.classList.add('kd-progress-animated')
+            animateProgressBar(form)
+        } else {
+            resetProgressBar(form)
+        }
     }
 }

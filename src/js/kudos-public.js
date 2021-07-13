@@ -8,11 +8,13 @@ import {getStyle, isVisible} from "./Helpers/util"
 import {handleMessages} from "./Helpers/modal"
 
 import {
+    animateInView,
     animateProgressBar,
     checkRequirements,
     createSummary,
     resetForm,
-    resetProgressBar, valueChange,
+    resetProgressBar,
+    valueChange
 } from "./Helpers/form"
 
 jQuery(document).ready(($) => {
@@ -148,7 +150,19 @@ jQuery(document).ready(($) => {
 
         // Configure forms.
         if (kudosForms) {
+            // On scroll animate each progress-bar when visible.
+            document.addEventListener('scroll', _.debounce(() => {
+                kudosForms.forEach((form) => {
+                    animateInView(form)
+                })
+            }, 100))
+
+            // Attach listeners and set initial state.
             kudosForms.forEach((form) => {
+                if (isVisible(form)) {
+                    form.classList.add('kd-progress-animated')
+                    animateProgressBar(form)
+                }
                 resetForm(form)
                 valueChange(form)
             })
