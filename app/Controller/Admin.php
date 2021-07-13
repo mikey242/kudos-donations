@@ -103,7 +103,7 @@ class Admin {
 		$this->mapper      = $mapper;
 		$this->twig        = $twig;
 		$this->payment     = $payment;
-		$this->activator = $activator;
+		$this->activator   = $activator;
 		$this->settings    = $settings;
 
 	}
@@ -111,7 +111,7 @@ class Admin {
 	/**
 	 * Create the Kudos Donations admin pages.
 	 */
-	public function kudos_add_menu_pages() {
+	public function add_menu_pages() {
 
 		add_menu_page(
 			__( 'Kudos', 'kudos-donations' ),

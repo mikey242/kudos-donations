@@ -86,7 +86,7 @@ class KudosDonations {
 
 		$plugin_admin = $this->container->get( 'Admin' );
 
-		add_action( 'admin_menu', [ $plugin_admin, 'kudos_add_menu_pages' ], 11 );
+		add_action( 'admin_menu', [ $plugin_admin, 'add_menu_pages' ], 11 );
 		add_action( 'admin_init', [ $plugin_admin, 'admin_actions' ] );
 		add_action( 'admin_init', [ $plugin_admin, 'register_settings' ] );
 		add_action( 'rest_api_init', [ $plugin_admin, 'register_settings' ] );
