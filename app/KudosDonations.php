@@ -2,10 +2,6 @@
 
 namespace Kudos;
 
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Entity\TransactionEntity;
-
 /**
  * The file that defines the core plugin class
  *
@@ -75,7 +71,6 @@ class KudosDonations {
 		$this->define_rest_hooks();
 		$this->define_payment_hooks();
 		$this->define_public_hooks();
-		$this->define_entity_hooks();
 
 		add_action( 'plugins_loaded', [ $this, 'version_check' ] );
 
@@ -95,6 +90,7 @@ class KudosDonations {
 		add_action( 'admin_init', [ $plugin_admin, 'admin_actions' ] );
 		add_action( 'admin_init', [ $plugin_admin, 'register_settings' ] );
 		add_action( 'rest_api_init', [ $plugin_admin, 'register_settings' ] );
+		add_action( 'kudos_remove_secret_action', [ $plugin_admin, 'remove_secret_action' ], 10, 2 );
 
 	}
 
@@ -135,21 +131,6 @@ class KudosDonations {
 
 		add_action( 'kudos_mollie_transaction_paid', [ $payment_service, 'schedule_process_transaction' ] );
 		add_action( 'kudos_process_mollie_transaction', [ $payment_service, 'process_transaction' ] );
-
-	}
-
-	/**
-	 * Register all the entity related hooks.
-	 */
-	private function define_entity_hooks() {
-
-		// Action triggered by Action Scheduler to remove the entity secret.
-		add_action( TransactionEntity::get_table_name( false ) . '_remove_secret_action',
-			[ TransactionEntity::class, 'remove_secret_action' ] );
-		add_action( DonorEntity::get_table_name( false ) . '_remove_secret_action',
-			[ DonorEntity::class, 'remove_secret_action' ] );
-		add_action( SubscriptionEntity::get_table_name( false ) . '_remove_secret_action',
-			[ SubscriptionEntity::class, 'remove_secret_action' ] );
 
 	}
 

@@ -539,6 +539,33 @@ class Admin {
 	}
 
 	/**
+	 * Removes the secret for the specified entity where
+	 * it matches the provided id.
+	 *
+	 * @param string $entity The class of entity.
+	 * @param string $id The ID of row.
+	 *
+	 * @return bool|int
+	 */
+	public function remove_secret_action( string $entity, string $id ) {
+
+		if ( $id ) {
+			$mapper = $this->mapper;
+			$entity = $mapper
+				->get_repository( $entity )
+				->get_one_by( [ 'id' => $id ] );
+			if ( ! $entity ) {
+				return false;
+			}
+			$entity->clear_secret();
+
+			return $mapper->save( $entity, false );
+		}
+
+		return false;
+	}
+
+	/**
 	 * Register the kudos settings.
 	 */
 	public function register_settings() {

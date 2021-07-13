@@ -4,8 +4,6 @@ namespace Kudos\Entity;
 
 use DateTime;
 use Kudos\Helpers\Utils;
-use Kudos\Service\LoggerService;
-use Kudos\Service\MapperService;
 
 abstract class AbstractEntity {
 
@@ -38,8 +36,6 @@ abstract class AbstractEntity {
 	 * Entity object constructor.
 	 *
 	 * @param array|null $atts Array of entities properties and values.
-	 *
-	 * @since   2.0.0
 	 */
 	public function __construct( array $atts = null ) {
 
@@ -91,36 +87,7 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Removes the secret for the current entity where
-	 * it matches the provided id
-	 *
-	 * @param string $secret The secret as stored in the database.
-	 *
-	 * @return bool|int
-	 */
-	public static function remove_secret_action( string $secret ) {
-
-		if ( $secret ) {
-			$mapper = new MapperService(new LoggerService());
-			/** @var AbstractEntity $entity */
-			$entity = $mapper
-				->get_repository(static::class)
-				->get_one_by( [ 'secret' => $secret ] );
-			if ( ! $entity ) {
-				return false;
-			}
-			$entity->clear_secret();
-
-			return $mapper->save( $entity, false );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Clears the Entities secret
-	 *
-	 * @since   2.0.0
 	 */
 	public function clear_secret() {
 
@@ -135,22 +102,22 @@ abstract class AbstractEntity {
 	 *
 	 * @return string|false
 	 * @throws \Exception
-	 * @since   2.0.0
 	 */
 	public function create_secret( string $timeout = '+10 minutes' ) {
-
-		$table = static::get_table_name( false );
 
 		// Create secret if none set.
 		if ( null === $this->secret ) {
 			$this->secret = bin2hex( random_bytes( 10 ) );
 		}
 
-		Utils::schedule_action( strtotime( $timeout ), $table . '_remove_secret_action', [ $this->secret ], true );
+		Utils::schedule_action(
+			strtotime( $timeout ),
+			'kudos_remove_secret_action',
+			[ static::class, $this->id ],
+			true
+		);
 
 		return wp_hash_password( $this->secret );
-
-
 	}
 
 	/**
@@ -159,7 +126,6 @@ abstract class AbstractEntity {
 	 * @param string $hash Hashed version of secret.
 	 *
 	 * @return bool
-	 * @since   2.0.0
 	 */
 	public function verify_secret( string $hash ): bool {
 
@@ -171,7 +137,6 @@ abstract class AbstractEntity {
 	 * Returns class as an array using type casting
 	 *
 	 * @return array
-	 * @since 2.0.0
 	 */
 	public function to_array(): array {
 
@@ -183,7 +148,6 @@ abstract class AbstractEntity {
 	 * Returns the object as a string.
 	 *
 	 * @return string
-	 * @since   2.0.0
 	 */
 	public function __toString(): string {
 
