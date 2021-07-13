@@ -22,22 +22,27 @@ class MailerService {
 	/**
 	 * @var TwigService
 	 */
-	private $twig_service;
+	private $twig;
 	/**
 	 * @var MapperService
 	 */
-	private $mapper_service;
+	private $mapper;
+	/**
+	 * @var \Kudos\Service\LoggerService
+	 */
+	private $logger;
 
 	/**
 	 * Mailer constructor.
 	 */
-	public function __construct( TwigService $twig_service, MapperService $mapper_service) {
+	public function __construct( TwigService $twig, MapperService $mapper, LoggerService $logger ) {
 
-		$from_name          = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
-		$from_address       = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
-		$this->from         = "From: $from_name " . ' <' . $from_address . '>';
-		$this->twig_service = $twig_service;
-		$this->mapper_service = $mapper_service;
+		$from_name    = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
+		$from_address = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
+		$this->from   = "From: $from_name " . ' <' . $from_address . '>';
+		$this->twig   = $twig;
+		$this->mapper = $mapper;
+		$this->logger = $logger;
 
 	}
 
@@ -100,10 +105,10 @@ class MailerService {
 		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction->order_id );
 
 		// Get donor details.
-		$mapper = $this->mapper_service;
-		$mapper->set_repository(DonorEntity::class);
 		/** @var DonorEntity $donor */
-		$donor = $mapper->get_one_by([ 'customer_id' => $transaction->customer_id ]);
+		$donor = $this->mapper
+			->get_repository( DonorEntity::class )
+			->get_one_by( [ 'customer_id' => $transaction->customer_id ] );
 
 		// Create array of variables for use in twig template.
 		$render_array = [
@@ -118,11 +123,12 @@ class MailerService {
 
 		// Add a cancel subscription url if transaction associated with a subscription.
 		if ( ! empty( $transaction->subscription_id ) ) {
-			$mapper = $this->mapper_service;
-			$mapper->set_repository( SubscriptionEntity::class );
+			$mapper          = $this->mapper;
 			$subscription_id = $transaction->subscription_id;
 			/** @var SubscriptionEntity $subscription */
-			$subscription               = $mapper->get_one_by( [ 'subscription_id' => $subscription_id ] );
+			$subscription               = $mapper
+				->get_repository( SubscriptionEntity::class )
+				->get_one_by( [ 'subscription_id' => $subscription_id ] );
 			$token                      = $subscription->create_secret( '+1 week' );
 			$cancel_url                 = add_query_arg(
 				[
@@ -136,7 +142,7 @@ class MailerService {
 			$mapper->save( $subscription );
 		}
 
-		$twig = $this->twig_service;
+		$twig = $this->twig;
 		$body = $twig->render( 'emails/receipt.html.twig', $render_array );
 
 		return $this->send(
@@ -228,7 +234,7 @@ class MailerService {
 	 */
 	public function send_message( string $email, string $header, string $message ): bool {
 
-		$twig = $this->twig_service;
+		$twig = $this->twig;
 		$body = $twig->render(
 			'emails/message.html.twig',
 			[
