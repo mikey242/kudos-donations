@@ -120,12 +120,26 @@ class LoggerService extends Monolog {
 	public static function get_as_array() {
 
 		if ( file_exists( self::LOG_FILE ) ) {
-			$reg  = '/^\[(?<date>.*)\]\s(?<env>\w+)\.(?<type>\w+):(?<message>.*)/m';
-			$text = file_get_contents( self::LOG_FILE );
-			preg_match_all( $reg, $text, $matches, PREG_SET_ORDER );
-			usort( $matches, [ static::class, 'date_compare' ] );
 
-			return $matches;
+			$limit = 26;
+			$reg = '/^\[(?<date>.*)\]\s(?<env>\w+)\.(?<type>\w+):(?<message>.*)/m';
+
+			$lines = [];
+			$fp    = fopen( self::LOG_FILE, "r" );
+			while ( ! feof( $fp ) ) {
+				$line = fgets( $fp, 4096 );
+				preg_match( $reg, $line, $matches );
+				array_push( $lines, $matches );
+				if ( count( $lines ) > $limit ) {
+					array_shift( $lines );
+				}
+			}
+			fclose( $fp );
+
+			$lines = array_filter($lines);
+			usort( $lines, [ static::class, 'date_compare' ] );
+
+			return $lines;
 		}
 
 		return false;
