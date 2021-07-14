@@ -3,6 +3,7 @@
 namespace Kudos\Entity;
 
 use DateTime;
+use Exception;
 use Kudos\Helpers\Utils;
 
 abstract class AbstractEntity {
@@ -96,18 +97,17 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Set the donor's secret
+	 * Set the entities secret and schedule removal.
 	 *
 	 * @param string $timeout How long the secret should be kept in the database for.
 	 *
 	 * @return string|false
-	 * @throws \Exception
 	 */
 	public function create_secret( string $timeout = '+10 minutes' ) {
 
 		// Create secret if none set.
 		if ( null === $this->secret ) {
-			$this->secret = bin2hex( random_bytes( 10 ) );
+			$this->secret = bin2hex( wp_generate_password( 10 ) );
 		}
 
 		Utils::schedule_action(
