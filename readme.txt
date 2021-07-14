@@ -122,12 +122,14 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * *NEW* You can now add a donation form without using a button or popup. This can be selected in the side panel when placing a Kudos block, or if using the shortcode by adding the attribute type="form".
 * *NEW* Allow adding additional funds to campaign. Useful if you receive donations for your campaign outside of Kudos.
 * *NEW* Add ability to choose custom theme color.
-* Implementation of dependency injection using PHP-DI. This will result in faster, cleaner, easier to maintain code.
+* Log file is cleared once it reaches 2MB.
+* Implementation of dependency injection using PHP-DI. This will result in faster, cleaner and easier to maintain code.
 * Use Laravel-Mix for building assets.
 * Move goal icon in front of goal amount.
 * Update Mollie API client to 2.36.1
 * Update ActionScheduler to 3.2.1
 * Update TailwindCSS to 2.2.4
+* Update Monolog to 2.3.1
 
 = 2.7.0 =
 * Add goal progression to campaigns. Disabled by default, this can be enabled per campaign and shows a percentage bar of how much the campaign has already raised as well as how much the currently selected amount will progress the campaign.
