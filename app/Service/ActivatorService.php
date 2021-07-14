@@ -6,6 +6,7 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
+use Kudos\Helpers\Utils;
 use Kudos\Helpers\WpDb;
 
 /**
@@ -19,8 +20,6 @@ use Kudos\Helpers\WpDb;
  * Fired during plugin activation.
  *
  * This class defines all code necessary to run during the plugin's activation.
- *
- * @since      1.0.0
  */
 class ActivatorService {
 
@@ -82,6 +81,9 @@ class ActivatorService {
 
 		update_option( '_kudos_donations_version', KUDOS_VERSION );
 		$logger->info( 'Kudos Donations plugin activated', ['version' => KUDOS_VERSION] );
+
+		// Schedule log file clearing.
+		Utils::schedule_recurring_action( strtotime( 'today midnight' ), DAY_IN_SECONDS, 'kudos_clear_log' );
 
 	}
 

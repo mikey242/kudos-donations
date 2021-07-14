@@ -91,6 +91,7 @@ class KudosDonations {
 		add_action( 'admin_init', [ $plugin_admin, 'register_settings' ] );
 		add_action( 'rest_api_init', [ $plugin_admin, 'register_settings' ] );
 		add_action( 'kudos_remove_secret_action', [ $plugin_admin, 'remove_secret_action' ], 10, 2 );
+		add_action( 'kudos_clear_log', [$plugin_admin, 'clear_log'] );
 
 	}
 

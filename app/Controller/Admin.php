@@ -566,6 +566,23 @@ class Admin {
 	}
 
 	/**
+	 * Clear the log file when over certain size.
+	 *
+	 * @return bool|int
+	 */
+	public function clear_log() {
+
+		$file = LoggerService::LOG_FILE;
+		$size = filesize( $file );
+
+		if ( $size >= LoggerService::LOG_SIZE ) {
+			return LoggerService::clear();
+		}
+
+		return false;
+	}
+
+	/**
 	 * Register the kudos settings.
 	 */
 	public function register_settings() {
