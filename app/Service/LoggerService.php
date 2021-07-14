@@ -28,26 +28,6 @@ class LoggerService extends Monolog {
 	}
 
 	/**
-	 * The class factory. In most cases this
-	 * should be used instead of instantiating the object
-	 * directly.
-	 *
-	 * @return static
-	 * @since   2.0.0
-	 */
-	public static function factory() {
-
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new static();
-		}
-
-		return $instance;
-
-	}
-
-	/**
 	 * Clears the log file
 	 *
 	 * @return bool|int
