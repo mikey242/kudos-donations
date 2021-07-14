@@ -5,8 +5,6 @@ use Kudos\Service\LoggerService;
 
 /**
  * Debug page render
- *
- * @since   2.0.0
  */
 
 // Get the active tab from the $_GET param.

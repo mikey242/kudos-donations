@@ -9,12 +9,12 @@ use Monolog\Logger as Monolog;
 class LoggerService extends Monolog {
 
 	const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
-	const LOG_FILE = self::LOG_DIR . 'kudos.log';
+	const LOG_FILENAME = 'kudos.log';
+	const LOG_SIZE = 2097152; // 2097152 = 2MB
+	const LOG_FILE = self::LOG_DIR . self::LOG_FILENAME;
 
 	/**
 	 * Kudos_Logger constructor.
-	 *
-	 * @since    1.0.0
 	 */
 	public function __construct() {
 
@@ -51,7 +51,6 @@ class LoggerService extends Monolog {
 	 * Clears the log file
 	 *
 	 * @return bool|int
-	 * @since   2.0.0
 	 */
 	public static function clear() {
 
@@ -67,7 +66,6 @@ class LoggerService extends Monolog {
 	 * Checks if log file is writeable and returns true if it is
 	 *
 	 * @return bool
-	 * @since   1.0.1
 	 */
 	private static function is_writeable(): bool {
 
@@ -81,8 +79,6 @@ class LoggerService extends Monolog {
 
 	/**
 	 * Downloads the log file
-	 *
-	 * @since   2.0.0
 	 */
 	public static function download() {
 
@@ -103,8 +99,6 @@ class LoggerService extends Monolog {
 
 	/**
 	 * Create the log directory
-	 *
-	 * @since    1.0.0
 	 */
 	public function init() {
 
@@ -122,7 +116,6 @@ class LoggerService extends Monolog {
 	 * @param array $context Context array.
 	 *
 	 * @return bool
-	 * @since    2.0.0
 	 */
 	public function addRecord( int $level, string $message, array $context = [] ): bool {
 
@@ -140,10 +133,9 @@ class LoggerService extends Monolog {
 	}
 
 	/**
-	 * Get the contents of the log file and return as array
+	 * Get the contents of the log file and return as array.
 	 *
 	 * @return array|false
-	 * @since   2.0.0
 	 */
 	public static function get_as_array() {
 
@@ -167,7 +159,6 @@ class LoggerService extends Monolog {
 	 * @param array $b Second array.
 	 *
 	 * @return false|int
-	 * @since   2.0.0
 	 */
 	private static function date_compare( array $a, array $b ) {
 

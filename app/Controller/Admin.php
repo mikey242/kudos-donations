@@ -19,41 +19,19 @@ use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
 
-/**
- * The admin-specific functionality of the plugin.
- *
- * @link       https://www.linkedin.com/in/michael-iseard/
- * @since      1.0.0
- *
- * @package    Kudos-Donations
- * @subpackage Kudos/admin
- */
-
-/**
- * The admin-specific functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
- * @package    Kudos-Donations
- * @subpackage Kudos/admin
- * @author     Michael Iseard <michael@iseard.media>
- */
 class Admin {
 
 	/**
 	 * The ID of this plugin.
 	 *
-	 * @access   private
-	 * @var      string $plugin_name The ID of this plugin.
+	 * @var string $plugin_name The ID of this plugin.
 	 */
 	private $plugin_name;
 
 	/**
 	 * The version of this plugin.
 	 *
-	 * @access   private
-	 * @var      string $version The current version of this plugin.
+	 * @var string $version The current version of this plugin.
 	 */
 	private $version;
 
@@ -66,19 +44,19 @@ class Admin {
 	 */
 	private $table;
 	/**
-	 * @var \Kudos\Service\TwigService
+	 * @var TwigService
 	 */
 	private $twig;
 	/**
-	 * @var \Kudos\Service\PaymentService
+	 * @var PaymentService
 	 */
 	private $payment;
 	/**
-	 * @var \Kudos\Helpers\Settings
+	 * @var Settings
 	 */
 	private $settings;
 	/**
-	 * @var \Kudos\Service\ActivatorService
+	 * @var ActivatorService
 	 */
 	private $activator;
 
@@ -175,7 +153,6 @@ class Admin {
 
 		add_action( "load-$subscriptions_page_hook_suffix", [ $this, 'prepare_subscriptions_page' ] );
 
-
 		/*
 		 * Donor page.
 		 */
@@ -225,6 +202,7 @@ class Admin {
 				require_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-debug.php';
 			}
 		);
+
 		add_action( "admin_print_scripts-$debug_page_hook_suffix",
 			function () {
 				?>
@@ -445,7 +423,6 @@ class Admin {
 					if ( LoggerService::clear() === 0 ) {
 						new AdminNotice( __( 'Log cleared', 'kudos-donations' ) );
 					}
-
 					break;
 
 				case 'kudos_clear_mollie':

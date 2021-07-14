@@ -8,7 +8,6 @@ class Utils {
 	 * Gets url Mollie will use to return customer to after payment complete.
 	 *
 	 * @return string|void
-	 * @since   1.0.0
 	 */
 	public static function get_return_url(): string {
 
@@ -36,7 +35,6 @@ class Utils {
 	 * @param string $url e.g style.css.
 	 *
 	 * @return array
-	 * @since   1.0.0
 	 */
 	private static function get_asset_manifest( string $url ): array {
 		$map      = $url . 'dist/mix-manifest.json';
@@ -91,7 +89,6 @@ class Utils {
 	 * @param string $asset e.g style.css.
 	 *
 	 * @return string
-	 * @since   1.0.0
 	 */
 	public static function get_asset_content( string $asset ): string {
 
@@ -115,7 +112,6 @@ class Utils {
 	 * @param string $currency Three letter currency code (EUR, GBP, USD).
 	 *
 	 * @return string
-	 * @since      1.0.2
 	 */
 	public static function get_currency_symbol( string $currency ): string {
 
@@ -150,7 +146,6 @@ class Utils {
 	 *
 	 * @return string Lightened/Darkened colour as hexadecimal (with hash);
 	 * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
-	 * @sice    1.0.2
 	 */
 	public static function color_luminance( string $hex, float $percent ): string {
 
@@ -182,7 +177,6 @@ class Utils {
 	 * @param string $text Mollie sequence type code.
 	 *
 	 * @return string|void
-	 * @since   2.0.0
 	 */
 	public static function get_sequence_type( string $text ): string {
 
@@ -203,7 +197,6 @@ class Utils {
 	 * @param string $frequency Mollie frequency code.
 	 *
 	 * @return string|void
-	 * @since   2.0.0
 	 */
 	public static function get_frequency_name( string $frequency ): string {
 
@@ -230,7 +223,6 @@ class Utils {
 	 * @param string $frequency Frequency.
 	 *
 	 * @return int|null
-	 * @since   2.0.0
 	 */
 	public static function get_times_from_years( int $years, string $frequency ) {
 
@@ -249,7 +241,6 @@ class Utils {
 	 * @param int $length Return value length (minus prefix).
 	 *
 	 * @return string
-	 * @since   2.0.0
 	 */
 	public static function generate_id( string $prefix = null, int $length = 10 ): string {
 
@@ -264,8 +255,6 @@ class Utils {
 	 * @param string $hook The name of the WordPress action that is being registered.
 	 * @param array $args An array of arguments to pass.
 	 * @param bool $overwrite Whether to replace existing scheduled action or not.
-	 *
-	 * @since    1.0.0
 	 */
 	public static function schedule_action( int $timestamp, string $hook, array $args = [], bool $overwrite = false ) {
 
@@ -292,8 +281,6 @@ class Utils {
 	 * @param string $hook The name of the WordPress action that is being registered.
 	 * @param array $args An array of arguments to pass.
 	 * @param bool $overwrite Whether to replace existing scheduled action or not.
-	 *
-	 * @since    1.0.0
 	 */
 	public static function schedule_recurring_action(
 		int $timestamp,
@@ -327,7 +314,6 @@ class Utils {
 	 *
 	 * @return string
 	 * @link https://www.php.net/manual/en/function.filesize.php
-	 * @since 2.4.6
 	 */
 	public static function human_filesize( int $bytes, int $decimals = 2 ): string {
 		$sz     = 'BKMGTP';
@@ -374,7 +360,6 @@ class Utils {
 	 *
 	 * @return string
 	 * @link https://www.genieblog.ch/blog/en/2018/how-to-encode-an-svg-for-the-src-attribute-using-php/
-	 *
 	 */
 	public static function get_data_uri( string $image_url ): string {
 
