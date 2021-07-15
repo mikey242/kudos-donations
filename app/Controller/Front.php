@@ -323,11 +323,12 @@ class Front {
 	 */
 	private function render_modal( Modal $modal ): ?string {
 
-		$twig    = $this->twig;
-		$content = $twig->render( Modal::TEMPLATE, $modal->to_array() );
+		$twig = $this->twig;
 
 		// Get markup for modal.
-		$modal = $this->render( $content );
+		$content = $twig->render( Modal::TEMPLATE, $modal->to_array() );
+		// Add wrapper.
+		$modal   = $this->render( $content );
 
 		// Place markup in footer if setting enabled.
 		if ( Settings::get_setting( 'donate_modal_in_footer' ) ) {

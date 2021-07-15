@@ -101,19 +101,19 @@ form[id^=kudos-form] input[name=value]:required + span {
 
 /* Base */
 :root {
-    --kudos-screen: xs;
+    --kudos-screen:xs;
 }
 
 /* 'xs' and up */
 @screen xs {
     :root {
-        --kudos-screen: sm;
+        --kudos-screen:sm;
     }
 }
 
 /* 'sm' and up */
 @screen sm {
     :root {
-        --kudos-screen: md;
+        --kudos-screen:md;
     }
 }
