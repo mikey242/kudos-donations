@@ -10,13 +10,6 @@ use Kudos\Helpers\Utils;
 use Kudos\Helpers\WpDb;
 
 /**
- * Fired during plugin activation
- *
- * @link       https://www.linkedin.com/in/michael-iseard/
- * @since      1.0.0
- */
-
-/**
  * Fired during plugin activation.
  *
  * This class defines all code necessary to run during the plugin's activation.
@@ -58,8 +51,6 @@ class ActivatorService {
 	 * Runs all activation functions.
 	 *
 	 * @param string|null $old_version Previous version of plugin.
-	 *
-	 * @since    1.0.0
 	 */
 	public function activate( string $old_version = null ) {
 
@@ -91,8 +82,6 @@ class ActivatorService {
 	 * Run migrations if upgrading
 	 *
 	 * @param string $old_version
-	 *
-	 * @since 2.3.2
 	 */
 	private function run_migrations( string $old_version ) {
 
@@ -160,12 +149,10 @@ class ActivatorService {
 			$connected = $settings::get_setting( 'mollie_connected' );
 			$settings::update_array( 'vendor_mollie',
 				[
-
 					'connected' => (bool) $connected,
 					'mode'      => ! empty( $settings::get_setting( 'mollie_api_mode' ) ) ? (string) $settings::get_setting( 'mollie_api_mode' ) : 'test',
 					'test_key'  => (string) $settings::get_setting( 'mollie_test_api_key' ),
 					'live_key'  => (string) $settings::get_setting( 'mollie_live_api_key' ),
-
 				] );
 
 			// Remove old settings fields.
@@ -199,8 +186,6 @@ class ActivatorService {
 
 	/**
 	 * Creates the donors table
-	 *
-	 * @since    1.1.0
 	 */
 	private function create_donors_table() {
 
@@ -233,8 +218,6 @@ class ActivatorService {
 
 	/**
 	 * Creates the transactions table
-	 *
-	 * @since    1.0.0
 	 */
 	private function create_transactions_table() {
 
@@ -271,8 +254,6 @@ class ActivatorService {
 
 	/**
 	 * Creates the subscription table
-	 *
-	 * @since    1.1.0
 	 */
 	private function create_subscriptions_table() {
 
