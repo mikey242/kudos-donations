@@ -129,6 +129,12 @@ class TwigService {
 		$this->twig->addFunction( $get_asset );
 
 		/**
+		 * Add generate_id function.
+		 */
+		$generate_id = new TwigFunction('generate_id', [Utils::class, 'generate_id']);
+		$this->twig->addFunction($generate_id);
+
+		/**
 		 * Add do_action function.
 		 */
 		$do_action = new TwigFunction( 'do_action', 'do_action' );

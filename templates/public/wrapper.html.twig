@@ -1,0 +1,5 @@
+<div id="kudos-donations-{{ generate_id() }}" class="kudos-donations{{ alignment ? " has-text-align-" ~ alignment : 'has-text-align-none' }}">
+    {% block main %}
+        {{ content | raw }}
+    {% endblock %}
+</div>

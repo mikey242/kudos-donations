@@ -13,6 +13,7 @@ use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
+use Kudos\View\Model\AbstractModel;
 use Kudos\View\Model\Button;
 use Kudos\View\Model\Form;
 use Kudos\View\Model\Message;
@@ -261,28 +262,28 @@ class Front {
 					$this->payment::get_vendor_name() ) );
 			}
 
-			// Twig service.
-			$twig = $this->twig;
+			// Twig service and alignment.
+			$twig      = $this->twig;
+			$alignment = $atts['alignment'] ?? 'none';
 
 			// Create the form based on campaign id.
-			$form = $this->create_form( $atts['campaign_id'] );
-			$form = $this->twig->render( Form::TEMPLATE, $form->to_array() );
+			$form      = $this->create_form( $atts['campaign_id'] );
+			$form_html = $twig->render( Form::TEMPLATE, $form->to_array() );
 
-			// If type set and true then return form.
+			// If 'type' set and true then return form.
 			if ( isset( $atts['type'] ) && $atts['type'] === 'form' ) {
-				return $form;
+				return $this->render( $form_html, $alignment );
 			}
 
 			// Otherwise create modal and button and return their html.
 			$modal = new Modal();
-			$modal->set_content( $form );
+			$modal->set_content( $form_html );
 			$button = new Button();
 			$button->set_atts( $atts );
-			$button->set_target( $modal->get_container_id() );
+			$button->set_target( $modal->get_id() );
+			$button_html = $twig->render( Button::TEMPLATE, $button->to_array() );
 
-			return $twig->render( Button::TEMPLATE, $button->to_array() ) .
-			       $this->render_modal( $modal );
-
+			return $this->render( $button_html, $alignment ) . $this->render_modal( $modal );
 
 		} catch ( Exception $e ) {
 
@@ -298,23 +299,43 @@ class Front {
 	}
 
 	/**
+	 * Returns the html in a wrapper element.
+	 *
+	 * @param string $content
+	 * @param string $alignment
+	 *
+	 * @return bool|string
+	 */
+	private function render( string $content, string $alignment = 'none' ) {
+		return $this->twig->render( AbstractModel::WRAPPER,
+			[
+				'content'   => $content,
+				'alignment' => $alignment,
+			] );
+	}
+
+	/**
 	 * Wrapper for rendering a modal. Places markup in footer if setting enabled.
 	 *
-	 * @param $modal
+	 * @param $modal Modal
 	 *
 	 * @return string|null
 	 */
-	private function render_modal( $modal ): ?string {
+	private function render_modal( Modal $modal ): ?string {
+
+		$twig    = $this->twig;
+		$content = $twig->render( Modal::TEMPLATE, $modal->to_array() );
 
 		// Get markup for modal.
-		$modal = $this->twig->render( Modal::TEMPLATE, $modal->to_array() );
+		$modal = $this->render( $content );
 
 		// Place markup in footer if setting enabled.
 		if ( Settings::get_setting( 'donate_modal_in_footer' ) ) {
 			add_action( 'wp_footer',
 				function () use ( $modal ) {
 					echo $modal;
-				} );
+				}
+			);
 
 			// No need to return anything.
 			return null;
@@ -334,15 +355,15 @@ class Front {
 	 * @throws Exception
 	 */
 	private function create_form( $campaign_id ): Form {
-		$form = new Form();
-		$campaign = $this->settings::get_campaign( $campaign_id );
+		$form           = new Form();
+		$campaign       = $this->settings::get_campaign( $campaign_id );
 		$campaign_stats = $this->settings->get_campaign_stats( $campaign_id );
 
 		// Set campaign.
 		$form->set_campaign( $campaign );
 
 		// Add additional funds if any.
-		if(!empty($campaign['additional_funds'])) {
+		if ( ! empty( $campaign['additional_funds'] ) ) {
 			$campaign_stats['total'] += $campaign['additional_funds'];
 		}
 
@@ -369,7 +390,7 @@ class Front {
 		$modal->set_content( $this->twig->render( Message::TEMPLATE, $message->to_array() ) );
 		$modal->set_class( 'kudos-message-modal' );
 
-		return $this->twig->render(Modal::TEMPLATE, $modal->to_array());
+		return $this->twig->render( Modal::TEMPLATE, $modal->to_array() );
 	}
 
 	/**

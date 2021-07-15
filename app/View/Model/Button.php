@@ -7,12 +7,6 @@ class Button extends AbstractModel {
 	const TEMPLATE = 'public/button/kudos.button.html.twig';
 
 	/**
-	 * Button alignment.
-	 *
-	 * @var string
-	 */
-	protected $alignment;
-	/**
 	 * Button label.
 	 *
 	 * @var string
@@ -38,31 +32,22 @@ class Button extends AbstractModel {
 		parent::__construct();
 	}
 
+	/**
+	 * Set the attributes.
+	 *
+	 * @param array $atts
+	 */
 	public function set_atts( array $atts ) {
-		$this->alignment    = $atts['alignment'] ?? '';
 		$this->button_label = $atts['button_label'] ?? '';
 	}
 
+	/**
+	 * Set the target modal id.
+	 *
+	 * @param string $target
+	 */
 	public function set_target( string $target ) {
 		$this->target = $target;
-	}
-
-	/**
-	 * Returns alignment (left, center, right).
-	 *
-	 * @return string
-	 */
-	public function get_alignment(): string {
-		return $this->alignment;
-	}
-
-	/**
-	 * Returns the button label.
-	 *
-	 * @return string
-	 */
-	public function get_button_label(): string {
-		return $this->button_label;
 	}
 
 	/**

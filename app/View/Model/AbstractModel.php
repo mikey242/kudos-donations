@@ -6,34 +6,36 @@ use Kudos\Helpers\Utils;
 
 abstract class AbstractModel {
 
+	const WRAPPER = 'public/wrapper.html.twig';
+
 	/**
 	 * The id of the element.
 	 *
 	 * @var string
 	 */
-	protected $container_id;
+	protected $id;
 	/**
 	 * The twig template file to use.
 	 *
-	 * @var
+	 * @var string
 	 */
 	protected $template;
-
 	/**
 	 * AbstractRender constructor.
 	 */
+
 	public function __construct() {
-		$this->container_id = Utils::generate_id();
+		$this->id = Utils::generate_id();
 		$this->template     = static::TEMPLATE;
 	}
 
 	/**
-	 * Return the container_id of the object.
+	 * Return the id of the object.
 	 *
 	 * @return string
 	 */
-	public function get_container_id(): string {
-		return $this->container_id;
+	public function get_id(): string {
+		return $this->id;
 	}
 
 	/**

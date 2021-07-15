@@ -6,7 +6,7 @@ use Kudos\Helpers\Utils;
 
 class Modal extends AbstractModel {
 
-	const TEMPLATE = 'public/modal/modal.html.twig';
+	const TEMPLATE = 'public/modal/base.html.twig';
 
 	/**
 	 * @var string|null
@@ -15,7 +15,7 @@ class Modal extends AbstractModel {
 	/**
 	 * @var string
 	 */
-	protected $html;
+	protected $content;
 	/**
 	 * @var mixed|string
 	 */
@@ -42,10 +42,10 @@ class Modal extends AbstractModel {
 	/**
 	 * Set the content of the modal.
 	 *
-	 * @param string $html
+	 * @param string $content
 	 */
-	public function set_content(string $html) {
-		$this->html = $html;
+	public function set_content(string $content) {
+		$this->content = $content;
 	}
 
 	/**
