@@ -8,9 +8,7 @@
                     before:kd-w-full before:kd-h-full before:kd-bg-white before:kd-top-0 before:kd-left-0 before:kd-absolute before:kd--z-1 before:kd-opacity-70">
             <div class="kudos_modal_header kd-flex kd-items-center kd-justify-between">
                     <span class="kd-mr-3 kd-inline-block kd-flex" title="Kudos Donations">
-                        {% if(logo_url) %}
-                            <img alt="Logo" class="kd-h-6" src="{{ logo_url }}">
-                        {% endif %}
+                        <img alt="Kudos logo" class="kd-h-6" src="{{ get_asset('images/logo-colour.svg') }}">
                     </span>
                 {% block header %}
                 {% endblock header %}

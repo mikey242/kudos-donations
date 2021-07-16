@@ -9,7 +9,7 @@
     <input name="campaign_id" type="hidden" value="{{ campaign_id }}">
 
     {# INITIAL FIELDS #}
-    {% embed 'public/modal/embeds/_tab.html.twig' with { name: 'initial', isVisible: true} %}
+    {% embed 'public/modal/_tab.html.twig' with { name: 'initial', isVisible: true} %}
         {% block title %}{{ welcome_title }}{% endblock %}
         {% block text %}
             {{ welcome_text | wp_kses_post }}
@@ -100,7 +100,7 @@
     {% endembed %}
 
     {# PAYMENT FREQUENCY TAB #}
-    {% embed 'public/modal/embeds/_tab.html.twig' with { name: 'payment-frequency', requirements: '{"payment_frequency":"recurring"}'} %}
+    {% embed 'public/modal/_tab.html.twig' with { name: 'payment-frequency', requirements: '{"payment_frequency":"recurring"}'} %}
         {% block title %}{{ __('Subscription', 'kudos-donations') }}{% endblock %}
         {% block text %}{{ __('How often would you like to donate?', 'kudos-donations') }}{% endblock %}
         {% block body %}
@@ -137,7 +137,7 @@
 
     {# ADDRESS TAB #}
     {% if(address_enabled) %}
-        {% embed 'public/modal/embeds/_tab.html.twig' with { name: 'address' } %}
+        {% embed 'public/modal/_tab.html.twig' with { name: 'address' } %}
             {% block title %}{{ __('Address', 'kudos-donations') }}{% endblock %}
             {% block text %}{{ __('Please fill in your address', 'kudos-donations') ~ (address_required ? null : ' (' ~ __('optional', 'kudos-donations') ~ ')') ~ '.' }}{% endblock %}
             {% block body %}
@@ -400,7 +400,7 @@
 
     {# MESSAGE TAB #}
     {% if(message_enabled) %}
-        {% embed 'public/modal/embeds/_tab.html.twig' with { name: 'message' } %}
+        {% embed 'public/modal/_tab.html.twig' with { name: 'message' } %}
             {% block title %}{{ __('Message', 'kudos-donations') }}{% endblock %}
             {% block text %}{{ __('Leave a message (optional).', 'kudos-donations') }}{% endblock %}
             {% block body %}
@@ -416,7 +416,7 @@
     {% endif %}
 
     {# FINAL TAB #}
-    {% embed 'public/modal/embeds/_tab.html.twig' with { name: 'summary' } %}
+    {% embed 'public/modal/_tab.html.twig' with { name: 'summary' } %}
         {% from "public/macros/buttons.html.twig" import button %}
         {% block title %}{{ __('Payment', 'kudos-donations') }}{% endblock %}
         {% block text %}{{ __('By clicking donate you agree to the following payment:', 'kudos-donations') }}{% endblock %}

@@ -339,21 +339,6 @@ class Utils {
 	}
 
 	/**
-	 * Returns the Kudos logo url.
-	 *
-	 * @param int $height The height of the image to be returned.
-	 *
-	 * @return string|null
-	 */
-	public static function get_logo_url( int $height = 24 ): ?string {
-
-		return apply_filters( 'kudos_get_logo_url',
-			self::get_data_uri( self::get_asset_url( 'images/logo-colour.svg' ) ),
-			$height );
-
-	}
-
-	/**
 	 * Returns an image's base64 encoded data URI for use in 'src' attribute.
 	 *
 	 * @param string $image_url Url of image to be encoded.

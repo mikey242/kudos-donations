@@ -13,13 +13,34 @@ use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
-use Kudos\View\Model\AbstractModel;
-use Kudos\View\Model\Button;
-use Kudos\View\Model\Form;
-use Kudos\View\Model\Message;
-use Kudos\View\Model\Modal;
 
 class Front {
+
+	/*
+	 * The twig template file used to render the donate button.
+	 */
+	const BUTTON_TEMPLATE = 'public/button/donate.button.html.twig';
+
+	/*
+	 * The twig template file used to render the donation form.
+	 */
+	const FORM_TEMPLATE = 'public/forms/donate.form.html.twig';
+
+	/*
+	 * The twig template used to render the modal template.
+	 */
+	const MODAL_TEMPLATE = 'public/modal/base.html.twig';
+
+	/*
+	 * The twig template used to render a message for use in a modal.
+	 */
+	const MESSAGE_TEMPLATE = 'public/modal/_message.html.twig';
+
+	/*
+	 * The twig template used as a wrapper for the above templates.
+	 * Required for css targeting.
+	 */
+	const WRAPPER_TEMPLATE = 'public/wrapper.html.twig';
 
 	/**
 	 * The ID of this plugin.
@@ -36,22 +57,27 @@ class Front {
 	 * @var      string $version The current version of this plugin.
 	 */
 	private $version;
+
 	/**
 	 * @var LoggerService
 	 */
 	private $logger;
+
 	/**
 	 * @var PaymentService
 	 */
 	private $payment;
+
 	/**
 	 * @var TwigService
 	 */
 	private $twig;
+
 	/**
 	 * @var MapperService
 	 */
 	private $mapper;
+
 	/**
 	 * @var Settings
 	 */
@@ -265,25 +291,49 @@ class Front {
 			// Twig service and alignment.
 			$twig      = $this->twig;
 			$alignment = $atts['alignment'] ?? 'none';
+			$id        = Utils::generate_id();
 
 			// Create the form based on campaign id.
-			$form      = $this->create_form( $atts['campaign_id'] );
-			$form_html = $twig->render( Form::TEMPLATE, $form->to_array() );
+			$form = $this->create_form( $atts['campaign_id'], $id );
 
-			// If 'type' set and true then return form.
+
+			// If type is form then stop and return form.
 			if ( isset( $atts['type'] ) && $atts['type'] === 'form' ) {
-				return $this->render( $form_html, $alignment );
+				return $this->render_wrapper( $form, $alignment );
 			}
 
-			// Otherwise create modal and button and return their html.
-			$modal = new Modal();
-			$modal->set_content( $form_html );
-			$button = new Button();
-			$button->set_atts( $atts );
-			$button->set_target( $modal->get_id() );
-			$button_html = $twig->render( Button::TEMPLATE, $button->to_array() );
+			// If type is button, create modal and button for output.
+			$modal = $this->render_wrapper( $twig->render(
+				self::MODAL_TEMPLATE,
+				[
+					'id'      => $id,
+					'content' => $form,
+				]
+			) );
 
-			return $this->render( $button_html, $alignment ) . $this->render_modal( $modal );
+			$button = $this->render_wrapper( $twig->render(
+				self::BUTTON_TEMPLATE,
+				[
+					'id'           => $id,
+					'button_label' => $atts['button_label'],
+					'target'       => $id,
+				]
+			),
+				$alignment );
+
+			// Place markup in footer if setting enabled.
+			if ( Settings::get_setting( 'donate_modal_in_footer' ) ) {
+				add_action( 'wp_footer',
+					function () use ( $modal ) {
+						echo $modal;
+					}
+				);
+
+				// Empty modal variable.
+				$modal = null;
+			}
+
+			return $button . $modal;
 
 		} catch ( Exception $e ) {
 
@@ -306,72 +356,58 @@ class Front {
 	 *
 	 * @return bool|string
 	 */
-	private function render( string $content, string $alignment = 'none' ) {
-		return $this->twig->render( AbstractModel::WRAPPER,
+	protected function render_wrapper( string $content, string $alignment = 'none' ) {
+		return $this->twig->render( self::WRAPPER_TEMPLATE,
 			[
 				'content'   => $content,
 				'alignment' => $alignment,
-			] );
-	}
-
-	/**
-	 * Wrapper for rendering a modal. Places markup in footer if setting enabled.
-	 *
-	 * @param $modal Modal
-	 *
-	 * @return string|null
-	 */
-	private function render_modal( Modal $modal ): ?string {
-
-		$twig = $this->twig;
-
-		// Get markup for modal.
-		$content = $twig->render( Modal::TEMPLATE, $modal->to_array() );
-		// Add wrapper.
-		$modal   = $this->render( $content );
-
-		// Place markup in footer if setting enabled.
-		if ( Settings::get_setting( 'donate_modal_in_footer' ) ) {
-			add_action( 'wp_footer',
-				function () use ( $modal ) {
-					echo $modal;
-				}
-			);
-
-			// No need to return anything.
-			return null;
-		} else {
-
-			// Otherwise return the modal.
-			return $modal;
-		}
+			]
+		);
 	}
 
 	/**
 	 * Builds the form object from supplied campaign_id.
 	 *
 	 * @param $campaign_id
+	 * @param $id
 	 *
-	 * @return Form
-	 * @throws Exception
+	 * @return string
+	 * @throws \Exception
 	 */
-	private function create_form( $campaign_id ): Form {
-		$form           = new Form();
+	private function create_form( $campaign_id, $id ): string {
+
 		$campaign       = $this->settings::get_campaign( $campaign_id );
 		$campaign_stats = $this->settings->get_campaign_stats( $campaign_id );
 
-		// Set campaign.
-		$form->set_campaign( $campaign );
+		$atts = [
+			'id'                => $id,
+			'return_url'        => Utils::get_return_url(),
+			'privacy_link'      => Settings::get_setting( 'privacy_link' ),
+			'terms_link'        => Settings::get_setting( 'terms_link' ),
+			'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
+			'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
+			'campaign_id'       => $campaign['id'],
+			'button_label'      => $campaign['button_label'] ?? '',
+			'welcome_title'     => $campaign['modal_title'] ?? '',
+			'welcome_text'      => $campaign['welcome_text'] ?? '',
+			'campaign_goal'     => $campaign['campaign_goal'] ?? '',
+			'show_progress'     => $campaign['show_progress'] ?? '',
+			'amount_type'       => $campaign['amount_type'] ?? '',
+			'fixed_amounts'     => $campaign['fixed_amounts'] ?? '',
+			'frequency'         => $campaign['donation_type'] ?? '',
+			'address_enabled'   => $campaign['address_enabled'] ?? '',
+			'address_required'  => $campaign['address_required'] ?? '',
+			'message_enabled'   => $campaign['message_enabled'] ?? '',
+			'campaign_stats'    => $campaign_stats,
+		];
 
 		// Add additional funds if any.
 		if ( ! empty( $campaign['additional_funds'] ) ) {
-			$campaign_stats['total'] += $campaign['additional_funds'];
+
+			$atts['campaign_stats']['total'] += $campaign['additional_funds'];
 		}
 
-		// Set campaign stats.
-		$form->set_campaign_stats( $campaign_stats );
-
-		return $form;
+		return $this->twig->render( self::FORM_TEMPLATE, $atts );
 	}
 
 	/**
@@ -384,14 +420,22 @@ class Front {
 	 */
 	private function create_message_modal( string $header, string $body ): ?string {
 
-		$message = new Message();
-		$message->set_title( $header );
-		$message->set_body( $body );
-		$modal = new Modal();
-		$modal->set_content( $this->twig->render( Message::TEMPLATE, $message->to_array() ) );
-		$modal->set_class( 'kudos-message-modal' );
+		$twig = $this->twig;
 
-		return $this->twig->render( Modal::TEMPLATE, $modal->to_array() );
+		$message = $twig->render( self::MESSAGE_TEMPLATE,
+			[
+				'header_text' => $header,
+				'body_text'   => $body,
+			] );
+
+		$modal = $twig->render( self::MODAL_TEMPLATE,
+			[
+				'id'      => Utils::generate_id(),
+				'content' => $message,
+				'class'   => 'kudos-message-modal',
+			] );
+
+		return $this->render_wrapper( $modal );
 	}
 
 	/**
