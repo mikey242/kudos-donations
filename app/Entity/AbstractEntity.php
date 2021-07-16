@@ -3,7 +3,6 @@
 namespace Kudos\Entity;
 
 use DateTime;
-use Exception;
 use Kudos\Helpers\Utils;
 
 abstract class AbstractEntity {
