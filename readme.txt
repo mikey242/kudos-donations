@@ -124,7 +124,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * *NEW* Add ability to choose custom theme color.
 * Log file is cleared once it reaches 2MB.
 * Implementation of dependency injection using PHP-DI. This will result in faster, cleaner and easier to maintain code.
-* Use Laravel-Mix for building assets.
+* Switch to Laravel-Mix for building assets.
 * Move goal icon in front of goal amount.
 * Update Mollie API client to 2.36.1
 * Update ActionScheduler to 3.2.1
