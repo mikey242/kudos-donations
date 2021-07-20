@@ -440,8 +440,14 @@ class Admin {
 					$settings->add_defaults();
 					break;
 
-				case 'kudos_clear_cache':
+				case 'kudos_clear_twig_cache':
 					if ( $this->twig->clearCache() ) {
+						new AdminNotice( __( 'Cache cleared', 'kudos-donations' ) );
+					}
+					break;
+
+				case 'kudos_clear_object_cache':
+					if ( wp_cache_flush() ) {
 						new AdminNotice( __( 'Cache cleared', 'kudos-donations' ) );
 					}
 					break;
