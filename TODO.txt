@@ -1,3 +1,2 @@
 - Add ability to modify number of records per page in transactions table
 - Redirect currently does not work well with permalinks set to "Plain" (i.e ?page_id=5)
-- Refactor webhook using hooks and/or separate functions
