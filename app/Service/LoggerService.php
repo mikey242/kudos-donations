@@ -115,9 +115,9 @@ class LoggerService extends Monolog {
 	/**
 	 * Get the contents of the log file and return as array.
 	 *
-	 * @return array|false
+	 * @return array
 	 */
-	public static function get_as_array() {
+	public static function get_as_array(): array {
 
 		if ( file_exists( self::LOG_FILE ) ) {
 
@@ -142,12 +142,12 @@ class LoggerService extends Monolog {
 			return $lines;
 		}
 
-		return false;
+		return [];
 
 	}
 
 	/**
-	 * Compares dates to sort log
+	 * Compares dates to sort log.
 	 *
 	 * @param array $a First array.
 	 * @param array $b Second array.
