@@ -4,7 +4,7 @@ use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 
 /**
- * Debug page render
+ * Debug page render.
  */
 
 // Get the active tab from the $_GET param.
@@ -46,6 +46,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 				<p>This logfile location: <?php echo esc_url( $file ); ?></p>
 				<p>Current filesize: <?php echo Utils::human_filesize( (int) filesize( $file ) ); ?></p>
+				<p><strong>Note: The log will be automatically cleared when it reaches 2MB.</strong></p>
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
 				      method='post'>
@@ -125,7 +126,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 					performing any of these actions.</p>
 				<hr/>
 
-				<p>This will clear the selected settings from the database and reset them back to default.</p>
+				<p>Settings actions.</p>
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_mollie' ); ?>
 					<button type='submit' class="button-secondary confirm" name='kudos_action'
@@ -151,18 +152,25 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 				<hr/>
 
-				<p>This will clear the twig cache.</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_clear_cache' ); ?>
+				<p>Cache actions.</p>
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+					<?php wp_nonce_field( 'kudos_clear_twig_cache' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_clear_cache'>Clear cache
+					        value='kudos_clear_twig_cache'>Clear twig cache
+					</button>
+				</form>
+
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+					<?php wp_nonce_field( 'kudos_clear_object_cache' ); ?>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_clear_object_cache'>Clear object cache
 					</button>
 				</form>
 
 				<hr/>
 
-				<p>Remove all transactions</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+				<p>Table actions.</p>
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_transactions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_clear_transactions'>Delete all
@@ -170,10 +178,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 					</button>
 				</form>
 
-				<hr/>
-
-				<p>Remove all donors</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_donors' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_clear_donors'>Delete all
@@ -181,10 +186,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 					</button>
 				</form>
 
-				<hr/>
-
-				<p>Remove all subscriptions</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_subscriptions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_clear_subscriptions'>Delete all
@@ -194,7 +196,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 				<hr/>
 
-				<p>This will <strong>delete all Kudos data</strong> and recreate the database</p>
+				<p>This will <strong>delete all Kudos data</strong> and recreate the database.</p>
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_recreate_database' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
@@ -204,7 +206,6 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				</form>
 
 				<?php do_action( 'kudos_debug_menu_actions_extra', $url ); ?>
-
 
 				<?php
 				break;
