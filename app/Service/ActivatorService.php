@@ -74,7 +74,7 @@ class ActivatorService {
 		$logger->info( 'Kudos Donations plugin activated', ['version' => KUDOS_VERSION] );
 
 		// Schedule log file clearing.
-		Utils::schedule_recurring_action( strtotime( 'today midnight' ), DAY_IN_SECONDS, 'kudos_clear_log' );
+		Utils::schedule_recurring_action( strtotime( 'today midnight' ), DAY_IN_SECONDS, 'kudos_check_log' );
 
 	}
 
