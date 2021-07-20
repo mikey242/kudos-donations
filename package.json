@@ -9,7 +9,7 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "production": "mix --production",
-    "make-pot": "wp i18n make-pot . --exclude='docker, src, node_modules'",
+    "make-pot": "wp i18n make-pot . --exclude='docker, src, node_modules, vendor'",
     "make-json": "wp i18n make-json languages/ --no-purge",
     "export": "composer install --no-dev --optimize-autoloader && ./export.sh"
   },
