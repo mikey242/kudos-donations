@@ -150,6 +150,12 @@ class Settings {
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'intval',
 				],
+				'spam_protection'        => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
 				'theme_colors'           => [
 					'type'              => 'object',
 					'default'           => [

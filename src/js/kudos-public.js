@@ -6,6 +6,7 @@ import '../images/logo-colour-40.png' // used as email attachment
 import '../images/logo-colour.svg'
 import {getStyle, isVisible} from "./Helpers/util"
 import {handleMessages} from "./Helpers/modal"
+import {__} from "@wordpress/i18n"
 
 import {
     animateInView,
@@ -18,8 +19,6 @@ import {
 } from "./Helpers/form"
 
 jQuery(document).ready(($) => {
-
-    const {__} = wp.i18n
 
     'use strict'
     let screenSize
@@ -34,7 +33,7 @@ jQuery(document).ready(($) => {
         screenSize = getStyle('--kudos-screen')
 
         // Update screen size on window resize
-        $(window).on('resize', _.debounce(function () {
+        window.addEventListener('resize', _.debounce(() => {
             screenSize = getStyle('--kudos-screen')
         }, 100))
 
@@ -225,8 +224,11 @@ jQuery(document).ready(($) => {
 
                     const error = form.querySelector('.kudos_error_message')
                     const formData = new FormData(e.target)
+                    const timestamp = e.target.dataset.ts
+                    formData.append('timestamp', timestamp);
 
                     form.classList.add('kd-is-loading')
+                    error.classList.add('kd-hidden')
 
                     axios.post(kudos.createPaymentUrl, JSON.stringify(Object.fromEntries(formData)), {
                         headers: {
@@ -238,6 +240,7 @@ jQuery(document).ready(($) => {
                             window.location.href = result.data.data
                         } else {
                             error.innerHTML = result.data.data.message
+                            error.classList.remove('kd-hidden')
                             form.classList.add('error')
                             form.classList.remove('kd-is-loading')
                         }

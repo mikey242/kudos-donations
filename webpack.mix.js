@@ -1,4 +1,5 @@
 let mix = require('laravel-mix')
+const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' )
 
 mix
 
@@ -30,13 +31,9 @@ mix
 
     // Webpack config.
     .webpackConfig({
-        externals: {
-            jquery: 'jQuery',
-            react: 'React',
-            lodash: 'lodash',
-            // jqueryValidation: 'jquery-validation',
-            // micromodal: 'MicroModal',
-        }
+        plugins: [
+            new DependencyExtractionWebpackPlugin()
+        ]
     })
 
     // Copy vendor files.
@@ -53,7 +50,8 @@ mix
     ])
 
     // Block assets.
-    .js('src/js/kudos-button-block.jsx', 'js').react()
+    .js('src/js/Blocks/Button/kudos-button.jsx', 'blocks/kudos-button').react()
+    .copy('src/js/Blocks/Button/block.json', 'dist/blocks/kudos-button/')
 
     // Admin assets.
     .js('src/js/kudos-admin-settings.jsx', 'js').react()

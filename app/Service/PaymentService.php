@@ -179,9 +179,8 @@ class PaymentService {
 
 		$values = $request->get_json_params();
 
-		// Check field.
-		if ( ! empty( $values['donation'] ) ) {
-			$this->logger->info( 'Bot detected rejecting form.' );
+		// Check if bot filling form.
+		if($this->is_bot($values)) {
 			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
 		}
 
@@ -420,6 +419,34 @@ class PaymentService {
 
 		return $payment;
 
+	}
+
+	/**
+	 * Checks the provided honeypot field and logs request if bot detected.
+	 *
+	 * @param $values
+	 *
+	 * @return bool
+	 */
+	public function is_bot($values): bool {
+
+		$timeDiff = abs($values['timestamp'] - time());
+
+		// Check if form completed too quickly.
+		if($timeDiff < 4) {
+			$this->logger->info( 'Bot detected, rejecting form.', [
+				'reason' => 'Form completed too quickly',
+				'time_taken' => $timeDiff
+			] );
+			return true;
+		}
+
+		// Check if honeypot field completed.
+		if ( ! empty( $values['donation'] ) ) {
+			$this->logger->info( 'Bot detected, rejecting form.', array_merge(['reason' => 'Honeypot field completed'], $values) );
+			return true;
+		}
+		return false;
 	}
 
 	/**

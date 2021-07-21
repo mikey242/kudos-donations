@@ -71,7 +71,7 @@ form[id^=kudos-form] .kudos-radio-amount {
 
 form[id^=kudos-form] .kudos-radio-amount input:checked + label {
     @apply kd-text-white kd-border-transparent !important;
-    background-color: var(--kudos-theme-primary);
+    background-color: var(--kudos-theme-primary) !important;
 }
 
 form[id^=kudos-form] .kudos-radio-amount input:focus + label {

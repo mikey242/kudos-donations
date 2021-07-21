@@ -1,9 +1,8 @@
-<form id="kudos-form-{{ id }}" class="kudos-form kd-relative kd-inline-block kd-w-full kd-my-0 kd-p-0 kd-max-w-lg"
+<form id="kudos-form-{{ id }}" data-ts="{{ 'now' | date('U') }}"
+      class="kudos-form kd-relative kd-inline-block kd-w-full kd-my-0 kd-p-0 kd-max-w-lg"
       action="/">
 
-    <p class="kd-text-center kd-block kd-font-normal kd-mb-4">
-        <small class="kudos_error_message kd-text-sm kd-text-red-500"></small>
-    </p>
+    <small class="kudos_error_message kd-text-center kd-hidden kd-block kd-font-normal kd-mb-4 kd-text-sm kd-text-red-500"></small>
 
     <input name="return_url" type="hidden" value="{{ return_url }}">
     <input name="campaign_id" type="hidden" value="{{ campaign_id }}">
@@ -22,12 +21,6 @@
             {% if show_progress %}
                 {{ progress(campaign_goal, campaign_stats.total) }}
             {% endif %}
-
-            {# Honeypot spam protection #}
-            <label class="kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
-                <input class="kd-transition kd-ease-in-out kd-border-solid kd-cursor-pointer kd-m-0 kd-placeholder-gray-500 focus:kd-outline-none"
-                       type="number" name="donation" placeholder="Your donation">
-            </label>
 
             {# Fixed amount fields #}
             {% if ( amount_type != 'open' ) %}
@@ -67,6 +60,15 @@
                 placeholder: __('Name', 'kudos-donations'),
                 atts: {'aria-label' : __('Name', 'kudos-donations')}
             }) }}
+
+            {# Honeypot spam protection #}
+            {% if spam_protection %}
+                <label class="kd-cursor-pointer kd-font-normal kd-mr-2 kd-mt-2 kd-w-full">
+                    <input class="kd-appearance-none kd-m-0 kd-text-left kd-placeholder-gray-500 kd-border kd-border-solid kd-border-gray-300 kd-transition kd-ease-in-out kd-duration-75 kd-text-gray-700 focus:kd-border-primary focus:kd-outline-none focus:kd-ring-0 kd-order-1 kd-py-2 kd-px-3 kd-rounded kd-w-full"
+                           type="number" name="donation" tabindex="-1"
+                           placeholder="Your donation">
+                </label>
+            {% endif %}
 
             {# Email field #}
             {{ input({

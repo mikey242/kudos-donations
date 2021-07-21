@@ -148,13 +148,14 @@ class Front {
 	 */
 	public function enqueue_scripts() {
 
-		$handle = $this->plugin_name . '-public';
+		$handle    = $this->plugin_name . '-public';
+		$public_js = Utils::get_asset( '/js/kudos-public.js' );
 
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( '/js/kudos-public.js' ),
-			[ 'jquery', 'lodash' ],
-			$this->version,
+			$public_js['url'],
+			$public_js['dependencies'],
+			$public_js['version'],
 			true
 		);
 
@@ -175,46 +176,8 @@ class Front {
 	 * Register the assets used for blocks.
 	 */
 	public function enqueue_block_assets() {
-
-		$handle = $this->plugin_name . '-block';
-
-		// Enqueue block specific js.
-		wp_enqueue_style(
-			$handle,
-			Utils::get_asset_url( '/css/kudos-public.css' ),
-			[],
-			$this->version
-		);
-
-		wp_enqueue_script(
-			$handle,
-			Utils::get_asset_url( '/js/kudos-button-block.js' ),
-			[
-				'wp-i18n',
-				'wp-edit-post',
-				'wp-element',
-				'wp-editor',
-				'wp-components',
-				'wp-data',
-				'wp-plugins',
-				'wp-edit-post',
-				'wp-api',
-			],
-			$this->version,
-			true
-		);
-		wp_localize_script(
-			$handle,
-			'kudos',
-			[
-				'color_primary' => Settings::get_setting( 'color_primary' ),
-			]
-		);
-		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
-
 		// Output root styles.
 		echo $this->get_kudos_root_styles();
-
 	}
 
 	/**
@@ -243,31 +206,10 @@ class Front {
 		);
 
 		// Register kudos button block.
-		register_block_type(
-			'iseardmedia/kudos-button',
+		register_block_type_from_metadata( KUDOS_PLUGIN_DIR . '/dist/blocks/kudos-button/',
 			[
-				'editor_script'   => $this->plugin_name . '-button-block',
 				'render_callback' => [ $this, 'kudos_render_callback' ],
-				'attributes'      => [
-					'button_label' => [
-						'type'    => 'string',
-						'default' => __( 'Donate now', 'kudos-donations' ),
-					],
-					'campaign_id'  => [
-						'type'    => 'string',
-						'default' => 'default',
-					],
-					'alignment'    => [
-						'type'    => 'string',
-						'default' => 'none',
-					],
-					'type'         => [
-						'type'    => 'string',
-						'default' => 'button',
-					],
-				],
-			]
-		);
+			] );
 	}
 
 	/**
@@ -385,6 +327,7 @@ class Front {
 			'privacy_link'      => Settings::get_setting( 'privacy_link' ),
 			'terms_link'        => Settings::get_setting( 'terms_link' ),
 			'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
+			'spam_protection'   => Settings::get_setting( 'spam_protection' ),
 			'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
 			'campaign_id'       => $campaign['id'],
 			'button_label'      => $campaign['button_label'] ?? '',

@@ -62,6 +62,45 @@ class Utils {
 	}
 
 	/**
+	 * Returns an array with asset properties.
+	 *
+	 * @param $asset
+	 *
+	 * @return array|null
+	 */
+	public static function get_asset($asset): ?array {
+
+		$asset_path = KUDOS_PLUGIN_DIR . '/dist' . $asset;
+		if(file_exists($asset_path)) {
+			$out = [];
+			$out['path'] = $asset_path;
+			$out['url'] = KUDOS_PLUGIN_URL . 'dist/' . ltrim($asset, '/');
+			$asset_manifest = substr_replace( $asset_path, '.asset.php', - strlen( '.js' ) );
+			if(file_exists($asset_manifest)) {
+				$manifest_content = require($asset_manifest);
+				$out['dependencies'] = $manifest_content['dependencies'] ?? [];
+				$out['version'] = $manifest_content['version'] ?? KUDOS_VERSION;
+			}
+
+			return $out;
+		}
+
+		return null;
+	}
+
+	public static function get_asset_dependencies(string $asset) {
+		$asset_path = KUDOS_PLUGIN_DIR . '/dist' . $asset;
+		$dep_path = substr_replace( $asset_path, '.asset.php', - strlen( '.js' ) );
+//		wp_die($dep_path);
+//		wp_die(file_exists($dep_path));
+		if(file_exists($dep_path)) {
+			$content = require($dep_path);
+			return $content['dependencies'];
+		}
+		return [];
+	}
+
+	/**
 	 * Uses manifest to get asset path.
 	 *
 	 * @param string $asset

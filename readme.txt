@@ -1,10 +1,10 @@
 === Kudos Donations - Easy donations and payments with Mollie ===
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
-Requires at least: 5.5
+Requires at least: 5.6
 Tested up to: 5.8
 Requires PHP: 7.2
-Stable tag: 2.7.0
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,8 +92,8 @@ Here is a list of the shortcode attributes:
 
 * *button_label* = The label to display for the button.
 * *campaign_id* = Id of the campaign to use for this button.
-* *alignment* = Alignment of the button within container. Can be "center", "left" or "right"
-* *type* = Whether to show as a button with pop-up or just the form. Can be "button" or "form"
+* *alignment* = Alignment of the button within container. Can be "center", "left" or "right".
+* *type* = Whether to show as a button with pop-up or just the form. Can be "button" or "form".
 
 e.g:
 
@@ -118,7 +118,15 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
-= 2.8.0 =
+= 3.1.0 =
+* *NEW* Spam protection option (enabled by default). Automatically adds a honeypot field and timer for form to prevent/reduce spam.
+* Upgrade to Block API version 2. This increases the min WordPress version to 5.6.
+* Add "Clear object cache" to debug actions
+* Add white background to form elements
+* Rearrange debug actions page
+* Minor block bug fixes
+
+= 3.0.0 =
 * *NEW* You can now add a donation form without using a button or popup. This can be selected in the side panel when placing a Kudos block, or if using the shortcode by adding the attribute type="form".
 * *NEW* Allow adding additional funds to campaign. Useful if you receive donations for your campaign outside of Kudos.
 * *NEW* Add ability to choose custom theme color.
