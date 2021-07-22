@@ -10,7 +10,10 @@ module.exports = {
     purge: {
         enabled: true,
         content: [
-            './src/js/**/*.{js,jsx}',
+            './src/admin/**/*.{js,jsx}',
+            './src/blocks/**/*.{js,jsx}',
+            './src/public/**/*.{js,jsx}',
+            './src/helpers/**/*.{js,jsx}',
             './templates/**/*.twig',
             './safelist.txt'
         ],

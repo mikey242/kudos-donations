@@ -5,6 +5,7 @@ namespace Kudos\Service;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Assets;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use PHPMailer\PHPMailer\Exception;
@@ -61,7 +62,7 @@ class MailerService {
 
 		// Add logo as attachment.
 		$phpmailer->addEmbeddedImage(
-			Utils::get_asset_path( 'images/logo-colour-40.png' ),
+			Assets::get_asset_path( 'images/logo-colour-40.png' ),
 			'kudos-logo',
 			'kudos-logo.png'
 		);

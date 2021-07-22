@@ -6,6 +6,7 @@ use Exception;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Assets;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
@@ -113,11 +114,9 @@ class Front {
 	/**
 	 * Add root styles to header based on theme.
 	 *
-	 * @param bool $echo Whether to echo the styles instead of returning a string.
-	 *
 	 * @return string
 	 */
-	public function get_kudos_root_styles( bool $echo = true ): string {
+	public function get_kudos_root_styles(): string {
 
 		$theme_colours = apply_filters( 'kudos_theme_colors', Settings::get_setting( 'theme_colors' ) );
 
@@ -128,7 +127,7 @@ class Front {
 		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
-		return "<style>
+		return "
 
 		:root {
 			--kudos-theme-primary: $primary;
@@ -139,7 +138,7 @@ class Front {
 			--kudos-theme-secondary-darker: $secondary_darker;
 		}
 		
-		</style>";
+		";
 
 	}
 
@@ -149,7 +148,7 @@ class Front {
 	public function enqueue_scripts() {
 
 		$handle    = $this->plugin_name . '-public';
-		$public_js = Utils::get_asset( '/js/kudos-public.js' );
+		$public_js = Assets::get_script( '/public/kudos-public.js' );
 
 		wp_enqueue_script(
 			$handle,
@@ -175,9 +174,25 @@ class Front {
 	/**
 	 * Register the assets used for blocks.
 	 */
-	public function enqueue_block_assets() {
+	public function enqueue_root_styles() {
+
 		// Output root styles.
+		if ( function_exists( 'register_block_style' ) ) {
+			register_block_style(
+				'iseardmedia/kudos-button',
+				[
+					'name'         => 'kudos-button',
+					'label'        => __( 'Kudos Button', 'kudos-donations' ),
+					'is_default'   => true,
+					'inline_style' => $this->get_kudos_root_styles(),
+				]
+			);
+		}
+
+		// Failsafe.
+		echo "<style>";
 		echo $this->get_kudos_root_styles();
+		echo "</style>";
 	}
 
 	/**

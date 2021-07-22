@@ -3,6 +3,7 @@
 namespace Kudos\Service;
 
 use FilesystemIterator;
+use Kudos\Helpers\Assets;
 use Kudos\Helpers\Utils;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -125,7 +126,7 @@ class TwigService {
 		/**
 		 * Add get_asset function.
 		 */
-		$get_asset = new TwigFunction( 'get_asset', [ Utils::class, 'get_asset_url' ] );
+		$get_asset = new TwigFunction( 'get_asset', [ Assets::class, 'get_asset_url' ] );
 		$this->twig->addFunction( $get_asset );
 
 		/**

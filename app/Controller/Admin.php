@@ -9,8 +9,8 @@ use Kudos\Controller\Table\TransactionsTable;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Assets;
 use Kudos\Helpers\Settings;
-use Kudos\Helpers\Utils;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
@@ -272,20 +272,24 @@ class Admin {
 
 		$handle = $this->plugin_name . '-settings';
 
+		// Enqueue the styles
 		wp_enqueue_style(
 			$handle,
-			Utils::get_asset_url( '/css/kudos-admin-settings.css' ),
+			Assets::get_asset_url( '/admin/kudos-admin-settings.css' ),
 			[ 'wp-components' ],
 			$this->version
 		);
 
+		// Get and enqueue the script
+		$admin_js = Assets::get_script( '/admin/kudos-admin-settings.js' );
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( '/js/kudos-admin-settings.js' ),
-			[ 'wp-api', 'wp-i18n', 'wp-components', 'wp-element' ],
-			$this->version,
+			$admin_js['url'],
+			$admin_js['dependencies'],
+			$admin_js['version'],
 			true
 		);
+
 		wp_localize_script(
 			$handle,
 			'kudos',
@@ -293,7 +297,6 @@ class Admin {
 				'version'     => $this->version,
 				'checkApiUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_TEST ),
 				'sendTestUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::EMAIL_TEST ),
-				'ajaxurl'     => admin_url( 'admin-ajax.php' ),
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
@@ -307,12 +310,13 @@ class Admin {
 	private function table_page_assets(): string {
 
 		$handle = $this->plugin_name . '-table';
+		$table_js = Assets::get_script( '/admin/kudos-admin-table.js' );
 
 		wp_enqueue_script(
 			$handle,
-			Utils::get_asset_url( '/js/kudos-admin-table.js' ),
-			[ 'jquery' ],
-			$this->version,
+			$table_js['url'],
+			$table_js['dependencies'],
+			$table_js['version'],
 			false
 		);
 
@@ -324,11 +328,13 @@ class Admin {
 	 */
 	public function transactions_page_assets() {
 
+		$transactions_js = Assets::get_script( '/admin/kudos-admin-transactions.js' );
+
 		wp_enqueue_script(
 			$this->plugin_name . '-transactions',
-			Utils::get_asset_url( '/js/kudos-admin-transactions.js' ),
-			[ 'jquery' ],
-			$this->version,
+			$transactions_js['url'],
+			$transactions_js['dependencies'],
+			$transactions_js['version'],
 			false
 		);
 

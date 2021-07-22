@@ -36,13 +36,9 @@ mix
         ]
     })
 
-    // Copy vendor files.
-    // .copy('node_modules/jquery-validation/dist/jquery.validate.min.js', 'dist/js')
-    // .copy('node_modules/micromodal/dist/micromodal.min.js', 'dist/js')
-
     // Public assets.
-    .js('src/js/kudos-public.js', 'js')
-    .postCss('src/css/kudos-public.css', 'css', [
+    .js('src/public/kudos-public.js', 'public')
+    .postCss('src/public/kudos-public.css', 'public', [
         require('tailwindcss')('./tailwind.config.js'),
         require("postcss-prefixwrap")('[id^=kudos\\-donations\\-]', {
             ignoredSelectors: [':root'],
@@ -50,14 +46,14 @@ mix
     ])
 
     // Block assets.
-    .js('src/js/Blocks/Button/kudos-button.jsx', 'blocks/kudos-button').react()
-    .copy('src/js/Blocks/Button/block.json', 'dist/blocks/kudos-button/')
+    .js('src/blocks/kudos-button/index.jsx', 'blocks/kudos-button').react()
+    .copy('src/blocks/kudos-button/block.json', 'dist/blocks/kudos-button/')
 
     // Admin assets.
-    .js('src/js/kudos-admin-settings.jsx', 'js').react()
-    .js('src/js/kudos-admin-transactions.js', 'js')
-    .js('src/js/kudos-admin-table.js', 'js')
-    .postCss('src/css/kudos-admin-settings.css', 'css', [
+    .js('src/admin/kudos-admin-settings.jsx', 'admin').react()
+    .js('src/admin/kudos-admin-transactions.js', 'admin')
+    .js('src/admin/kudos-admin-table.js', 'admin')
+    .postCss('src/admin/kudos-admin-settings.css', 'admin', [
         require('tailwindcss'),
     ])
 
