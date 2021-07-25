@@ -15,17 +15,17 @@ Use the [yarn](https://yarnpkg.com/) and [composer](https://getcomposer.org/) pa
 
 ````bash
 # install dependencies
-yarn install
+npm install
 composer install
 
 # start development
-yarn run start
+npm run watch
 
 # build assets for export
-yarn run build:production
+npm run production
 
 # export plugin to KUDOS_EXPORT folder and produce installable zip
-yarn export
+npm run export
 ````
 
 ### Docker
