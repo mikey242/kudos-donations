@@ -4,8 +4,8 @@ import MicroModal from 'micromodal'
 import 'jquery-validation'
 import '../images/logo-colour-40.png' // used as email attachment
 import '../images/logo-colour.svg'
-import {getStyle, isVisible} from "../helpers/util"
-import {handleMessages} from "../helpers/modal"
+import {getStyle, isVisible} from "../common/helpers/util"
+import {handleMessages} from "../common/helpers/modal"
 import {__} from "@wordpress/i18n"
 
 import {
@@ -16,7 +16,7 @@ import {
     resetForm,
     resetProgressBar,
     valueChange
-} from "../helpers/form"
+} from "../common/helpers/form"
 
 jQuery(document).ready(($) => {
 

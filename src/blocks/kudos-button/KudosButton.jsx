@@ -1,4 +1,4 @@
-import {KudosLogo} from "../../admin/Settings/Components/KudosLogo"
+import {KudosLogo} from "../../common/components/KudosLogo"
 
 const KudosButton = ({children, className, color}) => {
 

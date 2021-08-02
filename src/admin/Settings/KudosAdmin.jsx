@@ -12,7 +12,7 @@ import api from '@wordpress/api'
 import {Notice} from './Components/Notice'
 import {Header} from './Components/Header'
 import {IntroGuide} from "./Components/IntroGuide"
-import {getQueryVar, updateQueryParameter} from "../../helpers/util"
+import {getQueryVar, updateQueryParameter} from "../../common/helpers/util"
 import {MollieTab} from "./Components/Tabs/MollieTab"
 import {CampaignsTab} from "./Components/Tabs/CampaignsTab"
 import {CustomizeTab} from "./Components/Tabs/CustomizeTab"

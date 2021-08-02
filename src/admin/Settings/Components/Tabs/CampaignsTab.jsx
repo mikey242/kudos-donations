@@ -1,6 +1,6 @@
 import {NewCampaignPanel} from "../Panels/NewCampaignPanel"
 import {CampaignPanel} from "../Panels/CampaignPanel"
-import {getQueryVar} from "../../../../helpers/util"
+import {getQueryVar} from "../../../../common/helpers/util"
 import {__} from "@wordpress/i18n"
 import {Card, CardHeader, CardDivider, SelectControl} from "@wordpress/components"
 import {Fragment, useState} from "@wordpress/element"
