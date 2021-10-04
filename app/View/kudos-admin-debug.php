@@ -205,6 +205,16 @@ $tab         = $_GET['tab'] ?? $default_tab;
 					</button>
 				</form>
 
+				<hr/>
+
+				<p>Mollie actions.</p>
+				<form action="<?php echo esc_url( $url ); ?>" method='post'>
+					<?php wp_nonce_field( 'kudos_resync_payments' ); ?>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_resync_payments'>Resync payments
+					</button>
+				</form>
+
 				<?php do_action( 'kudos_debug_menu_actions_extra', $url ); ?>
 
 				<?php

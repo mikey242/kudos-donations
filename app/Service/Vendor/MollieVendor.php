@@ -2,6 +2,7 @@
 
 namespace Kudos\Service\Vendor;
 
+use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
@@ -70,19 +71,30 @@ class MollieVendor implements VendorInterface {
 		$settings = Settings::get_setting( 'vendor_mollie' );
 
 		$this->api_client = new MollieApiClient();
-		$this->api_mode   = $settings['mode'] ?? '';
-		$this->api_key    = $settings[ $this->api_mode . '_key' ] ?? '';
 		$this->api_keys   = [
 			'test' => $settings['test_key'] ?? '',
 			'live' => $settings['live_key'] ?? '',
 		];
 
-		if ( $this->api_key ) {
-			try {
-				$this->api_client->setApiKey( $this->api_key );
-			} catch ( ApiException $e ) {
+		$this->set_api_mode($settings['mode']);
+	}
+
+	/**
+	 * Change the API client to the key for the specified mode.
+	 */
+	private function set_api_mode(string $mode){
+
+		$key = $this->api_keys[$mode] ?? false;
+
+		if($key) {
+			try{
+				$this->api_client->setApiKey($key);
+				$this->api_key = $key;
+				$this->api_mode = $mode;
+			} catch (ApiException $e) {
 				$this->logger->critical( $e->getMessage() );
 			}
+
 		}
 	}
 
@@ -482,7 +494,7 @@ class MollieVendor implements VendorInterface {
 	 */
 	public function rest_webhook( WP_REST_Request $request ) {
 
-		// ID is case sensitive (e.g: tr_HUW39xpdFN).
+		// ID is case-sensitive (e.g: tr_HUW39xpdFN).
 		$id = $request->get_param( 'id' );
 
 		/**
@@ -671,7 +683,56 @@ class MollieVendor implements VendorInterface {
 			return $_ENV['APP_URL'] . 'wp-json/' . $route;
 		}
 
-		// Otherwise return normal rest URL.
+		// Otherwise, return normal rest URL.
 		return rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK );
+	}
+
+	/**
+	 * Syncs Mollie transactions with the local DB.
+	 * Returns the number of transactions updated.
+	 */
+	public function sync_transactions(): int {
+		$updated = 0;
+		$mapper = $this->mapper;
+		$mapper->get_repository(DonorEntity::class);
+		$donors = $mapper->get_all_by();
+		/** @var DonorEntity $donor */
+		foreach ($donors as $donor) {
+			$customer_id = $donor->customer_id;
+			if($donor->mode !== $this->api_mode ) {
+				$this->set_api_mode($donor->mode);
+			}
+			$customer = $this->get_customer($customer_id);
+			if($customer) {
+				$payments = $customer->payments();
+				foreach ($payments as $payment) {
+					$amount = $payment->amount;
+					$order_id = $payment->metadata->order_id;
+					$mapper->get_repository(TransactionEntity::class);
+					/** @var TransactionEntity $transaction */
+					$transaction = $mapper->get_one_by([
+						'order_id' => $order_id,
+						'status' => 'open'
+					]);
+					if($transaction) {
+						$transaction->set_fields(
+							[
+								'status'          => $payment->status,
+								'customer_id'     => $payment->customerId,
+								'value'           => $amount->value,
+								'currency'        => $amount->currency,
+								'sequence_type'   => $payment->sequenceType,
+								'method'          => $payment->method,
+								'mode'            => $payment->mode,
+								'subscription_id' => $payment->subscriptionId,
+							]
+						);
+						$mapper->save($transaction);
+						$updated++;
+					}
+				}
+			}
+		}
+		return $updated;
 	}
 }

@@ -18,6 +18,7 @@ use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
+use Kudos\Service\Vendor\MollieVendor;
 
 class Admin {
 
@@ -59,6 +60,10 @@ class Admin {
 	 * @var ActivatorService
 	 */
 	private $activator;
+	/**
+	 * @var \Kudos\Service\Vendor\MollieVendor
+	 */
+	private $mollie;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -73,7 +78,8 @@ class Admin {
 		TwigService $twig,
 		PaymentService $payment,
 		ActivatorService $activator,
-		Settings $settings
+		Settings $settings,
+		MollieVendor $mollie_vendor
 	) {
 
 		$this->plugin_name = $plugin_name;
@@ -83,6 +89,7 @@ class Admin {
 		$this->payment     = $payment;
 		$this->activator   = $activator;
 		$this->settings    = $settings;
+		$this->mollie      = $mollie_vendor;
 
 	}
 
@@ -542,6 +549,25 @@ class Admin {
 					$activator = $this->activator;
 					$activator->activate();
 					new AdminNotice( __( 'Database re-created', 'kudos-donations' ) );
+					break;
+
+				case 'kudos_resync_payments':
+					$mollie = $this->mollie;
+					$updated = $mollie->sync_transactions();
+					if($updated) {
+						new AdminNotice(
+							sprintf(
+							/* translators: %s: Number of records. */
+								_n( 'Updated %s transaction',
+									'Updated %s transactions',
+									$updated,
+									'kudos-donations' ),
+								$updated
+							)
+						);
+						break;
+					}
+					new AdminNotice(__('No transactions need updating', 'kudos-donations'));
 			}
 
 			do_action( 'kudos_admin_actions_extra', $action );
