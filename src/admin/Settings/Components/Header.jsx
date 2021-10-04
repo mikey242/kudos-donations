@@ -1,5 +1,5 @@
 import {Btn} from "./Btn"
-import {KudosLogo} from "./KudosLogo"
+import {KudosLogo} from "../../../common/components/KudosLogo"
 import {__} from "@wordpress/i18n"
 import {applyFilters} from "@wordpress/hooks"
 
