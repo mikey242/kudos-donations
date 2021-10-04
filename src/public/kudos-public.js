@@ -270,7 +270,7 @@ jQuery(document).ready(($) => {
         }
 
         // Show summary if next tab is final
-        if ('FIELDSET' !== targetTab.nextElementSibling.tagName) {
+        if (!targetTab.nextElementSibling) {
             createSummary(currentTab.closest('form').id)
         }
 

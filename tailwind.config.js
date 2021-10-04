@@ -43,16 +43,6 @@ module.exports = {
             1: '1em',
             full: '100%',
         },
-        spacing: {
-            8: '2em',
-            6: '1.5em',
-            5: '1.25em',
-            4: '1em',
-            3: '0.75em',
-            2: '0.5em',
-            1: '0.25em',
-            0: '0'
-        },
         inset: {
             0: '0',
             auto: 'auto',
@@ -146,6 +136,16 @@ module.exports = {
             },
             ringWidth: {
                 'DEFAULT': '2px',
+            },
+            spacing: {
+                8: '2em',
+                6: '1.5em',
+                5: '1.25em',
+                4: '1em',
+                3: '0.75em',
+                2: '0.5em',
+                1: '0.25em',
+                0: '0'
             },
             keyframes: {
                 loaderSpin: {

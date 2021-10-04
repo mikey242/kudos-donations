@@ -54,11 +54,15 @@ class MollieVendor implements VendorInterface {
 	 * @var \Kudos\Service\MapperService
 	 */
 	private $mapper;
+	/**
+	 * @var array
+	 */
+	private $api_keys;
 
 	/**
 	 * Mollie constructor.
 	 */
-	public function __construct(MapperService $mapper_service, LoggerService $logger_service) {
+	public function __construct( MapperService $mapper_service, LoggerService $logger_service ) {
 
 		$this->logger = $logger_service;
 		$this->mapper = $mapper_service;
@@ -66,8 +70,12 @@ class MollieVendor implements VendorInterface {
 		$settings = Settings::get_setting( 'vendor_mollie' );
 
 		$this->api_client = new MollieApiClient();
-		$this->api_mode = $settings['mode'] ?? '';
-		$this->api_key  = $settings[ $this->api_mode . '_key' ] ?? '';
+		$this->api_mode   = $settings['mode'] ?? '';
+		$this->api_key    = $settings[ $this->api_mode . '_key' ] ?? '';
+		$this->api_keys   = [
+			'test' => $settings['test_key'] ?? '',
+			'live' => $settings['live_key'] ?? '',
+		];
 
 		if ( $this->api_key ) {
 			try {
@@ -83,7 +91,7 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Check the Mollie api key key associated with the mode. Sends a JSON response.
+	 * Check the Mollie api keys for both test and live keys. Sends a JSON response.
 	 */
 	public function check_api_keys() {
 
@@ -93,65 +101,57 @@ class MollieVendor implements VendorInterface {
 				'recurring' => false,
 			] );
 
-		$mode    = $this->api_mode;
-		$api_key = $this->api_key;
+		$modes    = [ "test", "live" ];
+		$api_keys = $this->api_keys;
 
-		// Check that the api key corresponds to the mode.
-		if ( substr( $api_key, 0, 4 ) !== $mode ) {
-			wp_send_json_error(
-				[
-					/* translators: %s: API mode */
-					'message' => sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ),
-						ucfirst( $mode ),
-						$mode . '_' ),
-					'setting' => Settings::get_setting( 'vendor_mollie' ),
-				]
-			);
+		// Check that the api key corresponds to each mode.
+		foreach ( $modes as $mode ) {
+			$api_key = $api_keys[ $mode ];
+			if ( substr( $api_key, 0, 5 ) !== $mode . "_" ) {
+				wp_send_json_error(
+					[
+						/* translators: %s: API mode */
+						'message' => sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ),
+							ucfirst( $mode ),
+							$mode . '_' ),
+						'setting' => Settings::get_setting( 'vendor_mollie' ),
+					]
+				);
+			}
+
+			// Test the api key.
+			if ( ! $this->refresh_api_connection( $api_key ) ) {
+				wp_send_json_error(
+					[
+						/* translators: %s: API mode */
+						'message' => sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.',
+							'kudos-donations' ),
+							ucfirst( $mode ) ),
+						'setting' => Settings::get_setting( 'vendor_mollie' ),
+					]
+				);
+			}
 		}
-
-		// Test the api key.
-		$result = $this->refresh_api_connection( $api_key );
-
-		// Update settings.
+		// Update vendor settings.
 		Settings::update_array( 'vendor_mollie',
 			[
-				'connected' => $result,
+				'recurring'       => $this->can_use_recurring(),
+				'connected'       => true,
+				'payment_methods' => array_map( function ( $method ) {
+					return [
+						'id'            => $method->id,
+						'status'        => $method->status,
+						'maximumAmount' => (array) $method->maximumAmount,
+					];
+				},
+					(array) $this->get_payment_methods() ),
 			] );
 
-		// Send result as JSON response.
-		if ( $result ) {
-
-			// Update vendor settings.
-			Settings::update_array( 'vendor_mollie',
-				[
-					'recurring'       => $this->can_use_recurring(),
-					'payment_methods' => array_map( function ( $method ) {
-						return [
-							'id'            => $method->id,
-							'status'        => $method->status,
-							'maximumAmount' => (array) $method->maximumAmount,
-						];
-					},
-						(array) $this->get_payment_methods() ),
-				] );
-
-			wp_send_json_success(
-				[
-					'message' =>
-					/* translators: %s: API mode */
-						sprintf( __( '%s API key connection was successful!', 'kudos-donations' ),
-							ucfirst( $mode ) ),
-					'setting' => Settings::get_setting( 'vendor_mollie' ),
-				]
-			);
-		}
-
-		wp_send_json_error(
+		wp_send_json_success(
 			[
+				'message' =>
 				/* translators: %s: API mode */
-				'message' => sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.',
-					'kudos-donations' ),
-					ucfirst( $mode ) ),
+					__( 'API connection was successful!', 'kudos-donations' ),
 				'setting' => Settings::get_setting( 'vendor_mollie' ),
 			]
 		);
@@ -189,7 +189,7 @@ class MollieVendor implements VendorInterface {
 	 */
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool {
 
-		$customer_id  = $subscription->customer_id;
+		$customer_id     = $subscription->customer_id;
 		$subscription_id = $subscription->subscription_id;
 
 		$customer = $this->get_customer( $customer_id );
@@ -212,7 +212,6 @@ class MollieVendor implements VendorInterface {
 	 * @param string $api_key API key to test.
 	 *
 	 * @return bool
-
 	 */
 	public function refresh_api_connection( string $api_key ): bool {
 
@@ -241,7 +240,6 @@ class MollieVendor implements VendorInterface {
 	 * @param string $mollie_payment_id Mollie payment id.
 	 *
 	 * @return bool|Payment
-
 	 */
 	public function get_payment( string $mollie_payment_id ) {
 
@@ -309,7 +307,6 @@ class MollieVendor implements VendorInterface {
 	 * @param array $payment_array Parameters to pass to mollie to create a payment.
 	 *
 	 * @return null|Payment
-
 	 */
 	public function create_payment( array $payment_array ): ?Payment {
 
@@ -537,14 +534,14 @@ class MollieVendor implements VendorInterface {
 		// Get transaction from database.
 		/** @var TransactionEntity $transaction */
 		$transaction = $this->mapper
-			->get_repository(TransactionEntity::class)
+			->get_repository( TransactionEntity::class )
 			->get_one_by(
-			[
-				'order_id'       => $order_id,
-				'transaction_id' => $transaction_id,
-			],
-			'OR'
-		);
+				[
+					'order_id'       => $order_id,
+					'transaction_id' => $transaction_id,
+				],
+				'OR'
+			);
 
 		// Create new transaction if none found.
 		if ( null === $transaction ) {
@@ -670,7 +667,7 @@ class MollieVendor implements VendorInterface {
 		$route = RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK;
 
 		// Use APP_URL if defined in .env file.
-		if(isset($_ENV['APP_URL'])) {
+		if ( isset( $_ENV['APP_URL'] ) ) {
 			return $_ENV['APP_URL'] . 'wp-json/' . $route;
 		}
 

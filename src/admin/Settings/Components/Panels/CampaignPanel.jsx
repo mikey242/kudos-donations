@@ -8,21 +8,18 @@ import {
     CardDivider,
     CardFooter,
     CheckboxControl,
-    ClipboardButton,
     Disabled,
     RadioControl,
     TextControl,
     ToggleControl
 } from "@wordpress/components"
+import {CopyToClipBoard} from "../CopyToClipBoard"
 
 const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, allowDelete = false}) => {
 
     const [hasCopied, setHasCopied] = useState(false)
-    let recurring_allowed = settings._kudos_vendor_mollie.recurring
 
-    useEffect(() => {
-        setHasCopied(false)
-    }, [campaign])
+    let recurring_allowed = settings._kudos_vendor_mollie.recurring
 
     let donation_type = <RadioControl
         selected={!recurring_allowed ? 'oneoff' : campaign.donation_type || 'oneoff'}
@@ -219,17 +216,13 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
 
 
             <CardFooter className={"kd-box-border"}>
-                <ClipboardButton
-                    isSecondary
-                    icon={(<ButtonIcon icon="copy"/>)}
+                <CopyToClipBoard
                     text={'[kudos campaign_id="' + campaign.id + '"]'}
-                    onClick={() => setHasCopied(true)}
                     onCopy={() => setHasCopied(true)}
                     onFinishCopy={() => setHasCopied(false)}
                 >
                     {hasCopied ? __('Copied!', 'kudos-donations') : __('Copy Shortcode', 'kudos-donations')}
-                </ClipboardButton>
-
+                </CopyToClipBoard>
                 {allowDelete ?
                     <Button
                         isLink

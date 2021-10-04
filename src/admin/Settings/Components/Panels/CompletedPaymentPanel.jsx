@@ -1,27 +1,28 @@
 import {Info} from "../Info"
 import {SettingCard} from "../SettingCard"
 import {__} from "@wordpress/i18n"
-import {TextControl, ToggleControl} from "@wordpress/components"
+import {RadioControl, TextControl} from "@wordpress/components"
 import {Fragment} from "@wordpress/element"
 
 const CompletedPaymentPanel = (props) => {
 
     return (
         <SettingCard title={__('Completed payment', 'kudos-donations')}>
-                <ToggleControl
-                    label={__(
-                        'Show pop-up message when payment complete.',
-                        'kudos-donations'
-                    )}
-                    help={__(
-                        'Enable this to show a pop-up thanking the customer for their donation.',
-                        'kudos-donations'
-                    )}
-                    checked={props.settings._kudos_return_message_enable || ''}
-                    onChange={() => props.handleInputChange("_kudos_return_message_enable", !props.settings._kudos_return_message_enable)}
-                />
 
-            {props.settings._kudos_return_message_enable ?
+            <RadioControl
+                help={__('When the donor returns to your website after completing the payment what do you want to happen?', 'kudos-donations')}
+                selected={props.settings._kudos_completed_payment || 'message'}
+                options={[
+                    {label: __('Pop-up message', 'kudos-donations'), value: 'message'},
+                    {label: __('Custom return URL', 'kudos-donations'), value: 'url'}
+                ]}
+                onChange={(value) => {
+                    props.settings._kudos_completed_payment = value
+                    props.handleInputChange('_kudos_completed_payment', props.settings._kudos_completed_payment)
+                }}
+            />
+
+            {props.settings._kudos_completed_payment === 'message' ?
 
                 <Fragment>
 
@@ -51,7 +52,19 @@ const CompletedPaymentPanel = (props) => {
 
                 </Fragment>
 
-                : ''}
+                :
+                <TextControl
+                    label={__('URL', 'kudos-donations')}
+                    help={__(
+                        'e.g https://mywebsite.com/thanks',
+                        'kudos-donations'
+                    )}
+                    type={'text'}
+                    value={props.settings._kudos_custom_return_url || ''}
+                    disabled={props.isSaving}
+                    onChange={(value) => props.handleInputChange("_kudos_custom_return_url", value)}
+                />
+            }
 
         </SettingCard>
     )

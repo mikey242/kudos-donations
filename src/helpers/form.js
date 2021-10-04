@@ -173,18 +173,20 @@ export function valueChange(form) {
     form.addEventListener('change', (e) => {
 
         let progressBar = form.querySelector('.kudos-campaign-progress')
-        let goal = parseFloat(progressBar.dataset.goal)
-        let total = parseFloat(progressBar.dataset.total)
+        if(progressBar) {
+            let goal = parseFloat(progressBar.dataset.goal)
+            let total = parseFloat(progressBar.dataset.total)
 
-        let extra = form.querySelector('.kudos-campaign-progress').querySelector('.kudos-progress-extra')
-        if ("value" === e.target.name) {
-            let value = Number.isInteger(parseFloat(form.value.value)) ? parseFloat(form.value.value) : 0
-            let newPercent = value / (goal - total) * 100
-            // Limit percentage to 100
-            newPercent = newPercent > 100 ? 100 : newPercent
-            extra.style.transform = 'scaleX(' + newPercent + '%)'
-            if (100 <= newPercent) {
-                party.confetti(form.querySelector('.kudos-progress-total'))
+            let extra = form.querySelector('.kudos-campaign-progress').querySelector('.kudos-progress-extra')
+            if ("value" === e.target.name) {
+                let value = Number.isInteger(parseFloat(form.value.value)) ? parseFloat(form.value.value) : 0
+                let newPercent = value / (goal - total) * 100
+                // Limit percentage to 100
+                newPercent = newPercent > 100 ? 100 : newPercent
+                extra.style.transform = 'scaleX(' + newPercent + '%)'
+                if (100 <= newPercent) {
+                    party.confetti(form.querySelector('.kudos-progress-total'))
+                }
             }
         }
     })

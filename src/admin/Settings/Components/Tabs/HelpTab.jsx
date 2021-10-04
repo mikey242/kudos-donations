@@ -5,6 +5,7 @@ import {DebugModePanel} from "../Panels/DebugModePanel"
 import {RenderModalFooter} from "../Panels/RenderModalFooter"
 import {Card, CardDivider} from "@wordpress/components"
 import {Fragment} from "@wordpress/element"
+import {DisableShortcodePanel} from "../Panels/DisableShortcodePanel"
 
 const HelpTab = (props) => {
 
@@ -32,6 +33,11 @@ const HelpTab = (props) => {
                 />
                 <CardDivider/>
                 <DebugModePanel
+                    settings={props.settings}
+                    handleInputChange={props.handleInputChange}
+                />
+                <CardDivider/>
+                <DisableShortcodePanel
                     settings={props.settings}
                     handleInputChange={props.handleInputChange}
                 />

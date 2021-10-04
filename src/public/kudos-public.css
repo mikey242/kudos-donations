@@ -35,12 +35,12 @@
     @apply kd-block kd-overflow-x-hidden kd-overflow-y-auto !important;
 }
 
-.kd-is-loading .kd-spinner {
+.kd-is-loading + .kd-spinner {
     @apply kd-block !important;
 }
 
-.kd-is-loading .kd-loading-overlay {
-    @apply kd-opacity-50 kd-block !important;
+.kd-is-loading {
+    @apply kd-opacity-50 !important;
 }
 
 .kudos-modal [data-current-tab="initial"] [data-direction="back"] {

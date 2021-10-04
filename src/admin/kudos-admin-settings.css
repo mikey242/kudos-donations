@@ -7,14 +7,6 @@
     --wp-admin-theme-color-darker-20: theme("colors.orange.700") ;
 }
 
-.kudos-intro-guide {
-    overflow: visible;
-    width: 352px;
-}
-.kudos-intro-guide .kd-intro-container {
-    padding: 0 32px;
-}
-
 .components-radio-control__input::before,
 .components-circular-option-picker__option::after,
 .components-modal__frame *,
@@ -40,15 +32,9 @@
     width: 15px;
     height: 15px;
 }
-.kudos-dashboard-header .kudos-api-status.connected {
-    color: green;
-}
 .kudos-dashboard-header .kudos-api-status.connected:before {
     background: #35ac35;
     border-color: #90ee90;
-}
-.kudos-dashboard-header .kudos-api-status.not-connected {
-    color: red;
 }
 .kudos-dashboard-header .kudos-api-status.not-connected:before {
     background: red;

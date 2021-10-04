@@ -13,13 +13,12 @@ const MollieApiModePanel = (props) => {
     const selected = vendorMollie['mode']
 
     const handleChange = (id, value) => {
-        props.mollieChanged()
         props.handleInputChange(id, value)
     }
 
     const refresh = () => {
         setIsBusy(true)
-        props.checkApiKey(() => setIsBusy(false))
+        props.checkApiKey(true, () => setIsBusy(false))
     }
 
     return (

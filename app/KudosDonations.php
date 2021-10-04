@@ -56,14 +56,14 @@ class KudosDonations {
 	 */
 	public function __construct( $container, $version, $plugin_name ) {
 
-		$this->container = $container;
-		$this->version = $version;
+		$this->container   = $container;
+		$this->version     = $version;
 		$this->plugin_name = $plugin_name;
 
 	}
 
 	/**
-	 * Run the loader to execute all of the hooks with WordPress.
+	 * Run the loader to execute all the hooks with WordPress.
 	 */
 	public function run() {
 
@@ -77,7 +77,7 @@ class KudosDonations {
 	}
 
 	/**
-	 * Register all of the hooks related to the admin area functionality
+	 * Register all the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
 	 * @access   private
@@ -88,15 +88,15 @@ class KudosDonations {
 
 		add_action( 'admin_menu', [ $plugin_admin, 'add_menu_pages' ], 11 );
 		add_action( 'admin_init', [ $plugin_admin, 'admin_actions' ] );
-		add_action( 'admin_init', [ $plugin_admin, 'register_settings' ] );
 		add_action( 'rest_api_init', [ $plugin_admin, 'register_settings' ] );
 		add_action( 'kudos_remove_secret_action', [ $plugin_admin, 'remove_secret_action' ], 10, 2 );
-		add_action( 'kudos_check_log', [$plugin_admin, 'clear_log'] );
+		add_action( 'kudos_check_log', [ $plugin_admin, 'clear_log' ] );
+		add_action( 'enqueue_block_editor_assets', [ $plugin_admin, 'register_block_editor_assets' ] );
 
 	}
 
 	/**
-	 * Register all of the hooks related to the public-facing functionality
+	 * Register all the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
 	 * @access   private
@@ -105,8 +105,8 @@ class KudosDonations {
 
 		$plugin_public = $this->container->get( 'Front' );
 
-		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'enqueue_scripts' ] );
-		add_action( 'enqueue_block_assets', [ $plugin_public, 'enqueue_root_styles' ] );
+		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'register_scripts' ] );
+		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'register_styles' ] );
 		add_action( 'init', [ $plugin_public, 'register_kudos' ] );
 		add_action( 'wp_footer', [ $plugin_public, 'handle_query_variables' ], 1000 );
 
@@ -168,7 +168,7 @@ class KudosDonations {
 
 		if ( $db_version !== KUDOS_VERSION ) {
 			$this->container->get( 'ActivatorService' )
-                ->activate( $db_version );
+			                ->activate( $db_version );
 		}
 	}
 

@@ -43,7 +43,7 @@ class PaymentService {
 	) {
 
 		$vendor               = $this::get_current_vendor_class();
-		$this->vendor         = new $vendor($mapper_service, $logger_service);
+		$this->vendor         = new $vendor( $mapper_service, $logger_service );
 		$this->mapper_service = $mapper_service;
 		$this->mailer_service = $mailer_service;
 		$this->logger         = $logger_service;
@@ -81,7 +81,7 @@ class PaymentService {
 	}
 
 	/**
-	 * Check the vendor api key key associated with the mode. Sends a JSON response.
+	 * Check the vendor api key associated with the mode. Sends a JSON response.
 	 */
 	public function check_api_keys() {
 
@@ -132,12 +132,6 @@ class PaymentService {
 	 */
 	public function process_transaction( string $order_id ): bool {
 
-		// Bail if no order ID.
-		if ( null === $order_id ) {
-			return false;
-		}
-
-		$mapper = $this->mapper_service;
 		$mailer = $this->mailer_service;
 
 		// Get transaction.
@@ -149,8 +143,8 @@ class PaymentService {
 		//  Get donor.
 		/** @var DonorEntity $donor */
 		$donor = $this->mapper_service
-			->get_repository(DonorEntity::class)
-			->get_one_by([ 'customer_id' => $transaction->customer_id ]);
+			->get_repository( DonorEntity::class )
+			->get_one_by( [ 'customer_id' => $transaction->customer_id ] );
 
 		if ( $donor->email ) {
 			// Send email - email setting is checked in mailer.
@@ -180,7 +174,7 @@ class PaymentService {
 		$values = $request->get_json_params();
 
 		// Check if bot filling form.
-		if($this->is_bot($values)) {
+		if ( $this->is_bot( $values ) ) {
 			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
 		}
 
@@ -209,10 +203,10 @@ class PaymentService {
 			// Search for existing donor based on email and mode.
 			/** @var DonorEntity $donor */
 			$donor = $mapper->get_repository( DonorEntity::class )
-				->get_one_by( [
-				'email' => $email,
-				'mode'  => $this->vendor->get_api_mode(),
-			] );
+			                ->get_one_by( [
+				                'email' => $email,
+				                'mode'  => $this->vendor->get_api_mode(),
+			                ] );
 
 			// Create new donor if none found.
 			if ( empty( $donor->customer_id ) ) {
@@ -281,7 +275,7 @@ class PaymentService {
 		// Get subscription entity from supplied row id.
 		/** @var SubscriptionEntity $subscription */
 		$subscription = $mapper
-			->get_repository(SubscriptionEntity::class)
+			->get_repository( SubscriptionEntity::class )
 			->get_one_by( [ 'id' => $id ] );
 
 		// Cancel subscription with vendor.
@@ -398,7 +392,7 @@ class PaymentService {
 		$mapper->save( $transaction );
 
 		// Add order id query arg to return url if option to show message enabled.
-		if ( get_option( '_kudos_return_message_enable' ) ) {
+		if ( get_option( '_kudos_completed_payment' ) === 'message' ) {
 			$redirect_url         = add_query_arg(
 				[
 					'kudos_action'   => 'order_complete',
@@ -428,24 +422,26 @@ class PaymentService {
 	 *
 	 * @return bool
 	 */
-	public function is_bot($values): bool {
+	public function is_bot( $values ): bool {
 
-		$timeDiff = abs($values['timestamp'] - time());
+		$timeDiff = abs( $values['timestamp'] - time() );
 
 		// Check if form completed too quickly.
-		if($timeDiff < 4) {
+		if ( $timeDiff < 4 ) {
 			$this->logger->info( 'Bot detected, rejecting form.', [
-				'reason' => 'Form completed too quickly',
-				'time_taken' => $timeDiff
+				'reason'     => 'Form completed too quickly',
+				'time_taken' => $timeDiff,
 			] );
 			return true;
 		}
 
 		// Check if honeypot field completed.
 		if ( ! empty( $values['donation'] ) ) {
-			$this->logger->info( 'Bot detected, rejecting form.', array_merge(['reason' => 'Honeypot field completed'], $values) );
+			$this->logger->info( 'Bot detected, rejecting form.',
+				array_merge( [ 'reason' => 'Honeypot field completed' ], $values ) );
 			return true;
 		}
+
 		return false;
 	}
 

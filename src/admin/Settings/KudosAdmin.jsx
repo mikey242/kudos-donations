@@ -69,7 +69,7 @@ class KudosAdmin extends Component {
         updateQueryParameter('tab_name', tab)
     }
 
-    checkApiKey(callback) {
+    checkApiKey(showNotice = true, callback) {
 
         this.setState({
             checkingApi: true,
@@ -86,7 +86,9 @@ class KudosAdmin extends Component {
             })
             .then((response) => {
 
-                this.showNotice(response.data.data.message)
+                if (showNotice) {
+                    this.showNotice(response.data.data.message)
+                }
 
                 // Update state
                 this.setState({
@@ -101,7 +103,7 @@ class KudosAdmin extends Component {
                 })
 
                 if (typeof callback === "function") {
-                    callback()
+                    callback(response)
                 }
             })
     }
@@ -133,17 +135,18 @@ class KudosAdmin extends Component {
     filterSettings(settings) {
         return Object.fromEntries(
             Object.entries(settings).filter(
-                ([key])=>key.startsWith('_kudos')
+                ([key]) => key.startsWith('_kudos')
             )
-        );
+        )
     }
 
+    // Get the settings from the database
     getSettings() {
         api.loadPromise.then(() => {
-            this.settings = new api.models.Settings()
-            this.settings.fetch().then((response) => {
+            let settings = new api.models.Settings()
+            settings.fetch().then((response) => {
                 this.setState({
-                    settings: {...this.filterSettings(response)},
+                    settings: this.filterSettings(response),
                     isAPILoaded: true,
                     showNotice: false,
                 })
@@ -152,7 +155,7 @@ class KudosAdmin extends Component {
     }
 
     // Update all settings
-    updateAll(showNotice = true) {
+    updateAll(showNotice = true, callback) {
         this.setState({isAPISaving: true})
 
         // Delete empty settings keys
@@ -171,7 +174,6 @@ class KudosAdmin extends Component {
         model
             .save()
             .then((response) => {
-                const settings = this.filterSettings(response)
                 // Commit state
                 this.setState({
                     settings: {
@@ -186,10 +188,14 @@ class KudosAdmin extends Component {
                     )
                 }
                 if (this.state.isMollieEdited) {
-                    this.checkApiKey()
+                    this.checkApiKey(showNotice, callback)
                     this.setState({
                         isMollieEdited: false,
                     })
+                } else {
+                    if (typeof callback === "function") {
+                        callback(response)
+                    }
                 }
             })
             .fail((response) => {
@@ -212,9 +218,7 @@ class KudosAdmin extends Component {
         model.save().then((response) => {
             // Commit state
             this.setState({
-                settings: {
-                    ...response
-                },
+                settings: this.filterSettings(response),
                 isAPISaving: false,
             })
             if (showNotice) {
@@ -233,6 +237,19 @@ class KudosAdmin extends Component {
                 <div className="kd-absolute kd-inset-0 kd-flex kd-items-center kd-justify-center">
                     <Spinner/>
                 </div>
+            )
+        }
+
+        if (this.state.settings._kudos_show_intro) {
+            return (
+                <IntroGuide
+                    updateAll={this.updateAll}
+                    mollieChanged={this.mollieChanged}
+                    isAPISaving={this.state.isAPISaving}
+                    settings={this.state.settings}
+                    handleInputChange={this.handleInputChange}
+                    updateSetting={this.updateSetting}
+                />
             )
         }
 
@@ -331,19 +348,11 @@ class KudosAdmin extends Component {
                     {(tab) => {
                         return (
                             <div className="kudos-settings-main">
-
                                 {tab.content}
-
                             </div>
                         )
                     }}
                 </TabPanel>
-
-
-                <IntroGuide
-                    show={this.state.settings._kudos_show_intro}
-                    updateSetting={this.updateSetting}
-                />
 
             </Fragment>
         )

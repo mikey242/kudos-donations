@@ -189,6 +189,11 @@ class Settings {
 					'default'           => null,
 					'sanitize_callback' => 'esc_url_raw',
 				],
+				'completed_payment'      => [
+					'type'         => 'string',
+					'default'      => 'message',
+					'show_in_rest' => true,
+				],
 				'return_message_enable'  => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
@@ -230,6 +235,12 @@ class Settings {
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'enable_shortcode'      => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				'donate_modal_in_footer' => [

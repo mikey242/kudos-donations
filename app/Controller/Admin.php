@@ -266,6 +266,28 @@ class Admin {
 	}
 
 	/**
+	 * Register assets for enqueuing in the block editor.
+	 */
+	public function register_block_editor_assets() {
+
+		wp_register_style(
+			'kudos-donations-public',
+			Assets::get_asset_url( '/public/kudos-public.css' ),
+			[],
+			$this->version
+		);
+
+		$editor_js = Assets::get_script( '/blocks/kudos-button/index.js' );
+		wp_register_script(
+			'kudos-donations-editor',
+			$editor_js['url'],
+			$editor_js['dependencies'],
+			$editor_js['version'],
+			true
+		);
+	}
+
+	/**
 	 * Assets specific to the Settings page.
 	 */
 	public function settings_page_assets() {
@@ -309,7 +331,7 @@ class Admin {
 	 */
 	private function table_page_assets(): string {
 
-		$handle = $this->plugin_name . '-table';
+		$handle   = $this->plugin_name . '-table';
 		$table_js = Assets::get_script( '/admin/kudos-admin-table.js' );
 
 		wp_enqueue_script(

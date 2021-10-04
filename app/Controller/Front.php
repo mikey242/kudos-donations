@@ -116,7 +116,7 @@ class Front {
 	 *
 	 * @return string
 	 */
-	public function get_kudos_root_styles(): string {
+	public function get_root_styles(): string {
 
 		$theme_colours = apply_filters( 'kudos_theme_colors', Settings::get_setting( 'theme_colors' ) );
 
@@ -128,30 +128,28 @@ class Front {
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
 		return "
-
-		:root {
-			--kudos-theme-primary: $primary;
-			--kudos-theme-primary-dark: $primary_dark;
-			--kudos-theme-primary-darker: $primary_darker;
-			--kudos-theme-secondary: $secondary;
-			--kudos-theme-secondary-dark: $secondary_dark;
-			--kudos-theme-secondary-darker: $secondary_darker;
-		}
-		
+			:root {
+				--kudos-theme-primary: $primary;
+				--kudos-theme-primary-dark: $primary_dark;
+				--kudos-theme-primary-darker: $primary_darker;
+				--kudos-theme-secondary: $secondary;
+				--kudos-theme-secondary-dark: $secondary_dark;
+				--kudos-theme-secondary-darker: $secondary_darker;
+			}
+	
 		";
 
 	}
 
 	/**
 	 * Register the JavaScript for the public-facing side of the plugin.
+	 * This is necessary in order to localize the script with variables.
 	 */
-	public function enqueue_scripts() {
+	public function register_scripts() {
 
-		$handle    = $this->plugin_name . '-public';
 		$public_js = Assets::get_script( '/public/kudos-public.js' );
-
-		wp_enqueue_script(
-			$handle,
+		wp_register_script(
+			'kudos-donations-public',
 			$public_js['url'],
 			$public_js['dependencies'],
 			$public_js['version'],
@@ -159,7 +157,7 @@ class Front {
 		);
 
 		wp_localize_script(
-			$handle,
+			'kudos-donations-public',
 			'kudos',
 			[
 				'_wpnonce'         => wp_create_nonce( 'wp_rest' ),
@@ -167,7 +165,21 @@ class Front {
 			]
 		);
 
-		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
+		wp_set_script_translations( 'kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
+
+	}
+
+	/**
+	 * Register the public facing styles.
+	 */
+	public function register_styles() {
+
+		wp_register_style(
+			'kudos-donations-public',
+			Assets::get_asset_url( '/public/kudos-public.css' ),
+			[],
+			$this->version
+		);
 
 	}
 
@@ -177,34 +189,46 @@ class Front {
 	public function enqueue_root_styles() {
 
 		// Output root styles.
-		if ( function_exists( 'register_block_style' ) ) {
-			register_block_style(
-				'iseardmedia/kudos-button',
-				[
-					'name'         => 'kudos-button',
-					'label'        => __( 'Kudos Button', 'kudos-donations' ),
-					'is_default'   => true,
-					'inline_style' => $this->get_kudos_root_styles(),
-				]
-			);
-		}
-
-		// Failsafe.
-		echo "<style>";
-		echo $this->get_kudos_root_styles();
-		echo "</style>";
+		register_block_style(
+			'iseardmedia/kudos-button',
+			[
+				'name'         => 'kudos-button',
+				'label'        => __( 'Kudos Button', 'kudos-donations' ),
+				'is_default'   => true,
+				'inline_style' => $this->get_root_styles(),
+			]
+		);
 	}
 
 	/**
-	 * Creates and registers the [kudos] shortcode and block.
+	 * Registers the button shortcode and block.
 	 */
 	public function register_kudos() {
 
-		// Add shortcode.
+		$this->enqueue_root_styles();
+		$this->register_button_block();
+
+		// If setting is not enabled the shortcode assets and registration will be skipped.
+		if(Settings::get_setting('enable_shortcode')) {
+			$this->register_button_shortcode();
+		}
+	}
+
+	/**
+	 * Register the kudos button shortcode.
+	 */
+	private function register_button_shortcode() {
+
+		// Enqueue necessary resources.
+		add_action('wp_enqueue_scripts', function () {
+			wp_enqueue_script('kudos-donations-public');
+			wp_enqueue_style('kudos-donations-public');
+		});
+
+		// Register actual shortcode.
 		add_shortcode(
 			'kudos',
 			function ( $atts ) {
-
 				$atts = shortcode_atts(
 					[
 						'button_label' => __( 'Donate now', 'kudos-donations' ),
@@ -215,15 +239,62 @@ class Front {
 					$atts,
 					'kudos'
 				);
-
 				return $this->kudos_render_callback( $atts );
 			}
 		);
+	}
 
-		// Register kudos button block.
-		register_block_type_from_metadata( KUDOS_PLUGIN_DIR . '/dist/blocks/kudos-button/',
+	/**
+	 * Register the Kudos button block.
+	 */
+	private function register_button_block() {
+
+		register_block_type( 'iseardmedia/kudos-button',
 			[
-				'render_callback' => [ $this, 'kudos_render_callback' ],
+				"render_callback" => [ $this, "kudos_render_callback" ],
+				"category"        => "widgets",
+				"title"           => "Kudos Button",
+				"description"     => "Adds a Kudos donate button or form to your post or page.",
+				"keywords"        => [
+					"kudos",
+					"button",
+					"donate",
+				],
+				"supports"        => [
+					"align"           => true,
+					"customClassName" => true,
+					"typography"      => [
+						"fontSize" => false,
+					],
+				],
+				"example"         => [
+					"attributes" => [
+						"label"     => "Donate now!",
+						"alignment" => "center",
+					],
+				],
+				"attributes"      => [
+					"button_label" => [
+						"type"    => "string",
+						"default" => "Donate now",
+					],
+					"campaign_id"  => [
+						"type"    => "string",
+						"default" => "default",
+					],
+					"alignment"    => [
+						"type"    => "string",
+						"default" => "none",
+					],
+					"type"         => [
+						"type"    => "string",
+						"default" => "button",
+					],
+				],
+				"editor_script"   => "kudos-donations-editor",
+				"editor_style"    => "kudos-donations-public",
+				"script"          => "kudos-donations-public",
+				"style"           => "kudos-donations-public",
 			] );
 	}
 
@@ -252,7 +323,6 @@ class Front {
 
 			// Create the form based on campaign id.
 			$form = $this->create_form( $atts['campaign_id'], $id );
-
 
 			// If type is form then stop and return form.
 			if ( isset( $atts['type'] ) && $atts['type'] === 'form' ) {
@@ -361,7 +431,6 @@ class Front {
 
 		// Add additional funds if any.
 		if ( ! empty( $campaign['additional_funds'] ) ) {
-
 			$atts['campaign_stats']['total'] += $campaign['additional_funds'];
 		}
 

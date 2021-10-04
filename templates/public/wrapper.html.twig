@@ -1,4 +1,4 @@
-<div id="kudos-donations-{{ generate_id() }}" class="kudos-donations{{ alignment ? " has-text-align-" ~ alignment : 'has-text-align-none' }}">
+<div id="kudos-donations-{{ generate_id() }}" style="position: relative" class="kudos-donations{{ alignment ? " has-text-align-" ~ alignment : 'has-text-align-none' }}">
     {% block main %}
         {{ content | raw }}
     {% endblock %}

@@ -20,11 +20,6 @@ const CustomizeTab = (props) => {
                 handleInputChange={props.handleInputChange}
             />
             <CardDivider/>
-            <CustomReturnPanel
-                settings={props.settings}
-                handleInputChange={props.handleInputChange}
-            />
-            <CardDivider/>
             <PrivacyPanel
                 settings={props.settings}
                 handleInputChange={props.handleInputChange}

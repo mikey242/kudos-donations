@@ -11,7 +11,7 @@ class Utils {
 	 */
 	public static function get_return_url(): string {
 
-		$use_custom = get_option( '_kudos_custom_return_enable' );
+		$use_custom = get_option( '_kudos_completed_payment' ) === 'url';
 		$custom_url = esc_url( get_option( '_kudos_custom_return_url' ) );
 
 		if ( $use_custom && $custom_url ) {
