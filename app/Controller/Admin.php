@@ -551,7 +551,7 @@ class Admin {
 					new AdminNotice( __( 'Database re-created', 'kudos-donations' ) );
 					break;
 
-				case 'kudos_resync_payments':
+				case 'kudos_sync_payments':
 					$mollie = $this->mollie;
 					$updated = $mollie->sync_transactions();
 					if($updated) {

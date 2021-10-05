@@ -209,9 +209,9 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 				<p>Mollie actions.</p>
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_resync_payments' ); ?>
+					<?php wp_nonce_field( 'kudos_sync_payments' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_resync_payments'>Resync payments
+					        value='kudos_sync_payments'>Sync payments
 					</button>
 				</form>
 
