@@ -42,12 +42,6 @@ class MollieVendor implements VendorInterface {
 	 */
 	private $api_mode;
 	/**
-	 * The API key to use
-	 *
-	 * @var string
-	 */
-	private $api_key;
-	/**
 	 * @var \Kudos\Service\LoggerService
 	 */
 	private $logger;
@@ -89,7 +83,6 @@ class MollieVendor implements VendorInterface {
 		if($key) {
 			try{
 				$this->api_client->setApiKey($key);
-				$this->api_key = $key;
 				$this->api_mode = $mode;
 			} catch (ApiException $e) {
 				$this->logger->critical( $e->getMessage() );
@@ -690,6 +683,7 @@ class MollieVendor implements VendorInterface {
 	/**
 	 * Syncs Mollie transactions with the local DB.
 	 * Returns the number of transactions updated.
+	 * @return int
 	 */
 	public function sync_transactions(): int {
 		$updated = 0;
