@@ -7,6 +7,10 @@
     --wp-admin-theme-color-darker-20: theme("colors.orange.700") ;
 }
 
+.intro p {
+    @apply kd-text-base !important;
+}
+
 .components-radio-control__input::before,
 .components-circular-option-picker__option::after,
 .components-modal__frame *,

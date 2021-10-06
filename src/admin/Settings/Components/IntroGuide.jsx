@@ -4,7 +4,7 @@ import campaign from "../../../images/guide-campaign.png"
 import button from "../../../images/guide-button.png"
 import live from "../../../images/guide-test-live.png"
 import {__} from "@wordpress/i18n"
-import {ExternalLink, TextControl} from "@wordpress/components"
+import {Dashicon, ExternalLink, TextControl} from "@wordpress/components"
 import {useState} from '@wordpress/element'
 import {Guide} from "./Guide"
 import {Btn} from "./Btn"
@@ -14,6 +14,7 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
     const [apiMessage, setApiMessage] = useState(null)
     const vendorMollie = settings._kudos_vendor_mollie
     const isConnected = vendorMollie.connected ?? false
+    const isRecurringEnabled = vendorMollie.recurring ?? false
 
     const closeModal = () => {
         updateSetting('_kudos_show_intro', false)
@@ -33,74 +34,90 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
             pages={[
                 {
                     imageSrc: intro,
+                    heading: __('Welcome to Kudos Donations', 'kudos-donations'),
                     content:
-                        <div>
-                            <h1 className="kd-leading-normal">{__('Welcome to Kudos Donations', 'kudos-donations')}</h1>
-                            <p>{__('It is easy to get started with Kudos Donations.', 'kudos-donations')}</p>
-                            <p>{__('Complete these simple steps to set up your first donation campaign.', 'kudos-donations')}</p>
+                        <div className={"kd-text-center"}>
+                            <p>{__('Complete these simple steps to set up your first donation campaign. Click the "next" button to get started', 'kudos-donations')}</p>
                         </div>
                     ,
                 },
                 {
                     imageSrc: mollie,
                     nextDisabled: !vendorMollie.connected,
+                    heading: __('Connect with Mollie', 'kudos-donations'),
                     content:
-                        <div>
-                            <h1 className="kd-leading-normal">{__('Connect with Mollie', 'kudos-donations')}</h1>
-
-                            <p>
-                                {__('Login to your Mollie account and grab your API keys. Make sure you get both your test and live API keys.', 'kudos-donations')}
-                                {" "}
-                                <ExternalLink
-                                    href="https://mollie.com/dashboard/developers/api-keys">{__('Mollie dashboard', 'kudos-donations')}
-                                </ExternalLink>
-                            </p>
-                            { ! isConnected
+                        <div className={"kd-text-center"}>
+                            {!isConnected
                                 ?
                                 <>
-                                    <TextControl
-                                        key={"_kudos_mollie_live_api_key"}
-                                        type={'text'}
-                                        label={__('Live key', 'kudos-donations')}
-                                        value={vendorMollie['live_key'] || ''}
-                                        placeholder={__('Begins with "live_"', 'kudos-donations')}
-                                        onChange={(value) => handleInputChange('_kudos_vendor_mollie', {
-                                            ...vendorMollie,
-                                            live_key: value
-                                        })}
-                                    />
-                                    <TextControl
-                                        key={"_kudos_mollie_test_api_key"}
-                                        type={'text'}
-                                        label={__('Test key', 'kudos-donations')}
-                                        value={vendorMollie['test_key'] || ''}
-                                        placeholder={__('Begins with "test_"', 'kudos-donations')}
-                                        onChange={(value) => handleInputChange('_kudos_vendor_mollie', {
-                                            ...vendorMollie,
-                                            test_key: value
-                                        })}
-                                    />
+                                    <p>
+                                        {__('Login to your Mollie account and grab your API keys. Make sure you get both your test and live API keys.', 'kudos-donations')}
+                                        {" "}
+                                        <ExternalLink
+                                            href="https://mollie.com/dashboard/developers/api-keys">{__('Mollie dashboard', 'kudos-donations')}
+                                        </ExternalLink>
+                                    </p>
+                                    <div className={"kd-p-5 kd-bg-white kd-rounded-lg kd-shadow-md" + (isAPISaving ? " kd-opacity-50" : "")}>
+                                        <TextControl
+                                            key={"_kudos_mollie_live_api_key"}
+                                            className={"kd-text-left"}
+                                            disabled={isAPISaving}
+                                            label={__('Live key', 'kudos-donations')}
+                                            value={vendorMollie['live_key'] || ''}
+                                            placeholder={__('Begins with "live_"', 'kudos-donations')}
+                                            onChange={(value) => handleInputChange('_kudos_vendor_mollie', {
+                                                ...vendorMollie,
+                                                live_key: value
+                                            })}
+                                        />
+                                        <TextControl
+                                            key={"_kudos_mollie_test_api_key"}
+                                            className={"kd-text-left"}
+                                            disabled={isAPISaving}
+                                            label={__('Test key', 'kudos-donations')}
+                                            value={vendorMollie['test_key'] || ''}
+                                            placeholder={__('Begins with "test_"', 'kudos-donations')}
+                                            onChange={(value) => handleInputChange('_kudos_vendor_mollie', {
+                                                ...vendorMollie,
+                                                test_key: value
+                                            })}
+                                        />
+                                    </div>
                                     <br/>
                                     <Btn
                                         isPrimary
-                                        // disabled={vendorMollie.connected}
                                         isBusy={isAPISaving}
                                         onClick={() => checkApi()}
                                     >
                                         {__('Connect with Mollie', 'kudos-donations')}
                                     </Btn>
-                                    <span className="kd-ml-3" style={{
+                                    <div className="kd-mt-3 kd-text-base" style={{
                                         color: 'red'
                                     }}>
-                                                {apiMessage}
-                                        </span>
+                                        {apiMessage}
+                                    </div>
                                 </>
                                 :
-                                <h2 style={{
-                                    color: 'green'
-                                }}>
-                                    Mollie connected!
-                                </h2>
+                                <div className="kd-flex kd-flex-col kd-rounded-lg kd-p-5">
+                                    <div className={"kd-flex kd-flex-row kd-justify-center kd-mb-3 kd-items-center"}>
+                                        <Dashicon className={"kd-w-auto kd-h-auto kd-text-4xl kd-text-green-500"}
+                                                  icon="yes"/>
+                                        <h2 className={"kd-m-0 kd-text-green-500"}>Connected {isRecurringEnabled ? '(recurring enabled)' : '(recurring not available)'}</h2>
+                                    </div>
+                                    {isRecurringEnabled
+                                        ?
+                                        <strong>Congratulations, your account is configured to allow recurring payments. <ExternalLink
+                                                href={"https://help.mollie.com/hc/articles/214558045"}>
+                                                Learn more
+                                            </ExternalLink></strong>
+                                        :
+                                        <strong>You can still use Kudos, however you will not be able to use subscription
+                                            payments. <ExternalLink
+                                                href={"https://help.mollie.com/hc/articles/214558045"}>
+                                                Learn more
+                                            </ExternalLink></strong>
+                                    }
+                                </div>
                             }
                         </div>
 
@@ -108,9 +125,9 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                 },
                 {
                     imageSrc: campaign,
+                    heading: __('Set up a campaign', 'kudos-donations'),
                     content:
-                        <div>
-                            <h1 className="kd-leading-normal">{__('Set up a campaign', 'kudos-donations')}</h1>
+                        <div className={"kd-text-center"}>
                             <p>{__('Visit the Campaigns tab and either create a new campaign or edit the default one.', 'kudos-donations')}</p>
                             <p>{__('If you need it, don\'t forget to click "Copy shortcode" at the bottom of your campaign.', 'kudos-donations')}</p>
                         </div>
@@ -118,9 +135,9 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                 },
                 {
                     imageSrc: button,
+                    heading: __('Place a button', 'kudos-donations'),
                     content:
-                        <div>
-                            <h1 className="kd-leading-normal">{__('Place a button', 'kudos-donations')}</h1>
+                        <div className={"kd-text-center"}>
                             <p>{__('Use the Kudos Button block or shortcode to place the button anywhere on your website.', 'kudos-donations')}</p>
                             <p>{__('If using the block, select the desired campaign in the block side bar.', 'kudos-donations')}</p>
                         </div>
@@ -128,9 +145,9 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                 },
                 {
                     imageSrc: live,
+                    heading: __('Test and go Live', 'kudos-donations'),
                     content:
-                        <div>
-                            <h1 className="kd-leading-normal">{__('Test and go Live', 'kudos-donations')}</h1>
+                        <div className={"kd-text-center"}>
                             <p>{__('With the API mode still on "Test" make a payment using your button. If it all looks good then you can switch to "Live".', 'kudos-donations')}</p>
                             <p>{__('Good luck with your campaign!', 'kudos-donations')}</p>
                             <p><ExternalLink
