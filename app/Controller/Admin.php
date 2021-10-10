@@ -21,14 +21,6 @@ use Kudos\Service\TwigService;
 use Kudos\Service\Vendor\MollieVendor;
 
 class Admin {
-
-	/**
-	 * The ID of this plugin.
-	 *
-	 * @var string $plugin_name The ID of this plugin.
-	 */
-	private $plugin_name;
-
 	/**
 	 * The version of this plugin.
 	 *
@@ -68,11 +60,9 @@ class Admin {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param string $plugin_name The name of this plugin.
 	 * @param string $version The version of this plugin.
 	 */
 	public function __construct(
-		string $plugin_name,
 		string $version,
 		MapperService $mapper,
 		TwigService $twig,
@@ -81,8 +71,6 @@ class Admin {
 		Settings $settings,
 		MollieVendor $mollie_vendor
 	) {
-
-		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 		$this->mapper      = $mapper;
 		$this->twig        = $twig;
@@ -90,7 +78,6 @@ class Admin {
 		$this->activator   = $activator;
 		$this->settings    = $settings;
 		$this->mollie      = $mollie_vendor;
-
 	}
 
 	/**
@@ -299,7 +286,7 @@ class Admin {
 	 */
 	public function settings_page_assets() {
 
-		$handle = $this->plugin_name . '-settings';
+		$handle = 'kudos-donations-settings';
 
 		// Enqueue the styles
 		wp_enqueue_style(
@@ -338,7 +325,7 @@ class Admin {
 	 */
 	private function table_page_assets(): string {
 
-		$handle   = $this->plugin_name . '-table';
+		$handle   = 'kudos-donations-table';
 		$table_js = Assets::get_script( '/admin/kudos-admin-table.js' );
 
 		wp_enqueue_script(
@@ -360,7 +347,7 @@ class Admin {
 		$transactions_js = Assets::get_script( '/admin/kudos-admin-transactions.js' );
 
 		wp_enqueue_script(
-			$this->plugin_name . '-transactions',
+			'kudos-donations-transactions',
 			$transactions_js['url'],
 			$transactions_js['dependencies'],
 			$transactions_js['version'],

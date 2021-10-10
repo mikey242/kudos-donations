@@ -10,9 +10,9 @@ use function DI\autowire;
 return [
 	'ActivatorService' => autowire( ActivatorService::class ),
 	'Front'            => autowire( Front::class )
-		->constructor( 'kudos-donations', KUDOS_VERSION ),
+		->constructor( KUDOS_VERSION ),
 	'Admin'            => autowire( Admin::class )
-		->constructor( 'kudos-donations', KUDOS_VERSION ),
+		->constructor( KUDOS_VERSION ),
 	'RestRouteService' => autowire( RestRouteService::class ),
 	'PaymentService'   => autowire( PaymentService::class ),
 ];

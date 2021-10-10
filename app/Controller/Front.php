@@ -44,14 +44,6 @@ class Front {
 	const WRAPPER_TEMPLATE = 'public/wrapper.html.twig';
 
 	/**
-	 * The ID of this plugin.
-	 *
-	 * @access   private
-	 * @var      string $plugin_name The ID of this plugin.
-	 */
-	private $plugin_name;
-
-	/**
 	 * The version of this plugin.
 	 *
 	 * @access   private
@@ -87,12 +79,10 @@ class Front {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param string $plugin_name The name of the plugin.
 	 * @param string $version The version of this plugin.
 	 *
 	 */
 	public function __construct(
-		string $plugin_name,
 		string $version,
 		LoggerService $logger,
 		PaymentService $payment,
@@ -100,8 +90,6 @@ class Front {
 		MapperService $mapper,
 		Settings $settings
 	) {
-
-		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 		$this->logger      = $logger;
 		$this->payment     = $payment;
