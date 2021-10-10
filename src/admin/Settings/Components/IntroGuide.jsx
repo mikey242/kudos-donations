@@ -102,19 +102,19 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                                     <div className={"kd-flex kd-flex-row kd-justify-center kd-mb-3 kd-items-center"}>
                                         <Dashicon className={"kd-w-auto kd-h-auto kd-text-4xl kd-text-green-500"}
                                                   icon="yes"/>
-                                        <h2 className={"kd-m-0 kd-text-green-500"}>Connected {isRecurringEnabled ? '(recurring enabled)' : '(recurring not available)'}</h2>
+                                        <h2 className={"kd-m-0 kd-text-green-500"}>{__('Connected')} ({isRecurringEnabled ? __('recurring enabled', 'kudos-donations') : __('recurring not available', 'kudos-donations')})</h2>
                                     </div>
                                     {isRecurringEnabled
                                         ?
-                                        <strong>Congratulations, your account is configured to allow recurring payments. <ExternalLink
+                                        <strong>{__('Congratulations, your account is configured to allow recurring payments.', 'kudos-donations')}<ExternalLink
                                                 href={"https://help.mollie.com/hc/articles/214558045"}>
-                                                Learn more
+                                            {__('Learn more', 'kudos-donations')}
                                             </ExternalLink></strong>
                                         :
-                                        <strong>You can still use Kudos, however you will not be able to use subscription
-                                            payments. <ExternalLink
+                                        <strong>{__('You can still use Kudos, however you will not be able to use subscription payments.', 'kudos-donations')}
+                                            <ExternalLink
                                                 href={"https://help.mollie.com/hc/articles/214558045"}>
-                                                Learn more
+                                                {__('Learn more', 'kudos-donations')}
                                             </ExternalLink></strong>
                                     }
                                 </div>
