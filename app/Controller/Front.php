@@ -387,7 +387,7 @@ class Front {
 	 * @param $id
 	 *
 	 * @return string
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	private function create_form( $campaign_id, $id ): string {
 
