@@ -1,9 +1,6 @@
 class KudosModal {
 
     constructor(modal, options = []) {
-        this.isOpen = false
-        this.modal = document.getElementById(modal)
-        this.closeModal = this.modal.querySelectorAll('[data-modal-close]')
         this.options = {
             timeOut: options.timeOut ?? 300,
             triggerElement: options.triggerElement,
@@ -16,6 +13,9 @@ class KudosModal {
             onClose: options.onClose,
             onClosed: options.onClosed
         }
+        this.isOpen = false
+        this.modal = document.getElementById(modal)
+        this.closeModal = this.modal.querySelectorAll('[data-modal-close]')
         this.focusableElements = [
             'a[href]',
             'area[href]',
@@ -149,11 +149,14 @@ class KudosModal {
         const firstFocusableElement = focusableContent[0]
         const lastFocusableElement = focusableContent[focusableContent.length - 1]
 
+        // Check if using shift (reverse) and on first element
         if (e.shiftKey) {
             if (document.activeElement === firstFocusableElement) {
                 lastFocusableElement.focus()
                 e.preventDefault()
             }
+
+        // Check if on last element
         } else {
             if (document.activeElement === lastFocusableElement) {
                 firstFocusableElement.focus()
