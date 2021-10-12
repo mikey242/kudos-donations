@@ -101,7 +101,8 @@ jQuery(document).ready(($) => {
 
                 const modal = button.dataset.kudosTarget
 
-                new KudosModal(modal, button, {
+                new KudosModal(modal, {
+                    triggerElement: button,
                     onOpen: (modal) => {
                         const form = modal.querySelector('.kudos-form')
                         animateProgressBar(form)

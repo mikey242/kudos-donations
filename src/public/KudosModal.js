@@ -1,12 +1,12 @@
 class KudosModal {
 
-    constructor(modal, trigger = null, options = []) {
+    constructor(modal, options = []) {
         this.isOpen = false
         this.modal = document.getElementById(modal)
-        this.trigger = trigger
         this.closeModal = this.modal.querySelectorAll('[data-modal-close]')
         this.options = {
             timeOut: options.timeOut ?? 300,
+            triggerElement: options.triggerElement,
             escapeClose: options.escapeClose ?? true,
             overlayClose: options.overlayClose ?? false,
             openClass: options.openClass ?? 'is-open',
@@ -35,8 +35,8 @@ class KudosModal {
         this.handleClick = this.handleClick.bind(this)
 
         // Click event listener for trigger element
-        if (this.trigger) {
-            this.trigger.addEventListener("click", () => {
+        if (this.options.triggerElement) {
+            this.options.triggerElement.addEventListener("click", () => {
                 if (this.isOpen) {
                     return this.close()
                 }
