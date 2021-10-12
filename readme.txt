@@ -124,6 +124,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Simplify completed payments settings (it is no longer possible to have a custom return url AND a pop-up message)
 * Add "Clear object cache" to debug actions
 * Add white background to form elements
+* Fixed compatibility issues with JavaScript minifiers (e.g WP-Optimize, Autoptimize)
 * Rearrange debug actions page
 * Update Mollie API client to 2.37.1
 * Update ActionScheduler to 3.3.0
