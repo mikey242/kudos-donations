@@ -44,14 +44,14 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                 {
                     imageSrc: mollie,
                     nextDisabled: !vendorMollie.connected,
-                    heading: __('Connect with Mollie', 'kudos-donations'),
+                    // heading: __('Connect with Mollie', 'kudos-donations'),
                     content:
                         <div className={"kd-text-center"}>
                             {!isConnected
                                 ?
                                 <>
                                     <p>
-                                        {__('Login to your Mollie account and grab your API keys. Make sure you get both your test and live API keys.', 'kudos-donations')}
+                                        {__('Time to connect with Mollie. Login to your Mollie account and grab your API keys. Make sure you get both your test and live API keys.', 'kudos-donations')}
                                         {" "}
                                         <ExternalLink
                                             href="https://mollie.com/dashboard/developers/api-keys">{__('Mollie dashboard', 'kudos-donations')}
@@ -89,7 +89,7 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                                         isBusy={isAPISaving}
                                         onClick={() => checkApi()}
                                     >
-                                        {__('Connect with Mollie', 'kudos-donations')}
+                                        {__('Connect', 'kudos-donations')}
                                     </Btn>
                                     <div className="kd-mt-3 kd-text-base" style={{
                                         color: 'red'
@@ -106,17 +106,15 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                                     </div>
                                     {isRecurringEnabled
                                         ?
-                                        <strong>{__('Congratulations, your account is configured to allow recurring payments.', 'kudos-donations')}<ExternalLink
-                                                href={"https://help.mollie.com/hc/articles/214558045"}>
-                                            {__('Learn more', 'kudos-donations')}
-                                            </ExternalLink></strong>
+                                        <strong>{__('Congratulations, your account is configured to allow recurring payments.', 'kudos-donations')}</strong>
                                         :
-                                        <strong>{__('You can still use Kudos, however you will not be able to use subscription payments.', 'kudos-donations')}
-                                            <ExternalLink
-                                                href={"https://help.mollie.com/hc/articles/214558045"}>
-                                                {__('Learn more', 'kudos-donations')}
-                                            </ExternalLink></strong>
+                                        <strong>{__('You can still use Kudos, however you will not be able to use subscription payments.', 'kudos-donations')}</strong>
                                     }
+                                    <ExternalLink
+                                        className={"kd-mt-2"}
+                                        href={"https://help.mollie.com/hc/articles/214558045"}>
+                                        {__('Learn more', 'kudos-donations')}
+                                    </ExternalLink>
                                 </div>
                             }
                         </div>
