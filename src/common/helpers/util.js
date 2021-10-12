@@ -3,7 +3,7 @@ export function capitalizeFirstLetter(string) {
 }
 
 export function camelize(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+    return str.replace(/(^\w|[A-Z]|\b\w)/g, function (word, index) {
         return index === 0 ? word.toLowerCase() : word.toUpperCase()
     }).replace(/\s+/g, '')
 }
@@ -34,6 +34,10 @@ export function setAttributes(el, attrs) {
 }
 
 export function isVisible(el) {
+    // Check if element visible
+    if(el.offsetParent === null) return false
+
+    // Check if in viewport
     const rect = el.getBoundingClientRect();
     return (
         rect.top >= 0 &&
