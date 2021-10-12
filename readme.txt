@@ -120,6 +120,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.1.0 =
 * *NEW* Spam protection option (enabled by default). Automatically adds a honeypot field and timer for form to prevent/reduce spam.
+* *NEW* Improved "Welcome Guide" making it easier to get started with Kudos Donations
 * Upgrade to Block API version 2. This increases the min WordPress version to 5.6.
 * Simplify completed payments settings (it is no longer possible to have a custom return url AND a pop-up message)
 * Add "Clear object cache" to debug actions
