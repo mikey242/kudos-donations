@@ -1,13 +1,10 @@
 import _ from 'lodash'
 import axios from 'axios'
-import MicroModal from 'micromodal'
 import 'jquery-validation'
 import '../images/logo-colour-40.png' // used as email attachment
 import '../images/logo-colour.svg'
 import {getStyle, isVisible} from "../common/helpers/util"
 import {handleMessages} from "../common/helpers/modal"
-import {__} from "@wordpress/i18n"
-
 import {
     animateInView,
     animateProgressBar,
@@ -17,6 +14,8 @@ import {
     resetProgressBar,
     valueChange
 } from "../common/helpers/form"
+import {__} from "@wordpress/i18n"
+import KudosModal from "./KudosModal"
 
 jQuery(document).ready(($) => {
 
@@ -99,49 +98,21 @@ jQuery(document).ready(($) => {
         if (kudosButtons.length) {
 
             // Setup button action
-            kudosButtons.forEach((e) => {
+            kudosButtons.forEach((button) => {
 
-                const target = e.dataset.kudosTarget
+                const modal = button.dataset.kudosTarget
 
-                e.addEventListener('click', () => {
-                    if (target) {
-                        MicroModal.show(target, {
-                            onShow(modal) {
-
-                                const form = modal.querySelector('.kudos-form')
-
-                                // Create and dispatch event
-                                window.dispatchEvent(new CustomEvent('kudosShowModal', {detail: modal}))
-
-                                // Animate progress bar
-                                animateProgressBar(form)
-
-                                // Clear error message
-                                form.querySelector('.kudos_error_message').innerHTML = ""
-
-                                // Reset and config form
-                                if (form.length) {
-
-                                    modal.querySelector('.kudos-modal-container').dataset.currentTab = 'initial'
-                                    resetForm(form)
-                                    $(form).validate().resetForm()
-
-                                    // Set first input as focus
-                                    if ('xs' !== screenSize) {
-                                        form.querySelector('input[name="value"]').focus()
-                                    }
-                                }
-                            },
-                            onClose(modal) {
-                                setTimeout(() => {
-                                    resetProgressBar(modal)
-                                }, 300)
-                                // Create and dispatch event
-                                window.dispatchEvent(new CustomEvent('kudosCloseModal', {detail: modal}))
-                            },
-                            awaitOpenAnimation: true,
-                            awaitCloseAnimation: true,
-                        })
+                new KudosModal(modal, button, {
+                    onOpen: (modal) => {
+                        const form = modal.querySelector('.kudos-form')
+                        animateProgressBar(form)
+                        // Set first input as focus
+                        if ('xs' !== screenSize) {
+                            form.querySelector('input[name="value"]').focus()
+                        }
+                    },
+                    onClosed: (modal) => {
+                        resetProgressBar(modal)
                     }
                 })
             })
@@ -180,7 +151,7 @@ jQuery(document).ready(($) => {
 
         // Multi step form navigation.
         document.querySelectorAll('.kudos-form [data-direction]').forEach((button) => {
-            button.addEventListener('click', (e) => {
+            button.addEventListener('click', () => {
 
                 // Stop if already busy swapping tabs.
                 if (animating) return false
@@ -225,7 +196,7 @@ jQuery(document).ready(($) => {
                     const error = form.querySelector('.kudos_error_message')
                     const formData = new FormData(e.target)
                     const timestamp = e.target.dataset.ts
-                    formData.append('timestamp', timestamp);
+                    formData.append('timestamp', timestamp)
 
                     form.classList.add('kd-is-loading')
                     error.classList.add('kd-hidden')
@@ -328,5 +299,4 @@ jQuery(document).ready(($) => {
             }
         )
     }
-
 })
