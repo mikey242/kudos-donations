@@ -19,12 +19,13 @@
     {% block body %}{% endblock %}
     <div class="kudos-modal-buttons kd-mt-8 kd-flex kd-justify-between kd-relative">
         {% block back_button %}
-            <span
+            <button
+                type="button"
                 class="focus:kd-ring hover:kd-text-primary-dark kd-hidden xs:kd-inline kd-transition-shadow kd-ease-in-out kd-ring-primary kd-ring-offset-2 kd-rounded-full kd-bg-back-button kd-w-5 kd-h-5 kd-cursor-pointer kd-self-center"
                 data-direction="back"
                 title="{{ __('Previous tab', 'kudos-donations') }}"
                 tabindex="0"
-            ></span>
+            ></button>
 
             {{ button('', 'outline', 'button', {
                 'class': 'kd-block xs:kd-hidden kd-bg-back-button kd-bg-no-repeat kd-bg-center kd-block kd-mr-3 kd-p-3',
