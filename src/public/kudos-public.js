@@ -4,7 +4,6 @@ import 'jquery-validation'
 import '../images/logo-colour-40.png' // used as email attachment
 import '../images/logo-colour.svg'
 import {getStyle, isVisible} from "../common/helpers/util"
-import {handleMessages} from "../common/helpers/modal"
 import {
     animateInView,
     animateProgressBar,
@@ -141,8 +140,12 @@ jQuery(document).ready(($) => {
         // Show message modal if exists.
         let messages = document.querySelectorAll('.kudos-message-modal')
         if (messages.length) {
-            handleMessages(Array.from(messages))
+            Array.from(messages).reverse().forEach(message => {
+                new KudosModal(message.id).open()
+            })
         }
+
+
 
         // Hide honeypot field.
         document.querySelectorAll('input[name="donation"]').forEach((e) => {
