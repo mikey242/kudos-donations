@@ -32,7 +32,7 @@ mix
     // Webpack config.
     .webpackConfig({
         plugins: [
-            new DependencyExtractionWebpackPlugin()
+            new DependencyExtractionWebpackPlugin({})
         ]
     })
 
