@@ -70,21 +70,21 @@ class MollieVendor implements VendorInterface {
 			'live' => $settings['live_key'] ?? '',
 		];
 
-		$this->set_api_mode($settings['mode']);
+		$this->set_api_mode( $settings['mode'] );
 	}
 
 	/**
 	 * Change the API client to the key for the specified mode.
 	 */
-	private function set_api_mode(string $mode){
+	private function set_api_mode( string $mode ) {
 
-		$key = $this->api_keys[$mode] ?? false;
+		$key = $this->api_keys[ $mode ] ?? false;
 
-		if($key) {
-			try{
-				$this->api_client->setApiKey($key);
+		if ( $key ) {
+			try {
+				$this->api_client->setApiKey( $key );
 				$this->api_mode = $mode;
-			} catch (ApiException $e) {
+			} catch ( ApiException $e ) {
 				$this->logger->critical( $e->getMessage() );
 			}
 
@@ -683,32 +683,33 @@ class MollieVendor implements VendorInterface {
 	/**
 	 * Syncs Mollie transactions with the local DB.
 	 * Returns the number of transactions updated.
+	 *
 	 * @return int
 	 */
 	public function sync_transactions(): int {
 		$updated = 0;
-		$mapper = $this->mapper;
-		$mapper->get_repository(DonorEntity::class);
+		$mapper  = $this->mapper;
+		$mapper->get_repository( DonorEntity::class );
 		$donors = $mapper->get_all_by();
 		/** @var DonorEntity $donor */
-		foreach ($donors as $donor) {
+		foreach ( $donors as $donor ) {
 			$customer_id = $donor->customer_id;
-			if($donor->mode !== $this->api_mode ) {
-				$this->set_api_mode($donor->mode);
+			if ( $donor->mode !== $this->api_mode ) {
+				$this->set_api_mode( $donor->mode );
 			}
-			$customer = $this->get_customer($customer_id);
-			if($customer) {
+			$customer = $this->get_customer( $customer_id );
+			if ( $customer ) {
 				$payments = $customer->payments();
-				foreach ($payments as $payment) {
-					$amount = $payment->amount;
+				foreach ( $payments as $payment ) {
+					$amount   = $payment->amount;
 					$order_id = $payment->metadata->order_id;
-					$mapper->get_repository(TransactionEntity::class);
+					$mapper->get_repository( TransactionEntity::class );
 					/** @var TransactionEntity $transaction */
-					$transaction = $mapper->get_one_by([
+					$transaction = $mapper->get_one_by( [
 						'order_id' => $order_id,
-						'status' => 'open'
-					]);
-					if($transaction) {
+						'status'   => 'open',
+					] );
+					if ( $transaction ) {
 						$transaction->set_fields(
 							[
 								'status'          => $payment->status,
@@ -721,12 +722,13 @@ class MollieVendor implements VendorInterface {
 								'subscription_id' => $payment->subscriptionId,
 							]
 						);
-						$mapper->save($transaction);
-						$updated++;
+						$mapper->save( $transaction );
+						$updated ++;
 					}
 				}
 			}
 		}
+
 		return $updated;
 	}
 }
