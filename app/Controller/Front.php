@@ -90,12 +90,12 @@ class Front {
 		MapperService $mapper,
 		Settings $settings
 	) {
-		$this->version     = $version;
-		$this->logger      = $logger;
-		$this->payment     = $payment;
-		$this->twig        = $twig;
-		$this->mapper      = $mapper;
-		$this->settings    = $settings;
+		$this->version  = $version;
+		$this->logger   = $logger;
+		$this->payment  = $payment;
+		$this->twig     = $twig;
+		$this->mapper   = $mapper;
+		$this->settings = $settings;
 
 	}
 
@@ -197,7 +197,7 @@ class Front {
 		$this->register_button_block();
 
 		// If setting is not enabled the shortcode assets and registration will be skipped.
-		if(Settings::get_setting('enable_shortcode')) {
+		if ( Settings::get_setting( 'enable_shortcode' ) ) {
 			$this->register_button_shortcode();
 		}
 	}
@@ -208,10 +208,10 @@ class Front {
 	private function register_button_shortcode() {
 
 		// Enqueue necessary resources.
-		add_action('wp_enqueue_scripts', function () {
-			wp_enqueue_script('kudos-donations-public');
-			wp_enqueue_style('kudos-donations-public');
-		});
+		add_action( 'wp_enqueue_scripts', function () {
+			wp_enqueue_script( 'kudos-donations-public' );
+			wp_enqueue_style( 'kudos-donations-public' );
+		} );
 
 		// Register actual shortcode.
 		add_shortcode(
@@ -227,6 +227,7 @@ class Front {
 					$atts,
 					'kudos'
 				);
+
 				return $this->kudos_render_callback( $atts );
 			}
 		);
