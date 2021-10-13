@@ -182,6 +182,12 @@ class ActivatorService {
 			$settings::remove_setting('address_required');
 		}
 
+		if ( version_compare( $old_version, '3.1.0', '<' ) ) {
+			// Remove unused settings.
+			$settings::remove_setting('return_message_enable');
+			$settings::remove_setting('custom_return_enable');
+		}
+
 	}
 
 	/**
