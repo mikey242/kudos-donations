@@ -60,20 +60,4 @@ class SubscriptionEntity extends AbstractEntity {
 	 * @var string
 	 */
 	public $subscription_id;
-
-	/**
-	 * Gets donor associated with subscription
-	 *
-	 * @return DonorEntity|null
-	 * @since   2.0.0
-	 */
-	public function get_donor(): ?EntityInterface {
-
-		$mapper = new MapperService( DonorEntity::class );
-		/** @var DonorEntity $donor */
-		$donor = $mapper->get_one_by( [ 'customer_id' => $this->customer_id ] );
-
-		return $donor ?? null;
-
-	}
 }
