@@ -90,7 +90,6 @@ class KudosDonations {
 		add_action( 'admin_init', [ $plugin_admin, 'admin_actions' ] );
 		add_action( 'rest_api_init', [ $plugin_admin, 'register_settings' ] );
 		add_action( 'kudos_remove_secret_action', [ $plugin_admin, 'remove_secret_action' ], 10, 2 );
-		add_action( 'kudos_check_log', [ $plugin_admin, 'clear_log' ] );
 		add_action( 'enqueue_block_editor_assets', [ $plugin_admin, 'register_block_editor_assets' ] );
 
 	}

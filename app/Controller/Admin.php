@@ -438,10 +438,6 @@ class Admin {
 
 			switch ( $action ) {
 
-				case 'kudos_log_download':
-					LoggerService::download();
-					break;
-
 				case 'kudos_log_clear':
 					if ( LoggerService::clear() === 0 ) {
 						new AdminNotice( __( 'Log cleared', 'kudos-donations' ) );
@@ -585,23 +581,6 @@ class Admin {
 			$entity->clear_secret();
 
 			return $mapper->save( $entity, false );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Clear the log file when over certain size.
-	 *
-	 * @return bool|int
-	 */
-	public function clear_log() {
-
-		$file = LoggerService::LOG_FILE;
-		$size = filesize( $file );
-
-		if ( $size >= LoggerService::LOG_SIZE ) {
-			return LoggerService::clear();
 		}
 
 		return false;

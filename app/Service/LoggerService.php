@@ -3,24 +3,26 @@
 namespace Kudos\Service;
 
 use DateTimeZone;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger as Monolog;
+use Kudos\Service\LogHandlers\DatabaseHandler;
+use Monolog\Logger;
+use Kudos\Helpers\WpDb;
 
-class LoggerService extends Monolog {
-
-	const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
-	const LOG_FILENAME = 'kudos.log';
-	const LOG_SIZE = 2097152; // 2097152 = 2MB
-	const LOG_FILE = self::LOG_DIR . self::LOG_FILENAME;
+class LoggerService extends Logger {
 
 	/**
-	 * Kudos_Logger constructor.
+	 * Table name without prefix
+	 *
+	 * @var string
 	 */
-	public function __construct() {
+	public const TABLE = 'kudos_log';
 
+	/**
+	 * @param \Kudos\Helpers\WpDb $wpdb
+	 */
+	public function __construct( WpDb $wpdb ) {
 		parent::__construct(
 			'kudos',
-			[ new StreamHandler( self::LOG_FILE ) ],
+			[ new DatabaseHandler($wpdb) ],
 			[],
 			new DateTimeZone( wp_timezone_string() )
 		);
@@ -28,68 +30,7 @@ class LoggerService extends Monolog {
 	}
 
 	/**
-	 * Clears the log file
-	 *
-	 * @return bool|int
-	 */
-	public static function clear() {
-
-		if ( ! self::is_writeable() ) {
-			return false;
-		}
-
-		return file_put_contents( self::LOG_FILE, '' );
-
-	}
-
-	/**
-	 * Checks if log file is writeable and returns true if it is
-	 *
-	 * @return bool
-	 */
-	private static function is_writeable(): bool {
-
-		if ( is_writable( self::LOG_DIR ) ) {
-			return true;
-		}
-
-		return false;
-
-	}
-
-	/**
-	 * Downloads the log file
-	 */
-	public static function download() {
-
-		$file = self::LOG_FILE;
-
-		header( 'Content-Description: File Transfer' );
-		header( 'Content-Disposition: attachment; filename=kudos_' . sanitize_title( get_bloginfo( 'name' ) ) . '_' . gmdate( 'Y-m-d' ) . '.log' );
-		header( 'Content-Type: application/octet-stream' );
-		header( 'Expires: 0' );
-		header( 'Cache-Control: must-revalidate' );
-		header( 'Pragma: public' );
-		header( 'Content-Length: ' . filesize( $file ) );
-
-		readfile( $file );
-		exit;
-
-	}
-
-	/**
-	 * Create the log directory
-	 */
-	public function init() {
-
-		if ( wp_mkdir_p( self::LOG_DIR ) ) {
-			$this->info( 'Log directory created successfully', [ 'location' => self::LOG_DIR ] );
-		}
-
-	}
-
-	/**
-	 * Add checks to parent function
+	 * Add checks to parent function.
 	 *
 	 * @param int $level Log level.
 	 * @param string $message Message to record.
@@ -104,63 +45,38 @@ class LoggerService extends Monolog {
 			return false;
 		}
 
-		// Check ig log is writeable before proceeding.
-		if ( ! $this->is_writeable() ) {
-			return false;
-		}
-
 		return parent::addRecord( $level, $message, $context );
 	}
 
-	/**
-	 * Get the contents of the log file and return as array.
-	 *
-	 * @return array
-	 */
-	public static function get_as_array(): array {
 
-		if ( file_exists( self::LOG_FILE ) ) {
-
-			$limit = 26;
-			$reg = '/^\[(?<date>.*)\]\s(?<env>\w+)\.(?<type>\w+):(?<message>.*)/m';
-
-			$lines = [];
-			$fp    = fopen( self::LOG_FILE, "r" );
-			while ( ! feof( $fp ) ) {
-				$line = fgets( $fp, 4096 );
-				preg_match( $reg, $line, $matches );
-				array_push( $lines, $matches );
-				if ( count( $lines ) > $limit ) {
-					array_shift( $lines );
-				}
-			}
-			fclose( $fp );
-
-			$lines = array_filter($lines);
-			usort( $lines, [ static::class, 'date_compare' ] );
-
-			return $lines;
-		}
-
-		return [];
+	public static function get_table_name(): string {
+		global $wpdb;
+		return $wpdb->prefix . self::TABLE;
 
 	}
 
 	/**
-	 * Compares dates to sort log.
+	 * Clears the log file.
 	 *
-	 * @param array $a First array.
-	 * @param array $b Second array.
-	 *
-	 * @return false|int
+	 * @return bool|int
 	 */
-	private static function date_compare( array $a, array $b ) {
+	public static function clear() {
 
-		$t1 = strtotime( $a['date'] );
-		$t2 = strtotime( $b['date'] );
+		global $wpdb;
+		$table = $wpdb->prefix . self::TABLE;
+		return $wpdb->query("TRUNCATE TABLE `{$table}`");
 
-		return $t2 - $t1;
+	}
 
+	/**
+	 * Returns the log table contents as an array.
+	 *
+	 * @return array|object|null
+	 */
+	public static function get_as_array() {
+		global $wpdb;
+		$table = $wpdb->prefix . self::TABLE;
+		return $wpdb->get_results("SELECT * FROM {$table} ORDER BY `date` DESC LIMIT 100",ARRAY_A);
 	}
 
 }

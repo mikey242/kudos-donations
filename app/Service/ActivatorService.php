@@ -6,7 +6,6 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
-use Kudos\Helpers\Utils;
 use Kudos\Helpers\WpDb;
 
 /**
@@ -39,8 +38,8 @@ class ActivatorService {
 
 	public function __construct() {
 
-		$this->logger = new LoggerService();
 		$this->wpdb = new WpDb();
+		$this->logger = new LoggerService($this->wpdb);
 		$this->twig = new TwigService($this->logger);
 		$this->mapper = new MapperService($this->logger, $this->wpdb);
 		$this->settings = new Settings($this->mapper);
@@ -54,8 +53,12 @@ class ActivatorService {
 	 */
 	public function activate( string $old_version = null ) {
 
+		self::create_log_table();
+		self::create_donors_table();
+		self::create_transactions_table();
+		self::create_subscriptions_table();
+
 		$logger = $this->logger;
-		$logger->init();
 		$twig = $this->twig;
 		$twig->init();
 		$settings = $this->settings;
@@ -66,15 +69,9 @@ class ActivatorService {
 		}
 
 		$settings->add_defaults();
-		self::create_donors_table();
-		self::create_transactions_table();
-		self::create_subscriptions_table();
 
 		update_option( '_kudos_donations_version', KUDOS_VERSION );
 		$logger->info( 'Kudos Donations plugin activated', ['version' => KUDOS_VERSION] );
-
-		// Schedule log file clearing.
-		Utils::schedule_recurring_action( strtotime( 'today midnight' ), DAY_IN_SECONDS, 'kudos_check_log' );
 
 	}
 
@@ -103,29 +100,6 @@ class ActivatorService {
 			if ( $link ) {
 				$settings::update_setting( 'terms_link', $link );
 				$settings::remove_setting( 'privacy_link' );
-			}
-		}
-
-		if ( version_compare( $old_version, '2.3.0', '<' ) ) {
-
-			// Rename setting
-			$transaction_table = TransactionEntity::get_table_name();
-			$wpdb->query( "ALTER TABLE $transaction_table RENAME COLUMN `campaign_label` TO `campaign_id`" );
-			$settings::update_setting( 'show_intro', 1 );
-
-			// Apply mode to Donors
-			$donor_table = DonorEntity::get_table_name();
-			$wpdb->query( "ALTER TABLE $donor_table ADD `mode` VARCHAR(45) NOT NULL" );
-			$donors = $this->mapper
-				->get_repository(DonorEntity::class)
-				->get_all_by();
-			/** @var DonorEntity $donor */
-			foreach ( $donors as $donor ) {
-				$transactions = $donor->get_transactions();
-				if ( $transactions ) {
-					$donor->set_fields( [ 'mode' => $transactions[0]->mode ] );
-				}
-				$this->mapper->save( $donor );
 			}
 		}
 
@@ -186,6 +160,9 @@ class ActivatorService {
 			// Remove unused settings.
 			$settings::remove_setting('return_message_enable');
 			$settings::remove_setting('custom_return_enable');
+
+			// Disable log file clearing
+			as_unschedule_all_actions('kudos_check_log');
 		}
 
 	}
@@ -281,6 +258,30 @@ class ActivatorService {
 		  subscription_id VARCHAR(255),
 		  status VARCHAR(255),
 		  secret VARCHAR(255),		  
+		  PRIMARY KEY (id)
+		) $charset_collate";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+
+	}
+
+	/**
+	 * Creates the subscription table
+	 */
+	private function create_log_table() {
+
+		$wpdb = $this->wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+		$table_name      = LoggerService::get_table_name();
+
+		$sql = "CREATE TABLE $table_name (
+		  id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+          date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  level VARCHAR(255) NOT NULL,
+		  message VARCHAR(255) NOT NULL,
+		  context VARCHAR(255),	  
 		  PRIMARY KEY (id)
 		) $charset_collate";
 

@@ -225,7 +225,7 @@ class Utils {
 	}
 
 	/**
-	 * Returns human readable filesize from given bytes.
+	 * Returns human-readable filesize from given bytes.
 	 *
 	 * @param int $bytes Size of file in bytes. Usually the value returned from filesize().
 	 * @param int $decimals Number of decimal places to return.

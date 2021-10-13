@@ -34,32 +34,17 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 			case 'log':
 				$url = add_query_arg( 'tab', 'log', $url );
-				$file = LoggerService::LOG_FILE;
-
-				// Quit if file does not exist.
-				if ( ! file_exists( $file ) ) {
-					return;
-				}
 
 				$log_array = LoggerService::get_as_array();
 				?>
 
-				<p>This logfile location: <?php echo esc_url( $file ); ?></p>
-				<p>Current filesize: <?php echo Utils::human_filesize( (int) filesize( $file ) ); ?></p>
-				<p><strong>Note: The log will be automatically cleared when it reaches 2MB.</strong></p>
+				<p>Kudos Donations logs to the "<?php echo LoggerService::get_table_name() ?>" table in the database.</p>
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
 				      method='post'>
 					<?php wp_nonce_field( 'kudos_log_clear' ); ?>
 					<button class="button-secondary confirm" name='kudos_action' type='submit' value='kudos_log_clear'>
 						Clear
-					</button>
-				</form>
-				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
-				      method='post'>
-					<?php wp_nonce_field( 'kudos_log_download' ); ?>
-					<button class="button-secondary" name='kudos_action' type='submit' value='kudos_log_download'>
-						Download
 					</button>
 				</form>
 
@@ -69,12 +54,13 @@ $tab         = $_GET['tab'] ?? $default_tab;
 						<th class='row-title'>Date</th>
 						<th>Level</th>
 						<th>Message</th>
+						<th>Context</th>
 					</tr>
 
 					<?php
 					foreach ( $log_array as $key => $log ) {
 
-						$level = $log['type'];
+						$level = LoggerService::getLevelName( $log['level'] );
 						$style = 'border-left-width: 4px; border-left-style: solid;';
 
 						switch ( $level ) {
@@ -102,10 +88,13 @@ $tab         = $_GET['tab'] ?? $default_tab;
 								?>
 							</td>
 							<td>
-								<?php echo esc_attr( $log['type'] ); ?>
+								<?php echo esc_attr( $level ); ?>
 							</td>
 							<td>
 								<?php echo( esc_textarea( $log['message'] ) ); ?>
+							</td>
+							<td>
+								<?php echo( esc_textarea( $log['context'] ) ); ?>
 							</td>
 
 						</tr>

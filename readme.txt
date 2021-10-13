@@ -20,7 +20,7 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 * Smart and modern design.
 * One-off or recurring payments.
-* Can add as many different buttons as you like.
+* Can add as many buttons as you like.
 * Connect with Mollie for secure payments by credit card, iDEAL and [many others](https://www.mollie.com/payments).
 * Toggle Automated email receipts.
 * Gutenberg block or shortcode to place your button virtually anywhere.
@@ -123,6 +123,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * *NEW* Improved "Welcome Guide" making it easier to get started with Kudos Donations
 * Upgrade to Block API version 2. This increases the min WordPress version to 5.6.
 * Simplify completed payments settings (it is no longer possible to have a custom return url AND a pop-up message)
+* Change logging to database storage
 * Add "Clear object cache" to debug actions
 * Add white background to form elements
 * Fixed compatibility issues with JavaScript minifiers (e.g. "WP-Optimize", "Autoptimize")
