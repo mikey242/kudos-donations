@@ -29,9 +29,8 @@ class MapperService {
 	 * @param \Kudos\Service\LoggerService $logger_service
 	 * @param \Kudos\Helpers\WpDb $wpdb
 	 */
-	public function __construct( LoggerService $logger_service, WpDb $wpdb) {
+	public function __construct( LoggerService $logger_service, WpDb $wpdb ) {
 
-		global $wpdb;
 		$this->wpdb   = $wpdb;
 		$this->logger = $logger_service;
 
@@ -42,8 +41,8 @@ class MapperService {
 	 *
 	 * @param AbstractEntity $entity Instance of AbstractEntity to save.
 	 *
-	 * @param bool $ignore_null Whether or not to remove NULL or empty fields from
-	 *                          the save query.
+	 * @param bool $ignore_null Whether to remove NULL or empty fields from
+	 *                          the save queries.
 	 *
 	 * @return false|int Returns the id of the record if successful
 	 *                   and false if not.
@@ -56,7 +55,7 @@ class MapperService {
 			// If we have an id, then update row.
 			$result = $this->update_record( $entity, $ignore_null );
 		} else {
-			// Otherwise create new record.
+			// Otherwise, create new record.
 			$result = $this->add_record( $entity );
 		}
 
@@ -140,7 +139,7 @@ class MapperService {
 	 * Cache incrementer for invalidating cache. Splits into groups
 	 * by current table name.
 	 *
-	 * @param false $refresh Whether or not to invalidate cache.
+	 * @param false $refresh Whether to invalidate cache.
 	 *
 	 * @return mixed
 	 */
@@ -182,12 +181,13 @@ class MapperService {
 	 *
 	 * @param string $class
 	 *
-	 * @return \Kudos\Service\MapperService|null
+	 * @return self|null
 	 */
-	public function get_repository( string $class): ?MapperService {
+	public function get_repository( string $class ): ?MapperService {
 
 		if ( is_subclass_of( $class, AbstractEntity::class ) ) {
 			$this->repository = $class;
+
 			return $this;
 		}
 
@@ -365,7 +365,7 @@ class MapperService {
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		}
 
-		$this->logger->debug( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
+		$this->logger->warning( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
 
 		return $deleted;
 
