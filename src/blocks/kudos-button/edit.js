@@ -72,7 +72,6 @@ class ButtonEdit extends Component {
     };
 
     render() {
-
         return (
             <div>
                 <InspectorControls>
