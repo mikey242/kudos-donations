@@ -261,13 +261,14 @@ class Admin {
 
 	/**
 	 * Register assets for enqueuing in the block editor.
+	 * These assets are enqueued using register_block_type in the front.
 	 */
 	public function register_block_editor_assets() {
 
 		wp_register_style(
 			'kudos-donations-public',
 			Assets::get_asset_url( '/public/kudos-public.css' ),
-			[],
+			['kudos-donations-root'],
 			$this->version
 		);
 

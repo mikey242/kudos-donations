@@ -107,6 +107,7 @@ class KudosDonations {
 
 		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'register_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'register_styles' ] );
+		add_action( 'enqueue_block_assets', [ $plugin_public, 'register_root_styles' ] ); // Used by front and admin
 		add_action( 'init', [ $plugin_public, 'register_kudos' ] );
 		add_action( 'wp_footer', [ $plugin_public, 'handle_query_variables' ], 1000 );
 

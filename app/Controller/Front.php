@@ -100,11 +100,11 @@ class Front {
 	}
 
 	/**
-	 * Add root styles to header based on theme.
+	 * Get the root styles based on theme settings.
 	 *
-	 * @return string
+	 * @return string The root styles to be inlined.
 	 */
-	public function get_root_styles(): string {
+	public static function get_root_styles(): string {
 
 		$theme_colours = apply_filters( 'kudos_theme_colors', Settings::get_setting( 'theme_colors' ) );
 
@@ -115,17 +115,16 @@ class Front {
 		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
-		return "
-			:root {
-				--kudos-theme-primary: $primary;
-				--kudos-theme-primary-dark: $primary_dark;
-				--kudos-theme-primary-darker: $primary_darker;
-				--kudos-theme-secondary: $secondary;
-				--kudos-theme-secondary-dark: $secondary_dark;
-				--kudos-theme-secondary-darker: $secondary_darker;
-			}
-	
-		";
+		return trim("
+		:root {
+			--kudos-theme-primary: $primary;
+			--kudos-theme-primary-dark: $primary_dark;
+			--kudos-theme-primary-darker: $primary_darker;
+			--kudos-theme-secondary: $secondary;
+			--kudos-theme-secondary-dark: $secondary_dark;
+			--kudos-theme-secondary-darker: $secondary_darker;
+		}
+		");
 
 	}
 
@@ -165,27 +164,18 @@ class Front {
 		wp_register_style(
 			'kudos-donations-public',
 			Assets::get_asset_url( '/public/kudos-public.css' ),
-			[],
+			['kudos-donations-root'],
 			$this->version
 		);
 
 	}
 
 	/**
-	 * Register the assets used for blocks.
+	 * Register the inline root styles used by block editor and front.
 	 */
-	public function enqueue_root_styles() {
-
-		// Output root styles.
-		register_block_style(
-			'iseardmedia/kudos-button',
-			[
-				'name'         => 'kudos-button',
-				'label'        => __( 'Kudos Button', 'kudos-donations' ),
-				'is_default'   => true,
-				'inline_style' => $this->get_root_styles(),
-			]
-		);
+	public function register_root_styles() {
+		wp_register_style('kudos-donations-root', false);
+		wp_add_inline_style('kudos-donations-root', $this->get_root_styles());
 	}
 
 	/**
@@ -193,7 +183,6 @@ class Front {
 	 */
 	public function register_kudos() {
 
-		$this->enqueue_root_styles();
 		$this->register_button_block();
 
 		// If setting is not enabled the shortcode assets and registration will be skipped.
@@ -213,7 +202,7 @@ class Front {
 			wp_enqueue_style( 'kudos-donations-public' );
 		} );
 
-		// Register actual shortcode.
+		// Register shortcode.
 		add_shortcode(
 			'kudos',
 			function ( $atts ) {
@@ -250,9 +239,9 @@ class Front {
 					"donate",
 				],
 				"supports"        => [
-					"align"           => true,
-					"customClassName" => true,
-					"typography"      => [
+					"align"              => false,
+					"customClassName"    => true,
+					"typography"         => [
 						"fontSize" => false,
 					],
 				],
