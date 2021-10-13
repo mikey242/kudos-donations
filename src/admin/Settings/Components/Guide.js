@@ -9,6 +9,7 @@ import {Btn} from "./Btn"
 const Guide = ({pages = [], className, onFinish}) => {
 
     const [currentPage, setCurrentPage] = useState(0)
+    const [furthestPage, setFurthestPage] = useState(0)
     const canGoBack = currentPage > 0
     const canGoForward = currentPage < pages.length - 1
     const focusOnMountRef = useFocusOnMount(true)
@@ -34,17 +35,21 @@ const Guide = ({pages = [], className, onFinish}) => {
 
     const goForward = () => {
         if (canGoForward) {
+            setFurthestPage(Math.max(currentPage + 1), furthestPage)
             setCurrentPage(currentPage + 1)
         }
     }
 
     const pageNav = pages.map((page, i) => {
-        const current = currentPage === i ? 'kd-bg-orange-500' : 'kd-bg-transparent'
+        const isAccessible = furthestPage >= i
+        const currentClass = currentPage === i ? "kd-bg-orange-500" : "kd-bg-transparent"
+        const accessibleClass = isAccessible ? "kd-cursor-pointer kd-border-orange-500" : "kd-border-orange-200"
+        const classes = classnames(currentClass, accessibleClass)
         return (
             <li
-                className={"kd-border kd-cursor-pointer kd-border-solid kd-border-orange-500 kd-m-0 kd-mx-2 kd-rounded-full kd-w-2 kd-h-2 " + current}
+                className={classnames(classes, "kd-border kd-border-solid kd-m-0 kd-mx-2 kd-rounded-full kd-w-2 kd-h-2")}
                 key={i}
-                onClick={() => setCurrentPage(i)}
+                onClick={() => isAccessible ? setCurrentPage(i) : null}
             >
             </li>
         )
