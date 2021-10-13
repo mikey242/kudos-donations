@@ -35,7 +35,7 @@ const Guide = ({pages = [], className, onFinish}) => {
 
     const goForward = () => {
         if (canGoForward) {
-            setFurthestPage(Math.max(currentPage + 1), furthestPage)
+            setFurthestPage(Math.max(currentPage + 1, furthestPage))
             setCurrentPage(currentPage + 1)
         }
     }
