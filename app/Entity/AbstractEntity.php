@@ -8,7 +8,7 @@ use Kudos\Helpers\Utils;
 abstract class AbstractEntity {
 
 	/**
-	 * The entities database id
+	 * The entities' database id
 	 *
 	 * @var int
 	 */

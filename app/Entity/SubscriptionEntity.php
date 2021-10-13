@@ -49,7 +49,7 @@ class SubscriptionEntity extends AbstractEntity {
 	 */
 	public $customer_id;
 	/**
-	 * Id of transaction used to make subscription
+	 * ID of transaction used to make subscription
 	 *
 	 * @var string
 	 */
