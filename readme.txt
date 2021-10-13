@@ -91,7 +91,7 @@ To get started add the Kudos Donations shortcode:
 Here is a list of the shortcode attributes:
 
 * *button_label* = The label to display for the button.
-* *campaign_id* = Id of the campaign to use for this button.
+* *campaign_id* = ID of the campaign to use for this button.
 * *alignment* = Alignment of the button within container. Can be "center", "left" or "right".
 * *type* = Whether to show as a button with pop-up or just the form. Can be "button" or "form".
 
@@ -125,7 +125,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Simplify completed payments settings (it is no longer possible to have a custom return url AND a pop-up message)
 * Add "Clear object cache" to debug actions
 * Add white background to form elements
-* Fixed compatibility issues with JavaScript minifiers (e.g WP-Optimize, Autoptimize)
+* Fixed compatibility issues with JavaScript minifiers (e.g. "WP-Optimize", "Autoptimize")
 * Rearrange debug actions page
 * Update Mollie API client to 2.37.1
 * Update ActionScheduler to 3.3.0
