@@ -1,6 +1,10 @@
 class KudosModal {
 
-    constructor(modal, options = []) {
+    constructor(modal, options = {}) {
+        // Get the modal element
+        this.modal = document.getElementById(modal)
+
+        // Assign options and their defaults
         this.options = {
             timeOut: options.timeOut ?? 300,
             triggerElement: options.triggerElement,
@@ -13,9 +17,14 @@ class KudosModal {
             onClose: options.onClose,
             onClosed: options.onClosed
         }
+
+        // Initial state is closed
         this.isOpen = false
-        this.modal = document.getElementById(modal)
+
+        // Get close elements
         this.closeModal = this.modal.querySelectorAll('[data-modal-close]')
+
+        // Elements in modal that are focusable
         this.focusableElements = [
             'a[href]',
             'area[href]',
@@ -53,7 +62,10 @@ class KudosModal {
 
     }
 
-    open() {
+    /**
+     * Opens modal.
+     */
+    open = () => {
         this.modal.setAttribute('aria-hidden', 'false')
         this.modal.classList.add(this.options.openClass)
         this.modal.querySelector('.kudos-modal-container').focus()
@@ -62,14 +74,13 @@ class KudosModal {
         this.addEventListeners()
 
         // Create and dispatch event
-        window.dispatchEvent(new CustomEvent('kudosOpenModal', {detail: this}))
+        window.dispatchEvent(new CustomEvent('kudosModalOpen', {detail: this}))
 
         // Fire onOpen function
         if (typeof this.options.onOpen === 'function') {
             this.options.onOpen(this.modal)
         }
 
-        // Timout
         setTimeout(() => {
             // Fire onOpened function
             if (typeof this.options.onOpened === 'function') {
@@ -78,21 +89,23 @@ class KudosModal {
         }, this.options.timeOut)
     }
 
-    close() {
+    /**
+     * Closes modal.
+     */
+    close = () => {
         this.modal.setAttribute('aria-hidden', 'true')
 
         // Remove event listeners
         this.removeEventListeners()
 
         // Create and dispatch event
-        window.dispatchEvent(new CustomEvent('kudosCloseModal', {detail: this}))
+        window.dispatchEvent(new CustomEvent('kudosModalClose', {detail: this}))
 
         // Fire onClose function
         if (typeof this.options.onClose === 'function') {
             this.options.onClose(this.modal)
         }
 
-        // Timout
         setTimeout(() => {
             this.modal.classList.remove(this.options.openClass)
 
@@ -103,44 +116,75 @@ class KudosModal {
         }, this.options.timeOut)
     }
 
-    addEventListeners() {
+    /**
+     * Registers event listeners.
+     */
+    addEventListeners = () => {
         window.addEventListener('keydown', this.handleKeyPress)
         window.addEventListener('click', this.handleClick)
     }
 
-    removeEventListeners() {
+    /**
+     * Remove registered event listeners.
+     */
+    removeEventListeners = () => {
         window.removeEventListener('keydown', this.handleKeyPress)
         window.removeEventListener('click', this.handleClick)
     }
 
-    getFocusableContent() {
-        return Array.from(this.modal.querySelectorAll(this.focusableElements)).filter((e) => {
-            return (e.offsetParent !== null)
-        })
-    }
+    /**
+     * Gets all focusable content specified in this.focusableElements
+     * and removes non-visible elements.
+     *
+     * @returns {array}
+     */
+    getFocusableContent = () => Array.from(this.modal.querySelectorAll(this.focusableElements)).filter((e) => {
+        return (e.offsetParent !== null)
+    })
 
-    handleClick(e) {
+    /**
+     * Handles click event and calls relevant function.
+     *
+     * @param {Event} e
+     */
+    handleClick = e => {
         if (e.target.classList.contains(this.options.overlayClass)) this.handleOverlayClose()
     }
 
-    handleKeyPress(e) {
+    /**
+     * Handles key press event and calls relevant function.
+     *
+     * @param {KeyboardEvent} e
+     */
+    handleKeyPress = e => {
         if (e.key === 'Escape' || e.keyCode === 27) this.handleEscapeClose()
         if (e.key === 'Tab' || e.keyCode === 9) this.handleTab(e)
     }
 
-    handleOverlayClose() {
+    /**
+     * Handles click event on overlay by closing modal.
+     */
+    handleOverlayClose = () => {
         if (this.options.overlayClose) {
             this.close()
         }
     }
 
-    handleEscapeClose() {
+    /**
+     * Handles escape button press by closing modal.
+     */
+    handleEscapeClose = () => {
         if (this.options.escapeClose) {
             this.close()
         }
     }
 
-    handleTab(e) {
+    /**
+     * Handles tab presses and contains focus within modal.
+     *
+     * @param {KeyboardEvent} e
+     */
+    handleTab = e => {
         const focusableContent = this.getFocusableContent()
 
         // Bail if no focusable content
