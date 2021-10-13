@@ -1,6 +1,5 @@
 import {ThemePanel} from "../Panels/ThemePanel"
 import {CompletedPaymentPanel} from "../Panels/CompletedPaymentPanel"
-import {CustomReturnPanel} from "../Panels/CustomReturnPanel"
 import {TermsPanel} from "../Panels/TermsPanel"
 import {PrivacyPanel} from "../Panels/PrivacyPanel"
 import {Card, CardDivider} from "@wordpress/components"
