@@ -44,7 +44,7 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                 {
                     imageSrc: mollie,
                     nextDisabled: !vendorMollie.connected,
-                    // heading: __('Connect with Mollie', 'kudos-donations'),
+                    heading: __('Connect with Mollie', 'kudos-donations'),
                     content:
                         <div className={"kd-text-center"}>
                             {!isConnected
@@ -146,7 +146,7 @@ const IntroGuide = ({settings, updateSetting, isAPISaving, updateAll, handleInpu
                     heading: __('Test and go Live', 'kudos-donations'),
                     content:
                         <div className={"kd-text-center"}>
-                            <p>{__('With the API mode still on "Test" make a payment using your button. If it all looks good then you can switch to "Live".', 'kudos-donations')}</p>
+                            <p>{__('With the API mode still on "Test" make a payment using Kudos Donations. If it worked then you can switch to "Live".', 'kudos-donations')}</p>
                             <p>{__('Good luck with your campaign!', 'kudos-donations')}</p>
                             <p><ExternalLink
                                 href="https://kudosdonations.com/faq/">{__('Visit our F.A.Q', 'kudos-donations')}</ExternalLink>
