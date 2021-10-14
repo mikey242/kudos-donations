@@ -56,6 +56,10 @@ class Admin {
 	 * @var \Kudos\Service\Vendor\MollieVendor
 	 */
 	private $mollie;
+	/**
+	 * @var \Kudos\Service\LoggerService
+	 */
+	private $logger;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -69,15 +73,17 @@ class Admin {
 		PaymentService $payment,
 		ActivatorService $activator,
 		Settings $settings,
-		MollieVendor $mollie_vendor
+		MollieVendor $mollie_vendor,
+		LoggerService $logger
 	) {
-		$this->version     = $version;
-		$this->mapper      = $mapper;
-		$this->twig        = $twig;
-		$this->payment     = $payment;
-		$this->activator   = $activator;
-		$this->settings    = $settings;
-		$this->mollie      = $mollie_vendor;
+		$this->version   = $version;
+		$this->mapper    = $mapper;
+		$this->twig      = $twig;
+		$this->payment   = $payment;
+		$this->activator = $activator;
+		$this->settings  = $settings;
+		$this->mollie    = $mollie_vendor;
+		$this->logger    = $logger;
 	}
 
 	/**
@@ -268,7 +274,7 @@ class Admin {
 		wp_register_style(
 			'kudos-donations-public',
 			Assets::get_asset_url( '/public/kudos-public.css' ),
-			['kudos-donations-root'],
+			[ 'kudos-donations-root' ],
 			$this->version
 		);
 
@@ -536,9 +542,9 @@ class Admin {
 					break;
 
 				case 'kudos_sync_payments':
-					$mollie = $this->mollie;
+					$mollie  = $this->mollie;
 					$updated = $mollie->sync_transactions();
-					if($updated) {
+					if ( $updated ) {
 						new AdminNotice(
 							sprintf(
 							/* translators: %s: Number of records. */
@@ -551,7 +557,7 @@ class Admin {
 						);
 						break;
 					}
-					new AdminNotice(__('No transactions need updating', 'kudos-donations'));
+					new AdminNotice( __( 'No transactions need updating', 'kudos-donations' ) );
 			}
 
 			do_action( 'kudos_admin_actions_extra', $action );
@@ -564,7 +570,7 @@ class Admin {
 	 * Length defined by LoggerService::TRUNCATE_AT const.
 	 */
 	public function truncate_log() {
-		LoggerService::truncate();
+		$this->logger->truncate();
 	}
 
 	/**

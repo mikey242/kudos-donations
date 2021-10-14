@@ -17,11 +17,18 @@ class LoggerService extends Logger {
 	 * @var string
 	 */
 	public const TABLE = 'kudos_log';
+	/**
+	 * @var \Kudos\Helpers\WpDb|\wpdb
+	 */
+	private $wpdb;
 
 	/**
 	 * @param \Kudos\Helpers\WpDb $wpdb
 	 */
 	public function __construct( WpDb $wpdb ) {
+
+		$this->wpdb = $wpdb;
+
 		parent::__construct(
 			'kudos',
 			[ new DatabaseHandler( $wpdb ) ],
@@ -80,13 +87,14 @@ class LoggerService extends Logger {
 	 *
 	 * @return bool|int
 	 */
-	public static function truncate() {
-		/** @var \wpdb $wpdb */
-		$wpdb  = new WpDb();
+	public function truncate() {
+		$wpdb  = $this->wpdb;
 		$table = self::get_table_name();
 
+		// Get ID of the oldest row to keep.
 		$last_row = $wpdb->get_row( $wpdb->prepare("
 			SELECT `id` FROM {$table}
+			ORDER BY `id` DESC
 			LIMIT %d,1
 		", (self::TRUNCATE_AT - 1) ) );
 
@@ -94,9 +102,8 @@ class LoggerService extends Logger {
 			$last_id = $last_row->id;
 			return $wpdb->query($wpdb->prepare("
 				DELETE FROM {$table}
-				WHERE `id` > %d
+				WHERE `id` < %d
 			", $last_id));
-
 		}
 
 		return false;
