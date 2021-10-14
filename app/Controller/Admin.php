@@ -11,6 +11,7 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
 use Kudos\Helpers\Settings;
+use Kudos\Helpers\WpDb;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
@@ -557,6 +558,14 @@ class Admin {
 			do_action( 'kudos_admin_actions_extra', $action );
 		}
 
+	}
+
+	/**
+	 * Truncates the log file when over certain length.
+	 * Length defined by LoggerService::TRUNCATE_AT const.
+	 */
+	public function truncate_log() {
+		LoggerService::truncate();
 	}
 
 	/**

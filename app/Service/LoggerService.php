@@ -9,6 +9,8 @@ use Kudos\Helpers\WpDb;
 
 class LoggerService extends Logger {
 
+	const TRUNCATE_AT = 100;
+
 	/**
 	 * Table name without prefix
 	 *
@@ -22,7 +24,7 @@ class LoggerService extends Logger {
 	public function __construct( WpDb $wpdb ) {
 		parent::__construct(
 			'kudos',
-			[ new DatabaseHandler($wpdb) ],
+			[ new DatabaseHandler( $wpdb ) ],
 			[],
 			new DateTimeZone( wp_timezone_string() )
 		);
@@ -50,7 +52,9 @@ class LoggerService extends Logger {
 
 
 	public static function get_table_name(): string {
-		global $wpdb;
+		/** @var \wpdb $wpdb */
+		$wpdb = new WpDb();
+
 		return $wpdb->prefix . self::TABLE;
 
 	}
@@ -62,10 +66,40 @@ class LoggerService extends Logger {
 	 */
 	public static function clear() {
 
-		global $wpdb;
-		$table = $wpdb->prefix . self::TABLE;
-		return $wpdb->query("TRUNCATE TABLE `{$table}`");
+		/** @var \wpdb $wpdb */
+		$wpdb  = new WpDb();
+		$table = self::get_table_name();
 
+		return $wpdb->query( "TRUNCATE TABLE `{$table}`" );
+
+	}
+
+	/**
+	 * Truncates the log table keeping
+	 * the last 'TRUNCATE_AT' records.
+	 *
+	 * @return bool|int
+	 */
+	public static function truncate() {
+		/** @var \wpdb $wpdb */
+		$wpdb  = new WpDb();
+		$table = self::get_table_name();
+
+		$last_row = $wpdb->get_row( $wpdb->prepare("
+			SELECT `id` FROM {$table}
+			LIMIT %d,1
+		", (self::TRUNCATE_AT - 1) ) );
+
+		if($last_row) {
+			$last_id = $last_row->id;
+			return $wpdb->query($wpdb->prepare("
+				DELETE FROM {$table}
+				WHERE `id` > %d
+			", $last_id));
+
+		}
+
+		return false;
 	}
 
 	/**
@@ -75,8 +109,9 @@ class LoggerService extends Logger {
 	 */
 	public static function get_as_array() {
 		global $wpdb;
-		$table = $wpdb->prefix . self::TABLE;
-		return $wpdb->get_results("SELECT * FROM {$table} ORDER BY `date` DESC LIMIT 100",ARRAY_A);
+		$table = self::get_table_name();
+
+		return $wpdb->get_results( "SELECT * FROM {$table} ORDER BY `id` DESC LIMIT 100", ARRAY_A );
 	}
 
 }
