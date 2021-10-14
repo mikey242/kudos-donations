@@ -3,9 +3,9 @@
 namespace Kudos\Service;
 
 use DateTimeZone;
+use Kudos\Helpers\WpDb;
 use Kudos\Service\LogHandlers\DatabaseHandler;
 use Monolog\Logger;
-use Kudos\Helpers\WpDb;
 
 class LoggerService extends Logger {
 

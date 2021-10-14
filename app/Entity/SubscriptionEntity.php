@@ -2,8 +2,6 @@
 
 namespace Kudos\Entity;
 
-use Kudos\Service\MapperService;
-
 class SubscriptionEntity extends AbstractEntity {
 
 	/**

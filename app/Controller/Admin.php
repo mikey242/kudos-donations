@@ -11,7 +11,6 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
 use Kudos\Helpers\Settings;
-use Kudos\Helpers\WpDb;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;

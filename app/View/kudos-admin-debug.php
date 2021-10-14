@@ -1,6 +1,5 @@
 <?php
 
-use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 
 /**
