@@ -21,7 +21,8 @@
     "squizlabs/php_codesniffer": "^3.5",
     "phpcompatibility/phpcompatibility-wp": "*",
     "phpcompatibility/php-compatibility": "^9.3",
-    "filp/whoops": "^2.13"
+    "filp/whoops": "^2.13",
+    "phpunit/phpunit": "8.*"
   },
   "scripts": {
     "post-update-cmd": [
