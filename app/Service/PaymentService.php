@@ -7,7 +7,6 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
-use Kudos\Helpers\WpDb;
 use Kudos\Service\Vendor\MollieVendor;
 use Kudos\Service\Vendor\VendorInterface;
 use Mollie\Api\Resources\Payment;
