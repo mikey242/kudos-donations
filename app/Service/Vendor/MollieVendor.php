@@ -76,7 +76,7 @@ class MollieVendor implements VendorInterface {
 	/**
 	 * Change the API client to the key for the specified mode.
 	 */
-	private function set_api_mode( string $mode ) {
+	private function set_api_mode( ?string $mode ) {
 
 		$key = $this->api_keys[ $mode ] ?? false;
 
