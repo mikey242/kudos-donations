@@ -7,6 +7,7 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
+use Kudos\Helpers\WpDb;
 use Kudos\Service\Vendor\MollieVendor;
 use Kudos\Service\Vendor\VendorInterface;
 use Mollie\Api\Resources\Payment;
@@ -58,12 +59,7 @@ class PaymentService {
 	private static function get_current_vendor_class(): string {
 
 		switch ( Settings::get_setting( 'payment_vendor' ) ) {
-			case 'mollie':
-				return MollieVendor::class;
 			default:
-				$logger = new LoggerService();
-				$logger->warning( 'No payment vendor specified. Using Mollie.' );
-
 				return MollieVendor::class;
 		}
 
