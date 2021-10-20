@@ -98,6 +98,7 @@ interface VendorInterface {
 	 * Creates a payment and returns it as an object
 	 *
 	 * @param array $payment_array Parameters to pass to mollie to create a payment.
+	 * @return object|bool
 	 */
 	public function create_payment( array $payment_array );
 

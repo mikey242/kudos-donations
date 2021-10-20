@@ -311,7 +311,7 @@ class PaymentService {
 	 * @param string|null $customer_id Mollie customer id.
 	 * @param string|null $message Message left by donor.
 	 *
-	 * @return false|Payment
+	 * @return false|Object
 	 */
 	public function create_payment(
 		string $value,
