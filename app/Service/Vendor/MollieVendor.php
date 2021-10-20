@@ -731,12 +731,28 @@ class MollieVendor implements VendorInterface {
 						$amount   = $payment->amount;
 						$order_id = $payment->metadata->order_id ?? null;
 						$mapper->get_repository( TransactionEntity::class );
-						/** @var TransactionEntity $transaction */
-						$transaction = $mapper->get_one_by( [
-							'order_id' => $order_id,
-							'status'   => 'open',
-						] );
-						if ( $transaction ) {
+
+						if($order_id) {
+
+							/**
+							 * Find existing transaction.
+							 * @var TransactionEntity $transaction
+							 */
+							$transaction = $mapper->get_one_by( [
+								'order_id' => $order_id,
+							] );
+
+							// Add new transaction if none found.
+							if ( ! $transaction ) {
+								$transaction = new TransactionEntity( [
+									'order_id' => $order_id,
+								] );
+							} else {
+								$transaction->set_fields([
+									'created' => $payment->createdAt
+								]);
+							}
+
 							$transaction->set_fields(
 								[
 									'status'          => $payment->status,
@@ -747,6 +763,7 @@ class MollieVendor implements VendorInterface {
 									'method'          => $payment->method,
 									'mode'            => $payment->mode,
 									'subscription_id' => $payment->subscriptionId,
+									'campaign_id'     => $payment->metadata ? $payment->metadata->campaign_id : null,
 								]
 							);
 							$mapper->save( $transaction );
