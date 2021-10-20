@@ -205,10 +205,16 @@ class MollieVendor implements VendorInterface {
 		}
 
 		// Cancel the subscription via Mollie's API.
-		$response = $customer->cancelSubscription( $subscription_id );
+		try {
+			$response = $customer->cancelSubscription( $subscription_id );
 
-		/** @var Subscription $response */
-		return ( $response->status === 'canceled' );
+			/** @var Subscription $response */
+			return ( $response->status === 'canceled' );
+		} catch ( ApiException $e ) {
+			$this->logger->error( $e->getMessage() );
+
+			return false;
+		}
 	}
 
 	/**
@@ -428,10 +434,13 @@ class MollieVendor implements VendorInterface {
 	 */
 	private function check_mandate( Customer $customer, string $mandate_id ): bool {
 
-		$mandate = $customer->getMandate( $mandate_id );
-
-		if ( $mandate->isValid() || $mandate->isPending() ) {
-			return true;
+		try {
+			$mandate = $customer->getMandate( $mandate_id );
+			if ( $mandate->isValid() || $mandate->isPending() ) {
+				return true;
+			}
+		} catch ( ApiException $e ) {
+			$this->logger->error( $e->getMessage() );
 		}
 
 		return false;
@@ -700,32 +709,36 @@ class MollieVendor implements VendorInterface {
 			}
 			$customer = $this->get_customer( $customer_id );
 			if ( $customer ) {
-				$payments = $customer->payments();
-				foreach ( $payments as $payment ) {
-					$amount   = $payment->amount;
-					$order_id = $payment->metadata->order_id;
-					$mapper->get_repository( TransactionEntity::class );
-					/** @var TransactionEntity $transaction */
-					$transaction = $mapper->get_one_by( [
-						'order_id' => $order_id,
-						'status'   => 'open',
-					] );
-					if ( $transaction ) {
-						$transaction->set_fields(
-							[
-								'status'          => $payment->status,
-								'customer_id'     => $payment->customerId,
-								'value'           => $amount->value,
-								'currency'        => $amount->currency,
-								'sequence_type'   => $payment->sequenceType,
-								'method'          => $payment->method,
-								'mode'            => $payment->mode,
-								'subscription_id' => $payment->subscriptionId,
-							]
-						);
-						$mapper->save( $transaction );
-						$updated ++;
+				try {
+					$payments = $customer->payments();
+					foreach ( $payments as $payment ) {
+						$amount   = $payment->amount;
+						$order_id = $payment->metadata->order_id ?? null;
+						$mapper->get_repository( TransactionEntity::class );
+						/** @var TransactionEntity $transaction */
+						$transaction = $mapper->get_one_by( [
+							'order_id' => $order_id,
+							'status'   => 'open',
+						] );
+						if ( $transaction ) {
+							$transaction->set_fields(
+								[
+									'status'          => $payment->status,
+									'customer_id'     => $payment->customerId,
+									'value'           => $amount->value,
+									'currency'        => $amount->currency,
+									'sequence_type'   => $payment->sequenceType,
+									'method'          => $payment->method,
+									'mode'            => $payment->mode,
+									'subscription_id' => $payment->subscriptionId,
+								]
+							);
+							$mapper->save( $transaction );
+							$updated ++;
+						}
 					}
+				} catch ( ApiException $e ) {
+					$this->logger->error( $e->getMessage() );
 				}
 			}
 		}
