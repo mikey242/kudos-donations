@@ -18,6 +18,7 @@ use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
+use Mollie\Api\Types\SequenceType;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -546,48 +547,105 @@ class MollieVendor implements VendorInterface {
 		$order_id       = $payment->metadata->order_id ?? Utils::generate_id( 'kdo_' );
 		$amount         = $payment->amount;
 
-		// Get transaction from database.
-		/** @var TransactionEntity $transaction */
-		$transaction = $this->mapper
-			->get_repository( TransactionEntity::class )
-			->get_one_by(
-				[
-					'order_id'       => $order_id,
-					'transaction_id' => $transaction_id,
-				],
-				'OR'
-			);
+		switch ( $payment->sequenceType ) {
 
-		// Create new transaction if none found.
-		if ( null === $transaction ) {
-			$transaction = new TransactionEntity( [
-				'order_id' => $order_id,
-			] );
-		}
+			/**
+			 * Update existing transaction.
+			 * This applies to 'oneoff' and 'first' sequence types.
+			 */
+			case SequenceType::SEQUENCETYPE_ONEOFF:
+			case SequenceType::SEQUENCETYPE_FIRST:
 
-		// Add refund if present.
-		if ( $payment->hasRefunds() ) {
-
-			do_action( 'kudos_mollie_refund', $order_id );
-
-			$transaction->set_fields(
-				[
-					'refunds' => json_encode(
+				/** @var TransactionEntity $transaction */
+				$transaction = $this->mapper
+					->get_repository( TransactionEntity::class )
+					->get_one_by(
 						[
-							'refunded'  => $payment->getAmountRefunded(),
-							'remaining' => $payment->getAmountRemaining(),
+							'order_id'       => $order_id,
+							'transaction_id' => $transaction_id,
+						],
+						'OR'
+					);
+
+				// Add refund if present.
+				if ( $payment->hasRefunds() ) {
+
+					do_action( 'kudos_mollie_refund', $order_id );
+
+					$transaction->set_fields(
+						[
+							'refunds' => json_encode(
+								[
+									'refunded'  => $payment->getAmountRefunded(),
+									'remaining' => $payment->getAmountRemaining(),
+								]
+							),
 						]
-					),
-				]
-			);
+					);
 
-			$this->logger->info( 'Payment refunded.', [ 'transaction' => $transaction ] );
+					$this->logger->info( 'Payment refunded.', [ 'transaction' => $transaction ] );
 
-		} else {
-			// Check if status is the same (in case of multiple webhook calls).
-			if ( $transaction->status === $payment->status ) {
-				return $response;
-			}
+				} else {
+					// Check if status is the same (in case of multiple webhook calls).
+					if ( $transaction->status === $payment->status ) {
+						$this->logger->debug( 'Multiple webhook call detected, ignoring', [
+							'transaction_id' => $id,
+							'status'         => $payment->status,
+							'sequence_type'  => $payment->sequenceType,
+						] );
+
+						return $response;
+					}
+				}
+
+				if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
+
+					// Schedule processing for later.
+					do_action( 'kudos_mollie_transaction_paid', $order_id );
+
+					// Set up recurring payment if sequence is first.
+					if ( $payment->hasSequenceTypeFirst() ) {
+						$this->logger->debug( 'Creating subscription', [ $transaction ] );
+						$this->create_subscription(
+							$transaction,
+							$payment->mandateId,
+							$payment->metadata->interval,
+							$payment->metadata->years
+						);
+					}
+				}
+
+				break;
+
+			/**
+			 * Assumed SequenceType::SEQUENCETYPE_RECURRING. Create new transaction.
+			 * This applies to 'recurring' sequence types.
+			 */
+			default:
+
+				$transaction = new TransactionEntity( [
+					'order_id' => $order_id,
+				] );
+
+				$subscription_id = $payment->subscriptionId;
+				$customer_id     = $payment->customerId;
+				$customer        = $this->get_customer( $customer_id );
+
+				try {
+					$subscription_meta = $customer->getSubscription( $subscription_id )->metadata;
+					if ( isset( $subscription_meta->campaign_id ) ) {
+						$campaign_id = $subscription_meta->campaign_id;
+						$transaction->set_fields(
+							[
+								'campaign_id' => $campaign_id,
+							]
+						);
+					}
+				} catch ( ApiException $e ) {
+					$this->logger->error( $e->getMessage() );
+				}
+
+				break;
 		}
 
 		// Update payment.
@@ -605,56 +663,14 @@ class MollieVendor implements VendorInterface {
 			]
 		);
 
-		// Add campaign id to recurring payments.
-		if ( $payment->hasSequenceTypeRecurring() ) {
-
-			$subscription_id   = $payment->subscriptionId;
-			$customer_id       = $payment->customerId;
-			$customer          = $this->get_customer( $customer_id );
-			$subscription_meta = $customer->getSubscription( $subscription_id )->metadata;
-			if ( isset( $subscription_meta['campaign_id'] ) ) {
-				$campaign_id = $subscription_meta->campaign_id;
-				$transaction->set_fields(
-					[
-						'campaign_id' => $campaign_id,
-					]
-				);
-			} else {
-				$this->logger->info(
-					'No campaign label found for recurring payment',
-					[
-						'customer_id'     => $customer_id,
-						'subscription_id' => $subscription_id,
-					]
-				);
-			}
-		}
-
 		// Save transaction to database.
 		$this->mapper->save( $transaction );
-
-		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
-
-			// Schedule processing for later.
-			do_action( 'kudos_mollie_transaction_paid', $order_id );
-
-			// Set up recurring payment if sequence is first.
-			if ( $payment->hasSequenceTypeFirst() ) {
-				$this->logger->debug( 'Creating subscription', [ $transaction ] );
-				$this->create_subscription(
-					$transaction,
-					$payment->mandateId,
-					$payment->metadata->interval,
-					$payment->metadata->years
-				);
-			}
-		}
 
 		return $response;
 	}
 
 	/**
-	 * Returns the api mode
+	 * Returns the api mode.
 	 *
 	 * @return string
 	 */
