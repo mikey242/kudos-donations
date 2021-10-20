@@ -363,6 +363,9 @@ class MapperService {
 			$this->get_cache_incrementer( true );
 			$this->logger->info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
+		} else {
+			$this->logger->warning( 'Error deleting record.',
+				[ 'table' => $this->get_table_name(), $column => $value ] );
 		}
 
 		$this->logger->warning( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
