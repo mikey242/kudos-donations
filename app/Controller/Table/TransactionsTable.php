@@ -437,6 +437,8 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_campaign_id( array $item ): string {
 
+		if(!$item['campaign_id']) return '';
+
 		try {
 			$campaign = Settings::get_campaign( $item['campaign_id'] );
 		} catch ( Exception $e ) {
