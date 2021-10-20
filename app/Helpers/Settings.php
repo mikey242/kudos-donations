@@ -565,14 +565,14 @@ class Settings {
 	}
 
 	/**
-	 * Gets the campaign by specified column (e.g id).
+	 * Gets the campaign by specified column (e.g. id).
 	 *
 	 * @param string|null $value
 	 *
 	 * @return array|null
 	 * @throws Exception
 	 */
-	public static function get_campaign( ?string $value ): ?array {
+	public static function get_campaign( string $value ): ?array {
 
 		$campaigns = self::get_setting( 'campaigns' );
 		$key       = array_search( $value, array_column( (array) $campaigns, 'id' ) );
