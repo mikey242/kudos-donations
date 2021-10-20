@@ -50,7 +50,6 @@ Once up and running you can access the various containers from these addresses:
 This software uses the following open source packages:
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework.
 - [Mollie API](https://github.com/mollie/mollie-api-php) - Mollie API client for PHP.
-- [Micromodal](https://micromodal.now.sh/) - A lightweight, configurable and a11y-enabled modal library written in pure JavaScript.
 - [jQuery Validation](https://github.com/jquery-validation/jquery-validation) - Provides drop-in validation for your existing forms. 
 - [Twig](https://twig.symfony.com/) - A modern template engine for PHP.
 - [WordPress Plugin Boilerplate](https://github.com/DevinVinson/WordPress-Plugin-Boilerplate) -  A foundation for WordPress Plugin Development.
