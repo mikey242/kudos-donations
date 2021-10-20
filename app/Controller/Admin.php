@@ -541,7 +541,7 @@ class Admin {
 					new AdminNotice( __( 'Database re-created', 'kudos-donations' ) );
 					break;
 
-				case 'kudos_sync_payments':
+				case 'kudos_sync_transactions':
 					$mollie  = $this->mollie;
 					$updated = $mollie->sync_transactions();
 					if ( $updated ) {
@@ -558,6 +558,25 @@ class Admin {
 						break;
 					}
 					new AdminNotice( __( 'No transactions need updating', 'kudos-donations' ) );
+					break;
+
+				case 'kudos_add_missing_transactions':
+					$mollie  = $this->mollie;
+					$updated = $mollie->add_missing_transactions();
+					if ( $updated ) {
+						new AdminNotice(
+							sprintf(
+							/* translators: %s: Number of records. */
+								_n( 'Added %s transaction',
+									'Added %s transactions',
+									$updated,
+									'kudos-donations' ),
+								$updated
+							)
+						);
+						break;
+					}
+					new AdminNotice( __( 'No transactions need adding', 'kudos-donations' ) );
 			}
 
 			do_action( 'kudos_admin_actions_extra', $action );

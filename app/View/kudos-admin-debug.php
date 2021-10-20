@@ -200,10 +200,17 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<hr/>
 
 				<p>Mollie actions.</p>
-				<form action="<?php echo esc_url( $url ); ?>" method='post'>
-					<?php wp_nonce_field( 'kudos_sync_payments' ); ?>
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+					<?php wp_nonce_field( 'kudos_sync_transactions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_sync_payments'>Sync payments
+					        value='kudos_sync_transactions'>Sync transactions
+					</button>
+				</form>
+
+				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+					<?php wp_nonce_field( 'kudos_add_missing_transactions' ); ?>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_add_missing_transactions'>Add missing transactions
 					</button>
 				</form>
 

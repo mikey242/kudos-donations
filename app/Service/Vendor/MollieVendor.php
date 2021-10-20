@@ -732,7 +732,72 @@ class MollieVendor implements VendorInterface {
 						$order_id = $payment->metadata->order_id ?? null;
 						$mapper->get_repository( TransactionEntity::class );
 
-						if($order_id) {
+						if ( $order_id ) {
+
+							/**
+							 * Find existing transaction.
+							 * @var TransactionEntity $transaction
+							 */
+							$transaction = $mapper->get_one_by( [
+								'order_id' => $order_id,
+								'status'   => 'open',
+							] );
+
+							if ( $transaction ) {
+								$transaction->set_fields(
+									[
+										'status'          => $payment->status,
+										'customer_id'     => $payment->customerId,
+										'value'           => $amount->value,
+										'currency'        => $amount->currency,
+										'sequence_type'   => $payment->sequenceType,
+										'method'          => $payment->method,
+										'mode'            => $payment->mode,
+										'subscription_id' => $payment->subscriptionId,
+										'campaign_id'     => $payment->metadata ? $payment->metadata->campaign_id : null,
+									]
+								);
+								$mapper->save( $transaction );
+								$updated ++;
+							}
+						}
+					}
+				} catch ( ApiException $e ) {
+					$this->logger->error( $e->getMessage() );
+				}
+			}
+		}
+
+		return $updated;
+	}
+
+	/**
+	 * Adds missing transactions from Mollie.
+	 * Returns the number of transactions added.
+	 *
+	 * @return int
+	 */
+	public function add_missing_transactions(): int {
+		$added  = 0;
+		$mapper = $this->mapper;
+		$mapper->get_repository( DonorEntity::class );
+		$donors = $mapper->get_all_by();
+		/** @var DonorEntity $donor */
+		foreach ( $donors as $donor ) {
+			$customer_id = $donor->customer_id;
+			if ( $donor->mode !== $this->api_mode ) {
+				$this->set_api_mode( $donor->mode );
+			}
+			$customer = $this->get_customer( $customer_id );
+			if ( $customer ) {
+				try {
+					$payments = $customer->payments();
+					foreach ( $payments as $payment ) {
+						$order_id = $payment->metadata->order_id ?? null;
+
+						if ( $order_id ) {
+
+							$mapper->get_repository( TransactionEntity::class );
 
 							/**
 							 * Find existing transaction.
@@ -744,30 +809,26 @@ class MollieVendor implements VendorInterface {
 
 							// Add new transaction if none found.
 							if ( ! $transaction ) {
-								$transaction = new TransactionEntity( [
-									'order_id' => $order_id,
-								] );
-							} else {
-								$transaction->set_fields([
-									'created' => $payment->createdAt
-								]);
-							}
 
-							$transaction->set_fields(
-								[
+								$transaction = new TransactionEntity( [
+									'order_id'        => $order_id,
+									'created'         => $payment->createdAt,
 									'status'          => $payment->status,
 									'customer_id'     => $payment->customerId,
-									'value'           => $amount->value,
-									'currency'        => $amount->currency,
+									'value'           => $payment->amount->value,
+									'currency'        => $payment->amount->currency,
 									'sequence_type'   => $payment->sequenceType,
 									'method'          => $payment->method,
 									'mode'            => $payment->mode,
 									'subscription_id' => $payment->subscriptionId,
+									'transaction_id'  => $payment->id,
 									'campaign_id'     => $payment->metadata ? $payment->metadata->campaign_id : null,
-								]
-							);
-							$mapper->save( $transaction );
-							$updated ++;
+								] );
+
+								$mapper->save( $transaction );
+								$added ++;
+							}
+
 						}
 					}
 				} catch ( ApiException $e ) {
@@ -776,6 +837,6 @@ class MollieVendor implements VendorInterface {
 			}
 		}
 
-		return $updated;
+		return $added;
 	}
 }
