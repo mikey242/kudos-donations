@@ -9,7 +9,7 @@ use Kudos\Helpers\WpDb;
 class MapperService {
 
 	/**
-	 * Repository class
+	 * Repository class.
 	 *
 	 * @var AbstractEntity
 	 */
@@ -69,7 +69,7 @@ class MapperService {
 	}
 
 	/**
-	 * Updates existing record
+	 * Updates existing record.
 	 *
 	 * @param AbstractEntity $entity An instance of AbstractEntity.
 	 * @param bool $ignore_null Whether to ignore null properties.
@@ -101,12 +101,12 @@ class MapperService {
 	}
 
 	/**
-	 * Adds new record to the database
+	 * Adds new record to the database.
 	 *
 	 * @param AbstractEntity $entity Instance of AbstractEntity to add.
 	 *
 	 * @return false|int Returns the id of the record if successful
-	 *                   and false if not
+	 *                   and false if not.
 	 */
 	private function add_record( AbstractEntity $entity ) {
 
@@ -164,7 +164,7 @@ class MapperService {
 	}
 
 	/**
-	 * Returns current repository table name
+	 * Returns current repository table name.
 	 *
 	 * @param bool $prefix Whether to return the prefix or not.
 	 *
@@ -195,7 +195,7 @@ class MapperService {
 	}
 
 	/**
-	 * Get row by $query_fields array
+	 * Get row by $query_fields array.
 	 *
 	 * @param array $query_fields Key-value pair of fields to query
 	 *                             e.g. ['email' => 'john.smith@gmail.com'].
@@ -271,10 +271,10 @@ class MapperService {
 	}
 
 	/**
-	 * Deletes all the records for the current repository
+	 * Deletes all the records for the current repository.
 	 *
 	 * @return bool|int Returns the number of records deleted if successful
-	 *                  and false if not
+	 *                  and false if not.
 	 */
 	public function delete_all() {
 
@@ -296,7 +296,7 @@ class MapperService {
 	}
 
 	/**
-	 * Get all results from table
+	 * Get all results from table.
 	 *
 	 * @param array|null $query_fields Array of columns and their values. The array is converted to
 	 *                                 a MYSQL WHERE statement as "key = value". If no value is
@@ -324,7 +324,7 @@ class MapperService {
 
 	/**
 	 * Maps array of current repository objects to instance
-	 * of current repository
+	 * of current repository.
 	 *
 	 * @param array $results Array of properties and values to map.
 	 *
@@ -342,7 +342,7 @@ class MapperService {
 	}
 
 	/**
-	 * Deletes selected record
+	 * Deletes selected record.
 	 *
 	 * @param string $column Column name to search for value.
 	 * @param string $value Value to search for.
@@ -359,7 +359,7 @@ class MapperService {
 		);
 
 		if ( $deleted ) {
-			// Invalidate cache if database updated
+			// Invalidate cache if database updated.
 			$this->get_cache_incrementer( true );
 			$this->logger->info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
@@ -367,8 +367,6 @@ class MapperService {
 			$this->logger->warning( 'Error deleting record.',
 				[ 'table' => $this->get_table_name(), $column => $value ] );
 		}
-
-		$this->logger->warning( 'Error deleting record.', [ 'table' => $this->get_table_name(), $column => $value ] );
 
 		return $deleted;
 
