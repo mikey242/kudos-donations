@@ -27,7 +27,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 		<?php
 
-		$url          = admin_url( 'admin.php?page=kudos-debug' );
+		$url = admin_url( 'admin.php?page=kudos-debug' );
 
 		switch ( $tab ) :
 
@@ -37,7 +37,8 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				$log_array = LoggerService::get_as_array();
 				?>
 
-				<p>Kudos Donations logs to the "<?php echo LoggerService::get_table_name() ?>" table in the database.</p>
+				<p>Kudos Donations logs to the "<?php echo LoggerService::get_table_name() ?>" table in the
+					database.</p>
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
 				      method='post'>
@@ -59,8 +60,10 @@ $tab         = $_GET['tab'] ?? $default_tab;
 					<?php
 					foreach ( $log_array as $key => $log ) {
 
-						$level = LoggerService::getLevelName( $log['level'] );
-						$style = 'border-left-width: 4px; border-left-style: solid;';
+						$level   = LoggerService::getLevelName( $log['level'] );
+						$style   = 'border-left-width: 4px; border-left-style: solid;';
+						$message = esc_textarea( $log['message'] );
+						$context = esc_textarea( $log['context'] );
 
 						switch ( $level ) {
 							case 'CRITICAL':
@@ -89,11 +92,11 @@ $tab         = $_GET['tab'] ?? $default_tab;
 							<td>
 								<?php echo esc_attr( $level ); ?>
 							</td>
-							<td>
-								<?php echo( esc_textarea( $log['message'] ) ); ?>
+							<td title="<?php echo( $message ); ?>">
+								<?php echo( substr( $message, 0, 255 ) ); ?>
 							</td>
-							<td>
-								<?php echo( esc_textarea( $log['context'] ) ); ?>
+							<td title="<?php echo( $context ); ?>">
+								<?php echo( substr( $context, 0, 255 ) ); ?>
 							</td>
 
 						</tr>
