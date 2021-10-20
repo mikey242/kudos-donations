@@ -292,4 +292,19 @@ class Utils {
 		return $image_url;
 	}
 
+	/**
+	 * Truncates string at specified length and return with ellipsis
+	 * if longer.
+	 *
+	 * @param string $string
+	 * @param int $length
+	 *
+	 * @return string
+	 */
+	public static function truncate_string(string $string, int $length): string {
+
+		return strlen($string) > $length ? substr($string, 0, $length) . "..." : $string;
+
+	}
+
 }

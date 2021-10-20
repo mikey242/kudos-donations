@@ -1,5 +1,6 @@
 <?php
 
+use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 
 /**
@@ -93,10 +94,10 @@ $tab         = $_GET['tab'] ?? $default_tab;
 								<?php echo esc_attr( $level ); ?>
 							</td>
 							<td title="<?php echo( $message ); ?>">
-								<?php echo( substr( $message, 0, 255 ) ); ?>
+								<?php echo( Utils::truncate_string($message, 255) ); ?>
 							</td>
 							<td title="<?php echo( $context ); ?>">
-								<?php echo( substr( $context, 0, 255 ) ); ?>
+								<?php echo( Utils::truncate_string($context, 255) ); ?>
 							</td>
 
 						</tr>
