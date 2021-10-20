@@ -380,8 +380,8 @@ class MollieVendor implements VendorInterface {
 
 		// Create subscription if valid mandate found
 		if ( $valid_mandate ) {
-			$subscription = $customer->createSubscription( $subscription_array );
-			if ( $subscription ) {
+			try {
+				$subscription       = $customer->createSubscription( $subscription_array );
 				$kudos_subscription = new SubscriptionEntity(
 					[
 						'transaction_id'  => $transaction->transaction_id,
@@ -397,11 +397,16 @@ class MollieVendor implements VendorInterface {
 				$this->mapper->save( $kudos_subscription );
 
 				return $subscription;
+			} catch ( ApiException $e ) {
+				$this->logger->error( $e->getMessage(), [
+					'transaction' => $transaction,
+					'mandate_id'  => $mandate_id,
+					'interval'    => $interval,
+					'years'       => $years,
+				] );
+
+				return false;
 			}
-
-			$this->logger->error( 'Failed to create subscription', [ $transaction ] );
-
-			return false;
 		}
 
 		// No valid mandates
