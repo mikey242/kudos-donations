@@ -19,6 +19,12 @@ class DatabaseHandler extends AbstractProcessingHandler {
 		parent::__construct( $level, $bubble );
 	}
 
+	/**
+	 * Defines how the handler should write a record.
+	 * In this case this uses wpdb to write to the database.
+	 *
+	 * @param array $record
+	 */
 	protected function write( array $record ): void {
 
 		$wpdb = $this->wpdb;
@@ -27,7 +33,7 @@ class DatabaseHandler extends AbstractProcessingHandler {
 			'level'   => $record['level'],
 			'message' => $record['message'],
 			'context' => $record['context'] ? json_encode( $record['context'] ) : '',
-			'date' => $record['datetime']->format('Y-m-d H:i:s')
+			'date'    => $record['datetime']->format( 'Y-m-d H:i:s' ),
 		] );
 	}
 }

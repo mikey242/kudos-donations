@@ -243,13 +243,13 @@ class PaymentService {
 			$message
 		);
 
-		// Return checkout url if payment successfully created in Mollie
+		// Return checkout url if payment successfully created in Mollie.
 		if ( $result instanceof Payment ) {
 			do_action( 'kudos_payment_submit_successful', $values );
 			wp_send_json_success( $result->getCheckoutUrl() );
 		}
 
-		// If payment not created return an error message
+		// If payment not created return an error message.
 		wp_send_json_error( [
 			'message' => __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' ),
 		] );
@@ -257,7 +257,7 @@ class PaymentService {
 	}
 
 	/**
-	 * Cancel the specified subscription
+	 * Cancel the specified subscription.
 	 *
 	 * @param string $id subscription row ID.
 	 *
@@ -325,9 +325,9 @@ class PaymentService {
 		string $message = null
 	) {
 
-		$order_id = Utils::generate_id( 'kdo_' );
-		$currency = 'EUR';
-		$value    = number_format( $value, 2, '.', '' );
+		$order_id        = Utils::generate_id( 'kdo_' );
+		$currency        = 'EUR';
+		$formatted_value = number_format( $value, 2, '.', '' );
 
 		// Set payment frequency.
 		$frequency_text = Utils::get_frequency_name( $interval );
@@ -337,7 +337,7 @@ class PaymentService {
 		$payment_array = [
 			"amount"       => [
 				'currency' => $currency,
-				'value'    => $value,
+				'value'    => $formatted_value,
 			],
 			'redirectUrl'  => $redirect_url,
 			'webhookUrl'   => $this->vendor->get_webhook_url(),
@@ -372,7 +372,7 @@ class PaymentService {
 			[
 				'order_id'      => $order_id,
 				'customer_id'   => $customer_id,
-				'value'         => $value,
+				'value'         => $formatted_value,
 				'currency'      => $currency,
 				'status'        => $payment->status,
 				'mode'          => $payment->mode,
@@ -427,6 +427,7 @@ class PaymentService {
 				'reason'     => 'Form completed too quickly',
 				'time_taken' => $timeDiff,
 			] );
+
 			return true;
 		}
 
@@ -434,6 +435,7 @@ class PaymentService {
 		if ( ! empty( $values['donation'] ) ) {
 			$this->logger->info( 'Bot detected, rejecting form.',
 				array_merge( [ 'reason' => 'Honeypot field completed' ], $values ) );
+
 			return true;
 		}
 
