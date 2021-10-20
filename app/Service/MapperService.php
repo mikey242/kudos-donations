@@ -113,7 +113,7 @@ class MapperService {
 		$wpdb       = $this->wpdb;
 		$table_name = $entity::get_table_name();
 
-		$entity->created = gmdate( 'Y-m-d H:i:s', time() );
+		$entity->created = $entity->created ?? gmdate( 'Y-m-d H:i:s', time() );
 
 		$result = $wpdb->insert(
 			$table_name,
