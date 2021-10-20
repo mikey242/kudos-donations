@@ -128,9 +128,9 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Add "Clear object cache" to debug actions
 * Add white background to form elements
 * Rearrange debug actions page
-* Update Mollie API client to 2.37.1
+* Update Mollie API client to 2.38.0
 * Update ActionScheduler to 3.3.0
-* Update TailwindCSS to 2.2.16
+* Update TailwindCSS to 2.2.17
 * Minor block bug fixes
 
 = 3.0.0 =
