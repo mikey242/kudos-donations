@@ -124,6 +124,8 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Option to disable [kudos] shortcode. If not needed this will prevent CSS/JS from loading when not needed.
 * Upgrade to Block API version 2. This increases the min WordPress version to 5.6.
 * Simplify completed payments settings (it is no longer possible to have a custom return url AND a pop-up message)
+* Fix issue with recurring payments not getting added to transactions
+* Add "Sync payments" and "Add missing transactions" commands to Debug actions
 * Change logging to database storage
 * Add "Clear object cache" to debug actions
 * Add white background to form elements
