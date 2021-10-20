@@ -284,8 +284,8 @@ class ActivatorService {
 		  id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
           date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  level VARCHAR(255) NOT NULL,
-		  message VARCHAR(255) NOT NULL,
-		  context VARCHAR(255),	  
+		  message TEXT NOT NULL,
+		  context TEXT,	  
 		  PRIMARY KEY (id)
 		) $charset_collate";
 

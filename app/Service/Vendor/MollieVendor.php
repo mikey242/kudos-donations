@@ -316,15 +316,11 @@ class MollieVendor implements VendorInterface {
 	public function create_payment( array $payment_array ): ?Payment {
 
 		try {
-
 			return $this->api_client->payments->create( $payment_array );
-
 		} catch ( ApiException $e ) {
-
-			$this->logger->critical( $e->getMessage(), [ 'payment' => $payment_array ] );
+			$this->logger->critical( $e->getMessage() );
 
 			return null;
-
 		}
 
 	}
