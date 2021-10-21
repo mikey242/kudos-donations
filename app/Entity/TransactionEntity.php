@@ -95,7 +95,7 @@ class TransactionEntity extends AbstractEntity {
 	 * @return object|false
 	 * @since   2.0.0
 	 */
-	public function get_refund(): bool {
+	public function get_refund() {
 
 		$refunds = $this->refunds;
 
