@@ -112,24 +112,22 @@
 {# Select box #}
 {% macro select(props) %}
 
-        <label class="kd-inline-block kd-relative kd-cursor-pointer kd-font-normal kd-mt-2 kd-w-full">
-                <select
-                        class="kd-bg-select kd-bg-white kd-bg-no-repeat kd-appearance-none kd-bg-right-2 kd-border-gray-300 kd-border kd-border-solid focus:kd-border-primary focus:kd-ring-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-gray-700"
-                        {{ (props.required ? "required") }}
-                        name="{{ props.name }}"
-                        aria-label="{{ props.placeholder ?? props.label }}"
-                        style="background-size: 1.5em 1.5em"
-                >
-                    <option value=""
-                            disabled
-                            selected>
-                        {{ props.placeholder ? props.placeholder ~ (props.required ? ' *') }}
-                    </option>
-                    {% for value, text in props.options %}
-                        <option value="{{ value }}">{{ text }}</option>
-                    {% endfor %}
-                </select>
-        </label>
+    <label class="kd-inline-block kd-relative kd-cursor-pointer kd-font-normal kd-mt-2 kd-w-full">
+        <select
+                class="kd-bg-select kd-appearance-none kd-bg-white kd-bg-no-repeat kd-bg-right-2 kd-border-gray-300 kd-border kd-border-solid focus:kd-border-primary focus:kd-ring-primary kd-transition-colors kd-ease-in-out kd-rounded kd-w-full kd-py-2 kd-px-3 kd-text-gray-700"
+                {{ (props.required ? "required") }}
+                name="{{ props.name }}"
+                aria-label="{{ props.placeholder ?? props.label }}"
+                style="background-size: 1.5em 1.5em; content: initial !important;"
+        >
+            <option value="" disabled selected>
+                {{ props.placeholder ? props.placeholder ~ (props.required ? ' *') }}
+            </option>
+            {% for value, text in props.options %}
+                <option value="{{ value }}">{{ text }}</option>
+            {% endfor %}
+        </select>
+    </label>
 {% endmacro %}
 
 {# Text area element #}
