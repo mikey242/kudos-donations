@@ -754,6 +754,7 @@ class MollieVendor implements VendorInterface {
 										'method'          => $payment->method,
 										'mode'            => $payment->mode,
 										'subscription_id' => $payment->subscriptionId,
+										'transaction_id'  => $payment->id,
 										'campaign_id'     => $payment->metadata ? $payment->metadata->campaign_id : null,
 									]
 								);
