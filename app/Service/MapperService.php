@@ -52,8 +52,8 @@ class MapperService {
 		$entity->last_updated = gmdate( 'Y-m-d H:i:s', time() );
 
 		// Set repository if not already set.
-		if(!$this->repository) {
-			$this->get_repository(get_class( $entity ));
+		if ( ! $this->repository ) {
+			$this->get_repository( get_class( $entity ) );
 		}
 
 		if ( $entity->id ) {
@@ -88,7 +88,18 @@ class MapperService {
 		$table_name = $entity::get_table_name();
 		$id         = $entity->id;
 
-		$this->logger->debug( 'Updating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
+		$current = $this->get_one_by( [
+			'id' => $id,
+		] )->to_array();
+
+		$new     = $entity->to_array();
+		$changes = array_diff( $new, $current );
+
+		$this->logger->debug( 'Updating entity.', [
+			'table'   => $entity::get_table_name(),
+			'id'      => $entity->id,
+			'changes' => $changes,
+		] );
 
 		$result = $wpdb->update(
 			$table_name,
