@@ -51,6 +51,11 @@ class MapperService {
 
 		$entity->last_updated = gmdate( 'Y-m-d H:i:s', time() );
 
+		// Set repository if not already set.
+		if(!$this->repository) {
+			$this->get_repository(get_class( $entity ));
+		}
+
 		if ( $entity->id ) {
 			// If we have an id, then update row.
 			$result = $this->update_record( $entity, $ignore_null );
