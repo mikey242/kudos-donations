@@ -557,26 +557,33 @@ class MollieVendor implements VendorInterface {
 				->get_repository( TransactionEntity::class )
 				->get_one_by(
 					[
-						'order_id' => $payment->metadata->order_id ?? '', // Recurring payment objects do not have metadata
-						'transaction_id' => $payment_id
+						'order_id'       => $payment->metadata->order_id ?? '',
+						// Recurring payment objects do not have metadata
+						'transaction_id' => $payment_id,
 					],
 					'OR'
 				);
 
 			// Create new transaction if this is a recurring payment and none found.
 			if ( ! $transaction && $payment->hasSequenceTypeRecurring() ) {
-				$this->logger->debug('Recurring payment received, creating transaction.', ['subscription_id' => $payment->subscriptionId]);
-				$customer          = $mollie->customers->get( $payment->customerId );
+				$this->logger->debug( 'Recurring payment received, creating transaction.',
+					[ 'subscription_id' => $payment->subscriptionId ] );
+				$customer     = $mollie->customers->get( $payment->customerId );
 				$subscription = $customer->getSubscription( $payment->subscriptionId );
-				$transaction       = new TransactionEntity( [
+				$transaction  = new TransactionEntity( [
 					'order_id'    => Utils::generate_id( 'kdo_' ),
 					'campaign_id' => $subscription->metadata->campaign_id ?? '',
 				] );
 			}
 
-			// If we don't have a transaction by now then there is nothing to do.
-			if(!$transaction) {
-				$this->logger->warning('Webhook received for unknown transaction. Aborting', ['transaction_id' => $payment_id]);
+			if ( ! $transaction ) {
+				/**
+				 * To not leak any information to malicious third parties, it is recommended
+				 * Always return a 200 OK response even if the ID is not known to your system.
+				 */
+				$this->logger->warning( 'Webhook received for unknown transaction. Aborting',
+					[ 'transaction_id' => $payment_id ] );
+
 				return $response;
 			}
 
@@ -651,11 +658,11 @@ class MollieVendor implements VendorInterface {
 		} catch ( ApiException $e ) {
 			$this->logger->error( "$this webhook exception: " . $e->getMessage(), [ 'payment_id' => $payment_id ] );
 
-			/**
-			 * To not leak any information to malicious third parties, it is recommended
-			 * Always return a 200 OK response even if the ID is not known to your system.
-			 */
-			return $response;
+			// Send fail response to Mollie so that they know to try again.
+			return rest_ensure_response(new WP_REST_Response([
+				'success' => false,
+				'id'      => $payment_id,
+			], 500));
 		}
 
 		/**
