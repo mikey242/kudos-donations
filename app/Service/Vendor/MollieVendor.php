@@ -295,7 +295,7 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Get the customer from Mollie
+	 * Get the customer from Mollie.
 	 *
 	 * @param $customer_id
 	 *
@@ -314,7 +314,7 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Creates a payment and returns it as an object
+	 * Creates a payment and returns it as an object.
 	 *
 	 * @param array $payment_array Parameters to pass to mollie to create a payment.
 	 *
@@ -489,7 +489,7 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Mollie webhook action
+	 * Mollie webhook action.
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 *
@@ -499,171 +499,169 @@ class MollieVendor implements VendorInterface {
 	public function rest_webhook( WP_REST_Request $request ) {
 
 		// ID is case-sensitive (e.g: tr_HUW39xpdFN).
-		$id = $request->get_param( 'id' );
+		$payment_id = $request->get_param( 'id' );
+
+		// Create action with payment_id as parameter.
+		do_action( 'kudos_mollie_webhook_requested', $payment_id );
+
+		// Mollie API.
+		$mollie = $this->api_client;
+
+		// Log request.
+		$this->logger->info(
+			"Webhook requested by $this.",
+			[
+				'payment_id' => $payment_id,
+			]
+		);
 
 		/**
+		 * Create response object.
+		 *
 		 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
 		 */
 		$response = rest_ensure_response(
 			[
 				'success' => true,
-				'id'      => $id,
+				'id'      => $payment_id,
 			]
 		);
 
 		$response->add_link( 'self', rest_url( $request->get_route() ) );
 
-		/**
-		 * Get the payment object from Mollie.
-		 *
-		 * @var Payment $payment Mollie payment object.
-		 */
-		$payment = $this->get_payment( $id );
-		$this->logger->info(
-			"Webhook requested by $this.",
-			[
-				'transaction_id' => $id,
-				'status'         => $payment->status,
-				'sequence_type'  => $payment->sequenceType,
-			]
-		);
+		try {
+			/**
+			 * Get the payment object from Mollie.
+			 *
+			 * @link https://docs.mollie.com/reference/v2/payments-api/get-payment
+			 */
+			$payment = $mollie->payments->get( $payment_id );
 
-		/**
-		 *
-		 * To not leak any information to malicious third parties, it is recommended
-		 * to return a 200 OK response even if the ID is not known to your system.
-		 *
-		 * @link https://docs.mollie.com/guides/webhooks#how-to-handle-unknown-ids
-		 */
-		if ( null === $payment ) {
+			// Log payment retrieval.
+			$this->logger->debug(
+				"Payment retrieved from Mollie.",
+				[
+					'transaction_id' => $payment_id,
+					'status'         => $payment->status,
+					'sequence_type'  => $payment->sequenceType,
+					'has_refunds'    => $payment->hasRefunds(),
+				]
+			);
+
+			/**
+			 * Get transaction from database.
+			 *
+			 * @var TransactionEntity $transaction
+			 */
+			$transaction = $this->mapper
+				->get_repository( TransactionEntity::class )
+				->get_one_by(
+					[
+						'order_id' => $payment->metadata->order_id ?? '', // Recurring payment objects do not have metadata
+						'transaction_id' => $payment_id
+					],
+					'OR'
+				);
+
+			// Create new transaction if this is a recurring payment and none found.
+			if ( ! $transaction && $payment->hasSequenceTypeRecurring() ) {
+				$this->logger->debug('Recurring payment received, creating transaction.', ['subscription_id' => $payment->subscriptionId]);
+				$customer          = $mollie->customers->get( $payment->customerId );
+				$subscription = $customer->getSubscription( $payment->subscriptionId );
+				$transaction       = new TransactionEntity( [
+					'order_id'    => Utils::generate_id( 'kdo_' ),
+					'campaign_id' => $subscription->metadata->campaign_id ?? '',
+				] );
+			}
+
+			// If we don't have a transaction by now then there is nothing to do.
+			if(!$transaction) {
+				$this->logger->warning('Webhook received for unknown transaction. Aborting', ['transaction_id' => $payment_id]);
+				return $response;
+			}
+
+			// Update transaction status.
+			$transaction->set_fields(
+				[
+					'status' => $payment->status,
+				] );
+
+			if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
+				/*
+				 * The payment is paid and isn't refunded or charged back.
+				 * At this point you'd probably want to start the process of delivering the product to the customer.
+				 */
+				if ( $payment_id === $transaction->transaction_id ) {
+					$this->logger->debug( 'Duplicate webhook detected. Ignoring', [ 'transaction_id' => $payment_id ] );
+
+					return $response;
+				}
+
+				// Create action with order_id as parameter.
+				do_action( 'kudos_mollie_transaction_paid', $transaction->order_id );
+
+				// Update transaction.
+				$transaction->set_fields(
+					[
+						'status'          => $payment->status,
+						'transaction_id'  => $payment->id,
+						'customer_id'     => $payment->customerId,
+						'value'           => $payment->amount->value,
+						'currency'        => $payment->amount->currency,
+						'sequence_type'   => $payment->sequenceType,
+						'method'          => $payment->method,
+						'mode'            => $payment->mode,
+						'subscription_id' => $payment->subscriptionId,
+					]
+				);
+
+				// Set up recurring payment if sequence is first.
+				if ( $payment->hasSequenceTypeFirst() ) {
+					$this->logger->info( 'Creating subscription', [ $transaction ] );
+					$this->create_subscription(
+						$transaction,
+						$payment->mandateId,
+						$payment->metadata->interval,
+						$payment->metadata->years
+					);
+				}
+
+			} elseif ( $payment->hasRefunds() ) {
+				/*
+				 * The payment has been (partially) refunded.
+				 * The status of the payment is still "paid".
+				 */
+				do_action( 'kudos_mollie_refund', $transaction->order_id );
+
+				$transaction->set_fields(
+					[
+						'refunds' => json_encode(
+							[
+								'refunded'  => $payment->getAmountRefunded(),
+								'remaining' => $payment->getAmountRemaining(),
+							]
+						),
+					]
+				);
+
+				$this->logger->info( 'Payment refunded.', [ 'transaction' => $transaction ] );
+
+			}
+
+		} catch ( ApiException $e ) {
+			$this->logger->error( "$this webhook exception: " . $e->getMessage(), [ 'payment_id' => $payment_id ] );
+
+			/**
+			 * To not leak any information to malicious third parties, it is recommended
+			 * Always return a 200 OK response even if the ID is not known to your system.
+			 */
 			return $response;
 		}
 
-		//Create webhook action.
-		do_action( 'kudos_mollie_webhook_requested', $payment );
-
-		//Get required data from payment object.
-		$transaction_id = $payment->id;
-		$order_id       = $payment->metadata->order_id ?? Utils::generate_id( 'kdo_' );
-		$amount         = $payment->amount;
-
-		switch ( $payment->sequenceType ) {
-
-			/**
-			 * Update existing transaction.
-			 * This applies to 'oneoff' and 'first' sequence types.
-			 */
-			case SequenceType::SEQUENCETYPE_ONEOFF:
-			case SequenceType::SEQUENCETYPE_FIRST:
-
-				/** @var TransactionEntity $transaction */
-				$transaction = $this->mapper
-					->get_repository( TransactionEntity::class )
-					->get_one_by(
-						[
-							'order_id'       => $order_id,
-							'transaction_id' => $transaction_id,
-						],
-						'OR'
-					);
-
-				// Add refund if present.
-				if ( $payment->hasRefunds() ) {
-
-					do_action( 'kudos_mollie_refund', $order_id );
-
-					$transaction->set_fields(
-						[
-							'refunds' => json_encode(
-								[
-									'refunded'  => $payment->getAmountRefunded(),
-									'remaining' => $payment->getAmountRemaining(),
-								]
-							),
-						]
-					);
-
-					$this->logger->info( 'Payment refunded.', [ 'transaction' => $transaction ] );
-
-				} else {
-					// Check if status is the same (in case of multiple webhook calls).
-					if ( $transaction->status === $payment->status ) {
-						$this->logger->debug( 'Multiple webhook call detected, ignoring', [
-							'transaction_id' => $id,
-							'status'         => $payment->status,
-							'sequence_type'  => $payment->sequenceType,
-						] );
-
-						return $response;
-					}
-				}
-
-				if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
-
-					// Schedule processing for later.
-					do_action( 'kudos_mollie_transaction_paid', $order_id );
-
-					// Set up recurring payment if sequence is first.
-					if ( $payment->hasSequenceTypeFirst() ) {
-						$this->logger->debug( 'Creating subscription', [ $transaction ] );
-						$this->create_subscription(
-							$transaction,
-							$payment->mandateId,
-							$payment->metadata->interval,
-							$payment->metadata->years
-						);
-					}
-				}
-
-				break;
-
-			/**
-			 * Assumed SequenceType::SEQUENCETYPE_RECURRING. Create new transaction.
-			 * This applies to 'recurring' sequence types.
-			 */
-			default:
-
-				$transaction = new TransactionEntity( [
-					'order_id' => $order_id,
-				] );
-
-				$subscription_id = $payment->subscriptionId;
-				$customer_id     = $payment->customerId;
-				$customer        = $this->get_customer( $customer_id );
-
-				try {
-					$subscription_meta = $customer->getSubscription( $subscription_id )->metadata;
-					if ( isset( $subscription_meta->campaign_id ) ) {
-						$campaign_id = $subscription_meta->campaign_id;
-						$transaction->set_fields(
-							[
-								'campaign_id' => $campaign_id,
-							]
-						);
-					}
-				} catch ( ApiException $e ) {
-					$this->logger->error( $e->getMessage() );
-				}
-
-				break;
-		}
-
-		// Update payment.
-		$transaction->set_fields(
-			[
-				'status'          => $payment->status,
-				'transaction_id'  => $transaction_id,
-				'customer_id'     => $payment->customerId,
-				'value'           => $amount->value,
-				'currency'        => $amount->currency,
-				'sequence_type'   => $payment->sequenceType,
-				'method'          => $payment->method,
-				'mode'            => $payment->mode,
-				'subscription_id' => $payment->subscriptionId,
-			]
-		);
-
-		// Save transaction to database.
+		/**
+		 * Save transaction to database and
+		 * return response to Mollie.
+		 */
 		$this->mapper->save( $transaction );
 
 		return $response;
