@@ -204,6 +204,7 @@ jQuery(document).ready(($) => {
 
                     form.classList.add('kd-is-loading')
                     error.classList.add('kd-hidden')
+                    form.lastChild.disabled = true
 
                     axios.post(kudos.createPaymentUrl, JSON.stringify(Object.fromEntries(formData)), {
                         headers: {
@@ -218,6 +219,7 @@ jQuery(document).ready(($) => {
                             error.classList.remove('kd-hidden')
                             form.classList.add('error')
                             form.classList.remove('kd-is-loading')
+                            form.lastChild.disabled = false
                         }
                     })
                 }
