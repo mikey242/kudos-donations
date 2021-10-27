@@ -88,8 +88,8 @@ class MapperService {
 		$table_name = $entity::get_table_name();
 		$id         = $entity->id;
 
-		$this->logger->debug( 'Updating entity.', [
-			'table'   => $entity::get_table_name(),
+		$this->logger->debug( "Updating entity.", [
+			'entity'   => $entity::get_entity_name(),
 			'id'      => $entity->id,
 		] );
 
@@ -130,7 +130,10 @@ class MapperService {
 
 		$id         = $wpdb->insert_id;
 		$entity->id = $id;
-		$this->logger->debug( 'Creating entity.', [ 'table' => $entity::get_table_name(), 'id' => $entity->id ] );
+		$this->logger->debug( "Creating entity.", [
+			'entity' => $entity::get_entity_name(),
+			'id' => $entity->id
+		] );
 
 		// If successful do action.
 		if ( $result ) {
