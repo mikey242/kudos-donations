@@ -127,6 +127,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Fix issue with recurring payments not getting added to transactions
 * Add "Sync payments" and "Add missing transactions" commands to Debug actions
 * Change logging to database storage
+* Misc logging improvements including more information when emails fail
 * Add "Clear object cache" to debug actions
 * Add white background to form elements
 * Rearrange debug actions page
