@@ -46,7 +46,7 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Set class properties based on array values
+	 * Set class properties based on array values.
 	 *
 	 * @param array $fields Array of entities properties and values.
 	 */
@@ -72,7 +72,7 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Returns the table name associated with Entity.
+	 * Returns the table name associated with entity.
 	 *
 	 * @param bool $prefix Whether to return the prefix or not.
 	 *
@@ -87,7 +87,7 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Clears the Entities secret
+	 * Clears the entities secret.
 	 */
 	public function clear_secret() {
 
@@ -120,7 +120,7 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Verify donor's secret
+	 * Verify the entities secret.
 	 *
 	 * @param string $hash Hashed version of secret.
 	 *
@@ -133,7 +133,7 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Returns class as an array using type casting
+	 * Returns class as an array.
 	 *
 	 * @return array
 	 */
@@ -144,7 +144,22 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Returns the object as a string.
+	 * Returns the name of the entity (e.g. Transaction).
+	 *
+	 * @return string The name of the entities class without the word 'Entity'.
+	 */
+	public static function get_entity_name(): string {
+
+		$array = explode( '\\', static::class );
+		$class = array_pop( $array );
+		$entity_pos = strpos( $class, 'Entity' );
+
+		return substr( $class, 0, $entity_pos );
+
+	}
+
+	/**
+	 * Returns the entities ID as a string.
 	 *
 	 * @return string
 	 */
