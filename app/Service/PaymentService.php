@@ -285,7 +285,10 @@ class PaymentService {
 
 			$this->logger->info(
 				'Subscription cancelled.',
-				[ 'id' => $subscription->id ]
+				[
+					'id'              => $subscription->id,
+					'subscription_id' => $subscription->subscription_id,
+				]
 			);
 
 			return true;
@@ -296,7 +299,7 @@ class PaymentService {
 	}
 
 	/**
-	 * Creates a payment and returns it as an object
+	 * Creates a payment and returns it as an object.
 	 *
 	 * @param string $value Value of payment.
 	 * @param string $interval Interval of payment (oneoff, first, recurring).
@@ -430,7 +433,9 @@ class PaymentService {
 		// Check if honeypot field completed.
 		if ( ! empty( $values['donation'] ) ) {
 			$this->logger->info( 'Bot detected, rejecting form.',
-				array_merge( [ 'reason' => 'Honeypot field completed' ], $values ) );
+				array_merge( [
+					'reason' => 'Honeypot field completed',
+				], $values ) );
 
 			return true;
 		}
