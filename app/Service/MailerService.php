@@ -10,6 +10,7 @@ use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use WP_Error;
 use WP_REST_Request;
 
 class MailerService {
@@ -177,16 +178,21 @@ class MailerService {
 
 		// Use hook to modify existing config.
 		add_action( 'phpmailer_init', [ $this, 'init' ] );
+		if ( KUDOS_DEBUG ) {
+			add_action( 'wp_mail_failed', [ $this, 'log_error' ] );
+		}
+
 		$mail = wp_mail( $to, $subject, $body, $headers, $attachment );
 
 		if ( $mail ) {
 			$this->logger->info( 'Email sent successfully.', [ 'to' => $to, 'subject' => $subject ] );
-		} else {
-			$this->logger->error( 'Error sending email.', [ 'to' => $to, 'subject' => $subject ] );
 		}
 
 		// Remove action to prevent conflict.
 		remove_action( 'phpmailer_init', [ $this, 'init' ] );
+		if ( KUDOS_DEBUG ) {
+			remove_action( 'wp_mail_failed', [ $this, 'log_error' ] );
+		}
 
 		return $mail;
 
@@ -248,6 +254,15 @@ class MailerService {
 		$headers[] = $this->from;
 
 		return $this->send( $email, $header, $body, $headers );
+	}
+
+	/**
+	 * Logs the supplied WP_Error object.
+	 *
+	 * @param WP_Error $error
+	 */
+	public function log_error( WP_Error $error ) {
+		$this->logger->debug( 'Error sending email.', $error->errors );
 	}
 
 }
