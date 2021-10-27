@@ -229,8 +229,6 @@ class PaymentService {
 
 		$customer_id = $donor->customer_id ?? null;
 
-		do_action( 'kudos_payment_submit_successful', $values );
-
 		$result = $this->create_payment(
 			$value,
 			$payment_frequency,
