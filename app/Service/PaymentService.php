@@ -382,10 +382,6 @@ class PaymentService {
 			]
 		);
 
-		// Commit transaction to database.
-		$mapper = $this->mapper_service;
-		$mapper->save( $transaction );
-
 		// Add order id query arg to return url if option to show message enabled.
 		if ( get_option( '_kudos_completed_payment' ) === 'message' ) {
 			$redirect_url         = add_query_arg(
@@ -398,8 +394,11 @@ class PaymentService {
 			);
 			$payment->redirectUrl = $redirect_url;
 			$payment->update();
-			$mapper->save( $transaction );
 		}
+
+		// Commit transaction to database.
+		$mapper = $this->mapper_service;
+		$mapper->save( $transaction );
 
 		$this->logger->info(
 			'New payment created',
