@@ -267,9 +267,8 @@ class PaymentService {
 
 		// Get subscription entity from supplied row id.
 		/** @var SubscriptionEntity $subscription */
-		$subscription = $mapper
-			->get_repository( SubscriptionEntity::class )
-			->get_one_by( [ 'id' => $id ] );
+		$subscription = $mapper->get_repository( SubscriptionEntity::class )
+		                       ->get_one_by( [ 'id' => $id ] );
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
@@ -399,7 +398,7 @@ class PaymentService {
 		$mapper->save( $transaction );
 
 		$this->logger->info(
-			'New payment created',
+			"New $this->vendor payment created.",
 			[ 'oder_id' => $order_id, 'sequence_type' => $payment->sequenceType ]
 		);
 
