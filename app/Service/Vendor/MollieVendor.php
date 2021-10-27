@@ -451,7 +451,6 @@ class MollieVendor implements VendorInterface {
 	 * Uses get_payment_methods to determine if account can receive recurring payments.
 	 *
 	 * @return bool
-	 * @since 2.3.9
 	 */
 	public function can_use_recurring(): bool {
 
@@ -489,14 +488,16 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Mollie webhook action.
+	 * Mollie webhook handler.
 	 *
-	 * @param WP_REST_Request $request Request array.
+	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return WP_Error|WP_REST_Response
-	 * @since    1.0.0
 	 */
 	public function rest_webhook( WP_REST_Request $request ) {
+
+		// Sanitize request params.
+		$request->sanitize_params();
 
 		// ID is case-sensitive (e.g: tr_HUW39xpdFN).
 		$payment_id = $request->get_param( 'id' );
@@ -515,21 +516,22 @@ class MollieVendor implements VendorInterface {
 			]
 		);
 
-		/**
-		 * Create response object.
-		 *
-		 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
-		 */
-		$response = rest_ensure_response(
-			[
-				'success' => true,
-				'id'      => $payment_id,
-			]
-		);
-
-		$response->add_link( 'self', rest_url( $request->get_route() ) );
-
 		try {
+
+			/**
+			 * Create success response object.
+			 *
+			 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
+			 */
+			$response = rest_ensure_response(
+				[
+					'success' => true,
+					'id'      => $payment_id,
+				]
+			);
+
+			$response->add_link( 'self', rest_url( $request->get_route() ) );
+
 			/**
 			 * Get the payment object from Mollie.
 			 *
@@ -550,6 +552,7 @@ class MollieVendor implements VendorInterface {
 
 			/**
 			 * Get transaction from database.
+			 * e.g. One-off, First, Recurring (only with refunds).
 			 *
 			 * @var TransactionEntity $transaction
 			 */
@@ -558,16 +561,20 @@ class MollieVendor implements VendorInterface {
 				->get_one_by(
 					[
 						'order_id'       => $payment->metadata->order_id ?? '',
-						// Recurring payment objects do not have metadata
+						// Recurring payment objects do not have metadata.
 						'transaction_id' => $payment_id,
 					],
 					'OR'
 				);
 
-			// Create new transaction if this is a recurring payment and none found.
+			/**
+			 * Create new transaction if this is a recurring payment and none found.
+			 * e.g. New recurring payment.
+			 */
 			if ( ! $transaction && $payment->hasSequenceTypeRecurring() ) {
-				$this->logger->debug( 'Recurring payment received, creating transaction.',
-					[ 'subscription_id' => $payment->subscriptionId ] );
+				$this->logger->debug( 'Recurring payment received, creating transaction.', [
+					'subscription_id' => $payment->subscriptionId,
+				] );
 				$customer     = $mollie->customers->get( $payment->customerId );
 				$subscription = $customer->getSubscription( $payment->subscriptionId );
 				$transaction  = new TransactionEntity( [
@@ -576,11 +583,14 @@ class MollieVendor implements VendorInterface {
 				] );
 			}
 
+			/**
+			 * We should have a transaction by now.
+			 * To not leak any information to malicious third parties, it is recommended
+			 * Always return a 200 OK response even if the ID is not known to your system.
+			 *
+			 * @link https://docs.mollie.com/overview/webhooks#how-to-handle-unknown-ids
+			 */
 			if ( ! $transaction ) {
-				/**
-				 * To not leak any information to malicious third parties, it is recommended
-				 * Always return a 200 OK response even if the ID is not known to your system.
-				 */
 				$this->logger->warning( 'Webhook received for unknown transaction. Aborting',
 					[ 'transaction_id' => $payment_id ] );
 
@@ -596,7 +606,7 @@ class MollieVendor implements VendorInterface {
 			if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 				/*
 				 * The payment is paid and isn't refunded or charged back.
-				 * At this point you'd probably want to start the process of delivering the product to the customer.
+				 * Time to check if this is a duplicate before processing.
 				 */
 				if ( $payment_id === $transaction->transaction_id ) {
 					$this->logger->debug( 'Duplicate webhook detected. Ignoring', [ 'transaction_id' => $payment_id ] );
@@ -659,10 +669,10 @@ class MollieVendor implements VendorInterface {
 			$this->logger->error( "$this webhook exception: " . $e->getMessage(), [ 'payment_id' => $payment_id ] );
 
 			// Send fail response to Mollie so that they know to try again.
-			return rest_ensure_response(new WP_REST_Response([
+			return rest_ensure_response( new WP_REST_Response( [
 				'success' => false,
 				'id'      => $payment_id,
-			], 500));
+			], 500 ) );
 		}
 
 		/**
