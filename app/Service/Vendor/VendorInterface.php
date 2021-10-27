@@ -18,7 +18,7 @@ interface VendorInterface {
 	public static function get_vendor_name():string;
 
 	/**
-	 * Check the vendor api key key associated with the mode. Sends a JSON response.
+	 * Check the vendor api key associated with the mode. Sends a JSON response.
 	 *
 	 * @return mixed
 	 */
@@ -38,7 +38,7 @@ interface VendorInterface {
 	);
 
 	/**
-	 * Returns all subscriptions for customer
+	 * Returns all subscriptions for customer.
 	 *
 	 * @param string $customer_id customer id.
 	 *
@@ -47,7 +47,7 @@ interface VendorInterface {
 	public function get_subscriptions( string $customer_id );
 
 	/**
-	 * Cancel the specified subscription
+	 * Cancel the specified subscription.
 	 *
 	 * @param SubscriptionEntity $subscription subscription row id.
 	 *
@@ -56,7 +56,7 @@ interface VendorInterface {
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool;
 
 	/**
-	 * Checks the provided api key by attempting to get associated payments
+	 * Checks the provided api key by attempting to get associated payments.
 	 *
 	 * @param string $api_key API key to test.
 	 *
@@ -66,7 +66,7 @@ interface VendorInterface {
 	public function refresh_api_connection( string $api_key ): bool;
 
 	/**
-	 * Gets specified payment
+	 * Gets specified payment.
 	 *
 	 * @param string $mollie_payment_id Mollie payment id.
 	 */
@@ -88,14 +88,14 @@ interface VendorInterface {
 	public function create_customer( string $email, string $name );
 
 	/**
-	 * Get the customer
+	 * Get the customer.
 	 *
 	 * @param $customer_id
 	 */
 	public function get_customer( $customer_id );
 
 	/**
-	 * Creates a payment and returns it as an object
+	 * Creates a payment and returns it as an object.
 	 *
 	 * @param array $payment_array Parameters to pass to mollie to create a payment.
 	 * @return object|bool
@@ -103,7 +103,7 @@ interface VendorInterface {
 	public function create_payment( array $payment_array );
 
 	/**
-	 * Vendor webhook action
+	 * Vendor webhook action.
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 *
@@ -112,14 +112,14 @@ interface VendorInterface {
 	public function rest_webhook( WP_REST_Request $request );
 
 	/**
-	 * Vendor API mode
+	 * Vendor API mode.
 	 *
 	 * @return string
 	 */
 	public function get_api_mode(): string;
 
 	/**
-	 * Returns the vendor name as a string
+	 * Returns the vendor name as a string.
 	 *
 	 * @return string
 	 */
