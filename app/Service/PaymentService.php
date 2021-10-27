@@ -274,7 +274,7 @@ class PaymentService {
 			->get_one_by( [ 'id' => $id ] );
 
 		// Cancel subscription with vendor.
-		$result = $subscription ?? $this->vendor->cancel_subscription( $subscription );
+		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
 
 		if ( $result ) {
 
