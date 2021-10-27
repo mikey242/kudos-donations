@@ -634,7 +634,7 @@ class MollieVendor implements VendorInterface {
 
 				// Set up recurring payment if sequence is first.
 				if ( $payment->hasSequenceTypeFirst() ) {
-					$this->logger->info( 'Creating subscription', [ $transaction ] );
+					$this->logger->info( 'Creating subscription', $transaction->to_array() );
 					$this->create_subscription(
 						$transaction,
 						$payment->mandateId,
