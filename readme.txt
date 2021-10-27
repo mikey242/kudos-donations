@@ -125,6 +125,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Upgrade to Block API version 2. This increases the min WordPress version to 5.6.
 * Simplify completed payments settings (it is no longer possible to have a custom return url AND a pop-up message)
 * Fix issue with recurring payments not getting added to transactions
+* Fix bug with subscription cancellation
 * Add "Sync payments" and "Add missing transactions" commands to Debug actions
 * Change logging to database storage
 * Misc logging improvements including more information when emails fail
