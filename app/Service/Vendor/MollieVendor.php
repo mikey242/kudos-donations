@@ -18,7 +18,6 @@ use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
-use Mollie\Api\Types\SequenceType;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
