@@ -26,8 +26,10 @@ class Settings {
 	 *
 	 */
 	public function __construct( MapperService $mapper ) {
-
 		$this->mapper   = $mapper;
+	}
+
+	public function init() {
 		$this->settings = apply_filters(
 			'kudos_register_settings',
 			[
@@ -444,7 +446,7 @@ class Settings {
 
 	/**
 	 * Updates specific values in serialized settings array.
-	 * e.g update_array('my_setting', ['enabled' => false]).
+	 * e.g. update_array('my_setting', ['enabled' => false]).
 	 *
 	 * @param string $name Setting array name without prefix.
 	 * @param array $value Array of name=>values in setting to update.
@@ -471,6 +473,8 @@ class Settings {
 	 * Register all the settings.
 	 */
 	public function register_settings() {
+
+		$this->init();
 
 		foreach ( $this->settings as $name => $setting ) {
 			register_setting(
