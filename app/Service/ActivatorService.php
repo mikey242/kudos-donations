@@ -39,11 +39,11 @@ class ActivatorService {
 
 	public function __construct() {
 
-		$this->wpdb = new WpDb();
-		$this->logger = new LoggerService($this->wpdb);
-		$this->twig = new TwigService($this->logger);
-		$this->mapper = new MapperService($this->logger, $this->wpdb);
-		$this->settings = new Settings($this->mapper);
+		$this->wpdb     = new WpDb();
+		$this->logger   = new LoggerService( $this->wpdb );
+		$this->twig     = new TwigService( $this->logger );
+		$this->mapper   = new MapperService( $this->logger, $this->wpdb );
+		$this->settings = new Settings( $this->mapper );
 
 	}
 
@@ -60,7 +60,7 @@ class ActivatorService {
 		self::create_subscriptions_table();
 
 		$logger = $this->logger;
-		$twig = $this->twig;
+		$twig   = $this->twig;
 		$twig->init();
 		$settings = $this->settings;
 		$settings->register_settings();
@@ -72,7 +72,7 @@ class ActivatorService {
 		$settings->add_defaults();
 
 		update_option( '_kudos_donations_version', KUDOS_VERSION );
-		$logger->info( 'Kudos Donations plugin activated', ['version' => KUDOS_VERSION] );
+		$logger->info( 'Kudos Donations plugin activated', [ 'version' => KUDOS_VERSION ] );
 
 		// Schedule log file clearing.
 		Utils::schedule_recurring_action( strtotime( 'today midnight' ), DAY_IN_SECONDS, 'kudos_check_log' );
@@ -86,8 +86,8 @@ class ActivatorService {
 	 */
 	private function run_migrations( string $old_version ) {
 
-		$logger = $this->logger;
-		$wpdb = $this->wpdb;
+		$logger   = $this->logger;
+		$wpdb     = $this->wpdb;
 		$settings = $this->settings;
 
 		$logger->info( 'Upgrade detected, running migrations.',
@@ -143,11 +143,11 @@ class ActivatorService {
 
 		if ( version_compare( $old_version, '2.4.1', '<' ) ) {
 			// Cast connected variable as boolean.
-			$vendor_settings = $settings::get_setting('vendor_mollie');
-			$connected = ! empty( $vendor_settings['connected'] ) && $vendor_settings['connected'];
-			$settings::update_array('vendor_mollie', [
-				'connected' => $connected
-			]);
+			$vendor_settings = $settings::get_setting( 'vendor_mollie' );
+			$connected       = ! empty( $vendor_settings['connected'] ) && $vendor_settings['connected'];
+			$settings::update_array( 'vendor_mollie', [
+				'connected' => $connected,
+			] );
 		}
 
 		if ( version_compare( $old_version, '2.5.0', '<' ) ) {
@@ -156,17 +156,17 @@ class ActivatorService {
 			$wpdb->query( "ALTER TABLE $transaction_table ADD `message` VARCHAR(255)" );
 
 			// Remove unused settings.
-			$settings::remove_setting('address_enabled');
-			$settings::remove_setting('address_required');
+			$settings::remove_setting( 'address_enabled' );
+			$settings::remove_setting( 'address_required' );
 		}
 
 		if ( version_compare( $old_version, '3.1.0', '<' ) ) {
 			// Remove unused settings.
-			$settings::remove_setting('return_message_enable');
-			$settings::remove_setting('custom_return_enable');
+			$settings::remove_setting( 'return_message_enable' );
+			$settings::remove_setting( 'custom_return_enable' );
 
 			// Disable log file clearing
-			as_unschedule_all_actions('kudos_check_log');
+			as_unschedule_all_actions( 'kudos_check_log' );
 		}
 
 	}

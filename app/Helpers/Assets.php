@@ -11,7 +11,7 @@ class Assets {
 	 * Fallback: the default asset name will be passed through.
 	 *
 	 * @source https://danielshaw.co.nz/wordpress-cache-busting-json-hash-map/
-	 * @param string $url e.g style.css.
+	 * @param string $url e.g. style.css.
 	 *
 	 * @return array
 	 */
@@ -93,7 +93,7 @@ class Assets {
 	 * Fallback: the default asset name will be passed through.
 	 *
 	 * @source https://danielshaw.co.nz/wordpress-cache-busting-json-hash-map/
-	 * @param string $asset e.g style.css.
+	 * @param string $asset e.g. style.css.
 	 *
 	 * @return string
 	 */

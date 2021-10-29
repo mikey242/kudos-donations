@@ -42,7 +42,7 @@ class KudosDonations {
 	/**
 	 * The container property.
 	 *
-	 * @var
+	 * @var \DI\Container
 	 */
 	protected $container;
 
@@ -50,7 +50,7 @@ class KudosDonations {
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
-	 * Load the dependencies, define the locale, and set the hooks for the admin area and
+	 * Load the dependencies and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
 	 */
@@ -86,7 +86,7 @@ class KudosDonations {
 
 		$plugin_admin = $this->container->get( 'Admin' );
 
-		add_action( 'admin_menu', [ $plugin_admin, 'add_menu_pages' ], 11 );
+		add_action( 'admin_menu', [ $plugin_admin, 'add_menu_pages' ] );
 		add_action( 'admin_init', [ $plugin_admin, 'admin_actions' ] );
 		add_action( 'rest_api_init', [ $plugin_admin, 'register_settings' ] );
 		add_action( 'kudos_remove_secret_action', [ $plugin_admin, 'remove_secret_action' ], 10, 2 );
