@@ -118,6 +118,10 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.1.1 =
+* Prevent interacting with form once submit button pressed
+* Update ActionScheduler to 3.4.0
+
 = 3.1.0 =
 * *NEW* Spam protection option (enabled by default). Automatically adds a honeypot field and timer for form to prevent/reduce spam.
 * *NEW* Improved "Welcome Guide" making it easier to get started with Kudos Donations
