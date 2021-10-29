@@ -31,7 +31,7 @@ class TwigService {
 	 *
 	 * @var array
 	 */
-	private $template_paths;
+	public $template_paths;
 
 	/**
 	 * Twig options
@@ -43,6 +43,10 @@ class TwigService {
 	 * @var \Kudos\Service\LoggerService
 	 */
 	private $logger;
+	/**
+	 * @var \Twig\Loader\FilesystemLoader
+	 */
+	private $loader;
 
 	/**
 	 * Twig constructor
@@ -51,34 +55,45 @@ class TwigService {
 	 */
 	public function __construct( LoggerService $logger_service ) {
 
-		$this->logger                  = $logger_service;
-		$this->template_paths[]        = KUDOS_PLUGIN_DIR . '/templates/'; // Always add main template directory to paths.
-		$this->options['cache']        = KUDOS_DEBUG ? false : self::CACHE_DIR;
-		$this->options['debug']        = KUDOS_DEBUG;
+		$this->logger           = $logger_service;
+		$this->template_paths   = [ KUDOS_PLUGIN_DIR . '/templates/' ];
+		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
+		$this->options['debug'] = KUDOS_DEBUG;
+		$this->loader           = new FilesystemLoader();
 		$this->initialize_twig();
-		$this->initialize_twig_extensions();
-		$this->initialize_twig_functions();
-		$this->initialize_twig_filters();
 	}
 
-	/**
-	 * Initialize environment and loaders
-	 */
-	public function initialize_twig() {
-
-		$loader = new FilesystemLoader();
-		foreach ( $this->template_paths as $namespace => $path ) {
+	public function add_path( string $path, $namespace = null ) {
+		$loader = $this->loader;
+		try {
 			if ( is_string( $namespace ) ) {
 				$loader->setPaths( $path, $namespace );
 			} else {
-				try {
-					$loader->addPath( $path );
-				} catch ( LoaderError $e ) {
-					$this->logger->error( $e->getMessage() );
-				}
+				$loader->addPath( $path );
 			}
+		} catch ( LoaderError $e ) {
+			$this->logger->error( $e->getMessage() );
 		}
+	}
+
+	/**
+	 * Initialize environment and loaders.
+	 */
+	public function initialize_twig() {
+
+		$paths = apply_filters( 'kudos_twig_template_paths', $this->template_paths );
+//		$this->logger->debug( 'Template paths', $paths );
+		$loader = $this->loader;
+
+		foreach ( $paths as $namespace => $path ) {
+			$this->add_path($path, $namespace);
+		}
+
 		$this->twig = new Environment( $loader, $this->options );
+
+		$this->initialize_twig_extensions();
+		$this->initialize_twig_functions();
+		$this->initialize_twig_filters();
 
 	}
 
@@ -132,8 +147,8 @@ class TwigService {
 		/**
 		 * Add generate_id function.
 		 */
-		$generate_id = new TwigFunction('generate_id', [Utils::class, 'generate_id']);
-		$this->twig->addFunction($generate_id);
+		$generate_id = new TwigFunction( 'generate_id', [ Utils::class, 'generate_id' ] );
+		$this->twig->addFunction( $generate_id );
 
 		/**
 		 * Add do_action function.
@@ -150,8 +165,8 @@ class TwigService {
 		/**
 		 * Add the WordPress apply_filters filter.
 		 */
-		$apply_filter = new TwigFilter( 'apply_filters', function ($string, $filter) {
-			return apply_filters($filter, $string);
+		$apply_filter = new TwigFilter( 'apply_filters', function ( $string, $filter ) {
+			return apply_filters( $filter, $string );
 		} );
 		$this->twig->addFilter( $apply_filter );
 
@@ -217,7 +232,7 @@ class TwigService {
 	}
 
 	/**
-	 * Render the provided template
+	 * Render the provided template.
 	 *
 	 * @param string $template Template file (.html.twig).
 	 * @param array $array Array to pass to template.
@@ -229,7 +244,7 @@ class TwigService {
 		try {
 			return $this->twig->render( $template, $array );
 		} catch ( Throwable $e ) {
-			$this->logger->critical( $e->getMessage(), [ 'template' => $template, 'line' => $e->getLine() ] );
+			$this->logger->critical( $e->getMessage(), [ 'location' => $e->getFile(), 'line' => $e->getLine() ] );
 
 			return false;
 		}
