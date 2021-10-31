@@ -70,7 +70,7 @@ trait TableTrait {
 		// Process bulk action if any.
 		static::process_bulk_action();
 
-		$table_data = static::fetch_table_data();
+		$table_data = self::fetch_table_data();
 		usort( $table_data, [ &$this, 'sort_data' ] );
 
 		$items_per_page = 20;
