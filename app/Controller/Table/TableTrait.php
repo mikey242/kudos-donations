@@ -35,8 +35,6 @@ trait TableTrait {
 
 	/**
 	 * Message to show when no transactions available
-	 *
-	 * @since      1.0.0
 	 */
 	public function no_items() {
 
@@ -52,7 +50,6 @@ trait TableTrait {
 	 * @param string $column_name Current column name.
 	 *
 	 * @return mixed
-	 * @since      1.0.0
 	 */
 	public function column_default( $item, $column_name ) {
 
@@ -64,7 +61,6 @@ trait TableTrait {
 	 * Prepare the table with different parameters, pagination, columns and table elements
 	 *
 	 * @return void
-	 * @since      1.0.0
 	 */
 	public function prepare_items() {
 
@@ -95,7 +91,6 @@ trait TableTrait {
 	 * Columns to show
 	 *
 	 * @return array
-	 * @since      2.0.0
 	 */
 	public function get_columns(): array {
 
@@ -109,7 +104,6 @@ trait TableTrait {
 	 * Get the table data
 	 *
 	 * @return array
-	 * @since   1.0.0
 	 */
 	abstract public function fetch_table_data(): array;
 
@@ -118,8 +112,6 @@ trait TableTrait {
 	 *
 	 * @param string $text The 'submit' button label.
 	 * @param string $input_id ID attribute value for the search input field.
-	 *
-	 * @since 3.1.0
 	 */
 	public function search_box( $text, $input_id ) {
 
@@ -164,6 +156,9 @@ trait TableTrait {
 		<?php
 	}
 
+	/**
+	 * @return array|null
+	 */
 	public function get_search_data(): ?array {
 
 		$search = null;
@@ -181,8 +176,6 @@ trait TableTrait {
 	 * Add extra markup in the toolbars before or after the list
 	 *
 	 * @param string $which helps you decide if you add the markup after (bottom) or before (top) the list.
-	 *
-	 * @since   1.0.0
 	 */
 	protected function extra_tablenav( $which ) {
 
@@ -201,7 +194,6 @@ trait TableTrait {
 	 * @param array $b Second array.
 	 *
 	 * @return Mixed
-	 * @since      1.0.0
 	 */
 	private function sort_data( array $a, array $b ): int {
 

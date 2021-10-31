@@ -93,7 +93,6 @@ class TransactionEntity extends AbstractEntity {
 	 * Returns unserialized array of refund data.
 	 *
 	 * @return object|false
-	 * @since   2.0.0
 	 */
 	public function get_refund() {
 
