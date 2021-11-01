@@ -40,7 +40,7 @@ class ActivatorService {
 	public function __construct() {
 
 		$this->wpdb     = new WpDb();
-		$this->logger   = new LoggerService( $this->wpdb );
+		$this->logger   = new LoggerService();
 		$this->twig     = new TwigService( $this->logger );
 		$this->mapper   = new MapperService( $this->logger, $this->wpdb );
 		$this->settings = new Settings( $this->mapper );
@@ -80,7 +80,7 @@ class ActivatorService {
 	}
 
 	/**
-	 * Run migrations if upgrading
+	 * Run migrations if upgrading.
 	 *
 	 * @param string $old_version
 	 */
@@ -172,7 +172,7 @@ class ActivatorService {
 	}
 
 	/**
-	 * Creates the donors table
+	 * Creates the donors table.
 	 */
 	private function create_donors_table() {
 
@@ -204,7 +204,7 @@ class ActivatorService {
 	}
 
 	/**
-	 * Creates the transactions table
+	 * Creates the transactions table.
 	 */
 	private function create_transactions_table() {
 
@@ -240,7 +240,7 @@ class ActivatorService {
 	}
 
 	/**
-	 * Creates the subscription table
+	 * Creates the subscription table.
 	 */
 	private function create_subscriptions_table() {
 
@@ -271,14 +271,14 @@ class ActivatorService {
 	}
 
 	/**
-	 * Creates the subscription table
+	 * Creates the subscription table.
 	 */
 	private function create_log_table() {
 
 		$wpdb = $this->wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
-		$table_name      = LoggerService::get_table_name();
+		$table_name      = $this->logger->get_table_name();
 
 		$sql = "CREATE TABLE $table_name (
 		  id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
