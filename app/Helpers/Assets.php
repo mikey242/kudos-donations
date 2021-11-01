@@ -34,10 +34,10 @@ class Assets {
 	public static function get_asset_url( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
 		if ( isset( $hash[ $asset ] ) ) {
-			return $url . 'dist/' . ltrim($hash[ $asset ], '/');
+			return $url . 'dist/' . ltrim( $hash[ $asset ], '/' );
 		}
 
-		return $url . 'dist/' . ltrim($asset, '/');
+		return $url . 'dist/' . ltrim( $asset, '/' );
 	}
 
 	/**
@@ -48,18 +48,18 @@ class Assets {
 	 *
 	 * @return array|null
 	 */
-	public static function get_script($asset): ?array {
+	public static function get_script( $asset ): ?array {
 
 		$asset_path = KUDOS_PLUGIN_DIR . '/dist' . $asset;
-		if(file_exists($asset_path)) {
-			$out = [];
-			$out['path'] = $asset_path;
-			$out['url'] = KUDOS_PLUGIN_URL . 'dist/' . ltrim($asset, '/');
+		if ( file_exists( $asset_path ) ) {
+			$out            = [];
+			$out['path']    = $asset_path;
+			$out['url']     = KUDOS_PLUGIN_URL . 'dist/' . ltrim( $asset, '/' );
 			$asset_manifest = substr_replace( $asset_path, '.asset.php', - strlen( '.js' ) );
-			if(file_exists($asset_manifest)) {
-				$manifest_content = require($asset_manifest);
+			if ( file_exists( $asset_manifest ) ) {
+				$manifest_content    = require( $asset_manifest );
 				$out['dependencies'] = $manifest_content['dependencies'] ?? [];
-				$out['version'] = $manifest_content['version'] ?? KUDOS_VERSION;
+				$out['version']      = $manifest_content['version'] ?? KUDOS_VERSION;
 			}
 
 			return $out;
@@ -79,10 +79,10 @@ class Assets {
 	public static function get_asset_path( string $asset, string $url = KUDOS_PLUGIN_URL ): string {
 		$hash = self::get_asset_manifest( $url );
 		if ( isset( $hash[ $asset ] ) ) {
-			return KUDOS_PLUGIN_DIR . '/dist/' . ltrim($hash[ $asset ], '/');
+			return KUDOS_PLUGIN_DIR . '/dist/' . ltrim( $hash[ $asset ], '/' );
 		}
 
-		return KUDOS_PLUGIN_DIR . '/dist/' . ltrim($asset, '/');
+		return KUDOS_PLUGIN_DIR . '/dist/' . ltrim( $asset, '/' );
 	}
 
 	/**
@@ -94,22 +94,18 @@ class Assets {
 	 *
 	 * @source https://danielshaw.co.nz/wordpress-cache-busting-json-hash-map/
 	 * @param string $asset e.g. style.css.
+	 * @param string $base
 	 *
 	 * @return string
 	 */
-	public static function get_asset_content( string $asset ): string {
+	public static function get_asset_content( string $asset, string $base = KUDOS_PLUGIN_URL ): string {
 
-		$map      = KUDOS_PLUGIN_URL . 'dist/mix-manifest.json';
-		$request  = wp_remote_get( $map );
-		$response = wp_remote_retrieve_body( $request );
-		$hash     = ! empty( $response ) ? json_decode( $response, true ) : [];
+		$hash = self::get_asset_manifest( $base );
+		$file = $hash[ $asset ] ?? $asset;
 
-		if ( isset( $hash[ $asset ] ) ) {
-			$asset_request = wp_remote_get( KUDOS_PLUGIN_URL . 'dist/' . $hash[ $asset ] );
+		$asset_request = wp_remote_get( KUDOS_PLUGIN_URL . 'dist/' . $file );
 
-			return wp_remote_retrieve_body( $asset_request );
-		}
+		return wp_remote_retrieve_body( $asset_request );
 
-		return $asset;
 	}
 }
