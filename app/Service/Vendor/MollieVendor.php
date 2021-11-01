@@ -9,6 +9,7 @@ use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
+use Kudos\Service\Rest\PaymentRoutes;
 use Kudos\Service\RestRouteService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
@@ -709,7 +710,7 @@ class MollieVendor implements VendorInterface {
 	 * @return string
 	 */
 	public static function get_webhook_url(): string {
-		$route = RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK;
+		$route = RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_WEBHOOK;
 
 		// Use APP_URL if defined in .env file.
 		if ( isset( $_ENV['APP_URL'] ) ) {
@@ -717,7 +718,7 @@ class MollieVendor implements VendorInterface {
 		}
 
 		// Otherwise, return normal rest URL.
-		return rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_WEBHOOK );
+		return rest_url( RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_WEBHOOK );
 	}
 
 	/**

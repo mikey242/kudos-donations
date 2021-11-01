@@ -16,6 +16,8 @@ use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
+use Kudos\Service\Rest\MailerRoutes;
+use Kudos\Service\Rest\PaymentRoutes;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
 use Kudos\Service\Vendor\MollieVendor;
@@ -318,8 +320,8 @@ class Admin {
 			'kudos',
 			[
 				'version'     => $this->version,
-				'checkApiUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::PAYMENT_TEST ),
-				'sendTestUrl' => rest_url( RestRouteService::NAMESPACE . RestRouteService::EMAIL_TEST ),
+				'checkApiUrl' => rest_url( RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_TEST ),
+				'sendTestUrl' => rest_url( RestRouteService::NAMESPACE . MailerRoutes::EMAIL_TEST ),
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
