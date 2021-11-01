@@ -12,7 +12,7 @@ class LoggerService extends Logger {
 	const TRUNCATE_AT = 100;
 
 	/**
-	 * Table name without prefix
+	 * Table name without prefix.
 	 *
 	 * @var string
 	 */
@@ -23,15 +23,15 @@ class LoggerService extends Logger {
 	private $wpdb;
 
 	/**
-	 * @param \Kudos\Helpers\WpDb $wpdb
+	 * LoggerService constructor.
 	 */
-	public function __construct( WpDb $wpdb ) {
+	public function __construct() {
 
-		$this->wpdb = $wpdb;
+		$this->wpdb = new WpDb();
 
 		parent::__construct(
 			'kudos',
-			[ new DatabaseHandler( $wpdb ) ],
+			[ new DatabaseHandler( $this->wpdb ) ],
 			[],
 			new DateTimeZone( wp_timezone_string() )
 		);
@@ -58,10 +58,8 @@ class LoggerService extends Logger {
 	}
 
 
-	public static function get_table_name(): string {
-		/** @var \wpdb $wpdb */
-		$wpdb = new WpDb();
-
+	public function get_table_name(): string {
+		$wpdb = $this->wpdb;
 		return $wpdb->prefix . self::TABLE;
 
 	}
@@ -71,11 +69,10 @@ class LoggerService extends Logger {
 	 *
 	 * @return bool|int
 	 */
-	public static function clear() {
+	public function clear() {
 
-		/** @var \wpdb $wpdb */
-		$wpdb  = new WpDb();
-		$table = self::get_table_name();
+		$wpdb  = $this->wpdb;
+		$table = $this->get_table_name();
 
 		return $wpdb->query( "TRUNCATE TABLE `{$table}`" );
 
@@ -92,18 +89,21 @@ class LoggerService extends Logger {
 		$table = self::get_table_name();
 
 		// Get ID of the oldest row to keep.
-		$last_row = $wpdb->get_row( $wpdb->prepare("
+		$last_row = $wpdb->get_row( $wpdb->prepare( "
 			SELECT `id` FROM {$table}
 			ORDER BY `id` DESC
 			LIMIT %d,1
-		", (self::TRUNCATE_AT - 1) ) );
+		",
+			( self::TRUNCATE_AT - 1 ) ) );
 
-		if($last_row) {
+		if ( $last_row ) {
 			$last_id = $last_row->id;
-			return $wpdb->query($wpdb->prepare("
+
+			return $wpdb->query( $wpdb->prepare( "
 				DELETE FROM {$table}
 				WHERE `id` < %d
-			", $last_id));
+			",
+				$last_id ) );
 		}
 
 		return false;
@@ -114,8 +114,8 @@ class LoggerService extends Logger {
 	 *
 	 * @return array|object|null
 	 */
-	public static function get_as_array() {
-		global $wpdb;
+	public function get_as_array() {
+		$wpdb  = $this->wpdb;
 		$table = self::get_table_name();
 
 		return $wpdb->get_results( "SELECT * FROM {$table} ORDER BY `id` DESC LIMIT 100", ARRAY_A );
