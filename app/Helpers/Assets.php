@@ -42,19 +42,25 @@ class Assets {
 
 	/**
 	 * Returns an array with js file properties.
-	 * This includes checking for an accompanying .asset.php file
+	 * This includes checking for an accompanying .asset.php file.
 	 *
 	 * @param $asset
+	 * @param string $base_dir
+	 * @param string $base_url
 	 *
 	 * @return array|null
 	 */
-	public static function get_script( $asset ): ?array {
+	public static function get_script(
+		$asset,
+		string $base_dir = KUDOS_PLUGIN_DIR,
+		string $base_url = KUDOS_PLUGIN_URL
+	): ?array {
 
-		$asset_path = KUDOS_PLUGIN_DIR . '/dist' . $asset;
+		$asset_path = $base_dir . '/dist' . $asset;
 		if ( file_exists( $asset_path ) ) {
 			$out            = [];
 			$out['path']    = $asset_path;
-			$out['url']     = KUDOS_PLUGIN_URL . 'dist/' . ltrim( $asset, '/' );
+			$out['url']     = $base_url . 'dist/' . ltrim( $asset, '/' );
 			$asset_manifest = substr_replace( $asset_path, '.asset.php', - strlen( '.js' ) );
 			if ( file_exists( $asset_manifest ) ) {
 				$manifest_content    = require( $asset_manifest );
