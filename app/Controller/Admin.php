@@ -445,7 +445,7 @@ class Admin {
 			switch ( $action ) {
 
 				case 'kudos_log_clear':
-					if ( LoggerService::clear() === 0 ) {
+					if ( $this->logger->clear() === 0 ) {
 						new AdminNotice( __( 'Log cleared', 'kudos-donations' ) );
 					}
 					break;

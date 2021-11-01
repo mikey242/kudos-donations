@@ -34,11 +34,11 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 			case 'log':
 				$url = add_query_arg( 'tab', 'log', $url );
-
-				$log_array = LoggerService::get_as_array();
+				$log = new LoggerService();
+				$log_array = $log->get_as_array();
 				?>
 
-				<p>Kudos Donations logs to the "<?php echo LoggerService::get_table_name() ?>" table in the
+				<p>Kudos Donations logs to the "<?php echo $log->get_table_name() ?>" table in the
 					database.</p>
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
