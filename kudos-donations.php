@@ -118,10 +118,10 @@ function run_kudos_donations() {
 
 		// Create our container for dependency injection.
 		$builder = new ContainerBuilder();
-		$builder->useAutowiring(true);
+		$builder->useAutowiring( true );
 		$builder->addDefinitions( KUDOS_PLUGIN_DIR . '/app/config.php' );
-		if(isset($_ENV['WP_ENV']) && $_ENV['WP_ENV']  !== 'development') {
-			$builder->enableCompilation(KUDOS_STORAGE_DIR . '/php-di/cache');
+		if ( isset( $_ENV['WP_ENV'] ) && $_ENV['WP_ENV'] !== 'development' ) {
+			$builder->enableCompilation( KUDOS_STORAGE_DIR . '/php-di/cache' );
 		}
 		$container = $builder->build();
 
