@@ -120,12 +120,13 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.1.1 =
 * Prevent interacting with form once submit button pressed
+* Update Mollie API client to 2.39.0
 * Update ActionScheduler to 3.4.0
 
 = 3.1.0 =
 * *NEW* Spam protection option (enabled by default). Automatically adds a honeypot field and timer for form to prevent/reduce spam.
 * *NEW* Improved "Welcome Guide" making it easier to get started with Kudos Donations
-* Option to disable [kudos] shortcode. If not needed this will prevent CSS/JS from loading when not needed.
+* Option to disable [kudos] shortcode. If not needed this will prevent CSS/JS from loading on pages without Kudos.
 * Upgrade to Block API version 2. This increases the min WordPress version to 5.6.
 * Simplify completed payments settings (it is no longer possible to have a custom return url AND a pop-up message)
 * Fix issue with recurring payments not getting added to transactions
