@@ -23,7 +23,6 @@ class Settings {
 
 	/**
 	 * Settings class constructor.
-	 *
 	 */
 	public function __construct( MapperService $mapper ) {
 		$this->mapper   = $mapper;
