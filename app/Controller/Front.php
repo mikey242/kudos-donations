@@ -12,7 +12,7 @@ use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
-use Kudos\Service\Rest\PaymentRoutes;
+use Kudos\Rest\Route\PaymentRoutes;
 use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
 
@@ -149,7 +149,7 @@ class Front {
 			'kudos',
 			[
 				'_wpnonce'         => wp_create_nonce( 'wp_rest' ),
-				'createPaymentUrl' => rest_url( RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_CREATE ),
+				'createPaymentUrl' => RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_CREATE,
 			]
 		);
 

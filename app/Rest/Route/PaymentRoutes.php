@@ -1,11 +1,12 @@
 <?php
 
-namespace Kudos\Service\Rest;
+namespace Kudos\Rest\Route;
 
+use Kudos\Rest\RouteInterface;
 use Kudos\Service\PaymentService;
 use WP_REST_Server;
 
-class PaymentRoutes {
+class PaymentRoutes implements RouteInterface {
 
 	/**
 	 * The route used for payment webhook.

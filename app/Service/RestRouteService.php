@@ -2,8 +2,9 @@
 
 namespace Kudos\Service;
 
-use Kudos\Service\Rest\MailerRoutes;
-use Kudos\Service\Rest\PaymentRoutes;
+use Kudos\Rest\Route\MailerRoutes;
+use Kudos\Rest\Route\PaymentRoutes;
+use Kudos\Rest\Route\TransactionRoutes;
 
 class RestRouteService {
 
@@ -20,10 +21,15 @@ class RestRouteService {
 	/**
 	 * RestRoutesService constructor.
 	 */
-	public function __construct( PaymentRoutes $payment_routes, MailerRoutes $mailer_routes ) {
+	public function __construct(
+		PaymentRoutes $payment_routes,
+		MailerRoutes $mailer_routes,
+		TransactionRoutes $transaction_routes
+	) {
 
 		$this->routes[] = $payment_routes->get_routes();
 		$this->routes[] = $mailer_routes->get_routes();
+		$this->routes[] = $transaction_routes->get_routes();
 
 	}
 
@@ -39,6 +45,4 @@ class RestRouteService {
 		}
 
 	}
-
-
 }

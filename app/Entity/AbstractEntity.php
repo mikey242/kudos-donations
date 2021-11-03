@@ -8,25 +8,25 @@ use Kudos\Helpers\Utils;
 abstract class AbstractEntity {
 
 	/**
-	 * The entities' database id
+	 * The entities' database id.
 	 *
 	 * @var int
 	 */
 	public $id;
 	/**
-	 * The date first entered into database
+	 * The date first entered into database.
 	 *
 	 * @var DateTime
 	 */
 	public $created;
 	/**
-	 * The date the entity was last changed
+	 * The date the entity was last changed.
 	 *
 	 * @var DateTime
 	 */
 	public $last_updated;
 	/**
-	 * The entities secret
+	 * The entities secret.
 	 *
 	 * @var string
 	 */

@@ -1,11 +1,12 @@
 <?php
 
-namespace Kudos\Service\Rest;
+namespace Kudos\Rest\Route;
 
+use Kudos\Rest\RouteInterface;
 use Kudos\Service\MailerService;
 use WP_REST_Server;
 
-class MailerRoutes {
+class MailerRoutes implements RouteInterface {
 
 	/**
 	 * Route used to send a test email.
