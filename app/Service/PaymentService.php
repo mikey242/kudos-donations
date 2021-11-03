@@ -166,7 +166,7 @@ class PaymentService {
 			] );
 		}
 
-		$values = $request->get_json_params();
+		$values = $request->get_body_params();
 
 		// Check if bot filling form.
 		if ( $this->is_bot( $values ) ) {

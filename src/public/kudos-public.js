@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import axios from 'axios'
 import 'jquery-validation'
 import '../images/logo-colour-40.png' // used as email attachment
 import '../images/logo-colour.svg'
@@ -14,6 +13,7 @@ import {
     valueChange
 } from "../common/helpers/form"
 import {__} from "@wordpress/i18n"
+import apiFetch from '@wordpress/api-fetch'
 import KudosModal from "./KudosModal"
 
 jQuery(document).ready(($) => {
@@ -147,7 +147,6 @@ jQuery(document).ready(($) => {
         }
 
 
-
         // Hide honeypot field.
         document.querySelectorAll('input[name="donation"]').forEach((e) => {
             e.closest('label').classList.add('kd-hidden')
@@ -206,16 +205,19 @@ jQuery(document).ready(($) => {
                     error.classList.add('kd-hidden')
                     form.lastChild.disabled = true
 
-                    axios.post(kudos.createPaymentUrl, JSON.stringify(Object.fromEntries(formData)), {
-                        headers: {
-                            'Content-Type': 'application/json',
+                    apiFetch({
+                        path: kudos.createPaymentUrl,
+                        headers: new Headers({
+                            'Content-Type': 'multipart/form-data',
                             'X-WP-Nonce': kudos._wpnonce
-                        }
+                        }),
+                        method: 'POST',
+                        body: new URLSearchParams(formData)
                     }).then((result) => {
-                        if (result.data.success) {
-                            window.location.href = result.data.data
+                        if (result.success) {
+                            window.location.href = result.data
                         } else {
-                            error.innerHTML = result.data.data.message
+                            error.innerHTML = result.data.message
                             error.classList.remove('kd-hidden')
                             form.classList.add('error')
                             form.classList.remove('kd-is-loading')

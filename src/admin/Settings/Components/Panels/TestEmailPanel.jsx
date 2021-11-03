@@ -1,7 +1,7 @@
-import axios from 'axios'
 import {SettingCard} from "../SettingCard"
 import {ButtonIcon} from "../ButtonIcon"
 import {__} from "@wordpress/i18n"
+import apiFetch from '@wordpress/api-fetch'
 import {Button, PanelRow, TextControl} from "@wordpress/components"
 import {useState} from "@wordpress/element"
 
@@ -34,26 +34,19 @@ const TestEmailPanel = (props) => {
         }
 
         // Perform Post request
-        axios
-            .post(
-                window.kudos.sendTestUrl,
-                {email},
-                {
-                    headers: {
-                        // eslint-disable-next-line no-undef
-                        'X-WP-Nonce': wpApiSettings.nonce,
-                        'Content-Type': 'application/json'
-                    },
-                }
-            )
-            .then(response => {
-                props.showNotice(response.data.data)
-                setIsBusy(false)
-            })
-            .catch(error => {
-                props.showNotice(error.response.statusText)
-                setIsBusy(false)
-            })
+        apiFetch({
+            path: window.kudos.sendTestUrl,
+            method: 'POST',
+            data: {
+                email: email
+            }
+        }).then(response => {
+            props.showNotice(response.data)
+            setIsBusy(false)
+        }).catch(error => {
+            props.showNotice(error.response.statusText)
+            setIsBusy(false)
+        })
     }
 
     return (

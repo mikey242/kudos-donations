@@ -1,12 +1,12 @@
 // https://www.codeinwp.com/blog/plugin-options-page-gutenberg/
 // https://github.com/HardeepAsrani/my-awesome-plugin/
 
-import axios from 'axios'
 import {__} from "@wordpress/i18n"
 import {Spinner, TabPanel} from "@wordpress/components"
 import {Component, Fragment} from "@wordpress/element"
 import {applyFilters} from "@wordpress/hooks"
 import api from '@wordpress/api'
+import apiFetch from '@wordpress/api-fetch'
 
 // Settings Panels
 import {Notice} from './Components/Notice'
@@ -77,17 +77,13 @@ class KudosAdmin extends Component {
         })
 
         // Perform Get request
-        axios
-            .get(window.kudos.checkApiUrl, {
-                headers: {
-                    // eslint-disable-next-line no-undef
-                    'X-WP-Nonce': wpApiSettings.nonce,
-                },
-            })
-            .then((response) => {
+        apiFetch({
+            path: window.kudos.checkApiUrl,
+            method: 'GET',
+        }).then((response) => {
 
                 if (showNotice) {
-                    this.showNotice(response.data.data.message)
+                    this.showNotice(response.data.message)
                 }
 
                 // Update state
@@ -97,7 +93,7 @@ class KudosAdmin extends Component {
                     settings: {
                         ...this.state.settings,
                         _kudos_vendor_mollie: {
-                            ...response.data.data.setting
+                            ...response.data.setting
                         }
                     }
                 })
