@@ -9,7 +9,7 @@ use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
-use Kudos\Service\Rest\PaymentRoutes;
+use Kudos\Rest\Route\PaymentRoutes;
 use Kudos\Service\RestRouteService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;

@@ -89,8 +89,8 @@ class MapperService {
 		$id         = $entity->id;
 
 		$this->logger->debug( "Updating entity.", [
-			'entity'   => $entity::get_entity_name(),
-			'id'      => $entity->id,
+			'entity' => $entity::get_entity_name(),
+			'id'     => $entity->id,
 		] );
 
 		$result = $wpdb->update(
@@ -132,7 +132,7 @@ class MapperService {
 		$entity->id = $id;
 		$this->logger->debug( "Creating entity.", [
 			'entity' => $entity::get_entity_name(),
-			'id' => $entity->id
+			'id'     => $entity->id,
 		] );
 
 		// If successful do action.
@@ -324,6 +324,21 @@ class MapperService {
 		$query_string = $query_fields ? $this->array_to_where( $query_fields, $operator ) : null;
 		$query        = "SELECT $table.* FROM $table $query_string";
 
+		$results = $this->get_results( $query );
+
+		if ( ! empty( $results ) ) {
+			return $this->map_to_class( $results );
+		}
+
+		return [];
+	}
+
+	public function get_all_between( $start, $end ): array {
+
+		$wpdb = $this->wpdb;
+		$table  = $this->get_table_name();
+		$query_string = $wpdb->prepare( "created BETWEEN %s AND %s", $start, $end );
+		$query = "SELECT $table.* FROM $table WHERE $query_string";
 		$results = $this->get_results( $query );
 
 		if ( ! empty( $results ) ) {
