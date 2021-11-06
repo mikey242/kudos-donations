@@ -3,7 +3,7 @@ Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
 Tested up to: 5.8
-Requires PHP: 7.2
+Requires PHP: 7.2.9
 Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -120,6 +120,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.1.1 =
 * Prevent interacting with form once submit button pressed
+* Memory usage optimizations
 * Update Mollie API client to 2.39.0
 * Update ActionScheduler to 3.4.0
 

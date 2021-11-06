@@ -1,17 +1,16 @@
 <?php
 
-namespace Kudos\Rest\Route;
+namespace Kudos\Controller\Rest\Route;
 
-use Kudos\Rest\RouteInterface;
 use Kudos\Service\MailerService;
 use WP_REST_Server;
 
-class MailerRoutes implements RouteInterface {
+class Mail extends Base {
 
 	/**
-	 * Route used to send a test email.
+	 * Base route.
 	 */
-	const EMAIL_TEST = '/email/test';
+	protected $base = 'email';
 
 	/**
 	 * @var \Kudos\Service\MailerService
@@ -21,7 +20,7 @@ class MailerRoutes implements RouteInterface {
 	/**
 	 * PaymentRoutes constructor.
 	 */
-	public function __construct(MailerService $mailer_service) {
+	public function __construct( MailerService $mailer_service ) {
 
 		$this->mailer_service = $mailer_service;
 
@@ -35,7 +34,7 @@ class MailerRoutes implements RouteInterface {
 		$mailer = $this->mailer_service;
 
 		return [
-			self::EMAIL_TEST => [
+			$this->get_base() . '/test' => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $mailer, 'send_test' ],
 				'args'                => [
@@ -51,5 +50,5 @@ class MailerRoutes implements RouteInterface {
 			],
 		];
 	}
-	
+
 }

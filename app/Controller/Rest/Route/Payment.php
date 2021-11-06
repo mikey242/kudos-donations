@@ -1,27 +1,16 @@
 <?php
 
-namespace Kudos\Rest\Route;
+namespace Kudos\Controller\Rest\Route;
 
-use Kudos\Rest\RouteInterface;
 use Kudos\Service\PaymentService;
 use WP_REST_Server;
 
-class PaymentRoutes implements RouteInterface {
+class Payment extends Base {
 
 	/**
-	 * The route used for payment webhook.
+	 * Base route.
 	 */
-	const PAYMENT_WEBHOOK = '/payment/webhook';
-
-	/**
-	 * New payment route.
-	 */
-	const PAYMENT_CREATE = '/payment/create';
-
-	/**
-	 * Rest route used for checking if api key is valid.
-	 */
-	const PAYMENT_TEST = '/payment/test-api';
+	protected $base = 'payment';
 
 	/**
 	 * @var \Kudos\Service\PaymentService
@@ -47,7 +36,7 @@ class PaymentRoutes implements RouteInterface {
 		$payment = $this->payment_service;
 
 		return [
-			self::PAYMENT_CREATE => [
+			 $this->get_base() . '/create' => [
 				'methods'             => 'POST',
 				'callback'            => [ $payment, 'submit_payment' ],
 				'permission_callback' => '__return_true',
@@ -125,7 +114,7 @@ class PaymentRoutes implements RouteInterface {
 				],
 			],
 
-			self::PAYMENT_WEBHOOK => [
+			$this->get_base() . '/webhook' => [
 				'methods'             => 'POST',
 				'callback'            => [ $payment, 'handle_webhook' ],
 				'args'                => [
@@ -138,7 +127,7 @@ class PaymentRoutes implements RouteInterface {
 				'permission_callback' => '__return_true',
 			],
 
-			self::PAYMENT_TEST => [
+			$this->get_base() . '/test' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $payment, 'check_api_keys' ],
 				'permission_callback' => function () {

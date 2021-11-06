@@ -67,12 +67,23 @@ class KudosDonations {
 	 */
 	public function run() {
 
-		$this->define_admin_hooks();
 		$this->define_rest_hooks();
+		$this->define_admin_hooks();
 		$this->define_payment_hooks();
 		$this->define_public_hooks();
 
 		add_action( 'plugins_loaded', [ $this, 'version_check' ] );
+
+	}
+
+	/**
+	 * Initialize rest service and register routes.
+	 */
+	private function define_rest_hooks() {
+
+		$rest_routes = $this->container->get( 'RestRoutes' );
+
+		add_action( 'rest_api_init', [ $rest_routes, 'register_all' ] );
 
 	}
 
@@ -111,17 +122,6 @@ class KudosDonations {
 		add_action( 'enqueue_block_assets', [ $plugin_public, 'register_root_styles' ] ); // Used by front and admin
 		add_action( 'init', [ $plugin_public, 'register_kudos' ] );
 		add_action( 'wp_footer', [ $plugin_public, 'handle_query_variables' ], 1000 );
-
-	}
-
-	/**
-	 * Initialize rest service and register routes.
-	 */
-	private function define_rest_hooks() {
-
-		$rest_service = $this->container->get( 'RestRouteService' );
-
-		add_action( 'rest_api_init', [ $rest_service, 'register_all' ] );
 
 	}
 

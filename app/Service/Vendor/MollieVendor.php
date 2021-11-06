@@ -9,8 +9,6 @@ use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
-use Kudos\Rest\Route\PaymentRoutes;
-use Kudos\Service\RestRouteService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
@@ -65,13 +63,16 @@ class MollieVendor implements VendorInterface {
 
 		$settings = Settings::get_setting( 'vendor_mollie' );
 
-		$this->api_client = new MollieApiClient();
-		$this->api_keys   = [
-			'test' => $settings['test_key'] ?? '',
-			'live' => $settings['live_key'] ?? '',
-		];
+		if ( ! $settings === false ) {
+			$this->api_client = new MollieApiClient();
+			$this->api_keys   = [
+				'test' => $settings['test_key'] ?? '',
+				'live' => $settings['live_key'] ?? '',
+			];
 
-		$this->set_api_mode( $settings['mode'] );
+			$this->set_api_mode( $settings['mode'] );
+			$this->set_user_agent();
+		}
 	}
 
 	/**
@@ -79,6 +80,7 @@ class MollieVendor implements VendorInterface {
 	 */
 	private function set_api_mode( ?string $mode ) {
 
+		// Gets the key associated with the specified mode.
 		$key = $this->api_keys[ $mode ] ?? false;
 
 		if ( $key ) {
@@ -92,6 +94,21 @@ class MollieVendor implements VendorInterface {
 		}
 	}
 
+	/**
+	 * Sets the user agent for identifying requests made with this plugin.
+	 */
+	private function set_user_agent() {
+
+		global $wp_version;
+		$this->api_client->addVersionString( "KudosDonations/" . KUDOS_VERSION );
+		$this->api_client->addVersionString( "WordPress/" . $wp_version );
+	}
+
+	/**
+	 * Returns the current vendor name.
+	 *
+	 * @return string
+	 */
 	public static function get_vendor_name(): string {
 		return static::VENDOR_NAME;
 	}
@@ -164,7 +181,7 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Returns all subscriptions for customer
+	 * Returns all subscriptions for customer.
 	 *
 	 * @param string $customer_id Mollie customer id.
 	 *
@@ -187,7 +204,7 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Cancel the specified subscription
+	 * Cancel the specified subscription.
 	 *
 	 * @param SubscriptionEntity $subscription Instance of SubscriptionEntity.
 	 *
@@ -195,10 +212,7 @@ class MollieVendor implements VendorInterface {
 	 */
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool {
 
-		$customer_id     = $subscription->customer_id;
-		$subscription_id = $subscription->subscription_id;
-
-		$customer = $this->get_customer( $customer_id );
+		$customer = $this->get_customer( $subscription->customer_id );
 
 		// Bail if no subscription found locally or if not active.
 		if ( 'active' !== $subscription->status || null === $customer ) {
@@ -207,7 +221,7 @@ class MollieVendor implements VendorInterface {
 
 		// Cancel the subscription via Mollie's API.
 		try {
-			$response = $customer->cancelSubscription( $subscription_id );
+			$response = $customer->cancelSubscription( $subscription->subscription_id );
 
 			/** @var Subscription $response */
 			return ( $response->status === 'canceled' );
@@ -219,7 +233,7 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Checks the provided api key by attempting to get associated payments
+	 * Checks the provided api key by attempting to get associated payments.
 	 *
 	 * @param string $api_key API key to test.
 	 *
@@ -236,18 +250,18 @@ class MollieVendor implements VendorInterface {
 			$mollie_api = $this->api_client;
 			$mollie_api->setApiKey( $api_key );
 			$mollie_api->payments->page();
+
+			return true;
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 
 			return false;
 		}
 
-		return true;
-
 	}
 
 	/**
-	 * Gets specified payment
+	 * Gets specified payment.
 	 *
 	 * @param string $mollie_payment_id Mollie payment id.
 	 *
@@ -255,10 +269,8 @@ class MollieVendor implements VendorInterface {
 	 */
 	public function get_payment( string $mollie_payment_id ) {
 
-		$mollie_api = $this->api_client;
-
 		try {
-			return $mollie_api->payments->get( $mollie_payment_id );
+			return $this->api_client->payments->get( $mollie_payment_id );
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 		}
@@ -310,7 +322,6 @@ class MollieVendor implements VendorInterface {
 
 			return null;
 		}
-
 	}
 
 	/**
@@ -329,7 +340,6 @@ class MollieVendor implements VendorInterface {
 
 			return null;
 		}
-
 	}
 
 	/**
@@ -463,7 +473,6 @@ class MollieVendor implements VendorInterface {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -484,7 +493,6 @@ class MollieVendor implements VendorInterface {
 
 			return null;
 		}
-
 	}
 
 	/**
@@ -692,7 +700,6 @@ class MollieVendor implements VendorInterface {
 	public function get_api_mode(): string {
 
 		return $this->api_mode;
-
 	}
 
 	/**
@@ -701,6 +708,7 @@ class MollieVendor implements VendorInterface {
 	 * @return string
 	 */
 	public function __toString(): string {
+
 		return self::get_vendor_name();
 	}
 
@@ -710,7 +718,7 @@ class MollieVendor implements VendorInterface {
 	 * @return string
 	 */
 	public static function get_webhook_url(): string {
-		$route = RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_WEBHOOK;
+		$route = "kudos/v1/payment/webhook";
 
 		// Use APP_URL if defined in .env file.
 		if ( isset( $_ENV['APP_URL'] ) ) {
@@ -718,7 +726,7 @@ class MollieVendor implements VendorInterface {
 		}
 
 		// Otherwise, return normal rest URL.
-		return rest_url( RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_WEBHOOK );
+		return rest_url( $route );
 	}
 
 	/**
@@ -794,6 +802,7 @@ class MollieVendor implements VendorInterface {
 	 * @return int
 	 */
 	public function add_missing_transactions(): int {
+
 		$added  = 0;
 		$mapper = $this->mapper;
 		$mapper->get_repository( DonorEntity::class );

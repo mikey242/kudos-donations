@@ -316,7 +316,7 @@ class MapperService {
 	 *
 	 * @param string $operator AND or OR.
 	 *
-	 * @return array|object|null
+	 * @return array
 	 */
 	public function get_all_by( array $query_fields = null, string $operator = 'AND' ): ?array {
 
@@ -399,7 +399,7 @@ class MapperService {
 	}
 
 	/**
-	 * Removes the specified table from the database
+	 * Removes the specified table from the database.
 	 *
 	 * @param $table_name
 	 *
@@ -413,7 +413,7 @@ class MapperService {
 	}
 
 	/**
-	 * Removes empty values from array
+	 * Removes empty values from array.
 	 *
 	 * @param string|null $value Array value to check.
 	 *

@@ -2,9 +2,9 @@
 
 use Kudos\Controller\Admin;
 use Kudos\Controller\Front;
+use Kudos\Controller\Rest\RestRoutes;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\PaymentService;
-use Kudos\Service\RestRouteService;
 use function DI\autowire;
 
 return [
@@ -13,6 +13,6 @@ return [
 		->constructor( KUDOS_VERSION ),
 	'Admin'            => autowire( Admin::class )
 		->constructor( KUDOS_VERSION ),
-	'RestRouteService' => autowire( RestRouteService::class ),
+	'RestRoutes' => autowire( RestRoutes::class ),
 	'PaymentService'   => autowire( PaymentService::class ),
 ];

@@ -35,7 +35,7 @@ const TestEmailPanel = (props) => {
 
         // Perform Post request
         apiFetch({
-            path: window.kudos.sendTestUrl,
+            path: 'kudos/v1/email/test',
             method: 'POST',
             data: {
                 email: email
@@ -44,7 +44,7 @@ const TestEmailPanel = (props) => {
             props.showNotice(response.data)
             setIsBusy(false)
         }).catch(error => {
-            props.showNotice(error.response.statusText)
+            props.showNotice(error.data)
             setIsBusy(false)
         })
     }

@@ -2,8 +2,6 @@
 
 namespace Kudos\Controller;
 
-use Kudos\Rest\Route\MailerRoutes;
-use Kudos\Rest\Route\PaymentRoutes;
 use Kudos\Controller\Table\CampaignsTable;
 use Kudos\Controller\Table\DonorsTable;
 use Kudos\Controller\Table\SubscriptionsTable;
@@ -18,7 +16,6 @@ use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
-use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
 use Kudos\Service\Vendor\MollieVendor;
 
@@ -46,10 +43,6 @@ class Admin {
 	 */
 	private $payment;
 	/**
-	 * @var Settings
-	 */
-	private $settings;
-	/**
 	 * @var ActivatorService
 	 */
 	private $activator;
@@ -73,18 +66,16 @@ class Admin {
 		TwigService $twig,
 		PaymentService $payment,
 		ActivatorService $activator,
-		Settings $settings,
 		MollieVendor $mollie_vendor,
 		LoggerService $logger
 	) {
-		$this->version   = $version;
-		$this->mapper    = $mapper;
-		$this->twig      = $twig;
-		$this->payment   = $payment;
-		$this->activator = $activator;
-		$this->settings  = $settings;
-		$this->mollie    = $mollie_vendor;
-		$this->logger    = $logger;
+		$this->version     = $version;
+		$this->mapper      = $mapper;
+		$this->twig        = $twig;
+		$this->payment     = $payment;
+		$this->activator   = $activator;
+		$this->mollie      = $mollie_vendor;
+		$this->logger      = $logger;
 	}
 
 	/**
@@ -263,7 +254,7 @@ class Admin {
 	 */
 	public function prepare_campaigns_page() {
 		add_action( "admin_enqueue_scripts", [ $this, 'campaign_page_assets' ] );
-		$this->table = new CampaignsTable( $this->mapper, $this->settings );
+		$this->table = new CampaignsTable( $this->mapper );
 		$this->table->prepare_items();
 	}
 
@@ -319,9 +310,7 @@ class Admin {
 			$handle,
 			'kudos',
 			[
-				'version'     => $this->version,
-				'checkApiUrl' => RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_TEST,
-				'sendTestUrl' => RestRouteService::NAMESPACE . MailerRoutes::EMAIL_TEST,
+				'version' => $this->version,
 			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
@@ -442,8 +431,6 @@ class Admin {
 				die();
 			}
 
-			$settings = $this->settings;
-
 			switch ( $action ) {
 
 				case 'kudos_log_clear':
@@ -453,18 +440,18 @@ class Admin {
 					break;
 
 				case 'kudos_clear_mollie':
-					$settings->remove_setting( 'vendor_mollie' );
-					$settings->add_defaults();
+					Settings::remove_setting( 'vendor_mollie' );
+					Settings::add_defaults();
 					break;
 
 				case 'kudos_clear_campaigns':
-					$settings->remove_setting( 'campaigns' );
-					$settings->add_defaults();
+					Settings::remove_setting( 'campaigns' );
+					Settings::add_defaults();
 					break;
 
 				case 'kudos_clear_all':
-					$settings->remove_settings();
-					$settings->add_defaults();
+					Settings::remove_settings();
+					Settings::add_defaults();
 					break;
 
 				case 'kudos_clear_twig_cache':
@@ -626,8 +613,7 @@ class Admin {
 	 */
 	public function register_settings() {
 
-		$settings = $this->settings;
-		$settings->register_settings();
+		Settings::register_settings();
 
 	}
 }

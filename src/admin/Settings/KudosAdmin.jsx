@@ -78,7 +78,7 @@ class KudosAdmin extends Component {
 
         // Perform Get request
         apiFetch({
-            path: window.kudos.checkApiUrl,
+            path: 'kudos/v1/payment/test',
             method: 'GET',
         }).then((response) => {
 

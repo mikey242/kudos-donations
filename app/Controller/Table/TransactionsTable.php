@@ -5,7 +5,7 @@ namespace Kudos\Controller\Table;
 use Exception;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Settings;
+use Kudos\Helpers\Campaign;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use WP_List_Table;
@@ -440,7 +440,7 @@ class TransactionsTable extends WP_List_Table {
 		if(!$item['campaign_id']) return '';
 
 		try {
-			$campaign = Settings::get_campaign( $item['campaign_id'] );
+			$campaign = Campaign::get_campaign( $item['campaign_id'] );
 		} catch ( Exception $e ) {
 			return $e->getMessage();
 		}

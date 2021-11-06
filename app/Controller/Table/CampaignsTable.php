@@ -3,6 +3,7 @@
 namespace Kudos\Controller\Table;
 
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Campaign;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
@@ -18,19 +19,14 @@ class CampaignsTable extends WP_List_Table {
 	 * @var MapperService
 	 */
 	private $mapper;
-	/**
-	 * @var \Kudos\Helpers\Settings
-	 */
-	private $settings;
 
 	/**
 	 * Class constructor.
 	 */
-	public function __construct( MapperService $mapper_service, Settings $settings) {
+	public function __construct( MapperService $mapper_service ) {
 
-		$this->mapper = $mapper_service;
-		$this->settings = $settings;
-		$this->table = TransactionEntity::get_table_name();
+		$this->mapper   = $mapper_service;
+		$this->table    = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
 			'name' => __( 'Name', 'kudos-donations' ),
@@ -79,7 +75,7 @@ class CampaignsTable extends WP_List_Table {
 			return [];
 		}
 
-		// Add search query if exist.
+		// Add search query if it exists.
 		if ( $search ) {
 			$campaigns = array_filter( $campaigns,
 				function ( $value ) use ( $search ) {
@@ -91,7 +87,11 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$id = $campaign['id'];
 
-			$campaign_total = $this->settings->get_campaign_stats( $id );
+			$transactions = $this->mapper->get_repository(TransactionEntity::class)
+				->get_all_by([
+					'campaign_id' => $id
+				]);
+			$campaign_total = Campaign::get_campaign_stats($transactions);
 
 			$campaigns[ $key ]['currency']     = 'EUR';
 			$campaigns[ $key ]['date']         = $campaign_total['last_donation'] ?? null;

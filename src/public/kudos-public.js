@@ -206,7 +206,7 @@ jQuery(document).ready(($) => {
                     form.lastChild.disabled = true
 
                     apiFetch({
-                        path: kudos.createPaymentUrl,
+                        path: 'kudos/v1/payment/create',
                         headers: new Headers({
                             'Content-Type': 'multipart/form-data',
                             'X-WP-Nonce': kudos._wpnonce

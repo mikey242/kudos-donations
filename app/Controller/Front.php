@@ -7,13 +7,12 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
+use Kudos\Helpers\Campaign;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
-use Kudos\Rest\Route\PaymentRoutes;
-use Kudos\Service\RestRouteService;
 use Kudos\Service\TwigService;
 
 class Front {
@@ -73,11 +72,6 @@ class Front {
 	private $mapper;
 
 	/**
-	 * @var Settings
-	 */
-	private $settings;
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @param string $version The version of this plugin.
@@ -88,16 +82,13 @@ class Front {
 		LoggerService $logger,
 		PaymentService $payment,
 		TwigService $twig,
-		MapperService $mapper,
-		Settings $settings
+		MapperService $mapper
 	) {
 		$this->version  = $version;
 		$this->logger   = $logger;
 		$this->payment  = $payment;
 		$this->twig     = $twig;
 		$this->mapper   = $mapper;
-		$this->settings = $settings;
-
 	}
 
 	/**
@@ -116,7 +107,7 @@ class Front {
 		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
-		return trim("
+		return trim( "
 		:root {
 			--kudos-theme-primary: $primary;
 			--kudos-theme-primary-dark: $primary_dark;
@@ -125,7 +116,7 @@ class Front {
 			--kudos-theme-secondary-dark: $secondary_dark;
 			--kudos-theme-secondary-darker: $secondary_darker;
 		}
-		");
+		" );
 
 	}
 
@@ -148,8 +139,7 @@ class Front {
 			'kudos-donations-public',
 			'kudos',
 			[
-				'_wpnonce'         => wp_create_nonce( 'wp_rest' ),
-				'createPaymentUrl' => RestRouteService::NAMESPACE . PaymentRoutes::PAYMENT_CREATE,
+				'_wpnonce' => wp_create_nonce( 'wp_rest' ),
 			]
 		);
 
@@ -165,7 +155,7 @@ class Front {
 		wp_register_style(
 			'kudos-donations-public',
 			Assets::get_asset_url( '/public/kudos-public.css' ),
-			['kudos-donations-root'],
+			[ 'kudos-donations-root' ],
 			$this->version
 		);
 
@@ -175,8 +165,8 @@ class Front {
 	 * Register the inline root styles used by block editor and front.
 	 */
 	public function register_root_styles() {
-		wp_register_style('kudos-donations-root', false);
-		wp_add_inline_style('kudos-donations-root', $this->get_root_styles());
+		wp_register_style( 'kudos-donations-root', false );
+		wp_add_inline_style( 'kudos-donations-root', $this->get_root_styles() );
 	}
 
 	/**
@@ -240,9 +230,9 @@ class Front {
 					"donate",
 				],
 				"supports"        => [
-					"align"              => false,
-					"customClassName"    => true,
-					"typography"         => [
+					"align"           => false,
+					"customClassName" => true,
+					"typography"      => [
 						"fontSize" => false,
 					],
 				],
@@ -382,8 +372,12 @@ class Front {
 	 */
 	private function create_form( $campaign_id, $id ): string {
 
-		$campaign       = $this->settings::get_campaign( $campaign_id );
-		$campaign_stats = $this->settings->get_campaign_stats( $campaign_id );
+		$campaign       = Campaign::get_campaign( $campaign_id );
+		$transactions   = $this->mapper->get_repository(TransactionEntity::class)
+		                               ->get_all_by([
+				'campaign_id' => $campaign_id
+			]);
+		$campaign_stats = Campaign::get_campaign_stats($transactions);
 
 		$atts = [
 			'id'                => $id,
@@ -566,7 +560,7 @@ class Front {
 				->get_one_by( [ 'customer_id' => $transaction->customer_id ] );
 
 			try {
-				$campaign = Settings::get_campaign( $transaction->campaign_id );
+				$campaign = Campaign::get_campaign( $transaction->campaign_id );
 			} catch ( Exception $e ) {
 				$logger = $this->logger;
 				$logger->warning( 'Error checking transaction: ' . $e->getMessage() );
