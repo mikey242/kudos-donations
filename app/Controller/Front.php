@@ -14,7 +14,6 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\TwigService;
-use ParagonIE\Sodium\Core\Util;
 
 class Front {
 
