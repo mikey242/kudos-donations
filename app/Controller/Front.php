@@ -14,6 +14,7 @@ use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\TwigService;
+use ParagonIE\Sodium\Core\Util;
 
 class Front {
 
@@ -84,11 +85,11 @@ class Front {
 		TwigService $twig,
 		MapperService $mapper
 	) {
-		$this->version  = $version;
-		$this->logger   = $logger;
-		$this->payment  = $payment;
-		$this->twig     = $twig;
-		$this->mapper   = $mapper;
+		$this->version = $version;
+		$this->logger  = $logger;
+		$this->payment = $payment;
+		$this->twig    = $twig;
+		$this->mapper  = $mapper;
 	}
 
 	/**
@@ -373,11 +374,11 @@ class Front {
 	private function create_form( $campaign_id, $id ): string {
 
 		$campaign       = Campaign::get_campaign( $campaign_id );
-		$transactions   = $this->mapper->get_repository(TransactionEntity::class)
-		                               ->get_all_by([
-				'campaign_id' => $campaign_id
-			]);
-		$campaign_stats = Campaign::get_campaign_stats($transactions);
+		$transactions   = $this->mapper->get_repository( TransactionEntity::class )
+		                               ->get_all_by( [
+			                               'campaign_id' => $campaign_id,
+		                               ] );
+		$campaign_stats = Campaign::get_campaign_stats( $transactions );
 
 		$atts = [
 			'id'                => $id,

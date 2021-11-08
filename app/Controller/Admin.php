@@ -10,6 +10,7 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
+use Kudos\Helpers\Campaign;
 use Kudos\Helpers\Settings;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
@@ -69,13 +70,13 @@ class Admin {
 		MollieVendor $mollie_vendor,
 		LoggerService $logger
 	) {
-		$this->version     = $version;
-		$this->mapper      = $mapper;
-		$this->twig        = $twig;
-		$this->payment     = $payment;
-		$this->activator   = $activator;
-		$this->mollie      = $mollie_vendor;
-		$this->logger      = $logger;
+		$this->version   = $version;
+		$this->mapper    = $mapper;
+		$this->twig      = $twig;
+		$this->payment   = $payment;
+		$this->activator = $activator;
+		$this->mollie    = $mollie_vendor;
+		$this->logger    = $logger;
 	}
 
 	/**
@@ -582,38 +583,321 @@ class Admin {
 	}
 
 	/**
-	 * Removes the secret for the specified entity where
-	 * it matches the provided id.
-	 *
-	 * @param string $entity The class of entity.
-	 * @param string $id The ID of row.
-	 *
-	 * @return bool|int
-	 */
-	public function remove_secret_action( string $entity, string $id ) {
-
-		if ( $id ) {
-			$mapper = $this->mapper;
-			$entity = $mapper
-				->get_repository( $entity )
-				->get_one_by( [ 'id' => $id ] );
-			if ( ! $entity ) {
-				return false;
-			}
-			$entity->clear_secret();
-
-			return $mapper->save( $entity, false );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Register the kudos settings.
 	 */
 	public function register_settings() {
 
-		Settings::register_settings();
+		Settings::register_settings( self::get_settings() );
 
+	}
+
+	/**
+	 * Returns all settings in array.
+	 *
+	 * @return array
+	 */
+	public static function get_settings(): array {
+		return
+			[
+				'show_intro'             => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'vendor_mollie'          => [
+					'type'              => 'object',
+					'default'           => [
+						'connected'       => false,
+						'recurring'       => false,
+						'mode'            => 'test',
+						'payment_methods' => [],
+						'test_key'        => '',
+						'live_key'        => '',
+					],
+					'show_in_rest'      => [
+						'schema' => [
+							'type'       => 'object',
+							'properties' => [
+								'connected'       => [
+									'type' => 'boolean',
+								],
+								'recurring'       => [
+									'type' => 'boolean',
+								],
+								'mode'            => [
+									'type' => 'string',
+								],
+								'test_key'        => [
+									'type' => 'string',
+								],
+								'live_key'        => [
+									'type' => 'string',
+								],
+								'payment_methods' => [
+									'type'  => 'array',
+									'items' => [
+										'type'       => 'object',
+										'properties' => [
+											'id'            => [
+												'type' => 'string',
+											],
+											'status'        => [
+												'type' => 'string',
+											],
+											'maximumAmount' => [
+												'type'       => 'object',
+												'properties' => [
+													'value'    => [
+														'type' => 'string',
+													],
+													'currency' => [
+														'type' => 'string',
+													],
+												],
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+					'sanitize_callback' => [ Settings::class, 'sanitize_vendor' ],
+				],
+				'email_receipt_enable'   => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'email_bcc'              => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'sanitize_callback' => 'sanitize_email',
+				],
+				'smtp_enable'            => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'smtp_host'              => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'sanitize_callback' => 'sanitize_text_field',
+				],
+				'smtp_encryption'        => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'default'           => 'tls',
+					'sanitize_callback' => 'sanitize_text_field',
+				],
+				'smtp_autotls'           => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'smtp_from'              => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'default'           => null,
+					'sanitize_callback' => 'sanitize_email',
+				],
+				'smtp_username'          => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'sanitize_callback' => 'sanitize_text_field',
+				],
+				'smtp_password'          => [
+					'type'         => 'string',
+					'show_in_rest' => true,
+				],
+				'smtp_port'              => [
+					'type'              => 'number',
+					'show_in_rest'      => true,
+					'sanitize_callback' => 'intval',
+				],
+				'spam_protection'        => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'theme_colors'           => [
+					'type'              => 'object',
+					'default'           => [
+						'primary'   => '#ff9f1c',
+						'secondary' => '#2ec4b6',
+					],
+					'show_in_rest'      => [
+						'schema' => [
+							'type'       => 'object',
+							'properties' => [
+								'primary'   => [
+									'type' => 'string',
+								],
+								'secondary' => [
+									'type' => 'string',
+								],
+							],
+						],
+					],
+					'sanitize_callback' => [ Settings::class, 'recursive_sanitize_text_field' ],
+				],
+				'terms_link'             => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'default'           => null,
+					'sanitize_callback' => 'esc_url_raw',
+				],
+				'privacy_link'           => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'default'           => null,
+					'sanitize_callback' => 'esc_url_raw',
+				],
+				'completed_payment'      => [
+					'type'         => 'string',
+					'default'      => 'message',
+					'show_in_rest' => true,
+				],
+				'return_message_enable'  => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'return_message_title'   => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'default'           => __( 'Thank you!', 'kudos-donations' ),
+					'sanitize_callback' => 'sanitize_text_field',
+				],
+				'return_message_text'    => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'default'           => sprintf(
+					/* translators: %s: Value of donation. */
+						__( 'Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations' ),
+						'{{value}}'
+					),
+					'sanitize_callback' => 'sanitize_text_field',
+				],
+				'custom_return_enable'   => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'custom_return_url'      => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'sanitize_callback' => 'esc_url_raw',
+				],
+				'payment_vendor'         => [
+					'type'    => 'string',
+					'default' => 'mollie',
+				],
+				'debug_mode'             => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'enable_shortcode'       => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'donate_modal_in_footer' => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'disable_object_cache'   => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				'campaigns'              => [
+					'type'              => 'array',
+					'show_in_rest'      => [
+						'schema' => [
+							'type'  => 'array',
+							'items' => [
+								'type'       => 'object',
+								'properties' => [
+									'id'               => [
+										'type' => 'string',
+									],
+									'name'             => [
+										'type' => 'string',
+									],
+									'campaign_goal'    => [
+										'type' => 'string',
+									],
+									'additional_funds' => [
+										'type' => 'string',
+									],
+									'modal_title'      => [
+										'type' => 'string',
+									],
+									'welcome_text'     => [
+										'type' => 'string',
+									],
+									'address_enabled'  => [
+										'type' => 'boolean',
+									],
+									'address_required' => [
+										'type' => 'boolean',
+									],
+									'message_enabled'  => [
+										'type' => 'boolean',
+									],
+									'amount_type'      => [
+										'type' => 'string',
+									],
+									'fixed_amounts'    => [
+										'type' => 'string',
+									],
+									'donation_type'    => [
+										'type' => 'string',
+									],
+									'show_progress'    => [
+										'type' => 'boolean',
+									],
+									// Deprecated: do not use
+									'protected'        => [
+										'type' => 'boolean',
+									],
+								],
+							],
+						],
+					],
+					'default'           => [
+						0 => [
+							'id'               => 'default',
+							'name'             => 'Default',
+							'modal_title'      => __( 'Support us!', 'kudos-donations' ),
+							'welcome_text'     => __( 'Your support is greatly appreciated and will help to keep us going.',
+								'kudos-donations' ),
+							'address_enabled'  => false,
+							'address_required' => true,
+							'message_enabled'  => false,
+							'amount_type'      => 'both',
+							'fixed_amounts'    => '1,5,20,50',
+							'campaign_goal'    => '',
+							'additional_funds' => '',
+							'show_progress'    => false,
+							'donation_type'    => 'oneoff',
+						],
+					],
+					'sanitize_callback' => [ Campaign::class, 'sanitize_campaigns' ],
+				],
+			];
 	}
 }
