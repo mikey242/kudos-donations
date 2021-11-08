@@ -3,7 +3,6 @@
 namespace Kudos\Entity;
 
 use DateTime;
-use Kudos\Helpers\Utils;
 
 abstract class AbstractEntity {
 
@@ -25,12 +24,6 @@ abstract class AbstractEntity {
 	 * @var DateTime
 	 */
 	public $last_updated;
-	/**
-	 * The entities secret.
-	 *
-	 * @var string
-	 */
-	protected $secret;
 
 	/**
 	 * Entity object constructor.
@@ -60,18 +53,6 @@ abstract class AbstractEntity {
 	}
 
 	/**
-	 * Create the hooks associated with the child entity.
-	 */
-	public static function create_hooks() {
-
-		add_action(
-			static::get_table_name( false ) . '_remove_secret_action',
-			[ static::class, 'remove_secret_action' ]
-		);
-
-	}
-
-	/**
 	 * Returns the table name associated with entity.
 	 *
 	 * @param bool $prefix Whether to return the prefix or not.
@@ -83,52 +64,6 @@ abstract class AbstractEntity {
 		global $wpdb;
 
 		return $prefix ? $wpdb->prefix . static::TABLE : static::TABLE;
-
-	}
-
-	/**
-	 * Clears the entities secret.
-	 */
-	public function clear_secret() {
-
-		$this->secret = null;
-
-	}
-
-	/**
-	 * Set the entities secret and schedule removal.
-	 *
-	 * @param string $timeout How long the secret should be kept in the database for.
-	 *
-	 * @return string|false
-	 */
-	public function create_secret( string $timeout = '+10 minutes' ) {
-
-		// Create secret if none set.
-		if ( null === $this->secret ) {
-			$this->secret = bin2hex( wp_generate_password( 10 ) );
-		}
-
-		Utils::schedule_action(
-			strtotime( $timeout ),
-			'kudos_remove_secret_action',
-			[ static::class, $this->id ],
-			true
-		);
-
-		return wp_hash_password( $this->secret );
-	}
-
-	/**
-	 * Verify the entities secret.
-	 *
-	 * @param string $hash Hashed version of secret.
-	 *
-	 * @return bool
-	 */
-	public function verify_secret( string $hash ): bool {
-
-		return wp_check_password( $this->secret, $hash );
 
 	}
 
@@ -150,8 +85,8 @@ abstract class AbstractEntity {
 	 */
 	public static function get_entity_name(): string {
 
-		$array = explode( '\\', static::class );
-		$class = array_pop( $array );
+		$array      = explode( '\\', static::class );
+		$class      = array_pop( $array );
 		$entity_pos = strpos( $class, 'Entity' );
 
 		return substr( $class, 0, $entity_pos );

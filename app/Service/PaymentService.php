@@ -384,11 +384,12 @@ class PaymentService {
 
 		// Add order id query arg to return url if option to show message enabled.
 		if ( get_option( '_kudos_completed_payment' ) === 'message' ) {
+			$action = 'order_complete';
 			$redirect_url         = add_query_arg(
 				[
 					'kudos_action'   => 'order_complete',
 					'kudos_order_id' => $order_id,
-					'kudos_token'    => $transaction->create_secret(),
+					'kudos_nonce'    => wp_create_nonce($action . $order_id),
 				],
 				$redirect_url
 			);

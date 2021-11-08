@@ -131,11 +131,11 @@ class MailerService {
 			$subscription               = $mapper
 				->get_repository( SubscriptionEntity::class )
 				->get_one_by( [ 'subscription_id' => $subscription_id ] );
-			$token                      = $subscription->create_secret( '+1 week' );
+			$action                     = 'cancel_subscription';
 			$cancel_url                 = add_query_arg(
 				[
-					'kudos_action'          => 'cancel_subscription',
-					'kudos_token'           => $token,
+					'kudos_action'          => $action,
+					'kudos_nonce'           => wp_create_nonce( $action ),
 					'kudos_subscription_id' => $subscription_id,
 				],
 				get_home_url()

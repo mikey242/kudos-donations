@@ -446,19 +446,18 @@ class Front {
 		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
 
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
-			$token  = sanitize_text_field( wp_unslash( $_REQUEST['kudos_token'] ) );
+			$nonce  = sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) );
 
 			switch ( $action ) {
 
 				case 'order_complete':
 					$order_id = sanitize_text_field( $_REQUEST['kudos_order_id'] );
 					// Return message modal.
-					if ( ! empty( $order_id ) && ! empty( $token ) ) {
+					if ( ! empty( $order_id ) && ! empty( $nonce ) ) {
 						$transaction = $this->mapper
 							->get_repository( TransactionEntity::class )
 							->get_one_by( [ 'order_id' => $order_id ] );
-
-						if ( $transaction && $transaction->verify_secret( $token ) ) {
+						if ( $transaction && wp_verify_nonce( $nonce, $action . $order_id ) ) {
 							$atts = $this->check_transaction( $order_id );
 							if ( $atts ) {
 								echo $this->create_message_modal( $atts['modal_title'], $atts['modal_text'] );
@@ -470,7 +469,7 @@ class Front {
 				case 'cancel_subscription':
 					$subscription_id = sanitize_text_field( $_REQUEST['kudos_subscription_id'] );
 					// Cancel subscription modal.
-					if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
+					if ( ! empty( $nonce && ! empty( $subscription_id ) ) ) {
 
 						/** @var SubscriptionEntity $subscription */
 						$subscription = $this->mapper
@@ -482,7 +481,7 @@ class Front {
 							return;
 						}
 
-						if ( $subscription->verify_secret( $token ) ) {
+						if ( wp_verify_nonce( $nonce, $action ) ) {
 							if ( $this->payment->cancel_subscription( $subscription_id ) ) {
 								echo $this->create_message_modal(
 									__( 'Subscription cancelled', 'kudos-donations' ),
