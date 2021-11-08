@@ -62,13 +62,13 @@ This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wi
 
 In order to use recurring payments Mollie requires that you have either SEPA Direct Debit OR credit card payment methods enabled on your account. For more information visit [this link](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
 
-= I've enabled the required recurring payment methods but I still cannot use recurring.
+= I've enabled the required recurring payment methods, but I still cannot use recurring.
 
 If you modified your Mollie account after adding it to Kudos Donations your will need to re-sync the settings. To do this visit the Mollie tab under the settings page and click the "Refresh API" link.
 
 = How much does Mollie cost? =
 
-Mollie registration is free and you only pay a small fee per transaction. See [here](https://www.mollie.com/pricing) for details.
+Mollie registration is free, and you only pay a small fee per transaction. See [here](https://www.mollie.com/pricing) for details.
 
 = Can anyone use Mollie? =
 
@@ -120,7 +120,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.1.1 =
 * Prevent interacting with form once submit button pressed
-* Memory usage optimizations
+* Various memory usage optimizations
 * Update Mollie API client to 2.39.0
 * Update ActionScheduler to 3.4.0
 
@@ -238,7 +238,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Fix migration issue with Mollie connected status
 
 = 2.4.0 =
-* Add API check for Mollie recurring payments ability. Please see [here](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-) for more detail.
+* Add API check for Mollie recurring payments' ability. Please see [here](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-) for more detail.
 * Add additional theme colours
 * Change default donation type to oneoff
 * Improve campaign settings sanitization
