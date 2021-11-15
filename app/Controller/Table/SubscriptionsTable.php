@@ -177,7 +177,7 @@ class SubscriptionsTable extends WP_List_Table {
 
 			case 'cancel':
 				// Verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
 						'bulk-' . $this->_args['singular'] ) ) {
 					die();
 				}
@@ -190,7 +190,7 @@ class SubscriptionsTable extends WP_List_Table {
 
 			case 'delete':
 				// Verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
 						'bulk-' . $this->_args['singular'] ) ) {
 					die();
 				}
@@ -204,7 +204,7 @@ class SubscriptionsTable extends WP_List_Table {
 
 			case 'bulk-delete':
 				// Verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
 						'bulk-' . $this->_args['plural'] ) ) {
 					die();
 				}

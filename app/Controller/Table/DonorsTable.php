@@ -144,9 +144,7 @@ class DonorsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Process cancel and bulk-cancel actions
-	 *
-	 * @since   2.0.0
+	 * Process cancel and bulk-cancel actions.
 	 */
 	public function process_bulk_action() {
 
@@ -155,7 +153,7 @@ class DonorsTable extends WP_List_Table {
 
 			case 'delete':
 				// In our file that handles the request, verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
 						'bulk-' . $this->_args['singular'] ) ) {
 					die();
 				}
@@ -168,7 +166,7 @@ class DonorsTable extends WP_List_Table {
 
 			case 'bulk-delete':
 				// In our file that handles the request, verify the nonce.
-				if ( isset( $_REQUEST['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
 						'bulk-' . $this->_args['plural'] ) ) {
 					die();
 				}
@@ -190,7 +188,6 @@ class DonorsTable extends WP_List_Table {
 	 * @param string $id Value to search for.
 	 *
 	 * @return false|int
-	 * @since   1.0.0
 	 */
 	protected function delete_record( string $column, string $id ) {
 
