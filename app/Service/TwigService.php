@@ -82,7 +82,6 @@ class TwigService {
 	public function initialize_twig() {
 
 		$paths = apply_filters( 'kudos_twig_template_paths', $this->template_paths );
-//		$this->logger->debug( 'Template paths', $paths );
 		$loader = $this->loader;
 
 		foreach ( $paths as $namespace => $path ) {
@@ -185,6 +184,11 @@ class TwigService {
 
 		}, [ 'is_safe' => [ 'html' ] ] );
 		$this->twig->addFilter( $wp_kses_post );
+
+		$number_format = new TwigFilter('number_format_i18n', function($number) {
+			return number_format_i18n($number);
+		});
+		$this->twig->addFilter($number_format);
 
 	}
 
