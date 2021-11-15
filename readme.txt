@@ -2,7 +2,7 @@
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
-Tested up to: 5.8
+Tested up to: 5.8.2
 Requires PHP: 7.2.9
 Stable tag: 3.1.0
 License: GPLv2 or later
