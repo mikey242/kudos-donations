@@ -364,13 +364,13 @@ class Front {
 	/**
 	 * Builds the form object from supplied campaign_id.
 	 *
-	 * @param $campaign_id
-	 * @param $id
+	 * @param string $campaign_id
+	 * @param string $id
 	 *
 	 * @return string
 	 * @throws Exception
 	 */
-	private function create_form( $campaign_id, $id ): string {
+	private function create_form( string $campaign_id, string $id ): string {
 
 		$campaign       = Campaign::get_campaign( $campaign_id );
 		$transactions   = $this->mapper->get_repository( TransactionEntity::class )
