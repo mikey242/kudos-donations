@@ -120,6 +120,8 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.1.1 =
 * Prevent interacting with form once submit button pressed
+* Display goal in localized format
+* Fix various CSRF security flaws
 * Various memory usage optimizations
 * Update Mollie API client to 2.39.0
 * Update ActionScheduler to 3.4.0
