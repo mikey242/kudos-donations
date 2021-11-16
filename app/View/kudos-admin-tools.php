@@ -32,7 +32,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 		<?php
 
-		$url               = admin_url( 'admin.php?page=kudos-debug' );
+		$url               = admin_url( 'admin.php?page=kudos-tools' );
 
 		switch ( $tab ) :
 
