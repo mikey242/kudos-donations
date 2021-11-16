@@ -335,11 +335,11 @@ class MapperService {
 
 	public function get_all_between( $start, $end ): array {
 
-		$wpdb = $this->wpdb;
-		$table  = $this->get_table_name();
+		$wpdb         = $this->wpdb;
+		$table        = $this->get_table_name();
 		$query_string = $wpdb->prepare( "created BETWEEN %s AND %s", $start, $end );
-		$query = "SELECT $table.* FROM $table WHERE $query_string";
-		$results = $this->get_results( $query );
+		$query        = "SELECT $table.* FROM $table WHERE $query_string";
+		$results      = $this->get_results( $query );
 
 		if ( ! empty( $results ) ) {
 			return $this->map_to_class( $results );
@@ -384,7 +384,7 @@ class MapperService {
 			[ $column => $value ]
 		);
 
-		if ( $deleted ) {
+		if ( false !== $deleted ) {
 			// Invalidate cache if database updated.
 			$this->get_cache_incrementer( true );
 			$this->logger->info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
