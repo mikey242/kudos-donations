@@ -118,6 +118,11 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.1.2 =
+* Remove Mollie settings from export
+* Rename 'Debug' page to 'Tools' and always make visible
+* Include missing CSRF fixes from 3.1.1
+
 = 3.1.1 =
 * Prevent interacting with form once submit button pressed
 * Display goal in localized format
