@@ -10,7 +10,7 @@ const DebugModePanel = (props) => {
             <ToggleControl
                 label={__('Enable debug mode', 'kudos-donations')}
                 help={__(
-                    'This will enable the debug logging and a debug menu found under Kudos.',
+                    'This will enable debug logging and an extra debug menu found under "Tools".',
                     'kudos-donations'
                 )}
                 checked={props.settings._kudos_debug_mode || ''}

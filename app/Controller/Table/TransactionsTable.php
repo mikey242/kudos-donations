@@ -20,12 +20,12 @@ class TransactionsTable extends WP_List_Table {
 	private $mapper;
 
 	/**
-	 * Class constructor
+	 * Class constructor.
 	 */
 	public function __construct( MapperService $mapper_service ) {
 
 		$this->mapper = $mapper_service;
-		$this->table = TransactionEntity::get_table_name();
+		$this->table  = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
 			'name'        => __( 'Name', 'kudos-donations' ),
@@ -60,7 +60,7 @@ class TransactionsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Call this function where the table is to be displayed
+	 * Call this function where the table is to be displayed.
 	 */
 	public function display() {
 
@@ -71,7 +71,7 @@ class TransactionsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Get the table data
+	 * Get the table data.
 	 *
 	 * @return array
 	 */
@@ -89,7 +89,7 @@ class TransactionsTable extends WP_List_Table {
 			LEFT JOIN $join_table on $join_table.customer_id = $table.customer_id
 		";
 
-		// Having clause
+		// Having clause.
 		if ( $view ) {
 			global $wpdb;
 			$having[] = $wpdb->prepare( "
@@ -110,13 +110,13 @@ class TransactionsTable extends WP_List_Table {
 		$query  = $query . $having;
 
 		return $this->mapper
-			->get_repository(TransactionEntity::class)
+			->get_repository( TransactionEntity::class )
 			->get_results( $query );
 
 	}
 
 	/**
-	 * Returns a list of columns to include in table
+	 * Returns a list of columns to include in table.
 	 *
 	 * @return array
 	 */
@@ -139,7 +139,7 @@ class TransactionsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Define which columns are hidden
+	 * Define which columns are hidden.
 	 *
 	 * @return array
 	 */
@@ -152,7 +152,7 @@ class TransactionsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Define the sortable columns
+	 * Define the sortable columns.
 	 *
 	 * @return array
 	 */
@@ -176,7 +176,7 @@ class TransactionsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Render the bulk edit checkbox
+	 * Render the bulk edit checkbox.
 	 *
 	 * @param array $item Array of results.
 	 *
@@ -192,7 +192,7 @@ class TransactionsTable extends WP_List_Table {
 	}
 
 	/**
-	 * Process delete and bulk-delete actions
+	 * Process delete and bulk-delete actions.
 	 *
 	 */
 	public function process_bulk_action() {
@@ -242,7 +242,7 @@ class TransactionsTable extends WP_List_Table {
 	protected function delete_record( string $column, string $id ) {
 
 		return $this->mapper
-			->get_repository(TransactionEntity::class)
+			->get_repository( TransactionEntity::class )
 			->delete( $column, $id );
 
 	}
@@ -437,7 +437,9 @@ class TransactionsTable extends WP_List_Table {
 	 */
 	protected function column_campaign_id( array $item ): string {
 
-		if(!$item['campaign_id']) return '';
+		if ( ! $item['campaign_id'] ) {
+			return '';
+		}
 
 		try {
 			$campaign = Campaign::get_campaign( $item['campaign_id'] );

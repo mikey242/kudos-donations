@@ -200,7 +200,7 @@ class TwigService {
 		$logger = $this->logger;
 
 		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
-			$logger->info( 'Twig cache directory created successfully', [ 'location' => self::CACHE_DIR ] );
+			$logger->info( 'Twig cache directory created successfully.', [ 'location' => self::CACHE_DIR ] );
 			$this->clearCache();
 
 			return;
@@ -225,7 +225,7 @@ class TwigService {
 			$file->isDir() ? $files ++ && rmdir( $file ) : $folders ++ && unlink( $file );
 		}
 		$this->logger->debug(
-			'Twig cache cleared',
+			'Twig cache cleared.',
 			[
 				'files'   => $files,
 				'folders' => $folders,

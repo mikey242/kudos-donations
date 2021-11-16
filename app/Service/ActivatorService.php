@@ -64,7 +64,7 @@ class ActivatorService {
 		Settings::add_defaults( $settings );
 
 		update_option( '_kudos_donations_version', KUDOS_VERSION );
-		$logger->info( 'Kudos Donations plugin activated', [ 'version' => KUDOS_VERSION ] );
+		$logger->info( 'Kudos Donations plugin activated.', [ 'version' => KUDOS_VERSION ] );
 
 		// Schedule log file clearing.
 		Utils::schedule_recurring_action( strtotime( 'today midnight' ), DAY_IN_SECONDS, 'kudos_check_log' );

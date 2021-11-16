@@ -9,7 +9,7 @@ const ExportSettingsPanel = (props) => {
     const exportSettings = () => {
 
         const url = window.URL.createObjectURL(
-            new Blob([JSON.stringify(props.settings)], {
+            new Blob([JSON.stringify(_.omit(props.settings, '_kudos_vendor_mollie'))], {
                 type: 'application/json',
             })
         )
@@ -25,7 +25,7 @@ const ExportSettingsPanel = (props) => {
         <SettingCard title={__('Export settings', 'kudos-donations')}>
             <BaseControl
                 id="export-1"
-                help={__('Note: this file will contain sensitive information and should be kept safe.', 'kudos-donations')}
+                help={__('Note: this file may contain sensitive information and should be kept safe.', 'kudos-donations')}
             >
                 <Button
                     isLink

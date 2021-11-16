@@ -390,7 +390,7 @@ class MapperService {
 			$this->logger->info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		} else {
-			$this->logger->warning( 'Error deleting record.',
+			$this->logger->error( 'Error deleting record.',
 				[ 'table' => $this->get_table_name(), $column => $value ] );
 		}
 
