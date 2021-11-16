@@ -187,13 +187,13 @@ class Admin {
 		 * Debug page.
 		 */
 		$debug_page_hook_suffix = add_submenu_page(
-			KUDOS_DEBUG ? 'kudos-settings' : null,
-			'Kudos Debug',
-			'Debug',
+			'kudos-settings',
+			'Kudos Tools',
+			'Tools',
 			'manage_options',
-			'kudos-debug',
+			'kudos-tools',
 			function () {
-				require_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-debug.php';
+				require_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-tools.php';
 			}
 		);
 

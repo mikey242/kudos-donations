@@ -18,23 +18,27 @@ $tab         = $_GET['tab'] ?? $default_tab;
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 	<nav class="nav-tab-wrapper">
-		<a href="?page=kudos-debug&tab=log"
+		<a href="?page=kudos-tools&tab=log"
 		   class="nav-tab <?php echo ( 'log' === $tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
-		<a href="?page=kudos-debug&tab=actions"
-		   class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
+		<?php
+		if ( KUDOS_DEBUG ):
+			?>
+			<a href="?page=kudos-tools&tab=actions"
+			   class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
+		<?php endif; ?>
 	</nav>
 
 	<div class="tab-content">
 
 		<?php
 
-		$url = admin_url( 'admin.php?page=kudos-debug' );
+		$url               = admin_url( 'admin.php?page=kudos-debug' );
 
 		switch ( $tab ) :
 
 			case 'log':
 				$url = add_query_arg( 'tab', 'log', $url );
-				$logger = new LoggerService();
+				$logger    = new LoggerService();
 				$log_array = $logger->get_as_array();
 				?>
 
@@ -94,10 +98,10 @@ $tab         = $_GET['tab'] ?? $default_tab;
 								<?php echo esc_attr( $level ); ?>
 							</td>
 							<td title="<?php echo( $message ); ?>">
-								<?php echo( Utils::truncate_string($message, 255) ); ?>
+								<?php echo( Utils::truncate_string( $message, 255 ) ); ?>
 							</td>
 							<td title="<?php echo( $context ); ?>">
-								<?php echo( Utils::truncate_string($context, 255) ); ?>
+								<?php echo( Utils::truncate_string( $context, 255 ) ); ?>
 							</td>
 
 						</tr>
@@ -114,8 +118,9 @@ $tab         = $_GET['tab'] ?? $default_tab;
 			case 'actions':
 				$url = add_query_arg( 'tab', 'actions', $url );
 				?>
-				<p>Please use the following actions only if you are having issues. Remember to backup your data before
-					performing any of these actions.</p>
+				<p><strong>Please use the following actions only if you are having issues. Remember to backup your data
+						before
+						performing any of these actions.</strong></p>
 				<hr/>
 
 				<p>Settings actions.</p>
