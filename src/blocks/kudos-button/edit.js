@@ -4,7 +4,7 @@ import {AlignmentToolbar, BlockControls, InspectorControls, RichText, useBlockPr
 import {PanelBody, RadioControl, SelectControl} from "@wordpress/components"
 import {__} from "@wordpress/i18n"
 import api from '@wordpress/api'
-import {KudosButton} from "./KudosButton"
+import {KudosButton} from "../../common/components/KudosButton"
 
 class ButtonEdit extends Component {
 

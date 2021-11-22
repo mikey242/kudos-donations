@@ -285,51 +285,7 @@ class Front {
 					$this->payment::get_vendor_name() ) );
 			}
 
-			// Twig service and alignment.
-			$twig      = $this->twig;
-			$alignment = $atts['alignment'] ?? 'none';
-			$id        = Utils::generate_id();
-
-			// Create the form based on campaign id.
-			$form = $this->create_form( $atts['campaign_id'], $id );
-
-			// If type is form then stop and return form.
-			if ( isset( $atts['type'] ) && $atts['type'] === 'form' ) {
-				return $this->render_wrapper( $form, $alignment );
-			}
-
-			// If type is button, create modal and button for output.
-			$modal = $this->render_wrapper( $twig->render(
-				self::MODAL_TEMPLATE,
-				[
-					'id'      => $id,
-					'content' => $form,
-				]
-			) );
-
-			$button = $this->render_wrapper( $twig->render(
-				self::BUTTON_TEMPLATE,
-				[
-					'id'           => $id,
-					'button_label' => $atts['button_label'],
-					'target'       => $id,
-				]
-			),
-				$alignment );
-
-			// Place markup in footer if setting enabled.
-			if ( Settings::get_setting( 'donate_modal_in_footer' ) ) {
-				add_action( 'wp_footer',
-					function () use ( $modal ) {
-						echo $modal;
-					}
-				);
-
-				// Empty modal variable.
-				$modal = null;
-			}
-
-			return $button . $modal;
+			return '<div id=kudos-donations></div>';
 
 		} catch ( Exception $e ) {
 

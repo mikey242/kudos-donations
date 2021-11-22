@@ -39,10 +39,7 @@ mix
     // Public assets.
     .js('src/public/kudos-public.js', 'public')
     .postCss('src/public/kudos-public.css', 'public', [
-        require('tailwindcss')('./tailwind.config.js'),
-        require("postcss-prefixwrap")('[id^=kudos\\-donations\\-]', {
-            ignoredSelectors: [':root'],
-        })
+        require('tailwindcss')('./tailwind.config.js')
     ])
 
     // Block assets.

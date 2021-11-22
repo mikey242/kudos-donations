@@ -6,7 +6,6 @@ const plugin = require('tailwindcss/plugin')
 module.exports = {
     mode: 'jit',
     prefix: 'kd-',
-    important: true,
     purge: {
         enabled: true,
         content: [

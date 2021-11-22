@@ -17,13 +17,7 @@
     }
 }
 
-*:not(path):not(svg):not(.kd-style-ignore):not(.kd-style-ignore *),
-*::before,
-*::after {
-    all: initial;
-    font-size: inherit;
-    opacity: 1;
-    content: none !important; /* Needed to overwrite aggressive theme selectors */
+* {
     @apply kd-font-sans kd-box-border kd-leading-normal;
 }
 

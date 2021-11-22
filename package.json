@@ -46,6 +46,8 @@
     "jquery-validation": "1.19.3",
     "lodash": "^4.17.21",
     "party-js": "^2.1.2",
+    "react-frame-component": "^5.1.0",
+    "react-modal": "^3.14.4",
     "tailwindcss": "^2.2.19"
   }
 }
