@@ -41,21 +41,29 @@ class KudosModal extends Component {
     }
 
     render() {
+
         return (
-            <KudosFrame
-                color={this.state.color}
-            >
+            <>
                 <KudosButton
-                    onClick={this.handleOpenModal}>
+                    onClick={this.handleOpenModal}
+                >
                     Donate Now!
                 </KudosButton>
                 <Modal
                     isOpen={this.state.showModal}
+                    onRequestClose={this.handleCloseModal}
+                    parentSelector={
+                        () => document.body
+                    }
                     contentLabel="Donate Modal"
                 >
-                    <button onClick={this.handleCloseModal}>Close Modal</button>
+                    <KudosFrame
+                        color={this.state.color}
+                    >
+                        <button onClick={this.handleCloseModal}>Close Modal</button>
+                    </KudosFrame>
                 </Modal>
-            </KudosFrame>
+            </>
         )
     }
 
