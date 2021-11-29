@@ -27,7 +27,7 @@ services:
       - APACHE_RUN_USER="www-data"
       - APACHE_RUN_GROUP="www-data"
     depends_on:
-      - "mysql"
+      - "db"
     networks:
       - "back"
     volumes:
