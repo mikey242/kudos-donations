@@ -18,79 +18,79 @@
 }
 
 * {
-    @apply kd-font-sans kd-box-border kd-leading-normal;
+    @apply font-sans text-base leading-normal;
 }
 
 ::placeholder {
-    @apply kd-font-sans;
+    @apply font-sans;
 }
 
 .kudos-modal.is-open {
-    @apply kd-block kd-overflow-x-hidden kd-overflow-y-auto !important;
+    @apply block overflow-x-hidden overflow-y-auto !important;
 }
 
-.kd-is-loading + .kd-spinner {
-    @apply kd-block !important;
+.is-loading + .spinner {
+    @apply block !important;
 }
 
-.kd-is-loading {
-    @apply kd-opacity-50 !important;
+.is-loading {
+    @apply opacity-50 !important;
 }
 
 .kudos-modal [data-current-tab="initial"] [data-direction="back"] {
     display: none;
 }
 
-.kd-logo-animate:hover .kd-logo {
-    @apply kd--rotate-90 !important;
+.logo-animate:hover .logo {
+    @apply -rotate-90 !important;
 }
-.kd-logo-animate:hover .kd-logo .kd-logo-heart {
+.logo-animate:hover .logo .logo-heart {
     backface-visibility: visible;
-    @apply kd-rotate-x-180 !important;
+    @apply rotate-x-180 !important;
 }
 
-form[id^=kudos-form] small.error {
-    @apply kd-order-last kd-mt-1 kd-block kd-text-sm kd-text-red-500;
+form small.error {
+    @apply order-last mt-1 block text-sm text-red-500;
 }
 
-form[id^=kudos-form] input.error,
-form[id^=kudos-form] select.error,
-form[id^=kudos-form] input.error ~ .checkmark {
-    @apply kd-border-red-500 !important;
+form input.error,
+form select.error,
+form input.error ~ .checkmark {
+    @apply border-red-500 !important;
 }
 
-form[id^=kudos-form] .kudos-radio-amount {
+form .kudos-radio-amount {
     min-width: 65px !important;
 }
 
-form[id^=kudos-form] .kudos-radio-amount input:checked + label {
-    @apply kd-text-white kd-border-transparent !important;
+form .kudos-radio-amount input:checked + label {
+    @apply text-white border-transparent !important;
     background-color: var(--kudos-theme-primary) !important;
 }
 
-form[id^=kudos-form] .kudos-radio-amount input:focus + label {
-    @apply kd-ring-primary kd-ring kd-ring-offset-2;
+form .kudos-radio-amount input:focus + label {
+    @apply ring-primary ring ring-offset-2;
 }
 
-form[id^=kudos-form] input[name=value]:required + span {
-    @apply kd-text-white kd-border-transparent !important;
+form input[name=value]:required + span {
+    @apply text-white border-transparent !important;
     background-color: var(--kudos-theme-primary) !important;
 }
 
 .kudos-modal[aria-hidden=false] .kudos-modal-overlay {
-    @apply kd-animate-fade-in;
+    @apply animate-fade-in;
 }
 
 .kudos-modal[aria-hidden=false] .kudos-modal-container {
-    @apply kd-animate-slide-in;
+    @apply animate-slide-in;
 }
 
 .kudos-modal[aria-hidden=true] .kudos-modal-overlay {
-    @apply kd-animate-fade-out;
+    @apply animate-fade-out;
 }
 
 .kudos-modal[aria-hidden=true] .kudos-modal-container {
-    @apply kd-animate-slide-out;
+    @apply animate-slide-out;
 }
 
 /* Base */

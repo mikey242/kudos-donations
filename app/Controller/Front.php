@@ -285,7 +285,10 @@ class Front {
 					$this->payment::get_vendor_name() ) );
 			}
 
-			return '<div id=kudos-donations></div>';
+			$alignment = 'has-text-align-' . $atts['alignment'] ?? 'none';
+
+			return "<div><kudos-donations class='$alignment' label='". $atts['button_label'] ."' align='". $atts['alignment'] ."' campaign='". $atts['campaign_id'] ."'>
+					</kudos-donations></div>";
 
 		} catch ( Exception $e ) {
 
@@ -297,6 +300,7 @@ class Front {
 
 		// Nothing displayed to visitors if there is a problem.
 		return null;
+
 
 	}
 

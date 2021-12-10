@@ -215,7 +215,7 @@ const CampaignPanel = ({settings, campaign, removeCampaign, handleInputChange, a
             </SettingCard>
 
 
-            <CardFooter className={"kd-box-border"}>
+            <CardFooter className={"box-border"}>
                 <CopyToClipBoard
                     text={'[kudos campaign_id="' + campaign.id + '"]'}
                     onCopy={() => setHasCopied(true)}

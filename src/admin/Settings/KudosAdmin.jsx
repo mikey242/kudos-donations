@@ -230,7 +230,7 @@ class KudosAdmin extends Component {
         // Show spinner if not yet loaded
         if (!this.state.isAPILoaded) {
             return (
-                <div className="kd-absolute kd-inset-0 kd-flex kd-items-center kd-justify-center">
+                <div className="absolute inset-0 flex items-center justify-center">
                     <Spinner/>
                 </div>
             )
@@ -328,7 +328,7 @@ class KudosAdmin extends Component {
                 />
 
                 <TabPanel
-                    className={"kudos-tab-panel kd-mx-auto kd-mt-5 kd-w-[768px]" + (this.state.isAPISaving ? " api-saving" : "")}
+                    className={"kudos-tab-panel mx-auto mt-5 w-[768px]" + (this.state.isAPISaving ? " api-saving" : "")}
                     onSelect={(tab) => {
                         this.changeTab(tab)
                     }}

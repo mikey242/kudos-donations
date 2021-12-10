@@ -21,22 +21,22 @@ const Header = (props) => {
 
     return (
         <div
-            className="kudos-dashboard-header kd-sticky kd-border-solid kd-border-1 kd-border-gray-300 kd-z-1050 kd-bg-white kd-py-3">
-            <div className="kd-w-[768px] kd-mx-auto kd-flex kd-items-center kd-justify-between">
-                <div className="kd-flex">
-                    <a title={__('Visit Kudos Donations')} className="kd-flex kd-mr-4 kd-logo-animate" href="https://kudosdonations.com"
+            className="kudos-dashboard-header sticky border-solid border-1 border-gray-300 z-1050 bg-white py-3">
+            <div className="w-[768px] mx-auto flex items-center justify-between">
+                <div className="flex">
+                    <a title={__('Visit Kudos Donations')} className="flex mr-4 logo-animate" href="https://kudosdonations.com"
                        target="_blank">
                         <KudosLogo/>
                     </a>
                     <h1>{__('Kudos Donations', 'kudos-donations')}</h1>
                     <span
-                        className="kudos-version kd-self-center kd-font-bold kd-rounded-lg kd-p-3 kd-ml-4 kd-border-1 kd-border-solid kd-border-gray-400">
+                        className="kudos-version self-center font-bold rounded-lg p-3 ml-4 border-1 border-solid border-gray-400">
 						{applyFilters('kudos.settings.headerVersion', window.kudos.version)}
 					</span>
                 </div>
-                <div className="kd-flex kd-items-center">
+                <div className="flex items-center">
 					<span
-                        className={'kudos-api-status ' + statusClass + ' kd-text-gray-600 kd-mr-4'}
+                        className={'kudos-api-status ' + statusClass + ' text-gray-600 mr-4'}
                     >
 						{status}
 					</span>

@@ -1,18 +1,18 @@
 import {KudosLogo} from "./KudosLogo"
 
-const KudosButton = ({children, className, color, onClick= null}) => {
+const KudosButton = ({children, className, color, id, onClick= null}) => {
 
     return (
         <div
-            id={'kudos-donations-' + Math.random().toString(36).substr(2, 9)}
-            className={"kudos-donations kd-style-ignore" + className}
+            id={'kudos-button'}
+            className={"kudos-donations"}
         >
             <div
-                className={'kd-transition kd-ease-in-out kd-font-sans focus:kd-ring-primary focus:kd-ring focus:kd-ring-offset-2 focus:kd-outline-none kd-text-center kd-text-white kd-leading-normal kd-normal-case kd-no-underline kd-w-auto kd-h-auto kd-inline-flex kd-items-center kd-select-none kd-py-3 kd-px-5 kd-rounded-lg kd-cursor-pointer kd-shadow-none kd-border-none kd-bg-primary hover:kd-bg-primary-dark kd-logo-animate kudos-button-donate'}
+                className={'ease-in-out font-sans focus:ring-primary focus:ring focus:ring-offset-2 focus:outline-none text-center text-white leading-normal normal-case no-underline w-auto h-auto inline-flex items-center select-none py-3 px-5 rounded-lg cursor-pointer shadow-none border-none bg-primary hover:bg-primary-dark logo-animate'}
                 onClick={ () => onClick && onClick()}
                 style={{backgroundColor: color}}
             >
-                <div className="kd-mr-3 kd-flex kd-text-white">
+                <div className="mr-3 flex text-white">
                     <KudosLogo
                         lineColor="currentColor"
                         heartColor="currentColor"

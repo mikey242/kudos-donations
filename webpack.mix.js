@@ -7,9 +7,6 @@ mix
     .setPublicPath('dist')
     .setResourceRoot('/wp-content/plugins/kudos-donations/dist')
     .options({
-        postCss: [
-            require('postcss-nested')
-        ],
         terser: {
             terserOptions: {
                 toplevel: false,
@@ -54,7 +51,7 @@ mix
     ])
 
     // BrowserSync.
-    .browserSync('localhost')
+    .browserSync('kudos.test')
 
     // Add version hash to filenames.
     .version()

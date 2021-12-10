@@ -42,12 +42,12 @@ const Guide = ({pages = [], className, onFinish}) => {
 
     const pageNav = pages.map((page, i) => {
         const isAccessible = furthestPage >= i
-        const currentClass = currentPage === i ? "kd-bg-orange-500" : "kd-bg-transparent"
-        const accessibleClass = isAccessible ? "kd-cursor-pointer kd-border-orange-500" : "kd-border-orange-200"
+        const currentClass = currentPage === i ? "bg-orange-500" : "bg-transparent"
+        const accessibleClass = isAccessible ? "cursor-pointer border-orange-500" : "border-orange-200"
         const classes = classnames(currentClass, accessibleClass)
         return (
             <li
-                className={classnames(classes, "kd-border kd-border-solid kd-m-0 kd-mx-2 kd-rounded-full kd-w-2 kd-h-2")}
+                className={classnames(classes, "border border-solid m-0 mx-2 rounded-full w-2 h-2")}
                 key={i}
                 onClick={() => isAccessible ? setCurrentPage(i) : null}
             >
@@ -62,33 +62,33 @@ const Guide = ({pages = [], className, onFinish}) => {
             ])}
             tabIndex="-1"
             onKeyDown={(e) => handleKeyPress(e)}
-            className={classnames("intro kd-text-2xl kd-leading-6 kd-fixed kd-top-0 kd-left-0 kd-bottom-0 kd-right-0 kd-z-[100000] kd-w-screen kd-min-h-screen kd-bg-green-500", className)}>
-            <div className={"kd-h-full kd-flex kd-justify-center kd-items-center kd-overflow-auto"}>
+            className={classnames("intro text-2xl leading-6 fixed top-0 left-0 bottom-0 right-0 z-[100000] w-screen min-h-screen bg-green-500", className)}>
+            <div className={"h-full flex justify-center items-center overflow-auto"}>
                 <div
-                    className={"intro-content kd-bg-gray-50 kd-flex kd-flex-col kd-justify-center kd-items-center kd-h-full kd-w-[768px]"}>
+                    className={"intro-content bg-gray-50 flex flex-col justify-center items-center h-full w-[768px]"}>
                     <small
-                        className={"kd-ml-auto kd-mr-3 kd-mt-3 kd-cursor-pointer kd-text-gray-500 kd-underline"}
+                        className={"ml-auto mr-3 mt-3 cursor-pointer text-gray-500 underline"}
                         onClick={onFinish}
                     >
                         {__('skip', 'kudos-donations')}
                     </small>
-                    <div className="intro-content kd-m-auto kd-w-3/4">
-                        <div className="intro-image kd-w-full">
-                            <img alt="Page graphic" className={"kd-w-full"} src={pages[currentPage].imageSrc}/>
+                    <div className="intro-content m-auto w-3/4">
+                        <div className="intro-image w-full">
+                            <img alt="Page graphic" className={"w-full"} src={pages[currentPage].imageSrc}/>
                         </div>
-                        <h1 className={"kd-leading-normal kd-text-center"}>{pages[currentPage].heading}</h1>
+                        <h1 className={"leading-normal text-center"}>{pages[currentPage].heading}</h1>
                         {pages[currentPage].content}
                     </div>
                     <div
-                        className="intro-nav kd-py-3 kd-border-0 kd-border-t kd-border-solid kd-border-gray-200 kd-flex kd-justify-between kd-items-center kd-w-11/12 kd-mt-5 kd-mb-5">
+                        className="intro-nav py-3 border-0 border-t border-solid border-gray-200 flex justify-between items-center w-11/12 mt-5 mb-5">
                         <Btn
-                            className={canGoBack ? "kd-visible" : "kd-invisible"}
+                            className={canGoBack ? "visible" : "invisible"}
                             onClick={goBack}
                         >
                             {__('Previous', 'kudos-donations')}
                         </Btn>
 
-                        <ul className={"kd-flex kd-justify-center kd-m-0"}>
+                        <ul className={"flex justify-center m-0"}>
                             {pageNav}
                         </ul>
                         {canGoForward && (

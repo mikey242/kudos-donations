@@ -60,7 +60,7 @@ const CampaignsTab = (props) => {
             <br/>
 
             <Card>
-                <CardHeader className={"kd-box-border"}>
+                <CardHeader className={"box-border"}>
                     <div>
                         <h3>{__('Campaign details', 'kudos-donations')}</h3>
                         {typeof campaigns[campaign] !== 'undefined' ?

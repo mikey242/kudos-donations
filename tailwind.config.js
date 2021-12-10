@@ -5,12 +5,12 @@ const plugin = require('tailwindcss/plugin')
 
 module.exports = {
     mode: 'jit',
-    prefix: 'kd-',
     purge: {
         enabled: true,
         content: [
             './src/admin/**/*.{js,jsx}',
             './src/blocks/**/*.{js,jsx}',
+            './src/common/**/*.{js,jsx}',
             './src/public/**/*.{js,jsx}',
             './src/helpers/**/*.{js,jsx}',
             './templates/**/*.twig',
@@ -23,23 +23,23 @@ module.exports = {
             ...defaultTheme.screens
         },
         fontSize: {
-            base: '16px',
-            xs: '0.75em',
-            sm: '0.875em',
-            lg: '1.125em', //'18px'
-            '2xl': '1.5em',
-            '4xl': '2.25em', //'36px'
+            base: '18px',
+            xs: '0.75rem',
+            sm: '0.875rem',
+            lg: '1.125rem', //'18px'
+            '2xl': '1.5rem',
+            '4xl': '2.25rem', //'36px'
         },
         fontFamily: {
             sans: ['montserratregular', 'Century Gothic', 'sans-serif'],
             serif: ['libre_baskervillebold', 'Times New Roman', 'serif']
         },
         maxWidth: {
-            lg: '32em',
+            lg: '32rem',
         },
         minWidth: {
             0: '0',
-            1: '1em',
+            1: '1rem',
             full: '100%',
         },
         inset: {
@@ -49,13 +49,13 @@ module.exports = {
         },
         backgroundSize: {
             'contain': 'contain',
-            '8': '2em'
+            '8': '2rem'
         },
         borderRadius: {
             none: '0',
-            DEFAULT: '0.25em',
+            DEFAULT: '0.25rem',
             sm: '2px',
-            lg: '0.5em',
+            lg: '0.5rem',
             full: '9999px'
         },
         borderWidth: {

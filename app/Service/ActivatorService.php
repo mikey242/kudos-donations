@@ -7,7 +7,6 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
-use Kudos\Helpers\Utils;
 use Kudos\Helpers\WpDb;
 
 /**

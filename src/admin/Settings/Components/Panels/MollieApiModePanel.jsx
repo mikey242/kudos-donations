@@ -35,7 +35,7 @@ const MollieApiModePanel = (props) => {
                 <PanelRow>
                     <ButtonGroup>
                         <Btn
-                            className="kd-rounded-l-sm kd-shadow-button-group"
+                            className="rounded-l-sm shadow-button-group"
                             isPrimary={'test' === selected}
                             isSecondary={'test' !== selected}
                             isPressed={'test' === selected}
@@ -46,7 +46,7 @@ const MollieApiModePanel = (props) => {
                             {'Test'}
                         </Btn>
                         <Btn
-                            className="kd-rounded-r-sm kd-shadow-button-group"
+                            className="rounded-r-sm shadow-button-group"
                             isPrimary={'live' === selected}
                             isSecondary={'live' !== selected}
                             isPressed={'live' === selected}
@@ -66,7 +66,7 @@ const MollieApiModePanel = (props) => {
                 >
                 <Button
                     isLink
-                    icon={(<ButtonIcon icon='sync' className={(isBusy ? 'kd-animate-spin' : '')}/>)}
+                    icon={(<ButtonIcon icon='sync' className={(isBusy ? 'animate-spin' : '')}/>)}
                     onClick={() => refresh()}
                 >
                     {__('Refresh API', 'kudos-donations')}

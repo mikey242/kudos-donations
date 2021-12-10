@@ -18,7 +18,7 @@ const ThemePanel = (props) => {
         <SettingCard title={__("Theme colour", 'kudos-donations')} id="themeColor" {...props}>
             <BaseControl
                 label={
-                    <div className={"kd-mb-5 kd-flex"}>
+                    <div className={"mb-5 flex"}>
                         {__('Selected color', 'kudos-donations') + ':'}
                         <ColorIndicator colorValue={props.settings._kudos_theme_colors.primary}/>
                     </div>
