@@ -1,6 +1,6 @@
 import {SettingCard} from "../SettingCard"
 import {__} from "@wordpress/i18n"
-import {BaseControl, ColorPalette, ColorIndicator} from "@wordpress/components"
+import {BaseControl, ColorPalette} from "@wordpress/components"
 
 
 const ThemePanel = (props) => {
