@@ -25,20 +25,12 @@
     @apply font-sans;
 }
 
-.kudos-modal.is-open {
-    @apply block overflow-x-hidden overflow-y-auto !important;
-}
-
 .is-loading + .spinner {
     @apply block !important;
 }
 
 .is-loading {
     @apply opacity-50 !important;
-}
-
-.kudos-modal [data-current-tab="initial"] [data-direction="back"] {
-    display: none;
 }
 
 .logo-animate:hover .logo {
@@ -77,21 +69,21 @@ form input[name=value]:required + span {
     background-color: var(--kudos-theme-primary) !important;
 }
 
-.kudos-modal[aria-hidden=false] .kudos-modal-overlay {
-    @apply animate-fade-in;
-}
+/*.kudos-modal[aria-hidden=false] .kudos-modal-overlay {*/
+/*    @apply animate-fade-in;*/
+/*}*/
 
-.kudos-modal[aria-hidden=false] .kudos-modal-container {
-    @apply animate-slide-in;
-}
+/*.kudos-modal[aria-hidden=false] .kudos-modal-container {*/
+/*    @apply animate-slide-in;*/
+/*}*/
 
-.kudos-modal[aria-hidden=true] .kudos-modal-overlay {
-    @apply animate-fade-out;
-}
+/*.kudos-modal[aria-hidden=true] .kudos-modal-overlay {*/
+/*    @apply animate-fade-out;*/
+/*}*/
 
-.kudos-modal[aria-hidden=true] .kudos-modal-container {
-    @apply animate-slide-out;
-}
+/*.kudos-modal[aria-hidden=true] .kudos-modal-container {*/
+/*    @apply animate-slide-out;*/
+/*}*/
 
 /* Base */
 :root {

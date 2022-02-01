@@ -1,46 +1,33 @@
-import {__} from "@wordpress/i18n"
-import {Form} from "./Form"
-import {useForm} from 'react-hook-form'
+import { __ } from '@wordpress/i18n'
+import { useFormContext } from 'react-hook-form'
+import React from 'react'
+import FormTab from './FormTab'
 
-const PaymentFrequency = (props) => {
+function PaymentFrequency (props) {
+  const { title, description, getValues } = props
 
-    const {values, title, description} = props
-    const {handleInput, next} = props
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext()
 
-    const {
-        register,
-        handleSubmit,
-        getValues,
-        formState: {errors},
-    } = useForm({
-        defaultValues: {
-            recurring_frequency: values.recurring_frequency,
-            recurring_length: values.recurring_length
-        }
-    })
-
-    const onSubmit = (data) => {
-        handleInput(data)
-        next()
+  const isMoreThanOne = (years) => {
+    const frequency = getValues('recurring_frequency')
+    if (frequency) {
+      return (12 / parseInt(frequency, 10)) * years !== 1
     }
+    return true
+  }
 
-    const isMoreThanOne = (years) => {
-        const frequency = getValues('recurring_frequency')
-        if(frequency) {
-            return 12 / parseInt(frequency) * years !== 1
-        }
-        return true
-
-    }
-
-    return (
-        <Form onSubmit={handleSubmit(onSubmit)} title={title} description={description}>
+  return (
+        <FormTab title={title} description={description}>
             <label className="flex cursor-pointer font-normal mt-2 w-full">
                 <select
-                    {...register("recurring_frequency", {required: __('Please select a payment frequency', 'kudos-donations')})}
+                    {...register('recurring_frequency', { required: __('Please select a payment frequency', 'kudos-donations') })}
+                    defaultValue=""
                     className="bg-select appearance-none bg-white bg-no-repeat bg-right-2 border-gray-300 border border-solid focus:border-primary focus:ring-primary transition-colors ease-in-out rounded w-full py-2 px-3 text-gray-700"
                 >
-                    <option value="" disabled={true} selected={true}>{__('Payment frequency', 'kudos-donations')}</option>
+                    <option value="" disabled>{__('Payment frequency', 'kudos-donations')}</option>
                     <option value="12 months">{__('Yearly', 'kudos-donations')}</option>
                     <option value=" 3 months">{__('Quarterly', 'kudos-donations')}</option>
                     <option value=" 1 month">{__('Monthly', 'kudos-donations')}</option>
@@ -50,13 +37,15 @@ const PaymentFrequency = (props) => {
                 <small className="error">{errors?.recurring_frequency?.message}</small>}
             <label className="flex cursor-pointer font-normal mt-2 w-full">
                 <select
-                    {...register("recurring_length", {
-                        required: __('Please select a payment duration', 'kudos-donations'),
-                        validate: { isMoreThanOne: v => isMoreThanOne(v) || __('Subscriptions must be more than one payment', 'kudos-donations')}})
+                    {...register('recurring_length', {
+                      required: __('Please select a payment duration', 'kudos-donations'),
+                      validate: { isMoreThanOne: (v) => isMoreThanOne(v) || __('Subscriptions must be more than one payment', 'kudos-donations') }
+                    })
                     }
+                    defaultValue=""
                     className="bg-select appearance-none bg-white bg-no-repeat bg-right-2 border-gray-300 border border-solid focus:border-primary focus:ring-primary transition-colors ease-in-out rounded w-full py-2 px-3 text-gray-700"
                 >
-                    <option value="" disabled={true} selected={true}>{__('Donation duration', 'kudos-donations')}</option>
+                    <option value="" disabled>{__('Donation duration', 'kudos-donations')}</option>
                     <option value="0">{__('Continuous', 'kudos-donations')}</option>
                     <option value="1">{__('1 year', 'kudos-donations')}</option>
                     <option value="2">{__('2 years', 'kudos-donations')}</option>
@@ -72,8 +61,8 @@ const PaymentFrequency = (props) => {
             </label>
             {errors?.recurring_length &&
                 <small className="error">{errors?.recurring_length?.message}</small>}
-        </Form>
-    )
+        </FormTab>
+  )
 }
 
-export {PaymentFrequency}
+export default PaymentFrequency

@@ -1,19 +1,20 @@
-import classNames from "classnames"
+import classNames from 'classnames'
+import React from 'react'
 
-const Button = (props) => {
-
-    return(
+function Button ({
+  type = 'button', children, ariaLabel, className, onClick
+}) {
+  return (
         <button
-            onClick={props.onClick}
-            type={props.type}
-            className={classNames(props.className, "border-none bg-primary hover:bg-primary-dark w-auto h-auto inline-flex items-center select-none py-3 px-5 rounded-lg cursor-pointer shadow-none transition ease-in-out focus:ring-primary focus:ring focus:ring-offset-2 text-center text-white leading-normal font-normal normal-case no-underline")}
-            aria-label={props.children}
+            type={type}
+            onClick={onClick}
+            className={classNames(className, 'border-none bg-primary hover:bg-primary-dark w-auto h-auto inline-flex items-center select-none py-3 px-5 rounded-lg cursor-pointer shadow-none transition ease-in-out focus:ring-primary focus:ring focus:ring-offset-2 text-center text-white leading-normal font-normal normal-case no-underline')}
+            aria-label={ariaLabel}
         >
-            {props.children}
+            {children}
         </button>
 
-    )
-
+  )
 }
 
-export {Button}
+export default Button

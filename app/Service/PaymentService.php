@@ -424,7 +424,7 @@ class PaymentService {
 		// Check if form completed too quickly.
 		if ( $timeDiff < 4 ) {
 			$this->logger->info( 'Bot detected, rejecting form.', [
-				'reason'     => 'Form completed too quickly',
+				'reason'     => 'FormTab completed too quickly',
 				'time_taken' => $timeDiff,
 			] );
 
