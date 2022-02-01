@@ -2,7 +2,7 @@
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
-Tested up to: 5.8.2
+Tested up to: 5.9
 Requires PHP: 7.2.9
 Stable tag: 3.1.2
 License: GPLv2 or later
@@ -117,6 +117,11 @@ This can occur as a result of a conflict with your theme or another plugin and t
 6. Automated email receipt
 
 == Changelog ==
+
+= 3.1.3 =
+* Tested compatibility with WordPress 5.9
+* Fix theme colour panel in settings
+* Update dependencies (Mollie, Tailwind CSS, Twig etc.)
 
 = 3.1.2 =
 * Remove Mollie settings from export
