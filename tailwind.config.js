@@ -95,7 +95,7 @@ module.exports = {
                 'back-button': `url("${svgToDataUri(
                     `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="${theme(
                         'colors.gray.500',
-                        colors.gray[500]
+                        colors.gray
                     )}" fill="none">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>`
@@ -106,7 +106,7 @@ module.exports = {
                 'close-button': `url("${svgToDataUri(
                     `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="${theme(
                         'colors.gray.500',
-                        colors.gray[500]
+                        colors.gray
                     )}" fill="none">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>`
@@ -120,7 +120,7 @@ module.exports = {
                 'select': `url("${svgToDataUri(
                     `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="${theme(
                         'colors.gray.500',
-                        colors.gray[500]
+                        colors.gray
                     )}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
                 )}")`,
                 'vendor-mollie': `url("${svgToDataUri(
