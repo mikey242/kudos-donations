@@ -33,7 +33,8 @@ module.exports = {
         },
         fontFamily: {
             sans: ['montserratregular', 'Century Gothic', 'sans-serif'],
-            serif: ['libre_baskervillebold', 'Times New Roman', 'serif']
+            serif: ['libre_baskervillebold', 'Times New Roman', 'serif'],
+            mono: ['ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace']
         },
         maxWidth: {
             lg: '32em',
