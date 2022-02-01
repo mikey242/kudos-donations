@@ -4,19 +4,15 @@ const {colors} = defaultTheme
 const plugin = require('tailwindcss/plugin')
 
 module.exports = {
-    mode: 'jit',
-    purge: {
-        enabled: true,
-        content: [
-            './src/admin/**/*.{js,jsx}',
-            './src/blocks/**/*.{js,jsx}',
-            './src/common/**/*.{js,jsx}',
-            './src/public/**/*.{js,jsx}',
-            './src/helpers/**/*.{js,jsx}',
-            './templates/**/*.twig',
-            './safelist.txt'
-        ],
-    },
+    content: [
+        './src/admin/**/*.{js,jsx}',
+        './src/blocks/**/*.{js,jsx}',
+        './src/common/**/*.{js,jsx}',
+        './src/public/**/*.{js,jsx}',
+        './src/helpers/**/*.{js,jsx}',
+        './templates/**/*.twig',
+        './safelist.txt'
+    ],
     theme: {
         screens: {
             'xs': '475px',
@@ -32,7 +28,8 @@ module.exports = {
         },
         fontFamily: {
             sans: ['montserratregular', 'Century Gothic', 'sans-serif'],
-            serif: ['libre_baskervillebold', 'Times New Roman', 'serif']
+            serif: ['libre_baskervillebold', 'Times New Roman', 'serif'],
+            mono: ['ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace']
         },
         maxWidth: {
             lg: '32rem',
@@ -94,7 +91,7 @@ module.exports = {
                 'back-button': `url("${svgToDataUri(
                     `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="${theme(
                         'colors.gray.500',
-                        colors.gray[500]
+                        colors.gray
                     )}" fill="none">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>`
@@ -105,7 +102,7 @@ module.exports = {
                 'close-button': `url("${svgToDataUri(
                     `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="${theme(
                         'colors.gray.500',
-                        colors.gray[500]
+                        colors.gray
                     )}" fill="none">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>`
@@ -119,7 +116,7 @@ module.exports = {
                 'select': `url("${svgToDataUri(
                     `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="${theme(
                         'colors.gray.500',
-                        colors.gray[500]
+                        colors.gray
                     )}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
                 )}")`,
                 'vendor-mollie': `url("${svgToDataUri(

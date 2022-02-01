@@ -91,3 +91,7 @@
 .components-input-control__backdrop:focus {
     @apply outline-none shadow-inner border-orange-700;
 }
+
+.components-circular-option-picker {
+    @apply ml-3;
+}
