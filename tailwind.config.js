@@ -7,17 +7,14 @@ module.exports = {
     mode: 'jit',
     prefix: 'kd-',
     important: true,
-    purge: {
-        enabled: true,
-        content: [
-            './src/admin/**/*.{js,jsx}',
-            './src/blocks/**/*.{js,jsx}',
-            './src/public/**/*.{js,jsx}',
-            './src/helpers/**/*.{js,jsx}',
-            './templates/**/*.twig',
-            './safelist.txt'
-        ],
-    },
+    content: [
+        './src/admin/**/*.{js,jsx}',
+        './src/blocks/**/*.{js,jsx}',
+        './src/public/**/*.{js,jsx}',
+        './src/helpers/**/*.{js,jsx}',
+        './templates/**/*.twig',
+        './safelist.txt'
+    ],
     theme: {
         screens: {
             'xs': '475px',
