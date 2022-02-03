@@ -6,15 +6,18 @@ import Initial from './form/Initial'
 import PaymentFrequency from './form/PaymentFrequency'
 import Address from './form/Address'
 import Button from './form/Button'
+import Message from './form/Message'
+import Summary from './form/Summary'
 
 function FormRouter (props) {
   const {
-    step, title, campaign, description, formData
+    step, title, campaign, description
   } = props
   const { handlePrev, handleNext } = props
   const methods = useForm()
+
   const onSubmit = (data) => {
-    handleNext(data)
+    return handleNext(data, step + 1)
   }
 
   const getStep = () => {
@@ -24,16 +27,13 @@ function FormRouter (props) {
                     <Initial
                         title={title}
                         description={description}
-                        values={formData}
                     />
         )
       case 2:
         return (
                     <PaymentFrequency
-                        {...methods}
                         title={__('Subscription')}
                         description={__('How often would you like to donate?')}
-                        values={formData}
                     />
         )
       case 3:
@@ -42,12 +42,21 @@ function FormRouter (props) {
                         campaign={campaign}
                         title={__('Address')}
                         description={__('Please fill in your address')}
-                        values={formData}
                     />
         )
       case 4:
         return (
-                    <p>Step 4</p>
+                    <Message
+                        title={__('Message')}
+                        description={__('Leave a message (optional).')}
+                    />
+        )
+      case 5:
+        return (
+                    <Summary
+                        title={__('Payment')}
+                        description={__('By clicking donate you agree to the following payment:')}
+                    />
         )
       default:
         return ('')

@@ -6,6 +6,7 @@ import { getStyle } from '../helpers/util'
 import { KudosButton } from './KudosButton'
 import KudosModal from './KudosModal'
 import FormRouter from './FormRouter'
+import { checkRequirements } from '../helpers/form'
 
 const screenSize = getStyle('--kudos-screen')
 
@@ -15,12 +16,7 @@ function KudosRender ({ label }) {
   const [formState, setFormState] = useState({
     currentStep: 1,
     skipSteps: [],
-    formData: {
-      value: '',
-      name: '',
-      email: '',
-      payment_frequency: 'oneoff'
-    }
+    formData: {}
   })
   const [modalOpen, setModalOpen] = useState(false)
   const style = ':host { all: initial } '
@@ -36,12 +32,7 @@ function KudosRender ({ label }) {
         setFormState((prev) => ({
           ...prev,
           currentStep: 1,
-          formData: {
-            value: '',
-            name: '',
-            email: '',
-            payment_frequency: 'oneoff'
-          }
+          formData: {}
         }))
       }, 300)
     }
@@ -56,48 +47,31 @@ function KudosRender ({ label }) {
     })
   }
 
-  const getNextStep = (skip) => {
-    const { currentStep } = formState
-    return skip.includes(currentStep + 1) ? currentStep + 2 : currentStep + 1
-  }
-
-  const addSkip = (step) => {
-    const { skipSteps } = formState
-    if (skipSteps.indexOf(step) === -1) {
-      return [...skipSteps, step]
-    }
-    return skipSteps
-  }
-
-  const removeSkip = (step) => {
-    const { skipSteps } = formState
-    const index = skipSteps.indexOf(step)
-    if (index > -1) {
-      return [skipSteps.splice(index, 1)]
-    }
-    return skipSteps
-  }
-
-  const getSteps = (data) => (data.payment_frequency === 'recurring'
-    ? removeSkip(2)
-    : addSkip(2))
-
   const handlePrev = () => {
-    const { currentStep, skipSteps } = formState
-    const step = skipSteps.includes(currentStep - 1) ? currentStep - 2 : currentStep - 1
+    const { currentStep } = formState
+    let step = currentStep - 1
+    const state = { ...formState.formData, ...campaign }
+    // Find next available step
+    while (!checkRequirements(state, step) && step >= 1) {
+      step--
+    }
     setFormState((prev) => ({
       ...prev,
       currentStep: step
     }))
   }
 
-  const handleNext = (data) => {
-    const skip = getSteps(data)
+  const handleNext = (data, step) => {
+    const state = { ...data, ...campaign }
+    // Find next available step
+    while (!checkRequirements(state, step) && step <= 10) {
+      step++
+    }
+
     setFormState((prev) => ({
       ...prev,
-      skipSteps: skip,
       formData: { ...prev.formData, ...data },
-      currentStep: getNextStep(skip)
+      currentStep: step
     }))
   }
 
@@ -119,7 +93,7 @@ function KudosRender ({ label }) {
   return (
         <ReactShadowRoot>
             <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
-            <style>{style}</style>
+            {/* <style>{style}</style> */}
             <KudosButton onClick={toggleModal}>
                 {label}
             </KudosButton>
