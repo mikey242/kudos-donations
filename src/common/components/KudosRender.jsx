@@ -1,5 +1,5 @@
 import apiFetch from '@wordpress/api-fetch'
-import { useEffect, useState } from '@wordpress/element'
+import { useEffect, useRef, useState } from '@wordpress/element'
 import ReactShadowRoot from 'react-shadow-root'
 import React from 'react'
 import { getStyle } from '../helpers/util'
@@ -10,7 +10,7 @@ import { checkRequirements } from '../helpers/form'
 
 const screenSize = getStyle('--kudos-screen')
 
-function KudosRender ({ label }) {
+function KudosRender ({ label, root }) {
   const [campaign, setCampaign] = useState()
   const [ready, setReady] = useState(false)
   const [formState, setFormState] = useState({
@@ -94,26 +94,29 @@ function KudosRender ({ label }) {
         <ReactShadowRoot>
             <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
             {/* <style>{style}</style> */}
-            <KudosButton onClick={toggleModal}>
-                {label}
-            </KudosButton>
-            {ready &&
-                (
-                    <KudosModal
-                        toggle={toggleModal}
-                        isOpen={modalOpen}
-                    >
-                        <FormRouter
-                            step={formState.currentStep}
-                            campaign={campaign}
-                            handleNext={handleNext}
-                            handlePrev={handlePrev}
-                            formData={formState.formData}
-                            title={campaign.modal_title}
-                            description={campaign.welcome_text}
-                        />
-                    </KudosModal>
-                )}
+            <div id="kudos">
+                <KudosButton onClick={toggleModal}>
+                    {label}
+                </KudosButton>
+                {ready &&
+                    (
+                        <KudosModal
+                            toggle={toggleModal}
+                            root={root}
+                            isOpen={modalOpen}
+                        >
+                            <FormRouter
+                                step={formState.currentStep}
+                                campaign={campaign}
+                                handleNext={handleNext}
+                                handlePrev={handlePrev}
+                                formData={formState.formData}
+                                title={campaign.modal_title}
+                                description={campaign.welcome_text}
+                            />
+                        </KudosModal>
+                    )}
+            </div>
         </ReactShadowRoot>
   )
 }

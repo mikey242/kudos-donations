@@ -18,6 +18,7 @@
   ],
   "devDependencies": {
     "@babel/preset-react": "^7.16.0",
+    "@hookform/devtools": "^4.0.2",
     "@wordpress/babel-preset-default": "^6.3.4",
     "@wordpress/block-editor": "^3.9.1",
     "@wordpress/blocks": "^11.1.4",
@@ -43,11 +44,15 @@
     "tailwindcss": "^3.0.18"
   },
   "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@headlessui/react": "^1.4.3",
     "@heroicons/react": "^1.0.5",
+    "@mui/material": "^5.4.0",
     "@tailwindui/react": "^0.1.1",
     "@wordpress/api-fetch": "^5.2.6",
     "@wordpress/element": "^4.1.0",
@@ -57,7 +62,8 @@
     "lodash": "^4.17.21",
     "party-js": "^2.1.2",
     "react": "^17.0.2",
-    "react-hook-form": "^7.23.0",
+    "react-hook-form": "^7.26.0",
+    "react-modal": "^3.14.4",
     "react-select-country-list": "^2.2.3",
     "react-shadow-root": "^6.1.1"
   }

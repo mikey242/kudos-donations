@@ -17,6 +17,7 @@ function FormRouter (props) {
   const methods = useForm()
 
   const onSubmit = (data) => {
+    console.log(data)
     return handleNext(data, step + 1)
   }
 

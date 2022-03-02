@@ -22,21 +22,21 @@ function Address (props) {
 
   return (
         <FormTab title={title} description={description}>
-            <InputControl {...register('business_name')}
+            <InputControl name="business_name"
                           placeholder={__('Business name', 'kudos-donations')}/>
-            <InputControl {...register('street', { required: campaign.address_required })}
+            <InputControl name="street" error={__('Street required', 'kudos-donations')}
+                          validation={{ required: campaign.address_required }}
                           placeholder={__('Street', 'kudos-donations')}/>
-            {errors.street && <small className="error">{__('Street required', 'kudos-donations')}</small>}
-            <InputControl {...register('postcode', { required: campaign.address_required })}
+            <InputControl name="postcode" error={__('Postcode required', 'kudos-donations')}
+                          validation={{ required: campaign.address_required }}
                           placeholder={__('Postcode', 'kudos-donations')}/>
-            {errors.postcode && <small className="error">{__('Postcode required', 'kudos-donations')}</small>}
-            <InputControl {...register('city', { required: campaign.address_required })}
-                          placeholder={__('City', 'kudos-donations')}/>
-            {errors.city && <small className="error">{__('City required', 'kudos-donations')}</small>}
-            <SelectControl {...register('country', { required: campaign.address_required })}
-                           placeholder={__('Country', 'kudos-donations')}
-                           options={countryOptions}/>
-            {errors.country && <small className="error">{__('Country required', 'kudos-donations')}</small>}
+            {/* <InputControl {...register('city', { required: campaign.address_required })} */}
+            {/*              placeholder={__('City', 'kudos-donations')}/> */}
+            {/* {errors.city && <small className="error">{__('City required', 'kudos-donations')}</small>} */}
+            {/* <SelectControl {...register('country', { required: campaign.address_required })} */}
+            {/*               placeholder={__('Country', 'kudos-donations')} */}
+            {/*               options={countryOptions}/> */}
+            {/* {errors.country && <small className="error">{__('Country required', 'kudos-donations')}</small>} */}
         </FormTab>
   )
 }

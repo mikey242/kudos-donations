@@ -10,9 +10,7 @@ function Initial (props) {
   const { title, description } = props
 
   const {
-    register,
-    setFocus,
-    formState: { errors }
+    setFocus
   } = useFormContext()
 
   useEffect(() => {
@@ -21,19 +19,19 @@ function Initial (props) {
 
   return (
         <FormTab title={title} description={description}>
-            <InputControl {...register('value', { required: true, min: 1, max: 5000 })}
+
+            <InputControl name="value" error={__('Minimum donation is 1 euro', 'kudos-donations')}
+                          validation={{ required: true, min: 1, max: 5000 }}
                           type="number" placeholder={`${__('Amount', 'kudos-donations')} (€)`}/>
-            {errors.value && <small className="error">{__('Minimum donation is 1 euro', 'kudos-donations')}</small>}
 
-            <InputControl {...register('name', { required: true })}
+            <InputControl name="name" error={__('Your name is required', 'kudos-donations')}
+                          validation={{ required: true }}
                           placeholder={__('Name', 'kudos-donations')}/>
-            {errors.name && <small className="error">{__('Your name is required', 'kudos-donations')}</small>}
 
-            <InputControl {...register('email', { required: true })}
+            <InputControl name="email" error={__('Your email is required', 'kudos-donations')}
+                          validation={{ required: true }}
                           type="email" placeholder={__('Email', 'kudos-donations')}/>
-            {errors.email && <small className="error">{__('Your email is required', 'kudos-donations')}</small>}
-
-            <RadioControl {...register('payment_frequency', { required: true })} options={[
+            <RadioControl name="payment_frequency" validation={{ required: true }} options={[
               {
                 label: __('One-off', 'kudos-donations'),
                 value: 'oneoff'
