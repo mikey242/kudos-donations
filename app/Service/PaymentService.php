@@ -65,26 +65,6 @@ class PaymentService {
 	}
 
 	/**
-	 * Returns the name of the current vendor.
-	 *
-	 * @return string
-	 */
-	public static function get_vendor_name(): string {
-
-		return static::get_current_vendor_class()::get_vendor_name();
-
-	}
-
-	/**
-	 * Check the vendor api key associated with the mode. Sends a JSON response.
-	 */
-	public function check_api_keys() {
-
-		$this->vendor->check_api_keys();
-
-	}
-
-	/**
 	 * Checks if required api settings are saved before displaying button.
 	 *
 	 * @return bool
@@ -115,6 +95,26 @@ class PaymentService {
 			strtotime( '+1 minute' ),
 			'kudos_process_' . strtolower( self::get_vendor_name() ) . '_transaction',
 			[ $order_id ] );
+
+	}
+
+	/**
+	 * Returns the name of the current vendor.
+	 *
+	 * @return string
+	 */
+	public static function get_vendor_name(): string {
+
+		return static::get_current_vendor_class()::get_vendor_name();
+
+	}
+
+	/**
+	 * Check the vendor api key associated with the mode. Sends a JSON response.
+	 */
+	public function check_api_keys() {
+
+		$this->vendor->check_api_keys();
 
 	}
 
@@ -188,7 +188,7 @@ class PaymentService {
 		$city              = $values['city'] ?? null;
 		$country           = $values['country'] ?? null;
 		$message           = $values['message'] ?? null;
-		$redirect_url      = $values['return_url'] ?? null;
+		$redirect_url      = $values['return_url'] ?? get_site_url();
 		$campaign_id       = $values['campaign_id'] ?? null;
 
 		$mapper = $this->mapper_service;
@@ -255,47 +255,37 @@ class PaymentService {
 	}
 
 	/**
-	 * Cancel the specified subscription.
+	 * Checks the provided honeypot field and logs request if bot detected.
 	 *
-	 * @param string $id subscription row ID.
+	 * @param $values
 	 *
 	 * @return bool
 	 */
-	public function cancel_subscription( string $id ): bool {
+	public function is_bot( $values ): bool {
 
-		$mapper = $this->mapper_service;
+		$timeDiff = abs( $values['timestamp'] - time() );
 
-		// Get subscription entity from supplied row id.
-		/** @var SubscriptionEntity $subscription */
-		$subscription = $mapper->get_repository( SubscriptionEntity::class )
-		                       ->get_one_by( [ 'id' => $id ] );
-
-		// Cancel subscription with vendor.
-		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
-
-		if ( $result ) {
-
-			// Update entity with canceled status.
-			$subscription->set_fields( [
-				'status' => 'cancelled',
+		// Check if form completed too quickly.
+		if ( $timeDiff < 4 ) {
+			$this->logger->info( 'Bot detected, rejecting form.', [
+				'reason'     => 'FormTab completed too quickly',
+				'time_taken' => $timeDiff,
 			] );
 
-			// Save changes to subscription entity.
-			$mapper->save( $subscription );
+			return true;
+		}
 
-			$this->logger->info(
-				'Subscription cancelled.',
-				[
-					'id'              => $subscription->id,
-					'subscription_id' => $subscription->subscription_id,
-				]
-			);
+		// Check if honeypot field completed.
+		if ( ! empty( $values['donation'] ) ) {
+			$this->logger->info( 'Bot detected, rejecting form.',
+				array_merge( [
+					'reason' => 'Honeypot field completed',
+				], $values ) );
 
 			return true;
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -384,12 +374,12 @@ class PaymentService {
 
 		// Add order id query arg to return url if option to show message enabled.
 		if ( get_option( '_kudos_completed_payment' ) === 'message' ) {
-			$action = 'order_complete';
+			$action               = 'order_complete';
 			$redirect_url         = add_query_arg(
 				[
 					'kudos_action'   => 'order_complete',
 					'kudos_order_id' => $order_id,
-					'kudos_nonce'    => wp_create_nonce($action . $order_id),
+					'kudos_nonce'    => wp_create_nonce( $action . $order_id ),
 				],
 				$redirect_url
 			);
@@ -411,37 +401,47 @@ class PaymentService {
 	}
 
 	/**
-	 * Checks the provided honeypot field and logs request if bot detected.
+	 * Cancel the specified subscription.
 	 *
-	 * @param $values
+	 * @param string $id subscription row ID.
 	 *
 	 * @return bool
 	 */
-	public function is_bot( $values ): bool {
+	public function cancel_subscription( string $id ): bool {
 
-		$timeDiff = abs( $values['timestamp'] - time() );
+		$mapper = $this->mapper_service;
 
-		// Check if form completed too quickly.
-		if ( $timeDiff < 4 ) {
-			$this->logger->info( 'Bot detected, rejecting form.', [
-				'reason'     => 'FormTab completed too quickly',
-				'time_taken' => $timeDiff,
+		// Get subscription entity from supplied row id.
+		/** @var SubscriptionEntity $subscription */
+		$subscription = $mapper->get_repository( SubscriptionEntity::class )
+		                       ->get_one_by( [ 'id' => $id ] );
+
+		// Cancel subscription with vendor.
+		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
+
+		if ( $result ) {
+
+			// Update entity with canceled status.
+			$subscription->set_fields( [
+				'status' => 'cancelled',
 			] );
 
-			return true;
-		}
+			// Save changes to subscription entity.
+			$mapper->save( $subscription );
 
-		// Check if honeypot field completed.
-		if ( ! empty( $values['donation'] ) ) {
-			$this->logger->info( 'Bot detected, rejecting form.',
-				array_merge( [
-					'reason' => 'Honeypot field completed',
-				], $values ) );
+			$this->logger->info(
+				'Subscription cancelled.',
+				[
+					'id'              => $subscription->id,
+					'subscription_id' => $subscription->subscription_id,
+				]
+			);
 
 			return true;
 		}
 
 		return false;
+
 	}
 
 	/**

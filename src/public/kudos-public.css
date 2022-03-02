@@ -18,7 +18,7 @@
 }
 
 * {
-    @apply font-sans text-base leading-normal;
+    @apply font-sans text-lg leading-normal;
 }
 
 ::placeholder {
@@ -36,6 +36,7 @@
 .logo-animate:hover .logo {
     @apply -rotate-90 !important;
 }
+
 .logo-animate:hover .logo .logo-heart {
     backface-visibility: visible;
     @apply rotate-x-180 !important;
@@ -69,37 +70,21 @@ form input[name=value]:required + span {
     background-color: var(--kudos-theme-primary) !important;
 }
 
-/*.kudos-modal[aria-hidden=false] .kudos-modal-overlay {*/
-/*    @apply animate-fade-in;*/
-/*}*/
-
-/*.kudos-modal[aria-hidden=false] .kudos-modal-container {*/
-/*    @apply animate-slide-in;*/
-/*}*/
-
-/*.kudos-modal[aria-hidden=true] .kudos-modal-overlay {*/
-/*    @apply animate-fade-out;*/
-/*}*/
-
-/*.kudos-modal[aria-hidden=true] .kudos-modal-container {*/
-/*    @apply animate-slide-out;*/
-/*}*/
-
 /* Base */
 :root {
-    --kudos-screen:xs;
+    --kudos-screen: xs;
 }
 
 /* 'xs' and up */
 @screen xs {
     :root {
-        --kudos-screen:sm;
+        --kudos-screen: sm;
     }
 }
 
 /* 'sm' and up */
 @screen sm {
     :root {
-        --kudos-screen:md;
+        --kudos-screen: md;
     }
 }

@@ -18,14 +18,6 @@ module.exports = {
       xs: '475px',
       ...defaultTheme.screens
     },
-    fontSize: {
-      base: '18px',
-      xs: '0.75rem',
-      sm: '0.875rem',
-      lg: '1.125rem', // '18px'
-      '2xl': '1.5rem',
-      '4xl': '2.25rem' // '36px'
-    },
     fontFamily: {
       sans: ['montserratregular', 'Century Gothic', 'sans-serif'],
       serif: ['libre_baskervillebold', 'Times New Roman', 'serif'],

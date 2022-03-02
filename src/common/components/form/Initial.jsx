@@ -28,7 +28,7 @@ function Initial (props) {
                           validation={{ required: true }}
                           placeholder={__('Name', 'kudos-donations')}/>
 
-            <InputControl name="email" error={__('Your email is required', 'kudos-donations')}
+            <InputControl name="email_address" error={__('Your email is required', 'kudos-donations')}
                           validation={{ required: true }}
                           type="email" placeholder={__('Email', 'kudos-donations')}/>
             <RadioControl name="payment_frequency" validation={{ required: true }} options={[

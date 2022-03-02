@@ -12,7 +12,9 @@ const screenSize = getStyle('--kudos-screen')
 
 function KudosRender ({ label, root }) {
   const [campaign, setCampaign] = useState()
+  const [timestamp, setTimestamp] = useState()
   const [ready, setReady] = useState(false)
+  const [errors, setErrors] = useState([])
   const [formState, setFormState] = useState({
     currentStep: 1,
     skipSteps: [],
@@ -43,6 +45,7 @@ function KudosRender ({ label, root }) {
       path: `kudos/v1/campaign/get?${new URLSearchParams({ id: 'default' })}`
     }).then((response) => {
       setCampaign(response)
+      setTimestamp(Date.now())
       setReady(true)
     })
   }
@@ -79,6 +82,34 @@ function KudosRender ({ label, root }) {
     if (e.key === 'Escape' || e.keyCode === 27) toggleModal()
   }
 
+  const submitForm = (data) => {
+    setErrors([])
+    const formData = new FormData()
+    formData.append('timestamp', timestamp)
+    for (const key in data) {
+      if (key === 'field') {
+        formData.append(key, data[key][1])
+      } else {
+        formData.append(key, data[key])
+      }
+    }
+
+    apiFetch({
+      path: 'kudos/v1/payment/create',
+      headers: new Headers({
+        'Content-Type': 'multipart/form-data'
+      }),
+      method: 'POST',
+      body: new URLSearchParams(formData)
+    }).then((result) => {
+      if (result.success) {
+        window.location.href = result.data
+      } else {
+        setErrors([...errors, result.data.message])
+      }
+    })
+  }
+
   useEffect(() => {
     getCampaign()
   }, [])
@@ -105,11 +136,18 @@ function KudosRender ({ label, root }) {
                             root={root}
                             isOpen={modalOpen}
                         >
+                            {errors.length > 0 &&
+                                errors.map((e, i) => (
+                                    <small className="text-center block font-normal mb-4 text-sm text-red-500"
+                                           key={i}>{e}</small>
+                                ))
+                            }
                             <FormRouter
                                 step={formState.currentStep}
                                 campaign={campaign}
                                 handleNext={handleNext}
                                 handlePrev={handlePrev}
+                                submitForm={submitForm}
                                 formData={formState.formData}
                                 title={campaign.modal_title}
                                 description={campaign.welcome_text}
