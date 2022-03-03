@@ -1,21 +1,31 @@
 import React from 'react'
-import { Modal, Zoom, Dialog, Fade, Grow, Slide } from '@mui/material'
+import { Dialog } from '@mui/material'
 import { __ } from '@wordpress/i18n'
 import { XIcon } from '@heroicons/react/solid'
 import logo from '../../images/logo-colour.svg'
+import { Transition } from '@headlessui/react'
 
 function KudosModal ({
   toggle, isOpen, children, root
 }) {
   return (
 
-        <Modal
+        <Dialog
             open={isOpen}
             className="fixed z-10 inset-0 overflow-y-auto"
             container={() => root.shadowRoot.getElementById('kudos')}
             BackdropComponent={() => <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"/>}
         >
-            <Zoom in={isOpen} unmountOnExit>
+            <Transition
+                appear={true}
+                enter="transform transition duration-[400ms]"
+                enterFrom="opacity-0 rotate-[-120deg] scale-50"
+                enterTo="opacity-100 rotate-0 scale-100"
+                leave="transform duration-200 transition ease-in-out"
+                leaveFrom="opacity-100 rotate-0 scale-100 "
+                leaveTo="opacity-0 scale-95 "
+                show={isOpen}
+            >
                 <div
                     className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                     {/* This element is to trick the browser into centering the modal contents. */}
@@ -44,8 +54,8 @@ function KudosModal ({
                         </div>
                     </div>
                 </div>
-            </Zoom>
-        </Modal>
+            </Transition>
+        </Dialog>
   )
 }
 
