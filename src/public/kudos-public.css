@@ -17,12 +17,12 @@
     }
 }
 
-* {
-    @apply font-sans text-lg leading-normal;
-}
+/** {*/
+/*    @apply text-base;*/
+/*}*/
 
 ::placeholder {
-    @apply font-sans;
+    @apply font-sans text-lg;
 }
 
 .is-loading + .spinner {

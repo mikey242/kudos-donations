@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form'
 import React from 'react'
 import FormTab from './FormTab'
 import { useEffect } from '@wordpress/element'
-import SelectControl from './SelectControl'
+import SelectControl from '../controls/SelectControl'
 
 function PaymentFrequency (props) {
   const { title, description } = props

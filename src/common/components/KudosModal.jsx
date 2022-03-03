@@ -12,15 +12,15 @@ function KudosModal ({
 
         <Dialog
             open={isOpen}
-            className="fixed z-10 inset-0 overflow-y-auto"
+            className="fixed z-10 inset-0 overflow-y-auto text-base"
             container={() => root.shadowRoot.getElementById('kudos')}
             BackdropComponent={() => <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"/>}
         >
             <Transition
                 appear={true}
-                enter="transform transition duration-[400ms]"
-                enterFrom="opacity-0 rotate-[-120deg] scale-50"
-                enterTo="opacity-100 rotate-0 scale-100"
+                enter="transition-all duration-[400ms]"
+                enterFrom="opacity-0 rotate-[-5deg] translate-x-3 translate-y-3 scale-90"
+                enterTo="opacity-100 rotate-0 translate-x-0 translate-y-0 scale-100"
                 leave="transform duration-200 transition ease-in-out"
                 leaveFrom="opacity-100 rotate-0 scale-100 "
                 leaveTo="opacity-0 scale-95 "
@@ -36,16 +36,16 @@ function KudosModal ({
                     >
                         <div className="bg-white p-8">
                             <div className="kudos-modal-header flex items-center justify-between">
-                  <span className="mr-3 inline-block flex" title="Kudos Donations">
-                    <img alt="Kudos logo" className="h-6" src={logo}/>
-                  </span>
+                                <span className="mr-3 inline-block flex" title="Kudos Donations">
+                                    <img alt="Kudos logo" className="h-6" src={logo}/>
+                                </span>
                                 <button
-                                    className="bg-transparent inline leading-none border-0 focus:outline-none focus:ring hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center"
+                                    className="bg-transparent p-0 inline leading-none border-0 focus:outline-none focus:ring hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center"
                                     onClick={toggle}
                                     type="button"
                                     title={__('Close modal', 'kudos-donations')}
                                 >
-                                    <XIcon className="align-middle"/>
+                                    <XIcon className="align-middle w-5 h-5"/>
                                 </button>
                             </div>
                             <div className="mt-2">

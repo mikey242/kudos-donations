@@ -60,6 +60,14 @@ module.exports = {
       1050: 1050
     },
     extend: {
+      fontSize: {
+        // base: '18px',
+        xs: '0.75em',
+        sm: '0.875em',
+        lg: '1.125em', // '18px'
+        '2xl': '1.5em',
+        '4xl': '2.25em' // '36px'
+      },
       colors: {
         orange: {
           200: '#ffd59c',

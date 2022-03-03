@@ -78,8 +78,8 @@ function FormRouter (props) {
                                 ariaLabel={__('Prev')}
                                 onClick={handlePrev}
                             >
-                                <ChevronLeftIcon width="1.5em"/>
-                                <span className="ml-1">Prev</span>
+                                <ChevronLeftIcon className="w-5 h-5"/>
+                                <span className="mx-2">Prev</span>
                             </Button>
                         )}
                     <Button
@@ -88,8 +88,9 @@ function FormRouter (props) {
                         className="ml-auto"
                     >
                         {step < 5
-                          ? <><span className="mr-1">{__('Next')}</span><ChevronRightIcon width="1.5em"/></>
-                          : <><LockClosedIcon width="1em"/> <span className="ml-1">{__('Submit')}</span></>}
+                          ? <><span className="mx-2">{__('Next')}</span><ChevronRightIcon
+                                className="w-5 h-5"/></>
+                          : <><LockClosedIcon className="w-5 h-5"/> <span className="mx-2">{__('Submit')}</span></>}
                     </Button>
                 </div>
             </form>

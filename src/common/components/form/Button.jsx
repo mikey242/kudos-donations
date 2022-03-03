@@ -8,7 +8,7 @@ function Button ({
         <button
             type={type}
             onClick={onClick}
-            className={classNames(className, 'border-none bg-primary hover:bg-primary-dark w-auto h-auto inline-flex items-center select-none py-3 px-5 rounded-lg cursor-pointer shadow-none transition ease-in-out focus:ring-primary focus:ring focus:ring-offset-2 text-center text-white leading-normal font-normal normal-case no-underline')}
+            className={classNames(className, 'bg-primary hover:bg-primary-dark text-base text-white font-bold py-3 px-5 rounded-lg border-none inline-flex items-center transition ease-in-out focus:ring-primary focus:ring focus:ring-offset-2')}
             aria-label={ariaLabel}
         >
             {children}

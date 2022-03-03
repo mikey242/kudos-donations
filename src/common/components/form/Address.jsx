@@ -4,8 +4,8 @@ import React from 'react'
 import { __ } from '@wordpress/i18n'
 import { useEffect, useMemo } from '@wordpress/element'
 import countryList from 'react-select-country-list'
-import SelectControl from './SelectControl'
-import InputControl from './InputControl'
+import SelectControl from '../controls/SelectControl'
+import InputControl from '../controls/InputControl'
 
 function Address (props) {
   const { title, description, campaign } = props

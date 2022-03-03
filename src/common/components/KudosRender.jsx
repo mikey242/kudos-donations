@@ -125,7 +125,7 @@ function KudosRender ({ label, root }) {
         <ReactShadowRoot>
             <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
             {/* <style>{style}</style> */}
-            <div id="kudos">
+            <div id="kudos" className="font-sans text-base">
                 <KudosButton onClick={toggleModal}>
                     {label}
                 </KudosButton>
