@@ -12,8 +12,8 @@ function Summary (props) {
   } = useFormContext()
 
   const recurringText = () => {
-    const type = getValues('payment_frequency')
-    if (type === 'oneoff') return __('One off')
+    const recurring = getValues('recurring')
+    if (!recurring) return __('One off')
     const recurringFrequency = getFrequencyName(getValues('recurring_frequency'))
     const recurringLength = getValues('recurring_length')
     const length = recurringLength > 0 ? recurringLength + ' ' + __('years') : __('Continuous')

@@ -9,7 +9,7 @@ import Button from './form/Button'
 import Message from './form/Message'
 import Summary from './form/Summary'
 
-function FormRouter (props) {
+const FormRouter = (props) => {
   const {
     step, title, campaign, description
   } = props
@@ -17,7 +17,7 @@ function FormRouter (props) {
   const methods = useForm()
 
   const onSubmit = (data) => {
-    console.log(data)
+    // console.debug(data)
     if (step < 5) return handleNext(data, step + 1)
     return submitForm(data)
   }
@@ -29,6 +29,9 @@ function FormRouter (props) {
                     <Initial
                         title={title}
                         description={description}
+                        donationType={campaign.donation_type}
+                        amountType={campaign.amount_type}
+                        fixedAmounts={campaign.fixed_amounts}
                     />
         )
       case 2:

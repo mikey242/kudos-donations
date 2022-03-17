@@ -1,12 +1,10 @@
 import React from 'react'
-import { __ } from '@wordpress/i18n'
 import { useFormContext } from 'react-hook-form'
 
 const RadioControl = ({ name, validation, options }) => {
   const {
     getValues,
-    register,
-    formState: { errors }
+    register
   } = useFormContext()
 
   return (

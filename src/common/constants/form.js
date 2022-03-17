@@ -1,6 +1,6 @@
 export const requirements = {
   2: {
-    payment_frequency: true
+    recurring: true
   },
   3: {
     address_enabled: true

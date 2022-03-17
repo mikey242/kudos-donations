@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form'
 import FormTab from './FormTab'
 import { useEffect } from '@wordpress/element'
 
-function Message (props) {
+const Message = (props) => {
   const { title, description } = props
 
   const {

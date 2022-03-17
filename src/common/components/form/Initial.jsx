@@ -7,28 +7,37 @@ import InputControl from '../controls/InputControl'
 import ToggleControl from '../controls/ToggleControl'
 import RadioGroupControl from '../controls/RadioGroupControl'
 
-function Initial (props) {
-  const { title, description } = props
+const Initial = (props) => {
+  const { title, description, donationType, amountType, fixedAmounts } = props
 
   const {
-    setFocus
+    setValue
   } = useFormContext()
 
   useEffect(() => {
-    setFocus('value')
-  }, [setFocus])
+    if (donationType !== 'both') {
+      setValue('recurring', donationType === 'recurring')
+    }
+  })
 
   return (
         <FormTab title={title} description={description}>
 
-            <RadioGroupControl name="value" options={[
-              { value: '12', label: __('12 Euros', 'kudos-donations') },
-              { value: '3', label: __('3 Euros', 'kudos-donations') },
-              { value: '1', label: __('1 Euro', 'kudos-donations') }
-            ]}/>
-            <InputControl name="value" error={__('Minimum donation is 1 euro', 'kudos-donations')}
-                          validation={{ required: true, min: 1, max: 5000 }}
-                          type="number" placeholder={`${__('Amount', 'kudos-donations')} (€)`}/>
+            {(amountType === 'both' || amountType === 'fixed') &&
+                <RadioGroupControl name="value" options={
+                    fixedAmounts.split(',').map((value) => {
+                      return { value: value, label: '€' + value }
+                    })
+                }/>
+            }
+
+            {(amountType === 'both' || amountType === 'open') &&
+                <InputControl name="value" error={__('Minimum donation is 1 euro', 'kudos-donations')}
+                              validation={{ required: true, min: 1, max: 5000 }}
+                              type="number" placeholder={
+                    `${amountType === 'both' ? __('Other amount', 'kudos-donations') : __('Amount', 'kudos-donations')} (€)`
+                }/>
+            }
 
             <InputControl name="name" error={__('Your name is required', 'kudos-donations')}
                           validation={{ required: true }}
@@ -37,8 +46,12 @@ function Initial (props) {
             <InputControl name="email_address" error={__('Your email is required', 'kudos-donations')}
                           validation={{ required: true }}
                           type="email" placeholder={__('Email', 'kudos-donations')}/>
-            <ToggleControl name="payment_frequency" validation={{ required: true }}
-                           label={__('Recurring donation')}/>
+
+            {donationType === 'both' &&
+                <ToggleControl name="recurring" validation={{ required: true }}
+                               label={__('Recurring donation')}/>
+            }
+
         </FormTab>
   )
 }

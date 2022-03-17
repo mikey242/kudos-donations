@@ -1,17 +1,20 @@
 import React from 'react'
-import { Dialog } from '@mui/material'
+import { Dialog, Modal } from '@mui/material'
 import { __ } from '@wordpress/i18n'
 import { XIcon } from '@heroicons/react/solid'
 import logo from '../../images/logo-colour.svg'
 import { Transition } from '@headlessui/react'
+import { useRef } from '@wordpress/element'
 
-function KudosModal ({
-  toggle, isOpen, children, root
-}) {
+const KudosModal = ({ toggle, isOpen, children, root }) => {
+  const modal = useRef()
+  const content = useRef()
+
   return (
 
         <Dialog
             open={isOpen}
+            onClose={toggle}
             className="fixed z-10 inset-0 overflow-y-auto text-base"
             container={() => root.shadowRoot.getElementById('kudos')}
             BackdropComponent={() => <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"/>}
@@ -32,6 +35,8 @@ function KudosModal ({
                     <span className="hidden sm:inline-block sm:align-middle sm:h-screen"
                           aria-hidden="true">&#8203;</span>
                     <div
+                        id="kudos-modal"
+                        ref={modal}
                         className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
                     >
                         <div className="bg-white p-8">
@@ -48,7 +53,7 @@ function KudosModal ({
                                     <XIcon className="align-middle w-5 h-5"/>
                                 </button>
                             </div>
-                            <div className="mt-2">
+                            <div ref={content} className="mt-2">
                                 {children}
                             </div>
                         </div>
@@ -56,6 +61,7 @@ function KudosModal ({
                 </div>
             </Transition>
         </Dialog>
+
   )
 }
 

@@ -13,10 +13,9 @@ const SelectControl = forwardRef(({ onChange, onBlur, name, label, options, plac
                 onChange={onChange}
                 onBlur={onBlur}
                 defaultValue=""
-                className={'cursor-pointer relative z-0 pr-10 appearance-none bg-transparent border-gray-300 border border-solid focus:border-primary focus:ring-primary transition-colors ease-in-out rounded w-full py-2 px-3 text-gray-700'}
+                className={'cursor-pointer relative z-0 pr-10 appearance-none bg-transparent border-gray-300 border border-solid focus:border-primary focus:ring-primary transition-colors ease-in-out text-base rounded w-full py-2 px-3 text-gray-700'}
             >
-                {placeholder && (
-                    <option disabled key={`placeholder_${name}`} value="">{placeholder}</option>)}
+                {placeholder && (<option disabled key={`placeholder_${name}`} value="">{placeholder}</option>)}
                 {options.map((entry, index) => (
                         <option key={index} value={entry.value}>{entry.label}</option>
                 )

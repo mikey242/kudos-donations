@@ -21,6 +21,7 @@ function KudosRender ({ label, root }) {
     formData: {}
   })
   const [modalOpen, setModalOpen] = useState(false)
+  const modal = useRef(null)
   const style = ':host { all: initial } '
 
   const toggleModal = () => {
@@ -122,7 +123,9 @@ function KudosRender ({ label, root }) {
   }, [modalOpen])
 
   return (
-        <ReactShadowRoot>
+        <ReactShadowRoot
+
+        >
             <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
             {/* <style>{style}</style> */}
             <div id="kudos" className="font-sans text-base">
