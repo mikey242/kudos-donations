@@ -5,7 +5,7 @@ import FormTab from './FormTab'
 import { useEffect } from '@wordpress/element'
 
 const Message = (props) => {
-  const { title, description } = props
+  const { title, description, buttons } = props
 
   const {
     register,
@@ -17,7 +17,7 @@ const Message = (props) => {
   }, [setFocus])
 
   return (
-        <FormTab title={title} description={description}>
+        <FormTab title={title} description={description} buttons={buttons}>
             <label className="flex cursor-pointer font-normal mt-2 w-full">
                 <textarea
                     {...register('message', {})}

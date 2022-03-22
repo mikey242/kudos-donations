@@ -21,7 +21,7 @@ __( 'Click here', 'kudos-donations' );
 __( 'Close', 'kudos-donations' );
 __( 'Close modal', 'kudos-donations' );
 
-// Template: "templates/public/forms/donate.form.html.twig"
+// Template: "templates/public/forms/donate.tabs.html.twig"
 __( 'Other', 'kudos-donations' );
 __( 'Amount', 'kudos-donations' );
 __( 'Name', 'kudos-donations' );

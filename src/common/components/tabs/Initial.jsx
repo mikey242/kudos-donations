@@ -8,7 +8,7 @@ import ToggleControl from '../controls/ToggleControl'
 import RadioGroupControl from '../controls/RadioGroupControl'
 
 const Initial = (props) => {
-  const { title, description, donationType, amountType, fixedAmounts } = props
+  const { title, description, buttons, donationType, amountType, fixedAmounts } = props
 
   const {
     setValue
@@ -21,7 +21,11 @@ const Initial = (props) => {
   })
 
   return (
-        <FormTab title={title} description={description}>
+        <FormTab
+            title={title}
+            description={description}
+            buttons={buttons}
+        >
 
             {(amountType === 'both' || amountType === 'fixed') &&
                 <RadioGroupControl name="value" options={
@@ -32,19 +36,23 @@ const Initial = (props) => {
             }
 
             {(amountType === 'both' || amountType === 'open') &&
-                <InputControl name="value" error={__('Minimum donation is 1 euro', 'kudos-donations')}
-                              validation={{ required: true, min: 1, max: 5000 }}
+                <InputControl name="value"
+                              validation={{
+                                required: __('Minimum donation is 1 euro', 'kudos-donations'),
+                                min: { value: 1, message: __('Minimum donation is 1 euro', 'kudos-donations') },
+                                max: { value: 5000, message: __('Maximum donation is 5000 euros', 'kudos-donations') }
+                              }}
                               type="number" placeholder={
                     `${amountType === 'both' ? __('Other amount', 'kudos-donations') : __('Amount', 'kudos-donations')} (€)`
                 }/>
             }
 
-            <InputControl name="name" error={__('Your name is required', 'kudos-donations')}
-                          validation={{ required: true }}
+            <InputControl name="name"
+                          validation={{ required: __('Your name is required', 'kudos-donations') }}
                           placeholder={__('Name', 'kudos-donations')}/>
 
-            <InputControl name="email_address" error={__('Your email is required', 'kudos-donations')}
-                          validation={{ required: true }}
+            <InputControl name="email_address"
+                          validation={{ required: __('Your email is required', 'kudos-donations') }}
                           type="email" placeholder={__('Email', 'kudos-donations')}/>
 
             {donationType === 'both' &&

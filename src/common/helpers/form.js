@@ -1,7 +1,7 @@
 import party from 'party-js'
 import { isVisible } from './util'
 import { __ } from '@wordpress/i18n'
-import { requirements } from '../constants/form'
+import { steps } from '../constants/form'
 
 export function resetForm (form) {
   setFormHeight(form)
@@ -23,11 +23,11 @@ export function resetForm (form) {
     amountInput.setAttribute('name', '')
   }
 
-  // Clear all form values
+  // Clear all tabs values
   form.reset()
 }
 
-// Set form height according to highest tab.
+// Set tabs height according to highest tab.
 export function setFormHeight (form) {
   if (!form.closest('.kudos-modal')) {
     const tabs = form.querySelectorAll('fieldset')
@@ -61,7 +61,7 @@ export function toggleAmount (amountInput, amountRadios) {
   })
 }
 
-// Create the summary at the end of the form before submitting
+// Create the summary at the end of the tabs before submitting
 export function createSummary (formId) {
   const form = document.getElementById(formId)
   const formData = new FormData(form)
@@ -198,7 +198,7 @@ export function getFrequencyName (frequency) {
 }
 
 export function checkRequirements (data, target) {
-  const reqs = requirements[target]
+  const reqs = steps[target].requirements
   if (reqs) {
     // Requirements found for target
     for (const [key, value] of Object.entries(reqs)) {

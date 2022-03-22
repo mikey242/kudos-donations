@@ -20,7 +20,7 @@ class Payment extends Base {
 	/**
 	 * PaymentRoutes constructor.
 	 */
-	public function __construct(PaymentService $payment_service) {
+	public function __construct( PaymentService $payment_service ) {
 
 		$this->payment_service = $payment_service;
 
@@ -36,77 +36,77 @@ class Payment extends Base {
 		$payment = $this->payment_service;
 
 		return [
-			 $this->get_base() . '/create' => [
+			$this->get_base() . '/create' => [
 				'methods'             => 'POST',
 				'callback'            => [ $payment, 'submit_payment' ],
 				'permission_callback' => '__return_true',
 				'args'                => [
-					'return_url'        => [
+					'return_url'    => [
 						'type'              => 'string',
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'campaign_id'       => [
+					'campaign_id'   => [
 						'type'              => 'string',
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'value'             => [
+					'value'         => [
 						'type'              => 'integer',
 						'required'          => true,
 						'sanitize_callback' => 'absint',
 					],
-					'name'              => [
+					'name'          => [
 						'type'              => 'string',
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'email_address'     => [
+					'email_address' => [
 						'type'              => 'string',
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_email',
 					],
-					'payment_frequency' => [
-						'type'              => 'string',
+					'recurring'     => [
+						'type'              => 'boolean',
 						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
-					'business_name'     => [
+					'business_name' => [
 						'type'              => 'string',
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'street'            => [
+					'street'        => [
 						'type'              => 'string',
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'postcode'          => [
+					'postcode'      => [
 						'type'              => 'string',
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'city'              => [
+					'city'          => [
 						'type'              => 'string',
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'country'           => [
+					'country'       => [
 						'type'              => 'string',
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'message'           => [
+					'message'       => [
 						'type'              => 'string',
-						'required'          => 'false',
+						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'privacy'           => [
+					'privacy'       => [
 						'type'              => 'boolean',
 						'required'          => false,
 						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
-					'terms'             => [
+					'terms'         => [
 						'type'              => 'boolean',
 						'required'          => false,
 						'sanitize_callback' => 'rest_sanitize_boolean',

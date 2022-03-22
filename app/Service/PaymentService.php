@@ -168,17 +168,17 @@ class PaymentService {
 
 		$values = $request->get_body_params();
 
-		// Check if bot filling form.
+		// Check if bot filling tabs.
 		if ( $this->is_bot( $values ) ) {
 			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
 		}
 
-		// Add submit action and pass form data.
+		// Add submit action and pass tabs data.
 		do_action( 'kudos_submit_payment', $values );
 
-		// Assign form fields.
+		// Assign tabs fields.
 		$value             = $values['value'];
-		$payment_frequency = $values['recurring_frequency'] ?? 'oneoff';
+		$payment_frequency = $values['recurring'] === 'true' ? $values['recurring_frequency'] : 'oneoff';
 		$recurring_length  = $values['recurring_length'] ?? 0;
 		$name              = $values['name'] ?? null;
 		$business_name     = $values['business_name'] ?? null;
@@ -265,9 +265,9 @@ class PaymentService {
 
 		$timeDiff = abs( $values['timestamp'] - time() );
 
-		// Check if form completed too quickly.
+		// Check if tabs completed too quickly.
 		if ( $timeDiff < 4 ) {
-			$this->logger->info( 'Bot detected, rejecting form.', [
+			$this->logger->info( 'Bot detected, rejecting tabs.', [
 				'reason'     => 'FormTab completed too quickly',
 				'time_taken' => $timeDiff,
 			] );
@@ -277,7 +277,7 @@ class PaymentService {
 
 		// Check if honeypot field completed.
 		if ( ! empty( $values['donation'] ) ) {
-			$this->logger->info( 'Bot detected, rejecting form.',
+			$this->logger->info( 'Bot detected, rejecting tabs.',
 				array_merge( [
 					'reason' => 'Honeypot field completed',
 				], $values ) );

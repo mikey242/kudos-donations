@@ -23,9 +23,9 @@ class Front {
 	const BUTTON_TEMPLATE = 'public/button/donate.button.html.twig';
 
 	/*
-	 * The twig template file used to render the donation form.
+	 * The twig template file used to render the donation tabs.
 	 */
-	const FORM_TEMPLATE = 'public/forms/donate.form.html.twig';
+	const FORM_TEMPLATE = 'public/forms/donate.tabs.html.twig';
 
 	/*
 	 * The twig template used to render the modal template.
@@ -92,35 +92,6 @@ class Front {
 	}
 
 	/**
-	 * Get the root styles based on theme settings.
-	 *
-	 * @return string The root styles to be inlined.
-	 */
-	public static function get_root_styles(): string {
-
-		$theme_colours = apply_filters( 'kudos_theme_colors', Settings::get_setting( 'theme_colors' ) );
-
-		$primary          = $theme_colours['primary'] ?? '#ff9f1c';
-		$primary_dark     = Utils::color_luminance( $primary, '-0.06' );
-		$primary_darker   = Utils::color_luminance( $primary, '-0.09' );
-		$secondary        = $theme_colours['secondary'] ?? '#2ec4b6';
-		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
-		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
-
-		return trim( "
-		:root {
-			--kudos-theme-primary: $primary;
-			--kudos-theme-primary-dark: $primary_dark;
-			--kudos-theme-primary-darker: $primary_darker;
-			--kudos-theme-secondary: $secondary;
-			--kudos-theme-secondary-dark: $secondary_dark;
-			--kudos-theme-secondary-darker: $secondary_darker;
-		}
-		" );
-
-	}
-
-	/**
 	 * Register the JavaScript for the public-facing side of the plugin.
 	 * This is necessary in order to localize the script with variables.
 	 */
@@ -170,6 +141,35 @@ class Front {
 	}
 
 	/**
+	 * Get the root styles based on theme settings.
+	 *
+	 * @return string The root styles to be inlined.
+	 */
+	public static function get_root_styles(): string {
+
+		$theme_colours = apply_filters( 'kudos_theme_colors', Settings::get_setting( 'theme_colors' ) );
+
+		$primary          = $theme_colours['primary'] ?? '#ff9f1c';
+		$primary_dark     = Utils::color_luminance( $primary, '-0.06' );
+		$primary_darker   = Utils::color_luminance( $primary, '-0.09' );
+		$secondary        = $theme_colours['secondary'] ?? '#2ec4b6';
+		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
+		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
+
+		return trim( "
+		:root {
+			--kudos-theme-primary: $primary;
+			--kudos-theme-primary-dark: $primary_dark;
+			--kudos-theme-primary-darker: $primary_darker;
+			--kudos-theme-secondary: $secondary;
+			--kudos-theme-secondary-dark: $secondary_dark;
+			--kudos-theme-secondary-darker: $secondary_darker;
+		}
+		" );
+
+	}
+
+	/**
 	 * Registers the button shortcode and block.
 	 */
 	public function register_kudos() {
@@ -183,37 +183,6 @@ class Front {
 	}
 
 	/**
-	 * Register the kudos button shortcode.
-	 */
-	private function register_button_shortcode() {
-
-		// Enqueue necessary resources.
-		add_action( 'wp_enqueue_scripts', function () {
-			wp_enqueue_script( 'kudos-donations-public' );
-			wp_enqueue_style( 'kudos-donations-public' );
-		} );
-
-		// Register shortcode.
-		add_shortcode(
-			'kudos',
-			function ( $atts ) {
-				$atts = shortcode_atts(
-					[
-						'button_label' => __( 'Donate now', 'kudos-donations' ),
-						'campaign_id'  => 'default',
-						'alignment'    => 'none',
-						'type'         => 'button',
-					],
-					$atts,
-					'kudos'
-				);
-
-				return $this->kudos_render_callback( $atts );
-			}
-		);
-	}
-
-	/**
 	 * Register the Kudos button block.
 	 */
 	private function register_button_block() {
@@ -223,7 +192,7 @@ class Front {
 				"render_callback" => [ $this, "kudos_render_callback" ],
 				"category"        => "widgets",
 				"title"           => "Kudos Button",
-				"description"     => "Adds a Kudos donate button or form to your post or page.",
+				"description"     => "Adds a Kudos donate button or tabs to your post or page.",
 				"keywords"        => [
 					"kudos",
 					"button",
@@ -268,6 +237,37 @@ class Front {
 	}
 
 	/**
+	 * Register the kudos button shortcode.
+	 */
+	private function register_button_shortcode() {
+
+		// Enqueue necessary resources.
+		add_action( 'wp_enqueue_scripts', function () {
+			wp_enqueue_script( 'kudos-donations-public' );
+			wp_enqueue_style( 'kudos-donations-public' );
+		} );
+
+		// Register shortcode.
+		add_shortcode(
+			'kudos',
+			function ( $atts ) {
+				$atts = shortcode_atts(
+					[
+						'button_label' => __( 'Donate now', 'kudos-donations' ),
+						'campaign_id'  => 'default',
+						'alignment'    => 'none',
+						'type'         => 'button',
+					],
+					$atts,
+					'kudos'
+				);
+
+				return $this->kudos_render_callback( $atts );
+			}
+		);
+	}
+
+	/**
 	 * Renders the kudos button and donation modals.
 	 *
 	 * @param array $atts Array of Kudos button/modal attributes.
@@ -287,7 +287,7 @@ class Front {
 
 			$alignment = 'has-text-align-' . $atts['alignment'] ?? 'none';
 
-			return "<div><kudos-donations class='$alignment' label='". $atts['button_label'] ."' align='". $atts['alignment'] ."' campaign='". $atts['campaign_id'] ."'>
+			return "<div><kudos-donations class='$alignment' label='" . $atts['button_label'] . "' align='" . $atts['alignment'] . "' campaign='" . $atts['campaign_id'] . "'>
 					</kudos-donations></div>";
 
 		} catch ( Exception $e ) {
@@ -302,100 +302,6 @@ class Front {
 		return null;
 
 
-	}
-
-	/**
-	 * Returns the html in a wrapper element.
-	 *
-	 * @param string $content
-	 * @param string $alignment
-	 *
-	 * @return bool|string
-	 */
-	protected function render_wrapper( string $content, string $alignment = 'none' ) {
-		return $this->twig->render( self::WRAPPER_TEMPLATE,
-			[
-				'content'   => $content,
-				'alignment' => $alignment,
-			]
-		);
-	}
-
-	/**
-	 * Builds the form object from supplied campaign_id.
-	 *
-	 * @param string $campaign_id
-	 * @param string $id
-	 *
-	 * @return string
-	 * @throws Exception
-	 */
-	private function create_form( string $campaign_id, string $id ): string {
-
-		$campaign       = Campaign::get_campaign( $campaign_id );
-		$transactions   = $this->mapper->get_repository( TransactionEntity::class )
-		                               ->get_all_by( [
-			                               'campaign_id' => $campaign_id,
-		                               ] );
-		$campaign_stats = Campaign::get_campaign_stats( $transactions );
-
-		$atts = [
-			'id'                => $id,
-			'return_url'        => Utils::get_return_url(),
-			'privacy_link'      => Settings::get_setting( 'privacy_link' ),
-			'terms_link'        => Settings::get_setting( 'terms_link' ),
-			'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
-			'spam_protection'   => Settings::get_setting( 'spam_protection' ),
-			'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
-			'campaign_id'       => $campaign['id'],
-			'button_label'      => $campaign['button_label'] ?? '',
-			'welcome_title'     => $campaign['modal_title'] ?? '',
-			'welcome_text'      => $campaign['welcome_text'] ?? '',
-			'campaign_goal'     => $campaign['campaign_goal'] ?? '',
-			'show_progress'     => $campaign['show_progress'] ?? '',
-			'amount_type'       => $campaign['amount_type'] ?? '',
-			'fixed_amounts'     => $campaign['fixed_amounts'] ?? '',
-			'frequency'         => $campaign['donation_type'] ?? '',
-			'address_enabled'   => $campaign['address_enabled'] ?? '',
-			'address_required'  => $campaign['address_required'] ?? '',
-			'message_enabled'   => $campaign['message_enabled'] ?? '',
-			'campaign_stats'    => $campaign_stats,
-		];
-
-		// Add additional funds if any.
-		if ( ! empty( $campaign['additional_funds'] ) ) {
-			$atts['campaign_stats']['total'] += $campaign['additional_funds'];
-		}
-
-		return $this->twig->render( self::FORM_TEMPLATE, $atts );
-	}
-
-	/**
-	 * Create message modal with supplied header and body text.
-	 *
-	 * @param string $header The header text.
-	 * @param string $body The body text.
-	 *
-	 * @return string
-	 */
-	private function create_message_modal( string $header, string $body ): ?string {
-
-		$twig = $this->twig;
-
-		$message = $twig->render( self::MESSAGE_TEMPLATE,
-			[
-				'header_text' => $header,
-				'body_text'   => $body,
-			] );
-
-		$modal = $twig->render( self::MODAL_TEMPLATE,
-			[
-				'id'      => Utils::generate_id(),
-				'content' => $message,
-				'class'   => 'kudos-message-modal',
-			] );
-
-		return $this->render_wrapper( $modal );
 	}
 
 	/**
@@ -464,34 +370,6 @@ class Front {
 	}
 
 	/**
-	 * Returns the kudos logo SVG markup.
-	 *
-	 * @param string|null $color
-	 * @param int $width
-	 *
-	 * @return string|null
-	 */
-	public function get_kudos_logo_markup( string $color = null, int $width = 24 ): ?string {
-
-		if ( $color ) {
-			$lineColor  = $color;
-			$heartColor = $color;
-		} else {
-			$lineColor  = '#2ec4b6';
-			$heartColor = '#ff9f1c';
-		}
-
-		return apply_filters( 'kudos_get_kudos_logo',
-			$this->twig->render( 'public/logo.html.twig',
-				[
-					'width'      => $width,
-					'lineColor'  => $lineColor,
-					'heartColor' => $heartColor,
-				] ),
-			$width );
-	}
-
-	/**
 	 * Check payment status based on local order_id
 	 *
 	 * @param string $order_id Kudos order id.
@@ -553,5 +431,127 @@ class Front {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Create message modal with supplied header and body text.
+	 *
+	 * @param string $header The header text.
+	 * @param string $body The body text.
+	 *
+	 * @return string
+	 */
+	private function create_message_modal( string $header, string $body ): ?string {
+
+		$twig = $this->twig;
+
+		$message = $twig->render( self::MESSAGE_TEMPLATE,
+			[
+				'header_text' => $header,
+				'body_text'   => $body,
+			] );
+
+		$modal = $twig->render( self::MODAL_TEMPLATE,
+			[
+				'id'      => Utils::generate_id(),
+				'content' => $message,
+				'class'   => 'kudos-message-modal',
+			] );
+
+		return $this->render_wrapper( $modal );
+	}
+
+	/**
+	 * Returns the html in a wrapper element.
+	 *
+	 * @param string $content
+	 * @param string $alignment
+	 *
+	 * @return bool|string
+	 */
+	protected function render_wrapper( string $content, string $alignment = 'none' ) {
+		return $this->twig->render( self::WRAPPER_TEMPLATE,
+			[
+				'content'   => $content,
+				'alignment' => $alignment,
+			]
+		);
+	}
+
+	/**
+	 * Returns the kudos logo SVG markup.
+	 *
+	 * @param string|null $color
+	 * @param int $width
+	 *
+	 * @return string|null
+	 */
+	public function get_kudos_logo_markup( string $color = null, int $width = 24 ): ?string {
+
+		if ( $color ) {
+			$lineColor  = $color;
+			$heartColor = $color;
+		} else {
+			$lineColor  = '#2ec4b6';
+			$heartColor = '#ff9f1c';
+		}
+
+		return apply_filters( 'kudos_get_kudos_logo',
+			$this->twig->render( 'public/logo.html.twig',
+				[
+					'width'      => $width,
+					'lineColor'  => $lineColor,
+					'heartColor' => $heartColor,
+				] ),
+			$width );
+	}
+
+	/**
+	 * Builds the tabs object from supplied campaign_id.
+	 *
+	 * @param string $campaign_id
+	 * @param string $id
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
+	private function create_form( string $campaign_id, string $id ): string {
+
+		$campaign       = Campaign::get_campaign( $campaign_id );
+		$transactions   = $this->mapper->get_repository( TransactionEntity::class )
+		                               ->get_all_by( [
+			                               'campaign_id' => $campaign_id,
+		                               ] );
+		$campaign_stats = Campaign::get_campaign_stats( $transactions );
+
+		$atts = [
+			'id'                => $id,
+			'return_url'        => Utils::get_return_url(),
+			'privacy_link'      => Settings::get_setting( 'privacy_link' ),
+			'terms_link'        => Settings::get_setting( 'terms_link' ),
+			'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
+			'spam_protection'   => Settings::get_setting( 'spam_protection' ),
+			'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
+			'campaign_id'       => $campaign['id'],
+			'button_label'      => $campaign['button_label'] ?? '',
+			'welcome_title'     => $campaign['modal_title'] ?? '',
+			'welcome_text'      => $campaign['welcome_text'] ?? '',
+			'campaign_goal'     => $campaign['campaign_goal'] ?? '',
+			'show_progress'     => $campaign['show_progress'] ?? '',
+			'amount_type'       => $campaign['amount_type'] ?? '',
+			'fixed_amounts'     => $campaign['fixed_amounts'] ?? '',
+			'frequency'         => $campaign['donation_type'] ?? '',
+			'address_enabled'   => $campaign['address_enabled'] ?? '',
+			'address_required'  => $campaign['address_required'] ?? '',
+			'message_enabled'   => $campaign['message_enabled'] ?? '',
+			'campaign_stats'    => $campaign_stats,
+		];
+
+		// Add additional funds if any.
+		if ( ! empty( $campaign['additional_funds'] ) ) {
+			$atts['campaign_stats']['total'] += $campaign['additional_funds'];
+		}
+
+		return $this->twig->render( self::FORM_TEMPLATE, $atts );
 	}
 }

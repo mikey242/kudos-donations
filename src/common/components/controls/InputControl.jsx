@@ -1,7 +1,7 @@
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
-const InputControl = ({ name, error, validation, type = 'text', placeholder }) => {
+const InputControl = ({ name, validation, type = 'text', placeholder }) => {
   const { register, formState: { errors } } = useFormContext()
 
   return (
@@ -18,7 +18,7 @@ const InputControl = ({ name, error, validation, type = 'text', placeholder }) =
                     />
                 </label>
             </div>
-            {errors[name] && <small className="error">{error}</small>}
+            {errors[name] && <small className="error">{errors[name].message}</small>}
         </>
   )
 }

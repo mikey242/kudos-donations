@@ -1,11 +1,26 @@
-export const requirements = {
+export const steps = {
+  1: {
+    name: 'initial'
+  },
   2: {
-    recurring: true
+    name: 'recurring',
+    requirements: {
+      recurring: true
+    }
   },
   3: {
-    address_enabled: true
+    name: 'address',
+    requirements: {
+      address_enabled: true
+    }
   },
   4: {
-    message_enabled: true
+    name: 'message',
+    requirements: {
+      message_enabled: true
+    }
+  },
+  5: {
+    name: 'summary'
   }
 }

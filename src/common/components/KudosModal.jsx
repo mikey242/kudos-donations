@@ -4,14 +4,10 @@ import { __ } from '@wordpress/i18n'
 import { XIcon } from '@heroicons/react/solid'
 import logo from '../../images/logo-colour.svg'
 import { Transition } from '@headlessui/react'
-import { useRef } from '@wordpress/element'
+import { forwardRef } from '@wordpress/element'
 
-const KudosModal = ({ toggle, isOpen, children, root }) => {
-  const modal = useRef()
-  const content = useRef()
-
+const KudosModal = forwardRef(({ toggle, isOpen, children, root }, ref) => {
   return (
-
         <Dialog
             open={isOpen}
             onClose={toggle}
@@ -21,13 +17,13 @@ const KudosModal = ({ toggle, isOpen, children, root }) => {
         >
             <Transition
                 appear={true}
+                show={isOpen}
                 enter="transition-all duration-[400ms]"
                 enterFrom="opacity-0 rotate-[-5deg] translate-x-3 translate-y-3 scale-90"
                 enterTo="opacity-100 rotate-0 translate-x-0 translate-y-0 scale-100"
                 leave="transform duration-200 transition ease-in-out"
                 leaveFrom="opacity-100 rotate-0 scale-100 "
                 leaveTo="opacity-0 scale-95 "
-                show={isOpen}
             >
                 <div
                     className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -36,8 +32,8 @@ const KudosModal = ({ toggle, isOpen, children, root }) => {
                           aria-hidden="true">&#8203;</span>
                     <div
                         id="kudos-modal"
-                        ref={modal}
-                        className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                        ref={ref}
+                        className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all duration-200 sm:align-middle sm:max-w-lg sm:w-full"
                     >
                         <div className="bg-white p-8">
                             <div className="kudos-modal-header flex items-center justify-between">
@@ -53,7 +49,7 @@ const KudosModal = ({ toggle, isOpen, children, root }) => {
                                     <XIcon className="align-middle w-5 h-5"/>
                                 </button>
                             </div>
-                            <div ref={content} className="mt-2">
+                            <div className="mt-2">
                                 {children}
                             </div>
                         </div>
@@ -61,8 +57,7 @@ const KudosModal = ({ toggle, isOpen, children, root }) => {
                 </div>
             </Transition>
         </Dialog>
-
   )
-}
+})
 
 export default KudosModal

@@ -2,12 +2,12 @@ import { __ } from '@wordpress/i18n'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ChevronLeftIcon, ChevronRightIcon, LockClosedIcon } from '@heroicons/react/solid'
-import Initial from './form/Initial'
-import PaymentFrequency from './form/PaymentFrequency'
-import Address from './form/Address'
-import Button from './form/Button'
-import Message from './form/Message'
-import Summary from './form/Summary'
+import Initial from './tabs/Initial'
+import PaymentFrequency from './tabs/PaymentFrequency'
+import Address from './tabs/Address'
+import Button from './controls/Button'
+import Message from './tabs/Message'
+import Summary from './tabs/Summary'
 
 const FormRouter = (props) => {
   const {
@@ -17,12 +17,12 @@ const FormRouter = (props) => {
   const methods = useForm()
 
   const onSubmit = (data) => {
-    // console.debug(data)
+    console.log(data)
     if (step < 5) return handleNext(data, step + 1)
     return submitForm(data)
   }
 
-  const getStep = () => {
+  const CurrentStep = ({ buttons }) => {
     switch (step) {
       case 1:
         return (
@@ -32,6 +32,7 @@ const FormRouter = (props) => {
                         donationType={campaign.donation_type}
                         amountType={campaign.amount_type}
                         fixedAmounts={campaign.fixed_amounts}
+                        buttons={buttons}
                     />
         )
       case 2:
@@ -39,6 +40,7 @@ const FormRouter = (props) => {
                     <PaymentFrequency
                         title={__('Subscription')}
                         description={__('How often would you like to donate?')}
+                        buttons={buttons}
                     />
         )
       case 3:
@@ -47,6 +49,7 @@ const FormRouter = (props) => {
                         campaign={campaign}
                         title={__('Address')}
                         description={__('Please fill in your address')}
+                        buttons={buttons}
                     />
         )
       case 4:
@@ -54,6 +57,7 @@ const FormRouter = (props) => {
                     <Message
                         title={__('Message')}
                         description={__('Leave a message (optional).')}
+                        buttons={buttons}
                     />
         )
       case 5:
@@ -61,6 +65,7 @@ const FormRouter = (props) => {
                     <Summary
                         title={__('Payment')}
                         description={__('By clicking donate you agree to the following payment:')}
+                        buttons={buttons}
                     />
         )
       default:
@@ -72,7 +77,7 @@ const FormRouter = (props) => {
   return (
         <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
-                {getStep()}
+                <CurrentStep/>
                 <div className="kudos-modal-buttons mt-8 flex justify-between relative">
                     {step > 1 &&
                         (
@@ -93,7 +98,8 @@ const FormRouter = (props) => {
                         {step < 5
                           ? <><span className="mx-2">{__('Next')}</span><ChevronRightIcon
                                 className="w-5 h-5"/></>
-                          : <><LockClosedIcon className="w-5 h-5"/> <span className="mx-2">{__('Submit')}</span></>}
+                          : <><LockClosedIcon className="w-5 h-5"/> <span
+                                className="mx-2">{__('Submit')}</span></>}
                     </Button>
                 </div>
             </form>

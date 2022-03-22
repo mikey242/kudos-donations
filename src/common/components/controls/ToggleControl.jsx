@@ -31,7 +31,6 @@ const ToggleControl = forwardRef(({ name, validation, label }, ref) => {
                 </div>
             )}
         />
-
   )
 })
 

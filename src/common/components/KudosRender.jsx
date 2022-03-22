@@ -2,22 +2,28 @@ import apiFetch from '@wordpress/api-fetch'
 import { useEffect, useRef, useState } from '@wordpress/element'
 import ReactShadowRoot from 'react-shadow-root'
 import React from 'react'
+import PropTypes from 'prop-types'
 import { getStyle } from '../helpers/util'
 import { KudosButton } from './KudosButton'
 import KudosModal from './KudosModal'
 import FormRouter from './FormRouter'
 import { checkRequirements } from '../helpers/form'
+import { anim } from '../helpers/animate'
 
 const screenSize = getStyle('--kudos-screen')
 
-function KudosRender ({ label, root }) {
+KudosRender.propTypes = {
+  buttonLabel: PropTypes.string,
+  root: PropTypes.object
+}
+
+function KudosRender ({ buttonLabel, root }) {
   const [campaign, setCampaign] = useState()
   const [timestamp, setTimestamp] = useState()
   const [ready, setReady] = useState(false)
   const [errors, setErrors] = useState([])
   const [formState, setFormState] = useState({
-    currentStep: 1,
-    skipSteps: [],
+    currentStep: 3,
     formData: {}
   })
   const [modalOpen, setModalOpen] = useState(false)
@@ -53,30 +59,39 @@ function KudosRender ({ label, root }) {
 
   const handlePrev = () => {
     const { currentStep } = formState
+    const target = modal.current
     let step = currentStep - 1
     const state = { ...formState.formData, ...campaign }
+
     // Find next available step
     while (!checkRequirements(state, step) && step >= 1) {
       step--
     }
-    setFormState((prev) => ({
-      ...prev,
-      currentStep: step
-    }))
+
+    anim(target, () => {
+      setFormState((prev) => ({
+        ...prev,
+        currentStep: step
+      }))
+    }, ['translate-x-1'])
   }
 
   const handleNext = (data, step) => {
     const state = { ...data, ...campaign }
+    const target = modal.current
+
     // Find next available step
     while (!checkRequirements(state, step) && step <= 10) {
       step++
     }
 
-    setFormState((prev) => ({
-      ...prev,
-      formData: { ...prev.formData, ...data },
-      currentStep: step
-    }))
+    anim(target, () => {
+      setFormState((prev) => ({
+        ...prev,
+        formData: { ...prev.formData, ...data },
+        currentStep: step
+      }))
+    }, ['-translate-x-1'])
   }
 
   const handleKeyPress = (e) => {
@@ -87,6 +102,7 @@ function KudosRender ({ label, root }) {
     setErrors([])
     const formData = new FormData()
     formData.append('timestamp', timestamp)
+    formData.append('campaign_id', campaign.id)
     for (const key in data) {
       if (key === 'field') {
         formData.append(key, data[key][1])
@@ -98,7 +114,7 @@ function KudosRender ({ label, root }) {
     apiFetch({
       path: 'kudos/v1/payment/create',
       headers: new Headers({
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/tabs-data'
       }),
       method: 'POST',
       body: new URLSearchParams(formData)
@@ -123,20 +139,19 @@ function KudosRender ({ label, root }) {
   }, [modalOpen])
 
   return (
-        <ReactShadowRoot
-
-        >
+        <ReactShadowRoot>
             <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
-            {/* <style>{style}</style> */}
+            <style>{style}</style>
             <div id="kudos" className="font-sans text-base">
                 <KudosButton onClick={toggleModal}>
-                    {label}
+                    {buttonLabel}
                 </KudosButton>
                 {ready &&
                     (
                         <KudosModal
                             toggle={toggleModal}
                             root={root}
+                            ref={modal}
                             isOpen={modalOpen}
                         >
                             {errors.length > 0 &&
@@ -151,7 +166,6 @@ function KudosRender ({ label, root }) {
                                 handleNext={handleNext}
                                 handlePrev={handlePrev}
                                 submitForm={submitForm}
-                                formData={formState.formData}
                                 title={campaign.modal_title}
                                 description={campaign.welcome_text}
                             />

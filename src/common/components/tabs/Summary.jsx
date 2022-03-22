@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form'
 import { getFrequencyName } from '../../helpers/form'
 
 function Summary (props) {
-  const { title, description } = props
+  const { title, description, buttons } = props
 
   const {
     getValues
@@ -21,7 +21,7 @@ function Summary (props) {
   }
 
   return (
-        <FormTab title={title} description={description}>
+        <FormTab title={title} description={description} buttons={buttons}>
             <div
                 className="kudos_summary text-left block bg-gray-100 p-2 border-0 border-solid border-t-2 border-primary">
                 <p className="m-0"><strong>{__('Name', 'kudos-donations')}: </strong><span

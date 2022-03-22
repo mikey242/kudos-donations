@@ -35,7 +35,7 @@ class Campaign {
 	 *
 	 * @return array
 	 */
-	public static function get_campaign_stats( array $transactions): ?array {
+	public static function get_campaign_stats( array $transactions ): ?array {
 
 		if ( $transactions ) {
 			$values = array_map( function ( $transaction ) {
@@ -68,7 +68,7 @@ class Campaign {
 	}
 
 	/**
-	 * Sanitize the various setting fields in the donation form array.
+	 * Sanitize the various setting fields in the donation tabs array.
 	 *
 	 * @param $campaigns
 	 *
@@ -112,7 +112,7 @@ class Campaign {
 	}
 
 	/**
-	 * Generates a unique ID in the form of a slug for the campaign.
+	 * Generates a unique ID in the tabs of a slug for the campaign.
 	 *
 	 * @param $name string User provided name for the campaign.
 	 *

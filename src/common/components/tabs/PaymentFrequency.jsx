@@ -6,13 +6,11 @@ import { useEffect } from '@wordpress/element'
 import SelectControl from '../controls/SelectControl'
 
 function PaymentFrequency (props) {
-  const { title, description } = props
+  const { title, description, buttons } = props
 
   const {
-    register,
     setFocus,
-    getValues,
-    formState: { errors }
+    getValues
   } = useFormContext()
 
   useEffect(() => {
@@ -28,22 +26,22 @@ function PaymentFrequency (props) {
   }
 
   return (
-        <FormTab title={title} description={description}>
+        <FormTab title={title} description={description} buttons={buttons}>
 
-            <SelectControl {...register('recurring_frequency', { required: __('Please select a payment frequency', 'kudos-donations') })}
+            <SelectControl name="recurring_frequency"
+                           validation={{ required: __('Please select a payment frequency', 'kudos-donations') }}
                            placeholder={__('Payment frequency')}
                            options={[
                              { value: '12 months', label: __('Yearly', 'kudos-donations') },
                              { value: '3 months', label: __('Quarterly', 'kudos-donations') },
                              { value: '1 month', label: __('Monthly', 'kudos-donations') }
                            ]}/>
-            {errors.recurring_frequency &&
-                <small className="error">{errors?.recurring_frequency?.message}</small>}
 
-            <SelectControl {...register('recurring_length', {
-              required: __('Please select a payment duration', 'kudos-donations'),
-              validate: { isMoreThanOne: (v) => isMoreThanOne(v) || __('Subscriptions must be more than one payment', 'kudos-donations') }
-            })}
+            <SelectControl name="recurring_length"
+                           validation={{
+                             required: __('Please select a payment duration', 'kudos-donations'),
+                             validate: { isMoreThanOne: (v) => isMoreThanOne(v) || __('Subscriptions must be more than one payment', 'kudos-donations') }
+                           }}
                            placeholder={__('Donation duration', 'kudos-donations')}
                            options={[
                              { value: '0', label: __('Continuous', 'kudos-donations') },
@@ -58,8 +56,6 @@ function PaymentFrequency (props) {
                              { value: '9', label: __('9 years', 'kudos-donations') },
                              { value: '10', label: __('10 years', 'kudos-donations') }
                            ]}/>
-            {errors?.recurring_length &&
-                <small className="error">{errors?.recurring_length?.message}</small>}
         </FormTab>
   )
 }
