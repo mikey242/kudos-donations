@@ -17,7 +17,7 @@ KudosRender.propTypes = {
   root: PropTypes.object
 }
 
-function KudosRender ({ buttonLabel, root }) {
+function KudosRender ({ buttonLabel, campaignId, root }) {
   const [campaign, setCampaign] = useState()
   const [timestamp, setTimestamp] = useState()
   const [ready, setReady] = useState(false)
@@ -49,7 +49,7 @@ function KudosRender ({ buttonLabel, root }) {
 
   const getCampaign = () => {
     apiFetch({
-      path: `kudos/v1/campaign/get?${new URLSearchParams({ id: 'default' })}`
+      path: `kudos/v1/campaign/get?${new URLSearchParams({ id: campaignId })}`
     }).then((response) => {
       setCampaign(response)
       setTimestamp(Date.now())

@@ -7,7 +7,11 @@ import { render, StrictMode } from '@wordpress/element'
 import React from 'react'
 import KudosRender from '../common/components/KudosRender'
 
-// Select the web component as target for component.
-const root = document.querySelector('kudos-donations')
+// Select the web components as target for render.
+const roots = document.querySelectorAll('kudos-donations')
 
-render(<StrictMode><KudosRender root={root} buttonLabel={root.getAttribute('label')}/></StrictMode>, root)
+roots.forEach((root) => {
+  const buttonLabel = root.getAttribute('label')
+  const campaignId = root.getAttribute('campaign')
+  render(<StrictMode><KudosRender root={root} campaignId={campaignId} buttonLabel={buttonLabel}/></StrictMode>, root)
+})

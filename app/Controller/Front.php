@@ -287,8 +287,8 @@ class Front {
 
 			$alignment = 'has-text-align-' . $atts['alignment'] ?? 'none';
 
-			return "<div><kudos-donations class='$alignment' label='" . $atts['button_label'] . "' align='" . $atts['alignment'] . "' campaign='" . $atts['campaign_id'] . "'>
-					</kudos-donations></div>";
+			return "<kudos-donations class='block $alignment' label='" . $atts['button_label'] . "' align='" . $atts['alignment'] . "' campaign='" . $atts['campaign_id'] . "'>
+					</kudos-donations>";
 
 		} catch ( Exception $e ) {
 
