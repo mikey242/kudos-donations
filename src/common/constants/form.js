@@ -1,26 +1,26 @@
 export const steps = {
   1: {
-    name: 'initial'
+    name: 'Initial'
   },
   2: {
-    name: 'recurring',
+    name: 'Recurring',
     requirements: {
       recurring: true
     }
   },
   3: {
-    name: 'address',
+    name: 'Address',
     requirements: {
       address_enabled: true
     }
   },
   4: {
-    name: 'message',
+    name: 'Message',
     requirements: {
       message_enabled: true
     }
   },
   5: {
-    name: 'summary'
+    name: 'Summary'
   }
 }

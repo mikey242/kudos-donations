@@ -8,11 +8,10 @@ import Address from './tabs/Address'
 import Button from './controls/Button'
 import Message from './tabs/Message'
 import Summary from './tabs/Summary'
+import { steps } from '../constants/form'
 
 const FormRouter = (props) => {
-  const {
-    step, title, campaign, description
-  } = props
+  const { step, campaign } = props
   const { handlePrev, handleNext, submitForm } = props
   const methods = useForm()
 
@@ -22,17 +21,16 @@ const FormRouter = (props) => {
     return submitForm(data)
   }
 
-  const CurrentStep = ({ buttons }) => {
+  const CurrentStep = () => {
     switch (step) {
       case 1:
         return (
                     <Initial
-                        title={title}
-                        description={description}
+                        title={campaign.modal_title}
+                        description={campaign.welcome_text}
                         donationType={campaign.donation_type}
                         amountType={campaign.amount_type}
                         fixedAmounts={campaign.fixed_amounts}
-                        buttons={buttons}
                     />
         )
       case 2:
@@ -40,16 +38,14 @@ const FormRouter = (props) => {
                     <PaymentFrequency
                         title={__('Subscription')}
                         description={__('How often would you like to donate?')}
-                        buttons={buttons}
                     />
         )
       case 3:
         return (
                     <Address
-                        campaign={campaign}
+                        required={campaign.address_required}
                         title={__('Address')}
                         description={__('Please fill in your address')}
-                        buttons={buttons}
                     />
         )
       case 4:
@@ -57,7 +53,6 @@ const FormRouter = (props) => {
                     <Message
                         title={__('Message')}
                         description={__('Leave a message (optional).')}
-                        buttons={buttons}
                     />
         )
       case 5:
@@ -65,7 +60,6 @@ const FormRouter = (props) => {
                     <Summary
                         title={__('Payment')}
                         description={__('By clicking donate you agree to the following payment:')}
-                        buttons={buttons}
                     />
         )
       default:
@@ -95,11 +89,11 @@ const FormRouter = (props) => {
                         ariaLabel={__('Next')}
                         className="ml-auto"
                     >
-                        {step < 5
-                          ? <><span className="mx-2">{__('Next')}</span><ChevronRightIcon
-                                className="w-5 h-5"/></>
-                          : <><LockClosedIcon className="w-5 h-5"/> <span
-                                className="mx-2">{__('Submit')}</span></>}
+                        {steps[step].name === 'Summary'
+                          ? <><LockClosedIcon className="w-5 h-5"/> <span
+                                className="mx-2">{__('Submit')}</span></>
+                          : <><span className="mx-2">{__('Next')}</span><ChevronRightIcon
+                                className="w-5 h-5"/></>}
                     </Button>
                 </div>
             </form>

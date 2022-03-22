@@ -8,7 +8,7 @@ import SelectControl from '../controls/SelectControl'
 import InputControl from '../controls/InputControl'
 
 function Address (props) {
-  const { title, description, buttons, campaign } = props
+  const { title, description, buttons, required } = props
   const countryOptions = useMemo(() => countryList().getData(), [])
   const {
     setFocus
@@ -25,7 +25,7 @@ function Address (props) {
             <InputControl name="street"
                           validation={{
                             required: {
-                              value: campaign.address_required,
+                              value: required,
                               message: __('Street required', 'kudos-donations')
                             }
                           }}
@@ -33,7 +33,7 @@ function Address (props) {
             <InputControl name="postcode"
                           validation={{
                             required: {
-                              value: campaign.address_required,
+                              value: required,
                               message: __('Postcode required', 'kudos-donations')
                             }
                           }}
@@ -41,7 +41,7 @@ function Address (props) {
             <InputControl name="city"
                           validation={{
                             required: {
-                              value: campaign.address_required,
+                              value: required,
                               message: __('City required', 'kudos-donations')
                             }
                           }}
@@ -50,7 +50,7 @@ function Address (props) {
                            options={countryOptions}
                            validation={{
                              required: {
-                               value: campaign.address_required,
+                               value: required,
                                message: __('Country required', 'kudos-donations')
                              }
                            }}

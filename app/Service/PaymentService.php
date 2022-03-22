@@ -178,7 +178,7 @@ class PaymentService {
 
 		// Assign tabs fields.
 		$value             = $values['value'];
-		$payment_frequency = $values['recurring'] === 'true' ? $values['recurring_frequency'] : 'oneoff';
+		$payment_frequency = $values['recurring'] == "true" ? $values['recurring_frequency'] : 'oneoff';
 		$recurring_length  = $values['recurring_length'] ?? 0;
 		$name              = $values['name'] ?? null;
 		$business_name     = $values['business_name'] ?? null;

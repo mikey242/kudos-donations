@@ -23,7 +23,7 @@ function KudosRender ({ buttonLabel, root }) {
   const [ready, setReady] = useState(false)
   const [errors, setErrors] = useState([])
   const [formState, setFormState] = useState({
-    currentStep: 3,
+    currentStep: 1,
     formData: {}
   })
   const [modalOpen, setModalOpen] = useState(false)
@@ -63,7 +63,7 @@ function KudosRender ({ buttonLabel, root }) {
     let step = currentStep - 1
     const state = { ...formState.formData, ...campaign }
 
-    // Find next available step
+    // Find next available step.
     while (!checkRequirements(state, step) && step >= 1) {
       step--
     }
@@ -80,7 +80,7 @@ function KudosRender ({ buttonLabel, root }) {
     const state = { ...data, ...campaign }
     const target = modal.current
 
-    // Find next available step
+    // Find next available step.
     while (!checkRequirements(state, step) && step <= 10) {
       step++
     }
@@ -166,8 +166,6 @@ function KudosRender ({ buttonLabel, root }) {
                                 handleNext={handleNext}
                                 handlePrev={handlePrev}
                                 submitForm={submitForm}
-                                title={campaign.modal_title}
-                                description={campaign.welcome_text}
                             />
                         </KudosModal>
                     )}

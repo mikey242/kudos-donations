@@ -69,7 +69,7 @@ class Payment extends Base {
 					'recurring'     => [
 						'type'              => 'boolean',
 						'required'          => true,
-						'sanitize_callback' => 'rest_sanitize_boolean',
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'business_name' => [
 						'type'              => 'string',
