@@ -1,31 +1,20 @@
-import {Btn} from "./Btn"
-import {KudosLogo} from "../../../common/components/KudosLogo"
-import {__} from "@wordpress/i18n"
-import {applyFilters} from "@wordpress/hooks"
+import Button from '../../Components/Controls/Button'
+import React from 'react'
+import { KudosLogo } from '../../../common/components/KudosLogo'
+import { __ } from '@wordpress/i18n'
+import { applyFilters } from '@wordpress/hooks'
 
 const Header = (props) => {
+  const { checkingApi, isEdited, isAPISaving, children, updateAll } = props
 
-    let status
-    let statusClass
-
-    if (props.checkingApi) {
-        statusClass = 'checking'
-        status = __('Checking', 'kudos-donations')
-    } else if (props.settings._kudos_vendor_mollie['connected']) {
-        statusClass = 'connected'
-        status = __('Mollie connected', 'kudos-donations')
-    } else if (!props.settings._kudos_vendor_mollie['connected']) {
-        statusClass = 'not-connected'
-        status = __('Not connected', 'kudos-donations')
-    }
-
-    return (
+  return (
         <div
-            className="kudos-dashboard-header sticky border-solid border-1 border-gray-300 z-1050 bg-white py-3">
-            <div className="w-[768px] mx-auto flex items-center justify-between">
+            className="sticky flex justify-around w-full z-1050 bg-white py-5">
+            <div className="max-w-3xl w-full mx-auto flex items-center justify-between">
                 <div className="flex">
-                    <a title={__('Visit Kudos Donations')} className="flex mr-4 logo-animate" href="https://kudosdonations.com"
-                       target="_blank">
+                    <a title={__('Visit Kudos Donations')} className="flex mr-4 logo-animate"
+                       href="https://kudosdonations.com"
+                       target="_blank" rel="noreferrer">
                         <KudosLogo/>
                     </a>
                     <h1>{__('Kudos Donations', 'kudos-donations')}</h1>
@@ -35,29 +24,25 @@ const Header = (props) => {
 					</span>
                 </div>
                 <div className="flex items-center">
-					<span
-                        className={'kudos-api-status ' + statusClass + ' text-gray-600 mr-4'}
-                    >
-						{status}
-					</span>
-                    <Btn
+                    {children}
+                    <Button
                         isPrimary
                         disabled={
-                            props.isAPISaving ||
-                            !props.isEdited
+                            isAPISaving ||
+                            !isEdited
                         }
                         isBusy={
-                            props.isAPISaving ||
-                            props.checkingApi
+                            isAPISaving ||
+                            checkingApi
                         }
-                        onClick={props.updateAll}
+                        onClick={updateAll}
                     >
                         {__('Save', 'kudos-donations')}
-                    </Btn>
+                    </Button>
                 </div>
             </div>
         </div>
-    )
+  )
 }
 
-export {Header}
+export { Header }

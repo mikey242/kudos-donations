@@ -1,25 +1,25 @@
-import {SettingCard} from "../SettingCard"
-import {ButtonIcon} from "../ButtonIcon"
-import {__} from "@wordpress/i18n"
-import {Button, TextControl} from "@wordpress/components"
-import {useState} from "@wordpress/element"
+import { SettingCard } from '../SettingCard'
+import { ButtonIcon } from '../ButtonIcon'
+import React from 'react'
+import { __ } from '@wordpress/i18n'
+import { Button, TextControl } from '@wordpress/components'
+import { useState } from '@wordpress/element'
 
-const NewCampaignPanel = ({addCampaign, isAPISaving}) => {
+const NewCampaignPanel = ({ addCampaign, isAPISaving }) => {
+  const [addFormValue, setAddFormValue] = useState('')
+  const [buttonDisabled, setButtonDisabled] = useState(true)
 
-    const [addFormValue, setAddFormValue] = useState('')
-    const [buttonDisabled, setButtonDisabled] = useState(true)
+  const updateValue = (value) => {
+    setAddFormValue(value)
+    setButtonDisabled(value.trim() === '')
+  }
 
-    const updateValue = (value) => {
-        setAddFormValue(value)
-        setButtonDisabled('' === value.trim())
-    }
-
-    return (
+  return (
         <SettingCard title={__('New campaign', 'kudos-donations')}>
             <TextControl
                 label={__(
-                    'Campaign name',
-                    'kudos-donations'
+                  'Campaign name',
+                  'kudos-donations'
                 )}
                 help={__('Give your campaign a unique name to identify it.', 'kudos-donations')}
                 id={'kudos_new_campaign'}
@@ -31,18 +31,18 @@ const NewCampaignPanel = ({addCampaign, isAPISaving}) => {
                 isSecondary
                 disabled={buttonDisabled}
                 isBusy={isAPISaving}
-                icon={(<ButtonIcon icon='add'/>)}
+                icon={(<ButtonIcon icon="add"/>)}
                 onClick={
                     () => {
-                        addCampaign(document.getElementById('kudos_new_campaign').value)
-                        setButtonDisabled(true)
+                      addCampaign(document.getElementById('kudos_new_campaign').value)
+                      setButtonDisabled(true)
                     }
                 }
             >
                 {__('Add campaign', 'kudos-donations')}
             </Button>
         </SettingCard>
-    )
+  )
 }
 
-export {NewCampaignPanel}
+export { NewCampaignPanel }

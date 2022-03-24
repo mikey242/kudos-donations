@@ -8,6 +8,7 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
 use Kudos\Helpers\Campaign;
+use Kudos\Helpers\CustomPostType;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
@@ -175,6 +176,7 @@ class Front {
 	public function register_kudos() {
 
 		$this->register_button_block();
+		$this->register_post_types();
 
 		// If setting is not enabled the shortcode assets and registration will be skipped.
 		if ( Settings::get_setting( 'enable_shortcode' ) ) {
@@ -234,6 +236,56 @@ class Front {
 				"script"          => "kudos-donations-public",
 				"style"           => "kudos-donations-public",
 			] );
+	}
+
+	private function register_post_types() {
+		$campaign = new CustomPostType( 'kudos_campaign', [], [
+			'goal'             => [
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'additional_funds' => [
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'modal_title'      => [
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'welcome_text'     => [
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'address_enabled'  => [
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'address_required' => [
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'message_enabled'  => [
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'amount_type'      => [
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'fixed_amounts'    => [
+				'type'              => 'string',
+				'single'            => false,
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'donation_type'    => [
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'show_progress'    => [
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+		] );
 	}
 
 	/**

@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --kudos-theme-primary: theme("colors.orange.500");
+    --wp-admin-theme-color-darker-10: theme("colors.orange.500");
+    --wp-admin-theme-color-darker-20: theme("colors.orange.700");
+}
+
+#wpcontent {
+    padding-left: 0;
+}
+
+.auto-fold #wpcontent {
+    padding-left: 0;
+}

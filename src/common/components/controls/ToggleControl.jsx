@@ -10,7 +10,7 @@ const ToggleControl = forwardRef(({ name, validation, label }, ref) => {
             validation={validation}
             ref={ref}
             render={({ field: { value, onChange } }) => (
-                <div className="flex items-center justify-center font-normal mt-2 w-full">
+                <div className="flex items-center font-normal mt-2">
                     <Switch.Group>
                         <Switch.Label className="mr-4 cursor-pointer">{label}</Switch.Label>
                         <Switch

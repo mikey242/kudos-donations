@@ -56,8 +56,10 @@ const Initial = (props) => {
                           type="email" placeholder={__('Email', 'kudos-donations')}/>
 
             {donationType === 'both' &&
-                <ToggleControl name="recurring" validation={{ required: true }}
-                               label={__('Recurring donation')}/>
+                <div className="flex justify-center">
+                    <ToggleControl name="recurring" validation={{ required: true }}
+                                   label={__('Recurring donation')}/>
+                </div>
             }
 
         </FormTab>

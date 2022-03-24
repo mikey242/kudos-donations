@@ -10,7 +10,6 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
-use Kudos\Helpers\Campaign;
 use Kudos\Helpers\Settings;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
@@ -111,7 +110,29 @@ class Admin {
 			}
 		);
 
-		add_action( "load-$settings_page_hook_suffix", [ $this, 'prepare_settings_page' ] );
+		add_action( "load-$settings_page_hook_suffix", function () {
+			add_action( 'admin_enqueue_scripts', [ $this, 'settings_page_assets' ] );
+		} );
+
+		/*
+		 * Campaign page.
+		 */
+		$campaigns_page_hook_suffix = add_submenu_page(
+			$parent_slug,
+			/* translators: %s: Plugin name */
+			sprintf( __( '%s Campaigns', 'kudos-donations' ), 'Kudos' ),
+			__( 'Campaigns', 'kudos-donations' ),
+			'manage_options',
+			'kudos-campaigns',
+			function () {
+				echo '<div id="kudos-campaigns"></div>';
+			}
+
+		);
+
+		add_action( "load-$campaigns_page_hook_suffix", function () {
+			add_action( "admin_enqueue_scripts", [ $this, 'campaign_page_assets' ] );
+		} );
 
 		/*
 		 * Transaction page.
@@ -128,7 +149,11 @@ class Admin {
 			}
 		);
 
-		add_action( "load-$transactions_page_hook_suffix", [ $this, 'prepare_transactions_page' ] );
+		add_action( "load-$transactions_page_hook_suffix", function () {
+			add_action( "admin_enqueue_scripts", [ $this, "transactions_page_assets" ] );
+			$this->table = new TransactionsTable( $this->mapper );
+			$this->table->prepare_items();
+		} );
 
 		/*
 		 * Subscription page.
@@ -145,7 +170,11 @@ class Admin {
 			}
 		);
 
-		add_action( "load-$subscriptions_page_hook_suffix", [ $this, 'prepare_subscriptions_page' ] );
+		add_action( "load-$subscriptions_page_hook_suffix", function () {
+			add_action( "admin_enqueue_scripts", [ $this, 'subscriptions_page_assets' ] );
+			$this->table = new SubscriptionsTable( $this->mapper, $this->payment );
+			$this->table->prepare_items();
+		} );
 
 		/*
 		 * Donor page.
@@ -163,25 +192,11 @@ class Admin {
 
 		);
 
-		add_action( "load-$donors_page_hook_suffix", [ $this, 'prepare_donors_page' ] );
-
-		/*
-		 * Campaign page.
-		 */
-		$campaigns_page_hook_suffix = add_submenu_page(
-			$parent_slug,
-			/* translators: %s: Plugin name */
-			sprintf( __( '%s Campaigns', 'kudos-donations' ), 'Kudos' ),
-			__( 'Campaigns', 'kudos-donations' ),
-			'manage_options',
-			'kudos-campaigns',
-			function () {
-				include_once KUDOS_PLUGIN_DIR . '/app/View/kudos-admin-campaigns.php';
-			}
-
-		);
-
-		add_action( "load-$campaigns_page_hook_suffix", [ $this, 'prepare_campaigns_page' ] );
+		add_action( "load-$donors_page_hook_suffix", function () {
+			add_action( "admin_enqueue_scripts", [ $this, 'donor_page_assets' ] );
+			$this->table = new DonorsTable( $this->mapper );
+			$this->table->prepare_items();
+		} );
 
 		/*
 		 * Debug page.
@@ -214,49 +229,6 @@ class Admin {
 				</script>
 				<?php
 			} );
-	}
-
-	/**
-	 * Hook settings page assets.
-	 */
-	public function prepare_settings_page() {
-		add_action( 'admin_enqueue_scripts', [ $this, 'settings_page_assets' ] );
-	}
-
-	/**
-	 * Hook assets and prepare the table for screen options.
-	 */
-	public function prepare_transactions_page() {
-		add_action( "admin_enqueue_scripts", [ $this, "transactions_page_assets" ] );
-		$this->table = new TransactionsTable( $this->mapper );
-		$this->table->prepare_items();
-	}
-
-	/**
-	 * Hook assets and prepare the table for screen options.
-	 */
-	public function prepare_subscriptions_page() {
-		add_action( "admin_enqueue_scripts", [ $this, 'subscriptions_page_assets' ] );
-		$this->table = new SubscriptionsTable( $this->mapper, $this->payment );
-		$this->table->prepare_items();
-	}
-
-	/**
-	 * Hook assets and prepare the table for screen options.
-	 */
-	public function prepare_donors_page() {
-		add_action( "admin_enqueue_scripts", [ $this, 'donor_page_assets' ] );
-		$this->table = new DonorsTable( $this->mapper );
-		$this->table->prepare_items();
-	}
-
-	/**
-	 * Hook assets and prepare the table for screen options.
-	 */
-	public function prepare_campaigns_page() {
-		add_action( "admin_enqueue_scripts", [ $this, 'campaign_page_assets' ] );
-		$this->table = new CampaignsTable( $this->mapper );
-		$this->table->prepare_items();
 	}
 
 	/**
@@ -320,25 +292,6 @@ class Admin {
 	}
 
 	/**
-	 * Assets common to all Table pages.
-	 */
-	private function table_page_assets(): string {
-
-		$handle   = 'kudos-donations-table';
-		$table_js = Assets::get_script( '/admin/kudos-admin-table.js' );
-
-		wp_enqueue_script(
-			$handle,
-			$table_js['url'],
-			$table_js['dependencies'],
-			$table_js['version'],
-			false
-		);
-
-		return $handle;
-	}
-
-	/**
 	 * Assets specific to the Kudos Transactions page.
 	 */
 	public function transactions_page_assets() {
@@ -362,6 +315,25 @@ class Admin {
 				'confirmationDelete' => __( 'Are you sure you want to delete this transaction?', 'kudos-donations' ),
 			]
 		);
+	}
+
+	/**
+	 * Assets common to all Table pages.
+	 */
+	private function table_page_assets(): string {
+
+		$handle   = 'kudos-donations-table';
+		$table_js = Assets::get_script( '/admin/kudos-admin-table.js' );
+
+		wp_enqueue_script(
+			$handle,
+			$table_js['url'],
+			$table_js['dependencies'],
+			$table_js['version'],
+			false
+		);
+
+		return $handle;
 	}
 
 	/**
@@ -402,18 +374,38 @@ class Admin {
 	 */
 	public function campaign_page_assets() {
 
-		// Load table assets.
-		$table_handle = $this->table_page_assets();
+
+		$handle = 'kudos-donations-campaigns';
+
+		// Enqueue the styles
+		wp_enqueue_style(
+			$handle,
+			Assets::get_asset_url( '/admin/kudos-admin-campaigns.css' ),
+			[],
+			$this->version
+		);
+
+
+		// Get and enqueue the script
+		$admin_js = Assets::get_script( '/admin/kudos-admin-campaigns.js' );
+		wp_enqueue_script(
+			$handle,
+			$admin_js['url'],
+			$admin_js['dependencies'],
+			$admin_js['version'],
+			true
+		);
+
 		wp_localize_script(
-			$table_handle,
+			$handle,
 			'kudos',
 			[
-				'confirmationDelete' => __(
-					'Are you sure you want to delete this campaign? This will not remove any transactions',
-					'kudos-donations'
-				),
+				'version' => $this->version,
 			]
 		);
+		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
+
+		do_action( 'kudos_admin_settings_page_assets', $handle );
 	}
 
 	/**
@@ -822,81 +814,6 @@ class Admin {
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				'campaigns'              => [
-					'type'              => 'array',
-					'show_in_rest'      => [
-						'schema' => [
-							'type'  => 'array',
-							'items' => [
-								'type'       => 'object',
-								'properties' => [
-									'id'               => [
-										'type' => 'string',
-									],
-									'name'             => [
-										'type' => 'string',
-									],
-									'campaign_goal'    => [
-										'type' => 'string',
-									],
-									'additional_funds' => [
-										'type' => 'string',
-									],
-									'modal_title'      => [
-										'type' => 'string',
-									],
-									'welcome_text'     => [
-										'type' => 'string',
-									],
-									'address_enabled'  => [
-										'type' => 'boolean',
-									],
-									'address_required' => [
-										'type' => 'boolean',
-									],
-									'message_enabled'  => [
-										'type' => 'boolean',
-									],
-									'amount_type'      => [
-										'type' => 'string',
-									],
-									'fixed_amounts'    => [
-										'type' => 'string',
-									],
-									'donation_type'    => [
-										'type' => 'string',
-									],
-									'show_progress'    => [
-										'type' => 'boolean',
-									],
-									// Deprecated: do not use
-									'protected'        => [
-										'type' => 'boolean',
-									],
-								],
-							],
-						],
-					],
-					'default'           => [
-						0 => [
-							'id'               => 'default',
-							'name'             => 'Default',
-							'modal_title'      => __( 'Support us!', 'kudos-donations' ),
-							'welcome_text'     => __( 'Your support is greatly appreciated and will help to keep us going.',
-								'kudos-donations' ),
-							'address_enabled'  => false,
-							'address_required' => true,
-							'message_enabled'  => false,
-							'amount_type'      => 'both',
-							'fixed_amounts'    => '1,5,20,50',
-							'campaign_goal'    => '',
-							'additional_funds' => '',
-							'show_progress'    => false,
-							'donation_type'    => 'oneoff',
-						],
-					],
-					'sanitize_callback' => [ Campaign::class, 'sanitize_campaigns' ],
 				],
 			];
 	}

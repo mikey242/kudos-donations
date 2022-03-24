@@ -4,6 +4,7 @@ const { colors } = defaultTheme
 const plugin = require('tailwindcss/plugin')
 
 module.exports = {
+  important: true,
   content: [
     './src/admin/**/*.{js,jsx}',
     './src/blocks/**/*.{js,jsx}',
@@ -22,9 +23,6 @@ module.exports = {
       sans: ['montserratregular', 'Century Gothic', 'sans-serif'],
       serif: ['libre_baskervillebold', 'Times New Roman', 'serif'],
       mono: ['ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace']
-    },
-    maxWidth: {
-      lg: '32rem'
     },
     minWidth: {
       0: '0',

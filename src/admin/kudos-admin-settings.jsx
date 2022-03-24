@@ -1,12 +1,5 @@
-/**
- * WordPress dependencies
- */
+import { render } from '@wordpress/element'
+import React from 'react'
+import { KudosSettings } from './Settings/KudosSettings'
 
-import {render} from "@wordpress/element"
-
-/**
- * Internal dependencies
- */
-import {KudosAdmin} from './Settings/KudosAdmin'
-
-render(<KudosAdmin/>, document.getElementById('kudos-settings'))
+render(<KudosSettings/>, document.getElementById('kudos-settings'))

@@ -1,25 +1,24 @@
-import {Button} from "@wordpress/components"
+import React from 'react'
+import { Button } from '@wordpress/components'
 
 const Btn = (props) => {
-
-    return (
+  return (
 
         <Button
-            className={(props.isPrimary ? "bg-orange-500 " : "") + props.className}
+            className={(props.isPrimary ? 'bg-orange-500 ' : '') + props.className}
             isPrimary={props.isPrimary}
             isSecondary={props.isSecondary}
             isPressed={props.isPressed}
             isBusy={props.isBusy}
             disabled={props.disabled}
             onClick={() =>
-                props.onClick()
+              props.onClick()
             }
         >
             {props.children}
         </Button>
 
-    )
-
+  )
 }
 
-export {Btn}
+export { Btn }

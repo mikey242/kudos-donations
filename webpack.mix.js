@@ -45,9 +45,13 @@ mix
 
 // Admin assets.
   .js('src/admin/kudos-admin-settings.jsx', 'admin').react()
+  .js('src/admin/kudos-admin-campaigns.jsx', 'admin').react()
   .js('src/admin/kudos-admin-transactions.js', 'admin')
   .js('src/admin/kudos-admin-table.js', 'admin')
   .postCss('src/admin/kudos-admin-settings.css', 'admin', [
+    require('tailwindcss')
+  ])
+  .postCss('src/admin/kudos-admin-campaigns.css', 'admin', [
     require('tailwindcss')
   ])
 

@@ -1,14 +1,18 @@
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
-const InputControl = ({ name, validation, type = 'text', placeholder }) => {
+const InputControl = ({ name, validation, label, type = 'text', placeholder }) => {
   const { register, formState: { errors } } = useFormContext()
 
   return (
-
         <>
             <div className="relative w-full">
-                <label className="flex cursor-pointer mt-2">
+                <label className="flex items-center cursor-pointer mt-2">
+                    {label &&
+                        <span className={'w-1/5'}>
+                            {label}
+                        </span>
+                    }
                     <input
                         {...register(name, validation)}
                         type={type}
@@ -18,7 +22,7 @@ const InputControl = ({ name, validation, type = 'text', placeholder }) => {
                     />
                 </label>
             </div>
-            {errors[name] && <small className="error">{errors[name].message}</small>}
+            {errors[name] && <div><small className="error">{errors[name].message}</small></div>}
         </>
   )
 }
