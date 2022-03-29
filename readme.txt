@@ -118,6 +118,10 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.1.4 =
+* Improve email compatibility
+* Update dependencies (Mollie, Twig)
+
 = 3.1.3 =
 * Tested compatibility with WordPress 5.9
 * Fix theme colour panel in settings
