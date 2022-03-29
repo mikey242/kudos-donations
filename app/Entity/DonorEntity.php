@@ -5,7 +5,7 @@ namespace Kudos\Entity;
 class DonorEntity extends AbstractEntity {
 
 	/**
-	 * Table name without prefix
+	 * CampaignTable name without prefix
 	 *
 	 * @var string
 	 */

@@ -1,8 +1,9 @@
-import { Icon, edit, trash } from '@wordpress/icons'
 import React from 'react'
 import Panel from './Panel'
+import { __ } from '@wordpress/i18n'
+import { PencilAltIcon, TrashIcon } from '@heroicons/react/outline'
 
-function Table ({ campaigns, transactions, editClick, deleteClick }) {
+function CampaignTable ({ campaigns, transactions, editClick, deleteClick }) {
   const getTotal = (campaignId) => {
     const filtered = transactions.filter(transaction => (
       transaction.campaign_id === campaignId
@@ -36,7 +37,7 @@ function Table ({ campaigns, transactions, editClick, deleteClick }) {
                 </tr>
                 </thead>
                 <tbody>
-                {campaigns?.reverse().map((campaign, i) => (
+                {campaigns?.map((campaign, i) => (
                     <tr key={campaign.id} className="bg-white border-b">
                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                             {campaign.title.rendered}
@@ -51,13 +52,20 @@ function Table ({ campaigns, transactions, editClick, deleteClick }) {
                             {campaign.meta.goal > 0 ? campaign.meta.goal : 'None'}
                         </td>
                         <td className="px-6 py-4 text-right">
-                            <a href="#" onClick={() => editClick(campaign)}
-                               className="mr-2 font-medium inline-block text-gray-700 hover:underline"><Icon
-                                fill={'currentColor'} icon={edit}/></a>
+                            <PencilAltIcon
+                                className="h-6 w-6 cursor-pointer font-medium inline-block text-gray-500 hover:underline"
+                                onClick={() => editClick(campaign)}
+                            />
                             {i !== 0 &&
-                                <a href="#" onClick={() => deleteClick(campaign.id)}
-                                   className="font-medium inline-block text-gray-700 hover:underline"><Icon
-                                    fill={'currentColor'} icon={trash}/></a>
+
+                                <TrashIcon
+                                    className="h-6 w-6 cursor-pointer ml-2 font-medium inline-block text-red-500 hover:underline"
+                                    onClick={() => {
+                                      window.confirm(__('Are you sure you wish to delete this campaign?')) &&
+                                        deleteClick(campaign.id)
+                                    }}
+                                />
+
                             }
                         </td>
                     </tr>
@@ -70,4 +78,4 @@ function Table ({ campaigns, transactions, editClick, deleteClick }) {
   )
 }
 
-export default Table
+export default CampaignTable

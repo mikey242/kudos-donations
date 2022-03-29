@@ -5,7 +5,7 @@ namespace Kudos\Entity;
 class SubscriptionEntity extends AbstractEntity {
 
 	/**
-	 * Table name without prefix
+	 * CampaignTable name without prefix
 	 *
 	 * @var string
 	 */

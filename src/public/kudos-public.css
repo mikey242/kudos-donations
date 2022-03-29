@@ -20,55 +20,16 @@
 /** {*/
 /*    @apply text-base;*/
 /*}*/
+:host {
+    all: initial;
+}
 
+input,
+select,
 ::placeholder {
-    @apply font-sans text-lg;
+    @apply font-sans text-base;
 }
 
-.is-loading + .spinner {
-    @apply block !important;
-}
-
-.is-loading {
-    @apply opacity-50 !important;
-}
-
-.logo-animate:hover .logo {
-    @apply -rotate-90 !important;
-}
-
-.logo-animate:hover .logo .logo-heart {
-    backface-visibility: visible;
-    @apply rotate-x-180 !important;
-}
-
-form small.error {
-    @apply order-last mt-1 block text-sm text-red-500;
-}
-
-form input.error,
-form select.error,
-form input.error ~ .checkmark {
-    @apply border-red-500 !important;
-}
-
-form .kudos-radio-amount {
-    min-width: 65px !important;
-}
-
-form .kudos-radio-amount input:checked + label {
-    @apply text-white border-transparent !important;
-    background-color: var(--kudos-theme-primary) !important;
-}
-
-form .kudos-radio-amount input:focus + label {
-    @apply ring-primary ring ring-offset-2;
-}
-
-form input[name=value]:required + span {
-    @apply text-white border-transparent !important;
-    background-color: var(--kudos-theme-primary) !important;
-}
 
 /* Base */
 :root {

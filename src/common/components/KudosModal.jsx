@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dialog, Modal } from '@mui/material'
+import { Dialog } from '@mui/material'
 import { __ } from '@wordpress/i18n'
 import { XIcon } from '@heroicons/react/solid'
 import logo from '../../images/logo-colour.svg'
@@ -11,7 +11,7 @@ const KudosModal = forwardRef(({ toggle, isOpen, children, root }, ref) => {
         <Dialog
             open={isOpen}
             onClose={toggle}
-            className="fixed z-10 inset-0 overflow-y-auto text-base"
+            className="fixed z-10 inset-0 overflow-y-auto"
             container={() => root.shadowRoot.getElementById('kudos')}
             BackdropComponent={() => <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"/>}
         >

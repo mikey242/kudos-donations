@@ -26,8 +26,8 @@ const FormRouter = (props) => {
       case 1:
         return (
                     <Initial
-                        title={campaign.modal_title}
-                        description={campaign.welcome_text}
+                        title={campaign.initial_title}
+                        description={campaign.initial_text}
                         donationType={campaign.donation_type}
                         amountType={campaign.amount_type}
                         fixedAmounts={campaign.fixed_amounts}
@@ -77,6 +77,7 @@ const FormRouter = (props) => {
                         (
                             <Button
                                 type="button"
+                                className="text-base"
                                 ariaLabel={__('Prev')}
                                 onClick={handlePrev}
                             >
@@ -87,7 +88,7 @@ const FormRouter = (props) => {
                     <Button
                         type="submit"
                         ariaLabel={__('Next')}
-                        className="ml-auto"
+                        className="ml-auto text-base"
                     >
                         {steps[step].name === 'Summary'
                           ? <><LockClosedIcon className="w-5 h-5"/> <span

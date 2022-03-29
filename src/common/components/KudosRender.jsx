@@ -28,7 +28,7 @@ function KudosRender ({ buttonLabel, campaignId, root }) {
   })
   const [modalOpen, setModalOpen] = useState(false)
   const modal = useRef(null)
-  const style = ':host { all: initial } '
+  // const style = ':host { all: initial } '
 
   const toggleModal = () => {
     // Open modal
@@ -48,10 +48,11 @@ function KudosRender ({ buttonLabel, campaignId, root }) {
   }
 
   const getCampaign = () => {
-    apiFetch({
-      path: `kudos/v1/campaign/get?${new URLSearchParams({ id: campaignId })}`
+    return apiFetch({
+      path: `wp/v2/kudos_campaign?${new URLSearchParams({ slug: campaignId })}`,
+      method: 'GET'
     }).then((response) => {
-      setCampaign(response)
+      setCampaign(response[0]?.meta)
       setTimestamp(Date.now())
       setReady(true)
     })
@@ -141,7 +142,7 @@ function KudosRender ({ buttonLabel, campaignId, root }) {
   return (
         <ReactShadowRoot>
             <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
-            <style>{style}</style>
+            {/* <style>{style}</style> */}
             <div id="kudos" className="font-sans text-base">
                 <KudosButton onClick={toggleModal}>
                     {buttonLabel}

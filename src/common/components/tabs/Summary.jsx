@@ -24,14 +24,14 @@ function Summary (props) {
         <FormTab title={title} description={description} buttons={buttons}>
             <div
                 className="kudos_summary text-left block bg-gray-100 p-2 border-0 border-solid border-t-2 border-primary">
-                <p className="m-0"><strong>{__('Name', 'kudos-donations')}: </strong><span
+                <p className="my-1"><strong>{__('Name', 'kudos-donations')}: </strong><span
                 >{getValues('name')}</span></p>
-                <p className="m-0"><strong>{__('E-mail address', 'kudos-donations')}
+                <p className="my-1"><strong>{__('E-mail address', 'kudos-donations')}
                     : </strong><span
                 >{getValues('email')}</span></p>
-                <p className="m-0"><strong>{__('Amount', 'kudos-donations')}: </strong>€<span
+                <p className="my-1"><strong>{__('Amount', 'kudos-donations')}: </strong>€<span
                 >{getValues('value')}</span></p>
-                <p className="m-0"><strong>{__('Type', 'kudos-donations')}: </strong><span>{
+                <p className="my-1"><strong>{__('Type', 'kudos-donations')}: </strong><span>{
                     recurringText()
                 }</span>
                 </p>

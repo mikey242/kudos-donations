@@ -4,8 +4,7 @@
 
 :root {
     --kudos-theme-primary: theme("colors.orange.500");
-    --wp-admin-theme-color-darker-10: theme("colors.orange.500");
-    --wp-admin-theme-color-darker-20: theme("colors.orange.700");
+    --kudos-theme-primary-dark: theme("colors.orange.700");
 }
 
 #wpcontent {

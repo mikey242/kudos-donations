@@ -12,7 +12,7 @@ class LoggerService extends Logger {
 	const TRUNCATE_AT = 100;
 
 	/**
-	 * Table name without prefix.
+	 * CampaignTable name without prefix.
 	 *
 	 * @var string
 	 */
@@ -57,13 +57,6 @@ class LoggerService extends Logger {
 		return parent::addRecord( $level, $message, $context );
 	}
 
-
-	public function get_table_name(): string {
-		$wpdb = $this->wpdb;
-		return $wpdb->prefix . self::TABLE;
-
-	}
-
 	/**
 	 * Clears the log file.
 	 *
@@ -75,6 +68,13 @@ class LoggerService extends Logger {
 		$table = $this->get_table_name();
 
 		return $wpdb->query( "TRUNCATE TABLE `{$table}`" );
+
+	}
+
+	public function get_table_name(): string {
+		$wpdb = $this->wpdb;
+
+		return $wpdb->prefix . self::TABLE;
 
 	}
 

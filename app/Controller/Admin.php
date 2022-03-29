@@ -318,7 +318,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets common to all Table pages.
+	 * Assets common to all CampaignTable pages.
 	 */
 	private function table_page_assets(): string {
 

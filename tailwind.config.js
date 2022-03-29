@@ -59,12 +59,12 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        // base: '18px',
-        xs: '0.75em',
-        sm: '0.875em',
-        lg: '1.125em', // '18px'
-        '2xl': '1.5em',
-        '4xl': '2.25em' // '36px'
+        base: '16px',
+        xs: '0.75rem',
+        sm: '0.875rem',
+        lg: '1.125rem', // '18px'
+        '2xl': '1.5rem',
+        '4xl': '2.25rem' // '36px'
       },
       colors: {
         orange: {

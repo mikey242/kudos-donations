@@ -29,7 +29,7 @@ const Initial = (props) => {
 
             {(amountType === 'both' || amountType === 'fixed') &&
                 <RadioGroupControl name="value" options={
-                    fixedAmounts.split(',').map((value) => {
+                    fixedAmounts.map((value) => {
                       return { value: value, label: '€' + value }
                     })
                 }/>

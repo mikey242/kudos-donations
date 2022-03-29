@@ -248,11 +248,11 @@ class Front {
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'modal_title'      => [
+			'initial_title'    => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'welcome_text'     => [
+			'initial_text'     => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
