@@ -68,10 +68,12 @@ class MailerService {
 			'kudos-logo.png'
 		);
 
+		// Enable HTML email support to header.
+		$phpmailer->isHTML( true );
+
 		// Add custom config if enabled.
 		if ( Settings::get_setting( 'smtp_enable' ) ) {
 			$phpmailer->isSMTP();
-			$phpmailer->isHTML( true );
 			$phpmailer->Host        = Settings::get_setting( 'smtp_host' );
 			$phpmailer->SMTPAutoTLS = Settings::get_setting( 'smtp_autotls' );
 			$phpmailer->SMTPAuth    = true;
