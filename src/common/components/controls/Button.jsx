@@ -8,10 +8,12 @@ function Button ({
         <button
             type={type}
             onClick={onClick}
-            className={classNames(className, 'bg-primary hover:saturate-200 cursor-pointer text-white font-bold py-3 px-5 rounded-lg border-none inline-flex items-center transition ease-in-out focus:ring-primary focus:ring focus:ring-offset-2')}
+            className={classNames(className, 'relative z-1 group cursor-pointer text-white overflow-hidden font-bold py-3 px-5 rounded-lg border-none inline-flex items-center transition ease-in-out focus:ring-primary focus:ring focus:ring-offset-2')}
             aria-label={ariaLabel}
         >
             {children}
+            <div
+                className="absolute -z-1 w-full h-full top-0 left-0 bg-primary group-hover:brightness-90 transition ease-in-out"/>
         </button>
 
   )

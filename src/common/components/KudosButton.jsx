@@ -1,7 +1,6 @@
 import { KudosLogo } from './KudosLogo'
 
 const KudosButton = ({ children, color, className, onClick = null }) => {
-  console.log(color)
   return (
         <div
             id={'kudos-button'}
