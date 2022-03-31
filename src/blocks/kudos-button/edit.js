@@ -1,142 +1,136 @@
-// Defining the edit interface
-import {Component} from "@wordpress/element"
-import {AlignmentToolbar, BlockControls, InspectorControls, RichText, useBlockProps} from "@wordpress/block-editor"
-import {PanelBody, RadioControl, SelectControl} from "@wordpress/components"
-import {__} from "@wordpress/i18n"
-import api from '@wordpress/api'
-import {KudosButton} from "../../common/components/KudosButton"
+import { useEffect, useState } from '@wordpress/element'
+import { AlignmentToolbar, BlockControls, InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor'
+import { PanelBody, RadioControl, SelectControl } from '@wordpress/components'
+import { __ } from '@wordpress/i18n'
+import React, { Fragment } from 'react'
+import { KudosButton } from '../../common/components/KudosButton'
+import apiFetch from '@wordpress/api-fetch'
 
-class ButtonEdit extends Component {
+const ButtonEdit = (props) => {
+  const [campaigns, setCampaigns] = useState()
+  const [currentCampaign, setCurrentCampaign] = useState()
 
-    constructor() {
-        super()
-        this.onChangeButtonLabel = this.onChangeButtonLabel.bind(this)
-        this.onChangeAlignment = this.onChangeAlignment.bind(this)
-        this.onChangeCampaign = this.onChangeCampaign.bind(this)
-        this.onChangeType = this.onChangeType.bind(this)
-        this.state = {
-            campaigns:
-                [{
-                    value: '',
-                    label: '',
-                    disabled: true
-                }]
+  const {
+    className,
+    attributes: { button_label, campaign_id, type, alignment },
+    setAttributes
+  } = props
 
-            ,
-            selectedCampaign: ''
-        }
+  useEffect(() => {
+    getCampaigns()
+  }, [])
+
+  useEffect(() => {
+    if (campaigns) {
+      setCurrentCampaign(getCampaign(campaign_id))
     }
+  }, [campaigns])
 
-    componentDidMount() {
-        this.getCampaigns()
-    }
+  useEffect(() => {
+    console.log(currentCampaign)
+  }, [currentCampaign])
 
-    onChangeButtonLabel(newValue) {
-        this.props.setAttributes({button_label: newValue})
-    };
+  const onChangeButtonLabel = (newValue) => {
+    setAttributes({ button_label: newValue })
+  }
 
-    onChangeAlignment(newValue) {
-        this.props.setAttributes({
-            alignment: newValue === undefined ? 'none' : newValue,
-        })
-    };
+  const onChangeAlignment = (newValue) => {
+    setAttributes({ alignment: newValue === undefined ? 'none' : newValue })
+  }
 
-    onChangeCampaign(newValue) {
-        this.props.setAttributes({campaign_id: newValue})
-        this.setState({
-            selectedCampaign: newValue
-        })
-    };
+  const onChangeCampaign = (newValue) => {
+    setAttributes({ campaign_id: newValue })
+    setCurrentCampaign(getCampaign(newValue))
+  }
 
-    onChangeType(newValue) {
-        this.props.setAttributes({type: newValue})
-    }
+  const onChangeType = (newValue) => {
+    setAttributes({ type: newValue })
+  }
 
-    getCampaignName(value) {
-        let campaign = this.state.campaigns.find(campaign => campaign.value === value)
-        return campaign ? campaign.value ? campaign.label : '' : 'Unknown (' + value + ')'
-    }
+  const getCampaign = (slug) => {
+    return campaigns.find(campaign => campaign.slug === slug)
+  }
 
-    getCampaigns() {
-        api.loadPromise.then(() => {
-            new api.models.Settings().fetch().then((response) => {
-                let options = response._kudos_campaigns.map(campaign => ({
-                    value: campaign.id,
-                    label: campaign.name
-                }))
-                this.setState({
-                    campaigns: [...this.state.campaigns, ...options],
-                })
-            })
-        })
-    };
+  const getCampaigns = () => {
+    return apiFetch({
+      path: 'wp/v2/kudos_campaign',
+      method: 'GET'
+    }).then((response) => {
+      setCampaigns(response)
+    })
+  }
 
-    render() {
-        return (
-            <div>
-                <InspectorControls>
-                    <PanelBody
-                        title={__('Campaign', 'kudos-donations')}
-                        initialOpen={false}
-                    >
-                        <p><strong>Current
-                            campaign: {this.getCampaignName(this.props.attributes.campaign_id)}</strong></p>
-                        <SelectControl
-                            label={__('Select a campaign', 'kudos-donations')}
-                            value={this.state.selectedCampaign}
-                            onChange={this.onChangeCampaign}
-                            options={this.state.campaigns}
+  return (
+        <div>
+            {campaigns &&
+                <Fragment>
+                    <InspectorControls>
+                        <PanelBody
+                            title={__('Campaign', 'kudos-donations')}
+                            initialOpen={false}
+                        >
+                            <p><strong>Current
+                                campaign: {currentCampaign?.title.rendered}</strong></p>
+                            <SelectControl
+                                label={__('Select a campaign', 'kudos-donations')}
+                                value={campaign_id}
+                                onChange={onChangeCampaign}
+                                options={campaigns.map((campaign) => ({
+                                  label: campaign?.title.rendered, value: campaign.slug
+                                }))}
+                            />
+                            <a href="admin.php?page=kudos-campaigns&tab_name=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
+                        </PanelBody>
+
+                        <PanelBody
+                            title={__('Options', 'kudos-donations')}
+                            initialOpen={false}
+                        >
+                            <RadioControl
+                                label={__('Display type', 'kudos-donations')}
+                                selected={type}
+                                options={[
+                                  { label: __('Button', 'kudos-donations'), value: 'button' },
+                                  { label: __('Form', 'kudos-donations'), value: 'form' }
+                                ]}
+                                onChange={onChangeType}
+                            />
+                        </PanelBody>
+                    </InspectorControls>
+
+                    <BlockControls>
+                        <AlignmentToolbar
+                            value={alignment}
+                            onChange={onChangeAlignment}
                         />
-                        <a href="admin.php?page=kudos-settings&tab_name=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
-                    </PanelBody>
+                    </BlockControls>
 
-                    <PanelBody
-                        title={__('Options', 'kudos-donations')}
-                        initialOpen={false}
+                    <KudosButton
+                        color={currentCampaign?.meta.theme_color}
+                        className={(className ?? '') + ' has-text-align-' + alignment}
                     >
-                        <RadioControl
-                            label={__('Display type', 'kudos-donations')}
-                            selected={this.props.attributes.type}
-                            options={[
-                                {label: __('Button', 'kudos-donations'), value: 'button'},
-                                {label: __('Form', 'kudos-donations'), value: 'form'}
+                        <RichText
+                            allowedFormats={[
+                              'core/bold',
+                              'core/italic',
+                              'core/text-color',
+                              'core/strikethrough'
                             ]}
-                            onChange={this.onChangeType}
+
+                            onChange={onChangeButtonLabel}
+                            value={button_label}
                         />
-                    </PanelBody>
-                </InspectorControls>
-
-                <BlockControls>
-                    <AlignmentToolbar
-                        value={this.props.attributes.alignment}
-                        onChange={this.onChangeAlignment}
-                    />
-                </BlockControls>
-
-                <KudosButton
-                    className={(this.props.attributes.className ?? '') + ' has-text-align-' + this.props.attributes.alignment}
-                >
-                    <RichText
-                        allowedFormats={[
-                            'core/bold',
-                            'core/italic',
-                            'core/text-color',
-                            'core/strikethrough',
-                        ]}
-                        onChange={this.onChangeButtonLabel}
-                        value={this.props.attributes.button_label}
-                    />
-                </KudosButton>
-            </div>
-
-        )
-    }
+                    </KudosButton>
+                </Fragment>
+            }
+        </div>
+  )
 }
 
-export default function Edit(props) {
-    return(
+export default function Edit (props) {
+  return (
         <div {...useBlockProps()}>
             <ButtonEdit {...props}/>
         </div>
-    )
+  )
 }
