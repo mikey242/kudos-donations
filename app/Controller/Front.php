@@ -92,6 +92,10 @@ class Front {
 		$this->mapper  = $mapper;
 	}
 
+	public static function test_callback() {
+		wp_send_json_error( 'no' );
+	}
+
 	/**
 	 * Register the JavaScript for the public-facing side of the plugin.
 	 * This is necessary in order to localize the script with variables.
@@ -138,36 +142,6 @@ class Front {
 	 */
 	public function register_root_styles() {
 		wp_register_style( 'kudos-donations-root', false );
-		wp_add_inline_style( 'kudos-donations-root', $this->get_root_styles() );
-	}
-
-	/**
-	 * Get the root styles based on theme settings.
-	 *
-	 * @return string The root styles to be inlined.
-	 */
-	public static function get_root_styles(): string {
-
-		$theme_colours = apply_filters( 'kudos_theme_colors', Settings::get_setting( 'theme_colors' ) );
-
-		$primary          = $theme_colours['primary'] ?? '#ff9f1c';
-		$primary_dark     = Utils::color_luminance( $primary, '-0.06' );
-		$primary_darker   = Utils::color_luminance( $primary, '-0.09' );
-		$secondary        = $theme_colours['secondary'] ?? '#2ec4b6';
-		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
-		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
-
-		return trim( "
-		:root {
-			--kudos-theme-primary: $primary;
-			--kudos-theme-primary-dark: $primary_dark;
-			--kudos-theme-primary-darker: $primary_darker;
-			--kudos-theme-secondary: $secondary;
-			--kudos-theme-secondary-dark: $secondary_dark;
-			--kudos-theme-secondary-darker: $secondary_darker;
-		}
-		" );
-
 	}
 
 	/**
@@ -239,7 +213,7 @@ class Front {
 	}
 
 	private function register_post_types() {
-		$campaign = new CustomPostType( 'kudos_campaign', [], [
+		new CustomPostType( 'kudos_campaign', [], [
 			'goal'             => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
@@ -284,6 +258,10 @@ class Front {
 			'show_progress'    => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'theme_color'      => [
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
 			],
 		] );
 	}

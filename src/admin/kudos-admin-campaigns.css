@@ -7,10 +7,38 @@
     --kudos-theme-primary-dark: theme("colors.orange.700");
 }
 
+h1 {
+    @apply text-2xl font-bold leading-loose;
+}
+
+h2 {
+    @apply text-xl;
+}
+
+h3 {
+    @apply text-lg font-bold;
+}
+
 #wpcontent {
     padding-left: 0;
 }
 
 .auto-fold #wpcontent {
     padding-left: 0;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+input[type="week"] {
+    @apply border-gray-300 m-0 placeholder-gray-500 border border-solid transition ease-in-out duration-75 leading-6 text-gray-700 bg-white focus:border-primary focus:outline-none focus:ring-0 py-2 px-3 rounded w-full;
 }

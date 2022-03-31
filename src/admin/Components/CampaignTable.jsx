@@ -38,7 +38,7 @@ function CampaignTable ({ campaigns, transactions, editClick, deleteClick }) {
                 </thead>
                 <tbody>
                 {campaigns?.map((campaign, i) => (
-                    <tr key={campaign.id} className="bg-white border-b">
+                    <tr key={campaign.id} className="bg-white">
                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                             {campaign.title.rendered}
                         </th>

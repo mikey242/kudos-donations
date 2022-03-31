@@ -3,17 +3,18 @@ import Panel from './Panel'
 import { Transition } from '@headlessui/react'
 import { CheckCircleIcon } from '@heroicons/react/outline'
 
-const Notification = ({ notification }) => {
+const Notification = ({ notification, onClick }) => {
   return (
-        <div className="absolute bottom-0 right-1/2 translate-x-1/2 z-1050">
+        <div className="fixed bottom-5 right-5 z-1050 cursor-pointer">
             <Transition
                 show={notification?.shown}
                 enter="transform transition duration-[400ms]"
-                enterFrom="opacity-0 rotate-[-120deg] scale-50"
-                enterTo="opacity-100 rotate-0 scale-100"
+                enterFrom="translate-x-full"
+                enterTo="translate-x-0"
                 leave="transform duration-200 transition ease-in-out"
-                leaveFrom="opacity-100 rotate-0 scale-100 "
+                leaveFrom="opacity-100 scale-100 "
                 leaveTo="opacity-0 scale-95 "
+                onClick={onClick}
             >
                 <Panel>
                     <div className="flex justify-around items-center p-5">

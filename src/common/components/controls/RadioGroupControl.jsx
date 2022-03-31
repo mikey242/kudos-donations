@@ -12,7 +12,7 @@ const RadioGroupControl = forwardRef(({ name, validation, options, label }, ref)
             render={({ field: { onChange, value } }) => (
                 <RadioGroup value={value} onChange={onChange}>
                     {label &&
-                        <p className="mb-1">
+                        <p className="my-2">
                             {label}
                         </p>
                     }

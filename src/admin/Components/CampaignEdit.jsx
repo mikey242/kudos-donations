@@ -8,6 +8,7 @@ import Button from '../../common/components/controls/Button'
 import TextAreaControl from '../../common/components/controls/TextAreaControl'
 import RadioGroupControl from '../../common/components/controls/RadioGroupControl'
 import Panel from './Panel'
+import ColorPicker from '../../common/components/controls/ColorPicker'
 
 function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurringAllowed }) {
   const methods = useForm({
@@ -33,23 +34,24 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
 
   return (
         <Fragment>
-            <h1 className="text-center my-5">{campaign.status === 'draft' ? __('New campaign', 'kudos-donations') : __('Edit campaign', 'kudos-donations')}</h1>
+            <h2 className="text-center my-5">{campaign.status === 'draft' ? __('New campaign', 'kudos-donations') : __('Edit campaign', 'kudos-donations')}</h2>
             <Panel>
                 <div className="p-5">
 
                     <FormProvider {...methods}>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            {/* <h2>Campaign details</h2> */}
-                            <InputControl name="title" label="Campaign name"
+                            {/* <h3>Campaign details</h2> */}
+                            <InputControl name="title" label={__('Campaign name', 'kudos-donations')}
                                           validation={{ required: __('Name required') }}/>
                             <InputControl type="number" name="meta.goal" label="Goal"/>
+                            <ColorPicker label={__('Theme color', 'kudos-donations')} name="meta.theme_color"/>
                             <hr className="my-5 border-gray-50"/>
-                            <h2>{__('Text fields', 'kudos-donations')}</h2>
+                            <h3>{__('Text fields', 'kudos-donations')}</h3>
                             <InputControl name="meta.initial_title" label="Welcome Title"/>
                             <TextAreaControl name="meta.initial_text" label="Welcome Text"
                                              placeholder="Welcome Text"/>
                             <hr className="my-5 border-gray-50"/>
-                            <h2>{__('Donation settings', 'kudos-donations')}</h2>
+                            <h3>{__('Donation settings', 'kudos-donations')}</h3>
                             <RadioGroupControl name="meta.donation_type" label={__('Donation type', 'kudos-donations')}
                                                options={[
                                                  { label: __('One-off', 'kudos-donations'), value: 'oneoff' },
@@ -75,9 +77,10 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                                 <InputControl name="meta.fixed_amounts" label={__('Fixed amounts', 'kudos-donations')}/>
                             }
                             <hr className="my-5 border-gray-50"/>
-                            <h2>{__('Optional fields', 'kudos-donations')}</h2>
+                            <h3>{__('Optional fields', 'kudos-donations')}</h3>
                             <ToggleControl name="meta.address_enabled" label={__('Address')}/>
                             <ToggleControl name="meta.message_enabled" label={__('Message')}/>
+                            <hr className="my-5 border-gray-50"/>
                             <div className="text-right flex justify-between mt-5">
                                 <Button onClick={() => setCurrentCampaign(null)}
                                         type="button">{__('Cancel', 'kudos-donations')}</Button>

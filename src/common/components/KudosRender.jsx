@@ -1,5 +1,5 @@
 import apiFetch from '@wordpress/api-fetch'
-import { useEffect, useRef, useState } from '@wordpress/element'
+import { Fragment, useEffect, useRef, useState } from '@wordpress/element'
 import ReactShadowRoot from 'react-shadow-root'
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -26,9 +26,15 @@ function KudosRender ({ buttonLabel, campaignId, root }) {
     currentStep: 1,
     formData: {}
   })
+
   const [modalOpen, setModalOpen] = useState(false)
   const modal = useRef(null)
-  // const style = ':host { all: initial } '
+  const style = `:host { 
+      all: initial;
+      // --kudos-theme-primary: #ff9f1c;
+      // --kudos-theme-primary-dark: #f0961b;
+      // --kudos-theme-primary-darker: #e9911a;
+  }`
 
   const toggleModal = () => {
     // Open modal
@@ -141,14 +147,16 @@ function KudosRender ({ buttonLabel, campaignId, root }) {
 
   return (
         <ReactShadowRoot>
-            <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
-            {/* <style>{style}</style> */}
-            <div id="kudos" className="font-sans text-base">
-                <KudosButton onClick={toggleModal}>
-                    {buttonLabel}
-                </KudosButton>
-                {ready &&
-                    (
+            {ready &&
+                <Fragment>
+                    <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
+                    <style>{style}</style>
+                    <style>{`:host {--kudos-theme-primary: ${campaign.theme_color}`}</style>
+                    <div id="kudos" className="font-sans text-base">
+                        <KudosButton onClick={toggleModal}>
+                            {buttonLabel}
+                        </KudosButton>
+
                         <KudosModal
                             toggle={toggleModal}
                             root={root}
@@ -169,8 +177,10 @@ function KudosRender ({ buttonLabel, campaignId, root }) {
                                 submitForm={submitForm}
                             />
                         </KudosModal>
-                    )}
-            </div>
+
+                    </div>
+                </Fragment>
+            }
         </ReactShadowRoot>
   )
 }

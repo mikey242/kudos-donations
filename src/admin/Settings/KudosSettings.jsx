@@ -37,14 +37,12 @@ class KudosSettings extends Component {
       tabName: getQueryVar('tab_name', 'mollie'),
       showNotice: false,
       noticeMessage: '',
-      isCampaignsLoaded: false,
       isSettingsLoaded: false,
       isMollieEdited: false,
       isEdited: false,
       isAPILoaded: false,
       isAPISaving: false,
       checkingApi: false,
-      campaigns: [],
       settings: {}
     }
 
@@ -263,19 +261,6 @@ class KudosSettings extends Component {
                         showNotice={this.showNotice}
                         checkApiKey={this.checkApiKey}
                         handleInputChange={this.handleInputChange}
-                    />
-      },
-      {
-        name: 'campaigns',
-        title: __('Campaigns', 'kudos-donations'),
-        className: 'tab-campaigns',
-        content:
-                    <CampaignsTab
-                        settings={this.state.settings}
-                        isRecurringAllowed={this.state.settings._kudos_vendor_mollie.recurring}
-                        handleInputChange={this.handleInputChange}
-                        updateSetting={this.updateSetting}
-                        isAPISaving={this.state.isAPISaving}
                     />
       },
       {
