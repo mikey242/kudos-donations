@@ -1,3 +1,4 @@
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -6,16 +7,20 @@
     --kudos-theme-primary-dark: theme("colors.orange.700");
 }
 
-.intro p {
-    @apply text-base !important;
+h1 {
+    @apply text-2xl font-bold leading-loose;
 }
 
-.components-radio-control__input::before,
-.components-circular-option-picker__option::after,
-.components-modal__frame *,
-.components-modal__frame ::after,
-.components-modal__frame ::before {
-    box-sizing: inherit;
+h2 {
+    @apply text-xl font-bold;
+}
+
+h3 {
+    @apply text-lg font-bold;
+}
+
+.intro p {
+    @apply text-base !important;
 }
 
 #wpcontent {
@@ -24,82 +29,4 @@
 
 .auto-fold #wpcontent {
     padding-left: 0;
-}
-
-.kudos-dashboard-header {
-    top: 32px;
-}
-
-.kudos-dashboard-header .kudos-api-status:before {
-    @apply rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 bg-gray-500;
-    content: "";
-    width: 15px;
-    height: 15px;
-}
-
-.kudos-dashboard-header .kudos-api-status.connected:before {
-    background: #35ac35;
-    border-color: #90ee90;
-}
-
-.kudos-dashboard-header .kudos-api-status.not-connected:before {
-    background: red;
-    border-color: lightcoral;
-}
-
-.kudos-tab-panel .components-tab-panel__tabs {
-    @apply flex justify-center bg-white;
-}
-
-.kudos-tab-panel .components-tab-panel__tabs .components-button.is-active {
-    @apply relative font-semibold;
-}
-
-.kudos-tab-panel .components-tab-panel__tabs .components-button {
-    @apply text-gray-800 inline-block bg-transparent border-none cursor-pointer py-1 px-5 ml-0 transition-shadow duration-100 ease-linear;
-    height: 50px;
-    outline-offset: -1px;
-}
-
-.kudos-tab-panel .components-base-control__field {
-    @apply mb-4;
-}
-
-.kudos-tab-panel .components-tab-panel__tab-content {
-    @apply mt-5;
-}
-
-.components-tab-panel__tabs {
-    @apply border-solid border-1 border-gray-300 rounded;
-}
-
-.components-radio-control .components-base-control__help,
-.components-base-control__help {
-    @apply mt-2 italic;
-}
-
-.components-snackbar {
-    @apply fixed px-4 ml-5 mb-5 w-auto z-1 opacity-0 bottom-0;
-}
-
-.components-snackbar.notification-shown {
-    @apply opacity-100;
-}
-
-.kudos-campaign-selector .components-base-control__field {
-    @apply m-0;
-}
-
-.components-text-control__input,
-.components-input-control__backdrop {
-    @apply appearance-none px-4 py-3 border border-gray-300;
-}
-
-.components-text-control__input:focus,
-.components-input-control__backdrop:focus {
-    @apply outline-none shadow-inner border-orange-700;
-}
-
-.components-circular-option-picker {
-    @apply ml-3;
 }

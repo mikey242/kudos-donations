@@ -1,9 +1,9 @@
 import React from 'react'
 import Panel from './Panel'
 import { __ } from '@wordpress/i18n'
-import { PencilAltIcon, TrashIcon } from '@heroicons/react/outline'
+import { DuplicateIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline'
 
-function CampaignTable ({ campaigns, transactions, editClick, deleteClick }) {
+function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, deleteClick }) {
   const getTotal = (campaignId) => {
     const filtered = transactions.filter(transaction => (
       transaction.campaign_id === campaignId
@@ -15,8 +15,8 @@ function CampaignTable ({ campaigns, transactions, editClick, deleteClick }) {
   }
 
   return (
-        <Panel>
-            <table className="w-full text-left text-gray-500 border-collapse">
+        <Panel className="overflow-x-auto" title={__('Your campaigns', 'kudos-donations')}>
+            <table className="w-full text-left text-gray-500 border-collapse p-2">
                 <thead className="text-md text-gray-700 bg-gray-100">
                 <tr>
                     <th scope="col" className="px-6 py-3">
@@ -52,20 +52,28 @@ function CampaignTable ({ campaigns, transactions, editClick, deleteClick }) {
                             {campaign.meta.goal > 0 ? campaign.meta.goal : 'None'}
                         </td>
                         <td className="px-6 py-4 text-right">
-                            <PencilAltIcon
-                                className="h-6 w-6 cursor-pointer font-medium inline-block text-gray-500 hover:underline"
-                                onClick={() => editClick(campaign)}
+                            <span title={__('Edit campaign', 'kudos-donations')}>
+                                <PencilAltIcon
+                                    className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-gray-500"
+                                    onClick={() => editClick(campaign)}
+                                />
+                            </span>
+                            <span title={__('Duplicate campaign', 'kudos-donations')}>
+                            <DuplicateIcon
+                                className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-gray-500"
+                                onClick={() => duplicateClick(campaign)}
                             />
+                                </span>
                             {i !== 0 &&
-
+                                <span title={__('Delete campaign', 'kudos-donations')}>
                                 <TrashIcon
-                                    className="h-6 w-6 cursor-pointer ml-2 font-medium inline-block text-red-500 hover:underline"
+                                    className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-red-500"
                                     onClick={() => {
                                       window.confirm(__('Are you sure you wish to delete this campaign?')) &&
                                         deleteClick(campaign.id)
                                     }}
                                 />
-
+                                </span>
                             }
                         </td>
                     </tr>

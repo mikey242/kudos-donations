@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch'
 import api from '@wordpress/api'
-import { Fragment, useEffect, useState } from '@wordpress/element'
+import { Fragment, useEffect, useRef, useState } from '@wordpress/element'
 import { Header } from '../Settings/Components/Header'
 import { PlusIcon } from '@heroicons/react/outline'
 import React from 'react'
@@ -16,6 +16,7 @@ const KudosCampaigns = () => {
   const [currentCampaign, setCurrentCampaign] = useState(null)
   const [transactions, setTransactions] = useState()
   const [vendorSettings, setVendorSettings] = useState()
+  const notificationTimer = useRef(null)
 
   useEffect(() => {
     getCampaigns()
@@ -42,9 +43,13 @@ const KudosCampaigns = () => {
       message: message,
       shown: true
     })
-    setTimeout(() => {
+    clearTimeout(notificationTimer.current)
+    notificationTimer.current = setTimeout(() => {
       hideNotification()
     }, 2000)
+    return () => {
+      clearTimeout(notificationTimer.current)
+    }
   }
 
   const changeCampaign = (campaign) => {
@@ -74,6 +79,16 @@ const KudosCampaigns = () => {
       createNotification(__('Campaign deleted', 'kudos-donations'))
       return getCampaigns()
     })
+  }
+
+  const duplicateCampaign = (campaign) => {
+    const data = {
+      ...campaign,
+      id: null,
+      title: campaign.title.rendered,
+      status: 'draft'
+    }
+    updateCampaign(null, data)
   }
 
   const getCampaigns = () => {
@@ -118,11 +133,15 @@ const KudosCampaigns = () => {
                     <div className="max-w-3xl w-full mx-auto">
                         {!currentCampaign
                           ? <Fragment>
-                                <CampaignTable transactions={transactions}
-                                               deleteClick={removeCampaign}
-                                               editClick={changeCampaign}
-                                               campaigns={campaigns}/>
+                                <CampaignTable
+                                    transactions={transactions}
+                                    deleteClick={removeCampaign}
+                                    duplicateClick={duplicateCampaign}
+                                    editClick={changeCampaign}
+                                    campaigns={campaigns}
+                                />
                                 <button
+                                    title={__('Add campaign', 'kudos-donations')}
                                     className="rounded-full mx-auto p-2 flex justify-center items-center bg-white mt-5 shadow-md border-0 cursor-pointer"
                                     onClick={newCampaign}>
                                     <PlusIcon
@@ -130,10 +149,12 @@ const KudosCampaigns = () => {
                                     />
                                 </button>
                             </Fragment>
-                          : <CampaignEdit updateCampaign={updateCampaign}
-                                            recurringAllowed={vendorSettings?.recurring}
-                                            setCurrentCampaign={setCurrentCampaign}
-                                            campaign={currentCampaign}/>
+                          : <CampaignEdit
+                                updateCampaign={updateCampaign}
+                                recurringAllowed={vendorSettings?.recurring}
+                                setCurrentCampaign={setCurrentCampaign}
+                                campaign={currentCampaign}
+                            />
 
                         }
                     </div>

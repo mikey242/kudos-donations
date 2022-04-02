@@ -26,12 +26,17 @@ class RestRoutes {
 	 */
 	private $campaign;
 
-	public function __construct( Mail $mail, Payment $payment, Transaction $transaction, Campaign $campaign) {
+	public function __construct(
+		Mail $mail,
+		Payment $payment,
+		Transaction $transaction,
+		Campaign $campaign
+	) {
 
 		$this->mail        = $mail;
 		$this->payment     = $payment;
 		$this->transaction = $transaction;
-		$this->campaign = $campaign;
+		$this->campaign    = $campaign;
 
 	}
 

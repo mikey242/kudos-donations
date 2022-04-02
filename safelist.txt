@@ -1,2 +1,0 @@
-kd-bg-vendor-mollie
-kd-bg-lock

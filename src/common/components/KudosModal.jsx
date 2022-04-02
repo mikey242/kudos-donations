@@ -11,7 +11,7 @@ const KudosModal = forwardRef(({ toggle, isOpen, children, root }, ref) => {
         <Dialog
             open={isOpen}
             onClose={toggle}
-            className="fixed z-10 inset-0 overflow-y-auto"
+            className="fixed z-1050 inset-0 overflow-y-auto"
             container={() => root.shadowRoot.getElementById('kudos')}
             BackdropComponent={() => <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"/>}
         >

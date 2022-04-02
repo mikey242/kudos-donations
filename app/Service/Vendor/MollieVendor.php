@@ -17,6 +17,7 @@ use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
+use Mollie\OAuth2\Client\Provider\Mollie;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -105,15 +106,6 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Returns the current vendor name.
-	 *
-	 * @return string
-	 */
-	public static function get_vendor_name(): string {
-		return static::VENDOR_NAME;
-	}
-
-	/**
 	 * Check the Mollie api keys for both test and live keys. Sends a JSON response.
 	 */
 	public function check_api_keys() {
@@ -181,6 +173,72 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
+	 * Checks the provided api key by attempting to get associated payments.
+	 *
+	 * @param string $api_key API key to test.
+	 *
+	 * @return bool
+	 */
+	public function refresh_api_connection( string $api_key ): bool {
+
+		if ( ! $api_key ) {
+			return false;
+		}
+
+		try {
+			// Perform test call to verify api key.
+			$mollie_api = $this->api_client;
+			$mollie_api->setApiKey( $api_key );
+			$mollie_api->payments->page();
+
+			return true;
+		} catch ( ApiException $e ) {
+			$this->logger->critical( $e->getMessage() );
+
+			return false;
+		}
+
+	}
+
+	/**
+	 * Uses get_payment_methods to determine if account can receive recurring payments.
+	 *
+	 * @return bool
+	 */
+	public function can_use_recurring(): bool {
+
+		$methods = $this->get_payment_methods( [
+			'sequenceType' => 'recurring',
+		] );
+
+		if ( $methods ) {
+			return $methods->count > 0;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Gets a list of payment methods for the current Mollie account
+	 *
+	 * @param array $options https://docs.mollie.com/reference/v2/methods-api/list-methods
+	 *
+	 * @return BaseCollection|MethodCollection|null
+	 */
+	public function get_payment_methods( array $options = [] ) {
+
+		try {
+
+			return $this->api_client->methods->allActive( $options );
+
+		} catch ( ApiException $e ) {
+			$this->logger->critical( $e->getMessage() );
+
+			return null;
+		}
+	}
+
+	/**
 	 * Returns all subscriptions for customer.
 	 *
 	 * @param string $customer_id Mollie customer id.
@@ -233,31 +291,21 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Checks the provided api key by attempting to get associated payments.
+	 * Get the customer from Mollie.
 	 *
-	 * @param string $api_key API key to test.
+	 * @param $customer_id
 	 *
-	 * @return bool
+	 * @return Customer|null
 	 */
-	public function refresh_api_connection( string $api_key ): bool {
-
-		if ( ! $api_key ) {
-			return false;
-		}
+	public function get_customer( $customer_id ): ?Customer {
 
 		try {
-			// Perform test call to verify api key.
-			$mollie_api = $this->api_client;
-			$mollie_api->setApiKey( $api_key );
-			$mollie_api->payments->page();
-
-			return true;
+			return $this->api_client->customers->get( $customer_id );
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 
-			return false;
+			return null;
 		}
-
 	}
 
 	/**
@@ -307,24 +355,6 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Get the customer from Mollie.
-	 *
-	 * @param $customer_id
-	 *
-	 * @return Customer|null
-	 */
-	public function get_customer( $customer_id ): ?Customer {
-
-		try {
-			return $this->api_client->customers->get( $customer_id );
-		} catch ( ApiException $e ) {
-			$this->logger->critical( $e->getMessage() );
-
-			return null;
-		}
-	}
-
-	/**
 	 * Creates a payment and returns it as an object.
 	 *
 	 * @param array $payment_array Parameters to pass to mollie to create a payment.
@@ -335,159 +365,6 @@ class MollieVendor implements VendorInterface {
 
 		try {
 			return $this->api_client->payments->create( $payment_array );
-		} catch ( ApiException $e ) {
-			$this->logger->critical( $e->getMessage() );
-
-			return null;
-		}
-	}
-
-	/**
-	 * Creates a subscription based on the provided TransactionEntity
-	 *
-	 * @param TransactionEntity $transaction
-	 * @param string $mandate_id
-	 * @param string $interval
-	 * @param string $years
-	 *
-	 * @return false|Subscription
-	 */
-	public function create_subscription(
-		TransactionEntity $transaction,
-		string $mandate_id,
-		string $interval,
-		string $years
-	) {
-
-		$customer_id = $transaction->customer_id;
-		$start_date  = gmdate( 'Y-m-d', strtotime( '+' . $interval ) );
-		$currency    = 'EUR';
-		$value       = number_format( $transaction->value, 2 );
-
-		$subscription_array = [
-			'amount'      => [
-				'value'    => $value,
-				'currency' => $currency,
-			],
-			'webhookUrl'  => $this->get_webhook_url(),
-			'mandateId'   => $mandate_id,
-			'interval'    => $interval,
-			'startDate'   => $start_date,
-			'description' => sprintf(
-			/* translators: %1$s: Subscription interval. %2$s: Order id. */
-				__( 'Kudos Subscription (%1$s) - %2$s', 'kudos-donations' ),
-				$interval,
-				$transaction->order_id
-			),
-			'metadata'    => [
-				'campaign_id' => $transaction->campaign_id,
-			],
-		];
-
-		if ( 'test' === $transaction->mode ) {
-			unset( $subscription_array['startDate'] );  // Disable for test mode.
-		}
-
-		if ( $years && $years > 0 ) {
-			$subscription_array['times'] = Utils::get_times_from_years( $years, $interval );
-		}
-
-		$customer      = $this->get_customer( $customer_id );
-		$valid_mandate = $this->check_mandate( $customer, $mandate_id );
-
-		// Create subscription if valid mandate found
-		if ( $valid_mandate ) {
-			try {
-				$subscription       = $customer->createSubscription( $subscription_array );
-				$kudos_subscription = new SubscriptionEntity(
-					[
-						'transaction_id'  => $transaction->transaction_id,
-						'customer_id'     => $customer_id,
-						'frequency'       => $interval,
-						'years'           => $years,
-						'value'           => $value,
-						'currency'        => $currency,
-						'subscription_id' => $subscription->id,
-						'status'          => $subscription->status,
-					]
-				);
-				$this->mapper->save( $kudos_subscription );
-
-				return $subscription;
-			} catch ( ApiException $e ) {
-				$this->logger->error( $e->getMessage(), [
-					'transaction' => $transaction,
-					'mandate_id'  => $mandate_id,
-					'interval'    => $interval,
-					'years'       => $years,
-				] );
-
-				return false;
-			}
-		}
-
-		// No valid mandates
-		$this->logger->error(
-			'Cannot create subscription as customer has no valid mandates.',
-			[ $customer_id ]
-		);
-
-		return false;
-	}
-
-	/**
-	 * Check the provided customer for valid mandates
-	 *
-	 * @param Customer $customer
-	 * @param string $mandate_id
-	 *
-	 * @return bool
-	 */
-	private function check_mandate( Customer $customer, string $mandate_id ): bool {
-
-		try {
-			$mandate = $customer->getMandate( $mandate_id );
-			if ( $mandate->isValid() || $mandate->isPending() ) {
-				return true;
-			}
-		} catch ( ApiException $e ) {
-			$this->logger->error( $e->getMessage() );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Uses get_payment_methods to determine if account can receive recurring payments.
-	 *
-	 * @return bool
-	 */
-	public function can_use_recurring(): bool {
-
-		$methods = $this->get_payment_methods( [
-			'sequenceType' => 'recurring',
-		] );
-
-		if ( $methods ) {
-			return $methods->count > 0;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Gets a list of payment methods for the current Mollie account
-	 *
-	 * @param array $options https://docs.mollie.com/reference/v2/methods-api/list-methods
-	 *
-	 * @return BaseCollection|MethodCollection|null
-	 */
-	public function get_payment_methods( array $options = [] ) {
-
-		try {
-
-			return $this->api_client->methods->allActive( $options );
-
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 
@@ -693,6 +570,138 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
+	 * Creates a subscription based on the provided TransactionEntity
+	 *
+	 * @param TransactionEntity $transaction
+	 * @param string $mandate_id
+	 * @param string $interval
+	 * @param string $years
+	 *
+	 * @return false|Subscription
+	 */
+	public function create_subscription(
+		TransactionEntity $transaction,
+		string $mandate_id,
+		string $interval,
+		string $years
+	) {
+
+		$customer_id = $transaction->customer_id;
+		$start_date  = gmdate( 'Y-m-d', strtotime( '+' . $interval ) );
+		$currency    = 'EUR';
+		$value       = number_format( $transaction->value, 2 );
+
+		$subscription_array = [
+			'amount'      => [
+				'value'    => $value,
+				'currency' => $currency,
+			],
+			'webhookUrl'  => $this->get_webhook_url(),
+			'mandateId'   => $mandate_id,
+			'interval'    => $interval,
+			'startDate'   => $start_date,
+			'description' => sprintf(
+			/* translators: %1$s: Subscription interval. %2$s: Order id. */
+				__( 'Kudos Subscription (%1$s) - %2$s', 'kudos-donations' ),
+				$interval,
+				$transaction->order_id
+			),
+			'metadata'    => [
+				'campaign_id' => $transaction->campaign_id,
+			],
+		];
+
+		if ( 'test' === $transaction->mode ) {
+			unset( $subscription_array['startDate'] );  // Disable for test mode.
+		}
+
+		if ( $years && $years > 0 ) {
+			$subscription_array['times'] = Utils::get_times_from_years( $years, $interval );
+		}
+
+		$customer      = $this->get_customer( $customer_id );
+		$valid_mandate = $this->check_mandate( $customer, $mandate_id );
+
+		// Create subscription if valid mandate found
+		if ( $valid_mandate ) {
+			try {
+				$subscription       = $customer->createSubscription( $subscription_array );
+				$kudos_subscription = new SubscriptionEntity(
+					[
+						'transaction_id'  => $transaction->transaction_id,
+						'customer_id'     => $customer_id,
+						'frequency'       => $interval,
+						'years'           => $years,
+						'value'           => $value,
+						'currency'        => $currency,
+						'subscription_id' => $subscription->id,
+						'status'          => $subscription->status,
+					]
+				);
+				$this->mapper->save( $kudos_subscription );
+
+				return $subscription;
+			} catch ( ApiException $e ) {
+				$this->logger->error( $e->getMessage(), [
+					'transaction' => $transaction,
+					'mandate_id'  => $mandate_id,
+					'interval'    => $interval,
+					'years'       => $years,
+				] );
+
+				return false;
+			}
+		}
+
+		// No valid mandates
+		$this->logger->error(
+			'Cannot create subscription as customer has no valid mandates.',
+			[ $customer_id ]
+		);
+
+		return false;
+	}
+
+	/**
+	 * Returns the Mollie Rest URL.
+	 *
+	 * @return string
+	 */
+	public static function get_webhook_url(): string {
+		$route = "kudos/v1/payment/webhook";
+
+		// Use APP_URL if defined in .env file.
+		if ( isset( $_ENV['APP_URL'] ) ) {
+			return $_ENV['APP_URL'] . 'wp-json/' . $route;
+		}
+
+		// Otherwise, return normal rest URL.
+		return rest_url( $route );
+	}
+
+	/**
+	 * Check the provided customer for valid mandates
+	 *
+	 * @param Customer $customer
+	 * @param string $mandate_id
+	 *
+	 * @return bool
+	 */
+	private function check_mandate( Customer $customer, string $mandate_id ): bool {
+
+		try {
+			$mandate = $customer->getMandate( $mandate_id );
+			if ( $mandate->isValid() || $mandate->isPending() ) {
+				return true;
+			}
+		} catch ( ApiException $e ) {
+			$this->logger->error( $e->getMessage() );
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the api mode.
 	 *
 	 * @return string
@@ -713,20 +722,12 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Returns the Mollie Rest URL.
+	 * Returns the current vendor name.
 	 *
 	 * @return string
 	 */
-	public static function get_webhook_url(): string {
-		$route = "kudos/v1/payment/webhook";
-
-		// Use APP_URL if defined in .env file.
-		if ( isset( $_ENV['APP_URL'] ) ) {
-			return $_ENV['APP_URL'] . 'wp-json/' . $route;
-		}
-
-		// Otherwise, return normal rest URL.
-		return rest_url( $route );
+	public static function get_vendor_name(): string {
+		return static::VENDOR_NAME;
 	}
 
 	/**

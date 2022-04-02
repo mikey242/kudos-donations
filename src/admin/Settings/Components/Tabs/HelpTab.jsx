@@ -1,23 +1,22 @@
-import {HelpPanel} from "../Panels/HelpPanel"
-import {ExportSettingsPanel} from "../Panels/ExportSettingsPanel"
-import {ImportSettingsPanel} from "../Panels/ImportSettingsPanel"
-import {DebugModePanel} from "../Panels/DebugModePanel"
-import {RenderModalFooter} from "../Panels/RenderModalFooter"
-import {Card, CardDivider} from "@wordpress/components"
-import {Fragment} from "@wordpress/element"
-import {DisableShortcodePanel} from "../Panels/DisableShortcodePanel"
+import { HelpPanel } from '../Panels/HelpPanel'
+import { ExportSettingsPanel } from '../Panels/ExportSettingsPanel'
+import { ImportSettingsPanel } from '../Panels/ImportSettingsPanel'
+import { DebugModePanel } from '../Panels/DebugModePanel'
+import { RenderModalFooter } from '../Panels/RenderModalFooter'
+import { Card, CardDivider } from '@wordpress/components'
+import { Fragment } from '@wordpress/element'
+import { DisableShortcodePanel } from '../Panels/DisableShortcodePanel'
+import Panel from '../../../Components/Panel'
 
 const HelpTab = (props) => {
-
-    return (
+  return (
         <Fragment>
-            <Card>
+            <Panel>
                 <HelpPanel
                     handleInputChange={props.handleInputChange}
                 />
-            </Card>
-            <br/>
-            <Card>
+            </Panel>
+            <Panel>
                 <ExportSettingsPanel
                     settings={props.settings}
                 />
@@ -41,9 +40,9 @@ const HelpTab = (props) => {
                     settings={props.settings}
                     handleInputChange={props.handleInputChange}
                 />
-            </Card>
+            </Panel>
         </Fragment>
-    )
+  )
 }
 
-export {HelpTab}
+export { HelpTab }

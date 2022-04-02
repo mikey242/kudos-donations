@@ -36,7 +36,7 @@ mix
 // Public assets.
   .js('src/public/kudos-public.js', 'public')
   .postCss('src/public/kudos-public.css', 'public', [
-    require('tailwindcss')('./tailwind.config.js')
+    require('tailwindcss')('./tailwind.public.config.js')
   ])
   .sourceMaps()
 
@@ -49,10 +49,10 @@ mix
   .js('src/admin/kudos-admin-transactions.js', 'admin')
   .js('src/admin/kudos-admin-table.js', 'admin')
   .postCss('src/admin/kudos-admin-settings.css', 'admin', [
-    require('tailwindcss')
+    require('tailwindcss')('./tailwind.admin.config.js')
   ])
   .postCss('src/admin/kudos-admin-campaigns.css', 'admin', [
-    require('tailwindcss')
+    require('tailwindcss')('./tailwind.admin.config.js')
   ])
 
 // BrowserSync.

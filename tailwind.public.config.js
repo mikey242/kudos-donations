@@ -27,16 +27,12 @@ module.exports = {
       1: '1rem',
       full: '100%'
     },
+    maxWidth: {
+      lg: '32em'
+    },
     backgroundSize: {
       contain: 'contain',
       8: '2rem'
-    },
-    borderRadius: {
-      none: '0',
-      DEFAULT: '0.25rem',
-      sm: '2px',
-      lg: '0.5rem',
-      full: '9999px'
     },
     borderWidth: {
       DEFAULT: '2px',
@@ -53,16 +49,24 @@ module.exports = {
     extend: {
       fontSize: {
         base: '16px',
-        xs: '0.75rem',
-        sm: '0.875rem',
-        lg: '1.125rem', // '18px'
-        '2xl': '1.5rem',
-        '4xl': '2.25rem' // '36px'
+        xs: '0.75em',
+        sm: '0.875em',
+        lg: '1.125em', // '18px'
+        '2xl': '1.5em',
+        '4xl': '2.25em' // '36px'
+      },
+      lineHeight: {
+        6: '1.5em'
       },
       inset: {
         0: '0',
         auto: 'auto',
         '1/2': '50%'
+      },
+      borderRadius: {
+        DEFAULT: '0.25em',
+        sm: '0.125em',
+        lg: '0.5em'
       },
       colors: {
         orange: {

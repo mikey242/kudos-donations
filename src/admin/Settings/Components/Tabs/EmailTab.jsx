@@ -1,17 +1,17 @@
-import {EmailCustomPanel} from "../Panels/EmailCustomPanel"
-import {TestEmailPanel} from "../Panels/TestEmailPanel"
-import {EmailServerPanel} from "../Panels/EmailServerPanel"
-import {EmailEncryptionPanel} from "../Panels/EmailEncryptionPanel"
-import {EmailAuthenticationPanel} from "../Panels/EmailAuthenticationPanel"
-import {EmailFromPanel} from "../Panels/EmailFromPanel"
-import {EmailReceiptsPanel} from "../Panels/EmailReceiptsPanel"
-import {Card, CardDivider} from "@wordpress/components"
-import {Fragment} from "@wordpress/element"
+import { EmailCustomPanel } from '../Panels/EmailCustomPanel'
+import { TestEmailPanel } from '../Panels/TestEmailPanel'
+import { EmailServerPanel } from '../Panels/EmailServerPanel'
+import { EmailEncryptionPanel } from '../Panels/EmailEncryptionPanel'
+import { EmailAuthenticationPanel } from '../Panels/EmailAuthenticationPanel'
+import { EmailFromPanel } from '../Panels/EmailFromPanel'
+import { EmailReceiptsPanel } from '../Panels/EmailReceiptsPanel'
+import { CardDivider } from '@wordpress/components'
+import { Fragment } from '@wordpress/element'
+import Panel from '../../../Components/Panel'
 
 const EmailTab = (props) => {
-
-    return (
-        <Card>
+  return (
+        <Panel>
             <EmailReceiptsPanel
                 settings={props.settings}
                 handleInputChange={props.handleInputChange}
@@ -27,8 +27,8 @@ const EmailTab = (props) => {
                     settings={props.settings}
                     handleInputChange={props.handleInputChange}
                 />
-                {props.settings._kudos_smtp_enable ?
-                    <Fragment>
+                {props.settings._kudos_smtp_enable
+                  ? <Fragment>
                         <CardDivider/>
                         <EmailServerPanel
                             settings={props.settings}
@@ -50,13 +50,13 @@ const EmailTab = (props) => {
                             handleInputChange={props.handleInputChange}
                         />
                     </Fragment>
-                : ''}
+                  : ''}
             </Fragment>
-        </Card>
-    )
+        </Panel>
+  )
 }
 
 export
 {
-    EmailTab
+  EmailTab
 }

@@ -31,9 +31,6 @@ function KudosRender ({ buttonLabel, campaignId, root }) {
   const modal = useRef(null)
   const style = `:host { 
       all: initial;
-      // --kudos-theme-primary: #ff9f1c;
-      // --kudos-theme-primary-dark: #f0961b;
-      // --kudos-theme-primary-darker: #e9911a;
   }`
 
   const toggleModal = () => {

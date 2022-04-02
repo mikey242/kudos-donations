@@ -2,18 +2,19 @@ import classNames from 'classnames'
 import React from 'react'
 
 function Button ({
-  type = 'button', children, ariaLabel, className, onClick
+  type = 'button', children, isLink, ariaLabel, className, onClick, form
 }) {
   return (
         <button
             type={type}
             onClick={onClick}
-            className={classNames(className, 'relative z-1 group cursor-pointer text-white overflow-hidden font-bold py-3 px-5 rounded-lg border-none inline-flex items-center transition ease-in-out focus:ring-primary focus:ring focus:ring-offset-2')}
+            form={form}
+            className={classNames(className, isLink ? 'underline' : 'text-white font-bold px-5 focus:ring', 'relative z-1 group cursor-pointer overflow-hidden py-3 rounded-lg border-none inline-flex items-center transition ease-in-out focus:ring-primary focus:ring-offset-2')}
             aria-label={ariaLabel}
         >
             {children}
             <div
-                className="absolute -z-1 w-full h-full top-0 left-0 bg-primary group-hover:brightness-90 transition ease-in-out"/>
+                className={`${isLink ? '' : 'bg-primary'} absolute -z-1 w-full h-full top-0 left-0 group-hover:brightness-90 transition ease-in-out`}/>
         </button>
 
   )
