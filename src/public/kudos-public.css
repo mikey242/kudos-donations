@@ -17,19 +17,9 @@
     }
 }
 
-/** {*/
-/*    @apply text-base;*/
+/*:host {*/
+/*    all: initial;*/
 /*}*/
-:host {
-    all: initial;
-}
-
-input,
-select,
-::placeholder {
-    @apply font-sans text-base;
-}
-
 
 /* Base */
 :root {

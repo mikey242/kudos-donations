@@ -2,6 +2,7 @@ import React from 'react'
 import { Controller } from 'react-hook-form'
 import { RadioGroup } from '@headlessui/react'
 import { forwardRef } from '@wordpress/element'
+import classNames from 'classnames'
 
 const RadioGroupControl = forwardRef(({ name, validation, options, label }, ref) => {
   return (
@@ -10,27 +11,25 @@ const RadioGroupControl = forwardRef(({ name, validation, options, label }, ref)
             validation={validation}
             ref={ref}
             render={({ field: { onChange, value } }) => (
-                <RadioGroup value={value} onChange={onChange}>
-                    {label &&
-                        <p className="my-2">
-                            {label}
-                        </p>
-                    }
-                    <div className="grid grid-flow-row grid-cols-[repeat(auto-fit,_minmax(75px,_auto))] gap-3">
+                <RadioGroup value={value} onChange={onChange} className="mt-2">
+                    <RadioGroup.Label className="sr-only">Choose a memory option</RadioGroup.Label>
+                    <div className="grid gap-3 grid-flow-col auto-cols-fr">
                         {options.map((option, i) => (
-                            <RadioGroup.Option key={i} value={option.value} disabled={option.disabled}
-                                               className="flex-grow transition group">
-                                {({ checked }) => (
-                                    <span
-                                        className={`${checked ? 'bg-primary border-primary text-white font-bold' : 'bg-white border-gray-300'}
-                                        ${option.disabled && 'opacity-50'}
-                                        px-5 py-3 ring-primary cursor-pointer flex justify-center rounded border border-solid transition ease-in-out
-                                        group-focus:border-primary group-focus:outline-none
-                                        group-focus:ring group-focus:ring-primary group-focus:ring-offset-2
-                                        `}
-                                    >
-                                   {option.label}</span>
-                                )}
+                            <RadioGroup.Option
+                                key={i}
+                                value={option.value}
+                                className={({ active, checked }) =>
+                                  classNames(
+                                    active ? 'ring-2 ring-offset-2 ring-primary' : '',
+                                    checked
+                                      ? 'bg-primary border-transparent text-white'
+                                      : 'bg-white border-gray-300 text-gray-900 hover:bg-gray-50',
+                                    'transition ease-in-out cursor-pointer focus:outline-none border rounded-md py-3 px-3 flex items-center justify-center text-sm font-medium sm:flex-1'
+                                  )
+                                }
+                                disabled={option.disabled}
+                            >
+                                <RadioGroup.Label as="p">{option.label}</RadioGroup.Label>
                             </RadioGroup.Option>
                         ))}
                     </div>

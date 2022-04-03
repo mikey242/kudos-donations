@@ -15,7 +15,7 @@ switch ( $table_action ) {
 		$message = __( 'Campaign deleted', 'kudos-donations' );
 		break;
 	case 'bulk-delete':
-		$records       = isset( $_REQUEST['bulk-action'] ) ? count( $_REQUEST['bulk-action'] ) : '';
+		$records = isset( $_REQUEST['bulk-action'] ) ? count( $_REQUEST['bulk-action'] ) : '';
 		$message = sprintf(
 		/* translators: %s: Number of records */
 			_n( 'Deleted %s campaign', 'Deleted %s campaigns', $records, 'kudos-donations' ),
@@ -26,7 +26,7 @@ switch ( $table_action ) {
 
 ?>
 <div class="wrap">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'Campaigns', 'kudos-donations' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'campaigns', 'kudos-donations' ); ?></h1>
 	<?php if ( ! empty( $_REQUEST['s'] ) ) { ?>
 		<span class="subtitle">
 		<?php

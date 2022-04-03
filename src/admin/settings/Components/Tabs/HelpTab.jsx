@@ -6,7 +6,7 @@ import { RenderModalFooter } from '../Panels/RenderModalFooter'
 import { Card, CardDivider } from '@wordpress/components'
 import { Fragment } from '@wordpress/element'
 import { DisableShortcodePanel } from '../Panels/DisableShortcodePanel'
-import Panel from '../../../Components/Panel'
+import Panel from '../../../components/Panel'
 
 const HelpTab = (props) => {
   return (

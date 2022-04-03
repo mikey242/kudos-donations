@@ -5,7 +5,7 @@
 
 import { render, StrictMode } from '@wordpress/element'
 import React from 'react'
-import KudosRender from '../common/components/KudosRender'
+import KudosRender from './components/KudosRender'
 
 // Select the web components as target for render.
 const roots = document.querySelectorAll('kudos-donations')

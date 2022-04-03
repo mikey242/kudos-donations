@@ -3,8 +3,8 @@ import { TermsPanel } from '../Panels/TermsPanel'
 import { PrivacyPanel } from '../Panels/PrivacyPanel'
 
 import { SpamProtectionPanel } from '../Panels/SpamProtectionPanel'
-import Panel from '../../../Components/Panel'
-import Divider from '../../../Components/Divider'
+import Panel from '../../../components/Panel'
+import Divider from '../../../components/Divider'
 import { __ } from '@wordpress/i18n'
 import RadioControl from '../../../../common/components/controls/RadioControl'
 

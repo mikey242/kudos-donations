@@ -2,7 +2,7 @@ import React from 'react'
 import { Fragment, useEffect } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { useForm, FormProvider } from 'react-hook-form'
-import InputControl from '../../common/components/controls/InputControl'
+import TextControl from '../../common/components/controls/TextControl'
 import ToggleControl from '../../common/components/controls/ToggleControl'
 import Button from '../../common/components/controls/Button'
 import TextAreaControl from '../../common/components/controls/TextAreaControl'
@@ -38,9 +38,9 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       title: __('General', 'kudos-donations'),
       content:
                 <Fragment>
-                    <InputControl name="title" label={__('Campaign name', 'kudos-donations')}
-                                  validation={{ required: __('Name required') }}/>
-                    <InputControl type="number" name="meta.goal" label="Goal"/>
+                    <TextControl name="title" label={__('Campaign name', 'kudos-donations')}
+                                 validation={{ required: __('Name required') }}/>
+                    <TextControl type="number" name="meta.goal" label="Goal"/>
                     <ColorPicker label={__('Theme color', 'kudos-donations')} name="meta.theme_color"/>
                 </Fragment>
     },
@@ -49,7 +49,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       title: __('Text fields', 'kudos-donations'),
       content:
                 <Fragment>
-                    <InputControl name="meta.initial_title" label="Welcome Title"/>
+                    <TextControl name="meta.initial_title" label="Welcome Title"/>
                     <TextAreaControl name="meta.initial_text" label="Welcome Text"
                                      placeholder="Welcome Text"/>
                 </Fragment>
@@ -59,30 +59,32 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       title: __('Donation settings', 'kudos-donations'),
       content:
                 <Fragment>
-                    <RadioGroupControl name="meta.donation_type"
-                                       label={__('Donation type', 'kudos-donations')}
-                                       options={[
-                                         { label: __('One-off', 'kudos-donations'), value: 'oneoff' },
-                                         {
-                                           label: __('Subscription', 'kudos-donations'),
-                                           value: 'recurring',
-                                           disabled: !recurringAllowed
-                                         },
-                                         {
-                                           label: __('Both', 'kudos-donations'),
-                                           value: 'both',
-                                           disabled: !recurringAllowed
-                                         }
-                                       ]}/>
-                    <RadioGroupControl name="meta.amount_type" label={__('Payment type', 'kudos-donations')}
-                                       options={[
-                                         { label: __('Open', 'kudos-donations'), value: 'open' },
-                                         { label: __('Fixed', 'kudos-donations'), value: 'fixed' },
-                                         { label: __('Both', 'kudos-donations'), value: 'both' }
+                    <RadioGroupControl
+                        name="meta.donation_type"
+                        label={__('Donation type', 'kudos-donations')}
+                        options={[
+                          { label: __('One-off', 'kudos-donations'), value: 'oneoff' },
+                          {
+                            label: __('Subscription', 'kudos-donations'),
+                            value: 'recurring',
+                            disabled: !recurringAllowed
+                          },
+                          {
+                            label: __('Both', 'kudos-donations'),
+                            value: 'both',
+                            disabled: !recurringAllowed
+                          }
+                        ]}/>
+                    <RadioGroupControl
+                        name="meta.amount_type" label={__('Payment type', 'kudos-donations')}
+                        options={[
+                          { label: __('Open', 'kudos-donations'), value: 'open' },
+                          { label: __('Fixed', 'kudos-donations'), value: 'fixed' },
+                          { label: __('Both', 'kudos-donations'), value: 'both' }
 
-                                       ]}/>
+                        ]}/>
                     {watchAmountType !== 'open' &&
-                        <InputControl name="meta.fixed_amounts" label={__('Fixed amounts', 'kudos-donations')}/>
+                        <TextControl name="meta.fixed_amounts" label={__('Fixed amounts', 'kudos-donations')}/>
                     }
                 </Fragment>
     },
@@ -93,6 +95,8 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                 <Fragment>
                     <ToggleControl name="meta.address_enabled" label={__('Address')}/>
                     <ToggleControl name="meta.message_enabled" label={__('Message')}/>
+                    <TextControl name="meta.terms_link" label={__('Terms and Conditions URL', 'kudos-donations')}/>
+                    <TextControl name="meta.privacy_link" label={__('Privacy Policy URL', 'kudos-donations')}/>
                 </Fragment>
     }
   ]

@@ -1,14 +1,14 @@
 import apiFetch from '@wordpress/api-fetch'
 import api from '@wordpress/api'
 import { Fragment, useEffect, useRef, useState } from '@wordpress/element'
-import { Header } from '../Settings/Components/Header'
+import { Header } from '../settings/Components/Header'
 import { PlusIcon } from '@heroicons/react/outline'
 import React from 'react'
-import CampaignTable from '../Components/CampaignTable'
-import CampaignEdit from '../Components/CampaignEdit'
+import CampaignTable from '../components/CampaignTable'
+import CampaignEdit from '../components/CampaignEdit'
 import { __ } from '@wordpress/i18n'
 import { Spinner } from '@wordpress/components'
-import Notification from '../Components/Notification'
+import Notification from '../components/Notification'
 
 const KudosCampaigns = () => {
   const [campaigns, setCampaigns] = useState()

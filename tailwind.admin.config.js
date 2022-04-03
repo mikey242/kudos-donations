@@ -1,9 +1,11 @@
 module.exports = {
   important: true,
   content: [
+    // './src/**/*.{js,jsx}'
     './src/admin/**/*.{js,jsx}',
     './src/blocks/**/*.{js,jsx}',
-    './src/common/**/*.{js,jsx}'
+    './src/common/**/*.{js,jsx}',
+    './src/helpers/**/*.{js,jsx}'
   ],
   theme: {
     fontFamily: {
@@ -31,16 +33,13 @@ module.exports = {
         'primary-dark': 'var(--kudos-theme-primary-dark)',
         'primary-darker': 'var(--kudos-theme-primary-darker)',
         secondary: 'var(--kudos-theme-secondary)'
-      },
-      borderWidth: {
-        DEFAULT: '2px',
-        0: '0',
-        1: '1px',
-        2: '2px'
       }
     },
     corePlugins: {
       preflight: true
-    }
+    },
+    plugins: [
+      require('@tailwindcss/forms')
+    ]
   }
 }

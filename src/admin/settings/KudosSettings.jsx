@@ -9,7 +9,7 @@ import React from 'react'
 import api from '@wordpress/api'
 import apiFetch from '@wordpress/api-fetch'
 
-// Settings Panels
+// settings Panels
 import { Header } from './Components/Header'
 import { IntroGuide } from './Components/IntroGuide'
 import { getQueryVar, updateQueryParameter } from '../../common/helpers/util'
@@ -18,10 +18,10 @@ import { CustomizeTab } from './Components/Tabs/CustomizeTab'
 import { EmailTab } from './Components/Tabs/EmailTab'
 import { HelpTab } from './Components/Tabs/HelpTab'
 import Button from '../../common/components/controls/Button'
-import TabPanel from '../Components/TabPanel'
-import Notification from '../Components/Notification'
+import TabPanel from '../components/TabPanel'
+import Notification from '../components/Notification'
 import { useForm, FormProvider } from 'react-hook-form'
-import SettingsEdit from '../Components/SettingsEdit'
+import SettingsEdit from '../components/SettingsEdit'
 
 const KudosSettings = () => {
   const [mollieChanged, setMollieChanged] = useState()

@@ -1,10 +1,10 @@
 import RadioGroupControl from '../../../../common/components/controls/RadioGroupControl'
 import { __ } from '@wordpress/i18n'
 import React from 'react'
-import InputControl from '../../../../common/components/controls/InputControl'
+import TextControl from '../../../../common/components/controls/TextControl'
 import { Fragment, useState } from '@wordpress/element'
 import { RefreshIcon } from '@heroicons/react/solid'
-import Divider from '../../../Components/Divider'
+import Divider from '../../../components/Divider'
 import Button from '../../../../common/components/controls/Button'
 
 const MollieTab = ({ checkApiKey }) => {
@@ -43,8 +43,8 @@ const MollieTab = ({ checkApiKey }) => {
                 {__('Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.', 'kudos-donations')}
             </p>
             <Divider/>
-            <InputControl name="_kudos_vendor_mollie.live_key" label="Live key"/>
-            <InputControl name="_kudos_vendor_mollie.test_key" label="Test key"/>
+            <TextControl name="_kudos_vendor_mollie.live_key" label="Live key"/>
+            <TextControl name="_kudos_vendor_mollie.test_key" label="Test key"/>
         </Fragment>
   )
 }

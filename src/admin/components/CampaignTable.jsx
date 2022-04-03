@@ -23,7 +23,7 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
                         Campaign name
                     </th>
                     <th scope="col" className="px-6 py-3">
-                        Campaign Id
+                        Color
                     </th>
                     <th scope="col" className="px-6 py-3">
                         Total
@@ -43,7 +43,7 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
                             {campaign.title.rendered}
                         </th>
                         <td className="px-6 py-4">
-                            {campaign.slug}
+                            <div className="w-5 h-5 rounded" style={{ backgroundColor: campaign.meta.theme_color }}/>
                         </td>
                         <td className="px-6 py-4">
                             {getTotal(campaign.slug)}

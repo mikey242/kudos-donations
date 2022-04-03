@@ -1,16 +1,11 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
-const plugin = require('tailwindcss/plugin')
 
 module.exports = {
   important: false,
   content: [
-    './src/admin/**/*.{js,jsx}',
-    './src/blocks/**/*.{js,jsx}',
     './src/common/**/*.{js,jsx}',
     './src/public/**/*.{js,jsx}',
-    './src/helpers/**/*.{js,jsx}',
-    './templates/**/*.twig',
-    './safelist.txt'
+    './src/helpers/**/*.{js,jsx}'
   ],
   theme: {
     screens: {
@@ -33,12 +28,6 @@ module.exports = {
     backgroundSize: {
       contain: 'contain',
       8: '2rem'
-    },
-    borderWidth: {
-      DEFAULT: '2px',
-      0: '0',
-      1: '1px',
-      2: '2px'
     },
     zIndex: {
       '-1': -1,
@@ -119,12 +108,6 @@ module.exports = {
     preflight: true
   },
   plugins: [
-    plugin(function ({ addUtilities }) {
-      addUtilities({
-        '.rotate-x-180': {
-          transform: 'rotateX(180deg)'
-        }
-      })
-    })
+    require('@tailwindcss/forms')
   ]
 }

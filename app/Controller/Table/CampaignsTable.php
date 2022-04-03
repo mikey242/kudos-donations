@@ -25,8 +25,8 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function __construct( MapperService $mapper_service ) {
 
-		$this->mapper   = $mapper_service;
-		$this->table    = TransactionEntity::get_table_name();
+		$this->mapper = $mapper_service;
+		$this->table  = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
 			'name' => __( 'Name', 'kudos-donations' ),
@@ -43,7 +43,7 @@ class CampaignsTable extends WP_List_Table {
 			[
 				'orderBy'  => 'date',
 				'singular' => __( 'Campaign', 'kudos-donations' ),
-				'plural'   => __( 'Campaigns', 'kudos-donations' ),
+				'plural'   => __( 'campaigns', 'kudos-donations' ),
 				'ajax'     => false,
 			]
 		);
@@ -87,11 +87,11 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$id = $campaign['id'];
 
-			$transactions = $this->mapper->get_repository(TransactionEntity::class)
-				->get_all_by([
-					'campaign_id' => $id
-				]);
-			$campaign_total = Campaign::get_campaign_stats($transactions);
+			$transactions   = $this->mapper->get_repository( TransactionEntity::class )
+			                               ->get_all_by( [
+				                               'campaign_id' => $id,
+			                               ] );
+			$campaign_total = Campaign::get_campaign_stats( $transactions );
 
 			$campaigns[ $key ]['currency']     = 'EUR';
 			$campaigns[ $key ]['date']         = $campaign_total['last_donation'] ?? null;

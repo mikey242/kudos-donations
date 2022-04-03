@@ -7,7 +7,7 @@ import { EmailFromPanel } from '../Panels/EmailFromPanel'
 import { EmailReceiptsPanel } from '../Panels/EmailReceiptsPanel'
 import { CardDivider } from '@wordpress/components'
 import { Fragment } from '@wordpress/element'
-import Panel from '../../../Components/Panel'
+import Panel from '../../../components/Panel'
 
 const EmailTab = (props) => {
   return (

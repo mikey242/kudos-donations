@@ -45,11 +45,11 @@ msgid "Donations"
 msgstr ""
 
 #: app/Controller/Admin.php:112
-msgid "Kudos Settings"
+msgid "Kudos settings"
 msgstr ""
 
 #: app/Controller/Admin.php:113
-msgid "Settings"
+msgid "settings"
 msgstr ""
 
 #. translators: %s: Plugin name
@@ -89,13 +89,13 @@ msgstr ""
 
 #. translators: %s: Plugin name
 #: app/Controller/Admin.php:181
-msgid "%s Campaigns"
+msgid "%s campaigns"
 msgstr ""
 
 #: app/Controller/Admin.php:182
 #: app/Controller/Table/CampaignsTable.php:50
 #: app/View/kudos-admin-campaigns.php:29
-msgid "Campaigns"
+msgid "campaigns"
 msgstr ""
 
 #: app/Controller/Admin.php:215

@@ -3,7 +3,7 @@ import { AlignmentToolbar, BlockControls, InspectorControls, RichText, useBlockP
 import { PanelBody, RadioControl, SelectControl } from '@wordpress/components'
 import { __ } from '@wordpress/i18n'
 import React, { Fragment } from 'react'
-import { KudosButton } from '../../common/components/KudosButton'
+import { KudosButton } from '../../public/components/KudosButton'
 import apiFetch from '@wordpress/api-fetch'
 
 const ButtonEdit = (props) => {

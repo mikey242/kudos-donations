@@ -3,12 +3,12 @@ import { Fragment, useEffect, useRef, useState } from '@wordpress/element'
 import ReactShadowRoot from 'react-shadow-root'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { getStyle } from '../helpers/util'
+import { getStyle } from '../../common/helpers/util'
 import { KudosButton } from './KudosButton'
 import KudosModal from './KudosModal'
 import FormRouter from './FormRouter'
-import { checkRequirements } from '../helpers/form'
-import { anim } from '../helpers/animate'
+import { checkRequirements } from '../../common/helpers/form'
+import { anim } from '../../common/helpers/animate'
 
 const screenSize = getStyle('--kudos-screen')
 

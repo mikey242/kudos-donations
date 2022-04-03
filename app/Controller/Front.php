@@ -19,16 +19,6 @@ use Kudos\Service\TwigService;
 class Front {
 
 	/*
-	 * The twig template file used to render the donate button.
-	 */
-	const BUTTON_TEMPLATE = 'public/button/donate.button.html.twig';
-
-	/*
-	 * The twig template file used to render the donation tabs.
-	 */
-	const FORM_TEMPLATE = 'public/forms/donate.tabs.html.twig';
-
-	/*
 	 * The twig template used to render the modal template.
 	 */
 	const MODAL_TEMPLATE = 'public/modal/base.html.twig';
@@ -262,6 +252,16 @@ class Front {
 			'theme_color'      => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'terms_link'       => [
+				'type'              => 'string',
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
+			],
+			'privacy_link'     => [
+				'type'              => 'string',
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
 			],
 		] );
 	}
@@ -506,82 +506,5 @@ class Front {
 				'alignment' => $alignment,
 			]
 		);
-	}
-
-	/**
-	 * Returns the kudos logo SVG markup.
-	 *
-	 * @param string|null $color
-	 * @param int $width
-	 *
-	 * @return string|null
-	 */
-	public function get_kudos_logo_markup( string $color = null, int $width = 24 ): ?string {
-
-		if ( $color ) {
-			$lineColor  = $color;
-			$heartColor = $color;
-		} else {
-			$lineColor  = '#2ec4b6';
-			$heartColor = '#ff9f1c';
-		}
-
-		return apply_filters( 'kudos_get_kudos_logo',
-			$this->twig->render( 'public/logo.html.twig',
-				[
-					'width'      => $width,
-					'lineColor'  => $lineColor,
-					'heartColor' => $heartColor,
-				] ),
-			$width );
-	}
-
-	/**
-	 * Builds the tabs object from supplied campaign_id.
-	 *
-	 * @param string $campaign_id
-	 * @param string $id
-	 *
-	 * @return string
-	 * @throws Exception
-	 */
-	private function create_form( string $campaign_id, string $id ): string {
-
-		$campaign       = Campaign::get_campaign( $campaign_id );
-		$transactions   = $this->mapper->get_repository( TransactionEntity::class )
-		                               ->get_all_by( [
-			                               'campaign_id' => $campaign_id,
-		                               ] );
-		$campaign_stats = Campaign::get_campaign_stats( $transactions );
-
-		$atts = [
-			'id'                => $id,
-			'return_url'        => Utils::get_return_url(),
-			'privacy_link'      => Settings::get_setting( 'privacy_link' ),
-			'terms_link'        => Settings::get_setting( 'terms_link' ),
-			'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
-			'spam_protection'   => Settings::get_setting( 'spam_protection' ),
-			'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
-			'campaign_id'       => $campaign['id'],
-			'button_label'      => $campaign['button_label'] ?? '',
-			'welcome_title'     => $campaign['modal_title'] ?? '',
-			'welcome_text'      => $campaign['welcome_text'] ?? '',
-			'campaign_goal'     => $campaign['campaign_goal'] ?? '',
-			'show_progress'     => $campaign['show_progress'] ?? '',
-			'amount_type'       => $campaign['amount_type'] ?? '',
-			'fixed_amounts'     => $campaign['fixed_amounts'] ?? '',
-			'frequency'         => $campaign['donation_type'] ?? '',
-			'address_enabled'   => $campaign['address_enabled'] ?? '',
-			'address_required'  => $campaign['address_required'] ?? '',
-			'message_enabled'   => $campaign['message_enabled'] ?? '',
-			'campaign_stats'    => $campaign_stats,
-		];
-
-		// Add additional funds if any.
-		if ( ! empty( $campaign['additional_funds'] ) ) {
-			$atts['campaign_stats']['total'] += $campaign['additional_funds'];
-		}
-
-		return $this->twig->render( self::FORM_TEMPLATE, $atts );
 	}
 }

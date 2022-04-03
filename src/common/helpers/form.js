@@ -1,7 +1,7 @@
 import party from 'party-js'
 import { isVisible } from './util'
 import { __ } from '@wordpress/i18n'
-import { steps } from '../constants/form'
+import { steps } from '../../public/constants/form'
 
 export function resetForm (form) {
   setFormHeight(form)

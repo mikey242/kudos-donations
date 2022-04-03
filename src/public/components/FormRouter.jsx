@@ -5,7 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon, LockClosedIcon } from '@heroicons/re
 import Initial from './tabs/Initial'
 import PaymentFrequency from './tabs/PaymentFrequency'
 import Address from './tabs/Address'
-import Button from './controls/Button'
+import Button from '../../common/components/controls/Button'
 import Message from './tabs/Message'
 import Summary from './tabs/Summary'
 import { steps } from '../constants/form'
@@ -59,6 +59,8 @@ const FormRouter = (props) => {
         return (
                     <Summary
                         title={__('Payment')}
+                        privacyLink={campaign.privacy_link}
+                        termsLink={campaign.terms_link}
                         description={__('By clicking donate you agree to the following payment:')}
                     />
         )

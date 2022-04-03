@@ -2,7 +2,6 @@
 
 namespace Kudos\Controller;
 
-use Kudos\Controller\Table\CampaignsTable;
 use Kudos\Controller\Table\DonorsTable;
 use Kudos\Controller\Table\SubscriptionsTable;
 use Kudos\Controller\Table\TransactionsTable;
@@ -97,12 +96,12 @@ class Admin {
 		);
 
 		/*
-		 * Settings page.
+		 * settings page.
 		 */
 		$settings_page_hook_suffix = add_submenu_page(
 			$parent_slug,
-			__( 'Kudos Settings', 'kudos-donations' ),
-			__( 'Settings', 'kudos-donations' ),
+			__( 'Kudos settings', 'kudos-donations' ),
+			__( 'settings', 'kudos-donations' ),
 			'manage_options',
 			'kudos-settings',
 			function () {
@@ -120,8 +119,8 @@ class Admin {
 		$campaigns_page_hook_suffix = add_submenu_page(
 			$parent_slug,
 			/* translators: %s: Plugin name */
-			sprintf( __( '%s Campaigns', 'kudos-donations' ), 'Kudos' ),
-			__( 'Campaigns', 'kudos-donations' ),
+			sprintf( __( '%s campaigns', 'kudos-donations' ), 'Kudos' ),
+			__( 'campaigns', 'kudos-donations' ),
 			'manage_options',
 			'kudos-campaigns',
 			function () {
@@ -255,7 +254,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets specific to the Settings page.
+	 * Assets specific to the settings page.
 	 */
 	public function settings_page_assets() {
 
@@ -265,7 +264,7 @@ class Admin {
 		wp_enqueue_style(
 			$handle,
 			Assets::get_asset_url( '/admin/kudos-admin-settings.css' ),
-			[ 'wp-components' ],
+			[],
 			$this->version
 		);
 
@@ -370,7 +369,7 @@ class Admin {
 	}
 
 	/**
-	 * Assets specific to the Kudos Campaigns page.
+	 * Assets specific to the Kudos campaigns page.
 	 */
 	public function campaign_page_assets() {
 
@@ -380,7 +379,7 @@ class Admin {
 		// Enqueue the styles
 		wp_enqueue_style(
 			$handle,
-			Assets::get_asset_url( '/admin/kudos-admin-campaigns.css' ),
+			Assets::get_asset_url( '/admin/kudos-admin-settings.css' ),
 			[],
 			$this->version
 		);
@@ -715,39 +714,6 @@ class Admin {
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				'theme_colors'           => [
-					'type'              => 'object',
-					'default'           => [
-						'primary'   => '#ff9f1c',
-						'secondary' => '#2ec4b6',
-					],
-					'show_in_rest'      => [
-						'schema' => [
-							'type'       => 'object',
-							'properties' => [
-								'primary'   => [
-									'type' => 'string',
-								],
-								'secondary' => [
-									'type' => 'string',
-								],
-							],
-						],
-					],
-					'sanitize_callback' => [ Settings::class, 'recursive_sanitize_text_field' ],
-				],
-				'terms_link'             => [
-					'type'              => 'string',
-					'show_in_rest'      => true,
-					'default'           => null,
-					'sanitize_callback' => 'esc_url_raw',
-				],
-				'privacy_link'           => [
-					'type'              => 'string',
-					'show_in_rest'      => true,
-					'default'           => null,
-					'sanitize_callback' => 'esc_url_raw',
 				],
 				'completed_payment'      => [
 					'type'         => 'string',
