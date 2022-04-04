@@ -1,7 +1,6 @@
 module.exports = {
-  important: true,
+  important: false,
   content: [
-    // './src/**/*.{js,jsx}'
     './src/admin/**/*.{js,jsx}',
     './src/blocks/**/*.{js,jsx}',
     './src/common/**/*.{js,jsx}',
@@ -34,12 +33,12 @@ module.exports = {
         'primary-darker': 'var(--kudos-theme-primary-darker)',
         secondary: 'var(--kudos-theme-secondary)'
       }
-    },
-    corePlugins: {
-      preflight: true
-    },
-    plugins: [
-      require('@tailwindcss/forms')
-    ]
-  }
+    }
+  },
+  corePlugins: {
+    preflight: true
+  },
+  plugins: [
+    require('@tailwindcss/forms')
+  ]
 }

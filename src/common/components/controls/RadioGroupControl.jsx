@@ -12,7 +12,8 @@ const RadioGroupControl = forwardRef(({ name, validation, options, label }, ref)
             ref={ref}
             render={({ field: { onChange, value } }) => (
                 <RadioGroup value={value} onChange={onChange} className="mt-2">
-                    <RadioGroup.Label className="sr-only">Choose a memory option</RadioGroup.Label>
+                    <RadioGroup.Label
+                        className={label ? 'block text-sm font-medium font-bold text-gray-700 mb-1' : 'sr-only'}>{label}</RadioGroup.Label>
                     <div className="grid gap-3 grid-flow-col auto-cols-fr">
                         {options.map((option, i) => (
                             <RadioGroup.Option

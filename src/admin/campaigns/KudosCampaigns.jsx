@@ -7,11 +7,16 @@ import React from 'react'
 import CampaignTable from '../components/CampaignTable'
 import CampaignEdit from '../components/CampaignEdit'
 import { __ } from '@wordpress/i18n'
-import { Spinner } from '@wordpress/components'
+import loader from '../../images/loader.svg'
 import Notification from '../components/Notification'
+import Button from '../../common/components/controls/Button'
+import { getQueryVar, removeQueryParameter, updateQueryParameter } from '../../common/helpers/util'
+import ReactShadowRoot from 'react-shadow-root'
 
 const KudosCampaigns = () => {
   const [campaigns, setCampaigns] = useState()
+  const [isApiBusy, setIsApiBusy] = useState(true)
+  const [campaignSlug, setCampaignSlug] = useState(getQueryVar('campaign'))
   const [notification, setNotification] = useState({ shown: false })
   const [currentCampaign, setCurrentCampaign] = useState(null)
   const [transactions, setTransactions] = useState()
@@ -23,6 +28,10 @@ const KudosCampaigns = () => {
     getTransactions()
     getSettings()
   }, [])
+
+  useEffect(() => {
+    currentCampaign ? updateQueryParameter('campaign', currentCampaign.slug) : removeQueryParameter('campaign')
+  }, [currentCampaign])
 
   const newCampaign = () => {
     setCurrentCampaign({
@@ -52,11 +61,8 @@ const KudosCampaigns = () => {
     }
   }
 
-  const changeCampaign = (campaign) => {
-    setCurrentCampaign(campaign)
-  }
-
   const updateCampaign = (id, data = {}) => {
+    setIsApiBusy(true)
     apiFetch({
       path: `wp/v2/kudos_campaign/${id ?? ''}`,
       method: 'POST',
@@ -65,9 +71,11 @@ const KudosCampaigns = () => {
         status: 'publish'
       }
     }).then(() => {
-      setCurrentCampaign(null)
-      createNotification(data.status === 'draft' ? __('Campaign created', 'kudos-donations') : __('Campaign updated', 'kudos-donations'))
       return getCampaigns()
+    }).then(() => {
+      setIsApiBusy(false)
+      createNotification(data.status === 'draft' ? __('Campaign created', 'kudos-donations') : __('Campaign updated', 'kudos-donations'))
+      setCurrentCampaign(null)
     })
   }
 
@@ -97,6 +105,9 @@ const KudosCampaigns = () => {
       method: 'GET'
     }).then((response) => {
       setCampaigns(response.reverse())
+      // if (campaignSlug) {
+      //   setCurrentCampaign(response.filter(campaign => campaign.slug === campaignSlug)[0])
+      // }
     })
   }
 
@@ -126,10 +137,18 @@ const KudosCampaigns = () => {
   }
 
   return (
-        <Fragment>
-            {transactions && campaigns
-              ? <Fragment>
-                    <Header/>
+        <ReactShadowRoot>
+            {transactions && campaigns &&
+                <Fragment>
+                    <link rel="stylesheet"
+                          href="/wp-content/plugins/kudos-donations/dist/admin/kudos-admin-settings.css"/>
+                    <Header>
+                        {currentCampaign &&
+                            <Button form="settings-form" type="submit">
+                                {currentCampaign.status === 'draft' ? __('Create', 'kudos-donations') : __('Save', 'kudos-donations')}
+                            </Button>
+                        }
+                    </Header>
                     <div className="max-w-3xl w-full mx-auto">
                         {!currentCampaign
                           ? <Fragment>
@@ -137,7 +156,7 @@ const KudosCampaigns = () => {
                                     transactions={transactions}
                                     deleteClick={removeCampaign}
                                     duplicateClick={duplicateCampaign}
-                                    editClick={changeCampaign}
+                                    editClick={setCurrentCampaign}
                                     campaigns={campaigns}
                                 />
                                 <button
@@ -162,11 +181,8 @@ const KudosCampaigns = () => {
                     <Notification notification={notification} onClick={hideNotification}/>
 
                 </Fragment>
-              : <div className="absolute inset-0 flex items-center justify-center">
-                    <Spinner/>
-                </div>
             }
-        </Fragment>
+        </ReactShadowRoot>
   )
 }
 

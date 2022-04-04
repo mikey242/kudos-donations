@@ -4,7 +4,6 @@
 import { __ } from '@wordpress/i18n'
 import { Spinner } from '@wordpress/components'
 import { Fragment, useEffect, useState } from '@wordpress/element'
-import { applyFilters } from '@wordpress/hooks'
 import React from 'react'
 import api from '@wordpress/api'
 import apiFetch from '@wordpress/api-fetch'
@@ -14,14 +13,12 @@ import { Header } from './Components/Header'
 import { IntroGuide } from './Components/IntroGuide'
 import { getQueryVar, updateQueryParameter } from '../../common/helpers/util'
 import MollieTab from './Components/Tabs/MollieTab'
-import { CustomizeTab } from './Components/Tabs/CustomizeTab'
 import { EmailTab } from './Components/Tabs/EmailTab'
 import { HelpTab } from './Components/Tabs/HelpTab'
 import Button from '../../common/components/controls/Button'
-import TabPanel from '../components/TabPanel'
 import Notification from '../components/Notification'
-import { useForm, FormProvider } from 'react-hook-form'
 import SettingsEdit from '../components/SettingsEdit'
+import ReactShadowRoot from 'react-shadow-root'
 
 const KudosSettings = () => {
   const [mollieChanged, setMollieChanged] = useState()
@@ -200,15 +197,6 @@ const KudosSettings = () => {
                 />
     },
     {
-      name: 'customize',
-      title: __('Customize', 'kudos-donations'),
-      content:
-                <CustomizeTab
-                    settings={settings}
-                    handleInputChange={handleInputChange}
-                />
-    },
-    {
       name: 'email',
       title: __('Email', 'kudos-donations'),
       content:
@@ -234,7 +222,9 @@ const KudosSettings = () => {
 
   return (
         // Show spinner if not yet loaded
-        <Fragment>
+        <ReactShadowRoot>
+            <link rel="stylesheet"
+                  href="/wp-content/plugins/kudos-donations/dist/admin/kudos-admin-settings.css"/>
 
             {!isAPILoaded
               ? <div className="absolute inset-0 flex items-center justify-center">
@@ -291,7 +281,7 @@ const KudosSettings = () => {
 
                 </Fragment>
             }
-        </Fragment>
+        </ReactShadowRoot>
   )
 }
 

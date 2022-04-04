@@ -43,7 +43,7 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
                             {campaign.title.rendered}
                         </th>
                         <td className="px-6 py-4">
-                            <div className="w-5 h-5 rounded" style={{ backgroundColor: campaign.meta.theme_color }}/>
+                            <div className="w-5 h-5 rounded-full" style={{ backgroundColor: campaign.meta.theme_color }}/>
                         </td>
                         <td className="px-6 py-4">
                             {getTotal(campaign.slug)}

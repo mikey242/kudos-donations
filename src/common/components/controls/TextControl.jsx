@@ -8,9 +8,10 @@ const TextControl = ({ name, validation, label, help, addOn, type = 'text', plac
 
   return (
         <div className="first:mt-0 mt-3">
-            <label htmlFor={name} className={label ? 'block text-sm font-medium text-gray-700' : 'sr-only'}>
+            <label htmlFor={name} className={label ? 'block text-sm font-medium font-bold text-gray-700' : 'sr-only'}>
                 {label}
             </label>
+            {help && <p className="text-sm leading-5 text-gray-500">{help}</p>}
             <div className="mt-1 relative rounded-md shadow-sm">
                 {addOn &&
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

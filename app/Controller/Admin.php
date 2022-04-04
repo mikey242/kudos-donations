@@ -101,7 +101,7 @@ class Admin {
 		$settings_page_hook_suffix = add_submenu_page(
 			$parent_slug,
 			__( 'Kudos settings', 'kudos-donations' ),
-			__( 'settings', 'kudos-donations' ),
+			__( 'Settings', 'kudos-donations' ),
 			'manage_options',
 			'kudos-settings',
 			function () {
@@ -120,11 +120,11 @@ class Admin {
 			$parent_slug,
 			/* translators: %s: Plugin name */
 			sprintf( __( '%s campaigns', 'kudos-donations' ), 'Kudos' ),
-			__( 'campaigns', 'kudos-donations' ),
+			__( 'Campaigns', 'kudos-donations' ),
 			'manage_options',
 			'kudos-campaigns',
 			function () {
-				echo '<div id="kudos-campaigns"></div>';
+				echo '<div id="kudos-settings"></div>';
 			}
 
 		);
@@ -715,32 +715,11 @@ class Admin {
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'completed_payment'      => [
-					'type'         => 'string',
-					'default'      => 'message',
-					'show_in_rest' => true,
-				],
 				'return_message_enable'  => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				'return_message_title'   => [
-					'type'              => 'string',
-					'show_in_rest'      => true,
-					'default'           => __( 'Thank you!', 'kudos-donations' ),
-					'sanitize_callback' => 'sanitize_text_field',
-				],
-				'return_message_text'    => [
-					'type'              => 'string',
-					'show_in_rest'      => true,
-					'default'           => sprintf(
-					/* translators: %s: Value of donation. */
-						__( 'Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations' ),
-						'{{value}}'
-					),
-					'sanitize_callback' => 'sanitize_text_field',
 				],
 				'custom_return_enable'   => [
 					'type'              => 'boolean',

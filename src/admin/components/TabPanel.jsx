@@ -1,32 +1,43 @@
 import { Tab } from '@headlessui/react'
 import React from 'react'
 import Panel from './Panel'
+import classNames from 'classnames'
+import { Fragment } from '@wordpress/element'
 
 const TabPanel = ({ tabs }) => {
   return (
-        <div className="mx-auto mt-5 w-[768px]">
+        <div className="mx-auto mt-5 w-full max-w-[768px]">
             <Tab.Group>
                 <Panel>
-                    <div className="px-2">
-                        <Tab.List className="flex justify-around">
-                            {Object.entries(tabs).map((tab) => {
-                              tab = tab[1]
-                              return (
-                                    <Tab
-                                        key={tab.name}
-                                        className={({ selected }) => `
-                                            ${selected ? 'text-black font-bold after:content-[""] after:border-b-4' : 'text-gray-500'}
-                                            after:border-primary after:absolute after:left-0 after:bottom-0 after:w-full
-                                            border-0 py-4 px-2 cursor-pointer rounded-lg text-md relative transition ease-in-out 
-                                            
-                                        `}
-                                    >
-                                        {tab.title}
-                                    </Tab>
-                              )
-                            })}
-                        </Tab.List>
-                    </div>
+                    <Tab.List className="relative z-0 rounded-lg flex divide-x divide-gray-200">
+                        {Object.entries(tabs).map((tab, index) => {
+                          tab = tab[1]
+                          return (
+                                <Tab key={index} as={Fragment}>
+                                    {({ selected }) => (
+                                        <button
+                                            key={tab.name}
+                                            className={classNames(
+                                              selected ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700',
+                                              index === 0 && 'rounded-l-lg',
+                                              index === tabs.length - 1 && 'rounded-r-lg',
+                                              'group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-sm font-medium text-center hover:bg-gray-50 focus:z-10'
+                                            )}
+                                        >
+                                            {tab.title}
+                                            <span
+                                                // aria-hidden="true"
+                                                className={classNames(
+                                                  selected ? 'bg-primary' : 'bg-transparent',
+                                                  'absolute inset-x-0 bottom-0 h-0.5'
+                                                )}
+                                            />
+                                        </button>
+                                    )}
+                                </Tab>
+                          )
+                        })}
+                    </Tab.List>
                 </Panel>
                 <Tab.Panels>
                     <Panel>

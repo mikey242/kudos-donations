@@ -38,8 +38,10 @@ function Summary (props) {
                     <strong>{__('Type', 'kudos-donations')}: </strong><span>{recurringText()}</span>
                 </p>
             </div>
-            {privacyLink && <CheckboxControl name="privacy" label={__('Accept privacy policy')}/>}
-            {termsLink && <CheckboxControl name="terms" label={__('Accept Terms and Conditions')}/>}
+            {privacyLink && <CheckboxControl name="privacy" label={__('Accept privacy policy')}
+                                             validation={{ required: __('Please accept this to continue', 'kudos-donations') }}/>}
+            {termsLink && <CheckboxControl name="terms" label={__('Accept Terms and Conditions')}
+                                           validation={{ required: __('Please accept this to continue', 'kudos-donations') }}/>}
         </FormTab>
   )
 }

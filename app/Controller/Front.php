@@ -204,64 +204,85 @@ class Front {
 
 	private function register_post_types() {
 		new CustomPostType( 'kudos_campaign', [], [
-			'goal'             => [
+			'goal'                 => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'additional_funds' => [
+			'additional_funds'     => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'initial_title'    => [
+			'initial_title'        => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'initial_text'     => [
+			'initial_text'         => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'address_enabled'  => [
+			'address_enabled'      => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'address_required' => [
+			'address_required'     => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'message_enabled'  => [
+			'message_enabled'      => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'amount_type'      => [
+			'amount_type'          => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'fixed_amounts'    => [
+			'fixed_amounts'        => [
 				'type'              => 'string',
 				'single'            => false,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'donation_type'    => [
+			'donation_type'        => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'show_progress'    => [
+			'show_progress'        => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'theme_color'      => [
+			'theme_color'          => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'terms_link'       => [
+			'terms_link'           => [
 				'type'              => 'string',
 				'default'           => '',
 				'sanitize_callback' => 'esc_url_raw',
 			],
-			'privacy_link'     => [
+			'privacy_link'         => [
 				'type'              => 'string',
 				'default'           => '',
 				'sanitize_callback' => 'esc_url_raw',
+			],
+			'completed_payment'    => [
+				'type'         => 'string',
+				'default'      => 'message',
+				'show_in_rest' => true,
+			],
+			'return_message_title' => [
+				'type'              => 'string',
+				'show_in_rest'      => true,
+				'default'           => __( 'Thank you!', 'kudos-donations' ),
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'return_message_text'  => [
+				'type'              => 'string',
+				'show_in_rest'      => true,
+				'default'           => sprintf(
+				/* translators: %s: Value of donation. */
+					__( 'Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations' ),
+					'{{value}}'
+				),
+				'sanitize_callback' => 'sanitize_text_field',
 			],
 		] );
 	}

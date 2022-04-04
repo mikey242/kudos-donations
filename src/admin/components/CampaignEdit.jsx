@@ -9,15 +9,13 @@ import TextAreaControl from '../../common/components/controls/TextAreaControl'
 import RadioGroupControl from '../../common/components/controls/RadioGroupControl'
 import ColorPicker from '../../common/components/controls/ColorPicker'
 import TabPanel from './TabPanel'
+import Divider from './Divider'
+import { ArrowCircleLeftIcon } from '@heroicons/react/outline'
+import RadioControl from '../../common/components/controls/RadioControl'
 
 function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurringAllowed }) {
-  const methods = useForm({
-    defaultValues: {
-      ...campaign,
-      title: campaign?.title?.rendered
-    }
-  })
-  const { reset, handleSubmit, watch } = methods
+  const methods = useForm()
+  const { reset, handleSubmit, watch, formState } = methods
 
   const watchAmountType = watch('meta.amount_type')
 
@@ -27,6 +25,14 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       title: campaign?.title?.rendered
     })
   }, [campaign])
+
+  const goBack = () => {
+    if (Object.keys(formState.dirtyFields).length) {
+      window.confirm(__('You have unsaved changes, are you sure you want to leave?')) && setCurrentCampaign(null)
+    } else {
+      setCurrentCampaign(null)
+    }
+  }
 
   const onSubmit = (data) => {
     updateCampaign(data.id, data)
@@ -39,9 +45,21 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       content:
                 <Fragment>
                     <TextControl name="title" label={__('Campaign name', 'kudos-donations')}
+                                 help={__('Give your campaign a unique name', 'kudos-donations')}
                                  validation={{ required: __('Name required') }}/>
-                    <TextControl type="number" name="meta.goal" label="Goal"/>
+                    <TextControl type="number" name="meta.goal"
+                                 help={__('Set a goal for your campaign', 'kudos-donations')}
+                                 label={__('Goal', 'kudos-donations')}/>
                     <ColorPicker label={__('Theme color', 'kudos-donations')} name="meta.theme_color"/>
+                    <RadioControl
+                        name="meta.completed_payment"
+                        label={__('Completed payment', 'kudos-donations')}
+                        help={__('What happens after a payment is complete?', 'kudos-donations')}
+                        options={[
+                          { id: 'message', label: 'Show a message' },
+                          { id: 'url', label: 'Return to a custom URL' }
+                        ]}
+                    />
                 </Fragment>
     },
     {
@@ -49,8 +67,16 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       title: __('Text fields', 'kudos-donations'),
       content:
                 <Fragment>
-                    <TextControl name="meta.initial_title" label="Welcome Title"/>
-                    <TextAreaControl name="meta.initial_text" label="Welcome Text"
+                    <h3>{__('Initial tab', 'kudos-donations')}</h3>
+                    <TextControl name="meta.initial_title" label={__('Title', 'kudos-donations')}/>
+                    <TextAreaControl name="meta.initial_text" label={__('Text', 'kudos-donations')}
+                                     placeholder="Welcome Text"/>
+                    <Divider/>
+                    <h3>{__('Payment complete', 'kudos-donations')}</h3>
+                    <TextControl name="meta.return_message_title"
+                                 label={__('Message title', 'kudos-donations')}/>
+                    <TextAreaControl name="meta.return_message_text"
+                                     label={__('Message title', 'kudos-donations')}
                                      placeholder="Welcome Text"/>
                 </Fragment>
     },
@@ -103,7 +129,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
 
   return (
         <Fragment>
-            <h2 className="text-center my-5">{campaign.status === 'draft' ? __('New campaign', 'kudos-donations') : __('Edit campaign', 'kudos-donations')}</h2>
+            <h2 className="text-center my-5">{campaign.status === 'draft' ? __('New campaign', 'kudos-donations') : __('Edit campaign: ', 'kudos-donations') + campaign.title.rendered}</h2>
             <FormProvider {...methods}>
                 <form id="settings-form" onSubmit={handleSubmit(onSubmit)}>
                     <TabPanel
@@ -111,10 +137,9 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                     />
                 </form>
                 <div className="text-right flex justify-between mt-5">
-                    <Button onClick={() => setCurrentCampaign(null)}
-                            type="button">{__('Cancel', 'kudos-donations')}</Button>
-                    <Button form="settings-form" type="submit">
-                        {campaign.status === 'draft' ? __('Create', 'kudos-donations') : __('Save', 'kudos-donations')}
+                    <Button isLink onClick={() => goBack()}
+                            type="button">
+                        <ArrowCircleLeftIcon className="mr-2 w-5 h-5"/>{__('Back', 'kudos-donations')}
                     </Button>
                 </div>
             </FormProvider>
