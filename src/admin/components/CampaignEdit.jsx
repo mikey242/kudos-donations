@@ -7,13 +7,13 @@ import {
   ToggleControl,
   TextAreaControl,
   ColorPicker,
+  RadioControl,
   RadioGroupControl,
   Button
 } from '../../common/components/controls'
 import TabPanel from './TabPanel'
 import Divider from './Divider'
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline'
-import RadioControl from '../../common/components/controls/RadioControl'
 
 function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurringAllowed }) {
   const methods = useForm()

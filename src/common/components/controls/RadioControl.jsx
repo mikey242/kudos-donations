@@ -11,7 +11,7 @@ const RadioControl = ({ name, validation, options, label, help }) => {
         <div className="mt-4">
             <label className="block text-sm font-medium font-bold text-gray-700">{label}</label>
             {help && <p className="text-sm leading-5 text-gray-500">{help}</p>}
-            <fieldset className="mt-4">
+            <fieldset className="mt-2">
                 <legend className="sr-only">Notification method</legend>
                 <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
                     {options.map((option, index) => (
@@ -22,7 +22,7 @@ const RadioControl = ({ name, validation, options, label, help }) => {
                                 value={option.id}
                                 type="radio"
                                 defaultChecked={!!((!getValues(name) && index === 0))}
-                                className="focus:ring-primary h-4 w-4 text-primary border-gray-300"
+                                className="focus:ring-primary transition h-4 w-4 text-primary border-gray-300"
                             />
                             <label htmlFor={option.id} className="ml-3 block text-sm font-medium text-gray-700">
                                 {option.label}
@@ -57,4 +57,4 @@ const RadioControl = ({ name, validation, options, label, help }) => {
   )
 }
 
-export default RadioControl
+export { RadioControl }

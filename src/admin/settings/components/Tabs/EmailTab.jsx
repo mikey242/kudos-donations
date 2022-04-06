@@ -1,10 +1,14 @@
-import { Fragment, useState } from '@wordpress/element'
+import { Fragment } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
-import { Button, TextControl, ToggleControl } from '../../../../common/components/controls'
+import { CheckboxControl, RadioControl, TextControl, ToggleControl } from '../../../../common/components/controls'
 import React from 'react'
 import Divider from '../../../components/Divider'
+import { useFormContext } from 'react-hook-form'
 
 const EmailTab = () => {
+  const { watch } = useFormContext()
+  const watchCustom = watch('_kudos_smtp_enable')
+
   return (
         <Fragment>
             <ToggleControl
@@ -20,62 +24,53 @@ const EmailTab = () => {
                 help={__('Leave blank to disable.', 'kudos-donations')}
                 name="_kudos_email_bcc"
             />
-            <Divider/>
-            {/* <br/> */}
-            {/* <Button */}
-            {/*    isLink */}
-            {/*    aria-label={__('Refresh API')} */}
-            {/*    onClick={check} */}
-            {/* > */}
-            {/*    <><RefreshIcon className={`${checkingMollie && 'animate-spin '}w-5 h-5`}/> <span */}
-            {/*        className="mx-2">{__('Refresh API', 'kudos-donations')}</span></> */}
+            <ToggleControl name="_kudos_smtp_enable" label={__('Use custom SMTP settings', 'kudos-donations')}/>
+            {watchCustom &&
+                <Fragment>
+                    <Divider/>
+                    <TextControl name="_kudos_smtp_host" label={__('Host', 'kudos-donations')}/>
+                    <TextControl name="_kudos_smtp_port" label={__('Port', 'kudos-donations')} type="number"/>
+                    <br/>
+                    <RadioControl
+                        name="_kudos_smtp_encryption"
+                        label={__('Encryption', 'kudos-donations')}
+                        options={
+                            [
+                              { label: __('None', 'kudos-donations'), value: 'none', id: 'none' },
+                              { label: __('SSL', 'kudos-donations'), value: 'ssl', id: 'ssl' },
+                              { label: __('TLS', 'kudos-donations'), value: 'tls', id: 'tls' }
+                            ]
+                        }/>
+                    <CheckboxControl name="_kudos_smtp_autotls" label={__('Auto TLS', 'kudos-donations')}/>
+                    <br/>
+                    <TextControl
+                        name="_kudos_smtp_username" label={__('Username', 'kudos-donations')} help={__(
+                          'This is usually an email address.',
+                          'kudos-donations'
+                        )}
 
-            {/* </Button> */}
-            {/* <p className="my-2 text-xs text-gray-500"> */}
-            {/*    {__('Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.', 'kudos-donations')} */}
-            {/* </p> */}
-            {/* <Divider/> */}
-            {/* <TextControl name="_kudos_vendor_mollie.live_key" label="Live key"/> */}
-            {/* <TextControl name="_kudos_vendor_mollie.test_key" label="Test key"/> */}
+                        placeholder="user@domain.com"/>
+                    <TextControl
+                        name="_kudos_smtp_password" label={__('Password', 'kudos-donations')} help={__(
+                          'This password will be stored as plain text in the database.',
+                          'kudos-donations'
+                        )}
+                        type="password"
+                        placeholder="*****"
+                    />
+                    <br/>
+                    <TextControl
+                        name="_kudos_smtp_from"
+                        label={__('From address', 'kudos-donations')}
+                        help={__(
+                          'The email address emails will appear to be sent from. Leave empty to use same as username.',
+                          'kudos-donations'
+                        )}
+                        placeholder="user@domain.com"
+                    />
+                </Fragment>
+            }
         </Fragment>
-        // <Panel>
-        //     <Fragment>
-        //         <CardDivider/>
-        //         <TestEmailPanel
-        //             handleInputChange={props.handleInputChange}
-        //             showNotice={props.showNotice}
-        //         />
-        //         <CardDivider/>
-        //         <EmailCustomPanel
-        //             settings={props.settings}
-        //             handleInputChange={props.handleInputChange}
-        //         />
-        //         {props.settings._kudos_smtp_enable
-        //           ? <Fragment>
-        //                 <CardDivider/>
-        //                 <EmailServerPanel
-        //                     settings={props.settings}
-        //                     handleInputChange={props.handleInputChange}
-        //                 />
-        //                 <CardDivider/>
-        //                 <EmailEncryptionPanel
-        //                     settings={props.settings}
-        //                     handleInputChange={props.handleInputChange}
-        //                 />
-        //                 <CardDivider/>
-        //                 <EmailAuthenticationPanel
-        //                     settings={props.settings}
-        //                     handleInputChange={props.handleInputChange}
-        //                 />
-        //                 <CardDivider/>
-        //                 <EmailFromPanel
-        //                     settings={props.settings}
-        //                     handleInputChange={props.handleInputChange}
-        //                 />
-        //             </Fragment>
-        //           : ''}
-        //     </Fragment>
-        // </Panel>
   )
 }
 

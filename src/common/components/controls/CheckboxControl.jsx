@@ -6,6 +6,7 @@ const CheckboxControl = ({ name, validation, label, help, placeholder }) => {
 
   return (
         <div className="first:mt-0 mt-3">
+            {help && <p className="text-sm leading-5 text-gray-500 mb-1">{help}</p>}
             <div className="relative flex items-center">
                 <div className="flex items-center h-5">
                     <input

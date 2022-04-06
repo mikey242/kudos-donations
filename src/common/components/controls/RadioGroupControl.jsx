@@ -1,15 +1,13 @@
 import React from 'react'
 import { Controller } from 'react-hook-form'
 import { RadioGroup } from '@headlessui/react'
-import { forwardRef } from '@wordpress/element'
 import classNames from 'classnames'
 
-const RadioGroupControl = forwardRef(({ name, validation, options, help, label }, ref) => {
+const RadioGroupControl = ({ name, validation, options, help, label }) => {
   return (
         <Controller
             name={name}
             validation={validation}
-            ref={ref}
             render={({ field: { onChange, value } }) => (
                 <RadioGroup value={value} onChange={onChange} className="mt-2">
                     <RadioGroup.Label
@@ -39,6 +37,6 @@ const RadioGroupControl = forwardRef(({ name, validation, options, help, label }
             )}
         />
   )
-})
+}
 
 export { RadioGroupControl }

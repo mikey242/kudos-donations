@@ -20,7 +20,7 @@ const KudosCampaigns = ({ stylesheet }) => {
   const [notification, setNotification] = useState({ shown: false })
   const [currentCampaign, setCurrentCampaign] = useState(null)
   const [transactions, setTransactions] = useState()
-  const [vendorSettings, setVendorSettings] = useState()
+  const [settings, setSettings] = useState()
   const notificationTimer = useRef(null)
 
   useEffect(() => {
@@ -148,7 +148,7 @@ const KudosCampaigns = ({ stylesheet }) => {
     api.loadPromise.then(() => {
       const settings = new api.models.Settings()
       settings.fetch().then((response) => {
-        setVendorSettings(response._kudos_vendor_mollie)
+        setSettings(response)
       })
     })
   }
@@ -190,7 +190,7 @@ const KudosCampaigns = ({ stylesheet }) => {
                             </Fragment>
                           : <CampaignEdit
                                 updateCampaign={updateCampaign}
-                                recurringAllowed={vendorSettings?.recurring}
+                                recurringAllowed={settings?._kudos_vendor_mollie.recurring}
                                 setCurrentCampaign={setCurrentCampaign}
                                 campaign={currentCampaign}
                             />
