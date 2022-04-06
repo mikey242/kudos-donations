@@ -16,42 +16,46 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
 
   return (
         <Panel className="overflow-x-auto" title={__('Your campaigns', 'kudos-donations')}>
-            <table className="w-full text-left text-gray-500 border-collapse p-2">
-                <thead className="text-md text-gray-700 bg-gray-100">
+            <table className="min-w-full text-left divide-y divide-gray-300">
+                <thead className="bg-gray-50">
                 <tr>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
                         Campaign name
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
                         Color
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
                         Total
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
                         Goal
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col"
+                        className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                         <span className="sr-only">Edit</span>
                     </th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-200 bg-white">
                 {campaigns?.map((campaign, i) => (
-                    <tr key={campaign.id} className="bg-white">
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <tr key={campaign.id}>
+                        <td scope="row"
+                            className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                             {campaign.title.rendered}
-                        </th>
-                        <td className="px-6 py-4">
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             <div className="w-5 h-5 rounded-full" style={{ backgroundColor: campaign.meta.theme_color }}/>
                         </td>
-                        <td className="px-6 py-4">
-                            {getTotal(campaign.slug)}
-                        </td>
-                        <td className="px-6 py-4">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{getTotal(campaign.slug)}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {campaign.meta.goal > 0 ? campaign.meta.goal : 'None'}
                         </td>
-                        <td className="px-6 py-4 text-right">
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <span title={__('Edit campaign', 'kudos-donations')}>
                                 <PencilAltIcon
                                     className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-gray-500"
@@ -64,8 +68,7 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
                                 onClick={() => duplicateClick(campaign)}
                             />
                                 </span>
-                            {i !== 0 &&
-                                <span title={__('Delete campaign', 'kudos-donations')}>
+                            <span title={__('Delete campaign', 'kudos-donations')}>
                                 <TrashIcon
                                     className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-red-500"
                                     onClick={() => {
@@ -73,8 +76,7 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
                                         deleteClick(campaign.id)
                                     }}
                                 />
-                                </span>
-                            }
+                            </span>
                         </td>
                     </tr>
                 ))}

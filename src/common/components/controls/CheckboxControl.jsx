@@ -1,6 +1,5 @@
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
-import BaseControl from './BaseControl'
 
 const CheckboxControl = ({ name, validation, label, help, placeholder }) => {
   const { register, formState: { errors } } = useFormContext()
@@ -31,4 +30,4 @@ const CheckboxControl = ({ name, validation, label, help, placeholder }) => {
   )
 }
 
-export default CheckboxControl
+export { CheckboxControl }

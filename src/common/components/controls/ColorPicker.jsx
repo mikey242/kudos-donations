@@ -101,4 +101,4 @@ const ColorPicker = ({ name, label, help }) => {
   )
 }
 
-export default ColorPicker
+export { ColorPicker }

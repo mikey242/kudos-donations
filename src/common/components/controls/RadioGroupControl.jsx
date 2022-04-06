@@ -4,7 +4,7 @@ import { RadioGroup } from '@headlessui/react'
 import { forwardRef } from '@wordpress/element'
 import classNames from 'classnames'
 
-const RadioGroupControl = forwardRef(({ name, validation, options, label }, ref) => {
+const RadioGroupControl = forwardRef(({ name, validation, options, help, label }, ref) => {
   return (
         <Controller
             name={name}
@@ -14,7 +14,8 @@ const RadioGroupControl = forwardRef(({ name, validation, options, label }, ref)
                 <RadioGroup value={value} onChange={onChange} className="mt-2">
                     <RadioGroup.Label
                         className={label ? 'block text-sm font-medium font-bold text-gray-700 mb-1' : 'sr-only'}>{label}</RadioGroup.Label>
-                    <div className="grid gap-3 grid-flow-col auto-cols-fr">
+                    {help && <p className="text-sm leading-5 text-gray-500">{help}</p>}
+                    <div className="grid gap-3 mt-1 grid-flow-col auto-cols-fr">
                         {options.map((option, i) => (
                             <RadioGroup.Option
                                 key={i}
@@ -40,4 +41,4 @@ const RadioGroupControl = forwardRef(({ name, validation, options, label }, ref)
   )
 })
 
-export default RadioGroupControl
+export { RadioGroupControl }

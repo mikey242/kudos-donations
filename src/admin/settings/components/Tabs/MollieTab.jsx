@@ -1,11 +1,9 @@
-import RadioGroupControl from '../../../../common/components/controls/RadioGroupControl'
 import { __ } from '@wordpress/i18n'
 import React from 'react'
-import TextControl from '../../../../common/components/controls/TextControl'
+import { TextControl, Button, RadioGroupControl } from '../../../../common/components/controls'
 import { Fragment, useState } from '@wordpress/element'
 import { RefreshIcon } from '@heroicons/react/solid'
 import Divider from '../../../components/Divider'
-import Button from '../../../../common/components/controls/Button'
 
 const MollieTab = ({ checkApiKey }) => {
   const [checkingMollie, setCheckingMollie] = useState()
@@ -35,7 +33,7 @@ const MollieTab = ({ checkApiKey }) => {
                 aria-label={__('Refresh API')}
                 onClick={check}
             >
-                <><RefreshIcon className={`${checkingMollie && 'animate-spin'} w-5 h-5`}/> <span
+                <><RefreshIcon className={`${checkingMollie && 'animate-spin '}w-5 h-5`}/> <span
                     className="mx-2">{__('Refresh API', 'kudos-donations')}</span></>
 
             </Button>

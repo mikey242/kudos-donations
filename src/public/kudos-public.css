@@ -17,9 +17,9 @@
     }
 }
 
-/*:host {*/
-/*    all: initial;*/
-/*}*/
+:host {
+    all: initial;
+}
 
 /* Base */
 :root {

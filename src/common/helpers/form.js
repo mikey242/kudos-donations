@@ -199,7 +199,6 @@ export function getFrequencyName (frequency) {
 
 export function checkRequirements (data, target) {
   const reqs = steps[target].requirements
-  console.log(findVal(data, 'address_enabled'))
   if (reqs) {
     // Requirements found for target
     for (const [key, value] of Object.entries(reqs)) {

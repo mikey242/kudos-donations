@@ -26,10 +26,6 @@ const ButtonEdit = (props) => {
     }
   }, [campaigns])
 
-  useEffect(() => {
-    console.log(currentCampaign)
-  }, [currentCampaign])
-
   const onChangeButtonLabel = (newValue) => {
     setAttributes({ button_label: newValue })
   }
@@ -69,15 +65,16 @@ const ButtonEdit = (props) => {
                             title={__('Campaign', 'kudos-donations')}
                             initialOpen={false}
                         >
-                            <p><strong>Current
-                                campaign: {currentCampaign?.title.rendered}</strong></p>
+                            <p>
+                                <strong>Current campaign: {currentCampaign?.title.rendered}</strong>
+                            </p>
                             <SelectControl
                                 label={__('Select a campaign', 'kudos-donations')}
                                 value={campaign_id}
                                 onChange={onChangeCampaign}
-                                options={campaigns.map((campaign) => ({
-                                  label: campaign?.title.rendered, value: campaign.slug
-                                }))}
+                                options={[{ label: '', value: '' }].concat(campaigns.map((campaign) => (
+                                  { label: campaign?.title.rendered, value: campaign.slug }
+                                )))}
                             />
                             <a href="admin.php?page=kudos-campaigns&tab_name=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>
                         </PanelBody>

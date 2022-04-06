@@ -1,5 +1,6 @@
 import { render } from '@wordpress/element'
 import React from 'react'
-import { KudosSettings } from './settings/KudosSettings'
+import KudosSettings from './settings/KudosSettings'
 
-render(<KudosSettings/>, document.getElementById('kudos-settings'))
+const stylesheet = document.getElementById('kudos-donations-settings-css')
+render(<KudosSettings stylesheet={stylesheet}/>, document.getElementById('kudos-settings'))

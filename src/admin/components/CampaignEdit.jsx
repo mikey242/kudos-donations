@@ -2,12 +2,14 @@ import React from 'react'
 import { Fragment, useEffect } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { useForm, FormProvider } from 'react-hook-form'
-import TextControl from '../../common/components/controls/TextControl'
-import ToggleControl from '../../common/components/controls/ToggleControl'
-import Button from '../../common/components/controls/Button'
-import TextAreaControl from '../../common/components/controls/TextAreaControl'
-import RadioGroupControl from '../../common/components/controls/RadioGroupControl'
-import ColorPicker from '../../common/components/controls/ColorPicker'
+import {
+  TextControl,
+  ToggleControl,
+  TextAreaControl,
+  ColorPicker,
+  RadioGroupControl,
+  Button
+} from '../../common/components/controls'
 import TabPanel from './TabPanel'
 import Divider from './Divider'
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline'
@@ -47,10 +49,15 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                     <TextControl name="title" label={__('Campaign name', 'kudos-donations')}
                                  help={__('Give your campaign a unique name', 'kudos-donations')}
                                  validation={{ required: __('Name required') }}/>
+                    <br/>
                     <TextControl type="number" name="meta.goal"
+                                 addOn="€"
                                  help={__('Set a goal for your campaign', 'kudos-donations')}
                                  label={__('Goal', 'kudos-donations')}/>
-                    <ColorPicker label={__('Theme color', 'kudos-donations')} name="meta.theme_color"/>
+                    <br/>
+                    <ColorPicker name="meta.theme_color" label={__('Theme color', 'kudos-donations')}
+                                 help={__('Choose a color them for your campaign', 'kudos-donations')}/>
+                    <br/>
                     <RadioControl
                         name="meta.completed_payment"
                         label={__('Completed payment', 'kudos-donations')}
@@ -68,16 +75,24 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       content:
                 <Fragment>
                     <h3>{__('Initial tab', 'kudos-donations')}</h3>
-                    <TextControl name="meta.initial_title" label={__('Title', 'kudos-donations')}/>
-                    <TextAreaControl name="meta.initial_text" label={__('Text', 'kudos-donations')}
-                                     placeholder="Welcome Text"/>
+                    <TextControl
+                        name="meta.initial_title"
+                        label={__('Title', 'kudos-donations')}
+                    />
+                    <TextAreaControl
+                        name="meta.initial_text"
+                        label={__('Text', 'kudos-donations')}
+                    />
                     <Divider/>
                     <h3>{__('Payment complete', 'kudos-donations')}</h3>
-                    <TextControl name="meta.return_message_title"
-                                 label={__('Message title', 'kudos-donations')}/>
-                    <TextAreaControl name="meta.return_message_text"
-                                     label={__('Message title', 'kudos-donations')}
-                                     placeholder="Welcome Text"/>
+                    <TextControl
+                        name="meta.return_message_title"
+                        label={__('Message title', 'kudos-donations')}
+                    />
+                    <TextAreaControl
+                        name="meta.return_message_text"
+                        label={__('Message title', 'kudos-donations')}
+                    />
                 </Fragment>
     },
     {
@@ -88,6 +103,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                     <RadioGroupControl
                         name="meta.donation_type"
                         label={__('Donation type', 'kudos-donations')}
+                        help={__('Chose the available payment frequency', 'kudos-donations')}
                         options={[
                           { label: __('One-off', 'kudos-donations'), value: 'oneoff' },
                           {
@@ -103,6 +119,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                         ]}/>
                     <RadioGroupControl
                         name="meta.amount_type" label={__('Payment type', 'kudos-donations')}
+                        help={__('Chose the available amount types', 'kudos-donations')}
                         options={[
                           { label: __('Open', 'kudos-donations'), value: 'open' },
                           { label: __('Fixed', 'kudos-donations'), value: 'fixed' },
@@ -110,7 +127,10 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
 
                         ]}/>
                     {watchAmountType !== 'open' &&
-                        <TextControl name="meta.fixed_amounts" label={__('Fixed amounts', 'kudos-donations')}/>
+                        <TextControl
+                            name="meta.fixed_amounts"
+                            help={__('Comma-separated list of amounts', 'kudos-donations')}
+                            label={__('Fixed amounts', 'kudos-donations')}/>
                     }
                 </Fragment>
     },

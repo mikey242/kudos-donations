@@ -17,7 +17,7 @@ KudosRender.propTypes = {
   root: PropTypes.object
 }
 
-function KudosRender ({ buttonLabel, campaignId, root }) {
+function KudosRender ({ buttonLabel, campaignId, root, stylesheet }) {
   const [campaign, setCampaign] = useState()
   const [timestamp, setTimestamp] = useState()
   const [ready, setReady] = useState(false)
@@ -146,9 +146,9 @@ function KudosRender ({ buttonLabel, campaignId, root }) {
         <ReactShadowRoot>
             {ready &&
                 <Fragment>
-                    <link rel="stylesheet" href="/wp-content/plugins/kudos-donations/dist/public/kudos-public.css"/>
+                    <link rel="stylesheet" href={stylesheet.href}/>
                     <style>{style}</style>
-                    <style>{`:host {--kudos-theme-primary: ${campaign.theme_color}`}</style>
+                    <style>{`:host {--kudos-theme-primary: ${campaign?.theme_color}`}</style>
                     <div id="kudos" className="font-sans text-base">
                         <KudosButton onClick={toggleModal}>
                             {buttonLabel}

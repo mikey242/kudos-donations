@@ -3,24 +3,24 @@
 
 import { __ } from '@wordpress/i18n'
 import { Spinner } from '@wordpress/components'
-import { Fragment, useEffect, useState } from '@wordpress/element'
+import { Fragment, useEffect, useRef, useState } from '@wordpress/element'
 import React from 'react'
 import api from '@wordpress/api'
 import apiFetch from '@wordpress/api-fetch'
 
 // settings Panels
-import { Header } from './Components/Header'
-import { IntroGuide } from './Components/IntroGuide'
+import { Header } from '../components/Header'
+import { IntroGuide } from './components/IntroGuide'
 import { getQueryVar, updateQueryParameter } from '../../common/helpers/util'
-import MollieTab from './Components/Tabs/MollieTab'
-import { EmailTab } from './Components/Tabs/EmailTab'
-import { HelpTab } from './Components/Tabs/HelpTab'
-import Button from '../../common/components/controls/Button'
+import MollieTab from './components/Tabs/MollieTab'
+import { EmailTab } from './components/Tabs/EmailTab'
+import { HelpTab } from './components/Tabs/HelpTab'
+import { Button } from '../../common/components/controls'
 import Notification from '../components/Notification'
 import SettingsEdit from '../components/SettingsEdit'
 import ReactShadowRoot from 'react-shadow-root'
 
-const KudosSettings = () => {
+const KudosSettings = ({ stylesheet }) => {
   const [mollieChanged, setMollieChanged] = useState()
   const [isAPISaving, setIsAPISaving] = useState()
   const [isEdited, setIsEdited] = useState()
@@ -30,6 +30,7 @@ const KudosSettings = () => {
   const [notification, setNotification] = useState({ shown: false })
   const [isMollieEdited, setIsMollieEdited] = useState()
   const [tabName] = useState(getQueryVar('tab_name', 'mollie'))
+  const notificationTimer = useRef(null)
 
   useEffect(() => {
     window.onbeforeunload = (e) => {
@@ -39,6 +40,16 @@ const KudosSettings = () => {
     }
     getSettings()
   }, [])
+
+  useEffect(() => {
+    clearTimeout(notificationTimer.current)
+    notificationTimer.current = setTimeout(() => {
+      hideNotification()
+    }, 2000)
+    return () => {
+      clearTimeout(notificationTimer.current)
+    }
+  }, [notification])
 
   const changeTab = (tab) => {
     updateQueryParameter('tab_name', tab)
@@ -80,10 +91,11 @@ const KudosSettings = () => {
     }))
   }
 
-  const showNotice = (message) => {
+  const createNotification = (message, success) => {
     setNotification({
-      shown: true,
-      message: message
+      message: message,
+      success: success,
+      shown: true
     })
   }
 
@@ -134,34 +146,11 @@ const KudosSettings = () => {
         // Commit state
         setSettings(filterSettings(response))
         setIsAPISaving(false)
-        setIsEdited(false)
-        if (showNotice) {
-          createNotification(__('Setting(s) updated', 'kudos-donations'))
-        }
-        if (isMollieEdited) {
-          checkApiKey(showNotice, callback)
-          setIsMollieEdited(false)
-        } else {
-          if (typeof callback === 'function') {
-            callback(response)
-          }
-        }
+        createNotification(__('Setting(s) updated', 'kudos-donations'))
       })
       .fail((response) => {
-        if (showNotice) {
-          createNotification(response.statusText)
-        }
+        createNotification(response.statusText)
       })
-  }
-
-  const createNotification = (message) => {
-    setNotification({
-      message: message,
-      shown: true
-    })
-    setTimeout(() => {
-      hideNotification()
-    }, 2000)
   }
 
   // Update an individual setting, uses current state if value not specified
@@ -201,9 +190,7 @@ const KudosSettings = () => {
       title: __('Email', 'kudos-donations'),
       content:
                 <EmailTab
-                    settings={settings}
-                    handleInputChange={handleInputChange}
-                    showNotice={showNotice}
+                    createNotification={createNotification}
                 />
     },
     {
@@ -224,7 +211,7 @@ const KudosSettings = () => {
         // Show spinner if not yet loaded
         <ReactShadowRoot>
             <link rel="stylesheet"
-                  href="/wp-content/plugins/kudos-donations/dist/admin/kudos-admin-settings.css"/>
+                  href={stylesheet.href}/>
 
             {!isAPILoaded
               ? <div className="absolute inset-0 flex items-center justify-center">
@@ -277,7 +264,12 @@ const KudosSettings = () => {
                         updateSettings={updateSettings}
                         tabs={tabs}
                     />
-                    <Notification notification={notification} onClick={hideNotification}/>
+                    <Notification
+                        shown={notification.shown}
+                        message={notification.message}
+                        success={notification.success}
+                        onClick={hideNotification}
+                    />
 
                 </Fragment>
             }
@@ -285,4 +277,4 @@ const KudosSettings = () => {
   )
 }
 
-export { KudosSettings }
+export default KudosSettings

@@ -82,7 +82,7 @@ class Admin {
 	 */
 	public function add_menu_pages() {
 
-		$parent_slug = apply_filters( 'kudos_parent_settings_slug', 'kudos-settings' );
+		$parent_slug = apply_filters( 'kudos_parent_settings_slug', 'kudos-campaigns' );
 
 		add_menu_page(
 			__( 'Kudos', 'kudos-donations' ),
@@ -94,24 +94,6 @@ class Admin {
 				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>'
 			)
 		);
-
-		/*
-		 * settings page.
-		 */
-		$settings_page_hook_suffix = add_submenu_page(
-			$parent_slug,
-			__( 'Kudos settings', 'kudos-donations' ),
-			__( 'Settings', 'kudos-donations' ),
-			'manage_options',
-			'kudos-settings',
-			function () {
-				echo '<div id="kudos-settings"></div>';
-			}
-		);
-
-		add_action( "load-$settings_page_hook_suffix", function () {
-			add_action( 'admin_enqueue_scripts', [ $this, 'settings_page_assets' ] );
-		} );
 
 		/*
 		 * Campaign page.
@@ -126,11 +108,28 @@ class Admin {
 			function () {
 				echo '<div id="kudos-settings"></div>';
 			}
-
 		);
 
 		add_action( "load-$campaigns_page_hook_suffix", function () {
 			add_action( "admin_enqueue_scripts", [ $this, 'campaign_page_assets' ] );
+		} );
+
+		/*
+		 * Settings page.
+		 */
+		$settings_page_hook_suffix = add_submenu_page(
+			$parent_slug,
+			__( 'Kudos settings', 'kudos-donations' ),
+			__( 'Settings', 'kudos-donations' ),
+			'manage_options',
+			'kudos-settings',
+			function () {
+				echo '<div id="kudos-settings"></div>';
+			}
+		);
+
+		add_action( "load-$settings_page_hook_suffix", function () {
+			add_action( 'admin_enqueue_scripts', [ $this, 'settings_page_assets' ] );
 		} );
 
 		/*
@@ -374,7 +373,7 @@ class Admin {
 	public function campaign_page_assets() {
 
 
-		$handle = 'kudos-donations-campaigns';
+		$handle = 'kudos-donations-settings';
 
 		// Enqueue the styles
 		wp_enqueue_style(

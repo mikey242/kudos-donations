@@ -27,4 +27,4 @@ const TextAreaControl = ({ name, validation, placeholder, label, help }) => {
   )
 }
 
-export default TextAreaControl
+export { TextAreaControl }

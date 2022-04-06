@@ -1,14 +1,12 @@
 import React from 'react'
-import { KudosLogo } from '../../../public/components/KudosLogo'
+import { KudosLogo } from '../../public/components/KudosLogo'
 import { __ } from '@wordpress/i18n'
 import { applyFilters } from '@wordpress/hooks'
 
-const Header = (props) => {
-  const { children } = props
-
+const Header = ({ children }) => {
   return (
         <div
-            className="sticky top-0 flex justify-around w-full z-1050 bg-white py-5">
+            className="flex justify-around w-full z-1050 bg-white py-5">
             <div className="max-w-3xl w-full mx-auto flex items-center justify-between">
                 <div className="flex">
                     <a title={__('Visit Kudos Donations', 'kudos-donations')} className="flex mr-4 logo-animate"

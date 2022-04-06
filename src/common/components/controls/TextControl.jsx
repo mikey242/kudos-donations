@@ -44,4 +44,4 @@ const TextControl = ({ name, validation, label, help, addOn, type = 'text', plac
   )
 }
 
-export default TextControl
+export { TextControl }

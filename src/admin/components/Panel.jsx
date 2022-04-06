@@ -6,7 +6,7 @@ const Panel = forwardRef(({ children, title, className = '' }, ref) => {
         <div>
             {title && <h2 className="text-center my-5">{title}</h2>}
             <div ref={ref}
-                 className={`${className} mt-5 w-full bg-white shadow-md sm:rounded-lg z-1`}>
+                 className={`${className} mt-5 w-full bg-white shadow-md sm:rounded-lg z-1 ring-1 ring-black ring-opacity-5`}>
                 {children}
             </div>
         </div>

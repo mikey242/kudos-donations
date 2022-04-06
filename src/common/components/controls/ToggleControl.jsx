@@ -2,15 +2,13 @@ import React from 'react'
 import { Controller } from 'react-hook-form'
 import { Switch } from '@headlessui/react'
 import { forwardRef } from '@wordpress/element'
-import BaseControl from './BaseControl'
 import classNames from 'classnames'
 
-const ToggleControl = forwardRef(({ name, validation, label, help }, ref) => {
+const ToggleControl = ({ name, validation, label, help }) => {
   return (
         <Controller
             name={name}
             validation={validation}
-            ref={ref}
             render={({ field: { value, onChange } }) => (
                 <Switch.Group as="div" className="flex items-center mt-3 first:mt-0">
                     <Switch
@@ -36,6 +34,6 @@ const ToggleControl = forwardRef(({ name, validation, label, help }, ref) => {
             )}
         />
   )
-})
+}
 
-export default ToggleControl
+export { ToggleControl }

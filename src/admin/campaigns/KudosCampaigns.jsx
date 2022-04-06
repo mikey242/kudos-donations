@@ -1,19 +1,19 @@
 import apiFetch from '@wordpress/api-fetch'
 import api from '@wordpress/api'
 import { Fragment, useEffect, useRef, useState } from '@wordpress/element'
-import { Header } from '../settings/Components/Header'
+import { Header } from '../components/Header'
 import { PlusIcon } from '@heroicons/react/outline'
 import React from 'react'
 import CampaignTable from '../components/CampaignTable'
 import CampaignEdit from '../components/CampaignEdit'
 import { __ } from '@wordpress/i18n'
-import loader from '../../images/loader.svg'
 import Notification from '../components/Notification'
-import Button from '../../common/components/controls/Button'
+import { Button } from '../../common/components/controls'
 import { getQueryVar, removeQueryParameter, updateQueryParameter } from '../../common/helpers/util'
 import ReactShadowRoot from 'react-shadow-root'
+import EmptyCampaigns from '../components/EmptyCampaigns'
 
-const KudosCampaigns = () => {
+const KudosCampaigns = ({ stylesheet }) => {
   const [campaigns, setCampaigns] = useState()
   const [isApiBusy, setIsApiBusy] = useState(true)
   const [campaignSlug, setCampaignSlug] = useState(getQueryVar('campaign'))
@@ -33,25 +33,7 @@ const KudosCampaigns = () => {
     currentCampaign ? updateQueryParameter('campaign', currentCampaign.slug) : removeQueryParameter('campaign')
   }, [currentCampaign])
 
-  const newCampaign = () => {
-    setCurrentCampaign({
-      status: 'draft',
-      meta: {
-        initial_title: __('Support us!', 'kudos-donations'),
-        initial_text: __('Your support is greatly appreciated and will help to keep us going.', 'kudos-donations'),
-        donation_type: 'oneoff',
-        amount_type: 'both',
-        fixed_amounts: '5,10,20,50',
-        theme_color: '#ff9f1c'
-      }
-    })
-  }
-
-  const createNotification = (message) => {
-    setNotification({
-      message: message,
-      shown: true
-    })
+  useEffect(() => {
     clearTimeout(notificationTimer.current)
     notificationTimer.current = setTimeout(() => {
       hideNotification()
@@ -59,6 +41,41 @@ const KudosCampaigns = () => {
     return () => {
       clearTimeout(notificationTimer.current)
     }
+  }, [notification])
+
+  const newCampaign = () => {
+    setCurrentCampaign({
+      status: 'draft',
+      title: {
+        rendered: __('New campaign', 'kudos-donations')
+      },
+      meta: {
+        initial_title: __('Support us!', 'kudos-donations'),
+        initial_text: __('Your support is greatly appreciated and will help to keep us going.', 'kudos-donations'),
+        donation_type: 'oneoff',
+        amount_type: 'both',
+        fixed_amounts: '5,10,20,50',
+        theme_color: '#ff9f1c',
+        completed_payment: 'message',
+        return_message_title: __('Thank you!', 'kudos-donations'),
+        return_message_text: __('Many thanks for your donation. We appreciate your support.', 'kudos-donations')
+      }
+    })
+  }
+
+  const createNotification = (message, success) => {
+    setNotification({
+      message: message,
+      success: success,
+      shown: true
+    })
+  }
+
+  const hideNotification = () => {
+    setNotification(prev => ({
+      ...prev,
+      shown: false
+    }))
   }
 
   const updateCampaign = (id, data = {}) => {
@@ -73,9 +90,16 @@ const KudosCampaigns = () => {
     }).then(() => {
       return getCampaigns()
     }).then(() => {
-      setIsApiBusy(false)
-      createNotification(data.status === 'draft' ? __('Campaign created', 'kudos-donations') : __('Campaign updated', 'kudos-donations'))
+      createNotification(
+        data.status === 'draft'
+          ? __('Campaign created', 'kudos-donations')
+          : __('Campaign updated', 'kudos-donations')
+      )
       setCurrentCampaign(null)
+    }).catch((error) => {
+      createNotification(error.message, 'fail')
+    }).finally(() => {
+      setIsApiBusy(false)
     })
   }
 
@@ -129,19 +153,12 @@ const KudosCampaigns = () => {
     })
   }
 
-  const hideNotification = () => {
-    setNotification(prev => ({
-      ...prev,
-      shown: false
-    }))
-  }
-
   return (
         <ReactShadowRoot>
             {transactions && campaigns &&
                 <Fragment>
                     <link rel="stylesheet"
-                          href="/wp-content/plugins/kudos-donations/dist/admin/kudos-admin-settings.css"/>
+                          href={stylesheet.href}/>
                     <Header>
                         {currentCampaign &&
                             <Button form="settings-form" type="submit">
@@ -152,13 +169,16 @@ const KudosCampaigns = () => {
                     <div className="max-w-3xl w-full mx-auto">
                         {!currentCampaign
                           ? <Fragment>
-                                <CampaignTable
-                                    transactions={transactions}
-                                    deleteClick={removeCampaign}
-                                    duplicateClick={duplicateCampaign}
-                                    editClick={setCurrentCampaign}
-                                    campaigns={campaigns}
-                                />
+                                {campaigns.length >= 1
+                                  ? <CampaignTable
+                                        transactions={transactions}
+                                        deleteClick={removeCampaign}
+                                        duplicateClick={duplicateCampaign}
+                                        editClick={setCurrentCampaign}
+                                        campaigns={campaigns}
+                                    />
+                                  : <EmptyCampaigns/>
+                                }
                                 <button
                                     title={__('Add campaign', 'kudos-donations')}
                                     className="rounded-full mx-auto p-2 flex justify-center items-center bg-white mt-5 shadow-md border-0 cursor-pointer"
@@ -178,7 +198,12 @@ const KudosCampaigns = () => {
                         }
                     </div>
 
-                    <Notification notification={notification} onClick={hideNotification}/>
+                    <Notification
+                        shown={notification.shown}
+                        message={notification.message}
+                        success={notification.success}
+                        onClick={hideNotification}
+                    />
 
                 </Fragment>
             }

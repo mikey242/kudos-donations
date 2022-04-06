@@ -3,7 +3,7 @@ import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import FormTab from './FormTab'
 import { useEffect } from '@wordpress/element'
-import TextAreaControl from '../../../common/components/controls/TextAreaControl'
+import { TextAreaControl } from '../../../common/components/controls'
 
 const Message = (props) => {
   const { title, description, buttons } = props

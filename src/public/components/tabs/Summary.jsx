@@ -3,7 +3,7 @@ import React from 'react'
 import FormTab from './FormTab'
 import { useFormContext } from 'react-hook-form'
 import { getFrequencyName } from '../../../common/helpers/form'
-import CheckboxControl from '../../../common/components/controls/CheckboxControl'
+import { CheckboxControl } from '../../../common/components/controls'
 
 function Summary (props) {
   const { title, description, privacyLink, termsLink } = props

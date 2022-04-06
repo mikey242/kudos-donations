@@ -255,33 +255,24 @@ class Front {
 			],
 			'terms_link'           => [
 				'type'              => 'string',
-				'default'           => '',
 				'sanitize_callback' => 'esc_url_raw',
 			],
 			'privacy_link'         => [
 				'type'              => 'string',
-				'default'           => '',
 				'sanitize_callback' => 'esc_url_raw',
 			],
 			'completed_payment'    => [
 				'type'         => 'string',
-				'default'      => 'message',
 				'show_in_rest' => true,
 			],
 			'return_message_title' => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
-				'default'           => __( 'Thank you!', 'kudos-donations' ),
 				'sanitize_callback' => 'sanitize_text_field',
 			],
 			'return_message_text'  => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
-				'default'           => sprintf(
-				/* translators: %s: Value of donation. */
-					__( 'Many thanks for your donation of %s. We appreciate your support.', 'kudos-donations' ),
-					'{{value}}'
-				),
 				'sanitize_callback' => 'sanitize_text_field',
 			],
 		] );

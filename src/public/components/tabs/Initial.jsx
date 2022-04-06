@@ -3,9 +3,7 @@ import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import FormTab from './FormTab'
 import { useEffect } from '@wordpress/element'
-import TextControl from '../../../common/components/controls/TextControl'
-import ToggleControl from '../../../common/components/controls/ToggleControl'
-import RadioGroupControl from '../../../common/components/controls/RadioGroupControl'
+import { TextControl, ToggleControl, RadioGroupControl } from '../../../common/components/controls'
 
 const Initial = (props) => {
   const { title, description, buttons, donationType, amountType, fixedAmounts } = props
