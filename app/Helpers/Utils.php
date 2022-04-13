@@ -7,7 +7,7 @@ class Utils {
 	/**
 	 * Gets url Mollie will use to return customer to after payment complete.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public static function get_return_url(): string {
 
@@ -94,7 +94,7 @@ class Utils {
 	 *
 	 * @param string $text Mollie sequence type code.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public static function get_sequence_type( string $text ): string {
 
@@ -114,7 +114,7 @@ class Utils {
 	 *
 	 * @param string $frequency Mollie frequency code.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public static function get_frequency_name( string $frequency ): string {
 

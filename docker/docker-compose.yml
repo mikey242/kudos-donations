@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   wordpress:
-    image: "wordpress:${WP_VERSION:-5.5}-php${PHP_VERSION:-7.2}-apache"
+    image: "wordpress:${WP_VERSION:-5.5}-php${PHP_VERSION:-7.2}"
     volumes:
       - wp:/var/www/html
       - ../:/var/www/html/wp-content/plugins/kudos-donations:ro
@@ -10,26 +10,22 @@ services:
     restart: always
     depends_on:
       - db
-    networks:
-      - "front"
-      - "back"
+    ports:
+      - "8080:80"
     environment:
-      VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN:-project.test}"
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
-#      WORDPRESS_DEBUG: "${WORDPRESS_DEBUG:-false}"
+  #      WORDPRESS_DEBUG: "${WORDPRESS_DEBUG:-false}"
 
   wp-cli:
     image: "wordpress:cli-${WP_CLI_VERSION:-2.2.0}-php${PHP_VERSION:-7.3}"
-    environment:
-      - APACHE_RUN_USER="www-data"
-      - APACHE_RUN_GROUP="www-data"
+    #    environment:
+    #      - APACHE_RUN_USER="www-data"
+    #      - APACHE_RUN_GROUP="www-data"
     depends_on:
       - "db"
-    networks:
-      - "back"
     volumes:
       - "wp:/var/www/html:rw"
       - "./bin/install-wp.sh:/usr/local/bin/install-wp:ro"
@@ -45,8 +41,6 @@ services:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
-    networks:
-      - back
 
   adminer:
     image: adminer
@@ -57,21 +51,6 @@ services:
     depends_on:
       - db
 
-  proxy:
-    image: "jwilder/nginx-proxy:alpine"
-    ports:
-      - "80:80"
-    networks:
-      front:
-        aliases:
-          - "${DOCKER_DEV_DOMAIN:-project.test}"
-    volumes:
-      - "/var/run/docker.sock:/tmp/docker.sock:ro"
-
-networks:
-  front: {}
-  back: {}
-
 volumes:
-  wp: {}
-  db: {}
+  wp: { }
+  db: { }

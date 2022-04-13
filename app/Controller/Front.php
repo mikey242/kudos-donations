@@ -329,8 +329,8 @@ class Front {
 
 			$alignment = 'has-text-align-' . $atts['alignment'] ?? 'none';
 
-			return "<kudos-donations class='block $alignment' label='" . $atts['button_label'] . "' align='" . $atts['alignment'] . "' campaign='" . $atts['campaign_id'] . "'>
-					</kudos-donations>";
+			return "<div class='kudos-donations kudos-form $alignment' data-label='" . $atts['button_label'] . "' align='" . $atts['alignment'] . "' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
+					</div>";
 
 		} catch ( Exception $e ) {
 
@@ -368,7 +368,9 @@ class Front {
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $order_id ) ) {
 							$atts = $this->check_transaction( $order_id );
 							if ( $atts ) {
-								echo $this->create_message_modal( $atts['modal_title'], $atts['modal_text'] );
+								echo $this->create_message_modal( $transaction->campaign_id,
+									$atts['modal_title'],
+									$atts['modal_text'] );
 							}
 						}
 					}
@@ -483,40 +485,8 @@ class Front {
 	 *
 	 * @return string
 	 */
-	private function create_message_modal( string $header, string $body ): ?string {
+	private function create_message_modal( string $campaign_id, string $header, string $body ): ?string {
 
-		$twig = $this->twig;
-
-		$message = $twig->render( self::MESSAGE_TEMPLATE,
-			[
-				'header_text' => $header,
-				'body_text'   => $body,
-			] );
-
-		$modal = $twig->render( self::MODAL_TEMPLATE,
-			[
-				'id'      => Utils::generate_id(),
-				'content' => $message,
-				'class'   => 'kudos-message-modal',
-			] );
-
-		return $this->render_wrapper( $modal );
-	}
-
-	/**
-	 * Returns the html in a wrapper element.
-	 *
-	 * @param string $content
-	 * @param string $alignment
-	 *
-	 * @return bool|string
-	 */
-	protected function render_wrapper( string $content, string $alignment = 'none' ) {
-		return $this->twig->render( self::WRAPPER_TEMPLATE,
-			[
-				'content'   => $content,
-				'alignment' => $alignment,
-			]
-		);
+		return "<div class='kudos-donations kudos-message' data-campaign='$campaign_id' data-title='$header' data-body='$body'></div>";
 	}
 }

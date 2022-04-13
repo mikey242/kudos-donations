@@ -108,6 +108,18 @@ class KudosDonations {
 	}
 
 	/**
+	 * Define mollie related hooks.
+	 */
+	private function define_payment_hooks() {
+
+		$payment_service = $this->container->get( 'PaymentService' );
+
+		add_action( 'kudos_mollie_transaction_paid', [ $payment_service, 'schedule_process_transaction' ] );
+		add_action( 'kudos_process_mollie_transaction', [ $payment_service, 'process_transaction' ] );
+
+	}
+
+	/**
 	 * Register all the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
@@ -121,19 +133,7 @@ class KudosDonations {
 		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'register_styles' ] );
 		add_action( 'enqueue_block_assets', [ $plugin_public, 'register_root_styles' ] ); // Used by front and admin
 		add_action( 'init', [ $plugin_public, 'register_kudos' ] );
-		add_action( 'wp_footer', [ $plugin_public, 'handle_query_variables' ], 1000 );
-
-	}
-
-	/**
-	 * Define mollie related hooks.
-	 */
-	private function define_payment_hooks() {
-
-		$payment_service = $this->container->get( 'PaymentService' );
-
-		add_action( 'kudos_mollie_transaction_paid', [ $payment_service, 'schedule_process_transaction' ] );
-		add_action( 'kudos_process_mollie_transaction', [ $payment_service, 'process_transaction' ] );
+		add_action( 'wp_footer', [ $plugin_public, 'handle_query_variables' ], 1 );
 
 	}
 

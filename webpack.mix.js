@@ -54,7 +54,7 @@ mix
   .sourceMaps()
 
 // BrowserSync.
-  .browserSync('kudos.test')
+  .browserSync('localhost:8080')
 
 // Add version hash to filenames.
   .version()
