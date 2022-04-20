@@ -11,6 +11,7 @@ import { anim } from '../../common/helpers/animate'
 import KudosRender from './KudosRender'
 
 const screenSize = getStyle('--kudos-screen')
+const stylesheet = document.getElementById('kudos-donations-public-css')
 
 KudosDonate.propTypes = {
   buttonLabel: PropTypes.string,
@@ -93,7 +94,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
     const formData = new FormData()
     formData.append('timestamp', timestamp)
     formData.append('campaign_id', campaignId)
-    campaign.completed_payment === 'message' && formData.append('return_url', window.location.href)
+    formData.append('return_url', campaign.use_custom_return_url ? campaign.custom_return_url : window.location.href)
     for (const key in data) {
       if (key === 'field') {
         formData.append(key, data[key][1])
@@ -143,7 +144,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
   return (
         <>
             {ready &&
-                <KudosRender themeColor={campaign?.theme_color}>
+                <KudosRender themeColor={campaign?.theme_color} stylesheet={stylesheet.href}>
                     <KudosButton onClick={toggleModal}>
                         {buttonLabel}
                     </KudosButton>

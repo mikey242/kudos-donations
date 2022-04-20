@@ -204,75 +204,78 @@ class Front {
 
 	private function register_post_types() {
 		new CustomPostType( 'kudos_campaign', [], [
-			'goal'                 => [
+			'goal'                  => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'additional_funds'     => [
+			'additional_funds'      => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'initial_title'        => [
+			'initial_title'         => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'initial_text'         => [
+			'initial_text'          => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'address_enabled'      => [
+			'address_enabled'       => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'address_required'     => [
+			'address_required'      => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'message_enabled'      => [
+			'message_enabled'       => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'amount_type'          => [
+			'amount_type'           => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'fixed_amounts'        => [
+			'fixed_amounts'         => [
 				'type'              => 'string',
 				'single'            => false,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'donation_type'        => [
+			'donation_type'         => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'show_progress'        => [
+			'show_progress'         => [
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'theme_color'          => [
+			'theme_color'           => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'terms_link'           => [
+			'terms_link'            => [
 				'type'              => 'string',
 				'sanitize_callback' => 'esc_url_raw',
 			],
-			'privacy_link'         => [
+			'privacy_link'          => [
 				'type'              => 'string',
 				'sanitize_callback' => 'esc_url_raw',
 			],
-			'completed_payment'    => [
-				'type'         => 'string',
-				'show_in_rest' => true,
+			'show_return_message'   => [
+				'type' => 'boolean',
 			],
-			'return_message_title' => [
+			'use_custom_return_url' => [
+				'type' => 'boolean',
+			],
+			'custom_return_url'     => [
+				'type' => 'string',
+			],
+			'return_message_title'  => [
 				'type'              => 'string',
-				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'return_message_text'  => [
+			'return_message_text'   => [
 				'type'              => 'string',
-				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
 		] );
@@ -342,8 +345,6 @@ class Front {
 
 		// Nothing displayed to visitors if there is a problem.
 		return null;
-
-
 	}
 
 	/**
@@ -355,6 +356,9 @@ class Front {
 
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
 			$nonce  = sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) );
+
+			// Enqueue script / style in case we are on another page.
+			wp_enqueue_script( 'kudos-donations-public' );
 
 			switch ( $action ) {
 
@@ -368,9 +372,11 @@ class Front {
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $order_id ) ) {
 							$atts = $this->check_transaction( $order_id );
 							if ( $atts ) {
-								echo $this->create_message_modal( $transaction->campaign_id,
+								echo $this->create_message_modal(
 									$atts['modal_title'],
-									$atts['modal_text'] );
+									$atts['modal_text'],
+									$atts['theme_color']
+								);
 							}
 						}
 					}
@@ -418,7 +424,7 @@ class Front {
 	 *
 	 * @param string $order_id Kudos order id.
 	 *
-	 * @return bool | array
+	 * @return false | array
 	 */
 	public function check_transaction( string $order_id ) {
 
@@ -445,21 +451,22 @@ class Front {
 			} catch ( Exception $e ) {
 				$logger = $this->logger;
 				$logger->warning( 'Error checking transaction: ' . $e->getMessage() );
+
+				return false;
 			}
 
-			$campaign_name = $campaign['name'] ?? '';
+			$atts['theme_color'] = $campaign['theme_color'][0];
 
 			switch ( $transaction->status ) {
 				case 'paid':
 					$vars                = [
-						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
+						'{{value}}' => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
 								2 ),
-						'{{name}}'     => $donor->name,
-						'{{email}}'    => $donor->email,
-						'{{campaign}}' => $campaign_name,
+						'{{name}}'  => $donor->name,
+						'{{email}}' => $donor->email,
 					];
-					$atts['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
-					$atts['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
+					$atts['modal_title'] = strtr( $campaign['return_message_title'][0], $vars );
+					$atts['modal_text']  = strtr( $campaign['return_message_text'][0], $vars );
 					break;
 				case 'canceled':
 					$atts['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
@@ -485,8 +492,8 @@ class Front {
 	 *
 	 * @return string
 	 */
-	private function create_message_modal( string $campaign_id, string $header, string $body ): ?string {
+	private function create_message_modal( string $header, string $body, string $color = '#ff9f1c' ): ?string {
 
-		return "<div class='kudos-donations kudos-message' data-campaign='$campaign_id' data-title='$header' data-body='$body'></div>";
+		return "<div class='kudos-donations kudos-message' data-color='$color' data-title='$header' data-body='$body'></div>";
 	}
 }

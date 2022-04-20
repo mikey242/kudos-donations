@@ -7,19 +7,20 @@ import {
   ToggleControl,
   TextAreaControl,
   ColorPicker,
-  RadioControl,
   RadioGroupControl,
   Button
 } from '../../common/components/controls'
 import TabPanel from './TabPanel'
 import Divider from './Divider'
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline'
+import { isValidUrl } from '../../common/helpers/util'
 
 function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurringAllowed }) {
   const methods = useForm()
   const { reset, handleSubmit, watch, formState } = methods
 
   const watchAmountType = watch('meta.amount_type')
+  const watchUseReturnURL = watch('meta.use_custom_return_url')
 
   useEffect(() => {
     reset({
@@ -58,15 +59,22 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                     <ColorPicker name="meta.theme_color" label={__('Theme color', 'kudos-donations')}
                                  help={__('Choose a color them for your campaign', 'kudos-donations')}/>
                     <br/>
-                    <RadioControl
-                        name="meta.completed_payment"
-                        label={__('Completed payment', 'kudos-donations')}
-                        help={__('What happens after a payment is complete?', 'kudos-donations')}
-                        options={[
-                          { id: 'message', label: 'Show a message' },
-                          { id: 'url', label: 'Return to a custom URL' }
-                        ]}
+                    <p className="block text-sm font-medium font-bold text-gray-700">Completed payment</p>
+                    <ToggleControl
+                        name="meta.show_return_message"
+                        label={__('Show return message', 'kudos-donations')}
                     />
+                    <ToggleControl
+                        name="meta.use_custom_return_url"
+                        label={__('Use custom return URL', 'kudos-donations')}
+                    />
+                    {watchUseReturnURL &&
+                        <TextControl name="meta.custom_return_url"
+                                     validation={{
+                                       required: __('Name required'),
+                                       validate: value => isValidUrl(value)
+                                     }}/>
+                    }
                 </Fragment>
     },
     {
@@ -84,7 +92,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                         label={__('Text', 'kudos-donations')}
                     />
                     <Divider/>
-                    <h3>{__('Payment complete', 'kudos-donations')}</h3>
+                    <h3>{__('Completed payment', 'kudos-donations')}</h3>
                     <TextControl
                         name="meta.return_message_title"
                         label={__('Message title', 'kudos-donations')}
@@ -139,8 +147,10 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       title: __('Optional fields', 'kudos-donations'),
       content:
                 <Fragment>
-                    <ToggleControl name="meta.address_enabled" label={__('Address')}/>
-                    <ToggleControl name="meta.message_enabled" label={__('Message')}/>
+                    <ToggleControl name="meta.address_enabled" label={__('Address')}
+                                   help={__('Show the address tab', 'kudos-donations')}/>
+                    <ToggleControl name="meta.message_enabled" label={__('Message')}
+                                   help={__('Allow donors to leave a message', 'kudos-donations')}/>
                     <TextControl name="meta.terms_link" label={__('Terms and Conditions URL', 'kudos-donations')}/>
                     <TextControl name="meta.privacy_link" label={__('Privacy Policy URL', 'kudos-donations')}/>
                 </Fragment>

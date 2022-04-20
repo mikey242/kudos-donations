@@ -12,6 +12,7 @@ import { Button } from '../../common/components/controls'
 import { getQueryVar, removeQueryParameter, updateQueryParameter } from '../../common/helpers/util'
 import ReactShadowRoot from 'react-shadow-root'
 import EmptyCampaigns from '../components/EmptyCampaigns'
+import KudosRender from '../../public/components/KudosRender'
 
 const KudosCampaigns = ({ stylesheet }) => {
   const [campaigns, setCampaigns] = useState()
@@ -154,11 +155,9 @@ const KudosCampaigns = ({ stylesheet }) => {
   }
 
   return (
-        <ReactShadowRoot>
+        <>
             {transactions && campaigns &&
-                <Fragment>
-                    <link rel="stylesheet"
-                          href={stylesheet.href}/>
+                <KudosRender stylesheet={stylesheet.href}>
                     <Header>
                         {currentCampaign &&
                             <Button form="settings-form" type="submit">
@@ -205,9 +204,9 @@ const KudosCampaigns = ({ stylesheet }) => {
                         onClick={hideNotification}
                     />
 
-                </Fragment>
+                </KudosRender>
             }
-        </ReactShadowRoot>
+        </>
   )
 }
 

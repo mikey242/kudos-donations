@@ -21,6 +21,10 @@
     all: initial;
 }
 
+p {
+    @apply text-base;
+}
+
 /* Base */
 :root {
     --kudos-screen: xs;

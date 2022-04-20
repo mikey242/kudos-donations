@@ -10,11 +10,13 @@ import { __ } from '@wordpress/i18n'
 KudosMessage.propTypes = {
   title: PropTypes.string,
   body: PropTypes.node,
-  campaignId: PropTypes.string,
+  color: PropTypes.string,
   root: PropTypes.object
 }
 
-function KudosMessage ({ title, body, campaignId, root }) {
+const stylesheet = document.getElementById('kudos-donations-public-css')
+
+function KudosMessage ({ title, body, color, root }) {
   const [campaign, setCampaign] = useState()
   const [ready, setReady] = useState(false)
 
@@ -28,18 +30,19 @@ function KudosMessage ({ title, body, campaignId, root }) {
     if (e.key === 'Escape' || e.keyCode === 27) toggleModal()
   }
 
-  const getCampaign = () => {
-    return apiFetch({
-      path: `wp/v2/kudos_campaign?${new URLSearchParams({ slug: campaignId })}`,
-      method: 'GET'
-    }).then((response) => {
-      setCampaign(response[0]?.meta)
-      setReady(true)
-    })
-  }
+  // const getCampaign = () => {
+  //   return apiFetch({
+  //     path: `wp/v2/kudos_campaign?${new URLSearchParams({ slug: campaignId })}`,
+  //     method: 'GET'
+  //   }).then((response) => {
+  //     setCampaign(response[0]?.meta)
+  //     console.log(response[0]?.meta)
+  //     setReady(true)
+  //   })
+  // }
 
   useEffect(() => {
-    getCampaign()
+    setReady(true)
   }, [])
 
   useEffect(() => {
@@ -52,14 +55,14 @@ function KudosMessage ({ title, body, campaignId, root }) {
   return (
         <>
             {ready &&
-                <KudosRender themeColor={campaign?.theme_color}>
+                <KudosRender themeColor={color} stylesheet={stylesheet.href}>
                     <KudosModal
                         toggle={toggleModal}
                         root={root}
                         isOpen={modalOpen}
                     >
-                        <h2 className="font-normal font-serif text-4xl m-0 mb-2 text-gray-900 block text-center">{campaign?.return_message_title}</h2>
-                        <p className="text-lg text-gray-900 text-center block font-normal mb-4">{campaign?.return_message_text}</p>
+                        <h2 className="font-normal font-serif text-4xl m-0 mb-2 text-gray-900 block text-center">{title}</h2>
+                        <p className="text-lg text-gray-900 text-center block font-normal mb-4">{body}</p>
                         <Button
                             type="button"
                             className="text-base block ml-auto"

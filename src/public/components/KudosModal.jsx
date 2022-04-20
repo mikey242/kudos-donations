@@ -41,7 +41,7 @@ const KudosModal = forwardRef(({ toggle, isOpen, children, root }, ref) => {
                                     <img alt="Kudos logo" className="h-6" src={logo}/>
                                 </span>
                                 <button
-                                    className="bg-transparent p-0 inline leading-none border-0 focus:outline-none focus:ring hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center"
+                                    className="bg-transparent transition p-0 inline leading-none border-0 focus:outline-none focus:ring hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center"
                                     onClick={toggle}
                                     type="button"
                                     title={__('Close modal', 'kudos-donations')}

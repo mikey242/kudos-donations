@@ -10,6 +10,7 @@ import KudosMessage from './components/KudosMessage'
 
 // Select the web components as target for render.
 const roots = document.querySelectorAll('.kudos-form')
+const messages = document.querySelectorAll('.kudos-message')
 
 // Kudos Donations form/modal
 roots.forEach((root) => {
@@ -24,16 +25,15 @@ roots.forEach((root) => {
         , root)
 })
 
-const messages = document.querySelectorAll('.kudos-message')
 // Kudos Donations message
 messages.forEach((message) => {
   const title = message.dataset.title
   const body = message.dataset.body
-  const campaignId = message.dataset.campaign
+  const color = message.dataset.color
   render(
         <KudosMessage
             root={message}
-            campaignId={campaignId}
+            color={color}
             title={title}
             body={body}
         />

@@ -16,12 +16,19 @@ class Campaign {
 	 */
 	public static function get_campaign( string $value ): ?array {
 
-		$campaigns = Settings::get_setting( 'campaigns' );
-		$key       = array_search( $value, array_column( (array) $campaigns, 'id' ) );
+		$posts = get_posts( [
+			'post_type'      => 'kudos_campaign',
+			'posts_per_page' => '1',
+			'name'           => $value,
+		] );
 
-		// Check if key is an index and if so return index from forms.
-		if ( is_int( $key ) ) {
-			return $campaigns[ $key ];
+		if ( ! empty( $posts ) ) {
+			$post = get_post_meta( $posts[0]->ID );
+			if ( $post ) {
+				$post['name'] = $posts[0]->post_title;
+
+				return $post;
+			}
 		}
 
 		/* translators: %s: Campaign id */
@@ -65,78 +72,6 @@ class Campaign {
 			'total'         => 0,
 			'last_donation' => '',
 		];
-	}
-
-	/**
-	 * Sanitize the various setting fields in the donation tabs array.
-	 *
-	 * @param $campaigns
-	 *
-	 * @return array
-	 */
-	public static function sanitize_campaigns( $campaigns ): array {
-
-		// Loop through each of the campaigns.
-		foreach ( $campaigns as &$form ) {
-
-			// Generate a unique campaign ID if none yet.
-			if ( ! isset( $form['id'] ) ) {
-				$form['id'] = self::generate_campaign_id( $form['name'] );
-			}
-
-			// Loop through fields and sanitize.
-			foreach ( $form as $option => &$value ) {
-
-				switch ( $option ) {
-					case 'name':
-					case 'modal_title':
-					case 'welcome_text':
-					case 'fixed_amounts':
-						$value = sanitize_text_field( $value );
-						break;
-					case 'amount_type':
-					case 'donation_type':
-						$value = sanitize_key( $value );
-						break;
-					case 'address_enabled':
-					case 'address_required':
-					case 'show_progress':
-					case 'message_enabled':
-						$value = rest_sanitize_boolean( $value );
-						break;
-				}
-			}
-		}
-
-		return $campaigns;
-	}
-
-	/**
-	 * Generates a unique ID in the tabs of a slug for the campaign.
-	 *
-	 * @param $name string User provided name for the campaign.
-	 *
-	 * @return string
-	 */
-	private static function generate_campaign_id( string $name ): string {
-
-		$id        = sanitize_title( $name );
-		$campaigns = Settings::get_setting( 'campaigns' );
-		$ids       = array_map( function ( $campaign ) {
-			return $campaign['id'];
-		},
-			$campaigns );
-
-		// If current id exists in array, iterate $n until it is unique.
-		$n      = 1;
-		$new_id = $id;
-		while ( in_array( $new_id, $ids ) ) {
-			$new_id = $id . '-' . $n;
-			$n ++;
-		}
-
-		// Return new id.
-		return $new_id;
 	}
 
 }

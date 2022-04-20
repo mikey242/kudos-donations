@@ -9,7 +9,7 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "production": "mix --production",
-    "make-pot": "wp i18n make-pot . --exclude='docker, src, node_modules, vendor'",
+    "make-pot": "wp i18n make-pot . --exclude='docker, src'",
     "make-json": "wp i18n make-json languages/ --no-purge",
     "export": "composer install --no-dev --optimize-autoloader && ./export.sh"
   },
@@ -17,6 +17,8 @@
     "extends @wordpress/browserslist-config"
   ],
   "devDependencies": {
+    "@automattic/babel-plugin-preserve-i18n": "^1.0.0",
+    "@automattic/i18n-check-webpack-plugin": "^1.0.8",
     "@babel/preset-react": "^7.16.0",
     "@hookform/devtools": "^4.0.2",
     "@tailwindcss/forms": "^0.5.0",
@@ -63,9 +65,9 @@
     "party-js": "^2.1.2",
     "prop-types": "^15.8.1",
     "react": "^17.0.0",
-    "react-dom": "^17.0.0",
     "react-color": "^2.19.3",
     "react-colorful": "^5.5.1",
+    "react-dom": "^17.0.0",
     "react-hook-form": "^7.26.0",
     "react-select-country-list": "^2.2.3",
     "react-shadow-root": "^6.1.1"

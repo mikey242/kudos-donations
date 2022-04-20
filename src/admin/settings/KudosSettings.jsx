@@ -18,7 +18,7 @@ import { HelpTab } from './components/Tabs/HelpTab'
 import { Button } from '../../common/components/controls'
 import Notification from '../components/Notification'
 import SettingsEdit from '../components/SettingsEdit'
-import ReactShadowRoot from 'react-shadow-root'
+import KudosRender from '../../public/components/KudosRender'
 
 const KudosSettings = ({ stylesheet }) => {
   const [mollieChanged, setMollieChanged] = useState()
@@ -209,9 +209,7 @@ const KudosSettings = ({ stylesheet }) => {
 
   return (
         // Show spinner if not yet loaded
-        <ReactShadowRoot>
-            <link rel="stylesheet"
-                  href={stylesheet.href}/>
+        <KudosRender stylesheet={stylesheet.href}>
 
             {!isAPILoaded
               ? <div className="absolute inset-0 flex items-center justify-center">
@@ -273,7 +271,7 @@ const KudosSettings = ({ stylesheet }) => {
 
                 </Fragment>
             }
-        </ReactShadowRoot>
+        </KudosRender>
   )
 }
 
