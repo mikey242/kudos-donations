@@ -12,7 +12,7 @@ const Header = ({ children }) => {
                     <a title={__('Visit Kudos Donations', 'kudos-donations')} className="flex mr-4 logo-animate"
                        href="https://kudosdonations.com"
                        target="_blank" rel="noreferrer">
-                        <KudosLogo/>
+                        <KudosLogo className="w-6 h-6"/>
                     </a>
                     <h1>{__('Kudos Donations', 'kudos-donations')}</h1>
                     <span
