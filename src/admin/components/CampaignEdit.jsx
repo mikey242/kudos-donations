@@ -31,7 +31,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
 
   const goBack = () => {
     if (Object.keys(formState.dirtyFields).length) {
-      window.confirm(__('You have unsaved changes, are you sure you want to leave?')) && setCurrentCampaign(null)
+      window.confirm(__('You have unsaved changes, are you sure you want to leave?', 'kudos-donations')) && setCurrentCampaign(null)
     } else {
       setCurrentCampaign(null)
     }
@@ -49,7 +49,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                 <Fragment>
                     <TextControl name="title" label={__('Campaign name', 'kudos-donations')}
                                  help={__('Give your campaign a unique name', 'kudos-donations')}
-                                 validation={{ required: __('Name required') }}/>
+                                 validation={{ required: __('Name required', 'kudos-donations') }}/>
                     <br/>
                     <TextControl type="number" name="meta.goal"
                                  addOn="€"
@@ -71,7 +71,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                     {watchUseReturnURL &&
                         <TextControl name="meta.custom_return_url"
                                      validation={{
-                                       required: __('Name required'),
+                                       required: __('Name required', 'kudos-donations'),
                                        validate: value => isValidUrl(value)
                                      }}/>
                     }
@@ -147,9 +147,9 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
       title: __('Optional fields', 'kudos-donations'),
       content:
                 <Fragment>
-                    <ToggleControl name="meta.address_enabled" label={__('Address')}
+                    <ToggleControl name="meta.address_enabled" label={__('Address', 'kudos-donations')}
                                    help={__('Show the address tab', 'kudos-donations')}/>
-                    <ToggleControl name="meta.message_enabled" label={__('Message')}
+                    <ToggleControl name="meta.message_enabled" label={__('Message', 'kudos-donations')}
                                    help={__('Allow donors to leave a message', 'kudos-donations')}/>
                     <TextControl name="meta.terms_link" label={__('Terms and Conditions URL', 'kudos-donations')}/>
                     <TextControl name="meta.privacy_link" label={__('Privacy Policy URL', 'kudos-donations')}/>

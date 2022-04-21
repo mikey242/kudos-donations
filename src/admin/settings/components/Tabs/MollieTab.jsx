@@ -30,7 +30,7 @@ const MollieTab = ({ checkApiKey }) => {
             <br/>
             <Button
                 isLink
-                aria-label={__('Refresh API')}
+                aria-label={__('Refresh API', 'kudos-donations')}
                 onClick={check}
             >
                 <><RefreshIcon className={`${checkingMollie && 'animate-spin '}w-5 h-5`}/> <span

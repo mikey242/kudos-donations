@@ -104,7 +104,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
     }
 
     apiFetch({
-      path: 'kudos/v1/payment/create',
+      path: '/kudos/v1/payment/create',
       headers: new Headers({
         'Content-Type': 'multipart/tabs-data'
       }),
@@ -121,7 +121,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
 
   const getCampaign = () => {
     return apiFetch({
-      path: `wp/v2/kudos_campaign?${new URLSearchParams({ slug: campaignId })}`,
+      path: `/wp/v2/kudos_campaign?${new URLSearchParams({ slug: campaignId })}`,
       method: 'GET'
     }).then((response) => {
       setCampaign(response[0]?.meta)

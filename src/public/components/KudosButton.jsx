@@ -1,4 +1,5 @@
 import { KudosLogo } from './KudosLogo'
+import React from 'react'
 
 const KudosButton = ({ children, color, className, onClick = null }) => {
   return (

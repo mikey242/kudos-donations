@@ -30,7 +30,7 @@ function PaymentFrequency (props) {
 
             <SelectControl name="recurring_frequency"
                            validation={{ required: __('Please select a payment frequency', 'kudos-donations') }}
-                           placeholder={__('Payment frequency')}
+                           placeholder={__('Payment frequency', 'kudos-donations')}
                            options={[
                              { value: '12 months', label: __('Yearly', 'kudos-donations') },
                              { value: '3 months', label: __('Quarterly', 'kudos-donations') },

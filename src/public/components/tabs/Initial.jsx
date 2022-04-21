@@ -57,7 +57,7 @@ const Initial = (props) => {
             {donationType === 'both' &&
                 <div className="flex justify-center mt-3">
                     <ToggleControl name="recurring" validation={{ required: true }}
-                                   label={__('Recurring donation')}/>
+                                   label={__('Recurring donation', 'kudos-donations')}/>
                 </div>
             }
 

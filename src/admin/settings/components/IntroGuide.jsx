@@ -100,7 +100,7 @@ const IntroGuide = ({ settings, updateSetting, isAPISaving, updateAll, handleInp
                                     <div className={'flex flex-row justify-center mb-3 items-center'}>
                                         <Dashicon className={'w-auto h-auto text-4xl text-green-500'}
                                                   icon="yes"/>
-                                        <h2 className={'m-0 text-green-500'}>{__('Connected')} ({isRecurringEnabled ? __('recurring enabled', 'kudos-donations') : __('recurring not available', 'kudos-donations')})</h2>
+                                        <h2 className={'m-0 text-green-500'}>{__('Connected', 'kudos-donations')} ({isRecurringEnabled ? __('recurring enabled', 'kudos-donations') : __('recurring not available', 'kudos-donations')})</h2>
                                     </div>
                                     {isRecurringEnabled
                                       ? <strong>{__('Congratulations, your account is configured to allow recurring payments.', 'kudos-donations')}</strong>

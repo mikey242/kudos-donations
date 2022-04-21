@@ -66,7 +66,7 @@ function KudosMessage ({ title, body, color, root }) {
                         <Button
                             type="button"
                             className="text-base block ml-auto"
-                            ariaLabel={__('Prev')}
+                            ariaLabel={__('Prev', 'kudos-donations')}
                             onClick={toggleModal}
                         >
                             <span className="mx-2">OK</span>

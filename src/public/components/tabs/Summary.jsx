@@ -14,11 +14,11 @@ function Summary (props) {
 
   const recurringText = () => {
     const recurring = getValues('recurring')
-    if (!recurring) return __('One off')
+    if (!recurring) return __('One off', 'kudos-donations')
     const recurringFrequency = getFrequencyName(getValues('recurring_frequency'))
     const recurringLength = getValues('recurring_length')
-    const length = recurringLength > 0 ? recurringLength + ' ' + __('years') : __('Continuous')
-    return `${__('Recurring')} (${recurringFrequency} / ${length})`
+    const length = recurringLength > 0 ? recurringLength + ' ' + __('years', 'kudos-donations') : __('Continuous', 'kudos-donations')
+    return `${__('Recurring', 'kudos-donations')} (${recurringFrequency} / ${length})`
   }
 
   return (
@@ -38,9 +38,9 @@ function Summary (props) {
                     <strong>{__('Type', 'kudos-donations')}: </strong><span>{recurringText()}</span>
                 </p>
             </div>
-            {privacyLink && <CheckboxControl name="privacy" label={__('Accept privacy policy')}
+            {privacyLink && <CheckboxControl name="privacy" label={__('Accept privacy policy', 'kudos-donations')}
                                              validation={{ required: __('Please accept this to continue', 'kudos-donations') }}/>}
-            {termsLink && <CheckboxControl name="terms" label={__('Accept Terms and Conditions')}
+            {termsLink && <CheckboxControl name="terms" label={__('Accept Terms and Conditions', 'kudos-donations')}
                                            validation={{ required: __('Please accept this to continue', 'kudos-donations') }}/>}
         </FormTab>
   )

@@ -35,32 +35,32 @@ const FormRouter = (props) => {
       case 2:
         return (
                     <PaymentFrequency
-                        title={__('Subscription')}
-                        description={__('How often would you like to donate?')}
+                        title={__('Subscription', 'kudos-donations')}
+                        description={__('How often would you like to donate?', 'kudos-donations')}
                     />
         )
       case 3:
         return (
                     <Address
                         required={campaign.address_required}
-                        title={__('Address')}
-                        description={__('Please fill in your address')}
+                        title={__('Address', 'kudos-donations')}
+                        description={__('Please fill in your address', 'kudos-donations')}
                     />
         )
       case 4:
         return (
                     <Message
-                        title={__('Message')}
-                        description={__('Leave a message (optional).')}
+                        title={__('Message', 'kudos-donations')}
+                        description={__('Leave a message (optional).', 'kudos-donations')}
                     />
         )
       case 5:
         return (
                     <Summary
-                        title={__('Payment')}
+                        title={__('Payment', 'kudos-donations')}
                         privacyLink={campaign.privacy_link}
                         termsLink={campaign.terms_link}
-                        description={__('By clicking donate you agree to the following payment:')}
+                        description={__('By clicking donate you agree to the following payment:', 'kudos-donations')}
                     />
         )
       default:
@@ -79,22 +79,22 @@ const FormRouter = (props) => {
                             <Button
                                 type="button"
                                 className="text-base"
-                                ariaLabel={__('Prev')}
+                                ariaLabel={__('Prev', 'kudos-donations')}
                                 onClick={handlePrev}
                             >
                                 <ChevronLeftIcon className="w-5 h-5"/>
-                                <span className="mx-2">Prev</span>
+                                <span className="mx-2">{__('Prev', 'kudos-donations')}</span>
                             </Button>
                         )}
                     <Button
                         type="submit"
-                        ariaLabel={__('Next')}
+                        ariaLabel={__('Next', 'kudos-donations')}
                         className="ml-auto text-base"
                     >
                         {steps[step].name === 'Summary'
                           ? <><LockClosedIcon className="w-5 h-5"/> <span
-                                className="mx-2">{__('Submit')}</span></>
-                          : <><span className="mx-2">{__('Next')}</span><ChevronRightIcon
+                                className="mx-2">{__('Submit', 'kudos-donations')}</span></>
+                          : <><span className="mx-2">{__('Next', 'kudos-donations')}</span><ChevronRightIcon
                                 className="w-5 h-5"/></>}
                     </Button>
                 </div>

@@ -72,7 +72,7 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
                                 <TrashIcon
                                     className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-red-500"
                                     onClick={() => {
-                                      window.confirm(__('Are you sure you wish to delete this campaign?')) &&
+                                      window.confirm(__('Are you sure you wish to delete this campaign?', 'kudos-donations')) &&
                                         deleteClick(campaign.id)
                                     }}
                                 />
