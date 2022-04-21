@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import React from 'react'
-import { TextControl, Button, RadioGroupControl } from '../../../../common/components/controls'
+import { RadioGroupControl, TextControl } from '../../../../common/components/controls'
 import { Fragment, useState } from '@wordpress/element'
 import { RefreshIcon } from '@heroicons/react/solid'
 import Divider from '../../../components/Divider'
@@ -28,15 +28,14 @@ const MollieTab = ({ checkApiKey }) => {
                 )}
             />
             <br/>
-            <Button
-                isLink
-                aria-label={__('Refresh API', 'kudos-donations')}
+            <div
+                className="inline-flex items-center cursor-pointer"
                 onClick={check}
             >
                 <><RefreshIcon className={`${checkingMollie && 'animate-spin '}w-5 h-5`}/> <span
                     className="mx-2">{__('Refresh API', 'kudos-donations')}</span></>
 
-            </Button>
+            </div>
             <p className="my-2 text-xs text-gray-500">
                 {__('Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.', 'kudos-donations')}
             </p>

@@ -2,7 +2,7 @@ import { Info } from '../Info'
 import { SettingCard } from '../SettingCard'
 import React from 'react'
 import { __ } from '@wordpress/i18n'
-import { useState, Fragment } from '@wordpress/element'
+import { Fragment, useState } from '@wordpress/element'
 import {
   Button,
   CardDivider,

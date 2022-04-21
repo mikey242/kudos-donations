@@ -27,6 +27,7 @@ const KudosSettings = ({ stylesheet }) => {
   const [isAPILoaded, setIsAPILoaded] = useState(false)
   const [checkingMollie, setCheckingMollie] = useState()
   const [settings, setSettings] = useState()
+  const [showIntro, setShowIntro] = useState(false)
   const [notification, setNotification] = useState({ shown: false })
   const [isMollieEdited, setIsMollieEdited] = useState()
   const [tabName] = useState(getQueryVar('tab_name', 'mollie'))
@@ -120,6 +121,7 @@ const KudosSettings = ({ stylesheet }) => {
     api.loadPromise.then(() => {
       const settings = new api.models.Settings()
       settings.fetch().then((response) => {
+        setShowIntro(response._kudos_show_intro)
         setSettings(filterSettings(response))
       })
     })
@@ -198,10 +200,7 @@ const KudosSettings = ({ stylesheet }) => {
       title: __('Help', 'kudos-donations'),
       content:
                 <HelpTab
-                    settings={settings}
-                    handleInputChange={handleInputChange}
-                    updateSettings={updateSettings}
-                    updateSetting={updateSetting}
+                    setShowIntro={setShowIntro}
                 />
     }
 
@@ -217,21 +216,22 @@ const KudosSettings = ({ stylesheet }) => {
                 </div>
               : ''}
 
-            {settings?._kudos_show_intro
-
-              ? <IntroGuide
-                    updateSettings={updateSettings}
-                    mollieChanged={() => setMollieChanged(true)}
-                    isAPISaving={isAPISaving}
-                    settings={settings}
-                    handleInputChange={handleInputChange}
-                    updateSetting={updateSetting}
-                />
-              : ''}
-
             {isAPILoaded &&
 
                 <Fragment>
+
+                    {showIntro
+
+                      ? <IntroGuide
+                            updateSettings={updateSettings}
+                            mollieChanged={() => setMollieChanged(true)}
+                            isAPISaving={isAPISaving}
+                            settings={settings}
+                            setShowIntro={setShowIntro}
+                            handleInputChange={handleInputChange}
+                            updateSetting={updateSetting}
+                        />
+                      : ''}
 
                     <Header>
                         <div className="flex items-center">

@@ -8,8 +8,18 @@ import { Dashicon, ExternalLink, TextControl } from '@wordpress/components'
 import { useState } from '@wordpress/element'
 import { Guide } from './Guide'
 import { Btn } from './Btn'
+import React from 'react'
+import { Button } from '../../../common/components/controls'
 
-const IntroGuide = ({ settings, updateSetting, isAPISaving, updateAll, handleInputChange, mollieChanged }) => {
+const IntroGuide = ({
+  settings,
+  updateSetting,
+  isAPISaving,
+  updateAll,
+  handleInputChange,
+  mollieChanged,
+  setShowIntro
+}) => {
   const [apiMessage, setApiMessage] = useState(null)
   const vendorMollie = settings._kudos_vendor_mollie
   const isConnected = vendorMollie.connected ?? false
@@ -29,7 +39,7 @@ const IntroGuide = ({ settings, updateSetting, isAPISaving, updateAll, handleInp
   return (
         <Guide
             className={'kudos-intro-guide box-border'}
-            onFinish={() => closeModal()}
+            onFinish={() => setShowIntro(false)}
             pages={[
               {
                 imageSrc: intro,
@@ -51,9 +61,10 @@ const IntroGuide = ({ settings, updateSetting, isAPISaving, updateAll, handleInp
                                     <p>
                                         {__('Time to connect with Mollie. Login to your Mollie account and grab your API keys. Make sure you get both your test and live API keys.', 'kudos-donations')}
                                         {' '}
-                                        <ExternalLink
+                                        <Button
+                                            isLink
                                             href="https://mollie.com/dashboard/developers/api-keys">{__('Mollie dashboard', 'kudos-donations')}
-                                        </ExternalLink>
+                                        </Button>
                                     </p>
                                     <div
                                         className={'p-5 bg-white rounded-lg shadow-md' + (isAPISaving ? ' opacity-50' : '')}>

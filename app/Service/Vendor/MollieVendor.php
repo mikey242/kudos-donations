@@ -17,7 +17,6 @@ use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
-use Mollie\OAuth2\Client\Provider\Mollie;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -712,16 +711,6 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Returns the vendor name.
-	 *
-	 * @return string
-	 */
-	public function __toString(): string {
-
-		return self::get_vendor_name();
-	}
-
-	/**
 	 * Returns the current vendor name.
 	 *
 	 * @return string
@@ -864,5 +853,19 @@ class MollieVendor implements VendorInterface {
 		}
 
 		return $added;
+	}
+
+	public static function supports_recurring(): bool {
+		return true;
+	}
+
+	/**
+	 * Returns the vendor name.
+	 *
+	 * @return string
+	 */
+	public function __toString(): string {
+
+		return self::get_vendor_name();
 	}
 }

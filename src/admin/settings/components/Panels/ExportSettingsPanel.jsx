@@ -1,6 +1,6 @@
 import { SettingCard } from '../SettingCard'
 import { __ } from '@wordpress/i18n'
-import { Button, BaseControl } from '@wordpress/components'
+import { BaseControl, Button } from '@wordpress/components'
 
 const ExportSettingsPanel = (props) => {
   const { Button, BaseControl } = wp.components

@@ -595,6 +595,11 @@ class Admin {
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
+				'vendor'                 => [
+					'type'         => 'string',
+					'show_in_rest' => true,
+					'default'      => 'mollie',
+				],
 				'vendor_mollie'          => [
 					'type'              => 'object',
 					'default'           => [

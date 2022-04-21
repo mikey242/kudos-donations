@@ -1,25 +1,25 @@
 import { KudosLogo } from './KudosLogo'
 import React from 'react'
+import { Button } from '../../common/components/controls'
 
-const KudosButton = ({ children, color, className, onClick = null }) => {
+const KudosButton = ({ children, className, onClick = null }) => {
   return (
         <div
             id={'kudos-button'}
             className={className}
         >
-            <div
-                className={` ${!color && 'bg-primary '}ease-in-out transition font-sans focus:ring-primary focus:ring focus:ring-offset-2 focus:outline-none text-center text-white leading-normal normal-case no-underline w-auto h-auto inline-flex items-center select-none py-3 px-5 rounded-lg cursor-pointer shadow-none border-none hover:saturate-200 logo-animate`}
+            <Button
                 onClick={() => onClick && onClick()}
-                style={{ backgroundColor: color }}
             >
                 <div className="mr-3 flex text-white">
                     <KudosLogo
+                        className="w-5 h-5"
                         lineColor="currentColor"
                         heartColor="currentColor"
                     />
                 </div>
                 {children}
-            </div>
+            </Button>
         </div>
   )
 }

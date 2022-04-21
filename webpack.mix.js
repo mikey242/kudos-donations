@@ -17,7 +17,7 @@ mix
         mangle: { reserved: ['__', '_n', '_nx', '_x'] },
         compress: {
           passes: 2,
-          conditionals: false, // Set to 'false' to prevent __() functions in ternary from being combined
+          conditionals: false, // Set to 'false' to prevent __() functions in ternary from being combined.
           drop_console: true
         },
         format: {
@@ -31,13 +31,13 @@ mix
   .webpackConfig({
     plugins: [
       new DependencyExtractionWebpackPlugin({}),
-      // new I18nLoaderWebpackPlugin({
-      //   textdomain: 'kudos-donations'
-      // }),
+      new I18nLoaderWebpackPlugin({
+        textdomain: 'kudos-donations'
+      }),
       new I18nCheckWebpackPlugin()
     ],
     optimization: {
-      concatenateModules: false // Important for preserving i18n functions
+      concatenateModules: false // Important for preserving i18n functions.
     }
   })
 

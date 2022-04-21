@@ -1,5 +1,5 @@
 import React from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 
 import TabPanel from './TabPanel'
 

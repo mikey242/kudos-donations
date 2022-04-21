@@ -1,14 +1,14 @@
 import React from 'react'
 import { Fragment, useEffect } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
-import { useForm, FormProvider } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import {
-  TextControl,
-  ToggleControl,
-  TextAreaControl,
+  Button,
   ColorPicker,
   RadioGroupControl,
-  Button
+  TextAreaControl,
+  TextControl,
+  ToggleControl
 } from '../../common/components/controls'
 import TabPanel from './TabPanel'
 import Divider from './Divider'
@@ -167,7 +167,7 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
                     />
                 </form>
                 <div className="text-right flex justify-between mt-5">
-                    <Button isLink onClick={() => goBack()}
+                    <Button onClick={() => goBack()}
                             type="button">
                         <ArrowCircleLeftIcon className="mr-2 w-5 h-5"/>{__('Back', 'kudos-donations')}
                     </Button>

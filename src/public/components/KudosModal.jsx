@@ -5,8 +5,9 @@ import { XIcon } from '@heroicons/react/solid'
 import logo from '../../images/logo-colour.svg'
 import { Transition } from '@headlessui/react'
 import { forwardRef } from '@wordpress/element'
+import { KudosLogo } from './KudosLogo'
 
-const KudosModal = forwardRef(({ toggle, isOpen, children, root }, ref) => {
+const KudosModal = forwardRef(({ toggle, isOpen, isBusy, children, root }, ref) => {
   return (
         <Dialog
             open={isOpen}
@@ -35,6 +36,13 @@ const KudosModal = forwardRef(({ toggle, isOpen, children, root }, ref) => {
                         ref={ref}
                         className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all duration-200 sm:align-middle sm:max-w-lg sm:w-full"
                     >
+                        {isBusy &&
+                            <div
+                                className="absolute inset w-full h-full z-[2] flex justify-center items-center">
+                                <KudosLogo lineColor="#000" heartColor="#000" className="z-1 animate-spin w-6 h-6"/>
+                                <div className="absolute w-full h-full opacity-50 bg-white"/>
+                            </div>
+                        }
                         <div className="bg-white p-8">
                             <div className="kudos-modal-header flex items-center justify-between">
                                 <span className="mr-3 inline-block flex" title="Kudos Donations">

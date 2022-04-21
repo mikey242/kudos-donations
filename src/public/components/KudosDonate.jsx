@@ -27,6 +27,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
     currentStep: 1,
     formData: {}
   })
+  const [isBusy, setIsBusy] = useState(false)
 
   const [modalOpen, setModalOpen] = useState(false)
   const modal = useRef(null)
@@ -91,6 +92,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
 
   const submitForm = (data) => {
     setErrors([])
+    setIsBusy(true)
     const formData = new FormData()
     formData.append('timestamp', timestamp)
     formData.append('campaign_id', campaignId)
@@ -114,6 +116,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
       if (result.success) {
         window.location.href = result.data
       } else {
+        setIsBusy(false)
         setErrors([...errors, result.data.message])
       }
     })
@@ -152,6 +155,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
                         toggle={toggleModal}
                         root={root}
                         ref={modal}
+                        isBusy={isBusy}
                         isOpen={modalOpen}
                     >
                         {errors.length > 0 &&

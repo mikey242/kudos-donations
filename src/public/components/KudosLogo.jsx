@@ -1,10 +1,14 @@
 import React from 'react'
+import classNames from 'classnames'
 
-const KudosLogo = ({ lineColor = '#2ec4b6', heartColor = '#ff9f1c', width = '24px', height = '24px' }) => {
+const KudosLogo = ({ lineColor = '#2ec4b6', heartColor = '#ff9f1c', className }) => {
   return (
         <svg
-            className="logo origin-center rotate-0 duration-500 ease-in-out m-auto"
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449" width={width} height={height ?? width}>
+            className={classNames(
+              className,
+              'logo origin-center duration-500 ease-in-out m-auto'
+            )}
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449">
             <path className="logo-line" fill={lineColor}
                   d="M0-.003h130.458v448.355H.001z"/>
             <path

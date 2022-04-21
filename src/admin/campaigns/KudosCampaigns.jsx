@@ -10,7 +10,6 @@ import { __ } from '@wordpress/i18n'
 import Notification from '../components/Notification'
 import { Button } from '../../common/components/controls'
 import { getQueryVar, removeQueryParameter, updateQueryParameter } from '../../common/helpers/util'
-import ReactShadowRoot from 'react-shadow-root'
 import EmptyCampaigns from '../components/EmptyCampaigns'
 import KudosRender from '../../public/components/KudosRender'
 
@@ -189,7 +188,7 @@ const KudosCampaigns = ({ stylesheet }) => {
                             </Fragment>
                           : <CampaignEdit
                                 updateCampaign={updateCampaign}
-                                recurringAllowed={settings?._kudos_vendor_mollie.recurring}
+                                recurringAllowed={settings?.['_kudos_vendor_' + settings._kudos_vendor].recurring}
                                 setCurrentCampaign={setCurrentCampaign}
                                 campaign={currentCampaign}
                             />
