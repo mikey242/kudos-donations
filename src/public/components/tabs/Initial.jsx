@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import React from 'react'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import FormTab from './FormTab'
 import { useEffect } from '@wordpress/element'
 import { RadioGroupControl, TextControl, ToggleControl } from '../../../common/components/controls'
@@ -12,11 +12,24 @@ const Initial = (props) => {
     setValue
   } = useFormContext()
 
+  const watchFixed = useWatch({ name: 'valueFixed' })
+  const watchValue = useWatch({ name: 'value' })
+
   useEffect(() => {
     if (donationType !== 'both') {
       setValue('recurring', donationType === 'recurring')
     }
-  })
+  }, [])
+
+  useEffect(() => {
+    if (watchFixed) {
+      setValue('value', watchFixed)
+    }
+  }, [watchFixed])
+
+  useEffect(() => {
+    setValue('valueFixed', watchValue)
+  }, [watchValue])
 
   return (
         <FormTab
@@ -24,9 +37,8 @@ const Initial = (props) => {
             description={description}
             buttons={buttons}
         >
-
             {(amountType === 'both' || amountType === 'fixed') &&
-                <RadioGroupControl name="value" options={
+                <RadioGroupControl name="valueFixed" options={
                     fixedAmounts.map((value) => {
                       return { value: value, label: '€' + value }
                     })
