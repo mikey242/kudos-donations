@@ -16,7 +16,7 @@ const HelpTab = ({ setShowIntro }) => {
                 href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
                 target="_blank"
             >
-                <PencilAltIcon className="w-5 h-5"/>
+                <PencilAltIcon className="w-5 h-5 mr-2"/>
                 {__('Leave a review', 'kudos-donations')}
             </Button>
             <hr className="my-5"/>
@@ -30,7 +30,7 @@ const HelpTab = ({ setShowIntro }) => {
                         href="https://wordpress.org/support/plugin/kudos-donations/"
                         target="_blank"
                     >
-                        <SupportIcon className="h-5 w-5"/>
+                        <SupportIcon className="w-5 h-5 mr-2"/>
                         {__('Support forums', 'kudos-donations')}
                     </Button>
                     <Button
@@ -38,7 +38,7 @@ const HelpTab = ({ setShowIntro }) => {
                         className={'mr-2'}
                         onClick={() => setShowIntro(true)}
                     >
-                        <InformationCircleIcon className="w-5 h-5"/>
+                        <InformationCircleIcon className="w-5 h-5 mr-2"/>
                         {__('Show welcome guide', 'kudos-donations')}
                     </Button>
                     <Button
@@ -47,7 +47,7 @@ const HelpTab = ({ setShowIntro }) => {
                         target="_blank"
                         href="https://kudosdonations.com/faq/"
                     >
-                        <QuestionMarkCircleIcon className="w-5 h-5"/>
+                        <QuestionMarkCircleIcon className="w-5 h-5 mr-2"/>
                         {__('Visit our F.A.Q', 'kudos-donations')}
                     </Button>
                 </div>
