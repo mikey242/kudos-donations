@@ -2,9 +2,9 @@ import classnames from 'classnames'
 import { useState } from '@wordpress/element'
 import { useConstrainedTabbing, useFocusOnMount, useMergeRefs } from '@wordpress/compose'
 import { ESCAPE, LEFT, RIGHT } from '@wordpress/keycodes'
-import { Button } from '@wordpress/components'
 import { __ } from '@wordpress/i18n'
-import { Btn } from './Btn'
+import React from 'react'
+import { Button } from '../../../common/components/controls'
 
 const Guide = ({ pages = [], className, onFinish }) => {
   const [currentPage, setCurrentPage] = useState(0)
@@ -46,7 +46,7 @@ const Guide = ({ pages = [], className, onFinish }) => {
     const classes = classnames(currentClass, accessibleClass)
     return (
             <li
-                className={classnames(classes, 'border border-solid m-0 mx-2 rounded-full w-2 h-2')}
+                className={classnames(classes, 'border-2 border-solid m-0 mx-2 rounded-full w-5 h-5')}
                 key={i}
                 onClick={() => isAccessible ? setCurrentPage(i) : null}
             >
@@ -61,10 +61,10 @@ const Guide = ({ pages = [], className, onFinish }) => {
             ])}
             tabIndex="-1"
             onKeyDown={(e) => handleKeyPress(e)}
-            className={classnames('intro text-2xl leading-6 fixed top-0 left-0 bottom-0 right-0 z-[100000] w-screen min-h-screen bg-green-500', className)}>
+            className={classnames('intro text-base leading-6 fixed top-0 left-0 bottom-0 right-0 z-[100000] w-screen min-h-screen bg-white', className)}>
             <div className={'h-full flex justify-center items-center overflow-auto'}>
                 <div
-                    className={'intro-content bg-gray-50 flex flex-col justify-center items-center h-full w-[768px]'}>
+                    className={'flex flex-col justify-center items-center h-full w-[768px]'}>
                     <small
                         className={'ml-auto mr-3 mt-3 cursor-pointer text-gray-500 underline'}
                         onClick={onFinish}
@@ -80,27 +80,27 @@ const Guide = ({ pages = [], className, onFinish }) => {
                     </div>
                     <div
                         className="intro-nav py-3 border-0 border-t border-solid border-gray-200 flex justify-between items-center w-11/12 mt-5 mb-5">
-                        <Btn
+                        <Button
+                            isOutline
                             className={canGoBack ? 'visible' : 'invisible'}
                             onClick={goBack}
                         >
                             {__('Previous', 'kudos-donations')}
-                        </Btn>
+                        </Button>
 
                         <ul className={'flex justify-center m-0'}>
                             {pageNav}
                         </ul>
                         {canGoForward && (
-                            <Btn
+                            <Button
                                 disabled={(pages[currentPage].nextDisabled ?? false)}
                                 onClick={goForward}
                             >
                                 {pages[currentPage].hasOwnProperty('nextLabel') ? pages[currentPage].nextLabel : __('Next', 'kudos-donations')}
-                            </Btn>
+                            </Button>
                         )}
                         {!canGoForward && (
                             <Button
-                                isPrimary
                                 onClick={onFinish}
                             >
                                 {__('Finish', 'kudos-donations')}

@@ -19,10 +19,6 @@ h3 {
     @apply text-lg font-bold;
 }
 
-.intro p {
-    @apply text-base !important;
-}
-
 #wpcontent {
     padding-left: 0;
 }
