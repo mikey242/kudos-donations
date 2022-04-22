@@ -21,8 +21,8 @@ function Button ({
             className={classNames(
               className,
               isDisabled && 'cursor-not-allowed',
-              isOutline ? 'border-primary border text-primary' : 'border-none',
-              'relative text-white font-bold px-5 focus:ring z-1 group cursor-pointer overflow-hidden py-3 rounded-lg flex items-center transition ease-in-out focus:ring-primary focus:ring-offset-2'
+              isOutline ? 'border-primary border text-primary' : 'border-none text-white',
+              'relative font-bold px-5 focus:ring z-1 group cursor-pointer overflow-hidden py-3 rounded-lg flex items-center transition ease-in-out focus:ring-primary focus:ring-offset-2'
             )}
             aria-label={ariaLabel}
         >
