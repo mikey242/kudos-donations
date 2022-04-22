@@ -102,11 +102,11 @@ const KudosCampaigns = ({ stylesheet }) => {
           ? __('Campaign created', 'kudos-donations')
           : __('Campaign updated', 'kudos-donations')
       )
-      setCurrentCampaign(null)
     }).catch((error) => {
       createNotification(error.message, 'fail')
     }).finally(() => {
       setIsApiBusy(false)
+      clearCurrentCampaign()
     })
   }
 
