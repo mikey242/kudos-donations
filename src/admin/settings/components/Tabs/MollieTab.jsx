@@ -33,7 +33,7 @@ const MollieTab = ({ checkApiKey }) => {
                 onClick={check}
             >
                 <><RefreshIcon className={`${checkingMollie && 'animate-spin '}w-5 h-5`}/> <span
-                    className="mx-2">{__('Refresh API', 'kudos-donations')}</span></>
+                    className="mx-2">{__('Test / Refresh API', 'kudos-donations')}</span></>
 
             </div>
             <p className="my-2 text-xs text-gray-500">
