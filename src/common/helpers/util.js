@@ -25,13 +25,15 @@ export function updateQueryParameter (key, value) {
   }
 }
 
-export function removeQueryParameter (key) {
-  if ('URLSearchParams' in window) {
-    const searchParams = new URLSearchParams(window.location.search)
-    searchParams.delete(key)
-    const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString()
-    history.replaceState(null, '', newRelativePathQuery)
-  }
+export function removeQueryParameters (keys) {
+  keys.forEach((key) => {
+    if ('URLSearchParams' in window) {
+      const searchParams = new URLSearchParams(window.location.search)
+      searchParams.delete(key)
+      const newRelativePathQuery = window.location.pathname + '?' + searchParams.toString()
+      history.replaceState(null, '', newRelativePathQuery)
+    }
+  })
 }
 
 export function getStyle (style) {
