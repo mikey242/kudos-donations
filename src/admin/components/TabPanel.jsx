@@ -2,12 +2,26 @@ import { Tab } from '@headlessui/react'
 import React from 'react'
 import Panel from './Panel'
 import classNames from 'classnames'
-import { Fragment } from '@wordpress/element'
+import { Fragment, useEffect, useState } from '@wordpress/element'
+import { getQueryVar, updateQueryParameter } from '../../common/helpers/util'
 
 const TabPanel = ({ tabs }) => {
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const query = getQueryVar('tab')
+
+  useEffect(() => {
+    setSelectedIndex(query)
+  }, [])
+
+  useEffect(() => {
+    if (selectedIndex != null) {
+      updateQueryParameter('tab', selectedIndex)
+    }
+  }, [selectedIndex])
+
   return (
         <div className="mx-auto mt-5 w-full max-w-[768px]">
-            <Tab.Group>
+            <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
                 <Panel>
                     <Tab.List className="relative z-0 rounded-lg flex divide-x divide-gray-200">
                         {Object.entries(tabs).map((tab, index) => {

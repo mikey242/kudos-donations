@@ -15,7 +15,7 @@ import Divider from './Divider'
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline'
 import { isValidUrl } from '../../common/helpers/util'
 
-function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurringAllowed }) {
+function CampaignEdit ({ campaign, updateCampaign, clearCurrentCampaign, recurringAllowed }) {
   const methods = useForm()
   const { reset, handleSubmit, watch, formState } = methods
 
@@ -31,9 +31,9 @@ function CampaignEdit ({ campaign, updateCampaign, setCurrentCampaign, recurring
 
   const goBack = () => {
     if (Object.keys(formState.dirtyFields).length) {
-      window.confirm(__('You have unsaved changes, are you sure you want to leave?', 'kudos-donations')) && setCurrentCampaign(null)
+      window.confirm(__('You have unsaved changes, are you sure you want to leave?', 'kudos-donations')) && clearCurrentCampaign()
     } else {
-      setCurrentCampaign(null)
+      clearCurrentCampaign()
     }
   }
 

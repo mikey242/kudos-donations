@@ -9,14 +9,14 @@ import CampaignEdit from '../components/CampaignEdit'
 import { __ } from '@wordpress/i18n'
 import Notification from '../components/Notification'
 import { Button } from '../../common/components/controls'
-import { getQueryVar, removeQueryParameter, updateQueryParameter } from '../../common/helpers/util'
+import { getQueryVar, removeQueryParameters, updateQueryParameter } from '../../common/helpers/util'
 import EmptyCampaigns from '../components/EmptyCampaigns'
 import KudosRender from '../../public/components/KudosRender'
 
 const KudosCampaigns = ({ stylesheet }) => {
   const [campaigns, setCampaigns] = useState()
   const [isApiBusy, setIsApiBusy] = useState(true)
-  const [campaignSlug, setCampaignSlug] = useState(getQueryVar('campaign'))
+  const [currentId] = useState(getQueryVar('campaign'))
   const [notification, setNotification] = useState({ shown: false })
   const [currentCampaign, setCurrentCampaign] = useState(null)
   const [transactions, setTransactions] = useState()
@@ -30,7 +30,9 @@ const KudosCampaigns = ({ stylesheet }) => {
   }, [])
 
   useEffect(() => {
-    currentCampaign ? updateQueryParameter('campaign', currentCampaign.slug) : removeQueryParameter('campaign')
+    if (currentCampaign !== null) {
+      updateQueryParameter('campaign', currentCampaign.id)
+    }
   }, [currentCampaign])
 
   useEffect(() => {
@@ -42,6 +44,11 @@ const KudosCampaigns = ({ stylesheet }) => {
       clearTimeout(notificationTimer.current)
     }
   }, [notification])
+
+  const clearCurrentCampaign = () => {
+    removeQueryParameters(['campaign', 'tab'])
+    setCurrentCampaign(null)
+  }
 
   const newCampaign = () => {
     setCurrentCampaign({
@@ -124,14 +131,17 @@ const KudosCampaigns = ({ stylesheet }) => {
   }
 
   const getCampaigns = () => {
-    return apiFetch({
+    apiFetch({
       path: 'wp/v2/kudos_campaign',
       method: 'GET'
     }).then((response) => {
       setCampaigns(response.reverse())
-      // if (campaignSlug) {
-      //   setCurrentCampaign(response.filter(campaign => campaign.slug === campaignSlug)[0])
-      // }
+      if (currentId) {
+        const campaign = response.filter(campaign => campaign.id === parseInt(currentId))
+        if (campaign) {
+          setCurrentCampaign(campaign[0])
+        }
+      }
     })
   }
 
@@ -189,7 +199,7 @@ const KudosCampaigns = ({ stylesheet }) => {
                           : <CampaignEdit
                                 updateCampaign={updateCampaign}
                                 recurringAllowed={settings?.['_kudos_vendor_' + settings._kudos_vendor].recurring}
-                                setCurrentCampaign={setCurrentCampaign}
+                                clearCurrentCampaign={clearCurrentCampaign}
                                 campaign={currentCampaign}
                             />
 
