@@ -16,18 +16,14 @@ class Campaign {
 	 */
 	public static function get_campaign( string $value ): ?array {
 
-		$posts = get_posts( [
-			'post_type'      => 'kudos_campaign',
-			'posts_per_page' => '1',
-			'name'           => $value,
-		] );
+		$post = get_post( $value );
 
-		if ( ! empty( $posts ) ) {
-			$post = get_post_meta( $posts[0]->ID );
-			if ( $post ) {
-				$post['name'] = $posts[0]->post_title;
+		if ( $post ) {
+			$postMeta = get_post_meta( $post->ID );
+			if ( $postMeta ) {
+				$postMeta['name'] = $post->post_title;
 
-				return $post;
+				return $postMeta;
 			}
 		}
 

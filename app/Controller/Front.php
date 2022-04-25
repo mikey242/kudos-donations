@@ -208,6 +208,10 @@ class Front {
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
+			'show_goal'             => [
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
 			'additional_funds'      => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
@@ -216,7 +220,7 @@ class Front {
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'initial_text'          => [
+			'initial_description'   => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],

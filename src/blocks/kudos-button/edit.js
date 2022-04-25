@@ -4,7 +4,7 @@ import { PanelBody, RadioControl, SelectControl } from '@wordpress/components'
 import { __ } from '@wordpress/i18n'
 import React, { Fragment } from 'react'
 import { KudosButton } from '../../public/components/KudosButton'
-import apiFetch from '@wordpress/api-fetch'
+import { fetchCampaigns } from '../../common/helpers/fetch'
 
 const ButtonEdit = (props) => {
   const [campaigns, setCampaigns] = useState()
@@ -17,14 +17,13 @@ const ButtonEdit = (props) => {
   } = props
 
   useEffect(() => {
-    getCampaigns()
+    fetchCampaigns().then(setCampaigns)
+    fetchCampaigns(campaign_id).then(setCurrentCampaign)
   }, [])
 
   useEffect(() => {
-    if (campaigns) {
-      setCurrentCampaign(getCampaign(campaign_id))
-    }
-  }, [campaigns])
+    console.log(currentCampaign)
+  }, [currentCampaign])
 
   const onChangeButtonLabel = (newValue) => {
     setAttributes({ button_label: newValue })
@@ -36,24 +35,11 @@ const ButtonEdit = (props) => {
 
   const onChangeCampaign = (newValue) => {
     setAttributes({ campaign_id: newValue })
-    setCurrentCampaign(getCampaign(newValue))
+    fetchCampaigns(campaign_id).then(setCurrentCampaign)
   }
 
   const onChangeType = (newValue) => {
     setAttributes({ type: newValue })
-  }
-
-  const getCampaign = (slug) => {
-    return campaigns.find(campaign => campaign.slug === slug)
-  }
-
-  const getCampaigns = () => {
-    return apiFetch({
-      path: 'wp/v2/kudos_campaign',
-      method: 'GET'
-    }).then((response) => {
-      setCampaigns(response)
-    })
   }
 
   return (
@@ -73,7 +59,7 @@ const ButtonEdit = (props) => {
                                 value={campaign_id}
                                 onChange={onChangeCampaign}
                                 options={[{ label: '', value: '' }].concat(campaigns.map((campaign) => (
-                                  { label: campaign?.title.rendered, value: campaign.slug }
+                                  { label: campaign?.title.rendered, value: campaign.id }
                                 )))}
                             />
                             <a href="admin.php?page=kudos-campaigns&tab_name=campaigns">{__('Create a new campaign here', 'kudos-donations')}</a>

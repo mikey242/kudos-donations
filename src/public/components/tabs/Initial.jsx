@@ -4,9 +4,10 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import FormTab from './FormTab'
 import { useEffect } from '@wordpress/element'
 import { RadioGroupControl, TextControl, ToggleControl } from '../../../common/components/controls'
+import { ProgressBar } from '../ProgressBar'
 
 const Initial = (props) => {
-  const { title, description, buttons, donationType, amountType, fixedAmounts } = props
+  const { title, description, buttons, donationType, amountType, fixedAmounts, goal, showGoal, total } = props
 
   const {
     setValue
@@ -37,6 +38,7 @@ const Initial = (props) => {
             description={description}
             buttons={buttons}
         >
+            {showGoal && <ProgressBar goal={goal} total={total} extra={watchValue}/>}
             {(amountType === 'both' || amountType === 'fixed') &&
                 <RadioGroupControl name="valueFixed" options={
                     fixedAmounts.map((value) => {

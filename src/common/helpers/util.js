@@ -69,3 +69,13 @@ export function isValidUrl (string) {
 
   return url.protocol === 'http:' || url.protocol === 'https:'
 }
+
+export function getTotal (campaignId, transactions) {
+  const filtered = transactions.filter(transaction => (
+    transaction.campaign_id === campaignId
+  ))
+  if (filtered.length) {
+    return filtered.reduce((a, b) => a + parseInt(b.value), 0)
+  }
+  return 0
+}

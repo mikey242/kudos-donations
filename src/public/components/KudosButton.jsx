@@ -1,15 +1,18 @@
 import { KudosLogo } from './KudosLogo'
 import React from 'react'
 import { Button } from '../../common/components/controls'
+import classNames from 'classnames'
 
-const KudosButton = ({ children, className, onClick = null }) => {
+const KudosButton = ({ children, color, className, onClick = null }) => {
   return (
         <div
             id={'kudos-button'}
-            className={className}
+            className={classNames('font-sans', className)}
         >
             <Button
                 onClick={() => onClick && onClick()}
+                className={!color && 'bg-primary '}
+                color={color}
             >
                 <div className="mr-3 flex text-white">
                     <KudosLogo

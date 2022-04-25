@@ -55,6 +55,10 @@ function CampaignEdit ({ campaign, updateCampaign, clearCurrentCampaign, recurri
                                  addOn="€"
                                  help={__('Set a goal for your campaign', 'kudos-donations')}
                                  label={__('Goal', 'kudos-donations')}/>
+                    <ToggleControl
+                        name="meta.show_goal"
+                        label={__('Display goal progress', 'kudos-donations')}
+                    />
                     <br/>
                     <ColorPicker name="meta.theme_color" label={__('Theme color', 'kudos-donations')}
                                  help={__('Choose a color them for your campaign', 'kudos-donations')}/>
@@ -88,7 +92,7 @@ function CampaignEdit ({ campaign, updateCampaign, clearCurrentCampaign, recurri
                         label={__('Title', 'kudos-donations')}
                     />
                     <TextAreaControl
-                        name="meta.initial_text"
+                        name="meta.initial_description"
                         label={__('Text', 'kudos-donations')}
                     />
                     <Divider/>

@@ -2,18 +2,9 @@ import React from 'react'
 import Panel from './Panel'
 import { __ } from '@wordpress/i18n'
 import { DuplicateIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline'
+import { getTotal } from '../../common/helpers/util'
 
 function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, deleteClick }) {
-  const getTotal = (campaignId) => {
-    const filtered = transactions.filter(transaction => (
-      transaction.campaign_id === campaignId
-    ))
-    if (filtered.length) {
-      return filtered.reduce((a, b) => a + parseInt(b.value), 0)
-    }
-    return 0
-  }
-
   return (
         <Panel className="overflow-x-auto" title={__('Your campaigns', 'kudos-donations')}>
             <table className="min-w-full text-left divide-y divide-gray-300">
@@ -51,7 +42,7 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             <div className="w-5 h-5 rounded-full" style={{ backgroundColor: campaign.meta.theme_color }}/>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{'€' + getTotal(campaign.slug)}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{'€' + getTotal(campaign.slug, transactions)}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {campaign.meta.goal > 0 ? campaign.meta.goal : 'None'}
                         </td>

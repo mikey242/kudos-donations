@@ -9,6 +9,7 @@ import FormRouter from './FormRouter'
 import { checkRequirements } from '../../common/helpers/form'
 import { anim } from '../../common/helpers/animate'
 import KudosRender from './KudosRender'
+import { fetchCampaigns, fetchCampaignTransactions, fetchTransactions } from '../../common/helpers/fetch'
 
 const screenSize = getStyle('--kudos-screen')
 const stylesheet = document.getElementById('kudos-donations-public-css')
@@ -20,6 +21,7 @@ KudosDonate.propTypes = {
 
 function KudosDonate ({ buttonLabel, campaignId, root }) {
   const [campaign, setCampaign] = useState()
+  const [total, setTotal] = useState(0)
   const [timestamp, setTimestamp] = useState()
   const [ready, setReady] = useState(false)
   const [errors, setErrors] = useState([])
@@ -123,11 +125,8 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
   }
 
   const getCampaign = () => {
-    return apiFetch({
-      path: `/wp/v2/kudos_campaign?${new URLSearchParams({ slug: campaignId })}`,
-      method: 'GET'
-    }).then((response) => {
-      setCampaign(response[0]?.meta)
+    fetchCampaigns(campaignId).then((response) => {
+      setCampaign(response?.meta)
       setTimestamp(Date.now())
       setReady(true)
     })
@@ -135,6 +134,9 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
 
   useEffect(() => {
     getCampaign()
+    fetchCampaignTransactions(campaignId).then((transactions) => {
+      setTotal(transactions.reduce((n, { value }) => n + parseInt(value), 0))
+    })
   }, [])
 
   useEffect(() => {
@@ -167,6 +169,7 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
                         <FormRouter
                             step={formState.currentStep}
                             campaign={campaign}
+                            total={total}
                             handleNext={handleNext}
                             handlePrev={handlePrev}
                             submitForm={submitForm}

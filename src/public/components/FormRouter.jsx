@@ -11,7 +11,7 @@ import Summary from './tabs/Summary'
 import { steps } from '../constants/form'
 
 const FormRouter = (props) => {
-  const { step, campaign } = props
+  const { step, campaign, total } = props
   const { handlePrev, handleNext, submitForm } = props
   const methods = useForm()
 
@@ -26,41 +26,44 @@ const FormRouter = (props) => {
         return (
                     <Initial
                         title={campaign.initial_title}
-                        description={campaign.initial_text}
+                        description={campaign.initial_description}
                         donationType={campaign.donation_type}
                         amountType={campaign.amount_type}
                         fixedAmounts={campaign.fixed_amounts}
+                        showGoal={campaign.show_goal}
+                        goal={campaign.goal}
+                        total={total}
                     />
         )
       case 2:
         return (
                     <PaymentFrequency
-                        title={__('Subscription', 'kudos-donations')}
-                        description={__('How often would you like to donate?', 'kudos-donations')}
+                        title={campaign.recurring_title ?? __('Subscription', 'kudos-donations')}
+                        description={campaign.recurring_description ?? __('How often would you like to donate?', 'kudos-donations')}
                     />
         )
       case 3:
         return (
                     <Address
                         required={campaign.address_required}
-                        title={__('Address', 'kudos-donations')}
-                        description={__('Please fill in your address', 'kudos-donations')}
+                        title={campaign.address_title ?? __('Address', 'kudos-donations')}
+                        description={campaign.address_description ?? __('Please fill in your address', 'kudos-donations')}
                     />
         )
       case 4:
         return (
                     <Message
-                        title={__('Message', 'kudos-donations')}
-                        description={__('Leave a message (optional).', 'kudos-donations')}
+                        title={campaign.message_title ?? __('Message', 'kudos-donations')}
+                        description={campaign.message_description ?? __('Leave a message (optional).', 'kudos-donations')}
                     />
         )
       case 5:
         return (
                     <Summary
-                        title={__('Payment', 'kudos-donations')}
+                        title={campaign.summary_title ?? __('Payment', 'kudos-donations')}
+                        description={campaign.summary_description ?? __('By clicking donate you agree to the following payment:', 'kudos-donations')}
                         privacyLink={campaign.privacy_link}
                         termsLink={campaign.terms_link}
-                        description={__('By clicking donate you agree to the following payment:', 'kudos-donations')}
                     />
         )
       default:

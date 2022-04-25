@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import React from 'react'
 
 function Button ({
-  type = 'button', children, href, isOutline, isDisabled, ariaLabel, className, onClick, form
+  type = 'button', children, href, isOutline, isDisabled, color, ariaLabel, className, onClick, form
 }) {
   const handleClick = (e) => {
     if (href) {
@@ -17,6 +17,7 @@ function Button ({
         <button
             type={type}
             onClick={handleClick}
+            style={{ backgroundColor: color }}
             form={form}
             className={classNames(
               className,

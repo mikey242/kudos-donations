@@ -147,7 +147,7 @@ class ActivatorService {
 		  transaction_id VARCHAR(255),
 		  subscription_id VARCHAR(255),
 		  refunds BLOB DEFAULT NULL,
-		  campaign_id VARCHAR(255),
+		  campaign_id mediumint(9),
 		  message VARCHAR(255),
 		  PRIMARY KEY (id)
 		) $charset_collate;";

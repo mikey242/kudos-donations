@@ -12,6 +12,7 @@ import { Button } from '../../common/components/controls'
 import { getQueryVar, removeQueryParameters, updateQueryParameter } from '../../common/helpers/util'
 import EmptyCampaigns from '../components/EmptyCampaigns'
 import KudosRender from '../../public/components/KudosRender'
+import { fetchCampaigns, fetchTransactions } from '../../common/helpers/fetch'
 
 const KudosCampaigns = ({ stylesheet }) => {
   const [campaigns, setCampaigns] = useState()
@@ -25,7 +26,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 
   useEffect(() => {
     getCampaigns()
-    getTransactions()
+    fetchTransactions().then(setTransactions)
     getSettings()
   }, [])
 
@@ -131,10 +132,7 @@ const KudosCampaigns = ({ stylesheet }) => {
   }
 
   const getCampaigns = () => {
-    apiFetch({
-      path: 'wp/v2/kudos_campaign',
-      method: 'GET'
-    }).then((response) => {
+    fetchCampaigns().then((response) => {
       setCampaigns(response.reverse())
       if (currentId) {
         const campaign = response.filter(campaign => campaign.id === parseInt(currentId))
@@ -142,15 +140,6 @@ const KudosCampaigns = ({ stylesheet }) => {
           setCurrentCampaign(campaign[0])
         }
       }
-    })
-  }
-
-  const getTransactions = () => {
-    apiFetch({
-      path: 'kudos/v1/transaction/all/',
-      method: 'GET'
-    }).then((response) => {
-      setTransactions(response)
     })
   }
 

@@ -37,7 +37,14 @@ class Transaction extends Base {
 		$this->mapper_service->get_repository( TransactionEntity::class );
 
 		return [
-			$this->get_base() . '/get'                               => [
+			$this->get_base()                                    => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_all' ],
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+			],
+			$this->get_base() . '/get'                           => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_one' ],
 				'args'                => [
@@ -51,14 +58,7 @@ class Transaction extends Base {
 					return current_user_can( 'manage_options' );
 				},
 			],
-			$this->get_base() . '/all'                               => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_all' ],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
-			],
-			$this->get_base() . '/all/between'                       => [
+			$this->get_base() . '/between'                       => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_all_between' ],
 				'args'                => [
@@ -77,14 +77,14 @@ class Transaction extends Base {
 					return current_user_can( 'manage_options' );
 				},
 			],
-			$this->get_base() . '/all/campaign/(?P<campaign_id>\w+)' => [
+			$this->get_base() . '/campaign/(?P<campaign_id>\d+)' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_all_campaign' ],
 				'args'                => [
 					'campaign_id' => [
-						'type'              => 'string',
+						'type'              => 'int',
 						'required'          => true,
-						'sanitize_callback' => 'sanitize_title',
+						'sanitize_callback' => 'absint',
 					],
 				],
 				'permission_callback' => function () {
@@ -166,7 +166,10 @@ class Transaction extends Base {
 		if ( $request->has_valid_params() ) {
 			$param = $request->get_param( 'campaign_id' );
 			if ( ! empty( $param ) ) {
-				$response->set_data( $mapper->get_all_by( [ 'campaign_id' => $param ] ) );
+				$response->set_data( $mapper->get_all_by( [
+					'campaign_id' => $param,
+					'status'      => 'paid'
+				] ) );
 
 				return $response;
 			}
