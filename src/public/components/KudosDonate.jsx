@@ -162,8 +162,9 @@ function KudosDonate ({ buttonLabel, campaignId, root }) {
                     >
                         {errors.length > 0 &&
                             errors.map((e, i) => (
-                                <small className="text-center block font-normal mb-4 text-sm text-red-500"
-                                       key={i}>{e}</small>
+                                <small key={i} className="text-center block font-normal mb-4 text-sm text-red-500">
+                                    {e}
+                                </small>
                             ))
                         }
                         <FormRouter
