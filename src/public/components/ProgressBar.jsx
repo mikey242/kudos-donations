@@ -6,7 +6,7 @@ const ProgressBar = ({ goal, total, extra }) => {
   const extraPercentage = extra / (goal - total)
 
   return (
-        <div className="w-full">
+        <div className="w-full text-base">
             <div data-total={total} data-goal={goal}
                  className="h-7 border-1 border-solid border-gray-300 flex relative shadow-inner my-5 overflow-hidden bg-gray-200 rounded w-full">
                 <div style={{ width: percentage + '%' }} className="flex flex-shrink-0 justify-center items-center">
