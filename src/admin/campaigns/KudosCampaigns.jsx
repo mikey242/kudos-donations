@@ -132,7 +132,7 @@ const KudosCampaigns = ({ stylesheet }) => {
   }
 
   const getCampaigns = () => {
-    fetchCampaigns().then((response) => {
+    return fetchCampaigns().then((response) => {
       setCampaigns(response.reverse())
       if (currentId) {
         const campaign = response.filter(campaign => campaign.id === parseInt(currentId))
@@ -166,7 +166,7 @@ const KudosCampaigns = ({ stylesheet }) => {
                     <div className="max-w-3xl w-full mx-auto">
                         {!currentCampaign
                           ? <Fragment>
-                                {campaigns.length >= 1
+                                {campaigns?.length >= 1
                                   ? <CampaignTable
                                         transactions={transactions}
                                         deleteClick={removeCampaign}
