@@ -3,7 +3,7 @@ import { Fragment, useEffect } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { FormProvider, useForm } from 'react-hook-form'
 import {
-  Button,
+  Button, CheckboxControl,
   ColorPicker,
   RadioGroupControl,
   TextAreaControl,
@@ -21,6 +21,7 @@ function CampaignEdit ({ campaign, updateCampaign, clearCurrentCampaign, recurri
 
   const watchAmountType = watch('meta.amount_type')
   const watchUseReturnURL = watch('meta.use_custom_return_url')
+  const watchAddress = watch('meta.address_enabled')
 
   useEffect(() => {
     reset({
@@ -153,8 +154,12 @@ function CampaignEdit ({ campaign, updateCampaign, clearCurrentCampaign, recurri
                 <Fragment>
                     <ToggleControl name="meta.address_enabled" label={__('Address', 'kudos-donations')}
                                    help={__('Show the address tab', 'kudos-donations')}/>
+                    {watchAddress &&
+                        <CheckboxControl name="meta.address_required" label={__('Required', 'kudos-donations')}/>}
+                    <hr className="my-5"/>
                     <ToggleControl name="meta.message_enabled" label={__('Message', 'kudos-donations')}
                                    help={__('Allow donors to leave a message', 'kudos-donations')}/>
+                    <hr className="my-5"/>
                     <TextControl name="meta.terms_link" label={__('Terms and Conditions URL', 'kudos-donations')}/>
                     <TextControl name="meta.privacy_link" label={__('Privacy Policy URL', 'kudos-donations')}/>
                 </Fragment>
