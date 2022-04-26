@@ -40,9 +40,7 @@ class Transaction extends Base {
 			$this->get_base()                                    => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_all' ],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
+				'permission_callback' => '__return_true',
 			],
 			$this->get_base() . '/get'                           => [
 				'methods'             => WP_REST_Server::READABLE,
@@ -54,9 +52,7 @@ class Transaction extends Base {
 						'sanitize_callback' => 'absint',
 					],
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
+				'permission_callback' => '__return_true',
 			],
 			$this->get_base() . '/between'                       => [
 				'methods'             => WP_REST_Server::READABLE,
@@ -73,9 +69,7 @@ class Transaction extends Base {
 						'sanitize_callback' => 'sanitize_title',
 					],
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
+				'permission_callback' => '__return_true',
 			],
 			$this->get_base() . '/campaign/(?P<campaign_id>\d+)' => [
 				'methods'             => WP_REST_Server::READABLE,
@@ -87,9 +81,7 @@ class Transaction extends Base {
 						'sanitize_callback' => 'absint',
 					],
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
+				'permission_callback' => '__return_true',
 			],
 		];
 	}
@@ -168,7 +160,7 @@ class Transaction extends Base {
 			if ( ! empty( $param ) ) {
 				$response->set_data( $mapper->get_all_by( [
 					'campaign_id' => $param,
-					'status'      => 'paid'
+					'status'      => 'paid',
 				] ) );
 
 				return $response;
