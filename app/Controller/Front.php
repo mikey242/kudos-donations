@@ -139,7 +139,7 @@ class Front {
 	 */
 	public function register_kudos() {
 
-		$this->register_button_block();
+		$this->register_blocks();
 		$this->register_post_types();
 
 		// If setting is not enabled the shortcode assets and registration will be skipped.
@@ -151,11 +151,11 @@ class Front {
 	/**
 	 * Register the Kudos button block.
 	 */
-	private function register_button_block() {
+	private function register_blocks() {
 
 		register_block_type( 'iseardmedia/kudos-button',
 			[
-				"render_callback" => [ $this, "kudos_render_callback" ],
+				"render_callback" => [ $this, "button_render_callback" ],
 				"category"        => "widgets",
 				"title"           => "Kudos Button",
 				"description"     => "Adds a Kudos donate button or tabs to your post or page.",
@@ -195,7 +195,7 @@ class Front {
 						"default" => "button",
 					],
 				],
-				"editor_script"   => "kudos-donations-editor",
+				"editor_script"   => "kudos-donations-button",
 				"editor_style"    => "kudos-donations-public",
 				"script"          => "kudos-donations-public",
 				"style"           => "kudos-donations-public",
@@ -311,7 +311,7 @@ class Front {
 					'kudos'
 				);
 
-				return $this->kudos_render_callback( $atts );
+				return $this->button_render_callback( $atts );
 			}
 		);
 	}
@@ -323,7 +323,7 @@ class Front {
 	 *
 	 * @return string|null
 	 */
-	public function kudos_render_callback( array $atts ): ?string {
+	public function button_render_callback( array $atts ): ?string {
 
 		try {
 

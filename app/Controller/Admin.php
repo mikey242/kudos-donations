@@ -244,7 +244,7 @@ class Admin {
 
 		$editor_js = Assets::get_script( '/blocks/kudos-button/index.js' );
 		wp_register_script(
-			'kudos-donations-editor',
+			'kudos-donations-button',
 			$editor_js['url'],
 			$editor_js['dependencies'],
 			$editor_js['version'],
