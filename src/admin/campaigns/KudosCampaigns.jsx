@@ -37,14 +37,13 @@ const KudosCampaigns = ({ stylesheet }) => {
   }, [currentCampaign])
 
   useEffect(() => {
-    clearTimeout(notificationTimer.current)
-    notificationTimer.current = setTimeout(() => {
-      hideNotification()
-    }, 2000)
-    return () => {
-      clearTimeout(notificationTimer.current)
+    if (notification.shown) {
+      notificationTimer.current = setTimeout(() => {
+        hideNotification()
+      }, 2000)
+      return () => clearTimeout(notificationTimer.current)
     }
-  }, [notification])
+  })
 
   const clearCurrentCampaign = () => {
     removeQueryParameters(['campaign', 'tab'])
@@ -132,7 +131,7 @@ const KudosCampaigns = ({ stylesheet }) => {
   }
 
   const getCampaigns = () => {
-    return fetchCampaigns().then((response) => {
+    fetchCampaigns().then((response) => {
       setCampaigns(response.reverse())
       if (currentId) {
         const campaign = response.filter(campaign => campaign.id === parseInt(currentId))
