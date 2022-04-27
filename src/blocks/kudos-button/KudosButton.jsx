@@ -15,6 +15,7 @@ const KudosButton = ({children, className, color}) => {
                     <KudosLogo
                         lineColor="currentColor"
                         heartColor="currentColor"
+                        className="kd-w-5 kd-h-5"
                     />
                 </div>
                 {children}
