@@ -42,7 +42,7 @@ function CampaignTable ({ campaigns, transactions, editClick, duplicateClick, de
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             <div className="w-5 h-5 rounded-full" style={{ backgroundColor: campaign.meta.theme_color }}/>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{'€' + getTotal(campaign.slug, transactions)}</td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{'€' + getTotal(campaign.id, transactions)}</td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {campaign.meta.goal > 0 ? campaign.meta.goal : 'None'}
                         </td>
