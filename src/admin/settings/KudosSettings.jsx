@@ -3,25 +3,24 @@
 
 import { __ } from '@wordpress/i18n'
 import { Spinner } from '@wordpress/components'
-import { Fragment, useEffect, useRef, useState } from '@wordpress/element'
+import { useEffect, useRef, useState } from '@wordpress/element'
 import React from 'react'
 import api from '@wordpress/api'
-import apiFetch from '@wordpress/api-fetch'
+import { FormProvider, useForm } from 'react-hook-form'
 
 // settings Panels
 import { Header } from '../components/Header'
 import { IntroGuide } from './components/IntroGuide'
-import { getQueryVar, updateQueryParameter } from '../../common/helpers/util'
 import MollieTab from './components/Tabs/MollieTab'
 import { EmailTab } from './components/Tabs/EmailTab'
 import { HelpTab } from './components/Tabs/HelpTab'
 import { Button } from '../../common/components/controls'
 import Notification from '../components/Notification'
-import SettingsEdit from '../components/SettingsEdit'
 import KudosRender from '../../public/components/KudosRender'
+import TabPanel from '../components/TabPanel'
+import { fetchSettings } from '../../common/helpers/fetch'
 
 const KudosSettings = ({ stylesheet }) => {
-  const [mollieChanged, setMollieChanged] = useState()
   const [isAPISaving, setIsAPISaving] = useState()
   const [isEdited, setIsEdited] = useState()
   const [isAPILoaded, setIsAPILoaded] = useState(false)
@@ -29,9 +28,10 @@ const KudosSettings = ({ stylesheet }) => {
   const [settings, setSettings] = useState()
   const [showIntro, setShowIntro] = useState(false)
   const [notification, setNotification] = useState({ shown: false })
-  const [isMollieEdited, setIsMollieEdited] = useState()
-  const [tabName] = useState(getQueryVar('tab_name', 'mollie'))
   const notificationTimer = useRef(null)
+  const methods = useForm({
+    defaultValues: settings
+  })
 
   useEffect(() => {
     window.onbeforeunload = (e) => {
@@ -43,53 +43,39 @@ const KudosSettings = ({ stylesheet }) => {
   }, [])
 
   useEffect(() => {
-    clearTimeout(notificationTimer.current)
-    notificationTimer.current = setTimeout(() => {
-      hideNotification()
-    }, 2000)
-    return () => {
-      clearTimeout(notificationTimer.current)
+    if (notification.shown) {
+      notificationTimer.current = setTimeout(() => {
+        hideNotification()
+      }, 2000)
+      return () => clearTimeout(notificationTimer.current)
     }
-  }, [notification])
-
-  const changeTab = (tab) => {
-    updateQueryParameter('tab_name', tab)
-  }
+  })
 
   useEffect(() => {
     if (settings) {
       setIsAPILoaded(true)
+      methods.reset(settings)
     }
   }, [settings])
 
-  const checkApiKey = (callback) => {
-    setIsAPISaving(true)
-    setCheckingMollie(true)
-
-    // Perform Get request
-    apiFetch({
-      path: 'kudos/v1/payment/test',
-      method: 'GET'
-    }).then((response) => {
-      createNotification(response.data.message)
-
-      // Update state
-      setIsAPISaving(false)
-      setCheckingMollie(false)
-      // setSettings(response.data.settings)
-
-      if (typeof callback === 'function') {
-        callback(response)
-      }
-    })
+  // Returns an object with only _kudos prefixed settings
+  const filterSettings = (settings) => {
+    return Object.fromEntries(
+      Object.entries(settings).filter(
+        ([key]) => key.startsWith('_kudos')
+      )
+    )
   }
 
-  const handleInputChange = (option, value, isEdited = true) => {
-    setIsEdited(isEdited)
-    setSettings(prev => ({
-      ...prev,
-      [option]: value
-    }))
+  const getSettings = () => {
+    api.loadPromise.then(() => {
+      const settings = new api.models.Settings()
+      settings.fetch().then((response) => filterSettings(response))
+        .then((response) => {
+          setShowIntro(response._kudos_show_intro)
+          setSettings(response)
+        })
+    })
   }
 
   const createNotification = (message, success) => {
@@ -107,28 +93,8 @@ const KudosSettings = ({ stylesheet }) => {
     }))
   }
 
-  // Returns an object with only _kudos prefixed settings
-  const filterSettings = (settings) => {
-    return Object.fromEntries(
-      Object.entries(settings).filter(
-        ([key]) => key.startsWith('_kudos')
-      )
-    )
-  }
-
-  // Get the settings from the database
-  const getSettings = () => {
-    api.loadPromise.then(() => {
-      const settings = new api.models.Settings()
-      settings.fetch().then((response) => {
-        setShowIntro(response._kudos_show_intro)
-        setSettings(filterSettings(response))
-      })
-    })
-  }
-
   // Update all settings
-  const updateSettings = (data, callback) => {
+  const updateSettings = (data) => {
     setIsAPISaving(true)
 
     // Delete empty settings keys
@@ -145,33 +111,28 @@ const KudosSettings = ({ stylesheet }) => {
     model
       .save()
       .then((response) => {
-        // Commit state
         setSettings(filterSettings(response))
         setIsAPISaving(false)
-        createNotification(__('Setting(s) updated', 'kudos-donations'))
+        createNotification(__('Settings updated', 'kudos-donations'))
       })
-      .fail((response) => {
-        createNotification(response.statusText)
+      .fail(() => {
+        createNotification(__('Failed to save settings', 'kudos-donations'), false)
       })
   }
 
   // Update an individual setting, uses current state if value not specified
-  const updateSetting = (option, value, showNotice = false, noticeText = __('Setting updated', 'kudos-donations')) => {
+  async function updateSetting (option, value) {
     setIsAPISaving(true)
 
     // Create WordPress settings model
     const model = new api.models.Settings({
-      [option]: value ?? settings[option]
+      [option]: value
     })
 
     // Save to database
-    model.save().then((response) => {
-      // Commit state
+    return model.save().then((response) => {
       setSettings(filterSettings(response))
       setIsAPISaving(false)
-      if (showNotice) {
-        createNotification(noticeText)
-      }
     })
   }
 
@@ -183,8 +144,8 @@ const KudosSettings = ({ stylesheet }) => {
       content:
                 <MollieTab
                     settings={settings}
-                    mollieChanged={() => setMollieChanged(true)}
-                    checkApiKey={checkApiKey}
+                    updateSetting={updateSetting}
+                    createNotification={createNotification}
                 />
     },
     {
@@ -203,7 +164,6 @@ const KudosSettings = ({ stylesheet }) => {
                     setShowIntro={setShowIntro}
                 />
     }
-
   ]
 
   return (
@@ -218,59 +178,55 @@ const KudosSettings = ({ stylesheet }) => {
 
             {isAPILoaded &&
 
-                <Fragment>
+                <FormProvider {...methods}>
+                    <form id="settings-form" onSubmit={methods.handleSubmit(updateSettings)}>
 
-                    {showIntro
+                        {showIntro
 
-                      ? <IntroGuide
-                            updateSettings={updateSettings}
-                            mollieChanged={() => setMollieChanged(true)}
-                            isAPISaving={isAPISaving}
-                            settings={settings}
-                            setShowIntro={setShowIntro}
-                            handleInputChange={handleInputChange}
-                            updateSetting={updateSetting}
+                          ? <IntroGuide
+                                updateSettings={updateSettings}
+                                isAPISaving={isAPISaving}
+                                settings={settings}
+                                setShowIntro={setShowIntro}
+                                updateSetting={updateSetting}
+                            />
+                          : ''}
+
+                        <Header>
+                            <div className="flex items-center">
+                                <span
+                                    className={`${
+                                        settings._kudos_vendor_mollie.connected && 'connected'
+                                    } kudos-api-status text-gray-600 mr-2`}
+                                >
+                                    {checkingMollie
+                                      ? __('Checking', 'kudos-donations')
+                                      : settings._kudos_vendor_mollie.connected
+                                        ? __('Mollie connected', 'kudos-donations')
+                                        : __('Not connected', 'kudos-donations')
+                                    }
+                                </span>
+                                <span
+                                    className={`${settings._kudos_vendor_mollie.connected ? 'bg-green-600' : 'bg-gray-500'} rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 w-4 h-4`}/>
+                                <Button
+                                    form="settings-form"
+                                    type="submit"
+                                >
+                                    {__('Save', 'kudos-donations')}
+                                </Button>
+                            </div>
+                        </Header>
+                        <TabPanel tabs={tabs}/>
+                        <Notification
+                            shown={notification.shown}
+                            message={notification.message}
+                            success={notification.success}
+                            onClick={hideNotification}
                         />
-                      : ''}
-
-                    <Header>
-                        <div className="flex items-center">
-                    <span
-                        className={`${
-                            settings._kudos_vendor_mollie.connected && 'connected'
-                        } kudos-api-status text-gray-600 mr-2`}
-                    >
-                        {checkingMollie
-                          ? __('Checking', 'kudos-donations')
-                          : settings._kudos_vendor_mollie.connected
-                            ? __('Mollie connected', 'kudos-donations')
-                            : __('Not connected', 'kudos-donations')
-                        }
-                    </span>
-                            <span
-                                className={`${settings._kudos_vendor_mollie.connected ? 'bg-green-600' : 'bg-gray-500'} rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 w-4 h-4`}/>
-                            <Button
-                                form="settings-form"
-                                type="submit"
-                            >
-                                {__('Save', 'kudos-donations')}
-                            </Button>
-                        </div>
-                    </Header>
-                    <SettingsEdit
-                        settings={settings}
-                        updateSettings={updateSettings}
-                        tabs={tabs}
-                    />
-                    <Notification
-                        shown={notification.shown}
-                        message={notification.message}
-                        success={notification.success}
-                        onClick={hideNotification}
-                    />
-
-                </Fragment>
+                    </form>
+                </FormProvider>
             }
+
         </KudosRender>
   )
 }

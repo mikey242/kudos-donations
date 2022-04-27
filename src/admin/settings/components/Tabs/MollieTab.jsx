@@ -4,13 +4,21 @@ import { RadioGroupControl, TextControl } from '../../../../common/components/co
 import { Fragment, useState } from '@wordpress/element'
 import { RefreshIcon } from '@heroicons/react/solid'
 import Divider from '../../../components/Divider'
+import { fetchTestMollie } from '../../../../common/helpers/fetch'
 
-const MollieTab = ({ checkApiKey }) => {
+const MollieTab = ({ createNotification, updateSetting }) => {
   const [checkingMollie, setCheckingMollie] = useState()
 
-  const check = () => {
+  async function checkApiKey () {
     setCheckingMollie(true)
-    checkApiKey(() => setCheckingMollie(false))
+
+    return fetchTestMollie()
+      .then((response) => {
+        createNotification(response.data.message, response?.success)
+        updateSetting('_kudos_vendor_mollie.connected', response?.success)
+        return response
+      })
+      .then(() => setCheckingMollie(false))
   }
 
   return (
@@ -30,7 +38,7 @@ const MollieTab = ({ checkApiKey }) => {
             <br/>
             <div
                 className="inline-flex items-center cursor-pointer"
-                onClick={check}
+                onClick={checkApiKey}
             >
                 <><RefreshIcon className={`${checkingMollie && 'animate-spin '}w-5 h-5`}/> <span
                     className="mx-2">{__('Test / Refresh API', 'kudos-donations')}</span></>
