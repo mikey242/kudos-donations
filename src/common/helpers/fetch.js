@@ -20,3 +20,10 @@ export async function fetchCampaigns (id) {
     method: 'GET'
   })
 }
+
+export async function fetchTestMollie () {
+  return await apiFetch({
+    path: 'kudos/v1/payment/test',
+    method: 'GET'
+  })
+}
