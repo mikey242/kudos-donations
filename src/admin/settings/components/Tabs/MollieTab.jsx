@@ -5,9 +5,10 @@ import { Fragment, useState } from '@wordpress/element'
 import { RefreshIcon } from '@heroicons/react/solid'
 import Divider from '../../../components/Divider'
 import { fetchTestMollie } from '../../../../common/helpers/fetch'
+import classNames from 'classnames'
 
 const MollieTab = ({ createNotification, updateSetting }) => {
-  const [checkingMollie, setCheckingMollie] = useState()
+  const [checkingMollie, setCheckingMollie] = useState(false)
 
   async function checkApiKey () {
     setCheckingMollie(true)
@@ -40,7 +41,7 @@ const MollieTab = ({ createNotification, updateSetting }) => {
                 className="inline-flex items-center cursor-pointer"
                 onClick={checkApiKey}
             >
-                <><RefreshIcon className={`${checkingMollie && 'animate-spin '}w-5 h-5`}/> <span
+                <><RefreshIcon className={classNames(checkingMollie && 'animate-spin', 'w-5 h-5')}/> <span
                     className="mx-2">{__('Test / Refresh API', 'kudos-donations')}</span></>
 
             </div>
