@@ -24,7 +24,7 @@ class CustomPostType {
 
 	private function register_post() {
 		$args = wp_parse_args( $this->args, [
-			'public'       => true,
+			'public'       => false,
 			'show_in_rest' => true,
 			'supports'     => [ 'title', 'custom-fields' ],
 		] );
