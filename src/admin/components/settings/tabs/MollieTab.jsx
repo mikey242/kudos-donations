@@ -6,7 +6,7 @@ import {
 } from '../../../../common/components/controls';
 import { Fragment, useState } from '@wordpress/element';
 import { RefreshIcon } from '@heroicons/react/solid';
-import Divider from '../../../components/Divider';
+import Divider from '../../Divider';
 import { fetchTestMollie } from '../../../../common/helpers/fetch';
 import classNames from 'classnames';
 

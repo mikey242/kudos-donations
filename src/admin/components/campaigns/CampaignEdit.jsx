@@ -10,11 +10,11 @@ import {
 	TextAreaControl,
 	TextControl,
 	ToggleControl,
-} from '../../common/components/controls';
-import TabPanel from './TabPanel';
-import Divider from './Divider';
+} from '../../../common/components/controls';
+import TabPanel from '../TabPanel';
+import Divider from '../Divider';
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
-import { isValidUrl } from '../../common/helpers/util';
+import { isValidUrl } from '../../../common/helpers/util';
 
 function CampaignEdit({
 	campaign,
@@ -70,7 +70,7 @@ function CampaignEdit({
 							required: __('Name required', 'kudos-donations'),
 						}}
 					/>
-					<br />
+					{/*<br />*/}
 					<TextControl
 						type="number"
 						name="meta.goal"
@@ -85,16 +85,16 @@ function CampaignEdit({
 						name="meta.show_goal"
 						label={__('Display goal progress', 'kudos-donations')}
 					/>
-					<br />
+					<Divider />
 					<ColorPicker
 						name="meta.theme_color"
 						label={__('Theme color', 'kudos-donations')}
 						help={__(
-							'Choose a color them for your campaign',
+							'Choose a color theme for your campaign',
 							'kudos-donations'
 						)}
 					/>
-					<br />
+					<Divider />
 					<p className="block text-sm font-medium font-bold text-gray-700">
 						Completed payment
 					</p>
@@ -228,7 +228,7 @@ function CampaignEdit({
 							label={__('Required', 'kudos-donations')}
 						/>
 					)}
-					<hr className="my-5" />
+					<Divider />
 					<ToggleControl
 						name="meta.message_enabled"
 						label={__('Message', 'kudos-donations')}
@@ -237,7 +237,7 @@ function CampaignEdit({
 							'kudos-donations'
 						)}
 					/>
-					<hr className="my-5" />
+					<Divider />
 					<TextControl
 						name="meta.terms_link"
 						label={__(

@@ -1,22 +1,25 @@
 import apiFetch from '@wordpress/api-fetch';
 import api from '@wordpress/api';
 import { Fragment, useEffect, useRef, useState } from '@wordpress/element';
-import { Header } from '../components/Header';
+import { Header } from '../Header';
 import { PlusIcon } from '@heroicons/react/outline';
 import React from 'react';
-import CampaignTable from '../components/CampaignTable';
-import CampaignEdit from '../components/CampaignEdit';
+import CampaignTable from './CampaignTable';
+import CampaignEdit from './CampaignEdit';
 import { __ } from '@wordpress/i18n';
-import Notification from '../components/Notification';
-import { Button } from '../../common/components/controls';
+import Notification from '../Notification';
+import { Button } from '../../../common/components/controls';
 import {
 	getQueryVar,
 	removeQueryParameters,
 	updateQueryParameter,
-} from '../../common/helpers/util';
-import EmptyCampaigns from '../components/EmptyCampaigns';
-import KudosRender from '../../public/components/KudosRender';
-import { fetchCampaigns, fetchTransactions } from '../../common/helpers/fetch';
+} from '../../../common/helpers/util';
+import EmptyCampaigns from './EmptyCampaigns';
+import KudosRender from '../../../public/components/KudosRender';
+import {
+	fetchCampaigns,
+	fetchTransactions,
+} from '../../../common/helpers/fetch';
 
 const KudosCampaigns = ({ stylesheet }) => {
 	const [campaigns, setCampaigns] = useState();

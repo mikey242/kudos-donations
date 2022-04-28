@@ -1,12 +1,12 @@
 import React from 'react';
-import Panel from './Panel';
+import Panel from '../Panel';
 import { __ } from '@wordpress/i18n';
 import {
 	DuplicateIcon,
 	PencilAltIcon,
 	TrashIcon,
 } from '@heroicons/react/outline';
-import { getTotal } from '../../common/helpers/util';
+import { getTotal } from '../../../common/helpers/util';
 
 function CampaignTable({
 	campaigns,

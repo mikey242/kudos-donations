@@ -11,15 +11,15 @@ import api from '@wordpress/api';
 import { FormProvider, useForm } from 'react-hook-form';
 
 // settings Panels
-import { Header } from '../components/Header';
-import { IntroGuide } from './components/IntroGuide';
-import MollieTab from './components/Tabs/MollieTab';
-import { EmailTab } from './components/Tabs/EmailTab';
-import { HelpTab } from './components/Tabs/HelpTab';
-import { Button } from '../../common/components/controls';
-import Notification from '../components/Notification';
-import KudosRender from '../../public/components/KudosRender';
-import TabPanel from '../components/TabPanel';
+import { Header } from '../Header';
+import { IntroGuide } from '../IntroGuide';
+import MollieTab from './tabs/MollieTab';
+import { EmailTab } from './tabs/EmailTab';
+import { HelpTab } from './tabs/HelpTab';
+import { Button } from '../../../common/components/controls';
+import Notification from '../Notification';
+import KudosRender from '../../../public/components/KudosRender';
+import TabPanel from '../TabPanel';
 
 const KudosSettings = ({ stylesheet }) => {
 	const [isAPISaving, setIsAPISaving] = useState();

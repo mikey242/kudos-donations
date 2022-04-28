@@ -8,7 +8,7 @@ import {
 import { ESCAPE, LEFT, RIGHT } from '@wordpress/keycodes';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import { Button } from '../../../common/components/controls';
+import { Button } from '../../common/components/controls';
 
 const Guide = ({ pages = [], className, onFinish }) => {
 	const [currentPage, setCurrentPage] = useState(0);
@@ -83,14 +83,14 @@ const Guide = ({ pages = [], className, onFinish }) => {
 						'flex flex-col justify-center items-center h-full w-[768px]'
 					}
 				>
-					<small
+					<button
 						className={
 							'ml-auto mr-3 mt-3 cursor-pointer text-gray-500 underline'
 						}
 						onClick={onFinish}
 					>
-						{__('skip', 'kudos-donations')}
-					</small>
+						<small>{__('skip', 'kudos-donations')}</small>
+					</button>
 					<div className="intro-content m-auto w-3/4">
 						<div className="intro-image w-full">
 							<img

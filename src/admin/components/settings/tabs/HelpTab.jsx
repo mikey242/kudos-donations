@@ -9,6 +9,7 @@ import {
 	QuestionMarkCircleIcon,
 	SupportIcon,
 } from '@heroicons/react/outline';
+import Divider from '../../Divider';
 
 const HelpTab = ({ setShowIntro }) => {
 	return (
@@ -29,7 +30,7 @@ const HelpTab = ({ setShowIntro }) => {
 				<PencilAltIcon className="w-5 h-5 mr-2" />
 				{__('Leave a review', 'kudos-donations')}
 			</Button>
-			<hr className="my-5" />
+			<Divider />
 			<h2>{__('Need some assistance?', 'kudos-donations')}</h2>
 			<p>
 				{__(

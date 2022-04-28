@@ -7,7 +7,7 @@ import {
 	ToggleControl,
 } from '../../../../common/components/controls';
 import React from 'react';
-import Divider from '../../../components/Divider';
+import Divider from '../../Divider';
 import { useFormContext } from 'react-hook-form';
 
 const EmailTab = () => {

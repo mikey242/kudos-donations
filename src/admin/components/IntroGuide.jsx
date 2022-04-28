@@ -1,14 +1,14 @@
-import intro from '../../../images/guide-welcome.png';
-import mollie from '../../../images/guide-mollie-api.png';
-import campaign from '../../../images/guide-campaign.png';
-import button from '../../../images/guide-button.png';
-import live from '../../../images/guide-test-live.png';
+import intro from '../../images/guide-welcome.png';
+import mollie from '../../images/guide-mollie-api.png';
+import campaign from '../../images/guide-campaign.png';
+import button from '../../images/guide-button.png';
+import live from '../../images/guide-test-live.png';
 import { __ } from '@wordpress/i18n';
 import { Dashicon, ExternalLink, TextControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { Guide } from './Guide';
 import React from 'react';
-import { Button } from '../../../common/components/controls';
+import { Button } from '../../common/components/controls';
 
 const IntroGuide = ({
 	settings,
