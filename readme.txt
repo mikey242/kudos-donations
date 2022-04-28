@@ -120,6 +120,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.1.4 =
 * Improve email compatibility
+* Fix Kudos icon issues with iOS
 * Update dependencies (Mollie, Twig)
 
 = 3.1.3 =
