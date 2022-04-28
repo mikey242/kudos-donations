@@ -192,7 +192,7 @@ class DonorsTable extends WP_List_Table {
 	protected function delete_record( string $column, string $id ) {
 
 		return $this->mapper
-			->get_repository(DonorEntity::class)
+			->get_repository( DonorEntity::class )
 			->delete( $column, $id );
 
 	}
@@ -296,7 +296,7 @@ class DonorsTable extends WP_List_Table {
 	protected function column_donations( array $item ) {
 
 		$transactions = $this->mapper
-			->get_repository(TransactionEntity::class)
+			->get_repository( TransactionEntity::class )
 			->get_all_by( [ 'customer_id' => $item['customer_id'] ] );
 
 		if ( $transactions ) {

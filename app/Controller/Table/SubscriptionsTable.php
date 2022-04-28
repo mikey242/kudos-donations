@@ -25,10 +25,10 @@ class SubscriptionsTable extends WP_List_Table {
 	/**
 	 * Class constructor
 	 */
-	public function __construct(MapperService $mapper_service, PaymentService $payment_service) {
+	public function __construct( MapperService $mapper_service, PaymentService $payment_service ) {
 
-		$this->mapper = $mapper_service;
-		$this->table  = SubscriptionEntity::get_table_name();
+		$this->mapper  = $mapper_service;
+		$this->table   = SubscriptionEntity::get_table_name();
 		$this->payment = $payment_service;
 
 		$this->search_columns = [
@@ -109,7 +109,7 @@ class SubscriptionsTable extends WP_List_Table {
 		$query = $query . $where;
 
 		return $this->mapper
-			->get_repository(SubscriptionEntity::class)
+			->get_repository( SubscriptionEntity::class )
 			->get_results( $query );
 
 	}
@@ -229,6 +229,7 @@ class SubscriptionsTable extends WP_List_Table {
 	public function cancel_subscription( string $id ): bool {
 
 		$payment_service = $this->payment;
+
 		return $payment_service->cancel_subscription( $id );
 	}
 
@@ -243,7 +244,7 @@ class SubscriptionsTable extends WP_List_Table {
 	protected function delete_record( string $column, string $id ) {
 
 		return $this->mapper
-			->get_repository(SubscriptionEntity::class)
+			->get_repository( SubscriptionEntity::class )
 			->delete( $column, $id );
 
 	}
