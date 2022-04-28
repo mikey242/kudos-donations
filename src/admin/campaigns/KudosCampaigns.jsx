@@ -105,22 +105,20 @@ const KudosCampaigns = ({ stylesheet }) => {
 				status: 'publish',
 			},
 		})
-			.then(() => {
-				return getCampaigns();
-			})
-			.then(() => {
+			.then((response) => {
+				setCurrentCampaign(response);
 				createNotification(
 					data.status === 'draft'
 						? __('Campaign created', 'kudos-donations')
 						: __('Campaign updated', 'kudos-donations')
 				);
+				return getCampaigns();
 			})
 			.catch((error) => {
 				createNotification(error.message, 'fail');
 			})
 			.finally(() => {
 				setIsApiBusy(false);
-				clearCurrentCampaign();
 			});
 	};
 
