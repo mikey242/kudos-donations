@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlagIcon } from '@heroicons/react/solid';
 
-const ProgressBar = ({ goal, total, extra }) => {
+const ProgressBar = ({ goal, total = 0, extra = 0 }) => {
 	const percentage = Math.floor((total / goal) * 100);
 	const extraPercentage = extra / (goal - total);
 
