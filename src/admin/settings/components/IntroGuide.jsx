@@ -7,7 +7,6 @@ import { __ } from '@wordpress/i18n';
 import { Dashicon, ExternalLink, TextControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { Guide } from './Guide';
-import { Btn } from './Btn';
 import React from 'react';
 import { Button } from '../../../common/components/controls';
 
@@ -135,13 +134,13 @@ const IntroGuide = ({
 										/>
 									</div>
 									<br />
-									<Btn
-										isPrimary
-										isBusy={isAPISaving}
+									<Button
+										isOutline
+										isDisabled={isAPISaving}
 										onClick={() => checkApi()}
 									>
 										{__('Connect', 'kudos-donations')}
-									</Btn>
+									</Button>
 									<div
 										className="mt-3 text-base"
 										style={{
