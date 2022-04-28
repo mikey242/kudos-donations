@@ -117,12 +117,7 @@ const ButtonEdit = (props) => {
 						}
 					>
 						<RichText
-							allowedFormats={[
-								'core/bold',
-								'core/italic',
-								'core/text-color',
-								'core/strikethrough',
-							]}
+							allowedFormats={[]} // Disable all formatting
 							onChange={onChangeButtonLabel}
 							value={button_label}
 						/>
