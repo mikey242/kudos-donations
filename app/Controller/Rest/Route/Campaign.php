@@ -2,6 +2,7 @@
 
 namespace Kudos\Controller\Rest\Route;
 
+use Exception;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -24,8 +25,8 @@ class Campaign extends Base {
 				'callback'            => [ $this, 'get_one' ],
 				'args'                => [
 					'id' => [
-						'type'              => 'string',
-						'required'          => true,
+						'type'     => 'string',
+						'required' => true,
 					],
 				],
 				'permission_callback' => '__return_true',
@@ -48,7 +49,7 @@ class Campaign extends Base {
 			try {
 				return new WP_REST_Response( \Kudos\Helpers\Campaign::get_campaign( $params['id'] ) );
 
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				wp_send_json_error( $e->getMessage() );
 			}
 		}
