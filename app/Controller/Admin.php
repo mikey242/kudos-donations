@@ -328,7 +328,7 @@ class Admin {
 			$table_js['url'],
 			$table_js['dependencies'],
 			$table_js['version'],
-			false
+			true
 		);
 
 		return $handle;
