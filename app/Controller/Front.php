@@ -184,7 +184,7 @@ class Front {
 					],
 					"campaign_id"  => [
 						"type"    => "string",
-						"default" => "default",
+						"default" => "",
 					],
 					"alignment"    => [
 						"type"    => "string",

@@ -14,7 +14,7 @@ import { fetchCampaigns } from '../../common/helpers/fetch';
 
 const ButtonEdit = (props) => {
 	const [campaigns, setCampaigns] = useState();
-	const [currentCampaign, setCurrentCampaign] = useState();
+	const [currentCampaign, setCurrentCampaign] = useState(null);
 
 	const {
 		className,
@@ -24,12 +24,10 @@ const ButtonEdit = (props) => {
 
 	useEffect(() => {
 		fetchCampaigns().then(setCampaigns);
-		fetchCampaigns(campaign_id).then(setCurrentCampaign);
+		if (campaign_id) {
+			fetchCampaigns(campaign_id).then(setCurrentCampaign);
+		}
 	}, []);
-
-	useEffect(() => {
-		console.log(currentCampaign);
-	}, [currentCampaign]);
 
 	const onChangeButtonLabel = (newValue) => {
 		setAttributes({ button_label: newValue });
@@ -42,8 +40,10 @@ const ButtonEdit = (props) => {
 	};
 
 	const onChangeCampaign = (newValue) => {
-		setAttributes({ campaign_id: newValue });
-		fetchCampaigns(campaign_id).then(setCurrentCampaign);
+		if (newValue) {
+			setAttributes({ campaign_id: newValue });
+			fetchCampaigns(newValue).then(setCurrentCampaign);
+		}
 	};
 
 	const onChangeType = (newValue) => {
@@ -59,12 +59,6 @@ const ButtonEdit = (props) => {
 							title={__('Campaign', 'kudos-donations')}
 							initialOpen={false}
 						>
-							<p>
-								<strong>
-									Current campaign:{' '}
-									{currentCampaign?.title.rendered}
-								</strong>
-							</p>
 							<SelectControl
 								label={__(
 									'Select a campaign',
@@ -117,7 +111,7 @@ const ButtonEdit = (props) => {
 					</BlockControls>
 
 					<KudosButton
-						color={currentCampaign?.meta.theme_color}
+						color={currentCampaign?.meta.theme_color ?? '#ff9f1c'}
 						className={
 							(className ?? '') + ' has-text-align-' + alignment
 						}
