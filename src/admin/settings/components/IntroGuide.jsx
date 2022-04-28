@@ -25,6 +25,7 @@ const IntroGuide = ({
 	const isRecurringEnabled = vendorMollie.recurring ?? false;
 
 	const closeModal = () => {
+		setShowIntro(false);
 		updateSetting('_kudos_show_intro', false);
 	};
 
@@ -38,7 +39,7 @@ const IntroGuide = ({
 	return (
 		<Guide
 			className={'kudos-intro-guide box-border'}
-			onFinish={() => setShowIntro(false)}
+			onFinish={closeModal}
 			pages={[
 				{
 					imageSrc: intro,
