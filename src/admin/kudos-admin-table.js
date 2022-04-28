@@ -1,19 +1,20 @@
-(($) => {
-	'use strict';
+(() => {
+	const cancelButtons = document.querySelectorAll('.row-actions .cancel');
+	const deleteButtons = document.querySelectorAll('.row-actions .delete');
 
-	$(() => {
-		$('.row-actions .cancel').click(function (e) {
-			// eslint-disable-next-line no-alert,no-undef
-			if (!confirm(window.kudos.confirmationCancel)) {
-				e.preventDefault();
-			}
-		});
-
-		$('.row-actions .delete').click(function (e) {
-			// eslint-disable-next-line no-alert,no-undef
-			if (!confirm(window.kudos.confirmationDelete)) {
+	cancelButtons.forEach((button) => {
+		button.addEventListener('click', (e) => {
+			if (!window.confirm(window.kudos.confirmationCancel)) {
 				e.preventDefault();
 			}
 		});
 	});
-})(jQuery);
+
+	deleteButtons.forEach((button) => {
+		button.addEventListener('click', (e) => {
+			if (!window.confirm(window.kudos.confirmationDelete)) {
+				e.preventDefault();
+			}
+		});
+	});
+})();
