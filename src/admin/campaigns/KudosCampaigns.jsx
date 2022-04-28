@@ -21,7 +21,6 @@ import { fetchCampaigns, fetchTransactions } from '../../common/helpers/fetch';
 const KudosCampaigns = ({ stylesheet }) => {
 	const [campaigns, setCampaigns] = useState();
 	const [isApiBusy, setIsApiBusy] = useState(true);
-	const [currentId] = useState(getQueryVar('campaign'));
 	const [notification, setNotification] = useState({ shown: false });
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 	const [transactions, setTransactions] = useState();
@@ -145,11 +144,12 @@ const KudosCampaigns = ({ stylesheet }) => {
 	const getCampaigns = () => {
 		fetchCampaigns().then((response) => {
 			setCampaigns(response.reverse());
+			const currentId = getQueryVar('campaign');
 			if (currentId) {
 				const campaign = response.filter(
 					(campaign) => campaign.id === parseInt(currentId)
 				);
-				if (campaign) {
+				if (campaign && currentCampaign === null) {
 					setCurrentCampaign(campaign[0]);
 				}
 			}
