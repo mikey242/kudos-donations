@@ -4,41 +4,41 @@ import campaign from '../../images/guide-campaign.png';
 import button from '../../images/guide-button.png';
 import live from '../../images/guide-test-live.png';
 import { __ } from '@wordpress/i18n';
-import { Dashicon, ExternalLink, TextControl } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { Dashicon, ExternalLink } from '@wordpress/components';
+import { useEffect, useState } from '@wordpress/element';
 import { Guide } from './Guide';
 import React from 'react';
-import { Button } from '../../common/components/controls';
+import { Button, TextControl } from '../../common/components/controls';
+import { useFormContext } from 'react-hook-form';
+import Panel from './Panel';
 
 const IntroGuide = ({
 	settings,
 	updateSetting,
 	isAPISaving,
-	updateAll,
-	handleInputChange,
-	mollieChanged,
 	setShowIntro,
+	checkApiKey,
 }) => {
 	const [apiMessage, setApiMessage] = useState(null);
 	const vendorMollie = settings._kudos_vendor_mollie;
 	const isConnected = vendorMollie.connected ?? false;
 	const isRecurringEnabled = vendorMollie.recurring ?? false;
+	const { formState } = useFormContext();
 
 	const closeModal = () => {
 		setShowIntro(false);
 		updateSetting('_kudos_show_intro', false);
 	};
 
-	const checkApi = () => {
-		mollieChanged();
-		updateAll(false, (response) => {
-			setApiMessage(response.data.data.message);
-		});
-	};
+	useEffect(() => {
+		if (formState.isSubmitted) {
+			checkApiKey();
+		}
+	}, [formState.isSubmitted]);
 
 	return (
 		<Guide
-			className={'kudos-intro-guide box-border'}
+			className={'box-border'}
 			onFinish={closeModal}
 			pages={[
 				{
@@ -71,74 +71,54 @@ const IntroGuide = ({
 											'Time to connect with Mollie. Login to your Mollie account and grab your API keys. Make sure you get both your test and live API keys.',
 											'kudos-donations'
 										)}{' '}
-										<Button
-											isLink
-											href="https://mollie.com/dashboard/developers/api-keys"
-										>
-											{__(
-												'Mollie dashboard',
-												'kudos-donations'
-											)}
-										</Button>
 									</p>
-									<div
-										className={
-											'p-5 bg-white rounded-lg shadow-md' +
-											(isAPISaving ? ' opacity-50' : '')
-										}
+									<a
+										className="text-primary"
+										target="_blank"
+										href="https://mollie.com/dashboard/developers/api-keys"
+										rel="noreferrer"
 									>
+										{__(
+											'Mollie dashboard',
+											'kudos-donations'
+										)}
+									</a>
+									<Panel className="p-5">
 										<TextControl
-											key={'_kudos_mollie_live_api_key'}
-											className={'text-left'}
+											name={
+												'_kudos_vendor_mollie.live_key'
+											}
 											disabled={isAPISaving}
 											label={__(
 												'Live key',
 												'kudos-donations'
 											)}
-											value={vendorMollie.live_key || ''}
 											placeholder={__(
 												'Begins with "live_"',
 												'kudos-donations'
 											)}
-											onChange={(value) =>
-												handleInputChange(
-													'_kudos_vendor_mollie',
-													{
-														...vendorMollie,
-														live_key: value,
-													}
-												)
-											}
 										/>
 										<TextControl
-											key={'_kudos_mollie_test_api_key'}
-											className={'text-left'}
+											name={
+												'_kudos_vendor_mollie.test_key'
+											}
 											disabled={isAPISaving}
 											label={__(
 												'Test key',
 												'kudos-donations'
 											)}
-											value={vendorMollie.test_key || ''}
 											placeholder={__(
 												'Begins with "test_"',
 												'kudos-donations'
 											)}
-											onChange={(value) =>
-												handleInputChange(
-													'_kudos_vendor_mollie',
-													{
-														...vendorMollie,
-														test_key: value,
-													}
-												)
-											}
 										/>
-									</div>
+									</Panel>
 									<br />
 									<Button
 										isOutline
+										type="submit"
 										isDisabled={isAPISaving}
-										onClick={() => checkApi()}
+										// onClick={() => checkApi()}
 									>
 										{__('Connect', 'kudos-donations')}
 									</Button>
@@ -158,12 +138,6 @@ const IntroGuide = ({
 											'flex flex-row justify-center mb-3 items-center'
 										}
 									>
-										<Dashicon
-											className={
-												'w-auto h-auto text-4xl text-green-500'
-											}
-											icon="yes"
-										/>
 										<h2 className={'m-0 text-green-500'}>
 											{__('Connected', 'kudos-donations')}{' '}
 											(
@@ -194,14 +168,14 @@ const IntroGuide = ({
 											)}
 										</strong>
 									)}
-									<ExternalLink
-										className={'mt-2'}
+									<a
+										className={'text-primary mt-2'}
 										href={
 											'https://help.mollie.com/hc/articles/214558045'
 										}
 									>
 										{__('Learn more', 'kudos-donations')}
-									</ExternalLink>
+									</a>
 								</div>
 							)}
 						</div>

@@ -7,26 +7,15 @@ import {
 import { Fragment, useState } from '@wordpress/element';
 import { RefreshIcon } from '@heroicons/react/solid';
 import Divider from '../../Divider';
-import { fetchTestMollie } from '../../../../common/helpers/fetch';
 import classNames from 'classnames';
 
-const MollieTab = ({ createNotification, updateSetting }) => {
+const MollieTab = ({ checkApiKey }) => {
 	const [checkingMollie, setCheckingMollie] = useState(false);
 
-	async function checkApiKey() {
+	const check = () => {
 		setCheckingMollie(true);
-
-		return fetchTestMollie()
-			.then((response) => {
-				createNotification(response.data.message, response?.success);
-				updateSetting(
-					'_kudos_vendor_mollie.connected',
-					response?.success
-				);
-				return response;
-			})
-			.then(() => setCheckingMollie(false));
-	}
+		checkApiKey().then(() => setCheckingMollie(false));
+	};
 
 	return (
 		<Fragment>
@@ -43,9 +32,9 @@ const MollieTab = ({ createNotification, updateSetting }) => {
 				)}
 			/>
 			<br />
-			<div
+			<button
 				className="inline-flex items-center cursor-pointer"
-				onClick={checkApiKey}
+				onClick={check}
 			>
 				<>
 					<RefreshIcon
@@ -58,7 +47,7 @@ const MollieTab = ({ createNotification, updateSetting }) => {
 						{__('Test / Refresh API', 'kudos-donations')}
 					</span>
 				</>
-			</div>
+			</button>
 			<p className="my-2 text-xs text-gray-500">
 				{__(
 					'Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.',

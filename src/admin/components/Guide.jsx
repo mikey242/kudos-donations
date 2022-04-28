@@ -99,10 +99,12 @@ const Guide = ({ pages = [], className, onFinish }) => {
 								src={pages[currentPage].imageSrc}
 							/>
 						</div>
-						<h1 className={'leading-normal text-center'}>
+						<h1 className={'text-center'}>
 							{pages[currentPage].heading}
 						</h1>
-						{pages[currentPage].content}
+						<div className="text-lg">
+							{pages[currentPage].content}
+						</div>
 					</div>
 					<div className="intro-nav py-3 border-0 border-t border-solid border-gray-200 flex justify-between items-center w-11/12 mt-5 mb-5">
 						<Button

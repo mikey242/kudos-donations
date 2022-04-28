@@ -20,6 +20,7 @@ import { Button } from '../../../common/components/controls';
 import Notification from '../Notification';
 import KudosRender from '../../../public/components/KudosRender';
 import TabPanel from '../TabPanel';
+import { fetchTestMollie } from '../../../common/helpers/fetch';
 
 const KudosSettings = ({ stylesheet }) => {
 	const [isAPISaving, setIsAPISaving] = useState();
@@ -95,7 +96,7 @@ const KudosSettings = ({ stylesheet }) => {
 	};
 
 	// Update all settings
-	const updateSettings = (data) => {
+	async function updateSettings(data) {
 		setIsAPISaving(true);
 
 		// Delete empty settings keys
@@ -109,7 +110,7 @@ const KudosSettings = ({ stylesheet }) => {
 		const model = new api.models.Settings(data);
 
 		// Save to database
-		model
+		return model
 			.save()
 			.then((response) => {
 				setSettings(filterSettings(response));
@@ -122,7 +123,7 @@ const KudosSettings = ({ stylesheet }) => {
 					false
 				);
 			});
-	};
+	}
 
 	// Update an individual setting, uses current state if value not specified
 	async function updateSetting(option, value) {
@@ -140,6 +141,14 @@ const KudosSettings = ({ stylesheet }) => {
 		});
 	}
 
+	async function checkApiKey() {
+		return fetchTestMollie().then((response) => {
+			createNotification(response.data.message, response?.success);
+			updateSetting('_kudos_vendor_mollie.connected', response?.success);
+			return response;
+		});
+	}
+
 	// Define tabs and panels
 	const tabs = [
 		{
@@ -150,6 +159,7 @@ const KudosSettings = ({ stylesheet }) => {
 					settings={settings}
 					updateSetting={updateSetting}
 					createNotification={createNotification}
+					checkApiKey={checkApiKey}
 				/>
 			),
 		},
@@ -185,6 +195,7 @@ const KudosSettings = ({ stylesheet }) => {
 						{showIntro ? (
 							<IntroGuide
 								updateSettings={updateSettings}
+								checkApiKey={checkApiKey}
 								isAPISaving={isAPISaving}
 								settings={settings}
 								setShowIntro={setShowIntro}
