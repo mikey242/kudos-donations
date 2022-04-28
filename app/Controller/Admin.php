@@ -200,7 +200,7 @@ class Admin {
 		 * Debug page.
 		 */
 		$debug_page_hook_suffix = add_submenu_page(
-			'kudos-settings',
+			$parent_slug,
 			'Kudos Tools',
 			'Tools',
 			'manage_options',
