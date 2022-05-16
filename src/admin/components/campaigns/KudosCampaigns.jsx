@@ -126,7 +126,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 
 	const removeCampaign = (id) => {
 		apiFetch({
-			path: `wp/v2/kudos_campaign/${id}`,
+			path: `wp/v2/kudos_campaign/${id}?force=true`,
 			method: 'DELETE',
 		}).then(() => {
 			createNotification(__('Campaign deleted', 'kudos-donations'));
