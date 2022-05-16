@@ -2,6 +2,8 @@
 
 namespace Kudos\Helpers;
 
+use Exception;
+
 class CustomPostType {
 
 	private $post_type;
@@ -20,6 +22,31 @@ class CustomPostType {
 		$this->custom_meta = $custom_meta;
 
 		$this->register_post();
+	}
+
+	/**
+	 * Gets the custom post type with post meta by id.
+	 *
+	 * @param string|null $value
+	 *
+	 * @return array|null
+	 * @throws Exception
+	 */
+	public static function get_post( string $value ): ?array {
+
+		$post = get_post( $value );
+
+		if ( $post ) {
+			$postMeta = get_post_meta( $post->ID );
+			if ( $postMeta ) {
+				$postMeta['name'] = $post->post_title;
+
+				return $postMeta;
+			}
+		}
+
+		/* translators: %s: Campaign id */
+		throw new Exception( sprintf( __( 'Campaign "%s" not found.', 'kudos-donations' ), $value ) );
 	}
 
 	private function register_post() {

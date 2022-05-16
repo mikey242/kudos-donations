@@ -5,7 +5,7 @@ namespace Kudos\Service;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Campaign;
+use Kudos\Helpers\CustomPostType;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\Vendor\MollieVendor;
@@ -374,8 +374,8 @@ class PaymentService {
 		);
 
 		// Add order id query arg to return url if option to show message enabled.
-		$campaign = Campaign::get_campaign( $campaign_id );
-		if ( $campaign['show_return_message'][0] ) {
+		$campaign = CustomPostType::get_post( $campaign_id );
+		if ( ! empty( $campaign['show_return_message'] ) ) {
 			$action               = 'order_complete';
 			$redirect_url         = add_query_arg(
 				[

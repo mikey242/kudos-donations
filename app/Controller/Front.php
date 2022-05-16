@@ -7,7 +7,6 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
-use Kudos\Helpers\Campaign;
 use Kudos\Helpers\CustomPostType;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
@@ -451,7 +450,7 @@ class Front {
 				->get_one_by( [ 'customer_id' => $transaction->customer_id ] );
 
 			try {
-				$campaign = Campaign::get_campaign( $transaction->campaign_id );
+				$campaign = CustomPostType::get_post( $transaction->campaign_id );
 			} catch ( Exception $e ) {
 				$logger = $this->logger;
 				$logger->warning( 'Error checking transaction: ' . $e->getMessage() );

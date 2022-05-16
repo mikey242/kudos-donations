@@ -5,7 +5,7 @@ namespace Kudos\Controller\Table;
 use Exception;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Campaign;
+use Kudos\Helpers\CustomPostType;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use WP_List_Table;
@@ -442,7 +442,7 @@ class TransactionsTable extends WP_List_Table {
 		}
 
 		try {
-			$campaign = Campaign::get_campaign( $item['campaign_id'] );
+			$campaign = CustomPostType::get_post( $item['campaign_id'] );
 		} catch ( Exception $e ) {
 			return $item['campaign_id'];
 		}

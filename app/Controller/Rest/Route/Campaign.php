@@ -47,7 +47,7 @@ class Campaign extends Base {
 			$params = $request->get_query_params();
 
 			try {
-				return new WP_REST_Response( \Kudos\Helpers\Campaign::get_campaign( $params['id'] ) );
+				return new WP_REST_Response( \Kudos\Helpers\CustomPostType::get_post( $params['id'] ) );
 
 			} catch ( Exception $e ) {
 				wp_send_json_error( $e->getMessage() );
