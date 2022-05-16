@@ -448,15 +448,13 @@ class TransactionsTable extends WP_List_Table {
 		}
 
 		if ( $campaign ) {
-			return sprintf(
+			return wp_sprintf(
 				'<a href=%1$s>%2$s</a>',
-				sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=name&s=%s' ),
-					rawurlencode( $campaign['name'] ) ),
+				wp_sprintf( admin_url( 'admin.php?page=kudos-campaigns&tab=0&campaign=%l' ),
+					$item['campaign_id'] ),
 				$campaign['name']
 			);
 		}
-
-		return $item['campaign_id'];
 
 	}
 
