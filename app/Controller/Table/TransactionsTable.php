@@ -444,7 +444,7 @@ class TransactionsTable extends WP_List_Table {
 		try {
 			$campaign = Campaign::get_campaign( $item['campaign_id'] );
 		} catch ( Exception $e ) {
-			return $e->getMessage();
+			return $item['campaign_id'];
 		}
 
 		if ( $campaign ) {
