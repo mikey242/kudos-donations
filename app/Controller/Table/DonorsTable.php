@@ -115,7 +115,6 @@ class DonorsTable extends WP_List_Table {
 	 * Define which columns are hidden
 	 *
 	 * @return array
-	 * @since   2.0.0
 	 */
 	public function get_hidden_columns(): array {
 		return [
@@ -128,7 +127,6 @@ class DonorsTable extends WP_List_Table {
 	 * Define the sortable columns
 	 *
 	 * @return array
-	 * @since   2.0.0
 	 */
 	public function get_sortable_columns(): array {
 		return [
@@ -203,7 +201,6 @@ class DonorsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   2.0.0
 	 */
 	protected function column_cb( $item ): string {
 		return sprintf(
@@ -218,7 +215,6 @@ class DonorsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   1.0.0
 	 */
 	protected function column_created( array $item ): string {
 
@@ -233,7 +229,6 @@ class DonorsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   2.0.0
 	 */
 	protected function column_email( array $item ): string {
 
@@ -266,7 +261,6 @@ class DonorsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   2.0.0
 	 */
 	protected function column_address( array $item ): string {
 
@@ -291,7 +285,6 @@ class DonorsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since   2.0.0
 	 */
 	protected function column_donations( array $item ) {
 
@@ -326,7 +319,6 @@ class DonorsTable extends WP_List_Table {
 	 * Returns an associative array containing the bulk action
 	 *
 	 * @return array
-	 * @since   2.0.0
 	 */
 	protected function get_bulk_actions(): array {
 		return [

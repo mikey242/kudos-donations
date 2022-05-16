@@ -167,8 +167,6 @@ class SubscriptionsTable extends WP_List_Table {
 
 	/**
 	 * Process delete, cancel and bulk-delete actions
-	 *
-	 * @since      2.0.0
 	 */
 	public function process_bulk_action() {
 
@@ -255,7 +253,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since      2.0.0
 	 */
 	protected function column_cb( $item ): string {
 		return sprintf(
@@ -270,7 +267,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since      2.0.0
 	 */
 	protected function column_created( array $item ): string {
 
@@ -316,8 +312,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 *
 	 * @param array $item Array of results.
 	 *
-	 * @return string|void
-	 * @since      2.0.0
+	 * @return string
 	 */
 	protected function column_frequency( array $item ): string {
 		return Utils::get_frequency_name( $item['frequency'] );
@@ -328,8 +323,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 *
 	 * @param array $item Array of results.
 	 *
-	 * @return string|void
-	 * @since      2.0.0
+	 * @return string
 	 */
 	protected function column_years( array $item ): string {
 
@@ -342,7 +336,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string|null
-	 * @since   2.0.0
 	 */
 	protected function column_name( array $item ): ?string {
 
@@ -366,7 +359,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * @param array $item Array of results.
 	 *
 	 * @return string
-	 * @since      2.0.0
 	 */
 	protected function column_email( array $item ): string {
 		return sprintf(
@@ -380,8 +372,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 *
 	 * @param array $item Array of results.
 	 *
-	 * @return string|void
-	 * @since      2.0.0
+	 * @return string
 	 */
 	protected function column_value( array $item ): string {
 
@@ -396,8 +387,7 @@ class SubscriptionsTable extends WP_List_Table {
 	 *
 	 * @param array $item Array of results.
 	 *
-	 * @return string|void
-	 * @since      2.0.0
+	 * @return string
 	 */
 	protected function column_status( array $item ): string {
 
@@ -419,7 +409,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * Returns an associative array containing the bulk action
 	 *
 	 * @return array|string[]
-	 * @since      2.0.0
 	 */
 	protected function get_bulk_actions(): array {
 		return [
@@ -431,7 +420,6 @@ class SubscriptionsTable extends WP_List_Table {
 	 * Gets view data
 	 *
 	 * @return array
-	 * @since      2.0.0
 	 */
 	protected function get_views(): array {
 		$views   = [];
