@@ -332,7 +332,7 @@ class TransactionsTable extends WP_List_Table {
 	 *
 	 * @param array $item Array of results.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	protected function column_value( array $item ): string {
 
@@ -370,7 +370,7 @@ class TransactionsTable extends WP_List_Table {
 	 *
 	 * @param array $item Array of results.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	protected function column_type( array $item ): string {
 
@@ -383,7 +383,7 @@ class TransactionsTable extends WP_List_Table {
 	 *
 	 * @param array $item Array of results.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	protected function column_status( array $item ): string {
 
@@ -420,7 +420,7 @@ class TransactionsTable extends WP_List_Table {
 	 *
 	 * @param array $item Array of results.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	protected function column_order_id( array $item ): string {
 
@@ -456,7 +456,7 @@ class TransactionsTable extends WP_List_Table {
 			);
 		}
 
-		return $item['campaign_id'] ?? '';
+		return $item['campaign_id'];
 
 	}
 
