@@ -16,12 +16,20 @@ class CustomPostType {
 	 */
 	private $custom_meta;
 
-	public function __construct( $post_type, $args = [], $custom_meta = [] ) {
+	/**
+	 * The custom post type constructor.
+	 *
+	 * @param $post_type
+	 * @param array $args
+	 * @param array $custom_meta
+	 */
+	public function __construct( $post_type, array $args, array $custom_meta ) {
 		$this->post_type   = $post_type;
 		$this->args        = $args;
 		$this->custom_meta = $custom_meta;
 
 		$this->register_post();
+		$this->register_meta();
 	}
 
 	/**
@@ -49,6 +57,11 @@ class CustomPostType {
 		throw new Exception( sprintf( __( 'Campaign "%s" not found.', 'kudos-donations' ), $value ) );
 	}
 
+	/**
+	 * Register the post type with WordPress.
+	 *
+	 * @return void
+	 */
 	private function register_post() {
 		$args = wp_parse_args( $this->args, [
 			'public'       => false,
@@ -56,9 +69,13 @@ class CustomPostType {
 			'supports'     => [ 'title', 'custom-fields' ],
 		] );
 		register_post_type( $this->post_type, $args );
-		$this->register_meta();
 	}
 
+	/**
+	 * Register the post meta.
+	 *
+	 * @return void
+	 */
 	private function register_meta() {
 		foreach ( $this->custom_meta as $key => $value ) {
 			$args = wp_parse_args( $value, [
