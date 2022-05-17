@@ -29,65 +29,81 @@ const FormRouter = (props) => {
 			<form onSubmit={methods.handleSubmit(onSubmit)}>
 				{
 					{
-						1: <Initial
-							title={campaign.initial_title}
-							description={campaign.initial_description}
-							donationType={campaign.donation_type}
-							amountType={campaign.amount_type}
-							fixedAmounts={campaign.fixed_amounts}
-							showGoal={campaign.show_goal}
-							goal={campaign.goal}
-							total={total}
-						/>,
-						2: <PaymentFrequency
-							title={
-								campaign.recurring_title ??
-								__('Subscription', 'kudos-donations')
-							}
-							description={
-								campaign.recurring_description ??
-								__(
-									'How often would you like to donate?',
-									'kudos-donations'
-								)
-							}
-						/>,
-						3: <Address
-							required={campaign.address_required}
-							title={
-								campaign.address_title ??
-								__('Address', 'kudos-donations')
-							}
-							description={
-								campaign.address_description ??
-								__('Please fill in your address', 'kudos-donations')
-							}
-						/>,
-						4: <Message
-							title={
-								campaign.message_title ??
-								__('Message', 'kudos-donations')
-							}
-							description={
-								campaign.message_description ??
-								__('Leave a message (optional).', 'kudos-donations')
-							}
-						/>,
-						5 : <Summary
-							title={
-								campaign.summary_title ??
-								__('Payment', 'kudos-donations')
-							}
-							description={
-								campaign.summary_description ??
-								__(
-									'By clicking donate you agree to the following payment:',
-									'kudos-donations'
-								)
-							}
-							privacyLink={campaign.privacy_link}
-							termsLink={campaign.terms_link}
-						/>
+						1: (
+							<Initial
+								title={campaign.initial_title}
+								description={campaign.initial_description}
+								donationType={campaign.donation_type}
+								amountType={campaign.amount_type}
+								fixedAmounts={campaign.fixed_amounts}
+								showGoal={campaign.show_goal}
+								goal={campaign.goal}
+								total={total}
+							/>
+						),
+						2: (
+							<PaymentFrequency
+								title={
+									campaign.recurring_title ??
+									__('Subscription', 'kudos-donations')
+								}
+								description={
+									campaign.recurring_description ??
+									__(
+										'How often would you like to donate?',
+										'kudos-donations'
+									)
+								}
+							/>
+						),
+						3: (
+							<Address
+								required={campaign.address_required}
+								title={
+									campaign.address_title ??
+									__('Address', 'kudos-donations')
+								}
+								description={
+									campaign.address_description ??
+									__(
+										'Please fill in your address',
+										'kudos-donations'
+									)
+								}
+							/>
+						),
+						4: (
+							<Message
+								title={
+									campaign.message_title ??
+									__('Message', 'kudos-donations')
+								}
+								description={
+									campaign.message_description ??
+									__(
+										'Leave a message (optional).',
+										'kudos-donations'
+									)
+								}
+							/>
+						),
+						5: (
+							<Summary
+								title={
+									campaign.summary_title ??
+									__('Payment', 'kudos-donations')
+								}
+								description={
+									campaign.summary_description ??
+									__(
+										'By clicking donate you agree to the following payment:',
+										'kudos-donations'
+									)
+								}
+								privacyLink={campaign.privacy_link}
+								termsLink={campaign.terms_link}
+							/>
+						),
 					}[step]
 				}
 				<div className="kudos-modal-buttons mt-8 flex justify-between relative">
