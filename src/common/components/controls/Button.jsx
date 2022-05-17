@@ -28,6 +28,7 @@ function Button({
 			onClick={handleClick}
 			style={{ backgroundColor: color }}
 			form={form}
+			disabled={isDisabled}
 			className={classNames(
 				className,
 				isDisabled && 'cursor-not-allowed',
