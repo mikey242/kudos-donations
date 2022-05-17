@@ -23,7 +23,7 @@ import {
 
 const KudosCampaigns = ({ stylesheet }) => {
 	const [campaigns, setCampaigns] = useState();
-	const [isApiBusy, setIsApiBusy] = useState(true);
+	const [isApiBusy, setIsApiBusy] = useState(false);
 	const [notification, setNotification] = useState({ shown: false });
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 	const [transactions, setTransactions] = useState();
@@ -64,7 +64,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 			},
 			meta: {
 				initial_title: __('Support us!', 'kudos-donations'),
-				initial_text: __(
+				initial_description: __(
 					'Your support is greatly appreciated and will help to keep us going.',
 					'kudos-donations'
 				),
@@ -161,8 +161,8 @@ const KudosCampaigns = ({ stylesheet }) => {
 
 	const getSettings = () => {
 		api.loadPromise.then(() => {
-			const settings = new api.models.Settings();
-			settings.fetch().then((response) => {
+			const settingsModel = new api.models.Settings();
+			settingsModel.fetch().then((response) => {
 				setSettings(response);
 			});
 		});
@@ -174,7 +174,11 @@ const KudosCampaigns = ({ stylesheet }) => {
 				<KudosRender stylesheet={stylesheet.href}>
 					<Header>
 						{currentCampaign && (
-							<Button form="settings-form" type="submit">
+							<Button
+								form="settings-form"
+								type="submit"
+								isDisabled={isApiBusy}
+							>
 								{currentCampaign.status === 'draft'
 									? __('Create', 'kudos-donations')
 									: __('Save', 'kudos-donations')}
