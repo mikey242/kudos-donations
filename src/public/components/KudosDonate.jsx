@@ -14,7 +14,6 @@ import {
 	fetchCampaignTransactions,
 } from '../../common/helpers/fetch';
 
-const screenSize = getStyle('--kudos-screen');
 const stylesheet = document.getElementById('kudos-donations-public-css');
 
 KudosDonate.propTypes = {
@@ -28,10 +27,7 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 	const [timestamp, setTimestamp] = useState();
 	const [ready, setReady] = useState(false);
 	const [errors, setErrors] = useState([]);
-	const [formState, setFormState] = useState({
-		currentStep: 1,
-		formData: {},
-	});
+	const [formState, setFormState] = useState();
 	const [isBusy, setIsBusy] = useState(false);
 
 	const [modalOpen, setModalOpen] = useState(false);
@@ -58,7 +54,7 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 		const { currentStep } = formState;
 		const target = modal.current;
 		let step = currentStep - 1;
-		const state = { ...formState.formData, ...campaign };
+		const state = { ...formState?.formData, ...campaign };
 
 		// Find next available step.
 		while (!checkRequirements(state, step) && step >= 1) {
@@ -91,7 +87,7 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 			() => {
 				setFormState((prev) => ({
 					...prev,
-					formData: { ...prev.formData, ...data },
+					formData: { ...prev?.formData, ...data },
 					currentStep: step,
 				}));
 			},
@@ -182,23 +178,25 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 						isBusy={isBusy}
 						isOpen={modalOpen}
 					>
-						{errors.length > 0 &&
-							errors.map((e, i) => (
-								<small
-									key={i}
-									className="text-center block font-normal mb-4 text-sm text-red-500"
-								>
-									{e}
-								</small>
-							))}
-						<FormRouter
-							step={formState.currentStep}
-							campaign={campaign}
-							total={total}
-							handleNext={handleNext}
-							handlePrev={handlePrev}
-							submitForm={submitForm}
-						/>
+						<>
+							{errors.length > 0 &&
+								errors.map((e, i) => (
+									<small
+										key={i}
+										className="text-center block font-normal mb-4 text-sm text-red-500"
+									>
+										{e}
+									</small>
+								))}
+							<FormRouter
+								step={formState?.currentStep ?? 1}
+								campaign={campaign}
+								total={total}
+								handleNext={handleNext}
+								handlePrev={handlePrev}
+								submitForm={submitForm}
+							/>
+						</>
 					</KudosModal>
 				</KudosRender>
 			)}
