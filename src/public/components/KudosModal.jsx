@@ -37,9 +37,6 @@ const KudosModal = forwardRef(
 							enter="transition-all duration-[400ms]"
 							enterFrom="opacity-0 rotate-[-5deg] translate-x-3 translate-y-3 scale-90"
 							enterTo="opacity-100 rotate-0 translate-x-0 translate-y-0 scale-100"
-							leave="transform duration-200 transition ease-in-out"
-							leaveFrom="opacity-100 rotate-0 scale-100"
-							leaveTo="opacity-0 scale-95"
 						>
 							<div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 								{/* This element is to trick the browser into centering the modal contents. */}
