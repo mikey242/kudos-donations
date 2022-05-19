@@ -248,10 +248,6 @@ class Front {
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'show_progress'         => [
-				'type'              => 'boolean',
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
 			'theme_color'           => [
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
