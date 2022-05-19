@@ -16,7 +16,7 @@ function Button({
 	const handleClick = (e) => {
 		if (href) {
 			e.preventDefault();
-			location.href = href;
+			window.location.href = href;
 		} else {
 			typeof onClick === 'function' && onClick();
 		}

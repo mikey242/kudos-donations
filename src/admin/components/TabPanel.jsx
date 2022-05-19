@@ -41,7 +41,7 @@ const TabPanel = ({ tabs }) => {
 												index === 0 && 'rounded-l-lg',
 												index === tabs.length - 1 &&
 													'rounded-r-lg',
-												'group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-sm font-medium text-center hover:bg-gray-50 focus:z-10'
+												'group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-sm font-medium text-center hover:bg-gray-50 focus:outline-none focus:z-10'
 											)}
 										>
 											{tab.title}

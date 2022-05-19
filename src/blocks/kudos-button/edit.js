@@ -67,7 +67,7 @@ const ButtonEdit = (props) => {
 								value={campaign_id}
 								onChange={onChangeCampaign}
 								options={[{ label: '', value: '' }].concat(
-									campaigns.map((campaign) => ({
+									campaigns?.map((campaign) => ({
 										label: campaign?.title.rendered,
 										value: campaign.id,
 									}))

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-const CheckboxControl = ({ name, validation, label, help, placeholder }) => {
+const CheckboxControl = ({ name, validation, label, help }) => {
 	const {
 		register,
 		formState: { errors },

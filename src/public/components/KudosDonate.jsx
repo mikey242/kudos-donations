@@ -1,8 +1,8 @@
+// eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getStyle } from '../../common/helpers/util';
 import { KudosButton } from './KudosButton';
 import KudosModal from './KudosModal';
 import FormRouter from './FormRouter';
@@ -24,7 +24,7 @@ KudosDonate.propTypes = {
 function KudosDonate({ buttonLabel, campaignId, root }) {
 	const [campaign, setCampaign] = useState();
 	const [total, setTotal] = useState(0);
-	const [timestamp, setTimestamp] = useState();
+	const [timestamp, setTimestamp] = useState(0);
 	const [ready, setReady] = useState(false);
 	const [errors, setErrors] = useState([]);
 	const [formState, setFormState] = useState();
@@ -102,8 +102,8 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 	const submitForm = (data) => {
 		setErrors([]);
 		setIsBusy(true);
-		const formData = new FormData();
-		formData.append('timestamp', timestamp);
+		const formData = new window.FormData();
+		formData.append('timestamp', timestamp.toString());
 		formData.append('campaign_id', campaignId);
 		formData.append(
 			'return_url',
@@ -121,9 +121,6 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 
 		apiFetch({
 			path: '/kudos/v1/payment/create',
-			headers: new Headers({
-				'Content-Type': 'multipart/tabs-data',
-			}),
 			method: 'POST',
 			body: new URLSearchParams(formData),
 		}).then((result) => {

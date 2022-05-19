@@ -15,6 +15,7 @@ const TextAreaControl = ({ name, validation, placeholder, label, help }) => {
 			>
 				{label}
 			</label>
+			{help && <p className="text-sm leading-5 text-gray-500">{help}</p>}
 			<div className="mt-1">
 				<textarea
 					rows={4}

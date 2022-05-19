@@ -102,7 +102,7 @@ const ColorPicker = ({ name, label, help }) => {
 												prefixed
 											/>
 										</div>
-										<div
+										<button
 											onClick={togglePicker}
 											className="fixed top-0 left-0 w-full h-full z-1 cursor-default"
 										/>
