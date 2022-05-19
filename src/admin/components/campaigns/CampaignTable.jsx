@@ -25,25 +25,25 @@ function CampaignTable({
 					<tr>
 						<th
 							scope="col"
-							className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+							className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 table-cell"
 						>
 							Campaign name
 						</th>
 						<th
 							scope="col"
-							className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+							className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 table-cell"
 						>
 							Color
 						</th>
 						<th
 							scope="col"
-							className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+							className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 table-cell"
 						>
 							Total
 						</th>
 						<th
 							scope="col"
-							className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+							className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 table-cell"
 						>
 							Goal
 						</th>
