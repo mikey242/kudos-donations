@@ -16,17 +16,16 @@ namespace Kudos\Service;
  *
  * @since      1.0.0
  */
-class DeactivatorService {
-
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function deactivate() {
-
-	}
-
+class DeactivatorService
+{
+    /**
+     * Short Description. (use period)
+     *
+     * Long Description.
+     *
+     * @since    1.0.0
+     */
+    public static function deactivate()
+    {
+    }
 }
