@@ -104,11 +104,13 @@ interface VendorInterface
     /**
      * Creates a payment and returns it as an object.
      *
-     * @param array $payment_array Parameters to pass to mollie to create a payment.
+     * @param array $payment_args Parameters to pass to mollie to create a payment.
+     * @param string $order_id Order ID.
+     * @param string|null $customer_id ID of customer the payment is for.
      *
-     * @return object|bool
+     * @return string
      */
-    public function create_payment(array $payment_array);
+    public function create_payment(array $payment_args, string $order_id, ?string $customer_id);
 
     /**
      * Vendor webhook action.

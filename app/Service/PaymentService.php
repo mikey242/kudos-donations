@@ -5,12 +5,10 @@ namespace Kudos\Service;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\CustomPostType;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\Vendor\MollieVendor;
 use Kudos\Service\Vendor\VendorInterface;
-use Mollie\Api\Resources\Payment;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -145,7 +143,7 @@ class PaymentService
     }
 
     /**
-     * Creates a payment with Mollie.
+     * Handles the donation form submission.
      *
      * @param WP_REST_Request $request
      *
@@ -167,53 +165,57 @@ class PaymentService
             wp_send_json_error(['message' => __('Request invalid.', 'kudos-donations')]);
         }
 
-        // Add submit action and pass tabs data.
-        do_action('kudos_submit_payment', $values);
+        $defaults = [
+            'currency'         => 'EUR',
+            'recurring_length' => 0,
+            'redirect_url'     => get_site_url(),
+            'name'             => null,
+            'business_name'    => null,
+            'email'            => null,
+            'street'           => null,
+            'postcode'         => null,
+            'city'             => null,
+            'country'          => null,
+            'message'          => null,
+            'campaign_id'      => null,
+        ];
 
-        // Assign tabs fields.
-        $value             = $values['value'];
-        $payment_frequency = $values['recurring'] == "true" ? $values['recurring_frequency'] : 'oneoff';
-        $recurring_length  = $values['recurring_length'] ?? 0;
-        $name              = $values['name'] ?? null;
-        $business_name     = $values['business_name'] ?? null;
-        $email             = $values['email_address'] ?? null;
-        $street            = $values['street'] ?? null;
-        $postcode          = $values['postcode'] ?? null;
-        $city              = $values['city'] ?? null;
-        $country           = $values['country'] ?? null;
-        $message           = $values['message'] ?? null;
-        $redirect_url      = $values['return_url'] ?? get_site_url();
-        $campaign_id       = $values['campaign_id'] ?? null;
+        $args                      = wp_parse_args($values, $defaults);
+        $args['payment_frequency'] = $values['recurring'] == "true" ? $values['recurring_frequency'] : 'oneoff';
+        $args['value']             = number_format($args['value'], 2, '.', '');
+
+        // Add submit action and pass args.
+        do_action('kudos_submit_payment', $args);
 
         $mapper = $this->mapper_service;
 
-        if ($email) {
+        if ($args['email_address']) {
             // Search for existing donor based on email and mode.
             /** @var DonorEntity $donor */
             $donor = $mapper->get_repository(DonorEntity::class)
                             ->get_one_by([
-                                'email' => $email,
+                                'email' => $args['email_address'],
                                 'mode'  => $this->vendor->get_api_mode(),
                             ]);
 
             // Create new donor if none found.
             if (empty($donor->customer_id)) {
                 $donor    = new DonorEntity();
-                $customer = $this->vendor->create_customer($email, $name);
+                $customer = $this->vendor->create_customer($args['email_address'], $args['name']);
                 $donor->set_fields(['customer_id' => $customer->id]);
             }
 
             // Update donor.
             $donor->set_fields(
                 [
-                    'email'         => $email,
-                    'name'          => $name,
-                    'business_name' => $business_name,
                     'mode'          => $this->vendor->get_api_mode(),
-                    'street'        => $street,
-                    'postcode'      => $postcode,
-                    'city'          => $city,
-                    'country'       => $country,
+                    'email'         => $args['email_address'],
+                    'name'          => $args['name'],
+                    'business_name' => $args['business_name'],
+                    'street'        => $args['street'],
+                    'postcode'      => $args['postcode'],
+                    'city'          => $args['city'],
+                    'country'       => $args['country'],
                 ]
             );
 
@@ -221,23 +223,14 @@ class PaymentService
         }
 
         $customer_id = $donor->customer_id ?? null;
+        $order_id    = Utils::generate_id('kdo_');
 
-        $result = $this->create_payment(
-            $value,
-            $payment_frequency,
-            $recurring_length,
-            $redirect_url,
-            $campaign_id,
-            $name,
-            $email,
-            $customer_id,
-            $message
-        );
+        $url = $this->vendor->create_payment($args, $order_id, $customer_id);
 
         // Return checkout url if payment successfully created in Mollie.
-        if ($result instanceof Payment) {
-            do_action('kudos_payment_submit_successful', $values);
-            wp_send_json_success($result->getCheckoutUrl());
+        if ($url) {
+            do_action('kudos_payment_submit_successful', $args);
+            wp_send_json_success($url);
         }
 
         // If payment not created return an error message.
@@ -280,117 +273,6 @@ class PaymentService
         }
 
         return false;
-    }
-
-    /**
-     * Creates a payment and returns it as an object.
-     *
-     * @param string $value Value of payment.
-     * @param string $interval Interval of payment (oneoff, first, recurring).
-     * @param string $years Number of years for subscription.
-     * @param string $redirect_url URL to redirect customer to on payment completion.
-     * @param string|null $campaign_id Campaign name to associate payment to.
-     * @param string|null $name Name of donor.
-     * @param string|null $email Email of donor.
-     * @param string|null $customer_id Mollie customer id.
-     * @param string|null $message Message left by donor.
-     *
-     * @return false|Object
-     */
-    public function create_payment(
-        string $value,
-        string $interval,
-        string $years,
-        string $redirect_url,
-        string $campaign_id = null,
-        string $name = null,
-        string $email = null,
-        string $customer_id = null,
-        string $message = null
-    ) {
-        $order_id        = Utils::generate_id('kdo_');
-        $currency        = 'EUR';
-        $formatted_value = number_format($value, 2, '.', '');
-
-        // Set payment frequency.
-        $frequency_text = Utils::get_frequency_name($interval);
-        $sequence_type  = 'oneoff' === $interval ? 'oneoff' : 'first';
-
-        // Create payment settings.
-        $payment_array = [
-            "amount"       => [
-                'currency' => $currency,
-                'value'    => $formatted_value,
-            ],
-            'redirectUrl'  => $redirect_url,
-            'webhookUrl'   => $this->vendor->get_webhook_url(),
-            'sequenceType' => $sequence_type,
-            'description'  => sprintf(
-            /* translators: %s: The order id */
-                __('Kudos Donation (%1$s) - %2$s', 'kudos-donations'),
-                $frequency_text,
-                $order_id
-            ),
-            'metadata'     => [
-                'order_id'    => $order_id,
-                'interval'    => $interval,
-                'years'       => $years,
-                'email'       => $email,
-                'name'        => $name,
-                'campaign_id' => $campaign_id,
-            ],
-        ];
-
-        // Link payment to customer if specified.
-        if ($customer_id) {
-            $payment_array['customerId'] = $customer_id;
-        }
-
-        $payment = $this->vendor->create_payment($payment_array);
-        if (null === $payment) {
-            return false;
-        }
-
-        $transaction = new TransactionEntity(
-            [
-                'order_id'      => $order_id,
-                'customer_id'   => $customer_id,
-                'value'         => $formatted_value,
-                'currency'      => $currency,
-                'status'        => $payment->status,
-                'mode'          => $payment->mode,
-                'sequence_type' => $payment->sequenceType,
-                'campaign_id'   => $campaign_id,
-                'message'       => $message,
-            ]
-        );
-
-        // Add order id query arg to return url if option to show message enabled.
-        $campaign = CustomPostType::get_post($campaign_id);
-        if (! empty($campaign['show_return_message'])) {
-            $action               = 'order_complete';
-            $redirect_url         = add_query_arg(
-                [
-                    'kudos_action'   => 'order_complete',
-                    'kudos_order_id' => $order_id,
-                    'kudos_nonce'    => wp_create_nonce($action . $order_id),
-                ],
-                $redirect_url
-            );
-            $payment->redirectUrl = $redirect_url;
-            $payment->update();
-        }
-
-        // Commit transaction to database.
-        $mapper = $this->mapper_service;
-        $mapper->save($transaction);
-
-        $this->logger->info(
-            "New $this->vendor payment created.",
-            ['oder_id' => $order_id, 'sequence_type' => $payment->sequenceType]
-        );
-
-        return $payment;
     }
 
     /**

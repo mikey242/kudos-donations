@@ -2,9 +2,11 @@
 
 namespace Kudos\Service\Vendor;
 
+use Exception;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\CustomPostType;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
@@ -101,6 +103,11 @@ class MollieVendor implements VendorInterface
         global $wp_version;
         $this->api_client->addVersionString("KudosDonations/" . KUDOS_VERSION);
         $this->api_client->addVersionString("WordPress/" . $wp_version);
+    }
+
+    public static function supports_recurring(): bool
+    {
+        return true;
     }
 
     /**
@@ -360,19 +367,114 @@ class MollieVendor implements VendorInterface
     /**
      * Creates a payment and returns it as an object.
      *
-     * @param array $payment_array Parameters to pass to mollie to create a payment.
+     * @param array $payment_args Parameters to pass to mollie to create a payment.
+     * @param $order_id
+     * @param string|null $customer_id
      *
-     * @return null|Payment
+     * @return string
      */
-    public function create_payment(array $payment_array): ?Payment
+    public function create_payment(array $payment_args, $order_id, ?string $customer_id): string
     {
+        // Set payment frequency.
+        $frequency_text = Utils::get_frequency_name($payment_args['payment_frequency']);
+        $sequence_type  = 'oneoff' === $payment_args['payment_frequency'] ? 'oneoff' : 'first';
+        $redirect_url   = $payment_args['return_url'];
+
+        // Add order id query arg to return url if option to show message enabled.
         try {
-            return $this->api_client->payments->create($payment_array);
+            $campaign = CustomPostType::get_post($payment_args['campaign_id']);
+            if (! empty($campaign['show_return_message'])) {
+                $action       = 'order_complete';
+                $redirect_url = add_query_arg(
+                    [
+                        'kudos_action'   => 'order_complete',
+                        'kudos_order_id' => $order_id,
+                        'kudos_nonce'    => wp_create_nonce($action . $order_id),
+                    ],
+                    $payment_args['return_url']
+                );
+            }
+        } catch (Exception $e) {
+            $this->logger->warning($e->getMessage());
+        }
+
+        // Create payment settings.
+        $payment_array = [
+            "amount"       => [
+                'currency' => $payment_args['currency'],
+                'value'    => $payment_args['value'],
+            ],
+            'redirectUrl'  => $redirect_url,
+            'webhookUrl'   => $this->get_webhook_url(),
+            'sequenceType' => $sequence_type,
+            'description'  => sprintf(
+            /* translators: %s: The order id */
+                __('Kudos Donation (%1$s) - %2$s', 'kudos-donations'),
+                $frequency_text,
+                $order_id
+            ),
+            'metadata'     => [
+                'order_id'    => $order_id,
+                'interval'    => $payment_args['payment_frequency'],
+                'years'       => $payment_args['recurring_length'],
+                'email'       => $payment_args['email'],
+                'name'        => $payment_args['name'],
+                'campaign_id' => $payment_args['campaign_id'],
+            ],
+        ];
+
+        // Link payment to customer if specified.
+        if ($customer_id) {
+            $payment_array['customerId'] = $customer_id;
+        }
+
+        try {
+            $payment     = $this->api_client->payments->create($payment_array);
+            $transaction = new TransactionEntity(
+                [
+                    'order_id'      => $order_id,
+                    'customer_id'   => $customer_id,
+                    'value'         => $payment_args['value'],
+                    'currency'      => $payment_args['currency'],
+                    'status'        => $payment->status,
+                    'mode'          => $payment->mode,
+                    'sequence_type' => $payment->sequenceType,
+                    'campaign_id'   => $payment_args['campaign_id'],
+                    'message'       => $payment_args['message'],
+                ]
+            );
+
+            $this->mapper->save($transaction);
+
+            $this->logger->info(
+                "New $this payment created.",
+                ['oder_id' => $order_id, 'sequence_type' => $payment->sequenceType]
+            );
+
+            return $payment->getCheckoutUrl();
         } catch (ApiException $e) {
             $this->logger->critical($e->getMessage());
 
-            return null;
+            return false;
         }
+    }
+
+    /**
+     * Returns the Mollie Rest URL.
+     *
+     * @return string
+     */
+    public static function get_webhook_url(): string
+    {
+        $route = "kudos/v1/payment/webhook";
+
+        // Use APP_URL if defined in .env file.
+        if (isset($_ENV['APP_URL'])) {
+            return $_ENV['APP_URL'] . 'wp-json/' . $route;
+        }
+
+        // Otherwise, return normal rest URL.
+        return rest_url($route);
     }
 
     /**
@@ -666,24 +768,6 @@ class MollieVendor implements VendorInterface
     }
 
     /**
-     * Returns the Mollie Rest URL.
-     *
-     * @return string
-     */
-    public static function get_webhook_url(): string
-    {
-        $route = "kudos/v1/payment/webhook";
-
-        // Use APP_URL if defined in .env file.
-        if (isset($_ENV['APP_URL'])) {
-            return $_ENV['APP_URL'] . 'wp-json/' . $route;
-        }
-
-        // Otherwise, return normal rest URL.
-        return rest_url($route);
-    }
-
-    /**
      * Check the provided customer for valid mandates
      *
      * @param Customer $customer
@@ -713,16 +797,6 @@ class MollieVendor implements VendorInterface
     public function get_api_mode(): string
     {
         return $this->api_mode;
-    }
-
-    /**
-     * Returns the current vendor name.
-     *
-     * @return string
-     */
-    public static function get_vendor_name(): string
-    {
-        return static::VENDOR_NAME;
     }
 
     /**
@@ -858,11 +932,6 @@ class MollieVendor implements VendorInterface
         return $added;
     }
 
-    public static function supports_recurring(): bool
-    {
-        return true;
-    }
-
     /**
      * Returns the vendor name.
      *
@@ -871,5 +940,15 @@ class MollieVendor implements VendorInterface
     public function __toString(): string
     {
         return self::get_vendor_name();
+    }
+
+    /**
+     * Returns the current vendor name.
+     *
+     * @return string
+     */
+    public static function get_vendor_name(): string
+    {
+        return static::VENDOR_NAME;
     }
 }
