@@ -8,6 +8,7 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\CustomPostType;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
+use Kudos\Service\Vendor\MollieVendor;
 use WP_List_Table;
 
 class TransactionsTable extends WP_List_Table
@@ -376,7 +377,7 @@ class TransactionsTable extends WP_List_Table
      */
     protected function column_type(array $item): string
     {
-        return Utils::get_sequence_type($item['sequence_type']);
+        return MollieVendor::get_sequence_type($item['sequence_type']);
     }
 
     /**
@@ -436,7 +437,7 @@ class TransactionsTable extends WP_List_Table
      */
     protected function column_campaign_id(array $item): string
     {
-        if (! $item['campaign_id']) {
+        if ( ! $item['campaign_id']) {
             return '';
         }
 
@@ -504,18 +505,18 @@ class TransactionsTable extends WP_List_Table
         $canceled_url      = add_query_arg('status', 'canceled', $url);
         $class             = ('canceled' === $current ? ' class="current"' : '');
         $views['canceled'] = "<a href='$canceled_url' $class >" . __(
-            'Cancelled',
-            'kudos-donations'
-        ) . " ($count)</a>";
+                'Cancelled',
+                'kudos-donations'
+            ) . " ($count)</a>";
 
         // Canceled link.
         $count            = count($this->mapper->get_all_by(['status' => 'expired']));
         $expired_url      = add_query_arg('status', 'expired', $url);
         $class            = ('expired' === $current ? ' class="current"' : '');
         $views['expired'] = "<a href='$expired_url' $class >" . __(
-            'Expired',
-            'kudos-donations'
-        ) . " ($count)</a>";
+                'Expired',
+                'kudos-donations'
+            ) . " ($count)</a>";
 
         return $views;
     }
