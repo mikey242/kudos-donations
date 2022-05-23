@@ -86,8 +86,8 @@ class CustomPostType
             }
         }
 
-        /* translators: %s: Campaign id */
-        throw new Exception(sprintf(__('Campaign "%s" not found.', 'kudos-donations'), $value));
+        /* translators: %s: Post id */
+        throw new Exception(sprintf(__('Post with id "%s" not found.', 'kudos-donations'), $value));
     }
 
     /**
