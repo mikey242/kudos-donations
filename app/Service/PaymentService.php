@@ -189,12 +189,12 @@ class PaymentService
 
         $mapper = $this->mapper_service;
 
-        if ($args['email_address']) {
+        if ($args['email']) {
             // Search for existing donor based on email and mode.
             /** @var DonorEntity $donor */
             $donor = $mapper->get_repository(DonorEntity::class)
                             ->get_one_by([
-                                'email' => $args['email_address'],
+                                'email' => $args['email'],
                                 'mode'  => $this->vendor->get_api_mode(),
                             ]);
 
@@ -209,7 +209,7 @@ class PaymentService
             $donor->set_fields(
                 [
                     'mode'          => $this->vendor->get_api_mode(),
-                    'email'         => $args['email_address'],
+                    'email'         => $args['email'],
                     'name'          => $args['name'],
                     'business_name' => $args['business_name'],
                     'street'        => $args['street'],

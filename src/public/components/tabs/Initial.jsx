@@ -100,7 +100,7 @@ const Initial = (props) => {
 			/>
 
 			<TextControl
-				name="email_address"
+				name="email"
 				validation={{
 					required: __('Your email is required', 'kudos-donations'),
 				}}

@@ -60,7 +60,7 @@ class Payment extends Base
                         'required'          => true,
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'email_address' => [
+                    'email'         => [
                         'type'              => 'string',
                         'required'          => true,
                         'sanitize_callback' => 'sanitize_email',
