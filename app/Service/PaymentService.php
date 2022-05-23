@@ -72,7 +72,7 @@ class PaymentService
         $mode      = $settings['mode'] ?? '';
         $key       = $settings[$mode . '_key'] ?? null;
 
-        if (! $connected || ! $key) {
+        if ( ! $connected || ! $key) {
             return false;
         }
 
@@ -151,7 +151,7 @@ class PaymentService
     public function submit_payment(WP_REST_Request $request)
     {
         // Verify nonce.
-        if (! wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest')) {
+        if ( ! wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest')) {
             wp_send_json_error([
                 'message' => __('Request invalid.', 'kudos-donations'),
                 'nonce'   => $request->get_header('X-WP-Nonce'),
@@ -180,9 +180,7 @@ class PaymentService
             'campaign_id'      => null,
         ];
 
-        $args                      = wp_parse_args($values, $defaults);
-        $args['payment_frequency'] = $values['recurring'] == "true" ? $values['recurring_frequency'] : 'oneoff';
-        $args['value']             = number_format($args['value'], 2, '.', '');
+        $args = wp_parse_args($values, $defaults);
 
         // Add submit action and pass args.
         do_action('kudos_submit_payment', $args);
@@ -201,7 +199,7 @@ class PaymentService
             // Create new donor if none found.
             if (empty($donor->customer_id)) {
                 $donor    = new DonorEntity();
-                $customer = $this->vendor->create_customer($args['email_address'], $args['name']);
+                $customer = $this->vendor->create_customer($args['email'], $args['name']);
                 $donor->set_fields(['customer_id' => $customer->id]);
             }
 
@@ -230,6 +228,21 @@ class PaymentService
         // Return checkout url if payment successfully created in Mollie.
         if ($url) {
             do_action('kudos_payment_submit_successful', $args);
+            $transaction = new TransactionEntity(
+                [
+                    'order_id'      => $order_id,
+                    'customer_id'   => $customer_id,
+                    'value'         => $args['value'],
+                    'currency'      => $args['currency'],
+                    'status'        => 'open',
+                    'mode'          => $this->vendor->get_api_mode(),
+                    'sequence_type' => "true" === $args['recurring'] ? 'first' : 'oneoff',
+                    'campaign_id'   => $args['campaign_id'],
+                    'message'       => $args['message'],
+                ]
+            );
+
+            $mapper->save($transaction);
             wp_send_json_success($url);
         }
 
@@ -261,7 +274,7 @@ class PaymentService
         }
 
         // Check if honeypot field completed.
-        if (! empty($values['donation'])) {
+        if ( ! empty($values['donation'])) {
             $this->logger->info(
                 'Bot detected, rejecting tabs.',
                 array_merge([
