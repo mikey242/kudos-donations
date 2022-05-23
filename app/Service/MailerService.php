@@ -174,7 +174,6 @@ class MailerService
      * @param array|null $attachment Attachment.
      *
      * @return bool
-     * @since    1.1.0
      */
     private function send(
         string $to,
