@@ -11,7 +11,7 @@ const TextAreaControl = ({ name, validation, placeholder, label, help }) => {
 		<div className="first:mt-0 mt-3">
 			<label
 				htmlFor={name}
-				className="block text-sm font-medium font-bold text-gray-700"
+				className="block text-sm font-bold text-gray-700"
 			>
 				{label}
 			</label>

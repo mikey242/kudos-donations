@@ -26,7 +26,7 @@ const ColorPicker = ({ name, label, help }) => {
 			name={name}
 			render={({ field: { onChange, value } }) => (
 				<RadioGroup value={value} onChange={onChange} className="mt-3">
-					<RadioGroup.Label className="block text-sm font-medium font-bold text-gray-700">
+					<RadioGroup.Label className="block text-sm font-bold text-gray-700">
 						{label}
 					</RadioGroup.Label>
 					{help && (

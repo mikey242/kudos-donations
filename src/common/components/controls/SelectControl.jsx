@@ -12,9 +12,7 @@ const SelectControl = ({ name, label, validation, options, placeholder }) => {
 			<label
 				htmlFor={name}
 				className={
-					label
-						? 'block text-sm font-medium text-gray-700'
-						: 'sr-only'
+					label ? 'block text-sm font-bold text-gray-700' : 'sr-only'
 				}
 			>
 				{label}

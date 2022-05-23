@@ -22,9 +22,7 @@ const TextControl = ({
 			<label
 				htmlFor={name}
 				className={
-					label
-						? 'block text-sm font-medium font-bold text-gray-700'
-						: 'sr-only'
+					label ? 'block text-sm font-bold text-gray-700' : 'sr-only'
 				}
 			>
 				{label}

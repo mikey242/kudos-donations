@@ -6,9 +6,7 @@ const RadioControl = ({ name, validation, options, label, help }) => {
 
 	return (
 		<div className="mt-4">
-			<p className="block text-sm font-medium font-bold text-gray-700">
-				{label}
-			</p>
+			<p className="block text-sm font-bold text-gray-700">{label}</p>
 			{help && <p className="text-sm leading-5 text-gray-500">{help}</p>}
 			<fieldset className="mt-2">
 				<legend className="sr-only">Notification method</legend>

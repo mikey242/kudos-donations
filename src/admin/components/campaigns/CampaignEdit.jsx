@@ -95,7 +95,7 @@ function CampaignEdit({
 						)}
 					/>
 					<Divider />
-					<p className="block text-sm font-medium font-bold text-gray-700">
+					<p className="block text-sm font-bold text-gray-700">
 						Completed payment
 					</p>
 					<ToggleControl
