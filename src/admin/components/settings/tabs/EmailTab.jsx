@@ -25,6 +25,7 @@ const EmailTab = ({ createNotification }) => {
 
 	return (
 		<Fragment>
+			<h2>{__('Email receipts', 'kudos-donations')}</h2>
 			<ToggleControl
 				label={__('Send email receipts', 'kudos-donations')}
 				help={__(
@@ -35,7 +36,6 @@ const EmailTab = ({ createNotification }) => {
 			/>
 			<TextControl
 				label={__('Send receipt copy to:', 'kudos-donations')}
-				help={__('Leave blank to disable.', 'kudos-donations')}
 				name="_kudos_email_bcc"
 			/>
 			<ToggleControl
@@ -45,6 +45,7 @@ const EmailTab = ({ createNotification }) => {
 			{watchCustom && (
 				<Fragment>
 					<Divider />
+					<h2>{__('SMTP settings', 'kudos-donations')}</h2>
 					<TextControl
 						name="_kudos_smtp_host"
 						label={__('Host', 'kudos-donations')}
@@ -104,15 +105,12 @@ const EmailTab = ({ createNotification }) => {
 					<TextControl
 						name="_kudos_smtp_from"
 						label={__('From address', 'kudos-donations')}
-						help={__(
-							'The email address emails will appear to be sent from. Leave empty to use same as username.',
-							'kudos-donations'
-						)}
 						placeholder="user@domain.com"
 					/>
 				</Fragment>
 			)}
 			<Divider />
+			<h2>{__('Test email', 'kudos-donations')}</h2>
 			<TextControl
 				label={__('Send test email', 'kudos-donations')}
 				type="email"
