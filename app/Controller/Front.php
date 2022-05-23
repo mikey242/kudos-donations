@@ -13,7 +13,6 @@ use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
-use Kudos\Service\TwigService;
 
 class Front
 {
@@ -36,11 +35,6 @@ class Front
     private $payment;
 
     /**
-     * @var TwigService
-     */
-    private $twig;
-
-    /**
      * @var MapperService
      */
     private $mapper;
@@ -55,13 +49,11 @@ class Front
         string $version,
         LoggerService $logger,
         PaymentService $payment,
-        TwigService $twig,
         MapperService $mapper
     ) {
         $this->version = $version;
         $this->logger  = $logger;
         $this->payment = $payment;
-        $this->twig    = $twig;
         $this->mapper  = $mapper;
     }
 
