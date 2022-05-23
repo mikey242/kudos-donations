@@ -5,7 +5,7 @@ namespace Kudos\Helpers;
 class Utils
 {
     /**
-     * Gets url Mollie will use to return customer to after payment complete.
+     * Gets url vendor will use to return customer to after payment complete.
      *
      * @return string
      */

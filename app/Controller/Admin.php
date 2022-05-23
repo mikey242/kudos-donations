@@ -214,7 +214,7 @@ class Admin
             "admin_print_scripts-$debug_page_hook_suffix",
             function () {
                 ?>
-                <script>
+				<script>
                     document.addEventListener("DOMContentLoaded", function () {
                         let buttons = document.querySelectorAll('button[type="submit"].confirm')
                         for (let i = 0; i < buttons.length; i++) {
@@ -225,7 +225,7 @@ class Admin
                             })
                         }
                     })
-                </script>
+				</script>
                 <?php
             }
         );
@@ -418,7 +418,7 @@ class Admin
             $nonce  = wp_unslash($_REQUEST['_wpnonce']);
 
             // Check nonce.
-            if (! wp_verify_nonce($nonce, $action)) {
+            if ( ! wp_verify_nonce($nonce, $action)) {
                 die();
             }
 
@@ -522,7 +522,7 @@ class Admin
                     new AdminNotice(__('Database re-created', 'kudos-donations'));
                     break;
 
-                case 'kudos_sync_transactions':
+                case 'kudos_sync_mollie_transactions':
                     $mollie  = $this->mollie;
                     $updated = $mollie->sync_transactions();
                     if ($updated) {
@@ -543,7 +543,7 @@ class Admin
                     new AdminNotice(__('No transactions need updating', 'kudos-donations'));
                     break;
 
-                case 'kudos_add_missing_transactions':
+                case 'kudos_add_missing_mollie_transactions':
                     $mollie  = $this->mollie;
                     $updated = $mollie->add_missing_transactions();
                     if ($updated) {

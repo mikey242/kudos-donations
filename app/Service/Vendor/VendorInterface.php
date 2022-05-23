@@ -75,16 +75,9 @@ interface VendorInterface
     /**
      * Gets specified payment.
      *
-     * @param string $mollie_payment_id Mollie payment id.
+     * @param string $vendor_payment_id Vendor payment id.
      */
-    public function get_payment(string $mollie_payment_id);
-
-    /**
-     * Returns the vendors webhook url.
-     *
-     * @return string
-     */
-    public static function get_webhook_url(): string;
+    public function get_payment(string $vendor_payment_id);
 
     /**
      * Create a customer.
