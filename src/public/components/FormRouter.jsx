@@ -17,7 +17,11 @@ import { steps } from '../constants/form';
 const FormRouter = (props) => {
 	const { step, campaign, total } = props;
 	const { handlePrev, handleNext, submitForm } = props;
-	const methods = useForm();
+	const methods = useForm({
+		defaultValues: {
+			recurring: false,
+		},
+	});
 
 	const onSubmit = (data) => {
 		if (step < 5) return handleNext(data, step + 1);
