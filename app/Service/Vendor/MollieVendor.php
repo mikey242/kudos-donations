@@ -31,13 +31,13 @@ class MollieVendor implements VendorInterface
     public const VENDOR_NAME = 'Mollie';
 
     /**
-     * Instance of MollieApiClient
+     * Instance of MollieApiClient.
      *
      * @var MollieApiClient
      */
     private $api_client;
     /**
-     * The API mode (test or live)
+     * The API mode (test or live).
      *
      * @var string
      */
@@ -65,7 +65,7 @@ class MollieVendor implements VendorInterface
 
         $settings = Settings::get_setting('vendor_mollie');
 
-        if (! $settings === false) {
+        if ( ! $settings === false) {
             $this->api_client = new MollieApiClient();
             $this->api_keys   = [
                 'test' => $settings['test_key'] ?? '',
@@ -111,6 +111,25 @@ class MollieVendor implements VendorInterface
     }
 
     /**
+     * Returns a translated string of the sequence type.
+     *
+     * @param string $text Mollie sequence type code.
+     *
+     * @return string
+     */
+    public static function get_sequence_type(string $text): string
+    {
+        switch ($text) {
+            case 'oneoff':
+                return __('One-off', 'kudos-donations');
+            case 'first':
+                return __('Recurring (first payment)', 'kudos-donations');
+            default:
+                return __('Recurring', 'kudos-donations');
+        }
+    }
+
+    /**
      * Check the Mollie api keys for both test and live keys. Sends a JSON response.
      */
     public function check_api_keys()
@@ -144,7 +163,7 @@ class MollieVendor implements VendorInterface
             }
 
             // Test the api key.
-            if (! $this->refresh_api_connection($api_key)) {
+            if ( ! $this->refresh_api_connection($api_key)) {
                 wp_send_json_error(
                     [
                         /* translators: %s: API mode */
@@ -196,7 +215,7 @@ class MollieVendor implements VendorInterface
      */
     public function refresh_api_connection(string $api_key): bool
     {
-        if (! $api_key) {
+        if ( ! $api_key) {
             return false;
         }
 
@@ -375,15 +394,18 @@ class MollieVendor implements VendorInterface
      */
     public function create_payment(array $payment_args, $order_id, ?string $customer_id): string
     {
+//        wp_send_json_error($payment_args);
         // Set payment frequency.
-        $frequency_text = Utils::get_frequency_name($payment_args['payment_frequency']);
-        $sequence_type  = 'oneoff' === $payment_args['payment_frequency'] ? 'oneoff' : 'first';
-        $redirect_url   = $payment_args['return_url'];
+        $payment_args['payment_frequency'] = $payment_args['recurring'] == "true" ? $payment_args['recurring_frequency'] : 'oneoff';
+        $payment_args['value']             = number_format($payment_args['value'], 2, '.', '');
+        $frequency_text                    = self::get_frequency_name($payment_args['payment_frequency']);
+        $sequence_type                     = "true" === $payment_args['recurring'] ? 'first' : 'oneoff';
+        $redirect_url                      = $payment_args['return_url'];
 
         // Add order id query arg to return url if option to show message enabled.
         try {
             $campaign = CustomPostType::get_post($payment_args['campaign_id']);
-            if (! empty($campaign['show_return_message'])) {
+            if ( ! empty($campaign['show_return_message'])) {
                 $action       = 'order_complete';
                 $redirect_url = add_query_arg(
                     [
@@ -429,22 +451,7 @@ class MollieVendor implements VendorInterface
         }
 
         try {
-            $payment     = $this->api_client->payments->create($payment_array);
-            $transaction = new TransactionEntity(
-                [
-                    'order_id'      => $order_id,
-                    'customer_id'   => $customer_id,
-                    'value'         => $payment_args['value'],
-                    'currency'      => $payment_args['currency'],
-                    'status'        => $payment->status,
-                    'mode'          => $payment->mode,
-                    'sequence_type' => $payment->sequenceType,
-                    'campaign_id'   => $payment_args['campaign_id'],
-                    'message'       => $payment_args['message'],
-                ]
-            );
-
-            $this->mapper->save($transaction);
+            $payment = $this->api_client->payments->create($payment_array);
 
             $this->logger->info(
                 "New $this payment created.",
@@ -456,6 +463,29 @@ class MollieVendor implements VendorInterface
             $this->logger->critical($e->getMessage());
 
             return false;
+        }
+    }
+
+    /**
+     * Returns subscription frequency name based on number of months.
+     *
+     * @param string $frequency Mollie frequency code.
+     *
+     * @return string
+     */
+    public static function get_frequency_name(string $frequency): string
+    {
+        switch ($frequency) {
+            case '12 months':
+                return __('Yearly', 'kudos-donations');
+            case '1 month':
+                return __('Monthly', 'kudos-donations');
+            case '3 months':
+                return __('Quarterly', 'kudos-donations');
+            case 'oneoff':
+                return __('One-off', 'kudos-donations');
+            default:
+                return $frequency;
         }
     }
 
@@ -560,7 +590,7 @@ class MollieVendor implements VendorInterface
              * Create new transaction if this is a recurring payment and none found.
              * e.g. New recurring payment.
              */
-            if (! $transaction && $payment->hasSequenceTypeRecurring()) {
+            if ( ! $transaction && $payment->hasSequenceTypeRecurring()) {
                 $this->logger->debug('Recurring payment received, creating transaction.', [
                     'subscription_id' => $payment->subscriptionId,
                 ]);
@@ -579,7 +609,7 @@ class MollieVendor implements VendorInterface
              *
              * @link https://docs.mollie.com/overview/webhooks#how-to-handle-unknown-ids
              */
-            if (! $transaction) {
+            if ( ! $transaction) {
                 $this->logger->warning(
                     'Webhook received for unknown transaction. Aborting',
                     ['transaction_id' => $payment_id]
@@ -902,7 +932,7 @@ class MollieVendor implements VendorInterface
                             ]);
 
                             // Add new transaction if none found.
-                            if (! $transaction) {
+                            if ( ! $transaction) {
                                 $transaction = new TransactionEntity([
                                     'order_id'        => $order_id,
                                     'created'         => $payment->createdAt,
@@ -949,6 +979,6 @@ class MollieVendor implements VendorInterface
      */
     public static function get_vendor_name(): string
     {
-        return static::VENDOR_NAME;
+        return self::VENDOR_NAME;
     }
 }

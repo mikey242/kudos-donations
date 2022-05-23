@@ -8,6 +8,7 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
+use Kudos\Service\Vendor\MollieVendor;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_Error;
@@ -95,7 +96,7 @@ class MailerService
     public function send_receipt(TransactionEntity $transaction): bool
     {
         // Check if setting enabled.
-        if (! Settings::get_setting('email_receipt_enable')) {
+        if ( ! Settings::get_setting('email_receipt_enable')) {
             return false;
         }
 
@@ -119,19 +120,19 @@ class MailerService
         $render_array = [
             'name'         => $donor->name ?? '',
             'date'         => $transaction->created,
-            'description'  => Utils::get_sequence_type($transaction->sequence_type),
+            'description'  => MollieVendor::get_sequence_type($transaction->sequence_type),
             'amount'       => (! empty($transaction->currency) ? html_entity_decode(
-                Utils::get_currency_symbol($transaction->currency)
-            ) : '') . number_format_i18n(
-                $transaction->value,
-                2
-            ),
+                    Utils::get_currency_symbol($transaction->currency)
+                ) : '') . number_format_i18n(
+                                  $transaction->value,
+                                  2
+                              ),
             'receipt_id'   => $transaction->order_id,
             'website_name' => get_bloginfo('name'),
         ];
 
         // Add a cancel subscription url if transaction associated with a subscription.
-        if (! empty($transaction->subscription_id)) {
+        if ( ! empty($transaction->subscription_id)) {
             $mapper          = $this->mapper;
             $subscription_id = $transaction->subscription_id;
             /** @var SubscriptionEntity $subscription */

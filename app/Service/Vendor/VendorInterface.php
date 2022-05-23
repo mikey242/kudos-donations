@@ -18,18 +18,25 @@ interface VendorInterface
     public static function get_vendor_name(): string;
 
     /**
-     * Check the vendor api key associated with the mode. Sends a JSON response.
-     *
-     * @return mixed
-     */
-    public function check_api_keys();
-
-    /**
      * Returns true if vendor supports recurring payments.
      *
      * @return bool
      */
     public static function supports_recurring(): bool;
+
+    /**
+     * Returns the vendors webhook url.
+     *
+     * @return string
+     */
+    public static function get_webhook_url(): string;
+
+    /**
+     * Check the vendor api key associated with the mode. Sends a JSON response.
+     *
+     * @return mixed
+     */
+    public function check_api_keys();
 
     /**
      * @param TransactionEntity $transaction ,
@@ -103,7 +110,7 @@ interface VendorInterface
      *
      * @return string
      */
-    public function create_payment(array $payment_args, string $order_id, ?string $customer_id);
+    public function create_payment(array $payment_args, string $order_id, ?string $customer_id): string;
 
     /**
      * Vendor webhook action.

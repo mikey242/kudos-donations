@@ -89,48 +89,6 @@ class Utils
     }
 
     /**
-     * Returns a translated string of the sequence type.
-     *
-     * @param string $text Mollie sequence type code.
-     *
-     * @return string
-     */
-    public static function get_sequence_type(string $text): string
-    {
-        switch ($text) {
-            case 'oneoff':
-                return __('One-off', 'kudos-donations');
-            case 'first':
-                return __('Recurring (first payment)', 'kudos-donations');
-            default:
-                return __('Recurring', 'kudos-donations');
-        }
-    }
-
-    /**
-     * Returns subscription frequency name based on number of months.
-     *
-     * @param string $frequency Mollie frequency code.
-     *
-     * @return string
-     */
-    public static function get_frequency_name(string $frequency): string
-    {
-        switch ($frequency) {
-            case '12 months':
-                return __('Yearly', 'kudos-donations');
-            case '1 month':
-                return __('Monthly', 'kudos-donations');
-            case '3 months':
-                return __('Quarterly', 'kudos-donations');
-            case 'oneoff':
-                return __('One-off', 'kudos-donations');
-            default:
-                return $frequency;
-        }
-    }
-
-    /**
      * Calculate how many years a subscription is running for.
      * This is based on the number of payments and the frequency.
      *
@@ -141,7 +99,7 @@ class Utils
      */
     public static function get_times_from_years(int $years, string $frequency)
     {
-        if (! $years > 0) {
+        if ( ! $years > 0) {
             return null;
         }
 

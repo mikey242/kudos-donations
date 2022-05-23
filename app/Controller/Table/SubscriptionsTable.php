@@ -7,6 +7,7 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Helpers\Utils;
 use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
+use Kudos\Service\Vendor\MollieVendor;
 use WP_List_Table;
 
 class SubscriptionsTable extends WP_List_Table
@@ -304,7 +305,7 @@ class SubscriptionsTable extends WP_List_Table
         if ('active' === $item['status']) {
             $url               = add_query_arg(
                 [
-                'action' => 'cancel',
+                    'action' => 'cancel',
                 ],
                 $url
             );
@@ -316,7 +317,7 @@ class SubscriptionsTable extends WP_List_Table
         } else {
             $url               = add_query_arg(
                 [
-                'action' => 'delete',
+                    'action' => 'delete',
                 ],
                 $url
             );
@@ -339,7 +340,7 @@ class SubscriptionsTable extends WP_List_Table
      */
     protected function column_frequency(array $item): string
     {
-        return Utils::get_frequency_name($item['frequency']);
+        return MollieVendor::get_frequency_name($item['frequency']);
     }
 
     /**
@@ -467,18 +468,18 @@ class SubscriptionsTable extends WP_List_Table
         $class              = ('3 months' === $current ? ' class="current"' : '');
         $yearly_url         = add_query_arg('frequency', '3 months');
         $views['quarterly'] = "<a href='$yearly_url' $class >" . __(
-            'Quarterly',
-            'kudos-donations'
-        ) . " ($count)</a>";
+                'Quarterly',
+                'kudos-donations'
+            ) . " ($count)</a>";
 
         // Monthly link.
         $count            = count($this->mapper->get_all_by(['frequency' => '1 month']));
         $class            = ('1 month' === $current ? ' class="current"' : '');
         $monthly_url      = add_query_arg('frequency', '1 month');
         $views['monthly'] = "<a href='$monthly_url' $class >" . __(
-            'Monthly',
-            'kudos-donations'
-        ) . " ($count)</a>";
+                'Monthly',
+                'kudos-donations'
+            ) . " ($count)</a>";
 
         return $views;
     }
