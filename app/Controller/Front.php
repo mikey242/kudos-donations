@@ -265,10 +265,7 @@ class Front
     private function register_button_shortcode()
     {
         // Enqueue necessary resources.
-        add_action('wp_enqueue_scripts', function () {
-            wp_enqueue_script('kudos-donations-public');
-            wp_enqueue_style('kudos-donations-public');
-        });
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
 
         // Register shortcode.
         add_shortcode(
@@ -301,7 +298,7 @@ class Front
     {
         try {
             // Check if the current vendor is connected, otherwise throw an exception.
-            if (! $this->payment::is_api_ready()) {
+            if ( ! $this->payment::is_api_ready()) {
                 /* translators: %s: Payment vendor (e.g. Mollie). */
                 throw new Exception(
                     sprintf(
@@ -336,13 +333,13 @@ class Front
             $nonce  = sanitize_text_field(wp_unslash($_REQUEST['kudos_nonce']));
 
             // Enqueue script / style in case we are on another page.
-            wp_enqueue_script('kudos-donations-public');
+            $this->enqueue_assets();
 
             switch ($action) {
                 case 'order_complete':
                     $order_id = sanitize_text_field($_REQUEST['kudos_order_id']);
                     // Return message modal.
-                    if (! empty($order_id) && ! empty($nonce)) {
+                    if ( ! empty($order_id) && ! empty($nonce)) {
                         $transaction = $this->mapper
                             ->get_repository(TransactionEntity::class)
                             ->get_one_by(['order_id' => $order_id]);
@@ -362,7 +359,7 @@ class Front
                 case 'cancel_subscription':
                     $subscription_id = sanitize_text_field($_REQUEST['kudos_subscription_id']);
                     // Cancel subscription modal.
-                    if (! empty($nonce && ! empty($subscription_id))) {
+                    if ( ! empty($nonce && ! empty($subscription_id))) {
                         /** @var SubscriptionEntity $subscription */
                         $subscription = $this->mapper
                             ->get_repository(SubscriptionEntity::class)
@@ -395,6 +392,17 @@ class Front
                     break;
             }
         }
+    }
+
+    /**
+     * Enqueue the styles and scripts.
+     *
+     * @return void
+     */
+    private function enqueue_assets()
+    {
+        wp_enqueue_script('kudos-donations-public');
+        wp_enqueue_style('kudos-donations-public');
     }
 
     /**
@@ -438,11 +446,11 @@ class Front
                 case 'paid':
                     $vars                = [
                         '{{value}}' => (! empty($transaction->currency) ? html_entity_decode(
-                            Utils::get_currency_symbol($transaction->currency)
-                        ) : '') . number_format_i18n(
-                            $transaction->value,
-                            2
-                        ),
+                                Utils::get_currency_symbol($transaction->currency)
+                            ) : '') . number_format_i18n(
+                                           $transaction->value,
+                                           2
+                                       ),
                         '{{name}}'  => $donor->name,
                         '{{email}}' => $donor->email,
                     ];
