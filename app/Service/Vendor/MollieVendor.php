@@ -341,14 +341,14 @@ class MollieVendor implements VendorInterface
     /**
      * Gets specified payment.
      *
-     * @param string $mollie_payment_id Mollie payment id.
+     * @param string $vendor_payment_id Mollie payment id.
      *
      * @return bool|Payment
      */
-    public function get_payment(string $mollie_payment_id)
+    public function get_payment(string $vendor_payment_id)
     {
         try {
-            return $this->api_client->payments->get($mollie_payment_id);
+            return $this->api_client->payments->get($vendor_payment_id);
         } catch (ApiException $e) {
             $this->logger->critical($e->getMessage());
         }
@@ -396,7 +396,7 @@ class MollieVendor implements VendorInterface
     {
 //        wp_send_json_error($payment_args);
         // Set payment frequency.
-        $payment_args['payment_frequency'] = $payment_args['recurring'] == "true" ? $payment_args['recurring_frequency'] : 'oneoff';
+        $payment_args['payment_frequency'] = $payment_args['recurring'] === "true" ? $payment_args['recurring_frequency'] : 'oneoff';
         $payment_args['value']             = number_format($payment_args['value'], 2, '.', '');
         $frequency_text                    = self::get_frequency_name($payment_args['payment_frequency']);
         $sequence_type                     = "true" === $payment_args['recurring'] ? 'first' : 'oneoff';
