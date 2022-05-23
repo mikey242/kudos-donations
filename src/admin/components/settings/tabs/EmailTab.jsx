@@ -1,6 +1,7 @@
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import {
+	Button,
 	CheckboxControl,
 	RadioControl,
 	TextControl,
@@ -9,10 +10,18 @@ import {
 import React from 'react';
 import Divider from '../../Divider';
 import { useFormContext } from 'react-hook-form';
+import { fetchTestEmail } from '../../../../common/helpers/fetch';
 
-const EmailTab = () => {
-	const { watch } = useFormContext();
+const EmailTab = ({ createNotification }) => {
+	const { watch, getValues } = useFormContext();
 	const watchCustom = watch('_kudos_smtp_enable');
+
+	const sendTestEmail = () => {
+		const address = getValues('test_email_address');
+		fetchTestEmail(address).then((result) => {
+			createNotification(result.data, result.success);
+		});
+	};
 
 	return (
 		<Fragment>
@@ -103,6 +112,16 @@ const EmailTab = () => {
 					/>
 				</Fragment>
 			)}
+			<Divider />
+			<TextControl
+				label={__('Send test email', 'kudos-donations')}
+				type="email"
+				name="test_email_address"
+			/>
+			<br />
+			<Button isOutline type="button" onClick={sendTestEmail}>
+				Send
+			</Button>
 		</Fragment>
 	);
 };

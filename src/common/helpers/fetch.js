@@ -27,3 +27,15 @@ export async function fetchTestMollie() {
 		method: 'GET',
 	});
 }
+
+export async function fetchTestEmail(email) {
+	return await apiFetch({
+		path: 'kudos/v1/email/test',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+		},
+		method: 'POST',
+		body: JSON.stringify({ email }),
+	});
+}
