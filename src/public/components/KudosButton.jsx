@@ -5,7 +5,10 @@ import classNames from 'classnames';
 
 const KudosButton = ({ children, color, className, onClick = null }) => {
 	return (
-		<div id={'kudos-button'} className={classNames('font-sans', className)}>
+		<div
+			id="kudos-button"
+			className={classNames('font-sans p-2', className)}
+		>
 			<Button
 				onClick={() => onClick && onClick()}
 				className={!color && 'bg-primary '}
