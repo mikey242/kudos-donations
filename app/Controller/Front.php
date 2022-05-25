@@ -399,7 +399,7 @@ class Front
      *
      * @return void
      */
-    private function enqueue_assets()
+    public function enqueue_assets()
     {
         wp_enqueue_script('kudos-donations-public');
         wp_enqueue_style('kudos-donations-public');
