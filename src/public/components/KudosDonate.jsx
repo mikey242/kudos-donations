@@ -27,11 +27,11 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 	const [timestamp, setTimestamp] = useState(0);
 	const [ready, setReady] = useState(false);
 	const [errors, setErrors] = useState([]);
-	const [formState, setFormState] = useState();
+	const [formState, setFormState] = useState(null);
 	const [isBusy, setIsBusy] = useState(false);
 
 	const [modalOpen, setModalOpen] = useState(false);
-	const modal = useRef(null);
+	const targetRef = useRef(null);
 
 	const toggleModal = () => {
 		// Open modal
@@ -52,7 +52,7 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 
 	const handlePrev = () => {
 		const { currentStep } = formState;
-		const target = modal.current;
+		const target = targetRef.current;
 		let step = currentStep - 1;
 		const state = { ...formState?.formData, ...campaign };
 
@@ -75,7 +75,7 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 
 	const handleNext = (data, step) => {
 		const state = { ...data, ...campaign };
-		const target = modal.current;
+		const target = targetRef.current;
 
 		// Find next available step.
 		while (!checkRequirements(state, step) && step <= 10) {
@@ -171,7 +171,6 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 					<KudosModal
 						toggle={toggleModal}
 						root={root}
-						ref={modal}
 						isBusy={isBusy}
 						isOpen={modalOpen}
 					>
@@ -186,6 +185,7 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 									</small>
 								))}
 							<FormRouter
+								ref={targetRef}
 								step={formState?.currentStep ?? 1}
 								campaign={campaign}
 								total={total}
