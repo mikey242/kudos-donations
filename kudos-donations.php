@@ -52,7 +52,7 @@ if ( class_exists( Dotenv::class ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-define( 'KUDOS_VERSION', '3.2.0' );
+define( 'KUDOS_VERSION', '4.0.0' );
 define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'KUDOS_PLUGIN_DIR', dirname( __FILE__ ) );
 define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
