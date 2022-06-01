@@ -7,7 +7,6 @@ import { KudosButton } from './KudosButton';
 import KudosModal from './KudosModal';
 import FormRouter from './FormRouter';
 import { checkRequirements } from '../../common/helpers/form';
-import { anim } from '../../common/helpers/animate';
 import KudosRender from './KudosRender';
 import {
 	fetchCampaigns,
@@ -52,7 +51,6 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 
 	const handlePrev = () => {
 		const { currentStep } = formState;
-		const target = targetRef.current;
 		let step = currentStep - 1;
 		const state = { ...formState?.formData, ...campaign };
 
@@ -60,17 +58,10 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 		while (!checkRequirements(state, step) && step >= 1) {
 			step--;
 		}
-
-		anim(
-			target,
-			() => {
-				setFormState((prev) => ({
-					...prev,
-					currentStep: step,
-				}));
-			},
-			['translate-x-1']
-		);
+		setFormState((prev) => ({
+			...prev,
+			currentStep: step,
+		}));
 	};
 
 	const handleNext = (data, step) => {
@@ -82,17 +73,11 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 			step++;
 		}
 
-		anim(
-			target,
-			() => {
-				setFormState((prev) => ({
-					...prev,
-					formData: { ...prev?.formData, ...data },
-					currentStep: step,
-				}));
-			},
-			['-translate-x-1']
-		);
+		setFormState((prev) => ({
+			...prev,
+			formData: { ...prev?.formData, ...data },
+			currentStep: step,
+		}));
 	};
 
 	const handleKeyPress = (e) => {

@@ -18,6 +18,7 @@ import { forwardRef, useEffect, useState } from '@wordpress/element';
 const FormRouter = forwardRef(
 	({ step, campaign, total, handlePrev, handleNext, submitForm }, ref) => {
 		const [height, setHeight] = useState('');
+		const [currentStep, setCurrentStep] = useState(1)
 		const methods = useForm({
 			defaultValues: {
 				recurring: false,
@@ -32,8 +33,19 @@ const FormRouter = forwardRef(
 		useEffect(() => {
 			const target = ref?.current;
 			if (target) {
-				const newHeight = target.querySelector('form').offsetHeight;
-				setHeight(newHeight + 'px');
+				target.classList.add('translate-x-1', 'opacity-0')
+				const oldHeight = target.querySelector('form').offsetHeight;
+				setHeight(oldHeight)
+				setTimeout(() => {
+					setCurrentStep(step)
+					target.classList.remove('translate-x-1', 'opacity-0');
+					const newHeight = target.querySelector('form').offsetHeight;
+					setHeight(newHeight + 'px');
+					setTimeout(() => {
+						setHeight('auto') // This allows form to grow if validation message appear.
+					}, 200)
+				}, 200);
+
 			}
 		}, [step]);
 
@@ -127,10 +139,10 @@ const FormRouter = forwardRef(
 										termsLink={campaign.terms_link}
 									/>
 								),
-							}[step]
+							}[currentStep]
 						}
 						<div className="kudos-modal-buttons mt-8 flex justify-between relative">
-							{step > 1 && (
+							{currentStep > 1 && (
 								<Button
 									type="button"
 									className="text-base"
@@ -148,7 +160,7 @@ const FormRouter = forwardRef(
 								ariaLabel={__('Next', 'kudos-donations')}
 								className="ml-auto text-base"
 							>
-								{steps[step].name === 'Summary' ? (
+								{steps[currentStep].name === 'Summary' ? (
 									<>
 										<LockClosedIcon className="w-5 h-5" />{' '}
 										<span className="mx-2">
