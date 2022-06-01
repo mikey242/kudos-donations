@@ -86,15 +86,21 @@ const ButtonEdit = (props) => {
 							initialOpen={false}
 						>
 							<RadioControl
-								label={__('Display type', 'kudos-donations')}
+								label={__('Display as', 'kudos-donations')}
 								selected={type}
 								options={[
 									{
-										label: __('Button', 'kudos-donations'),
+										label: __(
+											'Button with modal',
+											'kudos-donations'
+										),
 										value: 'button',
 									},
 									{
-										label: __('Form', 'kudos-donations'),
+										label: __(
+											'Embedded form',
+											'kudos-donations'
+										),
 										value: 'form',
 									},
 								]}

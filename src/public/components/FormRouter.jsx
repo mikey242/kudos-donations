@@ -18,7 +18,7 @@ import { forwardRef, useEffect, useState } from '@wordpress/element';
 const FormRouter = forwardRef(
 	({ step, campaign, total, handlePrev, handleNext, submitForm }, ref) => {
 		const [height, setHeight] = useState('');
-		const [currentStep, setCurrentStep] = useState(1)
+		const [currentStep, setCurrentStep] = useState(1);
 		const methods = useForm({
 			defaultValues: {
 				recurring: false,
@@ -33,19 +33,18 @@ const FormRouter = forwardRef(
 		useEffect(() => {
 			const target = ref?.current;
 			if (target) {
-				target.classList.add('translate-x-1', 'opacity-0')
+				target.classList.add('translate-x-1', 'opacity-0');
 				const oldHeight = target.querySelector('form').offsetHeight;
-				setHeight(oldHeight)
+				setHeight(oldHeight);
 				setTimeout(() => {
-					setCurrentStep(step)
+					setCurrentStep(step);
 					target.classList.remove('translate-x-1', 'opacity-0');
 					const newHeight = target.querySelector('form').offsetHeight;
 					setHeight(newHeight + 'px');
 					setTimeout(() => {
-						setHeight('auto') // This allows form to grow if validation message appear.
-					}, 200)
+						setHeight('auto'); // This allows form to grow if validation message appear.
+					}, 200);
 				}, 200);
-
 			}
 		}, [step]);
 

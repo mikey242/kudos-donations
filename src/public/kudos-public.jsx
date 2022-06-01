@@ -17,11 +17,13 @@ const messages = document.querySelectorAll('.kudos-message');
 roots.forEach((root) => {
 	const buttonLabel = root.dataset.label;
 	const campaignId = root.dataset.campaign;
+	const displayAs = root.dataset.displayAs;
 	render(
 		<KudosDonate
 			root={root}
 			campaignId={campaignId}
 			buttonLabel={buttonLabel}
+			displayAs={displayAs}
 		/>,
 		root
 	);

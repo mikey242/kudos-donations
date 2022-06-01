@@ -310,7 +310,7 @@ class Front
 
             $alignment = 'has-text-align-' . $atts['alignment'] ?? 'none';
 
-            return "<div class='kudos-donations kudos-form $alignment' data-label='" . $atts['button_label'] . "' align='" . $atts['alignment'] . "' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
+            return "<div class='kudos-donations kudos-form $alignment' data-label='" . $atts['button_label'] . "' data-display-as='" . $atts['type'] . "' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
 					</div>";
         } catch (Exception $e) {
             // Display error message if thrown and user is admin.

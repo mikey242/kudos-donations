@@ -20,7 +20,7 @@ KudosDonate.propTypes = {
 	root: PropTypes.object,
 };
 
-function KudosDonate({ buttonLabel, campaignId, root }) {
+function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	const [campaign, setCampaign] = useState();
 	const [total, setTotal] = useState(0);
 	const [timestamp, setTimestamp] = useState(0);
@@ -51,6 +51,7 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 
 	const handlePrev = () => {
 		const { currentStep } = formState;
+		if (currentStep === 1) return;
 		let step = currentStep - 1;
 		const state = { ...formState?.formData, ...campaign };
 
@@ -66,7 +67,6 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 
 	const handleNext = (data, step) => {
 		const state = { ...data, ...campaign };
-		const target = targetRef.current;
 
 		// Find next available step.
 		while (!checkRequirements(state, step) && step <= 10) {
@@ -126,6 +126,29 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 		});
 	};
 
+	const donationForm = () => (
+		<>
+			{errors.length > 0 &&
+				errors.map((e, i) => (
+					<small
+						key={i}
+						className="text-center block font-normal mb-4 text-sm text-red-500"
+					>
+						{e}
+					</small>
+				))}
+			<FormRouter
+				ref={targetRef}
+				step={formState?.currentStep ?? 1}
+				campaign={campaign}
+				total={total}
+				handleNext={handleNext}
+				handlePrev={handlePrev}
+				submitForm={submitForm}
+			/>
+		</>
+	);
+
 	useEffect(() => {
 		getCampaign();
 		fetchCampaignTransactions(campaignId).then((transactions) => {
@@ -150,36 +173,25 @@ function KudosDonate({ buttonLabel, campaignId, root }) {
 					themeColor={campaign?.theme_color}
 					stylesheet={stylesheet.href}
 				>
-					<KudosButton onClick={toggleModal}>
-						{buttonLabel}
-					</KudosButton>
-					<KudosModal
-						toggle={toggleModal}
-						root={root}
-						isBusy={isBusy}
-						isOpen={modalOpen}
-					>
-						<>
-							{errors.length > 0 &&
-								errors.map((e, i) => (
-									<small
-										key={i}
-										className="text-center block font-normal mb-4 text-sm text-red-500"
-									>
-										{e}
-									</small>
-								))}
-							<FormRouter
-								ref={targetRef}
-								step={formState?.currentStep ?? 1}
-								campaign={campaign}
-								total={total}
-								handleNext={handleNext}
-								handlePrev={handlePrev}
-								submitForm={submitForm}
-							/>
-						</>
-					</KudosModal>
+					<>
+						{displayAs === 'button' && (
+							<>
+								<KudosButton onClick={toggleModal}>
+									{buttonLabel}
+								</KudosButton>
+								<KudosModal
+									embedded={displayAs === 'form'}
+									toggle={toggleModal}
+									root={root}
+									isBusy={isBusy}
+									isOpen={modalOpen}
+								>
+									{donationForm()}
+								</KudosModal>
+							</>
+						)}
+						{displayAs === 'form' && donationForm()}
+					</>
 				</KudosRender>
 			)}
 		</>
