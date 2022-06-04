@@ -26,6 +26,7 @@ const Initial = (props) => {
 	const { setValue } = useFormContext();
 
 	const watchFixed = useWatch({ name: 'valueFixed' });
+	const watchOpen = useWatch({ name: 'valueOpen' });
 	const watchValue = useWatch({ name: 'value' });
 
 	useEffect(() => {
@@ -36,13 +37,17 @@ const Initial = (props) => {
 
 	useEffect(() => {
 		if (watchFixed) {
-			setValue('value', watchFixed);
+			setValue('value', watchFixed, { shouldValidate: true });
+			setValue('valueOpen', '');
 		}
 	}, [watchFixed]);
 
 	useEffect(() => {
-		setValue('valueFixed', watchValue);
-	}, [watchValue]);
+		if (watchOpen) {
+			setValue('value', watchOpen, { shouldValidate: true });
+			setValue('valueFixed', '');
+		}
+	}, [watchOpen]);
 
 	return (
 		<FormTab title={title} description={description} buttons={buttons}>
@@ -60,28 +65,8 @@ const Initial = (props) => {
 
 			{(amountType === 'both' || amountType === 'open') && (
 				<TextControl
-					name="value"
+					name="valueOpen"
 					addOn="€"
-					validation={{
-						required: __(
-							'Minimum donation is 1 euro',
-							'kudos-donations'
-						),
-						min: {
-							value: 1,
-							message: __(
-								'Minimum donation is 1 euro',
-								'kudos-donations'
-							),
-						},
-						max: {
-							value: 5000,
-							message: __(
-								'Maximum donation is 5000 euros',
-								'kudos-donations'
-							),
-						},
-					}}
 					type="number"
 					placeholder={`${
 						amountType === 'both'
@@ -90,6 +75,31 @@ const Initial = (props) => {
 					}`}
 				/>
 			)}
+
+			<TextControl
+				type="hidden"
+				name="value"
+				validation={{
+					required: __(
+						'Minimum donation is 1 euro',
+						'kudos-donations'
+					),
+					min: {
+						value: 1,
+						message: __(
+							'Minimum donation is 1 euro',
+							'kudos-donations'
+						),
+					},
+					max: {
+						value: 5000,
+						message: __(
+							'Maximum donation is 5000 euros',
+							'kudos-donations'
+						),
+					},
+				}}
+			/>
 
 			<TextControl
 				name="name"

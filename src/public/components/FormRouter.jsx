@@ -13,7 +13,12 @@ import { Button } from '../../common/components/controls';
 import Message from './tabs/Message';
 import Summary from './tabs/Summary';
 import { steps } from '../constants/form';
-import { forwardRef, useEffect, useState } from '@wordpress/element';
+import {
+	forwardRef,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from '@wordpress/element';
 
 const FormRouter = forwardRef(
 	({ step, campaign, total, handlePrev, handleNext, submitForm }, ref) => {
@@ -24,27 +29,33 @@ const FormRouter = forwardRef(
 				recurring: false,
 			},
 		});
+		const firstUpdate = useRef(true);
 
 		const onSubmit = (data) => {
 			if (step < 5) return handleNext(data, step + 1);
 			return submitForm(data);
 		};
 
-		useEffect(() => {
-			const target = ref?.current;
-			if (target) {
-				target.classList.add('translate-x-1', 'opacity-0');
-				const oldHeight = target.querySelector('form').offsetHeight;
-				setHeight(oldHeight);
-				setTimeout(() => {
-					setCurrentStep(step);
-					target.classList.remove('translate-x-1', 'opacity-0');
-					const newHeight = target.querySelector('form').offsetHeight;
-					setHeight(newHeight + 'px');
+		useLayoutEffect(() => {
+			if (firstUpdate.current) {
+				firstUpdate.current = false;
+			} else {
+				const target = ref?.current;
+				if (target) {
+					target.classList.add('translate-x-1', 'opacity-0');
+					const oldHeight = target.querySelector('form').offsetHeight;
+					setHeight(oldHeight);
 					setTimeout(() => {
-						setHeight('auto'); // This allows form to grow if validation message appear.
+						setCurrentStep(step);
+						target.classList.remove('translate-x-1', 'opacity-0');
+						const newHeight =
+							target.querySelector('form').offsetHeight;
+						setHeight(newHeight + 'px');
+						setTimeout(() => {
+							setHeight('auto'); // This allows form to grow if validation message appear.
+						}, 200);
 					}, 200);
-				}, 200);
+				}
 			}
 		}, [step]);
 
