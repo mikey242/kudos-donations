@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import FormTab from './FormTab';
@@ -15,6 +15,7 @@ const Initial = (props) => {
 		title,
 		description,
 		buttons,
+		minimumDonation = 1,
 		donationType,
 		amountType,
 		fixedAmounts,
@@ -28,6 +29,16 @@ const Initial = (props) => {
 	const watchFixed = useWatch({ name: 'valueFixed' });
 	const watchOpen = useWatch({ name: 'valueOpen' });
 	const watchValue = useWatch({ name: 'value' });
+
+	const valueError = sprintf(
+		_n(
+			'Minimum donation is %d euro',
+			'Minimum donation is %d euros',
+			minimumDonation,
+			'kudos-donations'
+		),
+		minimumDonation
+	);
 
 	useEffect(() => {
 		if (donationType !== 'both') {
@@ -80,16 +91,10 @@ const Initial = (props) => {
 				type="hidden"
 				name="value"
 				validation={{
-					required: __(
-						'Minimum donation is 1 euro',
-						'kudos-donations'
-					),
+					required: valueError,
 					min: {
-						value: 1,
-						message: __(
-							'Minimum donation is 1 euro',
-							'kudos-donations'
-						),
+						value: minimumDonation,
+						message: valueError,
 					},
 					max: {
 						value: 5000,

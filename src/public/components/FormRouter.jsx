@@ -92,6 +92,9 @@ const FormRouter = forwardRef(
 											description={
 												campaign.initial_description
 											}
+											minimumDonation={
+												campaign.minimum_donation
+											}
 											donationType={
 												campaign.donation_type
 											}

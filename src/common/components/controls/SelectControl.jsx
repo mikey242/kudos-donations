@@ -1,11 +1,14 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import { get } from 'lodash';
 
 const SelectControl = ({ name, label, validation, options, placeholder }) => {
 	const {
 		register,
 		formState: { errors },
 	} = useFormContext();
+
+	const error = get(errors, name);
 
 	return (
 		<div className="first:mt-0 mt-3">
@@ -33,9 +36,9 @@ const SelectControl = ({ name, label, validation, options, placeholder }) => {
 					</option>
 				))}
 			</select>
-			{errors[name]?.message && (
+			{error?.message && (
 				<p className="mt-2 text-sm text-red-600" id="email-error">
-					{errors[name]?.message}
+					{error?.message}
 				</p>
 			)}
 		</div>

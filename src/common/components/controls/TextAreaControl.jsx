@@ -1,11 +1,14 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import { get } from 'lodash';
 
 const TextAreaControl = ({ name, validation, placeholder, label, help }) => {
 	const {
 		register,
 		formState: { errors },
 	} = useFormContext();
+
+	const error = get(errors, name);
 
 	return (
 		<div className="first:mt-0 mt-3">
@@ -25,10 +28,8 @@ const TextAreaControl = ({ name, validation, placeholder, label, help }) => {
 					defaultValue={''}
 				/>
 			</div>
-			{errors[name]?.message && (
-				<p className="mt-2 text-sm text-red-600">
-					{errors[name]?.message}
-				</p>
+			{error?.message && (
+				<p className="mt-2 text-sm text-red-600">{error?.message}</p>
 			)}
 		</div>
 	);

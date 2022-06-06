@@ -199,6 +199,24 @@ function CampaignEdit({
 							},
 						]}
 					/>
+					{watchAmountType !== 'fixed' && (
+						<TextControl
+							name="meta.minimum_donation"
+							validation={{
+								min: {
+									value: 1,
+									message: __(
+										'Minimum value is 1',
+										'kudos-donations'
+									),
+								},
+							}}
+							label={__(
+								'Minimum allowed donation',
+								'kudos-donations'
+							)}
+						/>
+					)}
 					{watchAmountType !== 'open' && (
 						<TextControl
 							name="meta.fixed_amounts"

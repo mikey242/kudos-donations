@@ -223,6 +223,10 @@ class Front
                 'single'            => false,
                 'sanitize_callback' => 'sanitize_text_field',
             ],
+            'minimum_donation'      => [
+                'type'              => 'integer',
+                'sanitize_callback' => 'sanitize_float',
+            ],
             'donation_type'         => [
                 'type'              => 'string',
                 'sanitize_callback' => 'sanitize_text_field',
