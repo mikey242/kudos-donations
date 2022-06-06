@@ -203,6 +203,10 @@ function CampaignEdit({
 						<TextControl
 							name="meta.minimum_donation"
 							validation={{
+								required: __(
+									'Minimum donation required',
+									'kudos-donations'
+								),
 								min: {
 									value: 1,
 									message: __(

@@ -66,6 +66,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 				),
 				donation_type: 'oneoff',
 				amount_type: 'both',
+				minimum_donation: 1,
 				fixed_amounts: '5,10,20,50',
 				theme_color: '#ff9f1c',
 				completed_payment: 'message',

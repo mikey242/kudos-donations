@@ -583,6 +583,7 @@ class Admin
                                     'message_enabled'       => $old_campaign['message_enabled'] ?? false,
                                     'amount_type'           => $old_campaign['amount_type'] ?? 'both',
                                     'donation_type'         => $old_campaign['donation_type'] ?? 'oneoff',
+                                    'minimum_donation'      => 1,
                                     'theme_color'           => Settings::get_setting('theme_colors')['primary'],
                                     'terms_link'            => Settings::get_setting('terms_link'),
                                     'privacy_link'          => Settings::get_setting('privacy_link'),
