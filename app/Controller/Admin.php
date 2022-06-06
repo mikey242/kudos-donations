@@ -582,7 +582,6 @@ class Admin
                                     'address_required'      => $old_campaign['address_required'] ?? false,
                                     'message_enabled'       => $old_campaign['message_enabled'] ?? false,
                                     'amount_type'           => $old_campaign['amount_type'] ?? 'both',
-                                    'fixed_amounts'         => $old_campaign['fixed_amounts'] ?? '5,10,20,50',
                                     'donation_type'         => $old_campaign['donation_type'] ?? 'oneoff',
                                     'theme_color'           => Settings::get_setting('theme_colors')['primary'],
                                     'terms_link'            => Settings::get_setting('terms_link'),
@@ -596,6 +595,15 @@ class Admin
                             ]);
 
                             if ($new_id) {
+                                // Add fixed amounts separately as they are multiple values for the same key.
+                                if ( ! empty($old_campaign['fixed_amounts'])) {
+                                    $fixed_amounts = explode(",", $old_campaign['fixed_amounts']);
+                                    foreach ($fixed_amounts as $amount) {
+                                        add_post_meta($new_id, 'fixed_amounts', $amount);
+                                    }
+                                }
+
+                                // Assign transactions to new campaign id.
                                 $transactions = $this->mapper->get_repository(TransactionEntity::class)
                                                              ->get_all_by(['campaign_id' => $old_campaign['id']]);
                                 /** @var TransactionEntity $transaction */
