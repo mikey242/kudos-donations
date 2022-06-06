@@ -27,7 +27,6 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	const [ready, setReady] = useState(false);
 	const [errors, setErrors] = useState([]);
 	const [formState, setFormState] = useState(null);
-	const [isBusy, setIsBusy] = useState(false);
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const targetRef = useRef(null);
@@ -84,9 +83,8 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 		if (e.key === 'Escape' || e.keyCode === 27) toggleModal();
 	};
 
-	const submitForm = (data) => {
+	async function submitForm(data) {
 		setErrors([]);
-		setIsBusy(true);
 		const formData = new window.FormData();
 		formData.append('timestamp', timestamp.toString());
 		formData.append('campaign_id', campaignId);
@@ -104,7 +102,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 			}
 		}
 
-		apiFetch({
+		return apiFetch({
 			path: '/kudos/v1/payment/create',
 			method: 'POST',
 			body: new URLSearchParams(formData),
@@ -112,11 +110,11 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 			if (result.success) {
 				window.location.href = result.data;
 			} else {
-				setIsBusy(false);
-				setErrors([...errors, result.data.message]);
+				setErrors([result.data.message]);
 			}
+			return result;
 		});
-	};
+	}
 
 	const getCampaign = () => {
 		fetchCampaigns(campaignId).then((response) => {
@@ -183,7 +181,6 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 									embedded={displayAs === 'form'}
 									toggle={toggleModal}
 									root={root}
-									isBusy={isBusy}
 									isOpen={modalOpen}
 								>
 									{donationForm()}
