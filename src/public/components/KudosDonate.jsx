@@ -12,6 +12,7 @@ import {
 	fetchCampaigns,
 	fetchCampaignTransactions,
 } from '../../common/helpers/fetch';
+import { Spinner } from '../../common/components/Spinner';
 
 const stylesheet = document.getElementById('kudos-donations-public-css');
 
@@ -166,7 +167,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 
 	return (
 		<>
-			{ready && (
+			{ready ? (
 				<KudosRender
 					themeColor={campaign?.theme_color}
 					stylesheet={stylesheet.href}
@@ -190,6 +191,8 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 						{displayAs === 'form' && donationForm()}
 					</>
 				</KudosRender>
+			) : (
+				<Spinner />
 			)}
 		</>
 	);

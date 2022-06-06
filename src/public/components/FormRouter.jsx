@@ -19,8 +19,8 @@ import {
 	useRef,
 	useState,
 } from '@wordpress/element';
-import { KudosLogo } from './KudosLogo';
 import classNames from 'classnames';
+import { Spinner } from '../../common/components/Spinner';
 
 const FormRouter = forwardRef(
 	({ step, campaign, total, handlePrev, handleNext, submitForm }, ref) => {
@@ -72,12 +72,7 @@ const FormRouter = forwardRef(
 				<div className="relative">
 					{isBusy && (
 						<div className="absolute inset w-full h-full z-[2] flex justify-center items-center">
-							<KudosLogo
-								lineColor="#000"
-								heartColor="#000"
-								className="z-1 animate-spin w-6 h-6"
-							/>
-							<div className="absolute w-full h-full" />
+							<Spinner />
 						</div>
 					)}
 					<div
