@@ -4,7 +4,6 @@
  */
 
 import { __ } from '@wordpress/i18n';
-import { Spinner } from '@wordpress/components';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
 import api from '@wordpress/api';
@@ -21,6 +20,7 @@ import Notification from '../Notification';
 import KudosRender from '../../../public/components/KudosRender';
 import TabPanel from '../TabPanel';
 import { fetchTestMollie } from '../../../common/helpers/fetch';
+import { Spinner } from '../../../common/components/Spinner';
 
 const KudosSettings = ({ stylesheet }) => {
 	const [isAPISaving, setIsAPISaving] = useState();
@@ -183,10 +183,6 @@ const KudosSettings = ({ stylesheet }) => {
 					<Spinner />
 				</div>
 			) : (
-				''
-			)}
-
-			{isAPILoaded && (
 				<FormProvider {...methods}>
 					<form
 						id="settings-form"

@@ -16,10 +16,7 @@ import {
 } from '../../../common/helpers/util';
 import EmptyCampaigns from './EmptyCampaigns';
 import KudosRender from '../../../public/components/KudosRender';
-import {
-	fetchCampaigns,
-	fetchTransactions,
-} from '../../../common/helpers/fetch';
+import { Spinner } from '../../../common/components/Spinner';
 
 const KudosCampaigns = ({ stylesheet }) => {
 	const [campaigns, setCampaigns] = useState();
@@ -27,13 +24,12 @@ const KudosCampaigns = ({ stylesheet }) => {
 	const [notification, setNotification] = useState({ shown: false });
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 	const [transactions, setTransactions] = useState();
+	const [isApiLoaded, setIsApiLoaded] = useState(false);
 	const [settings, setSettings] = useState();
 	const notificationTimer = useRef(null);
 
 	useEffect(() => {
-		getCampaigns();
-		fetchTransactions().then(setTransactions);
-		getSettings();
+		getData();
 	}, []);
 
 	useEffect(() => {
@@ -144,13 +140,22 @@ const KudosCampaigns = ({ stylesheet }) => {
 		updateCampaign(null, data);
 	};
 
+	const getData = () => {
+		Promise.all([getCampaigns(), getSettings(), getTransactions()]).then(
+			() => setIsApiLoaded(true)
+		);
+	};
+
 	const getCampaigns = () => {
-		fetchCampaigns().then((response) => {
+		return apiFetch({
+			path: 'wp/v2/kudos_campaign/',
+			method: 'GET',
+		}).then((response) => {
 			setCampaigns(response.reverse());
 			const currentId = getQueryVar('campaign');
 			if (currentId) {
 				const campaign = response.filter(
-					(campaign) => campaign.id === parseInt(currentId)
+					(res) => res.id === parseInt(currentId)
 				);
 				if (campaign && currentCampaign === null) {
 					setCurrentCampaign(campaign[0]);
@@ -160,7 +165,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 	};
 
 	const getSettings = () => {
-		api.loadPromise.then(() => {
+		return api.loadPromise.then(() => {
 			const settingsModel = new api.models.Settings();
 			settingsModel.fetch().then((response) => {
 				setSettings(response);
@@ -168,10 +173,21 @@ const KudosCampaigns = ({ stylesheet }) => {
 		});
 	};
 
+	const getTransactions = () => {
+		return apiFetch({
+			path: 'kudos/v1/transaction/',
+			method: 'GET',
+		}).then(setTransactions);
+	};
+
 	return (
-		<>
-			{transactions && campaigns && (
-				<KudosRender stylesheet={stylesheet.href}>
+		<KudosRender stylesheet={stylesheet.href}>
+			{!isApiLoaded ? (
+				<div className="absolute inset-0 flex items-center justify-center">
+					<Spinner />
+				</div>
+			) : (
+				<>
 					<Header>
 						{currentCampaign && (
 							<Button
@@ -231,9 +247,9 @@ const KudosCampaigns = ({ stylesheet }) => {
 						success={notification.success}
 						onClick={hideNotification}
 					/>
-				</KudosRender>
+				</>
 			)}
-		</>
+		</KudosRender>
 	);
 };
 
