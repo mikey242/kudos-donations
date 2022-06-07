@@ -173,8 +173,8 @@ class Front
                 ],
                 "editor_script"   => "kudos-donations-button",
                 "editor_style"    => "kudos-donations-public",
-                "script"          => "kudos-donations-public",
-                "style"           => "kudos-donations-public",
+                "view_script"     => "kudos-donations-public",
+                "view_style"      => "kudos-donations-public",
             ]
         );
     }
