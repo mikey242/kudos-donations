@@ -70,7 +70,6 @@ function CampaignEdit({
 							required: __('Name required', 'kudos-donations'),
 						}}
 					/>
-					{/*<br />*/}
 					<TextControl
 						type="number"
 						name="meta.goal"
@@ -239,9 +238,12 @@ function CampaignEdit({
 			title: __('Optional fields', 'kudos-donations'),
 			content: (
 				<Fragment>
+					<p className="text-sm font-bold text-gray-700">
+						{__('Address', 'kudos-donations')}
+					</p>
 					<ToggleControl
 						name="meta.address_enabled"
-						label={__('Address', 'kudos-donations')}
+						label={__('Enable', 'kudos-donations')}
 						help={__('Show the address tab', 'kudos-donations')}
 					/>
 					{watchAddress && (
@@ -251,9 +253,12 @@ function CampaignEdit({
 						/>
 					)}
 					<Divider />
+					<p className="text-sm font-bold text-gray-700">
+						{__('Message', 'kudos-donations')}
+					</p>
 					<ToggleControl
 						name="meta.message_enabled"
-						label={__('Message', 'kudos-donations')}
+						label={__('Enable', 'kudos-donations')}
 						help={__(
 							'Allow donors to leave a message',
 							'kudos-donations'

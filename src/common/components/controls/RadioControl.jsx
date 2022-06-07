@@ -9,7 +9,7 @@ const RadioControl = ({ name, validation, options, label, help }) => {
 			<p className="block text-sm font-bold text-gray-700">{label}</p>
 			{help && <p className="text-sm leading-5 text-gray-500">{help}</p>}
 			<fieldset className="mt-2">
-				<legend className="sr-only">Notification method</legend>
+				<legend className="sr-only">{label}</legend>
 				<div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
 					{options.map((option, index) => (
 						<div key={option.id} className="flex items-center">

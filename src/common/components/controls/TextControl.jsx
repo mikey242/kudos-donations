@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
-import { get } from 'lodash';
+import { get, uniqueId } from 'lodash';
 
 const TextControl = ({
 	name,
@@ -19,14 +19,13 @@ const TextControl = ({
 	} = useFormContext();
 
 	const error = get(errors, name);
+	const id = uniqueId(name + '-');
 
 	return (
 		<div className="first:mt-0 mt-3">
 			<label
-				htmlFor={name}
-				className={
-					label ? 'block text-sm font-bold text-gray-700' : 'sr-only'
-				}
+				htmlFor={id}
+				className="block text-sm font-bold text-gray-700"
 			>
 				{label}
 			</label>
@@ -42,6 +41,7 @@ const TextControl = ({
 				<input
 					{...register(name, validation)}
 					type={type}
+					id={id}
 					className={classNames(
 						error?.message
 							? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 '
@@ -51,7 +51,7 @@ const TextControl = ({
 					)}
 					placeholder={placeholder}
 					aria-invalid={!!error}
-					aria-errormessage={`${name}-error`}
+					aria-errormessage={`${id}-error`}
 				/>
 				<div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
 					{error?.message && type !== 'hidden' && (
@@ -63,7 +63,7 @@ const TextControl = ({
 				</div>
 			</div>
 			{error?.message && (
-				<p className="mt-2 text-sm text-red-600" id={`${name}-error`}>
+				<p className="mt-2 text-sm text-red-600" id={`${id}-error`}>
 					{error?.message}
 				</p>
 			)}
