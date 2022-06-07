@@ -15,11 +15,9 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	const [campaign, setCampaign] = useState();
 	const [total, setTotal] = useState(0);
 	const [timestamp, setTimestamp] = useState(0);
-	const [ready, setReady] = useState(false);
-	const [errors, setErrors] = useState([]);
+	const [isApiLoaded, setIsApiLoaded] = useState(false);
+	const [errors, setErrors] = useState(null);
 	const [formState, setFormState] = useState(null);
-	// const [errorMessage, setErrorMessage] = useState(null);
-
 	const [modalOpen, setModalOpen] = useState(false);
 	const targetRef = useRef(null);
 
@@ -109,15 +107,29 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	}
 
 	const getCampaign = () => {
-		apiFetch({
+		return apiFetch({
 			path: `wp/v2/kudos_campaign/${campaignId}`,
 			method: 'GET',
-		})
-			.then((response) => {
-				setCampaign(response?.meta);
-				setTimestamp(Date.now());
-				setReady(true);
-			})
+		}).then((response) => {
+			setCampaign(response?.meta);
+			setTimestamp(Date.now());
+		});
+	};
+
+	const getTransactions = () => {
+		return apiFetch({
+			path: `kudos/v1/transaction/campaign/${campaignId}`,
+			method: 'GET',
+		}).then((transactions) => {
+			setTotal(
+				transactions.reduce((n, { value }) => n + parseInt(value), 0)
+			);
+		});
+	};
+
+	const getData = () => {
+		Promise.all([getCampaign(), getTransactions()])
+			.then(() => setIsApiLoaded(true))
 			.catch((error) => {
 				setErrors([error.message]);
 			});
@@ -125,7 +137,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 
 	const donationForm = () => (
 		<>
-			{errors.length > 0 &&
+			{errors?.length > 0 &&
 				errors.map((e, i) => (
 					<small
 						key={i}
@@ -147,15 +159,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	);
 
 	useEffect(() => {
-		getCampaign();
-		apiFetch({
-			path: `kudos/v1/transaction/campaign/${campaignId}`,
-			method: 'GET',
-		}).then((transactions) => {
-			setTotal(
-				transactions.reduce((n, { value }) => n + parseInt(value), 0)
-			);
-		});
+		getData();
 	}, []);
 
 	useEffect(() => {
@@ -168,7 +172,8 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 
 	return (
 		<>
-			{ready ? (
+			{/* eslint-disable-next-line no-nested-ternary */}
+			{isApiLoaded ? (
 				<KudosRender
 					themeColor={campaign?.theme_color}
 					stylesheet={stylesheet.href}
@@ -192,7 +197,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 						{displayAs === 'form' && donationForm()}
 					</>
 				</KudosRender>
-			) : errors ? (
+			) : errors?.length ? (
 				<>
 					<p className="m-0">Kudos Donations</p>
 					{errors.map((error, i) => (

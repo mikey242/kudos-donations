@@ -142,9 +142,11 @@ const KudosCampaigns = ({ stylesheet }) => {
 	};
 
 	const getData = () => {
-		Promise.all([getCampaigns(), getSettings(), getTransactions()]).then(
-			() => setIsApiLoaded(true)
-		);
+		Promise.all([getCampaigns(), getSettings(), getTransactions()])
+			.then(() => setIsApiLoaded(true))
+			.catch((error) => {
+				createNotification(error.message, false);
+			});
 	};
 
 	const getCampaigns = () => {
