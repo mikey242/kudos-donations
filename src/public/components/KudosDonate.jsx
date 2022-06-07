@@ -2,24 +2,14 @@
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
-import PropTypes from 'prop-types';
 import { KudosButton } from './KudosButton';
 import KudosModal from './KudosModal';
 import FormRouter from './FormRouter';
 import { checkRequirements } from '../../common/helpers/form';
 import KudosRender from './KudosRender';
-import {
-	fetchCampaigns,
-	fetchCampaignTransactions,
-} from '../../common/helpers/fetch';
 import { Spinner } from '../../common/components/Spinner';
 
 const stylesheet = document.getElementById('kudos-donations-public-css');
-
-KudosDonate.propTypes = {
-	buttonLabel: PropTypes.string,
-	root: PropTypes.object,
-};
 
 function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	const [campaign, setCampaign] = useState();
@@ -28,6 +18,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	const [ready, setReady] = useState(false);
 	const [errors, setErrors] = useState([]);
 	const [formState, setFormState] = useState(null);
+	// const [errorMessage, setErrorMessage] = useState(null);
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const targetRef = useRef(null);
@@ -118,11 +109,18 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	}
 
 	const getCampaign = () => {
-		fetchCampaigns(campaignId).then((response) => {
-			setCampaign(response?.meta);
-			setTimestamp(Date.now());
-			setReady(true);
-		});
+		apiFetch({
+			path: `wp/v2/kudos_campaign/${campaignId}`,
+			method: 'GET',
+		})
+			.then((response) => {
+				setCampaign(response?.meta);
+				setTimestamp(Date.now());
+				setReady(true);
+			})
+			.catch((error) => {
+				setErrors([error.message]);
+			});
 	};
 
 	const donationForm = () => (
@@ -150,7 +148,10 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 
 	useEffect(() => {
 		getCampaign();
-		fetchCampaignTransactions(campaignId).then((transactions) => {
+		apiFetch({
+			path: `kudos/v1/transaction/campaign/${campaignId}`,
+			method: 'GET',
+		}).then((transactions) => {
 			setTotal(
 				transactions.reduce((n, { value }) => n + parseInt(value), 0)
 			);
@@ -191,6 +192,15 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 						{displayAs === 'form' && donationForm()}
 					</>
 				</KudosRender>
+			) : errors ? (
+				<>
+					<p className="m-0">Kudos Donations</p>
+					{errors.map((error, i) => (
+						<p key={i} className="text-red-500">
+							{error}
+						</p>
+					))}
+				</>
 			) : (
 				<Spinner />
 			)}
