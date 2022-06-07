@@ -114,7 +114,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 				return getCampaigns();
 			})
 			.catch((error) => {
-				createNotification(error.message, 'fail');
+				createNotification(error.message, false);
 			})
 			.finally(() => {
 				setIsApiBusy(false);
