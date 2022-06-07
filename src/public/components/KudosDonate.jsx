@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
 import { KudosButton } from './KudosButton';
@@ -159,7 +160,11 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	);
 
 	useEffect(() => {
-		getData();
+		if (campaignId) {
+			getData();
+		} else {
+			setErrors([__('No campaign ID', 'kudos-donations')]);
+		}
 	}, []);
 
 	useEffect(() => {
