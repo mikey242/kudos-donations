@@ -50,8 +50,8 @@ const TextControl = ({
 						'form-input transition ease-in-out shadow-none block w-full pr-10 focus:outline-none sm:text-sm rounded-md'
 					)}
 					placeholder={placeholder}
-					aria-invalid="true"
-					aria-describedby="email-error"
+					aria-invalid={!!error}
+					aria-errormessage={`${name}-error`}
 				/>
 				<div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
 					{error?.message && type !== 'hidden' && (
@@ -63,7 +63,7 @@ const TextControl = ({
 				</div>
 			</div>
 			{error?.message && (
-				<p className="mt-2 text-sm text-red-600" id="email-error">
+				<p className="mt-2 text-sm text-red-600" id={`${name}-error`}>
 					{error?.message}
 				</p>
 			)}

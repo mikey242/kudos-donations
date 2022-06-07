@@ -22,6 +22,8 @@ const CheckboxControl = ({ name, validation, label, help }) => {
 						id={name}
 						type="checkbox"
 						className="transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
+						aria-invalid={!!error}
+						aria-errormessage={`${name}-error`}
 					/>
 				</div>
 				<div className="ml-3 text-sm">
@@ -31,7 +33,9 @@ const CheckboxControl = ({ name, validation, label, help }) => {
 				</div>
 			</div>
 			{error?.message && (
-				<p className="mt-2 text-sm text-red-600">{error?.message}</p>
+				<p className="mt-2 text-sm text-red-600" id={`${name}-error`}>
+					{error?.message}
+				</p>
 			)}
 		</div>
 	);

@@ -26,10 +26,14 @@ const TextAreaControl = ({ name, validation, placeholder, label, help }) => {
 					placeholder={placeholder}
 					className="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md"
 					defaultValue={''}
+					aria-invalid={!!error}
+					aria-errormessage={`${name}-error`}
 				/>
 			</div>
 			{error?.message && (
-				<p className="mt-2 text-sm text-red-600">{error?.message}</p>
+				<p className="mt-2 text-sm text-red-600" id={`${name}-error`}>
+					{error?.message}
+				</p>
 			)}
 		</div>
 	);
