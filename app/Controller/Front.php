@@ -166,6 +166,11 @@ class Front
         );
     }
 
+    /**
+     * Register the custom post types sued by Kudos.
+     *
+     * @return void
+     */
     private function register_post_types()
     {
         new CustomPostType('kudos_campaign', [], [
@@ -316,6 +321,7 @@ class Front
 
     /**
      * Handles the various query variables and shows relevant modals.
+     * @return void
      */
     public function handle_query_variables()
     {
@@ -331,11 +337,58 @@ class Front
                     $order_id = sanitize_text_field($_REQUEST['kudos_order_id']);
                     // Return message modal.
                     if ( ! empty($order_id) && ! empty($nonce)) {
+                        /** @var TransactionEntity $transaction */
                         $transaction = $this->mapper
                             ->get_repository(TransactionEntity::class)
                             ->get_one_by(['order_id' => $order_id]);
                         if ($transaction && wp_verify_nonce($nonce, $action . $order_id)) {
-                            $atts = $this->check_transaction($order_id);
+                            /** @var DonorEntity $donor */
+                            $donor = $this->mapper
+                                ->get_repository(DonorEntity::class)
+                                ->get_one_by(['customer_id' => $transaction->customer_id]);
+
+                            try {
+                                $campaign = CustomPostType::get_post($transaction->campaign_id);
+                            } catch (Exception $e) {
+                                $logger = $this->logger;
+                                $logger->warning('Error checking transaction: ' . $e->getMessage());
+
+                                return;
+                            }
+
+                            $atts['theme_color'] = $campaign['theme_color'][0];
+
+                            switch ($transaction->status) {
+                                case 'paid':
+                                    $vars                = [
+                                        '{{value}}' => (! empty($transaction->currency) ? html_entity_decode(
+                                                Utils::get_currency_symbol($transaction->currency)
+                                            ) : '') . number_format_i18n(
+                                                           $transaction->value,
+                                                           2
+                                                       ),
+                                        '{{name}}'  => $donor->name,
+                                        '{{email}}' => $donor->email,
+                                    ];
+                                    $atts['modal_title'] = strtr($campaign['return_message_title'][0], $vars);
+                                    $atts['modal_text']  = strtr($campaign['return_message_text'][0], $vars);
+                                    break;
+                                case 'canceled':
+                                    $atts['modal_title'] = __('Payment cancelled', 'kudos-donations');
+                                    $atts['modal_text']  = __(
+                                        'You have not been charged for this transaction.',
+                                        'kudos-donations'
+                                    );
+                                    break;
+                                default:
+                                    $atts['modal_title'] = __('Thanks', 'kudos-donations');
+                                    $atts['modal_text']  = __(
+                                        'Your donation will be processed soon.',
+                                        'kudos-donations'
+                                    );
+                                    break;
+                            }
+
                             if ($atts) {
                                 echo $this->create_message_modal(
                                     $atts['modal_title'],
@@ -358,7 +411,7 @@ class Front
 
                         // Bail if no subscription found.
                         if (null === $subscription) {
-                            return;
+                            break;
                         }
 
                         if (wp_verify_nonce($nonce, $action)) {
@@ -371,7 +424,7 @@ class Front
                                     )
                                 );
 
-                                return;
+                                break;
                             }
                         }
 
@@ -394,74 +447,6 @@ class Front
     {
         wp_enqueue_script('kudos-donations-public');
         wp_enqueue_style('kudos-donations-public');
-    }
-
-    /**
-     * Check payment status based on local order_id
-     *
-     * @param string $order_id Kudos order id.
-     *
-     * @return false | array
-     */
-    public function check_transaction(string $order_id)
-    {
-        if ($order_id) {
-            $mapper = $this->mapper;
-
-            /** @var TransactionEntity $transaction */
-            $transaction = $mapper
-                ->get_repository(TransactionEntity::class)
-                ->get_one_by(['order_id' => $order_id]);
-
-            if (null === $transaction) {
-                return false;
-            }
-
-            /** @var DonorEntity $donor */
-            $donor = $mapper
-                ->get_repository(DonorEntity::class)
-                ->get_one_by(['customer_id' => $transaction->customer_id]);
-
-            try {
-                $campaign = CustomPostType::get_post($transaction->campaign_id);
-            } catch (Exception $e) {
-                $logger = $this->logger;
-                $logger->warning('Error checking transaction: ' . $e->getMessage());
-
-                return false;
-            }
-
-            $atts['theme_color'] = $campaign['theme_color'][0];
-
-            switch ($transaction->status) {
-                case 'paid':
-                    $vars                = [
-                        '{{value}}' => (! empty($transaction->currency) ? html_entity_decode(
-                                Utils::get_currency_symbol($transaction->currency)
-                            ) : '') . number_format_i18n(
-                                           $transaction->value,
-                                           2
-                                       ),
-                        '{{name}}'  => $donor->name,
-                        '{{email}}' => $donor->email,
-                    ];
-                    $atts['modal_title'] = strtr($campaign['return_message_title'][0], $vars);
-                    $atts['modal_text']  = strtr($campaign['return_message_text'][0], $vars);
-                    break;
-                case 'canceled':
-                    $atts['modal_title'] = __('Payment cancelled', 'kudos-donations');
-                    $atts['modal_text']  = __('You have not been charged for this transaction.', 'kudos-donations');
-                    break;
-                default:
-                    $atts['modal_title'] = __('Thanks', 'kudos-donations');
-                    $atts['modal_text']  = __('Your donation will be processed soon.', 'kudos-donations');
-                    break;
-            }
-
-            return $atts;
-        }
-
-        return false;
     }
 
     /**
