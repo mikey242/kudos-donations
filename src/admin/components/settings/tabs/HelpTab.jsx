@@ -2,7 +2,7 @@ import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import logo from '../../../../images/full-logo-green.svg';
 import React from 'react';
-import { Button } from '../../../../common/components/controls';
+import { Button, ToggleControl } from '../../../../common/components/controls';
 import {
 	InformationCircleIcon,
 	PencilAltIcon,
@@ -84,6 +84,15 @@ const HelpTab = ({ setShowIntro }) => {
 					</a>
 				</div>
 			</div>
+			<Divider />
+			<ToggleControl
+				label={__('Enable shortcode', 'kudos-donations')}
+				help={__(
+					'This allows the use of shortcodes. Leave disabled for better performance.',
+					'kudos-donations'
+				)}
+				name="_kudos_enable_shortcode"
+			/>
 			{/* <Panel> */}
 			{/*    <HelpPanel */}
 			{/*        handleInputChange={props.handleInputChange} */}

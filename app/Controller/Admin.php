@@ -824,7 +824,7 @@ class Admin
                 'enable_shortcode'       => [
                     'type'              => 'boolean',
                     'show_in_rest'      => true,
-                    'default'           => true,
+                    'default'           => false,
                     'sanitize_callback' => 'rest_sanitize_boolean',
                 ],
                 'donate_modal_in_footer' => [
