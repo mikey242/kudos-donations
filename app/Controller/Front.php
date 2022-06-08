@@ -77,14 +77,6 @@ class Front
             true
         );
 
-        wp_localize_script(
-            'kudos-donations-public',
-            'kudos',
-            [
-                '_wpnonce' => wp_create_nonce('wp_rest'),
-            ]
-        );
-
         wp_set_script_translations('kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
     }
 
