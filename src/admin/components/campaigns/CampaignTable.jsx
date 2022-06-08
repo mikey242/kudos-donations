@@ -56,12 +56,9 @@ function CampaignTable({
 					</tr>
 				</thead>
 				<tbody className="divide-y divide-gray-200 bg-white">
-					{campaigns?.map((campaign, i) => (
+					{campaigns?.map((campaign) => (
 						<tr key={campaign.id}>
-							<td
-								scope="row"
-								className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-							>
+							<td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
 								{campaign.title.rendered}
 							</td>
 							<td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -78,7 +75,7 @@ function CampaignTable({
 							</td>
 							<td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
 								{campaign.meta.goal > 0
-									? campaign.meta.goal
+									? '€' + campaign.meta.goal
 									: 'None'}
 							</td>
 							<td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -113,12 +110,15 @@ function CampaignTable({
 									<TrashIcon
 										className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-red-500"
 										onClick={() => {
-											window.confirm(
-												__(
-													'Are you sure you wish to delete this campaign?',
-													'kudos-donations'
-												)
-											) && deleteClick(campaign.id);
+											return (
+												// eslint-disable-next-line no-alert
+												window.confirm(
+													__(
+														'Are you sure you wish to delete this campaign?',
+														'kudos-donations'
+													)
+												) && deleteClick(campaign.id)
+											);
 										}}
 									/>
 								</span>
