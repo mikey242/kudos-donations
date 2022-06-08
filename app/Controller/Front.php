@@ -57,11 +57,6 @@ class Front
         $this->mapper  = $mapper;
     }
 
-    public static function test_callback()
-    {
-        wp_send_json_error('no');
-    }
-
     /**
      * Register the JavaScript for the public-facing side of the plugin.
      * This is necessary in order to localize the script with variables.
