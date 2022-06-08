@@ -1,5 +1,6 @@
 import React from 'react';
 import { Fragment, useEffect } from '@wordpress/element';
+import { useCopyToClipboard } from '@wordpress/compose';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
@@ -13,17 +14,31 @@ import {
 } from '../../../common/components/controls';
 import TabPanel from '../TabPanel';
 import Divider from '../Divider';
-import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
+import {
+	ArrowCircleLeftIcon,
+	ClipboardCopyIcon,
+} from '@heroicons/react/outline';
 import { isValidUrl } from '../../../common/helpers/util';
 
 function CampaignEdit({
 	campaign,
 	updateCampaign,
+	createNotification,
 	clearCurrentCampaign,
+	shortcodeEnabled,
 	recurringAllowed,
 }) {
 	const methods = useForm();
 	const { reset, handleSubmit, watch, formState } = methods;
+
+	const onCopy = () => {
+		createNotification('Shortcode copied');
+	};
+
+	const copyRef = useCopyToClipboard(
+		`[kudos campaign_id=${campaign.id}]`,
+		onCopy
+	);
 
 	const watchAmountType = watch('meta.amount_type');
 	const watchUseReturnURL = watch('meta.use_custom_return_url');
@@ -38,15 +53,17 @@ function CampaignEdit({
 
 	const goBack = () => {
 		if (Object.keys(formState.dirtyFields).length) {
-			window.confirm(
-				__(
-					'You have unsaved changes, are you sure you want to leave?',
-					'kudos-donations'
-				)
-			) && clearCurrentCampaign();
-		} else {
-			clearCurrentCampaign();
+			return (
+				// eslint-disable-next-line no-alert
+				window.confirm(
+					__(
+						'You have unsaved changes, are you sure you want to leave?',
+						'kudos-donations'
+					)
+				) && clearCurrentCampaign()
+			);
 		}
+		clearCurrentCampaign();
 	};
 
 	const onSubmit = (data) => {
@@ -293,11 +310,26 @@ function CampaignEdit({
 				<form id="settings-form" onSubmit={handleSubmit(onSubmit)}>
 					<TabPanel tabs={tabs} />
 				</form>
-				<div className="text-right flex justify-between mt-5">
-					<Button onClick={() => goBack()} type="button">
+				<div className="text-right flex justify-start mt-5">
+					<Button
+						className="mr-2"
+						onClick={() => goBack()}
+						type="button"
+					>
 						<ArrowCircleLeftIcon className="mr-2 w-5 h-5" />
 						{__('Back', 'kudos-donations')}
 					</Button>
+					{shortcodeEnabled && (
+						<Button
+							isOutline
+							ref={copyRef}
+							onClick={() => onCopy()}
+							type="button"
+						>
+							<ClipboardCopyIcon className="mr-2 w-5 h-5" />
+							{__('Copy shortcode', 'kudos-donations')}
+						</Button>
+					)}
 				</div>
 			</FormProvider>
 		</Fragment>

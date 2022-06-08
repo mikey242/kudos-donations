@@ -232,11 +232,15 @@ const KudosCampaigns = ({ stylesheet }) => {
 						) : (
 							<CampaignEdit
 								updateCampaign={updateCampaign}
+								createNotification={createNotification}
 								recurringAllowed={
 									settings?.[
 										'_kudos_vendor_' +
 											settings._kudos_vendor
 									].recurring
+								}
+								shortcodeEnabled={
+									settings?._kudos_enable_shortcode
 								}
 								clearCurrentCampaign={clearCurrentCampaign}
 								campaign={currentCampaign}
