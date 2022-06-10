@@ -11,22 +11,47 @@ import { __ } from '@wordpress/i18n';
 import React, { Fragment } from 'react';
 import { KudosButton } from '../../public/components/KudosButton';
 import { fetchCampaigns } from '../../common/helpers/fetch';
+import apiFetch from '@wordpress/api-fetch';
 
 const ButtonEdit = (props) => {
-	const [campaigns, setCampaigns] = useState();
+	const [campaigns, setCampaigns] = useState(null);
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 
 	const {
 		className,
+		// eslint-disable-next-line camelcase
 		attributes: { button_label, campaign_id, type, alignment },
 		setAttributes,
 	} = props;
 
 	useEffect(() => {
-		fetchCampaigns().then(setCampaigns);
-		if (campaign_id) {
-			fetchCampaigns(campaign_id).then(setCurrentCampaign);
-		}
+		const controller =
+			typeof AbortController === 'undefined'
+				? undefined
+				: new AbortController();
+		apiFetch({
+			path: `wp/v2/kudos_campaign/`,
+			method: 'GET',
+			signal: controller?.signal,
+		})
+			.then((response) => {
+				setCampaigns(response);
+				// eslint-disable-next-line camelcase
+				if (campaign_id) {
+					const current = response.find(
+						(x) => x.id === parseInt(campaign_id)
+					);
+					setCurrentCampaign(current);
+				}
+			})
+			.catch((error) => {
+				// eslint-disable-next-line no-console
+				console.log(error);
+			});
+
+		return () => {
+			controller.abort();
+		};
 	}, []);
 
 	const onChangeButtonLabel = (newValue) => {
