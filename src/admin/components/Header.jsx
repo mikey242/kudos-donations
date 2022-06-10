@@ -1,5 +1,5 @@
 import React from 'react';
-import { KudosLogo } from '../../public/components/KudosLogo';
+import { KudosLogo } from '../../common/components/KudosLogo';
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
 
