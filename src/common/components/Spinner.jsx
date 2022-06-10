@@ -1,5 +1,5 @@
 import React from 'react';
-import { KudosLogo } from '../../public/components/KudosLogo';
+import { KudosLogo } from './KudosLogo';
 
 function Spinner({}) {
 	return (

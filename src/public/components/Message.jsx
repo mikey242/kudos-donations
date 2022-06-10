@@ -2,11 +2,11 @@ import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import PropTypes from 'prop-types';
 import KudosModal from './KudosModal';
-import KudosRender from './KudosRender';
+import Render from './Render';
 import { Button } from '../../common/components/controls';
 import { __ } from '@wordpress/i18n';
 
-KudosMessage.propTypes = {
+Message.propTypes = {
 	title: PropTypes.string,
 	body: PropTypes.node,
 	color: PropTypes.string,
@@ -15,7 +15,7 @@ KudosMessage.propTypes = {
 
 const stylesheet = document.getElementById('kudos-donations-public-css');
 
-function KudosMessage({ title, body, color, root }) {
+function Message({ title, body, color, root }) {
 	const [ready, setReady] = useState(false);
 
 	const [modalOpen, setModalOpen] = useState(true);
@@ -43,7 +43,7 @@ function KudosMessage({ title, body, color, root }) {
 	return (
 		<>
 			{ready && (
-				<KudosRender themeColor={color} stylesheet={stylesheet.href}>
+				<Render themeColor={color} stylesheet={stylesheet.href}>
 					<KudosModal
 						toggle={toggleModal}
 						root={root}
@@ -66,10 +66,10 @@ function KudosMessage({ title, body, color, root }) {
 							</Button>
 						</>
 					</KudosModal>
-				</KudosRender>
+				</Render>
 			)}
 		</>
 	);
 }
 
-export default KudosMessage;
+export default Message;

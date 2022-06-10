@@ -7,14 +7,15 @@
 import { render } from '@wordpress/element';
 import React from 'react';
 import KudosDonate from './components/KudosDonate';
-import KudosMessage from './components/KudosMessage';
+import Message from './components/Message';
 
 // Select the web components as target for render.
-const roots = document.querySelectorAll('.kudos-form');
+const widgets = document.querySelectorAll('.kudos-form');
+const hover = document.getElementById('kudos-hover-button');
 const messages = document.querySelectorAll('.kudos-message');
 
 // Kudos Donations form/modal
-roots.forEach((root) => {
+widgets.forEach((root) => {
 	const buttonLabel = root.dataset.label;
 	const campaignId = root.dataset.campaign;
 	const displayAs = root.dataset.displayAs;
@@ -35,7 +36,7 @@ messages.forEach((message) => {
 	const body = message.dataset.body;
 	const color = message.dataset.color;
 	render(
-		<KudosMessage root={message} color={color} title={title} body={body} />,
+		<Message root={message} color={color} title={title} body={body} />,
 		message
 	);
 });

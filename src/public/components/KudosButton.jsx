@@ -1,4 +1,4 @@
-import { KudosLogo } from './KudosLogo';
+import { KudosLogo } from '../../common/components/KudosLogo';
 import React from 'react';
 import { Button } from '../../common/components/controls';
 import classNames from 'classnames';

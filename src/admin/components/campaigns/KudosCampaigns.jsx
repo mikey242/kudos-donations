@@ -15,7 +15,7 @@ import {
 	updateQueryParameter,
 } from '../../../common/helpers/util';
 import EmptyCampaigns from './EmptyCampaigns';
-import KudosRender from '../../../public/components/KudosRender';
+import Render from '../../../public/components/Render';
 import { Spinner } from '../../../common/components/Spinner';
 
 const KudosCampaigns = ({ stylesheet }) => {
@@ -184,7 +184,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 	};
 
 	return (
-		<KudosRender stylesheet={stylesheet.href}>
+		<Render stylesheet={stylesheet.href}>
 			{!isApiLoaded ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
@@ -256,7 +256,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 					/>
 				</>
 			)}
-		</KudosRender>
+		</Render>
 	);
 };
 

@@ -17,7 +17,7 @@ import { EmailTab } from './tabs/EmailTab';
 import { HelpTab } from './tabs/HelpTab';
 import { Button } from '../../../common/components/controls';
 import Notification from '../Notification';
-import KudosRender from '../../../public/components/KudosRender';
+import Render from '../../../public/components/Render';
 import TabPanel from '../TabPanel';
 import { fetchTestMollie } from '../../../common/helpers/fetch';
 import { Spinner } from '../../../common/components/Spinner';
@@ -177,7 +177,7 @@ const KudosSettings = ({ stylesheet }) => {
 
 	return (
 		// Show spinner if not yet loaded
-		<KudosRender stylesheet={stylesheet.href}>
+		<Render stylesheet={stylesheet.href}>
 			{!isAPILoaded ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
@@ -244,7 +244,7 @@ const KudosSettings = ({ stylesheet }) => {
 					</form>
 				</FormProvider>
 			)}
-		</KudosRender>
+		</Render>
 	);
 };
 

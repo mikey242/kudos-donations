@@ -4,10 +4,10 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
 import { KudosButton } from './KudosButton';
-import KudosModal from './KudosModal';
+import Modal from './KudosModal';
 import FormRouter from './FormRouter';
 import { checkRequirements } from '../../common/helpers/form';
-import KudosRender from './KudosRender';
+import Render from './Render';
 import { Spinner } from '../../common/components/Spinner';
 
 const stylesheet = document.getElementById('kudos-donations-public-css');
@@ -177,32 +177,34 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 
 	return (
 		<>
-			{/* eslint-disable-next-line no-nested-ternary */}
-			{isApiLoaded ? (
-				<KudosRender
-					themeColor={campaign?.theme_color}
-					stylesheet={stylesheet.href}
-				>
+			<Render
+				themeColor={campaign?.theme_color}
+				stylesheet={stylesheet.href}
+			>
+				{/* eslint-disable-next-line no-nested-ternary */}
+				{isApiLoaded ? (
 					<>
+						{displayAs === 'form' && donationForm()}
 						{displayAs === 'button' && (
 							<>
 								<KudosButton onClick={toggleModal}>
 									{buttonLabel}
 								</KudosButton>
-								<KudosModal
-									embedded={displayAs === 'form'}
+								<Modal
 									toggle={toggleModal}
 									root={root}
 									isOpen={modalOpen}
 								>
 									{donationForm()}
-								</KudosModal>
+								</Modal>
 							</>
 						)}
-						{displayAs === 'form' && donationForm()}
 					</>
-				</KudosRender>
-			) : errors?.length ? (
+				) : (
+					<Spinner />
+				)}
+			</Render>
+			{errors?.length && (
 				<>
 					<p className="m-0">Kudos Donations</p>
 					{errors.map((error, i) => (
@@ -211,8 +213,6 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 						</p>
 					))}
 				</>
-			) : (
-				<Spinner />
 			)}
 		</>
 	);
