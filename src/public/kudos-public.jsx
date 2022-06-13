@@ -11,7 +11,6 @@ import Message from './components/Message';
 
 // Select the web components as target for render.
 const widgets = document.querySelectorAll('.kudos-form');
-const hover = document.getElementById('kudos-hover-button');
 const messages = document.querySelectorAll('.kudos-message');
 
 // Kudos Donations form/modal
