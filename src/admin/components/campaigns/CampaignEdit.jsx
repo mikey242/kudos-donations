@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fragment, useEffect } from '@wordpress/element';
+import { Fragment, useState } from '@wordpress/element';
 import { useCopyToClipboard } from '@wordpress/compose';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import {
 	ClipboardCopyIcon,
 } from '@heroicons/react/outline';
 import { isValidUrl } from '../../../common/helpers/util';
+import KudosModal from '../../../common/components/KudosModal';
 
 function CampaignEdit({
 	root,
@@ -29,28 +30,37 @@ function CampaignEdit({
 	shortcodeEnabled,
 	recurringAllowed,
 }) {
-	const methods = useForm();
-	const { reset, handleSubmit, watch, formState } = methods;
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const methods = useForm({
+		defaultValues: {
+			...campaign,
+			title: campaign?.title?.rendered,
+			'shortcode.showAs': 'button',
+			'shortcode.buttonLabel': __('Donate now!', 'kudos-donations'),
+		},
+	});
+	const { handleSubmit, watch, formState } = methods;
+	const watchAmountType = watch('meta.amount_type');
+	const watchUseReturnURL = watch('meta.use_custom_return_url');
+	const watchAddress = watch('meta.address_enabled');
+	const watchShowAs = watch('shortcode.showAs');
+	const watchButtonLabel = watch('shortcode.buttonLabel');
+
+	const toggleModal = () => setIsModalOpen((prev) => !prev);
 
 	const onCopy = () => {
+		setIsModalOpen(false);
 		createNotification('Shortcode copied');
 	};
 
 	const copyRef = useCopyToClipboard(
-		`[kudos campaign_id=${campaign.id}]`,
+		`[kudos campaign_id=${campaign.id} type=${watchShowAs} ${
+			watchButtonLabel && watchShowAs === 'button'
+				? 'button_label="' + watchButtonLabel + '"'
+				: ''
+		}]`,
 		onCopy
 	);
-
-	const watchAmountType = watch('meta.amount_type');
-	const watchUseReturnURL = watch('meta.use_custom_return_url');
-	const watchAddress = watch('meta.address_enabled');
-
-	useEffect(() => {
-		reset({
-			...campaign,
-			title: campaign?.title?.rendered,
-		});
-	}, [campaign]);
 
 	const goBack = () => {
 		if (Object.keys(formState.dirtyFields).length) {
@@ -174,7 +184,7 @@ function CampaignEdit({
 						name="meta.donation_type"
 						label={__('Donation type', 'kudos-donations')}
 						help={__(
-							'Chose the available payment frequency',
+							'Choose the available payment frequency',
 							'kudos-donations'
 						)}
 						options={[
@@ -311,7 +321,7 @@ function CampaignEdit({
 				<form id="settings-form" onSubmit={handleSubmit(onSubmit)}>
 					<TabPanel tabs={tabs} />
 				</form>
-				<div className="text-right flex justify-start mt-5">
+				<div className="text-right flex justify-start mt-5 pb-2">
 					<Button
 						className="mr-2"
 						onClick={() => goBack()}
@@ -321,8 +331,50 @@ function CampaignEdit({
 						{__('Back', 'kudos-donations')}
 					</Button>
 					{shortcodeEnabled && (
+						<Button isOutline onClick={toggleModal} type="button">
+							{__('Generate shortcode', 'kudos-donations')}
+						</Button>
+					)}
+				</div>
+				<KudosModal
+					showLogo={false}
+					isOpen={isModalOpen}
+					root={root}
+					toggle={toggleModal}
+				>
+					<h1 className="text-center">
+						{__('Generate shortcode', 'kudos-donations')}
+					</h1>
+					<RadioGroupControl
+						name="shortcode.showAs"
+						label={__('Display as', 'kudos-donations')}
+						help={__(
+							'Choose whether to show Kudos as a button or an embedded form.',
+							'kudos-donations'
+						)}
+						options={[
+							{
+								label: __(
+									'Button with pop-up',
+									'kudos-donations'
+								),
+								value: 'button',
+							},
+							{
+								label: __('Embedded form', 'kudos-donations'),
+								value: 'form',
+							},
+						]}
+					/>
+					{watchShowAs === 'button' && (
+						<TextControl
+							name="shortcode.buttonLabel"
+							help={__('Add a button label', 'kudos-donations')}
+							label={__('Button label', 'kudos-donations')}
+						/>
+					)}
+					<div className="mt-8 flex justify-end relative">
 						<Button
-							isOutline
 							ref={copyRef}
 							onClick={() => onCopy()}
 							type="button"
@@ -330,8 +382,8 @@ function CampaignEdit({
 							<ClipboardCopyIcon className="mr-2 w-5 h-5" />
 							{__('Copy shortcode', 'kudos-donations')}
 						</Button>
-					)}
-				</div>
+					</div>
+				</KudosModal>
 			</FormProvider>
 		</Fragment>
 	);
