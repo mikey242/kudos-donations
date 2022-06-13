@@ -58,37 +58,6 @@ class Front
     }
 
     /**
-     * Register the JavaScript for the public-facing side of the plugin.
-     * This is necessary in order to localize the script with variables.
-     */
-    public function register_scripts()
-    {
-        $public_js = Assets::get_script('/public/kudos-public.js');
-        wp_register_script(
-            'kudos-donations-public',
-            $public_js['url'],
-            $public_js['dependencies'],
-            $public_js['version'],
-            true
-        );
-
-        wp_set_script_translations('kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
-    }
-
-    /**
-     * Register the public facing styles.
-     */
-    public function register_styles()
-    {
-        wp_register_style(
-            'kudos-donations-public',
-            Assets::get_asset_url('/public/kudos-public.css'),
-            ['kudos-donations-root'],
-            $this->version
-        );
-    }
-
-    /**
      * Register the inline root styles used by block editor and front.
      */
     public function register_root_styles()
@@ -101,6 +70,7 @@ class Front
      */
     public function register_kudos()
     {
+        $this->register_assets();
         $this->register_blocks();
         $this->register_post_types();
 
@@ -108,6 +78,27 @@ class Front
         if (Settings::get_setting('enable_shortcode')) {
             $this->register_button_shortcode();
         }
+    }
+
+    public function register_assets()
+    {
+        $public_js = Assets::get_script('/public/kudos-public.js');
+        wp_register_script(
+            'kudos-donations-public',
+            $public_js['url'],
+            $public_js['dependencies'],
+            $public_js['version'],
+            true
+        );
+
+        wp_set_script_translations('kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
+
+        wp_register_style(
+            'kudos-donations-public',
+            Assets::get_asset_url('/public/kudos-public.css'),
+            ['kudos-donations-root'],
+            $this->version
+        );
     }
 
     /**
@@ -159,9 +150,8 @@ class Front
                     ],
                 ],
                 "editor_script"   => "kudos-donations-button",
-                "editor_style"    => "kudos-donations-public",
-                "view_script"     => "kudos-donations-public",
-                "view_style"      => "kudos-donations-public",
+                "script"          => "kudos-donations-public",
+                "style"           => "kudos-donations-public",
             ]
         );
     }
