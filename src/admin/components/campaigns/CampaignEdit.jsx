@@ -21,6 +21,7 @@ import {
 import { isValidUrl } from '../../../common/helpers/util';
 
 function CampaignEdit({
+	root,
 	campaign,
 	updateCampaign,
 	createNotification,
