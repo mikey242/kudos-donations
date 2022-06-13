@@ -18,21 +18,18 @@ use Twig\TwigFunction;
 class TwigService
 {
     public const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
-
-    /**
-     * Twig environment.
-     *
-     * @var Environment
-     */
-    private $twig;
-
     /**
      * Directories where templates are stored.
      *
      * @var array
      */
     public $template_paths;
-
+    /**
+     * Twig environment.
+     *
+     * @var Environment
+     */
+    private $twig;
     /**
      * Twig options
      *
@@ -63,20 +60,6 @@ class TwigService
         $this->initialize_twig();
     }
 
-    public function add_path(string $path, $namespace = null)
-    {
-        $loader = $this->loader;
-        try {
-            if (is_string($namespace)) {
-                $loader->setPaths($path, $namespace);
-            } else {
-                $loader->addPath($path);
-            }
-        } catch (LoaderError $e) {
-            $this->logger->error($e->getMessage());
-        }
-    }
-
     /**
      * Initialize environment and loaders.
      */
@@ -94,6 +77,20 @@ class TwigService
         $this->initialize_twig_extensions();
         $this->initialize_twig_functions();
         $this->initialize_twig_filters();
+    }
+
+    public function add_path(string $path, $namespace = null)
+    {
+        $loader = $this->loader;
+        try {
+            if (is_string($namespace)) {
+                $loader->setPaths($path, $namespace);
+            } else {
+                $loader->addPath($path);
+            }
+        } catch (LoaderError $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 
     /**

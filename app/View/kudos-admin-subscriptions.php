@@ -29,11 +29,11 @@ switch ($table_action) {
 
 ?>
 <div class="wrap">
-    <h1 class="wp-heading-inline"><?php
+	<h1 class="wp-heading-inline"><?php
         esc_attr_e('Subscriptions', 'kudos-donations'); ?></h1>
     <?php
-    if (! empty($_REQUEST['s'])) { ?>
-        <span class="subtitle">
+    if ( ! empty($_REQUEST['s'])) { ?>
+		<span class="subtitle">
             <?php
             /* translators: %s: Search term */
             printf(__('Search results for “%s”'), $_REQUEST['s'])
@@ -47,8 +47,8 @@ switch ($table_action) {
         $notice->render();
     }
     ?>
-    <form id="subscriptions-table" method="POST">
+	<form id="subscriptions-table" method="POST">
         <?php
         $this->table->display(); ?>
-    </form>
+	</form>
 </div>

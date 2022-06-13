@@ -51,7 +51,7 @@ class MapperService
         $entity->last_updated = gmdate('Y-m-d H:i:s', time());
 
         // Set repository if not already set.
-        if (! $this->repository) {
+        if ( ! $this->repository) {
             $this->get_repository(get_class($entity));
         }
 
@@ -69,6 +69,24 @@ class MapperService
         }
 
         return $result;
+    }
+
+    /**
+     * Gets the current repository.
+     *
+     * @param string $class
+     *
+     * @return self|null
+     */
+    public function get_repository(string $class): ?MapperService
+    {
+        if (is_subclass_of($class, AbstractEntity::class)) {
+            $this->repository = $class;
+
+            return $this;
+        }
+
+        return null;
     }
 
     /**
@@ -104,6 +122,18 @@ class MapperService
         }
 
         return $result;
+    }
+
+    /**
+     * Returns current repository table name.
+     *
+     * @param bool $prefix Whether to return the prefix or not.
+     *
+     * @return string
+     */
+    public function get_table_name(bool $prefix = true): string
+    {
+        return $this->repository::get_table_name($prefix);
     }
 
     /**
@@ -168,36 +198,6 @@ class MapperService
         }
 
         return $value;
-    }
-
-    /**
-     * Returns current repository table name.
-     *
-     * @param bool $prefix Whether to return the prefix or not.
-     *
-     * @return string
-     */
-    public function get_table_name(bool $prefix = true): string
-    {
-        return $this->repository::get_table_name($prefix);
-    }
-
-    /**
-     * Gets the current repository.
-     *
-     * @param string $class
-     *
-     * @return self|null
-     */
-    public function get_repository(string $class): ?MapperService
-    {
-        if (is_subclass_of($class, AbstractEntity::class)) {
-            $this->repository = $class;
-
-            return $this;
-        }
-
-        return null;
     }
 
     /**
@@ -319,22 +319,7 @@ class MapperService
 
         $results = $this->get_results($query);
 
-        if (! empty($results)) {
-            return $this->map_to_class($results);
-        }
-
-        return [];
-    }
-
-    public function get_all_between($start, $end): array
-    {
-        $wpdb         = $this->wpdb;
-        $table        = $this->get_table_name();
-        $query_string = $wpdb->prepare("created BETWEEN %s AND %s", $start, $end);
-        $query        = "SELECT $table.* FROM $table WHERE $query_string";
-        $results      = $this->get_results($query);
-
-        if (! empty($results)) {
+        if ( ! empty($results)) {
             return $this->map_to_class($results);
         }
 
@@ -389,6 +374,21 @@ class MapperService
         }
 
         return $deleted;
+    }
+
+    public function get_all_between($start, $end): array
+    {
+        $wpdb         = $this->wpdb;
+        $table        = $this->get_table_name();
+        $query_string = $wpdb->prepare("created BETWEEN %s AND %s", $start, $end);
+        $query        = "SELECT $table.* FROM $table WHERE $query_string";
+        $results      = $this->get_results($query);
+
+        if ( ! empty($results)) {
+            return $this->map_to_class($results);
+        }
+
+        return [];
     }
 
     /**

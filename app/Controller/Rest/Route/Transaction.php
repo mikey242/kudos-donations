@@ -135,7 +135,7 @@ class Transaction extends Base
 
         if ($request->has_valid_params()) {
             $params = $request->get_query_params();
-            if (! empty($params['start']) && ! empty($params['end'])) {
+            if ( ! empty($params['start']) && ! empty($params['end'])) {
                 $start = $params['start'] . ' 00:00:00';
                 $end   = $params['end'] . ' 23:59:59';
 
@@ -163,7 +163,7 @@ class Transaction extends Base
         $response = new WP_REST_Response();
         if ($request->has_valid_params()) {
             $param = $request->get_param('campaign_id');
-            if (! empty($param)) {
+            if ( ! empty($param)) {
                 $response->set_data(
                     $mapper->get_all_by([
                         'campaign_id' => $param,

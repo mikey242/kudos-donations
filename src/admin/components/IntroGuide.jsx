@@ -4,7 +4,7 @@ import campaign from '../../images/guide-campaign.png';
 import button from '../../images/guide-button.png';
 import live from '../../images/guide-test-live.png';
 import { __ } from '@wordpress/i18n';
-import { Dashicon, ExternalLink } from '@wordpress/components';
+import { ExternalLink } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import { Guide } from './Guide';
 import React from 'react';

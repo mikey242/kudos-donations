@@ -66,16 +66,6 @@ abstract class AbstractEntity
     }
 
     /**
-     * Returns class as an array.
-     *
-     * @return array
-     */
-    public function to_array(): array
-    {
-        return get_object_vars($this);
-    }
-
-    /**
      * Returns the name of the entity (e.g. Transaction).
      *
      * @return string The name of the entities class without the word 'Entity'.
@@ -87,6 +77,16 @@ abstract class AbstractEntity
         $entity_pos = strpos($class, 'Entity');
 
         return substr($class, 0, $entity_pos);
+    }
+
+    /**
+     * Returns class as an array.
+     *
+     * @return array
+     */
+    public function to_array(): array
+    {
+        return get_object_vars($this);
     }
 
     /**

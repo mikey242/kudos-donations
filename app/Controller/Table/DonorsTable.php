@@ -319,10 +319,10 @@ class DonorsTable extends WP_List_Table
             }
 
             return '<a href="' . admin_url(
-                'admin.php?page=kudos-transactions&search-field=customer_id&s=' . rawurlencode(
-                    $item['customer_id']
-                ) . ''
-            ) . '">
+                    'admin.php?page=kudos-transactions&search-field=customer_id&s=' . rawurlencode(
+                        $item['customer_id']
+                    ) . ''
+                ) . '">
 						' . $number . ' ( ' . Utils::get_currency_symbol($transactions[0]->currency) . $total . ' )' .
                    '</a>';
         }

@@ -80,6 +80,10 @@ class Front
         }
     }
 
+    /**
+     * Register the assets needed to display Kudos.
+     * @return void
+     */
     public function register_assets()
     {
         $public_js = Assets::get_script('/public/kudos-public.js');
