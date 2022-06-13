@@ -46,7 +46,6 @@ const TabPanel = ({ tabs }) => {
 										>
 											{tab.title}
 											<span
-												// aria-hidden="true"
 												className={classNames(
 													selected
 														? 'bg-primary'
