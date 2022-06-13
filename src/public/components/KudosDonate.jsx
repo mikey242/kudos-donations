@@ -4,11 +4,11 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
 import { KudosButton } from './KudosButton';
-import Modal from '../../common/components/KudosModal';
 import FormRouter from './FormRouter';
 import { checkRequirements } from '../../common/helpers/form';
 import Render from './Render';
 import { Spinner } from '../../common/components/Spinner';
+import KudosModal from '../../common/components/KudosModal';
 
 const stylesheet = document.getElementById('kudos-donations-public-css');
 
@@ -178,13 +178,13 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 								<KudosButton onClick={toggleModal}>
 									{buttonLabel}
 								</KudosButton>
-								<Modal
+								<KudosModal
 									toggle={toggleModal}
 									root={root}
 									isOpen={modalOpen}
 								>
 									{donationForm()}
-								</Modal>
+								</KudosModal>
 							</>
 						)}
 					</>
