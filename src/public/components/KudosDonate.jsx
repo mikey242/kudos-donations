@@ -70,10 +70,6 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 		}));
 	};
 
-	const handleKeyPress = (e) => {
-		if (e.key === 'Escape' || e.keyCode === 27) toggleModal();
-	};
-
 	async function submitForm(data) {
 		setErrors([]);
 		const formData = new window.FormData();
@@ -166,14 +162,6 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 			setErrors([__('No campaign ID', 'kudos-donations')]);
 		}
 	}, []);
-
-	useEffect(() => {
-		if (modalOpen) {
-			document.addEventListener('keydown', handleKeyPress, false);
-		}
-		return () =>
-			document.removeEventListener('keydown', handleKeyPress, false);
-	}, [modalOpen]);
 
 	return (
 		<>
