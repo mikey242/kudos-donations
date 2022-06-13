@@ -1,7 +1,7 @@
 import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import PropTypes from 'prop-types';
-import KudosModal from './KudosModal';
+import KudosModal from '../../common/components/KudosModal';
 import Render from './Render';
 import { Button } from '../../common/components/controls';
 import { __ } from '@wordpress/i18n';

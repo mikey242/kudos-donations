@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
 import { KudosButton } from './KudosButton';
-import Modal from './KudosModal';
+import Modal from '../../common/components/KudosModal';
 import FormRouter from './FormRouter';
 import { checkRequirements } from '../../common/helpers/form';
 import Render from './Render';
