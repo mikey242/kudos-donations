@@ -8,7 +8,6 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
 use Kudos\Helpers\CustomPostType;
-use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
@@ -65,11 +64,7 @@ class Front
         $this->register_assets();
         $this->register_blocks();
         $this->register_post_types();
-
-        // If setting is not enabled the shortcode assets and registration will be skipped.
-        if (Settings::get_setting('enable_shortcode')) {
-            $this->register_button_shortcode();
-        }
+        $this->register_button_shortcode();
     }
 
     /**
@@ -204,9 +199,6 @@ class Front
      */
     private function register_button_shortcode()
     {
-        // Enqueue necessary resources.
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
-
         // Register shortcode.
         add_shortcode(
             'kudos',
@@ -248,6 +240,7 @@ class Front
                 );
             }
 
+            // Enqueue necessary resources.
             $this->enqueue_assets();
 
             $alignment = 'has-text-align-' . $atts['alignment'] ?? 'none';

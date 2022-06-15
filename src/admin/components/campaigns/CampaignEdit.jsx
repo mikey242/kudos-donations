@@ -27,7 +27,6 @@ function CampaignEdit({
 	updateCampaign,
 	createNotification,
 	clearCurrentCampaign,
-	shortcodeEnabled,
 	recurringAllowed,
 }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -330,11 +329,9 @@ function CampaignEdit({
 						<ArrowCircleLeftIcon className="mr-2 w-5 h-5" />
 						{__('Back', 'kudos-donations')}
 					</Button>
-					{shortcodeEnabled && (
-						<Button isOutline onClick={toggleModal} type="button">
-							{__('Generate shortcode', 'kudos-donations')}
-						</Button>
-					)}
+					<Button isOutline onClick={toggleModal} type="button">
+						{__('Generate shortcode', 'kudos-donations')}
+					</Button>
 				</div>
 				<KudosModal
 					showLogo={false}

@@ -240,9 +240,6 @@ const KudosCampaigns = ({ root, stylesheet }) => {
 											settings._kudos_vendor
 									].recurring
 								}
-								shortcodeEnabled={
-									settings?._kudos_enable_shortcode
-								}
 								clearCurrentCampaign={clearCurrentCampaign}
 								campaign={currentCampaign}
 							/>
