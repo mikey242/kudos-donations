@@ -6,8 +6,8 @@ const I18nCheckWebpackPlugin = require('@automattic/i18n-check-webpack-plugin');
 mix
 
 	// Laravel Mix config.
-	.setPublicPath('dist')
-	.setResourceRoot('/wp-content/plugins/kudos-donations/dist')
+	.setPublicPath('build')
+	.setResourceRoot('/wp-content/plugins/kudos-donations/build')
 	.options({
 		terser: {
 			extractComments: false,
@@ -51,7 +51,7 @@ mix
 	// Block assets.
 	.js('src/blocks/kudos-button/index.jsx', 'blocks/kudos-button')
 	.react()
-	.copy('src/blocks/kudos-button/block.json', 'dist/blocks/kudos-button')
+	.copy('src/blocks/kudos-button/block.json', 'build/blocks/kudos-button')
 
 	// Admin assets.
 	.js('src/admin/kudos-admin-settings.jsx', 'admin')

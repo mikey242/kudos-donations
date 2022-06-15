@@ -14,7 +14,7 @@ class Assets
      */
     public static function get_asset_url(string $asset, string $url = KUDOS_PLUGIN_URL): string
     {
-        return $url . 'dist/' . ltrim($asset, '/');
+        return $url . 'build/' . ltrim($asset, '/');
     }
 
     /**
@@ -32,11 +32,11 @@ class Assets
         string $base_dir = KUDOS_PLUGIN_DIR,
         string $base_url = KUDOS_PLUGIN_URL
     ): ?array {
-        $asset_path = $base_dir . '/dist' . $asset;
+        $asset_path = $base_dir . '/build' . $asset;
         if (file_exists($asset_path)) {
             $out            = [];
             $out['path']    = $asset_path;
-            $out['url']     = $base_url . 'dist/' . ltrim($asset, '/');
+            $out['url']     = $base_url . 'build/' . ltrim($asset, '/');
             $asset_manifest = substr_replace($asset_path, '.asset.php', -strlen('.js'));
             if (file_exists($asset_manifest)) {
                 $manifest_content    = require($asset_manifest);
@@ -59,6 +59,6 @@ class Assets
      */
     public static function get_asset_path(string $asset): string
     {
-        return KUDOS_PLUGIN_DIR . '/dist/' . ltrim($asset, '/');
+        return KUDOS_PLUGIN_DIR . '/build/' . ltrim($asset, '/');
     }
 }

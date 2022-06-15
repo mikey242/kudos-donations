@@ -103,7 +103,7 @@ class Front
     private function register_blocks()
     {
         register_block_type(
-            KUDOS_PLUGIN_DIR . '/dist/blocks/kudos-button/',
+            KUDOS_PLUGIN_DIR . '/build/blocks/kudos-button/',
             [
                 "render_callback" => [$this, "button_render_callback"],
             ]
