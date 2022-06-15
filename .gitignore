@@ -1,5 +1,6 @@
 vendor
 dist
+build
 logs
 node_modules
 docker/wordpress/
