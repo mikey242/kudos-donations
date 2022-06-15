@@ -364,11 +364,17 @@ function CampaignEdit({
 						]}
 					/>
 					{watchShowAs === 'button' && (
-						<TextControl
-							name="shortcode.buttonLabel"
-							help={__('Add a button label', 'kudos-donations')}
-							label={__('Button label', 'kudos-donations')}
-						/>
+						<>
+							<Divider />
+							<TextControl
+								name="shortcode.buttonLabel"
+								help={__(
+									'Add a button label',
+									'kudos-donations'
+								)}
+								label={__('Button label', 'kudos-donations')}
+							/>
+						</>
 					)}
 					<div className="mt-8 flex justify-end relative">
 						<Button
