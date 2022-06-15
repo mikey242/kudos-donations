@@ -137,7 +137,6 @@ class KudosDonations
         try {
             $plugin_public = $this->container->get('Front');
             add_action('init', [$plugin_public, 'register_kudos']);
-//            add_action('init', [$plugin_public, 'register_assets']);
             add_action('wp_footer', [$plugin_public, 'handle_query_variables'], 1);
         } catch (DependencyException|NotFoundException $e) {
             error_log($e->getMessage());
