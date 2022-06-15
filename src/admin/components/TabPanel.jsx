@@ -14,7 +14,7 @@ const TabPanel = ({ tabs }) => {
 	}, []);
 
 	useEffect(() => {
-		if (selectedIndex) {
+		if (selectedIndex !== null) {
 			updateQueryParameter('tab', selectedIndex);
 		}
 	}, [selectedIndex]);
