@@ -58,14 +58,6 @@ class Front
     }
 
     /**
-     * Register the inline root styles used by block editor and front.
-     */
-    public function register_root_styles()
-    {
-        wp_register_style('kudos-donations-root', false);
-    }
-
-    /**
      * Registers the button shortcode and block.
      */
     public function register_kudos()
@@ -100,7 +92,7 @@ class Front
         wp_register_style(
             'kudos-donations-public',
             Assets::get_asset_url('/public/kudos-public.css'),
-            ['kudos-donations-root'],
+            [],
             $this->version
         );
     }
@@ -111,51 +103,9 @@ class Front
     private function register_blocks()
     {
         register_block_type(
-            'iseardmedia/kudos-button',
+            KUDOS_PLUGIN_DIR . '/dist/blocks/kudos-button/',
             [
                 "render_callback" => [$this, "button_render_callback"],
-                "category"        => "widgets",
-                "title"           => "Kudos Button",
-                "description"     => "Adds a Kudos donate button or tabs to your post or page.",
-                "keywords"        => [
-                    "kudos",
-                    "button",
-                    "donate",
-                ],
-                "supports"        => [
-                    "align"           => false,
-                    "customClassName" => true,
-                    "typography"      => [
-                        "fontSize" => false,
-                    ],
-                ],
-                "example"         => [
-                    "attributes" => [
-                        "label"     => "Donate now!",
-                        "alignment" => "center",
-                    ],
-                ],
-                "attributes"      => [
-                    "button_label" => [
-                        "type"    => "string",
-                        "default" => "Donate now",
-                    ],
-                    "campaign_id"  => [
-                        "type"    => "string",
-                        "default" => "",
-                    ],
-                    "alignment"    => [
-                        "type"    => "string",
-                        "default" => "none",
-                    ],
-                    "type"         => [
-                        "type"    => "string",
-                        "default" => "button",
-                    ],
-                ],
-                "editor_script"   => "kudos-donations-button",
-                "script"          => "kudos-donations-public",
-                "style"           => "kudos-donations-public",
             ]
         );
     }
@@ -298,6 +248,8 @@ class Front
                 );
             }
 
+            $this->enqueue_assets();
+
             $alignment = 'has-text-align-' . $atts['alignment'] ?? 'none';
 
             return "<div class='kudos-donations kudos-form $alignment' data-label='" . $atts['button_label'] . "' data-display-as='" . $atts['type'] . "' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
@@ -311,6 +263,17 @@ class Front
 
         // Nothing displayed to visitors if there is a problem.
         return null;
+    }
+
+    /**
+     * Enqueue the styles and scripts.
+     *
+     * @return void
+     */
+    public function enqueue_assets()
+    {
+        wp_enqueue_script('kudos-donations-public');
+        wp_enqueue_style('kudos-donations-public');
     }
 
     /**
@@ -430,17 +393,6 @@ class Front
                     break;
             }
         }
-    }
-
-    /**
-     * Enqueue the styles and scripts.
-     *
-     * @return void
-     */
-    public function enqueue_assets()
-    {
-        wp_enqueue_script('kudos-donations-public');
-        wp_enqueue_style('kudos-donations-public');
     }
 
     /**

@@ -2,6 +2,9 @@
 
 namespace Kudos;
 
+use DI\DependencyException;
+use DI\NotFoundException;
+
 /**
  * The file that defines the core plugin class
  *
@@ -79,9 +82,12 @@ class KudosDonations
      */
     private function define_rest_hooks()
     {
-        $rest_routes = $this->container->get('RestRoutes');
-
-        add_action('rest_api_init', [$rest_routes, 'register_all']);
+        try {
+            $rest_routes = $this->container->get('RestRoutes');
+            add_action('rest_api_init', [$rest_routes, 'register_all']);
+        } catch (DependencyException|NotFoundException $e) {
+            error_log($e->getMessage());
+        }
     }
 
     /**
@@ -92,15 +98,18 @@ class KudosDonations
      */
     private function define_admin_hooks()
     {
-        $plugin_admin = $this->container->get('Admin');
-
-        add_action('admin_menu', [$plugin_admin, 'add_menu_pages']);
-        add_action('admin_init', [$plugin_admin, 'admin_actions']);
-        add_action('rest_api_init', [$plugin_admin, 'register_settings']);
-        add_action('admin_init', [$plugin_admin, 'register_settings']);
-        add_action('kudos_remove_secret_action', [$plugin_admin, 'remove_secret_action'], 10, 2);
-        add_action('kudos_check_log', [$plugin_admin, 'truncate_log']);
-        add_action('enqueue_block_editor_assets', [$plugin_admin, 'register_block_editor_assets']);
+        try {
+            $plugin_admin = $this->container->get('Admin');
+            add_action('admin_menu', [$plugin_admin, 'add_menu_pages']);
+            add_action('admin_init', [$plugin_admin, 'admin_actions']);
+            add_action('rest_api_init', [$plugin_admin, 'register_settings']);
+            add_action('admin_init', [$plugin_admin, 'register_settings']);
+            add_action('admin_init', [$plugin_admin, 'register_block_editor_assets']);
+            add_action('kudos_remove_secret_action', [$plugin_admin, 'remove_secret_action'], 10, 2);
+            add_action('kudos_check_log', [$plugin_admin, 'truncate_log']);
+        } catch (DependencyException|NotFoundException $e) {
+            error_log($e->getMessage());
+        }
     }
 
     /**
@@ -108,10 +117,13 @@ class KudosDonations
      */
     private function define_payment_hooks()
     {
-        $payment_service = $this->container->get('PaymentService');
-
-        add_action('kudos_mollie_transaction_paid', [$payment_service, 'schedule_process_transaction']);
-        add_action('kudos_process_mollie_transaction', [$payment_service, 'process_transaction']);
+        try {
+            $payment_service = $this->container->get('PaymentService');
+            add_action('kudos_mollie_transaction_paid', [$payment_service, 'schedule_process_transaction']);
+            add_action('kudos_process_mollie_transaction', [$payment_service, 'process_transaction']);
+        } catch (DependencyException|NotFoundException $e) {
+            error_log($e->getMessage());
+        }
     }
 
     /**
@@ -122,33 +134,14 @@ class KudosDonations
      */
     private function define_public_hooks()
     {
-        $plugin_public = $this->container->get('Front');
-
-        add_action('init', [$plugin_public, 'register_kudos']);
-        add_action('init', [$plugin_public, 'register_assets']);
-        add_action('enqueue_block_assets', [$plugin_public, 'register_root_styles']); // Used by front and admin
-        add_action('wp_footer', [$plugin_public, 'handle_query_variables'], 1);
-    }
-
-    /**
-     * The name of the plugin used to uniquely identify it within the context of
-     * WordPress and to define internationalization functionality.
-     *
-     * @return    string    The name of the plugin.
-     */
-    public function get_plugin_name(): string
-    {
-        return $this->plugin_name;
-    }
-
-    /**
-     * Retrieve the version number of the plugin.
-     *
-     * @return    string    The version number of the plugin.
-     */
-    public function get_version(): string
-    {
-        return $this->version;
+        try {
+            $plugin_public = $this->container->get('Front');
+            add_action('init', [$plugin_public, 'register_kudos']);
+//            add_action('init', [$plugin_public, 'register_assets']);
+            add_action('wp_footer', [$plugin_public, 'handle_query_variables'], 1);
+        } catch (DependencyException|NotFoundException $e) {
+            error_log($e->getMessage());
+        }
     }
 
     /**
@@ -160,8 +153,13 @@ class KudosDonations
         $db_version = get_option('_kudos_donations_version');
 
         if ($db_version !== KUDOS_VERSION) {
-            $this->container->get('ActivatorService')
-                            ->activate($db_version);
+            try {
+                $this->container
+                    ->get('ActivatorService')
+                    ->activate($db_version);
+            } catch (DependencyException|NotFoundException $e) {
+                error_log($e->getMessage());
+            }
         }
     }
 }

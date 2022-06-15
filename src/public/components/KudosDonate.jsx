@@ -10,7 +10,9 @@ import Render from './Render';
 import { Spinner } from '../../common/components/Spinner';
 import KudosModal from '../../common/components/KudosModal';
 
-const stylesheet = document.getElementById('kudos-donations-public-css');
+const stylesheet =
+	document.getElementById('kudos-donations-public-css') ||
+	document.getElementById('iseardmedia-kudos-button-style-css');
 
 function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	const [campaign, setCampaign] = useState();
@@ -165,42 +167,52 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 
 	return (
 		<>
-			<Render
-				themeColor={campaign?.theme_color}
-				stylesheet={stylesheet.href}
-			>
-				{/* eslint-disable-next-line no-nested-ternary */}
-				{isApiLoaded ? (
-					<>
-						{displayAs === 'form' && donationForm()}
-						{displayAs === 'button' && (
-							<>
-								<KudosButton onClick={toggleModal}>
-									{buttonLabel}
-								</KudosButton>
-								<KudosModal
-									toggle={toggleModal}
-									root={root}
-									isOpen={modalOpen}
-								>
-									{donationForm()}
-								</KudosModal>
-							</>
-						)}
-					</>
-				) : (
-					<Spinner />
-				)}
-			</Render>
-			{errors?.length && (
+			{/* Only continue if the stylesheet was found */}
+			{stylesheet ? (
 				<>
-					<p className="m-0">Kudos Donations</p>
-					{errors.map((error, i) => (
-						<p key={i} className="text-red-500">
-							{error}
-						</p>
-					))}
+					<Render
+						themeColor={campaign?.theme_color}
+						stylesheet={stylesheet?.href}
+					>
+						{/* If API not loaded yet then show a spinner */}
+						{isApiLoaded ? (
+							<>
+								{displayAs === 'form' && donationForm()}
+								{displayAs === 'button' && (
+									<>
+										<KudosButton onClick={toggleModal}>
+											{buttonLabel}
+										</KudosButton>
+										<KudosModal
+											toggle={toggleModal}
+											root={root}
+											isOpen={modalOpen}
+										>
+											{donationForm()}
+										</KudosModal>
+									</>
+								)}
+							</>
+						) : (
+							<Spinner />
+						)}
+					</Render>
+					{/* Show errors if present */}
+					{errors?.length && (
+						<>
+							<p className="m-0">Kudos Donations</p>
+							{errors.map((error, i) => (
+								<p key={i} className="text-red-500">
+									{error}
+								</p>
+							))}
+						</>
+					)}
 				</>
+			) : (
+				<p style={{ color: 'red' }}>
+					Kudos Donations stylesheet not found
+				</p>
 			)}
 		</>
 	);

@@ -240,7 +240,7 @@ class Admin
         wp_register_style(
             'kudos-donations-public',
             Assets::get_asset_url('/public/kudos-public.css'),
-            ['kudos-donations-root'],
+            [],
             $this->version
         );
 

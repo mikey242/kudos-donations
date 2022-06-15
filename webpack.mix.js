@@ -51,6 +51,7 @@ mix
 	// Block assets.
 	.js('src/blocks/kudos-button/index.jsx', 'blocks/kudos-button')
 	.react()
+	.copy('src/blocks/kudos-button/block.json', 'dist/blocks/kudos-button')
 
 	// Admin assets.
 	.js('src/admin/kudos-admin-settings.jsx', 'admin')
