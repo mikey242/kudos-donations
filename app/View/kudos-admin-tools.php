@@ -153,16 +153,6 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php
                 echo esc_url($url); ?>" method='post' style="display: inline">
                     <?php
-                    wp_nonce_field('kudos_clear_campaigns'); ?>
-					<button type='submit' class="button-secondary confirm" name='kudos_action'
-					        value='kudos_clear_campaigns'>
-						Reset campaigns settings
-					</button>
-				</form>
-
-				<form action="<?php
-                echo esc_url($url); ?>" method='post' style="display: inline">
-                    <?php
                     wp_nonce_field('kudos_clear_all'); ?>
 					<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_clear_all'>
 						Reset all settings

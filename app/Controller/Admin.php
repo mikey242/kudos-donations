@@ -434,11 +434,6 @@ class Admin
                     Settings::add_defaults();
                     break;
 
-                case 'kudos_clear_campaigns':
-                    Settings::remove_setting('campaigns');
-                    Settings::add_defaults();
-                    break;
-
                 case 'kudos_clear_all':
                     Settings::remove_settings();
                     Settings::add_defaults();
