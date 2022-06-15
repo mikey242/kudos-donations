@@ -9,6 +9,7 @@ mix
 	.setPublicPath('build')
 	.setResourceRoot('/wp-content/plugins/kudos-donations/build')
 	.options({
+		manifest: false,
 		terser: {
 			extractComments: false,
 			terserOptions: {
@@ -66,7 +67,4 @@ mix
 	.sourceMaps(false)
 
 	// BrowserSync.
-	.browserSync('localhost:8080')
-
-	// Add version hash to filenames.
-	.version();
+	.browserSync('localhost:8080');
