@@ -6,7 +6,7 @@ import React from 'react'
 import {KudosButton} from './KudosButton'
 import FormRouter from './FormRouter'
 import {checkRequirements} from '../../common/helpers/form'
-import Render from './Render'
+import Render from '../../common/components/Render'
 import {Spinner} from '../../common/components/Spinner'
 import KudosModal from '../../common/components/KudosModal'
 

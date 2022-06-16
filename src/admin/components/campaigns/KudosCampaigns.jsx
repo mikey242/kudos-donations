@@ -11,7 +11,7 @@ import Notification from '../Notification'
 import {Button} from '../../../common/components/controls'
 import {getQueryVar, removeQueryParameters, updateQueryParameter,} from '../../../common/helpers/util'
 import EmptyCampaigns from './EmptyCampaigns'
-import Render from '../../../public/components/Render'
+import Render from '../../../common/components/Render'
 import {Spinner} from '../../../common/components/Spinner'
 
 const KudosCampaigns = ({root, stylesheet}) => {
