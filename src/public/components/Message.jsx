@@ -13,7 +13,7 @@ Message.propTypes = {
     root: PropTypes.object,
 }
 
-const stylesheet = document.getElementById('kudos-donations-public-css')
+const stylesheet = "/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
 
 function Message({title, body, color, root}) {
     const [ready, setReady] = useState(false)
@@ -43,7 +43,7 @@ function Message({title, body, color, root}) {
     return (
         <>
             {ready && (
-                <Render themeColor={color} stylesheet={stylesheet.href}>
+                <Render themeColor={color} stylesheet={stylesheet}>
                     <KudosModal
                         toggle={toggleModal}
                         root={root}

@@ -10,7 +10,7 @@ import Render from '../../common/components/Render'
 import {Spinner} from '../../common/components/Spinner'
 import KudosModal from '../../common/components/KudosModal'
 
-const stylesheet = document.getElementById('kudos-donations-public-css')
+const stylesheet = "/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
 
 function KudosDonate({buttonLabel, campaignId, displayAs, root}) {
     const [campaign, setCampaign] = useState()
@@ -170,7 +170,7 @@ function KudosDonate({buttonLabel, campaignId, displayAs, root}) {
                 <>
                     <Render
                         themeColor={campaign?.theme_color}
-                        stylesheet={stylesheet?.href}
+                        stylesheet={stylesheet}
                     >
                         {/* If API not loaded yet then show a spinner */}
                         {isApiLoaded ? (

@@ -84,9 +84,16 @@ class Front
 
         wp_set_script_translations('kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
 
+//        wp_register_style(
+//            'kudos-donations-public',
+//            Assets::get_asset_url('/public/kudos-public.css'),
+//            [],
+//            $this->version
+//        );
+
         wp_register_style(
-            'kudos-donations-public',
-            Assets::get_asset_url('/public/kudos-public.css'),
+            'kudos-donations-fonts',
+            Assets::get_asset_url('/public/kudos-fonts.css'),
             [],
             $this->version
         );
@@ -266,7 +273,7 @@ class Front
     public function enqueue_assets()
     {
         wp_enqueue_script('kudos-donations-public');
-        wp_enqueue_style('kudos-donations-public');
+        wp_enqueue_style('kudos-donations-fonts'); // Fonts need to be loaded in the main document.
     }
 
     /**

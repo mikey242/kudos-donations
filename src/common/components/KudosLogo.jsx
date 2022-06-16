@@ -5,6 +5,7 @@ const KudosLogo = ({
                        lineColor = '#2ec4b6',
                        heartColor = '#ff9f1c',
                        className,
+                       style
                    }) => {
     return (
         <svg
@@ -14,6 +15,7 @@ const KudosLogo = ({
             )}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 555 449"
+            style={style}
         >
             <path
                 className="logo-line"

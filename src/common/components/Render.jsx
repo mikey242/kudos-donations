@@ -10,8 +10,10 @@ function Render({children, themeColor, stylesheet, style, className}) {
             {themeColor && (
                 <style>{`:host {--kudos-theme-primary: ${themeColor}`}</style>
             )}
-            <div id="kudos" className={classNames(className, 'font-sans')}>
-                {children}
+            <div id="kudos-container">
+                <div id="kudos" className={classNames(className, 'font-sans')}>
+                    {children}
+                </div>
             </div>
         </ReactShadowRoot>
     )
