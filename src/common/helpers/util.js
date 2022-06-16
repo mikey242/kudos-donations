@@ -17,7 +17,7 @@ export function getQueryVar(key, fallback = null) {
 export function updateQueryParameter(key, value) {
 	if ('URLSearchParams' in window) {
 		const searchParams = new URLSearchParams(window.location.search);
-		searchParams.set(key, value);
+		searchParams.set(key, value?.toString());
 		const newRelativePathQuery =
 			window.location.pathname + '?' + searchParams.toString();
 		history.replaceState(null, '', newRelativePathQuery);

@@ -6,7 +6,7 @@ import { Fragment, useEffect, useState } from '@wordpress/element';
 import { getQueryVar, updateQueryParameter } from '../../common/helpers/util';
 
 const TabPanel = ({ tabs }) => {
-	const [selectedIndex, setSelectedIndex] = useState(0);
+	const [selectedIndex, setSelectedIndex] = useState('0');
 	const query = getQueryVar('tab');
 
 	useEffect(() => {
@@ -14,7 +14,7 @@ const TabPanel = ({ tabs }) => {
 	}, []);
 
 	useEffect(() => {
-		if (selectedIndex !== null) {
+		if (parseInt(selectedIndex) >= 0) {
 			updateQueryParameter('tab', selectedIndex);
 		}
 	}, [selectedIndex]);
