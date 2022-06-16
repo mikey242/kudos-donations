@@ -1,16 +1,16 @@
 import {Fragment} from '@wordpress/element'
 import {__} from '@wordpress/i18n'
 import {
-	Button,
-	CheckboxControl,
-	RadioControl,
-	TextControl,
-	ToggleControl,
+    Button,
+    CheckboxControl,
+    RadioControl,
+    TextControl,
+    ToggleControl,
 } from '../../../../common/components/controls'
 import React from 'react'
 import Divider from '../../Divider'
 import {useFormContext} from 'react-hook-form'
-import {fetchTestEmail} from '../../../../common/helpers/fetch'
+import apiFetch from "@wordpress/api-fetch"
 
 const EmailTab = ({createNotification}) => {
     const {watch, getValues} = useFormContext()
@@ -18,8 +18,18 @@ const EmailTab = ({createNotification}) => {
 
     const sendTestEmail = () => {
         const address = getValues('test_email_address')
-        fetchTestEmail(address).then((result) => {
+        apiFetch({
+            path: 'kudos/v1/email/test',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({email: address}),
+        }).then((result) => {
             createNotification(result.data, result.success)
+        }).catch((error) => {
+            createNotification(error.message)
         })
     }
 

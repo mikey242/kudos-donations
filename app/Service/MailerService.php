@@ -41,9 +41,7 @@ class MailerService
     public function __construct(TwigService $twig, MapperService $mapper, LoggerService $logger)
     {
         $from_name    = apply_filters('kudos_email_from_name', __('Kudos Donations', 'kudos-donations'));
-        $from_address = Settings::get_setting('smtp_from') ? Settings::get_setting('smtp_from') : Settings::get_setting(
-            'smtp_username'
-        );
+        $from_address = Settings::get_setting('smtp_from');
         $this->from   = "From: $from_name " . ' <' . $from_address . '>';
         $this->twig   = $twig;
         $this->mapper = $mapper;
@@ -184,9 +182,7 @@ class MailerService
     ): bool {
         // Use hook to modify existing config.
         add_action('phpmailer_init', [$this, 'init']);
-        if (KUDOS_DEBUG) {
-            add_action('wp_mail_failed', [$this, 'log_error']);
-        }
+        add_action('wp_mail_failed', [$this, 'log_error']);
 
         $mail = wp_mail($to, $subject, $body, $headers, $attachment);
 
@@ -194,11 +190,9 @@ class MailerService
             $this->logger->info('Email sent successfully.', ['to' => $to, 'subject' => $subject]);
         }
 
-        // Remove action to prevent conflict.
+        // Remove actions.
         remove_action('phpmailer_init', [$this, 'init']);
-        if (KUDOS_DEBUG) {
-            remove_action('wp_mail_failed', [$this, 'log_error']);
-        }
+        remove_action('wp_mail_failed', [$this, 'log_error']);
 
         return $mail;
     }
@@ -271,6 +265,6 @@ class MailerService
      */
     public function log_error(WP_Error $error)
     {
-        $this->logger->debug('Error sending email.', $error->errors);
+        $this->logger->error('Error sending email.', $error->errors);
     }
 }
