@@ -155,7 +155,7 @@ class KudosDonations
             try {
                 $this->container
                     ->get('ActivatorService')
-                    ->activate($db_version);
+                    ->activate();
             } catch (DependencyException|NotFoundException $e) {
                 error_log($e->getMessage());
             }

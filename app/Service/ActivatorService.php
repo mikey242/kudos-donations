@@ -31,17 +31,15 @@ class ActivatorService
 
     public function __construct()
     {
-        $this->wpdb   = new WpDb();
+        $this->wpdb = new WpDb();
         $this->logger = new LoggerService();
-        $this->twig   = new TwigService($this->logger);
+        $this->twig = new TwigService($this->logger);
     }
 
     /**
      * Runs all activation functions.
-     *
-     * @param string|null $old_version Previous version of plugin.
      */
-    public function activate(string $old_version = null)
+    public function activate()
     {
         self::create_log_table();
         self::create_donors_table();
@@ -54,10 +52,9 @@ class ActivatorService
         $twig->init();
 
         Settings::register_settings($settings);
+        $db_version = get_option('_kudos_donations_version');
 
-        if ($old_version) {
-            self::run_migrations($old_version);
-        }
+        self::run_migrations($db_version);
 
         Settings::add_defaults($settings);
 
@@ -184,90 +181,18 @@ class ActivatorService
     /**
      * Run migrations if upgrading.
      *
-     * @param string $old_version
+     * @param string $db_version
      */
-    private function run_migrations(string $old_version)
+    private function run_migrations(string $db_version)
     {
         $logger = $this->logger;
-        $wpdb   = $this->wpdb;
 
         $logger->info(
             'Upgrade detected, running migrations.',
-            ['old_version' => $old_version, 'new_version' => KUDOS_VERSION]
+            ['old_version' => $db_version, 'new_version' => KUDOS_VERSION]
         );
 
-        if (version_compare($old_version, '2.1.1', '<')) {
-            Settings::remove_setting('action_scheduler');
-        }
-
-        if (version_compare($old_version, '2.2.0', '<')) {
-            $link = Settings::get_setting('privacy_link');
-            Settings::remove_setting('subscription_enabled');
-
-            if ($link) {
-                Settings::update_setting('terms_link', $link);
-                Settings::remove_setting('privacy_link');
-            }
-        }
-
-        if (version_compare($old_version, '2.3.2', '<')) {
-            // Setting now replaced by 'theme_colors'
-            $old_color             = Settings::get_setting('theme_color');
-            $new_colors            = Settings::get_setting('theme_colors');
-            $new_colors['primary'] = $old_color;
-            Settings::update_setting('theme_colors', $new_colors);
-            Settings::remove_setting('theme_color');
-        }
-
-        if (version_compare($old_version, '2.3.7', '<')) {
-            // Change business_name to allow NULL
-            $donor_table = DonorEntity::get_table_name();
-            $wpdb->query("ALTER TABLE $donor_table MODIFY `business_name` VARCHAR(255)");
-        }
-
-        if (version_compare($old_version, '2.4.0', '<')) {
-            // Setting now replaced by single 'vendor_mollie' setting.
-            $connected = Settings::get_setting('mollie_connected');
-            Settings::update_array(
-                'vendor_mollie',
-                [
-                    'connected' => (bool)$connected,
-                    'mode'      => ! empty(Settings::get_setting('mollie_api_mode')) ? (string)Settings::get_setting(
-                        'mollie_api_mode'
-                    ) : 'test',
-                    'test_key'  => (string)Settings::get_setting('mollie_test_api_key'),
-                    'live_key'  => (string)Settings::get_setting('mollie_live_api_key'),
-                ]
-            );
-
-            // Remove old settings fields.
-            Settings::remove_setting('mollie_connected');
-            Settings::remove_setting('mollie_api_mode');
-            Settings::remove_setting('mollie_test_api_key');
-            Settings::remove_setting('mollie_live_api_key');
-            Settings::remove_setting('campaign_labels');
-        }
-
-        if (version_compare($old_version, '2.4.1', '<')) {
-            // Cast connected variable as boolean.
-            $vendor_settings = Settings::get_setting('vendor_mollie');
-            $connected       = ! empty($vendor_settings['connected']);
-            Settings::update_array('vendor_mollie', [
-                'connected' => $connected,
-            ]);
-        }
-
-        if (version_compare($old_version, '2.5.0', '<')) {
-            // Add message field to transactions.
-            $transaction_table = TransactionEntity::get_table_name();
-            $wpdb->query("ALTER TABLE $transaction_table ADD `message` VARCHAR(255)");
-
-            // Remove unused settings.
-            Settings::remove_setting('address_enabled');
-            Settings::remove_setting('address_required');
-        }
-
-        if (version_compare($old_version, '3.1.0', '<')) {
+        if (version_compare($db_version, '3.1.0', '<')) {
             // Remove unused settings.
             Settings::remove_setting('return_message_enable');
             Settings::remove_setting('custom_return_enable');
@@ -276,7 +201,7 @@ class ActivatorService
             as_unschedule_all_actions('kudos_check_log');
         }
 
-        if (version_compare($old_version, '3.1.1', '<')) {
+        if (version_compare($db_version, '3.1.1', '<')) {
             // Remove 'secret' column from entities.
             $donor_table = DonorEntity::get_table_name();
             $this->wpdb->query("ALTER TABLE $donor_table DROP COLUMN `secret`");
@@ -284,6 +209,10 @@ class ActivatorService
             $this->wpdb->query("ALTER TABLE $transaction_table DROP COLUMN `secret`");
             $subscription_table = SubscriptionEntity::get_table_name();
             $this->wpdb->query("ALTER TABLE $subscription_table DROP COLUMN `secret`");
+        }
+
+        if (version_compare($db_version, '4.0.0', '<')) {
+            Settings::update_array('migration_actions', ['migrate_campaigns'], true);
         }
     }
 }
