@@ -2,7 +2,7 @@ languages
 templates
 vendor
 app
-dist
+build
 index.php
 uninstall.php
 kudos-donations.php
