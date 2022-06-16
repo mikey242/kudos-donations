@@ -14,6 +14,7 @@ use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
+use Kudos\Service\MigratorService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\TwigService;
 use Kudos\Service\Vendor\MollieVendor;
@@ -54,6 +55,10 @@ class Admin
      * @var \Kudos\Service\LoggerService
      */
     private $logger;
+    /**
+     * @var \Kudos\Service\MigratorService
+     */
+    private $migrator;
 
     /**
      * Initialize the class and set its properties.
@@ -67,6 +72,7 @@ class Admin
         PaymentService $payment,
         ActivatorService $activator,
         MollieVendor $mollie_vendor,
+        MigratorService $migrator,
         LoggerService $logger
     ) {
         $this->version   = $version;
