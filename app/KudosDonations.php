@@ -102,6 +102,7 @@ class KudosDonations
             $plugin_admin = $this->container->get('Admin');
             add_action('admin_menu', [$plugin_admin, 'add_menu_pages']);
             add_action('admin_init', [$plugin_admin, 'admin_actions']);
+            add_action('admin_init', [$plugin_admin, 'check_migration_actions']);
             add_action('rest_api_init', [$plugin_admin, 'register_settings']);
             add_action('admin_init', [$plugin_admin, 'register_settings']);
             add_action('admin_init', [$plugin_admin, 'register_block_editor_assets']);
