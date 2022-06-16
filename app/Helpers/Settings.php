@@ -36,6 +36,27 @@ class Settings
     }
 
     /**
+     * Method to recursively sanitize all text fields in an array.
+     *
+     * @param array $array Array of values to sanitize.
+     *
+     * @return mixed
+     * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
+     */
+    public static function recursive_sanitize_text_field(array $array): array
+    {
+        foreach ($array as &$value) {
+            if (is_array($value)) {
+                $value = self::recursive_sanitize_text_field($value);
+            } else {
+                $value = sanitize_text_field($value);
+            }
+        }
+
+        return $array;
+    }
+
+    /**
      * Gets the settings for the current vendor.
      *
      * @return mixed
@@ -58,6 +79,32 @@ class Settings
     }
 
     /**
+     * Updates specific values in serialized settings array.
+     * e.g. update_array('my_setting', ['enabled' => false]).
+     *
+     * @param string $name Setting array name without prefix.
+     * @param array $value Array of name=>values in setting to update.
+     * @param bool $unique Whether the resulting array should have unique values.
+     *
+     * @return bool
+     */
+    public static function update_array(string $name, array $value, bool $unique = false): bool
+    {
+        // Grab current data.
+        $current = self::get_setting($name);
+
+        // Check if setting is either an array or null.
+        if (is_array($current) || ! null) {
+            // Merge provided data and current data then update setting.
+            $new = wp_parse_args($value, $current);
+
+            return self::update_setting($name, $unique ? array_unique($new) : $new);
+        }
+
+        return false;
+    }
+
+    /**
      * Update specified setting.
      *
      * @param string $name Setting name without prefix.
@@ -68,31 +115,6 @@ class Settings
     public static function update_setting(string $name, $value): bool
     {
         return update_option(self::PREFIX . $name, $value);
-    }
-
-    /**
-     * Updates specific values in serialized settings array.
-     * e.g. update_array('my_setting', ['enabled' => false]).
-     *
-     * @param string $name Setting array name without prefix.
-     * @param array $value Array of name=>values in setting to update.
-     *
-     * @return bool
-     */
-    public static function update_array(string $name, array $value): bool
-    {
-        // Grab current data.
-        $current = self::get_setting($name);
-
-        // Check if setting is either an array or null.
-        if (is_array($current) || ! null) {
-            // Merge provided data and current data then update setting.
-            $new = wp_parse_args($value, $current);
-
-            return self::update_setting($name, $new);
-        }
-
-        return false;
     }
 
     /**
@@ -141,26 +163,5 @@ class Settings
     public static function remove_setting(string $name): bool
     {
         return delete_option(self::PREFIX . $name);
-    }
-
-    /**
-     * Method to recursively sanitize all text fields in an array.
-     *
-     * @param array $array Array of values to sanitize.
-     *
-     * @return mixed
-     * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
-     */
-    public static function recursive_sanitize_text_field(array $array): array
-    {
-        foreach ($array as &$value) {
-            if (is_array($value)) {
-                $value = self::recursive_sanitize_text_field($value);
-            } else {
-                $value = sanitize_text_field($value);
-            }
-        }
-
-        return $array;
     }
 }
