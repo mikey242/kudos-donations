@@ -118,6 +118,25 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 4.0.0 =
+* Complete rewrite of front-end rendering to react
+* Reduced conflict with other themes and plugins
+* Improved settings pages look and feel
+* New campaigns admin page with ability to create / edit / duplicate and delete campaigns
+* Can now configure most settings per-campaign
+* Easily generate shortcodes per campaign with a helpful form
+* New minimum donation setting
+
+= 3.1.4 =
+* Improve email compatibility
+* Fix Kudos icon issues with iOS
+* Update dependencies (Mollie, Twig)
+
+= 3.1.3 =
+* Tested compatibility with WordPress 5.9
+* Fix theme colour panel in settings
+* Update dependencies (Mollie, Tailwind CSS, Twig etc.)
+
 = 3.1.2 =
 * Remove Mollie settings from export
 * Rename 'Debug' page to 'Tools' and always make visible
