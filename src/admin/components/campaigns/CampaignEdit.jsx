@@ -345,53 +345,56 @@ function CampaignEdit({
                     root={root}
                     toggle={toggleModal}
                 >
-                    <h1 className="text-center">
-                        {__('Generate shortcode', 'kudos-donations')}
-                    </h1>
-                    <RadioGroupControl
-                        name="shortcode.showAs"
-                        label={__('Display as', 'kudos-donations')}
-                        help={__(
-                            'Choose whether to show Kudos as a button or an embedded form.',
-                            'kudos-donations'
+                    <>
+                        {/*<h1 className="text-center">*/}
+                        {/*    {__('Generate shortcode', 'kudos-donations')}*/}
+                        {/*</h1>*/}
+                        <RadioGroupControl
+                            name="shortcode.showAs"
+                            label={__('Display as', 'kudos-donations')}
+                            help={__(
+                                'Choose whether to show Kudos as a button or an embedded form.',
+                                'kudos-donations'
+                            )}
+                            options={[
+                                {
+                                    label: __(
+                                        'Button with pop-up',
+                                        'kudos-donations'
+                                    ),
+                                    value: 'button',
+                                },
+                                {
+                                    label: __('Embedded form', 'kudos-donations'),
+                                    value: 'form',
+                                },
+                            ]}
+                        />
+                        {watchShowAs === 'button' && (
+                            <>
+                                <Divider/>
+                                <TextControl
+                                    name="shortcode.buttonLabel"
+                                    help={__(
+                                        'Add a button label',
+                                        'kudos-donations'
+                                    )}
+                                    label={__('Button label', 'kudos-donations')}
+                                />
+                            </>
+
                         )}
-                        options={[
-                            {
-                                label: __(
-                                    'Button with pop-up',
-                                    'kudos-donations'
-                                ),
-                                value: 'button',
-                            },
-                            {
-                                label: __('Embedded form', 'kudos-donations'),
-                                value: 'form',
-                            },
-                        ]}
-                    />
-                    {watchShowAs === 'button' && (
-                        <>
-                            <Divider/>
-                            <TextControl
-                                name="shortcode.buttonLabel"
-                                help={__(
-                                    'Add a button label',
-                                    'kudos-donations'
-                                )}
-                                label={__('Button label', 'kudos-donations')}
-                            />
-                        </>
-                    )}
-                    <div className="mt-8 flex justify-end relative">
-                        <Button
-                            ref={copyRef}
-                            onClick={() => onCopy()}
-                            type="button"
-                        >
-                            <ClipboardCopyIcon className="mr-2 w-5 h-5"/>
-                            {__('Copy shortcode', 'kudos-donations')}
-                        </Button>
-                    </div>
+                        <div className="mt-8 flex justify-end relative">
+                            <Button
+                                ref={copyRef}
+                                onClick={() => onCopy()}
+                                type="button"
+                            >
+                                <ClipboardCopyIcon className="mr-2 w-5 h-5"/>
+                                {__('Copy shortcode', 'kudos-donations')}
+                            </Button>
+                        </div>
+                    </>
                 </KudosModal>
             </FormProvider>
         </Fragment>
