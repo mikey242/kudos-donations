@@ -5,7 +5,7 @@ import {CheckCircleIcon, ExclamationCircleIcon,} from '@heroicons/react/outline'
 
 const Notification = ({success = true, shown, message, onClick}) => {
     return (
-        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-1050 cursor-pointer">
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-1050 cursor-pointer" onClick={onClick}>
             <Transition
                 show={shown}
                 enter="transform transition duration-[400ms]"
@@ -14,7 +14,6 @@ const Notification = ({success = true, shown, message, onClick}) => {
                 leave="transform duration-200 transition ease-in-out"
                 leaveFrom="opacity-100 scale-100 "
                 leaveTo="opacity-0 scale-95 "
-                onClick={onClick}
             >
                 <Panel>
                     <div className="flex justify-around items-center p-5">
