@@ -10,8 +10,6 @@ import Render from '../../common/components/Render'
 import {Spinner} from '../../common/components/Spinner'
 import KudosModal from '../../common/components/KudosModal'
 
-const stylesheet = "/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
-
 function KudosDonate({buttonLabel, campaignId, displayAs, root}) {
     const [campaign, setCampaign] = useState()
     const [total, setTotal] = useState(0)
@@ -165,52 +163,43 @@ function KudosDonate({buttonLabel, campaignId, displayAs, root}) {
 
     return (
         <>
-            {/* Only continue if the stylesheet was found */}
-            {stylesheet ? (
-                <>
-                    <Render
-                        themeColor={campaign?.theme_color}
-                        stylesheet={stylesheet}
-                    >
-                        {/* If API not loaded yet then show a spinner */}
-                        {isApiLoaded ? (
+            <Render
+                themeColor={campaign?.theme_color}
+                stylesheet="/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
+            >
+                {/* If API not loaded yet then show a spinner */}
+                {isApiLoaded ? (
+                    <>
+                        {displayAs === 'form' && donationForm()}
+                        {displayAs === 'button' && (
                             <>
-                                {displayAs === 'form' && donationForm()}
-                                {displayAs === 'button' && (
-                                    <>
-                                        <KudosButton onClick={toggleModal}>
-                                            {buttonLabel}
-                                        </KudosButton>
-                                        <KudosModal
-                                            toggle={toggleModal}
-                                            root={root}
-                                            isOpen={modalOpen}
-                                        >
-                                            {donationForm()}
-                                        </KudosModal>
-                                    </>
-                                )}
+                                <KudosButton onClick={toggleModal}>
+                                    {buttonLabel}
+                                </KudosButton>
+                                <KudosModal
+                                    toggle={toggleModal}
+                                    root={root}
+                                    isOpen={modalOpen}
+                                >
+                                    {donationForm()}
+                                </KudosModal>
                             </>
-                        ) : (
-                            <Spinner/>
                         )}
-                    </Render>
-                    {/* Show errors if present */}
-                    {errors?.length && (
-                        <>
-                            <p className="m-0">Kudos Donations</p>
-                            {errors.map((error, i) => (
-                                <p key={i} className="text-red-500">
-                                    {error}
-                                </p>
-                            ))}
-                        </>
-                    )}
+                    </>
+                ) : (
+                    <Spinner/>
+                )}
+            </Render>
+            {/* Show errors if present */}
+            {errors?.length && (
+                <>
+                    <p className="m-0">Kudos Donations</p>
+                    {errors.map((error, i) => (
+                        <p key={i} className="text-red-500">
+                            {error}
+                        </p>
+                    ))}
                 </>
-            ) : (
-                <p style={{color: 'red'}}>
-                    Kudos Donations stylesheet not found
-                </p>
             )}
         </>
     )

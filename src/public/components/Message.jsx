@@ -1,6 +1,5 @@
 import {useEffect, useState} from '@wordpress/element'
 import React from 'react'
-import PropTypes from 'prop-types'
 import KudosModal from '../../common/components/KudosModal'
 import Render from '../../common/components/Render'
 import {Button} from '../../common/components/controls'
@@ -34,7 +33,8 @@ function Message({title, body, color, root}) {
     return (
         <>
             {ready && (
-                <Render themeColor={color} stylesheet={stylesheet}>
+                <Render themeColor={color}
+                        stylesheet="/wp-content/plugins/kudos-donations/build/public/kudos-public.css">
                     <KudosModal
                         toggle={toggleModal}
                         root={root}
