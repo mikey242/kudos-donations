@@ -15,6 +15,14 @@ p {
     @apply text-base;
 }
 
+.logo-animate:hover .logo {
+    @apply -rotate-90;
+}
+.logo-animate:hover .logo-heart {
+    backface-visibility: visible;
+    @apply rotate-x-180;
+}
+
 /* 'xs' and up */
 @screen xs {
     :root {

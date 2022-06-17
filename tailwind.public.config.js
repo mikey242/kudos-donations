@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const plugin = require('tailwindcss/plugin')
 
 module.exports = {
   important: false,
@@ -57,6 +58,13 @@ module.exports = {
     }
   },
   plugins: [
-    require('@tailwindcss/forms')
+    require('@tailwindcss/forms'),
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        '.rotate-x-180': {
+          transform: 'rotateX(180deg)',
+        },
+      })
+    })
   ]
 }

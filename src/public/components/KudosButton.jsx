@@ -11,7 +11,7 @@ const KudosButton = ({children, color, className, onClick = null}) => {
         >
             <Button
                 onClick={() => onClick && onClick()}
-                className={!color && 'bg-primary '}
+                className={classNames(!color && 'bg-primary ', 'logo-animate')}
                 color={color}
             >
                 <div className="mr-3 flex text-white">
