@@ -288,8 +288,15 @@ class Admin
 
         // Enqueue the styles
         wp_enqueue_style(
-            $handle,
+            'kudos-donations-settings',
             Assets::get_asset_url('/admin/kudos-admin-settings.css'),
+            [],
+            $this->version
+        );
+
+        wp_enqueue_style(
+            'kudos-fonts',
+            Assets::get_asset_url('/public/kudos-fonts.css'),
             [],
             $this->version
         );
@@ -297,7 +304,7 @@ class Admin
         // Get and enqueue the script
         $admin_js = Assets::get_script('/admin/kudos-admin-settings.js');
         wp_enqueue_script(
-            $handle,
+            'kudos-donations-settings',
             $admin_js['url'],
             $admin_js['dependencies'],
             $admin_js['version'],
@@ -305,15 +312,15 @@ class Admin
         );
 
         wp_localize_script(
-            $handle,
+            'kudos-donations-settings',
             'kudos',
             [
                 'version' => $this->version,
             ]
         );
-        wp_set_script_translations($handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
+        wp_set_script_translations('kudos-donations-settings', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
 
-        do_action('kudos_admin_settings_page_assets', $handle);
+        do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
     }
 
     /**
@@ -399,12 +406,17 @@ class Admin
      */
     public function campaign_page_assets()
     {
-        $handle = 'kudos-donations-settings';
-
         // Enqueue the styles
         wp_enqueue_style(
-            $handle,
+            'kudos-donations-settings',
             Assets::get_asset_url('/admin/kudos-admin-settings.css'),
+            [],
+            $this->version
+        );
+
+        wp_enqueue_style(
+            'kudos-fonts',
+            Assets::get_asset_url('/public/kudos-fonts.css'),
             [],
             $this->version
         );
@@ -413,7 +425,7 @@ class Admin
         // Get and enqueue the script
         $admin_js = Assets::get_script('/admin/kudos-admin-campaigns.js');
         wp_enqueue_script(
-            $handle,
+            'kudos-donations-settings',
             $admin_js['url'],
             $admin_js['dependencies'],
             $admin_js['version'],
@@ -421,15 +433,15 @@ class Admin
         );
 
         wp_localize_script(
-            $handle,
+            'kudos-donations-settings',
             'kudos',
             [
                 'version' => $this->version,
             ]
         );
-        wp_set_script_translations($handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
+        wp_set_script_translations('kudos-donations-settings', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
 
-        do_action('kudos_admin_settings_page_assets', $handle);
+        do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
     }
 
     /**
