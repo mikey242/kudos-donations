@@ -6,15 +6,6 @@ import Render from '../../common/components/Render'
 import {Button} from '../../common/components/controls'
 import {__} from '@wordpress/i18n'
 
-Message.propTypes = {
-    title: PropTypes.string,
-    body: PropTypes.node,
-    color: PropTypes.string,
-    root: PropTypes.object,
-}
-
-const stylesheet = "/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
-
 function Message({title, body, color, root}) {
     const [ready, setReady] = useState(false)
 
