@@ -9,7 +9,8 @@
 
 ## Development
 
-Use the [yarn](https://yarnpkg.com/) and [composer](https://getcomposer.org/) package managers to install the required dependencies.
+Use the [yarn](https://yarnpkg.com/) and [composer](https://getcomposer.org/) package managers to install the required
+dependencies.
 
 ### Build
 
@@ -31,11 +32,13 @@ npm run export
 ### Docker
 
 Included is a docker environment used for development of the plugin. This environment includes the following containers:
+
 - WordPress - The WordPress software.
 - MariaDB - Database container.
 - Adminer - A web interface for manipulating the database.
 
 To use the included docker environment run the following from the docker sub-folder:
+
 ````bash
 docker-compose up -d
 ````
@@ -45,16 +48,22 @@ Once up and running you can access the various containers from these addresses:
 - Wordpress - http://localhost:8080
 - Adminer - http://localhost:8081
 
-
 ## Credits
+
 This software uses the following open source packages:
-- [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework.
+
+- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework.
+- [Headless UI](https://github.com/tailwindlabs/headlessui) - Completely unstyled, fully accessible UI components,
+  designed to integrate beautifully with Tailwind CSS.
+- [MUI Core](https://github.com/mui/material-ui) - tRhe React UI library you always wanted.
 - [Mollie API](https://github.com/mollie/mollie-api-php) - Mollie API client for PHP.
-- [jQuery Validation](https://github.com/jquery-validation/jquery-validation) - Provides drop-in validation for your existing forms. 
+- [React Hook Form](https://github.com/react-hook-form/react-hook-form) - Performant, flexible and extensible forms
+  with easy-to-use validation.
+- [PHP-DI](https://github.com/PHP-DI/PHP-DI) - The dependency injection container for humans
 - [Twig](https://twig.symfony.com/) - A modern template engine for PHP.
-- [WordPress Plugin Boilerplate](https://github.com/DevinVinson/WordPress-Plugin-Boilerplate) -  A foundation for WordPress Plugin Development.
 - [ActionScheduler](https://actionscheduler.org/) - WordPress Job Queue with Background Processing.
 - [Laravel Mix](https://laravel-mix.com/) - An elegant wrapper around Webpack for the 80% use case.
 
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
