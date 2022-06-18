@@ -61,7 +61,7 @@ const KudosModal = forwardRef(
                                 <div
                                     id="kudos-modal"
                                     ref={ref}
-                                    className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all duration-200 sm:align-middle sm:max-w-lg sm:w-full"
+                                    className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all duration-200 sm:align-middle sm:max-w-lg w-full"
                                 >
                                     <div className="bg-white p-8">
                                         <div className="kudos-modal-header flex items-center justify-between">
