@@ -2,7 +2,7 @@
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 7.2.9
 Stable tag: 3.1.3
 License: GPLv2 or later
@@ -117,6 +117,11 @@ This can occur as a result of a conflict with your theme or another plugin and t
 6. Automated email receipt
 
 == Changelog ==
+
+= 3.1.5 =
+* Allow Mollie to connect with either  test or live key. Previously both were required.
+* Tested compatibility with WordPress 6.0
+* Update dependencies
 
 = 3.1.4 =
 * Improve email compatibility
