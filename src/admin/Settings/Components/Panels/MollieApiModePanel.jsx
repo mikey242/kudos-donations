@@ -13,6 +13,7 @@ const MollieApiModePanel = (props) => {
     const selected = vendorMollie['mode']
 
     const handleChange = (id, value) => {
+        props.mollieChanged()
         props.handleInputChange(id, value)
     }
 
@@ -40,7 +41,7 @@ const MollieApiModePanel = (props) => {
                             isSecondary={'test' !== selected}
                             isPressed={'test' === selected}
                             onClick={() =>
-                                handleChange('_kudos_vendor_mollie', {...vendorMollie, mode: 'test' })
+                                handleChange('_kudos_vendor_mollie', {...vendorMollie, mode: 'test'})
                             }
                         >
                             {'Test'}
@@ -51,7 +52,7 @@ const MollieApiModePanel = (props) => {
                             isSecondary={'live' !== selected}
                             isPressed={'live' === selected}
                             onClick={() =>
-                                handleChange('_kudos_vendor_mollie', {...vendorMollie, mode: 'live' })
+                                handleChange('_kudos_vendor_mollie', {...vendorMollie, mode: 'live'})
                             }
                         >
                             {'Live'}
@@ -60,19 +61,19 @@ const MollieApiModePanel = (props) => {
                 </PanelRow>
             </BaseControl>
 
-            { vendorMollie.connected ?
+            {vendorMollie.connected ?
                 <BaseControl
                     help={__("Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.", 'kudos-donations')}
                 >
-                <Button
-                    isLink
-                    icon={(<ButtonIcon icon='sync' className={(isBusy ? 'kd-animate-spin' : '')}/>)}
-                    onClick={() => refresh()}
-                >
-                    {__('Refresh API', 'kudos-donations')}
-                </Button>
+                    <Button
+                        isLink
+                        icon={(<ButtonIcon icon="sync" className={(isBusy ? 'kd-animate-spin' : '')}/>)}
+                        onClick={() => refresh()}
+                    >
+                        {__('Refresh API', 'kudos-donations')}
+                    </Button>
                 </BaseControl>
-            : '' }
+                : ''}
 
 
         </SettingCard>

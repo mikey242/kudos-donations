@@ -82,26 +82,26 @@ class KudosAdmin extends Component {
             method: 'GET',
         }).then((response) => {
 
-                if (showNotice) {
-                    this.showNotice(response.data.message)
-                }
+            if (showNotice) {
+                this.showNotice(response.data.message)
+            }
 
-                // Update state
-                this.setState({
-                    checkingApi: false,
-                    isAPISaving: false,
-                    settings: {
-                        ...this.state.settings,
-                        _kudos_vendor_mollie: {
-                            ...response.data.setting
-                        }
+            // Update state
+            this.setState({
+                checkingApi: false,
+                isAPISaving: false,
+                settings: {
+                    ...this.state.settings,
+                    _kudos_vendor_mollie: {
+                        ...response.data?.setting
                     }
-                })
-
-                if (typeof callback === "function") {
-                    callback(response)
                 }
             })
+
+            if (typeof callback === "function") {
+                callback(response)
+            }
+        })
     }
 
     handleInputChange(option, value, isEdited = true) {
