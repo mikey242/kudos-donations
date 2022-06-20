@@ -35,6 +35,10 @@ const KudosSettings = ({ stylesheet }) => {
 	const { dirtyFields } = methods.formState;
 
 	useEffect(() => {
+		getSettings();
+	}, []);
+
+	useEffect(() => {
 		if (notification.shown) {
 			notificationTimer.current = setTimeout(() => {
 				hideNotification();
