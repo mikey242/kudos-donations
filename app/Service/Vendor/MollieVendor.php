@@ -142,43 +142,58 @@ class MollieVendor implements VendorInterface
             ]
         );
 
-        $modes    = ["test", "live"];
-        $api_keys = $this->api_keys;
+        $mode = Settings::get_setting('vendor_mollie')['mode'];
 
-        // Check that the api key corresponds to each mode.
-        foreach ($modes as $mode) {
-            $api_key = $api_keys[$mode];
-            if (substr($api_key, 0, 5) !== $mode . "_") {
-                wp_send_json_error(
-                    [
-                        /* translators: %s: API mode */
-                        'message' => sprintf(
-                            __('%1$s API key should begin with %2$s', 'kudos-donations'),
-                            ucfirst($mode),
-                            $mode . '_'
-                        ),
-                        'setting' => Settings::get_setting('vendor_mollie'),
-                    ]
-                );
-            }
+        // Check if both fields are empty.
+        if (empty($this->api_keys[$mode])) {
+            wp_send_json_error(
+                [
+                    /* translators: %s: API mode */
+                    'message' => sprintf(
+                        __('Please enter your %s API key.', 'kudos-donations'),
+                        $mode
+                    ),
+                    'setting' => Settings::get_setting('vendor_mollie'),
+                ]
+            );
+        }
 
-            // Test the api key.
-            if ( ! $this->refresh_api_connection($api_key)) {
-                wp_send_json_error(
-                    [
-                        /* translators: %s: API mode */
-                        'message' => sprintf(
-                            __(
-                                'Error connecting with Mollie, please check the %s API key and try again.',
-                                'kudos-donations'
+        foreach ($this->api_keys as $type => $apiKey) {
+            if ($apiKey) {
+                // Check that the api key corresponds to each mode.
+                if (substr($apiKey, 0, 5) !== $type . "_") {
+                    wp_send_json_error(
+                        [
+                            /* translators: %s: API mode */
+                            'message' => sprintf(
+                                __('%1$s API key should begin with %2$s', 'kudos-donations'),
+                                ucfirst($type),
+                                $type . '_'
                             ),
-                            ucfirst($mode)
-                        ),
-                        'setting' => Settings::get_setting('vendor_mollie'),
-                    ]
-                );
+                            'setting' => Settings::get_setting('vendor_mollie'),
+                        ]
+                    );
+                }
+
+                // Test the api key.
+                if ( ! $this->refresh_api_connection($apiKey)) {
+                    wp_send_json_error(
+                        [
+                            /* translators: %s: API mode */
+                            'message' => sprintf(
+                                __(
+                                    'Error connecting with Mollie, please check the %s API key and try again.',
+                                    'kudos-donations'
+                                ),
+                                ucfirst($type)
+                            ),
+                            'setting' => Settings::get_setting('vendor_mollie'),
+                        ]
+                    );
+                }
             }
         }
+
         // Update vendor settings.
         Settings::update_array(
             'vendor_mollie',

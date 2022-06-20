@@ -1,27 +1,6 @@
 @font-face {
-    font-family: 'pt_serifbold';
-    src: url('../fonts/PTF75F-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
     font-family: "montserratregular";
     src: url("../fonts/montserrat-regular-webfont.woff2") format("woff2"), url("../fonts/montserrat-regular-webfont.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'karlabold';
-    src: url('../fonts/karla-bold-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'fira_sansmedium';
-    src: url('../fonts/firasans-medium-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }

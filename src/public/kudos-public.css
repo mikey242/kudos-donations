@@ -18,6 +18,7 @@ p {
 .logo-animate:hover .logo {
     @apply -rotate-90;
 }
+
 .logo-animate:hover .logo-heart {
     backface-visibility: visible;
     @apply rotate-x-180;
