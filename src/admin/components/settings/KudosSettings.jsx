@@ -23,10 +23,9 @@ import { fetchTestMollie } from '../../../common/helpers/fetch';
 import { Spinner } from '../../../common/components/Spinner';
 
 const KudosSettings = ({ stylesheet }) => {
-	const [isAPISaving, setIsAPISaving] = useState();
+	const [isAPISaving, setIsAPISaving] = useState(false);
 	const [isEdited, setIsEdited] = useState();
 	const [isAPILoaded, setIsAPILoaded] = useState(false);
-	const [checkingMollie, setCheckingMollie] = useState();
 	const [settings, setSettings] = useState();
 	const [showIntro, setShowIntro] = useState(false);
 	const [notification, setNotification] = useState({ shown: false });
@@ -34,6 +33,7 @@ const KudosSettings = ({ stylesheet }) => {
 	const methods = useForm({
 		defaultValues: settings,
 	});
+	const { dirtyFields } = methods.formState;
 
 	useEffect(() => {
 		window.onbeforeunload = (e) => {
@@ -112,10 +112,13 @@ const KudosSettings = ({ stylesheet }) => {
 		// Save to database
 		return model
 			.save()
-			.then((response) => {
+			.then(async (response) => {
 				setSettings(filterSettings(response));
 				setIsAPISaving(false);
 				createNotification(__('Settings updated', 'kudos-donations'));
+				if ('_kudos_vendor_' + settings._kudos_vendor in dirtyFields) {
+					await checkApiKey();
+				}
 			})
 			.fail(() => {
 				createNotification(
@@ -154,14 +157,7 @@ const KudosSettings = ({ stylesheet }) => {
 		{
 			name: 'mollie',
 			title: __('Mollie', 'kudos-donations'),
-			content: (
-				<MollieTab
-					settings={settings}
-					updateSetting={updateSetting}
-					createNotification={createNotification}
-					checkApiKey={checkApiKey}
-				/>
-			),
+			content: <MollieTab checkApiKey={checkApiKey} />,
 		},
 		{
 			name: 'email',
@@ -207,16 +203,15 @@ const KudosSettings = ({ stylesheet }) => {
 									className={`${
 										settings._kudos_vendor_mollie
 											.connected && 'connected'
-									} kudos-api-status text-gray-600 mr-2`}
+									} kudos-api-status text-gray-600 capitalize mr-2`}
 								>
-									{checkingMollie
-										? __('Checking', 'kudos-donations')
-										: settings._kudos_vendor_mollie
-												.connected
-										? __(
-												'Mollie connected',
-												'kudos-donations'
-										  )
+									{settings?.[
+										'_kudos_vendor_' +
+											settings._kudos_vendor
+									].connected
+										? settings._kudos_vendor +
+										  ' ' +
+										  __('connected', 'kudos-donations')
 										: __(
 												'Not connected',
 												'kudos-donations'
