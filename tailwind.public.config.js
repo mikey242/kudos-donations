@@ -15,7 +15,7 @@ module.exports = {
         },
         fontFamily: {
             sans: ['montserratregular', 'sans-serif'],
-            serif: ['pt_serifbold', 'serif'],
+            serif: ['cabinbold', 'serif'],
             mono: ['ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace']
         },
         extend: {

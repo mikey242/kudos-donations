@@ -11,3 +11,24 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'karlabold';
+    src: url('../fonts/karla-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'fira_sansmedium';
+    src: url('../fonts/firasans-medium-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'cabinbold';
+    src: url('../fonts/cabin-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
