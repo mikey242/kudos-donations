@@ -10,7 +10,7 @@
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
- * Version:           3.1.4
+ * Version:           3.1.5
  * Author:            Iseard Media
  * Author URI:        https://iseard.media
  * Requires at least: 5.5
@@ -32,8 +32,8 @@ use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
+if ( ! defined('WPINC')) {
+    die;
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -44,20 +44,20 @@ require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.ph
  *
  * @link https://github.com/vlucas/phpdotenv
  */
-if ( class_exists( Dotenv::class ) ) {
-	$dotenv = Dotenv::createImmutable( __DIR__ );
-	$dotenv->safeLoad();
+if (class_exists(Dotenv::class)) {
+    $dotenv = Dotenv::createImmutable(__DIR__);
+    $dotenv->safeLoad();
 }
 
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-define( 'KUDOS_VERSION', '3.1.4' );
-define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'KUDOS_PLUGIN_DIR', dirname( __FILE__ ) );
-define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
-define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
-define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
+define('KUDOS_VERSION', '3.1.5');
+define('KUDOS_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('KUDOS_PLUGIN_DIR', dirname(__FILE__));
+define('KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/');
+define('KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/');
+define('KUDOS_DEBUG', get_option('_kudos_debug_mode'));
 
 /**
  * Check if we are in development mode and if so replace the default
@@ -65,36 +65,37 @@ define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
  *
  * @link https://github.com/filp/whoops
  */
-if ( class_exists( Run::class ) && ( $_ENV['WP_ENV'] ?? '' ) === 'development' ) {
+if (class_exists(Run::class) && ($_ENV['WP_ENV'] ?? '') === 'development') {
+    $run     = new Run();
+    $handler = new PrettyPageHandler();
 
-	$run     = new Run();
-	$handler = new PrettyPageHandler;
+    // Set the title of the error page.
+    $handler->setPageTitle("Whoops! There was a problem.");
+    $run->pushHandler($handler);
 
-	// Set the title of the error page.
-	$handler->setPageTitle( "Whoops! There was a problem." );
-	$run->pushHandler( $handler );
-
-	// Register the handler with PHP.
-	$run->register();
+    // Register the handler with PHP.
+    $run->register();
 }
 
 /**
  * The code that runs during plugin activation.
  */
-function activate_kudos() {
-	$activator = new ActivatorService();
-	$activator->activate();
+function activate_kudos()
+{
+    $activator = new ActivatorService();
+    $activator->activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
  */
-function deactivate_kudos() {
-	DeactivatorService::deactivate();
+function deactivate_kudos()
+{
+    DeactivatorService::deactivate();
 }
 
-register_activation_hook( __FILE__, __NAMESPACE__ . '\activate_kudos' );
-register_deactivation_hook( __FILE__, __NAMESPACE__ . '\deactivate_kudos' );
+register_activation_hook(__FILE__, __NAMESPACE__ . '\activate_kudos');
+register_deactivation_hook(__FILE__, __NAMESPACE__ . '\deactivate_kudos');
 
 /**
  * The core plugin class that is used to define admin-specific hooks
@@ -109,26 +110,25 @@ require KUDOS_PLUGIN_DIR . '/app/KudosDonations.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  */
-function run_kudos_donations() {
+function run_kudos_donations()
+{
+    // Check compatibility and run kudos if OK
+    $compatibility = new CompatibilityService();
 
-	// Check compatibility and run kudos if OK
-	$compatibility = new CompatibilityService();
+    if ($compatibility->init()) {
+        // Create our container for dependency injection.
+        $builder = new ContainerBuilder();
+        $builder->useAutowiring(true);
+        $builder->addDefinitions(KUDOS_PLUGIN_DIR . '/app/config.php');
+        if (isset($_ENV['WP_ENV']) && $_ENV['WP_ENV'] !== 'development') {
+            $builder->enableCompilation(KUDOS_STORAGE_DIR . '/php-di/cache');
+        }
+        $container = $builder->build();
 
-	if ( $compatibility->init() ) {
-
-		// Create our container for dependency injection.
-		$builder = new ContainerBuilder();
-		$builder->useAutowiring( true );
-		$builder->addDefinitions( KUDOS_PLUGIN_DIR . '/app/config.php' );
-		if ( isset( $_ENV['WP_ENV'] ) && $_ENV['WP_ENV'] !== 'development' ) {
-			$builder->enableCompilation( KUDOS_STORAGE_DIR . '/php-di/cache' );
-		}
-		$container = $builder->build();
-
-		// Create and run our main plugin class.
-		$plugin = new KudosDonations( $container, KUDOS_VERSION, 'kudos-donations' );
-		$plugin->run();
-	}
+        // Create and run our main plugin class.
+        $plugin = new KudosDonations($container, KUDOS_VERSION, 'kudos-donations');
+        $plugin->run();
+    }
 }
 
 run_kudos_donations();
