@@ -24,7 +24,6 @@ import { Spinner } from '../../../common/components/Spinner';
 
 const KudosSettings = ({ stylesheet }) => {
 	const [isAPISaving, setIsAPISaving] = useState(false);
-	const [isEdited, setIsEdited] = useState();
 	const [isAPILoaded, setIsAPILoaded] = useState(false);
 	const [settings, setSettings] = useState();
 	const [showIntro, setShowIntro] = useState(false);
@@ -34,15 +33,6 @@ const KudosSettings = ({ stylesheet }) => {
 		defaultValues: settings,
 	});
 	const { dirtyFields } = methods.formState;
-
-	useEffect(() => {
-		window.onbeforeunload = (e) => {
-			if (isEdited) {
-				e.preventDefault();
-			}
-		};
-		getSettings();
-	}, []);
 
 	useEffect(() => {
 		if (notification.shown) {
