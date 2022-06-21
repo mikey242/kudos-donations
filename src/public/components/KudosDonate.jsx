@@ -187,20 +187,22 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 						)}
 					</>
 				) : (
-					<Spinner />
+					!errors?.length && <Spinner />
+				)}
+				{/* Show errors if present */}
+				{errors?.length && (
+					<>
+						<p className="m-0">
+							Kudos Donations ran into a problem:
+						</p>
+						{errors.map((error, i) => (
+							<p key={i} className="text-red-500">
+								- {error}
+							</p>
+						))}
+					</>
 				)}
 			</Render>
-			{/* Show errors if present */}
-			{errors?.length && (
-				<>
-					<p className="m-0">Kudos Donations</p>
-					{errors.map((error, i) => (
-						<p key={i} className="text-red-500">
-							{error}
-						</p>
-					))}
-				</>
-			)}
 		</>
 	);
 }
