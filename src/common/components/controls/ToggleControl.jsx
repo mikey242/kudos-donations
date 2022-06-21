@@ -30,14 +30,19 @@ const ToggleControl = ({ name, validation, label, help }) => {
 								)}
 							/>
 						</Switch>
-						<Switch.Label as="span" className="ml-3 cursor-pointer">
-							<span className="text-sm font-medium text-gray-700">
-								{label}
-							</span>
-						</Switch.Label>
+						{label && (
+							<Switch.Label
+								as="span"
+								className="ml-3 cursor-pointer"
+							>
+								<span className="text-sm font-medium text-gray-700">
+									{label}
+								</span>
+							</Switch.Label>
+						)}
 					</Switch.Group>
 					{help && (
-						<p className="text-sm leading-5 text-gray-500">
+						<p className="mt-2 text-sm leading-5 text-gray-500">
 							{help}
 						</p>
 					)}

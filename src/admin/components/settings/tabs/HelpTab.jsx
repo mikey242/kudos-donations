@@ -2,7 +2,7 @@ import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import logo from '../../../../images/full-logo-green.svg';
 import React from 'react';
-import { Button } from '../../../../common/components/controls';
+import { Button, ToggleControl } from '../../../../common/components/controls';
 import {
 	InformationCircleIcon,
 	PencilAltIcon,
@@ -84,6 +84,15 @@ const HelpTab = ({ setShowIntro }) => {
 					</a>
 				</div>
 			</div>
+			<Divider />
+			<ToggleControl
+				name="_kudos_always_load_assets"
+				label={__('Always load assets', 'kudos-donations')}
+				help={__(
+					'This will ensure that the JavaScript for Kudos is loaded on every page.',
+					'kudos-donations'
+				)}
+			/>
 			{/* <Panel> */}
 			{/*    <HelpPanel */}
 			{/*        handleInputChange={props.handleInputChange} */}

@@ -8,6 +8,7 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
 use Kudos\Helpers\CustomPostType;
+use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
@@ -65,6 +66,9 @@ class Front
         $this->register_blocks();
         $this->register_post_types();
         $this->register_button_shortcode();
+        if (Settings::get_setting('always_load_assets')) {
+            $this->enqueue_assets();
+        }
     }
 
     /**

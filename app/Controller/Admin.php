@@ -85,197 +85,6 @@ class Admin
         $this->migrator  = $migrator;
     }
 
-    /**
-     * Returns all settings in array.
-     *
-     * @return array
-     */
-    public static function get_settings(): array
-    {
-        return
-            [
-                'show_intro'             => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'migration_actions'      => [
-                    'type'    => 'array',
-                    'default' => [],
-                ],
-                'vendor'                 => [
-                    'type'         => 'string',
-                    'show_in_rest' => true,
-                    'default'      => 'mollie',
-                ],
-                'vendor_mollie'          => [
-                    'type'              => 'object',
-                    'default'           => [
-                        'connected'       => false,
-                        'recurring'       => false,
-                        'mode'            => 'test',
-                        'payment_methods' => [],
-                        'test_key'        => '',
-                        'live_key'        => '',
-                    ],
-                    'show_in_rest'      => [
-                        'schema' => [
-                            'type'       => 'object',
-                            'properties' => [
-                                'connected'       => [
-                                    'type' => 'boolean',
-                                ],
-                                'recurring'       => [
-                                    'type' => 'boolean',
-                                ],
-                                'mode'            => [
-                                    'type' => 'string',
-                                ],
-                                'test_key'        => [
-                                    'type' => 'string',
-                                ],
-                                'live_key'        => [
-                                    'type' => 'string',
-                                ],
-                                'payment_methods' => [
-                                    'type'  => 'array',
-                                    'items' => [
-                                        'type'       => 'object',
-                                        'properties' => [
-                                            'id'            => [
-                                                'type' => 'string',
-                                            ],
-                                            'status'        => [
-                                                'type' => 'string',
-                                            ],
-                                            'maximumAmount' => [
-                                                'type'       => 'object',
-                                                'properties' => [
-                                                    'value'    => [
-                                                        'type' => 'string',
-                                                    ],
-                                                    'currency' => [
-                                                        'type' => 'string',
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'sanitize_callback' => [Settings::class, 'sanitize_vendor'],
-                ],
-                'email_receipt_enable'   => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'email_bcc'              => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'sanitize_email',
-                ],
-                'smtp_enable'            => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'smtp_host'              => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'sanitize_text_field',
-                ],
-                'smtp_encryption'        => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'default'           => 'tls',
-                    'sanitize_callback' => 'sanitize_text_field',
-                ],
-                'smtp_autotls'           => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'smtp_from'              => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'default'           => null,
-                    'sanitize_callback' => 'sanitize_email',
-                ],
-                'smtp_username'          => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'sanitize_text_field',
-                ],
-                'smtp_password'          => [
-                    'type'         => 'string',
-                    'show_in_rest' => true,
-                ],
-                'smtp_port'              => [
-                    'type'              => 'number',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'intval',
-                ],
-                'spam_protection'        => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'return_message_enable'  => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'custom_return_enable'   => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'custom_return_url'      => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'esc_url_raw',
-                ],
-                'payment_vendor'         => [
-                    'type'    => 'string',
-                    'default' => 'mollie',
-                ],
-                'debug_mode'             => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'enable_shortcode'       => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'donate_modal_in_footer' => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'disable_object_cache'   => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-            ];
-    }
-
     public function check_migration_actions()
     {
         $actions = Settings::get_setting('migration_actions');
@@ -455,14 +264,7 @@ class Admin
         wp_register_style(
             'kudos-donations-public',
             Assets::get_asset_url('/public/kudos-public.css'),
-            ['kudos-fonts'],
-            $this->version
-        );
-
-        wp_register_style(
-            'kudos-fonts',
-            Assets::get_asset_url('/public/kudos-fonts.css'),
-            [],
+            ['kudos-donations-fonts'],
             $this->version
         );
 
@@ -481,19 +283,10 @@ class Admin
      */
     public function settings_page_assets()
     {
-        $handle = 'kudos-donations-settings';
-
         // Enqueue the styles
         wp_enqueue_style(
             'kudos-donations-settings',
             Assets::get_asset_url('/admin/kudos-admin-settings.css'),
-            [],
-            $this->version
-        );
-
-        wp_enqueue_style(
-            'kudos-fonts',
-            Assets::get_asset_url('/public/kudos-fonts.css'),
             [],
             $this->version
         );
@@ -547,6 +340,25 @@ class Admin
     }
 
     /**
+     * Assets common to all CampaignTable pages.
+     */
+    private function table_page_assets(): string
+    {
+        $handle   = 'kudos-donations-table';
+        $table_js = Assets::get_script('/admin/kudos-admin-table.js');
+
+        wp_enqueue_script(
+            $handle,
+            $table_js['url'],
+            $table_js['dependencies'],
+            $table_js['version'],
+            true
+        );
+
+        return $handle;
+    }
+
+    /**
      * Assets specific to the Kudos Subscriptions page.
      */
     public function subscriptions_page_assets()
@@ -588,13 +400,6 @@ class Admin
         wp_enqueue_style(
             'kudos-donations-settings',
             Assets::get_asset_url('/admin/kudos-admin-settings.css'),
-            [],
-            $this->version
-        );
-
-        wp_enqueue_style(
-            'kudos-fonts',
-            Assets::get_asset_url('/public/kudos-fonts.css'),
             [],
             $this->version
         );
@@ -797,21 +602,193 @@ class Admin
     }
 
     /**
-     * Assets common to all CampaignTable pages.
+     * Returns all settings in array.
+     *
+     * @return array
      */
-    private function table_page_assets(): string
+    public static function get_settings(): array
     {
-        $handle   = 'kudos-donations-table';
-        $table_js = Assets::get_script('/admin/kudos-admin-table.js');
-
-        wp_enqueue_script(
-            $handle,
-            $table_js['url'],
-            $table_js['dependencies'],
-            $table_js['version'],
-            true
-        );
-
-        return $handle;
+        return
+            [
+                'show_intro'             => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => true,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'migration_actions'      => [
+                    'type'    => 'array',
+                    'default' => [],
+                ],
+                'vendor'                 => [
+                    'type'         => 'string',
+                    'show_in_rest' => true,
+                    'default'      => 'mollie',
+                ],
+                'vendor_mollie'          => [
+                    'type'              => 'object',
+                    'default'           => [
+                        'connected'       => false,
+                        'recurring'       => false,
+                        'mode'            => 'test',
+                        'payment_methods' => [],
+                        'test_key'        => '',
+                        'live_key'        => '',
+                    ],
+                    'show_in_rest'      => [
+                        'schema' => [
+                            'type'       => 'object',
+                            'properties' => [
+                                'connected'       => [
+                                    'type' => 'boolean',
+                                ],
+                                'recurring'       => [
+                                    'type' => 'boolean',
+                                ],
+                                'mode'            => [
+                                    'type' => 'string',
+                                ],
+                                'test_key'        => [
+                                    'type' => 'string',
+                                ],
+                                'live_key'        => [
+                                    'type' => 'string',
+                                ],
+                                'payment_methods' => [
+                                    'type'  => 'array',
+                                    'items' => [
+                                        'type'       => 'object',
+                                        'properties' => [
+                                            'id'            => [
+                                                'type' => 'string',
+                                            ],
+                                            'status'        => [
+                                                'type' => 'string',
+                                            ],
+                                            'maximumAmount' => [
+                                                'type'       => 'object',
+                                                'properties' => [
+                                                    'value'    => [
+                                                        'type' => 'string',
+                                                    ],
+                                                    'currency' => [
+                                                        'type' => 'string',
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'sanitize_callback' => [Settings::class, 'sanitize_vendor'],
+                ],
+                'email_receipt_enable'   => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => false,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'email_bcc'              => [
+                    'type'              => 'string',
+                    'show_in_rest'      => true,
+                    'sanitize_callback' => 'sanitize_email',
+                ],
+                'smtp_enable'            => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => false,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'smtp_host'              => [
+                    'type'              => 'string',
+                    'show_in_rest'      => true,
+                    'sanitize_callback' => 'sanitize_text_field',
+                ],
+                'smtp_encryption'        => [
+                    'type'              => 'string',
+                    'show_in_rest'      => true,
+                    'default'           => 'tls',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ],
+                'smtp_autotls'           => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => true,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'smtp_from'              => [
+                    'type'              => 'string',
+                    'show_in_rest'      => true,
+                    'default'           => null,
+                    'sanitize_callback' => 'sanitize_email',
+                ],
+                'smtp_username'          => [
+                    'type'              => 'string',
+                    'show_in_rest'      => true,
+                    'sanitize_callback' => 'sanitize_text_field',
+                ],
+                'smtp_password'          => [
+                    'type'         => 'string',
+                    'show_in_rest' => true,
+                ],
+                'smtp_port'              => [
+                    'type'              => 'number',
+                    'show_in_rest'      => true,
+                    'sanitize_callback' => 'intval',
+                ],
+                'spam_protection'        => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => true,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'return_message_enable'  => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => true,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'custom_return_enable'   => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => false,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'custom_return_url'      => [
+                    'type'              => 'string',
+                    'show_in_rest'      => true,
+                    'sanitize_callback' => 'esc_url_raw',
+                ],
+                'payment_vendor'         => [
+                    'type'    => 'string',
+                    'default' => 'mollie',
+                ],
+                'debug_mode'             => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => false,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'always_load_assets'     => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => false,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'donate_modal_in_footer' => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => false,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+                'disable_object_cache'   => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => false,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
+            ];
     }
 }
