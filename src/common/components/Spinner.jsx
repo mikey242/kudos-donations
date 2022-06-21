@@ -10,7 +10,6 @@ function Spinner({}) {
 				className="z-1 animate-spin"
 				style={{ width: '1.5rem', height: '1.5rem' }}
 			/>
-			<div className="absolute w-full h-full" />
 		</>
 	);
 }
