@@ -19,11 +19,10 @@ import Render from '../../../common/components/Render';
 import { Spinner } from '../../../common/components/Spinner';
 
 const KudosCampaigns = ({ root, stylesheet }) => {
-	const [campaigns, setCampaigns] = useState();
+	const [campaigns, setCampaigns] = useState(null);
 	const [isApiBusy, setIsApiBusy] = useState(false);
 	const [notification, setNotification] = useState({ shown: false });
 	const [currentCampaign, setCurrentCampaign] = useState(null);
-	const [transactions, setTransactions] = useState();
 	const [isApiLoaded, setIsApiLoaded] = useState(false);
 	const [settings, setSettings] = useState();
 	const notificationTimer = useRef(null);
@@ -142,7 +141,7 @@ const KudosCampaigns = ({ root, stylesheet }) => {
 	};
 
 	const getData = () => {
-		Promise.all([getCampaigns(), getSettings(), getTransactions()])
+		Promise.all([getCampaigns(), getSettings()])
 			.then(() => setIsApiLoaded(true))
 			.catch((error) => {
 				createNotification(error.message, false);
@@ -153,18 +152,32 @@ const KudosCampaigns = ({ root, stylesheet }) => {
 		return apiFetch({
 			path: 'wp/v2/kudos_campaign/',
 			method: 'GET',
-		}).then((response) => {
-			setCampaigns(response.reverse());
-			const currentId = getQueryVar('campaign');
-			if (currentId) {
-				const campaign = response.filter(
-					(res) => res.id === parseInt(currentId)
+		})
+			.then(async (response) => {
+				await Promise.all(
+					response.map((campaign) => {
+						return apiFetch({
+							path: `kudos/v1/transaction/campaign/total/${campaign.id}`,
+							method: 'GET',
+						}).then((total) => {
+							campaign.total = total;
+						});
+					})
 				);
-				if (campaign && currentCampaign === null) {
-					setCurrentCampaign(campaign[0]);
+				return response;
+			})
+			.then((response) => {
+				setCampaigns(response.reverse());
+				const currentId = getQueryVar('campaign');
+				if (currentId) {
+					const campaign = response.filter(
+						(res) => res.id === parseInt(currentId)
+					);
+					if (campaign && currentCampaign === null) {
+						setCurrentCampaign(campaign[0]);
+					}
 				}
-			}
-		});
+			});
 	};
 
 	const getSettings = () => {
@@ -174,13 +187,6 @@ const KudosCampaigns = ({ root, stylesheet }) => {
 				setSettings(response);
 			});
 		});
-	};
-
-	const getTransactions = () => {
-		return apiFetch({
-			path: 'kudos/v1/transaction/',
-			method: 'GET',
-		}).then(setTransactions);
 	};
 
 	return (
@@ -209,7 +215,6 @@ const KudosCampaigns = ({ root, stylesheet }) => {
 							<Fragment>
 								{campaigns?.length >= 1 ? (
 									<CampaignTable
-										transactions={transactions}
 										deleteClick={removeCampaign}
 										duplicateClick={duplicateCampaign}
 										editClick={setCurrentCampaign}
