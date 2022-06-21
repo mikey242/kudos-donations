@@ -116,6 +116,25 @@ function CampaignEdit({
 							},
 						}}
 					/>
+					<TextControl
+						type="number"
+						name="meta.additional_funds"
+						addOn="€"
+						help={__(
+							'Add external funds to the total',
+							'kudos-donations'
+						)}
+						label={__('Additional funds', 'kudos-donations')}
+						validation={{
+							min: {
+								value: 1,
+								message: __(
+									'Minimum value is 1',
+									'kudos-donations'
+								),
+							},
+						}}
+					/>
 					<ToggleControl
 						name="meta.show_goal"
 						label={__(
