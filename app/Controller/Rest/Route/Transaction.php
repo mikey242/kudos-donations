@@ -38,12 +38,12 @@ class Transaction extends Base
         $this->mapper_service->get_repository(TransactionEntity::class);
 
         return [
-            $this->get_base()                                    => [
+            $this->get_base()                                          => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_all'],
                 'permission_callback' => '__return_true',
             ],
-            $this->get_base() . '/get'                           => [
+            $this->get_base() . '/get'                                 => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_one'],
                 'args'                => [
@@ -55,7 +55,7 @@ class Transaction extends Base
                 ],
                 'permission_callback' => '__return_true',
             ],
-            $this->get_base() . '/between'                       => [
+            $this->get_base() . '/between'                             => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_all_between'],
                 'args'                => [
@@ -72,9 +72,21 @@ class Transaction extends Base
                 ],
                 'permission_callback' => '__return_true',
             ],
-            $this->get_base() . '/campaign/(?P<campaign_id>\d+)' => [
+            $this->get_base() . '/campaign/(?P<campaign_id>\d+)'       => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_all_campaign'],
+                'args'                => [
+                    'campaign_id' => [
+                        'type'              => 'int',
+                        'required'          => true,
+                        'sanitize_callback' => 'absint',
+                    ],
+                ],
+                'permission_callback' => '__return_true',
+            ],
+            $this->get_base() . '/campaign/total/(?P<campaign_id>\d+)' => [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [$this, 'get_total_campaign'],
                 'args'                => [
                     'campaign_id' => [
                         'type'              => 'int',
@@ -170,6 +182,34 @@ class Transaction extends Base
                         'status'      => 'paid',
                     ])
                 );
+
+                return $response;
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param \WP_REST_Request $request
+     *
+     * @return \WP_REST_Response
+     */
+    public function get_total_campaign(WP_REST_Request $request): WP_REST_Response
+    {
+        $mapper   = $this->mapper_service;
+        $response = new WP_REST_Response();
+        if ($request->has_valid_params()) {
+            $param = $request->get_param('campaign_id');
+            if ( ! empty($param)) {
+                $transactions = $mapper->get_all_by([
+                    'campaign_id' => $param,
+                    'status'      => 'paid',
+                ]);
+
+                $values = array_column($transactions, 'value');
+                $total  = array_sum($values);
+                $response->set_data($total);
 
                 return $response;
             }

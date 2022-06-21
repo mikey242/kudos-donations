@@ -111,19 +111,17 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 		});
 	};
 
-	const getTransactions = () => {
+	const getTotal = () => {
 		return apiFetch({
-			path: `kudos/v1/transaction/campaign/${campaignId}`,
+			path: `kudos/v1/transaction/campaign/total/${campaignId}`,
 			method: 'GET',
-		}).then((transactions) => {
-			setTotal(
-				transactions.reduce((n, { value }) => n + parseInt(value), 0)
-			);
+		}).then((response) => {
+			setTotal(response);
 		});
 	};
 
 	const getData = () => {
-		Promise.all([getCampaign(), getTransactions()])
+		Promise.all([getCampaign(), getTotal()])
 			.then(() => setIsApiLoaded(true))
 			.catch((error) => {
 				setErrors([error.message]);
