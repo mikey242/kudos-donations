@@ -4,7 +4,6 @@ namespace Kudos\Migrations;
 
 use Exception;
 use Kudos\Helpers\Settings;
-use Kudos\Service\AdminNotice;
 
 class Migrator
 {
@@ -33,8 +32,6 @@ class Migrator
         if ( ! $force && isset($library[$version])) {
             throw new Exception("Migration '$version' already performed.");
         }
-
-        new AdminNotice('I\'m running');
 
         /** @var \Kudos\Migrations\MigrationInterface $type */
         $type = new $migration();
