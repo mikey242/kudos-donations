@@ -11,7 +11,7 @@ use Kudos\Service\MapperService;
 class Version400 extends AbstractMigration implements MigrationInterface
 {
 
-    private const VERSION = '400';
+    protected const VERSION = '400';
 
     /**
      * @var \Kudos\Service\MapperService
@@ -20,7 +20,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
     /**
      * @var array
      */
-    private $result;
+    private $cache;
 
     public function run()
     {
@@ -75,15 +75,13 @@ class Version400 extends AbstractMigration implements MigrationInterface
                         }
                     }
 
-                    $this->result[self::VERSION][$old_campaign['id']] = [
-                        'new_id' => $new_id,
+                    $this->cache['campaigns'][] = [
+                        $old_campaign['id'] => $new_id,
                     ];
 
                     $success++;
                 }
             }
-
-            Settings::update_setting('migration_history', $this->result);
 
             new AdminNotice(
                 sprintf(
@@ -105,9 +103,9 @@ class Version400 extends AbstractMigration implements MigrationInterface
 
     public function migrate_transactions()
     {
-        $migrationHistory = $this->result[self::VERSION];
-        if ( ! empty($migrationHistory)) {
-            foreach ($migrationHistory as $old_id => $campaign) {
+        if ( ! empty($this->cache['campaigns'])) {
+            $campaigns = $this->cache['campaigns'];
+            foreach ($campaigns as $old_id => $new_id) {
                 if ($old_id) {
                     // Assign transactions to new campaign id.
                     $transactions = $this->mapper->get_repository(TransactionEntity::class)
@@ -115,7 +113,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
                     /** @var TransactionEntity $transaction */
                     foreach ($transactions as $transaction) {
                         $transaction->set_fields([
-                            'campaign_id' => $campaign['new_id'],
+                            'campaign_id' => $new_id,
                         ]);
                         $this->mapper->save($transaction);
                     }
