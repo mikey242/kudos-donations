@@ -15,10 +15,6 @@ class MapperService
      */
     protected $repository;
     /**
-     * @var \Kudos\Service\LoggerService
-     */
-    private $logger;
-    /**
      * @var \Kudos\Helpers\WpDb|\wpdb
      */
     private $wpdb;
@@ -26,13 +22,11 @@ class MapperService
     /**
      * Entity object constructor.
      *
-     * @param \Kudos\Service\LoggerService $logger_service
      * @param \Kudos\Helpers\WpDb $wpdb
      */
-    public function __construct(LoggerService $logger_service, WpDb $wpdb)
+    public function __construct(WpDb $wpdb)
     {
-        $this->wpdb   = $wpdb;
-        $this->logger = $logger_service;
+        $this->wpdb = $wpdb;
     }
 
     /**
@@ -104,11 +98,6 @@ class MapperService
         $table_name = $entity::get_table_name();
         $id         = $entity->id;
 
-        $this->logger->debug("Updating entity.", [
-            'entity' => $entity::get_entity_name(),
-            'id'     => $entity->id,
-        ]);
-
         $result = $wpdb->update(
             $table_name,
             $ignore_null ? array_filter($entity->to_array(), [$this, 'remove_empty']) : $entity->to_array(),
@@ -158,10 +147,6 @@ class MapperService
 
         $id         = $wpdb->insert_id;
         $entity->id = $id;
-        $this->logger->debug("Creating entity.", [
-            'entity' => $entity::get_entity_name(),
-            'id'     => $entity->id,
-        ]);
 
         // If successful do action.
         if ($result) {
@@ -364,13 +349,7 @@ class MapperService
         if (false !== $deleted) {
             // Invalidate cache if database updated.
             $this->get_cache_incrementer(true);
-            $this->logger->info('Record deleted.', ['table' => $this->get_table_name(), $column => $value]);
             do_action($this->get_table_name(false) . '_delete', $column, $value);
-        } else {
-            $this->logger->error(
-                'Error deleting record.',
-                ['table' => $this->get_table_name(), $column => $value]
-            );
         }
 
         return $deleted;

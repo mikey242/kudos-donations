@@ -2,6 +2,7 @@
 
 namespace Kudos\Controller;
 
+use Exception;
 use Kudos\Controller\Table\DonorsTable;
 use Kudos\Controller\Table\SubscriptionsTable;
 use Kudos\Controller\Table\TransactionsTable;
@@ -10,11 +11,11 @@ use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
 use Kudos\Helpers\Settings;
+use Kudos\Migrations\Migrator;
 use Kudos\Service\ActivatorService;
 use Kudos\Service\AdminNotice;
 use Kudos\Service\LoggerService;
 use Kudos\Service\MapperService;
-use Kudos\Service\MigratorService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\TwigService;
 use Kudos\Service\Vendor\MollieVendor;
@@ -55,10 +56,6 @@ class Admin
      * @var \Kudos\Service\LoggerService
      */
     private $logger;
-    /**
-     * @var \Kudos\Service\MigratorService
-     */
-    private $migrator;
 
     /**
      * Initialize the class and set its properties.
@@ -72,7 +69,6 @@ class Admin
         PaymentService $payment,
         ActivatorService $activator,
         MollieVendor $mollie_vendor,
-        MigratorService $migrator,
         LoggerService $logger
     ) {
         $this->version   = $version;
@@ -82,7 +78,6 @@ class Admin
         $this->activator = $activator;
         $this->mollie    = $mollie_vendor;
         $this->logger    = $logger;
-        $this->migrator  = $migrator;
     }
 
     public function check_migration_actions()
@@ -90,10 +85,10 @@ class Admin
         $actions = Settings::get_setting('migration_actions');
         if ($actions) {
             foreach ($actions as $action) {
-                switch ($action) {
-                    case 'migrate_campaigns':
-                        $this->migrator->migrate_campaigns();
-                        break;
+                try {
+                    Migrator::migrate($action);
+                } catch (Exception $e) {
+                    new AdminNotice($e->getMessage(), 'error');
                 }
                 if (($key = array_search($action, $actions)) !== false) {
                     unset($actions[$key]);
@@ -578,6 +573,14 @@ class Admin
                     }
                     new AdminNotice(__('No transactions need adding', 'kudos-donations'));
                     break;
+
+                case 'kudos_migrate':
+                    $version = sanitize_text_field(wp_unslash($_REQUEST['migration_version']));
+                    try {
+                        Migrator::migrate($version);
+                    } catch (Exception $e) {
+                        new AdminNotice($e->getMessage(), 'warning');
+                    }
             }
 
             do_action('kudos_admin_actions_extra', $action);
@@ -619,6 +622,9 @@ class Admin
                 'migration_actions'      => [
                     'type'    => 'array',
                     'default' => [],
+                ],
+                'migration_history'      => [
+                    'type' => 'array',
                 ],
                 'vendor'                 => [
                     'type'         => 'string',

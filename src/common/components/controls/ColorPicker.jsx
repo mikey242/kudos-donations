@@ -30,7 +30,7 @@ const ColorPicker = ({ name, label, help }) => {
 						{label}
 					</RadioGroup.Label>
 					{help && (
-						<p className="text-sm leading-5 text-gray-500">
+						<p className="text-sm leading-5 text-gray-500 mt-1">
 							{help}
 						</p>
 					)}

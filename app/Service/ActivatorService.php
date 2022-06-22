@@ -185,34 +185,15 @@ class ActivatorService
      */
     private function run_migrations(string $db_version)
     {
-        $logger = $this->logger;
+        if (version_compare($db_version, KUDOS_VERSION, '<')) {
+            $logger = $this->logger;
 
-        $logger->info(
-            'Upgrade detected, running migrations.',
-            ['old_version' => $db_version, 'new_version' => KUDOS_VERSION]
-        );
+            $logger->info(
+                'Upgrade detected, running migrations.',
+                ['old_version' => $db_version, 'new_version' => KUDOS_VERSION]
+            );
 
-        if (version_compare($db_version, '3.1.0', '<')) {
-            // Remove unused settings.
-            Settings::remove_setting('return_message_enable');
-            Settings::remove_setting('custom_return_enable');
-
-            // Disable log file clearing
-            as_unschedule_all_actions('kudos_check_log');
-        }
-
-        if (version_compare($db_version, '3.1.1', '<')) {
-            // Remove 'secret' column from entities.
-            $donor_table = DonorEntity::get_table_name();
-            $this->wpdb->query("ALTER TABLE $donor_table DROP COLUMN `secret`");
-            $transaction_table = TransactionEntity::get_table_name();
-            $this->wpdb->query("ALTER TABLE $transaction_table DROP COLUMN `secret`");
-            $subscription_table = SubscriptionEntity::get_table_name();
-            $this->wpdb->query("ALTER TABLE $subscription_table DROP COLUMN `secret`");
-        }
-
-        if (version_compare($db_version, '4.0.0', '<')) {
-            Settings::update_array('migration_actions', ['migrate_campaigns'], true);
+            Settings::update_array('migration_actions', [KUDOS_VERSION], true);
         }
     }
 }

@@ -1,20 +1,34 @@
 <?php
 
-namespace Kudos\Service;
+namespace Kudos\Migrations;
 
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
+use Kudos\Helpers\WpDb;
+use Kudos\Service\AdminNotice;
+use Kudos\Service\MapperService;
 
-class MigratorService
+class Version400 extends AbstractMigration implements MigrationInterface
 {
+
+    private const VERSION = '400';
+
     /**
      * @var \Kudos\Service\MapperService
      */
     private $mapper;
+    /**
+     * @var array
+     */
+    private $result;
 
-    public function __construct(MapperService $mapper)
+    public function run()
     {
-        $this->mapper = $mapper;
+        $db           = new WpDb();
+        $this->mapper = new MapperService($db);
+
+        $this->migrate_campaigns();
+        $this->migrate_transactions();
     }
 
     /**
@@ -52,7 +66,6 @@ class MigratorService
                         'return_message_text'   => Settings::get_setting('return_message_text'),
                     ],
                 ]);
-
                 if ($new_id) {
                     // Add fixed amounts separately as they are multiple values for the same key.
                     if ( ! empty($old_campaign['fixed_amounts'])) {
@@ -62,19 +75,16 @@ class MigratorService
                         }
                     }
 
-                    // Assign transactions to new campaign id.
-                    $transactions = $this->mapper->get_repository(TransactionEntity::class)
-                                                 ->get_all_by(['campaign_id' => $old_campaign['id']]);
-                    /** @var TransactionEntity $transaction */
-                    foreach ($transactions as $transaction) {
-                        $transaction->set_fields([
-                            'campaign_id' => $new_id,
-                        ]);
-                        $this->mapper->save($transaction);
-                    }
+                    $this->result[self::VERSION][$old_campaign['id']] = [
+                        'new_id' => $new_id,
+                    ];
+
                     $success++;
                 }
             }
+
+            Settings::update_setting('migration_history', $this->result);
+
             new AdminNotice(
                 sprintf(
                 /* translators: %s: Number of records. */
@@ -91,5 +101,26 @@ class MigratorService
             return;
         }
         new AdminNotice(__('No old campaigns found', 'kudos-donations'));
+    }
+
+    public function migrate_transactions()
+    {
+        $migrationHistory = $this->result[self::VERSION];
+        if ( ! empty($migrationHistory)) {
+            foreach ($migrationHistory as $old_id => $campaign) {
+                if ($old_id) {
+                    // Assign transactions to new campaign id.
+                    $transactions = $this->mapper->get_repository(TransactionEntity::class)
+                                                 ->get_all_by(['campaign_id' => $old_id]);
+                    /** @var TransactionEntity $transaction */
+                    foreach ($transactions as $transaction) {
+                        $transaction->set_fields([
+                            'campaign_id' => $campaign['new_id'],
+                        ]);
+                        $this->mapper->save($transaction);
+                    }
+                }
+            }
+        }
     }
 }

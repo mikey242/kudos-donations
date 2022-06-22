@@ -105,10 +105,17 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 		return apiFetch({
 			path: `wp/v2/kudos_campaign/${campaignId}`,
 			method: 'GET',
-		}).then((response) => {
-			setCampaign(response?.meta);
-			setTimestamp(Date.now());
-		});
+		})
+			.then((response) => {
+				setCampaign(response?.meta);
+				setTimestamp(Date.now());
+			})
+			.catch((error) => {
+				throw {
+					message: `Failed to fetch campaign '${campaignId}'.`,
+					original: error,
+				};
+			});
 	};
 
 	const getTotal = () => {

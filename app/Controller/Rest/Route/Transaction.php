@@ -2,6 +2,7 @@
 
 namespace Kudos\Controller\Rest\Route;
 
+use Exception;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\CustomPostType;
 use Kudos\Service\MapperService;
@@ -195,7 +196,6 @@ class Transaction extends Base
      * @param \WP_REST_Request $request
      *
      * @return \WP_REST_Response
-     * @throws \Exception
      */
     public function get_total_campaign(WP_REST_Request $request): WP_REST_Response
     {
@@ -209,9 +209,13 @@ class Transaction extends Base
                     'status'      => 'paid',
                 ]);
 
-                $values     = array_column($transactions, 'value');
-                $total      = array_sum($values);
-                $additional = CustomPostType::get_post($param)['additional_funds'];
+                $values = array_column($transactions, 'value');
+                $total  = array_sum($values);
+                try {
+                    $additional = CustomPostType::get_post($param)['additional_funds'];
+                } catch (Exception $e) {
+                    wp_send_json_error($e->getMessage());
+                }
                 if ( ! empty($additional[0])) {
                     $total = (int)$total + (int)$additional[0];
                 }

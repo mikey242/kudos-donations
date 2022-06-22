@@ -101,6 +101,7 @@ class Front
      */
     private function register_blocks()
     {
+//        Settings::update_array('migration_actions', ['21062021'], true);
         register_block_type(
             KUDOS_PLUGIN_DIR . '/build/blocks/kudos-button/',
             [

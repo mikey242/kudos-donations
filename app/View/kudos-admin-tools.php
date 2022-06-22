@@ -134,7 +134,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
             case 'actions':
                 $url = add_query_arg('tab', 'actions', $url);
                 ?>
-				<p><strong>Please use the following actions only if you are having issues. Remember to backup your data
+				<p><strong>Please use the following actions only if you are having issues. Remember to back up your data
 						before
 						performing any of these actions.</strong></p>
 				<hr/>
@@ -244,6 +244,21 @@ $tab         = $_GET['tab'] ?? $default_tab;
                     wp_nonce_field('kudos_add_missing_mollie_transactions'); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_add_missing_mollie_transactions'>Add missing transactions
+					</button>
+				</form>
+
+				<hr/>
+
+				<p>Migration actions.</p>
+				<form action="<?php
+                echo esc_url($url); ?>" method='post' style="display: inline">
+                    <?php
+                    wp_nonce_field('kudos_migrate'); ?>
+					<label>
+						<input placeholder="Version" type="text" name="migration_version"/>
+					</label>
+					<button class="button-secondary confirm" type='submit' name='kudos_action'
+					        value='kudos_migrate'>Run migration
 					</button>
 				</form>
 
