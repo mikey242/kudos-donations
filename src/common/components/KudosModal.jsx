@@ -1,35 +1,24 @@
 import React from 'react';
-import { Modal } from '@mui/material';
+import { Dialog } from '@mui/material';
 import { __ } from '@wordpress/i18n';
 import { XIcon } from '@heroicons/react/solid';
 import logo from '../../images/logo-colour.svg';
 import { Transition } from '@headlessui/react';
-import { forwardRef, useEffect } from '@wordpress/element';
+import { forwardRef } from '@wordpress/element';
 
 const KudosModal = forwardRef(
-	({ toggle, isOpen, children, root, showLogo = true }, ref) => {
-		useEffect(() => {
-			if (isOpen) {
-				document.addEventListener('keydown', handleKeyPress, false);
-			}
-
-			return () =>
-				document.removeEventListener('keydown', handleKeyPress, false);
-		}, [isOpen]);
-
-		const handleKeyPress = (e) => {
-			if (e.key === 'Escape' || e.keyCode === 27) toggle();
-		};
-
+	({ toggle, isOpen, children, container, showLogo = true }, ref) => {
 		return (
 			<Transition show={isOpen} appear={true}>
-				<Modal
+				<Dialog
 					open={isOpen}
 					hideBackdrop={true}
 					keepMounted={true}
 					onClose={toggle}
-					className="fixed z-1050 inset-0 overflow-y-auto"
-					container={() => root.shadowRoot.getElementById('kudos')}
+					className="fixed z-[999999] inset-0 overflow-y-auto"
+					container={() =>
+						container.shadowRoot.getElementById('kudos')
+					}
 				>
 					<>
 						<Transition.Child
@@ -95,7 +84,7 @@ const KudosModal = forwardRef(
 							</div>
 						</Transition.Child>
 					</>
-				</Modal>
+				</Dialog>
 			</Transition>
 		);
 	}

@@ -22,7 +22,7 @@ import { isValidUrl } from '../../../common/helpers/util';
 import KudosModal from '../../../common/components/KudosModal';
 
 function CampaignEdit({
-	root,
+	container,
 	campaign,
 	updateCampaign,
 	createNotification,
@@ -367,7 +367,7 @@ function CampaignEdit({
 				<KudosModal
 					showLogo={false}
 					isOpen={isModalOpen}
-					root={root}
+					container={container}
 					toggle={toggleModal}
 				>
 					<>

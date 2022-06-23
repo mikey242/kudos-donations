@@ -14,18 +14,18 @@ const widgets = document.querySelectorAll('.kudos-form');
 const messages = document.querySelectorAll('.kudos-message');
 
 // Kudos Donations form/modal
-widgets.forEach((root) => {
-	const buttonLabel = root.dataset.label;
-	const campaignId = root.dataset.campaign;
-	const displayAs = root.dataset.displayAs;
+widgets.forEach((container) => {
+	const buttonLabel = container.dataset.label;
+	const campaignId = container.dataset.campaign;
+	const displayAs = container.dataset.displayAs;
 	render(
 		<KudosDonate
-			root={root}
+			container={container}
 			campaignId={campaignId}
 			buttonLabel={buttonLabel}
 			displayAs={displayAs}
 		/>,
-		root
+		container
 	);
 });
 

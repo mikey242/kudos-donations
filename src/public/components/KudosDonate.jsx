@@ -6,11 +6,11 @@ import React from 'react';
 import { KudosButton } from './KudosButton';
 import FormRouter from './FormRouter';
 import { checkRequirements } from '../../common/helpers/form';
-import Render from '../../common/components/Render';
 import { Spinner } from '../../common/components/Spinner';
 import KudosModal from '../../common/components/KudosModal';
+import Render from '../../common/components/Render';
 
-function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
+function KudosDonate({ buttonLabel, campaignId, displayAs, container }) {
 	const [campaign, setCampaign] = useState();
 	const [total, setTotal] = useState(0);
 	const [timestamp, setTimestamp] = useState(0);
@@ -169,6 +169,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 	return (
 		<>
 			<Render
+				container={container}
 				themeColor={campaign?.theme_color}
 				stylesheet="/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
 			>
@@ -183,7 +184,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, root }) {
 								</KudosButton>
 								<KudosModal
 									toggle={toggleModal}
-									root={root}
+									container={container}
 									isOpen={modalOpen}
 								>
 									{donationForm()}

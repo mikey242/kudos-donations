@@ -18,7 +18,7 @@ import EmptyCampaigns from './EmptyCampaigns';
 import Render from '../../../common/components/Render';
 import { Spinner } from '../../../common/components/Spinner';
 
-const KudosCampaigns = ({ root, stylesheet }) => {
+const KudosCampaigns = ({ container, stylesheet }) => {
 	const [campaigns, setCampaigns] = useState(null);
 	const [isApiBusy, setIsApiBusy] = useState(false);
 	const [notification, setNotification] = useState({ shown: false });
@@ -236,7 +236,7 @@ const KudosCampaigns = ({ root, stylesheet }) => {
 							</Fragment>
 						) : (
 							<CampaignEdit
-								root={root}
+								container={container}
 								updateCampaign={updateCampaign}
 								createNotification={createNotification}
 								recurringAllowed={
