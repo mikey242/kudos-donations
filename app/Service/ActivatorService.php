@@ -54,7 +54,7 @@ class ActivatorService
         Settings::register_settings($settings);
         $db_version = get_option('_kudos_donations_version');
 
-        self::run_migrations($db_version);
+        self::queue_migrations($db_version);
 
         Settings::add_defaults($settings);
 
@@ -183,7 +183,7 @@ class ActivatorService
      *
      * @param string $db_version
      */
-    private function run_migrations(string $db_version)
+    private function queue_migrations(string $db_version)
     {
         if (version_compare($db_version, KUDOS_VERSION, '<')) {
             $logger = $this->logger;
@@ -193,7 +193,9 @@ class ActivatorService
                 ['old_version' => $db_version, 'new_version' => KUDOS_VERSION]
             );
 
-            Settings::update_array('migration_actions', [KUDOS_VERSION], true);
+            if (version_compare($db_version, '4.0.0', '<')) {
+                Settings::update_array('migration_actions', ['4.0.0']);
+            }
         }
     }
 }
