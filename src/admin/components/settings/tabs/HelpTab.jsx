@@ -27,7 +27,7 @@ const HelpTab = ({ setShowIntro }) => {
 				href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
 				target="_blank"
 			>
-				<PencilAltIcon className="w-5 h-5 mr-2" />
+				<PencilAltIcon className="hidden sm:block w-5 h-5 mr-2" />
 				{__('Leave a review', 'kudos-donations')}
 			</Button>
 			<Divider />
@@ -38,15 +38,15 @@ const HelpTab = ({ setShowIntro }) => {
 					'kudos-donations'
 				)}
 			</p>
-			<div className="flex mt-2">
-				<div className="flex flex-grow">
+			<div className="flex flex-wrap sm:flex-nowrap mt-2">
+				<div className="flex flex-wrap flex-grow">
 					<Button
 						isOutline
 						className="mr-2"
 						href="https://wordpress.org/support/plugin/kudos-donations/"
 						target="_blank"
 					>
-						<SupportIcon className="w-5 h-5 mr-2" />
+						<SupportIcon className="hidden sm:block w-5 h-5 mr-2" />
 						{__('Support forums', 'kudos-donations')}
 					</Button>
 					<Button
@@ -54,7 +54,7 @@ const HelpTab = ({ setShowIntro }) => {
 						className={'mr-2'}
 						onClick={() => setShowIntro(true)}
 					>
-						<InformationCircleIcon className="w-5 h-5 mr-2" />
+						<InformationCircleIcon className="hidden sm:block w-5 h-5 mr-2" />
 						{__('Show welcome guide', 'kudos-donations')}
 					</Button>
 					<Button
@@ -63,11 +63,11 @@ const HelpTab = ({ setShowIntro }) => {
 						target="_blank"
 						href="https://kudosdonations.com/faq/"
 					>
-						<QuestionMarkCircleIcon className="w-5 h-5 mr-2" />
+						<QuestionMarkCircleIcon className="hidden sm:block w-5 h-5 mr-2" />
 						{__('Visit our F.A.Q', 'kudos-donations')}
 					</Button>
 				</div>
-				<div>
+				<div className="mt-2 sm:mt-0">
 					<a
 						target="_blank"
 						title={__('Visit Kudos Donations', 'kudos-donations')}
@@ -93,36 +93,6 @@ const HelpTab = ({ setShowIntro }) => {
 					'kudos-donations'
 				)}
 			/>
-			{/* <Panel> */}
-			{/*    <HelpPanel */}
-			{/*        handleInputChange={props.handleInputChange} */}
-			{/*    /> */}
-			{/* </Panel> */}
-			{/* <Panel> */}
-			{/*    <ExportSettingsPanel */}
-			{/*        settings={props.settings} */}
-			{/*    /> */}
-			{/*    <CardDivider/> */}
-			{/*    <ImportSettingsPanel */}
-			{/*        updateAll={props.updateAll} */}
-			{/*        handleInputChange={props.handleInputChange} */}
-			{/*    /> */}
-			{/*    <CardDivider/> */}
-			{/*    <RenderModalFooter */}
-			{/*        settings={props.settings} */}
-			{/*        handleInputChange={props.handleInputChange} */}
-			{/*    /> */}
-			{/*    <CardDivider/> */}
-			{/*    <DebugModePanel */}
-			{/*        settings={props.settings} */}
-			{/*        handleInputChange={props.handleInputChange} */}
-			{/*    /> */}
-			{/*    <CardDivider/> */}
-			{/*    <DisableShortcodePanel */}
-			{/*        settings={props.settings} */}
-			{/*        handleInputChange={props.handleInputChange} */}
-			{/*    /> */}
-			{/* </Panel> */}
 		</Fragment>
 	);
 };
