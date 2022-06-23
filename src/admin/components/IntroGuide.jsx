@@ -188,7 +188,7 @@ const IntroGuide = ({
 						<div className={'text-center'}>
 							<p>
 								{__(
-									'Visit the campaigns tab and either create a new campaign or edit the default one.',
+									'Visit the campaigns page and either create a new campaign or edit the default one.',
 									'kudos-donations'
 								)}
 							</p>
