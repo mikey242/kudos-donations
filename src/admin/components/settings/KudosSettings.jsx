@@ -55,16 +55,16 @@ const KudosSettings = () => {
 	}, [settings]);
 
 	// Returns an object with only _kudos prefixed settings
-	const filterSettings = (settings) => {
+	const filterSettings = (response) => {
 		return Object.fromEntries(
-			Object.entries(settings).filter(([key]) => key.startsWith('_kudos'))
+			Object.entries(response).filter(([key]) => key.startsWith('_kudos'))
 		);
 	};
 
 	const getSettings = () => {
 		api.loadPromise.then(() => {
-			const settings = new api.models.Settings();
-			settings
+			const settingsModel = new api.models.Settings();
+			settingsModel
 				.fetch()
 				.then((response) => filterSettings(response))
 				.then((response) => {
