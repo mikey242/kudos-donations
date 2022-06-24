@@ -1,6 +1,5 @@
 import React from 'react';
-import { Fragment, useState } from '@wordpress/element';
-import { useCopyToClipboard } from '@wordpress/compose';
+import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
@@ -14,22 +13,17 @@ import {
 } from '../../../common/components/controls';
 import TabPanel from '../TabPanel';
 import Divider from '../Divider';
-import {
-	ArrowCircleLeftIcon,
-	ClipboardCopyIcon,
-} from '@heroicons/react/outline';
+import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
 import { isValidUrl } from '../../../common/helpers/util';
-import KudosModal from '../../../common/components/KudosModal';
+import GenerateShortcode from './GenerateShortcode';
 
 function CampaignEdit({
-	container,
 	campaign,
 	updateCampaign,
 	createNotification,
 	clearCurrentCampaign,
 	recurringAllowed,
 }) {
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -42,24 +36,6 @@ function CampaignEdit({
 	const watchAmountType = watch('meta.amount_type');
 	const watchUseReturnURL = watch('meta.use_custom_return_url');
 	const watchAddress = watch('meta.address_enabled');
-	const watchShowAs = watch('shortcode.showAs');
-	const watchButtonLabel = watch('shortcode.buttonLabel');
-
-	const toggleModal = () => setIsModalOpen((prev) => !prev);
-
-	const onCopy = () => {
-		setIsModalOpen(false);
-		createNotification('Shortcode copied');
-	};
-
-	const copyRef = useCopyToClipboard(
-		`[kudos campaign_id=${campaign.id} type=${watchShowAs} ${
-			watchButtonLabel && watchShowAs === 'button'
-				? 'button_label="' + watchButtonLabel + '"'
-				: ''
-		}]`,
-		onCopy
-	);
 
 	const goBack = () => {
 		if (Object.keys(formState.dirtyFields).length) {
@@ -360,72 +336,11 @@ function CampaignEdit({
 						<ArrowCircleLeftIcon className="mr-2 w-5 h-5" />
 						{__('Back', 'kudos-donations')}
 					</Button>
-					<Button isOutline onClick={toggleModal} type="button">
-						{__('Generate shortcode', 'kudos-donations')}
-					</Button>
+					<GenerateShortcode
+						campaign={campaign}
+						createNotification={createNotification}
+					/>
 				</div>
-				<KudosModal
-					showLogo={false}
-					isOpen={isModalOpen}
-					container={container}
-					toggle={toggleModal}
-				>
-					<>
-						{/*<h1 className="text-center">*/}
-						{/*    {__('Generate shortcode', 'kudos-donations')}*/}
-						{/*</h1>*/}
-						<RadioGroupControl
-							name="shortcode.showAs"
-							label={__('Display as', 'kudos-donations')}
-							help={__(
-								'Choose whether to show Kudos as a button or an embedded form.',
-								'kudos-donations'
-							)}
-							options={[
-								{
-									label: __(
-										'Button with pop-up',
-										'kudos-donations'
-									),
-									value: 'button',
-								},
-								{
-									label: __(
-										'Embedded form',
-										'kudos-donations'
-									),
-									value: 'form',
-								},
-							]}
-						/>
-						{watchShowAs === 'button' && (
-							<>
-								<Divider />
-								<TextControl
-									name="shortcode.buttonLabel"
-									help={__(
-										'Add a button label',
-										'kudos-donations'
-									)}
-									label={__(
-										'Button label',
-										'kudos-donations'
-									)}
-								/>
-							</>
-						)}
-						<div className="mt-8 flex justify-end relative">
-							<Button
-								ref={copyRef}
-								onClick={() => onCopy()}
-								type="button"
-							>
-								<ClipboardCopyIcon className="mr-2 w-5 h-5" />
-								{__('Copy shortcode', 'kudos-donations')}
-							</Button>
-						</div>
-					</>
-				</KudosModal>
 			</FormProvider>
 		</Fragment>
 	);
