@@ -7,35 +7,22 @@ import { __ } from '@wordpress/i18n';
 
 function Message({ title, body, color, root }) {
 	const [ready, setReady] = useState(false);
-
 	const [modalOpen, setModalOpen] = useState(true);
 
 	const toggleModal = () => {
 		setModalOpen(!modalOpen);
 	};
 
-	const handleKeyPress = (e) => {
-		if (e.key === 'Escape' || e.keyCode === 27) toggleModal();
-	};
-
 	useEffect(() => {
 		setReady(true);
 	}, []);
-
-	useEffect(() => {
-		if (modalOpen) {
-			document.addEventListener('keydown', handleKeyPress, false);
-		}
-		return () =>
-			document.removeEventListener('keydown', handleKeyPress, false);
-	}, [modalOpen]);
 
 	return (
 		<>
 			{ready && (
 				<Render
 					themeColor={color}
-					stylesheet="/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
+					stylesheet={window.kudos.stylesheets.public}
 				>
 					<KudosModal
 						toggle={toggleModal}
