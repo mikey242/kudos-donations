@@ -10,12 +10,13 @@ import { Spinner } from '../../common/components/Spinner';
 import KudosModal from '../../common/components/KudosModal';
 import Render from '../../common/components/Render';
 
-function KudosDonate({ buttonLabel, campaignId, displayAs, container }) {
+function KudosDonate({ buttonLabel, campaignId, displayAs }) {
 	const [campaign, setCampaign] = useState();
 	const [total, setTotal] = useState(0);
 	const [timestamp, setTimestamp] = useState(0);
 	const [isApiLoaded, setIsApiLoaded] = useState(false);
-	const [errors, setErrors] = useState(null);
+	const [formError, setFormError] = useState(null);
+	const [apiErrors, setApiErrors] = useState(null);
 	const [formState, setFormState] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
 	const targetRef = useRef(null);
@@ -69,7 +70,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, container }) {
 	};
 
 	async function submitForm(data) {
-		setErrors([]);
+		setFormError(null);
 		const formData = new window.FormData();
 		formData.append('timestamp', timestamp.toString());
 		formData.append('campaign_id', campaignId);
@@ -95,7 +96,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, container }) {
 			if (result.success) {
 				window.location.href = result.data;
 			} else {
-				setErrors([result.data.message]);
+				setFormError(result.data.message);
 			}
 			return result;
 		});
@@ -131,21 +132,18 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, container }) {
 		Promise.all([getCampaign(), getTotal()])
 			.then(() => setIsApiLoaded(true))
 			.catch((error) => {
-				setErrors([error.message]);
+				setApiErrors([error.message]);
 			});
 	};
 
-	const donationForm = () => (
+	const renderDonationForm = () => (
 		<>
-			{errors?.length > 0 &&
-				errors.map((e, i) => (
-					<small
-						key={i}
-						className="text-center block font-normal mb-4 text-sm text-red-500"
-					>
-						{e}
-					</small>
-				))}
+			{formError && (
+				<small className="text-center block font-normal mb-4 text-sm text-red-500">
+					{formError}
+				</small>
+			)}
+
 			<FormRouter
 				ref={targetRef}
 				step={formState?.currentStep ?? 1}
@@ -158,25 +156,41 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, container }) {
 		</>
 	);
 
+	const renderApiErrors = () => (
+		<>
+			{apiErrors && (
+				<>
+					<p className="m-0">Kudos Donations ran into a problem:</p>
+					{apiErrors.map((error, i) => (
+						<p key={i} className="text-red-500">
+							- {error}
+						</p>
+					))}
+				</>
+			)}
+		</>
+	);
+
+	const renderSpinner = () => <>{!apiErrors && <Spinner />}</>;
+
 	useEffect(() => {
 		if (campaignId) {
 			getData();
 		} else {
-			setErrors([__('No campaign ID', 'kudos-donations')]);
+			setApiErrors([__('No campaign ID', 'kudos-donations')]);
 		}
 	}, []);
 
 	return (
 		<>
 			<Render
-				container={container}
 				themeColor={campaign?.theme_color}
 				stylesheet="/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
 			>
 				{/* If API not loaded yet then show a spinner */}
 				{isApiLoaded ? (
 					<>
-						{displayAs === 'form' && donationForm()}
+						{displayAs === 'form' && renderDonationForm()}
 						{displayAs === 'button' && (
 							<>
 								<KudosButton onClick={toggleModal}>
@@ -184,30 +198,17 @@ function KudosDonate({ buttonLabel, campaignId, displayAs, container }) {
 								</KudosButton>
 								<KudosModal
 									toggle={toggleModal}
-									container={container}
 									isOpen={modalOpen}
 								>
-									{donationForm()}
+									{renderDonationForm()}
 								</KudosModal>
 							</>
 						)}
 					</>
 				) : (
-					!errors?.length && <Spinner />
+					renderSpinner()
 				)}
-				{/* Show errors if present */}
-				{errors?.length && (
-					<>
-						<p className="m-0">
-							Kudos Donations ran into a problem:
-						</p>
-						{errors.map((error, i) => (
-							<p key={i} className="text-red-500">
-								- {error}
-							</p>
-						))}
-					</>
-				)}
+				{renderApiErrors()}
 			</Render>
 		</>
 	);
