@@ -101,7 +101,6 @@ class Front
      */
     private function register_blocks()
     {
-//        Settings::update_array('migration_actions', ['21062021'], true);
         register_block_type(
             KUDOS_PLUGIN_DIR . '/build/blocks/kudos-button/',
             [
@@ -211,7 +210,7 @@ class Front
                 $atts = shortcode_atts(
                     [
                         'button_label' => __('Donate now', 'kudos-donations'),
-                        'campaign_id'  => 'default',
+                        'campaign_id'  => '',
                         'alignment'    => 'none',
                         'type'         => 'button',
                     ],
