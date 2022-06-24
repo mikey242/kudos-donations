@@ -22,7 +22,7 @@ import TabPanel from '../TabPanel';
 import { fetchTestMollie } from '../../../common/helpers/fetch';
 import { Spinner } from '../../../common/components/Spinner';
 
-const KudosSettings = ({ stylesheet }) => {
+const KudosSettings = () => {
 	const [isAPISaving, setIsAPISaving] = useState(false);
 	const [isAPILoaded, setIsAPILoaded] = useState(false);
 	const [settings, setSettings] = useState();
@@ -167,7 +167,7 @@ const KudosSettings = ({ stylesheet }) => {
 
 	return (
 		// Show spinner if not yet loaded
-		<Render stylesheet={stylesheet.href}>
+		<Render stylesheet={window.kudos.stylesheets.admin}>
 			{!isAPILoaded ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />

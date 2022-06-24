@@ -86,6 +86,16 @@ class Front
             true
         );
 
+        wp_localize_script(
+            'kudos-donations-public',
+            'kudos',
+            [
+                'stylesheets' => [
+                    'public' => Assets::get_asset_url('/public/kudos-public.css'),
+                ],
+            ]
+        );
+
         wp_set_script_translations('kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
 
         wp_register_style(

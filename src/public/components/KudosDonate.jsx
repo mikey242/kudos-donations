@@ -180,12 +180,11 @@ function KudosDonate({ buttonLabel, campaignId, displayAs }) {
 			setApiErrors([__('No campaign ID', 'kudos-donations')]);
 		}
 	}, []);
-
 	return (
 		<>
 			<Render
 				themeColor={campaign?.theme_color}
-				stylesheet="/wp-content/plugins/kudos-donations/build/public/kudos-public.css"
+				stylesheet={window.kudos.stylesheets.public}
 			>
 				{/* If API not loaded yet then show a spinner */}
 				{isApiLoaded ? (

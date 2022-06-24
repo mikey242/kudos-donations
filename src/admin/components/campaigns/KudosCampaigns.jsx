@@ -18,7 +18,7 @@ import EmptyCampaigns from './EmptyCampaigns';
 import Render from '../../../common/components/Render';
 import { Spinner } from '../../../common/components/Spinner';
 
-const KudosCampaigns = ({ stylesheet }) => {
+const KudosCampaigns = () => {
 	const [campaigns, setCampaigns] = useState(null);
 	const [isApiBusy, setIsApiBusy] = useState(false);
 	const [notification, setNotification] = useState({ shown: false });
@@ -190,7 +190,7 @@ const KudosCampaigns = ({ stylesheet }) => {
 	};
 
 	return (
-		<Render stylesheet={stylesheet.href}>
+		<Render stylesheet={window.kudos.stylesheets.admin}>
 			{!isApiLoaded ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
