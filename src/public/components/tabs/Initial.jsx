@@ -24,7 +24,7 @@ const Initial = (props) => {
 		total,
 	} = props;
 
-	const { setValue, setFocus } = useFormContext();
+	const { setValue } = useFormContext();
 
 	const watchFixed = useWatch({ name: 'valueFixed' });
 	const watchOpen = useWatch({ name: 'valueOpen' });
@@ -41,7 +41,6 @@ const Initial = (props) => {
 	);
 
 	useEffect(() => {
-		setFocus('name');
 		if (donationType !== 'both') {
 			setValue('recurring', donationType === 'recurring');
 		}
