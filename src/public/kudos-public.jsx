@@ -20,7 +20,6 @@ widgets.forEach((container) => {
 	const displayAs = container.dataset.displayAs;
 	render(
 		<KudosDonate
-			container={container}
 			campaignId={campaignId}
 			buttonLabel={buttonLabel}
 			displayAs={displayAs}
