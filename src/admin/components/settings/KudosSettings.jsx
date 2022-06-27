@@ -38,8 +38,9 @@ const KudosSettings = () => {
 	const { dirtyFields } = methods.formState;
 
 	const toggleNewsletterModal = () => {
-		updateSetting('_kudos_show_newsletter', false);
-		setIsNewsletterModalOpen(!isNewsletterModalOpen);
+		updateSetting('_kudos_show_newsletter', false).then(() => {
+			setIsNewsletterModalOpen(!isNewsletterModalOpen);
+		});
 	};
 
 	useEffect(() => {
@@ -187,7 +188,7 @@ const KudosSettings = () => {
 							id="settings-form"
 							onSubmit={methods.handleSubmit(updateSettings)}
 						>
-							{showIntro ? (
+							{showIntro && (
 								<IntroGuide
 									updateSettings={updateSettings}
 									checkApiKey={checkApiKey}
@@ -196,8 +197,6 @@ const KudosSettings = () => {
 									setShowIntro={setShowIntro}
 									updateSetting={updateSetting}
 								/>
-							) : (
-								''
 							)}
 
 							<Header>
