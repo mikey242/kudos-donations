@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import api from '@wordpress/api';
-import { Fragment, useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { Header } from '../Header';
 import { PlusIcon } from '@heroicons/react/outline';
 import React from 'react';
@@ -141,7 +141,7 @@ const KudosCampaigns = () => {
 	};
 
 	const getData = () => {
-		Promise.all([getCampaigns(), getSettings()])
+		Promise.all([getSettings(), getCampaigns()])
 			.then(() => setIsApiLoaded(true))
 			.catch((error) => {
 				createNotification(error.message, false);
@@ -184,7 +184,11 @@ const KudosCampaigns = () => {
 		return api.loadPromise.then(() => {
 			const settingsModel = new api.models.Settings();
 			settingsModel.fetch().then((response) => {
-				setSettings(response);
+				if (response._kudos_show_intro) {
+					window.location.replace('admin.php?page=kudos-settings');
+				} else {
+					setSettings(response);
+				}
 			});
 		});
 	};
@@ -212,7 +216,7 @@ const KudosCampaigns = () => {
 					</Header>
 					<div className="max-w-3xl w-full mx-auto">
 						{!currentCampaign ? (
-							<Fragment>
+							<>
 								{campaigns?.length >= 1 ? (
 									<CampaignTable
 										deleteClick={removeCampaign}
@@ -233,7 +237,7 @@ const KudosCampaigns = () => {
 								>
 									<PlusIcon className={'w-5 h-5'} />
 								</button>
-							</Fragment>
+							</>
 						) : (
 							<CampaignEdit
 								updateCampaign={updateCampaign}
