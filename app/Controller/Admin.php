@@ -623,6 +623,12 @@ class Admin
                     'default'           => true,
                     'sanitize_callback' => 'rest_sanitize_boolean',
                 ],
+                'show_newsletter'        => [
+                    'type'              => 'boolean',
+                    'show_in_rest'      => true,
+                    'default'           => true,
+                    'sanitize_callback' => 'rest_sanitize_boolean',
+                ],
                 'migration_actions'      => [
                     'type'    => 'array',
                     'default' => [],

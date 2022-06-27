@@ -21,6 +21,8 @@ import Render from '../../../common/components/Render';
 import TabPanel from '../TabPanel';
 import { fetchTestMollie } from '../../../common/helpers/fetch';
 import { Spinner } from '../../../common/components/Spinner';
+import { Newsletter } from '../Newsletter';
+import KudosModal from '../../../common/components/KudosModal';
 
 const KudosSettings = () => {
 	const [isAPISaving, setIsAPISaving] = useState(false);
@@ -28,11 +30,17 @@ const KudosSettings = () => {
 	const [settings, setSettings] = useState();
 	const [showIntro, setShowIntro] = useState(false);
 	const [notification, setNotification] = useState({ shown: false });
+	const [isNewsletterModalOpen, setIsNewsletterModalOpen] = useState(true);
 	const notificationTimer = useRef(null);
 	const methods = useForm({
 		defaultValues: settings,
 	});
 	const { dirtyFields } = methods.formState;
+
+	const toggleNewsletterModal = () => {
+		updateSetting('_kudos_show_newsletter', false);
+		setIsNewsletterModalOpen(!isNewsletterModalOpen);
+	};
 
 	useEffect(() => {
 		getSettings();
@@ -173,65 +181,77 @@ const KudosSettings = () => {
 					<Spinner />
 				</div>
 			) : (
-				<FormProvider {...methods}>
-					<form
-						id="settings-form"
-						onSubmit={methods.handleSubmit(updateSettings)}
-					>
-						{showIntro ? (
-							<IntroGuide
-								updateSettings={updateSettings}
-								checkApiKey={checkApiKey}
-								isAPISaving={isAPISaving}
-								settings={settings}
-								setShowIntro={setShowIntro}
-								updateSetting={updateSetting}
-							/>
-						) : (
-							''
-						)}
-
-						<Header>
-							<div className="flex items-center">
-								<span
-									className={`${
-										settings._kudos_vendor_mollie
-											.connected && 'connected'
-									} kudos-api-status text-gray-600 capitalize mr-2`}
-								>
-									{settings?.[
-										'_kudos_vendor_' +
-											settings._kudos_vendor
-									].connected
-										? settings._kudos_vendor +
-										  ' ' +
-										  __('connected', 'kudos-donations')
-										: __(
-												'Not connected',
-												'kudos-donations'
-										  )}
-								</span>
-								<span
-									className={`${
-										settings._kudos_vendor_mollie.connected
-											? 'bg-green-600'
-											: 'bg-gray-500'
-									} rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 w-4 h-4`}
+				<>
+					<FormProvider {...methods}>
+						<form
+							id="settings-form"
+							onSubmit={methods.handleSubmit(updateSettings)}
+						>
+							{showIntro ? (
+								<IntroGuide
+									updateSettings={updateSettings}
+									checkApiKey={checkApiKey}
+									isAPISaving={isAPISaving}
+									settings={settings}
+									setShowIntro={setShowIntro}
+									updateSetting={updateSetting}
 								/>
-								<Button form="settings-form" type="submit">
-									{__('Save', 'kudos-donations')}
-								</Button>
-							</div>
-						</Header>
-						<TabPanel tabs={tabs} />
-						<Notification
-							shown={notification.shown}
-							message={notification.message}
-							success={notification.success}
-							onClick={hideNotification}
-						/>
-					</form>
-				</FormProvider>
+							) : (
+								''
+							)}
+
+							<Header>
+								<div className="flex items-center">
+									<span
+										className={`${
+											settings._kudos_vendor_mollie
+												.connected && 'connected'
+										} kudos-api-status text-gray-600 capitalize mr-2`}
+									>
+										{settings?.[
+											'_kudos_vendor_' +
+												settings._kudos_vendor
+										].connected
+											? settings._kudos_vendor +
+											  ' ' +
+											  __('connected', 'kudos-donations')
+											: __(
+													'Not connected',
+													'kudos-donations'
+											  )}
+									</span>
+									<span
+										className={`${
+											settings._kudos_vendor_mollie
+												.connected
+												? 'bg-green-600'
+												: 'bg-gray-500'
+										} rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 w-4 h-4`}
+									/>
+									<Button form="settings-form" type="submit">
+										{__('Save', 'kudos-donations')}
+									</Button>
+								</div>
+							</Header>
+							<TabPanel tabs={tabs} />
+							<Notification
+								shown={notification.shown}
+								message={notification.message}
+								success={notification.success}
+								onClick={hideNotification}
+							/>
+						</form>
+					</FormProvider>
+					{settings._kudos_show_newsletter &&
+						!settings._kudos_show_intro && (
+							<KudosModal
+								toggle={toggleNewsletterModal}
+								isOpen={isNewsletterModalOpen}
+							>
+								<Newsletter />
+							</KudosModal>
+						)}
+				</>
 			)}
 		</Render>
 	);
