@@ -301,9 +301,7 @@ class Admin
             'kudos',
             [
                 'version'     => $this->version,
-                'stylesheets' => [
-                    'admin' => Assets::get_asset_url('/admin/kudos-admin-settings.css'),
-                ],
+                'stylesheets' => [Assets::get_asset_url('/admin/kudos-admin-settings.css')],
             ]
         );
         wp_set_script_translations('kudos-donations-settings', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');

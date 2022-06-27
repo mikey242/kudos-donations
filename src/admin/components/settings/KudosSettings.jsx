@@ -167,7 +167,7 @@ const KudosSettings = () => {
 
 	return (
 		// Show spinner if not yet loaded
-		<Render stylesheet={window.kudos.stylesheets.admin}>
+		<Render>
 			{!isAPILoaded ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />

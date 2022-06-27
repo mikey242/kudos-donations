@@ -90,9 +90,7 @@ class Front
             'kudos-donations-public',
             'kudos',
             [
-                'stylesheets' => [
-                    'public' => Assets::get_asset_url('/public/kudos-public.css'),
-                ],
+                'stylesheets' => [Assets::get_asset_url('/public/kudos-public.css')],
             ]
         );
 

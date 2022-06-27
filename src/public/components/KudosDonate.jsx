@@ -182,10 +182,7 @@ function KudosDonate({ buttonLabel, campaignId, displayAs }) {
 	}, []);
 	return (
 		<>
-			<Render
-				themeColor={campaign?.theme_color}
-				stylesheet={window.kudos.stylesheets.public}
-			>
+			<Render themeColor={campaign?.theme_color}>
 				{/* If API not loaded yet then show a spinner */}
 				{isApiLoaded ? (
 					<>

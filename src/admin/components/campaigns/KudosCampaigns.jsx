@@ -190,7 +190,7 @@ const KudosCampaigns = () => {
 	};
 
 	return (
-		<Render stylesheet={window.kudos.stylesheets.admin}>
+		<Render>
 			{!isApiLoaded ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />

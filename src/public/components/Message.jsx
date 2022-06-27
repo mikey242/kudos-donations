@@ -20,10 +20,7 @@ function Message({ title, body, color, root }) {
 	return (
 		<>
 			{ready && (
-				<Render
-					themeColor={color}
-					stylesheet={window.kudos.stylesheets.public}
-				>
+				<Render themeColor={color}>
 					<KudosModal
 						toggle={toggleModal}
 						root={root}
