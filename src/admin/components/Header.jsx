@@ -1,7 +1,6 @@
 import React from 'react';
 import { KudosLogo } from '../../common/components/KudosLogo';
 import { __ } from '@wordpress/i18n';
-import { applyFilters } from '@wordpress/hooks';
 
 const Header = ({ children }) => {
 	return (
@@ -21,10 +20,7 @@ const Header = ({ children }) => {
 						{__('Kudos Donations', 'kudos-donations')}
 					</h1>
 					<span className="kudos-version self-center font-bold rounded-lg p-3 ml-4 border border-solid border-gray-400">
-						{applyFilters(
-							'kudos.settings.headerVersion',
-							window.kudos.version
-						)}
+						{window.kudos?.version}
 					</span>
 				</div>
 				<div className="flex items-center">{children}</div>
