@@ -304,7 +304,50 @@ class Admin
                 'stylesheets' => [Assets::get_asset_url('/admin/kudos-admin-settings.css')],
             ]
         );
-        wp_set_script_translations('kudos-donations-settings', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
+        wp_set_script_translations('kudos-donations-settings', 'kudos-donations');
+
+        do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
+    }
+
+    /**
+     * Assets specific to the Kudos campaigns page.
+     */
+    public function campaign_page_assets()
+    {
+        // Enqueue the styles
+        wp_enqueue_style(
+            'kudos-donations-settings',
+            Assets::get_asset_url('/admin/kudos-admin-settings.css'),
+            [],
+            $this->version
+        );
+
+
+        // Get and enqueue the script
+        $admin_js = Assets::get_script('/admin/kudos-admin-campaigns.js');
+        wp_enqueue_script(
+            'kudos-donations-settings',
+            $admin_js['url'],
+            $admin_js['dependencies'],
+            $admin_js['version'],
+            true
+        );
+
+        wp_localize_script(
+            'kudos-donations-settings',
+            'kudos',
+            [
+                'version'     => $this->version,
+                'stylesheets' => [
+                    Assets::get_asset_url('/admin/kudos-admin-settings.css'),
+                ],
+            ]
+        );
+        wp_set_script_translations(
+            'kudos-donations-settings',
+            'kudos-donations',
+            plugin_dir_path(__FILE__) . '/languages/'
+        );
 
         do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
     }
@@ -385,45 +428,6 @@ class Admin
                 'confirmationDelete' => __('Are you sure you want to delete this donor?', 'kudos-donations'),
             ]
         );
-    }
-
-    /**
-     * Assets specific to the Kudos campaigns page.
-     */
-    public function campaign_page_assets()
-    {
-        // Enqueue the styles
-        wp_enqueue_style(
-            'kudos-donations-settings',
-            Assets::get_asset_url('/admin/kudos-admin-settings.css'),
-            [],
-            $this->version
-        );
-
-
-        // Get and enqueue the script
-        $admin_js = Assets::get_script('/admin/kudos-admin-campaigns.js');
-        wp_enqueue_script(
-            'kudos-donations-settings',
-            $admin_js['url'],
-            $admin_js['dependencies'],
-            $admin_js['version'],
-            true
-        );
-
-        wp_localize_script(
-            'kudos-donations-settings',
-            'kudos',
-            [
-                'version'     => $this->version,
-                'stylesheets' => [
-                    'admin' => Assets::get_asset_url('/admin/kudos-admin-settings.css'),
-                ],
-            ]
-        );
-        wp_set_script_translations('kudos-donations-settings', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
-
-        do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
     }
 
     /**
