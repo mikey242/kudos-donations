@@ -116,10 +116,10 @@ const Initial = (props) => {
 
 			<TextControl
 				name="email"
+				type="email"
 				validation={{
 					required: __('Your email is required', 'kudos-donations'),
 				}}
-				type="email"
 				placeholder={__('Email', 'kudos-donations')}
 			/>
 
