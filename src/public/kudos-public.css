@@ -7,7 +7,7 @@
 }
 
 /* Base */
-:root {
+:host {
     --kudos-screen: xs;
 }
 
@@ -26,14 +26,14 @@ p {
 
 /* 'xs' and up */
 @screen xs {
-    :root {
+    :host {
         --kudos-screen: sm;
     }
 }
 
 /* 'sm' and up */
 @screen sm {
-    :root {
+    :host {
         --kudos-screen: md;
     }
 }

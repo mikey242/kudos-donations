@@ -16,7 +16,7 @@
     font-style: normal;
 }
 
-:root {
+:host {
     --kudos-theme-primary: theme("colors.orange.500");
     --kudos-theme-primary-dark: theme("colors.orange.700");
 }
