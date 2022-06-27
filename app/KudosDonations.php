@@ -75,6 +75,7 @@ class KudosDonations
         $this->define_public_hooks();
 
         add_action('plugins_loaded', [$this, 'version_check']);
+        add_action('plugins_loaded', [$this, 'load_translations']);
     }
 
     /**
@@ -142,6 +143,18 @@ class KudosDonations
         } catch (DependencyException|NotFoundException $e) {
             error_log($e->getMessage());
         }
+    }
+
+    /**
+     * Loads translations for current language.
+     *
+     * @return void
+     */
+    public function load_translations()
+    {
+        $path   = dirname(plugin_basename(__FILE__), 2) . '/languages';
+        $domain = 'kudos-donations';
+        load_plugin_textdomain($domain, false, $path);
     }
 
     /**
