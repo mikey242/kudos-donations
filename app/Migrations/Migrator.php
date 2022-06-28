@@ -4,9 +4,20 @@ namespace Kudos\Migrations;
 
 use Exception;
 use Kudos\Helpers\Settings;
+use Kudos\Service\LoggerService;
 
 class Migrator
 {
+
+    /**
+     * @var \Kudos\Service\LoggerService
+     */
+    private $logger;
+
+    public function __construct(LoggerService $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * @param string $version
@@ -15,7 +26,7 @@ class Migrator
      * @return void
      * @throws \Exception
      */
-    public static function migrate(string $version, bool $force = false)
+    public function migrate(string $version, bool $force = false)
     {
         // Remove dots from version.
         $version = str_replace('.', '', $version);
@@ -34,7 +45,7 @@ class Migrator
         }
 
         /** @var \Kudos\Migrations\MigrationInterface $type */
-        $type = new $migration();
+        $type = new $migration($this->logger);
         $type->run();
     }
 }

@@ -5,7 +5,6 @@ namespace Kudos\Migrations;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\WpDb;
-use Kudos\Service\AdminNotice;
 use Kudos\Service\MapperService;
 
 class Version400 extends AbstractMigration implements MigrationInterface
@@ -38,7 +37,6 @@ class Version400 extends AbstractMigration implements MigrationInterface
     {
         $old_campaigns = Settings::get_setting('campaigns');
         if ($old_campaigns) {
-            $success = 0;
             foreach ($old_campaigns as $old_campaign) {
                 $new_id = wp_insert_post([
                     'post_status' => 'publish',
@@ -75,30 +73,15 @@ class Version400 extends AbstractMigration implements MigrationInterface
                         }
                     }
 
-                    $this->cache['campaigns'][] = [
-                        $old_campaign['id'] => $new_id,
-                    ];
-
-                    $success++;
+                    $this->cache['campaigns'][$old_campaign['id']] = $new_id;
                 }
             }
 
-            new AdminNotice(
-                sprintf(
-                /* translators: %s: Number of records. */
-                    _n(
-                        'Migrated %s campaign',
-                        'Migrated %s campaigns',
-                        $success,
-                        'kudos-donations'
-                    ),
-                    $success
-                )
-            );
+            $this->logger->info("Migrated campaign(s)", $this->cache['campaigns']);
 
             return;
         }
-        new AdminNotice(__('No old campaigns found', 'kudos-donations'));
+        $this->logger->info(__('No old campaigns found', 'kudos-donations'));
     }
 
     public function migrate_transactions()
@@ -106,7 +89,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
         if ( ! empty($this->cache['campaigns'])) {
             $campaigns = $this->cache['campaigns'];
             foreach ($campaigns as $old_id => $new_id) {
-                if ($old_id) {
+                if ($old_id && $new_id) {
                     // Assign transactions to new campaign id.
                     $transactions = $this->mapper->get_repository(TransactionEntity::class)
                                                  ->get_all_by(['campaign_id' => $old_id]);

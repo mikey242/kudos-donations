@@ -56,6 +56,10 @@ class Admin
      * @var \Kudos\Service\LoggerService
      */
     private $logger;
+    /**
+     * @var \Kudos\Migrations\Migrator
+     */
+    private $migrator;
 
     /**
      * Initialize the class and set its properties.
@@ -69,7 +73,8 @@ class Admin
         PaymentService $payment,
         ActivatorService $activator,
         MollieVendor $mollie_vendor,
-        LoggerService $logger
+        LoggerService $logger,
+        Migrator $migrator
     ) {
         $this->version   = $version;
         $this->mapper    = $mapper;
@@ -78,6 +83,7 @@ class Admin
         $this->activator = $activator;
         $this->mollie    = $mollie_vendor;
         $this->logger    = $logger;
+        $this->migrator  = $migrator;
     }
 
     public function check_migration_actions()
@@ -86,7 +92,7 @@ class Admin
         if ($actions) {
             foreach ($actions as $action) {
                 try {
-                    Migrator::migrate($action);
+                    $this->migrator->migrate($action);
                 } catch (Exception $e) {
                     new AdminNotice($e->getMessage(), 'error');
                 }
@@ -585,7 +591,7 @@ class Admin
                 case 'kudos_migrate':
                     $version = sanitize_text_field(wp_unslash($_REQUEST['migration_version']));
                     try {
-                        Migrator::migrate($version);
+                        $this->migrator->migrate($version);
                     } catch (Exception $e) {
                         new AdminNotice($e->getMessage(), 'warning');
                     }
@@ -622,12 +628,6 @@ class Admin
         return
             [
                 'show_intro'             => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'show_newsletter'        => [
                     'type'              => 'boolean',
                     'show_in_rest'      => true,
                     'default'           => true,

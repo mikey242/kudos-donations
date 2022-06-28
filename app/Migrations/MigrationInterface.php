@@ -2,12 +2,14 @@
 
 namespace Kudos\Migrations;
 
+use Kudos\Service\LoggerService;
+
 interface MigrationInterface
 {
     /**
      * Migration constructor.
      */
-    public function __construct();
+    public function __construct(LoggerService $logger);
 
     /**
      * Run the migrations and return true if successful.
