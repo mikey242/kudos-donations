@@ -19,10 +19,8 @@ import { Button } from '../../../common/components/controls';
 import Notification from '../Notification';
 import Render from '../../../common/components/Render';
 import TabPanel from '../TabPanel';
-import { fetchTestMollie } from '../../../common/helpers/fetch';
 import { Spinner } from '../../../common/components/Spinner';
-import { Newsletter } from '../Newsletter';
-import KudosModal from '../../../common/components/KudosModal';
+import apiFetch from '@wordpress/api-fetch';
 
 const KudosSettings = () => {
 	const [isAPISaving, setIsAPISaving] = useState(false);
@@ -30,18 +28,11 @@ const KudosSettings = () => {
 	const [settings, setSettings] = useState();
 	const [showIntro, setShowIntro] = useState(false);
 	const [notification, setNotification] = useState({ shown: false });
-	const [isNewsletterModalOpen, setIsNewsletterModalOpen] = useState(true);
 	const notificationTimer = useRef(null);
 	const methods = useForm({
 		defaultValues: settings,
 	});
 	const { dirtyFields } = methods.formState;
-
-	const toggleNewsletterModal = () => {
-		updateSetting('_kudos_show_newsletter', false).then(() => {
-			setIsNewsletterModalOpen(!isNewsletterModalOpen);
-		});
-	};
 
 	useEffect(() => {
 		getSettings();
@@ -98,6 +89,17 @@ const KudosSettings = () => {
 		}));
 	};
 
+	async function checkApiKey(keys) {
+		return apiFetch({
+			path: 'kudos/v1/payment/test',
+			method: 'POST',
+			data: keys,
+		}).then((response) => {
+			updateSetting('_kudos_vendor_mollie.connected', response?.success);
+			return response;
+		});
+	}
+
 	// Update all settings
 	async function updateSettings(data) {
 		setIsAPISaving(true);
@@ -119,8 +121,14 @@ const KudosSettings = () => {
 				setSettings(filterSettings(response));
 				setIsAPISaving(false);
 				createNotification(__('Settings updated', 'kudos-donations'));
-				if ('_kudos_vendor_' + settings._kudos_vendor in dirtyFields) {
-					await checkApiKey();
+				if (`_kudos_vendor_${settings._kudos_vendor}` in dirtyFields) {
+					await checkApiKey({
+						keys: methods.getValues(
+							`_kudos_vendor_${settings._kudos_vendor}`
+						),
+					}).then((res) =>
+						createNotification(res.data.message, res?.success)
+					);
 				}
 			})
 			.fail(() => {
@@ -144,14 +152,6 @@ const KudosSettings = () => {
 		return model.save().then((response) => {
 			setSettings(filterSettings(response));
 			setIsAPISaving(false);
-		});
-	}
-
-	async function checkApiKey() {
-		return fetchTestMollie().then((response) => {
-			createNotification(response.data.message, response?.success);
-			updateSetting('_kudos_vendor_mollie.connected', response?.success);
-			return response;
 		});
 	}
 
@@ -183,22 +183,21 @@ const KudosSettings = () => {
 				</div>
 			) : (
 				<>
+					<IntroGuide
+						updateSettings={updateSettings}
+						isOpen={showIntro ?? false}
+						checkApiKey={checkApiKey}
+						isAPISaving={isAPISaving}
+						settings={settings}
+						setShowIntro={setShowIntro}
+						updateSetting={updateSetting}
+					/>
+
 					<FormProvider {...methods}>
 						<form
 							id="settings-form"
 							onSubmit={methods.handleSubmit(updateSettings)}
 						>
-							{showIntro && (
-								<IntroGuide
-									updateSettings={updateSettings}
-									checkApiKey={checkApiKey}
-									isAPISaving={isAPISaving}
-									settings={settings}
-									setShowIntro={setShowIntro}
-									updateSetting={updateSetting}
-								/>
-							)}
-
 							<Header>
 								<div className="flex items-center">
 									<span
@@ -227,7 +226,7 @@ const KudosSettings = () => {
 												: 'bg-gray-500'
 										} rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 w-4 h-4`}
 									/>
-									<Button form="settings-form" type="submit">
+									<Button type="submit">
 										{__('Save', 'kudos-donations')}
 									</Button>
 								</div>
@@ -241,15 +240,6 @@ const KudosSettings = () => {
 							/>
 						</form>
 					</FormProvider>
-					{settings._kudos_show_newsletter &&
-						!settings._kudos_show_intro && (
-							<KudosModal
-								toggle={toggleNewsletterModal}
-								isOpen={isNewsletterModalOpen}
-							>
-								<Newsletter />
-							</KudosModal>
-						)}
 				</>
 			)}
 		</Render>

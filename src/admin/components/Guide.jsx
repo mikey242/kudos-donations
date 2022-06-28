@@ -52,14 +52,14 @@ const Guide = ({ pages = [], className, onFinish }) => {
 			: 'border-orange-200';
 		const classes = classnames(currentClass, accessibleClass);
 		return (
-			<li
+			<button
 				className={classnames(
 					classes,
-					'border-2 border-solid m-0 mx-2 rounded-full w-5 h-5'
+					'border-2 border-solid m-0 mx-2 rounded-full w-4 h-4'
 				)}
 				key={i}
 				onClick={() => (isAccessible ? setCurrentPage(i) : null)}
-			></li>
+			/>
 		);
 	});
 
@@ -68,72 +68,49 @@ const Guide = ({ pages = [], className, onFinish }) => {
 			ref={useMergeRefs([focusOnMountRef, constrainedTabbingRef])}
 			tabIndex="-1"
 			onKeyDown={(e) => handleKeyPress(e)}
-			className={classnames(
-				'intro text-base leading-6 fixed top-0 left-0 bottom-0 right-0 z-[100000] w-screen min-h-screen bg-white',
-				className
-			)}
+			className={classnames('intro text-base leading-6', className)}
 		>
-			<div
-				className={
-					'h-full flex justify-center items-center overflow-auto'
-				}
-			>
-				<div
-					className={
-						'flex flex-col justify-center items-center h-full w-[768px]'
-					}
-				>
-					<button
-						className={
-							'ml-auto mr-3 mt-3 cursor-pointer text-gray-500 underline'
-						}
-						onClick={onFinish}
+			<div className={'m-auto flex flex-col justify-center items-center'}>
+				<div className="intro-content m-auto ">
+					<div className="intro-image mb-2">
+						<img
+							alt="Page graphic"
+							className={'w-full'}
+							src={pages[currentPage].imageSrc}
+						/>
+					</div>
+					<h1 className={'font-serif text-center'}>
+						{pages[currentPage].heading}
+					</h1>
+					<div className="text-lg text-center">
+						{pages[currentPage].content}
+					</div>
+				</div>
+				<div className="intro-nav w-full pt-5 border-0 border-t border-solid border-gray-200 flex justify-between items-center w-11/12 mt-5 mb-5">
+					<Button
+						isOutline
+						className={canGoBack ? 'visible' : 'invisible'}
+						onClick={goBack}
 					>
-						<small>{__('skip', 'kudos-donations')}</small>
-					</button>
-					<div className="intro-content m-auto w-3/4">
-						<div className="intro-image w-full">
-							<img
-								alt="Page graphic"
-								className={'w-full'}
-								src={pages[currentPage].imageSrc}
-							/>
-						</div>
-						<h1 className={'text-center'}>
-							{pages[currentPage].heading}
-						</h1>
-						<div className="text-lg">
-							{pages[currentPage].content}
-						</div>
-					</div>
-					<div className="intro-nav py-3 border-0 border-t border-solid border-gray-200 flex justify-between items-center w-11/12 mt-5 mb-5">
-						<Button
-							isOutline
-							className={canGoBack ? 'visible' : 'invisible'}
-							onClick={goBack}
-						>
-							{__('Previous', 'kudos-donations')}
-						</Button>
+						{__('Previous', 'kudos-donations')}
+					</Button>
 
-						<ul className={'flex justify-center m-0'}>{pageNav}</ul>
-						{canGoForward && (
-							<Button
-								disabled={
-									pages[currentPage].nextDisabled ?? false
-								}
-								onClick={goForward}
-							>
-								{pages[currentPage].hasOwnProperty('nextLabel')
-									? pages[currentPage].nextLabel
-									: __('Next', 'kudos-donations')}
-							</Button>
-						)}
-						{!canGoForward && (
-							<Button onClick={onFinish}>
-								{__('Finish', 'kudos-donations')}
-							</Button>
-						)}
-					</div>
+					<div className={'flex justify-center m-0'}>{pageNav}</div>
+					{canGoForward && (
+						<Button
+							disabled={pages[currentPage].nextDisabled ?? false}
+							onClick={goForward}
+						>
+							{pages[currentPage].hasOwnProperty('nextLabel')
+								? pages[currentPage].nextLabel
+								: __('Next', 'kudos-donations')}
+						</Button>
+					)}
+					{!canGoForward && (
+						<Button onClick={onFinish}>
+							{__('Finish', 'kudos-donations')}
+						</Button>
+					)}
 				</div>
 			</div>
 		</div>

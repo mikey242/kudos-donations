@@ -105,10 +105,12 @@ class PaymentService
 
     /**
      * Check the vendor api key associated with the mode. Sends a JSON response.
+     *
+     * @param \WP_REST_Request|null $request
      */
-    public function check_api_keys()
+    public function check_api_keys(WP_REST_Request $request)
     {
-        $this->vendor->check_api_keys();
+        $this->vendor->check_api_keys($request);
     }
 
     /**

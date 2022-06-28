@@ -8,7 +8,7 @@ import FocusTrap from 'focus-trap-react';
 
 const KudosModal = ({
 	toggle,
-	isOpen,
+	isOpen = false,
 	children,
 	trapFocus = true,
 	showLogo = true,

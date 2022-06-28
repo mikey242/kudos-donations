@@ -65,7 +65,10 @@ const TextControl = ({
 				</div>
 			</div>
 			{error?.message && (
-				<p className="mt-2 text-sm text-red-600" id={`${id}-error`}>
+				<p
+					className="mt-2 text-left text-sm text-red-600"
+					id={`${id}-error`}
+				>
 					{error?.message}
 				</p>
 			)}

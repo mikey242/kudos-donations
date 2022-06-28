@@ -12,7 +12,7 @@ import classNames from 'classnames';
 const MollieTab = ({ checkApiKey }) => {
 	const [checkingMollie, setCheckingMollie] = useState(false);
 
-	const check = () => {
+	const refresh = () => {
 		setCheckingMollie(true);
 		checkApiKey().then(() => setCheckingMollie(false));
 	};
@@ -34,7 +34,7 @@ const MollieTab = ({ checkApiKey }) => {
 			<br />
 			<button
 				className="inline-flex items-center cursor-pointer"
-				onClick={check}
+				onClick={refresh}
 			>
 				<>
 					<RefreshIcon
@@ -48,7 +48,7 @@ const MollieTab = ({ checkApiKey }) => {
 					</span>
 				</>
 			</button>
-			<p className="my-2 text-xs text-gray-500">
+			<p className="my-2 text-sm text-gray-500">
 				{__(
 					'Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.',
 					'kudos-donations'

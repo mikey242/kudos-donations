@@ -72,7 +72,7 @@ class MollieVendor implements VendorInterface
                 'live' => $settings['live_key'] ?? '',
             ];
 
-            $this->set_api_mode($settings['mode']);
+            $this->set_api_mode($settings['mode'] ?? 'test');
             $this->set_user_agent();
         }
     }
@@ -82,13 +82,13 @@ class MollieVendor implements VendorInterface
      */
     private function set_api_mode(?string $mode)
     {
+        $this->api_mode = $mode;
         // Gets the key associated with the specified mode.
         $key = $this->api_keys[$mode] ?? false;
 
         if ($key) {
             try {
                 $this->api_client->setApiKey($key);
-                $this->api_mode = $mode;
             } catch (ApiException $e) {
                 $this->logger->critical($e->getMessage());
             }
@@ -132,8 +132,17 @@ class MollieVendor implements VendorInterface
     /**
      * Check the Mollie api keys for both test and live keys. Sends a JSON response.
      */
-    public function check_api_keys()
+    public function check_api_keys(WP_REST_Request $request)
     {
+        $keys = $request->get_param('keys');
+
+        if ($keys) {
+            $this->api_keys = [
+                'test' => $keys['test_key'] ?? '',
+                'live' => $keys['live_key'] ?? '',
+            ];
+        }
+
         Settings::update_array(
             'vendor_mollie',
             [
@@ -142,7 +151,7 @@ class MollieVendor implements VendorInterface
             ]
         );
 
-        $mode = Settings::get_setting('vendor_mollie')['mode'];
+        $mode = $this->get_api_mode();
 
         // Check if both fields are empty.
         if (empty($this->api_keys[$mode])) {
@@ -198,7 +207,10 @@ class MollieVendor implements VendorInterface
         Settings::update_array(
             'vendor_mollie',
             [
+                'test_key'        => $this->api_keys['test'],
+                'live_key'        => $this->api_keys['live'],
                 'recurring'       => $this->can_use_recurring(),
+                'mode'            => $this->get_api_mode(),
                 'connected'       => true,
                 'payment_methods' => array_map(function ($method) {
                     return [
@@ -219,6 +231,16 @@ class MollieVendor implements VendorInterface
                 'setting' => Settings::get_setting('vendor_mollie'),
             ]
         );
+    }
+
+    /**
+     * Returns the api mode.
+     *
+     * @return string
+     */
+    public function get_api_mode(): string
+    {
+        return $this->api_mode;
     }
 
     /**
@@ -832,16 +854,6 @@ class MollieVendor implements VendorInterface
         }
 
         return false;
-    }
-
-    /**
-     * Returns the api mode.
-     *
-     * @return string
-     */
-    public function get_api_mode(): string
-    {
-        return $this->api_mode;
     }
 
     /**

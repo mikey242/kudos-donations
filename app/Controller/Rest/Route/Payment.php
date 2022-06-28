@@ -127,8 +127,14 @@ class Payment extends Base
             ],
 
             $this->get_base() . '/test' => [
-                'methods'             => WP_REST_Server::READABLE,
+                'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$payment, 'check_api_keys'],
+                'args'                => [
+                    'keys' => [
+                        'type'     => 'object',
+                        'required' => false,
+                    ],
+                ],
                 'permission_callback' => function () {
                     return current_user_can('manage_options');
                 },

@@ -30,12 +30,6 @@ const Newsletter = () => {
 										});
 									})}
 								>
-									<h1>
-										{__(
-											'Signup for our newsletter',
-											'kudos-donations'
-										)}
-									</h1>
 									{status === 'sending' && (
 										<div className="text-blue-500">
 											sending...
@@ -73,9 +67,13 @@ const Newsletter = () => {
 											'kudos-donations'
 										)}
 									/>
-									<div className="mt-8 flex justify-end relative">
-										<Button type="submit" className="mt-3">
-											Submit
+									<div className="mt-3 flex justify-end relative">
+										<Button
+											isSmall
+											className="w-full"
+											type="submit"
+										>
+											{__('Subscribe', 'kudos-donations')}
 										</Button>
 									</div>
 								</form>

@@ -34,9 +34,11 @@ interface VendorInterface
     /**
      * Check the vendor api key associated with the mode. Sends a JSON response.
      *
+     * @param \WP_REST_Request|null $request
+     *
      * @return mixed
      */
-    public function check_api_keys();
+    public function check_api_keys(WP_REST_Request $request);
 
     /**
      * @param TransactionEntity $transaction ,
