@@ -10,6 +10,7 @@ import {
 	SupportIcon,
 } from '@heroicons/react/outline';
 import Divider from '../../Divider';
+import { HeartIcon } from '@heroicons/react/solid';
 
 const HelpTab = ({ setShowIntro }) => {
 	return (
@@ -21,15 +22,26 @@ const HelpTab = ({ setShowIntro }) => {
 					'kudos-donations'
 				)}
 			</p>
-
-			<Button
-				isOutline
-				href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
-				target="_blank"
-			>
-				<PencilAltIcon className="hidden sm:block w-5 h-5 mr-2" />
-				{__('Leave a review', 'kudos-donations')}
-			</Button>
+			<div className="flex flex-wrap">
+				<Button
+					isOutline
+					isExternal
+					className="mr-2"
+					href="https://kudosdonations.com/donate/"
+				>
+					<HeartIcon className="hidden sm:block w-5 h-5 mr-2" />
+					{__('Donate to Kudos Donations', 'kudos-donations')}
+				</Button>
+				<Button
+					isOutline
+					isExternal
+					className="mr-2"
+					href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
+				>
+					<PencilAltIcon className="hidden sm:block w-5 h-5 mr-2" />
+					{__('Leave a review', 'kudos-donations')}
+				</Button>
+			</div>
 			<Divider />
 			<h2>{__('Need some assistance?', 'kudos-donations')}</h2>
 			<p>
