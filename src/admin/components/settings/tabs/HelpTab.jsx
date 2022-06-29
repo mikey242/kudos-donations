@@ -56,7 +56,7 @@ const HelpTab = ({ setShowIntro }) => {
 						isOutline
 						className="mr-2"
 						href="https://wordpress.org/support/plugin/kudos-donations/"
-						target="_blank"
+						isExternal
 					>
 						<SupportIcon className="hidden sm:block w-5 h-5 mr-2" />
 						{__('Support forums', 'kudos-donations')}
@@ -72,7 +72,7 @@ const HelpTab = ({ setShowIntro }) => {
 					<Button
 						isOutline
 						className={'mr-2'}
-						target="_blank"
+						isExternal
 						href="https://kudosdonations.com/faq/"
 					>
 						<QuestionMarkCircleIcon className="hidden sm:block w-5 h-5 mr-2" />
