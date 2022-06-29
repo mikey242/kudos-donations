@@ -336,10 +336,12 @@ function CampaignEdit({
 						<ArrowCircleLeftIcon className="mr-2 w-5 h-5" />
 						{__('Back', 'kudos-donations')}
 					</Button>
-					<GenerateShortcode
-						campaign={campaign}
-						createNotification={createNotification}
-					/>
+					{campaign.status !== 'draft' && (
+						<GenerateShortcode
+							campaign={campaign}
+							createNotification={createNotification}
+						/>
+					)}
 				</div>
 			</FormProvider>
 		</Fragment>
