@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import api from '@wordpress/api';
 import { useEffect, useRef, useState } from '@wordpress/element';
@@ -32,7 +33,7 @@ const KudosCampaigns = () => {
 	}, []);
 
 	useEffect(() => {
-		if (currentCampaign !== null) {
+		if (currentCampaign?.id) {
 			updateQueryParameter('campaign', currentCampaign.id);
 		}
 	}, [currentCampaign]);
