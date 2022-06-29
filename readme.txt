@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
 Tested up to: 6.0.0
 Requires PHP: 7.2.9
-Stable tag: 3.2.0
+Stable tag: 3.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -126,6 +126,11 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Can now configure most settings per-campaign
 * Easily generate shortcodes per campaign with a helpful form
 * New minimum donation setting
+
+= 3.1.5 =
+* Allow Mollie to connect with either test or live key. Previously both were required.
+* Tested compatibility with WordPress 6.0
+* Update dependencies
 
 = 3.1.4 =
 * Improve email compatibility
