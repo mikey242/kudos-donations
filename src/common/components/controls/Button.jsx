@@ -9,8 +9,10 @@ const Button = forwardRef(
 			children,
 			href,
 			isOutline,
+			isExternal,
 			isDisabled,
 			isSmall,
+			form,
 			ariaLabel,
 			className,
 			onClick,
@@ -33,7 +35,7 @@ const Button = forwardRef(
 				? 'border-primary border text-primary'
 				: 'border-none text-white',
 			isSmall ? 'px-2 py-2 text-sm' : 'px-3 py-2 sm:py-3',
-			'relative font-bold focus:ring z-1 group cursor-pointer overflow-hidden rounded-lg inline-flex justify-center items-center transition ease-in-out focus:ring-primary focus:ring-offset-2'
+			'relative font-bold focus:ring z-1 group cursor-pointer overflow-hidden rounded-lg flex justify-center items-center transition ease-in-out focus:ring-primary focus:ring-offset-2'
 		);
 
 		const Inner = () => (
@@ -53,6 +55,7 @@ const Button = forwardRef(
 				{href ? (
 					<a
 						href={href}
+						target={isExternal && '_blank'}
 						ref={ref}
 						className={classes}
 						aria-label={ariaLabel}
@@ -64,6 +67,7 @@ const Button = forwardRef(
 						type={type}
 						onClick={handleClick}
 						ref={ref}
+						form={form}
 						disabled={isDisabled}
 						className={classes}
 						aria-label={ariaLabel}
