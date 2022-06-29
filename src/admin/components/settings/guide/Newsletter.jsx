@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Button, TextControl } from '../../common/components/controls';
+import { Button, TextControl } from '../../../../common/components/controls';
+// eslint-disable-next-line import/default
 import MailchimpSubscribe from 'react-mailchimp-subscribe';
 import { __ } from '@wordpress/i18n';
 

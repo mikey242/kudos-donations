@@ -79,7 +79,7 @@ const Guide = ({ pages = [], className, onFinish }) => {
 							src={pages[currentPage].imageSrc}
 						/>
 					</div>
-					<h1 className={'font-serif text-center'}>
+					<h1 className={'font-serif text-center mb-2'}>
 						{pages[currentPage].heading}
 					</h1>
 					<div className="text-lg text-center">
@@ -98,7 +98,9 @@ const Guide = ({ pages = [], className, onFinish }) => {
 					<div className={'flex justify-center m-0'}>{pageNav}</div>
 					{canGoForward && (
 						<Button
-							disabled={pages[currentPage].nextDisabled ?? false}
+							isDisabled={
+								pages[currentPage].nextDisabled ?? false
+							}
 							onClick={goForward}
 						>
 							{pages[currentPage].hasOwnProperty('nextLabel')

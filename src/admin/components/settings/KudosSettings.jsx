@@ -8,10 +8,8 @@ import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
 import api from '@wordpress/api';
 import { FormProvider, useForm } from 'react-hook-form';
-
-// settings Panels
 import { Header } from '../Header';
-import { IntroGuide } from '../IntroGuide';
+import { IntroGuide } from './guide/IntroGuide';
 import MollieTab from './tabs/MollieTab';
 import { EmailTab } from './tabs/EmailTab';
 import { HelpTab } from './tabs/HelpTab';
@@ -20,6 +18,7 @@ import Notification from '../Notification';
 import Render from '../../../common/components/Render';
 import TabPanel from '../TabPanel';
 import { Spinner } from '../../../common/components/Spinner';
+// eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 
 const KudosSettings = () => {

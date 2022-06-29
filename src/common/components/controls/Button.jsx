@@ -30,7 +30,7 @@ const Button = forwardRef(
 
 		const classes = classNames(
 			className,
-			isDisabled && 'cursor-not-allowed',
+			isDisabled && 'cursor-not-allowed opacity-75',
 			isOutline
 				? 'border-primary border text-primary'
 				: 'border-none text-white',

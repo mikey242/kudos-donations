@@ -7,6 +7,7 @@ import { get, uniqueId } from 'lodash';
 const TextControl = ({
 	name,
 	validation,
+	disabled,
 	label,
 	help,
 	addOn,
@@ -44,11 +45,13 @@ const TextControl = ({
 					{...register(name, validation)}
 					type={type}
 					id={id}
+					disabled={disabled}
 					className={classNames(
 						error?.message
 							? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 '
 							: 'border-gray-300 focus:ring-primary focus:border-primary',
 						addOn && 'pl-7',
+						disabled && 'cursor-not-allowed opacity-75',
 						'form-input transition ease-in-out shadow-none block w-full pr-10 focus:outline-none sm:text-sm rounded-md'
 					)}
 					placeholder={placeholder}

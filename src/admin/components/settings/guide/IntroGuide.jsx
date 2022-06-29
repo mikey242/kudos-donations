@@ -1,15 +1,16 @@
-import intro from '../../images/guide-welcome.png';
-import mollie from '../../images/guide-mollie-api.png';
-import campaign from '../../images/guide-campaign.png';
-import button from '../../images/guide-button.png';
-import live from '../../images/guide-test-live.png';
+import intro from '../../../../images/guide-welcome.png';
+import mollie from '../../../../images/guide-mollie-api.png';
+import campaign from '../../../../images/guide-campaign.png';
+import button from '../../../../images/guide-button.png';
+import live from '../../../../images/guide-test-live.png';
 import { __ } from '@wordpress/i18n';
-import { ExternalLink } from '@wordpress/components';
-import { Guide } from './Guide';
+import { Guide } from '../../Guide';
 import React from 'react';
 import { Newsletter } from './Newsletter';
-import KudosModal from '../../common/components/KudosModal';
-import { MollieKeys } from './MollieKeys';
+import KudosModal from '../../../../common/components/KudosModal';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Button, TextControl } from '../../../../common/components/controls';
+import { useState } from '@wordpress/element';
 
 const IntroGuide = ({
 	settings,
@@ -21,6 +22,23 @@ const IntroGuide = ({
 	const vendorMollie = settings._kudos_vendor_mollie;
 	const isConnected = vendorMollie.connected ?? false;
 	const isRecurringEnabled = vendorMollie.recurring ?? false;
+
+	const [isApiSaving, setIsApiSaving] = useState(false);
+	const [apiMessage, setApiMessage] = useState(null);
+
+	const methods = useForm();
+
+	const submitMollie = (data) => {
+		setIsApiSaving(true);
+		checkApiKey({
+			keys: data.keys,
+		}).then((response) => {
+			if (!response.success) {
+				setApiMessage(response.data.message);
+			}
+			setIsApiSaving(false);
+		});
+	};
 
 	const closeModal = () => {
 		setShowIntro(false);
@@ -74,10 +92,52 @@ const IntroGuide = ({
 												.
 											</a>
 										</p>
-										<MollieKeys checkApiKey={checkApiKey} />
+										<FormProvider {...methods}>
+											<form
+												className="mt-5"
+												onSubmit={methods.handleSubmit(
+													submitMollie
+												)}
+											>
+												{apiMessage && (
+													<div className="text-sm text-red-500">
+														{apiMessage}
+													</div>
+												)}
+												<TextControl
+													name="keys.live_key"
+													disabled={isApiSaving}
+													placeholder={__(
+														'Live key',
+														'kudos-donations'
+													)}
+												/>
+												<TextControl
+													name="keys.test_key"
+													disabled={isApiSaving}
+													placeholder={__(
+														'Test key',
+														'kudos-donations'
+													)}
+												/>
+												<div className="mt-3 flex justify-end relative">
+													<Button
+														isSmall
+														type="submit"
+														className="w-full"
+														isDisabled={isApiSaving}
+													>
+														{__(
+															'Connect',
+															'kudos-donations'
+														)}
+													</Button>
+												</div>
+											</form>
+										</FormProvider>
 									</div>
 								) : (
-									<div className="flex flex-col rounded-lg p-5">
+									<div className="flex flex-col rounded-lg">
 										<div
 											className={
 												'flex flex-row justify-center mb-3 items-center'
@@ -104,25 +164,27 @@ const IntroGuide = ({
 											</h2>
 										</div>
 										{isRecurringEnabled ? (
-											<strong>
+											<p>
 												{__(
 													'Congratulations, your account is configured to allow recurring payments.',
 													'kudos-donations'
 												)}
-											</strong>
+											</p>
 										) : (
-											<strong>
+											<p>
 												{__(
 													'You can still use Kudos, however you will not be able to use subscription payments.',
 													'kudos-donations'
 												)}
-											</strong>
+											</p>
 										)}
 										<a
 											className={'text-primary mt-2'}
+											target="_blank"
 											href={
 												'https://help.mollie.com/hc/articles/214558045'
 											}
+											rel="noreferrer"
 										>
 											{__(
 												'Learn more',
@@ -192,12 +254,17 @@ const IntroGuide = ({
 									)}
 								</p>
 								<p>
-									<ExternalLink href="https://kudosdonations.com/faq/">
+									<a
+										className="text-primary"
+										href="src/admin/components/guide/IntroGuide"
+										target="_blank"
+										rel="noreferrer"
+									>
 										{__(
 											'Visit our F.A.Q',
 											'kudos-donations'
 										)}
-									</ExternalLink>
+									</a>
 								</p>
 							</>
 						),
