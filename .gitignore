@@ -1,12 +1,6 @@
 vendor
-dist
 build
-logs
 node_modules
-docker/wordpress/
-cache
-invoices
 .idea
 *.iml
 .env
-package-lock.json
