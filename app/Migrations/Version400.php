@@ -28,6 +28,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
 
         $this->migrate_campaigns();
         $this->migrate_transactions();
+        $this->logger->info('Migration 400 complete', $this->cache);
     }
 
     /**
@@ -95,6 +96,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
                                                  ->get_all_by(['campaign_id' => $old_id]);
                     /** @var TransactionEntity $transaction */
                     foreach ($transactions as $transaction) {
+                        $this->cache['transactions'][$transaction->campaign_id] = $new_id;
                         $transaction->set_fields([
                             'campaign_id' => $new_id,
                         ]);
@@ -102,6 +104,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
                     }
                 }
             }
+            $this->logger->info("Migrated transaction(s)", $this->cache['transactions']);
         }
     }
 }
