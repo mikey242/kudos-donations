@@ -4,7 +4,6 @@ import {
 	createContext,
 	useContext,
 	useEffect,
-	useRef,
 	useState,
 } from '@wordpress/element';
 
@@ -13,9 +12,7 @@ export const SettingsContext = createContext(null);
 export default function SettingsProvider({ children }) {
 	const [settingsReady, setSettingsReady] = useState(false);
 	const [settingsSaving, setSettingsSaving] = useState(false);
-	const [isApiSaving, setIsApiSaving] = useState(false);
 	const [settings, setSettings] = useState();
-	const notificationTimer = useRef(null);
 
 	useEffect(() => {
 		getSettings();
