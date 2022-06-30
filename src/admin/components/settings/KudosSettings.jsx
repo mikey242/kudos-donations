@@ -4,9 +4,8 @@
  */
 
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
-import api from '@wordpress/api';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Header } from '../Header';
 import { IntroGuide } from './guide/IntroGuide';
@@ -14,78 +13,62 @@ import MollieTab from './tabs/MollieTab';
 import { EmailTab } from './tabs/EmailTab';
 import { HelpTab } from './tabs/HelpTab';
 import { Button } from '../../../common/components/controls';
-import Notification from '../Notification';
-import Render from '../../../common/components/Render';
 import TabPanel from '../TabPanel';
 import { Spinner } from '../../../common/components/Spinner';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
+import { useSettingsContext } from '../../../common/contexts/SettingsContext';
+import {
+	ADD,
+	useNotificationContext,
+} from '../../../common/contexts/NotificationContext';
 
 const KudosSettings = () => {
-	const [isAPISaving, setIsAPISaving] = useState(false);
-	const [isAPILoaded, setIsAPILoaded] = useState(false);
-	const [settings, setSettings] = useState();
 	const [showIntro, setShowIntro] = useState(false);
-	const [notification, setNotification] = useState({ shown: false });
-	const notificationTimer = useRef(null);
+	const {
+		updateSetting,
+		updateSettings,
+		settings,
+		settingsSaving,
+		settingsReady,
+	} = useSettingsContext();
+	const { notificationDispatch } = useNotificationContext();
 	const methods = useForm({
 		defaultValues: settings,
 	});
 	const { dirtyFields } = methods.formState;
 
 	useEffect(() => {
-		getSettings();
-	}, []);
-
-	useEffect(() => {
-		if (notification.shown) {
-			notificationTimer.current = setTimeout(() => {
-				hideNotification();
-			}, 2000);
-			return () => clearTimeout(notificationTimer.current);
-		}
-	});
-
-	useEffect(() => {
 		if (settings) {
-			setIsAPILoaded(true);
 			methods.reset(settings);
 		}
 	}, [settings]);
 
-	// Returns an object with only _kudos prefixed settings
-	const filterSettings = (response) => {
-		return Object.fromEntries(
-			Object.entries(response).filter(([key]) => key.startsWith('_kudos'))
-		);
-	};
-
-	const getSettings = () => {
-		api.loadPromise.then(() => {
-			const settingsModel = new api.models.Settings();
-			settingsModel
-				.fetch()
-				.then((response) => filterSettings(response))
-				.then((response) => {
-					setShowIntro(response._kudos_show_intro);
-					setSettings(response);
-				});
+	const save = (data) => {
+		updateSettings(data).then(async () => {
+			notificationDispatch({
+				type: ADD,
+				payload: {
+					content: __('Settings updated', 'kudos-donations'),
+					success: true,
+				},
+			});
+			if (`_kudos_vendor_${settings._kudos_vendor}` in dirtyFields) {
+				await checkApiKey({
+					keys: methods.getValues(
+						`_kudos_vendor_${settings._kudos_vendor}`
+					),
+				}).then((res) =>
+					notificationDispatch({
+						type: ADD,
+						payload: {
+							content: res.data.message,
+							success: res?.success,
+						},
+					})
+				);
+			}
 		});
-	};
-
-	const createNotification = (message, success) => {
-		setNotification({
-			message,
-			success,
-			shown: true,
-		});
-	};
-
-	const hideNotification = () => {
-		setNotification((prev) => ({
-			...prev,
-			shown: false,
-		}));
 	};
 
 	async function checkApiKey(keys) {
@@ -99,61 +82,6 @@ const KudosSettings = () => {
 		});
 	}
 
-	// Update all settings
-	async function updateSettings(data) {
-		setIsAPISaving(true);
-
-		// Delete empty settings keys
-		for (const key in data) {
-			if (data[key] === null) {
-				delete data[key];
-			}
-		}
-
-		// Create WordPress settings model
-		const model = new api.models.Settings(data);
-
-		// Save to database
-		return model
-			.save()
-			.then(async (response) => {
-				setSettings(filterSettings(response));
-				setIsAPISaving(false);
-				createNotification(__('Settings updated', 'kudos-donations'));
-				if (`_kudos_vendor_${settings._kudos_vendor}` in dirtyFields) {
-					await checkApiKey({
-						keys: methods.getValues(
-							`_kudos_vendor_${settings._kudos_vendor}`
-						),
-					}).then((res) =>
-						createNotification(res.data.message, res?.success)
-					);
-				}
-			})
-			.fail(() => {
-				createNotification(
-					__('Failed to save settings', 'kudos-donations'),
-					false
-				);
-			});
-	}
-
-	// Update an individual setting, uses current state if value not specified
-	async function updateSetting(option, value) {
-		setIsAPISaving(true);
-
-		// Create WordPress settings model
-		const model = new api.models.Settings({
-			[option]: value,
-		});
-
-		// Save to database
-		return model.save().then((response) => {
-			setSettings(filterSettings(response));
-			setIsAPISaving(false);
-		});
-	}
-
 	// Define tabs and panels
 	const tabs = [
 		{
@@ -164,7 +92,7 @@ const KudosSettings = () => {
 		{
 			name: 'email',
 			title: __('Email', 'kudos-donations'),
-			content: <EmailTab createNotification={createNotification} />,
+			content: <EmailTab createNotification={notificationDispatch} />,
 		},
 		{
 			name: 'help',
@@ -175,18 +103,18 @@ const KudosSettings = () => {
 
 	return (
 		// Show spinner if not yet loaded
-		<Render>
-			{!isAPILoaded ? (
+		<>
+			{!settingsReady ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
 				</div>
 			) : (
 				<>
 					<IntroGuide
-						updateSettings={updateSettings}
+						updateSettings={save}
 						isOpen={showIntro ?? false}
 						checkApiKey={checkApiKey}
-						isAPISaving={isAPISaving}
+						isAPISaving={settingsSaving}
 						settings={settings}
 						setShowIntro={setShowIntro}
 						updateSetting={updateSetting}
@@ -195,7 +123,7 @@ const KudosSettings = () => {
 					<FormProvider {...methods}>
 						<form
 							id="settings-form"
-							onSubmit={methods.handleSubmit(updateSettings)}
+							onSubmit={methods.handleSubmit(save)}
 						>
 							<Header>
 								<div className="flex items-center">
@@ -231,17 +159,11 @@ const KudosSettings = () => {
 								</div>
 							</Header>
 							<TabPanel tabs={tabs} />
-							<Notification
-								shown={notification.shown}
-								message={notification.message}
-								success={notification.success}
-								onClick={hideNotification}
-							/>
 						</form>
 					</FormProvider>
 				</>
 			)}
-		</Render>
+		</>
 	);
 };
 

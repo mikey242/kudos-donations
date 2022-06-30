@@ -20,7 +20,6 @@ import GenerateShortcode from './GenerateShortcode';
 function CampaignEdit({
 	campaign,
 	updateCampaign,
-	createNotification,
 	clearCurrentCampaign,
 	recurringAllowed,
 }) {
@@ -337,10 +336,7 @@ function CampaignEdit({
 						{__('Back', 'kudos-donations')}
 					</Button>
 					{campaign.status !== 'draft' && (
-						<GenerateShortcode
-							campaign={campaign}
-							createNotification={createNotification}
-						/>
+						<GenerateShortcode campaign={campaign} />
 					)}
 				</div>
 			</FormProvider>

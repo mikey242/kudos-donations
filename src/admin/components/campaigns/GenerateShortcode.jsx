@@ -11,9 +11,14 @@ import Divider from '../Divider';
 import { ClipboardCopyIcon } from '@heroicons/react/outline';
 import KudosModal from '../../../common/components/KudosModal';
 import { useFormContext } from 'react-hook-form';
+import {
+	ADD,
+	useNotificationContext,
+} from '../../../common/contexts/NotificationContext';
 
-function GenerateShortcode({ campaign, createNotification }) {
+function GenerateShortcode({ campaign }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const { notificationDispatch } = useNotificationContext();
 	const toggleModal = () => setIsModalOpen((prev) => !prev);
 
 	const methods = useFormContext();
@@ -24,8 +29,15 @@ function GenerateShortcode({ campaign, createNotification }) {
 	const watchButtonLabel = watch('shortcode.buttonLabel');
 
 	const onCopy = () => {
+		console.log('called');
 		setIsModalOpen(false);
-		createNotification('Shortcode copied');
+		notificationDispatch({
+			type: ADD,
+			payload: {
+				content: 'Shortcode copied',
+				success: true,
+			},
+		});
 	};
 
 	const copyRef = useCopyToClipboard(
@@ -88,11 +100,7 @@ function GenerateShortcode({ campaign, createNotification }) {
 						</>
 					)}
 					<div className="mt-8 flex justify-end relative">
-						<Button
-							ref={copyRef}
-							onClick={() => onCopy()}
-							type="button"
-						>
+						<Button ref={copyRef} type="button">
 							<ClipboardCopyIcon className="mr-2 w-5 h-5" />
 							{__('Copy shortcode', 'kudos-donations')}
 						</Button>

@@ -1,14 +1,12 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import api from '@wordpress/api';
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { Header } from '../Header';
 import { PlusIcon } from '@heroicons/react/outline';
 import React from 'react';
 import CampaignTable from './CampaignTable';
 import CampaignEdit from './CampaignEdit';
 import { __ } from '@wordpress/i18n';
-import Notification from '../Notification';
 import { Button } from '../../../common/components/controls';
 import {
 	getQueryVar,
@@ -16,17 +14,20 @@ import {
 	updateQueryParameter,
 } from '../../../common/helpers/util';
 import EmptyCampaigns from './EmptyCampaigns';
-import Render from '../../../common/components/Render';
 import { Spinner } from '../../../common/components/Spinner';
+import { useSettingsContext } from '../../../common/contexts/SettingsContext';
+import {
+	ADD,
+	useNotificationContext,
+} from '../../../common/contexts/NotificationContext';
 
 const KudosCampaigns = () => {
 	const [campaigns, setCampaigns] = useState(null);
 	const [isApiBusy, setIsApiBusy] = useState(false);
-	const [notification, setNotification] = useState({ shown: false });
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 	const [isApiLoaded, setIsApiLoaded] = useState(false);
-	const [settings, setSettings] = useState();
-	const notificationTimer = useRef(null);
+	const { settings, settingsReady } = useSettingsContext();
+	const { notificationDispatch } = useNotificationContext();
 
 	useEffect(() => {
 		getData();
@@ -37,15 +38,6 @@ const KudosCampaigns = () => {
 			updateQueryParameter('campaign', currentCampaign.id);
 		}
 	}, [currentCampaign]);
-
-	useEffect(() => {
-		if (notification.shown) {
-			notificationTimer.current = setTimeout(() => {
-				hideNotification();
-			}, 2000);
-			return () => clearTimeout(notificationTimer.current);
-		}
-	});
 
 	const clearCurrentCampaign = () => {
 		removeQueryParameters(['campaign', 'tab']);
@@ -79,21 +71,6 @@ const KudosCampaigns = () => {
 		});
 	};
 
-	const createNotification = (message, success) => {
-		setNotification({
-			message,
-			success,
-			shown: true,
-		});
-	};
-
-	const hideNotification = () => {
-		setNotification((prev) => ({
-			...prev,
-			shown: false,
-		}));
-	};
-
 	const updateCampaign = (id, data = {}) => {
 		setIsApiBusy(true);
 		apiFetch({
@@ -106,15 +83,26 @@ const KudosCampaigns = () => {
 		})
 			.then((response) => {
 				setCurrentCampaign(response);
-				createNotification(
-					data.status === 'draft'
-						? __('Campaign created', 'kudos-donations')
-						: __('Campaign updated', 'kudos-donations')
-				);
+				notificationDispatch({
+					type: ADD,
+					payload: {
+						content:
+							data.status === 'draft'
+								? __('Campaign created', 'kudos-donations')
+								: __('Campaign updated', 'kudos-donations'),
+						success: true,
+					},
+				});
 				return getCampaigns();
 			})
 			.catch((error) => {
-				createNotification(error.message, false);
+				notificationDispatch({
+					type: ADD,
+					payload: {
+						content: error.message,
+						success: false,
+					},
+				});
 			})
 			.finally(() => {
 				setIsApiBusy(false);
@@ -126,7 +114,13 @@ const KudosCampaigns = () => {
 			path: `wp/v2/kudos_campaign/${id}?force=true`,
 			method: 'DELETE',
 		}).then(() => {
-			createNotification(__('Campaign deleted', 'kudos-donations'));
+			notificationDispatch({
+				type: ADD,
+				payload: {
+					content: __('Campaign deleted', 'kudos-donations'),
+					success: true,
+				},
+			});
 			return getCampaigns();
 		});
 	};
@@ -142,10 +136,16 @@ const KudosCampaigns = () => {
 	};
 
 	const getData = () => {
-		Promise.all([getSettings(), getCampaigns()])
+		Promise.all([settingsReady, getCampaigns()])
 			.then(() => setIsApiLoaded(true))
 			.catch((error) => {
-				createNotification(error.message, false);
+				notificationDispatch({
+					type: ADD,
+					payload: {
+						content: error.message,
+						success: false,
+					},
+				});
 			});
 	};
 
@@ -181,21 +181,8 @@ const KudosCampaigns = () => {
 			});
 	};
 
-	const getSettings = () => {
-		return api.loadPromise.then(() => {
-			const settingsModel = new api.models.Settings();
-			settingsModel.fetch().then((response) => {
-				if (response._kudos_show_intro) {
-					window.location.replace('admin.php?page=kudos-settings');
-				} else {
-					setSettings(response);
-				}
-			});
-		});
-	};
-
 	return (
-		<Render>
+		<>
 			{!isApiLoaded ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
@@ -242,7 +229,6 @@ const KudosCampaigns = () => {
 						) : (
 							<CampaignEdit
 								updateCampaign={updateCampaign}
-								createNotification={createNotification}
 								recurringAllowed={
 									settings?.[
 										'_kudos_vendor_' +
@@ -254,15 +240,9 @@ const KudosCampaigns = () => {
 							/>
 						)}
 					</div>
-					<Notification
-						shown={notification.shown}
-						message={notification.message}
-						success={notification.success}
-						onClick={hideNotification}
-					/>
 				</>
 			)}
-		</Render>
+		</>
 	);
 };
 
