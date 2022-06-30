@@ -36,7 +36,7 @@ function Message({ title, body, color, root }) {
 							<Button
 								type="button"
 								className="text-base block ml-auto"
-								ariaLabel={__('Prev', 'kudos-donations')}
+								ariaLabel={__('Close', 'kudos-donations')}
 								onClick={toggleModal}
 							>
 								<span className="mx-2">OK</span>

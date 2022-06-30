@@ -181,14 +181,14 @@ const FormRouter = forwardRef(
 										type="button"
 										className="text-base"
 										ariaLabel={__(
-											'Prev',
+											'Back',
 											'kudos-donations'
 										)}
 										onClick={handlePrev}
 									>
 										<ChevronLeftIcon className="w-5 h-5" />
 										<span className="mx-2">
-											{__('Prev', 'kudos-donations')}
+											{__('Back', 'kudos-donations')}
 										</span>
 									</Button>
 								)}
