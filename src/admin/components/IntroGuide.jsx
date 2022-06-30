@@ -1,15 +1,15 @@
-import intro from '../../../../images/guide-welcome.png';
-import mollie from '../../../../images/guide-mollie-api.png';
-import campaign from '../../../../images/guide-campaign.png';
-import button from '../../../../images/guide-button.png';
-import live from '../../../../images/guide-test-live.png';
+import intro from '../../images/guide-welcome.png';
+import mollie from '../../images/guide-mollie-api.png';
+import campaign from '../../images/guide-campaign.png';
+import button from '../../images/guide-button.png';
+import live from '../../images/guide-test-live.png';
 import { __ } from '@wordpress/i18n';
-import { Guide } from '../../Guide';
+import { Guide } from '../../common/components/Guide';
 import React from 'react';
 import { Newsletter } from './Newsletter';
-import KudosModal from '../../../../common/components/KudosModal';
+import KudosModal from '../../common/components/KudosModal';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Button, TextControl } from '../../../../common/components/controls';
+import { Button, TextControl } from '../../common/components/controls';
 import { useState } from '@wordpress/element';
 
 const IntroGuide = ({

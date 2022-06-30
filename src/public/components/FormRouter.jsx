@@ -6,12 +6,12 @@ import {
 	ChevronRightIcon,
 	LockClosedIcon,
 } from '@heroicons/react/solid';
-import Initial from './tabs/Initial';
-import PaymentFrequency from './tabs/PaymentFrequency';
-import Address from './tabs/Address';
+import InitialTab from './InitialTab';
+import FrequencyTab from './FrequencyTab';
+import AddressTab from './AddressTab';
 import { Button } from '../../common/components/controls';
-import Message from './tabs/Message';
-import Summary from './tabs/Summary';
+import MessageTab from './MessageTab';
+import SummaryTab from './SummaryTab';
 import { steps } from '../constants/form';
 import {
 	forwardRef,
@@ -87,7 +87,7 @@ const FormRouter = forwardRef(
 							{
 								{
 									1: (
-										<Initial
+										<InitialTab
 											title={campaign.initial_title}
 											description={
 												campaign.initial_description
@@ -108,7 +108,7 @@ const FormRouter = forwardRef(
 										/>
 									),
 									2: (
-										<PaymentFrequency
+										<FrequencyTab
 											title={
 												campaign.recurring_title ??
 												__(
@@ -126,7 +126,7 @@ const FormRouter = forwardRef(
 										/>
 									),
 									3: (
-										<Address
+										<AddressTab
 											required={campaign.address_required}
 											title={
 												campaign.address_title ??
@@ -142,7 +142,7 @@ const FormRouter = forwardRef(
 										/>
 									),
 									4: (
-										<Message
+										<MessageTab
 											title={
 												campaign.message_title ??
 												__('Message', 'kudos-donations')
@@ -157,7 +157,7 @@ const FormRouter = forwardRef(
 										/>
 									),
 									5: (
-										<Summary
+										<SummaryTab
 											title={
 												campaign.summary_title ??
 												__('Payment', 'kudos-donations')

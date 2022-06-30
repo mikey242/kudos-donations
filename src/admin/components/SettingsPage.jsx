@@ -7,23 +7,20 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Header } from '../Header';
-import { IntroGuide } from './guide/IntroGuide';
-import MollieTab from './tabs/MollieTab';
-import { EmailTab } from './tabs/EmailTab';
-import { HelpTab } from './tabs/HelpTab';
-import { Button } from '../../../common/components/controls';
-import TabPanel from '../TabPanel';
-import { Spinner } from '../../../common/components/Spinner';
+import { Header } from './Header';
+import { IntroGuide } from './IntroGuide';
+import MollieTab from './MollieTab';
+import { EmailTab } from './EmailTab';
+import { HelpTab } from './HelpTab';
+import { Button } from '../../common/components/controls';
+import TabPanel from './TabPanel';
+import { Spinner } from '../../common/components/Spinner';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useSettingsContext } from '../../../common/contexts/SettingsContext';
-import {
-	ADD,
-	useNotificationContext,
-} from '../../../common/contexts/NotificationContext';
+import { useSettingsContext } from '../contexts/SettingsContext';
+import { ADD, useNotificationContext } from '../contexts/NotificationContext';
 
-const KudosSettings = () => {
+const SettingsPage = () => {
 	const [showIntro, setShowIntro] = useState(false);
 	const {
 		updateSetting,
@@ -167,4 +164,4 @@ const KudosSettings = () => {
 	);
 };
 
-export default KudosSettings;
+export default SettingsPage;

@@ -1,5 +1,5 @@
 import React from 'react';
-import Panel from '../Panel';
+import Panel from '../../common/components/Panel';
 import { __ } from '@wordpress/i18n';
 import {
 	DuplicateIcon,

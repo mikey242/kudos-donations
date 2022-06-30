@@ -1,5 +1,5 @@
 import React from 'react';
-import Panel from './Panel';
+import Panel from '../../common/components/Panel';
 import { Transition } from '@headlessui/react';
 import {
 	CheckCircleIcon,

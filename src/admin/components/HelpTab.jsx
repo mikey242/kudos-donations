@@ -1,15 +1,15 @@
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import logo from '../../../../images/full-logo-green.svg';
+import logo from '../../images/full-logo-green.svg';
 import React from 'react';
-import { Button, ToggleControl } from '../../../../common/components/controls';
+import { Button, ToggleControl } from '../../common/components/controls';
 import {
 	InformationCircleIcon,
 	PencilAltIcon,
 	QuestionMarkCircleIcon,
 	SupportIcon,
 } from '@heroicons/react/outline';
-import Divider from '../../Divider';
+import Divider from '../../common/components/Divider';
 import { HeartIcon } from '@heroicons/react/solid';
 
 const HelpTab = ({ setShowIntro }) => {

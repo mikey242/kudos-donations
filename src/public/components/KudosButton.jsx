@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '../../common/components/controls';
 import classNames from 'classnames';
 
-const KudosButton = ({ children, color, className, onClick = null }) => {
+const KudosButton = ({ children, className, onClick = null }) => {
 	return (
 		<div
 			id="kudos-button"
@@ -11,8 +11,7 @@ const KudosButton = ({ children, color, className, onClick = null }) => {
 		>
 			<Button
 				onClick={() => onClick && onClick()}
-				className={classNames(!color && 'bg-primary ', 'logo-animate')}
-				color={color}
+				className="bg-primary logo-animate"
 			>
 				<div className="mr-3 flex text-white">
 					<KudosLogo

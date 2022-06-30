@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 import React from 'react';
-import FormTab from './FormTab';
+import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
-import { SelectControl } from '../../../common/components/controls';
+import { SelectControl } from '../../common/components/controls';
 
-function PaymentFrequency(props) {
+function FrequencyTab(props) {
 	const { title, description, buttons } = props;
 
 	const { setFocus, getValues } = useFormContext();
@@ -23,7 +23,7 @@ function PaymentFrequency(props) {
 	};
 
 	return (
-		<FormTab title={title} description={description} buttons={buttons}>
+		<BaseTab title={title} description={description} buttons={buttons}>
 			<SelectControl
 				name="recurring_frequency"
 				validation={{
@@ -80,8 +80,8 @@ function PaymentFrequency(props) {
 					{ value: '10', label: __('10 years', 'kudos-donations') },
 				]}
 			/>
-		</FormTab>
+		</BaseTab>
 	);
 }
 
-export default PaymentFrequency;
+export default FrequencyTab;

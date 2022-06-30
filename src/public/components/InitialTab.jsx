@@ -1,16 +1,16 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import FormTab from './FormTab';
+import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import {
 	RadioGroupControl,
 	TextControl,
 	ToggleControl,
-} from '../../../common/components/controls';
-import { ProgressBar } from '../ProgressBar';
+} from '../../common/components/controls';
+import { ProgressBar } from './ProgressBar';
 
-const Initial = (props) => {
+const InitialTab = (props) => {
 	const {
 		title,
 		description,
@@ -61,7 +61,7 @@ const Initial = (props) => {
 	}, [watchOpen]);
 
 	return (
-		<FormTab title={title} description={description} buttons={buttons}>
+		<BaseTab title={title} description={description} buttons={buttons}>
 			{showGoal && goal > 0 && (
 				<ProgressBar goal={goal} total={total} extra={watchValue} />
 			)}
@@ -132,8 +132,8 @@ const Initial = (props) => {
 					/>
 				</div>
 			)}
-		</FormTab>
+		</BaseTab>
 	);
 };
 
-export default Initial;
+export default InitialTab;

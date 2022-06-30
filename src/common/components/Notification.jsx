@@ -1,6 +1,6 @@
 import React from 'react';
 import { Transition } from '@headlessui/react';
-import Panel from '../../admin/components/Panel';
+import Panel from './Panel';
 import {
 	CheckCircleIcon,
 	ExclamationCircleIcon,
@@ -8,7 +8,7 @@ import {
 import {
 	REMOVE,
 	useNotificationContext,
-} from '../contexts/NotificationContext';
+} from '../../admin/contexts/NotificationContext';
 
 export default function Notification({ notifications }) {
 	const { notificationDispatch } = useNotificationContext();

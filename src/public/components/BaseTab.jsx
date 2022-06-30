@@ -1,6 +1,6 @@
 import React from 'react';
 
-function FormTab(props) {
+function BaseTab(props) {
 	const { title, description, children } = props;
 
 	return (
@@ -18,4 +18,4 @@ function FormTab(props) {
 	);
 }
 
-export default FormTab;
+export default BaseTab;

@@ -6,15 +6,12 @@ import {
 	Button,
 	RadioGroupControl,
 	TextControl,
-} from '../../../common/components/controls';
-import Divider from '../Divider';
+} from '../../common/components/controls';
+import Divider from '../../common/components/Divider';
 import { ClipboardCopyIcon } from '@heroicons/react/outline';
-import KudosModal from '../../../common/components/KudosModal';
+import KudosModal from '../../common/components/KudosModal';
 import { useFormContext } from 'react-hook-form';
-import {
-	ADD,
-	useNotificationContext,
-} from '../../../common/contexts/NotificationContext';
+import { ADD, useNotificationContext } from '../contexts/NotificationContext';
 
 function GenerateShortcode({ campaign }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,7 +26,6 @@ function GenerateShortcode({ campaign }) {
 	const watchButtonLabel = watch('shortcode.buttonLabel');
 
 	const onCopy = () => {
-		console.log('called');
 		setIsModalOpen(false);
 		notificationDispatch({
 			type: ADD,

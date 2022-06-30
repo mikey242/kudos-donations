@@ -6,13 +6,13 @@ import {
 	useReducer,
 	useRef,
 } from '@wordpress/element';
-import Notification from '../components/Notification';
+import Notification from '../../common/components/Notification';
 
 export const NotificationContext = createContext(null);
 
 const initialState = [];
-const init = (initialState) => {
-	return initialState;
+const init = (initial) => {
+	return initial;
 };
 
 export const ADD = 'ADD';

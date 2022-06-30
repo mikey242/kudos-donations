@@ -1,15 +1,12 @@
 import { useFormContext } from 'react-hook-form';
-import FormTab from './FormTab';
+import BaseTab from './BaseTab';
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
 import countryList from 'react-select-country-list';
-import {
-	SelectControl,
-	TextControl,
-} from '../../../common/components/controls';
+import { SelectControl, TextControl } from '../../common/components/controls';
 
-function Address(props) {
+function AddressTab(props) {
 	const { title, description, buttons, required } = props;
 	const countryOptions = useMemo(() => countryList().getData(), []);
 	const { setFocus } = useFormContext();
@@ -19,7 +16,7 @@ function Address(props) {
 	}, [setFocus]);
 
 	return (
-		<FormTab title={title} description={description} buttons={buttons}>
+		<BaseTab title={title} description={description} buttons={buttons}>
 			<TextControl
 				name="business_name"
 				placeholder={__('Business name', 'kudos-donations')}
@@ -66,8 +63,8 @@ function Address(props) {
 				}}
 				error={__('Country required', 'kudos-donations')}
 			/>
-		</FormTab>
+		</BaseTab>
 	);
 }
 
-export default Address;
+export default AddressTab;

@@ -1,6 +1,6 @@
 import { Tab } from '@headlessui/react';
 import React from 'react';
-import Panel from './Panel';
+import Panel from '../../common/components/Panel';
 import classNames from 'classnames';
 import { Fragment, useEffect, useState } from '@wordpress/element';
 import { getQueryVar, updateQueryParameter } from '../../common/helpers/util';

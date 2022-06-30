@@ -6,9 +6,9 @@ import {
 	RadioControl,
 	TextControl,
 	ToggleControl,
-} from '../../../../common/components/controls';
+} from '../../common/components/controls';
 import React from 'react';
-import Divider from '../../Divider';
+import Divider from '../../common/components/Divider';
 import { useFormContext } from 'react-hook-form';
 import apiFetch from '@wordpress/api-fetch';
 

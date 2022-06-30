@@ -10,11 +10,11 @@ import {
 	TextAreaControl,
 	TextControl,
 	ToggleControl,
-} from '../../../common/components/controls';
-import TabPanel from '../TabPanel';
-import Divider from '../Divider';
+} from '../../common/components/controls';
+import TabPanel from './TabPanel';
+import Divider from '../../common/components/Divider';
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
-import { isValidUrl } from '../../../common/helpers/util';
+import { isValidUrl } from '../../common/helpers/util';
 import GenerateShortcode from './GenerateShortcode';
 
 function CampaignEdit({

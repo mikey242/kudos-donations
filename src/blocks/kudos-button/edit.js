@@ -10,7 +10,7 @@ import { PanelBody, RadioControl, SelectControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React, { Fragment } from 'react';
 import { KudosButton } from '../../public/components/KudosButton';
-import { fetchCampaigns } from '../../common/helpers/fetch';
+// eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 
 const ButtonEdit = (props) => {
@@ -67,7 +67,10 @@ const ButtonEdit = (props) => {
 	const onChangeCampaign = (newValue) => {
 		if (newValue) {
 			setAttributes({ campaign_id: newValue });
-			fetchCampaigns(newValue).then(setCurrentCampaign);
+			apiFetch({
+				path: `wp/v2/kudos_campaign/${newValue ?? ''}`,
+				method: 'GET',
+			}).then(setCurrentCampaign);
 		}
 	};
 
@@ -79,6 +82,9 @@ const ButtonEdit = (props) => {
 		<div>
 			{campaigns && (
 				<Fragment>
+					<style>{`:root {--kudos-theme-primary: ${
+						currentCampaign?.meta.theme_color ?? '#ff9f1c'
+					}`}</style>
 					<InspectorControls>
 						<PanelBody
 							title={__('Campaign', 'kudos-donations')}
@@ -142,7 +148,6 @@ const ButtonEdit = (props) => {
 					</BlockControls>
 
 					<KudosButton
-						color={currentCampaign?.meta.theme_color ?? '#ff9f1c'}
 						className={
 							(className ?? '') + ' has-text-align-' + alignment
 						}

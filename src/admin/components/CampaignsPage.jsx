@@ -1,27 +1,24 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
-import { Header } from '../Header';
+import { Header } from './Header';
 import { PlusIcon } from '@heroicons/react/outline';
 import React from 'react';
 import CampaignTable from './CampaignTable';
 import CampaignEdit from './CampaignEdit';
 import { __ } from '@wordpress/i18n';
-import { Button } from '../../../common/components/controls';
+import { Button } from '../../common/components/controls';
 import {
 	getQueryVar,
 	removeQueryParameters,
 	updateQueryParameter,
-} from '../../../common/helpers/util';
+} from '../../common/helpers/util';
 import EmptyCampaigns from './EmptyCampaigns';
-import { Spinner } from '../../../common/components/Spinner';
-import { useSettingsContext } from '../../../common/contexts/SettingsContext';
-import {
-	ADD,
-	useNotificationContext,
-} from '../../../common/contexts/NotificationContext';
+import { Spinner } from '../../common/components/Spinner';
+import { useSettingsContext } from '../contexts/SettingsContext';
+import { ADD, useNotificationContext } from '../contexts/NotificationContext';
 
-const KudosCampaigns = () => {
+const CampaignsPage = () => {
 	const [campaigns, setCampaigns] = useState(null);
 	const [isApiBusy, setIsApiBusy] = useState(false);
 	const [currentCampaign, setCurrentCampaign] = useState(null);
@@ -246,4 +243,4 @@ const KudosCampaigns = () => {
 	);
 };
 
-export { KudosCampaigns };
+export { CampaignsPage };

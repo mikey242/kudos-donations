@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import FormTab from './FormTab';
+import BaseTab from './BaseTab';
 import { useFormContext } from 'react-hook-form';
-import { getFrequencyName } from '../../../common/helpers/form';
-import { CheckboxControl } from '../../../common/components/controls';
+import { getFrequencyName } from '../../common/helpers/form';
+import { CheckboxControl } from '../../common/components/controls';
 
-function Summary(props) {
+function SummaryTab(props) {
 	const { title, description, privacyLink, termsLink } = props;
 
 	const { getValues } = useFormContext();
@@ -28,7 +28,7 @@ function Summary(props) {
 	};
 
 	return (
-		<FormTab title={title} description={description}>
+		<BaseTab title={title} description={description}>
 			<div className="kudos_summary text-left block bg-gray-100 p-2 border-0 border-solid border-t-2 border-primary">
 				<p className="my-1">
 					<strong>{__('Name', 'kudos-donations')}: </strong>
@@ -73,8 +73,8 @@ function Summary(props) {
 					}}
 				/>
 			)}
-		</FormTab>
+		</BaseTab>
 	);
 }
 
-export default Summary;
+export default SummaryTab;

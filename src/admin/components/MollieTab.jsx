@@ -3,10 +3,10 @@ import React from 'react';
 import {
 	RadioGroupControl,
 	TextControl,
-} from '../../../../common/components/controls';
+} from '../../common/components/controls';
 import { Fragment, useState } from '@wordpress/element';
 import { RefreshIcon } from '@heroicons/react/solid';
-import Divider from '../../Divider';
+import Divider from '../../common/components/Divider';
 import classNames from 'classnames';
 
 const MollieTab = ({ checkApiKey }) => {
