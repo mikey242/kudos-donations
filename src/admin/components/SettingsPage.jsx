@@ -18,7 +18,7 @@ import { Spinner } from '../../common/components/Spinner';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { useSettingsContext } from '../contexts/SettingsContext';
-import { ADD, useNotificationContext } from '../contexts/NotificationContext';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const SettingsPage = () => {
 	const [showIntro, setShowIntro] = useState(false);
@@ -29,7 +29,7 @@ const SettingsPage = () => {
 		settingsSaving,
 		settingsReady,
 	} = useSettingsContext();
-	const { notificationDispatch } = useNotificationContext();
+	const { createNotification } = useNotificationContext();
 	const methods = useForm({
 		defaultValues: settings,
 	});
@@ -43,26 +43,14 @@ const SettingsPage = () => {
 
 	const save = (data) => {
 		updateSettings(data).then(async () => {
-			notificationDispatch({
-				type: ADD,
-				payload: {
-					content: __('Settings updated', 'kudos-donations'),
-					success: true,
-				},
-			});
+			createNotification(__('Settings updated', 'kudos-donations'), true);
 			if (`_kudos_vendor_${settings._kudos_vendor}` in dirtyFields) {
 				await checkApiKey({
 					keys: methods.getValues(
 						`_kudos_vendor_${settings._kudos_vendor}`
 					),
 				}).then((res) =>
-					notificationDispatch({
-						type: ADD,
-						payload: {
-							content: res.data.message,
-							success: res?.success,
-						},
-					})
+					createNotification(res.data.message, res?.success)
 				);
 			}
 		});
@@ -89,7 +77,7 @@ const SettingsPage = () => {
 		{
 			name: 'email',
 			title: __('Email', 'kudos-donations'),
-			content: <EmailTab createNotification={notificationDispatch} />,
+			content: <EmailTab />,
 		},
 		{
 			name: 'help',

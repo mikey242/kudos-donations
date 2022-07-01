@@ -11,9 +11,11 @@ import React from 'react';
 import Divider from '../../common/components/Divider';
 import { useFormContext } from 'react-hook-form';
 import apiFetch from '@wordpress/api-fetch';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
-const EmailTab = ({ createNotification }) => {
+const EmailTab = () => {
 	const { watch, getValues } = useFormContext();
+	const { createNotification } = useNotificationContext();
 	const watchCustom = watch('_kudos_smtp_enable');
 
 	const sendTestEmail = () => {

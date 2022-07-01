@@ -3,70 +3,47 @@ import {
 	createContext,
 	useContext,
 	useEffect,
-	useReducer,
-	useRef,
+	useState,
 } from '@wordpress/element';
 import Notification from '../../common/components/Notification';
 
 export const NotificationContext = createContext(null);
 
-const initialState = [];
-const init = (initial) => {
-	return initial;
-};
-
-export const ADD = 'ADD';
-export const REMOVE = 'REMOVE';
-export const REMOVE_ALL = 'REMOVE_ALL';
-
-export const notificationReducer = (state, action) => {
-	switch (action.type) {
-		case ADD:
-			return [
-				...state,
-				{
-					id: +new Date(),
-					content: action.payload.content,
-					success: action.payload.success,
-				},
-			];
-		case REMOVE:
-			return state.filter((t) => t.id !== action.payload.id);
-		case REMOVE_ALL:
-			return initialState;
-		default:
-			return state;
-	}
-};
-
 export const NotificationProvider = ({ children }) => {
-	const notificationTimer = useRef(null);
-	const [notifications, notificationDispatch] = useReducer(
-		notificationReducer,
-		initialState,
-		init
-	);
-	const notificationData = { notifications, notificationDispatch };
+	const [list, setList] = useState([]);
+
+	const createNotification = (text, success = true) => {
+		const id = +new Date();
+		const timerId = setTimeout(deleteNotification, 2000, id);
+		setList((prev) =>
+			prev.concat({
+				id,
+				timerId,
+				success,
+				text,
+			})
+		);
+	};
+
+	const deleteNotification = (id) => {
+		setList((prev) => prev.filter((el) => el.id !== id));
+	};
+
+	const clearNotifications = () => {
+		setList([]);
+	};
 
 	useEffect(() => {
-		if (notifications.length) {
-			notificationTimer.current = setTimeout(() => {
-				return notificationDispatch({
-					type: REMOVE,
-					payload: {
-						id: notifications?.[0].id,
-					},
-				});
-			}, 2000);
-			return () => clearTimeout(notificationTimer.current);
-		}
-	}, [notifications]);
+		return () => list.forEach(({ timerId }) => clearTimeout(timerId));
+	}, []);
+
+	const data = { createNotification, deleteNotification, clearNotifications };
 
 	return (
-		<NotificationContext.Provider value={notificationData}>
+		<NotificationContext.Provider value={data}>
 			<>
 				{children}
-				<Notification notifications={notifications} />
+				<Notification notifications={list} />
 			</>
 		</NotificationContext.Provider>
 	);

@@ -11,11 +11,11 @@ import Divider from '../../common/components/Divider';
 import { ClipboardCopyIcon } from '@heroicons/react/outline';
 import KudosModal from '../../common/components/KudosModal';
 import { useFormContext } from 'react-hook-form';
-import { ADD, useNotificationContext } from '../contexts/NotificationContext';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 function GenerateShortcode({ campaign }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const { notificationDispatch } = useNotificationContext();
+	const { createNotification } = useNotificationContext();
 	const toggleModal = () => setIsModalOpen((prev) => !prev);
 
 	const methods = useFormContext();
@@ -27,13 +27,7 @@ function GenerateShortcode({ campaign }) {
 
 	const onCopy = () => {
 		setIsModalOpen(false);
-		notificationDispatch({
-			type: ADD,
-			payload: {
-				content: 'Shortcode copied',
-				success: true,
-			},
-		});
+		createNotification(__('Shortcode copied', 'kudos-donations'), true);
 	};
 
 	const copyRef = useCopyToClipboard(

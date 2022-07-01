@@ -16,7 +16,7 @@ import {
 import EmptyCampaigns from './EmptyCampaigns';
 import { Spinner } from '../../common/components/Spinner';
 import { useSettingsContext } from '../contexts/SettingsContext';
-import { ADD, useNotificationContext } from '../contexts/NotificationContext';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const CampaignsPage = () => {
 	const [campaigns, setCampaigns] = useState(null);
@@ -24,7 +24,7 @@ const CampaignsPage = () => {
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 	const [isApiLoaded, setIsApiLoaded] = useState(false);
 	const { settings, settingsReady } = useSettingsContext();
-	const { notificationDispatch } = useNotificationContext();
+	const { createNotification } = useNotificationContext();
 
 	useEffect(() => {
 		getData();
@@ -80,26 +80,16 @@ const CampaignsPage = () => {
 		})
 			.then((response) => {
 				setCurrentCampaign(response);
-				notificationDispatch({
-					type: ADD,
-					payload: {
-						content:
-							data.status === 'draft'
-								? __('Campaign created', 'kudos-donations')
-								: __('Campaign updated', 'kudos-donations'),
-						success: true,
-					},
-				});
+				createNotification(
+					data.status === 'draft'
+						? __('Campaign created', 'kudos-donations')
+						: __('Campaign updated', 'kudos-donations'),
+					true
+				);
 				return getCampaigns();
 			})
 			.catch((error) => {
-				notificationDispatch({
-					type: ADD,
-					payload: {
-						content: error.message,
-						success: false,
-					},
-				});
+				createNotification(error.message, false);
 			})
 			.finally(() => {
 				setIsApiBusy(false);
@@ -111,13 +101,7 @@ const CampaignsPage = () => {
 			path: `wp/v2/kudos_campaign/${id}?force=true`,
 			method: 'DELETE',
 		}).then(() => {
-			notificationDispatch({
-				type: ADD,
-				payload: {
-					content: __('Campaign deleted', 'kudos-donations'),
-					success: true,
-				},
-			});
+			createNotification(__('Campaign deleted', 'kudos-donations'), true);
 			return getCampaigns();
 		});
 	};
@@ -136,13 +120,7 @@ const CampaignsPage = () => {
 		Promise.all([settingsReady, getCampaigns()])
 			.then(() => setIsApiLoaded(true))
 			.catch((error) => {
-				notificationDispatch({
-					type: ADD,
-					payload: {
-						content: error.message,
-						success: false,
-					},
-				});
+				createNotification(error.message, false);
 			});
 	};
 
