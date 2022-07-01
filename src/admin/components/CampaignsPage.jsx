@@ -117,7 +117,7 @@ const CampaignsPage = () => {
 	};
 
 	const getData = () => {
-		Promise.all([settingsReady, getCampaigns()])
+		Promise.all([getCampaigns()])
 			.then(() => setIsApiLoaded(true))
 			.catch((error) => {
 				createNotification(error.message, false);
