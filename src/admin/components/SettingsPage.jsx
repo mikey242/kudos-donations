@@ -16,7 +16,6 @@ import { Button } from '../../common/components/controls';
 import TabPanel from './TabPanel';
 import { Spinner } from '../../common/components/Spinner';
 // eslint-disable-next-line import/default
-import apiFetch from '@wordpress/api-fetch';
 import { useSettingsContext } from '../contexts/SettingsContext';
 import { useNotificationContext } from '../contexts/NotificationContext';
 
@@ -25,6 +24,7 @@ const SettingsPage = () => {
 	const {
 		updateSetting,
 		updateSettings,
+		checkApiKey,
 		settings,
 		settingsSaving,
 		settingsReady,
@@ -43,7 +43,6 @@ const SettingsPage = () => {
 
 	const save = (data) => {
 		updateSettings(data).then(async () => {
-			createNotification(__('Settings updated', 'kudos-donations'), true);
 			if (`_kudos_vendor_${settings._kudos_vendor}` in dirtyFields) {
 				await checkApiKey({
 					keys: methods.getValues(
@@ -55,17 +54,6 @@ const SettingsPage = () => {
 			}
 		});
 	};
-
-	async function checkApiKey(keys) {
-		return apiFetch({
-			path: 'kudos/v1/payment/test',
-			method: 'POST',
-			data: keys,
-		}).then((response) => {
-			updateSetting('_kudos_vendor_mollie.connected', response?.success);
-			return response;
-		});
-	}
 
 	// Define tabs and panels
 	const tabs = [

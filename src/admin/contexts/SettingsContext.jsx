@@ -6,6 +6,10 @@ import {
 	useEffect,
 	useState,
 } from '@wordpress/element';
+// eslint-disable-next-line import/default
+import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
+import { useNotificationContext } from './NotificationContext';
 
 export const SettingsContext = createContext(null);
 
@@ -13,6 +17,7 @@ export default function SettingsProvider({ children }) {
 	const [settingsReady, setSettingsReady] = useState(false);
 	const [settingsSaving, setSettingsSaving] = useState(false);
 	const [settings, setSettings] = useState();
+	const { createNotification } = useNotificationContext();
 
 	useEffect(() => {
 		getSettings();
@@ -53,6 +58,7 @@ export default function SettingsProvider({ children }) {
 
 		// Save to database
 		return model.save().then(async (response) => {
+			createNotification(__('Settings updated', 'kudos-donations'), true);
 			setSettingsSaving(false);
 			setSettings(response);
 			return response;
@@ -76,11 +82,23 @@ export default function SettingsProvider({ children }) {
 		});
 	}
 
+	async function checkApiKey(keys) {
+		return apiFetch({
+			path: 'kudos/v1/payment/test',
+			method: 'POST',
+			data: keys,
+		}).then((response) => {
+			updateSetting('_kudos_vendor_mollie.connected', response?.success);
+			return response;
+		});
+	}
+
 	return (
 		<SettingsContext.Provider
 			value={{
 				settings,
 				setSettings,
+				checkApiKey,
 				updateSetting,
 				updateSettings,
 				settingsReady,
