@@ -105,6 +105,14 @@ const HelpTab = ({ setShowIntro }) => {
 					'kudos-donations'
 				)}
 			/>
+			<ToggleControl
+				name="_kudos_debug_mode"
+				label={__('Debug mode', 'kudos-donations')}
+				help={__(
+					'Enables an actions tab under tools and adds more detail to logs.',
+					'kudos-donations'
+				)}
+			/>
 		</Fragment>
 	);
 };
