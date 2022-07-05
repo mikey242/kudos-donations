@@ -90,7 +90,7 @@ class Front
             'kudos-donations-public',
             'kudos',
             [
-                'stylesheets' => [Assets::get_asset_url('/public/kudos-public.css')],
+                'stylesheets' => [Assets::get_style('/public/kudos-public.css')],
             ]
         );
 
@@ -98,7 +98,7 @@ class Front
 
         wp_register_style(
             'kudos-donations-fonts',
-            Assets::get_asset_url('/public/kudos-fonts.css'),
+            Assets::get_style('/public/kudos-fonts.css'),
             [],
             $this->version
         );

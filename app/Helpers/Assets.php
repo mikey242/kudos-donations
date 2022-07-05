@@ -8,13 +8,17 @@ class Assets
      * Uses manifest to get asset URL.
      *
      * @param string $asset
-     * @param string $url
+     * @param bool $version
      *
      * @return string
      */
-    public static function get_asset_url(string $asset, string $url = KUDOS_PLUGIN_URL): string
+    public static function get_style(string $asset, bool $version = true): string
     {
-        return $url . 'build/' . ltrim($asset, '/');
+        $suffix = 'build/' . ltrim($asset, '/');
+        $url    = KUDOS_PLUGIN_URL . $suffix;
+        $path   = KUDOS_PLUGIN_DIR . $suffix;
+
+        return $url . ($version ? '?ver=' . filemtime($path) : '');
     }
 
     /**
@@ -39,7 +43,7 @@ class Assets
             $out['url']     = $base_url . 'build/' . ltrim($asset, '/');
             $asset_manifest = substr_replace($asset_path, '.asset.php', -strlen('.js'));
             if (file_exists($asset_manifest)) {
-                $manifest_content    = require($asset_manifest);
+                $manifest_content    = include($asset_manifest);
                 $out['dependencies'] = $manifest_content['dependencies'] ?? [];
                 $out['version']      = $manifest_content['version'] ?? KUDOS_VERSION;
             }

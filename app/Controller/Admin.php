@@ -264,7 +264,7 @@ class Admin
     {
         wp_register_style(
             'kudos-donations-public',
-            Assets::get_asset_url('/public/kudos-public.css'),
+            Assets::get_style('/public/kudos-public.css'),
             ['kudos-donations-fonts'],
             $this->version
         );
@@ -287,7 +287,7 @@ class Admin
         // Enqueue the styles
         wp_enqueue_style(
             'kudos-donations-settings',
-            Assets::get_asset_url('/admin/kudos-admin-settings.css'),
+            Assets::get_style('/admin/kudos-admin-settings.css'),
             [],
             $this->version
         );
@@ -307,7 +307,7 @@ class Admin
             'kudos',
             [
                 'version'     => $this->version,
-                'stylesheets' => [Assets::get_asset_url('/admin/kudos-admin-settings.css')],
+                'stylesheets' => [Assets::get_style('/admin/kudos-admin-settings.css')],
             ]
         );
         wp_set_script_translations('kudos-donations-settings', 'kudos-donations');
@@ -323,7 +323,7 @@ class Admin
         // Enqueue the styles
         wp_enqueue_style(
             'kudos-donations-settings',
-            Assets::get_asset_url('/admin/kudos-admin-settings.css'),
+            Assets::get_style('/admin/kudos-admin-settings.css'),
             [],
             $this->version
         );
@@ -344,9 +344,7 @@ class Admin
             'kudos',
             [
                 'version'     => $this->version,
-                'stylesheets' => [
-                    Assets::get_asset_url('/admin/kudos-admin-settings.css'),
-                ],
+                'stylesheets' => [Assets::get_style('/admin/kudos-admin-settings.css') . "?ver=$this->version"],
             ]
         );
         wp_set_script_translations(

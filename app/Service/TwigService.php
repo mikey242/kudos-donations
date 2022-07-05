@@ -137,7 +137,7 @@ class TwigService
         /**
          * Add get_asset function.
          */
-        $get_asset = new TwigFunction('get_asset', [Assets::class, 'get_asset_url']);
+        $get_asset = new TwigFunction('get_asset', [Assets::class, 'get_style']);
         $this->twig->addFunction($get_asset);
 
         /**
