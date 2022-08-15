@@ -175,7 +175,7 @@ function CampaignEdit({
 					/>
 					<TextAreaControl
 						name="meta.return_message_text"
-						label={__('Message title', 'kudos-donations')}
+						label={__('Message text', 'kudos-donations')}
 					/>
 				</Fragment>
 			),
