@@ -1,7 +1,5 @@
 import { useEffect, useState } from '@wordpress/element';
 import {
-	AlignmentToolbar,
-	BlockControls,
 	InspectorControls,
 	RichText,
 	useBlockProps,
@@ -20,7 +18,7 @@ const ButtonEdit = (props) => {
 	const {
 		className,
 		// eslint-disable-next-line camelcase
-		attributes: { button_label, campaign_id, type, alignment },
+		attributes: { button_label, campaign_id, type },
 		setAttributes,
 	} = props;
 
@@ -56,12 +54,6 @@ const ButtonEdit = (props) => {
 
 	const onChangeButtonLabel = (newValue) => {
 		setAttributes({ button_label: newValue });
-	};
-
-	const onChangeAlignment = (newValue) => {
-		setAttributes({
-			alignment: newValue === undefined ? 'none' : newValue,
-		});
 	};
 
 	const onChangeCampaign = (newValue) => {
@@ -140,18 +132,7 @@ const ButtonEdit = (props) => {
 						</PanelBody>
 					</InspectorControls>
 
-					<BlockControls>
-						<AlignmentToolbar
-							value={alignment}
-							onChange={onChangeAlignment}
-						/>
-					</BlockControls>
-
-					<KudosButton
-						className={
-							(className ?? '') + ' has-text-align-' + alignment
-						}
-					>
+					<KudosButton className={className ?? ''}>
 						<RichText
 							allowedFormats={[]} // Disable all formatting
 							onChange={onChangeButtonLabel}
