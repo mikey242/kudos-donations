@@ -40,7 +40,7 @@ class MailerService
      */
     public function __construct(TwigService $twig, MapperService $mapper, LoggerService $logger)
     {
-        $from_name    = Settings::get_setting('from_email_name') ?? get_bloginfo('name');
+        $from_name    = Settings::get_setting('from_email_name');
         $from_address = Settings::get_setting('smtp_from');
         $this->from   = "From: $from_name " . ' <' . $from_address . '>';
         $this->twig   = $twig;
@@ -69,18 +69,20 @@ class MailerService
         );
 
         // Enable HTML email support to header.
-        $phpmailer->isHTML(true);
+        $phpmailer->isHTML();
 
         // Add custom config if enabled.
         if (Settings::get_setting('smtp_enable')) {
-            $phpmailer->isHTML(true);
+            $phpmailer->isSMTP();
             $phpmailer->Host        = Settings::get_setting('smtp_host');
             $phpmailer->SMTPAutoTLS = Settings::get_setting('smtp_autotls');
             $phpmailer->SMTPAuth    = true;
-            $phpmailer->SMTPSecure  = Settings::get_setting('smtp_encryption');
-            $phpmailer->Username    = Settings::get_setting('smtp_username');
-            $phpmailer->Password    = Settings::get_setting('smtp_password');
-            $phpmailer->Port        = Settings::get_setting('smtp_port');
+            if ('none' !== Settings::get_setting('smtp_encryption')) {
+                $phpmailer->SMTPSecure = Settings::get_setting('smtp_encryption');
+            }
+            $phpmailer->Username = Settings::get_setting('smtp_username');
+            $phpmailer->Password = Settings::get_setting('smtp_password');
+            $phpmailer->Port     = Settings::get_setting('smtp_port');
         }
     }
 
