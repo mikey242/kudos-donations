@@ -713,6 +713,12 @@ class Admin
                     'show_in_rest'      => true,
                     'sanitize_callback' => 'sanitize_email',
                 ],
+	            'from_email_name' => [
+					'type'  => 'string',
+                    'show_in_rest'      => true,
+                    'default'           => null,
+                    'sanitize_callback' => 'sanitize_text_field',
+	            ],
                 'smtp_enable'            => [
                     'type'              => 'boolean',
                     'show_in_rest'      => true,

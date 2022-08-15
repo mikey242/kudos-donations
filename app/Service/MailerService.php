@@ -40,7 +40,7 @@ class MailerService
      */
     public function __construct(TwigService $twig, MapperService $mapper, LoggerService $logger)
     {
-        $from_name    = apply_filters('kudos_email_from_name', __('Kudos Donations', 'kudos-donations'));
+        $from_name    = Settings::get_setting('from_email_name') ?? get_bloginfo('name');
         $from_address = Settings::get_setting('smtp_from');
         $this->from   = "From: $from_name " . ' <' . $from_address . '>';
         $this->twig   = $twig;
