@@ -77,7 +77,7 @@ const EmailTab = () => {
 							<Divider />
 							<h2>{__('SMTP settings', 'kudos-donations')}</h2>
 							<TextControl
-								name="_kudos_smtp_host"
+								name="_kudos_custom_smtp.host"
 								label={__('Host', 'kudos-donations')}
 								help={__(
 									'The email server.',
@@ -91,7 +91,7 @@ const EmailTab = () => {
 								}}
 							/>
 							<TextControl
-								name="_kudos_smtp_port"
+								name="_kudos_custom_smtp.port"
 								label={__('Port', 'kudos-donations')}
 								type="number"
 								help={__(
@@ -107,7 +107,7 @@ const EmailTab = () => {
 							/>
 							<br />
 							<RadioControl
-								name="_kudos_smtp_encryption"
+								name="_kudos_custom_smtp.encryption"
 								label={__('Encryption', 'kudos-donations')}
 								options={[
 									{
@@ -131,12 +131,12 @@ const EmailTab = () => {
 								]}
 							/>
 							<CheckboxControl
-								name="_kudos_smtp_autotls"
+								name="_kudos_custom_smtp.autotls"
 								label={__('Auto TLS', 'kudos-donations')}
 							/>
 							<br />
 							<TextControl
-								name="_kudos_smtp_username"
+								name="_kudos_custom_smtp.username"
 								label={__('Username', 'kudos-donations')}
 								help={__(
 									'This is usually an email address.',
@@ -151,7 +151,7 @@ const EmailTab = () => {
 								}}
 							/>
 							<TextControl
-								name="_kudos_smtp_password"
+								name="_kudos_custom_smtp.password"
 								label={__('Password', 'kudos-donations')}
 								help={__(
 									'This password will be stored as plain text in the database.',
@@ -168,7 +168,7 @@ const EmailTab = () => {
 							/>
 							<br />
 							<TextControl
-								name="_kudos_smtp_from"
+								name="_kudos_custom_smtp.from_email"
 								label={__('From address', 'kudos-donations')}
 								placeholder="user@domain.com"
 								help={__(
@@ -185,7 +185,7 @@ const EmailTab = () => {
 							<br />
 							<TextControl
 								label={__('Email from name', 'kudos-donations')}
-								name="_kudos_from_email_name"
+								name="_kudos_custom_smtp.from_name"
 								validation={{
 									required: __(
 										'The field is required.',

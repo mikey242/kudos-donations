@@ -589,7 +589,7 @@ class Admin
                 case 'kudos_migrate':
                     $version = sanitize_text_field(wp_unslash($_REQUEST['migration_version']));
                     try {
-                        $this->migrator->migrate($version);
+                        $this->migrator->migrate($version, true);
                     } catch (Exception $e) {
                         new AdminNotice($e->getMessage(), 'warning');
                     }
@@ -713,55 +713,99 @@ class Admin
                     'show_in_rest'      => true,
                     'sanitize_callback' => 'sanitize_email',
                 ],
-                'from_email_name'        => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'default'           => get_bloginfo('name'),
-                    'sanitize_callback' => 'sanitize_text_field',
+                'custom_smtp'            => [
+                    'type'         => 'object',
+                    'default'      => [
+                        'from_email' => '',
+                        'from_name'  => get_bloginfo('name'),
+                        'host'       => '',
+                        'port'       => '',
+                        'encryption' => 'tls',
+                        'autotls'    => false,
+                        'username'   => '',
+                        'password'   => '',
+                    ],
+                    'show_in_rest' => [
+                        'schema' => [
+                            'type'       => 'object',
+                            'properties' => [
+                                'from_email' => [
+                                    'type' => 'string',
+                                ],
+                                'from_name'  => [
+                                    'type' => 'string',
+                                ],
+                                'host'       => [
+                                    'type' => 'string',
+                                ],
+                                'port'       => [
+                                    'type' => 'number',
+                                ],
+                                'encryption' => [
+                                    'type' => 'string',
+                                ],
+                                'autotls'    => [
+                                    'type' => 'boolean',
+                                ],
+                                'username'   => [
+                                    'type' => 'string',
+                                ],
+                                'password'   => [
+                                    'type' => 'string',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
+//                'from_email_name'        => [
+//                    'type'              => 'string',
+//                    'show_in_rest'      => true,
+//                    'default'           => get_bloginfo('name'),
+//                    'sanitize_callback' => 'sanitize_text_field',
+//                ],
                 'smtp_enable'            => [
                     'type'              => 'boolean',
                     'show_in_rest'      => true,
                     'default'           => false,
                     'sanitize_callback' => 'rest_sanitize_boolean',
                 ],
-                'smtp_host'              => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'sanitize_text_field',
-                ],
-                'smtp_encryption'        => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'default'           => 'tls',
-                    'sanitize_callback' => 'sanitize_text_field',
-                ],
-                'smtp_autotls'           => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'smtp_from'              => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'default'           => null,
-                    'sanitize_callback' => 'sanitize_email',
-                ],
-                'smtp_username'          => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'sanitize_text_field',
-                ],
-                'smtp_password'          => [
-                    'type'         => 'string',
-                    'show_in_rest' => true,
-                ],
-                'smtp_port'              => [
-                    'type'              => 'number',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'intval',
-                ],
+//                'smtp_host'              => [
+//                    'type'              => 'string',
+//                    'show_in_rest'      => true,
+//                    'sanitize_callback' => 'sanitize_text_field',
+//                ],
+//                'smtp_encryption'        => [
+//                    'type'              => 'string',
+//                    'show_in_rest'      => true,
+//                    'default'           => 'tls',
+//                    'sanitize_callback' => 'sanitize_text_field',
+//                ],
+//                'smtp_autotls'           => [
+//                    'type'              => 'boolean',
+//                    'show_in_rest'      => true,
+//                    'default'           => true,
+//                    'sanitize_callback' => 'rest_sanitize_boolean',
+//                ],
+//                'smtp_from'              => [
+//                    'type'              => 'string',
+//                    'show_in_rest'      => true,
+//                    'default'           => null,
+//                    'sanitize_callback' => 'sanitize_email',
+//                ],
+//                'smtp_username'          => [
+//                    'type'              => 'string',
+//                    'show_in_rest'      => true,
+//                    'sanitize_callback' => 'sanitize_text_field',
+//                ],
+//                'smtp_password'          => [
+//                    'type'         => 'string',
+//                    'show_in_rest' => true,
+//                ],
+//                'smtp_port'              => [
+//                    'type'              => 'number',
+//                    'show_in_rest'      => true,
+//                    'sanitize_callback' => 'intval',
+//                ],
                 'spam_protection'        => [
                     'type'              => 'boolean',
                     'show_in_rest'      => true,
