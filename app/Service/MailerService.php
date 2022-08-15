@@ -34,18 +34,32 @@ class MailerService
      * @var \Kudos\Service\LoggerService
      */
     private $logger;
+    /**
+     * @var mixed
+     */
+    private $custom_config;
+    /**
+     * @var mixed
+     */
+    private $custom_smtp;
+    /**
+     * @var mixed
+     */
+    private $bcc;
 
     /**
      * Mailer constructor.
      */
     public function __construct(TwigService $twig, MapperService $mapper, LoggerService $logger)
     {
-        $from_name    = Settings::get_setting('from_email_name');
-        $from_address = Settings::get_setting('smtp_from');
-        $this->from   = "From: $from_name " . ' <' . $from_address . '>';
-        $this->twig   = $twig;
-        $this->mapper = $mapper;
-        $this->logger = $logger;
+        $this->twig        = $twig;
+        $this->mapper      = $mapper;
+        $this->logger      = $logger;
+        $this->custom_smtp = Settings::get_setting('smtp_enable');
+        $this->bcc         = filter_var(Settings::get_setting('email_bcc'), FILTER_SANITIZE_EMAIL);
+        if ($this->custom_smtp) {
+            $this->custom_config = Settings::get_setting('custom_smtp');
+        }
     }
 
     /**
@@ -61,6 +75,9 @@ class MailerService
         // Toggle this on to enable PHPMailer's debug mode.
         $phpmailer->SMTPDebug = 0;
 
+        // Set higher timeout.
+        $phpmailer->Timeout = 10;
+
         // Add logo as attachment.
         $phpmailer->addEmbeddedImage(
             Assets::get_asset_path('images/logo-colour-40.png'),
@@ -68,26 +85,34 @@ class MailerService
             'kudos-logo.png'
         );
 
-        // Enable HTML email support to header.
+        // Enable HTML email support.
         $phpmailer->isHTML();
 
+        // Add BCC.
+        if ($this->bcc) {
+            $phpmailer->addBCC($this->bcc);
+        }
+
         // Add custom config if enabled.
-        if (Settings::get_setting('smtp_enable')) {
+        if ($this->custom_smtp) {
             $phpmailer->isSMTP();
-            $phpmailer->Host        = Settings::get_setting('smtp_host');
-            $phpmailer->SMTPAutoTLS = Settings::get_setting('smtp_autotls');
+            $phpmailer->Host        = $this->custom_config['host'];
+            $phpmailer->SMTPAutoTLS = $this->custom_config['autotls'];
             $phpmailer->SMTPAuth    = true;
-            if ('none' !== Settings::get_setting('smtp_encryption')) {
-                $phpmailer->SMTPSecure = Settings::get_setting('smtp_encryption');
+            if ('none' !== $this->custom_config['encryption']) {
+                $phpmailer->SMTPSecure = $this->custom_config['encryption'];
             }
-            $phpmailer->Username = Settings::get_setting('smtp_username');
-            $phpmailer->Password = Settings::get_setting('smtp_password');
-            $phpmailer->Port     = Settings::get_setting('smtp_port');
+            $phpmailer->Username = $this->custom_config['username'];
+            $phpmailer->Password = $this->custom_config['password'];
+            $phpmailer->Port     = $this->custom_config['port'];
+
+            $phpmailer->From     = $this->custom_config['from_email'];
+            $phpmailer->FromName = $this->custom_config['from_name'];
         }
     }
 
     /**
-     * Sends receipt to the donor
+     * Sends receipt to the donor.
      *
      * @param TransactionEntity $transaction TransactionEntity object.
      *
@@ -98,13 +123,6 @@ class MailerService
         // Check if setting enabled.
         if ( ! Settings::get_setting('email_receipt_enable')) {
             return false;
-        }
-
-        $bcc = Settings::get_setting('email_bcc');
-
-        $headers[] = $this->from;
-        if (filter_var($bcc, FILTER_SANITIZE_EMAIL)) {
-            $headers[] = 'bcc: ' . Settings::get_setting('email_bcc');
         }
 
         // Assign attachment.
@@ -159,7 +177,6 @@ class MailerService
             $donor->email,
             __('Donation Receipt', 'kudos-donations'),
             $body,
-            $headers,
             $attachments
         );
     }
@@ -170,7 +187,6 @@ class MailerService
      * @param string $to Recipient email address.
      * @param string $subject Email subject line.
      * @param string $body Body of email.
-     * @param array $headers Email headers.
      * @param array|null $attachment Attachment.
      *
      * @return bool
@@ -179,20 +195,18 @@ class MailerService
         string $to,
         string $subject,
         string $body,
-        array $headers = [],
         array $attachment = []
     ): bool {
         // Use hook to modify existing config.
         add_action('phpmailer_init', [$this, 'init']);
         add_action('wp_mail_failed', [$this, 'log_error']);
 
-        $mail = wp_mail($to, $subject, $body, $headers, $attachment);
+        $mail = wp_mail($to, $subject, $body, '', $attachment);
 
         if ($mail) {
             $this->logger->info('Email sent successfully.', ['to' => $to, 'subject' => $subject]);
         }
 
-        // Remove actions.
         remove_action('phpmailer_init', [$this, 'init']);
         remove_action('wp_mail_failed', [$this, 'log_error']);
 
@@ -255,9 +269,7 @@ class MailerService
             ]
         );
 
-        $headers[] = $this->from;
-
-        return $this->send($email, $header, $body, $headers);
+        return $this->send($email, $header, $body);
     }
 
     /**
