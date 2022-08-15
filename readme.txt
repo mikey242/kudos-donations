@@ -126,6 +126,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Can now configure most settings per-campaign
 * Easily generate shortcodes per campaign with a helpful form
 * New minimum donation setting
+* Email "from name" header can now be configured and defaults to website name
 
 = 3.1.5 =
 * Allow Mollie to connect with either test or live key. Previously both were required.
