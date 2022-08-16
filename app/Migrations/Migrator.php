@@ -44,7 +44,6 @@ class Migrator
             throw new Exception("Migration '$version' already performed.");
         }
 
-        /** @var \Kudos\Migrations\MigrationInterface $type */
         $type = new $migration($this->logger);
         $type->run();
     }
