@@ -53,7 +53,7 @@ const FormRouter = forwardRef(
 					target.classList.add('translate-x-1', 'opacity-0');
 					const oldHeight = target.querySelector('form').offsetHeight;
 					setHeight(oldHeight);
-					setTimeout(() => {
+					const timeout = setTimeout(() => {
 						setCurrentStep(step);
 						target.classList.remove('translate-x-1', 'opacity-0');
 						const newHeight =
@@ -63,6 +63,7 @@ const FormRouter = forwardRef(
 							setHeight('auto'); // This allows form to grow if validation message appear.
 						}, 200);
 					}, 200);
+					return () => clearTimeout(timeout);
 				}
 			}
 		}, [step]);
