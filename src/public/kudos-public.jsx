@@ -6,9 +6,9 @@
 
 import { render } from '@wordpress/element';
 import React from 'react';
-import KudosForm from './KudosForm';
+import KudosForm from './components/KudosForm';
 import Message from './components/Message';
-import { KudosButton } from './KudosButton';
+import { KudosButton } from './components/KudosButton';
 import CampaignProvider from '../admin/contexts/CampaignContext';
 
 // Select the web components as target for render.

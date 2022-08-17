@@ -2,12 +2,12 @@
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
-import FormRouter from './components/FormRouter';
-import { checkRequirements } from '../common/helpers/form';
-import { Spinner } from '../common/components/Spinner';
-import KudosModal from '../common/components/KudosModal';
-import Render from '../common/components/Render';
-import { useCampaignContext } from '../admin/contexts/CampaignContext';
+import FormRouter from './FormRouter';
+import { checkRequirements } from '../../common/helpers/form';
+import { Spinner } from '../../common/components/Spinner';
+import KudosModal from '../../common/components/KudosModal';
+import Render from '../../common/components/Render';
+import { useCampaignContext } from '../../admin/contexts/CampaignContext';
 
 function KudosForm({ displayAs }) {
 	const { campaign, campaignId, total, campaignReady } = useCampaignContext();

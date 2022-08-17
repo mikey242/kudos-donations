@@ -1,7 +1,7 @@
 import React from 'react';
-import Render from '../common/components/Render';
-import { useCampaignContext } from '../admin/contexts/CampaignContext';
-import { DonateButton } from '../common/components/DonateButton';
+import Render from '../../common/components/Render';
+import { useCampaignContext } from '../../admin/contexts/CampaignContext';
+import { DonateButton } from '../../common/components/DonateButton';
 
 const KudosButton = ({ children, className, targetId = null }) => {
 	const { campaign } = useCampaignContext();
