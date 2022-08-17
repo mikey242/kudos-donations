@@ -21,7 +21,7 @@ function Message({ color, title, body }) {
 		<>
 			{ready && (
 				<Render themeColor={color}>
-					<KudosModal isOpen={modalOpen}>
+					<KudosModal toggleModal={closeModal} isOpen={modalOpen}>
 						<>
 							<h2 className="font-normal font-serif text-4xl m-0 mb-2 text-gray-900 block text-center">
 								{title}

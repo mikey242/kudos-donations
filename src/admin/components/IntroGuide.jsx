@@ -46,7 +46,7 @@ const IntroGuide = ({
 	};
 
 	return (
-		<KudosModal isOpen={isOpen} toggle={closeModal}>
+		<KudosModal isOpen={isOpen} toggleModal={closeModal}>
 			<Guide
 				className={'box-border'}
 				onFinish={closeModal}
