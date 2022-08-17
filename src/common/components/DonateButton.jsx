@@ -1,6 +1,6 @@
-import { KudosLogo } from '../../common/components/KudosLogo';
+import { KudosLogo } from './KudosLogo';
 import React from 'react';
-import { Button } from '../../common/components/controls';
+import { Button } from './controls';
 import classNames from 'classnames';
 
 const DonateButton = ({ children, className, onClick = null }) => {

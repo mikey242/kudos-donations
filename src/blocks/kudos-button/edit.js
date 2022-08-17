@@ -9,7 +9,7 @@ import { __ } from '@wordpress/i18n';
 import React, { Fragment } from 'react';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { DonateButton } from '../../public/components/DonateButton';
+import { DonateButton } from '../../common/components/DonateButton';
 
 const ButtonEdit = (props) => {
 	const [campaigns, setCampaigns] = useState(null);
