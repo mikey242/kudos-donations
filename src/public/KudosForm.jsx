@@ -10,7 +10,7 @@ import Render from '../common/components/Render';
 import { useCampaignContext } from '../admin/contexts/CampaignContext';
 
 function KudosForm({ displayAs }) {
-	const { campaign, total, campaignReady } = useCampaignContext();
+	const { campaign, campaignId, total, campaignReady } = useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [isApiLoaded, setIsApiLoaded] = useState(false);
 	const [formError, setFormError] = useState(null);

@@ -61,6 +61,7 @@ export default function CampaignProvider({ campaignId, children }) {
 		<CampaignContext.Provider
 			value={{
 				campaign,
+				campaignId,
 				total,
 				getCampaign,
 				getTotal,
