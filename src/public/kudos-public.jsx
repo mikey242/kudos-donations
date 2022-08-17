@@ -6,24 +6,42 @@
 
 import { render } from '@wordpress/element';
 import React from 'react';
-import KudosDonate from './components/KudosDonate';
+import KudosForm from './KudosForm';
 import Message from './components/Message';
+import { KudosButton } from './KudosButton';
+import CampaignProvider from '../admin/contexts/CampaignContext';
 
 // Select the web components as target for render.
-const widgets = document.querySelectorAll('.kudos-form');
+const forms = document.querySelectorAll('.kudos-form');
 const messages = document.querySelectorAll('.kudos-message');
+const buttons = document.querySelectorAll('.kudos-button');
+
+// Kudos Donations buttons
+buttons.forEach((container) => {
+	const campaignId = container.dataset.campaign;
+	const targetId = container.dataset.target;
+	const label = container.dataset.label;
+
+	render(
+		<CampaignProvider campaignId={campaignId}>
+			<KudosButton
+				// campaignId={campaignId}
+				targetId={targetId}
+				children={label}
+			/>
+		</CampaignProvider>,
+		container
+	);
+});
 
 // Kudos Donations form/modal
-widgets.forEach((container) => {
-	const buttonLabel = container.dataset.label;
+forms.forEach((container) => {
 	const campaignId = container.dataset.campaign;
 	const displayAs = container.dataset.displayAs;
 	render(
-		<KudosDonate
-			campaignId={campaignId}
-			buttonLabel={buttonLabel}
-			displayAs={displayAs}
-		/>,
+		<CampaignProvider campaignId={campaignId}>
+			<KudosForm displayAs={displayAs} />
+		</CampaignProvider>,
 		container
 	);
 });
@@ -33,8 +51,5 @@ messages.forEach((message) => {
 	const title = message.dataset.title;
 	const body = message.dataset.body;
 	const color = message.dataset.color;
-	render(
-		<Message root={message} color={color} title={title} body={body} />,
-		message
-	);
+	render(<Message color={color} title={title} body={body} />, message);
 });

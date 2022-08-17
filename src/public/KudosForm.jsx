@@ -1,42 +1,33 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
-import { KudosButton } from './KudosButton';
-import FormRouter from './FormRouter';
-import { checkRequirements } from '../../common/helpers/form';
-import { Spinner } from '../../common/components/Spinner';
-import KudosModal from '../../common/components/KudosModal';
-import Render from '../../common/components/Render';
+import FormRouter from './components/FormRouter';
+import { checkRequirements } from '../common/helpers/form';
+import { Spinner } from '../common/components/Spinner';
+import KudosModal from '../common/components/KudosModal';
+import Render from '../common/components/Render';
+import { useCampaignContext } from '../admin/contexts/CampaignContext';
 
-function KudosDonate({ buttonLabel, campaignId, displayAs }) {
-	const [campaign, setCampaign] = useState();
-	const [total, setTotal] = useState(0);
+function KudosForm({ displayAs }) {
+	const { campaign, total, campaignReady } = useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [isApiLoaded, setIsApiLoaded] = useState(false);
 	const [formError, setFormError] = useState(null);
 	const [apiErrors, setApiErrors] = useState(null);
 	const [formState, setFormState] = useState(null);
-	const [modalOpen, setModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const targetRef = useRef(null);
 
-	const toggleModal = () => {
-		// Open modal
-		if (!modalOpen) {
-			setModalOpen(true);
-		} else {
-			// Close modal
-			setModalOpen(false);
-			setTimeout(() => {
-				setFormState((prev) => ({
-					...prev,
-					currentStep: 1,
-					formData: {},
-				}));
-			}, 300);
+	useEffect(() => {
+		setTimestamp(Date.now());
+	}, []);
+
+	useEffect(() => {
+		if (!isModalOpen) {
+			resetForm();
 		}
-	};
+	}, [isModalOpen]);
 
 	const handlePrev = () => {
 		const { currentStep } = formState;
@@ -66,6 +57,18 @@ function KudosDonate({ buttonLabel, campaignId, displayAs }) {
 			...prev,
 			formData: { ...prev?.formData, ...data },
 			currentStep: step,
+		}));
+	};
+
+	const toggleModal = () => {
+		setIsModalOpen(!isModalOpen);
+	};
+
+	const resetForm = () => {
+		setFormState((prev) => ({
+			...prev,
+			currentStep: 1,
+			formData: {},
 		}));
 	};
 
@@ -101,40 +104,6 @@ function KudosDonate({ buttonLabel, campaignId, displayAs }) {
 			return result;
 		});
 	}
-
-	const getCampaign = () => {
-		return apiFetch({
-			path: `wp/v2/kudos_campaign/${campaignId}`,
-			method: 'GET',
-		})
-			.then((response) => {
-				setCampaign(response?.meta);
-				setTimestamp(Date.now());
-			})
-			.catch((error) => {
-				throw {
-					message: `Failed to fetch campaign '${campaignId}'.`,
-					original: error,
-				};
-			});
-	};
-
-	const getTotal = () => {
-		return apiFetch({
-			path: `kudos/v1/transaction/campaign/total/${campaignId}`,
-			method: 'GET',
-		}).then((response) => {
-			setTotal(response);
-		});
-	};
-
-	const getData = () => {
-		Promise.all([getCampaign(), getTotal()])
-			.then(() => setIsApiLoaded(true))
-			.catch((error) => {
-				setApiErrors([error.message]);
-			});
-	};
 
 	const renderDonationForm = () => (
 		<>
@@ -173,41 +142,29 @@ function KudosDonate({ buttonLabel, campaignId, displayAs }) {
 
 	const renderSpinner = () => <>{!apiErrors && <Spinner />}</>;
 
-	useEffect(() => {
-		if (campaignId) {
-			getData();
-		} else {
-			setApiErrors([__('No campaign ID', 'kudos-donations')]);
-		}
-	}, []);
 	return (
-		<>
-			<Render themeColor={campaign?.theme_color}>
-				{/* If API not loaded yet then show a spinner */}
-				{isApiLoaded ? (
-					<>
-						{displayAs === 'form' && renderDonationForm()}
-						{displayAs === 'button' && (
-							<>
-								<KudosButton onClick={toggleModal}>
-									{buttonLabel}
-								</KudosButton>
-								<KudosModal
-									toggle={toggleModal}
-									isOpen={modalOpen}
-								>
-									{renderDonationForm()}
-								</KudosModal>
-							</>
-						)}
-					</>
-				) : (
-					renderSpinner()
-				)}
-				{renderApiErrors()}
-			</Render>
-		</>
+		<Render themeColor={campaign?.theme_color}>
+			{/* If API not loaded yet then show a spinner */}
+			{campaignReady ? (
+				<>
+					{displayAs === 'form' && renderDonationForm()}
+					{displayAs === 'button' && (
+						<>
+							<KudosModal
+								toggleModal={toggleModal}
+								isOpen={isModalOpen}
+							>
+								{renderDonationForm()}
+							</KudosModal>
+						</>
+					)}
+				</>
+			) : (
+				renderSpinner()
+			)}
+			{renderApiErrors()}
+		</Render>
 	);
 }
 
-export default KudosDonate;
+export default KudosForm;

@@ -46,10 +46,9 @@ function GenerateShortcode({ campaign }) {
 			</Button>
 
 			<KudosModal
-				trapFocus={false}
 				showLogo={false}
 				isOpen={isModalOpen}
-				toggle={toggleModal}
+				toggleModal={toggleModal}
 			>
 				<>
 					<h1 className="text-center">

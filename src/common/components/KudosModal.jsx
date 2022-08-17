@@ -3,16 +3,39 @@ import { __ } from '@wordpress/i18n';
 import { XIcon } from '@heroicons/react/solid';
 import logo from '../../images/logo-colour.svg';
 import { Transition } from '@headlessui/react';
-import { useEffect } from '@wordpress/element';
-import FocusTrap from 'focus-trap-react';
+import { useEffect, useRef } from '@wordpress/element';
 
 const KudosModal = ({
-	toggle,
 	isOpen = false,
+	toggleModal,
 	children,
-	trapFocus = true,
 	showLogo = true,
 }) => {
+	useEffect(() => {
+		document.body.style.overflowY = isOpen ? 'hidden' : 'auto';
+	}, [isOpen]);
+
+	// Watch for data-toggle attribute changes.
+	const targetRef = useRef(null);
+	const observer = new MutationObserver((mutations) => {
+		mutations.forEach((mutation) => {
+			if (
+				mutation.type === 'attributes' &&
+				mutation.attributeName === 'data-toggle' &&
+				targetRef.current.dataset.toggle === 'true'
+			) {
+				toggleModal();
+				targetRef.current.dataset.toggle = 'false';
+			}
+		});
+	});
+	useEffect(() => {
+		if (targetRef.current) {
+			observer.observe(targetRef.current, { attributes: true });
+		}
+	}, [targetRef.current]);
+
+	// Add escape key event listeners.
 	useEffect(() => {
 		if (isOpen) {
 			document.addEventListener('keydown', handleKeyPress, false);
@@ -23,13 +46,13 @@ const KudosModal = ({
 	}, [isOpen]);
 
 	const handleKeyPress = (e) => {
-		if (e.key === 'Escape' || e.keyCode === 27) toggle();
+		if (e.key === 'Escape' || e.keyCode === 27) toggleModal();
 	};
 
 	return (
-		<Transition show={isOpen} appear={true}>
-			<FocusTrap active={trapFocus}>
-				<div className="fixed z-[999999] inset-0 overflow-y-auto">
+		<div ref={targetRef} data-toggle={false}>
+			<Transition show={isOpen} appear={false}>
+				<div className={'fixed z-[999999] inset-0 overflow-y-auto'}>
 					<>
 						<Transition.Child
 							enter="transition-opacity duration-[400ms]"
@@ -77,7 +100,7 @@ const KudosModal = ({
 											)}
 											<button
 												className="bg-transparent transition p-0 inline leading-none border-0 focus:outline-none focus:ring hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center ml-auto"
-												onClick={toggle}
+												onClick={toggleModal}
 												type="button"
 												title={__(
 													'Close modal',
@@ -94,8 +117,8 @@ const KudosModal = ({
 						</Transition.Child>
 					</>
 				</div>
-			</FocusTrap>
-		</Transition>
+			</Transition>
+		</div>
 	);
 };
 

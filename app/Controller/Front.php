@@ -255,10 +255,26 @@ class Front
             // Enqueue necessary resources.
             $this->enqueue_assets();
 
-            $alignment = 'has-text-align-' . $atts['alignment'] ?? 'none';
+            // Create unique id for triggering.
+            $id = Utils::generate_id('kudos-');
 
-            return "<div class='kudos-donations kudos-form $alignment' data-label='" . $atts['button_label'] . "' data-display-as='" . $atts['type'] . "' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
-					</div>";
+            if ($atts['type'] === 'button') {
+                // Add modal to footer.
+                add_action(
+                    'wp_footer',
+                    function () use ($atts, $id) {
+                        echo $this->form_html($id, $atts);
+                    }
+                );
+
+                // Get theme color.
+
+
+                // Output button.
+                return $this->button_html($id, $atts);
+            }
+
+            return $this->form_html($id, $atts);
         } catch (Exception $e) {
             // Display error message if thrown and user is admin.
             if (current_user_can('manage_options')) {
@@ -279,6 +295,18 @@ class Front
     {
         wp_enqueue_script('kudos-donations-public');
         wp_enqueue_style('kudos-donations-fonts'); // Fonts need to be loaded in the main document.
+    }
+
+    public function form_html($id, $atts): string
+    {
+        return "<div id='form-$id' class='kudos-donations kudos-form' data-display-as='" . $atts['type'] . "' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
+					</div>";
+    }
+
+    public function button_html($id, $atts): string
+    {
+        return "<div id='button-$id' class='kudos-button' data-label='" . $atts['button_label'] . "' data-target='form-$id' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
+					</div>";
     }
 
     /**
@@ -352,7 +380,7 @@ class Front
                             }
 
                             if ($atts) {
-                                echo $this->create_message_modal(
+                                echo $this->message_modal_html(
                                     $atts['modal_title'],
                                     $atts['modal_text'],
                                     $atts['theme_color']
@@ -378,7 +406,7 @@ class Front
 
                         if (wp_verify_nonce($nonce, $action)) {
                             if ($this->payment->cancel_subscription($subscription_id)) {
-                                echo $this->create_message_modal(
+                                echo $this->message_modal_html(
                                     __('Subscription cancelled', 'kudos-donations'),
                                     __(
                                         'We will no longer be taking payments for this subscription. Thank you for your contributions.',
@@ -390,7 +418,7 @@ class Front
                             }
                         }
 
-                        echo $this->create_message_modal(
+                        echo $this->message_modal_html(
                             __('Link expired', 'kudos-donations'),
                             __('Sorry, this link is no longer valid.', 'kudos-donations')
                         );
@@ -408,7 +436,7 @@ class Front
      *
      * @return string
      */
-    private function create_message_modal(string $header, string $body, string $color = '#ff9f1c'): ?string
+    private function message_modal_html(string $header, string $body, string $color = '#ff9f1c'): ?string
     {
         return "<div class='kudos-donations kudos-message' data-color='$color' data-title='$header' data-body='$body'></div>";
     }

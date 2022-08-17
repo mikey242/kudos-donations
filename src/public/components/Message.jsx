@@ -5,11 +5,11 @@ import Render from '../../common/components/Render';
 import { Button } from '../../common/components/controls';
 import { __ } from '@wordpress/i18n';
 
-function Message({ title, body, color, root }) {
+function Message({ color, title, body }) {
 	const [ready, setReady] = useState(false);
 	const [modalOpen, setModalOpen] = useState(true);
 
-	const toggleModal = () => {
+	const closeModal = () => {
 		setModalOpen(!modalOpen);
 	};
 
@@ -21,11 +21,7 @@ function Message({ title, body, color, root }) {
 		<>
 			{ready && (
 				<Render themeColor={color}>
-					<KudosModal
-						toggle={toggleModal}
-						root={root}
-						isOpen={modalOpen}
-					>
+					<KudosModal isOpen={modalOpen}>
 						<>
 							<h2 className="font-normal font-serif text-4xl m-0 mb-2 text-gray-900 block text-center">
 								{title}
@@ -37,7 +33,7 @@ function Message({ title, body, color, root }) {
 								type="button"
 								className="text-base block ml-auto"
 								ariaLabel={__('Close', 'kudos-donations')}
-								onClick={toggleModal}
+								onClick={closeModal}
 							>
 								<span className="mx-2">OK</span>
 							</Button>

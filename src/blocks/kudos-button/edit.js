@@ -7,9 +7,9 @@ import {
 import { PanelBody, RadioControl, SelectControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React, { Fragment } from 'react';
-import { KudosButton } from '../../public/components/KudosButton';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
+import { DonateButton } from '../../public/components/DonateButton';
 
 const ButtonEdit = (props) => {
 	const [campaigns, setCampaigns] = useState(null);
@@ -132,13 +132,13 @@ const ButtonEdit = (props) => {
 						</PanelBody>
 					</InspectorControls>
 
-					<KudosButton className={className ?? ''}>
+					<DonateButton className={className ?? ''}>
 						<RichText
 							allowedFormats={[]} // Disable all formatting
 							onChange={onChangeButtonLabel}
 							value={button_label}
 						/>
-					</KudosButton>
+					</DonateButton>
 				</Fragment>
 			)}
 		</div>

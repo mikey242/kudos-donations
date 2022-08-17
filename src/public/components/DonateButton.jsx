@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '../../common/components/controls';
 import classNames from 'classnames';
 
-const KudosButton = ({ children, className, onClick = null }) => {
+const DonateButton = ({ children, className, onClick = null }) => {
 	return (
 		<div
 			id="kudos-button"
@@ -26,4 +26,4 @@ const KudosButton = ({ children, className, onClick = null }) => {
 	);
 };
 
-export { KudosButton };
+export { DonateButton };
