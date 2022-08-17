@@ -10,11 +10,10 @@ import Render from '../../common/components/Render';
 import { useCampaignContext } from '../../admin/contexts/CampaignContext';
 
 function KudosForm({ displayAs }) {
-	const { campaign, campaignId, total, campaignReady } = useCampaignContext();
+	const { campaign, campaignId, total, campaignReady, campaignErrors } =
+		useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
-	const [isApiLoaded, setIsApiLoaded] = useState(false);
 	const [formError, setFormError] = useState(null);
-	const [apiErrors, setApiErrors] = useState(null);
 	const [formState, setFormState] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const targetRef = useRef(null);
@@ -127,10 +126,10 @@ function KudosForm({ displayAs }) {
 
 	const renderApiErrors = () => (
 		<>
-			{apiErrors && (
+			{campaignErrors && (
 				<>
 					<p className="m-0">Kudos Donations ran into a problem:</p>
-					{apiErrors.map((error, i) => (
+					{campaignErrors.map((error, i) => (
 						<p key={i} className="text-red-500">
 							- {error}
 						</p>
@@ -140,7 +139,7 @@ function KudosForm({ displayAs }) {
 		</>
 	);
 
-	const renderSpinner = () => <>{!apiErrors && <Spinner />}</>;
+	const renderSpinner = () => <>{!campaignErrors && <Spinner />}</>;
 
 	return (
 		<Render themeColor={campaign?.theme_color}>

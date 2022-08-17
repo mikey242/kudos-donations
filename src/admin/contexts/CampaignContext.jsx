@@ -13,7 +13,7 @@ export const CampaignContext = createContext(null);
 export default function CampaignProvider({ campaignId, children }) {
 	const [campaign, setCampaign] = useState(null);
 	const [campaignReady, setCampaignReady] = useState(false);
-	const [campaignError, setCampaignError] = useState(null);
+	const [campaignErrors, setCampaignErrors] = useState(null);
 	const [total, setTotal] = useState(0);
 
 	useEffect(() => {
@@ -53,7 +53,7 @@ export default function CampaignProvider({ campaignId, children }) {
 		])
 			.then(() => setCampaignReady(true))
 			.catch((error) => {
-				setCampaignError([error.message]);
+				setCampaignErrors([error.message]);
 			});
 	};
 
@@ -65,7 +65,7 @@ export default function CampaignProvider({ campaignId, children }) {
 				total,
 				getCampaign,
 				getTotal,
-				campaignError,
+				campaignErrors,
 				campaignReady,
 			}}
 		>
