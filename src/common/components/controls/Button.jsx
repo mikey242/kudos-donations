@@ -38,7 +38,7 @@ const Button = forwardRef(
 			'relative font-bold focus:ring z-1 group cursor-pointer overflow-hidden rounded-lg flex justify-center items-center transition ease-in-out focus:ring-primary focus:ring-offset-2'
 		);
 
-		const Inner = () => (
+		const inner = () => (
 			<>
 				{children}
 				<div
@@ -60,7 +60,7 @@ const Button = forwardRef(
 						className={classes}
 						aria-label={ariaLabel}
 					>
-						<Inner />
+						{inner()}
 					</a>
 				) : (
 					<button
@@ -72,7 +72,7 @@ const Button = forwardRef(
 						className={classes}
 						aria-label={ariaLabel}
 					>
-						<Inner />
+						{inner()}
 					</button>
 				)}
 			</>
