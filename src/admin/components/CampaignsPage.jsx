@@ -22,7 +22,7 @@ const CampaignsPage = () => {
 	const [campaigns, setCampaigns] = useState(null);
 	const [isApiBusy, setIsApiBusy] = useState(false);
 	const [currentCampaign, setCurrentCampaign] = useState(null);
-	const [isApiLoaded, setIsApiLoaded] = useState(false);
+	const [campaignsReady, setCampaignsReady] = useState(false);
 	const { settings, settingsReady } = useSettingsContext();
 	const { createNotification } = useNotificationContext();
 
@@ -118,7 +118,7 @@ const CampaignsPage = () => {
 
 	const getData = () => {
 		Promise.all([getCampaigns()])
-			.then(() => setIsApiLoaded(true))
+			.then(() => setCampaignsReady(true))
 			.catch((error) => {
 				createNotification(error.message, false);
 			});
@@ -158,7 +158,7 @@ const CampaignsPage = () => {
 
 	return (
 		<>
-			{!isApiLoaded ? (
+			{!campaignsReady && !settingsReady ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
 				</div>
