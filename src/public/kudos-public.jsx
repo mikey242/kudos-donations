@@ -21,14 +21,9 @@ buttons.forEach((container) => {
 	const campaignId = container.dataset.campaign;
 	const targetId = container.dataset.target;
 	const label = container.dataset.label;
-
 	render(
 		<CampaignProvider campaignId={campaignId}>
-			<KudosButton
-				// campaignId={campaignId}
-				targetId={targetId}
-				children={label}
-			/>
+			<KudosButton targetId={targetId} children={label} />
 		</CampaignProvider>,
 		container
 	);
@@ -37,7 +32,7 @@ buttons.forEach((container) => {
 // Kudos Donations form/modal
 forms.forEach((container) => {
 	const campaignId = container.dataset.campaign;
-	const displayAs = container.dataset.displayAs;
+	const displayAs = container.dataset.displayAs ?? 'button';
 	render(
 		<CampaignProvider campaignId={campaignId}>
 			<KudosForm displayAs={displayAs} />
