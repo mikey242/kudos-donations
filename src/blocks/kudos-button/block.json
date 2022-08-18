@@ -2,9 +2,9 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 2,
   "name": "iseardmedia/kudos-button",
-  "title": "Kudos Button",
+  "title": "Kudos Donation Form",
   "category": "widgets",
-  "description": "Adds a Kudos donate button or tabs to your post or page.",
+  "description": "Adds a configurable Kudos donate button or form.",
   "textdomain": "kudos-donations",
   "keywords": [
     "kudos",
