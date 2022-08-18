@@ -11,14 +11,10 @@ import KudosModal from '../../common/components/KudosModal';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextControl } from '../../common/components/controls';
 import { useState } from '@wordpress/element';
+import { useSettingsContext } from '../contexts/SettingsContext';
 
-const IntroGuide = ({
-	settings,
-	updateSetting,
-	setShowIntro,
-	checkApiKey,
-	isOpen,
-}) => {
+const IntroGuide = ({ setShowIntro, isOpen }) => {
+	const { updateSetting, checkApiKey, settings } = useSettingsContext();
 	const vendorMollie = settings._kudos_vendor_mollie;
 	const isConnected = vendorMollie.connected ?? false;
 	const isRecurringEnabled = vendorMollie.recurring ?? false;

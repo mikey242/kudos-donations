@@ -60,7 +60,7 @@ const SettingsPage = () => {
 		{
 			name: 'mollie',
 			title: __('Mollie', 'kudos-donations'),
-			content: <MollieTab checkApiKey={checkApiKey} />,
+			content: <MollieTab />,
 		},
 		{
 			name: 'email',
@@ -84,11 +84,8 @@ const SettingsPage = () => {
 			) : (
 				<>
 					<IntroGuide
-						updateSettings={save}
 						isOpen={showIntro ?? false}
-						checkApiKey={checkApiKey}
 						isAPISaving={settingsSaving}
-						settings={settings}
 						setShowIntro={setShowIntro}
 						updateSetting={updateSetting}
 					/>

@@ -8,8 +8,10 @@ import { Fragment, useState } from '@wordpress/element';
 import { RefreshIcon } from '@heroicons/react/solid';
 import Divider from '../../common/components/Divider';
 import classNames from 'classnames';
+import { useSettingsContext } from '../contexts/SettingsContext';
 
-const MollieTab = ({ checkApiKey }) => {
+const MollieTab = () => {
+	const { checkApiKey } = useSettingsContext();
 	const [checkingMollie, setCheckingMollie] = useState(false);
 
 	const refresh = () => {
