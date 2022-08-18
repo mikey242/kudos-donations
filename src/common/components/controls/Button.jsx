@@ -16,6 +16,7 @@ const Button = forwardRef(
 			ariaLabel,
 			className,
 			onClick,
+			style,
 		},
 		ref
 	) => {
@@ -70,6 +71,7 @@ const Button = forwardRef(
 						form={form}
 						disabled={isDisabled}
 						className={classes}
+						style={style}
 						aria-label={ariaLabel}
 					>
 						{inner()}

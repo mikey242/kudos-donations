@@ -74,9 +74,6 @@ const ButtonEdit = (props) => {
 		<div>
 			{campaigns && (
 				<Fragment>
-					<style>{`:root {--kudos-theme-primary: ${
-						currentCampaign?.meta.theme_color ?? '#ff9f1c'
-					}`}</style>
 					<InspectorControls>
 						<PanelBody
 							title={__('Campaign', 'kudos-donations')}
@@ -132,7 +129,10 @@ const ButtonEdit = (props) => {
 						</PanelBody>
 					</InspectorControls>
 
-					<DonateButton className={className ?? ''}>
+					<DonateButton
+						className={className ?? ''}
+						color={currentCampaign?.meta.theme_color ?? '#ff9f1c'}
+					>
 						<RichText
 							allowedFormats={[]} // Disable all formatting
 							onChange={onChangeButtonLabel}
