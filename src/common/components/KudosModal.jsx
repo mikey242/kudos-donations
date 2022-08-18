@@ -46,7 +46,11 @@ const KudosModal = ({
 	}, [isOpen]);
 
 	const handleKeyPress = (e) => {
-		if (e.key === 'Escape' || e.keyCode === 27) toggleModal();
+		if (e.key === 'Escape' || e.keyCode === 27) toggle();
+	};
+
+	const toggle = () => {
+		if (typeof toggleModal === 'function') toggleModal();
 	};
 
 	return (
@@ -100,7 +104,7 @@ const KudosModal = ({
 											)}
 											<button
 												className="bg-transparent transition p-0 inline leading-none border-0 focus:outline-none focus:ring hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center ml-auto"
-												onClick={toggleModal}
+												onClick={toggle}
 												type="button"
 												title={__(
 													'Close modal',
