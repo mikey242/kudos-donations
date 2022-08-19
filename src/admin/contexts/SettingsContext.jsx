@@ -49,7 +49,7 @@ export default function SettingsProvider({ children }) {
 	const getSettings = () => {
 		return api.loadPromise.then(() => {
 			const settingsModel = new api.models.Settings();
-			settingsModel.fetch().then((response) => {
+			return settingsModel.fetch().then((response) => {
 				if (response._kudos_show_intro) {
 					window.location.replace('admin.php?page=kudos-settings');
 				} else {
@@ -58,6 +58,7 @@ export default function SettingsProvider({ children }) {
 						settings: response,
 					});
 				}
+				return response;
 			});
 		});
 	};
