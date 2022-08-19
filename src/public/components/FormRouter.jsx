@@ -20,7 +20,6 @@ import {
 	useState,
 } from '@wordpress/element';
 import classNames from 'classnames';
-import { Spinner } from '../../common/components/Spinner';
 
 const FormRouter = forwardRef(
 	({ step, campaign, handlePrev, handleNext, submitForm }, ref) => {
@@ -37,11 +36,11 @@ const FormRouter = forwardRef(
 		const onSubmit = (data) => {
 			if (step < 5) return handleNext(data, step + 1);
 			setIsBusy(true);
-			submitForm(data).then((result) => {
-				if (!result.success) {
-					setIsBusy(false);
-				}
-			});
+			// submitForm(data).then((result) => {
+			// 	if (!result.success) {
+			// 		setIsBusy(false);
+			// 	}
+			// });
 		};
 
 		useLayoutEffect(() => {
@@ -71,11 +70,6 @@ const FormRouter = forwardRef(
 		return (
 			<FormProvider {...methods}>
 				<div className="relative">
-					{isBusy && (
-						<div className="absolute inset w-full h-full z-[2] flex justify-center items-center">
-							<Spinner />
-						</div>
-					)}
 					<div
 						ref={ref}
 						className={classNames(
@@ -186,34 +180,31 @@ const FormRouter = forwardRef(
 											'kudos-donations'
 										)}
 										onClick={handlePrev}
+										icon={
+											<ChevronLeftIcon className="mr-2 w-5 h-5" />
+										}
 									>
-										<ChevronLeftIcon className="w-5 h-5" />
-										<span className="mx-2">
-											{__('Back', 'kudos-donations')}
-										</span>
+										{__('Back', 'kudos-donations')}
 									</Button>
 								)}
 								<Button
 									type="submit"
 									ariaLabel={__('Next', 'kudos-donations')}
 									className="ml-auto text-base"
+									isBusy={isBusy}
+									icon={
+										steps[currentStep].name ===
+											'Summary' && (
+											<LockClosedIcon className="mr-2 w-5 h-5" />
+										)
+									}
 								>
 									{steps[currentStep].name === 'Summary' ? (
-										<>
-											<LockClosedIcon className="w-5 h-5" />{' '}
-											<span className="mx-2">
-												{__(
-													'Submit',
-													'kudos-donations'
-												)}
-											</span>
-										</>
+										__('Submit', 'kudos-donations')
 									) : (
 										<>
-											<span className="mx-2">
-												{__('Next', 'kudos-donations')}
-											</span>
-											<ChevronRightIcon className="w-5 h-5" />
+											{__('Next', 'kudos-donations')}
+											<ChevronRightIcon className="ml-2 w-5 h-5" />
 										</>
 									)}
 								</Button>

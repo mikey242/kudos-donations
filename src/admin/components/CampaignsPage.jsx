@@ -2,7 +2,7 @@
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
 import { Header } from './Header';
-import { PlusIcon } from '@heroicons/react/outline';
+import { PlusCircleIcon, PlusIcon, SaveIcon } from '@heroicons/react/outline';
 import React from 'react';
 import CampaignTable from './CampaignTable';
 import CampaignEdit from './CampaignEdit';
@@ -92,7 +92,9 @@ const CampaignsPage = () => {
 				createNotification(error.message, false);
 			})
 			.finally(() => {
-				setIsApiBusy(false);
+				setTimeout(() => {
+					setIsApiBusy(false);
+				}, 500);
 			});
 	};
 
@@ -169,11 +171,16 @@ const CampaignsPage = () => {
 							<Button
 								form="settings-form"
 								type="submit"
-								isDisabled={isApiBusy}
+								isBusy={isApiBusy}
+								icon={
+									currentCampaign.status === 'draft' ? (
+										<PlusCircleIcon className="mr-2 w-5 h-5" />
+									) : (
+										<SaveIcon className="mr-2 w-5 h-5" />
+									)
+								}
 							>
-								{currentCampaign.status === 'draft'
-									? __('Create', 'kudos-donations')
-									: __('Save', 'kudos-donations')}
+								{__('Save', 'kudos-donations')}
 							</Button>
 						)}
 					</Header>

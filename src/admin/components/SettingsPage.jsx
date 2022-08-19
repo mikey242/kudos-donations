@@ -17,19 +17,20 @@ import TabPanel from './TabPanel';
 import { Spinner } from '../../common/components/Spinner';
 // eslint-disable-next-line import/default
 import { useSettingsContext } from '../contexts/SettingsContext';
-import { useNotificationContext } from '../contexts/NotificationContext';
+import { SaveIcon } from '@heroicons/react/outline';
+import classNames from 'classnames';
 
 const SettingsPage = () => {
 	const [showIntro, setShowIntro] = useState(false);
 	const {
 		settingsRequest,
+		settingsSaving,
 		updateSetting,
 		updateSettings,
 		checkApiKey,
 		settings,
-		settingsSaving,
+		isVendorConnected,
 	} = useSettingsContext();
-	const { createNotification } = useNotificationContext();
 	const methods = useForm({
 		defaultValues: settings,
 	});
@@ -48,9 +49,7 @@ const SettingsPage = () => {
 					keys: methods.getValues(
 						`_kudos_vendor_${settings._kudos_vendor}`
 					),
-				}).then((res) =>
-					createNotification(res.data.message, res?.success)
-				);
+				});
 			}
 		});
 	};
@@ -98,15 +97,12 @@ const SettingsPage = () => {
 							<Header>
 								<div className="flex items-center">
 									<span
-										className={`${
-											settings._kudos_vendor_mollie
-												.connected && 'connected'
-										} kudos-api-status text-gray-600 capitalize mr-2`}
+										className={classNames(
+											isVendorConnected && 'connected',
+											'kudos-api-status text-gray-600 capitalize mr-2'
+										)}
 									>
-										{settings?.[
-											'_kudos_vendor_' +
-												settings._kudos_vendor
-										].connected
+										{isVendorConnected
 											? settings._kudos_vendor +
 											  ' ' +
 											  __('connected', 'kudos-donations')
@@ -116,14 +112,20 @@ const SettingsPage = () => {
 											  )}
 									</span>
 									<span
-										className={`${
-											settings._kudos_vendor_mollie
-												.connected
+										className={classNames(
+											isVendorConnected
 												? 'bg-green-600'
-												: 'bg-gray-500'
-										} rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 w-4 h-4`}
+												: 'bg-gray-500',
+											'rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 w-4 h-4'
+										)}
 									/>
-									<Button type="submit">
+									<Button
+										type="submit"
+										isBusy={settingsSaving}
+										icon={
+											<SaveIcon className="mr-2 w-5 h-5" />
+										}
+									>
 										{__('Save', 'kudos-donations')}
 									</Button>
 								</div>

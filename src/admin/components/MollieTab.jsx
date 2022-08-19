@@ -4,19 +4,17 @@ import {
 	RadioGroupControl,
 	TextControl,
 } from '../../common/components/controls';
-import { Fragment, useState } from '@wordpress/element';
+import { Fragment } from '@wordpress/element';
 import { RefreshIcon } from '@heroicons/react/solid';
 import Divider from '../../common/components/Divider';
 import classNames from 'classnames';
 import { useSettingsContext } from '../contexts/SettingsContext';
 
 const MollieTab = () => {
-	const { checkApiKey } = useSettingsContext();
-	const [checkingMollie, setCheckingMollie] = useState(false);
+	const { checkApiKey, checkingApiKey } = useSettingsContext();
 
 	const refresh = () => {
-		setCheckingMollie(true);
-		checkApiKey().then(() => setCheckingMollie(false));
+		checkApiKey();
 	};
 
 	return (
@@ -37,11 +35,12 @@ const MollieTab = () => {
 			<button
 				className="inline-flex items-center cursor-pointer"
 				onClick={refresh}
+				type="button"
 			>
 				<>
 					<RefreshIcon
 						className={classNames(
-							checkingMollie && 'animate-spin',
+							checkingApiKey && 'animate-spin',
 							'w-5 h-5'
 						)}
 					/>{' '}

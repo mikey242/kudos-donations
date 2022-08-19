@@ -19,6 +19,8 @@ export default function SettingsProvider({ children }) {
 		settings: null,
 	});
 	const [settingsReady] = useState(false);
+	const [isVendorConnected, setIsVendorConnected] = useState(false);
+	const [checkingApiKey, setCheckingApiKey] = useState(false);
 	const [settingsSaving, setSettingsSaving] = useState(false);
 	const { settings } = settingsRequest;
 	const { createNotification } = useNotificationContext();
@@ -27,11 +29,19 @@ export default function SettingsProvider({ children }) {
 		getSettings();
 	}, []);
 
+	useEffect(() => {
+		if (settings) {
+			const vendor = settings._kudos_vendor;
+			const vendorSetting = settings[`_kudos_vendor_${vendor}`];
+			setIsVendorConnected(vendorSetting.connected);
+		}
+	}, [settings]);
+
 	const setSettings = (newSettings) => {
 		setSettingsRequest((prev) => {
 			return {
 				...prev,
-				settings: newSettings,
+				settings: { ...newSettings },
 			};
 		});
 	};
@@ -69,7 +79,9 @@ export default function SettingsProvider({ children }) {
 		// Save to database.
 		return model.save().then(async (response) => {
 			createNotification(__('Settings updated', 'kudos-donations'), true);
-			setSettingsSaving(false);
+			setTimeout(() => {
+				setSettingsSaving(false);
+			}, 500);
 			setSettings(response);
 			return response;
 		});
@@ -93,12 +105,15 @@ export default function SettingsProvider({ children }) {
 	}
 
 	async function checkApiKey(keys) {
+		setCheckingApiKey(true);
 		return apiFetch({
 			path: 'kudos/v1/payment/test',
 			method: 'POST',
 			data: keys,
 		}).then((response) => {
-			updateSetting('_kudos_vendor_mollie.connected', response?.success);
+			createNotification(response.data.message, response?.success);
+			setIsVendorConnected(response?.success);
+			setCheckingApiKey(false);
 			return response;
 		});
 	}
@@ -109,11 +124,13 @@ export default function SettingsProvider({ children }) {
 				settings,
 				settingsRequest,
 				setSettings,
+				checkingApiKey,
 				checkApiKey,
 				updateSetting,
 				updateSettings,
 				settingsReady,
 				settingsSaving,
+				isVendorConnected,
 			}}
 		>
 			{children}

@@ -1,4 +1,4 @@
-import { Fragment } from '@wordpress/element';
+import { Fragment, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import {
 	Button,
@@ -12,15 +12,18 @@ import Divider from '../../common/components/Divider';
 import { useFormContext } from 'react-hook-form';
 import apiFetch from '@wordpress/api-fetch';
 import { useNotificationContext } from '../contexts/NotificationContext';
+import { MailIcon } from '@heroicons/react/outline';
 
 const EmailTab = () => {
 	const { watch, getValues } = useFormContext();
 	const { createNotification } = useNotificationContext();
+	const [isEmailBusy, setIsEmailBusy] = useState(false);
 	const watchCustom = watch('_kudos_smtp_enable');
 	const watchSendReceipts = watch('_kudos_email_receipt_enable');
 
 	const sendTestEmail = () => {
 		const address = getValues('test_email_address');
+		setIsEmailBusy(true);
 		apiFetch({
 			path: 'kudos/v1/email/test',
 			headers: {
@@ -35,6 +38,9 @@ const EmailTab = () => {
 			})
 			.catch((error) => {
 				createNotification(error.message);
+			})
+			.finally(() => {
+				setIsEmailBusy(false);
 			});
 	};
 
@@ -208,7 +214,13 @@ const EmailTab = () => {
 						name="test_email_address"
 					/>
 					<br />
-					<Button isOutline type="button" onClick={sendTestEmail}>
+					<Button
+						isOutline
+						type="button"
+						isBusy={isEmailBusy}
+						onClick={sendTestEmail}
+						icon={<MailIcon className="mr-2 w-5 h-5" />}
+					>
 						Send
 					</Button>
 				</>
