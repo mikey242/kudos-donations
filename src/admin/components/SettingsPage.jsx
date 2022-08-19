@@ -22,12 +22,12 @@ import { useNotificationContext } from '../contexts/NotificationContext';
 const SettingsPage = () => {
 	const [showIntro, setShowIntro] = useState(false);
 	const {
+		settingsRequest,
 		updateSetting,
 		updateSettings,
 		checkApiKey,
 		settings,
 		settingsSaving,
-		settingsReady,
 	} = useSettingsContext();
 	const { createNotification } = useNotificationContext();
 	const methods = useForm({
@@ -77,7 +77,7 @@ const SettingsPage = () => {
 	return (
 		// Show spinner if not yet loaded
 		<>
-			{!settingsReady ? (
+			{!settingsRequest.ready ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
 				</div>

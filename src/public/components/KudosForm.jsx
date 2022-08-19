@@ -10,13 +10,13 @@ import Render from '../../common/components/Render';
 import { useCampaignContext } from '../../admin/contexts/CampaignContext';
 
 function KudosForm({ displayAs }) {
-	const { campaign, campaignId, total, campaignReady, campaignErrors } =
-		useCampaignContext();
+	const { campaignRequest, campaignId } = useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [formError, setFormError] = useState(null);
 	const [formState, setFormState] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const targetRef = useRef(null);
+	const { campaign } = campaignRequest;
 
 	useEffect(() => {
 		setTimestamp(Date.now());
@@ -116,7 +116,6 @@ function KudosForm({ displayAs }) {
 				ref={targetRef}
 				step={formState?.currentStep ?? 1}
 				campaign={campaign}
-				total={total}
 				handleNext={handleNext}
 				handlePrev={handlePrev}
 				submitForm={submitForm}
@@ -124,27 +123,10 @@ function KudosForm({ displayAs }) {
 		</>
 	);
 
-	const renderApiErrors = () => (
-		<>
-			{campaignErrors && (
-				<>
-					<p className="m-0">Kudos Donations ran into a problem:</p>
-					{campaignErrors.map((error, i) => (
-						<p key={i} className="text-red-500">
-							- {error}
-						</p>
-					))}
-				</>
-			)}
-		</>
-	);
-
-	const renderSpinner = () => <>{!campaignErrors && <Spinner />}</>;
-
 	return (
 		<Render themeColor={campaign?.theme_color}>
 			{/* If API not loaded yet then show a spinner */}
-			{campaignReady ? (
+			{campaignRequest.ready ? (
 				<>
 					{displayAs === 'form' && renderDonationForm()}
 					{displayAs === 'button' && (
@@ -159,9 +141,8 @@ function KudosForm({ displayAs }) {
 					)}
 				</>
 			) : (
-				renderSpinner()
+				<Spinner />
 			)}
-			{renderApiErrors()}
 		</Render>
 	);
 }

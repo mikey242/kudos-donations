@@ -11,10 +11,11 @@ import apiFetch from '@wordpress/api-fetch';
 export const CampaignContext = createContext(null);
 
 export default function CampaignProvider({ campaignId, children }) {
-	const [campaign, setCampaign] = useState(null);
-	const [campaignReady, setCampaignReady] = useState(false);
+	const [campaignRequest, setCampaignRequest] = useState({
+		ready: false,
+		campaign: null,
+	});
 	const [campaignErrors, setCampaignErrors] = useState(null);
-	const [total, setTotal] = useState(0);
 
 	useEffect(() => {
 		getData();
@@ -36,7 +37,6 @@ export default function CampaignProvider({ campaignId, children }) {
 		})
 			.then((response) => {
 				return response?.meta;
-				// setTimestamp(Date.now());
 			})
 			.catch((error) => {
 				throw {
@@ -47,29 +47,41 @@ export default function CampaignProvider({ campaignId, children }) {
 	};
 
 	const getData = () => {
-		Promise.all([
-			getCampaign().then((res) => setCampaign(res)),
-			getTotal().then((res) => setTotal(res)),
-		])
-			.then(() => setCampaignReady(true))
+		Promise.all([getCampaign(), getTotal()])
+			.then((data) =>
+				setCampaignRequest({
+					ready: true,
+					campaign: {
+						...data[0],
+						total: data[1],
+					},
+				})
+			)
 			.catch((error) => {
 				setCampaignErrors([error.message]);
 			});
 	};
 
+	const renderApiErrors = () => (
+		<>
+			<p className="m-0">Kudos Donations ran into a problem:</p>
+			{campaignErrors.map((error, i) => (
+				<p key={i} className="text-red-500">
+					- {error}
+				</p>
+			))}
+		</>
+	);
+
 	return (
 		<CampaignContext.Provider
 			value={{
-				campaign,
+				campaignRequest,
 				campaignId,
-				total,
-				getCampaign,
-				getTotal,
 				campaignErrors,
-				campaignReady,
 			}}
 		>
-			{children}
+			{!campaignErrors ? children : renderApiErrors()}
 		</CampaignContext.Provider>
 	);
 }

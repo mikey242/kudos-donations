@@ -14,20 +14,27 @@ import { useNotificationContext } from './NotificationContext';
 export const SettingsContext = createContext(null);
 
 export default function SettingsProvider({ children }) {
-	const [settingsReady, setSettingsReady] = useState(false);
+	const [settingsRequest, setSettingsRequest] = useState({
+		ready: false,
+		settings: null,
+	});
+	const [settingsReady] = useState(false);
 	const [settingsSaving, setSettingsSaving] = useState(false);
-	const [settings, setSettings] = useState();
+	const { settings } = settingsRequest;
 	const { createNotification } = useNotificationContext();
 
 	useEffect(() => {
 		getSettings();
 	}, []);
 
-	useEffect(() => {
-		if (settings) {
-			setSettingsReady(true);
-		}
-	}, [settings]);
+	const setSettings = (newSettings) => {
+		setSettingsRequest((prev) => {
+			return {
+				...prev,
+				settings: newSettings,
+			};
+		});
+	};
 
 	const getSettings = () => {
 		return api.loadPromise.then(() => {
@@ -36,27 +43,30 @@ export default function SettingsProvider({ children }) {
 				if (response._kudos_show_intro) {
 					window.location.replace('admin.php?page=kudos-settings');
 				} else {
-					setSettings(response);
+					setSettingsRequest({
+						ready: true,
+						settings: response,
+					});
 				}
 			});
 		});
 	};
 
-	// Update all settings
+	// Update all settings.
 	async function updateSettings(data) {
 		setSettingsSaving(true);
 
-		// Delete empty settings keys
+		// Delete empty settings keys.
 		for (const key in data) {
 			if (data[key] === null) {
 				delete data[key];
 			}
 		}
 
-		// Create WordPress settings model
+		// Create WordPress settings model.
 		const model = new api.models.Settings(data);
 
-		// Save to database
+		// Save to database.
 		return model.save().then(async (response) => {
 			createNotification(__('Settings updated', 'kudos-donations'), true);
 			setSettingsSaving(false);
@@ -65,16 +75,16 @@ export default function SettingsProvider({ children }) {
 		});
 	}
 
-	// Update an individual setting, uses current state if value not specified
+	// Update an individual setting, uses current state if value not specified.
 	async function updateSetting(option, value) {
 		setSettingsSaving(true);
 
-		// Create WordPress settings model
+		// Create WordPress settings model.
 		const model = new api.models.Settings({
 			[option]: value,
 		});
 
-		// Save to database
+		// Save to database.
 		return model.save().then((response) => {
 			setSettings(response);
 			setSettingsSaving(false);
@@ -97,6 +107,7 @@ export default function SettingsProvider({ children }) {
 		<SettingsContext.Provider
 			value={{
 				settings,
+				settingsRequest,
 				setSettings,
 				checkApiKey,
 				updateSetting,

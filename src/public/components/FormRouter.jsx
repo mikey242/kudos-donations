@@ -23,7 +23,7 @@ import classNames from 'classnames';
 import { Spinner } from '../../common/components/Spinner';
 
 const FormRouter = forwardRef(
-	({ step, campaign, total, handlePrev, handleNext, submitForm }, ref) => {
+	({ step, campaign, handlePrev, handleNext, submitForm }, ref) => {
 		const [height, setHeight] = useState('');
 		const [currentStep, setCurrentStep] = useState(1);
 		const [isBusy, setIsBusy] = useState(false);
@@ -105,7 +105,7 @@ const FormRouter = forwardRef(
 											}
 											showGoal={campaign.show_goal}
 											goal={campaign.goal}
-											total={total}
+											total={campaign.total}
 										/>
 									),
 									2: (

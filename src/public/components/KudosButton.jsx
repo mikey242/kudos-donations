@@ -2,9 +2,11 @@ import React from 'react';
 import Render from '../../common/components/Render';
 import { useCampaignContext } from '../../admin/contexts/CampaignContext';
 import { DonateButton } from '../../common/components/DonateButton';
+import { Spinner } from '../../common/components/Spinner';
 
 const KudosButton = ({ children, className, targetId = null }) => {
-	const { campaign } = useCampaignContext();
+	const { campaignRequest } = useCampaignContext();
+	const { campaign } = campaignRequest;
 
 	const triggerModal = () => {
 		const target = document.getElementById(targetId);
@@ -17,11 +19,15 @@ const KudosButton = ({ children, className, targetId = null }) => {
 
 	return (
 		<Render themeColor={campaign?.theme_color}>
-			<DonateButton
-				className={className}
-				children={children}
-				onClick={triggerModal}
-			/>
+			{campaignRequest.ready ? (
+				<DonateButton
+					className={className}
+					children={children}
+					onClick={triggerModal}
+				/>
+			) : (
+				<Spinner />
+			)}
 		</Render>
 	);
 };
