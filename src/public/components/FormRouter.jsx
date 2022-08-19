@@ -36,11 +36,11 @@ const FormRouter = forwardRef(
 		const onSubmit = (data) => {
 			if (step < 5) return handleNext(data, step + 1);
 			setIsBusy(true);
-			// submitForm(data).then((result) => {
-			// 	if (!result.success) {
-			// 		setIsBusy(false);
-			// 	}
-			// });
+			submitForm(data).then((result) => {
+				if (!result.success) {
+					setIsBusy(false);
+				}
+			});
 		};
 
 		useLayoutEffect(() => {
