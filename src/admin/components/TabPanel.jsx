@@ -67,7 +67,9 @@ const TabPanel = ({ tabs }) => {
 								tab = tab[1];
 								return (
 									<Tab.Panel key={tab.name}>
-										{tab.content}
+										<div className={'space-y-6'}>
+											{tab.content}
+										</div>
 									</Tab.Panel>
 								);
 							})}

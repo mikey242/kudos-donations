@@ -2,7 +2,6 @@ import { Fragment, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import {
 	Button,
-	CheckboxControl,
 	RadioControl,
 	TextControl,
 	ToggleControl,
@@ -57,7 +56,6 @@ const EmailTab = () => {
 			/>
 			{watchSendReceipts && (
 				<>
-					<br />
 					<TextControl
 						label={__('Send receipt copy to', 'kudos-donations')}
 						name="_kudos_email_bcc"
@@ -66,7 +64,6 @@ const EmailTab = () => {
 							'kudos-donations'
 						)}
 					/>
-					<br />
 					<ToggleControl
 						name="_kudos_smtp_enable"
 						label={__(
@@ -111,10 +108,13 @@ const EmailTab = () => {
 									),
 								}}
 							/>
-							<br />
 							<RadioControl
 								name="_kudos_custom_smtp.encryption"
 								label={__('Encryption', 'kudos-donations')}
+								help={__(
+									'For most servers TLS is the recommended option. If your SMTP provider offers both SSL and TLS options, we recommend using TLS.',
+									'kudos-donations'
+								)}
 								options={[
 									{
 										label: __('None', 'kudos-donations'),
@@ -122,25 +122,21 @@ const EmailTab = () => {
 										id: 'none',
 									},
 									{
-										label: __('SSL/TLS', 'kudos-donations'),
+										label: __('SSL', 'kudos-donations'),
 										value: 'ssl',
 										id: 'ssl',
 									},
 									{
-										label: __(
-											'STARTTLS',
-											'kudos-donations'
-										),
+										label: __('TLS', 'kudos-donations'),
 										value: 'tls',
 										id: 'tls',
 									},
 								]}
 							/>
-							<CheckboxControl
-								name="_kudos_custom_smtp.autotls"
-								label={__('Auto TLS', 'kudos-donations')}
-							/>
-							<br />
+							{/*<CheckboxControl*/}
+							{/*	name="_kudos_custom_smtp.autotls"*/}
+							{/*	label={__('Auto TLS', 'kudos-donations')}*/}
+							{/*/>*/}
 							<TextControl
 								name="_kudos_custom_smtp.username"
 								label={__('Username', 'kudos-donations')}
@@ -172,7 +168,6 @@ const EmailTab = () => {
 									),
 								}}
 							/>
-							<br />
 							<TextControl
 								name="_kudos_custom_smtp.from_email"
 								label={__('From address', 'kudos-donations')}
@@ -188,7 +183,6 @@ const EmailTab = () => {
 									),
 								}}
 							/>
-							<br />
 							<TextControl
 								label={__('Email from name', 'kudos-donations')}
 								name="_kudos_custom_smtp.from_name"
@@ -208,21 +202,26 @@ const EmailTab = () => {
 
 					<Divider />
 					<h2>{__('Test email', 'kudos-donations')}</h2>
-					<TextControl
-						label={__('Send test email', 'kudos-donations')}
-						type="email"
-						name="test_email_address"
-					/>
-					<br />
-					<Button
-						isOutline
-						type="button"
-						isBusy={isEmailBusy}
-						onClick={sendTestEmail}
-						icon={<MailIcon className="mr-2 w-5 h-5" />}
-					>
-						Send
-					</Button>
+					<div className="space-y-3">
+						<TextControl
+							label={__('Email address', 'kudos-donations')}
+							type="email"
+							name="test_email_address"
+							help={__(
+								'Address to send the test email to.',
+								'kudos-donations'
+							)}
+						/>
+						<Button
+							isOutline
+							type="button"
+							isBusy={isEmailBusy}
+							onClick={sendTestEmail}
+							icon={<MailIcon className="mr-2 w-5 h-5" />}
+						>
+							Send
+						</Button>
+					</div>
 				</>
 			)}
 		</Fragment>

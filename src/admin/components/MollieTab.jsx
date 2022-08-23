@@ -31,30 +31,31 @@ const MollieTab = () => {
 					'kudos-donations'
 				)}
 			/>
-			<br />
-			<button
-				className="inline-flex items-center cursor-pointer"
-				onClick={refresh}
-				type="button"
-			>
-				<>
-					<RefreshIcon
-						className={classNames(
-							checkingApiKey && 'animate-spin',
-							'w-5 h-5'
-						)}
-					/>{' '}
-					<span className="mx-2">
-						{__('Test / Refresh API', 'kudos-donations')}
-					</span>
-				</>
-			</button>
-			<p className="my-2 text-sm text-gray-500">
-				{__(
-					'Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.',
-					'kudos-donations'
-				)}
-			</p>
+			<div>
+				<button
+					className="inline-flex items-center cursor-pointer"
+					onClick={refresh}
+					type="button"
+				>
+					<>
+						<RefreshIcon
+							className={classNames(
+								checkingApiKey && 'animate-spin',
+								'w-5 h-5'
+							)}
+						/>{' '}
+						<span className="mx-2">
+							{__('Test / Refresh API', 'kudos-donations')}
+						</span>
+					</>
+				</button>
+				<p className="my-2 text-sm text-gray-500">
+					{__(
+						'Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.',
+						'kudos-donations'
+					)}
+				</p>
+			</div>
 			<Divider />
 			<TextControl
 				name="_kudos_vendor_mollie.live_key"

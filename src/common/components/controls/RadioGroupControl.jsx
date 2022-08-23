@@ -19,11 +19,6 @@ const RadioGroupControl = ({ name, validation, options, help, label }) => {
 					>
 						{label}
 					</RadioGroup.Label>
-					{help && (
-						<p className="text-sm leading-5 text-gray-500 mt-1">
-							{help}
-						</p>
-					)}
 					<div className="grid gap-3 mt-1 grid-flow-col auto-cols-fr">
 						{options.map((option, i) => (
 							<RadioGroup.Option
@@ -49,6 +44,11 @@ const RadioGroupControl = ({ name, validation, options, help, label }) => {
 							</RadioGroup.Option>
 						))}
 					</div>
+					{help && (
+						<p className="text-sm leading-5 text-gray-500 mt-2">
+							{help}
+						</p>
+					)}
 				</RadioGroup>
 			)}
 		/>

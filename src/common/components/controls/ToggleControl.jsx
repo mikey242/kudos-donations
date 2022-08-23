@@ -9,7 +9,7 @@ const ToggleControl = ({ name, validation, label, help }) => {
 			name={name}
 			validation={validation}
 			render={({ field: { value, onChange } }) => (
-				<>
+				<div>
 					<Switch.Group
 						as="div"
 						className="flex items-center mt-3 first:mt-0 mb-1"
@@ -35,7 +35,7 @@ const ToggleControl = ({ name, validation, label, help }) => {
 								as="span"
 								className="ml-3 cursor-pointer"
 							>
-								<span className="text-sm font-medium text-gray-700">
+								<span className="text-sm font-bold text-gray-700">
 									{label}
 								</span>
 							</Switch.Label>
@@ -46,7 +46,7 @@ const ToggleControl = ({ name, validation, label, help }) => {
 							{help}
 						</p>
 					)}
-				</>
+				</div>
 			)}
 		/>
 	);

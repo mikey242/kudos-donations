@@ -65,7 +65,7 @@ function CampaignEdit({
 						name="title"
 						label={__('Campaign name', 'kudos-donations')}
 						help={__(
-							'Give your campaign a unique name',
+							'Give your campaign a unique name.',
 							'kudos-donations'
 						)}
 						validation={{
@@ -77,7 +77,7 @@ function CampaignEdit({
 						name="meta.goal"
 						addOn="€"
 						help={__(
-							'Set a goal for your campaign',
+							'Set a goal for your campaign.',
 							'kudos-donations'
 						)}
 						label={__('Goal', 'kudos-donations')}
@@ -112,35 +112,41 @@ function CampaignEdit({
 					/>
 					<ToggleControl
 						name="meta.show_goal"
-						label={__(
-							'Display goal progress on form',
+						label={__('Display goal progress.', 'kudos-donations')}
+						help={__(
+							'This will publicly display a goal progress bar on your donation form.',
 							'kudos-donations'
 						)}
 					/>
-					<Divider />
+
 					<ColorPicker
 						name="meta.theme_color"
 						label={__('Theme color', 'kudos-donations')}
 						help={__(
-							'Choose a color theme for your campaign',
+							'Choose a color theme for your campaign.',
 							'kudos-donations'
 						)}
 					/>
-					<Divider />
-					<p className="block text-sm font-bold text-gray-700">
-						Completed payment
-					</p>
 					<ToggleControl
 						name="meta.show_return_message"
 						label={__('Show return message', 'kudos-donations')}
+						help={__(
+							'This will show a pop-up message to the donor thanking them for their donation.',
+							'kudos-donations'
+						)}
 					/>
 					<ToggleControl
 						name="meta.use_custom_return_url"
 						label={__('Use custom return URL', 'kudos-donations')}
+						help={__(
+							'Once the payment has been completed, return the donor to a custom URL.',
+							'kudos-donations'
+						)}
 					/>
 					{watchUseReturnURL && (
 						<TextControl
 							name="meta.custom_return_url"
+							label={__('URL', 'kudos-donations')}
 							validation={{
 								required: __(
 									'Name required',
@@ -189,7 +195,7 @@ function CampaignEdit({
 						name="meta.donation_type"
 						label={__('Donation type', 'kudos-donations')}
 						help={__(
-							'Choose the available payment frequency',
+							'Choose the available payment frequency.',
 							'kudos-donations'
 						)}
 						options={[
@@ -213,7 +219,7 @@ function CampaignEdit({
 						name="meta.amount_type"
 						label={__('Payment type', 'kudos-donations')}
 						help={__(
-							'Chose the available amount types',
+							'Chose the available amount types.',
 							'kudos-donations'
 						)}
 						options={[
@@ -234,6 +240,7 @@ function CampaignEdit({
 					{watchAmountType !== 'fixed' && (
 						<TextControl
 							name="meta.minimum_donation"
+							addOn="€"
 							validation={{
 								required: __(
 									'Minimum donation required',
@@ -271,33 +278,29 @@ function CampaignEdit({
 			title: __('Optional fields', 'kudos-donations'),
 			content: (
 				<Fragment>
-					<p className="text-sm font-bold text-gray-700">
-						{__('Address', 'kudos-donations')}
-					</p>
 					<ToggleControl
 						name="meta.address_enabled"
-						label={__('Enable', 'kudos-donations')}
-						help={__('Show the address tab', 'kudos-donations')}
+						label={__('Address', 'kudos-donations')}
+						help={__('Show the address tab.', 'kudos-donations')}
 					/>
 					{watchAddress && (
 						<CheckboxControl
 							name="meta.address_required"
+							help={__(
+								'Make the address fields required',
+								'kudos-donations'
+							)}
 							label={__('Required', 'kudos-donations')}
 						/>
 					)}
-					<Divider />
-					<p className="text-sm font-bold text-gray-700">
-						{__('Message', 'kudos-donations')}
-					</p>
 					<ToggleControl
 						name="meta.message_enabled"
-						label={__('Enable', 'kudos-donations')}
+						label={__('Message', 'kudos-donations')}
 						help={__(
-							'Allow donors to leave a message',
+							'Allow donors to leave a message.',
 							'kudos-donations'
 						)}
 					/>
-					<Divider />
 					<TextControl
 						name="meta.terms_link"
 						label={__(

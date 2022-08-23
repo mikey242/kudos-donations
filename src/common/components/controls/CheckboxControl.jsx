@@ -13,9 +13,6 @@ const CheckboxControl = ({ name, validation, label, help }) => {
 
 	return (
 		<div className="first:mt-0 mt-3">
-			{help && (
-				<p className="text-sm leading-5 text-gray-500 mb-1">{help}</p>
-			)}
 			<div className="relative flex items-center">
 				<div className="flex items-center h-5">
 					<input
@@ -33,6 +30,9 @@ const CheckboxControl = ({ name, validation, label, help }) => {
 					</label>
 				</div>
 			</div>
+			{help && (
+				<p className="text-sm leading-5 text-gray-500 mt-2">{help}</p>
+			)}
 			{error?.message && (
 				<p className="mt-2 text-sm text-red-600" id={`${id}-error`}>
 					{error?.message}

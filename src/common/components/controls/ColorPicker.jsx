@@ -29,12 +29,7 @@ const ColorPicker = ({ name, label, help }) => {
 					<RadioGroup.Label className="block text-sm font-bold text-gray-700">
 						{label}
 					</RadioGroup.Label>
-					{help && (
-						<p className="text-sm leading-5 text-gray-500 mt-1">
-							{help}
-						</p>
-					)}
-					<div className="mt-4 inline-flex items-center space-x-3">
+					<div className="mt-2 inline-flex items-center space-x-3">
 						{colors.map((color) => (
 							<RadioGroup.Option
 								key={color.name}
@@ -111,6 +106,11 @@ const ColorPicker = ({ name, label, help }) => {
 							</RadioGroup.Option>
 						</>
 					</div>
+					{help && (
+						<p className="text-sm leading-5 text-gray-500 mt-2">
+							{help}
+						</p>
+					)}
 				</RadioGroup>
 			)}
 		/>

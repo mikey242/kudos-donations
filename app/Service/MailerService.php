@@ -96,9 +96,9 @@ class MailerService
         // Add custom config if enabled.
         if ($this->custom_smtp) {
             $phpmailer->isSMTP();
-            $phpmailer->Host        = $this->custom_config['host'];
-            $phpmailer->SMTPAutoTLS = $this->custom_config['autotls'];
-            $phpmailer->SMTPAuth    = true;
+            $phpmailer->Host = $this->custom_config['host'];
+//            $phpmailer->SMTPAutoTLS = $this->custom_config['autotls'];
+            $phpmailer->SMTPAuth = true;
             if ('none' !== $this->custom_config['encryption']) {
                 $phpmailer->SMTPSecure = $this->custom_config['encryption'];
             }
