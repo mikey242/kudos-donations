@@ -29,25 +29,6 @@ npm run production
 npm run export
 ````
 
-### Docker
-
-Included is a docker environment used for development of the plugin. This environment includes the following containers:
-
-- WordPress - The WordPress software.
-- MariaDB - Database container.
-- Adminer - A web interface for manipulating the database.
-
-To use the included docker environment run the following from the docker sub-folder:
-
-````bash
-docker-compose up -d
-````
-
-Once up and running you can access the various containers from these addresses:
-
-- Wordpress - http://localhost:8080
-- Adminer - http://localhost:8081
-
 ## Credits
 
 This software uses the following open source packages:
