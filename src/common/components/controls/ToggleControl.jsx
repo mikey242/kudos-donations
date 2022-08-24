@@ -12,7 +12,7 @@ const ToggleControl = ({ name, validation, label, help }) => {
 				<div>
 					<Switch.Group
 						as="div"
-						className="flex items-center mt-3 first:mt-0 mb-1"
+						className="flex items-center first:mt-0 mt-3 mb-1"
 					>
 						<Switch
 							checked={value}

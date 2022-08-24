@@ -25,7 +25,11 @@ const ColorPicker = ({ name, label, help }) => {
 		<Controller
 			name={name}
 			render={({ field: { onChange, value } }) => (
-				<RadioGroup value={value} onChange={onChange} className="mt-3">
+				<RadioGroup
+					value={value}
+					onChange={onChange}
+					className="first:mt-0 mt-3"
+				>
 					<RadioGroup.Label className="block text-sm font-bold text-gray-700">
 						{label}
 					</RadioGroup.Label>

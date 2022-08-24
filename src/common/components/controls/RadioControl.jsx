@@ -5,7 +5,7 @@ const RadioControl = ({ name, validation, options, label, help }) => {
 	const { getValues, register } = useFormContext();
 
 	return (
-		<div className="mt-4">
+		<div className="first:mt-0 mt-3">
 			<p className="block text-sm font-bold text-gray-700">{label}</p>
 			<fieldset className="mt-2">
 				<legend className="sr-only">{label}</legend>

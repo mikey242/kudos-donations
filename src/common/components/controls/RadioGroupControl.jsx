@@ -9,7 +9,11 @@ const RadioGroupControl = ({ name, validation, options, help, label }) => {
 			name={name}
 			validation={validation}
 			render={({ field: { onChange, value } }) => (
-				<RadioGroup value={value} onChange={onChange} className="mt-2">
+				<RadioGroup
+					value={value}
+					onChange={onChange}
+					className="first:mt-0 mt-3"
+				>
 					<RadioGroup.Label
 						className={
 							label
