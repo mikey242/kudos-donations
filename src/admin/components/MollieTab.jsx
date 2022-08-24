@@ -31,6 +31,7 @@ const MollieTab = () => {
 					'kudos-donations'
 				)}
 			/>
+			<Divider />
 			<div>
 				<button
 					className="inline-flex items-center cursor-pointer"
