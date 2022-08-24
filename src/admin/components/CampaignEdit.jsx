@@ -12,10 +12,10 @@ import {
 	ToggleControl,
 } from '../../common/components/controls';
 import TabPanel from './TabPanel';
-import Divider from '../../common/components/Divider';
 import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
 import { isValidUrl } from '../../common/helpers/util';
 import GenerateShortcode from './GenerateShortcode';
+import Divider from '../../common/components/Divider';
 
 function CampaignEdit({
 	campaign,
@@ -35,6 +35,7 @@ function CampaignEdit({
 	const watchAmountType = watch('meta.amount_type');
 	const watchUseReturnURL = watch('meta.use_custom_return_url');
 	const watchAddress = watch('meta.address_enabled');
+	const watchUseReturnMessage = watch('meta.show_return_message');
 
 	const goBack = () => {
 		if (Object.keys(formState.dirtyFields).length) {
@@ -96,7 +97,7 @@ function CampaignEdit({
 						name="meta.additional_funds"
 						addOn="€"
 						help={__(
-							'Add external funds to the total',
+							'Add external funds to the total.',
 							'kudos-donations'
 						)}
 						label={__('Additional funds', 'kudos-donations')}
@@ -114,7 +115,7 @@ function CampaignEdit({
 						name="meta.show_goal"
 						label={__('Display goal progress.', 'kudos-donations')}
 						help={__(
-							'This will publicly display a goal progress bar on your donation form.',
+							'This will display a goal progress bar on your donation form. Make sure you also set a goal.',
 							'kudos-donations'
 						)}
 					/>
@@ -127,6 +128,7 @@ function CampaignEdit({
 							'kudos-donations'
 						)}
 					/>
+					<Divider />
 					<ToggleControl
 						name="meta.show_return_message"
 						label={__('Show return message', 'kudos-donations')}
@@ -135,6 +137,19 @@ function CampaignEdit({
 							'kudos-donations'
 						)}
 					/>
+					{watchUseReturnMessage && (
+						<>
+							<TextControl
+								name="meta.return_message_title"
+								label={__('Message title', 'kudos-donations')}
+							/>
+							<TextAreaControl
+								name="meta.return_message_text"
+								label={__('Message text', 'kudos-donations')}
+							/>
+						</>
+					)}
+					<Divider />
 					<ToggleControl
 						name="meta.use_custom_return_url"
 						label={__('Use custom return URL', 'kudos-donations')}
@@ -172,16 +187,6 @@ function CampaignEdit({
 					<TextAreaControl
 						name="meta.initial_description"
 						label={__('Text', 'kudos-donations')}
-					/>
-					<Divider />
-					<h3>{__('Completed payment', 'kudos-donations')}</h3>
-					<TextControl
-						name="meta.return_message_title"
-						label={__('Message title', 'kudos-donations')}
-					/>
-					<TextAreaControl
-						name="meta.return_message_text"
-						label={__('Message text', 'kudos-donations')}
 					/>
 				</Fragment>
 			),
@@ -287,7 +292,7 @@ function CampaignEdit({
 						<CheckboxControl
 							name="meta.address_required"
 							help={__(
-								'Make the address fields required',
+								'Make the address required.',
 								'kudos-donations'
 							)}
 							label={__('Required', 'kudos-donations')}
@@ -307,10 +312,18 @@ function CampaignEdit({
 							'Terms and Conditions URL',
 							'kudos-donations'
 						)}
+						help={__(
+							'Add a URL to your Terms & Conditions, donors will need to agree to them before donating.',
+							'kudos-donations'
+						)}
 					/>
 					<TextControl
 						name="meta.privacy_link"
 						label={__('Privacy Policy URL', 'kudos-donations')}
+						help={__(
+							'Add a URL to your Privacy policy, donors will need to agree to it before donating.',
+							'kudos-donations'
+						)}
 					/>
 				</Fragment>
 			),
