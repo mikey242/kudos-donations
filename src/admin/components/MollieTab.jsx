@@ -10,11 +10,11 @@ import Divider from '../../common/components/Divider';
 import classNames from 'classnames';
 import { useSettingsContext } from '../contexts/SettingsContext';
 
-const MollieTab = () => {
-	const { checkApiKey, checkingApiKey } = useSettingsContext();
+const MollieTab = ({ checkApiKeys }) => {
+	const { checkingApiKey } = useSettingsContext();
 
 	const refresh = () => {
-		checkApiKey();
+		checkApiKeys();
 	};
 
 	return (

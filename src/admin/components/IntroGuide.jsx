@@ -25,15 +25,20 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 	const methods = useForm();
 
 	const submitMollie = (data) => {
+		console.log(data);
 		setIsApiSaving(true);
 		checkApiKey({
 			keys: data.keys,
-		}).then((response) => {
-			if (!response.success) {
+		})
+			.then((response) => {
 				setApiMessage(response.data.message);
-			}
-			setIsApiSaving(false);
-		});
+			})
+			.catch((error) => {
+				setApiMessage(error.message);
+			})
+			.finally(() => {
+				setIsApiSaving(false);
+			});
 	};
 
 	const closeModal = () => {
@@ -119,9 +124,9 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 												<div className="mt-3 flex justify-end relative">
 													<Button
 														isSmall
+														isBusy={isApiSaving}
 														type="submit"
 														className="w-full"
-														isDisabled={isApiSaving}
 													>
 														{__(
 															'Connect',

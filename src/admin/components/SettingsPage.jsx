@@ -19,9 +19,9 @@ import { Spinner } from '../../common/components/Spinner';
 import { useSettingsContext } from '../contexts/SettingsContext';
 import { SaveIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const SettingsPage = () => {
-	const [showIntro, setShowIntro] = useState(false);
 	const {
 		settingsRequest,
 		settingsSaving,
@@ -29,8 +29,11 @@ const SettingsPage = () => {
 		updateSettings,
 		checkApiKey,
 		settings,
+		setIsVendorConnected,
 		isVendorConnected,
 	} = useSettingsContext();
+	const { createNotification } = useNotificationContext();
+	const [showIntro, setShowIntro] = useState(false);
 	const methods = useForm({
 		defaultValues: settings,
 	});
@@ -45,7 +48,7 @@ const SettingsPage = () => {
 	const save = (data) => {
 		updateSettings(data).then(async () => {
 			if (`_kudos_vendor_${settings._kudos_vendor}` in dirtyFields) {
-				await checkApiKey({
+				checkApiKeyWrapper({
 					keys: methods.getValues(
 						`_kudos_vendor_${settings._kudos_vendor}`
 					),
@@ -54,12 +57,19 @@ const SettingsPage = () => {
 		});
 	};
 
+	const checkApiKeyWrapper = (keys) => {
+		checkApiKey(keys).then((response) => {
+			createNotification(response.data.message, response?.success);
+			setIsVendorConnected(response?.success);
+		});
+	};
+
 	// Define tabs and panels
 	const tabs = [
 		{
 			name: 'mollie',
 			title: __('Mollie', 'kudos-donations'),
-			content: <MollieTab />,
+			content: <MollieTab checkApiKeys={checkApiKeyWrapper} />,
 		},
 		{
 			name: 'email',

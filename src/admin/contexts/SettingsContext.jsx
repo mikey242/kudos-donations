@@ -50,14 +50,10 @@ export default function SettingsProvider({ children }) {
 		return api.loadPromise.then(() => {
 			const settingsModel = new api.models.Settings();
 			return settingsModel.fetch().then((response) => {
-				if (response._kudos_show_intro) {
-					window.location.replace('admin.php?page=kudos-settings');
-				} else {
-					setSettingsRequest({
-						ready: true,
-						settings: response,
-					});
-				}
+				setSettingsRequest({
+					ready: true,
+					settings: response,
+				});
 				return response;
 			});
 		});
@@ -111,12 +107,14 @@ export default function SettingsProvider({ children }) {
 			path: 'kudos/v1/payment/test',
 			method: 'POST',
 			data: keys,
-		}).then((response) => {
-			createNotification(response.data.message, response?.success);
-			setIsVendorConnected(response?.success);
-			setCheckingApiKey(false);
-			return response;
-		});
+		})
+			.then((response) => {
+				return response;
+			})
+			.finally(() => {
+				getSettings();
+				setCheckingApiKey(false);
+			});
 	}
 
 	return (
@@ -131,6 +129,7 @@ export default function SettingsProvider({ children }) {
 				updateSettings,
 				settingsReady,
 				settingsSaving,
+				setIsVendorConnected,
 				isVendorConnected,
 			}}
 		>
