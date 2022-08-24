@@ -88,7 +88,7 @@ const EmailTab = () => {
 								)}
 								validation={{
 									required: __(
-										'The field is required.',
+										'This field is required.',
 										'kudos-donations'
 									),
 								}}
@@ -103,7 +103,7 @@ const EmailTab = () => {
 								)}
 								validation={{
 									required: __(
-										'The field is required.',
+										'This field is required.',
 										'kudos-donations'
 									),
 								}}
@@ -147,7 +147,7 @@ const EmailTab = () => {
 								placeholder="user@domain.com"
 								validation={{
 									required: __(
-										'The field is required.',
+										'This field is required.',
 										'kudos-donations'
 									),
 								}}
@@ -163,7 +163,7 @@ const EmailTab = () => {
 								placeholder="*****"
 								validation={{
 									required: __(
-										'The field is required.',
+										'This field is required.',
 										'kudos-donations'
 									),
 								}}
@@ -178,7 +178,7 @@ const EmailTab = () => {
 								)}
 								validation={{
 									required: __(
-										'The field is required.',
+										'This field is required.',
 										'kudos-donations'
 									),
 								}}
@@ -188,7 +188,7 @@ const EmailTab = () => {
 								name="_kudos_custom_smtp.from_name"
 								validation={{
 									required: __(
-										'The field is required.',
+										'This field is required.',
 										'kudos-donations'
 									),
 								}}
