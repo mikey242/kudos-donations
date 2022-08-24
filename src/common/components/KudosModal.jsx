@@ -56,7 +56,7 @@ const KudosModal = ({
 	return (
 		<div ref={targetRef} data-toggle={false}>
 			<Transition show={isOpen} appear={false}>
-				<div className={'fixed z-[999999] inset-0 overflow-y-auto'}>
+				<div className={'fixed z-[999999] inset-0 overflow-y-clip'}>
 					<>
 						<Transition.Child
 							enter="transition-opacity duration-[400ms]"
