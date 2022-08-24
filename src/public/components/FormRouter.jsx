@@ -69,148 +69,138 @@ const FormRouter = forwardRef(
 
 		return (
 			<FormProvider {...methods}>
-				<div className="relative">
-					<div
-						ref={ref}
-						className={classNames(
-							isBusy && 'opacity-50',
-							'transition-all duration-200'
-						)}
-						style={{ height }}
-					>
-						<form onSubmit={methods.handleSubmit(onSubmit)}>
+				<div
+					ref={ref}
+					className={classNames(
+						isBusy && 'opacity-50',
+						'transition-all duration-200'
+					)}
+					style={{ height }}
+				>
+					<form onSubmit={methods.handleSubmit(onSubmit)}>
+						{
 							{
-								{
-									1: (
-										<InitialTab
-											title={campaign.initial_title}
-											description={
-												campaign.initial_description
-											}
-											minimumDonation={
-												campaign.minimum_donation
-											}
-											donationType={
-												campaign.donation_type
-											}
-											amountType={campaign.amount_type}
-											fixedAmounts={
-												campaign.fixed_amounts
-											}
-											showGoal={campaign.show_goal}
-											goal={campaign.goal}
-											total={campaign.total}
-										/>
-									),
-									2: (
-										<FrequencyTab
-											title={
-												campaign.recurring_title ??
-												__(
-													'Subscription',
-													'kudos-donations'
-												)
-											}
-											description={
-												campaign.recurring_description ??
-												__(
-													'How often would you like to donate?',
-													'kudos-donations'
-												)
-											}
-										/>
-									),
-									3: (
-										<AddressTab
-											required={campaign.address_required}
-											title={
-												campaign.address_title ??
-												__('Address', 'kudos-donations')
-											}
-											description={
-												campaign.address_description ??
-												__(
-													'Please fill in your address',
-													'kudos-donations'
-												)
-											}
-										/>
-									),
-									4: (
-										<MessageTab
-											title={
-												campaign.message_title ??
-												__('Message', 'kudos-donations')
-											}
-											description={
-												campaign.message_description ??
-												__(
-													'Leave a message (optional).',
-													'kudos-donations'
-												)
-											}
-										/>
-									),
-									5: (
-										<SummaryTab
-											title={
-												campaign.summary_title ??
-												__('Payment', 'kudos-donations')
-											}
-											description={
-												campaign.summary_description ??
-												__(
-													'By clicking donate you agree to the following payment:',
-													'kudos-donations'
-												)
-											}
-											privacyLink={campaign.privacy_link}
-											termsLink={campaign.terms_link}
-										/>
-									),
-								}[currentStep]
-							}
-							<div className="kudos-modal-buttons mt-8 flex justify-between relative">
-								{currentStep > 1 && (
-									<Button
-										type="button"
-										className="text-base"
-										ariaLabel={__(
-											'Back',
-											'kudos-donations'
-										)}
-										onClick={handlePrev}
-										icon={
-											<ChevronLeftIcon className="mr-2 w-5 h-5" />
+								1: (
+									<InitialTab
+										title={campaign.initial_title}
+										description={
+											campaign.initial_description
 										}
-									>
-										{__('Back', 'kudos-donations')}
-									</Button>
-								)}
+										minimumDonation={
+											campaign.minimum_donation
+										}
+										donationType={campaign.donation_type}
+										amountType={campaign.amount_type}
+										fixedAmounts={campaign.fixed_amounts}
+										showGoal={campaign.show_goal}
+										goal={campaign.goal}
+										total={campaign.total}
+									/>
+								),
+								2: (
+									<FrequencyTab
+										title={
+											campaign.recurring_title ??
+											__(
+												'Subscription',
+												'kudos-donations'
+											)
+										}
+										description={
+											campaign.recurring_description ??
+											__(
+												'How often would you like to donate?',
+												'kudos-donations'
+											)
+										}
+									/>
+								),
+								3: (
+									<AddressTab
+										required={campaign.address_required}
+										title={
+											campaign.address_title ??
+											__('Address', 'kudos-donations')
+										}
+										description={
+											campaign.address_description ??
+											__(
+												'Please fill in your address',
+												'kudos-donations'
+											)
+										}
+									/>
+								),
+								4: (
+									<MessageTab
+										title={
+											campaign.message_title ??
+											__('Message', 'kudos-donations')
+										}
+										description={
+											campaign.message_description ??
+											__(
+												'Leave a message (optional).',
+												'kudos-donations'
+											)
+										}
+									/>
+								),
+								5: (
+									<SummaryTab
+										title={
+											campaign.summary_title ??
+											__('Payment', 'kudos-donations')
+										}
+										description={
+											campaign.summary_description ??
+											__(
+												'By clicking donate you agree to the following payment:',
+												'kudos-donations'
+											)
+										}
+										privacyLink={campaign.privacy_link}
+										termsLink={campaign.terms_link}
+									/>
+								),
+							}[currentStep]
+						}
+						<div className="kudos-modal-buttons mt-8 flex justify-between relative">
+							{currentStep > 1 && (
 								<Button
-									type="submit"
-									ariaLabel={__('Next', 'kudos-donations')}
-									className="ml-auto text-base"
-									isBusy={isBusy}
+									type="button"
+									className="text-base"
+									ariaLabel={__('Back', 'kudos-donations')}
+									onClick={handlePrev}
 									icon={
-										steps[currentStep].name ===
-											'Summary' && (
-											<LockClosedIcon className="mr-2 w-5 h-5" />
-										)
+										<ChevronLeftIcon className="mr-2 w-5 h-5" />
 									}
 								>
-									{steps[currentStep].name === 'Summary' ? (
-										__('Submit', 'kudos-donations')
-									) : (
-										<>
-											{__('Next', 'kudos-donations')}
-											<ChevronRightIcon className="ml-2 w-5 h-5" />
-										</>
-									)}
+									{__('Back', 'kudos-donations')}
 								</Button>
-							</div>
-						</form>
-					</div>
+							)}
+							<Button
+								type="submit"
+								ariaLabel={__('Next', 'kudos-donations')}
+								className="ml-auto text-base"
+								isBusy={isBusy}
+								icon={
+									steps[currentStep].name === 'Summary' && (
+										<LockClosedIcon className="mr-2 w-5 h-5" />
+									)
+								}
+							>
+								{steps[currentStep].name === 'Summary' ? (
+									__('Submit', 'kudos-donations')
+								) : (
+									<>
+										{__('Next', 'kudos-donations')}
+										<ChevronRightIcon className="ml-2 w-5 h-5" />
+									</>
+								)}
+							</Button>
+						</div>
+					</form>
 				</div>
 			</FormProvider>
 		);

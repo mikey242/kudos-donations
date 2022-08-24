@@ -33,10 +33,7 @@ function Render({ children, themeColor, style, className }) {
 			)}
 			{ready && (
 				<div id="kudos-container">
-					<div
-						id="kudos"
-						className={classNames(className, 'font-sans')}
-					>
+					<div className={classNames(className, 'font-sans')}>
 						{children}
 					</div>
 				</div>
