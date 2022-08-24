@@ -25,10 +25,57 @@ class Version400 extends AbstractMigration implements MigrationInterface
     {
         $db           = new WpDb();
         $this->mapper = new MapperService($db);
+        $this->cache  = [];
 
-        $this->migrate_campaigns();
+//        $this->migrate_campaigns();
         $this->migrate_transactions();
+        $this->migrate_smtp();
         $this->logger->info('Migration 400 complete', $this->cache);
+    }
+
+    public function migrate_transactions()
+    {
+        if ( ! empty($this->cache['campaigns'])) {
+            $campaigns                   = $this->cache['campaigns'];
+            $this->cache['transactions'] = [];
+            foreach ($campaigns as $old_id => $new_id) {
+                if ($old_id && $new_id) {
+                    // Assign transactions to new campaign id.
+                    $transactions = $this->mapper->get_repository(TransactionEntity::class)
+                                                 ->get_all_by(['campaign_id' => $old_id]);
+                    /** @var TransactionEntity $transaction */
+                    foreach ($transactions as $transaction) {
+                        $this->cache['transactions'][$transaction->campaign_id] = $new_id;
+                        $transaction->set_fields([
+                            'campaign_id' => $new_id,
+                        ]);
+                        $this->mapper->save($transaction);
+                    }
+                }
+            }
+            $this->logger->info("Migrated transaction(s)", $this->cache['transactions']);
+        }
+    }
+
+    private function migrate_smtp()
+    {
+        $from       = Settings::get_setting('smtp_from');
+        $host       = Settings::get_setting('smtp_host');
+        $port       = Settings::get_setting('smtp_port');
+        $encryption = Settings::get_setting('smtp_encryption');
+        $autotls    = Settings::get_setting('smtp_autotls');
+        $username   = Settings::get_setting('smtp_username');
+        $password   = Settings::get_setting('smtp_password');
+
+        Settings::update_array('custom_smtp', [
+            'from_email' => $from,
+            'host'       => $host,
+            'port'       => $port,
+            'encryption' => $encryption,
+            'autotls'    => $autotls,
+            'username'   => $username,
+            'password'   => $password,
+        ]);
     }
 
     /**
@@ -83,28 +130,5 @@ class Version400 extends AbstractMigration implements MigrationInterface
             return;
         }
         $this->logger->info(__('No old campaigns found', 'kudos-donations'));
-    }
-
-    public function migrate_transactions()
-    {
-        if ( ! empty($this->cache['campaigns'])) {
-            $campaigns = $this->cache['campaigns'];
-            foreach ($campaigns as $old_id => $new_id) {
-                if ($old_id && $new_id) {
-                    // Assign transactions to new campaign id.
-                    $transactions = $this->mapper->get_repository(TransactionEntity::class)
-                                                 ->get_all_by(['campaign_id' => $old_id]);
-                    /** @var TransactionEntity $transaction */
-                    foreach ($transactions as $transaction) {
-                        $this->cache['transactions'][$transaction->campaign_id] = $new_id;
-                        $transaction->set_fields([
-                            'campaign_id' => $new_id,
-                        ]);
-                        $this->mapper->save($transaction);
-                    }
-                }
-            }
-            $this->logger->info("Migrated transaction(s)", $this->cache['transactions']);
-        }
     }
 }
