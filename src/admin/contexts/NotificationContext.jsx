@@ -14,7 +14,7 @@ export const NotificationProvider = ({ children }) => {
 
 	const createNotification = (text, success = true) => {
 		const id = +new Date();
-		const timerId = setTimeout(deleteNotification, 2000, id);
+		const timerId = setTimeout(deleteNotification, 3000, id);
 		setList((prev) =>
 			prev.concat({
 				id,
