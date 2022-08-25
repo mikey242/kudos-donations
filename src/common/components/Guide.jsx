@@ -66,7 +66,6 @@ const Guide = ({ pages = [], className, onFinish }) => {
 	return (
 		<div
 			ref={useMergeRefs([focusOnMountRef, constrainedTabbingRef])}
-			tabIndex="-1"
 			onKeyDown={(e) => handleKeyPress(e)}
 			className={classnames('intro text-base leading-6', className)}
 		>
