@@ -2,7 +2,6 @@
 
 namespace Kudos\Service;
 
-use Kudos\Controller\Admin;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
@@ -46,12 +45,10 @@ class ActivatorService
         self::create_transactions_table();
         self::create_subscriptions_table();
 
-        $settings = Admin::get_settings();
-        $logger   = $this->logger;
-        $twig     = $this->twig;
+        $logger = $this->logger;
+        $twig   = $this->twig;
         $twig->init();
 
-        Settings::register_settings($settings);
         $db_version = get_option('_kudos_donations_version');
 
         self::queue_migrations($db_version);
