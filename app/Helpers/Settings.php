@@ -132,18 +132,6 @@ class Settings
     }
 
     /**
-     * Add the settings to the database.
-     */
-    public static function add_defaults(array $settings = [])
-    {
-        foreach ($settings as $name => $setting) {
-            if (isset($setting['default'])) {
-                add_option(self::PREFIX . $name, $setting['default']);
-            }
-        }
-    }
-
-    /**
      * Removes all settings from database.
      */
     public static function remove_settings(array $settings = [])

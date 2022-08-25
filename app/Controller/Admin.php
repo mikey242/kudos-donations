@@ -458,12 +458,10 @@ class Admin
 
                 case 'kudos_clear_mollie':
                     Settings::remove_setting('vendor_mollie');
-                    Settings::add_defaults();
                     break;
 
                 case 'kudos_clear_all':
                     Settings::remove_settings();
-                    Settings::add_defaults();
                     break;
 
                 case 'kudos_clear_twig_cache':
