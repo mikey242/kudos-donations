@@ -25,7 +25,6 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 	const methods = useForm();
 
 	const submitMollie = (data) => {
-		console.log(data);
 		setIsApiSaving(true);
 		checkApiKey({
 			keys: data.keys,
@@ -83,7 +82,7 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 											<a
 												className="text-primary inline"
 												target="_blank"
-												href="https://mollie.com/dashboard/developers/api-keys"
+												href="https://my.mollie.com/dashboard/developers/api-keys"
 												rel="noreferrer"
 											>
 												{__(
