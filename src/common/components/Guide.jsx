@@ -55,6 +55,7 @@ const Guide = ({ pages = [], className, onFinish }) => {
 			<button
 				className={classnames(
 					classes,
+					isAccessible ? 'cursor-pointer' : 'cursor-default',
 					'border-2 border-solid m-0 mx-2 rounded-full w-4 h-4'
 				)}
 				key={i}
