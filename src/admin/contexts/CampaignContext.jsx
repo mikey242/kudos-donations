@@ -7,6 +7,7 @@ import {
 } from '@wordpress/element';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
 
 export const CampaignContext = createContext(null);
 
@@ -15,11 +16,15 @@ export default function CampaignProvider({ campaignId, children }) {
 		ready: false,
 		campaign: null,
 	});
-	const [campaignErrors, setCampaignErrors] = useState(null);
+	const [campaignErrors, setCampaignErrors] = useState(false);
 
 	useEffect(() => {
-		getData();
-	}, []);
+		if (campaignId) {
+			getData();
+		} else {
+			setCampaignErrors([__('No campaign selected.', 'kudos-donations')]);
+		}
+	}, [campaignId]);
 
 	const getTotal = () => {
 		return apiFetch({
@@ -40,7 +45,7 @@ export default function CampaignProvider({ campaignId, children }) {
 			})
 			.catch((error) => {
 				throw {
-					message: `Failed to fetch campaign '${campaignId}'.`,
+					message: `Failed to find campaign with id: '${campaignId}'.`,
 					original: error,
 				};
 			});
@@ -59,19 +64,14 @@ export default function CampaignProvider({ campaignId, children }) {
 			)
 			.catch((error) => {
 				setCampaignErrors([error.message]);
+			})
+			.finally(() => {
+				setCampaignRequest((prevState) => ({
+					ready: true,
+					...prevState,
+				}));
 			});
 	};
-
-	const renderApiErrors = () => (
-		<>
-			<p className="m-0">Kudos Donations ran into a problem:</p>
-			{campaignErrors.map((error, i) => (
-				<p key={i} className="text-red-500">
-					- {error}
-				</p>
-			))}
-		</>
-	);
 
 	return (
 		<>
