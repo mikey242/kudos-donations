@@ -1,10 +1,6 @@
 import classnames from 'classnames';
-import { useState } from '@wordpress/element';
-import {
-	useConstrainedTabbing,
-	useFocusOnMount,
-	useMergeRefs,
-} from '@wordpress/compose';
+import { useEffect, useState } from '@wordpress/element';
+import { useFocusOnMount } from '@wordpress/compose';
 import { ESCAPE, LEFT, RIGHT } from '@wordpress/keycodes';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
@@ -16,7 +12,12 @@ const Guide = ({ pages = [], className, onFinish }) => {
 	const canGoBack = currentPage > 0;
 	const canGoForward = currentPage < pages.length - 1;
 	const focusOnMountRef = useFocusOnMount(true);
-	const constrainedTabbingRef = useConstrainedTabbing();
+
+	useEffect(() => {
+		document.addEventListener('keydown', handleKeyPress);
+		return () =>
+			document.removeEventListener('keydown', handleKeyPress, false);
+	}, []);
 
 	const handleKeyPress = (event) => {
 		if (event.keyCode === LEFT) {
@@ -65,11 +66,7 @@ const Guide = ({ pages = [], className, onFinish }) => {
 	});
 
 	return (
-		<div
-			ref={useMergeRefs([focusOnMountRef, constrainedTabbingRef])}
-			onKeyDown={(e) => handleKeyPress(e)}
-			className={classnames('intro text-base leading-6', className)}
-		>
+		<div className={classnames('intro text-base leading-6', className)}>
 			<div className={'m-auto flex flex-col justify-center items-center'}>
 				<div className="intro-content m-auto ">
 					<div className="intro-image mb-2">
@@ -98,6 +95,7 @@ const Guide = ({ pages = [], className, onFinish }) => {
 					<div className={'flex justify-center m-0'}>{pageNav}</div>
 					{canGoForward && (
 						<Button
+							ref={focusOnMountRef}
 							isDisabled={
 								pages[currentPage].nextDisabled ?? false
 							}
