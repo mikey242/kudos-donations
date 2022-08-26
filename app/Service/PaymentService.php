@@ -54,7 +54,7 @@ class PaymentService
      */
     private static function get_current_vendor_class(): string
     {
-        switch (Settings::get_setting('payment_vendor')) {
+        switch (Settings::get_setting('vendor')) {
             default:
                 return MollieVendor::class;
         }
