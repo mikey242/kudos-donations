@@ -67,6 +67,6 @@ mix
 		require('tailwindcss')('./tailwind.admin.config.js'),
 	])
 	.sourceMaps(false)
-
+	.disableSuccessNotifications()
 	// BrowserSync.
 	.browserSync('localhost:8080');
