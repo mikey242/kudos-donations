@@ -5,7 +5,7 @@ import { DonateButton } from '../../common/components/DonateButton';
 import { Spinner } from '../../common/components/Spinner';
 
 const KudosButton = ({ children, className, targetId = null }) => {
-	const { campaignRequest } = useCampaignContext();
+	const { campaignRequest, campaignErrors } = useCampaignContext();
 	const { campaign } = campaignRequest;
 
 	const triggerModal = () => {
@@ -18,17 +18,19 @@ const KudosButton = ({ children, className, targetId = null }) => {
 	};
 
 	return (
-		<Render themeColor={campaign?.theme_color}>
-			{campaignRequest.ready ? (
-				<DonateButton
-					className={className}
-					children={children}
-					onClick={triggerModal}
-				/>
-			) : (
-				<Spinner />
-			)}
-		</Render>
+		<>
+			<Render themeColor={campaign?.theme_color} errors={campaignErrors}>
+				{campaignRequest.ready ? (
+					<DonateButton
+						className={className}
+						children={children}
+						onClick={triggerModal}
+					/>
+				) : (
+					<Spinner />
+				)}
+			</Render>
+		</>
 	);
 };
 

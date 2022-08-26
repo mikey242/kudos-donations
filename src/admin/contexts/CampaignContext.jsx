@@ -74,15 +74,17 @@ export default function CampaignProvider({ campaignId, children }) {
 	);
 
 	return (
-		<CampaignContext.Provider
-			value={{
-				campaignRequest,
-				campaignId,
-				campaignErrors,
-			}}
-		>
-			{!campaignErrors ? children : renderApiErrors()}
-		</CampaignContext.Provider>
+		<>
+			<CampaignContext.Provider
+				value={{
+					campaignRequest,
+					campaignId,
+					campaignErrors,
+				}}
+			>
+				{children}
+			</CampaignContext.Provider>
+		</>
 	);
 }
 

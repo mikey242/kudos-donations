@@ -10,13 +10,16 @@ import Render from '../../common/components/Render';
 import { useCampaignContext } from '../../admin/contexts/CampaignContext';
 
 function KudosForm({ displayAs }) {
-	const { campaignRequest, campaignId } = useCampaignContext();
+	const { campaignRequest, campaignId, campaignErrors } =
+		useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [formError, setFormError] = useState(null);
 	const [formState, setFormState] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const targetRef = useRef(null);
 	const { campaign } = campaignRequest;
+	const isForm = displayAs === 'form';
+	const isModal = displayAs === 'button';
 
 	useEffect(() => {
 		setTimestamp(Date.now());
@@ -124,12 +127,15 @@ function KudosForm({ displayAs }) {
 	);
 
 	return (
-		<Render themeColor={campaign?.theme_color}>
+		<Render
+			themeColor={campaign?.theme_color}
+			errors={isForm && campaignErrors}
+		>
 			{/* If API not loaded yet then show a spinner */}
 			{campaignRequest.ready ? (
 				<>
-					{displayAs === 'form' && renderDonationForm()}
-					{displayAs === 'button' && (
+					{isForm && renderDonationForm()}
+					{isModal && (
 						<>
 							<KudosModal
 								toggleModal={toggleModal}

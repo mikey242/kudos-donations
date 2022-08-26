@@ -3,7 +3,7 @@ import ReactShadowRoot from 'react-shadow-root';
 import classNames from 'classnames';
 import { useRef, useState } from '@wordpress/element';
 
-function Render({ children, themeColor, style, className }) {
+function Render({ children, themeColor, style, className, errors = null }) {
 	// Set ready = false if there are stylesheets to load
 	const [ready, setReady] = useState(!window.kudos?.stylesheets);
 	// Count number of stylesheets to load
@@ -16,6 +16,21 @@ function Render({ children, themeColor, style, className }) {
 			setReady(true);
 		}
 	};
+
+	const renderErrors = () => (
+		<>
+			{errors && (
+				<>
+					<p className="m-0">Kudos Donations ran into a problem:</p>
+					{errors.map((error, i) => (
+						<p key={i} className="text-red-500">
+							- {error}
+						</p>
+					))}
+				</>
+			)}
+		</>
+	);
 
 	return (
 		<ReactShadowRoot>
@@ -31,13 +46,12 @@ function Render({ children, themeColor, style, className }) {
 			{themeColor && (
 				<style>{`:host {--kudos-theme-primary: ${themeColor}`}</style>
 			)}
-			{ready && (
-				<div id="kudos-container">
-					<div className={classNames(className, 'font-sans')}>
-						{children}
-					</div>
+
+			<div id="kudos-container">
+				<div className={classNames(className, 'font-sans')}>
+					{ready && !errors ? <>{children}</> : <>{renderErrors()}</>}
 				</div>
-			)}
+			</div>
 		</ReactShadowRoot>
 	);
 }
