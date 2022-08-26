@@ -72,6 +72,7 @@ class MailerService
      */
     public function init(PHPMailer $phpmailer)
     {
+        $this->logger->debug('Mailer: PHPMailer initialized');
         // Toggle this on to enable PHPMailer's debug mode.
         $phpmailer->SMTPDebug = 0;
 
@@ -92,13 +93,13 @@ class MailerService
         if ($this->bcc) {
             $phpmailer->addBCC($this->bcc);
         }
-
         // Add custom config if enabled.
         if ($this->custom_smtp) {
+            $this->logger->debug('Mailer: Using custom SMTP config', [$this->custom_config]);
             $phpmailer->isSMTP();
-            $phpmailer->Host = $this->custom_config['host'];
-//            $phpmailer->SMTPAutoTLS = $this->custom_config['autotls'];
-            $phpmailer->SMTPAuth = true;
+            $phpmailer->Host        = $this->custom_config['host'];
+            $phpmailer->SMTPAutoTLS = true;
+            $phpmailer->SMTPAuth    = true;
             if ('none' !== $this->custom_config['encryption']) {
                 $phpmailer->SMTPSecure = $this->custom_config['encryption'];
             }
@@ -198,8 +199,7 @@ class MailerService
         array $attachment = []
     ): bool {
         // Use hook to modify existing config.
-        add_action('phpmailer_init', [$this, 'init']);
-        add_action('wp_mail_failed', [$this, 'log_error']);
+        $this->add_hooks();
 
         $mail = wp_mail($to, $subject, $body, '', $attachment);
 
@@ -207,10 +207,36 @@ class MailerService
             $this->logger->info('Email sent successfully.', ['to' => $to, 'subject' => $subject]);
         }
 
-        remove_action('phpmailer_init', [$this, 'init']);
-        remove_action('wp_mail_failed', [$this, 'log_error']);
+        // Remove hooks once send complete.
+        $this->remove_hooks();
 
         return $mail;
+    }
+
+    private function add_hooks()
+    {
+        add_action('phpmailer_init', [$this, 'init']);
+        add_filter('wp_mail_from', [$this, 'get_from_email'], PHP_INT_MAX);
+        add_filter('wp_mail_from_name', [$this, 'get_from_name'], PHP_INT_MAX);
+        add_action('wp_mail_failed', [$this, 'log_error']);
+    }
+
+    private function remove_hooks()
+    {
+        remove_action('phpmailer_init', [$this, 'init']);
+        remove_filter('wp_mail_from', [$this, 'get_from_email'], PHP_INT_MAX);
+        remove_filter('wp_mail_from_name', [$this, 'get_from_name'], PHP_INT_MAX);
+        remove_action('wp_mail_failed', [$this, 'log_error']);
+    }
+
+    public function get_from_email()
+    {
+        return filter_var($this->custom_config['from_email'], FILTER_VALIDATE_EMAIL);
+    }
+
+    public function get_from_name()
+    {
+        return $this->custom_config['from_name'];
     }
 
     /**
@@ -279,6 +305,6 @@ class MailerService
      */
     public function log_error(WP_Error $error)
     {
-        $this->logger->error('Error sending email.', $error->errors);
+        $this->logger->error('Error sending email.', [$error->get_error_messages()]);
     }
 }
