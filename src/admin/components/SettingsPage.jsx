@@ -41,6 +41,7 @@ const SettingsPage = () => {
 
 	useEffect(() => {
 		if (settings) {
+			setShowIntro(settings._kudos_show_intro);
 			methods.reset(settings);
 		}
 	}, [settings]);
