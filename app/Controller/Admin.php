@@ -235,55 +235,12 @@ class Admin
                         ],
                     ],
                 ],
-//                'from_email_name'        => [
-//                    'type'              => 'string',
-//                    'show_in_rest'      => true,
-//                    'default'           => get_bloginfo('name'),
-//                    'sanitize_callback' => 'sanitize_text_field',
-//                ],
                 'smtp_enable'            => [
                     'type'              => 'boolean',
                     'show_in_rest'      => true,
                     'default'           => false,
                     'sanitize_callback' => 'rest_sanitize_boolean',
                 ],
-//                'smtp_host'              => [
-//                    'type'              => 'string',
-//                    'show_in_rest'      => true,
-//                    'sanitize_callback' => 'sanitize_text_field',
-//                ],
-//                'smtp_encryption'        => [
-//                    'type'              => 'string',
-//                    'show_in_rest'      => true,
-//                    'default'           => 'tls',
-//                    'sanitize_callback' => 'sanitize_text_field',
-//                ],
-//                'smtp_autotls'           => [
-//                    'type'              => 'boolean',
-//                    'show_in_rest'      => true,
-//                    'default'           => true,
-//                    'sanitize_callback' => 'rest_sanitize_boolean',
-//                ],
-//                'smtp_from'              => [
-//                    'type'              => 'string',
-//                    'show_in_rest'      => true,
-//                    'default'           => null,
-//                    'sanitize_callback' => 'sanitize_email',
-//                ],
-//                'smtp_username'          => [
-//                    'type'              => 'string',
-//                    'show_in_rest'      => true,
-//                    'sanitize_callback' => 'sanitize_text_field',
-//                ],
-//                'smtp_password'          => [
-//                    'type'         => 'string',
-//                    'show_in_rest' => true,
-//                ],
-//                'smtp_port'              => [
-//                    'type'              => 'number',
-//                    'show_in_rest'      => true,
-//                    'sanitize_callback' => 'intval',
-//                ],
                 'spam_protection'        => [
                     'type'              => 'boolean',
                     'show_in_rest'      => true,
@@ -306,10 +263,6 @@ class Admin
                     'type'              => 'string',
                     'show_in_rest'      => true,
                     'sanitize_callback' => 'esc_url_raw',
-                ],
-                'payment_vendor'         => [
-                    'type'    => 'string',
-                    'default' => 'mollie',
                 ],
                 'debug_mode'             => [
                     'type'              => 'boolean',

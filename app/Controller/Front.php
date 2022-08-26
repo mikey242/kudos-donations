@@ -267,9 +267,6 @@ class Front
                     }
                 );
 
-                // Get theme color.
-
-
                 // Output button.
                 return $this->button_html($id, $atts);
             }
