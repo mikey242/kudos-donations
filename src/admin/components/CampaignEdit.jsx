@@ -36,6 +36,7 @@ function CampaignEdit({
 	const watchUseReturnURL = watch('meta.use_custom_return_url');
 	const watchAddress = watch('meta.address_enabled');
 	const watchUseReturnMessage = watch('meta.show_return_message');
+	const isNew = campaign.status === 'draft';
 
 	const goBack = () => {
 		if (Object.keys(formState.dirtyFields).length) {
@@ -333,7 +334,7 @@ function CampaignEdit({
 	return (
 		<Fragment>
 			<h2 className="text-center my-5">
-				{campaign.status === 'draft'
+				{isNew
 					? __('New campaign', 'kudos-donations')
 					: __('Edit campaign: ', 'kudos-donations') +
 					  campaign.title.rendered}
@@ -351,9 +352,7 @@ function CampaignEdit({
 						<ArrowCircleLeftIcon className="mr-2 w-5 h-5" />
 						{__('Back', 'kudos-donations')}
 					</Button>
-					{campaign.status !== 'draft' && (
-						<GenerateShortcode campaign={campaign} />
-					)}
+					{!isNew && <GenerateShortcode campaign={campaign} />}
 				</div>
 			</FormProvider>
 		</Fragment>
