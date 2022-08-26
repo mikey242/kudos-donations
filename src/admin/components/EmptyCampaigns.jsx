@@ -19,12 +19,18 @@ export default function EmptyCampaigns() {
 					d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
 				/>
 			</svg>
-			<h3 className="mt-2 text-sm font-medium text-gray-900">
-				{__('No campaigns', 'kudos-donations')}
+			<h3 className="mt-2 text-md font-medium text-gray-900">
+				{__('No campaign found.', 'kudos-donations')}
 			</h3>
-			<p className="mt-1 text-sm text-gray-500">
+			<p className="mt-1 text-base text-gray-500">
 				{__(
-					'Get started by creating a new campaign.',
+					'Click the button below to get started.',
+					'kudos-donations'
+				)}
+			</p>
+			<p className="mt-1 text-sm">
+				{__(
+					'Once created, you can add it anywhere on your site using a shortcode or a block.',
 					'kudos-donations'
 				)}
 			</p>
