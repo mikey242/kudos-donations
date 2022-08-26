@@ -2,6 +2,8 @@
 
 namespace Kudos\Helpers;
 
+use Kudos\Controller\Admin;
+
 class Settings
 {
     public const PREFIX = '_kudos_';
@@ -63,7 +65,7 @@ class Settings
      */
     public static function get_current_vendor_settings()
     {
-        return self::get_setting('vendor_' . self::get_setting('payment_vendor'));
+        return self::get_setting('vendor_' . self::get_setting('vendor'));
     }
 
     /**
@@ -73,8 +75,13 @@ class Settings
      *
      * @return mixed
      */
-    public static function get_setting(string $name, $default = false)
+    public static function get_setting(string $name, $default = null)
     {
+        if ( ! $default) {
+            $settings = Admin::get_settings();
+            $default  = $settings[$name]['default'] ?? 'false';
+        }
+
         return get_option(self::PREFIX . $name, $default);
     }
 
