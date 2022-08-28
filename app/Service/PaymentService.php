@@ -88,7 +88,7 @@ class PaymentService
     {
         Utils::schedule_action(
             strtotime('+1 minute'),
-            'kudos_process_' . strtolower(self::get_vendor_name()) . '_transaction',
+            'kudos_process_transaction',
             [$order_id]
         );
     }

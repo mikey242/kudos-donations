@@ -664,7 +664,7 @@ class MollieVendor implements VendorInterface
             );
 
             // Create action with order_id as parameter.
-            do_action("kudos_mollie_transaction_$payment->status", $transaction->order_id);
+            do_action("kudos_transaction_$payment->status", $transaction->order_id);
 
             if ($payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks()) {
                 /*
@@ -910,7 +910,7 @@ class MollieVendor implements VendorInterface
                                     ]
                                 );
                                 $mapper->save($transaction);
-                                do_action("kudos_mollie_transaction_$payment->status", $transaction->order_id);
+                                do_action("kudos_transaction_$payment->status", $transaction->order_id);
                                 $updated++;
                             }
                         }

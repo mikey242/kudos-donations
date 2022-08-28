@@ -199,7 +199,7 @@ class MailerService
         array $attachment = []
     ): bool {
         // Use hook to modify existing config.
-        $this->add_hooks();
+        $this->create_hooks();
 
         $mail = wp_mail($to, $subject, $body, '', $attachment);
 
@@ -213,7 +213,7 @@ class MailerService
         return $mail;
     }
 
-    private function add_hooks()
+    private function create_hooks()
     {
         add_action('phpmailer_init', [$this, 'init']);
         add_filter('wp_mail_from', [$this, 'get_from_email'], PHP_INT_MAX);

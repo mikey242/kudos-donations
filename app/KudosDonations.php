@@ -84,6 +84,7 @@ class KudosDonations
     private function define_rest_hooks()
     {
         try {
+            /** @var \Kudos\Controller\Rest\RestRoutes $rest_routes */
             $rest_routes = $this->container->get('RestRoutes');
             add_action('rest_api_init', [$rest_routes, 'register_all']);
         } catch (DependencyException|NotFoundException $e) {
@@ -100,6 +101,7 @@ class KudosDonations
     private function define_admin_hooks()
     {
         try {
+            /** @var \Kudos\Controller\Admin $plugin_admin */
             $plugin_admin = $this->container->get('Admin');
             add_action('admin_menu', [$plugin_admin, 'add_menu_pages']);
             add_action('admin_init', [$plugin_admin, 'admin_actions']);
@@ -120,6 +122,7 @@ class KudosDonations
     private function define_payment_hooks()
     {
         try {
+            /** @var \Kudos\Service\PaymentService $payment_service */
             $payment_service = $this->container->get('PaymentService');
             add_action('kudos_mollie_transaction_paid', [$payment_service, 'schedule_process_transaction']);
             add_action('kudos_process_mollie_transaction', [$payment_service, 'process_transaction']);
@@ -137,6 +140,7 @@ class KudosDonations
     private function define_public_hooks()
     {
         try {
+            /** @var \Kudos\Controller\Front $plugin_public */
             $plugin_public = $this->container->get('Front');
             add_action('init', [$plugin_public, 'register_kudos']);
             add_action('wp_footer', [$plugin_public, 'handle_query_variables'], 1);
