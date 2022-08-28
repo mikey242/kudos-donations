@@ -124,8 +124,8 @@ class KudosDonations
         try {
             /** @var \Kudos\Service\PaymentService $payment_service */
             $payment_service = $this->container->get('PaymentService');
-            add_action('kudos_mollie_transaction_paid', [$payment_service, 'schedule_process_transaction']);
-            add_action('kudos_process_mollie_transaction', [$payment_service, 'process_transaction']);
+            add_action('kudos_transaction_paid', [$payment_service, 'schedule_process_transaction']);
+            add_action('kudos_process_transaction', [$payment_service, 'process_transaction']);
         } catch (DependencyException|NotFoundException $e) {
             error_log($e->getMessage());
         }
