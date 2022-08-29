@@ -3,6 +3,7 @@
 namespace Kudos\Migrations;
 
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Blocks;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\WpDb;
 use Kudos\Service\MapperService;
@@ -23,16 +24,25 @@ class Version400 extends AbstractMigration implements MigrationInterface
      * @var array
      */
     private $transactions;
+    /**
+     * @var int[]|\WP_Post[]
+     */
+    private $posts;
 
     public function run()
     {
         $db                 = new WpDb();
         $this->mapper       = new MapperService($db);
+        $this->posts        = get_posts([
+            'numberposts' => -1,
+            'post_type'   => 'any',
+        ]);
         $this->campaigns    = [];
         $this->transactions = [];
 
         $this->migrate_campaigns();
         $this->migrate_transactions();
+        $this->migrate_blocks();
         $this->migrate_smtp();
         $this->logger->info('Migration 400 complete');
     }
@@ -109,10 +119,32 @@ class Version400 extends AbstractMigration implements MigrationInterface
                         'campaign_id' => $campaigns[$transaction->campaign_id],
                     ]);
                     $mapper->save($transaction);
+                    $this->transactions[] = $transaction;
                 }
             }
 
             $this->logger->info("Migrated transaction(s)", $this->transactions);
+        }
+    }
+
+    private function migrate_blocks()
+    {
+        foreach ($this->posts as $post) {
+            $new_content = Blocks::getNewContent($post->ID, function ($block) {
+                if (isset($block['blockName']) && $block['blockName'] === 'iseardmedia/kudos-button') {
+                    $old_id                        = $block['attrs']['campaign_id'] ?? 'default';
+                    $block['attrs']['campaign_id'] = (string)$this->campaigns[$old_id];
+                }
+
+                return $block;
+            });
+
+            $post = [
+                'ID'           => $post->ID,
+                'post_content' => $new_content,
+            ];
+
+            wp_update_post($post);
         }
     }
 
