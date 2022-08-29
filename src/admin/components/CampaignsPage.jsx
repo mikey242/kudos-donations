@@ -2,7 +2,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
 import { Header } from './Header';
-import { PlusCircleIcon, PlusIcon, SaveIcon } from '@heroicons/react/outline';
 import React from 'react';
 import CampaignTable from './CampaignTable';
 import CampaignEdit from './CampaignEdit';
@@ -17,6 +16,11 @@ import EmptyCampaigns from './EmptyCampaigns';
 import { Spinner } from '../../common/components/Spinner';
 import { useSettingsContext } from '../contexts/SettingsContext';
 import { useNotificationContext } from '../contexts/NotificationContext';
+import {
+	ArrowDownTrayIcon,
+	PlusCircleIcon,
+	PlusIcon,
+} from '@heroicons/react/24/outline';
 
 const CampaignsPage = () => {
 	const [campaigns, setCampaigns] = useState(null);
@@ -78,8 +82,7 @@ const CampaignsPage = () => {
 				status: 'publish',
 			},
 		})
-			.then((response) => {
-				setCurrentCampaign(response);
+			.then(() => {
 				createNotification(
 					data.status === 'draft'
 						? __('Campaign created', 'kudos-donations')
@@ -176,7 +179,7 @@ const CampaignsPage = () => {
 									currentCampaign.status === 'draft' ? (
 										<PlusCircleIcon className="mr-2 w-5 h-5" />
 									) : (
-										<SaveIcon className="mr-2 w-5 h-5" />
+										<ArrowDownTrayIcon className="mr-2 w-5 h-5" />
 									)
 								}
 							>

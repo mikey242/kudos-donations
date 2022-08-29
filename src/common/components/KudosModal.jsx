@@ -1,9 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { XIcon } from '@heroicons/react/solid';
 import logo from '../../images/logo-colour.svg';
 import { Transition } from '@headlessui/react';
 import { useEffect, useRef } from '@wordpress/element';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 const KudosModal = ({
 	isOpen = false,
@@ -111,7 +111,7 @@ const KudosModal = ({
 													'kudos-donations'
 												)}
 											>
-												<XIcon className="align-middle w-5 h-5" />
+												<XMarkIcon className="align-middle w-5 h-5" />
 											</button>
 										</div>
 										<div className="mt-2">{children}</div>

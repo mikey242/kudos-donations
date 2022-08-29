@@ -2,10 +2,10 @@ import React from 'react';
 import Panel from '../../common/components/Panel';
 import { __ } from '@wordpress/i18n';
 import {
-	DuplicateIcon,
-	PencilAltIcon,
+	DocumentDuplicateIcon,
+	PencilIcon,
 	TrashIcon,
-} from '@heroicons/react/outline';
+} from '@heroicons/react/24/outline';
 
 const CampaignTable = ({
 	campaigns,
@@ -83,7 +83,7 @@ const CampaignTable = ({
 										'kudos-donations'
 									)}
 								>
-									<PencilAltIcon
+									<PencilIcon
 										className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-gray-500"
 										onClick={() => editClick(campaign)}
 									/>
@@ -94,7 +94,7 @@ const CampaignTable = ({
 										'kudos-donations'
 									)}
 								>
-									<DuplicateIcon
+									<DocumentDuplicateIcon
 										className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-gray-500"
 										onClick={() => duplicateClick(campaign)}
 									/>

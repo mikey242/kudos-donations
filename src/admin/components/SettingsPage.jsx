@@ -17,9 +17,9 @@ import TabPanel from './TabPanel';
 import { Spinner } from '../../common/components/Spinner';
 // eslint-disable-next-line import/default
 import { useSettingsContext } from '../contexts/SettingsContext';
-import { SaveIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import { useNotificationContext } from '../contexts/NotificationContext';
+import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 
 const SettingsPage = () => {
 	const {
@@ -134,7 +134,7 @@ const SettingsPage = () => {
 										type="submit"
 										isBusy={settingsSaving}
 										icon={
-											<SaveIcon className="mr-2 w-5 h-5" />
+											<ArrowDownTrayIcon className="mr-2 w-5 h-5" />
 										}
 									>
 										{__('Save', 'kudos-donations')}

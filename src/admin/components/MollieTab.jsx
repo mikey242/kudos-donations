@@ -5,10 +5,10 @@ import {
 	TextControl,
 } from '../../common/components/controls';
 import { Fragment } from '@wordpress/element';
-import { RefreshIcon } from '@heroicons/react/solid';
 import Divider from '../../common/components/Divider';
 import classNames from 'classnames';
 import { useSettingsContext } from '../contexts/SettingsContext';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 const MollieTab = ({ checkApiKeys }) => {
 	const { checkingApiKey } = useSettingsContext();
@@ -39,7 +39,7 @@ const MollieTab = ({ checkApiKeys }) => {
 					type="button"
 				>
 					<>
-						<RefreshIcon
+						<ArrowPathIcon
 							className={classNames(
 								checkingApiKey && 'animate-spin',
 								'w-5 h-5'

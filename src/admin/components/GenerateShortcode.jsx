@@ -8,10 +8,10 @@ import {
 	TextControl,
 } from '../../common/components/controls';
 import Divider from '../../common/components/Divider';
-import { ClipboardCopyIcon } from '@heroicons/react/outline';
 import KudosModal from '../../common/components/KudosModal';
 import { useFormContext } from 'react-hook-form';
 import { useNotificationContext } from '../contexts/NotificationContext';
+import { ClipboardIcon } from '@heroicons/react/24/outline';
 
 function GenerateShortcode({ campaign }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,7 +90,7 @@ function GenerateShortcode({ campaign }) {
 					)}
 					<div className="mt-8 flex justify-end relative">
 						<Button ref={copyRef} type="button">
-							<ClipboardCopyIcon className="mr-2 w-5 h-5" />
+							<ClipboardIcon className="mr-2 w-5 h-5" />
 							{__('Copy shortcode', 'kudos-donations')}
 						</Button>
 					</div>

@@ -5,7 +5,7 @@ import { useState } from '@wordpress/element';
 import { RadioGroup } from '@headlessui/react';
 import classNames from 'classnames';
 import { __ } from '@wordpress/i18n';
-import { PencilIcon } from '@heroicons/react/outline';
+import { PencilIcon } from '@heroicons/react/24/outline';
 
 const ColorPicker = ({ name, label, help }) => {
 	const [showPicker, setShowPicker] = useState(false);

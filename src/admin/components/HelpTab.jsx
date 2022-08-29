@@ -3,14 +3,14 @@ import { __ } from '@wordpress/i18n';
 import logo from '../../images/full-logo-green.svg';
 import React from 'react';
 import { Button, ToggleControl } from '../../common/components/controls';
+import Divider from '../../common/components/Divider';
+import { HeartIcon } from '@heroicons/react/20/solid';
 import {
 	InformationCircleIcon,
-	PencilAltIcon,
+	PencilIcon,
 	QuestionMarkCircleIcon,
-	SupportIcon,
-} from '@heroicons/react/outline';
-import Divider from '../../common/components/Divider';
-import { HeartIcon } from '@heroicons/react/solid';
+	UserGroupIcon,
+} from '@heroicons/react/24/outline';
 
 const HelpTab = ({ setShowIntro }) => {
 	return (
@@ -39,7 +39,7 @@ const HelpTab = ({ setShowIntro }) => {
 						className="mr-2"
 						href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
 					>
-						<PencilAltIcon className="hidden sm:block w-5 h-5 mr-2" />
+						<PencilIcon className="hidden sm:block w-5 h-5 mr-2" />
 						{__('Leave a review', 'kudos-donations')}
 					</Button>
 				</div>
@@ -61,7 +61,7 @@ const HelpTab = ({ setShowIntro }) => {
 							href="https://wordpress.org/support/plugin/kudos-donations/"
 							isExternal
 						>
-							<SupportIcon className="hidden sm:block w-5 h-5 mr-2" />
+							<UserGroupIcon className="hidden sm:block w-5 h-5 mr-2" />
 							{__('Support forums', 'kudos-donations')}
 						</Button>
 						<Button

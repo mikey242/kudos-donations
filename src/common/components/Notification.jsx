@@ -1,11 +1,11 @@
 import React from 'react';
 import { Transition } from '@headlessui/react';
 import Panel from './Panel';
+import { useNotificationContext } from '../../admin/contexts/NotificationContext';
 import {
 	CheckCircleIcon,
 	ExclamationCircleIcon,
-} from '@heroicons/react/outline';
-import { useNotificationContext } from '../../admin/contexts/NotificationContext';
+} from '@heroicons/react/24/outline';
 
 const Notification = ({ notifications }) => {
 	const { deleteNotification } = useNotificationContext();

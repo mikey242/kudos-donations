@@ -12,10 +12,10 @@ import {
 	ToggleControl,
 } from '../../common/components/controls';
 import TabPanel from './TabPanel';
-import { ArrowCircleLeftIcon } from '@heroicons/react/outline';
 import { isValidUrl } from '../../common/helpers/util';
 import GenerateShortcode from './GenerateShortcode';
 import Divider from '../../common/components/Divider';
+import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
 
 function CampaignEdit({
 	campaign,
@@ -349,7 +349,7 @@ function CampaignEdit({
 						onClick={() => goBack()}
 						type="button"
 					>
-						<ArrowCircleLeftIcon className="mr-2 w-5 h-5" />
+						<ArrowLeftCircleIcon className="mr-2 w-5 h-5" />
 						{__('Back', 'kudos-donations')}
 					</Button>
 					{!isNew && <GenerateShortcode campaign={campaign} />}
