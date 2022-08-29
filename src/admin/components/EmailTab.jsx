@@ -11,7 +11,7 @@ import Divider from '../../common/components/Divider';
 import { useFormContext } from 'react-hook-form';
 import apiFetch from '@wordpress/api-fetch';
 import { useNotificationContext } from '../contexts/NotificationContext';
-import { MailIcon } from '@heroicons/react/outline';
+import { EnvelopeIcon } from '@heroicons/react/24/outline';
 
 const EmailTab = () => {
 	const { watch, getValues } = useFormContext();
@@ -217,7 +217,7 @@ const EmailTab = () => {
 							type="button"
 							isBusy={isEmailBusy}
 							onClick={sendTestEmail}
-							icon={<MailIcon className="mr-2 w-5 h-5" />}
+							icon={<EnvelopeIcon className="mr-2 w-5 h-5" />}
 						>
 							Send
 						</Button>
