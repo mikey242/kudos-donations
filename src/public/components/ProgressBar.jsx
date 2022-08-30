@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlagIcon } from '@heroicons/react/solid';
+import { FlagIcon } from '@heroicons/react/20/solid';
 
 const ProgressBar = ({ goal, total = 0, extra = 0 }) => {
 	const percentage = Math.floor((total / goal) * 100);
@@ -26,7 +26,7 @@ const ProgressBar = ({ goal, total = 0, extra = 0 }) => {
 					style={{ transform: `scaleX(${extraPercentage})` }}
 					className="h-full w-full bg-green-500 transition-transform opacity-30 origin-left"
 				></div>
-				<div className="kudos-progress-total flex items-center absolute top-1/2 right-0 mr-2 -translate-y-2/4">
+				<div className="kudos-progress-total flex space-x-2 items-center absolute top-1/2 right-0 mr-2 -translate-y-2/4">
 					<FlagIcon className="w-4 h-4" />
 					<span>€{goal}</span>
 				</div>
