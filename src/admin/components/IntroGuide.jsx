@@ -3,6 +3,7 @@ import mollie from '../../images/guide-mollie-api.png';
 import campaign from '../../images/guide-campaign.png';
 import button from '../../images/guide-button.png';
 import live from '../../images/guide-test-live.png';
+import newsletter from '../../images/guide-newsletter.png';
 import { __ } from '@wordpress/i18n';
 import { Guide } from '../../common/components/Guide';
 import React from 'react';
@@ -203,13 +204,13 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 							<>
 								<p>
 									{__(
-										'Visit the campaigns page and either create a new campaign or edit the default one.',
+										'Visit the campaigns page and click the "+" icon to create your first campaign.',
 										'kudos-donations'
 									)}
 								</p>
 								<p>
 									{__(
-										'If you need it, don\'t forget to click "Copy shortcode" at the bottom of your campaign.',
+										'If you need it, don\'t forget to click "Generate shortcode" at the bottom of your campaign.',
 										'kudos-donations'
 									)}
 								</p>
@@ -218,12 +219,12 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 					},
 					{
 						imageSrc: button,
-						heading: __('Place a button', 'kudos-donations'),
+						heading: __('Place a form', 'kudos-donations'),
 						content: (
 							<>
 								<p>
 									{__(
-										'Use the Kudos Button block or shortcode to place the button anywhere on your website.',
+										'Use the Kudos Donations block or shortcode to place the button anywhere on your website.',
 										'kudos-donations'
 									)}
 								</p>
@@ -270,7 +271,7 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 						),
 					},
 					{
-						imageSrc: intro,
+						imageSrc: newsletter,
 						heading: __(
 							'Sign-up for our newsletter',
 							'kudos-donations'
