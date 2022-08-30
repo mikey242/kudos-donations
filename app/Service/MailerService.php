@@ -42,10 +42,6 @@ class MailerService
      * @var mixed
      */
     private $custom_smtp;
-    /**
-     * @var mixed
-     */
-    private $bcc;
 
     /**
      * Mailer constructor.
@@ -56,7 +52,6 @@ class MailerService
         $this->mapper      = $mapper;
         $this->logger      = $logger;
         $this->custom_smtp = Settings::get_setting('smtp_enable');
-        $this->bcc         = filter_var(Settings::get_setting('email_bcc'), FILTER_SANITIZE_EMAIL);
         if ($this->custom_smtp) {
             $this->custom_config = Settings::get_setting('custom_smtp');
         }
@@ -90,8 +85,9 @@ class MailerService
         $phpmailer->isHTML();
 
         // Add BCC.
-        if ($this->bcc) {
-            $phpmailer->addBCC($this->bcc);
+        $bcc = Settings::get_setting('email_bcc');
+        if (is_email($bcc)) {
+            $phpmailer->addBCC($bcc);
         }
         // Add custom config if enabled.
         if ($this->custom_smtp) {
@@ -216,17 +212,21 @@ class MailerService
     private function create_hooks()
     {
         add_action('phpmailer_init', [$this, 'init']);
-        add_filter('wp_mail_from', [$this, 'get_from_email'], PHP_INT_MAX);
-        add_filter('wp_mail_from_name', [$this, 'get_from_name'], PHP_INT_MAX);
-        add_action('wp_mail_failed', [$this, 'log_error']);
+        add_action('wp_mail_failed', [$this, 'handle_error']);
+        if ($this->custom_config) {
+            add_filter('wp_mail_from', [$this, 'get_from_email'], PHP_INT_MAX);
+            add_filter('wp_mail_from_name', [$this, 'get_from_name'], PHP_INT_MAX);
+        }
     }
 
     private function remove_hooks()
     {
         remove_action('phpmailer_init', [$this, 'init']);
-        remove_filter('wp_mail_from', [$this, 'get_from_email'], PHP_INT_MAX);
-        remove_filter('wp_mail_from_name', [$this, 'get_from_name'], PHP_INT_MAX);
-        remove_action('wp_mail_failed', [$this, 'log_error']);
+        remove_action('wp_mail_failed', [$this, 'handle_error']);
+        if ($this->custom_config) {
+            remove_filter('wp_mail_from', [$this, 'get_from_email'], PHP_INT_MAX);
+            remove_filter('wp_mail_from_name', [$this, 'get_from_name'], PHP_INT_MAX);
+        }
     }
 
     public function get_from_email()
@@ -303,8 +303,9 @@ class MailerService
      *
      * @param WP_Error $error
      */
-    public function log_error(WP_Error $error)
+    public function handle_error(WP_Error $error)
     {
         $this->logger->error('Error sending email.', [$error->get_error_messages()]);
+        wp_send_json_error($error->get_error_messages());
     }
 }
