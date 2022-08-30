@@ -76,20 +76,22 @@ export default function SettingsProvider({ children }) {
 		return model
 			.save()
 			.then(async (response) => {
-				createNotification(
-					__('Settings updated', 'kudos-donations'),
-					true
-				);
-				setSettings(response);
-				return response;
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						createNotification(
+							__('Settings updated', 'kudos-donations'),
+							true
+						);
+						setSettings(response);
+						resolve();
+					}, 500);
+				});
 			})
 			.catch((error) => {
 				createNotification(error?.responseJSON.message, false);
 			})
 			.always(() => {
-				setTimeout(() => {
-					setSettingsSaving(false);
-				}, 500);
+				setSettingsSaving(false);
 			});
 	}
 
