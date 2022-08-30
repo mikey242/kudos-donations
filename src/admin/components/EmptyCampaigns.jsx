@@ -20,17 +20,11 @@ export default function EmptyCampaigns() {
 				/>
 			</svg>
 			<h3 className="mt-2 text-md font-medium text-gray-900">
-				{__('No campaign found.', 'kudos-donations')}
+				{__('No campaigns found.', 'kudos-donations')}
 			</h3>
-			<p className="mt-1 text-base text-gray-500">
+			<p className="my-2 text-base text-gray-500">
 				{__(
 					'Click the button below to get started.',
-					'kudos-donations'
-				)}
-			</p>
-			<p className="mt-1 text-sm">
-				{__(
-					'Once created, you can add it anywhere on your site using a shortcode or a block.',
 					'kudos-donations'
 				)}
 			</p>
