@@ -62,7 +62,6 @@ export default function SettingsProvider({ children }) {
 	// Update all settings.
 	async function updateSettings(data) {
 		setSettingsSaving(true);
-
 		// Delete empty settings keys.
 		for (const key in data) {
 			if (data[key] === null) {
@@ -74,20 +73,28 @@ export default function SettingsProvider({ children }) {
 		const model = new api.models.Settings(data);
 
 		// Save to database.
-		return model.save().then(async (response) => {
-			createNotification(__('Settings updated', 'kudos-donations'), true);
-			setTimeout(() => {
-				setSettingsSaving(false);
-			}, 500);
-			setSettings(response);
-			return response;
-		});
+		return model
+			.save()
+			.then(async (response) => {
+				createNotification(
+					__('Settings updated', 'kudos-donations'),
+					true
+				);
+				setSettings(response);
+				return response;
+			})
+			.catch((error) => {
+				createNotification(error?.responseJSON.message, false);
+			})
+			.always(() => {
+				setTimeout(() => {
+					setSettingsSaving(false);
+				}, 500);
+			});
 	}
 
 	// Update an individual setting, uses current state if value not specified.
 	async function updateSetting(option, value) {
-		setSettingsSaving(true);
-
 		// Create WordPress settings model.
 		const model = new api.models.Settings({
 			[option]: value,
@@ -96,7 +103,6 @@ export default function SettingsProvider({ children }) {
 		// Save to database.
 		return model.save().then((response) => {
 			setSettings(response);
-			setSettingsSaving(false);
 			return response;
 		});
 	}
