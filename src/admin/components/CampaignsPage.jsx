@@ -74,7 +74,7 @@ const CampaignsPage = () => {
 
 	const updateCampaign = (id, data = {}) => {
 		setIsApiBusy(true);
-		apiFetch({
+		return apiFetch({
 			path: `wp/v2/kudos_campaign/${id ?? ''}`,
 			method: 'POST',
 			data: {
@@ -83,21 +83,23 @@ const CampaignsPage = () => {
 			},
 		})
 			.then(() => {
-				createNotification(
-					data.status === 'draft'
-						? __('Campaign created', 'kudos-donations')
-						: __('Campaign updated', 'kudos-donations'),
-					true
-				);
-				return getCampaigns();
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						createNotification(
+							data.status === 'draft'
+								? __('Campaign created', 'kudos-donations')
+								: __('Campaign updated', 'kudos-donations'),
+							true
+						);
+						getCampaigns().then(() => resolve());
+					}, 500);
+				});
 			})
 			.catch((error) => {
 				createNotification(error.message, false);
 			})
 			.finally(() => {
-				setTimeout(() => {
-					setIsApiBusy(false);
-				}, 500);
+				setIsApiBusy(false);
 			});
 	};
 

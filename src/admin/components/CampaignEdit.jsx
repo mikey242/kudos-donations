@@ -54,8 +54,9 @@ function CampaignEdit({
 	};
 
 	const onSubmit = (data) => {
-		updateCampaign(data.id, data);
-		clearCurrentCampaign();
+		updateCampaign(data.id, data).then(() => {
+			clearCurrentCampaign();
+		});
 	};
 
 	const tabs = [
