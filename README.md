@@ -36,6 +36,7 @@ This software uses the following open source packages:
 - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework.
 - [Headless UI](https://github.com/tailwindlabs/headlessui) - Completely unstyled, fully accessible UI components,
   designed to integrate beautifully with Tailwind CSS.
+- [Heroicons](https://heroicons.com/) - Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS.
 - [Mollie API](https://github.com/mollie/mollie-api-php) - Mollie API client for PHP.
 - [React Hook Form](https://github.com/react-hook-form/react-hook-form) - Performant, flexible and extensible forms
   with easy-to-use validation.
