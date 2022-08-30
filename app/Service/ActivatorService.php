@@ -51,7 +51,9 @@ class ActivatorService
 
         $db_version = get_option('_kudos_donations_version');
 
-        self::queue_migrations($db_version);
+        if ($db_version) {
+            self::queue_migrations($db_version);
+        }
 
         update_option('_kudos_donations_version', KUDOS_VERSION);
         $logger->info('Kudos Donations plugin activated.', ['version' => KUDOS_VERSION]);
