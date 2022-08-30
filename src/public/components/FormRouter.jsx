@@ -1,11 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import {
-	ChevronLeftIcon,
-	ChevronRightIcon,
-	LockClosedIcon,
-} from '@heroicons/react/solid';
 import InitialTab from './InitialTab';
 import FrequencyTab from './FrequencyTab';
 import AddressTab from './AddressTab';
@@ -20,6 +15,11 @@ import {
 	useState,
 } from '@wordpress/element';
 import classNames from 'classnames';
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	LockClosedIcon,
+} from '@heroicons/react/24/outline';
 
 const FormRouter = forwardRef(
 	({ step, campaign, handlePrev, handleNext, submitForm }, ref) => {
