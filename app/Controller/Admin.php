@@ -442,15 +442,17 @@ class Admin
                     break;
 
                 case 'kudos_migrate':
-                    $version = sanitize_text_field(wp_unslash($_REQUEST['migration_version']));
+                    $versions = wp_unslash($_REQUEST['migration_version']);
                     try {
-                        $this->migrator->migrate($version, true);
+                        foreach ($versions as $version) {
+                            $this->migrator->migrate($version, true);
+                        }
+                        new AdminNotice(__('Update complete.', 'kudos-donations'));
+                        Settings::update_setting('migration_actions', []);
                     } catch (Exception $e) {
                         new AdminNotice($e->getMessage(), 'warning');
                     }
             }
-
-            do_action('kudos_admin_actions_extra', $action);
         }
     }
 
@@ -458,17 +460,21 @@ class Admin
     {
         $actions = Settings::get_setting('migration_actions');
         if ($actions) {
-            foreach ($actions as $action) {
-                try {
-                    $this->migrator->migrate($action);
-                } catch (Exception $e) {
-                    new AdminNotice($e->getMessage(), 'error');
-                }
-                if (($key = array_search($action, $actions)) !== false) {
-                    unset($actions[$key]);
-                }
-                Settings::update_setting('migration_actions', $actions);
+            $form = "<form style='display:inline-block;' action='' method='post'>";
+            $form .= wp_nonce_field('kudos_migrate', '_wpnonce', true, false);
+            foreach ($actions as $key => $action) {
+                $form .= "<input type='hidden' name='migration_version[$key]' value='$action' />";
             }
+            $form .= "<button class='button-secondary confirm' name='kudos_action' type='submit' value='kudos_migrate'>";
+            $form .= __("Update now", 'kudos-donations');
+            $form .= "</button>";
+            $form .= "</form>";
+            new AdminNotice(
+                __('Kudos Donations database needs updating before you can continue.', 'kudos-donations') . $form,
+                'info',
+                null,
+                false
+            );
         }
     }
 

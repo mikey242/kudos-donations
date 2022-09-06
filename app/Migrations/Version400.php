@@ -95,6 +95,8 @@ class Version400 extends AbstractMigration implements MigrationInterface
                 }
             }
 
+            Settings::remove_setting('campaigns');
+
             $this->logger->info("Migrated campaign(s)", $this->campaigns);
 
             return;
@@ -129,22 +131,24 @@ class Version400 extends AbstractMigration implements MigrationInterface
 
     private function migrate_blocks()
     {
-        foreach ($this->posts as $post) {
-            $new_content = Blocks::getNewContent($post->ID, function ($block) {
-                if (isset($block['blockName']) && $block['blockName'] === 'iseardmedia/kudos-button') {
-                    $old_id                        = $block['attrs']['campaign_id'] ?? 'default';
-                    $block['attrs']['campaign_id'] = (string)$this->campaigns[$old_id];
-                }
+        if ( ! empty($this->campaigns)) {
+            foreach ($this->posts as $post) {
+                $new_content = Blocks::getNewContent($post->ID, function ($block) {
+                    if (isset($block['blockName']) && $block['blockName'] === 'iseardmedia/kudos-button') {
+                        $old_id                        = $block['attrs']['campaign_id'] ?? 'default';
+                        $block['attrs']['campaign_id'] = (string)$this->campaigns[$old_id];
+                    }
 
-                return $block;
-            });
+                    return $block;
+                });
 
-            $post = [
-                'ID'           => $post->ID,
-                'post_content' => $new_content,
-            ];
+                $post = [
+                    'ID'           => $post->ID,
+                    'post_content' => $new_content,
+                ];
 
-            wp_update_post($post);
+                wp_update_post($post);
+            }
         }
     }
 

@@ -79,7 +79,7 @@ class Settings
     {
         if ( ! $default) {
             $settings = Admin::get_settings();
-            $default  = $settings[$name]['default'] ?? 'false';
+            $default  = $settings[$name]['default'] ?? null;
         }
 
         return get_option(self::PREFIX . $name, $default);

@@ -255,7 +255,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
                     <?php
                     wp_nonce_field('kudos_migrate'); ?>
 					<label>
-						<input placeholder="Version" type="text" name="migration_version"/>
+						<input placeholder="Version" type="text" name="migration_version[0]"/>
 					</label>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
 					        value='kudos_migrate'>Run migration
