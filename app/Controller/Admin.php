@@ -109,7 +109,7 @@ class Admin
                     'default'           => true,
                     'sanitize_callback' => 'rest_sanitize_boolean',
                 ],
-                'migration_actions'      => [
+                'migrations_pending'     => [
                     'type'    => 'array',
                     'default' => [],
                 ],
@@ -442,13 +442,21 @@ class Admin
                     break;
 
                 case 'kudos_migrate':
-                    $versions = wp_unslash($_REQUEST['migration_version']);
+                    if (isset($_REQUEST['migration_version'])) {
+                        $versions = wp_unslash($_REQUEST['migration_version']);
+                    } else {
+                        $versions = Settings::get_setting('migrations_pending');
+                    }
                     try {
-                        foreach ($versions as $version) {
-                            $this->migrator->migrate($version, true);
+                        if ($versions) {
+                            foreach ($versions as $version) {
+                                $this->migrator->migrate($version);
+                                if (($key = array_search($version, $versions)) !== false) {
+                                    unset($versions[$key]);
+                                }
+                            }
+                            Settings::update_setting('migrations_pending', $versions);
                         }
-                        new AdminNotice(__('Update complete.', 'kudos-donations'));
-                        Settings::update_setting('migration_actions', []);
                     } catch (Exception $e) {
                         new AdminNotice($e->getMessage(), 'warning');
                     }
@@ -456,21 +464,21 @@ class Admin
         }
     }
 
-    public function check_migration_actions()
+    public function check_migrations_pending()
     {
-        $actions = Settings::get_setting('migration_actions');
+        $actions = Settings::get_setting('migrations_pending');
         if ($actions) {
-            $form = "<form style='display:inline-block;' action='' method='post'>";
+            $form = "<form method='post'>";
             $form .= wp_nonce_field('kudos_migrate', '_wpnonce', true, false);
-            foreach ($actions as $key => $action) {
-                $form .= "<input type='hidden' name='migration_version[$key]' value='$action' />";
-            }
             $form .= "<button class='button-secondary confirm' name='kudos_action' type='submit' value='kudos_migrate'>";
             $form .= __("Update now", 'kudos-donations');
             $form .= "</button>";
             $form .= "</form>";
             new AdminNotice(
-                __('Kudos Donations database needs updating before you can continue.', 'kudos-donations') . $form,
+                __(
+                    'Kudos Donations database needs updating before you can continue. Please make sure you backup your data before proceeding.',
+                    'kudos-donations'
+                ) . $form,
                 'info',
                 null,
                 false
@@ -529,9 +537,7 @@ class Admin
             __('Campaigns', 'kudos-donations'),
             'manage_options',
             'kudos-campaigns',
-            function () {
-                echo '<div id="kudos-settings"></div>';
-            }
+            [$this, 'settings_page_markup']
         );
 
         add_action("load-$campaigns_page_hook_suffix", function () {
@@ -547,9 +553,7 @@ class Admin
             __('Settings', 'kudos-donations'),
             'manage_options',
             'kudos-settings',
-            function () {
-                echo '<div id="kudos-settings"></div>';
-            }
+            [$this, 'settings_page_markup']
         );
 
         add_action("load-$settings_page_hook_suffix", function () {
@@ -665,6 +669,13 @@ class Admin
         }
     }
 
+    public function settings_page_markup()
+    {
+        if ( ! Settings::get_setting('migrations_pending')) {
+            echo '<div id="kudos-settings"></div>';
+        }
+    }
+
     /**
      * Assets specific to the settings page.
      */
@@ -692,8 +703,9 @@ class Admin
             'kudos-donations-settings',
             'kudos',
             [
-                'version'     => $this->version,
-                'stylesheets' => [Assets::get_style('/admin/kudos-admin-settings.css')],
+                'version'            => $this->version,
+                'migrations_pending' => (bool)Settings::get_setting('migrations_pending'),
+                'stylesheets'        => [Assets::get_style('/admin/kudos-admin-settings.css')],
             ]
         );
         wp_set_script_translations('kudos-donations-settings', 'kudos-donations');

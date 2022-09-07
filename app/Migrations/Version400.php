@@ -6,6 +6,7 @@ use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Blocks;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\WpDb;
+use Kudos\Service\AdminNotice;
 use Kudos\Service\MapperService;
 
 class Version400 extends AbstractMigration implements MigrationInterface
@@ -45,6 +46,10 @@ class Version400 extends AbstractMigration implements MigrationInterface
         $this->migrate_blocks();
         $this->migrate_smtp();
         $this->logger->info('Migration 400 complete');
+        new AdminNotice(
+            'Database update complete. <br/> Notice: If you have used [kudos] shortcodes, you will need to re-add them.',
+            'warning'
+        );
     }
 
     /**

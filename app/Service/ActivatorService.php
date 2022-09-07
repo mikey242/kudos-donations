@@ -191,7 +191,7 @@ class ActivatorService
             );
 
             if (version_compare($db_version, '4.0.0', '<')) {
-                Settings::update_array('migration_actions', ['4.0.0']);
+                Settings::update_array('migrations_pending', ['400']);
             }
         }
     }
