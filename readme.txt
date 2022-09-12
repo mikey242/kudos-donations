@@ -29,12 +29,12 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 * View and manage individual transactions, subscriptions, donors and campaigns from the admin menu.
 
 = Easy to use =
-Just enter your API key from Mollie, then add one or more buttons anywhere on you website. You can add a button using either the provided *Kudos Button* block or with a shortcode. Please see the FAQ below for shortcode use.
+Just enter your API key from Mollie, then create your first campaign and add a form or button for the campaign anywhere on you website. You can place the form using use either the *Kudos Donations* block or with a shortcode. Please see the FAQ below for shortcode use.
 
 Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
 
 = Campaigns =
-Create campaigns to easily group and track donations made by your donors. Each campaign can have a unique configuration which can be changed from the settings page and automatically applied to all your buttons.
+Create campaigns to easily group and track donations made by your donors. Each campaign can have a unique configuration which can be changed from the campaigns page and automatically applied to all your forms.
 
 = Recurring Payments =
 Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie. Remember to check that your Mollie account meets the [conditions for recurring payments](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
