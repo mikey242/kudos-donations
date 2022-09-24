@@ -1,4 +1,3 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
@@ -9,10 +8,6 @@ module.exports = {
 		'./src/helpers/**/*.{js,jsx}',
 	],
 	theme: {
-		screens: {
-			xs: '475px',
-			...defaultTheme.screens,
-		},
 		fontFamily: {
 			sans: ['montserratregular', 'sans-serif'],
 			serif: ['cabinbold', 'serif'],
@@ -21,6 +16,9 @@ module.exports = {
 			],
 		},
 		extend: {
+			screens: {
+				xs: '475px',
+			},
 			zIndex: {
 				'-1': -1,
 				1: 1,
