@@ -447,18 +447,18 @@ class Admin
                     } else {
                         $versions = Settings::get_setting('migrations_pending');
                     }
-                    try {
-                        if ($versions) {
-                            foreach ($versions as $version) {
+                    if ($versions) {
+                        foreach ($versions as $version) {
+                            try {
                                 $this->migrator->migrate($version);
-                                if (($key = array_search($version, $versions)) !== false) {
-                                    unset($versions[$key]);
-                                }
+                            } catch (Exception $e) {
+                                new AdminNotice($e->getMessage(), 'warning');
+                            }
+                            if (($key = array_search($version, $versions)) !== false) {
+                                unset($versions[$key]);
                             }
                             Settings::update_setting('migrations_pending', $versions);
                         }
-                    } catch (Exception $e) {
-                        new AdminNotice($e->getMessage(), 'warning');
                     }
             }
         }
