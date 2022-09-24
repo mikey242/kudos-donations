@@ -23,7 +23,7 @@ const RadioGroupControl = ({ name, validation, options, help, label }) => {
 					>
 						{label}
 					</RadioGroup.Label>
-					<div className="grid gap-3 mt-1 grid-flow-col auto-cols-fr">
+					<div className="grid gap-3 mt-1 grid-flow-row xs:grid-flow-col xs:auto-cols-fr">
 						{options.map((option, i) => (
 							<RadioGroup.Option
 								key={i}
