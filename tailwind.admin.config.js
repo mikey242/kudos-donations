@@ -20,6 +20,9 @@ module.exports = {
 			1050: 1050,
 		},
 		extend: {
+			screens: {
+				xs: '475px',
+			},
 			colors: {
 				orange: {
 					200: '#ffd59c',
