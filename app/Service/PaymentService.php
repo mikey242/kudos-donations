@@ -1,14 +1,14 @@
 <?php
 
-namespace Kudos\Service;
+namespace IseardMedia\Kudos\Service;
 
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Settings;
-use Kudos\Helpers\Utils;
-use Kudos\Service\Vendor\MollieVendor;
-use Kudos\Service\Vendor\VendorInterface;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Service\Vendor\MollieVendor;
+use IseardMedia\Kudos\Service\Vendor\VendorInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -20,15 +20,15 @@ class PaymentService
      */
     private $vendor;
     /**
-     * @var \Kudos\Service\MailerService
+     * @var \IseardMedia\Kudos\Service\MailerService
      */
     private $mailer_service;
     /**
-     * @var \Kudos\Service\MapperService
+     * @var \IseardMedia\Kudos\Service\MapperService
      */
     private $mapper_service;
     /**
-     * @var \Kudos\Service\LoggerService
+     * @var \IseardMedia\Kudos\Service\LoggerService
      */
     private $logger;
 

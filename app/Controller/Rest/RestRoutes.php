@@ -1,28 +1,28 @@
 <?php
 
-namespace Kudos\Controller\Rest;
+namespace IseardMedia\Kudos\Controller\Rest;
 
-use Kudos\Controller\Rest\Route\Campaign;
-use Kudos\Controller\Rest\Route\Mail;
-use Kudos\Controller\Rest\Route\Payment;
-use Kudos\Controller\Rest\Route\Transaction;
+use IseardMedia\Kudos\Controller\Rest\Route\Campaign;
+use IseardMedia\Kudos\Controller\Rest\Route\Mail;
+use IseardMedia\Kudos\Controller\Rest\Route\Payment;
+use IseardMedia\Kudos\Controller\Rest\Route\Transaction;
 
 class RestRoutes
 {
     /**
-     * @var \Kudos\Controller\Rest\Route\Transaction
+     * @var \IseardMedia\Kudos\Controller\Rest\Route\Transaction
      */
     private $transaction;
     /**
-     * @var \Kudos\Controller\Rest\Route\Payment
+     * @var \IseardMedia\Kudos\Controller\Rest\Route\Payment
      */
     private $payment;
     /**
-     * @var \Kudos\Controller\Rest\Route\Mail
+     * @var \IseardMedia\Kudos\Controller\Rest\Route\Mail
      */
     private $mail;
     /**
-     * @var \Kudos\Controller\Rest\Route\Campaign
+     * @var \IseardMedia\Kudos\Controller\Rest\Route\Campaign
      */
     private $campaign;
 

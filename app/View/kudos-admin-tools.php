@@ -1,7 +1,7 @@
 <?php
 
-use Kudos\Helpers\Utils;
-use Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Service\LoggerService;
 
 /**
  * Debug page render.

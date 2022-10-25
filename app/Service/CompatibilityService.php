@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Service;
+namespace IseardMedia\Kudos\Service;
 
 class CompatibilityService
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Controller\Rest\Route;
+namespace IseardMedia\Kudos\Controller\Rest\Route;
 
 abstract class Base
 {

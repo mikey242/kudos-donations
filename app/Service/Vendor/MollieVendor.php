@@ -1,16 +1,16 @@
 <?php
 
-namespace Kudos\Service\Vendor;
+namespace IseardMedia\Kudos\Service\Vendor;
 
 use Exception;
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\CustomPostType;
-use Kudos\Helpers\Settings;
-use Kudos\Helpers\Utils;
-use Kudos\Service\LoggerService;
-use Kudos\Service\MapperService;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\CustomPostType;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Service\MapperService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
@@ -43,11 +43,11 @@ class MollieVendor implements VendorInterface
      */
     private $api_mode;
     /**
-     * @var \Kudos\Service\LoggerService
+     * @var \IseardMedia\Kudos\Service\LoggerService
      */
     private $logger;
     /**
-     * @var \Kudos\Service\MapperService
+     * @var \IseardMedia\Kudos\Service\MapperService
      */
     private $mapper;
     /**

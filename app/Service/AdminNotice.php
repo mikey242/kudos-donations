@@ -4,7 +4,7 @@
  * @source https://wordpress.stackexchange.com/questions/224485/how-to-pass-parameters-to-admin-notices
  */
 
-namespace Kudos\Service;
+namespace IseardMedia\Kudos\Service;
 
 class AdminNotice
 {

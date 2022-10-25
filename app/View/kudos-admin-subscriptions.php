@@ -1,6 +1,6 @@
 <?php
 
-use Kudos\Service\AdminNotice;
+use IseardMedia\Kudos\Service\AdminNotice;
 
 /**
  * Creates the subscriptions table

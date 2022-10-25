@@ -1,11 +1,11 @@
 <?php
 
-namespace Kudos\Controller\Rest\Route;
+namespace IseardMedia\Kudos\Controller\Rest\Route;
 
 use Exception;
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\CustomPostType;
-use Kudos\Service\MapperService;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\CustomPostType;
+use IseardMedia\Kudos\Service\MapperService;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;

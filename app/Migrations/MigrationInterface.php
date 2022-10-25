@@ -1,8 +1,8 @@
 <?php
 
-namespace Kudos\Migrations;
+namespace IseardMedia\Kudos\Migrations;
 
-use Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Service\LoggerService;
 
 interface MigrationInterface
 {

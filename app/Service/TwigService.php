@@ -1,10 +1,10 @@
 <?php
 
-namespace Kudos\Service;
+namespace IseardMedia\Kudos\Service;
 
 use FilesystemIterator;
-use Kudos\Helpers\Assets;
-use Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Helpers\Assets;
+use IseardMedia\Kudos\Helpers\Utils;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Throwable;
@@ -37,7 +37,7 @@ class TwigService
      */
     private $options;
     /**
-     * @var \Kudos\Service\LoggerService
+     * @var \IseardMedia\Kudos\Service\LoggerService
      */
     private $logger;
     /**

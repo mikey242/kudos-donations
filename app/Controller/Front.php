@@ -1,18 +1,18 @@
 <?php
 
-namespace Kudos\Controller;
+namespace IseardMedia\Kudos\Controller;
 
 use Exception;
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Assets;
-use Kudos\Helpers\CustomPostType;
-use Kudos\Helpers\Settings;
-use Kudos\Helpers\Utils;
-use Kudos\Service\LoggerService;
-use Kudos\Service\MapperService;
-use Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\Assets;
+use IseardMedia\Kudos\Helpers\CustomPostType;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Service\MapperService;
+use IseardMedia\Kudos\Service\PaymentService;
 
 class Front
 {

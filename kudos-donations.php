@@ -21,13 +21,13 @@
  * Domain Path:       /languages
  */
 
-namespace Kudos;
+namespace IseardMedia\Kudos;
 
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
-use Kudos\Service\ActivatorService;
-use Kudos\Service\CompatibilityService;
-use Kudos\Service\DeactivatorService;
+use IseardMedia\Kudos\Service\ActivatorService;
+use IseardMedia\Kudos\Service\CompatibilityService;
+use IseardMedia\Kudos\Service\DeactivatorService;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 

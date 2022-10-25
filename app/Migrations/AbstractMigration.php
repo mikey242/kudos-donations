@@ -1,16 +1,16 @@
 <?php
 
-namespace Kudos\Migrations;
+namespace IseardMedia\Kudos\Migrations;
 
-use Kudos\Helpers\Settings;
-use Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Service\LoggerService;
 
 class AbstractMigration
 {
 
     protected const VERSION = '';
     /**
-     * @var \Kudos\Service\LoggerService
+     * @var \IseardMedia\Kudos\Service\LoggerService
      */
     protected $logger;
 

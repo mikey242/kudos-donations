@@ -1,16 +1,16 @@
 <?php
 
-namespace Kudos\Service\LogHandlers;
+namespace IseardMedia\Kudos\Service\LogHandlers;
 
-use Kudos\Helpers\WpDb;
-use Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Helpers\WpDb;
+use IseardMedia\Kudos\Service\LoggerService;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {
     /**
-     * @var \Kudos\Helpers\WpDb|\wpdb
+     * @var \IseardMedia\Kudos\Helpers\WpDb|\wpdb
      */
     private $wpdb;
 

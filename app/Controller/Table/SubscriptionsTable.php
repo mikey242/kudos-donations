@@ -1,13 +1,13 @@
 <?php
 
-namespace Kudos\Controller\Table;
+namespace IseardMedia\Kudos\Controller\Table;
 
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Helpers\Utils;
-use Kudos\Service\MapperService;
-use Kudos\Service\PaymentService;
-use Kudos\Service\Vendor\MollieVendor;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Service\MapperService;
+use IseardMedia\Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 use WP_List_Table;
 
 class SubscriptionsTable extends WP_List_Table
@@ -19,7 +19,7 @@ class SubscriptionsTable extends WP_List_Table
      */
     private $mapper;
     /**
-     * @var \Kudos\Service\PaymentService
+     * @var \IseardMedia\Kudos\Service\PaymentService
      */
     private $payment;
 

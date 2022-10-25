@@ -1,12 +1,12 @@
 <?php
 
-namespace Kudos\Service;
+namespace IseardMedia\Kudos\Service;
 
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Settings;
-use Kudos\Helpers\WpDb;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helpers\WpDb;
 
 /**
  * Fired during plugin activation.

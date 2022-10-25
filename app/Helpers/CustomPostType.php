@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Helpers;
+namespace IseardMedia\Kudos\Helpers;
 
 use Exception;
 use WP_Query;

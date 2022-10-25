@@ -1,10 +1,10 @@
 <?php
 
-namespace Kudos\Service;
+namespace IseardMedia\Kudos\Service;
 
 use DateTimeZone;
-use Kudos\Helpers\WpDb;
-use Kudos\Service\LogHandlers\DatabaseHandler;
+use IseardMedia\Kudos\Helpers\WpDb;
+use IseardMedia\Kudos\Service\LogHandlers\DatabaseHandler;
 use Monolog\DateTimeImmutable;
 use Monolog\Logger;
 
@@ -19,7 +19,7 @@ class LoggerService extends Logger
      */
     public const TABLE = 'kudos_log';
     /**
-     * @var \Kudos\Helpers\WpDb|\wpdb
+     * @var \IseardMedia\Kudos\Helpers\WpDb|\wpdb
      */
     private $wpdb;
 

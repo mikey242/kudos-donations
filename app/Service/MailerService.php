@@ -1,14 +1,14 @@
 <?php
 
-namespace Kudos\Service;
+namespace IseardMedia\Kudos\Service;
 
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Assets;
-use Kudos\Helpers\Settings;
-use Kudos\Helpers\Utils;
-use Kudos\Service\Vendor\MollieVendor;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\Assets;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_Error;
@@ -31,7 +31,7 @@ class MailerService
      */
     private $mapper;
     /**
-     * @var \Kudos\Service\LoggerService
+     * @var \IseardMedia\Kudos\Service\LoggerService
      */
     private $logger;
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Entity;
+namespace IseardMedia\Kudos\Entity;
 
 use DateTime;
 

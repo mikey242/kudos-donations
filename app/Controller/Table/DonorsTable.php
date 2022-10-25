@@ -1,11 +1,11 @@
 <?php
 
-namespace Kudos\Controller\Table;
+namespace IseardMedia\Kudos\Controller\Table;
 
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Utils;
-use Kudos\Service\MapperService;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Service\MapperService;
 use WP_List_Table;
 
 class DonorsTable extends WP_List_Table

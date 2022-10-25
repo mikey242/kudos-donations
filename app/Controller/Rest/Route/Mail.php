@@ -1,8 +1,8 @@
 <?php
 
-namespace Kudos\Controller\Rest\Route;
+namespace IseardMedia\Kudos\Controller\Rest\Route;
 
-use Kudos\Service\MailerService;
+use IseardMedia\Kudos\Service\MailerService;
 use WP_REST_Server;
 
 class Mail extends Base
@@ -13,7 +13,7 @@ class Mail extends Base
     protected $base = 'email';
 
     /**
-     * @var \Kudos\Service\MailerService
+     * @var \IseardMedia\Kudos\Service\MailerService
      */
     private $mailer_service;
 

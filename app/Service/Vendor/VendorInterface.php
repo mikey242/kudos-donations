@@ -1,9 +1,9 @@
 <?php
 
-namespace Kudos\Service\Vendor;
+namespace IseardMedia\Kudos\Service\Vendor;
 
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

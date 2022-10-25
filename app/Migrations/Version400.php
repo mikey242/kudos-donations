@@ -1,13 +1,13 @@
 <?php
 
-namespace Kudos\Migrations;
+namespace IseardMedia\Kudos\Migrations;
 
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Blocks;
-use Kudos\Helpers\Settings;
-use Kudos\Helpers\WpDb;
-use Kudos\Service\AdminNotice;
-use Kudos\Service\MapperService;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\Blocks;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helpers\WpDb;
+use IseardMedia\Kudos\Service\AdminNotice;
+use IseardMedia\Kudos\Service\MapperService;
 
 class Version400 extends AbstractMigration implements MigrationInterface
 {
@@ -18,7 +18,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
      */
     protected $campaigns;
     /**
-     * @var \Kudos\Service\MapperService
+     * @var \IseardMedia\Kudos\Service\MapperService
      */
     private $mapper;
     /**

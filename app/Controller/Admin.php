@@ -1,24 +1,24 @@
 <?php
 
-namespace Kudos\Controller;
+namespace IseardMedia\Kudos\Controller;
 
 use Exception;
-use Kudos\Controller\Table\DonorsTable;
-use Kudos\Controller\Table\SubscriptionsTable;
-use Kudos\Controller\Table\TransactionsTable;
-use Kudos\Entity\DonorEntity;
-use Kudos\Entity\SubscriptionEntity;
-use Kudos\Entity\TransactionEntity;
-use Kudos\Helpers\Assets;
-use Kudos\Helpers\Settings;
-use Kudos\Migrations\Migrator;
-use Kudos\Service\ActivatorService;
-use Kudos\Service\AdminNotice;
-use Kudos\Service\LoggerService;
-use Kudos\Service\MapperService;
-use Kudos\Service\PaymentService;
-use Kudos\Service\TwigService;
-use Kudos\Service\Vendor\MollieVendor;
+use IseardMedia\Kudos\Controller\Table\DonorsTable;
+use IseardMedia\Kudos\Controller\Table\SubscriptionsTable;
+use IseardMedia\Kudos\Controller\Table\TransactionsTable;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helpers\Assets;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Migrations\Migrator;
+use IseardMedia\Kudos\Service\ActivatorService;
+use IseardMedia\Kudos\Service\AdminNotice;
+use IseardMedia\Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Service\MapperService;
+use IseardMedia\Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Service\TwigService;
+use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 
 class Admin
 {
@@ -49,15 +49,15 @@ class Admin
      */
     private $activator;
     /**
-     * @var \Kudos\Service\Vendor\MollieVendor
+     * @var \IseardMedia\Kudos\Service\Vendor\MollieVendor
      */
     private $mollie;
     /**
-     * @var \Kudos\Service\LoggerService
+     * @var \IseardMedia\Kudos\Service\LoggerService
      */
     private $logger;
     /**
-     * @var \Kudos\Migrations\Migrator
+     * @var \IseardMedia\Kudos\Migrations\Migrator
      */
     private $migrator;
 

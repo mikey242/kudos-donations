@@ -1,10 +1,10 @@
 <?php
 
-use Kudos\Controller\Admin;
-use Kudos\Controller\Front;
-use Kudos\Controller\Rest\RestRoutes;
-use Kudos\Service\ActivatorService;
-use Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Controller\Admin;
+use IseardMedia\Kudos\Controller\Front;
+use IseardMedia\Kudos\Controller\Rest\RestRoutes;
+use IseardMedia\Kudos\Service\ActivatorService;
+use IseardMedia\Kudos\Service\PaymentService;
 
 use function DI\autowire;
 

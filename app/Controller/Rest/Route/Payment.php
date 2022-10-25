@@ -1,8 +1,8 @@
 <?php
 
-namespace Kudos\Controller\Rest\Route;
+namespace IseardMedia\Kudos\Controller\Rest\Route;
 
-use Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Service\PaymentService;
 use WP_REST_Server;
 
 class Payment extends Base
@@ -13,7 +13,7 @@ class Payment extends Base
     protected $base = 'payment';
 
     /**
-     * @var \Kudos\Service\PaymentService
+     * @var \IseardMedia\Kudos\Service\PaymentService
      */
     private $payment_service;
 

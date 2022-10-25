@@ -1,10 +1,10 @@
 <?php
 
-namespace Kudos\Service;
+namespace IseardMedia\Kudos\Service;
 
-use Kudos\Entity\AbstractEntity;
-use Kudos\Helpers\Settings;
-use Kudos\Helpers\WpDb;
+use IseardMedia\Kudos\Entity\AbstractEntity;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helpers\WpDb;
 
 class MapperService
 {
@@ -15,7 +15,7 @@ class MapperService
      */
     protected $repository;
     /**
-     * @var \Kudos\Helpers\WpDb|\wpdb
+     * @var \IseardMedia\Kudos\Helpers\WpDb|\wpdb
      */
     private $wpdb;
 

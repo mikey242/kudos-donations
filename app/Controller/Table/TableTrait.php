@@ -1,6 +1,6 @@
 <?php
 
-namespace Kudos\Controller\Table;
+namespace IseardMedia\Kudos\Controller\Table;
 
 /**
  * @link https://gist.github.com/paulund/7659452

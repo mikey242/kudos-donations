@@ -1,16 +1,16 @@
 <?php
 
-namespace Kudos\Migrations;
+namespace IseardMedia\Kudos\Migrations;
 
 use Exception;
-use Kudos\Helpers\Settings;
-use Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Service\LoggerService;
 
 class Migrator
 {
 
     /**
-     * @var \Kudos\Service\LoggerService
+     * @var \IseardMedia\Kudos\Service\LoggerService
      */
     private $logger;
 

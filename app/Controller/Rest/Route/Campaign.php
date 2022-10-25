@@ -1,9 +1,9 @@
 <?php
 
-namespace Kudos\Controller\Rest\Route;
+namespace IseardMedia\Kudos\Controller\Rest\Route;
 
 use Exception;
-use Kudos\Helpers\CustomPostType;
+use IseardMedia\Kudos\Helpers\CustomPostType;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;

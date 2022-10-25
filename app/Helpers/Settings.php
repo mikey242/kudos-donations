@@ -1,8 +1,8 @@
 <?php
 
-namespace Kudos\Helpers;
+namespace IseardMedia\Kudos\Helpers;
 
-use Kudos\Controller\Admin;
+use IseardMedia\Kudos\Controller\Admin;
 
 class Settings
 {
