@@ -37,7 +37,7 @@ if ( ! defined('WPINC')) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+require_once(__DIR__ . '/libraries/action-scheduler/action-scheduler.php');
 
 /**
  * Load the .env file if present.

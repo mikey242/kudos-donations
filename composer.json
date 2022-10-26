@@ -15,7 +15,6 @@
     "twig/twig": "^3.0",
     "ext-json": "*",
     "psr/log": "1.1.*",
-    "woocommerce/action-scheduler": "^3.1",
     "php-di/php-di": "^6.3",
     "php-di/invoker": "2.0.0",
     "symfony/config": "^5.3"
@@ -58,8 +57,11 @@
         "psr/container",
         "php-di/php-di",
         "php-di/invoker",
-        "woocommerce/action-scheduler"
-      ]
+        "symfony/polyfill-php81"
+      ],
+      "override_autoload": {
+        "symfony/polyfill-php80": {}
+      }
     }
   }
 }

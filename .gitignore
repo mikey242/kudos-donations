@@ -2,6 +2,7 @@ vendor
 build
 dist
 classes
+libraries
 node_modules
 .idea
 *.iml
