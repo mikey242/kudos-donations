@@ -38,20 +38,6 @@ abstract class AbstractEntity
     }
 
     /**
-     * Set class properties based on array values.
-     *
-     * @param array $fields Array of entities properties and values.
-     */
-    public function set_fields(array $fields)
-    {
-        foreach ($fields as $property => $value) {
-            if (property_exists(static::class, $property)) {
-                $this->$property = $value;
-            }
-        }
-    }
-
-    /**
      * Returns the table name associated with entity.
      *
      * @param bool $prefix Whether to return the prefix or not.
@@ -77,6 +63,20 @@ abstract class AbstractEntity
         $entity_pos = strpos($class, 'Entity');
 
         return substr($class, 0, $entity_pos);
+    }
+
+    /**
+     * Set class properties based on array values.
+     *
+     * @param array $fields Array of entities properties and values.
+     */
+    public function set_fields(array $fields)
+    {
+        foreach ($fields as $property => $value) {
+            if (property_exists(static::class, $property)) {
+                $this->$property = $value;
+            }
+        }
     }
 
     /**

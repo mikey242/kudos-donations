@@ -105,133 +105,6 @@ class Front
     }
 
     /**
-     * Register the Kudos button block.
-     */
-    private function register_blocks()
-    {
-        register_block_type(
-            KUDOS_PLUGIN_DIR . '/build/blocks/kudos-button/',
-            [
-                "render_callback" => [$this, "button_render_callback"],
-            ]
-        );
-    }
-
-    /**
-     * Register the custom post types sued by Kudos.
-     *
-     * @return void
-     */
-    private function register_post_types()
-    {
-        new CustomPostType('kudos_campaign', [], [
-            'goal'                  => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'show_goal'             => [
-                'type'              => 'boolean',
-                'sanitize_callback' => 'rest_sanitize_boolean',
-            ],
-            'additional_funds'      => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'initial_title'         => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'initial_description'   => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'address_enabled'       => [
-                'type'              => 'boolean',
-                'sanitize_callback' => 'rest_sanitize_boolean',
-            ],
-            'address_required'      => [
-                'type'              => 'boolean',
-                'sanitize_callback' => 'rest_sanitize_boolean',
-            ],
-            'message_enabled'       => [
-                'type'              => 'boolean',
-                'sanitize_callback' => 'rest_sanitize_boolean',
-            ],
-            'amount_type'           => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'fixed_amounts'         => [
-                'type'              => 'string',
-                'single'            => false,
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'minimum_donation'      => [
-                'type'              => 'integer',
-                'sanitize_callback' => 'sanitize_float',
-            ],
-            'donation_type'         => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'theme_color'           => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'terms_link'            => [
-                'type'              => 'string',
-                'sanitize_callback' => 'esc_url_raw',
-            ],
-            'privacy_link'          => [
-                'type'              => 'string',
-                'sanitize_callback' => 'esc_url_raw',
-            ],
-            'show_return_message'   => [
-                'type' => 'boolean',
-            ],
-            'use_custom_return_url' => [
-                'type' => 'boolean',
-            ],
-            'custom_return_url'     => [
-                'type' => 'string',
-            ],
-            'return_message_title'  => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'return_message_text'   => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-        ]);
-    }
-
-    /**
-     * Register the kudos button shortcode.
-     */
-    private function register_button_shortcode()
-    {
-        // Register shortcode.
-        add_shortcode(
-            'kudos',
-            function ($atts) {
-                $atts = shortcode_atts(
-                    [
-                        'button_label' => __('Donate now', 'kudos-donations'),
-                        'campaign_id'  => '',
-                        'alignment'    => 'none',
-                        'type'         => 'button',
-                    ],
-                    $atts,
-                    'kudos'
-                );
-
-                return $this->button_render_callback($atts);
-            }
-        );
-    }
-
-    /**
      * Renders the kudos button and donation modals.
      *
      * @param array $atts Array of Kudos button/modal attributes.
@@ -423,6 +296,133 @@ class Front
                     break;
             }
         }
+    }
+
+    /**
+     * Register the Kudos button block.
+     */
+    private function register_blocks()
+    {
+        register_block_type(
+            KUDOS_PLUGIN_DIR . '/dist/blocks/kudos-button/',
+            [
+                "render_callback" => [$this, "button_render_callback"],
+            ]
+        );
+    }
+
+    /**
+     * Register the custom post types sued by Kudos.
+     *
+     * @return void
+     */
+    private function register_post_types()
+    {
+        new CustomPostType('kudos_campaign', [], [
+            'goal'                  => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'show_goal'             => [
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+            ],
+            'additional_funds'      => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'initial_title'         => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'initial_description'   => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'address_enabled'       => [
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+            ],
+            'address_required'      => [
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+            ],
+            'message_enabled'       => [
+                'type'              => 'boolean',
+                'sanitize_callback' => 'rest_sanitize_boolean',
+            ],
+            'amount_type'           => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'fixed_amounts'         => [
+                'type'              => 'string',
+                'single'            => false,
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'minimum_donation'      => [
+                'type'              => 'integer',
+                'sanitize_callback' => 'sanitize_float',
+            ],
+            'donation_type'         => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'theme_color'           => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'terms_link'            => [
+                'type'              => 'string',
+                'sanitize_callback' => 'esc_url_raw',
+            ],
+            'privacy_link'          => [
+                'type'              => 'string',
+                'sanitize_callback' => 'esc_url_raw',
+            ],
+            'show_return_message'   => [
+                'type' => 'boolean',
+            ],
+            'use_custom_return_url' => [
+                'type' => 'boolean',
+            ],
+            'custom_return_url'     => [
+                'type' => 'string',
+            ],
+            'return_message_title'  => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'return_message_text'   => [
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+        ]);
+    }
+
+    /**
+     * Register the kudos button shortcode.
+     */
+    private function register_button_shortcode()
+    {
+        // Register shortcode.
+        add_shortcode(
+            'kudos',
+            function ($atts) {
+                $atts = shortcode_atts(
+                    [
+                        'button_label' => __('Donate now', 'kudos-donations'),
+                        'campaign_id'  => '',
+                        'alignment'    => 'none',
+                        'type'         => 'button',
+                    ],
+                    $atts,
+                    'kudos'
+                );
+
+                return $this->button_render_callback($atts);
+            }
+        );
     }
 
     /**

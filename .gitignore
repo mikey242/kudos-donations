@@ -1,6 +1,9 @@
 vendor
 build
+dist
+classes
 node_modules
 .idea
 *.iml
 .env
+app/Dependencies

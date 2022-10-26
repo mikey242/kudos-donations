@@ -1,7 +1,7 @@
 templates
 vendor
 app
-build
+dist
 index.php
 uninstall.php
 kudos-donations.php

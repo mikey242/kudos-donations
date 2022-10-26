@@ -51,17 +51,6 @@ class CompatibilityService
     }
 
     /**
-     * Run the specified tests
-     *
-     * @since 2.0.0
-     */
-    private function run_tests()
-    {
-        $this->check_wordpress_version();
-        $this->check_php();
-    }
-
-    /**
      * Check if WordPress version is compatible
      *
      * @return bool Whether compatible or not
@@ -72,7 +61,7 @@ class CompatibilityService
         global $wp_version;
 
         /* WordPress version not compatible */
-        if (! version_compare($wp_version, $this->required_wp_version, '>=')) {
+        if ( ! version_compare($wp_version, $this->required_wp_version, '>=')) {
             /* translators: %1$s: WordPress version number. */
             $this->notices[] = sprintf(
                 esc_html__('WordPress Version %1$s is required.', 'kudos-donations'),
@@ -94,7 +83,7 @@ class CompatibilityService
     public function check_php(): bool
     {
         /* Check PHP version is compatible */
-        if (! version_compare(phpversion(), $this->required_php_version, '>=')) {
+        if ( ! version_compare(phpversion(), $this->required_php_version, '>=')) {
             /* translators:
                 %1$s: Support URL.
                 %2$s: Current PHP version.
@@ -127,9 +116,9 @@ class CompatibilityService
     {
         $notice['error']   = __('Kudos Donations Installation Problem', 'kudos-donations');
         $notice['details'] = "<p>" . __(
-            'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:',
-            'kudos-donations'
-        ) . "</p>";
+                'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:',
+                'kudos-donations'
+            ) . "</p>";
         $notice['details'] .= "<ul style='padding-bottom: 0.5em'>";
         foreach ($this->notices as $error) :
             $notice['details'] .= "<li style='padding-left: 20px;list-style: inside'>" . $error . "</li>";
@@ -149,5 +138,16 @@ class CompatibilityService
     public function add_notice(string $notice)
     {
         $this->notices[] = $notice;
+    }
+
+    /**
+     * Run the specified tests
+     *
+     * @since 2.0.0
+     */
+    private function run_tests()
+    {
+        $this->check_wordpress_version();
+        $this->check_php();
     }
 }

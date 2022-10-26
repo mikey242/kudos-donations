@@ -3,10 +3,10 @@
 namespace IseardMedia\Kudos\Service;
 
 use DateTimeZone;
+use IseardMedia\Kudos\Dependencies\Monolog\DateTimeImmutable;
+use IseardMedia\Kudos\Dependencies\Monolog\Logger;
 use IseardMedia\Kudos\Helpers\WpDb;
 use IseardMedia\Kudos\Service\LogHandlers\DatabaseHandler;
-use Monolog\DateTimeImmutable;
-use Monolog\Logger;
 
 class LoggerService extends Logger
 {
@@ -44,7 +44,7 @@ class LoggerService extends Logger
      * @param int $level Log level.
      * @param string $message Message to record.
      * @param array $context Context array.
-     * @param \Monolog\DateTimeImmutable|null $datetime
+     * @param \IseardMedia\Kudos\Dependencies\Monolog\DateTimeImmutable|null $datetime
      *
      * @return bool
      */

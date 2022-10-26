@@ -7,13 +7,13 @@
     }
   },
   "require": {
+    "php": "^7.2 | ^8.0",
     "symfony/polyfill-mbstring": "1.20.*",
     "symfony/polyfill-ctype": "1.20.*",
     "mollie/mollie-api-php": "^2.32.0",
     "monolog/monolog": "^2.0",
     "twig/twig": "^3.0",
     "ext-json": "*",
-    "php": "^7.2 | ^8.0",
     "psr/log": "1.1.*",
     "woocommerce/action-scheduler": "^3.1",
     "php-di/php-di": "^6.3",
@@ -28,16 +28,38 @@
     "phpcompatibility/php-compatibility": "^9.3",
     "filp/whoops": "^2.13",
     "phpunit/phpunit": "8.*",
-    "phpstan/phpstan": "^1.6"
+    "phpstan/phpstan": "^1.6",
+    "coenjacobs/mozart": "^0.6.0"
   },
   "scripts": {
+    "post-install-cmd": [
+      "\"vendor/bin/mozart\" compose",
+      "composer dump-autoload"
+    ],
     "post-update-cmd": [
-      "rm -rf vendor/mollie/mollie-api-php/examples vendor/sabberworm/php-css-parser/tests vendor/twig/twig/doc vendor/woocommerce/action-scheduler/action-scheduler.zip"
+      "rm -rf vendor/mollie/mollie-api-php/examples",
+      "\"vendor/bin/mozart\" compose",
+      "composer dump-autoload"
     ]
   },
   "autoload": {
     "psr-4": {
-      "Kudos\\": "app/"
+      "IseardMedia\\Kudos\\": "app/"
+    }
+  },
+  "extra": {
+    "mozart": {
+      "dep_namespace": "IseardMedia\\Kudos\\Dependencies\\",
+      "dep_directory": "/app/Dependencies/",
+      "classmap_directory": "/classes/dependencies/",
+      "classmap_prefix": "IM_KUDOS_",
+      "delete_vendor_directories": true,
+      "excluded_packages": [
+        "psr/container",
+        "php-di/php-di",
+        "php-di/invoker",
+        "woocommerce/action-scheduler"
+      ]
     }
   }
 }

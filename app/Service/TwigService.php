@@ -3,17 +3,17 @@
 namespace IseardMedia\Kudos\Service;
 
 use FilesystemIterator;
+use IseardMedia\Kudos\Dependencies\Twig\Environment;
+use IseardMedia\Kudos\Dependencies\Twig\Error\LoaderError;
+use IseardMedia\Kudos\Dependencies\Twig\Extension\DebugExtension;
+use IseardMedia\Kudos\Dependencies\Twig\Loader\FilesystemLoader;
+use IseardMedia\Kudos\Dependencies\Twig\TwigFilter;
+use IseardMedia\Kudos\Dependencies\Twig\TwigFunction;
 use IseardMedia\Kudos\Helpers\Assets;
 use IseardMedia\Kudos\Helpers\Utils;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Throwable;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Extension\DebugExtension;
-use Twig\Loader\FilesystemLoader;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
 
 class TwigService
 {
@@ -41,14 +41,14 @@ class TwigService
      */
     private $logger;
     /**
-     * @var \Twig\Loader\FilesystemLoader
+     * @var \IseardMedia\Kudos\Dependencies\Twig\Loader\FilesystemLoader
      */
     private $loader;
 
     /**
      * Twig constructor
      *
-     * @param \Kudos\Service\LoggerService $logger_service
+     * @param \IseardMedia\Kudos\Service\LoggerService $logger_service
      */
     public function __construct(LoggerService $logger_service)
     {
