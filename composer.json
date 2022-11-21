@@ -2,8 +2,13 @@
   "name": "iseard-media/kudos-donations",
   "description": "",
   "config": {
+    "classmap-authoritative": true,
+    "optimize-autoloader": true,
     "platform": {
-      "php": "7.2.9"
+      "php": "8"
+    },
+    "allow-plugins": {
+      "typisttech/imposter-plugin": false
     }
   },
   "require": {
@@ -11,7 +16,7 @@
     "symfony/polyfill-mbstring": "1.20.*",
     "symfony/polyfill-ctype": "1.20.*",
     "mollie/mollie-api-php": "^2.32.0",
-    "monolog/monolog": "^2.0",
+    "monolog/monolog": "^2.8",
     "twig/twig": "^3.0",
     "ext-json": "*",
     "psr/log": "1.1.*",
@@ -27,19 +32,7 @@
     "phpcompatibility/php-compatibility": "^9.3",
     "filp/whoops": "^2.13",
     "phpunit/phpunit": "8.*",
-    "phpstan/phpstan": "^1.6",
-    "coenjacobs/mozart": "^0.6.0"
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "\"vendor/bin/mozart\" compose",
-      "composer dump-autoload"
-    ],
-    "post-update-cmd": [
-      "rm -rf vendor/mollie/mollie-api-php/examples",
-      "\"vendor/bin/mozart\" compose",
-      "composer dump-autoload"
-    ]
+    "phpstan/phpstan": "^1.6"
   },
   "autoload": {
     "psr-4": {
