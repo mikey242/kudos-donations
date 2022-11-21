@@ -3,17 +3,17 @@
 namespace IseardMedia\Kudos\Service;
 
 use FilesystemIterator;
+use IseardMedia\Kudos\Helpers\Assets;
+use IseardMedia\Kudos\Helpers\Utils;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use Throwable;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use IseardMedia\Kudos\Helpers\Assets;
-use IseardMedia\Kudos\Helpers\Utils;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use Throwable;
 
 class TwigService
 {

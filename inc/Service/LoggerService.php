@@ -3,10 +3,10 @@
 namespace IseardMedia\Kudos\Service;
 
 use DateTimeZone;
-use Monolog\DateTimeImmutable;
-use Monolog\Logger;
 use IseardMedia\Kudos\Helpers\WpDb;
 use IseardMedia\Kudos\Service\LogHandlers\DatabaseHandler;
+use Monolog\DateTimeImmutable;
+use Monolog\Logger;
 
 class LoggerService extends Logger
 {

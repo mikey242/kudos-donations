@@ -2,10 +2,10 @@
 
 namespace IseardMedia\Kudos\Service\LogHandlers;
 
-use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
 use IseardMedia\Kudos\Helpers\WpDb;
 use IseardMedia\Kudos\Service\LoggerService;
+use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Logger;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {
