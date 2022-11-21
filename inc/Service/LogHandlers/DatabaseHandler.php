@@ -2,8 +2,8 @@
 
 namespace IseardMedia\Kudos\Service\LogHandlers;
 
-use IseardMedia\Kudos\Dependencies\Monolog\Handler\AbstractProcessingHandler;
-use IseardMedia\Kudos\Dependencies\Monolog\Logger;
+use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Logger;
 use IseardMedia\Kudos\Helpers\WpDb;
 use IseardMedia\Kudos\Service\LoggerService;
 

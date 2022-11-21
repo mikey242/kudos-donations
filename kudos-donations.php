@@ -24,7 +24,6 @@
 namespace IseardMedia\Kudos;
 
 use DI\ContainerBuilder;
-use Dotenv\Dotenv;
 use IseardMedia\Kudos\Service\ActivatorService;
 use IseardMedia\Kudos\Service\CompatibilityService;
 use IseardMedia\Kudos\Service\DeactivatorService;
@@ -37,17 +36,7 @@ if ( ! defined('WPINC')) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once(__DIR__ . '/libraries/action-scheduler/action-scheduler.php');
-
-/**
- * Load the .env file if present.
- *
- * @link https://github.com/vlucas/phpdotenv
- */
-if (class_exists(Dotenv::class)) {
-    $dotenv = Dotenv::createImmutable(__DIR__);
-    $dotenv->safeLoad();
-}
+require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
@@ -65,7 +54,7 @@ define('KUDOS_DEBUG', get_option('_kudos_debug_mode'));
  *
  * @link https://github.com/filp/whoops
  */
-if (class_exists(Run::class) && ($_ENV['WP_ENV'] ?? '') === 'development') {
+if (class_exists(Run::class) && WP_DEBUG) {
     $run     = new Run();
     $handler = new PrettyPageHandler();
 
@@ -101,7 +90,7 @@ register_deactivation_hook(__FILE__, __NAMESPACE__ . '\deactivate_kudos');
  * The core plugin class that is used to define admin-specific hooks
  * and public-facing site hooks.
  */
-require KUDOS_PLUGIN_DIR . '/app/KudosDonations.php';
+require KUDOS_PLUGIN_DIR . '/inc/KudosDonations.php';
 
 /**
  * Begins execution of the plugin.
@@ -119,7 +108,7 @@ function run_kudos_donations()
         // Create our container for dependency injection.
         $builder = new ContainerBuilder();
         $builder->useAutowiring(true);
-        $builder->addDefinitions(KUDOS_PLUGIN_DIR . '/app/config.php');
+        $builder->addDefinitions(KUDOS_PLUGIN_DIR . '/inc/config.php');
         if (isset($_ENV['WP_ENV']) && $_ENV['WP_ENV'] !== 'development') {
             $builder->enableCompilation(KUDOS_STORAGE_DIR . '/php-di/cache');
         }

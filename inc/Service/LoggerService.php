@@ -3,8 +3,8 @@
 namespace IseardMedia\Kudos\Service;
 
 use DateTimeZone;
-use IseardMedia\Kudos\Dependencies\Monolog\DateTimeImmutable;
-use IseardMedia\Kudos\Dependencies\Monolog\Logger;
+use Monolog\DateTimeImmutable;
+use Monolog\Logger;
 use IseardMedia\Kudos\Helpers\WpDb;
 use IseardMedia\Kudos\Service\LogHandlers\DatabaseHandler;
 

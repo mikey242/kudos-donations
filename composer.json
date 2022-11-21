@@ -43,25 +43,7 @@
   },
   "autoload": {
     "psr-4": {
-      "IseardMedia\\Kudos\\": "app/"
-    }
-  },
-  "extra": {
-    "mozart": {
-      "dep_namespace": "IseardMedia\\Kudos\\Dependencies\\",
-      "dep_directory": "/app/Dependencies/",
-      "classmap_directory": "/classes/dependencies/",
-      "classmap_prefix": "IM_KUDOS_",
-      "delete_vendor_directories": true,
-      "excluded_packages": [
-        "psr/container",
-        "php-di/php-di",
-        "php-di/invoker",
-        "symfony/polyfill-php81"
-      ],
-      "override_autoload": {
-        "symfony/polyfill-php80": {}
-      }
+      "IseardMedia\\Kudos\\": "inc/"
     }
   }
 }

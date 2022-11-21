@@ -3,12 +3,12 @@
 namespace IseardMedia\Kudos\Service;
 
 use FilesystemIterator;
-use IseardMedia\Kudos\Dependencies\Twig\Environment;
-use IseardMedia\Kudos\Dependencies\Twig\Error\LoaderError;
-use IseardMedia\Kudos\Dependencies\Twig\Extension\DebugExtension;
-use IseardMedia\Kudos\Dependencies\Twig\Loader\FilesystemLoader;
-use IseardMedia\Kudos\Dependencies\Twig\TwigFilter;
-use IseardMedia\Kudos\Dependencies\Twig\TwigFunction;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 use IseardMedia\Kudos\Helpers\Assets;
 use IseardMedia\Kudos\Helpers\Utils;
 use RecursiveDirectoryIterator;
@@ -41,7 +41,7 @@ class TwigService
      */
     private $logger;
     /**
-     * @var \IseardMedia\Kudos\Dependencies\Twig\Loader\FilesystemLoader
+     * @var \Twig\Loader\FilesystemLoader
      */
     private $loader;
 

@@ -3,14 +3,14 @@
 namespace IseardMedia\Kudos\Service\Vendor;
 
 use Exception;
-use IseardMedia\Kudos\Dependencies\Mollie\Api\Exceptions\ApiException;
-use IseardMedia\Kudos\Dependencies\Mollie\Api\MollieApiClient;
-use IseardMedia\Kudos\Dependencies\Mollie\Api\Resources\BaseCollection;
-use IseardMedia\Kudos\Dependencies\Mollie\Api\Resources\Customer;
-use IseardMedia\Kudos\Dependencies\Mollie\Api\Resources\MethodCollection;
-use IseardMedia\Kudos\Dependencies\Mollie\Api\Resources\Payment;
-use IseardMedia\Kudos\Dependencies\Mollie\Api\Resources\Subscription;
-use IseardMedia\Kudos\Dependencies\Mollie\Api\Resources\SubscriptionCollection;
+use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\MollieApiClient;
+use Mollie\Api\Resources\BaseCollection;
+use Mollie\Api\Resources\Customer;
+use Mollie\Api\Resources\MethodCollection;
+use Mollie\Api\Resources\Payment;
+use Mollie\Api\Resources\Subscription;
+use Mollie\Api\Resources\SubscriptionCollection;
 use IseardMedia\Kudos\Entity\DonorEntity;
 use IseardMedia\Kudos\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Entity\TransactionEntity;
