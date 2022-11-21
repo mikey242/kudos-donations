@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    ".",
+    "https://downloads.wordpress.org/plugin/web-stories.1.27.0.zip",
+    "https://downloads.wordpress.org/plugin/woocommerce.7.1.0.zip",
+    "https://downloads.wordpress.org/plugin/mollie-payments-for-woocommerce.7.3.4.zip"
+  ],
+  "config": {
+    "WP_DEBUG_DISPLAY": true
+  }
+}
