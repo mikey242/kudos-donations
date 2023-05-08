@@ -5,6 +5,7 @@ namespace Kudos\Service;
 use DateTimeZone;
 use Kudos\Helpers\WpDb;
 use Kudos\Service\LogHandlers\DatabaseHandler;
+use Monolog\DateTimeImmutable;
 use Monolog\Logger;
 
 class LoggerService extends Logger {
@@ -38,16 +39,16 @@ class LoggerService extends Logger {
 
 	}
 
-	/**
-	 * Add checks to parent function.
-	 *
-	 * @param int $level Log level.
-	 * @param string $message Message to record.
-	 * @param array $context Context array.
-	 *
-	 * @return bool
-	 */
-	public function addRecord( int $level, string $message, array $context = [] ): bool {
+    /**
+     * Add checks to parent function.
+     *
+     * @param int $level Log level.
+     * @param string $message Message to record.
+     * @param array $context Context array.
+     * @param DateTimeImmutable|null $datetime
+     * @return bool
+     */
+	public function addRecord( int $level, string $message, array $context = [], DateTimeImmutable $datetime = null ): bool {
 
 		// Don't log debug if not enabled.
 		if ( self::DEBUG === $level && ! KUDOS_DEBUG ) {
