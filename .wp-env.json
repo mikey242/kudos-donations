@@ -1,0 +1,7 @@
+{
+  "phpVersion": "7.2",
+  "plugins": [ "." ],
+  "config": {
+    "APP_ENV": "dev"
+  }
+}
