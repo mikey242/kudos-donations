@@ -118,6 +118,21 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.1.5 =
+* Allow Mollie to connect with either test or live key. Previously both were required.
+* Tested compatibility with WordPress 6.0
+* Update dependencies
+
+= 3.1.4 =
+* Improve email compatibility
+* Fix Kudos icon issues with iOS
+* Update dependencies (Mollie, Twig)
+
+= 3.1.3 =
+* Tested compatibility with WordPress 5.9
+* Fix theme colour panel in settings
+* Update dependencies (Mollie, Tailwind CSS, Twig etc.)
+
 = 3.1.2 =
 * Remove Mollie settings from export
 * Rename 'Debug' page to 'Tools' and always make visible
