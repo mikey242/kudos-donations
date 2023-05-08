@@ -26,7 +26,7 @@ class MollieVendor implements VendorInterface {
 	/**
 	 * This is the name of the vendor as displayed to the user.
 	 */
-	const VENDOR_NAME = 'Mollie';
+	public const VENDOR_NAME = 'Mollie';
 
 	/**
 	 * Instance of MollieApiClient
@@ -57,7 +57,6 @@ class MollieVendor implements VendorInterface {
 	 * Mollie constructor.
 	 */
 	public function __construct( MapperService $mapper_service, LoggerService $logger_service ) {
-
 		$this->logger = $logger_service;
 		$this->mapper = $mapper_service;
 
@@ -70,8 +69,10 @@ class MollieVendor implements VendorInterface {
 				'live' => $settings['live_key'] ?? '',
 			];
 
-			$this->set_api_mode( $settings['mode'] );
-			$this->set_user_agent();
+			if ( ! empty( $settings['mode'] ) ) {
+				$this->set_api_mode( $settings['mode'] );
+				$this->set_user_agent();
+			}
 		}
 	}
 
@@ -79,7 +80,6 @@ class MollieVendor implements VendorInterface {
 	 * Change the API client to the key for the specified mode.
 	 */
 	private function set_api_mode( ?string $mode ) {
-
 		// Gets the key associated with the specified mode.
 		$key = $this->api_keys[ $mode ] ?? false;
 
@@ -90,7 +90,6 @@ class MollieVendor implements VendorInterface {
 			} catch ( ApiException $e ) {
 				$this->logger->critical( $e->getMessage() );
 			}
-
 		}
 	}
 
@@ -98,65 +97,78 @@ class MollieVendor implements VendorInterface {
 	 * Sets the user agent for identifying requests made with this plugin.
 	 */
 	private function set_user_agent() {
-
 		global $wp_version;
 		$this->api_client->addVersionString( "KudosDonations/" . KUDOS_VERSION );
 		$this->api_client->addVersionString( "WordPress/" . $wp_version );
 	}
 
 	/**
-	 * Returns the current vendor name.
-	 *
-	 * @return string
-	 */
-	public static function get_vendor_name(): string {
-		return static::VENDOR_NAME;
-	}
-
-	/**
 	 * Check the Mollie api keys for both test and live keys. Sends a JSON response.
 	 */
 	public function check_api_keys() {
-
-		Settings::update_array( 'vendor_mollie',
+		Settings::update_array(
+			'vendor_mollie',
 			[
 				'connected' => false,
 				'recurring' => false,
-			] );
+			]
+		);
 
-		$modes    = [ "test", "live" ];
-		$api_keys = $this->api_keys;
+		$mode = Settings::get_setting( 'vendor_mollie' )['mode'];
 
-		// Check that the api key corresponds to each mode.
-		foreach ( $modes as $mode ) {
-			$api_key = $api_keys[ $mode ];
-			if ( substr( $api_key, 0, 5 ) !== $mode . "_" ) {
-				wp_send_json_error(
-					[
-						/* translators: %s: API mode */
-						'message' => sprintf( __( '%1$s API key should begin with %2$s', 'kudos-donations' ),
-							ucfirst( $mode ),
-							$mode . '_' ),
-						'setting' => Settings::get_setting( 'vendor_mollie' ),
-					]
-				);
-			}
+		// Check if both fields are empty.
+		if ( empty( $this->api_keys[ $mode ] ) ) {
+			wp_send_json_error(
+				[
+					/* translators: %s: API mode */
+					'message' => sprintf(
+						__( 'Please enter your %s API key.', 'kudos-donations' ),
+						$mode
+					),
+					'setting' => Settings::get_setting( 'vendor_mollie' ),
+				]
+			);
+		}
 
-			// Test the api key.
-			if ( ! $this->refresh_api_connection( $api_key ) ) {
-				wp_send_json_error(
-					[
-						/* translators: %s: API mode */
-						'message' => sprintf( __( 'Error connecting with Mollie, please check the %s API key and try again.',
-							'kudos-donations' ),
-							ucfirst( $mode ) ),
-						'setting' => Settings::get_setting( 'vendor_mollie' ),
-					]
-				);
+		foreach ( $this->api_keys as $type => $apiKey ) {
+			if ( $apiKey ) {
+				// Check that the api key corresponds to each mode.
+				if ( substr( $apiKey, 0, 5 ) !== $type . "_" ) {
+					wp_send_json_error(
+						[
+							/* translators: %s: API mode */
+							'message' => sprintf(
+								__( '%1$s API key should begin with %2$s', 'kudos-donations' ),
+								ucfirst( $type ),
+								$type . '_'
+							),
+							'setting' => Settings::get_setting( 'vendor_mollie' ),
+						]
+					);
+				}
+
+				// Test the api key.
+				if ( ! $this->refresh_api_connection( $apiKey ) ) {
+					wp_send_json_error(
+						[
+							/* translators: %s: API mode */
+							'message' => sprintf(
+								__(
+									'Error connecting with Mollie, please check the %s API key and try again.',
+									'kudos-donations'
+								),
+								ucfirst( $type )
+							),
+							'setting' => Settings::get_setting( 'vendor_mollie' ),
+						]
+					);
+				}
 			}
 		}
+
 		// Update vendor settings.
-		Settings::update_array( 'vendor_mollie',
+		Settings::update_array(
+			'vendor_mollie',
 			[
 				'recurring'       => $this->can_use_recurring(),
 				'connected'       => true,
@@ -168,7 +180,8 @@ class MollieVendor implements VendorInterface {
 					];
 				},
 					(array) $this->get_payment_methods() ),
-			] );
+			]
+		);
 
 		wp_send_json_success(
 			[
@@ -181,6 +194,75 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
+	 * Checks the provided api key by attempting to get associated payments.
+	 *
+	 * @param string $api_key API key to test.
+	 *
+	 * @return bool
+	 */
+	public function refresh_api_connection( string $api_key ): bool {
+		if ( ! $api_key ) {
+			return false;
+		}
+
+		try {
+			// Perform test call to verify api key.
+			$mollie_api = $this->api_client;
+			$mollie_api->setApiKey( $api_key );
+			$mollie_api->payments->page();
+
+			return true;
+		} catch ( ApiException $e ) {
+			$this->logger->critical( $e->getMessage() );
+
+			return false;
+		}
+	}
+
+	/**
+	 * Uses get_payment_methods to determine if account can receive recurring payments.
+	 *
+	 * @return bool
+	 */
+	public function can_use_recurring(): bool {
+		$methods = $this->get_payment_methods( [
+			'sequenceType' => 'recurring',
+		] );
+
+		if ( $methods ) {
+			return $methods->count > 0;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Gets a list of payment methods for the current Mollie account
+	 *
+	 * @param array $options https://docs.mollie.com/reference/v2/methods-api/list-methods
+	 *
+	 * @return BaseCollection|MethodCollection|null
+	 */
+	public function get_payment_methods( array $options = [] ) {
+		try {
+			return $this->api_client->methods->allActive( $options );
+		} catch ( ApiException $e ) {
+			$this->logger->critical( $e->getMessage() );
+
+			return null;
+		}
+	}
+
+	/**
+	 * Returns the api mode.
+	 *
+	 * @return string
+	 */
+	public function get_api_mode(): string {
+		return $this->api_mode;
+	}
+
+	/**
 	 * Returns all subscriptions for customer.
 	 *
 	 * @param string $customer_id Mollie customer id.
@@ -188,7 +270,6 @@ class MollieVendor implements VendorInterface {
 	 * @return SubscriptionCollection|false
 	 */
 	public function get_subscriptions( string $customer_id ) {
-
 		$mollie_api = $this->api_client;
 
 		try {
@@ -200,7 +281,6 @@ class MollieVendor implements VendorInterface {
 
 			return false;
 		}
-
 	}
 
 	/**
@@ -211,7 +291,6 @@ class MollieVendor implements VendorInterface {
 	 * @return bool
 	 */
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool {
-
 		$customer = $this->get_customer( $subscription->customer_id );
 
 		// Bail if no subscription found locally or if not active.
@@ -233,31 +312,20 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Checks the provided api key by attempting to get associated payments.
+	 * Get the customer from Mollie.
 	 *
-	 * @param string $api_key API key to test.
+	 * @param $customer_id
 	 *
-	 * @return bool
+	 * @return Customer|null
 	 */
-	public function refresh_api_connection( string $api_key ): bool {
-
-		if ( ! $api_key ) {
-			return false;
-		}
-
+	public function get_customer( $customer_id ): ?Customer {
 		try {
-			// Perform test call to verify api key.
-			$mollie_api = $this->api_client;
-			$mollie_api->setApiKey( $api_key );
-			$mollie_api->payments->page();
-
-			return true;
+			return $this->api_client->customers->get( $customer_id );
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 
-			return false;
+			return null;
 		}
-
 	}
 
 	/**
@@ -268,7 +336,6 @@ class MollieVendor implements VendorInterface {
 	 * @return bool|Payment
 	 */
 	public function get_payment( string $mollie_payment_id ) {
-
 		try {
 			return $this->api_client->payments->get( $mollie_payment_id );
 		} catch ( ApiException $e ) {
@@ -276,7 +343,6 @@ class MollieVendor implements VendorInterface {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -288,7 +354,6 @@ class MollieVendor implements VendorInterface {
 	 * @return bool|Customer
 	 */
 	public function create_customer( string $email, string $name ) {
-
 		$customer_array = [
 			'email' => $email,
 		];
@@ -307,16 +372,15 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Get the customer from Mollie.
+	 * Creates a payment and returns it as an object.
 	 *
-	 * @param $customer_id
+	 * @param array $payment_array Parameters to pass to mollie to create a payment.
 	 *
-	 * @return Customer|null
+	 * @return null|Payment
 	 */
-	public function get_customer( $customer_id ): ?Customer {
-
+	public function create_payment( array $payment_array ): ?Payment {
 		try {
-			return $this->api_client->customers->get( $customer_id );
+			return $this->api_client->payments->create( $payment_array );
 		} catch ( ApiException $e ) {
 			$this->logger->critical( $e->getMessage() );
 
@@ -325,21 +389,200 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Creates a payment and returns it as an object.
+	 * Mollie webhook handler.
 	 *
-	 * @param array $payment_array Parameters to pass to mollie to create a payment.
+	 * @param WP_REST_Request $request Request object.
 	 *
-	 * @return null|Payment
+	 * @return WP_Error|WP_REST_Response
 	 */
-	public function create_payment( array $payment_array ): ?Payment {
+	public function rest_webhook( WP_REST_Request $request ) {
+		// Sanitize request params.
+		$request->sanitize_params();
+
+		// ID is case-sensitive (e.g: tr_HUW39xpdFN).
+		$payment_id = $request->get_param( 'id' );
+
+		// Create action with payment_id as parameter.
+		do_action( 'kudos_mollie_webhook_requested', $payment_id );
+
+		// Mollie API.
+		$mollie = $this->api_client;
+
+		// Log request.
+		$this->logger->info(
+			"Webhook requested by $this.",
+			[
+				'payment_id' => $payment_id,
+			]
+		);
 
 		try {
-			return $this->api_client->payments->create( $payment_array );
-		} catch ( ApiException $e ) {
-			$this->logger->critical( $e->getMessage() );
+			/**
+			 * Create success response object.
+			 *
+			 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
+			 */
+			$response = rest_ensure_response(
+				[
+					'success' => true,
+					'id'      => $payment_id,
+				]
+			);
 
-			return null;
+			$response->add_link( 'self', rest_url( $request->get_route() ) );
+
+			/**
+			 * Get the payment object from Mollie.
+			 *
+			 * @link https://docs.mollie.com/reference/v2/payments-api/get-payment
+			 */
+			$payment = $mollie->payments->get( $payment_id );
+
+			// Log payment retrieval.
+			$this->logger->debug(
+				"Payment retrieved from Mollie.",
+				[
+					'transaction_id' => $payment_id,
+					'status'         => $payment->status,
+					'sequence_type'  => $payment->sequenceType,
+					'has_refunds'    => $payment->hasRefunds(),
+				]
+			);
+
+			/**
+			 * Get transaction from database.
+			 * e.g. One-off, First, Recurring (only with refunds).
+			 *
+			 * @var TransactionEntity $transaction
+			 */
+			$transaction = $this->mapper
+				->get_repository( TransactionEntity::class )
+				->get_one_by(
+					[
+						'order_id'       => $payment->metadata->order_id ?? '',
+						// Recurring payment objects do not have metadata.
+						'transaction_id' => $payment_id,
+					],
+					'OR'
+				);
+
+			/**
+			 * Create new transaction if this is a recurring payment and none found.
+			 * e.g. New recurring payment.
+			 */
+			if ( ! $transaction && $payment->hasSequenceTypeRecurring() ) {
+				$this->logger->debug( 'Recurring payment received, creating transaction.', [
+					'subscription_id' => $payment->subscriptionId,
+				] );
+				$customer     = $mollie->customers->get( $payment->customerId );
+				$subscription = $customer->getSubscription( $payment->subscriptionId );
+				$transaction  = new TransactionEntity( [
+					'order_id'    => Utils::generate_id( 'kdo_' ),
+					'campaign_id' => $subscription->metadata->campaign_id ?? '',
+				] );
+			}
+
+			/**
+			 * We should have a transaction by now.
+			 * To not leak any information to malicious third parties, it is recommended
+			 * Always return a 200 OK response even if the ID is not known to your system.
+			 *
+			 * @link https://docs.mollie.com/overview/webhooks#how-to-handle-unknown-ids
+			 */
+			if ( ! $transaction ) {
+				$this->logger->warning(
+					'Webhook received for unknown transaction. Aborting',
+					[ 'transaction_id' => $payment_id ]
+				);
+
+				return $response;
+			}
+
+			// Update transaction status.
+			$transaction->set_fields(
+				[
+					'status' => $payment->status,
+				]
+			);
+
+			if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
+				/*
+				 * The payment is paid and isn't refunded or charged back.
+				 * Time to check if this is a duplicate before processing.
+				 */
+				if ( $payment_id === $transaction->transaction_id ) {
+					$this->logger->debug( 'Duplicate webhook detected. Ignoring', [ 'transaction_id' => $payment_id ] );
+
+					return $response;
+				}
+
+				// Create action with order_id as parameter.
+				do_action( 'kudos_mollie_transaction_paid', $transaction->order_id );
+
+				// Update transaction.
+				$transaction->set_fields(
+					[
+						'status'          => $payment->status,
+						'transaction_id'  => $payment->id,
+						'customer_id'     => $payment->customerId,
+						'value'           => $payment->amount->value,
+						'currency'        => $payment->amount->currency,
+						'sequence_type'   => $payment->sequenceType,
+						'method'          => $payment->method,
+						'mode'            => $payment->mode,
+						'subscription_id' => $payment->subscriptionId,
+					]
+				);
+
+				// Set up recurring payment if sequence is first.
+				if ( $payment->hasSequenceTypeFirst() ) {
+					$this->logger->info( 'Creating subscription.', $transaction->to_array() );
+					$this->create_subscription(
+						$transaction,
+						$payment->mandateId,
+						$payment->metadata->interval,
+						$payment->metadata->years
+					);
+				}
+			} elseif ( $payment->hasRefunds() ) {
+				/*
+				 * The payment has been (partially) refunded.
+				 * The status of the payment is still "paid".
+				 */
+				do_action( 'kudos_mollie_refund', $transaction->order_id );
+
+				$transaction->set_fields(
+					[
+						'refunds' => json_encode(
+							[
+								'refunded'  => $payment->getAmountRefunded(),
+								'remaining' => $payment->getAmountRemaining(),
+							]
+						),
+					]
+				);
+
+				$this->logger->info( 'Payment refunded.', [ 'transaction' => $transaction ] );
+			}
+		} catch ( ApiException $e ) {
+			$this->logger->error( "$this webhook exception: " . $e->getMessage(), [ 'payment_id' => $payment_id ] );
+
+			// Send fail response to Mollie so that they know to try again.
+			return rest_ensure_response(
+				new WP_REST_Response( [
+					'success' => false,
+					'id'      => $payment_id,
+				], 500 )
+			);
 		}
+
+		/**
+		 * Save transaction to database and
+		 * return response to Mollie.
+		 */
+		$this->mapper->save( $transaction );
+
+		return $response;
 	}
 
 	/**
@@ -358,7 +601,6 @@ class MollieVendor implements VendorInterface {
 		string $interval,
 		string $years
 	) {
-
 		$customer_id = $transaction->customer_id;
 		$start_date  = gmdate( 'Y-m-d', strtotime( '+' . $interval ) );
 		$currency    = 'EUR';
@@ -436,283 +678,6 @@ class MollieVendor implements VendorInterface {
 	}
 
 	/**
-	 * Check the provided customer for valid mandates
-	 *
-	 * @param Customer $customer
-	 * @param string $mandate_id
-	 *
-	 * @return bool
-	 */
-	private function check_mandate( Customer $customer, string $mandate_id ): bool {
-
-		try {
-			$mandate = $customer->getMandate( $mandate_id );
-			if ( $mandate->isValid() || $mandate->isPending() ) {
-				return true;
-			}
-		} catch ( ApiException $e ) {
-			$this->logger->error( $e->getMessage() );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Uses get_payment_methods to determine if account can receive recurring payments.
-	 *
-	 * @return bool
-	 */
-	public function can_use_recurring(): bool {
-
-		$methods = $this->get_payment_methods( [
-			'sequenceType' => 'recurring',
-		] );
-
-		if ( $methods ) {
-			return $methods->count > 0;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Gets a list of payment methods for the current Mollie account
-	 *
-	 * @param array $options https://docs.mollie.com/reference/v2/methods-api/list-methods
-	 *
-	 * @return BaseCollection|MethodCollection|null
-	 */
-	public function get_payment_methods( array $options = [] ) {
-
-		try {
-
-			return $this->api_client->methods->allActive( $options );
-
-		} catch ( ApiException $e ) {
-			$this->logger->critical( $e->getMessage() );
-
-			return null;
-		}
-	}
-
-	/**
-	 * Mollie webhook handler.
-	 *
-	 * @param WP_REST_Request $request Request object.
-	 *
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function rest_webhook( WP_REST_Request $request ) {
-
-		// Sanitize request params.
-		$request->sanitize_params();
-
-		// ID is case-sensitive (e.g: tr_HUW39xpdFN).
-		$payment_id = $request->get_param( 'id' );
-
-		// Create action with payment_id as parameter.
-		do_action( 'kudos_mollie_webhook_requested', $payment_id );
-
-		// Mollie API.
-		$mollie = $this->api_client;
-
-		// Log request.
-		$this->logger->info(
-			"Webhook requested by $this.",
-			[
-				'payment_id' => $payment_id,
-			]
-		);
-
-		try {
-
-			/**
-			 * Create success response object.
-			 *
-			 * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
-			 */
-			$response = rest_ensure_response(
-				[
-					'success' => true,
-					'id'      => $payment_id,
-				]
-			);
-
-			$response->add_link( 'self', rest_url( $request->get_route() ) );
-
-			/**
-			 * Get the payment object from Mollie.
-			 *
-			 * @link https://docs.mollie.com/reference/v2/payments-api/get-payment
-			 */
-			$payment = $mollie->payments->get( $payment_id );
-
-			// Log payment retrieval.
-			$this->logger->debug(
-				"Payment retrieved from Mollie.",
-				[
-					'transaction_id' => $payment_id,
-					'status'         => $payment->status,
-					'sequence_type'  => $payment->sequenceType,
-					'has_refunds'    => $payment->hasRefunds(),
-				]
-			);
-
-			/**
-			 * Get transaction from database.
-			 * e.g. One-off, First, Recurring (only with refunds).
-			 *
-			 * @var TransactionEntity $transaction
-			 */
-			$transaction = $this->mapper
-				->get_repository( TransactionEntity::class )
-				->get_one_by(
-					[
-						'order_id'       => $payment->metadata->order_id ?? '',
-						// Recurring payment objects do not have metadata.
-						'transaction_id' => $payment_id,
-					],
-					'OR'
-				);
-
-			/**
-			 * Create new transaction if this is a recurring payment and none found.
-			 * e.g. New recurring payment.
-			 */
-			if ( ! $transaction && $payment->hasSequenceTypeRecurring() ) {
-				$this->logger->debug( 'Recurring payment received, creating transaction.', [
-					'subscription_id' => $payment->subscriptionId,
-				] );
-				$customer     = $mollie->customers->get( $payment->customerId );
-				$subscription = $customer->getSubscription( $payment->subscriptionId );
-				$transaction  = new TransactionEntity( [
-					'order_id'    => Utils::generate_id( 'kdo_' ),
-					'campaign_id' => $subscription->metadata->campaign_id ?? '',
-				] );
-			}
-
-			/**
-			 * We should have a transaction by now.
-			 * To not leak any information to malicious third parties, it is recommended
-			 * Always return a 200 OK response even if the ID is not known to your system.
-			 *
-			 * @link https://docs.mollie.com/overview/webhooks#how-to-handle-unknown-ids
-			 */
-			if ( ! $transaction ) {
-				$this->logger->warning( 'Webhook received for unknown transaction. Aborting',
-					[ 'transaction_id' => $payment_id ] );
-
-				return $response;
-			}
-
-			// Update transaction status.
-			$transaction->set_fields(
-				[
-					'status' => $payment->status,
-				] );
-
-			if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
-				/*
-				 * The payment is paid and isn't refunded or charged back.
-				 * Time to check if this is a duplicate before processing.
-				 */
-				if ( $payment_id === $transaction->transaction_id ) {
-					$this->logger->debug( 'Duplicate webhook detected. Ignoring', [ 'transaction_id' => $payment_id ] );
-
-					return $response;
-				}
-
-				// Create action with order_id as parameter.
-				do_action( 'kudos_mollie_transaction_paid', $transaction->order_id );
-
-				// Update transaction.
-				$transaction->set_fields(
-					[
-						'status'          => $payment->status,
-						'transaction_id'  => $payment->id,
-						'customer_id'     => $payment->customerId,
-						'value'           => $payment->amount->value,
-						'currency'        => $payment->amount->currency,
-						'sequence_type'   => $payment->sequenceType,
-						'method'          => $payment->method,
-						'mode'            => $payment->mode,
-						'subscription_id' => $payment->subscriptionId,
-					]
-				);
-
-				// Set up recurring payment if sequence is first.
-				if ( $payment->hasSequenceTypeFirst() ) {
-					$this->logger->info( 'Creating subscription.', $transaction->to_array() );
-					$this->create_subscription(
-						$transaction,
-						$payment->mandateId,
-						$payment->metadata->interval,
-						$payment->metadata->years
-					);
-				}
-
-			} elseif ( $payment->hasRefunds() ) {
-				/*
-				 * The payment has been (partially) refunded.
-				 * The status of the payment is still "paid".
-				 */
-				do_action( 'kudos_mollie_refund', $transaction->order_id );
-
-				$transaction->set_fields(
-					[
-						'refunds' => json_encode(
-							[
-								'refunded'  => $payment->getAmountRefunded(),
-								'remaining' => $payment->getAmountRemaining(),
-							]
-						),
-					]
-				);
-
-				$this->logger->info( 'Payment refunded.', [ 'transaction' => $transaction ] );
-
-			}
-
-		} catch ( ApiException $e ) {
-			$this->logger->error( "$this webhook exception: " . $e->getMessage(), [ 'payment_id' => $payment_id ] );
-
-			// Send fail response to Mollie so that they know to try again.
-			return rest_ensure_response( new WP_REST_Response( [
-				'success' => false,
-				'id'      => $payment_id,
-			], 500 ) );
-		}
-
-		/**
-		 * Save transaction to database and
-		 * return response to Mollie.
-		 */
-		$this->mapper->save( $transaction );
-
-		return $response;
-	}
-
-	/**
-	 * Returns the api mode.
-	 *
-	 * @return string
-	 */
-	public function get_api_mode(): string {
-
-		return $this->api_mode;
-	}
-
-	/**
-	 * Returns the vendor name.
-	 *
-	 * @return string
-	 */
-	public function __toString(): string {
-
-		return self::get_vendor_name();
-	}
-
-	/**
 	 * Returns the Mollie Rest URL.
 	 *
 	 * @return string
@@ -727,6 +692,45 @@ class MollieVendor implements VendorInterface {
 
 		// Otherwise, return normal rest URL.
 		return rest_url( $route );
+	}
+
+	/**
+	 * Check the provided customer for valid mandates
+	 *
+	 * @param Customer $customer
+	 * @param string $mandate_id
+	 *
+	 * @return bool
+	 */
+	private function check_mandate( Customer $customer, string $mandate_id ): bool {
+		try {
+			$mandate = $customer->getMandate( $mandate_id );
+			if ( $mandate->isValid() || $mandate->isPending() ) {
+				return true;
+			}
+		} catch ( ApiException $e ) {
+			$this->logger->error( $e->getMessage() );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns the vendor name.
+	 *
+	 * @return string
+	 */
+	public function __toString(): string {
+		return self::get_vendor_name();
+	}
+
+	/**
+	 * Returns the current vendor name.
+	 *
+	 * @return string
+	 */
+	public static function get_vendor_name(): string {
+		return static::VENDOR_NAME;
 	}
 
 	/**
@@ -756,7 +760,6 @@ class MollieVendor implements VendorInterface {
 						$mapper->get_repository( TransactionEntity::class );
 
 						if ( $order_id ) {
-
 							/**
 							 * Find existing transaction.
 							 * @var TransactionEntity $transaction
@@ -802,7 +805,6 @@ class MollieVendor implements VendorInterface {
 	 * @return int
 	 */
 	public function add_missing_transactions(): int {
-
 		$added  = 0;
 		$mapper = $this->mapper;
 		$mapper->get_repository( DonorEntity::class );
@@ -821,7 +823,6 @@ class MollieVendor implements VendorInterface {
 						$order_id = $payment->metadata->order_id ?? null;
 
 						if ( $order_id ) {
-
 							$mapper->get_repository( TransactionEntity::class );
 
 							/**
@@ -834,7 +835,6 @@ class MollieVendor implements VendorInterface {
 
 							// Add new transaction if none found.
 							if ( ! $transaction ) {
-
 								$transaction = new TransactionEntity( [
 									'order_id'        => $order_id,
 									'created'         => $payment->createdAt,
@@ -853,7 +853,6 @@ class MollieVendor implements VendorInterface {
 								$mapper->save( $transaction );
 								$added ++;
 							}
-
 						}
 					}
 				} catch ( ApiException $e ) {
