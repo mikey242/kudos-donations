@@ -114,7 +114,8 @@ class PaymentService {
 		Utils::schedule_action(
 			strtotime( '+1 minute' ),
 			'kudos_process_' . strtolower( self::get_vendor_name() ) . '_transaction',
-			[ $order_id ] );
+			[ $order_id ] 
+		);
 
 	}
 
@@ -135,7 +136,7 @@ class PaymentService {
 			->get_repository( TransactionEntity::class )
 			->get_one_by( [ 'order_id' => $order_id ] );
 
-		//  Get donor.
+		// Get donor.
 		/** @var DonorEntity $donor */
 		$donor = $this->mapper_service
 			->get_repository( DonorEntity::class )
@@ -154,16 +155,17 @@ class PaymentService {
 	 * Creates a payment with Mollie.
 	 *
 	 * @param WP_REST_Request $request
-	 *
 	 */
 	public function submit_payment( WP_REST_Request $request ) {
 
 		// Verify nonce.
 		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
-			wp_send_json_error( [
-				'message' => __( 'Request invalid.', 'kudos-donations' ),
-				'nonce'   => $request->get_header( 'X-WP-Nonce' ),
-			] );
+			wp_send_json_error(
+				[
+					'message' => __( 'Request invalid.', 'kudos-donations' ),
+					'nonce'   => $request->get_header( 'X-WP-Nonce' ),
+				] 
+			);
 		}
 
 		$values = $request->get_body_params();
@@ -198,10 +200,12 @@ class PaymentService {
 			// Search for existing donor based on email and mode.
 			/** @var DonorEntity $donor */
 			$donor = $mapper->get_repository( DonorEntity::class )
-			                ->get_one_by( [
-				                'email' => $email,
-				                'mode'  => $this->vendor->get_api_mode(),
-			                ] );
+							->get_one_by(
+								[
+									'email' => $email,
+									'mode'  => $this->vendor->get_api_mode(),
+								] 
+							);
 
 			// Create new donor if none found.
 			if ( empty( $donor->customer_id ) ) {
@@ -248,9 +252,11 @@ class PaymentService {
 		}
 
 		// If payment not created return an error message.
-		wp_send_json_error( [
-			'message' => __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' ),
-		] );
+		wp_send_json_error(
+			[
+				'message' => __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' ),
+			] 
+		);
 
 	}
 
@@ -268,7 +274,7 @@ class PaymentService {
 		// Get subscription entity from supplied row id.
 		/** @var SubscriptionEntity $subscription */
 		$subscription = $mapper->get_repository( SubscriptionEntity::class )
-		                       ->get_one_by( [ 'id' => $id ] );
+							   ->get_one_by( [ 'id' => $id ] );
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
@@ -276,9 +282,11 @@ class PaymentService {
 		if ( $result ) {
 
 			// Update entity with canceled status.
-			$subscription->set_fields( [
-				'status' => 'cancelled',
-			] );
+			$subscription->set_fields(
+				[
+					'status' => 'cancelled',
+				] 
+			);
 
 			// Save changes to subscription entity.
 			$mapper->save( $subscription );
@@ -301,10 +309,10 @@ class PaymentService {
 	/**
 	 * Creates a payment and returns it as an object.
 	 *
-	 * @param string $value Value of payment.
-	 * @param string $interval Interval of payment (oneoff, first, recurring).
-	 * @param string $years Number of years for subscription.
-	 * @param string $redirect_url URL to redirect customer to on payment completion.
+	 * @param string      $value Value of payment.
+	 * @param string      $interval Interval of payment (oneoff, first, recurring).
+	 * @param string      $years Number of years for subscription.
+	 * @param string      $redirect_url URL to redirect customer to on payment completion.
 	 * @param string|null $campaign_id Campaign name to associate payment to.
 	 * @param string|null $name Name of donor.
 	 * @param string|null $email Email of donor.
@@ -335,7 +343,7 @@ class PaymentService {
 
 		// Create payment settings.
 		$payment_array = [
-			"amount"       => [
+			'amount'       => [
 				'currency' => $currency,
 				'value'    => $formatted_value,
 			],
@@ -384,12 +392,12 @@ class PaymentService {
 
 		// Add order id query arg to return url if option to show message enabled.
 		if ( get_option( '_kudos_completed_payment' ) === 'message' ) {
-			$action = 'order_complete';
+			$action               = 'order_complete';
 			$redirect_url         = add_query_arg(
 				[
 					'kudos_action'   => 'order_complete',
 					'kudos_order_id' => $order_id,
-					'kudos_nonce'    => wp_create_nonce($action . $order_id),
+					'kudos_nonce'    => wp_create_nonce( $action . $order_id ),
 				],
 				$redirect_url
 			);
@@ -403,7 +411,10 @@ class PaymentService {
 
 		$this->logger->info(
 			"New $this->vendor payment created.",
-			[ 'oder_id' => $order_id, 'sequence_type' => $payment->sequenceType ]
+			[
+				'oder_id'       => $order_id,
+				'sequence_type' => $payment->sequenceType,
+			]
 		);
 
 		return $payment;
@@ -423,20 +434,28 @@ class PaymentService {
 
 		// Check if form completed too quickly.
 		if ( $timeDiff < 4 ) {
-			$this->logger->info( 'Bot detected, rejecting form.', [
-				'reason'     => 'Form completed too quickly',
-				'time_taken' => $timeDiff,
-			] );
+			$this->logger->info(
+				'Bot detected, rejecting form.',
+				[
+					'reason'     => 'Form completed too quickly',
+					'time_taken' => $timeDiff,
+				] 
+			);
 
 			return true;
 		}
 
 		// Check if honeypot field completed.
 		if ( ! empty( $values['donation'] ) ) {
-			$this->logger->info( 'Bot detected, rejecting form.',
-				array_merge( [
-					'reason' => 'Honeypot field completed',
-				], $values ) );
+			$this->logger->info(
+				'Bot detected, rejecting form.',
+				array_merge(
+					[
+						'reason' => 'Honeypot field completed',
+					],
+					$values 
+				) 
+			);
 
 			return true;
 		}

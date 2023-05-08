@@ -52,7 +52,6 @@ class KudosDonations {
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
 	 * Load the dependencies and set the hooks for the admin area and
 	 * the public-facing side of the site.
-	 *
 	 */
 	public function __construct( $container, $version, $plugin_name ) {
 
@@ -170,7 +169,7 @@ class KudosDonations {
 
 		if ( $db_version !== KUDOS_VERSION ) {
 			$this->container->get( 'ActivatorService' )
-			                ->activate( $db_version );
+							->activate( $db_version );
 		}
 	}
 

@@ -37,7 +37,7 @@ class Transaction extends Base {
 		$this->mapper_service->get_repository( TransactionEntity::class );
 
 		return [
-			$this->get_base() . '/get' => [
+			$this->get_base() . '/get'         => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_one' ],
 				'args'                => [
@@ -51,14 +51,14 @@ class Transaction extends Base {
 					return current_user_can( 'manage_options' );
 				},
 			],
-			$this->get_base() . '/all'                         => [
+			$this->get_base() . '/all'         => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_all' ],
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},
 			],
-			$this->get_base() . '/all/between'                 => [
+			$this->get_base() . '/all/between' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_all_between' ],
 				'args'                => [
@@ -91,9 +91,13 @@ class Transaction extends Base {
 
 		$mapper = $this->mapper_service;
 
-		return new WP_REST_Response( $mapper->get_one_by( [
-			'id' => $request['id'],
-		] ) );
+		return new WP_REST_Response(
+			$mapper->get_one_by(
+				[
+					'id' => $request['id'],
+				] 
+			) 
+		);
 	}
 
 	/**
@@ -105,9 +109,13 @@ class Transaction extends Base {
 
 		$mapper = $this->mapper_service;
 
-		return new WP_REST_Response( $mapper->get_all_by([
-			'status' => 'paid'
-		]) );
+		return new WP_REST_Response(
+			$mapper->get_all_by(
+				[
+					'status' => 'paid',
+				] 
+			) 
+		);
 	}
 
 	/**

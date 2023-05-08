@@ -29,11 +29,14 @@ class DatabaseHandler extends AbstractProcessingHandler {
 
 		$wpdb = $this->wpdb;
 
-		$wpdb->insert( $wpdb->prefix . LoggerService::TABLE, [
-			'level'   => $record['level'],
-			'message' => $record['message'],
-			'context' => $record['context'] ? json_encode( $record['context'] ) : '',
-			'date'    => $record['datetime']->format( 'Y-m-d H:i:s' ),
-		] );
+		$wpdb->insert(
+			$wpdb->prefix . LoggerService::TABLE,
+			[
+				'level'   => $record['level'],
+				'message' => $record['message'],
+				'context' => $record['context'] ? json_encode( $record['context'] ) : '',
+				'date'    => $record['datetime']->format( 'Y-m-d H:i:s' ),
+			] 
+		);
 	}
 }

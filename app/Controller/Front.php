@@ -75,7 +75,6 @@ class Front {
 	 * Initialize the class and set its properties.
 	 *
 	 * @param string $version The version of this plugin.
-	 *
 	 */
 	public function __construct(
 		string $version,
@@ -107,7 +106,8 @@ class Front {
 		$secondary_dark   = Utils::color_luminance( $secondary, '-0.06' );
 		$secondary_darker = Utils::color_luminance( $secondary, '-0.09' );
 
-		return trim( "
+		return trim(
+			"
 		:root {
 			--kudos-theme-primary: $primary;
 			--kudos-theme-primary-dark: $primary_dark;
@@ -116,7 +116,8 @@ class Front {
 			--kudos-theme-secondary-dark: $secondary_dark;
 			--kudos-theme-secondary-darker: $secondary_darker;
 		}
-		" );
+		" 
+		);
 
 	}
 
@@ -188,10 +189,13 @@ class Front {
 	private function register_button_shortcode() {
 
 		// Enqueue necessary resources.
-		add_action( 'wp_enqueue_scripts', function () {
-			wp_enqueue_script( 'kudos-donations-public' );
-			wp_enqueue_style( 'kudos-donations-public' );
-		} );
+		add_action(
+			'wp_enqueue_scripts',
+			function () {
+				wp_enqueue_script( 'kudos-donations-public' );
+				wp_enqueue_style( 'kudos-donations-public' );
+			} 
+		);
 
 		// Register shortcode.
 		add_shortcode(
@@ -218,53 +222,55 @@ class Front {
 	 */
 	private function register_button_block() {
 
-		register_block_type( 'iseardmedia/kudos-button',
+		register_block_type(
+			'iseardmedia/kudos-button',
 			[
-				"render_callback" => [ $this, "kudos_render_callback" ],
-				"category"        => "widgets",
-				"title"           => "Kudos Button",
-				"description"     => "Adds a Kudos donate button or form to your post or page.",
-				"keywords"        => [
-					"kudos",
-					"button",
-					"donate",
+				'render_callback' => [ $this, 'kudos_render_callback' ],
+				'category'        => 'widgets',
+				'title'           => 'Kudos Button',
+				'description'     => 'Adds a Kudos donate button or form to your post or page.',
+				'keywords'        => [
+					'kudos',
+					'button',
+					'donate',
 				],
-				"supports"        => [
-					"align"           => false,
-					"customClassName" => true,
-					"typography"      => [
-						"fontSize" => false,
-					],
-				],
-				"example"         => [
-					"attributes" => [
-						"label"     => "Donate now!",
-						"alignment" => "center",
+				'supports'        => [
+					'align'           => false,
+					'customClassName' => true,
+					'typography'      => [
+						'fontSize' => false,
 					],
 				],
-				"attributes"      => [
-					"button_label" => [
-						"type"    => "string",
-						"default" => "Donate now",
-					],
-					"campaign_id"  => [
-						"type"    => "string",
-						"default" => "default",
-					],
-					"alignment"    => [
-						"type"    => "string",
-						"default" => "none",
-					],
-					"type"         => [
-						"type"    => "string",
-						"default" => "button",
+				'example'         => [
+					'attributes' => [
+						'label'     => 'Donate now!',
+						'alignment' => 'center',
 					],
 				],
-				"editor_script"   => "kudos-donations-editor",
-				"editor_style"    => "kudos-donations-public",
-				"script"          => "kudos-donations-public",
-				"style"           => "kudos-donations-public",
-			] );
+				'attributes'      => [
+					'button_label' => [
+						'type'    => 'string',
+						'default' => 'Donate now',
+					],
+					'campaign_id'  => [
+						'type'    => 'string',
+						'default' => 'default',
+					],
+					'alignment'    => [
+						'type'    => 'string',
+						'default' => 'none',
+					],
+					'type'         => [
+						'type'    => 'string',
+						'default' => 'button',
+					],
+				],
+				'editor_script'   => 'kudos-donations-editor',
+				'editor_style'    => 'kudos-donations-public',
+				'script'          => 'kudos-donations-public',
+				'style'           => 'kudos-donations-public',
+			] 
+		);
 	}
 
 	/**
@@ -281,8 +287,12 @@ class Front {
 			// Check if the current vendor is connected, otherwise throw an exception.
 			if ( ! $this->payment::is_api_ready() ) {
 				/* translators: %s: Payment vendor (e.g. Mollie). */
-				throw new Exception( sprintf( __( "%s not connected.", 'kudos-donations' ),
-					$this->payment::get_vendor_name() ) );
+				throw new Exception(
+					sprintf(
+						__( '%s not connected.', 'kudos-donations' ),
+						$this->payment::get_vendor_name() 
+					) 
+				);
 			}
 
 			// Twig service and alignment.
@@ -299,27 +309,32 @@ class Front {
 			}
 
 			// If type is button, create modal and button for output.
-			$modal = $this->render_wrapper( $twig->render(
-				self::MODAL_TEMPLATE,
-				[
-					'id'      => $id,
-					'content' => $form,
-				]
-			) );
+			$modal = $this->render_wrapper(
+				$twig->render(
+					self::MODAL_TEMPLATE,
+					[
+						'id'      => $id,
+						'content' => $form,
+					]
+				) 
+			);
 
-			$button = $this->render_wrapper( $twig->render(
-				self::BUTTON_TEMPLATE,
-				[
-					'id'           => $id,
-					'button_label' => $atts['button_label'],
-					'target'       => $id,
-				]
-			),
-				$alignment );
+			$button = $this->render_wrapper(
+				$twig->render(
+					self::BUTTON_TEMPLATE,
+					[
+						'id'           => $id,
+						'button_label' => $atts['button_label'],
+						'target'       => $id,
+					]
+				),
+				$alignment 
+			);
 
 			// Place markup in footer if setting enabled.
 			if ( Settings::get_setting( 'donate_modal_in_footer' ) ) {
-				add_action( 'wp_footer',
+				add_action(
+					'wp_footer',
 					function () use ( $modal ) {
 						echo $modal;
 					}
@@ -353,7 +368,8 @@ class Front {
 	 * @return bool|string
 	 */
 	protected function render_wrapper( string $content, string $alignment = 'none' ) {
-		return $this->twig->render( self::WRAPPER_TEMPLATE,
+		return $this->twig->render(
+			self::WRAPPER_TEMPLATE,
 			[
 				'content'   => $content,
 				'alignment' => $alignment,
@@ -374,9 +390,11 @@ class Front {
 
 		$campaign       = Campaign::get_campaign( $campaign_id );
 		$transactions   = $this->mapper->get_repository( TransactionEntity::class )
-		                               ->get_all_by( [
-			                               'campaign_id' => $campaign_id,
-		                               ] );
+									->get_all_by(
+										[
+											'campaign_id' => $campaign_id,
+										] 
+									);
 		$campaign_stats = Campaign::get_campaign_stats( $transactions );
 
 		$atts = [
@@ -422,18 +440,22 @@ class Front {
 
 		$twig = $this->twig;
 
-		$message = $twig->render( self::MESSAGE_TEMPLATE,
+		$message = $twig->render(
+			self::MESSAGE_TEMPLATE,
 			[
 				'header_text' => $header,
 				'body_text'   => $body,
-			] );
+			] 
+		);
 
-		$modal = $twig->render( self::MODAL_TEMPLATE,
+		$modal = $twig->render(
+			self::MODAL_TEMPLATE,
 			[
 				'id'      => Utils::generate_id(),
 				'content' => $message,
 				'class'   => 'kudos-message-modal',
-			] );
+			] 
+		);
 
 		return $this->render_wrapper( $modal );
 	}
@@ -485,8 +507,10 @@ class Front {
 							if ( $this->payment->cancel_subscription( $subscription_id ) ) {
 								echo $this->create_message_modal(
 									__( 'Subscription cancelled', 'kudos-donations' ),
-									__( 'We will no longer be taking payments for this subscription. Thank you for your contributions.',
-										'kudos-donations' )
+									__(
+										'We will no longer be taking payments for this subscription. Thank you for your contributions.',
+										'kudos-donations' 
+									)
 								);
 
 								return;
@@ -507,7 +531,7 @@ class Front {
 	 * Returns the kudos logo SVG markup.
 	 *
 	 * @param string|null $color
-	 * @param int $width
+	 * @param int         $width
 	 *
 	 * @return string|null
 	 */
@@ -521,14 +545,18 @@ class Front {
 			$heartColor = '#ff9f1c';
 		}
 
-		return apply_filters( 'kudos_get_kudos_logo',
-			$this->twig->render( 'public/logo.html.twig',
+		return apply_filters(
+			'kudos_get_kudos_logo',
+			$this->twig->render(
+				'public/logo.html.twig',
 				[
 					'width'      => $width,
 					'lineColor'  => $lineColor,
 					'heartColor' => $heartColor,
-				] ),
-			$width );
+				] 
+			),
+			$width 
+		);
 	}
 
 	/**
@@ -570,8 +598,10 @@ class Front {
 			switch ( $transaction->status ) {
 				case 'paid':
 					$vars                = [
-						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
-								2 ),
+						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n(
+							$transaction->value,
+							2 
+						),
 						'{{name}}'     => $donor->name,
 						'{{email}}'    => $donor->email,
 						'{{campaign}}' => $campaign_name,

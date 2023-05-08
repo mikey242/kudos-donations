@@ -86,10 +86,12 @@ class DonorsTable extends WP_List_Table {
 			->get_repository( DonorEntity::class )
 			->get_all_by( [ $search_field => $search_term ] );
 
-		return array_map( function ( $donor ) {
-			return $donor->to_array();
-		},
-			$donors );
+		return array_map(
+			function ( $donor ) {
+				return $donor->to_array();
+			},
+			$donors 
+		);
 
 	}
 
@@ -153,8 +155,10 @@ class DonorsTable extends WP_List_Table {
 
 			case 'delete':
 				// In our file that handles the request, verify the nonce.
-				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['singular'] ) ) {
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+					sanitize_key( $_REQUEST['_wpnonce'] ),
+					'bulk-' . $this->_args['singular'] 
+				) ) {
 					die();
 				}
 
@@ -166,8 +170,10 @@ class DonorsTable extends WP_List_Table {
 
 			case 'bulk-delete':
 				// In our file that handles the request, verify the nonce.
-				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['plural'] ) ) {
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+					sanitize_key( $_REQUEST['_wpnonce'] ),
+					'bulk-' . $this->_args['plural'] 
+				) ) {
 					die();
 				}
 
@@ -192,7 +198,7 @@ class DonorsTable extends WP_List_Table {
 	protected function delete_record( string $column, string $id ) {
 
 		return $this->mapper
-			->get_repository(DonorEntity::class)
+			->get_repository( DonorEntity::class )
 			->delete( $column, $id );
 
 	}
@@ -223,8 +229,10 @@ class DonorsTable extends WP_List_Table {
 	protected function column_created( array $item ): string {
 
 		return __( 'Added', 'kudos-donations' ) . '<br/>' .
-		       wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			       strtotime( $item['created'] ) );
+			wp_date(
+				get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+				strtotime( $item['created'] ) 
+			);
 	}
 
 	/**
@@ -237,12 +245,14 @@ class DonorsTable extends WP_List_Table {
 	 */
 	protected function column_email( array $item ): string {
 
-		$url = add_query_arg( [
-			'page'     => esc_attr( $_REQUEST['page'] ),
-			'action'   => 'delete',
-			'id'       => sanitize_text_field( $item['id'] ),
-			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
-		] );
+		$url = add_query_arg(
+			[
+				'page'     => esc_attr( $_REQUEST['page'] ),
+				'action'   => 'delete',
+				'id'       => sanitize_text_field( $item['id'] ),
+				'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
+			] 
+		);
 
 		$title = sprintf(
 			'<a href="mailto: %1$s" />%1$s</a>',
@@ -277,10 +287,12 @@ class DonorsTable extends WP_List_Table {
 			$item['country'],
 		];
 
-		$address = array_filter( $address,
+		$address = array_filter(
+			$address,
 			function ( $item ) {
 				return ! empty( $item ) ? wp_unslash( $item ) : null;
-			} );
+			} 
+		);
 
 		return implode( '<br/>', $address );
 	}
@@ -296,7 +308,7 @@ class DonorsTable extends WP_List_Table {
 	protected function column_donations( array $item ) {
 
 		$transactions = $this->mapper
-			->get_repository(TransactionEntity::class)
+			->get_repository( TransactionEntity::class )
 			->get_all_by( [ 'customer_id' => $item['customer_id'] ] );
 
 		if ( $transactions ) {
@@ -316,7 +328,7 @@ class DonorsTable extends WP_List_Table {
 
 			return '<a href="' . admin_url( 'admin.php?page=kudos-transactions&search-field=customer_id&s=' . rawurlencode( $item['customer_id'] ) . '' ) . '">
 						' . $number . ' ( ' . Utils::get_currency_symbol( $transactions[0]->currency ) . $total . ' )' .
-			       '</a>';
+				   '</a>';
 		}
 
 		return false;

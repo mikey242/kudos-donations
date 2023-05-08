@@ -77,8 +77,13 @@ class ActivatorService {
 		$logger = $this->logger;
 		$wpdb   = $this->wpdb;
 
-		$logger->info( 'Upgrade detected, running migrations.',
-			[ 'old_version' => $old_version, 'new_version' => KUDOS_VERSION ] );
+		$logger->info(
+			'Upgrade detected, running migrations.',
+			[
+				'old_version' => $old_version,
+				'new_version' => KUDOS_VERSION,
+			] 
+		);
 
 		if ( version_compare( $old_version, '2.1.1', '<' ) ) {
 			Settings::remove_setting( 'action_scheduler' );
@@ -112,13 +117,15 @@ class ActivatorService {
 		if ( version_compare( $old_version, '2.4.0', '<' ) ) {
 			// Setting now replaced by single 'vendor_mollie' setting.
 			$connected = Settings::get_setting( 'mollie_connected' );
-			Settings::update_array( 'vendor_mollie',
+			Settings::update_array(
+				'vendor_mollie',
 				[
 					'connected' => (bool) $connected,
 					'mode'      => ! empty( Settings::get_setting( 'mollie_api_mode' ) ) ? (string) Settings::get_setting( 'mollie_api_mode' ) : 'test',
 					'test_key'  => (string) Settings::get_setting( 'mollie_test_api_key' ),
 					'live_key'  => (string) Settings::get_setting( 'mollie_live_api_key' ),
-				] );
+				] 
+			);
 
 			// Remove old settings fields.
 			Settings::remove_setting( 'mollie_connected' );
@@ -132,9 +139,12 @@ class ActivatorService {
 			// Cast connected variable as boolean.
 			$vendor_settings = Settings::get_setting( 'vendor_mollie' );
 			$connected       = ! empty( $vendor_settings['connected'] ) && $vendor_settings['connected'];
-			Settings::update_array( 'vendor_mollie', [
-				'connected' => $connected,
-			] );
+			Settings::update_array(
+				'vendor_mollie',
+				[
+					'connected' => $connected,
+				] 
+			);
 		}
 
 		if ( version_compare( $old_version, '2.5.0', '<' ) ) {

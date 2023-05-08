@@ -21,7 +21,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 		<a href="?page=kudos-tools&tab=log"
 		   class="nav-tab <?php echo ( 'log' === $tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
 		<?php
-		if ( KUDOS_DEBUG ):
+		if ( KUDOS_DEBUG ) :
 			?>
 			<a href="?page=kudos-tools&tab=actions"
 			   class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
@@ -32,21 +32,21 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 		<?php
 
-		$url               = admin_url( 'admin.php?page=kudos-tools' );
+		$url = admin_url( 'admin.php?page=kudos-tools' );
 
 		switch ( $tab ) :
 
 			case 'log':
-				$url = add_query_arg( 'tab', 'log', $url );
+				$url       = add_query_arg( 'tab', 'log', $url );
 				$logger    = new LoggerService();
 				$log_array = $logger->get_as_array();
 				?>
 
-				<p>Kudos Donations logs to the "<?php echo $logger->get_table_name() ?>" table in the
+				<p>Kudos Donations logs to the "<?php echo $logger->get_table_name(); ?>" table in the
 					database.</p>
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
-				      method='post'>
+					  method='post'>
 					<?php wp_nonce_field( 'kudos_log_clear' ); ?>
 					<button class="button-secondary confirm" name='kudos_action' type='submit' value='kudos_log_clear'>
 						Clear
@@ -84,13 +84,15 @@ $tab         = $_GET['tab'] ?? $default_tab;
 						?>
 
 						<tr style='<?php echo esc_attr( $style ); ?>'
-						    class='<?php echo esc_attr( ( 0 === $key % 2 ? 'alternate ' : null ) . $class ); ?>'>
+							class='<?php echo esc_attr( ( 0 === $key % 2 ? 'alternate ' : null ) . $class ); ?>'>
 
 							<td>
 								<?php
 								echo esc_textarea(
-									wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-										strtotime( $log['date'] ) )
+									wp_date(
+										get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+										strtotime( $log['date'] ) 
+									)
 								);
 								?>
 							</td>
@@ -127,7 +129,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_mollie' ); ?>
 					<button type='submit' class="button-secondary confirm" name='kudos_action'
-					        value='kudos_clear_mollie'>
+							value='kudos_clear_mollie'>
 						Reset Mollie settings
 					</button>
 				</form>
@@ -135,7 +137,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_campaigns' ); ?>
 					<button type='submit' class="button-secondary confirm" name='kudos_action'
-					        value='kudos_clear_campaigns'>
+							value='kudos_clear_campaigns'>
 						Reset campaigns settings
 					</button>
 				</form>
@@ -153,14 +155,14 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_twig_cache' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_clear_twig_cache'>Clear twig cache
+							value='kudos_clear_twig_cache'>Clear twig cache
 					</button>
 				</form>
 
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_object_cache' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_clear_object_cache'>Clear object cache
+							value='kudos_clear_object_cache'>Clear object cache
 					</button>
 				</form>
 
@@ -170,7 +172,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_transactions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_clear_transactions'>Delete all
+							value='kudos_clear_transactions'>Delete all
 						transactions
 					</button>
 				</form>
@@ -178,7 +180,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_donors' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_clear_donors'>Delete all
+							value='kudos_clear_donors'>Delete all
 						donors
 					</button>
 				</form>
@@ -186,7 +188,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_clear_subscriptions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_clear_subscriptions'>Delete all
+							value='kudos_clear_subscriptions'>Delete all
 						subscriptions
 					</button>
 				</form>
@@ -197,7 +199,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post'>
 					<?php wp_nonce_field( 'kudos_recreate_database' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_recreate_database'>Recreate
+							value='kudos_recreate_database'>Recreate
 						database
 					</button>
 				</form>
@@ -208,14 +210,14 @@ $tab         = $_GET['tab'] ?? $default_tab;
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_sync_transactions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_sync_transactions'>Sync transactions
+							value='kudos_sync_transactions'>Sync transactions
 					</button>
 				</form>
 
 				<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 					<?php wp_nonce_field( 'kudos_add_missing_transactions' ); ?>
 					<button class="button-secondary confirm" type='submit' name='kudos_action'
-					        value='kudos_add_missing_transactions'>Add missing transactions
+							value='kudos_add_missing_transactions'>Add missing transactions
 					</button>
 				</form>
 

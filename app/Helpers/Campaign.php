@@ -35,22 +35,24 @@ class Campaign {
 	 *
 	 * @return array
 	 */
-	public static function get_campaign_stats( array $transactions): ?array {
+	public static function get_campaign_stats( array $transactions ): ?array {
 
 		if ( $transactions ) {
-			$values = array_map( function ( $transaction ) {
-				if ( 'paid' === $transaction->status ) {
-					$refunds = $transaction->get_refund();
-					if ( $refunds ) {
-						return $refunds->remaining;
-					} else {
-						return $transaction->value;
+			$values = array_map(
+				function ( $transaction ) {
+					if ( 'paid' === $transaction->status ) {
+						  $refunds = $transaction->get_refund();
+						if ( $refunds ) {
+							return $refunds->remaining;
+						} else {
+							return $transaction->value;
+						}
 					}
-				}
 
-				return 0;
-			},
-				$transactions );
+					return 0;
+				},
+				$transactions 
+			);
 
 			return [
 				'count'         => count( $values ),
@@ -122,10 +124,12 @@ class Campaign {
 
 		$id        = sanitize_title( $name );
 		$campaigns = Settings::get_setting( 'campaigns' );
-		$ids       = array_map( function ( $campaign ) {
-			return $campaign['id'];
-		},
-			$campaigns );
+		$ids       = array_map(
+			function ( $campaign ) {
+				return $campaign['id'];
+			},
+			$campaigns 
+		);
 
 		// If current id exists in array, iterate $n until it is unique.
 		$n      = 1;

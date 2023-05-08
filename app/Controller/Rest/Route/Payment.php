@@ -20,7 +20,7 @@ class Payment extends Base {
 	/**
 	 * PaymentRoutes constructor.
 	 */
-	public function __construct(PaymentService $payment_service) {
+	public function __construct( PaymentService $payment_service ) {
 
 		$this->payment_service = $payment_service;
 
@@ -36,7 +36,7 @@ class Payment extends Base {
 		$payment = $this->payment_service;
 
 		return [
-			 $this->get_base() . '/create' => [
+			$this->get_base() . '/create'  => [
 				'methods'             => 'POST',
 				'callback'            => [ $payment, 'submit_payment' ],
 				'permission_callback' => '__return_true',
@@ -127,7 +127,7 @@ class Payment extends Base {
 				'permission_callback' => '__return_true',
 			],
 
-			$this->get_base() . '/test' => [
+			$this->get_base() . '/test'    => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $payment, 'check_api_keys' ],
 				'permission_callback' => function () {

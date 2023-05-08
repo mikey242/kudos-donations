@@ -118,6 +118,10 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.1.6 =
+* Test compatability with WordPress 6.2
+* Update dependencies
+
 = 3.1.5 =
 * Allow Mollie to connect with either test or live key. Previously both were required.
 * Tested compatibility with WordPress 6.0

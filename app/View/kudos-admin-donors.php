@@ -17,8 +17,10 @@ switch ( $table_action ) {
 		break;
 	case 'bulk-delete':
 		/* translators: %s: Number of records. */
-		$message = sprintf( _n( 'Deleted %s donor', 'Deleted %s donors', $records, 'kudos-donations' ),
-			$records );
+		$message = sprintf(
+			_n( 'Deleted %s donor', 'Deleted %s donors', $records, 'kudos-donations' ),
+			$records 
+		);
 		break;
 }
 

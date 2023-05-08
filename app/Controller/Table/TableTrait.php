@@ -8,7 +8,6 @@ namespace Kudos\Controller\Table;
  * @link https://github.com/collizo4sky/WP_List_Table-Class-Plugin-Example/blob/master/plugin.php
  * @link https://wpmudev.com/blog/wordpress-admin-tables/
  */
-
 trait TableTrait {
 
 	/**
@@ -46,7 +45,7 @@ trait TableTrait {
 	/**
 	 * Define what data to show on each column of the table
 	 *
-	 * @param array $item Data.
+	 * @param array  $item Data.
 	 * @param string $column_name Current column name.
 	 *
 	 * @return mixed
@@ -140,14 +139,20 @@ trait TableTrait {
 		<p class="search-box">
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
-			       value="<?php _admin_search_query(); ?>"/>
-			<label for="search-field-selector" class="screen-reader-text"><?php _e( 'Select search field',
-					'kudos-donations' ) ?>></label>
+				   value="<?php _admin_search_query(); ?>"/>
+			<label for="search-field-selector" class="screen-reader-text">
+			<?php 
+			_e(
+				'Select search field',
+				'kudos-donations' 
+			) 
+			?>
+					></label>
 			<select name="search-field" style="vertical-align: baseline" id="search-field-selector">
-				<option value="-1"><?php _e( 'Search field', 'kudos-donations' ) ?></option>
+				<option value="-1"><?php _e( 'Search field', 'kudos-donations' ); ?></option>
 				<?php
 				foreach ( $this->search_columns as $value => $label ) {
-					echo "<option " . ( $value === $search_field ? "selected" : '' ) . " value=$value>$label</option>";
+					echo '<option ' . ( $value === $search_field ? 'selected' : '' ) . " value=$value>$label</option>";
 				}
 				?>
 			</select>
@@ -163,7 +168,7 @@ trait TableTrait {
 
 		$search = null;
 
-		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && isset( $this->column_names()[$_REQUEST['search-field']]) ) {
+		if ( isset( $_REQUEST['s'] ) && isset( $_REQUEST['search-field'] ) && isset( $this->column_names()[ $_REQUEST['search-field'] ] ) ) {
 			$search['term']  = strtolower( esc_attr( wp_unslash( $_REQUEST['s'] ) ) );
 			$search['field'] = esc_attr( wp_unslash( $_REQUEST['search-field'] ) );
 		}

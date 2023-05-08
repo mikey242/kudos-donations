@@ -68,12 +68,12 @@ class MailerService {
 			'kudos-logo.png'
 		);
 
-        // Enable HTML email support to header.
-        $phpmailer->isHTML( true );
+		// Enable HTML email support to header.
+		$phpmailer->isHTML( true );
 
-        // Add custom config if enabled.
+		// Add custom config if enabled.
 		if ( Settings::get_setting( 'smtp_enable' ) ) {
-            $phpmailer->isSMTP();
+			$phpmailer->isSMTP();
 			$phpmailer->Host        = Settings::get_setting( 'smtp_host' );
 			$phpmailer->SMTPAutoTLS = Settings::get_setting( 'smtp_autotls' );
 			$phpmailer->SMTPAuth    = true;
@@ -119,8 +119,10 @@ class MailerService {
 			'name'         => $donor->name ?? '',
 			'date'         => $transaction->created,
 			'description'  => Utils::get_sequence_type( $transaction->sequence_type ),
-			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n( $transaction->value,
-					2 ),
+			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n(
+				$transaction->value,
+				2 
+			),
 			'receipt_id'   => $transaction->order_id,
 			'website_name' => get_bloginfo( 'name' ),
 		];
@@ -161,10 +163,10 @@ class MailerService {
 	/**
 	 * Email send function.
 	 *
-	 * @param string $to Recipient email address.
-	 * @param string $subject Email subject line.
-	 * @param string $body Body of email.
-	 * @param array $headers Email headers.
+	 * @param string     $to Recipient email address.
+	 * @param string     $subject Email subject line.
+	 * @param string     $body Body of email.
+	 * @param array      $headers Email headers.
 	 * @param array|null $attachment Attachment.
 	 *
 	 * @return bool
@@ -187,7 +189,13 @@ class MailerService {
 		$mail = wp_mail( $to, $subject, $body, $headers, $attachment );
 
 		if ( $mail ) {
-			$this->logger->info( 'Email sent successfully.', [ 'to' => $to, 'subject' => $subject ] );
+			$this->logger->info(
+				'Email sent successfully.',
+				[
+					'to'      => $to,
+					'subject' => $subject,
+				] 
+			);
 		}
 
 		// Remove action to prevent conflict.
@@ -224,8 +232,12 @@ class MailerService {
 			wp_send_json_success( sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) );
 		} else {
 			/* translators: %s: API mode */
-			wp_send_json_error( __( 'Error sending email, please check the settings and try again.',
-				'kudos-donations' ) );
+			wp_send_json_error(
+				__(
+					'Error sending email, please check the settings and try again.',
+					'kudos-donations' 
+				) 
+			);
 		}
 
 		return $result;

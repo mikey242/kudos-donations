@@ -25,10 +25,10 @@ class SubscriptionsTable extends WP_List_Table {
 	/**
 	 * Class constructor
 	 */
-	public function __construct(MapperService $mapper_service, PaymentService $payment_service) {
+	public function __construct( MapperService $mapper_service, PaymentService $payment_service ) {
 
-		$this->mapper = $mapper_service;
-		$this->table  = SubscriptionEntity::get_table_name();
+		$this->mapper  = $mapper_service;
+		$this->table   = SubscriptionEntity::get_table_name();
 		$this->payment = $payment_service;
 
 		$this->search_columns = [
@@ -91,25 +91,29 @@ class SubscriptionsTable extends WP_List_Table {
 		// Where clause.
 		if ( $frequency ) {
 			global $wpdb;
-			$where[] = $wpdb->prepare( "
+			$where[] = $wpdb->prepare(
+				"
 				$table.frequency = %s
 			",
-				$frequency );
+				$frequency 
+			);
 		}
 
 		if ( $search ) {
 			global $wpdb;
-			$where[] = $wpdb->prepare( "
+			$where[] = $wpdb->prepare(
+				"
 				${search['field']} = %s
 			",
-				$search['term'] );
+				$search['term'] 
+			);
 		}
 
-		$where = ! empty( $where ) ? 'WHERE ' . implode( " AND ", $where ) : '';
+		$where = ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';
 		$query = $query . $where;
 
 		return $this->mapper
-			->get_repository(SubscriptionEntity::class)
+			->get_repository( SubscriptionEntity::class )
 			->get_results( $query );
 
 	}
@@ -177,8 +181,10 @@ class SubscriptionsTable extends WP_List_Table {
 
 			case 'cancel':
 				// Verify the nonce.
-				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['singular'] ) ) {
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+					sanitize_key( $_REQUEST['_wpnonce'] ),
+					'bulk-' . $this->_args['singular'] 
+				) ) {
 					die();
 				}
 
@@ -190,22 +196,28 @@ class SubscriptionsTable extends WP_List_Table {
 
 			case 'delete':
 				// Verify the nonce.
-				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['singular'] ) ) {
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+					sanitize_key( $_REQUEST['_wpnonce'] ),
+					'bulk-' . $this->_args['singular'] 
+				) ) {
 					die();
 				}
 
 				if ( isset( $_GET['id'] ) ) {
-					self::delete_record( 'id',
-						sanitize_text_field( wp_unslash( $_GET['id'] ) ) );
+					self::delete_record(
+						'id',
+						sanitize_text_field( wp_unslash( $_GET['id'] ) ) 
+					);
 				}
 
 				break;
 
 			case 'bulk-delete':
 				// Verify the nonce.
-				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['plural'] ) ) {
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+					sanitize_key( $_REQUEST['_wpnonce'] ),
+					'bulk-' . $this->_args['plural'] 
+				) ) {
 					die();
 				}
 
@@ -229,6 +241,7 @@ class SubscriptionsTable extends WP_List_Table {
 	public function cancel_subscription( string $id ): bool {
 
 		$payment_service = $this->payment;
+
 		return $payment_service->cancel_subscription( $id );
 	}
 
@@ -243,7 +256,7 @@ class SubscriptionsTable extends WP_List_Table {
 	protected function delete_record( string $column, string $id ) {
 
 		return $this->mapper
-			->get_repository(SubscriptionEntity::class)
+			->get_repository( SubscriptionEntity::class )
 			->delete( $column, $id );
 
 	}
@@ -274,32 +287,40 @@ class SubscriptionsTable extends WP_List_Table {
 	protected function column_created( array $item ): string {
 
 		$title = '<strong>' .
-		         wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			         strtotime( $item['created'] ) ) .
-		         '</strong>';
+				wp_date(
+					get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+					strtotime( $item['created'] ) 
+				) .
+				 '</strong>';
 
-		$url = add_query_arg( [
-			'page'     => esc_attr( $_REQUEST['page'] ),
-			'id'       => sanitize_text_field( $item['id'] ),
-			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
-		] );
+		$url = add_query_arg(
+			[
+				'page'     => esc_attr( $_REQUEST['page'] ),
+				'id'       => sanitize_text_field( $item['id'] ),
+				'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
+			] 
+		);
 
 		$actions = [];
 		if ( 'active' === $item['status'] ) {
-			$url               = add_query_arg( [
-				'action' => 'cancel',
-			],
-				$url );
+			$url               = add_query_arg(
+				[
+					'action' => 'cancel',
+				],
+				$url 
+			);
 			$actions['cancel'] = sprintf(
 				'<a href="%s">%s</a>',
 				$url,
 				__( 'Cancel', 'kudos-donations' )
 			);
 		} else {
-			$url               = add_query_arg( [
-				'action' => 'delete',
-			],
-				$url );
+			$url               = add_query_arg(
+				[
+					'action' => 'delete',
+				],
+				$url 
+			);
 			$actions['cancel'] = sprintf(
 				'<a href=%s>%s</a>',
 				$url,
@@ -452,15 +473,19 @@ class SubscriptionsTable extends WP_List_Table {
 		$count              = count( $this->mapper->get_all_by( [ 'frequency' => '3 months' ] ) );
 		$class              = ( '3 months' === $current ? ' class="current"' : '' );
 		$yearly_url         = add_query_arg( 'frequency', '3 months' );
-		$views['quarterly'] = "<a href='$yearly_url' $class >" . __( 'Quarterly',
-				'kudos-donations' ) . " ($count)</a>";
+		$views['quarterly'] = "<a href='$yearly_url' $class >" . __(
+			'Quarterly',
+			'kudos-donations' 
+		) . " ($count)</a>";
 
 		// Monthly link.
 		$count            = count( $this->mapper->get_all_by( [ 'frequency' => '1 month' ] ) );
 		$class            = ( '1 month' === $current ? ' class="current"' : '' );
 		$monthly_url      = add_query_arg( 'frequency', '1 month' );
-		$views['monthly'] = "<a href='$monthly_url' $class >" . __( 'Monthly',
-				'kudos-donations' ) . " ($count)</a>";
+		$views['monthly'] = "<a href='$monthly_url' $class >" . __(
+			'Monthly',
+			'kudos-donations' 
+		) . " ($count)</a>";
 
 		return $views;
 

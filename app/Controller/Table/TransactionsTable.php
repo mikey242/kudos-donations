@@ -92,21 +92,25 @@ class TransactionsTable extends WP_List_Table {
 		// Having clause.
 		if ( $view ) {
 			global $wpdb;
-			$having[] = $wpdb->prepare( "
+			$having[] = $wpdb->prepare(
+				"
 				$table.status = %s
 			",
-				$view );
+				$view 
+			);
 		}
 
 		if ( $search ) {
 			global $wpdb;
-			$having[] = $wpdb->prepare( "
+			$having[] = $wpdb->prepare(
+				"
 				${search['field']} LIKE %s
 			",
-				$search['term'] );
+				$search['term'] 
+			);
 		}
 
-		$having = ! empty( $having ) ? 'HAVING ' . implode( " AND ", $having ) : '';
+		$having = ! empty( $having ) ? 'HAVING ' . implode( ' AND ', $having ) : '';
 		$query  = $query . $having;
 
 		return $this->mapper
@@ -193,7 +197,6 @@ class TransactionsTable extends WP_List_Table {
 
 	/**
 	 * Process delete and bulk-delete actions.
-	 *
 	 */
 	public function process_bulk_action() {
 
@@ -202,8 +205,10 @@ class TransactionsTable extends WP_List_Table {
 
 			case 'delete':
 				// Verify the nonce.
-				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['singular'] ) ) {
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+					sanitize_key( $_REQUEST['_wpnonce'] ),
+					'bulk-' . $this->_args['singular'] 
+				) ) {
 					die();
 				}
 
@@ -215,8 +220,10 @@ class TransactionsTable extends WP_List_Table {
 
 			case 'bulk-delete':
 				// Verify the nonce.
-				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ),
-						'bulk-' . $this->_args['plural'] ) ) {
+				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+					sanitize_key( $_REQUEST['_wpnonce'] ),
+					'bulk-' . $this->_args['plural'] 
+				) ) {
 					die();
 				}
 
@@ -257,16 +264,20 @@ class TransactionsTable extends WP_List_Table {
 	protected function column_created( array $item ): string {
 
 		$title = '<strong>' .
-		         wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			         strtotime( $item['created'] ) ) .
-		         '</strong>';
+				wp_date(
+					get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+					strtotime( $item['created'] ) 
+				) .
+				 '</strong>';
 
-		$url = add_query_arg( [
-			'page'     => esc_attr( $_REQUEST['page'] ),
-			'action'   => 'delete',
-			'id'       => $item['id'],
-			'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
-		] );
+		$url = add_query_arg(
+			[
+				'page'     => esc_attr( $_REQUEST['page'] ),
+				'action'   => 'delete',
+				'id'       => $item['id'],
+				'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
+			] 
+		);
 
 		$actions = apply_filters(
 			TransactionEntity::get_table_name( false ) . '_actions',
@@ -361,7 +372,7 @@ class TransactionsTable extends WP_List_Table {
 		}
 
 		return '<i title="' . $item['method'] . '" class="' . $icon . '"></i> ' .
-		       $currency . ' ' . number_format_i18n( $value, 2 );
+			   $currency . ' ' . number_format_i18n( $value, 2 );
 
 	}
 
@@ -450,8 +461,10 @@ class TransactionsTable extends WP_List_Table {
 		if ( $campaign ) {
 			return sprintf(
 				'<a href=%1$s>%2$s</a>',
-				sprintf( admin_url( 'admin.php?page=kudos-campaigns&search-field=name&s=%s' ),
-					rawurlencode( $campaign['name'] ) ),
+				sprintf(
+					admin_url( 'admin.php?page=kudos-campaigns&search-field=name&s=%s' ),
+					rawurlencode( $campaign['name'] ) 
+				),
 				$campaign['name']
 			);
 		}
@@ -508,15 +521,19 @@ class TransactionsTable extends WP_List_Table {
 		$count             = count( $this->mapper->get_all_by( [ 'status' => 'canceled' ] ) );
 		$canceled_url      = add_query_arg( 'status', 'canceled', $url );
 		$class             = ( 'canceled' === $current ? ' class="current"' : '' );
-		$views['canceled'] = "<a href='$canceled_url' $class >" . __( 'Cancelled',
-				'kudos-donations' ) . " ($count)</a>";
+		$views['canceled'] = "<a href='$canceled_url' $class >" . __(
+			'Cancelled',
+			'kudos-donations' 
+		) . " ($count)</a>";
 
 		// Canceled link.
 		$count            = count( $this->mapper->get_all_by( [ 'status' => 'expired' ] ) );
 		$expired_url      = add_query_arg( 'status', 'expired', $url );
 		$class            = ( 'expired' === $current ? ' class="current"' : '' );
-		$views['expired'] = "<a href='$expired_url' $class >" . __( 'Expired',
-				'kudos-donations' ) . " ($count)</a>";
+		$views['expired'] = "<a href='$expired_url' $class >" . __(
+			'Expired',
+			'kudos-donations' 
+		) . " ($count)</a>";
 
 		return $views;
 

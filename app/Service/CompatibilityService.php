@@ -76,8 +76,10 @@ class CompatibilityService {
 		/* WordPress version not compatible */
 		if ( ! version_compare( $wp_version, $this->required_wp_version, '>=' ) ) {
 			/* translators: %1$s: WordPress version number. */
-			$this->notices[] = sprintf( esc_html__( 'WordPress Version %1$s is required.', 'kudos-donations' ),
-				$this->required_wp_version );
+			$this->notices[] = sprintf(
+				esc_html__( 'WordPress Version %1$s is required.', 'kudos-donations' ),
+				$this->required_wp_version 
+			);
 
 			return false;
 		}
@@ -96,16 +98,21 @@ class CompatibilityService {
 
 		/* Check PHP version is compatible */
 		if ( ! version_compare( phpversion(), $this->required_php_version, '>=' ) ) {
-			/* translators:
+			/*
+			 translators:
 				%1$s: Support URL.
 				%2$s: Current PHP version.
 				%3$s: Required PHP version.
 			*/
-			$this->notices[] = sprintf( __( 'You are running an <a href="%1$s">outdated version of PHP</a> (%2$s). Kudos Donations requires at least PHP %3$s to work. Contact your web hosting provider to update.',
-				'kudos-donations' ),
-				"https://wordpress.org/support/update-php/",
+			$this->notices[] = sprintf(
+				__(
+					'You are running an <a href="%1$s">outdated version of PHP</a> (%2$s). Kudos Donations requires at least PHP %3$s to work. Contact your web hosting provider to update.',
+					'kudos-donations' 
+				),
+				'https://wordpress.org/support/update-php/',
 				phpversion(),
-				$this->required_php_version );
+				$this->required_php_version 
+			);
 
 			return false;
 		}
@@ -122,14 +129,16 @@ class CompatibilityService {
 	 */
 	public function build_notice(): array {
 
-		$notice['error']   = __( 'Kudos Donations Installation Problem', 'kudos-donations' );
-		$notice['details'] = "<p>" . __( 'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:',
-				'kudos-donations' ) . "</p>";
+		$notice['error']    = __( 'Kudos Donations Installation Problem', 'kudos-donations' );
+		$notice['details']  = '<p>' . __(
+			'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:',
+			'kudos-donations' 
+		) . '</p>';
 		$notice['details'] .= "<ul style='padding-bottom: 0.5em'>";
-		foreach ( $this->notices as $error ):
-			$notice['details'] .= "<li style='padding-left: 20px;list-style: inside'>" . $error . "</li>";
+		foreach ( $this->notices as $error ) :
+			$notice['details'] .= "<li style='padding-left: 20px;list-style: inside'>" . $error . '</li>';
 		endforeach;
-		$notice['details'] .= "</ul>";
+		$notice['details'] .= '</ul>';
 
 		return $notice;
 	}

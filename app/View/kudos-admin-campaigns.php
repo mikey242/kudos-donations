@@ -15,7 +15,7 @@ switch ( $table_action ) {
 		$message = __( 'Campaign deleted', 'kudos-donations' );
 		break;
 	case 'bulk-delete':
-		$records       = isset( $_REQUEST['bulk-action'] ) ? count( $_REQUEST['bulk-action'] ) : '';
+		$records = isset( $_REQUEST['bulk-action'] ) ? count( $_REQUEST['bulk-action'] ) : '';
 		$message = sprintf(
 		/* translators: %s: Number of records */
 			_n( 'Deleted %s campaign', 'Deleted %s campaigns', $records, 'kudos-donations' ),

@@ -63,7 +63,7 @@ class Assets {
 			$out['url']     = $base_url . 'dist/' . ltrim( $asset, '/' );
 			$asset_manifest = substr_replace( $asset_path, '.asset.php', - strlen( '.js' ) );
 			if ( file_exists( $asset_manifest ) ) {
-				$manifest_content    = require( $asset_manifest );
+				$manifest_content    = require $asset_manifest;
 				$out['dependencies'] = $manifest_content['dependencies'] ?? [];
 				$out['version']      = $manifest_content['version'] ?? KUDOS_VERSION;
 			}

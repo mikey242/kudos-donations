@@ -2,10 +2,11 @@
 /**
  * Wrapper class for WordPress' wpdb.
  * Used for dependency injection.
+ *
  * @source https://gist.github.com/szepeviktor/ddb1bfd12d93accd318cc081637956ec
  */
 
-declare( strict_types = 1 );
+declare( strict_types=1 );
 
 namespace Kudos\Helpers;
 
@@ -27,6 +28,7 @@ class WpDb {
 	 */
 	public function __get( string $name ) {
 		global $wpdb;
+
 		return $wpdb->$name;
 	}
 
@@ -34,9 +36,10 @@ class WpDb {
 	 * Noop on set.
 	 *
 	 * @param string $name
-	 * @param mixed $value
+	 * @param mixed  $value
 	 */
-	public function __set( string $name, $value ) {}
+	public function __set( string $name, $value ) {
+	}
 
 	/**
 	 * Execute a method.
@@ -44,12 +47,13 @@ class WpDb {
 	 * @see https://www.php.net/manual/en/language.oop5.overloading.php#object.call
 	 *
 	 * @param string $name
-	 * @param array $arguments
+	 * @param array  $arguments
 	 *
 	 * @return mixed
 	 */
 	public function __call( string $name, array $arguments ) {
 		global $wpdb;
+
 		return call_user_func_array( [ $wpdb, $name ], $arguments );
 	}
 }

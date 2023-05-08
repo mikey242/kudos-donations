@@ -25,8 +25,8 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	public function __construct( MapperService $mapper_service ) {
 
-		$this->mapper   = $mapper_service;
-		$this->table    = TransactionEntity::get_table_name();
+		$this->mapper = $mapper_service;
+		$this->table  = TransactionEntity::get_table_name();
 
 		$this->search_columns = [
 			'name' => __( 'Name', 'kudos-donations' ),
@@ -77,7 +77,8 @@ class CampaignsTable extends WP_List_Table {
 
 		// Add search query if it exists.
 		if ( $search ) {
-			$campaigns = array_filter( $campaigns,
+			$campaigns = array_filter(
+				$campaigns,
 				function ( $value ) use ( $search ) {
 					return ( strtolower( $value[ $search['field'] ] ) == strtolower( $search['term'] ) );
 				}
@@ -87,11 +88,13 @@ class CampaignsTable extends WP_List_Table {
 		foreach ( $campaigns as $key => $campaign ) {
 			$id = $campaign['id'];
 
-			$transactions = $this->mapper->get_repository(TransactionEntity::class)
-				->get_all_by([
-					'campaign_id' => $id
-				]);
-			$campaign_total = Campaign::get_campaign_stats($transactions);
+			$transactions   = $this->mapper->get_repository( TransactionEntity::class )
+										->get_all_by(
+											[
+												'campaign_id' => $id,
+											] 
+										);
+			$campaign_total = Campaign::get_campaign_stats( $transactions );
 
 			$campaigns[ $key ]['currency']     = 'EUR';
 			$campaigns[ $key ]['date']         = $campaign_total['last_donation'] ?? null;
@@ -171,8 +174,10 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function column_date( array $item ): string {
 
-		return $item['date'] ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			strtotime( $item['date'] ) ) : sprintf( "<i>%s</i>", __( 'None yet', 'kudos-donations' ) );
+		return $item['date'] ? wp_date(
+			get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			strtotime( $item['date'] ) 
+		) : sprintf( '<i>%s</i>', __( 'None yet', 'kudos-donations' ) );
 
 	}
 
@@ -186,12 +191,14 @@ class CampaignsTable extends WP_List_Table {
 	 */
 	protected function column_name( array $item ): string {
 
-		$url = add_query_arg( [
-			'page'        => 'kudos-settings',
-			'tab_name'    => 'campaigns',
-			'campaign_id' => $item['id'],
-		],
-			admin_url() );
+		$url = add_query_arg(
+			[
+				'page'        => 'kudos-settings',
+				'tab_name'    => 'campaigns',
+				'campaign_id' => $item['id'],
+			],
+			admin_url() 
+		);
 
 		$actions = [
 			'edit' => sprintf(
@@ -217,8 +224,10 @@ class CampaignsTable extends WP_List_Table {
 
 		return sprintf(
 			'<a href=%1$s>%2$s</a>',
-			sprintf( admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_id&s=%s' ),
-				rawurlencode( $item['id'] ) ),
+			sprintf(
+				admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_id&s=%s' ),
+				rawurlencode( $item['id'] ) 
+			),
 			strtoupper( $item['transactions'] )
 		);
 

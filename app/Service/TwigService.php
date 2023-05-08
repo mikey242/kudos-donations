@@ -81,11 +81,11 @@ class TwigService {
 	 */
 	public function initialize_twig() {
 
-		$paths = apply_filters( 'kudos_twig_template_paths', $this->template_paths );
+		$paths  = apply_filters( 'kudos_twig_template_paths', $this->template_paths );
 		$loader = $this->loader;
 
 		foreach ( $paths as $namespace => $path ) {
-			$this->add_path($path, $namespace);
+			$this->add_path( $path, $namespace );
 		}
 
 		$this->twig = new Environment( $loader, $this->options );
@@ -164,9 +164,12 @@ class TwigService {
 		/**
 		 * Add the WordPress apply_filters filter.
 		 */
-		$apply_filter = new TwigFilter( 'apply_filters', function ( $string, $filter ) {
-			return apply_filters( $filter, $string );
-		} );
+		$apply_filter = new TwigFilter(
+			'apply_filters',
+			function ( $string, $filter ) {
+				return apply_filters( $filter, $string );
+			}
+		);
 		$this->twig->addFilter( $apply_filter );
 
 		/**
@@ -177,18 +180,26 @@ class TwigService {
 
 		/**
 		 * Add the WordPress wp_kses_post function filter.
+		 *
 		 * @link https://developer.wordpress.org/reference/functions/wp_kses_post/
 		 */
-		$wp_kses_post = new TwigFilter( 'wp_kses_post', function ( $string ) {
-			return wp_kses_post( $string );
+		$wp_kses_post = new TwigFilter(
+			'wp_kses_post',
+			function ( $string ) {
+				return wp_kses_post( $string );
 
-		}, [ 'is_safe' => [ 'html' ] ] );
+			},
+			[ 'is_safe' => [ 'html' ] ]
+		);
 		$this->twig->addFilter( $wp_kses_post );
 
-		$number_format = new TwigFilter('number_format_i18n', function($number) {
-			return number_format_i18n($number);
-		});
-		$this->twig->addFilter($number_format);
+		$number_format = new TwigFilter(
+			'number_format_i18n',
+			function ( $number ) {
+				return number_format_i18n( $number );
+			}
+		);
+		$this->twig->addFilter( $number_format );
 
 	}
 
@@ -239,7 +250,7 @@ class TwigService {
 	 * Render the provided template.
 	 *
 	 * @param string $template Template file (.html.twig).
-	 * @param array $array Array to pass to template.
+	 * @param array  $array Array to pass to template.
 	 *
 	 * @return string|bool
 	 */
@@ -248,7 +259,13 @@ class TwigService {
 		try {
 			return $this->twig->render( $template, $array );
 		} catch ( Throwable $e ) {
-			$this->logger->critical( $e->getMessage(), [ 'location' => $e->getFile(), 'line' => $e->getLine() ] );
+			$this->logger->critical(
+				$e->getMessage(),
+				[
+					'location' => $e->getFile(),
+					'line'     => $e->getLine(),
+				]
+			);
 
 			return false;
 		}

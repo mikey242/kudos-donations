@@ -39,15 +39,16 @@ class LoggerService extends Logger {
 
 	}
 
-    /**
-     * Add checks to parent function.
-     *
-     * @param int $level Log level.
-     * @param string $message Message to record.
-     * @param array $context Context array.
-     * @param DateTimeImmutable|null $datetime
-     * @return bool
-     */
+	/**
+	 * Add checks to parent function.
+	 *
+	 * @param int                    $level Log level.
+	 * @param string                 $message Message to record.
+	 * @param array                  $context Context array.
+	 * @param DateTimeImmutable|null $datetime
+	 *
+	 * @return bool
+	 */
 	public function addRecord( int $level, string $message, array $context = [], DateTimeImmutable $datetime = null ): bool {
 
 		// Don't log debug if not enabled.
@@ -61,6 +62,7 @@ class LoggerService extends Logger {
 
 	public function get_table_name(): string {
 		$wpdb = $this->wpdb;
+
 		return $wpdb->prefix . self::TABLE;
 
 	}
@@ -90,21 +92,29 @@ class LoggerService extends Logger {
 		$table = self::get_table_name();
 
 		// Get ID of the oldest row to keep.
-		$last_row = $wpdb->get_row( $wpdb->prepare( "
+		$last_row = $wpdb->get_row(
+			$wpdb->prepare(
+				"
 			SELECT `id` FROM {$table}
 			ORDER BY `id` DESC
 			LIMIT %d,1
 		",
-			( self::TRUNCATE_AT - 1 ) ) );
+				( self::TRUNCATE_AT - 1 ) 
+			) 
+		);
 
 		if ( $last_row ) {
 			$last_id = $last_row->id;
 
-			return $wpdb->query( $wpdb->prepare( "
+			return $wpdb->query(
+				$wpdb->prepare(
+					"
 				DELETE FROM {$table}
 				WHERE `id` < %d
 			",
-				$last_id ) );
+					$last_id 
+				) 
+			);
 		}
 
 		return false;

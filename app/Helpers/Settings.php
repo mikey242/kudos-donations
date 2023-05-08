@@ -61,7 +61,7 @@ class Settings {
 	 * Update specified setting.
 	 *
 	 * @param string $name Setting name without prefix.
-	 * @param mixed $value Setting value.
+	 * @param mixed  $value Setting value.
 	 *
 	 * @return bool
 	 */
@@ -75,7 +75,7 @@ class Settings {
 	 * e.g. update_array('my_setting', ['enabled' => false]).
 	 *
 	 * @param string $name Setting array name without prefix.
-	 * @param array $value Array of name=>values in setting to update.
+	 * @param array  $value Array of name=>values in setting to update.
 	 *
 	 * @return bool
 	 */

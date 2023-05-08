@@ -27,7 +27,7 @@ class MapperService {
 	 * Entity object constructor.
 	 *
 	 * @param \Kudos\Service\LoggerService $logger_service
-	 * @param \Kudos\Helpers\WpDb $wpdb
+	 * @param \Kudos\Helpers\WpDb          $wpdb
 	 */
 	public function __construct( LoggerService $logger_service, WpDb $wpdb ) {
 
@@ -41,8 +41,8 @@ class MapperService {
 	 *
 	 * @param AbstractEntity $entity Instance of AbstractEntity to save.
 	 *
-	 * @param bool $ignore_null Whether to remove NULL or empty fields from
-	 *                          the save queries.
+	 * @param bool           $ignore_null Whether to remove NULL or empty fields from
+	 *                                    the save queries.
 	 *
 	 * @return false|int Returns the id of the record if successful
 	 *                   and false if not.
@@ -77,7 +77,7 @@ class MapperService {
 	 * Updates existing record.
 	 *
 	 * @param AbstractEntity $entity An instance of AbstractEntity.
-	 * @param bool $ignore_null Whether to ignore null properties.
+	 * @param bool           $ignore_null Whether to ignore null properties.
 	 *
 	 * @return false|int Returns the id of the record if successful
 	 *                  and false if not.
@@ -88,10 +88,13 @@ class MapperService {
 		$table_name = $entity::get_table_name();
 		$id         = $entity->id;
 
-		$this->logger->debug( "Updating entity.", [
-			'entity' => $entity::get_entity_name(),
-			'id'     => $entity->id,
-		] );
+		$this->logger->debug(
+			'Updating entity.',
+			[
+				'entity' => $entity::get_entity_name(),
+				'id'     => $entity->id,
+			] 
+		);
 
 		$result = $wpdb->update(
 			$table_name,
@@ -130,10 +133,13 @@ class MapperService {
 
 		$id         = $wpdb->insert_id;
 		$entity->id = $id;
-		$this->logger->debug( "Creating entity.", [
-			'entity' => $entity::get_entity_name(),
-			'id'     => $entity->id,
-		] );
+		$this->logger->debug(
+			'Creating entity.',
+			[
+				'entity' => $entity::get_entity_name(),
+				'id'     => $entity->id,
+			] 
+		);
 
 		// If successful do action.
 		if ( $result ) {
@@ -208,8 +214,8 @@ class MapperService {
 	/**
 	 * Get row by $query_fields array.
 	 *
-	 * @param array $query_fields Key-value pair of fields to query
-	 *                             e.g. ['email' => 'john.smith@gmail.com'].
+	 * @param array  $query_fields Key-value pair of fields to query
+	 *                              e.g. ['email' => 'john.smith@gmail.com'].
 	 * @param string $operator Operator to use to join array items. Can be AND or OR.
 	 *
 	 * @return AbstractEntity|null
@@ -233,7 +239,7 @@ class MapperService {
 	/**
 	 * Converts an associative array into a query string.
 	 *
-	 * @param array $query_fields Array of key (column) and value pairs.
+	 * @param array  $query_fields Array of key (column) and value pairs.
 	 * @param string $operator Accepts AND or OR.
 	 *
 	 * @return string
@@ -314,7 +320,7 @@ class MapperService {
 	 *                                 specified it uses "key IS NOT NULL". If array is empty it
 	 *                                 returns all values in table.
 	 *
-	 * @param string $operator AND or OR.
+	 * @param string     $operator AND or OR.
 	 *
 	 * @return array
 	 */
@@ -337,7 +343,7 @@ class MapperService {
 
 		$wpdb         = $this->wpdb;
 		$table        = $this->get_table_name();
-		$query_string = $wpdb->prepare( "created BETWEEN %s AND %s", $start, $end );
+		$query_string = $wpdb->prepare( 'created BETWEEN %s AND %s', $start, $end );
 		$query        = "SELECT $table.* FROM $table WHERE $query_string";
 		$results      = $this->get_results( $query );
 
@@ -387,11 +393,22 @@ class MapperService {
 		if ( false !== $deleted ) {
 			// Invalidate cache if database updated.
 			$this->get_cache_incrementer( true );
-			$this->logger->info( 'Record deleted.', [ 'table' => $this->get_table_name(), $column => $value ] );
+			$this->logger->info(
+				'Record deleted.',
+				[
+					'table' => $this->get_table_name(),
+					$column => $value,
+				] 
+			);
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		} else {
-			$this->logger->error( 'Error deleting record.',
-				[ 'table' => $this->get_table_name(), $column => $value ] );
+			$this->logger->error(
+				'Error deleting record.',
+				[
+					'table' => $this->get_table_name(),
+					$column => $value,
+				] 
+			);
 		}
 
 		return $deleted;

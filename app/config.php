@@ -13,6 +13,6 @@ return [
 		->constructor( KUDOS_VERSION ),
 	'Admin'            => autowire( Admin::class )
 		->constructor( KUDOS_VERSION ),
-	'RestRoutes' => autowire( RestRoutes::class ),
+	'RestRoutes'       => autowire( RestRoutes::class ),
 	'PaymentService'   => autowire( PaymentService::class ),
 ];
