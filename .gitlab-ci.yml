@@ -8,7 +8,7 @@ build-job:
   stage: build
   script:
     - echo "Building plugin..."
-    - composer run production
+    - composer run build-production
 
 deploy-job:
   stage: deploy
