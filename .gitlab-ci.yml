@@ -13,7 +13,7 @@ build-job:
 deploy-job:
   stage: deploy
   environment: production
-    artifacts:
+  artifacts:
     paths:
       - kudos-donations.zip
   script:
