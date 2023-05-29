@@ -1,3 +1,5 @@
+image: carlosalgms/composer-and-node-ci
+
 stages:
   - build
   - deploy
