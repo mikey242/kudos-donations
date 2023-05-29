@@ -11,7 +11,7 @@
     "production": "mix --production",
     "make-pot": "wp i18n make-pot . --exclude='docker, src, node_modules, vendor'",
     "make-json": "wp i18n make-json languages/ --no-purge",
-    "export": "composer install --no-dev --optimize-autoloader && ./export.sh"
+    "export": "composer run release"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
@@ -27,10 +27,10 @@
     "@wordpress/compose": "^5.0.5",
     "@wordpress/dependency-extraction-webpack-plugin": "^3.2.1",
     "@wordpress/element": "^4.0.3",
+    "@wordpress/env": "^5.7.0",
     "@wordpress/hooks": "^3.2.1",
     "@wordpress/i18n": "^4.2.3",
     "@wordpress/keycodes": "^3.2.3",
-    "@wordpress/env": "^5.7.0",
     "browser-sync": "^2.27.7",
     "browser-sync-webpack-plugin": "^2.3.0",
     "laravel-mix": "^6.0.38",

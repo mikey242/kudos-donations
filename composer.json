@@ -34,8 +34,17 @@
     "phpunit/phpunit": "8.*"
   },
   "scripts": {
-    "post-update-cmd": [
-      "rm -rf vendor/mollie/mollie-api-php/examples vendor/sabberworm/php-css-parser/tests vendor/twig/twig/doc vendor/woocommerce/action-scheduler/action-scheduler.zip"
+    "build-production": [
+      "composer install --optimize-autoloader --no-dev",
+      "npm run production"
+    ],
+    "make-zip": [
+      "rm -f kudos-donations.zip",
+      "php wp-cli.phar dist-archive . ./kudos-donations.zip"
+    ],
+    "release": [
+      "@build-production",
+      "@make-zip"
     ]
   },
   "autoload": {
