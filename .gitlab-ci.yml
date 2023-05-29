@@ -1,5 +1,3 @@
-image: tetraweb/php
-
 stages:
   - build
   - deploy
