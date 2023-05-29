@@ -8,6 +8,7 @@ build-job:
   stage: build
   script:
     - echo "Building plugin..."
+    - npm install
     - composer run build-production
 
 deploy-job:
