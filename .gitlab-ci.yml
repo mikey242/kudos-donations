@@ -1,5 +1,8 @@
 image: carlosalgms/composer-and-node-ci
 
+before_script:
+  - php wp-cli.phar package install wp-cli/dist-archive-command
+
 stages:
   - build
   - deploy
