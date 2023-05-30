@@ -40,7 +40,7 @@
     ],
     "make-zip": [
       "rm -f kudos-donations.zip",
-      "php wp-cli.phar dist-archive . ./kudos-donations.zip"
+      "php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
     ],
     "release": [
       "@build-production",
