@@ -18,7 +18,7 @@ docs
 languages
 node_modules
 public
-src
+/src
 tests
 
 # Configuration
