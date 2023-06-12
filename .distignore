@@ -48,6 +48,7 @@ tests
 .wp-env.json
 babel.config.cjs
 codecov.yml
+composer.json
 composer.lock
 composer.phar
 CONTRIBUTING.md
@@ -81,4 +82,5 @@ tsconfig.json
 tsconfig.shared.json
 webpack.config.cjs
 webpack.config.test.cjs
+webpack.mix.js
 wp-cli.phar
