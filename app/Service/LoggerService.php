@@ -10,7 +10,7 @@ use Monolog\Logger;
 
 class LoggerService extends Logger {
 
-	const TRUNCATE_AT = 100;
+	public const TRUNCATE_AT = 100;
 
 	/**
 	 * Table name without prefix.
@@ -27,7 +27,6 @@ class LoggerService extends Logger {
 	 * LoggerService constructor.
 	 */
 	public function __construct() {
-
 		$this->wpdb = new WpDb();
 
 		parent::__construct(
@@ -36,7 +35,6 @@ class LoggerService extends Logger {
 			[],
 			new DateTimeZone( wp_timezone_string() )
 		);
-
 	}
 
 	/**
@@ -49,8 +47,12 @@ class LoggerService extends Logger {
 	 *
 	 * @return bool
 	 */
-	public function addRecord( int $level, string $message, array $context = [], DateTimeImmutable $datetime = null ): bool {
-
+	public function addRecord(
+		int $level,
+		string $message,
+		array $context = [],
+		DateTimeImmutable $datetime = null
+	): bool {
 		// Don't log debug if not enabled.
 		if ( self::DEBUG === $level && ! KUDOS_DEBUG ) {
 			return false;
@@ -59,26 +61,22 @@ class LoggerService extends Logger {
 		return parent::addRecord( $level, $message, $context );
 	}
 
-
-	public function get_table_name(): string {
-		$wpdb = $this->wpdb;
-
-		return $wpdb->prefix . self::TABLE;
-
-	}
-
 	/**
 	 * Clears the log file.
 	 *
 	 * @return bool|int
 	 */
 	public function clear() {
-
 		$wpdb  = $this->wpdb;
 		$table = $this->get_table_name();
 
 		return $wpdb->query( "TRUNCATE TABLE `{$table}`" );
+	}
 
+	public function get_table_name(): string {
+		$wpdb = $this->wpdb;
+
+		return $wpdb->prefix . self::TABLE;
 	}
 
 	/**
@@ -99,8 +97,8 @@ class LoggerService extends Logger {
 			ORDER BY `id` DESC
 			LIMIT %d,1
 		",
-				( self::TRUNCATE_AT - 1 ) 
-			) 
+				( self::TRUNCATE_AT - 1 )
+			)
 		);
 
 		if ( $last_row ) {
@@ -112,8 +110,8 @@ class LoggerService extends Logger {
 				DELETE FROM {$table}
 				WHERE `id` < %d
 			",
-					$last_id 
-				) 
+					$last_id
+				)
 			);
 		}
 

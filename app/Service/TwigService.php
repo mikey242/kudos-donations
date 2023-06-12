@@ -168,7 +168,7 @@ class TwigService {
 			'apply_filters',
 			function ( $string, $filter ) {
 				return apply_filters( $filter, $string );
-			}
+			} 
 		);
 		$this->twig->addFilter( $apply_filter );
 
@@ -189,7 +189,7 @@ class TwigService {
 				return wp_kses_post( $string );
 
 			},
-			[ 'is_safe' => [ 'html' ] ]
+			[ 'is_safe' => [ 'html' ] ] 
 		);
 		$this->twig->addFilter( $wp_kses_post );
 
@@ -197,7 +197,7 @@ class TwigService {
 			'number_format_i18n',
 			function ( $number ) {
 				return number_format_i18n( $number );
-			}
+			} 
 		);
 		$this->twig->addFilter( $number_format );
 
@@ -264,7 +264,7 @@ class TwigService {
 				[
 					'location' => $e->getFile(),
 					'line'     => $e->getLine(),
-				]
+				] 
 			);
 
 			return false;
