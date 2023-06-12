@@ -1,3 +1,4 @@
+# Environment
 .allstar
 .env
 .env.sample
@@ -6,16 +7,21 @@
 .gitlab
 .idea
 .wordpress-org
+
+# Folders
 __mocks__
 __static__
 assets
 bin
 build
 docs
-/src
+languages
 node_modules
 public
+src
 tests
+
+# Configuration
 .browserslistrc
 .DS_Store
 .distignore
@@ -71,16 +77,16 @@ phpunit-integration.xml
 phpunit-integration.xml.dist
 phpunit-integration-multisite.xml
 phpunit-integration-multisite.xml.dist
+tailwind.config.js
+
+# Misc
 README.md
 rollup.config.js
 safelist.txt
 scoper.inc.php
 SECURITY.md
-tailwind.config.js
 TODO.txt
 tsconfig.json
 tsconfig.shared.json
-webpack.config.cjs
-webpack.config.test.cjs
 webpack.mix.js
 wp-cli.phar
