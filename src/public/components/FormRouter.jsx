@@ -9,7 +9,6 @@ import MessageTab from './MessageTab';
 import SummaryTab from './SummaryTab';
 import { steps } from '../constants/form';
 import {
-	forwardRef,
 	useLayoutEffect,
 	useRef,
 	useState,
@@ -21,11 +20,11 @@ import {
 	LockClosedIcon,
 } from '@heroicons/react/24/outline';
 
-const FormRouter = forwardRef(
-	({ step, campaign, handlePrev, handleNext, submitForm }, ref) => {
+const FormRouter =	({ step, campaign, handlePrev, handleNext, submitForm }) => {
 		const [height, setHeight] = useState('');
 		const [currentStep, setCurrentStep] = useState(1);
 		const [isBusy, setIsBusy] = useState(false);
+		const elementRef = useRef(null);
 		const methods = useForm({
 			defaultValues: {
 				recurring: false,
@@ -47,35 +46,35 @@ const FormRouter = forwardRef(
 			if (firstUpdate.current) {
 				firstUpdate.current = false;
 			} else {
-				const target = ref?.current;
-				if (target) {
-					target.classList.add('translate-x-1', 'opacity-0');
-					const oldHeight = target.querySelector('form').offsetHeight;
-					setHeight(oldHeight);
+				if (!elementRef.current ) return;
+				const target = elementRef.current;
+				target.classList.add('translate-x-1', 'opacity-0');
+				const oldHeight = target.querySelector('form').offsetHeight;
+				setHeight(oldHeight);
+				const resizeObserver = new ResizeObserver(() => {
+					const newHeight = target.querySelector('form').offsetHeight;
+					setHeight(newHeight);
 					const timeout = setTimeout(() => {
+						setHeight('auto'); // This allows form to grow if validation message appear.
 						setCurrentStep(step);
 						target.classList.remove('translate-x-1', 'opacity-0');
-						const newHeight =
-							target.querySelector('form').offsetHeight;
-						setHeight(newHeight + 'px');
-						setTimeout(() => {
-							setHeight('auto'); // This allows form to grow if validation message appear.
-						}, 200);
 					}, 200);
 					return () => clearTimeout(timeout);
-				}
+				})
+				resizeObserver.observe(target.querySelector('form'))
+				return () => resizeObserver.disconnect(); // clean up
 			}
-		}, [step]);
+		}, [step])
 
 		return (
 			<FormProvider {...methods}>
 				<div
-					ref={ref}
+					ref={elementRef}
 					className={classNames(
 						isBusy && 'opacity-50',
 						'transition-all duration-200'
 					)}
-					style={{ height }}
+					style={{ height: height  + 'px' }}
 				>
 					<form onSubmit={methods.handleSubmit(onSubmit)}>
 						{
@@ -204,6 +203,5 @@ const FormRouter = forwardRef(
 				</div>
 			</FormProvider>
 		);
-	}
-);
+	};
 export default FormRouter;

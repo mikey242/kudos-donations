@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import FormRouter from './FormRouter';
 import { checkRequirements } from '../../common/helpers/form';
@@ -16,7 +16,6 @@ function KudosForm({ displayAs }) {
 	const [formError, setFormError] = useState(null);
 	const [formState, setFormState] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const targetRef = useRef(null);
 	const { campaign } = campaignRequest;
 	const isForm = displayAs === 'form';
 	const isModal = displayAs === 'button';
@@ -116,7 +115,6 @@ function KudosForm({ displayAs }) {
 			)}
 
 			<FormRouter
-				ref={targetRef}
 				step={formState?.currentStep ?? 1}
 				campaign={campaign}
 				handleNext={handleNext}
