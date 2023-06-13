@@ -4,7 +4,7 @@
  *  @see https://stackoverflow.com/questions/42274721/shadow-dom-and-reactjs
  */
 
-import { render } from '@wordpress/element';
+import {createRoot} from '@wordpress/element';
 import React from 'react';
 import KudosForm from './components/KudosForm';
 import Message from './components/Message';
@@ -18,33 +18,34 @@ const buttons = document.querySelectorAll('.kudos-button');
 
 // Kudos Donations buttons
 buttons.forEach((container) => {
+	const root = createRoot(container)
 	const campaignId = container.dataset.campaign;
 	const targetId = container.dataset.target;
 	const label = container.dataset.label;
-	render(
+	root.render(
 		<CampaignProvider campaignId={campaignId}>
 			<KudosButton targetId={targetId} children={label} />
-		</CampaignProvider>,
-		container
+		</CampaignProvider>
 	);
 });
 
 // Kudos Donations form/modal
 forms.forEach((container) => {
+	const root = createRoot(container);
 	const campaignId = container.dataset.campaign;
 	const displayAs = container.dataset.displayAs ?? 'button';
-	render(
+	root.render(
 		<CampaignProvider campaignId={campaignId}>
 			<KudosForm displayAs={displayAs} />
-		</CampaignProvider>,
-		container
+		</CampaignProvider>
 	);
 });
 
 // Kudos Donations message
-messages.forEach((message) => {
-	const title = message.dataset.title;
-	const body = message.dataset.body;
-	const color = message.dataset.color;
-	render(<Message color={color} title={title} body={body} />, message);
+messages.forEach((container) => {
+	const root = createRoot(container);
+	const title = container.dataset.title;
+	const body = container.dataset.body;
+	const color = container.dataset.color;
+	root.render(<Message color={color} title={title} body={body} />);
 });
