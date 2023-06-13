@@ -92,7 +92,7 @@ const KudosModal = ({
 										<div className="kudos-modal-header flex items-center justify-between">
 											{showLogo && (
 												<span
-													className="mr-3 inline-block flex"
+													className="mr-3 flex"
 													title="Kudos Donations"
 												>
 													<img
