@@ -69,4 +69,4 @@ mix
 	.sourceMaps(false)
 	.disableSuccessNotifications()
 	// BrowserSync.
-	.browserSync('localhost:8080');
+	.browserSync('localhost:8888');
