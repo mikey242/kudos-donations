@@ -1,7 +1,7 @@
 import { render } from '@wordpress/element';
 import React from 'react';
 import SettingsPage from './components/SettingsPage';
-import '../images/logo-colour-40.png';
+import '../../assets/images/logo-colour-40.png';
 import SettingsProvider from './contexts/SettingsContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import Render from '../common/components/Render';

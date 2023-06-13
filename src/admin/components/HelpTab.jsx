@@ -1,6 +1,6 @@
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import logo from '../../images/full-logo-green.svg';
+import logo from '../../../assets/images/full-logo-green.svg';
 import React from 'react';
 import { Button, ToggleControl } from '../../common/components/controls';
 import Divider from '../../common/components/Divider';

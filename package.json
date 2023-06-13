@@ -35,6 +35,7 @@
     "@wordpress/env": "^8.1.0",
     "@wordpress/eslint-plugin": "^14.8.0",
     "@wordpress/keycodes": "^3.35.0",
+    "@wordpress/scripts": "^26.6.0",
     "browser-sync": "^2.27.10",
     "browser-sync-webpack-plugin": "^2.3.0",
     "laravel-mix": "^6.0.38",

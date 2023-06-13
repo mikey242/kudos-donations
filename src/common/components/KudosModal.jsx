@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import logo from '../../images/logo-colour.svg';
+import logo from '../../../assets/images/logo-colour.svg';
 import { Transition } from '@headlessui/react';
 import { useEffect, useRef } from '@wordpress/element';
 import { XMarkIcon } from '@heroicons/react/24/outline';

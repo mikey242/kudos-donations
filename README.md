@@ -1,10 +1,10 @@
 <div align="center">
-    <img alt="Kudos logo" src="assets/icon-128x128.png" width="75">
+    <img alt="Kudos logo" src="assets/plugin/icon-128x128.png" width="75">
     <h1>Kudos Donations</h1>
     Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
     <br>
     <br>
-    <img src="assets/demo-1.gif" alt="Kudos Donations">
+    <img src="assets/plugin/demo-1.gif" alt="Kudos Donations">
 </div>
 
 ## Development
