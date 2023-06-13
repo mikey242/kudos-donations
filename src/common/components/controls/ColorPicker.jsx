@@ -74,7 +74,7 @@ const ColorPicker = ({ name, label, help }) => {
 											? 'ring ring-offset-1'
 											: '',
 										!active && checked ? 'ring-2' : '',
-										'relative transition -m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none'
+										'transition -m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none'
 									);
 								}}
 							>
@@ -94,7 +94,7 @@ const ColorPicker = ({ name, label, help }) => {
 										<div className="bg-white mt-2 p-5 relative rounded-lg drop-shadow-md z-[2]">
 											<HexColorInput
 												className={
-													'w-20 border-gray-300 mt-2 placeholder-gray-500 border border-solid transition ease-in-out duration-75 leading-6 text-gray-700 bg-white focus:border-primary focus:outline-none focus:ring-0 py-2 px-3 rounded w-full'
+													'w-20 border-gray-300 mt-2 placeholder-gray-500 border border-solid transition ease-in-out duration-75 leading-6 text-gray-700 bg-white focus:border-primary focus:outline-none focus:ring-0 py-2 px-3 rounded'
 												}
 												color={value}
 												onChange={onChange}
