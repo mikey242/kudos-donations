@@ -5,14 +5,14 @@
     "classmap-authoritative": true,
     "optimize-autoloader": true,
     "platform": {
-      "php": "8"
+      "php": "7.4"
     },
     "allow-plugins": {
       "typisttech/imposter-plugin": false
     }
   },
   "require": {
-    "php": "^7.2 | ^8.0",
+    "php": "^7.4 | ^8.0",
     "symfony/polyfill-mbstring": "1.20.*",
     "symfony/polyfill-ctype": "1.20.*",
     "mollie/mollie-api-php": "^2.32.0",
