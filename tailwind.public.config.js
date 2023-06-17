@@ -9,8 +9,8 @@ module.exports = {
 	],
 	theme: {
 		fontFamily: {
-			sans: ['montserratregular', 'sans-serif'],
-			serif: ['cabinbold', 'serif'],
+			sans: 'var(--kudos-font-sans)',
+			serif: 'var(--kudos-font-serif)',
 			mono: [
 				'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
 			],
@@ -34,10 +34,10 @@ module.exports = {
 					500: '#2ec4b6',
 					700: '#2bb9ac',
 				},
-				primary: 'var(--kudos-theme-primary)',
+				'primary': 'var(--kudos-theme-primary)',
 				'primary-dark': 'var(--kudos-theme-primary-dark)',
 				'primary-darker': 'var(--kudos-theme-primary-darker)',
-				secondary: 'var(--kudos-theme-secondary)',
+				'secondary': 'var(--kudos-theme-secondary)',
 			},
 			keyframes: {
 				loaderSpin: {

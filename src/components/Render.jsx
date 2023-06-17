@@ -3,7 +3,7 @@ import ReactShadowRoot from 'react-shadow-root';
 import classNames from 'classnames';
 import { useRef, useState } from '@wordpress/element';
 
-function Render({ children, themeColor, style, className, errors = null }) {
+function Render({ children, themeColor, style, className, fonts, errors = null }) {
 	// Set ready = false if there are stylesheets to load
 	const [ready, setReady] = useState(!window.kudos?.stylesheets);
 	// Count number of stylesheets to load
@@ -34,6 +34,7 @@ function Render({ children, themeColor, style, className, errors = null }) {
 
 	return (
 		<ReactShadowRoot>
+			{/* Load the main stylesheet */}
 			{window.kudos?.stylesheets?.map((stylesheet, i) => (
 				<link
 					key={i}
@@ -43,6 +44,14 @@ function Render({ children, themeColor, style, className, errors = null }) {
 				/>
 			))}
 			{style && <style>{style}</style>}
+
+			{/* Fonts */}
+			<style>
+				{`:host {--kudos-font-serif: ${fonts?.header ?? 'cabinbold, sans-serif'} }`}
+				{`:host {--kudos-font-sans: ${fonts?.header ?? 'montserratregular, sans-serif'} }`}
+			</style>
+
+			{/* Set the theme color */}
 			{themeColor && (
 				<style>{`:host {--kudos-theme-primary: ${themeColor}`}</style>
 			)}

@@ -127,6 +127,12 @@ function KudosForm({ displayAs }) {
 	return (
 		<Render
 			themeColor={campaign?.theme_color}
+			// fonts={
+			// 	{
+			// 		header: '"Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif',
+			// 		body: '"Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif'
+			// 	}
+			// }
 			errors={isForm && campaignErrors}
 		>
 			{/* If API not loaded yet then show a spinner */}
