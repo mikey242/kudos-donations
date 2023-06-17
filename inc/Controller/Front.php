@@ -97,13 +97,6 @@ class Front
         );
 
         wp_set_script_translations('kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
-
-//        wp_register_style(
-//            'kudos-donations-fonts',
-//            Assets::get_style('kudos-fonts.css.css'),
-//            [],
-//            $this->version
-//        );
     }
 
     /**
