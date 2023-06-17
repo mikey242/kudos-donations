@@ -1,3 +1,4 @@
+@import 'kudos-fonts.css';
 @config '../../tailwind.public.config.js';
 @tailwind base;
 @tailwind components;
