@@ -1,0 +1,40 @@
+@config '../../tailwind.public.config.js';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:host {
+    all: initial;
+}
+
+/* Base */
+:host {
+    --kudos-screen: xs;
+}
+
+p {
+    @apply text-base;
+}
+
+.logo-animate:hover .logo {
+    @apply -rotate-90;
+}
+
+.logo-animate:hover .logo-heart {
+    backface-visibility: visible;
+    @apply rotate-x-180;
+}
+
+/* 'xs' and up */
+@screen xs {
+    :host {
+        --kudos-screen: sm;
+    }
+}
+
+/* 'sm' and up */
+@screen sm {
+    :host {
+        --kudos-screen: md;
+    }
+}

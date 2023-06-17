@@ -36,7 +36,7 @@ class Blocks
         $allBlocks = [];
 
         foreach ($blocks as $block) {
-            // Go into inner blocks and run this method recursively
+            // Go into inner front and run this method recursively
             if ( ! empty($block['innerBlocks'])) {
                 $block['innerBlocks'] = self::parseBlocks($block['innerBlocks'], $callback);
             }
@@ -47,7 +47,7 @@ class Blocks
                 continue;
             }
 
-            // Continuously create back the blocks array.
+            // Continuously create back the front array.
             $allBlocks[] = $block;
         }
 

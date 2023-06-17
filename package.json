@@ -5,12 +5,13 @@
   "description": " Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.",
   "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
+    "build": "npm run build:admin && npm run build:front",
+    "build:admin": "wp-scripts build --webpack-src-dir=src/admin src/admin/settings/kudos-admin-settings.jsx src/admin/campaigns/kudos-admin-campaigns.jsx --output-path=build/admin",
+    "build:front": "wp-scripts build --webpack-src-dir=src/front --output-path=build/front",
+    "check-engines": "wp-scripts check-engines",
+    "start:admin": "wp-scripts start --hot --webpack-src-dir=src/admin src/admin/settings/kudos-admin-settings.jsx src/admin/campaigns/kudos-admin-campaigns.jsx --output-path=build/admin",
+    "start:front": "wp-scripts start --hot --webpack-src-dir=src/front --output-path=build/front",
     "wp-env": "wp-env",
-    "development": "mix",
-    "watch": "mix watch",
-    "watch-poll": "mix watch -- --watch-options-poll=1000",
-    "hot": "mix watch --hot",
-    "production": "mix --production",
     "make-pot": "wp i18n make-pot . --exclude='src'",
     "make-json": "wp i18n make-json languages/ --no-purge",
     "export": "composer install --no-dev --prefer-dist && ./export.sh"
@@ -36,12 +37,12 @@
     "@wordpress/eslint-plugin": "^14.8.0",
     "@wordpress/keycodes": "^3.35.0",
     "@wordpress/scripts": "^26.6.0",
-    "browser-sync": "^2.27.10",
-    "browser-sync-webpack-plugin": "^2.3.0",
-    "laravel-mix": "^6.0.38",
+    "autoprefixer": "^10.4.14",
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",
-    "tailwindcss": "^3.3.2"
+    "tailwindcss": "^3.3.2",
+    "webpack": "^5.86.0",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
@@ -53,7 +54,6 @@
     "@wordpress/api-fetch": "^6.32.0",
     "@wordpress/element": "^5.12.0",
     "@wordpress/i18n": "^4.35.0",
-    "autoprefixer": "^10.4.14",
     "classnames": "^2.3.1",
     "focus-trap-react": "^10.1.4",
     "lodash": "^4.17.21",

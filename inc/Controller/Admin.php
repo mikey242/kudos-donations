@@ -493,18 +493,9 @@ class Admin
     {
         wp_register_style(
             'kudos-donations-public',
-            Assets::get_style('/public/kudos-public.css'),
-            ['kudos-donations-fonts'],
+            Assets::get_style('admin/kudos-admin-campaigns.jsx.css'),
+            [],
             $this->version
-        );
-
-        $editor_js = Assets::get_script('/blocks/kudos-button/index.js');
-        wp_register_script(
-            'kudos-donations-button',
-            $editor_js['url'],
-            $editor_js['dependencies'],
-            $editor_js['version'],
-            true
         );
     }
 
@@ -576,7 +567,6 @@ class Admin
         );
 
         add_action("load-$transactions_page_hook_suffix", function () {
-            add_action("admin_enqueue_scripts", [$this, "transactions_page_assets"]);
             $this->table = new TransactionsTable($this->mapper);
             $this->table->prepare_items();
         });
@@ -597,7 +587,6 @@ class Admin
         );
 
         add_action("load-$subscriptions_page_hook_suffix", function () {
-            add_action("admin_enqueue_scripts", [$this, 'subscriptions_page_assets']);
             $this->table = new SubscriptionsTable($this->mapper, $this->payment);
             $this->table->prepare_items();
         });
@@ -618,7 +607,6 @@ class Admin
         );
 
         add_action("load-$donors_page_hook_suffix", function () {
-            add_action("admin_enqueue_scripts", [$this, 'donor_page_assets']);
             $this->table = new DonorsTable($this->mapper);
             $this->table->prepare_items();
         });
@@ -684,13 +672,13 @@ class Admin
         // Enqueue the styles
         wp_enqueue_style(
             'kudos-donations-settings',
-            Assets::get_style('/admin/kudos-admin-settings.css'),
+            Assets::get_style('admin/kudos-admin-settings.jsx.css'),
             [],
             $this->version
         );
 
         // Get and enqueue the script
-        $admin_js = Assets::get_script('/admin/kudos-admin-settings.js');
+        $admin_js = Assets::get_script('admin/kudos-admin-settings.jsx.js');
         wp_enqueue_script(
             'kudos-donations-settings',
             $admin_js['url'],
@@ -705,7 +693,7 @@ class Admin
             [
                 'version'            => $this->version,
                 'migrations_pending' => (bool)Settings::get_setting('migrations_pending'),
-                'stylesheets'        => [Assets::get_style('/admin/kudos-admin-settings.css')],
+                'stylesheets'        => [Assets::get_style('admin/kudos-admin-settings.jsx.css')],
             ]
         );
         wp_set_script_translations('kudos-donations-settings', 'kudos-donations');
@@ -721,14 +709,13 @@ class Admin
         // Enqueue the styles
         wp_enqueue_style(
             'kudos-donations-settings',
-            Assets::get_style('/admin/kudos-admin-settings.css'),
+            Assets::get_style('admin/kudos-admin-settings.jsx.css'),
             [],
             $this->version
         );
 
-
         // Get and enqueue the script
-        $admin_js = Assets::get_script('/admin/kudos-admin-campaigns.js');
+        $admin_js = Assets::get_script('admin/kudos-admin-campaigns.jsx.js');
         wp_enqueue_script(
             'kudos-donations-settings',
             $admin_js['url'],
@@ -742,7 +729,7 @@ class Admin
             'kudos',
             [
                 'version'     => $this->version,
-                'stylesheets' => [Assets::get_style('/admin/kudos-admin-settings.css') . "?ver=$this->version"],
+                'stylesheets' => [Assets::get_style('admin/kudos-admin-settings.jsx.css') . "?ver=$this->version"],
             ]
         );
         wp_set_script_translations(
@@ -752,32 +739,6 @@ class Admin
         );
 
         do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
-    }
-
-    /**
-     * Assets specific to the Kudos Transactions page.
-     */
-    public function transactions_page_assets()
-    {
-        $transactions_js = Assets::get_script('/admin/kudos-admin-transactions.js');
-
-        wp_enqueue_script(
-            'kudos-donations-transactions',
-            $transactions_js['url'],
-            $transactions_js['dependencies'],
-            $transactions_js['version'],
-            false
-        );
-
-        // Load table assets.
-        $table_handle = $this->table_page_assets();
-        wp_localize_script(
-            $table_handle,
-            'kudos',
-            [
-                'confirmationDelete' => __('Are you sure you want to delete this transaction?', 'kudos-donations'),
-            ]
-        );
     }
 
     /**
@@ -797,39 +758,6 @@ class Admin
         );
 
         return $handle;
-    }
-
-    /**
-     * Assets specific to the Kudos Subscriptions page.
-     */
-    public function subscriptions_page_assets()
-    {
-        // Load table assets.
-        $table_handle = $this->table_page_assets();
-        wp_localize_script(
-            $table_handle,
-            'kudos',
-            [
-                'confirmationCancel' => __('Are you sure you want to cancel this subscription?', 'kudos-donations'),
-                'confirmationDelete' => __('Are you sure you want to delete this subscription?', 'kudos-donations'),
-            ]
-        );
-    }
-
-    /**
-     * Assets specific to the Kudos Donors page.
-     */
-    public function donor_page_assets()
-    {
-        // Load table assets.
-        $table_handle = $this->table_page_assets();
-        wp_localize_script(
-            $table_handle,
-            'kudos',
-            [
-                'confirmationDelete' => __('Are you sure you want to delete this donor?', 'kudos-donations'),
-            ]
-        );
     }
 
     /**

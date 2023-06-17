@@ -77,7 +77,7 @@ class Front
      */
     public function register_assets()
     {
-        $public_js = Assets::get_script('/public/kudos-public.js');
+        $public_js = Assets::get_script('front/kudos-public.js');
         wp_register_script(
             'kudos-donations-public',
             $public_js['url'],
@@ -90,18 +90,20 @@ class Front
             'kudos-donations-public',
             'kudos',
             [
-                'stylesheets' => [Assets::get_style('/public/kudos-public.css')],
+                'stylesheets' => [
+					Assets::get_style('front/kudos-public.css')
+                ],
             ]
         );
 
         wp_set_script_translations('kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages');
 
-        wp_register_style(
-            'kudos-donations-fonts',
-            Assets::get_style('/public/kudos-fonts.css'),
-            [],
-            $this->version
-        );
+//        wp_register_style(
+//            'kudos-donations-fonts',
+//            Assets::get_style('kudos-fonts.css.css'),
+//            [],
+//            $this->version
+//        );
     }
 
     /**
@@ -175,7 +177,7 @@ class Front
 
     public function button_html($id, $atts): string
     {
-        return "<div id='button-$id' class='kudos-button' data-label='" . $atts['button_label'] . "' data-target='form-$id' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
+        return "<div id='button-$id' class='button' data-label='" . $atts['button_label'] . "' data-target='form-$id' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
 					</div>";
     }
 
@@ -304,7 +306,7 @@ class Front
     private function register_blocks()
     {
         register_block_type(
-            KUDOS_PLUGIN_DIR . '/dist/blocks/kudos-button/',
+            KUDOS_PLUGIN_DIR . '/build/front/button/',
             [
                 "render_callback" => [$this, "button_render_callback"],
             ]

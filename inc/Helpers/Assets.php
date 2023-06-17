@@ -2,6 +2,8 @@
 
 namespace IseardMedia\Kudos\Helpers;
 
+use DI\NotFoundException;
+
 class Assets
 {
     /**
@@ -11,13 +13,15 @@ class Assets
      * @param bool $version
      *
      * @return string
+     * @throws NotFoundException
      */
     public static function get_style(string $asset, bool $version = true): string
     {
-        $suffix = 'dist/' . ltrim($asset, '/');
+        $suffix = 'build/' . ltrim($asset, '/');
         $url    = KUDOS_PLUGIN_URL . $suffix;
         $path   = KUDOS_PLUGIN_DIR . $suffix;
 
+		if(!file_exists($path)) throw new NotFoundException("Cannot find style '$asset'");
         return $url . ($version ? '?ver=' . filemtime($path) : '');
     }
 
@@ -30,17 +34,18 @@ class Assets
      * @param string $base_url
      *
      * @return array|null
+     * @throws NotFoundException
      */
     public static function get_script(
         $asset,
         string $base_dir = KUDOS_PLUGIN_DIR,
         string $base_url = KUDOS_PLUGIN_URL
     ): ?array {
-        $asset_path = $base_dir . '/dist' . $asset;
+        $asset_path = $base_dir . 'build' . '/' . $asset;
         if (file_exists($asset_path)) {
             $out            = [];
             $out['path']    = $asset_path;
-            $out['url']     = $base_url . 'dist/' . ltrim($asset, '/');
+            $out['url']     = $base_url . 'build/' . ltrim($asset, '/');
             $asset_manifest = substr_replace($asset_path, '.asset.php', -strlen('.js'));
             if (file_exists($asset_manifest)) {
                 $manifest_content    = include($asset_manifest);
@@ -51,7 +56,7 @@ class Assets
             return $out;
         }
 
-        return null;
+        throw new NotFoundException("Cannot find script '$asset_path'");
     }
 
     /**

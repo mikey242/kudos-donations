@@ -1,10 +1,9 @@
 module.exports = {
 	important: false,
 	content: [
-		'./src/admin/**/*.{js,jsx}',
-		'./src/blocks/**/*.{js,jsx}',
-		'./src/common/**/*.{js,jsx}',
-		'./src/helpers/**/*.{js,jsx}',
+		'./src/components/*.{js,jsx}',
+		'./src/components/admin/**/*.{js,jsx}',
+		'./src/components/controls/**/*.{js,jsx}',
 	],
 	theme: {
 		fontFamily: {

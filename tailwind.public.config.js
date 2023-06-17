@@ -3,9 +3,9 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
 	important: false,
 	content: [
-		'./src/common/**/*.{js,jsx}',
-		'./src/public/**/*.{js,jsx}',
-		'./src/helpers/**/*.{js,jsx}',
+		'./src/components/*.{js,jsx}',
+		'./src/components/public/**/*.{js,jsx}',
+		'./src/components/controls/**/*.{js,jsx}',
 	],
 	theme: {
 		fontFamily: {
