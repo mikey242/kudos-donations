@@ -8,7 +8,7 @@ const RadioGroupControl = ({ name, validation, options, help, label }) => {
 		<Controller
 			name={name}
 			validation={validation}
-			render={({ field: { onChange, value } }) => (
+			render={({ field: { onChange, value = null } }) => (
 				<RadioGroup
 					value={value}
 					onChange={onChange}
