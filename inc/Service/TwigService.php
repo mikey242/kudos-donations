@@ -129,12 +129,6 @@ class TwigService
         $this->twig->addFunction($get_option);
 
         /**
-         * Add color_luminance helper function.
-         */
-        $color_luminance = new TwigFunction('color_luminance', [Utils::class, 'color_luminance']);
-        $this->twig->addFunction($color_luminance);
-
-        /**
          * Add get_asset function.
          */
         $get_asset = new TwigFunction('get_asset', [Assets::class, 'get_style']);

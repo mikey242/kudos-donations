@@ -55,40 +55,6 @@ class Utils
     }
 
     /**
-     * Lightens/darkens a given colour (hex format), returning the altered colour in hex format.
-     *
-     * @source https://gist.github.com/stephenharris/5532899
-     * @param string $hex Colour as hexadecimal (with or without hash).
-     * @param float $percent Percentage to modify the luminance by.
-     *
-     * @return string Lightened/Darkened colour as hexadecimal (with hash);
-     * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
-     */
-    public static function color_luminance(string $hex, float $percent): string
-    {
-        // Remove leading '#' if present.
-        $hex = ltrim($hex, '#');
-
-        // Expand to 6 character hex code (e.g. FFF -> FFFFFF).
-        if (strlen($hex) === 3) {
-            $hex = $hex[0] + $hex[0] + $hex[1] + $hex[1] + $hex[2] + $hex[2];
-        }
-
-        // Convert to decimal.
-        $hex = array_map('hexdec', str_split($hex, 2));
-
-        // Change luminosity of decimal colour.
-        foreach ($hex as & $color) {
-            $adjustable_limit = $percent < 0 ? $color : 255 - $color;
-            $adjust_amount    = ceil($adjustable_limit * $percent);
-
-            $color = str_pad(dechex($color + $adjust_amount), 2, '0', STR_PAD_LEFT);
-        }
-
-        return '#' . implode($hex);
-    }
-
-    /**
      * Calculate how many years a subscription is running for.
      * This is based on the number of payments and the frequency.
      *
