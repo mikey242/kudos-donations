@@ -693,7 +693,7 @@ class Admin
             [
                 'version'            => $this->version,
                 'migrations_pending' => (bool)Settings::get_setting('migrations_pending'),
-                'stylesheets'        => [Assets::get_style('admin/kudos-admin-campaigns.jsx.css')],
+                'stylesheets'        => [Assets::get_style('admin/kudos-admin-settings.jsx.css')],
             ]
         );
         wp_set_script_translations('kudos-donations-settings', 'kudos-donations');
