@@ -1,10 +1,5 @@
 module.exports = {
 	important: false,
-	content: [
-		'./src/components/*.{js,jsx}',
-		'./src/components/admin/**/*.{js,jsx}',
-		'./src/components/controls/**/*.{js,jsx}',
-	],
 	theme: {
 		fontFamily: {
 			sans: ['montserratregular', 'sans-serif'],

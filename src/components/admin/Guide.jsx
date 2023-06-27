@@ -4,7 +4,7 @@ import { useFocusOnMount } from '@wordpress/compose';
 import { ESCAPE, LEFT, RIGHT } from '@wordpress/keycodes';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import { Button } from './controls';
+import { Button } from '../controls';
 
 const Guide = ({ pages = [], className, onFinish }) => {
 	const [currentPage, setCurrentPage] = useState(0);

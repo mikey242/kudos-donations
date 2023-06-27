@@ -693,7 +693,7 @@ class Admin
             [
                 'version'            => $this->version,
                 'migrations_pending' => (bool)Settings::get_setting('migrations_pending'),
-                'stylesheets'        => [Assets::get_style('admin/kudos-admin-settings.jsx.css')],
+                'stylesheets'        => [Assets::get_style('admin/kudos-admin-campaigns.jsx.css')],
             ]
         );
         wp_set_script_translations('kudos-donations-settings', 'kudos-donations');
@@ -709,7 +709,7 @@ class Admin
         // Enqueue the styles
         wp_enqueue_style(
             'kudos-donations-settings',
-            Assets::get_style('admin/kudos-admin-settings.jsx.css'),
+            Assets::get_style('admin/kudos-admin-campaigns.jsx.css'),
             [],
             $this->version
         );
@@ -729,7 +729,7 @@ class Admin
             'kudos',
             [
                 'version'     => $this->version,
-                'stylesheets' => [Assets::get_style('admin/kudos-admin-settings.jsx.css') . "?ver=$this->version"],
+                'stylesheets' => [Assets::get_style('admin/kudos-admin-campaigns.jsx.css') . "?ver=$this->version"],
             ]
         );
         wp_set_script_translations(
@@ -739,25 +739,6 @@ class Admin
         );
 
         do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
-    }
-
-    /**
-     * Assets common to all CampaignTable pages.
-     */
-    private function table_page_assets(): string
-    {
-        $handle   = 'kudos-donations-table';
-        $table_js = Assets::get_script('/admin/kudos-admin-table.js');
-
-        wp_enqueue_script(
-            $handle,
-            $table_js['url'],
-            $table_js['dependencies'],
-            $table_js['version'],
-            true
-        );
-
-        return $handle;
     }
 
     /**

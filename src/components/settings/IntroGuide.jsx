@@ -5,7 +5,7 @@ import button from '../../../assets/images/guide-button.png';
 import live from '../../../assets/images/guide-test-live.png';
 import newsletter from '../../../assets/images/guide-newsletter.png';
 import { __ } from '@wordpress/i18n';
-import { Guide } from '../Guide';
+import { Guide } from '../admin/Guide';
 import React from 'react';
 import { Newsletter } from './Newsletter';
 import KudosModal from '../KudosModal';

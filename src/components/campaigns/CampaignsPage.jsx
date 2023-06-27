@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
-import { Header } from './Header';
+import { Header } from '../admin/Header';
 import React from 'react';
 import CampaignTable from './CampaignTable';
 import CampaignEdit from './CampaignEdit';

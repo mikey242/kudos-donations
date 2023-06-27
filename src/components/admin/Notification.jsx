@@ -1,7 +1,7 @@
 import React from 'react';
 import { Transition } from '@headlessui/react';
-import Panel from './Panel';
-import { useNotificationContext } from '../contexts/NotificationContext';
+import Panel from '../Panel';
+import { useNotificationContext } from '../../contexts/NotificationContext';
 import {
 	CheckCircleIcon,
 	ExclamationCircleIcon,

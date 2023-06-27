@@ -1,8 +1,3 @@
-@config '../../tailwind.admin.config.js';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @font-face {
     font-family: "montserratregular";
     src: url("../../assets/fonts/montserrat-regular-webfont.woff2") format("woff2"), url("../../assets/fonts/montserrat-regular-webfont.woff") format("woff");
@@ -22,22 +17,24 @@
     --kudos-theme-primary-dark: theme("colors.orange.700");
 }
 
-h1 {
-    @apply text-2xl font-bold leading-loose;
-}
+@layer base {
+    h1 {
+        @apply text-2xl font-bold leading-loose;
+    }
 
-h2 {
-    @apply text-xl font-bold;
-}
+    h2 {
+        @apply text-xl font-bold;
+    }
 
-h3 {
-    @apply text-lg font-bold;
-}
+    h3 {
+        @apply text-lg font-bold;
+    }
 
-#wpcontent {
-    padding-left: 0;
-}
+    #wpcontent {
+        padding-left: 0;
+    }
 
-.auto-fold #wpcontent {
-    padding-left: 0;
+    .auto-fold #wpcontent {
+        padding-left: 0;
+    }
 }

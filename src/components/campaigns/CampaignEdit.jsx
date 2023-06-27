@@ -11,7 +11,7 @@ import {
 	TextControl,
 	ToggleControl,
 } from '../controls';
-import TabPanel from './TabPanel';
+import TabPanel from '../admin/TabPanel';
 import { isValidUrl } from '../../helpers/util';
 import GenerateShortcode from './GenerateShortcode';
 import Divider from '../Divider';

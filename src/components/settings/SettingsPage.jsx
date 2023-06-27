@@ -7,13 +7,13 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Header } from './Header';
+import { Header } from '../admin/Header';
 import { IntroGuide } from './IntroGuide';
 import MollieTab from './MollieTab';
 import { EmailTab } from './EmailTab';
 import { HelpTab } from './HelpTab';
 import { Button } from '../controls';
-import TabPanel from './TabPanel';
+import TabPanel from '../admin/TabPanel';
 import { Spinner } from '../Spinner';
 // eslint-disable-next-line import/default
 import { useSettingsContext } from '../../contexts/SettingsContext';
