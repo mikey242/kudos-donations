@@ -28,21 +28,21 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	 * {@inheritDoc}
 	 */
 	public function get_description(): string {
-		return 'Kudos TransactionPostType';
+		return 'Kudos Transaction';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function get_singular_name(): string {
-		return _x( 'TransactionPostType', 'TransactionPostType post type singular name', 'kudos-donations' );
+		return _x( 'Transaction', 'Transaction post type singular name', 'kudos-donations' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function get_plural_name(): string {
-		return _x( 'Transactions', 'TransactionPostType post type plural name', 'kudos-donations' );
+		return _x( 'Transactions', 'Transaction post type plural name', 'kudos-donations' );
 	}
 
 	/**

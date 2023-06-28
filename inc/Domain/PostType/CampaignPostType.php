@@ -28,21 +28,21 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 * {@inheritDoc}
 	 */
 	public function get_description(): string {
-		return 'Kudos CampaignPostType';
+		return 'Kudos Campaign';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function get_singular_name(): string {
-		return _x( 'CampaignPostType', 'CampaignPostType post type singular name', 'kudos-donations' );
+		return _x( 'Campaign', 'Campaign post type singular name', 'kudos-donations' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function get_plural_name(): string {
-		return _x( 'Campaigns', 'CampaignPostType post type plural name', 'kudos-donations' );
+		return _x( 'Campaigns', 'Campaign post type plural name', 'kudos-donations' );
 	}
 
 	/**

@@ -35,14 +35,14 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	 * {@inheritDoc}
 	 */
 	protected function get_singular_name(): string {
-		return _x( 'DonorPostType', 'DonorPostType post type singular name', 'kudos-donations' );
+		return _x( 'Donor', 'Donor post type singular name', 'kudos-donations' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function get_plural_name(): string {
-		return _x( 'Donors', 'DonorPostType post type plural name', 'kudos-donations' );
+		return _x( 'Donors', 'Donor post type plural name', 'kudos-donations' );
 	}
 
 	/**
