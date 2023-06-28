@@ -15,87 +15,86 @@ class TransactionEntity extends AbstractEntity
      *
      * @var int
      */
-    public $value;
+    public int $value;
     /**
      * Currency of donation (EUR)
      *
      * @var string
      */
-    public $currency;
+    public string $currency;
     /**
      * Status of transaction
      *
      * @var string
      */
-    public $status;
+    public string $status;
     /**
      * Payment method
      *
      * @var string
      */
-    public $method;
+    public string $method;
     /**
      * Mode used ('test' or 'live')
      *
      * @var string
      */
-    public $mode;
+    public string $mode;
     /**
      * Sequence type (oneoff, first, recurring)
      *
      * @var string
      */
-    public $sequence_type;
+    public string $sequence_type;
     /**
      * Mollie transaction id
      *
      * @var string
      */
-    public $transaction_id;
+    public string $transaction_id;
     /**
      * Kudos order id
      *
      * @var string
      */
-    public $order_id;
+    public string $order_id;
     /**
      * Mollie customer id
      *
      * @var string
      */
-    public $customer_id;
+    public string $customer_id;
     /**
      * Mollie subscription id
      *
      * @var string
      */
-    public $subscription_id;
+    public string $subscription_id;
     /**
-     * Campaign label for donation
+     * CampaignPostType label for donation
      *
      * @var string
      */
-    public $campaign_id;
+    public string $campaign_id;
     /**
      * Refunds serialized array
      *
      * @var string
      */
-    public $refunds;
+    public string $refunds;
     /**
      * Message
      *
      * @var string
      */
-    public $message;
+    public string $message;
 
     /**
      * Returns unserialized array of refund data.
      *
      * @return object|false
      */
-    public function get_refund()
-    {
+    public function get_refund(): object|bool {
         $refunds = $this->refunds;
 
         if ($refunds) {

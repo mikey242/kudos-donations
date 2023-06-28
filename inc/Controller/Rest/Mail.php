@@ -1,27 +1,25 @@
 <?php
 
-namespace IseardMedia\Kudos\Controller\Rest\Route;
+namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Service\MailerService;
 use WP_REST_Server;
 
-class Mail extends Base
+class Mail extends AbstractRestController
 {
     /**
-     * Base route.
+     * @var MailerService
      */
-    protected $base = 'email';
-
-    /**
-     * @var \IseardMedia\Kudos\Service\MailerService
-     */
-    private $mailer_service;
+    private MailerService $mailer_service;
 
     /**
      * PaymentRoutes constructor.
      */
     public function __construct(MailerService $mailer_service)
     {
+		parent::__construct();
+
+	    $this->rest_base = 'email';
         $this->mailer_service = $mailer_service;
     }
 
@@ -33,7 +31,7 @@ class Mail extends Base
         $mailer = $this->mailer_service;
 
         return [
-            $this->get_base() . '/test' => [
+            '/test' => [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$mailer, 'send_test'],
                 'args'                => [

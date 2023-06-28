@@ -11,72 +11,63 @@ use IseardMedia\Kudos\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Helpers\Assets;
 use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use IseardMedia\Kudos\Migrations\Migrator;
 use IseardMedia\Kudos\Service\ActivatorService;
 use IseardMedia\Kudos\Service\AdminNotice;
-use IseardMedia\Kudos\Service\LoggerService;
 use IseardMedia\Kudos\Service\MapperService;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Service\Vendor\MollieVendor;
+use Psr\Log\LoggerInterface;
 
-class Admin
+class Admin extends AbstractService
 {
-    /**
-     * The version of this plugin.
-     *
-     * @var string $version The current version of this plugin.
-     */
-    private $version;
     /**
      * @var MapperService
      */
-    private $mapper;
+    private MapperService $mapper;
     /**
      * @var TransactionsTable
      */
-    private $table;
+    private TransactionsTable $table;
     /**
      * @var TwigService
      */
-    private $twig;
+    private TwigService $twig;
     /**
      * @var PaymentService
      */
-    private $payment;
+    private PaymentService $payment;
     /**
      * @var ActivatorService
      */
-    private $activator;
+    private ActivatorService $activator;
     /**
-     * @var \IseardMedia\Kudos\Service\Vendor\MollieVendor
+     * @var MollieVendor
      */
-    private $mollie;
+    private MollieVendor $mollie;
     /**
-     * @var \IseardMedia\Kudos\Service\LoggerService
+     * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
     /**
-     * @var \IseardMedia\Kudos\Migrations\Migrator
+     * @var Migrator
      */
-    private $migrator;
+    private Migrator $migrator;
 
     /**
      * Initialize the class and set its properties.
-     *
-     * @param string $version The version of this plugin.
      */
     public function __construct(
-        string $version,
         MapperService $mapper,
         TwigService $twig,
         PaymentService $payment,
         ActivatorService $activator,
         MollieVendor $mollie_vendor,
-        LoggerService $logger,
+        LoggerInterface $logger,
         Migrator $migrator
     ) {
-        $this->version   = $version;
         $this->mapper    = $mapper;
         $this->twig      = $twig;
         $this->payment   = $payment;
@@ -86,217 +77,19 @@ class Admin
         $this->migrator  = $migrator;
     }
 
-    /**
-     * Register the kudos settings.
-     */
-    public function register_settings()
-    {
-        Settings::register_settings(self::get_settings());
-    }
-
-    /**
-     * Returns all settings in array.
-     *
-     * @return array
-     */
-    public static function get_settings(): array
-    {
-        return
-            [
-                'show_intro'             => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'migrations_pending'     => [
-                    'type'    => 'array',
-                    'default' => [],
-                ],
-                'migration_history'      => [
-                    'type' => 'array',
-                ],
-                'vendor'                 => [
-                    'type'         => 'string',
-                    'show_in_rest' => true,
-                    'default'      => 'mollie',
-                ],
-                'vendor_mollie'          => [
-                    'type'              => 'object',
-                    'default'           => [
-                        'connected'       => false,
-                        'recurring'       => false,
-                        'mode'            => 'test',
-                        'payment_methods' => [],
-                        'test_key'        => '',
-                        'live_key'        => '',
-                    ],
-                    'show_in_rest'      => [
-                        'schema' => [
-                            'type'       => 'object',
-                            'properties' => [
-                                'connected'       => [
-                                    'type' => 'boolean',
-                                ],
-                                'recurring'       => [
-                                    'type' => 'boolean',
-                                ],
-                                'mode'            => [
-                                    'type' => 'string',
-                                ],
-                                'test_key'        => [
-                                    'type' => 'string',
-                                ],
-                                'live_key'        => [
-                                    'type' => 'string',
-                                ],
-                                'payment_methods' => [
-                                    'type'  => 'array',
-                                    'items' => [
-                                        'type'       => 'object',
-                                        'properties' => [
-                                            'id'            => [
-                                                'type' => 'string',
-                                            ],
-                                            'status'        => [
-                                                'type' => 'string',
-                                            ],
-                                            'maximumAmount' => [
-                                                'type'       => 'object',
-                                                'properties' => [
-                                                    'value'    => [
-                                                        'type' => 'string',
-                                                    ],
-                                                    'currency' => [
-                                                        'type' => 'string',
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'sanitize_callback' => [Settings::class, 'sanitize_vendor'],
-                ],
-                'email_receipt_enable'   => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'email_bcc'              => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'sanitize_email',
-                ],
-                'custom_smtp'            => [
-                    'type'         => 'object',
-                    'default'      => [
-                        'from_email' => '',
-                        'from_name'  => get_bloginfo('name'),
-                        'host'       => '',
-                        'port'       => '',
-                        'encryption' => 'tls',
-                        'autotls'    => false,
-                        'username'   => '',
-                        'password'   => '',
-                    ],
-                    'show_in_rest' => [
-                        'schema' => [
-                            'type'       => 'object',
-                            'properties' => [
-                                'from_email' => [
-                                    'type' => 'string',
-                                ],
-                                'from_name'  => [
-                                    'type' => 'string',
-                                ],
-                                'host'       => [
-                                    'type' => 'string',
-                                ],
-                                'port'       => [
-                                    'type' => 'number',
-                                ],
-                                'encryption' => [
-                                    'type' => 'string',
-                                ],
-                                'autotls'    => [
-                                    'type' => 'boolean',
-                                ],
-                                'username'   => [
-                                    'type' => 'string',
-                                ],
-                                'password'   => [
-                                    'type' => 'string',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                'smtp_enable'            => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'spam_protection'        => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'return_message_enable'  => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => true,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'custom_return_enable'   => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'custom_return_url'      => [
-                    'type'              => 'string',
-                    'show_in_rest'      => true,
-                    'sanitize_callback' => 'esc_url_raw',
-                ],
-                'debug_mode'             => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'always_load_assets'     => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'donate_modal_in_footer' => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-                'disable_object_cache'   => [
-                    'type'              => 'boolean',
-                    'show_in_rest'      => true,
-                    'default'           => false,
-                    'sanitize_callback' => 'rest_sanitize_boolean',
-                ],
-            ];
-    }
+	public function register(): void {
+		add_action('admin_init', [$this, 'admin_actions']);
+		add_action('admin_init', [$this, 'check_migrations_pending']);
+		add_action('admin_init', [$this, 'register_block_editor_assets']);
+		add_action('kudos_remove_secret_action', [$this, 'remove_secret_action'], 10, 2);
+		add_action('kudos_check_log', [$this, 'truncate_log']);
+	}
 
     /**
      * Actions triggered by request data in the admin.
      * Needs to be hooked to admin_init as it modifies headers.
      */
-    public function admin_actions()
-    {
+    public function admin_actions(): void {
         if (isset($_REQUEST['kudos_action'])) {
             $action = sanitize_text_field(wp_unslash($_REQUEST['kudos_action']));
             $nonce  = wp_unslash($_REQUEST['_wpnonce']);
@@ -464,8 +257,7 @@ class Admin
         }
     }
 
-    public function check_migrations_pending()
-    {
+    public function check_migrations_pending(): void {
         $actions = Settings::get_setting('migrations_pending');
         if ($actions) {
             $form = "<form method='post'>";
@@ -489,70 +281,24 @@ class Admin
     /**
      * Register assets for enqueuing in the block editor.
      */
-    public function register_block_editor_assets()
-    {
+    public function register_block_editor_assets(): void {
         wp_register_style(
             'kudos-donations-public',
             Assets::get_style('admin/kudos-admin-campaigns.jsx.css'),
             [],
-            $this->version
+            KUDOS_VERSION
         );
     }
 
     /**
      * Create the Kudos Donations admin pages.
      */
-    public function add_menu_pages()
-    {
+    public function add_menu_pages(): void {
         $this->redirect_to_settings();
         $parent_slug = apply_filters('kudos_parent_settings_slug', 'kudos-campaigns');
 
-        add_menu_page(
-            __('Kudos', 'kudos-donations'),
-            __('Donations', 'kudos-donations'),
-            'manage_options',
-            $parent_slug,
-            false,
-            'data:image/svg+xml;base64,' . base64_encode(
-                '<svg viewBox="0 0 555 449" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2"><path fill="#f0f5fa99" d="M0 65.107a65.114 65.114 0 0 1 19.07-46.04A65.114 65.114 0 0 1 65.11-.003h.002c36.09 0 65.346 29.256 65.346 65.346v317.713a65.292 65.292 0 0 1-19.125 46.171 65.292 65.292 0 0 1-46.171 19.125h-.001c-35.987 0-65.16-29.173-65.16-65.16L0 65.107ZM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781Z"/></svg>'
-            )
-        );
-
         /*
-         * Campaign page.
-         */
-        $campaigns_page_hook_suffix = add_submenu_page(
-            $parent_slug,
-            /* translators: %s: Plugin name */
-            sprintf(__('%s campaigns', 'kudos-donations'), 'Kudos'),
-            __('Campaigns', 'kudos-donations'),
-            'manage_options',
-            'kudos-campaigns',
-            [$this, 'settings_page_markup']
-        );
-
-        add_action("load-$campaigns_page_hook_suffix", function () {
-            add_action("admin_enqueue_scripts", [$this, 'campaign_page_assets']);
-        });
-
-        /*
-         * Settings page.
-         */
-        $settings_page_hook_suffix = add_submenu_page(
-            $parent_slug,
-            __('Kudos settings', 'kudos-donations'),
-            __('Settings', 'kudos-donations'),
-            'manage_options',
-            'kudos-settings',
-            [$this, 'settings_page_markup']
-        );
-
-        add_action("load-$settings_page_hook_suffix", function () {
-            add_action('admin_enqueue_scripts', [$this, 'settings_page_assets']);
-        });
-
-        /*
-         * Transaction page.
+         * TransactionPostType page.
          */
         $transactions_page_hook_suffix = add_submenu_page(
             $parent_slug,
@@ -592,7 +338,7 @@ class Admin
         });
 
         /*
-         * Donor page.
+         * DonorPostType page.
          */
         $donors_page_hook_suffix = add_submenu_page(
             $parent_slug,
@@ -646,8 +392,7 @@ class Admin
         );
     }
 
-    public function redirect_to_settings()
-    {
+    public function redirect_to_settings(): void {
         $show_intro = Settings::get_setting('show_intro', true);
         if ($show_intro) {
             global $pagenow;
@@ -657,96 +402,11 @@ class Admin
         }
     }
 
-    public function settings_page_markup()
-    {
-        if ( ! Settings::get_setting('migrations_pending')) {
-            echo '<div id="kudos-settings"></div>';
-        }
-    }
-
-    /**
-     * Assets specific to the settings page.
-     */
-    public function settings_page_assets()
-    {
-        // Enqueue the styles
-        wp_enqueue_style(
-            'kudos-donations-settings',
-            Assets::get_style('admin/kudos-admin-settings.jsx.css'),
-            [],
-            $this->version
-        );
-
-        // Get and enqueue the script
-        $admin_js = Assets::get_script('admin/kudos-admin-settings.jsx.js');
-        wp_enqueue_script(
-            'kudos-donations-settings',
-            $admin_js['url'],
-            $admin_js['dependencies'],
-            $admin_js['version'],
-            true
-        );
-
-        wp_localize_script(
-            'kudos-donations-settings',
-            'kudos',
-            [
-                'version'            => $this->version,
-                'migrations_pending' => (bool)Settings::get_setting('migrations_pending'),
-                'stylesheets'        => [Assets::get_style('admin/kudos-admin-settings.jsx.css')],
-            ]
-        );
-        wp_set_script_translations('kudos-donations-settings', 'kudos-donations');
-
-        do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
-    }
-
-    /**
-     * Assets specific to the Kudos campaigns page.
-     */
-    public function campaign_page_assets()
-    {
-        // Enqueue the styles
-        wp_enqueue_style(
-            'kudos-donations-settings',
-            Assets::get_style('admin/kudos-admin-campaigns.jsx.css'),
-            [],
-            $this->version
-        );
-
-        // Get and enqueue the script
-        $admin_js = Assets::get_script('admin/kudos-admin-campaigns.jsx.js');
-        wp_enqueue_script(
-            'kudos-donations-settings',
-            $admin_js['url'],
-            $admin_js['dependencies'],
-            $admin_js['version'],
-            true
-        );
-
-        wp_localize_script(
-            'kudos-donations-settings',
-            'kudos',
-            [
-                'version'     => $this->version,
-                'stylesheets' => [Assets::get_style('admin/kudos-admin-campaigns.jsx.css') . "?ver=$this->version"],
-            ]
-        );
-        wp_set_script_translations(
-            'kudos-donations-settings',
-            'kudos-donations',
-            plugin_dir_path(__FILE__) . '/languages/'
-        );
-
-        do_action('kudos_admin_settings_page_assets', 'kudos-donations-settings');
-    }
-
     /**
      * Truncates the log file when over certain length.
      * Length defined by LoggerService::TRUNCATE_AT const.
      */
-    public function truncate_log()
-    {
-        $this->logger->truncate();
+    public function truncate_log(): void {
+	    $this->logger->truncate();
     }
 }

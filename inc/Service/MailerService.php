@@ -11,6 +11,7 @@ use IseardMedia\Kudos\Helpers\Utils;
 use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use Psr\Log\LoggerInterface;
 use WP_Error;
 use WP_REST_Request;
 
@@ -25,28 +26,28 @@ class MailerService
     /**
      * @var TwigService
      */
-    private $twig;
+    private TwigService $twig;
     /**
      * @var MapperService
      */
-    private $mapper;
+    private MapperService $mapper;
     /**
-     * @var \IseardMedia\Kudos\Service\LoggerService
+     * @var LoggerInterface
      */
-    private $logger;
-    /**
-     * @var mixed
-     */
-    private $custom_config;
+    private LoggerInterface $logger;
     /**
      * @var mixed
      */
-    private $custom_smtp;
+    private mixed $custom_config;
+    /**
+     * @var mixed
+     */
+    private mixed $custom_smtp;
 
     /**
      * Mailer constructor.
      */
-    public function __construct(TwigService $twig, MapperService $mapper, LoggerService $logger)
+    public function __construct(TwigService $twig, MapperService $mapper, LoggerInterface $logger)
     {
         $this->twig        = $twig;
         $this->mapper      = $mapper;
@@ -69,8 +70,7 @@ class MailerService
      *
      * @throws Exception From PHPMailer.
      */
-    public function init(PHPMailer $phpmailer)
-    {
+    public function init(PHPMailer $phpmailer): void {
         $this->logger->debug('Mailer: PHPMailer initialized');
         // Toggle this on to enable PHPMailer's debug mode.
         $phpmailer->SMTPDebug = 0;

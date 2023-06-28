@@ -2,6 +2,7 @@
 
 namespace IseardMedia\Kudos\Controller;
 
+use DI\NotFoundException;
 use Exception;
 use IseardMedia\Kudos\Entity\DonorEntity;
 use IseardMedia\Kudos\Entity\SubscriptionEntity;
@@ -10,73 +11,64 @@ use IseardMedia\Kudos\Helpers\Assets;
 use IseardMedia\Kudos\Helpers\CustomPostType;
 use IseardMedia\Kudos\Helpers\Settings;
 use IseardMedia\Kudos\Helpers\Utils;
-use IseardMedia\Kudos\Service\LoggerService;
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use IseardMedia\Kudos\Service\MapperService;
 use IseardMedia\Kudos\Service\PaymentService;
+use Psr\Log\LoggerInterface;
 
-class Front
+class Front extends AbstractService
 {
     /**
-     * The version of this plugin.
-     *
-     * @access   private
-     * @var      string $version The current version of this plugin.
+     * @var LoggerInterface
      */
-    private $version;
-
-    /**
-     * @var LoggerService
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var PaymentService
      */
-    private $payment;
+    private PaymentService $payment;
 
     /**
      * @var MapperService
      */
-    private $mapper;
+    private MapperService $mapper;
 
     /**
      * Initialize the class and set its properties.
-     *
-     * @param string $version The version of this plugin.
-     *
      */
     public function __construct(
-        string $version,
-        LoggerService $logger,
+        LoggerInterface $logger,
         PaymentService $payment,
         MapperService $mapper
     ) {
-        $this->version = $version;
         $this->logger  = $logger;
         $this->payment = $payment;
         $this->mapper  = $mapper;
     }
 
-    /**
+	public function register(): void {
+		$this->register_kudos();
+		add_action('wp_footer', [$this, 'handle_query_variables'], 1);
+	}
+
+	/**
      * Registers the button shortcode and block.
      */
-    public function register_kudos()
-    {
+    public function register_kudos(): void {
         $this->register_assets();
         $this->register_blocks();
-        $this->register_post_types();
         $this->register_button_shortcode();
         if (Settings::get_setting('always_load_assets')) {
             $this->enqueue_assets();
         }
     }
 
-    /**
-     * Register the assets needed to display Kudos.
-     * @return void
-     */
-    public function register_assets()
-    {
+	/**
+	 * Register the assets needed to display Kudos.
+	 * @return void
+	 * @throws NotFoundException
+	 */
+    public function register_assets(): void {
         $public_js = Assets::get_script('front/kudos-public.js');
         wp_register_script(
             'kudos-donations-public',
@@ -156,8 +148,7 @@ class Front
      *
      * @return void
      */
-    public function enqueue_assets()
-    {
+    public function enqueue_assets(): void {
         wp_enqueue_script('kudos-donations-public');
         wp_enqueue_style('kudos-donations-fonts'); // Fonts need to be loaded in the main document.
     }
@@ -178,8 +169,7 @@ class Front
      * Handles the various query variables and shows relevant modals.
      * @return void
      */
-    public function handle_query_variables()
-    {
+    public function handle_query_variables(): void {
         if (isset($_REQUEST['kudos_action']) && -1 !== $_REQUEST['kudos_action']) {
             $action = sanitize_text_field(wp_unslash($_REQUEST['kudos_action']));
             $nonce  = sanitize_text_field(wp_unslash($_REQUEST['kudos_nonce']));
@@ -296,8 +286,7 @@ class Front
     /**
      * Register the Kudos button block.
      */
-    private function register_blocks()
-    {
+    private function register_blocks(): void {
         register_block_type(
             KUDOS_PLUGIN_DIR . '/build/front/button/',
             [
@@ -307,99 +296,9 @@ class Front
     }
 
     /**
-     * Register the custom post types sued by Kudos.
-     *
-     * @return void
-     */
-    private function register_post_types()
-    {
-        new CustomPostType('kudos_campaign', [], [
-            'goal'                  => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'show_goal'             => [
-                'type'              => 'boolean',
-                'sanitize_callback' => 'rest_sanitize_boolean',
-            ],
-            'additional_funds'      => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'initial_title'         => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'initial_description'   => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'address_enabled'       => [
-                'type'              => 'boolean',
-                'sanitize_callback' => 'rest_sanitize_boolean',
-            ],
-            'address_required'      => [
-                'type'              => 'boolean',
-                'sanitize_callback' => 'rest_sanitize_boolean',
-            ],
-            'message_enabled'       => [
-                'type'              => 'boolean',
-                'sanitize_callback' => 'rest_sanitize_boolean',
-            ],
-            'amount_type'           => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'fixed_amounts'         => [
-                'type'              => 'string',
-                'single'            => false,
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'minimum_donation'      => [
-                'type'              => 'integer',
-                'sanitize_callback' => 'sanitize_float',
-            ],
-            'donation_type'         => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'theme_color'           => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'terms_link'            => [
-                'type'              => 'string',
-                'sanitize_callback' => 'esc_url_raw',
-            ],
-            'privacy_link'          => [
-                'type'              => 'string',
-                'sanitize_callback' => 'esc_url_raw',
-            ],
-            'show_return_message'   => [
-                'type' => 'boolean',
-            ],
-            'use_custom_return_url' => [
-                'type' => 'boolean',
-            ],
-            'custom_return_url'     => [
-                'type' => 'string',
-            ],
-            'return_message_title'  => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-            'return_message_text'   => [
-                'type'              => 'string',
-                'sanitize_callback' => 'sanitize_text_field',
-            ],
-        ]);
-    }
-
-    /**
      * Register the kudos button shortcode.
      */
-    private function register_button_shortcode()
-    {
+    private function register_button_shortcode(): void {
         // Register shortcode.
         add_shortcode(
             'kudos',
@@ -420,14 +319,15 @@ class Front
         );
     }
 
-    /**
-     * Create message modal with supplied header and body text.
-     *
-     * @param string $header The header text.
-     * @param string $body The body text.
-     *
-     * @return string
-     */
+	/**
+	 * Create message modal with supplied header and body text.
+	 *
+	 * @param string $header The header text.
+	 * @param string $body The body text.
+	 * @param string $color
+	 *
+	 * @return string|null
+	 */
     private function message_modal_html(string $header, string $body, string $color = '#ff9f1c'): ?string
     {
         return "<div class='kudos-donations kudos-message' data-color='$color' data-title='$header' data-body='$body'></div>";

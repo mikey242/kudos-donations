@@ -1,6 +1,6 @@
 <?php
 
-namespace IseardMedia\Kudos\Controller\Rest\Route;
+namespace IseardMedia\Kudos\Controller\Rest;
 
 use Exception;
 use IseardMedia\Kudos\Entity\TransactionEntity;
@@ -10,42 +10,38 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Transaction extends Base
+class Transaction extends AbstractRestController
 {
-    /**
-     * Base route.
-     */
-    protected $base = 'transaction';
-
     /**
      * @var MapperService
      */
-    protected $mapper_service;
+    protected MapperService $mapper_service;
 
     /**
      * Route constructor.
      *
      * @param MapperService $mapper_service
      */
-    public function __construct(MapperService $mapper_service)
-    {
-        $this->mapper_service = $mapper_service;
-    }
+	public function __construct(MapperService $mapper_service) {
+		parent::__construct();
+
+		$this->rest_base = 'transaction';
+		$this->mapper_service = $mapper_service;
+		$this->mapper_service->get_repository(TransactionEntity::class);
+	}
 
     /**
-     * Transaction routes.
+     * TransactionPostType routes.
      */
     public function get_routes(): array
     {
-        $this->mapper_service->get_repository(TransactionEntity::class);
-
         return [
-            $this->get_base()                                          => [
+            ''                                  => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_all'],
                 'permission_callback' => '__return_true',
             ],
-            $this->get_base() . '/get'                                 => [
+            '/get'                                 => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_one'],
                 'args'                => [
@@ -57,7 +53,7 @@ class Transaction extends Base
                 ],
                 'permission_callback' => '__return_true',
             ],
-            $this->get_base() . '/between'                             => [
+            '/between'                             => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_all_between'],
                 'args'                => [
@@ -74,7 +70,7 @@ class Transaction extends Base
                 ],
                 'permission_callback' => '__return_true',
             ],
-            $this->get_base() . '/campaign/(?P<campaign_id>\d+)'       => [
+            '/campaign/(?P<campaign_id>\d+)'       => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_all_campaign'],
                 'args'                => [
@@ -86,7 +82,7 @@ class Transaction extends Base
                 ],
                 'permission_callback' => '__return_true',
             ],
-            $this->get_base() . '/campaign/total/(?P<campaign_id>\d+)' => [
+            '/campaign/total/(?P<campaign_id>\d+)' => [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_total_campaign'],
                 'args'                => [

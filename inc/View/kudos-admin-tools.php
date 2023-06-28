@@ -1,8 +1,5 @@
 <?php
 
-use IseardMedia\Kudos\Helpers\Utils;
-use IseardMedia\Kudos\Service\LoggerService;
-
 /**
  * Debug page render.
  */
@@ -39,97 +36,6 @@ $tab         = $_GET['tab'] ?? $default_tab;
         $url               = admin_url('admin.php?page=kudos-tools');
 
         switch ($tab) :
-
-            case 'log':
-                $url = add_query_arg('tab', 'log', $url);
-                $logger    = new LoggerService();
-                $log_array = $logger->get_as_array();
-                ?>
-
-				<p>Kudos Donations logs to the "<?php
-                    echo $logger->get_table_name() ?>" table in the
-					database.</p>
-
-				<form style="display:inline-block;" action="<?php
-                echo esc_url($url); ?>"
-				      method='post'>
-                    <?php
-                    wp_nonce_field('kudos_log_clear'); ?>
-					<button class="button-secondary confirm" name='kudos_action' type='submit' value='kudos_log_clear'>
-						Clear
-					</button>
-				</form>
-
-				<table class='form-table'>
-					<tbody>
-					<tr>
-						<th class='row-title'>Date</th>
-						<th>Level</th>
-						<th>Message</th>
-						<th>Context</th>
-					</tr>
-
-                    <?php
-                    foreach ($log_array as $key => $log) {
-                        $level   = LoggerService::getLevelName($log['level']);
-                        $style   = 'border-left-width: 4px; border-left-style: solid;';
-                        $message = esc_textarea($log['message']);
-                        $context = esc_textarea($log['context']);
-
-                        switch ($level) {
-                            case 'CRITICAL':
-                            case 'ERROR':
-                                $class = 'notice-error';
-                                break;
-                            case 'DEBUG':
-                                $class = 'notice-debug';
-                                break;
-                            default:
-                                $class = 'notice-' . strtolower($level);
-                        }
-                        ?>
-
-						<tr style='<?php
-                        echo esc_attr($style); ?>'
-						    class='<?php
-                            echo esc_attr((0 === $key % 2 ? 'alternate ' : null) . $class); ?>'>
-
-							<td>
-                                <?php
-                                echo esc_textarea(
-                                    wp_date(
-                                        get_option('date_format') . ' ' . get_option('time_format'),
-                                        strtotime($log['date'])
-                                    )
-                                );
-                                ?>
-							</td>
-							<td>
-                                <?php
-                                echo esc_attr($level); ?>
-							</td>
-							<td title="<?php
-                            echo($message); ?>">
-                                <?php
-                                echo(Utils::truncate_string($message, 255)); ?>
-							</td>
-							<td title="<?php
-                            echo($context); ?>">
-                                <?php
-                                echo(Utils::truncate_string($context, 255)); ?>
-							</td>
-
-						</tr>
-
-                        <?php
-                    } ?>
-
-					</tbody>
-				</table>
-
-                <?php
-
-                break;
 
             case 'actions':
                 $url = add_query_arg('tab', 'actions', $url);

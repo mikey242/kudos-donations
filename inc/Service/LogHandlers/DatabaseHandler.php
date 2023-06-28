@@ -3,14 +3,13 @@
 namespace IseardMedia\Kudos\Service\LogHandlers;
 
 use IseardMedia\Kudos\Helpers\WpDb;
-use IseardMedia\Kudos\Service\LoggerService;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {
     /**
-     * @var \IseardMedia\Kudos\Helpers\WpDb|\wpdb
+     * @var WpDb|\wpdb
      */
     private $wpdb;
 
@@ -30,7 +29,7 @@ class DatabaseHandler extends AbstractProcessingHandler
     {
         $wpdb = $this->wpdb;
 
-        $wpdb->insert($wpdb->prefix . LoggerService::TABLE, [
+        $wpdb->insert($wpdb->prefix . 'kudos_log', [
             'level'   => $record['level'],
             'message' => $record['message'],
             'context' => $record['context'] ? json_encode($record['context']) : '',

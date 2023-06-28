@@ -1,27 +1,25 @@
 <?php
 
-namespace IseardMedia\Kudos\Controller\Rest\Route;
+namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Service\PaymentService;
 use WP_REST_Server;
 
-class Payment extends Base
+class Payment extends AbstractRestController
 {
     /**
-     * Base route.
+     * @var PaymentService
      */
-    protected $base = 'payment';
-
-    /**
-     * @var \IseardMedia\Kudos\Service\PaymentService
-     */
-    private $payment_service;
+    private PaymentService $payment_service;
 
     /**
      * PaymentRoutes constructor.
      */
     public function __construct(PaymentService $payment_service)
     {
+	    parent::__construct();
+
+	    $this->rest_base = 'payment';
         $this->payment_service = $payment_service;
     }
 
@@ -35,7 +33,7 @@ class Payment extends Base
         $payment = $this->payment_service;
 
         return [
-            $this->get_base() . '/create' => [
+            '/create' => [
                 'methods'             => 'POST',
                 'callback'            => [$payment, 'submit_payment'],
                 'permission_callback' => '__return_true',
@@ -113,7 +111,7 @@ class Payment extends Base
                 ],
             ],
 
-            $this->get_base() . '/webhook' => [
+            '/webhook' => [
                 'methods'             => 'POST',
                 'callback'            => [$payment, 'handle_webhook'],
                 'args'                => [
@@ -126,7 +124,7 @@ class Payment extends Base
                 'permission_callback' => '__return_true',
             ],
 
-            $this->get_base() . '/test' => [
+            '/test' => [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [$payment, 'check_api_keys'],
                 'args'                => [

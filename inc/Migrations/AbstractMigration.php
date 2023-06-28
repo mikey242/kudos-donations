@@ -3,18 +3,18 @@
 namespace IseardMedia\Kudos\Migrations;
 
 use IseardMedia\Kudos\Helpers\Settings;
-use IseardMedia\Kudos\Service\LoggerService;
+use Psr\Log\LoggerInterface;
 
 class AbstractMigration
 {
 
     protected const VERSION = '';
     /**
-     * @var \IseardMedia\Kudos\Service\LoggerService
+     * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    public function __construct(LoggerService $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
 

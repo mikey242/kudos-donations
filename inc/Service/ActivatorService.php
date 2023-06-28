@@ -7,6 +7,7 @@ use IseardMedia\Kudos\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Helpers\Settings;
 use IseardMedia\Kudos\Helpers\WpDb;
+use Psr\Log\LoggerInterface;
 
 /**
  * Fired during plugin activation.
@@ -16,30 +17,29 @@ use IseardMedia\Kudos\Helpers\WpDb;
 class ActivatorService
 {
     /**
-     * @var LoggerService
+     * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
     /**
      * @var TwigService
      */
-    private $twig;
+    private TwigService $twig;
     /**
      * @var WpDb|\wpdb
      */
-    private $wpdb;
+    private \wpdb|WpDb $wpdb;
 
-    public function __construct()
+    public function __construct(LoggerInterface $logger)
     {
         $this->wpdb = new WpDb();
-        $this->logger = new LoggerService();
+        $this->logger = $logger;
         $this->twig = new TwigService($this->logger);
     }
 
     /**
      * Runs all activation functions.
      */
-    public function activate()
-    {
+    public function activate(): void {
         self::create_log_table();
         self::create_donors_table();
         self::create_transactions_table();
@@ -62,8 +62,7 @@ class ActivatorService
     /**
      * Creates the log table.
      */
-    private function create_log_table()
-    {
+    private function create_log_table(): void {
         $wpdb = $this->wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
@@ -85,8 +84,7 @@ class ActivatorService
     /**
      * Creates the donors table.
      */
-    private function create_donors_table()
-    {
+    private function create_donors_table(): void {
         $wpdb = $this->wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
@@ -115,8 +113,7 @@ class ActivatorService
     /**
      * Creates the transactions table.
      */
-    private function create_transactions_table()
-    {
+    private function create_transactions_table(): void {
         $wpdb = $this->wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
@@ -149,8 +146,7 @@ class ActivatorService
     /**
      * Creates the subscription table.
      */
-    private function create_subscriptions_table()
-    {
+    private function create_subscriptions_table(): void {
         $wpdb = $this->wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
@@ -180,8 +176,7 @@ class ActivatorService
      *
      * @param string $db_version
      */
-    private function queue_migrations(string $db_version)
-    {
+    private function queue_migrations(string $db_version): void {
         if (version_compare($db_version, KUDOS_VERSION, '<')) {
             $logger = $this->logger;
 

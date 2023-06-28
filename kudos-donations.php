@@ -23,10 +23,6 @@
 
 namespace IseardMedia\Kudos;
 
-use DI\ContainerBuilder;
-use IseardMedia\Kudos\Service\ActivatorService;
-use IseardMedia\Kudos\Service\CompatibilityService;
-use IseardMedia\Kudos\Service\DeactivatorService;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
@@ -42,6 +38,7 @@ require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.ph
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
 define('KUDOS_VERSION', '4.0.0-beta-6');
+define('KUDOS_DB_VERSION', '4.0.0-beta-6');
 define('KUDOS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('KUDOS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/');
@@ -66,58 +63,5 @@ if (class_exists(Run::class) && WP_DEBUG) {
     $run->register();
 }
 
-/**
- * The code that runs during plugin activation.
- */
-function activate_kudos()
-{
-    $activator = new ActivatorService();
-    $activator->activate();
-}
-
-/**
- * The code that runs during plugin deactivation.
- */
-function deactivate_kudos()
-{
-    DeactivatorService::deactivate();
-}
-
-register_activation_hook(__FILE__, __NAMESPACE__ . '\activate_kudos');
-register_deactivation_hook(__FILE__, __NAMESPACE__ . '\deactivate_kudos');
-
-/**
- * The core plugin class that is used to define admin-specific hooks
- * and public-facing site hooks.
- */
-require KUDOS_PLUGIN_DIR . '/inc/KudosDonations.php';
-
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- */
-function run_kudos_donations()
-{
-    // Check compatibility and run kudos if OK
-    $compatibility = new CompatibilityService();
-
-    if ($compatibility->init()) {
-        // Create our container for dependency injection.
-        $builder = new ContainerBuilder();
-        $builder->useAutowiring(true);
-        $builder->addDefinitions(KUDOS_PLUGIN_DIR . '/inc/config.php');
-        if (isset($_ENV['WP_ENV']) && $_ENV['WP_ENV'] !== 'development') {
-            $builder->enableCompilation(KUDOS_STORAGE_DIR . '/php-di/cache');
-        }
-        $container = $builder->build();
-
-        // Create and run our main plugin class.
-        $plugin = new KudosDonations($container, KUDOS_VERSION, 'kudos-donations');
-        $plugin->run();
-    }
-}
-
-run_kudos_donations();
+// Main plugin initialization happens there so that this file is still parsable in PHP < 7.0.
+require KUDOS_PLUGIN_DIR . '/inc/namespace.php';

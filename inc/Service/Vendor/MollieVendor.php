@@ -9,7 +9,6 @@ use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Helpers\CustomPostType;
 use IseardMedia\Kudos\Helpers\Settings;
 use IseardMedia\Kudos\Helpers\Utils;
-use IseardMedia\Kudos\Service\LoggerService;
 use IseardMedia\Kudos\Service\MapperService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
@@ -19,6 +18,7 @@ use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
+use Psr\Log\LoggerInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -35,30 +35,30 @@ class MollieVendor implements VendorInterface
      *
      * @var MollieApiClient
      */
-    private $api_client;
+    private MollieApiClient $api_client;
     /**
      * The API mode (test or live).
      *
      * @var string
      */
-    private $api_mode;
+    private string $api_mode;
     /**
-     * @var \IseardMedia\Kudos\Service\LoggerService
+     * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
     /**
-     * @var \IseardMedia\Kudos\Service\MapperService
+     * @var MapperService
      */
-    private $mapper;
+    private MapperService $mapper;
     /**
      * @var array
      */
-    private $api_keys;
+    private array $api_keys;
 
     /**
      * Mollie constructor.
      */
-    public function __construct(MapperService $mapper_service, LoggerService $logger_service)
+    public function __construct(MapperService $mapper_service, LoggerInterface $logger_service)
     {
         $this->logger = $logger_service;
         $this->mapper = $mapper_service;

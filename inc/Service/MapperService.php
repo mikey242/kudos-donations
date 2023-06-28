@@ -11,19 +11,19 @@ class MapperService
     /**
      * Repository class.
      *
-     * @var AbstractEntity
+     * @var string
      */
-    protected $repository;
+    protected string $repository;
     /**
-     * @var \IseardMedia\Kudos\Helpers\WpDb|\wpdb
+     * @var \wpdb|WpDb
      */
-    private $wpdb;
+    private \wpdb|WpDb $wpdb;
 
-    /**
-     * Entity object constructor.
-     *
-     * @param \Kudos\Helpers\WpDb $wpdb
-     */
+	/**
+	 * Entity object constructor.
+	 *
+	 * @param WpDb $wpdb
+	 */
     public function __construct(WpDb $wpdb)
     {
         $this->wpdb = $wpdb;
@@ -40,8 +40,7 @@ class MapperService
      * @return false|int Returns the id of the record if successful
      *                   and false if not.
      */
-    public function save(AbstractEntity $entity, bool $ignore_null = true)
-    {
+    public function save(AbstractEntity $entity, bool $ignore_null = true): bool|int {
         $entity->last_updated = gmdate('Y-m-d H:i:s', time());
 
         // Set repository if not already set.

@@ -9,6 +9,7 @@ use IseardMedia\Kudos\Helpers\Settings;
 use IseardMedia\Kudos\Helpers\Utils;
 use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 use IseardMedia\Kudos\Service\Vendor\VendorInterface;
+use Psr\Log\LoggerInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -18,19 +19,19 @@ class PaymentService
     /**
      * @var VendorInterface
      */
-    private $vendor;
+    private mixed $vendor;
     /**
-     * @var \IseardMedia\Kudos\Service\MailerService
+     * @var MailerService
      */
-    private $mailer_service;
+    private MailerService $mailer_service;
     /**
-     * @var \IseardMedia\Kudos\Service\MapperService
+     * @var MapperService
      */
-    private $mapper_service;
+    private MapperService $mapper_service;
     /**
-     * @var \IseardMedia\Kudos\Service\LoggerService
+     * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * Payment service constructor.
@@ -38,7 +39,7 @@ class PaymentService
     public function __construct(
         MapperService $mapper_service,
         MailerService $mailer_service,
-        LoggerService $logger_service
+        LoggerInterface $logger_service
     ) {
         $vendor               = $this::get_current_vendor_class();
         $this->vendor         = new $vendor($mapper_service, $logger_service);
@@ -84,8 +85,7 @@ class PaymentService
      *
      * @param string $order_id
      */
-    public static function schedule_process_transaction(string $order_id)
-    {
+    public static function schedule_process_transaction(string $order_id): void {
         Utils::schedule_action(
             strtotime('+1 minute'),
             'kudos_process_transaction',
@@ -103,13 +103,12 @@ class PaymentService
         return static::get_current_vendor_class()::get_vendor_name();
     }
 
-    /**
-     * Check the vendor api key associated with the mode. Sends a JSON response.
-     *
-     * @param \WP_REST_Request|null $request
-     */
-    public function check_api_keys(WP_REST_Request $request)
-    {
+	/**
+	 * Check the vendor api key associated with the mode. Sends a JSON response.
+	 *
+	 * @param WP_REST_Request $request
+	 */
+    public function check_api_keys(WP_REST_Request $request): void {
         $this->vendor->check_api_keys($request);
     }
 
@@ -150,8 +149,7 @@ class PaymentService
      * @param WP_REST_Request $request
      *
      */
-    public function submit_payment(WP_REST_Request $request)
-    {
+    public function submit_payment(WP_REST_Request $request): void {
         // Verify nonce.
         if ( ! wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest')) {
             wp_send_json_error([
@@ -339,8 +337,7 @@ class PaymentService
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function handle_webhook(WP_REST_Request $request)
-    {
+    public function handle_webhook(WP_REST_Request $request): WP_Error|WP_REST_Response {
         return $this->vendor->rest_webhook($request);
     }
 }

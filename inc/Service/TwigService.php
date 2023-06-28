@@ -5,6 +5,7 @@ namespace IseardMedia\Kudos\Service;
 use FilesystemIterator;
 use IseardMedia\Kudos\Helpers\Assets;
 use IseardMedia\Kudos\Helpers\Utils;
+use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Throwable;
@@ -23,34 +24,34 @@ class TwigService
      *
      * @var array
      */
-    public $template_paths;
+    public array $template_paths;
     /**
      * Twig environment.
      *
      * @var Environment
      */
-    private $twig;
+    private Environment $twig;
     /**
      * Twig options
      *
      * @var array
      */
-    private $options;
+    private array $options;
     /**
-     * @var \IseardMedia\Kudos\Service\LoggerService
+     * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
     /**
-     * @var \Twig\Loader\FilesystemLoader
+     * @var FilesystemLoader
      */
-    private $loader;
+    private FilesystemLoader $loader;
 
     /**
      * Twig constructor
      *
-     * @param \IseardMedia\Kudos\Service\LoggerService $logger_service
+     * @param LoggerInterface $logger_service
      */
-    public function __construct(LoggerService $logger_service)
+    public function __construct(LoggerInterface $logger_service)
     {
         $this->logger           = $logger_service;
         $this->template_paths   = [KUDOS_PLUGIN_DIR . '/templates/'];
@@ -63,8 +64,7 @@ class TwigService
     /**
      * Initialize environment and loaders.
      */
-    public function initialize_twig()
-    {
+    public function initialize_twig(): void {
         $paths  = apply_filters('kudos_twig_template_paths', $this->template_paths);
         $loader = $this->loader;
 
@@ -79,8 +79,7 @@ class TwigService
         $this->initialize_twig_filters();
     }
 
-    public function add_path(string $path, $namespace = null)
-    {
+    public function add_path(string $path, $namespace = null): void {
         $loader = $this->loader;
         try {
             if (is_string($namespace)) {
@@ -96,8 +95,7 @@ class TwigService
     /**
      * Initialize additional twig extensions
      */
-    public function initialize_twig_extensions()
-    {
+    public function initialize_twig_extensions(): void {
         if (KUDOS_DEBUG) {
             $this->twig->addExtension(new DebugExtension());
         }
@@ -108,8 +106,7 @@ class TwigService
      *
      * @source https://wordpress.stackexchange.com/questions/287988/use-str-to-translate-strings-symfony-twig
      */
-    public function initialize_twig_functions()
-    {
+    public function initialize_twig_functions(): void {
         /**
          * Add gettext __ function.
          */
@@ -150,8 +147,7 @@ class TwigService
     /**
      * Initialize additional twig filters
      */
-    public function initialize_twig_filters()
-    {
+    public function initialize_twig_filters(): void {
         /**
          * Add the WordPress apply_filters filter.
          */
@@ -184,8 +180,7 @@ class TwigService
     /**
      * Create the twig cache directory
      */
-    public function init()
-    {
+    public function init(): void {
         $logger = $this->logger;
 
         if (wp_mkdir_p(self::CACHE_DIR)) {
@@ -231,8 +226,7 @@ class TwigService
      *
      * @return string|bool
      */
-    public function render(string $template, array $array = [])
-    {
+    public function render(string $template, array $array = []): bool|string {
         try {
             return $this->twig->render($template, $array);
         } catch (Throwable $e) {

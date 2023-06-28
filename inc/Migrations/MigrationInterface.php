@@ -2,14 +2,14 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Service\LoggerService;
+use Psr\Log\LoggerInterface;
 
 interface MigrationInterface
 {
     /**
      * Migration constructor.
      */
-    public function __construct(LoggerService $logger);
+    public function __construct(LoggerInterface $logger);
 
     /**
      * Run the migrations and return true if successful.

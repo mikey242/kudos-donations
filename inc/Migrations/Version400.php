@@ -18,7 +18,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
      */
     protected $campaigns;
     /**
-     * @var \IseardMedia\Kudos\Service\MapperService
+     * @var MapperService
      */
     private $mapper;
     /**
@@ -55,8 +55,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
     /**
      * @return void
      */
-    public function migrate_campaigns()
-    {
+    public function migrate_campaigns(): void {
         $old_campaigns = Settings::get_setting('campaigns');
         if ($old_campaigns) {
             foreach ($old_campaigns as $old_campaign) {
@@ -109,8 +108,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
         $this->logger->info(__('No old campaigns found', 'kudos-donations'));
     }
 
-    public function migrate_transactions()
-    {
+    public function migrate_transactions(): void {
         if ( ! empty($this->campaigns)) {
             $campaigns          = $this->campaigns;
             $this->transactions = [];
@@ -134,8 +132,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
         }
     }
 
-    private function migrate_blocks()
-    {
+    private function migrate_blocks(): void {
         if ( ! empty($this->campaigns)) {
             foreach ($this->posts as $post) {
                 $new_content = Blocks::getNewContent($post->ID, function ($block) {
@@ -157,8 +154,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
         }
     }
 
-    private function migrate_smtp()
-    {
+    private function migrate_smtp(): void {
         $from       = Settings::get_setting('smtp_from');
         $host       = Settings::get_setting('smtp_host');
         $port       = Settings::get_setting('smtp_port');

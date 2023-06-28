@@ -4,17 +4,17 @@ namespace IseardMedia\Kudos\Migrations;
 
 use Exception;
 use IseardMedia\Kudos\Helpers\Settings;
-use IseardMedia\Kudos\Service\LoggerService;
+use Psr\Log\LoggerInterface;
 
 class Migrator
 {
 
     /**
-     * @var \IseardMedia\Kudos\Service\LoggerService
+     * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
-    public function __construct(LoggerService $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -24,10 +24,9 @@ class Migrator
      * @param bool $force
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public function migrate(string $version, bool $force = false)
-    {
+    public function migrate(string $version, bool $force = false): void {
         // Remove dots from version.
         $version = str_replace('.', '', $version);
 
