@@ -1,7 +1,6 @@
 import { createRoot } from '@wordpress/element';
 import React from 'react';
 import SettingsPage from '../components/settings/SettingsPage';
-import '../../assets/images/logo-colour-40.png';
 import SettingsProvider from '../contexts/SettingsContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import Render from '../components/Render';
