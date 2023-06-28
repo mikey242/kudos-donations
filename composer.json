@@ -5,7 +5,7 @@
     "classmap-authoritative": true,
     "optimize-autoloader": true,
     "platform": {
-      "php": "7.4"
+      "php": "8.0"
     },
     "allow-plugins": {
       "typisttech/imposter-plugin": false,
@@ -13,7 +13,7 @@
     }
   },
   "require": {
-    "php": "^7.4 | ^8.0",
+    "php": "^8.0",
     "symfony/polyfill-mbstring": "1.20.*",
     "symfony/polyfill-ctype": "1.20.*",
     "mollie/mollie-api-php": "^2.32.0",
@@ -21,7 +21,7 @@
     "twig/twig": "^3.0",
     "ext-json": "*",
     "psr/log": "1.1.*",
-    "php-di/php-di": "^6.3",
+    "php-di/php-di": "^7.0",
     "php-di/invoker": "2.0.0",
     "woocommerce/action-scheduler": "^3.5"
   },
