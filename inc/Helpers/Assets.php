@@ -68,6 +68,6 @@ class Assets
      */
     public static function get_asset_path(string $asset): string
     {
-        return KUDOS_PLUGIN_DIR . '/dist/' . ltrim($asset, '/');
+        return KUDOS_PLUGIN_DIR . 'build/' . ltrim($asset, '/');
     }
 }
