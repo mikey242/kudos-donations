@@ -2,6 +2,8 @@
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Admin\Notice\AdminDismissibleNotice;
+
 class CompatibilityService
 {
     /**
@@ -42,7 +44,7 @@ class CompatibilityService
         /* Check if any errors were thrown, enqueue them and exit early */
         if (sizeof($this->notices) > 0) {
             $notice = $this->build_notice();
-            new AdminNotice($notice['error'], 'error', $notice['details']);
+	        (new AdminDismissibleNotice())->error($notice['error'], 'error', $notice['details']);
 
             return false;
         }

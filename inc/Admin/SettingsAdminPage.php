@@ -1,39 +1,66 @@
 <?php
+/**
+ * Settings Admin Page.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
+
+declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Helpers\Assets;
-use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helper\Assets;
+use IseardMedia\Kudos\Helper\Settings;
+use IseardMedia\Kudos\Infrastructure\Admin\AbstractAdminPage;
+use IseardMedia\Kudos\Infrastructure\Admin\HasAssetsInterface;
+use IseardMedia\Kudos\Infrastructure\Admin\HasCallbackInterface;
 
-class SettingsAdminPage extends AbstractAdminPage {
+class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_page_title(): string {
-		return __('Kudos settings', 'kudos-donations');
+		return __( 'Kudos settings', 'kudos-donations' );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_menu_title(): string {
-		return __('Settings', 'kudos-donations');
+		return __( 'Settings', 'kudos-donations' );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_menu_slug(): string {
 		return 'kudos-settings';
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function callback(): void {
 		echo '<div id="kudos-settings"></div>';
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function register_assets(): void {
-		// Enqueue the styles
+		// Enqueue the styles.
 		wp_enqueue_style(
 			'kudos-donations-settings',
-			Assets::get_style('admin/kudos-admin-settings.jsx.css'),
+			Assets::get_style( 'admin/kudos-admin-settings.jsx.css' ),
 			[],
 			KUDOS_VERSION
 		);
 
-		// Get and enqueue the script
-		$admin_js = Assets::get_script('admin/kudos-admin-settings.jsx.js');
+		// Get and enqueue the script.
+		$admin_js = Assets::get_script( 'admin/kudos-admin-settings.jsx.js' );
 		wp_enqueue_script(
 			'kudos-donations-settings',
 			$admin_js['url'],
@@ -47,10 +74,17 @@ class SettingsAdminPage extends AbstractAdminPage {
 			'kudos',
 			[
 				'version'            => KUDOS_VERSION,
-				'migrations_pending' => (bool)Settings::get_setting('migrations_pending'),
-				'stylesheets'        => [Assets::get_style('admin/kudos-admin-settings.jsx.css')],
+				'migrations_pending' => (bool) Settings::get_setting( 'migrations_pending' ),
+				'stylesheets'        => [ Assets::get_style( 'admin/kudos-admin-settings.jsx.css' ) ],
 			]
 		);
-		wp_set_script_translations('kudos-donations-settings', 'kudos-donations');
+		wp_set_script_translations( 'kudos-donations-settings', 'kudos-donations' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_position(): int {
+		return 10;
 	}
 }

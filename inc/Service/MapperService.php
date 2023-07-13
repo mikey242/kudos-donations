@@ -2,9 +2,9 @@
 
 namespace IseardMedia\Kudos\Service;
 
-use IseardMedia\Kudos\Entity\AbstractEntity;
-use IseardMedia\Kudos\Helpers\Settings;
-use IseardMedia\Kudos\Helpers\WpDb;
+use IseardMedia\Kudos\Helper\Settings;
+use IseardMedia\Kudos\Helper\WpDb;
+use IseardMedia\Kudos\Infrastructure\Entity\AbstractEntity;
 
 class MapperService
 {

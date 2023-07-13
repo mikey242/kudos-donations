@@ -2,6 +2,7 @@
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Infrastructure\Controller\AbstractRestController;
 use IseardMedia\Kudos\Service\PaymentService;
 use WP_REST_Server;
 

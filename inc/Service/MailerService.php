@@ -2,12 +2,11 @@
 
 namespace IseardMedia\Kudos\Service;
 
-use IseardMedia\Kudos\Entity\DonorEntity;
-use IseardMedia\Kudos\Entity\SubscriptionEntity;
-use IseardMedia\Kudos\Entity\TransactionEntity;
-use IseardMedia\Kudos\Helpers\Assets;
-use IseardMedia\Kudos\Helpers\Settings;
-use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helper\Settings;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;

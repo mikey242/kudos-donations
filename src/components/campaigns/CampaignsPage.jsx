@@ -87,8 +87,8 @@ const CampaignsPage = () => {
 					setTimeout(() => {
 						createNotification(
 							data.status === 'draft'
-								? __('CampaignPostType created', 'kudos-donations')
-								: __('CampaignPostType updated', 'kudos-donations'),
+								? __('Campaign created', 'kudos-donations')
+								: __('Campaign updated', 'kudos-donations'),
 							true
 						);
 						getCampaigns().then(() => resolve());
@@ -108,7 +108,7 @@ const CampaignsPage = () => {
 			path: `wp/v2/kudos_campaign/${id}?force=true`,
 			method: 'DELETE',
 		}).then(() => {
-			createNotification(__('CampaignPostType deleted', 'kudos-donations'), true);
+			createNotification(__('Campaign deleted', 'kudos-donations'), true);
 			return getCampaigns();
 		});
 	};

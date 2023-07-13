@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Helpers;
+namespace IseardMedia\Kudos\Helper;
 
 /**
  * Connect to global $wpdb instance from a proper class.

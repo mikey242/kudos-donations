@@ -3,8 +3,6 @@
  * Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
  *
  * @link              https://www.linkedin.com/in/michael-iseard/
- * @author            Michael Iseard
- * @package           Kudos-Donations
  *
  * @wordpress-plugin
  * Plugin Name:       Kudos Donations
@@ -28,8 +26,8 @@ use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
 // If this file is called directly, abort.
-if ( ! defined('WPINC')) {
-    die;
+if ( ! \defined( 'WPINC' ) ) {
+	die;
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -51,13 +49,13 @@ if ( empty( $_ENV['APP_ENV'] ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-define('KUDOS_VERSION', '4.0.0-beta-6');
-define('KUDOS_DB_VERSION', '4.0.0-beta-6');
-define('KUDOS_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('KUDOS_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/');
-define('KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/');
-define('KUDOS_DEBUG', get_option('_kudos_debug_mode'));
+\define( 'KUDOS_VERSION', '4.0.0-beta-6' );
+\define( 'KUDOS_DB_VERSION', '4.0.0-beta-6' );
+\define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+\define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+\define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
+\define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
+\define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
 
 /**
  * Check if we are in development mode and if so replace the default
@@ -65,16 +63,16 @@ define('KUDOS_DEBUG', get_option('_kudos_debug_mode'));
  *
  * @link https://github.com/filp/whoops
  */
-if (class_exists(Run::class) && WP_DEBUG) {
-    $run     = new Run();
-    $handler = new PrettyPageHandler();
+if ( class_exists( Run::class ) && WP_DEBUG ) {
+	$run     = new Run();
+	$handler = new PrettyPageHandler();
 
-    // Set the title of the error page.
-    $handler->setPageTitle("Whoops! There was a problem.");
-    $run->pushHandler($handler);
+	// Set the title of the error page.
+	$handler->setPageTitle( 'Whoops! There was a problem.' );
+	$run->pushHandler( $handler );
 
-    // Register the handler with PHP.
-    $run->register();
+	// Register the handler with PHP.
+	$run->register();
 }
 
 // Main plugin initialization happens there so that this file is still parsable in PHP < 7.0.

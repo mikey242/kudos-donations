@@ -9,16 +9,10 @@
 
 namespace IseardMedia\Kudos\Infrastructure\Domain;
 
-/**
- * Interface for declaring an entity has fields to register.
- */
 interface HasMetaFieldsInterface {
 
 	/**
 	 * Get meta fields to register.
-	 *
-	 * @return array
 	 */
-	public function get_meta_fields(): array;
-
+	public static function get_meta_config(): array;
 }

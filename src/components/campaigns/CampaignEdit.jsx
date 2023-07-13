@@ -67,7 +67,7 @@ function CampaignEdit({
 				<Fragment>
 					<TextControl
 						name="title"
-						label={__('CampaignPostType name', 'kudos-donations')}
+						label={__('Campaign name', 'kudos-donations')}
 						help={__(
 							'Give your campaign a unique name.',
 							'kudos-donations'

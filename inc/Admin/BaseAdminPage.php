@@ -1,29 +1,55 @@
 <?php
+/**
+ * Base Admin Page.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
+
+declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
+use IseardMedia\Kudos\Infrastructure\Admin\AbstractAdminPage;
+
 class BaseAdminPage extends AbstractAdminPage {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function register(): void {
 		$this->register_parent_page();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_page_title(): string {
-		return __('Kudos', 'kudos-donations');
+		return __( 'Kudos', 'kudos-donations' );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_menu_title(): string {
-		return __('Donations', 'kudos-donations');
+		return __( 'Donations', 'kudos-donations' );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_menu_slug(): string {
 		return 'kudos-campaigns';
 	}
 
+	/**
+	 * Register the parent page.
+	 */
 	public function register_parent_page(): void {
 		add_menu_page(
-			__('Kudos', 'kudos-donations'),
-			__('Donations', 'kudos-donations'),
+			__( 'Kudos', 'kudos-donations' ),
+			__( 'Donations', 'kudos-donations' ),
 			$this->get_capability(),
 			$this->get_parent_slug(),
 			false,
@@ -32,8 +58,4 @@ class BaseAdminPage extends AbstractAdminPage {
 			)
 		);
 	}
-
-	public function callback(): void {}
-
-	public function register_assets(): void {}
 }

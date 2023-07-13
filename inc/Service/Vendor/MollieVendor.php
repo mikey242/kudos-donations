@@ -3,13 +3,12 @@
 namespace IseardMedia\Kudos\Service\Vendor;
 
 use Exception;
-use IseardMedia\Kudos\Entity\DonorEntity;
-use IseardMedia\Kudos\Entity\SubscriptionEntity;
-use IseardMedia\Kudos\Entity\TransactionEntity;
-use IseardMedia\Kudos\Helpers\CustomPostType;
-use IseardMedia\Kudos\Helpers\Settings;
-use IseardMedia\Kudos\Helpers\Utils;
-use IseardMedia\Kudos\Service\MapperService;
+use IseardMedia\Kudos\Domain\PostType\DonorPostType;
+use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
+use IseardMedia\Kudos\Helper\CustomPostType;
+use IseardMedia\Kudos\Helper\Settings;
+use IseardMedia\Kudos\Helper\Utils;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
@@ -20,6 +19,7 @@ use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
 use Psr\Log\LoggerInterface;
 use WP_Error;
+use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -47,10 +47,6 @@ class MollieVendor implements VendorInterface
      */
     private LoggerInterface $logger;
     /**
-     * @var MapperService
-     */
-    private MapperService $mapper;
-    /**
      * @var array
      */
     private array $api_keys;
@@ -58,10 +54,9 @@ class MollieVendor implements VendorInterface
     /**
      * Mollie constructor.
      */
-    public function __construct(MapperService $mapper_service, LoggerInterface $logger_service)
+    public function __construct(LoggerInterface $logger_service)
     {
         $this->logger = $logger_service;
-        $this->mapper = $mapper_service;
 
         $settings = Settings::get_setting('vendor_mollie');
 
@@ -80,8 +75,7 @@ class MollieVendor implements VendorInterface
     /**
      * Change the API client to the key for the specified mode.
      */
-    private function set_api_mode(?string $mode)
-    {
+    private function set_api_mode(?string $mode): void {
         $this->api_mode = $mode;
         // Gets the key associated with the specified mode.
         $key = $this->api_keys[$mode] ?? false;
@@ -98,8 +92,7 @@ class MollieVendor implements VendorInterface
     /**
      * Sets the user agent for identifying requests made with this plugin.
      */
-    private function set_user_agent()
-    {
+    private function set_user_agent(): void {
         global $wp_version;
         $this->api_client->addVersionString("KudosDonations/" . KUDOS_VERSION);
         $this->api_client->addVersionString("WordPress/" . $wp_version);
@@ -119,21 +112,17 @@ class MollieVendor implements VendorInterface
      */
     public static function get_sequence_type(string $text): string
     {
-        switch ($text) {
-            case 'oneoff':
-                return __('One-off', 'kudos-donations');
-            case 'first':
-                return __('Recurring (first payment)', 'kudos-donations');
-            default:
-                return __('Recurring', 'kudos-donations');
-        }
+	    return match ( $text ) {
+		    'oneoff' => __( 'One-off', 'kudos-donations' ),
+		    'first' => __( 'Recurring (first payment)', 'kudos-donations' ),
+		    default => __( 'Recurring', 'kudos-donations' ),
+	    };
     }
 
     /**
      * Check the Mollie api keys for both test and live keys. Sends a JSON response.
      */
-    public function check_api_keys(WP_REST_Request $request)
-    {
+    public function check_api_keys(WP_REST_Request $request): void {
         $keys = $request->get_param('keys');
 
         if ($keys) {
@@ -295,8 +284,7 @@ class MollieVendor implements VendorInterface
      *
      * @return BaseCollection|MethodCollection|null
      */
-    public function get_payment_methods(array $options = [])
-    {
+    public function get_payment_methods(array $options = []): BaseCollection|MethodCollection|null {
         try {
             return $this->api_client->methods->allActive($options);
         } catch (ApiException $e) {
@@ -309,16 +297,15 @@ class MollieVendor implements VendorInterface
     /**
      * Returns all subscriptions for customer.
      *
-     * @param string $customer_id Mollie customer id.
+     * @param string $vendor_id Mollie customer id.
      *
      * @return SubscriptionCollection|false
      */
-    public function get_subscriptions(string $customer_id)
-    {
+    public function get_subscriptions(string $vendor_id): bool|SubscriptionCollection {
         $mollie_api = $this->api_client;
 
         try {
-            $customer = $mollie_api->customers->get($customer_id);
+            $customer = $mollie_api->customers->get($vendor_id);
 
             return $customer->subscriptions();
         } catch (ApiException $e) {
@@ -331,13 +318,13 @@ class MollieVendor implements VendorInterface
     /**
      * Cancel the specified subscription.
      *
-     * @param SubscriptionEntity $subscription Instance of SubscriptionEntity.
+     * @param WP_Post $subscription Instance of WP_Post.
      *
      * @return bool
      */
-    public function cancel_subscription(SubscriptionEntity $subscription): bool
+    public function cancel_subscription( WP_Post $subscription): bool
     {
-        $customer = $this->get_customer($subscription->customer_id);
+        $customer = $this->get_customer($subscription->vendor_id);
 
         // Bail if no subscription found locally or if not active.
         if ('active' !== $subscription->status || null === $customer) {
@@ -349,7 +336,7 @@ class MollieVendor implements VendorInterface
             $response = $customer->cancelSubscription($subscription->subscription_id);
 
             /** @var Subscription $response */
-            return ($response->status === 'canceled');
+            return ($response->status === PaymentStatus::CANCELED);
         } catch (ApiException $e) {
             $this->logger->error($e->getMessage());
 
@@ -360,14 +347,14 @@ class MollieVendor implements VendorInterface
     /**
      * Get the customer from Mollie.
      *
-     * @param $customer_id
+     * @param string $vendor_customer_id
      *
      * @return Customer|null
      */
-    public function get_customer($customer_id): ?Customer
+    public function get_customer($vendor_customer_id): ?Customer
     {
         try {
-            return $this->api_client->customers->get($customer_id);
+            return $this->api_client->customers->get($vendor_customer_id);
         } catch (ApiException $e) {
             $this->logger->critical($e->getMessage());
 
@@ -382,8 +369,7 @@ class MollieVendor implements VendorInterface
      *
      * @return bool|Payment
      */
-    public function get_payment(string $vendor_payment_id)
-    {
+    public function get_payment(string $vendor_payment_id): bool|Payment {
         try {
             return $this->api_client->payments->get($vendor_payment_id);
         } catch (ApiException $e) {
@@ -401,8 +387,7 @@ class MollieVendor implements VendorInterface
      *
      * @return bool|Customer
      */
-    public function create_customer(string $email, string $name)
-    {
+    public function create_customer(string $email, string $name): Customer|bool {
         $customer_array = [
             'email' => $email,
         ];
@@ -425,13 +410,12 @@ class MollieVendor implements VendorInterface
      *
      * @param array $payment_args Parameters to pass to mollie to create a payment.
      * @param $order_id
-     * @param string|null $customer_id
+     * @param string|null $vendor_customer_id
      *
      * @return string
      */
-    public function create_payment(array $payment_args, $order_id, ?string $customer_id): string
+    public function create_payment(array $payment_args, $order_id, ?string $vendor_customer_id): string
     {
-//        wp_send_json_error($payment_args);
         // Set payment frequency.
         $payment_args['payment_frequency'] = $payment_args['recurring'] === "true" ? $payment_args['recurring_frequency'] : 'oneoff';
         $payment_args['value']             = number_format($payment_args['value'], 2, '.', '');
@@ -483,8 +467,8 @@ class MollieVendor implements VendorInterface
         ];
 
         // Link payment to customer if specified.
-        if ($customer_id) {
-            $payment_array['customerId'] = $customer_id;
+        if ($vendor_customer_id) {
+            $payment_array['customerId'] = $vendor_customer_id;
         }
 
         try {
@@ -512,18 +496,13 @@ class MollieVendor implements VendorInterface
      */
     public static function get_frequency_name(string $frequency): string
     {
-        switch ($frequency) {
-            case '12 months':
-                return __('Yearly', 'kudos-donations');
-            case '1 month':
-                return __('Monthly', 'kudos-donations');
-            case '3 months':
-                return __('Quarterly', 'kudos-donations');
-            case 'oneoff':
-                return __('One-off', 'kudos-donations');
-            default:
-                return $frequency;
-        }
+	    return match ( $frequency ) {
+		    '12 months' => __( 'Yearly', 'kudos-donations' ),
+		    '1 month' => __( 'Monthly', 'kudos-donations' ),
+		    '3 months' => __( 'Quarterly', 'kudos-donations' ),
+		    'oneoff' => __( 'One-off', 'kudos-donations' ),
+		    default => $frequency,
+	    };
     }
 
     /**
@@ -537,7 +516,7 @@ class MollieVendor implements VendorInterface
 
         // Use APP_URL if defined in .env file.
         if (isset($_ENV['APP_URL'])) {
-            return $_ENV['APP_URL'] . 'wp-json/' . $route;
+            return $_ENV['APP_URL'] . '/wp-json/' . $route;
         }
 
         // Otherwise, return normal rest URL.
@@ -551,8 +530,7 @@ class MollieVendor implements VendorInterface
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function rest_webhook(WP_REST_Request $request)
-    {
+    public function rest_webhook(WP_REST_Request $request): WP_Error|WP_REST_Response {
         // Sanitize request params.
         $request->sanitize_params();
 
@@ -599,7 +577,7 @@ class MollieVendor implements VendorInterface
             $this->logger->debug(
                 "Payment retrieved from Mollie.",
                 [
-                    'transaction_id' => $payment_id,
+                    'vendor_id'      => $payment_id,
                     'status'         => $payment->status,
                     'sequence_type'  => $payment->sequenceType,
                     'has_refunds'    => $payment->hasRefunds(),
@@ -607,36 +585,29 @@ class MollieVendor implements VendorInterface
             );
 
             /**
-             * Get transaction from database.
-             * e.g. One-off, First, Recurring (only with refunds).
-             *
-             * @var TransactionEntity $transaction
-             */
-            $transaction = $this->mapper
-                ->get_repository(TransactionEntity::class)
-                ->get_one_by(
-                    [
-                        'order_id'       => $payment->metadata->order_id ?? '',
-                        // Recurring payment objects do not have metadata.
-                        'transaction_id' => $payment_id,
-                    ],
-                    'OR'
-                );
-
-            /**
-             * Create new transaction if this is a recurring payment and none found.
+             * Create new transaction if this is a recurring payment.
              * e.g. New recurring payment.
              */
-            if ( ! $transaction && $payment->hasSequenceTypeRecurring()) {
+            if ( $payment->hasSequenceTypeRecurring()) {
                 $this->logger->debug('Recurring payment received, creating transaction.', [
                     'subscription_id' => $payment->subscriptionId,
                 ]);
                 $customer     = $mollie->customers->get($payment->customerId);
                 $subscription = $customer->getSubscription($payment->subscriptionId);
-                $transaction  = new TransactionEntity([
-                    'order_id'    => Utils::generate_id('kdo_'),
-                    'campaign_id' => $subscription->metadata->campaign_id ?? '',
-                ]);
+				$order_id = Utils::generate_id('kdo_');
+                $transaction  = TransactionPostType::save(
+					[],
+					[
+	                    'order_id'    => $order_id,
+	                    'campaign_id' => $subscription->metadata->campaign_id ?? '',
+                    ]
+                );
+            } else {
+	            $transaction = TransactionPostType::get_by_meta(
+		            [
+			            'order_id'   => $payment->metadata->order_id
+		            ]
+	            )[0] ?? null;
             }
 
             /**
@@ -649,19 +620,16 @@ class MollieVendor implements VendorInterface
             if ( ! $transaction) {
                 $this->logger->warning(
                     'Webhook received for unknown transaction. Aborting',
-                    ['transaction_id' => $payment_id]
+                    ['vendor_id' => $payment_id]
                 );
 
                 return $response;
             }
 
             // Update transaction status.
-            $transaction->set_fields(
-                [
-                    'status' => $payment->status,
-                    $payment->status,
-                ]
-            );
+	        TransactionPostType::update_meta($transaction->ID, [
+		        'status' => $payment->status
+	        ]);
 
             // Create action with order_id as parameter.
             do_action("kudos_transaction_$payment->status", $transaction->order_id);
@@ -678,19 +646,17 @@ class MollieVendor implements VendorInterface
                 }
 
                 // Update transaction.
-                $transaction->set_fields(
-                    [
-                        'status'          => $payment->status,
-                        'transaction_id'  => $payment->id,
-                        'customer_id'     => $payment->customerId,
-                        'value'           => $payment->amount->value,
-                        'currency'        => $payment->amount->currency,
-                        'sequence_type'   => $payment->sequenceType,
-                        'method'          => $payment->method,
-                        'mode'            => $payment->mode,
-                        'subscription_id' => $payment->subscriptionId,
-                    ]
-                );
+	            TransactionPostType::update_meta($transaction->ID, [
+		            'status'                => $payment->status,
+		            'vendor_payment_id'     => $payment->id,
+		            'vendor_customer_id'    => $payment->customerId,
+		            'value'                 => $payment->amount->value,
+		            'currency'              => $payment->amount->currency,
+		            'sequence_type'         => $payment->sequenceType,
+		            'method'                => $payment->method,
+		            'mode'                  => $payment->mode,
+		            'subscription_id'       => $payment->subscriptionId,
+	            ]);
 
                 // Set up recurring payment if sequence is first.
                 if ($payment->hasSequenceTypeFirst()) {
@@ -734,19 +700,13 @@ class MollieVendor implements VendorInterface
             );
         }
 
-        /**
-         * Save transaction to database and
-         * return response to Mollie.
-         */
-        $this->mapper->save($transaction);
-
         return $response;
     }
 
     /**
      * Creates a subscription based on the provided TransactionEntity
      *
-     * @param TransactionEntity $transaction
+     * @param WP_Post $transaction
      * @param string $mandate_id
      * @param string $interval
      * @param string $years
@@ -754,12 +714,12 @@ class MollieVendor implements VendorInterface
      * @return false|Subscription
      */
     public function create_subscription(
-        TransactionEntity $transaction,
+        WP_Post $transaction,
         string $mandate_id,
         string $interval,
         string $years
     ) {
-        $customer_id = $transaction->customer_id;
+        $vendor_id = $transaction->vendor_id;
         $start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
         $currency    = 'EUR';
         $value       = number_format($transaction->value, 2);
@@ -792,7 +752,7 @@ class MollieVendor implements VendorInterface
             $subscription_array['times'] = Utils::get_times_from_years($years, $interval);
         }
 
-        $customer      = $this->get_customer($customer_id);
+        $customer      = $this->get_customer($vendor_id);
         $valid_mandate = $this->check_mandate($customer, $mandate_id);
 
         // Create subscription if valid mandate found
@@ -802,7 +762,7 @@ class MollieVendor implements VendorInterface
                 $kudos_subscription = new SubscriptionEntity(
                     [
                         'transaction_id'  => $transaction->transaction_id,
-                        'customer_id'     => $customer_id,
+                        'vendor_id'     => $vendor_id,
                         'frequency'       => $interval,
                         'years'           => $years,
                         'value'           => $value,
@@ -829,14 +789,14 @@ class MollieVendor implements VendorInterface
         // No valid mandates
         $this->logger->error(
             'Cannot create subscription as customer has no valid mandates.',
-            [$customer_id]
+            [$vendor_id]
         );
 
         return false;
     }
 
     /**
-     * Check the provided customer for valid mandates
+     * Check the provided customer for valid mandates.
      *
      * @param Customer $customer
      * @param string $mandate_id
@@ -866,39 +826,41 @@ class MollieVendor implements VendorInterface
     public function sync_transactions(): int
     {
         $updated = 0;
-        $mapper  = $this->mapper;
-        $mapper->get_repository(DonorEntity::class);
-        $donors = $mapper->get_all_by();
-        /** @var DonorEntity $donor */
+        $donors = DonorPostType::get_all();
         foreach ($donors as $donor) {
-            $customer_id = $donor->customer_id;
+            $vendor_id = $donor->vendor_id;
             if ($donor->mode !== $this->api_mode) {
                 $this->set_api_mode($donor->mode);
             }
-            $customer = $this->get_customer($customer_id);
+            $customer = $this->get_customer($vendor_id);
             if ($customer) {
                 try {
                     $payments = $customer->payments();
                     foreach ($payments as $payment) {
                         $amount   = $payment->amount;
                         $order_id = $payment->metadata->order_id ?? null;
-                        $mapper->get_repository(TransactionEntity::class);
 
                         if ($order_id) {
                             /**
                              * Find existing transaction.
                              * @var TransactionEntity $transaction
                              */
-                            $transaction = $mapper->get_one_by([
-                                'order_id' => $order_id,
-                                'status'   => 'open',
+                            $transaction = TransactionPostType::get_by_meta_query([
+								[
+									'key' => 'order_id',
+									'value' => $order_id
+								],
+								[
+									'key' => 'status',
+									'value' => 'open'
+								]
                             ]);
 
                             if ($transaction) {
                                 $transaction->set_fields(
                                     [
                                         'status'          => $payment->status,
-                                        'customer_id'     => $payment->customerId,
+                                        'vendor_customer_id'     => $payment->customerId,
                                         'value'           => $amount->value,
                                         'currency'        => $amount->currency,
                                         'sequence_type'   => $payment->sequenceType,
@@ -938,11 +900,11 @@ class MollieVendor implements VendorInterface
         $donors = $mapper->get_all_by();
         /** @var DonorEntity $donor */
         foreach ($donors as $donor) {
-            $customer_id = $donor->customer_id;
+            $vendor_id = $donor->vendor_id;
             if ($donor->mode !== $this->api_mode) {
                 $this->set_api_mode($donor->mode);
             }
-            $customer = $this->get_customer($customer_id);
+            $customer = $this->get_customer($vendor_id);
             if ($customer) {
                 try {
                     $payments = $customer->payments();
@@ -966,7 +928,7 @@ class MollieVendor implements VendorInterface
                                     'order_id'        => $order_id,
                                     'created'         => $payment->createdAt,
                                     'status'          => $payment->status,
-                                    'customer_id'     => $payment->customerId,
+                                    'vendor_id'     => $payment->customerId,
                                     'value'           => $payment->amount->value,
                                     'currency'        => $payment->amount->currency,
                                     'sequence_type'   => $payment->sequenceType,
@@ -1010,4 +972,9 @@ class MollieVendor implements VendorInterface
     {
         return self::VENDOR_NAME;
     }
+
+	public static function get_vendor_slug(): string
+	{
+		return 'mollie';
+	}
 }

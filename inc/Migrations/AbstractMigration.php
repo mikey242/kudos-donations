@@ -2,7 +2,7 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helper\Settings;
 use Psr\Log\LoggerInterface;
 
 class AbstractMigration

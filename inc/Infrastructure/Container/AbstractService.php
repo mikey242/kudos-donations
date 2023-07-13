@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface for delayed classes.
+ * Abstract class for services to extend.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations
  *
@@ -11,16 +11,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Infrastructure\Container;
 
-/**
- * AbstractRestController used for all services.
- */
 abstract class AbstractService implements Delayed, Registrable {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_registration_actions(): array {
-		return ['init'];
+		return [ 'init' ];
 	}
 
 	/**

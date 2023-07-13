@@ -2,11 +2,11 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Entity\TransactionEntity;
-use IseardMedia\Kudos\Helpers\Blocks;
-use IseardMedia\Kudos\Helpers\Settings;
-use IseardMedia\Kudos\Helpers\WpDb;
-use IseardMedia\Kudos\Service\AdminNotice;
+use IseardMedia\Kudos\Admin\Notice\AdminDismissibleNotice;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helper\Blocks;
+use IseardMedia\Kudos\Helper\Settings;
+use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Service\MapperService;
 
 class Version400 extends AbstractMigration implements MigrationInterface
@@ -46,10 +46,7 @@ class Version400 extends AbstractMigration implements MigrationInterface
         $this->migrate_blocks();
         $this->migrate_smtp();
         $this->logger->info('Migration 400 complete');
-        new AdminNotice(
-            'Database update complete. <br/> Notice: If you have used [kudos] shortcodes, you will need to re-add them.',
-            'warning'
-        );
+	    (new AdminDismissibleNotice())->warning('Database update complete. <br/> Notice: If you have used [kudos] shortcodes, you will need to re-add them.',);
     }
 
     /**

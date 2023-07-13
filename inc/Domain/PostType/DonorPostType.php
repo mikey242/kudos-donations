@@ -1,21 +1,22 @@
 <?php
 /**
- * CampaignPostType Post Type
+ * Donor Post Type.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
  * @copyright 2023 Iseard Media
  */
 
+declare(strict_types=1);
+
 namespace IseardMedia\Kudos\Domain\PostType;
 
+use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Infrastructure\Domain\AbstractCustomPostType;
+use IseardMedia\Kudos\Infrastructure\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Infrastructure\Domain\HasMetaFieldsInterface;
-use IseardMedia\Kudos\Infrastructure\Domain\PostType\AbstractCustomPostType;
 
-/**
- * Custom PostType
- */
-class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface {
+class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
 	/**
 	 * {@inheritDoc}
@@ -28,7 +29,7 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	 * {@inheritDoc}
 	 */
 	public function get_description(): string {
-		return 'Kudos DonorPostType';
+		return 'Kudos Donor';
 	}
 
 	/**
@@ -48,55 +49,73 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_args(): array {
-		return array_merge(
-			parent::get_args(),
-			[
-				'public'              => false,
-				'has_archive'         => true,
-				'exclude_from_search' => false,
-				'capability_type'     => 'page',
-			]
-		);
-	}
-
-	public function get_meta_fields(): array {
+	public static function get_meta_config(): array {
 		return [
-			'email'                  => [
-				'type'              => 'string',
+			'email'              => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_email',
 			],
-			'mode'             => [
-				'type'              => 'string',
+			'mode'               => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'name'      => [
-				'type'              => 'string',
+			'name'               => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'business_name'         => [
-				'type'              => 'string',
+			'business_name'      => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'street'   => [
-				'type'              => 'string',
+			'street'             => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'postcode'       => [
-				'type'              => 'string',
+			'postcode'           => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'city'      => [
-				'type'              => 'string',
+			'city'               => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'country'       => [
-				'type'              => 'string',
+			'country'            => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'customer_id'       => [
-				'type'              => 'string',
+			'vendor_customer_id' => [
+				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_columns_config(): array {
+		return [
+			'name'               => [
+				'label'      => __( 'Name', 'kudos-donations' ),
+				'value_type' => FieldType::STRING,
+			],
+			'email'              => [
+				'label'      => __( 'Email', 'kudos-donations' ),
+				'value_type' => FieldType::EMAIL,
+			],
+			'vendor_customer_id' => [
+				'label'      => __( 'Vendor ID', 'kudos-donations' ),
+				'value_type' => FieldType::STRING,
+			],
+			'total_donations'    => [
+				'label'          => __( 'Total donated', 'kudos-donations' ),
+				'value_type'     => FieldType::INTEGER,
+				'value_callback' => function( $donor_id ) {
+					$request = new \WP_REST_Request( 'GET', '/kudos/v1/transaction/donor/total' );
+					$request->set_query_params( [ 'donor_id' => $donor_id ] );
+					$response = rest_do_request( $request );
+					return $response->data;
+				},
 			],
 		];
 	}

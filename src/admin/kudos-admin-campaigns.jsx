@@ -6,7 +6,7 @@ import Render from '../components/Render';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import './kudos-admin-campaigns.css'
 
-const container = document.getElementById('kudos-settings');
+const container = document.getElementById('kudos-campaigns');
 const root = createRoot(container);
 root.render(
 	<Render>

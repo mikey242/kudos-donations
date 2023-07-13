@@ -2,6 +2,7 @@
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Infrastructure\Controller\AbstractRestController;
 use IseardMedia\Kudos\Service\MailerService;
 use WP_REST_Server;
 

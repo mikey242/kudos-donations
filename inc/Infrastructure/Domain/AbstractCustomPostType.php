@@ -9,12 +9,11 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Domain\PostType;
+namespace IseardMedia\Kudos\Infrastructure\Domain;
 
+use IseardMedia\Kudos\Infrastructure\Admin\TableColumnsTrait;
 use IseardMedia\Kudos\Infrastructure\Container\Delayed;
 use IseardMedia\Kudos\Infrastructure\Container\Registrable;
-use IseardMedia\Kudos\Infrastructure\Domain\HasMetaFieldsInterface;
-use IseardMedia\Kudos\Infrastructure\Domain\LabelsTrait;
 
 /**
  * AbstractCustomPostType class.
@@ -22,22 +21,27 @@ use IseardMedia\Kudos\Infrastructure\Domain\LabelsTrait;
 abstract class AbstractCustomPostType implements CustomPostTypeInterface, Registrable, Delayed {
 
 	use LabelsTrait;
+	use MapperTrait;
+	use TableColumnsTrait;
+
+	protected const SUPPORTS     = [ 'custom-fields' ];
+	protected const CAPABILITIES = [ 'create_posts' => false ];
+	protected const SHOW_IN_REST = false;
+	protected const PUBLIC       = false;
+	protected const SHOW_UI      = true;
+	protected const SHOW_IN_MENU = false;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
 		$this->register_post_type();
-		if(is_a($this, HasMetaFieldsInterface::class, true)) {
-			foreach ($this->get_meta_fields() as $name => $meta_field) {
-				add_action('rest_api_init', function () use ($name, $meta_field) {
-					$args = wp_parse_args($meta_field, [
-						'show_in_rest' => true,
-						'single'       => true,
-					]);
-					register_post_meta($this::get_slug(), $name, $args);
-				});
-			}
+		if ( is_a( $this, HasMetaFieldsInterface::class ) ) {
+			$this->register_meta_fields();
+		}
+
+		if ( is_a( $this, HasAdminColumns::class ) ) {
+			$this->add_table_columns( $this::get_slug(), $this->get_columns_config() );
 		}
 	}
 
@@ -47,38 +51,71 @@ abstract class AbstractCustomPostType implements CustomPostTypeInterface, Regist
 	private function register_post_type(): void {
 		register_post_type(
 			$this->get_slug(),
-			$this->get_args(),
+			$this->get_args()
 		);
+	}
+
+	/**
+	 * Register the meta fields for this post type.
+	 */
+	private function register_meta_fields(): void {
+		foreach ( $this->get_meta_config() as $field_name => $args ) {
+
+			// Merge with defaults.
+			$args = array_merge(
+				[
+					'public'       => true,
+					'single'       => true,
+					'show_in_rest' => true,
+				],
+				$args
+			);
+
+			add_action(
+				'rest_api_init',
+				function () use ( $field_name, $args ): void {
+					register_post_meta(
+						$this::get_slug(),
+						$field_name,
+						$args
+					);
+				}
+			);
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_args(): array {
-		return [
-			'supports'     => [ 'title', 'editor', 'custom-fields', 'revisions' ],
-			'public'       => false,
-			'show_in_rest' => true,
-			'hierarchical' => false,
-			'description'  => $this->get_description(),
-			'labels'       => $this->get_labels(),
-		];
+		return array_merge(
+			[
+				'supports'     => static::SUPPORTS,
+				'public'       => static::PUBLIC,
+				'show_ui'      => static::SHOW_UI,
+				'show_in_menu' => static::SHOW_IN_MENU,
+				'show_in_rest' => static::SHOW_IN_REST,
+				'capabilities' => static::CAPABILITIES,
+				'map_meta_cap' => true,
+			],
+			[
+				'description' => $this->get_description(),
+				'labels'      => $this->get_labels(),
+			]
+		);
 	}
 
 	/**
-	 * Defines the default labels for the custom post type.
+	 * Returns the default labels.
 	 *
-	 * @see https://developer.wordpress.org/reference/functions/get_post_type_labels/
-	 *
-	 * @param string $singular_uc Singular upper-case term.
-	 * @param string $singular_lc Singular lower-case term.
-	 * @param string $plural_uc Plural upper-case term.
-	 * @param string $plural_lc Plural lower-case term.
-	 * @return array<string, string>
+	 * @param string $singular_uc Singular uppercase name.
+	 * @param string $singular_lc Singular lowercase name.
+	 * @param string $plural_uc Plural uppercase name.
+	 * @param string $plural_lc Plural lowercase name.
 	 */
-	protected function get_default_labels( string $singular_uc, string $singular_lc, string $plural_uc, string $plural_lc ): array {
+	private function get_default_labels( string $singular_uc, string $singular_lc, string $plural_uc, string $plural_lc ): array {
 		return [
-			'menu_name'                => $singular_uc,
+			'name'                     => $plural_uc,
 			'add_new'                  => _x( 'Add New', 'Menu label', 'kudos-donations' ),
 			/* translators: %s: Custom post type singular name. */
 			'add_new_item'             => sprintf( _x( 'Add New %s', 'Label for adding a new singular item', 'kudos-donations' ), $singular_uc ),
@@ -148,10 +185,16 @@ abstract class AbstractCustomPostType implements CustomPostTypeInterface, Regist
 		return 5;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_registration_actions(): array {
-		return ['init'];
+		return [ 'init' ];
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function is_enabled(): bool {
 		return true;
 	}

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Domain\PostType;
+namespace IseardMedia\Kudos\Infrastructure\Domain;
 
 interface CustomPostTypeInterface {
 
@@ -27,8 +27,6 @@ interface CustomPostTypeInterface {
 	 * Function that returns the arguments of the custom post type.
 	 *
 	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#parameters
-	 *
-	 * @return array<string, mixed>
 	 */
 	public function get_args(): array;
 }

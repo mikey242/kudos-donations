@@ -1,38 +1,66 @@
 <?php
+/**
+ * Campaign Admin Page.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
+
+declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Helpers\Assets;
+use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
+use IseardMedia\Kudos\Helper\Assets;
+use IseardMedia\Kudos\Infrastructure\Admin\AbstractAdminPage;
+use IseardMedia\Kudos\Infrastructure\Admin\HasAssetsInterface;
+use IseardMedia\Kudos\Infrastructure\Admin\HasCallbackInterface;
 
-class CampaignAdminPage extends AbstractAdminPage {
+class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_page_title(): string {
-		return __('Kudos campaigns', 'kudos-donations');
+		return __( 'Kudos campaigns', 'kudos-donations' );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_menu_title(): string {
-		return __('Campaigns', 'kudos-donations');
+		return __( 'Campaigns', 'kudos-donations' );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_menu_slug(): string {
 		return 'kudos-campaigns';
 	}
 
-	public function callback():void {
-		echo '<div id="kudos-settings"></div>';
+	/**
+	 * {@inheritDoc}
+	 */
+	public function callback(): void {
+		echo '<div id="kudos-campaigns"></div>';
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function register_assets(): void {
-		// Enqueue the styles
+		// Enqueue the styles.
 		wp_enqueue_style(
 			'kudos-donations-settings',
-			Assets::get_style('admin/kudos-admin-campaigns.jsx.css'),
+			Assets::get_style( 'admin/kudos-admin-campaigns.jsx.css' ),
 			[],
 			KUDOS_VERSION
 		);
 
-		// Get and enqueue the script
-		$admin_js = Assets::get_script('admin/kudos-admin-campaigns.jsx.js');
+		// Get and enqueue the script.
+		$admin_js = Assets::get_script( 'admin/kudos-admin-campaigns.jsx.js' );
 		wp_enqueue_script(
 			'kudos-donations-settings',
 			$admin_js['url'],
@@ -46,13 +74,20 @@ class CampaignAdminPage extends AbstractAdminPage {
 			'kudos',
 			[
 				'version'     => KUDOS_VERSION,
-				'stylesheets' => [Assets::get_style('admin/kudos-admin-campaigns.jsx.css') . "?ver=KUDOS_VERSION"],
+				'stylesheets' => [ Assets::get_style( 'admin/kudos-admin-campaigns.jsx.css' ) . '?ver=KUDOS_VERSION' ],
 			]
 		);
 		wp_set_script_translations(
 			'kudos-donations-settings',
 			'kudos-donations',
-			plugin_dir_path(__FILE__) . '/languages/'
+			plugin_dir_path( __FILE__ ) . '/languages/'
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_position(): ?int {
+		return 100;
 	}
 }

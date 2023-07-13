@@ -3,8 +3,8 @@
 namespace IseardMedia\Kudos\Service;
 
 use FilesystemIterator;
-use IseardMedia\Kudos\Helpers\Assets;
-use IseardMedia\Kudos\Helpers\Utils;
+use IseardMedia\Kudos\Helper\Assets;
+use IseardMedia\Kudos\Helper\Utils;
 use Psr\Log\LoggerInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

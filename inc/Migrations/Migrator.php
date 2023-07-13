@@ -3,7 +3,7 @@
 namespace IseardMedia\Kudos\Migrations;
 
 use Exception;
-use IseardMedia\Kudos\Helpers\Settings;
+use IseardMedia\Kudos\Helper\Settings;
 use Psr\Log\LoggerInterface;
 
 class Migrator

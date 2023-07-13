@@ -2,7 +2,7 @@
 
 namespace IseardMedia\Kudos\Service\LogHandlers;
 
-use IseardMedia\Kudos\Helpers\WpDb;
+use IseardMedia\Kudos\Helper\WpDb;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 

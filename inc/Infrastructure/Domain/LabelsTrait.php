@@ -32,7 +32,7 @@ trait LabelsTrait {
 	 * @param string $singular_lc Singular lower-case term.
 	 * @param string $plural_uc Plural upper-case term.
 	 * @param string $plural_lc Plural lower-case term.
-	 * @return array<string, string>
+	 * @return array
 	 */
 	abstract protected function get_default_labels( string $singular_uc, string $singular_lc, string $plural_uc, string $plural_lc): array;
 
@@ -53,7 +53,7 @@ trait LabelsTrait {
 	/**
 	 * Allow overriding individual generated labels.
 	 *
-	 * @return array<string, string>
+	 * @return array
 	 */
 	protected function get_custom_labels(): array {
 		return [];
@@ -62,7 +62,7 @@ trait LabelsTrait {
 	/**
 	 * Returns the labels for the child class to be used in registration.
 	 *
-	 * @return array<string, string> Array of label names and values.
+	 * @return array Array of label names and values.
 	 */
 	private function get_labels(): array {
 		$singular    = $this->get_singular_name();

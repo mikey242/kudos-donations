@@ -2,9 +2,8 @@
 
 namespace IseardMedia\Kudos\Service\Vendor;
 
-use IseardMedia\Kudos\Entity\SubscriptionEntity;
-use IseardMedia\Kudos\Entity\TransactionEntity;
 use WP_Error;
+use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -31,23 +30,23 @@ interface VendorInterface
      */
     public static function get_webhook_url(): string;
 
-    /**
-     * Check the vendor api key associated with the mode. Sends a JSON response.
-     *
-     * @param \WP_REST_Request|null $request
-     *
-     * @return mixed
-     */
-    public function check_api_keys(WP_REST_Request $request);
+	/**
+	 * Check the vendor api key associated with the mode. Sends a JSON response.
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return void
+	 */
+    public function check_api_keys(WP_REST_Request $request): void;
 
     /**
-     * @param TransactionEntity $transaction ,
+     * @param WP_Post $transaction ,
      * @param string $mandate_id ,
      * @param string $interval ,
      * @param string $years
      */
     public function create_subscription(
-        TransactionEntity $transaction,
+        WP_Post $transaction,
         string $mandate_id,
         string $interval,
         string $years
@@ -65,11 +64,11 @@ interface VendorInterface
     /**
      * Cancel the specified subscription.
      *
-     * @param SubscriptionEntity $subscription subscription row id.
+     * @param WP_Post $subscription subscription row id.
      *
      * @return bool
      */
-    public function cancel_subscription(SubscriptionEntity $subscription): bool;
+    public function cancel_subscription( WP_Post $subscription): bool;
 
     /**
      * Checks the provided api key by attempting to get associated payments.
@@ -99,20 +98,20 @@ interface VendorInterface
     /**
      * Get the customer.
      *
-     * @param $customer_id
+     * @param $vendor_customer_id
      */
-    public function get_customer($customer_id);
+    public function get_customer($vendor_customer_id);
 
     /**
      * Creates a payment and returns it as an object.
      *
      * @param array $payment_args Parameters to pass to mollie to create a payment.
      * @param string $order_id Order ID.
-     * @param string|null $customer_id ID of customer the payment is for.
+     * @param string|null $vendor_customer_id ID of customer the payment is for.
      *
      * @return string
      */
-    public function create_payment(array $payment_args, string $order_id, ?string $customer_id): string;
+    public function create_payment(array $payment_args, string $order_id, ?string $vendor_customer_id): string;
 
     /**
      * Vendor webhook action.
@@ -121,7 +120,7 @@ interface VendorInterface
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function rest_webhook(WP_REST_Request $request);
+    public function rest_webhook(WP_REST_Request $request): WP_Error|WP_REST_Response;
 
     /**
      * Vendor API mode.
@@ -129,6 +128,13 @@ interface VendorInterface
      * @return string
      */
     public function get_api_mode(): string;
+
+	/**
+	 * Gets the vendor slug for identification.
+	 *
+	 * @return string
+	 */
+	public static function get_vendor_slug(): string;
 
     /**
      * Returns the vendor name as a string.
