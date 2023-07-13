@@ -31,7 +31,7 @@ function activate( $network_wide = false ): void {
 	do_action( 'kudos_donations_activated', $network_wide );
 }
 
-register_activation_hook( KUDOS_PLUGIN_DIR, __NAMESPACE__ . '\activate' );
+register_activation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 
 /**
  * Hook into new site creation on Multisite.
@@ -101,7 +101,7 @@ function deactivate( $network_wide = false ): void {
 	do_action( 'kudos_donations_deactivated', $network_wide );
 }
 
-register_deactivation_hook( KUDOS_PLUGIN_DIR, __NAMESPACE__ . '\deactivate' );
+register_deactivation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
 
 /**
  * Load functions for use by plugin developers.
