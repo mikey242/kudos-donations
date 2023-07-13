@@ -14,7 +14,6 @@ namespace IseardMedia\Kudos;
 use DI\Container;
 use DI\ContainerBuilder;
 use Exception;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use IseardMedia\Kudos\Infrastructure\Container\Delayed;
 use IseardMedia\Kudos\Infrastructure\Container\Registrable;
 use Psr\Log\LoggerInterface;
@@ -108,28 +107,30 @@ class Plugin {
 			$definitions = $this->container->getKnownEntryNames();
 
 			// Loop through definitions and find registrable classes.
-			foreach ($definitions as $definition) {
-				if(! is_a($definition, Registrable::class, true)) {
+			foreach ( $definitions as $definition ) {
+				if ( ! is_a( $definition, Registrable::class, true ) ) {
 					continue;
 				}
+
 				/**
 				 * Run register method using specified action(s) and priority.
-				 * @var AbstractService $service
+				 *
+				 * @var Registrable $service
 				 */
-				$service = $this->container->get($definition);
+				$registrable = $this->container->get( $definition );
 
-				// Bail if service not enabled.
-				if(! $service->is_enabled()) {
+				// Skip if service not enabled.
+				if ( ! $registrable->is_enabled() ) {
 					continue;
 				}
 
 				// Add specified action or call register directly.
-				if(is_a($definition, Delayed::class, true)) {
-					foreach ($service::get_registration_actions() as $action) {
+				if ( is_a( $definition, Delayed::class, true ) ) {
+					foreach ( $registrable::get_registration_actions() as $action ) {
 						add_action(
 							$action,
-							[ $service, 'register' ],
-							$service::get_registration_action_priority()
+							[ $registrable, 'register' ],
+							$registrable::get_registration_action_priority()
 						);
 					}
 				} else {
