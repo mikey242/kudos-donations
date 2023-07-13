@@ -33,6 +33,8 @@ class Plugin {
 	 */
 	private Container $container;
 	/**
+	 * Logger interface.
+	 *
 	 * @var LoggerInterface
 	 */
 	private LoggerInterface $logger;
@@ -94,9 +96,7 @@ class Plugin {
 		$container_builder->addDefinitions( $config_path . '/config.php' );
 
 		$this->container = $container_builder->build();
-
-		$this->container = $containerBuilder->build();
-		$this->logger = $this->container->get(LoggerInterface::class);
+		$this->logger    = $this->container->get( LoggerInterface::class );
 	}
 
 	/**
@@ -136,9 +136,8 @@ class Plugin {
 					$definition->register();
 				}
 			}
-
 		} catch ( Exception $e ) {
-			$this->logger->error(esc_html( $e->getMessage() ));
+			$this->logger->error( esc_html( $e->getMessage() ) );
 		}
 	}
 
