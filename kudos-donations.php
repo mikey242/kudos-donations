@@ -23,6 +23,7 @@
 
 namespace IseardMedia\Kudos;
 
+use Symfony\Component\Dotenv\Dotenv;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
@@ -33,6 +34,19 @@ if ( ! defined('WPINC')) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+
+/**
+ * Load the environment variables.
+ */
+$dotenv = new Dotenv();
+$dotenv->load( __DIR__ . '/.env' );
+
+/**
+ * Set the environment as production if not specified.
+ */
+if ( empty( $_ENV['APP_ENV'] ) ) {
+	$_ENV['APP_ENV'] = 'production';
+}
 
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
