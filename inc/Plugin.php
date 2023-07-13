@@ -155,15 +155,4 @@ class Plugin {
 			wp_die( esc_html( $e->getMessage() ) );
 		}
 	}
-
-	/**
-	 * Get the specified entry from the container.
-	 *
-	 * @throws Exception No entry was found in the container.
-	 *
-	 * @param string $service_id Id of service to get.
-	 */
-	protected function get_service( string $service_id ): ?object {
-		return $this->container->get( $service_id );
-	}
 }
