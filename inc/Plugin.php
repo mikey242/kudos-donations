@@ -81,10 +81,19 @@ class Plugin {
 	 * @throws Exception Handled by ::register.
 	 */
 	private function build_container(): void {
-		$containerBuilder = new ContainerBuilder();
+		$container_builder = new ContainerBuilder();
+
+		// Enable cache if not in development mode.
+		if ( 'development' !== $_ENV['APP_ENV'] ) {
+			$kudos_uploads = wp_upload_dir()['basedir'] . '/kudos-donations/container';
+			$container_builder->enableCompilation( $kudos_uploads );
+			$container_builder->writeProxiesToFile( true, $kudos_uploads . '/proxies' );
+		}
 
 		$config_path = KUDOS_PLUGIN_DIR . '/config/';
-		$containerBuilder->addDefinitions($config_path . '/config.php');
+		$container_builder->addDefinitions( $config_path . '/config.php' );
+
+		$this->container = $container_builder->build();
 
 		$this->container = $containerBuilder->build();
 		$this->logger = $this->container->get(LoggerInterface::class);
