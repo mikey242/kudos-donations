@@ -129,7 +129,6 @@ class Plugin {
 		try {
 			do_action( 'kudos_donations_loaded', $this->container );
 			$this->on_plugin_loaded();
-			do_action( 'kudos_donations_loaded', $this->container );
 		} catch ( \Throwable $e ) {
 			// TODO: add logging.
 			wp_die( esc_html( $e->getMessage() ) );
