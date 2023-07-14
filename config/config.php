@@ -30,6 +30,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
 return [
+	Plugin::class                  => DI\autowire(),
 	Admin::class                   => DI\autowire(),
 	Front::class                   => DI\autowire(),
 	BaseAdminPage::class           => DI\autowire(),

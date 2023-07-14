@@ -1,17 +1,18 @@
 <?php
+/**
+ * Admin related functions.
+ */
+
+declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller;
 
 use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminDismissibleNotice;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Settings;
 use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
-use IseardMedia\Kudos\Migrations\Migrator;
-use IseardMedia\Kudos\Service\ActivatorService;
-use IseardMedia\Kudos\Service\MapperService;
-use IseardMedia\Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Service\MigratorService;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 use Psr\Log\LoggerInterface;
@@ -19,67 +20,21 @@ use Psr\Log\LoggerInterface;
 class Admin extends AbstractService {
 
 	/**
-	 * @var MapperService
-	 */
-	private MapperService $mapper;
-	/**
-	 * @var TwigService
-	 */
-	private TwigService $twig;
-	/**
-	 * @var PaymentService
-	 */
-	private PaymentService $payment;
-	/**
-	 * @var ActivatorService
-	 */
-	private ActivatorService $activator;
-	/**
-	 * @var MollieVendor
-	 */
-	private MollieVendor $mollie;
-	/**
-	 * @var LoggerInterface
-	 */
-	private LoggerInterface $logger;
-	/**
-	 * @var Migrator
-	 */
-	private Migrator $migrator;
-
-	/**
 	 * Initialize the class and set its properties.
+	 *
+	 * @param TwigService     $twig Twig service.
+	 * @param MollieVendor    $mollie_vendor Mollie vendor.
+	 * @param LoggerInterface $logger Logger instance.
+	 * @param MigratorService $migrator Migrator service.
 	 */
 	public function __construct(
-		MapperService $mapper,
-		TwigService $twig,
-		PaymentService $payment,
-		ActivatorService $activator,
-		MollieVendor $mollie_vendor,
-		LoggerInterface $logger,
-		Migrator $migrator
-	) {
-		$this->mapper    = $mapper;
-		$this->twig      = $twig;
-		$this->payment   = $payment;
-		$this->activator = $activator;
-		$this->mollie    = $mollie_vendor;
-		$this->logger    = $logger;
-		$this->migrator  = $migrator;
-	}
+		private TwigService $twig,
+		private MollieVendor $mollie_vendor,
+		private LoggerInterface $logger,
+		private MigratorService $migrator
+	) {}
 
 	public function register(): void {
-
-		$transaction = TransactionPostType::get_by_meta(
-			[
-				'order_id'   => 'kdo_4w18wcmwbt'
-			],
-		)[0] ?? null;
-
-//        wp_send_json($transaction);
-
-		add_action( 'admin_init', [ $this, 'admin_actions' ] );
-		add_action( 'admin_init', [ $this, 'check_migrations_pending' ] );
 		add_action( 'admin_init', [ $this, 'register_block_editor_assets' ] );
 		add_action( 'kudos_remove_secret_action', [ $this, 'remove_secret_action' ], 10, 2 );
 		add_action( 'kudos_check_log', [ $this, 'truncate_log' ] );
@@ -100,13 +55,6 @@ class Admin extends AbstractService {
 			}
 
 			switch ( $action ) {
-				case 'kudos_log_clear':
-					if ( $this->logger->clear() === 0 ) {
-						$notice = new AdminDismissibleNotice();
-						$notice->success( __( 'Log cleared', 'kudos-donations' ) );
-					}
-					break;
-
 				case 'kudos_clear_mollie':
 					Settings::remove_setting( 'vendor_mollie' );
 					break;
@@ -129,78 +77,8 @@ class Admin extends AbstractService {
 					}
 					break;
 
-				case 'kudos_clear_transactions':
-					$records = $this->mapper
-						->get_repository( TransactionEntity::class )
-						->delete_all();
-					if ( $records ) {
-						$notice = new AdminDismissibleNotice();
-						$notice->success(
-							sprintf(
-							/* translators: %s: Number of records. */
-								_n( 'Deleted %s transaction', 'Deleted %s transactions', $records, 'kudos-donations' ),
-								$records
-							)
-						);
-					}
-
-					break;
-
-				case 'kudos_clear_donors':
-					$records = $this->mapper
-						->get_repository( DonorEntity::class )
-						->delete_all();
-					if ( $records ) {
-						$notice = new AdminDismissibleNotice();
-						$notice->success(
-							sprintf(
-							/* translators: %s: Number of records. */
-								_n( 'Deleted %s donor', 'Deleted %s donors', $records, 'kudos-donations' ),
-								$records
-							)
-						);
-					}
-					break;
-
-				case 'kudos_clear_subscriptions':
-					$records = $this->mapper
-						->get_repository( SubscriptionEntity::class )
-						->delete_all();
-					if ( $records ) {
-						$notice = new AdminDismissibleNotice();
-						$notice->success(
-							sprintf(
-							/* translators: %s: Number of records. */
-								_n(
-									'Deleted %s subscription',
-									'Deleted %s subscriptions',
-									$records,
-									'kudos-donations'
-								),
-								$records
-							)
-						);
-					}
-					break;
-
-				case 'kudos_recreate_database':
-					foreach (
-						[
-							SubscriptionEntity::get_table_name(),
-							TransactionEntity::get_table_name(),
-							DonorEntity::get_table_name(),
-						] as $table
-					) {
-						$this->mapper->delete_table( $table );
-					}
-					$activator = $this->activator;
-					$activator->activate();
-					( new AdminDismissibleNotice() )->success( __( 'Cache cleared', 'kudos-donations' ) );
-					( new AdminDismissibleNotice() )->success( __( 'Database re-created', 'kudos-donations' ) );
-					break;
-
 				case 'kudos_sync_mollie_transactions':
-					$mollie  = $this->mollie;
+					$mollie  = $this->mollie_vendor;
 					$updated = $mollie->sync_transactions();
 					if ( $updated ) {
 						( new AdminDismissibleNotice() )->success(
@@ -221,7 +99,7 @@ class Admin extends AbstractService {
 					break;
 
 				case 'kudos_add_missing_mollie_transactions':
-					$mollie  = $this->mollie;
+					$mollie  = $this->mollie_vendor;
 					$updated = $mollie->add_missing_transactions();
 					if ( $updated ) {
 						( new AdminDismissibleNotice() )->success(
@@ -262,24 +140,6 @@ class Admin extends AbstractService {
 						}
 					}
 			}
-		}
-	}
-
-	public function check_migrations_pending(): void {
-		$actions = Settings::get_setting( 'migrations_pending' );
-		if ( $actions ) {
-			$form  = "<form method='post'>";
-			$form .= wp_nonce_field( 'kudos_migrate', '_wpnonce', true, false );
-			$form .= "<button class='button-secondary confirm' name='kudos_action' type='submit' value='kudos_migrate'>";
-			$form .= __( 'Update now', 'kudos-donations' );
-			$form .= '</button>';
-			$form .= '</form>';
-			( new AdminDismissibleNotice() )->info(
-				__(
-					'Kudos Donations database needs updating before you can continue. Please make sure you backup your data before proceeding.',
-					'kudos-donations'
-				) . $form
-			);
 		}
 	}
 
