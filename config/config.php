@@ -24,6 +24,7 @@ use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Plugin;
 use IseardMedia\Kudos\Service\Settings;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
