@@ -26,17 +26,19 @@ use function load_plugin_textdomain;
 class Plugin {
 
 	/**
-	 * Symfony's container builder.
+	 * Plugin constructor.
 	 *
-	 * @var Container
+	 * @param LoggerInterface  $logger Instance of logger.
+	 * @param Container        $container The container.
+	 * @param ActivatorService $activator_service  Activation related functions.
+	 * @param MigratorService  $migrator_service  Service for checking migrations.
 	 */
-	private Container $container;
-	/**
-	 * Logger interface.
-	 *
-	 * @var LoggerInterface
-	 */
-	private LoggerInterface $logger;
+	public function __construct(
+		private LoggerInterface $logger,
+		private Container $container,
+		private ActivatorService $activator_service,
+		private MigratorService $migrator_service
+	) {}
 
 	/**
 	 * Initialize the services.
@@ -74,28 +76,6 @@ class Plugin {
 				load_plugin_textdomain( 'kudos-donations', false, 'kudos-donations/languages' );
 			}
 		);
-	}
-
-	/**
-	 * Create and configure the container.
-	 *
-	 * @throws Exception Handled by ::register.
-	 */
-	private function build_container(): void {
-		$container_builder = new ContainerBuilder();
-
-		// Enable cache if not in development mode.
-		if ( 'development' !== $_ENV['APP_ENV'] ) {
-			$kudos_uploads = wp_upload_dir()['basedir'] . '/kudos-donations/container';
-			$container_builder->enableCompilation( $kudos_uploads );
-			$container_builder->writeProxiesToFile( true, $kudos_uploads . '/proxies' );
-		}
-
-		$config_path = KUDOS_PLUGIN_DIR . '/config/';
-		$container_builder->addDefinitions( $config_path . '/config.php' );
-
-		$this->container = $container_builder->build();
-		$this->logger    = $this->container->get( LoggerInterface::class );
 	}
 
 	/**
