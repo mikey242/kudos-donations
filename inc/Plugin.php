@@ -12,18 +12,15 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos;
 
 use DI\Container;
-use DI\ContainerBuilder;
 use Exception;
 use IseardMedia\Kudos\Infrastructure\Container\Delayed;
 use IseardMedia\Kudos\Infrastructure\Container\Registrable;
 use IseardMedia\Kudos\Service\ActivatorService;
+use IseardMedia\Kudos\Service\MigratorService;
 use Psr\Log\LoggerInterface;
 use function add_action;
 use function load_plugin_textdomain;
 
-/**
- * Class Plugin.
- */
 class Plugin {
 
 	/**
@@ -45,8 +42,21 @@ class Plugin {
 	 * Initialize the services.
 	 */
 	public function on_plugin_loaded(): void {
-		$this->instantiate_services();
 		$this->setup_localization();
+		if ( $this->plugin_ready() ) {
+			$this->instantiate_services();
+		}
+	}
+
+	/**
+	 * Runs checks to ensure plugin ready to run.
+	 */
+	private function plugin_ready(): bool {
+		$database = $this->migrator_service->check_database();
+		if ( ! $database ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
