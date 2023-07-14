@@ -16,6 +16,7 @@ use DI\ContainerBuilder;
 use Exception;
 use IseardMedia\Kudos\Infrastructure\Container\Delayed;
 use IseardMedia\Kudos\Infrastructure\Container\Registrable;
+use IseardMedia\Kudos\Service\ActivatorService;
 use Psr\Log\LoggerInterface;
 use function add_action;
 use function load_plugin_textdomain;
@@ -54,7 +55,7 @@ class Plugin {
 	 * @param bool $network_wide Whether activation is network-wide or not.
 	 */
 	public function on_plugin_activation( bool $network_wide ): void {
-		// TODO implement on_plugin_activation method.
+		$this->activator_service->activate();
 	}
 
 	/**
