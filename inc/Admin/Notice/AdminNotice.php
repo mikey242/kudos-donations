@@ -104,7 +104,26 @@ class AdminNotice {
 			'<div class="notice %s %s"><p>%s</p></div>',
 			esc_attr( $this->level ),
 			esc_html( $this->is_dismissible ? 'is-dismissible' : '' ),
-			wp_kses_post( $this->message ),
+			wp_kses(
+				$this->message,
+				[
+					'form'   => [
+						'method' => [],
+					],
+					'input'  => [
+						'id'    => [],
+						'type'  => [],
+						'name'  => [],
+						'value' => [],
+					],
+					'button' => [
+						'class' => [],
+						'name'  => [],
+						'type'  => [],
+						'value' => [],
+					],
+				]
+			)
 		);
 	}
 }
