@@ -127,7 +127,7 @@ class Plugin {
 	 */
 	public function register(): void {
 		try {
-			$this->build_container();
+			do_action( 'kudos_donations_loaded', $this->container );
 			$this->on_plugin_loaded();
 			do_action( 'kudos_donations_loaded', $this->container );
 		} catch ( \Throwable $e ) {
