@@ -4,7 +4,6 @@ namespace IseardMedia\Kudos\Controller;
 
 use DI\NotFoundException;
 use Exception;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
