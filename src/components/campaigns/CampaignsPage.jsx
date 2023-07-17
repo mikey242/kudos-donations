@@ -73,6 +73,7 @@ const CampaignsPage = () => {
 	};
 
 	const updateCampaign = (id, data = {}) => {
+		console.log(data)
 		setIsApiBusy(true);
 		return apiFetch({
 			path: `wp/v2/kudos_campaign/${id ?? ''}`,

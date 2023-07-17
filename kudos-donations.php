@@ -64,17 +64,17 @@ if ( empty( $_ENV['APP_ENV'] ) ) {
  *
  * @link https://github.com/filp/whoops
  */
-if ( class_exists( Run::class ) && WP_DEBUG ) {
-	$run     = new Run();
-	$handler = new PrettyPageHandler();
-
-	// Set the title of the error page.
-	$handler->setPageTitle( 'Whoops! There was a problem.' );
-	$run->pushHandler( $handler );
-
-	// Register the handler with PHP.
-	$run->register();
-}
+//if ( class_exists( Run::class ) && WP_DEBUG ) {
+//	$run     = new Run();
+//	$handler = new PrettyPageHandler();
+//
+//	// Set the title of the error page.
+//	$handler->setPageTitle( 'Whoops! There was a problem.' );
+//	$run->pushHandler( $handler );
+//
+//	// Register the handler with PHP.
+//	$run->register();
+//}
 
 // Main plugin initialization happens there so that this file is still parsable in PHP < 7.0.
 require KUDOS_PLUGIN_DIR . '/inc/namespace.php';

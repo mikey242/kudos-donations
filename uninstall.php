@@ -1,41 +1,30 @@
 <?php
-
 /**
- * Fired when the plugin is uninstalled.
+ * Uninstall handler.
  *
- * When populating this file, consider the following flow
- * of control:
+ * @link https://gitlab.iseard.media/michael/kudos-donations
  *
- * - This method should be static
- * - Check if the $_REQUEST content actually is the plugin name
- * - Run an admin referrer check to make sure it goes through authentication
- * - Verify the output of $_GET makes sense
- * - Repeat with other user roles. Best directly by using the links/query string parameters.
- * - Repeat things for multisite. Once for a single site in the network, once sitewide.
- *
- * This file may be updated more in future version of the Boilerplate; however, this is the
- * general skeleton and outline for how the file should work.
- *
- * For more information, see the following discussion:
- * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
- *
- * @link       https://www.linkedin.com/in/michael-iseard/
- * @since      1.0.0
- *
- * @package    Kudos-Donations
+ * @copyright 2023 Iseard Media
  */
+
+declare( strict_types=1 );
+
+use IseardMedia\Kudos\PluginFactory;
 
 // If uninstall not called from WordPress, then exit.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-// Needs work
-//global $wpdb;
-//$table = $wpdb->prefix . Transaction::TABLE;
-//$wpdb->query( "DROP TABLE IF EXISTS $table" );
-//foreach (wp_load_alloptions() as $option) {
-//	if(strpos($option, '_kudos_') === 0) {
-//		delete_option($option);
-//	}
-//}
+PluginFactory::create()->register();
+
+/**
+ * Defer running uninstall until every service is registered.
+ */
+function kudos_donations_uninstall(): void {
+	$plugin = PluginFactory::create();
+	$plugin->register();
+	$plugin->on_plugin_uninstall();
+}
+add_action( 'shutdown', 'kudos_donations_uninstall' );
+

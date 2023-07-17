@@ -5,7 +5,6 @@ namespace IseardMedia\Kudos\Service;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
-use IseardMedia\Kudos\Helper\Settings;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 use IseardMedia\Kudos\Service\Vendor\VendorInterface;
@@ -17,47 +16,36 @@ use WP_REST_Response;
 class PaymentService {
 
 	/**
-	 * @var VendorInterface
-	 */
-	private mixed $vendor;
-	/**
-	 * @var MailerService
-	 */
-	private MailerService $mailer_service;
-	/**
-	 * @var LoggerInterface
-	 */
-	private LoggerInterface $logger;
-
-	/**
 	 * Payment service constructor.
+	 *
+	 * @see https://stackoverflow.com/questions/36853791/laravel-dynamic-dependency-injection-for-interface-based-on-user-input
+	 *
+	 * @param MailerService   $mailer_service Mailer service.
+	 * @param LoggerInterface $logger Logger.
+	 * @param VendorInterface $vendor Current vendor.
+	 * @param SettingsService $settings Settings service.
 	 */
 	public function __construct(
-		MailerService $mailer_service,
-		LoggerInterface $logger_service
-	) {
-		$vendor               = $this::get_current_vendor_class();
-		$this->vendor         = new $vendor( $logger_service );
-		$this->mailer_service = $mailer_service;
-		$this->logger         = $logger_service;
-	}
+		private MailerService $mailer_service,
+		private LoggerInterface $logger,
+		private VendorInterface $vendor,
+		private SettingsService $settings
+	) {}
 
 	/**
 	 * Returns current vendor class.
 	 *
 	 * @return VendorInterface
 	 */
-	private static function get_current_vendor_class(): string {
-		return match ( Settings::get_setting( 'vendor' ) ) {
-			default => MollieVendor::class,
-		};
+	public static function get_current_vendor_class(): string {
+		return MollieVendor::class;
 	}
 
 	/**
 	 * Checks if required api settings are saved before displaying button.
 	 */
-	public static function is_api_ready(): bool {
-		$settings  = Settings::get_current_vendor_settings();
+	public function is_api_ready(): bool {
+		$settings  = $this->settings->get_current_vendor_settings();
 		$connected = $settings['connected'] ?? false;
 		$mode      = $settings['mode'] ?? '';
 		$key       = $settings[ $mode . '_key' ] ?? null;

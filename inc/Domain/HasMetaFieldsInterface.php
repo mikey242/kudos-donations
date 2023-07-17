@@ -7,7 +7,7 @@
  * @copyright 2023 Iseard Media
  */
 
-namespace IseardMedia\Kudos\Infrastructure\Domain;
+namespace IseardMedia\Kudos\Domain;
 
 interface HasMetaFieldsInterface {
 

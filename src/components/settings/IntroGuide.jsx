@@ -106,7 +106,7 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 													</div>
 												)}
 												<TextControl
-													name="keys.live_key"
+													name="keys.live"
 													disabled={isApiSaving}
 													placeholder={__(
 														'Live key',
@@ -114,7 +114,7 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 													)}
 												/>
 												<TextControl
-													name="keys.test_key"
+													name="keys.test"
 													disabled={isApiSaving}
 													placeholder={__(
 														'Test key',

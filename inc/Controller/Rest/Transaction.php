@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
-use IseardMedia\Kudos\Infrastructure\Controller\AbstractRestController;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;

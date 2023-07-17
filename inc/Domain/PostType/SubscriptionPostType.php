@@ -11,9 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\PostType;
 
+use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Infrastructure\Domain\AbstractCustomPostType;
-use IseardMedia\Kudos\Infrastructure\Domain\HasMetaFieldsInterface;
 
 class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface {
 

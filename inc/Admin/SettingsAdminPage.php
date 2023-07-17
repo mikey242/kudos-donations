@@ -12,10 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Helper\Assets;
-use IseardMedia\Kudos\Helper\Settings;
-use IseardMedia\Kudos\Infrastructure\Admin\AbstractAdminPage;
-use IseardMedia\Kudos\Infrastructure\Admin\HasAssetsInterface;
-use IseardMedia\Kudos\Infrastructure\Admin\HasCallbackInterface;
+use IseardMedia\Kudos\Infrastructure\HasAssetsInterface;
+use IseardMedia\Kudos\Infrastructure\HasCallbackInterface;
 
 class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
 
@@ -74,7 +72,7 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			'kudos',
 			[
 				'version'            => KUDOS_VERSION,
-				'migrations_pending' => (bool) Settings::get_setting( 'migrations_pending' ),
+				'migrations_pending' => (bool) get_option( '_kudos_migrations_pending' ),
 				'stylesheets'        => [ Assets::get_style( 'admin/kudos-admin-settings.jsx.css' ) ],
 			]
 		);

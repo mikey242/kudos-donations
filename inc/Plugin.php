@@ -13,8 +13,9 @@ namespace IseardMedia\Kudos;
 
 use DI\Container;
 use Exception;
-use IseardMedia\Kudos\Infrastructure\Container\Delayed;
-use IseardMedia\Kudos\Infrastructure\Container\Registrable;
+use IseardMedia\Kudos\Infrastructure\Delayed;
+use IseardMedia\Kudos\Infrastructure\PluginUninstallAware;
+use IseardMedia\Kudos\Infrastructure\Registrable;
 use IseardMedia\Kudos\Service\ActivatorService;
 use IseardMedia\Kudos\Service\MigratorService;
 use Psr\Log\LoggerInterface;
@@ -35,7 +36,7 @@ class Plugin {
 		private LoggerInterface $logger,
 		private Container $container,
 		private ActivatorService $activator_service,
-		private MigratorService $migrator_service
+		private MigratorService $migrator_service,
 	) {}
 
 	/**
@@ -78,6 +79,23 @@ class Plugin {
 	}
 
 	/**
+	 * Act on plugin uninstall.
+	 */
+	public function on_plugin_uninstall(): void {
+		try {
+			foreach ( $this->container->getKnownEntryNames() as $entry ) {
+				$service = $this->container->get( $entry );
+
+				if ( $service instanceof PluginUninstallAware ) {
+					$service->on_plugin_uninstall();
+				}
+			}
+		} catch ( Exception $e ) {
+			$this->logger->error( $e->getMessage() );
+		}
+	}
+
+	/**
 	 * Loading our plugin's text domain and letting WordPress know where to find its translations.
 	 */
 	protected function setup_localization(): void {
@@ -94,12 +112,9 @@ class Plugin {
 	 */
 	private function instantiate_services(): void {
 		try {
-			// Get definitions from container.
-			$definitions = $this->container->getKnownEntryNames();
-
 			// Loop through definitions and find registrable classes.
-			foreach ( $definitions as $definition ) {
-				if ( ! is_a( $definition, Registrable::class, true ) ) {
+			foreach ( $this->container->getKnownEntryNames() as $entry ) {
+				if ( ! is_a( $entry, Registrable::class, true ) ) {
 					continue;
 				}
 
@@ -108,7 +123,7 @@ class Plugin {
 				 *
 				 * @var Registrable $service
 				 */
-				$registrable = $this->container->get( $definition );
+				$registrable = $this->container->get( $entry );
 
 				// Skip if service not enabled.
 				if ( ! $registrable->is_enabled() ) {
@@ -116,7 +131,7 @@ class Plugin {
 				}
 
 				// Add specified action or call register directly.
-				if ( is_a( $definition, Delayed::class, true ) ) {
+				if ( is_a( $entry, Delayed::class, true ) ) {
 					foreach ( $registrable::get_registration_actions() as $action ) {
 						add_action(
 							$action,
@@ -125,7 +140,7 @@ class Plugin {
 						);
 					}
 				} else {
-					$definition->register();
+					$entry->register();
 				}
 			}
 		} catch ( Exception $e ) {

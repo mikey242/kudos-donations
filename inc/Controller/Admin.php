@@ -1,18 +1,21 @@
 <?php
 /**
  * Admin related functions.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
  */
 
 declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller;
 
-use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminDismissibleNotice;
 use IseardMedia\Kudos\Helper\Assets;
-use IseardMedia\Kudos\Helper\Settings;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
+use IseardMedia\Kudos\Service\AbstractService;
 use IseardMedia\Kudos\Service\MigratorService;
+use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 use Psr\Log\LoggerInterface;
@@ -31,13 +34,13 @@ class Admin extends AbstractService {
 		private TwigService $twig,
 		private MollieVendor $mollie_vendor,
 		private LoggerInterface $logger,
-		private MigratorService $migrator
+		private MigratorService $migrator,
+		private SettingsService $settings,
 	) {}
 
 	public function register(): void {
 		add_action( 'admin_init', [ $this, 'register_block_editor_assets' ] );
 		add_action( 'kudos_remove_secret_action', [ $this, 'remove_secret_action' ], 10, 2 );
-		add_action( 'kudos_check_log', [ $this, 'truncate_log' ] );
 	}
 
 	/**
@@ -56,11 +59,7 @@ class Admin extends AbstractService {
 
 			switch ( $action ) {
 				case 'kudos_clear_mollie':
-					Settings::remove_setting( 'vendor_mollie' );
-					break;
-
-				case 'kudos_clear_all':
-					Settings::remove_settings();
+					delete_option( SettingsService::SETTING_NAME_VENDOR_MOLLIE );
 					break;
 
 				case 'kudos_clear_twig_cache':
@@ -118,27 +117,6 @@ class Admin extends AbstractService {
 					}
 					( new AdminDismissibleNotice() )->success( __( 'No transactions need adding', 'kudos-donations' ) );
 					break;
-
-				case 'kudos_migrate':
-					if ( isset( $_REQUEST['migration_version'] ) ) {
-						$versions = wp_unslash( $_REQUEST['migration_version'] );
-					} else {
-						$versions = Settings::get_setting( 'migrations_pending' );
-					}
-					if ( $versions ) {
-						foreach ( $versions as $version ) {
-							try {
-								$this->migrator->migrate( $version );
-							} catch ( Exception $e ) {
-								$notice = new AdminDismissibleNotice();
-								$notice->warning( $e->getMessage() );
-							}
-							if ( ( $key = array_search( $version, $versions ) ) !== false ) {
-								unset( $versions[ $key ] );
-							}
-							Settings::update_setting( 'migrations_pending', $versions );
-						}
-					}
 			}
 		}
 	}
@@ -198,20 +176,12 @@ class Admin extends AbstractService {
 	}
 
 	public function redirect_to_settings(): void {
-		$show_intro = Settings::get_setting( 'show_intro', true );
+		$show_intro = $this->settings->get_setting( SettingsService::SETTING_NAME_SHOW_INTRO );
 		if ( $show_intro ) {
 			global $pagenow;
 			if ( $pagenow === 'admin.php' && $_GET['page'] === 'kudos-campaigns' ) {
 				wp_redirect( admin_url( 'admin.php?page=kudos-settings' ) );
 			}
 		}
-	}
-
-	/**
-	 * Truncates the log file when over certain length.
-	 * Length defined by LoggerService::TRUNCATE_AT const.
-	 */
-	public function truncate_log(): void {
-		$this->logger->truncate();
 	}
 }

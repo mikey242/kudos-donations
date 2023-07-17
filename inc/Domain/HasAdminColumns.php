@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Domain;
+namespace IseardMedia\Kudos\Domain;
 
 interface HasAdminColumns {
 

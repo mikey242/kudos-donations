@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
-use IseardMedia\Kudos\Infrastructure\Admin\AbstractAdminPage;
 
 class TransactionsAdminPage extends AbstractAdminPage {
 

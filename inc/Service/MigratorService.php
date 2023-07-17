@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Service;
 
 use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
-use IseardMedia\Kudos\Helper\Settings;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use Psr\Log\LoggerInterface;
 
@@ -24,7 +23,7 @@ class MigratorService {
 	 *
 	 * @param LoggerInterface $logger Logger instance.
 	 */
-	public function __construct( private LoggerInterface $logger ) {
+	public function __construct( private LoggerInterface $logger, private SettingsService $settings ) {
 		add_action( 'kudos_donations_loaded', [ $this, 'process_form_data' ] );
 	}
 
@@ -40,7 +39,7 @@ class MigratorService {
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {
 				die();
 			}
-			Settings::update_setting( 'db_version', KUDOS_DB_VERSION );
+			$this->settings->update_setting( SettingsService::SETTING_NAME_DB_VERSION, KUDOS_DB_VERSION );
 		}
 	}
 
@@ -48,7 +47,7 @@ class MigratorService {
 	 * Check database version number.
 	 */
 	public function check_database(): bool {
-		$db_version = Settings::get_setting( 'db_version' );
+		$db_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION );
 
 		// Make sure that old versions of kudos start at base version.
 		if ( ! $db_version ) {
@@ -97,7 +96,7 @@ class MigratorService {
 		}
 
 		// Check if migration already run.
-		$migrations = Settings::get_setting( 'migration_history' );
+		$migrations = get_option( '_kudos_migration_history' );
 		$library    = \is_array( $migrations ) ? array_flip( $migrations ) : '';
 		if ( ! $force && isset( $library[ $version ] ) ) {
 			throw new Exception( "Migration '$version' already performed." );

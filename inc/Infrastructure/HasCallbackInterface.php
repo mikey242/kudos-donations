@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Admin;
+namespace IseardMedia\Kudos\Infrastructure;
 
 interface HasCallbackInterface {
 

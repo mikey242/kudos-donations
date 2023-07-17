@@ -9,7 +9,10 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Container;
+namespace IseardMedia\Kudos\Service;
+
+use IseardMedia\Kudos\Infrastructure\Delayed;
+use IseardMedia\Kudos\Infrastructure\Registrable;
 
 abstract class AbstractService implements Delayed, Registrable {
 

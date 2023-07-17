@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
-use IseardMedia\Kudos\Infrastructure\Admin\AbstractAdminPage;
 
 class SubscriptionsAdminPage extends AbstractAdminPage {
 

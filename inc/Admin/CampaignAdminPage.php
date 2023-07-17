@@ -11,11 +11,9 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Helper\Assets;
-use IseardMedia\Kudos\Infrastructure\Admin\AbstractAdminPage;
-use IseardMedia\Kudos\Infrastructure\Admin\HasAssetsInterface;
-use IseardMedia\Kudos\Infrastructure\Admin\HasCallbackInterface;
+use IseardMedia\Kudos\Infrastructure\HasAssetsInterface;
+use IseardMedia\Kudos\Infrastructure\HasCallbackInterface;
 
 class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
 

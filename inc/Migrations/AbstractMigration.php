@@ -2,26 +2,19 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Helper\Settings;
+use IseardMedia\Kudos\Service\SettingsService;
 use Psr\Log\LoggerInterface;
 
 class AbstractMigration
 {
 
     protected const VERSION = '';
-    /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(protected LoggerInterface $logger, protected SettingsService $settings)
     {
-        $this->logger = $logger;
-
-        Settings::update_array(
+        $this->settings->update_setting(
             'migration_history',
-            [static::VERSION],
-            true
+            [static::VERSION]
         );
     }
 }

@@ -6,9 +6,8 @@ use Exception;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
-use IseardMedia\Kudos\Helper\CustomPostType;
-use IseardMedia\Kudos\Helper\Settings;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Service\SettingsService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
@@ -31,21 +30,11 @@ class MollieVendor implements VendorInterface
     public const VENDOR_NAME = 'Mollie';
 
     /**
-     * Instance of MollieApiClient.
-     *
-     * @var MollieApiClient
-     */
-    private MollieApiClient $api_client;
-    /**
      * The API mode (test or live).
      *
      * @var string
      */
     private string $api_mode;
-    /**
-     * @var LoggerInterface
-     */
-    private LoggerInterface $logger;
     /**
      * @var array
      */
@@ -54,23 +43,29 @@ class MollieVendor implements VendorInterface
     /**
      * Mollie constructor.
      */
-    public function __construct(LoggerInterface $logger_service)
+    public function __construct(private LoggerInterface $logger, private MollieApiClient $api_client, private SettingsService $settings)
     {
-        $this->logger = $logger_service;
+	    $settings = $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE);
+		$this->api_mode = $settings['mode'] ?? 'test';
 
-        $settings = Settings::get_setting('vendor_mollie');
-
-        if ( ! $settings === false) {
-            $this->api_client = new MollieApiClient();
-            $this->api_keys   = [
-                'test' => $settings['test_key'] ?? '',
-                'live' => $settings['live_key'] ?? '',
-            ];
-
-            $this->set_api_mode($settings['mode'] ?? 'test');
-            $this->set_user_agent();
-        }
+	    if ( ! $settings === false) {
+		    $this->api_keys   = [
+			    'test' => $settings['test_key'] ?? '',
+			    'live' => $settings['live_key'] ?? '',
+		    ];
+		    $this->set_user_agent();
+	    }
     }
+
+	/**
+	 * Returns the api mode.
+	 *
+	 * @return string
+	 */
+	public function get_api_mode(): string
+	{
+		return $this->api_mode;
+	}
 
     /**
      * Change the API client to the key for the specified mode.
@@ -98,6 +93,9 @@ class MollieVendor implements VendorInterface
         $this->api_client->addVersionString("WordPress/" . $wp_version);
     }
 
+	/**
+	 * {@inheritDoc}
+	 */
     public static function supports_recurring(): bool
     {
         return true;
@@ -123,24 +121,25 @@ class MollieVendor implements VendorInterface
      * Check the Mollie api keys for both test and live keys. Sends a JSON response.
      */
     public function check_api_keys(WP_REST_Request $request): void {
-        $keys = $request->get_param('keys');
 
-        if ($keys) {
-            $this->api_keys = [
-                'test' => $keys['test_key'] ?? '',
-                'live' => $keys['live_key'] ?? '',
-            ];
-        }
+		$keys = $request->get_param('keys');
 
-        Settings::update_array(
-            'vendor_mollie',
+	    if ($keys) {
+		    $this->api_keys = [
+			    'test' => $keys['test'] ?? '',
+			    'live' => $keys['live'] ?? '',
+		    ];
+	    }
+
+	    $this->settings->update_setting(
+            SettingsService::SETTING_NAME_VENDOR_MOLLIE,
             [
                 'connected' => false,
                 'recurring' => false,
             ]
         );
 
-        $mode = $this->get_api_mode();
+        $mode = $this->api_mode;
 
         // Check if both fields are empty.
         if (empty($this->api_keys[$mode])) {
@@ -150,13 +149,12 @@ class MollieVendor implements VendorInterface
                     'message' => sprintf(
                         __('Please enter your %s API key.', 'kudos-donations'),
                         $mode
-                    ),
-                    'setting' => Settings::get_setting('vendor_mollie'),
+                    )
                 ]
             );
         }
 
-        foreach ($this->api_keys as $type => $apiKey) {
+	    foreach ($keys as $type => $apiKey) {
             if ($apiKey) {
                 // Check that the api key corresponds to each mode.
                 if (substr($apiKey, 0, 5) !== $type . "_") {
@@ -168,7 +166,7 @@ class MollieVendor implements VendorInterface
                                 ucfirst($type),
                                 $type . '_'
                             ),
-                            'setting' => Settings::get_setting('vendor_mollie'),
+                            'setting' => $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE),
                         ]
                     );
                 }
@@ -185,7 +183,7 @@ class MollieVendor implements VendorInterface
                                 ),
                                 ucfirst($type)
                             ),
-                            'setting' => Settings::get_setting('vendor_mollie'),
+                            'setting' => $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE),
                         ]
                     );
                 }
@@ -193,8 +191,8 @@ class MollieVendor implements VendorInterface
         }
 
         // Update vendor settings.
-        Settings::update_array(
-            'vendor_mollie',
+        $this->settings->update_setting(
+            SettingsService::SETTING_NAME_VENDOR_MOLLIE,
             [
                 'test_key'        => $this->api_keys['test'],
                 'live_key'        => $this->api_keys['live'],
@@ -217,19 +215,9 @@ class MollieVendor implements VendorInterface
                 'message' =>
                 /* translators: %s: API mode */
                     __('API connection was successful!', 'kudos-donations'),
-                'setting' => Settings::get_setting('vendor_mollie'),
+                'setting' => $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE),
             ]
         );
-    }
-
-    /**
-     * Returns the api mode.
-     *
-     * @return string
-     */
-    public function get_api_mode(): string
-    {
-        return $this->api_mode;
     }
 
     /**

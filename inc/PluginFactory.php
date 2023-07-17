@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use IseardMedia\Kudos\Service\SettingsService;
 
 /**
  * Class PluginFactory
@@ -44,9 +45,9 @@ class PluginFactory {
 			$container_builder->addDefinitions( $config_path . 'config.php' );
 			try {
 				$container = $container_builder->build();
-				$plugin    = $container->get( Plugin::class );
+				$plugin = $container->get( Plugin::class );
 			} catch ( DependencyException | NotFoundException | \Exception $e ) {
-				error_log($e->getMessage());
+				error_log( $e->getMessage() );
 			}
 		}
 

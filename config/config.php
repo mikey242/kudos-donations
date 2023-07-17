@@ -25,30 +25,40 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Plugin;
-use IseardMedia\Kudos\Service\Settings;
+use IseardMedia\Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Service\SettingsService;
+use IseardMedia\Kudos\Service\Vendor\VendorInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 return [
-	Plugin::class                  => DI\autowire(),
-	Admin::class                   => DI\autowire(),
-	Front::class                   => DI\autowire(),
-	BaseAdminPage::class           => DI\autowire(),
-	CampaignAdminPage::class       => DI\autowire(),
-	SettingsAdminPage::class       => DI\autowire(),
-	TransactionsAdminPage::class   => DI\autowire(),
-	DonorAdminPage::class          => DI\autowire(),
-	SubscriptionsAdminPage::class  => DI\autowire(),
-	CampaignPostType::class        => DI\autowire(),
-	DonorPostType::class           => DI\autowire(),
-	SubscriptionPostType::class    => DI\autowire(),
-	TransactionPostType::class     => DI\autowire(),
-	Transaction::class             => DI\autowire(),
-	Mail::class                    => DI\autowire(),
-	Payment::class                 => DI\autowire(),
-	Settings::class                => DI\autowire(),
-	Psr\Log\LoggerInterface::class => DI\factory(
+	Plugin::class                 => DI\autowire(),
+	Admin::class                  => DI\autowire(),
+	Front::class                  => DI\autowire(),
+	BaseAdminPage::class          => DI\autowire(),
+	CampaignAdminPage::class      => DI\autowire(),
+	SettingsAdminPage::class      => DI\autowire(),
+	TransactionsAdminPage::class  => DI\autowire(),
+	DonorAdminPage::class         => DI\autowire(),
+	SubscriptionsAdminPage::class => DI\autowire(),
+	CampaignPostType::class       => DI\autowire(),
+	DonorPostType::class          => DI\autowire(),
+	SubscriptionPostType::class   => DI\autowire(),
+	TransactionPostType::class    => DI\autowire(),
+	Transaction::class            => DI\autowire(),
+	Mail::class                   => DI\autowire(),
+	Payment::class                => DI\autowire(),
+	SettingsService::class        => DI\autowire(),
+	VendorInterface::class        => DI\factory(
+		function ( ContainerInterface $c ) {
+			$vendor_class = PaymentService::get_current_vendor_class();
+			return $c->get( $vendor_class );
+		}
+	),
+	LoggerInterface::class        => DI\factory(
 		function () {
 			$logger       = new Logger( 'kudos_log' );
 			$file_handler = new StreamHandler( wp_upload_dir()['basedir'] . '/kudos-donations/logs/' . $_ENV['APP_ENV'] . '.log', Logger::DEBUG );

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Front related functions.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations
+ *
+ * @copyright 2023 Iseard Media
+ */
+
+declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller;
 
@@ -8,35 +17,27 @@ use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
-use IseardMedia\Kudos\Helper\Settings;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
+use IseardMedia\Kudos\Service\AbstractService;
 use IseardMedia\Kudos\Service\PaymentService;
-use Psr\Log\LoggerInterface;
+use IseardMedia\Kudos\Service\SettingsService;
 
 class Front extends AbstractService {
 
 	/**
-	 * @var LoggerInterface
-	 */
-	private LoggerInterface $logger;
-
-	/**
-	 * @var PaymentService
-	 */
-	private PaymentService $payment;
-
-	/**
 	 * Initialize the class and set its properties.
+	 *
+	 * @param PaymentService  $payment Payment service.
+	 * @param SettingsService $settings Settings service.
 	 */
 	public function __construct(
-		LoggerInterface $logger,
-		PaymentService $payment,
-	) {
-		$this->logger  = $logger;
-		$this->payment = $payment;
-	}
+		private PaymentService $payment,
+		private SettingsService $settings
+	) {}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function register(): void {
 		$this->register_kudos();
 		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );
@@ -49,7 +50,7 @@ class Front extends AbstractService {
 		$this->register_assets();
 		$this->register_blocks();
 		$this->register_button_shortcode();
-		if ( Settings::get_setting( 'always_load_assets' ) ) {
+		if ( $this->settings->get_setting( 'always_load_assets' ) ) {
 			$this->enqueue_assets();
 		}
 	}
@@ -90,10 +91,10 @@ class Front extends AbstractService {
 	public function button_render_callback( array $atts ): ?string {
 		try {
 			// Check if the current vendor is connected, otherwise throw an exception.
-			if ( ! $this->payment::is_api_ready() ) {
-				/* translators: %s: Payment vendor (e.g. Mollie). */
+			if ( ! $this->payment->is_api_ready() ) {
 				throw new Exception(
 					sprintf(
+						/* translators: %s: Payment vendor (e.g. Mollie). */
 						__( '%s not connected.', 'kudos-donations' ),
 						$this->payment::get_vendor_name()
 					)
@@ -106,7 +107,7 @@ class Front extends AbstractService {
 			// Create unique id for triggering.
 			$id = Utils::generate_id( 'kudos-' );
 
-			if ( $atts['type'] === 'button' ) {
+			if ( 'button' === $atts['type'] ) {
 				// Add modal to footer.
 				add_action(
 					'wp_footer',

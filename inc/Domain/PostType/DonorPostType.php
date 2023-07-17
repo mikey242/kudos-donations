@@ -11,10 +11,9 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\PostType;
 
+use IseardMedia\Kudos\Domain\HasAdminColumns;
+use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Infrastructure\Domain\AbstractCustomPostType;
-use IseardMedia\Kudos\Infrastructure\Domain\HasAdminColumns;
-use IseardMedia\Kudos\Infrastructure\Domain\HasMetaFieldsInterface;
 
 class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 

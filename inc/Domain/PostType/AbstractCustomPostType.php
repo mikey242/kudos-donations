@@ -9,11 +9,15 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Domain;
+namespace IseardMedia\Kudos\Domain\PostType;
 
-use IseardMedia\Kudos\Infrastructure\Admin\TableColumnsTrait;
-use IseardMedia\Kudos\Infrastructure\Container\Delayed;
-use IseardMedia\Kudos\Infrastructure\Container\Registrable;
+use IseardMedia\Kudos\Admin\TableColumnsTrait;
+use IseardMedia\Kudos\Domain\HasAdminColumns;
+use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
+use IseardMedia\Kudos\Domain\LabelsTrait;
+use IseardMedia\Kudos\Domain\MapperTrait;
+use IseardMedia\Kudos\Infrastructure\Delayed;
+use IseardMedia\Kudos\Infrastructure\Registrable;
 
 /**
  * AbstractCustomPostType class.
