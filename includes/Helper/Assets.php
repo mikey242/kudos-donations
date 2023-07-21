@@ -27,15 +27,16 @@ class Assets {
 	 * Returns an array with js file properties.
 	 * This includes checking for an accompanying .asset.php file.
 	 *
-	 * @throws \Exception
-	 *
 	 * @param string $asset
 	 * @param string $base_dir
 	 * @param string $base_url
+	 *
 	 * @return array|null
+	 *@throws \Exception
+	 *
 	 */
 	public static function get_script(
-		$asset,
+		string $asset,
 		string $base_dir = KUDOS_PLUGIN_DIR,
 		string $base_url = KUDOS_PLUGIN_URL
 	): ?array {
