@@ -9,9 +9,9 @@
 
 declare( strict_types=1 );
 
-use IseardMedia\Kudos\Admin\BaseAdminPage;
 use IseardMedia\Kudos\Admin\CampaignAdminPage;
 use IseardMedia\Kudos\Admin\DonorAdminPage;
+use IseardMedia\Kudos\Admin\ParentAdminPage;
 use IseardMedia\Kudos\Admin\SettingsAdminPage;
 use IseardMedia\Kudos\Admin\SubscriptionsAdminPage;
 use IseardMedia\Kudos\Admin\TransactionsAdminPage;
@@ -41,8 +41,8 @@ return [
 	Plugin::class                 => autowire(),
 	Admin::class                  => autowire(),
 	Front::class                  => autowire(),
-	BaseAdminPage::class          => autowire(),
 	CampaignAdminPage::class      => autowire(),
+	ParentAdminPage::class        => autowire(),
 	SettingsAdminPage::class      => autowire(),
 	TransactionsAdminPage::class  => autowire(),
 	DonorAdminPage::class         => autowire(),

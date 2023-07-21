@@ -1,6 +1,6 @@
 <?php
 /**
- * Base Admin Page.
+ * Parent Admin Page.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-class BaseAdminPage extends AbstractAdminPage {
+class ParentAdminPage extends AbstractAdminPage {
 
 	/**
 	 * {@inheritDoc}
