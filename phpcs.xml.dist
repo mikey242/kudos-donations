@@ -18,6 +18,7 @@
 		<!-- Documentation is organized with the use of namespaces. -->
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
 		<exclude name="Squiz.Commenting.ClassComment.Missing"/>
+		<exclude name="Squiz.Commenting.VariableComment.Missing"/>
 			</rule>
 
 	<rule ref="WordPress-Extra">

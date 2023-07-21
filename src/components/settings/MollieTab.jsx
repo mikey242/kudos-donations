@@ -13,7 +13,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 const MollieTab = ({ checkApiKeys }) => {
 	const { checkingApiKey } = useSettingsContext();
 
-	const refresh = () => {
+	const refresh = (e) => {
 		checkApiKeys();
 	};
 

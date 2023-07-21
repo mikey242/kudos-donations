@@ -7,4 +7,4 @@ node_modules
 .idea
 *.iml
 .env
-inc/Dependencies
+includes/Dependencies

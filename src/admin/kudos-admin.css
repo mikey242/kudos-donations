@@ -31,7 +31,7 @@
     }
 
     #wpcontent {
-        padding-left: 0;
+        padding-left: 0 !important;
     }
 
     .auto-fold #wpcontent {

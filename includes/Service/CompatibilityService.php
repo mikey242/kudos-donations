@@ -1,0 +1,150 @@
+<?php
+
+namespace IseardMedia\Kudos\Service;
+
+use IseardMedia\Kudos\Admin\Notice\AdminDismissibleNotice;
+
+class CompatibilityService {
+
+	/**
+	 * The plugin's required WordPress version
+	 *
+	 * @since 2.0.0
+	 *
+	 * @var string
+	 */
+	public $required_wp_version = '5.5';
+
+	/**
+	 * The plugin's required PHP version
+	 *
+	 * @since 2.0.0
+	 *
+	 * @var string
+	 */
+	public $required_php_version = '7.3';
+
+	/**
+	 * Holds any blocker error messages stopping plugin running
+	 *
+	 * @since 2.0.0
+	 *
+	 * @var array
+	 */
+	private $notices = [];
+
+	/**
+	 * Check if dependencies are met and load plugin, otherwise display errors
+	 *
+	 * @since 2.0.0
+	 */
+	public function init(): bool {
+		/* Check minimum requirements are met */
+		$this->run_tests();
+
+		/* Check if any errors were thrown, enqueue them and exit early */
+		if ( \sizeof( $this->notices ) > 0 ) {
+			$notice = $this->build_notice();
+			( new AdminDismissibleNotice() )->error( $notice['error'], 'error', $notice['details'] );
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if WordPress version is compatible
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool Whether compatible or not
+	 */
+	public function check_wordpress_version(): bool {
+		global $wp_version;
+
+		/* WordPress version not compatible */
+		if ( ! version_compare( $wp_version, $this->required_wp_version, '>=' ) ) {
+			$this->notices[] = sprintf(
+				/* translators: %1$s: WordPress version number. */
+				esc_html__( 'WordPress Version %1$s is required.', 'kudos-donations' ),
+				$this->required_wp_version
+			);
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if PHP version is compatible
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool Whether compatible or not
+	 */
+	public function check_php(): bool {
+		/* Check PHP version is compatible */
+		if ( ! version_compare( phpversion(), $this->required_php_version, '>=' ) ) {
+			$this->notices[] = sprintf(
+				/* translators:	%1$s: Support URL. %2$s: Current PHP version. %3$s: Required PHP version. */
+				__(
+					'You are running an <a href="%1$s">outdated version of PHP</a> (%2$s). Kudos Donations requires at least PHP %3$s to work. Contact your web hosting provider to update.',
+					'kudos-donations'
+				),
+				'https://wordpress.org/support/update-php/',
+				phpversion(),
+				$this->required_php_version
+			);
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Helper function to build the messages
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function build_notice(): array {
+		$notice             = [];
+		$notice['error']    = __( 'Kudos Donations Installation Problem', 'kudos-donations' );
+		$notice['details']  = '<p>' . __(
+			'The minimum requirements for Kudos Donations have not been met. Please fix the issue(s) below to continue:',
+			'kudos-donations'
+		) . '</p>';
+		$notice['details'] .= "<ul style='padding-bottom: 0.5em'>";
+		foreach ( $this->notices as $error ) :
+			$notice['details'] .= "<li style='padding-left: 20px;list-style: inside'>" . $error . '</li>';
+		endforeach;
+		$notice['details'] .= '</ul>';
+
+		return $notice;
+	}
+
+	/**
+	 * Add to notices array
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $notice
+	 */
+	public function add_notice( string $notice ): void {
+		$this->notices[] = $notice;
+	}
+
+	/**
+	 * Run the specified tests
+	 *
+	 * @since 2.0.0
+	 */
+	private function run_tests(): void {
+		$this->check_wordpress_version();
+		$this->check_php();
+	}
+}

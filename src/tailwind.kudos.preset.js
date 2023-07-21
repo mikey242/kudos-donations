@@ -15,6 +15,8 @@ module.exports = {
 		},
 		extend: {
 			screens: {
+				adminXs: '600px',
+				adminSm: '783px',
 				xs: '475px',
 			},
 			colors: {

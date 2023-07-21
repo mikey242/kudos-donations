@@ -190,7 +190,7 @@ const CampaignsPage = () => {
 							</Button>
 						)}
 					</Header>
-					<div className="max-w-3xl w-full mx-auto">
+					<div className="max-w-4xl w-full mx-auto">
 						{!currentCampaign ? (
 							<>
 								{campaigns?.length >= 1 ? (
