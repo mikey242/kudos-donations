@@ -45,24 +45,6 @@ abstract class AbstractAdminPage implements AdminPageInterface, Registrable, Del
 	}
 
 	/**
-	 * Extra styles to load for formatting admin pages.
-	 */
-	public function add_extra_styles(): void {
-		$extra_css = "
-			.kudos-admin-page {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background-color: #f0f0f1;
-			}
-		";
-
-		wp_add_inline_style('kudos-donations-settings', $extra_css);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function get_parent_slug(): string {
