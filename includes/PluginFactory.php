@@ -32,7 +32,6 @@ class PluginFactory {
 
 		if ( null === $plugin ) {
 			$container_builder = new ContainerBuilder();
-
 			// Enable cache if not in development mode.
 			if ( 'development' !== $_ENV['APP_ENV'] ) {
 				$kudos_uploads = wp_upload_dir()['basedir'] . '/kudos-donations/container';
@@ -44,7 +43,7 @@ class PluginFactory {
 			$container_builder->addDefinitions( $config_path . 'config.php' );
 			try {
 				$container = $container_builder->build();
-				$plugin = $container->get( Plugin::class );
+				$plugin    = $container->get( Plugin::class );
 			} catch ( DependencyException | NotFoundException | \Exception $e ) {
 				error_log( $e->getMessage() );
 			}

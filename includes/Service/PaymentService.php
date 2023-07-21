@@ -54,7 +54,9 @@ class PaymentService extends AbstractService {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		// First hook is to schedule the process hook once payment completed.
 		add_action( 'kudos_transaction_paid', [ $this, 'schedule_process_transaction' ] );
+		// Second hook is to call another hook that runs when scheduled hook called.
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
 	}
 
@@ -120,7 +122,7 @@ class PaymentService extends AbstractService {
 	public function process_transaction( int $transaction_id ): bool {
 		$mailer = $this->mailer_service;
 
-		$this->logger->debug( 'Processing paid transaction', [ 'transaction_id' => $transaction_id ] );
+		$this->logger->debug( 'Processing paid transaction.', [ 'transaction_id' => $transaction_id ] );
 
 		// Get donor.
 		$donor = get_post( get_post_meta( $transaction_id, 'donor_id', true ) );

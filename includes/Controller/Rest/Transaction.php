@@ -108,7 +108,7 @@ class Transaction extends AbstractRestController {
 	/**
 	 * Get one by id.
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request The request object.
 	 */
 	public function get_one( WP_REST_Request $request ): WP_REST_Response {
 		return new WP_REST_Response(
@@ -136,7 +136,7 @@ class Transaction extends AbstractRestController {
 	/**
 	 * Get all records between specified dates.
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request The request object.
 	 */
 	public function get_all_between( WP_REST_Request $request ): WP_REST_Response {
 		$response = new WP_REST_Response();
@@ -161,7 +161,7 @@ class Transaction extends AbstractRestController {
 	}
 
 	/**
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request The request object.
 	 */
 	public function get_all_campaign( WP_REST_Request $request ): WP_REST_Response {
 		$response = new WP_REST_Response();

@@ -881,7 +881,6 @@ class MollieVendor extends AbstractService implements VendorInterface
                         if ($order_id) {
                             /**
                              * Find existing transaction.
-                             * @var TransactionEntity $transaction
                              */
                             $transaction = TransactionPostType::get_by_meta_query([
 								[
@@ -897,16 +896,16 @@ class MollieVendor extends AbstractService implements VendorInterface
                             if ($transaction) {
                                 $transaction->set_fields(
                                     [
-                                        'status'          => $payment->status,
-                                        'vendor_customer_id'     => $payment->customerId,
-                                        'value'           => $amount->value,
-                                        'currency'        => $amount->currency,
-                                        'sequence_type'   => $payment->sequenceType,
-                                        'method'          => $payment->method,
-                                        'mode'            => $payment->mode,
-                                        'subscription_id' => $payment->subscriptionId,
-                                        'transaction_id'  => $payment->id,
-                                        'campaign_id'     => $payment->metadata ? $payment->metadata->campaign_id : null,
+                                        'status'                => $payment->status,
+                                        'vendor_customer_id'    => $payment->customerId,
+                                        'value'                 => $amount->value,
+                                        'currency'              => $amount->currency,
+                                        'sequence_type'         => $payment->sequenceType,
+                                        'method'                => $payment->method,
+                                        'mode'                  => $payment->mode,
+                                        'subscription_id'       => $payment->subscriptionId,
+                                        'transaction_id'        => $payment->id,
+                                        'campaign_id'           => $payment->metadata ? $payment->metadata->campaign_id : null,
                                     ]
                                 );
                                 $mapper->save($transaction);

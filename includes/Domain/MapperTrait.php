@@ -42,7 +42,7 @@ trait MapperTrait {
 	 * Gets posts by simple key => value args.
 	 *
 	 * @param array  $meta_args Array of key => value meta args.
-	 * @param string $relation AND or OR relation between values.
+	 * @param string $relation AND / OR relation between values.
 	 */
 	public static function get_one_by_meta( array $meta_args, string $relation = 'AND' ): ?WP_Post {
 		$args = array_merge(
@@ -72,7 +72,7 @@ trait MapperTrait {
 	 * Gets posts by simple key => value args.
 	 *
 	 * @param array  $meta_args Array of key => value meta args.
-	 * @param string $relation AND or OR relation between values.
+	 * @param string $relation AND / OR relation between values.
 	 */
 	public static function get_by_meta( array $meta_args, string $relation = 'AND' ): array {
 		$args = array_merge(
