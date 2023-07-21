@@ -23,6 +23,8 @@ class Payment extends AbstractRestController {
 
 	/**
 	 * PaymentRoutes constructor.
+	 *
+	 * @param PaymentService $payment_service Payment service.
 	 */
 	public function __construct( PaymentService $payment_service ) {
 		parent::__construct();

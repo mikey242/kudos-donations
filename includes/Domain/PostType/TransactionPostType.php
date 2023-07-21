@@ -19,6 +19,25 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 class TransactionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
 	/**
+	 * Meta field constants.
+	 */
+	public const META_FIELD_VALUE              = 'value';
+	public const META_FIELD_CURRENCY           = 'currency';
+	public const META_FIELD_STATUS             = 'status';
+	public const META_FIELD_METHOD             = 'method';
+	public const META_FIELD_MODE               = 'mode';
+	public const META_FIELD_SEQUENCE_TYPE      = 'sequence_type';
+	public const META_FIELD_DONOR_ID           = 'donor_id';
+	public const META_FIELD_VENDOR_PAYMENT_ID  = 'vendor_payment_id';
+	public const META_FIELD_ORDER_ID           = 'order_id';
+	public const META_FIELD_CAMPAIGN_ID        = 'campaign_id';
+	public const META_FIELD_REFUNDS            = 'refunds';
+	public const META_FIELD_MESSAGE            = 'message';
+	public const META_FIELD_VENDOR             = 'vendor';
+	public const META_FIELD_VENDOR_CUSTOMER_ID = 'vendor_customer_id';
+	public const META_FIELD_SUBSCRIPTION_ID    = 'subscription_id';
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_slug(): string {
@@ -51,55 +70,63 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	 */
 	public static function get_meta_config(): array {
 		return [
-			'value'             => [
+			self::META_FIELD_VALUE              => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
 			],
-			'currency'          => [
+			self::META_FIELD_CURRENCY           => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'status'            => [
+			self::META_FIELD_STATUS             => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'method'            => [
+			self::META_FIELD_METHOD             => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'mode'              => [
+			self::META_FIELD_MODE               => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'sequence_type'     => [
+			self::META_FIELD_SEQUENCE_TYPE      => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'donor_id'          => [
+			self::META_FIELD_DONOR_ID           => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
 			],
-			'vendor_payment_id' => [
+			self::META_FIELD_VENDOR_PAYMENT_ID  => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'order_id'          => [
+			self::META_FIELD_ORDER_ID           => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'campaign_id'       => [
+			self::META_FIELD_CAMPAIGN_ID        => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'refunds'           => [
+			self::META_FIELD_REFUNDS            => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'message'           => [
+			self::META_FIELD_MESSAGE            => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'vendor'            => [
+			self::META_FIELD_VENDOR             => [
+				'type'              => FieldType::STRING,
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			self::META_FIELD_VENDOR_CUSTOMER_ID => [
+				'type'              => FieldType::STRING,
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			self::META_FIELD_SUBSCRIPTION_ID    => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
@@ -111,7 +138,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	 */
 	public function get_columns_config(): array {
 		return [
-			'donor'             => [
+			'donor'                            => [
 				'value_type'     => FieldType::EMAIL,
 				'label'          => __( 'Donor', 'kudos-donations' ),
 				'value_callback' => function ( $transaction_id ) {
@@ -122,19 +149,19 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					return null;
 				},
 			],
-			'order_id'          => [
+			self::META_FIELD_ORDER_ID          => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Order ID', 'kudos-donations' ),
 			],
-			'vendor_payment_id' => [
+			self::META_FIELD_VENDOR_PAYMENT_ID => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Vendor ID', 'kudos-donations' ),
 			],
-			'value'             => [
+			self::META_FIELD_VALUE             => [
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Amount', 'kudos-donations' ),
 			],
-			'campaign'          => [
+			self::META_FIELD_CAMPAIGN_ID       => [
 				'value_type'     => FieldType::STRING,
 				'label'          => __( 'Campaign', 'kudos-donations' ),
 				'value_callback' => function( $transaction_id ): ?string {
@@ -148,11 +175,11 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					return null;
 				},
 			],
-			'currency'          => [
+			self::META_FIELD_CURRENCY          => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Currency', 'kudos-donations' ),
 			],
-			'status'            => [
+			self::META_FIELD_STATUS            => [
 				'value_type'     => FieldType::STRING,
 				'label'          => __( 'Status', 'kudos-donations' ),
 				'value_callback' => function( $transaction_id ) {
@@ -175,7 +202,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					return $status_text;
 				},
 			],
-			'message'           => [
+			self::META_FIELD_MESSAGE           => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Message', 'kudos-donations' ),
 			],

@@ -17,6 +17,18 @@ use IseardMedia\Kudos\Enum\FieldType;
 class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface {
 
 	/**
+	 * Meta field constants.
+	 */
+	public const META_FIELD_VALUE           = 'value';
+	public const META_FIELD_CURRENCY        = 'currency';
+	public const META_FIELD_FREQUENCY       = 'frequency';
+	public const META_FIELD_YEARS           = 'years';
+	public const META_FIELD_STATUS          = 'status';
+	public const META_FIELD_CUSTOMER_ID     = 'customer_id';
+	public const META_FIELD_TRANSACTION_ID  = 'transaction_id';
+	public const META_FIELD_SUBSCRIPTION_ID = 'subscription_id';
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_slug(): string {
@@ -49,35 +61,35 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	 */
 	public static function get_meta_config(): array {
 		return [
-			'value'           => [
+			self::META_FIELD_VALUE           => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
 			],
-			'currency'        => [
+			self::META_FIELD_CURRENCY        => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'frequency'       => [
+			self::META_FIELD_FREQUENCY       => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'years'           => [
+			self::META_FIELD_YEARS           => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
 			],
-			'status'          => [
+			self::META_FIELD_STATUS          => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'customer_id'     => [
+			self::META_FIELD_CUSTOMER_ID     => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'transaction_id'  => [
+			self::META_FIELD_TRANSACTION_ID  => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'subscription_id' => [
+			self::META_FIELD_SUBSCRIPTION_ID => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],

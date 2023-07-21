@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain;
 
+use IseardMedia\Kudos\Domain\Post\AbstractPost;
+use IseardMedia\Kudos\Domain\Post\TransactionPost;
 use WP_Error;
 use WP_Post;
 

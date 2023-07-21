@@ -18,6 +18,19 @@ use IseardMedia\Kudos\Enum\FieldType;
 class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
 	/**
+	 * Meta field constants.
+	 */
+	public const META_FIELD_EMAIL              = 'email';
+	public const META_FIELD_MODE               = 'mode';
+	public const META_FIELD_NAME               = 'name';
+	public const META_FIELD_BUSINESS_NAME      = 'business_name';
+	public const META_FIELD_STREET             = 'street';
+	public const META_FIELD_POSTCODE           = 'postcode';
+	public const META_FIELD_CITY               = 'city';
+	public const META_FIELD_COUNTRY            = 'country';
+	public const META_FIELD_VENDOR_CUSTOMER_ID = 'vendor_customer_id';
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_slug(): string {
@@ -50,39 +63,39 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	 */
 	public static function get_meta_config(): array {
 		return [
-			'email'              => [
+			self::META_FIELD_EMAIL              => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_email',
 			],
-			'mode'               => [
+			self::META_FIELD_MODE               => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'name'               => [
+			self::META_FIELD_NAME               => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'business_name'      => [
+			self::META_FIELD_BUSINESS_NAME      => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'street'             => [
+			self::META_FIELD_STREET             => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'postcode'           => [
+			self::META_FIELD_POSTCODE           => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'city'               => [
+			self::META_FIELD_CITY               => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'country'            => [
+			self::META_FIELD_COUNTRY            => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'vendor_customer_id' => [
+			self::META_FIELD_VENDOR_CUSTOMER_ID => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
@@ -94,19 +107,19 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	 */
 	public function get_columns_config(): array {
 		return [
-			'name'               => [
+			self::META_FIELD_NAME               => [
 				'label'      => __( 'Name', 'kudos-donations' ),
 				'value_type' => FieldType::STRING,
 			],
-			'email'              => [
+			self::META_FIELD_EMAIL              => [
 				'label'      => __( 'Email', 'kudos-donations' ),
 				'value_type' => FieldType::EMAIL,
 			],
-			'vendor_customer_id' => [
+			self::META_FIELD_VENDOR_CUSTOMER_ID => [
 				'label'      => __( 'Vendor ID', 'kudos-donations' ),
 				'value_type' => FieldType::STRING,
 			],
-			'total_donations'    => [
+			'total_donations'                   => [
 				'label'          => __( 'Total donated', 'kudos-donations' ),
 				'value_type'     => FieldType::INTEGER,
 				'value_callback' => function( $donor_id ) {

@@ -20,6 +20,7 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\AbstractService;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Service\SettingsService;
+use IseardMedia\Kudos\Service\Vendor\MollieVendor;
 
 class Front extends AbstractService {
 	private SettingsService $settings;
@@ -54,7 +55,7 @@ class Front extends AbstractService {
 	public function register_kudos(): void {
 		$this->register_blocks();
 		$this->register_button_shortcode();
-		if ( $this->settings->get_setting( 'always_load_assets' ) ) {
+		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_ALWAYS_LOAD_ASSETS ) ) {
 			$this->enqueue_assets();
 		}
 	}

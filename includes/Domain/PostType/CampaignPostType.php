@@ -1,6 +1,6 @@
 <?php
 /**
- * CampaignPostType Post Type
+ * Campaign Post Type
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
@@ -19,6 +19,30 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	protected const SUPPORTS     = [ 'title', 'custom-fields' ];
 	protected const SHOW_IN_REST = true;
 	protected const CAPABILITIES = [ 'create_posts' => true ];
+
+	/**
+	 * Meta field constants.
+	 */
+	public const META_FIELD_GOAL                  = 'goal';
+	public const META_FIELD_SHOW_GOAL             = 'show_goal';
+	public const META_FIELD_ADDITIONAL_FUNDS      = 'additional_funds';
+	public const META_FIELD_INITIAL_TITLE         = 'initial_title';
+	public const META_FIELD_INITIAL_DESCRIPTION   = 'initial_description';
+	public const META_FIELD_ADDRESS_ENABLED       = 'address_enabled';
+	public const META_FIELD_ADDRESS_REQUIRED      = 'address_required';
+	public const META_FIELD_MESSAGE_ENABLED       = 'message_enabled';
+	public const META_FIELD_AMOUNT_TYPE           = 'amount_type';
+	public const META_FIELD_FIXED_AMOUNTS         = 'fixed_amounts';
+	public const META_FIELD_MINIMUM_DONATION      = 'minimum_donation';
+	public const META_FIELD_DONATION_TYPE         = 'donation_type';
+	public const META_FIELD_THEME_COLOR           = 'theme_color';
+	public const META_FIELD_TERMS_LINK            = 'terms_link';
+	public const META_FIELD_PRIVACY_LINK          = 'privacy_link';
+	public const META_FIELD_SHOW_RETURN_MESSAGE   = 'show_return_message';
+	public const META_FIELD_USE_CUSTOM_RETURN_URL = 'use_custom_return_url';
+	public const META_FIELD_CUSTOM_RETURN_URL     = 'custom_return_url';
+	public const META_FIELD_RETURN_MESSAGE_TITLE  = 'return_message_title';
+	public const META_FIELD_RETURN_MESSAGE_TEXT   = 'return_message_text';
 
 	/**
 	 * {@inheritDoc}
@@ -53,84 +77,84 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 */
 	public static function get_meta_config(): array {
 		return [
-			'goal'                  => [
+			self::META_FIELD_GOAL                  => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'show_goal'             => [
+			self::META_FIELD_SHOW_GOAL             => [
 				'type'              => FieldType::BOOLEAN,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'additional_funds'      => [
+			self::META_FIELD_ADDITIONAL_FUNDS      => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'initial_title'         => [
+			self::META_FIELD_INITIAL_TITLE         => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'initial_description'   => [
+			self::META_FIELD_INITIAL_DESCRIPTION   => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'address_enabled'       => [
+			self::META_FIELD_ADDRESS_ENABLED       => [
 				'type'              => FieldType::BOOLEAN,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'address_required'      => [
+			self::META_FIELD_ADDRESS_REQUIRED      => [
 				'type'              => FieldType::BOOLEAN,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'message_enabled'       => [
+			self::META_FIELD_MESSAGE_ENABLED       => [
 				'type'              => FieldType::BOOLEAN,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'amount_type'           => [
+			self::META_FIELD_AMOUNT_TYPE           => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'fixed_amounts'         => [
+			self::META_FIELD_FIXED_AMOUNTS         => [
 				'type'              => FieldType::STRING,
 				'single'            => false,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'minimum_donation'      => [
+			self::META_FIELD_MINIMUM_DONATION      => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'sanitize_float',
 			],
-			'donation_type'         => [
+			self::META_FIELD_DONATION_TYPE         => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'theme_color'           => [
+			self::META_FIELD_THEME_COLOR           => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'terms_link'            => [
+			self::META_FIELD_TERMS_LINK            => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'esc_url_raw',
 			],
-			'privacy_link'          => [
+			self::META_FIELD_PRIVACY_LINK          => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'esc_url_raw',
 			],
-			'show_return_message'   => [
+			self::META_FIELD_SHOW_RETURN_MESSAGE   => [
 				'type'              => FieldType::BOOLEAN,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'use_custom_return_url' => [
+			self::META_FIELD_USE_CUSTOM_RETURN_URL => [
 				'type'              => FieldType::BOOLEAN,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'custom_return_url'     => [
+			self::META_FIELD_CUSTOM_RETURN_URL     => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'return_message_title'  => [
+			self::META_FIELD_RETURN_MESSAGE_TITLE  => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'return_message_text'   => [
+			self::META_FIELD_RETURN_MESSAGE_TEXT   => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],

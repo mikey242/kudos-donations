@@ -4,6 +4,7 @@ namespace IseardMedia\Kudos\Service\Vendor;
 
 use Exception;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
+use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
@@ -485,12 +486,12 @@ class MollieVendor extends AbstractService implements VendorInterface
                 $order_id
             ),
             'metadata'     => [
-                'order_id'    => $order_id,
-                'interval'    => $payment_args['payment_frequency'],
-                'years'       => $payment_args['recurring_length'],
-                'email'       => $payment_args['email'],
-                'name'        => $payment_args['name'],
-                'campaign_id' => $payment_args['campaign_id'],
+                TransactionPostType::META_FIELD_ORDER_ID    => $order_id,
+                'interval'                                  => $payment_args['payment_frequency'],
+                SubscriptionPostType::META_FIELD_YEARS      => $payment_args['recurring_length'],
+                DonorPostType::META_FIELD_EMAIL             => $payment_args['email'],
+                DonorPostType::META_FIELD_NAME              => $payment_args['name'],
+                TransactionPostType::META_FIELD_CAMPAIGN_ID => $payment_args['campaign_id'],
             ],
         ];
 
@@ -558,7 +559,7 @@ class MollieVendor extends AbstractService implements VendorInterface
         }
 
         // Otherwise, return normal rest URL.
-        return rest_url($route);
+        return get_rest_url(null, $route);
     }
 
     /**
@@ -636,14 +637,14 @@ class MollieVendor extends AbstractService implements VendorInterface
                 $transaction  = TransactionPostType::save(
 					[],
 					[
-	                    'order_id'    => $order_id,
-	                    'campaign_id' => $subscription->metadata->campaign_id ?? '',
+	                    TransactionPostType::META_FIELD_ORDER_ID    => $order_id,
+	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $subscription->metadata->campaign_id ?? '',
                     ]
                 );
             } else {
 	            $transaction = TransactionPostType::get_one_by_meta(
 		            [
-			            'order_id'   => $payment->metadata->order_id
+			            TransactionPostType::META_FIELD_ORDER_ID   => $payment->metadata->order_id
 		            ]
 	            );
             }
@@ -666,7 +667,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 
             // Update transaction status.
 	        TransactionPostType::update_meta($transaction->ID, [
-		        'status' => $payment->status
+		        TransactionPostType::META_FIELD_STATUS => $payment->status
 	        ]);
 
             // Create action with order_id as parameter.
@@ -685,15 +686,15 @@ class MollieVendor extends AbstractService implements VendorInterface
 
                 // Update transaction.
 	            TransactionPostType::update_meta($transaction->ID, [
-		            'status'                => $payment->status,
-		            'vendor_payment_id'     => $payment->id,
-		            'vendor_customer_id'    => $payment->customerId,
-		            'value'                 => $payment->amount->value,
-		            'currency'              => $payment->amount->currency,
-		            'sequence_type'         => $payment->sequenceType,
-		            'method'                => $payment->method,
-		            'mode'                  => $payment->mode,
-		            'subscription_id'       => $payment->subscriptionId,
+		            TransactionPostType::META_FIELD_STATUS                => $payment->status,
+		            TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID     => $payment->id,
+		            TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID    => $payment->customerId,
+		            TransactionPostType::META_FIELD_VALUE                 => $payment->amount->value,
+		            TransactionPostType::META_FIELD_CURRENCY              => $payment->amount->currency,
+		            TransactionPostType::META_FIELD_SEQUENCE_TYPE         => $payment->sequenceType,
+		            TransactionPostType::META_FIELD_METHOD                => $payment->method,
+		            TransactionPostType::META_FIELD_MODE                  => $payment->mode,
+		            TransactionPostType::META_FIELD_SUBSCRIPTION_ID       => $payment->subscriptionId,
 	            ]);
 
                 // Set up recurring payment if sequence is first.
@@ -884,7 +885,7 @@ class MollieVendor extends AbstractService implements VendorInterface
                              */
                             $transaction = TransactionPostType::get_by_meta_query([
 								[
-									'key' => 'order_id',
+									'key' => TransactionPostType::META_FIELD_ORDER_ID,
 									'value' => $order_id
 								],
 								[
@@ -956,13 +957,13 @@ class MollieVendor extends AbstractService implements VendorInterface
                              * @var TransactionEntity $transaction
                              */
                             $transaction = $mapper->get_one_by([
-                                'order_id' => $order_id,
+                                TransactionPostType::META_FIELD_ORDER_ID => $order_id,
                             ]);
 
                             // Add new transaction if none found.
                             if ( ! $transaction) {
                                 $transaction = new TransactionEntity([
-                                    'order_id'        => $order_id,
+                                    TransactionPostType::META_FIELD_ORDER_ID        => $order_id,
                                     'created'         => $payment->createdAt,
                                     'status'          => $payment->status,
                                     'vendor_id'     => $payment->customerId,

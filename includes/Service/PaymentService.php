@@ -125,9 +125,9 @@ class PaymentService extends AbstractService {
 		$this->logger->debug( 'Processing paid transaction.', [ 'transaction_id' => $transaction_id ] );
 
 		// Get donor.
-		$donor = get_post( get_post_meta( $transaction_id, 'donor_id', true ) );
+		$donor = get_post( get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true ) );
 
-		if ( get_post_meta( $donor->ID, 'email' ) ) {
+		if ( get_post_meta( $donor->ID, DonorPostType::META_FIELD_EMAIL ) ) {
 			// Send email - email setting is checked in mailer.
 			$mailer->send_receipt( $donor->ID, $transaction_id );
 		}
@@ -138,7 +138,7 @@ class PaymentService extends AbstractService {
 	/**
 	 * Handles the donation form submission.
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request Request object.
 	 */
 	public function submit_payment( WP_REST_Request $request ): void {
 		// Verify nonce.
@@ -182,28 +182,28 @@ class PaymentService extends AbstractService {
 		if ( $args['email'] ) {
 
 			$donor_meta = [
-				'mode'          => $this->vendor->get_api_mode(),
-				'email'         => $args['email'],
-				'name'          => $args['name'],
-				'business_name' => $args['business_name'],
-				'street'        => $args['street'],
-				'postcode'      => $args['postcode'],
-				'city'          => $args['city'],
-				'country'       => $args['country'],
+				DonorPostType::META_FIELD_MODE          => $this->vendor->get_api_mode(),
+				DonorPostType::META_FIELD_EMAIL         => $args['email'],
+				DonorPostType::META_FIELD_NAME          => $args['name'],
+				DonorPostType::META_FIELD_BUSINESS_NAME => $args['business_name'],
+				DonorPostType::META_FIELD_STREET        => $args['street'],
+				DonorPostType::META_FIELD_POSTCODE      => $args['postcode'],
+				DonorPostType::META_FIELD_CITY          => $args['city'],
+				DonorPostType::META_FIELD_COUNTRY       => $args['country'],
 			];
 
 			// Search for existing donor based on email and mode.
 			$donor = DonorPostType::get_one_by_meta(
 				[
-					'email' => $args['email'],
-					'mode'  => $this->vendor->get_api_mode(),
+					DonorPostType::META_FIELD_EMAIL => $args['email'],
+					DonorPostType::META_FIELD_MODE  => $this->vendor->get_api_mode(),
 				]
 			);
 
 			// Create new customer with vendor if none found.
 			if ( ! $donor ) {
-				$customer                         = $this->vendor->create_customer( $args['email'], $args['name'] );
-				$donor_meta['vendor_customer_id'] = $customer->id;
+				$customer = $this->vendor->create_customer( $args['email'], $args['name'] );
+				$donor_meta[ DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID ] = $customer->id;
 			}
 
 			// Update or create donor.
@@ -313,7 +313,7 @@ class PaymentService extends AbstractService {
 			SubscriptionPostType::update_meta(
 				$id,
 				[
-					'status' => 'cancelled',
+					SubscriptionPostType::META_FIELD_STATUS => 'cancelled',
 				]
 			);
 

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Mailer service.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
+
+declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
@@ -17,6 +26,10 @@ class MailerService {
 
 	/**
 	 * Mailer constructor.
+	 *
+	 * @param TwigService     $twig Twig service.
+	 * @param LoggerInterface $logger Logger instance.
+	 * @param SettingsService $settings Settings service.
 	 */
 	public function __construct( TwigService $twig, LoggerInterface $logger, SettingsService $settings ) {
 		$this->settings = $settings;
@@ -24,6 +37,9 @@ class MailerService {
 		$this->twig     = $twig;
 	}
 
+	/**
+	 * Bse64 encoded logo.
+	 */
 	private function get_logo(): string {
 		return 'iVBORw0KGgoAAAANSUhEUgAAACgAAAAgCAYAAABgrToAAAAFVGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgZXhpZjpQaXhlbFhEaW1lbnNpb249IjQwIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iMzIiCiAgIGV4aWY6Q29sb3JTcGFjZT0iMSIKICAgdGlmZjpJbWFnZVdpZHRoPSI0MCIKICAgdGlmZjpJbWFnZUxlbmd0aD0iMzIiCiAgIHRpZmY6UmVzb2x1dGlvblVuaXQ9IjIiCiAgIHRpZmY6WFJlc29sdXRpb249IjcyLzEiCiAgIHRpZmY6WVJlc29sdXRpb249IjcyLzEiCiAgIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiCiAgIHBob3Rvc2hvcDpJQ0NQcm9maWxl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';
 	}
@@ -38,7 +54,7 @@ class MailerService {
 	 */
 	public function init( PHPMailer $phpmailer ): void {
 		$this->logger->debug( 'Mailer: PHPMailer initialized' );
-		// Toggle this on to enable PHPMailer's debug mode.
+		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$phpmailer->SMTPDebug = 0;
 
 		// Set higher timeout.
@@ -46,6 +62,7 @@ class MailerService {
 
 		// Add logo as attachment.
 		$phpmailer->addStringEmbeddedImage(
+			// phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 			base64_decode( $this->get_logo() ),
 			'kudos-logo',
 			'kudos-logo.png'
@@ -55,7 +72,7 @@ class MailerService {
 		$phpmailer->isHTML();
 
 		// Add BCC.
-		$bcc = $this->settings->get_setting( 'email_bcc' );
+		$bcc = $this->settings->get_setting( SettingsService::SETTING_NAME_EMAIL_BCC );
 		if ( is_email( $bcc ) ) {
 			$phpmailer->addBCC( $bcc );
 		}
@@ -73,10 +90,10 @@ class MailerService {
 			$phpmailer->Username = $custom_config['username'];
 			$phpmailer->Password = $custom_config['password'];
 			$phpmailer->Port     = $custom_config['port'];
-
 			$phpmailer->From     = $custom_config['from_email'];
 			$phpmailer->FromName = $custom_config['from_name'];
 		}
+		// phpcs:enable
 	}
 
 	/**
@@ -169,6 +186,9 @@ class MailerService {
 		return $mail;
 	}
 
+	/**
+	 * Creates the hooks for changing phpmailer settings.
+	 */
 	private function create_hooks(): void {
 		add_action( 'phpmailer_init', [ $this, 'init' ] );
 		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
@@ -178,6 +198,9 @@ class MailerService {
 		}
 	}
 
+	/**
+	 * Removes hooks to return to normal settings after email sent.
+	 */
 	private function remove_hooks(): void {
 		remove_action( 'phpmailer_init', [ $this, 'init' ] );
 		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
@@ -187,10 +210,20 @@ class MailerService {
 		}
 	}
 
+	/**
+	 * Returns a filtered email.
+	 *
+	 * @return mixed
+	 */
 	public function get_from_email() {
 		return filter_var( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
 	}
 
+	/**
+	 * Returns a filtered name.
+	 *
+	 * @return mixed
+	 */
 	public function get_from_name() {
 		return $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP )['from_name'];
 	}
@@ -251,7 +284,7 @@ class MailerService {
 	/**
 	 * Logs the supplied WP_Error object.
 	 *
-	 * @param WP_Error $error
+	 * @param WP_Error $error WP_Error object.
 	 */
 	public function handle_error( WP_Error $error ): void {
 		$this->logger->error( 'Error sending email.', [ $error->get_error_messages() ] );

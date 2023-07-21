@@ -26,6 +26,7 @@ class MigratorService {
 	 * Migrator service constructor.
 	 *
 	 * @param LoggerInterface $logger Logger instance.
+	 * @param SettingsService $settings Settings service.
 	 */
 	public function __construct( LoggerInterface $logger, SettingsService $settings ) {
 		$this->settings = $settings;
