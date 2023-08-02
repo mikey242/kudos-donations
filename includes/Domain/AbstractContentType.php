@@ -38,7 +38,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	 */
 	protected const SHOW_UI = true;
 	/**
-	 * Should a menu link to the UI be added to the menu.
+	 * Should a link to the UI be added to the menu.
 	 * Since Kudos Donations uses its own menu we will add this ourselves later.
 	 */
 	protected const SHOW_IN_MENU = false;
@@ -51,21 +51,17 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	 * {@inheritDoc}
 	 */
 	public function get_args(): array {
-		return array_merge(
-			[
-				'public'       => static::PUBLIC,
-				'show_ui'      => static::SHOW_UI,
-				'show_in_menu' => static::SHOW_IN_MENU,
-				'show_in_rest' => static::SHOW_IN_REST,
-				'capabilities' => static::CAPABILITIES,
-				'hierarchical' => static::HIERARCHICAL,
-				'map_meta_cap' => true,
-			],
-			[
-				'description' => $this->get_description(),
-				'labels'      => $this->get_labels(),
-			]
-		);
+		return [
+			'description'  => $this->get_description(),
+			'labels'       => $this->get_labels(),
+			'public'       => static::PUBLIC,
+			'show_ui'      => static::SHOW_UI,
+			'show_in_menu' => static::SHOW_IN_MENU,
+			'show_in_rest' => static::SHOW_IN_REST,
+			'capabilities' => static::CAPABILITIES,
+			'hierarchical' => static::HIERARCHICAL,
+			'map_meta_cap' => true,
+		];
 	}
 
 	/**
