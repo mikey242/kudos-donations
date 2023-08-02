@@ -42,6 +42,10 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	 * Since Kudos Donations uses its own menu we will add this ourselves later.
 	 */
 	protected const SHOW_IN_MENU = false;
+	/**
+	 * Whether the content is hierarchical.
+	 */
+	protected const HIERARCHICAL = false;
 
 	/**
 	 * {@inheritDoc}
@@ -54,6 +58,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 				'show_in_menu' => static::SHOW_IN_MENU,
 				'show_in_rest' => static::SHOW_IN_REST,
 				'capabilities' => static::CAPABILITIES,
+				'hierarchical' => static::HIERARCHICAL,
 				'map_meta_cap' => true,
 			],
 			[
