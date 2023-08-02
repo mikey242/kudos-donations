@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Service;
 
 class SettingsService extends AbstractService {
 
+	public const HOOK_GET_SETTINGS                 = 'kudos_get_settings';
 	public const SETTING_GROUP                     = 'kudos-donations';
 	public const SETTING_NAME_SHOW_INTRO           = '_kudos_show_intro';
 	public const SETTING_NAME_VENDOR               = '_kudos_vendor';
@@ -52,10 +53,10 @@ class SettingsService extends AbstractService {
 	 * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
 	 *
 	 * @param string $key     Setting key.
-	 * @param bool   $default Optional. Default value to return if the option does not exist.
+	 * @param mixed  $default Optional. Default value to return if the option does not exist.
 	 * @return mixed
 	 */
-	public function get_setting( string $key, bool $default = false ) {
+	public function get_setting( string $key, $default = false ) {
 		// Distinguish between `false` as a default, and not passing one, just like WordPress.
 		$passed_default = \func_num_args() > 1;
 
@@ -145,66 +146,85 @@ class SettingsService extends AbstractService {
 	 * Returns all settings in array.
 	 */
 	public static function get_settings(): array {
-		return [
-			self::SETTING_NAME_SHOW_INTRO           => [
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => true,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-			self::SETTING_NAME_VENDOR               => [
-				'type'         => 'string',
-				'show_in_rest' => true,
-				'default'      => 'mollie',
-			],
-			self::SETTING_NAME_VENDOR_MOLLIE        => [
-				'type'              => 'object',
-				'default'           => [
-					'connected'       => false,
-					'recurring'       => false,
-					'mode'            => 'test',
-					'payment_methods' => [],
-					'test_key'        => '',
-					'live_key'        => '',
+		return apply_filters(
+			self::HOOK_GET_SETTINGS,
+			[
+				self::SETTING_NAME_SHOW_INTRO           => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'show_in_rest'      => [
-					'schema' => [
-						'type'       => 'object',
-						'properties' => [
-							'connected'       => [
-								'type' => 'boolean',
-							],
-							'recurring'       => [
-								'type' => 'boolean',
-							],
-							'mode'            => [
-								'type' => 'string',
-							],
-							'test_key'        => [
-								'type' => 'string',
-							],
-							'live_key'        => [
-								'type' => 'string',
-							],
-							'payment_methods' => [
-								'type'  => 'array',
-								'items' => [
+				self::SETTING_NAME_VENDOR               => [
+					'type'         => 'string',
+					'show_in_rest' => true,
+					'default'      => 'mollie',
+				],
+				self::SETTING_NAME_VENDOR_MOLLIE        => [
+					'type'         => 'object',
+					'default'      => [
+						'recurring'       => false,
+						'mode'            => 'test',
+						'payment_methods' => [],
+						'test_key'        => [
+							'verified' => false,
+						],
+						'live_key'        => [
+							'verified' => false,
+						],
+					],
+					'show_in_rest' => [
+						'schema' => [
+							'type'       => 'object',
+							'properties' => [
+								'recurring'       => [
+									'type' => 'boolean',
+								],
+								'mode'            => [
+									'type' => 'string',
+								],
+								'test_key'        => [
 									'type'       => 'object',
 									'properties' => [
-										'id'            => [
+										'key'      => [
 											'type' => 'string',
 										],
-										'status'        => [
+										'verified' => [
+											'type' => 'boolean',
+										],
+									],
+								],
+								'live_key'        => [
+									'type'       => 'object',
+									'properties' => [
+										'key'      => [
 											'type' => 'string',
 										],
-										'maximumAmount' => [
-											'type'       => 'object',
-											'properties' => [
-												'value'    => [
-													'type' => 'string',
-												],
-												'currency' => [
-													'type' => 'string',
+										'verified' => [
+											'type' => 'boolean',
+										],
+									],
+								],
+								'payment_methods' => [
+									'type'  => 'array',
+									'items' => [
+										'type'       => 'object',
+										'properties' => [
+											'id'     => [
+												'type' => 'string',
+											],
+											'status' => [
+												'type' => 'string',
+											],
+											'maximumAmount' => [
+												'type' => 'object',
+												'properties' => [
+													'value'    => [
+														'type' => 'string',
+													],
+													'currency' => [
+														'type' => 'string',
+													],
 												],
 											],
 										],
@@ -214,114 +234,87 @@ class SettingsService extends AbstractService {
 						],
 					],
 				],
-				'sanitize_callback' => [ self::class, 'sanitize_vendor' ],
-			],
-			self::SETTING_NAME_EMAIL_RECEIPT_ENABLE => [
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-			self::SETTING_NAME_EMAIL_BCC            => [
-				'type'              => 'string',
-				'show_in_rest'      => true,
-				'sanitize_callback' => 'sanitize_email',
-			],
-			self::SETTING_NAME_CUSTOM_SMTP          => [
-				'type'         => 'object',
-				'default'      => [
-					'from_email' => '',
-					'from_name'  => get_bloginfo( 'name' ),
-					'host'       => '',
-					'port'       => '',
-					'encryption' => 'tls',
-					'autotls'    => false,
-					'username'   => '',
-					'password'   => '',
+				self::SETTING_NAME_EMAIL_RECEIPT_ENABLE => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				'show_in_rest' => [
-					'schema' => [
-						'type'       => 'object',
-						'properties' => [
-							'from_email' => [
-								'type' => 'string',
-							],
-							'from_name'  => [
-								'type' => 'string',
-							],
-							'host'       => [
-								'type' => 'string',
-							],
-							'port'       => [
-								'type' => 'number',
-							],
-							'encryption' => [
-								'type' => 'string',
-							],
-							'autotls'    => [
-								'type' => 'boolean',
-							],
-							'username'   => [
-								'type' => 'string',
-							],
-							'password'   => [
-								'type' => 'string',
+				self::SETTING_NAME_EMAIL_BCC            => [
+					'type'              => 'string',
+					'show_in_rest'      => true,
+					'sanitize_callback' => 'sanitize_email',
+				],
+				self::SETTING_NAME_CUSTOM_SMTP          => [
+					'type'         => 'object',
+					'default'      => [
+						'from_email' => '',
+						'from_name'  => get_bloginfo( 'name' ),
+						'host'       => '',
+						'port'       => '',
+						'encryption' => 'tls',
+						'autotls'    => false,
+						'username'   => '',
+						'password'   => '',
+					],
+					'show_in_rest' => [
+						'schema' => [
+							'type'       => 'object',
+							'properties' => [
+								'from_email' => [
+									'type' => 'string',
+								],
+								'from_name'  => [
+									'type' => 'string',
+								],
+								'host'       => [
+									'type' => 'string',
+								],
+								'port'       => [
+									'type' => 'number',
+								],
+								'encryption' => [
+									'type' => 'string',
+								],
+								'autotls'    => [
+									'type' => 'boolean',
+								],
+								'username'   => [
+									'type' => 'string',
+								],
+								'password'   => [
+									'type' => 'string',
+								],
 							],
 						],
 					],
 				],
-			],
-			self::SETTING_NAME_SMTP_ENABLE          => [
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-			self::SETTING_NAME_SPAM_PROTECTION      => [
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => true,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-			self::SETTING_NAME_DEBUG_MODE           => [
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-			self::SETTING_NAME_ALWAYS_LOAD_ASSETS   => [
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-		];
-	}
-
-	/**
-	 * Sanitize vendor settings.
-	 *
-	 * @param array $settings Settings array.
-	 */
-	public static function sanitize_vendor( array $settings ): array {
-		foreach ( $settings as $setting => &$value ) {
-			switch ( $setting ) {
-				case 'connected':
-				case 'recurring':
-					$value = rest_sanitize_boolean( $value );
-					break;
-				case 'live_key':
-				case 'test_key':
-				case 'mode':
-					$value = sanitize_text_field( $value );
-					break;
-				case 'payment_methods':
-					$value = self::recursive_sanitize_text_field( $value );
-					break;
-			}
-		}
-
-		return $settings;
+				self::SETTING_NAME_SMTP_ENABLE          => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				self::SETTING_NAME_SPAM_PROTECTION      => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => true,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				self::SETTING_NAME_DEBUG_MODE           => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				self::SETTING_NAME_ALWAYS_LOAD_ASSETS   => [
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+			]
+		);
 	}
 
 	/**

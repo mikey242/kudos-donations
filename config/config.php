@@ -27,8 +27,9 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Plugin;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Service\SettingsService;
-use IseardMedia\Kudos\Service\Vendor\MollieVendor;
-use IseardMedia\Kudos\Service\Vendor\VendorInterface;
+use IseardMedia\Kudos\Vendor\MollieVendor;
+use IseardMedia\Kudos\Vendor\PaymentVendors;
+use IseardMedia\Kudos\Vendor\VendorInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -39,6 +40,7 @@ use function DI\factory;
 
 return [
 	Plugin::class                 => autowire(),
+	MollieVendor::class           => autowire(),
 	Admin::class                  => autowire(),
 	Front::class                  => autowire(),
 	CampaignAdminPage::class      => autowire(),
@@ -55,12 +57,14 @@ return [
 	Mail::class                   => autowire(),
 	Payment::class                => autowire(),
 	SettingsService::class        => autowire(),
-	MollieVendor::class           => autowire(),
 	PaymentService::class         => autowire(),
 	VendorInterface::class        => factory(
-		function ( ContainerInterface $c ) {
-			$vendor_class = PaymentService::get_current_vendor_class();
-			return $c->get( $vendor_class );
+		function ( ContainerInterface $container, SettingsService $settings, PaymentVendors $payment_vendors ) {
+			$vendor_class = $payment_vendors->get_current_vendor_class();
+			if ( $vendor_class ) {
+				return $container->get( $vendor_class );
+			}
+			return null;
 		}
 	),
 	LoggerInterface::class        => factory(

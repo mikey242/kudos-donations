@@ -18,6 +18,8 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 
 class TransactionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
+	protected const SUPPORTS = [ 'title', 'custom-fields' ];
+
 	/**
 	 * Meta field constants.
 	 */
@@ -29,7 +31,6 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	public const META_FIELD_SEQUENCE_TYPE      = 'sequence_type';
 	public const META_FIELD_DONOR_ID           = 'donor_id';
 	public const META_FIELD_VENDOR_PAYMENT_ID  = 'vendor_payment_id';
-	public const META_FIELD_ORDER_ID           = 'order_id';
 	public const META_FIELD_CAMPAIGN_ID        = 'campaign_id';
 	public const META_FIELD_REFUNDS            = 'refunds';
 	public const META_FIELD_MESSAGE            = 'message';
@@ -102,10 +103,6 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_ORDER_ID           => [
-				'type'              => FieldType::STRING,
-				'sanitize_callback' => 'sanitize_text_field',
-			],
 			self::META_FIELD_CAMPAIGN_ID        => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
@@ -139,9 +136,9 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	public function get_columns_config(): array {
 		return [
 			'donor'                            => [
-				'value_type'     => FieldType::EMAIL,
-				'label'          => __( 'Donor', 'kudos-donations' ),
-				'value_callback' => function ( $transaction_id ) {
+				'value_type' => FieldType::EMAIL,
+				'label'      => __( 'Donor', 'kudos-donations' ),
+				'value'      => function ( $transaction_id ) {
 					$donor_id = get_post_meta( $transaction_id, 'donor_id', true );
 					if ( $donor_id ) {
 						return get_post_meta( $donor_id, 'email', true );
@@ -149,9 +146,11 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					return null;
 				},
 			],
-			self::META_FIELD_ORDER_ID          => [
+			'ID'                               => [
 				'value_type' => FieldType::STRING,
-				'label'      => __( 'Order ID', 'kudos-donations' ),
+				'value'      => function( $transaction_id ) {
+					return static::get_formatted_id( $transaction_id );
+				},
 			],
 			self::META_FIELD_VENDOR_PAYMENT_ID => [
 				'value_type' => FieldType::STRING,
@@ -162,9 +161,9 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 				'label'      => __( 'Amount', 'kudos-donations' ),
 			],
 			self::META_FIELD_CAMPAIGN_ID       => [
-				'value_type'     => FieldType::STRING,
-				'label'          => __( 'Campaign', 'kudos-donations' ),
-				'value_callback' => function( $transaction_id ): ?string {
+				'value_type' => FieldType::STRING,
+				'label'      => __( 'Campaign', 'kudos-donations' ),
+				'value'      => function( $transaction_id ): ?string {
 					$campaign_id = get_post_meta( $transaction_id, 'campaign_id', true );
 					if ( $campaign_id ) {
 						$campaign = get_post( $campaign_id );
@@ -180,9 +179,9 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 				'label'      => __( 'Currency', 'kudos-donations' ),
 			],
 			self::META_FIELD_STATUS            => [
-				'value_type'     => FieldType::STRING,
-				'label'          => __( 'Status', 'kudos-donations' ),
-				'value_callback' => function( $transaction_id ) {
+				'value_type' => FieldType::STRING,
+				'label'      => __( 'Status', 'kudos-donations' ),
+				'value'      => function( $transaction_id ) {
 					$status = get_post_meta( $transaction_id, 'status', true );
 
 					switch ( $status ) {

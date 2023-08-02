@@ -86,7 +86,7 @@ const CampaignTable = ({
 							</td>
 							<td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
 								{campaign.meta.goal > 0
-									? (parseInt(campaign.total)/parseInt(campaign.meta.goal) * 100) + '%'
+									? Math.round((parseInt(campaign.total)/parseInt(campaign.meta.goal) * 100)) + '%'
 									: ''}
 							</td>
 							<td className="relative whitespace-nowrap py-4 pl-3 pr-4 divide-x-8 divide-transparent text-right text-sm font-medium sm:pr-6">

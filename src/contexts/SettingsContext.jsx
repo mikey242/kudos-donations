@@ -19,7 +19,7 @@ export default function SettingsProvider({ children }) {
 		settings: null,
 	});
 	const [settingsReady] = useState(false);
-	const [isVendorConnected, setIsVendorConnected] = useState(false);
+	const [isVendorReady, setIsVendorReady] = useState(false);
 	const [checkingApiKey, setCheckingApiKey] = useState(false);
 	const [settingsSaving, setSettingsSaving] = useState(false);
 	const { settings } = settingsRequest;
@@ -28,14 +28,6 @@ export default function SettingsProvider({ children }) {
 	useEffect(() => {
 		getSettings();
 	}, []);
-
-	useEffect(() => {
-		if (settings) {
-			const vendor = settings._kudos_vendor;
-			const vendorSetting = settings[`_kudos_vendor_${vendor}`];
-			setIsVendorConnected(vendorSetting.connected);
-		}
-	}, [settings]);
 
 	const setSettings = (newSettings) => {
 		setSettingsRequest((prev) => {
@@ -55,9 +47,23 @@ export default function SettingsProvider({ children }) {
 					settings: response,
 				});
 				return response;
-			});
+			}).then(() => getVendorStatus());
 		});
 	};
+
+	const getVendorStatus = () => {
+		return apiFetch({
+			path: 'kudos/v1/payment/ready',
+			method: 'GET',
+		})
+		.then((response) => {
+			setIsVendorReady(response)
+			return response;
+		})
+		.catch((response) => {
+			return response
+		})
+	}
 
 	// Update all settings.
 	async function updateSettings(data) {
@@ -114,10 +120,13 @@ export default function SettingsProvider({ children }) {
 		return apiFetch({
 			path: 'kudos/v1/payment/test',
 			method: 'POST',
-			data: keys,
+			data: { keys: keys },
 		})
 			.then((response) => {
 				return response;
+			})
+			.catch((response) => {
+				return response
 			})
 			.finally(() => {
 				getSettings();
@@ -137,8 +146,8 @@ export default function SettingsProvider({ children }) {
 				updateSettings,
 				settingsReady,
 				settingsSaving,
-				setIsVendorConnected,
-				isVendorConnected,
+				setIsVendorReady,
+				isVendorReady,
 			}}
 		>
 			{children}

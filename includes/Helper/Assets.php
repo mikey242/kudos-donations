@@ -1,24 +1,30 @@
 <?php
+/**
+ * Helper for retrieving assets.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
+
+declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Helper;
 
 class Assets {
-
 	/**
 	 * Uses manifest to get asset URL.
 	 *
-	 * @throws \Exception
-	 *
-	 * @param string $asset
-	 * @param bool   $version
+	 * @param string $asset Asset name.
+	 * @param bool   $version Whether to attach the version number.
 	 */
-	public static function get_style( string $asset, bool $version = true ): string {
+	public static function get_style( string $asset, bool $version = true ): ?string {
 		$suffix = 'build/' . ltrim( $asset, '/' );
 		$url    = KUDOS_PLUGIN_URL . $suffix;
 		$path   = KUDOS_PLUGIN_DIR . $suffix;
 
 		if ( ! file_exists( $path ) ) {
-			throw new \Exception( "Cannot find style '$asset'" );
+			return null;
 		}
 		return $url . ( $version ? '?ver=' . filemtime( $path ) : '' );
 	}
@@ -27,13 +33,9 @@ class Assets {
 	 * Returns an array with js file properties.
 	 * This includes checking for an accompanying .asset.php file.
 	 *
-	 * @param string $asset
-	 * @param string $base_dir
-	 * @param string $base_url
-	 *
-	 * @return array|null
-	 *@throws \Exception
-	 *
+	 * @param string $asset The script name.
+	 * @param string $base_dir Base dir to search.
+	 * @param string $base_url Base use to return.
 	 */
 	public static function get_script(
 		string $asset,
@@ -42,28 +44,18 @@ class Assets {
 	): ?array {
 		$asset_path = $base_dir . 'build/' . $asset;
 		if ( file_exists( $asset_path ) ) {
-			$out            = [];
-			$out['path']    = $asset_path;
-			$out['url']     = $base_url . 'build/' . ltrim( $asset, '/' );
+			$return         = [];
+			$return['path'] = $asset_path;
+			$return['url']  = $base_url . 'build/' . ltrim( $asset, '/' );
 			$asset_manifest = substr_replace( $asset_path, '.asset.php', -\strlen( '.js' ) );
 			if ( file_exists( $asset_manifest ) ) {
-				$manifest_content    = include $asset_manifest;
-				$out['dependencies'] = $manifest_content['dependencies'] ?? [];
-				$out['version']      = $manifest_content['version'] ?? KUDOS_VERSION;
+				$manifest_content       = include $asset_manifest;
+				$return['dependencies'] = $manifest_content['dependencies'] ?? [];
+				$return['version']      = $manifest_content['version'] ?? KUDOS_VERSION;
+				return $return;
 			}
-
-			return $out;
 		}
 
-		throw new \Exception( "Cannot find script '$asset_path'" );
-	}
-
-	/**
-	 * Uses manifest to get asset path.
-	 *
-	 * @param string $asset
-	 */
-	public static function get_asset_path( string $asset ): string {
-		return KUDOS_PLUGIN_DIR . 'build/' . ltrim( $asset, '/' );
+		return null;
 	}
 }

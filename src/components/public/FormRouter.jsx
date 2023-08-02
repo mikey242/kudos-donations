@@ -99,18 +99,10 @@ const FormRouter =	({ step, campaign, handlePrev, handleNext, submitForm }) => {
 								2: (
 									<FrequencyTab
 										title={
-											campaign.recurring_title ??
-											__(
-												'Subscription',
-												'kudos-donations'
-											)
+											campaign.recurring_title
 										}
 										description={
-											campaign.recurring_description ??
-											__(
-												'How often would you like to donate?',
-												'kudos-donations'
-											)
+											campaign.recurring_description
 										}
 									/>
 								),
@@ -118,45 +110,30 @@ const FormRouter =	({ step, campaign, handlePrev, handleNext, submitForm }) => {
 									<AddressTab
 										required={campaign.address_required}
 										title={
-											campaign.address_title ??
-											__('Address', 'kudos-donations')
+											campaign.address_title
 										}
 										description={
-											campaign.address_description ??
-											__(
-												'Please fill in your address',
-												'kudos-donations'
-											)
+											campaign.address_description
 										}
 									/>
 								),
 								4: (
 									<MessageTab
 										title={
-											campaign.message_title ??
-											__('Message', 'kudos-donations')
+											campaign.message_title
 										}
 										description={
-											campaign.message_description ??
-											__(
-												'Leave a message (optional).',
-												'kudos-donations'
-											)
+											campaign.message_description
 										}
 									/>
 								),
 								5: (
 									<SummaryTab
 										title={
-											campaign.summary_title ??
-											__('Payment', 'kudos-donations')
+											campaign.payment_title
 										}
 										description={
-											campaign.summary_description ??
-											__(
-												'By clicking donate you agree to the following payment:',
-												'kudos-donations'
-											)
+											campaign.payment_description
 										}
 										privacyLink={campaign.privacy_link}
 										termsLink={campaign.terms_link}

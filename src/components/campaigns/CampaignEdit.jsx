@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fragment } from '@wordpress/element';
+import {Fragment, useEffect} from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
@@ -31,7 +31,7 @@ function CampaignEdit({
 			'shortcode.buttonLabel': __('Donate now!', 'kudos-donations'),
 		},
 	});
-	const { handleSubmit, watch, formState } = methods;
+	const { handleSubmit, watch, formState, reset } = methods;
 	const watchAmountType = watch('meta.amount_type');
 	const watchUseReturnURL = watch('meta.use_custom_return_url');
 	const watchAddress = watch('meta.address_enabled');
@@ -54,8 +54,8 @@ function CampaignEdit({
 	};
 
 	const onSubmit = (data) => {
-		updateCampaign(data.id, data).then(() => {
-			clearCurrentCampaign();
+		updateCampaign(data.id, data).finally(() => {
+			reset(data);
 		});
 	};
 
@@ -189,6 +189,46 @@ function CampaignEdit({
 					/>
 					<TextAreaControl
 						name="meta.initial_description"
+						label={__('Text', 'kudos-donations')}
+					/>
+					<Divider />
+					<h3>{__('Subscription tab', 'kudos-donations')}</h3>
+					<TextControl
+						name="meta.subscription_title"
+						label={__('Title', 'kudos-donations')}
+					/>
+					<TextAreaControl
+						name="meta.subscription_description"
+						label={__('Text', 'kudos-donations')}
+					/>
+					<Divider />
+					<h3>{__('Address tab', 'kudos-donations')}</h3>
+					<TextControl
+						name="meta.address_title"
+						label={__('Title', 'kudos-donations')}
+					/>
+					<TextAreaControl
+						name="meta.address_description"
+						label={__('Text', 'kudos-donations')}
+					/>
+					<Divider />
+					<h3>{__('Message tab', 'kudos-donations')}</h3>
+					<TextControl
+						name="meta.message_title"
+						label={__('Title', 'kudos-donations')}
+					/>
+					<TextAreaControl
+						name="meta.message_description"
+						label={__('Text', 'kudos-donations')}
+					/>
+					<Divider />
+					<h3>{__('Payment tab', 'kudos-donations')}</h3>
+					<TextControl
+						name="meta.payment_title"
+						label={__('Title', 'kudos-donations')}
+					/>
+					<TextAreaControl
+						name="meta.payment_description"
 						label={__('Text', 'kudos-donations')}
 					/>
 				</Fragment>

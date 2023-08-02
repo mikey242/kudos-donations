@@ -20,24 +20,28 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\AbstractService;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Service\SettingsService;
-use IseardMedia\Kudos\Service\Vendor\MollieVendor;
+use IseardMedia\Kudos\Vendor\VendorInterface;
 
 class Front extends AbstractService {
 	private SettingsService $settings;
 	private PaymentService $payment;
+	private VendorInterface $vendor;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @param PaymentService  $payment Payment service.
 	 * @param SettingsService $settings Settings service.
+	 * @param VendorInterface $vendor Payment vendors.
 	 */
 	public function __construct(
 		PaymentService $payment,
-		SettingsService $settings
+		SettingsService $settings,
+		VendorInterface $vendor
 	) {
 		$this->payment  = $payment;
 		$this->settings = $settings;
+		$this->vendor   = $vendor;
 	}
 
 	/**
@@ -96,12 +100,12 @@ class Front extends AbstractService {
 	public function button_render_callback( array $atts ): ?string {
 		try {
 			// Check if the current vendor is connected, otherwise throw an exception.
-			if ( ! $this->payment->is_api_ready() ) {
+			if ( ! $this->vendor->is_ready() ) {
 				throw new Exception(
 					sprintf(
 						/* translators: %s: Payment vendor (e.g. Mollie). */
 						__( '%s not connected.', 'kudos-donations' ),
-						$this->payment::get_vendor_name()
+						$this->vendor::get_vendor_name()
 					)
 				);
 			}
@@ -168,16 +172,12 @@ class Front extends AbstractService {
 
 			switch ( $action ) {
 				case 'order_complete':
-					$order_id = sanitize_text_field( $_REQUEST['kudos_order_id'] );
+					$transaction_id = sanitize_text_field( $_REQUEST['kudos_transaction_id'] );
 					// Return message modal.
-					if ( ! empty( $order_id ) && ! empty( $nonce ) ) {
-						$transaction = TransactionPostType::get_one_by_meta(
-							[
-								'order_id' => $order_id,
-							]
-						);
+					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
+						$transaction = get_post($transaction_id);
 
-						if ( $transaction && wp_verify_nonce( $nonce, $action . $order_id ) ) {
+						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
 							$transaction_id = $transaction->ID;
 							$campaign_id    = get_post_meta( $transaction_id, 'campaign_id', true );
 

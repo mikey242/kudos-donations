@@ -1,6 +1,6 @@
 <?php
 
-namespace IseardMedia\Kudos\Service\Vendor;
+namespace IseardMedia\Kudos\Vendor;
 
 use WP_Error;
 use WP_Post;
@@ -15,6 +15,13 @@ interface VendorInterface
      * @return string
      */
     public static function get_vendor_name(): string;
+
+	/**
+	 * Gets the vendor slug for identification.
+	 *
+	 * @return string
+	 */
+	public static function get_vendor_slug(): string;
 
     /**
      * Returns true if vendor supports recurring payments.
@@ -31,13 +38,13 @@ interface VendorInterface
     public static function get_webhook_url(): string;
 
 	/**
-	 * Check the vendor api key associated with the mode. Sends a JSON response.
+	 * Check the vendor connection.
 	 *
-	 * @param WP_REST_Request $request
+	 * @param mixed $data
 	 *
-	 * @return void
+	 * @return WP_REST_Response
 	 */
-    public function check_api_keys(WP_REST_Request $request): void;
+	public function verify_connection($data): WP_REST_Response;
 
     /**
      * @param WP_Post $transaction ,
@@ -49,7 +56,7 @@ interface VendorInterface
         WP_Post $transaction,
         string $mandate_id,
         string $interval,
-        string $years
+        int $years
     );
 
     /**
@@ -106,12 +113,12 @@ interface VendorInterface
      * Creates a payment and returns it as an object.
      *
      * @param array $payment_args Parameters to pass to mollie to create a payment.
-     * @param string $order_id Order ID.
+     * @param int $transaction_id Transaction ID.
      * @param string|null $vendor_customer_id ID of customer the payment is for.
      *
      * @return string
      */
-    public function create_payment(array $payment_args, string $order_id, ?string $vendor_customer_id): string;
+    public function create_payment(array $payment_args, int $transaction_id, ?string $vendor_customer_id): string;
 
     /**
      * Vendor webhook action.
@@ -130,16 +137,7 @@ interface VendorInterface
     public function get_api_mode(): string;
 
 	/**
-	 * Gets the vendor slug for identification.
-	 *
-	 * @return string
+	 * Returns true is the API is ready to communicate.
 	 */
-	public static function get_vendor_slug(): string;
-
-    /**
-     * Returns the vendor name as a string.
-     *
-     * @return string
-     */
-    public function __toString(): string;
+	public function is_ready(): bool;
 }

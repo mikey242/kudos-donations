@@ -15,7 +15,6 @@ use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Service\AbstractService;
 
 class Admin extends AbstractService {
-
 	/**
 	 * {@inheritDoc}
 	 */

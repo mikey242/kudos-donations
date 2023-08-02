@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import { get, uniqueId } from 'lodash';
 
@@ -13,6 +12,7 @@ const TextControl = ({
 	addOn,
 	type = 'text',
 	placeholder,
+	inlineButton
 }) => {
 	const {
 		register,
@@ -23,14 +23,15 @@ const TextControl = ({
 	const id = uniqueId(name + '-');
 
 	return (
-		<div className="first:mt-0 mt-3">
+		<>
+		<div className={classNames('hidden' === type && 'hidden', "first:mt-0 mt-3")}>
 			<label
 				htmlFor={id}
 				className="block text-sm font-bold text-gray-700"
 			>
 				{label}
 			</label>
-			<div className="mt-1 relative rounded-md shadow-sm">
+			<div className="mt-1 relative flex rounded-md">
 				{addOn && (
 					<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 						<span className="text-gray-500 sm:text-sm">
@@ -49,24 +50,23 @@ const TextControl = ({
 							: 'border-gray-300 focus:ring-primary focus:border-primary',
 						addOn && 'pl-7',
 						disabled && 'cursor-not-allowed opacity-75',
-						'form-input transition ease-in-out shadow-none block w-full pr-10 focus:outline-none sm:text-sm rounded-md'
+						'form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md'
 					)}
 					placeholder={placeholder}
 					aria-invalid={!!error}
 					aria-errormessage={`${id}-error`}
 				/>
-				<div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-					{error?.message && type !== 'hidden' && (
-						<ExclamationCircleIcon
-							className="h-5 w-5 text-red-500"
-							aria-hidden="true"
-						/>
-					)}
-				</div>
+				{inlineButton && (
+					<div className='ml-3 flex items-center'>
+						{inlineButton}
+					</div>
+				)}
 			</div>
 			{help && (
 				<p className="text-sm leading-5 text-gray-500 mt-1">{help}</p>
 			)}
+		</div>
+
 			{error?.message && (
 				<p
 					className="mt-2 text-left text-sm text-red-600"
@@ -75,7 +75,7 @@ const TextControl = ({
 					{error?.message}
 				</p>
 			)}
-		</div>
+		</>
 	);
 };
 

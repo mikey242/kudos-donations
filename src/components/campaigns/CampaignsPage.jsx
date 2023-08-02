@@ -46,34 +46,15 @@ const CampaignsPage = () => {
 	};
 
 	const newCampaign = () => {
-		setCurrentCampaign({
+		updateCampaign(null, {
+			title: __('New campaign', 'kudos-donations'),
 			status: 'draft',
-			title: {
-				rendered: __('New campaign', 'kudos-donations'),
-			},
-			meta: {
-				initial_title: __('Support us!', 'kudos-donations'),
-				initial_description: __(
-					'Your support is greatly appreciated and will help to keep us going.',
-					'kudos-donations'
-				),
-				donation_type: 'oneoff',
-				amount_type: 'both',
-				minimum_donation: 1,
-				fixed_amounts: '5,10,20,50',
-				theme_color: '#ff9f1c',
-				completed_payment: 'message',
-				return_message_title: __('Thank you!', 'kudos-donations'),
-				return_message_text: __(
-					'Many thanks for your donation. We appreciate your support.',
-					'kudos-donations'
-				),
-			},
-		});
+		}).then((response) => {
+			setCurrentCampaign(response)
+		})
 	};
 
-	const updateCampaign = (id, data = {}) => {
-		console.log(data)
+	const updateCampaign = (id = null, data = {}) => {
 		setIsApiBusy(true);
 		return apiFetch({
 			path: `wp/v2/kudos_campaign/${id ?? ''}`,
@@ -83,25 +64,23 @@ const CampaignsPage = () => {
 				status: 'publish',
 			},
 		})
-			.then(() => {
-				return new Promise((resolve) => {
-					setTimeout(() => {
-						createNotification(
-							data.status === 'draft'
-								? __('Campaign created', 'kudos-donations')
-								: __('Campaign updated', 'kudos-donations'),
-							true
-						);
-						getCampaigns().then(() => resolve());
-					}, 500);
-				});
-			})
-			.catch((error) => {
-				createNotification(error.message, false);
-			})
-			.finally(() => {
-				setIsApiBusy(false);
+		.then((response) => {
+			getCampaigns().then(() => {
+				createNotification(
+					data.status === 'draft'
+						? __('Campaign created', 'kudos-donations')
+						: __('Campaign updated', 'kudos-donations'),
+					true
+				);
 			});
+			return response;
+		})
+		.catch((error) => {
+			createNotification(error.message, false);
+		})
+		.finally(() => {
+			setIsApiBusy(false);
+		});
 	};
 
 	const removeCampaign = (id) => {

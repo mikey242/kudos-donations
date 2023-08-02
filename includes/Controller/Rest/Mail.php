@@ -17,12 +17,16 @@ use WP_REST_Server;
 class Mail extends AbstractRestController {
 
 	/**
+	 * Mailer service.
+	 *
 	 * @var MailerService
 	 */
 	private MailerService $mailer_service;
 
 	/**
 	 * PaymentRoutes constructor.
+	 *
+	 * @param MailerService $mailer_service Mailer service.
 	 */
 	public function __construct( MailerService $mailer_service ) {
 		parent::__construct();

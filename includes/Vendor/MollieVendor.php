@@ -1,6 +1,15 @@
 <?php
+/**
+ * Mollie payment vendor.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations
+ *
+ * @copyright 2023 Iseard Media
+ */
 
-namespace IseardMedia\Kudos\Service\Vendor;
+declare(strict_types=1);
+
+namespace IseardMedia\Kudos\Vendor;
 
 use Exception;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
@@ -18,6 +27,7 @@ use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
+use Mollie\Api\Types\SequenceType;
 use Psr\Log\LoggerInterface;
 use WP_Error;
 use WP_Post;
@@ -26,11 +36,6 @@ use WP_REST_Response;
 
 class MollieVendor extends AbstractService implements VendorInterface
 {
-    /**
-     * This is the name of the vendor as displayed to the user.
-     */
-    public const VENDOR_NAME = 'Mollie';
-
     /**
      * The API mode (test or live).
      *
@@ -56,18 +61,18 @@ class MollieVendor extends AbstractService implements VendorInterface
     }
 
 	/**
-	 * Returns the current vendor name.
-	 *
-	 * @return string
+	 * {@inheritDoc}
 	 */
-	public static function get_vendor_name(): string
-	{
-		return self::VENDOR_NAME;
-	}
+	public function register(): void {
+		$settings         = $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE);
+		$this->api_mode   = $settings['mode'] ?? 'test';
+		$this->api_keys   = [
+			'test' => $settings['test_key']['key'] ?? '',
+			'live' => $settings['live_key']['key'] ?? '',
+		];
 
-	public static function get_vendor_slug(): string
-	{
-		return 'mollie';
+		$this->config_client($this->api_mode);
+		$this->set_user_agent();
 	}
 
 	/**
@@ -78,18 +83,18 @@ class MollieVendor extends AbstractService implements VendorInterface
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns the current vendor name.
+	 *
+	 * @return string
 	 */
-	public function register(): void {
-		$settings         = $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE);
-		$this->api_mode   = $settings['mode'] ?? 'test';
-		$this->api_keys   = [
-			'test' => $settings['test_key'] ?? '',
-			'live' => $settings['live_key'] ?? '',
-		];
+	public static function get_vendor_name(): string
+	{
+		return 'Mollie';
+	}
 
-		$this->config_client($this->api_mode);
-		$this->set_user_agent();
+	public static function get_vendor_slug(): string
+	{
+		return 'mollie';
 	}
 
 	/**
@@ -146,10 +151,10 @@ class MollieVendor extends AbstractService implements VendorInterface
     public static function get_sequence_type(string $text): string
     {
 		switch ($text) {
-			case 'oneoff':
+			case SequenceType::SEQUENCETYPE_ONEOFF:
 				$result = __('One-off', 'kudos-donations');
 				break;
-			case 'first':
+			case SequenceType::SEQUENCETYPE_FIRST:
 				$result = __( 'Recurring (first payment)', 'kudos-donations' );
 				break;
 			default:
@@ -158,108 +163,105 @@ class MollieVendor extends AbstractService implements VendorInterface
 		return $result;
     }
 
-    /**
+	/**
+	 * {@inheritDoc}
+	 */
+	public function verify_connection($data ): WP_REST_Response {
+		return $this->check_api_keys($data);
+	}
+
+	/**
      * Check the Mollie api keys for both test and live keys. Sends a JSON response.
      */
-    public function check_api_keys(WP_REST_Request $request): void {
-		$keys = $request->get_param('keys');
+    public function check_api_keys(WP_REST_Request $request): WP_REST_Response {
+	    $keys = $request->get_param( 'keys' );
 
-	    if ($keys) {
-		    $this->api_keys = [
-			    'test' => $keys['test'] ?? '',
-			    'live' => $keys['live'] ?? '',
-		    ];
+	    // Check if key(s) are empty.
+	    if (empty($keys)) {
+			return new WP_REST_Response([
+				'success' => false,
+				'message' => __('Please enter an API key.', 'kudos-donations')
+			], 400);
 	    }
 
-		$mollie_settings = $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE);
+	    $settings = $this->settings->get_current_vendor_settings();
 
-	    $this->settings->update_setting(
-            SettingsService::SETTING_NAME_VENDOR_MOLLIE,
-            array_merge([
-                'connected' => false,
-                'recurring' => false,
-            ], $mollie_settings)
-        );
+	    $api_keys = [];
+		foreach ($keys as $type => $value) {
+			if ($value) {
 
-        $mode = $this->api_mode;
+				// Set verified to false.
+				$this->settings->update_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE, array_merge([
+					$type . '_key' => [
+						'verified' => false
+					],
+				], $settings));
 
-        // Check if both fields are empty.
-        if (empty($this->api_keys[$mode])) {
-            wp_send_json_error(
-                [
-                    /* translators: %s: API mode */
-                    'message' => sprintf(
-                        __('Please enter your %s API key.', 'kudos-donations'),
-                        $mode
-                    )
-                ]
-            );
-        }
+				// Check that the api key corresponds to each mode.
+				if (substr($value, 0, 5) === $type . "_") {
+					// Set local key.
+					$this->api_keys[$type] = $value;
 
-	    foreach ($keys as $type => $apiKey) {
-            if ($apiKey) {
-                // Check that the api key corresponds to each mode.
-                if (substr($apiKey, 0, 5) !== $type . "_") {
-                    wp_send_json_error(
-                        [
-                            /* translators: %s: API mode */
-                            'message' => sprintf(
-                                __('%1$s API key should begin with %2$s', 'kudos-donations'),
-                                ucfirst($type),
-                                $type . '_'
-                            ),
-                            'setting' => $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE),
-                        ]
-                    );
-                }
+					// Test key with Mollie.
+					$verified = $this->refresh_api_connection($value);
 
-                // Test the api key.
-                if ( ! $this->refresh_api_connection($apiKey)) {
-                    wp_send_json_error(
-                        [
-                            /* translators: %s: API mode */
-                            'message' => sprintf(
-                                __(
-                                    'Error connecting with Mollie, please check the %s API key and try again.',
-                                    'kudos-donations'
-                                ),
-                                ucfirst($type)
-                            ),
-                            'setting' => $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE),
-                        ]
-                    );
-                }
-            }
-        }
+					if(!$verified) {
+						return new WP_REST_Response([
+							'success' => false,
+							/* translators: %s: API mode */
+							'message' => sprintf(
+								__('%1$s API key is invalid.', 'kudos-donations'),
+								ucfirst($type)
+							),
+						], 400);
+					}
+
+					// Update settings array.
+					$api_keys[$type . '_key'] = [
+						'verified' => $verified,
+						'key' => $value
+					];
+				} else {
+					return new WP_REST_Response([
+						'success' => false,
+						/* translators: %s: API mode */
+						'message' => sprintf(
+							__('%1$s API key should begin with %2$s', 'kudos-donations'),
+							ucfirst($type),
+							$type . '_'
+						),
+					], 400);
+				}
+			}
+		}
+
+		$current_settings = $this->settings->get_current_vendor_settings();
+		$updated_settings = array_merge([
+			'recurring'       => $this->can_use_recurring(),
+			'mode'            => $this->api_mode,
+			'payment_methods' => array_map(function ($method) {
+				return [
+					'id'            => $method->id,
+					'status'        => $method->status,
+					'maximumAmount' => (array)$method->maximumAmount,
+				];
+			}, (array)$this->get_payment_methods())
+		], $api_keys);
+
+		$combined_settings = array_merge($current_settings, $updated_settings);
 
         // Update vendor settings.
-        $this->settings->update_setting(
-            SettingsService::SETTING_NAME_VENDOR_MOLLIE,
-            [
-                'test_key'        => $this->api_keys['test'],
-                'live_key'        => $this->api_keys['live'],
-                'recurring'       => $this->can_use_recurring(),
-                'mode'            => $this->api_mode,
-                'connected'       => true,
-                'payment_methods' => array_map(function ($method) {
-                    return [
-                        'id'            => $method->id,
-                        'status'        => $method->status,
-                        'maximumAmount' => (array)$method->maximumAmount,
-                    ];
-                },
-                    (array)$this->get_payment_methods()),
-            ]
-        );
+		$this->settings->update_setting(
+			SettingsService::SETTING_NAME_VENDOR_MOLLIE,
+			$combined_settings
+		);
 
-        wp_send_json_success(
-            [
-                'message' =>
-                /* translators: %s: API mode */
-                    __('API connection was successful!', 'kudos-donations'),
-                'setting' => $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE),
-            ]
-        );
+	    return new WP_REST_Response([
+		    'success' => true,
+		    'message' =>
+		    /* translators: %s: API mode */
+			    __('API connection was successful!', 'kudos-donations'),
+	    ], 200);
     }
 
     /**
@@ -436,20 +438,14 @@ class MollieVendor extends AbstractService implements VendorInterface
     }
 
 	/**
-	 * Creates a payment and returns checkout URL.
-	 *
-	 * @param array $payment_args Parameters to pass to mollie to create a payment.
-	 * @param $order_id
-	 * @param string|null $vendor_customer_id
-	 *
-	 * @return string
+	 * {@inheritDoc}
 	 */
-    public function create_payment(array $payment_args, $order_id, ?string $vendor_customer_id): string {
+    public function create_payment(array $payment_args, int $transaction_id, ?string $vendor_customer_id): string {
         // Set payment frequency.
-        $payment_args['payment_frequency'] = $payment_args['recurring'] === "true" ? $payment_args['recurring_frequency'] : 'oneoff';
+        $payment_args['payment_frequency'] = $payment_args['recurring'] === "true" ? $payment_args['recurring_frequency'] : SequenceType::SEQUENCETYPE_ONEOFF;
         $payment_args['value']             = number_format($payment_args['value'], 2, '.', '');
         $frequency_text                    = self::get_frequency_name($payment_args['payment_frequency']);
-        $sequence_type                     = "true" === $payment_args['recurring'] ? 'first' : 'oneoff';
+        $sequence_type                     = "true" === $payment_args['recurring'] ? SequenceType::SEQUENCETYPE_FIRST : SequenceType::SEQUENCETYPE_ONEOFF;
         $redirect_url                      = $payment_args['return_url'];
 
         // Add order id query arg to return url if option to show message enabled.
@@ -460,8 +456,8 @@ class MollieVendor extends AbstractService implements VendorInterface
                 $redirect_url = add_query_arg(
                     [
                         'kudos_action'   => 'order_complete',
-                        'kudos_order_id' => $order_id,
-                        'kudos_nonce'    => wp_create_nonce($action . $order_id),
+                        'kudos_transaction_id' => $transaction_id,
+                        'kudos_nonce'    => wp_create_nonce($action . $transaction_id),
                     ],
                     $payment_args['return_url']
                 );
@@ -483,10 +479,10 @@ class MollieVendor extends AbstractService implements VendorInterface
             /* translators: %s: The order id */
                 __('Kudos Donation (%1$s) - %2$s', 'kudos-donations'),
                 $frequency_text,
-                $order_id
+                $transaction_id
             ),
             'metadata'     => [
-                TransactionPostType::META_FIELD_ORDER_ID    => $order_id,
+                'transaction_id'                            => $transaction_id,
                 'interval'                                  => $payment_args['payment_frequency'],
                 SubscriptionPostType::META_FIELD_YEARS      => $payment_args['recurring_length'],
                 DonorPostType::META_FIELD_EMAIL             => $payment_args['email'],
@@ -504,8 +500,8 @@ class MollieVendor extends AbstractService implements VendorInterface
             $payment = $this->api_client->payments->create($payment_array);
 
             $this->logger->info(
-                "New $this payment created.",
-                ['oder_id' => $order_id, 'sequence_type' => $payment->sequenceType]
+                "New " . $this->get_vendor_name() . " payment created.",
+                ['transaction_id' => $transaction_id, 'sequence_type' => $payment->sequenceType]
             );
 
             return $payment->getCheckoutUrl();
@@ -535,7 +531,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 			case '3 months':
 				$result = __( 'Quarterly', 'kudos-donations' );
 				break;
-			case 'oneoff' :
+			case SequenceType::SEQUENCETYPE_ONEOFF :
 				$result = __( 'One-off', 'kudos-donations' );
 				break;
 			default:
@@ -584,7 +580,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 
         // Log request.
         $this->logger->info(
-            "Webhook requested by $this.",
+            "Webhook requested by " . $this::get_vendor_name(),
             [
                 'payment_id' => $payment_id,
             ]
@@ -633,20 +629,14 @@ class MollieVendor extends AbstractService implements VendorInterface
                 ]);
                 $customer     = $mollie->customers->get($payment->customerId);
                 $subscription = $customer->getSubscription($payment->subscriptionId);
-				$order_id = Utils::generate_id('kdo_');
                 $transaction  = TransactionPostType::save(
 					[],
 					[
-	                    TransactionPostType::META_FIELD_ORDER_ID    => $order_id,
 	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $subscription->metadata->campaign_id ?? '',
                     ]
                 );
             } else {
-	            $transaction = TransactionPostType::get_one_by_meta(
-		            [
-			            TransactionPostType::META_FIELD_ORDER_ID   => $payment->metadata->order_id
-		            ]
-	            );
+	            $transaction = get_post($payment->metadata->transaction_id);
             }
 
             /**
@@ -678,7 +668,7 @@ class MollieVendor extends AbstractService implements VendorInterface
                  * The payment is paid and isn't refunded or charged back.
                  * Time to check if this is a duplicate before processing.
                  */
-                if ($payment_id === $transaction->transaction_id) {
+                if ($payment_id === $transaction->ID) {
                     $this->logger->debug('Duplicate webhook detected. Ignoring', ['transaction_id' => $payment_id]);
 
                     return $response;
@@ -712,7 +702,7 @@ class MollieVendor extends AbstractService implements VendorInterface
                  * The payment has been (partially) refunded.
                  * The status of the payment is still "paid".
                  */
-                do_action('kudos_mollie_refund', $transaction->order_id);
+                do_action('kudos_mollie_refund', $transaction->transaction_id);
 
                 $transaction->set_fields(
                     [
@@ -728,7 +718,7 @@ class MollieVendor extends AbstractService implements VendorInterface
                 $this->logger->info('Payment refunded.', ['transaction' => $transaction]);
             }
         } catch (ApiException $e) {
-            $this->logger->error("$this webhook exception: " . $e->getMessage(), ['payment_id' => $payment_id]);
+            $this->logger->error($this::get_vendor_name() . " webhook exception: " . $e->getMessage(), ['payment_id' => $payment_id]);
 
             // Send fail response to Mollie so that they know to try again.
             return rest_ensure_response(
@@ -748,7 +738,7 @@ class MollieVendor extends AbstractService implements VendorInterface
      * @param WP_Post $transaction
      * @param string $mandate_id
      * @param string $interval
-     * @param string $years
+     * @param int $years
      *
      * @return false|Subscription
      */
@@ -756,12 +746,13 @@ class MollieVendor extends AbstractService implements VendorInterface
         WP_Post $transaction,
         string $mandate_id,
         string $interval,
-        string $years
+        int $years
     ) {
-        $vendor_id = $transaction->vendor_id;
+		$donor = get_post(get_post_meta($transaction->ID, TransactionPostType::META_FIELD_DONOR_ID, true));
+		$customer_id = get_post_meta($donor->ID, DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID, true);
         $start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
         $currency    = 'EUR';
-        $value       = number_format($transaction->value, 2);
+        $value       = number_format(get_post_meta($transaction->ID, TransactionPostType::META_FIELD_VALUE, 'true'), 2);
 
         $subscription_array = [
             'amount'      => [
@@ -772,18 +763,19 @@ class MollieVendor extends AbstractService implements VendorInterface
             'mandateId'   => $mandate_id,
             'interval'    => $interval,
             'startDate'   => $start_date,
+
             'description' => sprintf(
             /* translators: %1$s: Subscription interval. %2$s: Order id. */
                 __('Kudos Subscription (%1$s) - %2$s', 'kudos-donations'),
                 $interval,
-                $transaction->order_id
+                $transaction->ID
             ),
             'metadata'    => [
-                'campaign_id' => $transaction->campaign_id,
+                'campaign_id' => get_post_meta($transaction->ID, TransactionPostType::META_FIELD_CAMPAIGN_ID, true),
             ],
         ];
 
-        if ('test' === $transaction->mode) {
+        if ('test' === get_post_meta($transaction->ID, TransactionPostType::META_FIELD_MODE)) {
             unset($subscription_array['startDate']);  // Disable for test mode.
         }
 
@@ -791,26 +783,22 @@ class MollieVendor extends AbstractService implements VendorInterface
             $subscription_array['times'] = Utils::get_times_from_years($years, $interval);
         }
 
-        $customer      = $this->get_customer($vendor_id);
+        $customer      = $this->get_customer($customer_id);
         $valid_mandate = $this->check_mandate($customer, $mandate_id);
 
         // Create subscription if valid mandate found
         if ($valid_mandate) {
             try {
                 $subscription       = $customer->createSubscription($subscription_array);
-                $kudos_subscription = new SubscriptionEntity(
-                    [
-                        'transaction_id'  => $transaction->transaction_id,
-                        'vendor_id'     => $vendor_id,
-                        'frequency'       => $interval,
-                        'years'           => $years,
-                        'value'           => $value,
-                        'currency'        => $currency,
-                        'subscription_id' => $subscription->id,
-                        'status'          => $subscription->status,
-                    ]
-                );
-                $this->mapper->save($kudos_subscription);
+				$kudos_subscription = SubscriptionPostType::save([
+					SubscriptionPostType::META_FIELD_STATUS => $subscription->status,
+					SubscriptionPostType::META_FIELD_FREQUENCY => $interval,
+					SubscriptionPostType::META_FIELD_YEARS => $years,
+					SubscriptionPostType::META_FIELD_VALUE => $value,
+					SubscriptionPostType::META_FIELD_CURRENCY => $currency,
+					SubscriptionPostType::META_FIELD_SUBSCRIPTION_ID => $subscription->id,
+					SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction->ID
+				]);
 
                 return $subscription;
             } catch (ApiException $e) {
@@ -828,7 +816,7 @@ class MollieVendor extends AbstractService implements VendorInterface
         // No valid mandates
         $this->logger->error(
             'Cannot create subscription as customer has no valid mandates.',
-            [$vendor_id]
+            [$customer_id]
         );
 
         return false;
@@ -991,13 +979,12 @@ class MollieVendor extends AbstractService implements VendorInterface
         return $added;
     }
 
-    /**
-     * Returns the vendor name.
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return self::get_vendor_name();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public function is_ready(): bool {
+		$settings = $this->settings->get_current_vendor_settings();
+		$mode = $this->api_mode;
+		return $settings[$mode . '_key']['verified'] ?? false;
+	}
 }

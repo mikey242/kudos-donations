@@ -17,8 +17,8 @@ import { useSettingsContext } from '../../contexts/SettingsContext';
 const IntroGuide = ({ setShowIntro, isOpen }) => {
 	const { updateSetting, checkApiKey, settings } = useSettingsContext();
 	const vendorMollie = settings._kudos_vendor_mollie;
-	const isConnected = vendorMollie.connected ?? false;
-	const isRecurringEnabled = vendorMollie.recurring ?? false;
+	const isConnected = vendorMollie?.connected ?? false;
+	const isRecurringEnabled = vendorMollie?.recurring ?? false;
 
 	const [isApiSaving, setIsApiSaving] = useState(false);
 	const [apiMessage, setApiMessage] = useState(null);
@@ -69,7 +69,7 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 					},
 					{
 						imageSrc: mollie,
-						nextDisabled: !vendorMollie.connected,
+						nextDisabled: !vendorMollie?.connected,
 						heading: __('Connect with Mollie', 'kudos-donations'),
 						content: (
 							<>

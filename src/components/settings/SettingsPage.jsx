@@ -29,15 +29,13 @@ const SettingsPage = () => {
 		updateSettings,
 		checkApiKey,
 		settings,
-		setIsVendorConnected,
-		isVendorConnected,
+		isVendorReady,
 	} = useSettingsContext();
 	const { createNotification } = useNotificationContext();
 	const [showIntro, setShowIntro] = useState(false);
 	const methods = useForm({
 		defaultValues: settings,
 	});
-	const { dirtyFields } = methods.formState;
 
 	useEffect(() => {
 		if (settings) {
@@ -47,21 +45,12 @@ const SettingsPage = () => {
 	}, [settings]);
 
 	const save = (data) => {
-		updateSettings(data).then(async () => {
-			if (`_kudos_vendor_${settings._kudos_vendor}` in dirtyFields) {
-				checkApiKeyWrapper({
-					keys: methods.getValues(
-						`_kudos_vendor_${settings._kudos_vendor}`
-					),
-				});
-			}
-		});
+		return updateSettings(data)
 	};
 
 	const checkApiKeyWrapper = (keys) => {
-		checkApiKey(keys).then((response) => {
-			createNotification(response.data.message, response?.success);
-			setIsVendorConnected(response?.success);
+		return checkApiKey(keys).then((response) => {
+			createNotification(response.message, response?.success);
 		});
 	};
 
@@ -109,11 +98,11 @@ const SettingsPage = () => {
 								<div className="flex items-center">
 									<span
 										className={classNames(
-											isVendorConnected && 'connected',
+											isVendorReady && 'connected',
 											'kudos-api-status text-gray-600 capitalize mr-2'
 										)}
 									>
-										{isVendorConnected
+										{isVendorReady
 											? settings._kudos_vendor +
 											  ' ' +
 											  __('connected', 'kudos-donations')
@@ -124,7 +113,7 @@ const SettingsPage = () => {
 									</span>
 									<span
 										className={classNames(
-											isVendorConnected
+											isVendorReady
 												? 'bg-green-600'
 												: 'bg-gray-500',
 											'rounded-full inline-block align-middle mr-2 border-2 border-solid border-gray-300 w-4 h-4'

@@ -122,7 +122,7 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 			'total_donations'                   => [
 				'label'          => __( 'Total donated', 'kudos-donations' ),
 				'value_type'     => FieldType::INTEGER,
-				'value_callback' => function( $donor_id ) {
+				'value' => function( $donor_id ) {
 					$request = new \WP_REST_Request( 'GET', '/kudos/v1/transaction/donor/total' );
 					$request->set_query_params( [ 'donor_id' => $donor_id ] );
 					$response = rest_do_request( $request );

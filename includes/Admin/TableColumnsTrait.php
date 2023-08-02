@@ -66,8 +66,8 @@ trait TableColumnsTrait {
 			'manage_' . $post_type . '_posts_custom_column',
 			function ( $column_name, $post_id ) use ( $additional_columns ): void {
 				if ( ! empty( $additional_columns[ $column_name ] ) ) {
-					if ( isset( $additional_columns[ $column_name ]['value_callback'] ) ) {
-						$meta_field_value = \call_user_func( $additional_columns[ $column_name ]['value_callback'], $post_id );
+					if ( isset( $additional_columns[ $column_name ]['value'] ) ) {
+						$meta_field_value = \is_callable( $additional_columns[ $column_name ]['value'] ) ? \call_user_func( $additional_columns[ $column_name ]['value'], $post_id ) : $additional_columns[ $column_name ]['value'];
 					} else {
 						$meta_field_value = get_post_meta( $post_id, $column_name, true );
 					}
@@ -201,7 +201,11 @@ trait TableColumnsTrait {
 	private function get_column_list( array $column_config, bool $use_label = true ): array {
 		$post_columns = [];
 		foreach ( $column_config as $name => $config ) {
-			$post_columns[ $name ] = $use_label ? $config['label'] : $name;
+			if ( $use_label ) {
+				$post_columns[ $name ] = !empty($config['label']) ? ( \is_callable( $config['label'] ) ? \call_user_func( $config['label'] ) : $config['label'] ) : $name;
+			} else {
+				$post_columns[ $name ] = $name;
+			}
 		}
 		return $post_columns;
 	}

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Abstract rest controller.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations
+ *
+ * @copyright 2023 Iseard Media
+ */
+
+declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
@@ -7,7 +16,6 @@ use IseardMedia\Kudos\Infrastructure\Registrable;
 use WP_REST_Controller;
 
 abstract class AbstractRestController extends WP_REST_Controller implements Registrable, Delayed {
-
 
 	/**
 	 * Configure the namespace for the plugin.
@@ -33,14 +41,30 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 	}
 
 	/**
+	 * Returns the full rest route for the specified route.
+	 *
+	 * @param string $route The final part of the rest route.
+	 */
+	public function get_route( string $route ): string {
+		return $this->namespace . $this->rest_base . $route;
+	}
+
+	/**
 	 * Get all routes. Should be specified in child class.
 	 */
 	abstract public function get_routes(): array;
 
 	/**
-	 * Called to register all the routes defined in this service.
+	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		$this->register_routes();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function register_routes(): void {
 		foreach ( $this->get_routes() as $route => $args ) {
 			register_rest_route( static::get_namespace(), static::get_base() . $route, $args );
 		}
@@ -79,5 +103,46 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 	 */
 	public function can_edit_posts(): bool {
 		return current_user_can( 'edit_posts' );
+	}
+
+	/**
+	 * Checks the provided honeypot field and logs request if bot detected.
+	 *
+	 * @param array $values Array of form value.
+	 */
+	public function is_bot( array $values ): bool {
+		$time_diff = abs( $values['timestamp'] - time() );
+
+		// Check if tabs completed too quickly.
+		if ( $time_diff < 4 ) {
+			new \WP_Error(
+				'rest_forbidden',
+				__( 'Bot detected, rejecting tabs.', 'kudos-donations' ),
+				[
+					'reason'     => 'FormTab completed too quickly',
+					'time_taken' => $time_diff,
+				]
+			);
+
+			return true;
+		}
+
+		// Check if honeypot field completed.
+		if ( ! empty( $values['donation'] ) ) {
+			new \WP_ERROR(
+				'rest_forbidden',
+				__( 'Bot detected, rejecting tabs.', 'kudos-donations' ),
+				array_merge(
+					[
+						'reason' => 'Honeypot field completed',
+					],
+					$values
+				)
+			);
+
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -98,11 +98,14 @@ function KudosForm({ displayAs }) {
 			body: new URLSearchParams(formData),
 		}).then((result) => {
 			if (result.success) {
-				window.location.href = result.data;
+				window.location.href = result.url;
 			} else {
 				setFormError(result.data.message);
 			}
 			return result;
+		}).catch((error) => {
+			setFormError(error.message)
+			return error
 		});
 	}
 

@@ -99,7 +99,7 @@ const InitialTab = (props) => {
 					max: {
 						value: 5000,
 						message: __(
-							'Maximum donation is 5000 euros',
+							__('Maximum donation is 5000 euros', 'kudos-donations'),
 							'kudos-donations'
 						),
 					},
