@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Controller;
 
 use Exception;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
@@ -66,8 +65,6 @@ class Front extends AbstractService {
 
 	/**
 	 * Register the assets needed to display Kudos.
-	 *
-	 * @throws Exception
 	 */
 	public function register_assets(): void {
 		$public_js = Assets::get_script( 'front/kudos-public.js' );
@@ -94,6 +91,8 @@ class Front extends AbstractService {
 
 	/**
 	 * Renders the kudos button and donation modals.
+	 *
+	 * @throws Exception If the api is not ready.
 	 *
 	 * @param array $atts Array of Kudos button/modal attributes.
 	 */
@@ -149,12 +148,24 @@ class Front extends AbstractService {
 		wp_enqueue_style( 'kudos-donations-fonts' ); // Fonts need to be loaded in the main document.
 	}
 
-	public function form_html( $id, $atts ): string {
+	/**
+	 * Returns the html for the kudos form.
+	 *
+	 * @param string $id ID to use for the form.
+	 * @param array  $atts Attributes.
+	 */
+	public function form_html( string $id, array $atts ): string {
 		return "<div id='form-$id' class='kudos-donations kudos-form' data-display-as='" . $atts['type'] . "' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
 					</div>";
 	}
 
-	public function button_html( $id, $atts ): string {
+	/**
+	 * Returns the html for the kudos button.
+	 *
+	 * @param string $id ID to use for the form.
+	 * @param array  $atts Attributes.
+	 */
+	public function button_html( string $id, array $atts ): string {
 		return "<div id='button-$id' class='button' data-label='" . $atts['button_label'] . "' data-target='form-$id' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
 					</div>";
 	}
@@ -175,7 +186,7 @@ class Front extends AbstractService {
 					$transaction_id = sanitize_text_field( $_REQUEST['kudos_transaction_id'] );
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
-						$transaction = get_post($transaction_id);
+						$transaction = get_post( $transaction_id );
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
 							$transaction_id = $transaction->ID;

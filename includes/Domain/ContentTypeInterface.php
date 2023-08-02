@@ -29,4 +29,11 @@ interface ContentTypeInterface {
 	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#parameters
 	 */
 	public function get_args(): array;
+
+	/**
+	 * Returns a formatted id based on the post id and date of post.
+	 *
+	 * @param int $post_id WordPress post id.
+	 */
+	public static function get_formatted_id( int $post_id ): string;
 }

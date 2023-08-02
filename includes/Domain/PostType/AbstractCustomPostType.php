@@ -28,7 +28,18 @@ abstract class AbstractCustomPostType extends AbstractContentType {
 	use MapperTrait;
 	use TableColumnsTrait;
 
+	/**
+	 * Features that the post type should support.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#supports
+	 */
 	protected const SUPPORTS = [ 'custom-fields', 'title' ];
+	/**
+	 * Allows changing the capabilities of the CPT. By default, we want to disable post creation by the user.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
+	 */
+	protected const CAPABILITIES = [ 'create_posts' => false ];
 
 	/**
 	 * {@inheritDoc}

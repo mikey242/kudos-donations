@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract Content Type.
+ * Abstract Content Type. Used as a base for creating Custom Post Types and Custom Taxonomies.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
@@ -24,10 +24,23 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	use MapperTrait;
 	use TableColumnsTrait;
 	use RegisterMetaTrait;
-	protected const CAPABILITIES = [ 'create_posts' => false ];
+
+	/**
+	 * Whether to show the content in the REST API.
+	 */
 	protected const SHOW_IN_REST = true;
-	protected const PUBLIC       = false;
-	protected const SHOW_UI      = true;
+	/**
+	 * Whether the content is intended for use publicly.
+	 */
+	protected const PUBLIC = false;
+	/**
+	 * Whether the content should be visible in the Admin UI.
+	 */
+	protected const SHOW_UI = true;
+	/**
+	 * Should a menu link to the UI be added to the menu.
+	 * Since Kudos Donations uses its own menu we will add this ourselves later.
+	 */
 	protected const SHOW_IN_MENU = false;
 
 	/**
@@ -145,9 +158,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	}
 
 	/**
-	 * Returns a formatted id based on the post id and date of post.
-	 *
-	 * @param int $post_id WordPress post id.
+	 * {@inheritDoc}
 	 */
 	public static function get_formatted_id( int $post_id ): string {
 		$transaction = get_post( $post_id );
