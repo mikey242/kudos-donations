@@ -3,11 +3,7 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
-import {
-	RadioGroupControl,
-	TextControl,
-	ToggleControl,
-} from '../controls';
+import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
 import { ProgressBar } from './ProgressBar';
 
 const InitialTab = (props) => {
@@ -31,6 +27,7 @@ const InitialTab = (props) => {
 	const watchValue = useWatch({ name: 'value' });
 
 	const valueError = sprintf(
+		// translators: %d is the amount in euros.
 		_n(
 			'Minimum donation is %d euro',
 			'Minimum donation is %d euros',
@@ -44,21 +41,21 @@ const InitialTab = (props) => {
 		if (donationType !== 'both') {
 			setValue('recurring', donationType === 'recurring');
 		}
-	}, []);
+	}, [donationType, setValue]);
 
 	useEffect(() => {
 		if (watchFixed) {
 			setValue('value', watchFixed, { shouldValidate: true });
 			setValue('valueOpen', '');
 		}
-	}, [watchFixed]);
+	}, [setValue, watchFixed]);
 
 	useEffect(() => {
 		if (watchOpen) {
 			setValue('value', watchOpen, { shouldValidate: true });
 			setValue('valueFixed', '');
 		}
-	}, [watchOpen]);
+	}, [setValue, watchOpen]);
 
 	return (
 		<BaseTab title={title} description={description} buttons={buttons}>
@@ -99,7 +96,7 @@ const InitialTab = (props) => {
 					max: {
 						value: 5000,
 						message: __(
-							__('Maximum donation is 5000 euros', 'kudos-donations'),
+							'Maximum donation is 5000 euros',
 							'kudos-donations'
 						),
 					},

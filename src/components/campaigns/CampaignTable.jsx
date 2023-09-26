@@ -5,7 +5,6 @@ import {
 	DocumentDuplicateIcon,
 	PencilIcon,
 	TrashIcon,
-	CodeBracketSquareIcon
 } from '@heroicons/react/24/outline';
 
 const CampaignTable = ({
@@ -14,7 +13,6 @@ const CampaignTable = ({
 	duplicateClick,
 	deleteClick,
 }) => {
-
 	return (
 		<Panel
 			className="overflow-x-auto"
@@ -57,7 +55,9 @@ const CampaignTable = ({
 							scope="col"
 							className="relative py-3.5 pl-3 pr-4 sm:pr-6"
 						>
-							<span className="sr-only">{__('Edit', 'kudos-donations')}</span>
+							<span className="sr-only">
+								{__('Edit', 'kudos-donations')}
+							</span>
 						</th>
 					</tr>
 				</thead>
@@ -86,7 +86,11 @@ const CampaignTable = ({
 							</td>
 							<td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
 								{campaign.meta.goal > 0
-									? Math.round((parseInt(campaign.total)/parseInt(campaign.meta.goal) * 100)) + '%'
+									? Math.round(
+											(parseInt(campaign.total) /
+												parseInt(campaign.meta.goal)) *
+												100
+									  ) + '%'
 									: ''}
 							</td>
 							<td className="relative whitespace-nowrap py-4 pl-3 pr-4 divide-x-8 divide-transparent text-right text-sm font-medium sm:pr-6">

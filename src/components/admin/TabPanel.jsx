@@ -6,15 +6,19 @@ import { Fragment, useEffect, useState } from '@wordpress/element';
 import { getQueryVar, updateQueryParameter } from '../../helpers/util';
 
 const TabPanel = ({ tabs }) => {
-	const [selectedIndex, setSelectedIndex] = useState('0');
+	const [selectedIndex, setSelectedIndex] = useState(0);
+	const [didLoad, setDidLoad] = useState(false);
 	const query = getQueryVar('tab');
 
 	useEffect(() => {
-		setSelectedIndex(query);
-	}, []);
+		if (!didLoad) {
+			setSelectedIndex(query);
+			setDidLoad(true);
+		}
+	}, [didLoad, query]);
 
 	useEffect(() => {
-		if (parseInt(selectedIndex) >= 0) {
+		if (selectedIndex >= 0) {
 			updateQueryParameter('tab', selectedIndex);
 		}
 	}, [selectedIndex]);
@@ -23,7 +27,7 @@ const TabPanel = ({ tabs }) => {
 		<div className="mx-auto mt-5 w-full max-w-4xl">
 			<Tab.Group
 				selectedIndex={selectedIndex}
-				onChange={setSelectedIndex}
+				onChange={(index) => setSelectedIndex(index)}
 			>
 				<Panel>
 					<Tab.List className="relative z-0 rounded-lg flex divide-x divide-gray-200">

@@ -50,7 +50,8 @@ const ButtonEdit = (props) => {
 		return () => {
 			controller.abort();
 		};
-	}, []);
+		// eslint-disable-next-line camelcase
+	}, [campaign_id]);
 
 	const onChangeButtonLabel = (newValue) => {
 		setAttributes({ button_label: newValue });
@@ -84,6 +85,7 @@ const ButtonEdit = (props) => {
 									'Select a campaign',
 									'kudos-donations'
 								)}
+								// eslint-disable-next-line camelcase
 								value={campaign_id}
 								onChange={onChangeCampaign}
 								options={[{ label: '', value: '' }].concat(
@@ -131,11 +133,13 @@ const ButtonEdit = (props) => {
 
 					<DonateButton
 						className={className ?? ''}
+						// eslint-disable-next-line camelcase
 						color={currentCampaign?.meta.theme_color ?? '#ff9f1c'}
 					>
 						<RichText
 							allowedFormats={[]} // Disable all formatting
 							onChange={onChangeButtonLabel}
+							// eslint-disable-next-line camelcase
 							value={button_label}
 						/>
 					</DonateButton>

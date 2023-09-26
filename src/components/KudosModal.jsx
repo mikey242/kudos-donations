@@ -1,8 +1,7 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
 import logo from '../../assets/images/logo-colour.svg';
 import { Transition } from '@headlessui/react';
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useRef, useState, useCallback } from '@wordpress/element';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 const KudosModal = ({
@@ -11,29 +10,44 @@ const KudosModal = ({
 	children,
 	showLogo = true,
 }) => {
+	const [didLoad, setDidLoad] = useState(false);
+	const targetRef = useRef(null);
+	const toggle = useCallback(() => {
+		if (typeof toggleModal === 'function') toggleModal();
+	}, [toggleModal]);
+	const handleKeyPress = useCallback(
+		(e) => {
+			if (e.key === 'Escape' || e.keyCode === 27) toggle();
+		},
+		[toggle]
+	);
+
 	useEffect(() => {
 		document.body.style.overflowY = isOpen ? 'hidden' : 'auto';
 	}, [isOpen]);
 
-	// Watch for data-toggle attribute changes.
-	const targetRef = useRef(null);
-	const observer = new MutationObserver((mutations) => {
-		mutations.forEach((mutation) => {
-			if (
-				mutation.type === 'attributes' &&
-				mutation.attributeName === 'data-toggle' &&
-				targetRef.current.dataset.toggle === 'true'
-			) {
-				toggleModal();
-				targetRef.current.dataset.toggle = 'false';
-			}
-		});
-	});
 	useEffect(() => {
-		if (targetRef.current) {
-			observer.observe(targetRef.current, { attributes: true });
+		if (!didLoad) {
+			// Watch for data-toggle attribute changes.
+			const observer = new MutationObserver((mutations) => {
+				mutations.forEach((mutation) => {
+					if (
+						mutation.type === 'attributes' &&
+						mutation.attributeName === 'data-toggle' &&
+						targetRef.current.dataset.toggle === 'true'
+					) {
+						toggleModal();
+						targetRef.current.dataset.toggle = 'false';
+					}
+				});
+			});
+
+			setDidLoad(true);
+			if (targetRef.current) {
+				observer.observe(targetRef.current, { attributes: true });
+			}
 		}
-	}, [targetRef.current]);
+	}, [didLoad, toggleModal]);
 
 	// Add escape key event listeners.
 	useEffect(() => {
@@ -43,15 +57,7 @@ const KudosModal = ({
 
 		return () =>
 			document.removeEventListener('keydown', handleKeyPress, false);
-	}, [isOpen]);
-
-	const handleKeyPress = (e) => {
-		if (e.key === 'Escape' || e.keyCode === 27) toggle();
-	};
-
-	const toggle = () => {
-		if (typeof toggleModal === 'function') toggleModal();
-	};
+	}, [handleKeyPress, isOpen]);
 
 	return (
 		<div ref={targetRef} data-toggle={false}>

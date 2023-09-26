@@ -4,7 +4,7 @@ import { CampaignsPage } from '../components/campaigns/CampaignsPage';
 import SettingsProvider from '../contexts/SettingsContext';
 import Render from '../components/Render';
 import { NotificationProvider } from '../contexts/NotificationContext';
-import './kudos-admin-campaigns.css'
+import './kudos-admin-campaigns.css';
 
 const container = document.getElementById('kudos-campaigns');
 const root = createRoot(container);

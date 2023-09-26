@@ -42,10 +42,10 @@ const SettingsPage = () => {
 			setShowIntro(settings._kudos_show_intro);
 			methods.reset(settings);
 		}
-	}, [settings]);
+	}, [methods, settings]);
 
 	const save = (data) => {
-		return updateSettings(data)
+		return updateSettings(data);
 	};
 
 	const checkApiKeyWrapper = (keys) => {

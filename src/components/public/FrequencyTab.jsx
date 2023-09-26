@@ -28,7 +28,7 @@ function FrequencyTab(props) {
 				name="recurring_frequency"
 				validation={{
 					required: __(
-						__('Please select a payment frequency', 'kudos-donations'),
+						'Please select a payment frequency',
 						'kudos-donations'
 					),
 				}}

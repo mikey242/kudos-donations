@@ -1,14 +1,10 @@
 import { Fragment, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import {
-	Button,
-	RadioControl,
-	TextControl,
-	ToggleControl,
-} from '../controls';
+import { Button, RadioControl, TextControl, ToggleControl } from '../controls';
 import React from 'react';
 import Divider from '../Divider';
 import { useFormContext } from 'react-hook-form';
+// eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { useNotificationContext } from '../../contexts/NotificationContext';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';

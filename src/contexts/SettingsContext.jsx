@@ -5,6 +5,7 @@ import {
 	useContext,
 	useEffect,
 	useState,
+	useCallback,
 } from '@wordpress/element';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
@@ -25,29 +26,33 @@ export default function SettingsProvider({ children }) {
 	const { settings } = settingsRequest;
 	const { createNotification } = useNotificationContext();
 
-	useEffect(() => {
-		getSettings();
-	}, []);
-
-	const setSettings = (newSettings) => {
-		setSettingsRequest((prev) => {
-			return {
-				...prev,
-				settings: { ...newSettings },
-			};
-		});
-	};
-
-	const getSettings = () => {
+	const getSettings = useCallback(() => {
 		return api.loadPromise.then(() => {
 			const settingsModel = new api.models.Settings();
-			return settingsModel.fetch().then((response) => {
-				setSettingsRequest({
-					ready: true,
-					settings: response,
-				});
-				return response;
-			}).then(() => getVendorStatus());
+			return settingsModel
+				.fetch()
+				.then((response) => {
+					setSettingsRequest({
+						ready: true,
+						settings: response,
+					});
+					return response;
+				})
+				.then(() => getVendorStatus());
+		});
+	}, []);
+
+	useEffect(() => {
+		getSettings();
+	}, [getSettings]);
+
+	const setSettings = (newSettings) => {
+		setSettingsRequest((prevState) => {
+			return {
+				...prevState,
+				ready: true,
+				settings: { ...newSettings },
+			};
 		});
 	};
 
@@ -56,14 +61,14 @@ export default function SettingsProvider({ children }) {
 			path: 'kudos/v1/payment/ready',
 			method: 'GET',
 		})
-		.then((response) => {
-			setIsVendorReady(response)
-			return response;
-		})
-		.catch((response) => {
-			return response
-		})
-	}
+			.then((response) => {
+				setIsVendorReady(response);
+				return response;
+			})
+			.catch((response) => {
+				return response;
+			});
+	};
 
 	// Update all settings.
 	async function updateSettings(data) {
@@ -120,13 +125,13 @@ export default function SettingsProvider({ children }) {
 		return apiFetch({
 			path: 'kudos/v1/payment/test',
 			method: 'POST',
-			data: { keys: keys },
+			data: { keys },
 		})
 			.then((response) => {
 				return response;
 			})
 			.catch((response) => {
-				return response
+				return response;
 			})
 			.finally(() => {
 				getSettings();

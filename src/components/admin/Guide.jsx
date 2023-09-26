@@ -1,9 +1,8 @@
 import classnames from 'classnames';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState, useCallback } from '@wordpress/element';
 import { useFocusOnMount } from '@wordpress/compose';
 import { ESCAPE, LEFT, RIGHT } from '@wordpress/keycodes';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
 import { Button } from '../controls';
 
 const Guide = ({ pages = [], className, onFinish }) => {
@@ -13,36 +12,39 @@ const Guide = ({ pages = [], className, onFinish }) => {
 	const canGoForward = currentPage < pages.length - 1;
 	const focusOnMountRef = useFocusOnMount(true);
 
-	useEffect(() => {
-		document.addEventListener('keydown', handleKeyPress);
-		return () =>
-			document.removeEventListener('keydown', handleKeyPress, false);
-	}, []);
-
-	const handleKeyPress = (event) => {
-		if (event.keyCode === LEFT) {
-			goBack();
-		}
-		if (event.keyCode === RIGHT) {
-			goForward();
-		}
-		if (event.keyCode === ESCAPE) {
-			onFinish();
-		}
-	};
-
-	const goBack = () => {
+	const goBack = useCallback(() => {
 		if (canGoBack) {
 			setCurrentPage(currentPage - 1);
 		}
-	};
+	}, [canGoBack, currentPage]);
 
-	const goForward = () => {
+	const goForward = useCallback(() => {
 		if (canGoForward) {
 			setFurthestPage(Math.max(currentPage + 1, furthestPage));
 			setCurrentPage(currentPage + 1);
 		}
-	};
+	}, [canGoForward, currentPage, furthestPage]);
+
+	const handleKeyPress = useCallback(
+		(event) => {
+			if (event.keyCode === LEFT) {
+				goBack();
+			}
+			if (event.keyCode === RIGHT) {
+				goForward();
+			}
+			if (event.keyCode === ESCAPE) {
+				onFinish();
+			}
+		},
+		[goBack, goForward, onFinish]
+	);
+
+	useEffect(() => {
+		document.addEventListener('keydown', handleKeyPress);
+		return () =>
+			document.removeEventListener('keydown', handleKeyPress, false);
+	}, [handleKeyPress]);
 
 	const pageNav = pages.map((page, i) => {
 		const isAccessible = furthestPage >= i;
@@ -83,7 +85,7 @@ const Guide = ({ pages = [], className, onFinish }) => {
 						{pages[currentPage].content}
 					</div>
 				</div>
-				<div className="intro-nav w-full pt-5 border-0 border-t border-solid border-gray-200 flex justify-between items-center w-11/12 mt-5 mb-5">
+				<div className="intro-nav w-full pt-5 border-0 border-t border-solid border-gray-200 flex justify-between items-center mt-5 mb-5">
 					<Button
 						isOutline
 						className={canGoBack ? 'visible' : 'invisible'}

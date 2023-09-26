@@ -96,17 +96,19 @@ function KudosForm({ displayAs }) {
 			path: '/kudos/v1/payment/create',
 			method: 'POST',
 			body: new URLSearchParams(formData),
-		}).then((result) => {
-			if (result.success) {
-				window.location.href = result.url;
-			} else {
-				setFormError(result.data.message);
-			}
-			return result;
-		}).catch((error) => {
-			setFormError(error.message)
-			return error
-		});
+		})
+			.then((result) => {
+				if (result.success) {
+					window.location.href = result.url;
+				} else {
+					setFormError(result.data.message);
+				}
+				return result;
+			})
+			.catch((error) => {
+				setFormError(error.message);
+				return error;
+			});
 	}
 
 	const renderDonationForm = () => (

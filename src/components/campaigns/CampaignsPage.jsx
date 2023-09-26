@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState, useCallback } from '@wordpress/element';
 import { Header } from '../admin/Header';
 import React from 'react';
 import CampaignTable from './CampaignTable';
@@ -30,88 +30,7 @@ const CampaignsPage = () => {
 	const { settings, settingsReady } = useSettingsContext();
 	const { createNotification } = useNotificationContext();
 
-	useEffect(() => {
-		getData();
-	}, []);
-
-	useEffect(() => {
-		if (currentCampaign?.id) {
-			updateQueryParameter('campaign', currentCampaign.id);
-		}
-	}, [currentCampaign]);
-
-	const clearCurrentCampaign = () => {
-		removeQueryParameters(['campaign', 'tab']);
-		setCurrentCampaign(null);
-	};
-
-	const newCampaign = () => {
-		updateCampaign(null, {
-			title: __('New campaign', 'kudos-donations'),
-			status: 'draft',
-		}).then((response) => {
-			setCurrentCampaign(response)
-		})
-	};
-
-	const updateCampaign = (id = null, data = {}) => {
-		setIsApiBusy(true);
-		return apiFetch({
-			path: `wp/v2/kudos_campaign/${id ?? ''}`,
-			method: 'POST',
-			data: {
-				...data,
-				status: 'publish',
-			},
-		})
-		.then((response) => {
-			getCampaigns().then(() => {
-				createNotification(
-					data.status === 'draft'
-						? __('Campaign created', 'kudos-donations')
-						: __('Campaign updated', 'kudos-donations'),
-					true
-				);
-			});
-			return response;
-		})
-		.catch((error) => {
-			createNotification(error.message, false);
-		})
-		.finally(() => {
-			setIsApiBusy(false);
-		});
-	};
-
-	const removeCampaign = (id) => {
-		apiFetch({
-			path: `wp/v2/kudos_campaign/${id}?force=true`,
-			method: 'DELETE',
-		}).then(() => {
-			createNotification(__('Campaign deleted', 'kudos-donations'), true);
-			return getCampaigns();
-		});
-	};
-
-	const duplicateCampaign = (campaign) => {
-		const data = {
-			...campaign,
-			id: null,
-			title: campaign.title.rendered,
-			status: 'draft',
-		};
-		updateCampaign(null, data);
-	};
-
-	const getData = () => {
-		Promise.all([getCampaigns()])
-			.then(() => setCampaignsReady(true))
-			.catch((error) => {
-				createNotification(error.message, false);
-			});
-	};
-
-	const getCampaigns = () => {
+	const getCampaigns = useCallback(() => {
 		return apiFetch({
 			path: 'wp/v2/kudos_campaign/',
 			method: 'GET',
@@ -141,6 +60,87 @@ const CampaignsPage = () => {
 					}
 				}
 			});
+	}, [currentCampaign]);
+
+	const getData = useCallback(() => {
+		Promise.all([getCampaigns()])
+			.then(() => setCampaignsReady(true))
+			.catch((error) => {
+				createNotification(error.message, false);
+			});
+	}, [createNotification, getCampaigns]);
+
+	useEffect(() => {
+		getData();
+	}, [getData]);
+
+	useEffect(() => {
+		if (currentCampaign?.id) {
+			updateQueryParameter('campaign', currentCampaign.id);
+		}
+	}, [currentCampaign]);
+
+	const clearCurrentCampaign = () => {
+		removeQueryParameters(['campaign', 'tab']);
+		setCurrentCampaign(null);
+	};
+
+	const newCampaign = () => {
+		updateCampaign(null, {
+			title: __('New campaign', 'kudos-donations'),
+			status: 'draft',
+		}).then((response) => {
+			setCurrentCampaign(response);
+		});
+	};
+
+	const updateCampaign = (id = null, data = {}) => {
+		setIsApiBusy(true);
+		return apiFetch({
+			path: `wp/v2/kudos_campaign/${id ?? ''}`,
+			method: 'POST',
+			data: {
+				...data,
+				status: 'publish',
+			},
+		})
+			.then((response) => {
+				getCampaigns().then(() => {
+					createNotification(
+						data.status === 'draft'
+							? __('Campaign created', 'kudos-donations')
+							: __('Campaign updated', 'kudos-donations'),
+						true
+					);
+				});
+				return response;
+			})
+			.catch((error) => {
+				createNotification(error.message, false);
+			})
+			.finally(() => {
+				setIsApiBusy(false);
+			});
+	};
+
+	const removeCampaign = (id) => {
+		apiFetch({
+			path: `wp/v2/kudos_campaign/${id}?force=true`,
+			method: 'DELETE',
+		}).then(() => {
+			createNotification(__('Campaign deleted', 'kudos-donations'), true);
+			return getCampaigns();
+		});
+	};
+
+	const duplicateCampaign = (campaign) => {
+		const data = {
+			...campaign,
+			id: null,
+			title: campaign.title.rendered,
+			status: 'draft',
+		};
+		return updateCampaign(null, data);
 	};
 
 	return (

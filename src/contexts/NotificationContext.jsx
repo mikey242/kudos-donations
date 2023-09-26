@@ -35,7 +35,7 @@ export const NotificationProvider = ({ children }) => {
 
 	useEffect(() => {
 		return () => list.forEach(({ timerId }) => clearTimeout(timerId));
-	}, []);
+	}, [list]);
 
 	const data = { createNotification, deleteNotification, clearNotifications };
 
