@@ -35,32 +35,18 @@ const CampaignsPage = () => {
 		return apiFetch({
 			path: 'wp/v2/kudos_campaign/',
 			method: 'GET',
-		})
-			.then(async (response) => {
-				await Promise.all(
-					response.map((campaign) => {
-						return apiFetch({
-							path: `kudos/v1/transaction/campaign/total/${campaign.id}`,
-							method: 'GET',
-						}).then((total) => {
-							campaign.total = total;
-						});
-					})
+		}).then((response) => {
+			setCampaigns(response.reverse());
+			const currentId = getQueryVar('campaign');
+			if (currentId) {
+				const campaign = response.filter(
+					(res) => res.id === parseInt(currentId)
 				);
-				return response;
-			})
-			.then((response) => {
-				setCampaigns(response.reverse());
-				const currentId = getQueryVar('campaign');
-				if (currentId) {
-					const campaign = response.filter(
-						(res) => res.id === parseInt(currentId)
-					);
-					if (campaign && currentCampaign === null) {
-						setCurrentCampaign(campaign[0]);
-					}
+				if (campaign && currentCampaign === null) {
+					setCurrentCampaign(campaign[0]);
 				}
-			});
+			}
+		});
 	}, [currentCampaign]);
 
 	const getData = useCallback(() => {

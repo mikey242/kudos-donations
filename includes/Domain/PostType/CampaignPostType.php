@@ -12,9 +12,11 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Domain\PostType;
 
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
+use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
 
-class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsInterface {
+class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface {
 
 	protected const SHOW_IN_REST = true;
 	protected const CAPABILITIES = [ 'create_posts' => true ];
@@ -50,6 +52,11 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public const META_FIELD_CUSTOM_RETURN_URL        = 'custom_return_url';
 	public const META_FIELD_RETURN_MESSAGE_TITLE     = 'return_message_title';
 	public const META_FIELD_RETURN_MESSAGE_TEXT      = 'return_message_text';
+
+	/**
+	 * Rest field constants.
+	 */
+	public const REST_FIELD_TOTAL = 'total';
 
 	/**
 	 * {@inheritDoc}
@@ -210,6 +217,34 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 			self::META_FIELD_RETURN_MESSAGE_TEXT      => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_rest_fields(): array {
+		return [
+			self::REST_FIELD_TOTAL => [
+				'get_callback' => function ( $object ) {
+
+					$campaign_id = $object['id'];
+
+						$transactions = TransactionPostType::get_by_meta(
+							[
+								TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_id,
+								TransactionPostType::META_FIELD_STATUS      => PaymentStatus::PAID,
+							]
+						);
+
+						$values = array_column( $transactions, TransactionPostType::META_FIELD_VALUE );
+						$total  = array_sum( $values );
+
+						$additional_funds = get_post_meta( $campaign_id, CampaignPostType::META_FIELD_ADDITIONAL_FUNDS, true );
+
+						return $total + (int) $additional_funds;
+				},
 			],
 		];
 	}

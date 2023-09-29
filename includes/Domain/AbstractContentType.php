@@ -24,6 +24,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	use MapperTrait;
 	use TableColumnsTrait;
 	use RegisterMetaTrait;
+	use RegisterRestFieldsTrait;
 
 	/**
 	 * Whether to show the content in the REST API.

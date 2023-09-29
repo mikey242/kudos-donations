@@ -11,22 +11,16 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\PostType;
 
-use IseardMedia\Kudos\Admin\TableColumnsTrait;
 use IseardMedia\Kudos\Domain\AbstractContentType;
 use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
-use IseardMedia\Kudos\Domain\LabelsTrait;
-use IseardMedia\Kudos\Domain\MapperTrait;
+use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\ObjectType;
 
 /**
  * AbstractCustomPostType class.
  */
 abstract class AbstractCustomPostType extends AbstractContentType {
-
-	use LabelsTrait;
-	use MapperTrait;
-	use TableColumnsTrait;
 
 	/**
 	 * Features that the post type should support.
@@ -48,6 +42,10 @@ abstract class AbstractCustomPostType extends AbstractContentType {
 		$this->register_post_type();
 		if ( is_a( $this, HasMetaFieldsInterface::class ) ) {
 			$this->register_meta_fields( $this::get_meta_config(), ObjectType::POST, static::get_slug() );
+		}
+
+		if ( is_a( $this, HasRestFieldsInterface::class ) ) {
+			$this->register_rest_fields( $this::get_rest_fields(), static::get_slug() );
 		}
 
 		if ( is_a( $this, HasAdminColumns::class ) ) {

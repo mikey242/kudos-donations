@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface for the registration of meta/custom-fields on a PostType
+ * Interface for the registration of meta/custom-fields on an object
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
