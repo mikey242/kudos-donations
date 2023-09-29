@@ -2,11 +2,7 @@ import React from 'react';
 import { Fragment, useState } from '@wordpress/element';
 import { useCopyToClipboard } from '@wordpress/compose';
 import { __ } from '@wordpress/i18n';
-import {
-	Button,
-	RadioGroupControl,
-	TextControl,
-} from '../controls';
+import { Button, RadioGroupControl, TextControl } from '../controls';
 import Divider from '../Divider';
 import KudosModal from '../KudosModal';
 import { useFormContext } from 'react-hook-form';

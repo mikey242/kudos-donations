@@ -2,10 +2,10 @@ import React from 'react';
 import api from '@wordpress/api';
 import {
 	createContext,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
-	useCallback,
 } from '@wordpress/element';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';

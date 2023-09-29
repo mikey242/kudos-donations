@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { useEffect, useState, useCallback } from '@wordpress/element';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import { useFocusOnMount } from '@wordpress/compose';
 import { ESCAPE, LEFT, RIGHT } from '@wordpress/keycodes';
 import { __ } from '@wordpress/i18n';

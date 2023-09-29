@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import logo from '../../assets/images/logo-colour.svg';
 import { Transition } from '@headlessui/react';
-import { useEffect, useRef, useState, useCallback } from '@wordpress/element';
+import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 const KudosModal = ({

@@ -4,7 +4,7 @@
  *  @see https://stackoverflow.com/questions/42274721/shadow-dom-and-reactjs
  */
 
-import {createRoot} from '@wordpress/element';
+import { createRoot } from '@wordpress/element';
 import React from 'react';
 import KudosForm from '../components/public/KudosForm';
 import Message from '../components/public/Message';
@@ -19,7 +19,7 @@ const buttons = document.querySelectorAll('.button');
 
 // Kudos Donations buttons
 buttons.forEach((container) => {
-	const root = createRoot(container)
+	const root = createRoot(container);
 	const campaignId = container.dataset.campaign;
 	const targetId = container.dataset.target;
 	const label = container.dataset.label;
