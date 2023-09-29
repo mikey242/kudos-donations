@@ -50,7 +50,7 @@ const CampaignsPage = () => {
 	}, [currentCampaign]);
 
 	const getData = useCallback(() => {
-		Promise.all([getCampaigns()])
+		getCampaigns()
 			.then(() => setCampaignsReady(true))
 			.catch((error) => {
 				createNotification(error.message, false);
