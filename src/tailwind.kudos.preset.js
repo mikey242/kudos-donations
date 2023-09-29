@@ -25,10 +25,6 @@ module.exports = {
 					500: '#ff9f1c',
 					700: '#f58d00',
 				},
-				green: {
-					500: '#2ec4b6',
-					700: '#2bb9ac',
-				},
 				primary: 'var(--kudos-theme-primary)',
 				'primary-dark': 'var(--kudos-theme-primary-dark)',
 				'primary-darker': 'var(--kudos-theme-primary-darker)',
