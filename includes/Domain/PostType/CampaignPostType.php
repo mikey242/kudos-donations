@@ -230,22 +230,32 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'get_callback' => function ( $object ) {
 
 					$campaign_id = $object['id'];
+					return self::get_total( $campaign_id );
 
-						$transactions = TransactionPostType::get_by_meta(
-							[
-								TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_id,
-								TransactionPostType::META_FIELD_STATUS      => PaymentStatus::PAID,
-							]
-						);
-
-						$values = array_column( $transactions, TransactionPostType::META_FIELD_VALUE );
-						$total  = array_sum( $values );
-
-						$additional_funds = get_post_meta( $campaign_id, CampaignPostType::META_FIELD_ADDITIONAL_FUNDS, true );
-
-						return $total + (int) $additional_funds;
 				},
 			],
 		];
+	}
+
+	/**
+	 * Returns the total donated to the specified campaign.
+	 *
+	 * @param int $campaign_id The post ID of the campaign.
+	 * @return float|int
+	 */
+	public static function get_total( int $campaign_id ): int {
+		$transactions = TransactionPostType::get_by_meta(
+			[
+				TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_id,
+				TransactionPostType::META_FIELD_STATUS => PaymentStatus::PAID,
+			]
+		);
+
+		$values = array_column( $transactions, TransactionPostType::META_FIELD_VALUE );
+		$total  = array_sum( $values );
+
+		$additional_funds = get_post_meta( $campaign_id, self::META_FIELD_ADDITIONAL_FUNDS, true );
+
+		return $total + (int) $additional_funds;
 	}
 }
