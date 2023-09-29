@@ -110,13 +110,14 @@ const CampaignsPage = () => {
 		})
 			.then((response) => {
 				getCampaigns().then(() => {
-					notification &&
+					if (notification) {
 						createNotification(
 							data.status === 'draft'
 								? __('Campaign created', 'kudos-donations')
 								: __('Campaign updated', 'kudos-donations'),
 							true
 						);
+					}
 				});
 				return response;
 			})
