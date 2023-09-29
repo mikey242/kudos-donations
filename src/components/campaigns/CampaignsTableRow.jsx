@@ -70,7 +70,7 @@ const CampaignsTableRow = ({
 				<div className="table-cell align-middle whitespace-nowrap px-3 py-4 text-gray-900">
 					<div className="block w-60">
 						<ProgressBar
-							goal={campaign.meta.goal}
+							percentage={Math.round(campaign.progress)}
 							total={campaign.total}
 							showGoal={false}
 						/>

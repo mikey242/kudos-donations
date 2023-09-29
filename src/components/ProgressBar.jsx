@@ -1,15 +1,20 @@
 import React from 'react';
 import { FlagIcon } from '@heroicons/react/20/solid';
 
-const ProgressBar = ({ goal, total = 0, extra = 0, showGoal = true }) => {
-	const percentage = goal ? Math.floor((total / goal) * 100) : 0;
+const ProgressBar = ({
+	percentage,
+	goal,
+	total = 0,
+	extra = 0,
+	showGoal = true,
+}) => {
 	const extraPercentage = goal ? extra / (goal - total) : 0;
 
 	return (
 		<div className="w-full text-base">
 			<div
 				data-total={total}
-				data-goal={goal}
+				// data-goal={goal}
 				className="h-7 border-1 border-solid border-gray-300 flex relative shadow-inner overflow-hidden bg-gray-200 rounded w-full"
 			>
 				<div

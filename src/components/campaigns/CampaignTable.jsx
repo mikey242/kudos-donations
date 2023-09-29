@@ -19,16 +19,18 @@ const CampaignTable = ({
 				<div className="table-header-group bg-gray-50">
 					<div className="table-row text-left text-sm font-semibold text-gray-900">
 						<div className="table-cell px-3 py-3.5">
-							{__('Campaign name', 'kudos-donations')}
+							<span>
+								{__('Campaign name', 'kudos-donations')}{' '}
+							</span>
 						</div>
 						<div className="table-cell px-3 py-3.5">
-							{__('Color', 'kudos-donations')}
+							<span>{__('Color', 'kudos-donations')} </span>
 						</div>
 						<div className="table-cell px-3 py-3.5">
-							{__('Goal', 'kudos-donations')}
+							<span>{__('Goal', 'kudos-donations')} </span>
 						</div>
 						<div className="table-cell px-3 py-3.5">
-							{__('Progress', 'kudos-donations')}
+							<span>{__('Progress', 'kudos-donations')} </span>
 						</div>
 						<div className="table-cell relative py-3.5 pl-3 pr-4 sm:pr-6">
 							<span className="sr-only">
