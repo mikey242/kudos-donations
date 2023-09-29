@@ -13,9 +13,11 @@ namespace IseardMedia\Kudos\Domain\PostType;
 
 use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
+use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
 
-class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
+class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface, HasAdminColumns {
 
 	/**
 	 * Meta field constants.
@@ -29,6 +31,11 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	public const META_FIELD_CITY               = 'city';
 	public const META_FIELD_COUNTRY            = 'country';
 	public const META_FIELD_VENDOR_CUSTOMER_ID = 'vendor_customer_id';
+
+	/**
+	 * Rest field constants.
+	 */
+	public const REST_FIELD_TOTAL = 'total';
 
 	/**
 	 * {@inheritDoc}
@@ -105,6 +112,20 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_rest_fields(): array {
+		return [
+			self::REST_FIELD_TOTAL => [
+				'get_callback' => function ( $object ) {
+					$donor_id = $object['id'];
+					return self::get_total( $donor_id );
+				},
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_columns_config(): array {
 		return [
 			self::META_FIELD_NAME               => [
@@ -120,15 +141,30 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 				'value_type' => FieldType::STRING,
 			],
 			'total_donations'                   => [
-				'label'          => __( 'Total donated', 'kudos-donations' ),
-				'value_type'     => FieldType::INTEGER,
-				'value' => function( $donor_id ) {
-					$request = new \WP_REST_Request( 'GET', '/kudos/v1/transaction/donor/total' );
-					$request->set_query_params( [ 'donor_id' => $donor_id ] );
-					$response = rest_do_request( $request );
-					return $response->data;
+				'label'      => __( 'Total donated', 'kudos-donations' ),
+				'value_type' => FieldType::INTEGER,
+				'value'      => function( $donor_id ) {
+					return self::get_total( $donor_id );
 				},
 			],
 		];
+	}
+
+	/**
+	 * Returns the total donated by the specified donor.
+	 *
+	 * @param int $donor_id The post ID of the donor.
+	 * @return float|int
+	 */
+	public static function get_total( int $donor_id ): int {
+		$transactions = TransactionPostType::get_by_meta(
+			[
+				TransactionPostType::META_FIELD_DONOR_ID => $donor_id,
+				TransactionPostType::META_FIELD_STATUS   => PaymentStatus::PAID,
+			]
+		);
+
+		$values = array_column( $transactions, TransactionPostType::META_FIELD_VALUE );
+		return array_sum( $values );
 	}
 }
