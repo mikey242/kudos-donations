@@ -242,7 +242,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 					$total       = self::get_total( $campaign_id );
 					$goal        = get_post_meta( $campaign_id, self::META_FIELD_GOAL, true );
 
-					return $goal ? ( $total / $goal ) * 100 : 0;
+					return $goal ? round(( $total / $goal ) * 100) : 0;
 
 				},
 			],
