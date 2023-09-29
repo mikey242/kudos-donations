@@ -1,5 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { dateI18n } from '@wordpress/date';
 import {
 	DocumentDuplicateIcon,
 	PencilSquareIcon,
@@ -29,6 +30,8 @@ const CampaignsTableRow = ({
 	});
 
 	const { handleSubmit } = methods;
+
+	const date = dateI18n('d-m-Y', campaign.date);
 
 	const save = (data) => {
 		updateCampaign(data.id, data, false);
@@ -75,6 +78,9 @@ const CampaignsTableRow = ({
 							showGoal={false}
 						/>
 					</div>
+				</div>
+				<div className="table-cell align-middle whitespace-nowrap px-3 py-4 text-gray-500">
+					<p>{date}</p>
 				</div>
 				<div className="relative table-cell align-middle whitespace-nowrap py-4 pl-3 pr-4 divide-x-8 divide-transparent text-right font-medium sm:pr-6">
 					<span title={__('Edit campaign', 'kudos-donations')}>

@@ -32,6 +32,9 @@ const CampaignTable = ({
 						<div className="table-cell px-3 py-3.5">
 							<span>{__('Progress', 'kudos-donations')} </span>
 						</div>
+						<div className="table-cell px-3 py-3.5">
+							<span>{__('Created', 'kudos-donations')} </span>
+						</div>
 						<div className="table-cell relative py-3.5 pl-3 pr-4 sm:pr-6">
 							<span className="sr-only">
 								{__('Edit', 'kudos-donations')}
