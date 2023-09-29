@@ -1,16 +1,16 @@
 import React from 'react';
 import { FlagIcon } from '@heroicons/react/20/solid';
 
-const ProgressBar = ({ goal, total = 0, extra = 0 }) => {
-	const percentage = Math.floor((total / goal) * 100);
-	const extraPercentage = extra / (goal - total);
+const ProgressBar = ({ goal, total = 0, extra = 0, showGoal = true }) => {
+	const percentage = goal ? Math.floor((total / goal) * 100) : 0;
+	const extraPercentage = goal ? extra / (goal - total) : 0;
 
 	return (
 		<div className="w-full text-base">
 			<div
 				data-total={total}
 				data-goal={goal}
-				className="h-7 border-1 border-solid border-gray-300 flex relative shadow-inner my-5 overflow-hidden bg-gray-200 rounded w-full"
+				className="h-7 border-1 border-solid border-gray-300 flex relative shadow-inner overflow-hidden bg-gray-200 rounded w-full"
 			>
 				<div
 					style={{ width: percentage + '%' }}
@@ -26,10 +26,12 @@ const ProgressBar = ({ goal, total = 0, extra = 0 }) => {
 					style={{ transform: `scaleX(${extraPercentage})` }}
 					className="h-full w-full bg-green-500 transition-transform opacity-30 origin-left"
 				></div>
-				<div className="kudos-progress-total flex space-x-2 items-center absolute top-1/2 right-0 mr-2 -translate-y-2/4">
-					<FlagIcon className="w-4 h-4" />
-					<span>€{goal}</span>
-				</div>
+				{showGoal && (
+					<div className="kudos-progress-total flex space-x-2 items-center absolute top-1/2 right-0 mr-2 -translate-y-2/4">
+						<FlagIcon className="w-4 h-4" />
+						<span>€{goal}</span>
+					</div>
+				)}
 			</div>
 		</div>
 	);

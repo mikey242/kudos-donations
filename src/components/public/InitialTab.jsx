@@ -4,7 +4,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
-import { ProgressBar } from './ProgressBar';
+import { ProgressBar } from '../ProgressBar';
 
 const InitialTab = (props) => {
 	const {
@@ -60,7 +60,9 @@ const InitialTab = (props) => {
 	return (
 		<BaseTab title={title} description={description} buttons={buttons}>
 			{showGoal && goal > 0 && (
-				<ProgressBar goal={goal} total={total} extra={watchValue} />
+				<div className="my-5">
+					<ProgressBar goal={goal} total={total} extra={watchValue} />
+				</div>
 			)}
 			{(amountType === 'both' || amountType === 'fixed') && (
 				<RadioGroupControl
