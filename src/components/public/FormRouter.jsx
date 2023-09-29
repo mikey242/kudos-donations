@@ -86,6 +86,7 @@ const FormRouter = ({ step, campaign, handlePrev, handleNext, submitForm }) => {
 									showGoal={campaign.show_goal}
 									goal={campaign.goal}
 									total={campaign.total}
+									progress={campaign.progress}
 								/>
 							),
 							2: (
