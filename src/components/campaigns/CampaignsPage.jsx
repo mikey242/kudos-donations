@@ -22,47 +22,63 @@ import {
 	PlusIcon,
 } from '@heroicons/react/24/outline';
 
-const CampaignsPage = () => {
+const CampaignsPage = (callback, deps) => {
 	const [campaigns, setCampaigns] = useState(null);
 	const [isApiBusy, setIsApiBusy] = useState(false);
 	const [currentCampaign, setCurrentCampaign] = useState(null);
-	const [campaignsReady, setCampaignsReady] = useState(false);
 	const { settings, settingsReady } = useSettingsContext();
 	const { createNotification } = useNotificationContext();
 	const [didLoad, setDidLoad] = useState(false);
+
+	const sort = (data, column = 'date') => {
+		setCampaigns(
+			data.sort(function (a, b) {
+				switch (column) {
+					case 'date':
+						return new Date(a.date) - new Date(b.date);
+					case 'title':
+						return a.title.rendered > b.title.rendered;
+					case 'goal':
+						return b.meta.goal - a.meta.goal;
+					case 'progress':
+						return b.progress - a.progress;
+					default:
+						return true;
+				}
+			})
+		);
+	};
 
 	const getCampaigns = useCallback(() => {
 		return apiFetch({
 			path: 'wp/v2/kudos_campaign/',
 			method: 'GET',
-		}).then((response) => {
-			setCampaigns(response.reverse());
-			const currentId = getQueryVar('campaign');
-			if (currentId) {
-				const campaign = response.filter(
-					(res) => res.id === parseInt(currentId)
-				);
-				if (campaign && currentCampaign === null) {
-					setCurrentCampaign(campaign[0]);
+		})
+			.then((response) => {
+				sort(response);
+				setCampaigns(response);
+				const currentId = getQueryVar('campaign');
+				if (currentId) {
+					const campaign = response.filter(
+						(res) => res.id === parseInt(currentId)
+					);
+					if (campaign && currentCampaign === null) {
+						setCurrentCampaign(campaign[0]);
+					}
 				}
-			}
-		});
-	}, [currentCampaign]);
-
-	const getData = useCallback(() => {
-		getCampaigns()
-			.then(() => setCampaignsReady(true))
+			})
 			.catch((error) => {
 				createNotification(error.message, false);
 			});
-	}, [createNotification, getCampaigns]);
+	}, [createNotification, currentCampaign]);
 
 	useEffect(() => {
 		if (!didLoad) {
-			getData();
-			setDidLoad(true);
+			getCampaigns().then(() => {
+				setDidLoad(true);
+			});
 		}
-	}, [didLoad, getData]);
+	}, [didLoad, getCampaigns]);
 
 	useEffect(() => {
 		if (currentCampaign?.id) {
@@ -137,7 +153,7 @@ const CampaignsPage = () => {
 
 	return (
 		<>
-			{!campaignsReady && !settingsReady ? (
+			{!campaigns && !settingsReady ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
 				</div>
