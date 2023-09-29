@@ -177,7 +177,7 @@ const CampaignsPage = (callback, deps) => {
 							</Button>
 						)}
 					</Header>
-					<div className="max-w-4xl w-full mx-auto">
+					<div className="max-w-5xl w-full mx-auto">
 						{!currentCampaign ? (
 							<>
 								{campaigns?.length >= 1 ? (
