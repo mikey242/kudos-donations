@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { PencilIcon } from '@heroicons/react/24/outline';
 
-const ColorPicker = ({ name, label, help }) => {
+const ColorPicker = ({ name, label, help, onColorChange = () => {} }) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const togglePicker = () => {
 		setShowPicker(!showPicker);
@@ -27,7 +27,10 @@ const ColorPicker = ({ name, label, help }) => {
 			render={({ field: { onChange, value } }) => (
 				<RadioGroup
 					value={value}
-					onChange={onChange}
+					onChange={(e) => {
+						onChange(e);
+						onColorChange();
+					}}
 					className="first:mt-0 mt-3"
 				>
 					<RadioGroup.Label className="block text-sm font-bold text-gray-700">
@@ -94,10 +97,13 @@ const ColorPicker = ({ name, label, help }) => {
 										<div className="bg-white mt-2 p-5 relative rounded-lg drop-shadow-md z-[2]">
 											<HexColorInput
 												className={
-													'w-20 border-gray-300 mt-2 placeholder-gray-500 border border-solid transition ease-in-out duration-75 leading-6 text-gray-700 bg-white focus:border-primary focus:outline-none focus:ring-0 py-2 px-3 rounded'
+													'w-24 border-gray-300 mt-2 placeholder-gray-500 border border-solid transition ease-in-out duration-75 leading-6 text-gray-700 bg-white focus:border-primary focus:outline-none focus:ring-0 py-2 px-3 rounded'
 												}
 												color={value}
-												onChange={onChange}
+												onChange={(e) => {
+													onChange(e);
+													onColorChange();
+												}}
 												prefixed
 											/>
 										</div>

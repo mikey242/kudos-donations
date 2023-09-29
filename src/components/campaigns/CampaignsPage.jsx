@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useEffect, useState, useCallback } from '@wordpress/element';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import { Header } from '../admin/Header';
 import React from 'react';
 import CampaignTable from './CampaignTable';
@@ -29,6 +29,7 @@ const CampaignsPage = () => {
 	const [campaignsReady, setCampaignsReady] = useState(false);
 	const { settings, settingsReady } = useSettingsContext();
 	const { createNotification } = useNotificationContext();
+	const [didLoad, setDidLoad] = useState(false);
 
 	const getCampaigns = useCallback(() => {
 		return apiFetch({
@@ -71,8 +72,11 @@ const CampaignsPage = () => {
 	}, [createNotification, getCampaigns]);
 
 	useEffect(() => {
-		getData();
-	}, [getData]);
+		if (!didLoad) {
+			getData();
+			setDidLoad(true);
+		}
+	}, [didLoad, getData]);
 
 	useEffect(() => {
 		if (currentCampaign?.id) {
@@ -94,7 +98,7 @@ const CampaignsPage = () => {
 		});
 	};
 
-	const updateCampaign = (id = null, data = {}) => {
+	const updateCampaign = (id = null, data = {}, notification = true) => {
 		setIsApiBusy(true);
 		return apiFetch({
 			path: `wp/v2/kudos_campaign/${id ?? ''}`,
@@ -106,12 +110,13 @@ const CampaignsPage = () => {
 		})
 			.then((response) => {
 				getCampaigns().then(() => {
-					createNotification(
-						data.status === 'draft'
-							? __('Campaign created', 'kudos-donations')
-							: __('Campaign updated', 'kudos-donations'),
-						true
-					);
+					notification &&
+						createNotification(
+							data.status === 'draft'
+								? __('Campaign created', 'kudos-donations')
+								: __('Campaign updated', 'kudos-donations'),
+							true
+						);
 				});
 				return response;
 			})
@@ -174,6 +179,7 @@ const CampaignsPage = () => {
 							<>
 								{campaigns?.length >= 1 ? (
 									<CampaignTable
+										updateCampaign={updateCampaign}
 										deleteClick={removeCampaign}
 										duplicateClick={duplicateCampaign}
 										editClick={setCurrentCampaign}
