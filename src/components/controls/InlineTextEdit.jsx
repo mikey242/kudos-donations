@@ -31,7 +31,7 @@ const InlineTextEdit = ({
 						? 'border-red-300 text-red-900 placeholder-red-300'
 						: 'border-0 focus:ring-primary focus:border-primary',
 					disabled && 'cursor-not-allowed opacity-75',
-					'hover:bg-zinc-50 hover:shadow-inner focus:text-gray-900 bg-transparent form-input transition ease-in-out inline focus:outline-none sm:text-sm rounded-md',
+					'hover:bg-zinc-50 hover:shadow-inner focus:text-gray-900 bg-transparent form-input transition ease-in-out inline focus:outline-none text-sm rounded-md',
 					className
 				)}
 				placeholder={placeholder}
