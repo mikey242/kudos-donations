@@ -19,7 +19,10 @@ const KudosButton = ({ children, className, targetId = null }) => {
 
 	return (
 		<>
-			<Render themeColor={campaign?.theme_color} errors={campaignErrors}>
+			<Render
+				themeColor={campaign?.meta?.theme_color}
+				errors={campaignErrors}
+			>
 				{campaignRequest.ready ? (
 					<DonateButton
 						className={className}

@@ -32,10 +32,7 @@ export default function CampaignProvider({ campaignId, children }) {
 			getCampaign().then((response) => {
 				setCampaignRequest({
 					ready: true,
-					campaign: {
-						...response.meta,
-						total: response.total,
-					},
+					campaign: { ...response },
 				});
 			});
 		} else {

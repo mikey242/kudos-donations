@@ -34,7 +34,7 @@ function KudosForm({ displayAs }) {
 		const { currentStep } = formState;
 		if (currentStep === 1) return;
 		let step = currentStep - 1;
-		const state = { ...formState?.formData, ...campaign };
+		const state = { ...formState?.formData, ...campaign.meta };
 
 		// Find next available step.
 		while (!checkRequirements(state, step) && step >= 1) {
@@ -47,7 +47,7 @@ function KudosForm({ displayAs }) {
 	};
 
 	const handleNext = (data, step) => {
-		const state = { ...data, ...campaign };
+		const state = { ...data, ...campaign.meta };
 
 		// Find next available step.
 		while (!checkRequirements(state, step) && step <= 10) {
@@ -118,7 +118,6 @@ function KudosForm({ displayAs }) {
 					{formError}
 				</small>
 			)}
-
 			<FormRouter
 				step={formState?.currentStep ?? 1}
 				campaign={campaign}
@@ -131,7 +130,7 @@ function KudosForm({ displayAs }) {
 
 	return (
 		<Render
-			themeColor={campaign?.theme_color}
+			themeColor={campaign?.meta?.theme_color}
 			// fonts={
 			// 	{
 			// 		header: '"Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif',

@@ -77,42 +77,54 @@ const FormRouter = ({ step, campaign, handlePrev, handleNext, submitForm }) => {
 						{
 							1: (
 								<InitialTab
-									title={campaign.initial_title}
-									description={campaign.initial_description}
-									minimumDonation={campaign.minimum_donation}
-									donationType={campaign.donation_type}
-									amountType={campaign.amount_type}
-									fixedAmounts={campaign.fixed_amounts}
-									showGoal={campaign.show_goal}
-									goal={campaign.goal}
+									title={campaign.meta.initial_title}
+									description={
+										campaign.meta.initial_description
+									}
+									minimumDonation={
+										campaign.meta.minimum_donation
+									}
+									donationType={campaign.meta.donation_type}
+									amountType={campaign.meta.amount_type}
+									fixedAmounts={campaign.meta.fixed_amounts}
+									showGoal={campaign.meta.show_goal}
+									goal={campaign.meta.goal}
 									total={campaign.total}
 								/>
 							),
 							2: (
 								<FrequencyTab
-									title={campaign.recurring_title}
-									description={campaign.recurring_description}
+									title={campaign.meta.recurring_title}
+									description={
+										campaign.meta.recurring_description
+									}
 								/>
 							),
 							3: (
 								<AddressTab
-									required={campaign.address_required}
-									title={campaign.address_title}
-									description={campaign.address_description}
+									required={campaign.meta.address_required}
+									title={campaign.meta.address_title}
+									description={
+										campaign.meta.address_description
+									}
 								/>
 							),
 							4: (
 								<MessageTab
-									title={campaign.message_title}
-									description={campaign.message_description}
+									title={campaign.meta.message_title}
+									description={
+										campaign.meta.message_description
+									}
 								/>
 							),
 							5: (
 								<SummaryTab
-									title={campaign.payment_title}
-									description={campaign.payment_description}
-									privacyLink={campaign.privacy_link}
-									termsLink={campaign.terms_link}
+									title={campaign.meta.payment_title}
+									description={
+										campaign.meta.payment_description
+									}
+									privacyLink={campaign.meta.privacy_link}
+									termsLink={campaign.meta.terms_link}
 								/>
 							),
 						}[currentStep]
