@@ -43,6 +43,6 @@
     }
   },
   "editorScript": "file:index.js",
-  "script": "file:../kudos-public.jsx",
-  "style": "file:../kudos-public.css"
+  "script": "file:../kudos-front.jsx",
+  "style": "file:../kudos-front.css"
 }

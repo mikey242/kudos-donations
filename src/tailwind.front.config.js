@@ -6,7 +6,7 @@ module.exports = {
 	],
 	content: [
 		'./src/components/*.{js,jsx}',
-		'./src/components/public/**/*.{js,jsx}',
+		'./src/components/front/**/*.{js,jsx}',
 		'./src/components/controls/**/*.{js,jsx}',
 	],
 	theme: {

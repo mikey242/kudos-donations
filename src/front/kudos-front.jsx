@@ -6,11 +6,11 @@
 
 import { createRoot } from '@wordpress/element';
 import React from 'react';
-import KudosForm from '../components/public/KudosForm';
-import Message from '../components/public/Message';
-import { KudosButton } from '../components/public/KudosButton';
+import KudosForm from '../components/front/KudosForm';
+import Message from '../components/front/Message';
+import { KudosButton } from '../components/front/KudosButton';
 import CampaignProvider from '../contexts/CampaignContext';
-import './kudos-public.css';
+import './kudos-front.css';
 
 // Select the web components as target for render.
 const forms = document.querySelectorAll('.kudos-form');
