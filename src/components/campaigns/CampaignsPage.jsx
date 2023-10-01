@@ -22,7 +22,7 @@ import {
 	PlusIcon,
 } from '@heroicons/react/24/outline';
 
-const CampaignsPage = (callback, deps) => {
+const CampaignsPage = () => {
 	const [campaigns, setCampaigns] = useState(null);
 	const [isApiBusy, setIsApiBusy] = useState(false);
 	const [currentCampaign, setCurrentCampaign] = useState(null);
