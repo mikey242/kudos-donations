@@ -126,9 +126,9 @@ const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 							),
 							2: (
 								<FrequencyTab
-									title={campaign.meta.recurring_title}
+									title={campaign.meta.subscription_title}
 									description={
-										campaign.meta.recurring_description
+										campaign.meta.subscription_description
 									}
 								/>
 							),
