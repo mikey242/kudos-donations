@@ -24,7 +24,7 @@ const TabPanel = ({ tabs }) => {
 	}, [selectedIndex]);
 
 	return (
-		<div className="mx-auto mt-5 w-full max-w-4xl">
+		<div className="mx-auto mt-5 w-full max-w-5xl">
 			<Tab.Group
 				selectedIndex={selectedIndex}
 				onChange={(index) => setSelectedIndex(index)}
