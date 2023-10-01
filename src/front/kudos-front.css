@@ -5,37 +5,37 @@
 @tailwind utilities;
 
 :host {
-    all: initial;
+	all: initial;
 }
 
 /* Base */
 :host {
-    --kudos-screen: xs;
+	--kudos-screen: xs;
 }
 
 p {
-    @apply text-base;
+	@apply text-base;
 }
 
 .logo-animate:hover .logo {
-    @apply -rotate-90;
+	@apply -rotate-90;
 }
 
 .logo-animate:hover .logo-heart {
-    backface-visibility: visible;
-    @apply rotate-x-180;
+	backface-visibility: visible;
+	@apply rotate-x-180;
 }
 
 /* 'xs' and up */
 @screen xs {
-    :host {
-        --kudos-screen: sm;
-    }
+	:host {
+		--kudos-screen: sm;
+	}
 }
 
 /* 'sm' and up */
 @screen sm {
-    :host {
-        --kudos-screen: md;
-    }
+	:host {
+		--kudos-screen: md;
+	}
 }
