@@ -56,8 +56,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	/**
 	 * Rest field constants.
 	 */
-	public const REST_FIELD_TOTAL    = 'total';
-	public const REST_FIELD_PROGRESS = 'progress';
+	public const REST_FIELD_TOTAL = 'total';
 
 	/**
 	 * {@inheritDoc}
@@ -227,22 +226,11 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 */
 	public static function get_rest_fields(): array {
 		return [
-			self::REST_FIELD_TOTAL    => [
+			self::REST_FIELD_TOTAL => [
 				'get_callback' => function ( $object ) {
 
 					$campaign_id = $object['id'];
 					return self::get_total( $campaign_id );
-
-				},
-			],
-			self::REST_FIELD_PROGRESS => [
-				'get_callback' => function ( $object ) {
-
-					$campaign_id = $object['id'];
-					$total       = self::get_total( $campaign_id );
-					$goal        = get_post_meta( $campaign_id, self::META_FIELD_GOAL, true );
-
-					return $goal ? round(( $total / $goal ) * 100) : 0;
 
 				},
 			],

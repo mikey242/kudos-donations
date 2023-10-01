@@ -35,7 +35,6 @@ export default function CampaignProvider({ campaignId, children }) {
 					campaign: {
 						...response.meta,
 						total: response.total,
-						progress: response.progress,
 					},
 				});
 			});

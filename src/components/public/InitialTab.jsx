@@ -18,7 +18,6 @@ const InitialTab = (props) => {
 		goal,
 		showGoal,
 		total,
-		progress,
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -62,12 +61,7 @@ const InitialTab = (props) => {
 		<BaseTab title={title} description={description} buttons={buttons}>
 			{showGoal && goal > 0 && (
 				<div className="my-5">
-					<ProgressBar
-						percentage={progress}
-						goal={goal}
-						total={total}
-						extra={watchValue}
-					/>
+					<ProgressBar goal={goal} total={total} extra={watchValue} />
 				</div>
 			)}
 			{(amountType === 'both' || amountType === 'fixed') && (
