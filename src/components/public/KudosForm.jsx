@@ -3,7 +3,6 @@ import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import FormRouter from './FormRouter';
-import { checkRequirements } from '../../helpers/form';
 import { Spinner } from '../Spinner';
 import KudosModal from '../KudosModal';
 import Render from '../Render';
@@ -29,37 +28,6 @@ function KudosForm({ displayAs }) {
 			resetForm();
 		}
 	}, [isModalOpen]);
-
-	const handlePrev = () => {
-		const { currentStep } = formState;
-		if (currentStep === 1) return;
-		let step = currentStep - 1;
-		const state = { ...formState?.formData, ...campaign.meta };
-
-		// Find next available step.
-		while (!checkRequirements(state, step) && step >= 1) {
-			step--;
-		}
-		setFormState((prev) => ({
-			...prev,
-			currentStep: step,
-		}));
-	};
-
-	const handleNext = (data, step) => {
-		const state = { ...data, ...campaign.meta };
-
-		// Find next available step.
-		while (!checkRequirements(state, step) && step <= 10) {
-			step++;
-		}
-
-		setFormState((prev) => ({
-			...prev,
-			formData: { ...prev?.formData, ...data },
-			currentStep: step,
-		}));
-	};
 
 	const toggleModal = () => {
 		setIsModalOpen(!isModalOpen);
@@ -121,8 +89,7 @@ function KudosForm({ displayAs }) {
 			<FormRouter
 				step={formState?.currentStep ?? 1}
 				campaign={campaign}
-				handleNext={handleNext}
-				handlePrev={handlePrev}
+				setFormState={setFormState}
 				submitForm={submitForm}
 			/>
 		</>

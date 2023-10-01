@@ -15,8 +15,9 @@ import {
 	ChevronRightIcon,
 	LockClosedIcon,
 } from '@heroicons/react/24/outline';
+import { checkRequirements } from '../../helpers/form';
 
-const FormRouter = ({ step, campaign, handlePrev, handleNext, submitForm }) => {
+const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	const [height, setHeight] = useState('');
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isBusy, setIsBusy] = useState(false);
@@ -27,6 +28,37 @@ const FormRouter = ({ step, campaign, handlePrev, handleNext, submitForm }) => {
 		},
 	});
 	const firstUpdate = useRef(true);
+
+	const handlePrev = (data) => {
+		if (step === 1) return;
+		let prevStep = step - 1;
+		const state = { ...data, ...campaign.meta };
+
+		// Find next available step.
+		while (!checkRequirements(state, prevStep) && prevStep >= 1) {
+			prevStep--;
+		}
+		setFormState((prev) => ({
+			...prev,
+			currentStep: prevStep,
+		}));
+	};
+
+	const handleNext = (data) => {
+		const state = { ...data, ...campaign.meta };
+		let nextStep = step + 1;
+
+		// Find next available step.
+		while (!checkRequirements(state, nextStep) && nextStep <= 10) {
+			nextStep++;
+		}
+
+		setFormState((prev) => ({
+			...prev,
+			formData: { ...prev?.formData, ...data },
+			currentStep: nextStep,
+		}));
+	};
 
 	const onSubmit = (data) => {
 		if (step < 5) return handleNext(data, step + 1);
