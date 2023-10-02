@@ -31,7 +31,6 @@ const CampaignsPage = () => {
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 	const { settings, settingsReady } = useSettingsContext();
 	const { createNotification } = useNotificationContext();
-	const [didLoad, setDidLoad] = useState(false);
 	const [campaignId, setCampaignId] = useQueryParam('campaign', NumberParam);
 	const [sortQuery, setSortQuery] = useQueryParams({
 		order: withDefault(StringParam, 'asc'),
@@ -39,26 +38,15 @@ const CampaignsPage = () => {
 	});
 
 	const getCampaigns = useCallback(() => {
-		return apiFetch({
+		apiFetch({
 			path: `wp/v2/kudos_campaign?orderby=${sortQuery.orderby}&order=${sortQuery.order}`,
 			method: 'GET',
 		})
-			.then((response) => {
-				setCampaigns(response);
-				return response;
-			})
+			.then((posts) => setCampaigns(posts))
 			.catch((error) => {
 				createNotification(error.message, false);
 			});
 	}, [createNotification, sortQuery]);
-
-	useEffect(() => {
-		if (!didLoad) {
-			getCampaigns().then(() => {
-				setDidLoad(true);
-			});
-		}
-	}, [didLoad, getCampaigns]);
 
 	useEffect(() => {
 		if (campaigns) {
@@ -72,16 +60,25 @@ const CampaignsPage = () => {
 		}
 	}, [campaignId, campaigns]);
 
+	useEffect(() => {
+		getCampaigns();
+	}, [getCampaigns, sortQuery]);
+
 	const clearCurrentCampaign = () => {
 		removeQueryParameters(['campaign', 'tab']);
 		setCurrentCampaign(null);
 	};
 
 	const newCampaign = () => {
-		updateCampaign(null, {
-			title: __('New campaign', 'kudos-donations'),
-			status: 'draft',
+		apiFetch({
+			path: 'wp/v2/kudos_campaign/',
+			method: 'POST',
+			data: {
+				title: __('New campaign', 'kudos-donations'),
+				status: 'publish',
+			},
 		}).then((response) => {
+			getCampaigns();
 			setCampaignId(response.id);
 		});
 	};
@@ -97,16 +94,15 @@ const CampaignsPage = () => {
 			},
 		})
 			.then((response) => {
-				getCampaigns().then(() => {
-					if (notification) {
-						createNotification(
-							data.status === 'draft'
-								? __('Campaign created', 'kudos-donations')
-								: __('Campaign updated', 'kudos-donations'),
-							true
-						);
-					}
-				});
+				getCampaigns();
+				if (notification) {
+					createNotification(
+						data.status === 'draft'
+							? __('Campaign created', 'kudos-donations')
+							: __('Campaign updated', 'kudos-donations'),
+						true
+					);
+				}
 				return response;
 			})
 			.catch((error) => {
@@ -126,10 +122,6 @@ const CampaignsPage = () => {
 			return getCampaigns();
 		});
 	};
-
-	useEffect(() => {
-		getCampaigns();
-	}, [getCampaigns, sortQuery]);
 
 	const duplicateCampaign = (campaign) => {
 		const data = {
