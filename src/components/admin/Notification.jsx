@@ -1,15 +1,12 @@
 import React from 'react';
 import { Transition } from '@headlessui/react';
 import Panel from '../Panel';
-import { useNotificationContext } from '../../contexts/NotificationContext';
 import {
 	CheckCircleIcon,
 	ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
 
-const Notification = ({ notifications }) => {
-	const { deleteNotification } = useNotificationContext();
-
+const Notification = ({ notifications, onNotificationClick }) => {
 	return (
 		<div className="fixed flex flex-col items-center bottom-5 left-1/2 -translate-x-1/2 z-1050 cursor-pointer">
 			{notifications.map((t, i) => (
@@ -27,7 +24,7 @@ const Notification = ({ notifications }) => {
 					>
 						<Panel>
 							<button
-								onClick={() => deleteNotification(t.id)}
+								onClick={() => onNotificationClick(t.id)}
 								className="flex justify-around items-center p-5"
 							>
 								{t.success ? (

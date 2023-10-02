@@ -14,15 +14,14 @@ export const NotificationProvider = ({ children }) => {
 
 	const createNotification = (text, success = true) => {
 		const id = +new Date();
-		const timerId = setTimeout(deleteNotification, 3000, id);
-		setList((prev) =>
-			prev.concat({
+		setList((prev) => [
+			...prev,
+			{
 				id,
-				timerId,
 				success,
 				text,
-			})
-		);
+			},
+		]);
 	};
 
 	const deleteNotification = (id) => {
@@ -30,11 +29,14 @@ export const NotificationProvider = ({ children }) => {
 	};
 
 	const clearNotifications = () => {
+		list.forEach(({ timerId }) => clearTimeout(timerId));
 		setList([]);
 	};
 
 	useEffect(() => {
-		return () => list.forEach(({ timerId }) => clearTimeout(timerId));
+		list.forEach(({ id }) => {
+			setTimeout(() => deleteNotification(id), 3000);
+		});
 	}, [list]);
 
 	const data = { createNotification, deleteNotification, clearNotifications };
@@ -43,7 +45,10 @@ export const NotificationProvider = ({ children }) => {
 		<NotificationContext.Provider value={data}>
 			<>
 				{children}
-				<Notification notifications={list} />
+				<Notification
+					onNotificationClick={deleteNotification}
+					notifications={list}
+				/>
 			</>
 		</NotificationContext.Provider>
 	);
