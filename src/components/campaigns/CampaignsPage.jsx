@@ -33,8 +33,8 @@ const CampaignsPage = () => {
 	const { createNotification } = useNotificationContext();
 	const [campaignId, setCampaignId] = useQueryParam('campaign', NumberParam);
 	const [sortQuery, setSortQuery] = useQueryParams({
-		order: withDefault(StringParam, 'asc'),
-		orderby: withDefault(StringParam, 'title'),
+		order: withDefault(StringParam, 'desc'),
+		orderby: withDefault(StringParam, 'date'),
 	});
 
 	const getCampaigns = useCallback(() => {
