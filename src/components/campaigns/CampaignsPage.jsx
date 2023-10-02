@@ -70,13 +70,9 @@ const CampaignsPage = () => {
 	};
 
 	const newCampaign = () => {
-		apiFetch({
-			path: 'wp/v2/kudos_campaign/',
-			method: 'POST',
-			data: {
-				title: __('New campaign', 'kudos-donations'),
-				status: 'publish',
-			},
+		updateCampaign(null, {
+			title: __('New campaign', 'kudos-donations'),
+			status: 'draft',
 		}).then((response) => {
 			getCampaigns();
 			setCampaignId(response.id);
@@ -128,6 +124,7 @@ const CampaignsPage = () => {
 			...campaign,
 			id: null,
 			title: campaign.title.rendered,
+			date: new Date(),
 			status: 'draft',
 		};
 		return updateCampaign(null, data);
