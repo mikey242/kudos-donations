@@ -86,7 +86,7 @@ const CampaignsTableRow = ({
 					<span title={__('Edit campaign', 'kudos-donations')}>
 						<PencilSquareIcon
 							className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block"
-							onClick={() => editClick(campaign)}
+							onClick={() => editClick(campaign.id)}
 						/>
 					</span>
 					<span title={__('Duplicate campaign', 'kudos-donations')}>

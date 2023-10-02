@@ -7,11 +7,6 @@ import CampaignTable from './CampaignTable';
 import CampaignEdit from './CampaignEdit';
 import { __ } from '@wordpress/i18n';
 import { Button } from '../controls';
-import {
-	getQueryVar,
-	removeQueryParameters,
-	updateQueryParameter,
-} from '../../helpers/util';
 import EmptyCampaigns from './EmptyCampaigns';
 import { Spinner } from '../Spinner';
 import { useSettingsContext } from '../../contexts/SettingsContext';
@@ -21,6 +16,8 @@ import {
 	PlusCircleIcon,
 	PlusIcon,
 } from '@heroicons/react/24/outline';
+import { NumberParam, useQueryParam } from 'use-query-params';
+import { removeQueryParameters } from '../../helpers/util';
 
 const CampaignsPage = () => {
 	const [campaigns, setCampaigns] = useState(null);
@@ -29,6 +26,7 @@ const CampaignsPage = () => {
 	const { settings, settingsReady } = useSettingsContext();
 	const { createNotification } = useNotificationContext();
 	const [didLoad, setDidLoad] = useState(false);
+	const [campaignId, setCampaignId] = useQueryParam('campaign', NumberParam);
 
 	const sort = (data, column = 'date') => {
 		setCampaigns(
@@ -57,10 +55,9 @@ const CampaignsPage = () => {
 			.then((response) => {
 				sort(response);
 				setCampaigns(response);
-				const currentId = getQueryVar('campaign');
-				if (currentId) {
+				if (campaignId) {
 					const campaign = response.filter(
-						(res) => res.id === parseInt(currentId)
+						(res) => res.id === campaignId
 					);
 					if (campaign && currentCampaign === null) {
 						setCurrentCampaign(campaign[0]);
@@ -70,7 +67,7 @@ const CampaignsPage = () => {
 			.catch((error) => {
 				createNotification(error.message, false);
 			});
-	}, [createNotification, currentCampaign]);
+	}, [campaignId, createNotification, currentCampaign]);
 
 	useEffect(() => {
 		if (!didLoad) {
@@ -81,10 +78,16 @@ const CampaignsPage = () => {
 	}, [didLoad, getCampaigns]);
 
 	useEffect(() => {
-		if (currentCampaign?.id) {
-			updateQueryParameter('campaign', currentCampaign.id);
+		if (campaigns) {
+			if (campaignId) {
+				setCurrentCampaign(
+					campaigns.filter((c) => c.id === campaignId)[0]
+				);
+			} else {
+				clearCurrentCampaign();
+			}
 		}
-	}, [currentCampaign]);
+	}, [campaignId, campaigns]);
 
 	const clearCurrentCampaign = () => {
 		removeQueryParameters(['campaign', 'tab']);
@@ -185,7 +188,7 @@ const CampaignsPage = () => {
 										updateCampaign={updateCampaign}
 										deleteClick={removeCampaign}
 										duplicateClick={duplicateCampaign}
-										editClick={setCurrentCampaign}
+										editClick={setCampaignId}
 										campaigns={campaigns}
 									/>
 								) : (
