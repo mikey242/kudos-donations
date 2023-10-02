@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 const Header = ({ children }) => {
 	return (
 		<div className="flex justify-around w-full z-1050 bg-white p-5">
-			<div className="max-w-5xl w-full mx-auto flex items-center justify-between">
+			<div className="max-w-4xl w-full mx-auto flex items-center justify-between">
 				<div className="flex">
 					<a
 						title={__('Visit Kudos Donations', 'kudos-donations')}

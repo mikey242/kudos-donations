@@ -16,7 +16,13 @@ import {
 	PlusCircleIcon,
 	PlusIcon,
 } from '@heroicons/react/24/outline';
-import { NumberParam, useQueryParam } from 'use-query-params';
+import {
+	NumberParam,
+	StringParam,
+	useQueryParam,
+	useQueryParams,
+	withDefault,
+} from 'use-query-params';
 import { removeQueryParameters } from '../../helpers/util';
 
 const CampaignsPage = () => {
@@ -27,47 +33,24 @@ const CampaignsPage = () => {
 	const { createNotification } = useNotificationContext();
 	const [didLoad, setDidLoad] = useState(false);
 	const [campaignId, setCampaignId] = useQueryParam('campaign', NumberParam);
-
-	const sort = (data, column = 'date') => {
-		setCampaigns(
-			data.sort(function (a, b) {
-				switch (column) {
-					case 'date':
-						return new Date(a.date) - new Date(b.date);
-					case 'title':
-						return a.title.rendered > b.title.rendered;
-					case 'goal':
-						return b.meta.goal - a.meta.goal;
-					case 'progress':
-						return b.progress - a.progress;
-					default:
-						return true;
-				}
-			})
-		);
-	};
+	const [sortQuery, setSortQuery] = useQueryParams({
+		order: withDefault(StringParam, 'asc'),
+		orderby: withDefault(StringParam, 'title'),
+	});
 
 	const getCampaigns = useCallback(() => {
 		return apiFetch({
-			path: 'wp/v2/kudos_campaign/',
+			path: `wp/v2/kudos_campaign?orderby=${sortQuery.orderby}&order=${sortQuery.order}`,
 			method: 'GET',
 		})
 			.then((response) => {
-				sort(response);
 				setCampaigns(response);
-				if (campaignId) {
-					const campaign = response.filter(
-						(res) => res.id === campaignId
-					);
-					if (campaign && currentCampaign === null) {
-						setCurrentCampaign(campaign[0]);
-					}
-				}
+				return response;
 			})
 			.catch((error) => {
 				createNotification(error.message, false);
 			});
-	}, [campaignId, createNotification, currentCampaign]);
+	}, [createNotification, sortQuery]);
 
 	useEffect(() => {
 		if (!didLoad) {
@@ -99,7 +82,7 @@ const CampaignsPage = () => {
 			title: __('New campaign', 'kudos-donations'),
 			status: 'draft',
 		}).then((response) => {
-			setCurrentCampaign(response);
+			setCampaignId(response.id);
 		});
 	};
 
@@ -144,6 +127,10 @@ const CampaignsPage = () => {
 		});
 	};
 
+	useEffect(() => {
+		getCampaigns();
+	}, [getCampaigns, sortQuery]);
+
 	const duplicateCampaign = (campaign) => {
 		const data = {
 			...campaign,
@@ -180,32 +167,31 @@ const CampaignsPage = () => {
 							</Button>
 						)}
 					</Header>
-					<div className="max-w-5xl w-full mx-auto">
-						{!currentCampaign ? (
-							<>
-								{campaigns?.length >= 1 ? (
-									<CampaignTable
-										updateCampaign={updateCampaign}
-										deleteClick={removeCampaign}
-										duplicateClick={duplicateCampaign}
-										editClick={setCampaignId}
-										campaigns={campaigns}
-									/>
-								) : (
-									<EmptyCampaigns />
-								)}
-								<button
-									title={__(
-										'Add campaign',
-										'kudos-donations'
-									)}
-									className="rounded-full mx-auto p-2 flex justify-center items-center bg-white mt-5 shadow-md border-0 cursor-pointer"
-									onClick={newCampaign}
-								>
-									<PlusIcon className={'w-5 h-5'} />
-								</button>
-							</>
-						) : (
+					{!currentCampaign ? (
+						<div className="max-w-5xl w-full mx-auto">
+							{campaigns?.length >= 1 ? (
+								<CampaignTable
+									updateCampaign={updateCampaign}
+									deleteClick={removeCampaign}
+									duplicateClick={duplicateCampaign}
+									editClick={setCampaignId}
+									campaigns={campaigns}
+									sortQuery={sortQuery}
+									setSortQuery={setSortQuery}
+								/>
+							) : (
+								<EmptyCampaigns />
+							)}
+							<button
+								title={__('Add campaign', 'kudos-donations')}
+								className="rounded-full mx-auto p-2 flex justify-center items-center bg-white mt-5 shadow-md border-0 cursor-pointer"
+								onClick={newCampaign}
+							>
+								<PlusIcon className={'w-5 h-5'} />
+							</button>
+						</div>
+					) : (
+						<div className="max-w-4xl w-full mx-auto">
 							<CampaignEdit
 								updateCampaign={updateCampaign}
 								recurringAllowed={
@@ -217,8 +203,8 @@ const CampaignsPage = () => {
 								clearCurrentCampaign={clearCurrentCampaign}
 								campaign={currentCampaign}
 							/>
-						)}
-					</div>
+						</div>
+					)}
 				</>
 			)}
 		</>

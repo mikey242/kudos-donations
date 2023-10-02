@@ -9,7 +9,7 @@ const TabPanel = ({ tabs }) => {
 	const [tabIndex, setTabIndex] = useQueryParam('tab', NumberParam);
 
 	return (
-		<div className="mx-auto mt-5 w-full max-w-5xl">
+		<div className="mx-auto mt-5 w-full max-w-4xl">
 			<Tab.Group
 				selectedIndex={tabIndex}
 				onChange={(index) => setTabIndex(index)}
