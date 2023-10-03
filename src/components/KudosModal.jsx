@@ -1,3 +1,5 @@
+// @see https://medium.com/cstech/achieving-focus-trapping-in-a-react-modal-component-3f28f596f35b
+// @see https://dev.to/open-wc/mind-the-document-activeelement-2o9a
 import { __ } from '@wordpress/i18n';
 import logo from '../../assets/images/logo-colour.svg';
 import { Transition } from '@headlessui/react';
