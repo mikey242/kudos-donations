@@ -8,3 +8,5 @@ node_modules
 *.iml
 .env
 includes/Dependencies
+/kudos-donations.zip
+/wp-cli.phar
