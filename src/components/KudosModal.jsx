@@ -12,19 +12,56 @@ const KudosModal = ({
 }) => {
 	const [didLoad, setDidLoad] = useState(false);
 	const targetRef = useRef(null);
+	let focusableElements;
+	let firstElement;
+	let lastElement;
+
 	const toggle = useCallback(() => {
 		if (typeof toggleModal === 'function') toggleModal();
 	}, [toggleModal]);
+
+	const setUp = () => {
+		focusableElements = targetRef.current?.querySelectorAll(
+			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+		);
+		firstElement = focusableElements && focusableElements[0];
+		lastElement =
+			focusableElements &&
+			focusableElements[focusableElements?.length - 1];
+		const initialFocus = targetRef.current?.querySelector(
+			'[name*="value"]:not([type="hidden"])'
+		);
+		initialFocus?.focus();
+		addEventListeners();
+	};
+
+	const addEventListeners = () => {
+		document.addEventListener('keydown', handleKeyPress, false);
+	};
+
 	const handleKeyPress = useCallback(
 		(e) => {
 			if (e.key === 'Escape' || e.keyCode === 27) toggle();
+			if (e.key === 'Tab' || e.keyCode === 9) {
+				const activeElement =
+					targetRef.current.getRootNode().activeElement;
+				if (e.shiftKey && activeElement === firstElement) {
+					e.preventDefault();
+					lastElement.focus();
+				} else if (!e.shiftKey && activeElement === lastElement) {
+					e.preventDefault();
+					firstElement.focus();
+				}
+			}
 		},
-		[toggle]
+		[firstElement, lastElement, toggle]
 	);
 
 	useEffect(() => {
 		document.body.style.overflowY = isOpen ? 'hidden' : 'auto';
-	}, [isOpen]);
+		return () =>
+			document.removeEventListener('keydown', handleKeyPress, false);
+	}, [handleKeyPress, isOpen]);
 
 	useEffect(() => {
 		if (!didLoad) {
@@ -49,16 +86,6 @@ const KudosModal = ({
 		}
 	}, [didLoad, toggleModal]);
 
-	// Add escape key event listeners.
-	useEffect(() => {
-		if (isOpen) {
-			document.addEventListener('keydown', handleKeyPress, false);
-		}
-
-		return () =>
-			document.removeEventListener('keydown', handleKeyPress, false);
-	}, [handleKeyPress, isOpen]);
-
 	return (
 		<div ref={targetRef} data-toggle={false}>
 			<Transition show={isOpen} appear={false}>
@@ -78,6 +105,7 @@ const KudosModal = ({
 							/>
 						</Transition.Child>
 						<Transition.Child
+							beforeEnter={setUp}
 							enter="transition-all duration-[400ms]"
 							enterFrom="opacity-0 rotate-[-5deg] translate-x-3 translate-y-3 scale-90"
 							enterTo="opacity-100 rotate-0 translate-x-0 translate-y-0 scale-100"
