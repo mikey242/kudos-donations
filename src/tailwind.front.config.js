@@ -1,9 +1,7 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-	presets: [
-		require('./tailwind.kudos.preset.js')
-	],
+	presets: [require('./tailwind.kudos.preset.js')],
 	content: [
 		'./src/components/*.{js,jsx}',
 		'./src/components/front/**/*.{js,jsx}',
@@ -12,7 +10,7 @@ module.exports = {
 	theme: {
 		fontFamily: {
 			sans: 'var(--kudos-font-sans)',
-			serif: 'var(--kudos-font-serif)'
+			serif: 'var(--kudos-font-serif)',
 		},
 		extend: {
 			keyframes: {
