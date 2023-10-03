@@ -1,9 +1,0 @@
-- Add ability to modify number of records per page in transactions table
-- Redirect currently does not work well with permalinks set to "Plain" (i.e ?page_id=5)
-- Re-visit honeypot implementation (make it optional in settings to highlight availability)
-    - https://stackoverflow.com/questions/36227376/better-honeypot-implementation-form-anti-spam
-    - https://stackoverflow.com/questions/26452716/how-to-create-a-nuclear-honeypot-to-catch-form-spammers
-    - https://blog.cloudflare.com/using-the-cloudflare-api-to-report-spam-on-yo/
-- Make Kudos form a separate block
-- Integrate diagnostics with Site Health
-    - https://kinsta.com/blog/wordpress-5-8/#block-api-enhancements
