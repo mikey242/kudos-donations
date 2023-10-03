@@ -1,0 +1,31 @@
+image: carlosalgms/composer-and-node-ci
+
+before_script:
+  - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
+
+cache:
+  paths:
+    - dist/
+    - vendor/
+
+stages:
+  - build
+  - deploy
+
+build-job:
+  stage: build
+  script:
+    - echo "Building plugin..."
+    - npm install
+    - composer run build-production
+
+deploy-job:
+  stage: deploy
+  environment: production
+  artifacts:
+    paths:
+      - kudos-donations.zip
+  script:
+    - echo "Deploying application..."
+    - composer run make-zip
+    - echo "Application successfully built."
