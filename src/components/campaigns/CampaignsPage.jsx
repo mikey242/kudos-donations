@@ -187,7 +187,7 @@ const CampaignsPage = () => {
 									settings?.[
 										'_kudos_vendor_' +
 											settings._kudos_vendor
-									].recurring
+									]?.recurring
 								}
 								clearCurrentCampaign={clearCurrentCampaign}
 								campaign={currentCampaign}
