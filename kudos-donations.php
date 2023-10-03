@@ -54,8 +54,8 @@ if ( file_exists( KUDOS_PLUGIN_DIR . '/vendor/woocommerce/action-scheduler/actio
 $dotenv = new Dotenv();
 try {
 	$dotenv->load( __DIR__ . '/.env' );
+	// phpcs:ignore
 } catch ( \Exception $ignored ) {
-	return [];
 }
 
 // Set the environment as production if not specified.
