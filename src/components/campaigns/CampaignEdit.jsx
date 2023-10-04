@@ -16,13 +16,9 @@ import { isValidUrl } from '../../helpers/util';
 import GenerateShortcode from './GenerateShortcode';
 import Divider from '../Divider';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
+import { useAdminTableContext } from '../../contexts/AdminTableContext';
 
-function CampaignEdit({
-	campaign,
-	updateCampaign,
-	clearCurrentCampaign,
-	recurringAllowed,
-}) {
+function CampaignEdit({ campaign, updateCampaign, recurringAllowed }) {
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -31,6 +27,7 @@ function CampaignEdit({
 			'shortcode.buttonLabel': __('Donate now!', 'kudos-donations'),
 		},
 	});
+	const { clearCurrentPost } = useAdminTableContext();
 	const { handleSubmit, watch, formState, reset } = methods;
 	const watchAmountType = watch('meta.amount_type');
 	const watchUseReturnURL = watch('meta.use_custom_return_url');
@@ -47,10 +44,10 @@ function CampaignEdit({
 						'You have unsaved changes, are you sure you want to leave?',
 						'kudos-donations'
 					)
-				) && clearCurrentCampaign()
+				) && clearCurrentPost()
 			);
 		}
-		clearCurrentCampaign();
+		clearCurrentPost();
 	};
 
 	const onSubmit = (data) => {

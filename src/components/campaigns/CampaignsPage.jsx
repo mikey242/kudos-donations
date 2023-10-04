@@ -1,151 +1,159 @@
 // eslint-disable-next-line import/default
-import apiFetch from '@wordpress/api-fetch';
-import { useCallback, useEffect, useState } from '@wordpress/element';
 import { Header } from '../admin/Header';
 import React from 'react';
-import CampaignTable from './CampaignTable';
 import CampaignEdit from './CampaignEdit';
 import { __ } from '@wordpress/i18n';
 import { Button } from '../controls';
 import EmptyCampaigns from './EmptyCampaigns';
 import { Spinner } from '../Spinner';
 import { useSettingsContext } from '../../contexts/SettingsContext';
-import { useNotificationContext } from '../../contexts/NotificationContext';
 import {
 	ArrowDownTrayIcon,
+	DocumentDuplicateIcon,
+	PencilSquareIcon,
 	PlusCircleIcon,
 	PlusIcon,
+	TrashIcon,
 } from '@heroicons/react/24/outline';
-import {
-	NumberParam,
-	StringParam,
-	useQueryParam,
-	useQueryParams,
-	withDefault,
-} from 'use-query-params';
-import { removeQueryParameters } from '../../helpers/util';
+import { useAdminTableContext } from '../../contexts/AdminTableContext';
+import { InlineTextEdit } from '../controls/InlineTextEdit';
+import { ColorPickerPopup } from './ColorPickerPopup';
+import { ProgressBar } from '../ProgressBar';
+import { dateI18n } from '@wordpress/date';
+import { Fragment } from '@wordpress/element';
+import Table from '../admin/Table';
 
 const CampaignsPage = () => {
-	const [campaigns, setCampaigns] = useState(null);
-	const [isApiBusy, setIsApiBusy] = useState(false);
-	const [currentCampaign, setCurrentCampaign] = useState(null);
+	const {
+		updatePost,
+		posts,
+		newPost,
+		isApiBusy,
+		currentPost,
+		setPostId,
+		duplicatePost,
+		deletePost,
+	} = useAdminTableContext();
 	const { settings, settingsReady } = useSettingsContext();
-	const { createNotification } = useNotificationContext();
-	const [campaignId, setCampaignId] = useQueryParam('campaign', NumberParam);
-	const [sortQuery, setSortQuery] = useQueryParams({
-		order: withDefault(StringParam, 'desc'),
-		orderby: withDefault(StringParam, 'date'),
-	});
-
-	const getCampaigns = useCallback(() => {
-		apiFetch({
-			path: `wp/v2/kudos_campaign?orderby=${sortQuery.orderby}&order=${sortQuery.order}`,
-			method: 'GET',
-		})
-			.then((posts) => setCampaigns(posts))
-			.catch((error) => {
-				createNotification(error.message, false);
-			});
-	}, [createNotification, sortQuery]);
-
-	useEffect(() => {
-		if (campaigns) {
-			if (campaignId) {
-				setCurrentCampaign(
-					campaigns.filter((c) => c.id === campaignId)[0]
-				);
-			} else {
-				clearCurrentCampaign();
-			}
-		}
-	}, [campaignId, campaigns]);
-
-	useEffect(() => {
-		getCampaigns();
-	}, [getCampaigns, sortQuery]);
-
-	const clearCurrentCampaign = () => {
-		removeQueryParameters(['campaign', 'tab']);
-		setCurrentCampaign(null);
-	};
 
 	const newCampaign = () => {
-		updateCampaign(null, {
-			title: __('New campaign', 'kudos-donations'),
-			status: 'draft',
-		}).then((response) => {
-			getCampaigns();
-			setCampaignId(response.id);
+		newPost(__('New campaign', 'kudos-donations')).then((response) => {
+			setPostId(response.id);
 		});
 	};
 
-	const updateCampaign = (id = null, data = {}, notification = true) => {
-		setIsApiBusy(true);
-		return apiFetch({
-			path: `wp/v2/kudos_campaign/${id ?? ''}`,
-			method: 'POST',
-			data: {
-				...data,
-				status: 'publish',
+	const headerItems = [
+		{
+			title: __('Campaign name', 'kudos-donations'),
+			orderby: 'title',
+			dataCallback: () => <InlineTextEdit name={'title'} />,
+		},
+		{
+			title: __('Color', 'kudos-donations'),
+			dataCallback: (i, formRef) => (
+				<ColorPickerPopup
+					color={posts[i].meta?.theme_color}
+					onColorChange={() => formRef?.current.requestSubmit()}
+				/>
+			),
+		},
+		{
+			title: __('Goal', 'kudos-donations'),
+			headerClass: 'w-20',
+			dataCallback: () => (
+				<InlineTextEdit
+					type="number"
+					className="w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+					validation={{
+						min: {
+							value: 1,
+							message: __(
+								'Minimum value is 1',
+								'kudos-donations'
+							),
+						},
+					}}
+					name={'meta.goal'}
+				/>
+			),
+		},
+		{
+			title: __('Progress', 'kudos-donations'),
+			headerClass: 'min-w-[13rem]',
+			dataCallback: (i) => {
+				return (
+					<ProgressBar
+						goal={posts[i].meta?.goal}
+						total={posts[i].total}
+						showGoal={false}
+					/>
+				);
 			},
-		})
-			.then((response) => {
-				getCampaigns();
-				if (notification) {
-					createNotification(
-						data.status === 'draft'
-							? __('Campaign created', 'kudos-donations')
-							: __('Campaign updated', 'kudos-donations'),
-						true
-					);
-				}
-				return response;
-			})
-			.catch((error) => {
-				createNotification(error.message, false);
-			})
-			.finally(() => {
-				setIsApiBusy(false);
-			});
-	};
-
-	const removeCampaign = (id) => {
-		apiFetch({
-			path: `wp/v2/kudos_campaign/${id}?force=true`,
-			method: 'DELETE',
-		}).then(() => {
-			createNotification(__('Campaign deleted', 'kudos-donations'), true);
-			return getCampaigns();
-		});
-	};
-
-	const duplicateCampaign = (campaign) => {
-		const data = {
-			...campaign,
-			id: null,
-			title: campaign.title.rendered,
-			date: new Date(),
-			status: 'draft',
-		};
-		return updateCampaign(null, data);
-	};
+		},
+		{
+			title: __('Created', 'kudos-donations'),
+			orderby: 'date',
+			dataCallback: (i) => (
+				<i className="text-gray-500">
+					{dateI18n('d-m-Y', posts[i].date, null)}
+				</i>
+			),
+		},
+		{
+			title: (
+				<span className="sr-only">{__('Edit', 'kudos-donations')}</span>
+			),
+			dataCallback: (i) => (
+				<Fragment>
+					<span title={__('Edit campaign', 'kudos-donations')}>
+						<PencilSquareIcon
+							className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block"
+							onClick={() => setPostId(posts[i].id)}
+						/>
+					</span>
+					<span title={__('Duplicate campaign', 'kudos-donations')}>
+						<DocumentDuplicateIcon
+							className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block"
+							onClick={() => duplicatePost(posts[i])}
+						/>
+					</span>
+					<span title={__('Delete campaign', 'kudos-donations')}>
+						<TrashIcon
+							className="h-5 w-5 cursor-pointer mx-1 font-medium inline-block text-red-500"
+							onClick={() => {
+								return (
+									// eslint-disable-next-line no-alert
+									window.confirm(
+										__(
+											'Are you sure you wish to delete this campaign?',
+											'kudos-donations'
+										)
+									) && deletePost(posts[i].id)
+								);
+							}}
+						/>
+					</span>
+				</Fragment>
+			),
+		},
+	];
 
 	return (
 		<>
-			{!campaigns && !settingsReady ? (
+			{!posts && !settingsReady ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
 				</div>
 			) : (
 				<>
 					<Header>
-						{currentCampaign && (
+						{currentPost && (
 							<Button
 								form="settings-form"
 								type="submit"
 								isBusy={isApiBusy}
 								icon={
-									currentCampaign.status === 'draft' ? (
+									currentPost.status === 'draft' ? (
 										<PlusCircleIcon className="mr-2 w-5 h-5" />
 									) : (
 										<ArrowDownTrayIcon className="mr-2 w-5 h-5" />
@@ -156,17 +164,13 @@ const CampaignsPage = () => {
 							</Button>
 						)}
 					</Header>
-					{!currentCampaign ? (
+					{!currentPost ? (
 						<div className="max-w-5xl w-full mx-auto">
-							{campaigns?.length >= 1 ? (
-								<CampaignTable
-									updateCampaign={updateCampaign}
-									deleteClick={removeCampaign}
-									duplicateClick={duplicateCampaign}
-									editClick={setCampaignId}
-									campaigns={campaigns}
-									sortQuery={sortQuery}
-									setSortQuery={setSortQuery}
+							{posts?.length >= 1 ? (
+								<Table
+									headerItems={headerItems}
+									tableData={posts}
+									updatePost={updatePost}
 								/>
 							) : (
 								<EmptyCampaigns />
@@ -182,15 +186,14 @@ const CampaignsPage = () => {
 					) : (
 						<div className="max-w-4xl w-full mx-auto">
 							<CampaignEdit
-								updateCampaign={updateCampaign}
+								updateCampaign={updatePost}
 								recurringAllowed={
 									settings?.[
 										'_kudos_vendor_' +
 											settings._kudos_vendor
 									]?.recurring
 								}
-								clearCurrentCampaign={clearCurrentCampaign}
-								campaign={currentCampaign}
+								campaign={currentPost}
 							/>
 						</div>
 					)}
