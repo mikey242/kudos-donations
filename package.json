@@ -13,7 +13,8 @@
     "start:front": "wp-scripts start --hot --webpack-src-dir=src/front --output-path=build/front",
     "wp-env": "wp-env",
     "make-pot": "wp i18n make-pot . --exclude='src'",
-    "make-json": "wp i18n make-json languages/ --no-purge"
+    "make-json": "wp i18n make-json languages/ --no-purge",
+    "follow-log": "docker exec -it $(docker ps -qf \"name=_wordpress_1$\") tail -f -n 200 wp-content/uploads/kudos-donations/logs/development.log"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
