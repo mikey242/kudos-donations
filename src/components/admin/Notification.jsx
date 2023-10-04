@@ -25,7 +25,7 @@ const Notification = ({ notifications, onNotificationClick }) => {
 						<Panel>
 							<button
 								onClick={() => onNotificationClick(t.id)}
-								className="flex justify-around items-center p-5"
+								className="flex justify-around items-center p-5 capitalize"
 							>
 								{t.success ? (
 									<CheckCircleIcon className="w-5 h-5 mr-2 text-green-600" />
