@@ -48,6 +48,22 @@ class PaymentService extends AbstractService {
 		add_action( 'kudos_transaction_paid', [ $this, 'schedule_process_transaction' ] );
 		// Second hook is to call another hook that runs when scheduled hook called.
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
+		// Replace returned get_home_url with app_url if defined.
+		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
+	}
+
+	/**
+	 * Replaces the home url with the url defined in $_ENV['APP_URL'].
+	 *
+	 * @param string $url The full URL.
+	 * @param string $path The rest route.
+	 */
+	public function use_alternate_app_url( string $url, string $path ): string {
+		if ( isset( $_ENV['APP_URL'] ) && '/kudos/v1/payment/webhook' === $path ) {
+			$home_url = get_home_url();
+			return str_replace( $home_url, $_ENV['APP_URL'], $url );
+		}
+		return $url;
 	}
 
 	/**

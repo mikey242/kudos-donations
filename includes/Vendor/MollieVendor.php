@@ -549,11 +549,6 @@ class MollieVendor extends AbstractService implements VendorInterface
     {
         $route = "kudos/v1/payment/webhook";
 
-        // Use APP_URL if defined in .env file.
-        if (isset($_ENV['APP_URL'])) {
-            return $_ENV['APP_URL'] . '/wp-json/' . $route;
-        }
-
         // Otherwise, return normal rest URL.
         return get_rest_url(null, $route);
     }
