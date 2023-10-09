@@ -92,8 +92,6 @@ class Front extends AbstractService {
 	/**
 	 * Renders the kudos button and donation modals.
 	 *
-	 * @throws Exception If the api is not ready.
-	 *
 	 * @param array $atts Array of Kudos button/modal attributes.
 	 */
 	public function button_render_callback( array $atts ): ?string {
