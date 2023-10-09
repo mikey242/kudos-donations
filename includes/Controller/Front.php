@@ -130,7 +130,7 @@ class Front extends AbstractService {
 		} catch ( Exception $e ) {
 			// Display error message if thrown and user is admin.
 			if ( current_user_can( 'manage_options' ) ) {
-				return '<p>' . $e->getMessage() . '</p>';
+				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $e->getMessage() . '</p>';
 			}
 		}
 
