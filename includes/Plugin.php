@@ -164,7 +164,13 @@ class Plugin {
 			do_action( 'kudos_donations_loaded', $this->container );
 			$this->on_plugin_loaded();
 		} catch ( \Throwable $e ) {
-			$this->logger->error( $e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine()] );
+			$this->logger->error(
+				$e->getMessage(),
+				[
+					'file' => $e->getFile(),
+					'line' => $e->getLine(),
+				]
+			);
 		}
 	}
 }
