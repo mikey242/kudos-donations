@@ -213,10 +213,12 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 			self::META_FIELD_RETURN_MESSAGE_TITLE     => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => __( 'Payment received', 'kudos-donations' ),
 			],
 			self::META_FIELD_RETURN_MESSAGE_TEXT      => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => __( 'Thank you for your donation!', 'kudos-donations' ),
 			],
 		];
 	}
