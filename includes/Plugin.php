@@ -75,7 +75,7 @@ class Plugin {
 	 * @param bool $network_wide Whether activation is network-wide or not.
 	 */
 	public function on_plugin_activation( bool $network_wide ): void {
-		$this->activator_service->activate();
+		$this->activator_service->activate( $network_wide );
 	}
 
 	/**

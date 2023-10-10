@@ -31,11 +31,19 @@ class ActivatorService {
 
 	/**
 	 * Runs all activation functions.
+	 *
+	 * @param bool $network_wide Whether the activation is network wide or not.
 	 */
-	public function activate(): void {
+	public function activate( bool $network_wide ): void {
 		$logger = $this->logger;
 		$twig   = $this->twig;
 		$twig->init();
-		$logger->info( 'Kudos Donations plugin activated.', [ 'version' => KUDOS_VERSION ] );
+		$logger->info(
+			'Kudos Donations plugin activated.',
+			[
+				'version'      => KUDOS_VERSION,
+				'network_wide' => $network_wide,
+			]
+		);
 	}
 }
