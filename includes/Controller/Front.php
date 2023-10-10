@@ -319,7 +319,7 @@ class Front extends AbstractService {
 	 *
 	 * @param string $header The header text.
 	 * @param string $body The body text.
-	 * @param string $color
+	 * @param string $color The theme color.
 	 */
 	private function message_modal_html( string $header, string $body, string $color = '#ff9f1c' ): ?string {
 		return "<div class='kudos-donations kudos-message' data-color='$color' data-title='$header' data-body='$body'></div>";
