@@ -12,7 +12,10 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller;
 
 use Exception;
+use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
+use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
+use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
@@ -190,24 +193,26 @@ class Front extends AbstractService {
 							$transaction_id = $transaction->ID;
 							$campaign_id    = get_post_meta( $transaction_id, 'campaign_id', true );
 
-							$campaign_meta         = get_post_meta( $campaign_id );
-							$return_message_title  = get_post_meta( $campaign_id, 'return_message_title', true );
-							$return_message_text   = get_post_meta( $campaign_id, 'return_message_text', true );
+							$return_message_title  = get_post_meta( $campaign_id, CampaignPostType::META_FIELD_RETURN_MESSAGE_TITLE, true );
+							$return_message_text   = get_post_meta( $campaign_id, CampaignPostType::META_FIELD_RETURN_MESSAGE_TEXT, true );
 							$result                = [];
-							$result['theme_color'] = $campaign_meta['theme_color'][0];
+							$result['theme_color'] = get_post_meta( $campaign_id, CampaignPostType::META_FIELD_THEME_COLOR, true );
 							$status                = get_post_meta( $transaction_id, 'status', true );
 
 							switch ( $status ) {
 								case PaymentStatus::PAID:
+									$donor_id              = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true );
+									$value                 = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_VALUE, true );
+									$currency              = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_CURRENCY, true );
 									$vars                  = [
-										'{{value}}' => ( ! empty( $transaction->currency ) ? html_entity_decode(
-											Utils::get_currency_symbol( $transaction->currency )
+										'{{value}}' => ( ! empty( $currency ) ? html_entity_decode(
+											Utils::get_currency_symbol( $currency )
 										) : '' ) . number_format_i18n(
-											$transaction->value,
+											$value,
 											2
 										),
-										'{{name}}'  => get_post_meta( $transaction_id, 'name', true ),
-										'{{email}}' => get_post_meta( $transaction_id, 'email', true ),
+										'{{name}}'  => get_post_meta( $donor_id, DonorPostType::META_FIELD_NAME, true ),
+										'{{email}}' => get_post_meta( $donor_id, DonorPostType::META_FIELD_EMAIL, true ),
 									];
 									$result['modal_title'] = strtr( $return_message_title, $vars );
 									$result['modal_text']  = strtr( $return_message_text, $vars );
