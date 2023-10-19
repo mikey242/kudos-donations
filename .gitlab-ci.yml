@@ -19,6 +19,7 @@ lint-job:
   stage: lint
   script:
     - echo "Linting plugin...."
+    - composer install
     - composer run lint:gitlab
 
 build-job:
