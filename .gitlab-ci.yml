@@ -11,12 +11,12 @@ cache:
     - vendor/
 
 stages:
-  - lint
+  - test
   - build
   - deploy
 
 lint-job:
-  stage: lint
+  stage: test
   script:
     - echo "Linting plugin...."
     - composer install
