@@ -28,6 +28,9 @@ build-job:
     - echo "Building plugin..."
     - npm install
     - composer run build-production
+  artifacts:
+    reports:
+      codequality: phpcs-quality-report.json
 
 deploy-job:
   stage: deploy
