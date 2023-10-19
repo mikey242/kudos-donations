@@ -27,4 +27,3 @@ function kudos_donations_uninstall(): void {
 	$plugin->on_plugin_uninstall();
 }
 add_action( 'shutdown', 'kudos_donations_uninstall' );
-

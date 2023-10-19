@@ -84,7 +84,7 @@ class Plugin {
 	 * @param bool $network_wide Whether activation is network-wide or not.
 	 */
 	public function on_plugin_deactivation( bool $network_wide ): void {
-		// TODO implement on_plugin_activation method.
+		$this->logger->debug( ' Plugin deactivated', [ 'network_wide' => $network_wide ] );
 	}
 
 	/**

@@ -45,11 +45,11 @@ class PluginFactory {
 				$container = $container_builder->build();
 				$plugin    = $container->get( Plugin::class );
 			} catch ( DependencyException | NotFoundException | \Exception $e ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( $e->getMessage() );
 			}
 		}
 
 		return $plugin;
-
 	}
 }

@@ -87,10 +87,12 @@ class MigratorService {
 	}
 
 	/**
-	 * @throws Exception
+	 * Run the migration for the specified version.
 	 *
-	 * @param string $version
-	 * @param bool   $force
+	 * @throws Exception Thrown if migration not found.
+	 *
+	 * @param string $version Version to run.
+	 * @param bool   $force Force migration (even if already run).
 	 */
 	public function migrate( string $version, bool $force = false ): void {
 		// Remove dots from version.
@@ -99,14 +101,14 @@ class MigratorService {
 		// Check if migration exists and is valid.
 		$migration = __NAMESPACE__ . '\\Version' . $version;
 		if ( ! class_exists( $migration ) && ! $migration instanceof MigrationInterface ) {
-			throw new Exception( "Migration '$version' not found or invalid." );
+			throw new Exception( wp_sprintf( 'Migration %s not found or invalid.', \intval( $version ) ) );
 		}
 
 		// Check if migration already run.
 		$migrations = get_option( '_kudos_migration_history' );
 		$library    = \is_array( $migrations ) ? array_flip( $migrations ) : '';
 		if ( ! $force && isset( $library[ $version ] ) ) {
-			throw new Exception( "Migration '$version' already performed." );
+			throw new Exception( wp_sprintf( 'Migration %s already performed.', \intval( $version ) ) );
 		}
 
 		$type = new $migration( $this->logger );

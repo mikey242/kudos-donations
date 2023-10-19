@@ -212,19 +212,15 @@ class MailerService {
 
 	/**
 	 * Returns a filtered email.
-	 *
-	 * @return mixed
 	 */
-	public function get_from_email() {
+	public function get_from_email(): string {
 		return filter_var( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
 	}
 
 	/**
 	 * Returns a filtered name.
-	 *
-	 * @return mixed
 	 */
-	public function get_from_name() {
+	public function get_from_name(): string {
 		return $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP )['from_name'];
 	}
 

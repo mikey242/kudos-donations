@@ -1,11 +1,25 @@
 <?php
+/**
+ * Posts helper.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
 
 namespace IseardMedia\Kudos\Helper;
 
 class Posts {
 
 
-	public static function get_shortcodes_on_page( $post_id, $shortcode ): bool|array {
+	/**
+	 * Returns shortcodes used on specified post / page.
+	 *
+	 * @param int    $post_id ID of the post or page.
+	 * @param string $shortcode Shortcode to search for.
+	 * @return array
+	 */
+	public static function get_shortcodes_on_page( int $post_id, string $shortcode ): array {
 		// Get the post content once.
 		$content = get_the_content( null, false, $post_id );
 
@@ -37,15 +51,21 @@ class Posts {
 			// Return it.
 			return $results;
 		} else {
-			return false;
+			return [];
 		}
 	}
 
-	public static function shortcode_parse_atts( $shortcode ): array {
+	/**
+	 * Get shortcode attributes.
+	 *
+	 * @param string $shortcode Shortcode to use.
+	 * @return array
+	 */
+	public static function shortcode_parse_atts( string $shortcode ): array {
 		// Store the shortcode attributes in an array here.
 		$attributes = [];
 
-		if ( preg_match_all( '/\w+\=\".*?\"/', $shortcode, $key_value_pairs ) ) {
+		if ( preg_match_all( '/\w+=\".*?\"/', $shortcode, $key_value_pairs ) ) {
 			// Now split up the key value pairs.
 			foreach ( $key_value_pairs[0] as $kvp ) {
 				$kvp                    = str_replace( '"', '', $kvp );

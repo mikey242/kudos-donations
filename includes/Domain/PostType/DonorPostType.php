@@ -115,8 +115,8 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	public static function get_rest_fields(): array {
 		return [
 			self::REST_FIELD_TOTAL => [
-				'get_callback' => function ( $object ) {
-					$donor_id = $object['id'];
+				'get_callback' => function ( $item ) {
+					$donor_id = $item['id'];
 					return self::get_total( $donor_id );
 				},
 			],
@@ -143,7 +143,7 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 			'total_donations'                   => [
 				'label'      => __( 'Total donated', 'kudos-donations' ),
 				'value_type' => FieldType::INTEGER,
-				'value'      => function( $donor_id ) {
+				'value'      => function ( $donor_id ) {
 					return self::get_total( $donor_id );
 				},
 			],

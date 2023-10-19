@@ -1,31 +1,19 @@
 <?php
+/**
+ * Deactivator service.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
 
 namespace IseardMedia\Kudos\Service;
 
-/**
- * Fired during plugin deactivation
- *
- * @link       https://www.linkedin.com/in/michael-iseard/
- * @since      1.0.0
- */
+class DeactivatorService {
 
-/**
- * Fired during plugin deactivation.
- *
- * This class defines all code necessary to run during the plugin's deactivation.
- *
- * @since      1.0.0
- */
-class DeactivatorService
-{
-    /**
-     * Short Description. (use period)
-     *
-     * Long Description.
-     *
-     * @since    1.0.0
-     */
-    public static function deactivate()
-    {
-    }
+	/**
+	 * Runs on plugin de-activation.
+	 */
+	public static function deactivate(): void {
+	}
 }

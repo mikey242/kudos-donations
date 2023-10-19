@@ -202,7 +202,7 @@ trait TableColumnsTrait {
 		$post_columns = [];
 		foreach ( $column_config as $name => $config ) {
 			if ( $use_label ) {
-				$post_columns[ $name ] = !empty($config['label']) ? ( \is_callable( $config['label'] ) ? \call_user_func( $config['label'] ) : $config['label'] ) : $name;
+				$post_columns[ $name ] = ! empty( $config['label'] ) ? ( \is_callable( $config['label'] ) ? \call_user_func( $config['label'] ) : $config['label'] ) : $name;
 			} else {
 				$post_columns[ $name ] = $name;
 			}

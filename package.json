@@ -14,7 +14,7 @@
     "wp-env": "wp-env",
     "make-pot": "wp i18n make-pot . --exclude='src'",
     "make-json": "wp i18n make-json languages/ --no-purge",
-    "follow-log": "docker exec -it $(docker ps -qf \"name=_wordpress_1$\") tail -f -n 200 wp-content/uploads/kudos-donations/logs/development.log"
+    "follow-log": "docker exec -it $(docker ps -n 1 -qf \"name=93-wordpress-1$\") tail -f -n 200 wp-content/uploads/kudos-donations/logs/production.log"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"

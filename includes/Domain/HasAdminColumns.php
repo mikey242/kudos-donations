@@ -17,5 +17,4 @@ interface HasAdminColumns {
 	 * Returns an array of columns config.
 	 */
 	public function get_columns_config(): array;
-
 }

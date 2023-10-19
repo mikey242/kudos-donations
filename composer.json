@@ -31,7 +31,7 @@
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "3.7.2",
-    "wp-coding-standards/wpcs": "2.3.0",
+    "wp-coding-standards/wpcs": "3.*",
     "phpcompatibility/phpcompatibility-wp": "*",
     "phpcompatibility/php-compatibility": "^9.3",
     "sirbrillig/phpcs-variable-analysis": "v2.11.16",
@@ -46,6 +46,8 @@
     "phpstan/phpstan-deprecation-rules": "^1.1"
   },
   "scripts": {
+    "lint": "phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-source",
+    "lint:gitlab": "phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-\\\\Micheh\\\\PhpCodeSniffer\\\\Report\\\\Gitlab=phpcs-quality-report.json",
     "build-production": [
       "composer install --optimize-autoloader --no-dev",
       "npm run build"

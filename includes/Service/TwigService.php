@@ -1,4 +1,11 @@
 <?php
+/**
+ * TwigService.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
 
 namespace IseardMedia\Kudos\Service;
 
@@ -19,37 +26,16 @@ use Twig\TwigFunction;
 class TwigService {
 
 	public const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
-	/**
-	 * Directories where templates are stored.
-	 *
-	 * @var array
-	 */
 	public array $template_paths;
-	/**
-	 * Twig environment.
-	 *
-	 * @var Environment
-	 */
 	private Environment $twig;
-	/**
-	 * Twig options
-	 *
-	 * @var array
-	 */
 	private array $options;
-	/**
-	 * @var LoggerInterface
-	 */
 	private LoggerInterface $logger;
-	/**
-	 * @var FilesystemLoader
-	 */
 	private FilesystemLoader $loader;
 
 	/**
 	 * Twig constructor
 	 *
-	 * @param LoggerInterface $logger_service
+	 * @param LoggerInterface $logger_service Logger instance.
 	 */
 	public function __construct( LoggerInterface $logger_service ) {
 		$this->logger           = $logger_service;
@@ -78,11 +64,17 @@ class TwigService {
 		$this->initialize_twig_filters();
 	}
 
-	public function add_path( string $path, $namespace = null ): void {
+	/**
+	 * Add path to templates.
+	 *
+	 * @param string      $path Path to add.
+	 * @param string|null $twig_namespace Namespace to use.
+	 */
+	public function add_path( string $path, ?string $twig_namespace = null ): void {
 		$loader = $this->loader;
 		try {
-			if ( \is_string( $namespace ) ) {
-				$loader->setPaths( $path, $namespace );
+			if ( \is_string( $twig_namespace ) ) {
+				$loader->setPaths( $path, $twig_namespace );
 			} else {
 				$loader->addPath( $path );
 			}
@@ -152,8 +144,8 @@ class TwigService {
 		 */
 		$apply_filter = new TwigFilter(
 			'apply_filters',
-			function ( $string, $filter ) {
-				return apply_filters( $filter, $string );
+			function ( $text, $filter ) {
+				return apply_filters( $filter, $text );
 			}
 		);
 		$this->twig->addFilter( $apply_filter );
@@ -171,8 +163,8 @@ class TwigService {
 		 */
 		$wp_kses_post = new TwigFilter(
 			'wp_kses_post',
-			function ( $string ) {
-				return wp_kses_post( $string );
+			function ( $content ) {
+				return wp_kses_post( $content );
 			},
 			[ 'is_safe' => [ 'html' ] ]
 		);
@@ -195,7 +187,7 @@ class TwigService {
 
 		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
 			$logger->info( 'Twig cache directory created successfully.', [ 'location' => self::CACHE_DIR ] );
-			$this->clearCache();
+			$this->clear_cache();
 
 			return;
 		}
@@ -206,12 +198,13 @@ class TwigService {
 	/**
 	 * Clears the twig cache
 	 */
-	public function clearCache(): bool {
+	public function clear_cache(): bool {
 		$di      = new RecursiveDirectoryIterator( self::CACHE_DIR, FilesystemIterator::SKIP_DOTS );
 		$ri      = new RecursiveIteratorIterator( $di, RecursiveIteratorIterator::CHILD_FIRST );
 		$files   = 0;
 		$folders = 0;
 		foreach ( $ri as $file ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions
 			$file->isDir() ? $files++ && rmdir( $file ) : $folders++ && unlink( $file );
 		}
 		$this->logger->debug(
@@ -229,11 +222,11 @@ class TwigService {
 	 * Render the provided template.
 	 *
 	 * @param string $template Template file (.html.twig).
-	 * @param array  $array Array to pass to template.
+	 * @param array  $attributes Array to pass to template.
 	 */
-	public function render( string $template, array $array = [] ): ?string {
+	public function render( string $template, array $attributes = [] ): ?string {
 		try {
-			return $this->twig->render( $template, $array );
+			return $this->twig->render( $template, $attributes );
 		} catch ( Throwable $e ) {
 			$this->logger->critical(
 				$e->getMessage(),

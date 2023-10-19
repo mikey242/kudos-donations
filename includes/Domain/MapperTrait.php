@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain;
 
-use IseardMedia\Kudos\Domain\Post\AbstractPost;
-use IseardMedia\Kudos\Domain\Post\TransactionPost;
 use WP_Error;
 use WP_Post;
 
@@ -68,7 +66,6 @@ trait MapperTrait {
 		}
 
 		return null;
-
 	}
 	/**
 	 * Gets posts by simple key => value args.
@@ -93,7 +90,6 @@ trait MapperTrait {
 		}
 
 		return get_posts( $args );
-
 	}
 
 	/**
@@ -163,7 +159,6 @@ trait MapperTrait {
 		}
 
 		return self::update_meta( $post_id, $post_meta );
-
 	}
 
 	/**

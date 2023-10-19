@@ -17,5 +17,4 @@ interface HasAssetsInterface {
 	 * Callback used for registering page assets.
 	 */
 	public function register_assets(): void;
-
 }

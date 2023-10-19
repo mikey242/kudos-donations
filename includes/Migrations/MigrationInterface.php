@@ -1,4 +1,11 @@
 <?php
+/**
+ * MigrationInterface.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
 
 namespace IseardMedia\Kudos\Migrations;
 
@@ -9,8 +16,11 @@ interface MigrationInterface {
 
 	/**
 	 * Migration constructor.
+	 *
+	 * @param LoggerInterface $logger Logger instance.
+	 * @param SettingsService $settings Settings instance.
 	 */
-	public function __construct( LoggerInterface $logger, SettingsService $settings);
+	public function __construct( LoggerInterface $logger, SettingsService $settings );
 
 	/**
 	 * Run the migrations and return true if successful.

@@ -129,7 +129,7 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 
 		// Check if honeypot field completed.
 		if ( ! empty( $values['donation'] ) ) {
-			new \WP_ERROR(
+			new \WP_Error(
 				'rest_forbidden',
 				__( 'Bot detected, rejecting tabs.', 'kudos-donations' ),
 				array_merge(

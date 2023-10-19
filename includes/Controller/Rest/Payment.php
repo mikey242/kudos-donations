@@ -339,7 +339,7 @@ class Payment extends AbstractRestController {
 	 * Webhook handler. Passes request to rest_webhook method of current vendor.
 	 *
 	 * @param WP_REST_Request $request Request array.
-	 * @return WP_Error|WP_REST_Response
+	 * @return WP_ERROR | WP_REST_Response
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
 		return $this->vendor->rest_webhook( $request );

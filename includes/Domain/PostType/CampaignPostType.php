@@ -229,11 +229,10 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public static function get_rest_fields(): array {
 		return [
 			self::REST_FIELD_TOTAL => [
-				'get_callback' => function ( $object ) {
+				'get_callback' => function ( $item ) {
 
-					$campaign_id = $object['id'];
+					$campaign_id = $item['id'];
 					return self::get_total( $campaign_id );
-
 				},
 			],
 		];

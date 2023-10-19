@@ -20,6 +20,4 @@ class FieldType {
 	public const EMAIL   = 'email';
 	public const URL     = 'url';
 	public const IMAGE   = 'img';
-
 }
-

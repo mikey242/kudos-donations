@@ -19,4 +19,3 @@ class PaymentStatus {
 	public const EXPIRED  = 'expired';
 	public const FAILED   = 'failed';
 }
-

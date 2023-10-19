@@ -53,16 +53,16 @@ class SettingsService extends AbstractService {
 	 * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
 	 *
 	 * @param string $key     Setting key.
-	 * @param mixed  $default Optional. Default value to return if the option does not exist.
+	 * @param mixed  $default_value Optional. Default value to return if the option does not exist.
 	 * @return mixed
 	 */
-	public function get_setting( string $key, $default = false ) {
+	public function get_setting( string $key, $default_value = false ) {
 		// Distinguish between `false` as a default, and not passing one, just like WordPress.
 		$passed_default = \func_num_args() > 1;
 
 		if ( $passed_default ) {
-			$option = get_option( $key, $default );
-			if ( $option === $default ) {
+			$option = get_option( $key, $default_value );
+			if ( $option === $default_value ) {
 				return $option;
 			}
 		} else {
@@ -322,10 +322,10 @@ class SettingsService extends AbstractService {
 	 *
 	 * @link https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
 	 *
-	 * @param array $array Array of values to sanitize.
+	 * @param array $values Array of values to sanitize.
 	 */
-	public static function recursive_sanitize_text_field( array $array ): array {
-		foreach ( $array as &$value ) {
+	public static function recursive_sanitize_text_field( array $values ): array {
+		foreach ( $values as &$value ) {
 			if ( \is_array( $value ) ) {
 				$value = self::recursive_sanitize_text_field( $value );
 			} else {
@@ -333,7 +333,7 @@ class SettingsService extends AbstractService {
 			}
 		}
 
-		return $array;
+		return $values;
 	}
 
 	/**

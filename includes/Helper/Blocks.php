@@ -1,56 +1,65 @@
 <?php
+/**
+ * Block helper functions.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2023 Iseard Media
+ */
 
 namespace IseardMedia\Kudos\Helper;
 
-class Blocks
-{
-    /**
-     * @param \WP_Post|int $post
-     * @param callable $callback
-     *
-     * @return string
-     */
-    public static function getNewContent($post, callable $callback): string
-    {
-        $post    = get_post($post);
-        $content = $post->post_content;
+use WP_Block_Parser_Block;
+use WP_Post;
 
-        if (has_blocks($post->post_content)) {
-            $blocks       = parse_blocks($post->post_content);
-            $parsedBlocks = self::parseBlocks($blocks, $callback);
+class Blocks {
 
-            $content = serialize_blocks($parsedBlocks);
-        }
+	/**
+	 * Returns modified block content.
+	 *
+	 * @param WP_Post|int $post Post instance or post id.
+	 * @param callable    $callback Callback function.
+	 */
+	public static function get_new_content( $post, callable $callback ): string {
+		$post    = get_post( $post );
+		$content = $post->post_content;
 
-        return $content;
-    }
+		if ( has_blocks( $post->post_content ) ) {
+			$blocks        = parse_blocks( $post->post_content );
+			$parsed_blocks = self::parse_blocks( $blocks, $callback );
 
-    /**
-     * @param array[]|\WP_Block_Parser_Block[] $blocks
-     * @param callable $callback
-     *
-     * @return \WP_Block_Parser_Block[]
-     */
-    protected static function parseBlocks(array $blocks, callable $callback): array
-    {
-        $allBlocks = [];
+			$content = serialize_blocks( $parsed_blocks );
+		}
 
-        foreach ($blocks as $block) {
-            // Go into inner front and run this method recursively
-            if ( ! empty($block['innerBlocks'])) {
-                $block['innerBlocks'] = self::parseBlocks($block['innerBlocks'], $callback);
-            }
+		return $content;
+	}
 
-            // Make sure that is a valid block (some block names may be NULL)
-            if ( ! empty($block['blockName'])) {
-                $allBlocks[] = $callback($block); // the magic is here...
-                continue;
-            }
+	/**
+	 * Parse block objects.
+	 *
+	 * @param array    $blocks Array of block objects.
+	 * @param callable $callback Callback function.
+	 * @return WP_Block_Parser_Block[]
+	 */
+	protected static function parse_blocks( array $blocks, callable $callback ): array {
+		$all_blocks = [];
 
-            // Continuously create back the front array.
-            $allBlocks[] = $block;
-        }
+		foreach ( $blocks as $block ) {
+			// Go into inner front and run this method recursively.
+			if ( ! empty( $block['innerBlocks'] ) ) {
+				$block['innerBlocks'] = self::parse_blocks( $block['innerBlocks'], $callback );
+			}
 
-        return $allBlocks;
-    }
+			// Make sure that is a valid block (some block names may be NULL).
+			if ( ! empty( $block['blockName'] ) ) {
+				$all_blocks[] = $callback( $block ); // the magic is here...
+				continue;
+			}
+
+			// Continuously create back the front array.
+			$all_blocks[] = $block;
+		}
+
+		return $all_blocks;
+	}
 }

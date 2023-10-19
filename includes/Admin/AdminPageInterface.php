@@ -37,5 +37,4 @@ interface AdminPageInterface {
 	 * Returns the slug for the parent page.
 	 */
 	public function get_parent_slug(): string;
-
 }

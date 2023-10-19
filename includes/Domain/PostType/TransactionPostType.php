@@ -148,7 +148,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 			],
 			'ID'                               => [
 				'value_type' => FieldType::STRING,
-				'value'      => function( $transaction_id ) {
+				'value'      => function ( $transaction_id ) {
 					return static::get_formatted_id( $transaction_id );
 				},
 			],
@@ -163,7 +163,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 			self::META_FIELD_CAMPAIGN_ID       => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Campaign', 'kudos-donations' ),
-				'value'      => function( $transaction_id ): ?string {
+				'value'      => function ( $transaction_id ): ?string {
 					$campaign_id = get_post_meta( $transaction_id, 'campaign_id', true );
 					if ( $campaign_id ) {
 						$campaign = get_post( $campaign_id );
@@ -181,7 +181,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 			self::META_FIELD_STATUS            => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Status', 'kudos-donations' ),
-				'value'      => function( $transaction_id ) {
+				'value'      => function ( $transaction_id ) {
 					$status = get_post_meta( $transaction_id, 'status', true );
 
 					switch ( $status ) {

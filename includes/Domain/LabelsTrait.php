@@ -34,7 +34,7 @@ trait LabelsTrait {
 	 * @param string $plural_lc Plural lower-case term.
 	 * @return array
 	 */
-	abstract protected function get_default_labels( string $singular_uc, string $singular_lc, string $plural_uc, string $plural_lc): array;
+	abstract protected function get_default_labels( string $singular_uc, string $singular_lc, string $plural_uc, string $plural_lc ): array;
 
 	/**
 	 * The singular name.
@@ -77,5 +77,4 @@ trait LabelsTrait {
 			$this->get_custom_labels()
 		);
 	}
-
 }

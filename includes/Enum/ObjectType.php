@@ -13,8 +13,6 @@ namespace IseardMedia\Kudos\Enum;
 
 class ObjectType {
 
-	public const POST  = 'post';
+	public const POST = 'post';
 	public const TERM = 'term';
-
 }
-

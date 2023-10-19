@@ -11,7 +11,6 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller;
 
-use Exception;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
@@ -95,47 +94,42 @@ class Front extends AbstractService {
 	/**
 	 * Renders the kudos button and donation modals.
 	 *
-	 * @param array $atts Array of Kudos button/modal attributes.
+	 * @param array $args Array of Kudos button/modal attributes.
 	 */
-	public function button_render_callback( array $atts ): ?string {
-		try {
-			// Check if the current vendor is connected, otherwise throw an exception.
-			if ( ! $this->vendor->is_ready() ) {
-				throw new Exception(
-					sprintf(
-						/* translators: %s: Payment vendor (e.g. Mollie). */
-						__( '%s not connected.', 'kudos-donations' ),
-						$this->vendor::get_vendor_name()
-					)
-				);
-			}
+	public function button_render_callback( array $args ): ?string {
 
-			// Enqueue necessary resources.
-			$this->enqueue_assets();
-
-			// Create unique id for triggering.
-			$id = Utils::generate_id( 'kudos-' );
-
-			if ( 'button' === $atts['type'] ) {
-				// Add modal to footer.
-				add_action(
-					'wp_footer',
-					function () use ( $atts, $id ): void {
-						echo $this->form_html( $id, $atts );
-					}
-				);
-
-				// Output button.
-				return $this->button_html( $id, $atts );
-			}
-
-			return $this->form_html( $id, $atts );
-		} catch ( Exception $e ) {
-			// Display error message if thrown and user is admin.
+		// Check if the current vendor is connected, otherwise show an error to logged in admins.
+		if ( ! $this->vendor->is_ready() ) {
 			if ( current_user_can( 'manage_options' ) ) {
-				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $e->getMessage() . '</p>';
+				$message = sprintf(
+				/* translators: %s: Payment vendor (e.g. Mollie). */
+					__( '%s not connected.', 'kudos-donations' ),
+					$this->vendor::get_vendor_name()
+				);
+				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
 			}
 		}
+
+		// Enqueue necessary resources.
+		$this->enqueue_assets();
+
+		// Create unique id for triggering.
+		$id = Utils::generate_id( 'kudos-' );
+
+		if ( 'button' === $args['type'] ) {
+			// Add modal to footer.
+			add_action(
+				'wp_footer',
+				function () use ( $args, $id ): void {
+					$this->form_html( $id, $args );
+				}
+			);
+
+			// Output button.
+			return $this->button_html( $id, $args );
+		}
+
+			$this->form_html( $id, $args );
 
 		// Nothing displayed to visitors if there is a problem.
 		return null;
@@ -153,21 +147,37 @@ class Front extends AbstractService {
 	 * Returns the html for the kudos form.
 	 *
 	 * @param string $id ID to use for the form.
-	 * @param array  $atts Attributes.
+	 * @param array  $args Attributes.
 	 */
-	public function form_html( string $id, array $atts ): string {
-		return "<div id='form-$id' class='kudos-donations kudos-form' data-display-as='" . $atts['type'] . "' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
-					</div>";
+	public function form_html( string $id, array $args ): void {
+		echo wp_kses(
+			wp_sprintf(
+				"<div id='form-%s' class='kudos-donations kudos-form' data-display-as='%s' data-campaign='%s' style='display: block'>
+					</div>",
+				$id,
+				$args['type'],
+				$args['campaign_id']
+			),
+			[
+				'div' => [
+					'id'              => [],
+					'class'           => [],
+					'data-display-as' => [],
+					'data-campaign'   => [],
+					'style'           => [],
+				],
+			]
+		);
 	}
 
 	/**
 	 * Returns the html for the kudos button.
 	 *
 	 * @param string $id ID to use for the form.
-	 * @param array  $atts Attributes.
+	 * @param array  $args Attributes.
 	 */
-	public function button_html( string $id, array $atts ): string {
-		return "<div id='button-$id' class='button' data-label='" . $atts['button_label'] . "' data-target='form-$id' data-campaign='" . $atts['campaign_id'] . "' style='display: block'>
+	public function button_html( string $id, array $args ): string {
+		return "<div id='button-$id' class='button' data-label='" . $args['button_label'] . "' data-target='form-$id' data-campaign='" . $args['campaign_id'] . "' style='display: block'>
 					</div>";
 	}
 
@@ -234,7 +244,7 @@ class Front extends AbstractService {
 							}
 
 							if ( $result ) {
-								echo $this->message_modal_html(
+								$this->message_modal_html(
 									$result['modal_title'],
 									$result['modal_text'],
 									$result['theme_color']
@@ -261,7 +271,7 @@ class Front extends AbstractService {
 
 						if ( wp_verify_nonce( $nonce, $action ) ) {
 							if ( $this->payment->cancel_subscription( $subscription_id ) ) {
-								echo $this->message_modal_html(
+								$this->message_modal_html(
 									__( 'Subscription cancelled', 'kudos-donations' ),
 									__(
 										'We will no longer be taking payments for this subscription. Thank you for your contributions.',
@@ -273,7 +283,7 @@ class Front extends AbstractService {
 							}
 						}
 
-						echo $this->message_modal_html(
+						$this->message_modal_html(
 							__( 'Link expired', 'kudos-donations' ),
 							__( 'Sorry, this link is no longer valid.', 'kudos-donations' )
 						);
@@ -302,19 +312,19 @@ class Front extends AbstractService {
 		// Register shortcode.
 		add_shortcode(
 			'kudos',
-			function ( $atts ) {
-				$atts = shortcode_atts(
+			function ( $args ) {
+				$args = shortcode_atts(
 					[
 						'button_label' => __( 'Donate now', 'kudos-donations' ),
 						'campaign_id'  => '',
 						'alignment'    => 'none',
 						'type'         => 'button',
 					],
-					$atts,
+					$args,
 					'kudos'
 				);
 
-				return $this->button_render_callback( $atts );
+				return $this->button_render_callback( $args );
 			}
 		);
 	}
@@ -326,7 +336,17 @@ class Front extends AbstractService {
 	 * @param string $body The body text.
 	 * @param string $color The theme color.
 	 */
-	private function message_modal_html( string $header, string $body, string $color = '#ff9f1c' ): ?string {
-		return "<div class='kudos-donations kudos-message' data-color='$color' data-title='$header' data-body='$body'></div>";
+	private function message_modal_html( string $header, string $body, string $color = '#ff9f1c' ): void {
+		echo wp_kses(
+			wp_sprintf( "<div class='kudos-donations kudos-message' data-color='%s' data-title='%s' data-body='%s'></div>", $color, $header, $body ),
+			[
+				'div' => [
+					'class'      => [],
+					'data-color' => [],
+					'data-title' => [],
+					'data-body'  => [],
+				],
+			]
+		);
 	}
 }

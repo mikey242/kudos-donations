@@ -47,9 +47,8 @@ class Utils {
 	 *
 	 * @param int    $years Number of years as an integer.
 	 * @param string $frequency Frequency.
-	 * @return float|int|null
 	 */
-	public static function get_times_from_years( int $years, string $frequency ) {
+	public static function get_times_from_years( int $years, string $frequency ): ?int {
 		if ( ! $years > 0 ) {
 			return null;
 		}
