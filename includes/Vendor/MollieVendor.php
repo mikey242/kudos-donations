@@ -475,12 +475,12 @@ class MollieVendor extends AbstractService implements VendorInterface
             'redirectUrl'  => $redirect_url,
             'webhookUrl'   => $this->get_webhook_url(),
             'sequenceType' => $sequence_type,
-	        'description'  => apply_filters('kudos_payment_description', sprintf(
+	        'description'   => apply_filters('kudos_payment_description', sprintf(
 	            /* translators: %1$s: Payment frequency, %2$s: The order id */
 		        __('Kudos Donation (%1$s) - %2$s', 'kudos-donations'),
 		        $payment_args['payment_frequency'],
-		        $transaction_id),
-		        $transaction_id, $payment_args['payment_frequency'], $this::get_vendor_name()),
+		        TransactionPostType::get_formatted_id($transaction_id)
+	        ), $transaction_id, $payment_args['payment_frequency'], $this::get_vendor_name()),
             'metadata'     => [
                 'transaction_id'                            => $transaction_id,
                 'interval'                                  => $payment_args['payment_frequency'],
@@ -762,7 +762,8 @@ class MollieVendor extends AbstractService implements VendorInterface
 	            /* translators: %1$s: Payment frequency, %2$s: The order id */
 		        __('Kudos Subscription (%1$s) - %2$s', 'kudos-donations'),
 		        $interval,
-		        $transaction->ID),
+		        TransactionPostType::get_formatted_id($transaction->ID)
+	        ),
 		        $transaction->ID, $interval, $this::get_vendor_name()),
             'metadata'    => [
                 'campaign_id' => get_post_meta($transaction->ID, TransactionPostType::META_FIELD_CAMPAIGN_ID, true),
