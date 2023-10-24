@@ -50,7 +50,7 @@ interface VendorInterface
      * @param WP_Post $transaction ,
      * @param string $mandate_id ,
      * @param string $interval ,
-     * @param string $years
+     * @param int $years
      */
     public function create_subscription(
         WP_Post $transaction,
