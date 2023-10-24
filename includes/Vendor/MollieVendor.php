@@ -475,12 +475,12 @@ class MollieVendor extends AbstractService implements VendorInterface
             'redirectUrl'  => $redirect_url,
             'webhookUrl'   => $this->get_webhook_url(),
             'sequenceType' => $sequence_type,
-            'description'  => sprintf(
-            /* translators: %s: The order id */
-                __('Kudos Donation (%1$s) - %2$s', 'kudos-donations'),
-                $frequency_text,
-                $transaction_id
-            ),
+	        'description'  => apply_filters('kudos_payment_description', sprintf(
+	            /* translators: %1$s: Payment frequency, %2$s: The order id */
+		        __('Kudos Donation (%1$s) - %2$s', 'kudos-donations'),
+		        $payment_args['payment_frequency'],
+		        $transaction_id),
+		        $transaction_id, $payment_args['payment_frequency'], $this::get_vendor_name()),
             'metadata'     => [
                 'transaction_id'                            => $transaction_id,
                 'interval'                                  => $payment_args['payment_frequency'],
@@ -728,7 +728,7 @@ class MollieVendor extends AbstractService implements VendorInterface
     }
 
     /**
-     * Creates a subscription based on the provided TransactionEntity
+     * Creates a subscription based on the provided transaction
      *
      * @param WP_Post $transaction
      * @param string $mandate_id
@@ -758,13 +758,12 @@ class MollieVendor extends AbstractService implements VendorInterface
             'mandateId'   => $mandate_id,
             'interval'    => $interval,
             'startDate'   => $start_date,
-
-            'description' => sprintf(
-            /* translators: %1$s: Subscription interval. %2$s: Order id. */
-                __('Kudos Subscription (%1$s) - %2$s', 'kudos-donations'),
-                $interval,
-                $transaction->ID
-            ),
+	        'description' => apply_filters('kudos_subscription_description', sprintf(
+	            /* translators: %1$s: Payment frequency, %2$s: The order id */
+		        __('Kudos Subscription (%1$s) - %2$s', 'kudos-donations'),
+		        $interval,
+		        $transaction->ID),
+		        $transaction->ID, $interval, $this::get_vendor_name()),
             'metadata'    => [
                 'campaign_id' => get_post_meta($transaction->ID, TransactionPostType::META_FIELD_CAMPAIGN_ID, true),
             ],
@@ -810,7 +809,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 
         // No valid mandates
         $this->logger->error(
-            'Cannot create subscription as customer has no valid mandates.',
+            __('Cannot create subscription as customer has no valid mandates.', 'kudos-donations'),
             [$customer_id]
         );
 
