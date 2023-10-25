@@ -32,7 +32,7 @@
     "phpcompatibility/phpcompatibility-wp": "*",
     "phpcompatibility/php-compatibility": "^9.3",
     "filp/whoops": "^2.13",
-    "phpunit/phpunit": "8.*"
+    "phpunit/phpunit": "10.*"
   },
   "scripts": {
     "build-production": [
