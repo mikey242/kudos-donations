@@ -6,7 +6,8 @@
       "php": "7.2.9"
     },
     "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
     }
   },
   "require": {
@@ -16,7 +17,7 @@
     "monolog/monolog": "^2.0",
     "twig/twig": "^3.0",
     "ext-json": "*",
-    "php": "^7.2 | ^8.0",
+    "php": "^7.2",
     "psr/log": "1.1.*",
     "woocommerce/action-scheduler": "^3.1",
     "php-di/php-di": "^6.3",
