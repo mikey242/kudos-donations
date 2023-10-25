@@ -9,8 +9,8 @@ const MollieApiModePanel = (props) => {
 
     const [isBusy, setIsBusy] = useState(false)
 
-    const vendorMollie = props.settings._kudos_vendor_mollie
-    const selected = vendorMollie['mode']
+    const vendorMollie = props.settings?._kudos_vendor_mollie
+    const selected = vendorMollie?.['mode'] ?? 'test'
 
     const handleChange = (id, value) => {
         props.handleInputChange(id, value)
@@ -60,7 +60,7 @@ const MollieApiModePanel = (props) => {
                 </PanelRow>
             </BaseControl>
 
-            { vendorMollie.connected ?
+            { vendorMollie?.connected ?
                 <BaseControl
                     help={__("Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.", 'kudos-donations')}
                 >
