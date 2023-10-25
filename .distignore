@@ -82,6 +82,7 @@ tailwind.config.js
 
 # Misc
 README.md
+renovate.json
 rollup.config.js
 scoper.inc.php
 SECURITY.md
