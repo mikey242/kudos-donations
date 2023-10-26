@@ -1,31 +1,35 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: carlosalgms/composer-and-node-ci
-
 before_script:
-  - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
-
+- php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
 cache:
   paths:
-    - dist/
-    - vendor/
-
+  - dist/
+  - vendor/
 stages:
-  - build
-  - deploy
-
+- build
+- deploy
 build-job:
   stage: build
   script:
-    - echo "Building plugin..."
-    - npm install
-    - composer run build-production
-
+  - echo "Building plugin..."
+  - npm install
+  - composer run build-production
 deploy-job:
   stage: deploy
   environment: production
   artifacts:
     paths:
-      - kudos-donations.zip
+    - kudos-donations.zip
   script:
-    - echo "Deploying application..."
-    - composer run make-zip
-    - echo "Application successfully built."
+  - echo "Deploying application..."
+  - composer run make-zip
+  - echo "Application successfully built."
+include:
+- template: Security/Secret-Detection.gitlab-ci.yml
