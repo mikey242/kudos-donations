@@ -16,6 +16,11 @@ stages:
 - test
 - build
 - deploy
+test-job:
+  stage: test
+  artifacts:
+    paths:
+    - gl-sast-report.json
 build-job:
   stage: build
   script:
