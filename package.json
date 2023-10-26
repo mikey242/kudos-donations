@@ -11,7 +11,8 @@
     "production": "mix --production",
     "make-pot": "wp i18n make-pot . --exclude='docker, src, node_modules, vendor'",
     "make-json": "wp i18n make-json languages/ --no-purge",
-    "export": "composer run release"
+    "export": "composer run release",
+    "wp-env": "wp-env"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
