@@ -19,6 +19,7 @@ stages:
 test-job:
   stage: test
   artifacts:
+    name: sast
     paths:
     - gl-sast-report.json
 build-job:
