@@ -13,6 +13,7 @@ cache:
   - dist/
   - vendor/
 stages:
+- secret_detection
 - build
 - deploy
 build-job:
