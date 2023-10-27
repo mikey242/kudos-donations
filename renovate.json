@@ -4,6 +4,6 @@
     "local>renovate/renovate-config"
   ],
   "constraints": {
-    "php": "^7.2"
+    "php": "< 7.3"
   }
 }
