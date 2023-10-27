@@ -3,5 +3,5 @@
   "extends": [
     "local>renovate/renovate-config"
   ],
-  "composerIgnorePlatformReqs": null,
+  "composerIgnorePlatformReqs": null
 }
