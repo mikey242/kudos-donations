@@ -1,6 +1,9 @@
 {
   "name": "iseard-media/kudos-donations",
-  "description": "",
+  "description": "A modern and easy to use donation plugin for WordPress.",
+  "type": "wordpress-plugin",
+  "prefer-stable": true,
+  "minimum-stability": "dev",
   "config": {
     "platform": {
       "php": "7.2.5"
@@ -11,6 +14,7 @@
     }
   },
   "require": {
+    "php": ">=7.2.5",
     "symfony/polyfill-mbstring": "1.28.*",
     "symfony/polyfill-ctype": "1.28.*",
     "mollie/mollie-api-php": "^2.32.0",
