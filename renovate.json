@@ -3,7 +3,5 @@
   "extends": [
     "renovate/renovate-config"
   ],
-  "constraints": {
-    "php": "^7.4"
-  }
+  "composerIgnorePlatformReqs": null
 }
