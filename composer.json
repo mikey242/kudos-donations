@@ -23,7 +23,7 @@
     "php-di/invoker": "^2.0",
     "php-di/php-di": "^6.3",
     "psr/log": "1.1.*",
-    "symfony/config": "^5.3",
+    "symfony/config": "^6.0",
     "symfony/polyfill-ctype": "1.28.*",
     "symfony/polyfill-mbstring": "1.28.*",
     "twig/twig": "^3.0",
