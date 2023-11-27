@@ -17,7 +17,6 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Throwable;
 use Twig\Environment;
-use Twig\Error\LoaderError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
@@ -26,11 +25,9 @@ use Twig\TwigFunction;
 class TwigService {
 
 	public const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
-	public array $template_paths;
 	private Environment $twig;
 	private array $options;
 	private LoggerInterface $logger;
-	private FilesystemLoader $loader;
 
 	/**
 	 * Twig constructor
@@ -39,48 +36,19 @@ class TwigService {
 	 */
 	public function __construct( LoggerInterface $logger_service ) {
 		$this->logger           = $logger_service;
-		$this->template_paths   = [ KUDOS_PLUGIN_DIR . '/templates/' ];
 		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
 		$this->options['debug'] = KUDOS_DEBUG;
-		$this->loader           = new FilesystemLoader();
-		$this->initialize_twig();
-	}
 
-	/**
-	 * Initialize environment and loaders.
-	 */
-	public function initialize_twig(): void {
-		$paths  = apply_filters( 'kudos_twig_template_paths', $this->template_paths );
-		$loader = $this->loader;
-
-		foreach ( $paths as $namespace => $path ) {
-			$this->add_path( $path, $namespace );
-		}
-
-		$this->twig = new Environment( $loader, $this->options );
+		$this->twig = new Environment(
+			new FilesystemLoader(
+				apply_filters( 'kudos_twig_template_paths', [ KUDOS_PLUGIN_DIR . 'templates/' ] )
+			),
+			$this->options
+		);
 
 		$this->initialize_twig_extensions();
 		$this->initialize_twig_functions();
 		$this->initialize_twig_filters();
-	}
-
-	/**
-	 * Add path to templates.
-	 *
-	 * @param string      $path Path to add.
-	 * @param string|null $twig_namespace Namespace to use.
-	 */
-	public function add_path( string $path, ?string $twig_namespace = null ): void {
-		$loader = $this->loader;
-		try {
-			if ( \is_string( $twig_namespace ) ) {
-				$loader->setPaths( $path, $twig_namespace );
-			} else {
-				$loader->addPath( $path );
-			}
-		} catch ( LoaderError $e ) {
-			$this->logger->error( $e->getMessage() );
-		}
 	}
 
 	/**
