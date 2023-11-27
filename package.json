@@ -14,7 +14,8 @@
     "wp-env": "wp-env",
     "make-pot": "wp i18n make-pot . --exclude='src'",
     "make-json": "wp i18n make-json languages/ --no-purge",
-    "follow-log": "source ./.env && tail -f -n 200 ./uploads/logs/$APP_ENV.log"
+    "follow-log": "source ./.env && tail -f -n 200 ./uploads/logs/$APP_ENV.log",
+    "serveo": "ssh -R 80:localhost:8888 serveo.net"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
