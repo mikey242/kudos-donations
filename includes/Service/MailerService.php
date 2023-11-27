@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -126,7 +127,7 @@ class MailerService {
 				$transaction_meta['value'][0],
 				2
 			),
-			'receipt_id'   => $transaction_meta['order_id'][0],
+			'receipt_id'   => TransactionPostType::get_formatted_id( $transaction_id ),
 			'website_name' => get_bloginfo( 'name' ),
 		];
 
