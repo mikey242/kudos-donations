@@ -154,10 +154,9 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	 * Returns the total donated by the specified donor.
 	 *
 	 * @param int $donor_id The post ID of the donor.
-	 * @return float|int
 	 */
 	public static function get_total( int $donor_id ): int {
-		$transactions = TransactionPostType::get_by_meta(
+		$transactions = TransactionPostType::get_posts(
 			[
 				TransactionPostType::META_FIELD_DONOR_ID => $donor_id,
 				TransactionPostType::META_FIELD_STATUS   => PaymentStatus::PAID,

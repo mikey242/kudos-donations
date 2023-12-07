@@ -221,7 +221,7 @@ class Payment extends AbstractRestController {
 			];
 
 			// Search for existing donor based on email and mode.
-			$donor = DonorPostType::get_one_by_meta(
+			$donor = DonorPostType::get_post(
 				[
 					DonorPostType::META_FIELD_EMAIL => $args['email'],
 					DonorPostType::META_FIELD_MODE  => $this->vendor->get_api_mode(),
@@ -236,16 +236,31 @@ class Payment extends AbstractRestController {
 
 			// Update or create donor.
 			$donor = DonorPostType::save(
-				[
-					'ID' => $donor->ID ?? 0,
-				],
-				$donor_meta
+				array_merge(
+					[
+						'ID' => $donor->ID ?? null,
+					],
+					$donor_meta
+				)
 			);
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
 		$vendor_customer_id = get_post_meta( $donor->ID, DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID, true ) ?? null;
-		$transaction        = TransactionPostType::save();
+		$transaction        = TransactionPostType::save(
+			[
+				TransactionPostType::META_FIELD_DONOR_ID => $donor->ID ?? null,
+				TransactionPostType::META_FIELD_VALUE    => $args['value'],
+				TransactionPostType::META_FIELD_CURRENCY => $args['currency'],
+				TransactionPostType::META_FIELD_STATUS   => 'open',
+				TransactionPostType::META_FIELD_MODE     => $this->vendor->get_api_mode(),
+				TransactionPostType::META_FIELD_SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
+				TransactionPostType::META_FIELD_CAMPAIGN_ID => (int) $args['campaign_id'],
+				TransactionPostType::META_FIELD_MESSAGE  => $args['message'],
+				TransactionPostType::META_FIELD_VENDOR   => $this->vendor::get_vendor_slug(),
+				TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID => $vendor_customer_id,
+			]
+		);
 		$url                = $this->vendor->create_payment( $args, $transaction->ID, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created in Mollie.
@@ -256,19 +271,8 @@ class Payment extends AbstractRestController {
 				[
 					'ID'         => $transaction->ID,
 					'post_title' => $title,
+
 				],
-				[
-					TransactionPostType::META_FIELD_DONOR_ID => $donor->ID ?? null,
-					TransactionPostType::META_FIELD_VALUE  => $args['value'],
-					TransactionPostType::META_FIELD_CURRENCY => $args['currency'],
-					TransactionPostType::META_FIELD_STATUS => 'open',
-					TransactionPostType::META_FIELD_MODE   => $this->vendor->get_api_mode(),
-					TransactionPostType::META_FIELD_SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
-					TransactionPostType::META_FIELD_CAMPAIGN_ID => (int) $args['campaign_id'],
-					TransactionPostType::META_FIELD_MESSAGE => $args['message'],
-					TransactionPostType::META_FIELD_VENDOR => $this->vendor::get_vendor_slug(),
-					TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID => $vendor_customer_id,
-				]
 			);
 
 			// Send payment redirect URL.
@@ -305,9 +309,9 @@ class Payment extends AbstractRestController {
 
 		if ( $result ) {
 			// Update entity with canceled status.
-			SubscriptionPostType::update_meta(
-				$id,
+			SubscriptionPostType::save(
 				[
+					'ID' => $id,
 					SubscriptionPostType::META_FIELD_STATUS => 'cancelled',
 				]
 			);
@@ -315,7 +319,7 @@ class Payment extends AbstractRestController {
 			$this->logger->info(
 				'Subscription cancelled.',
 				[
-					'id'              => $id,
+					'ID'              => $id,
 					'subscription_id' => get_post_meta( $id, 'subscription_id', true ),
 				]
 			);

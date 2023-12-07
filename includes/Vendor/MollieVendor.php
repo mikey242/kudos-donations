@@ -625,7 +625,6 @@ class MollieVendor extends AbstractService implements VendorInterface
                 $customer     = $mollie->customers->get($payment->customerId);
                 $subscription = $customer->getSubscription($payment->subscriptionId);
                 $transaction  = TransactionPostType::save(
-					[],
 					[
 	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $subscription->metadata->campaign_id ?? '',
                     ]
@@ -651,8 +650,9 @@ class MollieVendor extends AbstractService implements VendorInterface
             }
 
             // Update transaction status.
-	        TransactionPostType::update_meta($transaction->ID, [
-		        TransactionPostType::META_FIELD_STATUS => $payment->status
+	        TransactionPostType::save([
+				'ID' => $transaction->ID,
+				TransactionPostType::META_FIELD_STATUS => $payment->status
 	        ]);
 
             // Create action with order_id as parameter.
@@ -670,7 +670,8 @@ class MollieVendor extends AbstractService implements VendorInterface
                 }
 
                 // Update transaction.
-	            TransactionPostType::update_meta($transaction->ID, [
+	            TransactionPostType::save([
+					'ID' => $transaction->ID,
 		            TransactionPostType::META_FIELD_STATUS                => $payment->status,
 		            TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID     => $payment->id,
 		            TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID    => $payment->customerId,
@@ -848,7 +849,7 @@ class MollieVendor extends AbstractService implements VendorInterface
     public function sync_transactions(): int
     {
         $updated = 0;
-        $donors = DonorPostType::get_all();
+        $donors = DonorPostType::get_posts();
         foreach ($donors as $donor) {
             $vendor_id = $donor->vendor_id;
             if ($donor->mode !== $this->api_mode) {
@@ -866,15 +867,9 @@ class MollieVendor extends AbstractService implements VendorInterface
                             /**
                              * Find existing transaction.
                              */
-                            $transaction = TransactionPostType::get_by_meta_query([
-								[
-									'key' => TransactionPostType::META_FIELD_ORDER_ID,
-									'value' => $order_id
-								],
-								[
-									'key' => 'status',
-									'value' => 'open'
-								]
+                            $transaction = TransactionPostType::get_post([
+								TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID => $order_id,
+								TransactionPostType::META_FIELD_STATUS => 'open'
                             ]);
 
                             if ($transaction) {

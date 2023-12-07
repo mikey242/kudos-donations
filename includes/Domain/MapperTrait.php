@@ -11,107 +11,32 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain;
 
-use WP_Error;
 use WP_Post;
 
 trait MapperTrait {
 
 	/**
-	 * Returns the slug of the current post type.
-	 */
-	abstract public static function get_slug(): string;
-
-	/**
 	 * The default arguments.
 	 */
-	public static function get_default_args(): array {
+	private static function get_default_args(): array {
 		return [
-			'post_type'   => static::get_slug(),
-			'post_status' => 'publish',
+			'post_title'   => '',
+			'post_content' => '',
+			'post_type'    => self::get_post_type(),
+			'post_status'  => 'publish',
+			'post_author'  => '',
 		];
 	}
 
 	/**
-	 * Gets all posts for current post type.
+	 * Gets the current post type.
 	 */
-	public static function get_all(): array {
-		return get_posts( self::get_default_args() );
-	}
-
-	/**
-	 * Gets posts by simple key => value args.
-	 *
-	 * @param array  $meta_args Array of key => value meta args.
-	 * @param string $relation AND / OR relation between values.
-	 */
-	public static function get_one_by_meta( array $meta_args, string $relation = 'AND' ): ?WP_Post {
-		$args = array_merge(
-			self::get_default_args(),
-			[
-				'posts_per_page' => 1,
-				'relation'       => $relation,
-			]
-		);
-
-		foreach ( $meta_args as $key => $value ) {
-			$args['meta_query'][] = [
-				'key'   => $key,
-				'value' => $value,
-			];
-		}
-
-		$posts = get_posts( $args );
-		if ( $posts ) {
-			return $posts[0];
-		}
-
-		return null;
-	}
-	/**
-	 * Gets posts by simple key => value args.
-	 *
-	 * @param array  $meta_args Array of key => value meta args.
-	 * @param string $relation AND / OR relation between values.
-	 */
-	public static function get_by_meta( array $meta_args, string $relation = 'AND' ): array {
-		$args = array_merge(
-			self::get_default_args(),
-			[
-				'posts_per_page' => -1,
-				'relation'       => $relation,
-			]
-		);
-
-		foreach ( $meta_args as $key => $value ) {
-			$args['meta_query'][] = [
-				'key'   => $key,
-				'value' => $value,
-			];
-		}
-
-		return get_posts( $args );
-	}
-
-	/**
-	 * Pass a more advanced meta query.
-	 *
-	 * @param array  $meta_args Meta args @see https://developer.wordpress.org/reference/classes/wp_meta_query/#accepted-arguments.
-	 * @param string $relation AND / OR relation between values.
-	 */
-	public static function get_by_meta_query( array $meta_args = [], string $relation = 'AND' ): ?array {
-
-		$args = array_merge(
-			self::get_default_args(),
-			[
-				'posts_per_page' => -1,
-				'meta_query'     => [
-					'relation' => $relation,
-					$meta_args,
-				],
-			]
-		);
-
-		return get_posts( $args );
+	private static function get_post_type(): string {
+		return \in_array(
+			ContentTypeInterface::class,
+			class_implements( static::class ),
+			true
+		) ? static::get_slug() : 'post';
 	}
 
 	/**
@@ -121,8 +46,8 @@ trait MapperTrait {
 	 * @param string $end End date.
 	 */
 	public static function get_all_between( string $start, string $end ): array {
-		$args = array_merge(
-			self::get_default_args(),
+
+		$args = self::prepare_arguments(
 			[
 				'posts_per_page' => -1,
 				'date_query'     => [
@@ -135,48 +60,127 @@ trait MapperTrait {
 			]
 		);
 
-		return get_posts( $args );
+		return get_posts( $args['post_data'] );
+	}
+
+	/**
+	 * Gets posts by simple [key => value] args. Returns all posts of parent type if args empty.
+	 *
+	 * @param array  $args Array of [key => value] args.
+	 * @param string $meta_relation AND / OR relation between meta values.
+	 * @return WP_Post[]|int[] Array of post objects or post IDs.
+	 */
+	public static function get_posts( array $args = [], string $meta_relation = 'AND' ): array {
+
+		$prepared_args = self::prepare_arguments(
+			array_merge(
+				[
+					'posts_per_page' => -1,
+					'relation'       => $meta_relation,
+				],
+				$args
+			)
+		);
+
+		$query = $prepared_args['post_data'];
+
+		foreach ( $prepared_args['meta_data'] as $key => $value ) {
+			$query['meta_query'][] = [
+				'key'   => $key,
+				'value' => $value,
+			];
+		}
+
+		return get_posts( array_filter( $query ) );
+	}
+
+	/**
+	 * Gets a single post by simple [key => value] args.
+	 *
+	 * @param array  $args Array of key => value meta args.
+	 * @param string $relation AND / OR relation between values.
+	 */
+	public static function get_post( array $args, string $relation = 'AND' ): ?WP_Post {
+
+		// Return post using WordPress get_post() if ID present.
+		if ( isset( $args['ID'] ) && $args['ID'] > 0 ) {
+			return get_post( $args['ID'] );
+		}
+
+		$posts = static::get_posts( $args, $relation );
+		if ( $posts ) {
+			return $posts[0];
+		}
+
+		return null;
 	}
 
 	/**
 	 * Create or update a post.
 	 *
-	 * @param array $post_data Array of post fields @see https://developer.wordpress.org/reference/functions/wp_insert_post/#parameters.
-	 * @param array $post_meta Array of meta fields.
-	 * @param bool  $wp_error Whether to return a WP_Error on failure.
+	 * @see https://developer.wordpress.org/reference/functions/wp_insert_post/#parameters.
+	 *
+	 * @param array $args Array of post fields and meta.
 	 */
-	public static function save( array $post_data = [], array $post_meta = [], bool $wp_error = false ): ?WP_Post {
+	public static function save( array $args = [] ): ?WP_Post {
 
-		// Merge incoming arguments with defaults.
-		$post_data = array_merge( self::get_default_args(), $post_data );
+		$post_id = isset( $args['ID'] ) ? absint( $args['ID'] ) : 0;
 
-		if ( isset( $post_data['ID'] ) && $post_data['ID'] > 0 ) {
-			// Update post.
-			$post_id = wp_update_post( $post_data );
+		// Prepare post data.
+		$post_data = self::prepare_arguments( $args );
+
+		// Save or update post.
+		if ( $post_id ) {
+			wp_update_post( $post_data['post_data'] );
 		} else {
-			// Create new post.
-			$post_id = wp_insert_post( $post_data, $wp_error );
+			$post_id = wp_insert_post( $post_data['post_data'] );
 		}
 
-		return self::update_meta( $post_id, $post_meta );
+		// Update meta.
+		self::save_meta_data( $post_id, $post_data );
+
+		// Return post object or null.
+		return get_post( $post_id );
 	}
 
 	/**
-	 * Update the meta.
+	 * Adds defaults and sorts arguments by post_data and meta_data (if applicable).
 	 *
-	 * @param int|WP_Error $post_id Post ID.
-	 * @param array        $post_meta Post meta.
+	 * @param array $args Array of arguments to sort.
+	 * @return array{post_data: array, meta_data: array}
 	 */
-	public static function update_meta( $post_id, array $post_meta ): ?WP_Post {
-		// If something went wrong, return null.
-		if ( 0 === $post_id || $post_id instanceof WP_Error ) {
-			return null;
+	private static function prepare_arguments( array $args ): array {
+		if ( \in_array( HasMetaFieldsInterface::class, class_implements( static::class ), true ) ) {
+			/**
+			 * HasMetaFieldsInterface is implemented.
+			 *
+			 * @var HasMetaFieldsInterface $current_class
+			 */
+			$current_class = static::class;
+			$meta_config   = $current_class::get_meta_config();
+			$meta_data     = array_intersect_key( $args, $meta_config );
+			$post_data     = array_diff_key( $args, $meta_config );
 		}
 
-		foreach ( $post_meta as $key => $value ) {
-			update_post_meta( $post_id, $key, $value );
-		}
+		return [
+			'post_data' => wp_parse_args( $post_data ?? $args, self::get_default_args() ),
+			'meta_data' => $meta_data ?? [],
+		];
+	}
 
-		return get_post( $post_id );
+	/**
+	 * Saves meta values for the specified post.
+	 *
+	 * @param int   $post_id The post id to use.
+	 * @param array $args Array of meta fields and values.
+	 */
+	private static function save_meta_data( int $post_id, array $args ): void {
+		// Check if custom meta fields are provided.
+		if ( isset( $args['meta_data'] ) && \is_array( $args['meta_data'] ) ) {
+			foreach ( $args['meta_data'] as $meta_key => $meta_value ) {
+				// Sanitize and save meta value.
+				update_post_meta( $post_id, sanitize_key( $meta_key ), $meta_value );
+			}
+		}
 	}
 }

@@ -258,7 +258,7 @@ class Front extends AbstractService {
 					$subscription_id = sanitize_text_field( $_REQUEST['kudos_subscription_id'] );
 					// Cancel subscription modal.
 					if ( ! empty( $nonce && ! empty( $subscription_id ) ) ) {
-						$subscription = SubscriptionPostType::get_one_by_meta(
+						$subscription = SubscriptionPostType::get_post(
 							[
 								'subscription_id' => $subscription_id,
 							]

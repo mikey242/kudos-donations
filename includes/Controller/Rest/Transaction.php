@@ -86,7 +86,7 @@ class Transaction extends AbstractRestController {
 	 */
 	public function get_all(): WP_REST_Response {
 		return new WP_REST_Response(
-			TransactionPostType::get_by_meta(
+			TransactionPostType::get_posts(
 				[ TransactionPostType::META_FIELD_STATUS => PaymentStatus::PAID ]
 			)
 		);
@@ -111,7 +111,7 @@ class Transaction extends AbstractRestController {
 				return $response;
 			}
 
-			$response->set_data( TransactionPostType::get_all() );
+			$response->set_data( TransactionPostType::get_posts() );
 
 			return $response;
 		}
