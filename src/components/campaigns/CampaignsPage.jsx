@@ -81,12 +81,14 @@ const CampaignsPage = () => {
 			title: __('Progress', 'kudos-donations'),
 			headerClass: 'min-w-[13rem]',
 			dataCallback: (i) => {
-				return (
+				return posts[i].meta?.goal > 0 ? (
 					<ProgressBar
 						goal={posts[i].meta?.goal}
 						total={posts[i].total}
 						showGoal={false}
 					/>
+				) : (
+					<i>{__('No goal set', 'kudos-donations')}</i>
 				);
 			},
 		},
