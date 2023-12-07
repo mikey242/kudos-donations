@@ -88,7 +88,7 @@ const CampaignsPage = () => {
 						showGoal={false}
 					/>
 				) : (
-					<i>{__('No goal set', 'kudos-donations')}</i>
+					'€' + posts[i].total
 				);
 			},
 		},
