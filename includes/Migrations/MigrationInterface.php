@@ -9,18 +9,16 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Service\SettingsService;
-use Psr\Log\LoggerInterface;
+use IseardMedia\Kudos\Helper\WpDb;
 
 interface MigrationInterface {
 
 	/**
 	 * Migration constructor.
 	 *
-	 * @param LoggerInterface $logger Logger instance.
-	 * @param SettingsService $settings Settings instance.
+	 * @param WpDb $wpdb WordPress database object.
 	 */
-	public function __construct( LoggerInterface $logger, SettingsService $settings );
+	public function __construct( WpDb $wpdb );
 
 	/**
 	 * Run the migrations and return true if successful.

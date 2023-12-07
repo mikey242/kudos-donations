@@ -11,8 +11,8 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Service;
 
-use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
+use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use Psr\Log\LoggerInterface;
 
@@ -21,24 +21,41 @@ class MigratorService {
 	private const MIGRATE_ACTION = 'kudos_migrate_action';
 	private LoggerInterface $logger;
 	private SettingsService $settings;
+	private WpDb $wpdb;
+	private string $current_version;
+	private string $target_version;
+	private array $migrations = [];
 
 	/**
 	 * Migrator service constructor.
 	 *
 	 * @param LoggerInterface $logger Logger instance.
 	 * @param SettingsService $settings Settings service.
+	 * @param WpDb            $wpdb WordPress database object.
 	 */
-	public function __construct( LoggerInterface $logger, SettingsService $settings ) {
-		$this->settings = $settings;
-		$this->logger   = $logger;
+	public function __construct( LoggerInterface $logger, SettingsService $settings, WpDb $wpdb ) {
+		$this->settings        = $settings;
+		$this->logger          = $logger;
+		$this->wpdb            = $wpdb;
+		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION, '3.0.0' );
+		$this->target_version  = KUDOS_DB_VERSION;
 		add_action( 'kudos_donations_loaded', [ $this, 'process_form_data' ] );
 	}
 
 	/**
-	 * Process form data for performing migrations.
+	 * Add migration to list.
+	 *
+	 * @param string $migration The migration to add.
+	 */
+	public function add_migration( string $migration ): void {
+		$this->migrations[] = $migration;
+	}
+
+	/**
+	 * Runs when the migrate form is submitted.
 	 */
 	public function process_form_data(): void {
-		if ( isset( $_REQUEST['kudos_migrate_action'] ) ) {
+		if ( isset( $_REQUEST[ self::MIGRATE_ACTION ] ) ) {
 			$action = sanitize_text_field( wp_unslash( $_REQUEST[ self::MIGRATE_ACTION ] ) );
 			$nonce  = wp_unslash( $_REQUEST['_wpnonce'] );
 
@@ -46,22 +63,34 @@ class MigratorService {
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {
 				die();
 			}
-			$this->settings->update_setting( SettingsService::SETTING_NAME_DB_VERSION, KUDOS_DB_VERSION );
+
+			$this->discover_migrations();
+			$this->run_migrations();
 		}
 	}
 
 	/**
-	 * Check database version number.
+	 * Run the migrations in $migrations.
+	 */
+	private function run_migrations(): void {
+		$this->logger->debug( 'Processing migrations.', $this->migrations );
+		foreach ( $this->migrations as $migration ) {
+			$class_name = basename( $migration, '.php' );
+			$migration  = 'IseardMedia\\Kudos\\Migrations\\' . $class_name;
+			if ( ! class_exists( $migration ) || ! is_subclass_of( $migration, MigrationInterface::class ) ) {
+				continue;
+			}
+			$instance = new $migration( $this->wpdb );
+			$instance->run();
+		}
+		update_option( SettingsService::SETTING_NAME_DB_VERSION, KUDOS_DB_VERSION );
+	}
+
+	/**
+	 * Check database version number and add admin notice to update if necessary.
 	 */
 	public function check_database(): bool {
-		$db_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION );
-
-		// Make sure that old versions of kudos start at base version.
-		if ( ! $db_version ) {
-			$db_version = '3.0.0';
-		}
-
-		if ( version_compare( $db_version, KUDOS_DB_VERSION, '<' ) ) {
+		if ( version_compare( $this->current_version, $this->target_version, '<' ) ) {
 			$this->add_admin_notice();
 			return false;
 		}
@@ -80,38 +109,27 @@ class MigratorService {
 		$form .= '</form>';
 		( new AdminNotice() )->info(
 			__(
-				'Kudos Donations database needs updating before you can continue. Please make sure you backup your data before proceeding.',
+				'Kudos Donations needs to update your database before you can continue. Please make sure you backup your data before proceeding.',
 				'kudos-donations'
-			) . $form
+			) . '<p>From <strong>' . $this->current_version . '</strong> to <strong>' . KUDOS_DB_VERSION . '</strong></p>' . $form
 		);
 	}
 
 	/**
-	 * Run the migration for the specified version.
-	 *
-	 * @throws Exception Thrown if migration not found.
-	 *
-	 * @param string $version Version to run.
-	 * @param bool   $force Force migration (even if already run).
+	 * Find migrations and add relevant ones to $this->migrations.
 	 */
-	public function migrate( string $version, bool $force = false ): void {
-		// Remove dots from version.
-		$version = str_replace( '.', '', $version );
+	public function discover_migrations() {
+		$migration_files = glob( KUDOS_PLUGIN_DIR . 'includes/Migrations/*.php' );
 
-		// Check if migration exists and is valid.
-		$migration = __NAMESPACE__ . '\\Version' . $version;
-		if ( ! class_exists( $migration ) && ! $migration instanceof MigrationInterface ) {
-			throw new Exception( wp_sprintf( 'Migration %s not found or invalid.', \intval( $version ) ) );
+		foreach ( $migration_files as $migration ) {
+			$file_name  = basename( $migration, '.php' );
+			$candidates = (int) filter_var( $file_name, FILTER_SANITIZE_NUMBER_INT );
+			if ( $candidates ) {
+				$candidate_version = implode( '.', str_split( (string) $candidates ) );
+				if ( version_compare( $candidate_version, $this->target_version, '<=' ) && version_compare( $candidate_version, $this->current_version, '>' ) ) {
+					$this->add_migration( $file_name );
+				}
+			}
 		}
-
-		// Check if migration already run.
-		$migrations = get_option( '_kudos_migration_history' );
-		$library    = \is_array( $migrations ) ? array_flip( $migrations ) : '';
-		if ( ! $force && isset( $library[ $version ] ) ) {
-			throw new Exception( wp_sprintf( 'Migration %s already performed.', \intval( $version ) ) );
-		}
-
-		$type = new $migration( $this->logger );
-		$type->run();
 	}
 }

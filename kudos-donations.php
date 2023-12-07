@@ -32,7 +32,7 @@ if ( ! \defined( 'WPINC' ) ) {
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
 \define( 'KUDOS_VERSION', '4.0.0-beta-6' );
-\define( 'KUDOS_DB_VERSION', '4.0.0-beta-6' );
+\define( 'KUDOS_DB_VERSION', '4.0.0' );
 \define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 \define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 \define( 'KUDOS_PLUGIN_FILE', __FILE__ );

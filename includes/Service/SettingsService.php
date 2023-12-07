@@ -26,6 +26,7 @@ class SettingsService extends AbstractService {
 	public const SETTING_NAME_DEBUG_MODE           = '_kudos_debug_mode';
 	public const SETTING_NAME_ALWAYS_LOAD_ASSETS   = '_kudos_always_load_assets';
 	public const SETTING_NAME_DB_VERSION           = '_kudos_db_version';
+	public const SETTING_NAME_MIGRATION_HISTORY    = '_kudos_migration_history';
 
 	/**
 	 * {@inheritDoc}

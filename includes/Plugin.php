@@ -62,8 +62,8 @@ class Plugin {
 	 * Runs checks to ensure plugin ready to run.
 	 */
 	private function plugin_ready(): bool {
-		$database = $this->migrator_service->check_database();
-		if ( ! $database ) {
+		$skip_migration = $this->migrator_service->check_database();
+		if ( ! $skip_migration ) {
 			return false;
 		}
 		return true;
