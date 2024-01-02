@@ -121,6 +121,7 @@ class Front extends AbstractService {
 			add_action(
 				'wp_footer',
 				function () use ( $args, $id ): void {
+					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo $this->form_html( $id, $args );
 				}
 			);
