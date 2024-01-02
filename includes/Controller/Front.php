@@ -121,7 +121,7 @@ class Front extends AbstractService {
 			add_action(
 				'wp_footer',
 				function () use ( $args, $id ): void {
-					$this->form_html( $id, $args );
+					echo $this->form_html( $id, $args );
 				}
 			);
 
@@ -129,10 +129,7 @@ class Front extends AbstractService {
 			return $this->button_html( $id, $args );
 		}
 
-			$this->form_html( $id, $args );
-
-		// Nothing displayed to visitors if there is a problem.
-		return null;
+		return $this->form_html( $id, $args );
 	}
 
 	/**
@@ -149,8 +146,8 @@ class Front extends AbstractService {
 	 * @param string $id ID to use for the form.
 	 * @param array  $args Attributes.
 	 */
-	public function form_html( string $id, array $args ): void {
-		echo wp_kses(
+	public function form_html( string $id, array $args ): string {
+		return wp_kses(
 			wp_sprintf(
 				"<div id='form-%s' class='kudos-donations kudos-form' data-display-as='%s' data-campaign='%s' style='display: block'>
 					</div>",
