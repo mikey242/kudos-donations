@@ -24,11 +24,44 @@ trait TableColumnsTrait {
 	protected function add_table_columns( string $post_type, array $column_config ): void {
 
 		if ( ! empty( $column_config ) ) {
+			if ( ! KUDOS_DEBUG ) {
+				$this->remove_actions( $post_type );
+			}
 			$this->config_column_headers( $post_type, $column_config );
 			$this->populate_columns( $post_type, $column_config );
 			$this->make_columns_sortable( $post_type, $column_config );
 			$this->add_column_sorting( $post_type, $column_config );
 		}
+	}
+
+	/**
+	 * Removes several actions from table.
+	 *
+	 * @param string $post_type The post type.
+	 */
+	protected function remove_actions( string $post_type ): void {
+		// Remove bulk actions.
+		add_filter(
+			'bulk_actions-edit-' . $post_type,
+			function ( $actions ) {
+				unset( $actions['edit'] );
+				return $actions;
+			}
+		);
+
+		// Remove row actions.
+		add_filter(
+			'post_row_actions',
+			function ( $actions, $post ) use ( $post_type ) {
+				if ( $post_type === $post->post_type ) {
+					unset( $actions['inline hide-if-no-js'] );
+					unset( $actions['edit'] );
+				}
+				return $actions;
+			},
+			10,
+			2
+		);
 	}
 
 	/**
