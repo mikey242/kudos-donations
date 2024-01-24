@@ -20,37 +20,30 @@ use IseardMedia\Kudos\Enum\ObjectType;
 /**
  * AbstractCustomPostType class.
  */
-abstract class AbstractCustomPostType extends AbstractContentType {
-
-	/**
-	 * Features that the post type should support.
-	 *
-	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#supports
-	 */
-	protected const SUPPORTS = [ 'custom-fields', 'title' ];
+abstract class AbstractCustomPostType extends AbstractContentType implements CustomPostTypeInterface {
 	/**
 	 * Allows changing the capabilities of the CPT. By default, we want to disable post creation by the user.
 	 *
-	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#capabilities
+	 * @see https://developer.wordpress.org/reference/functions/get_post_type_capabilities/
 	 */
-	protected const CAPABILITIES = [ 'create_posts' => false ];
+	protected function get_capabilities(): array {
+		return [ 'create_posts' => false ];
+	}
+
+	/**
+	 * Returns supported features.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#supports
+	 */
+	protected function get_supports(): array {
+		return [ 'custom-fields', 'title' ];
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function register(): void {
-		$this->register_post_type();
-		if ( is_a( $this, HasMetaFieldsInterface::class ) ) {
-			$this->register_meta_fields( $this::get_meta_config(), ObjectType::POST, static::get_slug() );
-		}
-
-		if ( is_a( $this, HasRestFieldsInterface::class ) ) {
-			$this->register_rest_fields( $this::get_rest_fields(), static::get_slug() );
-		}
-
-		if ( is_a( $this, HasAdminColumns::class ) ) {
-			$this->add_table_columns( $this::get_slug(), $this->get_columns_config() );
-		}
+	public function get_args(): array {
+		return array_merge( [ 'supports' => $this->get_supports() ], parent::get_args() );
 	}
 
 	/**
@@ -66,7 +59,18 @@ abstract class AbstractCustomPostType extends AbstractContentType {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_args(): array {
-		return array_merge( [ 'supports' => static::SUPPORTS ], parent::get_args() );
+	public function register(): void {
+		$this->register_post_type();
+		if ( is_a( $this, HasMetaFieldsInterface::class ) ) {
+			$this->register_meta_fields( $this->get_meta_config(), ObjectType::POST, $this->get_slug() );
+		}
+
+		if ( is_a( $this, HasRestFieldsInterface::class ) ) {
+			$this->register_rest_fields( $this->get_rest_fields(), $this->get_slug() );
+		}
+
+		if ( is_a( $this, HasAdminColumns::class ) ) {
+			$this->add_table_columns( $this->get_slug(), $this->get_columns_config() );
+		}
 	}
 }

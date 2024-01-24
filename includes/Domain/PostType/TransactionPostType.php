@@ -18,8 +18,6 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 
 class TransactionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
-	protected const SUPPORTS = [ 'title', 'custom-fields' ];
-
 	/**
 	 * Meta field constants.
 	 */

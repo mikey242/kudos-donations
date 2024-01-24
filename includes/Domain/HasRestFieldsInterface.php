@@ -14,5 +14,5 @@ interface HasRestFieldsInterface {
 	/**
 	 * Get rest fields to register.
 	 */
-	public static function get_rest_fields(): array;
+	public function get_rest_fields(): array;
 }

@@ -19,7 +19,6 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface {
 
 	protected const SHOW_IN_REST = true;
-	protected const CAPABILITIES = [ 'create_posts' => true ];
 
 	/**
 	 * Meta field constants.
@@ -57,6 +56,15 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 * Rest field constants.
 	 */
 	public const REST_FIELD_TOTAL = 'total';
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_capabilities(): array {
+		return [
+			'create_posts' => true,
+		];
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -227,13 +235,13 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_rest_fields(): array {
+	public function get_rest_fields(): array {
 		return [
 			self::REST_FIELD_TOTAL => [
 				'get_callback' => function ( $item ) {
 
 					$campaign_id = $item['id'];
-					return self::get_total( $campaign_id );
+					return $this->get_total( $campaign_id );
 				},
 			],
 		];
@@ -244,7 +252,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 *
 	 * @param int $campaign_id The post ID of the campaign.
 	 */
-	public static function get_total( int $campaign_id ): int {
+	private function get_total( int $campaign_id ): int {
 		$transactions = TransactionPostType::get_posts(
 			[
 				TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_id,
