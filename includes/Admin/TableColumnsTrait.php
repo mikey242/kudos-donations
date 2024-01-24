@@ -24,9 +24,7 @@ trait TableColumnsTrait {
 	protected function add_table_columns( string $post_type, array $column_config ): void {
 
 		if ( ! empty( $column_config ) ) {
-			if ( ! KUDOS_DEBUG ) {
-				$this->remove_actions( $post_type );
-			}
+			$this->remove_actions( $post_type );
 			$this->config_column_headers( $post_type, $column_config );
 			$this->populate_columns( $post_type, $column_config );
 			$this->make_columns_sortable( $post_type, $column_config );
@@ -44,7 +42,9 @@ trait TableColumnsTrait {
 		add_filter(
 			'bulk_actions-edit-' . $post_type,
 			function ( $actions ) {
-				unset( $actions['edit'] );
+				if ( ! KUDOS_DEBUG ) {
+					unset( $actions['edit'] );
+				}
 				return $actions;
 			}
 		);
@@ -54,8 +54,10 @@ trait TableColumnsTrait {
 			'post_row_actions',
 			function ( $actions, $post ) use ( $post_type ) {
 				if ( $post_type === $post->post_type ) {
-					unset( $actions['inline hide-if-no-js'] );
-					unset( $actions['edit'] );
+					if ( ! KUDOS_DEBUG ) {
+						unset( $actions['edit'] );
+					}
+					unset( $actions['inline hide-if-no-js'] ); // Quick edit.
 				}
 				return $actions;
 			},
