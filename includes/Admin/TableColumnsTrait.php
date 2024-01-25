@@ -106,7 +106,7 @@ trait TableColumnsTrait {
 					} else {
 						$meta_field_value = get_post_meta( $post_id, $column_name, true );
 					}
-					$meta_value_type   = $additional_columns[ $column_name ]['value_type'];
+					$meta_value_type   = $additional_columns[ $column_name ]['value_type'] ?? FieldType::STRING;
 					$meta_field_output = $meta_field_value
 						? $this->prepare_values( $meta_value_type, $meta_field_value )
 						: '—';
