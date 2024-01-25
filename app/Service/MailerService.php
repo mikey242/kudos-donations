@@ -16,12 +16,6 @@ use WP_REST_Request;
 class MailerService {
 
 	/**
-	 * From header
-	 *
-	 * @var bool|mixed|void
-	 */
-	private $from;
-	/**
 	 * @var TwigService
 	 */
 	private $twig;
@@ -39,9 +33,6 @@ class MailerService {
 	 */
 	public function __construct( TwigService $twig, MapperService $mapper, LoggerService $logger ) {
 
-		$from_name    = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
-		$from_address = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
-		$this->from   = "From: $from_name " . ' <' . $from_address . '>';
 		$this->twig   = $twig;
 		$this->mapper = $mapper;
 		$this->logger = $logger;
@@ -98,9 +89,10 @@ class MailerService {
 			return false;
 		}
 
+		$this->logger->debug('Receipt emails enabled, preparing email.');
+
 		$bcc = Settings::get_setting( 'email_bcc' );
 
-		$headers[] = $this->from;
 		if ( filter_var( $bcc, FILTER_SANITIZE_EMAIL ) ) {
 			$headers[] = 'bcc: ' . Settings::get_setting( 'email_bcc' );
 		}
@@ -155,7 +147,7 @@ class MailerService {
 			$donor->email,
 			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
-			$headers,
+			[],
 			$attachments
 		);
 	}
@@ -185,6 +177,11 @@ class MailerService {
 		if ( KUDOS_DEBUG ) {
 			add_action( 'wp_mail_failed', [ $this, 'log_error' ] );
 		}
+
+		$from_name    = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
+		$from_address = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
+		$from   = "From: $from_name " . ' <' . $from_address . '>';
+		$headers[] = $from;
 
 		$mail = wp_mail( $to, $subject, $body, $headers, $attachment );
 
@@ -265,9 +262,7 @@ class MailerService {
 			]
 		);
 
-		$headers[] = $this->from;
-
-		return $this->send( $email, $header, $body, $headers );
+		return $this->send( $email, $header, $body );
 	}
 
 	/**
