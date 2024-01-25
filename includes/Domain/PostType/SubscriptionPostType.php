@@ -11,10 +11,11 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\PostType;
 
+use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 
-class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface {
+class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
 	/**
 	 * Meta field constants.
@@ -92,6 +93,46 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 			self::META_FIELD_SUBSCRIPTION_ID => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
+			],
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_columns_config(): array {
+		return [
+			'donor'                    => [
+				'value_type' => FieldType::EMAIL,
+				'label'      => __( 'Donor', 'kudos-donations' ),
+				'value'      => function ( $subscription_id ) {
+					$transaction_id = get_post_meta( $subscription_id, SubscriptionPostType::META_FIELD_TRANSACTION_ID, true );
+					if ( $transaction_id ) {
+						$donor_id = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true );
+						if ( $donor_id ) {
+							return get_post_meta( $donor_id, DonorPostType::META_FIELD_EMAIL, true );
+						}
+					}
+					return null;
+				},
+			],
+			'ID'                       => [
+				'value_type' => FieldType::STRING,
+				'value'      => function ( $subscription_id ) {
+					return static::get_formatted_id( $subscription_id );
+				},
+			],
+			self::META_FIELD_VALUE     => [
+				'value_type' => FieldType::INTEGER,
+				'label'      => __( 'Amount', 'kudos-donations' ),
+			],
+			self::META_FIELD_FREQUENCY => [
+				'value_type' => FieldType::INTEGER,
+				'label'      => __( 'Frequency', 'kudos-donations' ),
+			],
+			self::META_FIELD_YEARS     => [
+				'value_type' => FieldType::INTEGER,
+				'label'      => __( 'Length', 'kudos-donations' ),
 			],
 		];
 	}
