@@ -690,7 +690,7 @@ class MollieVendor extends AbstractService implements VendorInterface
                         $transaction,
                         $payment->mandateId,
                         $payment->metadata->interval,
-                        $payment->metadata->years
+	                    (int) $payment->metadata->years
                     );
                 }
             } elseif ($payment->hasRefunds()) {
@@ -731,11 +731,6 @@ class MollieVendor extends AbstractService implements VendorInterface
     /**
      * Creates a subscription based on the provided transaction
      *
-     * @param WP_Post $transaction
-     * @param string $mandate_id
-     * @param string $interval
-     * @param int $years
-     *
      * @return false|Subscription
      */
     public function create_subscription(
@@ -748,7 +743,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 		$customer_id = get_post_meta($donor->ID, DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID, true);
         $start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
         $currency    = 'EUR';
-        $value       = number_format(get_post_meta($transaction->ID, TransactionPostType::META_FIELD_VALUE, 'true'), 2);
+        $value       = number_format((int) get_post_meta($transaction->ID, TransactionPostType::META_FIELD_VALUE, 'true'), 2);
 
         $subscription_array = [
             'amount'      => [
@@ -786,7 +781,7 @@ class MollieVendor extends AbstractService implements VendorInterface
         if ($valid_mandate) {
             try {
                 $subscription       = $customer->createSubscription($subscription_array);
-				$kudos_subscription = SubscriptionPostType::save([
+				SubscriptionPostType::save([
 					SubscriptionPostType::META_FIELD_STATUS => $subscription->status,
 					SubscriptionPostType::META_FIELD_FREQUENCY => $interval,
 					SubscriptionPostType::META_FIELD_YEARS => $years,
