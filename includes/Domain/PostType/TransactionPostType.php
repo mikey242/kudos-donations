@@ -158,6 +158,10 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Amount', 'kudos-donations' ),
 			],
+			self::META_FIELD_CURRENCY          => [
+				'value_type' => FieldType::STRING,
+				'label'      => __( 'Currency', 'kudos-donations' ),
+			],
 			self::META_FIELD_CAMPAIGN_ID       => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Campaign', 'kudos-donations' ),
@@ -171,10 +175,6 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					}
 					return null;
 				},
-			],
-			self::META_FIELD_CURRENCY          => [
-				'value_type' => FieldType::STRING,
-				'label'      => __( 'Currency', 'kudos-donations' ),
 			],
 			self::META_FIELD_STATUS            => [
 				'value_type' => FieldType::STRING,
