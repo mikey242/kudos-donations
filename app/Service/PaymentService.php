@@ -350,12 +350,12 @@ class PaymentService {
 			'redirectUrl'  => $redirect_url,
 			'webhookUrl'   => $this->vendor->get_webhook_url(),
 			'sequenceType' => $sequence_type,
-			'description'  => sprintf(
+			'description'  => apply_filters('kudos_payment_description', sprintf(
 			/* translators: %s: The order id */
 				__( 'Kudos Donation (%1$s) - %2$s', 'kudos-donations' ),
 				$frequency_text,
 				$order_id
-			),
+			), $frequency_text, $order_id),
 			'metadata'     => [
 				'order_id'    => $order_id,
 				'interval'    => $interval,
