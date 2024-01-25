@@ -17,8 +17,6 @@ use IseardMedia\Kudos\Infrastructure\Registrable;
 
 abstract class AbstractAdminPage implements AdminPageInterface, Registrable, Delayed {
 
-	use TableColumnsTrait;
-
 	/**
 	 * {@inheritDoc}
 	 */
