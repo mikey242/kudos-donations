@@ -37,7 +37,7 @@ trait TableColumnsTrait {
 	 *
 	 * @param string $post_type The post type.
 	 */
-	protected function remove_actions( string $post_type ): void {
+	private function remove_actions( string $post_type ): void {
 		// Remove bulk actions.
 		add_filter(
 			'bulk_actions-edit-' . $post_type,
