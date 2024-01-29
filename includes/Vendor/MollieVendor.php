@@ -697,18 +697,18 @@ class MollieVendor extends AbstractService implements VendorInterface
                  * The payment has been (partially) refunded.
                  * The status of the payment is still "paid".
                  */
-                do_action('kudos_mollie_refund', $transaction->transaction_id);
+                do_action('kudos_mollie_refund', $transaction->ID);
 
-                $transaction->set_fields(
-                    [
-                        'refunds' => json_encode(
-                            [
-                                'refunded'  => $payment->getAmountRefunded(),
-                                'remaining' => $payment->getAmountRemaining(),
-                            ]
-                        ),
-                    ]
-                );
+	            // Update transaction.
+	            TransactionPostType::save([
+		            'ID' => $transaction->ID,
+		            TransactionPostType::META_FIELD_REFUNDS => json_encode(
+			            [
+				            'refunded'  => $payment->getAmountRefunded(),
+				            'remaining' => $payment->getAmountRemaining(),
+			            ]
+		            ),
+	            ]);
 
                 $this->logger->info('Payment refunded.', ['transaction' => $transaction]);
             }
