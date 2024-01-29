@@ -444,7 +444,6 @@ class MollieVendor extends AbstractService implements VendorInterface
         // Set payment frequency.
         $payment_args['payment_frequency'] = $payment_args['recurring'] === "true" ? $payment_args['recurring_frequency'] : SequenceType::SEQUENCETYPE_ONEOFF;
         $payment_args['value']             = number_format($payment_args['value'], 2, '.', '');
-        $frequency_text                    = self::get_frequency_name($payment_args['payment_frequency']);
         $sequence_type                     = "true" === $payment_args['recurring'] ? SequenceType::SEQUENCETYPE_FIRST : SequenceType::SEQUENCETYPE_ONEOFF;
         $redirect_url                      = $payment_args['return_url'];
 
