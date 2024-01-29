@@ -75,8 +75,8 @@ class TwigService {
 		/**
 		 * Add gettext _n function.
 		 */
-		$get_text = new TwigFunction( '_n', '_n' );
-		$this->twig->addFunction( $get_text );
+		$get_text_n = new TwigFunction( '_n', '_n' );
+		$this->twig->addFunction( $get_text_n );
 
 		/**
 		 * Add get_option function.
