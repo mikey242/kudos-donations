@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 use WP_Error;
 use WP_REST_Request;
 
-class MailerService {
+class MailerService extends AbstractService {
 
 	private TwigService $twig;
 	private LoggerInterface $logger;
@@ -36,6 +36,26 @@ class MailerService {
 		$this->settings = $settings;
 		$this->logger   = $logger;
 		$this->twig     = $twig;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function register(): void {
+		$this->logger->debug( 'Mailer: Creating hooks' );
+		add_action( 'phpmailer_init', [ $this, 'init' ] );
+		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
+		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP ) ) {
+			add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
+			add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_registration_actions(): array {
+		return [ 'kudos_mailer_send' ];
 	}
 
 	/**
@@ -166,14 +186,13 @@ class MailerService {
 		string $body,
 		array $attachment = []
 	): bool {
-		// Use hook to modify existing config.
-		$this->create_hooks();
+		do_action( 'kudos_mailer_send', $to, $subject, $body, $attachment );
 
 		$mail = wp_mail( $to, $subject, $body, '', $attachment );
 
 		if ( $mail ) {
 			$this->logger->debug(
-				'Email sent successfully.',
+				'Mailer: Email sent successfully.',
 				[
 					'to'      => $to,
 					'subject' => $subject,
@@ -185,18 +204,6 @@ class MailerService {
 		$this->remove_hooks();
 
 		return $mail;
-	}
-
-	/**
-	 * Creates the hooks for changing phpmailer settings.
-	 */
-	private function create_hooks(): void {
-		add_action( 'phpmailer_init', [ $this, 'init' ] );
-		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
-		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP ) ) {
-			add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
-			add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
-		}
 	}
 
 	/**
