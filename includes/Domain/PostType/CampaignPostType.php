@@ -110,7 +110,6 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 			self::META_FIELD_ADDITIONAL_FUNDS         => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
-				'default'           => '0',
 			],
 			self::META_FIELD_INITIAL_TITLE            => [
 				'type'              => FieldType::STRING,
