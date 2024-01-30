@@ -72,9 +72,9 @@ return [
 	LoggerInterface::class        => factory(
 		function () {
 			$app_env      = $_ENV['APP_ENV'];
-			$logger       = new Logger( 'kudos_log' );
-			$file_handler = new StreamHandler( KUDOS_STORAGE_DIR . 'logs/' . $app_env . '.log', 'development' === $app_env ? Logger::DEBUG : Logger::WARNING );
-			$file_handler->setFormatter( new LineFormatter() );
+			$logger       = new Logger( 'kudos_donations' );
+			$file_handler = new StreamHandler( KUDOS_STORAGE_DIR . 'logs/' . $app_env . '.log', ( 'development' === $app_env || KUDOS_DEBUG ) ? Logger::DEBUG : Logger::INFO );
+			$file_handler->setFormatter( new LineFormatter( null, null, false, true ) );
 			$logger->pushHandler( $file_handler );
 			return $logger;
 		}
