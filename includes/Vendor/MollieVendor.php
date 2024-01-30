@@ -474,12 +474,9 @@ class MollieVendor extends AbstractService implements VendorInterface
             'redirectUrl'  => $redirect_url,
             'webhookUrl'   => $this->get_webhook_url(),
             'sequenceType' => $sequence_type,
-	        'description'   => apply_filters('kudos_payment_description', sprintf(
-	            /* translators: %1$s: Payment frequency, %2$s: The order id */
-		        __('Kudos Donation (%1$s) - %2$s', 'kudos-donations'),
-		        $payment_args['payment_frequency'],
-		        TransactionPostType::get_formatted_id($transaction_id)
-	        ), $transaction_id, $payment_args['payment_frequency'], $this::get_vendor_name()),
+            'description' => apply_filters('kudos_payment_description', __('Donation', 'kudos-donations') .
+				sprintf(' (%1$s) - %2$s', $payment_args['payment_frequency'], TransactionPostType::get_formatted_id($transaction_id)),
+            ),
             'metadata'     => [
                 'transaction_id'                            => $transaction_id,
                 'interval'                                  => $payment_args['payment_frequency'],
@@ -753,13 +750,9 @@ class MollieVendor extends AbstractService implements VendorInterface
             'mandateId'   => $mandate_id,
             'interval'    => $interval,
             'startDate'   => $start_date,
-	        'description' => apply_filters('kudos_subscription_description', sprintf(
-	            /* translators: %1$s: Payment frequency, %2$s: The order id */
-		        __('Kudos Subscription (%1$s) - %2$s', 'kudos-donations'),
-		        $interval,
-		        TransactionPostType::get_formatted_id($transaction->ID)
+	        'description' => apply_filters('kudos_subscription_description', __('Subscription', 'kudos-donations') .
+                sprintf(' (%1$s) - %2$s', $interval, TransactionPostType::get_formatted_id($transaction->ID)),
 	        ),
-		        $transaction->ID, $interval, $this::get_vendor_name()),
             'metadata'    => [
                 'campaign_id' => get_post_meta($transaction->ID, TransactionPostType::META_FIELD_CAMPAIGN_ID, true),
             ],
