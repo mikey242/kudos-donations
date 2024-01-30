@@ -110,7 +110,7 @@ const InitialTab = (props) => {
 				validation={{
 					required: __('Your name is required', 'kudos-donations'),
 				}}
-				placeholder={__('Name', 'kudos-donations')}
+				placeholder={__('Full name', 'kudos-donations')}
 			/>
 
 			<TextControl
