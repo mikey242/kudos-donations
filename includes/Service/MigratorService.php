@@ -37,7 +37,7 @@ class MigratorService {
 		$this->settings        = $settings;
 		$this->logger          = $logger;
 		$this->wpdb            = $wpdb;
-		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION, '3.0.0' );
+		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
 		$this->target_version  = KUDOS_DB_VERSION;
 		add_action( 'kudos_donations_loaded', [ $this, 'process_form_data' ] );
 	}
@@ -90,7 +90,7 @@ class MigratorService {
 	 * Check database version number and add admin notice to update if necessary.
 	 */
 	public function check_database(): bool {
-		if ( version_compare( $this->current_version, $this->target_version, '<' ) ) {
+		if ( $this->current_version > 0 && version_compare( $this->current_version, $this->target_version, '<' ) ) {
 			$this->add_admin_notice();
 			return false;
 		}
