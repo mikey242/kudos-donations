@@ -751,7 +751,7 @@ class MollieVendor extends AbstractService implements VendorInterface
             'interval'    => $interval,
             'startDate'   => $start_date,
 	        'description' => apply_filters('kudos_subscription_description', __('Subscription', 'kudos-donations') .
-                sprintf(' (%1$s) - %2$s', $interval, TransactionPostType::get_formatted_id($transaction->ID)),
+                sprintf(' (%1$s) - %2$s', $interval, SubscriptionPostType::get_formatted_id($transaction->ID)),
 	        ),
             'metadata'    => [
                 'campaign_id' => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
