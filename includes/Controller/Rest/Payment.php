@@ -246,7 +246,7 @@ class Payment extends AbstractRestController {
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
-		$vendor_customer_id = get_post_meta( $donor->ID, DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID, true ) ?? null;
+		$vendor_customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID} ?? null;
 		$transaction        = TransactionPostType::save(
 			[
 				TransactionPostType::META_FIELD_DONOR_ID => $donor->ID ?? null,

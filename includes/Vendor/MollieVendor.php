@@ -735,11 +735,11 @@ class MollieVendor extends AbstractService implements VendorInterface
         string $interval,
         int $years
     ) {
-		$donor = get_post(get_post_meta($transaction->ID, TransactionPostType::META_FIELD_DONOR_ID, true));
-		$customer_id = get_post_meta($donor->ID, DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID, true);
+		$donor       = get_post($transaction->{TransactionPostType::META_FIELD_DONOR_ID});
+		$customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID};
         $start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
         $currency    = 'EUR';
-        $value       = number_format((int) get_post_meta($transaction->ID, TransactionPostType::META_FIELD_VALUE, 'true'), 2);
+        $value       = number_format( (int) $transaction->{TransactionPostType::META_FIELD_VALUE}, 2);
 
         $subscription_array = [
             'amount'      => [
@@ -754,11 +754,11 @@ class MollieVendor extends AbstractService implements VendorInterface
                 sprintf(' (%1$s) - %2$s', $interval, TransactionPostType::get_formatted_id($transaction->ID)),
 	        ),
             'metadata'    => [
-                'campaign_id' => get_post_meta($transaction->ID, TransactionPostType::META_FIELD_CAMPAIGN_ID, true),
+                'campaign_id' => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
             ],
         ];
 
-        if ('test' === get_post_meta($transaction->ID, TransactionPostType::META_FIELD_MODE)) {
+        if ('test' === $transaction->{TransactionPostType::META_FIELD_MODE}) {
             unset($subscription_array['startDate']);  // Disable for test mode.
         }
 
