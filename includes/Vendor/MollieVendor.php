@@ -218,7 +218,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 
 					// Update settings array.
 					$api_keys[$type . '_key'] = [
-						'verified' => $verified,
+						'verified' => true,
 						'key' => $value
 					];
 				} else {
