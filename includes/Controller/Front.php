@@ -198,20 +198,21 @@ class Front extends AbstractService {
 						$transaction = get_post( $transaction_id );
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
-							$transaction_id = $transaction->ID;
-							$campaign_id    = get_post_meta( $transaction_id, 'campaign_id', true );
+							$campaign_id = $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID};
+							$campaign    = get_post( $campaign_id );
 
-							$return_message_title  = get_post_meta( $campaign_id, CampaignPostType::META_FIELD_RETURN_MESSAGE_TITLE, true );
-							$return_message_text   = get_post_meta( $campaign_id, CampaignPostType::META_FIELD_RETURN_MESSAGE_TEXT, true );
+							$return_message_title  = $campaign->{CampaignPostType::META_FIELD_RETURN_MESSAGE_TITLE};
+							$return_message_text   = $campaign->{CampaignPostType::META_FIELD_RETURN_MESSAGE_TEXT};
 							$result                = [];
-							$result['theme_color'] = get_post_meta( $campaign_id, CampaignPostType::META_FIELD_THEME_COLOR, true );
-							$status                = get_post_meta( $transaction_id, 'status', true );
+							$result['theme_color'] = $campaign->{CampaignPostType::META_FIELD_THEME_COLOR};
+							$status                = $transaction->{TransactionPostType::META_FIELD_STATUS};
 
 							switch ( $status ) {
 								case PaymentStatus::PAID:
-									$donor_id              = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true );
-									$value                 = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_VALUE, true );
-									$currency              = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_CURRENCY, true );
+									$donor_id              = $transaction->{TransactionPostType::META_FIELD_DONOR_ID};
+									$donor                 = get_post( $donor_id );
+									$value                 = $transaction->{TransactionPostType::META_FIELD_VALUE};
+									$currency              = $transaction->{TransactionPostType::META_FIELD_VALUE};
 									$vars                  = [
 										'{{value}}' => ( ! empty( $currency ) ? html_entity_decode(
 											Utils::get_currency_symbol( $currency )
@@ -219,8 +220,8 @@ class Front extends AbstractService {
 											$value,
 											2
 										),
-										'{{name}}'  => get_post_meta( $donor_id, DonorPostType::META_FIELD_NAME, true ),
-										'{{email}}' => get_post_meta( $donor_id, DonorPostType::META_FIELD_EMAIL, true ),
+										'{{name}}'  => $donor->{DonorPostType::META_FIELD_NAME},
+										'{{email}}' => $donor->{DonorPostType::META_FIELD_EMAIL},
 									];
 									$result['modal_title'] = strtr( $return_message_title, $vars );
 									$result['modal_text']  = strtr( $return_message_text, $vars );
