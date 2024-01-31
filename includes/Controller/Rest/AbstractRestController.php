@@ -37,7 +37,7 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 	 * @return string $rest_base
 	 */
 	public function get_base(): string {
-		return '/' . $this->rest_base;
+		return $this->rest_base;
 	}
 
 	/**
@@ -46,7 +46,7 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 	 * @param string $route The final part of the rest route.
 	 */
 	public function get_route( string $route ): string {
-		return $this->namespace . $this->rest_base . $route;
+		return '/' . $this->namespace . $this->rest_base . $route;
 	}
 
 	/**
