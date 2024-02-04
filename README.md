@@ -9,7 +9,7 @@
 
 ## Development
 
-Use the [yarn](https://yarnpkg.com/) and [composer](https://getcomposer.org/) package managers to install the required
+Use the [npm](https://www.npmjs.com/) and [composer](https://getcomposer.org/) package managers to install the required
 dependencies.
 
 ### Build
@@ -19,14 +19,14 @@ dependencies.
 npm install
 composer install
 
-# start development
-npm run watch
+# start public facing development
+npm run start:front
 
-# build assets for export
-npm run production
+# start admin facing development
+npm run start:admin
 
-# export plugin to KUDOS_EXPORT folder and produce installable zip
-npm run export
+# build all assets
+npm run build
 ````
 
 ## Credits
@@ -43,7 +43,6 @@ This software uses the following open source packages:
 - [PHP-DI](https://github.com/PHP-DI/PHP-DI) - The dependency injection container for humans
 - [Twig](https://twig.symfony.com/) - A modern template engine for PHP.
 - [ActionScheduler](https://actionscheduler.org/) - WordPress Job Queue with Background Processing.
-- [Laravel Mix](https://laravel-mix.com/) - An elegant wrapper around Webpack for the 80% use case.
 
 ## Contributing
 
