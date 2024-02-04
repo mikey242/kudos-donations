@@ -107,7 +107,7 @@ class AdminNotice {
 			wp_kses(
 				$this->message,
 				[
-					'p' => [],
+					'p'      => [],
 					'strong' => [],
 					'form'   => [
 						'method' => [],

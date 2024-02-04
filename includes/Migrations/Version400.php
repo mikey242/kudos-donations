@@ -5,6 +5,8 @@
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
  * @copyright 2023 Iseard Media
+ *
+ *  phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
  */
 
 namespace IseardMedia\Kudos\Migrations;
@@ -16,15 +18,23 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 class Version400 extends AbstractMigration {
 
 	private array $cache;
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function run(): void {
 		$this->migrate_donors_to_posts();
 		$this->migrate_campaigns_to_posts();
 		$this->migrate_transactions_to_posts();
 	}
 
-	public function migrate_donors_to_posts() {
+	/**
+	 * Migrates donors from custom table to custom post type.
+	 */
+	public function migrate_donors_to_posts(): void {
 		$table_name = $this->wpdb->prefix . 'kudos_donors';
-		$results    = $this->wpdb->get_results( "SELECT * FROM $table_name" );
+		$query      = "SELECT * FROM {$table_name}";
+		$results    = $this->wpdb->get_results( $query );
 
 		foreach ( $results as $donor ) {
 
@@ -54,7 +64,7 @@ class Version400 extends AbstractMigration {
 	/**
 	 * Migrate campaigns from a settings array to CampaignPostTypes.
 	 */
-	public function migrate_campaigns_to_posts() {
+	public function migrate_campaigns_to_posts(): void {
 		foreach ( get_option( '_kudos_campaigns' ) as $campaign ) {
 
 			// Create post and store ID.
@@ -92,13 +102,12 @@ class Version400 extends AbstractMigration {
 	/**
 	 * Migrate transactions from kudos_transactions table to
 	 * TransactionPostTypes.
-	 *
-	 * @return void
 	 */
-	public function migrate_transactions_to_posts() {
+	public function migrate_transactions_to_posts(): void {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'kudos_transactions';
-		$results    = $wpdb->get_results( "SELECT * FROM $table_name" );
+		$query      = "SELECT * FROM {$table_name}";
+		$results    = $wpdb->get_results( $query );
 
 		foreach ( $results as $transaction ) {
 

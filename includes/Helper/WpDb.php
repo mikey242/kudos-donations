@@ -3,8 +3,8 @@
  * Wrapper class for WordPress' wpdb.
  * Used for dependency injection.
  *
- * @source https://gist.github.com/szepeviktor/ddb1bfd12d93accd318cc081637956ec
  * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
  */
 
 declare(strict_types=1);
@@ -19,40 +19,47 @@ namespace IseardMedia\Kudos\Helper;
 class WpDb {
 
 	/**
-	 * Get a property.
+	 * The wpdb instance.
 	 *
-	 * @see https://codex.wordpress.org/Class_Reference/wpdb#Class_Variables
-	 *
-	 * @param string $name The property name to get.
-	 * @return mixed
+	 * @var \wpdb
 	 */
-	public function __get( string $name ) {
-		global $wpdb;
+	private $wpdb;
 
-		return $wpdb->$name;
+	/**
+	 * WordPress table prefix.
+	 *
+	 * @var string
+	 */
+	public string $prefix;
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		global $wpdb;
+		$this->wpdb   = $wpdb;
+		$this->prefix = $wpdb->prefix;
 	}
 
 	/**
-	 * Noop on set.
+	 * Wrapper method for $wpdb->get_results()
 	 *
-	 * @param string $name The property name to set.
-	 * @param mixed  $value The property value.
+	 * @param string $query SQL query string.
+	 * @param string $output Optional. Any of ARRAY_A | ARRAY_N | OBJECT | OBJECT_K constants. Default OBJECT.
+	 * @return array|object|null Database query results.
 	 */
-	public function __set( string $name, $value ): void {
+	public function get_results( string $query, string $output = OBJECT ) {
+		return $this->wpdb->get_results( $query, $output );
 	}
 
 	/**
-	 * Execute a method.
+	 * Safely prepares SQL query for execution.
 	 *
-	 * @see https://www.php.net/manual/en/language.oop5.overloading.php#object.call
-	 *
-	 * @param string $name Callable name.
-	 * @param array  $arguments Arguments to pass.
-	 * @return mixed
+	 * @param string $query SQL query with placeholders.
+	 * @param mixed  ...$args  Array of placeholders values.
+	 * @return string Safely prepared SQL query.
 	 */
-	public function __call( string $name, array $arguments ) {
-		global $wpdb;
-
-		return \call_user_func_array( [ $wpdb, $name ], $arguments );
+	public function prepare( string $query, ...$args ): string {
+		return $this->wpdb->prepare( $query, ...$args );
 	}
 }
