@@ -77,16 +77,16 @@ class Version400 extends AbstractMigration {
 			);
 
 			// Add post meta to new post.
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_INITIAL_TITLE, $campaign['modal_title'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_INITIAL_DESCRIPTION, $campaign['welcome_text'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_ADDRESS_ENABLED, $campaign['address_enabled'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_ADDRESS_REQUIRED, $campaign['address_required'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_MESSAGE_ENABLED, $campaign['message_enabled'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_AMOUNT_TYPE, $campaign['amount_type'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_GOAL, $campaign['campaign_goal'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_ADDITIONAL_FUNDS, $campaign['additional_funds'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_SHOW_GOAL, $campaign['show_progress'] );
-			update_post_meta( $new_id, CampaignPostType::META_FIELD_DONATION_TYPE, $campaign['donation_type'] );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_INITIAL_TITLE, $campaign['modal_title'] ?? '' );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_INITIAL_DESCRIPTION, $campaign['welcome_text'] ?? '' );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_ADDRESS_ENABLED, $campaign['address_enabled'] ?? false );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_ADDRESS_REQUIRED, $campaign['address_required'] ?? false );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_MESSAGE_ENABLED, $campaign['message_enabled'] ?? false );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_AMOUNT_TYPE, $campaign['amount_type'] ?? 'open' );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_GOAL, $campaign['campaign_goal'] ?? '' );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_ADDITIONAL_FUNDS, $campaign['additional_funds'] ?? '' );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_SHOW_GOAL, $campaign['show_progress'] ?? false );
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_DONATION_TYPE, $campaign['donation_type'] ?? 'oneoff' );
 
 			// Add fixed amounts separately.
 			$fixed_amounts = explode( ',', $campaign['fixed_amounts'] );
