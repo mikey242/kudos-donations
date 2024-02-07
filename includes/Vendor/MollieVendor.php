@@ -107,6 +107,15 @@ class MollieVendor extends AbstractService implements VendorInterface
 		return $this->api_mode;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function is_ready(): bool {
+		$settings = $this->settings->get_current_vendor_settings();
+		$mode = $this->api_mode;
+		return $settings[$mode . '_key']['verified'] ?? false;
+	}
+
     /**
      * Change the API client to the key for the specified mode.
      */
@@ -141,27 +150,23 @@ class MollieVendor extends AbstractService implements VendorInterface
         return true;
     }
 
-    /**
-     * Returns a translated string of the sequence type.
-     *
-     * @param string $text Mollie sequence type code.
-     *
-     * @return string
-     */
-    public static function get_sequence_type(string $text): string
-    {
-		switch ($text) {
-			case SequenceType::SEQUENCETYPE_ONEOFF:
-				$result = __('One-off', 'kudos-donations');
-				break;
-			case SequenceType::SEQUENCETYPE_FIRST:
-				$result = __( 'Recurring (first payment)', 'kudos-donations' );
-				break;
-			default:
-				$result =  __( 'Recurring', 'kudos-donations' );
+	/**
+	 * Uses get_payment_methods to determine if account can receive recurring payments.
+	 *
+	 * @return bool
+	 */
+	public function can_use_recurring(): bool
+	{
+		$methods = $this->get_payment_methods([
+			'sequenceType' => 'recurring',
+		]);
+
+		if ($methods) {
+			return $methods->count > 0;
 		}
-		return $result;
-    }
+
+		return false;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -289,24 +294,6 @@ class MollieVendor extends AbstractService implements VendorInterface
 
             return false;
         }
-    }
-
-    /**
-     * Uses get_payment_methods to determine if account can receive recurring payments.
-     *
-     * @return bool
-     */
-    public function can_use_recurring(): bool
-    {
-        $methods = $this->get_payment_methods([
-            'sequenceType' => 'recurring',
-        ]);
-
-        if ($methods) {
-            return $methods->count > 0;
-        }
-
-        return false;
     }
 
     /**
@@ -442,9 +429,9 @@ class MollieVendor extends AbstractService implements VendorInterface
 	 */
     public function create_payment(array $payment_args, int $transaction_id, ?string $vendor_customer_id): string {
         // Set payment frequency.
-        $payment_args['payment_frequency'] = $payment_args['recurring'] === "true" ? $payment_args['recurring_frequency'] : SequenceType::SEQUENCETYPE_ONEOFF;
+        $payment_args['payment_frequency'] = "true" === $payment_args['recurring'] ? $payment_args['recurring_frequency'] : SequenceType::SEQUENCETYPE_ONEOFF;
+	    $sequence_type                     = "true" === $payment_args['recurring'] ? SequenceType::SEQUENCETYPE_FIRST : SequenceType::SEQUENCETYPE_ONEOFF;
         $payment_args['value']             = number_format($payment_args['value'], 2, '.', '');
-        $sequence_type                     = "true" === $payment_args['recurring'] ? SequenceType::SEQUENCETYPE_FIRST : SequenceType::SEQUENCETYPE_ONEOFF;
         $redirect_url                      = $payment_args['return_url'];
 
         // Add order id query arg to return url if option to show message enabled.
@@ -478,12 +465,12 @@ class MollieVendor extends AbstractService implements VendorInterface
 				sprintf(' (%1$s) - %2$s', $payment_args['payment_frequency'], TransactionPostType::get_formatted_id($transaction_id)),
             ),
             'metadata'     => [
-                'transaction_id'                            => $transaction_id,
-                'interval'                                  => $payment_args['payment_frequency'],
-                SubscriptionPostType::META_FIELD_YEARS      => $payment_args['recurring_length'],
-                DonorPostType::META_FIELD_EMAIL             => $payment_args['email'],
-                DonorPostType::META_FIELD_NAME              => $payment_args['name'],
-                TransactionPostType::META_FIELD_CAMPAIGN_ID => $payment_args['campaign_id'],
+                SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id,
+                SubscriptionPostType::META_FIELD_FREQUENCY      => $payment_args['payment_frequency'],
+                SubscriptionPostType::META_FIELD_YEARS          => $payment_args['recurring_length'],
+                DonorPostType::META_FIELD_EMAIL                 => $payment_args['email'],
+                DonorPostType::META_FIELD_NAME                  => $payment_args['name'],
+                TransactionPostType::META_FIELD_CAMPAIGN_ID     => $payment_args['campaign_id'],
             ],
         ];
 
@@ -506,34 +493,6 @@ class MollieVendor extends AbstractService implements VendorInterface
 
             return '';
         }
-    }
-
-    /**
-     * Returns subscription frequency name based on number of months.
-     *
-     * @param string $frequency Mollie frequency code.
-     *
-     * @return string
-     */
-    public static function get_frequency_name(string $frequency): string
-    {
-		switch($frequency) {
-			case '12 months':
-				$result = __( 'Yearly', 'kudos-donations' );
-				break;
-			case '1 month':
-				$result = __( 'Monthly', 'kudos-donations' );
-				break;
-			case '3 months':
-				$result = __( 'Quarterly', 'kudos-donations' );
-				break;
-			case SequenceType::SEQUENCETYPE_ONEOFF :
-				$result = __( 'One-off', 'kudos-donations' );
-				break;
-			default:
-				$result = $frequency;
-		}
-		return $result;
     }
 
     /**
@@ -622,7 +581,8 @@ class MollieVendor extends AbstractService implements VendorInterface
                 $subscription = $customer->getSubscription($payment->subscriptionId);
                 $transaction  = TransactionPostType::save(
 					[
-	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $subscription->metadata->campaign_id ?? '',
+						TransactionPostType::META_FIELD_DONOR_ID => $subscription->metadata->{TransactionPostType::META_FIELD_DONOR_ID} ?? '',
+	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $subscription->metadata->{TransactionPostType::META_FIELD_CAMPAIGN_ID} ?? '',
                     ]
                 );
             } else {
@@ -685,8 +645,8 @@ class MollieVendor extends AbstractService implements VendorInterface
                     $this->create_subscription(
                         $transaction,
                         $payment->mandateId,
-                        $payment->metadata->interval,
-	                    (int) $payment->metadata->years
+                        $payment->metadata->{SubscriptionPostType::META_FIELD_FREQUENCY},
+	                    (int) $payment->metadata->{SubscriptionPostType::META_FIELD_YEARS}
                     );
                 }
             } elseif ($payment->hasRefunds()) {
@@ -754,7 +714,8 @@ class MollieVendor extends AbstractService implements VendorInterface
                 sprintf(' (%1$s) - %2$s', $interval, SubscriptionPostType::get_formatted_id($transaction->ID)),
 	        ),
             'metadata'    => [
-                'campaign_id' => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
+                TransactionPostType::META_FIELD_CAMPAIGN_ID => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
+	            TransactionPostType::META_FIELD_DONOR_ID => $transaction->{TransactionPostType::META_FIELD_DONOR_ID}
             ],
         ];
 
@@ -826,142 +787,4 @@ class MollieVendor extends AbstractService implements VendorInterface
 
         return false;
     }
-
-    /**
-     * Syncs Mollie transactions with the local DB.
-     * Returns the number of transactions updated.
-     *
-     * @return int
-     */
-    public function sync_transactions(): int
-    {
-        $updated = 0;
-        $donors = DonorPostType::get_posts();
-        foreach ($donors as $donor) {
-            $vendor_id = $donor->vendor_id;
-            if ($donor->mode !== $this->api_mode) {
-                $this->config_client($donor->mode);
-            }
-            $customer = $this->get_customer($vendor_id);
-            if ($customer) {
-                try {
-                    $payments = $customer->payments();
-                    foreach ($payments as $payment) {
-                        $amount   = $payment->amount;
-                        $order_id = $payment->metadata->order_id ?? null;
-
-                        if ($order_id) {
-                            /**
-                             * Find existing transaction.
-                             */
-                            $transaction = TransactionPostType::get_post([
-								TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID => $order_id,
-								TransactionPostType::META_FIELD_STATUS => 'open'
-                            ]);
-
-                            if ($transaction) {
-                                $transaction->set_fields(
-                                    [
-                                        'status'                => $payment->status,
-                                        'vendor_customer_id'    => $payment->customerId,
-                                        'value'                 => $amount->value,
-                                        'currency'              => $amount->currency,
-                                        'sequence_type'         => $payment->sequenceType,
-                                        'method'                => $payment->method,
-                                        'mode'                  => $payment->mode,
-                                        'subscription_id'       => $payment->subscriptionId,
-                                        'transaction_id'        => $payment->id,
-                                        'campaign_id'           => $payment->metadata ? $payment->metadata->campaign_id : null,
-                                    ]
-                                );
-                                $mapper->save($transaction);
-                                do_action("kudos_transaction_$payment->status", $transaction->order_id);
-                                $updated++;
-                            }
-                        }
-                    }
-                } catch (ApiException $e) {
-                    $this->logger->error($e->getMessage());
-                }
-            }
-        }
-
-        return $updated;
-    }
-
-    /**
-     * Adds missing transactions from Mollie.
-     * Returns the number of transactions added.
-     *
-     * @return int
-     */
-    public function add_missing_transactions(): int
-    {
-        $added  = 0;
-        $mapper = $this->mapper;
-        $mapper->get_repository(DonorEntity::class);
-        $donors = $mapper->get_all_by();
-        /** @var DonorEntity $donor */
-        foreach ($donors as $donor) {
-            $vendor_id = $donor->vendor_id;
-            if ($donor->mode !== $this->api_mode) {
-                $this->config_client($donor->mode);
-            }
-            $customer = $this->get_customer($vendor_id);
-            if ($customer) {
-                try {
-                    $payments = $customer->payments();
-                    foreach ($payments as $payment) {
-                        $order_id = $payment->metadata->order_id ?? null;
-
-                        if ($order_id) {
-                            $mapper->get_repository(TransactionEntity::class);
-
-                            /**
-                             * Find existing transaction.
-                             * @var TransactionEntity $transaction
-                             */
-                            $transaction = $mapper->get_one_by([
-                                TransactionPostType::META_FIELD_ORDER_ID => $order_id,
-                            ]);
-
-                            // Add new transaction if none found.
-                            if ( ! $transaction) {
-                                $transaction = new TransactionEntity([
-                                    TransactionPostType::META_FIELD_ORDER_ID        => $order_id,
-                                    'created'         => $payment->createdAt,
-                                    'status'          => $payment->status,
-                                    'vendor_id'     => $payment->customerId,
-                                    'value'           => $payment->amount->value,
-                                    'currency'        => $payment->amount->currency,
-                                    'sequence_type'   => $payment->sequenceType,
-                                    'method'          => $payment->method,
-                                    'mode'            => $payment->mode,
-                                    'subscription_id' => $payment->subscriptionId,
-                                    'transaction_id'  => $payment->id,
-                                    'campaign_id'     => $payment->metadata ? $payment->metadata->campaign_id : null,
-                                ]);
-
-                                $mapper->save($transaction);
-                                $added++;
-                            }
-                        }
-                    }
-                } catch (ApiException $e) {
-                    $this->logger->error($e->getMessage());
-                }
-            }
-        }
-
-        return $added;
-    }
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function is_ready(): bool {
-		$settings = $this->settings->get_current_vendor_settings();
-		$mode = $this->api_mode;
-		return $settings[$mode . '_key']['verified'] ?? false;
-	}
 }
