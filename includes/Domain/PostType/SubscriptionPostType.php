@@ -126,6 +126,10 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Amount', 'kudos-donations' ),
 			],
+			self::META_FIELD_CURRENCY     => [
+				'value_type' => FieldType::STRING,
+				'label'      => __( 'Currency', 'kudos-donations' ),
+			],
 			self::META_FIELD_FREQUENCY => [
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Frequency', 'kudos-donations' ),
@@ -133,6 +137,10 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 			self::META_FIELD_YEARS     => [
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Length', 'kudos-donations' ),
+			],
+			'status' => [
+				'value_type' => FieldType::STRING,
+				'label' => __('Status', 'kudos-donations'),
 			],
 		];
 	}
