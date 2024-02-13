@@ -51,15 +51,10 @@ trait RegisterMetaTrait {
 			$args
 		);
 
-		add_action(
-			'rest_api_init',
-			function () use ( $object_type, $field_name, $args ): void {
-				register_meta(
-					$object_type,
-					$field_name,
-					$args
-				);
-			}
+		register_meta(
+			$object_type,
+			$field_name,
+			$args
 		);
 	}
 }
