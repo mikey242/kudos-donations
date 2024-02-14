@@ -5,6 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import {
 	Button,
 	CheckboxControl,
+	CodeEditor,
 	ColorPicker,
 	RadioGroupControl,
 	TextAreaControl,
@@ -368,6 +369,15 @@ function CampaignEdit({ campaign, updateCampaign, recurringAllowed }) {
 				</Fragment>
 			),
 		},
+		{
+			name: 'Custom CSS',
+			title: __('Custom CSS', 'kudos-donations'),
+			content: (
+				<>
+					<CodeEditor label="Custom CSS" help="This will only apply to the current campaign." name="meta.custom_styles" />
+				</>
+			)
+		}
 	];
 
 	return (

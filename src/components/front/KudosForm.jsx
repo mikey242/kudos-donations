@@ -104,6 +104,7 @@ function KudosForm({ displayAs }) {
 			// 		body: '"Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif'
 			// 	}
 			// }
+			style={campaign?.meta?.custom_styles}
 			errors={isForm && campaignErrors}
 		>
 			{/* If API not loaded yet then show a spinner */}

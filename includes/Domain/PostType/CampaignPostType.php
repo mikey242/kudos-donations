@@ -51,6 +51,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public const META_FIELD_CUSTOM_RETURN_URL        = 'custom_return_url';
 	public const META_FIELD_RETURN_MESSAGE_TITLE     = 'return_message_title';
 	public const META_FIELD_RETURN_MESSAGE_TEXT      = 'return_message_text';
+	public const META_FIELD_CUSTOM_STYLES            = 'custom_styles';
 
 	/**
 	 * Rest field constants.
@@ -227,6 +228,9 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 				'default'           => __( 'Thank you for your donation!', 'kudos-donations' ),
+			],
+			self::META_FIELD_CUSTOM_STYLES            => [
+				'type' => FieldType::STRING,
 			],
 		];
 	}

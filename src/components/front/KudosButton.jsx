@@ -22,6 +22,7 @@ const KudosButton = ({ children, className, targetId = null }) => {
 			<Render
 				themeColor={campaign?.meta?.theme_color}
 				errors={campaignErrors}
+				style={campaign?.meta?.custom_styles}
 			>
 				{campaignRequest.ready ? (
 					<DonateButton
