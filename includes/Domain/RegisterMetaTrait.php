@@ -13,15 +13,13 @@ namespace IseardMedia\Kudos\Domain;
 
 /**
  * Register meta trait.
- *
- * @phpstan-import-type PropertiesShape from HasMetaFieldsInterface
  */
 trait RegisterMetaTrait {
 
 	/**
-	 * Register meta fields if present.
+	 * Register meta fields.
 	 *
-	 * @param array  $fields The class to use for getting meta fields.
+	 * @param array  $fields The meta fields array.
 	 * @param string $object_type Type of object (e.g. post or term).
 	 * @param string $object_subtype Object subtype, usually a slug (e.g. the custom post slug).
 	 */
