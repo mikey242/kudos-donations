@@ -49,8 +49,8 @@ class Front extends AbstractService {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$this->register_kudos();
 		$this->register_assets();
+		$this->register_kudos();
 		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );
 	}
 
@@ -136,7 +136,7 @@ class Front extends AbstractService {
 	/**
 	 * Enqueue the styles and scripts.
 	 */
-	public function enqueue_assets(): void {
+	private function enqueue_assets(): void {
 		wp_enqueue_script( 'kudos-donations-public' );
 		wp_enqueue_style( 'kudos-donations-fonts' ); // Fonts need to be loaded in the main document.
 	}
@@ -147,7 +147,7 @@ class Front extends AbstractService {
 	 * @param string $id ID to use for the form.
 	 * @param array  $args Attributes.
 	 */
-	public function form_html( string $id, array $args ): string {
+	private function form_html( string $id, array $args ): string {
 		return wp_kses(
 			wp_sprintf(
 				"<div id='form-%s' class='kudos-donations kudos-form' data-display-as='%s' data-campaign='%s' style='display: block'>
@@ -174,7 +174,7 @@ class Front extends AbstractService {
 	 * @param string $id ID to use for the form.
 	 * @param array  $args Attributes.
 	 */
-	public function button_html( string $id, array $args ): string {
+	private function button_html( string $id, array $args ): string {
 		return "<div id='button-$id' class='button' data-label='" . $args['button_label'] . "' data-target='form-$id' data-campaign='" . $args['campaign_id'] . "' style='display: block'>
 					</div>";
 	}
