@@ -176,20 +176,21 @@ class Front extends AbstractService {
 	 */
 	private function button_html( string $id, array $args ): string {
 		return wp_kses(
-			wp_sprintf("<p><span id='button-$id' class='button' data-label='%s' data-target='form-%s' data-campaign='%s'></span></p>",
+			wp_sprintf(
+				"<p><span id='button-$id' class='button' data-label='%s' data-target='form-%s' data-campaign='%s'></span></p>",
 				$args['button_label'],
 				$id,
 				$args['campaign_id']
 			),
 			[
-				'p' => [],
+				'p'    => [],
 				'span' => [
-					'id' => [],
-					'class' => [],
-					'data-label' => [],
-					'data-target' => [],
-					'data-campaign' => []
-				]
+					'id'            => [],
+					'class'         => [],
+					'data-label'    => [],
+					'data-target'   => [],
+					'data-campaign' => [],
+				],
 			]
 		);
 	}
