@@ -122,6 +122,10 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 					return static::get_formatted_id( $subscription_id );
 				},
 			],
+			self::META_FIELD_SUBSCRIPTION_ID    => [
+				'value_type' => FieldType::STRING,
+				'label' => __('Vendor ID')
+			],
 			self::META_FIELD_VALUE     => [
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Amount', 'kudos-donations' ),
