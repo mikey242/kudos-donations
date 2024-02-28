@@ -13,34 +13,28 @@ namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\AbstractService;
-use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 
 class Front extends AbstractService {
 	private SettingsService $settings;
-	private PaymentService $payment;
 	private VendorInterface $vendor;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param PaymentService  $payment Payment service.
 	 * @param SettingsService $settings Settings service.
 	 * @param VendorInterface $vendor Payment vendors.
 	 */
 	public function __construct(
-		PaymentService $payment,
 		SettingsService $settings,
 		VendorInterface $vendor
 	) {
-		$this->payment  = $payment;
 		$this->settings = $settings;
 		$this->vendor   = $vendor;
 	}
@@ -268,42 +262,11 @@ class Front extends AbstractService {
 						}
 					}
 					break;
-
-				case 'cancel_subscription':
-					$subscription_id = sanitize_text_field( $_REQUEST['kudos_subscription_id'] );
-					// Cancel subscription modal.
-					if ( ! empty( $nonce && ! empty( $subscription_id ) ) ) {
-						$subscription = SubscriptionPostType::get_post(
-							[
-								'subscription_id' => $subscription_id,
-							]
-						);
-
-						// Bail if no subscription found.
-						if ( null === $subscription ) {
-							break;
-						}
-
-						if ( wp_verify_nonce( $nonce, $action ) ) {
-							if ( $this->payment->cancel_subscription( $subscription_id ) ) {
-								$this->message_modal_html(
-									__( 'Subscription cancelled', 'kudos-donations' ),
-									__(
-										'We will no longer be taking payments for this subscription. Thank you for your contributions.',
-										'kudos-donations'
-									)
-								);
-
-								break;
-							}
-						}
-
-						$this->message_modal_html(
-							__( 'Link expired', 'kudos-donations' ),
-							__( 'Sorry, this link is no longer valid.', 'kudos-donations' )
-						);
-					}
-					break;
+				default:
+					$this->message_modal_html(
+						'Unknown',
+						'Unknown action supplied.',
+					);
 			}
 		}
 	}
