@@ -24,7 +24,6 @@ use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
 use Mollie\Api\Resources\Customer;
 use Mollie\Api\Resources\MethodCollection;
-use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
 use Mollie\Api\Types\RefundStatus;
@@ -380,23 +379,6 @@ class MollieVendor extends AbstractService implements VendorInterface
 
             return null;
         }
-    }
-
-    /**
-     * Gets specified payment.
-     *
-     * @param string $vendor_payment_id Mollie payment id.
-     *
-     * @return bool|Payment
-     */
-    public function get_payment(string $vendor_payment_id) {
-        try {
-            return $this->api_client->payments->get($vendor_payment_id);
-        } catch (ApiException $e) {
-            $this->logger->critical($e->getMessage());
-        }
-
-        return false;
     }
 
     /**
