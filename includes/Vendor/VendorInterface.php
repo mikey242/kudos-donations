@@ -30,13 +30,6 @@ interface VendorInterface
      */
     public static function supports_recurring(): bool;
 
-    /**
-     * Returns the vendors webhook url.
-     *
-     * @return string
-     */
-    public static function get_webhook_url(): string;
-
 	/**
 	 * Check the vendor connection.
 	 *
@@ -88,13 +81,6 @@ interface VendorInterface
     public function refresh_api_connection(string $api_key): bool;
 
     /**
-     * Gets specified payment.
-     *
-     * @param string $vendor_payment_id Vendor payment id.
-     */
-    public function get_payment(string $vendor_payment_id);
-
-    /**
      * Create a customer.
      *
      * @param string $email Donor email address.
@@ -119,6 +105,13 @@ interface VendorInterface
      * @return string
      */
     public function create_payment(array $payment_args, int $transaction_id, ?string $vendor_customer_id): string;
+
+	/**
+	 * Refunds the provided transaction.
+	 *
+	 * @param int $post_id The post ID of the transaction to refund.
+	 */
+	public function refund(int $post_id): bool;
 
     /**
      * Vendor webhook action.
