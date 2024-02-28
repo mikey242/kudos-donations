@@ -24,6 +24,7 @@ use WP_REST_Server;
 class Payment extends AbstractRestController {
 
 	public const ROUTE_CREATE  = '/create';
+	public const ROUTE_REFUND  = '/refund';
 	public const ROUTE_WEBHOOK = '/webhook';
 	public const ROUTE_TEST    = '/test';
 	public const ROUTE_READY   = '/ready';
@@ -138,6 +139,18 @@ class Payment extends AbstractRestController {
 					],
 				],
 				'permission_callback' => '__return_true',
+			],
+
+			self::ROUTE_REFUND  => [
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => [ $this, 'refund' ],
+				'args'     => [
+					'id' => [
+						'type'              => 'integer',
+						'required'          => true,
+						'sanitize_callback' => 'absint',
+					],
+				],
 			],
 
 			self::ROUTE_TEST    => [
@@ -347,5 +360,15 @@ class Payment extends AbstractRestController {
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
 		return $this->vendor->rest_webhook( $request );
+	}
+
+	/**
+	 * Refund the transaction for the post id provided.
+	 *
+	 * @param WP_REST_Request $request The request.
+	 */
+	public function refund( WP_REST_Request $request ): bool {
+		$post_id = $request->get_param( 'id' );
+		return $this->vendor->refund( $post_id );
 	}
 }
