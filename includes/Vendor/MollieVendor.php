@@ -27,6 +27,7 @@ use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Payment;
 use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
+use Mollie\Api\Types\RefundStatus;
 use Mollie\Api\Types\SequenceType;
 use Psr\Log\LoggerInterface;
 use WP_Error;
@@ -787,4 +788,28 @@ class MollieVendor extends AbstractService implements VendorInterface
 
         return false;
     }
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function refund( int $post_id ): bool {
+		$post = get_post($post_id);
+		if(TransactionPostType::get_slug() === $post->post_type) {
+			$payment_id = $post->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID};
+			$amount['value'] = number_format((float) $post->{TransactionPostType::META_FIELD_VALUE}, 2, '.', '');
+			$amount['currency'] = $post->{TransactionPostType::META_FIELD_CURRENCY};
+			try {
+				$payment = $this->api_client->payments->get($payment_id);
+				$response = $payment->refund(["amount" => $amount]);
+				$this->logger->info(sprintf('Refunding transaction "%s"', $payment_id), ["status" => $response->status, 'amount' => $amount]);
+				if(RefundStatus::STATUS_PENDING == $response->status) {
+					return true;
+				}
+				return false;
+			} catch (ApiException $e) {
+				$this->logger->error($e->getMessage());
+			}
+		}
+		return false;
+	}
 }
