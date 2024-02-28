@@ -316,15 +316,15 @@ class MollieVendor extends AbstractService implements VendorInterface
     /**
      * Returns all subscriptions for customer.
      *
-     * @param string $customer_vendor_id Mollie customer id.
+     * @param string $customer_id Mollie customer id.
      *
      * @return SubscriptionCollection|false
      */
-    public function get_subscriptions(string $customer_vendor_id) {
+    public function get_subscriptions(string $customer_id) {
         $mollie_api = $this->api_client;
 
         try {
-            $customer = $mollie_api->customers->get($customer_vendor_id);
+            $customer = $mollie_api->customers->get($customer_id);
 
             return $customer->subscriptions();
         } catch (ApiException $e) {
