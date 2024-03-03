@@ -22,11 +22,17 @@ lint-job:
     - composer install
     - composer run lint:gitlab
 
+test-job:
+  stage: test
+  script:
+    - npm install
+    - npm run wp-env start
+    - npm run test:unit
+
 build-job:
   stage: build
   script:
     - echo "Building plugin..."
-    - npm install
     - composer run build-production
   artifacts:
     reports:
