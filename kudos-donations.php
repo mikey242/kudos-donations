@@ -33,9 +33,9 @@ if ( ! \defined( 'WPINC' ) ) {
  */
 \define( 'KUDOS_VERSION', '4.0.0-beta-6' );
 \define( 'KUDOS_DB_VERSION', '4.0.0' );
-\define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-\define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 \define( 'KUDOS_PLUGIN_FILE', __FILE__ );
+\define( 'KUDOS_PLUGIN_URL', plugin_dir_url( KUDOS_PLUGIN_FILE ) );
+\define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( KUDOS_PLUGIN_FILE ) );
 \define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
 \define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
 \define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
