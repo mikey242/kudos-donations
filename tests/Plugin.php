@@ -16,9 +16,9 @@ class Plugin extends WP_UnitTestCase {
 	}
 
 	/**
-	 * A single example test.
+	 * Test that plugin is registered.
 	 */
 	public function test_plugin_register() {
-		$this->assertSame(1, did_action('kudos_donations_loaded'));
+		$this->assertSame( 1, did_action( 'kudos_donations_loaded' ) );
 	}
 }
