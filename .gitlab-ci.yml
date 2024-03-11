@@ -4,7 +4,7 @@ variables:
 
 before_script:
   - echo "Installing dependencies..."
-  - apt update && apt install unzip #Required for composer to install packages
+  - apt-get update && apt-get install -y zip #Required for composer and make-zip command.
   - echo "Installing composer..."
   - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   - echo "Installing Node.js..."
