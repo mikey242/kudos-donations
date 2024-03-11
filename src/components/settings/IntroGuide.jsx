@@ -156,11 +156,11 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 													? __(
 															'recurring enabled',
 															'kudos-donations'
-													  )
+														)
 													: __(
 															'recurring not available',
 															'kudos-donations'
-													  )}
+														)}
 												)
 											</h2>
 										</div>

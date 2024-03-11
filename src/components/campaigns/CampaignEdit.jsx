@@ -373,10 +373,14 @@ function CampaignEdit({ campaign, updateCampaign, recurringAllowed }) {
 			title: __('Custom CSS', 'kudos-donations'),
 			content: (
 				<>
-					<TextAreaControl label="Custom CSS" help="This will only apply to the current campaign." name="meta.custom_styles" />
+					<TextAreaControl
+						label="Custom CSS"
+						help="This will only apply to the current campaign."
+						name="meta.custom_styles"
+					/>
 				</>
-			)
-		}
+			),
+		},
 	];
 
 	return (
@@ -385,7 +389,7 @@ function CampaignEdit({ campaign, updateCampaign, recurringAllowed }) {
 				{isNew
 					? __('New campaign', 'kudos-donations')
 					: __('Edit campaign: ', 'kudos-donations') +
-					  campaign.title.rendered}
+						campaign.title.rendered}
 			</h2>
 			<FormProvider {...methods}>
 				<form id="settings-form" onSubmit={handleSubmit(onSubmit)}>

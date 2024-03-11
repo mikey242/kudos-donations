@@ -1,80 +1,81 @@
 {
-  "name": "iseard-media/kudos-donations",
-  "description": "A modern and easy to use donation plugin for WordPress.",
-  "type": "wordpress-plugin",
-  "prefer-stable": true,
-  "minimum-stability": "dev",
-  "config": {
-    "classmap-authoritative": true,
-    "optimize-autoloader": true,
-    "sort-packages": true,
-    "platform": {
-      "php": "7.4"
-    },
-    "allow-plugins": {
-      "typisttech/imposter-plugin": false,
-      "dealerdirect/phpcodesniffer-composer-installer": true,
-      "phpstan/extension-installer": true
-    }
-  },
-  "require": {
-    "php": ">=7.4",
-    "ext-json": "*",
-    "mollie/mollie-api-php": "^2.32.0",
-    "monolog/monolog": "^2.9",
-    "php-di/php-di": "^6.4",
-    "psr/log": "1.1.*",
-    "symfony/config": "^5.4",
-    "symfony/dependency-injection": "^5.4",
-    "symfony/dotenv": "^5.4",
-    "symfony/polyfill-ctype": "1.20.*",
-    "symfony/polyfill-mbstring": "1.20.*",
-    "symfony/yaml": "^5.4",
-    "twig/twig": "^3.0",
-    "woocommerce/action-scheduler": "^3.5"
-  },
-  "require-dev": {
-    "filp/whoops": "^2.13",
-    "humbug/php-scoper": "0.17.5",
-    "micheh/phpcs-gitlab": "^1.1",
-    "php-stubs/wordpress-tests-stubs": "^6.3",
-    "phpcompatibility/php-compatibility": "^9.3",
-    "phpcompatibility/phpcompatibility-wp": "*",
-    "phpstan/extension-installer": "^1.3",
-    "phpstan/phpstan": "^1.6",
-    "phpstan/phpstan-deprecation-rules": "^1.1",
-    "phpunit/phpunit": "^8.5",
-    "sirbrillig/phpcs-variable-analysis": "v2.11.16",
-    "slevomat/coding-standard": "^8.6",
-    "sniccowp/php-scoper-wordpress-excludes": "^6.2",
-    "squizlabs/php_codesniffer": "3.7.2",
-    "szepeviktor/phpstan-wordpress": "^1.3",
-    "wp-coding-standards/wpcs": "3.*",
-    "yoast/phpunit-polyfills": "^2.0"
-  },
-  "scripts": {
-    "lint": "phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-source",
-    "test:gitlab": "phpunit",
-    "lint:gitlab": "vendor/bin/phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-\\\\Micheh\\\\PhpCodeSniffer\\\\Report\\\\Gitlab=phpcs-quality-report.json",
-    "build-production": [
-      "composer install --optimize-autoloader --no-dev",
-      "npm run build"
-    ],
-    "make-zip": [
-      "rm -f kudos-donations.zip",
-      "php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
-    ],
-    "release": [
-      "@build-production",
-      "@make-zip"
-    ]
-  },
-  "autoload": {
-    "psr-4": {
-      "IseardMedia\\Kudos\\": "includes/"
-    },
-    "files": [
-      "includes/helpers.php"
-    ]
-  }
+	"name": "iseard-media/kudos-donations",
+	"description": "A modern and easy to use donation plugin for WordPress.",
+	"type": "wordpress-plugin",
+	"prefer-stable": true,
+	"license": "proprietary",
+	"minimum-stability": "dev",
+	"config": {
+		"classmap-authoritative": true,
+		"optimize-autoloader": true,
+		"sort-packages": true,
+		"platform": {
+			"php": "7.4"
+		},
+		"allow-plugins": {
+			"typisttech/imposter-plugin": false,
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"phpstan/extension-installer": true
+		}
+	},
+	"require": {
+		"php": ">=7.4",
+		"ext-json": "*",
+		"mollie/mollie-api-php": "^2.32.0",
+		"monolog/monolog": "^2.9",
+		"php-di/php-di": "^6.4",
+		"psr/log": "1.1.*",
+		"symfony/config": "^5.4",
+		"symfony/dependency-injection": "^5.4",
+		"symfony/dotenv": "^5.4",
+		"symfony/polyfill-ctype": "1.20.*",
+		"symfony/polyfill-mbstring": "1.20.*",
+		"symfony/yaml": "^5.4",
+		"twig/twig": "^3.0",
+		"woocommerce/action-scheduler": "^3.5"
+	},
+	"require-dev": {
+		"filp/whoops": "^2.13",
+		"humbug/php-scoper": "0.17.5",
+		"micheh/phpcs-gitlab": "^1.1",
+		"php-stubs/wordpress-tests-stubs": "^6.3",
+		"phpcompatibility/php-compatibility": "^9.3",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"phpstan/extension-installer": "^1.3",
+		"phpstan/phpstan": "^1.6",
+		"phpstan/phpstan-deprecation-rules": "^1.1",
+		"phpunit/phpunit": "^8.5",
+		"sirbrillig/phpcs-variable-analysis": "v2.11.16",
+		"slevomat/coding-standard": "^8.6",
+		"sniccowp/php-scoper-wordpress-excludes": "^6.2",
+		"squizlabs/php_codesniffer": "3.7.2",
+		"szepeviktor/phpstan-wordpress": "^1.3",
+		"wp-coding-standards/wpcs": "3.*",
+		"yoast/phpunit-polyfills": "^2.0"
+	},
+	"scripts": {
+		"lint": "phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-source",
+		"test-integration:gitlab": "vendor/bin/phpunit --do-not-cache-result",
+		"lint:gitlab": "vendor/bin/phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-\\\\Micheh\\\\PhpCodeSniffer\\\\Report\\\\Gitlab=phpcs-quality-report.json",
+		"build-production": [
+			"composer install --optimize-autoloader --no-dev",
+			"npm run build"
+		],
+		"make-zip": [
+			"rm -f kudos-donations.zip",
+			"php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
+		],
+		"release": [
+			"@build-production",
+			"@make-zip"
+		]
+	},
+	"autoload": {
+		"psr-4": {
+			"IseardMedia\\Kudos\\": "includes/"
+		},
+		"files": [
+			"includes/helpers.php"
+		]
+	}
 }

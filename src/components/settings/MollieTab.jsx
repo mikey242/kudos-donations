@@ -84,7 +84,17 @@ const MollieTab = ({ checkApiKeys }) => {
 				</p>
 			</div>
 			<Divider />
-			<p>You can get your Mollie API keys <a target="_blank" className="underline" href="https://my.mollie.com/dashboard/developers/api-keys">here</a>.</p>
+			<p>
+				You can get your Mollie API keys{' '}
+				<a
+					target="_blank"
+					className="underline"
+					href="https://my.mollie.com/dashboard/developers/api-keys"
+				>
+					here
+				</a>
+				.
+			</p>
 			<>
 				{[
 					{ ...watchLive, name: 'live' },

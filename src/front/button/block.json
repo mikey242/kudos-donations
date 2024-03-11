@@ -1,48 +1,44 @@
 {
-  "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 2,
-  "name": "iseardmedia/kudos-button",
-  "title": "Kudos Donations",
-  "category": "widgets",
-  "description": "Adds a configurable Kudos donate button or form.",
-  "textdomain": "kudos-donations",
-  "keywords": [
-    "kudos",
-    "button",
-    "donate"
-  ],
-  "supports": {
-    "align": false,
-    "customClassName": true,
-    "typography": {
-      "fontSize": false
-    }
-  },
-  "example": {
-    "attributes": {
-      "label": "Donate now!",
-      "alignment": "center"
-    }
-  },
-  "attributes": {
-    "button_label": {
-      "type": "string",
-      "default": "Donate now"
-    },
-    "campaign_id": {
-      "type": "string",
-      "default": ""
-    },
-    "alignment": {
-      "type": "string",
-      "default": "none"
-    },
-    "type": {
-      "type": "string",
-      "default": "button"
-    }
-  },
-  "editorScript": "file:index.js",
-  "script": "file:../kudos-front.jsx",
-  "style": "file:../kudos-front.css"
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "iseardmedia/kudos-button",
+	"title": "Kudos Donations",
+	"category": "widgets",
+	"description": "Adds a configurable Kudos donate button or form.",
+	"textdomain": "kudos-donations",
+	"keywords": ["kudos", "button", "donate"],
+	"supports": {
+		"align": false,
+		"customClassName": true,
+		"typography": {
+			"fontSize": false
+		}
+	},
+	"example": {
+		"attributes": {
+			"label": "Donate now!",
+			"alignment": "center"
+		}
+	},
+	"attributes": {
+		"button_label": {
+			"type": "string",
+			"default": "Donate now"
+		},
+		"campaign_id": {
+			"type": "string",
+			"default": ""
+		},
+		"alignment": {
+			"type": "string",
+			"default": "none"
+		},
+		"type": {
+			"type": "string",
+			"default": "button"
+		}
+	},
+	"editorScript": "file:index.js",
+	"script": "file:../kudos-front.jsx",
+	"style": "file:../kudos-front.css"
 }

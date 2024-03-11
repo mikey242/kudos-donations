@@ -104,12 +104,15 @@ const SettingsPage = () => {
 									>
 										{isVendorReady
 											? settings._kudos_vendor +
-											  ' ' +
-											  __('connected', 'kudos-donations')
+												' ' +
+												__(
+													'connected',
+													'kudos-donations'
+												)
 											: __(
 													'Not connected',
 													'kudos-donations'
-											  )}
+												)}
 									</span>
 									<span
 										className={classNames(
