@@ -88,6 +88,7 @@ const MollieTab = ({ checkApiKeys }) => {
 				You can get your Mollie API keys{' '}
 				<a
 					target="_blank"
+					rel="noreferrer"
 					className="underline"
 					href="https://my.mollie.com/dashboard/developers/api-keys"
 				>
