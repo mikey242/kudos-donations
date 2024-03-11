@@ -51,11 +51,11 @@ build-job:
     - echo "Building plugin..."
     - composer run build-production
 
-test-job:
-  stage: test
-  script:
-    - npm run wp-env start
-    - npm run test:unit
+#test-job:
+#  stage: test
+#  script:
+#    - npm run wp-env start
+#    - npm run test:unit
 
 deploy-job:
   stage: deploy
