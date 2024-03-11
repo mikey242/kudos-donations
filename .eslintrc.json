@@ -4,5 +4,9 @@
 		"browser": true,
 		"node": true,
 		"jasmine": true
+	},
+	"parser": "@babel/eslint-parser",
+	"parserOptions": {
+		"requireConfigFile": false
 	}
 }
