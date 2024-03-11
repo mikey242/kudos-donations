@@ -61,6 +61,8 @@ test-job:
   script:
     - apt-get update && apt-get install -y subversion git default-mysql-client
     - bash bin/install-wp-tests.sh wordpress_test root $MYSQL_ROOT_PASSWORD mysql latest
+    - composer global require "phpunit/phpunit=4.8.*|5.7.*"
+    - vendor/bin/phpunit
 
 deploy-job:
   image: php:$PHP_VERSION
