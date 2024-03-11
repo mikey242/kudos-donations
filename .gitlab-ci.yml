@@ -1,50 +1,72 @@
-image: carlosalgms/composer-and-node-ci
+variables:
+  PHP_VERSION: "7.4"
+  NODE_VERSION: "18.18.1"
 
 before_script:
-  - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-  - chmod +x wp-cli.phar
-  - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
+  - echo "Installing dependencies..."
+  - apt update && apt install unzip #Required for composer to install packages
+  - echo "Installing composer..."
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  - echo "Installing Node.js..."
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+  - source ~/.bashrc
+  - nvm install $NODE_VERSION
+  - nvm use $NODE_VERSION
+  - node --version
+  - npm --version
 
 cache:
   paths:
     - build/
     - vendor/
+    - node_modules
 
 stages:
-  - test
+  - prepare
+  - code-quality
   - build
+  # - test
   - deploy
 
-lint-job:
-  stage: test
+prepare-job:
+  image: php:$PHP_VERSION
+  stage: prepare
   script:
-    - echo "Linting plugin...."
-    - composer install
+    - echo "Installing PHP dependencies with Composer..."
+    - composer install --prefer-dist --no-progress --no-suggest
+    - echo "Installing Node modules with npm..."
+    - npm install
+
+code-quality-job:
+  image: php:$PHP_VERSION
+  stage: code-quality
+  script:
+    - echo "Linting php..."
     - composer run lint:gitlab
 
-test-job:
-  stage: test
-  script:
-    - npm install
-    - npm run wp-env start
-    - npm run test:unit
-
 build-job:
+  image: php:$PHP_VERSION
   stage: build
   script:
     - echo "Building plugin..."
     - composer run build-production
-  artifacts:
-    reports:
-      codequality: phpcs-quality-report.json
+
+test-job:
+  stage: test
+  script:
+    - npm run wp-env start
+    - npm run test:unit
 
 deploy-job:
   stage: deploy
   environment: production
+  script:
+    - echo "Deploying application..."
+    - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    - chmod +x wp-cli.phar
+    - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
+    - composer run make-zip
+    - echo "Application successfully built."
   artifacts:
     paths:
       - kudos-donations.zip
-  script:
-    - echo "Deploying application..."
-    - composer run make-zip
-    - echo "Application successfully built."
