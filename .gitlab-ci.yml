@@ -58,6 +58,7 @@ build-job:
 #    - npm run test:unit
 
 deploy-job:
+  image: php:$PHP_VERSION
   stage: deploy
   environment: production
   script:
