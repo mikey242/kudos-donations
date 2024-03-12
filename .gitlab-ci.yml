@@ -89,7 +89,7 @@ test-job:
         - apt-get update && apt-get install -y subversion default-mysql-client
         - curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
         - chmod +x /bin/*.sh
-        - bash bin/install-wp-tests.sh $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST $WORDPRESS_TEST_VERSION true
+        - bash /bin/install-wp-tests.sh $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST $WORDPRESS_TEST_VERSION true
         - composer run test-integration:gitlab
 
 deploy-job:
