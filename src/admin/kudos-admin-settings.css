@@ -2,4 +2,4 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 @import "kudos-admin.css";
-@config '../tailwind.admin.settings.config.js';
+@config "../tailwind.admin.settings.config.js";

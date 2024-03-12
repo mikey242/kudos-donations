@@ -1,40 +1,44 @@
 @font-face {
-    font-family: "montserratregular";
-    src: url("../../assets/fonts/montserrat-regular-webfont.woff2") format("woff2"), url("../../assets/fonts/montserrat-regular-webfont.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
+	font-family: montserratregular;
+	src: url(../../assets/fonts/montserrat-regular-webfont.woff2) format("woff2"), url(../../assets/fonts/montserrat-regular-webfont.woff) format("woff");
+	font-weight: 400;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: 'cabinbold';
-    src: url('../../assets/fonts/cabin-bold-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+	font-family: cabinbold;
+	src: url(../../assets/fonts/cabin-bold-webfont.woff) format("woff");
+	font-weight: 400;
+	font-style: normal;
 }
 
 :host {
-    --kudos-theme-primary: theme("colors.orange.500");
-    --kudos-theme-primary-dark: theme("colors.orange.700");
+	--kudos-theme-primary: theme("colors.orange.500");
+	--kudos-theme-primary-dark: theme("colors.orange.700");
 }
 
 @layer base {
-    h1 {
-        @apply text-2xl font-bold leading-loose;
-    }
 
-    h2 {
-        @apply text-xl font-bold;
-    }
+	h1 {
 
-    h3 {
-        @apply text-lg font-bold;
-    }
+		@apply text-2xl font-bold leading-loose;
+	}
 
-    #wpcontent {
-        padding-left: 0 !important;
-    }
+	h2 {
 
-    .auto-fold #wpcontent {
-        padding-left: 0;
-    }
+		@apply text-xl font-bold;
+	}
+
+	h3 {
+
+		@apply text-lg font-bold;
+	}
+
+	#wpcontent {
+		padding-left: 0 !important;
+	}
+
+	.auto-fold #wpcontent {
+		padding-left: 0;
+	}
 }
