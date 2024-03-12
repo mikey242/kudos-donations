@@ -1,79 +1,118 @@
 variables:
-  PHP_VERSION: "7.4"
-  NODE_VERSION: "18.18.1"
-  MYSQL_ROOT_PASSWORD: 'password'
-  MYSQL_HOST: "mysql"
+    PHP_VERSION: '7.4'
+    NODE_VERSION: 18.18.1
+    MYSQL_DATABASE: test-wordpress
+    MYSQL_HOST: mysql
+    MYSQL_USER: test
+    MYSQL_PASSWORD: password
+    MYSQL_ROOT_PASSWORD: password
 
-before_script:
-  - echo "Installing dependencies..."
-  - apt-get update && apt-get install -y zip #Required for composer and make-zip command.
-  - echo "Installing composer..."
-  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-  - echo "Installing Node.js..."
-  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-  - source ~/.bashrc
-  - nvm install $NODE_VERSION
-  - nvm use $NODE_VERSION
-  - node --version
-  - npm --version
+.script_install_composer: &script_install_composer
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
-cache:
-  paths:
-    - build/
-    - vendor/
-    - node_modules
+.script_install_npm: &script_install_npm
+    - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    - source ~/.bashrc
+    - nvm install && nvm use
+    - npm i
 
 stages:
-  - prepare
-  - code-quality
-  - build
-  - test
-  - deploy
+    - validate
+    - code-quality
+    - build
+    - test
+    - deploy
 
-prepare-job:
-  image: php:$PHP_VERSION
-  stage: prepare
-  script:
-    - echo "Installing PHP dependencies with Composer..."
-    - composer install --prefer-dist --no-progress --no-suggest
-    - echo "Installing Node modules with npm..."
-    - npm install
+validate-composer:
+    image: composer:2
+    stage: validate
+    script:
+        - composer --no-ansi validate
 
-code-quality-job:
-  image: php:$PHP_VERSION
-  stage: code-quality
-  script:
-    - echo "Linting php..."
-    - composer run lint:gitlab
+lint-php:
+    cache:
+        key:
+            files: [ composer.lock ]
+        paths:
+            - vendor/
+    image: wordpress:php$PHP_VERSION
+    stage: code-quality
+    before_script: *script_install_composer
+    script:
+        - composer run lint:gitlab
+
+lint-js-css:
+    cache:
+        key:
+            files: [ package-lock.json ]
+        paths:
+            - node_modules/
+    image: wordpress:php$PHP_VERSION
+    stage: code-quality
+    before_script: *script_install_npm
+    script:
+        - npm run lint:js
+        - npm run lint:css
 
 build-job:
-  image: php:$PHP_VERSION
-  stage: build
-  script:
-    - echo "Building plugin..."
-    - composer run build-production
+    cache:
+        key:
+            files:
+                - composer.lock
+                - package-lock.json
+        paths:
+            - vendor/
+            - node_modules/
+            - build/
+    image: wordpress:php$PHP_VERSION
+    stage: build
+    before_script:
+        - *script_install_npm
+        - *script_install_composer
+    script:
+        - composer run build-production
 
 test-job:
-  image: php:$PHP_VERSION-apache
-  stage: test
-  services:
-    - mysql
-  script:
-    - apt-get update && apt-get install -y subversion git default-mysql-client
-    - bash bin/install-wp-tests.sh wordpress_test root $MYSQL_ROOT_PASSWORD mysql latest
-    - ./vendor/bin/phpunit
+    image: wordpress:php$PHP_VERSION
+    stage: test
+    services:
+        - mysql
+    variables:
+        WORDPRESS_DB_USER: $MYSQL_USER
+        WORDPRESS_DB_PASSWORD: $MYSQL_PASSWORD
+        WORDPRESS_DB_NAME: $MYSQL_DATABASE
+        WORDPRESS_DB_HOST: $MYSQL_HOST
+        WORDPRESS_TEST_VERSION: latest
+    before_script: *script_install_composer
+    script:
+        - apt-get update && apt-get install -y subversion default-mysql-client
+        - curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
+        - chmod +x /bin/*.sh
+        - bash bin/install-wp-tests.sh $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST $WORDPRESS_TEST_VERSION true
+        - composer run test-integration:gitlab
 
 deploy-job:
-  image: php:$PHP_VERSION
-  stage: deploy
-  environment: production
-  script:
-    - echo "Deploying application..."
-    - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-    - chmod +x wp-cli.phar
-    - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
-    - composer run make-zip
-    - echo "Application successfully built."
-  artifacts:
-    paths:
-      - kudos-donations.zip
+    cache:
+        key:
+            files:
+                - composer.lock
+                - package-lock.json
+        paths:
+            - vendor/
+            - node_modules/
+            - build/
+    image: wordpress:php$PHP_VERSION
+    stage: deploy
+    environment: production
+    script:
+        - echo "Deploying application..."
+        - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+        - chmod +x wp-cli.phar
+        - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
+        - composer run make-zip
+        - echo "Application successfully built."
+    artifacts:
+        paths:
+            - kudos-donations.zip
+        expire_in: 1 week
