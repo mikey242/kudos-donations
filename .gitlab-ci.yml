@@ -86,7 +86,7 @@ test-job:
         WORDPRESS_TEST_VERSION: latest
     before_script: *script_install_composer
     script:
-        - apt-get update && apt-get install -y subversion default-mysql-client
+        - apt-get update -y && apt-get install -y subversion default-mysql-client
         - curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
         - chmod +x /bin/*.sh
         - bash /bin/install-wp-tests.sh $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST $WORDPRESS_TEST_VERSION true
@@ -104,7 +104,9 @@ deploy-job:
             - build/
     image: wordpress:php$PHP_VERSION
     stage: deploy
-    environment: production
+    before_script:
+        - *script_install_composer
+        - apt-get update -y && apt-get install -y zip
     script:
         - echo "Deploying application..."
         - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
