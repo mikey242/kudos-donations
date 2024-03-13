@@ -18,6 +18,7 @@ variables:
     - npm i
 
 cache:
+    key: ${CI_COMMIT_REF_SLUG}
     paths:
         - vendor/
         - node_modules/
@@ -58,7 +59,7 @@ build-job:
         - *script_install_npm
         - *script_install_composer
     script:
-        - composer run build-production
+        - npm run build
 
 test-job:
     image: wordpress:php$PHP_VERSION
@@ -84,6 +85,7 @@ deploy-job:
     stage: deploy
     before_script:
         - *script_install_composer
+        - composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist
         - apt-get update -y && apt-get install -y zip
     script:
         - echo "Deploying application..."
