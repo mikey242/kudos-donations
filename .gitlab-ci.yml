@@ -17,6 +17,12 @@ variables:
     - nvm install && nvm use
     - npm i
 
+cache:
+    paths:
+        - vendor/
+        - node_modules/
+        - build/
+
 stages:
     - validate
     - code-quality
@@ -31,11 +37,6 @@ validate-composer:
         - composer --no-ansi validate
 
 lint-php:
-    cache:
-        key:
-            files: [ composer.lock ]
-        paths:
-            - vendor/
     image: wordpress:php$PHP_VERSION
     stage: code-quality
     before_script: *script_install_composer
@@ -43,11 +44,6 @@ lint-php:
         - composer run lint:gitlab
 
 lint-js-css:
-    cache:
-        key:
-            files: [ package-lock.json ]
-        paths:
-            - node_modules/
     image: wordpress:php$PHP_VERSION
     stage: code-quality
     before_script: *script_install_npm
@@ -56,15 +52,6 @@ lint-js-css:
         - npm run lint:css
 
 build-job:
-    cache:
-        key:
-            files:
-                - composer.lock
-                - package-lock.json
-        paths:
-            - vendor/
-            - node_modules/
-            - build/
     image: wordpress:php$PHP_VERSION
     stage: build
     before_script:
@@ -93,15 +80,6 @@ test-job:
         - composer run test-integration:gitlab
 
 deploy-job:
-    cache:
-        key:
-            files:
-                - composer.lock
-                - package-lock.json
-        paths:
-            - vendor/
-            - node_modules/
-            - build/
     image: wordpress:php$PHP_VERSION
     stage: deploy
     before_script:
