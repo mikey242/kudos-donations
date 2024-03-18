@@ -134,19 +134,19 @@ class MailerService extends AbstractService {
 		// Assign attachment.
 		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction_id );
 
-		// Get donor details.
-		$donor_meta       = get_post_meta( $donor_id );
-		$transaction_meta = get_post_meta( $transaction_id );
+		// Get posts.
+		$donor       = get_post( $donor_id );
+		$transaction = get_post( $transaction_id );
 
 		// Create array of variables for use in twig template.
 		$render_array = [
-			'name'         => $donor_meta['name'][0] ?? '',
-			'date'         => get_post( $transaction_id )->post_date,
-			'description'  => $transaction_meta['description'][0] ?? '',
-			'amount'       => ( ! empty( $transaction_meta['currency'][0] ) ? html_entity_decode(
-				Utils::get_currency_symbol( $transaction_meta['currency'][0] )
+			'name'         => $donor->{DonorPostType::META_FIELD_NAME} ?? '',
+			'date'         => $transaction->post_date,
+			'description'  => $transaction->post_title,
+			'amount'       => ( ! empty( $transaction->{TransactionPostType::META_FIELD_CURRENCY} ) ? html_entity_decode(
+				Utils::get_currency_symbol( $transaction->{TransactionPostType::META_FIELD_CURRENCY} )
 			) : '' ) . number_format_i18n(
-				$transaction_meta['value'][0],
+				$transaction->{TransactionPostType::META_FIELD_VALUE},
 				2
 			),
 			'receipt_id'   => TransactionPostType::get_formatted_id( $transaction_id ),
@@ -181,14 +181,14 @@ class MailerService extends AbstractService {
 			'Creating receipt email.',
 			array_merge(
 				[
-					'email' => $donor_meta['email'],
+					'email' => $donor->{DonorPostType::META_FIELD_EMAIL},
 					$render_array,
 				]
 			)
 		);
 
 		return $this->send(
-			$donor_meta['email'][0],
+			$donor->{DonorPostType::META_FIELD_EMAIL},
 			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
 			$attachments
@@ -233,6 +233,7 @@ class MailerService extends AbstractService {
 	 * Removes hooks to return to normal settings after email sent.
 	 */
 	private function remove_hooks(): void {
+		$this->logger->debug( 'Mailer: Removing hooks' );
 		remove_action( 'phpmailer_init', [ $this, 'init' ] );
 		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
 		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP ) ) {
