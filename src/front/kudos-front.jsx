@@ -10,6 +10,7 @@ import KudosForm from '../components/front/KudosForm';
 import Message from '../components/front/Message';
 import { KudosButton } from '../components/front/KudosButton';
 import CampaignProvider from '../contexts/CampaignContext';
+import './kudos-fonts.css';
 import './kudos-front.css';
 
 // Select the web components as target for render.

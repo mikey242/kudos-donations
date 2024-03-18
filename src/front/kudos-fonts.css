@@ -1,3 +1,5 @@
+@config "../tailwind.front.config.js";
+
 @font-face {
 	font-family: montserratregular;
 	src: url(../../assets/fonts/montserrat-regular-webfont.woff2) format("woff2"), url(../../assets/fonts/montserrat-regular-webfont.woff) format("woff");

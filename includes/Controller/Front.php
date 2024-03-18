@@ -64,6 +64,7 @@ class Front extends AbstractService {
 	 */
 	public function register_assets(): void {
 		$public_js = Assets::get_script( 'front/kudos-front.js' );
+		wp_register_style( 'kudos-donations-fonts', Assets::get_style( 'front/kudos-fonts.css' ), [], KUDOS_VERSION );
 		wp_register_script(
 			'kudos-donations-public',
 			$public_js['url'],
