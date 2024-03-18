@@ -20,6 +20,7 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\AbstractService;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorInterface;
+use WP_REST_Server;
 
 class Front extends AbstractService {
 	private SettingsService $settings;
@@ -196,13 +197,13 @@ class Front extends AbstractService {
 	public function handle_query_variables(): void {
 		if ( isset( $_REQUEST['kudos_action'] ) && -1 !== $_REQUEST['kudos_action'] ) {
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
-			$nonce  = sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) );
 
 			// Enqueue script / style in case we are on another page.
 			$this->enqueue_assets();
 
 			switch ( $action ) {
 				case 'order_complete':
+					$nonce  = sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) );
 					$transaction_id = sanitize_text_field( $_REQUEST['kudos_transaction_id'] );
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
@@ -262,6 +263,18 @@ class Front extends AbstractService {
 							}
 						}
 					}
+					break;
+				case 'cancel_subscription':
+					$id = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
+					$token = sanitize_text_field( wp_unslash( $_REQUEST['token'] ) );
+					$request = new \WP_REST_Request( WP_REST_Server::READABLE, '/kudos/v1/subscription/cancel');
+					$request->set_query_params(['id' => $id, 'token' => $token]);
+					$response = rest_do_request($request);
+					$data = $response->get_data();
+						$this->message_modal_html(
+							$data['message'],
+							$response->is_error() ?  __( 'Please contact support.', 'kudos-donations' ) : __( 'Thanks for your support!', 'kudos-donations' )
+						);
 					break;
 				default:
 					$this->message_modal_html(

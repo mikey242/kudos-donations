@@ -19,6 +19,7 @@ use IseardMedia\Kudos\Controller\Admin;
 use IseardMedia\Kudos\Controller\Front;
 use IseardMedia\Kudos\Controller\Rest\Mail;
 use IseardMedia\Kudos\Controller\Rest\Payment;
+use IseardMedia\Kudos\Controller\Rest\Subscription;
 use IseardMedia\Kudos\Controller\Rest\Transaction;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
@@ -57,6 +58,7 @@ return [
 	Transaction::class            => autowire(),
 	Mail::class                   => autowire(),
 	Payment::class                => autowire(),
+	Subscription::class           => autowire(),
 	SettingsService::class        => autowire(),
 	PaymentService::class         => autowire(),
 	MailerService::class          => autowire(),

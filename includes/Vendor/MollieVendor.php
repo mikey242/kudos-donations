@@ -343,16 +343,18 @@ class MollieVendor extends AbstractService implements VendorInterface
      */
     public function cancel_subscription( WP_Post $subscription): bool
     {
-        $customer = $this->get_customer($subscription->vendor_id);
+		$transaction = get_post($subscription->{SubscriptionPostType::META_FIELD_TRANSACTION_ID});
+		$customer_id = $transaction->{TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID};
+	    $customer = $this->get_customer($customer_id);
 
         // Bail if no subscription found locally or if not active.
-        if ('active' !== $subscription->status || null === $customer) {
+        if ('active' !== $subscription->{SubscriptionPostType::META_FIELD_STATUS} || null === $customer) {
             return false;
         }
 
         // Cancel the subscription via Mollie's API.
         try {
-            $response = $customer->cancelSubscription($subscription->subscription_id);
+            $response = $customer->cancelSubscription($subscription->{SubscriptionPostType::META_FIELD_SUBSCRIPTION_ID});
 
             /** @var Subscription $response */
             return ($response->status === PaymentStatus::CANCELED);

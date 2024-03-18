@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use Psr\Log\LoggerInterface;
@@ -305,42 +304,6 @@ class Payment extends AbstractRestController {
 			],
 			500
 		);
-	}
-
-	/**
-	 * Cancel the specified subscription.
-	 *
-	 * @param string $id subscription row ID.
-	 */
-	public function cancel_subscription( string $id ): bool {
-
-		// Get subscription post from supplied row id.
-		$subscription = get_post( $id );
-
-		// Cancel subscription with vendor.
-		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
-
-		if ( $result ) {
-			// Update entity with canceled status.
-			SubscriptionPostType::save(
-				[
-					'ID' => $id,
-					SubscriptionPostType::META_FIELD_STATUS => 'cancelled',
-				]
-			);
-
-			$this->logger->info(
-				'Subscription cancelled.',
-				[
-					'ID'              => $id,
-					'subscription_id' => get_post_meta( $id, 'subscription_id', true ),
-				]
-			);
-
-			return true;
-		}
-
-		return false;
 	}
 
 	/**

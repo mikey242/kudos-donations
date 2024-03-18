@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Domain\PostType\DonorPostType;
+use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
 use PHPMailer\PHPMailer\Exception;
@@ -151,8 +153,29 @@ class MailerService extends AbstractService {
 			'website_name' => get_bloginfo( 'name' ),
 		];
 
-		$twig = $this->twig;
-		$body = $twig->render( 'emails/receipt.html.twig', $render_array );
+		// Add a cancel button if this is the receipt for a subscription payment.
+		try {
+			if ( 'oneoff' !== $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE} ) {
+				$subscription = SubscriptionPostType::get_post(
+					[
+						SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id,
+					]
+				);
+				$this->logger->debug( 'Mailer: Detected recurring payment. Adding cancel button.', [ SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id ] );
+				$render_array['cancel_url'] = add_query_arg(
+					[
+						'kudos_action' => 'cancel_subscription',
+						'token'        => Utils::generate_token( $subscription->ID ),
+						'id'           => $subscription->ID,
+					],
+					home_url()
+				);
+			}
+		} catch ( \Exception $e ) {
+			$this->logger->error( 'Mailer: Error adding cancel button: ' . $e->getMessage() );
+		}
+
+		$body = $this->twig->render( 'emails/receipt.html.twig', $render_array );
 
 		$this->logger->debug(
 			'Creating receipt email.',
