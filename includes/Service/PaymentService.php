@@ -106,7 +106,7 @@ class PaymentService extends AbstractService {
 		// Get donor.
 		$donor = get_post( get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true ) );
 
-		if ( get_post_meta( $donor->ID, DonorPostType::META_FIELD_EMAIL ) ) {
+		if ( $donor->{DonorPostType::META_FIELD_EMAIL} ) {
 			// Send email - email setting is checked in mailer.
 			$mailer->send_receipt( $donor->ID, $transaction_id );
 		}
