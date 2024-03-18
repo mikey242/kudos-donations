@@ -141,15 +141,16 @@ class Payment extends AbstractRestController {
 			],
 
 			self::ROUTE_REFUND  => [
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => [ $this, 'refund' ],
-				'args'     => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'refund' ],
+				'args'                => [
 					'id' => [
 						'type'              => 'integer',
 						'required'          => true,
 						'sanitize_callback' => 'absint',
 					],
 				],
+				'permission_callback' => '__return_true',
 			],
 
 			self::ROUTE_TEST    => [
@@ -273,16 +274,25 @@ class Payment extends AbstractRestController {
 				TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID => $vendor_customer_id,
 			]
 		);
-		$url                = $this->vendor->create_payment( $args, $transaction->ID, $vendor_customer_id );
+
+		$payment_frequency = 'false' === $args['recurring'] ? __( 'oneoff', 'kudos-donations' ) : __( 'recurring', 'kudos-donations' );
+		$transaction       = TransactionPostType::save(
+			[
+				'ID'         => $transaction->ID,
+				'post_title' => apply_filters(
+					'kudos_payment_description',
+					__( 'Donation', 'kudos-donations' ) . sprintf( ' (%1$s) - %2$s', $payment_frequency, TransactionPostType::get_formatted_id( $transaction->ID ) ),
+				),
+			]
+		);
+
+		$url = $this->vendor->create_payment( $args, $transaction->ID, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created in Mollie.
 		if ( $url ) {
-			do_action( 'kudos_payment_submit_successful', $args );
-			$title = TransactionPostType::get_formatted_id( $transaction->ID );
 			TransactionPostType::save(
 				[
-					'ID'         => $transaction->ID,
-					'post_title' => $title,
+					'ID' => $transaction->ID,
 
 				],
 			);

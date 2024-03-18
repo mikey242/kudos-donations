@@ -413,6 +413,9 @@ class MollieVendor extends AbstractService implements VendorInterface
 	 * {@inheritDoc}
 	 */
     public function create_payment(array $payment_args, int $transaction_id, ?string $vendor_customer_id): string {
+
+		$transaction = get_post($transaction_id);
+
         // Set payment frequency.
         $payment_args['payment_frequency'] = "true" === $payment_args['recurring'] ? $payment_args['recurring_frequency'] : SequenceType::SEQUENCETYPE_ONEOFF;
 	    $sequence_type                     = "true" === $payment_args['recurring'] ? SequenceType::SEQUENCETYPE_FIRST : SequenceType::SEQUENCETYPE_ONEOFF;
@@ -446,9 +449,7 @@ class MollieVendor extends AbstractService implements VendorInterface
             'redirectUrl'  => $redirect_url,
             'webhookUrl'   => $this->get_webhook_url(),
             'sequenceType' => $sequence_type,
-            'description' => apply_filters('kudos_payment_description', __('Donation', 'kudos-donations') .
-				sprintf(' (%1$s) - %2$s', $payment_args['payment_frequency'], TransactionPostType::get_formatted_id($transaction_id)),
-            ),
+            'description' => $transaction->post_title,
             'metadata'     => [
                 SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id,
                 SubscriptionPostType::META_FIELD_FREQUENCY      => $payment_args['payment_frequency'],

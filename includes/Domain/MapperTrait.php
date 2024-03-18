@@ -20,7 +20,6 @@ trait MapperTrait {
 	 */
 	private static function get_default_args(): array {
 		return [
-			'post_title'   => '',
 			'post_content' => '',
 			'post_type'    => self::get_post_type(),
 			'post_status'  => 'publish',
