@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Helper;
 
+use Exception;
+
 class Utils {
 
 	/**
@@ -86,5 +88,35 @@ class Utils {
 		} else {
 			do_action( $hook, $args );
 		}
+	}
+
+	/**
+	 * Generates a unique token based on the post id.
+	 *
+	 * @throws Exception If post ID invalid.
+	 *
+	 * @param int $post_id The post id to be hashed.
+	 */
+	public static function generate_token( int $post_id ): ?string {
+		if ( ! is_numeric( $post_id ) || $post_id <= 0 ) {
+			throw new Exception( wp_sprintf( 'Invalid post ID supplied to generate_token: %s', (int) $post_id ) );
+		}
+
+		return hash_hmac( 'sha256', (string) $post_id, KUDOS_SALT );
+	}
+
+	/**
+	 * Verifies the provided token against the post id.
+	 *
+	 * @throws Exception If invalid post_id supplied.
+	 *
+	 * @param int    $post_id The ID of the post.
+	 * @param string $token The token.
+	 */
+	public static function verify_token( int $post_id, string $token ): bool {
+		return hash_equals(
+			self::generate_token( $post_id ),
+			$token
+		);
 	}
 }
