@@ -41,15 +41,6 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 	}
 
 	/**
-	 * Returns the full rest route for the specified route.
-	 *
-	 * @param string $route The final part of the rest route.
-	 */
-	public function get_route( string $route ): string {
-		return '/' . $this->namespace . '/' . $this->rest_base . $route;
-	}
-
-	/**
 	 * Get all routes. Should be specified in child class.
 	 */
 	abstract public function get_routes(): array;
