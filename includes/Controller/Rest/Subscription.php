@@ -77,14 +77,14 @@ class Subscription extends AbstractRestController {
 
 		try {
 			if ( ! Utils::verify_token( $post_id, $token ) ) {
-				$response->set_status(401);
-				$response->set_data(['message' => __('Subscription token expired.', 'kudos-donations')]);
+				$response->set_status( 401 );
+				$response->set_data( [ 'message' => __( 'Subscription token expired.', 'kudos-donations' ) ] );
 				$this->logger->info( 'Subscription: Invalid token supplied' );
 				return $response;
 			}
 		} catch ( Exception $e ) {
-			$response->set_status(400);
-			$response->set_data(['message' => __('Error canceling subscription.', 'kudos-donations')]);
+			$response->set_status( 400 );
+			$response->set_data( [ 'message' => __( 'Error canceling subscription.', 'kudos-donations' ) ] );
 			$this->logger->warning( 'Subscription: Error canceling: ' . $e->getMessage() );
 			return $response;
 		}
@@ -111,8 +111,8 @@ class Subscription extends AbstractRestController {
 					'subscription_id' => get_post_meta( $post_id, 'subscription_id', true ),
 				]
 			);
-			$response->set_status(200);
-			$response->set_data(['message' => __( 'Subscription canceled', 'kudos-donations' )]);
+			$response->set_status( 200 );
+			$response->set_data( [ 'message' => __( 'Subscription canceled', 'kudos-donations' ) ] );
 		}
 		return $response;
 	}
