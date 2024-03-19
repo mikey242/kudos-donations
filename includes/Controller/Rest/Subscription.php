@@ -17,6 +17,7 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use Psr\Log\LoggerInterface;
 use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 
 class Subscription extends AbstractRestController {
@@ -66,27 +67,42 @@ class Subscription extends AbstractRestController {
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 */
-	public function cancel( WP_REST_Request $request ): \WP_REST_Response {
-
-		$response = new \WP_REST_Response();
+	public function cancel( WP_REST_Request $request ): WP_REST_Response {
 
 		$post_id = $request->get_param( 'id' );
 		$token   = $request->get_param( 'token' );
 
+		// Stop if missing a parameter.
+		if ( ! $post_id || ! $token ) {
+			return new WP_REST_Response(
+				[
+					'message' => __( 'Parameter missing', 'kudos-donations' ),
+				],
+				422
+			);
+		}
+
 		$this->logger->info( 'Subscription: Cancelling subscription', [ 'post_id' => $post_id ] );
 
+		// Check if token is valid.
 		try {
 			if ( ! Utils::verify_token( $post_id, $token ) ) {
-				$response->set_status( 401 );
-				$response->set_data( [ 'message' => __( 'Subscription token expired.', 'kudos-donations' ) ] );
 				$this->logger->info( 'Subscription: Invalid token supplied' );
-				return $response;
+				return new WP_REST_Response(
+					[
+						'message' => __( 'Token expired', 'kudos-donations' ),
+					],
+					401
+				);
 			}
 		} catch ( Exception $e ) {
-			$response->set_status( 400 );
-			$response->set_data( [ 'message' => __( 'Error canceling subscription.', 'kudos-donations' ) ] );
-			$this->logger->warning( 'Subscription: Error canceling: ' . $e->getMessage() );
-			return $response;
+			$this->logger->warning( 'Subscription: Error cancelling: ' . $e->getMessage() );
+			return new WP_REST_Response(
+				[
+					'message' => __( 'Error cancelling subscription.', 'kudos-donations' ),
+				],
+				400
+			);
 		}
 
 		// Get subscription post from supplied row id.
@@ -96,7 +112,7 @@ class Subscription extends AbstractRestController {
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
 
 		if ( $result ) {
-			// Update entity with canceled status.
+			// Cancelling was successful. Update entity with canceled status.
 			SubscriptionPostType::save(
 				[
 					'ID' => $post_id,
@@ -111,9 +127,20 @@ class Subscription extends AbstractRestController {
 					'subscription_id' => get_post_meta( $post_id, 'subscription_id', true ),
 				]
 			);
-			$response->set_status( 200 );
-			$response->set_data( [ 'message' => __( 'Subscription canceled', 'kudos-donations' ) ] );
+			return new WP_REST_Response(
+				[
+					'message' => __( 'Subscription canceled', 'kudos-donations' ),
+				],
+				200
+			);
 		}
-		return $response;
+
+		// Result from vendor was false, most likely because subscription was already cancelled.
+		return new WP_REST_Response(
+			[
+				'message' => __( 'Subscription already canceled', 'kudos-donations' ),
+			],
+			200
+		);
 	}
 }
