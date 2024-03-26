@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import React from 'react';
 import { forwardRef } from '@wordpress/element';
 
@@ -36,7 +36,7 @@ const Button = forwardRef(
 			}
 		};
 
-		const classes = classNames(
+		const classes = clsx(
 			className,
 			isDisabled && 'cursor-not-allowed opacity-75',
 			isBusy && 'cursor-not-allowed',
@@ -51,7 +51,7 @@ const Button = forwardRef(
 			<>
 				{children}
 				<div
-					className={classNames(
+					className={clsx(
 						isOutline ? 'bg-none' : 'bg-primary',
 						'absolute -z-1 w-full h-full top-0 left-0 group-hover:brightness-90 transition ease-in-out'
 					)}

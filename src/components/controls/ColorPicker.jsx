@@ -3,9 +3,9 @@ import React from 'react';
 import { HexColorInput } from 'react-colorful';
 import { useState } from '@wordpress/element';
 import { RadioGroup } from '@headlessui/react';
-import classNames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { PencilIcon } from '@heroicons/react/24/outline';
+import { clsx } from 'clsx';
 
 const ColorPicker = ({ name, label, help, onColorChange = () => {} }) => {
 	const [showPicker, setShowPicker] = useState(false);
@@ -42,7 +42,7 @@ const ColorPicker = ({ name, label, help, onColorChange = () => {} }) => {
 								key={color.name}
 								value={color.value}
 								className={({ active, checked }) =>
-									classNames(
+									clsx(
 										color.selectedColor,
 										active && checked
 											? 'ring ring-offset-1'
@@ -72,7 +72,7 @@ const ColorPicker = ({ name, label, help, onColorChange = () => {} }) => {
 										!colors.filter(
 											(color) => color.value === value
 										).length > 0;
-									return classNames(
+									return clsx(
 										active && checked
 											? 'ring ring-offset-1'
 											: '',

@@ -9,7 +9,7 @@ import MessageTab from './MessageTab';
 import SummaryTab from './SummaryTab';
 import { steps } from '../../constants/form';
 import { useLayoutEffect, useRef, useState } from '@wordpress/element';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
@@ -98,7 +98,7 @@ const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		<FormProvider {...methods}>
 			<div
 				ref={elementRef}
-				className={classNames(
+				className={clsx(
 					isBusy && 'opacity-50',
 					'transition-all duration-200'
 				)}

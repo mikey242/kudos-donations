@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import React from 'react';
 import { useRef } from '@wordpress/element';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 
 const TableRow = ({ post, headerItems, rowIndex, updatePost }) => {
 	const formRef = useRef(null);
@@ -28,7 +28,7 @@ const TableRow = ({ post, headerItems, rowIndex, updatePost }) => {
 					return (
 						<div
 							key={column.title + post.id}
-							className={classNames(
+							className={clsx(
 								headerItems[i]?.cellClass,
 								'table-cell align-middle whitespace-nowrap px-3 py-4 text-gray-900'
 							)}

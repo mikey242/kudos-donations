@@ -17,7 +17,7 @@ import TabPanel from '../admin/TabPanel';
 import { Spinner } from '../Spinner';
 // eslint-disable-next-line import/default
 import { useSettingsContext } from '../../contexts/SettingsContext';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { useNotificationContext } from '../../contexts/NotificationContext';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 
@@ -97,7 +97,7 @@ const SettingsPage = () => {
 							<Header>
 								<div className="flex items-center">
 									<span
-										className={classNames(
+										className={clsx(
 											isVendorReady && 'connected',
 											'kudos-api-status text-gray-600 capitalize mr-2'
 										)}
@@ -115,7 +115,7 @@ const SettingsPage = () => {
 												)}
 									</span>
 									<span
-										className={classNames(
+										className={clsx(
 											isVendorReady
 												? 'bg-green-600'
 												: 'bg-gray-500',

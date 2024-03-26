@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { get, uniqueId } from 'lodash';
 
 const InlineTextEdit = ({
@@ -26,7 +26,7 @@ const InlineTextEdit = ({
 				type={type}
 				id={id}
 				disabled={disabled}
-				className={classNames(
+				className={clsx(
 					error?.message
 						? 'border-red-300 text-red-900 placeholder-red-300'
 						: 'border-0 focus:ring-primary focus:border-primary',

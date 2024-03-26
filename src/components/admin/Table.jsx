@@ -6,7 +6,7 @@ import { ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 
 import { StringParam, useQueryParams, withDefault } from 'use-query-params';
 import TableRow from './TableRow';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 
 const Table = ({ headerItems, tableData, updatePost }) => {
 	const [sortQuery, setSortQuery] = useQueryParams({
@@ -29,10 +29,7 @@ const Table = ({ headerItems, tableData, updatePost }) => {
 		return (
 			<>
 				<div
-					className={classNames(
-						item.headerClass,
-						'table-cell px-3 py-3.5'
-					)}
+					className={clsx(item.headerClass, 'table-cell px-3 py-3.5')}
 				>
 					{item.orderby ? (
 						<button

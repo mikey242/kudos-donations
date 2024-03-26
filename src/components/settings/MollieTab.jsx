@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, RadioGroupControl, TextControl } from '../controls';
 import { Fragment, useState } from '@wordpress/element';
 import Divider from '../Divider';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { useSettingsContext } from '../../contexts/SettingsContext';
 import { ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useFormContext } from 'react-hook-form';
@@ -66,7 +66,7 @@ const MollieTab = ({ checkApiKeys }) => {
 				>
 					<>
 						<ArrowPathIcon
-							className={classNames(
+							className={clsx(
 								checkingApiKey && 'animate-spin',
 								'w-5 h-5'
 							)}

@@ -1,7 +1,7 @@
 import { Tab } from '@headlessui/react';
 import React from 'react';
 import Panel from '../Panel';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { Fragment } from '@wordpress/element';
 import { useQueryParam, NumberParam } from 'use-query-params';
 
@@ -21,7 +21,7 @@ const TabPanel = ({ tabs }) => {
 								{({ selected }) => (
 									<button
 										key={tab[1].name}
-										className={classNames(
+										className={clsx(
 											selected
 												? 'text-gray-900'
 												: 'text-gray-500 hover:text-gray-700',
@@ -33,7 +33,7 @@ const TabPanel = ({ tabs }) => {
 									>
 										{tab[1].title}
 										<span
-											className={classNames(
+											className={clsx(
 												selected
 													? 'bg-primary'
 													: 'bg-transparent',

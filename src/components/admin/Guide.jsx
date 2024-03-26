@@ -1,4 +1,4 @@
-import classnames from 'classnames';
+import { clsx } from 'clsx';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { useFocusOnMount } from '@wordpress/compose';
 import { ESCAPE, LEFT, RIGHT } from '@wordpress/keycodes';
@@ -53,10 +53,10 @@ const Guide = ({ pages = [], className, onFinish }) => {
 		const accessibleClass = isAccessible
 			? 'cursor-pointer border-orange-500'
 			: 'border-orange-200';
-		const classes = classnames(currentClass, accessibleClass);
+		const classes = clsx(currentClass, accessibleClass);
 		return (
 			<button
-				className={classnames(
+				className={clsx(
 					classes,
 					isAccessible ? 'cursor-pointer' : 'cursor-default',
 					'border-2 border-solid m-0 mx-2 rounded-full w-4 h-4'
@@ -68,7 +68,7 @@ const Guide = ({ pages = [], className, onFinish }) => {
 	});
 
 	return (
-		<div className={classnames('intro text-base leading-6', className)}>
+		<div className={clsx('intro text-base leading-6', className)}>
 			<div className={'m-auto flex flex-col justify-center items-center'}>
 				<div className="intro-content m-auto ">
 					<div className="intro-image mb-2">

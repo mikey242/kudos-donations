@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 
 const KudosLogo = ({
 	lineColor = '#2ec4b6',
@@ -9,7 +9,7 @@ const KudosLogo = ({
 }) => {
 	return (
 		<svg
-			className={classNames(
+			className={clsx(
 				className,
 				'logo origin-center duration-500 ease-in-out m-auto'
 			)}

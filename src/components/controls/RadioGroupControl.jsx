@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { RadioGroup } from '@headlessui/react';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 
 const RadioGroupControl = ({ name, validation, options, help, label }) => {
 	return (
@@ -29,7 +29,7 @@ const RadioGroupControl = ({ name, validation, options, help, label }) => {
 								key={i}
 								value={option.value}
 								className={({ active, checked }) =>
-									classNames(
+									clsx(
 										active
 											? 'ring-2 ring-offset-2 ring-primary'
 											: '',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { get, uniqueId } from 'lodash';
 
 const TextControl = ({
@@ -25,7 +25,7 @@ const TextControl = ({
 	return (
 		<>
 			<div
-				className={classNames(
+				className={clsx(
 					'hidden' === type && 'hidden',
 					'first:mt-0 mt-3'
 				)}
@@ -49,7 +49,7 @@ const TextControl = ({
 						type={type}
 						id={id}
 						disabled={disabled}
-						className={classNames(
+						className={clsx(
 							error?.message
 								? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 '
 								: 'border-gray-300 focus:ring-primary focus:border-primary',

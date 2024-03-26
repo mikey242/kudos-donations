@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactShadowRoot from 'react-shadow-root';
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import { useRef, useState } from '@wordpress/element';
 
 function Render({
@@ -68,7 +68,7 @@ function Render({
 			)}
 
 			<div id="kudos-container">
-				<div className={classNames(className, 'font-sans')}>
+				<div className={clsx(className, 'font-sans')}>
 					{ready && !errors ? <>{children}</> : <>{renderErrors()}</>}
 				</div>
 			</div>
