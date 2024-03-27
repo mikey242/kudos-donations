@@ -2,9 +2,9 @@
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Requires PHP: 7.2.9
-Stable tag: 3.1.7
+Stable tag: 3.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,6 +117,11 @@ This can occur as a result of a conflict with your theme or another plugin and t
 6. Automated email receipt
 
 == Changelog ==
+
+= 3.2.0 =
+* Subscriptions can now be canceled by donor (via email receipt) without restrictions
+* Fix email subscriptions sometimes not canceling from email link
+* Update dependencies
 
 = 3.1.7 =
 * Add 'kudos_payment_description' filter
