@@ -89,7 +89,9 @@ class MailerService {
 			return false;
 		}
 
-		$this->logger->debug('Receipt emails enabled, preparing email.');
+		$this->logger->debug('Receipt emails enabled, preparing email.', $transaction->to_array());
+
+		$headers = [];
 
 		$bcc = Settings::get_setting( 'email_bcc' );
 
@@ -120,19 +122,20 @@ class MailerService {
 		];
 
 		// Add a cancel subscription url if transaction associated with a subscription.
-		if ( ! empty( $transaction->subscription_id ) ) {
+		if ( 'oneoff' !== $transaction->sequence_type ) {
 			$mapper          = $this->mapper;
-			$subscription_id = $transaction->subscription_id;
+			$transaction_id = $transaction->transaction_id;
+			$this->logger->debug('Subscription payment found, adding cancel button.', ['transaction_id' => $transaction_id]);
 			/** @var SubscriptionEntity $subscription */
 			$subscription               = $mapper
 				->get_repository( SubscriptionEntity::class )
-				->get_one_by( [ 'subscription_id' => $subscription_id ] );
+				->get_one_by( [ 'transaction_id' => $transaction_id ] );
 			$action                     = 'cancel_subscription';
 			$cancel_url                 = add_query_arg(
 				[
 					'kudos_action'          => $action,
-					'kudos_nonce'           => wp_create_nonce( $action ),
-					'kudos_subscription_id' => $subscription_id,
+					'token'                 => Utils::generate_token( $subscription->subscription_id ),
+					'kudos_subscription_id' => $subscription->subscription_id,
 				],
 				get_home_url()
 			);
@@ -147,7 +150,7 @@ class MailerService {
 			$donor->email,
 			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
-			[],
+			$headers,
 			$attachments
 		);
 	}

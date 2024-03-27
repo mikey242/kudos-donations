@@ -7,7 +7,7 @@ class Utils {
 	/**
 	 * Gets url Mollie will use to return customer to after payment complete.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public static function get_return_url(): string {
 
@@ -94,7 +94,7 @@ class Utils {
 	 *
 	 * @param string $text Mollie sequence type code.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public static function get_sequence_type( string $text ): string {
 
@@ -114,7 +114,7 @@ class Utils {
 	 *
 	 * @param string $frequency Mollie frequency code.
 	 *
-	 * @return string|void
+	 * @return string
 	 */
 	public static function get_frequency_name( string $frequency ): string {
 
@@ -306,4 +306,27 @@ class Utils {
 		return strlen( $string ) > $length ? substr( $string, 0, $length ) . '...' : $string;
 
 	}
+
+	/**
+	 * Generates a unique token based on the post id.
+	 *
+	 * @param string $message The post id to be hashed.
+	 */
+	public static function generate_token( string $message ): ?string {
+		return hash_hmac( 'sha256', $message, KUDOS_SALT );
+	}
+
+	/**
+	 * Verifies the provided token against the post id.
+	 *
+	 * @param string    $message The ID of the post.
+	 * @param string $token The token.
+	 */
+	public static function verify_token( string $message, string $token ): bool {
+		return hash_equals(
+			self::generate_token( $message ),
+			$token
+		);
+	}
+
 }

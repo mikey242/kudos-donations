@@ -468,11 +468,11 @@ class Front {
 		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
 
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
-			$nonce  = sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) );
 
 			switch ( $action ) {
 
 				case 'order_complete':
+					$nonce    = sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) );
 					$order_id = sanitize_text_field( $_REQUEST['kudos_order_id'] );
 					// Return message modal.
 					if ( ! empty( $order_id ) && ! empty( $nonce ) ) {
@@ -489,32 +489,37 @@ class Front {
 					break;
 
 				case 'cancel_subscription':
-					$subscription_id = sanitize_text_field( $_REQUEST['kudos_subscription_id'] );
-					// Cancel subscription modal.
-					if ( ! empty( $nonce && ! empty( $subscription_id ) ) ) {
+					$subscription_id    = sanitize_text_field( wp_unslash( $_REQUEST['kudos_subscription_id'] ) );
+					$token              = sanitize_text_field( wp_unslash( $_REQUEST['token'] ) );
 
+					// Cancel subscription modal.
+					if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
 						/** @var SubscriptionEntity $subscription */
 						$subscription = $this->mapper
 							->get_repository( SubscriptionEntity::class )
 							->get_one_by( [ 'subscription_id' => $subscription_id ] );
 
-						// Bail if no subscription found.
-						if ( null === $subscription ) {
+						// Bail if no subscription found or already cancelled.
+						if ( null === $subscription || "cancelled" === $subscription->status ) {
 							return;
 						}
 
-						if ( wp_verify_nonce( $nonce, $action ) ) {
+						if ( Utils::verify_token( $subscription_id, $token ) ) {
 							if ( $this->payment->cancel_subscription( $subscription_id ) ) {
 								echo $this->create_message_modal(
 									__( 'Subscription cancelled', 'kudos-donations' ),
 									__(
 										'We will no longer be taking payments for this subscription. Thank you for your contributions.',
-										'kudos-donations' 
+										'kudos-donations'
 									)
 								);
-
 								return;
 							}
+							echo $this->create_message_modal(
+								__( 'Error cancelling subscription', 'kudos-donations' ),
+								__( 'Please contact us for help with this error.', 'kudos-donations' )
+							);
+							return;
 						}
 
 						echo $this->create_message_modal(

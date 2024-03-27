@@ -241,8 +241,14 @@ class SubscriptionsTable extends WP_List_Table {
 	public function cancel_subscription( string $id ): bool {
 
 		$payment_service = $this->payment;
+		$mapper = $this->mapper;
+		/** @var SubscriptionEntity $subscription */
+		$subscription = $mapper->get_repository(SubscriptionEntity::class)
+		                       ->get_one_by([
+				'id' => $id
+			]);
 
-		return $payment_service->cancel_subscription( $id );
+		return $payment_service->cancel_subscription( $subscription->subscription_id );
 	}
 
 	/**

@@ -263,18 +263,18 @@ class PaymentService {
 	/**
 	 * Cancel the specified subscription.
 	 *
-	 * @param string $id subscription row ID.
+	 * @param string $subscription_id subscription_id.
 	 *
 	 * @return bool
 	 */
-	public function cancel_subscription( string $id ): bool {
+	public function cancel_subscription( string $subscription_id ): bool {
 
 		$mapper = $this->mapper_service;
 
 		// Get subscription entity from supplied row id.
 		/** @var SubscriptionEntity $subscription */
 		$subscription = $mapper->get_repository( SubscriptionEntity::class )
-							   ->get_one_by( [ 'id' => $id ] );
+							   ->get_one_by( [ 'subscription_id' => $subscription_id ] );
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
