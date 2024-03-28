@@ -25,6 +25,7 @@ deploy-job:
   artifacts:
     paths:
       - kudos-donations.zip
+    expire_in: 1 week
   script:
     - echo "Deploying application..."
     - composer run make-zip
