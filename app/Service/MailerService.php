@@ -137,7 +137,7 @@ class MailerService {
 					'token'                 => Utils::generate_token( $subscription->subscription_id ),
 					'kudos_subscription_id' => $subscription->subscription_id,
 				],
-				get_home_url()
+				apply_filters('kudos_cancel_subscription_url', get_home_url())
 			);
 			$render_array['cancel_url'] = $cancel_url;
 			$mapper->save( $subscription );
