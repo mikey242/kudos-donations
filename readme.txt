@@ -120,6 +120,8 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.2.1 =
 * Add new filter for changing the subscription cancellation URL (kudos_cancel_subscription_url)
+* Upgrade postcss to 8.*
+* Upgrade WordPress packages
 
 = 3.2.0 =
 * Subscriptions can now be canceled by donor (via email receipt) without restrictions
