@@ -249,7 +249,7 @@ jQuery(document).ready(($) => {
         }
 
         // Show summary if next tab is final
-        if (!targetTab.nextElementSibling) {
+        if ("summary" === targetTab.dataset.name) {
             createSummary(currentTab.closest('form').id)
         }
 
