@@ -48,14 +48,13 @@ class Invoice extends AbstractRestController {
 			'/transaction/(?P<id>\d+)' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_invoice' ],
-				'permission_callback' => [$this, 'can_manage_options'],
+				'permission_callback' => [ $this, 'can_manage_options' ],
+
 			],
 			'/view_sample'             => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'view_sample_invoice' ],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
+				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 		];
 	}
@@ -67,6 +66,7 @@ class Invoice extends AbstractRestController {
 	 */
 	public function get_invoice( WP_REST_Request $request ) {
 		$transaction_id = $request->get_param( 'id' );
+		$display        = $request->get_param( 'display' ) ?? true;
 		$file_name      = "invoice-$transaction_id.pdf";
 		$file           = PDFService::INVOICE_DIR . $file_name;
 
@@ -89,12 +89,13 @@ class Invoice extends AbstractRestController {
 			'donor_street'    => $donor->{DonorPostType::META_FIELD_STREET},
 			'donor_postcode'  => $donor->{DonorPostType::META_FIELD_POSTCODE},
 			'donor_city'      => $donor->{DonorPostType::META_FIELD_CITY},
-			'order_id'        => TransactionPostType::get_formatted_id( (int) $transaction_id ),
+			'order_id'        => $transaction->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID},
+			'vendor'          => $transaction->{TransactionPostType::META_FIELD_VENDOR},
 			'currency'        => $transaction->{TransactionPostType::META_FIELD_CURRENCY},
 			'sequence_type'   => $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
 			'id'              => 'inv_' . $transaction_id,
 			'date'            => $transaction->post_date,
-			'company_name'    => get_option( '_kudos_invoice_company_name' ),
+			'company_name'    => get_bloginfo( 'name' ),
 			'company_address' => get_option( '_kudos_invoice_company_address' ),
 			'vat_number'      => get_option( '_kudos_invoice_vat_number' ),
 			'currency_symbol' => html_entity_decode( Utils::get_currency_symbol( 'EUR' ) ),
@@ -105,7 +106,7 @@ class Invoice extends AbstractRestController {
 			'total'           => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
 		];
 
-		$this->pdf->generate( $file, 'pdf/invoice.html.twig', $data, true );
+		$this->pdf->generate( $file, 'pdf/invoice.html.twig', $data, $display );
 		exit;
 	}
 

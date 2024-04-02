@@ -184,7 +184,15 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 
 					switch ( $status ) {
 						case PaymentStatus::PAID:
-							$url         = rest_url( '/kudos/v1/invoice/transaction/' . $transaction_id );
+							$url         = add_query_arg(
+								[
+									'post_type'    => self::get_slug(),
+									'kudos_action' => 'view_invoice',
+									'_wp_nonce'    => wp_create_nonce( "view_invoice_$transaction_id" ),
+									'id'           => $transaction_id,
+								],
+								admin_url( 'edit.php' )
+							);
 							$status_text = '<a href="' . $url . '">' . __( 'Paid', 'kudos-donations' ) . '</a><span class="dashicons dashicons-yes"></span>';
 							break;
 						case PaymentStatus::OPEN:

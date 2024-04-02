@@ -162,9 +162,7 @@ class Payment extends AbstractRestController {
 						'required' => true,
 					],
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
+				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 
 			self::ROUTE_READY   => [

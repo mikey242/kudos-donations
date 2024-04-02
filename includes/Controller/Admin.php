@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Service\AbstractService;
+use WP_REST_Server;
 
 class Admin extends AbstractService {
 
@@ -26,6 +27,28 @@ class Admin extends AbstractService {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		// TODO add registration.
+		$this->handle_query_variables();
+	}
+
+	/**
+	 * Handles the various query variables and shows relevant modals.
+	 */
+	public function handle_query_variables(): void {
+		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
+			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
+
+			switch ( $action ) {
+				case 'view_invoice':
+					$nonce          = sanitize_text_field( wp_unslash( $_REQUEST['_wp_nonce'] ) );
+					$transaction_id = sanitize_text_field( $_REQUEST['id'] );
+					if ( $transaction_id && wp_verify_nonce( $nonce, $action . '_' . $transaction_id ) ) {
+						$request = new \WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/transaction/$transaction_id" );
+						rest_do_request( $request );
+					}
+					break;
+				case 'default':
+					break;
+			}
+		}
 	}
 }
