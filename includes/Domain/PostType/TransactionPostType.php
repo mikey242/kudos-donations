@@ -184,7 +184,8 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 
 					switch ( $status ) {
 						case PaymentStatus::PAID:
-							$status_text = __( 'Paid', 'kudos-donations' ) . '<span class="dashicons dashicons-yes"></span>';
+							$url         = rest_url( '/kudos/v1/invoice/transaction/' . $transaction_id );
+							$status_text = '<a href="' . $url . '">' . __( 'Paid', 'kudos-donations' ) . '</a><span class="dashicons dashicons-yes"></span>';
 							break;
 						case PaymentStatus::OPEN:
 							$status_text = __( 'Open', 'kudos-donations' );

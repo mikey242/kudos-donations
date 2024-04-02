@@ -103,7 +103,8 @@ trait MapperTrait {
 
 		// Return post using WordPress get_post() if ID present.
 		if ( isset( $args['ID'] ) && $args['ID'] > 0 ) {
-			return get_post( $args['ID'] );
+			$post = get_post( $args['ID'] );
+			return static::get_slug() === $post->post_type ? $post : null;
 		}
 
 		$posts = static::get_posts( $args, $relation );

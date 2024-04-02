@@ -21,6 +21,7 @@
 	"require": {
 		"php": ">=7.4",
 		"ext-json": "*",
+		"dompdf/dompdf": "^2.0",
 		"mollie/mollie-api-php": "^2.32.0",
 		"monolog/monolog": "^2.9",
 		"php-di/php-di": "^6.4",

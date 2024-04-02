@@ -17,6 +17,7 @@ use IseardMedia\Kudos\Admin\SubscriptionsAdminPage;
 use IseardMedia\Kudos\Admin\TransactionsAdminPage;
 use IseardMedia\Kudos\Controller\Admin;
 use IseardMedia\Kudos\Controller\Front;
+use IseardMedia\Kudos\Controller\Rest\Invoice;
 use IseardMedia\Kudos\Controller\Rest\Mail;
 use IseardMedia\Kudos\Controller\Rest\Payment;
 use IseardMedia\Kudos\Controller\Rest\Subscription;
@@ -28,6 +29,7 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Plugin;
 use IseardMedia\Kudos\Service\MailerService;
 use IseardMedia\Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Service\PDFService;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\MollieVendor;
 use IseardMedia\Kudos\Vendor\PaymentVendors;
@@ -62,6 +64,8 @@ return [
 	SettingsService::class        => autowire(),
 	PaymentService::class         => autowire(),
 	MailerService::class          => autowire(),
+	PDFService::class             => autowire(),
+	Invoice::class => autowire(),
 	VendorInterface::class        => factory(
 		function ( ContainerInterface $container, SettingsService $settings, PaymentVendors $payment_vendors ) {
 			$vendor_class = $payment_vendors->get_current_vendor_class();

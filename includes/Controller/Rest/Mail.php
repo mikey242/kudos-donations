@@ -52,9 +52,7 @@ class Mail extends AbstractRestController {
 						'sanitize_callback' => 'sanitize_email',
 					],
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'manage_options' );
-				},
+				'permission_callback' => [$this, 'can_manage_options'],
 			],
 		];
 	}
