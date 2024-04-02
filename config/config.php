@@ -65,7 +65,7 @@ return [
 	PaymentService::class         => autowire(),
 	MailerService::class          => autowire(),
 	PDFService::class             => autowire(),
-	Invoice::class => autowire(),
+	Invoice::class                => autowire(),
 	VendorInterface::class        => factory(
 		function ( ContainerInterface $container, SettingsService $settings, PaymentVendors $payment_vendors ) {
 			$vendor_class = $payment_vendors->get_current_vendor_class();

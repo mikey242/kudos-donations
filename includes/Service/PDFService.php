@@ -33,9 +33,8 @@ class PDFService extends AbstractService {
 	 * @param LoggerInterface $logger Logger instance.
 	 * @param TwigService     $twig TwigService.
 	 * @param Dompdf          $pdf PDF generator.
-	 * @param SettingsService $settings For getting settings.
 	 */
-	public function __construct( LoggerInterface $logger, TwigService $twig, Dompdf $pdf, SettingsService $settings ) {
+	public function __construct( LoggerInterface $logger, TwigService $twig, Dompdf $pdf ) {
 
 		$this->logger = $logger;
 		$this->twig   = $twig;
@@ -115,6 +114,7 @@ class PDFService extends AbstractService {
 
 			$pdf = $dompdf->output();
 
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 			if ( file_put_contents( $file, $pdf ) > 0 ) {
 				$this->logger->debug( 'PDF successfully generated', [ 'file' => $file ] );
 
