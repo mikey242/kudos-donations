@@ -3,22 +3,18 @@ image: carlosalgms/composer-and-node-ci
 before_script:
   - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - dist/
-    - vendor/
-
-stages:
-  - build
-  - deploy
-
 build-job:
   stage: build
   script:
     - echo "Building plugin..."
     - npm install
     - composer run build-production
+  artifacts:
+    paths:
+      - dist/
+      - vendor/
+    expire_in: 6 hours
+    when: on_success
 
 deploy-job:
   stage: deploy
