@@ -168,7 +168,7 @@ class MailerService extends AbstractService {
 						'token'        => Utils::generate_token( $subscription->ID ),
 						'id'           => $subscription->ID,
 					],
-					apply_filters('kudos_cancel_subscription_url', get_home_url());
+					apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
 				);
 			}
 		} catch ( \Exception $e ) {
