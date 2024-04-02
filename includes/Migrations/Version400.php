@@ -121,7 +121,7 @@ class Version400 extends AbstractMigration {
 			);
 
 			// Add post meta to new post.
-			update_post_meta( $new_id, TransactionPostType::META_FIELD_VALUE, $transaction->value );
+			update_post_meta( $new_id, TransactionPostType::META_FIELD_VALUE, (int) $transaction->value );
 			update_post_meta( $new_id, TransactionPostType::META_FIELD_CURRENCY, $transaction->currency );
 			update_post_meta( $new_id, TransactionPostType::META_FIELD_STATUS, $transaction->status );
 			update_post_meta( $new_id, TransactionPostType::META_FIELD_METHOD, $transaction->method );
