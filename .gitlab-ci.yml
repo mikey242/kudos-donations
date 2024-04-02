@@ -4,6 +4,7 @@ before_script:
   - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
 
 cache:
+  key: ${CI_COMMIT_REF_SLUG}
   paths:
     - dist/
     - vendor/
