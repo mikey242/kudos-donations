@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
 Tested up to: 6.4.3
 Requires PHP: 7.2.9
-Stable tag: 3.2.1
+Stable tag: 3.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,6 +117,9 @@ This can occur as a result of a conflict with your theme or another plugin and t
 6. Automated email receipt
 
 == Changelog ==
+
+= 3.2.2 =
+* Fix issue where sometimes the payment summary would not display
 
 = 3.2.1 =
 * Add new filter for changing the subscription cancellation URL (kudos_cancel_subscription_url)
