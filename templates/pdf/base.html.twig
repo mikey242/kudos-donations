@@ -444,8 +444,12 @@
                                role="presentation">
                             <tr>
                                 <td class="content-cell" align="center">
-                                    <p class="sub align-center">&copy; {{ 'now' | date('Y') }} {{ company_name }}.
-                                        {{ __('VAT Number', 'kudos-donations') }}: {{ vat_number }}</p>
+                                    <p class="sub align-center">
+                                        &copy; {{ 'now' | date('Y') }} {{ company_name }}
+                                        {% if vat_number %}
+                                            | {{ __('VAT Number', 'kudos-donations') }}: {{ vat_number }}
+                                        {% endif %}
+                                    </p>
                                     {% if logos.logo_small %}
                                         <p class="sub align-center">
                                             <span>{{ __('Created by', 'kudos-donations') }}</span>
