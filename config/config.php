@@ -27,6 +27,7 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Plugin;
+use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\MailerService;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Service\PDFService;
@@ -66,6 +67,7 @@ return [
 	MailerService::class          => autowire(),
 	PDFService::class             => autowire(),
 	Invoice::class                => autowire(),
+	InvoiceService::class         => autowire(),
 	VendorInterface::class        => factory(
 		function ( ContainerInterface $container, SettingsService $settings, PaymentVendors $payment_vendors ) {
 			$vendor_class = $payment_vendors->get_current_vendor_class();
