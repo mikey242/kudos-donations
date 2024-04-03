@@ -60,7 +60,6 @@ class PDFService extends AbstractService {
 	 */
 	public function register(): void {
 		$this->init();
-		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
 	}
 
 	/**
@@ -105,7 +104,7 @@ class PDFService extends AbstractService {
 			header( "Content-disposition: inline;filename=$file_name" );
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $body;
-			return;
+			exit;
 		}
 		$this->logger->debug( 'Unable to steam, file not found', [ 'file' => $file ] );
 	}
