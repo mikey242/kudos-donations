@@ -20,6 +20,7 @@ use Throwable;
 class PDFService extends AbstractService {
 
 	public const INVOICE_DIR = KUDOS_STORAGE_DIR . 'invoices/';
+	public const INVOICE_URL = KUDOS_STORAGE_URL . 'invoices/';
 	private const FONTS_DIR  = KUDOS_STORAGE_DIR . 'fonts/';
 
 	private LoggerInterface $logger;
@@ -50,8 +51,7 @@ class PDFService extends AbstractService {
 		$this->pdf->setOptions( $options );
 
 		$this->logos = [
-			'logo'       => 'data:image/svg+xml,' . Utils::get_logo_svg(),
-			'logo_small' => 'data:image/svg+xml, <svg viewBox="0 0 555 449" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" fill="#a8aaaf" stroke-linejoin="round" stroke-miterlimit="2"><path d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>',
+			'logo' => 'data:image/svg+xml,' . Utils::get_logo_svg(),
 		];
 	}
 
@@ -85,15 +85,40 @@ class PDFService extends AbstractService {
 	}
 
 	/**
+	 * Streams the provided PDF.
+	 *
+	 * @param string $file The full path to the file.
+	 */
+	public function stream( string $file ): void {
+		if ( file_exists( $file ) ) {
+			if ( ob_get_contents() ) {
+				ob_end_clean();
+			}
+			$file_name = basename( $file );
+			$response  = wp_remote_get( self::INVOICE_URL . $file_name );
+			if ( is_wp_error( $response ) ) {
+				$this->logger->warning( $response->get_error_message() );
+				return;
+			}
+			$body = wp_remote_retrieve_body( $response );
+			header( 'Content-type: application/pdf' );
+			header( "Content-disposition: inline;filename=$file_name" );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $body;
+			return;
+		}
+		$this->logger->debug( 'Unable to steam, file not found', [ 'file' => $file ] );
+	}
+
+	/**
 	 * Generates and outputs / streams the pdf.
 	 *
 	 * @param string $file The output file.
 	 * @param string $template Template to use.
 	 * @param array  $data Data to pass to template.
-	 * @param bool   $display Whether to stream the output to screen.
 	 * @return bool
 	 */
-	public function generate( string $file, string $template, array $data, bool $display = false ) {
+	public function generate( string $file, string $template, array $data ) {
 
 		$data = array_merge( $data, [ 'logos' => $this->logos ] );
 
@@ -104,13 +129,6 @@ class PDFService extends AbstractService {
 			);
 
 			$dompdf->render();
-
-			if ( $display ) {
-				if ( ob_get_contents() ) {
-					ob_end_clean();
-				}
-				$dompdf->stream( $file, [ 'Attachment' => false ] );
-			}
 
 			$pdf = $dompdf->output();
 

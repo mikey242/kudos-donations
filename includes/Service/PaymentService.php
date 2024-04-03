@@ -44,12 +44,29 @@ class PaymentService extends AbstractService {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		// Update the invoice number.
+		add_action( 'kudos_transaction_paid', [ $this, 'iterate_invoice_number' ] );
 		// First hook is to schedule the process hook once payment completed.
 		add_action( 'kudos_transaction_paid', [ $this, 'schedule_process_transaction' ] );
 		// Second hook is to call another hook that runs when scheduled hook called.
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
 		// Replace returned get_home_url with app_url if defined.
 		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
+	}
+
+	/**
+	 * Adds the invoice number to a transaction and iterates it.
+	 *
+	 * @param int $post_id The id of the post being updated.
+	 * @return void
+	 */
+	public function iterate_invoice_number( int $post_id ) {
+
+		$current = (int) get_option( SettingsService::SETTING_NAME_INVOICE_NUMBER );
+
+		if ( update_post_meta( $post_id, TransactionPostType::META_FIELD_INVOICE_NUMBER, $current ) ) {
+			update_option( SettingsService::SETTING_NAME_INVOICE_NUMBER, ( $current + 1 ) );
+		}
 	}
 
 	/**

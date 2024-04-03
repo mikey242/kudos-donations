@@ -45,13 +45,32 @@ class Invoice extends AbstractRestController {
 	 */
 	public function get_routes(): array {
 		return [
-			'/transaction/(?P<id>\d+)' => [
+			'/view/transaction/(?P<id>\d+)' => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'view_invoice' ],
+				'permission_callback' => [ $this, 'can_manage_options' ],
+				'args'                => [
+					'force_generate' => [
+						'type'     => 'boolean',
+						'required' => false,
+						'default'  => false,
+					],
+				],
+
+			],
+			'/get/transaction/(?P<id>\d+)'  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_invoice' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
-
+				'args'                => [
+					'force_generate' => [
+						'type'     => 'boolean',
+						'required' => false,
+						'default'  => false,
+					],
+				],
 			],
-			'/view_sample'             => [
+			'/view_sample'                  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'view_sample_invoice' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
@@ -62,13 +81,19 @@ class Invoice extends AbstractRestController {
 	/**
 	 * Generate an invoice for the supplied transaction id.
 	 *
-	 * @param WP_REST_Request $request The REST request.
+	 * @param int  $transaction_id The transaction id to use.
+	 * @param bool $force_generate Whether to regenerate even if existing pdf found.
 	 */
-	public function get_invoice( WP_REST_Request $request ) {
-		$transaction_id = $request->get_param( 'id' );
-		$display        = $request->get_param( 'display' ) ?? true;
-		$file_name      = "invoice-$transaction_id.pdf";
-		$file           = PDFService::INVOICE_DIR . $file_name;
+	private function generate_invoice( int $transaction_id, bool $force_generate = false ) {
+		$file_name = "invoice-$transaction_id.pdf";
+		$file      = PDFService::INVOICE_DIR . $file_name;
+
+		// Stream existing file if found.
+		if ( ! $force_generate ) {
+			if ( file_exists( $file ) ) {
+				return;
+			}
+		}
 
 		$transaction = TransactionPostType::get_post( [ 'ID' => $transaction_id ] );
 
@@ -93,7 +118,7 @@ class Invoice extends AbstractRestController {
 			'vendor'          => $transaction->{TransactionPostType::META_FIELD_VENDOR},
 			'currency'        => $transaction->{TransactionPostType::META_FIELD_CURRENCY},
 			'sequence_type'   => $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
-			'id'              => 'inv_' . $transaction_id,
+			'id'              => 'inv_' . $transaction->{TransactionPostType::META_FIELD_INVOICE_NUMBER},
 			'date'            => $transaction->post_date,
 			'company_name'    => get_bloginfo( 'name' ),
 			'company_address' => get_option( '_kudos_invoice_company_address' ),
@@ -106,40 +131,38 @@ class Invoice extends AbstractRestController {
 			'total'           => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
 		];
 
-		$this->pdf->generate( $file, 'pdf/invoice.html.twig', $data, $display );
-		exit;
+		$this->pdf->generate( $file, 'pdf/invoice.html.twig', $data );
 	}
 
+	/**
+	 * Generate an invoice for the supplied transaction id.
+	 *
+	 * @param WP_REST_Request $request The REST request.
+	 */
+	public function view_invoice( WP_REST_Request $request ) {
+		$transaction_id = $request->get_param( 'id' );
+		$force_generate = $request->get_param( 'force_generate' );
+
+		$this->generate_invoice( (int) $transaction_id, $force_generate );
+
+		$file_name = "invoice-$transaction_id.pdf";
+		$file      = PDFService::INVOICE_DIR . $file_name;
+		$this->pdf->stream( $file );
+	}
 
 	/**
-	 * Generates and streams a sample invoice.
+	 * Generate an invoice for the supplied transaction id.
+	 *
+	 * @param WP_REST_Request $request The REST request.
 	 */
-	public function view_sample_invoice(): void {
+	public function get_invoice( WP_REST_Request $request ) {
+		$transaction_id = $request->get_param( 'id' );
+		$force_generate = $request->get_param( 'force_generate' );
 
-		$file_name = 'invoice-SAMPLE.pdf';
+		$this->generate_invoice( (int) $transaction_id, $force_generate );
+
+		$file_name = "invoice-$transaction_id.pdf";
 		$file      = PDFService::INVOICE_DIR . $file_name;
-
-		$data = [
-			'donor_name'      => 'John Smith',
-			'donor_street'    => '123 Sample Street',
-			'donor_postcode'  => '9876SP',
-			'donor_city'      => 'Sampleton',
-			'order_id'        => 'kdo_SAMPLE',
-			'currency'        => 'EUR',
-			'sequence_type'   => 'oneoff',
-			'id'              => 'inv_' . 1001,
-			'date'            => time(),
-			'company_name'    => get_option( '_kudos_invoice_company_name' ),
-			'company_address' => get_option( '_kudos_invoice_company_address' ),
-			'vat_number'      => get_option( '_kudos_invoice_vat_number' ),
-			'currency_symbol' => html_entity_decode( Utils::get_currency_symbol( 'EUR' ) ),
-			'items'           => [
-				'One-off'                      => number_format_i18n( 20, 2 ),
-				__( 'VAT', 'kudos-donations' ) => 0,
-			],
-			'total'           => number_format_i18n( 20, 2 ),
-		];
-
-		$this->pdf->generate( $file, 'pdf/invoice.html.twig', $data, true );
+		wp_send_json( $file );
 	}
 }

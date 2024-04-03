@@ -27,6 +27,7 @@ class SettingsService extends AbstractService {
 	public const SETTING_NAME_ALWAYS_LOAD_ASSETS   = '_kudos_always_load_assets';
 	public const SETTING_NAME_DB_VERSION           = '_kudos_db_version';
 	public const SETTING_NAME_MIGRATION_HISTORY    = '_kudos_migration_history';
+	public const SETTING_NAME_INVOICE_NUMBER       = '_kudos_invoice_number';
 
 	/**
 	 * {@inheritDoc}
@@ -313,6 +314,12 @@ class SettingsService extends AbstractService {
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
+				],
+				self::SETTING_NAME_INVOICE_NUMBER       => [
+					'type'              => 'int',
+					'show_in_rest'      => false,
+					'default'           => 1,
+					'sanitize_callback' => 'absint',
 				],
 			]
 		);

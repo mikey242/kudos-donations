@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Service\AbstractService;
+use WP_REST_Request;
 use WP_REST_Server;
 
 class Admin extends AbstractService {
@@ -42,7 +43,7 @@ class Admin extends AbstractService {
 					$nonce          = sanitize_text_field( wp_unslash( $_REQUEST['_wp_nonce'] ) );
 					$transaction_id = sanitize_text_field( $_REQUEST['id'] );
 					if ( $transaction_id && wp_verify_nonce( $nonce, $action . '_' . $transaction_id ) ) {
-						$request = new \WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/transaction/$transaction_id" );
+						$request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/view/transaction/$transaction_id" );
 						rest_do_request( $request );
 					}
 					break;
