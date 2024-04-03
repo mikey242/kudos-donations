@@ -13,21 +13,23 @@ namespace IseardMedia\Kudos\Service;
 
 class SettingsService extends AbstractService {
 
-	public const HOOK_GET_SETTINGS                 = 'kudos_get_settings';
-	public const SETTING_GROUP                     = 'kudos-donations';
-	public const SETTING_NAME_SHOW_INTRO           = '_kudos_show_intro';
-	public const SETTING_NAME_VENDOR               = '_kudos_vendor';
-	public const SETTING_NAME_VENDOR_MOLLIE        = '_kudos_vendor_mollie';
-	public const SETTING_NAME_EMAIL_RECEIPT_ENABLE = '_kudos_email_receipt_enable';
-	public const SETTING_NAME_EMAIL_BCC            = '_kudos_email_bcc';
-	public const SETTING_NAME_CUSTOM_SMTP          = '_kudos_custom_smtp';
-	public const SETTING_NAME_SMTP_ENABLE          = '_kudos_smtp_enable';
-	public const SETTING_NAME_SPAM_PROTECTION      = '_kudos_spam_protection';
-	public const SETTING_NAME_DEBUG_MODE           = '_kudos_debug_mode';
-	public const SETTING_NAME_ALWAYS_LOAD_ASSETS   = '_kudos_always_load_assets';
-	public const SETTING_NAME_DB_VERSION           = '_kudos_db_version';
-	public const SETTING_NAME_MIGRATION_HISTORY    = '_kudos_migration_history';
-	public const SETTING_NAME_INVOICE_NUMBER       = '_kudos_invoice_number';
+	public const HOOK_GET_SETTINGS                    = 'kudos_get_settings';
+	public const SETTING_GROUP                        = 'kudos-donations';
+	public const SETTING_NAME_SHOW_INTRO              = '_kudos_show_intro';
+	public const SETTING_NAME_VENDOR                  = '_kudos_vendor';
+	public const SETTING_NAME_VENDOR_MOLLIE           = '_kudos_vendor_mollie';
+	public const SETTING_NAME_EMAIL_RECEIPT_ENABLE    = '_kudos_email_receipt_enable';
+	public const SETTING_NAME_EMAIL_BCC               = '_kudos_email_bcc';
+	public const SETTING_NAME_CUSTOM_SMTP             = '_kudos_custom_smtp';
+	public const SETTING_NAME_SMTP_ENABLE             = '_kudos_smtp_enable';
+	public const SETTING_NAME_SPAM_PROTECTION         = '_kudos_spam_protection';
+	public const SETTING_NAME_DEBUG_MODE              = '_kudos_debug_mode';
+	public const SETTING_NAME_ALWAYS_LOAD_ASSETS      = '_kudos_always_load_assets';
+	public const SETTING_NAME_DB_VERSION              = '_kudos_db_version';
+	public const SETTING_NAME_MIGRATION_HISTORY       = '_kudos_migration_history';
+	public const SETTING_NAME_INVOICE_NUMBER          = '_kudos_invoice_number';
+	public const SETTING_NAME_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
+	public const SETTING_NAME_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
 
 	/**
 	 * {@inheritDoc}
@@ -151,18 +153,18 @@ class SettingsService extends AbstractService {
 		return apply_filters(
 			self::HOOK_GET_SETTINGS,
 			[
-				self::SETTING_NAME_SHOW_INTRO           => [
+				self::SETTING_NAME_SHOW_INTRO              => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_VENDOR               => [
+				self::SETTING_NAME_VENDOR                  => [
 					'type'         => 'string',
 					'show_in_rest' => true,
 					'default'      => 'mollie',
 				],
-				self::SETTING_NAME_VENDOR_MOLLIE        => [
+				self::SETTING_NAME_VENDOR_MOLLIE           => [
 					'type'         => 'object',
 					'default'      => [
 						'recurring'       => false,
@@ -236,18 +238,18 @@ class SettingsService extends AbstractService {
 						],
 					],
 				],
-				self::SETTING_NAME_EMAIL_RECEIPT_ENABLE => [
+				self::SETTING_NAME_EMAIL_RECEIPT_ENABLE    => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_EMAIL_BCC            => [
+				self::SETTING_NAME_EMAIL_BCC               => [
 					'type'              => 'string',
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_email',
 				],
-				self::SETTING_NAME_CUSTOM_SMTP          => [
+				self::SETTING_NAME_CUSTOM_SMTP             => [
 					'type'         => 'object',
 					'default'      => [
 						'from_email' => '',
@@ -291,35 +293,43 @@ class SettingsService extends AbstractService {
 						],
 					],
 				],
-				self::SETTING_NAME_SMTP_ENABLE          => [
+				self::SETTING_NAME_SMTP_ENABLE             => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_SPAM_PROTECTION      => [
+				self::SETTING_NAME_SPAM_PROTECTION         => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_DEBUG_MODE           => [
+				self::SETTING_NAME_DEBUG_MODE              => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_ALWAYS_LOAD_ASSETS   => [
+				self::SETTING_NAME_ALWAYS_LOAD_ASSETS      => [
 					'type'              => 'boolean',
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_INVOICE_NUMBER       => [
-					'type'              => 'int',
-					'show_in_rest'      => false,
+				self::SETTING_NAME_INVOICE_NUMBER          => [
+					'type'              => 'integer',
+					'show_in_rest'      => true,
 					'default'           => 1,
 					'sanitize_callback' => 'absint',
+				],
+				self::SETTING_NAME_INVOICE_COMPANY_ADDRESS => [
+					'type'         => 'string',
+					'show_in_rest' => true,
+				],
+				self::SETTING_NAME_INVOICE_VAT_NUMBER      => [
+					'type'         => 'string',
+					'show_in_rest' => true,
 				],
 			]
 		);

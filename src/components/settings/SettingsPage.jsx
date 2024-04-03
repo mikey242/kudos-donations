@@ -20,6 +20,7 @@ import { useSettingsContext } from '../../contexts/SettingsContext';
 import { clsx } from 'clsx';
 import { useNotificationContext } from '../../contexts/NotificationContext';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { InvoiceTab } from './InvoiceTab';
 
 const SettingsPage = () => {
 	const {
@@ -65,6 +66,11 @@ const SettingsPage = () => {
 			name: 'email',
 			title: __('Email', 'kudos-donations'),
 			content: <EmailTab />,
+		},
+		{
+			name: 'invoice',
+			title: __('Invoice', 'kudos-donations'),
+			content: <InvoiceTab />,
 		},
 		{
 			name: 'help',
