@@ -89,3 +89,4 @@ tsconfig.json
 tsconfig.shared.json
 webpack.mix.js
 wp-cli.phar
+renovate.json
