@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
 use Psr\Log\LoggerInterface;
+use WP_Post;
 
 class PaymentService extends AbstractService {
 	private MailerService $mailer_service;
@@ -50,6 +51,33 @@ class PaymentService extends AbstractService {
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
 		// Replace returned get_home_url with app_url if defined.
 		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
+		// Runs when new transactions are created.
+		add_action( 'save_post_kudos_transaction', [ $this, 'add_description' ], 10, 3 );
+	}
+
+	/**
+	 * Adds a description for new transactions.
+	 *
+	 * @param int     $post_id The id of the post.
+	 * @param WP_Post $transaction The post object.
+	 * @param bool    $update Whether this is an update or not.
+	 */
+	public function add_description( int $post_id, WP_Post $transaction, bool $update ) {
+		// Bail immediately if this is an update.
+		if ( $update ) {
+			return;
+		}
+
+		$this->logger->debug( 'Updating post title', [ 'post_id' => $post_id ] );
+		TransactionPostType::save(
+			[
+				'ID'         => $transaction->ID,
+				'post_title' => apply_filters(
+					'kudos_payment_description',
+					__( 'Donation', 'kudos-donations' ) . sprintf( ' (%1$s)', TransactionPostType::get_formatted_id( $transaction->ID ) )
+				),
+			]
+		);
 	}
 
 	/**
