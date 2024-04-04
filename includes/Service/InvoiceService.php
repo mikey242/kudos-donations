@@ -21,8 +21,14 @@ class InvoiceService extends AbstractService {
 	private PDFService $pdf;
 	private LoggerInterface $logger;
 
-	public function __construct(PDFService $pdf, LoggerInterface $logger) {
-		$this->pdf = $pdf;
+	/**
+	 * InvoiceService constructor.
+	 *
+	 * @param PDFService      $pdf PDF service.
+	 * @param LoggerInterface $logger Logger instance.
+	 */
+	public function __construct( PDFService $pdf, LoggerInterface $logger ) {
+		$this->pdf    = $pdf;
 		$this->logger = $logger;
 	}
 
@@ -30,19 +36,18 @@ class InvoiceService extends AbstractService {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		add_filter('kudos_receipt_attachment', [$this, 'attach_to_email'], 10, 2);
+		add_filter( 'kudos_receipt_attachment', [ $this, 'attach_to_email' ], 10, 2 );
 	}
 
 	/**
 	 * Callback for attaching invoice to email.
-	 * @param $attachment
-	 * @param $transaction_id
 	 *
-	 * @return array
+	 * @param array $attachment Array of current attachments.
+	 * @param int   $transaction_id Transaction ID.
 	 */
-	public function attach_to_email($attachment, $transaction_id): array {
-		$file = $this->generate_invoice($transaction_id);
-		$this->logger->debug('Adding invoice to email.', ['file' => $file]);
+	public function attach_to_email( array $attachment, int $transaction_id ): array {
+		$file = $this->generate_invoice( $transaction_id );
+		$this->logger->debug( 'Adding invoice to email.', [ 'file' => $file ] );
 		$attachment[] = $file;
 		return $attachment;
 	}
@@ -53,7 +58,7 @@ class InvoiceService extends AbstractService {
 	 * @param int  $transaction_id The transaction id to use.
 	 * @param bool $force_generate Whether to regenerate even if existing pdf found.
 	 */
-	public function generate_invoice( int $transaction_id, bool $force_generate = false ) {
+	public function generate_invoice( int $transaction_id, bool $force_generate = false ): ?string {
 		$file_name = "invoice-$transaction_id.pdf";
 		$file      = PDFService::INVOICE_DIR . $file_name;
 
