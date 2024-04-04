@@ -92,7 +92,7 @@ class InvoiceService extends AbstractService {
 			'vendor'          => $transaction->{TransactionPostType::META_FIELD_VENDOR},
 			'currency'        => $transaction->{TransactionPostType::META_FIELD_CURRENCY},
 			'sequence_type'   => $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
-			'id'              => date("Y") . '_' . $transaction->{TransactionPostType::META_FIELD_INVOICE_NUMBER},
+			'id'              => gmdate( 'Y' ) . '_' . $transaction->{TransactionPostType::META_FIELD_INVOICE_NUMBER},
 			'date'            => $transaction->post_date,
 			'company_name'    => get_bloginfo( 'name' ),
 			'company_address' => get_option( SettingsService::SETTING_NAME_INVOICE_COMPANY_ADDRESS ),
