@@ -44,10 +44,8 @@ class PaymentService extends AbstractService {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		// Update the invoice number.
-		add_action( 'kudos_transaction_paid', [ $this, 'iterate_invoice_number' ] );
-		// First hook is to schedule the process hook once payment completed.
-		add_action( 'kudos_transaction_paid', [ $this, 'schedule_process_transaction' ] );
+		// Process paid transaction.
+		add_action( 'kudos_transaction_paid', [ $this, 'handle_paid_transaction' ] );
 		// Second hook is to call another hook that runs when scheduled hook called.
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
 		// Replace returned get_home_url with app_url if defined.
@@ -55,16 +53,28 @@ class PaymentService extends AbstractService {
 	}
 
 	/**
+	 * Handle paid transactions.
+	 *
+	 * @param int $transaction_id The id of the paid transaction.
+	 */
+	public function handle_paid_transaction( int $transaction_id ) {
+		// Updates the invoice number and iterates it for the next one.
+		$this->iterate_invoice_number( $transaction_id );
+		// Schedule the process hook once payment completed.
+		$this->schedule_process_transaction( $transaction_id );
+	}
+
+	/**
 	 * Adds the invoice number to a transaction and iterates it.
 	 *
-	 * @param int $post_id The id of the post being updated.
+	 * @param int $transaction_id The id of the post being updated.
 	 * @return void
 	 */
-	public function iterate_invoice_number( int $post_id ) {
+	public function iterate_invoice_number( int $transaction_id ) {
 
 		$current = (int) get_option( SettingsService::SETTING_NAME_INVOICE_NUMBER );
 
-		if ( update_post_meta( $post_id, TransactionPostType::META_FIELD_INVOICE_NUMBER, $current ) ) {
+		if ( update_post_meta( $transaction_id, TransactionPostType::META_FIELD_INVOICE_NUMBER, $current ) ) {
 			update_option( SettingsService::SETTING_NAME_INVOICE_NUMBER, ( $current + 1 ) );
 		}
 	}
@@ -100,9 +110,9 @@ class PaymentService extends AbstractService {
 	/**
 	 * Schedules processing of successful transaction.
 	 *
-	 * @param string $transaction_id The post id of the transaction.
+	 * @param int $transaction_id The post id of the transaction.
 	 */
-	public static function schedule_process_transaction( string $transaction_id ): void {
+	public function schedule_process_transaction( int $transaction_id ): void {
 		Utils::schedule_action(
 			strtotime( '+1 minute' ),
 			'kudos_process_transaction',
