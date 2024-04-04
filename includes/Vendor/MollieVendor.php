@@ -449,7 +449,7 @@ class MollieVendor extends AbstractService implements VendorInterface
             'redirectUrl'  => $redirect_url,
             'webhookUrl'   => $this->get_webhook_url(),
             'sequenceType' => $sequence_type,
-            'description' => $transaction->post_title,
+            'description'  => $transaction->post_title,
             'metadata'     => [
                 SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id,
                 SubscriptionPostType::META_FIELD_FREQUENCY      => $payment_args['payment_frequency'],
