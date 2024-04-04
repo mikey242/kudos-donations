@@ -354,7 +354,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 
         // Cancel the subscription via Mollie's API.
         try {
-            $response = $customer->cancelSubscription($subscription->{SubscriptionPostType::META_FIELD_SUBSCRIPTION_ID});
+            $response = $customer->cancelSubscription($subscription->{SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID});
 
             /** @var Subscription $response */
             return ($response->status === PaymentStatus::CANCELED);
@@ -569,6 +569,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 					[
 						TransactionPostType::META_FIELD_DONOR_ID => $subscription->metadata->{TransactionPostType::META_FIELD_DONOR_ID} ?? '',
 	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $subscription->metadata->{TransactionPostType::META_FIELD_CAMPAIGN_ID} ?? '',
+						TransactionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id
                     ]
                 );
             } else {
@@ -613,27 +614,31 @@ class MollieVendor extends AbstractService implements VendorInterface
 
                 // Update transaction.
 	            TransactionPostType::save([
-					'ID' => $transaction->ID,
-		            TransactionPostType::META_FIELD_STATUS                => $payment->status,
-		            TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID     => $payment->id,
-		            TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID    => $payment->customerId,
-		            TransactionPostType::META_FIELD_VALUE                 => $payment->amount->value,
-		            TransactionPostType::META_FIELD_CURRENCY              => $payment->amount->currency,
-		            TransactionPostType::META_FIELD_SEQUENCE_TYPE         => $payment->sequenceType,
-		            TransactionPostType::META_FIELD_METHOD                => $payment->method,
-		            TransactionPostType::META_FIELD_MODE                  => $payment->mode,
-		            TransactionPostType::META_FIELD_SUBSCRIPTION_ID       => $payment->subscriptionId,
+					'ID'                                                   => $transaction->ID,
+		            TransactionPostType::META_FIELD_STATUS                 => $payment->status,
+		            TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID      => $payment->id,
+		            TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID     => $payment->customerId,
+		            TransactionPostType::META_FIELD_VALUE                  => $payment->amount->value,
+		            TransactionPostType::META_FIELD_CURRENCY               => $payment->amount->currency,
+		            TransactionPostType::META_FIELD_SEQUENCE_TYPE          => $payment->sequenceType,
+		            TransactionPostType::META_FIELD_METHOD                 => $payment->method,
+		            TransactionPostType::META_FIELD_MODE                   => $payment->mode
 	            ]);
 
                 // Set up recurring payment if sequence is first.
                 if ($payment->hasSequenceTypeFirst()) {
                     $this->logger->info('Creating subscription.', $transaction->to_array());
-                    $this->create_subscription(
+                    $subscription = $this->create_subscription(
                         $transaction,
                         $payment->mandateId,
                         $payment->metadata->{SubscriptionPostType::META_FIELD_FREQUENCY},
 	                    (int) $payment->metadata->{SubscriptionPostType::META_FIELD_YEARS}
                     );
+	                // Update transaction with subscription ID.
+	                TransactionPostType::save([
+		                'ID'                                                   => $transaction->ID,
+		                TransactionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id
+	                ]);
                 }
             } elseif ($payment->hasRefunds()) {
                 /*
@@ -721,13 +726,13 @@ class MollieVendor extends AbstractService implements VendorInterface
             try {
                 $subscription       = $customer->createSubscription($subscription_array);
 				SubscriptionPostType::save([
-					SubscriptionPostType::META_FIELD_STATUS => $subscription->status,
-					SubscriptionPostType::META_FIELD_FREQUENCY => $interval,
-					SubscriptionPostType::META_FIELD_YEARS => $years,
-					SubscriptionPostType::META_FIELD_VALUE => $value,
-					SubscriptionPostType::META_FIELD_CURRENCY => $currency,
-					SubscriptionPostType::META_FIELD_SUBSCRIPTION_ID => $subscription->id,
-					SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction->ID
+					SubscriptionPostType::META_FIELD_STATUS                 => $subscription->status,
+					SubscriptionPostType::META_FIELD_FREQUENCY              => $interval,
+					SubscriptionPostType::META_FIELD_YEARS                  => $years,
+					SubscriptionPostType::META_FIELD_VALUE                  => $value,
+					SubscriptionPostType::META_FIELD_CURRENCY               => $currency,
+					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id,
+					SubscriptionPostType::META_FIELD_TRANSACTION_ID         => $transaction->ID
 				]);
 
                 return $subscription;

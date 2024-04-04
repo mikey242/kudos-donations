@@ -21,21 +21,21 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	/**
 	 * Meta field constants.
 	 */
-	public const META_FIELD_VALUE              = 'value';
-	public const META_FIELD_CURRENCY           = 'currency';
-	public const META_FIELD_STATUS             = 'status';
-	public const META_FIELD_METHOD             = 'method';
-	public const META_FIELD_MODE               = 'mode';
-	public const META_FIELD_SEQUENCE_TYPE      = 'sequence_type';
-	public const META_FIELD_DONOR_ID           = 'donor_id';
-	public const META_FIELD_VENDOR_PAYMENT_ID  = 'vendor_payment_id';
-	public const META_FIELD_CAMPAIGN_ID        = 'campaign_id';
-	public const META_FIELD_REFUNDS            = 'refunds';
-	public const META_FIELD_MESSAGE            = 'message';
-	public const META_FIELD_VENDOR             = 'vendor';
-	public const META_FIELD_VENDOR_CUSTOMER_ID = 'vendor_customer_id';
-	public const META_FIELD_SUBSCRIPTION_ID    = 'subscription_id';
-	public const META_FIELD_INVOICE_NUMBER     = 'invoice_number';
+	public const META_FIELD_VALUE                  = 'value';
+	public const META_FIELD_CURRENCY               = 'currency';
+	public const META_FIELD_STATUS                 = 'status';
+	public const META_FIELD_METHOD                 = 'method';
+	public const META_FIELD_MODE                   = 'mode';
+	public const META_FIELD_SEQUENCE_TYPE          = 'sequence_type';
+	public const META_FIELD_DONOR_ID               = 'donor_id';
+	public const META_FIELD_VENDOR_PAYMENT_ID      = 'vendor_payment_id';
+	public const META_FIELD_CAMPAIGN_ID            = 'campaign_id';
+	public const META_FIELD_REFUNDS                = 'refunds';
+	public const META_FIELD_MESSAGE                = 'message';
+	public const META_FIELD_VENDOR                 = 'vendor';
+	public const META_FIELD_VENDOR_CUSTOMER_ID     = 'vendor_customer_id';
+	public const META_FIELD_VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
+	public const META_FIELD_INVOICE_NUMBER         = 'invoice_number';
 
 	/**
 	 * {@inheritDoc}
@@ -70,59 +70,59 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	 */
 	public static function get_meta_config(): array {
 		return [
-			self::META_FIELD_VALUE              => [
+			self::META_FIELD_VALUE                  => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
 			],
-			self::META_FIELD_CURRENCY           => [
+			self::META_FIELD_CURRENCY               => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_STATUS             => [
+			self::META_FIELD_STATUS                 => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_METHOD             => [
+			self::META_FIELD_METHOD                 => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_MODE               => [
+			self::META_FIELD_MODE                   => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_SEQUENCE_TYPE      => [
+			self::META_FIELD_SEQUENCE_TYPE          => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_DONOR_ID           => [
+			self::META_FIELD_DONOR_ID               => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
 			],
-			self::META_FIELD_VENDOR_PAYMENT_ID  => [
+			self::META_FIELD_VENDOR_PAYMENT_ID      => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_CAMPAIGN_ID        => [
+			self::META_FIELD_CAMPAIGN_ID            => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_REFUNDS            => [
+			self::META_FIELD_REFUNDS                => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_MESSAGE            => [
+			self::META_FIELD_MESSAGE                => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_VENDOR             => [
+			self::META_FIELD_VENDOR                 => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_VENDOR_CUSTOMER_ID => [
+			self::META_FIELD_VENDOR_CUSTOMER_ID     => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_SUBSCRIPTION_ID    => [
+			self::META_FIELD_VENDOR_SUBSCRIPTION_ID => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],

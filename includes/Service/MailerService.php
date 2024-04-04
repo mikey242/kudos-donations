@@ -150,7 +150,7 @@ class MailerService extends AbstractService {
 			if ( 'oneoff' !== $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE} ) {
 				$subscription = SubscriptionPostType::get_post(
 					[
-						SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id,
+						SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $transaction->{TransactionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID},
 					]
 				);
 				$this->logger->debug( 'Mailer: Detected recurring payment. Adding cancel button.', [ SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id ] );

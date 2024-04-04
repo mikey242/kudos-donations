@@ -20,14 +20,14 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	/**
 	 * Meta field constants.
 	 */
-	public const META_FIELD_VALUE           = 'value';
-	public const META_FIELD_CURRENCY        = 'currency';
-	public const META_FIELD_FREQUENCY       = 'frequency';
-	public const META_FIELD_YEARS           = 'years';
-	public const META_FIELD_STATUS          = 'status';
-	public const META_FIELD_CUSTOMER_ID     = 'customer_id';
-	public const META_FIELD_TRANSACTION_ID  = 'transaction_id';
-	public const META_FIELD_SUBSCRIPTION_ID = 'subscription_id';
+	public const META_FIELD_VALUE                  = 'value';
+	public const META_FIELD_CURRENCY               = 'currency';
+	public const META_FIELD_FREQUENCY              = 'frequency';
+	public const META_FIELD_YEARS                  = 'years';
+	public const META_FIELD_STATUS                 = 'status';
+	public const META_FIELD_CUSTOMER_ID            = 'customer_id';
+	public const META_FIELD_TRANSACTION_ID         = 'transaction_id';
+	public const META_FIELD_VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
 
 	/**
 	 * {@inheritDoc}
@@ -62,35 +62,35 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	 */
 	public static function get_meta_config(): array {
 		return [
-			self::META_FIELD_VALUE           => [
+			self::META_FIELD_VALUE                  => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
 			],
-			self::META_FIELD_CURRENCY        => [
+			self::META_FIELD_CURRENCY               => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_FREQUENCY       => [
+			self::META_FIELD_FREQUENCY              => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_YEARS           => [
+			self::META_FIELD_YEARS                  => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
 			],
-			self::META_FIELD_STATUS          => [
+			self::META_FIELD_STATUS                 => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_CUSTOMER_ID     => [
+			self::META_FIELD_CUSTOMER_ID            => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_TRANSACTION_ID  => [
+			self::META_FIELD_TRANSACTION_ID         => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			self::META_FIELD_SUBSCRIPTION_ID => [
+			self::META_FIELD_VENDOR_SUBSCRIPTION_ID => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
@@ -102,7 +102,7 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	 */
 	public function get_columns_config(): array {
 		return [
-			'donor'                          => [
+			'donor'                                 => [
 				'value_type' => FieldType::EMAIL,
 				'label'      => __( 'Donor', 'kudos-donations' ),
 				'value'      => function ( $subscription_id ) {
@@ -116,33 +116,33 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 					return null;
 				},
 			],
-			'ID'                             => [
+			'ID'                                    => [
 				'value_type' => FieldType::STRING,
 				'value'      => function ( $subscription_id ) {
 					return static::get_formatted_id( $subscription_id );
 				},
 			],
-			self::META_FIELD_SUBSCRIPTION_ID => [
+			self::META_FIELD_VENDOR_SUBSCRIPTION_ID => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Vendor ID', 'kudos-donations' ),
 			],
-			self::META_FIELD_VALUE           => [
+			self::META_FIELD_VALUE                  => [
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Amount', 'kudos-donations' ),
 			],
-			self::META_FIELD_CURRENCY        => [
+			self::META_FIELD_CURRENCY               => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Currency', 'kudos-donations' ),
 			],
-			self::META_FIELD_FREQUENCY       => [
+			self::META_FIELD_FREQUENCY              => [
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Frequency', 'kudos-donations' ),
 			],
-			self::META_FIELD_YEARS           => [
+			self::META_FIELD_YEARS                  => [
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Length', 'kudos-donations' ),
 			],
-			'status'                         => [
+			'status'                                => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Status', 'kudos-donations' ),
 			],
