@@ -258,6 +258,7 @@ class Payment extends AbstractRestController {
 
 		// Create the payment. If there is no customer ID it will be un-linked.
 		$vendor_customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID} ?? null;
+		$sequence_type      = 'true' === $args['recurring'] ? 'first' : 'oneoff';
 		$transaction        = TransactionPostType::save(
 			[
 				TransactionPostType::META_FIELD_DONOR_ID => $donor->ID ?? null,
@@ -265,7 +266,7 @@ class Payment extends AbstractRestController {
 				TransactionPostType::META_FIELD_CURRENCY => $args['currency'],
 				TransactionPostType::META_FIELD_STATUS   => 'open',
 				TransactionPostType::META_FIELD_MODE     => $this->vendor->get_api_mode(),
-				TransactionPostType::META_FIELD_SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
+				TransactionPostType::META_FIELD_SEQUENCE_TYPE => $sequence_type,
 				TransactionPostType::META_FIELD_CAMPAIGN_ID => (int) $args['campaign_id'],
 				TransactionPostType::META_FIELD_MESSAGE  => $args['message'],
 				TransactionPostType::META_FIELD_VENDOR   => $this->vendor::get_vendor_slug(),
@@ -273,13 +274,12 @@ class Payment extends AbstractRestController {
 			]
 		);
 
-		$payment_frequency = 'false' === $args['recurring'] ? __( 'oneoff', 'kudos-donations' ) : __( 'recurring', 'kudos-donations' );
-		$transaction       = TransactionPostType::save(
+		TransactionPostType::save(
 			[
 				'ID'         => $transaction->ID,
 				'post_title' => apply_filters(
 					'kudos_payment_description',
-					__( 'Donation', 'kudos-donations' ) . sprintf( ' (%1$s) - %2$s', $payment_frequency, TransactionPostType::get_formatted_id( $transaction->ID ) ),
+					__( 'Donation', 'kudos-donations' ) . sprintf( ' (%1$s) - %2$s', $sequence_type, TransactionPostType::get_formatted_id( $transaction->ID ) )
 				),
 			]
 		);
@@ -288,12 +288,6 @@ class Payment extends AbstractRestController {
 
 		// Return checkout url if payment successfully created in Mollie.
 		if ( $url ) {
-			TransactionPostType::save(
-				[
-					'ID' => $transaction->ID,
-
-				],
-			);
 
 			// Send payment redirect URL.
 			return new WP_REST_Response(
