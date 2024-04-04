@@ -99,7 +99,7 @@ class InvoiceService extends AbstractService {
 			'vat_number'      => get_option( SettingsService::SETTING_NAME_INVOICE_VAT_NUMBER ),
 			'currency_symbol' => html_entity_decode( Utils::get_currency_symbol( 'EUR' ) ),
 			'items'           => [
-				'One-off'                      => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
+				$transaction->post_title => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
 				__( 'VAT', 'kudos-donations' ) => 0,
 			],
 			'total'           => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
