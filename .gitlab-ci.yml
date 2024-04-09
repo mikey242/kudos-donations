@@ -28,8 +28,7 @@ cache:
               - package-lock.json
       paths:
           - node_modules/
-    - key:
-          prefix: ${CI_COMMIT_REF_SLUG}
+    - key: ${CI_COMMIT_REF_SLUG}
       paths:
           - build/
 
