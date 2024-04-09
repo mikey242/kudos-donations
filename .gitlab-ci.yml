@@ -18,11 +18,20 @@ variables:
     - npm i
 
 cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-        - vendor/
-        - node_modules/
-        - build/
+    - key:
+          files:
+              - composer.lock
+      paths:
+          - vendor/
+    - key:
+          files:
+              - package-lock.json
+      paths:
+          - node_modules/
+    - key:
+          prefix: ${CI_COMMIT_REF_SLUG}
+      paths:
+          - build/
 
 stages:
     - validate
