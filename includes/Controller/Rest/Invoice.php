@@ -44,7 +44,7 @@ class Invoice extends AbstractRestController {
 				'callback'            => [ $this, 'view_invoice' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 				'args'                => [
-					'force_generate' => [
+					'force' => [
 						'type'     => 'boolean',
 						'required' => false,
 						'default'  => false,
@@ -57,7 +57,7 @@ class Invoice extends AbstractRestController {
 				'callback'            => [ $this, 'get_invoice' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 				'args'                => [
-					'force_generate' => [
+					'force' => [
 						'type'     => 'boolean',
 						'required' => false,
 						'default'  => false,
@@ -79,9 +79,9 @@ class Invoice extends AbstractRestController {
 	 */
 	public function view_invoice( WP_REST_Request $request ) {
 		$transaction_id = $request->get_param( 'id' );
-		$force_generate = $request->get_param( 'force_generate' );
+		$force          = $request->get_param( 'force' );
 
-		$this->invoice->generate_invoice( (int) $transaction_id, $force_generate );
+		$this->invoice->generate_invoice( (int) $transaction_id, $force );
 
 		$file_name = "invoice-$transaction_id.pdf";
 		$file      = PDFService::INVOICE_DIR . $file_name;
@@ -95,9 +95,9 @@ class Invoice extends AbstractRestController {
 	 */
 	public function get_invoice( WP_REST_Request $request ) {
 		$transaction_id = $request->get_param( 'id' );
-		$force_generate = $request->get_param( 'force_generate' );
+		$force          = $request->get_param( 'force' );
 
-		$this->invoice->generate_invoice( (int) $transaction_id, $force_generate );
+		$this->invoice->generate_invoice( (int) $transaction_id, $force );
 
 		$file_name = "invoice-$transaction_id.pdf";
 		$file      = PDFService::INVOICE_DIR . $file_name;
