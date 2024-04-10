@@ -64,11 +64,6 @@ class Invoice extends AbstractRestController {
 					],
 				],
 			],
-			'/view_sample'                  => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'view_sample_invoice' ],
-				'permission_callback' => [ $this, 'can_manage_options' ],
-			],
 		];
 	}
 
