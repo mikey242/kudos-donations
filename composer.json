@@ -67,6 +67,7 @@
 			"php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
 		],
 		"release": [
+			"Composer\\Config::disableProcessTimeout",
 			"@build-production",
 			"@make-zip"
 		]
