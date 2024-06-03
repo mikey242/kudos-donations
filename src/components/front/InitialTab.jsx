@@ -63,7 +63,7 @@ const InitialTab = (props) => {
 		if (!watchEmail) {
 			setValue('recurring', false);
 		}
-	}, [watchEmail]);
+	}, [setValue, watchEmail]);
 
 	return (
 		<BaseTab title={title} description={description} buttons={buttons}>
