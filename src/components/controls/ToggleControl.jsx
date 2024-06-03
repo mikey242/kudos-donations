@@ -7,7 +7,7 @@ const ToggleControl = ({ name, validation, label, help }) => {
 	return (
 		<Controller
 			name={name}
-			validation={validation}
+			rules={validation}
 			render={({ field: { value, onChange } }) => (
 				<div>
 					<Switch.Group
