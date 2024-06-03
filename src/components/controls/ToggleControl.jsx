@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form';
 import { Switch } from '@headlessui/react';
 import { clsx } from 'clsx';
 
-const ToggleControl = ({ name, validation, label, help }) => {
+const ToggleControl = ({ name, validation, label, help, disabled }) => {
 	return (
 		<Controller
 			name={name}
@@ -17,8 +17,10 @@ const ToggleControl = ({ name, validation, label, help }) => {
 						<Switch
 							checked={value}
 							onChange={onChange}
+							disabled={disabled}
 							className={clsx(
 								value ? 'bg-primary' : 'bg-gray-200',
+								disabled && 'opacity-50',
 								'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
 							)}
 						>
@@ -32,8 +34,10 @@ const ToggleControl = ({ name, validation, label, help }) => {
 						</Switch>
 						{label && (
 							<Switch.Label
-								as="span"
-								className="ml-3 cursor-pointer"
+								className={clsx(
+									disabled && 'opacity-50',
+									'ml-3 cursor-pointer'
+								)}
 							>
 								<span className="text-sm font-bold text-gray-700">
 									{label}
@@ -42,7 +46,12 @@ const ToggleControl = ({ name, validation, label, help }) => {
 						)}
 					</Switch.Group>
 					{help && (
-						<p className="mt-2 text-sm leading-5 text-gray-500">
+						<p
+							className={clsx(
+								disabled && 'opacity-50',
+								'mt-2 text-sm leading-5 text-gray-500'
+							)}
+						>
 							{help}
 						</p>
 					)}
