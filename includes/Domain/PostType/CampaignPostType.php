@@ -52,6 +52,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public const META_FIELD_RETURN_MESSAGE_TITLE     = 'return_message_title';
 	public const META_FIELD_RETURN_MESSAGE_TEXT      = 'return_message_text';
 	public const META_FIELD_CUSTOM_STYLES            = 'custom_styles';
+	public const META_ALLOW_ANONYMOUS                = 'allow_anonymous';
 
 	/**
 	 * Rest field constants.
@@ -231,6 +232,9 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 			],
 			self::META_FIELD_CUSTOM_STYLES            => [
 				'type' => FieldType::STRING,
+			],
+			self::META_ALLOW_ANONYMOUS                => [
+				'type' => FieldType::BOOLEAN,
 			],
 		];
 	}

@@ -324,6 +324,17 @@ function CampaignEdit({ campaign, updateCampaign, recurringAllowed }) {
 			content: (
 				<Fragment>
 					<ToggleControl
+						name="meta.allow_anonymous"
+						label={__(
+							'Allow anonymous donations',
+							'kudos-donations'
+						)}
+						help={__(
+							'Allow users to donate without leaving a name or email address. Anonymous users can only perform one-off donations.',
+							'kudos-donations'
+						)}
+					/>
+					<ToggleControl
 						name="meta.address_enabled"
 						label={__('Address', 'kudos-donations')}
 						help={__('Show the address tab.', 'kudos-donations')}

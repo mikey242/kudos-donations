@@ -122,6 +122,7 @@ const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 									showGoal={campaign.meta.show_goal}
 									goal={campaign.meta.goal}
 									total={campaign.total}
+									anonymous={campaign.meta.allow_anonymous}
 								/>
 							),
 							2: (

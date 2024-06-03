@@ -18,6 +18,7 @@ const InitialTab = (props) => {
 		goal,
 		showGoal,
 		total,
+		anonymous,
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -25,6 +26,7 @@ const InitialTab = (props) => {
 	const watchFixed = useWatch({ name: 'valueFixed' });
 	const watchOpen = useWatch({ name: 'valueOpen' });
 	const watchValue = useWatch({ name: 'value' });
+	const watchEmail = useWatch({ name: 'email' });
 
 	const valueError = sprintf(
 		// translators: %d is the amount in euros.
@@ -56,6 +58,12 @@ const InitialTab = (props) => {
 			setValue('valueFixed', '');
 		}
 	}, [setValue, watchOpen]);
+
+	useEffect(() => {
+		if (!watchEmail) {
+			setValue('recurring', false);
+		}
+	}, [watchEmail]);
 
 	return (
 		<BaseTab title={title} description={description} buttons={buttons}>
@@ -107,26 +115,36 @@ const InitialTab = (props) => {
 
 			<TextControl
 				name="name"
-				validation={{
-					required: __('Your name is required', 'kudos-donations'),
-				}}
+				validation={
+					!anonymous && {
+						required: __(
+							'Your name is required',
+							'kudos-donations'
+						),
+					}
+				}
 				placeholder={__('Full name', 'kudos-donations')}
 			/>
 
 			<TextControl
 				name="email"
 				type="email"
-				validation={{
-					required: __('Your email is required', 'kudos-donations'),
-				}}
+				validation={
+					!anonymous && {
+						required: __(
+							'Your email is required',
+							'kudos-donations'
+						),
+					}
+				}
 				placeholder={__('Email', 'kudos-donations')}
 			/>
 
 			{donationType === 'both' && (
 				<div className="flex justify-center mt-3">
 					<ToggleControl
+						disabled={!watchEmail}
 						name="recurring"
-						validation={{ required: true }}
 						label={__('Recurring donation', 'kudos-donations')}
 					/>
 				</div>
