@@ -164,6 +164,6 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 		);
 
 		$values = array_column( $transactions, TransactionPostType::META_FIELD_VALUE );
-		return array_sum( $values );
+		return (int) array_sum( $values );
 	}
 }
