@@ -146,24 +146,22 @@ class Utils {
 	 *
 	 * @param string $dir The directory containing the cache.
 	 */
-	public static function recursively_clear_cache( string $dir ): array {
+	public static function recursively_clear_cache( string $dir ): int {
 
-		$files   = 0;
-		$folders = 0;
+		$result  = 0;
 
-		if ( is_dir( $dir ) ) {
-			$di = new RecursiveDirectoryIterator( $dir, FilesystemIterator::SKIP_DOTS );
-			$ri = new RecursiveIteratorIterator( $di, RecursiveIteratorIterator::CHILD_FIRST );
+		if(is_dir( $dir )) {
 
-			foreach ( $ri as $file ) {
-				// phpcs:ignore WordPress.WP.AlternativeFunctions
-				$file->isDir() ? $files++ && rmdir( $file ) : $folders++ && unlink( $file );
+			$files = glob(rtrim($dir, "/") . '*/**');
+
+			foreach ( $files as $file ) {
+				if(is_file($file)) {
+					error_log( 'Removing ' . $file );
+					unlink($file);
+				}
 			}
 		}
 
-		return [
-			'files'   => $files,
-			'folders' => $folders,
-		];
+		return $result;
 	}
 }

@@ -168,8 +168,7 @@ class TwigService {
 		$this->logger->debug(
 			'Twig cache cleared.',
 			[
-				'files'   => $result['files'],
-				'folders' => $result['folders'],
+				'files'   => $result,
 			]
 		);
 	}

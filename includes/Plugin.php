@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos;
 
 use DI\Container;
 use Exception;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Infrastructure\Delayed;
 use IseardMedia\Kudos\Infrastructure\PluginUninstallAware;
 use IseardMedia\Kudos\Infrastructure\Registrable;
@@ -75,6 +76,12 @@ class Plugin {
 	 * @param bool $network_wide Whether activation is network-wide or not.
 	 */
 	public function on_plugin_activation( bool $network_wide ): void {
+
+		// Clear container cache.
+		$cache_dir = wp_upload_dir()['basedir'] . '/kudos-donations/container/';
+		Utils::recursively_clear_cache( $cache_dir );
+
+		// Activate
 		$this->activator_service->activate( $network_wide );
 	}
 

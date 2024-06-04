@@ -39,10 +39,6 @@ class ActivatorService {
 		$logger = $this->logger;
 		$twig   = $this->twig;
 
-		// Clear container cache.
-		$cache_dir = wp_upload_dir()['basedir'] . '/kudos-donations/container/';
-		Utils::recursively_clear_cache( $cache_dir );
-
 		// Initialize twig.
 		$twig->init();
 		$logger->info(
