@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Helper\Utils;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -37,6 +38,12 @@ class ActivatorService {
 	public function activate( bool $network_wide ): void {
 		$logger = $this->logger;
 		$twig   = $this->twig;
+
+		// Clear container cache.
+		$cache_dir = wp_upload_dir()['basedir'] . '/kudos-donations/container/';
+		Utils::recursively_clear_cache( $cache_dir );
+
+		// Initialize twig.
 		$twig->init();
 		$logger->info(
 			'Kudos Donations plugin activated.',

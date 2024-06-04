@@ -9,12 +9,9 @@
 
 namespace IseardMedia\Kudos\Service;
 
-use FilesystemIterator;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
 use Psr\Log\LoggerInterface;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use Throwable;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -166,24 +163,15 @@ class TwigService {
 	/**
 	 * Clears the twig cache
 	 */
-	public function clear_cache(): bool {
-		$di      = new RecursiveDirectoryIterator( self::CACHE_DIR, FilesystemIterator::SKIP_DOTS );
-		$ri      = new RecursiveIteratorIterator( $di, RecursiveIteratorIterator::CHILD_FIRST );
-		$files   = 0;
-		$folders = 0;
-		foreach ( $ri as $file ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions
-			$file->isDir() ? $files++ && rmdir( $file ) : $folders++ && unlink( $file );
-		}
+	public function clear_cache(): void {
+		$result = Utils::recursively_clear_cache( self::CACHE_DIR );
 		$this->logger->debug(
 			'Twig cache cleared.',
 			[
-				'files'   => $files,
-				'folders' => $folders,
+				'files'   => $result['files'],
+				'folders' => $result['folders'],
 			]
 		);
-
-		return true;
 	}
 
 	/**

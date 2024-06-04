@@ -34,9 +34,9 @@ class PluginFactory {
 			$container_builder = new ContainerBuilder();
 			// Enable cache if not in development mode.
 			if ( 'development' !== $_ENV['APP_ENV'] ) {
-				$kudos_uploads = wp_upload_dir()['basedir'] . '/kudos-donations/container';
-				$container_builder->enableCompilation( $kudos_uploads );
-				$container_builder->writeProxiesToFile( true, $kudos_uploads . '/proxies' );
+				$cache_dir = wp_upload_dir()['basedir'] . '/kudos-donations/container';
+				$container_builder->enableCompilation( $cache_dir );
+				$container_builder->writeProxiesToFile( true, $cache_dir . '/proxies' );
 			}
 
 			$config_path = KUDOS_PLUGIN_DIR . 'config/';
