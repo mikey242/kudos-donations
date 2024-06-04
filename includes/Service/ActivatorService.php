@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
-use IseardMedia\Kudos\Helper\Utils;
 use Psr\Log\LoggerInterface;
 
 /**

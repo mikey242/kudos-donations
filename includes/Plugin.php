@@ -81,7 +81,7 @@ class Plugin {
 		$cache_dir = wp_upload_dir()['basedir'] . '/kudos-donations/container/';
 		Utils::recursively_clear_cache( $cache_dir );
 
-		// Activate
+		// Activate.
 		$this->activator_service->activate( $network_wide );
 	}
 

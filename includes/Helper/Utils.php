@@ -12,9 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Helper;
 
 use Exception;
-use FilesystemIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class Utils {
 
@@ -148,16 +145,16 @@ class Utils {
 	 */
 	public static function recursively_clear_cache( string $dir ): int {
 
-		$result  = 0;
+		$result = 0;
 
-		if(is_dir( $dir )) {
+		if ( is_dir( $dir ) ) {
 
-			$files = glob(rtrim($dir, "/") . '*/**');
+			$files = glob( rtrim( $dir, '/' ) . '*/**' );
 
 			foreach ( $files as $file ) {
-				if(is_file($file)) {
-					error_log( 'Removing ' . $file );
-					unlink($file);
+				if ( is_file( $file ) ) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+					unlink( $file );
 				}
 			}
 		}
