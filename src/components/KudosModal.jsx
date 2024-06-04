@@ -19,7 +19,9 @@ const KudosModal = ({
 	let lastElement;
 
 	const toggle = useCallback(() => {
-		if (typeof toggleModal === 'function') toggleModal();
+		if (typeof toggleModal === 'function') {
+			toggleModal();
+		}
 	}, [toggleModal]);
 
 	const setUp = () => {
@@ -43,7 +45,9 @@ const KudosModal = ({
 
 	const handleKeyPress = useCallback(
 		(e) => {
-			if (e.key === 'Escape' || e.keyCode === 27) toggle();
+			if (e.key === 'Escape' || e.keyCode === 27) {
+				toggle();
+			}
 			if (e.key === 'Tab' || e.keyCode === 9) {
 				const activeElement =
 					targetRef.current.getRootNode().activeElement;

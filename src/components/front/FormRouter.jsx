@@ -30,7 +30,9 @@ const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	const firstUpdate = useRef(true);
 
 	const handlePrev = (data) => {
-		if (step === 1) return;
+		if (step === 1) {
+			return;
+		}
 		let prevStep = step - 1;
 		const state = { ...data, ...campaign.meta };
 
@@ -61,7 +63,9 @@ const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	};
 
 	const onSubmit = (data) => {
-		if (step < 5) return handleNext(data, step + 1);
+		if (step < 5) {
+			return handleNext(data, step + 1);
+		}
 		setIsBusy(true);
 		submitForm(data).then((result) => {
 			if (!result.success) {
@@ -74,7 +78,9 @@ const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		if (firstUpdate.current) {
 			firstUpdate.current = false;
 		} else {
-			if (!elementRef.current) return;
+			if (!elementRef.current) {
+				return;
+			}
 			const target = elementRef.current;
 			target.classList.add('translate-x-1', 'opacity-0');
 			const oldHeight = target.querySelector('form').offsetHeight;

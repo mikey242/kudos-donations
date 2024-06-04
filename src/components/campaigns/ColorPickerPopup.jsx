@@ -16,7 +16,9 @@ const ColorPickerPopup = ({ color, onColorChange }) => {
 	const popoverRef = useRef();
 
 	const handleKeyPress = useCallback((event) => {
-		if (event.key === 'Escape' || event.keyCode === 27) setShown(false);
+		if (event.key === 'Escape' || event.keyCode === 27) {
+			setShown(false);
+		}
 	}, []);
 
 	const handleClick = useCallback(
@@ -39,7 +41,9 @@ const ColorPickerPopup = ({ color, onColorChange }) => {
 	}, [handleClick, handleKeyPress]);
 
 	useEffect(() => {
-		if (!shown) return;
+		if (!shown) {
+			return;
+		}
 
 		/**
 		 * Race condition causes popup to immediately close since is true.

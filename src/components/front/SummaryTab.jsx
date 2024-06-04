@@ -13,7 +13,9 @@ function SummaryTab(props) {
 
 	const recurringText = () => {
 		const recurring = getValues('recurring');
-		if (!recurring) return __('One off', 'kudos-donations');
+		if (!recurring) {
+			return __('One off', 'kudos-donations');
+		}
 		const recurringFrequency = getFrequencyName(
 			getValues('recurring_frequency')
 		);
