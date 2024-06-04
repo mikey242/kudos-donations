@@ -234,7 +234,8 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'type' => FieldType::STRING,
 			],
 			self::META_ALLOW_ANONYMOUS                => [
-				'type' => FieldType::BOOLEAN,
+				'type'    => FieldType::BOOLEAN,
+				'default' => false,
 			],
 		];
 	}
