@@ -18,7 +18,7 @@ import Divider from '../Divider';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
 import { useAdminTableContext } from '../../contexts/AdminTableContext';
 
-function CampaignEdit({ campaign, updateCampaign, recurringAllowed }) {
+const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -420,6 +420,6 @@ function CampaignEdit({ campaign, updateCampaign, recurringAllowed }) {
 			</FormProvider>
 		</Fragment>
 	);
-}
+};
 
 export default CampaignEdit;
