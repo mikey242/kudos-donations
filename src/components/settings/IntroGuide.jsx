@@ -13,6 +13,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextControl } from '../controls';
 import { useState } from '@wordpress/element';
 import { useSettingsContext } from '../../contexts/SettingsContext';
+import { clsx } from 'clsx';
 
 const IntroGuide = ({ setShowIntro, isOpen }) => {
 	const { updateSetting, checkApiKey, settings } = useSettingsContext();
@@ -21,20 +22,22 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 	const isRecurringEnabled = vendorMollie?.recurring ?? false;
 
 	const [isApiSaving, setIsApiSaving] = useState(false);
-	const [apiMessage, setApiMessage] = useState(null);
+	const [apiStatus, setApiStatus] = useState(null);
+	const [isVendorConnected, setIsVendorConnected] = useState(false);
 
 	const methods = useForm();
 
 	const submitMollie = (data) => {
 		setIsApiSaving(true);
 		checkApiKey({
-			keys: data.keys,
+			...data.keys,
 		})
 			.then((response) => {
-				setApiMessage(response.data.message);
+				setIsVendorConnected(response?.success);
+				setApiStatus(response);
 			})
 			.catch((error) => {
-				setApiMessage(error.message);
+				setApiStatus(error);
 			})
 			.finally(() => {
 				setIsApiSaving(false);
@@ -69,7 +72,7 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 					},
 					{
 						imageSrc: mollie,
-						nextDisabled: !vendorMollie?.connected,
+						nextDisabled: !isVendorConnected,
 						heading: __('Connect with Mollie', 'kudos-donations'),
 						content: (
 							<>
@@ -100,9 +103,16 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 													submitMollie
 												)}
 											>
-												{apiMessage && (
-													<div className="text-sm text-red-500">
-														{apiMessage}
+												{apiStatus?.message && (
+													<div
+														className={clsx(
+															apiStatus.success
+																? 'text-green-500'
+																: 'text-red-500',
+															'text-sm'
+														)}
+													>
+														{apiStatus.message}
 													</div>
 												)}
 												<TextControl

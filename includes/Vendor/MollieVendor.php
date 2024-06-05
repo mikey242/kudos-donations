@@ -182,7 +182,7 @@ class MollieVendor extends AbstractService implements VendorInterface
 	    $keys = $request->get_param( 'keys' );
 
 	    // Check if key(s) are empty.
-	    if (empty($keys)) {
+	    if (!array_filter($keys)) {
 			return new WP_REST_Response([
 				'success' => false,
 				'message' => __('Please enter an API key.', 'kudos-donations')
