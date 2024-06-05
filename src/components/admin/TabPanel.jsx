@@ -1,9 +1,9 @@
 import { Tab } from '@headlessui/react';
 import React from 'react';
-import Panel from '../Panel';
 import { clsx } from 'clsx';
 import { Fragment } from '@wordpress/element';
-import { useQueryParam, NumberParam } from 'use-query-params';
+import { NumberParam, useQueryParam } from 'use-query-params';
+import Panel from '../Panel';
 
 const TabPanel = ({ tabs }) => {
 	const [tabIndex, setTabIndex] = useQueryParam('tab', NumberParam);
@@ -28,7 +28,7 @@ const TabPanel = ({ tabs }) => {
 											index === 0 && 'rounded-l-lg',
 											index === tabs.length - 1 &&
 												'rounded-r-lg',
-											'group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-sm font-medium text-center hover:bg-gray-50 focus:outline-none focus:z-10'
+											'p-4 group relative min-w-0 flex-1 overflow-hidden text-sm font-medium text-center hover:bg-gray-50 focus:outline-none focus:z-10'
 										)}
 									>
 										{tab[1].title}
@@ -47,20 +47,16 @@ const TabPanel = ({ tabs }) => {
 					</Tab.List>
 				</Panel>
 				<Tab.Panels>
-					<Panel>
-						<div className="p-6">
-							{Object.entries(tabs).map((tab) => {
-								tab = tab[1];
-								return (
-									<Tab.Panel key={tab.name}>
-										<div className={'space-y-6'}>
-											{tab.content}
-										</div>
-									</Tab.Panel>
-								);
-							})}
-						</div>
-					</Panel>
+					<>
+						{Object.entries(tabs).map((tab) => {
+							tab = tab[1];
+							return (
+								<Tab.Panel key={tab.name}>
+									{tab.content}
+								</Tab.Panel>
+							);
+						})}
+					</>
 				</Tab.Panels>
 			</Tab.Group>
 		</div>

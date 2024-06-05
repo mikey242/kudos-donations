@@ -6,7 +6,7 @@ import { get, uniqueId } from 'lodash';
 const InlineTextEdit = ({
 	name,
 	validation,
-	disabled,
+	isDisabled,
 	className,
 	type = 'text',
 	placeholder,
@@ -25,7 +25,7 @@ const InlineTextEdit = ({
 				{...register(name, validation)}
 				type={type}
 				id={id}
-				disabled={disabled}
+				disabled={isDisabled}
 				className={clsx(
 					error?.message
 						? 'border-red-300 text-red-900 placeholder-red-300'

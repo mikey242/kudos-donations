@@ -1,8 +1,9 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { get, uniqueId } from 'lodash';
+import { clsx } from 'clsx';
 
-const CheckboxControl = ({ name, validation, label, help, disabled }) => {
+const CheckboxControl = ({ name, validation, label, help, isDisabled }) => {
 	const {
 		register,
 		formState: { errors },
@@ -12,15 +13,15 @@ const CheckboxControl = ({ name, validation, label, help, disabled }) => {
 	const id = uniqueId(name + '-');
 
 	return (
-		<div className="first:mt-0 mt-3">
+		<div className={clsx(isDisabled && 'opacity-50', 'first:mt-0 mt-3')}>
 			<div className="relative flex items-center">
 				<div className="flex items-center h-5">
 					<input
 						{...register(name, validation)}
 						id={id}
 						type="checkbox"
-						disabled={disabled}
-						className="disabled:opacity-50 disabled:cursor-not-allowed transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
+						disabled={isDisabled}
+						className="disabled:cursor-not-allowed transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
 						aria-invalid={!!error}
 						aria-errormessage={`${id}-error`}
 					/>

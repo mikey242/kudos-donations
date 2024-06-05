@@ -143,7 +143,7 @@ const InitialTab = (props) => {
 			{donationType === 'both' && (
 				<div className="flex justify-center mt-3">
 					<ToggleControl
-						disabled={!watchEmail}
+						isDisabled={!watchEmail}
 						name="recurring"
 						label={__('Recurring donation', 'kudos-donations')}
 					/>

@@ -36,8 +36,10 @@ const RadioGroupControl = ({ name, validation, options, help, label }) => {
 										checked
 											? 'bg-primary border-transparent text-white font-bold'
 											: 'bg-white border-gray-300 text-gray-900 hover:bg-gray-50',
-										option.disabled && 'opacity-50',
-										'transition ease-in-out cursor-pointer focus:outline-none border rounded-md py-2 px-2 sm:py-3 sm:px-3 flex items-center justify-center text-sm font-medium sm:flex-1'
+										option.disabled
+											? 'opacity-50 cursor-not-allowed'
+											: 'cursor-pointer',
+										'transition ease-in-out focus:outline-none border rounded-md py-2 px-2 sm:py-3 sm:px-3 flex items-center justify-center text-sm font-medium sm:flex-1'
 									)
 								}
 								disabled={option.disabled}

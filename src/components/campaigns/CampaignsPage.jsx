@@ -60,22 +60,7 @@ const CampaignsPage = () => {
 		{
 			title: __('Goal', 'kudos-donations'),
 			headerClass: 'w-20',
-			dataCallback: () => (
-				<InlineTextEdit
-					type="number"
-					className="w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-					validation={{
-						min: {
-							value: 1,
-							message: __(
-								'Minimum value is 1',
-								'kudos-donations'
-							),
-						},
-					}}
-					name={'meta.goal'}
-				/>
-			),
+			dataCallback: (i) => posts[i].meta?.goal,
 		},
 		{
 			title: __('Progress', 'kudos-donations'),

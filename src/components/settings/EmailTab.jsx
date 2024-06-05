@@ -8,6 +8,7 @@ import { useFormContext } from 'react-hook-form';
 import apiFetch from '@wordpress/api-fetch';
 import { useNotificationContext } from '../../contexts/NotificationContext';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
+import SettingsPanel from '../admin/SettingsPanel';
 
 const EmailTab = () => {
 	const { watch, getValues } = useFormContext();
@@ -41,25 +42,30 @@ const EmailTab = () => {
 
 	return (
 		<Fragment>
-			<h2>{__('Email receipts', 'kudos-donations')}</h2>
-			<ToggleControl
-				label={__('Send email receipts', 'kudos-donations')}
-				help={__(
-					'Once a payment has been completed, you can automatically send an email receipt to the donor.',
-					'kudos-donations'
-				)}
-				name="_kudos_email_receipt_enable"
-			/>
-			{watchSendReceipts && (
+			<SettingsPanel>
+				<h2>{__('Email receipts', 'kudos-donations')}</h2>
+				<ToggleControl
+					label={__('Send email receipts', 'kudos-donations')}
+					help={__(
+						'Once a payment has been completed, you can automatically send an email receipt to the donor.',
+						'kudos-donations'
+					)}
+					name="_kudos_email_receipt_enable"
+				/>
+				<Divider />
+				<TextControl
+					label={__('Send receipt copy to', 'kudos-donations')}
+					isDisabled={!watchSendReceipts}
+					name="_kudos_email_bcc"
+					help={__(
+						'Add an email address here to send a copy of every donation receipt.',
+						'kudos-donations'
+					)}
+				/>
+			</SettingsPanel>
+			<SettingsPanel>
 				<>
-					<TextControl
-						label={__('Send receipt copy to', 'kudos-donations')}
-						name="_kudos_email_bcc"
-						help={__(
-							'Add an email address here to send a copy of every donation receipt.',
-							'kudos-donations'
-						)}
-					/>
+					<h2>{__('SMTP settings', 'kudos-donations')}</h2>
 					<ToggleControl
 						name="_kudos_smtp_enable"
 						label={__(
@@ -74,7 +80,6 @@ const EmailTab = () => {
 					{watchCustom && (
 						<Fragment>
 							<Divider />
-							<h2>{__('SMTP settings', 'kudos-donations')}</h2>
 							<TextControl
 								name="_kudos_custom_smtp.host"
 								label={__('Host', 'kudos-donations')}
@@ -129,10 +134,6 @@ const EmailTab = () => {
 									},
 								]}
 							/>
-							{/*<CheckboxControl*/}
-							{/*	name="_kudos_custom_smtp.autotls"*/}
-							{/*	label={__('Auto TLS', 'kudos-donations')}*/}
-							{/*/>*/}
 							<TextControl
 								name="_kudos_custom_smtp.username"
 								label={__('Username', 'kudos-donations')}
@@ -195,31 +196,31 @@ const EmailTab = () => {
 							/>
 						</Fragment>
 					)}
-
-					<Divider />
-					<h2>{__('Test email', 'kudos-donations')}</h2>
-					<div className="space-y-3">
-						<TextControl
-							label={__('Email address', 'kudos-donations')}
-							type="email"
-							name="test_email_address"
-							help={__(
-								'Address to send the test email to.',
-								'kudos-donations'
-							)}
-						/>
-						<Button
-							isOutline
-							type="button"
-							isBusy={isEmailBusy}
-							onClick={sendTestEmail}
-							icon={<EnvelopeIcon className="mr-2 w-5 h-5" />}
-						>
-							Send
-						</Button>
-					</div>
 				</>
-			)}
+			</SettingsPanel>
+			<SettingsPanel>
+				<h2>{__('Test email', 'kudos-donations')}</h2>
+				<div className="space-y-3">
+					<TextControl
+						label={__('Email address', 'kudos-donations')}
+						type="email"
+						name="test_email_address"
+						help={__(
+							'Address to send the test email to.',
+							'kudos-donations'
+						)}
+					/>
+					<Button
+						isOutline
+						type="button"
+						isBusy={isEmailBusy}
+						onClick={sendTestEmail}
+						icon={<EnvelopeIcon className="mr-2 w-5 h-5" />}
+					>
+						Send
+					</Button>
+				</div>
+			</SettingsPanel>
 		</Fragment>
 	);
 };

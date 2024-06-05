@@ -241,9 +241,19 @@ class MollieVendor extends AbstractService implements VendorInterface
 		}
 
 		$current_settings = $this->settings->get_current_vendor_settings();
+
+		// Figure out mode to use.
+	    $valid_mode = 'test';
+	    $valid_modes = array_filter($api_keys, function ($value) {
+		    return is_array($value) && isset($value['verified']) && $value['verified'];
+	    });
+		if($valid_modes) {
+			$valid_mode = strstr(array_key_first($valid_modes), '_', true);
+		}
+
 		$updated_settings = array_merge([
 			'recurring'       => $this->can_use_recurring(),
-			'mode'            => $this->api_mode,
+			'mode'            => $valid_mode,
 			'payment_methods' => array_map(function ($method) {
 				return [
 					'id'            => $method->id,
