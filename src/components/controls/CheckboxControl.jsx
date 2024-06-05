@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { get, uniqueId } from 'lodash';
 
-const CheckboxControl = ({ name, validation, label, help }) => {
+const CheckboxControl = ({ name, validation, label, help, disabled }) => {
 	const {
 		register,
 		formState: { errors },
@@ -19,7 +19,8 @@ const CheckboxControl = ({ name, validation, label, help }) => {
 						{...register(name, validation)}
 						id={id}
 						type="checkbox"
-						className="transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
+						disabled={disabled}
+						className="disabled:opacity-50 disabled:cursor-not-allowed transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
 						aria-invalid={!!error}
 						aria-errormessage={`${id}-error`}
 					/>

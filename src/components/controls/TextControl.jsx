@@ -54,8 +54,7 @@ const TextControl = ({
 								? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 '
 								: 'border-gray-300 focus:ring-primary focus:border-primary',
 							addOn && 'pl-7',
-							disabled && 'cursor-not-allowed opacity-75',
-							'form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md'
+							'disabled:opacity-50 disabled:cursor-not-allowed form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md'
 						)}
 						placeholder={placeholder}
 						aria-invalid={!!error}
