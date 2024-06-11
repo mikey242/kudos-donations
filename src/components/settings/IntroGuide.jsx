@@ -16,14 +16,13 @@ import { useSettingsContext } from '../../contexts/SettingsContext';
 import { clsx } from 'clsx';
 
 const IntroGuide = ({ setShowIntro, isOpen }) => {
-	const { updateSetting, checkApiKey, settings } = useSettingsContext();
+	const { updateSetting, checkApiKey, settings, isVendorReady } =
+		useSettingsContext();
 	const vendorMollie = settings._kudos_vendor_mollie;
-	const isConnected = vendorMollie?.connected ?? false;
 	const isRecurringEnabled = vendorMollie?.recurring ?? false;
 
 	const [isApiSaving, setIsApiSaving] = useState(false);
 	const [apiStatus, setApiStatus] = useState(null);
-	const [isVendorConnected, setIsVendorConnected] = useState(false);
 
 	const methods = useForm();
 
@@ -33,7 +32,6 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 			...data.keys,
 		})
 			.then((response) => {
-				setIsVendorConnected(response?.success);
 				setApiStatus(response);
 			})
 			.catch((error) => {
@@ -72,11 +70,11 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 					},
 					{
 						imageSrc: mollie,
-						nextDisabled: !isVendorConnected,
+						nextDisabled: !isVendorReady,
 						heading: __('Connect with Mollie', 'kudos-donations'),
 						content: (
 							<>
-								{!isConnected ? (
+								{!isVendorReady ? (
 									<div className="mb-2">
 										<p>
 											{__(
