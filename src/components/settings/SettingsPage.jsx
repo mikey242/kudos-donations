@@ -40,7 +40,7 @@ const SettingsPage = () => {
 
 	useEffect(() => {
 		if (settings) {
-			setShowIntro(settings._kudos_show_intro);
+			setShowIntro(settings._kudos_show_intro ?? false);
 			methods.reset(settings);
 		}
 	}, [methods, settings]);
@@ -89,7 +89,7 @@ const SettingsPage = () => {
 			) : (
 				<>
 					<IntroGuide
-						isOpen={showIntro ?? false}
+						isOpen={showIntro}
 						isAPISaving={settingsSaving}
 						setShowIntro={setShowIntro}
 						updateSetting={updateSetting}
@@ -105,7 +105,7 @@ const SettingsPage = () => {
 									<span
 										className={clsx(
 											isVendorReady && 'connected',
-											'kudos-api-status text-gray-600 capitalize mr-2'
+											'hidden sm:block kudos-api-status text-gray-600 capitalize mr-2'
 										)}
 									>
 										{isVendorReady
