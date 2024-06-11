@@ -9,6 +9,7 @@ const ToggleControl = ({ name, validation, label, help, isDisabled }) => {
 			name={name}
 			rules={validation}
 			disabled={isDisabled}
+			defaultValue={null}
 			render={({ field: { value, onChange } }) => (
 				<div className={clsx(isDisabled && 'opacity-50')}>
 					<Switch.Group
