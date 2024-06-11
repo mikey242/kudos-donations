@@ -15,7 +15,7 @@ import { useState } from '@wordpress/element';
 import { useSettingsContext } from '../../contexts/SettingsContext';
 import { clsx } from 'clsx';
 
-const IntroGuide = ({ setShowIntro, isOpen }) => {
+const IntroGuide = () => {
 	const { updateSetting, checkApiKey, settings, isVendorReady } =
 		useSettingsContext();
 	const vendorMollie = settings._kudos_vendor_mollie;
@@ -43,12 +43,14 @@ const IntroGuide = ({ setShowIntro, isOpen }) => {
 	};
 
 	const closeModal = () => {
-		setShowIntro(false);
-		updateSetting('_kudos_show_intro', false);
+		updateSetting('_kudos_show_intro', 0);
 	};
 
 	return (
-		<KudosModal isOpen={isOpen} toggleModal={closeModal}>
+		<KudosModal
+			isOpen={settings._kudos_show_intro ?? false}
+			toggleModal={closeModal}
+		>
 			<Guide
 				className={'box-border'}
 				onFinish={closeModal}

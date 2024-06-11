@@ -4,7 +4,7 @@
  */
 
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Header } from '../admin/Header';
@@ -33,14 +33,12 @@ const SettingsPage = () => {
 		isVendorReady,
 	} = useSettingsContext();
 	const { createNotification } = useNotificationContext();
-	const [showIntro, setShowIntro] = useState(false);
 	const methods = useForm({
 		defaultValues: settings,
 	});
 
 	useEffect(() => {
 		if (settings) {
-			setShowIntro(settings._kudos_show_intro ?? false);
 			methods.reset(settings);
 		}
 	}, [methods, settings]);
@@ -75,7 +73,7 @@ const SettingsPage = () => {
 		{
 			name: 'help',
 			title: __('Help', 'kudos-donations'),
-			content: <HelpTab setShowIntro={setShowIntro} />,
+			content: <HelpTab />,
 		},
 	];
 
@@ -89,9 +87,7 @@ const SettingsPage = () => {
 			) : (
 				<>
 					<IntroGuide
-						isOpen={showIntro}
 						isAPISaving={settingsSaving}
-						setShowIntro={setShowIntro}
 						updateSetting={updateSetting}
 					/>
 
