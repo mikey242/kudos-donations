@@ -184,6 +184,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'type'              => FieldType::STRING,
 				'single'            => false,
 				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => '5, 10, 25, 50',
 			],
 			self::META_FIELD_MINIMUM_DONATION         => [
 				'type'              => FieldType::INTEGER,
