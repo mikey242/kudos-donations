@@ -34,16 +34,7 @@ const ButtonEdit = (props) => {
 			method: 'GET',
 			signal: controller?.signal,
 		})
-			.then((response) => {
-				setCampaigns(response);
-				// eslint-disable-next-line camelcase
-				if (campaign_id) {
-					const current = response.find(
-						(x) => x.id === parseInt(campaign_id)
-					);
-					setCurrentCampaign(current);
-				}
-			})
+			.then(setCampaigns)
 			.catch((error) => {
 				// eslint-disable-next-line no-console
 				console.log(error);
@@ -55,13 +46,28 @@ const ButtonEdit = (props) => {
 		// eslint-disable-next-line camelcase
 	}, [campaign_id]);
 
+	useEffect(() => {
+		if (campaigns) {
+			// eslint-disable-next-line camelcase
+			if (campaign_id) {
+				const current = campaigns.find(
+					(x) => x.id === parseInt(campaign_id)
+				);
+				setCurrentCampaign(current);
+			} else {
+				setAttributes({ campaign_id: String(campaigns[0].id) });
+			}
+		}
+		// eslint-disable-next-line camelcase
+	}, [campaign_id, campaigns, setAttributes]);
+
 	const onChangeButtonLabel = (newValue) => {
 		setAttributes({ button_label: newValue });
 	};
 
 	const onChangeCampaign = (newValue) => {
 		if (newValue) {
-			setAttributes({ campaign_id: newValue });
+			setAttributes({ campaign_id: String(newValue) });
 			apiFetch({
 				path: `wp/v2/kudos_campaign/${newValue ?? ''}`,
 				method: 'GET',
