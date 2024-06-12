@@ -329,6 +329,20 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 						<TextControl
 							name="meta.fixed_amounts"
 							isDisabled={watchAmountType === 'open'}
+							validation={{
+								validate: (value) => {
+									const regex = /^(\d+\s*)(\s*,\s*\d+\s*)*$/;
+									return regex.test(value)
+										? true
+										: __(
+												'Value needs to be a comma separated list of numbers'
+											);
+								},
+								required: __(
+									'You need to enter one or more amounts',
+									'kudos-donations'
+								),
+							}}
 							help={__(
 								'Comma-separated list of amounts',
 								'kudos-donations'
