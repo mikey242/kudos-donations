@@ -10,6 +10,9 @@ import React, { Fragment } from 'react';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { DonateButton } from '../../components/DonateButton';
+import CampaignProvider from '../../contexts/CampaignContext';
+import FormRouter from '../../components/front/FormRouter';
+import Render from '../../components/Render';
 
 const ButtonEdit = (props) => {
 	const [campaigns, setCampaigns] = useState(null);
@@ -129,19 +132,34 @@ const ButtonEdit = (props) => {
 							/>
 						</PanelBody>
 					</InspectorControls>
-
-					<DonateButton
-						className={className ?? ''}
-						// eslint-disable-next-line camelcase
-						color={currentCampaign?.meta.theme_color ?? '#ff9f1c'}
-					>
-						<RichText
-							allowedFormats={[]} // Disable all formatting
-							onChange={onChangeButtonLabel}
-							// eslint-disable-next-line camelcase
-							value={button_label}
-						/>
-					</DonateButton>
+					<>
+						{currentCampaign && (
+							<CampaignProvider campaignId={currentCampaign.id}>
+								<Render
+									className={className ?? ''}
+									themeColor={
+										currentCampaign?.meta?.theme_color
+									}
+								>
+									{type === 'form' ? (
+										<FormRouter
+											isPreview={true}
+											campaign={currentCampaign}
+										/>
+									) : (
+										<DonateButton>
+											<RichText
+												allowedFormats={[]} // Disable all formatting
+												onChange={onChangeButtonLabel}
+												// eslint-disable-next-line camelcase
+												value={button_label}
+											/>
+										</DonateButton>
+									)}
+								</Render>
+							</CampaignProvider>
+						)}
+					</>
 				</Fragment>
 			)}
 		</div>

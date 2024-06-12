@@ -17,7 +17,13 @@ import {
 } from '@heroicons/react/24/outline';
 import { checkRequirements } from '../../helpers/form';
 
-const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
+const FormRouter = ({
+	step,
+	campaign,
+	submitForm,
+	setFormState,
+	isPreview = false,
+}) => {
 	const [height, setHeight] = useState('');
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isBusy, setIsBusy] = useState(false);
@@ -63,6 +69,9 @@ const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	};
 
 	const onSubmit = (data) => {
+		if (isPreview) {
+			return null;
+		}
 		if (step < 5) {
 			return handleNext(data, step + 1);
 		}
