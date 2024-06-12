@@ -16,9 +16,8 @@ const ButtonEdit = (props) => {
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 
 	const {
-		className,
 		// eslint-disable-next-line camelcase
-		attributes: { button_label, campaign_id, type },
+		attributes: { button_label, campaign_id, type, className },
 		setAttributes,
 	} = props;
 
