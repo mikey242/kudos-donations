@@ -54,7 +54,7 @@ class Front extends AbstractService {
 	 */
 	public function register_kudos(): void {
 		$this->register_blocks();
-		$this->register_button_shortcode();
+		$this->register_shortcode();
 		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_ALWAYS_LOAD_ASSETS ) ) {
 			$this->enqueue_assets();
 		}
@@ -72,16 +72,6 @@ class Front extends AbstractService {
 			$public_js['dependencies'],
 			$public_js['version'],
 			true
-		);
-
-		wp_localize_script(
-			'kudos-donations-public',
-			'kudos',
-			[
-				'stylesheets' => [
-					Assets::get_style( 'front/kudos-front.css' ),
-				],
-			]
 		);
 
 		wp_set_script_translations( 'kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
@@ -105,9 +95,6 @@ class Front extends AbstractService {
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
 			}
 		}
-
-		// Enqueue necessary resources.
-		$this->enqueue_assets();
 
 		// Create unique id for triggering.
 		$id = Utils::generate_id( 'kudos-' );
@@ -133,8 +120,10 @@ class Front extends AbstractService {
 	 * Enqueue the styles and scripts.
 	 */
 	private function enqueue_assets(): void {
-		wp_enqueue_script( 'kudos-donations-public' );
 		wp_enqueue_style( 'kudos-donations-fonts' ); // Fonts need to be loaded in the main document.
+		if ( ! has_block( 'iseardmedia/kudos-button' ) ) {
+			wp_enqueue_script( 'kudos-donations-public' );
+		}
 	}
 
 	/**
@@ -173,7 +162,7 @@ class Front extends AbstractService {
 	private function button_html( string $id, array $args ): string {
 		return wp_kses(
 			wp_sprintf(
-				"<p><span id='button-$id' class='button' data-label='%s' data-target='form-%s' data-campaign='%s'></span></p>",
+				"<p><span id='button-$id' class='kudos-button' data-label='%s' data-target='form-%s' data-campaign='%s'></span></p>",
 				$args['button_label'],
 				$id,
 				$args['campaign_id']
@@ -294,10 +283,23 @@ class Front extends AbstractService {
 	 * Register the Kudos button block.
 	 */
 	private function register_blocks(): void {
-		register_block_type(
+		$block = register_block_type(
 			KUDOS_PLUGIN_DIR . '/build/front/button/',
 			[
 				'render_callback' => [ $this, 'button_render_callback' ],
+			]
+		);
+
+		$handle = $block->script_handles[0];
+
+		wp_enqueue_style( 'kudos-donations-fonts' ); // Fonts need to be loaded in the main document.
+		wp_localize_script(
+			$handle,
+			'kudos',
+			[
+				'stylesheets' => [
+					Assets::get_style( 'front/kudos-front.css' ),
+				],
 			]
 		);
 	}
@@ -305,8 +307,7 @@ class Front extends AbstractService {
 	/**
 	 * Register the kudos button shortcode.
 	 */
-	private function register_button_shortcode(): void {
-		// Register shortcode.
+	private function register_shortcode(): void {
 		add_shortcode(
 			'kudos',
 			function ( $args ) {
@@ -321,8 +322,24 @@ class Front extends AbstractService {
 					'kudos'
 				);
 
+				// Enqueue necessary resources.
+				$this->enqueue_assets();
+
 				return $this->button_render_callback( $args );
 			}
+		);
+
+		/**
+		 * Add the required stylesheets. Only needed for shortcode.
+		 */
+		wp_localize_script(
+			'kudos-donations-public',
+			'kudos',
+			[
+				'stylesheets' => [
+					Assets::get_style( 'front/kudos-front.css' ),
+				],
+			]
 		);
 	}
 
