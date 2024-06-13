@@ -1,10 +1,17 @@
+/* eslint camelcase: 0 */
+
 import { useEffect, useState } from '@wordpress/element';
 import {
 	InspectorControls,
 	RichText,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { PanelBody, RadioControl, SelectControl } from '@wordpress/components';
+import {
+	ExternalLink,
+	PanelBody,
+	RadioControl,
+	SelectControl,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React, { Fragment } from 'react';
 // eslint-disable-next-line import/default
@@ -19,7 +26,6 @@ const ButtonEdit = (props) => {
 	const [currentCampaign, setCurrentCampaign] = useState(null);
 
 	const {
-		// eslint-disable-next-line camelcase
 		attributes: { button_label, campaign_id, type, className },
 		setAttributes,
 	} = props;
@@ -43,12 +49,10 @@ const ButtonEdit = (props) => {
 		return () => {
 			controller.abort();
 		};
-		// eslint-disable-next-line camelcase
 	}, [campaign_id]);
 
 	useEffect(() => {
 		if (campaigns) {
-			// eslint-disable-next-line camelcase
 			if (campaign_id) {
 				const current = campaigns.find(
 					(x) => x.id === parseInt(campaign_id)
@@ -58,7 +62,6 @@ const ButtonEdit = (props) => {
 				setAttributes({ campaign_id: String(campaigns[0].id) });
 			}
 		}
-		// eslint-disable-next-line camelcase
 	}, [campaign_id, campaigns, setAttributes]);
 
 	const onChangeButtonLabel = (newValue) => {
@@ -93,7 +96,6 @@ const ButtonEdit = (props) => {
 									'Select a campaign',
 									'kudos-donations'
 								)}
-								// eslint-disable-next-line camelcase
 								value={campaign_id}
 								onChange={onChangeCampaign}
 								options={[{ label: '', value: '' }].concat(
@@ -157,7 +159,6 @@ const ButtonEdit = (props) => {
 											<RichText
 												allowedFormats={[]} // Disable all formatting
 												onChange={onChangeButtonLabel}
-												// eslint-disable-next-line camelcase
 												value={button_label}
 											/>
 										</DonateButton>
