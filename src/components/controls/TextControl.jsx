@@ -25,7 +25,7 @@ const TextControl = ({
 
 	return (
 		<div className={clsx(isDisabled && 'opacity-50', 'first:mt-0 mt-3')}>
-			<div className={'hidden' === type && 'hidden'}>
+			<div className={clsx('hidden' === type && 'hidden')}>
 				<label
 					htmlFor={id}
 					className="block text-sm font-bold text-gray-700"
