@@ -105,12 +105,24 @@ const ButtonEdit = (props) => {
 									}))
 								)}
 							/>
-							<a href="admin.php?page=kudos-campaigns&tab_name=campaigns">
+							{currentCampaign && (
+								<>
+									<ExternalLink
+										href={`admin.php?page=kudos-campaigns&kudos_campaign=${currentCampaign.id}`}
+									>
+										{__('Edit', 'kudos-donations') +
+											' ' +
+											currentCampaign.title.rendered}
+									</ExternalLink>
+									<br />
+								</>
+							)}
+							<ExternalLink href="admin.php?page=kudos-campaigns&tab_name=campaigns">
 								{__(
 									'Create a new campaign here',
 									'kudos-donations'
 								)}
-							</a>
+							</ExternalLink>
 						</PanelBody>
 
 						<PanelBody
