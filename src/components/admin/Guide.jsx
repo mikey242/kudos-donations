@@ -78,7 +78,7 @@ const Guide = ({ pages = [], className, onFinish }) => {
 							src={pages[currentPage].imageSrc}
 						/>
 					</div>
-					<h1 className={'font-serif text-center mb-2'}>
+					<h1 className={'font-heading text-center mb-2'}>
 						{pages[currentPage].heading}
 					</h1>
 					<div className="text-lg text-center">

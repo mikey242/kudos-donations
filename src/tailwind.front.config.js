@@ -9,8 +9,8 @@ module.exports = {
 	],
 	theme: {
 		fontFamily: {
-			sans: 'var(--kudos-font-sans)',
-			serif: 'var(--kudos-font-serif)',
+			body: 'var(--kudos-font-body)',
+			heading: 'var(--kudos-font-heading)',
 		},
 		extend: {
 			keyframes: {

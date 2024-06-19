@@ -2,8 +2,8 @@ module.exports = {
 	important: false,
 	theme: {
 		fontFamily: {
-			sans: ['montserratregular', 'sans-serif'],
-			serif: ['cabinbold', 'serif'],
+			body: ['montserratregular', 'sans-serif'],
+			heading: ['cabinbold', 'serif'],
 			mono: [
 				'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
 			],

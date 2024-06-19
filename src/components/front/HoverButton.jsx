@@ -7,7 +7,7 @@ const HoverButton = ({ color, className, onClick = null }) => {
 	return (
 		<div
 			id="kudos-badge"
-			className={clsx('font-sans p-2 fixed bottom-4 right-4', className)}
+			className={clsx('font-body p-2 fixed bottom-4 right-4', className)}
 		>
 			<Button
 				onClick={() => onClick && onClick()}

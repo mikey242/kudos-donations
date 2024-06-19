@@ -54,10 +54,10 @@ function Render({
 
 			{/* Fonts */}
 			<style>
-				{`:host {--kudos-font-serif: ${
+				{`:host {--kudos-font-heading: ${
 					fonts?.header ?? 'cabinbold, sans-serif'
 				} }`}
-				{`:host {--kudos-font-sans: ${
+				{`:host {--kudos-font-body: ${
 					fonts?.header ?? 'montserratregular, sans-serif'
 				} }`}
 			</style>
@@ -68,7 +68,7 @@ function Render({
 			)}
 
 			<div id="kudos-container">
-				<div className={clsx(className, 'font-sans')}>
+				<div className={clsx(className, 'font-body')}>
 					{ready && !errors ? <>{children}</> : <>{renderErrors()}</>}
 				</div>
 			</div>

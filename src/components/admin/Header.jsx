@@ -16,7 +16,7 @@ const Header = ({ children }) => {
 					>
 						<KudosLogo className="w-6 h-6" />
 					</a>
-					<h1 className="hidden xs:block font-serif">
+					<h1 className="hidden xs:block font-heading">
 						{__('Kudos Donations', 'kudos-donations')}
 					</h1>
 					<span className="kudos-version self-center font-bold rounded-lg p-3 ml-4 border border-solid border-gray-400">

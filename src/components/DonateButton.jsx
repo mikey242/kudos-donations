@@ -10,7 +10,7 @@ const DonateButton = ({
 	color = null,
 }) => {
 	return (
-		<div id="kudos-button" className={clsx('font-sans', className)}>
+		<div id="kudos-button" className={clsx('font-body', className)}>
 			<Button
 				onClick={() => onClick && onClick()}
 				className={clsx(!color && 'bg-primary', 'logo-animate')}

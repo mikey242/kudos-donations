@@ -23,7 +23,7 @@ function Message({ color, title, body }) {
 				<Render themeColor={color}>
 					<KudosModal toggleModal={closeModal} isOpen={modalOpen}>
 						<>
-							<h2 className="font-normal font-serif text-4xl m-0 mb-2 text-gray-900 block text-center">
+							<h2 className="font-normal font-heading text-4xl m-0 mb-2 text-gray-900 block text-center">
 								{title}
 							</h2>
 							<p className="text-lg text-gray-900 text-center block font-normal mb-4">
