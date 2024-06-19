@@ -76,8 +76,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		);
 		wp_set_script_translations(
 			'kudos-donations-settings',
-			'kudos-donations',
-			plugin_dir_path( __FILE__ ) . '/languages/'
+			'kudos-donations'
 		);
 	}
 
