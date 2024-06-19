@@ -118,7 +118,7 @@ class Plugin {
 		add_action(
 			'init',
 			static function (): void {
-				load_plugin_textdomain( 'kudos-donations', false, 'kudos-donations/languages' );
+				load_plugin_textdomain( 'kudos-donations', false, \dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 			}
 		);
 	}
