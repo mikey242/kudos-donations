@@ -45,15 +45,7 @@ class Front extends AbstractService {
 	 */
 	public function register(): void {
 		$this->register_assets();
-		$this->register_kudos();
-		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );
-	}
-
-	/**
-	 * Registers the button shortcode and block.
-	 */
-	public function register_kudos(): void {
-		$this->register_blocks();
+		$this->register_block();
 		$this->register_shortcode();
 		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_ALWAYS_LOAD_ASSETS ) ) {
 			$this->enqueue_assets();
@@ -82,7 +74,7 @@ class Front extends AbstractService {
 	 *
 	 * @param array $args Array of Kudos button/modal attributes.
 	 */
-	public function button_render_callback( array $args ): ?string {
+	public function kudos_render_callback( array $args ): ?string {
 
 		// Check if the current vendor is connected, otherwise show an error to logged in admins.
 		if ( ! $this->vendor->is_ready() ) {
@@ -105,15 +97,15 @@ class Front extends AbstractService {
 				'wp_footer',
 				function () use ( $args, $id ): void {
 					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $this->form_html( $id, $args );
+					echo $this->get_form_html( $id, $args );
 				}
 			);
 
 			// Output button.
-			return $this->button_html( $id, $args );
+			return $this->get_button_html( $id, $args );
 		}
 
-		return $this->form_html( $id, $args );
+		return $this->get_form_html( $id, $args );
 	}
 
 	/**
@@ -132,7 +124,7 @@ class Front extends AbstractService {
 	 * @param string $id ID to use for the form.
 	 * @param array  $args Attributes.
 	 */
-	private function form_html( string $id, array $args ): string {
+	private function get_form_html( string $id, array $args ): string {
 		return wp_kses(
 			wp_sprintf(
 				"<div id='form-%s' class='kudos-donations kudos-form' data-display-as='%s' data-campaign='%s' style='display: block'>
@@ -159,7 +151,7 @@ class Front extends AbstractService {
 	 * @param string $id ID to use for the form.
 	 * @param array  $args Attributes.
 	 */
-	private function button_html( string $id, array $args ): string {
+	private function get_button_html( string $id, array $args ): string {
 		return wp_kses(
 			wp_sprintf(
 				"<p><span id='button-$id' class='kudos-button' data-label='%s' data-target='form-%s' data-campaign='%s'></span></p>",
@@ -282,11 +274,11 @@ class Front extends AbstractService {
 	/**
 	 * Register the Kudos button block.
 	 */
-	private function register_blocks(): void {
+	private function register_block(): void {
 		$block = register_block_type(
 			KUDOS_PLUGIN_DIR . '/build/front/button/',
 			[
-				'render_callback' => [ $this, 'button_render_callback' ],
+				'render_callback' => [ $this, 'kudos_render_callback' ],
 			]
 		);
 
@@ -325,7 +317,7 @@ class Front extends AbstractService {
 				// Enqueue necessary resources.
 				$this->enqueue_assets();
 
-				return $this->button_render_callback( $args );
+				return $this->kudos_render_callback( $args );
 			}
 		);
 
