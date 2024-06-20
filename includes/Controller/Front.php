@@ -20,6 +20,7 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\AbstractService;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorInterface;
+use WP_REST_Request;
 use WP_REST_Server;
 
 class Front extends AbstractService {
@@ -248,7 +249,7 @@ class Front extends AbstractService {
 				case 'cancel_subscription':
 					$id      = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
 					$token   = sanitize_text_field( wp_unslash( $_REQUEST['token'] ) );
-					$request = new \WP_REST_Request( WP_REST_Server::READABLE, '/kudos/v1/subscription/cancel' );
+					$request = new WP_REST_Request( WP_REST_Server::READABLE, '/kudos/v1/subscription/cancel' );
 					$request->set_query_params(
 						[
 							'id'    => $id,
