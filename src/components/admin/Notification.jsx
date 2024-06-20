@@ -32,7 +32,9 @@ const Notification = ({ notifications, onNotificationClick }) => {
 								) : (
 									<ExclamationCircleIcon className="w-5 h-5 mr-2 text-red-600" />
 								)}
-								{t.text}
+								<span className="first-letter:uppercase">
+									{t.text}
+								</span>
 							</button>
 						</Panel>
 					</Transition>
