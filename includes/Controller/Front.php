@@ -115,7 +115,7 @@ class Front extends AbstractService {
 	 */
 	private function enqueue_assets(): void {
 		wp_enqueue_style( 'kudos-donations-fonts' ); // Fonts need to be loaded in the main document.
-		if ( ! has_block( 'iseardmedia/kudos-button' ) ) {
+		if ( ! has_block( 'iseardmedia/kudos-button' ) ) { // Don't register if block present.
 			wp_enqueue_script( 'kudos-donations-public' );
 		}
 	}
