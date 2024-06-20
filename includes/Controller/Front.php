@@ -51,6 +51,7 @@ class Front extends AbstractService {
 		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_ALWAYS_LOAD_ASSETS ) ) {
 			$this->enqueue_assets();
 		}
+		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );
 	}
 
 	/**
