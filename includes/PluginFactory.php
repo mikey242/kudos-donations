@@ -11,14 +11,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos;
 
-use DI\ContainerBuilder;
-use DI\DependencyException;
-use DI\NotFoundException;
+use Psr\Container\ContainerExceptionInterface;
 
 /**
  * Class PluginFactory
  */
 class PluginFactory {
+
 	/**
 	 * Create and return an instance of the plugin.
 	 *
@@ -31,20 +30,11 @@ class PluginFactory {
 		static $plugin = null;
 
 		if ( null === $plugin ) {
-			$container_builder = new ContainerBuilder();
-			// Enable cache if not in development mode.
-			if ( 'development' !== $_ENV['APP_ENV'] ) {
-				$cache_dir = wp_upload_dir()['basedir'] . '/kudos-donations/container';
-				$container_builder->enableCompilation( $cache_dir );
-				$container_builder->writeProxiesToFile( true, $cache_dir . '/proxies' );
-			}
-
-			$config_path = KUDOS_PLUGIN_DIR . 'config/';
-			$container_builder->addDefinitions( $config_path . 'config.php' );
 			try {
-				$container = $container_builder->build();
+				$kernel    = new Kernel();
+				$container = $kernel->get_container();
 				$plugin    = $container->get( Plugin::class );
-			} catch ( DependencyException | NotFoundException | \Exception $e ) {
+			} catch ( ContainerExceptionInterface  $e ) {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( $e->getMessage() );
 			}

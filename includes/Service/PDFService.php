@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Service;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use IseardMedia\Kudos\Helper\Utils;
-use Psr\Log\LoggerInterface;
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use Throwable;
 
 class PDFService extends AbstractService {
@@ -22,8 +22,6 @@ class PDFService extends AbstractService {
 	public const INVOICE_DIR = KUDOS_STORAGE_DIR . 'invoices/';
 	public const INVOICE_URL = KUDOS_STORAGE_URL . 'invoices/';
 	private const FONTS_DIR  = KUDOS_STORAGE_DIR . 'fonts/';
-
-	private LoggerInterface $logger;
 	private Dompdf $pdf;
 	private TwigService $twig;
 	private array $logos;
@@ -31,15 +29,13 @@ class PDFService extends AbstractService {
 	/**
 	 * Pdf constructor.
 	 *
-	 * @param LoggerInterface $logger Logger instance.
-	 * @param TwigService     $twig TwigService.
-	 * @param Dompdf          $pdf PDF generator.
+	 * @param TwigService $twig TwigService.
+	 * @param Dompdf      $pdf PDF generator.
 	 */
-	public function __construct( LoggerInterface $logger, TwigService $twig, Dompdf $pdf ) {
+	public function __construct( TwigService $twig, Dompdf $pdf ) {
 
-		$this->logger = $logger;
-		$this->twig   = $twig;
-		$this->pdf    = $pdf;
+		$this->twig = $twig;
+		$this->pdf  = $pdf;
 
 		// Config DomPdf.
 		$options = new Options();

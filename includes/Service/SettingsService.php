@@ -11,6 +11,8 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
+
 class SettingsService extends AbstractService {
 
 	public const HOOK_GET_SETTINGS                    = 'kudos_get_settings';

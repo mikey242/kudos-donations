@@ -9,12 +9,14 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Service;
+namespace IseardMedia\Kudos\Infrastructure\Container;
 
-use IseardMedia\Kudos\Infrastructure\Delayed;
-use IseardMedia\Kudos\Infrastructure\Registrable;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-abstract class AbstractService implements Delayed, Registrable {
+abstract class AbstractService implements Delayed, Registrable, LoggerAwareInterface {
+
+	use LoggerAwareTrait;
 
 	/**
 	 * {@inheritDoc}

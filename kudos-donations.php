@@ -8,7 +8,7 @@
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
- * Version:           4.0.0-beta-8
+ * Version:           4.0.0-alpha-9
  * Author:            Iseard Media
  * Author URI:        https://iseard.media
  * Requires at least: 6.2
@@ -31,7 +31,7 @@ if ( ! \defined( 'WPINC' ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-\define( 'KUDOS_VERSION', '4.0.0-beta-8' );
+\define( 'KUDOS_VERSION', '4.0.0-alpha-9' );
 \define( 'KUDOS_DB_VERSION', '4.0.0' );
 \define( 'KUDOS_PLUGIN_FILE', __FILE__ );
 \define( 'KUDOS_PLUGIN_URL', plugin_dir_url( KUDOS_PLUGIN_FILE ) );
@@ -64,5 +64,11 @@ if ( empty( $_ENV['APP_ENV'] ) ) {
 	$_ENV['APP_ENV'] = 'production';
 }
 
-// Main plugin initialization happens there so that this file is still parsable in PHP < 7.0.
+// Set Whoops as error handler if in development.
+if ( 'production' !== $_ENV['APP_ENV'] && class_exists( '\Whoops\Run' ) ) {
+	$whoops = new \Whoops\Run();
+	$whoops->pushHandler( new \Whoops\Handler\PrettyPageHandler() );
+	$whoops->register();
+}
+
 require KUDOS_PLUGIN_DIR . '/includes/namespace.php';

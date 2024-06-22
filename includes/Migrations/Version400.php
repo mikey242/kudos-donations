@@ -87,12 +87,7 @@ class Version400 extends AbstractMigration {
 			update_post_meta( $new_id, CampaignPostType::META_FIELD_ADDITIONAL_FUNDS, $campaign['additional_funds'] ?? '' );
 			update_post_meta( $new_id, CampaignPostType::META_FIELD_SHOW_GOAL, $campaign['show_progress'] ?? false );
 			update_post_meta( $new_id, CampaignPostType::META_FIELD_DONATION_TYPE, $campaign['donation_type'] ?? 'oneoff' );
-
-			// Add fixed amounts separately.
-			$fixed_amounts = explode( ',', $campaign['fixed_amounts'] );
-			foreach ( $fixed_amounts as $fixed_amount ) {
-				add_post_meta( $new_id, CampaignPostType::META_FIELD_FIXED_AMOUNTS, $fixed_amount );
-			}
+			update_post_meta( $new_id, CampaignPostType::META_FIELD_FIXED_AMOUNTS, $campaign['fixed_amounts'] ?? '5,10,25,50' );
 
 			// Store old and new ID for later reference.
 			$this->cache['campaign_id'][ $campaign['id'] ] = $new_id;

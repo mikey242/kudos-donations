@@ -1,6 +1,6 @@
 <?php
 /**
- * Payment vendor related functions.
+ * Factory for Payment Vendor.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations
  *
@@ -12,21 +12,25 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Vendor;
 
 use IseardMedia\Kudos\Service\SettingsService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-class PaymentVendors
+class VendorFactory
 {
-	private string $current_vendor;
-
-	public function __construct(SettingsService $settings) {
-
-		$this->current_vendor = $settings->get_setting( SettingsService::SETTING_NAME_VENDOR, 'mollie' );
-	}
 
 	/**
-	 * Returns the current vendor class.
+	 * @throws ContainerExceptionInterface
+	 * @throws NotFoundExceptionInterface
 	 */
-	public function get_current_vendor_class(): ?string {
-		return $this->get_vendor($this->current_vendor);
+	public function create(ContainerInterface $container, SettingsService $settings): ?VendorInterface
+	{
+		$vendor = $settings->get_setting( SettingsService::SETTING_NAME_VENDOR, 'mollie' );
+		$vendorClass = $this->get_vendor($vendor);
+		if ($vendorClass) {
+			return $container->get($vendorClass);
+		}
+		return null;
 	}
 
 	/**
@@ -54,10 +58,6 @@ class PaymentVendors
 			'mollie'     => [
 				'label' => __( 'Mollie', 'kudos-donations' ),
 				'class' => MollieVendor::class,
-			],
-			'stripe' => [
-				'label' => __( 'Stripe', 'kudos-donations' ),
-				'class' => StripeVendor::class,
 			],
 		];
 

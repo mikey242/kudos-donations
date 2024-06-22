@@ -17,7 +17,7 @@ use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Service\AbstractService;
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use IseardMedia\Kudos\Service\SettingsService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
@@ -46,7 +46,6 @@ class MollieVendor extends AbstractService implements VendorInterface
      * @var array
      */
     private array $api_keys;
-	private LoggerInterface $logger;
 	private MollieApiClient $api_client;
 	private SettingsService $settings;
 

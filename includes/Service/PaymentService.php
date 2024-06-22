@@ -14,12 +14,11 @@ namespace IseardMedia\Kudos\Service;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
-use Psr\Log\LoggerInterface;
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use WP_Post;
 
 class PaymentService extends AbstractService {
 	private MailerService $mailer_service;
-	private LoggerInterface $logger;
 	private SettingsService $settings;
 
 	/**
@@ -28,16 +27,13 @@ class PaymentService extends AbstractService {
 	 * @see https://stackoverflow.com/questions/36853791/laravel-dynamic-dependency-injection-for-interface-based-on-user-input
 	 *
 	 * @param MailerService   $mailer_service Mailer service.
-	 * @param LoggerInterface $logger Logger.
 	 * @param SettingsService $settings Settings service.
 	 */
 	public function __construct(
 		MailerService $mailer_service,
-		LoggerInterface $logger,
 		SettingsService $settings
 	) {
 		$this->settings       = $settings;
-		$this->logger         = $logger;
 		$this->mailer_service = $mailer_service;
 	}
 

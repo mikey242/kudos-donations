@@ -15,28 +15,25 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use Psr\Log\LoggerInterface;
 use WP_Error;
 use WP_REST_Request;
 
 class MailerService extends AbstractService {
 
 	private TwigService $twig;
-	private LoggerInterface $logger;
 	private SettingsService $settings;
 
 	/**
 	 * Mailer constructor.
 	 *
 	 * @param TwigService     $twig Twig service.
-	 * @param LoggerInterface $logger Logger instance.
 	 * @param SettingsService $settings Settings service.
 	 */
-	public function __construct( TwigService $twig, LoggerInterface $logger, SettingsService $settings ) {
+	public function __construct( TwigService $twig, SettingsService $settings ) {
 		$this->settings = $settings;
-		$this->logger   = $logger;
 		$this->twig     = $twig;
 	}
 

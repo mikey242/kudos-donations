@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller;
 
-use IseardMedia\Kudos\Service\AbstractService;
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use WP_REST_Request;
 use WP_REST_Server;
 

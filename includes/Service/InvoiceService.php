@@ -14,22 +14,19 @@ namespace IseardMedia\Kudos\Service;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
-use Psr\Log\LoggerInterface;
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 
 class InvoiceService extends AbstractService {
 
 	private PDFService $pdf;
-	private LoggerInterface $logger;
 
 	/**
 	 * InvoiceService constructor.
 	 *
-	 * @param PDFService      $pdf PDF service.
-	 * @param LoggerInterface $logger Logger instance.
+	 * @param PDFService $pdf PDF service.
 	 */
-	public function __construct( PDFService $pdf, LoggerInterface $logger ) {
-		$this->pdf    = $pdf;
-		$this->logger = $logger;
+	public function __construct( PDFService $pdf ) {
+		$this->pdf = $pdf;
 	}
 
 	/**
