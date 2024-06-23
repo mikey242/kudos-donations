@@ -35,8 +35,10 @@ class PluginFactory {
 				$container = $kernel->get_container();
 				$plugin    = $container->get( Plugin::class );
 			} catch ( ContainerExceptionInterface  $e ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log( $e->getMessage() );
+				if ( KUDOS_DEBUG ) {
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions
+					error_log( $e->getMessage() );
+				}
 			}
 		}
 
