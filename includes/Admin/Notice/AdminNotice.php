@@ -85,7 +85,7 @@ class AdminNotice {
 	 */
 	public function message( string $level, string $message ): void {
 		$this->level   = $level;
-		$this->message = $message;
+		$this->message = 'Kudos Donations: ' . $message;
 		$this->hook();
 	}
 
