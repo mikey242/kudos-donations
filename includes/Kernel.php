@@ -140,7 +140,10 @@ class Kernel {
 		$container_dump = $dumper->dump( [ 'class' => 'KudosContainer' ] );
 
 		if ( ! $this->file_system->put_contents( $container_file_path, $container_dump ) ) {
-			throw new Exception( 'Failed to write the container to the cache file.' );
+			if ( KUDOS_DEBUG ) {
+				// phpcs:disable WordPress.PHP.DevelopmentFunctions
+				error_log( 'Failed to write the container to the cache file.' );
+			}
 		}
 	}
 
