@@ -12,6 +12,7 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos;
 
 use Exception;
+use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\LoggerAwarePass;
 use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\ServiceCompilerPass;
 use Psr\Container\ContainerInterface;
@@ -131,8 +132,6 @@ class Kernel {
 	/**
 	 * Dumps the compiled container to a file for caching purposes.
 	 *
-	 * @throws Exception If unable to create cached container file.
-	 *
 	 * @param string $container_file_path The file to dump the container to.
 	 */
 	private function dump_container( string $container_file_path ): void {
@@ -141,8 +140,7 @@ class Kernel {
 
 		if ( ! $this->file_system->put_contents( $container_file_path, $container_dump ) ) {
 			if ( KUDOS_DEBUG ) {
-				// phpcs:disable WordPress.PHP.DevelopmentFunctions
-				error_log( 'Failed to write the container to the cache file.' );
+				( new AdminNotice() )->error( 'Failed to write the container to the cache file. Please ensure that the "wp-content/uploads" directory is writable.' );
 			}
 		}
 	}

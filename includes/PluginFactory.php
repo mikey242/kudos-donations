@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos;
 
+use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use Psr\Container\ContainerExceptionInterface;
 
 /**
@@ -35,10 +36,7 @@ class PluginFactory {
 				$container = $kernel->get_container();
 				$plugin    = $container->get( Plugin::class );
 			} catch ( ContainerExceptionInterface  $e ) {
-				if ( KUDOS_DEBUG ) {
-					// phpcs:ignore WordPress.PHP.DevelopmentFunctions
-					error_log( $e->getMessage() );
-				}
+				( new AdminNotice() )->error( $e->getMessage() );
 			}
 		}
 
