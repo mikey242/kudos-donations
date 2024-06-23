@@ -21,7 +21,7 @@ class PDFService extends AbstractService {
 
 	public const INVOICE_DIR = KUDOS_STORAGE_DIR . 'invoices/';
 	public const INVOICE_URL = KUDOS_STORAGE_URL . 'invoices/';
-	private const FONTS_DIR  = KUDOS_STORAGE_DIR . 'fonts/';
+	private const FONTS_DIR  = KUDOS_CACHE_DIR . 'fonts/';
 	private Dompdf $pdf;
 	private TwigService $twig;
 	private array $logos;

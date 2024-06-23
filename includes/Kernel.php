@@ -64,7 +64,7 @@ class Kernel {
 	 * @return string The cache folder path.
 	 */
 	private function get_cache_folder(): string {
-		return wp_upload_dir()['basedir'] . '/kudos-donations/container/';
+		return KUDOS_CACHE_DIR . 'container/';
 	}
 
 	/**

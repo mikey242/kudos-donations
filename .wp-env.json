@@ -8,6 +8,7 @@
 		"WP_SITEURL": "http://host.docker.internal:8888"
 	},
 	"mappings": {
-		"wp-content/uploads/kudos-donations/": "./uploads"
+		"wp-content/uploads/kudos-donations/": "./wordpress/storage",
+		"wp-content/cache/kudos-donations/": "./wordpress/cache"
 	}
 }

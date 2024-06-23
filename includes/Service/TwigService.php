@@ -21,7 +21,7 @@ use Twig\TwigFunction;
 
 class TwigService {
 
-	public const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
+	public const CACHE_DIR = KUDOS_CACHE_DIR . 'twig/';
 	private Environment $twig;
 	private array $options;
 	private LoggerInterface $logger;
