@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * ServiceCompilerPass class
  */
-class LoggerAwarePass implements CompilerPassInterface {
+class LoggerCompilerPass implements CompilerPassInterface {
 
 	/**
 	 * Add an instance of the LoggerInterface to the relevant services.
@@ -38,10 +38,9 @@ class LoggerAwarePass implements CompilerPassInterface {
 
 		// Iterate over all service definitions.
 		foreach ( $container->getDefinitions() as $definition ) {
-			$class = $definition->getClass();
 
 			// Check if the service implements LoggerAwareInterface.
-			if ( is_subclass_of( $class, LoggerAwareInterface::class ) ) {
+			if ( is_subclass_of( $definition->getClass(), LoggerAwareInterface::class ) ) {
 				// Call the setLogger method with the Logger service.
 				$definition->addMethodCall( 'setLogger', [ $logger_reference ] );
 			}

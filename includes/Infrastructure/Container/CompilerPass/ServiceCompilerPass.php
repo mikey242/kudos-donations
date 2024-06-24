@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Infrastructure\Container\CompilerPass;
 
 use IseardMedia\Kudos\Infrastructure\Container\Registrable;
-use IseardMedia\Kudos\Infrastructure\Container\ServiceInstantiator;
+use IseardMedia\Kudos\Infrastructure\Container\ServiceHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -29,21 +29,14 @@ class ServiceCompilerPass implements CompilerPassInterface {
 	 * @param ContainerBuilder $container The container builder.
 	 */
 	public function process( ContainerBuilder $container ): void {
-		$manager_definition = $container->getDefinition( ServiceInstantiator::class );
-		$definitions        = $container->getDefinitions();
-		foreach ( $definitions as $definition_id => $definition ) {
-			$definition_class = $definition->getClass();
-			if ( null === $definition_class || $definition->hasTag( 'container.excluded' ) ) {
-				continue;
+		$handler     = $container->getDefinition( ServiceHandler::class );
+		$definitions = $container->getDefinitions();
+		foreach ( $definitions as $id => $definition ) {
+			// Check if the service implements Registrable interface.
+			if ( is_a( $definition->getClass(), Registrable::class, true ) ) {
+				// Call the add method with the ServiceHandler.
+				$handler->addMethodCall( 'add', [ new Reference( $id ) ] );
 			}
-			if ( ! is_a( $definition_class, Registrable::class, true ) ) {
-				continue;
-			}
-
-			$manager_definition->addMethodCall(
-				'add',
-				[ new Reference( $definition_id ) ]
-			);
 		}
 	}
 }

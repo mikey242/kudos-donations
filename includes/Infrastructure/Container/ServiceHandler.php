@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Infrastructure\Container;
 /**
  * Service instantiator class.
  */
-class ServiceInstantiator {
+class ServiceHandler {
 	/**
 	 * Array of services.
 	 *
