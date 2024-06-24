@@ -41,7 +41,6 @@ class Kernel {
 	 * @throws Exception Thrown in load_config.
 	 */
 	public function __construct() {
-		$this->initialize_filesystem();
 		$this->initialize_container();
 	}
 
@@ -54,8 +53,7 @@ class Kernel {
 			require_once ABSPATH . '/wp-admin/includes/file.php';
 		}
 		WP_Filesystem();
-		$this->file_system  = $wp_filesystem;
-		$this->cache_folder = $this->get_cache_folder();
+		$this->file_system = $wp_filesystem;
 		wp_mkdir_p( $this->cache_folder );
 	}
 
@@ -94,14 +92,16 @@ class Kernel {
 	 * @throws Exception Thrown if config could not be loaded.
 	 */
 	private function initialize_container(): void {
+		$this->cache_folder  = $this->get_cache_folder();
 		$container_file_path = $this->cache_folder . self::CONTAINER_FILE;
 
 		// Enable cache if not in development mode.
-		if ( $this->is_production() && $this->file_system->exists( $container_file_path ) ) {
+		if ( $this->is_production() && file_exists( $container_file_path ) ) {
 			require_once $container_file_path;
 			$this->container = new \KudosContainer();
 		} else {
 			$this->container_builder = new ContainerBuilder();
+			$this->initialize_filesystem();
 			$this->load_config();
 			$this->add_compiler_passes();
 			$this->container_builder->compile();
