@@ -14,10 +14,14 @@ namespace IseardMedia\Kudos\Service;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
+use IseardMedia\Kudos\Infrastructure\ActivationAwareInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Throwable;
 
-class PDFService extends AbstractService {
+class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
+
+	use LoggerAwareTrait;
 
 	public const INVOICE_DIR = KUDOS_STORAGE_DIR . 'invoices/';
 	public const INVOICE_URL = KUDOS_STORAGE_URL . 'invoices/';
@@ -52,18 +56,14 @@ class PDFService extends AbstractService {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public function register(): void {
-		$this->init();
-	}
-
-	/**
 	 * Create the invoice and font cache directories.
 	 */
-	private function init() {
-		wp_mkdir_p( self::INVOICE_DIR );
-		wp_mkdir_p( self::FONTS_DIR );
+	public function on_plugin_activation(): void {
+		if ( wp_mkdir_p( self::INVOICE_DIR ) && wp_mkdir_p( self::FONTS_DIR ) ) {
+			$this->logger->info( 'Invoice directory created successfully.', [ 'location' => self::INVOICE_DIR ] );
+		} else {
+			$this->logger->info( 'Unable to create invoice directory.', [ 'location' => self::INVOICE_DIR ] );
+		}
 	}
 
 	/**

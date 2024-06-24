@@ -11,39 +11,37 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos;
 
-use Exception;
-use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\Container\ServiceInstantiator;
-use IseardMedia\Kudos\Service\ActivatorService;
+use IseardMedia\Kudos\Infrastructure\Container\ActivationHandler;
+use IseardMedia\Kudos\Infrastructure\Container\ServiceHandler;
 use IseardMedia\Kudos\Service\MigratorService;
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use function add_action;
 use function load_plugin_textdomain;
 
-class Plugin {
-	private LoggerInterface $logger;
-	private ActivatorService $activator_service;
+class Plugin implements LoggerAwareInterface {
+
+	use LoggerAwareTrait;
+
+	private ActivationHandler $activation_handler;
 	private MigratorService $migrator_service;
-	private ServiceInstantiator $service_instantiator;
+	private ServiceHandler $service_handler;
 
 	/**
 	 * Plugin constructor.
 	 *
-	 * @param LoggerInterface     $logger Instance of logger.
-	 * @param ServiceInstantiator $service_instantiator Service instantiator.
-	 * @param ActivatorService    $activator_service  Activation related functions.
-	 * @param MigratorService     $migrator_service  Service for checking migrations.
+	 * @param ServiceHandler    $service_handler Service instantiator.
+	 * @param ActivationHandler $activation_handler  Activation related functions.
+	 * @param MigratorService   $migrator_service  Service for checking migrations.
 	 */
 	public function __construct(
-		LoggerInterface $logger,
-		ServiceInstantiator $service_instantiator,
-		ActivatorService $activator_service,
+		ServiceHandler $service_handler,
+		ActivationHandler $activation_handler,
 		MigratorService $migrator_service
 	) {
-		$this->logger               = $logger;
-		$this->service_instantiator = $service_instantiator;
-		$this->activator_service    = $activator_service;
-		$this->migrator_service     = $migrator_service;
+		$this->service_handler    = $service_handler;
+		$this->activation_handler = $activation_handler;
+		$this->migrator_service   = $migrator_service;
 	}
 
 	/**
@@ -51,7 +49,7 @@ class Plugin {
 	 */
 	public function on_plugin_loaded(): void {
 		$this->setup_localization();
-		if ( $this->plugin_ready() ) {
+		if ( $this->is_plugin_ready() ) {
 			$this->instantiate_services();
 		}
 	}
@@ -59,7 +57,7 @@ class Plugin {
 	/**
 	 * Runs checks to ensure plugin ready to run.
 	 */
-	private function plugin_ready(): bool {
+	private function is_plugin_ready(): bool {
 		$skip_migration = $this->migrator_service->check_database();
 		if ( ! $skip_migration ) {
 			return false;
@@ -70,25 +68,26 @@ class Plugin {
 	/**
 	 * Runs on plugin activation.
 	 *
-	 * @param bool $network_wide Whether activation is network-wide or not.
+	 * @param bool $network_wide Whether the plugin is being activated network-wide.
 	 */
 	public function on_plugin_activation( bool $network_wide ): void {
-
-		// Clear container cache.
-		$cache_dir = wp_upload_dir()['basedir'] . '/kudos-donations/container/';
-		Utils::recursively_clear_cache( $cache_dir );
-
-		// Activate.
-		$this->activator_service->activate( $network_wide );
+		$this->activation_handler->process();
+		$this->logger->info(
+			'Plugin activated.',
+			[
+				'version'      => KUDOS_VERSION,
+				'network_wide' => $network_wide,
+			]
+		);
 	}
 
 	/**
 	 * Runs on plugin deactivation.
 	 *
-	 * @param bool $network_wide Whether activation is network-wide or not.
+	 * @param bool $network_wide Whether deactivation is network-wide or not.
 	 */
 	public function on_plugin_deactivation( bool $network_wide ): void {
-		$this->logger->debug( ' Plugin deactivated', [ 'network_wide' => $network_wide ] );
+		$this->logger->info( 'Plugin deactivated', [ 'network_wide' => $network_wide ] );
 	}
 
 	/**
@@ -112,13 +111,7 @@ class Plugin {
 	 * Instantiate the services.
 	 */
 	private function instantiate_services(): void {
-		try {
-			// Instantiate services.
-			$service_instantiator = $this->service_instantiator;
-			$service_instantiator->process();
-		} catch ( Exception $e ) {
-			$this->logger->error( $e->getMessage() );
-		}
+		$this->service_handler->process();
 	}
 
 	/**

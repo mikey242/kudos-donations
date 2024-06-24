@@ -11,7 +11,9 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
-use Psr\Log\LoggerInterface;
+use IseardMedia\Kudos\Infrastructure\ActivationAwareInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Throwable;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -19,20 +21,18 @@ use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class TwigService {
+class TwigService implements ActivationAwareInterface, LoggerAwareInterface {
+
+	use LoggerAwareTrait;
 
 	public const CACHE_DIR = KUDOS_CACHE_DIR . 'twig/';
 	private Environment $twig;
 	private array $options;
-	private LoggerInterface $logger;
 
 	/**
 	 * Twig constructor
-	 *
-	 * @param LoggerInterface $logger_service Logger instance.
 	 */
-	public function __construct( LoggerInterface $logger_service ) {
-		$this->logger           = $logger_service;
+	public function __construct() {
 		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
 		$this->options['debug'] = KUDOS_DEBUG;
 
@@ -46,6 +46,20 @@ class TwigService {
 		$this->initialize_twig_extensions();
 		$this->initialize_twig_functions();
 		$this->initialize_twig_filters();
+	}
+
+	/**
+	 * Create the twig cache directory
+	 */
+	public function on_plugin_activation(): void {
+		$logger = $this->logger;
+
+		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
+			$logger->info( 'Twig cache directory created successfully.', [ 'location' => self::CACHE_DIR ] );
+			return;
+		}
+
+		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ 'location' => self::CACHE_DIR ] );
 	}
 
 	/**
@@ -142,35 +156,6 @@ class TwigService {
 			}
 		);
 		$this->twig->addFilter( $number_format );
-	}
-
-	/**
-	 * Create the twig cache directory
-	 */
-	public function init(): void {
-		$logger = $this->logger;
-
-		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
-			$logger->info( 'Twig cache directory created successfully.', [ 'location' => self::CACHE_DIR ] );
-			$this->clear_cache();
-
-			return;
-		}
-
-		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ 'location' => self::CACHE_DIR ] );
-	}
-
-	/**
-	 * Clears the twig cache
-	 */
-	public function clear_cache(): void {
-		$result = Utils::recursively_clear_cache( self::CACHE_DIR );
-		$this->logger->debug(
-			'Twig cache cleared.',
-			[
-				'files' => $result,
-			]
-		);
 	}
 
 	/**

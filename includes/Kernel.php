@@ -13,7 +13,8 @@ namespace IseardMedia\Kudos;
 
 use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
-use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\LoggerAwarePass;
+use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\ActivationCompilerPass;
+use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\LoggerCompilerPass;
 use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\ServiceCompilerPass;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
@@ -26,7 +27,8 @@ class Kernel {
 
 	private const COMPILER_PASSES = [
 		ServiceCompilerPass::class,
-		LoggerAwarePass::class,
+		LoggerCompilerPass::class,
+		ActivationCompilerPass::class,
 	];
 
 	private const CONTAINER_FILE                 = 'container.php';
