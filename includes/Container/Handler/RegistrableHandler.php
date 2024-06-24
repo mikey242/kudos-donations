@@ -9,16 +9,16 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Container\Handler;
+namespace IseardMedia\Kudos\Container\Handler;
 
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
-use IseardMedia\Kudos\Infrastructure\Container\Delayed;
-use IseardMedia\Kudos\Infrastructure\Container\Registrable;
+use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\Delayed;
+use IseardMedia\Kudos\Container\Registrable;
 
 /**
  * Service instantiator class.
  */
-class ServiceHandler {
+class RegistrableHandler {
 	/**
 	 * Array of services.
 	 *
@@ -64,7 +64,7 @@ class ServiceHandler {
 	/**
 	 * Get the currently added services.
 	 *
-	 * @return AbstractService[] List of services.
+	 * @return AbstractRegistrable[] List of services.
 	 */
 	public function get_items(): array {
 		return $this->services;

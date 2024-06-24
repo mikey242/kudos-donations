@@ -12,12 +12,12 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Vendor;
 
 use Exception;
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use IseardMedia\Kudos\Service\SettingsService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
@@ -34,7 +34,7 @@ use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class MollieVendor extends AbstractService implements VendorInterface
+class MollieVendor extends AbstractRegistrable implements VendorInterface
 {
     /**
      * The API mode (test or live).

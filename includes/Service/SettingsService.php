@@ -11,9 +11,9 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Service;
 
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 
-class SettingsService extends AbstractService {
+class SettingsService extends AbstractRegistrable {
 
 	public const HOOK_GET_SETTINGS                    = 'kudos_get_settings';
 	public const SETTING_GROUP                        = 'kudos-donations';

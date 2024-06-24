@@ -11,17 +11,17 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_Error;
 use WP_REST_Request;
 
-class MailerService extends AbstractService {
+class MailerService extends AbstractRegistrable {
 
 	private TwigService $twig;
 	private SettingsService $settings;

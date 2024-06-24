@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Container;
+namespace IseardMedia\Kudos\Container;
 
 interface Registrable {
 

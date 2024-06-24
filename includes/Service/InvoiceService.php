@@ -11,12 +11,12 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 
-class InvoiceService extends AbstractService {
+class InvoiceService extends AbstractRegistrable {
 
 	private PDFService $pdf;
 

@@ -13,8 +13,8 @@ namespace IseardMedia\Kudos\Service;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\ActivationAwareInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Throwable;

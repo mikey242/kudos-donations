@@ -10,10 +10,10 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Container\CompilerPass;
+namespace IseardMedia\Kudos\Container\CompilerPass;
 
-use IseardMedia\Kudos\Infrastructure\Container\Handler\ServiceHandler;
-use IseardMedia\Kudos\Infrastructure\Container\Registrable;
+use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
+use IseardMedia\Kudos\Container\Registrable;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -29,7 +29,7 @@ class ServiceCompilerPass implements CompilerPassInterface {
 	 * @param ContainerBuilder $container The container builder.
 	 */
 	public function process( ContainerBuilder $container ): void {
-		$handler     = $container->getDefinition( ServiceHandler::class );
+		$handler     = $container->getDefinition( RegistrableHandler::class );
 		$definitions = $container->getDefinitions();
 		foreach ( $definitions as $id => $definition ) {
 			// Check if the service implements Registrable interface.

@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Helper\Assets;
-use IseardMedia\Kudos\Infrastructure\HasCallbackInterface;
 
 class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
 

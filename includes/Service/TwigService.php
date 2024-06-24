@@ -9,9 +9,9 @@
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\ActivationAwareInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Throwable;

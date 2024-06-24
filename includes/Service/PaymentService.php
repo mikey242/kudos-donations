@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use WP_Post;
 
-class PaymentService extends AbstractService {
+class PaymentService extends AbstractRegistrable {
 	private MailerService $mailer_service;
 	private SettingsService $settings;
 

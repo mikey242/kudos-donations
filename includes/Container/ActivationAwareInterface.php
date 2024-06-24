@@ -9,7 +9,7 @@
 
 declare( strict_types=1 );
 
-namespace IseardMedia\Kudos\Infrastructure;
+namespace IseardMedia\Kudos\Container;
 
 interface ActivationAwareInterface {
 

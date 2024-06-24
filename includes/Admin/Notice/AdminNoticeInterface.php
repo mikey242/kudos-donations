@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Admin;
+namespace IseardMedia\Kudos\Admin\Notice;
 
 /**
  * Class AdminNotice

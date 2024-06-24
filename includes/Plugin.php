@@ -11,8 +11,8 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos;
 
-use IseardMedia\Kudos\Infrastructure\Container\Handler\ActivationHandler;
-use IseardMedia\Kudos\Infrastructure\Container\Handler\ServiceHandler;
+use IseardMedia\Kudos\Container\Handler\ActivationHandler;
+use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use IseardMedia\Kudos\Service\MigratorService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -25,17 +25,17 @@ class Plugin implements LoggerAwareInterface {
 
 	private ActivationHandler $activation_handler;
 	private MigratorService $migrator_service;
-	private ServiceHandler $service_handler;
+	private RegistrableHandler $service_handler;
 
 	/**
 	 * Plugin constructor.
 	 *
-	 * @param ServiceHandler    $service_handler Service instantiator.
-	 * @param ActivationHandler $activation_handler  Activation related functions.
-	 * @param MigratorService   $migrator_service  Service for checking migrations.
+	 * @param RegistrableHandler $service_handler Service instantiator.
+	 * @param ActivationHandler  $activation_handler  Activation related functions.
+	 * @param MigratorService    $migrator_service  Service for checking migrations.
 	 */
 	public function __construct(
-		ServiceHandler $service_handler,
+		RegistrableHandler $service_handler,
 		ActivationHandler $activation_handler,
 		MigratorService $migrator_service
 	) {

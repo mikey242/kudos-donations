@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Container\Handler;
+namespace IseardMedia\Kudos\Container\Handler;
 
-use IseardMedia\Kudos\Infrastructure\ActivationAwareInterface;
+use IseardMedia\Kudos\Container\ActivationAwareInterface;
 
 /**
  * Service instantiator class.

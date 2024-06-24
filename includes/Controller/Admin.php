@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller;
 
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Admin extends AbstractService {
+class Admin extends AbstractRegistrable {
 
 	/**
 	 * {@inheritDoc}

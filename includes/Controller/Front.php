@@ -11,19 +11,19 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller;
 
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Front extends AbstractService {
+class Front extends AbstractRegistrable {
 	private SettingsService $settings;
 	private VendorInterface $vendor;
 

@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Domain;
 
 use IseardMedia\Kudos\Admin\TableColumnsTrait;
-use IseardMedia\Kudos\Infrastructure\Container\Delayed;
-use IseardMedia\Kudos\Infrastructure\Container\Registrable;
+use IseardMedia\Kudos\Container\Delayed;
+use IseardMedia\Kudos\Container\Registrable;
 
 /**
  * AbstractContentType class.

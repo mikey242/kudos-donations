@@ -10,10 +10,10 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Container\CompilerPass;
+namespace IseardMedia\Kudos\Container\CompilerPass;
 
-use IseardMedia\Kudos\Infrastructure\ActivationAwareInterface;
-use IseardMedia\Kudos\Infrastructure\Container\Handler\ActivationHandler;
+use IseardMedia\Kudos\Container\ActivationAwareInterface;
+use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

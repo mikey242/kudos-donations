@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Container\CompilerPass;
+namespace IseardMedia\Kudos\Container\CompilerPass;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;

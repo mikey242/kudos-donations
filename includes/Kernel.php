@@ -13,9 +13,9 @@ namespace IseardMedia\Kudos;
 
 use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
-use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\ActivationCompilerPass;
-use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\LoggerCompilerPass;
-use IseardMedia\Kudos\Infrastructure\Container\CompilerPass\ServiceCompilerPass;
+use IseardMedia\Kudos\Container\CompilerPass\ActivationCompilerPass;
+use IseardMedia\Kudos\Container\CompilerPass\LoggerCompilerPass;
+use IseardMedia\Kudos\Container\CompilerPass\ServiceCompilerPass;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

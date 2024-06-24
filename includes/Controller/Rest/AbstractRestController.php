@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Infrastructure\Container\Delayed;
-use IseardMedia\Kudos\Infrastructure\Container\Registrable;
+use IseardMedia\Kudos\Container\Delayed;
+use IseardMedia\Kudos\Container\Registrable;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use WP_REST_Controller;
 
 abstract class AbstractRestController extends WP_REST_Controller implements Registrable, Delayed {

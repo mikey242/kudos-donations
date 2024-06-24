@@ -11,9 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Infrastructure\Container\Delayed;
-use IseardMedia\Kudos\Infrastructure\Container\Registrable;
-use IseardMedia\Kudos\Infrastructure\HasCallbackInterface;
+use IseardMedia\Kudos\Container\Delayed;
+use IseardMedia\Kudos\Container\Registrable;
 
 abstract class AbstractAdminPage implements AdminPageInterface, Registrable, Delayed {
 
