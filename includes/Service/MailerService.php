@@ -41,7 +41,7 @@ class MailerService extends AbstractService {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$this->logger->debug( 'Mailer: Creating hooks' );
+		$this->logger->debug( 'Creating hooks' );
 		add_action( 'phpmailer_init', [ $this, 'init' ] );
 		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
 		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP ) ) {
@@ -66,7 +66,7 @@ class MailerService extends AbstractService {
 	 * @param PHPMailer $phpmailer PHPMailer instance.
 	 */
 	public function init( PHPMailer $phpmailer ): void {
-		$this->logger->debug( 'Mailer: PHPMailer initialized' );
+		$this->logger->debug( 'PHPMailer initialized' );
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$phpmailer->SMTPDebug = 0;
 
@@ -91,7 +91,7 @@ class MailerService extends AbstractService {
 		// Add custom config if enabled.
 		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_SMTP_ENABLE ) ) {
 			$custom_config = $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP );
-			$this->logger->debug( 'Mailer: Using custom SMTP config' );
+			$this->logger->debug( 'Using custom SMTP config' );
 			$phpmailer->isSMTP();
 			$phpmailer->Host        = $custom_config['host'];
 			$phpmailer->SMTPAutoTLS = true;
@@ -150,7 +150,7 @@ class MailerService extends AbstractService {
 						SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $transaction->{TransactionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID},
 					]
 				);
-				$this->logger->debug( 'Mailer: Detected recurring payment. Adding cancel button.', [ SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id ] );
+				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id ] );
 				$render_array['cancel_url'] = add_query_arg(
 					[
 						'kudos_action' => 'cancel_subscription',
@@ -161,7 +161,7 @@ class MailerService extends AbstractService {
 				);
 			}
 		} catch ( \Exception $e ) {
-			$this->logger->error( 'Mailer: Error adding cancel button: ' . $e->getMessage() );
+			$this->logger->error( 'Error adding cancel button: ' . $e->getMessage() );
 		}
 
 		$body = $this->twig->render( 'emails/receipt.html.twig', $render_array );
@@ -204,7 +204,7 @@ class MailerService extends AbstractService {
 
 		if ( $mail ) {
 			$this->logger->debug(
-				'Mailer: Email sent successfully.',
+				'Email sent successfully.',
 				[
 					'to'      => $to,
 					'subject' => $subject,
@@ -222,7 +222,7 @@ class MailerService extends AbstractService {
 	 * Removes hooks to return to normal settings after email sent.
 	 */
 	private function remove_hooks(): void {
-		$this->logger->debug( 'Mailer: Removing hooks' );
+		$this->logger->debug( 'Removing hooks' );
 		remove_action( 'phpmailer_init', [ $this, 'init' ] );
 		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
 		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP ) ) {
