@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Infrastructure\Container\CompilerPass;
 
 use IseardMedia\Kudos\Infrastructure\ActivationAwareInterface;
-use IseardMedia\Kudos\Infrastructure\Container\ActivationHandler;
+use IseardMedia\Kudos\Infrastructure\Container\Handler\ActivationHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

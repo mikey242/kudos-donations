@@ -9,7 +9,11 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Infrastructure\Container;
+namespace IseardMedia\Kudos\Infrastructure\Container\Handler;
+
+use IseardMedia\Kudos\Infrastructure\Container\AbstractService;
+use IseardMedia\Kudos\Infrastructure\Container\Delayed;
+use IseardMedia\Kudos\Infrastructure\Container\Registrable;
 
 /**
  * Service instantiator class.
