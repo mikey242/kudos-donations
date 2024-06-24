@@ -12,6 +12,9 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Helper;
 
 use Exception;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class Utils {
 
@@ -143,22 +146,20 @@ class Utils {
 	 *
 	 * @param string $dir The directory containing the cache.
 	 */
-	public static function recursively_clear_cache( string $dir ): int {
-
-		$result = 0;
+	public static function recursively_clear_cache( string $dir = KUDOS_CACHE_DIR ): void {
 
 		if ( is_dir( $dir ) ) {
 
-			$files = glob( rtrim( $dir, '/' ) . '*/**' );
+			$files = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator( $dir, FilesystemIterator::SKIP_DOTS ),
+				RecursiveIteratorIterator::CHILD_FIRST
+			);
 
 			foreach ( $files as $file ) {
-				if ( is_file( $file ) ) {
-					// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
-					unlink( $file );
+				if ( $file->isFile() ) {
+					wp_delete_file( $file->getRealPath() );
 				}
 			}
 		}
-
-		return $result;
 	}
 }
