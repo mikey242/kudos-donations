@@ -11,8 +11,8 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos;
 
-use IseardMedia\Kudos\Infrastructure\Container\ActivationHandler;
-use IseardMedia\Kudos\Infrastructure\Container\ServiceHandler;
+use IseardMedia\Kudos\Infrastructure\Container\Handler\ActivationHandler;
+use IseardMedia\Kudos\Infrastructure\Container\Handler\ServiceHandler;
 use IseardMedia\Kudos\Service\MigratorService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -87,7 +87,13 @@ class Plugin implements LoggerAwareInterface {
 	 * @param bool $network_wide Whether deactivation is network-wide or not.
 	 */
 	public function on_plugin_deactivation( bool $network_wide ): void {
-		$this->logger->info( 'Plugin deactivated', [ 'network_wide' => $network_wide ] );
+		$this->logger->info(
+			'Plugin deactivated',
+			[
+				'version'      => KUDOS_VERSION,
+				'network_wide' => $network_wide,
+			]
+		);
 	}
 
 	/**
