@@ -17,7 +17,9 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use WP_REST_Controller;
 
-abstract class AbstractRestController extends WP_REST_Controller implements Registrable, Delayed {
+abstract class AbstractRestController extends WP_REST_Controller implements Registrable, Delayed, LoggerAwareInterface {
+
+	use LoggerAwareTrait;
 
 	/**
 	 * Configure the namespace for the plugin.

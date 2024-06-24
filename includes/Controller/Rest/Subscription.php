@@ -15,7 +15,6 @@ use Exception;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\VendorInterface;
-use Psr\Log\LoggerInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -28,14 +27,12 @@ class Subscription extends AbstractRestController {
 	 * Subscription routes constructor.
 	 *
 	 * @param VendorInterface $vendor Current vendor.
-	 * @param LoggerInterface $logger Logger.
 	 */
-	public function __construct( VendorInterface $vendor, LoggerInterface $logger ) {
+	public function __construct( VendorInterface $vendor ) {
 		parent::__construct();
 
 		$this->rest_base = 'subscription';
 		$this->vendor    = $vendor;
-		$this->logger    = $logger;
 	}
 
 	/**

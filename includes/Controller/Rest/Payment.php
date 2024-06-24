@@ -14,7 +14,6 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Vendor\VendorInterface;
-use Psr\Log\LoggerInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -32,14 +31,12 @@ class Payment extends AbstractRestController {
 	 * PaymentRoutes constructor.
 	 *
 	 * @param VendorInterface $vendor Current vendor.
-	 * @param LoggerInterface $logger Logger.
 	 */
-	public function __construct( VendorInterface $vendor, LoggerInterface $logger ) {
+	public function __construct( VendorInterface $vendor ) {
 		parent::__construct();
 
 		$this->rest_base = 'payment';
 		$this->vendor    = $vendor;
-		$this->logger    = $logger;
 	}
 
 	/**

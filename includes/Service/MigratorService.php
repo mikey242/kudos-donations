@@ -14,12 +14,14 @@ namespace IseardMedia\Kudos\Service;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-class MigratorService {
+class MigratorService implements LoggerAwareInterface {
+
+	use LoggerAwareTrait;
 
 	private const MIGRATE_ACTION = 'kudos_migrate_action';
-	private LoggerInterface $logger;
 	private SettingsService $settings;
 	private WpDb $wpdb;
 	private string $current_version;
@@ -29,13 +31,11 @@ class MigratorService {
 	/**
 	 * Migrator service constructor.
 	 *
-	 * @param LoggerInterface $logger Logger instance.
 	 * @param SettingsService $settings Settings service.
 	 * @param WpDb            $wpdb WordPress database object.
 	 */
-	public function __construct( LoggerInterface $logger, SettingsService $settings, WpDb $wpdb ) {
+	public function __construct( SettingsService $settings, WpDb $wpdb ) {
 		$this->settings        = $settings;
-		$this->logger          = $logger;
 		$this->wpdb            = $wpdb;
 		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
 		$this->target_version  = KUDOS_DB_VERSION;
