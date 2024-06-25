@@ -146,12 +146,13 @@ class Utils {
 	 *
 	 * @param string $dir The directory containing the cache.
 	 */
-	public static function recursively_clear_cache( string $dir = KUDOS_CACHE_DIR ): void {
+	public static function recursively_clear_cache( string $dir ): void {
 
-		if ( is_dir( $dir ) ) {
+		$target = KUDOS_CACHE_DIR . $dir;
+		if ( is_dir( $target ) ) {
 
 			$files = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator( $dir, FilesystemIterator::SKIP_DOTS ),
+				new RecursiveDirectoryIterator( $target, FilesystemIterator::SKIP_DOTS ),
 				RecursiveIteratorIterator::CHILD_FIRST
 			);
 
