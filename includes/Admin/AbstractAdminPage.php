@@ -13,8 +13,12 @@ namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Container\Delayed;
 use IseardMedia\Kudos\Container\Registrable;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-abstract class AbstractAdminPage implements AdminPageInterface, Registrable, Delayed {
+abstract class AbstractAdminPage implements AdminPageInterface, Registrable, Delayed, LoggerAwareInterface {
+
+	use LoggerAwareTrait;
 
 	/**
 	 * {@inheritDoc}
