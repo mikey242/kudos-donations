@@ -81,6 +81,6 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	 * {@inheritDoc}
 	 */
 	protected function get_position(): int {
-		return 10;
+		return 4;
 	}
 }

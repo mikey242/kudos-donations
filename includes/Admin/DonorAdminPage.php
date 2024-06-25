@@ -40,6 +40,6 @@ class DonorAdminPage extends AbstractAdminPage {
 	 * {@inheritDoc}
 	 */
 	public function get_position(): ?int {
-		return 2;
+		return 3;
 	}
 }
