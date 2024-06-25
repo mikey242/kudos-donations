@@ -44,7 +44,7 @@ class Admin extends AbstractRegistrable {
 
 			switch ( $action ) {
 				case 'view_invoice':
-					$nonce          = sanitize_text_field( wp_unslash( $_REQUEST['_wp_nonce'] ) );
+					$nonce          = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					$transaction_id = sanitize_text_field( $_REQUEST['id'] );
 					$force          = rest_sanitize_boolean( $_REQUEST['force'] ?? false );
 					if ( $transaction_id && wp_verify_nonce( $nonce, $action . '_' . $transaction_id ) ) {

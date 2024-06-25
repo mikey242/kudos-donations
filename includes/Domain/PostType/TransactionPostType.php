@@ -189,7 +189,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 								[
 									'post_type'    => self::get_slug(),
 									'kudos_action' => 'view_invoice',
-									'_wp_nonce'    => wp_create_nonce( "view_invoice_$transaction_id" ),
+									'_wpnonce'     => wp_create_nonce( "view_invoice_$transaction_id" ),
 									'id'           => $transaction_id,
 								],
 								admin_url( 'edit.php' )
