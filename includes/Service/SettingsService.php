@@ -102,7 +102,7 @@ class SettingsService extends AbstractRegistrable {
 	 *
 	 * @param string $key Setting key.
 	 * @param mixed  $value Setting value.
-	 * @return bool Setting value.
+	 * @return bool True if the value was updated, false otherwise.
 	 */
 	public function update_setting( string $key, $value ): bool {
 		return update_option( $key, $value );
