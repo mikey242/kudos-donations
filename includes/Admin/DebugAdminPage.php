@@ -17,6 +17,20 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	private string $log_file;
 
 	/**
+	 * Pattern used for parsing log entries.
+	 *
+	 * @source https://github.com/devdot/monolog-parser/blob/master/src/Parser.php
+	 */
+	public const PATTERN_MONOLOG2 =
+		'/^' . // start with newline.
+		'\[(?<datetime>.*)] ' . // find the date that is between two brackets [].
+		'(?<channel>[\w-]+).(?<level>\w+): ' . // get the channel and log level, they look like this: channel.ERROR, follow by colon and space.
+		"(?<message>[^\[{\\n]+)" . // next up is the message (containing anything except [ or {, nor a new line).
+		'(?:(?<context> (\[.*?]|\{.*?}))|)' . // followed by a space and anything (non-greedy) in either square [] or curly {} brackets, or nothing at all (skips ahead to line end).
+		'(?:(?<extra> (\[.*]|\{.*}))|)' . // followed by a space and anything (non-greedy) in either square [] or curly {} brackets, or nothing at all (skips ahead to line end).
+		'\s{0,2}$/m'; // end with up to 2 optional spaces and the end line marker, flag: m = multiline.
+
+	/**
 	 * Tools page constructor.
 	 */
 	public function __construct() {
@@ -67,9 +81,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 		$log_array = [];
 		if ( file_exists( $this->log_file ) ) {
 			$log_content = array_reverse( file( $this->log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) );
-			$pattern     = '/\[(?P<date>.*)\] (?P<logger>\w+).(?P<level>\w+): (?P<message>.*[^ ]+) (?P<context>[^ ]+) (?P<extra>[^ ]+)/';
 			foreach ( $log_content as $line ) {
-				if ( preg_match( $pattern, $line, $log_matches ) ) {
+				if ( preg_match( self::PATTERN_MONOLOG2, $line, $log_matches ) ) {
 					$log_array[] = $log_matches;
 				}
 			}
@@ -79,7 +92,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 					$log_array,
 					function ( $line ) {
 						$levels = explode( '|', $this->log_level );
-						return \in_array( $line[3], $levels, true );
+						return \in_array( $line['level'], $levels, true );
 					}
 				);
 			}
@@ -146,7 +159,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 								$level   = $log['level'];
 								$style   = 'border-left-width: 10px; border-left-style: solid;';
 								$message = $log['message'];
-								$context = $log['context'];
+								$context = $log['context'] ?? '[]';
 
 								switch ( $level ) {
 									case 'CRITICAL':
@@ -169,7 +182,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 										echo esc_textarea(
 											wp_date(
 												get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-												strtotime( $log['date'] )
+												strtotime( $log['datetime'] )
 											)
 										);
 										?>
@@ -192,7 +205,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 					case 'actions':
 						$url = add_query_arg( 'tab', 'actions', $url );
 						?>
-						<p><strong>Please use the following actions only if you are having issues. Remember to backup your data
+						<p><strong>Please use the following actions only if you are having issues. Remember to back up your data
 								before
 								performing any of these actions.</strong></p>
 						<hr/>
