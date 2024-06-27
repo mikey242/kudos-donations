@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\MigratorService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -42,6 +43,14 @@ class Plugin implements LoggerAwareInterface {
 		$this->service_handler    = $service_handler;
 		$this->activation_handler = $activation_handler;
 		$this->migrator_service   = $migrator_service;
+
+		add_action( 'kudos_clear_cache', [ $this, 'purge_cache' ] );
+		add_action(
+			'upgrader_process_complete',
+			function () {
+				do_action( 'kudos_clear_cache' );
+			}
+		);
 	}
 
 	/**
@@ -136,5 +145,13 @@ class Plugin implements LoggerAwareInterface {
 				]
 			);
 		}
+	}
+
+	/**
+	 * Purges the plugin cache.
+	 */
+	public function purge_cache(): void {
+		Utils::recursively_clear_cache();
+		$this->logger->info( 'Plugin cache cleared' );
 	}
 }
