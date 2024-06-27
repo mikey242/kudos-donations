@@ -40,10 +40,14 @@ class CacheService extends AbstractRegistrable implements LoggerAwareInterface {
 	 * @param string      $reason The reason this purge was requested.
 	 */
 	public function purge_cache( ?string $dir = null, string $reason = '' ): void {
-		$result             = $this->recursively_clear_cache( $dir );
-		$context            = [];
-		$context['dir']     = $dir;
-		$context['reason']  = $reason;
+		$context = [];
+		$result  = $this->recursively_clear_cache( $dir );
+		if ( $dir ) {
+			$context['dir'] = $dir;
+		}
+		if ( $reason ) {
+			$context['reason'] = $reason;
+		}
 		$context['success'] = $result;
 		$this->logger->info( 'Plugin cache cleared', $context );
 	}
