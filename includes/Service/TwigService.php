@@ -33,7 +33,7 @@ class TwigService implements ActivationAwareInterface, LoggerAwareInterface {
 	 * Twig constructor
 	 */
 	public function __construct() {
-		$this->options['cache'] = KUDOS_DEBUG ? false : self::CACHE_DIR;
+		$this->options['cache'] = self::CACHE_DIR;
 		$this->options['debug'] = KUDOS_DEBUG;
 
 		$this->twig = new Environment(
