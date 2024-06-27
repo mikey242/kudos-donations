@@ -41,13 +41,4 @@ class ActivationHandler {
 			$service->on_plugin_activation();
 		}
 	}
-
-	/**
-	 * Get the currently added services.
-	 *
-	 * @return ActivationAwareInterface[] List of services.
-	 */
-	public function get_items(): array {
-		return $this->services;
-	}
 }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Container\Handler;
 
-use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\Delayed;
 use IseardMedia\Kudos\Container\Registrable;
 
@@ -59,14 +58,5 @@ class RegistrableHandler {
 				$service->register();
 			}
 		}
-	}
-
-	/**
-	 * Get the currently added services.
-	 *
-	 * @return AbstractRegistrable[] List of services.
-	 */
-	public function get_items(): array {
-		return $this->services;
 	}
 }
