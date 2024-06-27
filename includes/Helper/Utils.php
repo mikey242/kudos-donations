@@ -146,7 +146,7 @@ class Utils {
 	 *
 	 * @param string $dir The directory containing the cache.
 	 */
-	public static function recursively_clear_cache( string $dir ): void {
+	public static function recursively_clear_cache( string $dir = '' ): void {
 
 		$target = KUDOS_CACHE_DIR . $dir;
 		if ( is_dir( $target ) ) {
@@ -159,6 +159,13 @@ class Utils {
 			foreach ( $files as $file ) {
 				if ( $file->isFile() ) {
 					wp_delete_file( $file->getRealPath() );
+				} else {
+					if ( ! \function_exists( 'WP_Filesystem' ) ) {
+						require_once ABSPATH . '/wp-admin/includes/file.php';
+					}
+					WP_Filesystem();
+					global $wp_filesystem;
+					$wp_filesystem->rmdir( $file->getRealPath() );
 				}
 			}
 		}
