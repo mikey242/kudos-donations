@@ -153,7 +153,7 @@ const ButtonEdit = (props) => {
 						</PanelBody>
 					</InspectorControls>
 					<>
-						{currentCampaign && (
+						{currentCampaign ? (
 							<CampaignProvider campaignId={currentCampaign.id}>
 								<Render
 									className={className ?? ''}
@@ -177,6 +177,13 @@ const ButtonEdit = (props) => {
 									)}
 								</Render>
 							</CampaignProvider>
+						) : (
+							<p>
+								Kudos Donations:{' '}
+								{__(
+									'Please select a campaign from the sidebar to continue.'
+								)}
+							</p>
 						)}
 					</>
 				</Fragment>
