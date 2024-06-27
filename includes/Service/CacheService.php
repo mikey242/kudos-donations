@@ -28,7 +28,7 @@ class CacheService extends AbstractRegistrable implements LoggerAwareInterface {
 		add_action(
 			'upgrader_process_complete',
 			function () {
-				do_action( 'kudos_clear_cache', '', __( 'Plugin upgraded', 'kudos-donations' ) );
+				do_action( 'kudos_clear_cache', null, __( 'Plugin upgraded', 'kudos-donations' ) );
 			}
 		);
 	}
