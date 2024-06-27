@@ -255,6 +255,16 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						</form>
 
 						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+							<?php wp_nonce_field( 'kudos_clear_all_cache' ); ?>
+							<button class="button-secondary confirm" type='submit' name='kudos_action'
+									value='kudos_clear_all_cache'>Clear all cache
+							</button>
+						</form>
+
+						<hr/>
+
+						<p>Log actions.</p>
+						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_log' ); ?>
 							<button class="button-secondary confirm" type='submit' name='kudos_action'
 									value='kudos_clear_log'>Clear log

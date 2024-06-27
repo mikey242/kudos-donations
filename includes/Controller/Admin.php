@@ -85,12 +85,6 @@ class Admin extends AbstractRegistrable {
 						}
 					}
 					break;
-				case 'kudos_clear_log':
-					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
-					if ( wp_verify_nonce( $nonce, 'kudos_clear_log' ) ) {
-						wp_delete_file( KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '.log' );
-					}
-					break;
 				case 'kudos_clear_twig_cache':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_twig_cache' ) ) {
@@ -101,6 +95,18 @@ class Admin extends AbstractRegistrable {
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_container_cache' ) ) {
 						Utils::recursively_clear_cache( 'container' );
+					}
+					break;
+				case 'kudos_clear_all_cache':
+					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
+					if ( wp_verify_nonce( $nonce, 'kudos_clear_all_cache' ) ) {
+						do_action( 'kudos_clear_cache' );
+					}
+					break;
+				case 'kudos_clear_log':
+					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
+					if ( wp_verify_nonce( $nonce, 'kudos_clear_log' ) ) {
+						wp_delete_file( KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '.log' );
 					}
 					break;
 				default:
