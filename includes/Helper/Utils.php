@@ -145,29 +145,33 @@ class Utils {
 	 * Clears the container cache folder.
 	 *
 	 * @param string $dir The directory containing the cache.
+	 * @return bool True on success, false on failure.
 	 */
-	public static function recursively_clear_cache( string $dir = '' ): void {
+	public static function recursively_clear_cache( string $dir = '' ): bool {
 
 		$target = KUDOS_CACHE_DIR . $dir;
-		if ( is_dir( $target ) ) {
+		if ( ! is_dir( $target ) ) {
+			return false;
+		}
 
-			$files = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator( $target, FilesystemIterator::SKIP_DOTS ),
-				RecursiveIteratorIterator::CHILD_FIRST
-			);
+		// Ensure the WP_Filesystem is loaded.
+		if ( ! \function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		WP_Filesystem();
+		global $wp_filesystem;
 
-			foreach ( $files as $file ) {
-				if ( $file->isFile() ) {
-					wp_delete_file( $file->getRealPath() );
-				} else {
-					if ( ! \function_exists( 'WP_Filesystem' ) ) {
-						require_once ABSPATH . '/wp-admin/includes/file.php';
-					}
-					WP_Filesystem();
-					global $wp_filesystem;
-					$wp_filesystem->rmdir( $file->getRealPath() );
-				}
+		$files = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator( $target, FilesystemIterator::SKIP_DOTS ),
+			RecursiveIteratorIterator::CHILD_FIRST
+		);
+
+		foreach ( $files as $file ) {
+			if ( ! $wp_filesystem->delete( $file->getRealPath(), true ) ) {
+				return false; // Return false if a directory deletion fails.
 			}
 		}
+
+		return true;
 	}
 }

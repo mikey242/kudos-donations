@@ -151,7 +151,7 @@ class Plugin implements LoggerAwareInterface {
 	 * Purges the plugin cache.
 	 */
 	public function purge_cache(): void {
-		Utils::recursively_clear_cache();
-		$this->logger->info( 'Plugin cache cleared' );
+		$result = Utils::recursively_clear_cache();
+		$this->logger->info( 'Plugin cache cleared', [ 'success' => $result ] );
 	}
 }
