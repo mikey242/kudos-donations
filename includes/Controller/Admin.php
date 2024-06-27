@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\SettingsService;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -88,19 +87,19 @@ class Admin extends AbstractRegistrable {
 				case 'kudos_clear_twig_cache':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_twig_cache' ) ) {
-						Utils::recursively_clear_cache( 'twig' );
+						do_action( 'kudos_clear_cache', 'twig', __( 'User requested', 'kudos-donations' ) );
 					}
 					break;
 				case 'kudos_clear_container_cache':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_container_cache' ) ) {
-						Utils::recursively_clear_cache( 'container' );
+						do_action( 'kudos_clear_cache', 'container', __( 'User requested', 'kudos-donations' ) );
 					}
 					break;
 				case 'kudos_clear_all_cache':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_all_cache' ) ) {
-						do_action( 'kudos_clear_cache' );
+						do_action( 'kudos_clear_cache', null, __( 'User requested', 'kudos-donations' ) );
 					}
 					break;
 				case 'kudos_clear_log':
