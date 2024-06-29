@@ -14,7 +14,7 @@ use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorFactory;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use Mollie\Api\MollieApiClient;
-use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -30,15 +30,20 @@ return static function ( ContainerConfigurator $container ) {
 
 	// Logger.
 	$services
-		->set( StreamHandler::class )->args(
+		->set( RotatingFileHandler::class )->args(
 			[
 				KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '.log',
+				5,
 				( 'development' === $_ENV['APP_ENV'] || KUDOS_DEBUG ) ? Logger::DEBUG : Logger::INFO,
+				true,
+				null,
+				false,
+				KUDOS_LOG_DATE_FORMAT,
 			]
 		)
 		->set( LoggerInterface::class, Logger::class )
 		->args( [ 'kudos_donations' ] )
-		->call( 'pushHandler', [ service( StreamHandler::class ) ] );
+		->call( 'pushHandler', [ service( RotatingFileHandler::class ) ] );
 
 	// Vendor.
 	$services->set( VendorInterface::class )

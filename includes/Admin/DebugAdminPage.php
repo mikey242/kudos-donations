@@ -36,7 +36,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	public function __construct() {
 		$this->tab       = $_GET['tab'] ?? 'log'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->log_level = $_GET['log_level'] ?? 'ALL'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->log_file  = KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '.log';
+		$this->log_file  = KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '-' . gmdate( KUDOS_LOG_DATE_FORMAT ) . '.log';
 	}
 
 	/**
