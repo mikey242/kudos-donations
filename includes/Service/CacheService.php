@@ -27,8 +27,12 @@ class CacheService extends AbstractRegistrable implements LoggerAwareInterface {
 		add_action( 'kudos_clear_cache', [ $this, 'purge_cache' ], 10, 2 );
 		add_action(
 			'upgrader_process_complete',
-			function () {
-				do_action( 'kudos_clear_cache', null, __( 'Plugin upgraded', 'kudos-donations' ) );
+			function ( $upgrader, $hook_extra ) {
+				if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] ) {
+					if ( isset( $hook_extra['plugins'] ) && \in_array( 'kudos-donations/kudos-donations.php', $hook_extra['plugins'], true ) ) {
+						do_action( 'kudos_clear_cache', null, __( 'Plugin upgraded', 'kudos-donations' ) );
+					}
+				}
 			}
 		);
 	}
