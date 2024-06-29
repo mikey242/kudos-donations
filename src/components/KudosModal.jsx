@@ -14,9 +14,8 @@ const KudosModal = ({
 }) => {
 	const [didLoad, setDidLoad] = useState(false);
 	const targetRef = useRef(null);
-	let focusableElements;
-	let firstElement;
-	let lastElement;
+	const [firstElement, setFirstElement] = useState(null);
+	const [lastElement, setLastElement] = useState(null);
 
 	const toggle = useCallback(() => {
 		if (typeof toggleModal === 'function') {
@@ -24,24 +23,21 @@ const KudosModal = ({
 		}
 	}, [toggleModal]);
 
-	const setUp = () => {
-		focusableElements = targetRef.current?.querySelectorAll(
+	const setUp = useCallback(() => {
+		const focusableElements = targetRef.current?.querySelectorAll(
 			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
 		);
-		firstElement = focusableElements && focusableElements[0];
-		lastElement =
-			focusableElements &&
-			focusableElements[focusableElements?.length - 1];
+		setFirstElement(focusableElements ? focusableElements[0] : null);
+		setLastElement(
+			focusableElements
+				? focusableElements[focusableElements.length - 1]
+				: null
+		);
 		const initialFocus = targetRef.current?.querySelector(
 			'[name*="value"]:not([type="hidden"])'
 		);
 		initialFocus?.focus();
-		addEventListeners();
-	};
-
-	const addEventListeners = () => {
-		document.addEventListener('keydown', handleKeyPress, false);
-	};
+	}, []);
 
 	const handleKeyPress = useCallback(
 		(e) => {
@@ -64,10 +60,15 @@ const KudosModal = ({
 	);
 
 	useEffect(() => {
-		document.body.style.overflowY = isOpen ? 'hidden' : 'auto';
-		return () =>
-			document.removeEventListener('keydown', handleKeyPress, false);
-	}, [handleKeyPress, isOpen]);
+		if (isOpen) {
+			setUp();
+			document.addEventListener('keydown', handleKeyPress, false);
+			return () => {
+				// console.log('removeEventListener');
+				document.removeEventListener('keydown', handleKeyPress, false);
+			};
+		}
+	}, [isOpen, handleKeyPress, setUp]);
 
 	useEffect(() => {
 		if (!didLoad) {
