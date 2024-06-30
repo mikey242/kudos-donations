@@ -33,8 +33,14 @@ class Version400 extends AbstractMigration {
 	 */
 	public function migrate_donors_to_posts(): void {
 		$table_name = $this->wpdb->prefix . 'kudos_donors';
-		$query      = "SELECT * FROM {$table_name}";
-		$results    = $this->wpdb->get_results( $query );
+
+		$prepare = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
+		if ( $this->wpdb->get_var( $prepare ) !== $table_name ) {
+			return;
+		}
+
+		$query   = "SELECT * FROM {$table_name}";
+		$results = $this->wpdb->get_results( $query );
 
 		foreach ( $results as $donor ) {
 
@@ -65,7 +71,11 @@ class Version400 extends AbstractMigration {
 	 * Migrate campaigns from a settings array to CampaignPostTypes.
 	 */
 	public function migrate_campaigns_to_posts(): void {
-		foreach ( get_option( '_kudos_campaigns' ) as $campaign ) {
+		$campaigns = get_option( '_kudos_campaigns' );
+		if ( empty( $campaigns ) ) {
+			return;
+		}
+		foreach ( $campaigns as $campaign ) {
 
 			// Create post and store ID.
 			$new_id = wp_insert_post(
@@ -99,10 +109,15 @@ class Version400 extends AbstractMigration {
 	 * TransactionPostTypes.
 	 */
 	public function migrate_transactions_to_posts(): void {
-		global $wpdb;
-		$table_name = $wpdb->prefix . 'kudos_transactions';
-		$query      = "SELECT * FROM {$table_name}";
-		$results    = $wpdb->get_results( $query );
+		$table_name = $this->wpdb->prefix . 'kudos_transactions';
+
+		$prepare = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
+		if ( $this->wpdb->get_var( $prepare ) !== $table_name ) {
+			return;
+		}
+
+		$query   = "SELECT * FROM {$table_name}";
+		$results = $this->wpdb->get_results( $query );
 
 		foreach ( $results as $transaction ) {
 
