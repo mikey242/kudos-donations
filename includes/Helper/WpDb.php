@@ -62,4 +62,16 @@ class WpDb {
 	public function prepare( string $query, ...$args ): string {
 		return $this->wpdb->prepare( $query, ...$args );
 	}
+
+	/**
+	 * Returns value from database.
+	 *
+	 * @param string|null $query Optional. SQL query. Defaults to null, use the result from the previous query.
+	 * @param int         $x Optional. Column of value to return. Indexed from 0. Default 0.
+	 * @param int         $y Optional. Row of value to return. Indexed from 0. Default 0.
+	 * @return string|null Database query result (as string), or null on failure.
+	 */
+	public function get_var( ?string $query = null, int $x = 0, int $y = 0 ): ?string {
+		return $this->wpdb->get_var( $query, $x, $y );
+	}
 }
