@@ -30,10 +30,7 @@ class CacheService extends AbstractRegistrable implements LoggerAwareInterface {
 			function ( $upgrader, $hook_extra ) {
 				$this->logger->debug(
 					'Upgrade detected',
-					[
-						'upgrader'   => $upgrader,
-						'hook_extra' => $hook_extra,
-					]
+					[ 'hook_extra' => $hook_extra ]
 				);
 				if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] && isset( $hook_extra['plugins'] ) ) {
 					foreach ( $hook_extra['plugins'] as $plugin ) {
