@@ -35,9 +35,11 @@ class CacheService extends AbstractRegistrable implements LoggerAwareInterface {
 						'hook_extra' => $hook_extra,
 					]
 				);
-				if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] ) {
-					if ( isset( $hook_extra['plugins'] ) && \in_array( 'kudos-donations/kudos-donations.php', $hook_extra['plugins'], true ) ) {
-						do_action( 'kudos_clear_cache', null, __( 'Plugin upgraded', 'kudos-donations' ) );
+				if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] && isset( $hook_extra['plugins'] ) ) {
+					foreach ( $hook_extra['plugins'] as $plugin ) {
+						if ( str_contains( $plugin, 'kudos-donations.php' ) ) {
+							do_action( 'kudos_clear_cache', null, __( 'Plugin upgraded', 'kudos-donations' ) );
+						}
 					}
 				}
 			},
@@ -92,7 +94,7 @@ class CacheService extends AbstractRegistrable implements LoggerAwareInterface {
 
 		foreach ( $files as $file ) {
 			if ( ! $wp_filesystem->delete( $file->getRealPath(), true ) ) {
-				return false; // Return false if a directory deletion fails.
+				return false;
 			}
 		}
 
