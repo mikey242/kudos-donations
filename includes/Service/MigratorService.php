@@ -109,7 +109,7 @@ class MigratorService implements LoggerAwareInterface {
 		$form .= '</form>';
 		( new AdminNotice() )->info(
 			__(
-				'Kudos Donations needs to update your database before you can continue. Please make sure you backup your data before proceeding.',
+				'The plugin needs to update your database before you can continue. Please make sure you backup your data before proceeding.',
 				'kudos-donations'
 			) . '<p>From <strong>' . $this->current_version . '</strong> to <strong>' . KUDOS_DB_VERSION . '</strong></p>' . $form
 		);
@@ -131,5 +131,6 @@ class MigratorService implements LoggerAwareInterface {
 				}
 			}
 		}
+		$this->logger->debug( 'Discovered migrations.', [ 'migrations', $this->migrations ] );
 	}
 }
