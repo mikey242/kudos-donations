@@ -53,6 +53,11 @@ return static function ( ContainerConfigurator $container ) {
 	$services->instanceof( LoggerAwareInterface::class )
 		->call( 'setLogger', [ service( LoggerInterface::class ) ] );
 
+	// Tag services.
+	$services
+		->instanceof( Registrable::class )->tag( 'kudos.registrable' )
+		->instanceof( ActivationAwareInterface::class )->tag( 'kudos.activation' )
+
 	// Vendor.
 	$services->set( VendorInterface::class )
 			->factory( [ service( VendorFactory::class ), 'create' ] )
@@ -70,5 +75,5 @@ return static function ( ContainerConfigurator $container ) {
 
 	// Load resources with exclusions.
 	$services->load( 'IseardMedia\Kudos\\', '../includes/*' )
-	->exclude( '../includes/{namespace.php,functions.php,helpers.php,index.php}' );
+		->exclude( '../includes/{namespace.php,functions.php,helpers.php,index.php}' );
 };

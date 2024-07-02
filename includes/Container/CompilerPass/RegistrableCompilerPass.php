@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Container\CompilerPass;
 
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
-use IseardMedia\Kudos\Container\Registrable;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -30,13 +29,11 @@ class RegistrableCompilerPass implements CompilerPassInterface {
 	 */
 	public function process( ContainerBuilder $container ): void {
 		$handler     = $container->getDefinition( RegistrableHandler::class );
-		$definitions = $container->getDefinitions();
+		$definitions = $container->findTaggedServiceIds( 'kudos.registrable' );
+
 		foreach ( $definitions as $id => $definition ) {
-			// Check if the service implements Registrable interface.
-			if ( is_a( $definition->getClass(), Registrable::class, true ) ) {
-				// Call the add method with the ServiceHandler.
-				$handler->addMethodCall( 'add', [ new Reference( $id ) ] );
-			}
+			// Call the add method with the ServiceHandler.
+			$handler->addMethodCall( 'add', [ new Reference( $id ) ] );
 		}
 	}
 }
