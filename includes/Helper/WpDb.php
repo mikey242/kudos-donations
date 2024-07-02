@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Helper;
 
+use BadMethodCallException;
+
 /**
  * Connect to global $wpdb instance from a proper class.
  *
@@ -53,25 +55,19 @@ class WpDb {
 	}
 
 	/**
-	 * Safely prepares SQL query for execution.
+	 * Pass method calls to wpdb object.
 	 *
-	 * @param string $query SQL query with placeholders.
-	 * @param mixed  ...$args  Array of placeholders values.
-	 * @return string Safely prepared SQL query.
-	 */
-	public function prepare( string $query, ...$args ): string {
-		return $this->wpdb->prepare( $query, ...$args );
-	}
-
-	/**
-	 * Returns value from database.
+	 * @throws BadMethodCallException Called when method does not exist.
 	 *
-	 * @param string|null $query Optional. SQL query. Defaults to null, use the result from the previous query.
-	 * @param int         $x Optional. Column of value to return. Indexed from 0. Default 0.
-	 * @param int         $y Optional. Row of value to return. Indexed from 0. Default 0.
-	 * @return string|null Database query result (as string), or null on failure.
+	 * @param mixed $name Method name.
+	 * @param mixed $arguments Arguments.
+	 * @return mixed
 	 */
-	public function get_var( ?string $query = null, int $x = 0, int $y = 0 ): ?string {
-		return $this->wpdb->get_var( $query, $x, $y );
+	public function __call( $name, $arguments ) {
+		if ( method_exists( $this->wpdb, $name ) ) {
+			return \call_user_func_array( [ $this->wpdb, $name ], $arguments );
+		} else {
+			throw new BadMethodCallException( esc_html( "Method $name does not exist in the wpdb class" ) );
+		}
 	}
 }
