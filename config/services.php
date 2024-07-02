@@ -10,12 +10,16 @@
 declare( strict_types=1 );
 
 use Dompdf\Dompdf;
+use IseardMedia\Kudos\Container\ActivationAwareInterface;
+use IseardMedia\Kudos\Container\Registrable;
+use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorFactory;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use Mollie\Api\MollieApiClient;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
@@ -44,6 +48,10 @@ return static function ( ContainerConfigurator $container ) {
 		->set( LoggerInterface::class, Logger::class )
 		->args( [ 'kudos_donations' ] )
 		->call( 'pushHandler', [ service( RotatingFileHandler::class ) ] );
+
+	// Set logger on required services.
+	$services->instanceof( LoggerAwareInterface::class )
+		->call( 'setLogger', [ service( LoggerInterface::class ) ] );
 
 	// Vendor.
 	$services->set( VendorInterface::class )

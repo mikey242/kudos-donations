@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * ServiceCompilerPass class
  */
-class ServiceCompilerPass implements CompilerPassInterface {
+class RegistrableCompilerPass implements CompilerPassInterface {
 
 	/**
 	 * Modify container.

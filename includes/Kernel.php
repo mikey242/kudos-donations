@@ -14,8 +14,7 @@ namespace IseardMedia\Kudos;
 use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\CompilerPass\ActivationCompilerPass;
-use IseardMedia\Kudos\Container\CompilerPass\LoggerCompilerPass;
-use IseardMedia\Kudos\Container\CompilerPass\ServiceCompilerPass;
+use IseardMedia\Kudos\Container\CompilerPass\RegistrableCompilerPass;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,9 +25,8 @@ use WP_Filesystem_Base;
 class Kernel {
 
 	private const COMPILER_PASSES = [
-		ServiceCompilerPass::class,
-		LoggerCompilerPass::class,
 		ActivationCompilerPass::class,
+		RegistrableCompilerPass::class,
 	];
 
 	private const CONTAINER_FILE                 = 'container.php';
