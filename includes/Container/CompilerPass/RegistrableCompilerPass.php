@@ -28,7 +28,7 @@ class RegistrableCompilerPass implements CompilerPassInterface {
 	 * @param ContainerBuilder $container The container builder.
 	 */
 	public function process( ContainerBuilder $container ): void {
-		$handler     = $container->getDefinition( RegistrableHandler::class );
+		$handler     = $container->findDefinition( RegistrableHandler::class );
 		$definitions = $container->findTaggedServiceIds( 'kudos.registrable' );
 
 		foreach ( $definitions as $id => $definition ) {
