@@ -22,21 +22,32 @@ class Version400 extends AbstractMigration {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function run(): void {
-		$this->migrate_donors_to_posts();
-		$this->migrate_campaigns_to_posts();
-		$this->migrate_transactions_to_posts();
+	public function get_version(): string {
+		return '4.0.0';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function run(): bool {
+		return (
+			$this->migrate_donors_to_posts() &&
+			$this->migrate_campaigns_to_posts() &&
+			$this->migrate_transactions_to_posts()
+		);
 	}
 
 	/**
 	 * Migrates donors from custom table to custom post type.
 	 */
-	public function migrate_donors_to_posts(): void {
+	public function migrate_donors_to_posts(): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_donors';
 
+		// Check if table exists.
 		$prepare = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
 		if ( $this->wpdb->get_var( $prepare ) !== $table_name ) {
-			return;
+			$this->logger->error( 'Donors table not found', [ 'table_name' => $table_name ] );
+			return false;
 		}
 
 		$query   = "SELECT * FROM {$table_name}";
@@ -44,14 +55,20 @@ class Version400 extends AbstractMigration {
 
 		foreach ( $results as $donor ) {
 
+			$args = [
+				'post_type'   => DonorPostType::get_slug(),
+				'post_date'   => $donor->created,
+				'post_status' => 'publish',
+			];
+
 			// Create post and store ID.
-			$new_id = wp_insert_post(
-				[
-					'post_type'   => DonorPostType::get_slug(),
-					'post_date'   => $donor->created,
-					'post_status' => 'publish',
-				]
-			);
+			$new_id = wp_insert_post( $args );
+
+			// Bail if post not created.
+			if ( ! $new_id ) {
+				$this->logger->error( 'Error creating donor post', [ 'args' => $args ] );
+				return false;
+			}
 
 			// Add post meta to new post.
 			update_post_meta( $new_id, DonorPostType::META_FIELD_EMAIL, $donor->email );
@@ -65,26 +82,31 @@ class Version400 extends AbstractMigration {
 			update_post_meta( $new_id, DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID, $donor->customer_id );
 			$this->cache['donor_id'][ $donor->customer_id ] = $new_id;
 		}
+		return true;
 	}
 
 	/**
 	 * Migrate campaigns from a settings array to CampaignPostTypes.
 	 */
-	public function migrate_campaigns_to_posts(): void {
-		$campaigns = get_option( '_kudos_campaigns' );
-		if ( empty( $campaigns ) ) {
-			return;
-		}
+	public function migrate_campaigns_to_posts(): bool {
+		$campaigns = get_option( '_kudos_campaigns', [] );
+
 		foreach ( $campaigns as $campaign ) {
 
+			$args = [
+				'post_type'   => CampaignPostType::get_slug(),
+				'post_title'  => $campaign['name'],
+				'post_status' => 'publish',
+			];
+
 			// Create post and store ID.
-			$new_id = wp_insert_post(
-				[
-					'post_type'   => CampaignPostType::get_slug(),
-					'post_title'  => $campaign['name'],
-					'post_status' => 'publish',
-				]
-			);
+			$new_id = wp_insert_post( $args );
+
+			// Bail if post not created.
+			if ( ! $new_id ) {
+				$this->logger->error( 'Error creating campaign post', [ 'args' => $args ] );
+				return false;
+			}
 
 			// Add post meta to new post.
 			update_post_meta( $new_id, CampaignPostType::META_FIELD_INITIAL_TITLE, $campaign['modal_title'] ?? '' );
@@ -102,18 +124,21 @@ class Version400 extends AbstractMigration {
 			// Store old and new ID for later reference.
 			$this->cache['campaign_id'][ $campaign['id'] ] = $new_id;
 		}
+		return true;
 	}
 
 	/**
 	 * Migrate transactions from kudos_transactions table to
 	 * TransactionPostTypes.
 	 */
-	public function migrate_transactions_to_posts(): void {
+	public function migrate_transactions_to_posts(): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_transactions';
 
+		// Check if table exists.
 		$prepare = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
 		if ( $this->wpdb->get_var( $prepare ) !== $table_name ) {
-			return;
+			$this->logger->error( 'Transactions table not found', [ 'table_name' => $table_name ] );
+			return false;
 		}
 
 		$query   = "SELECT * FROM {$table_name}";
@@ -121,14 +146,20 @@ class Version400 extends AbstractMigration {
 
 		foreach ( $results as $transaction ) {
 
+			$args = [
+				'post_type'   => TransactionPostType::get_slug(),
+				'post_date'   => $transaction->created,
+				'post_status' => 'publish',
+			];
+
 			// Create post and store ID.
-			$new_id = wp_insert_post(
-				[
-					'post_type'   => TransactionPostType::get_slug(),
-					'post_date'   => $transaction->created,
-					'post_status' => 'publish',
-				]
-			);
+			$new_id = wp_insert_post( $args );
+
+			// Bail if post not created.
+			if ( ! $new_id ) {
+				$this->logger->error( 'Error creating transaction post', [ 'args' => $args ] );
+				return false;
+			}
 
 			// Add post meta to new post.
 			update_post_meta( $new_id, TransactionPostType::META_FIELD_VALUE, (int) $transaction->value );
@@ -143,5 +174,6 @@ class Version400 extends AbstractMigration {
 			update_post_meta( $new_id, TransactionPostType::META_FIELD_CAMPAIGN_ID, $this->cache['campaign_id'][ $transaction->campaign_id ] );
 			update_post_meta( $new_id, TransactionPostType::META_FIELD_MESSAGE, $transaction->message );
 		}
+		return true;
 	}
 }

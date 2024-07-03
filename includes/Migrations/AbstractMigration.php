@@ -9,24 +9,22 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Helper\WpDb;
-use IseardMedia\Kudos\Service\SettingsService;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 abstract class AbstractMigration implements MigrationInterface {
 
-	protected const VERSION = '';
-	protected WpDb $wpdb;
+	protected \wpdb $wpdb;
+	protected LoggerInterface $logger;
 
 	/**
-	 * Migration constructor.
+	 * Constructor for migrations.
 	 *
-	 * @param WpDb $wpdb WordPress database object.
+	 * @param LoggerInterface|null $logger Logger instance.
 	 */
-	public function __construct( WpDb $wpdb ) {
-		$this->wpdb = $wpdb;
-		update_option(
-			SettingsService::SETTING_NAME_MIGRATION_HISTORY,
-			[ static::VERSION ]
-		);
+	public function __construct( ?LoggerInterface $logger = null ) {
+		global $wpdb;
+		$this->wpdb   = $wpdb;
+		$this->logger = $logger ?? new NullLogger();
 	}
 }

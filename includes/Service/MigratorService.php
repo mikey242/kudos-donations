@@ -39,15 +39,15 @@ class MigratorService implements LoggerAwareInterface {
 		$this->wpdb            = $wpdb;
 		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
 		$this->target_version  = KUDOS_DB_VERSION;
-		add_action( 'kudos_donations_loaded', [ $this, 'process_form_data' ] );
+		add_action( 'kudos_container_ready', [ $this, 'process_form_data' ] );
 	}
 
 	/**
 	 * Add migration to list.
 	 *
-	 * @param string $migration The migration to add.
+	 * @param MigrationInterface $migration The migration to add.
 	 */
-	public function add_migration( string $migration ): void {
+	public function add_migration( MigrationInterface $migration ): void {
 		$this->migrations[] = $migration;
 	}
 
@@ -64,7 +64,6 @@ class MigratorService implements LoggerAwareInterface {
 				die();
 			}
 
-			$this->discover_migrations();
 			$this->run_migrations();
 		}
 	}
@@ -73,15 +72,20 @@ class MigratorService implements LoggerAwareInterface {
 	 * Run the migrations in $migrations.
 	 */
 	private function run_migrations(): void {
-		$this->logger->debug( 'Processing migrations.', $this->migrations );
 		foreach ( $this->migrations as $migration ) {
-			$class_name = basename( $migration, '.php' );
-			$migration  = 'IseardMedia\\Kudos\\Migrations\\' . $class_name;
-			if ( ! class_exists( $migration ) || ! is_subclass_of( $migration, MigrationInterface::class ) ) {
-				continue;
+			$this->logger->debug( 'Running migration: ' . $migration->get_version() );
+
+			$instance = new $migration( $this->logger );
+
+			// Run migration and stop if not successful.
+			if ( ! $instance->run() ) {
+				$this->logger->error( 'Migration failed.', [ 'migration' => $migration->get_version() ] );
+				return;
 			}
-			$instance = new $migration( $this->wpdb );
-			$instance->run();
+			update_option(
+				SettingsService::SETTING_NAME_MIGRATION_HISTORY,
+				[ $instance->get_version() ]
+			);
 		}
 		update_option( SettingsService::SETTING_NAME_DB_VERSION, KUDOS_DB_VERSION );
 	}
@@ -113,24 +117,5 @@ class MigratorService implements LoggerAwareInterface {
 				'kudos-donations'
 			) . '<p>From <strong>' . $this->current_version . '</strong> to <strong>' . KUDOS_DB_VERSION . '</strong></p>' . $form
 		);
-	}
-
-	/**
-	 * Find migrations and add relevant ones to $this->migrations.
-	 */
-	public function discover_migrations() {
-		$migration_files = glob( KUDOS_PLUGIN_DIR . 'includes/Migrations/*.php' );
-
-		foreach ( $migration_files as $migration ) {
-			$file_name  = basename( $migration, '.php' );
-			$candidates = (int) filter_var( $file_name, FILTER_SANITIZE_NUMBER_INT );
-			if ( $candidates ) {
-				$candidate_version = implode( '.', str_split( (string) $candidates ) );
-				if ( version_compare( $candidate_version, $this->target_version, '<=' ) && version_compare( $candidate_version, $this->current_version, '>' ) ) {
-					$this->add_migration( $file_name );
-				}
-			}
-		}
-		$this->logger->debug( 'Discovered migrations.', [ 'migrations', $this->migrations ] );
 	}
 }

@@ -9,19 +9,14 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Helper\WpDb;
-
 interface MigrationInterface {
-
 	/**
-	 * Migration constructor.
-	 *
-	 * @param WpDb $wpdb WordPress database object.
+	 * Returns the version number for the current migration.
 	 */
-	public function __construct( WpDb $wpdb );
+	public function get_version(): string;
 
 	/**
 	 * Run the migrations and return true if successful.
 	 */
-	public function run(): void;
+	public function run(): bool;
 }

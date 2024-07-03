@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos;
 use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\CompilerPass\ActivationCompilerPass;
+use IseardMedia\Kudos\Container\CompilerPass\MigrationCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\RegistrableCompilerPass;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
@@ -27,6 +28,7 @@ class Kernel {
 	private const COMPILER_PASSES = [
 		ActivationCompilerPass::class,
 		RegistrableCompilerPass::class,
+		MigrationCompilerPass::class,
 	];
 
 	private const CONTAINER_FILE                 = 'container.php';
@@ -42,6 +44,31 @@ class Kernel {
 	 */
 	public function __construct() {
 		$this->initialize_container();
+	}
+
+	/**
+	 * Create the container.
+	 *
+	 * @throws Exception Thrown if config could not be loaded.
+	 */
+	private function initialize_container(): void {
+		$this->cache_folder  = $this->get_cache_folder();
+		$container_file_path = $this->cache_folder . self::CONTAINER_FILE;
+
+		// Enable cache if not in development mode.
+		if ( $this->is_production() && file_exists( $container_file_path ) ) {
+			require_once $container_file_path;
+			$this->container = new \KudosContainer();
+		} else {
+			$this->container_builder = new ContainerBuilder();
+			$this->initialize_filesystem();
+			$this->load_config();
+			$this->add_compiler_passes();
+			$this->container_builder->compile();
+			$this->dump_container( $container_file_path );
+			$this->container         = $this->container_builder;
+			$this->container_builder = null; // Clear the builder reference after compilation.
+		}
 	}
 
 	/**
@@ -87,31 +114,6 @@ class Kernel {
 	}
 
 	/**
-	 * Create the container.
-	 *
-	 * @throws Exception Thrown if config could not be loaded.
-	 */
-	private function initialize_container(): void {
-		$this->cache_folder  = $this->get_cache_folder();
-		$container_file_path = $this->cache_folder . self::CONTAINER_FILE;
-
-		// Enable cache if not in development mode.
-		if ( $this->is_production() && file_exists( $container_file_path ) ) {
-			require_once $container_file_path;
-			$this->container = new \KudosContainer();
-		} else {
-			$this->container_builder = new ContainerBuilder();
-			$this->initialize_filesystem();
-			$this->load_config();
-			$this->add_compiler_passes();
-			$this->container_builder->compile();
-			$this->dump_container( $container_file_path );
-			$this->container         = $this->container_builder;
-			$this->container_builder = null; // Clear the builder reference after compilation.
-		}
-	}
-
-	/**
 	 * Add compiler passes to the container.
 	 */
 	private function add_compiler_passes(): void {
@@ -140,7 +142,7 @@ class Kernel {
 
 		if ( ! $this->file_system->put_contents( $container_file_path, $container_dump ) ) {
 			if ( KUDOS_DEBUG ) {
-				( new AdminNotice() )->error( 'Failed to write the container to the cache file. Please ensure that the "wp-content/uploads" directory is writable.' );
+				AdminNotice::error( 'Failed to write the container to the cache file. Please ensure that the "wp-content/uploads" directory is writable.' );
 			}
 		}
 	}

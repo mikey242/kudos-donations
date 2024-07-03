@@ -125,7 +125,7 @@ class Plugin implements LoggerAwareInterface {
 	 */
 	public function register(): void {
 		try {
-			do_action( 'kudos_donations_loaded' );
+			do_action( 'kudos_container_ready' );
 			$this->on_plugin_loaded();
 		} catch ( \Throwable $e ) {
 			$this->logger->error(
