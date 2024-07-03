@@ -11,43 +11,27 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin\Notice;
 
+use IseardMedia\Kudos\Helper\Utils;
+
 /**
  * Class AdminNotice
  */
-class AdminNotice {
-
-	public const ERROR   = 'notice-error';
-	public const WARNING = 'notice-warning';
-	public const SUCCESS = 'notice-success';
-	public const INFO    = 'notice-info';
+class AdminNotice implements AdminNoticeInterface {
 
 	/**
-	 * Whether this notice is dismissible or not.
-	 * Use AdminDismissibleNotice for dismissible notices.
-	 *
-	 * @var bool
+	 * {@inheritDoc}
 	 */
-	protected bool $is_dismissible = false;
-	/**
-	 * The style the message will be displayed in.
-	 *
-	 * @var string
-	 */
-	private string $level;
-	/**
-	 * The message to be displayed.
-	 *
-	 * @var string
-	 */
-	private string $message;
+	public static function is_dismissible(): bool {
+		return false;
+	}
 
 	/**
 	 * Error notice.
 	 *
 	 * @param string $message Message to be displayed.
 	 */
-	public function error( string $message ): void {
-		$this->message( self::ERROR, $message );
+	public static function error( string $message ): void {
+		static::notice( self::ERROR, $message );
 	}
 
 	/**
@@ -55,8 +39,8 @@ class AdminNotice {
 	 *
 	 * @param string $message Message to be displayed.
 	 */
-	public function warning( string $message ): void {
-		$this->message( self::WARNING, $message );
+	public static function warning( string $message ): void {
+		static::notice( self::WARNING, $message );
 	}
 
 	/**
@@ -64,8 +48,8 @@ class AdminNotice {
 	 *
 	 * @param string $message Message to be displayed.
 	 */
-	public function success( string $message ): void {
-		$this->message( self::SUCCESS, $message );
+	public static function success( string $message ): void {
+		static::notice( self::SUCCESS, $message );
 	}
 
 	/**
@@ -73,8 +57,21 @@ class AdminNotice {
 	 *
 	 * @param string $message Message to be displayed.
 	 */
-	public function info( string $message ): void {
-		$this->message( self::INFO, $message );
+	public static function info( string $message ): void {
+		static::notice( self::INFO, $message );
+	}
+
+	/**
+	 * Sets up the message and adds the hook.
+	 *
+	 * @param string $message The message content.
+	 * @param string $level The message level.
+	 */
+	public static function fancy( string $message, string $level = self::INFO ): void {
+		static::notice(
+			$level,
+			"<div class='logo' style='width: 50px; margin-right: 20px'>" . Utils::get_logo_svg() . "</div><div class='message'>" . $message . '</div>'
+		);
 	}
 
 	/**
@@ -83,30 +80,33 @@ class AdminNotice {
 	 * @param string $level The message level.
 	 * @param string $message The message content.
 	 */
-	public function message( string $level, string $message ): void {
-		$this->level   = $level;
-		$this->message = 'Kudos Donations: ' . $message;
-		$this->hook();
-	}
-
-	/**
-	 * Add the required hook to display the notice.
-	 */
-	public function hook(): void {
-		add_action( 'admin_notices', [ $this, 'render' ] );
+	protected static function notice( string $level, string $message ): void {
+		add_action(
+			'admin_notices',
+			function () use( $level, $message ) {
+				static::render( $level, $message );
+			}
+		);
 	}
 
 	/**
 	 * Generates the notice markup.
+	 *
+	 * @param string $level The alert level.
+	 * @param string $message The message to display.
 	 */
-	public function render(): void {
+	protected static function render( string $level, string $message ): void {
 		printf(
-			'<div class="notice %s %s"><p>%s</p></div>',
-			esc_attr( $this->level ),
-			esc_html( $this->is_dismissible ? 'is-dismissible' : '' ),
+			'<div class="notice %s %s" style="display: flex; padding: 10px; align-items: center">%s</div>',
+			esc_attr( $level ),
+			esc_html( static::is_dismissible() ? 'is-dismissible' : '' ),
 			wp_kses(
-				$this->message,
+				$message,
 				[
+					'div'    => [
+						'class' => [],
+						'style' => [],
+					],
 					'p'      => [],
 					'strong' => [],
 					'form'   => [
@@ -123,6 +123,16 @@ class AdminNotice {
 						'name'  => [],
 						'type'  => [],
 						'value' => [],
+					],
+					'svg'    => [
+						'class'   => [],
+						'viewbox' => [],
+						'xmlns'   => [],
+					],
+					'path'   => [
+						'class' => [],
+						'fill'  => [],
+						'd'     => [],
 					],
 				]
 			)

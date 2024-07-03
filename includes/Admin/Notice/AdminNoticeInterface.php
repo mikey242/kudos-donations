@@ -22,48 +22,35 @@ interface AdminNoticeInterface {
 	public const INFO    = 'notice-info';
 
 	/**
+	 * Whether alert is dismissible or not.
+	 */
+	public static function is_dismissible(): bool;
+
+	/**
 	 * Error notice.
 	 *
 	 * @param string $message Message to be displayed.
 	 */
-	public function error( string $message ): void;
+	public static function error( string $message ): void;
 
 	/**
 	 * Warning notice.
 	 *
 	 * @param string $message Message to be displayed.
 	 */
-	public function warning( string $message ): void;
+	public static function warning( string $message ): void;
 
 	/**
 	 * Success notice.
 	 *
 	 * @param string $message Message to be displayed.
 	 */
-	public function success( string $message ): void;
+	public static function success( string $message ): void;
 
 	/**
 	 * Info notice.
 	 *
 	 * @param string $message Message to be displayed.
 	 */
-	public function info( string $message ): void;
-
-	/**
-	 * Sets up the message and adds the hook.
-	 *
-	 * @param string $level The message level.
-	 * @param string $message The message content.
-	 */
-	public function message( string $level, string $message ): void;
-
-	/**
-	 * Add the required hook to display the notice.
-	 */
-	public function hook(): void;
-
-	/**
-	 * Generates the notice markup.
-	 */
-	public function render(): void;
+	public static function info( string $message ): void;
 }

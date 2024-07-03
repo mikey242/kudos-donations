@@ -16,9 +16,9 @@ namespace IseardMedia\Kudos\Admin\Notice;
  */
 class AdminDismissibleNotice extends AdminNotice {
 	/**
-	 * AdminDismissibleNotice constructor.
+	 * {@inheritDoc}
 	 */
-	public function __construct() {
-		$this->is_dismissible = true;
+	public static function is_dismissible(): bool {
+		return true;
 	}
 }

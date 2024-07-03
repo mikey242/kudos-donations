@@ -107,7 +107,7 @@ class MigratorService implements LoggerAwareInterface {
 		$form .= __( 'Update now', 'kudos-donations' );
 		$form .= '</button>';
 		$form .= '</form>';
-		( new AdminNotice() )->info(
+		AdminNotice::fancy(
 			__(
 				'The plugin needs to update your database before you can continue. Please make sure you backup your data before proceeding.',
 				'kudos-donations'
