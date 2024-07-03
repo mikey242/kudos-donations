@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
+use IseardMedia\Kudos\Container\Handler\UpgradeHandler;
 use IseardMedia\Kudos\Service\MigratorService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -26,21 +27,25 @@ class Plugin implements LoggerAwareInterface {
 	private ActivationHandler $activation_handler;
 	private MigratorService $migrator_service;
 	private RegistrableHandler $service_handler;
+	private UpgradeHandler $upgrade_handler;
 
 	/**
 	 * Plugin constructor.
 	 *
 	 * @param RegistrableHandler $service_handler Service instantiator.
 	 * @param ActivationHandler  $activation_handler  Activation related functions.
+	 * @param UpgradeHandler     $upgrade_handler Handler for upgradeable services.
 	 * @param MigratorService    $migrator_service  Service for checking migrations.
 	 */
 	public function __construct(
 		RegistrableHandler $service_handler,
 		ActivationHandler $activation_handler,
+		UpgradeHandler $upgrade_handler,
 		MigratorService $migrator_service
 	) {
 		$this->service_handler    = $service_handler;
 		$this->activation_handler = $activation_handler;
+		$this->upgrade_handler    = $upgrade_handler;
 		$this->migrator_service   = $migrator_service;
 	}
 
@@ -50,7 +55,8 @@ class Plugin implements LoggerAwareInterface {
 	public function on_plugin_loaded(): void {
 		$this->setup_localization();
 		if ( $this->is_plugin_ready() ) {
-			$this->instantiate_services();
+			$this->upgrade_handler->process();
+			$this->service_handler->process();
 		}
 	}
 
@@ -111,13 +117,6 @@ class Plugin implements LoggerAwareInterface {
 				load_plugin_textdomain( 'kudos-donations', false, \dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 			}
 		);
-	}
-
-	/**
-	 * Instantiate the services.
-	 */
-	private function instantiate_services(): void {
-		$this->service_handler->process();
 	}
 
 	/**

@@ -11,38 +11,24 @@ namespace IseardMedia\Kudos\Service;
 
 use FilesystemIterator;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class CacheService extends AbstractRegistrable implements LoggerAwareInterface {
-
-	use LoggerAwareTrait;
+class CacheService extends AbstractRegistrable implements UpgradeAwareInterface {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
 		add_action( 'kudos_clear_cache', [ $this, 'purge_cache' ], 10, 2 );
-		add_action(
-			'upgrader_process_complete',
-			function ( $upgrader, $hook_extra ) {
-				$this->logger->debug(
-					'Upgrade detected',
-					[ 'hook_extra' => $hook_extra ]
-				);
-				if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] && isset( $hook_extra['plugins'] ) ) {
-					foreach ( $hook_extra['plugins'] as $plugin ) {
-						if ( str_contains( $plugin, 'kudos-donations.php' ) ) {
-							do_action( 'kudos_clear_cache', null, __( 'Plugin upgraded', 'kudos-donations' ) );
-						}
-					}
-				}
-			},
-			10,
-			2
-		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function on_plugin_upgrade(): void {
+		do_action( 'kudos_clear_cache', null, __( 'Plugin upgraded', 'kudos-donations' ) );
 	}
 
 	/**
