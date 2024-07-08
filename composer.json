@@ -40,6 +40,7 @@
     "phpunit/phpunit": "8.*"
   },
   "scripts": {
+    "lint": "phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-source",
     "build-production": [
       "composer install --optimize-autoloader --no-dev",
       "npm run production"
