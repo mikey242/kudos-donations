@@ -54,7 +54,7 @@ if ( class_exists( Dotenv::class ) ) {
  */
 define( 'KUDOS_VERSION', '3.2.2' );
 define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'KUDOS_PLUGIN_DIR', dirname( __FILE__ ) );
+define( 'KUDOS_PLUGIN_DIR', __DIR__ );
 define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
 define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
 define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
@@ -69,10 +69,10 @@ define( 'KUDOS_SALT', NONCE_SALT );
 if ( class_exists( Run::class ) && ( $_ENV['WP_ENV'] ?? '' ) === 'development' ) {
 
 	$run     = new Run();
-	$handler = new PrettyPageHandler;
+	$handler = new PrettyPageHandler();
 
 	// Set the title of the error page.
-	$handler->setPageTitle( "Whoops! There was a problem." );
+	$handler->setPageTitle( 'Whoops! There was a problem.' );
 	$run->pushHandler( $handler );
 
 	// Register the handler with PHP.
@@ -120,11 +120,30 @@ function run_kudos_donations() {
 		// Create our container for dependency injection.
 		$builder = new ContainerBuilder();
 		$builder->useAutowiring( true );
-		$builder->addDefinitions( KUDOS_PLUGIN_DIR . '/app/config.php' );
-		if ( isset( $_ENV['WP_ENV'] ) && $_ENV['WP_ENV'] !== 'development' ) {
+
+		// Get definitions for building container.
+		$definitions = apply_filters(
+			'kudos_container_definitions',
+			array(
+				KUDOS_PLUGIN_DIR . '/app/config.php',
+			)
+		);
+
+		// Add definitions to container builder.
+		foreach ( $definitions as $definition ) {
+			$builder->addDefinitions( $definition );
+		}
+
+		// Allow container to be dumped to a file if in production.
+		if ( isset( $_ENV['WP_ENV'] ) && 'development' !== $_ENV['WP_ENV'] ) {
 			$builder->enableCompilation( KUDOS_STORAGE_DIR . '/php-di/cache' );
 		}
+
+		// Build container.
 		$container = $builder->build();
+
+		// Create action to provide container to addons.
+		do_action( 'kudos_container_ready', $container );
 
 		// Create and run our main plugin class.
 		$plugin = new KudosDonations( $container, KUDOS_VERSION, 'kudos-donations' );
