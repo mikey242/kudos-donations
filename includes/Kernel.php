@@ -25,12 +25,6 @@ use WP_Filesystem_Base;
 
 class Kernel {
 
-	private const COMPILER_PASSES = [
-		ActivationCompilerPass::class,
-		RegistrableCompilerPass::class,
-		MigrationCompilerPass::class,
-	];
-
 	private const CONTAINER_FILE                 = 'container.php';
 	private ?ContainerBuilder $container_builder = null;
 	private ?ContainerInterface $container       = null;
@@ -44,6 +38,19 @@ class Kernel {
 	 */
 	public function __construct() {
 		$this->initialize_container();
+	}
+
+	/**
+	 * Returns an array of compiler pass classes.
+	 *
+	 * @return string[]
+	 */
+	private function get_compiler_passes(): array {
+		return [
+			ActivationCompilerPass::class,
+			RegistrableCompilerPass::class,
+			MigrationCompilerPass::class,
+		];
 	}
 
 	/**
@@ -117,7 +124,7 @@ class Kernel {
 	 * Add compiler passes to the container.
 	 */
 	private function add_compiler_passes(): void {
-		foreach ( self::COMPILER_PASSES as $compiler_pass ) {
+		foreach ( $this->get_compiler_passes() as $compiler_pass ) {
 			$this->container_builder->addCompilerPass( new $compiler_pass() );
 		}
 	}
