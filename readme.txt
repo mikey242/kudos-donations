@@ -118,6 +118,10 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.2.3 =
+* Update dependencies
+* Add hooks for accessing the container
+
 = 3.2.2 =
 * Fix issue where sometimes the payment summary would not display
 
