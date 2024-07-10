@@ -42,7 +42,6 @@ return static function ( ContainerConfigurator $container ) {
 				true,
 				null,
 				false,
-				KUDOS_LOG_DATE_FORMAT,
 			]
 		)
 		->set( LoggerInterface::class, Logger::class )
