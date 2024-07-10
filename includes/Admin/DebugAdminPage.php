@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
+use Monolog\Handler\RotatingFileHandler;
+
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
 
 	private const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
@@ -40,7 +42,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	public function __construct() {
 		$this->current_tab       = $_GET['tab'] ?? 'log'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->log_files         = $this->get_logs();
-		$this->current_log_file  = ! empty( $this->log_files ) ? end( $this->log_files ) : '';
+		$log_file                = KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
+		$this->current_log_file  = file_exists( $log_file ) ? $log_file : ( ! empty( $this->log_files ) ? end( $this->log_files ) : '' );
 		$this->current_log_level = 'ALL';
 		$this->process_form_data();
 	}
