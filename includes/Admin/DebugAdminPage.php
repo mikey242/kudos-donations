@@ -12,9 +12,12 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
-	private string $tab;
-	private string $log_level;
-	private string $log_file;
+
+	private const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
+	private ?array $log_files;
+	private string $current_tab;
+	private ?string $current_log_level;
+	private ?string $current_log_file;
 
 	/**
 	 * Pattern used for parsing log entries.
@@ -34,9 +37,11 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	 * Tools page constructor.
 	 */
 	public function __construct() {
-		$this->tab       = $_GET['tab'] ?? 'log'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->log_level = $_GET['log_level'] ?? 'ALL'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->log_file  = KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '-' . gmdate( KUDOS_LOG_DATE_FORMAT ) . '.log';
+		$this->current_tab       = $_GET['tab'] ?? 'log'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$this->log_files         = $this->get_logs();
+		$this->current_log_file  = end( $this->log_files );
+		$this->current_log_level = 'ALL';
+		$this->process_form_data();
 	}
 
 	/**
@@ -77,21 +82,21 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	 *
 	 * @return array
 	 */
-	private function get_log(): array {
+	private function get_log_content(): array {
 		$log_array = [];
-		if ( file_exists( $this->log_file ) ) {
-			$log_content = array_reverse( file( $this->log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) );
+		if ( file_exists( $this->current_log_file ) ) {
+			$log_content = array_reverse( file( $this->current_log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) );
 			foreach ( $log_content as $line ) {
 				if ( preg_match( self::PATTERN_MONOLOG2, $line, $log_matches ) ) {
 					$log_array[] = $log_matches;
 				}
 			}
 
-			if ( 'ALL' !== $this->log_level ) {
+			if ( 'ALL' !== $this->current_log_level ) {
 				$log_array = array_filter(
 					$log_array,
 					function ( $line ) {
-						$levels = explode( '|', $this->log_level );
+						$levels = explode( '|', $this->current_log_level );
 						return \in_array( $line['level'], $levels, true );
 					}
 				);
@@ -101,23 +106,42 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	}
 
 	/**
+	 * Gets an array of the log file paths.
+	 */
+	private function get_logs(): ?array {
+		return glob( self::LOG_DIR . '*.log' );
+	}
+
+	/**
+	 * Gets the log file path to be displayed.
+	 */
+	private function process_form_data(): void {
+		if ( isset( $_REQUEST['log_option'] ) || isset( $_REQUEST['log_level'] ) ) {
+			$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
+			if ( wp_verify_nonce( $nonce, 'log' ) ) {
+				$this->current_log_file  = $_REQUEST['log_option'];
+				$this->current_log_level = $_REQUEST['log_level'];
+			}
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function callback(): void {
-		$url = '?page=' . $this->get_menu_slug();
 		?>
 		<div class="wrap">
 
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 			<nav class="nav-tab-wrapper">
-				<a href="<?php echo esc_attr( add_query_arg( 'tab', 'log', $url ) ); ?>"
-					class="nav-tab <?php echo ( 'log' === $this->tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
+				<a href="<?php echo esc_attr( add_query_arg( 'tab', 'log' ) ); ?>"
+					class="nav-tab <?php echo ( 'log' === $this->current_tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
 				<?php
 				if ( KUDOS_DEBUG ) :
 					?>
-					<a href="<?php echo esc_attr( add_query_arg( 'tab', 'actions', $url ) ); ?>"
-						class="nav-tab <?php echo ( 'actions' === $this->tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
+					<a href="<?php echo esc_attr( add_query_arg( 'tab', 'actions' ) ); ?>"
+						class="nav-tab <?php echo ( 'actions' === $this->current_tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
 				<?php endif; ?>
 			</nav>
 
@@ -125,24 +149,30 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 				<?php
 
-				switch ( $this->tab ) :
+				switch ( $this->current_tab ) :
 
 					case 'log':
-						$url = add_query_arg( 'tab', 'log', $url );
 						?>
 
-						<p>Current log file: <?php echo esc_textarea( $this->log_file ); ?></p>
-
-						<a href="<?php echo esc_attr( add_query_arg( 'log_level', 'ALL', $url ) ); ?>" class="button-secondary">
-							All
-						</a>
-						<a href="<?php echo esc_attr( add_query_arg( 'log_level', 'ERROR|WARNING', $url ) ); ?>" class="button-secondary">
-							Error
-						</a>
-						<a href="<?php echo esc_attr( add_query_arg( 'log_level', 'DEBUG', $url ) ); ?>" class="button-secondary">
-							Debug
-						</a>
-
+						<form name="log-form" action="" method='post' style="margin: 1em 0">
+							<?php wp_nonce_field( 'log' ); ?>
+								<label for="log_option"><?php echo esc_attr( __( 'Select log file:', 'kudos-donations' ) ); ?></label>
+								<select name="log_option" id="log_option" onChange="this.form.submit()">
+									<?php
+									foreach ( $this->log_files as $log ) {
+										echo '<option ' . ( basename( $log ) === basename( $this->current_log_file ) ? 'selected' : '' ) . ' value="' . esc_attr( $log ) . '">' . esc_html( basename( $log ) ) . '</option>';
+									}
+									?>
+								</select>
+								<label for="log_level"><?php echo esc_attr( __( 'Log level:', 'kudos-donations' ) ); ?></label>
+								<select name="log_level" id="log_level" onChange="this.form.submit()">
+									<?php
+									foreach ( [ 'ALL', 'ERROR', 'WARNING', 'NOTICE', 'INFO', 'DEBUG' ] as $level ) {
+										echo '<option ' . ( $this->current_log_level === $level ? 'selected' : '' ) . ' value=' . esc_attr( $level ) . '>' . esc_html( $level ) . '</option>';
+									}
+									?>
+								</select>
+						</form>
 
 						<table class='form-table' style="table-layout: auto">
 							<tbody>
@@ -154,7 +184,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 							</tr>
 
 							<?php
-							foreach ( $this->get_log() as $key => $log ) {
+							foreach ( $this->get_log_content() as $key => $log ) {
 
 								$level   = $log['level'];
 								$style   = 'border-left-width: 10px; border-left-style: solid;';
@@ -203,7 +233,6 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						break;
 
 					case 'actions':
-						$url = add_query_arg( 'tab', 'actions', $url );
 						?>
 						<p><strong>Please use the following actions only if you are having issues. Remember to back up your data
 								before
@@ -211,7 +240,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<hr/>
 
 						<p>Settings actions.</p>
-						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_mollie' ); ?>
 							<button type='submit' class="button-secondary confirm" name='kudos_action'
 									value='kudos_clear_mollie'>
@@ -219,7 +248,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 							</button>
 						</form>
 
-						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_settings' ); ?>
 							<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_clear_settings'>
 								Reset ALL settings
@@ -229,7 +258,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<hr/>
 
 						<p>Campaign actions.</p>
-						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_campaigns' ); ?>
 							<button type='submit' class="button-secondary confirm" name='kudos_action'
 									value='kudos_clear_campaigns'>
@@ -240,21 +269,21 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<hr/>
 
 						<p>Cache actions.</p>
-						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_twig_cache' ); ?>
 							<button class="button-secondary confirm" type='submit' name='kudos_action'
 									value='kudos_clear_twig_cache'>Clear twig cache
 							</button>
 						</form>
 
-						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_container_cache' ); ?>
 							<button class="button-secondary confirm" type='submit' name='kudos_action'
 									value='kudos_clear_container_cache'>Clear container cache
 							</button>
 						</form>
 
-						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_all_cache' ); ?>
 							<button class="button-secondary confirm" type='submit' name='kudos_action'
 									value='kudos_clear_all_cache'>Clear all cache
@@ -264,14 +293,14 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<hr/>
 
 						<p>Log actions.</p>
-						<form action="<?php echo esc_url( $url ); ?>" method='post' style="display: inline">
+						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_log' ); ?>
 							<button class="button-secondary confirm" type='submit' name='kudos_action'
 									value='kudos_clear_log'>Clear log
 							</button>
 						</form>
 
-						<?php do_action( 'kudos_debug_menu_actions_extra', $url ); ?>
+						<?php do_action( 'kudos_debug_menu_actions_extra' ); ?>
 
 						<?php
 						break;
