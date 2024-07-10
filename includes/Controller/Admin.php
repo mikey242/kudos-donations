@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller;
 
+use IseardMedia\Kudos\Admin\DebugAdminPage;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\SettingsService;
@@ -102,10 +103,13 @@ class Admin extends AbstractRegistrable {
 						do_action( 'kudos_clear_cache', null, __( 'User requested', 'kudos-donations' ) );
 					}
 					break;
-				case 'kudos_clear_log':
+				case 'kudos_clear_logs':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
-					if ( wp_verify_nonce( $nonce, 'kudos_clear_log' ) ) {
-						wp_delete_file( KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '.log' );
+					if ( wp_verify_nonce( $nonce, 'kudos_clear_logs' ) ) {
+						$log_files = DebugAdminPage::get_logs();
+						foreach ( $log_files as $log_file ) {
+							wp_delete_file( $log_file );
+						}
 					}
 					break;
 				default:

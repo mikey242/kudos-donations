@@ -14,24 +14,25 @@ namespace IseardMedia\Kudos\Admin;
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
 
 	private const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
-	private ?array $log_files;
-	private string $current_tab;
-	private ?string $current_log_level;
-	private ?string $current_log_file;
 
 	/**
 	 * Pattern used for parsing log entries.
 	 *
 	 * @source https://github.com/devdot/monolog-parser/blob/master/src/Parser.php
 	 */
-	public const PATTERN_MONOLOG2 =
+	private const PATTERN_MONOLOG2 =
 		'/^' . // start with newline.
 		'\[(?<datetime>.*)] ' . // find the date that is between two brackets [].
 		'(?<channel>[\w-]+).(?<level>\w+): ' . // get the channel and log level, they look like this: channel.ERROR, follow by colon and space.
 		"(?<message>[^\[{\\n]+)" . // next up is the message (containing anything except [ or {, nor a new line).
 		'(?:(?<context> (\[.*?]|\{.*?}))|)' . // followed by a space and anything (non-greedy) in either square [] or curly {} brackets, or nothing at all (skips ahead to line end).
 		'(?:(?<extra> (\[.*]|\{.*}))|)' . // followed by a space and anything (non-greedy) in either square [] or curly {} brackets, or nothing at all (skips ahead to line end).
-		'\s{0,2}$/m'; // end with up to 2 optional spaces and the end line marker, flag: m = multiline.
+		'\s{0,2}$/m';
+
+	private ?array $log_files;
+	private string $current_tab;
+	private ?string $current_log_level;
+	private ?string $current_log_file;
 
 	/**
 	 * Tools page constructor.
@@ -39,7 +40,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	public function __construct() {
 		$this->current_tab       = $_GET['tab'] ?? 'log'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->log_files         = $this->get_logs();
-		$this->current_log_file  = end( $this->log_files );
+		$this->current_log_file  = ! empty( $this->log_files ) ? end( $this->log_files ) : '';
 		$this->current_log_level = 'ALL';
 		$this->process_form_data();
 	}
@@ -108,7 +109,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	/**
 	 * Gets an array of the log file paths.
 	 */
-	private function get_logs(): ?array {
+	public static function get_logs(): ?array {
 		return glob( self::LOG_DIR . '*.log' );
 	}
 
@@ -152,27 +153,27 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 				switch ( $this->current_tab ) :
 
 					case 'log':
-						?>
-
-						<form name="log-form" action="" method='post' style="margin: 1em 0">
-							<?php wp_nonce_field( 'log' ); ?>
-								<label for="log_option"><?php echo esc_attr( __( 'Select log file:', 'kudos-donations' ) ); ?></label>
-								<select name="log_option" id="log_option" onChange="this.form.submit()">
-									<?php
-									foreach ( $this->log_files as $log ) {
-										echo '<option ' . ( basename( $log ) === basename( $this->current_log_file ) ? 'selected' : '' ) . ' value="' . esc_attr( $log ) . '">' . esc_html( basename( $log ) ) . '</option>';
-									}
-									?>
-								</select>
-								<label for="log_level"><?php echo esc_attr( __( 'Log level:', 'kudos-donations' ) ); ?></label>
-								<select name="log_level" id="log_level" onChange="this.form.submit()">
-									<?php
-									foreach ( [ 'ALL', 'ERROR', 'WARNING', 'NOTICE', 'INFO', 'DEBUG' ] as $level ) {
-										echo '<option ' . ( $this->current_log_level === $level ? 'selected' : '' ) . ' value=' . esc_attr( $level ) . '>' . esc_html( $level ) . '</option>';
-									}
-									?>
-								</select>
-						</form>
+						if ( $this->log_files ) {
+							?>
+							<form name="log-form" action="" method='post' style="margin: 1em 0">
+								<?php wp_nonce_field( 'log' ); ?>
+									<label for="log_option"><?php echo esc_attr( __( 'Log file:', 'kudos-donations' ) ); ?></label>
+									<select name="log_option" id="log_option" onChange="this.form.submit()">
+										<?php
+										foreach ( $this->log_files as $log ) {
+											echo '<option ' . ( basename( $log ) === basename( $this->current_log_file ) ? 'selected' : '' ) . ' value="' . esc_attr( $log ) . '">' . esc_html( basename( $log ) ) . '</option>';
+										}
+										?>
+									</select>
+									<label for="log_level"><?php echo esc_attr( __( 'Log level:', 'kudos-donations' ) ); ?></label>
+									<select name="log_level" id="log_level" onChange="this.form.submit()">
+										<?php
+										foreach ( [ 'ALL', 'ERROR', 'WARNING', 'NOTICE', 'INFO', 'DEBUG' ] as $level ) {
+											echo '<option ' . ( $this->current_log_level === $level ? 'selected' : '' ) . ' value=' . esc_attr( $level ) . '>' . esc_html( $level ) . '</option>';
+										}
+										?>
+									</select>
+							</form>
 
 						<table class='form-table' style="table-layout: auto">
 							<tbody>
@@ -228,8 +229,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 							</tbody>
 						</table>
 
-						<?php
-
+							<?php
+						}
 						break;
 
 					case 'actions':
@@ -294,9 +295,9 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 						<p>Log actions.</p>
 						<form action="" method='post' style="display: inline">
-							<?php wp_nonce_field( 'kudos_clear_log' ); ?>
+							<?php wp_nonce_field( 'kudos_clear_logs' ); ?>
 							<button class="button-secondary confirm" type='submit' name='kudos_action'
-									value='kudos_clear_log'>Clear log
+									value='kudos_clear_logs'>Clear logs
 							</button>
 						</form>
 
