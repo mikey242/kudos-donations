@@ -1,6 +1,6 @@
 <?php
 /**
- * Class SampleTest
+ * Plugin tests
  */
 
 /**
@@ -8,17 +8,17 @@
  */
 class Plugin extends WP_UnitTestCase {
 
-	private \IseardMedia\Kudos\Plugin $plugin;
-
-	public function setUp(): void {
-		$this->plugin = \IseardMedia\Kudos\PluginFactory::create();
-		parent::setup();
+	/**
+	 * Test that plugin container is created.
+	 */
+	public function test_container_ready() {
+		$this->assertSame( 1, did_action( 'kudos_container_ready' ) );
 	}
 
 	/**
-	 * Test that plugin is registered.
+	 * Test that plugin container is created.
 	 */
 	public function test_plugin_loaded() {
-		$this->assertSame( 1, did_action( 'kudos_container_ready' ) );
+		$this->assertSame( 1, did_action( 'kudos_donations_loaded' ) );
 	}
 }
