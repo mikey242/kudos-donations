@@ -50,15 +50,6 @@ function deactivate( $network_wide = false ): void {
 register_deactivation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
 
 /**
- * Load functions for use by plugin developers.
- */
-function load_functions(): void {
-	require_once KUDOS_PLUGIN_DIR . 'includes/functions.php';
-}
-
-add_action( 'init', __NAMESPACE__ . '\load_functions' );
-
-/**
  * Returns the Kudos Donations plugin instance.
  *
  * Can be used by other plugins to integrate with the plugin
