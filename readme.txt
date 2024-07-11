@@ -1,8 +1,8 @@
 === Kudos Donations - Easy donations and payments with Mollie ===
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
-Requires at least: 6.2
-Tested up to: 6.2.0
+Requires at least: 6.6
+Tested up to: 6.6
 Requires PHP: 7.2.9
 Stable tag: 3.1.5
 License: GPLv2 or later
