@@ -10,25 +10,21 @@
 namespace IseardMedia\Kudos\Service;
 
 use FilesystemIterator;
-use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class CacheService extends AbstractRegistrable implements UpgradeAwareInterface {
+class CacheService implements UpgradeAwareInterface, LoggerAwareInterface {
+
+	use LoggerAwareTrait;
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public function register(): void {
-		add_action( 'kudos_clear_cache', [ $this, 'purge_cache' ], 10, 2 );
-	}
-
-	/**
-	 * {@inheritDoc}
+	 * Clears the cache when the plugin is upgraded.
 	 */
 	public function on_plugin_upgrade(): void {
-		do_action( 'kudos_clear_cache', null, __( 'Plugin upgraded', 'kudos-donations' ) );
+		$this->purge_cache( null, __( 'Plugin upgraded', 'kudos-donations' ) );
 	}
 
 	/**
