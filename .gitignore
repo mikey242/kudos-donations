@@ -5,6 +5,7 @@ classes
 libraries
 node_modules
 .idea
+.zed
 *.iml
 .env
 includes/Dependencies
