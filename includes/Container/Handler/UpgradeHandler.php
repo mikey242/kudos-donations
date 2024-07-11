@@ -12,11 +12,16 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Container\Handler;
 
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 /**
  * Upgrade handler class.
  */
-class UpgradeHandler {
+class UpgradeHandler implements LoggerAwareInterface {
+
+	use LoggerAwareTrait;
+
 	/**
 	 * Array of services.
 	 *
@@ -41,9 +46,12 @@ class UpgradeHandler {
 			add_action(
 				'upgrader_process_complete',
 				function ( $upgrader, $hook_extra ) use ( $service ) {
+					$this->logger->debug( 'Upgrade detected.' );
 					if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] && isset( $hook_extra['plugins'] ) ) {
 						foreach ( $hook_extra['plugins'] as $plugin ) {
 							if ( str_contains( $plugin, 'kudos-donations.php' ) ) {
+								$this->logger->debug( 'Kudos Donations upgrade detected.', [ 'plugin' => $plugin ] );
+								do_action( 'kudos_donations_upgraded', $plugin );
 								$service->on_plugin_upgrade();
 							}
 						}
