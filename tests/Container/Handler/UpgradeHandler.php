@@ -14,8 +14,6 @@ use WP_UnitTestCase;
 class UpgradeHandler extends WP_UnitTestCase {
 
 	public function setUp(): void {
-		// Change filesystem access method.
-		\define( 'FS_METHOD', 'direct' );
 		// Include necessary WordPress files to access the classes needed for the upgrade process.
 		if ( ! class_exists( 'Plugin_Upgrader' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
