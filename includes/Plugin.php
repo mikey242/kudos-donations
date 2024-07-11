@@ -55,9 +55,16 @@ class Plugin implements LoggerAwareInterface {
 	public function on_plugin_loaded(): void {
 		$this->setup_localization();
 		if ( $this->is_plugin_ready() ) {
-			$this->upgrade_handler->process();
-			$this->service_handler->process();
+			$this->process_handlers();
 		}
+	}
+
+	/**
+	 * Runs the handlers which effectively runs the plugin.
+	 */
+	private function process_handlers() {
+		$this->service_handler->process();
+		$this->upgrade_handler->process();
 	}
 
 	/**
