@@ -1,0 +1,51 @@
+<?php
+/**
+ * Plugin tests
+ */
+
+namespace Controller;
+
+use IseardMedia\Kudos\Service\SettingsService;
+use IseardMedia\Kudos\Vendor\VendorInterface;
+use WP_UnitTestCase;
+
+/**
+ * Sample test case.
+ */
+class Front extends WP_UnitTestCase {
+
+	/**
+	 * Test that css file(s) are registered.
+	 */
+	public function test_css_registered() {
+		global $wp_styles;
+		$this->assertContains( 'kudos-donations-fonts', array_keys( $wp_styles->registered ), 'kudos-donations-fonts stylesheet not registered' );
+	}
+
+	/**
+	 * Test that css file(s) are registered.
+	 */
+	public function test_js_registered() {
+		global $wp_scripts;
+		$this->assertContains( 'kudos-donations-public', array_keys( $wp_scripts->registered ), 'kudos-donations-public script not registered' );
+		$this->assertContains( 'iseardmedia-kudos-button-script', array_keys( $wp_scripts->registered ), 'iseardmedia-kudos-button-script script not registered' );
+		$this->assertContains( 'iseardmedia-kudos-button-editor-script', array_keys( $wp_scripts->registered ), 'iseardmedia-kudos-button-editor-script script not registered' );
+	}
+
+	/**
+	 * Test that plugin container is created.
+	 */
+	public function test_render_callback() {
+		$settings_service = $this->createMock( SettingsService::class );
+		$vendor_service   = $this->createMock( VendorInterface::class );
+		$front            = new \IseardMedia\Kudos\Controller\Front( $settings_service, $vendor_service );
+		$args             = [
+			'campaign_id'  => 291,
+			'button_label' => 'Donate now',
+			'alignment'    => 'none',
+			'type'         => 'button',
+		];
+		$html             = $front->kudos_render_callback( $args );
+		$this->assertSame( true, \is_string( $html ) );
+	}
+}
