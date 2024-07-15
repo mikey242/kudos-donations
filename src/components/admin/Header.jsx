@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 
 const Header = ({ children }) => {
 	return (
-		<div className="flex justify-around w-full z-1050 bg-white p-5">
+		<div className="flex justify-around w-full z-1050 bg-white shadow-sm ring-1 ring-black ring-opacity-5 p-5">
 			<div className="max-w-4xl w-full mx-auto flex items-center justify-between">
 				<div className="flex">
 					<a
