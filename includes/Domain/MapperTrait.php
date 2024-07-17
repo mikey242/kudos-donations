@@ -21,7 +21,7 @@ trait MapperTrait {
 	private static function get_default_args(): array {
 		return [
 			'post_content' => '',
-			'post_type'    => self::get_post_type(),
+			'post_type'    => static::get_post_type(),
 			'post_status'  => 'publish',
 			'post_author'  => '',
 		];
@@ -131,9 +131,14 @@ trait MapperTrait {
 
 		// Save or update post.
 		if ( $post_id ) {
-			wp_update_post( $post_data['post_data'] );
+			$post_id = wp_update_post( $post_data['post_data'], true );
 		} else {
-			$post_id = wp_insert_post( $post_data['post_data'] );
+			$post_id = wp_insert_post( $post_data['post_data'], true );
+		}
+
+		// Bail if post not saved/updated.
+		if ( is_wp_error( $post_id ) ) {
+			return null;
 		}
 
 		// Update meta.
