@@ -9,17 +9,15 @@
 
 declare( strict_types=1 );
 
-namespace IseardMedia\Kudos\Service;
+namespace IseardMedia\Kudos\Container\Handler;
 
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use IseardMedia\Kudos\Service\SettingsService;
 
-class MigratorService implements LoggerAwareInterface {
-
-	use LoggerAwareTrait;
+class MigrationHandler extends AbstractRegistrable {
 
 	private const MIGRATE_ACTION = 'kudos_migrate_action';
 	private SettingsService $settings;
@@ -44,7 +42,20 @@ class MigratorService implements LoggerAwareInterface {
 		$this->wpdb            = $wpdb;
 		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
 		$this->target_version  = KUDOS_DB_VERSION;
-		add_action( 'kudos_container_ready', [ $this, 'process_form_data' ] );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_registration_actions(): array {
+		return [ 'admin_init' ];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function register(): void {
+		$this->process_form_data();
 	}
 
 	/**

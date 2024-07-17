@@ -12,9 +12,9 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
+use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use IseardMedia\Kudos\Container\Handler\UpgradeHandler;
-use IseardMedia\Kudos\Service\MigratorService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use function add_action;
@@ -25,7 +25,7 @@ class Plugin implements LoggerAwareInterface {
 	use LoggerAwareTrait;
 
 	private ActivationHandler $activation_handler;
-	private MigratorService $migrator_service;
+	private MigrationHandler $migration_handler;
 	private RegistrableHandler $service_handler;
 	private UpgradeHandler $upgrade_handler;
 
@@ -35,18 +35,18 @@ class Plugin implements LoggerAwareInterface {
 	 * @param RegistrableHandler $service_handler Service instantiator.
 	 * @param ActivationHandler  $activation_handler  Activation related functions.
 	 * @param UpgradeHandler     $upgrade_handler Handler for upgradeable services.
-	 * @param MigratorService    $migrator_service  Service for checking migrations.
+	 * @param MigrationHandler   $migration_handler  Service for checking migrations.
 	 */
 	public function __construct(
 		RegistrableHandler $service_handler,
 		ActivationHandler $activation_handler,
 		UpgradeHandler $upgrade_handler,
-		MigratorService $migrator_service
+		MigrationHandler $migration_handler
 	) {
 		$this->service_handler    = $service_handler;
 		$this->activation_handler = $activation_handler;
 		$this->upgrade_handler    = $upgrade_handler;
-		$this->migrator_service   = $migrator_service;
+		$this->migration_handler  = $migration_handler;
 	}
 
 	/**
@@ -54,9 +54,7 @@ class Plugin implements LoggerAwareInterface {
 	 */
 	public function on_plugin_loaded(): void {
 		$this->setup_localization();
-		if ( $this->is_plugin_ready() ) {
-			$this->process_handlers();
-		}
+		$this->process_handlers();
 	}
 
 	/**
@@ -65,17 +63,7 @@ class Plugin implements LoggerAwareInterface {
 	private function process_handlers() {
 		$this->service_handler->process();
 		$this->upgrade_handler->process();
-	}
-
-	/**
-	 * Runs checks to ensure plugin ready to run.
-	 */
-	private function is_plugin_ready(): bool {
-		$skip_migration = $this->migrator_service->check_database();
-		if ( ! $skip_migration ) {
-			return false;
-		}
-		return true;
+		$this->migration_handler->check_database();
 	}
 
 	/**
