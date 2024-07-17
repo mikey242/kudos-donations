@@ -126,6 +126,10 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
+			self::META_FIELD_INVOICE_NUMBER         => [
+				'type'              => FieldType::INTEGER,
+				'sanitize_callback' => 'absint',
+			],
 		];
 	}
 
