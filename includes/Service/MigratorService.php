@@ -26,6 +26,11 @@ class MigratorService implements LoggerAwareInterface {
 	private WpDb $wpdb;
 	private string $current_version;
 	private string $target_version;
+	/**
+	 * Array of migrations.
+	 *
+	 * @var MigrationInterface[]
+	 */
 	private array $migrations = [];
 
 	/**
@@ -73,6 +78,13 @@ class MigratorService implements LoggerAwareInterface {
 	 */
 	private function run_migrations(): void {
 		foreach ( $this->migrations as $migration ) {
+
+			// Prevent running migration if already in history.
+			if ( \in_array( $migration->get_version(), get_option( SettingsService::SETTING_NAME_MIGRATION_HISTORY, [] ), true ) ) {
+				$this->logger->debug( 'Migration already applied, skipping', [ 'migration' => $migration->get_version() ] );
+				continue;
+			}
+
 			$this->logger->debug( 'Running migration: ' . $migration->get_version() );
 
 			$instance = new $migration( $this->logger );
