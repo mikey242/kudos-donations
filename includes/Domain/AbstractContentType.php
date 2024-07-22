@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain;
 
-use IseardMedia\Kudos\Admin\TableColumnsTrait;
 use IseardMedia\Kudos\Container\Delayed;
 use IseardMedia\Kudos\Container\Registrable;
 
@@ -21,8 +20,6 @@ use IseardMedia\Kudos\Container\Registrable;
 abstract class AbstractContentType implements ContentTypeInterface, Registrable, Delayed {
 
 	use LabelsTrait;
-	use MapperTrait;
-	use TableColumnsTrait;
 	use RegisterMetaTrait;
 	use RegisterRestFieldsTrait;
 

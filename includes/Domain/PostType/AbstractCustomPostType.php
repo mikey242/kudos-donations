@@ -11,16 +11,22 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\PostType;
 
+use IseardMedia\Kudos\Admin\TableColumnsTrait;
 use IseardMedia\Kudos\Domain\AbstractContentType;
 use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
+use IseardMedia\Kudos\Domain\MapperTrait;
 use IseardMedia\Kudos\Enum\ObjectType;
 
 /**
  * AbstractCustomPostType class.
  */
 abstract class AbstractCustomPostType extends AbstractContentType implements CustomPostTypeInterface {
+
+	use MapperTrait;
+	use TableColumnsTrait;
+
 	/**
 	 * Allows changing the capabilities of the CPT. By default, we want to disable post creation by the user.
 	 *
