@@ -107,7 +107,16 @@ trait MapperTrait {
 			return static::get_slug() === $post->post_type ? $post : null;
 		}
 
+		// Ensure ID is not set.
+		unset( $args['ID'] );
+
+		// Return null if no args set.
+		if ( empty( $args ) ) {
+			return null;
+		}
+
 		$posts = static::get_posts( $args, $relation );
+
 		if ( $posts ) {
 			return $posts[0];
 		}
