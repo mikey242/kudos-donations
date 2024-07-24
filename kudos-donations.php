@@ -3,14 +3,12 @@
  * Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
  *
  * @link              https://www.linkedin.com/in/michael-iseard/
- * @author            Michael Iseard
- * @package           Kudos-Donations
  *
  * @wordpress-plugin
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
- * Version:           3.2.3
+ * Version:           3.2.4
  * Author:            Iseard Media
  * Author URI:        https://iseard.media
  * Requires at least: 5.5
@@ -32,7 +30,7 @@ use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if ( ! \defined( 'WPINC' ) ) {
 	die;
 }
 
@@ -52,13 +50,13 @@ if ( class_exists( Dotenv::class ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-define( 'KUDOS_VERSION', '3.2.3' );
-define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'KUDOS_PLUGIN_DIR', __DIR__ );
-define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
-define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
-define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
-define( 'KUDOS_SALT', NONCE_SALT );
+\define( 'KUDOS_VERSION', '3.2.4' );
+\define( 'KUDOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+\define( 'KUDOS_PLUGIN_DIR', __DIR__ );
+\define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
+\define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
+\define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
+\define( 'KUDOS_SALT', NONCE_SALT );
 
 /**
  * Check if we are in development mode and if so replace the default
@@ -124,9 +122,9 @@ function run_kudos_donations() {
 		// Get definitions for building container.
 		$definitions = apply_filters(
 			'kudos_container_definitions',
-			array(
+			[
 				KUDOS_PLUGIN_DIR . '/app/config.php',
-			)
+			]
 		);
 
 		// Add definitions to container builder.
