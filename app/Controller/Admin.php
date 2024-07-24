@@ -895,18 +895,29 @@ class Admin {
 	/**
 	 * Displays an update notice.
 	 *
-	 * @param array  $plugin_data Array of plugin data.
+	 * @param array $plugin_data Array of plugin data.
 	 */
 	public function update_message( array $plugin_data ): void {
-		// Bail if the update notice is not relevant (new version is not yet 4.0 or we're already on 4.0).
+		// Bail if the update notice is not relevant (new version is not yet 4.0.0 or we're already on 4.0.0).
 		if ( version_compare( '3.2.3', $plugin_data['new_version'], '>' ) || version_compare( '3.2.3', $plugin_data['Version'], '<=' ) ) {
 			return;
 		}
+		?>
+			<style>
+				.kudos_upgrade_notice {
+					margin-bottom: 5px;
+				}
+				p.kudos_upgrade_notice::before {
+					color: #000;
+					content: '\f348';
+				}
+			</style>
+		<?php
 
-		$update_notice = '</p><div class="wc_plugin_upgrade_notice">';
-		// translators: placeholders are opening and closing tags. Leads to docs on version 4.0.0.
-		$update_notice .= sprintf( __( 'Notice: Version 4.0.0 is a major update and includes some breaking changes. Before updating, please backup your current data so that you can rollback if needed. %1$sLearn more about the changes in version 2.0.0 &raquo;%2$s', 'kudos-donations' ), '<a href="https://docs.yoursite.com/document/major-frakking-update/">', '</a>' );
-		$update_notice .= '</div><p class="hidden">';
+		$update_notice = '</p><p class="kudos_upgrade_notice">';
+		// translators: Placeholders are opening and closing tags. Leads to docs on version 4.0.0.
+		$update_notice .= sprintf( __( 'Notice: Version 4.0.0 is a major update and includes some important changes. Before updating, please backup your current data so that you can rollback if needed. %1$sLearn more about the changes in version 4.0.0 &raquo;%2$s', 'kudos-donations' ), '<a target="_blank" href="https://kudosdonations.com/question/changes-in-4.0.0/">', '</a>' );
+		$update_notice .= '</p><p class="hidden">';
 		echo wp_kses_post( $update_notice );
 	}
 }
