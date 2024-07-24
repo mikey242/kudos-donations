@@ -5,5 +5,10 @@
     "APP_ENV": "dev",
     "WP_DEBUG_DISPLAY": true,
     "WP_DEBUG_LOG": true
+  },
+  "env": {
+    "development": {
+      "mysqlPort": 32770
+    }
   }
 }
