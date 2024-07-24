@@ -30,14 +30,16 @@
     "woocommerce/action-scheduler": "^3.1"
   },
   "require-dev": {
-    "vlucas/phpdotenv": "^5.1",
-    "squizlabs/php_codesniffer": ">=3.7.2",
     "automattic/vipwpcs": ">=2.3.3",
-    "wp-coding-standards/wpcs": ">=2.3.0",
-    "phpcompatibility/phpcompatibility-wp": "*",
-    "phpcompatibility/php-compatibility": "^9.3",
     "filp/whoops": "^2.13",
-    "phpunit/phpunit": "8.*"
+    "phpcompatibility/php-compatibility": "^9.3",
+    "phpcompatibility/phpcompatibility-wp": "*",
+    "phpstan/phpstan": "^1.11",
+    "phpunit/phpunit": "8.*",
+    "slevomat/coding-standard": "^8.15",
+    "squizlabs/php_codesniffer": ">=3.7.2",
+    "vlucas/phpdotenv": "^5.1",
+    "wp-coding-standards/wpcs": "3.*"
   },
   "scripts": {
     "lint": "phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-source",
