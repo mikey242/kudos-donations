@@ -899,7 +899,7 @@ class Admin {
 	 */
 	public function update_message( array $plugin_data ): void {
 		// Bail if the update notice is not relevant (new version is not yet 4.0.0 or we're already on 4.0.0).
-		if ( version_compare( '3.2.3', $plugin_data['new_version'], '>' ) || version_compare( '3.2.3', $plugin_data['Version'], '<=' ) ) {
+		if ( version_compare( '4.0.0', $plugin_data['new_version'], '>' ) || version_compare( '4.0.0', $plugin_data['Version'], '<=' ) ) {
 			return;
 		}
 		?>
