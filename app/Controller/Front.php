@@ -46,7 +46,6 @@ class Front {
 	/**
 	 * The version of this plugin.
 	 *
-	 * @access   private
 	 * @var      string $version The current version of this plugin.
 	 */
 	private $version;
@@ -116,9 +115,8 @@ class Front {
 			--kudos-theme-secondary-dark: $secondary_dark;
 			--kudos-theme-secondary-darker: $secondary_darker;
 		}
-		" 
+		"
 		);
-
 	}
 
 	/**
@@ -145,7 +143,6 @@ class Front {
 		);
 
 		wp_set_script_translations( 'kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
-
 	}
 
 	/**
@@ -159,7 +156,6 @@ class Front {
 			[ 'kudos-donations-root' ],
 			$this->version
 		);
-
 	}
 
 	/**
@@ -194,7 +190,7 @@ class Front {
 			function () {
 				wp_enqueue_script( 'kudos-donations-public' );
 				wp_enqueue_style( 'kudos-donations-public' );
-			} 
+			}
 		);
 
 		// Register shortcode.
@@ -269,7 +265,7 @@ class Front {
 				'editor_style'    => 'kudos-donations-public',
 				'script'          => 'kudos-donations-public',
 				'style'           => 'kudos-donations-public',
-			] 
+			]
 		);
 	}
 
@@ -277,8 +273,6 @@ class Front {
 	 * Renders the kudos button and donation modals.
 	 *
 	 * @param array $atts Array of Kudos button/modal attributes.
-	 *
-	 * @return string|null
 	 */
 	public function kudos_render_callback( array $atts ): ?string {
 
@@ -290,8 +284,8 @@ class Front {
 				throw new Exception(
 					sprintf(
 						__( '%s not connected.', 'kudos-donations' ),
-						$this->payment::get_vendor_name() 
-					) 
+						$this->payment::get_vendor_name()
+					)
 				);
 			}
 
@@ -316,7 +310,7 @@ class Front {
 						'id'      => $id,
 						'content' => $form,
 					]
-				) 
+				)
 			);
 
 			$button = $this->render_wrapper(
@@ -328,7 +322,7 @@ class Front {
 						'target'       => $id,
 					]
 				),
-				$alignment 
+				$alignment
 			);
 
 			// Place markup in footer if setting enabled.
@@ -356,7 +350,6 @@ class Front {
 
 		// Nothing displayed to visitors if there is a problem.
 		return null;
-
 	}
 
 	/**
@@ -364,7 +357,6 @@ class Front {
 	 *
 	 * @param string $content
 	 * @param string $alignment
-	 *
 	 * @return bool|string
 	 */
 	protected function render_wrapper( string $content, string $alignment = 'none' ) {
@@ -380,11 +372,10 @@ class Front {
 	/**
 	 * Builds the form object from supplied campaign_id.
 	 *
-	 * @param string $campaign_id
-	 * @param string $id
+	 * @throws Exception Thrown if campaign not found.
 	 *
-	 * @return string
-	 * @throws Exception
+	 * @param string $campaign_id The id of the campaign.
+	 * @param string $id The id of the form.
 	 */
 	private function create_form( string $campaign_id, string $id ): string {
 
@@ -393,7 +384,7 @@ class Front {
 									->get_all_by(
 										[
 											'campaign_id' => $campaign_id,
-										] 
+										]
 									);
 		$campaign_stats = Campaign::get_campaign_stats( $transactions );
 
@@ -433,8 +424,6 @@ class Front {
 	 *
 	 * @param string $header The header text.
 	 * @param string $body The body text.
-	 *
-	 * @return string
 	 */
 	private function create_message_modal( string $header, string $body ): ?string {
 
@@ -445,7 +434,7 @@ class Front {
 			[
 				'header_text' => $header,
 				'body_text'   => $body,
-			] 
+			]
 		);
 
 		$modal = $twig->render(
@@ -454,7 +443,7 @@ class Front {
 				'id'      => Utils::generate_id(),
 				'content' => $message,
 				'class'   => 'kudos-message-modal',
-			] 
+			]
 		);
 
 		return $this->render_wrapper( $modal );
@@ -489,8 +478,8 @@ class Front {
 					break;
 
 				case 'cancel_subscription':
-					$subscription_id    = sanitize_text_field( wp_unslash( $_REQUEST['kudos_subscription_id'] ) );
-					$token              = sanitize_text_field( wp_unslash( $_REQUEST['token'] ) );
+					$subscription_id = sanitize_text_field( wp_unslash( $_REQUEST['kudos_subscription_id'] ) );
+					$token           = sanitize_text_field( wp_unslash( $_REQUEST['token'] ) );
 
 					// Cancel subscription modal.
 					if ( ! empty( $token && ! empty( $subscription_id ) ) ) {
@@ -500,7 +489,7 @@ class Front {
 							->get_one_by( [ 'subscription_id' => $subscription_id ] );
 
 						// Bail if no subscription found or already cancelled.
-						if ( null === $subscription || "cancelled" === $subscription->status ) {
+						if ( null === $subscription || 'cancelled' === $subscription->status ) {
 							return;
 						}
 
@@ -537,10 +526,8 @@ class Front {
 	 *
 	 * @param string|null $color
 	 * @param int         $width
-	 *
-	 * @return string|null
 	 */
-	public function get_kudos_logo_markup( string $color = null, int $width = 24 ): ?string {
+	public function get_kudos_logo_markup( ?string $color = null, int $width = 24 ): ?string {
 
 		if ( $color ) {
 			$lineColor  = $color;
@@ -558,9 +545,9 @@ class Front {
 					'width'      => $width,
 					'lineColor'  => $lineColor,
 					'heartColor' => $heartColor,
-				] 
+				]
 			),
-			$width 
+			$width
 		);
 	}
 
@@ -568,7 +555,6 @@ class Front {
 	 * Check payment status based on local order_id
 	 *
 	 * @param string $order_id Kudos order id.
-	 *
 	 * @return bool | array
 	 */
 	public function check_transaction( string $order_id ) {
@@ -605,7 +591,7 @@ class Front {
 					$vars                = [
 						'{{value}}'    => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n(
 							$transaction->value,
-							2 
+							2
 						),
 						'{{name}}'     => $donor->name,
 						'{{email}}'    => $donor->email,

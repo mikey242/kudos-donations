@@ -9,10 +9,10 @@ class Campaign {
 	/**
 	 * Gets the campaign by specified column (e.g. id).
 	 *
-	 * @param string|null $value
-	 *
-	 * @return array|null
 	 * @throws Exception
+	 *
+	 * @param string|null $value
+	 * @return array|null
 	 */
 	public static function get_campaign( string $value ): ?array {
 
@@ -20,7 +20,7 @@ class Campaign {
 		$key       = array_search( $value, array_column( (array) $campaigns, 'id' ) );
 
 		// Check if key is an index and if so return index from forms.
-		if ( is_int( $key ) ) {
+		if ( \is_int( $key ) ) {
 			return $campaigns[ $key ];
 		}
 
@@ -32,8 +32,6 @@ class Campaign {
 	 * Gets transaction stats for campaign.
 	 *
 	 * @param array $transactions
-	 *
-	 * @return array
 	 */
 	public static function get_campaign_stats( array $transactions ): ?array {
 
@@ -41,7 +39,7 @@ class Campaign {
 			$values = array_map(
 				function ( $transaction ) {
 					if ( 'paid' === $transaction->status ) {
-						  $refunds = $transaction->get_refund();
+							$refunds = $transaction->get_refund();
 						if ( $refunds ) {
 							return $refunds->remaining;
 						} else {
@@ -51,11 +49,11 @@ class Campaign {
 
 					return 0;
 				},
-				$transactions 
+				$transactions
 			);
 
 			return [
-				'count'         => count( $values ),
+				'count'         => \count( $values ),
 				'total'         => array_sum( $values ),
 				'last_donation' => end( $transactions )->created,
 			];
@@ -73,8 +71,6 @@ class Campaign {
 	 * Sanitize the various setting fields in the donation form array.
 	 *
 	 * @param $campaigns
-	 *
-	 * @return array
 	 */
 	public static function sanitize_campaigns( $campaigns ): array {
 
@@ -117,8 +113,6 @@ class Campaign {
 	 * Generates a unique ID in the form of a slug for the campaign.
 	 *
 	 * @param $name string User provided name for the campaign.
-	 *
-	 * @return string
 	 */
 	private static function generate_campaign_id( string $name ): string {
 
@@ -128,19 +122,18 @@ class Campaign {
 			function ( $campaign ) {
 				return $campaign['id'];
 			},
-			$campaigns 
+			$campaigns
 		);
 
 		// If current id exists in array, iterate $n until it is unique.
 		$n      = 1;
 		$new_id = $id;
-		while ( in_array( $new_id, $ids ) ) {
+		while ( \in_array( $new_id, $ids ) ) {
 			$new_id = $id . '-' . $n;
-			$n ++;
+			++$n;
 		}
 
 		// Return new id.
 		return $new_id;
 	}
-
 }

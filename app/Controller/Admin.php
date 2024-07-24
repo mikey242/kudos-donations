@@ -111,8 +111,7 @@ class Admin {
 			}
 		);
 
-
-		add_action( "load-$settings_page_hook_suffix", array( $this, 'prepare_settings_page' ) );
+		add_action( "load-$settings_page_hook_suffix", [ $this, 'prepare_settings_page' ] );
 
 		/*
 		 * Transaction page.
@@ -129,7 +128,7 @@ class Admin {
 			}
 		);
 
-		add_action( "load-$transactions_page_hook_suffix", array( $this, 'prepare_transactions_page' ) );
+		add_action( "load-$transactions_page_hook_suffix", [ $this, 'prepare_transactions_page' ] );
 
 		/*
 		 * Subscription page.
@@ -146,7 +145,7 @@ class Admin {
 			}
 		);
 
-		add_action( "load-$subscriptions_page_hook_suffix", array( $this, 'prepare_subscriptions_page' ) );
+		add_action( "load-$subscriptions_page_hook_suffix", [ $this, 'prepare_subscriptions_page' ] );
 
 		/*
 		 * Donor page.
@@ -163,7 +162,7 @@ class Admin {
 			}
 		);
 
-		add_action( "load-$donors_page_hook_suffix", array( $this, 'prepare_donors_page' ) );
+		add_action( "load-$donors_page_hook_suffix", [ $this, 'prepare_donors_page' ] );
 
 		/*
 		 * Campaign page.
@@ -180,7 +179,7 @@ class Admin {
 			}
 		);
 
-		add_action( "load-$campaigns_page_hook_suffix", array( $this, 'prepare_campaigns_page' ) );
+		add_action( "load-$campaigns_page_hook_suffix", [ $this, 'prepare_campaigns_page' ] );
 
 		/*
 		 * Debug page.
@@ -213,7 +212,7 @@ class Admin {
 					})
 				</script>
 				<?php
-			} 
+			}
 		);
 	}
 
@@ -221,14 +220,14 @@ class Admin {
 	 * Hook settings page assets.
 	 */
 	public function prepare_settings_page() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'settings_page_assets' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'settings_page_assets' ] );
 	}
 
 	/**
 	 * Hook assets and prepare the table for screen options.
 	 */
 	public function prepare_transactions_page() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'transactions_page_assets' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'transactions_page_assets' ] );
 		$this->table = new TransactionsTable( $this->mapper );
 		$this->table->prepare_items();
 	}
@@ -237,7 +236,7 @@ class Admin {
 	 * Hook assets and prepare the table for screen options.
 	 */
 	public function prepare_subscriptions_page() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'subscriptions_page_assets' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'subscriptions_page_assets' ] );
 		$this->table = new SubscriptionsTable( $this->mapper, $this->payment );
 		$this->table->prepare_items();
 	}
@@ -246,7 +245,7 @@ class Admin {
 	 * Hook assets and prepare the table for screen options.
 	 */
 	public function prepare_donors_page() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'donor_page_assets' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'donor_page_assets' ] );
 		$this->table = new DonorsTable( $this->mapper );
 		$this->table->prepare_items();
 	}
@@ -255,7 +254,7 @@ class Admin {
 	 * Hook assets and prepare the table for screen options.
 	 */
 	public function prepare_campaigns_page() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'campaign_page_assets' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'campaign_page_assets' ] );
 		$this->table = new CampaignsTable( $this->mapper );
 		$this->table->prepare_items();
 	}
@@ -269,7 +268,7 @@ class Admin {
 		wp_register_style(
 			'kudos-donations-public',
 			Assets::get_asset_url( '/public/kudos-public.css' ),
-			array( 'kudos-donations-root' ),
+			[ 'kudos-donations-root' ],
 			$this->version
 		);
 
@@ -294,7 +293,7 @@ class Admin {
 		wp_enqueue_style(
 			$handle,
 			Assets::get_asset_url( '/admin/kudos-admin-settings.css' ),
-			array( 'wp-components' ),
+			[ 'wp-components' ],
 			$this->version
 		);
 
@@ -311,9 +310,9 @@ class Admin {
 		wp_localize_script(
 			$handle,
 			'kudos',
-			array(
+			[
 				'version' => $this->version,
-			)
+			]
 		);
 		wp_set_script_translations( $handle, 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
 
@@ -359,9 +358,9 @@ class Admin {
 		wp_localize_script(
 			$table_handle,
 			'kudos',
-			array(
+			[
 				'confirmationDelete' => __( 'Are you sure you want to delete this transaction?', 'kudos-donations' ),
-			)
+			]
 		);
 	}
 
@@ -375,10 +374,10 @@ class Admin {
 		wp_localize_script(
 			$table_handle,
 			'kudos',
-			array(
+			[
 				'confirmationCancel' => __( 'Are you sure you want to cancel this subscription?', 'kudos-donations' ),
 				'confirmationDelete' => __( 'Are you sure you want to delete this subscription?', 'kudos-donations' ),
-			)
+			]
 		);
 	}
 
@@ -392,9 +391,9 @@ class Admin {
 		wp_localize_script(
 			$table_handle,
 			'kudos',
-			array(
+			[
 				'confirmationDelete' => __( 'Are you sure you want to delete this donor?', 'kudos-donations' ),
-			)
+			]
 		);
 	}
 
@@ -408,12 +407,12 @@ class Admin {
 		wp_localize_script(
 			$table_handle,
 			'kudos',
-			array(
+			[
 				'confirmationDelete' => __(
 					'Are you sure you want to delete this campaign? This will not remove any transactions',
 					'kudos-donations'
 				),
-			)
+			]
 		);
 	}
 
@@ -511,7 +510,7 @@ class Admin {
 									'Deleted %s subscription',
 									'Deleted %s subscriptions',
 									$records,
-									'kudos-donations' 
+									'kudos-donations'
 								),
 								$records
 							)
@@ -521,11 +520,11 @@ class Admin {
 
 				case 'kudos_recreate_database':
 					foreach (
-						array(
+						[
 							SubscriptionEntity::get_table_name(),
 							TransactionEntity::get_table_name(),
 							DonorEntity::get_table_name(),
-						) as $table
+						] as $table
 					) {
 						$this->mapper->delete_table( $table );
 					}
@@ -545,7 +544,7 @@ class Admin {
 									'Updated %s transaction',
 									'Updated %s transactions',
 									$updated,
-									'kudos-donations' 
+									'kudos-donations'
 								),
 								$updated
 							)
@@ -566,7 +565,7 @@ class Admin {
 									'Added %s transaction',
 									'Added %s transactions',
 									$updated,
-									'kudos-donations' 
+									'kudos-donations'
 								),
 								$updated
 							)
@@ -598,187 +597,179 @@ class Admin {
 
 	/**
 	 * Returns all settings in array.
-	 *
-	 * @return array
 	 */
 	public static function get_settings(): array {
-		return array(
-			'show_intro'             => array(
+		return [
+			'show_intro'             => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'vendor_mollie'          => array(
+			],
+			'vendor_mollie'          => [
 				'type'              => 'object',
-				'default'           => array(
+				'default'           => [
 					'connected'       => false,
 					'recurring'       => false,
 					'mode'            => 'test',
-					'payment_methods' => array(),
+					'payment_methods' => [],
 					'test_key'        => '',
 					'live_key'        => '',
-				),
-				'show_in_rest'      => array(
-					'schema' => array(
+				],
+				'show_in_rest'      => [
+					'schema' => [
 						'type'       => 'object',
-						'properties' => array(
-							'connected'       => array(
+						'properties' => [
+							'connected'       => [
 								'type' => 'boolean',
-							),
-							'recurring'       => array(
+							],
+							'recurring'       => [
 								'type' => 'boolean',
-							),
-							'mode'            => array(
+							],
+							'mode'            => [
 								'type' => 'string',
-							),
-							'test_key'        => array(
+							],
+							'test_key'        => [
 								'type' => 'string',
-							),
-							'live_key'        => array(
+							],
+							'live_key'        => [
 								'type' => 'string',
-							),
-							'payment_methods' => array(
+							],
+							'payment_methods' => [
 								'type'  => 'array',
-								'items' => array(
+								'items' => [
 									'type'       => 'object',
-									'properties' => array(
-										'id'            => array(
+									'properties' => [
+										'id'            => [
 											'type' => 'string',
-										),
-										'status'        => array(
+										],
+										'status'        => [
 											'type' => 'string',
-										),
-										'maximumAmount' => array(
+										],
+										'maximumAmount' => [
 											'type'       => 'object',
-											'properties' => array(
-												'value'    => array(
+											'properties' => [
+												'value'    => [
 													'type' => 'string',
-												),
-												'currency' => array(
+												],
+												'currency' => [
 													'type' => 'string',
-												),
-											),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-				'sanitize_callback' => array( Settings::class, 'sanitize_vendor' ),
-			),
-			'email_receipt_enable'   => array(
+												],
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+				'sanitize_callback' => [ Settings::class, 'sanitize_vendor' ],
+			],
+			'email_receipt_enable'   => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'email_bcc'              => array(
+			],
+			'email_bcc'              => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_email',
-			),
-			'smtp_enable'            => array(
+			],
+			'smtp_enable'            => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'smtp_host'              => array(
+			],
+			'smtp_host'              => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-			'smtp_encryption'        => array(
+			],
+			'smtp_encryption'        => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => 'tls',
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-			'smtp_autotls'           => array(
+			],
+			'smtp_autotls'           => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'smtp_from'              => array(
+			],
+			'smtp_from'              => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => null,
 				'sanitize_callback' => 'sanitize_email',
-			),
-			'smtp_username'          => array(
+			],
+			'smtp_username'          => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-			'smtp_password'          => array(
+			],
+			'smtp_password'          => [
 				'type'         => 'string',
 				'show_in_rest' => true,
-			),
-			'smtp_port'              => array(
+			],
+			'smtp_port'              => [
 				'type'              => 'number',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'intval',
-			),
-			'spam_protection'        => array(
+			],
+			'spam_protection'        => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'theme_colors'           => array(
+			],
+			'theme_colors'           => [
 				'type'              => 'object',
-				'default'           => array(
+				'default'           => [
 					'primary'   => '#ff9f1c',
 					'secondary' => '#2ec4b6',
-				),
-				'show_in_rest'      => array(
-					'schema' => array(
+				],
+				'show_in_rest'      => [
+					'schema' => [
 						'type'       => 'object',
-						'properties' => array(
-							'primary'   => array(
+						'properties' => [
+							'primary'   => [
 								'type' => 'string',
-							),
-							'secondary' => array(
+							],
+							'secondary' => [
 								'type' => 'string',
-							),
-						),
-					),
-				),
-				'sanitize_callback' => array( Settings::class, 'recursive_sanitize_text_field' ),
-			),
-			'terms_link'             => array(
+							],
+						],
+					],
+				],
+				'sanitize_callback' => [ Settings::class, 'recursive_sanitize_text_field' ],
+			],
+			'terms_link'             => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => null,
 				'sanitize_callback' => 'esc_url_raw',
-			),
-			'privacy_link'           => array(
+			],
+			'privacy_link'           => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => null,
 				'sanitize_callback' => 'esc_url_raw',
-			),
-			'completed_payment'      => array(
+			],
+			'completed_payment'      => [
 				'type'         => 'string',
 				'default'      => 'message',
 				'show_in_rest' => true,
-			),
-			'return_message_enable'  => array(
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => true,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'return_message_title'   => array(
+			],
+			'return_message_title'   => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => __( 'Thank you!', 'kudos-donations' ),
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-			'return_message_text'    => array(
+			],
+			'return_message_text'    => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => sprintf(
@@ -787,109 +778,103 @@ class Admin {
 					'{{value}}'
 				),
 				'sanitize_callback' => 'sanitize_text_field',
-			),
-			'custom_return_enable'   => array(
-				'type'              => 'boolean',
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'custom_return_url'      => array(
+			],
+			'custom_return_url'      => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'esc_url_raw',
-			),
-			'payment_vendor'         => array(
+			],
+			'payment_vendor'         => [
 				'type'    => 'string',
 				'default' => 'mollie',
-			),
-			'debug_mode'             => array(
+			],
+			'debug_mode'             => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'enable_shortcode'       => array(
+			],
+			'enable_shortcode'       => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'donate_modal_in_footer' => array(
+			],
+			'donate_modal_in_footer' => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'disable_object_cache'   => array(
+			],
+			'disable_object_cache'   => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
-			),
-			'campaigns'              => array(
+			],
+			'campaigns'              => [
 				'type'              => 'array',
-				'show_in_rest'      => array(
-					'schema' => array(
+				'show_in_rest'      => [
+					'schema' => [
 						'type'  => 'array',
-						'items' => array(
+						'items' => [
 							'type'       => 'object',
-							'properties' => array(
-								'id'               => array(
+							'properties' => [
+								'id'               => [
 									'type' => 'string',
-								),
-								'name'             => array(
+								],
+								'name'             => [
 									'type' => 'string',
-								),
-								'campaign_goal'    => array(
+								],
+								'campaign_goal'    => [
 									'type' => 'string',
-								),
-								'additional_funds' => array(
+								],
+								'additional_funds' => [
 									'type' => 'string',
-								),
-								'modal_title'      => array(
+								],
+								'modal_title'      => [
 									'type' => 'string',
-								),
-								'welcome_text'     => array(
+								],
+								'welcome_text'     => [
 									'type' => 'string',
-								),
-								'address_enabled'  => array(
+								],
+								'address_enabled'  => [
 									'type' => 'boolean',
-								),
-								'address_required' => array(
+								],
+								'address_required' => [
 									'type' => 'boolean',
-								),
-								'message_enabled'  => array(
+								],
+								'message_enabled'  => [
 									'type' => 'boolean',
-								),
-								'amount_type'      => array(
+								],
+								'amount_type'      => [
 									'type' => 'string',
-								),
-								'fixed_amounts'    => array(
+								],
+								'fixed_amounts'    => [
 									'type' => 'string',
-								),
-								'donation_type'    => array(
+								],
+								'donation_type'    => [
 									'type' => 'string',
-								),
-								'show_progress'    => array(
+								],
+								'show_progress'    => [
 									'type' => 'boolean',
-								),
-								// Deprecated: do not use
-								'protected'        => array(
+								],
+								// Deprecated: do not use.
+								'protected'        => [
 									'type' => 'boolean',
-								),
-							),
-						),
-					),
-				),
-				'default'           => array(
-					0 => array(
+								],
+							],
+						],
+					],
+				],
+				'default'           => [
+					0 => [
 						'id'               => 'default',
 						'name'             => 'Default',
 						'modal_title'      => __( 'Support us!', 'kudos-donations' ),
 						'welcome_text'     => __(
 							'Your support is greatly appreciated and will help to keep us going.',
-							'kudos-donations' 
+							'kudos-donations'
 						),
 						'address_enabled'  => false,
 						'address_required' => true,
@@ -900,10 +885,28 @@ class Admin {
 						'additional_funds' => '',
 						'show_progress'    => false,
 						'donation_type'    => 'oneoff',
-					),
-				),
-				'sanitize_callback' => array( Campaign::class, 'sanitize_campaigns' ),
-			),
-		);
+					],
+				],
+				'sanitize_callback' => [ Campaign::class, 'sanitize_campaigns' ],
+			],
+		];
+	}
+
+	/**
+	 * Displays an update notice.
+	 *
+	 * @param array  $plugin_data Array of plugin data.
+	 */
+	public function update_message( array $plugin_data ): void {
+		// Bail if the update notice is not relevant (new version is not yet 4.0 or we're already on 4.0).
+		if ( version_compare( '3.2.3', $plugin_data['new_version'], '>' ) || version_compare( '3.2.3', $plugin_data['Version'], '<=' ) ) {
+			return;
+		}
+
+		$update_notice = '</p><div class="wc_plugin_upgrade_notice">';
+		// translators: placeholders are opening and closing tags. Leads to docs on version 4.0.0.
+		$update_notice .= sprintf( __( 'Notice: Version 4.0.0 is a major update and includes some breaking changes. Before updating, please backup your current data so that you can rollback if needed. %1$sLearn more about the changes in version 2.0.0 &raquo;%2$s', 'kudos-donations' ), '<a href="https://docs.yoursite.com/document/major-frakking-update/">', '</a>' );
+		$update_notice .= '</div><p class="hidden">';
+		echo wp_kses_post( $update_notice );
 	}
 }

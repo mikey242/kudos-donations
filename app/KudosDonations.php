@@ -9,24 +9,16 @@ namespace Kudos;
  * public-facing side of the site and the admin area.
  *
  * @link       https://www.linkedin.com/in/michael-iseard/
- *
- * @package    Kudos-Donations
- * @subpackage Kudos/includes
  */
 
 /**
  * The core plugin class.
- *
- * @package    Kudos-Donations
- * @subpackage Kudos/includes
- * @author     Michael Iseard <michael@iseard.media>
  */
 class KudosDonations {
 
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @access   protected
 	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_name;
@@ -34,7 +26,6 @@ class KudosDonations {
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @access   protected
 	 * @var      string $version The current version of the plugin.
 	 */
 	protected $version;
@@ -58,7 +49,6 @@ class KudosDonations {
 		$this->container   = $container;
 		$this->version     = $version;
 		$this->plugin_name = $plugin_name;
-
 	}
 
 	/**
@@ -72,7 +62,6 @@ class KudosDonations {
 		$this->define_public_hooks();
 
 		add_action( 'plugins_loaded', [ $this, 'version_check' ] );
-
 	}
 
 	/**
@@ -83,14 +72,11 @@ class KudosDonations {
 		$rest_routes = $this->container->get( 'RestRoutes' );
 
 		add_action( 'rest_api_init', [ $rest_routes, 'register_all' ] );
-
 	}
 
 	/**
 	 * Register all the hooks related to the admin area functionality
 	 * of the plugin.
-	 *
-	 * @access   private
 	 */
 	private function define_admin_hooks() {
 
@@ -109,8 +95,6 @@ class KudosDonations {
 	/**
 	 * Register all the hooks related to the public-facing functionality
 	 * of the plugin.
-	 *
-	 * @access   private
 	 */
 	private function define_public_hooks() {
 
@@ -118,10 +102,9 @@ class KudosDonations {
 
 		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'register_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $plugin_public, 'register_styles' ] );
-		add_action( 'enqueue_block_assets', [ $plugin_public, 'register_root_styles' ] ); // Used by front and admin
+		add_action( 'enqueue_block_assets', [ $plugin_public, 'register_root_styles' ] ); // Used by front and admin.
 		add_action( 'init', [ $plugin_public, 'register_kudos' ] );
 		add_action( 'wp_footer', [ $plugin_public, 'handle_query_variables' ], 1000 );
-
 	}
 
 	/**
@@ -133,7 +116,6 @@ class KudosDonations {
 
 		add_action( 'kudos_mollie_transaction_paid', [ $payment_service, 'schedule_process_transaction' ] );
 		add_action( 'kudos_process_mollie_transaction', [ $payment_service, 'process_transaction' ] );
-
 	}
 
 	/**
@@ -145,7 +127,6 @@ class KudosDonations {
 	public function get_plugin_name(): string {
 
 		return $this->plugin_name;
-
 	}
 
 	/**
@@ -156,7 +137,6 @@ class KudosDonations {
 	public function get_version(): string {
 
 		return $this->version;
-
 	}
 
 	/**
@@ -167,10 +147,9 @@ class KudosDonations {
 
 		$db_version = get_option( '_kudos_donations_version' );
 
-		if ( $db_version !== KUDOS_VERSION ) {
+		if ( KUDOS_VERSION !== $db_version ) {
 			$this->container->get( 'ActivatorService' )
 							->activate( $db_version );
 		}
 	}
-
 }
