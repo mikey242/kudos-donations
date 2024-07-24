@@ -118,6 +118,11 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.2.4 =
+* Cleanup unused settings
+* Tested on WordPress 6.6
+* Add update notice about upcoming major version
+
 = 3.2.3 =
 * Update dependencies
 * Add hooks for accessing the container
