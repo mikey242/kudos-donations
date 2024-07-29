@@ -58,20 +58,34 @@ class PaymentService extends AbstractRegistrable {
 	 * @param WP_Post $transaction The post object.
 	 * @param bool    $update Whether this is an update or not.
 	 */
-	public function add_description( int $post_id, WP_Post $transaction, bool $update ) {
+	public function add_title( int $post_id, WP_Post $transaction, bool $update ) {
 		// Bail immediately if this is an update.
 		if ( $update ) {
 			return;
 		}
 
-		$this->logger->debug( 'Updating post title', [ 'post_id' => $post_id ] );
+		$object_type = get_post_type_object( get_post_type( $post_id ) );
+		$single_name = $object_type->labels->singular_name;
+
+		$title = apply_filters(
+			'kudos_payment_description',
+			$single_name . sprintf( ' (%1$s)', TransactionPostType::get_formatted_id( $transaction->ID ) ),
+			$transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
+			$transaction->ID
+		);
+
+		$this->logger->debug(
+			'Updating post title',
+			[
+				'post_id' => $post_id,
+				'title'   => $title,
+			]
+		);
+
 		TransactionPostType::save(
 			[
 				'ID'         => $transaction->ID,
-				'post_title' => apply_filters(
-					'kudos_payment_description',
-					__( 'Donation', 'kudos-donations' ) . sprintf( ' (%1$s)', TransactionPostType::get_formatted_id( $transaction->ID ) )
-				),
+				'post_title' => $title,
 			]
 		);
 	}
