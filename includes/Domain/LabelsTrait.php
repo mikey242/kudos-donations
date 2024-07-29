@@ -47,7 +47,7 @@ trait LabelsTrait {
 	 * The plural name.
 	 */
 	protected function get_plural_name(): string {
-		return $this->get_singular_name() . 's';
+		return $this->get_singular_name();
 	}
 
 	/**
