@@ -272,7 +272,7 @@ class Payment extends AbstractRestController {
 
 		$url = $this->vendor->create_payment( $args, $transaction->ID, $vendor_customer_id );
 
-		// Return checkout url if payment successfully created in Mollie.
+		// Return checkout url if payment successfully created.
 		if ( $url ) {
 
 			// Send payment redirect URL.
@@ -288,7 +288,7 @@ class Payment extends AbstractRestController {
 		return new WP_REST_Response(
 			[
 				'success' => false,
-				'message' => __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' ),
+				'message' => __( 'Error creating payment. Please try again later.', 'kudos-donations' ),
 			],
 			500
 		);
