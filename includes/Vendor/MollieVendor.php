@@ -506,48 +506,54 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 		$start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
 		$currency    = 'EUR';
 		$value       = number_format( (int) $transaction->{TransactionPostType::META_FIELD_VALUE}, 2);
+		$customer    = $this->get_customer($customer_id);
 
-		$subscription_array = [
-			'amount'      => [
-				'value'    => $value,
-				'currency' => $currency,
-			],
-			'webhookUrl'  => $this->get_webhook_url(),
-			'mandateId'   => $mandate_id,
-			'interval'    => $interval,
-			'startDate'   => $start_date,
-			'description' => apply_filters('kudos_subscription_description', __('Subscription', 'kudos-donations') .
-			                                                                 sprintf(' (%1$s) - %2$s', $interval, SubscriptionPostType::get_formatted_id($transaction->ID)),
-			),
-			'metadata'    => [
-				TransactionPostType::META_FIELD_CAMPAIGN_ID => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
-				TransactionPostType::META_FIELD_DONOR_ID => $transaction->{TransactionPostType::META_FIELD_DONOR_ID}
-			],
-		];
-
-		if ('test' === $transaction->{TransactionPostType::META_FIELD_MODE}) {
-			unset($subscription_array['startDate']);  // Disable for test mode.
-		}
-
-		if ($years && $years > 0) {
-			$subscription_array['times'] = Utils::get_times_from_years($years, $interval);
-		}
-
-		$customer      = $this->get_customer($customer_id);
-		$valid_mandate = $this->check_mandate($customer, $mandate_id);
-
-		// Create subscription if valid mandate found
-		if ($valid_mandate) {
+		// Create subscription if valid mandate found.
+		if ($this->check_mandate($customer, $mandate_id)) {
 			try {
-				$subscription       = $customer->createSubscription($subscription_array);
-				SubscriptionPostType::save([
-					SubscriptionPostType::META_FIELD_STATUS                 => $subscription->status,
+
+				// Create subscription post.
+				$subscription_post = SubscriptionPostType::save([
 					SubscriptionPostType::META_FIELD_FREQUENCY              => $interval,
 					SubscriptionPostType::META_FIELD_YEARS                  => $years,
 					SubscriptionPostType::META_FIELD_VALUE                  => $value,
 					SubscriptionPostType::META_FIELD_CURRENCY               => $currency,
-					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id,
 					SubscriptionPostType::META_FIELD_TRANSACTION_ID         => $transaction->ID
+				]);
+
+				// Prepare arguments to send to Mollie.
+				$subscription_args = [
+					'amount'      => [
+						'value'    => $value,
+						'currency' => $currency,
+					],
+					'webhookUrl'  => $this->get_webhook_url(),
+					'mandateId'   => $mandate_id,
+					'interval'    => $interval,
+					'startDate'   => $start_date,
+					'description' => $subscription_post->post_title,
+					'metadata'    => [
+						TransactionPostType::META_FIELD_CAMPAIGN_ID => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
+						TransactionPostType::META_FIELD_DONOR_ID => $transaction->{TransactionPostType::META_FIELD_DONOR_ID}
+					],
+				];
+
+				// Disable startDate for test mode.
+				if ('test' === $transaction->{TransactionPostType::META_FIELD_MODE}) {
+					unset($subscription_args['startDate']);
+				}
+
+				if ($years && $years > 0) {
+					$subscription_args['times'] = Utils::get_times_from_years($years, $interval);
+				}
+
+				$subscription       = $customer->createSubscription($subscription_args);
+
+				// Update subscription post with status and subscription id.
+				SubscriptionPostType::save([
+					'ID' => $subscription_post->ID,
+					SubscriptionPostType::META_FIELD_STATUS                 => $subscription->status,
+					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id,
 				]);
 
 				return $subscription;
@@ -563,7 +569,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 			}
 		}
 
-		// No valid mandates
+		// No valid mandates.
 		$this->logger->error(
 			__('Cannot create subscription as customer has no valid mandates.', 'kudos-donations'),
 			[$customer_id]
@@ -689,7 +695,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 				TransactionPostType::META_FIELD_STATUS => $payment->status
 	        ]);
 
-            // Create action with order_id as parameter.
+            // Create action with post id as parameter.
             do_action("kudos_transaction_$payment->status", $transaction->ID);
 
             if ($payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks()) {

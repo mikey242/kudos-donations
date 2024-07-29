@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
+use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Helper\Utils;
 use WP_Post;
@@ -48,7 +49,9 @@ class PaymentService extends AbstractRegistrable {
 		// Replace returned get_home_url with app_url if defined.
 		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
 		// Runs when new transactions are created.
-		add_action( 'save_post_kudos_transaction', [ $this, 'add_description' ], 10, 3 );
+		add_action( 'save_post_' . TransactionPostType::get_slug(), [ $this, 'add_title' ], 10, 3 );
+		// Runs when new subscriptions are created.
+		add_action( 'save_post_' . SubscriptionPostType::get_slug(), [ $this, 'add_title' ], 10, 3 );
 	}
 
 	/**
