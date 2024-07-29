@@ -81,6 +81,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	protected function get_default_labels( string $singular_uc, string $singular_lc, string $plural_uc, string $plural_lc ): array {
 		return [
 			'name'                     => $plural_uc,
+			'singular_name'            => $singular_uc,
 			'add_new'                  => _x( 'Add New', 'Menu label', 'kudos-donations' ),
 			/* translators: %s: Custom post type singular name. */
 			'add_new_item'             => sprintf( _x( 'Add New %s', 'Label for adding a new singular item', 'kudos-donations' ), $singular_uc ),
