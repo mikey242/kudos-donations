@@ -490,6 +490,88 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
         }
     }
 
+	/**
+	 * Creates a subscription based on the provided transaction
+	 *
+	 * @return false|Subscription
+	 */
+	public function create_subscription(
+		WP_Post $transaction,
+		string $mandate_id,
+		string $interval,
+		int $years
+	) {
+		$donor       = get_post($transaction->{TransactionPostType::META_FIELD_DONOR_ID});
+		$customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID};
+		$start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
+		$currency    = 'EUR';
+		$value       = number_format( (int) $transaction->{TransactionPostType::META_FIELD_VALUE}, 2);
+
+		$subscription_array = [
+			'amount'      => [
+				'value'    => $value,
+				'currency' => $currency,
+			],
+			'webhookUrl'  => $this->get_webhook_url(),
+			'mandateId'   => $mandate_id,
+			'interval'    => $interval,
+			'startDate'   => $start_date,
+			'description' => apply_filters('kudos_subscription_description', __('Subscription', 'kudos-donations') .
+			                                                                 sprintf(' (%1$s) - %2$s', $interval, SubscriptionPostType::get_formatted_id($transaction->ID)),
+			),
+			'metadata'    => [
+				TransactionPostType::META_FIELD_CAMPAIGN_ID => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
+				TransactionPostType::META_FIELD_DONOR_ID => $transaction->{TransactionPostType::META_FIELD_DONOR_ID}
+			],
+		];
+
+		if ('test' === $transaction->{TransactionPostType::META_FIELD_MODE}) {
+			unset($subscription_array['startDate']);  // Disable for test mode.
+		}
+
+		if ($years && $years > 0) {
+			$subscription_array['times'] = Utils::get_times_from_years($years, $interval);
+		}
+
+		$customer      = $this->get_customer($customer_id);
+		$valid_mandate = $this->check_mandate($customer, $mandate_id);
+
+		// Create subscription if valid mandate found
+		if ($valid_mandate) {
+			try {
+				$subscription       = $customer->createSubscription($subscription_array);
+				SubscriptionPostType::save([
+					SubscriptionPostType::META_FIELD_STATUS                 => $subscription->status,
+					SubscriptionPostType::META_FIELD_FREQUENCY              => $interval,
+					SubscriptionPostType::META_FIELD_YEARS                  => $years,
+					SubscriptionPostType::META_FIELD_VALUE                  => $value,
+					SubscriptionPostType::META_FIELD_CURRENCY               => $currency,
+					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id,
+					SubscriptionPostType::META_FIELD_TRANSACTION_ID         => $transaction->ID
+				]);
+
+				return $subscription;
+			} catch (ApiException $e) {
+				$this->logger->error($e->getMessage(), [
+					'transaction' => $transaction,
+					'mandate_id'  => $mandate_id,
+					'interval'    => $interval,
+					'years'       => $years,
+				]);
+
+				return false;
+			}
+		}
+
+		// No valid mandates
+		$this->logger->error(
+			__('Cannot create subscription as customer has no valid mandates.', 'kudos-donations'),
+			[$customer_id]
+		);
+
+		return false;
+	}
+
     /**
      * Returns the Mollie Rest URL.
      *
@@ -682,88 +764,6 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
         }
 
         return $response;
-    }
-
-    /**
-     * Creates a subscription based on the provided transaction
-     *
-     * @return false|Subscription
-     */
-    public function create_subscription(
-        WP_Post $transaction,
-        string $mandate_id,
-        string $interval,
-        int $years
-    ) {
-		$donor       = get_post($transaction->{TransactionPostType::META_FIELD_DONOR_ID});
-		$customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID};
-        $start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
-        $currency    = 'EUR';
-        $value       = number_format( (int) $transaction->{TransactionPostType::META_FIELD_VALUE}, 2);
-
-        $subscription_array = [
-            'amount'      => [
-                'value'    => $value,
-                'currency' => $currency,
-            ],
-            'webhookUrl'  => $this->get_webhook_url(),
-            'mandateId'   => $mandate_id,
-            'interval'    => $interval,
-            'startDate'   => $start_date,
-	        'description' => apply_filters('kudos_subscription_description', __('Subscription', 'kudos-donations') .
-                sprintf(' (%1$s) - %2$s', $interval, SubscriptionPostType::get_formatted_id($transaction->ID)),
-	        ),
-            'metadata'    => [
-                TransactionPostType::META_FIELD_CAMPAIGN_ID => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
-	            TransactionPostType::META_FIELD_DONOR_ID => $transaction->{TransactionPostType::META_FIELD_DONOR_ID}
-            ],
-        ];
-
-        if ('test' === $transaction->{TransactionPostType::META_FIELD_MODE}) {
-            unset($subscription_array['startDate']);  // Disable for test mode.
-        }
-
-        if ($years && $years > 0) {
-            $subscription_array['times'] = Utils::get_times_from_years($years, $interval);
-        }
-
-        $customer      = $this->get_customer($customer_id);
-        $valid_mandate = $this->check_mandate($customer, $mandate_id);
-
-        // Create subscription if valid mandate found
-        if ($valid_mandate) {
-            try {
-                $subscription       = $customer->createSubscription($subscription_array);
-				SubscriptionPostType::save([
-					SubscriptionPostType::META_FIELD_STATUS                 => $subscription->status,
-					SubscriptionPostType::META_FIELD_FREQUENCY              => $interval,
-					SubscriptionPostType::META_FIELD_YEARS                  => $years,
-					SubscriptionPostType::META_FIELD_VALUE                  => $value,
-					SubscriptionPostType::META_FIELD_CURRENCY               => $currency,
-					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id,
-					SubscriptionPostType::META_FIELD_TRANSACTION_ID         => $transaction->ID
-				]);
-
-                return $subscription;
-            } catch (ApiException $e) {
-                $this->logger->error($e->getMessage(), [
-                    'transaction' => $transaction,
-                    'mandate_id'  => $mandate_id,
-                    'interval'    => $interval,
-                    'years'       => $years,
-                ]);
-
-                return false;
-            }
-        }
-
-        // No valid mandates
-        $this->logger->error(
-            __('Cannot create subscription as customer has no valid mandates.', 'kudos-donations'),
-            [$customer_id]
-        );
-
-        return false;
     }
 
     /**
