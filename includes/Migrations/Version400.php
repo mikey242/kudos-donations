@@ -23,13 +23,6 @@ class Version400 extends AbstractMigration {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_version(): string {
-		return '4.0.0';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function run(): bool {
 		return (
 			$this->migrate_donors_to_posts() &&

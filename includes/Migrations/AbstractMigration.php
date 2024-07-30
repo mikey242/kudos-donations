@@ -27,4 +27,14 @@ abstract class AbstractMigration implements MigrationInterface {
 		$this->wpdb   = $wpdb;
 		$this->logger = $logger ?? new NullLogger();
 	}
+
+	/**
+	 * Gets the version number from the static class name.
+	 * e.g Version400 will return 4.0.0 as the version number.
+	 */
+	public function get_version(): string {
+		$class = str_replace( __NAMESPACE__ . '\\', '', static::class );
+		$num   = filter_var( $class, FILTER_SANITIZE_NUMBER_INT );
+		return implode( '.', str_split( $num ) );
+	}
 }
