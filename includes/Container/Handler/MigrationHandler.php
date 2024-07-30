@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Container\Handler;
 
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Service\SettingsService;
 
