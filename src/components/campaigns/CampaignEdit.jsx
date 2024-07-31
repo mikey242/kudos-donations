@@ -16,7 +16,7 @@ import { isValidUrl } from '../../helpers/util';
 import GenerateShortcode from './GenerateShortcode';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
 import { useAdminTableContext } from '../../contexts/AdminTableContext';
-import SettingsPanel from '../admin/SettingsPanel';
+import { Panel } from '../Panel';
 import Divider from '../Divider';
 
 const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
@@ -64,7 +64,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 			title: __('General', 'kudos-donations'),
 			content: (
 				<Fragment>
-					<SettingsPanel>
+					<Panel title={__('Campaign details', 'kudos-donations')}>
 						<TextControl
 							name="title"
 							label={__('Campaign name', 'kudos-donations')}
@@ -79,6 +79,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								),
 							}}
 						/>
+						<Divider />
 						<TextControl
 							type="number"
 							name="meta.goal"
@@ -108,7 +109,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 						<ToggleControl
 							name="meta.show_goal"
 							label={__(
-								'Display goal progress.',
+								'Display goal progress',
 								'kudos-donations'
 							)}
 							help={__(
@@ -135,8 +136,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								},
 							}}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
+						<Divider />
 						<ColorPicker
 							name="meta.theme_color"
 							label={__('Theme color', 'kudos-donations')}
@@ -145,8 +145,8 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'kudos-donations'
 							)}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
+					</Panel>
+					<Panel title={__('After payment', 'kudos-donations')}>
 						<ToggleControl
 							name="meta.show_return_message"
 							label={__('Show return message', 'kudos-donations')}
@@ -155,7 +155,6 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'kudos-donations'
 							)}
 						/>
-						<Divider />
 						<TextControl
 							name="meta.return_message_title"
 							isDisabled={!watchUseReturnMessage}
@@ -178,8 +177,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 							isDisabled={!watchUseReturnMessage}
 							label={__('Message text', 'kudos-donations')}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
+						<Divider />
 						<ToggleControl
 							name="meta.use_custom_return_url"
 							label={__(
@@ -191,7 +189,6 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'kudos-donations'
 							)}
 						/>
-						<Divider />
 						<TextControl
 							name="meta.custom_return_url"
 							isDisabled={!watchUseReturnURL}
@@ -201,7 +198,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								validate: (value) => isValidUrl(value),
 							}}
 						/>
-					</SettingsPanel>
+					</Panel>
 				</Fragment>
 			),
 		},
@@ -210,8 +207,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 			title: __('Text fields', 'kudos-donations'),
 			content: (
 				<Fragment>
-					<SettingsPanel>
-						<h3>{__('Initial tab', 'kudos-donations')}</h3>
+					<Panel title={__('Initial tab', 'kudos-donations')}>
 						<TextControl
 							name="meta.initial_title"
 							label={__('Title', 'kudos-donations')}
@@ -220,9 +216,8 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 							name="meta.initial_description"
 							label={__('Text', 'kudos-donations')}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
-						<h3>{__('Subscription tab', 'kudos-donations')}</h3>
+					</Panel>
+					<Panel title={__('Subscription tab', 'kudos-donations')}>
 						<TextControl
 							name="meta.subscription_title"
 							label={__('Title', 'kudos-donations')}
@@ -231,9 +226,8 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 							name="meta.subscription_description"
 							label={__('Text', 'kudos-donations')}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
-						<h3>{__('Address tab', 'kudos-donations')}</h3>
+					</Panel>
+					<Panel title={__('Address tab', 'kudos-donations')}>
 						<TextControl
 							name="meta.address_title"
 							label={__('Title', 'kudos-donations')}
@@ -242,9 +236,8 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 							name="meta.address_description"
 							label={__('Text', 'kudos-donations')}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
-						<h3>{__('Message tab', 'kudos-donations')}</h3>
+					</Panel>
+					<Panel title={__('Message tab', 'kudos-donations')}>
 						<TextControl
 							name="meta.message_title"
 							label={__('Title', 'kudos-donations')}
@@ -253,9 +246,8 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 							name="meta.message_description"
 							label={__('Text', 'kudos-donations')}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
-						<h3>{__('Payment tab', 'kudos-donations')}</h3>
+					</Panel>
+					<Panel title={__('Payment tab', 'kudos-donations')}>
 						<TextControl
 							name="meta.payment_title"
 							label={__('Title', 'kudos-donations')}
@@ -264,7 +256,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 							name="meta.payment_description"
 							label={__('Text', 'kudos-donations')}
 						/>
-					</SettingsPanel>
+					</Panel>
 				</Fragment>
 			),
 		},
@@ -273,7 +265,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 			title: __('Donation settings', 'kudos-donations'),
 			content: (
 				<Fragment>
-					<SettingsPanel>
+					<Panel title={__('Subscription', 'kudos-donations')}>
 						<RadioGroupControl
 							name="meta.donation_type"
 							label={__('Donation type', 'kudos-donations')}
@@ -301,8 +293,8 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								},
 							]}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
+					</Panel>
+					<Panel title={__('Payment', 'kudos-donations')}>
 						<RadioGroupControl
 							name="meta.amount_type"
 							label={__('Payment type', 'kudos-donations')}
@@ -325,7 +317,6 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								},
 							]}
 						/>
-						<Divider />
 						<TextControl
 							name="meta.fixed_amounts"
 							isDisabled={watchAmountType === 'open'}
@@ -344,7 +335,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								),
 							}}
 							help={__(
-								'Comma-separated list of amounts',
+								'Comma-separated list of amounts.',
 								'kudos-donations'
 							)}
 							label={__('Fixed amounts', 'kudos-donations')}
@@ -353,6 +344,10 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 							name="meta.minimum_donation"
 							isDisabled={watchAmountType === 'fixed'}
 							addOn="€"
+							help={__(
+								'This is the minimum donation that will be accepted.',
+								'kudos-donations'
+							)}
 							validation={{
 								required: __(
 									'Minimum donation required',
@@ -371,7 +366,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'kudos-donations'
 							)}
 						/>
-					</SettingsPanel>
+					</Panel>
 				</Fragment>
 			),
 		},
@@ -380,7 +375,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 			title: __('Optional fields', 'kudos-donations'),
 			content: (
 				<Fragment>
-					<SettingsPanel>
+					<Panel title={__('Optional fields', 'kudos-donations')}>
 						<ToggleControl
 							name="meta.allow_anonymous"
 							label={__(
@@ -392,8 +387,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'kudos-donations'
 							)}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
+						<Divider />
 						<ToggleControl
 							name="meta.address_enabled"
 							label={__('Address', 'kudos-donations')}
@@ -402,7 +396,6 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'kudos-donations'
 							)}
 						/>
-						<Divider />
 						<CheckboxControl
 							name="meta.address_required"
 							isDisabled={!watchAddress}
@@ -410,10 +403,10 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'Make the address required.',
 								'kudos-donations'
 							)}
-							label={__('Required', 'kudos-donations')}
+							label={' '}
+							altLabel={__('Required', 'kudos-donations')}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
+						<Divider />
 						<ToggleControl
 							name="meta.message_enabled"
 							label={__('Message', 'kudos-donations')}
@@ -422,12 +415,12 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'kudos-donations'
 							)}
 						/>
-					</SettingsPanel>
-					<SettingsPanel>
+					</Panel>
+					<Panel title={__('Policy links', 'kudos-donations')}>
 						<TextControl
 							name="meta.terms_link"
 							label={__(
-								'Terms and Conditions URL',
+								'Terms & Conditions URL',
 								'kudos-donations'
 							)}
 							help={__(
@@ -443,7 +436,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 								'kudos-donations'
 							)}
 						/>
-					</SettingsPanel>
+					</Panel>
 				</Fragment>
 			),
 		},
@@ -451,13 +444,12 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 			name: 'Custom CSS',
 			title: __('Custom CSS', 'kudos-donations'),
 			content: (
-				<SettingsPanel>
+				<Panel title={__('Custom CSS', 'kudos-donations')}>
 					<TextAreaControl
-						label="Custom CSS"
-						help="This will only apply to the current campaign."
+						help="Enter your custom css here. This will only apply to the current campaign."
 						name="meta.custom_styles"
 					/>
-				</SettingsPanel>
+				</Panel>
 			),
 		},
 	];

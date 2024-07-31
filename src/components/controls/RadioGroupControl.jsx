@@ -1,28 +1,33 @@
 import React from 'react';
-import { Controller } from 'react-hook-form';
 import { RadioGroup } from '@headlessui/react';
 import { clsx } from 'clsx';
+import { Field } from './Field';
 
-const RadioGroupControl = ({ name, validation, options, help, label }) => {
+const RadioGroupControl = ({
+	name,
+	validation,
+	options,
+	help,
+	label,
+	hideLabel,
+	isDisabled,
+}) => {
 	return (
-		<Controller
+		<Field
 			name={name}
-			rules={validation}
-			render={({ field: { onChange, value = null } }) => (
+			isDisabled={isDisabled}
+			hideLabel={hideLabel}
+			help={help}
+			label={label}
+			validation={validation}
+			render={({ id, onChange, value }) => (
 				<RadioGroup
-					value={value}
+					value={value ?? null}
+					id={id}
+					disabled={isDisabled}
 					onChange={onChange}
 					className="first:mt-0 mt-3"
 				>
-					<RadioGroup.Label
-						className={
-							label
-								? 'block text-sm font-bold text-gray-700 mb-1'
-								: 'sr-only'
-						}
-					>
-						{label}
-					</RadioGroup.Label>
 					<div className="grid gap-3 mt-1 grid-flow-row xs:grid-flow-col xs:auto-cols-fr">
 						{options.map((option, i) => (
 							<RadioGroup.Option
@@ -50,11 +55,6 @@ const RadioGroupControl = ({ name, validation, options, help, label }) => {
 							</RadioGroup.Option>
 						))}
 					</div>
-					{help && (
-						<p className="text-sm leading-5 text-gray-500 mt-2">
-							{help}
-						</p>
-					)}
 				</RadioGroup>
 			)}
 		/>

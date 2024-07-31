@@ -2,13 +2,12 @@ import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { TextAreaControl, TextControl } from '../controls';
-import SettingsPanel from '../admin/SettingsPanel';
+import { Panel } from '../Panel';
 
 const InvoiceTab = () => {
 	return (
 		<Fragment>
-			<SettingsPanel>
-				<h2>{__('Your details', 'kudos-donations')}</h2>
+			<Panel title={__('Your details', 'kudos-donations')}>
 				<TextAreaControl
 					name="_kudos_invoice_company_address"
 					label={__('Invoice Address', 'kudos-donations')}
@@ -25,8 +24,8 @@ const InvoiceTab = () => {
 						'kudos-donations'
 					)}
 				/>
-			</SettingsPanel>
-			<SettingsPanel>
+			</Panel>
+			<Panel title={__('Other', 'kudos-donations')}>
 				<TextControl
 					name="_kudos_invoice_number"
 					type="number"
@@ -36,7 +35,7 @@ const InvoiceTab = () => {
 						'kudos-donations'
 					)}
 				/>
-			</SettingsPanel>
+			</Panel>
 		</Fragment>
 	);
 };

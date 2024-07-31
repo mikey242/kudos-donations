@@ -10,7 +10,7 @@ import {
 	QuestionMarkCircleIcon,
 	UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import SettingsPanel from '../admin/SettingsPanel';
+import { Panel } from '../Panel';
 import { useSettingsContext } from '../../contexts/SettingsContext';
 
 const HelpTab = () => {
@@ -18,8 +18,7 @@ const HelpTab = () => {
 
 	return (
 		<Fragment>
-			<SettingsPanel>
-				<h2>{__('Share the love', 'kudos-donations')}</h2>
+			<Panel title={__('Share the love', 'kudos-donations')}>
 				<div>
 					<p className="mb-2">
 						{__(
@@ -48,9 +47,8 @@ const HelpTab = () => {
 						</Button>
 					</div>
 				</div>
-			</SettingsPanel>
-			<SettingsPanel>
-				<h2>{__('Need some assistance?', 'kudos-donations')}</h2>
+			</Panel>
+			<Panel title={__('Need some assistance?', 'kudos-donations')}>
 				<div>
 					<p>
 						{__(
@@ -110,9 +108,8 @@ const HelpTab = () => {
 						</div>
 					</div>
 				</div>
-			</SettingsPanel>
-			<SettingsPanel>
-				<h2>{__('Advanced', 'kudos-donations')}</h2>
+			</Panel>
+			<Panel title={__('Advanced', 'kudos-donations')}>
 				<ToggleControl
 					name="_kudos_always_load_assets"
 					label={__('Always load assets', 'kudos-donations')}
@@ -129,7 +126,7 @@ const HelpTab = () => {
 						'kudos-donations'
 					)}
 				/>
-			</SettingsPanel>
+			</Panel>
 		</Fragment>
 	);
 };

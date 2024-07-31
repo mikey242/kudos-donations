@@ -1,4 +1,3 @@
-import { Controller } from 'react-hook-form';
 import React from 'react';
 import { HexColorInput } from 'react-colorful';
 import { useState } from '@wordpress/element';
@@ -6,8 +5,15 @@ import { RadioGroup } from '@headlessui/react';
 import { __ } from '@wordpress/i18n';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { clsx } from 'clsx';
+import { Field } from './Field';
 
-const ColorPicker = ({ name, label, help, onColorChange = () => {} }) => {
+const ColorPicker = ({
+	name,
+	label,
+	altLabel,
+	help,
+	onColorChange = () => {},
+}) => {
 	const [showPicker, setShowPicker] = useState(false);
 	const togglePicker = () => {
 		setShowPicker(!showPicker);
@@ -22,10 +28,13 @@ const ColorPicker = ({ name, label, help, onColorChange = () => {} }) => {
 	];
 
 	return (
-		<Controller
+		<Field
 			name={name}
-			render={({ field: { onChange, value } }) => (
+			help={help}
+			label={label}
+			render={({ id, onChange, value }) => (
 				<RadioGroup
+					id={id}
 					value={value}
 					onChange={(e) => {
 						onChange(e);
@@ -33,9 +42,11 @@ const ColorPicker = ({ name, label, help, onColorChange = () => {} }) => {
 					}}
 					className="first:mt-0 mt-3"
 				>
-					<RadioGroup.Label className="block text-sm font-bold text-gray-700">
-						{label}
-					</RadioGroup.Label>
+					{altLabel && (
+						<RadioGroup.Label className="block text-sm font-bold text-gray-700">
+							{altLabel}
+						</RadioGroup.Label>
+					)}
 					<div className="mt-2 inline-flex items-center space-x-3">
 						{colors.map((color) => (
 							<RadioGroup.Option
@@ -116,11 +127,6 @@ const ColorPicker = ({ name, label, help, onColorChange = () => {} }) => {
 							</RadioGroup.Option>
 						</>
 					</div>
-					{help && (
-						<p className="text-sm leading-5 text-gray-500 mt-2">
-							{help}
-						</p>
-					)}
 				</RadioGroup>
 			)}
 		/>

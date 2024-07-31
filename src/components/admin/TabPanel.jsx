@@ -3,7 +3,7 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { Fragment } from '@wordpress/element';
 import { NumberParam, useQueryParam } from 'use-query-params';
-import Panel from '../Panel';
+import { Pane } from '../Panel';
 
 const TabPanel = ({ tabs }) => {
 	const [tabIndex, setTabIndex] = useQueryParam('tab', NumberParam);
@@ -14,7 +14,7 @@ const TabPanel = ({ tabs }) => {
 				selectedIndex={tabIndex}
 				onChange={(index) => setTabIndex(index)}
 			>
-				<Panel>
+				<Pane>
 					<Tab.List className="relative z-0 rounded-lg flex divide-x divide-gray-200">
 						{Object.entries(tabs).map((tab, index) => (
 							<Tab key={index} as={Fragment}>
@@ -45,7 +45,7 @@ const TabPanel = ({ tabs }) => {
 							</Tab>
 						))}
 					</Tab.List>
-				</Panel>
+				</Pane>
 				<Tab.Panels>
 					<>
 						{Object.entries(tabs).map((tab) => {

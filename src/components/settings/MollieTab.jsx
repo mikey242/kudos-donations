@@ -7,7 +7,8 @@ import { clsx } from 'clsx';
 import { useSettingsContext } from '../../contexts/SettingsContext';
 import { ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useFormContext } from 'react-hook-form';
-import SettingsPanel from '../admin/SettingsPanel';
+import { Panel } from '../Panel';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/16/solid';
 
 const MollieTab = ({ checkApiKeys }) => {
 	const { checkingApiKey, updateSetting } = useSettingsContext();
@@ -32,10 +33,11 @@ const MollieTab = ({ checkApiKeys }) => {
 
 	return (
 		<Fragment>
-			<SettingsPanel>
+			<Panel title={__('API Mode', 'kudos-donations')}>
 				<RadioGroupControl
 					name="_kudos_vendor_mollie.mode"
 					label={__('API Mode', 'kudos-donations')}
+					hideLabel={true}
 					options={[
 						{
 							label: __('Test', 'kudos-donations'),
@@ -53,46 +55,51 @@ const MollieTab = ({ checkApiKeys }) => {
 						'kudos-donations'
 					)}
 				/>
-			</SettingsPanel>
-			<SettingsPanel>
-				<button
-					className="inline-flex items-center cursor-pointer"
-					onClick={refresh}
-					type="button"
-				>
-					<>
-						<ArrowPathIcon
-							className={clsx(
-								checkingApiKey && 'animate-spin',
-								'w-5 h-5'
-							)}
-						/>{' '}
-						<span className="mx-2">
-							{__('Refresh API', 'kudos-donations')}
-						</span>
-					</>
-				</button>
-				<p className="my-2 text-sm text-gray-500">
-					{__(
-						'Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.',
-						'kudos-donations'
-					)}
-				</p>
-			</SettingsPanel>
-			<SettingsPanel>
-				<p>
-					You can get your Mollie API keys{' '}
-					<a
-						target="_blank"
-						rel="noreferrer"
-						className="underline"
-						href="https://my.mollie.com/dashboard/developers/api-keys"
-					>
-						here
-					</a>
-					.
-				</p>
 				<Divider />
+				<div>
+					<button
+						className="inline-flex items-center cursor-pointer"
+						onClick={refresh}
+						type="button"
+					>
+						<>
+							<ArrowPathIcon
+								className={clsx(
+									checkingApiKey && 'animate-spin',
+									'w-5 h-5'
+								)}
+							/>{' '}
+							<span className="mx-2">
+								{__('Refresh API', 'kudos-donations')}
+							</span>
+						</>
+					</button>
+					<p className="my-1 text-sm text-gray-500">
+						{__(
+							'Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.',
+							'kudos-donations'
+						)}
+					</p>
+				</div>
+			</Panel>
+			<Panel
+				title={__('API Keys', 'kudos-donations')}
+				help={
+					<>
+						You can get your Mollie API keys{' '}
+						<a
+							target="_blank"
+							rel="noreferrer"
+							className="underline inline-flex items-center"
+							href="https://my.mollie.com/dashboard/developers/api-keys"
+						>
+							here{' '}
+							<ArrowTopRightOnSquareIcon className="w-5 h-5 ml-1" />
+						</a>
+						.
+					</>
+				}
+			>
 				{[
 					{ ...watchLive, name: 'live' },
 					{ ...watchTest, name: 'test' },
@@ -139,7 +146,7 @@ const MollieTab = ({ checkApiKeys }) => {
 				>
 					{__('Reset Mollie', 'kudos-donations')}
 				</button>
-			</SettingsPanel>
+			</Panel>
 		</Fragment>
 	);
 };

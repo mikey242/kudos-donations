@@ -7,7 +7,7 @@ import {
 	useState,
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import Panel from '../Panel';
+import { Pane } from '../Panel';
 import { ColorPicker } from '../controls';
 import { Transition } from '@headlessui/react';
 
@@ -81,17 +81,17 @@ const ColorPickerPopup = ({ color, onColorChange }) => {
 					leaveFrom="opacity-100 translate-y-0"
 					leaveTo="opacity-0 translate-y-1"
 				>
-					<Panel className="absolute p-3" ref={popoverRef}>
+					<Pane className="absolute p-3" ref={popoverRef}>
 						<ColorPicker
 							name="meta.theme_color"
 							onColorChange={onColorChange}
-							label={__('Theme color', 'kudos-donations')}
+							altLabel={__('Theme color', 'kudos-donations')}
 							help={__(
 								'Choose a color theme for your campaign.',
 								'kudos-donations'
 							)}
 						/>
-					</Panel>
+					</Pane>
 				</Transition>
 			</div>
 		</>

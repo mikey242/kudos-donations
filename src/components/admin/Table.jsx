@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fragment } from '@wordpress/element';
-import Panel from '../Panel';
+import { Pane } from '../Panel';
 import { __ } from '@wordpress/i18n';
 import { ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 
@@ -61,37 +61,39 @@ const Table = ({ headerItems, tableData, updatePost }) => {
 	return (
 		<>
 			{headerItems && tableData && (
-				<Panel
-					className="overflow-x-auto"
-					title={__('Your campaigns', 'kudos-donations')}
-				>
-					<div className="table border-collapse min-w-full text-left sm:rounded-lg">
-						<div className="table-header-group bg-gray-50">
-							<div className="table-row text-left text-sm font-semibold text-gray-900">
-								{headerItems.map((item, i) => (
-									<Fragment key={i}>
-										{renderHeaderItem(item)}
-									</Fragment>
-								))}
+				<>
+					<h2 className="text-center my-5">
+						{__('Your campaigns', 'kudos-donations')}
+					</h2>
+					<Pane>
+						<div className="table border-collapse min-w-full text-left sm:rounded-lg">
+							<div className="table-header-group bg-gray-50">
+								<div className="table-row text-left text-sm font-semibold text-gray-900">
+									{headerItems.map((item, i) => (
+										<Fragment key={i}>
+											{renderHeaderItem(item)}
+										</Fragment>
+									))}
+								</div>
+							</div>
+
+							<div className="table-row-group divide-y divide-gray-200 bg-white">
+								{tableData.map((post, i) => {
+									return (
+										<Fragment key={post.id}>
+											<TableRow
+												post={post}
+												headerItems={headerItems}
+												rowIndex={i}
+												updatePost={updatePost}
+											/>
+										</Fragment>
+									);
+								})}
 							</div>
 						</div>
-
-						<div className="table-row-group divide-y divide-gray-200 bg-white">
-							{tableData.map((post, i) => {
-								return (
-									<Fragment key={post.id}>
-										<TableRow
-											post={post}
-											headerItems={headerItems}
-											rowIndex={i}
-											updatePost={updatePost}
-										/>
-									</Fragment>
-								);
-							})}
-						</div>
-					</div>
-				</Panel>
+					</Pane>
+				</>
 			)}
 		</>
 	);

@@ -2,13 +2,12 @@ import { Fragment, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, RadioControl, TextControl, ToggleControl } from '../controls';
 import React from 'react';
-import Divider from '../Divider';
 import { useFormContext } from 'react-hook-form';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { useNotificationContext } from '../../contexts/NotificationContext';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
-import SettingsPanel from '../admin/SettingsPanel';
+import { Panel } from '../Panel';
 
 const EmailTab = () => {
 	const { watch, getValues } = useFormContext();
@@ -42,8 +41,7 @@ const EmailTab = () => {
 
 	return (
 		<Fragment>
-			<SettingsPanel>
-				<h2>{__('Email receipts', 'kudos-donations')}</h2>
+			<Panel title={__('Email receipts', 'kudos-donations')}>
 				<ToggleControl
 					label={__('Send email receipts', 'kudos-donations')}
 					help={__(
@@ -52,7 +50,6 @@ const EmailTab = () => {
 					)}
 					name="_kudos_email_receipt_enable"
 				/>
-				<Divider />
 				<TextControl
 					label={__('Send receipt copy to', 'kudos-donations')}
 					isDisabled={!watchSendReceipts}
@@ -62,10 +59,9 @@ const EmailTab = () => {
 						'kudos-donations'
 					)}
 				/>
-			</SettingsPanel>
-			<SettingsPanel>
+			</Panel>
+			<Panel title={__('SMTP settings', 'kudos-donations')}>
 				<>
-					<h2>{__('SMTP settings', 'kudos-donations')}</h2>
 					<ToggleControl
 						name="_kudos_smtp_enable"
 						label={__(
@@ -79,7 +75,6 @@ const EmailTab = () => {
 					/>
 					{watchCustom && (
 						<Fragment>
-							<Divider />
 							<TextControl
 								name="_kudos_custom_smtp.host"
 								label={__('Host', 'kudos-donations')}
@@ -197,9 +192,8 @@ const EmailTab = () => {
 						</Fragment>
 					)}
 				</>
-			</SettingsPanel>
-			<SettingsPanel>
-				<h2>{__('Test email', 'kudos-donations')}</h2>
+			</Panel>
+			<Panel title={__('Test email', 'kudos-donations')}>
 				<div className="space-y-3">
 					<TextControl
 						label={__('Email address', 'kudos-donations')}
@@ -209,18 +203,20 @@ const EmailTab = () => {
 							'Address to send the test email to.',
 							'kudos-donations'
 						)}
+						inlineButton={
+							<Button
+								isOutline
+								type="button"
+								isBusy={isEmailBusy}
+								onClick={sendTestEmail}
+								icon={<EnvelopeIcon className="mr-2 w-5 h-5" />}
+							>
+								Send
+							</Button>
+						}
 					/>
-					<Button
-						isOutline
-						type="button"
-						isBusy={isEmailBusy}
-						onClick={sendTestEmail}
-						icon={<EnvelopeIcon className="mr-2 w-5 h-5" />}
-					>
-						Send
-					</Button>
 				</div>
-			</SettingsPanel>
+			</Panel>
 		</Fragment>
 	);
 };

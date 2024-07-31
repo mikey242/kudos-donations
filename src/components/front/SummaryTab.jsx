@@ -61,7 +61,7 @@ function SummaryTab(props) {
 			{privacyLink && (
 				<CheckboxControl
 					name="privacy"
-					label={__('Accept privacy policy', 'kudos-donations')}
+					altLabel={__('Accept privacy policy', 'kudos-donations')}
 					validation={{
 						required: __(
 							'Please accept this to continue',
@@ -73,7 +73,10 @@ function SummaryTab(props) {
 			{termsLink && (
 				<CheckboxControl
 					name="terms"
-					label={__('Accept Terms and Conditions', 'kudos-donations')}
+					altLabel={__(
+						'Accept Terms and Conditions',
+						'kudos-donations'
+					)}
 					validation={{
 						required: __(
 							'Please accept this to continue',

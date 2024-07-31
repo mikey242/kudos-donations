@@ -145,7 +145,7 @@ const InitialTab = (props) => {
 					<ToggleControl
 						isDisabled={!watchEmail}
 						name="recurring"
-						label={__('Recurring donation', 'kudos-donations')}
+						altLabel={__('Recurring donation', 'kudos-donations')}
 					/>
 				</div>
 			)}

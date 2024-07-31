@@ -1,6 +1,6 @@
 import React from 'react';
 import { Transition } from '@headlessui/react';
-import Panel from '../Panel';
+import { Pane } from '../Panel';
 import {
 	CheckCircleIcon,
 	ExclamationCircleIcon,
@@ -22,7 +22,7 @@ const Notification = ({ notifications, onNotificationClick }) => {
 						enterFrom="opacity-0 translate-y-full"
 						enterTo="opacity-1 translate-y-0"
 					>
-						<Panel>
+						<Pane>
 							<button
 								onClick={() => onNotificationClick(t.id)}
 								className="flex justify-around items-center p-5"
@@ -36,7 +36,7 @@ const Notification = ({ notifications, onNotificationClick }) => {
 									{t.text}
 								</span>
 							</button>
-						</Panel>
+						</Pane>
 					</Transition>
 				</div>
 			))}
