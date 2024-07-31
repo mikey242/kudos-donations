@@ -1,11 +1,9 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
 import { Field } from './Field';
 
 const RadioControl = ({
 	name,
 	validation,
-	altLabel,
 	options,
 	label,
 	help,

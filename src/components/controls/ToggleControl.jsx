@@ -18,7 +18,6 @@ const ToggleControl = ({
 			isDisabled={isDisabled}
 			help={help}
 			label={label}
-			altLabel={altLabel}
 			validation={validation}
 			render={({ id, onChange, value, error }) => (
 				<Switch.Group
