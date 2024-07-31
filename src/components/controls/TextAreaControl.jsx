@@ -1,10 +1,12 @@
 import React from 'react';
 import { Field } from './Field';
+
 const TextAreaControl = ({
 	name,
 	validation,
 	placeholder,
 	label,
+	hideLabel,
 	altLabel,
 	help,
 	isDisabled,
@@ -16,6 +18,7 @@ const TextAreaControl = ({
 			help={help}
 			label={label}
 			altLabel={altLabel}
+			hideLabel={hideLabel}
 			validation={validation}
 			render={({ id, value, onChange, error }) => (
 				<div className="mt-1">
