@@ -355,25 +355,6 @@ class SettingsService extends AbstractRegistrable {
 	}
 
 	/**
-	 * Method to recursively sanitize all text fields in an array.
-	 *
-	 * @link https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
-	 *
-	 * @param array $values Array of values to sanitize.
-	 */
-	public static function recursive_sanitize_text_field( array $values ): array {
-		foreach ( $values as &$value ) {
-			if ( \is_array( $value ) ) {
-				$value = self::recursive_sanitize_text_field( $value );
-			} else {
-				$value = sanitize_text_field( $value );
-			}
-		}
-
-		return $values;
-	}
-
-	/**
 	 * Encrypts the smtp password before storing to the database.
 	 *
 	 * @throws Exception Thrown when problem encrypting password.
