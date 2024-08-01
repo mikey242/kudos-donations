@@ -35,12 +35,12 @@ const FormRouter = ({
 	});
 	const firstUpdate = useRef(true);
 
-	const handlePrev = (data) => {
+	const handlePrev = () => {
 		if (step === 1) {
 			return;
 		}
 		let prevStep = step - 1;
-		const state = { ...data, ...campaign.meta };
+		const state = { ...methods.getValues(), ...campaign.meta };
 
 		// Find next available step.
 		while (!checkRequirements(state, prevStep) && prevStep >= 1) {
