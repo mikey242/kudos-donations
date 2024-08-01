@@ -23,7 +23,7 @@ export const Field = ({
 	const hasLabel = label && !hideLabel;
 
 	return (
-		<div className={clsx(isDisabled && 'opacity-50', 'first:mt-0 mt-3')}>
+		<div className="first:mt-0 mt-3">
 			<div
 				className={clsx(
 					'hidden' === type && 'hidden',
