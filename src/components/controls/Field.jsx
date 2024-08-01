@@ -40,7 +40,8 @@ export const Field = ({
 					render={({ field: { onChange, value } }) => (
 						<div
 							className={clsx(
-								hasLabel ? 'md:col-span-3' : 'md:col-span-4'
+								hasLabel ? 'md:col-span-3' : 'md:col-span-4',
+								isDisabled && 'opacity-50'
 							)}
 						>
 							{render
