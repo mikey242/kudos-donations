@@ -16,6 +16,45 @@ use Exception;
 class Utils {
 
 	/**
+	 * Returns an array of supported currencies and their symbols.
+	 *
+	 * @return string[]
+	 */
+	public static function get_currencies(): array {
+		return [
+			'AED' => 'د.إ',
+			'AUD' => '$',
+			'BGN' => 'лв',
+			'BRL' => 'R$',
+			'CAD' => '$',
+			'CHF' => 'CHF',
+			'CZK' => 'Kč',
+			'DKK' => 'kr',
+			'EUR' => '€',
+			'GBP' => '£',
+			'HKD' => '$',
+			'HUF' => 'Ft',
+			'ILS' => '₪',
+			'ISK' => 'kr',
+			'JPY' => '¥',
+			'MXN' => '$',
+			'MYR' => 'RM',
+			'NOK' => 'kr',
+			'NZD' => '$',
+			'PHP' => '₱',
+			'PLN' => 'zł',
+			'RON' => 'lei',
+			'RUB' => '₽',
+			'SEK' => 'kr',
+			'SGD' => '$',
+			'THB' => '฿',
+			'TWD' => 'NT$',
+			'USD' => '$',
+			'ZAR' => 'R',
+		];
+	}
+
+	/**
 	 * Converts three letter currency code into a symbol.
 	 *
 	 * @param string $currency Three letter currency code (EUR, GBP, USD).
