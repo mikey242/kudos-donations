@@ -11,7 +11,9 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Service;
 
+use Exception;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Helper\Auth;
 
 class SettingsService extends AbstractRegistrable {
 
@@ -51,6 +53,20 @@ class SettingsService extends AbstractRegistrable {
 				$args
 			);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_registration_actions(): array {
+		return [ 'admin_init', 'rest_api_init', 'init' ];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_registration_action_priority(): int {
+		return 5;
 	}
 
 	/**
@@ -252,8 +268,8 @@ class SettingsService extends AbstractRegistrable {
 					'sanitize_callback' => 'sanitize_email',
 				],
 				self::SETTING_NAME_CUSTOM_SMTP             => [
-					'type'         => 'object',
-					'default'      => [
+					'type'              => 'object',
+					'default'           => [
 						'from_email' => '',
 						'from_name'  => get_bloginfo( 'name' ),
 						'host'       => '',
@@ -263,7 +279,7 @@ class SettingsService extends AbstractRegistrable {
 						'username'   => '',
 						'password'   => '',
 					],
-					'show_in_rest' => [
+					'show_in_rest'      => [
 						'schema' => [
 							'type'       => 'object',
 							'properties' => [
@@ -294,6 +310,7 @@ class SettingsService extends AbstractRegistrable {
 							],
 						],
 					],
+					'sanitize_callback' => [ self::class, 'encrypt_smtp_password' ],
 				],
 				self::SETTING_NAME_SMTP_ENABLE             => [
 					'type'              => 'boolean',
@@ -357,16 +374,19 @@ class SettingsService extends AbstractRegistrable {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Encrypts the smtp password before storing to the database.
+	 *
+	 * @throws Exception Thrown when problem encrypting password.
+	 *
+	 * @param array $setting The smtp settings array.
 	 */
-	public static function get_registration_actions(): array {
-		return [ 'admin_init', 'rest_api_init', 'init' ];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function get_registration_action_priority(): int {
-		return 5;
+	public static function encrypt_smtp_password( array $setting ): array {
+		$unencrypted_password = $setting['password'] ?? null;
+		if ( $unencrypted_password ) {
+			$setting['password'] = Auth::encrypt_password( $unencrypted_password );
+		} else {
+			$setting['password'] = get_option( self::SETTING_NAME_CUSTOM_SMTP )['password'] ?? null;
+		}
+		return $setting;
 	}
 }

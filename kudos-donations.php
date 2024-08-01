@@ -41,6 +41,7 @@ if ( ! \defined( 'WPINC' ) ) {
 \define( 'KUDOS_CACHE_DIR', WP_CONTENT_DIR . '/cache/kudos-donations/' );
 \define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
 \define( 'KUDOS_SALT', NONCE_SALT );
+\define( 'KUDOS_AUTH_KEY', AUTH_KEY );
 
 // Autoloader for plugin.
 if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/autoload.php' ) ) {

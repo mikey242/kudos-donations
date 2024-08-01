@@ -1,4 +1,4 @@
-import { Fragment, useState } from '@wordpress/element';
+import { Fragment, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, RadioControl, TextControl, ToggleControl } from '../controls';
 import React from 'react';
@@ -10,11 +10,24 @@ import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { Panel } from '../Panel';
 
 const EmailTab = () => {
-	const { watch, getValues } = useFormContext();
+	const { watch, getValues, setValue, formState } = useFormContext();
 	const { createNotification } = useNotificationContext();
 	const [isEmailBusy, setIsEmailBusy] = useState(false);
+	const [passwordDisabled, setPasswordDisabled] = useState(false);
 	const watchCustom = watch('_kudos_smtp_enable');
 	const watchSendReceipts = watch('_kudos_email_receipt_enable');
+	const password = getValues('_kudos_custom_smtp.password');
+
+	useEffect(() => {
+		if (password) {
+			setPasswordDisabled(true);
+		}
+	}, [formState.isSubmitSuccessful, password]);
+
+	const resetPassword = () => {
+		setValue('_kudos_custom_smtp.password', '');
+		setPasswordDisabled(false);
+	};
 
 	const sendTestEmail = () => {
 		const address = getValues('test_email_address');
@@ -145,20 +158,29 @@ const EmailTab = () => {
 								}}
 							/>
 							<TextControl
-								name="_kudos_custom_smtp.password"
+								name={'_kudos_custom_smtp.password'}
+								isDisabled={passwordDisabled}
 								label={__('Password', 'kudos-donations')}
 								help={__(
-									'This password will be stored as plain text in the database.',
+									'This password will be encrypted in the database.',
 									'kudos-donations'
 								)}
 								type="password"
-								placeholder="*****"
 								validation={{
 									required: __(
 										'This field is required.',
 										'kudos-donations'
 									),
 								}}
+								inlineButton={
+									<Button
+										isOutline
+										type="button"
+										onClick={resetPassword}
+									>
+										{__('Reset', 'kudos-donations')}
+									</Button>
+								}
 							/>
 							<TextControl
 								name="_kudos_custom_smtp.from_email"
