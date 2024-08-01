@@ -41,9 +41,9 @@ const TextControl = ({
 							name={name}
 							onChange={onChange}
 							className={clsx(
-								'read-only:read-only:bg-gray-50 disabled:cursor-not-allowed form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
+								'disabled:opacity-50 disabled:cursor-not-allowed read-only:bg-gray-100 form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
 								error?.message
-									? 'border-red-300 text-red-900 focus:ring-red-500 focus:border-red-500 '
+									? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500 '
 									: 'border-gray-300 focus:ring-primary focus:border-primary',
 								addOn && 'pl-7'
 							)}
