@@ -139,7 +139,7 @@ class MailerService extends AbstractRegistrable {
 			'date'         => $transaction->post_date,
 			'description'  => $transaction->post_title,
 			'amount'       => ( ! empty( $transaction->{TransactionPostType::META_FIELD_CURRENCY} ) ? html_entity_decode(
-				Utils::get_currency_symbol( $transaction->{TransactionPostType::META_FIELD_CURRENCY} )
+				Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ]
 			) : '' ) . number_format_i18n(
 				$transaction->{TransactionPostType::META_FIELD_VALUE},
 				2

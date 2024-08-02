@@ -5,9 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { getFrequencyName } from '../../helpers/form';
 import { CheckboxControl } from '../controls';
 
-function SummaryTab(props) {
-	const { title, description, privacyLink, termsLink } = props;
-
+function SummaryTab({ title, description, privacyLink, termsLink, currency }) {
 	const { getValues } = useFormContext();
 	const values = getValues();
 
@@ -50,8 +48,8 @@ function SummaryTab(props) {
 					</span>
 				</p>
 				<p className="my-1">
-					<strong>{__('Amount', 'kudos-donations')}: </strong>€
-					<span>{values.value}</span>
+					<strong>{__('Amount', 'kudos-donations')}: </strong>
+					<span>{`${window.kudos.currencies[currency]} ${values.value}`}</span>
 				</p>
 				<p className="my-1">
 					<strong>{__('Type', 'kudos-donations')}: </strong>

@@ -23,6 +23,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	/**
 	 * Meta field constants.
 	 */
+	public const META_FIELD_CURRENCY                 = 'currency';
 	public const META_FIELD_GOAL                     = 'goal';
 	public const META_FIELD_SHOW_GOAL                = 'show_goal';
 	public const META_FIELD_ADDITIONAL_FUNDS         = 'additional_funds';
@@ -101,6 +102,11 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 */
 	public static function get_meta_config(): array {
 		return [
+			self::META_FIELD_CURRENCY                 => [
+				'type'              => FieldType::STRING,
+				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => 'EUR',
+			],
 			self::META_FIELD_GOAL                     => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',

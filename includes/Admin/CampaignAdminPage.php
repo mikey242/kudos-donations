@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Helper\Assets;
+use IseardMedia\Kudos\Helper\Utils;
 
 class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
 
@@ -71,6 +72,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			[
 				'version'     => KUDOS_VERSION,
 				'stylesheets' => [ Assets::get_style( 'admin/kudos-admin-campaigns.jsx.css' ) . '?ver=KUDOS_VERSION' ],
+				'currencies'  => Utils::get_currencies(),
 			]
 		);
 		wp_set_script_translations(

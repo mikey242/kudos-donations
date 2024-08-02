@@ -19,6 +19,7 @@ const InitialTab = (props) => {
 		showGoal,
 		total,
 		anonymous,
+		currency,
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -76,7 +77,12 @@ const InitialTab = (props) => {
 				<RadioGroupControl
 					name="valueFixed"
 					options={fixedAmounts.split(',').map((value) => {
-						return { value, label: '€' + value };
+						return {
+							value,
+							label:
+								(window.kudos.currencies[currency] ?? '') +
+								value.trim(),
+						};
 					})}
 				/>
 			)}

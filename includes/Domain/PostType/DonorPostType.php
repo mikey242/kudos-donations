@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
+use IseardMedia\Kudos\Helper\Utils;
 
 class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface, HasAdminColumns {
 
@@ -155,7 +156,7 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	 *
 	 * @param int $donor_id The post ID of the donor.
 	 */
-	private function get_total( int $donor_id ): int {
+	private function get_total( int $donor_id ): string {
 		$transactions = TransactionPostType::get_posts(
 			[
 				TransactionPostType::META_FIELD_DONOR_ID => $donor_id,
@@ -163,7 +164,29 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 			]
 		);
 
-		$values = array_column( $transactions, TransactionPostType::META_FIELD_VALUE );
-		return (int) array_sum( $values );
+		// Array to hold the sum of each currency.
+		$currency_sums = [];
+		foreach ( $transactions as $transaction ) {
+			$currency = $transaction->{TransactionPostType::META_FIELD_CURRENCY};
+			// Initialize the sum for this currency if not already done.
+			if ( ! isset( $currency_sums[ $currency ] ) ) {
+				$currency_sums[ $currency ] = 0;
+			}
+
+			// Add value to sum for this currency.
+			$currency_sums[ $currency ] += $transaction->{TransactionPostType::META_FIELD_VALUE};
+
+		}
+
+		// Sort alphabetically.
+		ksort( $currency_sums );
+
+		// Prepare output.
+		$return = [];
+		foreach ( $currency_sums as $currency => $value ) {
+			$return[] = Utils::get_currencies()[ $currency ] . $value;
+		}
+
+		return implode( ', ', $return );
 	}
 }

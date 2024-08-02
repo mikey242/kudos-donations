@@ -75,6 +75,7 @@ const FormRouter = ({
 		if (step < 5) {
 			return handleNext(data, step + 1);
 		}
+
 		setIsBusy(true);
 		submitForm(data).then((result) => {
 			if (!result.success) {
@@ -128,6 +129,7 @@ const FormRouter = ({
 									description={
 										campaign.meta.initial_description
 									}
+									currency={campaign.meta.currency}
 									minimumDonation={
 										campaign.meta.minimum_donation
 									}
@@ -171,6 +173,7 @@ const FormRouter = ({
 									description={
 										campaign.meta.payment_description
 									}
+									currency={campaign.meta.currency}
 									privacyLink={campaign.meta.privacy_link}
 									termsLink={campaign.meta.terms_link}
 								/>

@@ -7,6 +7,7 @@ import {
 	CheckboxControl,
 	ColorPicker,
 	RadioGroupControl,
+	SelectControl,
 	TextAreaControl,
 	TextControl,
 	ToggleControl,
@@ -35,6 +36,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 	const watchAddress = watch('meta.address_enabled');
 	const watchUseReturnMessage = watch('meta.show_return_message');
 	const watchDisplayGoal = watch('meta.show_goal');
+	const watchCurrency = watch('meta.currency');
 	const isNew = campaign.status === 'draft';
 
 	const goBack = () => {
@@ -80,10 +82,34 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 							}}
 						/>
 						<Divider />
+						<SelectControl
+							name="meta.currency"
+							label={__('Currency', 'kudos-donations')}
+							isDisabled={campaign.total > 0}
+							help={__(
+								'Select the desired currency for this campaign. Cannot be changed once you have received a donation.'
+							)}
+							validation={{
+								required: __(
+									'Please select a currency',
+									'kudos-donations'
+								),
+							}}
+							placeholder={__('Currency', 'kudos-donations')}
+							options={Object.keys(window.kudos.currencies).map(
+								(key) => {
+									return {
+										label: key,
+										value: key,
+									};
+								}
+							)}
+						/>
+						<Divider />
 						<TextControl
 							type="number"
 							name="meta.goal"
-							addOn="€"
+							addOn={window.kudos?.currencies[watchCurrency]}
 							help={__(
 								'Set a goal for your campaign.',
 								'kudos-donations'
@@ -120,7 +146,7 @@ const CampaignEdit = ({ campaign, updateCampaign, recurringAllowed }) => {
 						<TextControl
 							type="number"
 							name="meta.additional_funds"
-							addOn="€"
+							addOn={window.kudos?.currencies[watchCurrency]}
 							help={__(
 								'Add external funds to the total.',
 								'kudos-donations'

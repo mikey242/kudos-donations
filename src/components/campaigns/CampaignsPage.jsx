@@ -70,10 +70,13 @@ const CampaignsPage = () => {
 					<ProgressBar
 						goal={posts[i].meta?.goal}
 						total={posts[i].total}
+						currency={
+							window.kudos.currencies[posts[i].meta?.currency]
+						}
 						showGoal={false}
 					/>
 				) : (
-					'€' + posts[i].total
+					`${window.kudos.currencies[posts[i].meta?.currency] ?? ''} ${posts[i].total}`
 				);
 			},
 		},

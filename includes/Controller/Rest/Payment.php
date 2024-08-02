@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Vendor\VendorInterface;
@@ -194,8 +195,10 @@ class Payment extends AbstractRestController {
 			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
 		}
 
+		$campaign = get_post( $values['campaign_id'] );
+
 		$defaults = [
-			'currency'         => 'EUR',
+			'currency'         => $campaign->{CampaignPostType::META_FIELD_CURRENCY},
 			'recurring_length' => 0,
 			'redirect_url'     => get_site_url(),
 			'name'             => null,

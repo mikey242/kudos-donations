@@ -1,7 +1,13 @@
 import React from 'react';
 import { FlagIcon } from '@heroicons/react/20/solid';
 
-const ProgressBar = ({ goal, total = 0, extra = 0, showGoal = true }) => {
+const ProgressBar = ({
+	goal,
+	total = 0,
+	currency = '',
+	extra = 0,
+	showGoal = true,
+}) => {
 	const percentage = goal ? Math.round((total / goal) * 100) : 0;
 	const extraPercentage = goal ? extra / (goal - total) : 0;
 
@@ -19,7 +25,7 @@ const ProgressBar = ({ goal, total = 0, extra = 0, showGoal = true }) => {
 					<div className="h-full w-full bg-green-500" />
 					<div className="left-0 transition-opacity absolute flex items-center justify-center w-full opacity-0" />
 					<div className="absolute right-1/2 translate-x-1/2">
-						{percentage + '%' + ' ( €' + total + ')'}
+						{percentage + '%' + ' ( ' + currency + total + ')'}
 					</div>
 				</div>
 				<div
@@ -29,7 +35,7 @@ const ProgressBar = ({ goal, total = 0, extra = 0, showGoal = true }) => {
 				{showGoal && (
 					<div className="kudos-progress-total flex space-x-2 items-center absolute top-1/2 right-0 mr-2 -translate-y-2/4">
 						<FlagIcon className="w-4 h-4" />
-						<span>€{goal}</span>
+						<span>{currency + ' ' + goal}</span>
 					</div>
 				)}
 			</div>
