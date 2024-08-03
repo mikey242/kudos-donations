@@ -113,7 +113,10 @@ trait TableColumnsTrait {
 					echo wp_kses(
 						$meta_field_output,
 						[
-							'a'    => [ 'href' => [], 'class' => [] ],
+							'a'    => [
+								'href'  => [],
+								'class' => [],
+							],
 							'img'  => [ 'src' => [] ],
 							'span' => [ 'class' => [] ],
 						]
