@@ -35,6 +35,7 @@ const CampaignsPage = () => {
 		deletePost,
 	} = useAdminTableContext();
 	const { settings, settingsReady } = useSettingsContext();
+	const { currencies } = window.kudos;
 
 	const newCampaign = () => {
 		newPost(__('New campaign', 'kudos-donations')).then((response) => {
@@ -60,7 +61,8 @@ const CampaignsPage = () => {
 		{
 			title: __('Goal', 'kudos-donations'),
 			headerClass: 'w-20',
-			dataCallback: (i) => posts[i].meta?.goal,
+			dataCallback: (i) =>
+				`${currencies[posts[i].meta?.currency]} ${posts[i].meta?.goal}`,
 		},
 		{
 			title: __('Progress', 'kudos-donations'),
@@ -70,13 +72,11 @@ const CampaignsPage = () => {
 					<ProgressBar
 						goal={posts[i].meta?.goal}
 						total={posts[i].total}
-						currency={
-							window.kudos.currencies[posts[i].meta?.currency]
-						}
+						currency={currencies[posts[i].meta?.currency]}
 						showGoal={false}
 					/>
 				) : (
-					`${window.kudos.currencies[posts[i].meta?.currency] ?? ''} ${posts[i].total}`
+					`${currencies[posts[i].meta?.currency] ?? ''} ${posts[i].total}`
 				);
 			},
 		},

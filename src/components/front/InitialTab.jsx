@@ -6,29 +6,26 @@ import { useEffect } from '@wordpress/element';
 import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
 import { ProgressBar } from '../ProgressBar';
 
-const InitialTab = (props) => {
-	const {
-		title,
-		description,
-		buttons,
-		minimumDonation = 1,
-		donationType,
-		amountType,
-		fixedAmounts,
-		goal,
-		showGoal,
-		total,
-		anonymous,
-		currency,
-	} = props;
-
+const InitialTab = ({
+	title,
+	description,
+	buttons,
+	minimumDonation = 1,
+	donationType,
+	amountType,
+	fixedAmounts,
+	goal,
+	showGoal,
+	total,
+	anonymous,
+	currency,
+}) => {
+	const { currencies } = window.kudos.currencies;
 	const { setValue } = useFormContext();
-
 	const watchFixed = useWatch({ name: 'valueFixed' });
 	const watchOpen = useWatch({ name: 'valueOpen' });
 	const watchValue = useWatch({ name: 'value' });
 	const watchEmail = useWatch({ name: 'email' });
-
 	const valueError = sprintf(
 		// translators: %d is the amount in euros.
 		_n(
@@ -79,9 +76,7 @@ const InitialTab = (props) => {
 					options={fixedAmounts.split(',').map((value) => {
 						return {
 							value,
-							label:
-								(window.kudos.currencies[currency] ?? '') +
-								value.trim(),
+							label: (currencies[currency] ?? '') + value.trim(),
 						};
 					})}
 				/>
