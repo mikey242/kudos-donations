@@ -1,5 +1,5 @@
 <div align="center">
-    <img alt="Kudos logo" src="assets/plugin/icon-128x128.png" width="75">
+    <img alt="Kudos logo" src="assets/plugin/icon-128x128.png" width="128">
     <h1>Kudos Donations</h1>
     Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
     <br>
@@ -38,12 +38,8 @@ This software uses the following open source packages:
   designed to integrate beautifully with Tailwind CSS.
 - [Heroicons](https://heroicons.com/) - Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS.
 - [Mollie API](https://github.com/mollie/mollie-api-php) - Mollie API client for PHP.
-- [React Hook Form](https://github.com/react-hook-form/react-hook-form) - Performant, flexible and extensible forms
+- [React Hook Form](https://github.com/react-hook-form/react-hook-form) - Performant, flexible and extensible forms.
   with easy-to-use validation.
-- [PHP-DI](https://github.com/PHP-DI/PHP-DI) - The dependency injection container for humans
+- [Symfony-DI](https://symfony.com/components/DependencyInjection) - Dependency injection component from Symfony.
 - [Twig](https://twig.symfony.com/) - A modern template engine for PHP.
 - [ActionScheduler](https://actionscheduler.org/) - WordPress Job Queue with Background Processing.
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
