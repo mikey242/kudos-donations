@@ -20,7 +20,7 @@ const InitialTab = ({
 	anonymous,
 	currency,
 }) => {
-	const { currencies } = window.kudos.currencies;
+	const { currencies } = window.kudos;
 	const { setValue } = useFormContext();
 	const watchFixed = useWatch({ name: 'valueFixed' });
 	const watchOpen = useWatch({ name: 'valueOpen' });
@@ -76,7 +76,7 @@ const InitialTab = ({
 					options={fixedAmounts.split(',').map((value) => {
 						return {
 							value,
-							label: (currencies[currency] ?? '') + value.trim(),
+							label: (currencies[currency] ?? '') + value?.trim(),
 						};
 					})}
 				/>
