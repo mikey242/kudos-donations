@@ -206,6 +206,9 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 						case PaymentStatus::CANCELED:
 							$status_text = __( 'Canceled', 'kudos-donations' ) . '<span class="dashicons dashicons-no"></span>';
 							break;
+						case PaymentStatus::FAILED:
+							$status_text = __( 'Failed', 'kudos-donations' ) . '<span class="dashicons dashicons-no"></span>';
+							break;
 						default:
 							$status_text = $status;
 					}
