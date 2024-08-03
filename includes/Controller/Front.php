@@ -334,6 +334,7 @@ class Front extends AbstractRegistrable {
 				'stylesheets' => [
 					Assets::get_style( 'front/kudos-front.css' ),
 				],
+				'currencies'  => Utils::get_currencies(),
 			]
 		);
 	}
