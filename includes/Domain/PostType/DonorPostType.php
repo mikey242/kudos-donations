@@ -143,7 +143,7 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 			],
 			'total_donations'                   => [
 				'label'      => __( 'Total donated', 'kudos-donations' ),
-				'value_type' => FieldType::INTEGER,
+				'value_type' => FieldType::STRING,
 				'value'      => function ( $donor_id ) {
 					return $this->get_total( $donor_id );
 				},
