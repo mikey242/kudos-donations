@@ -1,14 +1,14 @@
 import React from 'react';
-import { Fragment } from '@wordpress/element';
-import { Pane } from '../Panel';
+import { Fragment, useRef } from '@wordpress/element';
+import { Pane } from '../common/Panel';
 import { __ } from '@wordpress/i18n';
 import { ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 
 import { StringParam, useQueryParams, withDefault } from 'use-query-params';
-import TableRow from './TableRow';
 import { clsx } from 'clsx';
+import { FormProvider, useForm } from 'react-hook-form';
 
-const Table = ({ headerItems, tableData, updatePost }) => {
+export const Table = ({ headerItems, tableData, updatePost }) => {
 	const [sortQuery, setSortQuery] = useQueryParams({
 		order: withDefault(StringParam, 'desc'),
 		orderby: withDefault(StringParam, 'date'),
@@ -99,4 +99,42 @@ const Table = ({ headerItems, tableData, updatePost }) => {
 	);
 };
 
-export default Table;
+const TableRow = ({ post, headerItems, rowIndex, updatePost }) => {
+	const formRef = useRef(null);
+	const methods = useForm({
+		defaultValues: {
+			...post,
+			title: post?.title?.rendered,
+		},
+	});
+
+	const save = (data) => {
+		updatePost(data.id, data, false);
+	};
+
+	const { handleSubmit } = methods;
+	return (
+		<FormProvider {...methods}>
+			<form
+				className="table-row text-sm"
+				onSubmit={handleSubmit(save)}
+				ref={formRef}
+			>
+				{headerItems.map((column, i) => {
+					return (
+						<div
+							key={column.title + post.id}
+							className={clsx(
+								headerItems[i]?.cellClass,
+								'table-cell align-middle whitespace-nowrap px-3 py-4 text-gray-900'
+							)}
+						>
+							{column.dataCallback &&
+								column.dataCallback(rowIndex, formRef)}
+						</div>
+					);
+				})}
+			</form>
+		</FormProvider>
+	);
+};

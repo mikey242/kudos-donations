@@ -16,10 +16,10 @@ import { __ } from '@wordpress/i18n';
 import React, { Fragment } from 'react';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { DonateButton } from '../../components/DonateButton';
-import CampaignProvider from '../../contexts/CampaignContext';
+import { DonateButton } from '../../components/common/DonateButton';
+import CampaignProvider from '../../components/common/contexts/CampaignContext';
 import FormRouter from '../../components/front/FormRouter';
-import Render from '../../components/Render';
+import Render from '../../components/common/Render';
 
 const ButtonEdit = (props) => {
 	const [campaigns, setCampaigns] = useState(null);

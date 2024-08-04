@@ -1,8 +1,12 @@
 import { Fragment } from '@wordpress/element';
-import { Panel } from '../Panel';
+import { Panel } from '../../common/Panel';
 import { __ } from '@wordpress/i18n';
-import { CheckboxControl, TextControl, ToggleControl } from '../controls';
-import Divider from '../Divider';
+import {
+	CheckboxControl,
+	TextControl,
+	ToggleControl,
+} from '../../common/controls';
+import Divider from '../../common/Divider';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 

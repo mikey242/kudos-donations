@@ -1,8 +1,8 @@
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import logo from '../../../assets/images/full-logo-green.svg';
+import logo from '../../../../assets/images/full-logo-green.svg';
 import React from 'react';
-import { Button, ToggleControl } from '../controls';
+import { Button, ToggleControl } from '../../common/controls';
 import { HeartIcon } from '@heroicons/react/20/solid';
 import {
 	InformationCircleIcon,
@@ -10,8 +10,8 @@ import {
 	QuestionMarkCircleIcon,
 	UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { Panel } from '../Panel';
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { Panel } from '../../common/Panel';
+import { useSettingsContext } from '../../common/contexts/SettingsContext';
 
 const HelpTab = () => {
 	const { updateSetting } = useSettingsContext();

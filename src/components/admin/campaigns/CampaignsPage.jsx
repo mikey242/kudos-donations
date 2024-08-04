@@ -1,12 +1,12 @@
 // eslint-disable-next-line import/default
-import { Header } from '../admin/Header';
+import { Header } from '../Header';
 import React from 'react';
 import CampaignEdit from './CampaignEdit';
 import { __ } from '@wordpress/i18n';
-import { Button } from '../controls';
+import { Button, InlineTextEdit } from '../../common/controls';
 import EmptyCampaigns from './EmptyCampaigns';
-import { Spinner } from '../Spinner';
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { Spinner } from '../../common/Spinner';
+import { useSettingsContext } from '../../common/contexts/SettingsContext';
 import {
 	ArrowDownTrayIcon,
 	DocumentDuplicateIcon,
@@ -15,13 +15,12 @@ import {
 	PlusIcon,
 	TrashIcon,
 } from '@heroicons/react/24/outline';
-import { useAdminTableContext } from '../../contexts/AdminTableContext';
-import { InlineTextEdit } from '../controls/InlineTextEdit';
+import { useAdminTableContext } from '../../common/contexts/AdminTableContext';
 import { ColorPickerPopup } from './ColorPickerPopup';
-import { ProgressBar } from '../ProgressBar';
+import { ProgressBar } from '../../common/ProgressBar';
 import { dateI18n } from '@wordpress/date';
 import { Fragment } from '@wordpress/element';
-import Table from '../admin/Table';
+import { Table } from '../Table';
 
 const CampaignsPage = () => {
 	const {

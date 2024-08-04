@@ -3,9 +3,8 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
 	presets: [require('./tailwind.kudos.preset.js')],
 	content: [
-		'./src/components/*.{js,jsx}',
+		'./src/components/common/**/*.{js,jsx}',
 		'./src/components/front/**/*.{js,jsx}',
-		'./src/components/controls/**/*.{js,jsx}',
 	],
 	theme: {
 		fontFamily: {

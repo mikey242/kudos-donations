@@ -1,5 +1,5 @@
 import { Fragment } from '@wordpress/element';
-import { Panel } from '../Panel';
+import { Panel } from '../../common/Panel';
 import { __ } from '@wordpress/i18n';
 import {
 	ColorPicker,
@@ -7,9 +7,9 @@ import {
 	TextAreaControl,
 	TextControl,
 	ToggleControl,
-} from '../controls';
-import Divider from '../Divider';
-import { isValidUrl } from '../../helpers/util';
+} from '../../common/controls';
+import Divider from '../../common/Divider';
+import { isValidUrl } from '../../../helpers/util';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 

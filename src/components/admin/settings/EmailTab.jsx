@@ -1,13 +1,18 @@
 import { Fragment, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Button, RadioControl, TextControl, ToggleControl } from '../controls';
+import {
+	Button,
+	RadioControl,
+	TextControl,
+	ToggleControl,
+} from '../../common/controls';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useNotificationContext } from '../../contexts/NotificationContext';
+import { useNotificationContext } from '../../common/contexts/NotificationContext';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
-import { Panel } from '../Panel';
+import { Panel } from '../../common/Panel';
 
 const EmailTab = () => {
 	const { watch, getValues, setValue, formState } = useFormContext();

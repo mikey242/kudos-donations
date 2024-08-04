@@ -3,8 +3,12 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
-import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
-import { ProgressBar } from '../ProgressBar';
+import {
+	RadioGroupControl,
+	TextControl,
+	ToggleControl,
+} from '../common/controls';
+import { ProgressBar } from '../common/ProgressBar';
 
 const InitialTab = ({
 	title,

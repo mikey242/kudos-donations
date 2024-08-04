@@ -1,6 +1,6 @@
-import { Panel } from '../Panel';
+import { Panel } from '../../common/Panel';
 import { __ } from '@wordpress/i18n';
-import { TextAreaControl } from '../controls';
+import { TextAreaControl } from '../../common/controls';
 import React from 'react';
 
 export const CustomCSSTab = () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { KudosLogo } from '../KudosLogo';
+import { KudosLogo } from '../common/KudosLogo';
 import { __ } from '@wordpress/i18n';
 
 const Header = ({ children }) => {

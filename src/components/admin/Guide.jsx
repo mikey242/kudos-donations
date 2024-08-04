@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from '@wordpress/element';
 import { useFocusOnMount } from '@wordpress/compose';
 import { ESCAPE, LEFT, RIGHT } from '@wordpress/keycodes';
 import { __ } from '@wordpress/i18n';
-import { Button } from '../controls';
+import { Button } from '../common/controls';
 
 const Guide = ({ pages = [], className, onFinish }) => {
 	const [currentPage, setCurrentPage] = useState(0);

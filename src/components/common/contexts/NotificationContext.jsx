@@ -5,7 +5,7 @@ import {
 	useEffect,
 	useState,
 } from '@wordpress/element';
-import Notification from '../components/admin/Notification';
+import Notification from '../../admin/Notification';
 
 export const NotificationContext = createContext(null);
 

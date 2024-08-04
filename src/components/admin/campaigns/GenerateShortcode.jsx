@@ -2,11 +2,11 @@ import React from 'react';
 import { Fragment, useState } from '@wordpress/element';
 import { useCopyToClipboard } from '@wordpress/compose';
 import { __ } from '@wordpress/i18n';
-import { Button, RadioGroupControl, TextControl } from '../controls';
-import Divider from '../Divider';
-import KudosModal from '../KudosModal';
+import { Button, RadioGroupControl, TextControl } from '../../common/controls';
+import Divider from '../../common/Divider';
+import KudosModal from '../../common/KudosModal';
 import { useFormContext } from 'react-hook-form';
-import { useNotificationContext } from '../../contexts/NotificationContext';
+import { useNotificationContext } from '../../common/contexts/NotificationContext';
 import { ClipboardIcon } from '@heroicons/react/24/outline';
 
 function GenerateShortcode({ campaign }) {

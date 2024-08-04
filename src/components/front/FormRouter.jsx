@@ -4,10 +4,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 import InitialTab from './InitialTab';
 import FrequencyTab from './FrequencyTab';
 import AddressTab from './AddressTab';
-import { Button } from '../controls';
+import { Button } from '../common/controls';
 import MessageTab from './MessageTab';
 import SummaryTab from './SummaryTab';
-import { steps } from '../../constants/form';
+import { steps } from '../../helpers/form';
 import { useLayoutEffect, useRef, useState } from '@wordpress/element';
 import { clsx } from 'clsx';
 import {

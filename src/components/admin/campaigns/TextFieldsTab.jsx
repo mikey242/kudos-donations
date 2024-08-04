@@ -1,7 +1,7 @@
 import { Fragment } from '@wordpress/element';
-import { Panel } from '../Panel';
+import { Panel } from '../../common/Panel';
 import { __ } from '@wordpress/i18n';
-import { TextAreaControl, TextControl } from '../controls';
+import { TextAreaControl, TextControl } from '../../common/controls';
 import React from 'react';
 
 export const TextFieldsTab = () => {

@@ -1,5 +1,32 @@
 import { __ } from '@wordpress/i18n';
-import { steps } from '../constants/form';
+
+// Form router config.
+export const steps = {
+	1: {
+		name: 'Initial',
+	},
+	2: {
+		name: 'Recurring',
+		requirements: {
+			recurring: true,
+		},
+	},
+	3: {
+		name: 'Address',
+		requirements: {
+			address_enabled: true,
+		},
+	},
+	4: {
+		name: 'Message',
+		requirements: {
+			message_enabled: true,
+		},
+	},
+	5: {
+		name: 'Summary',
+	},
+};
 
 // Set tabs height according to the highest tab.
 export function setFormHeight(form) {

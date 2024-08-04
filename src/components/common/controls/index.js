@@ -8,3 +8,4 @@ export * from './CheckboxControl';
 export * from './ColorPicker';
 export * from './TextAreaControl';
 export * from './SelectControl';
+export * from './InlineTextEdit';

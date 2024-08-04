@@ -3,7 +3,7 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { Fragment } from '@wordpress/element';
 import { NumberParam, useQueryParam } from 'use-query-params';
-import { Pane } from '../Panel';
+import { Pane } from '../common/Panel';
 
 const TabPanel = ({ tabs }) => {
 	const [tabIndex, setTabIndex] = useQueryParam('tab', NumberParam);

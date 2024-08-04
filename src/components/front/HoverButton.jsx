@@ -1,6 +1,6 @@
-import { KudosLogo } from '../KudosLogo';
+import { KudosLogo } from '../common/KudosLogo';
 import React from 'react';
-import { Button } from '../controls';
+import { Button } from '../../common/controls';
 import { clsx } from 'clsx';
 
 const HoverButton = ({ color, className, onClick = null }) => {

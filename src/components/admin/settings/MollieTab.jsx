@@ -1,13 +1,13 @@
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import { Button, RadioGroupControl, TextControl } from '../controls';
+import { Button, RadioGroupControl, TextControl } from '../../common/controls';
 import { Fragment } from '@wordpress/element';
-import Divider from '../Divider';
+import Divider from '../../common/Divider';
 import { clsx } from 'clsx';
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { useSettingsContext } from '../../common/contexts/SettingsContext';
 import { ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useFormContext } from 'react-hook-form';
-import { Panel } from '../Panel';
+import { Panel } from '../../common/Panel';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/16/solid';
 
 const MollieTab = ({ checkApiKeys }) => {

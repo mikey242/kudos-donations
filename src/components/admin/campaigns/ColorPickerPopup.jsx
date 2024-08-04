@@ -7,8 +7,8 @@ import {
 	useState,
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Pane } from '../Panel';
-import { ColorPicker } from '../controls';
+import { Pane } from '../../common/Panel';
+import { ColorPicker } from '../../common/controls';
 import { Transition } from '@headlessui/react';
 
 const ColorPickerPopup = ({ color, onColorChange }) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Transition } from '@headlessui/react';
-import { Pane } from '../Panel';
+import { Pane } from '../common/Panel';
 import {
 	CheckCircleIcon,
 	ExclamationCircleIcon,

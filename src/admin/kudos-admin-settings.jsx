@@ -1,9 +1,9 @@
 import { createRoot } from '@wordpress/element';
 import React from 'react';
-import SettingsPage from '../components/settings/SettingsPage';
-import SettingsProvider from '../contexts/SettingsContext';
-import { NotificationProvider } from '../contexts/NotificationContext';
-import Render from '../components/Render';
+import SettingsPage from '../components/admin/settings/SettingsPage';
+import SettingsProvider from '../components/common/contexts/SettingsContext';
+import { NotificationProvider } from '../components/common/contexts/NotificationContext';
+import Render from '../components/common/Render';
 import './kudos-admin-settings.css';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';

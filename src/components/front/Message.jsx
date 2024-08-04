@@ -1,8 +1,8 @@
 import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
-import KudosModal from '../KudosModal';
-import Render from '../Render';
-import { Button } from '../controls';
+import KudosModal from '../common/KudosModal';
+import Render from '../common/Render';
+import { Button } from '../common/controls';
 import { __ } from '@wordpress/i18n';
 
 function Message({ color, title, body }) {

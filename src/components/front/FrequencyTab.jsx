@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import React from 'react';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
-import { SelectControl } from '../controls';
+import { SelectControl } from '../common/controls';
 
 function FrequencyTab(props) {
 	const { title, description, buttons } = props;

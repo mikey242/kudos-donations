@@ -3,7 +3,7 @@ import React from 'react';
 import BaseTab from './BaseTab';
 import { useFormContext } from 'react-hook-form';
 import { getFrequencyName } from '../../helpers/form';
-import { CheckboxControl } from '../controls';
+import { CheckboxControl } from '../common/controls';
 
 function SummaryTab({ title, description, privacyLink, termsLink, currency }) {
 	const { getValues } = useFormContext();

@@ -17,7 +17,7 @@ import {
 	withDefault,
 } from 'use-query-params';
 import { useNotificationContext } from './NotificationContext';
-import { removeQueryParameters } from '../helpers/util';
+import { removeQueryParameters } from '../../../helpers/util';
 
 export const AdminTableContext = createContext(null);
 

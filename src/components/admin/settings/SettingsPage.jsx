@@ -7,18 +7,18 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Header } from '../admin/Header';
+import { Header } from '../Header';
 import { IntroGuide } from './IntroGuide';
 import MollieTab from './MollieTab';
 import { EmailTab } from './EmailTab';
 import { HelpTab } from './HelpTab';
-import { Button } from '../controls';
-import TabPanel from '../admin/TabPanel';
-import { Spinner } from '../Spinner';
+import { Button } from '../../common/controls';
+import TabPanel from '../TabPanel';
+import { Spinner } from '../../common/Spinner';
 // eslint-disable-next-line import/default
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { useSettingsContext } from '../../common/contexts/SettingsContext';
 import { clsx } from 'clsx';
-import { useNotificationContext } from '../../contexts/NotificationContext';
+import { useNotificationContext } from '../../common/contexts/NotificationContext';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { InvoiceTab } from './InvoiceTab';
 

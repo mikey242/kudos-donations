@@ -1,8 +1,8 @@
 import React from 'react';
-import Render from '../Render';
-import { useCampaignContext } from '../../contexts/CampaignContext';
-import { DonateButton } from '../DonateButton';
-import { Spinner } from '../Spinner';
+import Render from '../common/Render';
+import { useCampaignContext } from '../common/contexts/CampaignContext';
+import { DonateButton } from '../common/DonateButton';
+import { Spinner } from '../common/Spinner';
 
 const KudosButton = ({ children, className, targetId = null }) => {
 	const { campaignRequest, campaignErrors } = useCampaignContext();

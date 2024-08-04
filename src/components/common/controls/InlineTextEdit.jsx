@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import { clsx } from 'clsx';
 import { get, uniqueId } from 'lodash';
 
-const InlineTextEdit = ({
+export const InlineTextEdit = ({
 	name,
 	validation,
 	isDisabled,
@@ -50,5 +50,3 @@ const InlineTextEdit = ({
 		</>
 	);
 };
-
-export { InlineTextEdit };

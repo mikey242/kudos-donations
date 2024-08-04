@@ -3,10 +3,10 @@ import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import FormRouter from './FormRouter';
-import { Spinner } from '../Spinner';
-import KudosModal from '../KudosModal';
-import Render from '../Render';
-import { useCampaignContext } from '../../contexts/CampaignContext';
+import { Spinner } from '../common/Spinner';
+import KudosModal from '../common/KudosModal';
+import Render from '../common/Render';
+import { useCampaignContext } from '../common/contexts/CampaignContext';
 
 function KudosForm({ displayAs }) {
 	const { campaignRequest, campaignId, campaignErrors } =

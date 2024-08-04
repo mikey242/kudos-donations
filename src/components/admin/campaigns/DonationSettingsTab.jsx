@@ -1,7 +1,7 @@
 import { Fragment } from '@wordpress/element';
-import { Panel } from '../Panel';
+import { Panel } from '../../common/Panel';
 import { __ } from '@wordpress/i18n';
-import { RadioGroupControl, TextControl } from '../controls';
+import { RadioGroupControl, TextControl } from '../../common/controls';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 

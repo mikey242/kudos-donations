@@ -1,18 +1,18 @@
-import intro from '../../../assets/images/guide-welcome.png';
-import mollie from '../../../assets/images/guide-mollie-api.png';
-import campaign from '../../../assets/images/guide-campaign.png';
-import button from '../../../assets/images/guide-button.png';
-import live from '../../../assets/images/guide-test-live.png';
-import newsletter from '../../../assets/images/guide-newsletter.png';
+import intro from '../../../../assets/images/guide-welcome.png';
+import mollie from '../../../../assets/images/guide-mollie-api.png';
+import campaign from '../../../../assets/images/guide-campaign.png';
+import button from '../../../../assets/images/guide-button.png';
+import live from '../../../../assets/images/guide-test-live.png';
+import newsletter from '../../../../assets/images/guide-newsletter.png';
 import { __ } from '@wordpress/i18n';
-import { Guide } from '../admin/Guide';
+import { Guide } from '../Guide';
 import React from 'react';
 import { Newsletter } from './Newsletter';
-import KudosModal from '../KudosModal';
+import KudosModal from '../../common/KudosModal';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Button, TextControl } from '../controls';
+import { Button, TextControl } from '../../common/controls';
 import { useState } from '@wordpress/element';
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { useSettingsContext } from '../../common/contexts/SettingsContext';
 import { clsx } from 'clsx';
 
 const IntroGuide = () => {

@@ -1,8 +1,8 @@
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import { TextAreaControl, TextControl } from '../controls';
-import { Panel } from '../Panel';
+import { TextAreaControl, TextControl } from '../../common/controls';
+import { Panel } from '../../common/Panel';
 
 const InvoiceTab = () => {
 	return (
