@@ -1,8 +1,11 @@
 import React from 'react';
 import { clsx } from 'clsx';
 import { Field } from './Field';
+import { useFormContext } from 'react-hook-form';
+import { useState } from '@wordpress/element';
+import { get, uniqueId } from 'lodash';
 
-const TextControl = ({
+export const TextControl = ({
 	name,
 	validation,
 	isDisabled,
@@ -14,6 +17,7 @@ const TextControl = ({
 	placeholder,
 	inlineButton,
 }) => {
+	const { register } = useFormContext();
 	return (
 		<Field
 			name={name}
@@ -21,8 +25,7 @@ const TextControl = ({
 			isDisabled={isDisabled}
 			help={help}
 			label={label}
-			validation={validation}
-			render={({ id, onChange, value, error }) => (
+			render={({ id, error }) => (
 				<>
 					<div className="relative flex flex-row rounded-md">
 						{addOn && (
@@ -33,17 +36,23 @@ const TextControl = ({
 							</div>
 						)}
 						<input
+							{...register(name, {
+								...validation,
+								disabled: isDisabled,
+							})}
 							readOnly={isReadOnly}
-							disabled={isDisabled}
 							type={type}
 							id={id}
-							value={value ?? ''}
-							name={name}
-							onChange={onChange}
 							className={clsx(
-								'disabled:cursor-not-allowed form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
+								// General
+								'form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
+								// Disabled
+								'disabled:cursor-not-allowed',
+								// Read only
+								'read-only:bg-gray-100 read-only:opacity-75',
+								// Invalid
 								error?.message
-									? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500 '
+									? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
 									: 'border-gray-300 focus:ring-primary focus:border-primary',
 								addOn && 'pl-7'
 							)}
@@ -63,4 +72,49 @@ const TextControl = ({
 	);
 };
 
-export { TextControl };
+export const InlineTextEdit = ({
+	name,
+	validation,
+	isDisabled,
+	className,
+	type = 'text',
+	placeholder,
+}) => {
+	const {
+		register,
+		formState: { errors },
+	} = useFormContext();
+	const [id] = useState(uniqueId(name + '-'));
+	const error = get(errors, name);
+
+	return (
+		<>
+			<input
+				{...register(name, validation)}
+				type={type}
+				id={id}
+				disabled={isDisabled}
+				className={clsx(
+					error?.message
+						? 'border-red-300 text-red-900 placeholder-red-300'
+						: 'border-0 focus:ring-primary focus:border-primary',
+					'disabled:cursor-not-allowed disabled:opacity-50 hover:bg-zinc-50 hover:shadow-inner focus:text-gray-900 bg-transparent form-input transition ease-in-out inline focus:outline-none text-sm rounded-md',
+					className
+				)}
+				placeholder={placeholder}
+				aria-invalid={!!error}
+				aria-errormessage={error?.message}
+				onBlur={(e) => e.target.form.requestSubmit()}
+			/>
+
+			{error?.message && (
+				<p
+					className="mt-2 text-left text-sm text-red-600"
+					id={`${id}-error`}
+				>
+					{error?.message}
+				</p>
+			)}
+		</>
+	);
+};

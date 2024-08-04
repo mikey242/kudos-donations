@@ -1,7 +1,8 @@
 import React from 'react';
 import { clsx } from 'clsx';
 import { get, uniqueId } from 'lodash';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
+import { useState } from '@wordpress/element';
 
 export const Field = ({
 	children,
@@ -11,14 +12,13 @@ export const Field = ({
 	type,
 	help,
 	name,
-	validation,
 	render,
 }) => {
 	const {
 		formState: { errors },
 	} = useFormContext();
+	const [id] = useState(uniqueId(name + '-'));
 
-	const id = uniqueId(name + '-');
 	const error = get(errors, name);
 	const hasLabel = label && !hideLabel;
 
@@ -33,32 +33,16 @@ export const Field = ({
 				<Label htmlFor={id} hideLabel={hideLabel}>
 					{label}
 				</Label>
-				<Controller
-					name={name}
-					rules={validation}
-					disabled={isDisabled}
-					render={({ field: { onChange, value } }) => (
-						<div
-							className={clsx(
-								hasLabel ? 'md:col-span-3' : 'md:col-span-4',
-								isDisabled && 'opacity-50'
-							)}
-						>
-							{render
-								? render({
-										id,
-										onChange,
-										value,
-										isDisabled,
-										error,
-										help,
-									})
-								: children}
-							<Help>{help}</Help>
-							{hasLabel && <Error error={error} />}
-						</div>
+				<div
+					className={clsx(
+						hasLabel ? 'md:col-span-3' : 'md:col-span-4',
+						isDisabled && 'opacity-50'
 					)}
-				/>
+				>
+					{render ? render({ id, error }) : children}
+					<Help>{help}</Help>
+					{hasLabel && <Error error={error} />}
+				</div>
 			</div>
 			{!hasLabel && <Error error={error} />}
 		</div>
@@ -95,6 +79,7 @@ const Error = ({ error }) => {
 		<>
 			{error?.message && (
 				<p
+					role="alert"
 					className="mt-2 text-left text-sm text-red-600"
 					id={`${error?.ref?.name}-error`}
 				>

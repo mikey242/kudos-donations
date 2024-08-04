@@ -5,9 +5,7 @@ import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import { TextAreaControl } from '../common/controls';
 
-const MessageTab = (props) => {
-	const { title, description, buttons } = props;
-
+const MessageTab = ({ title, description, buttons }) => {
 	const { setFocus } = useFormContext();
 
 	useEffect(() => {

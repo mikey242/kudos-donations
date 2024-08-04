@@ -42,6 +42,7 @@ function KudosForm({ displayAs }) {
 	};
 
 	async function submitForm(data) {
+		console.log(data);
 		setFormError(null);
 		const formData = new window.FormData();
 		formData.append('timestamp', timestamp.toString());

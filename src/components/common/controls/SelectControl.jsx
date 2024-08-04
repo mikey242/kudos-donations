@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field } from './Field';
-import { clsx } from 'clsx';
+import { useFormContext } from 'react-hook-form';
 
 const SelectControl = ({
 	name,
@@ -12,6 +12,8 @@ const SelectControl = ({
 	help,
 	hideLabel,
 }) => {
+	const { register } = useFormContext();
+
 	return (
 		<Field
 			name={name}
@@ -19,17 +21,15 @@ const SelectControl = ({
 			hideLabel={hideLabel}
 			help={help}
 			label={label}
-			validation={validation}
-			render={({ id, onChange, value = '', error }) => (
+			render={({ id, error }) => (
 				<select
-					onChange={onChange}
-					value={value}
+					{...register(name, {
+						...validation,
+						disabled: isDisabled,
+					})}
 					id={id}
 					disabled={isDisabled}
-					className={clsx(
-						!value && 'text-gray-500',
-						'disabled:cursor-not-allowed mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md'
-					)}
+					className="disabled:cursor-not-allowed mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
 					aria-invalid={!!error}
 					aria-errormessage={error?.message}
 				>

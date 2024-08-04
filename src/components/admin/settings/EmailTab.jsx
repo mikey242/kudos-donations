@@ -18,16 +18,15 @@ const EmailTab = () => {
 	const { watch, getValues, setValue, formState } = useFormContext();
 	const { createNotification } = useNotificationContext();
 	const [isEmailBusy, setIsEmailBusy] = useState(false);
-	const [passwordDisabled, setPasswordDisabled] = useState(false);
+	const [passwordDisabled, setPasswordDisabled] = useState(
+		!getValues('_kudos_custom_smtp.password')
+	);
 	const watchCustom = watch('_kudos_smtp_enable');
 	const watchSendReceipts = watch('_kudos_email_receipt_enable');
-	const password = getValues('_kudos_custom_smtp.password');
 
 	useEffect(() => {
-		if (password) {
-			setPasswordDisabled(true);
-		}
-	}, [formState.isSubmitSuccessful, password]);
+		setPasswordDisabled(true);
+	}, [formState.isSubmitSuccessful]);
 
 	const resetPassword = () => {
 		setValue('_kudos_custom_smtp.password', '');
@@ -163,7 +162,7 @@ const EmailTab = () => {
 								}}
 							/>
 							<TextControl
-								name={'_kudos_custom_smtp.password'}
+								name="_kudos_custom_smtp.password"
 								isDisabled={passwordDisabled}
 								label={__('Password', 'kudos-donations')}
 								help={__(
@@ -177,16 +176,14 @@ const EmailTab = () => {
 										'kudos-donations'
 									),
 								}}
-								inlineButton={
-									<Button
-										isOutline
-										type="button"
-										onClick={resetPassword}
-									>
-										{__('Reset', 'kudos-donations')}
-									</Button>
-								}
 							/>
+							<button
+								type="button"
+								className="ml-auto text-red-600 underline text-right cursor-pointer block"
+								onClick={resetPassword}
+							>
+								{__('Reset password', 'kudos-donations')}
+							</button>
 							<TextControl
 								name="_kudos_custom_smtp.from_email"
 								label={__('From address', 'kudos-donations')}

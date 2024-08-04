@@ -3,7 +3,7 @@ import { Header } from '../Header';
 import React from 'react';
 import CampaignEdit from './CampaignEdit';
 import { __ } from '@wordpress/i18n';
-import { Button, InlineTextEdit } from '../../common/controls';
+import { Button } from '../../common/controls';
 import EmptyCampaigns from './EmptyCampaigns';
 import { Spinner } from '../../common/Spinner';
 import { useSettingsContext } from '../../common/contexts/SettingsContext';
@@ -46,7 +46,7 @@ const CampaignsPage = () => {
 		{
 			title: __('Campaign name', 'kudos-donations'),
 			orderby: 'title',
-			dataCallback: () => <InlineTextEdit name={'title'} />,
+			dataCallback: (i) => posts[i].title.rendered,
 		},
 		{
 			title: __('Color', 'kudos-donations'),
