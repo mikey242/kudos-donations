@@ -19,7 +19,7 @@
 		"email": "michael@iseard.media"
 	},
 	"dependencies": {
-		"@headlessui/react": "1.7.18",
+		"@headlessui/react": "1.7.19",
 		"@heroicons/react": "^2.1.3",
 		"clsx": "^2.1.1",
 		"focus-trap-react": "^10.2.3",
