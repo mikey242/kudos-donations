@@ -70,7 +70,6 @@ const ColorPickerPopup = ({ color, onColorChange }) => {
 			/>
 
 			<div className="top-16 w-full max-w-sm px-4">
-				{/*<div className="color-picker-overlay fixed inset-0 bg-black/30 z-1"></div>*/}
 				<Transition
 					show={shown}
 					as={Fragment}
