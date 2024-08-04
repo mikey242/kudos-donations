@@ -95,7 +95,7 @@ const KudosModal = ({
 
 	return (
 		<div ref={targetRef} data-toggle={false}>
-			<Transition show={isOpen} appear={false}>
+			<Transition show={isOpen}>
 				<div className={'fixed z-[999999] inset-0 overflow-y-scroll'}>
 					<>
 						<Transition.Child
@@ -116,6 +116,9 @@ const KudosModal = ({
 							enter="transition-all duration-[400ms]"
 							enterFrom="opacity-0 rotate-[-5deg] translate-x-3 translate-y-3 scale-90"
 							enterTo="opacity-100 rotate-0 translate-x-0 translate-y-0 scale-100"
+							leave="transition-all duration-200"
+							leaveFrom="opacity-100 rotate-0 translate-y-0 scale-100"
+							leaveTo="opacity-0 translate-y-3 scale-90"
 						>
 							<div className="flex min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 								{/* This element is to trick the browser into centering the modal contents. */}
