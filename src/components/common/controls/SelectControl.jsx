@@ -1,6 +1,7 @@
 import React from 'react';
 import { Field } from './Field';
 import { useFormContext } from 'react-hook-form';
+import { clsx } from 'clsx';
 
 const SelectControl = ({
 	name,
@@ -29,7 +30,14 @@ const SelectControl = ({
 					})}
 					id={id}
 					disabled={isDisabled}
-					className="disabled:cursor-not-allowed mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
+					className={clsx(
+						// General
+						'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md',
+						// Disabled
+						'disabled:cursor-not-allowed',
+						// Read only
+						'read-only:bg-gray-100'
+					)}
 					aria-invalid={!!error}
 					aria-errormessage={error?.message}
 				>

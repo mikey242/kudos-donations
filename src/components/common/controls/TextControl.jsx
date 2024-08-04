@@ -49,7 +49,7 @@ export const TextControl = ({
 								// Disabled
 								'disabled:cursor-not-allowed',
 								// Read only
-								'read-only:bg-gray-100',
+								'read-only:bg-gray-100 read-only:cursor-not-allowed',
 								// Invalid
 								error?.message
 									? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
