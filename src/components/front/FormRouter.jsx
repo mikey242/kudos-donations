@@ -7,7 +7,7 @@ import AddressTab from './AddressTab';
 import { Button } from '../common/controls';
 import MessageTab from './MessageTab';
 import SummaryTab from './SummaryTab';
-import { steps } from '../../helpers/form';
+import { steps, checkRequirements } from '../../helpers/form';
 import { useLayoutEffect, useRef, useState } from '@wordpress/element';
 import { clsx } from 'clsx';
 import {
@@ -15,7 +15,6 @@ import {
 	ChevronRightIcon,
 	LockClosedIcon,
 } from '@heroicons/react/24/outline';
-import { checkRequirements } from '../../helpers/form';
 
 const FormRouter = ({
 	step,
