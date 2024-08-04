@@ -178,7 +178,6 @@ class Payment extends AbstractRestController {
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ): WP_REST_Response {
-		wp_send_json($request);
 		// Verify nonce.
 		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			wp_send_json_error(
