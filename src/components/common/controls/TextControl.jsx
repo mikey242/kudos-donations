@@ -2,7 +2,7 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { Field } from './Field';
 import { useFormContext } from 'react-hook-form';
-import { useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { get, uniqueId } from 'lodash';
 
 export const TextControl = ({
@@ -17,7 +17,13 @@ export const TextControl = ({
 	placeholder,
 	inlineButton,
 }) => {
-	const { register } = useFormContext();
+	const addonRef = useRef(null);
+	const [width, setWidth] = useState(0);
+	useEffect(() => {
+		if (addonRef.current) {
+			setWidth(addonRef.current?.offsetWidth);
+		}
+	}, [addOn]);
 	return (
 		<Field
 			name={name}
@@ -25,37 +31,45 @@ export const TextControl = ({
 			isDisabled={isDisabled}
 			help={help}
 			label={label}
-			render={({ id, error }) => (
+			validation={validation}
+			render={({ id, error, onChange, value }) => (
 				<>
 					<div className="relative flex flex-row rounded-md">
 						{addOn && (
-							<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-								<span className="text-gray-500 sm:text-sm">
+							<div className="absolute inset-y-0 start-0 top-0 ps-3.5 flex items-center pointer-events-none">
+								<span
+									ref={addonRef}
+									className="text-gray-500 sm:text-sm"
+								>
 									{addOn}
 								</span>
 							</div>
 						)}
 						<input
-							{...register(name, {
-								...validation,
-								disabled: isDisabled,
-							})}
 							readOnly={isReadOnly}
+							disabled={isDisabled}
 							type={type}
 							id={id}
+							name={name}
+							onChange={onChange}
+							value={value ?? ''}
 							className={clsx(
 								// General
 								'form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
 								// Disabled
-								'disabled:cursor-not-allowed',
+								'disabled:cursor-not-allowed disabled:bg-slate-100',
 								// Read only
-								'read-only:bg-gray-100 read-only:cursor-not-allowed',
+								'read-only:bg-slate-50',
 								// Invalid
 								error?.message
 									? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
-									: 'border-gray-300 focus:ring-primary focus:border-primary',
-								addOn && 'pl-7'
+									: 'border-gray-300 focus:ring-primary focus:border-primary'
 							)}
+							style={
+								addOn && {
+									paddingLeft: width + 18 + 'px',
+								}
+							}
 							placeholder={placeholder}
 							aria-invalid={!!error}
 							aria-errormessage={error?.message}
@@ -74,14 +88,12 @@ export const TextControl = ({
 
 export const InlineTextEdit = ({
 	name,
-	validation,
 	isDisabled,
 	className,
 	type = 'text',
 	placeholder,
 }) => {
 	const {
-		register,
 		formState: { errors },
 	} = useFormContext();
 	const [id] = useState(uniqueId(name + '-'));
@@ -90,7 +102,6 @@ export const InlineTextEdit = ({
 	return (
 		<>
 			<input
-				{...register(name, validation)}
 				type={type}
 				id={id}
 				disabled={isDisabled}

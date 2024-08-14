@@ -1,6 +1,5 @@
 import React from 'react';
 import { Field } from './Field';
-import { useFormContext } from 'react-hook-form';
 
 const CheckboxControl = ({
 	name,
@@ -10,23 +9,22 @@ const CheckboxControl = ({
 	help,
 	isDisabled,
 }) => {
-	const { register } = useFormContext();
-
 	return (
 		<Field
 			name={name}
 			isDisabled={isDisabled}
 			help={help}
 			label={label}
-			render={({ id, error }) => (
+			validation={validation}
+			render={({ id, error, onChange, value }) => (
 				<div className="relative flex items-center">
 					<div className="flex items-center h-5">
 						<input
-							{...register(name, {
-								...validation,
-								disabled: isDisabled,
-							})}
+							disabled={isDisabled}
 							id={id}
+							checked={value}
+							onChange={onChange}
+							name={name}
 							type="checkbox"
 							className="disabled:cursor-not-allowed transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
 							aria-invalid={!!error}

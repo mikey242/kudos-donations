@@ -1,7 +1,7 @@
 import React from 'react';
 import { clsx } from 'clsx';
 import { get, uniqueId } from 'lodash';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useState } from '@wordpress/element';
 
 export const Field = ({
@@ -13,6 +13,7 @@ export const Field = ({
 	help,
 	name,
 	render,
+	validation,
 }) => {
 	const {
 		formState: { errors },
@@ -39,9 +40,20 @@ export const Field = ({
 						isDisabled && 'opacity-50'
 					)}
 				>
-					{render ? render({ id, error }) : children}
-					<Help>{help}</Help>
-					{hasLabel && <Error error={error} />}
+					<Controller
+						name={name}
+						rules={validation}
+						disabled={isDisabled}
+						render={({ field: { onChange, value } }) => (
+							<>
+								{render
+									? render({ id, error, onChange, value })
+									: children}
+								<Help>{help}</Help>
+								{hasLabel && <Error error={error} />}
+							</>
+						)}
+					/>
 				</div>
 			</div>
 			{!hasLabel && <Error error={error} />}

@@ -71,7 +71,12 @@ const InitialTab = ({
 		<BaseTab title={title} description={description} buttons={buttons}>
 			{showGoal && goal > 0 && (
 				<div className="my-5">
-					<ProgressBar goal={goal} total={total} extra={watchValue} />
+					<ProgressBar
+						goal={goal}
+						total={total}
+						extra={watchValue}
+						currency={currencies[currency]}
+					/>
 				</div>
 			)}
 			{(amountType === 'both' || amountType === 'fixed') && (

@@ -6,15 +6,14 @@ import { __ } from '@wordpress/i18n';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { clsx } from 'clsx';
 import { Field } from './Field';
-import { Controller } from 'react-hook-form';
 
 const ColorPicker = ({
 	name,
 	label,
 	altLabel,
 	help,
-	isDisabled,
 	validation,
+	isDisabled,
 	onColorChange = () => {},
 }) => {
 	const [showPicker, setShowPicker] = useState(false);
@@ -36,125 +35,105 @@ const ColorPicker = ({
 			help={help}
 			label={label}
 			isDisabled={isDisabled}
-			render={({ id }) => (
-				<Controller
-					name={name}
-					disabled={isDisabled}
-					rules={validation}
-					render={({ field: { value, onChange } }) => (
-						<RadioGroup
-							id={id}
-							value={value}
-							onChange={(e) => {
-								onChange(e);
-								onColorChange();
-							}}
-							className="first:mt-0 mt-3"
-						>
-							{altLabel && (
-								<RadioGroup.Label className="block text-sm font-bold text-gray-700">
-									{altLabel}
-								</RadioGroup.Label>
-							)}
-							<div className="mt-2 inline-flex items-center space-x-3">
-								{colors.map((color) => (
-									<RadioGroup.Option
-										key={color.name}
-										value={color.value}
-										className={({ active, checked }) =>
-											clsx(
-												color.selectedColor,
-												active && checked
-													? 'ring ring-offset-1'
-													: '',
-												!active && checked
-													? 'ring-2'
-													: '',
-												'transition -m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none'
-											)
-										}
-									>
-										<RadioGroup.Label
-											as="p"
-											className="sr-only"
-										>
-											{color.name}
-										</RadioGroup.Label>
-										<span
-											aria-hidden="true"
-											style={{
-												backgroundColor: color.value,
-											}}
-											className="h-8 w-8 border border-black border-opacity-10 rounded-full"
-										/>
-									</RadioGroup.Option>
-								))}
-								<>
-									<div className="h-5 border border-l-gray-300" />
-									<RadioGroup.Option
-										key="custom"
-										value={value}
-										className={({ active }) => {
-											const checked =
-												!colors.filter(
-													(color) =>
-														color.value === value
-												).length > 0;
-											return clsx(
-												active && checked
-													? 'ring ring-offset-1'
-													: '',
-												!active && checked
-													? 'ring-2'
-													: '',
-												'transition -m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none'
-											);
-										}}
-									>
-										<RadioGroup.Label
-											as="p"
-											className="sr-only"
-										>
-											{__(
-												'Custom color',
-												'kudos-donations'
-											)}
-										</RadioGroup.Label>
-										<span
-											onClick={togglePicker}
-											aria-hidden="true"
-											style={{ backgroundColor: value }}
-											className="h-8 w-8 border border-black border-opacity-10 rounded-full flex justify-center items-center"
-										>
-											<PencilIcon className="w-5 h-5 text-white" />
-										</span>
-										{showPicker && (
-											<div className="absolute left-full bottom-full z-1050">
-												<div className="bg-white mt-2 p-5 relative rounded-lg drop-shadow-md z-[2]">
-													<HexColorInput
-														className={
-															'w-24 border-gray-300 mt-2 placeholder-gray-500 border border-solid transition ease-in-out duration-75 leading-6 text-gray-700 bg-white focus:border-primary focus:outline-none focus:ring-0 py-2 px-3 rounded'
-														}
-														color={value}
-														onChange={(e) => {
-															onChange(e);
-															onColorChange();
-														}}
-														prefixed
-													/>
-												</div>
-												<button
-													onClick={togglePicker}
-													className="fixed top-0 left-0 w-full h-full z-1 cursor-default"
-												/>
-											</div>
-										)}
-									</RadioGroup.Option>
-								</>
-							</div>
-						</RadioGroup>
+			validation={validation}
+			render={({ id, onChange, value }) => (
+				<RadioGroup
+					id={id}
+					value={value}
+					onChange={(e) => {
+						onChange(e);
+						onColorChange();
+					}}
+					className="first:mt-0 mt-3"
+				>
+					{altLabel && (
+						<RadioGroup.Label className="block text-sm font-bold text-gray-700">
+							{altLabel}
+						</RadioGroup.Label>
 					)}
-				/>
+					<div className="mt-2 inline-flex items-center space-x-3">
+						{colors.map((color) => (
+							<RadioGroup.Option
+								key={color.name}
+								value={color.value}
+								className={({ active, checked }) =>
+									clsx(
+										color.selectedColor,
+										active && checked
+											? 'ring ring-offset-1'
+											: '',
+										!active && checked ? 'ring-2' : '',
+										'transition -m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none'
+									)
+								}
+							>
+								<RadioGroup.Label as="p" className="sr-only">
+									{color.name}
+								</RadioGroup.Label>
+								<span
+									aria-hidden="true"
+									style={{
+										backgroundColor: color.value,
+									}}
+									className="h-8 w-8 border border-black border-opacity-10 rounded-full"
+								/>
+							</RadioGroup.Option>
+						))}
+						<>
+							<div className="h-5 border border-l-gray-300" />
+							<RadioGroup.Option
+								key="custom"
+								value={value}
+								className={({ active }) => {
+									const checked =
+										!colors.filter(
+											(color) => color.value === value
+										).length > 0;
+									return clsx(
+										active && checked
+											? 'ring ring-offset-1'
+											: '',
+										!active && checked ? 'ring-2' : '',
+										'transition -m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none'
+									);
+								}}
+							>
+								<RadioGroup.Label as="p" className="sr-only">
+									{__('Custom color', 'kudos-donations')}
+								</RadioGroup.Label>
+								<span
+									onClick={togglePicker}
+									aria-hidden="true"
+									style={{ backgroundColor: value }}
+									className="h-8 w-8 border border-black border-opacity-10 rounded-full flex justify-center items-center"
+								>
+									<PencilIcon className="w-5 h-5 text-white" />
+								</span>
+								{showPicker && (
+									<div className="absolute left-full bottom-full z-1050">
+										<div className="bg-white mt-2 p-5 relative rounded-lg drop-shadow-md z-[2]">
+											<HexColorInput
+												className={
+													'w-24 border-gray-300 mt-2 placeholder-gray-500 border border-solid transition ease-in-out duration-75 leading-6 text-gray-700 bg-white focus:border-primary focus:outline-none focus:ring-0 py-2 px-3 rounded'
+												}
+												color={value}
+												onChange={(e) => {
+													onChange(e);
+													onColorChange();
+												}}
+												prefixed
+											/>
+										</div>
+										<button
+											onClick={togglePicker}
+											className="fixed top-0 left-0 w-full h-full z-1 cursor-default"
+										/>
+									</div>
+								)}
+							</RadioGroup.Option>
+						</>
+					</div>
+				</RadioGroup>
 			)}
 		/>
 	);
