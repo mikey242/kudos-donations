@@ -2,7 +2,6 @@ import React from 'react';
 import api from '@wordpress/api';
 import {
 	createContext,
-	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -17,34 +16,34 @@ export const SettingsContext = createContext(null);
 export default function SettingsProvider({ children }) {
 	const [settingsRequest, setSettingsRequest] = useState({
 		ready: false,
-		settings: null,
+		settings: {},
 	});
-	const [settingsReady] = useState(false);
+	const settingsReady = settingsRequest.ready;
+	const { settings } = settingsRequest;
 	const [isVendorReady, setIsVendorReady] = useState(false);
 	const [checkingApiKey, setCheckingApiKey] = useState(false);
 	const [settingsSaving, setSettingsSaving] = useState(false);
-	const { settings } = settingsRequest;
 	const { createNotification } = useNotificationContext();
 
-	const getSettings = useCallback(() => {
-		return api.loadPromise.then(() => {
-			const settingsModel = new api.models.Settings();
-			return settingsModel
-				.fetch()
-				.then((response) => {
-					setSettingsRequest({
-						ready: true,
-						settings: response,
-					});
-					return response;
-				})
-				.then(() => getVendorStatus());
+	const fetchSettings = async () => {
+		await api.loadPromise;
+		const settingsModel = new api.models.Settings();
+		const allSettings = await settingsModel.fetch();
+		const filteredSettings = Object.keys(allSettings)
+			.filter((key) => key.startsWith('_kudos_'))
+			.reduce((obj, key) => {
+				obj[key] = allSettings[key];
+				return obj;
+			}, {});
+		setSettingsRequest({
+			ready: true,
+			settings: filteredSettings,
 		});
-	}, []);
+	};
 
 	useEffect(() => {
-		getSettings();
-	}, [getSettings]);
+		fetchSettings().then(getVendorStatus);
+	}, []);
 
 	const setSettings = (newSettings) => {
 		setSettingsRequest((prevState) => {
@@ -134,7 +133,7 @@ export default function SettingsProvider({ children }) {
 				return response;
 			})
 			.finally(() => {
-				getSettings();
+				fetchSettings();
 				setCheckingApiKey(false);
 			});
 	}
@@ -143,7 +142,6 @@ export default function SettingsProvider({ children }) {
 		<SettingsContext.Provider
 			value={{
 				settings,
-				settingsRequest,
 				setSettings,
 				checkingApiKey,
 				checkApiKey,

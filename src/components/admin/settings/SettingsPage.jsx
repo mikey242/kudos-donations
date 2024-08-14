@@ -24,7 +24,7 @@ import { InvoiceTab } from './InvoiceTab';
 
 const SettingsPage = () => {
 	const {
-		settingsRequest,
+		settingsReady,
 		settingsSaving,
 		updateSetting,
 		updateSettings,
@@ -80,7 +80,7 @@ const SettingsPage = () => {
 	return (
 		// Show spinner if not yet loaded
 		<>
-			{!settingsRequest.ready ? (
+			{!settingsReady ? (
 				<div className="absolute inset-0 flex items-center justify-center">
 					<Spinner />
 				</div>
