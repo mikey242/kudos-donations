@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Service;
 
 use Exception;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Auth;
 
 class SettingsService extends AbstractRegistrable {
@@ -172,13 +173,13 @@ class SettingsService extends AbstractRegistrable {
 			self::HOOK_GET_SETTINGS,
 			[
 				self::SETTING_NAME_SHOW_INTRO              => [
-					'type'              => 'boolean',
+					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				self::SETTING_NAME_VENDOR                  => [
-					'type'         => 'string',
+					'type'         => FieldType::STRING,
 					'show_in_rest' => true,
 					'default'      => 'mollie',
 				],
@@ -200,19 +201,19 @@ class SettingsService extends AbstractRegistrable {
 							'type'       => 'object',
 							'properties' => [
 								'recurring'       => [
-									'type' => 'boolean',
+									'type' => FieldType::BOOLEAN,
 								],
 								'mode'            => [
-									'type' => 'string',
+									'type' => FieldType::STRING,
 								],
 								'test_key'        => [
 									'type'       => 'object',
 									'properties' => [
 										'key'      => [
-											'type' => 'string',
+											'type' => FieldType::STRING,
 										],
 										'verified' => [
-											'type' => 'boolean',
+											'type' => FieldType::BOOLEAN,
 										],
 									],
 								],
@@ -220,10 +221,10 @@ class SettingsService extends AbstractRegistrable {
 									'type'       => 'object',
 									'properties' => [
 										'key'      => [
-											'type' => 'string',
+											'type' => FieldType::STRING,
 										],
 										'verified' => [
-											'type' => 'boolean',
+											'type' => FieldType::BOOLEAN,
 										],
 									],
 								],
@@ -233,19 +234,19 @@ class SettingsService extends AbstractRegistrable {
 										'type'       => 'object',
 										'properties' => [
 											'id'     => [
-												'type' => 'string',
+												'type' => FieldType::STRING,
 											],
 											'status' => [
-												'type' => 'string',
+												'type' => FieldType::STRING,
 											],
 											'maximumAmount' => [
 												'type' => 'object',
 												'properties' => [
 													'value'    => [
-														'type' => 'string',
+														'type' => FieldType::STRING,
 													],
 													'currency' => [
-														'type' => 'string',
+														'type' => FieldType::STRING,
 													],
 												],
 											],
@@ -257,13 +258,13 @@ class SettingsService extends AbstractRegistrable {
 					],
 				],
 				self::SETTING_NAME_EMAIL_RECEIPT_ENABLE    => [
-					'type'              => 'boolean',
+					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				self::SETTING_NAME_EMAIL_BCC               => [
-					'type'              => 'string',
+					'type'              => FieldType::STRING,
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_email',
 				],
@@ -284,28 +285,28 @@ class SettingsService extends AbstractRegistrable {
 							'type'       => 'object',
 							'properties' => [
 								'from_email' => [
-									'type' => 'string',
+									'type' => FieldType::STRING,
 								],
 								'from_name'  => [
-									'type' => 'string',
+									'type' => FieldType::STRING,
 								],
 								'host'       => [
-									'type' => 'string',
+									'type' => FieldType::STRING,
 								],
 								'port'       => [
 									'type' => 'number',
 								],
 								'encryption' => [
-									'type' => 'string',
+									'type' => FieldType::STRING,
 								],
 								'autotls'    => [
-									'type' => 'boolean',
+									'type' => FieldType::BOOLEAN,
 								],
 								'username'   => [
-									'type' => 'string',
+									'type' => FieldType::STRING,
 								],
 								'password'   => [
-									'type' => 'string',
+									'type' => FieldType::STRING,
 								],
 							],
 						],
@@ -313,41 +314,41 @@ class SettingsService extends AbstractRegistrable {
 					'sanitize_callback' => [ self::class, 'encrypt_smtp_password' ],
 				],
 				self::SETTING_NAME_SMTP_ENABLE             => [
-					'type'              => 'boolean',
+					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				self::SETTING_NAME_SPAM_PROTECTION         => [
-					'type'              => 'boolean',
+					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				self::SETTING_NAME_DEBUG_MODE              => [
-					'type'              => 'boolean',
+					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				self::SETTING_NAME_ALWAYS_LOAD_ASSETS      => [
-					'type'              => 'boolean',
+					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
 				self::SETTING_NAME_INVOICE_NUMBER          => [
-					'type'              => 'integer',
+					'type'              => FieldType::INTEGER,
 					'show_in_rest'      => true,
 					'default'           => 1,
 					'sanitize_callback' => 'absint',
 				],
 				self::SETTING_NAME_INVOICE_COMPANY_ADDRESS => [
-					'type'         => 'string',
+					'type'         => FieldType::STRING,
 					'show_in_rest' => true,
 				],
 				self::SETTING_NAME_INVOICE_VAT_NUMBER      => [
-					'type'         => 'string',
+					'type'         => FieldType::STRING,
 					'show_in_rest' => true,
 				],
 			]
