@@ -118,6 +118,13 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.2.5 =
+* Add notice for upcoming major Kudos Donations update
+* Add various missing translation strings
+* Update WordPress tested up to version to 6.6
+* Fix potential security issues
+* Remove unused code
+
 = 3.2.4 =
 * Cleanup unused settings
 * Tested on WordPress 6.6
