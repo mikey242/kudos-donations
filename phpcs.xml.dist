@@ -20,6 +20,7 @@
 		<type>error</type>
 		<exclude-pattern>tests/*</exclude-pattern>
 		<!-- Documentation is organized with the use of namespaces. -->
+		<exclude name="Generic.Commenting.DocComment.MissingShort" />
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
 		<exclude name="Squiz.Commenting.ClassComment.Missing"/>
 		<exclude name="Squiz.Commenting.VariableComment.Missing"/>
