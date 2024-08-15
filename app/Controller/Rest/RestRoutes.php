@@ -1,4 +1,11 @@
 <?php
+/**
+ * Rest routes.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller\Rest;
 
@@ -9,26 +16,33 @@ use Kudos\Controller\Rest\Route\Transaction;
 class RestRoutes {
 
 	/**
-	 * @var \Kudos\Controller\Rest\Route\Transaction
+	 * @var Transaction
 	 */
 	private $transaction;
 	/**
-	 * @var \Kudos\Controller\Rest\Route\Payment
+	 * @var Payment
 	 */
 	private $payment;
 	/**
-	 * @var \Kudos\Controller\Rest\Route\Mail
+	 * @var Mail
 	 */
 	private $mail;
 
+	/**
+	 * @param Mail        $mail Mailer routes.
+	 * @param Payment     $payment Payment routes.
+	 * @param Transaction $transaction Transaction route.
+	 */
 	public function __construct( Mail $mail, Payment $payment, Transaction $transaction ) {
 
 		$this->mail        = $mail;
 		$this->payment     = $payment;
 		$this->transaction = $transaction;
-
 	}
 
+	/**
+	 * Register all the routes.
+	 */
 	public function register_all() {
 
 		$this->mail->register();

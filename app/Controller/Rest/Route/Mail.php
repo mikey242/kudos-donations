@@ -1,4 +1,11 @@
 <?php
+/**
+ * Mailer routes.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller\Rest\Route;
 
@@ -9,21 +16,24 @@ class Mail extends Base {
 
 	/**
 	 * Base route.
+	 *
+	 * @var string
 	 */
 	protected $base = 'email';
 
 	/**
-	 * @var \Kudos\Service\MailerService
+	 * @var MailerService
 	 */
 	private $mailer_service;
 
 	/**
 	 * PaymentRoutes constructor.
+	 *
+	 * @param MailerService $mailer_service The mailer service.
 	 */
 	public function __construct( MailerService $mailer_service ) {
 
 		$this->mailer_service = $mailer_service;
-
 	}
 
 	/**
@@ -50,5 +60,4 @@ class Mail extends Base {
 			],
 		];
 	}
-
 }

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Admin related functions.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller;
 
@@ -48,18 +55,24 @@ class Admin {
 	 */
 	private $activator;
 	/**
-	 * @var \Kudos\Service\Vendor\MollieVendor
+	 * @var MollieVendor
 	 */
 	private $mollie;
 	/**
-	 * @var \Kudos\Service\LoggerService
+	 * @var LoggerService
 	 */
 	private $logger;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param string $version The version of this plugin.
+	 * @param string           $version The version of this plugin.
+	 * @param MapperService    $mapper The mapper service.
+	 * @param TwigService      $twig The twig service.
+	 * @param PaymentService   $payment The payment service.
+	 * @param ActivatorService $activator The activator service.
+	 * @param MollieVendor     $mollie_vendor The mollie payment service.
+	 * @param LoggerService    $logger The logger.
 	 */
 	public function __construct(
 		string $version,
@@ -92,6 +105,7 @@ class Admin {
 			'manage_options',
 			$parent_slug,
 			false,
+            // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 			'data:image/svg+xml;base64,' . base64_encode(
 				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 449"><defs/><path fill="#f0f5fa99" d="M0-.003h130.458v448.355H.001zM489.887 224.178c78.407 47.195 78.407 141.59 39.201 188.784-39.2 47.194-117.612 47.194-196.019 0-58.809-33.04-117.612-117.992-156.818-188.784 39.206-70.793 98.01-155.744 156.818-188.781 78.407-47.196 156.818-47.196 196.02 0 39.205 47.195 39.205 141.587-39.202 188.781z"/></svg>'
 			)
@@ -204,7 +218,7 @@ class Admin {
 						let buttons = document.querySelectorAll('button[type="submit"].confirm')
 						for (let i = 0; i < buttons.length; i++) {
 							buttons[i].addEventListener('click', function (e) {
-								if (!confirm('<?php _e( 'Are you sure?', 'kudos-donations' ); ?>')) {
+								if (!confirm('<?php esc_html_e( 'Are you sure?', 'kudos-donations' ); ?>')) {
 									e.preventDefault()
 								}
 							})
@@ -456,7 +470,7 @@ class Admin {
 					break;
 
 				case 'kudos_clear_twig_cache':
-					if ( $this->twig->clearCache() ) {
+					if ( $this->twig->clear_cache() ) {
 						new AdminNotice( __( 'Cache cleared', 'kudos-donations' ) );
 					}
 					break;

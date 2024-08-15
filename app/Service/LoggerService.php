@@ -1,4 +1,11 @@
 <?php
+/**
+ * Logger service.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Service;
 
@@ -14,12 +21,10 @@ class LoggerService extends Logger {
 
 	/**
 	 * Table name without prefix.
-	 *
-	 * @var string
 	 */
 	public const TABLE = 'kudos_log';
 	/**
-	 * @var \Kudos\Helpers\WpDb|\wpdb
+	 * @var WpDb|\wpdb
 	 */
 	private $wpdb;
 
@@ -43,15 +48,13 @@ class LoggerService extends Logger {
 	 * @param int                    $level Log level.
 	 * @param string                 $message Message to record.
 	 * @param array                  $context Context array.
-	 * @param DateTimeImmutable|null $datetime
-	 *
-	 * @return bool
+	 * @param DateTimeImmutable|null $datetime DateTimeImmutable instance.
 	 */
 	public function addRecord(
 		int $level,
 		string $message,
 		array $context = [],
-		DateTimeImmutable $datetime = null
+		?DateTimeImmutable $datetime = null //phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 	): bool {
 		// Don't log debug if not enabled.
 		if ( self::DEBUG === $level && ! KUDOS_DEBUG ) {
@@ -73,6 +76,9 @@ class LoggerService extends Logger {
 		return $wpdb->query( "TRUNCATE TABLE `{$table}`" );
 	}
 
+	/**
+	 * Returns the logging table name.
+	 */
 	public function get_table_name(): string {
 		$wpdb = $this->wpdb;
 
@@ -129,5 +135,4 @@ class LoggerService extends Logger {
 
 		return $wpdb->get_results( "SELECT * FROM {$table} ORDER BY `id` DESC LIMIT 100", ARRAY_A );
 	}
-
 }

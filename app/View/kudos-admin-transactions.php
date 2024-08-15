@@ -1,12 +1,13 @@
 <?php
+/**
+ * Transactions table view.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 use Kudos\Service\AdminNotice;
-
-/**
- * Creates the transactions table
- *
- * @since    1.0.0
- */
 
 $table_action = $this->table->current_action();
 $records      = isset( $_REQUEST['bulk-action'] ) ? count( $_REQUEST['bulk-action'] ) : 0;
@@ -31,7 +32,7 @@ switch ( $table_action ) {
 		<span class="subtitle">
 			<?php
 			/* translators: %s: Search term */
-			printf( __( 'Search results for “%s”' ), $_REQUEST['s'] )
+			printf( __( 'Search results for “%s”', 'kudos-donations' ), $_REQUEST['s'] )
 			?>
 		</span>
 	<?php } ?>

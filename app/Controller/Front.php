@@ -1,4 +1,11 @@
 <?php
+/**
+ * Front related functions.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller;
 
@@ -16,32 +23,31 @@ use Kudos\Service\PaymentService;
 use Kudos\Service\TwigService;
 
 class Front {
-
 	/*
 	 * The twig template file used to render the donate button.
 	 */
-	const BUTTON_TEMPLATE = 'public/button/donate.button.html.twig';
+	private const BUTTON_TEMPLATE = 'public/button/donate.button.html.twig';
 
 	/*
 	 * The twig template file used to render the donation form.
 	 */
-	const FORM_TEMPLATE = 'public/forms/donate.form.html.twig';
+	private const FORM_TEMPLATE = 'public/forms/donate.form.html.twig';
 
 	/*
 	 * The twig template used to render the modal template.
 	 */
-	const MODAL_TEMPLATE = 'public/modal/base.html.twig';
+	private const MODAL_TEMPLATE = 'public/modal/base.html.twig';
 
 	/*
 	 * The twig template used to render a message for use in a modal.
 	 */
-	const MESSAGE_TEMPLATE = 'public/modal/_message.html.twig';
+	private const MESSAGE_TEMPLATE = 'public/modal/_message.html.twig';
 
 	/*
 	 * The twig template used as a wrapper for the above templates.
 	 * Required for css targeting.
 	 */
-	const WRAPPER_TEMPLATE = 'public/wrapper.html.twig';
+	private const WRAPPER_TEMPLATE = 'public/wrapper.html.twig';
 
 	/**
 	 * The version of this plugin.
@@ -73,14 +79,18 @@ class Front {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param string $version The version of this plugin.
+	 * @param string         $version The version of this plugin.
+	 * @param MapperService  $mapper The mapper service.
+	 * @param TwigService    $twig The twig service.
+	 * @param PaymentService $payment The payment service.
+	 * @param LoggerService  $logger The logger.
 	 */
 	public function __construct(
 		string $version,
-		LoggerService $logger,
-		PaymentService $payment,
+		MapperService $mapper,
 		TwigService $twig,
-		MapperService $mapper
+		PaymentService $payment,
+		LoggerService $logger
 	) {
 		$this->version = $version;
 		$this->logger  = $logger;
@@ -162,7 +172,7 @@ class Front {
 	 * Register the inline root styles used by block editor and front.
 	 */
 	public function register_root_styles() {
-		wp_register_style( 'kudos-donations-root', false );
+		wp_register_style( 'kudos-donations-root', false, [], $this->version );
 		wp_add_inline_style( 'kudos-donations-root', $this->get_root_styles() );
 	}
 
@@ -196,19 +206,19 @@ class Front {
 		// Register shortcode.
 		add_shortcode(
 			'kudos',
-			function ( $atts ) {
-				$atts = shortcode_atts(
+			function ( $args ) {
+				$args = shortcode_atts(
 					[
 						'button_label' => __( 'Donate now', 'kudos-donations' ),
 						'campaign_id'  => 'default',
 						'alignment'    => 'none',
 						'type'         => 'button',
 					],
-					$atts,
+					$args,
 					'kudos'
 				);
 
-				return $this->kudos_render_callback( $atts );
+				return $this->kudos_render_callback( $args );
 			}
 		);
 	}
@@ -272,17 +282,16 @@ class Front {
 	/**
 	 * Renders the kudos button and donation modals.
 	 *
-	 * @param array $atts Array of Kudos button/modal attributes.
+	 * @param array $args Array of Kudos button/modal attributes.
 	 */
-	public function kudos_render_callback( array $atts ): ?string {
-
+	public function kudos_render_callback( array $args ): ?string {
 		try {
 
 			// Check if the current vendor is connected, otherwise throw an exception.
 			if ( ! $this->payment::is_api_ready() ) {
-				/* translators: %s: Payment vendor (e.g. Mollie). */
 				throw new Exception(
 					sprintf(
+						/* translators: %s: Payment vendor (e.g. Mollie). */
 						__( '%s not connected.', 'kudos-donations' ),
 						$this->payment::get_vendor_name()
 					)
@@ -291,14 +300,14 @@ class Front {
 
 			// Twig service and alignment.
 			$twig      = $this->twig;
-			$alignment = $atts['alignment'] ?? 'none';
+			$alignment = $args['alignment'] ?? 'none';
 			$id        = Utils::generate_id();
 
 			// Create the form based on campaign id.
-			$form = $this->create_form( $atts['campaign_id'], $id );
+			$form = $this->create_form( $args['campaign_id'], $id );
 
 			// If type is form then stop and return form.
-			if ( isset( $atts['type'] ) && $atts['type'] === 'form' ) {
+			if ( isset( $args['type'] ) && 'form' === $args['type'] ) {
 				return $this->render_wrapper( $form, $alignment );
 			}
 
@@ -318,7 +327,7 @@ class Front {
 					self::BUTTON_TEMPLATE,
 					[
 						'id'           => $id,
-						'button_label' => $atts['button_label'],
+						'button_label' => $args['button_label'],
 						'target'       => $id,
 					]
 				),
@@ -355,8 +364,8 @@ class Front {
 	/**
 	 * Returns the html in a wrapper element.
 	 *
-	 * @param string $content
-	 * @param string $alignment
+	 * @param string $content The content to put in the wrapper.
+	 * @param string $alignment The alignment.
 	 * @return bool|string
 	 */
 	protected function render_wrapper( string $content, string $alignment = 'none' ) {
@@ -388,7 +397,7 @@ class Front {
 									);
 		$campaign_stats = Campaign::get_campaign_stats( $transactions );
 
-		$atts = [
+		$args = [
 			'id'                => $id,
 			'return_url'        => Utils::get_return_url(),
 			'privacy_link'      => Settings::get_setting( 'privacy_link' ),
@@ -413,10 +422,10 @@ class Front {
 
 		// Add additional funds if any.
 		if ( ! empty( $campaign['additional_funds'] ) ) {
-			$atts['campaign_stats']['total'] += $campaign['additional_funds'];
+			$args['campaign_stats']['total'] += $campaign['additional_funds'];
 		}
 
-		return $this->twig->render( self::FORM_TEMPLATE, $atts );
+		return $this->twig->render( self::FORM_TEMPLATE, $args );
 	}
 
 	/**
@@ -469,9 +478,9 @@ class Front {
 							->get_repository( TransactionEntity::class )
 							->get_one_by( [ 'order_id' => $order_id ] );
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $order_id ) ) {
-							$atts = $this->check_transaction( $order_id );
-							if ( $atts ) {
-								echo $this->create_message_modal( $atts['modal_title'], $atts['modal_text'] );
+							$args = $this->check_transaction( $order_id );
+							if ( $args ) {
+								echo $this->create_message_modal( $args['modal_title'], $args['modal_text'] );
 							}
 						}
 					}
@@ -522,36 +531,6 @@ class Front {
 	}
 
 	/**
-	 * Returns the kudos logo SVG markup.
-	 *
-	 * @param string|null $color
-	 * @param int         $width
-	 */
-	public function get_kudos_logo_markup( ?string $color = null, int $width = 24 ): ?string {
-
-		if ( $color ) {
-			$lineColor  = $color;
-			$heartColor = $color;
-		} else {
-			$lineColor  = '#2ec4b6';
-			$heartColor = '#ff9f1c';
-		}
-
-		return apply_filters(
-			'kudos_get_kudos_logo',
-			$this->twig->render(
-				'public/logo.html.twig',
-				[
-					'width'      => $width,
-					'lineColor'  => $lineColor,
-					'heartColor' => $heartColor,
-				]
-			),
-			$width
-		);
-	}
-
-	/**
 	 * Check payment status based on local order_id
 	 *
 	 * @param string $order_id Kudos order id.
@@ -585,6 +564,7 @@ class Front {
 			}
 
 			$campaign_name = $campaign['name'] ?? '';
+			$args          = [];
 
 			switch ( $transaction->status ) {
 				case 'paid':
@@ -597,20 +577,20 @@ class Front {
 						'{{email}}'    => $donor->email,
 						'{{campaign}}' => $campaign_name,
 					];
-					$atts['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
-					$atts['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
+					$args['modal_title'] = strtr( Settings::get_setting( 'return_message_title' ), $vars );
+					$args['modal_text']  = strtr( Settings::get_setting( 'return_message_text' ), $vars );
 					break;
 				case 'canceled':
-					$atts['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
-					$atts['modal_text']  = __( 'You have not been charged for this transaction.', 'kudos-donations' );
+					$args['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
+					$args['modal_text']  = __( 'You have not been charged for this transaction.', 'kudos-donations' );
 					break;
 				default:
-					$atts['modal_title'] = __( 'Thanks', 'kudos-donations' );
-					$atts['modal_text']  = __( 'Your donation will be processed soon.', 'kudos-donations' );
+					$args['modal_title'] = __( 'Thanks', 'kudos-donations' );
+					$args['modal_text']  = __( 'Your donation will be processed soon.', 'kudos-donations' );
 					break;
 			}
 
-			return $atts;
+			return $args;
 		}
 
 		return false;

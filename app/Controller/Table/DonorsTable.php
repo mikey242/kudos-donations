@@ -1,4 +1,11 @@
 <?php
+/**
+ * Donors table.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller\Table;
 
@@ -22,7 +29,7 @@ class DonorsTable extends WP_List_Table {
 	/**
 	 * Class constructor
 	 *
-	 * @since   2.0.0
+	 * @param MapperService $mapper_service The mapper.
 	 */
 	public function __construct( MapperService $mapper_service ) {
 
@@ -55,7 +62,6 @@ class DonorsTable extends WP_List_Table {
 				'ajax'     => false,
 			]
 		);
-
 	}
 
 	/**
@@ -66,15 +72,13 @@ class DonorsTable extends WP_List_Table {
 	public function display() {
 
 		$this->views();
-		$this->search_box( __( 'Search' ) . ' ' . $this->_args['plural'], 'search_records' );
+		$this->search_box( __( 'Search', 'kudos-donations' ) . ' ' . $this->_args['plural'], 'search_records' );
 		parent::display();
-
 	}
 
 	/**
 	 * Get the table data
 	 *
-	 * @return array
 	 * @since   2.0.0
 	 */
 	public function fetch_table_data(): array {
@@ -90,15 +94,13 @@ class DonorsTable extends WP_List_Table {
 			function ( $donor ) {
 				return $donor->to_array();
 			},
-			$donors 
+			$donors
 		);
-
 	}
 
 	/**
 	 * Returns a list of columns to include in table
 	 *
-	 * @return array
 	 * @since   2.0.0
 	 */
 	public function column_names(): array {
@@ -116,7 +118,6 @@ class DonorsTable extends WP_List_Table {
 	/**
 	 * Define which columns are hidden
 	 *
-	 * @return array
 	 * @since   2.0.0
 	 */
 	public function get_hidden_columns(): array {
@@ -129,7 +130,6 @@ class DonorsTable extends WP_List_Table {
 	/**
 	 * Define the sortable columns
 	 *
-	 * @return array
 	 * @since   2.0.0
 	 */
 	public function get_sortable_columns(): array {
@@ -157,7 +157,7 @@ class DonorsTable extends WP_List_Table {
 				// In our file that handles the request, verify the nonce.
 				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
 					sanitize_key( $_REQUEST['_wpnonce'] ),
-					'bulk-' . $this->_args['singular'] 
+					'bulk-' . $this->_args['singular']
 				) ) {
 					die();
 				}
@@ -172,7 +172,7 @@ class DonorsTable extends WP_List_Table {
 				// In our file that handles the request, verify the nonce.
 				if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
 					sanitize_key( $_REQUEST['_wpnonce'] ),
-					'bulk-' . $this->_args['plural'] 
+					'bulk-' . $this->_args['plural']
 				) ) {
 					die();
 				}
@@ -192,7 +192,6 @@ class DonorsTable extends WP_List_Table {
 	 *
 	 * @param string $column Column name to search.
 	 * @param string $id Value to search for.
-	 *
 	 * @return false|int
 	 */
 	protected function delete_record( string $column, string $id ) {
@@ -200,16 +199,14 @@ class DonorsTable extends WP_List_Table {
 		return $this->mapper
 			->get_repository( DonorEntity::class )
 			->delete( $column, $id );
-
 	}
 
 	/**
 	 * Render the bulk edit checkbox
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since   2.0.0
+	 *
+	 * @param array $item Array of results.
 	 */
 	protected function column_cb( $item ): string {
 		return sprintf(
@@ -221,27 +218,25 @@ class DonorsTable extends WP_List_Table {
 	/**
 	 * Time (date) column
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since   1.0.0
+	 *
+	 * @param array $item Array of results.
 	 */
 	protected function column_created( array $item ): string {
 
 		return __( 'Added', 'kudos-donations' ) . '<br/>' .
 			wp_date(
 				get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-				strtotime( $item['created'] ) 
+				strtotime( $item['created'] )
 			);
 	}
 
 	/**
 	 * Email column
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since   2.0.0
+	 *
+	 * @param array $item Array of results.
 	 */
 	protected function column_email( array $item ): string {
 
@@ -251,7 +246,7 @@ class DonorsTable extends WP_List_Table {
 				'action'   => 'delete',
 				'id'       => sanitize_text_field( $item['id'] ),
 				'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
-			] 
+			]
 		);
 
 		$title = sprintf(
@@ -273,10 +268,9 @@ class DonorsTable extends WP_List_Table {
 	/**
 	 * Address column
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since   2.0.0
+	 *
+	 * @param array $item Array of results.
 	 */
 	protected function column_address( array $item ): string {
 
@@ -291,7 +285,7 @@ class DonorsTable extends WP_List_Table {
 			$address,
 			function ( $item ) {
 				return ! empty( $item ) ? wp_unslash( $item ) : null;
-			} 
+			}
 		);
 
 		return implode( '<br/>', $address );
@@ -300,10 +294,10 @@ class DonorsTable extends WP_List_Table {
 	/**
 	 * Donations column
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since   2.0.0
+	 *
+	 * @param array $item Array of results.
+	 * @return string
 	 */
 	protected function column_donations( array $item ) {
 
@@ -312,7 +306,7 @@ class DonorsTable extends WP_List_Table {
 			->get_all_by( [ 'customer_id' => $item['customer_id'] ] );
 
 		if ( $transactions ) {
-			$number = count( $transactions );
+			$number = \count( $transactions );
 			$total  = 0;
 			/** @var TransactionEntity $transaction */
 			foreach ( $transactions as $transaction ) {
@@ -328,7 +322,7 @@ class DonorsTable extends WP_List_Table {
 
 			return '<a href="' . admin_url( 'admin.php?page=kudos-transactions&search-field=customer_id&s=' . rawurlencode( $item['customer_id'] ) . '' ) . '">
 						' . $number . ' ( ' . Utils::get_currency_symbol( $transactions[0]->currency ) . $total . ' )' .
-				   '</a>';
+					'</a>';
 		}
 
 		return false;
@@ -337,7 +331,6 @@ class DonorsTable extends WP_List_Table {
 	/**
 	 * Returns an associative array containing the bulk action
 	 *
-	 * @return array
 	 * @since   2.0.0
 	 */
 	protected function get_bulk_actions(): array {

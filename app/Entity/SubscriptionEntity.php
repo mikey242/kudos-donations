@@ -1,4 +1,11 @@
 <?php
+/**
+ * Subscription entity.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Entity;
 
@@ -6,8 +13,6 @@ class SubscriptionEntity extends AbstractEntity {
 
 	/**
 	 * Table name without prefix
-	 *
-	 * @var string
 	 */
 	protected const TABLE = 'kudos_subscriptions';
 	/**

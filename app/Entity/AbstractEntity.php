@@ -1,4 +1,11 @@
 <?php
+/**
+ * Abstract Entity class.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Entity;
 
@@ -28,14 +35,13 @@ abstract class AbstractEntity {
 	/**
 	 * Entity object constructor.
 	 *
-	 * @param array|null $atts Array of entities properties and values.
+	 * @param array|null $args Array of entities properties and values.
 	 */
-	public function __construct( array $atts = null ) {
+	public function __construct( ?array $args = null ) {
 
-		if ( null !== $atts ) {
-			$this->set_fields( $atts );
+		if ( null !== $args ) {
+			$this->set_fields( $args );
 		}
-
 	}
 
 	/**
@@ -56,26 +62,20 @@ abstract class AbstractEntity {
 	 * Returns the table name associated with entity.
 	 *
 	 * @param bool $prefix Whether to return the prefix or not.
-	 *
-	 * @return string
 	 */
 	public static function get_table_name( bool $prefix = true ): string {
 
 		global $wpdb;
 
 		return $prefix ? $wpdb->prefix . static::TABLE : static::TABLE;
-
 	}
 
 	/**
 	 * Returns class as an array.
-	 *
-	 * @return array
 	 */
 	public function to_array(): array {
 
 		return get_object_vars( $this );
-
 	}
 
 	/**
@@ -90,17 +90,13 @@ abstract class AbstractEntity {
 		$entity_pos = strpos( $class, 'Entity' );
 
 		return substr( $class, 0, $entity_pos );
-
 	}
 
 	/**
 	 * Returns the entities ID as a string.
-	 *
-	 * @return string
 	 */
 	public function __toString(): string {
 
 		return (string) $this->id;
-
 	}
 }

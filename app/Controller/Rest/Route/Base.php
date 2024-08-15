@@ -1,4 +1,11 @@
 <?php
+/**
+ * Base rest route
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller\Rest\Route;
 
@@ -20,13 +27,10 @@ abstract class Base {
 
 	/**
 	 * Returns the REST namespace.
-	 *
-	 * @return string
 	 */
 	public function get_namespace(): string {
 
 		return $this->namespace;
-
 	}
 
 	/**
@@ -37,7 +41,6 @@ abstract class Base {
 	public function get_base(): string {
 
 		return '/' . $this->base;
-
 	}
 
 	/**
@@ -54,5 +57,4 @@ abstract class Base {
 			register_rest_route( $this->get_namespace(), $route, $args );
 		}
 	}
-
 }

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Campaigns table.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller\Table;
 
@@ -22,6 +29,8 @@ class CampaignsTable extends WP_List_Table {
 
 	/**
 	 * Class constructor.
+	 *
+	 * @param MapperService $mapper_service Instance of mapper.
 	 */
 	public function __construct( MapperService $mapper_service ) {
 
@@ -47,7 +56,6 @@ class CampaignsTable extends WP_List_Table {
 				'ajax'     => false,
 			]
 		);
-
 	}
 
 	/**
@@ -56,15 +64,12 @@ class CampaignsTable extends WP_List_Table {
 	public function display() {
 
 		$this->views();
-		$this->search_box( __( 'Search' ) . ' ' . $this->_args['plural'], 'search_records' );
+		$this->search_box( __( 'Search', 'kudos-donations' ) . ' ' . $this->_args['plural'], 'search_records' );
 		parent::display();
-
 	}
 
 	/**
 	 * Get the table data.
-	 *
-	 * @return array
 	 */
 	public function fetch_table_data(): array {
 
@@ -80,7 +85,7 @@ class CampaignsTable extends WP_List_Table {
 			$campaigns = array_filter(
 				$campaigns,
 				function ( $value ) use ( $search ) {
-					return ( strtolower( $value[ $search['field'] ] ) == strtolower( $search['term'] ) );
+					return ( strtolower( $value[ $search['field'] ] ) === strtolower( $search['term'] ) );
 				}
 			);
 		}
@@ -92,7 +97,7 @@ class CampaignsTable extends WP_List_Table {
 										->get_all_by(
 											[
 												'campaign_id' => $id,
-											] 
+											]
 										);
 			$campaign_total = Campaign::get_campaign_stats( $transactions );
 
@@ -108,8 +113,6 @@ class CampaignsTable extends WP_List_Table {
 
 	/**
 	 * Returns a list of columns to include in table
-	 *
-	 * @return array
 	 */
 	public function column_names(): array {
 		return [
@@ -123,8 +126,6 @@ class CampaignsTable extends WP_List_Table {
 
 	/**
 	 * Define which columns are hidden.
-	 *
-	 * @return array
 	 */
 	public function get_hidden_columns(): array {
 		return [
@@ -135,8 +136,6 @@ class CampaignsTable extends WP_List_Table {
 
 	/**
 	 * Define the sortable columns.
-	 *
-	 * @return array
 	 */
 	public function get_sortable_columns(): array {
 		return [
@@ -155,8 +154,6 @@ class CampaignsTable extends WP_List_Table {
 	 * Render the bulk edit checkbox
 	 *
 	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 */
 	protected function column_cb( $item ): string {
 		return sprintf(
@@ -169,25 +166,21 @@ class CampaignsTable extends WP_List_Table {
 	 * Time (date) column
 	 *
 	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 */
 	protected function column_date( array $item ): string {
 
 		return $item['date'] ? wp_date(
 			get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-			strtotime( $item['date'] ) 
+			strtotime( $item['date'] )
 		) : sprintf( '<i>%s</i>', __( 'None yet', 'kudos-donations' ) );
-
 	}
 
 	/**
 	 * Label column
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since 2.0.4
+	 *
+	 * @param array $item Array of results.
 	 */
 	protected function column_name( array $item ): string {
 
@@ -197,7 +190,7 @@ class CampaignsTable extends WP_List_Table {
 				'tab_name'    => 'campaigns',
 				'campaign_id' => $item['id'],
 			],
-			admin_url() 
+			admin_url()
 		);
 
 		$actions = [
@@ -209,16 +202,14 @@ class CampaignsTable extends WP_List_Table {
 		];
 
 		return $item['name'] . $this->row_actions( $actions );
-
 	}
 
 	/**
 	 * Transactions column
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since 2.0.4
+	 *
+	 * @param array $item Array of results.
 	 */
 	protected function column_transactions( array $item ): string {
 
@@ -226,20 +217,18 @@ class CampaignsTable extends WP_List_Table {
 			'<a href=%1$s>%2$s</a>',
 			sprintf(
 				admin_url( 'admin.php?page=kudos-transactions&search-field=campaign_id&s=%s' ),
-				rawurlencode( $item['id'] ) 
+				rawurlencode( $item['id'] )
 			),
 			strtoupper( $item['transactions'] )
 		);
-
 	}
 
 	/**
 	 * Total column
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since 2.0.4
+	 *
+	 * @param array $item Array of results.
 	 */
 	protected function column_total( array $item ): string {
 
@@ -247,16 +236,14 @@ class CampaignsTable extends WP_List_Table {
 		$total    = $item['total'];
 
 		return $currency . ' ' . number_format_i18n( $total, 2 );
-
 	}
 
 	/**
 	 * Goal column
 	 *
-	 * @param array $item Array of results.
-	 *
-	 * @return string
 	 * @since 2.3.2
+	 *
+	 * @param array $item Array of results.
 	 */
 	protected function column_goal( array $item ): string {
 
@@ -264,6 +251,5 @@ class CampaignsTable extends WP_List_Table {
 		$total    = $item['goal'];
 
 		return $total ? $currency . ' ' . ( is_numeric( $total ) ? number_format_i18n( $total, 2 ) : '' ) : '';
-
 	}
 }

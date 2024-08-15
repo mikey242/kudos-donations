@@ -1,7 +1,11 @@
 <?php
-
-/*
+/**
+ * Database log handler.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
  * @source https://wordpress.stackexchange.com/questions/224485/how-to-pass-parameters-to-admin-notices
+ * @copyright 2024 Iseard Media
  */
 
 namespace Kudos\Service;
@@ -40,10 +44,8 @@ class AdminNotice {
 	 * @param string      $type Notice type (success, warning etc.).
 	 * @param string|null $extra Extra content for after message.
 	 * @param bool        $is_dismissible Whether the notice can be dismissed or not.
-	 *
-	 * @since 2.0.0
 	 */
-	public function __construct( string $notice, string $type = 'success', string $extra = null, bool $is_dismissible = true ) {
+	public function __construct( string $notice, string $type = 'success', ?string $extra = null, bool $is_dismissible = true ) {
 
 		$this->notice         = $notice;
 		$this->type           = $type;
@@ -51,13 +53,10 @@ class AdminNotice {
 		$this->is_dismissible = $is_dismissible;
 
 		add_action( 'admin_notices', [ $this, 'render' ] );
-
 	}
 
 	/**
 	 * Outputs the notice
-	 *
-	 * @since 2.0.0
 	 */
 	public function render() {
 
@@ -68,6 +67,5 @@ class AdminNotice {
 			$this->notice,
 			$this->extra
 		);
-
 	}
 }

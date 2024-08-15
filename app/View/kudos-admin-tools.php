@@ -1,4 +1,11 @@
 <?php
+/**
+ * Tools view.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 use Kudos\Helpers\Utils;
 use Kudos\Service\LoggerService;
@@ -19,12 +26,12 @@ $tab         = $_GET['tab'] ?? $default_tab;
 
 	<nav class="nav-tab-wrapper">
 		<a href="?page=kudos-tools&tab=log"
-		   class="nav-tab <?php echo ( 'log' === $tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
+			class="nav-tab <?php echo ( 'log' === $tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
 		<?php
 		if ( KUDOS_DEBUG ) :
 			?>
 			<a href="?page=kudos-tools&tab=actions"
-			   class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
+				class="nav-tab <?php echo ( 'actions' === $tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
 		<?php endif; ?>
 	</nav>
 
@@ -46,7 +53,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 					database.</p>
 
 				<form style="display:inline-block;" action="<?php echo esc_url( $url ); ?>"
-					  method='post'>
+						method='post'>
 					<?php wp_nonce_field( 'kudos_log_clear' ); ?>
 					<button class="button-secondary confirm" name='kudos_action' type='submit' value='kudos_log_clear'>
 						Clear
@@ -91,7 +98,7 @@ $tab         = $_GET['tab'] ?? $default_tab;
 								echo esc_textarea(
 									wp_date(
 										get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-										strtotime( $log['date'] ) 
+										strtotime( $log['date'] )
 									)
 								);
 								?>

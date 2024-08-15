@@ -1,4 +1,11 @@
 <?php
+/**
+ * Defines a vendor.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Service\Vendor;
 

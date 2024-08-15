@@ -1,4 +1,11 @@
 <?php
+/**
+ * Mailer service.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Service;
 
@@ -24,30 +31,35 @@ class MailerService {
 	 */
 	private $mapper;
 	/**
-	 * @var \Kudos\Service\LoggerService
+	 * @var LoggerService
 	 */
 	private $logger;
 
 	/**
 	 * Mailer constructor.
+	 *
+	 * @param TwigService   $twig Twig service.
+	 * @param MapperService $mapper Mapper service.
+	 * @param LoggerService $logger Logger service.
 	 */
 	public function __construct( TwigService $twig, MapperService $mapper, LoggerService $logger ) {
 
 		$this->twig   = $twig;
 		$this->mapper = $mapper;
 		$this->logger = $logger;
-
 	}
 
 	/**
 	 * Initializes the mailer by modifying default config if setting
 	 * is enabled.
 	 *
-	 * @param PHPMailer $phpmailer PHPMailer instance.
-	 *
 	 * @throws Exception From PHPMailer.
+	 *
+	 * @param PHPMailer $phpmailer PHPMailer instance.
 	 */
 	public function init( PHPMailer $phpmailer ) {
+
+		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 		// Toggle this on to enable PHPMailer's debug mode.
 		$phpmailer->SMTPDebug = 0;
@@ -73,14 +85,14 @@ class MailerService {
 			$phpmailer->Password    = Settings::get_setting( 'smtp_password' );
 			$phpmailer->Port        = Settings::get_setting( 'smtp_port' );
 		}
+
+		// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 	}
 
 	/**
 	 * Sends receipt to the donor
 	 *
 	 * @param TransactionEntity $transaction TransactionEntity object.
-	 *
-	 * @return bool
 	 */
 	public function send_receipt( TransactionEntity $transaction ): bool {
 
@@ -89,7 +101,7 @@ class MailerService {
 			return false;
 		}
 
-		$this->logger->debug('Receipt emails enabled, preparing email.', $transaction->to_array());
+		$this->logger->debug( 'Receipt emails enabled, preparing email.', $transaction->to_array() );
 
 		$headers = [];
 
@@ -115,7 +127,7 @@ class MailerService {
 			'description'  => Utils::get_sequence_type( $transaction->sequence_type ),
 			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n(
 				$transaction->value,
-				2 
+				2
 			),
 			'receipt_id'   => $transaction->order_id,
 			'website_name' => get_bloginfo( 'name' ),
@@ -123,9 +135,9 @@ class MailerService {
 
 		// Add a cancel subscription url if transaction associated with a subscription.
 		if ( 'oneoff' !== $transaction->sequence_type ) {
-			$mapper          = $this->mapper;
+			$mapper         = $this->mapper;
 			$transaction_id = $transaction->transaction_id;
-			$this->logger->debug('Subscription payment found, adding cancel button.', ['transaction_id' => $transaction_id]);
+			$this->logger->debug( 'Subscription payment found, adding cancel button.', [ 'transaction_id' => $transaction_id ] );
 			/** @var SubscriptionEntity $subscription */
 			$subscription               = $mapper
 				->get_repository( SubscriptionEntity::class )
@@ -137,7 +149,7 @@ class MailerService {
 					'token'                 => Utils::generate_token( $subscription->subscription_id ),
 					'kudos_subscription_id' => $subscription->subscription_id,
 				],
-				apply_filters('kudos_cancel_subscription_url', get_home_url())
+				apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
 			);
 			$render_array['cancel_url'] = $cancel_url;
 			$mapper->save( $subscription );
@@ -158,14 +170,13 @@ class MailerService {
 	/**
 	 * Email send function.
 	 *
+	 * @since    1.1.0
+	 *
 	 * @param string     $to Recipient email address.
 	 * @param string     $subject Email subject line.
 	 * @param string     $body Body of email.
 	 * @param array      $headers Email headers.
 	 * @param array|null $attachment Attachment.
-	 *
-	 * @return bool
-	 * @since    1.1.0
 	 */
 	private function send(
 		string $to,
@@ -183,8 +194,8 @@ class MailerService {
 
 		$from_name    = apply_filters( 'kudos_email_from_name', __( 'Kudos Donations', 'kudos-donations' ) );
 		$from_address = Settings::get_setting( 'smtp_from' ) ? Settings::get_setting( 'smtp_from' ) : Settings::get_setting( 'smtp_username' );
-		$from   = "From: $from_name " . ' <' . $from_address . '>';
-		$headers[] = $from;
+		$from         = "From: $from_name " . ' <' . $from_address . '>';
+		$headers[]    = $from;
 
 		$mail = wp_mail( $to, $subject, $body, $headers, $attachment );
 
@@ -194,7 +205,7 @@ class MailerService {
 				[
 					'to'      => $to,
 					'subject' => $subject,
-				] 
+				]
 			);
 		}
 
@@ -205,15 +216,12 @@ class MailerService {
 		}
 
 		return $mail;
-
 	}
 
 	/**
 	 * Sends a test email using send_message.
 	 *
 	 * @param WP_REST_Request $request Request array.
-	 *
-	 * @return bool
 	 */
 	public function send_test( WP_REST_Request $request ): bool {
 
@@ -235,13 +243,12 @@ class MailerService {
 			wp_send_json_error(
 				__(
 					'Error sending email, please check the settings and try again.',
-					'kudos-donations' 
-				) 
+					'kudos-donations'
+				)
 			);
 		}
 
 		return $result;
-
 	}
 
 	/**
@@ -250,8 +257,6 @@ class MailerService {
 	 * @param string $email Email address.
 	 * @param string $header Email headers.
 	 * @param string $message Email body.
-	 *
-	 * @return bool
 	 */
 	public function send_message( string $email, string $header, string $message ): bool {
 
@@ -271,10 +276,9 @@ class MailerService {
 	/**
 	 * Logs the supplied WP_Error object.
 	 *
-	 * @param WP_Error $error
+	 * @param WP_Error $error An error instance.
 	 */
 	public function log_error( WP_Error $error ) {
 		$this->logger->debug( 'Error sending email.', $error->errors );
 	}
-
 }

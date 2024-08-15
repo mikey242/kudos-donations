@@ -1,19 +1,24 @@
 <?php
+/**
+ * Settings helper.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Helpers;
 
 class Settings {
 
-	const PREFIX = '_kudos_';
+	private const PREFIX = '_kudos_';
 
 	/**
 	 * Sanitize vendor settings.
 	 *
-	 * @param $settings
-	 *
-	 * @return mixed
+	 * @param array $settings Settings array.
 	 */
-	public static function sanitize_vendor( $settings ) {
+	public static function sanitize_vendor( array $settings ): array {
 
 		foreach ( $settings as $setting => &$value ) {
 			switch ( $setting ) {
@@ -49,12 +54,12 @@ class Settings {
 	 * Returns setting value.
 	 *
 	 * @param string $name Setting name without prefix.
-	 *
+	 * @param mixed  $default_value Default value to use if none found.
 	 * @return mixed
 	 */
-	public static function get_setting( string $name, $default = false ) {
+	public static function get_setting( string $name, $default_value = false ) {
 
-		return get_option( self::PREFIX . $name, $default );
+		return get_option( self::PREFIX . $name, $default_value );
 	}
 
 	/**
@@ -62,8 +67,6 @@ class Settings {
 	 *
 	 * @param string $name Setting name without prefix.
 	 * @param mixed  $value Setting value.
-	 *
-	 * @return bool
 	 */
 	public static function update_setting( string $name, $value ): bool {
 
@@ -76,8 +79,6 @@ class Settings {
 	 *
 	 * @param string $name Setting array name without prefix.
 	 * @param array  $value Array of name=>values in setting to update.
-	 *
-	 * @return bool
 	 */
 	public static function update_array( string $name, array $value ): bool {
 
@@ -85,7 +86,7 @@ class Settings {
 		$current = self::get_setting( $name );
 
 		// Check if setting is either an array or null.
-		if ( is_array( $current ) || ! null ) {
+		if ( \is_array( $current ) || ! null ) {
 			// Merge provided data and current data then update setting.
 			$new = wp_parse_args( $value, $current );
 
@@ -97,6 +98,8 @@ class Settings {
 
 	/**
 	 * Register all the settings.
+	 *
+	 * @param array $settings Settings array.
 	 */
 	public static function register_settings( array $settings = [] ) {
 
@@ -111,6 +114,8 @@ class Settings {
 
 	/**
 	 * Add the settings to the database.
+	 *
+	 * @param array $settings Settings array.
 	 */
 	public static function add_defaults( array $settings = [] ) {
 
@@ -123,6 +128,8 @@ class Settings {
 
 	/**
 	 * Removes all settings from database.
+	 *
+	 * @param array $settings Settings array.
 	 */
 	public static function remove_settings( array $settings = [] ) {
 
@@ -134,9 +141,7 @@ class Settings {
 	/**
 	 * Remove specified setting from database.
 	 *
-	 * @param string $name
-	 *
-	 * @return bool
+	 * @param string $name Setting name.
 	 */
 	public static function remove_setting( string $name ): bool {
 
@@ -146,22 +151,21 @@ class Settings {
 	/**
 	 * Method to recursively sanitize all text fields in an array.
 	 *
-	 * @param array $array Array of values to sanitize.
-	 *
+	 * @param array $args Array of values to sanitize.
 	 * @return mixed
+	 *
 	 * @source https://wordpress.stackexchange.com/questions/24736/wordpress-sanitize-array
 	 */
-	public static function recursive_sanitize_text_field( array $array ): array {
+	public static function recursive_sanitize_text_field( array $args ): array {
 
-		foreach ( $array as &$value ) {
-			if ( is_array( $value ) ) {
+		foreach ( $args as &$value ) {
+			if ( \is_array( $value ) ) {
 				$value = self::recursive_sanitize_text_field( $value );
 			} else {
 				$value = sanitize_text_field( $value );
 			}
 		}
 
-		return $array;
+		return $args;
 	}
-
 }

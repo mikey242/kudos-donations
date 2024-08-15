@@ -1,4 +1,11 @@
 <?php
+/**
+ * Transaction entity.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Entity;
 
@@ -6,8 +13,6 @@ class TransactionEntity extends AbstractEntity {
 
 	/**
 	 * Table name without prefix
-	 *
-	 * @var string
 	 */
 	protected const TABLE = 'kudos_transactions';
 	/**
@@ -100,12 +105,11 @@ class TransactionEntity extends AbstractEntity {
 
 		if ( $refunds ) {
 			$result = json_decode( $refunds );
-			if ( json_last_error() == JSON_ERROR_NONE ) {
+			if ( json_last_error() === JSON_ERROR_NONE ) {
 				return $result;
 			}
 		}
 
 		return false;
-
 	}
 }

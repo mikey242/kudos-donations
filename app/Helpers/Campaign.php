@@ -1,4 +1,11 @@
 <?php
+/**
+ * Campaign helper.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Helpers;
 
@@ -9,15 +16,14 @@ class Campaign {
 	/**
 	 * Gets the campaign by specified column (e.g. id).
 	 *
-	 * @throws Exception
+	 * @throws Exception Thrown when campaign not found.
 	 *
-	 * @param string|null $value
-	 * @return array|null
+	 * @param string|null $value The id of the campaign.
 	 */
 	public static function get_campaign( string $value ): ?array {
 
 		$campaigns = Settings::get_setting( 'campaigns' );
-		$key       = array_search( $value, array_column( (array) $campaigns, 'id' ) );
+		$key       = array_search( $value, array_column( (array) $campaigns, 'id' ), true );
 
 		// Check if key is an index and if so return index from forms.
 		if ( \is_int( $key ) ) {
@@ -31,7 +37,7 @@ class Campaign {
 	/**
 	 * Gets transaction stats for campaign.
 	 *
-	 * @param array $transactions
+	 * @param array $transactions The transaction.
 	 */
 	public static function get_campaign_stats( array $transactions ): ?array {
 
@@ -70,9 +76,9 @@ class Campaign {
 	/**
 	 * Sanitize the various setting fields in the donation form array.
 	 *
-	 * @param $campaigns
+	 * @param array $campaigns Array of campaigns.
 	 */
-	public static function sanitize_campaigns( $campaigns ): array {
+	public static function sanitize_campaigns( array $campaigns ): array {
 
 		// Loop through each of the campaigns.
 		foreach ( $campaigns as &$form ) {
@@ -112,7 +118,7 @@ class Campaign {
 	/**
 	 * Generates a unique ID in the form of a slug for the campaign.
 	 *
-	 * @param $name string User provided name for the campaign.
+	 * @param string $name string User provided name for the campaign.
 	 */
 	private static function generate_campaign_id( string $name ): string {
 
@@ -128,7 +134,7 @@ class Campaign {
 		// If current id exists in array, iterate $n until it is unique.
 		$n      = 1;
 		$new_id = $id;
-		while ( \in_array( $new_id, $ids ) ) {
+		while ( \in_array( $new_id, $ids, true ) ) {
 			$new_id = $id . '-' . $n;
 			++$n;
 		}

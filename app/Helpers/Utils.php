@@ -1,4 +1,11 @@
 <?php
+/**
+ * Generic helper utilities.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Helpers;
 
@@ -6,8 +13,6 @@ class Utils {
 
 	/**
 	 * Gets url Mollie will use to return customer to after payment complete.
-	 *
-	 * @return string
 	 */
 	public static function get_return_url(): string {
 
@@ -21,15 +26,12 @@ class Utils {
 
 			return home_url( $request_uri );
 		}
-
 	}
 
 	/**
 	 * Converts three letter currency code into a symbol.
 	 *
 	 * @param string $currency Three letter currency code (EUR, GBP, USD).
-	 *
-	 * @return string
 	 */
 	public static function get_currency_symbol( string $currency ): string {
 
@@ -58,11 +60,11 @@ class Utils {
 	/**
 	 * Lightens/darkens a given colour (hex format), returning the altered colour in hex format.
 	 *
-	 * @source https://gist.github.com/stephenharris/5532899
 	 * @param string $hex Colour as hexadecimal (with or without hash).
 	 * @param float  $percent Percentage to modify the luminance by.
-	 *
 	 * @return string Lightened/Darkened colour as hexadecimal (with hash);
+	 *
+	 * @source https://gist.github.com/stephenharris/5532899
 	 * @percent float $percent Decimal ( 0.2 = lighten by 20%(), -0.4 = darken by 40%() )
 	 */
 	public static function color_luminance( string $hex, float $percent ): string {
@@ -71,7 +73,7 @@ class Utils {
 		$hex = ltrim( $hex, '#' );
 
 		// Expand to 6 character hex code (e.g. FFF -> FFFFFF).
-		if ( strlen( $hex ) === 3 ) {
+		if ( \strlen( $hex ) === 3 ) {
 			$hex = $hex[0] + $hex[0] + $hex[1] + $hex[1] + $hex[2] + $hex[2];
 		}
 
@@ -93,8 +95,6 @@ class Utils {
 	 * Returns a translated string of the sequence type.
 	 *
 	 * @param string $text Mollie sequence type code.
-	 *
-	 * @return string
 	 */
 	public static function get_sequence_type( string $text ): string {
 
@@ -106,15 +106,12 @@ class Utils {
 			default:
 				return __( 'Recurring', 'kudos-donations' );
 		}
-
 	}
 
 	/**
 	 * Returns subscription frequency name based on number of months.
 	 *
 	 * @param string $frequency Mollie frequency code.
-	 *
-	 * @return string
 	 */
 	public static function get_frequency_name( string $frequency ): string {
 
@@ -130,7 +127,6 @@ class Utils {
 			default:
 				return $frequency;
 		}
-
 	}
 
 	/**
@@ -139,7 +135,6 @@ class Utils {
 	 *
 	 * @param int    $years Number of years as an integer.
 	 * @param string $frequency Frequency.
-	 *
 	 * @return int|null
 	 */
 	public static function get_times_from_years( int $years, string $frequency ) {
@@ -148,8 +143,7 @@ class Utils {
 			return null;
 		}
 
-		return ( 12 / intval( $frequency ) ) * $years - 1;
-
+		return ( 12 / \intval( $frequency ) ) * $years - 1;
 	}
 
 	/**
@@ -157,13 +151,10 @@ class Utils {
 	 *
 	 * @param string|null $prefix Prefix for id.
 	 * @param int         $length Return value length (minus prefix).
-	 *
-	 * @return string
 	 */
-	public static function generate_id( string $prefix = null, int $length = 10 ): string {
+	public static function generate_id( ?string $prefix = null, int $length = 10 ): string {
 
-		return $prefix . substr( base_convert( sha1( uniqid( rand() ) ), 16, 36 ), 0, $length );
-
+		return $prefix . substr( base_convert( sha1( uniqid( wp_rand() ) ), 16, 36 ), 0, $length );
 	}
 
 	/**
@@ -188,7 +179,6 @@ class Utils {
 		} else {
 			do_action( $hook, $args );
 		}
-
 	}
 
 	/**
@@ -221,90 +211,18 @@ class Utils {
 		} else {
 			do_action( $hook, $args );
 		}
-
-	}
-
-	/**
-	 * Returns human-readable filesize from given bytes.
-	 *
-	 * @param int $bytes Size of file in bytes. Usually the value returned from filesize().
-	 * @param int $decimals Number of decimal places to return.
-	 *
-	 * @return string
-	 * @link https://www.php.net/manual/en/function.filesize.php
-	 */
-	public static function human_filesize( int $bytes, int $decimals = 2 ): string {
-		$sz     = 'BKMGTP';
-		$factor = floor( ( strlen( $bytes ) - 1 ) / 3 );
-
-		return sprintf( "%.{$decimals}f", $bytes / pow( 1024, $factor ) ) . @$sz[ $factor ];
-	}
-
-	/**
-	 * Uses regex that accepts any word character or hyphen in last name.
-	 *
-	 * @param $name
-	 * @source https://stackoverflow.com/questions/13637145/split-text-string-into-first-and-last-name-in-php
-	 *
-	 * @return array
-	 */
-	public static function split_name( $name ): array {
-		$name       = trim( $name );
-		$last_name  = ( strpos( $name, ' ' ) === false ) ? '' : preg_replace( '#.*\s([\w-]*)$#', '$1', $name );
-		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
-
-		return array( $first_name, $last_name );
-	}
-
-	/**
-	 * Returns an image's base64 encoded data URI for use in 'src' attribute.
-	 *
-	 * @param string $image_url Url of image to be encoded.
-	 *
-	 * @return string
-	 * @link https://www.genieblog.ch/blog/en/2018/how-to-encode-an-svg-for-the-src-attribute-using-php/
-	 */
-	public static function get_data_uri( string $image_url ): string {
-
-		// Get the filetype of supplied image URL.
-		$filetype = pathinfo( $image_url, PATHINFO_EXTENSION );
-
-		// Get the contents of the file.
-		$request  = wp_remote_get( $image_url );
-		$response = wp_remote_retrieve_body( $request );
-
-		// Return data URI if there is data.
-		if ( $response ) {
-
-			/*
-			 * Don't base64 encode svg.
-			 * @link https://css-tricks.com/probably-dont-base64-svg/
-			 */
-			if ( 'svg' === $filetype ) {
-				return 'data:image/svg+xml,' . rawurlencode( $response );
-			}
-
-			// All other image types get base64 encoded.
-			return 'data:image/' . $filetype . ';base64,' . base64_encode( $response );
-		}
-
-		// Return url if nothing found.
-		return $image_url;
 	}
 
 	/**
 	 * Truncates string at specified length and return with ellipsis
 	 * if longer.
 	 *
-	 * @param string $string
-	 * @param int    $length
-	 *
-	 * @return string
+	 * @param string $text The string to truncate.
+	 * @param int    $length The length to truncate at.
 	 */
-	public static function truncate_string( string $string, int $length ): string {
+	public static function truncate_string( string $text, int $length ): string {
 
-		return strlen( $string ) > $length ? substr( $string, 0, $length ) . '...' : $string;
-
+		return \strlen( $text ) > $length ? substr( $text, 0, $length ) . '...' : $text;
 	}
 
 	/**
@@ -319,7 +237,7 @@ class Utils {
 	/**
 	 * Verifies the provided token against the post id.
 	 *
-	 * @param string    $message The ID of the post.
+	 * @param string $message The ID of the post.
 	 * @param string $token The token.
 	 */
 	public static function verify_token( string $message, string $token ): bool {
@@ -328,5 +246,4 @@ class Utils {
 			$token
 		);
 	}
-
 }

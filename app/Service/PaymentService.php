@@ -1,4 +1,11 @@
 <?php
+/**
+ * Payment service.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Service;
 
@@ -21,20 +28,24 @@ class PaymentService {
 	 */
 	private $vendor;
 	/**
-	 * @var \Kudos\Service\MailerService
+	 * @var MailerService
 	 */
 	private $mailer_service;
 	/**
-	 * @var \Kudos\Service\MapperService
+	 * @var MapperService
 	 */
 	private $mapper_service;
 	/**
-	 * @var \Kudos\Service\LoggerService
+	 * @var LoggerService
 	 */
 	private $logger;
 
 	/**
 	 * Payment service constructor.
+	 *
+	 * @param MapperService $mapper_service Mapper service.
+	 * @param MailerService $mailer_service Mailer service.
+	 * @param LoggerService $logger_service Logger service.
 	 */
 	public function __construct(
 		MapperService $mapper_service,
@@ -47,7 +58,6 @@ class PaymentService {
 		$this->mapper_service = $mapper_service;
 		$this->mailer_service = $mailer_service;
 		$this->logger         = $logger_service;
-
 	}
 
 	/**
@@ -61,18 +71,14 @@ class PaymentService {
 			default:
 				return MollieVendor::class;
 		}
-
 	}
 
 	/**
 	 * Returns the name of the current vendor.
-	 *
-	 * @return string
 	 */
 	public static function get_vendor_name(): string {
 
 		return static::get_current_vendor_class()::get_vendor_name();
-
 	}
 
 	/**
@@ -81,13 +87,10 @@ class PaymentService {
 	public function check_api_keys() {
 
 		$this->vendor->check_api_keys();
-
 	}
 
 	/**
 	 * Checks if required api settings are saved before displaying button.
-	 *
-	 * @return bool
 	 */
 	public static function is_api_ready(): bool {
 
@@ -101,30 +104,26 @@ class PaymentService {
 		}
 
 		return true;
-
 	}
 
 	/**
 	 * Schedules processing of successful transaction.
 	 *
-	 * @param string $order_id
+	 * @param string $order_id Order id to process.
 	 */
 	public static function schedule_process_transaction( string $order_id ) {
 
 		Utils::schedule_action(
 			strtotime( '+1 minute' ),
 			'kudos_process_' . strtolower( self::get_vendor_name() ) . '_transaction',
-			[ $order_id ] 
+			[ $order_id ]
 		);
-
 	}
 
 	/**
 	 * Processes the transaction. Used by action scheduler.
 	 *
 	 * @param string $order_id Kudos order id.
-	 *
-	 * @return bool
 	 */
 	public function process_transaction( string $order_id ): bool {
 
@@ -148,13 +147,12 @@ class PaymentService {
 		}
 
 		return true;
-
 	}
 
 	/**
 	 * Creates a payment with Mollie.
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request Rest request of payment.
 	 */
 	public function submit_payment( WP_REST_Request $request ) {
 
@@ -164,7 +162,7 @@ class PaymentService {
 				[
 					'message' => __( 'Request invalid.', 'kudos-donations' ),
 					'nonce'   => $request->get_header( 'X-WP-Nonce' ),
-				] 
+				]
 			);
 		}
 
@@ -204,7 +202,7 @@ class PaymentService {
 								[
 									'email' => $email,
 									'mode'  => $this->vendor->get_api_mode(),
-								] 
+								]
 							);
 
 			// Create new donor if none found.
@@ -255,17 +253,14 @@ class PaymentService {
 		wp_send_json_error(
 			[
 				'message' => __( 'Error creating Mollie payment. Please try again later.', 'kudos-donations' ),
-			] 
+			]
 		);
-
 	}
 
 	/**
 	 * Cancel the specified subscription.
 	 *
 	 * @param string $subscription_id subscription_id.
-	 *
-	 * @return bool
 	 */
 	public function cancel_subscription( string $subscription_id ): bool {
 
@@ -274,7 +269,7 @@ class PaymentService {
 		// Get subscription entity from supplied row id.
 		/** @var SubscriptionEntity $subscription */
 		$subscription = $mapper->get_repository( SubscriptionEntity::class )
-							   ->get_one_by( [ 'subscription_id' => $subscription_id ] );
+								->get_one_by( [ 'subscription_id' => $subscription_id ] );
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
@@ -285,7 +280,7 @@ class PaymentService {
 			$subscription->set_fields(
 				[
 					'status' => 'cancelled',
-				] 
+				]
 			);
 
 			// Save changes to subscription entity.
@@ -303,7 +298,6 @@ class PaymentService {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -318,7 +312,6 @@ class PaymentService {
 	 * @param string|null $email Email of donor.
 	 * @param string|null $customer_id Mollie customer id.
 	 * @param string|null $message Message left by donor.
-	 *
 	 * @return false|Object
 	 */
 	public function create_payment(
@@ -326,11 +319,11 @@ class PaymentService {
 		string $interval,
 		string $years,
 		string $redirect_url,
-		string $campaign_id = null,
-		string $name = null,
-		string $email = null,
-		string $customer_id = null,
-		string $message = null
+		?string $campaign_id = null,
+		?string $name = null,
+		?string $email = null,
+		?string $customer_id = null,
+		?string $message = null
 	) {
 
 		$order_id        = Utils::generate_id( 'kdo_' );
@@ -350,12 +343,17 @@ class PaymentService {
 			'redirectUrl'  => $redirect_url,
 			'webhookUrl'   => $this->vendor->get_webhook_url(),
 			'sequenceType' => $sequence_type,
-			'description'  => apply_filters('kudos_payment_description', sprintf(
-			/* translators: %s: The order id */
-				__( 'Kudos Donation (%1$s) - %2$s', 'kudos-donations' ),
+			'description'  => apply_filters(
+				'kudos_payment_description',
+				sprintf(
+				/* translators: %s: The order id */
+					__( 'Kudos Donation (%1$s) - %2$s', 'kudos-donations' ),
+					$frequency_text,
+					$order_id
+				),
 				$frequency_text,
 				$order_id
-			), $frequency_text, $order_id),
+			),
 			'metadata'     => [
 				'order_id'    => $order_id,
 				'interval'    => $interval,
@@ -384,7 +382,7 @@ class PaymentService {
 				'currency'      => $currency,
 				'status'        => $payment->status,
 				'mode'          => $payment->mode,
-				'sequence_type' => $payment->sequenceType,
+				'sequence_type' => $payment->sequenceType, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				'campaign_id'   => $campaign_id,
 				'message'       => $message,
 			]
@@ -401,7 +399,7 @@ class PaymentService {
 				],
 				$redirect_url
 			);
-			$payment->redirectUrl = $redirect_url;
+			$payment->redirectUrl = $redirect_url; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$payment->update();
 		}
 
@@ -413,33 +411,30 @@ class PaymentService {
 			"New $this->vendor payment created.",
 			[
 				'oder_id'       => $order_id,
-				'sequence_type' => $payment->sequenceType,
+				'sequence_type' => $payment->sequenceType, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			]
 		);
 
 		return $payment;
-
 	}
 
 	/**
 	 * Checks the provided honeypot field and logs request if bot detected.
 	 *
-	 * @param $values
-	 *
-	 * @return bool
+	 * @param array $values Values from honeypot field.
 	 */
-	public function is_bot( $values ): bool {
+	public function is_bot( array $values ): bool {
 
-		$timeDiff = abs( $values['timestamp'] - time() );
+		$time_diff = abs( $values['timestamp'] - time() );
 
 		// Check if form completed too quickly.
-		if ( $timeDiff < 4 ) {
+		if ( $time_diff < 4 ) {
 			$this->logger->info(
 				'Bot detected, rejecting form.',
 				[
 					'reason'     => 'Form completed too quickly',
-					'time_taken' => $timeDiff,
-				] 
+					'time_taken' => $time_diff,
+				]
 			);
 
 			return true;
@@ -453,8 +448,8 @@ class PaymentService {
 					[
 						'reason' => 'Honeypot field completed',
 					],
-					$values 
-				) 
+					$values
+				)
 			);
 
 			return true;
@@ -467,12 +462,10 @@ class PaymentService {
 	 * Webhook handler. Passes request to rest_webhook method of current vendor.
 	 *
 	 * @param WP_REST_Request $request Request array.
-	 *
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
 
 		return $this->vendor->rest_webhook( $request );
-
 	}
 }

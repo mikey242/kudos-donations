@@ -1,4 +1,11 @@
 <?php
+/**
+ * Twig service.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Service;
 
@@ -17,7 +24,7 @@ use Twig\TwigFunction;
 
 class TwigService {
 
-	const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
+	private const CACHE_DIR = KUDOS_STORAGE_DIR . 'twig/cache/';
 
 	/**
 	 * Twig environment.
@@ -40,18 +47,18 @@ class TwigService {
 	 */
 	private $options;
 	/**
-	 * @var \Kudos\Service\LoggerService
+	 * @var LoggerService
 	 */
 	private $logger;
 	/**
-	 * @var \Twig\Loader\FilesystemLoader
+	 * @var FilesystemLoader
 	 */
 	private $loader;
 
 	/**
 	 * Twig constructor
 	 *
-	 * @param \Kudos\Service\LoggerService $logger_service
+	 * @param LoggerService $logger_service The logger.
 	 */
 	public function __construct( LoggerService $logger_service ) {
 
@@ -63,11 +70,18 @@ class TwigService {
 		$this->initialize_twig();
 	}
 
-	public function add_path( string $path, $namespace = null ) {
+	/**
+	 * Add template path to check.
+	 *
+	 * @param string  $path The path to add.
+	 * @param ?string $name_space Namespace to use for path.
+	 * @return void
+	 */
+	public function add_path( string $path, ?string $name_space = null ) {
 		$loader = $this->loader;
 		try {
-			if ( is_string( $namespace ) ) {
-				$loader->setPaths( $path, $namespace );
+			if ( $name_space ) {
+				$loader->setPaths( $path, $name_space );
 			} else {
 				$loader->addPath( $path );
 			}
@@ -93,7 +107,6 @@ class TwigService {
 		$this->initialize_twig_extensions();
 		$this->initialize_twig_functions();
 		$this->initialize_twig_filters();
-
 	}
 
 	/**
@@ -166,9 +179,9 @@ class TwigService {
 		 */
 		$apply_filter = new TwigFilter(
 			'apply_filters',
-			function ( $string, $filter ) {
-				return apply_filters( $filter, $string );
-			} 
+			function ( $text, $filter ) {
+				return apply_filters( $filter, $text );
+			}
 		);
 		$this->twig->addFilter( $apply_filter );
 
@@ -185,11 +198,10 @@ class TwigService {
 		 */
 		$wp_kses_post = new TwigFilter(
 			'wp_kses_post',
-			function ( $string ) {
-				return wp_kses_post( $string );
-
+			function ( $text ) {
+				return wp_kses_post( $text );
 			},
-			[ 'is_safe' => [ 'html' ] ] 
+			[ 'is_safe' => [ 'html' ] ]
 		);
 		$this->twig->addFilter( $wp_kses_post );
 
@@ -197,10 +209,9 @@ class TwigService {
 			'number_format_i18n',
 			function ( $number ) {
 				return number_format_i18n( $number );
-			} 
+			}
 		);
 		$this->twig->addFilter( $number_format );
-
 	}
 
 	/**
@@ -212,28 +223,25 @@ class TwigService {
 
 		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
 			$logger->info( 'Twig cache directory created successfully.', [ 'location' => self::CACHE_DIR ] );
-			$this->clearCache();
+			$this->clear_cache();
 
 			return;
 		}
 
 		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ 'location' => self::CACHE_DIR ] );
-
 	}
 
 	/**
 	 * Clears the twig cache
-	 *
-	 * @return bool
 	 */
-	public function clearCache(): bool {
+	public function clear_cache(): bool {
 
 		$di      = new RecursiveDirectoryIterator( self::CACHE_DIR, FilesystemIterator::SKIP_DOTS );
 		$ri      = new RecursiveIteratorIterator( $di, RecursiveIteratorIterator::CHILD_FIRST );
 		$files   = 0;
 		$folders = 0;
 		foreach ( $ri as $file ) {
-			$file->isDir() ? $files ++ && rmdir( $file ) : $folders ++ && unlink( $file );
+			$file->isDir() ? $files++ && rmdir( $file ) : $folders++ && wp_delete_file( $file );
 		}
 		$this->logger->debug(
 			'Twig cache cleared.',
@@ -250,21 +258,20 @@ class TwigService {
 	 * Render the provided template.
 	 *
 	 * @param string $template Template file (.html.twig).
-	 * @param array  $array Array to pass to template.
-	 *
+	 * @param array  $args Array to pass to template.
 	 * @return string|bool
 	 */
-	public function render( string $template, array $array = [] ) {
+	public function render( string $template, array $args = [] ) {
 
 		try {
-			return $this->twig->render( $template, $array );
+			return $this->twig->render( $template, $args );
 		} catch ( Throwable $e ) {
 			$this->logger->critical(
 				$e->getMessage(),
 				[
 					'location' => $e->getFile(),
 					'line'     => $e->getLine(),
-				] 
+				]
 			);
 
 			return false;

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Transaction routes.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller\Rest\Route;
 
@@ -12,6 +19,8 @@ class Transaction extends Base {
 
 	/**
 	 * Base route.
+	 *
+	 * @var string
 	 */
 	protected $base = 'transaction';
 
@@ -23,7 +32,7 @@ class Transaction extends Base {
 	/**
 	 * Route constructor.
 	 *
-	 * @param MapperService $mapper_service
+	 * @param MapperService $mapper_service The mapper service.
 	 */
 	public function __construct( MapperService $mapper_service ) {
 		$this->mapper_service = $mapper_service;
@@ -83,9 +92,7 @@ class Transaction extends Base {
 	/**
 	 * Get one by id.
 	 *
-	 * @param WP_REST_Request $request
-	 *
-	 * @return WP_REST_Response
+	 * @param WP_REST_Request $request A rest request.
 	 */
 	public function get_one( WP_REST_Request $request ): WP_REST_Response {
 
@@ -95,15 +102,13 @@ class Transaction extends Base {
 			$mapper->get_one_by(
 				[
 					'id' => $request['id'],
-				] 
-			) 
+				]
+			)
 		);
 	}
 
 	/**
 	 * Get all records.
-	 *
-	 * @return WP_REST_Response
 	 */
 	public function get_all(): WP_REST_Response {
 
@@ -113,17 +118,15 @@ class Transaction extends Base {
 			$mapper->get_all_by(
 				[
 					'status' => 'paid',
-				] 
-			) 
+				]
+			)
 		);
 	}
 
 	/**
 	 * Get all records between specified dates.
 	 *
-	 * @param WP_REST_Request $request
-	 *
-	 * @return WP_REST_Response
+	 * @param WP_REST_Request $request A rest request.
 	 */
 	public function get_all_between( WP_REST_Request $request ): WP_REST_Response {
 

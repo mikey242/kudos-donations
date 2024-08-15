@@ -1,11 +1,16 @@
 <?php
+/**
+ * Campaign table view.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 use Kudos\Service\AdminNotice;
 
 /**
  * Creates the donors table
- *
- * @since    1.1.0
  */
 
 $table_action = $this->table->current_action();
@@ -31,7 +36,7 @@ switch ( $table_action ) {
 		<span class="subtitle">
 		<?php
 		/* translators: %s: Search term */
-		printf( __( 'Search results for “%s”' ), sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) )
+		printf( __( 'Search results for “%s”', 'kudos-donations' ), sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) )
 		?>
 	</span>
 	<?php } ?>

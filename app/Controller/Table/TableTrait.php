@@ -1,4 +1,11 @@
 <?php
+/**
+ * Table trait.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller\Table;
 
@@ -39,7 +46,6 @@ trait TableTrait {
 
 		/* translators: %s: Name of record type (e.g transactions) */
 		printf( esc_html__( 'No %s found.', 'kudos-donations' ), esc_attr( $this->_args['plural'] ) );
-
 	}
 
 	/**
@@ -47,13 +53,11 @@ trait TableTrait {
 	 *
 	 * @param array  $item Data.
 	 * @param string $column_name Current column name.
-	 *
 	 * @return mixed
 	 */
 	public function column_default( $item, $column_name ) {
 
 		return $item[ $column_name ];
-
 	}
 
 	/**
@@ -63,7 +67,7 @@ trait TableTrait {
 	 */
 	public function prepare_items() {
 
-		// Get table columns (includes sortable and hidden)
+		// Get table columns (includes sortable and hidden).
 		$this->_column_headers = static::get_column_info();
 
 		// Process bulk action if any.
@@ -74,35 +78,30 @@ trait TableTrait {
 
 		$items_per_page = 20;
 		$current_page   = $this->get_pagenum();
-		$this->items    = array_slice( $table_data, ( ( $current_page - 1 ) * $items_per_page ), $items_per_page );
-		$total_items    = count( $table_data );
+		$this->items    = \array_slice( $table_data, ( ( $current_page - 1 ) * $items_per_page ), $items_per_page );
+		$total_items    = \count( $table_data );
 		$this->set_pagination_args(
 			[
-				'total_items' => count( $this->items ),
+				'total_items' => \count( $this->items ),
 				'per_page'    => $items_per_page,
 				'total_pages' => ceil( $total_items / $items_per_page ),
 			]
 		);
-
 	}
 
 	/**
 	 * Columns to show
-	 *
-	 * @return array
 	 */
 	public function get_columns(): array {
 
+		$columns       = [];
 		$columns['cb'] = '<input type="checkbox" />';
 
 		return array_merge( $columns, static::column_names() );
-
 	}
 
 	/**
 	 * Get the table data
-	 *
-	 * @return array
 	 */
 	abstract public function fetch_table_data(): array;
 
@@ -139,13 +138,13 @@ trait TableTrait {
 		<p class="search-box">
 			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s"
-				   value="<?php _admin_search_query(); ?>"/>
+					value="<?php _admin_search_query(); ?>"/>
 			<label for="search-field-selector" class="screen-reader-text">
-			<?php 
+			<?php
 			_e(
 				'Select search field',
-				'kudos-donations' 
-			) 
+				'kudos-donations'
+			)
 			?>
 					></label>
 			<select name="search-field" style="vertical-align: baseline" id="search-field-selector">
@@ -156,7 +155,7 @@ trait TableTrait {
 				}
 				?>
 			</select>
-			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
+			<?php submit_button( $text, '', '', false, [ 'id' => 'search-submit' ] ); ?>
 		</p>
 		<?php
 	}
@@ -174,7 +173,6 @@ trait TableTrait {
 		}
 
 		return $search;
-
 	}
 
 	/**
@@ -189,7 +187,6 @@ trait TableTrait {
 				echo wp_kses_post( apply_filters( 'kudos_table_tablenav_top', '', $this->_args ) );
 			}
 		}
-
 	}
 
 	/**
@@ -197,7 +194,6 @@ trait TableTrait {
 	 *
 	 * @param array $a First array.
 	 * @param array $b Second array.
-	 *
 	 * @return Mixed
 	 */
 	private function sort_data( array $a, array $b ): int {
@@ -223,6 +219,5 @@ trait TableTrait {
 		}
 
 		return - $result;
-
 	}
 }

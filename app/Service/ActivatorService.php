@@ -1,4 +1,11 @@
 <?php
+/**
+ * Activation related functions.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Service;
 
@@ -29,12 +36,14 @@ class ActivatorService {
 	 */
 	private $wpdb;
 
+	/**
+	 * ActivatorService constructor.
+	 */
 	public function __construct() {
 
 		$this->wpdb   = new WpDb();
 		$this->logger = new LoggerService();
 		$this->twig   = new TwigService( $this->logger );
-
 	}
 
 	/**
@@ -42,7 +51,7 @@ class ActivatorService {
 	 *
 	 * @param string|null $old_version Previous version of plugin.
 	 */
-	public function activate( string $old_version = null ) {
+	public function activate( ?string $old_version = null ) {
 
 		self::create_log_table();
 		self::create_donors_table();
@@ -64,13 +73,12 @@ class ActivatorService {
 
 		update_option( '_kudos_donations_version', KUDOS_VERSION );
 		$logger->info( 'Kudos Donations plugin activated.', [ 'version' => KUDOS_VERSION ] );
-
 	}
 
 	/**
 	 * Run migrations if upgrading.
 	 *
-	 * @param string $old_version
+	 * @param string $old_version Version upgrading from.
 	 */
 	private function run_migrations( string $old_version ) {
 
@@ -82,7 +90,7 @@ class ActivatorService {
 			[
 				'old_version' => $old_version,
 				'new_version' => KUDOS_VERSION,
-			] 
+			]
 		);
 
 		if ( version_compare( $old_version, '2.1.1', '<' ) ) {
@@ -100,7 +108,7 @@ class ActivatorService {
 		}
 
 		if ( version_compare( $old_version, '2.3.2', '<' ) ) {
-			// Setting now replaced by 'theme_colors'
+			// Setting now replaced by 'theme_colors'.
 			$old_color             = Settings::get_setting( 'theme_color' );
 			$new_colors            = Settings::get_setting( 'theme_colors' );
 			$new_colors['primary'] = $old_color;
@@ -109,7 +117,7 @@ class ActivatorService {
 		}
 
 		if ( version_compare( $old_version, '2.3.7', '<' ) ) {
-			// Change business_name to allow NULL
+			// Change business_name to allow NULL.
 			$donor_table = DonorEntity::get_table_name();
 			$wpdb->query( "ALTER TABLE $donor_table MODIFY `business_name` VARCHAR(255)" );
 		}
@@ -124,7 +132,7 @@ class ActivatorService {
 					'mode'      => ! empty( Settings::get_setting( 'mollie_api_mode' ) ) ? (string) Settings::get_setting( 'mollie_api_mode' ) : 'test',
 					'test_key'  => (string) Settings::get_setting( 'mollie_test_api_key' ),
 					'live_key'  => (string) Settings::get_setting( 'mollie_live_api_key' ),
-				] 
+				]
 			);
 
 			// Remove old settings fields.
@@ -143,7 +151,7 @@ class ActivatorService {
 				'vendor_mollie',
 				[
 					'connected' => $connected,
-				] 
+				]
 			);
 		}
 
@@ -162,7 +170,7 @@ class ActivatorService {
 			Settings::remove_setting( 'return_message_enable' );
 			Settings::remove_setting( 'custom_return_enable' );
 
-			// Disable log file clearing
+			// Disable log file clearing.
 			as_unschedule_all_actions( 'kudos_check_log' );
 		}
 
@@ -175,7 +183,6 @@ class ActivatorService {
 			$subscription_table = SubscriptionEntity::get_table_name();
 			$this->wpdb->query( "ALTER TABLE $subscription_table DROP COLUMN `secret`" );
 		}
-
 	}
 
 	/**
@@ -206,7 +213,6 @@ class ActivatorService {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
-
 	}
 
 	/**
@@ -241,7 +247,6 @@ class ActivatorService {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
-
 	}
 
 	/**
@@ -271,7 +276,6 @@ class ActivatorService {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
-
 	}
 
 	/**
@@ -295,6 +299,5 @@ class ActivatorService {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
-
 	}
 }

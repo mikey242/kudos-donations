@@ -1,11 +1,16 @@
 <?php
+/**
+ * Donor table view.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 use Kudos\Service\AdminNotice;
 
 /**
  * Creates the donors table
- *
- * @since    1.1.0
  */
 
 $table_action = $this->table->current_action();

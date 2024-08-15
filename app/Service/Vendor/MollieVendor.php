@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Mollie specific functions.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 namespace Kudos\Service\Vendor;
 
 use Kudos\Entity\DonorEntity;
@@ -41,11 +47,11 @@ class MollieVendor implements VendorInterface {
 	 */
 	private $api_mode;
 	/**
-	 * @var \Kudos\Service\LoggerService
+	 * @var LoggerService
 	 */
 	private $logger;
 	/**
-	 * @var \Kudos\Service\MapperService
+	 * @var MapperService
 	 */
 	private $mapper;
 	/**

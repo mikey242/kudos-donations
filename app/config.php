@@ -1,4 +1,11 @@
 <?php
+/**
+ * Container configuration.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 use Kudos\Controller\Admin;
 use Kudos\Controller\Front;

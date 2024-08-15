@@ -1,4 +1,11 @@
 <?php
+/**
+ * Mapper service.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Service;
 
@@ -15,35 +22,32 @@ class MapperService {
 	 */
 	protected $repository;
 	/**
-	 * @var \Kudos\Service\LoggerService
+	 * @var LoggerService
 	 */
 	private $logger;
 	/**
-	 * @var \Kudos\Helpers\WpDb|\wpdb
+	 * @var WpDb|\wpdb
 	 */
 	private $wpdb;
 
 	/**
 	 * Entity object constructor.
 	 *
-	 * @param \Kudos\Service\LoggerService $logger_service
-	 * @param \Kudos\Helpers\WpDb          $wpdb
+	 * @param LoggerService $logger_service Logger service.
+	 * @param WpDb          $wpdb WpDb object.
 	 */
 	public function __construct( LoggerService $logger_service, WpDb $wpdb ) {
 
 		$this->wpdb   = $wpdb;
 		$this->logger = $logger_service;
-
 	}
 
 	/**
 	 * Commit Entity to database.
 	 *
 	 * @param AbstractEntity $entity Instance of AbstractEntity to save.
-	 *
 	 * @param bool           $ignore_null Whether to remove NULL or empty fields from
 	 *                                    the save queries.
-	 *
 	 * @return false|int Returns the id of the record if successful
 	 *                   and false if not.
 	 */
@@ -53,7 +57,7 @@ class MapperService {
 
 		// Set repository if not already set.
 		if ( ! $this->repository ) {
-			$this->get_repository( get_class( $entity ) );
+			$this->get_repository( \get_class( $entity ) );
 		}
 
 		if ( $entity->id ) {
@@ -70,7 +74,6 @@ class MapperService {
 		}
 
 		return $result;
-
 	}
 
 	/**
@@ -78,7 +81,6 @@ class MapperService {
 	 *
 	 * @param AbstractEntity $entity An instance of AbstractEntity.
 	 * @param bool           $ignore_null Whether to ignore null properties.
-	 *
 	 * @return false|int Returns the id of the record if successful
 	 *                  and false if not.
 	 */
@@ -93,7 +95,7 @@ class MapperService {
 			[
 				'entity' => $entity::get_entity_name(),
 				'id'     => $entity->id,
-			] 
+			]
 		);
 
 		$result = $wpdb->update(
@@ -115,7 +117,6 @@ class MapperService {
 	 * Adds new record to the database.
 	 *
 	 * @param AbstractEntity $entity Instance of AbstractEntity to add.
-	 *
 	 * @return false|int Returns the id of the record if successful
 	 *                   and false if not.
 	 */
@@ -138,7 +139,7 @@ class MapperService {
 			[
 				'entity' => $entity::get_entity_name(),
 				'id'     => $entity->id,
-			] 
+			]
 		);
 
 		// If successful do action.
@@ -149,20 +150,18 @@ class MapperService {
 		}
 
 		return $result;
-
 	}
 
 	/**
 	 * Cache incrementer for invalidating cache. Splits into groups
 	 * by current table name.
 	 *
-	 * @param false $refresh Whether to invalidate cache.
-	 *
+	 * @param bool $refresh Whether to invalidate cache.
 	 * @return mixed
 	 */
 	private function get_cache_incrementer( bool $refresh = false ) {
 
-		// Override refresh with setting
+		// Override refresh with setting.
 		if ( Settings::get_setting( 'disable_object_cache' ) ) {
 			$refresh = true;
 		}
@@ -177,33 +176,28 @@ class MapperService {
 		}
 
 		return $value;
-
 	}
 
 	/**
 	 * Returns current repository table name.
 	 *
 	 * @param bool $prefix Whether to return the prefix or not.
-	 *
-	 * @return string
 	 */
 	public function get_table_name( bool $prefix = true ): string {
 
 		return $this->repository::get_table_name( $prefix );
-
 	}
 
 	/**
 	 * Gets the current repository.
 	 *
-	 * @param string $class
-	 *
+	 * @param string $entity Entity class.
 	 * @return self|null
 	 */
-	public function get_repository( string $class ): ?MapperService {
+	public function get_repository( string $entity ): ?MapperService {
 
-		if ( is_subclass_of( $class, AbstractEntity::class ) ) {
-			$this->repository = $class;
+		if ( is_subclass_of( $entity, AbstractEntity::class ) ) {
+			$this->repository = $entity;
 
 			return $this;
 		}
@@ -217,8 +211,6 @@ class MapperService {
 	 * @param array  $query_fields Key-value pair of fields to query
 	 *                              e.g. ['email' => 'john.smith@gmail.com'].
 	 * @param string $operator Operator to use to join array items. Can be AND or OR.
-	 *
-	 * @return AbstractEntity|null
 	 */
 	public function get_one_by( array $query_fields, string $operator = 'AND' ): ?AbstractEntity {
 
@@ -241,8 +233,6 @@ class MapperService {
 	 *
 	 * @param array  $query_fields Array of key (column) and value pairs.
 	 * @param string $operator Accepts AND or OR.
-	 *
-	 * @return string
 	 */
 	private function array_to_where( array $query_fields, string $operator = 'AND' ): string {
 
@@ -266,12 +256,11 @@ class MapperService {
 	/**
 	 * Gets query results from cache or database.
 	 *
-	 * @param $query
-	 * @param string $output
-	 *
+	 * @param string $query Query to run.
+	 * @param string $output Whether to return Array (ARRAY_A) or object (OBJECT).
 	 * @return mixed|object|array|bool|null
 	 */
-	public function get_results( $query, string $output = ARRAY_A ) {
+	public function get_results( string $query, string $output = ARRAY_A ) {
 
 		$wpdb        = $this->wpdb;
 		$cache_key   = 'get_results-' . md5( $query );
@@ -284,7 +273,6 @@ class MapperService {
 		}
 
 		return $result;
-
 	}
 
 	/**
@@ -301,7 +289,7 @@ class MapperService {
 			$total = 0;
 			foreach ( $records as $record ) {
 				if ( $this->delete( 'id', $record->id ) ) {
-					$total ++;
+					++$total;
 				}
 			}
 
@@ -309,7 +297,6 @@ class MapperService {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -319,12 +306,9 @@ class MapperService {
 	 *                                 a MYSQL WHERE statement as "key = value". If no value is
 	 *                                 specified it uses "key IS NOT NULL". If array is empty it
 	 *                                 returns all values in table.
-	 *
 	 * @param string     $operator AND or OR.
-	 *
-	 * @return array
 	 */
-	public function get_all_by( array $query_fields = null, string $operator = 'AND' ): ?array {
+	public function get_all_by( ?array $query_fields = null, string $operator = 'AND' ): ?array {
 
 		$table        = $this->get_table_name();
 		$query_string = $query_fields ? $this->array_to_where( $query_fields, $operator ) : null;
@@ -339,7 +323,13 @@ class MapperService {
 		return [];
 	}
 
-	public function get_all_between( $start, $end ): array {
+	/**
+	 * Get all results between two times.
+	 *
+	 * @param string $start Start datetime.
+	 * @param string $end End datetime.
+	 */
+	public function get_all_between( string $start, string $end ): array {
 
 		$wpdb         = $this->wpdb;
 		$table        = $this->get_table_name();
@@ -359,8 +349,6 @@ class MapperService {
 	 * of current repository.
 	 *
 	 * @param array $results Array of properties and values to map.
-	 *
-	 * @return array
 	 */
 	private function map_to_class( array $results ): array {
 
@@ -370,7 +358,6 @@ class MapperService {
 			},
 			$results
 		);
-
 	}
 
 	/**
@@ -378,7 +365,6 @@ class MapperService {
 	 *
 	 * @param string $column Column name to search for value.
 	 * @param string $value Value to search for.
-	 *
 	 * @return false|int
 	 */
 	public function delete( string $column, string $value ) {
@@ -398,7 +384,7 @@ class MapperService {
 				[
 					'table' => $this->get_table_name(),
 					$column => $value,
-				] 
+				]
 			);
 			do_action( $this->get_table_name( false ) . '_delete', $column, $value );
 		} else {
@@ -407,22 +393,20 @@ class MapperService {
 				[
 					'table' => $this->get_table_name(),
 					$column => $value,
-				] 
+				]
 			);
 		}
 
 		return $deleted;
-
 	}
 
 	/**
 	 * Removes the specified table from the database.
 	 *
-	 * @param $table_name
-	 *
+	 * @param string $table_name Table name to delete.
 	 * @return bool|int
 	 */
-	public function delete_table( $table_name ) {
+	public function delete_table( string $table_name ) {
 
 		return $this->wpdb->query(
 			"DROP TABLE IF EXISTS $table_name"
@@ -433,12 +417,9 @@ class MapperService {
 	 * Removes empty values from array.
 	 *
 	 * @param string|null $value Array value to check.
-	 *
-	 * @return bool
 	 */
 	private function remove_empty( ?string $value ): bool {
 
-		return ! is_null( $value ) && '' !== $value;
-
+		return ! \is_null( $value ) && '' !== $value;
 	}
 }

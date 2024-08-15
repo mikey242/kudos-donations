@@ -1,4 +1,11 @@
 <?php
+/**
+ * Payment routes.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations/
+ *
+ * @copyright 2024 Iseard Media
+ */
 
 namespace Kudos\Controller\Rest\Route;
 
@@ -9,27 +16,28 @@ class Payment extends Base {
 
 	/**
 	 * Base route.
+	 *
+	 * @var string
 	 */
 	protected $base = 'payment';
 
 	/**
-	 * @var \Kudos\Service\PaymentService
+	 * @var PaymentService
 	 */
 	private $payment_service;
 
 	/**
 	 * PaymentRoutes constructor.
+	 *
+	 * @param PaymentService $payment_service The payment service.
 	 */
 	public function __construct( PaymentService $payment_service ) {
 
 		$this->payment_service = $payment_service;
-
 	}
 
 	/**
 	 * Payment service routes.
-	 *
-	 * @return array
 	 */
 	public function get_routes(): array {
 
@@ -135,7 +143,5 @@ class Payment extends Base {
 				},
 			],
 		];
-
 	}
-
 }
