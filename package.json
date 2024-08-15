@@ -1,6 +1,6 @@
 {
   "name": "kudos-donations",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": " Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.",
   "homepage": "https://gitlab.iseard.media/michael/kudos-donations",
   "scripts": {
