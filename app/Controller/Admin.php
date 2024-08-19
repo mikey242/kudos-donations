@@ -930,7 +930,7 @@ class Admin {
 
 		$update_notice = '</p><p class="kudos_upgrade_notice">';
 		// translators: Placeholders are opening and closing tags. Leads to docs on version 4.0.0.
-		$update_notice .= sprintf( __( 'Notice: Version 4.0.0 is a major update and includes some important changes. Before updating, please backup your current data so that you can rollback if needed. %1$sLearn more about the changes in version 4.0.0 &raquo;%2$s', 'kudos-donations' ), '<a target="_blank" href="https://docs.kudosdonations.com/docs/changes-in-4.0.0/">', '</a>' );
+		$update_notice .= sprintf( __( 'Notice: Version 4.0.0 is a major update and includes some important changes that will require your attention. Before updating, please backup your current data so that you can rollback if needed. %1$sLearn more about the changes in version 4.0.0 &raquo;%2$s', 'kudos-donations' ), '<a target="_blank" href="https://docs.kudosdonations.com/docs/changes-in-4.0.0/">', '</a>' );
 		$update_notice .= '</p><p class="hidden">';
 		echo wp_kses_post( $update_notice );
 	}
