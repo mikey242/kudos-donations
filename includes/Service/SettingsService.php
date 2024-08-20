@@ -360,19 +360,33 @@ class SettingsService extends AbstractRegistrable {
 	}
 
 	/**
-	 * Encrypts the smtp password before storing to the database.
+	 * Encrypts the SMTP password before storing it in the database.
 	 *
-	 * @throws Exception Thrown when problem encrypting password.
+	 * @throws Exception Thrown when there is a problem encrypting the password.
 	 *
-	 * @param array $setting The smtp settings array.
+	 * @param array $setting The SMTP settings array.
+	 * @return array The modified settings array with the masked password.
 	 */
 	public static function encrypt_smtp_password( array $setting ): array {
 		$raw_password = $setting['password'] ?? null;
+
 		if ( $raw_password ) {
-			$setting['password'] = str_repeat( '*', \strlen( $raw_password ) );
-			$encrypted_password  = Auth::encrypt_password( $raw_password );
+			// Bail if this is only asterisks.
+			$num_asterisks = substr_count( $raw_password, '*' );
+			$count         = \strlen( $raw_password );
+			if ( $num_asterisks === $count ) {
+				return $setting;
+			}
+			// Encrypt the password.
+			$encrypted_password = Auth::encrypt_password( $raw_password );
+
+			// Update the encrypted password in the database.
 			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, $encrypted_password );
+
+			// Replace the password with asterisks in the settings array.
+			$setting['password'] = str_repeat( '*', $count );
 		} else {
+			// If no password is provided, retain the existing masked password or set it to null.
 			$setting['password'] = get_option( self::SETTING_CUSTOM_SMTP )['password'] ?? null;
 		}
 		return $setting;
