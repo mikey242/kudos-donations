@@ -63,7 +63,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$settings         = $this->settings->get_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE);
+		$settings         = $this->settings->get_setting(SettingsService::SETTING_VENDOR_MOLLIE);
 		$this->api_mode   = $settings['mode'] ?? 'test';
 		$this->api_keys   = [
 			'test' => $settings['test_key']['key'] ?? '',
@@ -195,7 +195,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 			if ($value && is_string($value)) {
 
 				// Set verified to false.
-				$this->settings->update_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE, array_merge([
+				$this->settings->update_setting(SettingsService::SETTING_VENDOR_MOLLIE, array_merge([
 					$type . '_key' => [
 						'verified' => false
 					],
@@ -266,7 +266,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 
         // Update vendor settings.
 		$this->settings->update_setting(
-			SettingsService::SETTING_NAME_VENDOR_MOLLIE,
+			SettingsService::SETTING_VENDOR_MOLLIE,
 			$combined_settings
 		);
 

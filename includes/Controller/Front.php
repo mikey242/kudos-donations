@@ -48,7 +48,7 @@ class Front extends AbstractRegistrable {
 		$this->register_assets();
 		$this->register_block();
 		$this->register_shortcode();
-		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_ALWAYS_LOAD_ASSETS ) ) {
+		if ( $this->settings->get_setting( SettingsService::SETTING_ALWAYS_LOAD_ASSETS ) ) {
 			$this->enqueue_assets();
 		}
 		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );

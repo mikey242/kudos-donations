@@ -91,8 +91,8 @@ class InvoiceService extends AbstractRegistrable {
 			'id'              => gmdate( 'Y' ) . '_' . $transaction->{TransactionPostType::META_FIELD_INVOICE_NUMBER},
 			'date'            => $transaction->post_date,
 			'company_name'    => get_bloginfo( 'name' ),
-			'company_address' => get_option( SettingsService::SETTING_NAME_INVOICE_COMPANY_ADDRESS ),
-			'vat_number'      => get_option( SettingsService::SETTING_NAME_INVOICE_VAT_NUMBER ),
+			'company_address' => get_option( SettingsService::SETTING_INVOICE_COMPANY_ADDRESS ),
+			'vat_number'      => get_option( SettingsService::SETTING_INVOICE_VAT_NUMBER ),
 			'currency_symbol' => Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ],
 			'items'           => [
 				$transaction->post_title       => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),

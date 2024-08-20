@@ -68,7 +68,7 @@ class Admin extends AbstractRegistrable {
 				case 'kudos_clear_mollie':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_mollie' ) ) {
-						update_option( SettingsService::SETTING_NAME_VENDOR_MOLLIE, [ 'mode' => 'test' ] );
+						update_option( SettingsService::SETTING_VENDOR_MOLLIE, [ 'mode' => 'test' ] );
 					}
 					break;
 				case 'kudos_clear_settings':
@@ -79,7 +79,7 @@ class Admin extends AbstractRegistrable {
 						$filtered_constants = array_filter(
 							$constants,
 							function ( $key ) {
-								return preg_match( '/^SETTING_NAME/', $key );
+								return preg_match( '/^SETTING/', $key );
 							},
 							ARRAY_FILTER_USE_KEY
 						);

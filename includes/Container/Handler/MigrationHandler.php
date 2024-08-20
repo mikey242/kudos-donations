@@ -36,7 +36,7 @@ class MigrationHandler extends AbstractRegistrable {
 	 */
 	public function __construct( SettingsService $settings ) {
 		$this->settings        = $settings;
-		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_NAME_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
+		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
 		$this->target_version  = KUDOS_DB_VERSION;
 	}
 
@@ -87,7 +87,7 @@ class MigrationHandler extends AbstractRegistrable {
 		foreach ( $this->migrations as $migration ) {
 
 			// Prevent running migration if already in history.
-			if ( \in_array( $migration->get_version(), get_option( SettingsService::SETTING_NAME_MIGRATION_HISTORY, [] ), true ) ) {
+			if ( \in_array( $migration->get_version(), get_option( SettingsService::SETTING_MIGRATION_HISTORY, [] ), true ) ) {
 				$this->logger->debug( 'Migration already applied, skipping', [ 'migration' => $migration->get_version() ] );
 				continue;
 			}
@@ -102,11 +102,11 @@ class MigrationHandler extends AbstractRegistrable {
 				return;
 			}
 			update_option(
-				SettingsService::SETTING_NAME_MIGRATION_HISTORY,
+				SettingsService::SETTING_MIGRATION_HISTORY,
 				[ $instance->get_version() ]
 			);
 		}
-		update_option( SettingsService::SETTING_NAME_DB_VERSION, KUDOS_DB_VERSION );
+		update_option( SettingsService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 	}
 
 	/**

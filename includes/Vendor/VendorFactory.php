@@ -25,7 +25,7 @@ class VendorFactory
 	 */
 	public function create(ContainerInterface $container, SettingsService $settings): ?VendorInterface
 	{
-		$vendor = $settings->get_setting( SettingsService::SETTING_NAME_VENDOR, 'mollie' );
+		$vendor = $settings->get_setting( SettingsService::SETTING_VENDOR, 'mollie' );
 		$vendorClass = $this->get_vendor($vendor);
 		if ($vendorClass) {
 			return $container->get($vendorClass);

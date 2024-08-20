@@ -222,7 +222,7 @@ class Version400 extends AbstractMigration {
 
 			$this->logger->debug( 'Transaction created', [ 'post_id' => $new_transaction->ID ] );
 		}
-		update_option( SettingsService::SETTING_NAME_INVOICE_NUMBER, $invoice_number );
+		update_option( SettingsService::SETTING_INVOICE_NUMBER, $invoice_number );
 		return true;
 	}
 }

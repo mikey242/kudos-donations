@@ -113,10 +113,10 @@ class PaymentService extends AbstractRegistrable {
 	 */
 	public function iterate_invoice_number( int $transaction_id ) {
 
-		$current = (int) get_option( SettingsService::SETTING_NAME_INVOICE_NUMBER );
+		$current = (int) get_option( SettingsService::SETTING_INVOICE_NUMBER );
 
 		if ( update_post_meta( $transaction_id, TransactionPostType::META_FIELD_INVOICE_NUMBER, $current ) ) {
-			update_option( SettingsService::SETTING_NAME_INVOICE_NUMBER, ( $current + 1 ) );
+			update_option( SettingsService::SETTING_INVOICE_NUMBER, ( $current + 1 ) );
 		}
 	}
 

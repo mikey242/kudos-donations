@@ -45,7 +45,7 @@ class MailerService extends AbstractRegistrable {
 		$this->logger->debug( 'Creating hooks' );
 		add_action( 'phpmailer_init', [ $this, 'init' ] );
 		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
-		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP ) ) {
+		if ( $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP ) ) {
 			add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 			add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
 		}
@@ -85,13 +85,13 @@ class MailerService extends AbstractRegistrable {
 		$phpmailer->isHTML();
 
 		// Add BCC.
-		$bcc = $this->settings->get_setting( SettingsService::SETTING_NAME_EMAIL_BCC );
+		$bcc = $this->settings->get_setting( SettingsService::SETTING_EMAIL_BCC );
 		if ( is_email( $bcc ) ) {
 			$phpmailer->addBCC( $bcc );
 		}
 		// Add custom config if enabled.
-		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_SMTP_ENABLE ) ) {
-			$custom_config = $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP );
+		if ( $this->settings->get_setting( SettingsService::SETTING_SMTP_ENABLE ) ) {
+			$custom_config = $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP );
 			$this->logger->debug( 'Using custom SMTP config' );
 
 			// Decrypt password.
@@ -122,7 +122,7 @@ class MailerService extends AbstractRegistrable {
 	 */
 	public function send_receipt( int $donor_id, int $transaction_id ): bool {
 		// Check if setting enabled.
-		if ( ! $this->settings->get_setting( SettingsService::SETTING_NAME_EMAIL_RECEIPT_ENABLE ) ) {
+		if ( ! $this->settings->get_setting( SettingsService::SETTING_EMAIL_RECEIPT_ENABLE ) ) {
 			return false;
 		}
 
@@ -231,7 +231,7 @@ class MailerService extends AbstractRegistrable {
 		$this->logger->debug( 'Removing hooks' );
 		remove_action( 'phpmailer_init', [ $this, 'init' ] );
 		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
-		if ( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP ) ) {
+		if ( $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP ) ) {
 			remove_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 			remove_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
 		}
@@ -241,14 +241,14 @@ class MailerService extends AbstractRegistrable {
 	 * Returns a filtered email.
 	 */
 	public function get_from_email(): string {
-		return filter_var( $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
+		return filter_var( $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
 	}
 
 	/**
 	 * Returns a filtered name.
 	 */
 	public function get_from_name(): string {
-		return $this->settings->get_setting( SettingsService::SETTING_NAME_CUSTOM_SMTP )['from_name'];
+		return $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP )['from_name'];
 	}
 
 	/**

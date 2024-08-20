@@ -18,23 +18,24 @@ use IseardMedia\Kudos\Helper\Auth;
 
 class SettingsService extends AbstractRegistrable {
 
-	public const HOOK_GET_SETTINGS                    = 'kudos_get_settings';
-	public const SETTING_GROUP                        = 'kudos-donations';
-	public const SETTING_NAME_SHOW_INTRO              = '_kudos_show_intro';
-	public const SETTING_NAME_VENDOR                  = '_kudos_vendor';
-	public const SETTING_NAME_VENDOR_MOLLIE           = '_kudos_vendor_mollie';
-	public const SETTING_NAME_EMAIL_RECEIPT_ENABLE    = '_kudos_email_receipt_enable';
-	public const SETTING_NAME_EMAIL_BCC               = '_kudos_email_bcc';
-	public const SETTING_NAME_CUSTOM_SMTP             = '_kudos_custom_smtp';
-	public const SETTING_NAME_SMTP_ENABLE             = '_kudos_smtp_enable';
-	public const SETTING_NAME_SPAM_PROTECTION         = '_kudos_spam_protection';
-	public const SETTING_NAME_DEBUG_MODE              = '_kudos_debug_mode';
-	public const SETTING_NAME_ALWAYS_LOAD_ASSETS      = '_kudos_always_load_assets';
-	public const SETTING_NAME_DB_VERSION              = '_kudos_db_version';
-	public const SETTING_NAME_MIGRATION_HISTORY       = '_kudos_migration_history';
-	public const SETTING_NAME_INVOICE_NUMBER          = '_kudos_invoice_number';
-	public const SETTING_NAME_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
-	public const SETTING_NAME_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
+	public const HOOK_GET_SETTINGS               = 'kudos_get_settings';
+	public const GROUP                           = 'kudos-donations';
+	public const SETTING_SHOW_INTRO              = '_kudos_show_intro';
+	public const SETTING_VENDOR                  = '_kudos_vendor';
+	public const SETTING_VENDOR_MOLLIE           = '_kudos_vendor_mollie';
+	public const SETTING_EMAIL_RECEIPT_ENABLE    = '_kudos_email_receipt_enable';
+	public const SETTING_EMAIL_BCC               = '_kudos_email_bcc';
+	public const SETTING_CUSTOM_SMTP             = '_kudos_custom_smtp';
+	public const SETTING_SMTP_ENABLE             = '_kudos_smtp_enable';
+	public const SETTING_SPAM_PROTECTION         = '_kudos_spam_protection';
+	public const SETTING_DEBUG_MODE              = '_kudos_debug_mode';
+	public const SETTING_ALWAYS_LOAD_ASSETS      = '_kudos_always_load_assets';
+	public const SETTING_DB_VERSION              = '_kudos_db_version';
+	public const SETTING_MIGRATION_HISTORY       = '_kudos_migration_history';
+	public const SETTING_INVOICE_NUMBER          = '_kudos_invoice_number';
+	public const SETTING_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
+	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
+	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
 
 	/**
 	 * {@inheritDoc}
@@ -49,7 +50,7 @@ class SettingsService extends AbstractRegistrable {
 	public function register_all(): void {
 		foreach ( $this->get_settings() as $name => $args ) {
 			register_setting(
-				self::SETTING_GROUP,
+				self::GROUP,
 				$name,
 				$args
 			);
@@ -108,7 +109,7 @@ class SettingsService extends AbstractRegistrable {
 	 * @return mixed
 	 */
 	public function get_current_vendor_settings() {
-		$vendor = $this->get_setting( self::SETTING_NAME_VENDOR );
+		$vendor = $this->get_setting( self::SETTING_VENDOR );
 		return $this->get_setting( '_kudos_vendor_' . $vendor );
 	}
 
@@ -170,18 +171,18 @@ class SettingsService extends AbstractRegistrable {
 		return apply_filters(
 			self::HOOK_GET_SETTINGS,
 			[
-				self::SETTING_NAME_SHOW_INTRO              => [
+				self::SETTING_SHOW_INTRO              => [
 					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_VENDOR                  => [
+				self::SETTING_VENDOR                  => [
 					'type'         => FieldType::STRING,
 					'show_in_rest' => true,
 					'default'      => 'mollie',
 				],
-				self::SETTING_NAME_VENDOR_MOLLIE           => [
+				self::SETTING_VENDOR_MOLLIE           => [
 					'type'         => 'object',
 					'default'      => [
 						'recurring'       => false,
@@ -255,18 +256,18 @@ class SettingsService extends AbstractRegistrable {
 						],
 					],
 				],
-				self::SETTING_NAME_EMAIL_RECEIPT_ENABLE    => [
+				self::SETTING_EMAIL_RECEIPT_ENABLE    => [
 					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_EMAIL_BCC               => [
+				self::SETTING_EMAIL_BCC               => [
 					'type'              => FieldType::STRING,
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_email',
 				],
-				self::SETTING_NAME_CUSTOM_SMTP             => [
+				self::SETTING_CUSTOM_SMTP             => [
 					'type'              => 'object',
 					'default'           => [
 						'from_email' => '',
@@ -304,48 +305,53 @@ class SettingsService extends AbstractRegistrable {
 									'type' => FieldType::STRING,
 								],
 								'password'   => [
-									'type' => FieldType::STRING,
+									'type'         => FieldType::STRING,
+									'show_in_rest' => false,
 								],
 							],
 						],
 					],
 					'sanitize_callback' => [ self::class, 'encrypt_smtp_password' ],
 				],
-				self::SETTING_NAME_SMTP_ENABLE             => [
+				self::SETTING_SMTP_PASSWORD_ENCRYPTED => [
+					'type'         => FieldType::STRING,
+					'show_in_rest' => false,
+				],
+				self::SETTING_SMTP_ENABLE             => [
 					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_SPAM_PROTECTION         => [
+				self::SETTING_SPAM_PROTECTION         => [
 					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_DEBUG_MODE              => [
+				self::SETTING_DEBUG_MODE              => [
 					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_ALWAYS_LOAD_ASSETS      => [
+				self::SETTING_ALWAYS_LOAD_ASSETS      => [
 					'type'              => FieldType::BOOLEAN,
 					'show_in_rest'      => true,
 					'default'           => false,
 					'sanitize_callback' => 'rest_sanitize_boolean',
 				],
-				self::SETTING_NAME_INVOICE_NUMBER          => [
+				self::SETTING_INVOICE_NUMBER          => [
 					'type'              => FieldType::INTEGER,
 					'show_in_rest'      => true,
 					'default'           => 1,
 					'sanitize_callback' => 'absint',
 				],
-				self::SETTING_NAME_INVOICE_COMPANY_ADDRESS => [
+				self::SETTING_INVOICE_COMPANY_ADDRESS => [
 					'type'         => FieldType::STRING,
 					'show_in_rest' => true,
 				],
-				self::SETTING_NAME_INVOICE_VAT_NUMBER      => [
+				self::SETTING_INVOICE_VAT_NUMBER      => [
 					'type'         => FieldType::STRING,
 					'show_in_rest' => true,
 				],
@@ -365,7 +371,7 @@ class SettingsService extends AbstractRegistrable {
 		if ( $unencrypted_password ) {
 			$setting['password'] = Auth::encrypt_password( $unencrypted_password );
 		} else {
-			$setting['password'] = get_option( self::SETTING_NAME_CUSTOM_SMTP )['password'] ?? null;
+			$setting['password'] = get_option( self::SETTING_CUSTOM_SMTP )['password'] ?? null;
 		}
 		return $setting;
 	}
