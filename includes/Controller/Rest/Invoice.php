@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\PDFService;
 use WP_REST_Request;
@@ -64,6 +66,11 @@ class Invoice extends AbstractRestController {
 					],
 				],
 			],
+			'/regenerate'                   => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'regenerate_invoices' ],
+				'permission_callback' => [ $this, 'can_manage_options' ],
+			],
 		];
 	}
 
@@ -97,5 +104,20 @@ class Invoice extends AbstractRestController {
 		$file_name = "invoice-$transaction_id.pdf";
 		$file      = PDFService::INVOICE_DIR . $file_name;
 		wp_send_json( $file );
+	}
+
+	/**
+	 * Regenerate all invoices.
+	 */
+	public function regenerate_invoices() {
+		$transactions = TransactionPostType::get_posts( [ TransactionPostType::META_FIELD_STATUS => PaymentStatus::PAID ] );
+		if ( $transactions ) {
+			foreach ( $transactions as $transaction ) {
+				$this->invoice->generate_invoice( $transaction->ID, true );
+			}
+			// translators: %s represents the number of invoices.
+			wp_send_json_success( wp_sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) );
+		}
+		wp_send_json_error( __( 'No valid transactions.', 'kudos-donations' ) );
 	}
 }
