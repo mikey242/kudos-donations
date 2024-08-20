@@ -235,7 +235,7 @@ const EmailTab = () => {
 								onClick={sendTestEmail}
 								icon={<EnvelopeIcon className="mr-2 w-5 h-5" />}
 							>
-								Send
+								{__('Send', 'kudos-donations')}
 							</Button>
 						}
 					/>
