@@ -369,7 +369,9 @@ class SettingsService extends AbstractRegistrable {
 	public static function encrypt_smtp_password( array $setting ): array {
 		$unencrypted_password = $setting['password'] ?? null;
 		if ( $unencrypted_password ) {
-			$setting['password'] = Auth::encrypt_password( $unencrypted_password );
+			$setting['password'] = str_repeat( '*', \strlen( $unencrypted_password ) );
+			$encrypted_password  = Auth::encrypt_password( $unencrypted_password );
+			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, $encrypted_password );
 		} else {
 			$setting['password'] = get_option( self::SETTING_CUSTOM_SMTP )['password'] ?? null;
 		}

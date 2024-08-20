@@ -95,7 +95,7 @@ class MailerService extends AbstractRegistrable {
 			$this->logger->debug( 'Using custom SMTP config' );
 
 			// Decrypt password.
-			$encrypted_password = $custom_config['password'];
+			$encrypted_password = get_option( SettingsService::SETTING_SMTP_PASSWORD_ENCRYPTED );
 			$decrypted_password = Auth::decrypt_password( $encrypted_password );
 
 			$phpmailer->isSMTP();
