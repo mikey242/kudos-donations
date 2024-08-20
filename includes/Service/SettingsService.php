@@ -15,9 +15,10 @@ use Exception;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Auth;
 
 class SettingsService extends AbstractRegistrable implements ActivationAwareInterface {
+
+	private EncryptionService $encryption;
 
 	public const HOOK_GET_SETTINGS               = 'kudos_get_settings';
 	public const GROUP                           = 'kudos-donations';
@@ -37,6 +38,17 @@ class SettingsService extends AbstractRegistrable implements ActivationAwareInte
 	public const SETTING_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
 	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
 	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
+
+	/**
+	 * SettingsService constructor.
+	 *
+	 * @param EncryptionService $encryption The encryption helper.
+	 */
+	public function __construct( EncryptionService $encryption ) {
+		$this->encryption = $encryption;
+		add_filter( 'pre_update_option_' . self::SETTING_CUSTOM_SMTP, [ $this, 'encrypt_smtp_password' ] );
+		add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this, 'decrypt_smtp_password' ] );
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -281,8 +293,8 @@ class SettingsService extends AbstractRegistrable implements ActivationAwareInte
 					'sanitize_callback' => 'sanitize_email',
 				],
 				self::SETTING_CUSTOM_SMTP             => [
-					'type'              => 'object',
-					'default'           => [
+					'type'         => 'object',
+					'default'      => [
 						'from_email' => '',
 						'from_name'  => get_bloginfo( 'name' ),
 						'host'       => '',
@@ -292,7 +304,7 @@ class SettingsService extends AbstractRegistrable implements ActivationAwareInte
 						'username'   => '',
 						'password'   => '',
 					],
-					'show_in_rest'      => [
+					'show_in_rest' => [
 						'schema' => [
 							'type'       => 'object',
 							'properties' => [
@@ -324,7 +336,6 @@ class SettingsService extends AbstractRegistrable implements ActivationAwareInte
 							],
 						],
 					],
-					'sanitize_callback' => [ self::class, 'encrypt_smtp_password' ],
 				],
 				self::SETTING_SMTP_PASSWORD_ENCRYPTED => [
 					'type'         => FieldType::STRING,
@@ -380,7 +391,7 @@ class SettingsService extends AbstractRegistrable implements ActivationAwareInte
 	 * @param array $setting The SMTP settings array.
 	 * @return array The modified settings array with the masked password.
 	 */
-	public static function encrypt_smtp_password( array $setting ): array {
+	public function encrypt_smtp_password( array $setting ): array {
 		$raw_password = $setting['password'] ?? null;
 
 		if ( $raw_password ) {
@@ -391,7 +402,7 @@ class SettingsService extends AbstractRegistrable implements ActivationAwareInte
 				return $setting;
 			}
 			// Encrypt the password.
-			$encrypted_password = Auth::encrypt_password( $raw_password );
+			$encrypted_password = $this->encryption->encrypt_password( $raw_password );
 
 			// Update the encrypted password in the database.
 			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, $encrypted_password );
@@ -403,5 +414,15 @@ class SettingsService extends AbstractRegistrable implements ActivationAwareInte
 			$setting['password'] = get_option( self::SETTING_CUSTOM_SMTP )['password'] ?? null;
 		}
 		return $setting;
+	}
+
+	/**
+	 * Decrypt the provided SMTP password.
+	 *
+	 * @param string $value The encrypted password.
+	 * @return false|string
+	 */
+	public function decrypt_smtp_password( string $value ) {
+		return $this->encryption->decrypt_password( $value );
 	}
 }

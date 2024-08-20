@@ -42,6 +42,7 @@ if ( ! \defined( 'WPINC' ) ) {
 \define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
 \define( 'KUDOS_SALT', NONCE_SALT );
 \define( 'KUDOS_AUTH_KEY', AUTH_KEY );
+\define( 'KUDOS_AUTH_SALT', AUTH_SALT );
 
 // Autoloader for plugin.
 if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/autoload.php' ) ) {

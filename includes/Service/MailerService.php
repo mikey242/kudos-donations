@@ -15,7 +15,6 @@ use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
-use IseardMedia\Kudos\Helper\Auth;
 use IseardMedia\Kudos\Helper\Utils;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -94,9 +93,8 @@ class MailerService extends AbstractRegistrable {
 			$custom_config = $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP );
 			$this->logger->debug( 'Using custom SMTP config' );
 
-			// Decrypt password.
-			$encrypted_password = get_option( SettingsService::SETTING_SMTP_PASSWORD_ENCRYPTED );
-			$decrypted_password = Auth::decrypt_password( $encrypted_password );
+			// Get password.
+			$password = get_option( SettingsService::SETTING_SMTP_PASSWORD_ENCRYPTED );
 
 			$phpmailer->isSMTP();
 			$phpmailer->Host        = $custom_config['host'];
@@ -106,7 +104,7 @@ class MailerService extends AbstractRegistrable {
 				$phpmailer->SMTPSecure = $custom_config['encryption'];
 			}
 			$phpmailer->Username = $custom_config['username'];
-			$phpmailer->Password = $decrypted_password;
+			$phpmailer->Password = $password;
 			$phpmailer->Port     = $custom_config['port'];
 			$phpmailer->From     = $custom_config['from_email'];
 			$phpmailer->FromName = $custom_config['from_name'];
