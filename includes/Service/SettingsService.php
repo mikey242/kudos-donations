@@ -293,7 +293,7 @@ class SettingsService extends AbstractRegistrable {
 									'type' => FieldType::STRING,
 								],
 								'port'       => [
-									'type' => 'number',
+									'type' => FieldType::INTEGER,
 								],
 								'encryption' => [
 									'type' => FieldType::STRING,
