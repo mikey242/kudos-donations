@@ -73,8 +73,6 @@ class SettingsService extends AbstractRegistrable {
 	/**
 	 * Returns the value for a given setting.
 	 *
-	 * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-	 *
 	 * @param string $key     Setting key.
 	 * @param mixed  $default_value Optional. Default value to return if the option does not exist.
 	 * @return mixed
