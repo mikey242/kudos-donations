@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\SettingsService;
+use WP_REST_Request;
 
 class Version400 extends AbstractMigration {
 
@@ -25,10 +26,48 @@ class Version400 extends AbstractMigration {
 	 */
 	public function run(): bool {
 		return (
+			$this->migrate_vendor_settings() &&
 			$this->migrate_donors_to_posts() &&
 			$this->migrate_campaigns_to_posts() &&
 			$this->migrate_transactions_to_posts()
 		);
+	}
+
+	/**
+	 * Migrate the old vendor settings.
+	 */
+	private function migrate_vendor_settings(): bool {
+		$vendor_mollie = get_option( '_kudos_vendor_mollie' );
+		$test_key      = $vendor_mollie['test_key'] ?? null;
+		$live_key      = $vendor_mollie['live_key'] ?? null;
+		$keys          = [];
+
+		// Grab current keys.
+		if ( $test_key ) {
+			$keys['test'] = $test_key;
+		}
+		if ( $live_key ) {
+			$keys['live'] = $live_key;
+		}
+
+		// Perform rest request to check keys are valid.
+		if ( ! empty( $keys ) ) {
+			$request = new WP_REST_Request(
+				'POST',
+				'/kudos/v1/payment/test'
+			);
+			$request->set_body_params(
+				[
+					'keys' => $keys,
+				]
+			);
+
+			rest_do_request( $request );
+
+		}
+
+		// Always return true, a failure here is not critical.
+		return true;
 	}
 
 	/**
