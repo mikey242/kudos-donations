@@ -27,6 +27,7 @@ class Version400 extends AbstractMigration {
 	public function run(): bool {
 		return (
 			$this->migrate_vendor_settings() &&
+			$this->migrate_smtp_settings() &&
 			$this->migrate_donors_to_posts() &&
 			$this->migrate_campaigns_to_posts() &&
 			$this->migrate_transactions_to_posts()
@@ -65,6 +66,50 @@ class Version400 extends AbstractMigration {
 			rest_do_request( $request );
 
 		}
+
+		// Always return true, a failure here is not critical.
+		return true;
+	}
+
+	/**
+	 * Migrate custom SMTP config.
+	 */
+	private function migrate_smtp_settings(): bool {
+		$host       = get_option( '_kudos_smtp_host' ) ?? null;
+		$port       = get_option( '_kudos_smtp_port' ) ?? null;
+		$encryption = get_option( '_kudos_smtp_encryption' ) ?? null;
+		$autotls    = get_option( '_kudos_smtp_autotls' ) ?? null;
+		$from_email = get_option( '_kudos_smtp_from' ) ?? null;
+		$username   = get_option( '_kudos_smtp_username' ) ?? null;
+		$password   = get_option( '_kudos_smtp_password' ) ?? null;
+
+		$new_settings = [];
+
+		$new_settings['from_name'] = get_bloginfo( 'name' );
+
+		if ( $host ) {
+			$new_settings['host'] = $host;
+		}
+		if ( $port ) {
+			$new_settings['port'] = $port;
+		}
+		if ( $encryption ) {
+			$new_settings['encryption'] = $encryption;
+		}
+		if ( $autotls ) {
+			$new_settings['autotls'] = $autotls;
+		}
+		if ( $from_email ) {
+			$new_settings['from_email'] = $from_email;
+		}
+		if ( $username ) {
+			$new_settings['username'] = $username;
+		}
+		if ( $password ) {
+			$new_settings['password'] = $password;
+		}
+
+		update_option( SettingsService::SETTING_CUSTOM_SMTP, $new_settings );
 
 		// Always return true, a failure here is not critical.
 		return true;
