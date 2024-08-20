@@ -13,10 +13,11 @@ namespace IseardMedia\Kudos\Service;
 
 use Exception;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Auth;
 
-class SettingsService extends AbstractRegistrable {
+class SettingsService extends AbstractRegistrable implements ActivationAwareInterface {
 
 	public const HOOK_GET_SETTINGS               = 'kudos_get_settings';
 	public const GROUP                           = 'kudos-donations';
@@ -36,6 +37,18 @@ class SettingsService extends AbstractRegistrable {
 	public const SETTING_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
 	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
 	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function on_plugin_activation(): void {
+		$settings = $this::get_settings();
+		foreach ( $settings as $name => $setting ) {
+			if ( ! get_option( $name ) ) {
+				update_option( $name, $setting['default'] ?? null );
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
