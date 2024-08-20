@@ -192,7 +192,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 
 	    $api_keys = [];
 		foreach ($keys as $type => $value) {
-			if ($value) {
+			if ($value && is_string($value)) {
 
 				// Set verified to false.
 				$this->settings->update_setting(SettingsService::SETTING_NAME_VENDOR_MOLLIE, array_merge([
