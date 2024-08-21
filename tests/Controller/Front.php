@@ -5,7 +5,6 @@
 
 namespace Controller;
 
-use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_UnitTestCase;
 
@@ -36,16 +35,15 @@ class Front extends WP_UnitTestCase {
 	 * Test that plugin container is created.
 	 */
 	public function test_render_callback() {
-		$settings_service = $this->createMock( SettingsService::class );
-		$vendor_service   = $this->createMock( VendorInterface::class );
-		$front            = new \IseardMedia\Kudos\Controller\Front( $settings_service, $vendor_service );
-		$args             = [
+		$vendor_service = $this->createMock( VendorInterface::class );
+		$front          = new \IseardMedia\Kudos\Controller\Front( $vendor_service );
+		$args           = [
 			'campaign_id'  => 291,
 			'button_label' => 'Donate now',
 			'alignment'    => 'none',
 			'type'         => 'button',
 		];
-		$html             = $front->kudos_render_callback( $args );
+		$html           = $front->kudos_render_callback( $args );
 		$this->assertSame( true, \is_string( $html ) );
 	}
 }
