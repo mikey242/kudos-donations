@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos;
 
+use IseardMedia\Kudos\Service\CacheService;
+
 /**
  * Handle plugin activation.
  *
@@ -63,7 +65,11 @@ function get_plugin_instance(): Plugin {
  * Bootstrap the plugin.
  */
 function bootstrap_plugin(): void {
-	PluginFactory::create()->register();
+	try {
+		PluginFactory::create()->register();
+	} catch ( \Throwable $e ) {
+		CacheService::recursively_clear_cache();
+	}
 }
 
 add_action( 'plugins_loaded', __NAMESPACE__ . '\bootstrap_plugin' );
