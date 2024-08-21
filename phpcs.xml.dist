@@ -2,7 +2,7 @@
 <ruleset name="Kudos Donations WP PHP Coding Standards Rules">
 	<config name="minimum_supported_wp_version" value="6.2"/>
 
-	<exclude-pattern>/uploads/*</exclude-pattern>
+	<exclude-pattern>/dist/*</exclude-pattern>
 
 	<rule ref="WordPress-Core">
 		<type>error</type>
