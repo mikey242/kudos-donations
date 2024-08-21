@@ -28,7 +28,7 @@ use WP_Filesystem_Base;
 
 class Kernel {
 
-	private const CONTAINER_FILE                 = 'container.php';
+	private const CONTAINER_FILE                 = 'container-' . KUDOS_VERSION . '.php';
 	private ?ContainerBuilder $container_builder = null;
 	private ?ContainerInterface $container       = null;
 	private ?WP_Filesystem_Base $file_system;
@@ -72,6 +72,7 @@ class Kernel {
 			require_once $container_file_path;
 			$this->container = new \KudosContainer();
 		} else {
+			CacheService::recursively_clear_cache( 'container' );
 			$this->container_builder = new ContainerBuilder();
 			$this->initialize_filesystem();
 			$this->load_config();
