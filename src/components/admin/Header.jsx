@@ -14,7 +14,7 @@ const Header = ({ children }) => {
 						target="_blank"
 						rel="noreferrer"
 					>
-						<KudosLogo className="w-6 h-6" />
+						<KudosLogo className="w-8 h-8" />
 					</a>
 					<h1 className="hidden xs:block font-heading">
 						{__('Kudos Donations', 'kudos-donations')}
