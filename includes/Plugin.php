@@ -26,27 +26,27 @@ class Plugin implements LoggerAwareInterface {
 
 	private ActivationHandler $activation_handler;
 	private MigrationHandler $migration_handler;
-	private RegistrableHandler $service_handler;
+	private RegistrableHandler $registrable_handler;
 	private UpgradeHandler $upgrade_handler;
 
 	/**
 	 * Plugin constructor.
 	 *
-	 * @param RegistrableHandler $service_handler Service instantiator.
+	 * @param RegistrableHandler $registrable_handler Service instantiator.
 	 * @param ActivationHandler  $activation_handler  Activation related functions.
 	 * @param UpgradeHandler     $upgrade_handler Handler for upgradeable services.
 	 * @param MigrationHandler   $migration_handler  Service for checking migrations.
 	 */
 	public function __construct(
-		RegistrableHandler $service_handler,
+		RegistrableHandler $registrable_handler,
 		ActivationHandler $activation_handler,
 		UpgradeHandler $upgrade_handler,
 		MigrationHandler $migration_handler
 	) {
-		$this->service_handler    = $service_handler;
-		$this->activation_handler = $activation_handler;
-		$this->upgrade_handler    = $upgrade_handler;
-		$this->migration_handler  = $migration_handler;
+		$this->registrable_handler = $registrable_handler;
+		$this->activation_handler  = $activation_handler;
+		$this->upgrade_handler     = $upgrade_handler;
+		$this->migration_handler   = $migration_handler;
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Plugin implements LoggerAwareInterface {
 	 * Runs the handlers which effectively runs the plugin.
 	 */
 	private function process_handlers() {
-		$this->service_handler->process();
+		$this->registrable_handler->process();
 		$this->upgrade_handler->process();
 		$this->migration_handler->check_database();
 	}
