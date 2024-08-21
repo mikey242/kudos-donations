@@ -24,7 +24,7 @@ const SelectControl = ({
 				<select
 					id={id}
 					disabled={isDisabled}
-					value={value}
+					value={value ?? ''}
 					onChange={onChange}
 					className={clsx(
 						// General
