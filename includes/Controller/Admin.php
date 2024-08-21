@@ -22,17 +22,6 @@ use WP_REST_Server;
 
 class Admin extends AbstractRegistrable {
 
-	private CacheService $cache;
-
-	/**
-	 * Constructor for injecting services.
-	 *
-	 * @param CacheService $cache The cache service.
-	 */
-	public function __construct( CacheService $cache ) {
-		$this->cache = $cache;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -101,19 +90,19 @@ class Admin extends AbstractRegistrable {
 				case 'kudos_clear_twig_cache':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_twig_cache' ) ) {
-						$this->cache->purge_cache( 'twig', __( 'User requested', 'kudos-donations' ) );
+						CacheService::recursively_clear_cache( 'twig' );
 					}
 					break;
 				case 'kudos_clear_container_cache':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_container_cache' ) ) {
-						$this->cache->purge_cache( 'container', __( 'User requested', 'kudos-donations' ) );
+						CacheService::recursively_clear_cache( 'container' );
 					}
 					break;
 				case 'kudos_clear_all_cache':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_all_cache' ) ) {
-						$this->cache->purge_cache( null, __( 'User requested', 'kudos-donations' ) );
+						CacheService::recursively_clear_cache();
 					}
 					break;
 				case 'kudos_clear_logs':
