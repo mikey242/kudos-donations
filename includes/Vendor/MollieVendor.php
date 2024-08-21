@@ -52,9 +52,8 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 	/**
      * Mollie constructor.
      */
-    public function __construct( LoggerInterface $logger, MollieApiClient $api_client, SettingsService $settings)
+    public function __construct( MollieApiClient $api_client, SettingsService $settings)
     {
-	    $this->logger     = $logger;
 	    $this->api_client = $api_client;
 	    $this->settings   = $settings;
     }
