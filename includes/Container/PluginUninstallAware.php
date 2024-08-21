@@ -1,6 +1,12 @@
 <?php
 /**
- * Main Plugin class.
+ * Something that can be uninstalled.
+ *
+ * By tagging a service with this interface, the system will automatically hook
+ * it up to the WordPress uninstall hook.
+ *
+ * This way, we can just add the simple interface marker and not worry about how
+ * to wire up the code to reach that part during the static uninstall hook.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations
  *
@@ -11,17 +17,6 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Container;
 
-/**
- * Something that can be uninstalled.
- *
- * By tagging a service with this interface, the system will automatically hook
- * it up to the WordPress uninstall hook.
- *
- * This way, we can just add the simple interface marker and not worry about how
- * to wire up the code to reach that part during the static uninstall hook.
- *
- * @internal
- */
 interface PluginUninstallAware {
 
 	/**
