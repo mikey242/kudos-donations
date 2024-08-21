@@ -11,39 +11,16 @@ namespace IseardMedia\Kudos\Service;
 
 use FilesystemIterator;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class CacheService implements UpgradeAwareInterface, LoggerAwareInterface {
-
-	use LoggerAwareTrait;
+class CacheService implements UpgradeAwareInterface {
 
 	/**
 	 * Clears the cache when the plugin is upgraded.
 	 */
 	public function on_plugin_upgrade(): void {
-		$this->purge_cache( null, __( 'Plugin upgraded', 'kudos-donations' ) );
-	}
-
-	/**
-	 * Purges the plugin cache.
-	 *
-	 * @param string|null $dir The subdirectory to clear.
-	 * @param string      $reason The reason this purge was requested.
-	 */
-	public function purge_cache( ?string $dir = null, string $reason = '' ): void {
-		$context = [];
-		$result  = $this->recursively_clear_cache( $dir );
-		if ( $dir ) {
-			$context['dir'] = $dir;
-		}
-		if ( $reason ) {
-			$context['reason'] = $reason;
-		}
-		$context['success'] = $result;
-		$this->logger->info( 'Plugin cache cleared', $context );
+		$this->recursively_clear_cache();
 	}
 
 	/**
@@ -52,7 +29,7 @@ class CacheService implements UpgradeAwareInterface, LoggerAwareInterface {
 	 * @param string|null $dir The directory containing the cache.
 	 * @return bool True on success, false on failure.
 	 */
-	private function recursively_clear_cache( ?string $dir = null ): bool {
+	public static function recursively_clear_cache( ?string $dir = null ): bool {
 
 		$target = KUDOS_CACHE_DIR . $dir;
 		if ( ! is_dir( $target ) ) {
