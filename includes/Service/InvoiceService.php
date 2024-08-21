@@ -12,12 +12,17 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 
-class InvoiceService extends AbstractRegistrable {
+class InvoiceService extends AbstractRegistrable implements HasSettingsInterface {
 
+	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
+	public const SETTING_INVOICE_NUMBER          = '_kudos_invoice_number';
+	public const SETTING_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
 	private PDFService $pdf;
 
 	/**
@@ -34,6 +39,28 @@ class InvoiceService extends AbstractRegistrable {
 	 */
 	public function register(): void {
 		add_filter( 'kudos_receipt_attachment', [ $this, 'attach_to_email' ], 10, 2 );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_settings(): array {
+		return [
+			self::SETTING_INVOICE_NUMBER          => [
+				'type'              => FieldType::INTEGER,
+				'show_in_rest'      => true,
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+			],
+			self::SETTING_INVOICE_COMPANY_ADDRESS => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
+			],
+			self::SETTING_INVOICE_VAT_NUMBER      => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
+			],
+		];
 	}
 
 	/**
@@ -91,8 +118,8 @@ class InvoiceService extends AbstractRegistrable {
 			'id'              => gmdate( 'Y' ) . '_' . $transaction->{TransactionPostType::META_FIELD_INVOICE_NUMBER},
 			'date'            => $transaction->post_date,
 			'company_name'    => get_bloginfo( 'name' ),
-			'company_address' => get_option( SettingsService::SETTING_INVOICE_COMPANY_ADDRESS ),
-			'vat_number'      => get_option( SettingsService::SETTING_INVOICE_VAT_NUMBER ),
+			'company_address' => get_option( self::SETTING_INVOICE_COMPANY_ADDRESS ),
+			'vat_number'      => get_option( self::SETTING_INVOICE_VAT_NUMBER ),
 			'currency_symbol' => Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ],
 			'items'           => [
 				$transaction->post_title       => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),

@@ -11,6 +11,7 @@ declare( strict_types=1 );
 
 use Dompdf\Dompdf;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Container\Registrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
@@ -59,7 +60,9 @@ return static function ( ContainerConfigurator $container ) {
 	$services->instanceof( ActivationAwareInterface::class )
 		->tag( 'kudos.activation' );
 	$services->instanceof( UpgradeAwareInterface::class )
-			->tag( 'kudos.upgradeable' );
+		->tag( 'kudos.upgradeable' );
+	$services->instanceof( HasSettingsInterface::class )
+		->tag( 'kudos.settings' );
 
 	// Migrations.
 	$services->instanceof( MigrationInterface::class )

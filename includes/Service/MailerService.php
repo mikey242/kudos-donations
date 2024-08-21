@@ -12,29 +12,42 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_Error;
 use WP_REST_Request;
 
-class MailerService extends AbstractRegistrable {
+class MailerService extends AbstractRegistrable implements HasSettingsInterface {
 
+	public const SETTING_CUSTOM_SMTP             = '_kudos_custom_smtp';
+	public const SETTING_SMTP_ENABLE             = '_kudos_smtp_enable';
+	public const SETTING_EMAIL_BCC               = '_kudos_email_bcc';
+	public const SETTING_EMAIL_RECEIPT_ENABLE    = '_kudos_email_receipt_enable';
+	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
 	private TwigService $twig;
 	private SettingsService $settings;
+	private EncryptionService $encryption;
 
 	/**
 	 * Mailer constructor.
 	 *
-	 * @param TwigService     $twig Twig service.
-	 * @param SettingsService $settings Settings service.
+	 * @param TwigService       $twig Twig service.
+	 * @param SettingsService   $settings Settings service.
+	 * @param EncryptionService $encryption Used for decrypting SMTP password.
 	 */
-	public function __construct( TwigService $twig, SettingsService $settings ) {
-		$this->settings = $settings;
-		$this->twig     = $twig;
+	public function __construct( TwigService $twig, SettingsService $settings, EncryptionService $encryption ) {
+		$this->settings   = $settings;
+		$this->twig       = $twig;
+		$this->encryption = $encryption;
+
+		// Add filters for encrypting passwords.
+		add_filter( 'pre_update_option_' . self::SETTING_CUSTOM_SMTP, [ $this, 'encrypt_smtp_password' ] );
 	}
 
 	/**
@@ -44,9 +57,10 @@ class MailerService extends AbstractRegistrable {
 		$this->logger->debug( 'Creating hooks' );
 		add_action( 'phpmailer_init', [ $this, 'init' ] );
 		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
-		if ( $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP ) ) {
+		if ( $this->settings->get_setting( self::SETTING_CUSTOM_SMTP ) ) {
 			add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 			add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
+			add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
 		}
 	}
 
@@ -55,6 +69,80 @@ class MailerService extends AbstractRegistrable {
 	 */
 	public static function get_registration_actions(): array {
 		return [ 'kudos_mailer_send' ];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_settings(): array {
+		return [
+			self::SETTING_EMAIL_RECEIPT_ENABLE    => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_EMAIL_BCC               => [
+				'type'              => FieldType::STRING,
+				'show_in_rest'      => true,
+				'sanitize_callback' => 'sanitize_email',
+			],
+			self::SETTING_CUSTOM_SMTP             => [
+				'type'         => 'object',
+				'default'      => [
+					'from_email' => '',
+					'from_name'  => get_bloginfo( 'name' ),
+					'host'       => '',
+					'port'       => '',
+					'encryption' => 'tls',
+					'autotls'    => false,
+					'username'   => '',
+					'password'   => '',
+				],
+				'show_in_rest' => [
+					'schema' => [
+						'type'       => 'object',
+						'properties' => [
+							'from_email' => [
+								'type' => FieldType::STRING,
+							],
+							'from_name'  => [
+								'type' => FieldType::STRING,
+							],
+							'host'       => [
+								'type' => FieldType::STRING,
+							],
+							'port'       => [
+								'type' => FieldType::INTEGER,
+							],
+							'encryption' => [
+								'type' => FieldType::STRING,
+							],
+							'autotls'    => [
+								'type' => FieldType::BOOLEAN,
+							],
+							'username'   => [
+								'type' => FieldType::STRING,
+							],
+							'password'   => [
+								'type'         => FieldType::STRING,
+								'show_in_rest' => false,
+							],
+						],
+					],
+				],
+			],
+			self::SETTING_SMTP_PASSWORD_ENCRYPTED => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => false,
+			],
+			self::SETTING_SMTP_ENABLE             => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+		];
 	}
 
 	/**
@@ -84,17 +172,17 @@ class MailerService extends AbstractRegistrable {
 		$phpmailer->isHTML();
 
 		// Add BCC.
-		$bcc = $this->settings->get_setting( SettingsService::SETTING_EMAIL_BCC );
+		$bcc = $this->settings->get_setting( self::SETTING_EMAIL_BCC );
 		if ( is_email( $bcc ) ) {
 			$phpmailer->addBCC( $bcc );
 		}
 		// Add custom config if enabled.
-		if ( $this->settings->get_setting( SettingsService::SETTING_SMTP_ENABLE ) ) {
-			$custom_config = $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP );
+		if ( $this->settings->get_setting( self::SETTING_SMTP_ENABLE ) ) {
+			$custom_config = $this->settings->get_setting( self::SETTING_CUSTOM_SMTP );
 			$this->logger->debug( 'Using custom SMTP config' );
 
 			// Get password.
-			$password = get_option( SettingsService::SETTING_SMTP_PASSWORD_ENCRYPTED );
+			$password = get_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED );
 
 			$phpmailer->isSMTP();
 			$phpmailer->Host        = $custom_config['host'];
@@ -120,7 +208,7 @@ class MailerService extends AbstractRegistrable {
 	 */
 	public function send_receipt( int $donor_id, int $transaction_id ): bool {
 		// Check if setting enabled.
-		if ( ! $this->settings->get_setting( SettingsService::SETTING_EMAIL_RECEIPT_ENABLE ) ) {
+		if ( ! $this->settings->get_setting( self::SETTING_EMAIL_RECEIPT_ENABLE ) ) {
 			return false;
 		}
 
@@ -229,7 +317,7 @@ class MailerService extends AbstractRegistrable {
 		$this->logger->debug( 'Removing hooks' );
 		remove_action( 'phpmailer_init', [ $this, 'init' ] );
 		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
-		if ( $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP ) ) {
+		if ( $this->settings->get_setting( self::SETTING_CUSTOM_SMTP ) ) {
 			remove_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 			remove_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
 		}
@@ -239,14 +327,14 @@ class MailerService extends AbstractRegistrable {
 	 * Returns a filtered email.
 	 */
 	public function get_from_email(): string {
-		return filter_var( $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
+		return filter_var( $this->settings->get_setting( self::SETTING_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
 	}
 
 	/**
 	 * Returns a filtered name.
 	 */
 	public function get_from_name(): string {
-		return $this->settings->get_setting( SettingsService::SETTING_CUSTOM_SMTP )['from_name'];
+		return $this->settings->get_setting( self::SETTING_CUSTOM_SMTP )['from_name'];
 	}
 
 	/**
@@ -300,6 +388,39 @@ class MailerService extends AbstractRegistrable {
 		);
 
 		return $this->send( $email, $header, $body );
+	}
+
+	/**
+	 * Encrypts the SMTP password before storing it in the database.
+	 *
+	 * @throws \Exception Thrown when there is a problem encrypting the password.
+	 *
+	 * @param array $setting The SMTP settings array.
+	 * @return array The modified settings array with the masked password.
+	 */
+	public function encrypt_smtp_password( array $setting ): array {
+		$raw_password = $setting['password'] ?? null;
+
+		if ( $raw_password ) {
+			// Bail if this is only asterisks.
+			$num_asterisks = substr_count( $raw_password, '*' );
+			$count         = \strlen( $raw_password );
+			if ( $num_asterisks === $count ) {
+				return $setting;
+			}
+			// Encrypt the password.
+			$encrypted_password = $this->encryption->encrypt_password( $raw_password );
+
+			// Update the encrypted password in the database.
+			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, $encrypted_password );
+
+			// Replace the password with asterisks in the settings array.
+			$setting['password'] = str_repeat( '*', $count );
+		} else {
+			// If no password is provided, retain the existing masked password or set it to null.
+			$setting['password'] = get_option( self::SETTING_CUSTOM_SMTP )['password'] ?? null;
+		}
+		return $setting;
 	}
 
 	/**

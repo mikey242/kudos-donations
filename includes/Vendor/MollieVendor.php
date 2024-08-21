@@ -13,9 +13,11 @@ namespace IseardMedia\Kudos\Vendor;
 
 use Exception;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\SettingsService;
@@ -28,15 +30,15 @@ use Mollie\Api\Resources\Subscription;
 use Mollie\Api\Resources\SubscriptionCollection;
 use Mollie\Api\Types\RefundStatus;
 use Mollie\Api\Types\SequenceType;
-use Psr\Log\LoggerInterface;
 use WP_Error;
 use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class MollieVendor extends AbstractRegistrable implements VendorInterface
+class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSettingsInterface
 {
-    /**
+	public const SETTING_VENDOR_MOLLIE = '_kudos_vendor_mollie';
+	/**
      * The API mode (test or live).
      *
      * @var string
@@ -62,7 +64,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$settings         = $this->settings->get_setting(SettingsService::SETTING_VENDOR_MOLLIE);
+		$settings         = $this->settings->get_setting( self::SETTING_VENDOR_MOLLIE );
 		$this->api_mode   = $settings['mode'] ?? 'test';
 		$this->api_keys   = [
 			'test' => $settings['test_key']['key'] ?? '',
@@ -71,6 +73,88 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 
 		$this->config_client($this->api_mode);
 		$this->set_user_agent();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_settings(): array {
+		return [
+			self::SETTING_VENDOR_MOLLIE => [
+				'type'         => 'object',
+				'default'      => [
+					'recurring'       => false,
+					'mode'            => 'test',
+					'payment_methods' => [],
+					'test_key'        => [
+						'verified' => false,
+					],
+					'live_key'        => [
+						'verified' => false,
+					],
+				],
+				'show_in_rest' => [
+					'schema' => [
+						'type'       => 'object',
+						'properties' => [
+							'recurring'       => [
+								'type' => FieldType::BOOLEAN,
+							],
+							'mode'            => [
+								'type' => FieldType::STRING,
+							],
+							'test_key'        => [
+								'type'       => 'object',
+								'properties' => [
+									'key'      => [
+										'type' => FieldType::STRING,
+									],
+									'verified' => [
+										'type' => FieldType::BOOLEAN,
+									],
+								],
+							],
+							'live_key'        => [
+								'type'       => 'object',
+								'properties' => [
+									'key'      => [
+										'type' => FieldType::STRING,
+									],
+									'verified' => [
+										'type' => FieldType::BOOLEAN,
+									],
+								],
+							],
+							'payment_methods' => [
+								'type'  => 'array',
+								'items' => [
+									'type'       => 'object',
+									'properties' => [
+										'id'     => [
+											'type' => FieldType::STRING,
+										],
+										'status' => [
+											'type' => FieldType::STRING,
+										],
+										'maximumAmount' => [
+											'type' => 'object',
+											'properties' => [
+												'value'    => [
+													'type' => FieldType::STRING,
+												],
+												'currency' => [
+													'type' => FieldType::STRING,
+												],
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+			]
+		];
 	}
 
 	/**
@@ -194,7 +278,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 			if ($value && is_string($value)) {
 
 				// Set verified to false.
-				$this->settings->update_setting(SettingsService::SETTING_VENDOR_MOLLIE, array_merge([
+				$this->settings->update_setting( self::SETTING_VENDOR_MOLLIE, array_merge([
 					$type . '_key' => [
 						'verified' => false
 					],
@@ -265,7 +349,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface
 
         // Update vendor settings.
 		$this->settings->update_setting(
-			SettingsService::SETTING_VENDOR_MOLLIE,
+			self::SETTING_VENDOR_MOLLIE,
 			$combined_settings
 		);
 

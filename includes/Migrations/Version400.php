@@ -14,7 +14,8 @@ namespace IseardMedia\Kudos\Migrations;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
-use IseardMedia\Kudos\Service\SettingsService;
+use IseardMedia\Kudos\Service\InvoiceService;
+use IseardMedia\Kudos\Service\MailerService;
 use WP_REST_Request;
 
 class Version400 extends AbstractMigration {
@@ -109,7 +110,7 @@ class Version400 extends AbstractMigration {
 			$new_settings['password'] = $password;
 		}
 
-		update_option( SettingsService::SETTING_CUSTOM_SMTP, $new_settings );
+		update_option( MailerService::SETTING_CUSTOM_SMTP, $new_settings );
 
 		// Always return true, a failure here is not critical.
 		return true;
@@ -267,7 +268,7 @@ class Version400 extends AbstractMigration {
 
 			$this->logger->debug( 'Transaction created', [ 'post_id' => $new_transaction->ID ] );
 		}
-		update_option( SettingsService::SETTING_INVOICE_NUMBER, $invoice_number );
+		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
 		return true;
 	}
 }

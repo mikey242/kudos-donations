@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\SettingsService;
+use IseardMedia\Kudos\Vendor\MollieVendor;
 use WP_REST_Request;
 use WP_REST_Server;
 
@@ -68,7 +69,7 @@ class Admin extends AbstractRegistrable {
 				case 'kudos_clear_mollie':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_mollie' ) ) {
-						update_option( SettingsService::SETTING_VENDOR_MOLLIE, [ 'mode' => 'test' ] );
+						update_option( MollieVendor::SETTING_VENDOR_MOLLIE, [ 'mode' => 'test' ] );
 					}
 					break;
 				case 'kudos_clear_settings':

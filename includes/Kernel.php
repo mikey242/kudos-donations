@@ -16,7 +16,9 @@ use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\CompilerPass\ActivationCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\MigrationCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\RegistrableCompilerPass;
+use IseardMedia\Kudos\Container\CompilerPass\SettingsCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\UpgradeAwareCompilerPass;
+use IseardMedia\Kudos\Service\CacheService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -52,6 +54,7 @@ class Kernel {
 			RegistrableCompilerPass::class,
 			MigrationCompilerPass::class,
 			UpgradeAwareCompilerPass::class,
+			SettingsCompilerPass::class,
 		];
 	}
 

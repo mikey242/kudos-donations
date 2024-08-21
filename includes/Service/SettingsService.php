@@ -11,90 +11,19 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Service;
 
-use Exception;
-use IseardMedia\Kudos\Container\AbstractRegistrable;
-use IseardMedia\Kudos\Container\ActivationAwareInterface;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 
-class SettingsService extends AbstractRegistrable implements ActivationAwareInterface {
+class SettingsService implements HasSettingsInterface {
 
-	private EncryptionService $encryption;
-
-	public const HOOK_GET_SETTINGS               = 'kudos_get_settings';
-	public const GROUP                           = 'kudos-donations';
-	public const SETTING_SHOW_INTRO              = '_kudos_show_intro';
-	public const SETTING_VENDOR                  = '_kudos_vendor';
-	public const SETTING_VENDOR_MOLLIE           = '_kudos_vendor_mollie';
-	public const SETTING_EMAIL_RECEIPT_ENABLE    = '_kudos_email_receipt_enable';
-	public const SETTING_EMAIL_BCC               = '_kudos_email_bcc';
-	public const SETTING_CUSTOM_SMTP             = '_kudos_custom_smtp';
-	public const SETTING_SMTP_ENABLE             = '_kudos_smtp_enable';
-	public const SETTING_SPAM_PROTECTION         = '_kudos_spam_protection';
-	public const SETTING_DEBUG_MODE              = '_kudos_debug_mode';
-	public const SETTING_ALWAYS_LOAD_ASSETS      = '_kudos_always_load_assets';
-	public const SETTING_DB_VERSION              = '_kudos_db_version';
-	public const SETTING_MIGRATION_HISTORY       = '_kudos_migration_history';
-	public const SETTING_INVOICE_NUMBER          = '_kudos_invoice_number';
-	public const SETTING_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
-	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
-	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
-
-	/**
-	 * SettingsService constructor.
-	 *
-	 * @param EncryptionService $encryption The encryption helper.
-	 */
-	public function __construct( EncryptionService $encryption ) {
-		$this->encryption = $encryption;
-		add_filter( 'pre_update_option_' . self::SETTING_CUSTOM_SMTP, [ $this, 'encrypt_smtp_password' ] );
-		add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this, 'decrypt_smtp_password' ] );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function on_plugin_activation(): void {
-		$settings = $this::get_settings();
-		foreach ( $settings as $name => $setting ) {
-			if ( ! get_option( $name ) ) {
-				update_option( $name, $setting['default'] ?? null );
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register(): void {
-		$this->register_all();
-	}
-
-	/**
-	 * Registers all settings.
-	 */
-	public function register_all(): void {
-		foreach ( $this->get_settings() as $name => $args ) {
-			register_setting(
-				self::GROUP,
-				$name,
-				$args
-			);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function get_registration_actions(): array {
-		return [ 'admin_init', 'rest_api_init', 'init' ];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function get_registration_action_priority(): int {
-		return 5;
-	}
+	public const GROUP                      = 'kudos-donations';
+	public const SETTING_SHOW_INTRO         = '_kudos_show_intro';
+	public const SETTING_VENDOR             = '_kudos_vendor';
+	public const SETTING_SPAM_PROTECTION    = '_kudos_spam_protection';
+	public const SETTING_DEBUG_MODE         = '_kudos_debug_mode';
+	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
+	public const SETTING_DB_VERSION         = '_kudos_db_version';
+	public const SETTING_MIGRATION_HISTORY  = '_kudos_migration_history';
 
 	/**
 	 * Returns the value for a given setting.
@@ -192,237 +121,37 @@ class SettingsService extends AbstractRegistrable implements ActivationAwareInte
 	/**
 	 * Returns all settings in array.
 	 */
-	public static function get_settings(): array {
-		return apply_filters(
-			self::HOOK_GET_SETTINGS,
-			[
-				self::SETTING_SHOW_INTRO              => [
-					'type'              => FieldType::BOOLEAN,
-					'show_in_rest'      => true,
-					'default'           => true,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				self::SETTING_VENDOR                  => [
-					'type'         => FieldType::STRING,
-					'show_in_rest' => true,
-					'default'      => 'mollie',
-				],
-				self::SETTING_VENDOR_MOLLIE           => [
-					'type'         => 'object',
-					'default'      => [
-						'recurring'       => false,
-						'mode'            => 'test',
-						'payment_methods' => [],
-						'test_key'        => [
-							'verified' => false,
-						],
-						'live_key'        => [
-							'verified' => false,
-						],
-					],
-					'show_in_rest' => [
-						'schema' => [
-							'type'       => 'object',
-							'properties' => [
-								'recurring'       => [
-									'type' => FieldType::BOOLEAN,
-								],
-								'mode'            => [
-									'type' => FieldType::STRING,
-								],
-								'test_key'        => [
-									'type'       => 'object',
-									'properties' => [
-										'key'      => [
-											'type' => FieldType::STRING,
-										],
-										'verified' => [
-											'type' => FieldType::BOOLEAN,
-										],
-									],
-								],
-								'live_key'        => [
-									'type'       => 'object',
-									'properties' => [
-										'key'      => [
-											'type' => FieldType::STRING,
-										],
-										'verified' => [
-											'type' => FieldType::BOOLEAN,
-										],
-									],
-								],
-								'payment_methods' => [
-									'type'  => 'array',
-									'items' => [
-										'type'       => 'object',
-										'properties' => [
-											'id'     => [
-												'type' => FieldType::STRING,
-											],
-											'status' => [
-												'type' => FieldType::STRING,
-											],
-											'maximumAmount' => [
-												'type' => 'object',
-												'properties' => [
-													'value'    => [
-														'type' => FieldType::STRING,
-													],
-													'currency' => [
-														'type' => FieldType::STRING,
-													],
-												],
-											],
-										],
-									],
-								],
-							],
-						],
-					],
-				],
-				self::SETTING_EMAIL_RECEIPT_ENABLE    => [
-					'type'              => FieldType::BOOLEAN,
-					'show_in_rest'      => true,
-					'default'           => false,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				self::SETTING_EMAIL_BCC               => [
-					'type'              => FieldType::STRING,
-					'show_in_rest'      => true,
-					'sanitize_callback' => 'sanitize_email',
-				],
-				self::SETTING_CUSTOM_SMTP             => [
-					'type'         => 'object',
-					'default'      => [
-						'from_email' => '',
-						'from_name'  => get_bloginfo( 'name' ),
-						'host'       => '',
-						'port'       => '',
-						'encryption' => 'tls',
-						'autotls'    => false,
-						'username'   => '',
-						'password'   => '',
-					],
-					'show_in_rest' => [
-						'schema' => [
-							'type'       => 'object',
-							'properties' => [
-								'from_email' => [
-									'type' => FieldType::STRING,
-								],
-								'from_name'  => [
-									'type' => FieldType::STRING,
-								],
-								'host'       => [
-									'type' => FieldType::STRING,
-								],
-								'port'       => [
-									'type' => FieldType::INTEGER,
-								],
-								'encryption' => [
-									'type' => FieldType::STRING,
-								],
-								'autotls'    => [
-									'type' => FieldType::BOOLEAN,
-								],
-								'username'   => [
-									'type' => FieldType::STRING,
-								],
-								'password'   => [
-									'type'         => FieldType::STRING,
-									'show_in_rest' => false,
-								],
-							],
-						],
-					],
-				],
-				self::SETTING_SMTP_PASSWORD_ENCRYPTED => [
-					'type'         => FieldType::STRING,
-					'show_in_rest' => false,
-				],
-				self::SETTING_SMTP_ENABLE             => [
-					'type'              => FieldType::BOOLEAN,
-					'show_in_rest'      => true,
-					'default'           => false,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				self::SETTING_SPAM_PROTECTION         => [
-					'type'              => FieldType::BOOLEAN,
-					'show_in_rest'      => true,
-					'default'           => true,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				self::SETTING_DEBUG_MODE              => [
-					'type'              => FieldType::BOOLEAN,
-					'show_in_rest'      => true,
-					'default'           => false,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				self::SETTING_ALWAYS_LOAD_ASSETS      => [
-					'type'              => FieldType::BOOLEAN,
-					'show_in_rest'      => true,
-					'default'           => false,
-					'sanitize_callback' => 'rest_sanitize_boolean',
-				],
-				self::SETTING_INVOICE_NUMBER          => [
-					'type'              => FieldType::INTEGER,
-					'show_in_rest'      => true,
-					'default'           => 1,
-					'sanitize_callback' => 'absint',
-				],
-				self::SETTING_INVOICE_COMPANY_ADDRESS => [
-					'type'         => FieldType::STRING,
-					'show_in_rest' => true,
-				],
-				self::SETTING_INVOICE_VAT_NUMBER      => [
-					'type'         => FieldType::STRING,
-					'show_in_rest' => true,
-				],
-			]
-		);
-	}
-
-	/**
-	 * Encrypts the SMTP password before storing it in the database.
-	 *
-	 * @throws Exception Thrown when there is a problem encrypting the password.
-	 *
-	 * @param array $setting The SMTP settings array.
-	 * @return array The modified settings array with the masked password.
-	 */
-	public function encrypt_smtp_password( array $setting ): array {
-		$raw_password = $setting['password'] ?? null;
-
-		if ( $raw_password ) {
-			// Bail if this is only asterisks.
-			$num_asterisks = substr_count( $raw_password, '*' );
-			$count         = \strlen( $raw_password );
-			if ( $num_asterisks === $count ) {
-				return $setting;
-			}
-			// Encrypt the password.
-			$encrypted_password = $this->encryption->encrypt_password( $raw_password );
-
-			// Update the encrypted password in the database.
-			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, $encrypted_password );
-
-			// Replace the password with asterisks in the settings array.
-			$setting['password'] = str_repeat( '*', $count );
-		} else {
-			// If no password is provided, retain the existing masked password or set it to null.
-			$setting['password'] = get_option( self::SETTING_CUSTOM_SMTP )['password'] ?? null;
-		}
-		return $setting;
-	}
-
-	/**
-	 * Decrypt the provided SMTP password.
-	 *
-	 * @param string $value The encrypted password.
-	 * @return false|string
-	 */
-	public function decrypt_smtp_password( string $value ) {
-		return $this->encryption->decrypt_password( $value );
+	public function get_settings(): array {
+		return [
+			self::SETTING_SHOW_INTRO         => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => true,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_VENDOR             => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
+				'default'      => 'mollie',
+			],
+			self::SETTING_SPAM_PROTECTION    => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => true,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_DEBUG_MODE         => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_ALWAYS_LOAD_ASSETS => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+		];
 	}
 }
