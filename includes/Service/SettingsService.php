@@ -58,27 +58,6 @@ class SettingsService implements HasSettingsInterface {
 	}
 
 	/**
-	 * Returns the settings for the current vendor.
-	 *
-	 * @return mixed
-	 */
-	public function get_current_vendor_settings() {
-		$vendor = $this->get_setting( self::SETTING_VENDOR );
-		return $this->get_setting( '_kudos_vendor_' . $vendor );
-	}
-
-	/**
-	 * Updates the given setting with a new value.
-	 *
-	 * @param string $key Setting key.
-	 * @param mixed  $value Setting value.
-	 * @return bool True if the value was updated, false otherwise.
-	 */
-	public function update_setting( string $key, $value ): bool {
-		return update_option( $key, $value );
-	}
-
-	/**
 	 * Retrieves all the registered options for the Settings API.
 	 * Inspired by get_registered_options method found in WordPress. But also get settings that are registered without `show_in_rest` property.
 	 *

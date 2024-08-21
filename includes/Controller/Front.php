@@ -24,21 +24,17 @@ use WP_REST_Request;
 use WP_REST_Server;
 
 class Front extends AbstractRegistrable {
-	private SettingsService $settings;
 	private VendorInterface $vendor;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param SettingsService $settings Settings service.
 	 * @param VendorInterface $vendor Payment vendors.
 	 */
 	public function __construct(
-		SettingsService $settings,
 		VendorInterface $vendor
 	) {
-		$this->settings = $settings;
-		$this->vendor   = $vendor;
+		$this->vendor = $vendor;
 	}
 
 	/**
@@ -48,7 +44,7 @@ class Front extends AbstractRegistrable {
 		$this->register_assets();
 		$this->register_block();
 		$this->register_shortcode();
-		if ( $this->settings->get_setting( SettingsService::SETTING_ALWAYS_LOAD_ASSETS ) ) {
+		if ( get_option( SettingsService::SETTING_ALWAYS_LOAD_ASSETS ) ) {
 			$this->enqueue_assets();
 		}
 		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );

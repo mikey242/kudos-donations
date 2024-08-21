@@ -67,7 +67,7 @@ class SettingsHandler implements Registrable, Delayed, ActivationAwareInterface 
 	/**
 	 * Return all the currently added settings.
 	 */
-	private function get_all_settings(): array {
+	public function get_all_settings(): array {
 		return apply_filters( self::HOOK_GET_SETTINGS, $this->settings );
 	}
 

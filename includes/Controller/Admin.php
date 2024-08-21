@@ -13,14 +13,24 @@ namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Admin\DebugAdminPage;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\Handler\SettingsHandler;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\CacheService;
-use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\MollieVendor;
 use WP_REST_Request;
 use WP_REST_Server;
 
 class Admin extends AbstractRegistrable {
+	private SettingsHandler $settings_handler;
+
+	/**
+	 * Admin constructor.
+	 *
+	 * @param SettingsHandler $settings_handler The settings handler.
+	 */
+	public function __construct( SettingsHandler $settings_handler ) {
+		$this->settings_handler = $settings_handler;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -64,16 +74,8 @@ class Admin extends AbstractRegistrable {
 				case 'kudos_clear_settings':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_settings' ) ) {
-						$reflection         = new \ReflectionClass( SettingsService::class );
-						$constants          = $reflection->getConstants();
-						$filtered_constants = array_filter(
-							$constants,
-							function ( $key ) {
-								return preg_match( '/^SETTING/', $key );
-							},
-							ARRAY_FILTER_USE_KEY
-						);
-						foreach ( $filtered_constants as $setting_name ) {
+						$settings = $this->settings_handler->get_all_settings();
+						foreach ( $settings as $setting_name => $config ) {
 							delete_option( $setting_name );
 						}
 					}

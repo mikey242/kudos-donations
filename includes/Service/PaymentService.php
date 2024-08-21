@@ -20,21 +20,15 @@ use WP_Post;
 
 class PaymentService extends AbstractRegistrable {
 	private MailerService $mailer_service;
-	private SettingsService $settings;
 
 	/**
 	 * Payment service constructor.
 	 *
 	 * @see https://stackoverflow.com/questions/36853791/laravel-dynamic-dependency-injection-for-interface-based-on-user-input
 	 *
-	 * @param MailerService   $mailer_service Mailer service.
-	 * @param SettingsService $settings Settings service.
+	 * @param MailerService $mailer_service Mailer service.
 	 */
-	public function __construct(
-		MailerService $mailer_service,
-		SettingsService $settings
-	) {
-		$this->settings       = $settings;
+	public function __construct( MailerService $mailer_service ) {
 		$this->mailer_service = $mailer_service;
 	}
 
@@ -52,6 +46,16 @@ class PaymentService extends AbstractRegistrable {
 		add_action( 'save_post_' . TransactionPostType::get_slug(), [ $this, 'add_title' ], 10, 3 );
 		// Runs when new subscriptions are created.
 		add_action( 'save_post_' . SubscriptionPostType::get_slug(), [ $this, 'add_title' ], 10, 3 );
+	}
+
+	/**
+	 * Returns the settings for the current vendor.
+	 *
+	 * @return mixed
+	 */
+	public function get_current_vendor_settings() {
+		$vendor = get_option( SettingsService::SETTING_VENDOR );
+		return get_option( '_kudos_vendor_' . $vendor );
 	}
 
 	/**
@@ -131,21 +135,6 @@ class PaymentService extends AbstractRegistrable {
 			return str_replace( get_home_url(), $_ENV['APP_URL'], $url );
 		}
 		return $url;
-	}
-
-	/**
-	 * Checks if required api settings are saved before displaying button.
-	 */
-	public function is_api_ready(): bool {
-		$settings  = $this->settings->get_current_vendor_settings();
-		$mode      = $settings['mode'];
-		$connected = $settings[ $mode . '_key' ]['verified'] ?? null;
-
-		if ( ! $connected ) {
-			return false;
-		}
-
-		return true;
 	}
 
 	/**

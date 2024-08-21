@@ -31,18 +31,15 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	public const SETTING_EMAIL_RECEIPT_ENABLE    = '_kudos_email_receipt_enable';
 	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
 	private TwigService $twig;
-	private SettingsService $settings;
 	private EncryptionService $encryption;
 
 	/**
 	 * Mailer constructor.
 	 *
 	 * @param TwigService       $twig Twig service.
-	 * @param SettingsService   $settings Settings service.
 	 * @param EncryptionService $encryption Used for decrypting SMTP password.
 	 */
-	public function __construct( TwigService $twig, SettingsService $settings, EncryptionService $encryption ) {
-		$this->settings   = $settings;
+	public function __construct( TwigService $twig, EncryptionService $encryption ) {
 		$this->twig       = $twig;
 		$this->encryption = $encryption;
 
@@ -57,7 +54,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		$this->logger->debug( 'Creating hooks' );
 		add_action( 'phpmailer_init', [ $this, 'init' ] );
 		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
-		if ( $this->settings->get_setting( self::SETTING_CUSTOM_SMTP ) ) {
+		if ( get_option( self::SETTING_CUSTOM_SMTP ) ) {
 			add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 			add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
 			add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
@@ -172,13 +169,13 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		$phpmailer->isHTML();
 
 		// Add BCC.
-		$bcc = $this->settings->get_setting( self::SETTING_EMAIL_BCC );
+		$bcc = get_option( self::SETTING_EMAIL_BCC );
 		if ( is_email( $bcc ) ) {
 			$phpmailer->addBCC( $bcc );
 		}
 		// Add custom config if enabled.
-		if ( $this->settings->get_setting( self::SETTING_SMTP_ENABLE ) ) {
-			$custom_config = $this->settings->get_setting( self::SETTING_CUSTOM_SMTP );
+		if ( get_option( self::SETTING_SMTP_ENABLE ) ) {
+			$custom_config = get_option( self::SETTING_CUSTOM_SMTP );
 			$this->logger->debug( 'Using custom SMTP config' );
 
 			// Get password.
@@ -208,7 +205,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 */
 	public function send_receipt( int $donor_id, int $transaction_id ): bool {
 		// Check if setting enabled.
-		if ( ! $this->settings->get_setting( self::SETTING_EMAIL_RECEIPT_ENABLE ) ) {
+		if ( ! get_option( self::SETTING_EMAIL_RECEIPT_ENABLE ) ) {
 			return false;
 		}
 
@@ -317,7 +314,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		$this->logger->debug( 'Removing hooks' );
 		remove_action( 'phpmailer_init', [ $this, 'init' ] );
 		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
-		if ( $this->settings->get_setting( self::SETTING_CUSTOM_SMTP ) ) {
+		if ( get_option( self::SETTING_CUSTOM_SMTP ) ) {
 			remove_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 			remove_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
 		}
@@ -327,14 +324,14 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 * Returns a filtered email.
 	 */
 	public function get_from_email(): string {
-		return filter_var( $this->settings->get_setting( self::SETTING_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
+		return filter_var( get_option( self::SETTING_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
 	}
 
 	/**
 	 * Returns a filtered name.
 	 */
 	public function get_from_name(): string {
-		return $this->settings->get_setting( self::SETTING_CUSTOM_SMTP )['from_name'];
+		return get_option( self::SETTING_CUSTOM_SMTP )['from_name'];
 	}
 
 	/**

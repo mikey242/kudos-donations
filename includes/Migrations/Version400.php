@@ -54,6 +54,9 @@ class Version400 extends AbstractMigration {
 
 		// Perform rest request to check keys are valid.
 		if ( ! empty( $keys ) ) {
+
+			// Let's first delete the old, and now invalid, option.
+			delete_option( '_kudos_vendor_mollie' );
 			$request = new WP_REST_Request(
 				'POST',
 				'/kudos/v1/payment/test'
@@ -210,6 +213,9 @@ class Version400 extends AbstractMigration {
 			// Store old and new ID for later reference.
 			$this->cache['campaign_id'][ $campaign['id'] ] = $new_campaign->ID;
 		}
+
+		// Campaigns migrated, let's delete the old option.
+		delete_option( '_kudos_campaigns' );
 		return true;
 	}
 

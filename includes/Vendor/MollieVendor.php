@@ -20,7 +20,6 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Service\SettingsService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
@@ -38,6 +37,7 @@ use WP_REST_Response;
 class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSettingsInterface
 {
 	public const SETTING_VENDOR_MOLLIE = '_kudos_vendor_mollie';
+
 	/**
      * The API mode (test or live).
      *
@@ -49,22 +49,20 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
      */
     private array $api_keys;
 	private MollieApiClient $api_client;
-	private SettingsService $settings;
 
 	/**
      * Mollie constructor.
      */
-    public function __construct( MollieApiClient $api_client, SettingsService $settings)
+    public function __construct( MollieApiClient $api_client )
     {
 	    $this->api_client = $api_client;
-	    $this->settings   = $settings;
     }
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$settings         = $this->settings->get_setting( self::SETTING_VENDOR_MOLLIE );
+		$settings         = get_option( self::SETTING_VENDOR_MOLLIE );
 		$this->api_mode   = $settings['mode'] ?? 'test';
 		$this->api_keys   = [
 			'test' => $settings['test_key']['key'] ?? '',
@@ -193,7 +191,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	 * {@inheritDoc}
 	 */
 	public function is_ready(): bool {
-		$settings = $this->settings->get_current_vendor_settings();
+		$settings = get_option( self::SETTING_VENDOR_MOLLIE );
 		$mode = $this->api_mode;
 		return $settings[$mode . '_key']['verified'] ?? false;
 	}
@@ -271,14 +269,14 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 			], 400);
 	    }
 
-	    $settings = $this->settings->get_current_vendor_settings();
+	    $settings = get_option( self::SETTING_VENDOR_MOLLIE );
 
 	    $api_keys = [];
 		foreach ($keys as $type => $value) {
 			if ($value && is_string($value)) {
 
 				// Set verified to false.
-				$this->settings->update_setting( self::SETTING_VENDOR_MOLLIE, array_merge([
+				update_option( self::SETTING_VENDOR_MOLLIE, array_merge([
 					$type . '_key' => [
 						'verified' => false
 					],
@@ -322,7 +320,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 			}
 		}
 
-		$current_settings = $this->settings->get_current_vendor_settings();
+		$current_settings = get_option(self::SETTING_VENDOR_MOLLIE);
 
 		// Figure out mode to use.
 	    $valid_mode = 'test';
@@ -348,7 +346,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		$combined_settings = array_merge($current_settings, $updated_settings);
 
         // Update vendor settings.
-		$this->settings->update_setting(
+		update_option(
 			self::SETTING_VENDOR_MOLLIE,
 			$combined_settings
 		);

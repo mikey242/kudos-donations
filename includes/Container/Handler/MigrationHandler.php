@@ -19,7 +19,6 @@ use IseardMedia\Kudos\Service\SettingsService;
 class MigrationHandler extends AbstractRegistrable {
 
 	private const MIGRATE_ACTION = 'kudos_migrate_action';
-	private SettingsService $settings;
 	private string $current_version;
 	private string $target_version;
 	/**
@@ -31,12 +30,9 @@ class MigrationHandler extends AbstractRegistrable {
 
 	/**
 	 * Migrator service constructor.
-	 *
-	 * @param SettingsService $settings Settings service.
 	 */
-	public function __construct( SettingsService $settings ) {
-		$this->settings        = $settings;
-		$this->current_version = $this->settings->get_setting( SettingsService::SETTING_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
+	public function __construct() {
+		$this->current_version = get_option( SettingsService::SETTING_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
 		$this->target_version  = KUDOS_DB_VERSION;
 	}
 

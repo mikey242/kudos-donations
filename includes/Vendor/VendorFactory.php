@@ -23,9 +23,9 @@ class VendorFactory
 	 * @throws ContainerExceptionInterface
 	 * @throws NotFoundExceptionInterface
 	 */
-	public function create(ContainerInterface $container, SettingsService $settings): ?VendorInterface
+	public function create(ContainerInterface $container): ?VendorInterface
 	{
-		$vendor = $settings->get_setting( SettingsService::SETTING_VENDOR, 'mollie' );
+		$vendor = get_option( SettingsService::SETTING_VENDOR, 'mollie' );
 		$vendorClass = $this->get_vendor($vendor);
 		if ($vendorClass) {
 			return $container->get($vendorClass);
