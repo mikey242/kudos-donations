@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Vendor;
 
-use Exception;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
@@ -20,6 +19,7 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Service\EncryptionService;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
@@ -37,6 +37,7 @@ use WP_REST_Response;
 class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSettingsInterface
 {
 	public const SETTING_VENDOR_MOLLIE = '_kudos_vendor_mollie';
+	public const SETTING_API_KEYS = '_kudos_vendor_mollie_api_keys';
 
 	/**
      * The API mode (test or live).
@@ -44,18 +45,16 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
      * @var string
      */
     private string $api_mode = 'test';
-    /**
-     * @var array
-     */
-    private array $api_keys;
 	private MollieApiClient $api_client;
+	private EncryptionService $encryption;
 
 	/**
      * Mollie constructor.
      */
-    public function __construct( MollieApiClient $api_client )
+    public function __construct( MollieApiClient $api_client, EncryptionService $encryption )
     {
 	    $this->api_client = $api_client;
+		$this->encryption = $encryption;
     }
 
 	/**
@@ -64,95 +63,20 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	public function register(): void {
 		$settings         = get_option( self::SETTING_VENDOR_MOLLIE );
 		$this->api_mode   = $settings['mode'] ?? 'test';
-		$this->api_keys   = [
-			'test' => $settings['test_key']['key'] ?? '',
-			'live' => $settings['live_key']['key'] ?? '',
-		];
-
 		$this->config_client($this->api_mode);
 		$this->set_user_agent();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns the decrypted API keys.
+	 *
+	 * @return false|mixed|null
 	 */
-	public function get_settings(): array {
-		return [
-			self::SETTING_VENDOR_MOLLIE => [
-				'type'         => 'object',
-				'default'      => [
-					'recurring'       => false,
-					'mode'            => 'test',
-					'payment_methods' => [],
-					'test_key'        => [
-						'verified' => false,
-					],
-					'live_key'        => [
-						'verified' => false,
-					],
-				],
-				'show_in_rest' => [
-					'schema' => [
-						'type'       => 'object',
-						'properties' => [
-							'recurring'       => [
-								'type' => FieldType::BOOLEAN,
-							],
-							'mode'            => [
-								'type' => FieldType::STRING,
-							],
-							'test_key'        => [
-								'type'       => 'object',
-								'properties' => [
-									'key'      => [
-										'type' => FieldType::STRING,
-									],
-									'verified' => [
-										'type' => FieldType::BOOLEAN,
-									],
-								],
-							],
-							'live_key'        => [
-								'type'       => 'object',
-								'properties' => [
-									'key'      => [
-										'type' => FieldType::STRING,
-									],
-									'verified' => [
-										'type' => FieldType::BOOLEAN,
-									],
-								],
-							],
-							'payment_methods' => [
-								'type'  => 'array',
-								'items' => [
-									'type'       => 'object',
-									'properties' => [
-										'id'     => [
-											'type' => FieldType::STRING,
-										],
-										'status' => [
-											'type' => FieldType::STRING,
-										],
-										'maximumAmount' => [
-											'type' => 'object',
-											'properties' => [
-												'value'    => [
-													'type' => FieldType::STRING,
-												],
-												'currency' => [
-													'type' => FieldType::STRING,
-												],
-											],
-										],
-									],
-								],
-							],
-						],
-					],
-				],
-			]
-		];
+	private function get_decrypted_api_keys() {
+		add_filter( 'option_' . self::SETTING_API_KEYS, [ $this->encryption, 'decrypt_password' ] );
+		$api_keys = get_option( self::SETTING_API_KEYS );
+		remove_filter('option_' . self::SETTING_API_KEYS, [ $this->encryption, 'decrypt_password' ]);
+		return $api_keys;
 	}
 
 	/**
@@ -202,7 +126,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
     private function config_client(?string $mode): void {
         $this->api_mode = $mode;
         // Gets the key associated with the specified mode.
-        $key = $this->api_keys[$mode] ?? false;
+	    $key = $this->get_decrypted_api_keys()[$mode] ?? false;
 
         if ($key) {
             try {
@@ -235,7 +159,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	 *
 	 * @return bool
 	 */
-	public function can_use_recurring(): bool
+	private function can_use_recurring(): bool
 	{
 		$methods = $this->get_payment_methods([
 			'sequenceType' => 'recurring',
@@ -258,7 +182,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	/**
      * Check the Mollie api keys for both test and live keys. Sends a JSON response.
      */
-    public function check_api_keys(WP_REST_Request $request): WP_REST_Response {
+    private function check_api_keys(WP_REST_Request $request): WP_REST_Response {
 	    $keys = $request->get_param( 'keys' );
 
 	    // Check if key(s) are empty.
@@ -272,6 +196,8 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	    $settings = get_option( self::SETTING_VENDOR_MOLLIE );
 
 	    $api_keys = [];
+	    $encrypted_api_keys = [];
+
 		foreach ($keys as $type => $value) {
 			if ($value && is_string($value)) {
 
@@ -290,6 +216,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 					// Test key with Mollie.
 					$verified = $this->refresh_api_connection($value);
 
+					// Key didn't work. Return error.
 					if(!$verified) {
 						return new WP_REST_Response([
 							'success' => false,
@@ -301,11 +228,19 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 						], 400);
 					}
 
-					// Update settings array.
-					$api_keys[$type . '_key'] = [
-						'verified' => true,
-						'key' => $value
-					];
+					// Add encrypted keys to array.
+					$encrypted_api_key = $this->encryption->encrypt_password( $value );
+
+					if($encrypted_api_key) {
+
+						// Update arrays.
+						$api_keys[$type . '_key'] = [
+							'verified' => true,
+							'key' => str_repeat( '*', strlen($value) )
+						];
+						$encrypted_api_keys[$type] = $encrypted_api_key;
+					}
+
 				} else {
 					return new WP_REST_Response([
 						'success' => false,
@@ -345,11 +280,13 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 
 		$combined_settings = array_merge($current_settings, $updated_settings);
 
-        // Update vendor settings.
+        // Update settings.
 		update_option(
 			self::SETTING_VENDOR_MOLLIE,
 			$combined_settings
 		);
+
+		update_option(self::SETTING_API_KEYS, $encrypted_api_keys);
 
 	    return new WP_REST_Response([
 		    'success' => true,
@@ -502,7 +439,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	/**
 	 * {@inheritDoc}
 	 */
-    public function create_payment(array $payment_args, int $transaction_id, ?string $vendor_customer_id): string {
+    public function create_payment(array $payment_args, int $transaction_id, ?string $vendor_customer_id) {
 
 		$transaction = get_post($transaction_id);
 
@@ -513,21 +450,17 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
         $redirect_url                      = $payment_args['return_url'];
 
         // Add order id query arg to return url if option to show message enabled.
-        try {
-			$show_return_message = get_post_meta($payment_args['campaign_id'], 'show_return_message', true);
-            if ( ! empty($show_return_message)) {
-                $action       = 'order_complete';
-                $redirect_url = add_query_arg(
-                    [
-                        'kudos_action'   => 'order_complete',
-                        'kudos_transaction_id' => $transaction_id,
-                        'kudos_nonce'    => wp_create_nonce($action . $transaction_id),
-                    ],
-                    $payment_args['return_url']
-                );
-            }
-        } catch (Exception $e) {
-            $this->logger->warning($e->getMessage());
+		$show_return_message = get_post_meta($payment_args['campaign_id'], 'show_return_message', true);
+        if ( ! empty($show_return_message)) {
+            $action       = 'order_complete';
+            $redirect_url = add_query_arg(
+                [
+                    'kudos_action'   => 'order_complete',
+                    'kudos_transaction_id' => $transaction_id,
+                    'kudos_nonce'    => wp_create_nonce($action . $transaction_id),
+                ],
+                $payment_args['return_url']
+            );
         }
 
         // Create payment settings.
@@ -565,9 +498,8 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 
             return $payment->getCheckoutUrl();
         } catch (ApiException $e) {
-            $this->logger->critical($e->getMessage());
-
-            return '';
+            $this->logger->error('Error creating payment with Mollie', ['error' =>$e->getMessage()]);
+            return false;
         }
     }
 
@@ -897,5 +829,91 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_settings(): array {
+		return [
+			self::SETTING_API_KEYS => [
+				'type' => 'object',
+				'show_in_rest' => false,
+			],
+			self::SETTING_VENDOR_MOLLIE => [
+				'type'         => 'object',
+				'default'      => [
+					'recurring'       => false,
+					'mode'            => 'test',
+					'payment_methods' => [],
+					'test_key'        => [
+						'verified' => false,
+					],
+					'live_key'        => [
+						'verified' => false,
+					],
+				],
+				'show_in_rest' => [
+					'schema' => [
+						'type'       => 'object',
+						'properties' => [
+							'recurring'       => [
+								'type' => FieldType::BOOLEAN,
+							],
+							'mode'            => [
+								'type' => FieldType::STRING,
+							],
+							'test_key'        => [
+								'type'       => 'object',
+								'properties' => [
+									'key'      => [
+										'type' => FieldType::STRING,
+									],
+									'verified' => [
+										'type' => FieldType::BOOLEAN,
+									],
+								],
+							],
+							'live_key'        => [
+								'type'       => 'object',
+								'properties' => [
+									'key'      => [
+										'type' => FieldType::STRING,
+									],
+									'verified' => [
+										'type' => FieldType::BOOLEAN,
+									],
+								],
+							],
+							'payment_methods' => [
+								'type'  => 'array',
+								'items' => [
+									'type'       => 'object',
+									'properties' => [
+										'id'     => [
+											'type' => FieldType::STRING,
+										],
+										'status' => [
+											'type' => FieldType::STRING,
+										],
+										'maximumAmount' => [
+											'type' => 'object',
+											'properties' => [
+												'value'    => [
+													'type' => FieldType::STRING,
+												],
+												'currency' => [
+													'type' => FieldType::STRING,
+												],
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+			]
+		];
 	}
 }
