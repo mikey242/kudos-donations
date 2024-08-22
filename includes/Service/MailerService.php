@@ -331,8 +331,10 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 
 	/**
 	 * Returns a filtered email.
+	 *
+	 * @return string|false
 	 */
-	public function get_from_email(): string {
+	public function get_from_email() {
 		return filter_var( get_option( self::SETTING_CUSTOM_SMTP )['from_email'], FILTER_VALIDATE_EMAIL );
 	}
 
