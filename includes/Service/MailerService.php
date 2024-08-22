@@ -327,8 +327,6 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	/**
 	 * Encrypts the SMTP password before storing it in the database.
 	 *
-	 * @throws \Exception Thrown when there is a problem encrypting the password.
-	 *
 	 * @param array $setting The SMTP settings array.
 	 * @return array The modified settings array with the masked password.
 	 */
