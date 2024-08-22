@@ -68,6 +68,7 @@ class EncryptionService extends AbstractRegistrable {
 	 */
 	public function encrypt_password( string $password ) {
 		if ( ! \extension_loaded( 'openssl' ) ) {
+			$this->logger->error( 'Tried to encrypt password before openssl was loaded.' );
 			return $password;
 		}
 
@@ -75,28 +76,51 @@ class EncryptionService extends AbstractRegistrable {
 		$iv_len = openssl_cipher_iv_length( $method );
 		$iv     = openssl_random_pseudo_bytes( $iv_len );
 
-		$raw_value = openssl_encrypt( $password . $this->salt, $method, $this->key, 0, $iv );
+		$encrypted_value = openssl_encrypt( $password . $this->salt, $method, $this->key, 0, $iv );
 
-		if ( ! $raw_value ) {
+		if ( ! $encrypted_value ) {
+			$this->logger->error( 'Error encrypting password.' );
 			return false;
 		}
+
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-		return base64_encode( $iv . $raw_value );
+		return base64_encode( $iv . $encrypted_value );
 	}
 
 	/**
 	 * Decrypt encrypted password.
 	 *
-	 * @param string $raw_value The encrypted password.
-	 * @return string|false
+	 * @param string|array $raw_value The encrypted password.
+	 * @return string|array|false Returns string if parameter is string and array if parameter is array.
 	 */
-	public function decrypt_password( string $raw_value ) {
+	public function decrypt_password( $raw_value ) {
+
+		// No raw value.
+		if ( ! $raw_value ) {
+			return false;
+		}
+
 		if ( ! \extension_loaded( 'openssl' ) ) {
+			$this->logger->error( 'Tried to decrypt password before openssl was loaded.' );
 			return $raw_value;
+		}
+
+		// If parameter is array, rerun with string as parameter.
+		if ( \is_array( $raw_value ) ) {
+			$result = [];
+			foreach ( $raw_value as $key => $value ) {
+				$result[ $key ] = $this->decrypt_password( $value );
+			}
+			return $result;
 		}
 
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 		$raw_value = base64_decode( $raw_value, true );
+
+		// Decoding base64 returned false, something went wrong.
+		if ( ! $raw_value ) {
+			return false;
+		}
 
 		$method = 'aes-256-ctr';
 		$iv_len = openssl_cipher_iv_length( $method );
