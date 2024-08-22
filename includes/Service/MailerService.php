@@ -57,8 +57,17 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		if ( get_option( self::SETTING_CUSTOM_SMTP ) ) {
 			add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 			add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
-			add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
 		}
+	}
+
+	/**
+	 * Returns the decrypted SMTP password.
+	 */
+	private function get_decrypted_smtp_password(): string {
+		add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
+		$password = get_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED );
+		remove_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
+		return $password;
 	}
 
 	/**
@@ -179,7 +188,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 			$this->logger->debug( 'Using custom SMTP config' );
 
 			// Get password.
-			$password = get_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED );
+			$password = $this->get_decrypted_smtp_password();
 
 			$phpmailer->isSMTP();
 			$phpmailer->Host        = $custom_config['host'];
