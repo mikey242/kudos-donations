@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Service;
 
-use Exception;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 
 class EncryptionService extends AbstractRegistrable {
@@ -60,8 +59,6 @@ class EncryptionService extends AbstractRegistrable {
 
 	/**
 	 * Encrypt provided password.
-	 *
-	 * @throws Exception Thrown if error getting random_bytes.
 	 *
 	 * @param string $password Password.
 	 * @return string|false
