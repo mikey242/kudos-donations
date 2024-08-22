@@ -61,16 +61,6 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	}
 
 	/**
-	 * Returns the decrypted SMTP password.
-	 */
-	private function get_decrypted_smtp_password(): string {
-		add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
-		$password = get_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED );
-		remove_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
-		return $password;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_registration_actions(): array {
@@ -78,77 +68,13 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns the decrypted SMTP password.
 	 */
-	public function get_settings(): array {
-		return [
-			self::SETTING_EMAIL_RECEIPT_ENABLE    => [
-				'type'              => FieldType::BOOLEAN,
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-			self::SETTING_EMAIL_BCC               => [
-				'type'              => FieldType::STRING,
-				'show_in_rest'      => true,
-				'sanitize_callback' => 'sanitize_email',
-			],
-			self::SETTING_CUSTOM_SMTP             => [
-				'type'         => 'object',
-				'default'      => [
-					'from_email' => '',
-					'from_name'  => get_bloginfo( 'name' ),
-					'host'       => '',
-					'port'       => '',
-					'encryption' => 'tls',
-					'autotls'    => false,
-					'username'   => '',
-					'password'   => '',
-				],
-				'show_in_rest' => [
-					'schema' => [
-						'type'       => 'object',
-						'properties' => [
-							'from_email' => [
-								'type' => FieldType::STRING,
-							],
-							'from_name'  => [
-								'type' => FieldType::STRING,
-							],
-							'host'       => [
-								'type' => FieldType::STRING,
-							],
-							'port'       => [
-								'type' => FieldType::INTEGER,
-							],
-							'encryption' => [
-								'type' => FieldType::STRING,
-							],
-							'autotls'    => [
-								'type' => FieldType::BOOLEAN,
-							],
-							'username'   => [
-								'type' => FieldType::STRING,
-							],
-							'password'   => [
-								'type'         => FieldType::STRING,
-								'show_in_rest' => false,
-							],
-						],
-					],
-				],
-			],
-			self::SETTING_SMTP_PASSWORD_ENCRYPTED => [
-				'type'         => FieldType::STRING,
-				'show_in_rest' => false,
-			],
-			self::SETTING_SMTP_ENABLE             => [
-				'type'              => FieldType::BOOLEAN,
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-		];
+	private function get_decrypted_smtp_password(): string {
+		add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
+		$password = get_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED );
+		remove_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
+		return $password;
 	}
 
 	/**
@@ -439,5 +365,79 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	public function handle_error( WP_Error $error ): void {
 		$this->logger->error( 'Error sending email.', [ $error->get_error_messages() ] );
 		wp_send_json_error( $error->get_error_messages() );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_settings(): array {
+		return [
+			self::SETTING_EMAIL_RECEIPT_ENABLE    => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_EMAIL_BCC               => [
+				'type'              => FieldType::STRING,
+				'show_in_rest'      => true,
+				'sanitize_callback' => 'sanitize_email',
+			],
+			self::SETTING_CUSTOM_SMTP             => [
+				'type'         => 'object',
+				'default'      => [
+					'from_email' => '',
+					'from_name'  => get_bloginfo( 'name' ),
+					'host'       => '',
+					'port'       => '',
+					'encryption' => 'tls',
+					'autotls'    => false,
+					'username'   => '',
+					'password'   => '',
+				],
+				'show_in_rest' => [
+					'schema' => [
+						'type'       => 'object',
+						'properties' => [
+							'from_email' => [
+								'type' => FieldType::STRING,
+							],
+							'from_name'  => [
+								'type' => FieldType::STRING,
+							],
+							'host'       => [
+								'type' => FieldType::STRING,
+							],
+							'port'       => [
+								'type' => FieldType::INTEGER,
+							],
+							'encryption' => [
+								'type' => FieldType::STRING,
+							],
+							'autotls'    => [
+								'type' => FieldType::BOOLEAN,
+							],
+							'username'   => [
+								'type' => FieldType::STRING,
+							],
+							'password'   => [
+								'type'         => FieldType::STRING,
+								'show_in_rest' => false,
+							],
+						],
+					],
+				],
+			],
+			self::SETTING_SMTP_PASSWORD_ENCRYPTED => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => false,
+			],
+			self::SETTING_SMTP_ENABLE             => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+		];
 	}
 }
