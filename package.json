@@ -78,8 +78,8 @@
 		"serveo": "ssh -R 80:localhost:8888 serveo.net",
 		"test:unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/kudos-donations ./vendor/bin/phpunit",
 		"format": "wp-scripts format",
-		"lint:css": "wp-scripts lint-style",
-		"lint:js": "wp-scripts lint-js",
+		"lint:css": "wp-scripts lint-style 'src/**/*.css'",
+		"lint:js": "wp-scripts lint-js ./src",
 		"packages-update": "wp-scripts packages-update"
 	},
 	"wp-env": {
