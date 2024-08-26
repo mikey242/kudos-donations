@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from '@wordpress/element';
+import { Fragment, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import {
 	Button,
@@ -13,25 +13,16 @@ import apiFetch from '@wordpress/api-fetch';
 import { useNotificationContext } from '../../common/contexts/NotificationContext';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { Panel } from '../../common/Panel';
+import { useSettingsContext } from '../../common/contexts/SettingsContext';
 
 const EmailTab = () => {
-	const { watch, getValues, setValue, formState } = useFormContext();
+	const { watch, getValues } = useFormContext();
 	const { createNotification } = useNotificationContext();
+	const { updateSetting, settings } = useSettingsContext();
+	const passwordDisabled = settings._kudos_smtp_password;
 	const [isEmailBusy, setIsEmailBusy] = useState(false);
-	const [passwordDisabled, setPasswordDisabled] = useState(
-		!getValues('_kudos_custom_smtp.password')
-	);
 	const watchCustom = watch('_kudos_smtp_enable');
 	const watchSendReceipts = watch('_kudos_email_receipt_enable');
-
-	useEffect(() => {
-		setPasswordDisabled(true);
-	}, [formState.isSubmitSuccessful]);
-
-	const resetPassword = () => {
-		setValue('_kudos_custom_smtp.password', '');
-		setPasswordDisabled(false);
-	};
 
 	const sendTestEmail = () => {
 		const address = getValues('test_email_address');
@@ -49,7 +40,7 @@ const EmailTab = () => {
 				createNotification(result.data, result.success);
 			})
 			.catch((error) => {
-				createNotification(error.message);
+				createNotification(error.data);
 			})
 			.finally(() => {
 				setIsEmailBusy(false);
@@ -162,7 +153,7 @@ const EmailTab = () => {
 								}}
 							/>
 							<TextControl
-								name="_kudos_custom_smtp.password"
+								name="_kudos_smtp_password"
 								isDisabled={passwordDisabled}
 								label={__('Password', 'kudos-donations')}
 								help={__(
@@ -180,7 +171,9 @@ const EmailTab = () => {
 							<button
 								type="button"
 								className="ml-auto text-red-600 underline text-right cursor-pointer block"
-								onClick={resetPassword}
+								onClick={() =>
+									updateSetting('_kudos_smtp_password', '')
+								}
 							>
 								{__('Reset password', 'kudos-donations')}
 							</button>

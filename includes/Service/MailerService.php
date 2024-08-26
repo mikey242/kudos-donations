@@ -29,6 +29,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	public const SETTING_SMTP_ENABLE             = '_kudos_smtp_enable';
 	public const SETTING_EMAIL_BCC               = '_kudos_email_bcc';
 	public const SETTING_EMAIL_RECEIPT_ENABLE    = '_kudos_email_receipt_enable';
+	public const SETTING_SMTP_PASSWORD           = '_kudos_smtp_password';
 	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
 	private TwigService $twig;
 	private EncryptionService $encryption;
@@ -44,7 +45,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		$this->encryption = $encryption;
 
 		// Add filters for encrypting passwords.
-		add_filter( 'pre_update_option_' . self::SETTING_CUSTOM_SMTP, [ $this, 'encrypt_smtp_password' ] );
+		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
 	}
 
 	/**
@@ -327,32 +328,30 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	/**
 	 * Encrypts the SMTP password before storing it in the database.
 	 *
-	 * @param array $setting The SMTP settings array.
-	 * @return array The modified settings array with the masked password.
+	 * @param string $raw_password The raw password.
+	 * @return string The masked password.
 	 */
-	public function encrypt_smtp_password( array $setting ): array {
-		$raw_password = $setting['password'] ?? null;
+	public function encrypt_smtp_password( string $raw_password ): string {
 
-		if ( $raw_password ) {
-			// Bail if this is only asterisks.
-			$num_asterisks = substr_count( $raw_password, '*' );
-			$count         = \strlen( $raw_password );
-			if ( $num_asterisks === $count ) {
-				return $setting;
-			}
-			// Encrypt the password.
-			$encrypted_password = $this->encryption->encrypt_password( $raw_password );
-
-			// Update the encrypted password in the database.
-			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, $encrypted_password );
-
-			// Replace the password with asterisks in the settings array.
-			$setting['password'] = str_repeat( '*', $count );
-		} else {
-			// If no password is provided, retain the existing masked password or set it to null.
-			$setting['password'] = get_option( self::SETTING_CUSTOM_SMTP )['password'] ?? null;
+		// Reset password.
+		if ( ! $raw_password ) {
+			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, '' );
 		}
-		return $setting;
+
+		// Bail if this is only asterisks.
+		$num_asterisks = substr_count( $raw_password, '*' );
+		$count         = \strlen( $raw_password );
+		if ( $num_asterisks === $count ) {
+			return $raw_password;
+		}
+		// Encrypt the password.
+		$encrypted_password = $this->encryption->encrypt_password( $raw_password );
+
+		// Update the encrypted password in the database.
+		update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, $encrypted_password );
+
+		// Replace the password with asterisks in the settings array.
+		return str_repeat( '*', $count );
 	}
 
 	/**
@@ -391,7 +390,6 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 					'encryption' => 'tls',
 					'autotls'    => false,
 					'username'   => '',
-					'password'   => '',
 				],
 				'show_in_rest' => [
 					'schema' => [
@@ -418,13 +416,13 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 							'username'   => [
 								'type' => FieldType::STRING,
 							],
-							'password'   => [
-								'type'         => FieldType::STRING,
-								'show_in_rest' => false,
-							],
 						],
 					],
 				],
+			],
+			self::SETTING_SMTP_PASSWORD           => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
 			],
 			self::SETTING_SMTP_PASSWORD_ENCRYPTED => [
 				'type'         => FieldType::STRING,
