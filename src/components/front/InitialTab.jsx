@@ -24,7 +24,7 @@ const InitialTab = ({
 	anonymous,
 	currency,
 }) => {
-	const { currencies } = window.kudos;
+	const { currencies, maxDonation } = window.kudos;
 	const { setValue } = useFormContext();
 	const watchFixed = useWatch({ name: 'valueFixed' });
 	const watchOpen = useWatch({ name: 'valueOpen' });
@@ -96,6 +96,16 @@ const InitialTab = ({
 					name="valueOpen"
 					addOn="€"
 					type="number"
+					validation={{
+						max: {
+							value: maxDonation,
+							message: sprintf(
+								// translators: %s is the maximum donation value
+								__('Maximum donation is %s', 'kudos-donations'),
+								maxDonation
+							),
+						},
+					}}
 					placeholder={`${
 						amountType === 'both'
 							? __('Other amount', 'kudos-donations')
