@@ -120,6 +120,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.2.6 =
 * Add maximum donation setting
+* Update dependencies
 
 = 3.2.5 =
 * Add notice for upcoming major Kudos Donations update
