@@ -149,6 +149,7 @@ class Front {
 			'kudos',
 			[
 				'_wpnonce' => wp_create_nonce( 'wp_rest' ),
+				'maxDonation' => Settings::get_setting('maximum_donation')
 			]
 		);
 
@@ -418,6 +419,7 @@ class Front {
 			'address_required'  => $campaign['address_required'] ?? '',
 			'message_enabled'   => $campaign['message_enabled'] ?? '',
 			'campaign_stats'    => $campaign_stats,
+			'maximum_donation'  => Settings::get_setting('maximum_donation')
 		];
 
 		// Add additional funds if any.

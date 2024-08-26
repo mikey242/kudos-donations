@@ -12,7 +12,7 @@ import {
     resetProgressBar,
     valueChange
 } from "../common/helpers/form"
-import {__} from "@wordpress/i18n"
+import {__, sprintf} from "@wordpress/i18n"
 import apiFetch from '@wordpress/api-fetch'
 import KudosModal from "./KudosModal"
 
@@ -75,6 +75,7 @@ jQuery(document).ready(($) => {
                 value: {
                     required: __('Donation amount is required', 'kudos-donations'),
                     min: __('Minimum donation is 1 euro', 'kudos-donations'),
+                    max: sprintf(__('Maximum donation is %s euros', 'kudos-donations'), kudos.maxDonation),
                     digits: __('Only digits are valid', 'kudos-donations'),
                 },
                 recurring_frequency: {

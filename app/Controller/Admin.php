@@ -903,6 +903,10 @@ class Admin {
 				],
 				'sanitize_callback' => [ Campaign::class, 'sanitize_campaigns' ],
 			],
+            'maximum_donation' => [
+                'type' => 'string',
+                'show_in_rest' => true,
+            ]
 		];
 	}
 

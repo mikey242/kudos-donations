@@ -4,6 +4,7 @@ import {TermsPanel} from "../Panels/TermsPanel"
 import {PrivacyPanel} from "../Panels/PrivacyPanel"
 import {Card, CardDivider} from "@wordpress/components"
 import {SpamProtectionPanel} from "../Panels/SpamProtectionPanel"
+import {MaximumDonationPanel} from "../Panels/MaximumDonationPanel";
 
 const CustomizeTab = (props) => {
 
@@ -25,6 +26,11 @@ const CustomizeTab = (props) => {
             />
             <CardDivider/>
             <TermsPanel
+                settings={props.settings}
+                handleInputChange={props.handleInputChange}
+            />
+            <CardDivider/>
+            <MaximumDonationPanel
                 settings={props.settings}
                 handleInputChange={props.handleInputChange}
             />
