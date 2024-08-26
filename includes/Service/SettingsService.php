@@ -24,6 +24,7 @@ class SettingsService implements HasSettingsInterface {
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	public const SETTING_DB_VERSION         = '_kudos_db_version';
 	public const SETTING_MIGRATION_HISTORY  = '_kudos_migration_history';
+	public const SETTING_MAXIMUM_DONATION   = '_kudos_maximum_donation';
 
 	/**
 	 * Returns the value for a given setting.
@@ -130,6 +131,10 @@ class SettingsService implements HasSettingsInterface {
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_MAXIMUM_DONATION   => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
 			],
 		];
 	}

@@ -2,7 +2,7 @@ import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import logo from '../../../../assets/images/full-logo-green.svg';
 import React from 'react';
-import { Button, ToggleControl } from '../../common/controls';
+import { Button, TextControl, ToggleControl } from '../../common/controls';
 import { HeartIcon } from '@heroicons/react/20/solid';
 import {
 	InformationCircleIcon,
@@ -125,6 +125,11 @@ const HelpTab = () => {
 						'Enables debug logging. Please only enable this if advised to by support.',
 						'kudos-donations'
 					)}
+				/>
+				<TextControl
+					name="_kudos_maximum_donation"
+					type="number"
+					label={__('Maximum donation', 'kudos-donations')}
 				/>
 			</Panel>
 		</Fragment>

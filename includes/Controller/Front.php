@@ -291,6 +291,7 @@ class Front extends AbstractRegistrable {
 					Assets::get_style( 'front/kudos-front.css' ),
 				],
 				'currencies'  => Utils::get_currencies(),
+				'maxDonation' => get_option( SettingsService::SETTING_MAXIMUM_DONATION ),
 			]
 		);
 	}
