@@ -147,20 +147,34 @@ export default function SettingsProvider({ children }) {
 			});
 	}
 
+	// @see https://github.com/orgs/react-hook-form/discussions/1991#discussioncomment-31308
 	const dirtyValues = (dirtyFields, allValues) => {
-		// If *any* item in an array was modified, the entire array must be submitted, because there's no way to indicate
-		// "placeholders" for unchanged elements. `dirtyFields` is `true` for leaves.
+		// If dirtyFields is true or an array, return the entire allValues
 		if (dirtyFields === true || Array.isArray(dirtyFields)) {
 			return allValues;
 		}
-		// Here, we have an object
+
+		// Process object to get modified fields
 		return Object.fromEntries(
-			Object.keys(dirtyFields)
-				.map((key) => [
-					key,
-					dirtyValues(dirtyFields[key], allValues[key]),
-				])
-				.filter(([, value]) => value !== undefined) // Filter out undefined values
+			Object.entries(dirtyFields)
+				.map(([key, value]) => {
+					// Check if value is an object
+					if (
+						value &&
+						typeof value === 'object' &&
+						!Array.isArray(value)
+					) {
+						// Recursively get dirty fields
+						const nestedDirty = dirtyValues(value, allValues[key]);
+						// Return entire object if any nested field is dirty
+						return nestedDirty !== undefined
+							? [key, allValues[key]]
+							: undefined;
+					}
+					// Return value if the field itself is dirty
+					return value === true ? [key, allValues[key]] : undefined;
+				})
+				.filter((entry) => entry !== undefined) // Filter out undefined entries
 		);
 	};
 
