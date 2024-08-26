@@ -118,6 +118,9 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.2.6 =
+* Add maximum donation setting
+
 = 3.2.5 =
 * Add notice for upcoming major Kudos Donations update
 * Add various missing translation strings
