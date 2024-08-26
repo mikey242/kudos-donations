@@ -245,14 +245,6 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 						<p>Settings actions.</p>
 						<form action="" method='post' style="display: inline">
-							<?php wp_nonce_field( 'kudos_clear_mollie' ); ?>
-							<button type='submit' class="button-secondary confirm" name='kudos_action'
-									value='kudos_clear_mollie'>
-								Reset Mollie settings
-							</button>
-						</form>
-
-						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_settings' ); ?>
 							<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_clear_settings'>
 								Reset ALL settings
