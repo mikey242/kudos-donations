@@ -116,8 +116,8 @@ class Invoice extends AbstractRestController {
 				$this->invoice->generate_invoice( $transaction->ID, true );
 			}
 			// translators: %s represents the number of invoices.
-			wp_send_json_success( wp_sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) );
+			wp_send_json_success( [ 'message' => wp_sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) ] );
 		}
-		wp_send_json_error( __( 'No valid transactions.', 'kudos-donations' ) );
+		wp_send_json_error( [ 'message' => __( 'No valid transactions.', 'kudos-donations' ) ] );
 	}
 }

@@ -73,7 +73,7 @@ class Subscription extends AbstractRestController {
 		if ( ! $post_id || ! $token ) {
 			return new WP_REST_Response(
 				[
-					'data' => __( 'Parameter missing', 'kudos-donations' ),
+					'message' => __( 'Parameter missing', 'kudos-donations' ),
 				],
 				422
 			);
@@ -87,7 +87,7 @@ class Subscription extends AbstractRestController {
 				$this->logger->info( 'Subscription: Invalid token supplied' );
 				return new WP_REST_Response(
 					[
-						'data' => __( 'Token expired', 'kudos-donations' ),
+						'message' => __( 'Token expired', 'kudos-donations' ),
 					],
 					401
 				);
@@ -96,7 +96,7 @@ class Subscription extends AbstractRestController {
 			$this->logger->warning( 'Subscription: Error cancelling: ' . $e->getMessage() );
 			return new WP_REST_Response(
 				[
-					'data' => __( 'Error cancelling subscription.', 'kudos-donations' ),
+					'message' => __( 'Error cancelling subscription.', 'kudos-donations' ),
 				],
 				400
 			);
@@ -126,7 +126,7 @@ class Subscription extends AbstractRestController {
 			);
 			return new WP_REST_Response(
 				[
-					'data' => __( 'Subscription canceled', 'kudos-donations' ),
+					'message' => __( 'Subscription canceled', 'kudos-donations' ),
 				],
 				200
 			);
@@ -135,7 +135,7 @@ class Subscription extends AbstractRestController {
 		// Result from vendor was false, most likely because subscription was already cancelled.
 		return new WP_REST_Response(
 			[
-				'data' => __( 'Subscription already canceled', 'kudos-donations' ),
+				'message' => __( 'Subscription already canceled', 'kudos-donations' ),
 			],
 			200
 		);

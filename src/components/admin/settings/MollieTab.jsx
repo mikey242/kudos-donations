@@ -20,7 +20,7 @@ const MollieTab = ({ checkApiKeys }) => {
 
 	const refresh = () => {
 		checkApiKeys().then((response) => {
-			createNotification(response.data, response?.success);
+			createNotification(response?.data?.message, response?.success);
 		});
 	};
 

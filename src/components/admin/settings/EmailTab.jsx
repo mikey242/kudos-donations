@@ -37,10 +37,10 @@ const EmailTab = () => {
 			body: JSON.stringify({ email: address }),
 		})
 			.then((result) => {
-				createNotification(result.data, result.success);
+				createNotification(result.data.message, result.success);
 			})
 			.catch((error) => {
-				createNotification(error.data);
+				createNotification(error.message, false);
 			})
 			.finally(() => {
 				setIsEmailBusy(false);

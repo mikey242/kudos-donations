@@ -108,7 +108,7 @@ export default function SettingsProvider({ children }) {
 				});
 			})
 			.catch((error) => {
-				createNotification(error?.responseJSON.data, false);
+				createNotification(error?.responseJSON?.data?.message, false);
 			})
 			.always(() => {
 				setSettingsSaving(false);

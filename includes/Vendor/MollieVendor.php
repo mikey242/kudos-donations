@@ -264,7 +264,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 				update_option(constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode) ), $encrypted_key);
 			} else {
 				wp_send_json_error(
-					wp_sprintf(__('%s API key invalid.', 'kudos-donations'), $mode),
+					['message' => wp_sprintf(__('%s API key invalid.', 'kudos-donations'), $mode)],
 					400
 				);
 			}

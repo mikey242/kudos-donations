@@ -176,8 +176,8 @@ class Payment extends AbstractRestController {
 		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			wp_send_json_error(
 				[
-					'data'  => __( 'Request invalid.', 'kudos-donations' ),
-					'nonce' => $request->get_header( 'X-WP-Nonce' ),
+					'message' => __( 'Request invalid.', 'kudos-donations' ),
+					'nonce'   => $request->get_header( 'X-WP-Nonce' ),
 				]
 			);
 		}
@@ -285,7 +285,7 @@ class Payment extends AbstractRestController {
 		return new WP_REST_Response(
 			[
 				'success' => false,
-				'data'    => __( 'Error creating payment. Please try again later.', 'kudos-donations' ),
+				'message' => __( 'Error creating payment. Please try again later.', 'kudos-donations' ),
 			],
 			500
 		);
@@ -299,7 +299,7 @@ class Payment extends AbstractRestController {
 		return new WP_REST_Response(
 			[
 				'success' => true,
-				'data'    =>
+				'message' =>
 					__( 'API connection refreshed', 'kudos-donations' ),
 			],
 			200
