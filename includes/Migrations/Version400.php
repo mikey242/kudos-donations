@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\MailerService;
+use IseardMedia\Kudos\Vendor\MollieVendor;
 use WP_REST_Request;
 
 class Version400 extends AbstractMigration {
@@ -42,34 +43,24 @@ class Version400 extends AbstractMigration {
 		$vendor_mollie = get_option( '_kudos_vendor_mollie' );
 		$test_key      = $vendor_mollie['test_key'] ?? null;
 		$live_key      = $vendor_mollie['live_key'] ?? null;
-		$keys          = [];
+		$mode          = $vendor_mollie['mode'] ?? 'test';
 
-		// Grab current keys.
-		if ( $test_key ) {
-			$keys['test'] = $test_key;
-		}
+		update_option( MollieVendor::SETTING_API_MODE, $mode );
+
 		if ( $live_key ) {
-			$keys['live'] = $live_key;
+			update_option( MollieVendor::SETTING_API_KEY_LIVE, $live_key );
 		}
 
-		// Perform rest request to check keys are valid.
-		if ( ! empty( $keys ) ) {
-
-			// Let's first delete the old, and now invalid, option.
-			delete_option( '_kudos_vendor_mollie' );
-			$request = new WP_REST_Request(
-				'POST',
-				'/kudos/v1/payment/test'
-			);
-			$request->set_body_params(
-				[
-					'keys' => $keys,
-				]
-			);
-
-			rest_do_request( $request );
-
+		if ( $test_key ) {
+			update_option( MollieVendor::SETTING_API_KEY_TEST, $test_key );
 		}
+
+		$request = new WP_REST_Request(
+			'POST',
+			'/kudos/v1/payment/test'
+		);
+
+		rest_do_request( $request );
 
 		// Always return true, a failure here is not critical.
 		return true;
@@ -110,7 +101,7 @@ class Version400 extends AbstractMigration {
 			$new_settings['username'] = $username;
 		}
 		if ( $password ) {
-			$new_settings['password'] = $password;
+			update_option( MailerService::SETTING_SMTP_PASSWORD, $password );
 		}
 
 		update_option( MailerService::SETTING_CUSTOM_SMTP, $new_settings );
