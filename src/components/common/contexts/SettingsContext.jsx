@@ -70,7 +70,17 @@ export default function SettingsProvider({ children }) {
 	};
 
 	// Update all settings.
-	async function updateSettings(data) {
+	async function updateSettings(data, dirtyFields = null) {
+		// If dirty fields have been specified, then filter out unchanged data.
+		if (dirtyFields) {
+			data = dirtyValues(dirtyFields, data);
+		}
+
+		// Nothing changed, no need to continue.
+		if (!Object.keys(data).length) {
+			return createNotification(__('Nothing changed', 'kudos-donations'));
+		}
+
 		setSettingsSaving(true);
 		// Delete empty settings keys.
 		for (const key in data) {
@@ -137,6 +147,23 @@ export default function SettingsProvider({ children }) {
 				setCheckingApiKey(false);
 			});
 	}
+
+	const dirtyValues = (dirtyFields, allValues) => {
+		// If *any* item in an array was modified, the entire array must be submitted, because there's no way to indicate
+		// "placeholders" for unchanged elements. `dirtyFields` is `true` for leaves.
+		if (dirtyFields === true || Array.isArray(dirtyFields)) {
+			return allValues;
+		}
+		// Here, we have an object
+		return Object.fromEntries(
+			Object.keys(dirtyFields)
+				.map((key) => [
+					key,
+					dirtyValues(dirtyFields[key], allValues[key]),
+				])
+				.filter(([, value]) => value !== undefined) // Filter out undefined values
+		);
+	};
 
 	return (
 		<SettingsContext.Provider

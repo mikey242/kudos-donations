@@ -36,6 +36,7 @@ const SettingsPage = () => {
 	const methods = useForm({
 		defaultValues: settings,
 	});
+	const { formState } = methods;
 
 	useEffect(() => {
 		if (settings) {
@@ -44,7 +45,7 @@ const SettingsPage = () => {
 	}, [methods, settings]);
 
 	const save = (data) => {
-		return updateSettings(data);
+		return updateSettings(data, formState.dirtyFields);
 	};
 
 	const checkApiKeyWrapper = (keys) => {
