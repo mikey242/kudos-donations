@@ -42,7 +42,7 @@ export const Field = ({
 				>
 					<Controller
 						name={name}
-						rules={validation}
+						rules={isDisabled ? {} : validation}
 						disabled={isDisabled}
 						render={({ field: { onChange, value } }) => (
 							<>
