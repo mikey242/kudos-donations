@@ -16,18 +16,19 @@ import { useSettingsContext } from '../../common/contexts/SettingsContext';
 import { clsx } from 'clsx';
 
 const IntroGuide = () => {
-	const { updateSetting, checkApiKey, settings, isVendorReady } =
-		useSettingsContext();
-	const vendorMollie = settings._kudos_vendor_mollie;
-	const isRecurringEnabled = vendorMollie?.recurring ?? false;
-
-	const [isApiSaving, setIsApiSaving] = useState(false);
+	const {
+		updateSetting,
+		checkApiKey,
+		settings,
+		isVendorReady,
+		checkingApiKey,
+	} = useSettingsContext();
+	const isRecurringEnabled = settings._kudos_vendor_mollie_recurring ?? false;
 	const [apiStatus, setApiStatus] = useState(null);
 
 	const methods = useForm();
 
 	const submitMollie = (data) => {
-		setIsApiSaving(true);
 		checkApiKey({
 			...data.keys,
 		})
@@ -36,9 +37,6 @@ const IntroGuide = () => {
 			})
 			.catch((error) => {
 				setApiStatus(error);
-			})
-			.finally(() => {
-				setIsApiSaving(false);
 			});
 	};
 
@@ -103,7 +101,7 @@ const IntroGuide = () => {
 													submitMollie
 												)}
 											>
-												{apiStatus?.message && (
+												{apiStatus?.data && (
 													<div
 														className={clsx(
 															apiStatus.success
@@ -112,12 +110,12 @@ const IntroGuide = () => {
 															'text-sm'
 														)}
 													>
-														{apiStatus.message}
+														{apiStatus.data}
 													</div>
 												)}
 												<TextControl
 													name="keys.live"
-													disabled={isApiSaving}
+													disabled={checkingApiKey}
 													placeholder={__(
 														'Live key',
 														'kudos-donations'
@@ -125,7 +123,7 @@ const IntroGuide = () => {
 												/>
 												<TextControl
 													name="keys.test"
-													disabled={isApiSaving}
+													disabled={checkingApiKey}
 													placeholder={__(
 														'Test key',
 														'kudos-donations'
@@ -134,7 +132,7 @@ const IntroGuide = () => {
 												<div className="mt-3 flex justify-end relative">
 													<Button
 														isSmall
-														isBusy={isApiSaving}
+														isBusy={checkingApiKey}
 														type="submit"
 														className="w-full"
 													>

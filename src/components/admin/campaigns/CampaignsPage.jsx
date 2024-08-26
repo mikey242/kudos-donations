@@ -179,8 +179,9 @@ const CampaignsPage = () => {
 								recurringAllowed={
 									settings?.[
 										'_kudos_vendor_' +
-											settings._kudos_vendor
-									]?.recurring
+											settings._kudos_vendor +
+											'_recurring'
+									]
 								}
 								campaign={currentPost}
 							/>

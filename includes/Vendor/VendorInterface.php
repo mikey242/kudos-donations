@@ -31,13 +31,9 @@ interface VendorInterface
     public static function supports_recurring(): bool;
 
 	/**
-	 * Check the vendor connection.
-	 *
-	 * @param mixed $data
-	 *
-	 * @return WP_REST_Response
+	 * Refresh the local vendor settings.
 	 */
-	public function verify_connection($data): WP_REST_Response;
+	public function refresh_api();
 
     /**
      * Cancel the specified subscription.

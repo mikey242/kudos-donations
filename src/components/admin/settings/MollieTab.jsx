@@ -1,53 +1,46 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
-import { Button, RadioGroupControl, TextControl } from '../../common/controls';
+import { RadioGroupControl, TextControl } from '../../common/controls';
 import { Fragment } from '@wordpress/element';
 import Divider from '../../common/Divider';
 import { clsx } from 'clsx';
 import { useSettingsContext } from '../../common/contexts/SettingsContext';
-import { ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { useFormContext } from 'react-hook-form';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { Panel } from '../../common/Panel';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/16/solid';
+import { useNotificationContext } from '../../common/contexts/NotificationContext';
 
 const MollieTab = ({ checkApiKeys }) => {
-	const { checkingApiKey, updateSetting } = useSettingsContext();
-	const { getValues, watch } = useFormContext();
-	const watchLive = watch('_kudos_vendor_mollie.live_key');
-	const watchTest = watch('_kudos_vendor_mollie.test_key');
-	const live = getValues('_kudos_vendor_mollie.live_key');
-	const test = getValues('_kudos_vendor_mollie.test_key');
-	const refresh = () => {
-		const keys = {
-			...(live?.key && { live: live.key }),
-			...(test?.key && { test: test.key }),
-		};
-		checkApiKeys(keys);
+	const { checkingApiKey, updateSettings, settings } = useSettingsContext();
+	const { createNotification } = useNotificationContext();
+	const apiKeyStatus = {
+		live: settings._kudos_vendor_mollie_api_key_live,
+		test: settings._kudos_vendor_mollie_api_key_test,
 	};
 
-	const checkKey = (name, key) => {
-		if (key) {
-			checkApiKeys({ [name]: key });
-		}
+	const refresh = () => {
+		checkApiKeys().then((response) => {
+			createNotification(response.data, response?.success);
+		});
 	};
 
 	return (
 		<Fragment>
 			<Panel title={__('API Mode', 'kudos-donations')}>
 				<RadioGroupControl
-					name="_kudos_vendor_mollie.mode"
+					name="_kudos_vendor_mollie_api_mode"
 					label={__('API Mode', 'kudos-donations')}
 					hideLabel={true}
 					options={[
 						{
 							label: __('Test', 'kudos-donations'),
 							value: 'test',
-							disabled: !test?.verified,
+							disabled: !apiKeyStatus.test,
 						},
 						{
 							label: __('Live', 'kudos-donations'),
 							value: 'live',
-							disabled: !live?.verified,
+							disabled: !apiKeyStatus.live,
 						},
 					]}
 					help={__(
@@ -100,38 +93,29 @@ const MollieTab = ({ checkApiKeys }) => {
 					</>
 				}
 			>
-				{[
-					{ ...watchLive, name: 'live' },
-					{ ...watchTest, name: 'test' },
-				].map((mode, i) => {
+				{['live', 'test'].map((mode, i) => {
+					const isDisabled = apiKeyStatus[mode];
 					return (
 						<TextControl
 							key={i}
-							name={`_kudos_vendor_mollie.${mode?.name}_key.key`}
-							isDisabled={checkingApiKey}
-							isReadOnly={mode?.verified}
-							type={mode?.verified ? 'password' : 'text'}
+							name={`_kudos_vendor_mollie_api_key_${mode}`}
+							isDisabled={isDisabled}
+							validation={{
+								pattern: {
+									value: new RegExp(`^$|^${mode}`), // Dynamically create the pattern
+									message: sprintf(
+										// translators: %s is the api mode.
+										__(
+											"API Key must start with '%s'",
+											'kudos-donations'
+										),
+										mode + '_'
+									),
+								},
+							}}
+							type={isDisabled ? 'password' : 'text'}
 							label={
-								<span className="capitalize">
-									{' '}
-									{mode?.name} key
-								</span>
-							}
-							inlineButton={
-								mode?.verified ? (
-									<CheckCircleIcon
-										className={'text-green-600 w-6 h-6'}
-									/>
-								) : (
-									<Button
-										isOutline
-										onClick={() =>
-											checkKey(mode.name, mode?.key)
-										}
-									>
-										{__('Apply', 'kudos-donations')}
-									</Button>
-								)
+								<span className="capitalize">{mode} key</span>
 							}
 						/>
 					);
@@ -140,9 +124,14 @@ const MollieTab = ({ checkApiKeys }) => {
 					type="button"
 					className="ml-auto text-red-600 underline text-right cursor-pointer block"
 					disabled={checkingApiKey}
-					onClick={() =>
-						updateSetting('_kudos_vendor_mollie', { mode: 'test' })
-					}
+					onClick={() => {
+						updateSettings({
+							_kudos_vendor_mollie_recurring: false,
+							_kudos_vendor_mollie_api_key_live: '',
+							_kudos_vendor_mollie_api_key_test: '',
+							_kudos_vendor_mollie_api_mode: 'test',
+						});
+					}}
 				>
 					{__('Reset Mollie', 'kudos-donations')}
 				</button>

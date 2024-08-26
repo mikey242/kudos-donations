@@ -25,6 +25,20 @@ export default function SettingsProvider({ children }) {
 	const [settingsSaving, setSettingsSaving] = useState(false);
 	const { createNotification } = useNotificationContext();
 
+	useEffect(() => {
+		if (settingsRequest.ready) {
+			const vendor = settings._kudos_vendor;
+			if (vendor) {
+				const mode = settings[`_kudos_vendor_${vendor}_api_mode`];
+				if (mode) {
+					setIsVendorReady(
+						settings[`_kudos_vendor_${vendor}_api_key_${mode}`]
+					);
+				}
+			}
+		}
+	}, [settings, settingsRequest.ready]);
+
 	const fetchSettings = async () => {
 		await api.loadPromise;
 		const settingsModel = new api.models.Settings();
@@ -42,7 +56,7 @@ export default function SettingsProvider({ children }) {
 	};
 
 	useEffect(() => {
-		fetchSettings().then(getVendorStatus);
+		void fetchSettings();
 	}, []);
 
 	const setSettings = (newSettings) => {
@@ -53,20 +67,6 @@ export default function SettingsProvider({ children }) {
 				settings: { ...newSettings },
 			};
 		});
-	};
-
-	const getVendorStatus = () => {
-		return apiFetch({
-			path: 'kudos/v1/payment/ready',
-			method: 'GET',
-		})
-			.then((response) => {
-				setIsVendorReady(response);
-				return response;
-			})
-			.catch((response) => {
-				return response;
-			});
 	};
 
 	// Update all settings.
@@ -108,7 +108,7 @@ export default function SettingsProvider({ children }) {
 				});
 			})
 			.catch((error) => {
-				createNotification(error?.responseJSON.message, false);
+				createNotification(error?.responseJSON.data, false);
 			})
 			.always(() => {
 				setSettingsSaving(false);
@@ -129,12 +129,11 @@ export default function SettingsProvider({ children }) {
 		});
 	}
 
-	async function checkApiKey(keys) {
+	async function checkApiKey() {
 		setCheckingApiKey(true);
 		return apiFetch({
 			path: 'kudos/v1/payment/test',
 			method: 'POST',
-			data: { keys },
 		})
 			.then((response) => {
 				return response;
@@ -176,7 +175,6 @@ export default function SettingsProvider({ children }) {
 				updateSettings,
 				settingsReady,
 				settingsSaving,
-				setIsVendorReady,
 				isVendorReady,
 			}}
 		>

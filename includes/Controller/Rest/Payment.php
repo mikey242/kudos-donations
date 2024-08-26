@@ -154,12 +154,6 @@ class Payment extends AbstractRestController {
 			self::ROUTE_TEST    => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'test_connection' ],
-				'args'                => [
-					'keys' => [
-						'type'     => 'object',
-						'required' => true,
-					],
-				],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 
@@ -299,11 +293,17 @@ class Payment extends AbstractRestController {
 
 	/**
 	 * Check the vendor api key associated with the mode. Sends a JSON response.
-	 *
-	 * @param WP_REST_Request $request Instance of WP_REST_Request.
 	 */
-	public function test_connection( WP_REST_Request $request ): WP_REST_Response {
-		return $this->vendor->verify_connection( $request );
+	public function test_connection(): WP_REST_Response {
+		$this->vendor->refresh_api();
+		return new WP_REST_Response(
+			[
+				'success' => true,
+				'data'    =>
+					__( 'API connection refreshed', 'kudos-donations' ),
+			],
+			200
+		);
 	}
 
 	/**

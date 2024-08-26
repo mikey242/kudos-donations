@@ -18,7 +18,6 @@ import { Spinner } from '../../common/Spinner';
 // eslint-disable-next-line import/default
 import { useSettingsContext } from '../../common/contexts/SettingsContext';
 import { clsx } from 'clsx';
-import { useNotificationContext } from '../../common/contexts/NotificationContext';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { InvoiceTab } from './InvoiceTab';
 
@@ -32,7 +31,6 @@ const SettingsPage = () => {
 		settings,
 		isVendorReady,
 	} = useSettingsContext();
-	const { createNotification } = useNotificationContext();
 	const methods = useForm({
 		defaultValues: settings,
 	});
@@ -48,18 +46,12 @@ const SettingsPage = () => {
 		return updateSettings(data, formState.dirtyFields);
 	};
 
-	const checkApiKeyWrapper = (keys) => {
-		return checkApiKey(keys).then((response) => {
-			createNotification(response.message, response?.success);
-		});
-	};
-
 	// Define tabs and panels
 	const tabs = [
 		{
 			name: 'mollie',
 			title: __('Mollie', 'kudos-donations'),
-			content: <MollieTab checkApiKeys={checkApiKeyWrapper} />,
+			content: <MollieTab checkApiKeys={checkApiKey} />,
 		},
 		{
 			name: 'email',
