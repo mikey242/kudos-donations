@@ -21,7 +21,6 @@ use IseardMedia\Kudos\Helper\Utils;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_Error;
-use WP_REST_Request;
 
 class MailerService extends AbstractRegistrable implements HasSettingsInterface {
 
@@ -270,38 +269,6 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 */
 	public function get_from_name(): string {
 		return get_option( self::SETTING_CUSTOM_SMTP )['from_name'];
-	}
-
-	/**
-	 * Sends a test email using send_message.
-	 *
-	 * @param WP_REST_Request $request Request array.
-	 */
-	public function send_test( WP_REST_Request $request ): bool {
-		if ( empty( $request['email'] ) ) {
-			wp_send_json_error( __( 'Please provide an email address.', 'kudos-donations' ) );
-		}
-
-		$email   = sanitize_email( $request['email'] );
-		$header  = __( 'It worked!', 'kudos-donations' );
-		$message = __( 'Looks like your email settings are set up correctly :-)', 'kudos-donations' );
-
-		$result = $this->send_message( $email, $header, $message );
-
-		if ( $result ) {
-			/* translators: %s: API mode */
-			wp_send_json_success( sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) );
-		} else {
-			/* translators: %s: API mode */
-			wp_send_json_error(
-				__(
-					'Error sending email, please check the settings and try again.',
-					'kudos-donations'
-				)
-			);
-		}
-
-		return $result;
 	}
 
 	/**
