@@ -21,16 +21,6 @@ use WP_REST_Request;
 use WP_REST_Server;
 
 class Admin extends AbstractRegistrable {
-	private SettingsHandler $settings_handler;
-
-	/**
-	 * Admin constructor.
-	 *
-	 * @param SettingsHandler $settings_handler The settings handler.
-	 */
-	public function __construct( SettingsHandler $settings_handler ) {
-		$this->settings_handler = $settings_handler;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -74,8 +64,9 @@ class Admin extends AbstractRegistrable {
 				case 'kudos_clear_settings':
 					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_settings' ) ) {
-						$settings = $this->settings_handler->get_all_settings();
-						foreach ( $settings as $setting_name => $config ) {
+						global $new_allowed_options;
+						$settings = $new_allowed_options[ SettingsHandler::GROUP ];
+						foreach ( $settings as $setting_name ) {
 							delete_option( $setting_name );
 						}
 					}
