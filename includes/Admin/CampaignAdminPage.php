@@ -63,7 +63,9 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			$admin_js['url'],
 			$admin_js['dependencies'],
 			$admin_js['version'],
-			true
+			[
+				'in_footer' => true,
+			]
 		);
 
 		wp_localize_script(
