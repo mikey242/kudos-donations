@@ -183,7 +183,7 @@ class Version400 extends AbstractMigration {
 					CampaignPostType::META_FIELD_ADDITIONAL_FUNDS => $campaign['additional_funds'] ?? '',
 					CampaignPostType::META_FIELD_SHOW_GOAL => $campaign['show_progress'] ?? false,
 					CampaignPostType::META_FIELD_DONATION_TYPE => $campaign['donation_type'] ?? 'oneoff',
-					CampaignPostType::META_FIELD_FIXED_AMOUNTS => $campaign['fixed_amounts'] ?? '5,10,25,50',
+					CampaignPostType::META_FIELD_FIXED_AMOUNTS => explode( ',', $campaign['fixed_amounts'] ?? '' ) ?? [ 5,10,25,50 ],
 					CampaignPostType::META_FIELD_THEME_COLOR => $theme_colour ? $theme_colour['primary'] : '#ff9f1c',
 					// Add these global settings which are now campaign scoped.
 					CampaignPostType::META_FIELD_SHOW_RETURN_MESSAGE => $show_return_message,
