@@ -75,7 +75,11 @@ export default function CampaignsProvider({
 		}
 
 		// Set default arguments.
-		const { title = 'My Campaign', status = 'publish', ...other } = args;
+		const {
+			title = __('New Campaign', 'kudos-donations'),
+			status = 'publish',
+			...other
+		} = args;
 
 		return handleSave({
 			title,
