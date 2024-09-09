@@ -101,6 +101,18 @@ const MollieTab = () => {
 									name={`_kudos_vendor_mollie_api_key_${mode}`}
 									prefix={<Icon icon="shield" />}
 									type={isDisabled ? 'password' : 'text'}
+									validation={{
+										validate: (value) =>
+											value.startsWith(mode) ||
+											sprintf(
+												// translators: %s is the api mode
+												__(
+													'Key must start with "%s"',
+													'kudos-donations'
+												),
+												mode
+											),
+									}}
 									label={
 										<span className="capitalize">
 											{mode} key
