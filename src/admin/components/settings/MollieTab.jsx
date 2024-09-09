@@ -103,6 +103,7 @@ const MollieTab = () => {
 									type={isDisabled ? 'password' : 'text'}
 									validation={{
 										validate: (value) =>
+											!value ||
 											value.startsWith(mode) ||
 											sprintf(
 												// translators: %s is the api mode
