@@ -48,8 +48,9 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	 */
 	public function register_assets(): void {
 		// Enqueue the styles.
+		wp_enqueue_style( 'wp-components' );
 		wp_enqueue_style(
-			'kudos-donations-settings',
+			'kudos-admin-settings-style',
 			Assets::get_style( 'admin/kudos-admin-settings.jsx.css' ),
 			[],
 			KUDOS_VERSION
@@ -57,6 +58,7 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 
 		// Get and enqueue the script.
 		$admin_js = Assets::get_script( 'admin/kudos-admin-settings.jsx.js' );
+
 		wp_enqueue_script(
 			'kudos-donations-settings',
 			$admin_js['url'],

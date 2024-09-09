@@ -2,10 +2,7 @@ const plugin = require('tailwindcss/plugin');
 
 module.exports = {
 	presets: [require('./tailwind.kudos.preset.js')],
-	content: [
-		'./src/components/common/**/*.{js,jsx}',
-		'./src/components/front/**/*.{js,jsx}',
-	],
+	content: ['./src/front/**/*.{js,jsx}'],
 	theme: {
 		fontFamily: {
 			body: 'var(--kudos-font-body)',

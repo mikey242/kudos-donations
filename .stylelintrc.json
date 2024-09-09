@@ -1,3 +1,6 @@
 {
-	"extends": ["@wordpress/stylelint-config", "stylelint-config-tailwindcss"]
+	"extends": ["@wordpress/stylelint-config", "stylelint-config-tailwindcss"],
+	"rules": {
+		"selector-class-pattern": null
+	}
 }

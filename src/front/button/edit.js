@@ -16,10 +16,9 @@ import { __ } from '@wordpress/i18n';
 import React, { Fragment } from 'react';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { DonateButton } from '../../components/common/DonateButton';
-import CampaignProvider from '../../components/common/contexts/CampaignContext';
-import FormRouter from '../../components/front/FormRouter';
-import Render from '../../components/common/Render';
+import { DonateButton } from '../components/DonateButton';
+import { FormRouter } from '../components/FormRouter';
+import Render from '../components/Render';
 
 const ButtonEdit = (props) => {
 	const [campaigns, setCampaigns] = useState(null);
@@ -154,29 +153,25 @@ const ButtonEdit = (props) => {
 					</InspectorControls>
 					<>
 						{currentCampaign ? (
-							<CampaignProvider campaignId={currentCampaign.id}>
-								<Render
-									className={className ?? ''}
-									themeColor={
-										currentCampaign?.meta?.theme_color
-									}
-								>
-									{type === 'form' ? (
-										<FormRouter
-											isPreview={true}
-											campaign={currentCampaign}
+							<Render
+								className={className ?? ''}
+								themeColor={currentCampaign?.meta?.theme_color}
+							>
+								{type === 'form' ? (
+									<FormRouter
+										isPreview={true}
+										campaign={currentCampaign}
+									/>
+								) : (
+									<DonateButton>
+										<RichText
+											allowedFormats={[]} // Disable all formatting
+											onChange={onChangeButtonLabel}
+											value={button_label}
 										/>
-									) : (
-										<DonateButton>
-											<RichText
-												allowedFormats={[]} // Disable all formatting
-												onChange={onChangeButtonLabel}
-												value={button_label}
-											/>
-										</DonateButton>
-									)}
-								</Render>
-							</CampaignProvider>
+									</DonateButton>
+								)}
+							</Render>
 						) : (
 							<p>
 								Kudos Donations:{' '}
