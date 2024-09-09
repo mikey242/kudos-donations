@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { Fragment } from '@wordpress/element';
 import { useSettingsContext } from '../../contexts/SettingsContext';
@@ -124,8 +124,8 @@ const MollieTab = () => {
 					})}
 					<Flex justify="flex-end">
 						<Button
-							type="link"
-							icon="update"
+							type="button"
+							variant="link"
 							disabled={checkingApiKey}
 							isDestructive={true}
 							onClick={() => {
