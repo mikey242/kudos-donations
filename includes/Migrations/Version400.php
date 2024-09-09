@@ -17,7 +17,6 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\MailerService;
 use IseardMedia\Kudos\Vendor\MollieVendor;
-use WP_REST_Request;
 
 class Version400 extends AbstractMigration {
 
@@ -54,13 +53,6 @@ class Version400 extends AbstractMigration {
 		if ( $test_key ) {
 			update_option( MollieVendor::SETTING_API_KEY_TEST, $test_key );
 		}
-
-		$request = new WP_REST_Request(
-			'POST',
-			'/kudos/v1/payment/test'
-		);
-
-		rest_do_request( $request );
 
 		// Always return true, a failure here is not critical.
 		return true;
