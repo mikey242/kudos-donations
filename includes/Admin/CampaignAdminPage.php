@@ -51,15 +51,8 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		// Enqueue the styles.
 		wp_enqueue_style( 'wp-components' );
 		wp_enqueue_style(
-			'kudos-donations-settings',
-			Assets::get_style( 'admin/kudos-admin-settings.jsx.css' ),
-			[ 'kudos-donations-campaigns' ],
-			KUDOS_VERSION
-		);
-
-		wp_enqueue_style(
-			'kudos-donations-campaigns',
-			Assets::get_style( 'admin/kudos-admin-campaigns.jsx.css' ),
+			'kudos-admin-style',
+			Assets::get_style( 'admin/kudos-admin-settings.css' ),
 			[],
 			KUDOS_VERSION
 		);
@@ -68,7 +61,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		$settings = wp_enqueue_code_editor( [ 'type' => 'text/css' ] );
 
 		// Get and enqueue the script.
-		$admin_js = Assets::get_script( 'admin/kudos-admin-campaigns.jsx.js' );
+		$admin_js = Assets::get_script( 'admin/kudos-admin-campaigns.js' );
 		wp_enqueue_script(
 			'kudos-donations-settings',
 			$admin_js['url'],

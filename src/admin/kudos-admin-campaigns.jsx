@@ -3,7 +3,6 @@ import React from 'react';
 import domReady from '@wordpress/dom-ready';
 import { CampaignsPage } from './components/campaigns/CampaignsPage';
 import CampaignsProvider from './contexts/CampaignsContext';
-import './kudos-admin-campaigns.css';
 import { AdminProvider } from './contexts/AdminContext';
 import { BrowserRouter } from 'react-router-dom';
 
