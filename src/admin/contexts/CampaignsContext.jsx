@@ -48,7 +48,7 @@ export default function CampaignsProvider({
 								'Error creating campaign: %s',
 								'kudos-donations'
 							),
-							error
+							error.message
 						)
 					);
 				});
