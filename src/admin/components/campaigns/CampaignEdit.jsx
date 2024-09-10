@@ -132,7 +132,8 @@ const CampaignEdit = ({ campaign, recurringAllowed, handleGoBack }) => {
 		<Fragment>
 			<Flex justify="center">
 				<h1 className="text-center my-5">
-					{__('Edit campaign: ', 'kudos-donations') +
+					{__('Campaign', 'kudos-donations') +
+						': ' +
 						campaign.title.rendered}
 				</h1>
 			</Flex>
