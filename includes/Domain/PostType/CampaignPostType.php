@@ -232,7 +232,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 			],
 			self::META_FIELD_CUSTOM_RETURN_URL        => [
 				'type'              => FieldType::STRING,
-				'sanitize_callback' => 'rest_sanitize_boolean',
+				'sanitize_callback' => 'esc_url_raw',
 			],
 			self::META_FIELD_RETURN_MESSAGE_TITLE     => [
 				'type'              => FieldType::STRING,
