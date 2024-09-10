@@ -70,9 +70,9 @@ class Version400 extends AbstractMigration {
 		$port       = get_option( '_kudos_smtp_port' ) ?? null;
 		$encryption = get_option( '_kudos_smtp_encryption' ) ?? null;
 		$autotls    = get_option( '_kudos_smtp_autotls' ) ?? null;
-		$from_email = get_option( '_kudos_smtp_from' ) ?? null;
 		$username   = get_option( '_kudos_smtp_username' ) ?? null;
 		$password   = get_option( '_kudos_smtp_password' ) ?? null;
+		$from_email = get_option( '_kudos_smtp_from' ) ? get_option( '_kudos_smtp_from' ) : $username;
 
 		$new_settings = [];
 
