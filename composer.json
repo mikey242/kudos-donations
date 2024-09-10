@@ -63,11 +63,11 @@
 			"npm run build"
 		],
 		"make-zip": [
+			"Composer\\Config::disableProcessTimeout",
 			"rm -f kudos-donations.zip",
 			"php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root"
 		],
 		"release": [
-			"Composer\\Config::disableProcessTimeout",
 			"@build-production",
 			"@make-zip"
 		]
