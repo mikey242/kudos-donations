@@ -258,7 +258,8 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		$count         = \strlen( $raw_key );
 		if ( $num_asterisks !== $count ) {
 			// Check that key works before saving.
-			if($this->is_key_valid($raw_key)) {
+			$key_valid = apply_filters("kudos_mollie_" . $mode . "_key_validation", $this->is_key_valid($raw_key));
+			if($key_valid) {
 				$encrypted_key = $this->encryption->encrypt_password($raw_key);
 				$raw_key = str_repeat( '*', strlen($raw_key) );
 				update_option(constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode) ), $encrypted_key);

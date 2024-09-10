@@ -295,15 +295,7 @@ class Payment extends AbstractRestController {
 	 * Check the vendor api key associated with the mode. Sends a JSON response.
 	 */
 	public function test_connection(): WP_REST_Response {
-		$this->vendor->refresh_api();
-		return new WP_REST_Response(
-			[
-				'success' => true,
-				'message' =>
-					__( 'API connection refreshed', 'kudos-donations' ),
-			],
-			200
-		);
+		return $this->vendor->refresh_api();
 	}
 
 	/**

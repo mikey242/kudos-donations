@@ -47,11 +47,15 @@ class Version400 extends AbstractMigration {
 		update_option( MollieVendor::SETTING_API_MODE, $mode );
 
 		if ( $live_key ) {
+			add_filter( 'kudos_mollie_live_key_validation', '__return_true' );
 			update_option( MollieVendor::SETTING_API_KEY_LIVE, $live_key );
+			remove_filter( 'kudos_mollie_live_key_validation', '__return_true' );
 		}
 
 		if ( $test_key ) {
+			add_filter( 'kudos_mollie_test_key_validation', '__return_true' );
 			update_option( MollieVendor::SETTING_API_KEY_TEST, $test_key );
+			remove_filter( 'kudos_mollie_test_key_validation', '__return_true' );
 		}
 
 		// Always return true, a failure here is not critical.
