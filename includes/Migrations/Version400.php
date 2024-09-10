@@ -163,6 +163,8 @@ class Version400 extends AbstractMigration {
 		$custom_return_url    = get_option( '_kudos_custom_return_url' );
 		$show_return_message  = get_option( '_kudos_completed_payment' ) === 'message';
 		$custom_return_enable = get_option( '_kudos_completed_payment' ) === 'url';
+		$terms_url            = get_option( '_kudos_terms_link' );
+		$privacy_url          = get_option( '_kudos_privacy_link' );
 
 		foreach ( $campaigns as $campaign ) {
 
@@ -187,6 +189,8 @@ class Version400 extends AbstractMigration {
 					CampaignPostType::META_FIELD_RETURN_MESSAGE_TEXT => $return_message_text,
 					CampaignPostType::META_FIELD_USE_CUSTOM_RETURN_URL => $custom_return_enable,
 					CampaignPostType::META_FIELD_CUSTOM_RETURN_URL => $custom_return_url,
+					CampaignPostType::META_FIELD_TERMS_LINK => $terms_url,
+					CampaignPostType::META_FIELD_PRIVACY_LINK => $privacy_url,
 				]
 			);
 
