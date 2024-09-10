@@ -11,12 +11,10 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Container\Handler;
 
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
-use IseardMedia\Kudos\Container\Delayed;
-use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Container\Registrable;
 
-class SettingsHandler implements Registrable, Delayed, ActivationAwareInterface {
+class SettingsHandler extends AbstractRegistrable implements ActivationAwareInterface {
 
 	public const GROUP             = 'kudos-donations';
 	public const HOOK_GET_SETTINGS = 'kudos_get_settings';
@@ -58,10 +56,12 @@ class SettingsHandler implements Registrable, Delayed, ActivationAwareInterface 
 	/**
 	 * Add Settings to array.
 	 *
-	 * @param HasSettingsInterface $service Service.
+	 * @param callable $method_call Service.
 	 */
-	public function add( HasSettingsInterface $service ): void {
-		$this->settings = array_merge( $this->settings, $service->get_settings() );
+	public function add( callable $method_call ): void {
+		// Call the get_settings() method on the referenced service.
+		$settings       = \call_user_func( $method_call );
+		$this->settings = array_merge( $this->settings, $settings );
 	}
 
 	/**

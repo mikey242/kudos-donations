@@ -17,12 +17,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * ServiceCompilerPass class
+ * SettingsCompilerPass class
  */
 class SettingsCompilerPass implements CompilerPassInterface {
 
 	/**
-	 * Add an instance of the LoggerInterface to the relevant services.
+	 * Add an instance of the HasSettingsInterface to the relevant services.
 	 *
 	 * @param ContainerBuilder $container Our container.
 	 */
@@ -32,7 +32,7 @@ class SettingsCompilerPass implements CompilerPassInterface {
 
 		foreach ( $definitions as $id => $definition ) {
 			// Call the add method with the SettingsHandler.
-			$handler->addMethodCall( 'add', [ new Reference( $id ) ] );
+			$handler->addMethodCall( 'add', [ [ new Reference( $id ), 'get_settings' ] ] );
 		}
 	}
 }
