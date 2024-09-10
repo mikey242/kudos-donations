@@ -41,10 +41,12 @@ const EmailTab = () => {
 			body: JSON.stringify({ email: address }),
 		})
 			.then((result) => {
-				void createSuccessNotice(result.data.message);
+				void createSuccessNotice(result.data.message, {
+					type: 'snackbar',
+				});
 			})
 			.catch((error) => {
-				void createErrorNotice(error.message);
+				void createErrorNotice(error.message, { type: 'snackbar' });
 			})
 			.finally(() => {
 				setIsEmailBusy(false);

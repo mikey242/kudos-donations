@@ -171,7 +171,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	/**
 	 * {@inheritDoc}
 	 */
-	public function refresh_api() {
+	public function refresh_api(): WP_REST_Response {
 
 		// Rebuild Mollie settings.
 		$payment_methods = array_map(function (Method $method) {
@@ -181,6 +181,17 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 				'maximumAmount' => (array)$method->maximumAmount,
 			];
 		}, (array)$this->get_payment_methods());
+
+		if(empty($payment_methods)) {
+			return new WP_REST_Response(
+				[
+					'success' => false,
+					'message' =>
+						__( 'No payment methods found. Please check your API keys', 'kudos-donations' ),
+				],
+				200
+			);
+		}
 
 		$recurring = $this->can_use_recurring();
 
@@ -194,6 +205,15 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 
 		// Update recurring status.
 		update_option(self::SETTING_RECURRING, $recurring);
+
+		return new WP_REST_Response(
+			[
+				'success' => true,
+				'message' =>
+					__( 'API connection refreshed', 'kudos-donations' ),
+			],
+			200
+		);
 	}
 
 	/**

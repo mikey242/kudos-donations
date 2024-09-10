@@ -16,9 +16,15 @@ import {
 import { RadioGroupControl, TextControl } from '../controls';
 
 const MollieTab = () => {
-	const { checkingApiKey, checkApiKey, updateSettings, settings } =
-		useSettingsContext();
-	const { createSuccessNotice } = useDispatch(noticesStore);
+	const {
+		checkingApiKey,
+		checkApiKey,
+		updateSettings,
+		settings,
+		isVendorReady,
+	} = useSettingsContext();
+	const { createSuccessNotice, createErrorNotice } =
+		useDispatch(noticesStore);
 	const apiKeyStatus = {
 		live: settings._kudos_vendor_mollie_api_key_live,
 		test: settings._kudos_vendor_mollie_api_key_test,
@@ -26,7 +32,13 @@ const MollieTab = () => {
 
 	const refresh = () => {
 		checkApiKey().then((response) => {
-			void createSuccessNotice(response?.message);
+			if (response.success) {
+				void createSuccessNotice(response?.message, {
+					type: 'snackbar',
+				});
+			} else {
+				void createErrorNotice(response?.message);
+			}
 		});
 	};
 
@@ -59,6 +71,7 @@ const MollieTab = () => {
 						type="button"
 						variant="secondary"
 						isBusy={checkingApiKey}
+						disabled={!isVendorReady}
 						icon="update"
 					>
 						{__('Refresh API', 'kudos-donations')}
