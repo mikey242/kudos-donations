@@ -2,7 +2,6 @@ import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { Fragment } from '@wordpress/element';
 import { useSettingsContext } from '../../contexts/SettingsContext';
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/16/solid';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import {
@@ -85,24 +84,7 @@ const MollieTab = () => {
 					</p>
 				</PanelBody>
 			</Panel>
-			<Panel
-				header={__('API Keys', 'kudos-donations')}
-				help={
-					<>
-						You can get your Mollie API keys{' '}
-						<a
-							target="_blank"
-							rel="noreferrer"
-							className="underline inline-flex items-center"
-							href="https://my.mollie.com/dashboard/developers/api-keys"
-						>
-							here{' '}
-							<ArrowTopRightOnSquareIcon className="w-5 h-5 ml-1" />
-						</a>
-						.
-					</>
-				}
-			>
+			<Panel header={__('API Keys', 'kudos-donations')}>
 				<PanelBody>
 					{['live', 'test'].map((mode, i) => {
 						const isDisabled = apiKeyStatus[mode];
