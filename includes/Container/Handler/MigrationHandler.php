@@ -97,10 +97,11 @@ class MigrationHandler extends AbstractRegistrable {
 				$this->logger->error( 'Migration failed.', [ 'migration' => $migration->get_version() ] );
 				return;
 			}
-			update_option(
-				SettingsService::SETTING_MIGRATION_HISTORY,
-				[ $instance->get_version() ]
-			);
+
+			// Update migration history.
+			$migration_history   = get_option( SettingsService::SETTING_MIGRATION_HISTORY, [] );
+			$migration_history[] = $instance->get_version();
+			update_option( SettingsService::SETTING_MIGRATION_HISTORY, $migration_history );
 		}
 		update_option( SettingsService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 	}
