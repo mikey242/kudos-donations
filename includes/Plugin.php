@@ -12,9 +12,7 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
-use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
-use IseardMedia\Kudos\Container\Handler\UpgradeHandler;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use function add_action;
@@ -25,28 +23,20 @@ class Plugin implements LoggerAwareInterface {
 	use LoggerAwareTrait;
 
 	private ActivationHandler $activation_handler;
-	private MigrationHandler $migration_handler;
 	private RegistrableHandler $registrable_handler;
-	private UpgradeHandler $upgrade_handler;
 
 	/**
 	 * Plugin constructor.
 	 *
 	 * @param RegistrableHandler $registrable_handler Service instantiator.
 	 * @param ActivationHandler  $activation_handler  Activation related functions.
-	 * @param UpgradeHandler     $upgrade_handler Handler for upgradeable services.
-	 * @param MigrationHandler   $migration_handler  Service for checking migrations.
 	 */
 	public function __construct(
 		RegistrableHandler $registrable_handler,
-		ActivationHandler $activation_handler,
-		UpgradeHandler $upgrade_handler,
-		MigrationHandler $migration_handler
+		ActivationHandler $activation_handler
 	) {
 		$this->registrable_handler = $registrable_handler;
 		$this->activation_handler  = $activation_handler;
-		$this->upgrade_handler     = $upgrade_handler;
-		$this->migration_handler   = $migration_handler;
 	}
 
 	/**
@@ -54,16 +44,7 @@ class Plugin implements LoggerAwareInterface {
 	 */
 	public function on_plugin_loaded(): void {
 		$this->setup_localization();
-		$this->process_handlers();
-	}
-
-	/**
-	 * Runs the handlers which effectively runs the plugin.
-	 */
-	private function process_handlers() {
 		$this->registrable_handler->process();
-		$this->upgrade_handler->process();
-		$this->migration_handler->check_database();
 	}
 
 	/**
