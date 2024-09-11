@@ -10,38 +10,35 @@ export const TextControl = ({
 	validation,
 	isDisabled,
 	isReadOnly,
-	label,
 	help,
-	addOn,
+	prefix,
 	type = 'text',
 	placeholder,
-	inlineButton,
 }) => {
-	const addonRef = useRef(null);
+	const prefixRef = useRef(null);
 	const [width, setWidth] = useState(0);
 	useEffect(() => {
-		if (addonRef.current) {
-			setWidth(addonRef.current?.offsetWidth);
+		if (prefixRef.current) {
+			setWidth(prefixRef.current?.offsetWidth);
 		}
-	}, [addOn]);
+	}, [prefix]);
 	return (
 		<Field
 			name={name}
 			type={type}
 			isDisabled={isDisabled}
 			help={help}
-			label={label}
 			validation={validation}
 			render={({ id, error, onChange, value }) => (
 				<>
 					<div className="relative flex flex-row rounded-md">
-						{addOn && (
+						{prefix && (
 							<div className="absolute inset-y-0 start-0 top-0 ps-3.5 flex items-center pointer-events-none">
 								<span
-									ref={addonRef}
+									ref={prefixRef}
 									className="text-gray-500 sm:text-sm"
 								>
-									{addOn}
+									{prefix}
 								</span>
 							</div>
 						)}
@@ -66,7 +63,7 @@ export const TextControl = ({
 									: 'border-gray-300 focus:ring-primary focus:border-primary'
 							)}
 							style={
-								addOn && {
+								prefix && {
 									paddingLeft: width + 18 + 'px',
 								}
 							}
@@ -74,11 +71,6 @@ export const TextControl = ({
 							aria-invalid={!!error}
 							aria-errormessage={error?.message}
 						/>
-						{inlineButton && (
-							<div className="ml-3 flex items-center">
-								{inlineButton}
-							</div>
-						)}
 					</div>
 				</>
 			)}

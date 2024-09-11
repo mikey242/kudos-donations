@@ -1,20 +1,12 @@
 import React from 'react';
 import { Field } from './Field';
 
-const CheckboxControl = ({
-	name,
-	validation,
-	label,
-	altLabel,
-	help,
-	isDisabled,
-}) => {
+const CheckboxControl = ({ name, validation, label, help, isDisabled }) => {
 	return (
 		<Field
 			name={name}
 			isDisabled={isDisabled}
 			help={help}
-			label={label}
 			validation={validation}
 			render={({ id, error, onChange, value }) => (
 				<div className="relative flex items-center">
@@ -22,7 +14,7 @@ const CheckboxControl = ({
 						<input
 							disabled={isDisabled}
 							id={id}
-							checked={value}
+							checked={value ?? false}
 							onChange={onChange}
 							name={name}
 							type="checkbox"
@@ -31,13 +23,13 @@ const CheckboxControl = ({
 							aria-errormessage={error?.message}
 						/>
 					</div>
-					{altLabel && (
+					{label && (
 						<div className="ml-3 text-sm">
 							<label
 								htmlFor={id}
 								className="font-medium text-gray-700"
 							>
-								{altLabel}
+								{label}
 							</label>
 						</div>
 					)}

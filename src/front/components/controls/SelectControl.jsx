@@ -4,21 +4,17 @@ import { clsx } from 'clsx';
 
 const SelectControl = ({
 	name,
-	label,
 	validation,
 	options,
 	placeholder,
 	isDisabled,
 	help,
-	hideLabel,
 }) => {
 	return (
 		<Field
 			name={name}
 			isDisabled={isDisabled}
-			hideLabel={hideLabel}
 			help={help}
-			label={label}
 			validation={validation}
 			render={({ id, error, onChange, value }) => (
 				<select

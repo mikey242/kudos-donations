@@ -5,20 +5,12 @@ import { Field } from './Field';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
 
-const ToggleControl = ({
-	name,
-	validation,
-	label,
-	altLabel,
-	help,
-	isDisabled,
-}) => {
+const ToggleControl = ({ name, validation, label, help, isDisabled }) => {
 	return (
 		<Field
 			name={name}
 			isDisabled={isDisabled}
 			help={help}
-			label={label}
 			render={({ id, error }) => (
 				<Controller
 					name={name}
@@ -54,7 +46,7 @@ const ToggleControl = ({
 							</Switch>
 							<Switch.Label className="ml-3 cursor-pointer">
 								<span className="text-sm font-bold text-gray-700">
-									{altLabel ??
+									{label ??
 										(value
 											? __('On', 'kudos-donations')
 											: __('Off', 'kudos-donations'))}

@@ -65,7 +65,7 @@ export default function SummaryTab({
 			{privacyLink && (
 				<CheckboxControl
 					name="privacy"
-					altLabel={createInterpolateElement(
+					label={createInterpolateElement(
 						__('Accept <a>Privacy Policy</a>', 'kudos-donations'),
 						{
 							a: (
@@ -90,7 +90,7 @@ export default function SummaryTab({
 			{termsLink && (
 				<CheckboxControl
 					name="terms"
-					altLabel={createInterpolateElement(
+					label={createInterpolateElement(
 						__(
 							'Accept <a>Terms and Conditions</a>',
 							'kudos-donations'

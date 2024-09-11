@@ -93,7 +93,7 @@ const InitialTab = ({
 			{(amountType === 'both' || amountType === 'open') && (
 				<TextControl
 					name="valueOpen"
-					addOn="€"
+					prefix={currencies[currency]}
 					type="number"
 					validation={{
 						max: {
@@ -164,7 +164,7 @@ const InitialTab = ({
 					<ToggleControl
 						isDisabled={!watchEmail}
 						name="recurring"
-						altLabel={__('Recurring donation', 'kudos-donations')}
+						label={__('Recurring donation', 'kudos-donations')}
 					/>
 				</div>
 			)}

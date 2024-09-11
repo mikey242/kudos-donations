@@ -3,22 +3,12 @@ import { RadioGroup } from '@headlessui/react';
 import { clsx } from 'clsx';
 import { Field } from './Field';
 
-const RadioGroupControl = ({
-	name,
-	options,
-	help,
-	label,
-	hideLabel,
-	isDisabled,
-	validation,
-}) => {
+const RadioGroupControl = ({ name, options, help, isDisabled, validation }) => {
 	return (
 		<Field
 			name={name}
 			isDisabled={isDisabled}
-			hideLabel={hideLabel}
 			help={help}
-			label={label}
 			validation={validation}
 			render={({ id, onChange, value }) => (
 				<RadioGroup

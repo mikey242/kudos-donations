@@ -92,7 +92,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					<TextControl
 						name="meta.minimum_donation"
 						isDisabled={watchAmountType === 'fixed'}
-						addOn="€"
+						prefix="€"
 						help={__(
 							'This is the minimum donation that will be accepted.',
 							'kudos-donations'

@@ -72,7 +72,7 @@ export const GeneralTab = ({ campaign }) => {
 					<TextControl
 						type="number"
 						name="meta.goal"
-						addOn={currencies[watchCurrency]}
+						prefix={currencies[watchCurrency]}
 						help={__(
 							'Set a goal for your campaign.',
 							'kudos-donations'
@@ -106,7 +106,7 @@ export const GeneralTab = ({ campaign }) => {
 					<TextControl
 						type="number"
 						name="meta.additional_funds"
-						addOn={currencies[watchCurrency]}
+						prefix={currencies[watchCurrency]}
 						help={__(
 							'Add external funds to the total.',
 							'kudos-donations'

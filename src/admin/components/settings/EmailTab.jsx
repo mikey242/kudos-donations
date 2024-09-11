@@ -69,7 +69,6 @@ const EmailTab = () => {
 					<TextControl
 						label={__('Send receipt copy to', 'kudos-donations')}
 						isDisabled={!watchSendReceipts}
-						addOn={'N'}
 						name="_kudos_email_bcc"
 						help={__(
 							'Add an email address here to send a copy of every donation receipt.',

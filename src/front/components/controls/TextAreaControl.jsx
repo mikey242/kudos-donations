@@ -6,8 +6,6 @@ const TextAreaControl = ({
 	name,
 	validation,
 	placeholder,
-	label,
-	hideLabel,
 	help,
 	isDisabled,
 }) => {
@@ -16,9 +14,7 @@ const TextAreaControl = ({
 			name={name}
 			isDisabled={isDisabled}
 			help={help}
-			label={label}
 			validation={validation}
-			hideLabel={hideLabel}
 			render={({ id, error, onChange, value }) => (
 				<div className="mt-1">
 					<textarea
