@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 export const FormTokenField = ({
 	name,
-	validation,
+	rules,
 	label,
 	help,
 	isDisabled,
@@ -18,7 +18,7 @@ export const FormTokenField = ({
 	return (
 		<BaseControl
 			name={name}
-			rules={validation}
+			rules={rules}
 			isDisabled={isDisabled}
 			help={help}
 			render={({ onChange, value, description }) => (

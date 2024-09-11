@@ -101,7 +101,7 @@ const EmailTab = () => {
 									'The email server.',
 									'kudos-donations'
 								)}
-								validation={{
+								rules={{
 									required: __(
 										'This field is required.',
 										'kudos-donations'
@@ -116,7 +116,7 @@ const EmailTab = () => {
 									'The email server port number.',
 									'kudos-donations'
 								)}
-								validation={{
+								rules={{
 									required: __(
 										'This field is required.',
 										'kudos-donations'
@@ -156,7 +156,7 @@ const EmailTab = () => {
 									'kudos-donations'
 								)}
 								placeholder="user@domain.com"
-								validation={{
+								rules={{
 									required: __(
 										'This field is required.',
 										'kudos-donations'
@@ -173,7 +173,7 @@ const EmailTab = () => {
 										'kudos-donations'
 									)}
 									type="password"
-									validation={{
+									rules={{
 										required: __(
 											'This field is required.',
 											'kudos-donations'
@@ -206,7 +206,7 @@ const EmailTab = () => {
 									'This email address will be used in the "From" field.',
 									'kudos-donations'
 								)}
-								validation={{
+								rules={{
 									required: __(
 										'This field is required.',
 										'kudos-donations'
@@ -217,7 +217,7 @@ const EmailTab = () => {
 							<TextControl
 								label={__('Email from name', 'kudos-donations')}
 								name="_kudos_custom_smtp.from_name"
-								validation={{
+								rules={{
 									required: __(
 										'This field is required.',
 										'kudos-donations'

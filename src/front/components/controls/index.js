@@ -6,3 +6,4 @@ export * from './RadioGroupControl';
 export * from './CheckboxControl';
 export * from './TextAreaControl';
 export * from './SelectControl';
+export * from './BaseController';

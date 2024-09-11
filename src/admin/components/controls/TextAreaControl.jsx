@@ -4,20 +4,20 @@ import { BaseControl } from './BaseControl';
 
 const TextAreaControl = forwardRef(
 	(
-		{ name, validation, label, help, isDisabled, id, hideLabelFromVision },
+		{ name, rules, label, help, isDisabled, id, hideLabelFromVision },
 		ref
 	) => {
 		return (
 			<BaseControl
 				name={name}
-				rules={validation}
+				rules={rules}
 				isDisabled={isDisabled}
 				help={help}
 				render={({ onChange, value, description }) => (
 					<WPTextAreaControl
 						id={id}
 						label={label}
-						value={value}
+						value={value ?? ''}
 						onChange={onChange}
 						help={description}
 						hideLabelFromVision={hideLabelFromVision}

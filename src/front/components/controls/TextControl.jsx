@@ -1,13 +1,12 @@
 import React from 'react';
 import { clsx } from 'clsx';
-import { Field } from './Field';
-import { useFormContext } from 'react-hook-form';
+import { BaseController } from './BaseController';
 import { useEffect, useRef, useState } from '@wordpress/element';
-import { get, uniqueId } from 'lodash';
+import { Input } from '@headlessui/react';
 
 export const TextControl = ({
 	name,
-	validation,
+	rules,
 	isDisabled,
 	isReadOnly,
 	help,
@@ -23,13 +22,13 @@ export const TextControl = ({
 		}
 	}, [prefix]);
 	return (
-		<Field
+		<BaseController
 			name={name}
 			type={type}
 			isDisabled={isDisabled}
 			help={help}
-			validation={validation}
-			render={({ id, error, onChange, value }) => (
+			rules={rules}
+			render={({ error, field: { value, onChange } }) => (
 				<>
 					<div className="relative flex flex-row rounded-md">
 						{prefix && (
@@ -42,21 +41,20 @@ export const TextControl = ({
 								</span>
 							</div>
 						)}
-						<input
+						<Input
+							value={value ?? ''}
+							onChange={onChange}
 							readOnly={isReadOnly}
 							disabled={isDisabled}
 							type={type}
-							id={id}
 							name={name}
-							onChange={onChange}
-							value={value ?? ''}
 							className={clsx(
 								// General
-								'form-input transition ease-in-out block w-full pr-10 focus:outline-none sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
+								'form-input transition ease-in-out block w-full pr-10 sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
+								// Focus
+								'focus:outline-none',
 								// Disabled
 								'disabled:cursor-not-allowed disabled:bg-slate-100',
-								// Read only
-								'read-only:bg-slate-50',
 								// Invalid
 								error?.message
 									? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
@@ -75,49 +73,5 @@ export const TextControl = ({
 				</>
 			)}
 		/>
-	);
-};
-
-export const InlineTextEdit = ({
-	name,
-	isDisabled,
-	className,
-	type = 'text',
-	placeholder,
-}) => {
-	const {
-		formState: { errors },
-	} = useFormContext();
-	const [id] = useState(uniqueId(name + '-'));
-	const error = get(errors, name);
-
-	return (
-		<>
-			<input
-				type={type}
-				id={id}
-				disabled={isDisabled}
-				className={clsx(
-					error?.message
-						? 'border-red-300 text-red-900 placeholder-red-300'
-						: 'border-0 focus:ring-primary focus:border-primary',
-					'disabled:cursor-not-allowed disabled:opacity-50 hover:bg-zinc-50 hover:shadow-inner focus:text-gray-900 bg-transparent form-input transition ease-in-out inline focus:outline-none text-sm rounded-md',
-					className
-				)}
-				placeholder={placeholder}
-				aria-invalid={!!error}
-				aria-errormessage={error?.message}
-				onBlur={(e) => e.target.form.requestSubmit()}
-			/>
-
-			{error?.message && (
-				<p
-					className="mt-2 text-left text-sm text-red-600"
-					id={`${id}-error`}
-				>
-					{error?.message}
-				</p>
-			)}
-		</>
 	);
 };

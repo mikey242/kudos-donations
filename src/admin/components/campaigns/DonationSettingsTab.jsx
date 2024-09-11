@@ -66,7 +66,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 						name="meta.fixed_amounts"
 						isDisabled={watchAmountType === 'open'}
 						maxLength={5}
-						validation={{
+						rules={{
 							validate: (value) => {
 								return (
 									value.every((item) =>
@@ -97,7 +97,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 							'This is the minimum donation that will be accepted.',
 							'kudos-donations'
 						)}
-						validation={{
+						rules={{
 							required: __(
 								'Minimum donation required',
 								'kudos-donations'

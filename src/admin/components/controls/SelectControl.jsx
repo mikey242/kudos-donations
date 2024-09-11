@@ -6,9 +6,9 @@ import {
 } from '@wordpress/components';
 import { BaseControl } from './BaseControl';
 
-const SelectControl = ({
+export const SelectControl = ({
 	name,
-	validation,
+	rules,
 	label,
 	help,
 	isDisabled,
@@ -18,7 +18,7 @@ const SelectControl = ({
 	return (
 		<BaseControl
 			name={name}
-			rules={validation}
+			rules={rules}
 			isDisabled={isDisabled}
 			help={help}
 			render={({ onChange, value, description }) => (
@@ -43,5 +43,3 @@ const SelectControl = ({
 		/>
 	);
 };
-
-export { SelectControl };

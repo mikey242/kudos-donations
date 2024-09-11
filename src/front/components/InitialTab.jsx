@@ -79,6 +79,10 @@ const InitialTab = ({
 				fixedAmounts?.length && (
 					<RadioGroupControl
 						name="valueFixed"
+						ariaLabel={__(
+							'Fixed donation amount',
+							'kudos-donations'
+						)}
 						options={fixedAmounts.map((value) => {
 							return {
 								value,
@@ -93,9 +97,10 @@ const InitialTab = ({
 			{(amountType === 'both' || amountType === 'open') && (
 				<TextControl
 					name="valueOpen"
+					ariaLabel={__('Open donation amount', 'kudos-donations')}
 					prefix={currencies[currency]}
 					type="number"
-					validation={{
+					rules={{
 						max: {
 							value: maxDonation,
 							message: sprintf(
@@ -116,7 +121,7 @@ const InitialTab = ({
 			<TextControl
 				type="hidden"
 				name="value"
-				validation={{
+				rules={{
 					required: valueError,
 					min: {
 						value: minimumDonation,
@@ -134,7 +139,7 @@ const InitialTab = ({
 
 			<TextControl
 				name="name"
-				validation={
+				rules={
 					!anonymous && {
 						required: __(
 							'Your name is required',
@@ -148,7 +153,7 @@ const InitialTab = ({
 			<TextControl
 				name="email"
 				type="email"
-				validation={
+				rules={
 					!anonymous && {
 						required: __(
 							'Your email is required',

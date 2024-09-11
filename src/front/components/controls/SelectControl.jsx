@@ -1,24 +1,24 @@
 import React from 'react';
-import { Field } from './Field';
+import { BaseController } from './BaseController';
 import { clsx } from 'clsx';
+import { Select } from '@headlessui/react';
 
-const SelectControl = ({
+export const SelectControl = ({
 	name,
-	validation,
+	rules,
 	options,
 	placeholder,
 	isDisabled,
 	help,
 }) => {
 	return (
-		<Field
+		<BaseController
 			name={name}
 			isDisabled={isDisabled}
 			help={help}
-			validation={validation}
-			render={({ id, error, onChange, value }) => (
-				<select
-					id={id}
+			rules={rules}
+			render={({ error, field: { onChange, value } }) => (
+				<Select
 					disabled={isDisabled}
 					value={value ?? ''}
 					onChange={onChange}
@@ -41,10 +41,8 @@ const SelectControl = ({
 							{entry.label}
 						</option>
 					))}
-				</select>
+				</Select>
 			)}
 		/>
 	);
 };
-
-export { SelectControl };

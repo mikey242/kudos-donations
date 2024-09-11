@@ -125,7 +125,7 @@ const ButtonEdit = (props) => {
 						</PanelBody>
 
 						<PanelBody
-							title={__('Options', 'kudos-donations')}
+							title={__('Format', 'kudos-donations')}
 							initialOpen={false}
 						>
 							<RadioControl

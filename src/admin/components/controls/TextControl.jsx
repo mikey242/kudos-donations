@@ -11,7 +11,7 @@ import { BaseControl } from './BaseControl';
 
 export const TextControl = ({
 	name,
-	validation,
+	rules,
 	isDisabled,
 	label,
 	help,
@@ -23,7 +23,7 @@ export const TextControl = ({
 	return (
 		<BaseControl
 			name={name}
-			rules={validation}
+			rules={rules}
 			isDisabled={isDisabled}
 			help={help}
 			render={({ onChange, value, description }) => (

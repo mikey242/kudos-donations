@@ -19,7 +19,7 @@
 		"email": "michael@iseard.media"
 	},
 	"dependencies": {
-		"@headlessui/react": "1.7.19",
+		"@headlessui/react": "2.1.6",
 		"@heroicons/react": "^2.1.5",
 		"@wordpress/core-data": "^7.6.0",
 		"@wordpress/data": "^10.7.0",

@@ -96,7 +96,7 @@ const MollieTab = () => {
 									name={`_kudos_vendor_mollie_api_key_${mode}`}
 									prefix={<Icon icon="shield" />}
 									type={isDisabled ? 'password' : 'text'}
-									validation={{
+									rules={{
 										validate: (value) =>
 											!value ||
 											value.startsWith(mode) ||

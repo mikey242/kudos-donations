@@ -9,14 +9,14 @@ const RadioGroupControl = ({
 	help,
 	label,
 	isDisabled,
-	validation,
+	rules,
 }) => {
 	const id = _.uniqueId('kudos');
 
 	return (
 		<Controller
 			name={name}
-			rules={isDisabled ? {} : validation}
+			rules={isDisabled ? {} : rules}
 			disabled={isDisabled}
 			render={({ field: { onChange, value } }) => (
 				<BaseControl

@@ -1,8 +1,8 @@
 import React from 'react';
-import { RadioControl as WPRadioControl } from '@wordpress/components';
+import { CheckboxControl as WPCheckboxControl } from '@wordpress/components';
 import { BaseControl } from './BaseControl';
 
-export const RadioControl = ({
+export const CheckboxControl = ({
 	name,
 	options,
 	label,
@@ -17,11 +17,11 @@ export const RadioControl = ({
 			isDisabled={isDisabled}
 			help={help}
 			render={({ onChange, value, description }) => (
-				<WPRadioControl
+				<WPCheckboxControl
 					label={label}
 					onChange={onChange}
 					options={options}
-					selected={value}
+					checked={value}
 					help={description}
 				/>
 			)}

@@ -1,28 +1,27 @@
 import React from 'react';
-import { Field } from './Field';
+import { BaseController } from './BaseController';
 import { clsx } from 'clsx';
+import { Textarea } from '@headlessui/react';
 
-const TextAreaControl = ({
+export const TextAreaControl = ({
 	name,
-	validation,
+	rules,
 	placeholder,
 	help,
 	isDisabled,
 }) => {
 	return (
-		<Field
+		<BaseController
 			name={name}
 			isDisabled={isDisabled}
 			help={help}
-			validation={validation}
-			render={({ id, error, onChange, value }) => (
+			rules={rules}
+			render={({ error, field }) => (
 				<div className="mt-1">
-					<textarea
-						value={value ?? ''}
-						onChange={onChange}
+					<Textarea
+						{...field}
 						disabled={isDisabled}
 						rows={4}
-						id={id}
 						name={name}
 						placeholder={placeholder}
 						className={clsx(
@@ -41,5 +40,3 @@ const TextAreaControl = ({
 		/>
 	);
 };
-
-export { TextAreaControl };

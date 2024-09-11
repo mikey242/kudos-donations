@@ -23,7 +23,7 @@ function AddressTab(props) {
 			/>
 			<TextControl
 				name="street"
-				validation={{
+				rules={{
 					required: {
 						value: required,
 						message: __('Street required', 'kudos-donations'),
@@ -33,7 +33,7 @@ function AddressTab(props) {
 			/>
 			<TextControl
 				name="postcode"
-				validation={{
+				rules={{
 					required: {
 						value: required,
 						message: __('Postcode required', 'kudos-donations'),
@@ -43,7 +43,7 @@ function AddressTab(props) {
 			/>
 			<TextControl
 				name="city"
-				validation={{
+				rules={{
 					required: {
 						value: required,
 						message: __('City required', 'kudos-donations'),
@@ -55,7 +55,7 @@ function AddressTab(props) {
 				name="country"
 				placeholder={__('Country', 'kudos-donations')}
 				options={countryOptions}
-				validation={{
+				rules={{
 					required: {
 						value: required,
 						message: __('Country required', 'kudos-donations'),

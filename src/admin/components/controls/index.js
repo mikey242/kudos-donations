@@ -6,3 +6,4 @@ export * from './TextAreaControl';
 export * from './ColorPicker';
 export * from './SelectControl';
 export * from './FormTokenField';
+export * from './CheckboxControl';

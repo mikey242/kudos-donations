@@ -1,7 +1,6 @@
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { CheckboxControl } from '../../../front/components/controls';
-import { TextControl, ToggleControl } from '../controls';
+import { TextControl, ToggleControl, CheckboxControl } from '../controls';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 import { Panel, PanelBody } from '@wordpress/components';
@@ -36,8 +35,7 @@ export const OptionalFieldsTab = () => {
 							'Make the address required.',
 							'kudos-donations'
 						)}
-						label={' '}
-						altLabel={__('Required', 'kudos-donations')}
+						label={__('Required', 'kudos-donations')}
 					/>
 					<ToggleControl
 						name="meta.message_enabled"

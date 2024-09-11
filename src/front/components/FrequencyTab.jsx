@@ -26,7 +26,7 @@ function FrequencyTab(props) {
 		<BaseTab title={title} description={description} buttons={buttons}>
 			<SelectControl
 				name="recurring_frequency"
-				validation={{
+				rules={{
 					required: __(
 						'Please select a payment frequency',
 						'kudos-donations'
@@ -51,7 +51,7 @@ function FrequencyTab(props) {
 
 			<SelectControl
 				name="recurring_length"
-				validation={{
+				rules={{
 					required: __(
 						'Please select a payment duration',
 						'kudos-donations'

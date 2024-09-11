@@ -1,19 +1,19 @@
 import React from 'react';
-import { Field } from './Field';
+import { BaseController } from './BaseController';
 
-const CheckboxControl = ({ name, validation, label, help, isDisabled }) => {
+export const CheckboxControl = ({ name, rules, label, help, isDisabled }) => {
 	return (
-		<Field
+		<BaseController
 			name={name}
 			isDisabled={isDisabled}
 			help={help}
-			validation={validation}
-			render={({ id, error, onChange, value }) => (
-				<div className="relative flex items-center">
+			rules={rules}
+			render={({ error, field: { onChange, value } }) => (
+				// eslint-disable-next-line jsx-a11y/label-has-associated-control
+				<label className="relative flex items-center">
 					<div className="flex items-center h-5">
 						<input
 							disabled={isDisabled}
-							id={id}
 							checked={value ?? false}
 							onChange={onChange}
 							name={name}
@@ -25,18 +25,13 @@ const CheckboxControl = ({ name, validation, label, help, isDisabled }) => {
 					</div>
 					{label && (
 						<div className="ml-3 text-sm">
-							<label
-								htmlFor={id}
-								className="font-medium text-gray-700"
-							>
+							<span className="font-medium text-gray-700">
 								{label}
-							</label>
+							</span>
 						</div>
 					)}
-				</div>
+				</label>
 			)}
 		/>
 	);
 };
-
-export { CheckboxControl };

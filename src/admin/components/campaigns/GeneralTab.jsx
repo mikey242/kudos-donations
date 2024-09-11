@@ -43,7 +43,7 @@ export const GeneralTab = ({ campaign }) => {
 							'Give your campaign a unique name.',
 							'kudos-donations'
 						)}
-						validation={{
+						rules={{
 							required: __('Name required', 'kudos-donations'),
 						}}
 					/>
@@ -55,7 +55,7 @@ export const GeneralTab = ({ campaign }) => {
 						help={__(
 							'Select the desired currency for this campaign. Cannot be changed once you have received a donation.'
 						)}
-						validation={{
+						rules={{
 							required: __(
 								'Please select a currency',
 								'kudos-donations'
@@ -78,7 +78,7 @@ export const GeneralTab = ({ campaign }) => {
 							'kudos-donations'
 						)}
 						label={__('Goal', 'kudos-donations')}
-						validation={{
+						rules={{
 							min: {
 								value: 1,
 								message: __(
@@ -112,7 +112,7 @@ export const GeneralTab = ({ campaign }) => {
 							'kudos-donations'
 						)}
 						label={__('Additional funds', 'kudos-donations')}
-						validation={{
+						rules={{
 							min: {
 								value: 1,
 								message: __(
@@ -145,7 +145,7 @@ export const GeneralTab = ({ campaign }) => {
 					<TextControl
 						name="meta.return_message_title"
 						isDisabled={!watchUseReturnMessage}
-						validation={{
+						rules={{
 							required: __(
 								'Title is required',
 								'kudos-donations'
@@ -155,7 +155,7 @@ export const GeneralTab = ({ campaign }) => {
 					/>
 					<TextAreaControl
 						name="meta.return_message_text"
-						validation={{
+						rules={{
 							required: __('Message required', 'kudos-donations'),
 						}}
 						isDisabled={!watchUseReturnMessage}
@@ -173,7 +173,7 @@ export const GeneralTab = ({ campaign }) => {
 						name="meta.custom_return_url"
 						isDisabled={!watchUseReturnURL}
 						label={__('URL', 'kudos-donations')}
-						validation={{
+						rules={{
 							required: __('URL required', 'kudos-donations'),
 							validate: (value) => {
 								return (

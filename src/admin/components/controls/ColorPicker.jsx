@@ -3,7 +3,7 @@ import { BaseControl, ColorPalette } from '@wordpress/components';
 import { Controller } from 'react-hook-form';
 import _ from 'lodash';
 
-const ColorPicker = ({ name, label, help, validation, isDisabled }) => {
+export const ColorPicker = ({ name, label, help, rules, isDisabled }) => {
 	const colors = [
 		{ name: 'Orange', color: '#ff9f1c' },
 		{ name: 'Pink', color: '#ec4899' },
@@ -17,7 +17,7 @@ const ColorPicker = ({ name, label, help, validation, isDisabled }) => {
 	return (
 		<Controller
 			name={name}
-			rules={isDisabled ? {} : validation}
+			rules={isDisabled ? {} : rules}
 			disabled={isDisabled}
 			render={({ field: { onChange, value } }) => (
 				<BaseControl id={id} label={label} help={help}>
@@ -31,5 +31,3 @@ const ColorPicker = ({ name, label, help, validation, isDisabled }) => {
 		/>
 	);
 };
-
-export { ColorPicker };

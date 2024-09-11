@@ -79,7 +79,7 @@ export default function SummaryTab({
 							),
 						}
 					)}
-					validation={{
+					rules={{
 						required: __(
 							'Please accept this to continue',
 							'kudos-donations'
@@ -107,7 +107,7 @@ export default function SummaryTab({
 							),
 						}
 					)}
-					validation={{
+					rules={{
 						required: __(
 							'Please accept this to continue',
 							'kudos-donations'

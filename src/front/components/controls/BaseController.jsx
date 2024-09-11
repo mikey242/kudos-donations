@@ -1,48 +1,43 @@
 import React from 'react';
 import { clsx } from 'clsx';
-import { get, uniqueId } from 'lodash';
+import { get } from 'lodash';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useState } from '@wordpress/element';
 
-export const Field = ({
+export const BaseController = ({
 	children,
 	isDisabled,
 	type,
 	help,
 	name,
 	render,
-	validation,
+	rules,
 }) => {
 	const {
 		formState: { errors },
+		control,
 	} = useFormContext();
-	const [id] = useState(uniqueId(name + '-'));
 
 	const error = get(errors, name);
 
 	return (
 		<div className="first:mt-0 mt-3">
-			<div className={clsx('hidden' === type && 'hidden')}>
-				<div
-					className={clsx(
-						'md:col-span-4',
-						isDisabled && 'opacity-50'
+			<div
+				className={clsx(
+					'form-element',
+					'hidden' === type && 'hidden',
+					isDisabled && 'opacity-50'
+				)}
+			>
+				{/* React-Hook-Form's controller for registering with form. */}
+				<Controller
+					control={control}
+					name={name}
+					rules={isDisabled ? {} : rules}
+					disabled={isDisabled}
+					render={({ field }) => (
+						<>{render ? render({ error, field }) : children}</>
 					)}
-				>
-					{/* React-Hook-Form's controller for registering with form. */}
-					<Controller
-						name={name}
-						rules={isDisabled ? {} : validation}
-						disabled={isDisabled}
-						render={({ field: { onChange, value } }) => (
-							<>
-								{render
-									? render({ id, error, onChange, value })
-									: children}
-							</>
-						)}
-					/>
-				</div>
+				/>
 			</div>
 			{/* Errors need to be shown outside hidden element. */}
 			{error ? <Error error={error} /> : <Help>{help}</Help>}
@@ -50,7 +45,7 @@ export const Field = ({
 	);
 };
 
-export const Help = ({ children }) => {
+const Help = ({ children }) => {
 	return (
 		<>
 			{children && (
