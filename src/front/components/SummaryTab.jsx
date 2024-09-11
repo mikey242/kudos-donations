@@ -3,6 +3,7 @@ import React from 'react';
 import BaseTab from './BaseTab';
 import { useFormContext } from 'react-hook-form';
 import { CheckboxControl } from './controls';
+import { createInterpolateElement } from '@wordpress/element';
 
 export default function SummaryTab({
 	title,
@@ -64,7 +65,20 @@ export default function SummaryTab({
 			{privacyLink && (
 				<CheckboxControl
 					name="privacy"
-					altLabel={__('Accept privacy policy', 'kudos-donations')}
+					altLabel={createInterpolateElement(
+						__('Accept <a>Privacy Policy</a>', 'kudos-donations'),
+						{
+							a: (
+								// eslint-disable-next-line jsx-a11y/anchor-has-content
+								<a
+									target="_blank"
+									className="underline"
+									href={privacyLink}
+									rel="noreferrer"
+								></a>
+							),
+						}
+					)}
 					validation={{
 						required: __(
 							'Please accept this to continue',
@@ -76,9 +90,22 @@ export default function SummaryTab({
 			{termsLink && (
 				<CheckboxControl
 					name="terms"
-					altLabel={__(
-						'Accept Terms and Conditions',
-						'kudos-donations'
+					altLabel={createInterpolateElement(
+						__(
+							'Accept <a>Terms and Conditions</a>',
+							'kudos-donations'
+						),
+						{
+							a: (
+								// eslint-disable-next-line jsx-a11y/anchor-has-content
+								<a
+									target="_blank"
+									className="underline"
+									href={termsLink}
+									rel="noreferrer"
+								></a>
+							),
+						}
 					)}
 					validation={{
 						required: __(
