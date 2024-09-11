@@ -65,7 +65,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_menu_slug(): string {
+	public static function get_menu_slug(): string {
 		return 'kudos-debug';
 	}
 

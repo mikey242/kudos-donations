@@ -31,7 +31,7 @@ interface AdminPageInterface {
 	/**
 	 * Get the menu slug for this page.
 	 */
-	public function get_menu_slug(): string;
+	public static function get_menu_slug(): string;
 
 	/**
 	 * Returns the slug for the parent page.

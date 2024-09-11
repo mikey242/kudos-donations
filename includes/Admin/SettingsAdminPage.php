@@ -32,7 +32,7 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_menu_slug(): string {
+	public static function get_menu_slug(): string {
 		return 'kudos-settings';
 	}
 

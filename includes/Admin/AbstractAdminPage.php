@@ -30,7 +30,7 @@ abstract class AbstractAdminPage implements AdminPageInterface, Registrable, Del
 			$this->get_page_title(),
 			$this->get_menu_title(),
 			$this->get_capability(),
-			$this->get_menu_slug(),
+			$this::get_menu_slug(),
 			$this instanceof HasCallbackInterface ? [ $this, 'callback' ] : '',
 			$this->get_position(),
 		);

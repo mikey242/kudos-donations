@@ -32,7 +32,7 @@ class SubscriptionsAdminPage extends AbstractAdminPage {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_menu_slug(): string {
+	public static function get_menu_slug(): string {
 		return 'edit.php?post_type=' . SubscriptionPostType::get_slug();
 	}
 
