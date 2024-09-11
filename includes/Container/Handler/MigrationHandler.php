@@ -11,6 +11,7 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Container\Handler;
 
+use IseardMedia\Kudos\Admin\CampaignAdminPage;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
@@ -48,6 +49,7 @@ class MigrationHandler extends AbstractRegistrable {
 	 */
 	public function register(): void {
 		$this->process_form_data();
+		$this->check_database();
 	}
 
 	/**
@@ -104,6 +106,9 @@ class MigrationHandler extends AbstractRegistrable {
 			update_option( SettingsService::SETTING_MIGRATION_HISTORY, $migration_history );
 		}
 		update_option( SettingsService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
+		// Redirect to prevent the migration notice from appearing again.
+		wp_safe_redirect( admin_url( 'admin.php?page=' . CampaignAdminPage::get_menu_slug() ) );
+		exit;
 	}
 
 	/**
