@@ -6,12 +6,13 @@ import { store as noticesStore } from '@wordpress/notices';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalDivider as Divider,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalInputControl as InputControl,
 	BaseControl,
 	Button,
 	ButtonGroup,
 	Icon,
 	Modal,
-	TextControl,
 } from '@wordpress/components';
 import { useCopyToClipboard } from '@wordpress/compose';
 
@@ -75,8 +76,9 @@ function GenerateShortcode({ campaign }) {
 							</ButtonGroup>
 						</div>
 					</BaseControl>
-					<TextControl
+					<InputControl
 						name="label"
+						disabled={type === 'form'}
 						label={__('Button label', 'kudos-donations')}
 						help={__('Add a button label', 'kudos-donations')}
 						onChange={setLabel}
