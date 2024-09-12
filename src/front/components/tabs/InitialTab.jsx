@@ -11,6 +11,7 @@ export const InitialTab = ({
 	description,
 	buttons,
 	minimumDonation = 1,
+	maximumDonation,
 	donationType,
 	amountType,
 	fixedAmounts,
@@ -20,7 +21,7 @@ export const InitialTab = ({
 	anonymous,
 	currency,
 }) => {
-	const { currencies, maxDonation } = window.kudos;
+	const currencySymbol = window?.kudos.currencies[currency];
 	const { setValue } = useFormContext();
 	const watchFixed = useWatch({ name: 'valueFixed' });
 	const watchOpen = useWatch({ name: 'valueOpen' });
@@ -71,7 +72,7 @@ export const InitialTab = ({
 						goal={goal}
 						total={total}
 						extra={watchValue}
-						currency={currencies[currency]}
+						currency={currencySymbol}
 					/>
 				</div>
 			)}
@@ -86,9 +87,7 @@ export const InitialTab = ({
 						options={fixedAmounts.map((value) => {
 							return {
 								value,
-								label:
-									(currencies[currency] ?? '') +
-									value?.trim(),
+								label: (currencySymbol ?? '') + value?.trim(),
 							};
 						})}
 					/>
@@ -98,18 +97,8 @@ export const InitialTab = ({
 				<TextControl
 					name="valueOpen"
 					ariaLabel={__('Open donation amount', 'kudos-donations')}
-					prefix={currencies[currency]}
+					prefix={currencySymbol}
 					type="number"
-					rules={{
-						max: {
-							value: maxDonation,
-							message: sprintf(
-								// translators: %s is the maximum donation value
-								__('Maximum donation is %s', 'kudos-donations'),
-								maxDonation
-							),
-						},
-					}}
 					placeholder={`${
 						amountType === 'both'
 							? __('Other amount', 'kudos-donations')
@@ -128,10 +117,15 @@ export const InitialTab = ({
 						message: valueError,
 					},
 					max: {
-						value: 5000,
-						message: __(
-							'Maximum donation is 5000 euros',
-							'kudos-donations'
+						value: maximumDonation,
+						message: sprintf(
+							// translators: %1$s is the currency and %2$s is the maximum donation value
+							__(
+								'Maximum donation is %1$s%2$s',
+								'kudos-donations'
+							),
+							currencySymbol,
+							maximumDonation
 						),
 					},
 				}}

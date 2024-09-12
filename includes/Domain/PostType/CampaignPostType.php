@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
+use IseardMedia\Kudos\Service\SettingsService;
 
 class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface {
 
@@ -58,7 +59,8 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	/**
 	 * Rest field constants.
 	 */
-	public const REST_FIELD_TOTAL = 'total';
+	public const REST_FIELD_TOTAL                    = 'total';
+	public const REST_FIELD_SETTING_MAXIMUM_DONATION = 'maximum_donation';
 
 	/**
 	 * {@inheritDoc}
@@ -259,11 +261,16 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 */
 	public function get_rest_fields(): array {
 		return [
-			self::REST_FIELD_TOTAL => [
+			self::REST_FIELD_TOTAL                    => [
 				'get_callback' => function ( $item ) {
 
 					$campaign_id = $item['id'];
 					return $this->get_total( $campaign_id );
+				},
+			],
+			self::REST_FIELD_SETTING_MAXIMUM_DONATION => [
+				'get_callback' => function () {
+					return get_option( SettingsService::SETTING_MAXIMUM_DONATION );
 				},
 			],
 		];

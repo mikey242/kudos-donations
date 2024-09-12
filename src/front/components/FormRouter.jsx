@@ -161,6 +161,7 @@ export const FormRouter = ({
 									minimumDonation={
 										campaign.meta.minimum_donation
 									}
+									maximumDonation={campaign.maximum_donation}
 									donationType={campaign.meta.donation_type}
 									amountType={campaign.meta.amount_type}
 									fixedAmounts={campaign.meta.fixed_amounts}
