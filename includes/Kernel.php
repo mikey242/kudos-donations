@@ -141,7 +141,7 @@ class Kernel {
 	 * @return bool True if in production, false otherwise.
 	 */
 	private function is_production(): bool {
-		return 'production' === ( $_ENV['APP_ENV'] ?? 'development' );
+		return ! KUDOS_ENV_IS_DEVELOPMENT;
 	}
 
 	/**

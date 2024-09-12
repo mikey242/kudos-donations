@@ -40,7 +40,7 @@ return static function ( ContainerConfigurator $container ) {
 			[
 				KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '.log',
 				5,
-				( 'development' === $_ENV['APP_ENV'] || KUDOS_DEBUG ) ? Logger::DEBUG : Logger::INFO,
+				( KUDOS_ENV_IS_DEVELOPMENT || KUDOS_DEBUG ) ? Logger::DEBUG : Logger::INFO,
 				true,
 				null,
 				false,

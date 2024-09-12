@@ -67,8 +67,11 @@ if ( empty( $_ENV['APP_ENV'] ) ) {
 	$_ENV['APP_ENV'] = 'production';
 }
 
+// Define constant for easily accessing environment.
+\define( 'KUDOS_ENV_IS_DEVELOPMENT', 'development' === $_ENV['APP_ENV'] );
+
 // Set Whoops as error handler if in development.
-if ( 'production' !== $_ENV['APP_ENV'] && class_exists( '\Whoops\Run' ) ) {
+if ( KUDOS_ENV_IS_DEVELOPMENT && class_exists( '\Whoops\Run' ) ) {
 	$whoops = new \Whoops\Run();
 	$whoops->pushHandler( new \Whoops\Handler\PrettyPageHandler() );
 	$whoops->register();
