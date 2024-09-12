@@ -27,7 +27,11 @@ export const SelectControl = ({
 						// General
 						'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md',
 						// Disabled
-						'disabled:cursor-not-allowed disabled:bg-slate-100'
+						'disabled:cursor-not-allowed disabled:bg-slate-100',
+						// Invalid
+						error?.message
+							? 'border-red-600 text-red-900 focus:ring-red-500 focus:border-red-500'
+							: 'border-gray-300 focus:ring-primary focus:border-primary'
 					)}
 					aria-invalid={!!error}
 					aria-errormessage={error?.message}
