@@ -3,7 +3,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
-import { TextAreaControl } from './controls';
+import { TextAreaControl } from '../controls';
 
 const MessageTab = ({ title, description, buttons }) => {
 	const { setFocus } = useFormContext();

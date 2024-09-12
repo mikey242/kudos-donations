@@ -6,7 +6,7 @@ import {
 	TextAreaControl,
 	TextControl,
 	ToggleControl,
-} from '../controls';
+} from '../../controls';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 import { Panel, PanelBody } from '@wordpress/components';

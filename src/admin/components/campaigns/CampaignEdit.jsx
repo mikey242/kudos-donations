@@ -3,11 +3,13 @@ import { Fragment, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AdminTabPanel } from '../AdminTabPanel';
-import { GeneralTab } from './GeneralTab';
-import { TextFieldsTab } from './TextFieldsTab';
-import { DonationSettingsTab } from './DonationSettingsTab';
-import { OptionalFieldsTab } from './OptionalFieldsTab';
-import { CustomCSSTab } from './CustomCSSTab';
+import {
+	GeneralTab,
+	TextFieldsTab,
+	DonationSettingsTab,
+	OptionalFieldsTab,
+	CustomCSSTab,
+} from './tabs';
 import { store as noticesStore } from '@wordpress/notices';
 
 import {

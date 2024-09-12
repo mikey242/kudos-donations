@@ -1,12 +1,14 @@
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import InitialTab from './InitialTab';
-import FrequencyTab from './FrequencyTab';
-import AddressTab from './AddressTab';
+import {
+	InitialTab,
+	FrequencyTab,
+	AddressTab,
+	MessageTab,
+	SummaryTab,
+} from './tabs';
 import { Button } from './controls';
-import MessageTab from './MessageTab';
-import SummaryTab from './SummaryTab';
 import { useLayoutEffect, useRef, useState } from '@wordpress/element';
 import { clsx } from 'clsx';
 import {

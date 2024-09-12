@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import BaseTab from './BaseTab';
 import { useFormContext } from 'react-hook-form';
-import { CheckboxControl } from './controls';
+import { CheckboxControl } from '../controls';
 import { createInterpolateElement } from '@wordpress/element';
 
 export default function SummaryTab({

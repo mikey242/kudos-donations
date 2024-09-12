@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { TextAreaControl } from '../controls';
+import { TextAreaControl } from '../../controls';
 import React from 'react';
 import { Panel, PanelBody } from '@wordpress/components';
 import { useEffect, useRef } from '@wordpress/element';
