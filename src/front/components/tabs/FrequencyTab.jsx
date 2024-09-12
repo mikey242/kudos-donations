@@ -5,7 +5,7 @@ import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import { SelectControl } from '../controls';
 
-function FrequencyTab(props) {
+export const FrequencyTab = (props) => {
 	const { title, description, buttons } = props;
 
 	const { setFocus, getValues } = useFormContext();
@@ -82,6 +82,4 @@ function FrequencyTab(props) {
 			/>
 		</BaseTab>
 	);
-}
-
-export default FrequencyTab;
+};

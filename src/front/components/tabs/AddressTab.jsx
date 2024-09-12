@@ -6,7 +6,7 @@ import { useEffect, useMemo } from '@wordpress/element';
 import countryList from 'react-select-country-list';
 import { SelectControl, TextControl } from '../controls';
 
-function AddressTab(props) {
+export const AddressTab = (props) => {
 	const { title, description, buttons, required } = props;
 	const countryOptions = useMemo(() => countryList().getData(), []);
 	const { setFocus } = useFormContext();
@@ -65,6 +65,4 @@ function AddressTab(props) {
 			/>
 		</BaseTab>
 	);
-}
-
-export default AddressTab;
+};

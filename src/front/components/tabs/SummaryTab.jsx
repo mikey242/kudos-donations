@@ -5,13 +5,13 @@ import { useFormContext } from 'react-hook-form';
 import { CheckboxControl } from '../controls';
 import { createInterpolateElement } from '@wordpress/element';
 
-export default function SummaryTab({
+export const SummaryTab = ({
 	title,
 	description,
 	privacyLink,
 	termsLink,
 	currency,
-}) {
+}) => {
 	const { getValues } = useFormContext();
 	const values = getValues();
 
@@ -117,7 +117,7 @@ export default function SummaryTab({
 			)}
 		</BaseTab>
 	);
-}
+};
 
 function getFrequencyName(frequency) {
 	switch (frequency) {
