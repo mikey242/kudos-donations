@@ -10,6 +10,7 @@ export const SelectControl = ({
 	placeholder,
 	isDisabled,
 	help,
+	ariaLabel,
 }) => {
 	return (
 		<BaseController
@@ -30,14 +31,15 @@ export const SelectControl = ({
 					)}
 					aria-invalid={!!error}
 					aria-errormessage={error?.message}
+					aria-label={ariaLabel ?? placeholder}
 				>
 					{placeholder && (
 						<option disabled key={`placeholder_${name}`} value="">
 							{placeholder}
 						</option>
 					)}
-					{options.map((entry, index) => (
-						<option key={index} value={entry.value}>
+					{options.map((entry) => (
+						<option key={entry.value} value={entry.value}>
 							{entry.label}
 						</option>
 					))}

@@ -8,6 +8,8 @@ export const TextControl = ({
 	name,
 	rules,
 	isDisabled,
+	label,
+	ariaLabel,
 	isReadOnly,
 	help,
 	prefix,
@@ -48,6 +50,7 @@ export const TextControl = ({
 							disabled={isDisabled}
 							type={type}
 							name={name}
+							aria-label={ariaLabel ?? label ?? placeholder}
 							className={clsx(
 								// General
 								'form-input transition ease-in-out block w-full pr-10 sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
