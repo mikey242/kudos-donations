@@ -30,7 +30,6 @@ export const TextControl = ({
 				<>
 					<InputControl
 						label={label}
-						isError={true}
 						value={value ?? ''}
 						disabled={isDisabled}
 						onChange={onChange}
