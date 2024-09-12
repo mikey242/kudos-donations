@@ -18,6 +18,7 @@ const TextAreaControl = forwardRef(
 						id={id}
 						label={label}
 						value={value ?? ''}
+						disabled={isDisabled}
 						onChange={onChange}
 						help={description}
 						hideLabelFromVision={hideLabelFromVision}
