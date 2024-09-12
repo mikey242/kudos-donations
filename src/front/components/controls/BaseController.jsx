@@ -23,7 +23,7 @@ export const BaseController = ({
 		<div className="first:mt-0 mt-3">
 			<div
 				className={clsx(
-					'form-element',
+					'form-element text-slate-800',
 					'hidden' === type && 'hidden',
 					isDisabled && 'opacity-50'
 				)}

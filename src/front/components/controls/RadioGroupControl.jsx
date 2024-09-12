@@ -38,7 +38,7 @@ export const RadioGroupControl = ({
 												'focus:ring-2 focus:ring-offset-2 focus:ring-primary',
 												checked
 													? 'bg-primary border-transparent text-white font-bold'
-													: 'bg-white border-gray-300 text-gray-900 hover:bg-gray-50',
+													: 'bg-white border-gray-300 text-slate-800 hover:bg-gray-50',
 												option.disabled
 													? 'opacity-50 cursor-not-allowed'
 													: 'cursor-pointer',
