@@ -148,8 +148,8 @@ class Front {
 			'kudos-donations-public',
 			'kudos',
 			[
-				'_wpnonce' => wp_create_nonce( 'wp_rest' ),
-				'maxDonation' => Settings::get_setting('maximum_donation')
+				'_wpnonce'    => wp_create_nonce( 'wp_rest' ),
+				'maxDonation' => Settings::get_setting( 'maximum_donation' ),
 			]
 		);
 
@@ -283,6 +283,8 @@ class Front {
 	/**
 	 * Renders the kudos button and donation modals.
 	 *
+	 * @throws Exception Thrown if Mollie is not correctly configured.
+	 *
 	 * @param array $args Array of Kudos button/modal attributes.
 	 */
 	public function kudos_render_callback( array $args ): ?string {
@@ -340,6 +342,7 @@ class Front {
 				add_action(
 					'wp_footer',
 					function () use ( $modal ) {
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						echo $modal;
 					}
 				);
@@ -398,29 +401,46 @@ class Front {
 									);
 		$campaign_stats = Campaign::get_campaign_stats( $transactions );
 
-		$args = [
-			'id'                => $id,
-			'return_url'        => Utils::get_return_url(),
-			'privacy_link'      => Settings::get_setting( 'privacy_link' ),
-			'terms_link'        => Settings::get_setting( 'terms_link' ),
-			'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
-			'spam_protection'   => Settings::get_setting( 'spam_protection' ),
-			'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
-			'campaign_id'       => $campaign['id'],
-			'button_label'      => $campaign['button_label'] ?? '',
-			'welcome_title'     => $campaign['modal_title'] ?? '',
-			'welcome_text'      => $campaign['welcome_text'] ?? '',
-			'campaign_goal'     => $campaign['campaign_goal'] ?? '',
-			'show_progress'     => $campaign['show_progress'] ?? '',
-			'amount_type'       => $campaign['amount_type'] ?? '',
-			'fixed_amounts'     => $campaign['fixed_amounts'] ?? '',
-			'frequency'         => $campaign['donation_type'] ?? '',
-			'address_enabled'   => $campaign['address_enabled'] ?? '',
-			'address_required'  => $campaign['address_required'] ?? '',
-			'message_enabled'   => $campaign['message_enabled'] ?? '',
-			'campaign_stats'    => $campaign_stats,
-			'maximum_donation'  => Settings::get_setting('maximum_donation')
-		];
+		$text_fields = apply_filters(
+			'kudos_campaign_text_fields',
+			[
+				'welcome_title'      => $campaign['modal_title'] ?? '',
+				'welcome_text'       => $campaign['welcome_text'] ?? '',
+				'subscription_title' => __( 'Subscription', 'kudos-donations' ),
+				'subscription_text'  => __( 'How often would you like to donate?', 'kudos-donations' ),
+				'address_title'      => __( 'Address', 'kudos-donations' ),
+				'address_text'       => __( 'Please fill in your address', 'kudos-donations' ),
+				'message_title'      => __( 'Message', 'kudos-donations' ),
+				'message_text'       => __( 'Leave a message (optional).', 'kudos-donations' ),
+				'summary_title'      => __( 'Payment', 'kudos-donations' ),
+				'summary_text'       => __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ),
+			]
+		);
+
+		$args = array_merge(
+			$text_fields,
+			[
+				'id'                => $id,
+				'return_url'        => Utils::get_return_url(),
+				'privacy_link'      => Settings::get_setting( 'privacy_link' ),
+				'terms_link'        => Settings::get_setting( 'terms_link' ),
+				'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
+				'spam_protection'   => Settings::get_setting( 'spam_protection' ),
+				'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
+				'campaign_id'       => $campaign['id'],
+				'button_label'      => $campaign['button_label'] ?? '',
+				'campaign_goal'     => $campaign['campaign_goal'] ?? '',
+				'show_progress'     => $campaign['show_progress'] ?? '',
+				'amount_type'       => $campaign['amount_type'] ?? '',
+				'fixed_amounts'     => $campaign['fixed_amounts'] ?? '',
+				'frequency'         => $campaign['donation_type'] ?? '',
+				'address_enabled'   => $campaign['address_enabled'] ?? '',
+				'address_required'  => $campaign['address_required'] ?? '',
+				'message_enabled'   => $campaign['message_enabled'] ?? '',
+				'campaign_stats'    => $campaign_stats,
+				'maximum_donation'  => Settings::get_setting( 'maximum_donation' ),
+			]
+		);
 
 		// Add additional funds if any.
 		if ( ! empty( $campaign['additional_funds'] ) ) {
@@ -482,6 +502,7 @@ class Front {
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $order_id ) ) {
 							$args = $this->check_transaction( $order_id );
 							if ( $args ) {
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								echo $this->create_message_modal( $args['modal_title'], $args['modal_text'] );
 							}
 						}
@@ -506,8 +527,10 @@ class Front {
 
 						if ( Utils::verify_token( $subscription_id, $token ) ) {
 							if ( $this->payment->cancel_subscription( $subscription_id ) ) {
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								echo $this->create_message_modal(
 									__( 'Subscription cancelled', 'kudos-donations' ),
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									__(
 										'We will no longer be taking payments for this subscription. Thank you for your contributions.',
 										'kudos-donations'
@@ -515,15 +538,18 @@ class Front {
 								);
 								return;
 							}
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							echo $this->create_message_modal(
 								__( 'Error cancelling subscription', 'kudos-donations' ),
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								__( 'Please contact us for help with this error.', 'kudos-donations' )
 							);
 							return;
 						}
-
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						echo $this->create_message_modal(
 							__( 'Link expired', 'kudos-donations' ),
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							__( 'Sorry, this link is no longer valid.', 'kudos-donations' )
 						);
 					}
