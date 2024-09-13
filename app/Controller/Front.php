@@ -404,6 +404,7 @@ class Front {
 		$text_fields = apply_filters(
 			'kudos_campaign_text_fields',
 			[
+				'campaign_id'       => $campaign['id'],
 				'welcome_title'      => $campaign['modal_title'] ?? '',
 				'welcome_text'       => $campaign['welcome_text'] ?? '',
 				'subscription_title' => __( 'Subscription', 'kudos-donations' ),
@@ -427,7 +428,6 @@ class Front {
 				'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
 				'spam_protection'   => Settings::get_setting( 'spam_protection' ),
 				'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
-				'campaign_id'       => $campaign['id'],
 				'button_label'      => $campaign['button_label'] ?? '',
 				'campaign_goal'     => $campaign['campaign_goal'] ?? '',
 				'show_progress'     => $campaign['show_progress'] ?? '',
