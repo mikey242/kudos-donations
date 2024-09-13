@@ -12,8 +12,9 @@ import CampaignProvider from './contexts/CampaignContext';
 import './kudos-fonts.css';
 import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
+import domReady from '@wordpress/dom-ready';
 
-document.addEventListener('DOMContentLoaded', function () {
+domReady(() => {
 	// Select the web components as target for render.
 	const forms = document.querySelectorAll('.kudos-form');
 	const messages = document.querySelectorAll('.kudos-message');
