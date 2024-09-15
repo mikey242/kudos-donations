@@ -171,6 +171,7 @@ class Version400 extends AbstractMigration {
 			$new_campaign = CampaignPostType::save(
 				[
 					'post_title'                           => $campaign['name'],
+					'post_name'                            => $campaign['id'],
 					CampaignPostType::META_FIELD_INITIAL_TITLE => $campaign['modal_title'] ?? '',
 					CampaignPostType::META_FIELD_INITIAL_DESCRIPTION => $campaign['welcome_text'] ?? '',
 					CampaignPostType::META_FIELD_ADDRESS_ENABLED => $campaign['address_enabled'] ?? false,

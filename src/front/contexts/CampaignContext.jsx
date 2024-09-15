@@ -1,36 +1,62 @@
-import React from 'react';
-import {
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-} from '@wordpress/element';
+import React, { createContext, useContext } from 'react';
 import { __ } from '@wordpress/i18n';
-import { useEntityRecord } from '@wordpress/core-data';
+import { useEntityRecords } from '@wordpress/core-data';
 import { Flex, Spinner } from '@wordpress/components';
+import { useEffect, useMemo, useState } from '@wordpress/element';
 
 export const CampaignContext = createContext(null);
 
 export default function CampaignProvider({ campaignId, children }) {
-	const [campaign, setCampaign] = useState({});
+	const [campaign, setCampaign] = useState(null);
 	const [campaignErrors, setCampaignErrors] = useState(null);
-	const { record, hasResolved } = useEntityRecord(
-		'postType',
-		'kudos_campaign',
-		campaignId
-	);
+
+	/**
+	 * Fetch campaign by ID first, fallback to slug if not found.
+	 * Slug fetch is enabled only if the ID fetch resolves and finds nothing.
+	 */
+	const { records: campaignsById, hasResolved: hasResolvedById } =
+		useEntityRecords('postType', 'kudos_campaign', {
+			include: [campaignId],
+		});
+
+	const { records: campaignsBySlug, hasResolved: hasResolvedBySlug } =
+		useEntityRecords(
+			'postType',
+			'kudos_campaign',
+			{ slug: campaignId },
+			{
+				enabled:
+					hasResolvedById &&
+					(!campaignsById || !campaignsById.length),
+			}
+		);
 
 	useEffect(() => {
-		if (hasResolved) {
-			if (record) {
-				setCampaign(record);
-			} else {
-				setCampaignErrors([__('Campaign not found')]);
-			}
+		if (hasResolvedById && campaignsById?.length) {
+			setCampaign(campaignsById[0]);
+			setCampaignErrors(null); // Clear errors if campaign found by ID
+		} else if (hasResolvedBySlug && campaignsBySlug?.length) {
+			setCampaign(campaignsBySlug[0]);
+			setCampaignErrors(null); // Clear errors if campaign found by slug
+		} else if (
+			hasResolvedById &&
+			hasResolvedBySlug &&
+			!campaignsById?.length &&
+			!campaignsBySlug?.length
+		) {
+			setCampaignErrors([__('Campaign not found')]);
 		}
-	}, [record, hasResolved]);
+	}, [campaignsById, campaignsBySlug, hasResolvedById, hasResolvedBySlug]);
 
-	if (!hasResolved) {
+	const contextValue = useMemo(
+		() => ({
+			campaign,
+			campaignErrors,
+		}),
+		[campaign, campaignErrors]
+	);
+
+	if (!campaign && !campaignErrors) {
 		return (
 			<Flex justify="center">
 				<Spinner />
@@ -39,20 +65,10 @@ export default function CampaignProvider({ campaignId, children }) {
 	}
 
 	return (
-		<>
-			<CampaignContext.Provider
-				value={{
-					campaign,
-					hasResolved,
-					campaignErrors,
-				}}
-			>
-				{children}
-			</CampaignContext.Provider>
-		</>
+		<CampaignContext.Provider value={contextValue}>
+			{children}
+		</CampaignContext.Provider>
 	);
 }
 
-export const useCampaignContext = () => {
-	return useContext(CampaignContext);
-};
+export const useCampaignContext = () => useContext(CampaignContext);
