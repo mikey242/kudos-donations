@@ -133,8 +133,9 @@ class SettingsService implements HasSettingsInterface {
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 			self::SETTING_MAXIMUM_DONATION   => [
-				'type'         => FieldType::STRING,
+				'type'         => FieldType::INTEGER,
 				'show_in_rest' => true,
+				'default'      => 5000,
 			],
 		];
 	}
