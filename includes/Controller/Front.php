@@ -61,7 +61,9 @@ class Front extends AbstractRegistrable {
 			$public_js['url'],
 			$public_js['dependencies'],
 			$public_js['version'],
-			true
+			[
+				'in_footer' => true,
+			]
 		);
 
 		wp_set_script_translations( 'kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
