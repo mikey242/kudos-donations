@@ -73,7 +73,7 @@ function Render({
 			)}
 
 			<div id="kudos-container">
-				<div className={clsx(className, 'font-body')}>
+				<div className={clsx(className, 'font-body text-gray-900')}>
 					{ready && !errors ? <>{children}</> : <>{renderErrors()}</>}
 				</div>
 			</div>
