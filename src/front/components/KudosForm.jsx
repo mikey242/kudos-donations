@@ -46,8 +46,8 @@ export const KudosForm = ({ displayAs, label }) => {
 		formData.append('campaign_id', campaign.id);
 		formData.append(
 			'return_url',
-			campaign.use_custom_return_url
-				? campaign.custom_return_url
+			campaign.meta.use_custom_return_url
+				? campaign.meta.custom_return_url
 				: window.location.href
 		);
 		for (const key in data) {

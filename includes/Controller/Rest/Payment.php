@@ -194,7 +194,7 @@ class Payment extends AbstractRestController {
 		$defaults = [
 			'currency'         => $campaign->{CampaignPostType::META_FIELD_CURRENCY},
 			'recurring_length' => 0,
-			'redirect_url'     => get_site_url(),
+			'return_url'       => get_site_url(),
 			'name'             => null,
 			'business_name'    => null,
 			'email'            => null,
