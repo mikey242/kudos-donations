@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactShadowRoot from 'react-shadow-root';
 import { clsx } from 'clsx';
 import { useRef, useState } from '@wordpress/element';
+import root from 'react-shadow';
 
 function Render({
 	children,
@@ -40,7 +40,7 @@ function Render({
 	);
 
 	return (
-		<ReactShadowRoot>
+		<root.div>
 			{/* Load global styles */}
 			{window.kudos?.styles && <style>{window.kudos?.styles}</style>}
 
@@ -77,7 +77,7 @@ function Render({
 					{ready && !errors ? <>{children}</> : <>{renderErrors()}</>}
 				</div>
 			</div>
-		</ReactShadowRoot>
+		</root.div>
 	);
 }
 
