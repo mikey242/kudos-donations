@@ -295,14 +295,15 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	/**
 	 * Encrypts the SMTP password before storing it in the database.
 	 *
-	 * @param string $raw_password The raw password.
+	 * @param null|string $raw_password The raw password.
 	 * @return string The masked password.
 	 */
-	public function encrypt_smtp_password( string $raw_password ): string {
+	public function encrypt_smtp_password( ?string $raw_password ): string {
 
 		// Reset password.
 		if ( ! $raw_password ) {
 			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, '' );
+			return '';
 		}
 
 		// Bail if this is only asterisks.
