@@ -6,8 +6,9 @@ import { FormRouter } from './FormRouter';
 import { KudosModal } from './KudosModal';
 import Render from './Render';
 import { useCampaignContext } from '../contexts/CampaignContext';
+import { DonateButton } from './DonateButton';
 
-function KudosForm({ displayAs }) {
+export const KudosForm = ({ displayAs, label }) => {
 	const { campaign, campaignErrors } = useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [formError, setFormError] = useState(null);
@@ -96,12 +97,15 @@ function KudosForm({ displayAs }) {
 		<Render
 			themeColor={campaign?.meta?.theme_color}
 			style={campaign?.meta?.custom_styles}
-			errors={isForm && campaignErrors}
+			errors={campaignErrors}
 		>
 			<>
 				{isForm && renderDonationForm()}
 				{isModal && (
 					<>
+						<DonateButton onClick={toggleModal}>
+							{label}
+						</DonateButton>
 						<KudosModal
 							toggleModal={toggleModal}
 							isOpen={isModalOpen}
@@ -113,6 +117,4 @@ function KudosForm({ displayAs }) {
 			</>
 		</Render>
 	);
-}
-
-export default KudosForm;
+};

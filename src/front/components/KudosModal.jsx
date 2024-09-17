@@ -12,7 +12,6 @@ export const KudosModal = ({
 	children,
 	showLogo = true,
 }) => {
-	const [didLoad, setDidLoad] = useState(false);
 	const targetRef = useRef(null);
 	const [firstElement, setFirstElement] = useState(null);
 	const [lastElement, setLastElement] = useState(null);
@@ -70,31 +69,8 @@ export const KudosModal = ({
 		}
 	}, [isOpen, handleKeyPress, setUp]);
 
-	useEffect(() => {
-		if (!didLoad) {
-			// Watch for data-toggle attribute changes.
-			const observer = new MutationObserver((mutations) => {
-				mutations.forEach((mutation) => {
-					if (
-						mutation.type === 'attributes' &&
-						mutation.attributeName === 'data-toggle' &&
-						targetRef.current.dataset.toggle === 'true'
-					) {
-						toggleModal();
-						targetRef.current.dataset.toggle = 'false';
-					}
-				});
-			});
-
-			setDidLoad(true);
-			if (targetRef.current) {
-				observer.observe(targetRef.current, { attributes: true });
-			}
-		}
-	}, [didLoad, toggleModal]);
-
 	return (
-		<div ref={targetRef} data-toggle={false}>
+		<div id="kudos-modal" ref={targetRef}>
 			<Transition show={isOpen}>
 				<div className={'fixed z-[999999] inset-0 overflow-y-scroll'}>
 					<>
