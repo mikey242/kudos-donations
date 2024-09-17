@@ -119,8 +119,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 == Changelog ==
 
 = 3.2.7 =
-* Fix modal sometime not in front of content
-* Add filter for changing text on other tabs (kudos_campaign_text_fields)
+* Fix modal sometimes not in front of content
 * Update dependencies
 
 = 3.2.6 =
