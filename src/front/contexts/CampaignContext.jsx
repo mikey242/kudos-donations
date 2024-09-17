@@ -24,7 +24,7 @@ export default function CampaignProvider({ campaignId, children }) {
 			})
 			.catch((error) => {
 				// Most likely the post ID was not found. Try searching by slug instead.
-				if (error.data.status === 404) {
+				if (error?.data?.status === 404) {
 					apiFetch({
 						path: `/wp/v2/kudos_campaign?slug=${campaignId}`,
 					}).then((postBySlug) => {
