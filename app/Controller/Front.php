@@ -401,46 +401,37 @@ class Front {
 									);
 		$campaign_stats = Campaign::get_campaign_stats( $transactions );
 
-		$text_fields = apply_filters(
-			'kudos_campaign_text_fields',
-			[
-				'campaign_id'       => $campaign['id'],
-				'welcome_title'      => $campaign['modal_title'] ?? '',
-				'welcome_text'       => $campaign['welcome_text'] ?? '',
-				'subscription_title' => __( 'Subscription', 'kudos-donations' ),
-				'subscription_text'  => __( 'How often would you like to donate?', 'kudos-donations' ),
-				'address_title'      => __( 'Address', 'kudos-donations' ),
-				'address_text'       => __( 'Please fill in your address', 'kudos-donations' ),
-				'message_title'      => __( 'Message', 'kudos-donations' ),
-				'message_text'       => __( 'Leave a message (optional).', 'kudos-donations' ),
-				'summary_title'      => __( 'Payment', 'kudos-donations' ),
-				'summary_text'       => __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ),
-			]
-		);
-
-		$args = array_merge(
-			$text_fields,
-			[
-				'id'                => $id,
-				'return_url'        => Utils::get_return_url(),
-				'privacy_link'      => Settings::get_setting( 'privacy_link' ),
-				'terms_link'        => Settings::get_setting( 'terms_link' ),
-				'recurring_allowed' => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
-				'spam_protection'   => Settings::get_setting( 'spam_protection' ),
-				'vendor_name'       => Settings::get_setting( 'payment_vendor' ),
-				'button_label'      => $campaign['button_label'] ?? '',
-				'campaign_goal'     => $campaign['campaign_goal'] ?? '',
-				'show_progress'     => $campaign['show_progress'] ?? '',
-				'amount_type'       => $campaign['amount_type'] ?? '',
-				'fixed_amounts'     => $campaign['fixed_amounts'] ?? '',
-				'frequency'         => $campaign['donation_type'] ?? '',
-				'address_enabled'   => $campaign['address_enabled'] ?? '',
-				'address_required'  => $campaign['address_required'] ?? '',
-				'message_enabled'   => $campaign['message_enabled'] ?? '',
-				'campaign_stats'    => $campaign_stats,
-				'maximum_donation'  => Settings::get_setting( 'maximum_donation' ),
-			]
-		);
+		$args = [
+			'id'                 => $id,
+			'return_url'         => Utils::get_return_url(),
+			'privacy_link'       => Settings::get_setting( 'privacy_link' ),
+			'terms_link'         => Settings::get_setting( 'terms_link' ),
+			'recurring_allowed'  => isset( Settings::get_current_vendor_settings()['recurring'] ) ?? false,
+			'spam_protection'    => Settings::get_setting( 'spam_protection' ),
+			'vendor_name'        => Settings::get_setting( 'payment_vendor' ),
+			'button_label'       => $campaign['button_label'] ?? '',
+			'campaign_goal'      => $campaign['campaign_goal'] ?? '',
+			'show_progress'      => $campaign['show_progress'] ?? '',
+			'amount_type'        => $campaign['amount_type'] ?? '',
+			'fixed_amounts'      => $campaign['fixed_amounts'] ?? '',
+			'frequency'          => $campaign['donation_type'] ?? '',
+			'address_enabled'    => $campaign['address_enabled'] ?? '',
+			'address_required'   => $campaign['address_required'] ?? '',
+			'message_enabled'    => $campaign['message_enabled'] ?? '',
+			'campaign_stats'     => $campaign_stats,
+			'maximum_donation'   => Settings::get_setting( 'maximum_donation' ),
+			'campaign_id'        => $campaign['id'],
+			'welcome_title'      => $campaign['modal_title'] ?? '',
+			'welcome_text'       => $campaign['welcome_text'] ?? '',
+			'subscription_title' => __( 'Subscription', 'kudos-donations' ),
+			'subscription_text'  => __( 'How often would you like to donate?', 'kudos-donations' ),
+			'address_title'      => __( 'Address', 'kudos-donations' ),
+			'address_text'       => __( 'Please fill in your address', 'kudos-donations' ),
+			'message_title'      => __( 'Message', 'kudos-donations' ),
+			'message_text'       => __( 'Leave a message (optional).', 'kudos-donations' ),
+			'summary_title'      => __( 'Payment', 'kudos-donations' ),
+			'summary_text'       => __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ),
+		];
 
 		// Add additional funds if any.
 		if ( ! empty( $campaign['additional_funds'] ) ) {
