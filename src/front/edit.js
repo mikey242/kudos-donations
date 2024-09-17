@@ -53,7 +53,7 @@ const ButtonEdit = (props) => {
 	}, [campaign_id]);
 
 	useEffect(() => {
-		if (campaigns) {
+		if (campaigns?.length > 0) {
 			if (campaign_id) {
 				const current = campaigns.find(
 					(x) => x.id === parseInt(campaign_id)
