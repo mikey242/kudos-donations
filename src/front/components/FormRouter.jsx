@@ -59,6 +59,11 @@ export const FormRouter = ({
 	const methods = useForm({
 		defaultValues: {
 			recurring: false,
+			business_name: '',
+			city: '',
+			country: '',
+			postcode: '',
+			street: '',
 		},
 	});
 	const firstUpdate = useRef(true);
