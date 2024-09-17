@@ -16,9 +16,9 @@ import { __ } from '@wordpress/i18n';
 import React, { Fragment } from 'react';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { DonateButton } from '../components/DonateButton';
-import { FormRouter } from '../components/FormRouter';
-import Render from '../components/Render';
+import { DonateButton } from './components/DonateButton';
+import { FormRouter } from './components/FormRouter';
+import Render from './components/Render';
 
 const ButtonEdit = (props) => {
 	const [campaigns, setCampaigns] = useState(null);
@@ -28,6 +28,8 @@ const ButtonEdit = (props) => {
 		attributes: { button_label, campaign_id, type, className },
 		setAttributes,
 	} = props;
+
+	const blockProps = useBlockProps();
 
 	useEffect(() => {
 		const controller =
@@ -82,7 +84,7 @@ const ButtonEdit = (props) => {
 	};
 
 	return (
-		<div>
+		<div {...blockProps}>
 			{campaigns && (
 				<Fragment>
 					<InspectorControls>
@@ -187,10 +189,4 @@ const ButtonEdit = (props) => {
 	);
 };
 
-export default function Edit(props) {
-	return (
-		<div {...useBlockProps()}>
-			<ButtonEdit {...props} />
-		</div>
-	);
-}
+export default ButtonEdit;

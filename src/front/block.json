@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "iseardmedia/kudos-button",
 	"title": "Kudos Donations",
 	"category": "widgets",
@@ -39,5 +39,6 @@
 		}
 	},
 	"editorScript": "file:index.js",
-	"script": "file:../kudos-front.jsx"
+	"style": "file:kudos-fonts.css",
+	"script": "file:kudos-front.jsx"
 }

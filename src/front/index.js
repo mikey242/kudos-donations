@@ -1,15 +1,15 @@
 import { registerBlockType } from '@wordpress/blocks';
-import Save from './save';
+import save from './save';
 import Edit from './edit';
 import React from 'react';
-import { KudosLogo } from '../components/KudosLogo';
+import { KudosLogo } from './components/KudosLogo';
 import metadata from './block.json';
 
 /**
  * Register block.
  */
-export default registerBlockType(metadata, {
+registerBlockType(metadata.name, {
 	icon: <KudosLogo />,
 	edit: Edit,
-	save: Save,
+	save,
 });

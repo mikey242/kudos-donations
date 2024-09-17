@@ -25,15 +25,15 @@ use WP_REST_Server;
 
 class Front extends AbstractRegistrable {
 	private VendorInterface $vendor;
+	private array $block_script_handles = [];
+	private array $block_style_handles  = [];
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @param VendorInterface $vendor Payment vendors.
 	 */
-	public function __construct(
-		VendorInterface $vendor
-	) {
+	public function __construct( VendorInterface $vendor ) {
 		$this->vendor = $vendor;
 	}
 
@@ -41,7 +41,6 @@ class Front extends AbstractRegistrable {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$this->register_assets();
 		$this->register_block();
 		$this->register_shortcode();
 		if ( get_option( SettingsService::SETTING_ALWAYS_LOAD_ASSETS ) ) {
@@ -51,22 +50,66 @@ class Front extends AbstractRegistrable {
 	}
 
 	/**
-	 * Register the assets needed to display Kudos.
+	 * Enqueue the styles and scripts.
 	 */
-	public function register_assets(): void {
-		$public_js = Assets::get_script( 'front/kudos-front.js' );
-		wp_register_style( 'kudos-donations-fonts', Assets::get_style( 'front/kudos-fonts.css' ), [], KUDOS_VERSION );
-		wp_register_script(
-			'kudos-donations-public',
-			$public_js['url'],
-			$public_js['dependencies'],
-			$public_js['version'],
+	private function enqueue_assets(): void {
+		foreach ( $this->block_style_handles as $handle ) {
+			wp_enqueue_style( $handle );
+		}
+		foreach ( $this->block_script_handles as $handle ) {
+			wp_enqueue_script( $handle );
+		}
+	}
+
+	/**
+	 * Register the Kudos block.
+	 */
+	private function register_block(): void {
+		$block = register_block_type(
+			KUDOS_PLUGIN_DIR . '/build/front/',
 			[
-				'in_footer' => true,
+				'render_callback' => [ $this, 'kudos_render_callback' ],
 			]
 		);
 
-		wp_set_script_translations( 'kudos-donations-public', 'kudos-donations', KUDOS_PLUGIN_DIR . '/languages' );
+		// Update handle properties.
+		$this->block_script_handles = $block->script_handles;
+		$this->block_style_handles  = $block->style_handles;
+
+		// Localize the first script with required properties.
+		wp_localize_script(
+			$this->block_script_handles[0],
+			'kudos',
+			[
+				'stylesheets' => [
+					Assets::get_style( 'front/kudos-front.css' ),
+				],
+				'currencies'  => Utils::get_currencies(),
+			]
+		);
+	}
+
+	/**
+	 * Register the kudos shortcode.
+	 */
+	private function register_shortcode(): void {
+		add_shortcode(
+			'kudos',
+			function ( $args ) {
+				$args = shortcode_atts(
+					[
+						'button_label' => __( 'Donate now', 'kudos-donations' ),
+						'campaign_id'  => '',
+						'alignment'    => 'none',
+						'type'         => 'button',
+					],
+					$args,
+					'kudos'
+				);
+				$this->enqueue_assets();
+				return $this->kudos_render_callback( $args );
+			}
+		);
 	}
 
 	/**
@@ -75,7 +118,6 @@ class Front extends AbstractRegistrable {
 	 * @param array $args Array of Kudos button/modal attributes.
 	 */
 	public function kudos_render_callback( array $args ): ?string {
-
 		// Check if the current vendor is connected, otherwise show an error to logged in admins.
 		if ( ! $this->vendor->is_ready() ) {
 			if ( current_user_can( 'manage_options' ) ) {
@@ -89,72 +131,13 @@ class Front extends AbstractRegistrable {
 		}
 
 		// Create unique id for triggering.
-		$id = Utils::generate_id( 'kudos-' );
+		$id         = Utils::generate_id( 'kudos-' );
+		$attributes = wp_json_encode( $args );
 
-		if ( 'button' === $args['type'] ) {
-			// Add modal to footer.
-			add_action(
-				'wp_footer',
-				function () use ( $args, $id ): void {
-					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $this->get_form_html( $id, $args );
-				}
-			);
-
-			// Output button.
-			return $this->get_button_html( $id, $args );
-		}
-
-		return $this->get_form_html( $id, $args );
-	}
-
-	/**
-	 * Enqueue the styles and scripts.
-	 */
-	private function enqueue_assets(): void {
-		wp_enqueue_style( 'kudos-donations-fonts' ); // Fonts need to be loaded in the main document.
-		if ( ! has_block( 'iseardmedia/kudos-button' ) ) { // Don't register if block present.
-			wp_enqueue_script( 'kudos-donations-public' );
-		}
-	}
-
-	/**
-	 * Returns the html for the kudos form.
-	 *
-	 * @param string $id ID to use for the form.
-	 * @param array  $args Attributes.
-	 */
-	private function get_form_html( string $id, array $args ): string {
 		return wp_kses(
 			wp_sprintf(
-				"<div id='form-%s' class='kudos-donations kudos-form' data-display-as='%s' data-campaign='%s' style='display: block'>
-					</div>",
-				$id,
+				"<p><span id='$id' class='kudos-form' data-options='$attributes'></span></p>",
 				$args['type'],
-				$args['campaign_id']
-			),
-			[
-				'div' => [
-					'id'              => [],
-					'class'           => [],
-					'data-display-as' => [],
-					'data-campaign'   => [],
-					'style'           => [],
-				],
-			]
-		);
-	}
-
-	/**
-	 * Returns the html for the kudos button.
-	 *
-	 * @param string $id ID to use for the form.
-	 * @param array  $args Attributes.
-	 */
-	private function get_button_html( string $id, array $args ): string {
-		return wp_kses(
-			wp_sprintf(
-				"<p><span id='button-$id' class='kudos-button' data-label='%s' data-target='form-%s' data-campaign='%s'></span></p>",
 				$args['button_label'],
 				$id,
 				$args['campaign_id']
@@ -162,11 +145,9 @@ class Front extends AbstractRegistrable {
 			[
 				'p'    => [],
 				'span' => [
-					'id'            => [],
-					'class'         => [],
-					'data-label'    => [],
-					'data-target'   => [],
-					'data-campaign' => [],
+					'id'           => [],
+					'class'        => [],
+					'data-options' => [],
 				],
 			]
 		);
@@ -269,72 +250,6 @@ class Front extends AbstractRegistrable {
 					);
 			}
 		}
-	}
-
-	/**
-	 * Register the Kudos button block.
-	 */
-	private function register_block(): void {
-		$block = register_block_type(
-			KUDOS_PLUGIN_DIR . '/build/front/button/',
-			[
-				'render_callback' => [ $this, 'kudos_render_callback' ],
-			]
-		);
-
-		$handle = $block->script_handles[0];
-
-		wp_enqueue_style( 'kudos-donations-fonts' ); // Fonts need to be loaded in the main document.
-		wp_localize_script(
-			$handle,
-			'kudos',
-			[
-				'stylesheets' => [
-					Assets::get_style( 'front/kudos-front.css' ),
-				],
-				'currencies'  => Utils::get_currencies(),
-			]
-		);
-	}
-
-	/**
-	 * Register the kudos button shortcode.
-	 */
-	private function register_shortcode(): void {
-		add_shortcode(
-			'kudos',
-			function ( $args ) {
-				$args = shortcode_atts(
-					[
-						'button_label' => __( 'Donate now', 'kudos-donations' ),
-						'campaign_id'  => '',
-						'alignment'    => 'none',
-						'type'         => 'button',
-					],
-					$args,
-					'kudos'
-				);
-
-				// Enqueue necessary resources.
-				$this->enqueue_assets();
-
-				return $this->kudos_render_callback( $args );
-			}
-		);
-
-		/**
-		 * Add the required stylesheets. Only needed for shortcode.
-		 */
-		wp_localize_script(
-			'kudos-donations-public',
-			'kudos',
-			[
-				'stylesheets' => [
-					Assets::get_style( 'front/kudos-front.css' ),
-				],
-				'currencies'  => Utils::get_currencies(),
-			]
-		);
 	}
 
 	/**
