@@ -12,20 +12,13 @@ module.exports = {
 					mangle: {
 						reserved: ['__', '_n', '_nx', '_x'],
 					},
+					format: {
+						comments: /(__|_e|_n|_x)\(/,
+					},
 				},
+				extractComments: false,
 			}),
 		],
 		moduleIds: 'deterministic',
-		splitChunks: {
-			cacheGroups: {
-				styles: {
-					test: /kudos-fonts.css/,
-					name: 'kudos-fonts',
-					type: 'css/mini-extract',
-					chunks: 'all',
-					enforce: true,
-				},
-			},
-		},
 	},
 };

@@ -1,4 +1,4 @@
-@config "../tailwind.front.config.js";
+@config "tailwind.config.js";
 
 @font-face {
 	font-family: montserratregular;

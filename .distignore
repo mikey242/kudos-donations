@@ -89,5 +89,5 @@ scoper.inc.php
 SECURITY.md
 tsconfig.json
 tsconfig.shared.json
-webpack.config.js
+webpack.config.base.js
 wp-cli.phar
