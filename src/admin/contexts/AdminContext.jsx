@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
+import { IntroGuide } from '../components/settings/IntroGuide';
+import SettingsProvider from './SettingsContext';
 
 // Create the context
 const AdminContext = createContext(null);
@@ -8,9 +10,14 @@ export const AdminProvider = ({ children }) => {
 	const [headerContent, setHeaderContent] = useState(null);
 
 	return (
-		<AdminContext.Provider value={{ headerContent, setHeaderContent }}>
-			{children}
-		</AdminContext.Provider>
+		<SettingsProvider>
+			<AdminContext.Provider value={{ headerContent, setHeaderContent }}>
+				<>
+					<IntroGuide />
+					{children}
+				</>
+			</AdminContext.Provider>
+		</SettingsProvider>
 	);
 };
 

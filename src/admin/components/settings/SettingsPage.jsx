@@ -8,7 +8,6 @@ import { useEffect } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AdminHeader } from '../AdminHeader';
-import { IntroGuide } from './IntroGuide';
 import MollieTab from './MollieTab';
 import { EmailTab } from './EmailTab';
 import { HelpTab } from './HelpTab';
@@ -25,7 +24,6 @@ export const SettingsPage = () => {
 	const {
 		settingsReady,
 		settingsSaving,
-		updateSetting,
 		updateSettings,
 		settings,
 		isVendorReady,
@@ -111,24 +109,17 @@ export const SettingsPage = () => {
 		// Show spinner if not yet loaded
 		<>
 			{settingsReady && (
-				<>
-					<IntroGuide
-						isAPISaving={settingsSaving}
-						updateSetting={updateSetting}
-					/>
-
-					<FormProvider {...methods}>
-						<form
-							id="settings-form"
-							onSubmit={methods.handleSubmit(save)}
-						>
-							<AdminHeader />
-							<div className="admin-wrap">
-								<AdminTabPanel tabs={tabs} />
-							</div>
-						</form>
-					</FormProvider>
-				</>
+				<FormProvider {...methods}>
+					<form
+						id="settings-form"
+						onSubmit={methods.handleSubmit(save)}
+					>
+						<AdminHeader />
+						<div className="admin-wrap">
+							<AdminTabPanel tabs={tabs} />
+						</div>
+					</form>
+				</FormProvider>
 			)}
 		</>
 	);
