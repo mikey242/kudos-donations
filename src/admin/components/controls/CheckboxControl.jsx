@@ -23,6 +23,7 @@ export const CheckboxControl = ({
 					options={options}
 					checked={value}
 					help={description}
+					disabled={isDisabled}
 				/>
 			)}
 		/>
