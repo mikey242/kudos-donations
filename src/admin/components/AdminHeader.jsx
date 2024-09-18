@@ -36,9 +36,9 @@ export const AdminHeader = () => {
 								</h1>
 							</FlexItem>
 							<FlexItem>
-								<span className="kudos-version">
+								<div className="kudos-version">
 									{window.kudos?.version}
-								</span>
+								</div>
 							</FlexItem>
 						</Flex>
 						<Flex justify="flex-end" align="center">
