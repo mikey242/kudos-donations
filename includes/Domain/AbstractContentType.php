@@ -58,8 +58,17 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 			'show_in_menu' => static::SHOW_IN_MENU,
 			'show_in_rest' => static::SHOW_IN_REST,
 			'hierarchical' => static::HIERARCHICAL,
+			'menu_icon'    => $this->get_icon(),
 			'map_meta_cap' => true,
 		];
+	}
+
+	/**
+	 * Returns the icon to use in the menu.
+	 * Can also use dashicon name @see https://developer.wordpress.org/resource/dashicons
+	 */
+	protected function get_icon(): string {
+		return 'dashicons-admin-post';
 	}
 
 	/**

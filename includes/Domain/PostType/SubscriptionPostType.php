@@ -60,6 +60,13 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function get_icon(): string {
+		return 'dashicons-update';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_meta_config(): array {
 		return [
 			self::META_FIELD_VALUE                  => [

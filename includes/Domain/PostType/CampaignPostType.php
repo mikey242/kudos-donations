@@ -102,6 +102,13 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function get_icon(): string {
+		return 'dashicons-megaphone';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_meta_config(): array {
 		return [
 			self::META_FIELD_CURRENCY                 => [

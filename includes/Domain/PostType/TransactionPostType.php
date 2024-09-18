@@ -68,6 +68,13 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function get_icon(): string {
+		return 'dashicons-money-alt';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_meta_config(): array {
 		return [
 			self::META_FIELD_VALUE                  => [

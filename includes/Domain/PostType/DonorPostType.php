@@ -69,6 +69,13 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function get_icon(): string {
+		return 'dashicons-admin-users';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_meta_config(): array {
 		return [
 			self::META_FIELD_EMAIL              => [
