@@ -16,8 +16,9 @@
 	margin-left: 1em;
 }
 
-.kudos-intro-guide {
+.components-modal__frame.components-guide.kudos-intro-guide {
 	width: 500px;
+	max-height: 580px;
 
 	.kudos-intro-guide-text,
 	.kudos-intro-guide-header {

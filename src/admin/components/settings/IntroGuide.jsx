@@ -53,7 +53,7 @@ const IntroGuide = () => {
 							<div className="kudos-intro-guide-text">
 								<p>
 									{__(
-										'Login to your Mollie account and grab your API keys.',
+										'Login to your Mollie account and grab your API keys. Then visit the settings page and enter them in the Mollie section.',
 										'kudos-donations'
 									)}
 								</p>
@@ -83,7 +83,7 @@ const IntroGuide = () => {
 							<div className="kudos-intro-guide-text">
 								<p>
 									{__(
-										'Visit the campaigns page and click the "+" icon to create your first campaign. Then click the edit button to start customising it.',
+										'Visit the campaigns page and click the "+ New campaign" button to create your first campaign. Then click the edit button to start customising it.',
 										'kudos-donations'
 									)}
 								</p>
