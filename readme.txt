@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 6.6
 Tested up to: 6.6
 Requires PHP: 7.2.9
-Stable tag: 3.1.5
+Stable tag: 3.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -127,6 +127,47 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Easily generate shortcodes per campaign with a helpful form
 * New minimum donation setting
 * Email "from name" header can now be configured and defaults to website name
+
+= 3.2.7 =
+* Fix modal sometimes not in front of content
+* Update dependencies
+
+= 3.2.6 =
+* Add maximum donation setting
+* Update dependencies
+
+= 3.2.5 =
+* Add notice for upcoming major Kudos Donations update
+* Add various missing translation strings
+* Update WordPress tested up to version to 6.6
+* Fix potential security issues
+* Remove unused code and settings
+
+= 3.2.3 =
+* Update dependencies
+* Add hooks for accessing the container
+
+= 3.2.2 =
+* Fix issue where sometimes the payment summary would not display
+
+= 3.2.1 =
+* Add new filter for changing the subscription cancellation URL (kudos_cancel_subscription_url)
+* Upgrade postcss to 8.*
+* Upgrade WordPress packages
+
+= 3.2.0 =
+* Subscriptions can now be canceled by donor (via email receipt) without restrictions
+* Fix email subscriptions sometimes not canceling from email link
+* Update dependencies
+
+= 3.1.7 =
+* Add 'kudos_payment_description' filter
+* Fix 'kudos_email_from_name' filter
+* Update dependencies
+
+= 3.1.6 =
+* Test compatability with WordPress 6.2
+* Update dependencies
 
 = 3.1.5 =
 * Allow Mollie to connect with either test or live key. Previously both were required.
