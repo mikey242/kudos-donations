@@ -23,15 +23,22 @@ export default function CampaignsProvider({
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice, removeAllNotices } =
 		useDispatch(noticesStore);
+	const [cachedPosts, setCachedPosts] = useState([]);
 	const { records: posts, hasResolved } = useEntityRecords(
 		'postType',
 		postType,
 		{
-			per_page: 10, // Number of posts per page
+			per_page: 10,
 			order: sortQuery.order,
 			orderby: sortQuery.orderby,
 		}
 	);
+
+	useEffect(() => {
+		if (hasResolved) {
+			setCachedPosts(posts);
+		}
+	}, [posts, hasResolved]);
 
 	const handleSave = useCallback(
 		(args = {}) => {
@@ -154,7 +161,7 @@ export default function CampaignsProvider({
 	}, [sortQuery]);
 
 	const data = {
-		posts,
+		posts: cachedPosts,
 		sort,
 		sortQuery,
 		hasResolved,
