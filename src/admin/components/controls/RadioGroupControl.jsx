@@ -1,6 +1,12 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { BaseControl, Button, ButtonGroup } from '@wordpress/components';
+import {
+	BaseControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+} from '@wordpress/components';
 import _ from 'lodash';
 
 const RadioGroupControl = ({
@@ -26,24 +32,18 @@ const RadioGroupControl = ({
 					className="kudos-button-group"
 				>
 					<div>
-						<ButtonGroup>
+						<ToggleGroupControl isBlock label="Label" value={value}>
 							{options.map((option) => {
-								const selected = value === option.value;
 								return (
-									<Button
-										__next40pxDefaultSize
-										type="button"
+									<ToggleGroupControlOption
 										key={option.value}
-										id={id + '_' + option.label}
-										variant="tertiary"
-										text={option.label}
-										icon={option.icon}
-										isPressed={selected}
+										label={option.label}
+										value={option.value}
 										onClick={() => onChange(option.value)}
 									/>
 								);
 							})}
-						</ButtonGroup>
+						</ToggleGroupControl>
 					</div>
 				</BaseControl>
 			)}
