@@ -17,7 +17,7 @@ import {
 	SelectControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import React, { Fragment } from 'react';
+import React from 'react';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { DonateButton } from './components/DonateButton';
@@ -101,7 +101,7 @@ const ButtonEdit = (props) => {
 	return (
 		<div {...blockProps}>
 			{campaigns && (
-				<Fragment>
+				<>
 					<InspectorControls>
 						<PanelBody
 							title={__('Campaign', 'kudos-donations')}
@@ -219,7 +219,7 @@ const ButtonEdit = (props) => {
 							</p>
 						)}
 					</>
-				</Fragment>
+				</>
 			)}
 		</div>
 	);
