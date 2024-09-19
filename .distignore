@@ -15,7 +15,6 @@ __static__
 assets
 bin
 docs
-languages
 node_modules
 public
 /src
