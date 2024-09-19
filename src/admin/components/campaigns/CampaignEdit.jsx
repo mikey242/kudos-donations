@@ -11,20 +11,12 @@ import {
 	CustomCSSTab,
 } from './tabs';
 import { store as noticesStore } from '@wordpress/notices';
-
-import {
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalSpacer as Spacer,
-	Button,
-	Flex,
-} from '@wordpress/components';
-import { useAdminContext } from '../../contexts/AdminContext';
+import { Flex } from '@wordpress/components';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
 import { useCampaignsContext } from '../../contexts/CampaignsContext';
-import GenerateShortcode from './GenerateShortcode';
 
-const CampaignEdit = ({ campaign, recurringAllowed, handleGoBack }) => {
+const CampaignEdit = ({ campaign, recurringAllowed }) => {
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -33,7 +25,6 @@ const CampaignEdit = ({ campaign, recurringAllowed, handleGoBack }) => {
 		reValidateMode: 'onSubmit',
 	});
 	const { reset, handleSubmit, formState } = methods;
-	const { setHeaderContent } = useAdminContext();
 	const { createWarningNotice } = useDispatch(noticesStore);
 	const { handleUpdate } = useCampaignsContext();
 
@@ -57,48 +48,9 @@ const CampaignEdit = ({ campaign, recurringAllowed, handleGoBack }) => {
 		}
 	}, [createWarningNotice, formState]);
 
-	const goBack = () => {
-		if (Object.keys(methods.formState.dirtyFields).length) {
-			return (
-				// eslint-disable-next-line no-alert
-				window.confirm(
-					__(
-						'You have unsaved changes, are you sure you want to leave?',
-						'kudos-donations'
-					)
-				) && handleGoBack()
-			);
-		}
-		handleGoBack();
-	};
-
 	const onSubmit = (data) => {
 		handleUpdate(data);
 	};
-
-	const NavigationButtons = () => (
-		<>
-			<Button
-				variant="secondary"
-				icon="arrow-left"
-				onClick={() => goBack()}
-				type="button"
-			>
-				{__('Back', 'kudos-donations')}
-			</Button>
-			<GenerateShortcode campaign={campaign} />
-			<Button variant="primary" type="submit" form="campaign-form">
-				{__('Save', 'kudos-donations')}
-			</Button>
-		</>
-	);
-
-	useEffect(() => {
-		setHeaderContent(<NavigationButtons />);
-
-		// Clean up on component unmount
-		return () => setHeaderContent(null);
-	}, [setHeaderContent]);
 
 	const tabs = [
 		{
@@ -144,10 +96,6 @@ const CampaignEdit = ({ campaign, recurringAllowed, handleGoBack }) => {
 					<AdminTabPanel tabs={tabs} />
 				</form>
 			</FormProvider>
-			<Spacer marginTop={'5'} />
-			<Flex justify="flex-start">
-				<NavigationButtons />
-			</Flex>
 		</Fragment>
 	);
 };
