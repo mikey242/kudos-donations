@@ -19,7 +19,7 @@ export const CustomCSSTab = () => {
 			);
 
 			// Update the form state whenever the CodeMirror content changes
-			editor.codemirror.on('change', () => {
+			editor?.codemirror.on('change', () => {
 				const value = editor.codemirror.getValue();
 				setValue('meta.custom_styles', value, { shouldValidate: true });
 			});
