@@ -120,12 +120,14 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 4.0.0 =
 * Complete rewrite of front-end rendering to react
-* Reduced conflict with other themes and plugins
+* Reduced conflict with other themes and plugins by using the Shadow DOM
 * Improved settings pages look and feel
 * New campaigns admin page with ability to create / edit / duplicate and delete campaigns
-* Can now configure most settings per-campaign
-* Easily generate shortcodes per campaign with a helpful form
+* Can now configure most settings per-campaign rather than globally
+* Most donation form text can now be customized
+* Easily generate shortcodes per campaign with a helpful pop-up
 * New minimum donation setting
+* Allow for partial donation amounts (e.g 1.5)
 * Email "from name" header can now be configured and defaults to website name
 
 = 3.2.7 =
