@@ -50,7 +50,7 @@ export default function CampaignsProvider({
 				).catch((error) => {
 					void createErrorNotice(
 						sprintf(
-							// translators: %s is the error message.
+							/* translators: %s is the error message. */
 							__(
 								'Error creating campaign: %s',
 								'kudos-donations'
@@ -114,7 +114,7 @@ export default function CampaignsProvider({
 				.catch((error) => {
 					void createErrorNotice(
 						sprintf(
-							// translators: %s is the error message.
+							/* translators: %s is the error message. */
 							__(
 								'Error deleting campaign: %s',
 								'kudos-donations'

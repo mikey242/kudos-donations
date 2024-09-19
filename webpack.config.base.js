@@ -13,7 +13,15 @@ module.exports = {
 						reserved: ['__', '_n', '_nx', '_x'],
 					},
 					format: {
-						comments: /(__|_e|_n|_x)\(/,
+						comments(node, comment) {
+							const text = comment.value;
+							const type = comment.type;
+							if (type === 'comment2') {
+								// multiline comment
+								return /translators:/i.test(text);
+							}
+							return false;
+						},
 					},
 				},
 				extractComments: false,

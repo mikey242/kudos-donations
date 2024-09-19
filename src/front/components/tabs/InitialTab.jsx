@@ -28,7 +28,7 @@ export const InitialTab = ({
 	const watchValue = useWatch({ name: 'value' });
 	const watchEmail = useWatch({ name: 'email' });
 	const valueError = sprintf(
-		// translators: %d is the amount in euros.
+		/* translators: %d is the amount in euros. */
 		_n(
 			'Minimum donation is %d euro',
 			'Minimum donation is %d euros',
@@ -119,7 +119,7 @@ export const InitialTab = ({
 					max: {
 						value: maximumDonation,
 						message: sprintf(
-							// translators: %1$s is the currency and %2$s is the maximum donation value
+							/* translators: %1$s is the currency and %2$s is the maximum donation value */
 							__(
 								'Maximum donation is %1$s%2$s',
 								'kudos-donations'

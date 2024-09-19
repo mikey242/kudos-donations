@@ -101,7 +101,7 @@ const MollieTab = () => {
 											!value ||
 											value.startsWith(mode) ||
 											sprintf(
-												// translators: %s is the api mode
+												/* translators: %s is the api mode */
 												__(
 													'Key must start with "%s"',
 													'kudos-donations'
