@@ -14,6 +14,8 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_Error;
 use WP_REST_Request;
@@ -63,9 +65,9 @@ class Payment extends AbstractRestController {
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'value'         => [
-						'type'              => 'integer',
+						'type'              => FieldType::NUMBER,
 						'required'          => true,
-						'sanitize_callback' => 'absint',
+						'sanitize_callback' => [ Utils::class, 'sanitize_float' ],
 					],
 					'name'          => [
 						'type'              => 'string',

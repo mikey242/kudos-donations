@@ -421,7 +421,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
         // Set payment frequency.
         $payment_args['payment_frequency'] = "true" === $payment_args['recurring'] ? $payment_args['recurring_frequency'] : SequenceType::SEQUENCETYPE_ONEOFF;
 	    $sequence_type                     = "true" === $payment_args['recurring'] ? SequenceType::SEQUENCETYPE_FIRST : SequenceType::SEQUENCETYPE_ONEOFF;
-        $payment_args['value']             = number_format($payment_args['value'], 2, '.', '');
+        $payment_args['value']             = number_format(floatval($payment_args['value']), 2, '.', '');
         $redirect_url                      = $payment_args['return_url'];
 
         // Add order id query arg to return url if option to show message enabled.
@@ -493,7 +493,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		$customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID};
 		$start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
 		$currency    = 'EUR';
-		$value       = number_format( (int) $transaction->{TransactionPostType::META_FIELD_VALUE}, 2);
+		$value       = number_format( floatval($transaction->{TransactionPostType::META_FIELD_VALUE}), 2);
 		$customer    = $this->get_customer($customer_id);
 
 		// Create subscription if valid mandate found.
@@ -789,7 +789,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		$post = get_post($post_id);
 		if(TransactionPostType::get_slug() === $post->post_type) {
 			$payment_id = $post->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID};
-			$amount['value'] = number_format((float) $post->{TransactionPostType::META_FIELD_VALUE}, 2, '.', '');
+			$amount['value'] = number_format(floatval($post->{TransactionPostType::META_FIELD_VALUE}), 2, '.', '');
 			$amount['currency'] = $post->{TransactionPostType::META_FIELD_CURRENCY};
 			try {
 				$payment = $this->api_client->payments->get($payment_id);

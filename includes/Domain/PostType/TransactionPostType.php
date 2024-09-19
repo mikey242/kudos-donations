@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
+use IseardMedia\Kudos\Helper\Utils;
 
 class TransactionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
@@ -78,8 +79,8 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	public static function get_meta_config(): array {
 		return [
 			self::META_FIELD_VALUE                  => [
-				'type'              => FieldType::INTEGER,
-				'sanitize_callback' => 'absint',
+				'type'              => FieldType::NUMBER,
+				'sanitize_callback' => [ Utils::class, 'sanitize_float' ],
 			],
 			self::META_FIELD_CURRENCY               => [
 				'type'              => FieldType::STRING,
@@ -167,7 +168,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 				'label'      => __( 'Vendor ID', 'kudos-donations' ),
 			],
 			self::META_FIELD_VALUE             => [
-				'value_type' => FieldType::INTEGER,
+				'value_type' => FieldType::NUMBER,
 				'label'      => __( 'Amount', 'kudos-donations' ),
 			],
 			self::META_FIELD_CURRENCY          => [

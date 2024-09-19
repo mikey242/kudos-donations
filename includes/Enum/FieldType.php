@@ -16,6 +16,7 @@ class FieldType {
 	public const STRING  = 'string';
 	public const BOOLEAN = 'boolean';
 	public const INTEGER = 'integer';
+	public const NUMBER  = 'number';
 	public const ARRAY   = 'array';
 	public const EMAIL   = 'email';
 	public const URL     = 'url';
