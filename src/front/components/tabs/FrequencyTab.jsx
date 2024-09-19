@@ -67,14 +67,12 @@ export const FrequencyTab = (props) => {
 						'Please select a payment duration',
 						'kudos-donations'
 					),
-					validate: {
-						isMoreThanOne: (v) =>
-							isMoreThanOne(v) ||
-							__(
-								'Subscriptions must be more than one payment',
-								'kudos-donations'
-							),
-					},
+					validate: (v) =>
+						isMoreThanOne(v) ||
+						__(
+							'Subscriptions must be more than one payment',
+							'kudos-donations'
+						),
 				}}
 				placeholder={__('Donation duration', 'kudos-donations')}
 				options={duration}
