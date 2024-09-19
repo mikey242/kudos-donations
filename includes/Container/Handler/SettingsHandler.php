@@ -47,7 +47,7 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 	public function on_plugin_activation(): void {
 		$settings = $this->get_all_settings();
 		foreach ( $settings as $name => $setting ) {
-			if ( ! get_option( $name ) ) {
+			if ( get_option( $name, 'not-set' ) === 'not-set' ) {
 				update_option( $name, $setting['default'] ?? null );
 			}
 		}
