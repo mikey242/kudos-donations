@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { useCampaignsContext } from '../contexts/CampaignsContext';
 
 export const Table = ({ headerItems }) => {
-	const { posts, sort, sortQuery } = useCampaignsContext();
+	const { posts, sort, sortQuery, hasResolved } = useCampaignsContext();
 
 	return (
 		<>
@@ -38,7 +38,7 @@ export const Table = ({ headerItems }) => {
 				</thead>
 				<tbody>
 					<>
-						{!posts?.length && (
+						{!posts?.length && hasResolved ? (
 							<tr>
 								<td colSpan={headerItems.length}>
 									<Flex justify="center">
@@ -51,14 +51,15 @@ export const Table = ({ headerItems }) => {
 									</Flex>
 								</td>
 							</tr>
+						) : (
+							posts?.map((post) => (
+								<TableRow
+									key={post.id}
+									post={post}
+									headerItems={headerItems}
+								/>
+							))
 						)}
-						{posts?.map((post) => (
-							<TableRow
-								key={post.id}
-								post={post}
-								headerItems={headerItems}
-							/>
-						))}
 					</>
 				</tbody>
 			</table>
