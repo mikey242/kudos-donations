@@ -1,0 +1,1564 @@
+# Copyright (C) 2024 Iseard Media
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Kudos Donations 4.0.0-beta-1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-09-19T11:25:38+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: kudos-donations\n"
+
+#. Plugin Name of the plugin
+#: kudos-donations.php
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Kudos Donations"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: kudos-donations.php
+msgid "https://gitlab.iseard.media/michael/kudos-donations"
+msgstr ""
+
+#. Description of the plugin
+#: kudos-donations.php
+msgid "Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments."
+msgstr ""
+
+#. Author of the plugin
+#: kudos-donations.php
+msgid "Iseard Media"
+msgstr ""
+
+#. Author URI of the plugin
+#: kudos-donations.php
+msgid "https://iseard.media"
+msgstr ""
+
+#: includes/Admin/CampaignAdminPage.php:23
+msgid "Kudos campaigns"
+msgstr ""
+
+#: includes/Admin/CampaignAdminPage.php:30
+msgid "Campaigns"
+msgstr ""
+
+#: includes/Admin/DebugAdminPage.php:55
+#: includes/Admin/DebugAdminPage.php:62
+msgid "Debug"
+msgstr ""
+
+#: includes/Admin/DebugAdminPage.php:163
+msgid "Log file:"
+msgstr ""
+
+#: includes/Admin/DebugAdminPage.php:171
+msgid "Log level:"
+msgstr ""
+
+#: includes/Admin/DonorAdminPage.php:30
+msgid "Donors"
+msgstr ""
+
+#: includes/Admin/ParentAdminPage.php:27
+#: includes/Admin/ParentAdminPage.php:49
+msgid "Kudos"
+msgstr ""
+
+#: includes/Admin/ParentAdminPage.php:34
+#: includes/Admin/ParentAdminPage.php:50
+msgid "Donations"
+msgstr ""
+
+#: includes/Admin/SettingsAdminPage.php:22
+msgid "Kudos settings"
+msgstr ""
+
+#: includes/Admin/SettingsAdminPage.php:29
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin/SubscriptionsAdminPage.php:29
+msgid "Subscriptions"
+msgstr ""
+
+#: includes/Admin/TransactionsAdminPage.php:29
+msgid "Transactions"
+msgstr ""
+
+#: includes/Container/Handler/MigrationHandler.php:132
+msgid "Update now"
+msgstr ""
+
+#: includes/Container/Handler/MigrationHandler.php:136
+msgid "The plugin needs to update your database before you can continue. Please make sure you backup your data before proceeding."
+msgstr ""
+
+#: includes/Controller/Front.php:101
+msgid "Donate now"
+msgstr ""
+
+#. translators: %s: Payment vendor (e.g. Mollie).
+#: includes/Controller/Front.php:126
+msgid "%s not connected."
+msgstr ""
+
+#: includes/Controller/Front.php:204
+msgid "Payment cancelled"
+msgstr ""
+
+#: includes/Controller/Front.php:205
+msgid "You have not been charged for this transaction."
+msgstr ""
+
+#: includes/Controller/Front.php:211
+msgid "Thanks"
+msgstr ""
+
+#: includes/Controller/Front.php:212
+msgid "Your donation will be processed soon."
+msgstr ""
+
+#: includes/Controller/Front.php:243
+msgid "Please contact support."
+msgstr ""
+
+#: includes/Controller/Front.php:243
+msgid "Thanks for your support!"
+msgstr ""
+
+#: includes/Controller/Rest/AbstractRestController.php:115
+#: includes/Controller/Rest/AbstractRestController.php:129
+msgid "Bot detected, rejecting tabs."
+msgstr ""
+
+#. translators: %s represents the number of invoices.
+#: includes/Controller/Rest/Invoice.php:120
+msgid "Regenerated %s invoices successfully."
+msgstr ""
+
+#: includes/Controller/Rest/Invoice.php:122
+msgid "No valid transactions."
+msgstr ""
+
+#: includes/Controller/Rest/Mail.php:70
+msgid "Invalid test email address"
+msgstr ""
+
+#: includes/Controller/Rest/Mail.php:73
+msgid "It worked!"
+msgstr ""
+
+#: includes/Controller/Rest/Mail.php:74
+msgid "Looks like your email settings are set up correctly :-)"
+msgstr ""
+
+#. translators: %s: API mode
+#: includes/Controller/Rest/Mail.php:80
+msgid "Email sent to %s."
+msgstr ""
+
+#: includes/Controller/Rest/Payment.php:181
+#: includes/Controller/Rest/Payment.php:191
+msgid "Request invalid."
+msgstr ""
+
+#: includes/Controller/Rest/Payment.php:290
+msgid "Error creating payment. Please try again later."
+msgstr ""
+
+#: includes/Controller/Rest/Subscription.php:77
+msgid "Parameter missing"
+msgstr ""
+
+#: includes/Controller/Rest/Subscription.php:91
+msgid "Token expired"
+msgstr ""
+
+#: includes/Controller/Rest/Subscription.php:100
+msgid "Error cancelling subscription."
+msgstr ""
+
+#: includes/Controller/Rest/Subscription.php:130
+msgid "Subscription canceled"
+msgstr ""
+
+#: includes/Controller/Rest/Subscription.php:139
+msgid "Subscription already canceled"
+msgstr ""
+
+#: includes/Domain/AbstractContentType.php:94
+msgctxt "Menu label"
+msgid "Add New"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:96
+msgctxt "Label for adding a new singular item"
+msgid "Add New %s"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:98
+msgctxt "Label for editing a singular item"
+msgid "Edit %s"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:100
+msgctxt "Label for the new item page title"
+msgid "New %s"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:102
+msgctxt "Label for viewing a singular item"
+msgid "View %s Name"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:104
+msgctxt "Label for viewing post type archives"
+msgid "View %s Name"
+msgstr ""
+
+#. translators: %s: Custom post type plural name.
+#: includes/Domain/AbstractContentType.php:106
+msgctxt "Label for searching plural items"
+msgid "Search %s"
+msgstr ""
+
+#. translators: %s: Custom post type plural name.
+#: includes/Domain/AbstractContentType.php:108
+msgctxt "Label used when no items are found"
+msgid "No %s found."
+msgstr ""
+
+#. translators: %s: Custom post type plural name.
+#: includes/Domain/AbstractContentType.php:110
+msgctxt "Label used when no items are in the Trash"
+msgid "No %s found."
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:112
+msgctxt "Label used to prefix parents of hierarchical items"
+msgid "Parent %s"
+msgstr ""
+
+#. translators: %s: Custom post type plural name.
+#: includes/Domain/AbstractContentType.php:114
+msgctxt "Label to signify all items in a submenu link"
+msgid "All %s"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:116
+msgctxt "Label for archives in nav menus"
+msgid "%s Archives"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:118
+msgctxt "Label for the attributes meta box"
+msgid "%s Attributes"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:120
+msgctxt "Label for the media frame button"
+msgid "Add to %s"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:122
+msgctxt "Label for the media frame filter"
+msgid "Uploaded to this %s"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:124
+#: includes/Domain/AbstractContentType.php:126
+msgctxt "Label for setting the featured image"
+msgid "%s Featured image"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:128
+msgctxt "Label for removing the featured image"
+msgid "Remove %s featured image"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:130
+msgctxt "Label in the media frame for using a featured image"
+msgid "Use as %s featured image"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:132
+msgctxt "Label for the table views hidden heading"
+msgid "Filter %s list"
+msgstr ""
+
+#. translators: %s: Custom post type plural name.
+#: includes/Domain/AbstractContentType.php:134
+msgctxt "Label for the date filter in list tables"
+msgid "Filter %s by date"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:136
+msgctxt "Label for the table pagination hidden heading"
+msgid "%s list navigation"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:138
+msgctxt "Label for the table hidden heading"
+msgid "%s list"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:140
+msgctxt "Label used when an item is published"
+msgid "%s published"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:142
+msgctxt "Label used when an item is published with private visibility"
+msgid "%s published privately"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:144
+msgctxt "Label used when an item is switched to a draft"
+msgid "%s reverted to draft"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:146
+msgctxt "Label used when an item is scheduled for publishing"
+msgid "%s scheduled"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:148
+msgctxt "Label used when an item is updated"
+msgid "%s updated"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:150
+msgctxt "Title for a navigation link block variation"
+msgid "%s link"
+msgstr ""
+
+#. translators: %s: Custom post type singular name.
+#: includes/Domain/AbstractContentType.php:152
+msgctxt "Description for a navigation link block variation."
+msgid "A link to a %s"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:92
+msgctxt "Campaign post type singular name"
+msgid "Campaign"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:99
+msgctxt "Campaign post type plural name"
+msgid "Campaigns"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:134
+msgid "Support us!"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:139
+msgid "Your support is greatly appreciated and will help to keep us going."
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:144
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Subscription"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:149
+msgid "How often would you like to donate?"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:154
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Address"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:159
+msgid "Please fill in your address"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:164
+#: includes/Domain/PostType/TransactionPostType.php:229
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Message"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:169
+msgid "Leave a message."
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:174
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Payment"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:179
+msgid "By clicking donate you agree to the following payment:"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:249
+msgid "Payment received"
+msgstr ""
+
+#: includes/Domain/PostType/CampaignPostType.php:254
+msgid "Thank you for your donation!"
+msgstr ""
+
+#: includes/Domain/PostType/DonorPostType.php:59
+msgctxt "Donor post type singular name"
+msgid "Donor"
+msgstr ""
+
+#: includes/Domain/PostType/DonorPostType.php:66
+msgctxt "Donor post type plural name"
+msgid "Donors"
+msgstr ""
+
+#: includes/Domain/PostType/DonorPostType.php:140
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Name"
+msgstr ""
+
+#: includes/Domain/PostType/DonorPostType.php:144
+#: build/admin/kudos-admin-settings.js:2
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Email"
+msgstr ""
+
+#: includes/Domain/PostType/DonorPostType.php:148
+#: includes/Domain/PostType/SubscriptionPostType.php:134
+#: includes/Domain/PostType/TransactionPostType.php:168
+msgid "Vendor ID"
+msgstr ""
+
+#: includes/Domain/PostType/DonorPostType.php:152
+msgid "Total donated"
+msgstr ""
+
+#: includes/Domain/PostType/SubscriptionPostType.php:50
+msgctxt "Subscription post type singular name"
+msgid "Subscription"
+msgstr ""
+
+#: includes/Domain/PostType/SubscriptionPostType.php:57
+msgctxt "Subscription post type plural name"
+msgid "Subscriptions"
+msgstr ""
+
+#: includes/Domain/PostType/SubscriptionPostType.php:114
+#: includes/Domain/PostType/TransactionPostType.php:151
+msgid "Donor"
+msgstr ""
+
+#: includes/Domain/PostType/SubscriptionPostType.php:138
+#: includes/Domain/PostType/TransactionPostType.php:172
+#: build/front/index.js:2
+#: build/front/index.js:3
+#: build/front/kudos-front.js:2
+#: build/front/kudos-front.js:3
+msgid "Amount"
+msgstr ""
+
+#: includes/Domain/PostType/SubscriptionPostType.php:142
+#: includes/Domain/PostType/TransactionPostType.php:176
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Currency"
+msgstr ""
+
+#: includes/Domain/PostType/SubscriptionPostType.php:146
+msgid "Frequency"
+msgstr ""
+
+#: includes/Domain/PostType/SubscriptionPostType.php:150
+msgid "Length"
+msgstr ""
+
+#: includes/Domain/PostType/SubscriptionPostType.php:154
+#: includes/Domain/PostType/TransactionPostType.php:194
+msgid "Status"
+msgstr ""
+
+#: includes/Domain/PostType/TransactionPostType.php:59
+msgctxt "Transaction post type singular name"
+msgid "Transaction"
+msgstr ""
+
+#: includes/Domain/PostType/TransactionPostType.php:66
+msgctxt "Transaction post type plural name"
+msgid "Transactions"
+msgstr ""
+
+#: includes/Domain/PostType/TransactionPostType.php:180
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/front/index.js:3
+msgid "Campaign"
+msgstr ""
+
+#: includes/Domain/PostType/TransactionPostType.php:209
+msgid "Paid"
+msgstr ""
+
+#: includes/Domain/PostType/TransactionPostType.php:212
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Open"
+msgstr ""
+
+#: includes/Domain/PostType/TransactionPostType.php:215
+msgid "Canceled"
+msgstr ""
+
+#: includes/Domain/PostType/TransactionPostType.php:218
+msgid "Failed"
+msgstr ""
+
+#: includes/Service/InvoiceService.php:126
+msgid "VAT"
+msgstr ""
+
+#: includes/Service/MailerService.php:205
+msgid "Donation Receipt"
+msgstr ""
+
+#: includes/Vendor/MollieVendor.php:190
+msgid "No payment methods found. Please check your API keys"
+msgstr ""
+
+#: includes/Vendor/MollieVendor.php:213
+msgid "API connection refreshed"
+msgstr ""
+
+#. translators: %s is the API mode (test or live).
+#: includes/Vendor/MollieVendor.php:289
+msgid "%s API key invalid."
+msgstr ""
+
+#: includes/Vendor/MollieVendor.php:563
+msgid "Cannot create subscription as customer has no valid mandates."
+msgstr ""
+
+#: includes/Vendor/VendorFactory.php:59
+#: build/admin/kudos-admin-settings.js:2
+msgid "Mollie"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "No campaigns"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "There are invalid fields in the form. Please check the fields and correct any errors."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "You have unsaved changes, are you sure you want to leave?"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Back"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:2
+msgid "Save"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "General"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Text"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Donation settings"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Optional fields"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Custom CSS"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Theme color"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Total / Goal"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Progress"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Created"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/front/index.js:3
+msgid "Edit"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Edit campaign"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Duplicate campaign"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Delete campaign"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Are you sure you wish to delete this campaign?"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Your campaigns"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "New campaign"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Shortcode copied"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Generate shortcode"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/front/index.js:3
+msgid "Display as"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Choose the available payment frequency."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Button"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/front/index.js:3
+msgid "Embedded form"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Button label"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Add a button label"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Copy shortcode"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Donation type"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "One-off"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Both"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Payment type"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Chose the available amount types."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Fixed"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "All values must be numbers"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "You need to enter one or more amounts"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "List of fixed amounts (max 5)."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Fixed amounts"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "This is the minimum donation that will be accepted."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Minimum donation required"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Minimum value is 1"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Minimum allowed donation"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Campaign details"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Campaign name"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Give your campaign a unique name."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Name required"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Please select a currency"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Set a goal for your campaign."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Goal"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Please enter a goal"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Display goal progress"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "This will display a goal progress bar on your donation form. Make sure you also set a goal."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Add external funds to the total."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Additional funds"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Choose a color theme for your campaign."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "After payment"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Show return message"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "This will show a pop-up message to the donor thanking them for their donation."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Title is required"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Message title"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Message required"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Message text"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Use custom return URL"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Once the payment has been completed, return the donor to a custom URL."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "URL"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "URL required"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Please enter a valid URL"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Allow anonymous donations"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Allow users to donate without leaving a name or email address. Anonymous users can only perform one-off donations."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Show the address tab."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Make the address required."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Required"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Allow donors to leave a message."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Policy links"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Terms & Conditions URL"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Add a URL to your Terms & Conditions, donors will need to agree to them before donating."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Privacy Policy URL"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Add a URL to your Privacy policy, donors will need to agree to it before donating."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Initial tab"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Title"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Subscription tab"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Address tab"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Message tab"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+msgid "Payment tab"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Welcome to Kudos Donations"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Complete these simple steps to set up your first donation campaign. Click the \"next\" button to get started"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Connect with Mollie"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Login to your Mollie account and grab your API keys. Then visit the settings page and enter them in the Mollie section."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Visit Mollie dashboard"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Set up a campaign"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Visit the campaigns page and click the \"+ New campaign\" button to create your first campaign. Then click the edit button to start customising it."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Place a form"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Use the Kudos Donations block or shortcode to place the button anywhere on your website."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Test and go Live"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "With the API mode still on \"Test\" make a payment using Kudos Donations. If it worked then you can switch to \"Live\"."
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:1
+#: build/admin/kudos-admin-settings.js:1
+msgid "Intro guide"
+msgstr ""
+
+#. translators: %s is the error message.
+#: build/admin/kudos-admin-campaigns.js:2
+msgid "Error creating campaign: %s"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:2
+msgid "Campaign deleted"
+msgstr ""
+
+#. translators: %s is the error message.
+#: build/admin/kudos-admin-campaigns.js:3
+msgid "Error deleting campaign: %s"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:3
+msgid "New Campaign"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:3
+msgid "Campaign created"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:3
+msgid "Campaign duplicated"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:3
+msgid "Campaign updated"
+msgstr ""
+
+#: build/admin/kudos-admin-campaigns.js:3
+#: build/admin/kudos-admin-settings.js:2
+msgid "Settings updated"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Email receipts"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Send email receipts"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Once a payment has been completed, you can automatically send an email receipt to the donor."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Send receipt copy to"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Add an email address here to send a copy of every donation receipt."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "SMTP settings"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Use custom SMTP settings"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Allow you to configure an external SMTP email server."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Host"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "The email server."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This field is required."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Port"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "The email server port number."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Encryption"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "For most servers TLS is the recommended option. If your SMTP provider offers both SSL and TLS options, we recommend using TLS."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "None"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "SSL"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "TLS"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Username"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This is usually an email address."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Password"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This password will be encrypted in the database."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Reset password"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "From address"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This email address will be used in the \"From\" field."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Email from name"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This name will be used in the \"From\" field."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Test email"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Email address"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Address to send the test email to."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Send"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Share the love"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Do you like using Kudos? Please let us know your thoughts."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Donate to Kudos Donations"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Leave a review"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Need some assistance?"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Don't hesitate to get in touch if you need any help or have a suggestion."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Support forums"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Show welcome guide"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Visit our F.A.Q"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Visit Kudos Donations"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Advanced"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Always load assets"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This will ensure that the JavaScript for Kudos is loaded on every page."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Debug mode"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Enables debug logging. Please only enable this if advised to by support."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Maximum donation"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "The maximum donation that you want to allow, leave blank to disable. This applies only to the open donation field."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Your details"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Invoice Address"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This is your address as it will appear on the invoice."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "VAT Number"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This will appear on your invoices."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Other"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Current Invoice Number"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "This number automatically increases as transactions are paid."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "API Mode"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Live"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Test"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "When using Kudos Donations for the first time, the payment mode is set to \"Test\". Check that the configuration is working correctly. Once you are ready to receive live payments you can switch the mode to \"Live\"."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Refresh API"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card."
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:1
+msgid "API Keys"
+msgstr ""
+
+#. translators: %s is the api mode
+#: build/admin/kudos-admin-settings.js:2
+msgid "Key must start with \"%s\""
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:2
+msgid "Reset Mollie"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:2
+msgid "ready"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:2
+msgid "not ready"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:2
+msgid "Invoice"
+msgstr ""
+
+#: build/admin/kudos-admin-settings.js:2
+msgid "Help"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Next"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Submit"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "On"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Off"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Business name"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Street required"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Street"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Postcode required"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Postcode"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "City required"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "City"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Country"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Country required"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/index.js:3
+#: build/front/kudos-front.js:1
+#: build/front/kudos-front.js:3
+msgid "Continuous"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "year"
+msgid_plural "years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Please select a payment frequency"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Payment frequency"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/index.js:3
+#: build/front/kudos-front.js:1
+#: build/front/kudos-front.js:3
+msgid "Yearly"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/index.js:3
+#: build/front/kudos-front.js:1
+#: build/front/kudos-front.js:3
+msgid "Quarterly"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/index.js:3
+#: build/front/kudos-front.js:1
+#: build/front/kudos-front.js:3
+msgid "Monthly"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Please select a payment duration"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Subscriptions must be more than one payment"
+msgstr ""
+
+#: build/front/index.js:1
+#: build/front/kudos-front.js:1
+msgid "Donation duration"
+msgstr ""
+
+#. translators: %d is the amount in euros.
+#: build/front/index.js:2
+#: build/front/kudos-front.js:2
+msgid "Minimum donation is %d euro"
+msgid_plural "Minimum donation is %d euros"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/front/index.js:2
+#: build/front/kudos-front.js:2
+msgid "Fixed donation amount"
+msgstr ""
+
+#: build/front/index.js:2
+#: build/front/kudos-front.js:2
+msgid "Open donation amount"
+msgstr ""
+
+#: build/front/index.js:2
+#: build/front/kudos-front.js:2
+msgid "Other amount"
+msgstr ""
+
+#. translators: %1$s is the currency and %2$s is the maximum donation value
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Maximum donation is %1$s%2$s"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Your name is required"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Full name"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Your email is required"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Recurring donation"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "anonymous"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "E-mail address"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Type"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "One off"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "years"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Recurring"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Accept <a>Privacy Policy</a>"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Please accept this to continue"
+msgstr ""
+
+#: build/front/index.js:3
+#: build/front/kudos-front.js:3
+msgid "Accept <a>Terms and Conditions</a>"
+msgstr ""
+
+#: build/front/index.js:3
+msgid "Select a campaign"
+msgstr ""
+
+#: build/front/index.js:3
+msgid "Create a new campaign here"
+msgstr ""
+
+#: build/front/index.js:3
+msgid "Format"
+msgstr ""
+
+#: build/front/index.js:3
+msgid "Button with modal"
+msgstr ""
+
+#: build/front/kudos-front.js:1
+msgid "Close modal"
+msgstr ""
+
+#: build/front/kudos-front.js:1
+msgid "Close"
+msgstr ""
+
+#: build/front/block.json
+msgctxt "block title"
+msgid "Kudos Donations"
+msgstr ""
+
+#: build/front/block.json
+msgctxt "block description"
+msgid "Adds a configurable Kudos donate button or form."
+msgstr ""
+
+#: build/front/block.json
+msgctxt "block keyword"
+msgid "kudos"
+msgstr ""
+
+#: build/front/block.json
+msgctxt "block keyword"
+msgid "button"
+msgstr ""
+
+#: build/front/block.json
+msgctxt "block keyword"
+msgid "donate"
+msgstr ""
