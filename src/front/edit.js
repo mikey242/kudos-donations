@@ -7,7 +7,11 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import {
+	Button,
 	ExternalLink,
+	Flex,
+	FlexItem,
+	Icon,
 	PanelBody,
 	RadioControl,
 	SelectControl,
@@ -23,6 +27,7 @@ import Render from './components/Render';
 const ButtonEdit = (props) => {
 	const [campaigns, setCampaigns] = useState(null);
 	const [currentCampaign, setCurrentCampaign] = useState(null);
+	const [updatingCampaigns, setUpdatingCampaigns] = useState(false);
 
 	const {
 		attributes: { button_label, campaign_id, type, className },
@@ -31,24 +36,34 @@ const ButtonEdit = (props) => {
 
 	const blockProps = useBlockProps();
 
-	useEffect(() => {
-		const controller =
-			typeof AbortController === 'undefined'
-				? undefined
-				: new AbortController();
-		apiFetch({
+	const fetchCampaigns = async () => {
+		setUpdatingCampaigns(true);
+		// Fetch data from the API
+		return await apiFetch({
 			path: `wp/v2/kudos_campaign/`,
 			method: 'GET',
-			signal: controller?.signal,
 		})
-			.then(setCampaigns)
 			.catch((error) => {
 				// eslint-disable-next-line no-console
 				console.log(error);
-			});
+			})
+			.finally(() => {
+				setUpdatingCampaigns(false);
+			}); // Return fetched data
+	};
 
+	useEffect(() => {
+		let isMounted = true; // Track whether the component is still mounted
+
+		fetchCampaigns().then((data) => {
+			if (isMounted) {
+				setCampaigns(data);
+			}
+		});
+
+		// Cleanup function to prevent state updates if component unmounts
 		return () => {
-			controller.abort();
+			isMounted = false;
 		};
 	}, [campaign_id]);
 
@@ -106,24 +121,45 @@ const ButtonEdit = (props) => {
 									}))
 								)}
 							/>
-							{currentCampaign && (
-								<>
-									<ExternalLink
-										href={`admin.php?page=kudos-campaigns&kudos_campaign=${currentCampaign.id}`}
-									>
-										{__('Edit', 'kudos-donations') +
-											' ' +
-											currentCampaign.title.rendered}
+							<Flex>
+								<FlexItem>
+									{currentCampaign && (
+										<>
+											<ExternalLink
+												href={`admin.php?page=kudos-campaigns&edit=${currentCampaign.id}`}
+											>
+												{__('Edit', 'kudos-donations') +
+													' ' +
+													currentCampaign.title
+														.rendered}
+											</ExternalLink>
+											<br />
+										</>
+									)}
+									<ExternalLink href="admin.php?page=kudos-campaigns&tab_name=campaigns">
+										{__(
+											'Create a new campaign',
+											'kudos-donations'
+										)}
 									</ExternalLink>
-									<br />
-								</>
-							)}
-							<ExternalLink href="admin.php?page=kudos-campaigns&tab_name=campaigns">
-								{__(
-									'Create a new campaign here',
-									'kudos-donations'
-								)}
-							</ExternalLink>
+								</FlexItem>
+								<FlexItem>
+									<Button
+										type="button"
+										icon={<Icon icon="update" />}
+										isBusy={updatingCampaigns}
+										label={__(
+											'Refresh campaign(s)',
+											'kudos-donations'
+										)}
+										onClick={() => {
+											fetchCampaigns().then((data) => {
+												setCampaigns(data);
+											});
+										}}
+									/>
+								</FlexItem>
+							</Flex>
 						</PanelBody>
 
 						<PanelBody
