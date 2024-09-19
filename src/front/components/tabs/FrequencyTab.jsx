@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, _n } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 import React from 'react';
 import BaseTab from './BaseTab';
@@ -9,6 +9,17 @@ export const FrequencyTab = (props) => {
 	const { title, description, buttons } = props;
 
 	const { setFocus, getValues } = useFormContext();
+
+	const duration = [];
+	[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((i) =>
+		duration.push({
+			value: i,
+			label:
+				i === 0
+					? __('Continuous', 'kudos-donations')
+					: i + ' ' + _n('year', 'years', i, 'kudos-donations'),
+		})
+	);
 
 	useEffect(() => {
 		setFocus('recurring_frequency');
@@ -66,19 +77,7 @@ export const FrequencyTab = (props) => {
 					},
 				}}
 				placeholder={__('Donation duration', 'kudos-donations')}
-				options={[
-					{ value: '0', label: __('Continuous', 'kudos-donations') },
-					{ value: '1', label: __('1 year', 'kudos-donations') },
-					{ value: '2', label: __('2 years', 'kudos-donations') },
-					{ value: '3', label: __('3 years', 'kudos-donations') },
-					{ value: '4', label: __('4 years', 'kudos-donations') },
-					{ value: '5', label: __('5 years', 'kudos-donations') },
-					{ value: '6', label: __('6 years', 'kudos-donations') },
-					{ value: '7', label: __('7 years', 'kudos-donations') },
-					{ value: '8', label: __('8 years', 'kudos-donations') },
-					{ value: '9', label: __('9 years', 'kudos-donations') },
-					{ value: '10', label: __('10 years', 'kudos-donations') },
-				]}
+				options={duration}
 			/>
 		</BaseTab>
 	);
