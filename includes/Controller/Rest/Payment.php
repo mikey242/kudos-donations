@@ -55,12 +55,12 @@ class Payment extends AbstractRestController {
 				'permission_callback' => '__return_true',
 				'args'                => [
 					'return_url'    => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'campaign_id'   => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
@@ -70,57 +70,57 @@ class Payment extends AbstractRestController {
 						'sanitize_callback' => [ Utils::class, 'sanitize_float' ],
 					],
 					'name'          => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'email'         => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_email',
 					],
 					'recurring'     => [
-						'type'              => 'boolean',
+						'type'              => FieldType::BOOLEAN,
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'business_name' => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'street'        => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'postcode'      => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'city'          => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'country'       => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'message'       => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => false,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'privacy'       => [
-						'type'              => 'boolean',
+						'type'              => FieldType::BOOLEAN,
 						'required'          => false,
 						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
 					'terms'         => [
-						'type'              => 'boolean',
+						'type'              => FieldType::BOOLEAN,
 						'required'          => false,
 						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
@@ -132,7 +132,7 @@ class Payment extends AbstractRestController {
 				'callback'            => [ $this, 'handle_webhook' ],
 				'args'                => [
 					'id' => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
@@ -145,7 +145,7 @@ class Payment extends AbstractRestController {
 				'callback'            => [ $this, 'refund' ],
 				'args'                => [
 					'id' => [
-						'type'              => 'integer',
+						'type'              => FieldType::INTEGER,
 						'required'          => true,
 						'sanitize_callback' => 'absint',
 					],

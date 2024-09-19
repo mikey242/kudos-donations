@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 
 use Exception;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_REST_Request;
@@ -45,7 +46,7 @@ class Subscription extends AbstractRestController {
 				'callback'            => [ $this, 'cancel' ],
 				'args'                => [
 					'id'    => [
-						'type'              => 'integer',
+						'type'              => FieldType::INTEGER,
 						'required'          => true,
 						'sanitize_callback' => 'absint',
 					],

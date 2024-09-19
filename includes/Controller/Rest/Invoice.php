@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\PDFService;
@@ -47,7 +48,7 @@ class Invoice extends AbstractRestController {
 				'permission_callback' => [ $this, 'can_manage_options' ],
 				'args'                => [
 					'force' => [
-						'type'     => 'boolean',
+						'type'     => FieldType::BOOLEAN,
 						'required' => false,
 						'default'  => false,
 					],
@@ -60,7 +61,7 @@ class Invoice extends AbstractRestController {
 				'permission_callback' => [ $this, 'can_manage_options' ],
 				'args'                => [
 					'force' => [
-						'type'     => 'boolean',
+						'type'     => FieldType::BOOLEAN,
 						'required' => false,
 						'default'  => false,
 					],

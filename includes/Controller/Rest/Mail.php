@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Service\MailerService;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -47,7 +48,7 @@ class Mail extends AbstractRestController {
 				'callback'            => [ $this, 'send_test' ],
 				'args'                => [
 					'email' => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_email',
 					],

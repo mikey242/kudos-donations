@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -43,7 +44,7 @@ class Transaction extends AbstractRestController {
 				'callback'            => [ $this, 'get_one' ],
 				'args'                => [
 					'id' => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'absint',
 					],
@@ -55,12 +56,12 @@ class Transaction extends AbstractRestController {
 				'callback'            => [ $this, 'get_all_between' ],
 				'args'                => [
 					'start' => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_title',
 					],
 					'end'   => [
-						'type'              => 'string',
+						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_title',
 					],
