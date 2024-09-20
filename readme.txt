@@ -14,35 +14,30 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 
 = A modern and easy to use donation plugin =
 
-*Kudos Donations* allows you to add a donate button anywhere on your website. Once a user clicks this button they will be greeted with a pop-up window where they can enter their details and how much they would like to donate.
+*Kudos Donations* is a powerful, easy-to-use WordPress plugin that lets you accept donations effortlessly. Whether you're running a charity, nonprofit, or a personal project, this plugin provides everything you need to create and manage effective donation campaigns. Fully integrated with Mollie, it supports a wide range of payment methods, allowing your donors to contribute through their preferred option.
 
-= Features and highlights =
+= Key Features =
 
-* Smart and modern design.
-* One-off or recurring payments.
-* Can add as many buttons as you like.
-* Connect with Mollie for secure payments by credit card, iDEAL and [many others](https://www.mollie.com/payments).
-* Toggle Automated email receipts.
-* Gutenberg block or shortcode to place your button virtually anywhere.
-* Customize the donation form, button and thank you message.
-* Set a goal and allow donors to see progression.
-* View and manage individual transactions, subscriptions, donors and campaigns from the admin menu.
+* Easy Mollie Integration: Accept payments via credit card, PayPal, iDEAL, and more, using the Mollie payment gateway.
+* Shortcode & Block Support: Choose between a shortcode or Gutenberg block to easily place donation forms anywhere on your site.
+* Campaign Management: Set up and manage multiple donation campaigns with flexible options, including one-off and subscription-based donations.
+* Customizable Donation Forms: Personalize the look of your donation forms by adjusting colors, text, and even applying custom CSS for each campaign.
+* Campaign Goals & Progress Tracking: Set campaign-specific fundraising goals and show progress bars to your visitors.
+* Multi-Currency Support: Accept donations in multiple currencies for a global reach.
+* Comprehensive Donor Management: Access detailed insights into donors, transactions, and subscriptions.
+* Automated Donation Receipts: Automatically generate and send donation receipts via email, complete with PDF attachments.
+* PDF Donation Summaries: Generate downloadable PDFs for every successful donation, providing donors with clear and professional records.
 
-= Easy to use =
-Just enter your API key from Mollie, then create your first campaign and add a form or button for the campaign anywhere on you website. You can place the form using use either the *Kudos Donations* block or with a shortcode. Please see the FAQ below for shortcode use.
+= Why Choose Kudos Donations? =
 
-Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
-
-= Campaigns =
-Create campaigns to easily group and track donations made by your donors. Each campaign can have a unique configuration which can be changed from the campaigns page and automatically applied to all your forms.
-
-= Recurring Payments =
-Allow donors to create a donation subscription to support your organization on a regular basis. Kudos Donations will automatically create the subscription and take payments from Mollie. Remember to check that your Mollie account meets the [conditions for recurring payments](https://help.mollie.com/hc/articles/214558045-What-are-the-conditions-for-the-use-of-Recurring-).
+Kudos Donations is designed to make online fundraising easier than ever. With seamless integration into your WordPress site, customizable options, and real-time tracking of donations, you can focus on growing your cause without the hassle of complicated setups.
 
 = Source =
 The Git repository for this plugin can be found [here](https://gitlab.iseard.media/michael/kudos-donations).
 
 == Installation ==
+
+Need a Mollie account? Visit their website to [get started](https://www.mollie.com/).
 
 1. Install using the WordPress plugin control panel or manually download the plugin and upload the *kudos-donations* folder to the /wp-content/plugins/ directory
 1. Activate the plugin through the *Plugins* menu in WordPress.
@@ -64,7 +59,7 @@ In order to use recurring payments Mollie requires that you have either SEPA Dir
 
 = I've enabled the required recurring payment methods, but I still cannot use recurring.
 
-If you modified your Mollie account after adding it to Kudos Donations your will need to re-sync the settings. To do this visit the Mollie tab under the settings page and click the "Refresh API" link.
+If you modified your Mollie account after adding it to Kudos Donations your will need to re-sync the settings. To do this visit the Mollie tab under the settings page and click the "Refresh API" button.
 
 = How much does Mollie cost? =
 
@@ -80,25 +75,24 @@ You can use this plugin in any country that is supported by Mollie. For a comple
 
 = How do I use the shortcode? =
 
-There is a handy "Copy shortcode" button at the bottom of the campaign settings page that will copy the shortcode into your clipboard.
+There is a handy "Copy shortcode" button at the top and bottom of the campaign edit screen that will copy the shortcode into your clipboard.
 
 To get started add the Kudos Donations shortcode:
 
 ~~~
-[kudos campaign_id="default"]
+[kudos campaign_id="242"]
 ~~~
 
 Here is a list of the shortcode attributes:
 
 * *button_label* = The label to display for the button.
 * *campaign_id* = ID of the campaign to use for this button.
-* *alignment* = Alignment of the button within container. Can be "center", "left" or "right".
 * *type* = Whether to show as a button with pop-up or just the form. Can be "button" or "form".
 
 e.g:
 
 ~~~~
-[kudos alignment="right" button_label="Donate now" campaign_id="default"]
+[kudos button_label="Donate now" campaign_id="default"]
 ~~~~
 
 For general information on how to use shortcodes, please visit [this page](https://codex.wordpress.org/shortcode).
