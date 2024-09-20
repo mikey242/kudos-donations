@@ -64,6 +64,7 @@ export const FormRouter = ({
 			country: '',
 			postcode: '',
 			street: '',
+			message: '',
 		},
 	});
 	const firstUpdate = useRef(true);
