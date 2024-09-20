@@ -39,7 +39,6 @@ class Front extends WP_UnitTestCase {
 		$args           = [
 			'campaign_id'  => 291,
 			'button_label' => 'Donate now',
-			'alignment'    => 'none',
 			'type'         => 'button',
 		];
 		$html           = $front->kudos_render_callback( $args );

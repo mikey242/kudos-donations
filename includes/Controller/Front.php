@@ -100,7 +100,6 @@ class Front extends AbstractRegistrable {
 					[
 						'button_label' => __( 'Donate now', 'kudos-donations' ),
 						'campaign_id'  => '',
-						'alignment'    => 'none',
 						'type'         => 'button',
 					],
 					$args,

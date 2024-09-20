@@ -17,7 +17,6 @@
 	"example": {
 		"attributes": {
 			"label": "Donate now!",
-			"alignment": "center"
 		}
 	},
 	"attributes": {
@@ -28,10 +27,6 @@
 		"campaign_id": {
 			"type": "string",
 			"default": ""
-		},
-		"alignment": {
-			"type": "string",
-			"default": "none"
 		},
 		"type": {
 			"type": "string",
