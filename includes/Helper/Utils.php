@@ -186,4 +186,13 @@ class Utils {
 	public static function sanitize_float( $input ) {
 		return filter_var( $input, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
 	}
+
+	/**
+	 * Formats value for display. Do not use to send to payment provider or store value.
+	 *
+	 * @param string $value The value to display.
+	 */
+	public static function format_value_for_display( string $value ): string {
+		return number_format_i18n( \floatval( $value ), 2, );
+	}
 }

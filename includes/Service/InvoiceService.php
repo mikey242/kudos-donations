@@ -125,7 +125,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 				$transaction->post_title       => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
 				__( 'VAT', 'kudos-donations' ) => 0,
 			],
-			'total'           => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
+			'total'           => Utils::format_value_for_display( $transaction->{TransactionPostType::META_FIELD_VALUE} ),
 		];
 
 		return $this->pdf->generate( $file, 'pdf/invoice.html.twig', $data );

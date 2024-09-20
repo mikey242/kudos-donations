@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos\Domain\PostType;
 use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Utils;
 
 class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
@@ -136,6 +137,10 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 			self::META_FIELD_VALUE                  => [
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Amount', 'kudos-donations' ),
+				'value'      => function ( $transaction_id ) {
+					$value = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_VALUE, true );
+					return Utils::format_value_for_display( $value );
+				},
 			],
 			self::META_FIELD_CURRENCY               => [
 				'value_type' => FieldType::STRING,

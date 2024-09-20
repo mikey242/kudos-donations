@@ -191,7 +191,7 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 		// Prepare output.
 		$return = [];
 		foreach ( $currency_sums as $currency => $value ) {
-			$return[] = Utils::get_currencies()[ $currency ] . $value;
+			$return[] = Utils::get_currencies()[ $currency ] . Utils::format_value_for_display( (string) $value );
 		}
 
 		return implode( ', ', $return );
