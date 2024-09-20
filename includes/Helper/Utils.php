@@ -193,6 +193,15 @@ class Utils {
 	 * @param string $value The value to display.
 	 */
 	public static function format_value_for_display( string $value ): string {
-		return number_format_i18n( \floatval( $value ), 2, );
+		return number_format_i18n( \floatval( $value ), 2 );
+	}
+
+	/**
+	 * Formats value for use with payment provider or storage.
+	 *
+	 * @param string $value The value to format.
+	 */
+	public static function format_value_for_use( string $value ): string {
+		return number_format( \floatval( $value ), 2, '.', '' );
 	}
 }

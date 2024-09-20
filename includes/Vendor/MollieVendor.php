@@ -494,7 +494,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		$customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID};
 		$start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
 		$currency    = $transaction->{TransactionPostType::META_FIELD_CURRENCY};
-		$value       = number_format( floatval($transaction->{TransactionPostType::META_FIELD_VALUE}), 2);
+		$value       = Utils::format_value_for_use($transaction->{TransactionPostType::META_FIELD_VALUE});
 		$customer    = $this->get_customer($customer_id);
 
 		// Create subscription if valid mandate found.
@@ -790,7 +790,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		$post = get_post($post_id);
 		if(TransactionPostType::get_slug() === $post->post_type) {
 			$payment_id = $post->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID};
-			$amount['value'] = number_format(floatval($post->{TransactionPostType::META_FIELD_VALUE}), 2, '.', '');
+			$amount['value'] = Utils::format_value_for_use($post->{TransactionPostType::META_FIELD_VALUE});
 			$amount['currency'] = $post->{TransactionPostType::META_FIELD_CURRENCY};
 			try {
 				$payment = $this->api_client->payments->get($payment_id);
