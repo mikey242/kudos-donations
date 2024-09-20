@@ -493,7 +493,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		$donor       = get_post($transaction->{TransactionPostType::META_FIELD_DONOR_ID});
 		$customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID};
 		$start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
-		$currency    = 'EUR';
+		$currency    = $transaction->{TransactionPostType::META_FIELD_CURRENCY};
 		$value       = number_format( floatval($transaction->{TransactionPostType::META_FIELD_VALUE}), 2);
 		$customer    = $this->get_customer($customer_id);
 
