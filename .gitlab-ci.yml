@@ -37,7 +37,6 @@ stages:
     - code-quality
     - build
     - test
-    - deploy
     - release
 
 .validate-composer:
@@ -89,31 +88,25 @@ build-job:
         - bash /bin/install-wp-tests.sh $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST $WORDPRESS_TEST_VERSION true
         - composer run test-integration:gitlab
 
-deploy-job:
+release-job:
     image: wordpress:php$PHP_VERSION
-    stage: deploy
+    stage: release
     before_script:
         - *script_install_composer
         - composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist
         - apt-get update -y && apt-get install -y zip
     script:
-        - echo "Deploying application..."
         - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
         - chmod +x wp-cli.phar
         - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
         - composer run make-zip
-        - echo "Application successfully built."
-    artifacts:
-        paths:
-            - kudos-donations.zip
-        expire_in: 1 week
-
-release:
-    stage: release
-    script:
-        - release-cli create --name "Release $CI_COMMIT_TAG" \
-            --tag-name "$CI_COMMIT_TAG" \
-            --description "Release description" \
-            --assets-link "{\"name\":\"kudos-donations.zip\",\"url\":\"${CI_PROJECT_URL}/-/jobs/$CI_JOB_ID/artifacts/file/release/kudos-donations.zip\"}"
+    release:
+        name: 'Release $CI_COMMIT_TAG'
+        tag_name: $CI_COMMIT_TAG
+        description: 'Release created using the release-cli.'
+        assets:
+            links:
+                - name: 'kudos-donations.zip'
+                  url: ${CI_PROJECT_URL}/-/jobs/$CI_JOB_ID/artifacts/file/release/kudos-donations.zip
     only:
         - tags
