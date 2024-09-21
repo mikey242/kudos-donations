@@ -185,10 +185,11 @@ class Front extends AbstractRegistrable {
 									$donor_id              = $transaction->{TransactionPostType::META_FIELD_DONOR_ID};
 									$donor                 = get_post( $donor_id );
 									$value                 = $transaction->{TransactionPostType::META_FIELD_VALUE};
-									$currency              = $transaction->{TransactionPostType::META_FIELD_VALUE};
+									$currency              = $transaction->{TransactionPostType::META_FIELD_CURRENCY};
+									$currency_symbol       = Utils::get_currencies()[ $currency ] ?? null;
 									$vars                  = [
-										'{{value}}' => ( ! empty( $currency ) ? html_entity_decode(
-											Utils::get_currency_symbol( $currency )
+										'{{value}}' => ( ! empty( $currency_symbol ) ? html_entity_decode(
+											$currency_symbol
 										) : '' ) . number_format_i18n(
 											$value,
 											2

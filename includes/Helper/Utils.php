@@ -21,65 +21,40 @@ class Utils {
 	 * @return string[]
 	 */
 	public static function get_currencies(): array {
-		return [
-			'AED' => 'د.إ',
-			'AUD' => '$',
-			'BGN' => 'лв',
-			'BRL' => 'R$',
-			'CAD' => '$',
-			'CHF' => 'CHF',
-			'CZK' => 'Kč',
-			'DKK' => 'kr',
-			'EUR' => '€',
-			'GBP' => '£',
-			'HKD' => '$',
-			'HUF' => 'Ft',
-			'ILS' => '₪',
-			'ISK' => 'kr',
-			'JPY' => '¥',
-			'MXN' => '$',
-			'MYR' => 'RM',
-			'NOK' => 'kr',
-			'NZD' => '$',
-			'PHP' => '₱',
-			'PLN' => 'zł',
-			'RON' => 'lei',
-			'RUB' => '₽',
-			'SEK' => 'kr',
-			'SGD' => '$',
-			'THB' => '฿',
-			'TWD' => 'NT$',
-			'USD' => '$',
-			'ZAR' => 'R',
-		];
-	}
-
-	/**
-	 * Converts three letter currency code into a symbol.
-	 *
-	 * @param string $currency Three letter currency code (EUR, GBP, USD).
-	 */
-	public static function get_currency_symbol( string $currency ): string {
-		$currency = strtoupper( $currency );
-
-		switch ( $currency ) {
-			case 'EUR':
-				$result = '&#8364;';
-				break;
-			case 'USD':
-				$result = '&#36;';
-				break;
-			case 'GBP':
-				$result = '&#163;';
-				break;
-			case 'JPY':
-				$result = '&#165;';
-				break;
-			default:
-				$result = '&#8364;';
-		}
-
-		return $result;
+		return apply_filters(
+			'kudos_get_currencies',
+			[
+				'AED' => 'د.إ',
+				'AUD' => '$',
+				'BGN' => 'лв',
+				'BRL' => 'R$',
+				'CAD' => '$',
+				'CHF' => 'CHF',
+				'CZK' => 'Kč',
+				'DKK' => 'kr',
+				'EUR' => '€',
+				'GBP' => '£',
+				'HKD' => '$',
+				'HUF' => 'Ft',
+				'ILS' => '₪',
+				'ISK' => 'kr',
+				'JPY' => '¥',
+				'MXN' => '$',
+				'MYR' => 'RM',
+				'NOK' => 'kr',
+				'NZD' => '$',
+				'PHP' => '₱',
+				'PLN' => 'zł',
+				'RON' => 'lei',
+				'RUB' => '₽',
+				'SEK' => 'kr',
+				'SGD' => '$',
+				'THB' => '฿',
+				'TWD' => 'NT$',
+				'USD' => '$',
+				'ZAR' => 'R',
+			]
+		);
 	}
 
 	/**
