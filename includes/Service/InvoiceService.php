@@ -112,6 +112,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 			'donor_street'    => $donor->{DonorPostType::META_FIELD_STREET},
 			'donor_postcode'  => $donor->{DonorPostType::META_FIELD_POSTCODE},
 			'donor_city'      => $donor->{DonorPostType::META_FIELD_CITY},
+			'donor_country'   => $donor->{DonorPostType::META_FIELD_COUNTRY},
 			'order_id'        => $transaction->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID},
 			'vendor'          => $transaction->{TransactionPostType::META_FIELD_VENDOR},
 			'sequence_type'   => $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
