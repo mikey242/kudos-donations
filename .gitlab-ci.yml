@@ -68,6 +68,8 @@ build-job:
         - *script_install_composer
     script:
         - npm run build
+    only:
+        - tags
 
 .test-job:
     image: wordpress:php$PHP_VERSION
