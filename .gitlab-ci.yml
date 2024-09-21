@@ -37,6 +37,8 @@ stages:
     - code-quality
     - build
     - test
+    - zip
+    - upload
     - release
 
 .validate-composer:
@@ -92,7 +94,7 @@ build-job:
 
 zip-job:
     image: wordpress:php$PHP_VERSION
-    stage: release
+    stage: zip
     before_script:
         - *script_install_composer
         - composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist
@@ -109,13 +111,19 @@ zip-job:
     only:
         - tags
 
+upload-zip:
+    stage: upload
+    image: curlimages/curl:latest
+    script:
+        - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file kudos-donations.zip "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/zip/${CI_COMMIT_TAG}/kudos-donations.zip"'
+    only:
+        - main
+
 release-job:
     image: registry.gitlab.com/gitlab-org/release-cli:latest
     stage: release
     script:
         - echo "Running the release job."
-    dependencies:
-        - zip-job
     release:
         name: 'Release $CI_COMMIT_TAG'
         tag_name: $CI_COMMIT_TAG
@@ -123,6 +131,6 @@ release-job:
         assets:
             links:
                 - name: 'kudos-donations.zip'
-                  url: ${CI_PROJECT_URL}/-/jobs/$CI_JOB_ID/artifacts/file/kudos-donations.zip
+                  url: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/zip/${CI_COMMIT_TAG}/kudos-donations.zip
     only:
         - tags
