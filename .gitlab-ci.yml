@@ -90,7 +90,7 @@ build-job:
         - bash /bin/install-wp-tests.sh $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST $WORDPRESS_TEST_VERSION true
         - composer run test-integration:gitlab
 
-release-job:
+zip-job:
     image: wordpress:php$PHP_VERSION
     stage: release
     before_script:
@@ -102,6 +102,18 @@ release-job:
         - chmod +x wp-cli.phar
         - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
         - composer run make-zip
+    artifacts:
+        paths:
+            - kudos-donations.zip
+        expire_in: 1 week
+    only:
+        - tags
+
+release-job:
+    image: registry.gitlab.com/gitlab-org/release-cli:latest
+    stage: release
+    dependencies:
+        - zip-job
     release:
         name: 'Release $CI_COMMIT_TAG'
         tag_name: $CI_COMMIT_TAG
