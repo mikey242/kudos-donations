@@ -115,7 +115,7 @@ upload-zip:
     image: curlimages/curl:latest
     stage: upload
     script:
-        - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file kudos-donations.zip "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/zip/${CI_COMMIT_TAG}/kudos-donations.zip"'
+        - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file kudos-donations.zip "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/kudos-donations/${CI_COMMIT_TAG}/kudos-donations.zip"'
     only:
         - tags
 
@@ -131,6 +131,6 @@ release-job:
         assets:
             links:
                 - name: 'kudos-donations.zip'
-                  url: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/zip/${CI_COMMIT_TAG}/kudos-donations.zip
+                  url: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/kudos-donations/${CI_COMMIT_TAG}/kudos-donations.zip
     only:
         - tags
