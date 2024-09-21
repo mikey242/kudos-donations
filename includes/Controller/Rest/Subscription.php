@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use Exception;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -84,7 +84,7 @@ class Subscription extends AbstractRestController {
 
 		// Check if token is valid.
 		try {
-			if ( ! Utils::verify_token( $post_id, $token ) ) {
+			if ( ! EncryptionService::verify_token( $post_id, $token ) ) {
 				$this->logger->info( 'Subscription: Invalid token supplied' );
 				return new WP_REST_Response(
 					[

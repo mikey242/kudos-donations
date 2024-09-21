@@ -178,7 +178,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 				$render_array['cancel_url'] = add_query_arg(
 					[
 						'kudos_action' => 'cancel_subscription',
-						'token'        => Utils::generate_token( $subscription->ID ),
+						'token'        => EncryptionService::generate_token( $subscription->ID ),
 						'id'           => $subscription->ID,
 					],
 					apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
