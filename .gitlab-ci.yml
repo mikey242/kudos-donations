@@ -33,10 +33,7 @@ cache:
           - build/
 
 stages:
-    #- validate
-    #- code-quality
     - build
-    #- test
     - deploy
     - release
 
