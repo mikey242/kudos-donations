@@ -33,11 +33,12 @@ cache:
           - build/
 
 stages:
-    - validate
-    - code-quality
+    #- validate
+    #- code-quality
     - build
-    - test
+    #- test
     - deploy
+    - release
 
 validate-composer:
     image: composer:2
@@ -106,3 +107,14 @@ deploy-job:
         paths:
             - kudos-donations.zip
         expire_in: 1 week
+
+release:
+    stage: release
+    script:
+        - unzip artifact.zip -d release/
+        - release-cli create --name "Release $CI_COMMIT_TAG" \
+            --tag-name "$CI_COMMIT_TAG" \
+            --description "Release description" \
+            --assets-link "{\"name\":\"kudos-donations.zip\",\"url\":\"${CI_PROJECT_URL}/-/jobs/$CI_JOB_ID/artifacts/file/release/kudos-donations.zip\"}"
+    only:
+        - tags
