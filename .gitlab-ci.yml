@@ -112,6 +112,8 @@ zip-job:
 release-job:
     image: registry.gitlab.com/gitlab-org/release-cli:latest
     stage: release
+    script:
+        - echo "Running the release job."
     dependencies:
         - zip-job
     release:
