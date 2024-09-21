@@ -51,7 +51,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 		$this->pdf->setOptions( $options );
 
 		$this->logos = [
-			'logo' => 'data:image/svg+xml,' . Utils::get_logo_svg(),
+			'logo' => 'data:image/svg+xml,' . Utils::get_company_logo_svg(),
 		];
 	}
 

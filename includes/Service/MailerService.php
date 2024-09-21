@@ -95,9 +95,9 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 
 		// Add logo as attachment.
 		$phpmailer->addStringEmbeddedImage(
-			Utils::get_logo(),
-			'kudos-logo',
-			'kudos-logo.png'
+			Utils::get_company_logo_svg(),
+			'logo',
+			'logo.png'
 		);
 
 		// Enable HTML email support.
@@ -163,7 +163,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 				2
 			),
 			'receipt_id'   => TransactionPostType::get_formatted_id( $transaction_id ),
-			'website_name' => get_bloginfo( 'name' ),
+			'website_name' => Utils::get_company_name(),
 		];
 
 		// Add a cancel button if this is the receipt for a subscription payment.

@@ -118,7 +118,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 			'sequence_type'   => $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
 			'id'              => gmdate( 'Y' ) . '_' . $transaction->{TransactionPostType::META_FIELD_INVOICE_NUMBER},
 			'date'            => $transaction->post_date,
-			'company_name'    => get_bloginfo( 'name' ),
+			'company_name'    => Utils::get_company_name(),
 			'company_address' => get_option( self::SETTING_INVOICE_COMPANY_ADDRESS ),
 			'vat_number'      => get_option( self::SETTING_INVOICE_VAT_NUMBER ),
 			'currency_symbol' => Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ],

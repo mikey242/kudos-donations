@@ -307,6 +307,7 @@ class Payment extends AbstractRestController {
 	 * @return WP_ERROR | WP_REST_Response
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
+		do_action( 'kudos_' . $this->vendor::get_vendor_slug() . '_webhook_requested', $request );
 		return $this->vendor->rest_webhook( $request );
 	}
 

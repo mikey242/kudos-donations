@@ -594,9 +594,6 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
         // ID is case-sensitive (e.g: tr_HUW39xpdFN).
         $payment_id = $request->get_param('id');
 
-        // Create action with payment_id as parameter.
-        do_action('kudos_mollie_webhook_requested', $payment_id);
-
         // Mollie API.
         $mollie = $this->api_client;
 
