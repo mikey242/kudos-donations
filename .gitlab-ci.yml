@@ -111,7 +111,6 @@ deploy-job:
 release:
     stage: release
     script:
-        - unzip artifact.zip -d release/
         - release-cli create --name "Release $CI_COMMIT_TAG" \
             --tag-name "$CI_COMMIT_TAG" \
             --description "Release description" \
