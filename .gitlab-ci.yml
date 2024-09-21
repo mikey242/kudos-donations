@@ -107,6 +107,6 @@ release-job:
         assets:
             links:
                 - name: 'kudos-donations.zip'
-                  url: ${CI_PROJECT_URL}/-/jobs/$CI_JOB_ID/artifacts/file/release/kudos-donations.zip
+                  url: ${CI_PROJECT_URL}/-/jobs/$CI_JOB_ID/artifacts/file/kudos-donations.zip
     only:
         - tags
