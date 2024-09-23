@@ -50,6 +50,7 @@ validate-composer:
 lint-php:
     image: wordpress:php$PHP_VERSION
     stage: code-quality
+    cache: []
     before_script: *script_install_composer
     script:
         - composer run lint:gitlab
@@ -57,6 +58,7 @@ lint-php:
 lint-js-css:
     image: wordpress:php$PHP_VERSION
     stage: code-quality
+    cache: []
     before_script: *script_install_npm
     script:
         - npm run lint:js
@@ -65,6 +67,8 @@ lint-js-css:
 build-job:
     image: wordpress:php$PHP_VERSION
     stage: build
+    cache:
+        policy: push
     before_script:
         - *script_install_npm
         - *script_install_composer
@@ -76,6 +80,8 @@ build-job:
 test-job:
     image: wordpress:php$PHP_VERSION
     stage: test
+    cache:
+        policy: pull
     services:
         - mysql
     variables:
@@ -95,6 +101,8 @@ test-job:
 zip-job:
     image: wordpress:php$PHP_VERSION
     stage: zip
+    cache:
+        policy: pull
     before_script:
         - *script_install_composer
         - composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist
