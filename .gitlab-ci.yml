@@ -41,20 +41,20 @@ stages:
     - upload
     - release
 
-.validate-composer:
+validate-composer:
     image: composer:2
     stage: validate
     script:
         - composer --no-ansi validate
 
-.lint-php:
+lint-php:
     image: wordpress:php$PHP_VERSION
     stage: code-quality
     before_script: *script_install_composer
     script:
         - composer run lint:gitlab
 
-.lint-js-css:
+lint-js-css:
     image: wordpress:php$PHP_VERSION
     stage: code-quality
     before_script: *script_install_npm
@@ -73,7 +73,7 @@ build-job:
     only:
         - tags
 
-.test-job:
+test-job:
     image: wordpress:php$PHP_VERSION
     stage: test
     services:
@@ -114,6 +114,7 @@ zip-job:
 upload-zip:
     image: curlimages/curl:latest
     stage: upload
+    cache: []
     script:
         - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file kudos-donations.zip "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/kudos-donations/${CI_COMMIT_TAG}/kudos-donations.zip"'
     only:
@@ -122,12 +123,13 @@ upload-zip:
 release-job:
     image: registry.gitlab.com/gitlab-org/release-cli:latest
     stage: release
+    cache: []
     script:
         - echo "Running the release job."
     release:
         name: 'Release $CI_COMMIT_TAG'
         tag_name: $CI_COMMIT_TAG
-        description: $CI_COMMIT_MESSAGE
+        description: $CI_COMMIT_TAG_MESSAGE
         assets:
             links:
                 - name: 'kudos-donations.zip'
