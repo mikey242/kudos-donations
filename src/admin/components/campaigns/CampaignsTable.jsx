@@ -8,7 +8,7 @@ import {
 	Tooltip,
 	VisuallyHidden,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { Table } from '../Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
@@ -22,7 +22,21 @@ export const CampaignsTable = ({ handleEdit }) => {
 		{
 			title: __('Campaign', 'kudos-donations'),
 			orderby: 'title',
-			valueCallback: (post) => post.title.rendered,
+			valueCallback: (post) => (
+				<Button
+					showTooltip={true}
+					style={{ textDecoration: 'none' }}
+					label={sprintf(
+						/* translators: %s is the campaign name */
+						__('Edit %s', 'kudos-donations'),
+						post.title.rendered
+					)}
+					variant="link"
+					onClick={() => handleEdit('edit', post.id)}
+				>
+					{post.title.rendered}
+				</Button>
+			),
 		},
 		{
 			title: __('Theme color', 'kudos-donations'),
