@@ -44,6 +44,7 @@ stages:
 validate-composer:
     image: composer:2
     stage: validate
+    cache: []
     script:
         - composer --no-ansi validate
 
