@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Vendor;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
+use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
@@ -648,10 +649,16 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
                 ]);
                 $customer     = $mollie->customers->get($payment->customerId);
                 $subscription = $customer->getSubscription($payment->subscriptionId);
+
+				//	Get post id if $campaign_id is slug from pre 4.0.0 version.
+				$campaign_id = $subscription->metadata->{TransactionPostType::META_FIELD_CAMPAIGN_ID};
+				$campaign = CampaignPostType::get_post_by_id_or_slug($campaign_id);
+				$campaign_id = $campaign->ID;
+
                 $transaction  = TransactionPostType::save(
 					[
 						TransactionPostType::META_FIELD_DONOR_ID => $subscription->metadata->{TransactionPostType::META_FIELD_DONOR_ID} ?? '',
-	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $subscription->metadata->{TransactionPostType::META_FIELD_CAMPAIGN_ID} ?? '',
+	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_id ?? '',
 						TransactionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id
                     ]
                 );

@@ -197,4 +197,31 @@ trait MapperTrait {
 			}
 		}
 	}
+
+	/**
+	 * Get the post by slug or ID.
+	 *
+	 * @param mixed $value The slug or ID to get.
+	 * @return array|WP_Post|null
+	 */
+	public static function get_post_by_id_or_slug( $value ) {
+		// Try to get the post by ID first, but only if it's a positive integer.
+		if ( is_numeric( $value ) && \intval( $value ) > 0 ) {
+			// Try to get the post by ID.
+			$post = get_post( (int) $value );
+			if ( $post ) {
+				return $post;
+			}
+		}
+
+		// Otherwise, treat it as a slug (even if it's numeric).
+		$post = get_page_by_path( sanitize_title( $value ), OBJECT, static::get_post_type() );
+
+		// Check if a post was found by slug.
+		if ( $post ) {
+			return $post;
+		}
+
+		return null; // Return null if no post was found.
+	}
 }
