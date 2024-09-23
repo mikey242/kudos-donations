@@ -69,20 +69,18 @@ build-job:
     image: wordpress:php$PHP_VERSION
     stage: build
     cache:
-        policy: pull-push
+        policy: push
     before_script:
         - *script_install_npm
         - *script_install_composer
     script:
         - npm run build
-    only:
-        - tags
 
 test-job:
     image: wordpress:php$PHP_VERSION
     stage: test
     cache:
-        policy: pull-push
+        policy: pull
     services:
         - mysql
     variables:
