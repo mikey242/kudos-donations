@@ -28,7 +28,7 @@ class Plugin implements LoggerAwareInterface {
 	/**
 	 * Plugin constructor.
 	 *
-	 * @param RegistrableHandler $registrable_handler Service instantiator.
+	 * @param RegistrableHandler $registrable_handler Registration handler.
 	 * @param ActivationHandler  $activation_handler  Activation related functions.
 	 */
 	public function __construct(
