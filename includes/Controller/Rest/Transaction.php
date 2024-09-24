@@ -34,12 +34,12 @@ class Transaction extends AbstractRestController {
 	 */
 	public function get_routes(): array {
 		return [
-			''         => [
+			''     => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_all' ],
 				'permission_callback' => '__return_true',
 			],
-			'/get'     => [
+			'/get' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_one' ],
 				'args'                => [
@@ -47,23 +47,6 @@ class Transaction extends AbstractRestController {
 						'type'              => FieldType::STRING,
 						'required'          => true,
 						'sanitize_callback' => 'absint',
-					],
-				],
-				'permission_callback' => '__return_true',
-			],
-			'/between' => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_all_between' ],
-				'args'                => [
-					'start' => [
-						'type'              => FieldType::STRING,
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_title',
-					],
-					'end'   => [
-						'type'              => FieldType::STRING,
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_title',
 					],
 				],
 				'permission_callback' => '__return_true',
@@ -91,32 +74,5 @@ class Transaction extends AbstractRestController {
 				[ TransactionPostType::META_FIELD_STATUS => PaymentStatus::PAID ]
 			)
 		);
-	}
-
-	/**
-	 * Get all records between specified dates.
-	 *
-	 * @param WP_REST_Request $request The request object.
-	 */
-	public function get_all_between( WP_REST_Request $request ): WP_REST_Response {
-		$response = new WP_REST_Response();
-
-		if ( $request->has_valid_params() ) {
-			$params = $request->get_query_params();
-			if ( ! empty( $params['start'] ) && ! empty( $params['end'] ) ) {
-				$start = $params['start'] . ' 00:00:00';
-				$end   = $params['end'] . ' 23:59:59';
-
-				$response->set_data( TransactionPostType::get_all_between( $start, $end ) );
-
-				return $response;
-			}
-
-			$response->set_data( TransactionPostType::get_posts() );
-
-			return $response;
-		}
-
-		return $response;
 	}
 }

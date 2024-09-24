@@ -39,30 +39,6 @@ trait MapperTrait {
 	}
 
 	/**
-	 * Returns all posts between specified dates.
-	 *
-	 * @param string $start Start date.
-	 * @param string $end End date.
-	 */
-	public static function get_all_between( string $start, string $end ): array {
-
-		$args = self::prepare_arguments(
-			[
-				'posts_per_page' => -1,
-				'date_query'     => [
-					[
-						'after'     => $start, // 'January 1st, 2015'
-						'before'    => $end, // 'December 31st, 2015'
-						'inclusive' => true,
-					],
-				],
-			]
-		);
-
-		return get_posts( $args['post_data'] );
-	}
-
-	/**
 	 * Gets posts by simple [key => value] args. Returns all posts of parent type if args empty.
 	 *
 	 * @param array  $args Array of [key => value] args.
