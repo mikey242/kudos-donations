@@ -93,17 +93,17 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 			}
 		}
 
+		// Get transaction.
 		$transaction = TransactionPostType::get_post( [ 'ID' => $transaction_id ] );
-
 		if ( ! $transaction ) {
-			wp_send_json_error( [ 'message' => 'Transaction not found' ] );
+			$this->logger->debug( 'Error generating invoice: Transaction not found', [ 'transaction_id' => $transaction_id ] );
 			return null;
 		}
 
+		// Get donor.
 		$donor = DonorPostType::get_post( [ 'ID' => $transaction->{TransactionPostType::META_FIELD_DONOR_ID} ] );
-
 		if ( ! $donor ) {
-			wp_send_json_error( [ 'message' => 'Donor not found' ] );
+			$this->logger->debug( 'Error generating invoice: Donor not found', [ 'donor_id' => $donor->ID ] );
 			return null;
 		}
 

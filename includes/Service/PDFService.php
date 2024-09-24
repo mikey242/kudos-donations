@@ -111,7 +111,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	 * @param string $file The output file.
 	 * @param string $template Template to use.
 	 * @param array  $data Data to pass to template.
-	 * @return bool
+	 * @return string|false
 	 */
 	public function generate( string $file, string $template, array $data ) {
 

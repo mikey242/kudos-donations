@@ -17,6 +17,7 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\PDFService;
 use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 
 class Invoice extends AbstractRestController {
@@ -72,16 +73,21 @@ class Invoice extends AbstractRestController {
 	 *
 	 * @param WP_REST_Request $request The REST request.
 	 */
-	public function get_invoice( WP_REST_Request $request ) {
+	public function get_invoice( WP_REST_Request $request ): WP_REST_Response {
 		$transaction_id = $request->get_param( 'id' );
 		$force          = $request->get_param( 'force' );
 		$view           = $request->get_param( 'view' );
 
 		$file = $this->invoice->generate_invoice( (int) $transaction_id, $force );
-		if ( $view ) {
-			$this->pdf->stream( $file );
+
+		if ( $file ) {
+			if ( $view ) {
+				$this->pdf->stream( $file );
+			}
+			return new WP_REST_Response( [ 'path' => $file ], 200 );
+		} else {
+			return new WP_REST_Response( [ 'message' => __( 'Something went wrong generating invoice', 'kudos-donations' ) ], 500 );
 		}
-		wp_send_json( $file );
 	}
 
 	/**
