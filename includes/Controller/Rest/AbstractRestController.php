@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Container\Delayed;
 use IseardMedia\Kudos\Container\Registrable;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use WP_Error;
 use WP_REST_Controller;
 
 abstract class AbstractRestController extends WP_REST_Controller implements Registrable, Delayed, LoggerAwareInterface {
@@ -110,7 +111,7 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 
 		// Check if tabs completed too quickly.
 		if ( $time_diff < 4 ) {
-			new \WP_Error(
+			new WP_Error(
 				'rest_forbidden',
 				__( 'Bot detected, rejecting tabs.', 'kudos-donations' ),
 				[
@@ -124,7 +125,7 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 
 		// Check if honeypot field completed.
 		if ( ! empty( $values['donation'] ) ) {
-			new \WP_Error(
+			new WP_Error(
 				'rest_forbidden',
 				__( 'Bot detected, rejecting tabs.', 'kudos-donations' ),
 				array_merge(
