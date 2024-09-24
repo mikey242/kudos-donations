@@ -42,20 +42,7 @@ class Invoice extends AbstractRestController {
 	 */
 	public function get_routes(): array {
 		return [
-			'/view/transaction/(?P<id>\d+)' => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'view_invoice' ],
-				'permission_callback' => [ $this, 'can_manage_options' ],
-				'args'                => [
-					'force' => [
-						'type'     => FieldType::BOOLEAN,
-						'required' => false,
-						'default'  => false,
-					],
-				],
-
-			],
-			'/get/transaction/(?P<id>\d+)'  => [
+			'/get/transaction/(?P<id>\d+)' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_invoice' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
@@ -65,9 +52,14 @@ class Invoice extends AbstractRestController {
 						'required' => false,
 						'default'  => false,
 					],
+					'view'  => [
+						'type'     => FieldType::BOOLEAN,
+						'required' => false,
+						'default'  => false,
+					],
 				],
 			],
-			'/regenerate'                   => [
+			'/regenerate'                  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'regenerate_invoices' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
@@ -80,30 +72,15 @@ class Invoice extends AbstractRestController {
 	 *
 	 * @param WP_REST_Request $request The REST request.
 	 */
-	public function view_invoice( WP_REST_Request $request ) {
-		$transaction_id = $request->get_param( 'id' );
-		$force          = $request->get_param( 'force' );
-
-		$this->invoice->generate_invoice( (int) $transaction_id, $force );
-
-		$file_name = "invoice-$transaction_id.pdf";
-		$file      = PDFService::INVOICE_DIR . $file_name;
-		$this->pdf->stream( $file );
-	}
-
-	/**
-	 * Generate an invoice for the supplied transaction id.
-	 *
-	 * @param WP_REST_Request $request The REST request.
-	 */
 	public function get_invoice( WP_REST_Request $request ) {
 		$transaction_id = $request->get_param( 'id' );
 		$force          = $request->get_param( 'force' );
+		$view           = $request->get_param( 'view' );
 
-		$this->invoice->generate_invoice( (int) $transaction_id, $force );
-
-		$file_name = "invoice-$transaction_id.pdf";
-		$file      = PDFService::INVOICE_DIR . $file_name;
+		$file = $this->invoice->generate_invoice( (int) $transaction_id, $force );
+		if ( $view ) {
+			$this->pdf->stream( $file );
+		}
 		wp_send_json( $file );
 	}
 
