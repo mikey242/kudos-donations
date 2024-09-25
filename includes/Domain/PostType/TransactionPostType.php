@@ -37,6 +37,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	public const META_FIELD_VENDOR_CUSTOMER_ID     = 'vendor_customer_id';
 	public const META_FIELD_VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
 	public const META_FIELD_INVOICE_NUMBER         = 'invoice_number';
+	public const META_FIELD_CHECKOUT_URL           = 'checkout_url';
 
 	/**
 	 * {@inheritDoc}
@@ -137,6 +138,10 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 			self::META_FIELD_INVOICE_NUMBER         => [
 				'type'              => FieldType::INTEGER,
 				'sanitize_callback' => 'absint',
+			],
+			self::META_FIELD_CHECKOUT_URL           => [
+				'type'              => FieldType::STRING,
+				'sanitize_callback' => 'sanitize_url',
 			],
 		];
 	}
