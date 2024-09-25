@@ -41,7 +41,7 @@ const EmailTab = () => {
 			body: JSON.stringify({ email: address }),
 		})
 			.then((result) => {
-				void createSuccessNotice(result.data.message, {
+				void createSuccessNotice(result.message, {
 					type: 'snackbar',
 				});
 			})

@@ -329,7 +329,6 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 */
 	public function handle_error( WP_Error $error ): void {
 		$this->logger->error( 'Error sending email.', [ $error->get_error_messages() ] );
-		wp_send_json_error( $error->get_error_messages() );
 	}
 
 	/**

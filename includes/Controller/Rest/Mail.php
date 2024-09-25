@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Service\MailerService;
 use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 
 class Mail extends AbstractRestController {
@@ -63,11 +64,11 @@ class Mail extends AbstractRestController {
 	 *
 	 * @param WP_REST_Request $request Request array.
 	 */
-	public function send_test( WP_REST_Request $request ): bool {
+	public function send_test( WP_REST_Request $request ): WP_REST_Response {
 		$email = sanitize_email( $request['email'] );
 
 		if ( ! $email ) {
-			wp_send_json_error( [ 'message' => __( 'Invalid test email address', 'kudos-donations' ) ] );
+			return new WP_REST_Response( [ 'message' => __( 'Invalid test email address', 'kudos-donations' ) ] );
 		}
 
 		$header  = __( 'It worked!', 'kudos-donations' );
@@ -77,9 +78,9 @@ class Mail extends AbstractRestController {
 
 		if ( $result ) {
 			/* translators: %s: API mode */
-			wp_send_json_success( [ 'message' => wp_sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) ] );
+			return new WP_REST_Response( [ 'message' => wp_sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) ], 200 );
 		}
 
-		return $result;
+		return new WP_REST_Response( [ 'message' => __( 'Something went wrong sending the test email', 'kudos-donations' ) ], 500 );
 	}
 }
