@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Container\Handler;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 
 /**
- * Service instantiator class.
+ * ActivationHandler class.
  */
 class ActivationHandler {
 	/**
