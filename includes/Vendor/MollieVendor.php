@@ -62,9 +62,6 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	    $this->api_client = $api_client;
 		$this->encryption = $encryption;
 
-		// Hook for checking payment status if it is still open after 1 minute.
-		add_action('kudos_check_mollie_payment', [$this, 'update_payment_status']);
-
 		// Handle API key saving.
 	    add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
 	    add_filter( 'pre_update_option_' . self::SETTING_API_KEY_TEST, [ $this, 'handle_key_update' ], 10, 3 );
@@ -482,11 +479,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 			$checkout_url =$payment->getCheckoutUrl();
 
 			// Update meta field from payment object.
-			update_post_meta($transaction_id, TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID, $payment->id);
 			update_post_meta($transaction_id, TransactionPostType::META_FIELD_CHECKOUT_URL, $checkout_url);
-
-			// Schedule checking the payment status.
-			Utils::schedule_action(strtotime( '+1 minute' ), 'kudos_check_mollie_payment', [$transaction_id]);
 
             return $checkout_url;
         } catch (ApiException $e) {
@@ -494,50 +487,6 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
             return false;
         }
     }
-
-	/**
-	 * Updates the status for the provided post id.
-	 *
-	 * @param int $post_id The WordPress post ID.
-	 */
-	public function update_payment_status( int $post_id): void {
-		$transaction = get_post($post_id);
-		if($transaction) {
-			$status = $transaction->{TransactionPostType::META_FIELD_STATUS};
-
-			// If payment status is not open, then it has already been updated. Bail.
-			if(PaymentStatus::OPEN !== $status) {
-				return;
-			}
-
-			// Get Mollie payment id and continue checking.
-			$payment_id = $transaction->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID};
-			if($payment_id) {
-				$status = $this->get_payment_status($payment_id);
-				update_post_meta($post_id, TransactionPostType::META_FIELD_STATUS, $status);
-			}
-		}
-	}
-
-	/**
-	 * Gets the payment status from Mollie.
-	 *
-	 * @param string $payment_id The Mollie payment ID.
-	 *
-	 * @return string|null The payment status or null if no payment found.
-	 */
-	public function get_payment_status( string $payment_id ): ?string {
-		try {
-			$payment = $this->api_client->payments->get($payment_id);
-			if($payment) {
-				return $payment->status;
-			}
-			return null;
-		} catch (APiException $e) {
-			$this->logger->error($e->getMessage());
-			return null;
-		}
-	}
 
 	/**
 	 * Creates a subscription based on the provided transaction
@@ -753,7 +702,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
             if ($payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks()) {
                 /*
                  * The payment is paid and isn't refunded or charged back.
-                 * Time to check if this is a duplicate before processing.
+                 * If it already has an ID then it has already been processed.
                  */
                 if ($payment_id === $transaction->ID) {
                     $this->logger->debug('Duplicate webhook detected. Ignoring', ['transaction_id' => $payment_id]);
