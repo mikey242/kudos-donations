@@ -478,10 +478,17 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
                 ['transaction_id' => $transaction_id, 'sequence_type' => $payment->sequenceType]
             );
 
-            return $payment->getCheckoutUrl();
+			// Checkout URL used to complete payment.
+			$checkout_url =$payment->getCheckoutUrl();
+
+			// Update meta field from payment object.
 			update_post_meta($transaction_id, TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID, $payment->id);
+			update_post_meta($transaction_id, TransactionPostType::META_FIELD_CHECKOUT_URL, $checkout_url);
+
 			// Schedule checking the payment status.
 			Utils::schedule_action(strtotime( '+1 minute' ), 'kudos_check_mollie_payment', [$transaction_id]);
+
+            return $checkout_url;
         } catch (ApiException $e) {
             $this->logger->error('Error creating payment with Mollie', ['error' =>$e->getMessage()]);
             return false;
