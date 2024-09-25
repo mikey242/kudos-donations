@@ -93,15 +93,15 @@ class Invoice extends AbstractRestController {
 	/**
 	 * Regenerate all invoices.
 	 */
-	public function regenerate_invoices() {
+	public function regenerate_invoices(): WP_REST_Response {
 		$transactions = TransactionPostType::get_posts( [ TransactionPostType::META_FIELD_STATUS => PaymentStatus::PAID ] );
 		if ( $transactions ) {
 			foreach ( $transactions as $transaction ) {
 				$this->invoice->generate_invoice( $transaction->ID, true );
 			}
 			// translators: %s represents the number of invoices.
-			wp_send_json_success( [ 'message' => wp_sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) ] );
+			return new WP_REST_Response( [ 'message' => wp_sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) ], 200 );
 		}
-		wp_send_json_error( [ 'message' => __( 'No valid transactions.', 'kudos-donations' ) ] );
+		return new WP_REST_Response( [ 'message' => __( 'No valid transactions.', 'kudos-donations' ) ], 200 );
 	}
 }

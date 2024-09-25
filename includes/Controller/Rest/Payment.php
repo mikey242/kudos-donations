@@ -176,11 +176,12 @@ class Payment extends AbstractRestController {
 	public function create_item( $request ): WP_REST_Response {
 		// Verify nonce.
 		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
-			wp_send_json_error(
+			return new WP_REST_Response(
 				[
 					'message' => __( 'Request invalid.', 'kudos-donations' ),
 					'nonce'   => $request->get_header( 'X-WP-Nonce' ),
-				]
+				],
+				400
 			);
 		}
 
@@ -188,7 +189,7 @@ class Payment extends AbstractRestController {
 
 		// Check if bot filling tabs.
 		if ( $this->is_bot( $values ) ) {
-			wp_send_json_error( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ] );
+			return new WP_REST_Response( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ], 400 );
 		}
 
 		$campaign = get_post( $values['campaign_id'] );
