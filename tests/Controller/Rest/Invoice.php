@@ -26,11 +26,7 @@ class Invoice extends WP_UnitTestCase {
 				'post_type'   => DonorPostType::get_slug(),
 			]
 		);
-		update_post_meta( $donor_id, DonorPostType::META_FIELD_NAME, '10' );
-		update_post_meta( $donor_id, DonorPostType::META_FIELD_STREET, '10' );
-		update_post_meta( $donor_id, DonorPostType::META_FIELD_POSTCODE, '10' );
-		update_post_meta( $donor_id, DonorPostType::META_FIELD_CITY, '10' );
-		update_post_meta( $donor_id, DonorPostType::META_FIELD_COUNTRY, '10' );
+		update_post_meta( $donor_id, DonorPostType::META_FIELD_NAME, 'John Smith' );
 
 		$transaction_id = $this->factory()->post->create(
 			[
