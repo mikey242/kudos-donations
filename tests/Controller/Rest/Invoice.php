@@ -5,9 +5,13 @@
 
 namespace Controller;
 
+use Dompdf\Dompdf;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Service\PDFService;
+use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Vendor\MollieVendor;
+use Monolog\Logger;
 use WP_REST_Request;
 use WP_REST_Server;
 use WP_UnitTestCase;
@@ -20,6 +24,18 @@ class Invoice extends WP_UnitTestCase {
 	private WP_REST_Request $request;
 
 	public function set_up() {
+
+		// Create PDFService dependencies
+		$twig   = $this->createMock( TwigService::class );
+		$dompdf = $this->createMock( Dompdf::class );
+		$logger = $this->createMock( Logger::class );
+
+		// Use PDFService to initialize required directories.
+		$pdf = new PDFService( $twig, $dompdf );
+		$pdf->setLogger( $logger );
+		$pdf->on_plugin_activation();
+
+		// Create Donor and link to Transaction.
 		$donor_id = $this->factory()->post->create(
 			[
 				'post_status' => 'publish',
@@ -42,6 +58,7 @@ class Invoice extends WP_UnitTestCase {
 		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_CURRENCY, 'EUR' );
 		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_VALUE, '10' );
 
+		// Define Request.
 		$this->request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/get/transaction/$transaction_id" );
 	}
 
