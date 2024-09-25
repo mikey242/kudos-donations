@@ -83,7 +83,7 @@ class Utils {
 	/**
 	 * Schedules an action using action scheduler.
 	 *
-	 * @param int    $timestamp Timestamp of when to run the action.
+	 * @param int    $timestamp Timestamp of when to run the action (e.g strtotime( '+1 minute' )).
 	 * @param string $hook The name of the WordPress action that is being registered.
 	 * @param array  $args An array of arguments to pass.
 	 * @param bool   $overwrite Whether to replace existing scheduled action or not.
