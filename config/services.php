@@ -63,8 +63,6 @@ return static function ( ContainerConfigurator $container ) {
 		->tag( 'kudos.upgradeable' );
 	$services->instanceof( HasSettingsInterface::class )
 		->tag( 'kudos.has_settings' );
-
-	// Migrations.
 	$services->instanceof( MigrationInterface::class )
 		->tag( 'kudos.migration' );
 
