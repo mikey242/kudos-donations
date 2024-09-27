@@ -28,11 +28,11 @@ class SettingsCompilerPass implements CompilerPassInterface {
 	 */
 	public function process( ContainerBuilder $container ): void {
 		$handler     = $container->findDefinition( SettingsHandler::class );
-		$definitions = $container->findTaggedServiceIds( 'kudos.settings' );
+		$definitions = $container->findTaggedServiceIds( 'kudos.has_settings' );
 
 		foreach ( $definitions as $id => $definition ) {
 			// Call the add method with the SettingsHandler.
-			$handler->addMethodCall( 'add', [ [ new Reference( $id ), 'get_settings' ] ] );
+			$handler->addMethodCall( 'add', [ new Reference( $id ) ] );
 		}
 	}
 }
