@@ -19,7 +19,6 @@ class SettingsService implements HasSettingsInterface {
 	public const GROUP                      = 'kudos-donations';
 	public const SETTING_SHOW_INTRO         = '_kudos_show_intro';
 	public const SETTING_VENDOR             = '_kudos_vendor';
-	public const SETTING_SPAM_PROTECTION    = '_kudos_spam_protection';
 	public const SETTING_DEBUG_MODE         = '_kudos_debug_mode';
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	public const SETTING_DB_VERSION         = '_kudos_db_version';
@@ -114,12 +113,6 @@ class SettingsService implements HasSettingsInterface {
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
 				'default'      => 'mollie',
-			],
-			self::SETTING_SPAM_PROTECTION    => [
-				'type'              => FieldType::BOOLEAN,
-				'show_in_rest'      => true,
-				'default'           => true,
-				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 			self::SETTING_DEBUG_MODE         => [
 				'type'              => FieldType::BOOLEAN,
