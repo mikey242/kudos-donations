@@ -15,8 +15,6 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 
 class SettingsService implements HasSettingsInterface {
-
-	public const GROUP                      = 'kudos-donations';
 	public const SETTING_SHOW_INTRO         = '_kudos_show_intro';
 	public const SETTING_VENDOR             = '_kudos_vendor';
 	public const SETTING_DEBUG_MODE         = '_kudos_debug_mode';
