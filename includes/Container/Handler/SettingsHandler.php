@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Container\Handler;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
 
 class SettingsHandler extends AbstractRegistrable implements ActivationAwareInterface {
 
@@ -56,12 +57,11 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 	/**
 	 * Add Settings to array.
 	 *
-	 * @param callable $method_call Service.
+	 * @param HasSettingsInterface $settings Service.
 	 */
-	public function add( callable $method_call ): void {
+	public function add( HasSettingsInterface $settings ): void {
 		// Call the get_settings() method on the referenced service.
-		$settings       = \call_user_func( $method_call );
-		$this->settings = array_merge( $this->settings, $settings );
+		$this->settings = array_merge( $this->settings, $settings->get_settings() );
 	}
 
 	/**
