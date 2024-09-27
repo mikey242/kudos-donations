@@ -25,6 +25,7 @@ class SettingsService implements HasSettingsInterface {
 	public const SETTING_DB_VERSION         = '_kudos_db_version';
 	public const SETTING_MIGRATION_HISTORY  = '_kudos_migration_history';
 	public const SETTING_MAXIMUM_DONATION   = '_kudos_maximum_donation';
+	public const SETTING_ALLOW_METRICS      = '_kudos_allow_metrics';
 
 	/**
 	 * Returns the value for a given setting.
@@ -136,6 +137,11 @@ class SettingsService implements HasSettingsInterface {
 				'type'         => FieldType::INTEGER,
 				'show_in_rest' => true,
 				'default'      => 5000,
+			],
+			self::SETTING_ALLOW_METRICS      => [
+				'type'         => FieldType::BOOLEAN,
+				'show_in_rest' => true,
+				'default'      => false,
 			],
 		];
 	}
