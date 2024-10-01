@@ -70,7 +70,7 @@ class AdminNotice implements AdminNoticeInterface {
 	public static function fancy( string $message, string $level = self::INFO ): void {
 		static::notice(
 			$level,
-			"<div class='logo' style='width: 50px; margin-right: 20px'>" . Utils::get_logo_svg() . "</div><div class='message'>" . $message . '</div>'
+			"<div class='logo' style='width: 50px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $message . '</div>'
 		);
 	}
 
