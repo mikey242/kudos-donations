@@ -40,6 +40,13 @@ class Front extends AbstractRegistrable {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_registration_actions(): array {
+		return [ 'wp' ];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function register(): void {
 		$this->register_block();
 		$this->register_shortcode();
