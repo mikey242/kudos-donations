@@ -45,9 +45,9 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	public function __construct( TwigService $twig, EncryptionService $encryption ) {
 		$this->twig               = $twig;
 		$this->encryption         = $encryption;
-		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE );
-		$this->bcc                = get_option( self::SETTING_EMAIL_BCC );
-		$this->custom_smtp_config = get_option( self::SETTING_CUSTOM_SMTP );
+		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE, false );
+		$this->bcc                = get_option( self::SETTING_EMAIL_BCC, '' );
+		$this->custom_smtp_config = get_option( self::SETTING_CUSTOM_SMTP, [] );
 
 		// Add filters for encrypting passwords.
 		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
