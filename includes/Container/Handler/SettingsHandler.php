@@ -31,20 +31,6 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_registration_action_priority(): int {
-		return 5;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function is_enabled(): bool {
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function on_plugin_activation(): void {
 		$settings = $this->get_all_settings();
 		foreach ( $settings as $name => $setting ) {
