@@ -21,6 +21,14 @@ class EncryptionService extends AbstractRegistrable {
 	private string $salt;
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public function register(): void {
+		$this->key  = $this->get_key();
+		$this->salt = $this->get_salt();
+	}
+
+	/**
 	 * Verifies the provided token against the post id.
 	 *
 	 * @throws Exception If invalid post_id supplied.
@@ -48,14 +56,6 @@ class EncryptionService extends AbstractRegistrable {
 		}
 
 		return hash_hmac( 'sha256', (string) $post_id, KUDOS_SALT );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register(): void {
-		$this->key  = $this->get_key();
-		$this->salt = $this->get_salt();
 	}
 
 	/**
