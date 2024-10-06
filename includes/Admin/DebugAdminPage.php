@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
+use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use Monolog\Handler\RotatingFileHandler;
 
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
@@ -295,6 +296,17 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 									value='kudos_clear_logs'>Clear logs
 							</button>
 						</form>
+
+						<hr/>
+
+						<p>Migration History:</p>
+						<ul>
+						<?php
+						foreach ( get_option( MigrationHandler::SETTING_MIGRATION_HISTORY ) as $migration ) {
+							echo '<li>' . esc_attr( $migration ) . '</li>';
+						}
+						?>
+						</ul>
 
 						<?php do_action( 'kudos_debug_menu_actions_extra' ); ?>
 
