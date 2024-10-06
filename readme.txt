@@ -121,7 +121,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Most donation form text can now be customized
 * Easily generate shortcodes per campaign with a helpful pop-up
 * New minimum donation setting
-* Allow for partial donation amounts (e.g 1.5)
+* Allow for partial donation amounts (e.g €1.5)
 * Email "from name" header can now be configured and defaults to website name
 
 = 3.2.7 =
