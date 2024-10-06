@@ -43,7 +43,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * {@inheritDoc}
 	 */
 	public static function get_registration_actions(): array {
-		return [ 'wp' ];
+		return [ 'init' ];
 	}
 
 	/**
