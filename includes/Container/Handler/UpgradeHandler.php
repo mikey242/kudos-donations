@@ -37,13 +37,6 @@ class UpgradeHandler extends AbstractRegistrable {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public static function get_registration_actions(): array {
-		return [ 'admin_init' ];
-	}
-
-	/**
 	 * Add service to list.
 	 *
 	 * @param UpgradeAwareInterface $service Service.
