@@ -12,18 +12,20 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Front extends AbstractRegistrable {
+class Front extends AbstractRegistrable implements HasSettingsInterface {
+	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	private VendorInterface $vendor;
 	private array $block_script_handles = [];
 	private array $block_style_handles  = [];
@@ -50,7 +52,7 @@ class Front extends AbstractRegistrable {
 	public function register(): void {
 		$this->register_block();
 		$this->register_shortcode();
-		if ( get_option( SettingsService::SETTING_ALWAYS_LOAD_ASSETS ) ) {
+		if ( get_option( self::SETTING_ALWAYS_LOAD_ASSETS ) ) {
 			$this->enqueue_assets();
 		}
 		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );
@@ -278,5 +280,20 @@ class Front extends AbstractRegistrable {
 				],
 			]
 		);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_settings(): array {
+		return [
+			self::SETTING_ALWAYS_LOAD_ASSETS => [
+				'type'              => FieldType::BOOLEAN,
+				'show_in_rest'      => true,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+		];
 	}
 }
