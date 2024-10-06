@@ -15,12 +15,10 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 
 class SettingsService implements HasSettingsInterface {
-	public const SETTING_SHOW_INTRO         = '_kudos_show_intro';
-	public const SETTING_VENDOR             = '_kudos_vendor';
-	public const SETTING_DEBUG_MODE         = '_kudos_debug_mode';
-	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
-	public const SETTING_MAXIMUM_DONATION   = '_kudos_maximum_donation';
-	public const SETTING_ALLOW_METRICS      = '_kudos_allow_metrics';
+	public const SETTING_SHOW_INTRO       = '_kudos_show_intro';
+	public const SETTING_DEBUG_MODE       = '_kudos_debug_mode';
+	public const SETTING_MAXIMUM_DONATION = '_kudos_maximum_donation';
+	public const SETTING_ALLOW_METRICS    = '_kudos_allow_metrics';
 
 	/**
 	 * Returns the value for a given setting.
@@ -99,35 +97,24 @@ class SettingsService implements HasSettingsInterface {
 	 */
 	public function get_settings(): array {
 		return [
-			self::SETTING_SHOW_INTRO         => [
+			self::SETTING_SHOW_INTRO       => [
 				'type'              => FieldType::BOOLEAN,
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			self::SETTING_VENDOR             => [
-				'type'         => FieldType::STRING,
-				'show_in_rest' => true,
-				'default'      => 'mollie',
-			],
-			self::SETTING_DEBUG_MODE         => [
+			self::SETTING_DEBUG_MODE       => [
 				'type'              => FieldType::BOOLEAN,
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			self::SETTING_ALWAYS_LOAD_ASSETS => [
-				'type'              => FieldType::BOOLEAN,
-				'show_in_rest'      => true,
-				'default'           => false,
-				'sanitize_callback' => 'rest_sanitize_boolean',
-			],
-			self::SETTING_MAXIMUM_DONATION   => [
+			self::SETTING_MAXIMUM_DONATION => [
 				'type'         => FieldType::INTEGER,
 				'show_in_rest' => true,
 				'default'      => 5000,
 			],
-			self::SETTING_ALLOW_METRICS      => [
+			self::SETTING_ALLOW_METRICS    => [
 				'type'         => FieldType::BOOLEAN,
 				'show_in_rest' => true,
 				'default'      => false,

@@ -12,13 +12,16 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use WP_Post;
 
-class PaymentService extends AbstractRegistrable {
+class PaymentService extends AbstractRegistrable implements HasSettingsInterface {
+	public const SETTING_VENDOR = '_kudos_vendor';
 	private MailerService $mailer_service;
 
 	/**
@@ -46,16 +49,6 @@ class PaymentService extends AbstractRegistrable {
 		add_action( 'save_post_' . TransactionPostType::get_slug(), [ $this, 'add_title' ], 10, 3 );
 		// Runs when new subscriptions are created.
 		add_action( 'save_post_' . SubscriptionPostType::get_slug(), [ $this, 'add_title' ], 10, 3 );
-	}
-
-	/**
-	 * Returns the settings for the current vendor.
-	 *
-	 * @return mixed
-	 */
-	public function get_current_vendor_settings() {
-		$vendor = get_option( SettingsService::SETTING_VENDOR );
-		return get_option( '_kudos_vendor_' . $vendor );
 	}
 
 	/**
@@ -169,5 +162,18 @@ class PaymentService extends AbstractRegistrable {
 		}
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_settings(): array {
+		return [
+			self::SETTING_VENDOR => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
+				'default'      => 'mollie',
+			],
+		];
 	}
 }

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Vendor;
 
-use IseardMedia\Kudos\Service\SettingsService;
+use IseardMedia\Kudos\Service\PaymentService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -25,7 +25,7 @@ class VendorFactory
 	 */
 	public function create(ContainerInterface $container): ?VendorInterface
 	{
-		$vendor = get_option( SettingsService::SETTING_VENDOR, 'mollie' );
+		$vendor = get_option( PaymentService::SETTING_VENDOR, 'mollie' );
 		$vendorClass = $this->get_vendor($vendor);
 		if ($vendorClass) {
 			return $container->get($vendorClass);
