@@ -27,8 +27,8 @@ use WP_REST_Server;
 class Front extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	private VendorInterface $vendor;
-	private array $block_script_handles = [];
-	private array $block_style_handles  = [];
+	private ?array $block_script_handles = [];
+	private ?array $block_style_handles  = [];
 
 	/**
 	 * Initialize the class and set its properties.
