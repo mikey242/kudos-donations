@@ -13,7 +13,7 @@ namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Helper\Assets;
 
-class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
+class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
 
 	/**
 	 * {@inheritDoc}
@@ -84,7 +84,14 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_position(): int {
+	public static function get_position(): int {
 		return 4;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_parent_slug(): string {
+		return DonationsAdminPage::get_menu_slug();
 	}
 }

@@ -14,12 +14,15 @@ namespace IseardMedia\Kudos\Container\Handler;
 use IseardMedia\Kudos\Admin\CampaignAdminPage;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\HasSettingsInterface;
+use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
-use IseardMedia\Kudos\Service\SettingsService;
 
-class MigrationHandler extends AbstractRegistrable {
+class MigrationHandler extends AbstractRegistrable implements HasSettingsInterface {
 
-	private const MIGRATE_ACTION = 'kudos_migrate_action';
+	private const MIGRATE_ACTION           = 'kudos_migrate_action';
+	public const SETTING_DB_VERSION        = '_kudos_db_version';
+	public const SETTING_MIGRATION_HISTORY = '_kudos_migration_history';
 	private string $current_version;
 	private string $target_version;
 	/**
@@ -33,7 +36,7 @@ class MigrationHandler extends AbstractRegistrable {
 	 * Migrator service constructor.
 	 */
 	public function __construct() {
-		$this->current_version = get_option( SettingsService::SETTING_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
+		$this->current_version = get_option( self::SETTING_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
 		$this->target_version  = KUDOS_DB_VERSION;
 	}
 
@@ -85,7 +88,7 @@ class MigrationHandler extends AbstractRegistrable {
 		foreach ( $this->migrations as $migration ) {
 
 			// Prevent running migration if already in history.
-			if ( \in_array( $migration->get_version(), get_option( SettingsService::SETTING_MIGRATION_HISTORY, [] ), true ) ) {
+			if ( \in_array( $migration->get_version(), get_option( self::SETTING_MIGRATION_HISTORY, [] ), true ) ) {
 				$this->logger->debug( 'Migration already applied, skipping', [ 'migration' => $migration->get_version() ] );
 				continue;
 			}
@@ -101,11 +104,11 @@ class MigrationHandler extends AbstractRegistrable {
 			}
 
 			// Update migration history.
-			$migration_history   = get_option( SettingsService::SETTING_MIGRATION_HISTORY, [] );
+			$migration_history   = get_option( self::SETTING_MIGRATION_HISTORY, [] );
 			$migration_history[] = $instance->get_version();
-			update_option( SettingsService::SETTING_MIGRATION_HISTORY, $migration_history );
+			update_option( self::SETTING_MIGRATION_HISTORY, $migration_history );
 		}
-		update_option( SettingsService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
+		update_option( self::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 		// Redirect to prevent the migration notice from appearing again.
 		wp_safe_redirect( admin_url( 'admin.php?page=' . CampaignAdminPage::get_menu_slug() ) );
 		exit;
@@ -138,5 +141,22 @@ class MigrationHandler extends AbstractRegistrable {
 				'kudos-donations'
 			) . '<p>From <strong>' . $this->current_version . '</strong> to <strong>' . KUDOS_DB_VERSION . '</strong></p>' . $form
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_settings(): array {
+		return [
+			self::SETTING_MIGRATION_HISTORY => [
+				'type'         => FieldType::ARRAY,
+				'show_in_rest' => false,
+				'default'      => [],
+			],
+			self::SETTING_DB_VERSION        => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
+			],
+		];
 	}
 }

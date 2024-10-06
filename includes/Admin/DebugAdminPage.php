@@ -13,7 +13,7 @@ namespace IseardMedia\Kudos\Admin;
 
 use Monolog\Handler\RotatingFileHandler;
 
-class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
+class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
 
 	private const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
 
@@ -72,7 +72,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_position(): ?int {
+	public static function get_position(): int {
 		return 5;
 	}
 
@@ -309,5 +309,12 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 		</div>
 		<?php
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_parent_slug(): string {
+		return DonationsAdminPage::get_menu_slug();
 	}
 }

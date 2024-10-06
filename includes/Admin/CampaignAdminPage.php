@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Admin;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
 
-class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface {
+class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
 
 	/**
 	 * {@inheritDoc}
@@ -90,7 +90,14 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_position(): ?int {
-		return 0;
+	public static function get_position(): int {
+		return 1;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_parent_slug(): string {
+		return DonationsAdminPage::get_menu_slug();
 	}
 }

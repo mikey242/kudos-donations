@@ -13,7 +13,7 @@ namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 
-class SubscriptionsAdminPage extends AbstractAdminPage {
+class SubscriptionsAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterface {
 
 	/**
 	 * {@inheritDoc}
@@ -39,7 +39,14 @@ class SubscriptionsAdminPage extends AbstractAdminPage {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_position(): ?int {
+	public static function get_position(): int {
 		return 2;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_parent_slug(): string {
+		return DonationsAdminPage::get_menu_slug();
 	}
 }

@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 
-class DonorAdminPage extends AbstractAdminPage {
+class DonorAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterface {
 
 	/**
 	 * {@inheritDoc}
@@ -40,7 +40,14 @@ class DonorAdminPage extends AbstractAdminPage {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_position(): ?int {
+	public static function get_position(): int {
 		return 3;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_parent_slug(): string {
+		return DonationsAdminPage::get_menu_slug();
 	}
 }

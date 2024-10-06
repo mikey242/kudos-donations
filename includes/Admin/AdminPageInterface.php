@@ -34,7 +34,7 @@ interface AdminPageInterface {
 	public static function get_menu_slug(): string;
 
 	/**
-	 * Returns the slug for the parent page.
+	 * Defines whether the page is a parent (top-level).
 	 */
-	public function get_parent_slug(): string;
+	public static function get_position(): int;
 }

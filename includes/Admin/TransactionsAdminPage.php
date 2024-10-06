@@ -13,7 +13,7 @@ namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 
-class TransactionsAdminPage extends AbstractAdminPage {
+class TransactionsAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterface {
 
 	/**
 	 * {@inheritDoc}
@@ -39,7 +39,14 @@ class TransactionsAdminPage extends AbstractAdminPage {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_position(): ?int {
+	public static function get_position(): int {
 		return 1;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function get_parent_slug(): string {
+		return DonationsAdminPage::get_menu_slug();
 	}
 }
