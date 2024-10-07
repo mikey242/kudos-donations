@@ -56,13 +56,15 @@ export const Table = ({ headerItems }) => {
 								</td>
 							</tr>
 						) : (
-							posts?.map((post) => (
-								<TableRow
-									key={post.id}
-									post={post}
-									headerItems={headerItems}
-								/>
-							))
+							posts?.map((post) => {
+								return (
+									<TableRow
+										key={post.slug}
+										post={post}
+										headerItems={headerItems}
+									/>
+								);
+							})
 						)}
 					</>
 				</tbody>
