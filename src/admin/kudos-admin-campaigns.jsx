@@ -12,11 +12,11 @@ const root = createRoot(container);
 domReady(() => {
 	root.render(
 		<BrowserRouter>
-			<CampaignsProvider>
-				<AdminProvider>
+			<AdminProvider>
+				<CampaignsProvider>
 					<CampaignsPage />
-				</AdminProvider>
-			</CampaignsProvider>
+				</CampaignsProvider>
+			</AdminProvider>
 		</BrowserRouter>
 	);
 });

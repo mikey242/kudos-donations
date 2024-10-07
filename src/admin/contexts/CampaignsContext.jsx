@@ -12,6 +12,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
+import { useAdminContext } from './AdminContext';
 
 export const CampaignsContext = createContext(null);
 
@@ -19,7 +20,7 @@ export default function CampaignsProvider({
 	postType = 'kudos_campaign',
 	children,
 }) {
-	const [sortQuery, setSortQuery] = useState(getSortParams());
+	const { updateParams, searchParams } = useAdminContext();
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice, removeAllNotices } =
 		useDispatch(noticesStore);
@@ -29,8 +30,8 @@ export default function CampaignsProvider({
 		postType,
 		{
 			per_page: 10,
-			order: sortQuery.order,
-			orderby: sortQuery.orderby,
+			order: searchParams.get('order') ?? 'desc',
+			orderby: searchParams.get('orderby') ?? 'date',
 		}
 	);
 
@@ -145,25 +146,24 @@ export default function CampaignsProvider({
 	};
 
 	const sort = (orderby) => {
-		setSortQuery((prev) => {
-			return {
-				orderby,
-				order:
-					prev.orderby !== orderby || prev.order === 'desc'
+		const prevOrderby = searchParams.get('orderby');
+		const prevOrder = searchParams.get('order');
+
+		updateParams([
+			{ name: 'orderby', value: orderby },
+			{
+				name: 'order',
+				value:
+					prevOrderby !== orderby || prevOrder === 'desc'
 						? 'asc'
 						: 'desc',
-			};
-		});
+			},
+		]);
 	};
-
-	useEffect(() => {
-		updateQueryVars(sortQuery);
-	}, [sortQuery]);
 
 	const data = {
 		posts: cachedPosts,
 		sort,
-		sortQuery,
 		hasResolved,
 		handleNew,
 		handleDuplicate,
@@ -179,22 +179,6 @@ export default function CampaignsProvider({
 		</>
 	);
 }
-
-const getSortParams = () => {
-	const params = new URLSearchParams(window.location.search);
-	return {
-		order: params.get('order') ?? 'desc',
-		orderby: params.get('orderby') ?? 'date',
-	};
-};
-
-const updateQueryVars = (sortQuery) => {
-	const params = new URLSearchParams(window.location.search);
-	params.set('order', sortQuery.order);
-	params.set('orderby', sortQuery.orderby);
-	const newUrl = `${window.location.pathname}?${params.toString()}`;
-	window.history.replaceState(null, '', newUrl);
-};
 
 export const useCampaignsContext = () => {
 	return useContext(CampaignsContext);

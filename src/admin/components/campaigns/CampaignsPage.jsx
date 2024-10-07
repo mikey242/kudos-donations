@@ -4,7 +4,6 @@ import { useEffect, useState } from '@wordpress/element';
 import CampaignEdit from './CampaignEdit';
 import { CampaignsTable } from './CampaignsTable';
 import { useCampaignsContext } from '../../contexts/CampaignsContext';
-import { useSearchParams } from 'react-router-dom';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalSpacer as Spacer,
@@ -16,22 +15,15 @@ import GenerateShortcode from './GenerateShortcode';
 import { useAdminContext } from '../../contexts/AdminContext';
 
 export const CampaignsPage = () => {
-	const [searchParams, setSearchParams] = useSearchParams();
 	const [currentCampaign, setCurrentCampaign] = useState(null);
-	const campaignId = searchParams.get('edit');
 	const { posts, hasResolved } = useCampaignsContext();
-	const { setHeaderContent } = useAdminContext();
-
-	const updateParam = (name, value) => {
-		searchParams.set(name, value);
-		setSearchParams(searchParams);
-	};
+	const { setHeaderContent, updateParam, searchParams, deleteParams } =
+		useAdminContext();
+	const campaignId = searchParams.get('edit');
 
 	const clearCurrentCampaign = () => {
 		setCurrentCampaign(null);
-		searchParams.delete('edit');
-		searchParams.delete('order');
-		setSearchParams(searchParams);
+		deleteParams(['edit', 'order', 'tab']);
 	};
 
 	const NavigationButtons = () => (
@@ -61,12 +53,10 @@ export const CampaignsPage = () => {
 
 	useEffect(() => {
 		if (currentCampaign) {
-			searchParams.set('edit', currentCampaign.id);
-			setSearchParams(searchParams);
 			setHeaderContent(<NavigationButtons />);
 		}
 		return () => setHeaderContent(null);
-	}, [currentCampaign, searchParams, setHeaderContent, setSearchParams]);
+	}, [currentCampaign, setHeaderContent]);
 
 	return (
 		<>

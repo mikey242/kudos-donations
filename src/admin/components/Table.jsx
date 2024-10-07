@@ -2,9 +2,11 @@ import React from 'react';
 import { Button, Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useCampaignsContext } from '../contexts/CampaignsContext';
+import { useAdminContext } from '../contexts/AdminContext';
 
 export const Table = ({ headerItems }) => {
-	const { posts, sort, sortQuery, hasResolved } = useCampaignsContext();
+	const { posts, sort, hasResolved } = useCampaignsContext();
+	const { searchParams } = useAdminContext();
 
 	return (
 		<>
@@ -20,8 +22,10 @@ export const Table = ({ headerItems }) => {
 										}}
 										icon={
 											// eslint-disable-next-line no-nested-ternary
-											sortQuery.orderby === item.orderby
-												? sortQuery.order === 'asc'
+											searchParams.get('orderby') ===
+											item.orderby
+												? searchParams.get('order') ===
+													'asc'
 													? 'arrow-up'
 													: 'arrow-down'
 												: 'sort'
