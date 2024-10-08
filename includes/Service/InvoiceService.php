@@ -66,14 +66,14 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 	/**
 	 * Callback for attaching invoice to email.
 	 *
-	 * @param array $attachment Array of current attachments.
+	 * @param array $attachments Array of current attachments.
 	 * @param int   $transaction_id Transaction ID.
 	 */
-	public function attach_to_email( array $attachment, int $transaction_id ): array {
+	public function attach_to_email( array $attachments, int $transaction_id ): array {
 		$file = $this->generate_invoice( $transaction_id );
 		$this->logger->debug( 'Adding invoice to email.', [ 'file' => $file ] );
-		$attachment[] = $file;
-		return $attachment;
+		$attachments[] = $file;
+		return $attachments;
 	}
 
 	/**
