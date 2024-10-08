@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Migrations;
 
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
+use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\MailerService;
@@ -31,7 +32,9 @@ class Version400 extends AbstractMigration {
 			$this->migrate_smtp_settings() &&
 			$this->migrate_donors_to_posts() &&
 			$this->migrate_campaigns_to_posts() &&
-			$this->migrate_transactions_to_posts()
+			$this->migrate_transactions_to_posts() &&
+			$this->migrate_subscriptions_to_posts() &&
+			$this->additional_cleanup()
 		);
 	}
 
@@ -282,6 +285,9 @@ class Version400 extends AbstractMigration {
 			}
 
 			$this->logger->debug( 'Transaction created', [ 'post_id' => $new_transaction->ID ] );
+
+			// Store old and new ID for later reference.
+			$this->cache['transaction_id'][ $transaction->transaction_id ] = $new_transaction->ID;
 		}
 		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
 
@@ -289,6 +295,66 @@ class Version400 extends AbstractMigration {
 		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
 		$this->wpdb->query( $del_query );
 
+		return true;
+	}
+
+	/**
+	 * Migrate transactions from kudos_transactions table to
+	 * TransactionPostTypes.
+	 */
+	private function migrate_subscriptions_to_posts(): bool {
+		$table_name = $this->wpdb->prefix . 'kudos_subscriptions';
+
+		// Check if table exists.
+		$prepare = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
+		if ( $this->wpdb->get_var( $prepare ) !== $table_name ) {
+			$this->logger->error( 'Subscriptions table not found', [ 'table_name' => $table_name ] );
+			return false;
+		}
+
+		$query   = "SELECT * FROM $table_name";
+		$results = $this->wpdb->get_results( $query );
+		$this->logger->debug( 'Subscriptions found', [ 'cache' => $this->cache ] );
+
+		foreach ( $results as $subscription ) {
+
+			$new_subscription = SubscriptionPostType::save(
+				[
+					'post_date'                            => $subscription->created,
+					SubscriptionPostType::META_FIELD_VALUE => (int) $subscription->value,
+					SubscriptionPostType::META_FIELD_CURRENCY => (string) $subscription->currency,
+					SubscriptionPostType::META_FIELD_FREQUENCY => (string) $subscription->frequency,
+					SubscriptionPostType::META_FIELD_YEARS => (int) $subscription->years,
+					SubscriptionPostType::META_FIELD_CUSTOMER_ID => (string) $subscription->customer_id,
+					SubscriptionPostType::META_FIELD_TRANSACTION_ID => (string) $this->cache['transaction_id'][ $subscription->transaction_id ],
+					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => (string) $subscription->subscription_id,
+					SubscriptionPostType::META_FIELD_STATUS => (string) $subscription->status,
+				]
+			);
+
+			// Bail if post not created.
+			if ( ! $new_subscription ) {
+				return false;
+			}
+
+			$this->logger->debug( 'Subscription created', [ 'post_id' => $new_subscription->ID ] );
+		}
+
+		// Cleanup.
+		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
+		$this->wpdb->query( $del_query );
+
+		return true;
+	}
+
+	/**
+	 * Performs additional cleanup not related to prior.
+	 */
+	private function additional_cleanup(): bool {
+		// Remove log table.
+		$table_name = $this->wpdb->prefix . 'kudos_log';
+		$del_query  = 'DROP TABLE IF EXISTS ' . $table_name;
+		$this->wpdb->query( $del_query );
 		return true;
 	}
 }
