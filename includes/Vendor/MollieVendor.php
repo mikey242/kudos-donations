@@ -669,7 +669,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		            'meta_key'   => DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID,
 		            'meta_value' => $subscription->customerId,
 		            'posts_per_page' => 1
-	            ])[0] ?? null;
+	            ])[0]->ID ?? null;
 
                 $transaction  = TransactionPostType::save(
 					[
