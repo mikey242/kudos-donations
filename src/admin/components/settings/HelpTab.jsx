@@ -82,11 +82,14 @@ const HelpTab = () => {
 								<Button
 									variant="secondary"
 									icon="editor-help"
-									href="https://kudosdonations.com/faq/"
+									href="https://docs.kudosdonations.com/"
 									target="_blank"
 									rel="noreferrer"
 								>
-									{__('Visit our F.A.Q', 'kudos-donations')}
+									{__(
+										'Visit our Documentation',
+										'kudos-donations'
+									)}
 								</Button>
 							</Flex>
 						</FlexItem>
