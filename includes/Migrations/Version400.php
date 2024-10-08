@@ -58,6 +58,9 @@ class Version400 extends AbstractMigration {
 			remove_filter( 'kudos_mollie_test_key_validation', '__return_true' );
 		}
 
+		// Cleanup.
+		delete_option( '_kudos_vendor_mollie' );
+
 		// Always return true, a failure here is not critical.
 		return true;
 	}
@@ -101,6 +104,14 @@ class Version400 extends AbstractMigration {
 		}
 
 		update_option( MailerService::SETTING_CUSTOM_SMTP, $new_settings );
+
+		// Cleanup.
+		delete_option( '_kudos_smtp_host' );
+		delete_option( '_kudos_smtp_port' );
+		delete_option( '_kudos_smtp_encryption' );
+		delete_option( '_kudos_smtp_autotls' );
+		delete_option( '_kudos_smtp_username' );
+		delete_option( '_kudos_smtp_from' );
 
 		// Always return true, a failure here is not critical.
 		return true;
@@ -147,6 +158,11 @@ class Version400 extends AbstractMigration {
 
 			$this->cache['donor_id'][ $donor->customer_id ] = $new_donor->ID;
 		}
+
+		// Cleanup.
+		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
+		$this->wpdb->query( $del_query );
+
 		return true;
 	}
 
@@ -206,8 +222,9 @@ class Version400 extends AbstractMigration {
 			$this->cache['campaign_id'][ $campaign['id'] ] = $new_campaign->ID;
 		}
 
-		// Campaigns migrated, let's delete the old option.
+		// Cleanup.
 		delete_option( '_kudos_campaigns' );
+
 		return true;
 	}
 
@@ -267,6 +284,11 @@ class Version400 extends AbstractMigration {
 			$this->logger->debug( 'Transaction created', [ 'post_id' => $new_transaction->ID ] );
 		}
 		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
+
+		// Cleanup.
+		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
+		$this->wpdb->query( $del_query );
+
 		return true;
 	}
 }
