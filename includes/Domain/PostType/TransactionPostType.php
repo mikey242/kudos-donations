@@ -165,7 +165,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 			'ID'                               => [
 				'value_type' => FieldType::STRING,
 				'value'      => function ( $transaction_id ) {
-					return static::get_formatted_id( $transaction_id );
+					return Utils::get_formatted_id( $transaction_id );
 				},
 			],
 			self::META_FIELD_VENDOR_PAYMENT_ID => [

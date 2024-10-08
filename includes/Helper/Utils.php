@@ -165,4 +165,19 @@ class Utils {
 	public static function get_company_logo_png(): string {
 		return apply_filters( 'kudos_company_logo_png', self::get_kudos_logo_png() );
 	}
+
+	/**
+	 * Returns a formatted id based on the post id and date of post.
+	 *
+	 * @param int $post_id WordPress post id.
+	 */
+	public static function get_formatted_id( int $post_id ): string {
+		$post      = get_post( $post_id );
+		$post_type = $post->post_type;
+		$date      = $post->post_date;
+		$year      = substr( $date, 0, 4 );
+		$type      = substr( $post_type, 6, 2 );
+
+		return 'k' . $type . '_' . $year . $post_id;
+	}
 }

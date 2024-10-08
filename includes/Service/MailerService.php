@@ -168,7 +168,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 				$transaction->{TransactionPostType::META_FIELD_VALUE},
 				2
 			),
-			'receipt_id'   => TransactionPostType::get_formatted_id( $transaction_id ),
+			'receipt_id'   => Utils::get_formatted_id( $transaction_id ),
 			'website_name' => Utils::get_company_name(),
 		];
 

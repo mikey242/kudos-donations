@@ -55,10 +55,10 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 * Adds a description for new transactions.
 	 *
 	 * @param int     $post_id The id of the post.
-	 * @param WP_Post $transaction The post object.
+	 * @param WP_Post $post The post object.
 	 * @param bool    $update Whether this is an update or not.
 	 */
-	public function add_title( int $post_id, WP_Post $transaction, bool $update ) {
+	public function add_title( int $post_id, WP_Post $post, bool $update ) {
 		// Bail immediately if this is an update.
 		if ( $update ) {
 			return;
@@ -69,9 +69,9 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 
 		$title = apply_filters(
 			'kudos_payment_description',
-			$single_name . sprintf( ' (%1$s)', TransactionPostType::get_formatted_id( $transaction->ID ) ),
-			$transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
-			$transaction->ID
+			$single_name . sprintf( ' (%1$s)', Utils::get_formatted_id( $post->ID ) ),
+			$post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
+			$post->ID
 		);
 
 		$this->logger->debug(
@@ -82,9 +82,9 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 			]
 		);
 
-		TransactionPostType::save(
+		wp_update_post(
 			[
-				'ID'         => $transaction->ID,
+				'ID'         => $post->ID,
 				'post_title' => $title,
 			]
 		);
