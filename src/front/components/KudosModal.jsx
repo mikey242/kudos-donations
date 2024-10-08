@@ -70,9 +70,9 @@ export const KudosModal = ({
 	}, [isOpen, handleKeyPress, setUp]);
 
 	return (
-		<div id="kudos-modal" ref={targetRef}>
+		<div id="kudos-modal-container" ref={targetRef}>
 			<Transition show={isOpen}>
-				<div className={'fixed z-[999999] inset-0 overflow-y-scroll'}>
+				<div className="fixed z-[999999] inset-0 overflow-y-scroll">
 					<>
 						<Transition.Child
 							enter="transition-opacity duration-[400ms]"
@@ -83,6 +83,7 @@ export const KudosModal = ({
 							leaveTo="opacity-0"
 						>
 							<div
+								id="kudos-modal-verlay"
 								className="fixed inset-0 bg-black/30"
 								aria-hidden="true"
 							/>
@@ -109,7 +110,10 @@ export const KudosModal = ({
 									className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all duration-200 sm:align-middle sm:max-w-lg w-full"
 								>
 									<div className="bg-white p-8">
-										<div className="kudos-modal-header flex items-center justify-between">
+										<div
+											id="kudos-modal-header"
+											className="flex items-center justify-between"
+										>
 											{showLogo && (
 												<span
 													className="mr-3 flex"
@@ -134,7 +138,12 @@ export const KudosModal = ({
 												<XMarkIcon className="align-middle w-5 h-5" />
 											</button>
 										</div>
-										<div className="mt-2">{children}</div>
+										<div
+											id="kudos-modal-body"
+											className="mt-2"
+										>
+											{children}
+										</div>
 									</div>
 								</div>
 							</div>

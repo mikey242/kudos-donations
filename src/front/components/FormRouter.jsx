@@ -148,13 +148,14 @@ export const FormRouter = ({
 		<FormProvider {...methods}>
 			<div
 				ref={elementRef}
+				id="kudos-form-container"
 				className={clsx(
 					isBusy && 'opacity-50',
 					'transition-all duration-200'
 				)}
 				style={{ height: height + 'px' }}
 			>
-				<form onSubmit={methods.handleSubmit(onSubmit)}>
+				<form id="kudos-form" onSubmit={methods.handleSubmit(onSubmit)}>
 					{
 						{
 							1: (
@@ -215,7 +216,10 @@ export const FormRouter = ({
 							),
 						}[currentStep]
 					}
-					<div className="kudos-modal-buttons mt-8 flex justify-between relative">
+					<div
+						id="kudos-form-buttons"
+						className="mt-8 flex justify-between relative"
+					>
 						{currentStep > 1 && (
 							<Button
 								type="button"
