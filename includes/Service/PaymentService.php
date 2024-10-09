@@ -74,14 +74,6 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 			$post->ID
 		);
 
-		$this->logger->debug(
-			'Updating post title',
-			[
-				'post_id' => $post_id,
-				'title'   => $title,
-			]
-		);
-
 		wp_update_post(
 			[
 				'ID'         => $post->ID,
