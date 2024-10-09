@@ -20,7 +20,7 @@ function GenerateShortcode({ campaign }) {
 	const { createSuccessNotice } = useDispatch(noticesStore);
 	const [isOpen, setOpen] = useState(false);
 	const [type, setType] = useState('button');
-	const [label, setLabel] = useState('Donate');
+	const [label, setLabel] = useState(__('Donate Now', 'kudos-donations'));
 
 	const openModal = () => setOpen(true);
 	const closeModal = () => setOpen(false);
@@ -81,6 +81,7 @@ function GenerateShortcode({ campaign }) {
 						disabled={type === 'form'}
 						label={__('Button label', 'kudos-donations')}
 						help={__('Add a button label', 'kudos-donations')}
+						value={label}
 						onChange={setLabel}
 					/>
 					<Divider margin="5" />
