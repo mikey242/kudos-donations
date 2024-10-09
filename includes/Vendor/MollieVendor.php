@@ -663,14 +663,11 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 				$campaign = CampaignPostType::get_post_by_id_or_slug($campaign_id);
 				$campaign_id = $campaign->ID;
 
-				// Get Donor ID. If subscription from pre 4.0.0 use customerId to get new donor id.
-	            $donor_id = $subscription->metadata->{TransactionPostType::META_FIELD_DONOR_ID} ?? get_posts([
-		            'post_type'  => DonorPostType::get_slug(),
-		            'meta_key'   => DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID,
-		            'meta_value' => $subscription->customerId,
-		            'posts_per_page' => 1
-	            ])[0]->ID ?? null;
+				// Get Donor ID. If subscription from pre 4.0.0, use customerId to get new donor ID.
+	            $donor_id = $subscription->metadata->{TransactionPostType::META_FIELD_DONOR_ID}
+	                        ?? DonorPostType::get_post([DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID => $subscription->customerId])->ID ?? null;
 
+				// Save new transaction.
                 $transaction  = TransactionPostType::save(
 					[
 						TransactionPostType::META_FIELD_DONOR_ID => $donor_id,
