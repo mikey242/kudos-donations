@@ -15,12 +15,14 @@
 		"allow-plugins": {
 			"typisttech/imposter-plugin": false,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"phpstan/extension-installer": true
+			"phpstan/extension-installer": true,
+			"automattic/jetpack-autoloader": true
 		}
 	},
 	"require": {
 		"php": ">=7.4",
 		"ext-json": "*",
+		"automattic/jetpack-autoloader": "^3.1",
 		"dompdf/dompdf": "^2.0",
 		"mollie/mollie-api-php": "^2.32.0",
 		"monolog/monolog": "^2.9",
@@ -36,7 +38,6 @@
 	},
 	"require-dev": {
 		"filp/whoops": "^2.15",
-		"humbug/php-scoper": "0.17.5",
 		"micheh/phpcs-gitlab": "^1.1",
 		"php-stubs/wordpress-tests-stubs": "^6.3",
 		"phpcompatibility/php-compatibility": "^9.3",

@@ -45,8 +45,8 @@ if ( ! \defined( 'WPINC' ) ) {
 \define( 'KUDOS_AUTH_SALT', AUTH_SALT );
 
 // Autoloader for plugin.
-if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
-	include KUDOS_PLUGIN_DIR . 'vendor/autoload.php';
+if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/autoload_packages.php' ) ) {
+	include KUDOS_PLUGIN_DIR . 'vendor/autoload_packages.php';
 }
 
 // Action Scheduler.
