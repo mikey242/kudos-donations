@@ -42,6 +42,7 @@ class Version400 extends AbstractMigration {
 	 * Migrate the old vendor settings.
 	 */
 	private function migrate_vendor_settings(): bool {
+		$this->logger->info( 'Migrating vendor settings' );
 		$vendor_mollie = get_option( '_kudos_vendor_mollie' );
 		$test_key      = $vendor_mollie['test_key'] ?? null;
 		$live_key      = $vendor_mollie['live_key'] ?? null;
@@ -72,6 +73,7 @@ class Version400 extends AbstractMigration {
 	 * Migrate custom SMTP config.
 	 */
 	private function migrate_smtp_settings(): bool {
+		$this->logger->info( 'Migrating SMTP settings' );
 		$host       = get_option( '_kudos_smtp_host' ) ?? null;
 		$port       = get_option( '_kudos_smtp_port' ) ?? null;
 		$encryption = get_option( '_kudos_smtp_encryption' ) ?? null;
@@ -133,10 +135,21 @@ class Version400 extends AbstractMigration {
 			return false;
 		}
 
-		$query   = "SELECT * FROM $table_name";
-		$results = $this->wpdb->get_results( $query );
+		$query  = "SELECT * FROM $table_name";
+		$donors = $this->wpdb->get_results( $query );
+		$total  = 0;
 
-		foreach ( $results as $donor ) {
+		$this->logger->info(
+			'Migrating donors',
+			array_map(
+				function ( object $donor ) {
+					return $donor->name;
+				},
+				$donors
+			)
+		);
+
+		foreach ( $donors as $donor ) {
 
 			$new_donor = DonorPostType::save(
 				[
@@ -157,15 +170,15 @@ class Version400 extends AbstractMigration {
 				return false;
 			}
 
-			$this->logger->debug( 'Donor created', [ 'post_id' => $new_donor->ID ] );
-
 			$this->cache['donor_id'][ $donor->customer_id ] = $new_donor->ID;
+			++$total;
 		}
 
 		// Cleanup.
 		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
 		$this->wpdb->query( $del_query );
 
+		$this->logger->info( 'Donors migrated', [ 'donors' => $total ] );
 		return true;
 	}
 
@@ -184,6 +197,18 @@ class Version400 extends AbstractMigration {
 		$custom_return_enable = get_option( '_kudos_completed_payment' ) === 'url';
 		$terms_url            = get_option( '_kudos_terms_link' );
 		$privacy_url          = get_option( '_kudos_privacy_link' );
+
+		$this->logger->info(
+			'Migrating campaigns',
+			array_map(
+				function ( array $campaign ) {
+					return $campaign['name'];
+				},
+				$campaigns
+			)
+		);
+
+		$total = 0;
 
 		foreach ( $campaigns as $campaign ) {
 
@@ -219,14 +244,15 @@ class Version400 extends AbstractMigration {
 				return false;
 			}
 
-			$this->logger->debug( 'Campaign created', [ 'post_id' => $new_campaign->ID ] );
-
 			// Store old and new ID for later reference.
 			$this->cache['campaign_id'][ $campaign['id'] ] = $new_campaign->ID;
+			++$total;
 		}
 
 		// Cleanup.
 		delete_option( '_kudos_campaigns' );
+
+		$this->logger->info( 'Campaigns migrated', [ 'campaigns' => $total ] );
 
 		return true;
 	}
@@ -246,10 +272,21 @@ class Version400 extends AbstractMigration {
 		}
 
 		$query          = "SELECT * FROM $table_name";
-		$results        = $this->wpdb->get_results( $query );
+		$transactions   = $this->wpdb->get_results( $query );
 		$invoice_number = 1;
+		$total          = 0;
 
-		foreach ( $results as $transaction ) {
+		$this->logger->info(
+			'Migrating transactions',
+			array_map(
+				function ( object $transaction ) {
+					return $transaction->id;
+				},
+				$transactions
+			)
+		);
+
+		foreach ( $transactions as $transaction ) {
 
 			$new_transaction = TransactionPostType::save(
 				[
@@ -284,16 +321,17 @@ class Version400 extends AbstractMigration {
 				++$invoice_number;
 			}
 
-			$this->logger->debug( 'Transaction created', [ 'post_id' => $new_transaction->ID ] );
-
 			// Store old and new ID for later reference.
 			$this->cache['transaction_id'][ $transaction->transaction_id ] = $new_transaction->ID;
+			++$total;
 		}
 		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
 
 		// Cleanup.
 		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
 		$this->wpdb->query( $del_query );
+
+		$this->logger->info( 'Transactions migrated', [ 'transactions' => $total ] );
 
 		return true;
 	}
@@ -312,11 +350,21 @@ class Version400 extends AbstractMigration {
 			return false;
 		}
 
-		$query   = "SELECT * FROM $table_name";
-		$results = $this->wpdb->get_results( $query );
-		$this->logger->debug( 'Subscriptions found', [ 'cache' => $this->cache ] );
+		$query         = "SELECT * FROM $table_name";
+		$subscriptions = $this->wpdb->get_results( $query );
+		$total         = 0;
 
-		foreach ( $results as $subscription ) {
+		$this->logger->info(
+			'Migrating subscriptions',
+			array_map(
+				function ( object $subscription ) {
+					return $subscription->id;
+				},
+				$subscriptions
+			)
+		);
+
+		foreach ( $subscriptions as $subscription ) {
 
 			$new_subscription = SubscriptionPostType::save(
 				[
@@ -336,13 +384,14 @@ class Version400 extends AbstractMigration {
 			if ( ! $new_subscription ) {
 				return false;
 			}
-
-			$this->logger->debug( 'Subscription created', [ 'post_id' => $new_subscription->ID ] );
+			++$total;
 		}
 
 		// Cleanup.
 		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
 		$this->wpdb->query( $del_query );
+
+		$this->logger->info( 'Subscriptions migrated', [ 'subscriptions' => $total ] );
 
 		return true;
 	}
@@ -352,6 +401,7 @@ class Version400 extends AbstractMigration {
 	 */
 	private function additional_cleanup(): bool {
 		// Remove log table.
+		$this->logger->info( 'Cleaning up after migration' );
 		$table_name = $this->wpdb->prefix . 'kudos_log';
 		$del_query  = 'DROP TABLE IF EXISTS ' . $table_name;
 		$this->wpdb->query( $del_query );
