@@ -61,9 +61,16 @@ export const KudosModal = ({
 	useEffect(() => {
 		if (isOpen) {
 			setUp();
+			document.documentElement.style.setProperty(
+				'--kudos-modal-overflow',
+				'hidden'
+			);
 			document.addEventListener('keydown', handleKeyPress, false);
 			return () => {
-				// console.log('removeEventListener');
+				document.documentElement.style.setProperty(
+					'--kudos-modal-overflow',
+					'auto'
+				);
 				document.removeEventListener('keydown', handleKeyPress, false);
 			};
 		}
