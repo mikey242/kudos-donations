@@ -80,7 +80,7 @@ trait MapperTrait {
 		// Return post using WordPress get_post() if ID present.
 		if ( isset( $args['ID'] ) && $args['ID'] > 0 ) {
 			$post = get_post( $args['ID'] );
-			return static::get_slug() === $post->post_type ? $post : null;
+			return $post && static::get_slug() === $post->post_type ? $post : null;
 		}
 
 		// Ensure ID is not set.
@@ -140,6 +140,9 @@ trait MapperTrait {
 	 * @return array{post_data: array, meta_data: array}
 	 */
 	private static function prepare_arguments( array $args ): array {
+		$meta_data = [];
+		$post_data = $args;
+
 		if ( \in_array( HasMetaFieldsInterface::class, class_implements( static::class ), true ) ) {
 			/**
 			 * HasMetaFieldsInterface is implemented.
@@ -153,8 +156,8 @@ trait MapperTrait {
 		}
 
 		return [
-			'post_data' => wp_parse_args( $post_data ?? $args, self::get_default_args() ),
-			'meta_data' => $meta_data ?? [],
+			'post_data' => wp_parse_args( $post_data, self::get_default_args() ),
+			'meta_data' => $meta_data,
 		];
 	}
 
@@ -166,7 +169,7 @@ trait MapperTrait {
 	 */
 	private static function save_meta_data( int $post_id, array $args ): void {
 		// Check if custom meta fields are provided.
-		if ( isset( $args['meta_data'] ) && \is_array( $args['meta_data'] ) ) {
+		if ( \array_key_exists( 'meta_data', $args ) && \is_array( $args['meta_data'] ) ) {
 			foreach ( $args['meta_data'] as $meta_key => $meta_value ) {
 				// Sanitize and save meta value.
 				update_post_meta( $post_id, sanitize_key( $meta_key ), $meta_value );
@@ -178,26 +181,17 @@ trait MapperTrait {
 	 * Get the post by slug or ID.
 	 *
 	 * @param mixed $value The slug or ID to get.
-	 * @return array|WP_Post|null
 	 */
-	public static function get_post_by_id_or_slug( $value ) {
-		// Try to get the post by ID first, but only if it's a positive integer.
-		if ( is_numeric( $value ) && \intval( $value ) > 0 ) {
-			// Try to get the post by ID.
+	public static function get_post_by_id_or_slug( $value ): ?WP_Post {
+		// Try to get the post by ID first.
+		if ( is_numeric( $value ) ) {
 			$post = get_post( (int) $value );
 			if ( $post ) {
 				return $post;
 			}
 		}
 
-		// Otherwise, treat it as a slug (even if it's numeric).
-		$post = get_page_by_path( sanitize_title( $value ), OBJECT, static::get_post_type() );
-
-		// Check if a post was found by slug.
-		if ( $post ) {
-			return $post;
-		}
-
-		return null; // Return null if no post was found.
+		// Get the post by slug if not found by ID.
+		return get_page_by_path( sanitize_title( $value ), OBJECT, static::get_post_type() ) ?? null;
 	}
 }
