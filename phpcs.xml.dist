@@ -49,7 +49,7 @@
 
 	<rule ref="WordPress.NamingConventions.ValidVariableName">
 		<properties>
-			<property name="customPropertiesWhitelist" type="array">
+			<property name="allowed_custom_properties" type="array">
 				<element value="childNodes"/>
 				<element value="tagName"/>
 				<element value="textContent"/>
