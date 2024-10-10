@@ -98,10 +98,16 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	 * @param string $file The output file.
 	 * @param string $template Template to use.
 	 * @param array  $data Data to pass to template.
-	 * @return string|false
 	 */
-	public function generate( string $file, string $template, array $data ) {
+	public function generate( string $file, string $template, array $data ): ?string {
 
+		// Check if target folder is writeable. If not it is possible that it does not yet exist.
+		$target_dir = \dirname( $file );
+		if ( ! wp_is_writable( $target_dir ) ) {
+			wp_mkdir_p( $target_dir );
+		}
+
+		// Add logos to $data.
 		$data = array_merge( $data, [ 'logos' => $this->logos ] );
 
 		try {
@@ -121,12 +127,12 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 				return $file;
 			}
 
-			return false;
+			return null;
 
 		} catch ( Throwable $e ) {
 			$this->logger->critical( $e->getMessage(), $data );
 
-			return false;
+			return null;
 		}
 	}
 }
