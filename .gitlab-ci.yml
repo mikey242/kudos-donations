@@ -12,7 +12,7 @@ variables:
     - composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
 .script_install_npm: &script_install_npm
-    - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
     - source ~/.bashrc
     - nvm install && nvm use
     - npm i
