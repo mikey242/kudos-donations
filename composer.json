@@ -10,7 +10,7 @@
 		"optimize-autoloader": true,
 		"sort-packages": true,
 		"platform": {
-			"php": "7.4"
+			"php": "7.4.0"
 		},
 		"allow-plugins": {
 			"typisttech/imposter-plugin": false,
