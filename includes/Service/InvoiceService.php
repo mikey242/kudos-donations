@@ -89,6 +89,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		// Stream existing file if found.
 		if ( ! $force_generate ) {
 			if ( file_exists( $file ) ) {
+				$this->logger->debug( 'Invoice already exists.', [ 'file' => $file ] );
 				return $file;
 			}
 		}
