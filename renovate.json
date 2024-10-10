@@ -4,6 +4,5 @@
 	"constraints": {
 		"php": "7.4"
 	},
-	"constraintsFiltering": "strict",
-	"composerIgnorePlatformReqs": null
+	"constraintsFiltering": "strict"
 }
