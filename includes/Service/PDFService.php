@@ -67,19 +67,6 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	}
 
 	/**
-	 * Checks if invoice file is writeable and returns true if it is.
-	 */
-	public function is_writeable(): bool {
-		if ( wp_is_writable( self::INVOICE_DIR ) ) {
-			return true;
-		}
-
-		$this->logger->warning( 'Invoice directory not writeable', [ 'path' => self::INVOICE_DIR ] );
-
-		return false;
-	}
-
-	/**
 	 * Streams the provided PDF.
 	 *
 	 * @param string $file The full path to the file.
