@@ -80,7 +80,7 @@ const MollieTab = () => {
 					header={__('Available payment methods', 'kudos-donations')}
 				>
 					<PanelBody>
-						<Flex wrap={true} expanded={false} direction="row">
+						<Flex wrap={true} justify="none" direction="row">
 							{paymentMethods?.map((method) => (
 								<FlexItem key={method?.id}>
 									<Flex>
