@@ -10,6 +10,7 @@ const MollieApiModePanel = (props) => {
     const [isBusy, setIsBusy] = useState(false)
 
     const vendorMollie = props.settings?._kudos_vendor_mollie
+    const {payment_methods} = vendorMollie
     const selected = vendorMollie?.['mode'] ?? 'test'
 
     const handleChange = (id, value) => {
@@ -61,17 +62,25 @@ const MollieApiModePanel = (props) => {
             </BaseControl>
 
             { vendorMollie?.connected ?
-                <BaseControl
-                    help={__("Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.", 'kudos-donations')}
-                >
-                <Button
-                    isLink
-                    icon={(<ButtonIcon icon='sync' className={(isBusy ? 'kd-animate-spin' : '')}/>)}
-                    onClick={() => refresh()}
-                >
-                    {__('Refresh API', 'kudos-donations')}
-                </Button>
-                </BaseControl>
+                <>
+                    <BaseControl
+                        help={__("Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.", 'kudos-donations')}
+                    >
+                    <Button
+                        isLink
+                        icon={(<ButtonIcon icon='sync' className={(isBusy ? 'kd-animate-spin' : '')}/>)}
+                        onClick={() => refresh()}
+                    >
+                        {__('Refresh API', 'kudos-donations')}
+                    </Button>
+                    </BaseControl>
+                    <span><h2>{__('Available Payment Methods', 'kudos-donations')}</h2>
+                        {payment_methods?.map((method, i) => (
+                                <span key={method?.id}><strong>{method?.id}</strong> ({method?.status}){payment_methods?.length !== i + 1 ? ', ' : ''}</span>
+                            )
+                        )}
+                    </span>
+                </>
             : '' }
 
 
