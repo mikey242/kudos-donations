@@ -84,8 +84,6 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 	/**
 	 * Gets the log file as an array.
-	 *
-	 * @return array
 	 */
 	private function get_log_content(): array {
 		$log_array = [];

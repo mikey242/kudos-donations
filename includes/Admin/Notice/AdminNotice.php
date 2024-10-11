@@ -83,7 +83,7 @@ class AdminNotice implements AdminNoticeInterface {
 	protected static function notice( string $level, string $message ): void {
 		add_action(
 			'admin_notices',
-			function () use( $level, $message ) {
+			function () use ( $level, $message ) {
 				static::render( $level, $message );
 			}
 		);

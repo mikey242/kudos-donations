@@ -32,7 +32,6 @@ trait LabelsTrait {
 	 * @param string $singular_lc Singular lower-case term.
 	 * @param string $plural_uc Plural upper-case term.
 	 * @param string $plural_lc Plural lower-case term.
-	 * @return array
 	 */
 	abstract protected function get_default_labels( string $singular_uc, string $singular_lc, string $plural_uc, string $plural_lc ): array;
 
@@ -52,8 +51,6 @@ trait LabelsTrait {
 
 	/**
 	 * Allow overriding individual generated labels.
-	 *
-	 * @return array
 	 */
 	protected function get_custom_labels(): array {
 		return [];

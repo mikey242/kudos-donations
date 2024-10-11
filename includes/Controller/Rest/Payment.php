@@ -44,8 +44,6 @@ class Payment extends AbstractRestController {
 
 	/**
 	 * Payment service routes.
-	 *
-	 * @return array
 	 */
 	public function get_routes(): array {
 		return [
