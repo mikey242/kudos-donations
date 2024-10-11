@@ -215,7 +215,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 			[
 				'success' => true,
 				'message' =>
-					__( 'API connection refreshed', 'kudos-donations' ),
+					__( 'Payment methods refreshed', 'kudos-donations' ),
 			],
 			200
 		);
