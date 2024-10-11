@@ -160,7 +160,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	 */
 	private function can_use_recurring(): bool
 	{
-		$methods = $this->get_payment_methods([
+		$methods = $this->get_active_payment_methods([
 			'sequenceType' => 'recurring',
 		]);
 
@@ -180,10 +180,12 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		$payment_methods = array_map(function (Method $method) {
 			return [
 				'id'            => $method->id,
+				'description'   => $method->description,
+				'image'         => $method->image->svg,
 				'minimumAmount' => $method->minimumAmount,
 				'maximumAmount' => (array)$method->maximumAmount,
 			];
-		}, (array)$this->get_payment_methods());
+		}, (array)$this->get_active_payment_methods());
 
 		if(empty($payment_methods)) {
 			return new WP_REST_Response(
@@ -331,7 +333,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
      *
      * @return BaseCollection|MethodCollection|null
      */
-    public function get_payment_methods(array $options = []) {
+    public function get_active_payment_methods(array $options = []) {
         try {
             return $this->api_client->methods->allActive($options);
         } catch (ApiException $e) {
@@ -858,8 +860,48 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 				'default' => false
 			],
 			self::SETTING_PAYMENT_METHODS => [
-				'type'         => 'array',
-				'show_in_rest' => false,
+				'type'         => FieldType::ARRAY,
+				'show_in_rest' => [
+					'schema'          => [
+						'type'        => FieldType::ARRAY,
+						'items'       => [
+							'type'       => FieldType::OBJECT,
+							'properties' => [
+								'id' => [
+									'type'        => FieldType::STRING,
+								],
+								'description' => [
+									'type' => FieldType::STRING
+								],
+								'image' => [
+									'type' => FieldType::STRING
+								],
+								'minimumAmount' => [
+									'type'        => FieldType::OBJECT,
+									'properties'  => [
+										'value'    => [
+											'type'        => FieldType::STRING,
+										],
+										'currency' => [
+											'type'        => FieldType::STRING,
+										],
+									],
+								],
+								'maximumAmount' => [
+									'type'        => FieldType::OBJECT,
+									'properties'  => [
+										'value'    => [
+											'type'        => FieldType::STRING,
+										],
+										'currency' => [
+											'type'        => FieldType::STRING,
+										],
+									],
+								],
+							],
+						],
+					],
+				],
 				'default' => []
 			]
 		];

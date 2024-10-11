@@ -8,6 +8,7 @@ import {
 	Button,
 	Disabled,
 	Flex,
+	FlexItem,
 	Icon,
 	Panel,
 	PanelBody,
@@ -24,9 +25,16 @@ const MollieTab = () => {
 	} = useSettingsContext();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
+
+	const {
+		_kudos_vendor_mollie_payment_methods: paymentMethods,
+		_kudos_vendor_mollie_api_key_live: liveKey,
+		_kudos_vendor_mollie_api_key_test: testKey,
+	} = settings;
+
 	const apiKeyStatus = {
-		live: settings._kudos_vendor_mollie_api_key_live,
-		test: settings._kudos_vendor_mollie_api_key_test,
+		live: liveKey,
+		test: testKey,
 	};
 
 	const refresh = () => {
@@ -65,25 +73,45 @@ const MollieTab = () => {
 							'kudos-donations'
 						)}
 					/>
-					<Button
-						onClick={refresh}
-						type="button"
-						variant="secondary"
-						isBusy={checkingApiKey}
-						disabled={!isVendorReady}
-						icon="update"
-					>
-						{__('Refresh API', 'kudos-donations')}
-					</Button>
-
-					<p className="my-1 text-sm text-gray-500">
-						{__(
-							'Use this if you have made changes in Mollie such as enabling SEPA Direct Debit or credit card.',
-							'kudos-donations'
-						)}
-					</p>
 				</PanelBody>
 			</Panel>
+			{paymentMethods.length > 0 && (
+				<Panel
+					header={__('Available payment methods', 'kudos-donations')}
+				>
+					<PanelBody>
+						<Flex wrap={true} expanded={false} direction="row">
+							{paymentMethods?.map((method) => (
+								<FlexItem key={method?.id}>
+									<Flex>
+										<img
+											alt={method.description + ' icon'}
+											src={method.image}
+										/>
+
+										<strong>{method?.description}</strong>
+									</Flex>
+								</FlexItem>
+							))}
+						</Flex>
+						<Flex justify="end">
+							<Button
+								onClick={refresh}
+								type="button"
+								variant="link"
+								isBusy={checkingApiKey}
+								disabled={!isVendorReady}
+								// icon="update"
+							>
+								{__(
+									'Refresh Payment Methods',
+									'kudos-donations'
+								)}
+							</Button>
+						</Flex>
+					</PanelBody>
+				</Panel>
+			)}
 			<Panel header={__('API Keys', 'kudos-donations')}>
 				<PanelBody>
 					{['live', 'test'].map((mode, i) => {
