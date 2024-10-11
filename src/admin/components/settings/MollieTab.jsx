@@ -94,6 +94,12 @@ const MollieTab = () => {
 								</FlexItem>
 							))}
 						</Flex>
+						<p>
+							{__(
+								"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card' or 'SEPA Direct Debit'. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.",
+								'kudos-donations'
+							)}
+						</p>
 						<Flex justify="end">
 							<Button
 								onClick={refresh}
