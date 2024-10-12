@@ -10,8 +10,6 @@ parameters:
   ignoreErrors:
   paths:
     - includes/
-  excludePaths:
-    - scoper.inc.php
   scanDirectories:
   bootstrapFiles:
     - kudos-donations.php
