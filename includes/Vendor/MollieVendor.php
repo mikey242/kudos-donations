@@ -199,8 +199,6 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 			);
 		}
 
-		$recurring = $this->can_use_recurring();
-
 		$this->logger->debug('Mollie refreshed connection settings', [$payment_methods]);
 
 		// Update payment methods.
@@ -210,7 +208,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		);
 
 		// Update recurring status.
-		update_option(self::SETTING_RECURRING, $recurring);
+		update_option(self::SETTING_RECURRING, $this->can_use_recurring());
 
 		return new WP_REST_Response(
 			[
