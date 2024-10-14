@@ -88,7 +88,6 @@ const MollieTab = () => {
 											alt={method.description + ' icon'}
 											src={method.image}
 										/>
-
 										<strong>{method?.description}</strong>
 									</Flex>
 								</FlexItem>
@@ -96,7 +95,7 @@ const MollieTab = () => {
 						</Flex>
 						<p>
 							{__(
-								"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card' or 'SEPA Direct Debit'. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.",
+								"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card' or 'SEPA Direct Debit'. If 'SEPA Direct Debit' is not enabled on your account then donors will only be able to use 'Card' or 'PayPal' for recurring payments. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.",
 								'kudos-donations'
 							)}
 						</p>
