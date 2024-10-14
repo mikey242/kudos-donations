@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
 Tested up to: 6.6
 Requires PHP: 7.2.9
-Stable tag: 3.3.0
+Stable tag: 3.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,7 +119,6 @@ This can occur as a result of a conflict with your theme or another plugin and t
 == Changelog ==
 
 = 3.3.0 =
-* Add: Only show payment methods other than creditcard and paypal if SEPA is enabled
 * Update @wordpress npm monorepo
 * Update Mollie php library
 * Update other dependencies

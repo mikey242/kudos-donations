@@ -17,8 +17,6 @@ use Kudos\Helpers\Utils;
 use Kudos\Service\Vendor\MollieVendor;
 use Kudos\Service\Vendor\VendorInterface;
 use Mollie\Api\Resources\Payment;
-use Mollie\Api\Types\PaymentMethod;
-use Mollie\Api\Types\SequenceType;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -60,45 +58,6 @@ class PaymentService {
 		$this->mapper_service = $mapper_service;
 		$this->mailer_service = $mailer_service;
 		$this->logger         = $logger_service;
-	}
-
-	/**
-	 * Get the allowed payment methods for the provided sequenceType.
-	 *
-	 * @param string $sequence_type The payment sequence (e.g. oneoff, first, recurring).
-	 */
-	private function allowed_payment_methods( string $sequence_type ): array {
-		// Fetch all active payment methods.
-		$methods = $this->vendor->get_payment_methods(
-			[
-				'sequenceType' => $sequence_type,
-			]
-		);
-
-		$available_methods = [];
-		$sepa_enabled      = false;
-
-		foreach ( $methods as $method ) {
-			$available_methods[] = $method->id;
-
-			if ( PaymentMethod::DIRECTDEBIT === $method->id ) {
-				$sepa_enabled = true;
-			}
-		}
-
-		// Filter for "first" sequence type.
-		if ( SequenceType::SEQUENCETYPE_FIRST === $sequence_type ) {
-			// If SEPA Direct Debit is enabled, return all active methods.
-			if ( $sepa_enabled ) {
-				return $available_methods;
-			}
-
-			// Otherwise, return only credit card and PayPal.
-			return array_intersect_key( $available_methods, [ PaymentMethod::CREDITCARD, PaymentMethod::PAYPAL ] );
-		}
-
-		// For other sequence types, return all available methods.
-		return $available_methods;
 	}
 
 	/**
@@ -381,7 +340,6 @@ class PaymentService {
 				'currency' => $currency,
 				'value'    => $formatted_value,
 			],
-			'method'       => $this->allowed_payment_methods( $sequence_type ),
 			'redirectUrl'  => $redirect_url,
 			'webhookUrl'   => $this->vendor->get_webhook_url(),
 			'sequenceType' => $sequence_type,
