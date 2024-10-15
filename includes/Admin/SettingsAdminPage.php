@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Helper\Assets;
+use WP_Screen;
 
 class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
 
@@ -41,6 +42,15 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	 */
 	public function callback(): void {
 		echo '<div id="kudos-settings" class="kudos-admin-page"></div>';
+	}
+
+	/**
+	 * Determines if assets should be loaded or not.
+	 *
+	 * @param WP_Screen $screen Screen object.
+	 */
+	public function should_enqueue_assets( WP_Screen $screen ): bool {
+		return 'donations_page_' . static::get_menu_slug() === $screen->id;
 	}
 
 	/**

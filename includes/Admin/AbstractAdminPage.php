@@ -59,7 +59,7 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				$this->get_position()
 			);
 		} elseif ( $this instanceof SubmenuAdminPageInterface ) {
-			$suffix = add_submenu_page(
+			add_submenu_page(
 				$this->get_parent_slug(),
 				$this->get_page_title(),
 				$this->get_menu_title(),
@@ -68,15 +68,18 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				$this instanceof HasCallbackInterface ? [ $this, 'callback' ] : null,
 				$this->get_position(),
 			);
+		}
 
-			if ( $this instanceof HasAssetsInterface ) {
+		if ( $this instanceof HasAssetsInterface ) {
 				add_action(
-					"load-$suffix",
-					function (): void {
-						add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
+					'admin_enqueue_scripts',
+					function () {
+						$screen = get_current_screen();
+						if ( $screen && static::should_enqueue_assets( $screen ) ) {
+							static::register_assets();
+						}
 					}
 				);
-			}
 		}
 	}
 }
