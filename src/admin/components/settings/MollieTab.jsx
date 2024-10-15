@@ -98,15 +98,15 @@ const MollieTab = () => {
 							{__(
 								"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card', 'PayPal' or 'SEPA Direct Debit'. Please note that 'SEPA Direct Debit' does not appear a payment option as it uses other payment options to set-up the subscription. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.",
 								'kudos-donations'
-							)}{' '}
+							)}
+						</p>
+						<Flex justify="space-between">
 							<ExternalLink href="https://help.mollie.com/hc/articles/115000470109-What-is-Mollie-Recurring">
 								{__(
 									'Read more about Mollie recurring payments',
 									'kudos-donations'
 								)}
 							</ExternalLink>
-						</p>
-						<Flex justify="end">
 							<Button
 								onClick={refresh}
 								type="button"
