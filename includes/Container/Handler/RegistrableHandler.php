@@ -47,13 +47,11 @@ class RegistrableHandler {
 		foreach ( $enabled_services as $service ) {
 			// Add specified action or call register directly.
 			if ( is_a( $service, Delayed::class, true ) ) {
-				foreach ( $service::get_registration_actions() as $action ) {
-					add_action(
-						$action,
-						[ $service, 'register' ],
-						$service::get_registration_action_priority()
-					);
-				}
+				add_action(
+					$service::get_registration_action(),
+					[ $service, 'register' ],
+					$service::get_registration_action_priority()
+				);
 			} else {
 				$service->register();
 			}

@@ -28,8 +28,8 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_registration_actions(): array {
-		return [ 'admin_menu' ];
+	public static function get_registration_action(): string {
+		return 'admin_menu';
 	}
 
 	/**

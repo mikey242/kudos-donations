@@ -69,8 +69,8 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_registration_actions(): array {
-		return [ 'kudos_mailer_send' ];
+	public static function get_registration_action(): string {
+		return 'kudos_mailer_send';
 	}
 
 	/**

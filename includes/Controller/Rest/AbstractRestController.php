@@ -76,8 +76,8 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_registration_actions(): array {
-		return [ 'rest_api_init' ];
+	public static function get_registration_action(): string {
+		return 'rest_api_init';
 	}
 
 	/**

@@ -24,8 +24,8 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_registration_actions(): array {
-		return [ 'admin_init', 'rest_api_init', 'init' ];
+	public static function get_registration_action(): string {
+		return 'init';
 	}
 
 	/**

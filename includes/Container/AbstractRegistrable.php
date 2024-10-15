@@ -21,8 +21,8 @@ abstract class AbstractRegistrable implements Delayed, Registrable, LoggerAwareI
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_registration_actions(): array {
-		return [ 'init' ];
+	public static function get_registration_action(): string {
+		return 'init';
 	}
 
 	/**

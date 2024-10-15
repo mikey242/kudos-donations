@@ -81,8 +81,8 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_registration_actions(): array {
-		return [ 'admin_init', 'init' ];
+	public static function get_registration_action(): string {
+		return 'init';
 	}
 
 	/**
