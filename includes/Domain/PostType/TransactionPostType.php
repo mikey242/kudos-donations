@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Vendor\MollieVendor;
 
 class TransactionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
@@ -241,6 +242,19 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					}
 
 					return $status_text;
+				},
+			],
+			self::META_FIELD_METHOD      => [
+				'label' => __( 'Method', 'kudos-donations' ),
+				'value' => function ( $transaction_id ) {
+					$method  = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_METHOD, true );
+					$methods = get_option( MollieVendor::SETTING_PAYMENT_METHODS );
+					$methods = array_column( $methods, null, 'id' );
+					$url     = $methods[ $method ]['image'] ?? null;
+					if ( $url ) {
+						return '<img src=' . $url . '  alt=' . __( 'Payment method icon', 'kudos-donations' ) . '/>';
+					}
+					return '';
 				},
 			],
 			self::META_FIELD_MESSAGE     => [
