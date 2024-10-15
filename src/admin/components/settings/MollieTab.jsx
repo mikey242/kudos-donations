@@ -158,7 +158,10 @@ const MollieTab = () => {
 							</Disabled>
 						);
 					})}
-					<Flex justify="flex-end">
+					<Flex justify="space-between">
+						<ExternalLink href="https://my.mollie.com/dashboard/developers/api-keys">
+							{__('Visit Mollie dashboard', 'kudos-donations')}.
+						</ExternalLink>
 						<Button
 							type="button"
 							variant="link"
