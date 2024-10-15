@@ -179,56 +179,69 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	 */
 	public function refresh_api(): WP_REST_Response {
 
-		// Rebuild Mollie settings.
-		$payment_methods = array_map(function (Method $method) {
-			return [
-				'id'            => $method->id,
-				'description'   => $method->description,
-				'image'         => $method->image->svg,
-				'minimumAmount' => $method->minimumAmount,
-				'maximumAmount' => (array)$method->maximumAmount,
-			];
-		}, (array)$this->get_active_payment_methods());
+		try {
+			// Rebuild Mollie settings.
+			$payment_methods = array_map(function (Method $method) {
+				return [
+					'id'            => $method->id,
+					'description'   => $method->description,
+					'image'         => $method->image->svg,
+					'minimumAmount' => $method->minimumAmount,
+					'maximumAmount' => (array)$method->maximumAmount,
+				];
+			}, (array)$this->get_active_payment_methods());
 
-		// Handle SEPA Direct Debit separately.
-		$sepa = $this->api_client->methods->get(PaymentMethod::DIRECTDEBIT);
-		if(PaymentMethodStatus::ACTIVATED === $sepa->status) {
-			$payment_methods[] = [
-				'id'    => $sepa->id,
-				'description' => $sepa->description,
-				'image' => $sepa->image->svg,
-				'minimumAmount' => $sepa->minimumAmount,
-				'maximumAmount' => $sepa->maximumAmount,
-			];
-		}
+			// Handle SEPA Direct Debit separately.
+			$sepa = $this->api_client->methods->get(PaymentMethod::DIRECTDEBIT);
+			if(PaymentMethodStatus::ACTIVATED === $sepa->status) {
+				$payment_methods[] = [
+					'id'    => $sepa->id,
+					'description' => $sepa->description,
+					'image' => $sepa->image->svg,
+					'minimumAmount' => $sepa->minimumAmount,
+					'maximumAmount' => $sepa->maximumAmount,
+				];
+			}
 
-		if(empty($payment_methods)) {
+			if(empty($payment_methods)) {
+				return new WP_REST_Response(
+					[
+						'success' => false,
+						'message' =>
+							__( 'No payment methods found. Please check your API keys', 'kudos-donations' ),
+					],
+					200
+				);
+			}
+
+			$this->logger->debug('Mollie refreshed connection settings', [$payment_methods]);
+
+			// Update payment methods.
+			update_option(
+				self::SETTING_PAYMENT_METHODS,
+				$payment_methods
+			);
+
+			// Update recurring status.
+			update_option(self::SETTING_RECURRING, $this->can_use_recurring());
+
 			return new WP_REST_Response(
 				[
-					'success' => false,
+					'success' => true,
 					'message' =>
-						__( 'No payment methods found. Please check your API keys', 'kudos-donations' ),
+						__( 'Payment methods refreshed', 'kudos-donations' ),
 				],
 				200
 			);
+		} catch (ApiException $e) {
+			$this->logger->critical($e->getMessage());
 		}
-
-		$this->logger->debug('Mollie refreshed connection settings', [$payment_methods]);
-
-		// Update payment methods.
-		update_option(
-			self::SETTING_PAYMENT_METHODS,
-			$payment_methods
-		);
-
-		// Update recurring status.
-		update_option(self::SETTING_RECURRING, $this->can_use_recurring());
 
 		return new WP_REST_Response(
 			[
-				'success' => true,
+				'success' => false,
 				'message' =>
-					__( 'Payment methods refreshed', 'kudos-donations' ),
+					__( 'There was an error refreshing payment methods. Please check the log for more information.', 'kudos-donations' ),
 			],
 			200
 		);
