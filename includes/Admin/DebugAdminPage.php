@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Admin;
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use Monolog\Handler\RotatingFileHandler;
 
-class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
+class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
 
 	private const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
 
@@ -76,11 +76,6 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	public static function get_position(): int {
 		return 5;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register_assets(): void {}
 
 	/**
 	 * Gets the log file as an array.
