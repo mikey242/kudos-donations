@@ -6,7 +6,7 @@ import live from '../../../../assets/images/guide-test-live.png';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useSettingsContext } from '../../contexts/SettingsContext';
-import { Guide } from '@wordpress/components';
+import { ExternalLink, Guide } from '@wordpress/components';
 
 const IntroGuide = () => {
 	const { updateSetting, settings } = useSettingsContext();
@@ -57,18 +57,13 @@ const IntroGuide = () => {
 										'kudos-donations'
 									)}
 								</p>
-								<a
-									className="text-primary inline"
-									target="_blank"
-									href="https://my.mollie.com/dashboard/developers/api-keys"
-									rel="noreferrer"
-								>
+								<ExternalLink href="https://my.mollie.com/dashboard/developers/api-keys">
 									{__(
 										'Visit Mollie dashboard',
 										'kudos-donations'
 									)}
 									.
-								</a>
+								</ExternalLink>
 							</div>
 						</>
 					),
