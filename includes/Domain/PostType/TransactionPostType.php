@@ -151,7 +151,29 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	 */
 	public function get_columns_config(): array {
 		return [
-			'donor'                            => [
+			'ID'                         => [
+				'value_type' => FieldType::STRING,
+				'value'      => function ( $transaction_id ) {
+					$post     = get_post( $transaction_id );
+					$sequence = $post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE};
+					switch ( $sequence ) {
+						case 'oneoff':
+							$icon = 'money-alt';
+							break;
+						case 'first':
+							$icon = 'calendar';
+							break;
+						case 'recurring':
+							$icon = 'update';
+							break;
+						default:
+							$icon = '';
+
+					}
+					return "<span class='dashicons dashicons-$icon'></span> " . Utils::get_formatted_id( $transaction_id );
+				},
+			],
+			'donor'                      => [
 				'value_type' => FieldType::EMAIL,
 				'label'      => __( 'Donor', 'kudos-donations' ),
 				'value'      => function ( $transaction_id ) {
@@ -162,29 +184,17 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					return null;
 				},
 			],
-			'ID'                               => [
-				'value_type' => FieldType::STRING,
-				'value'      => function ( $transaction_id ) {
-					return Utils::get_formatted_id( $transaction_id );
-				},
-			],
-			self::META_FIELD_VENDOR_PAYMENT_ID => [
-				'value_type' => FieldType::STRING,
-				'label'      => __( 'Vendor ID', 'kudos-donations' ),
-			],
-			self::META_FIELD_VALUE             => [
+			self::META_FIELD_VALUE       => [
 				'value_type' => FieldType::NUMBER,
 				'label'      => __( 'Amount', 'kudos-donations' ),
 				'value'      => function ( $transaction_id ) {
-					$value = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_VALUE, true );
-					return Utils::format_value_for_display( $value );
+					$post     = get_post( $transaction_id );
+					$value    = $post->{TransactionPostType::META_FIELD_VALUE};
+					$currency = $post->{TransactionPostType::META_FIELD_CURRENCY};
+					return Utils::get_currencies()[ $currency ] . Utils::format_value_for_display( $value );
 				},
 			],
-			self::META_FIELD_CURRENCY          => [
-				'value_type' => FieldType::STRING,
-				'label'      => __( 'Currency', 'kudos-donations' ),
-			],
-			self::META_FIELD_CAMPAIGN_ID       => [
+			self::META_FIELD_CAMPAIGN_ID => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Campaign', 'kudos-donations' ),
 				'value'      => function ( $transaction_id ): ?string {
@@ -198,7 +208,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					return null;
 				},
 			],
-			self::META_FIELD_STATUS            => [
+			self::META_FIELD_STATUS      => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Status', 'kudos-donations' ),
 				'value'      => function ( $transaction_id ) {
@@ -215,7 +225,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 								],
 								admin_url( 'edit.php' )
 							);
-							$status_text = '<a class="button button-small" href="' . $url . '">' . __( 'Paid', 'kudos-donations' ) . '</a><span class="dashicons dashicons-yes"></span>';
+							$status_text = '<a class="button button-small kudos-transaction-pdf success" href="' . $url . '"><span class="dashicons dashicons-media-document"></span><span>' . __( 'Paid', 'kudos-donations' ) . '</span></a>';
 							break;
 						case PaymentStatus::OPEN:
 							$status_text = __( 'Open', 'kudos-donations' );
@@ -233,7 +243,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					return $status_text;
 				},
 			],
-			self::META_FIELD_MESSAGE           => [
+			self::META_FIELD_MESSAGE     => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Message', 'kudos-donations' ),
 			],
