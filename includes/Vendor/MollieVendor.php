@@ -28,6 +28,8 @@ use Mollie\Api\Resources\Customer;
 use Mollie\Api\Resources\Method;
 use Mollie\Api\Resources\MethodCollection;
 use Mollie\Api\Resources\Subscription;
+use Mollie\Api\Types\PaymentMethod;
+use Mollie\Api\Types\PaymentMethodStatus;
 use Mollie\Api\Types\RefundStatus;
 use Mollie\Api\Types\SequenceType;
 use WP_Error;
@@ -187,6 +189,18 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 				'maximumAmount' => (array)$method->maximumAmount,
 			];
 		}, (array)$this->get_active_payment_methods());
+
+		// Handle SEPA Direct Debit separately.
+		$sepa = $this->api_client->methods->get(PaymentMethod::DIRECTDEBIT);
+		if(PaymentMethodStatus::ACTIVATED === $sepa->status) {
+			$payment_methods[] = [
+				'id'    => $sepa->id,
+				'description' => $sepa->description,
+				'image' => $sepa->image->svg,
+				'minimumAmount' => $sepa->minimumAmount,
+				'maximumAmount' => $sepa->maximumAmount,
+			];
+		}
 
 		if(empty($payment_methods)) {
 			return new WP_REST_Response(
