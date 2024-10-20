@@ -315,7 +315,7 @@ class Version400 extends AbstractMigration {
 		}
 		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
 
-		$this->logger->info( 'Transactions migrated', [ 'transactions' => $total ] );
+		$this->logger->info( 'Transactions migrated', [ 'count' => $total ] );
 
 		return true;
 	}
