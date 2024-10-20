@@ -34,7 +34,7 @@ class Version400 extends AbstractMigration {
 			$this->migrate_campaigns_to_posts() &&
 			$this->migrate_transactions_to_posts() &&
 			$this->migrate_subscriptions_to_posts() &&
-			$this->additional_cleanup()
+			$this->cleanup()
 		);
 	}
 
@@ -61,9 +61,6 @@ class Version400 extends AbstractMigration {
 			update_option( MollieVendor::SETTING_API_KEY_TEST, $test_key );
 			remove_filter( 'kudos_mollie_test_key_validation', '__return_true' );
 		}
-
-		// Cleanup.
-		delete_option( '_kudos_vendor_mollie' );
 
 		// Always return true, a failure here is not critical.
 		return true;
@@ -110,14 +107,6 @@ class Version400 extends AbstractMigration {
 
 		update_option( MailerService::SETTING_CUSTOM_SMTP, $new_settings );
 
-		// Cleanup.
-		delete_option( '_kudos_smtp_host' );
-		delete_option( '_kudos_smtp_port' );
-		delete_option( '_kudos_smtp_encryption' );
-		delete_option( '_kudos_smtp_autotls' );
-		delete_option( '_kudos_smtp_username' );
-		delete_option( '_kudos_smtp_from' );
-
 		// Always return true, a failure here is not critical.
 		return true;
 	}
@@ -141,12 +130,14 @@ class Version400 extends AbstractMigration {
 
 		$this->logger->info(
 			'Migrating donors',
-			array_map(
-				function ( object $donor ) {
-					return $donor->name;
-				},
-				$donors
-			)
+			[
+				'ids' => array_map(
+					function ( object $donor ) {
+						return $donor->name;
+					},
+					$donors
+				),
+			]
 		);
 
 		foreach ( $donors as $donor ) {
@@ -174,11 +165,7 @@ class Version400 extends AbstractMigration {
 			++$total;
 		}
 
-		// Cleanup.
-		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
-		$this->wpdb->query( $del_query );
-
-		$this->logger->info( 'Donors migrated', [ 'donors' => $total ] );
+		$this->logger->info( 'Donors migrated', [ 'count' => $total ] );
 		return true;
 	}
 
@@ -200,12 +187,14 @@ class Version400 extends AbstractMigration {
 
 		$this->logger->info(
 			'Migrating campaigns',
-			array_map(
-				function ( array $campaign ) {
-					return $campaign['name'];
-				},
-				$campaigns
-			)
+			[
+				'names' => array_map(
+					function ( array $campaign ) {
+						return $campaign['name'];
+					},
+					$campaigns
+				),
+			]
 		);
 
 		$total = 0;
@@ -249,10 +238,7 @@ class Version400 extends AbstractMigration {
 			++$total;
 		}
 
-		// Cleanup.
-		delete_option( '_kudos_campaigns' );
-
-		$this->logger->info( 'Campaigns migrated', [ 'campaigns' => $total ] );
+		$this->logger->info( 'Campaigns migrated', [ 'count' => $total ] );
 
 		return true;
 	}
@@ -278,12 +264,14 @@ class Version400 extends AbstractMigration {
 
 		$this->logger->info(
 			'Migrating transactions',
-			array_map(
-				function ( object $transaction ) {
-					return $transaction->id;
-				},
-				$transactions
-			)
+			[
+				'ids' => array_map(
+					function ( object $transaction ) {
+						return $transaction->id;
+					},
+					$transactions
+				),
+			]
 		);
 
 		foreach ( $transactions as $transaction ) {
@@ -327,10 +315,6 @@ class Version400 extends AbstractMigration {
 		}
 		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
 
-		// Cleanup.
-		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
-		$this->wpdb->query( $del_query );
-
 		$this->logger->info( 'Transactions migrated', [ 'transactions' => $total ] );
 
 		return true;
@@ -356,12 +340,14 @@ class Version400 extends AbstractMigration {
 
 		$this->logger->info(
 			'Migrating subscriptions',
-			array_map(
-				function ( object $subscription ) {
-					return $subscription->id;
-				},
-				$subscriptions
-			)
+			[
+				'ids' => array_map(
+					function ( object $subscription ) {
+						return $subscription->id;
+					},
+					$subscriptions
+				),
+			]
 		);
 
 		foreach ( $subscriptions as $subscription ) {
@@ -387,11 +373,7 @@ class Version400 extends AbstractMigration {
 			++$total;
 		}
 
-		// Cleanup.
-		$del_query = 'DROP TABLE IF EXISTS ' . $table_name;
-		$this->wpdb->query( $del_query );
-
-		$this->logger->info( 'Subscriptions migrated', [ 'subscriptions' => $total ] );
+		$this->logger->info( 'Subscriptions migrated', [ 'count' => $total ] );
 
 		return true;
 	}
@@ -399,11 +381,33 @@ class Version400 extends AbstractMigration {
 	/**
 	 * Performs additional cleanup not related to prior.
 	 */
-	private function additional_cleanup(): bool {
-		// Remove log table.
+	private function cleanup(): bool {
 		$this->logger->info( 'Cleaning up after migration' );
-		$table_name = $this->wpdb->prefix . 'kudos_log';
-		$del_query  = 'DROP TABLE IF EXISTS ' . $table_name;
+
+		// Remove old options.
+		delete_option( '_kudos_vendor_mollie' );
+		delete_option( '_kudos_smtp_host' );
+		delete_option( '_kudos_smtp_port' );
+		delete_option( '_kudos_smtp_encryption' );
+		delete_option( '_kudos_smtp_autotls' );
+		delete_option( '_kudos_smtp_username' );
+		delete_option( '_kudos_smtp_from' );
+		delete_option( '_kudos_campaigns' );
+
+		// Remove donors table.
+		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_donors';
+		$this->wpdb->query( $del_query );
+
+		// Remove transaction table.
+		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_transactions';
+		$this->wpdb->query( $del_query );
+
+		// Remove subscriptions table.
+		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_subscriptions';
+		$this->wpdb->query( $del_query );
+
+		// Remove log table.
+		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_log';
 		$this->wpdb->query( $del_query );
 		return true;
 	}
