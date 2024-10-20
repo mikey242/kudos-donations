@@ -117,7 +117,10 @@ trait TableColumnsTrait {
 								'href'  => [],
 								'class' => [],
 							],
-							'img'  => [ 'src' => [] ],
+							'img'  => [
+								'src'   => [],
+								'title' => [],
+							],
 							'span' => [ 'class' => [] ],
 						]
 					);

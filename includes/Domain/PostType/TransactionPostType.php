@@ -251,8 +251,9 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					$methods = get_option( MollieVendor::SETTING_PAYMENT_METHODS );
 					$methods = array_column( $methods, null, 'id' );
 					$url     = $methods[ $method ]['image'] ?? null;
+					$title   = $methods[ $method ]['description'] ?? null;
 					if ( $url ) {
-						return '<img src=' . $url . '  alt=' . __( 'Payment method icon', 'kudos-donations' ) . '/>';
+						return '<img title=' . $title . ' src=' . $url . '  alt=' . __( 'Payment method icon', 'kudos-donations' ) . '/>';
 					}
 					return '';
 				},
