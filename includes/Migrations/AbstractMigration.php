@@ -9,21 +9,22 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
+use IseardMedia\Kudos\Helper\WpDb;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 abstract class AbstractMigration implements MigrationInterface {
 
-	protected \wpdb $wpdb;
+	protected WpDb $wpdb;
 	protected LoggerInterface $logger;
 
 	/**
 	 * Constructor for migrations.
 	 *
+	 * @param WpDb                 $wpdb The WordPress database wrapper.
 	 * @param LoggerInterface|null $logger Logger instance.
 	 */
-	public function __construct( ?LoggerInterface $logger = null ) {
-		global $wpdb;
+	public function __construct( WpDb $wpdb, ?LoggerInterface $logger = null ) {
 		$this->wpdb   = $wpdb;
 		$this->logger = $logger ?? new NullLogger();
 	}

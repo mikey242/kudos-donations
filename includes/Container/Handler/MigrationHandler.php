@@ -11,12 +11,13 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Container\Handler;
 
-use IseardMedia\Kudos\Admin\CampaignAdminPage;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
+use IseardMedia\Kudos\Service\SettingsService;
 
 class MigrationHandler extends AbstractRegistrable implements HasSettingsInterface {
 
@@ -36,7 +37,7 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * Migrator service constructor.
 	 */
 	public function __construct() {
-		$this->current_version = get_option( self::SETTING_DB_VERSION, get_option( '_kudos_donations_version', '0' ) );
+		$this->current_version = get_option( self::SETTING_DB_VERSION, get_option( SettingsService::SETTING_PLUGIN_VERSION, '1.0' ) );
 		$this->target_version  = KUDOS_DB_VERSION;
 	}
 
@@ -51,8 +52,10 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$this->process_form_data();
-		$this->check_database();
+		if ( version_compare( $this->current_version, $this->target_version, '<' ) ) {
+			$this->enqueue_assets();
+			$this->add_admin_notice();
+		}
 	}
 
 	/**
@@ -65,64 +68,33 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
-	 * Runs when the migrate form is submitted.
+	 * Returns currently stored migrations.
+	 *
+	 * @return MigrationInterface[]
 	 */
-	public function process_form_data(): void {
-		if ( isset( $_REQUEST[ self::MIGRATE_ACTION ] ) ) {
-			$action = sanitize_text_field( wp_unslash( $_REQUEST[ self::MIGRATE_ACTION ] ) );
-			$nonce  = wp_unslash( $_REQUEST['_wpnonce'] );
-
-			// Check nonce.
-			if ( ! wp_verify_nonce( $nonce, $action ) ) {
-				die();
-			}
-
-			$this->run_migrations();
-		}
+	public function get_migrations(): array {
+		return $this->migrations;
 	}
 
 	/**
-	 * Run the migrations in $migrations.
+	 * Enqueues the required assets.
 	 */
-	private function run_migrations(): void {
-		foreach ( $this->migrations as $migration ) {
-
-			// Prevent running migration if already in history.
-			if ( \in_array( $migration->get_version(), get_option( self::SETTING_MIGRATION_HISTORY, [] ), true ) ) {
-				$this->logger->debug( 'Migration already applied, skipping', [ 'migration' => $migration->get_version() ] );
-				continue;
+	private function enqueue_assets(): void {
+		add_action(
+			'admin_enqueue_scripts',
+			function () {
+				$admin_js = Assets::get_script( 'admin/kudos-admin-migrations.js' );
+				wp_enqueue_script(
+					'kudos-donations-migrations',
+					$admin_js['url'],
+					$admin_js['dependencies'],
+					$admin_js['version'],
+					[
+						'in_footer' => true,
+					]
+				);
 			}
-
-			$this->logger->debug( 'Running migration: ' . $migration->get_version() );
-
-			$instance = new $migration( $this->logger );
-
-			// Run migration and stop if not successful.
-			if ( ! $instance->run() ) {
-				$this->logger->error( 'Migration failed.', [ 'migration' => $migration->get_version() ] );
-				return;
-			}
-
-			// Update migration history.
-			$migration_history   = get_option( self::SETTING_MIGRATION_HISTORY, [] );
-			$migration_history[] = $instance->get_version();
-			update_option( self::SETTING_MIGRATION_HISTORY, $migration_history );
-		}
-		update_option( self::SETTING_DB_VERSION, KUDOS_DB_VERSION );
-		// Redirect to prevent the migration notice from appearing again.
-		wp_safe_redirect( admin_url( 'admin.php?page=' . CampaignAdminPage::get_menu_slug() ) );
-		exit;
-	}
-
-	/**
-	 * Check database version number and add admin notice to update if necessary.
-	 */
-	public function check_database(): bool {
-		if ( $this->current_version > 0 && version_compare( $this->current_version, $this->target_version, '<' ) ) {
-			$this->add_admin_notice();
-			return false;
-		}
-		return true;
+		);
 	}
 
 	/**
@@ -130,10 +102,10 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 */
 	public function add_admin_notice(): void {
 		$form  = "<form method='post'>";
-		$form .= wp_nonce_field( 'kudos_migrate', '_wpnonce', true, false );
-		$form .= "<button class='button-secondary confirm' name=" . self::MIGRATE_ACTION . " type='submit' value='kudos_migrate'>";
+		$form .= "<button id='kudos-migrate-button' class='button-secondary confirm' name=" . self::MIGRATE_ACTION . " type='submit' value='kudos_migrate'>";
 		$form .= __( 'Update now', 'kudos-donations' );
 		$form .= '</button>';
+		$form .= "<p id='kudos-migration-status'></p>";
 		$form .= '</form>';
 		AdminNotice::fancy(
 			__(

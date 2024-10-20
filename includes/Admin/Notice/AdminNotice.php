@@ -104,10 +104,13 @@ class AdminNotice implements AdminNoticeInterface {
 				$message,
 				[
 					'div'    => [
+						'id'    => [],
 						'class' => [],
 						'style' => [],
 					],
-					'p'      => [],
+					'p'      => [
+						'id' => [],
+					],
 					'strong' => [],
 					'form'   => [
 						'method' => [],
@@ -119,6 +122,7 @@ class AdminNotice implements AdminNoticeInterface {
 						'value' => [],
 					],
 					'button' => [
+						'id'    => [],
 						'class' => [],
 						'name'  => [],
 						'type'  => [],
