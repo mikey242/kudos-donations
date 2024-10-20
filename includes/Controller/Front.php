@@ -126,7 +126,17 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * @param array $args Array of Kudos button/modal attributes.
 	 */
 	public function kudos_render_callback( array $args ): ?string {
-		// Check if the current vendor is connected, otherwise show an error to logged in admins.
+
+		// Check if the Campaign ID has been given.
+		if ( empty( $args['campaign_id'] ) ) {
+			if ( current_user_can( 'manage_options' ) ) {
+				$message = __( 'No Campaign ID specified.', 'kudos-donations' );
+
+				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
+			}
+		}
+
+		// Check if the current vendor is connected.
 		if ( ! $this->vendor->is_ready() ) {
 			if ( current_user_can( 'manage_options' ) ) {
 				$message = sprintf(
