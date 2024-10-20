@@ -1,20 +1,13 @@
 import { KudosLogo } from './KudosLogo';
 import React from 'react';
 import { Button } from './controls';
-import { clsx } from 'clsx';
 
-const DonateButton = ({
-	children,
-	className,
-	onClick = null,
-	color = null,
-}) => {
+const DonateButton = ({ children, onClick = null }) => {
 	return (
-		<div id="kudos-button" className={clsx('font-body', className)}>
+		<div id="kudos-donate-button" className="font-body">
 			<Button
 				onClick={() => onClick && onClick()}
-				className={clsx(!color && 'bg-primary', 'logo-animate')}
-				style={{ backgroundColor: color }}
+				className="logo-animate"
 			>
 				<div className="mr-3 flex text-white">
 					<KudosLogo
