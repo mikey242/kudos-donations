@@ -76,11 +76,10 @@ const MollieTab = () => {
 					/>
 				</PanelBody>
 			</Panel>
-			{paymentMethods.length > 0 && (
-				<Panel
-					header={__('Available payment methods', 'kudos-donations')}
-				>
-					<PanelBody>
+
+			<Panel header={__('Available payment methods', 'kudos-donations')}>
+				<PanelBody>
+					{paymentMethods.length > 0 ? (
 						<Flex wrap={true} justify="none" direction="row">
 							{paymentMethods?.map((method) => (
 								<FlexItem key={method?.id}>
@@ -94,36 +93,37 @@ const MollieTab = () => {
 								</FlexItem>
 							))}
 						</Flex>
-						<p>
+					) : (
+						<i>
+							{__('No payment methods found.', 'kudos-donations')}
+						</i>
+					)}
+					<p>
+						{__(
+							"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card', 'PayPal' or 'SEPA Direct Debit'. Please note that 'SEPA Direct Debit' does not appear a payment option as it uses other payment options to set-up the subscription. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.",
+							'kudos-donations'
+						)}
+					</p>
+					<Flex justify="space-between">
+						<ExternalLink href="https://help.mollie.com/hc/articles/115000470109-What-is-Mollie-Recurring">
 							{__(
-								"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card', 'PayPal' or 'SEPA Direct Debit'. Please note that 'SEPA Direct Debit' does not appear a payment option as it uses other payment options to set-up the subscription. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.",
+								'Read more about Mollie recurring payments',
 								'kudos-donations'
 							)}
-						</p>
-						<Flex justify="space-between">
-							<ExternalLink href="https://help.mollie.com/hc/articles/115000470109-What-is-Mollie-Recurring">
-								{__(
-									'Read more about Mollie recurring payments',
-									'kudos-donations'
-								)}
-							</ExternalLink>
-							<Button
-								onClick={refresh}
-								type="button"
-								variant="link"
-								isBusy={checkingApiKey}
-								disabled={!isVendorReady}
-								// icon="update"
-							>
-								{__(
-									'Refresh Payment Methods',
-									'kudos-donations'
-								)}
-							</Button>
-						</Flex>
-					</PanelBody>
-				</Panel>
-			)}
+						</ExternalLink>
+						<Button
+							onClick={refresh}
+							type="button"
+							variant="link"
+							isBusy={checkingApiKey}
+							disabled={!isVendorReady}
+							// icon="update"
+						>
+							{__('Refresh Payment Methods', 'kudos-donations')}
+						</Button>
+					</Flex>
+				</PanelBody>
+			</Panel>
 			<Panel header={__('API Keys', 'kudos-donations')}>
 				<PanelBody>
 					{['live', 'test'].map((mode, i) => {
