@@ -52,6 +52,7 @@ const Button = forwardRef(
 				{children}
 				<div
 					className={clsx(
+						'button-background',
 						isOutline ? 'bg-none' : 'bg-primary',
 						'absolute -z-1 w-full h-full top-0 left-0 group-hover:brightness-90 transition ease-in-out'
 					)}
