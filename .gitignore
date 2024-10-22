@@ -8,6 +8,7 @@ node_modules
 .zed
 *.iml
 .env
+TODO
 includes/Dependencies
 /kudos-donations.zip
 /wp-cli.phar
