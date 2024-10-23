@@ -123,7 +123,6 @@ class SettingsService implements HasSettingsInterface {
 			self::SETTING_PLUGIN_VERSION   => [
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
-				'default'      => '1.0',
 			],
 		];
 	}

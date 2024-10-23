@@ -21,9 +21,7 @@ use IseardMedia\Kudos\Service\SettingsService;
 
 class MigrationHandler extends AbstractRegistrable implements HasSettingsInterface {
 
-	private const MIGRATE_ACTION = 'kudos_migrate_action';
-
-	private const DEFAULT_VERSION          = '1.0';
+	private const MIGRATE_ACTION           = 'kudos_migrate_action';
 	public const SETTING_DB_VERSION        = '_kudos_db_version';
 	public const SETTING_MIGRATION_HISTORY = '_kudos_migration_history';
 	private string $current_version;
@@ -41,7 +39,7 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	public function __construct() {
 		$db_version            = get_option( self::SETTING_DB_VERSION );
 		$this->current_version = ( false === $db_version || '' === $db_version )
-			? get_option( SettingsService::SETTING_PLUGIN_VERSION, self::DEFAULT_VERSION )
+			? get_option( SettingsService::SETTING_PLUGIN_VERSION, '' )
 			: $db_version;
 		$this->target_version  = KUDOS_DB_VERSION;
 	}
@@ -57,7 +55,7 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		if ( version_compare( $this->current_version, $this->target_version, '<' ) ) {
+		if ( $this->current_version && version_compare( $this->current_version, $this->target_version, '<' ) ) {
 			$this->enqueue_assets();
 			$this->add_admin_notice();
 		}
