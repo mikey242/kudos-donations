@@ -107,7 +107,8 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	public function is_ready(): bool {
 		$keys = $this->get_decrypted_api_keys();
 		$mode = $this->api_mode;
-		return !empty($keys[$mode]) ?? false;
+		$methods = get_option(self::SETTING_PAYMENT_METHODS);
+		return !empty($keys[$mode]) && !empty($methods) ?? false;
 	}
 
 	/**
