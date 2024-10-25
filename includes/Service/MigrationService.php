@@ -82,9 +82,19 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
+	 * Returns currently stored migrations.
+	 *
+	 * @return MigrationInterface[]
+	 */
+	public function get_migrations(): array {
+		$this->discover_migrations();
+		return $this->migrations;
+	}
+
+	/**
 	 * Find migrations and determine which ones to add based on the current version.
 	 */
-	public function discover_migrations() {
+	private function discover_migrations() {
 		// Get all the migration files.
 		$migration_files = glob( KUDOS_PLUGIN_DIR . 'includes/Migrations/*.php' );
 
@@ -127,18 +137,8 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	 *
 	 * @param MigrationInterface $migration The migration to add.
 	 */
-	public function add_migration( MigrationInterface $migration ): void {
+	private function add_migration( MigrationInterface $migration ): void {
 		$this->migrations[] = $migration;
-	}
-
-	/**
-	 * Returns currently stored migrations.
-	 *
-	 * @return MigrationInterface[]
-	 */
-	public function get_migrations(): array {
-		$this->discover_migrations();
-		return $this->migrations;
 	}
 
 	/**
@@ -183,15 +183,15 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	/**
 	 * Creates an admin notice with update button.
 	 */
-	public function add_migration_notice(): void {
+	private function add_migration_notice(): void {
 		$form  = "<form method='post'>";
 		$form .= "<button id='kudos-migrate-button' class='button-primary confirm' name=" . self::ACTION_MIGRATE . " type='submit'>";
 		$form .= __( 'Update now', 'kudos-donations' );
 		$form .= '</button>';
-		$form .= "<p id='kudos-migration-status'></p>";
+		$form .= "<i id='kudos-migration-status'></i>";
 		$form .= '</form>';
 
-		AdminNotice::fancy(
+		AdminNotice::info(
 			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'This is a one-way upgrade so please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form
 		);
 	}
@@ -226,7 +226,6 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 								'default' => __( 'Kudos Donations: Migration status pending.', 'kudos-donations' ),
 							],
 						],
-						'required'   => [ 'success', 'message' ], // Require all three fields.
 					],
 				],
 			],

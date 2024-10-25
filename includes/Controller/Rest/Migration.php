@@ -124,7 +124,7 @@ class Migration extends AbstractRestController {
 	 *
 	 * @param MigrationInterface $migration The migration to run.
 	 */
-	public function run_migration( MigrationInterface $migration ): bool {
+	private function run_migration( MigrationInterface $migration ): bool {
 
 		// Prevent running migration if already in history.
 		if ( \in_array( $migration->get_version(), get_option( MigrationService::SETTING_MIGRATION_HISTORY, [] ), true ) ) {
