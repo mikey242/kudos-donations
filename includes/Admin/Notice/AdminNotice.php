@@ -31,7 +31,7 @@ class AdminNotice implements AdminNoticeInterface {
 	 * @param string $message Message to be displayed.
 	 */
 	public static function error( string $message ): void {
-		static::notice( self::ERROR, $message );
+		static::fancy( $message, self::ERROR );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class AdminNotice implements AdminNoticeInterface {
 	 * @param string $message Message to be displayed.
 	 */
 	public static function warning( string $message ): void {
-		static::notice( self::WARNING, $message );
+		static::fancy( $message, self::WARNING );
 	}
 
 	/**
@@ -49,7 +49,7 @@ class AdminNotice implements AdminNoticeInterface {
 	 * @param string $message Message to be displayed.
 	 */
 	public static function success( string $message ): void {
-		static::notice( self::SUCCESS, $message );
+		static::fancy( $message, self::SUCCESS );
 	}
 
 	/**
@@ -58,7 +58,7 @@ class AdminNotice implements AdminNoticeInterface {
 	 * @param string $message Message to be displayed.
 	 */
 	public static function info( string $message ): void {
-		static::notice( self::INFO, $message );
+		static::fancy( $message, self::INFO );
 	}
 
 	/**
@@ -109,7 +109,8 @@ class AdminNotice implements AdminNoticeInterface {
 						'style' => [],
 					],
 					'p'      => [
-						'id' => [],
+						'id'    => [],
+						'style' => [],
 					],
 					'strong' => [],
 					'form'   => [
@@ -138,6 +139,7 @@ class AdminNotice implements AdminNoticeInterface {
 						'fill'  => [],
 						'd'     => [],
 					],
+					'br'     => [],
 				]
 			)
 		);
