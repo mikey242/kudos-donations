@@ -58,7 +58,7 @@ class AdminNotice implements AdminNoticeInterface {
 	 * @param string $message Message to be displayed.
 	 */
 	public static function info( string $message ): void {
-		static::fancy( $message, self::INFO );
+		static::fancy( $message );
 	}
 
 	/**
@@ -111,6 +111,9 @@ class AdminNotice implements AdminNoticeInterface {
 					'p'      => [
 						'id'    => [],
 						'style' => [],
+					],
+					'i'      => [
+						'id' => [],
 					],
 					'strong' => [],
 					'form'   => [
