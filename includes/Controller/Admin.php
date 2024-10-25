@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\Handler\SettingsHandler;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\CacheService;
+use IseardMedia\Kudos\Service\MigrationService;
 use WP_REST_Request;
 use WP_REST_Server;
 
@@ -99,6 +100,14 @@ class Admin extends AbstractRegistrable {
 						foreach ( $log_files as $log_file ) {
 							wp_delete_file( $log_file );
 						}
+					}
+					break;
+				case MigrationService::ACTION_DISMISS_COMPLETE_NOTICE:
+					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
+					if ( wp_verify_nonce( $nonce, MigrationService::ACTION_DISMISS_COMPLETE_NOTICE ) ) {
+						delete_option( MigrationService::SETTING_MIGRATION_STATUS );
+						wp_safe_redirect( admin_url( 'admin.php?page=kudos-campaigns' ) );
+						exit;
 					}
 					break;
 				default:

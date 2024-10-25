@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			migrateButton.style.display = 'none';
 			migrateButton.disabled = true;
 			migrationStatus.textContent = __(
-				'Running migrations…',
+				'Running migrations in the background. This might take a minute.',
 				'kudos-donations'
 			);
 
@@ -31,25 +31,35 @@ document.addEventListener('DOMContentLoaded', () => {
 			},
 		})
 			.then((response) => {
-				if (response.success) {
-					if (response.completed) {
-						migrationStatus.textContent =
-							'Migrations completed successfully!';
-					} else {
-						migrationStatus.textContent = sprintf(
-							/* translators: %s is number of migrations processed */
-							__(`Processed %s migrations…`),
-							response.next_offset
-						);
-						processMigrations(response.next_offset, batch); // Process the next batch
-					}
+				if (response.completed) {
+					migrationStatus.textContent =
+						'Migrations completed successfully!';
 				} else {
-					throw new Error('Migration failed.');
+					migrationStatus.textContent = sprintf(
+						/* translators: %s is number of migrations processed */
+						__(`Processed %s migrations…`),
+						response.next_offset
+					);
+					processMigrations(response.next_offset, batch); // Process the next batch.
 				}
 			})
-			.catch(() => {
-				migrationStatus.textContent =
-					'Migration failed. Please check the logs.';
+			.catch((error) => {
+				if (error?.message) {
+					migrationStatus.textContent = error.message;
+				} else {
+					migrationStatus.textContent =
+						'Migration failed. Please check the logs.';
+				}
+			})
+			.finally(() => {
+				void apiFetch({
+					path: '/wp/v2/settings', // REST API endpoint for updating settings.
+					method: 'POST', // Use POST method to update the setting.
+					data: {
+						_kudos_migration_busy: false, // Unset busy status.
+						_kudos_migration_status: [], // Remove notice.
+					},
+				});
 			});
 	}
 });

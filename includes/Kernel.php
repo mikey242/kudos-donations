@@ -14,7 +14,6 @@ namespace IseardMedia\Kudos;
 use Exception;
 use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\CompilerPass\ActivationCompilerPass;
-use IseardMedia\Kudos\Container\CompilerPass\MigrationCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\RegistrableCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\SettingsCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\UpgradeAwareCompilerPass;
@@ -52,7 +51,6 @@ class Kernel {
 		return [
 			ActivationCompilerPass::class,
 			RegistrableCompilerPass::class,
-			MigrationCompilerPass::class,
 			UpgradeAwareCompilerPass::class,
 			SettingsCompilerPass::class,
 		];

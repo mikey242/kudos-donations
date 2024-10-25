@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Container\Handler\MigrationHandler;
+use IseardMedia\Kudos\Service\MigrationService;
 use Monolog\Handler\RotatingFileHandler;
 
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
@@ -295,7 +295,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<p>Migration History:</p>
 						<ul>
 						<?php
-						foreach ( get_option( MigrationHandler::SETTING_MIGRATION_HISTORY ) as $migration ) {
+						foreach ( get_option( MigrationService::SETTING_MIGRATION_HISTORY ) as $migration ) {
 							echo '<li>' . esc_attr( $migration ) . '</li>';
 						}
 						?>
