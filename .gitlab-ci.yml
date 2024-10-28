@@ -72,7 +72,7 @@ build-job:
         - *script_install_npm
         - *script_install_composer
     script:
-        - composer run build-production
+        - npm run build
 
 test-job:
     image: wordpress:php$PHP_VERSION
@@ -104,6 +104,7 @@ zip-job:
         policy: pull
     before_script:
         - *script_install_composer
+        - composer install --optimize-autoloader --no-dev
         - apt-get update -y && apt-get install -y zip
     script:
         - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
