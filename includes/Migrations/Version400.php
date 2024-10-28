@@ -33,8 +33,7 @@ class Version400 extends AbstractMigration {
 			$this->migrate_donors_to_posts() &&
 			$this->migrate_campaigns_to_posts() &&
 			$this->migrate_transactions_to_posts() &&
-			$this->migrate_subscriptions_to_posts() &&
-			$this->cleanup()
+			$this->migrate_subscriptions_to_posts()
 		);
 	}
 
@@ -375,40 +374,6 @@ class Version400 extends AbstractMigration {
 
 		$this->logger->info( 'Subscriptions migrated', [ 'count' => $total ] );
 
-		return true;
-	}
-
-	/**
-	 * Performs additional cleanup not related to prior.
-	 */
-	private function cleanup(): bool {
-		$this->logger->info( 'Cleaning up after migration' );
-
-		// Remove old options.
-		delete_option( '_kudos_vendor_mollie' );
-		delete_option( '_kudos_smtp_host' );
-		delete_option( '_kudos_smtp_port' );
-		delete_option( '_kudos_smtp_encryption' );
-		delete_option( '_kudos_smtp_autotls' );
-		delete_option( '_kudos_smtp_username' );
-		delete_option( '_kudos_smtp_from' );
-		delete_option( '_kudos_campaigns' );
-
-		// Remove donors table.
-		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_donors';
-		$this->wpdb->query( $del_query );
-
-		// Remove transaction table.
-		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_transactions';
-		$this->wpdb->query( $del_query );
-
-		// Remove subscriptions table.
-		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_subscriptions';
-		$this->wpdb->query( $del_query );
-
-		// Remove log table.
-		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_log';
-		$this->wpdb->query( $del_query );
 		return true;
 	}
 }
