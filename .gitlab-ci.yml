@@ -17,7 +17,8 @@ variables:
     - nvm install && nvm use
     - npm ci
 
-cache:
+cache: &global_cache
+    - policy: pull-push
     - key: "composer-$(md5sum composer.lock | awk '{ print $1 }')"
       paths:
           - vendor/
@@ -64,11 +65,14 @@ lint-js-css:
 build-job:
     image: wordpress:php$PHP_VERSION
     stage: build
+    cache:
+        <<: *global_cache
+        policy: push
     before_script:
         - *script_install_npm
         - *script_install_composer
     script:
-        - npm run build
+        - composer run build-production
 
 test-job:
     image: wordpress:php$PHP_VERSION
@@ -81,6 +85,9 @@ test-job:
         WORDPRESS_DB_NAME: $MYSQL_DATABASE
         WORDPRESS_DB_HOST: $MYSQL_HOST
         WORDPRESS_TEST_VERSION: latest
+    cache:
+        <<: *global_cache
+        policy: pull
     before_script: *script_install_composer
     script:
         - apt-get update -y && apt-get install -y subversion default-mysql-client
@@ -92,6 +99,9 @@ test-job:
 zip-job:
     image: wordpress:php$PHP_VERSION
     stage: zip
+    cache:
+        <<: *global_cache
+        policy: pull
     before_script:
         - *script_install_composer
         - composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist
