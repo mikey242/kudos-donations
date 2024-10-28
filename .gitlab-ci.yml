@@ -9,13 +9,11 @@ variables:
 
 .script_install_composer: &script_install_composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
 .script_install_npm: &script_install_npm
     - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
     - source ~/.bashrc
     - nvm install && nvm use
-    - npm ci
 
 default:
     cache: &global_cache
@@ -45,16 +43,24 @@ validate-composer:
 lint-php:
     image: wordpress:php$PHP_VERSION
     stage: code-quality
-    cache: []
-    before_script: *script_install_composer
+    cache:
+        <<: *global_cache
+        policy: push
+    before_script:
+        - *script_install_composer
+        - composer install --no-ansi --no-interaction --no-progress --prefer-dist
     script:
         - composer run lint:gitlab
 
 lint-js-css:
     image: wordpress:php$PHP_VERSION
     stage: code-quality
-    cache: []
-    before_script: *script_install_npm
+    cache:
+        <<: *global_cache
+        policy: push
+    before_script:
+        - *script_install_npm
+        - npm ci
     script:
         - npm run lint:js
         - npm run lint:css
@@ -69,7 +75,7 @@ build-job:
         - *script_install_npm
         - *script_install_composer
     script:
-        - npm run build
+        - composer run build-production
 
 test-job:
     image: wordpress:php$PHP_VERSION
