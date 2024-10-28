@@ -1,6 +1,10 @@
 {
 	"phpVersion": "7.4",
-	"plugins": [".", "https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"],
+	"plugins": [
+		".",
+		"https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip",
+		"https://downloads.wordpress.org/plugin/plugin-check.latest-stable.zip"
+	],
 	"port": 80,
 	"env": {
 		"development": {
