@@ -68,9 +68,6 @@ lint-js-css:
 build-job:
     image: wordpress:php$PHP_VERSION
     stage: build
-    cache:
-        <<: *global_cache
-        policy: push
     before_script:
         - *script_install_npm
         - *script_install_composer
