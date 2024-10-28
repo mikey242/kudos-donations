@@ -17,17 +17,18 @@ variables:
     - nvm install && nvm use
     - npm ci
 
-cache: &global_cache
-    - policy: pull-push
-    - key: "composer-$(md5sum composer.lock | awk '{ print $1 }')"
-      paths:
-          - vendor/
-    - key: "npm-$(md5sum package-lock.json | awk '{ print $1 }')"
-      paths:
-          - node_modules/
-    - key: "build-${CI_COMMIT_REF_NAME}"
-      paths:
-          - build/
+default:
+    cache: &global_cache
+        - policy: pull-push
+        - key: "composer-$(md5sum composer.lock | awk '{ print $1 }')"
+          paths:
+              - vendor/
+        - key: "npm-$(md5sum package-lock.json | awk '{ print $1 }')"
+          paths:
+              - node_modules/
+        - key: "build-${CI_COMMIT_REF_NAME}"
+          paths:
+              - build/
 
 stages:
     - validate
