@@ -73,7 +73,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		// Get and enqueue the script.
 		$admin_js = Assets::get_script( 'admin/kudos-admin-campaigns.js' );
 		wp_enqueue_script(
-			'kudos-donations-settings',
+			'kudos-donations-campaigns',
 			$admin_js['url'],
 			$admin_js['dependencies'],
 			$admin_js['version'],
@@ -83,7 +83,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		);
 
 		wp_localize_script(
-			'kudos-donations-settings',
+			'kudos-donations-campaigns',
 			'kudos',
 			[
 				'version'    => KUDOS_VERSION,
@@ -92,7 +92,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			]
 		);
 		wp_set_script_translations(
-			'kudos-donations-settings',
+			'kudos-donations-campaigns',
 			'kudos-donations'
 		);
 	}
