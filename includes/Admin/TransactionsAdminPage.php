@@ -12,9 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
-use WP_Screen;
 
-class TransactionsAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterface, HasAssetsInterface {
+class TransactionsAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterface {
 
 	/**
 	 * {@inheritDoc}
@@ -49,33 +48,5 @@ class TransactionsAdminPage extends AbstractAdminPage implements SubmenuAdminPag
 	 */
 	public function get_parent_slug(): string {
 		return DonationsAdminPage::get_menu_slug();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register_assets(): void {
-		echo '
-			<style>
-				.success {
-					color: #00a32a !important;
-					border-color: #00a32a !important;
-				}
-				.kudos-transaction-pdf {
-					display: inline-flex !important;
-					justify-content: center;
-                    align-items: center;
-				}
-			</style>
-		';
-	}
-
-	/**
-	 * Determines if assets should be loaded or not.
-	 *
-	 * @param WP_Screen $screen Screen object.
-	 */
-	public function should_enqueue_assets( WP_Screen $screen ): bool {
-		return 'edit-kudos_transaction' === $screen->id;
 	}
 }

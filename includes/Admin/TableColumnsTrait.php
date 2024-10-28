@@ -121,7 +121,10 @@ trait TableColumnsTrait {
 								'src'   => [],
 								'title' => [],
 							],
-							'span' => [ 'class' => [] ],
+							'span' => [
+								'class' => [],
+								'style' => [],
+							],
 						]
 					);
 				}

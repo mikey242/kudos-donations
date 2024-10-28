@@ -48,8 +48,10 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		$screen_id = null;
+
 		if ( $this instanceof ParentAdminPageInterface ) {
-			add_menu_page(
+			$screen_id = add_menu_page(
 				$this->get_page_title(),
 				$this->get_menu_title(),
 				$this->get_capability(),
@@ -59,7 +61,7 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				$this->get_position()
 			);
 		} elseif ( $this instanceof SubmenuAdminPageInterface ) {
-			add_submenu_page(
+			$screen_id = add_submenu_page(
 				$this->get_parent_slug(),
 				$this->get_page_title(),
 				$this->get_menu_title(),
@@ -71,15 +73,12 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 		}
 
 		if ( $this instanceof HasAssetsInterface ) {
-				add_action(
-					'admin_enqueue_scripts',
-					function () {
-						$screen = get_current_screen();
-						if ( $screen && static::should_enqueue_assets( $screen ) ) {
-							static::register_assets();
-						}
-					}
-				);
+			add_action(
+				"load-$screen_id",
+				function (): void {
+					add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
+				}
+			);
 		}
 	}
 }
