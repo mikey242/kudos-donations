@@ -192,7 +192,7 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 		$form .= '</form>';
 
 		AdminNotice::info(
-			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'This is a one-way upgrade so please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form
+			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'Please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form
 		);
 	}
 
