@@ -1,28 +1,22 @@
 variables:
     PHP_VERSION: '7.4'
-    NODE_VERSION: 18.18.1
+    NODE_VERSION: '18.18.1'
     MYSQL_DATABASE: test-wordpress
     MYSQL_HOST: mysql
     MYSQL_USER: test
     MYSQL_PASSWORD: password
     MYSQL_ROOT_PASSWORD: password
 
+# Script snippets for installing Composer and NPM
 .script_install_composer: &script_install_composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
 .script_install_npm: &script_install_npm
     - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
     - source ~/.bashrc
     - nvm install && nvm use
-
-default:
-    cache: &global_cache
-        key: $CI_COMMIT_REF_SLUG
-        paths:
-            - vendor/
-            - node_modules/
-            - build/
-        policy: pull-push
+    - npm ci
 
 stages:
     - validate
@@ -33,6 +27,7 @@ stages:
     - upload
     - release
 
+# Validate Composer configuration
 validate-composer:
     image: composer:2
     stage: validate
@@ -40,31 +35,35 @@ validate-composer:
     script:
         - composer --no-ansi validate
 
+# Linting PHP code
 lint-php:
     image: wordpress:php$PHP_VERSION
     stage: code-quality
     cache:
-        <<: *global_cache
+        key: composer.lock
+        paths:
+            - vendor/
         policy: push
     before_script:
         - *script_install_composer
-        - composer install --no-ansi --no-interaction --no-progress --prefer-dist
     script:
         - composer run lint:gitlab
 
+# Linting JS and CSS code
 lint-js-css:
     image: wordpress:php$PHP_VERSION
     stage: code-quality
     cache:
-        <<: *global_cache
+        key: package-lock.json
+        paths:
+            - node_modules/
         policy: push
-    before_script:
-        - *script_install_npm
-        - npm ci
+    before_script: *script_install_npm
     script:
         - npm run lint:js
         - npm run lint:css
 
+# Build job for front-end assets
 build-job:
     image: wordpress:php$PHP_VERSION
     stage: build
@@ -73,7 +72,15 @@ build-job:
         - *script_install_composer
     script:
         - npm run build
+    cache:
+        key: ${CI_COMMIT_REF_SLUG}
+        paths:
+            - vendor/
+            - node_modules/
+            - build/
+    when: on_success
 
+# Test job with database setup
 test-job:
     image: wordpress:php$PHP_VERSION
     stage: test
@@ -85,23 +92,25 @@ test-job:
         WORDPRESS_DB_NAME: $MYSQL_DATABASE
         WORDPRESS_DB_HOST: $MYSQL_HOST
         WORDPRESS_TEST_VERSION: latest
-    cache:
-        <<: *global_cache
-        policy: pull
-    before_script: *script_install_composer
-    script:
+    before_script:
+        - *script_install_composer
         - apt-get update -y && apt-get install -y subversion default-mysql-client
         - curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
         - chmod +x /bin/*.sh
         - bash /bin/install-wp-tests.sh $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST $WORDPRESS_TEST_VERSION true
+    script:
         - composer run test-integration:gitlab
+    cache:
+        key: ${CI_COMMIT_REF_SLUG}
+        paths:
+            - vendor/
+            - node_modules/
+            - build/
 
+# Zip the final artifacts
 zip-job:
     image: wordpress:php$PHP_VERSION
     stage: zip
-    cache:
-        <<: *global_cache
-        policy: pull
     before_script:
         - *script_install_composer
         - composer install --optimize-autoloader --no-dev
@@ -117,20 +126,26 @@ zip-job:
         expire_in: 1 week
     only:
         - tags
+    cache:
+        key: ${CI_COMMIT_REF_SLUG}
+        paths:
+            - vendor/
+            - node_modules/
+            - build/
 
+# Upload the zip file
 upload-zip:
     image: curlimages/curl:latest
     stage: upload
-    cache: []
     script:
         - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file kudos-donations.zip "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/kudos-donations/${CI_COMMIT_TAG}/kudos-donations.zip"'
     only:
         - tags
 
+# Release job
 release-job:
     image: registry.gitlab.com/gitlab-org/release-cli:latest
     stage: release
-    cache: []
     script:
         - echo "Running the release job."
     release:
