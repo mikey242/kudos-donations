@@ -18,17 +18,13 @@ variables:
     - npm ci
 
 cache:
-    - key:
-          files:
-              - composer.lock
+    - key: "composer-$(md5sum composer.lock | awk '{ print $1 }')"
       paths:
           - vendor/
-    - key:
-          files:
-              - package-lock.json
+    - key: "npm-$(md5sum package-lock.json | awk '{ print $1 }')"
       paths:
           - node_modules/
-    - key: ${CI_COMMIT_REF_SLUG}
+    - key: "build-${CI_COMMIT_REF_NAME}"
       paths:
           - build/
 
