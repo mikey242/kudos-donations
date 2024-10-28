@@ -1,4 +1,4 @@
-=== Kudos Donations - Easy donations and payments with Mollie ===
+=== Kudos Donations ===
 Contributors: iseardmedia
 Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 6.6

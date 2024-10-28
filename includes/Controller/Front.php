@@ -183,8 +183,8 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 
 			switch ( $action ) {
 				case 'order_complete':
-					$nonce          = sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) );
-					$transaction_id = sanitize_text_field( $_REQUEST['kudos_transaction_id'] );
+					$nonce          = isset( $_REQUEST['kudos_nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) ) : '';
+					$transaction_id = isset( $_REQUEST['kudos_transaction_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_transaction_id'] ) ) : '';
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
 						$transaction = get_post( $transaction_id );
@@ -246,8 +246,8 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 					}
 					break;
 				case 'cancel_subscription':
-					$id      = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
-					$token   = sanitize_text_field( wp_unslash( $_REQUEST['token'] ) );
+					$id      = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
+					$token   = isset( $_REQUEST['token'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['token'] ) ) : '';
 					$request = new WP_REST_Request( WP_REST_Server::READABLE, '/kudos/v1/subscription/cancel' );
 					$request->set_query_params(
 						[

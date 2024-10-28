@@ -41,9 +41,9 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	 * Tools page constructor.
 	 */
 	public function __construct() {
-		$this->current_tab       = $_GET['tab'] ?? 'log'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$this->current_tab       = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'log'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$this->log_files         = $this->get_logs();
-		$log_file                = KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
+		$log_file                = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
 		$this->current_log_file  = file_exists( $log_file ) ? $log_file : ( ! empty( $this->log_files ) ? end( $this->log_files ) : '' );
 		$this->current_log_level = 'ALL';
 		$this->process_form_data();
@@ -114,11 +114,15 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	 * Gets the log file path to be displayed.
 	 */
 	private function process_form_data(): void {
-		if ( isset( $_REQUEST['log_option'] ) || isset( $_REQUEST['log_level'] ) ) {
-			$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
-			if ( wp_verify_nonce( $nonce, 'log' ) ) {
-				$this->current_log_file  = $_REQUEST['log_option'];
-				$this->current_log_level = $_REQUEST['log_level'];
+		$log_option = isset( $_REQUEST['log_option'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['log_option'] ) ) : null;
+		$log_level  = isset( $_REQUEST['log_level'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['log_level'] ) ) : null;
+		if ( $log_option || $log_level ) {
+			if ( isset( $_REQUEST['_wpnonce'] ) ) {
+				$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
+				if ( wp_verify_nonce( $nonce, 'log' ) ) {
+					$this->current_log_file  = $log_option;
+					$this->current_log_level = $log_level;
+				}
 			}
 		}
 	}

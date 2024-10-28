@@ -38,7 +38,7 @@ return static function ( ContainerConfigurator $container ) {
 	$services
 		->set( RotatingFileHandler::class )->args(
 			[
-				KUDOS_STORAGE_DIR . 'logs/' . $_ENV['APP_ENV'] . '.log',
+				KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '.log',
 				5,
 				( KUDOS_ENV_IS_DEVELOPMENT || KUDOS_DEBUG ) ? Logger::DEBUG : Logger::INFO,
 				true,

@@ -70,6 +70,7 @@ if ( empty( $_ENV['APP_ENV'] ) ) {
 }
 
 // Define constant for easily accessing environment.
+\define( 'KUDOS_APP_ENV', sanitize_text_field( $_ENV['APP_ENV'] ) );
 \define( 'KUDOS_ENV_IS_DEVELOPMENT', 'development' === $_ENV['APP_ENV'] );
 
 // Set Whoops as error handler if in development.
