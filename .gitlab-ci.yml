@@ -104,7 +104,6 @@ zip-job:
         policy: pull
     before_script:
         - *script_install_composer
-        - composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist
         - apt-get update -y && apt-get install -y zip
     script:
         - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
