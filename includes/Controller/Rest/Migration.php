@@ -71,8 +71,8 @@ class Migration extends AbstractRestController {
 	 * @return WP_REST_Response | \WP_Error
 	 */
 	public function rest_migrate_handler( WP_REST_Request $request ) {
-		$batch_size = $request->get_param( 'batch_size' );
-		$offset     = $request->get_param( 'offset' );
+		$batch_size = (int) $request->get_param( 'batch_size' );
+		$offset     = (int) $request->get_param( 'offset' );
 		$migrations = \array_slice( $this->migration->get_migrations(), $offset, $batch_size );
 
 		// Set current status as busy.
@@ -98,17 +98,19 @@ class Migration extends AbstractRestController {
 		}
 
 		$next_offset = $offset + \count( $migrations );
-		$completed   = $next_offset >= \count( $this->migration->get_migrations() );
+		$completed   = empty( $migrations ) || ( $next_offset >= \count( $this->migration->get_migrations() ) );
 
-		update_option( MigrationService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
-		update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
-		update_option(
-			MigrationService::SETTING_MIGRATION_STATUS,
-			[
-				'success' => true,
-				'message' => __( 'Migrations completed successfully.', 'kudos-donations' ),
-			]
-		);
+		if ( $completed ) {
+			update_option( MigrationService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
+			update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
+			update_option(
+				MigrationService::SETTING_MIGRATION_STATUS,
+				[
+					'success' => true,
+					'message' => __( 'Migrations completed successfully.', 'kudos-donations' ),
+				]
+			);
+		}
 
 		return new WP_REST_Response(
 			[
