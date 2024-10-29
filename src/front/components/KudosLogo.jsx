@@ -31,4 +31,14 @@ const KudosLogo = ({
 	);
 };
 
-export { KudosLogo };
+const KudosLogoFullScreenAnimated = () => {
+	return (
+		<div className="z-[999999] fixed flex justify-center items-center top-0 left-0 w-full h-full bg-white">
+			<div className="logo-animate w-[25%]">
+				<KudosLogo />
+			</div>
+		</div>
+	);
+};
+
+export { KudosLogo, KudosLogoFullScreenAnimated };

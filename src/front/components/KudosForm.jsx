@@ -7,6 +7,7 @@ import { KudosModal } from './KudosModal';
 import Render from './Render';
 import { useCampaignContext } from '../contexts/CampaignContext';
 import { DonateButton } from './DonateButton';
+import { KudosLogoFullScreenAnimated } from './KudosLogo';
 
 export const KudosForm = ({ displayAs, label }) => {
 	const { campaign, campaignErrors } = useCampaignContext();
@@ -16,6 +17,7 @@ export const KudosForm = ({ displayAs, label }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const isForm = displayAs === 'form';
 	const isModal = displayAs === 'button';
+	const isFSLogo = displayAs === 'fslogo';
 
 	useEffect(() => {
 		setTimestamp(Date.now());
@@ -101,6 +103,7 @@ export const KudosForm = ({ displayAs, label }) => {
 		>
 			<>
 				{isForm && renderDonationForm()}
+				{isFSLogo && <KudosLogoFullScreenAnimated />}
 				{isModal && (
 					<>
 						<DonateButton onClick={toggleModal}>
