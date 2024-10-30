@@ -140,27 +140,6 @@ class KudosDonations {
 	}
 
 	/**
-	 * The name of the plugin used to uniquely identify it within the context of
-	 * WordPress and to define internationalization functionality.
-	 *
-	 * @return    string    The name of the plugin.
-	 */
-	public function get_plugin_name(): string {
-
-		return $this->plugin_name;
-	}
-
-	/**
-	 * Retrieve the version number of the plugin.
-	 *
-	 * @return    string    The version number of the plugin.
-	 */
-	public function get_version(): string {
-
-		return $this->version;
-	}
-
-	/**
 	 * Checks plugin version stored in database and runs activation
 	 * method if different.
 	 */
