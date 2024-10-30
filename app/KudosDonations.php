@@ -108,6 +108,7 @@ class KudosDonations {
 		add_action( 'kudos_check_log', [ $plugin_admin, 'truncate_log' ] );
 		add_action( 'enqueue_block_editor_assets', [ $plugin_admin, 'register_block_editor_assets' ] );
 		add_action( 'in_plugin_update_message-kudos-donations/kudos-donations.php', [ $plugin_admin, 'update_message' ], 10, 2 );
+		add_action( 'admin_init', [ $plugin_admin, 'show_notices' ], 10, 2 );
 	}
 
 	/**

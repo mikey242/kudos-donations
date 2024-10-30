@@ -93,6 +93,27 @@ class Admin {
 	}
 
 	/**
+	 * Shows admin notices stores in the option.
+	 */
+	public function show_notices(): void {
+		$notices = get_option( '_kudos_admin_notices', [] );
+		foreach ( $notices as $key => $notice ) {
+			$form  = "<form action='' method='post'>";
+			$form .= wp_nonce_field( 'kudos_dismiss_notice', '_wpnonce', true, false );
+			$form .= "<input type='hidden' name='kudos_notice_key' value='{$key}'>";
+			$form .= "<button type='submit' class='button button-secondary' name='kudos_action' value='kudos_dismiss_notice'>" . __( 'Dismiss', 'kudos-donations' ) . '</button>';
+			$form .= '</form>';
+			$form .= '<br/>';
+			new AdminNotice(
+				$notice,
+				'info',
+				$form,
+				false
+			);
+		}
+	}
+
+	/**
 	 * Create the Kudos Donations admin pages.
 	 */
 	public function add_menu_pages() {
@@ -587,6 +608,12 @@ class Admin {
 						break;
 					}
 					new AdminNotice( __( 'No transactions need adding', 'kudos-donations' ) );
+				case 'kudos_dismiss_notice':
+					$key     = isset( $_REQUEST['kudos_notice_key'] ) ? (int) wp_unslash( $_REQUEST['kudos_notice_key'] ) : '';
+					$notices = get_option( '_kudos_admin_notices', [] );
+					unset( $notices[ $key ] );
+					update_option( '_kudos_admin_notices', $notices );
+					break;
 			}
 
 			do_action( 'kudos_admin_actions_extra', $action );
@@ -903,10 +930,10 @@ class Admin {
 				],
 				'sanitize_callback' => [ Campaign::class, 'sanitize_campaigns' ],
 			],
-            'maximum_donation' => [
-                'type' => 'string',
-                'show_in_rest' => true,
-            ]
+			'maximum_donation'       => [
+				'type'         => 'string',
+				'show_in_rest' => true,
+			],
 		];
 	}
 
