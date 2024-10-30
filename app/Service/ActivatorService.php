@@ -183,6 +183,19 @@ class ActivatorService {
 			$subscription_table = SubscriptionEntity::get_table_name();
 			$this->wpdb->query( "ALTER TABLE $subscription_table DROP COLUMN `secret`" );
 		}
+
+		if ( version_compare( $old_version, '4.0.0', '<' ) ) {
+			update_option(
+				'_kudos_admin_notices',
+				[
+					// translators: %1$s is the opening <a> tag and %2$s is the closing </a> tag.
+					'<strong>Kudos Donations</strong>: ' . wp_sprintf( __( 'A new major update is coming to Kudos Donations. To learn more about the upcoming changes please visit %1$sthis page%2$s.', 'kudos-donations' ), '<a target="_blank" href="https://docs.kudosdonations.com/docs/changes-in-4.0.0">', '</a>' ) .
+					'<br/>' .
+					// translators: %1$s is the opening <a> tag and %2$s is the closing </a> tag.
+					'<p><strong>Beta testers wanted</strong>: ' . wp_sprintf( __( 'If you are interested in testing the new version now you can find more information %1$shere%2$s.', 'kudos-donations' ), '<a target="_blank" href="https://wordpress.org/support/topic/kudos-donations-4-0-0-beta-now-available/">', '</a>' ) . '</p>',
+				]
+			);
+		}
 	}
 
 	/**
