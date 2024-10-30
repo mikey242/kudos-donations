@@ -124,6 +124,12 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Allow for partial donation amounts (e.g €1.5)
 * Email "from name" header can now be configured and defaults to website name
 
+= 3.2.9 =
+* Add notification with information about upcoming 4.0.0 release
+* Update tested up to version to 6.7
+* Update Mollie php library
+* Update other dependencies
+
 = 3.2.8 =
 * Show available payment methods in Mollie tab under Refresh API
 
