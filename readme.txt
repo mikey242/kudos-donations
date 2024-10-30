@@ -120,7 +120,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.2.9 =
 * Add notification with information about upcoming 4.0.0 release
-* Update @wordpress npm monorepo
+* Update tested up to version to 6.7
 * Update Mollie php library
 * Update other dependencies
 
