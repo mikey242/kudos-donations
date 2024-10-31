@@ -32,6 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		})
 			.then((response) => {
 				if (response.completed) {
+					// Dismiss notice that has been created.
+					void apiFetch({
+						path: '/kudos/v1/notice/dismiss',
+						method: 'POST',
+						data: {
+							id: 'kudos-migration-complete',
+						},
+					});
 					migrationStatus.textContent =
 						'Migrations completed successfully!';
 				} else {
@@ -50,16 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
 					migrationStatus.textContent =
 						'Migration failed. Please check the logs.';
 				}
-			})
-			.finally(() => {
-				void apiFetch({
-					path: '/wp/v2/settings', // REST API endpoint for updating settings.
-					method: 'POST', // Use POST method to update the setting.
-					data: {
-						_kudos_migration_busy: false, // Unset busy status.
-						_kudos_migration_status: [], // Remove notice.
-					},
-				});
 			});
 	}
 });
