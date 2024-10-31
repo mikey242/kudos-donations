@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Service\MigrationService;
+use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -74,20 +75,22 @@ class Migration extends AbstractRestController {
 		$batch_size = (int) $request->get_param( 'batch_size' );
 		$offset     = (int) $request->get_param( 'offset' );
 		$migrations = \array_slice( $this->migration->get_migrations(), $offset, $batch_size );
-
-		// Set current status as busy.
-		update_option( MigrationService::SETTING_MIGRATION_BUSY, true );
+		$this->logger->debug(
+			'Running migration batch.',
+			[
+				'batch_size' => $batch_size,
+				'offset'     => $offset,
+				'total'      => \count( $this->migration->get_migrations() ),
+			]
+		);
 
 		// Process the migrations in this batch.
 		foreach ( $migrations as $migration ) {
+			// Set current status as busy.
+			update_option( MigrationService::SETTING_MIGRATION_BUSY, true );
+
 			if ( ! $this->run_migration( $migration ) ) {
-				update_option(
-					MigrationService::SETTING_MIGRATION_STATUS,
-					[
-						'success' => false,
-						'message' => __( 'Migration failed to run. Please check the log for more information.', 'kudos-donations' ),
-					]
-				);
+				NoticeService::add_notice( __( 'Migration failed to run. Please check the log for more information.', 'kudos-donations' ), NoticeService::ERROR );
 				update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
 				return new \WP_Error(
 					'migration_failed',
@@ -95,21 +98,20 @@ class Migration extends AbstractRestController {
 					[ 'migration' => $migration->get_version() ]
 				);
 			}
+			// Set current status as busy.
+			update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
 		}
 
 		$next_offset = $offset + \count( $migrations );
 		$completed   = empty( $migrations ) || ( $next_offset >= \count( $this->migration->get_migrations() ) );
 
+		$this->logger->debug( 'Migration batch complete', [ '' ] );
+
 		if ( $completed ) {
 			update_option( MigrationService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 			update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
-			update_option(
-				MigrationService::SETTING_MIGRATION_STATUS,
-				[
-					'success' => true,
-					'message' => __( 'Migrations completed successfully.', 'kudos-donations' ),
-				]
-			);
+			$this->logger->info( 'All migrations completed.' );
+			NoticeService::add_notice( __( 'Migrations completed successfully.', 'kudos-donations' ), NoticeService::SUCCESS );
 		}
 
 		return new WP_REST_Response(

@@ -16,7 +16,7 @@ use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\Handler\SettingsHandler;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\CacheService;
-use IseardMedia\Kudos\Service\MigrationService;
+use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
 use WP_REST_Server;
 
@@ -34,6 +34,7 @@ class Admin extends AbstractRegistrable {
 	 */
 	public function register(): void {
 		$this->handle_query_variables();
+		$this->show_notices();
 	}
 
 	/**
@@ -43,10 +44,10 @@ class Admin extends AbstractRegistrable {
 		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
 			$this->logger->debug( 'Action requested', [ 'action' => $action ] );
+			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 
 			switch ( $action ) {
 				case 'view_invoice':
-					$nonce          = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 					$transaction_id = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
 					$force          = isset( $_REQUEST['force'] ) && rest_sanitize_boolean( wp_unslash( $_REQUEST['force'] ) );
 					if ( $transaction_id && wp_verify_nonce( $nonce, $action . '_' . $transaction_id ) ) {
@@ -57,7 +58,6 @@ class Admin extends AbstractRegistrable {
 					}
 					break;
 				case 'kudos_clear_settings':
-					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_settings' ) ) {
 						global $new_allowed_options;
 						$settings = $new_allowed_options[ SettingsHandler::GROUP ];
@@ -67,7 +67,6 @@ class Admin extends AbstractRegistrable {
 					}
 					break;
 				case 'kudos_clear_campaigns':
-					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_campaigns' ) ) {
 						$campaigns = CampaignPostType::get_posts();
 						foreach ( $campaigns as $campaign ) {
@@ -76,25 +75,21 @@ class Admin extends AbstractRegistrable {
 					}
 					break;
 				case 'kudos_clear_twig_cache':
-					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_twig_cache' ) ) {
 						CacheService::recursively_clear_cache( 'twig' );
 					}
 					break;
 				case 'kudos_clear_container_cache':
-					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_container_cache' ) ) {
 						CacheService::recursively_clear_cache( 'container' );
 					}
 					break;
 				case 'kudos_clear_all_cache':
-					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_all_cache' ) ) {
 						CacheService::recursively_clear_cache();
 					}
 					break;
 				case 'kudos_clear_logs':
-					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_logs' ) ) {
 						$log_files = DebugAdminPage::get_logs();
 						foreach ( $log_files as $log_file ) {
@@ -102,17 +97,55 @@ class Admin extends AbstractRegistrable {
 						}
 					}
 					break;
-				case MigrationService::ACTION_DISMISS_COMPLETE_NOTICE:
-					$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
-					if ( wp_verify_nonce( $nonce, MigrationService::ACTION_DISMISS_COMPLETE_NOTICE ) ) {
-						delete_option( MigrationService::SETTING_MIGRATION_STATUS );
-						wp_safe_redirect( admin_url( 'admin.php?page=kudos-campaigns' ) );
-						exit;
-					}
-					break;
 				default:
 					$this->logger->debug( 'Action not implemented', [ 'action' => $action ] );
 					break;
+			}
+		}
+	}
+
+	/**
+	 * Shows admin notices stored in the option.
+	 */
+	public function show_notices(): void {
+		$notices = NoticeService::get_notices();
+		if ( $notices ) {
+			add_action(
+				'admin_print_footer_scripts',
+				function () {
+					echo '
+					<script type="text/javascript">
+						const notices = document.querySelectorAll(".kudos-notice")
+						console.log(notices)
+						notices.forEach((notice) => {
+                            notice.addEventListener("click", function() {
+                                const key = notice.dataset.noticeKey;
+                                fetch("' . esc_url( rest_url( '/kudos/v1/notice/dismiss' ) ) . '", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                		"X-WP-Nonce": "' . esc_attr( wp_create_nonce( 'wp_rest' ) ) . '"
+                                    },
+                                    body: JSON.stringify({ id: key })
+                                })
+                            })
+						})
+					</script>
+				';
+				}
+			);
+			foreach ( $notices as $key => $notice ) {
+				$message     = $notice['message'] ?? '';
+				$level       = $notice['level'] ?? NoticeService::INFO;
+				$dismissible = $notice['dismissible'] ?? true;
+				$logo        = $notice['logo'] ?? true;
+				NoticeService::notice(
+					$message,
+					$level,
+					$dismissible,
+					$key,
+					$logo
+				);
 			}
 		}
 	}

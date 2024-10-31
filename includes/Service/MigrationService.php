@@ -11,7 +11,6 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Service;
 
-use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
@@ -23,12 +22,11 @@ use ReflectionException;
 
 class MigrationService extends AbstractRegistrable implements HasSettingsInterface {
 
-	private const ACTION_MIGRATE                = 'kudos_migrate_action';
-	public const ACTION_DISMISS_COMPLETE_NOTICE = 'kudos_dismiss_migrate_complete_notice';
-	public const SETTING_DB_VERSION             = '_kudos_db_version';
-	public const SETTING_MIGRATION_HISTORY      = '_kudos_migration_history';
-	public const SETTING_MIGRATION_STATUS       = '_kudos_migration_status';
-	public const SETTING_MIGRATION_BUSY         = '_kudos_migration_busy';
+	private const ACTION_MIGRATE           = 'kudos_migrate_action';
+	public const SETTING_DB_VERSION        = '_kudos_db_version';
+	public const SETTING_MIGRATION_HISTORY = '_kudos_migration_history';
+	public const SETTING_MIGRATION_STATUS  = '_kudos_migration_status';
+	public const SETTING_MIGRATION_BUSY    = '_kudos_migration_busy';
 	private string $current_version;
 	private string $target_version;
 	/**
@@ -37,12 +35,6 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	 * @var MigrationInterface[]
 	 */
 	private array $migrations = [];
-	/**
-	 * Message text for migration complete.
-	 *
-	 * @var array
-	 */
-	private array $migration_status;
 	private WpDb $wpdb;
 
 	/**
@@ -51,13 +43,12 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	 * @param WpDb $wpdb The wpdb wrapper service.
 	 */
 	public function __construct( WpDb $wpdb ) {
-		$this->wpdb             = $wpdb;
-		$db_version             = get_option( self::SETTING_DB_VERSION );
-		$this->current_version  = ( false === $db_version || '' === $db_version )
+		$this->wpdb            = $wpdb;
+		$db_version            = get_option( self::SETTING_DB_VERSION );
+		$this->current_version = ( false === $db_version || '' === $db_version )
 			? get_option( SettingsService::SETTING_PLUGIN_VERSION, '' )
 			: $db_version;
-		$this->target_version   = KUDOS_DB_VERSION;
-		$this->migration_status = get_option( self::SETTING_MIGRATION_STATUS, [] );
+		$this->target_version  = KUDOS_DB_VERSION;
 	}
 
 	/**
@@ -75,9 +66,6 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 		if ( ! $busy_migrating && $this->current_version && version_compare( $this->current_version, $this->target_version, '<' ) ) {
 			$this->enqueue_assets();
 			$this->add_migration_notice();
-		}
-		if ( $this->migration_status['message'] ?? '' ) {
-			$this->add_migration_complete_notice();
 		}
 	}
 
@@ -168,24 +156,6 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
-	 * Adds a notice informing the user of the result of the migration process.
-	 */
-	private function add_migration_complete_notice(): void {
-		$form  = "<form method='post'>";
-		$form .= wp_nonce_field( self::ACTION_DISMISS_COMPLETE_NOTICE, '_wpnonce', true, false );
-		$form .= "<button class='button-primary confirm' name='kudos_action' value=" . self::ACTION_DISMISS_COMPLETE_NOTICE . " type='submit'>";
-		$form .= __( 'OK', 'kudos-donations' );
-		$form .= '</button>';
-		$form .= '</form>';
-
-		if ( $this->migration_status['success'] ?? false ) {
-			AdminNotice::success( '<p style="margin-right: 0.5em">' . $this->migration_status['message'] . '</p>' . $form );
-		} else {
-			AdminNotice::error( '<p style="margin-right: 0.5em">' . $this->migration_status['message'] . '</p>' . $form );
-		}
-	}
-
-	/**
 	 * Creates an admin notice with update button.
 	 */
 	private function add_migration_notice(): void {
@@ -196,8 +166,9 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 		$form .= "<i id='kudos-migration-status'></i>";
 		$form .= '</form>';
 
-		AdminNotice::info(
-			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'Please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form
+		NoticeService::notice(
+			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'Please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form,
+			NoticeService::INFO,
 		);
 	}
 

@@ -12,12 +12,12 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos;
 
 use Exception;
-use IseardMedia\Kudos\Admin\Notice\AdminNotice;
 use IseardMedia\Kudos\Container\CompilerPass\ActivationCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\RegistrableCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\SettingsCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\UpgradeAwareCompilerPass;
 use IseardMedia\Kudos\Service\CacheService;
+use IseardMedia\Kudos\Service\NoticeService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -153,7 +153,10 @@ class Kernel {
 
 		if ( ! $this->file_system->put_contents( $container_file_path, $container_dump ) ) {
 			if ( KUDOS_DEBUG ) {
-				AdminNotice::error( 'Failed to write the container to the cache file. Please ensure that the "wp-content/uploads" directory is writable.' );
+				NoticeService::notice(
+					'Failed to write the container to the cache file. Please ensure that the "wp-content/cache" directory is writable.',
+					NoticeService::ERROR,
+				);
 			}
 		}
 	}
