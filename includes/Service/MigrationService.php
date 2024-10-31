@@ -95,6 +95,11 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	 * Find migrations and determine which ones to add based on the current version.
 	 */
 	private function discover_migrations() {
+		// Check if migrations are already loaded.
+		if ( ! empty( $this->migrations ) ) {
+			return;
+		}
+
 		// Get all the migration files.
 		$migration_files = glob( KUDOS_PLUGIN_DIR . 'includes/Migrations/*.php' );
 
