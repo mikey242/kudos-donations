@@ -105,7 +105,7 @@ class Migration extends AbstractRestController {
 		$next_offset = $offset + \count( $migrations );
 		$completed   = empty( $migrations ) || ( $next_offset >= \count( $this->migration->get_migrations() ) );
 
-		$this->logger->debug( 'Migration batch complete', [ '' ] );
+		$this->logger->debug( 'Migration batch complete' );
 
 		if ( $completed ) {
 			update_option( MigrationService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
