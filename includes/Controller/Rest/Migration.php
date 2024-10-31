@@ -111,7 +111,7 @@ class Migration extends AbstractRestController {
 			update_option( MigrationService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 			update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
 			$this->logger->info( 'All migrations completed.' );
-			NoticeService::add_notice( __( 'Migrations completed successfully.', 'kudos-donations' ), NoticeService::SUCCESS );
+			NoticeService::add_notice( __( 'Migrations completed successfully.', 'kudos-donations' ), NoticeService::SUCCESS, true, 'kudos-migration-complete' );
 		}
 
 		return new WP_REST_Response(
