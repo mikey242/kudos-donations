@@ -106,7 +106,7 @@ class NoticeService implements HasSettingsInterface {
 	 * @param string $message The message to display.
 	 * @param bool   $dismissible Whether the notice can be dismissed by the user or not.
 	 */
-	public static function render( string $key, string $level, string $message, bool $dismissible = true ): void {
+	private static function render( string $key, string $level, string $message, bool $dismissible = true ): void {
 		printf(
 			'<div class="kudos-notice notice %s %s" data-notice-key="%s" style="display: flex; padding: 10px; align-items: center">%s</div>',
 			esc_attr( $level ),
@@ -122,7 +122,7 @@ class NoticeService implements HasSettingsInterface {
 	/**
 	 * Returns the tags allowed within the notice message.
 	 */
-	public static function get_allowed_tags(): array {
+	private static function get_allowed_tags(): array {
 		return [
 			'div'    => [
 				'id'    => [],
