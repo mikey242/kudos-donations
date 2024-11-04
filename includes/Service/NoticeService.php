@@ -75,13 +75,6 @@ class NoticeService implements HasSettingsInterface {
 	}
 
 	/**
-	 * Clear all notices.
-	 */
-	public static function clear_all_notices(): void {
-		delete_option( self::SETTING_ADMIN_NOTICES );
-	}
-
-	/**
 	 * Sets up the message and adds the hook.
 	 *
 	 * @param string  $message The message content.
