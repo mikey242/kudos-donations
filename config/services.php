@@ -20,6 +20,7 @@ use IseardMedia\Kudos\Vendor\VendorFactory;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use Mollie\Api\MollieApiClient;
 use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\WhatFailureGroupHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -34,9 +35,10 @@ return static function ( ContainerConfigurator $container ) {
 			->autowire()
 			->public();
 
-	// Logger.
+	// Define the rotating file handler.
 	$services
-		->set( RotatingFileHandler::class )->args(
+		->set( RotatingFileHandler::class )
+		->args(
 			[
 				KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '.log',
 				5,
@@ -45,10 +47,22 @@ return static function ( ContainerConfigurator $container ) {
 				null,
 				false,
 			]
-		)
+		);
+
+	// Define the WhatFailureGroupHandler to wrap around the RotatingFileHandler.
+	$services
+		->set( WhatFailureGroupHandler::class )
+		->args(
+			[
+				[ service( RotatingFileHandler::class ) ],
+			]
+		);
+
+	// Logger with WhatFailureGroupHandler to suppress exceptions.
+	$services
 		->set( LoggerInterface::class, Logger::class )
 		->args( [ 'kudos_donations' ] )
-		->call( 'pushHandler', [ service( RotatingFileHandler::class ) ] );
+		->call( 'pushHandler', [ service( WhatFailureGroupHandler::class ) ] );
 
 	// Set logger on required services.
 	$services->instanceof( LoggerAwareInterface::class )
