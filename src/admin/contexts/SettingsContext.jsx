@@ -106,7 +106,7 @@ export default function SettingsProvider({ children }) {
 				});
 			})
 			.catch((error) => {
-				createErrorNotice(error?.responseJSON?.data?.message, {
+				createErrorNotice(error?.message, {
 					type: 'snackbar',
 				});
 			})
