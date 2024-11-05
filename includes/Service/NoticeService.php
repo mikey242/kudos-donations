@@ -56,7 +56,8 @@ class NoticeService implements HasSettingsInterface {
 	 * @return array The list of notices.
 	 */
 	public static function get_notices(): array {
-		return get_option( self::SETTING_ADMIN_NOTICES, [] );
+		$notices = get_option( self::SETTING_ADMIN_NOTICES, [] );
+		return \is_array( $notices ) ? $notices : [];
 	}
 
 	/**
@@ -175,6 +176,7 @@ class NoticeService implements HasSettingsInterface {
 			self::SETTING_ADMIN_NOTICES => [
 				'type'         => FieldType::ARRAY,
 				'show_in_rest' => false,
+				'default'      => [],
 			],
 		];
 	}
