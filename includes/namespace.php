@@ -11,42 +11,32 @@ use IseardMedia\Kudos\Service\CacheService;
 
 /**
  * Handle plugin activation.
- *
- * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
- *
- * @param bool $network_wide Whether the plugin is being activated network-wide.
  */
-function activate( $network_wide = false ): void {
-	$network_wide = (bool) $network_wide;
-	PluginFactory::create()->on_plugin_activation( $network_wide );
+function activate(): void {
+	PluginFactory::create()->on_plugin_activation();
 
 	/**
 	 * Fires when the plugin is activated.
 	 *
 	 * @param bool $network_wide Whether the plugin is being activated network-wide.
 	 */
-	do_action( 'kudos_donations_activated', $network_wide );
+	do_action( 'kudos_donations_activated' );
 }
 
 register_activation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\activate' );
 
 /**
  * Handles plugin deactivation.
- *
- * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
- *
- * @param bool $network_wide Whether to deactivate network-wide.
  */
-function deactivate( $network_wide = false ): void {
-	$network_wide = (bool) $network_wide;
-	PluginFactory::create()->on_plugin_deactivation( $network_wide );
+function deactivate(): void {
+	PluginFactory::create()->on_plugin_deactivation();
 
 	/**
 	 * Fires after plugin deactivation.
 	 *
 	 * @param bool $network_wide Whether to deactivate network-wide.
 	 */
-	do_action( 'kudos_donations_deactivated', $network_wide );
+	do_action( 'kudos_donations_deactivated' );
 }
 
 register_deactivation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );

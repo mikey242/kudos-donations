@@ -49,32 +49,22 @@ class Plugin implements LoggerAwareInterface {
 
 	/**
 	 * Runs on plugin activation.
-	 *
-	 * @param bool $network_wide Whether the plugin is being activated network-wide.
 	 */
-	public function on_plugin_activation( bool $network_wide ): void {
+	public function on_plugin_activation(): void {
 		$this->activation_handler->process();
 		$this->logger->info(
 			'Plugin activated.',
-			[
-				'version'      => KUDOS_VERSION,
-				'network_wide' => $network_wide,
-			]
+			[ 'version' => KUDOS_VERSION ]
 		);
 	}
 
 	/**
 	 * Runs on plugin deactivation.
-	 *
-	 * @param bool $network_wide Whether deactivation is network-wide or not.
 	 */
-	public function on_plugin_deactivation( bool $network_wide ): void {
+	public function on_plugin_deactivation(): void {
 		$this->logger->info(
 			'Plugin deactivated',
-			[
-				'version'      => KUDOS_VERSION,
-				'network_wide' => $network_wide,
-			]
+			[ 'version' => KUDOS_VERSION ]
 		);
 	}
 
