@@ -20,7 +20,7 @@ export const BaseController = ({
 	const error = get(errors, name);
 
 	return (
-		<div className="first:mt-0 mt-3">
+		<div className={clsx('field-' + name, 'first:mt-0 mt-3')}>
 			<div
 				className={clsx(
 					'form-element text-slate-800',
