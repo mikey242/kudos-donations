@@ -5,7 +5,8 @@
  * @link https://gitlab.iseard.media/michael/kudos-donations
  *
  * @source https://github.com/woocommerce/woocommerce/blob/trunk/plugins/woocommerce/woocommerce.php
- * @copyright 2023 Iseard Media
+ *
+ * @copyright 2024 Iseard Media
  */
 
 namespace IseardMedia\Kudos;
