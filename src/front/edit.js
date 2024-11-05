@@ -139,6 +139,7 @@ const ButtonEdit = (props) => {
 						{currentCampaign ? (
 							<Render
 								className={className ?? ''}
+								style={currentCampaign?.meta?.custom_styles}
 								themeColor={currentCampaign?.meta?.theme_color}
 							>
 								{type === 'form' ? (
