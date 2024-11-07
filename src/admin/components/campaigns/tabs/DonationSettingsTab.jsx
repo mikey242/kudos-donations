@@ -6,7 +6,9 @@ import { useWatch } from 'react-hook-form';
 import { Panel, PanelBody } from '@wordpress/components';
 
 export const DonationSettingsTab = ({ recurringAllowed }) => {
+	const { currencies } = window.kudos;
 	const watchAmountType = useWatch({ name: 'meta.amount_type' });
+	const watchCurrency = useWatch({ name: 'meta.currency' });
 
 	return (
 		<Fragment>
@@ -92,7 +94,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					<TextControl
 						name="meta.minimum_donation"
 						isDisabled={watchAmountType === 'fixed'}
-						prefix="€"
+						prefix={currencies[watchCurrency]}
 						help={__(
 							'This is the minimum donation that will be accepted.',
 							'kudos-donations'
@@ -118,6 +120,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					<TextControl
 						name="meta.maximum_donation"
 						isDisabled={watchAmountType === 'fixed'}
+						prefix={currencies[watchCurrency]}
 						type="number"
 						label={__('Maximum donation', 'kudos-donations')}
 						help={__(
