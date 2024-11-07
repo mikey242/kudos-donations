@@ -124,7 +124,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 						type="number"
 						label={__('Maximum donation', 'kudos-donations')}
 						help={__(
-							'The maximum donation that you want to allow, leave blank to disable. This applies only to the open donation field.',
+							"The maximum donation that you want to allow, leave blank to disable. This applies only to the open donation field and does not override your payment provider's maximum.",
 							'kudos-donations'
 						)}
 					/>
