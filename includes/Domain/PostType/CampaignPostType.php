@@ -15,7 +15,6 @@ use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
-use IseardMedia\Kudos\Service\SettingsService;
 
 class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface {
 
@@ -44,6 +43,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public const META_FIELD_AMOUNT_TYPE              = 'amount_type';
 	public const META_FIELD_FIXED_AMOUNTS            = 'fixed_amounts';
 	public const META_FIELD_MINIMUM_DONATION         = 'minimum_donation';
+	public const META_FIELD_MAXIMUM_DONATION         = 'maximum_donation';
 	public const META_FIELD_DONATION_TYPE            = 'donation_type';
 	public const META_FIELD_THEME_COLOR              = 'theme_color';
 	public const META_FIELD_TERMS_LINK               = 'terms_link';
@@ -59,8 +59,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	/**
 	 * Rest field constants.
 	 */
-	public const REST_FIELD_TOTAL                    = 'total';
-	public const REST_FIELD_SETTING_MAXIMUM_DONATION = 'maximum_donation';
+	public const REST_FIELD_TOTAL = 'total';
 
 	/**
 	 * {@inheritDoc}
@@ -213,6 +212,11 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'sanitize_callback' => 'sanitize_float',
 				'default'           => 1,
 			],
+			self::META_FIELD_MAXIMUM_DONATION         => [
+				'type'              => FieldType::INTEGER,
+				'sanitize_callback' => 'sanitize_float',
+				'default'           => 5000,
+			],
 			self::META_FIELD_DONATION_TYPE            => [
 				'type'              => FieldType::STRING,
 				'sanitize_callback' => 'sanitize_text_field',
@@ -268,16 +272,11 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 */
 	public function get_rest_fields(): array {
 		return [
-			self::REST_FIELD_TOTAL                    => [
+			self::REST_FIELD_TOTAL => [
 				'get_callback' => function ( $item ) {
 
 					$campaign_id = $item['id'];
 					return $this->get_total( $campaign_id );
-				},
-			],
-			self::REST_FIELD_SETTING_MAXIMUM_DONATION => [
-				'get_callback' => function () {
-					return get_option( SettingsService::SETTING_MAXIMUM_DONATION );
 				},
 			],
 		];

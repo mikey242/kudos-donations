@@ -10,7 +10,7 @@ import {
 	Panel,
 	PanelBody,
 } from '@wordpress/components';
-import { TextControl, ToggleControl } from '../controls';
+import { ToggleControl } from '../controls';
 
 const HelpTab = () => {
 	const { updateSetting } = useSettingsContext();
@@ -131,15 +131,6 @@ const HelpTab = () => {
 						label={__('Debug mode', 'kudos-donations')}
 						help={__(
 							'Enables debug logging. Please only enable this if advised to by support.',
-							'kudos-donations'
-						)}
-					/>
-					<TextControl
-						name="_kudos_maximum_donation"
-						type="number"
-						label={__('Maximum donation', 'kudos-donations')}
-						help={__(
-							'The maximum donation that you want to allow, leave blank to disable. This applies only to the open donation field.',
 							'kudos-donations'
 						)}
 					/>

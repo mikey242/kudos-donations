@@ -115,6 +115,16 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 							'kudos-donations'
 						)}
 					/>
+					<TextControl
+						name="meta.maximum_donation"
+						isDisabled={watchAmountType === 'fixed'}
+						type="number"
+						label={__('Maximum donation', 'kudos-donations')}
+						help={__(
+							'The maximum donation that you want to allow, leave blank to disable. This applies only to the open donation field.',
+							'kudos-donations'
+						)}
+					/>
 				</PanelBody>
 			</Panel>
 		</Fragment>
