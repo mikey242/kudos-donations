@@ -27,7 +27,6 @@ use WP_Filesystem_Base;
 
 class Kernel {
 
-	private const CONTAINER_FILE                 = 'container-' . KUDOS_VERSION . '.php';
 	private ?ContainerBuilder $container_builder = null;
 	private ?ContainerInterface $container       = null;
 	private ?WP_Filesystem_Base $file_system;
@@ -40,6 +39,18 @@ class Kernel {
 	 */
 	public function __construct() {
 		$this->initialize_container();
+	}
+
+	/**
+	 * Gets the name for the container file.
+	 */
+	private function get_container_file(): string {
+		$cached_version_hash = get_option( '_kudos_version_hash' );
+		if ( ! $cached_version_hash || hash( 'md5', KUDOS_VERSION ) !== $cached_version_hash ) {
+			$cached_version_hash = hash( 'md5', KUDOS_VERSION );
+			update_option( '_kudos_version_hash', $cached_version_hash );
+		}
+		return apply_filters( 'kudos_container_file_name', 'container-' . $cached_version_hash . '.php', KUDOS_VERSION );
 	}
 
 	/**
@@ -63,7 +74,7 @@ class Kernel {
 	 */
 	private function initialize_container(): void {
 		$this->cache_folder  = $this->get_cache_folder();
-		$container_file_path = $this->cache_folder . self::CONTAINER_FILE;
+		$container_file_path = $this->cache_folder . self::get_container_file();
 
 		// Enable cache if not in development mode.
 		if ( $this->is_production() && file_exists( $container_file_path ) ) {
