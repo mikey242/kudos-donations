@@ -45,7 +45,7 @@ function GenerateShortcode({ campaign, iconOnly = false }) {
 				<Button
 					size="compact"
 					icon="shortcode"
-					label="Shortcode"
+					label="Get shortcode"
 					onClick={openModal}
 				/>
 			) : (
