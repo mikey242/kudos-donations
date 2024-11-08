@@ -38,7 +38,7 @@ class PluginFactory {
 			} catch ( ContainerExceptionInterface  $e ) {
 				// phpcs:disable WordPress.PHP.DevelopmentFunctions
 				error_log( $e->getMessage() );
-				NoticeService::notice( NoticeService::ERROR, $e->getMessage() );
+				NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
 			}
 		}
 
