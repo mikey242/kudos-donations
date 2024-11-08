@@ -13,6 +13,7 @@ import { Table } from '../Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useCampaignsContext } from '../../contexts/CampaignsContext';
+import GenerateShortcode from './GenerateShortcode';
 
 export const CampaignsTable = ({ handleEdit }) => {
 	const { currencies } = window.kudos;
@@ -110,6 +111,7 @@ export const CampaignsTable = ({ handleEdit }) => {
 							);
 						}}
 					/>
+					<GenerateShortcode campaign={post} iconOnly={true} />
 				</>
 			),
 		},

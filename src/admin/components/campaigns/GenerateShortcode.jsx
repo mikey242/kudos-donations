@@ -16,7 +16,7 @@ import {
 } from '@wordpress/components';
 import { useCopyToClipboard } from '@wordpress/compose';
 
-function GenerateShortcode({ campaign }) {
+function GenerateShortcode({ campaign, iconOnly = false }) {
 	const { createSuccessNotice } = useDispatch(noticesStore);
 	const [isOpen, setOpen] = useState(false);
 	const [type, setType] = useState('button');
@@ -41,9 +41,22 @@ function GenerateShortcode({ campaign }) {
 
 	return (
 		<>
-			<Button icon="shortcode" variant="secondary" onClick={openModal}>
-				Shortcode
-			</Button>
+			{iconOnly ? (
+				<Button
+					size="compact"
+					icon="shortcode"
+					label="Shortcode"
+					onClick={openModal}
+				/>
+			) : (
+				<Button
+					icon="shortcode"
+					variant="secondary"
+					onClick={openModal}
+				>
+					Shortcode
+				</Button>
+			)}
 			{isOpen && (
 				<Modal
 					title={__('Generate shortcode', 'kudos-donations')}

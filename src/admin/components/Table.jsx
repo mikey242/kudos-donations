@@ -10,7 +10,7 @@ export const Table = ({ headerItems }) => {
 
 	return (
 		<>
-			<table className="widefat fixed striped">
+			<table className="widefat striped">
 				<thead>
 					<tr>
 						{headerItems.map((item) => (
