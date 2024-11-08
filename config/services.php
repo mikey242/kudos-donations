@@ -96,6 +96,9 @@ return static function ( ContainerConfigurator $container ) {
 		->set( MollieApiClient::class );
 
 	// Load resources with exclusions.
-	$services->load( 'IseardMedia\Kudos\\', '../includes/*' )
-		->exclude( '../includes/{namespace.php,functions.php,helpers.php,index.php}' );
+	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
+		->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php}' );
+
+	// Filter for adding additional services.
+	apply_filters( 'kudos_container_configurator', $services );
 };
