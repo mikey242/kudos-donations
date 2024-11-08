@@ -46,11 +46,12 @@ class Kernel {
 	 */
 	private function get_container_file(): string {
 		$cached_version_hash = get_option( '_kudos_version_hash' );
-		if ( ! $cached_version_hash || hash( 'md5', KUDOS_VERSION ) !== $cached_version_hash ) {
-			$cached_version_hash = hash( 'md5', KUDOS_VERSION );
+		$strings_to_hash     = apply_filters( 'kudos_container_hash_string', KUDOS_VERSION );
+		if ( ! $cached_version_hash || hash( 'md5', $strings_to_hash ) !== $cached_version_hash ) {
+			$cached_version_hash = hash( 'md5', $strings_to_hash );
 			update_option( '_kudos_version_hash', $cached_version_hash );
 		}
-		return apply_filters( 'kudos_container_file_name', 'container-' . $cached_version_hash . '.php', KUDOS_VERSION );
+		return 'container-' . $cached_version_hash . '.php';
 	}
 
 	/**
