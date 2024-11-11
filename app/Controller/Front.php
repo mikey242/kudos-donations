@@ -97,6 +97,7 @@ class Front {
 		$this->payment = $payment;
 		$this->twig    = $twig;
 		$this->mapper  = $mapper;
+		add_filter( 'script_loader_tag', [ $this, 'add_data_no_optimize_attribute' ], 10, 3 );
 	}
 
 	/**
@@ -130,11 +131,30 @@ class Front {
 	}
 
 	/**
+	 * Prevent caching plugins from minifying the main JS file.
+	 *
+	 * @param string $tag The tag.
+	 * @param string $handle The handle name for the script.
+	 * @return array|string|string[]
+	 */
+	public function add_data_no_optimize_attribute( string $tag, string $handle ) {
+		// List of script handles to exclude from optimization.
+		$scripts_to_exclude = [ 'kudos-donations-public' ];
+
+		// Check if the current script handle is in the list.
+		if ( \in_array( $handle, $scripts_to_exclude, true ) ) {
+			// Add the data-no-optimize attribute.
+			$tag = str_replace( ' src', ' data-no-optimize="1" src', $tag );
+		}
+
+		return $tag;
+	}
+
+	/**
 	 * Register the JavaScript for the public-facing side of the plugin.
 	 * This is necessary in order to localize the script with variables.
 	 */
 	public function register_scripts() {
-
 		$public_js = Assets::get_script( '/public/kudos-public.js' );
 		wp_register_script(
 			'kudos-donations-public',
