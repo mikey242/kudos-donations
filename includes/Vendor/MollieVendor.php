@@ -81,13 +81,6 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_registration_action(): string {
-		return 'init';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public static function get_vendor_name(): string
 	{
 		return 'Mollie';
