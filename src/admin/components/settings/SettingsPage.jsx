@@ -18,6 +18,8 @@ import { InvoiceTab } from './InvoiceTab';
 import { AdminTabPanel } from '../AdminTabPanel';
 import { Button, FlexItem } from '@wordpress/components';
 import { useAdminContext } from '../../contexts/AdminContext';
+import { applyFilters } from '@wordpress/hooks';
+import * as AdminControls from '../../components/controls';
 
 export const SettingsPage = () => {
 	const { setHeaderContent } = useAdminContext();
@@ -32,6 +34,35 @@ export const SettingsPage = () => {
 		defaultValues: settings,
 	});
 	const { formState } = methods;
+
+	// Define tabs and panels
+	const tabs = applyFilters(
+		'kudosSettingsTabs',
+		[
+			{
+				name: 'mollie',
+				title: __('Mollie', 'kudos-donations'),
+				content: <MollieTab />,
+			},
+			{
+				name: 'email',
+				title: __('Email', 'kudos-donations'),
+				content: <EmailTab />,
+			},
+			{
+				name: 'invoice',
+				title: __('Invoice', 'kudos-donations'),
+				content: <InvoiceTab />,
+			},
+			{
+				name: 'help',
+				title: __('Help', 'kudos-donations'),
+				content: <HelpTab />,
+			},
+		],
+		AdminControls,
+		settings
+	);
 
 	useEffect(() => {
 		setHeaderContent(
@@ -80,30 +111,6 @@ export const SettingsPage = () => {
 	const save = (data) => {
 		return updateSettings(data, formState.dirtyFields);
 	};
-
-	// Define tabs and panels
-	const tabs = [
-		{
-			name: 'mollie',
-			title: __('Mollie', 'kudos-donations'),
-			content: <MollieTab />,
-		},
-		{
-			name: 'email',
-			title: __('Email', 'kudos-donations'),
-			content: <EmailTab />,
-		},
-		{
-			name: 'invoice',
-			title: __('Invoice', 'kudos-donations'),
-			content: <InvoiceTab />,
-		},
-		{
-			name: 'help',
-			title: __('Help', 'kudos-donations'),
-			content: <HelpTab />,
-		},
-	];
 
 	return (
 		// Show spinner if not yet loaded

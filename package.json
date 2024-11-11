@@ -21,6 +21,7 @@
 	"dependencies": {
 		"@headlessui/react": "2.2.0",
 		"@heroicons/react": "^2.1.5",
+		"@wordpress/hooks": "^4.11.0",
 		"clsx": "^2.1.1",
 		"focus-trap-react": "^10.3.0",
 		"react-hook-form": "^7.53.0",
