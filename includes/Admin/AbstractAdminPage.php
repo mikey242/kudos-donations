@@ -77,6 +77,7 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				"load-$screen_id",
 				function (): void {
 					add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
+					do_action( "{$this->get_menu_slug()}_page_register_assets" );
 				}
 			);
 		}
