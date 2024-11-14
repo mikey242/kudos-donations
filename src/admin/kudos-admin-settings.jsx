@@ -6,15 +6,16 @@ import './kudos-admin.css';
 import { AdminProvider } from './contexts/AdminContext';
 import { BrowserRouter } from 'react-router-dom';
 
-const container = document.getElementById('kudos-settings');
-const root = createRoot(container);
-
 domReady(() => {
-	root.render(
-		<BrowserRouter>
-			<AdminProvider>
-				<SettingsPage />
-			</AdminProvider>
-		</BrowserRouter>
-	);
+	const container = document.getElementById('kudos-settings');
+	if (container) {
+		const root = createRoot(container);
+		root.render(
+			<BrowserRouter>
+				<AdminProvider>
+					<SettingsPage />
+				</AdminProvider>
+			</BrowserRouter>
+		);
+	}
 });

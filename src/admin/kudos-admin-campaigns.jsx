@@ -6,17 +6,18 @@ import CampaignsProvider from './contexts/CampaignsContext';
 import { AdminProvider } from './contexts/AdminContext';
 import { BrowserRouter } from 'react-router-dom';
 
-const container = document.getElementById('kudos-campaigns');
-const root = createRoot(container);
-
 domReady(() => {
-	root.render(
-		<BrowserRouter>
-			<AdminProvider>
-				<CampaignsProvider>
-					<CampaignsPage />
-				</CampaignsProvider>
-			</AdminProvider>
-		</BrowserRouter>
-	);
+	const container = document.getElementById('kudos-campaigns');
+	if (container) {
+		const root = createRoot(container);
+		root.render(
+			<BrowserRouter>
+				<AdminProvider>
+					<CampaignsProvider>
+						<CampaignsPage />
+					</CampaignsProvider>
+				</AdminProvider>
+			</BrowserRouter>
+		);
+	}
 });
