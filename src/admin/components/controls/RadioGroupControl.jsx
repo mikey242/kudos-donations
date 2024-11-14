@@ -32,7 +32,12 @@ const RadioGroupControl = ({
 					__nextHasNoMarginBottom
 				>
 					<div>
-						<ToggleGroupControl isBlock value={value} label={label} __nextHasNoMarginBottom>
+						<ToggleGroupControl
+							isBlock
+							value={value}
+							label={label}
+							__nextHasNoMarginBottom
+						>
 							{options.map((option) => {
 								return (
 									<ToggleGroupControlOption
