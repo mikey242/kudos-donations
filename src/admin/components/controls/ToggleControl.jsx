@@ -16,6 +16,7 @@ const ToggleControl = ({ name, rules, label, help, isDisabled }) => {
 					onChange={onChange}
 					disabled={isDisabled}
 					help={description}
+					__nextHasNoMarginBottom
 				/>
 			)}
 		/>

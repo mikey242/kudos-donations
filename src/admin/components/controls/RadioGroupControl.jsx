@@ -25,9 +25,14 @@ const RadioGroupControl = ({
 			rules={isDisabled ? {} : rules}
 			disabled={isDisabled}
 			render={({ field: { onChange, value } }) => (
-				<BaseControl help={help} id={id} className="kudos-button-group">
+				<BaseControl
+					help={help}
+					id={id}
+					className="kudos-button-group"
+					__nextHasNoMarginBottom
+				>
 					<div>
-						<ToggleGroupControl isBlock value={value} label={label}>
+						<ToggleGroupControl isBlock value={value} label={label} __nextHasNoMarginBottom>
 							{options.map((option) => {
 								return (
 									<ToggleGroupControlOption
