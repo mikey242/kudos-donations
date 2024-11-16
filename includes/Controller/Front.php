@@ -82,20 +82,22 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		);
 
 		// Update handle properties.
-		$this->block_script_handles = $block->script_handles;
+		$this->block_script_handles = array_merge( $block->editor_script_handles, $block->view_script_handles );
 		$this->block_style_handles  = $block->style_handles;
 
 		// Localize the first script with required properties.
-		wp_localize_script(
-			$this->block_script_handles[0],
-			'kudos',
-			[
-				'stylesheets' => [
-					Assets::get_style( 'front/kudos-front.css' ),
-				],
-				'currencies'  => Utils::get_currencies(),
-			]
-		);
+		foreach ( $this->block_script_handles as $handle ) {
+			wp_localize_script(
+				$handle,
+				'kudos',
+				[
+					'stylesheets' => [
+						Assets::get_style( 'front/kudos-front.css' ),
+					],
+					'currencies'  => Utils::get_currencies(),
+				]
+			);
+		}
 	}
 
 	/**
