@@ -9,11 +9,14 @@ import { useCampaignContext } from '../contexts/CampaignContext';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
 
-export const KudosForm = ({ displayAs, label }) => {
+export const KudosForm = ({ displayAs, label, preventSubmit = false }) => {
 	const { campaign, campaignErrors } = useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [formError, setFormError] = useState(null);
-	const [formState, setFormState] = useState(null);
+	const [formState, setFormState] = useState({
+		currentStep: 1,
+		formData: {},
+	});
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const isForm = displayAs === 'form';
 	const isModal = displayAs === 'button';
@@ -42,6 +45,9 @@ export const KudosForm = ({ displayAs, label }) => {
 	};
 
 	async function submitForm(data) {
+		if (preventSubmit) {
+			return;
+		}
 		setFormError(null);
 		const formData = new window.FormData();
 		formData.append('timestamp', timestamp.toString());
@@ -87,7 +93,7 @@ export const KudosForm = ({ displayAs, label }) => {
 				</small>
 			)}
 			<FormRouter
-				step={formState?.currentStep ?? 1}
+				step={formState?.currentStep}
 				campaign={campaign}
 				setFormState={setFormState}
 				submitForm={submitForm}
@@ -102,8 +108,8 @@ export const KudosForm = ({ displayAs, label }) => {
 			errors={campaignErrors}
 		>
 			<>
-				{isForm && renderDonationForm()}
 				{isFSLogo && <KudosLogoFullScreenAnimated />}
+				{isForm && renderDonationForm()}
 				{isModal && (
 					<>
 						<DonateButton onClick={toggleModal}>
