@@ -55,7 +55,7 @@ export const SummaryTab = ({
 				</p>
 				<p className="my-1">
 					<strong>{__('Amount', 'kudos-donations')}: </strong>
-					<span>{`${window.kudos.currencies[currency]} ${values.value}`}</span>
+					<span>{`${window.kudos?.currencies[currency]} ${values.value}`}</span>
 				</p>
 				<p className="my-1">
 					<strong>{__('Type', 'kudos-donations')}: </strong>

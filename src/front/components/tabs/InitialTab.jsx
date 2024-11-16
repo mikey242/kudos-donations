@@ -21,7 +21,7 @@ export const InitialTab = ({
 	anonymous,
 	currency,
 }) => {
-	const currencySymbol = window?.kudos.currencies[currency];
+	const currencySymbol = window.kudos?.currencies[currency];
 	const { setValue } = useFormContext();
 	const watchFixed = useWatch({ name: 'valueFixed' });
 	const watchOpen = useWatch({ name: 'valueOpen' });
