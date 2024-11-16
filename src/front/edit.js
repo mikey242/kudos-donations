@@ -82,6 +82,7 @@ const ButtonEdit = (props) => {
 										value: item.id,
 									}))
 								)}
+								__nextHasNoMarginBottom
 							/>
 							<Flex>
 								<FlexItem>
