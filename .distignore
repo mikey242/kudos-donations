@@ -67,5 +67,4 @@ TODO
 renovate.json
 scoper.inc.php
 tsconfig.shared.json
-webpack.config.base.js
 wp-cli.phar
