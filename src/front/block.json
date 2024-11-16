@@ -9,7 +9,8 @@
 	"keywords": ["kudos", "button", "donate"],
 	"supports": {
 		"align": false,
-		"customClassName": true,
+		"html": false,
+		"customClassName": false,
 		"typography": {
 			"fontSize": false
 		}
