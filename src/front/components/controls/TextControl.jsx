@@ -20,7 +20,12 @@ export const TextControl = ({
 	const [width, setWidth] = useState(0);
 	useEffect(() => {
 		if (prefixRef.current) {
-			setWidth(prefixRef.current?.offsetWidth);
+			const widthInPx = prefixRef.current?.offsetWidth;
+			const rootFontSize =
+				parseFloat(
+					getComputedStyle(document.documentElement).fontSize
+				) * 1.5;
+			setWidth(widthInPx + rootFontSize);
 		}
 	}, [prefix]);
 	return (
@@ -65,7 +70,7 @@ export const TextControl = ({
 							)}
 							style={
 								prefix && {
-									paddingLeft: width + 18 + 'px',
+									paddingLeft: width + 'px',
 								}
 							}
 							placeholder={placeholder}
