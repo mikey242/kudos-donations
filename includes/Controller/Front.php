@@ -27,8 +27,8 @@ use WP_REST_Server;
 class Front extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	private VendorInterface $vendor;
-	private ?array $block_script_handles = [];
-	private ?array $block_style_handles  = [];
+	private array $view_script_handles   = [];
+	private array $style_handles;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -62,10 +62,10 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * Enqueue the styles and scripts.
 	 */
 	private function enqueue_assets(): void {
-		foreach ( $this->block_style_handles as $handle ) {
+		foreach ( $this->style_handles as $handle ) {
 			wp_enqueue_style( $handle );
 		}
-		foreach ( $this->block_script_handles as $handle ) {
+		foreach ( $this->view_script_handles as $handle ) {
 			wp_enqueue_script( $handle );
 		}
 	}
@@ -82,11 +82,12 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		);
 
 		// Update handle properties.
-		$this->block_script_handles = array_merge( $block->editor_script_handles, $block->view_script_handles );
-		$this->block_style_handles  = $block->style_handles;
+		$this->view_script_handles   = $block->view_script_handles;
+		$this->style_handles         = $block->style_handles;
+		$block_scripts               = array_merge( $block->editor_script_handles, $block->view_script_handles );
 
-		// Localize the first script with required properties.
-		foreach ( $this->block_script_handles as $handle ) {
+		// Localize the scripts with required properties.
+		foreach ( $block_scripts as $handle ) {
 			wp_localize_script(
 				$handle,
 				'kudos',
