@@ -20,7 +20,12 @@ export const ColorPicker = ({ name, label, help, rules, isDisabled }) => {
 			rules={isDisabled ? {} : rules}
 			disabled={isDisabled}
 			render={({ field: { onChange, value } }) => (
-				<BaseControl id={id} label={label} help={help}>
+				<BaseControl
+					id={id}
+					label={label}
+					help={help}
+					__nextHasNoMarginBottom
+				>
 					<ColorPalette
 						colors={colors}
 						onChange={onChange}

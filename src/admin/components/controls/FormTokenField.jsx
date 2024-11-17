@@ -26,6 +26,7 @@ export const FormTokenField = ({
 					help={description}
 					id={id}
 					className="kudos-button-group"
+					__nextHasNoMarginBottom
 				>
 					<WPFormTokenField
 						__next40pxDefaultSize
@@ -37,6 +38,7 @@ export const FormTokenField = ({
 						disabled={isDisabled}
 						onChange={onChange}
 						value={value ?? []}
+						__nextHasNoMarginBottom
 					/>
 				</WPBaseControl>
 			)}

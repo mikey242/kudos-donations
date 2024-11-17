@@ -24,6 +24,7 @@ export const CheckboxControl = ({
 					checked={value}
 					help={description}
 					disabled={isDisabled}
+					__nextHasNoMarginBottom
 				/>
 			)}
 		/>
