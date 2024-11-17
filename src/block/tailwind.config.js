@@ -1,7 +1,7 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-	content: ['./src/front/**/*.{js,jsx}'], // Preserves content paths for front-end
+	content: ['./src/block/**/*.{js,jsx}'], // Preserves content paths for front-end
 	theme: {
 		fontFamily: {
 			body: ['var(--kudos-font-body)', 'montserratregular', 'sans-serif'], // Merged font settings

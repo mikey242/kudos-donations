@@ -35,6 +35,6 @@
 		}
 	},
 	"editorScript": "file:index.js",
-	"style": "file:kudos-fonts.css",
+	"style": "file:../kudos-fonts.css",
 	"viewScript": "file:kudos-front.jsx"
 }

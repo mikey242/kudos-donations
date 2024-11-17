@@ -1,5 +1,5 @@
 import React from 'react';
-import { KudosLogo } from '../../front/components/KudosLogo';
+import { KudosLogo } from '../../block/components/KudosLogo';
 import { __ } from '@wordpress/i18n';
 import {
 	Flex,
