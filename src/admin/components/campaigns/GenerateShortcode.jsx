@@ -69,6 +69,7 @@ function GenerateShortcode({ campaign, iconOnly = false }) {
 							'Choose the available payment frequency.',
 							'kudos-donations'
 						)}
+						__nextHasNoMarginBottom
 					>
 						<div>
 							<ButtonGroup>
