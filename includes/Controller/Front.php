@@ -75,7 +75,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 */
 	private function register_block(): void {
 		$block = register_block_type(
-			KUDOS_PLUGIN_DIR . '/build/front/',
+			KUDOS_PLUGIN_DIR . '/build/front/block',
 			[
 				'render_callback' => [ $this, 'kudos_render_callback' ],
 			]
@@ -92,7 +92,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				'kudos',
 				[
 					'stylesheets' => [
-						Assets::get_style( 'front/kudos-front.css' ),
+						Assets::get_style( 'front/block/kudos-front.css' ),
 					],
 					'currencies'  => Utils::get_currencies(),
 				]
