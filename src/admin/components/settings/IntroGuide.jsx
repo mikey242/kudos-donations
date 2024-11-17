@@ -7,15 +7,22 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useSettingsContext } from '../../contexts/SettingsContext';
 import { ExternalLink, Guide } from '@wordpress/components';
+import { useEffect, useState } from '@wordpress/element';
 
 const IntroGuide = () => {
 	const { updateSetting, settings } = useSettingsContext();
+	const [showGuide, setShowGuide] = useState(0);
+
+	useEffect(() => {
+		setShowGuide(settings._kudos_show_intro);
+	}, [settings._kudos_show_intro]);
 
 	const closeModal = () => {
 		updateSetting('_kudos_show_intro', 0);
+		setShowGuide(0);
 	};
 
-	if (!settings._kudos_show_intro) {
+	if (!showGuide) {
 		return null;
 	}
 
