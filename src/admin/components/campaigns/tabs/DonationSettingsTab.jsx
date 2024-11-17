@@ -7,8 +7,10 @@ import { Panel, PanelBody } from '@wordpress/components';
 
 export const DonationSettingsTab = ({ recurringAllowed }) => {
 	const { currencies } = window.kudos;
-	const watchAmountType = useWatch({ name: 'meta.amount_type' });
-	const watchCurrency = useWatch({ name: 'meta.currency' });
+	const amountType = useWatch({ name: 'meta.amount_type' });
+	const currency = useWatch({ name: 'meta.currency' });
+	const maxDonation = useWatch({ name: 'meta.maximum_donation' });
+	const minDonation = useWatch({ name: 'meta.minimum_donation' });
 
 	return (
 		<Fragment>
@@ -66,19 +68,45 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					/>
 					<FormTokenField
 						name="meta.fixed_amounts"
-						isDisabled={watchAmountType === 'open'}
+						isDisabled={amountType === 'open'}
 						maxLength={5}
 						rules={{
 							validate: (value) => {
-								return (
-									value.every((item) =>
-										/^\d*\.?\d+$/.test(item)
-									) ||
-									__(
-										'All values must be numbers',
+								if (!value || value.length === 0) {
+									return __(
+										'You need to enter one or more amounts',
 										'kudos-donations'
-									)
-								);
+									);
+								}
+
+								for (const item of value) {
+									if (!/^\d*\.?\d+$/.test(item)) {
+										return __(
+											'All values must be numbers',
+											'kudos-donations'
+										);
+									}
+
+									const numberValue = parseFloat(item);
+									if (numberValue < minDonation) {
+										return (
+											__(
+												`Each value must be higher than the minimum donation amount`,
+												'kudos-donations'
+											) + ` (${minDonation}).`
+										);
+									}
+									if (numberValue > maxDonation) {
+										return (
+											__(
+												`Each value must not exceed the maximum donation amount`,
+												'kudos-donations'
+											) + ` (${maxDonation}).`
+										);
+									}
+								}
+
+								return true; // Return true if all validations pass
 							},
 							required: __(
 								'You need to enter one or more amounts',
@@ -93,8 +121,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					/>
 					<TextControl
 						name="meta.minimum_donation"
-						isDisabled={watchAmountType === 'fixed'}
-						prefix={currencies[watchCurrency]}
+						prefix={currencies[currency]}
 						help={__(
 							'This is the minimum donation that will be accepted.',
 							'kudos-donations'
@@ -119,8 +146,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					/>
 					<TextControl
 						name="meta.maximum_donation"
-						isDisabled={watchAmountType === 'fixed'}
-						prefix={currencies[watchCurrency]}
+						prefix={currencies[currency]}
 						type="number"
 						label={__('Maximum donation', 'kudos-donations')}
 						help={__(
