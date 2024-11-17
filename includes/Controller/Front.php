@@ -27,7 +27,7 @@ use WP_REST_Server;
 class Front extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	private VendorInterface $vendor;
-	private array $view_script_handles   = [];
+	private array $view_script_handles = [];
 	private array $style_handles;
 
 	/**
@@ -82,9 +82,9 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		);
 
 		// Update handle properties.
-		$this->view_script_handles   = $block->view_script_handles;
-		$this->style_handles         = $block->style_handles;
-		$block_scripts               = array_merge( $block->editor_script_handles, $block->view_script_handles );
+		$this->view_script_handles = $block->view_script_handles;
+		$this->style_handles       = $block->style_handles;
+		$block_scripts             = array_merge( $block->editor_script_handles, $block->view_script_handles );
 
 		// Localize the scripts with required properties.
 		foreach ( $block_scripts as $handle ) {
