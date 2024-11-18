@@ -78,7 +78,7 @@ function GenerateShortcode({ campaign, iconOnly = false }) {
 									isPressed={type === 'button'}
 									onClick={() => setType('button')}
 								>
-									{__('Button', 'kudos-donations')}
+									{__('Button with modal', 'kudos-donations')}
 								</Button>
 								<Button
 									variant="tertiary"

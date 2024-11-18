@@ -88,12 +88,15 @@ const ButtonEdit = (props) => {
 							selected={type}
 							options={[
 								{
-									label: __('Form', 'kudos-donations'),
+									label: __(
+										'Embedded form',
+										'kudos-donations'
+									),
 									value: 'form',
 								},
 								{
 									label: __(
-										'Button with Modal',
+										'Button with modal',
 										'kudos-donations'
 									),
 									value: 'button',
