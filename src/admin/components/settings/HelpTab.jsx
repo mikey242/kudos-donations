@@ -10,7 +10,7 @@ import {
 	Panel,
 	PanelBody,
 } from '@wordpress/components';
-import { ToggleControl } from '../controls';
+import { TextControl, ToggleControl } from '../controls';
 
 const HelpTab = () => {
 	const { updateSetting } = useSettingsContext();
@@ -132,6 +132,13 @@ const HelpTab = () => {
 						help={__(
 							'Enables debug logging. Please only enable this if advised to by support.',
 							'kudos-donations'
+						)}
+					/>
+					<TextControl
+						name="_kudos_base_font_size"
+						label={__('Base font size', 'kudos-donations')}
+						help={__(
+							"This will change the scale of all font sizes and spacing within the Kudos Donations frame. The default is 1rem which is your website's main font size."
 						)}
 					/>
 				</PanelBody>

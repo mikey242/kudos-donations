@@ -20,6 +20,7 @@ use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -92,10 +93,11 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				$handle,
 				'kudos',
 				[
-					'stylesheets' => [
+					'stylesheets'  => [
 						Assets::get_style( 'front/block/kudos-front.css' ),
 					],
-					'currencies'  => Utils::get_currencies(),
+					'currencies'   => Utils::get_currencies(),
+					'baseFontSize' => get_option( SettingsService::SETTING_BASE_FONT_SIZE ),
 				]
 			);
 		}

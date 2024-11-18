@@ -6,7 +6,7 @@ function BaseTab(props) {
 	return (
 		<div className="kudos-form-tab block w-full relative mt-4 p-0">
 			<legend className="block m-auto">
-				<h2 className="font-normal font-heading text-3xl sm:text-4xl m-0 mb-4 block text-center">
+				<h2 className="font-normal font-heading text-3xl sm:text-4xl/4 m-0 mb-2 block text-center">
 					{title}
 				</h2>
 			</legend>

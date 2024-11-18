@@ -21,11 +21,11 @@ export const TextControl = ({
 	useEffect(() => {
 		if (prefixRef.current) {
 			const widthInPx = prefixRef.current?.offsetWidth;
-			const rootFontSize =
-				parseFloat(
-					getComputedStyle(document.documentElement).fontSize
-				) * 1.5;
-			setWidth(widthInPx + rootFontSize);
+			const elementFontSizeInPx = parseFloat(
+				getComputedStyle(prefixRef.current).fontSize
+			);
+			const fontSize = elementFontSizeInPx * 1.5;
+			setWidth(widthInPx + fontSize);
 		}
 	}, [prefix]);
 	return (

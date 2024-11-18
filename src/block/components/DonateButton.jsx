@@ -7,7 +7,7 @@ const DonateButton = ({ children, onClick = null }) => {
 		<div id="kudos-donate-button" className="font-body">
 			<Button
 				onClick={() => onClick && onClick()}
-				className="logo-animate"
+				className="logo-animate text-base"
 			>
 				<div className="mr-3 flex text-white">
 					<KudosLogo

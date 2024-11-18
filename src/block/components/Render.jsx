@@ -57,20 +57,15 @@ function Render({
 			{/* Insert campaign-scoped custom CSS */}
 			{style && <style>{style}</style>}
 
-			{/* Fonts */}
+			{/* Fontsize/Font/Theme */}
 			<style>
-				{`:host {--kudos-font-heading: ${
-					fonts?.header ?? 'cabinbold, sans-serif'
-				} }`}
-				{`:host {--kudos-font-body: ${
-					fonts?.header ?? 'montserratregular, sans-serif'
-				} }`}
+				{`:host { 
+					font-size: ${window.kudos?.baseFontSize ?? '1rem'};
+					--kudos-font-heading: ${fonts?.header ?? 'cabinbold, sans-serif'} ;
+					--kudos-font-body: ${fonts?.header ?? 'montserratregular, sans-serif'};
+					${themeColor && `--kudos-theme-primary: ${themeColor}`};
+				}`}
 			</style>
-
-			{/* Set the theme color */}
-			{themeColor && (
-				<style>{`:host {--kudos-theme-primary: ${themeColor}`}</style>
-			)}
 
 			<div id="kudos-container">
 				<div className={clsx(className, 'font-body text-gray-900')}>

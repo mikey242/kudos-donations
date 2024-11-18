@@ -17,6 +17,7 @@ use IseardMedia\Kudos\Enum\FieldType;
 class SettingsService implements HasSettingsInterface {
 	public const SETTING_SHOW_INTRO       = '_kudos_show_intro';
 	public const SETTING_DEBUG_MODE       = '_kudos_debug_mode';
+	public const SETTING_BASE_FONT_SIZE   = '_kudos_base_font_size';
 	public const SETTING_MAXIMUM_DONATION = '_kudos_maximum_donation';
 	public const SETTING_ALLOW_METRICS    = '_kudos_allow_metrics';
 	public const SETTING_PLUGIN_VERSION   = '_kudos_donations_version';
@@ -109,6 +110,12 @@ class SettingsService implements HasSettingsInterface {
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_BASE_FONT_SIZE   => [
+				'type'              => FieldType::STRING,
+				'show_in_rest'      => true,
+				'default'           => '1rem',
+				'sanitize_callback' => 'sanitize_text_field',
 			],
 			self::SETTING_MAXIMUM_DONATION => [
 				'type'         => FieldType::INTEGER,
