@@ -141,7 +141,7 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 		add_action(
 			'admin_enqueue_scripts',
 			function () {
-				$admin_js = Assets::get_script( 'admin/kudos-admin-migrations.js' );
+				$admin_js = Assets::get_script( 'admin/migrations/kudos-admin-migrations.js' );
 				wp_enqueue_script(
 					'kudos-donations-migrations',
 					$admin_js['url'],
