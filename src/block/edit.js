@@ -116,7 +116,7 @@ const ButtonEdit = (props) => {
 				<KudosForm
 					displayAs={type}
 					label={button_label}
-					preventSubmit={true}
+					previewMode={true}
 				/>
 			) : (
 				<p>

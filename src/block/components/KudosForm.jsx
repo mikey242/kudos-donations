@@ -9,7 +9,7 @@ import { useCampaignContext } from '../contexts/CampaignContext';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
 
-export const KudosForm = ({ displayAs, label, preventSubmit = false }) => {
+export const KudosForm = ({ displayAs, label, previewMode = false }) => {
 	const { campaign, campaignErrors } = useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [formError, setFormError] = useState(null);
@@ -45,7 +45,7 @@ export const KudosForm = ({ displayAs, label, preventSubmit = false }) => {
 	};
 
 	async function submitForm(data) {
-		if (preventSubmit) {
+		if (previewMode) {
 			return;
 		}
 		setFormError(null);
@@ -106,6 +106,7 @@ export const KudosForm = ({ displayAs, label, preventSubmit = false }) => {
 			themeColor={campaign?.meta?.theme_color}
 			style={campaign?.meta?.custom_styles}
 			errors={campaignErrors}
+			className={previewMode && 'pointer-events-none'}
 		>
 			<>
 				{isFSLogo && <KudosLogoFullScreenAnimated />}
