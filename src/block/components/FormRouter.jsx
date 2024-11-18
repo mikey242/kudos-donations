@@ -27,6 +27,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	const methods = useForm({
 		defaultValues: {
 			defaultValues: campaign.meta,
+			recurring: false,
 		},
 	});
 
