@@ -92,12 +92,14 @@ export const KudosForm = ({ displayAs, label, previewMode = false }) => {
 					{formError}
 				</small>
 			)}
-			<FormRouter
-				step={formState?.currentStep}
-				campaign={campaign}
-				setFormState={setFormState}
-				submitForm={submitForm}
-			/>
+			{campaign && (
+				<FormRouter
+					step={formState?.currentStep}
+					campaign={campaign}
+					setFormState={setFormState}
+					submitForm={submitForm}
+				/>
+			)}
 		</>
 	);
 
