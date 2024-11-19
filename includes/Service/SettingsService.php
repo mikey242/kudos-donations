@@ -114,7 +114,7 @@ class SettingsService implements HasSettingsInterface {
 			self::SETTING_BASE_FONT_SIZE   => [
 				'type'              => FieldType::STRING,
 				'show_in_rest'      => true,
-				'default'           => '1rem',
+				'default'           => '1.2rem',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
 			self::SETTING_MAXIMUM_DONATION => [
