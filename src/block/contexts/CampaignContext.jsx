@@ -1,6 +1,5 @@
 import React, { createContext, useContext } from 'react';
 import { __ } from '@wordpress/i18n';
-import { Flex, Spinner } from '@wordpress/components';
 import { useEffect, useMemo, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 
@@ -53,17 +52,10 @@ export default function CampaignProvider({ campaignId, children }) {
 		() => ({
 			campaign,
 			campaignErrors,
+			isLoading,
 		}),
-		[campaign, campaignErrors]
+		[campaign, campaignErrors, isLoading]
 	);
-
-	if (isLoading) {
-		return (
-			<Flex justify="center">
-				<Spinner />
-			</Flex>
-		);
-	}
 
 	return (
 		<CampaignContext.Provider value={contextValue}>
