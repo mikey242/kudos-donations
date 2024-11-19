@@ -2,6 +2,7 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	ExternalLink,
+	Flex,
 	PanelBody,
 	RadioControl,
 	SelectControl,
@@ -11,23 +12,20 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useCampaignContext } from './contexts/CampaignContext';
 import { useEntityRecords } from '@wordpress/core-data';
-import { useEffect } from '@wordpress/element';
 import { KudosForm } from './components/KudosForm';
+import { KudosLogo } from './components/KudosLogo';
 
 const ButtonEdit = (props) => {
 	const {
-		attributes: { button_label, campaign_id, type },
+		attributes: { button_label, type },
 		setAttributes,
 	} = props;
-	const { campaign: currentCampaign } = useCampaignContext();
+	const { campaign } = useCampaignContext();
 	const blockProps = useBlockProps();
-	const { records: campaigns } = useEntityRecords(
-		'postType',
-		'kudos_campaign',
-		{
+	const { records: campaigns, hasResolved: campaignsLoaded } =
+		useEntityRecords('postType', 'kudos_campaign', {
 			per_page: -1,
-		}
-	);
+		});
 
 	const onChangeButtonLabel = (newValue) => {
 		setAttributes({ button_label: newValue });
@@ -35,7 +33,7 @@ const ButtonEdit = (props) => {
 
 	const onChangeCampaign = (newValue) => {
 		if (newValue) {
-			setAttributes({ campaign_id: String(newValue) });
+			setAttributes({ campaign_id: newValue });
 		}
 	};
 
@@ -43,39 +41,49 @@ const ButtonEdit = (props) => {
 		setAttributes({ type: newValue });
 	};
 
-	useEffect(() => {
-		if (!campaign_id && campaigns?.length > 0) {
-			setAttributes({ campaign_id: String(campaigns[0].id) });
-		}
-	}, [campaign_id, campaigns, setAttributes]);
+	const CampaignSelector = () => {
+		return (
+			<SelectControl
+				label={__('Select Campaign', 'kudos-donations')}
+				value={campaign?.id ?? ''}
+				onChange={onChangeCampaign}
+				options={
+					campaigns
+						?.map((item) => ({
+							label: item?.title.rendered,
+							value: item.id,
+						}))
+						.concat({
+							label: __('None', 'kudos-donations'),
+							value: '',
+							disabled: true,
+						}) || []
+				}
+				__nextHasNoMarginBottom
+			/>
+		);
+	};
 
 	return (
 		<div {...blockProps}>
-			{campaigns && (
+			{campaignsLoaded && (
 				<InspectorControls>
 					<PanelBody
 						title={__('Campaign Settings', 'kudos-donations')}
 						initialOpen={true}
 					>
-						<SelectControl
-							label={__('Select Campaign', 'kudos-donations')}
-							value={campaign_id}
-							onChange={onChangeCampaign}
-							options={
-								campaigns?.map((item) => ({
-									label: item?.title.rendered,
-									value: item.id,
-								})) || []
-							}
-							__nextHasNoMarginBottom
-						/>
-						{currentCampaign && (
+						<CampaignSelector />
+						{campaign?.length > 0 ? (
 							<ExternalLink
-								href={`admin.php?page=kudos-campaigns&edit=${currentCampaign?.id}`}
+								href={`admin.php?page=kudos-campaigns&edit=${campaign?.id}`}
 							>
 								{__('Edit', 'kudos-donations') +
 									' ' +
-									currentCampaign?.title?.rendered}
+									campaign?.title?.rendered}
+							</ExternalLink>
+						) : (
+							<ExternalLink href="admin.php?page=kudos-campaigns">
+								{__('Create a campaign', 'kudos-donations')}
 							</ExternalLink>
 						)}
 					</PanelBody>
@@ -115,20 +123,22 @@ const ButtonEdit = (props) => {
 					</PanelBody>
 				</InspectorControls>
 			)}
-			{currentCampaign ? (
+			{campaign ? (
 				<KudosForm
 					displayAs={type}
 					label={button_label}
 					previewMode={true}
 				/>
 			) : (
-				<p>
-					Kudos Donations:{' '}
-					{__(
-						'Please select a campaign from the sidebar to continue.',
-						'kudos-donations'
-					)}
-				</p>
+				<Flex justify="flex-start">
+					<KudosLogo style={{ maxWidth: '32px' }} />
+					<p>
+						{__(
+							'Please select a campaign from the sidebar',
+							'kudos-donations'
+						)}
+					</p>
+				</Flex>
 			)}
 		</div>
 	);
