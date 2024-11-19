@@ -20,7 +20,7 @@ const ButtonEdit = (props) => {
 		attributes: { button_label, type },
 		setAttributes,
 	} = props;
-	const { campaign } = useCampaignContext();
+	const { campaign, isLoading: campaignLoaded } = useCampaignContext();
 	const blockProps = useBlockProps();
 	const { records: campaigns, hasResolved: campaignsLoaded } =
 		useEntityRecords('postType', 'kudos_campaign', {
@@ -130,15 +130,17 @@ const ButtonEdit = (props) => {
 					previewMode={true}
 				/>
 			) : (
-				<Flex justify="flex-start">
-					<KudosLogo style={{ maxWidth: '32px' }} />
-					<p>
-						{__(
-							'Please select a campaign from the sidebar',
-							'kudos-donations'
-						)}
-					</p>
-				</Flex>
+				!campaignLoaded && (
+					<Flex justify="flex-start">
+						<KudosLogo style={{ maxWidth: '32px' }} />
+						<p>
+							{__(
+								'Please select a campaign from the sidebar',
+								'kudos-donations'
+							)}
+						</p>
+					</Flex>
+				)
 			)}
 		</div>
 	);
