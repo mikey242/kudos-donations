@@ -5,6 +5,7 @@
 
 :host {
 	--kudos-screen: xs;
+	outline: none !important;
 }
 
 p {
