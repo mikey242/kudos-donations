@@ -15,12 +15,7 @@ module.exports = {
 					format: {
 						comments(node, comment) {
 							const text = comment.value;
-							const type = comment.type;
-							if (type === 'comment2') {
-								// multiline comment
-								return /translators:/i.test(text);
-							}
-							return false;
+							return /(translators:|fs_premium_only)/i.test(text);
 						},
 					},
 				},
