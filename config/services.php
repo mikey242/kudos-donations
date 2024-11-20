@@ -15,7 +15,6 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Container\Registrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
-use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\VendorFactory;
 use IseardMedia\Kudos\Vendor\VendorInterface;
 use Mollie\Api\MollieApiClient;
@@ -86,7 +85,6 @@ return static function ( ContainerConfigurator $container ) {
 		->args(
 			[
 				service( 'service_container' ),
-				service( SettingsService::class ),
 			]
 		);
 
