@@ -5,7 +5,7 @@
 
 namespace Controller;
 
-use IseardMedia\Kudos\Vendor\VendorInterface;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_UnitTestCase;
 
 /**
@@ -34,7 +34,7 @@ class Front extends WP_UnitTestCase {
 	 * Test that plugin container is created.
 	 */
 	public function test_render_callback() {
-		$vendor_service = $this->createMock( VendorInterface::class );
+		$vendor_service = $this->createMock( PaymentVendorInterface::class );
 		$front          = new \IseardMedia\Kudos\Controller\Front( $vendor_service );
 		$args           = [
 			'campaign_id'  => 291,
