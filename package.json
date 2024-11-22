@@ -82,7 +82,7 @@
 		"make-json": "wp i18n make-json languages/ --no-purge",
 		"follow-log": "source ./.env && tail -f -n 200 ./wordpress/storage/logs/$APP_ENV.log",
 		"serveo": "ssh -R 80:localhost:8888 serveo.net",
-		"test:unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/kudos-donations ./vendor/bin/phpunit",
+		"test:unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/kudos-donations ./common/vendor/bin/phpunit",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style 'src/**/*.css'",
 		"lint:js": "wp-scripts lint-js ./src",
