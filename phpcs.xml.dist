@@ -3,6 +3,7 @@
 	<config name="minimum_supported_wp_version" value="6.2"/>
 
 	<exclude-pattern>/dist/*</exclude-pattern>
+	<exclude-pattern>/freemius/*</exclude-pattern>
 
     <rule ref="Squiz.Commenting.FunctionComment">
         <properties>
