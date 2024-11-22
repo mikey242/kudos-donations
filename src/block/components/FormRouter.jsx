@@ -26,8 +26,13 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	const firstUpdate = useRef(true);
 	const methods = useForm({
 		defaultValues: {
-			defaultValues: campaign.meta,
 			recurring: false,
+			business_name: '',
+			city: '',
+			country: '',
+			postcode: '',
+			street: '',
+			message: '',
 		},
 	});
 
