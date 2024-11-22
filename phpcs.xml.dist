@@ -4,6 +4,12 @@
 
 	<exclude-pattern>/dist/*</exclude-pattern>
 
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <properties>
+            <property name="skipIfInheritdoc" value="true"/>
+        </properties>
+    </rule>
+
 	<rule ref="WordPress-Core">
 		<type>error</type>
 		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
@@ -23,7 +29,7 @@
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
 		<exclude name="Squiz.Commenting.ClassComment.Missing"/>
 		<exclude name="Squiz.Commenting.VariableComment.Missing"/>
-			</rule>
+    </rule>
 
 	<rule ref="WordPress-Extra">
 		<type>error</type>
