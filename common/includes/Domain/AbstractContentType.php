@@ -157,7 +157,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	 * {@inheritDoc}
 	 */
 	public static function get_registration_action_priority(): int {
-		return 5;
+		return 10;
 	}
 
 	/**
