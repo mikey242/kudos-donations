@@ -57,7 +57,7 @@
 	},
 	"scripts": {
 		"lint": "phpcs --severity=1 --standard=../phpcs.xml.dist --report=full --report-source",
-		"test-integration:gitlab": "vendor/bin/phpunit --do-not-cache-result",
+		"test-integration:gitlab": "vendor/bin/phpunit --do-not-cache-result --configuration=../phpunit.xml.dist",
 		"lint:gitlab": "vendor/bin/phpcs --severity=1 --standard=../phpcs.xml.dist --report=full --report-\\\\Micheh\\\\PhpCodeSniffer\\\\Report\\\\Gitlab=phpcs-quality-report.json",
 		"build-production": [
 			"composer install --optimize-autoloader --no-dev",
