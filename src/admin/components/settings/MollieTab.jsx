@@ -116,7 +116,7 @@ const MollieTab = () => {
 							type="button"
 							variant="link"
 							isBusy={checkingApiKey}
-							disabled={!isVendorReady}
+							disabled={!isVendorReady || checkingApiKey}
 							// icon="update"
 						>
 							{__('Refresh Payment Methods', 'kudos-donations')}
