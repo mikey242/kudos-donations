@@ -5,13 +5,8 @@ import { useFormContext } from 'react-hook-form';
 import { CheckboxControl } from '../controls';
 import { createInterpolateElement } from '@wordpress/element';
 
-export const SummaryTab = ({
-	title,
-	description,
-	privacyLink,
-	termsLink,
-	currency,
-}) => {
+export const SummaryTab = ({ campaign }) => {
+	const { meta } = campaign;
 	const { getValues } = useFormContext();
 	const values = getValues();
 
@@ -35,7 +30,10 @@ export const SummaryTab = ({
 	};
 
 	return (
-		<BaseTab title={title} description={description}>
+		<BaseTab
+			title={meta.payment_title}
+			description={meta.payment_description}
+		>
 			<div className="kudos_summary text-left block bg-gray-100 p-2 border-0 border-solid border-t-2 border-primary">
 				<p className="my-1">
 					<strong>{__('Name', 'kudos-donations')}: </strong>
@@ -55,14 +53,14 @@ export const SummaryTab = ({
 				</p>
 				<p className="my-1">
 					<strong>{__('Amount', 'kudos-donations')}: </strong>
-					<span>{`${window.kudos?.currencies[currency]} ${values.value}`}</span>
+					<span>{`${window.kudos?.currencies[meta.currency]} ${values.value}`}</span>
 				</p>
 				<p className="my-1">
 					<strong>{__('Type', 'kudos-donations')}: </strong>
 					<span>{recurringText()}</span>
 				</p>
 			</div>
-			{privacyLink && (
+			{meta.privacy_link && (
 				<CheckboxControl
 					name="privacy"
 					label={createInterpolateElement(
@@ -73,7 +71,7 @@ export const SummaryTab = ({
 								<a
 									target="_blank"
 									className="underline"
-									href={privacyLink}
+									href={meta.privacy_link}
 									rel="noreferrer"
 								></a>
 							),
@@ -87,7 +85,7 @@ export const SummaryTab = ({
 					}}
 				/>
 			)}
-			{termsLink && (
+			{meta.terms_link && (
 				<CheckboxControl
 					name="terms"
 					label={createInterpolateElement(
@@ -101,7 +99,7 @@ export const SummaryTab = ({
 								<a
 									target="_blank"
 									className="underline"
-									href={termsLink}
+									href={meta.terms_link}
 									rel="noreferrer"
 								></a>
 							),

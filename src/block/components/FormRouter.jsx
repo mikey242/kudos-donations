@@ -248,15 +248,7 @@ const Tab = ({ step, campaign }) => {
 				/>
 			);
 		case 5:
-			return (
-				<SummaryTab
-					title={campaign.meta.payment_title}
-					description={campaign.meta.payment_description}
-					currency={campaign.meta.currency}
-					privacyLink={campaign.meta.privacy_link}
-					termsLink={campaign.meta.terms_link}
-				/>
-			);
+			return <SummaryTab campaign={campaign} />;
 		default:
 			return null;
 	}
