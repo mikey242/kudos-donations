@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailchimp provider.
+ * VendorInterface
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations
  *
