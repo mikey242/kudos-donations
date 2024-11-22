@@ -10,7 +10,7 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\PDFService;
 use IseardMedia\Kudos\Service\TwigService;
-use IseardMedia\Kudos\Vendor\MollieVendor;
+use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 use Monolog\Logger;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -52,7 +52,7 @@ class Invoice extends WP_UnitTestCase {
 		);
 		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, $donor_id );
 		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID, 'tr_12345' );
-		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_VENDOR, MollieVendor::get_vendor_slug() );
+		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_VENDOR, MolliePaymentVendor::get_slug() );
 		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_SEQUENCE_TYPE, 'oneoff' );
 		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_INVOICE_NUMBER, 1 );
 		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_CURRENCY, 'EUR' );

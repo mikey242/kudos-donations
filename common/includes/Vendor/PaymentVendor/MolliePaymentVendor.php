@@ -9,10 +9,8 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Vendor;
+namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 
-use IseardMedia\Kudos\Container\AbstractRegistrable;
-use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
@@ -20,7 +18,7 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Service\EncryptionService;
+use IseardMedia\Kudos\Vendor\AbstractVendor;
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
@@ -37,7 +35,7 @@ use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSettingsInterface
+class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterface
 {
 	public const SETTING_API_MODE = '_kudos_vendor_mollie_api_mode';
 	public const SETTING_RECURRING = '_kudos_vendor_mollie_recurring';
@@ -46,23 +44,15 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	public const SETTING_API_KEY_ENCRYPTED_LIVE = '_kudos_vendor_mollie_api_key_encrypted_live';
 	public const SETTING_API_KEY_ENCRYPTED_TEST = '_kudos_vendor_mollie_api_key_encrypted_test';
 	public const SETTING_PAYMENT_METHODS = '_kudos_vendor_mollie_payment_methods';
-
-	/**
-     * The API mode (test or live).
-     *
-     * @var string
-     */
     private string $api_mode = 'test';
 	private MollieApiClient $api_client;
-	private EncryptionService $encryption;
 
 	/**
      * Mollie constructor.
      */
-    public function __construct( MollieApiClient $api_client, EncryptionService $encryption )
+    public function __construct( MollieApiClient $api_client )
     {
 	    $this->api_client = $api_client;
-		$this->encryption = $encryption;
 
 		// Handle API key saving.
 	    add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
@@ -74,14 +64,14 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	 */
 	public function register(): void {
 		$this->api_mode   = get_option( self::SETTING_API_MODE );
-		$this->config_client($this->api_mode);
+		$this->config_client();
 		$this->set_user_agent();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_vendor_name(): string
+	public static function get_name(): string
 	{
 		return 'Mollie';
 	}
@@ -89,7 +79,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_vendor_slug(): string
+	public static function get_slug(): string
 	{
 		return 'mollie';
 	}
@@ -98,10 +88,11 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 	 * {@inheritDoc}
 	 */
 	public function is_ready(): bool {
-		$keys = $this->get_decrypted_api_keys();
-		$mode = $this->api_mode;
+        $mode = $this->api_mode;
+        $option = constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode));
+		$key = $this->get_decrypted_key($option);
 		$methods = get_option(self::SETTING_PAYMENT_METHODS);
-		return !empty($keys[$mode]) && !empty($methods) ?? false;
+		return !empty($key) && !empty($methods) ?? false;
 	}
 
 	/**
@@ -117,10 +108,11 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
     /**
      * Change the API client to the key for the specified mode.
      */
-    private function config_client(?string $mode): void {
-        $this->api_mode = $mode;
+    protected function config_client(): void {
         // Gets the key associated with the specified mode.
-	    $key = $this->get_decrypted_api_keys()[$mode] ?? false;
+        $mode = $this->api_mode;
+        $option = constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode));
+        $key = $this->get_decrypted_key($option);
 
         if ($key) {
             try {
@@ -151,8 +143,6 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 
 	/**
 	 * Uses get_payment_methods to determine if account can receive recurring payments.
-	 *
-	 * @return bool
 	 */
 	private function can_use_recurring(): bool
 	{
@@ -167,13 +157,45 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 		return false;
 	}
 
+    /**
+     * Handles the saving of the test and live api keys.
+     *
+     * @param string $value The new value.
+     * @param string $old_value The previous value.
+     * @param string $option The option name.
+     *
+     * @return string|WP_Error
+     */
+    public function handle_key_update( string $value, string $old_value, string $option): string {
+        // Determine whether the option is LIVE or TEST.
+        if($option === self::SETTING_API_KEY_LIVE) {
+            $mode = 'live';
+        } else {
+            $mode = 'test';
+        }
+
+        // Define which encrypted key to update.
+        $encrypted_option = constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode) );
+
+        if(!$value) {
+            // Clear value.
+            update_option($encrypted_option,'');
+            update_option(self::SETTING_PAYMENT_METHODS, []);
+            return $value;
+        } else {
+            // Save encrypted value and return only '*'.
+            return $this->save_encrypted_key($value, $encrypted_option, [$this, 'refresh']);
+        }
+    }
+
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function refresh_api(): WP_REST_Response {
-
+	public function refresh(): bool
+    {
 		try {
+            $this->config_client();
 			// Rebuild Mollie settings.
 			$payment_methods = array_map(function (Method $method) {
 				return [
@@ -184,6 +206,8 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 					'maximumAmount' => (array)$method->maximumAmount,
 				];
 			}, (array)$this->get_active_payment_methods());
+
+            $this->logger->debug('Mollie payment methods', $payment_methods);
 
 			// Handle SEPA Direct Debit separately.
 			$sepa = $this->api_client->methods->get(PaymentMethod::DIRECTDEBIT);
@@ -198,14 +222,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 			}
 
 			if(empty($payment_methods)) {
-				return new WP_REST_Response(
-					[
-						'success' => false,
-						'message' =>
-							__( 'No payment methods found. Please check your API keys', 'kudos-donations' ),
-					],
-					200
-				);
+                return false;
 			}
 
 			$this->logger->debug('Mollie refreshed connection settings', [$payment_methods]);
@@ -219,132 +236,13 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 			// Update recurring status.
 			update_option(self::SETTING_RECURRING, $this->can_use_recurring());
 
-			return new WP_REST_Response(
-				[
-					'success' => true,
-					'message' =>
-						__( 'Payment methods refreshed', 'kudos-donations' ),
-				],
-				200
-			);
+            return true;
 		} catch (ApiException $e) {
 			$this->logger->critical($e->getMessage());
 		}
 
-		return new WP_REST_Response(
-			[
-				'success' => false,
-				'message' =>
-					__( 'There was an error refreshing payment methods. Please check the log for more information.', 'kudos-donations' ),
-			],
-			200
-		);
+        return false;
 	}
-
-	/**
-	 * Returns the decrypted API keys.
-	 *
-	 * @return array
-	 */
-	private function get_decrypted_api_keys(): array {
-		$api_keys = [];
-		foreach (['live', 'test'] as $key) {
-			add_filter( 'option_' . constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($key)), [ $this->encryption, 'decrypt_password' ] );
-			$api_keys[$key] = get_option( constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($key)) );
-			remove_filter('option_' . constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($key)), [ $this->encryption, 'decrypt_password' ]);
-		}
-		return $api_keys;
-	}
-
-	/**
-	 * Handles the saving of the test and live api keys.
-	 *
-	 * @param string $value The new value.
-	 * @param string $old_value The previous value.
-	 * @param string $option The option name.
-	 *
-	 * @return string|WP_Error
-	 */
-	public function handle_key_update( string $value, string $old_value, string $option) {
-
-		// Determine whether the option is LIVE or TEST.
-		if($option === self::SETTING_API_KEY_LIVE) {
-			$mode = 'live';
-		} else {
-			$mode = 'test';
-		}
-
-		// Clear value.
-		if(!$value) {
-			update_option(constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode) ),'');
-			update_option(self::SETTING_PAYMENT_METHODS, []);
-			return $value;
-		} else {
-			$result = $this->verify_key($value, $mode);
-			if(is_wp_error($result)) {
-				return rest_ensure_response($result);
-			}
-			$this->refresh_api();
-			return $result;
-		}
-	}
-
-	/**
-	 * Encrypts the raw key and saves it in another setting.
-	 *
-	 * @param string $raw_key The unencrypted key.
-	 * @param string $mode The api mode the key is for.
-	 *
-	 * @return string
-	 */
-	private function verify_key( string $raw_key, string $mode): string {
-		// Bail if this is only asterisks.
-		$num_asterisks = substr_count( $raw_key, '*' );
-		$count         = \strlen( $raw_key );
-		if ( $num_asterisks !== $count ) {
-			// Check that key works before saving.
-			$key_valid = apply_filters("kudos_mollie_" . $mode . "_key_validation", $this->is_key_valid($raw_key));
-			if($key_valid) {
-				$encrypted_key = $this->encryption->encrypt_password($raw_key);
-				$raw_key = str_repeat( '*', strlen($raw_key) );
-				update_option(constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode) ), $encrypted_key);
-			} else {
-				wp_send_json_error(
-					// translators: %s is the API mode (test or live).
-					['message' => wp_sprintf(__('%s API key invalid.', 'kudos-donations'), $mode)],
-					400
-				);
-			}
-		}
-		return $raw_key;
-	}
-
-    /**
-     * Checks the provided api key by attempting to get associated payments.
-     *
-     * @param string $api_key API key to test.
-     *
-     * @return bool
-     */
-    private function is_key_valid(string $api_key): bool
-    {
-        if ( ! $api_key) {
-            return false;
-        }
-
-        try {
-            // Perform test call to verify api key.
-            $mollie_api = $this->api_client;
-            $mollie_api->setApiKey($api_key);
-            $mollie_api->payments->page();
-
-            return true;
-        } catch (ApiException $e) {
-            $this->logger->critical($e->getMessage());
-
-            return false;
-        }
-    }
 
     /**
      * Gets a list of payment methods for the current Mollie account
@@ -385,7 +283,6 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
         try {
             $response = $customer->cancelSubscription($subscription->{SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID});
 
-            /** @var Subscription $response */
             return ($response->status === PaymentStatus::CANCELED);
         } catch (ApiException $e) {
             $this->logger->error($e->getMessage());
@@ -493,7 +390,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
             $payment = $this->api_client->payments->create($payment_array);
 
             $this->logger->info(
-                "New " . $this->get_vendor_name() . " payment created.",
+                "New " . $this->get_name() . " payment created.",
                 ['transaction_id' => $transaction_id, 'sequence_type' => $payment->sequenceType]
             );
 
@@ -630,7 +527,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
 
         // Log request.
         $this->logger->info(
-            "Webhook requested by " . $this::get_vendor_name(),
+            "Webhook requested by " . $this::get_name(),
             [
                 'payment_id' => $payment_id,
             ]
@@ -786,7 +683,7 @@ class MollieVendor extends AbstractRegistrable implements VendorInterface, HasSe
                 $this->logger->info('Payment refunded.', ['transaction' => $transaction]);
             }
         } catch (ApiException $e) {
-            $this->logger->error($this::get_vendor_name() . " webhook exception: " . $e->getMessage(), ['payment_id' => $payment_id]);
+            $this->logger->error($this::get_name() . " webhook exception: " . $e->getMessage(), ['payment_id' => $payment_id]);
 
             // Send fail response to Mollie so that they know to try again.
             return rest_ensure_response(

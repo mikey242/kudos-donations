@@ -44,7 +44,7 @@ if ( ! \defined( 'WPINC' ) ) {
 \define( 'KUDOS_AUTH_KEY', AUTH_KEY );
 \define( 'KUDOS_AUTH_SALT', AUTH_SALT );
 
-require KUDOS_PLUGIN_DIR . 'includes/Autoloader.php';
+require KUDOS_PLUGIN_DIR . 'common/includes/Autoloader.php';
 
 // Autoloader for plugin.
 if ( ! Autoloader::init() ) {
@@ -52,8 +52,8 @@ if ( ! Autoloader::init() ) {
 }
 
 // Action Scheduler.
-if ( file_exists( KUDOS_PLUGIN_DIR . '/vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
-	include KUDOS_PLUGIN_DIR . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+if ( file_exists( KUDOS_PLUGIN_DIR . 'common/vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
+	include KUDOS_PLUGIN_DIR . 'common/vendor/woocommerce/action-scheduler/action-scheduler.php';
 }
 
 // Load the environment variables.
@@ -80,4 +80,4 @@ if ( KUDOS_ENV_IS_DEVELOPMENT && class_exists( '\Whoops\Run' ) ) {
 	$whoops->register();
 }
 
-require KUDOS_PLUGIN_DIR . '/includes/namespace.php';
+require KUDOS_PLUGIN_DIR . 'common/includes/namespace.php';

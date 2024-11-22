@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\Container\EncryptionAwareInterface;
+use IseardMedia\Kudos\Container\EncryptionAwareTrait;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
@@ -22,7 +24,9 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_Error;
 
-class MailerService extends AbstractRegistrable implements HasSettingsInterface {
+class MailerService extends AbstractRegistrable implements HasSettingsInterface, EncryptionAwareInterface {
+
+	use EncryptionAwareTrait;
 
 	public const SETTING_CUSTOM_SMTP             = '_kudos_custom_smtp';
 	public const SETTING_SMTP_ENABLE             = '_kudos_smtp_enable';
@@ -31,7 +35,6 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	public const SETTING_SMTP_PASSWORD           = '_kudos_smtp_password';
 	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
 	private TwigService $twig;
-	private EncryptionService $encryption;
 	private bool $enable_custom_smtp;
 	private ?string $bcc;
 	private array $custom_smtp_config;
@@ -39,12 +42,10 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	/**
 	 * Mailer constructor.
 	 *
-	 * @param TwigService       $twig Twig service.
-	 * @param EncryptionService $encryption Used for decrypting SMTP password.
+	 * @param TwigService $twig Twig service.
 	 */
-	public function __construct( TwigService $twig, EncryptionService $encryption ) {
+	public function __construct( TwigService $twig ) {
 		$this->twig               = $twig;
-		$this->encryption         = $encryption;
 		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE, false );
 		$this->bcc                = get_option( self::SETTING_EMAIL_BCC, '' );
 		$this->custom_smtp_config = get_option( self::SETTING_CUSTOM_SMTP, [] );
@@ -71,16 +72,6 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 */
 	public static function get_registration_action(): string {
 		return 'kudos_mailer_send';
-	}
-
-	/**
-	 * Returns the decrypted SMTP password.
-	 */
-	private function get_decrypted_smtp_password(): string {
-		add_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
-		$password = get_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED );
-		remove_filter( 'option_' . self::SETTING_SMTP_PASSWORD_ENCRYPTED, [ $this->encryption, 'decrypt_password' ] );
-		return $password;
 	}
 
 	/**
@@ -120,7 +111,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 			$this->logger->debug( 'Using custom SMTP config' );
 
 			// Get password.
-			$password = $this->get_decrypted_smtp_password();
+			$password = $this->get_decrypted_key( self::SETTING_SMTP_PASSWORD_ENCRYPTED );
 
 			$phpmailer->isSMTP();
 			$phpmailer->Host        = $custom_config['host'];
@@ -305,27 +296,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 * @return string The masked password.
 	 */
 	public function encrypt_smtp_password( ?string $raw_password ): string {
-
-		// Reset password.
-		if ( ! $raw_password ) {
-			update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, '' );
-			return '';
-		}
-
-		// Bail if this is only asterisks.
-		$num_asterisks = substr_count( $raw_password, '*' );
-		$count         = \strlen( $raw_password );
-		if ( $num_asterisks === $count ) {
-			return $raw_password;
-		}
-		// Encrypt the password.
-		$encrypted_password = $this->encryption->encrypt_password( $raw_password );
-
-		// Update the encrypted password in the database.
-		update_option( self::SETTING_SMTP_PASSWORD_ENCRYPTED, $encrypted_password );
-
-		// Replace the password with asterisks in the settings array.
-		return str_repeat( '*', $count );
+		return $this->save_encrypted_key( $raw_password, self::SETTING_SMTP_PASSWORD_ENCRYPTED );
 	}
 
 	/**

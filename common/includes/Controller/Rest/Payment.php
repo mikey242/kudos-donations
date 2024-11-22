@@ -16,7 +16,7 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Vendor\VendorInterface;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -33,9 +33,9 @@ class Payment extends AbstractRestController {
 	/**
 	 * PaymentRoutes constructor.
 	 *
-	 * @param VendorInterface $vendor Current vendor.
+	 * @param PaymentVendorInterface $vendor Current vendor.
 	 */
-	public function __construct( VendorInterface $vendor ) {
+	public function __construct( PaymentVendorInterface $vendor ) {
 		parent::__construct();
 
 		$this->rest_base = 'payment';
@@ -263,7 +263,7 @@ class Payment extends AbstractRestController {
 				TransactionPostType::META_FIELD_SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
 				TransactionPostType::META_FIELD_CAMPAIGN_ID => (int) $args['campaign_id'],
 				TransactionPostType::META_FIELD_MESSAGE  => $args['message'],
-				TransactionPostType::META_FIELD_VENDOR   => $this->vendor::get_vendor_slug(),
+				TransactionPostType::META_FIELD_VENDOR   => $this->vendor::get_slug(),
 				TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID => $vendor_customer_id,
 			]
 		);
@@ -296,7 +296,26 @@ class Payment extends AbstractRestController {
 	 * Check the vendor api key associated with the mode. Sends a JSON response.
 	 */
 	public function test_connection(): WP_REST_Response {
-		return $this->vendor->refresh_api();
+		$result = $this->vendor->refresh();
+		if ( $result ) {
+			return new WP_REST_Response(
+				[
+					'success' => true,
+					'message' =>
+						__( 'Payment methods refreshed', 'kudos-donations' ),
+				],
+				200
+			);
+		} else {
+			return new WP_REST_Response(
+				[
+					'success' => false,
+					'message' =>
+						__( 'There was an error refreshing payment methods. Please check the log for more information.', 'kudos-donations' ),
+				],
+				200
+			);
+		}
 	}
 
 	/**
@@ -306,7 +325,7 @@ class Payment extends AbstractRestController {
 	 * @return WP_ERROR | WP_REST_Response
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
-		do_action( 'kudos_' . $this->vendor::get_vendor_slug() . '_webhook_requested', $request );
+		do_action( 'kudos_' . $this->vendor::get_slug() . '_webhook_requested', $request );
 		return $this->vendor->rest_webhook( $request );
 	}
 

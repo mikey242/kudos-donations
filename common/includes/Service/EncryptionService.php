@@ -122,10 +122,9 @@ class EncryptionService extends AbstractRegistrable {
 	 * @return string|array|false Returns string if parameter is string and array if parameter is array.
 	 */
 	public function decrypt_password( $raw_value ) {
-
 		// No raw value.
 		if ( ! $raw_value ) {
-			return false;
+			return '';
 		}
 
 		if ( ! \extension_loaded( 'openssl' ) ) {
@@ -135,11 +134,10 @@ class EncryptionService extends AbstractRegistrable {
 
 		// If parameter is array, rerun with string as parameter.
 		if ( \is_array( $raw_value ) ) {
-			$result = [];
-			foreach ( $raw_value as $key => $value ) {
-				$result[ $key ] = $this->decrypt_password( $value );
-			}
-			return $result;
+			return array_map(
+				fn( $value ) => $this->decrypt_password( $value ),
+				$raw_value
+			);
 		}
 
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode

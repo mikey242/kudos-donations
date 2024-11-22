@@ -10,7 +10,7 @@ variables:
 # Script snippets for installing Composer and NPM
 .script_install_composer: &script_install_composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - composer install --no-ansi --no-interaction --no-progress --prefer-dist
+    - composer install --no-ansi --no-interaction --no-progress --prefer-dist --working-dir=./common
 
 .script_install_npm: &script_install_npm
     - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -33,7 +33,7 @@ validate-composer:
     stage: validate
     cache: []
     script:
-        - composer --no-ansi validate
+        - composer --no-ansi validate --working-dir=./common
 
 # Linting PHP code
 lint-php:
@@ -47,7 +47,7 @@ lint-php:
     before_script:
         - *script_install_composer
     script:
-        - composer run lint:gitlab
+        - composer run lint:gitlab --working-dir=./common
 
 # Linting JS and CSS code
 lint-js-css:

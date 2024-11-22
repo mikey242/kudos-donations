@@ -1,27 +1,27 @@
 <?php
 
-namespace IseardMedia\Kudos\Vendor;
+namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 
 use WP_Error;
 use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
 
-interface VendorInterface
+interface PaymentVendorInterface
 {
     /**
      * Returns the name of the vendor.
      *
      * @return string
      */
-    public static function get_vendor_name(): string;
+    public static function get_name(): string;
 
 	/**
 	 * Gets the vendor slug for identification.
 	 *
 	 * @return string
 	 */
-	public static function get_vendor_slug(): string;
+	public static function get_slug(): string;
 
     /**
      * Returns true if vendor supports recurring payments.
@@ -33,7 +33,7 @@ interface VendorInterface
 	/**
 	 * Refresh the local vendor settings.
 	 */
-	public function refresh_api();
+	public function refresh();
 
     /**
      * Cancel the specified subscription.

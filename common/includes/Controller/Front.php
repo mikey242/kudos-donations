@@ -21,22 +21,22 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\SettingsService;
-use IseardMedia\Kudos\Vendor\VendorInterface;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
 
 class Front extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
-	private VendorInterface $vendor;
+	private PaymentVendorInterface $vendor;
 	private array $view_script_handles = [];
 	private array $style_handles;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param VendorInterface $vendor Payment vendors.
+	 * @param PaymentVendorInterface $vendor Payment vendors.
 	 */
-	public function __construct( VendorInterface $vendor ) {
+	public function __construct( PaymentVendorInterface $vendor ) {
 		$this->vendor = $vendor;
 	}
 
@@ -147,7 +147,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				$message = sprintf(
 				/* translators: %s: Payment vendor (e.g. Mollie). */
 					__( '%s not connected.', 'kudos-donations' ),
-					$this->vendor::get_vendor_name()
+					$this->vendor::get_name()
 				);
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
 			}
@@ -296,7 +296,6 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			]
 		);
 	}
-
 
 	/**
 	 * {@inheritDoc}

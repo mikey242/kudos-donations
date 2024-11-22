@@ -17,7 +17,7 @@ use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\MailerService;
-use IseardMedia\Kudos\Vendor\MollieVendor;
+use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 
 class Version400 extends AbstractMigration {
 
@@ -47,17 +47,17 @@ class Version400 extends AbstractMigration {
 		$live_key      = $vendor_mollie['live_key'] ?? null;
 		$mode          = $vendor_mollie['mode'] ?? 'test';
 
-		update_option( MollieVendor::SETTING_API_MODE, $mode );
+		update_option( MolliePaymentVendor::SETTING_API_MODE, $mode );
 
 		if ( $live_key ) {
 			add_filter( 'kudos_mollie_live_key_validation', '__return_true' );
-			update_option( MollieVendor::SETTING_API_KEY_LIVE, $live_key );
+			update_option( MolliePaymentVendor::SETTING_API_KEY_LIVE, $live_key );
 			remove_filter( 'kudos_mollie_live_key_validation', '__return_true' );
 		}
 
 		if ( $test_key ) {
 			add_filter( 'kudos_mollie_test_key_validation', '__return_true' );
-			update_option( MollieVendor::SETTING_API_KEY_TEST, $test_key );
+			update_option( MolliePaymentVendor::SETTING_API_KEY_TEST, $test_key );
 			remove_filter( 'kudos_mollie_test_key_validation', '__return_true' );
 		}
 

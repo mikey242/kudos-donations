@@ -11,12 +11,14 @@ declare( strict_types=1 );
 
 use Dompdf\Dompdf;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
+use IseardMedia\Kudos\Container\EncryptionAwareInterface;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Container\Registrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
-use IseardMedia\Kudos\Vendor\VendorFactory;
-use IseardMedia\Kudos\Vendor\VendorInterface;
+use IseardMedia\Kudos\Service\EncryptionService;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use Mollie\Api\MollieApiClient;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\WhatFailureGroupHandler;
@@ -27,7 +29,6 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function ( ContainerConfigurator $container ) {
-
 	// Config defaults.
 	$services = $container->services()
 		->defaults()
@@ -67,6 +68,10 @@ return static function ( ContainerConfigurator $container ) {
 	$services->instanceof( LoggerAwareInterface::class )
 		->call( 'setLogger', [ service( LoggerInterface::class ) ] );
 
+	// Set encryption service on required services.
+	$services->instanceof( EncryptionAwareInterface::class )
+		->call( 'set_encryption', [ service( EncryptionService::class ) ] );
+
 	// Tag services.
 	$services->instanceof( Registrable::class )
 		->tag( 'kudos.registrable' );
@@ -80,8 +85,8 @@ return static function ( ContainerConfigurator $container ) {
 		->tag( 'kudos.migration' );
 
 	// Vendor.
-	$services->set( VendorInterface::class )
-		->factory( [ service( VendorFactory::class ), 'create' ] )
+	$services->set( PaymentVendorInterface::class )
+		->factory( [ service( PaymentVendorFactory::class ), 'create' ] )
 		->args(
 			[
 				service( 'service_container' ),
@@ -93,9 +98,26 @@ return static function ( ContainerConfigurator $container ) {
 		->set( Dompdf::class )
 		->set( MollieApiClient::class );
 
-	// Load resources with exclusions.
-	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
-		->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php}' );
+	// Load base plugin.
+	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'common/includes/*' )
+		->exclude( KUDOS_PLUGIN_DIR . 'common/includes/{namespace.php,functions.php,helpers.php,index.php}' );
+
+	// Load premium plugin.
+	if ( \IseardMedia\Kudos\kd_fs()->is__premium_only() ) {
+		// Newsletter providers.
+		$services->set( \IseardMedia\Kudos\Vendor\VendorInterface::class )
+			->factory( [ service( IseardMedia\KudosPremium\NewsletterProvider\NewsletterProviderFactory::class ), 'create' ] )
+			->args(
+				[
+					service( 'service_container' ),
+				]
+			);
+		$services->load( 'IseardMedia\KudosPremium\\', KUDOS_PLUGIN_DIR . 'premium/includes/*' )
+			->exclude( KUDOS_PLUGIN_DIR . 'premium/includes/{namespace.php,functions.php,helpers.php,index.php}' );
+		$services
+			->set( MailchimpMarketing\ApiClient::class )
+			->set( MailerLite\MailerLite::class );
+	}
 
 	// Filter for adding additional services.
 	apply_filters( 'kudos_container_configurator', $services );

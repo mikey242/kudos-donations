@@ -1,6 +1,6 @@
 services:
 includes:
-	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
+	- common/vendor/phpstan/phpstan/conf/bleedingEdge.neon
 
 parameters:
   level: 5

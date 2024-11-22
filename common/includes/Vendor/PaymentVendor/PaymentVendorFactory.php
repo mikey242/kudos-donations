@@ -9,26 +9,26 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Vendor;
+namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 
 use IseardMedia\Kudos\Service\PaymentService;
+use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class VendorFactory
-{
+class PaymentVendorFactory {
 
 	/**
 	 * @throws ContainerExceptionInterface
 	 * @throws NotFoundExceptionInterface
 	 */
-	public function create(ContainerInterface $container): ?VendorInterface
-	{
-		$vendor = get_option( PaymentService::SETTING_VENDOR, 'mollie' );
-		$vendorClass = $this->get_vendor($vendor);
-		if ($vendorClass) {
-			return $container->get($vendorClass);
+	public function create( ContainerInterface $container ): ?PaymentVendorInterface {
+		$vendor       = get_option( PaymentService::SETTING_VENDOR, 'mollie' );
+		$vendor_class = $this->get_vendor( $vendor );
+		if ( $vendor_class ) {
+			return $container->get( $vendor_class );
 		}
 		return null;
 	}
@@ -37,11 +37,12 @@ class VendorFactory
 	 * Returns the vendor class for the specified name.
 	 *
 	 * @param string $name The vendor name.
+	 * @param string $key The key to return.
 	 */
-	public function get_vendor(string $name, string $key = 'class'): ?string {
+	public function get_vendor( string $name, string $key = 'class' ): ?string {
 		$vendors = $this->get_vendors();
 
-		if ( ! isset( $vendors[ $name ][$key] ) || ! is_a($vendors[ $name ]['class'], VendorInterface::class, true) ) {
+		if ( ! isset( $vendors[ $name ][ $key ] ) || ! is_a( $vendors[ $name ]['class'], PaymentVendorInterface::class, true ) ) {
 			return null;
 		}
 
@@ -55,9 +56,9 @@ class VendorFactory
 	 */
 	public function get_vendors(): array {
 		$vendors = [
-			'mollie'     => [
+			'mollie' => [
 				'label' => __( 'Mollie', 'kudos-donations' ),
-				'class' => MollieVendor::class,
+				'class' => MolliePaymentVendor::class,
 			],
 		];
 

@@ -13,10 +13,10 @@
 			"php": "7.4"
 		},
 		"allow-plugins": {
-			"typisttech/imposter-plugin": false,
+			"automattic/jetpack-autoloader": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"phpstan/extension-installer": true,
-			"automattic/jetpack-autoloader": true
+			"typisttech/imposter-plugin": false
 		}
 	},
 	"require": {
