@@ -72,7 +72,7 @@ abstract class AbstractCustomPostType extends AbstractContentType implements Cus
 		}
 
 		if ( is_a( $this, HasRestFieldsInterface::class ) ) {
-			$this->register_rest_fields( $this->get_rest_fields(), $this->get_slug() );
+			$this->register_rest_fields( apply_filters( $this->get_slug() . '_rest_fields', $this->get_rest_fields() ), $this->get_slug() );
 		}
 
 		if ( is_a( $this, HasAdminColumns::class ) ) {
