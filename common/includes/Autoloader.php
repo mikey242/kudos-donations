@@ -26,10 +26,6 @@ class Autoloader {
 	public static function init(): bool {
 		$autoloaders = [ \dirname( __DIR__ ) . '/vendor/autoload_packages.php' ];
 
-		if ( ! is_readable( $autoloader ) ) {
-			self::missing_autoloader();
-			return false;
-		}
 		foreach ( $autoloaders as $autoloader ) {
 			if ( ! is_readable( $autoloader ) ) {
 				self::missing_autoloader();

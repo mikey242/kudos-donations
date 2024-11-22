@@ -42,7 +42,7 @@ lint-php:
     cache:
         key: composer.lock
         paths:
-            - vendor/
+            - common/vendor/
         policy: push
     before_script:
         - *script_install_composer
@@ -75,7 +75,7 @@ build-job:
     cache:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
-            - vendor/
+            - common/vendor/
             - node_modules/
             - build/
     when: on_success
@@ -103,7 +103,7 @@ test-job:
     cache:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
-            - vendor/
+            - common/vendor/
             - node_modules/
             - build/
 
@@ -129,7 +129,7 @@ zip-job:
     cache:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
-            - vendor/
+            - common/vendor/
             - node_modules/
             - build/
 
