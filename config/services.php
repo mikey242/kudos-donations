@@ -114,9 +114,6 @@ return static function ( ContainerConfigurator $container ) {
 			);
 		$services->load( 'IseardMedia\KudosPremium\\', KUDOS_PLUGIN_DIR . 'premium/includes/*' )
 			->exclude( KUDOS_PLUGIN_DIR . 'premium/includes/{namespace.php,functions.php,helpers.php,index.php}' );
-		$services
-			->set( MailchimpMarketing\ApiClient::class )
-			->set( MailerLite\MailerLite::class );
 	}
 
 	// Filter for adding additional services.
