@@ -2,9 +2,6 @@
 <ruleset name="Kudos Donations WP PHP Coding Standards Rules">
 	<config name="minimum_supported_wp_version" value="6.2"/>
 
-	<exclude-pattern>/dist/*</exclude-pattern>
-	<exclude-pattern>/freemius/*</exclude-pattern>
-
     <rule ref="Squiz.Commenting.FunctionComment">
         <properties>
             <property name="skipIfInheritdoc" value="true"/>
@@ -25,7 +22,6 @@
 
 	<rule ref="WordPress-Docs">
 		<type>error</type>
-		<exclude-pattern>tests/*</exclude-pattern>
 		<!-- Documentation is organized with the use of namespaces. -->
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
 		<exclude name="Squiz.Commenting.ClassComment.Missing"/>
@@ -36,19 +32,6 @@
 		<type>error</type>
 		<exclude name="WordPress.Files.FileName"/>
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
-	</rule>
-
-	<rule ref="WordPress.Security.NonceVerification">
-		<exclude-pattern>tests/*</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.WP.GlobalVariablesOverride.Prohibited">
-		<exclude-pattern>tests/*</exclude-pattern>
-	</rule>
-
-	<rule ref="WordPress.WP.EnqueuedResources">
-		<type>error</type>
-		<exclude-pattern>tests/*</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.WP.I18n" />
@@ -233,14 +216,15 @@
 	<!-- Check up to 20 files simultaneously. -->
 	<arg name="parallel" value="20"/>
 
+	<!-- Tests -->
+	<exclude-pattern>*/tests/*</exclude-pattern>
+
 	<!-- Third-party or auto-generated code -->
 	<exclude-pattern>*/build/*</exclude-pattern>
-	<exclude-pattern>*/cache/*</exclude-pattern>
-	<exclude-pattern>*/data/*</exclude-pattern>
+	<exclude-pattern>*/wordpress/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/third-party/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>assets/js/*.asset.php</exclude-pattern>
-	<exclude-pattern>assets/js/*.chunks.php</exclude-pattern>
-	<exclude-pattern>tests/phpstan/*</exclude-pattern>
+    <exclude-pattern>*/dist/*</exclude-pattern>
+    <exclude-pattern>*/freemius/*</exclude-pattern>
 </ruleset>
