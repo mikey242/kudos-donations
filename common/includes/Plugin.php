@@ -76,7 +76,7 @@ class Plugin implements LoggerAwareInterface {
 	/**
 	 * Loading our plugin's text domain and letting WordPress know where to find its translations.
 	 */
-	protected function setup_localization(): void {
+	private function setup_localization(): void {
 		add_action(
 			'init',
 			static function (): void {
