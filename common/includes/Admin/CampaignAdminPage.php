@@ -75,11 +75,16 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		wp_localize_script(
 			'kudos-donations-campaigns',
 			'kudos',
-			[
-				'version'    => KUDOS_VERSION,
-				'currencies' => Utils::get_currencies(),
-				'codeEditor' => $settings,
-			]
+			apply_filters(
+				'kudos_global_localization',
+				apply_filters(
+					'kudos_campaigns_page_localization',
+					[
+						'currencies' => Utils::get_currencies(),
+						'codeEditor' => $settings,
+					]
+				)
+			)
 		);
 		wp_set_script_translations(
 			'kudos-donations-campaigns',
