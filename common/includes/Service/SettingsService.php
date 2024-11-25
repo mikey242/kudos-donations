@@ -20,7 +20,6 @@ class SettingsService implements HasSettingsInterface {
 	public const SETTING_BASE_FONT_SIZE   = '_kudos_base_font_size';
 	public const SETTING_MAXIMUM_DONATION = '_kudos_maximum_donation';
 	public const SETTING_ALLOW_METRICS    = '_kudos_allow_metrics';
-	public const SETTING_PLUGIN_VERSION   = '_kudos_donations_version';
 
 	/**
 	 * Returns the value for a given setting.
@@ -126,10 +125,6 @@ class SettingsService implements HasSettingsInterface {
 				'type'         => FieldType::BOOLEAN,
 				'show_in_rest' => true,
 				'default'      => false,
-			],
-			self::SETTING_PLUGIN_VERSION   => [
-				'type'         => FieldType::STRING,
-				'show_in_rest' => true,
 			],
 		];
 	}

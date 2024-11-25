@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Service\MigrationService;
 use IseardMedia\Kudos\Service\NoticeService;
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -69,7 +70,7 @@ class Migration extends AbstractRestController {
 	 * Handles a request for running migrations.
 	 *
 	 * @param WP_REST_Request $request Request array.
-	 * @return WP_REST_Response | \WP_Error
+	 * @return WP_REST_Response | WP_Error
 	 */
 	public function rest_migrate_handler( WP_REST_Request $request ) {
 		$batch_size = (int) $request->get_param( 'batch_size' );
@@ -92,7 +93,7 @@ class Migration extends AbstractRestController {
 			if ( ! $this->run_migration( $migration ) ) {
 				NoticeService::add_notice( __( 'Migration failed to run. Please check the log for more information.', 'kudos-donations' ), NoticeService::ERROR );
 				update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
-				return new \WP_Error(
+				return new WP_Error(
 					'migration_failed',
 					__( 'Migration failed', 'kudos-donations' ),
 					[ 'migration' => $migration->get_version() ]

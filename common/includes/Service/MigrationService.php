@@ -27,6 +27,7 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	public const SETTING_MIGRATION_HISTORY = '_kudos_migration_history';
 	public const SETTING_MIGRATION_STATUS  = '_kudos_migration_status';
 	public const SETTING_MIGRATION_BUSY    = '_kudos_migration_busy';
+	public const SETTING_PLUGIN_VERSION = '_kudos_donations_version';
 	private string $current_version;
 	private string $target_version;
 	/**
@@ -46,7 +47,7 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 		$this->wpdb            = $wpdb;
 		$db_version            = get_option( self::SETTING_DB_VERSION );
 		$this->current_version = ( false === $db_version || '' === $db_version )
-			? get_option( SettingsService::SETTING_PLUGIN_VERSION, '' )
+			? get_option( self::SETTING_PLUGIN_VERSION, '' )
 			: $db_version;
 		$this->target_version  = KUDOS_DB_VERSION;
 	}
@@ -89,7 +90,7 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 		}
 
 		// Get all the migration files.
-		$migration_files = glob( KUDOS_PLUGIN_DIR . 'includes/Migrations/*.php' );
+		$migration_files = glob( KUDOS_PLUGIN_DIR . 'common/includes/Migrations/*.php' );
 
 		foreach ( $migration_files as $migration_file ) {
 			$class_name = $this->get_class_from_file( $migration_file );
@@ -183,6 +184,10 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 				'default'      => [],
 			],
 			self::SETTING_DB_VERSION        => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
+			],
+			self::SETTING_PLUGIN_VERSION    => [
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
 			],
