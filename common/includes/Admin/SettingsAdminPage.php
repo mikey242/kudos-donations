@@ -69,19 +69,18 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			]
 		);
 
+		$localized_data = apply_filters(
+			'kudos_settings_page_localization',
+			[
+				'migrations_pending' => (bool) get_option( '_kudos_migrations_pending' ),
+				'stylesheets'        => [ Assets::get_style( 'admin/kudos-admin-settings.jsx.css' ) ],
+			]
+		);
+
 		wp_localize_script(
 			'kudos-donations-settings',
 			'kudos',
-			apply_filters(
-				'kudos_global_localization',
-				apply_filters(
-					'kudos_settings_page_localization',
-					[
-						'migrations_pending' => (bool) get_option( '_kudos_migrations_pending' ),
-						'stylesheets'        => [ Assets::get_style( 'admin/kudos-admin-settings.jsx.css' ) ],
-					]
-				)
-			)
+			apply_filters( 'kudos_global_localization', $localized_data )
 		);
 		wp_set_script_translations( 'kudos-donations-settings', 'kudos-donations' );
 	}
