@@ -26,42 +26,17 @@ use Kudos\Service\MapperService;
 use Kudos\Service\PaymentService;
 use Kudos\Service\TwigService;
 use Kudos\Service\Vendor\MollieVendor;
+use WP_List_Table;
 
 class Admin {
-	/**
-	 * The version of this plugin.
-	 *
-	 * @var string $version The current version of this plugin.
-	 */
-	private $version;
-	/**
-	 * @var MapperService
-	 */
-	private $mapper;
-	/**
-	 * @var TransactionsTable
-	 */
-	private $table;
-	/**
-	 * @var TwigService
-	 */
-	private $twig;
-	/**
-	 * @var PaymentService
-	 */
-	private $payment;
-	/**
-	 * @var ActivatorService
-	 */
-	private $activator;
-	/**
-	 * @var MollieVendor
-	 */
-	private $mollie;
-	/**
-	 * @var LoggerService
-	 */
-	private $logger;
+	private string $version;
+	private MapperService $mapper;
+	private WP_List_Table $table;
+	private TwigService $twig;
+	private PaymentService $payment;
+	private ActivatorService $activator;
+	private MollieVendor $mollie;
+	private LoggerService $logger;
 
 	/**
 	 * Initialize the class and set its properties.
