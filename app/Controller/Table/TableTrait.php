@@ -193,7 +193,7 @@ trait TableTrait {
 
 		// If orderBy is set, use this as the sort column.
 		if ( ! empty( $_GET['orderby'] ) ) {
-			$order_by = $_GET['orderby'];
+			$order_by = sanitize_text_field($_GET['orderby']);
 		}
 
 		// If order is set use this as the order.
@@ -201,12 +201,17 @@ trait TableTrait {
 			$order = sanitize_text_field( $_GET['order'] );
 		}
 
-		$result = strcmp( $a[ $order_by ], $b[ $order_by ] );
+		if($order && $order_by) {
+            $result = strcmp( $a[ $order_by ], $b[ $order_by ] );
 
-		if ( 'asc' === $order ) {
-			return $result;
+            if ( 'asc' === $order ) {
+                return $result;
+            }
+
+            return - $result;
 		}
 
-		return - $result;
+		return 0;
+
 	}
 }

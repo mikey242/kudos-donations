@@ -36,7 +36,7 @@ switch ( $table_action ) {
 		<span class="subtitle">
 		<?php
 		/* translators: %s: Search term */
-		printf( __( 'Search results for “%s”' ), $_REQUEST['s'] )
+		printf( __( 'Search results for “%s”' ), sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) )
 		?>
 	</span>
 	<?php } ?>
