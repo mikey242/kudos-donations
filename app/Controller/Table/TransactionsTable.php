@@ -272,7 +272,7 @@ class TransactionsTable extends WP_List_Table {
 			[
 				'delete' => sprintf(
 					'<a href="%s">%s</a>',
-					$url,
+					esc_url($url),
 					__( 'Delete', 'kudos-donations' )
 				),
 			],
@@ -458,7 +458,7 @@ class TransactionsTable extends WP_List_Table {
 		$current = ( ! empty( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all' );
 
 		// Remove search query from current url.
-		$url = remove_query_arg( 's' );
+		$url = esc_url(remove_query_arg( 's' ));
 
 		// All link.
 		$count        = \count( $this->mapper->get_all_by() );

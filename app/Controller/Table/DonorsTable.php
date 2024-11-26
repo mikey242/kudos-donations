@@ -257,7 +257,7 @@ class DonorsTable extends WP_List_Table {
 		$actions = [
 			'delete' => sprintf(
 				'<a href="%s">%s</a>',
-				$url,
+				esc_url($url),
 				__( 'Delete', 'kudos-donations' )
 			),
 		];

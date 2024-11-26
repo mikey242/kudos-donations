@@ -19,15 +19,8 @@ use WP_List_Table;
 class SubscriptionsTable extends WP_List_Table {
 
 	use TableTrait;
-
-	/**
-	 * @var MapperService
-	 */
-	private $mapper;
-	/**
-	 * @var PaymentService
-	 */
-	private $payment;
+	private MapperService $mapper;
+	private PaymentService $payment;
 
 	/**
 	 * Class constructor
@@ -294,13 +287,13 @@ class SubscriptionsTable extends WP_List_Table {
 				) .
 				'</strong>';
 
-		$url = add_query_arg(
+		$url = esc_url(add_query_arg(
 			[
 				'page'     => esc_attr( $_REQUEST['page'] ),
 				'id'       => sanitize_text_field( $item['id'] ),
 				'_wpnonce' => wp_create_nonce( 'bulk-' . $this->_args['singular'] ),
 			]
-		);
+		));
 
 		$actions = [];
 		if ( 'active' === $item['status'] ) {
@@ -443,19 +436,19 @@ class SubscriptionsTable extends WP_List_Table {
 		// All link.
 		$count        = \count( $this->mapper->get_all_by() );
 		$class        = ( 'all' === $current && empty( $_REQUEST['s'] ) ? ' class="current"' : '' );
-		$all_url      = remove_query_arg( 'frequency' );
+		$all_url      = esc_url(remove_query_arg( 'frequency' ));
 		$views['all'] = "<a href='$all_url' $class >" . __( 'All', 'kudos-donations' ) . " ($count)</a>";
 
 		// Yearly link.
 		$count           = \count( $this->mapper->get_all_by( [ 'frequency' => '12 months' ] ) );
 		$class           = ( '12 months' === $current ? ' class="current"' : '' );
-		$yearly_url      = add_query_arg( 'frequency', '12 months' );
+		$yearly_url      = esc_url(add_query_arg( 'frequency', '12 months' ));
 		$views['yearly'] = "<a href='$yearly_url' $class >" . __( 'Yearly', 'kudos-donations' ) . " ($count)</a>";
 
 		// Quarterly link.
 		$count              = \count( $this->mapper->get_all_by( [ 'frequency' => '3 months' ] ) );
 		$class              = ( '3 months' === $current ? ' class="current"' : '' );
-		$yearly_url         = add_query_arg( 'frequency', '3 months' );
+		$yearly_url         = esc_url(add_query_arg( 'frequency', '3 months' ));
 		$views['quarterly'] = "<a href='$yearly_url' $class >" . __(
 			'Quarterly',
 			'kudos-donations'
@@ -464,7 +457,7 @@ class SubscriptionsTable extends WP_List_Table {
 		// Monthly link.
 		$count            = \count( $this->mapper->get_all_by( [ 'frequency' => '1 month' ] ) );
 		$class            = ( '1 month' === $current ? ' class="current"' : '' );
-		$monthly_url      = add_query_arg( 'frequency', '1 month' );
+		$monthly_url      = esc_url(add_query_arg( 'frequency', '1 month' ));
 		$views['monthly'] = "<a href='$monthly_url' $class >" . __(
 			'Monthly',
 			'kudos-donations'

@@ -24,20 +24,9 @@ trait TableTrait {
 	 */
 	public $table;
 
+	public array $export_columns;
 
-	/**
-	 * Array of column names and their names on export.
-	 *
-	 * @var array
-	 */
-	public $export_columns;
-
-	/**
-	 * Array of column values and names to use in search.
-	 *
-	 * @var array
-	 */
-	private $search_columns;
+	private array $search_columns;
 
 	/**
 	 * Message to show when no transactions available
