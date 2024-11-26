@@ -24,7 +24,7 @@ class TransactionsTable extends WP_List_Table {
 	/**
 	 * @var MapperService
 	 */
-	private $mapper;
+	private MapperService $mapper;
 
 	/**
 	 * Class constructor.
