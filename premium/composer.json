@@ -20,7 +20,7 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
-    "automattic/jetpack-autoloader": "^4.0",
+    "automattic/jetpack-autoloader": "^5.0",
     "mailchimp/marketing": "^3.0",
     "mailerlite/mailerlite-php": "^1.0"
   },
