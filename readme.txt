@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 5.6
 Tested up to: 6.7
 Requires PHP: 7.2.9
-Stable tag: 3.2.9
+Stable tag: 3.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,6 +117,10 @@ This can occur as a result of a conflict with your theme or another plugin and t
 6. Automated email receipt
 
 == Changelog ==
+
+= 3.3.0 =
+* Fix various security issues
+* Update dependencies
 
 = 3.2.9 =
 * Add notification with information about upcoming 4.0.0 release
