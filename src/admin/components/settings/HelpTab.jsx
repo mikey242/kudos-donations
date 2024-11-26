@@ -28,15 +28,6 @@ const HelpTab = () => {
 					<Flex justify="flex-start">
 						<Button
 							variant="secondary"
-							icon="heart"
-							href="https://kudosdonations.com/donate/"
-							target="_blank"
-							rel="noreferrer"
-						>
-							{__('Donate to Kudos Donations', 'kudos-donations')}
-						</Button>
-						<Button
-							variant="secondary"
 							icon="edit"
 							href="https://wordpress.org/support/plugin/kudos-donations/reviews/#new-post"
 							target="_blank"
