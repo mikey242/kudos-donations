@@ -2,6 +2,10 @@ import React from 'react';
 import { KudosLogo } from '../../block/components/KudosLogo';
 import { __ } from '@wordpress/i18n';
 import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalDivider as Divider,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalHeading as Heading,
 	Dashicon,
 	Flex,
 	FlexBlock,
@@ -21,10 +25,7 @@ export const AdminHeader = () => {
 				<div className="admin-wrap">
 					<Flex align="center" justify="space-between">
 						<FlexBlock>
-							<Flex
-								direction={['column', 'row']}
-								justify="flex-start"
-							>
+							<Flex direction="row" justify="flex-start">
 								<FlexItem>
 									<ResponsiveWrapper
 										naturalHeight={32}
@@ -34,17 +35,20 @@ export const AdminHeader = () => {
 									</ResponsiveWrapper>
 								</FlexItem>
 								<FlexItem>
-									<h1>
+									<Heading level="1" size="22">
 										{__(
 											'Kudos Donations',
 											'kudos-donations'
 										)}
-									</h1>
+									</Heading>
 								</FlexItem>
 								<FlexItem>
-									<div className="kudos-version">
+									<p className="kudos-version">
 										{window.kudos?.version}
-									</div>
+									</p>
+								</FlexItem>
+								<FlexItem>
+									<Divider orientation="vertical" />
 								</FlexItem>
 								{!window.kudos?.is_premium ? (
 									<FlexItem>

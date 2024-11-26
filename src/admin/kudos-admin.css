@@ -2,10 +2,6 @@
 	padding-left: 0 !important;
 }
 
-h1 {
-	line-height: 1;
-}
-
 .auto-fold #wpcontent {
 	padding-left: 0;
 }
@@ -89,11 +85,6 @@ h1 {
 			/*border: 1px solid #9ca3af;*/
 			border-radius: 0.5rem;
 			background-color: #efefef;
-			padding: 0.75em;
-		}
-
-		.kudos-premium-badge {
-
 			padding: 0.75em;
 		}
 
