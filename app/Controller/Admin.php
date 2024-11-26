@@ -583,6 +583,7 @@ class Admin {
 						break;
 					}
 					new AdminNotice( __( 'No transactions need adding', 'kudos-donations' ) );
+					break;
 				case 'kudos_dismiss_notice':
 					$key     = isset( $_REQUEST['kudos_notice_key'] ) ? (int) wp_unslash( $_REQUEST['kudos_notice_key'] ) : '';
 					$notices = get_option( '_kudos_admin_notices', [] );
