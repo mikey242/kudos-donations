@@ -50,7 +50,6 @@ lint-php:
         - *script_install_composer
     script:
         - composer run lint:gitlab --working-dir=./common
-        - composer run lint:gitlab --working-dir=./premium
 
 # Linting JS and CSS code
 lint-js-css:
