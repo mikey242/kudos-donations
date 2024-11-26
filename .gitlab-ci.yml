@@ -11,6 +11,7 @@ variables:
 .script_install_composer: &script_install_composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - composer install --no-ansi --no-interaction --no-progress --prefer-dist --working-dir=./common
+    - composer install --no-ansi --no-interaction --no-progress --prefer-dist --working-dir=./premium
 
 .script_install_npm: &script_install_npm
     - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -34,6 +35,7 @@ validate-composer:
     cache: []
     script:
         - composer --no-ansi validate --working-dir=./common
+        - composer --no-ansi validate --working-dir=./premium
 
 # Linting PHP code
 lint-php:
@@ -48,6 +50,7 @@ lint-php:
         - *script_install_composer
     script:
         - composer run lint:gitlab --working-dir=./common
+        - composer run lint:gitlab --working-dir=./premium
 
 # Linting JS and CSS code
 lint-js-css:
@@ -76,6 +79,7 @@ build-job:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
             - common/vendor/
+            - premium/vendor/
             - node_modules/
             - build/
     when: on_success
@@ -104,6 +108,7 @@ test-job:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
             - common/vendor/
+            - premium/vendor/
             - node_modules/
             - build/
 
@@ -130,6 +135,7 @@ zip-job:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
             - common/vendor/
+            - premium/vendor/
             - node_modules/
             - build/
 
