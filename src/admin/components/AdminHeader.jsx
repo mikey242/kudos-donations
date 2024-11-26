@@ -50,7 +50,7 @@ export const AdminHeader = () => {
 								<FlexItem>
 									<Divider orientation="vertical" />
 								</FlexItem>
-								{!window.kudos?.is_premium ? (
+								{!window.kudos?.can_use_premium_code ? (
 									<FlexItem>
 										<a href={window.kudos.upgrade_url}>
 											Upgrade

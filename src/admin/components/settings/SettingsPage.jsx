@@ -58,7 +58,7 @@ export const SettingsPage = () => {
 				content: <InvoiceTab />,
 			},
 			/*! <fs_premium_only> */
-			...(window.kudos?.is_premium && [
+			...(window.kudos?.can_use_premium_code && [
 				{
 					name: 'newsletter',
 					title: __('Newsletter', 'kudos-donations'),

@@ -96,9 +96,9 @@ class Plugin implements LoggerAwareInterface {
 			'kudos_global_localization',
 			function ( $localization ) {
 				try {
-					$localization['version']     = KUDOS_VERSION;
-					$localization['is_premium']  = kd_fs()->is_premium();
-					$localization['upgrade_url'] = kd_fs()->get_upgrade_url();
+					$localization['version']              = KUDOS_VERSION;
+					$localization['can_use_premium_code'] = kd_fs()->can_use_premium_code();
+					$localization['upgrade_url']          = kd_fs()->get_upgrade_url();
 				} catch ( Exception $e ) {
 					$localization['is_premium'] = false;
 				}
