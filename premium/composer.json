@@ -1,0 +1,32 @@
+{
+  "name": "iseard-media/kudos-donations",
+  "description": "A modern and easy to use donation plugin for WordPress.",
+  "type": "wordpress-plugin",
+  "prefer-stable": true,
+  "license": "proprietary",
+  "minimum-stability": "dev",
+  "config": {
+    "classmap-authoritative": true,
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "platform": {
+      "php": "7.4"
+    },
+    "allow-plugins": {
+      "automattic/jetpack-autoloader": true,
+      "php-http/discovery": true
+    }
+  },
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*",
+    "automattic/jetpack-autoloader": "^4.0",
+    "mailchimp/marketing": "^3.0",
+    "mailerlite/mailerlite-php": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "IseardMedia\\KudosPremium\\": "includes/"
+    }
+  }
+}

@@ -20,6 +20,9 @@ import { Button, FlexItem } from '@wordpress/components';
 import { useAdminContext } from '../../contexts/AdminContext';
 import { applyFilters } from '@wordpress/hooks';
 import * as AdminControls from '../../components/controls';
+/*! <fs_premium_only> */
+import { NewsletterTab } from './NewsletterTab';
+/*! </fs_premium_only> */
 
 export const SettingsPage = () => {
 	const { setHeaderContent } = useAdminContext();
@@ -54,6 +57,15 @@ export const SettingsPage = () => {
 				title: __('Invoice', 'kudos-donations'),
 				content: <InvoiceTab />,
 			},
+			/*! <fs_premium_only> */
+			...(window.kudos?.is_premium && [
+				{
+					name: 'newsletter',
+					title: __('Newsletter', 'kudos-donations'),
+					content: <NewsletterTab />,
+				},
+			]),
+			/*! </fs_premium_only> */
 			{
 				name: 'help',
 				title: __('Help', 'kudos-donations'),

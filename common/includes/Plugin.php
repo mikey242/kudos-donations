@@ -11,10 +11,12 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos;
 
+use Exception;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Throwable;
 use function add_action;
 use function load_plugin_textdomain;
 
@@ -44,6 +46,7 @@ class Plugin implements LoggerAwareInterface {
 	 */
 	public function on_plugin_loaded(): void {
 		$this->setup_localization();
+		$this->add_global_localization_data();
 		$this->registrable_handler->process();
 	}
 
@@ -86,6 +89,25 @@ class Plugin implements LoggerAwareInterface {
 	}
 
 	/**
+	 * Add data to the global localization array.
+	 */
+	private function add_global_localization_data(): void {
+		add_filter(
+			'kudos_global_localization',
+			function ( $localization ) {
+				try {
+					$localization['version']     = KUDOS_VERSION;
+					$localization['is_premium']  = kd_fs()->is_premium();
+					$localization['upgrade_url'] = kd_fs()->get_upgrade_url();
+				} catch ( Exception $e ) {
+					$localization['is_premium'] = false;
+				}
+				return $localization;
+			}
+		);
+	}
+
+	/**
 	 * Register the plugin.
 	 */
 	public function register(): void {
@@ -93,7 +115,7 @@ class Plugin implements LoggerAwareInterface {
 			do_action( 'kudos_container_ready' );
 			$this->on_plugin_loaded();
 			do_action( 'kudos_donations_loaded' );
-		} catch ( \Throwable $e ) {
+		} catch ( Throwable $e ) {
 			$this->logger->error(
 				$e->getMessage(),
 				[

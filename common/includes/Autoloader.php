@@ -26,6 +26,10 @@ class Autoloader {
 	public static function init(): bool {
 		$autoloaders = [ \dirname( __DIR__ ) . '/vendor/autoload_packages.php' ];
 
+		if ( \IseardMedia\Kudos\kd_fs()->is__premium_only() ) {
+			$autoloaders[] = KUDOS_PLUGIN_DIR . 'premium/vendor/autoload_packages.php';
+		}
+
 		foreach ( $autoloaders as $autoloader ) {
 			if ( ! is_readable( $autoloader ) ) {
 				self::missing_autoloader();

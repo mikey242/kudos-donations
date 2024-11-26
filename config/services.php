@@ -105,7 +105,7 @@ return static function ( ContainerConfigurator $container ) {
 	// Load premium plugin.
 	if ( \IseardMedia\Kudos\kd_fs()->is__premium_only() ) {
 		// Newsletter providers.
-		$services->set( \IseardMedia\Kudos\Vendor\VendorInterface::class )
+		$services->set( \IseardMedia\KudosPremium\NewsletterProvider\NewsletterProviderInterface::class )
 			->factory( [ service( IseardMedia\KudosPremium\NewsletterProvider\NewsletterProviderFactory::class ), 'create' ] )
 			->args(
 				[

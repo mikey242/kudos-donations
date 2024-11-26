@@ -113,6 +113,18 @@ export const SummaryTab = ({ campaign }) => {
 					}}
 				/>
 			)}
+			{campaign?.newsletter?.enabled && (
+				<CheckboxControl
+					name="newsletter"
+					label={
+						campaign.newsletter.checkbox_text ??
+						__(
+							'I would like to subscribe to the newsletter',
+							'kudos-donations'
+						)
+					}
+				/>
+			)}
 		</BaseTab>
 	);
 };

@@ -17,15 +17,67 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       kudos-donations
  * Domain Path:       /languages
+ *
+ * @fs_premium_only /premium
  */
 
 namespace IseardMedia\Kudos;
 
+use Freemius_Exception;
 use Symfony\Component\Dotenv\Dotenv;
 
 // If this file is called directly, abort.
 if ( ! \defined( 'WPINC' ) ) {
 	die;
+}
+
+if ( ! \function_exists( 'kd_fs' ) ) {
+	/**
+	 * Create a helper function for easy SDK access.
+	 *
+	 * @throws Freemius_Exception If there is an error running Freemius.
+	 */
+	function kd_fs(): object {
+		global $kd_fs;
+
+		if ( ! isset( $kd_fs ) ) {
+			// Include Freemius SDK.
+			require_once __DIR__ . '/freemius/start.php';
+
+			$kd_fs = fs_dynamic_init(
+				[
+					'id'                  => '17042',
+					'slug'                => 'kudos-donations',
+					'type'                => 'plugin',
+					'public_key'          => 'pk_c70e63631b2ef7d4a31a16523ff1d',
+					'is_premium'          => true,
+					'premium_suffix'      => 'Premium',
+					// If your plugin is a serviceware, set this option to false.
+					'has_premium_version' => true,
+					'has_addons'          => false,
+					'has_paid_plans'      => true,
+					'menu'                => [
+						'slug'    => 'kudos-campaigns',
+						'contact' => false,
+						'support' => false,
+						'pricing' => false,
+					],
+				]
+			);
+		}
+
+		return $kd_fs;
+	}
+
+	// Init Freemius.
+	try {
+		kd_fs();
+    // phpcs:ignore
+    } catch (Freemius_Exception $ignored) {
+
+	}
+	// Signal that SDK was initiated.
+	do_action( 'kd_fs_loaded' );
 }
 
 /**

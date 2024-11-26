@@ -27,7 +27,7 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	public const SETTING_MIGRATION_HISTORY = '_kudos_migration_history';
 	public const SETTING_MIGRATION_STATUS  = '_kudos_migration_status';
 	public const SETTING_MIGRATION_BUSY    = '_kudos_migration_busy';
-	public const SETTING_PLUGIN_VERSION = '_kudos_donations_version';
+	public const SETTING_PLUGIN_VERSION    = '_kudos_donations_version';
 	private string $current_version;
 	private string $target_version;
 	/**
