@@ -22,7 +22,7 @@
 	"require": {
 		"php": ">=7.4",
 		"ext-json": "*",
-		"automattic/jetpack-autoloader": "^4.0",
+		"automattic/jetpack-autoloader": "^5.0",
 		"dompdf/dompdf": "^3.0",
 		"mollie/mollie-api-php": "^2.32.0",
 		"monolog/monolog": "^2.9",
