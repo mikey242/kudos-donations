@@ -10,7 +10,7 @@ import { SelectControl, TextControl } from '../../controls';
 import { __ } from '@wordpress/i18n';
 import { useSettingsContext } from '../../../contexts/SettingsContext';
 
-export const MailerliteProvider = ({ refresh, isBusy }) => {
+export const MailerLite = ({ refresh, isBusy }) => {
 	const { settings, updateSettings } = useSettingsContext();
 	return (
 		<>

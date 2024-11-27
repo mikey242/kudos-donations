@@ -8,9 +8,9 @@ import { useSettingsContext } from '../../contexts/SettingsContext';
 import { useWatch } from 'react-hook-form';
 import { useState } from '@wordpress/element';
 import React from 'react';
-import { MailchimpProvider } from './providers/MailchimpProvider';
-import { MailerliteProvider } from './providers/MailerliteProvider';
-import { MailPoetProvider } from './providers/MailPoetProvider';
+import { Mailchimp } from './providers/Mailchimp';
+import { MailerLite } from './providers/MailerLite';
+import { MailPoet } from './providers/MailPoet';
 import { EmailOctopus } from './providers/EmailOctopus';
 
 export const NewsletterTab = () => {
@@ -49,11 +49,11 @@ export const NewsletterTab = () => {
 	const MailerProvider = (props) => {
 		switch (provider) {
 			case 'mailchimp':
-				return <MailchimpProvider {...props} />;
+				return <Mailchimp {...props} />;
 			case 'mailerlite':
-				return <MailerliteProvider {...props} />;
+				return <MailerLite {...props} />;
 			case 'mailpoet':
-				return <MailPoetProvider {...props} />;
+				return <MailPoet {...props} />;
 			case 'emailoctopus':
 				return <EmailOctopus {...props} />;
 			default:

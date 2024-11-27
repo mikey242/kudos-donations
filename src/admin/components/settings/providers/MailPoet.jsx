@@ -3,7 +3,7 @@ import { SelectControl } from '../../controls';
 import { __ } from '@wordpress/i18n';
 import { useSettingsContext } from '../../../contexts/SettingsContext';
 
-export const MailPoetProvider = ({ refresh, isBusy }) => {
+export const MailPoet = ({ refresh, isBusy }) => {
 	const { settings } = useSettingsContext();
 	return (
 		<>

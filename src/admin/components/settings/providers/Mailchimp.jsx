@@ -11,7 +11,7 @@ import { SelectControl, TextControl } from '../../controls';
 import React from 'react';
 import { useSettingsContext } from '../../../contexts/SettingsContext';
 
-export const MailchimpProvider = ({ refresh, isBusy }) => {
+export const Mailchimp = ({ refresh, isBusy }) => {
 	const { settings, updateSettings } = useSettingsContext();
 	return (
 		<>
