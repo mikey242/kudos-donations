@@ -18,6 +18,14 @@ use Psr\Container\ContainerInterface;
 
 class NewsletterProviderFactory {
 	private static array $providers = [
+		'brevo'        => [
+			'label' => 'Brevo',
+			'class' => Brevo::class,
+		],
+		'emailoctopus' => [
+			'label' => 'EmailOctopus',
+			'class' => EmailOctopus::class,
+		],
 		'mailchimp'    => [
 			'label' => 'Mailchimp',
 			'class' => Mailchimp::class,
@@ -30,12 +38,8 @@ class NewsletterProviderFactory {
 			'label' => 'MailPoet',
 			'class' => MailPoet::class,
 		],
-		'emailoctopus' => [
-			'label' => 'EmailOctopus',
-			'class' => EmailOctopus::class,
-		],
 		'none'         => [
-			'label' => 'None',
+			'label' => 'None (Disabled)',
 			'class' => null,
 		],
 	];
