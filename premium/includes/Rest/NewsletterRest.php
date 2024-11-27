@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\KudosPremium\Rest;
 
+use Exception;
 use IseardMedia\Kudos\Controller\Rest\AbstractRestController;
 use IseardMedia\KudosPremium\NewsletterProvider\NewsletterProviderFactory;
 use IseardMedia\KudosPremium\NewsletterProvider\NewsletterProviderInterface;
@@ -55,8 +56,8 @@ class NewsletterRest extends AbstractRestController {
 	 * Refresh the current provider.
 	 */
 	public function refresh(): WP_REST_Response {
-		$result = $this->provider->refresh();
-		if ( $result ) {
+		try {
+			$this->provider->refresh();
 			return new WP_REST_Response(
 				[
 					// translators: %s is the newsletter provider (e.g. Mailchimp).
@@ -64,13 +65,14 @@ class NewsletterRest extends AbstractRestController {
 				],
 				200
 			);
+		} catch ( Exception $e ) {
+			return new WP_REST_Response(
+				[
+					'message' => $e->getMessage(),
+				],
+				500
+			);
 		}
-		return new WP_REST_Response(
-			[
-				// translators: %s is the newsletter provider (e.g. Mailchimp).
-				'message' => wp_sprintf( __( 'Error refreshing %s', 'kudos-donations' ), $this->provider->get_name() ),
-			],
-		);
 	}
 
 	/**

@@ -24,17 +24,12 @@ class MailerliteProvider extends AbstractVendor implements NewsletterProviderInt
 	private ?MailerLite $api_client                   = null;
 
 	/**
-	 * Mailerlite service constructor.
+	 * {@inheritDoc}
 	 */
-	public function __construct() {
+	public function register(): void {
 		// Handle API key saving.
 		add_filter( 'pre_update_option_' . self::SETTING_MAILERLITE_API_KEY, [ $this, 'handle_key_update' ], 10, 3 );
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register(): void {}
 
 	/**
 	 * Gets the configured MailerLite api client.
@@ -72,37 +67,58 @@ class MailerliteProvider extends AbstractVendor implements NewsletterProviderInt
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @throws RuntimeException If there is an error refreshing.
 	 */
 	public function refresh(): bool {
-		$groups = $this->get_groups();
-		if ( $groups ) {
-			update_option(
-				self::SETTING_MAILERLITE_GROUPS,
-				array_map(
-					fn( $group ) =>
+		try {
+			$groups = $this->get_groups();
+			if ( $groups ) {
+				update_option(
+					self::SETTING_MAILERLITE_GROUPS,
+					array_map(
+						fn( $group ) =>
 						[
 							'id'   => $group['id'],
 							'name' => $group['name'],
 						],
-					$groups
-				)
-			);
+						$groups
+					)
+				);
+			}
 			return true;
+		} catch ( Exception $e ) {
+			$this->logger->error( __( 'Mailerlite: Something went wrong refreshing', 'kudos-donations' ), [ 'message' => $e->getMessage() ] );
+			throw new RuntimeException( esc_html__( 'Mailerlite failed to refresh, please check your api key.', 'kudos-donations' ) );
 		}
-		return false;
 	}
 
 	/**
 	 * Returns the groups stored on the account.
+	 *
+	 * @throws Exception When there is an error with the api.
 	 */
 	private function get_groups(): array {
-		try {
 			$response = $this->get_api_client()->groups->get();
 			return $response['body']['data'] ?? [];
-		} catch ( Exception $e ) {
-			$this->logger->error( 'Mailerlite: Something went wrong updating groups', [ 'message' => $e->getMessage() ] );
-			return [];
-		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function subscribe_user( string $email, ?string $name = null ): void {
+		$api_client = $this->get_api_client();
+		$group_id   = get_option( self::SETTING_MAILERLITE_SELECTED_GROUP );
+		$api_client->subscribers->create(
+			[
+				'email'  => $email,
+				'groups' => [ $group_id ],
+				'status' => 'active',
+				'fields' => [
+					'name' => $name,
+				],
+			]
+		);
 	}
 
 	/**
@@ -145,23 +161,5 @@ class MailerliteProvider extends AbstractVendor implements NewsletterProviderInt
 				'default'      => [],
 			],
 		];
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function subscribe_user( string $email, ?string $name = null ): void {
-		$api_client = $this->get_api_client();
-		$group_id   = get_option( self::SETTING_MAILERLITE_SELECTED_GROUP );
-		$api_client->subscribers->create(
-			[
-				'email'  => $email,
-				'groups' => [ $group_id ],
-				'status' => 'active',
-				'fields' => [
-					'name' => $name,
-				],
-			]
-		);
 	}
 }

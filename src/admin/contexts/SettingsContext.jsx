@@ -184,6 +184,7 @@ export default function SettingsProvider({ children }) {
 				settings,
 				setSettings,
 				checkingApiKey,
+				fetchSettings,
 				checkApiKey,
 				updateSetting,
 				updateSettings,

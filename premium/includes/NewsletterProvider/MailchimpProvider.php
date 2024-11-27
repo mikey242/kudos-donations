@@ -9,6 +9,7 @@
 
 namespace IseardMedia\KudosPremium\NewsletterProvider;
 
+use Exception;
 use GuzzleHttp\Exception\BadResponseException;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Vendor\AbstractVendor;
@@ -25,17 +26,12 @@ class MailchimpProvider extends AbstractVendor implements NewsletterProviderInte
 	private ?ApiClient $api_client                   = null;
 
 	/**
-	 * Mailchimp service constructor.
+	 * {@inheritDoc}
 	 */
-	public function __construct() {
+	public function register(): void {
 		// Handle API key saving.
 		add_filter( 'pre_update_option_' . self::SETTING_MAILCHIMP_API_KEY, [ $this, 'handle_key_update' ], 10, 3 );
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register(): void {}
 
 	/**
 	 * Returns the api client.
@@ -100,22 +96,30 @@ class MailchimpProvider extends AbstractVendor implements NewsletterProviderInte
 
 	/**
 	 * Refresh the cached audiences.
+	 *
+	 * @throws RuntimeException If there was an error refreshing.
 	 */
 	public function refresh(): bool {
-		$audiences = $this->get_audiences();
-		if ( $audiences ) {
-			update_option(
-				self::SETTING_MAILCHIMP_AUDIENCES,
-				array_map(
-					fn( $audience ) => [
-						'id'   => $audience->id,
-						'name' => $audience->name,
-					],
-					$audiences->lists
-				)
-			);
-			return true;
+		try {
+			$audiences = $this->get_audiences();
+			if ( $audiences ) {
+				update_option(
+					self::SETTING_MAILCHIMP_AUDIENCES,
+					array_map(
+						fn( $audience ) => [
+							'id'   => $audience->id,
+							'name' => $audience->name,
+						],
+						$audiences->lists
+					)
+				);
+				return true;
+			}
+		} catch ( Exception $e ) {
+			$this->logger->error( __( 'Mailchimp: Something went wrong refreshing', 'kudos-donations' ), [ 'message' => $e->getMessage() ] );
+			throw new RuntimeException( esc_html__( 'Mailchimp failed to refresh, please check your api key.', 'kudos-donations' ) );
 		}
+
 		return false;
 	}
 
@@ -132,7 +136,7 @@ class MailchimpProvider extends AbstractVendor implements NewsletterProviderInte
 		$list_id    = get_option( self::SETTING_MAILCHIMP_SELECTED_AUDIENCE );
 		try {
 			$subscriber_hash = md5( strtolower( $email ) );
-			$response        = $api_client->lists->setListMember(
+			$api_client->lists->setListMember(
 				$list_id,
 				$subscriber_hash,
 				[

@@ -20,14 +20,14 @@ class NewsletterService extends AbstractRegistrable implements HasSettingsInterf
 	public const SETTING_NEWSLETTER_PROVIDER = '_kudos_newsletter_provider';
 	public const SETTING_CHECKBOX_TEXT       = '_kudos_newsletter_checkbox_text';
 
-	public NewsletterProviderInterface $newsletter_provider;
+	public ?NewsletterProviderInterface $newsletter_provider;
 
 	/**
 	 * Newsletter service constructor.
 	 *
-	 * @param NewsletterProviderInterface $newsletter_provider The newsletter provider class.
+	 * @param ?NewsletterProviderInterface $newsletter_provider The newsletter provider class.
 	 */
-	public function __construct( NewsletterProviderInterface $newsletter_provider ) {
+	public function __construct( ?NewsletterProviderInterface $newsletter_provider ) {
 		$this->newsletter_provider = $newsletter_provider;
 	}
 

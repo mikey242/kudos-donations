@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { Button, Panel, PanelBody } from '@wordpress/components';
+import { Button, Icon, Panel, PanelBody } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { store as noticesStore } from '@wordpress/notices';
 import { useDispatch } from '@wordpress/data';
@@ -12,7 +12,7 @@ import { MailchimpProvider } from './providers/MailchimpProvider';
 import { MailerliteProvider } from './providers/MailerliteProvider';
 
 export const NewsletterTab = () => {
-	const { settings } = useSettingsContext();
+	const { settings, fetchSettings } = useSettingsContext();
 	const provider = useWatch({ name: '_kudos_newsletter_provider' });
 	const {
 		kudos: { newsletter_providers: providers },
@@ -30,7 +30,9 @@ export const NewsletterTab = () => {
 			.then((response) => {
 				void createSuccessNotice(response?.message, {
 					type: 'snackbar',
+					icon: <Icon icon="saved" />,
 				});
+				fetchSettings();
 			})
 			.catch((error) => {
 				void createErrorNotice(error?.message, {
