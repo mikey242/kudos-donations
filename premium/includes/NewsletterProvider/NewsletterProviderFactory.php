@@ -26,6 +26,10 @@ class NewsletterProviderFactory {
 			'label' => 'Mailerlite',
 			'class' => MailerliteProvider::class,
 		],
+		'mailpoet'   => [
+			'label' => 'MailPoet',
+			'class' => MailPoetProvider::class,
+		],
 		'none'       => [
 			'label' => 'None',
 			'class' => null,

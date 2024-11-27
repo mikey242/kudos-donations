@@ -180,4 +180,18 @@ class Utils {
 
 		return 'k' . $type . '_' . $year . $post_id;
 	}
+
+	/**
+	 * Uses regex that accepts any word character or hyphen in last name
+	 *
+	 * @link https://stackoverflow.com/questions/13637145/split-text-string-into-first-and-last-name-in-php
+	 *
+	 * @param string $name The full name.
+	 */
+	public static function split_name( string $name ): array {
+		$name       = trim( $name );
+		$last_name  = ( strpos( $name, ' ' ) === false ) ? '' : preg_replace( '#.*\s([\w-]*)$#', '$1', $name );
+		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
+		return [ $first_name, $last_name ];
+	}
 }

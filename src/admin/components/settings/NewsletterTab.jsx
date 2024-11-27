@@ -10,6 +10,7 @@ import { useState } from '@wordpress/element';
 import React from 'react';
 import { MailchimpProvider } from './providers/MailchimpProvider';
 import { MailerliteProvider } from './providers/MailerliteProvider';
+import { MailPoetProvider } from './providers/MailPoetProvider';
 
 export const NewsletterTab = () => {
 	const { settings, fetchSettings } = useSettingsContext();
@@ -50,6 +51,8 @@ export const NewsletterTab = () => {
 				return <MailchimpProvider {...props} />;
 			case 'mailerlite':
 				return <MailerliteProvider {...props} />;
+			case 'mailpoet':
+				return <MailPoetProvider {...props} />;
 			default:
 				return null;
 		}
