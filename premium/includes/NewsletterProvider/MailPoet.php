@@ -14,7 +14,7 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\AbstractVendor;
 use RuntimeException;
 
-class MailPoetProvider extends AbstractVendor implements NewsletterProviderInterface {
+class MailPoet extends AbstractVendor implements NewsletterProviderInterface {
 
 	public const SETTING_MAILPOET_API_KEY           = '_kudos_mailpoet_api_key';
 	public const SETTING_MAILPOET_API_KEY_ENCRYPTED = '_kudos_mailpoet_api_key_encrypted';

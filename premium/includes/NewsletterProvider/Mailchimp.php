@@ -16,7 +16,7 @@ use IseardMedia\Kudos\Vendor\AbstractVendor;
 use MailchimpMarketing\ApiClient;
 use RuntimeException;
 
-class MailchimpProvider extends AbstractVendor implements NewsletterProviderInterface {
+class Mailchimp extends AbstractVendor implements NewsletterProviderInterface {
 
 	public const SETTING_MAILCHIMP_API_KEY           = '_kudos_mailchimp_api_key';
 	public const SETTING_MAILCHIMP_API_KEY_ENCRYPTED = '_kudos_mailchimp_api_key_encrypted';

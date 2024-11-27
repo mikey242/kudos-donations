@@ -18,17 +18,17 @@ use Psr\Container\ContainerInterface;
 
 class NewsletterProviderFactory {
 	private static array $providers = [
-		'mailchimp'  => [
+		'mailchimp'    => [
 			'label' => 'Mailchimp',
-			'class' => MailchimpProvider::class,
+			'class' => Mailchimp::class,
 		],
-		'mailerlite' => [
+		'mailerlite'   => [
 			'label' => 'Mailerlite',
-			'class' => MailerliteProvider::class,
+			'class' => MailerLite::class,
 		],
-		'mailpoet'   => [
+		'mailpoet'     => [
 			'label' => 'MailPoet',
-			'class' => MailPoetProvider::class,
+			'class' => MailPoet::class,
 		],
 		'emailoctopus' => [
 			'label' => 'EmailOctopus',
