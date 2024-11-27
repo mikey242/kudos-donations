@@ -11,6 +11,7 @@ import React from 'react';
 import { MailchimpProvider } from './providers/MailchimpProvider';
 import { MailerliteProvider } from './providers/MailerliteProvider';
 import { MailPoetProvider } from './providers/MailPoetProvider';
+import { EmailOctopus } from './providers/EmailOctopus';
 
 export const NewsletterTab = () => {
 	const { settings, fetchSettings } = useSettingsContext();
@@ -53,6 +54,8 @@ export const NewsletterTab = () => {
 				return <MailerliteProvider {...props} />;
 			case 'mailpoet':
 				return <MailPoetProvider {...props} />;
+			case 'emailoctopus':
+				return <EmailOctopus {...props} />;
 			default:
 				return null;
 		}

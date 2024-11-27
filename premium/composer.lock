@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffbcb1ea50ba8e889fd723fdf49eca7a",
+    "content-hash": "a85320ae405b465ff38bfdaa6d73cae8",
     "packages": [
         {
             "name": "automattic/jetpack-autoloader",
@@ -135,6 +135,65 @@
                 }
             ],
             "time": "2023-12-20T15:40:13+00:00"
+        },
+        {
+            "name": "goran-popovic/email-octopus-php",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/goran-popovic/email-octopus-php.git",
+                "reference": "37eb153609960d3f62390ed7c7f48a4708acd5e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/goran-popovic/email-octopus-php/zipball/37eb153609960d3f62390ed7c7f48a4708acd5e4",
+                "reference": "37eb153609960d3f62390ed7c7f48a4708acd5e4",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0.1",
+                "php": "^7.2.5|^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.10"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/EmailOctopus.php"
+                ],
+                "psr-4": {
+                    "GoranPopovic\\EmailOctopus\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Goran Popović",
+                    "email": "goran.popovic@geoligard.com",
+                    "homepage": "https://geoligard.com"
+                }
+            ],
+            "description": "Email Octopus SDK for PHP",
+            "homepage": "https://github.com/goran-popovic/email-octopus-php",
+            "keywords": [
+                "campaign",
+                "email",
+                "email octopus",
+                "mailing list",
+                "marketing",
+                "newsletter",
+                "php",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/goran-popovic/email-octopus-php/issues",
+                "source": "https://github.com/goran-popovic/email-octopus-php/tree/v1.0.2"
+            },
+            "time": "2024-02-04T13:48:22+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

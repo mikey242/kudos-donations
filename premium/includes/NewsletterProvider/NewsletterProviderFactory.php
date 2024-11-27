@@ -30,7 +30,11 @@ class NewsletterProviderFactory {
 			'label' => 'MailPoet',
 			'class' => MailPoetProvider::class,
 		],
-		'none'       => [
+		'emailoctopus' => [
+			'label' => 'EmailOctopus',
+			'class' => EmailOctopus::class,
+		],
+		'none'         => [
 			'label' => 'None',
 			'class' => null,
 		],
