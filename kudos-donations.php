@@ -34,8 +34,6 @@ if ( ! \defined( 'WPINC' ) ) {
 if ( ! \function_exists( 'kd_fs' ) ) {
 	/**
 	 * Create a helper function for easy SDK access.
-	 *
-	 * @throws Freemius_Exception If there is an error running Freemius.
 	 */
 	function kd_fs(): object {
 		global $kd_fs;
@@ -44,38 +42,38 @@ if ( ! \function_exists( 'kd_fs' ) ) {
 			// Include Freemius SDK.
 			require_once __DIR__ . '/freemius/start.php';
 
-			$kd_fs = fs_dynamic_init(
-				[
-					'id'                  => '17042',
-					'slug'                => 'kudos-donations',
-					'type'                => 'plugin',
-					'public_key'          => 'pk_c70e63631b2ef7d4a31a16523ff1d',
-					'is_premium'          => true,
-					'premium_suffix'      => 'Premium',
-					// If your plugin is a serviceware, set this option to false.
-					'has_premium_version' => true,
-					'has_addons'          => false,
-					'has_paid_plans'      => true,
-					'menu'                => [
-						'slug'    => 'kudos-campaigns',
-						'contact' => false,
-						'support' => false,
-						'pricing' => false,
-					],
-				]
-			);
+			try {
+				$kd_fs = fs_dynamic_init(
+					[
+						'id'                  => '17042',
+						'slug'                => 'kudos-donations',
+						'type'                => 'plugin',
+						'public_key'          => 'pk_c70e63631b2ef7d4a31a16523ff1d',
+						'is_premium'          => true,
+						'premium_suffix'      => 'Premium',
+						'has_premium_version' => true,
+						'has_addons'          => false,
+						'has_paid_plans'      => true,
+						'menu'                => [
+							'slug'    => 'kudos-campaigns',
+							'contact' => false,
+							'support' => false,
+							'pricing' => false,
+						],
+					]
+				);
+			} catch ( Freemius_Exception $e ) {
+                // phpcs:ignore
+				error_log( $e->getMessage() );
+			}
 		}
 
 		return $kd_fs;
 	}
 
 	// Init Freemius.
-	try {
-		kd_fs();
-    // phpcs:ignore
-    } catch (Freemius_Exception $ignored) {
+	kd_fs();
 
-	}
 	// Signal that SDK was initiated.
 	do_action( 'kd_fs_loaded' );
 }

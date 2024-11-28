@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos;
 use Exception;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
+use IseardMedia\Kudos\Service\CacheService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Throwable;
@@ -54,6 +55,7 @@ class Plugin implements LoggerAwareInterface {
 	 * Runs on plugin activation.
 	 */
 	public function on_plugin_activation(): void {
+		CacheService::recursively_clear_cache();
 		$this->activation_handler->process();
 		$this->logger->info(
 			'Plugin activated.',
