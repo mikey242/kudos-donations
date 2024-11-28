@@ -10,11 +10,11 @@
 
 # Folders
 __static__
-assets
+/assets
 bin
-node_modules
+/node_modules
 /src
-tests
+/tests
 
 # Configuration
 .babelrc
