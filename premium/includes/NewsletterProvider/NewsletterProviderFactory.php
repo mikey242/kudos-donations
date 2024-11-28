@@ -48,7 +48,7 @@ class NewsletterProviderFactory {
 	 * Add filter to allow accessing providers in js.
 	 */
 	public function __construct() {
-		add_filter( 'kudos_global_localization', [ $this, 'add_providers' ], 50 );
+		add_filter( 'kudos_global_localization', [ $this, 'add_providers' ] );
 	}
 
 	/**
