@@ -26,7 +26,7 @@ export const Brevo = ({ refresh, isBusy }) => {
 						)}
 					/>
 					<Flex justify="space-between">
-						<ExternalLink href="https://dashboard.brevo.com/integrations/api">
+						<ExternalLink href="https://app.brevo.com/settings/keys/api">
 							{__('Visit Brevo dashboard', 'kudos-donations')}.
 						</ExternalLink>
 						<Button
