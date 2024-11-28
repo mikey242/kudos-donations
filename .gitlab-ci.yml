@@ -117,13 +117,15 @@ zip-job:
     stage: zip
     before_script:
         - *script_install_composer
-        - composer install --optimize-autoloader --no-dev
+        - composer install --optimize-autoloader --no-dev --working-dir=common
+        - composer install --optimize-autoloader --no-dev --working-dir=premium
         - apt-get update -y && apt-get install -y zip
     script:
         - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
         - chmod +x wp-cli.phar
         - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
-        - composer run make-zip
+        - rm -f kudos-donations.zip,
+        - php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root
     artifacts:
         paths:
             - kudos-donations.zip
