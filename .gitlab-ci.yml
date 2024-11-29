@@ -10,8 +10,7 @@ variables:
 # Script snippets for installing Composer and NPM
 .script_install_composer: &script_install_composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    - composer install --no-ansi --no-interaction --no-progress --prefer-dist --working-dir=./common
-    - composer install --no-ansi --no-interaction --no-progress --prefer-dist --working-dir=./premium
+    - composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
 .script_install_npm: &script_install_npm
     - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -34,8 +33,7 @@ validate-composer:
     stage: validate
     cache: []
     script:
-        - composer --no-ansi validate --working-dir=./common
-        - composer --no-ansi validate --working-dir=./premium
+        - composer --no-ansi validate
 
 # Linting PHP code
 lint-php:
@@ -44,12 +42,12 @@ lint-php:
     cache:
         key: composer.lock
         paths:
-            - common/vendor/
+            - vendor/
         policy: push
     before_script:
         - *script_install_composer
     script:
-        - composer run lint:gitlab --working-dir=./common
+        - composer run lint:gitlab
 
 # Linting JS and CSS code
 lint-js-css:
@@ -77,8 +75,7 @@ build-job:
     cache:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
-            - common/vendor/
-            - premium/vendor/
+            - vendor/
             - node_modules/
             - build/
     when: on_success
@@ -106,8 +103,7 @@ test-job:
     cache:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
-            - common/vendor/
-            - premium/vendor/
+            - vendor/
             - node_modules/
             - build/
 
@@ -117,15 +113,13 @@ zip-job:
     stage: zip
     before_script:
         - *script_install_composer
-        - composer install --optimize-autoloader --no-dev --working-dir=common
-        - composer install --optimize-autoloader --no-dev --working-dir=premium
+        - composer install --optimize-autoloader --no-dev
         - apt-get update -y && apt-get install -y zip
     script:
         - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
         - chmod +x wp-cli.phar
         - php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
-        - rm -f kudos-donations.zip,
-        - php wp-cli.phar dist-archive . ./kudos-donations.zip --allow-root
+        - composer run make-zip
     artifacts:
         paths:
             - kudos-donations.zip
@@ -135,8 +129,7 @@ zip-job:
     cache:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
-            - common/vendor/
-            - premium/vendor/
+            - vendor/
             - node_modules/
             - build/
 

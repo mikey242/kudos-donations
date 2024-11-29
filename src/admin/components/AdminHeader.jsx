@@ -3,10 +3,7 @@ import { KudosLogo } from '../../block/components/KudosLogo';
 import { __ } from '@wordpress/i18n';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalDivider as Divider,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalHeading as Heading,
-	Dashicon,
 	Flex,
 	FlexBlock,
 	FlexItem,
@@ -47,28 +44,6 @@ export const AdminHeader = () => {
 										{window.kudos?.version}
 									</p>
 								</FlexItem>
-								<FlexItem>
-									<Divider orientation="vertical" />
-								</FlexItem>
-								{!window.kudos?.can_use_premium_code ? (
-									<FlexItem>
-										<a href={window.kudos.upgrade_url}>
-											Upgrade
-										</a>
-									</FlexItem>
-								) : (
-									<FlexItem>
-										<div className="kudos-premium-badge">
-											<Dashicon
-												title={__(
-													'Premium active',
-													'kudos-donations'
-												)}
-												icon="star-filled"
-											/>
-										</div>
-									</FlexItem>
-								)}
 							</Flex>
 						</FlexBlock>
 						<FlexItem>

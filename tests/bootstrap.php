@@ -6,7 +6,7 @@
 // Change filesystem access method.
 const FS_METHOD = 'direct';
 
-require dirname( __DIR__ ) . '/common/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
+require dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 

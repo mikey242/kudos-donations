@@ -23,59 +23,11 @@
 
 namespace IseardMedia\Kudos;
 
-use Freemius_Exception;
 use Symfony\Component\Dotenv\Dotenv;
 
 // If this file is called directly, abort.
 if ( ! \defined( 'WPINC' ) ) {
 	die;
-}
-
-if ( ! \function_exists( 'kd_fs' ) ) {
-	/**
-	 * Create a helper function for easy SDK access.
-	 */
-	function kd_fs(): object {
-		global $kd_fs;
-
-		if ( ! isset( $kd_fs ) ) {
-			// Include Freemius SDK.
-			require_once __DIR__ . '/freemius/start.php';
-
-			try {
-				$kd_fs = fs_dynamic_init(
-					[
-						'id'                  => '17042',
-						'slug'                => 'kudos-donations',
-						'type'                => 'plugin',
-						'public_key'          => 'pk_c70e63631b2ef7d4a31a16523ff1d',
-						'is_premium'          => true,
-						'premium_suffix'      => 'Premium',
-						'has_premium_version' => true,
-						'has_addons'          => false,
-						'has_paid_plans'      => true,
-						'menu'                => [
-							'slug'    => 'kudos-campaigns',
-							'contact' => false,
-							'support' => false,
-							'pricing' => false,
-						],
-					]
-				);
-			} catch ( Freemius_Exception $e ) {
-                // phpcs:ignore
-				error_log( $e->getMessage() );
-			}
-		}
-
-		return $kd_fs;
-	}
-
-	// Init Freemius.
-	kd_fs();
-
-	// Signal that SDK was initiated.
-	do_action( 'kd_fs_loaded' );
 }
 
 /**
@@ -94,7 +46,7 @@ if ( ! \function_exists( 'kd_fs' ) ) {
 \define( 'KUDOS_AUTH_KEY', AUTH_KEY );
 \define( 'KUDOS_AUTH_SALT', AUTH_SALT );
 
-require KUDOS_PLUGIN_DIR . 'common/includes/Autoloader.php';
+require KUDOS_PLUGIN_DIR . 'includes/Autoloader.php';
 
 // Autoloader for plugin.
 if ( ! Autoloader::init() ) {
@@ -102,8 +54,8 @@ if ( ! Autoloader::init() ) {
 }
 
 // Action Scheduler.
-if ( file_exists( KUDOS_PLUGIN_DIR . 'common/vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
-	include KUDOS_PLUGIN_DIR . 'common/vendor/woocommerce/action-scheduler/action-scheduler.php';
+if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
+	include KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
 }
 
 // Load the environment variables.
@@ -130,4 +82,4 @@ if ( KUDOS_ENV_IS_DEVELOPMENT && class_exists( '\Whoops\Run' ) ) {
 	$whoops->register();
 }
 
-require KUDOS_PLUGIN_DIR . 'common/includes/namespace.php';
+require KUDOS_PLUGIN_DIR . 'includes/namespace.php';

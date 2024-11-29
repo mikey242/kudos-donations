@@ -99,22 +99,8 @@ return static function ( ContainerConfigurator $container ) {
 		->set( MollieApiClient::class );
 
 	// Load base plugin.
-	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'common/includes/*' )
-		->exclude( KUDOS_PLUGIN_DIR . 'common/includes/{namespace.php,functions.php,helpers.php,index.php}' );
-
-	// Load premium plugin.
-	if ( \IseardMedia\Kudos\kd_fs()->is__premium_only() ) {
-		// Newsletter providers.
-		$services->set( \IseardMedia\KudosPremium\NewsletterProvider\NewsletterProviderInterface::class )
-			->factory( [ service( IseardMedia\KudosPremium\NewsletterProvider\NewsletterProviderFactory::class ), 'create' ] )
-			->args(
-				[
-					service( 'service_container' ),
-				]
-			);
-		$services->load( 'IseardMedia\KudosPremium\\', KUDOS_PLUGIN_DIR . 'premium/includes/*' )
-			->exclude( KUDOS_PLUGIN_DIR . 'premium/includes/{namespace.php,functions.php,helpers.php,index.php}' );
-	}
+	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
+		->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php}' );
 
 	// Filter for adding additional services.
 	apply_filters( 'kudos_container_configurator', $services );
