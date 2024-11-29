@@ -99,7 +99,7 @@ test-job:
         - chmod +x /bin/*.sh
         - bash /bin/install-wp-tests.sh $WORDPRESS_DB_NAME $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_HOST $WORDPRESS_TEST_VERSION true
     script:
-        - composer run test-integration:gitlab --working-dir=./common
+        - composer run test-integration:gitlab
     cache:
         key: ${CI_COMMIT_REF_SLUG}
         paths:
