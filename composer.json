@@ -57,11 +57,10 @@
 	},
 	"scripts": {
 		"lint": "vendor/bin/phpcs --severity=1 --report=full --report-source",
-		"test-integration:gitlab": "vendor/bin/phpunit --do-not-cache-result --configuration=../phpunit.xml.dist",
-		"lint:gitlab": "vendor/bin/phpcs --severity=1 --standard=../phpcs.xml.dist --report=full --report-\\\\Micheh\\\\PhpCodeSniffer\\\\Report\\\\Gitlab=phpcs-quality-report.json",
+		"test-integration:gitlab": "vendor/bin/phpunit --do-not-cache-result",
+		"lint:gitlab": "vendor/bin/phpcs --severity=1 --standard=phpcs.xml.dist --report=full --report-\\\\Micheh\\\\PhpCodeSniffer\\\\Report\\\\Gitlab=phpcs-quality-report.json",
 		"build-production": [
 			"composer install --optimize-autoloader --no-dev",
-			"composer install --optimize-autoloader --no-dev --working-dir=../premium",
 			"npm run build"
 		],
 		"make-zip": [

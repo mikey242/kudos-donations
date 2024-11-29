@@ -213,7 +213,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 										<?php
 										echo esc_textarea(
 											wp_date(
-												get_option('date_format') . ' DebugAdminPage.php' . get_option( 'time_format' ),
+												get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 												strtotime( $log['datetime'] )
 											)
 										);
