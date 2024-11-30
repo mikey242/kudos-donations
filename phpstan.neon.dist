@@ -5,8 +5,6 @@ includes:
 parameters:
   level: 5
   inferPrivatePropertyTypeFromConstructor: true
-  checkGenericClassInNonGenericObjectType: false
-  checkMissingIterableValueType: false
   ignoreErrors:
   paths:
     - includes/
