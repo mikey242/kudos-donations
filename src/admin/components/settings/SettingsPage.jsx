@@ -30,10 +30,10 @@ export const SettingsPage = () => {
 		settings,
 		isVendorReady,
 	} = useSettingsContext();
-	const methods = useForm({
+	const formMethods = useForm({
 		defaultValues: settings,
 	});
-	const { formState } = methods;
+	const { formState } = formMethods;
 
 	// Define tabs and panels
 	const tabs = applyFilters(
@@ -61,7 +61,8 @@ export const SettingsPage = () => {
 			},
 		],
 		AdminControls,
-		settings
+		useSettingsContext,
+		formMethods
 	);
 
 	useEffect(() => {
@@ -104,9 +105,9 @@ export const SettingsPage = () => {
 
 	useEffect(() => {
 		if (settings) {
-			methods.reset(settings);
+			formMethods.reset(settings);
 		}
-	}, [methods, settings]);
+	}, [formMethods, settings]);
 
 	const save = (data) => {
 		return updateSettings(data, formState.dirtyFields);
@@ -116,10 +117,10 @@ export const SettingsPage = () => {
 		// Show spinner if not yet loaded
 		<>
 			{settingsReady && (
-				<FormProvider {...methods}>
+				<FormProvider {...formMethods}>
 					<form
 						id="settings-form"
-						onSubmit={methods.handleSubmit(save)}
+						onSubmit={formMethods.handleSubmit(save)}
 					>
 						<AdminHeader />
 						<div className="admin-wrap">
