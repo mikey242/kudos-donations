@@ -15,7 +15,7 @@ module.exports = {
 					format: {
 						comments(node, comment) {
 							const text = comment.value;
-							return /(translators:|fs_premium_only)/i.test(text);
+							return /(translators:)/i.test(text);
 						},
 					},
 				},
