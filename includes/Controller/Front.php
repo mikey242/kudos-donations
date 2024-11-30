@@ -131,6 +131,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * @param array $args Array of Kudos button/modal attributes.
 	 */
 	public function kudos_render_callback( array $args ): ?string {
+		do_action( 'kudos_render_callback', $args );
 
 		// Check if the Campaign ID has been given.
 		if ( empty( $args['campaign_id'] ) ) {
