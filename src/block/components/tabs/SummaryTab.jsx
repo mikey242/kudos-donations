@@ -4,12 +4,11 @@ import BaseTab from './BaseTab';
 import { useFormContext } from 'react-hook-form';
 import { CheckboxControl } from '../controls';
 import { createInterpolateElement } from '@wordpress/element';
-
+import { applyFilters } from '@wordpress/hooks';
 export const SummaryTab = ({ campaign }) => {
 	const { meta } = campaign;
 	const { getValues } = useFormContext();
 	const values = getValues();
-
 	const recurringText = () => {
 		const recurring = getValues('recurring');
 		if (!recurring) {
@@ -28,6 +27,62 @@ export const SummaryTab = ({ campaign }) => {
 			'kudos-donations'
 		)} (${recurringFrequency} / ${length})`;
 	};
+
+	// Define tabs and panels
+	const checkboxes = applyFilters(
+		'kudosSummaryCheckboxes',
+		[
+			{
+				name: 'privacy',
+				enabled: meta.privacy_link,
+				label: createInterpolateElement(
+					__('Accept <a>Privacy Policy</a>', 'kudos-donations'),
+					{
+						a: (
+							// eslint-disable-next-line jsx-a11y/anchor-has-content
+							<a
+								target="_blank"
+								className="underline"
+								href={meta.privacy_link}
+								rel="noreferrer"
+							></a>
+						),
+					}
+				),
+				rules: {
+					required: __(
+						'Please accept this to continue',
+						'kudos-donations'
+					),
+				},
+			},
+			{
+				name: 'terms',
+				enabled: meta.terms_link,
+				label: createInterpolateElement(
+					__('Accept <a>Terms and Conditions</a>', 'kudos-donations'),
+					{
+						a: (
+							// eslint-disable-next-line jsx-a11y/anchor-has-content
+							<a
+								target="_blank"
+								className="underline"
+								href={meta.terms_link}
+								rel="noreferrer"
+							></a>
+						),
+					}
+				),
+				rules: {
+					required: __(
+						'Please accept this to continue',
+						'kudos-donations'
+					),
+				},
+			},
+		],
+		campaign
+	);
 
 	return (
 		<BaseTab
@@ -60,59 +115,20 @@ export const SummaryTab = ({ campaign }) => {
 					<span>{recurringText()}</span>
 				</p>
 			</div>
-			{meta.privacy_link && (
-				<CheckboxControl
-					name="privacy"
-					label={createInterpolateElement(
-						__('Accept <a>Privacy Policy</a>', 'kudos-donations'),
-						{
-							a: (
-								// eslint-disable-next-line jsx-a11y/anchor-has-content
-								<a
-									target="_blank"
-									className="underline"
-									href={meta.privacy_link}
-									rel="noreferrer"
-								></a>
-							),
-						}
-					)}
-					rules={{
-						required: __(
-							'Please accept this to continue',
-							'kudos-donations'
-						),
-					}}
-				/>
-			)}
-			{meta.terms_link && (
-				<CheckboxControl
-					name="terms"
-					label={createInterpolateElement(
-						__(
-							'Accept <a>Terms and Conditions</a>',
-							'kudos-donations'
-						),
-						{
-							a: (
-								// eslint-disable-next-line jsx-a11y/anchor-has-content
-								<a
-									target="_blank"
-									className="underline"
-									href={meta.terms_link}
-									rel="noreferrer"
-								></a>
-							),
-						}
-					)}
-					rules={{
-						required: __(
-							'Please accept this to continue',
-							'kudos-donations'
-						),
-					}}
-				/>
-			)}
+
+			{checkboxes.map((item, key) => {
+				if (item.enabled) {
+					return (
+						<CheckboxControl
+							key={key}
+							name={item.name}
+							label={item.label}
+							rules={item?.rules ?? null}
+						/>
+					);
+				}
+				return '';
+			})}
 		</BaseTab>
 	);
 };
