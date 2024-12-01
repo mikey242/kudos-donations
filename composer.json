@@ -1,7 +1,6 @@
 {
   "name": "iseard-media/kudos-donations",
   "description": "A modern and easy to use donation plugin for WordPress.",
-  "version": "4.0.0",
   "type": "wordpress-plugin",
   "prefer-stable": true,
   "license": "proprietary",
