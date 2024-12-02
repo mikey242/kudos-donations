@@ -27,9 +27,13 @@ use WP_REST_Server;
 
 class Front extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
+	public const SCRIPT_HANDLE_VIEW         = 'kudos-view-script';
+	public const SCRIPT_HANDLE_EDITOR       = 'kudos-editor-script';
+	private const SCRIPT_HANDLES            = [
+		self::SCRIPT_HANDLE_VIEW,
+		self::SCRIPT_HANDLE_EDITOR,
+	];
 	private PaymentVendorInterface $vendor;
-	private array $view_script_handles = [];
-	private array $style_handles;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -51,46 +55,43 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		$this->register_assets();
 		$this->register_block();
 		$this->register_shortcode();
 		if ( get_option( self::SETTING_ALWAYS_LOAD_ASSETS ) ) {
-			$this->enqueue_assets();
+			$this->register_assets();
 		}
 		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );
 	}
 
 	/**
-	 * Enqueue the styles and scripts.
+	 * Register the styles and scripts.
 	 */
-	private function enqueue_assets(): void {
-		foreach ( $this->style_handles as $handle ) {
-			wp_enqueue_style( $handle );
-		}
-		foreach ( $this->view_script_handles as $handle ) {
-			wp_enqueue_script( $handle );
-		}
-	}
+	private function register_assets(): void {
+		// Styles.
+		$font = Assets::get_style( 'front/kudos-fonts.css' );
+		wp_register_style( 'kudos-fonts', $font, [], KUDOS_VERSION );
 
-	/**
-	 * Register the Kudos block.
-	 */
-	private function register_block(): void {
-		$block = register_block_type(
-			KUDOS_PLUGIN_DIR . '/build/front/block',
-			[
-				'render_callback' => [ $this, 'kudos_render_callback' ],
-			]
+		// Scripts.
+		$view = Assets::get_script( 'front/block/kudos-front.js' );
+		wp_register_script(
+			self::SCRIPT_HANDLE_VIEW,
+			$view['url'],
+			$view['dependencies'],
+			$view['version'],
+			true
 		);
-
-		// Update handle properties.
-		$this->view_script_handles = $block->view_script_handles;
-		$this->style_handles       = $block->style_handles;
-		$block_scripts             = array_merge( $block->editor_script_handles, $block->view_script_handles );
-
-		// Localize the scripts with required properties.
-		foreach ( $block_scripts as $handle ) {
+		$edit = Assets::get_script( 'front/block/index.js' );
+		wp_register_script(
+			self::SCRIPT_HANDLE_EDITOR,
+			$edit['url'],
+			$edit['dependencies'],
+			$edit['version'],
+			true
+		);
+		foreach ( self::SCRIPT_HANDLES as $script ) {
 			wp_localize_script(
-				$handle,
+				$script,
 				'kudos',
 				[
 					'stylesheets'  => [
@@ -101,6 +102,26 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				]
 			);
 		}
+	}
+
+	/**
+	 * Enqueue the styles and scripts.
+	 */
+	private function enqueue_assets(): void {
+		wp_enqueue_style( 'kudos-fonts' );
+		wp_enqueue_script( self::SCRIPT_HANDLE_VIEW );
+	}
+
+	/**
+	 * Register the Kudos block.
+	 */
+	private function register_block(): void {
+		register_block_type(
+			KUDOS_PLUGIN_DIR . '/build/front/block',
+			[
+				'render_callback' => [ $this, 'kudos_render_callback' ],
+			]
+		);
 	}
 
 	/**

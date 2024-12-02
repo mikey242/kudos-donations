@@ -1,5 +1,6 @@
 const { merge } = require('webpack-merge');
 const commonConfig = require('../webpack.config.base');
+const { resolve } = require('node:path');
 const convertRemToEm = {
 	postcssPlugin: 'convertRemToEm',
 	// When debugging this, https://astexplorer.net/#/2uBU1BLuJ1 is very helpful
@@ -12,6 +13,10 @@ const convertRemToEm = {
 const remRegex = /(?<=\d)rem/g;
 
 module.exports = merge(commonConfig, {
+	entry: {
+		'block/index': resolve(__dirname, 'index.js'),
+		'block/kudos-front': resolve(__dirname, 'kudos-front.jsx'),
+	},
 	module: {
 		rules: [
 			{
