@@ -15,6 +15,9 @@ use IseardMedia\Kudos\Helper\Assets;
 
 class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
 
+	public const SCRIPT_HANDLE_SETTINGS = 'kudos-donations-settings';
+	public const STYLE_HANDLE_ADMIN     = 'kudos-admin-style';
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -50,7 +53,7 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		// Enqueue the styles.
 		wp_enqueue_style( 'wp-components' );
 		wp_enqueue_style(
-			'kudos-admin-style',
+			self::STYLE_HANDLE_ADMIN,
 			Assets::get_style( 'admin/settings/kudos-admin-settings.css' ),
 			[],
 			KUDOS_VERSION
@@ -60,7 +63,7 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		$admin_js = Assets::get_script( 'admin/settings/kudos-admin-settings.js' );
 
 		wp_enqueue_script(
-			'kudos-donations-settings',
+			self::SCRIPT_HANDLE_SETTINGS,
 			$admin_js['url'],
 			$admin_js['dependencies'],
 			$admin_js['version'],
@@ -73,16 +76,15 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			'kudos_settings_page_localization',
 			[
 				'migrations_pending' => (bool) get_option( '_kudos_migrations_pending' ),
-				'stylesheets'        => [ Assets::get_style( 'admin/kudos-admin-settings.jsx.css' ) ],
 			]
 		);
 
 		wp_localize_script(
-			'kudos-donations-settings',
+			self::SCRIPT_HANDLE_SETTINGS,
 			'kudos',
 			apply_filters( 'kudos_global_localization', $localized_data )
 		);
-		wp_set_script_translations( 'kudos-donations-settings', 'kudos-donations' );
+		wp_set_script_translations( self::SCRIPT_HANDLE_SETTINGS, 'kudos-donations' );
 	}
 
 	/**
