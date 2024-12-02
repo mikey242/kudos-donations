@@ -79,7 +79,9 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			$view['url'],
 			$view['dependencies'],
 			$view['version'],
-			true
+			[
+				'in_footer' => true,
+			]
 		);
 		$edit = Assets::get_script( 'front/block/index.js' );
 		wp_register_script(
@@ -87,7 +89,9 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			$edit['url'],
 			$edit['dependencies'],
 			$edit['version'],
-			true
+			[
+				'in_footer' => true,
+			]
 		);
 		foreach ( self::SCRIPT_HANDLES as $script ) {
 			wp_localize_script(

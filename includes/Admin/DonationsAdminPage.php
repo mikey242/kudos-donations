@@ -31,7 +31,7 @@ class DonationsAdminPage extends AbstractAdminPage implements ParentAdminPageInt
 	 * {@inheritDoc}
 	 */
 	public static function get_menu_slug(): string {
-		return 'kudos-campaigns';
+		return apply_filters( 'kudos_admin_top_page', 'kudos-campaigns' );
 	}
 
 	/**
