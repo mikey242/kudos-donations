@@ -40,7 +40,7 @@ class SubscriptionsAdminPage extends AbstractAdminPage implements SubmenuAdminPa
 	 * {@inheritDoc}
 	 */
 	public static function get_position(): int {
-		return 2;
+		return 4;
 	}
 
 	/**

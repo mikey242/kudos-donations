@@ -98,7 +98,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	 * {@inheritDoc}
 	 */
 	public static function get_position(): int {
-		return 1;
+		return 2;
 	}
 
 	/**

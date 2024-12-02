@@ -41,7 +41,7 @@ class DonorAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterf
 	 * {@inheritDoc}
 	 */
 	public static function get_position(): int {
-		return 3;
+		return 5;
 	}
 
 	/**

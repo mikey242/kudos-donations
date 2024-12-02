@@ -40,7 +40,7 @@ class TransactionsAdminPage extends AbstractAdminPage implements SubmenuAdminPag
 	 * {@inheritDoc}
 	 */
 	public static function get_position(): int {
-		return 1;
+		return 3;
 	}
 
 	/**

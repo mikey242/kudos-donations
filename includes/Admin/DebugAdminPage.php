@@ -74,7 +74,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	 * {@inheritDoc}
 	 */
 	public static function get_position(): int {
-		return 5;
+		return 100;
 	}
 
 	/**
