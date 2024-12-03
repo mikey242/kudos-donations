@@ -1,7 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { Fragment } from '@wordpress/element';
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { useSettingsContext } from '../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import {

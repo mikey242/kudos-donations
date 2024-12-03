@@ -14,7 +14,7 @@ import { store as noticesStore } from '@wordpress/notices';
 import { Flex } from '@wordpress/components';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import { useCampaignsContext } from '../../contexts/CampaignsContext';
+import { useCampaignsContext } from '../contexts';
 import { applyFilters } from '@wordpress/hooks';
 import * as AdminControls from '../../components/controls';
 

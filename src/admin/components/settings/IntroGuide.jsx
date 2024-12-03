@@ -5,7 +5,7 @@ import button from '../../../../assets/images/guide-button.png';
 import live from '../../../../assets/images/guide-test-live.png';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { useSettingsContext } from '../contexts';
 import { ExternalLink, Guide } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 

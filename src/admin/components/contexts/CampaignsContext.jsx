@@ -14,12 +14,12 @@ import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import { useAdminContext } from './AdminContext';
 
-export const CampaignsContext = createContext(null);
+const CampaignsContext = createContext(null);
 
-export default function CampaignsProvider({
+export const CampaignsProvider = ({
 	postType = 'kudos_campaign',
 	children,
-}) {
+}) => {
 	const { updateParams, searchParams } = useAdminContext();
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice, removeAllNotices } =
@@ -178,7 +178,7 @@ export default function CampaignsProvider({
 			</CampaignsContext.Provider>
 		</>
 	);
-}
+};
 
 export const useCampaignsContext = () => {
 	return useContext(CampaignsContext);

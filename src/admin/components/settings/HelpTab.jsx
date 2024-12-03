@@ -2,7 +2,7 @@ import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import logo from '../../../../assets/images/full-logo-green.svg';
 import React from 'react';
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { useSettingsContext } from '../contexts';
 import {
 	Button,
 	Flex,

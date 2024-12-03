@@ -12,10 +12,11 @@ import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
+import { IntroGuide } from '../settings/IntroGuide';
 
-export const SettingsContext = createContext(null);
+const SettingsContext = createContext(null);
 
-export default function SettingsProvider({ children }) {
+export const SettingsProvider = ({ children }) => {
 	const [settingsRequest, setSettingsRequest] = useState({
 		ready: false,
 		settings: {},
@@ -193,11 +194,14 @@ export default function SettingsProvider({ children }) {
 				isVendorReady,
 			}}
 		>
+			<IntroGuide />
 			{children}
 		</SettingsContext.Provider>
 	);
-}
+};
 
 export const useSettingsContext = () => {
 	return useContext(SettingsContext);
 };
+
+export default SettingsProvider;

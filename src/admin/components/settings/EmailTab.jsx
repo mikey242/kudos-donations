@@ -4,7 +4,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useSettingsContext } from '../../contexts/SettingsContext';
+import { useSettingsContext } from '../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import {

@@ -1,9 +1,8 @@
-import { AdminHeader } from '../AdminHeader';
 import React from 'react';
 import { useEffect, useState } from '@wordpress/element';
 import CampaignEdit from './CampaignEdit';
 import { CampaignsTable } from './CampaignsTable';
-import { useCampaignsContext } from '../../contexts/CampaignsContext';
+import { useCampaignsContext, useAdminContext } from '../contexts';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalSpacer as Spacer,
@@ -12,7 +11,6 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import GenerateShortcode from './GenerateShortcode';
-import { useAdminContext } from '../../contexts/AdminContext';
 
 export const CampaignsPage = () => {
 	const [currentCampaign, setCurrentCampaign] = useState(null);
@@ -60,7 +58,6 @@ export const CampaignsPage = () => {
 
 	return (
 		<>
-			<AdminHeader />
 			<div className="admin-wrap">
 				{campaignId ? (
 					currentCampaign && (

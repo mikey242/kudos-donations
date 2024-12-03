@@ -7,17 +7,15 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { AdminHeader } from '../AdminHeader';
 import MollieTab from './MollieTab';
 import { EmailTab } from './EmailTab';
 import { HelpTab } from './HelpTab';
 // eslint-disable-next-line import/default
-import { useSettingsContext } from '../../contexts/SettingsContext';
 import { clsx } from 'clsx';
 import { InvoiceTab } from './InvoiceTab';
 import { AdminTabPanel } from '../AdminTabPanel';
 import { Button, FlexItem } from '@wordpress/components';
-import { useAdminContext } from '../../contexts/AdminContext';
+import { useAdminContext, useSettingsContext } from '../contexts';
 import { applyFilters } from '@wordpress/hooks';
 import * as AdminControls from '../../components/controls';
 
@@ -122,7 +120,6 @@ export const SettingsPage = () => {
 						id="settings-form"
 						onSubmit={formMethods.handleSubmit(save)}
 					>
-						<AdminHeader />
 						<div className="admin-wrap">
 							<AdminTabPanel tabs={tabs} />
 						</div>

@@ -1,11 +1,18 @@
 import React, { createContext, useContext, useState } from 'react';
-import { IntroGuide } from '../components/settings/IntroGuide';
-import SettingsProvider from './SettingsContext';
-import { useSearchParams } from 'react-router-dom';
+import { BrowserRouter, useSearchParams } from 'react-router-dom';
+import { AdminHeader } from '../AdminHeader';
 
 const AdminContext = createContext(null);
 
 export const AdminProvider = ({ children }) => {
+	return (
+		<BrowserRouter>
+			<InnerAdminProvider>{children}</InnerAdminProvider>
+		</BrowserRouter>
+	);
+};
+
+export const InnerAdminProvider = ({ children }) => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [headerContent, setHeaderContent] = useState(null);
 
@@ -38,14 +45,10 @@ export const AdminProvider = ({ children }) => {
 	};
 
 	return (
-		<SettingsProvider>
-			<AdminContext.Provider value={data}>
-				<>
-					<IntroGuide />
-					{children}
-				</>
-			</AdminContext.Provider>
-		</SettingsProvider>
+		<AdminContext.Provider value={data}>
+			<AdminHeader />
+			<>{children}</>
+		</AdminContext.Provider>
 	);
 };
 

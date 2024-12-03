@@ -1,8 +1,7 @@
 import React from 'react';
 import { Button, Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useCampaignsContext } from '../contexts/CampaignsContext';
-import { useAdminContext } from '../contexts/AdminContext';
+import { useCampaignsContext, useAdminContext } from './contexts';
 
 export const Table = ({ headerItems }) => {
 	const { posts, sort, hasResolved } = useCampaignsContext();

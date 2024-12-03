@@ -12,7 +12,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Table } from '../Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useCampaignsContext } from '../../contexts/CampaignsContext';
+import { useCampaignsContext } from '../contexts';
 import GenerateShortcode from './GenerateShortcode';
 
 export const CampaignsTable = ({ handleEdit }) => {

@@ -10,7 +10,7 @@ import {
 	Panel,
 	ResponsiveWrapper,
 } from '@wordpress/components';
-import { useAdminContext } from '../contexts/AdminContext';
+import { useAdminContext } from './contexts';
 import { Notices } from './Notices';
 
 export const AdminHeader = () => {

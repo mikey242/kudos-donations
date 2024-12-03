@@ -1,6 +1,6 @@
 import React from 'react';
 import { TabPanel } from '@wordpress/components';
-import { useAdminContext } from '../contexts/AdminContext';
+import { useAdminContext } from './contexts';
 
 export const AdminTabPanel = ({ tabs }) => {
 	const { searchParams, updateParam } = useAdminContext();
