@@ -51,11 +51,10 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	 */
 	public function register_assets(): void {
 		// Enqueue the styles.
-		wp_enqueue_style( 'wp-components' );
 		wp_enqueue_style(
 			self::STYLE_HANDLE_ADMIN,
 			Assets::get_style( 'admin/settings/kudos-admin-settings.css' ),
-			[],
+			[ 'wp-components' ],
 			KUDOS_VERSION
 		);
 
