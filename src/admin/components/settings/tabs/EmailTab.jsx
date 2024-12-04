@@ -4,7 +4,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useSettingsContext } from '../contexts';
+import { useSettingsContext } from '../../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import {
@@ -16,7 +16,7 @@ import {
 	PanelBody,
 	PanelRow,
 } from '@wordpress/components';
-import { RadioControl, TextControl, ToggleControl } from '../controls';
+import { RadioControl, TextControl, ToggleControl } from '../../controls';
 
 const EmailTab = () => {
 	const { watch, getValues } = useFormContext();

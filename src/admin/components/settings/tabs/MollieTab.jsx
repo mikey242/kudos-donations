@@ -1,7 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { Fragment } from '@wordpress/element';
-import { useSettingsContext } from '../contexts';
+import { useSettingsContext } from '../../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import {
@@ -14,7 +14,7 @@ import {
 	Panel,
 	PanelBody,
 } from '@wordpress/components';
-import { RadioGroupControl, TextControl } from '../controls';
+import { RadioGroupControl, TextControl } from '../../controls';
 
 const MollieTab = () => {
 	const {
@@ -185,4 +185,4 @@ const MollieTab = () => {
 	);
 };
 
-export default MollieTab;
+export { MollieTab };

@@ -2,17 +2,12 @@
  * @see https://www.codeinwp.com/blog/plugin-options-page-gutenberg/
  * @see https://github.com/HardeepAsrani/my-awesome-plugin/
  */
-
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import MollieTab from './MollieTab';
-import { EmailTab } from './EmailTab';
-import { HelpTab } from './HelpTab';
-// eslint-disable-next-line import/default
+import { MollieTab, EmailTab, HelpTab, InvoiceTab } from './tabs';
 import { clsx } from 'clsx';
-import { InvoiceTab } from './InvoiceTab';
 import { AdminTabPanel } from '../AdminTabPanel';
 import { Button, FlexItem } from '@wordpress/components';
 import { useAdminContext, useSettingsContext } from '../contexts';
@@ -32,6 +27,7 @@ export const SettingsPage = () => {
 		defaultValues: settings,
 	});
 	const { formState } = formMethods;
+	const formRef = useRef(null);
 
 	// Define tabs and panels
 	const tabs = applyFilters(
@@ -88,6 +84,8 @@ export const SettingsPage = () => {
 						variant="primary"
 						type="submit"
 						isBusy={settingsSaving}
+						disabled={settingsSaving}
+						onClick={() => formRef.current?.requestSubmit()}
 					>
 						{__('Save', 'kudos-donations')}
 					</Button>
@@ -118,6 +116,7 @@ export const SettingsPage = () => {
 				<FormProvider {...formMethods}>
 					<form
 						id="settings-form"
+						ref={formRef}
 						onSubmit={formMethods.handleSubmit(save)}
 					>
 						<div className="admin-wrap">

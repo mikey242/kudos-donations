@@ -1,8 +1,8 @@
 import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import logo from '../../../../assets/images/full-logo-green.svg';
+import logo from '../../../../../assets/images/full-logo-green.svg';
 import React from 'react';
-import { useSettingsContext } from '../contexts';
+import { useSettingsContext } from '../../contexts';
 import {
 	Button,
 	Flex,
@@ -10,7 +10,7 @@ import {
 	Panel,
 	PanelBody,
 } from '@wordpress/components';
-import { TextControl, ToggleControl } from '../controls';
+import { TextControl, ToggleControl } from '../../controls';
 
 const HelpTab = () => {
 	const { updateSetting } = useSettingsContext();

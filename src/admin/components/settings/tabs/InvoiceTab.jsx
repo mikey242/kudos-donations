@@ -2,7 +2,7 @@ import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { Panel, PanelBody } from '@wordpress/components';
-import { TextAreaControl, TextControl } from '../controls';
+import { TextAreaControl, TextControl } from '../../controls';
 
 const InvoiceTab = () => {
 	return (
