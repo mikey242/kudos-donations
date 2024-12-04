@@ -39,7 +39,6 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	public function __construct( TwigService $twig, Dompdf $pdf ) {
 
 		$this->twig = $twig;
-		$this->pdf  = $pdf;
 
 		// Config DomPdf.
 		$options = new Options();
@@ -48,7 +47,8 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 		$options->setFontHeightRatio( 1 );
 		$options->setIsFontSubsettingEnabled( true );
 		$options->setDefaultPaperSize( 'A4' );
-		$this->pdf->setOptions( $options );
+		$pdf->setOptions( $options );
+		$this->pdf = $pdf;
 
 		$this->logos = [
 			'logo' => 'data:image/svg+xml,' . Utils::get_company_logo_svg(),
@@ -111,7 +111,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 		$data = array_merge( $data, [ 'logos' => $this->logos ] );
 
 		try {
-			$dompdf = new Dompdf( $this->pdf->getOptions() );
+			$dompdf = $this->pdf;
 			$dompdf->loadHtml(
 				$this->twig->render( $template, $data )
 			);
