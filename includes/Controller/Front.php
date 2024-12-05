@@ -27,9 +27,10 @@ use WP_REST_Server;
 
 class Front extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
+	public const STYLE_HANDLE_VIEW          = 'kudos-fonts';
 	public const SCRIPT_HANDLE_VIEW         = 'kudos-view-script';
 	public const SCRIPT_HANDLE_EDITOR       = 'kudos-editor-script';
-	private const SCRIPT_HANDLES            = [
+	public const SCRIPT_HANDLES             = [
 		self::SCRIPT_HANDLE_VIEW,
 		self::SCRIPT_HANDLE_EDITOR,
 	];
@@ -70,7 +71,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	private function register_assets(): void {
 		// Styles.
 		$font = Assets::get_style( 'front/kudos-fonts.css' );
-		wp_register_style( 'kudos-fonts', $font, [], KUDOS_VERSION );
+		wp_register_style( self::STYLE_HANDLE_VIEW, $font, [], KUDOS_VERSION );
 
 		// Scripts.
 		$view = Assets::get_script( 'front/block/kudos-front.js' );
@@ -112,7 +113,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * Enqueue the styles and scripts.
 	 */
 	private function enqueue_assets(): void {
-		wp_enqueue_style( 'kudos-fonts' );
+		wp_enqueue_style( self::STYLE_HANDLE_VIEW );
 		wp_enqueue_script( self::SCRIPT_HANDLE_VIEW );
 	}
 
