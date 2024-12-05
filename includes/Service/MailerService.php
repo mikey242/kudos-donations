@@ -337,7 +337,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 				],
 				'show_in_rest' => [
 					'schema' => [
-						'type'       => 'object',
+						'type'       => FieldType::OBJECT,
 						'properties' => [
 							'from_email' => [
 								'type' => FieldType::STRING,
