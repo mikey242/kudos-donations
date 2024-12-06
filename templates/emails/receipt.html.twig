@@ -5,7 +5,6 @@
 {% endblock preheader %}
 
 {% block body %}
-    <h1>{{ __('Hi', 'kudos-donations') ~ ' ' ~ name }},</h1>
     <p>{{ __('Thanks for your donation. This email is a receipt for your records.', 'kudos-donations') }}</p>
     <table class="purchase" width="100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
@@ -43,7 +42,7 @@
         </tr>
     </table>
     <p>{{ __('Thanks', 'kudos-donations') }},
-        <br>{{ website_name }}</p>
+        <br>{{ get_bloginfo('name') }}</p>
     <!-- Cancel subscription -->
     {% if cancel_url %}
         <table class="body-sub" role="presentation">

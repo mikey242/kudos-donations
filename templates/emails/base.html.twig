@@ -1,15 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml"
+      style="color-scheme: light dark; supported-color-schemes: light dark;">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="x-apple-disable-message-reformatting"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
     <title></title>
     <style type="text/css" rel="stylesheet" media="all">
         /* Base ------------------------------ */
 
-        @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&display=swap");
+        @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&amp;display=swap");
 
         body {
             width: 100% !important;
@@ -104,6 +107,10 @@
 
         .align-center {
             text-align: center;
+        }
+
+        .u-margin-bottom-none {
+            margin-bottom: 0;
         }
 
         /* Buttons ------------------------------ */
@@ -398,6 +405,45 @@
                 width: 100% !important;
             }
         }
+
+        @media (prefers-color-scheme: dark) {
+            body,
+            .email-body,
+            .email-body_inner,
+            .email-content,
+            .email-wrapper,
+            .email-masthead,
+            .email-footer {
+                background-color: #333333 !important;
+                color: #FFF !important;
+            }
+
+            p,
+            ul,
+            ol,
+            blockquote,
+            h1,
+            h2,
+            h3,
+            span,
+            .purchase_item {
+                color: #FFF !important;
+            }
+
+            .attributes_content,
+            .discount {
+                background-color: #222 !important;
+            }
+
+            .email-masthead_name {
+                text-shadow: none !important;
+            }
+        }
+
+        :root {
+            color-scheme: light dark;
+            supported-color-schemes: light dark;
+        }
     </style>
     <!--[if mso]>
     <style type="text/css">
@@ -406,8 +452,26 @@
         }
     </style>
     <![endif]-->
+    <style type="text/css" rel="stylesheet" media="all">
+        body {
+            width: 100% !important;
+            height: 100%;
+            margin: 0;
+            -webkit-text-size-adjust: none;
+        }
+
+        body {
+            font-family: "Nunito Sans", Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #F2F4F6;
+            color: #51545E;
+        }
+    </style>
 </head>
-<body>
+<body style="width: 100% !important; height: 100%; -webkit-text-size-adjust: none; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; background-color: #F2F4F6; color: #51545E; margin: 0;"
+      bgcolor="#F2F4F6">
 <span class="preheader">
     {% block preheader %}
     {% endblock preheader %}
@@ -418,7 +482,7 @@
             <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                     <td class="email-masthead">
-                        <a href="#" class="f-fallback email-masthead_name">
+                        <a href="https://kudosdonations.com" class="f-fallback email-masthead_name">
                             <img width="40" src="cid:logo" alt="Kudos Donations Logo">
                         </a>
                     </td>
@@ -432,6 +496,7 @@
                             <tr>
                                 <td class="content-cell">
                                     <div class="f-fallback">
+                                        <h1>{{ header }}</h1>
                                         {% block body %}
                                         {% endblock body %}
                                     </div>
@@ -446,9 +511,12 @@
                                role="presentation">
                             <tr>
                                 <td class="content-cell" align="center">
-                                    <p class="f-fallback sub align-center">
-                                        &copy; {{ 'now' | date('Y') }} {{ website_name }}.
-                                        {{ __('All rights reserved.', 'kudos-donations') }}</p>
+                                    <p class="f-fallback sub align-center u-margin-bottom-none">
+                                        &copy; {{ 'now' | date('Y') }} <a
+                                                href="{{ get_bloginfo('url') }}">{{ get_bloginfo('name') }}</a>
+                                    </p>
+                                    <p style="font-style: italic;"
+                                       class="f-fallback sub align-center">{{ get_bloginfo('description') }}</p>
                                 </td>
                             </tr>
                         </table>

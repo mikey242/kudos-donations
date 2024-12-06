@@ -150,17 +150,16 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 
 		// Create array of variables for use in twig template.
 		$render_array = [
-			'name'         => $donor->{DonorPostType::META_FIELD_NAME} ?? '',
-			'date'         => $transaction->post_date,
-			'description'  => $transaction->post_title,
-			'amount'       => ( ! empty( $transaction->{TransactionPostType::META_FIELD_CURRENCY} ) ? html_entity_decode(
+			'name'        => $donor->{DonorPostType::META_FIELD_NAME} ?? '',
+			'date'        => $transaction->post_date,
+			'description' => $transaction->post_title,
+			'amount'      => ( ! empty( $transaction->{TransactionPostType::META_FIELD_CURRENCY} ) ? html_entity_decode(
 				Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ]
 			) : '' ) . number_format_i18n(
 				$transaction->{TransactionPostType::META_FIELD_VALUE},
 				2
 			),
-			'receipt_id'   => Utils::get_formatted_id( $transaction_id ),
-			'website_name' => Utils::get_company_name(),
+			'receipt_id'  => Utils::get_formatted_id( $transaction_id ),
 		];
 
 		// Add a cancel button if this is the receipt for a subscription payment.
@@ -280,9 +279,8 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 		$body = $twig->render(
 			'emails/message.html.twig',
 			[
-				'header'       => $header,
-				'message'      => $message,
-				'website_name' => get_bloginfo( 'name' ),
+				'header'  => $header,
+				'message' => $message,
 			]
 		);
 
