@@ -7,18 +7,38 @@
  * @copyright 2024 Iseard Media
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 
 use IseardMedia\Kudos\Service\PaymentService;
-use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
+use IseardMedia\Kudos\Vendor\AbstractVendorFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class PaymentVendorFactory {
+class PaymentVendorFactory extends AbstractVendorFactory {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_vendor_settings_key(): string {
+		return PaymentService::SETTING_VENDOR;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_default_vendor(): string {
+		return 'mollie';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_interface_class(): string {
+		return PaymentVendorInterface::class;
+	}
 
 	/**
 	 * @throws ContainerExceptionInterface
@@ -30,6 +50,7 @@ class PaymentVendorFactory {
 		if ( $vendor_class ) {
 			return $container->get( $vendor_class );
 		}
+
 		return null;
 	}
 

@@ -12,40 +12,29 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Vendor\EmailVendor;
 
 use IseardMedia\Kudos\Service\MailerService;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use IseardMedia\Kudos\Vendor\AbstractVendorFactory;
 
-class EmailVendorFactory {
+class EmailVendorFactory extends AbstractVendorFactory {
 
 	/**
-	 * @throws ContainerExceptionInterface
-	 * @throws NotFoundExceptionInterface
+	 * {@inheritDoc}
 	 */
-	public function create( ContainerInterface $container ): ?EmailVendorInterface {
-		$vendor       = get_option( MailerService::SETTING_EMAIL_VENDOR, 'smtp' );
-		$vendor_class = $this->get_vendor( $vendor );
-		if ( $vendor_class ) {
-			return $container->get( $vendor_class );
-		}
-
-		return null;
+	protected function get_vendor_settings_key(): string {
+		return MailerService::SETTING_EMAIL_VENDOR;
 	}
 
 	/**
-	 * Returns the vendor class for the specified name.
-	 *
-	 * @param string $name The vendor name.
-	 * @param string $key The key to return.
+	 * {@inheritDoc}
 	 */
-	public function get_vendor( string $name, string $key = 'class' ): ?string {
-		$vendors = $this->get_vendors();
+	protected function get_default_vendor(): string {
+		return 'smtp';
+	}
 
-		if ( ! isset( $vendors[ $name ][ $key ] ) || ! is_a( $vendors[ $name ]['class'], EmailVendorInterface::class, true ) ) {
-			return null;
-		}
-
-		return $vendors[ $name ][ $key ];
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_interface_class(): string {
+		return EmailVendorInterface::class;
 	}
 
 	/**
