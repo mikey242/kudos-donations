@@ -17,6 +17,8 @@ use IseardMedia\Kudos\Container\Registrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
+use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorFactory;
+use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorInterface;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use Mollie\Api\MollieApiClient;
@@ -31,9 +33,9 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 return static function ( ContainerConfigurator $container ) {
 	// Config defaults.
 	$services = $container->services()
-		->defaults()
-			->autowire()
-			->public();
+	                      ->defaults()
+	                      ->autowire()
+	                      ->public();
 
 	// Define the rotating file handler.
 	$services
@@ -66,32 +68,41 @@ return static function ( ContainerConfigurator $container ) {
 
 	// Set logger on required services.
 	$services->instanceof( LoggerAwareInterface::class )
-		->call( 'setLogger', [ service( LoggerInterface::class ) ] );
+	         ->call( 'setLogger', [ service( LoggerInterface::class ) ] );
 
 	// Set encryption service on required services.
 	$services->instanceof( EncryptionAwareInterface::class )
-		->call( 'set_encryption', [ service( EncryptionService::class ) ] );
+	         ->call( 'set_encryption', [ service( EncryptionService::class ) ] );
 
 	// Tag services.
 	$services->instanceof( Registrable::class )
-		->tag( 'kudos.registrable' );
+	         ->tag( 'kudos.registrable' );
 	$services->instanceof( ActivationAwareInterface::class )
-		->tag( 'kudos.activation' );
+	         ->tag( 'kudos.activation' );
 	$services->instanceof( UpgradeAwareInterface::class )
-		->tag( 'kudos.upgradeable' );
+	         ->tag( 'kudos.upgradeable' );
 	$services->instanceof( HasSettingsInterface::class )
-		->tag( 'kudos.has_settings' );
+	         ->tag( 'kudos.has_settings' );
 	$services->instanceof( MigrationInterface::class )
-		->tag( 'kudos.migration' );
+	         ->tag( 'kudos.migration' );
 
-	// Vendor.
+	// Payment Vendor.
 	$services->set( PaymentVendorInterface::class )
-		->factory( [ service( PaymentVendorFactory::class ), 'create' ] )
-		->args(
-			[
-				service( 'service_container' ),
-			]
-		);
+	         ->factory( [ service( PaymentVendorFactory::class ), 'create' ] )
+	         ->args(
+		         [
+			         service( 'service_container' ),
+		         ]
+	         );
+
+	// Email Vendor.
+	$services->set( EmailVendorInterface::class )
+	         ->factory( [ service( EmailVendorFactory::class ), 'create' ] )
+	         ->args(
+		         [
+			         service( 'service_container' ),
+		         ]
+	         );
 
 	// External libraries.
 	$services
@@ -100,7 +111,7 @@ return static function ( ContainerConfigurator $container ) {
 
 	// Load base plugin.
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
-		->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php}' );
+	         ->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php}' );
 
 	// Filter for adding additional services.
 	apply_filters( 'kudos_container_configurator', $services );

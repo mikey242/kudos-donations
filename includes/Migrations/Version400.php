@@ -16,7 +16,7 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\InvoiceService;
-use IseardMedia\Kudos\Service\MailerService;
+use IseardMedia\Kudos\Vendor\EmailVendor\SMTPVendor;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 
 class Version400 extends AbstractMigration {
@@ -101,10 +101,10 @@ class Version400 extends AbstractMigration {
 			$new_settings['username'] = $username;
 		}
 		if ( $password ) {
-			update_option( MailerService::SETTING_SMTP_PASSWORD, $password );
+			update_option( SMTPVendor::SETTING_SMTP_PASSWORD, $password );
 		}
 
-		update_option( MailerService::SETTING_CUSTOM_SMTP, $new_settings );
+		update_option( SMTPVendor::SETTING_CUSTOM_SMTP, $new_settings );
 
 		// Always return true, a failure here is not critical.
 		return true;

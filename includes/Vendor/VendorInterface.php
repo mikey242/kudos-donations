@@ -14,9 +14,4 @@ interface VendorInterface {
 	 * Returns the provider name.
 	 */
 	public static function get_name(): string;
-
-	/**
-	 * Refresh the cached audiences.
-	 */
-	public function refresh(): bool;
 }
