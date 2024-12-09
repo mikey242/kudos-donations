@@ -70,7 +70,6 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE, false );
 		$this->bcc                = get_option( self::SETTING_EMAIL_BCC, '' );
 		$this->custom_smtp_config = get_option( self::SETTING_CUSTOM_SMTP, [] );
-		$this->add_hooks();
 	}
 
 	/**
@@ -78,7 +77,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 */
 	private function add_hooks(): void {
 		// Configure PHPMailer.
-		add_action( 'phpmailer_init', [ $this, 'init' ] );
+		add_action( 'phpmailer_init', [ $this, 'phpmailer_init' ] );
 
 		// Add filters for encrypting passwords.
 		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
@@ -94,7 +93,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * Removes hooks to return to normal settings after email sent.
 	 */
 	private function remove_hooks(): void {
-		remove_action( 'phpmailer_init', [ $this, 'init' ] );
+		remove_action( 'phpmailer_init', [ $this, 'phpmailer_init' ] );
 		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
 		remove_filter( 'wp_mail_content_type', [ $this, 'set_html_mail_content_type' ] );
 		remove_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
@@ -110,8 +109,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * @throws Exception From PHPMailer.
 	 *
 	 */
-	public function init( PHPMailer $phpmailer ): void {
-		$this->logger->debug( 'PHPMailer initialized' );
+	public function phpmailer_init( PHPMailer $phpmailer ): void {
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$phpmailer->SMTPDebug = 0;
 
@@ -154,6 +152,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 			$phpmailer->FromName = $custom_config['from_name'];
 		}
 		// phpcs:enable
+		$this->logger->debug( 'PHPMailer initialized' );
 	}
 
 	/**
@@ -209,6 +208,8 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 		array $attachment = []
 	): bool {
 		do_action( 'kudos_mailer_send', $to, $subject, $body, $attachment );
+		// Add required hooks.
+		$this->add_hooks();
 
 		$mail = wp_mail( $to, $subject, $body, '', $attachment );
 
