@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos;
 
 use Exception;
 use IseardMedia\Kudos\Container\CompilerPass\ActivationCompilerPass;
-use IseardMedia\Kudos\Container\CompilerPass\RegistrableCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\SettingsCompilerPass;
 use IseardMedia\Kudos\Container\CompilerPass\UpgradeAwareCompilerPass;
 use IseardMedia\Kudos\Service\CacheService;
@@ -22,7 +21,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use WP_Filesystem_Base;
 
 class Kernel {
@@ -55,20 +54,6 @@ class Kernel {
 	}
 
 	/**
-	 * Returns an array of compiler pass classes.
-	 *
-	 * @return string[]
-	 */
-	private function get_compiler_passes(): array {
-		return [
-			ActivationCompilerPass::class,
-			RegistrableCompilerPass::class,
-			UpgradeAwareCompilerPass::class,
-			SettingsCompilerPass::class,
-		];
-	}
-
-	/**
 	 * Create the container.
 	 *
 	 * @throws Exception Thrown if config could not be loaded.
@@ -86,8 +71,7 @@ class Kernel {
 			$this->container_builder = new ContainerBuilder();
 			$this->initialize_filesystem();
 			$this->load_config();
-			$this->add_compiler_passes();
-			$this->container_builder->compile();
+			$this->container_builder->compile( true );
 			$this->dump_container( $container_file_path );
 			$this->container         = $this->container_builder;
 			$this->container_builder = null; // Clear the builder reference after compilation.
@@ -123,8 +107,8 @@ class Kernel {
 	 */
 	private function load_config(): void {
 		$config_path = $this->get_config_path();
-		$loader      = new PhpFileLoader( $this->container_builder, new FileLocator( $config_path ) );
-		$loader->load( 'services.php' );
+		$loader      = new YamlFileLoader( $this->container_builder, new FileLocator( $config_path ) );
+		$loader->load( 'services.yaml' );
 	}
 
 	/**
@@ -134,15 +118,6 @@ class Kernel {
 	 */
 	private function get_config_path(): string {
 		return KUDOS_PLUGIN_DIR . 'config/';
-	}
-
-	/**
-	 * Add compiler passes to the container.
-	 */
-	private function add_compiler_passes(): void {
-		foreach ( $this->get_compiler_passes() as $compiler_pass ) {
-			$this->container_builder->addCompilerPass( new $compiler_pass() );
-		}
 	}
 
 	/**

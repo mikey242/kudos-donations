@@ -21,6 +21,7 @@
 
 namespace IseardMedia\Kudos;
 
+use Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 
 // If this file is called directly, abort.
@@ -51,23 +52,33 @@ if ( ! Autoloader::init() ) {
 	return;
 }
 
-// Action Scheduler.
-if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
-	include KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
-}
-
 // Load the environment variables.
 $dotenv = new Dotenv();
 try {
 	$dotenv->load( __DIR__ . '/.env' );
 	// phpcs:ignore
 } catch ( \Exception $ignored ) {
+	$_ENV['APP_ENV'] = 'production';
+}
+
+// Action Scheduler.
+if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
+	include KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
 }
 
 // Set the environment as production if not specified.
 if ( empty( $_ENV['APP_ENV'] ) ) {
 	$_ENV['APP_ENV'] = 'production';
 }
+
+// Add additional env variables based on WordPress environment.
+$dotenv->populate(
+	[
+		'KUDOS_STORAGE_DIR' => KUDOS_STORAGE_DIR,
+		'LOG_LEVEL'         => KUDOS_DEBUG ? Logger::DEBUG : Logger::INFO,
+	],
+	true
+);
 
 // Define constant for easily accessing environment.
 \define( 'KUDOS_APP_ENV', sanitize_text_field( $_ENV['APP_ENV'] ) );

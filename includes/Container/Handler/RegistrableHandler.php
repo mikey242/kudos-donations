@@ -18,12 +18,24 @@ use IseardMedia\Kudos\Container\Registrable;
  * Service instantiator class.
  */
 class RegistrableHandler {
+
 	/**
 	 * Array of services.
 	 *
 	 * @var Registrable[]
 	 */
 	protected array $services = [];
+
+	/**
+	 * Receives the registrable services.
+	 *
+	 * @param iterable $services Array of services.
+	 */
+	public function __construct( iterable $services ) {
+		foreach ( $services as $service ) {
+			$this->add( $service );
+		}
+	}
 
 	/**
 	 * Add service to list.

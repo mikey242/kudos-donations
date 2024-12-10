@@ -19,6 +19,13 @@ class EmailVendorFactory extends AbstractVendorFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function get_type_slug(): string {
+		return 'email_vendors';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	protected function get_vendor_settings_key(): string {
 		return MailerService::SETTING_EMAIL_VENDOR;
 	}

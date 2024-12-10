@@ -11,14 +11,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Container\Handler;
 
-use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 /**
  * Upgrade handler class.
  */
-class UpgradeHandler extends AbstractRegistrable {
+class UpgradeHandler extends AbstractHandler {
 
 	use LoggerAwareTrait;
 
@@ -30,18 +29,11 @@ class UpgradeHandler extends AbstractRegistrable {
 	protected array $services = [];
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public function register(): void {
-		$this->process();
-	}
-
-	/**
 	 * Add service to list.
 	 *
 	 * @param UpgradeAwareInterface $service Service.
 	 */
-	public function add( UpgradeAwareInterface $service ): void {
+	public function add( $service ): void {
 		$this->services[] = $service;
 	}
 

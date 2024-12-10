@@ -22,6 +22,17 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 	private array $settings        = [];
 
 	/**
+	 * Receives the classes with settings.
+	 *
+	 * @param iterable $services Array of services.
+	 */
+	public function __construct( iterable $services ) {
+		foreach ( $services as $service ) {
+			$this->add( $service );
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_registration_action(): string {

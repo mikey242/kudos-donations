@@ -7,11 +7,31 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Vendor;
 
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use Psr\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-abstract class AbstractVendorFactory {
+abstract class AbstractVendorFactory extends AbstractRegistrable {
+
+	public iterable $vendors;
+
+	/**
+	 * Add filter to allow accessing providers in js.
+	 */
+	public function __construct(iterable $vendors) {
+		$this->vendors = $vendors;
+	}
+
+	public function register(): void {
+		add_filter( 'kudos_global_localization', [ $this, 'add_providers' ] );
+	}
+
+	/**
+	 * Returns the slug name for the vendor type
+	 */
+	abstract protected function get_type_slug(): string;
+
 	/**
 	 * Get the vendor key for retrieving the option.
 	 */
@@ -65,5 +85,24 @@ abstract class AbstractVendorFactory {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Add the providers to given args.
+	 *
+	 * @param array $args The existing args.
+	 */
+	public function add_providers( array $args ): array {
+		$providers                       = $this->get_vendors();
+		$args[ static::get_type_slug() ] = array_map(
+			fn( $key, $value ) => [
+				'label' => $value['label'],
+				'slug'  => $key,
+			],
+			array_keys( $providers ),
+			$providers
+		);
+
+		return $args;
 	}
 }

@@ -17,12 +17,24 @@ use IseardMedia\Kudos\Container\ActivationAwareInterface;
  * ActivationHandler class.
  */
 class ActivationHandler {
+
 	/**
 	 * Array of services.
 	 *
 	 * @var ActivationAwareInterface[]
 	 */
 	protected array $services = [];
+
+	/**
+	 * Receives the activation aware services.
+	 *
+	 * @param iterable $services Array of services.
+	 */
+	public function __construct( iterable $services ) {
+		foreach ( $services as $service ) {
+			$this->add( $service );
+		}
+	}
 
 	/**
 	 * Add service to list.
