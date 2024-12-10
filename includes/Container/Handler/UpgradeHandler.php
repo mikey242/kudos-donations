@@ -12,12 +12,13 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Container\Handler;
 
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 /**
  * Upgrade handler class.
  */
-class UpgradeHandler {
+class UpgradeHandler implements LoggerAwareInterface {
 
 	use LoggerAwareTrait;
 
