@@ -12,9 +12,6 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos;
 
 use Exception;
-use IseardMedia\Kudos\Container\CompilerPass\ActivationCompilerPass;
-use IseardMedia\Kudos\Container\CompilerPass\SettingsCompilerPass;
-use IseardMedia\Kudos\Container\CompilerPass\UpgradeAwareCompilerPass;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\NoticeService;
 use Psr\Container\ContainerInterface;

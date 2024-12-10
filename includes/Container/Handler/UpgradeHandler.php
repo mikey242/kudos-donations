@@ -17,7 +17,7 @@ use Psr\Log\LoggerAwareTrait;
 /**
  * Upgrade handler class.
  */
-class UpgradeHandler extends AbstractHandler {
+class UpgradeHandler {
 
 	use LoggerAwareTrait;
 
@@ -29,11 +29,22 @@ class UpgradeHandler extends AbstractHandler {
 	protected array $services = [];
 
 	/**
+	 * Receives the classes with settings.
+	 *
+	 * @param iterable $services Array of services.
+	 */
+	public function __construct( iterable $services ) {
+		foreach ( $services as $service ) {
+			$this->add( $service );
+		}
+	}
+
+	/**
 	 * Add service to list.
 	 *
 	 * @param UpgradeAwareInterface $service Service.
 	 */
-	public function add( $service ): void {
+	public function add( UpgradeAwareInterface $service ): void {
 		$this->services[] = $service;
 	}
 

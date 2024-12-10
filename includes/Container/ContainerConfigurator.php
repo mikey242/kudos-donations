@@ -14,18 +14,6 @@ namespace IseardMedia\Kudos\Container;
 use Psr\Container\ContainerInterface;
 
 class ContainerConfigurator {
-
-	private ContainerInterface $container;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param ContainerInterface $container Instance of the ContainerInterface.
-	 */
-	public function __construct( ContainerInterface $container ) {
-		$this->container = $container;
-	}
-
 	/**
 	 * Allows apply_filter global to be used in the container configuration.
 	 *
