@@ -65,7 +65,7 @@ export const SettingsPage = () => {
 				<FlexItem>
 					<span className="status-text">
 						{isVendorReady
-							? settings?._kudos_vendor +
+							? settings?._kudos_payment_vendor +
 								' ' +
 								__('ready', 'kudos-donations')
 							: __('not ready', 'kudos-donations')}
@@ -95,7 +95,7 @@ export const SettingsPage = () => {
 	}, [
 		isVendorReady,
 		setHeaderContent,
-		settings?._kudos_vendor,
+		settings?._kudos_payment_vendor,
 		settingsSaving,
 	]);
 

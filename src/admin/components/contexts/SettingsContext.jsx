@@ -31,7 +31,7 @@ export const SettingsProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (settingsRequest.ready) {
-			const vendor = settings._kudos_vendor;
+			const vendor = settings._kudos_payment_vendor;
 			if (vendor) {
 				const mode = settings[`_kudos_vendor_${vendor}_api_mode`];
 				if (mode) {

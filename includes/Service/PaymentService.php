@@ -21,7 +21,7 @@ use IseardMedia\Kudos\Helper\Utils;
 use WP_Post;
 
 class PaymentService extends AbstractRegistrable implements HasSettingsInterface {
-	public const SETTING_VENDOR = '_kudos_vendor';
+	public const SETTING_VENDOR = '_kudos_payment_vendor';
 	private MailerService $mailer_service;
 
 	/**
