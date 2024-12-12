@@ -34,7 +34,7 @@ class PaymentVendorFactory extends AbstractVendorFactory {
 	 * {@inheritDoc}
 	 */
 	protected function get_default_vendor(): string {
-		return 'mollie';
+		return MolliePaymentVendor::get_slug();
 	}
 
 	/**

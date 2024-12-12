@@ -62,16 +62,15 @@ abstract class AbstractVendorFactory extends AbstractRegistrable {
 	 */
 	public function get_vendor(): ?VendorInterface {
 		$selected_vendor       = get_option( $this->get_vendor_settings_key(), $this->get_default_vendor() );
-		if (!$this->vendor_locator->has($selected_vendor)) {
-			NoticeService::add_notice('Cannot find vendor: ' . $selected_vendor . '. Using default vendor: ' . $this->get_default_vendor(), 'error');
-			$selected_vendor = $this->get_default_vendor();
-			update_option($this->get_vendor_settings_key(), $selected_vendor);
-		}
-
-		try {
-			return $this->vendor_locator->get($selected_vendor);
-		} catch ( NotFoundExceptionInterface | ContainerExceptionInterface $e  ) {
-			$this->logger->error($e->getMessage());
+		/** @var VendorInterface $class */
+		foreach ($this->vendor_locator->getProvidedServices() as $class => $service) {
+			if($class::get_slug() === $selected_vendor) {
+				try {
+					return $this->vendor_locator->get($class);
+				} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+					$this->logger->error($e->getMessage());
+				}
+			}
 		}
 
 		return null;

@@ -37,7 +37,7 @@ class EmailVendorFactory extends AbstractVendorFactory {
 	 * {@inheritDoc}
 	 */
 	protected function get_default_vendor(): string {
-		return SMTPVendor::class;
+		return SMTPVendor::get_slug();
 	}
 
 	/**

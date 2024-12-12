@@ -52,6 +52,13 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	/**
 	 * {@inheritDoc}
 	 */
+	public static function get_slug(): string {
+		return 'smtp';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_registration_action(): string {
 		return 'kudos_mailer_send';
 	}
