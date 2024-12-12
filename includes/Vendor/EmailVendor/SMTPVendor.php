@@ -268,7 +268,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_settings(): array {
+	public static function get_settings(): array {
 		return [
 			self::SETTING_EMAIL_BCC               => [
 				'type'              => FieldType::STRING,

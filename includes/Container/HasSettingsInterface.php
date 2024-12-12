@@ -16,5 +16,5 @@ interface HasSettingsInterface {
 	/**
 	 * Gets the settings array.
 	 */
-	public function get_settings(): array;
+	public static function get_settings(): array;
 }

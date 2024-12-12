@@ -327,7 +327,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_settings(): array {
+	public static function get_settings(): array {
 		return [
 			self::SETTING_ALWAYS_LOAD_ASSETS => [
 				'type'              => FieldType::BOOLEAN,

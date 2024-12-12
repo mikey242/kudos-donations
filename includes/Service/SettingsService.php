@@ -96,7 +96,7 @@ class SettingsService implements HasSettingsInterface {
 	/**
 	 * Returns all settings in array.
 	 */
-	public function get_settings(): array {
+	public static function get_settings(): array {
 		return [
 			self::SETTING_SHOW_INTRO       => [
 				'type'              => FieldType::BOOLEAN,

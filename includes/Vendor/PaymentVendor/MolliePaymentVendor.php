@@ -746,7 +746,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_settings(): array {
+	public static function get_settings(): array {
 		return [
 			self::SETTING_API_MODE => [
 				'type' => FieldType::STRING,
