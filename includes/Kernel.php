@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use WP_Filesystem_Base;
 
 class Kernel {
@@ -103,9 +103,23 @@ class Kernel {
 	 * @throws Exception Thrown if unable to load the config file.
 	 */
 	private function load_config(): void {
-		$config_path = $this->get_config_path();
-		$loader      = new YamlFileLoader( $this->container_builder, new FileLocator( $config_path ) );
-		$loader->load( 'services.yaml' );
+		$config_paths = apply_filters( 'kudos_container_config_paths', [ $this->get_config_path() ] );
+		foreach ( $config_paths as $config_path ) {
+			// Ensure the config path ends with a directory separator.
+			$config_path = rtrim( $config_path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
+
+			// Create a YamlFileLoader instance for each config path.
+			$loader = new PhpFileLoader( $this->container_builder, new FileLocator( $config_path ) );
+
+			// Load the 'services.yaml' from the current config directory.
+			try {
+				$loader->load( 'services.php' );
+			} catch ( Exception $e ) {
+				// phpcs:disable WordPress.PHP.DevelopmentFunctions
+				error_log( $e->getMessage() );
+				NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+			}
+		}
 	}
 
 	/**
