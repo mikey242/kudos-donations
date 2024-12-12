@@ -5,7 +5,9 @@
 
 namespace Controller;
 
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
+use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use WP_UnitTestCase;
 
 /**
@@ -35,8 +37,10 @@ class Front extends WP_UnitTestCase {
 	 * Test that plugin container is created.
 	 */
 	public function test_render_callback() {
-		$vendor_service = $this->createMock( PaymentVendorInterface::class );
-		$front          = new \IseardMedia\Kudos\Controller\Front( $vendor_service );
+		$mollie_mock = $this->createMock(MolliePaymentVendor::class);
+		$vendor_factory = $this->createMock( PaymentVendorFactory::class );
+		$vendor_factory->method('get_vendor')->willReturn($mollie_mock);
+		$front          = new \IseardMedia\Kudos\Controller\Front( $vendor_factory );
 		$args           = [
 			'campaign_id'  => 291,
 			'button_label' => 'Donate now',
