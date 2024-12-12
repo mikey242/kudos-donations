@@ -12,7 +12,6 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Vendor;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use IseardMedia\Kudos\Service\NoticeService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -84,11 +83,18 @@ abstract class AbstractVendorFactory extends AbstractRegistrable {
 	public function add_providers( array $args ): array {
 		$providers = [];
 
-		// Iterate over the keys in the ServiceLocator
-		foreach ($this->vendor_locator->getProvidedServices() as $vendorClass => $vendorService) {
+		/**
+		 * Iterate over the keys in the ServiceLocator
+		 *
+		 * @var VendorInterface $vendor_class
+		 */
+		foreach ($this->vendor_locator->getProvidedServices() as $vendor_class => $vendorService) {
 			// Use a static method or reflection to get the name without instantiating the service
-			if (method_exists($vendorClass, 'get_name')) {
-				$providers[] = $vendorClass::get_name();
+			if (method_exists($vendor_class, 'get_name')) {
+				$providers[] = [
+					'slug' => $vendor_class::get_slug(),
+					'label' =>$vendor_class::get_name()
+				];
 			}
 		}
 

@@ -105,5 +105,5 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->args( [ tagged_iterator( 'kudos.upgradeable' ) ] );
 
 	// Filter for adding additional services.
-	apply_filters( 'kudos_container_configurator', $services );
+	do_action( 'kudos_container_configurator', $services );
 };
