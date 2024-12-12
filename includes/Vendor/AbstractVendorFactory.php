@@ -1,6 +1,10 @@
 <?php
 /**
  * Abstract Factory for Vendors.
+ *
+ * @link https://gitlab.iseard.media/michael/kudos-donations
+ *
+ * @copyright 2024 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -8,19 +12,24 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Vendor;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use Psr\Container\ContainerInterface;
+use IseardMedia\Kudos\Service\NoticeService;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
+
+/**
+ * @template T of VendorInterface
+ */
 abstract class AbstractVendorFactory extends AbstractRegistrable {
 
-	public iterable $vendors;
+	private ServiceLocator $vendor_locator;
 
 	/**
 	 * Add filter to allow accessing providers in js.
 	 */
-	public function __construct(iterable $vendors) {
-		$this->vendors = $vendors;
+	public function __construct(ServiceLocator $vendor_locator) {
+		$this->vendor_locator = $vendor_locator;
 	}
 
 	public function register(): void {
@@ -38,11 +47,6 @@ abstract class AbstractVendorFactory extends AbstractRegistrable {
 	abstract protected function get_vendor_settings_key(): string;
 
 	/**
-	 * Get the array of registered vendors.
-	 */
-	abstract protected function get_vendors(): array;
-
-	/**
 	 * Get the default vendor name.
 	 */
 	abstract protected function get_default_vendor(): string;
@@ -54,34 +58,20 @@ abstract class AbstractVendorFactory extends AbstractRegistrable {
 
 	/**
 	 * Create a vendor instance.
-	 *
-	 * @throws ContainerExceptionInterface
-	 * @throws NotFoundExceptionInterface
+	 * @return T
 	 */
-	public function create( ContainerInterface $container ): ?object {
-		$vendor       = get_option( $this->get_vendor_settings_key(), $this->get_default_vendor() );
-		$vendor_class = $this->get_vendor_class( $vendor );
-
-		if ( $vendor_class ) {
-			return $container->get( $vendor_class );
+	public function get_vendor(): ?VendorInterface {
+		$selected_vendor       = get_option( $this->get_vendor_settings_key(), $this->get_default_vendor() );
+		if (!$this->vendor_locator->has($selected_vendor)) {
+			NoticeService::add_notice('Cannot find vendor: ' . $selected_vendor . '. Using default vendor: ' . $this->get_default_vendor(), 'error');
+			$selected_vendor = $this->get_default_vendor();
+			update_option($this->get_vendor_settings_key(), $selected_vendor);
 		}
 
-		return null;
-	}
-
-	/**
-	 * Get the vendor class for a given vendor name.
-	 *
-	 * @param string $name Vendor name.
-	 */
-	protected function get_vendor_class( string $name ): ?string {
-		$vendors = $this->get_vendors();
-
-		if (
-			isset( $vendors[ $name ]['class'] ) &&
-			is_a( $vendors[ $name ]['class'], $this->get_interface_class(), true )
-		) {
-			return $vendors[ $name ]['class'];
+		try {
+			return $this->vendor_locator->get($selected_vendor);
+		} catch ( NotFoundExceptionInterface | ContainerExceptionInterface $e  ) {
+			$this->logger->error($e->getMessage());
 		}
 
 		return null;
@@ -93,15 +83,17 @@ abstract class AbstractVendorFactory extends AbstractRegistrable {
 	 * @param array $args The existing args.
 	 */
 	public function add_providers( array $args ): array {
-		$providers                       = $this->get_vendors();
-		$args[ static::get_type_slug() ] = array_map(
-			fn( $key, $value ) => [
-				'label' => $value['label'],
-				'slug'  => $key,
-			],
-			array_keys( $providers ),
-			$providers
-		);
+		$providers = [];
+
+		// Iterate over the keys in the ServiceLocator
+		foreach ($this->vendor_locator->getProvidedServices() as $vendorClass => $vendorService) {
+			// Use a static method or reflection to get the name without instantiating the service
+			if (method_exists($vendorClass, 'get_name')) {
+				$providers[] = $vendorClass::get_name();
+			}
+		}
+
+		$args[static::get_type_slug()] = $providers;
 
 		return $args;
 	}

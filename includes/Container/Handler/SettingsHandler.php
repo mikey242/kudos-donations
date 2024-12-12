@@ -14,21 +14,29 @@ namespace IseardMedia\Kudos\Container\Handler;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class SettingsHandler extends AbstractRegistrable implements ActivationAwareInterface {
 
-	public const GROUP             = 'kudos-donations';
 	public const HOOK_GET_SETTINGS = 'kudos_get_settings';
 	private array $settings        = [];
+	private string $group;
 
 	/**
-	 * Receives the classes with settings.
+	 * Receives a service locator with HasSettingsInterface implementations.
 	 *
-	 * @param iterable $services Array of services.
+	 * @param ServiceLocator $service_locator Array of services.
+	 * @param string         $group The settings group.
 	 */
-	public function __construct( iterable $services ) {
-		foreach ( $services as $service ) {
-			$this->add( $service );
+	public function __construct( ServiceLocator $service_locator, string $group ) {
+		$this->group = $group;
+		/**
+		 * The settings service.
+		 *
+		 * @var HasSettingsInterface $service
+		 */
+		foreach ( $service_locator->getProvidedServices() as $service => $name ) {
+			$this->settings = array_merge( $this->settings, $service::get_settings() );
 		}
 	}
 
@@ -52,16 +60,6 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 	}
 
 	/**
-	 * Add Settings to array.
-	 *
-	 * @param HasSettingsInterface $settings Service.
-	 */
-	public function add( HasSettingsInterface $settings ): void {
-		// Call the get_settings() method on the referenced service.
-		$this->settings = array_merge( $this->settings, $settings->get_settings() );
-	}
-
-	/**
 	 * Return all the currently added settings.
 	 */
 	public function get_all_settings(): array {
@@ -75,7 +73,7 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 		$settings = $this->get_all_settings();
 		foreach ( $settings as $name => $args ) {
 			register_setting(
-				self::GROUP,
+				$this->group,
 				$name,
 				$args
 			);

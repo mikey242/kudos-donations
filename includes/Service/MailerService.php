@@ -18,6 +18,7 @@ use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorFactory;
 use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorInterface;
 
 class MailerService extends AbstractRegistrable implements HasSettingsInterface {
@@ -29,10 +30,10 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	/**
 	 * MailerService constructor.
 	 *
-	 * @param EmailVendorInterface $vendor The currently configured email vendor.
+	 * @param EmailVendorFactory $vendor The currently configured email vendor.
 	 */
-	public function __construct( EmailVendorInterface $vendor ) {
-		$this->vendor = $vendor;
+	public function __construct( EmailVendorFactory $vendor ) {
+		$this->vendor = $vendor->get_vendor();
 	}
 
 	/**
@@ -124,7 +125,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_settings(): array {
+	public static function get_settings(): array {
 		return [
 			self::SETTING_EMAIL_VENDOR         => [
 				'type'         => FieldType::STRING,

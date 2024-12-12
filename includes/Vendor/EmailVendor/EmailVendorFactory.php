@@ -14,6 +14,9 @@ namespace IseardMedia\Kudos\Vendor\EmailVendor;
 use IseardMedia\Kudos\Service\MailerService;
 use IseardMedia\Kudos\Vendor\AbstractVendorFactory;
 
+/**
+ * @extends AbstractVendorFactory<EmailVendorInterface>
+ */
 class EmailVendorFactory extends AbstractVendorFactory {
 
 	/**
@@ -34,7 +37,7 @@ class EmailVendorFactory extends AbstractVendorFactory {
 	 * {@inheritDoc}
 	 */
 	protected function get_default_vendor(): string {
-		return 'smtp';
+		return SMTPVendor::class;
 	}
 
 	/**
@@ -42,26 +45,5 @@ class EmailVendorFactory extends AbstractVendorFactory {
 	 */
 	protected function get_interface_class(): string {
 		return EmailVendorInterface::class;
-	}
-
-	/**
-	 * Get an array of registered vendors.
-	 *
-	 * @return array Array of vendors.
-	 */
-	public function get_vendors(): array {
-		$vendors = [
-			'smtp' => [
-				'label' => __( 'SMTP', 'kudos-donations' ),
-				'class' => SMTPVendor::class,
-			],
-		];
-
-		/**
-		 * Filter the array of vendors.
-		 *
-		 * @param array $vendors Associative array of vendor, including label and class.
-		 */
-		return apply_filters( 'kudos_email_vendors', $vendors );
 	}
 }
