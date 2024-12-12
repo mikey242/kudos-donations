@@ -16,7 +16,7 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -33,13 +33,13 @@ class Payment extends AbstractRestController {
 	/**
 	 * PaymentRoutes constructor.
 	 *
-	 * @param PaymentVendorInterface $vendor Current vendor.
+	 * @param PaymentVendorFactory $factory Current vendor.
 	 */
-	public function __construct( PaymentVendorInterface $vendor ) {
+	public function __construct( PaymentVendorFactory $factory ) {
 		parent::__construct();
 
 		$this->rest_base = 'payment';
-		$this->vendor    = $vendor;
+		$this->vendor    = $factory->get_vendor();
 	}
 
 	/**

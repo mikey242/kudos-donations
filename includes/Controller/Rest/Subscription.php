@@ -15,7 +15,7 @@ use Exception;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Service\EncryptionService;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -27,13 +27,13 @@ class Subscription extends AbstractRestController {
 	/**
 	 * Subscription routes constructor.
 	 *
-	 * @param PaymentVendorInterface $vendor Current vendor.
+	 * @param PaymentVendorFactory $factory Current vendor.
 	 */
-	public function __construct( PaymentVendorInterface $vendor ) {
+	public function __construct( PaymentVendorFactory $factory ) {
 		parent::__construct();
 
 		$this->rest_base = 'subscription';
-		$this->vendor    = $vendor;
+		$this->vendor    = $factory->get_vendor();
 	}
 
 	/**

@@ -21,6 +21,7 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\SettingsService;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -39,10 +40,10 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param PaymentVendorInterface $vendor Payment vendors.
+	 * @param PaymentVendorFactory $factory Payment vendor factory.
 	 */
-	public function __construct( PaymentVendorInterface $vendor ) {
-		$this->vendor = $vendor;
+	public function __construct( PaymentVendorFactory $factory ) {
+		$this->vendor = $factory->get_vendor();
 	}
 
 	/**
