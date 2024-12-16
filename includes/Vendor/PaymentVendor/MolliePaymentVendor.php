@@ -50,13 +50,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
      * Mollie constructor.
      */
-    public function __construct( MollieApiClient $api_client )
-    {
+    public function __construct( MollieApiClient $api_client ) {
 	    $this->api_client = $api_client;
-
-		// Handle API key saving.
-	    add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
-	    add_filter( 'pre_update_option_' . self::SETTING_API_KEY_TEST, [ $this, 'handle_key_update' ], 10, 3 );
     }
 
 	/**
@@ -66,21 +61,23 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		$this->api_mode   = get_option( self::SETTING_API_MODE );
 		$this->config_client();
 		$this->set_user_agent();
+
+		// Handle API key saving.
+		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_LIVE, [ $this, 'handle_key_update' ], 10, 3 );
+		add_filter( 'pre_update_option_' . self::SETTING_API_KEY_TEST, [ $this, 'handle_key_update' ], 10, 3 );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_name(): string
-	{
+	public static function get_name(): string {
 		return 'Mollie';
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_slug(): string
-	{
+	public static function get_slug(): string {
 		return 'mollie';
 	}
 
@@ -100,8 +97,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 *
 	 * @return string
 	 */
-	public function get_api_mode(): string
-	{
+	public function get_api_mode(): string {
 		return $this->api_mode;
 	}
 
@@ -136,16 +132,14 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-    public static function supports_recurring(): bool
-    {
+    public static function supports_recurring(): bool {
         return true;
     }
 
 	/**
 	 * Uses get_payment_methods to determine if account can receive recurring payments.
 	 */
-	private function can_use_recurring(): bool
-	{
+	private function can_use_recurring(): bool {
 		$methods = $this->get_active_payment_methods([
 			'sequenceType' => 'recurring',
 		]);
@@ -192,8 +186,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-	public function refresh(): bool
-    {
+	public function refresh(): bool {
 		try {
             $this->config_client();
 			// Rebuild Mollie settings.
@@ -268,8 +261,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      *
      * @return bool
      */
-    public function cancel_subscription( WP_Post $subscription): bool
-    {
+    public function cancel_subscription( WP_Post $subscription): bool {
 		$transaction = get_post($subscription->{SubscriptionPostType::META_FIELD_TRANSACTION_ID});
 		$customer_id = $transaction->{TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID};
 	    $customer = $this->get_customer($customer_id);
@@ -297,8 +289,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      *
      * @return Customer|null
      */
-    public function get_customer( string $vendor_customer_id): ?Customer
-    {
+    public function get_customer( string $vendor_customer_id): ?Customer {
         try {
             return $this->api_client->customers->get($vendor_customer_id);
         } catch (ApiException $e) {
@@ -500,8 +491,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      *
      * @return string
      */
-    public static function get_webhook_url(): string
-    {
+    public static function get_webhook_url(): string {
         $route = "kudos/v1/payment/webhook";
 
         // Otherwise, return normal rest URL.
@@ -705,8 +695,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      *
      * @return bool
      */
-    private function check_mandate(Customer $customer, string $mandate_id): bool
-    {
+    private function check_mandate(Customer $customer, string $mandate_id): bool {
         try {
             $mandate = $customer->getMandate($mandate_id);
             if ($mandate->isValid() || $mandate->isPending()) {

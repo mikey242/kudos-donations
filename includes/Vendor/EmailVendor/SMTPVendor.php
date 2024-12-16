@@ -77,19 +77,16 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE, false );
 		$this->bcc                = get_option( self::SETTING_EMAIL_BCC, '' );
 		$this->custom_smtp_config = get_option( self::SETTING_CUSTOM_SMTP, [] );
+
+		// Add filters for encrypting passwords.
+		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
 	}
 
 	/**
 	 * Create the necessary hooks.
 	 */
 	private function add_hooks(): void {
-		// Configure PHPMailer.
 		add_action( 'phpmailer_init', [ $this, 'phpmailer_init' ] );
-
-		// Add filters for encrypting passwords.
-		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
-
-		// Add WordPress specific hooks.
 		add_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 		add_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
 		add_filter( 'wp_mail_content_type', [ $this, 'set_html_mail_content_type' ] );
@@ -101,10 +98,10 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 */
 	private function remove_hooks(): void {
 		remove_action( 'phpmailer_init', [ $this, 'phpmailer_init' ] );
-		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
-		remove_filter( 'wp_mail_content_type', [ $this, 'set_html_mail_content_type' ] );
 		remove_filter( 'wp_mail_from', [ $this, 'get_from_email' ], PHP_INT_MAX );
 		remove_filter( 'wp_mail_from_name', [ $this, 'get_from_name' ], PHP_INT_MAX );
+		remove_filter( 'wp_mail_content_type', [ $this, 'set_html_mail_content_type' ] );
+		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
 	}
 
 	/**
