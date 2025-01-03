@@ -38,7 +38,7 @@
   },
   "require-dev": {
     "filp/whoops": "^2.15",
-    "micheh/phpcs-gitlab": "^1.1",
+    "micheh/phpcs-gitlab": "^2.0",
     "php-stubs/wordpress-tests-stubs": "^6.3",
     "phpcompatibility/php-compatibility": "^9.3",
     "phpcompatibility/phpcompatibility-wp": "*",
