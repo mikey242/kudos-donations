@@ -83,8 +83,6 @@ jobs:
 
   test-job:
     runs-on: ubuntu-latest
-    container:
-      image: wordpress:php7.4
     services:
       mysql:
         image: mysql:latest
@@ -95,8 +93,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Composer dependencies
-        run: composer install --no-ansi --no-interaction --no-progress --prefer-dist
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+      - name: Install PHP Dependencies
+        uses: ramsey/composer-install@v3
       - name: Set up database for tests
         run: |
           curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o install-wp-tests.sh
