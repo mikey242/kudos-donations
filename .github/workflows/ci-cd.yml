@@ -9,10 +9,11 @@ on:
 env:
   PHP_VERSION: '7.4'
   NODE_VERSION: '18.18.1'
-  MYSQL_DATABASE: test-wordpress
+  MARIADB_INITDB_SKIP_TZINFO: 1
+  MYSQL_DATABASE: wordpress_test
   MYSQL_HOST: mysql
-  MYSQL_USER: test
-  MYSQL_PASSWORD: password
+  MYSQL_USER: wordpress
+  MYSQL_PASSWORD: wordpress
   MYSQL_ROOT_PASSWORD: password
 
 jobs:
@@ -85,11 +86,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:latest
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
-        options: >-
-          --health-cmd "mysqladmin ping --silent"
+        image: mariadb:latest
+        ports:
+          - '3306:3306'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
