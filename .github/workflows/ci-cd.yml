@@ -84,7 +84,7 @@ jobs:
   test-job:
     runs-on: ubuntu-latest
     container:
-      image: wordpress:${{ env.PHP_VERSION }}
+      image: wordpress:php7.4
     services:
       mysql:
         image: mysql:latest
