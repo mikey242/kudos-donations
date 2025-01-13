@@ -93,19 +93,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
+      
       - name: Install PHP Dependencies
         uses: ramsey/composer-install@v3
-      - name: Set up database for tests
-        run: |
-          curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o install-wp-tests.sh
-          chmod +x install-wp-tests.sh
-          ./install-wp-tests.sh ${{ env.MYSQL_DATABASE }} ${{ env.MYSQL_USER }} ${{ env.MYSQL_PASSWORD }} ${{ env.MYSQL_HOST }} latest
-      - name: Run integration tests
-        run: composer run test-integration:gitlab
+        
+      - name: Set up WordPress and WordPress Test Library
+        uses: sjinks/setup-wordpress-test-library@master
+        with:
+          version: latest
+          
+      - name: Run tests
+        run: vendor/bin/phpunit
 
   zip-job:
     runs-on: ubuntu-latest
