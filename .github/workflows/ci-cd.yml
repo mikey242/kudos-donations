@@ -24,35 +24,32 @@ jobs:
       - name: Validate Composer configuration
         run: composer --no-ansi validate
 
-  lint-php:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up PHP with Composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
           tools: composer
-      - name: Install Composer dependencies
-        run: composer install --no-ansi --no-interaction --no-progress --prefer-dist
-      - name: Run PHP linting
-        run: composer run lint:gitlab
 
-  lint-js-css:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Lint PHP
+        run: |
+          composer install --no-ansi --no-interaction --no-progress --prefer-dist
+          composer run lint:gitlab
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
+
       - name: Lint JavaScript and CSS
         run: |
+          npm ci
           npm run lint:js
           npm run lint:css
 
