@@ -88,8 +88,12 @@ jobs:
       - name: Build front-end assets
         run: npm run build
 
-      - name: Start wp-env
-        run: npm run wp-env start
+      - name: Install tests
+        run: |
+          apt-get update -y && apt-get install -y subversion default-mysql-client
+          curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
+          chmod +x /bin/*.sh
+          bash /bin/install-wp-tests.sh ${{ env.MYSQL_DATABASE }} ${{ env.MYSQL_USER }} ${{ env.MYSQL_PASSWORD }} ${{ env.MYSQL_HOST }} latest true
 
       - name: Run tests
         run: npm run test:unit
