@@ -95,6 +95,15 @@ jobs:
       
       - name: Install NPM dependencies
         run: npm ci
+        
+      - name: Set up PHP with Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Start wp-env
         run: npm run wp-env start
