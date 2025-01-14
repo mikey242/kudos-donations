@@ -96,6 +96,9 @@ jobs:
       - name: Install NPM dependencies
         run: npm ci
 
+      - name: Start wp-env
+        run: npm run wp-env start
+
       - name: Run tests
         run: npm run test:unit
 
