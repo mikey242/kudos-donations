@@ -97,7 +97,7 @@ jobs:
           sudo apt-get update -y && sudo apt-get install -y subversion default-mysql-client
           sudo curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
           sudo chmod +x /bin/*.sh
-          bash /bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest true
+          bash /bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:${{ job.services.mysql.ports['3306'] }} latest true
 
       - name: Run tests
         run: vendor/bin/phpunit --do-not-cache-result
