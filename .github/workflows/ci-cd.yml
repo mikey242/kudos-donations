@@ -115,6 +115,9 @@ jobs:
           npm ci
           composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
+      - name: Check subversion
+        run: svn --version
+
       - name: Install tests
         run: |
           sudo apt list subversion
