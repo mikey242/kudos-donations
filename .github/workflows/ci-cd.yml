@@ -64,6 +64,11 @@ jobs:
 
   test-job:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mariadb:latest
+        ports:
+          - '3306:3306'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -97,7 +102,7 @@ jobs:
           bash /bin/install-wp-tests.sh ${{ env.MYSQL_DATABASE }} ${{ env.MYSQL_USER }} ${{ env.MYSQL_PASSWORD }} ${{ env.MYSQL_HOST }} latest true
 
       - name: Run tests
-        run: npm run test:unit
+        run: vendor/bin/phpunit --do-not-cache-result
 
       - name: Upload build folder
         uses: actions/upload-artifact@v4
