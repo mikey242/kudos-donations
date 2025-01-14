@@ -11,7 +11,7 @@ env:
   NODE_VERSION: '18.18.1'
   MARIADB_INITDB_SKIP_TZINFO: 1
   MYSQL_DATABASE: wordpress_test
-  MYSQL_HOST: mysql
+  MYSQL_HOST: 127.0.0.1
   MYSQL_USER: wordpress
   MYSQL_PASSWORD: wordpress
   MYSQL_ROOT_PASSWORD: password
