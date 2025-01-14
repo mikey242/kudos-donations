@@ -82,32 +82,22 @@ jobs:
       - name: Build front-end assets
         run: npm run build
 
-  # test-job:
-  #   runs-on: ubuntu-latest
-  #   services:
-  #     mysql:
-  #       image: mariadb:latest
-  #       ports:
-  #         - '3306:3306'
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup node 
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.0
       
-  #     - name: Set up PHP
-  #       uses: shivammathur/setup-php@v2
-  #       with:
-  #         php-version: ${{ env.PHP_VERSION }}
-      
-  #     - name: Install PHP Dependencies
-  #       uses: ramsey/composer-install@v3
-        
-  #     - name: Set up WordPress and WordPress Test Library
-  #       uses: sjinks/setup-wordpress-test-library@master
-  #       with:
-  #         version: latest
-          
-  #     - name: Run tests
-  #       run: vendor/bin/phpunit
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test:unit
 
   # zip-job:
   #   runs-on: ubuntu-latest
