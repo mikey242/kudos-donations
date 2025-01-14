@@ -92,8 +92,8 @@ jobs:
         run: |
           sudo apt list subversion
           sudo apt-get update -y && sudo apt-get install -y subversion default-mysql-client
-          curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
-          chmod +x /bin/*.sh
+          sudo curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
+          sudo chmod +x /bin/*.sh
           bash /bin/install-wp-tests.sh ${{ env.MYSQL_DATABASE }} ${{ env.MYSQL_USER }} ${{ env.MYSQL_PASSWORD }} ${{ env.MYSQL_HOST }} latest true
 
       - name: Run tests
