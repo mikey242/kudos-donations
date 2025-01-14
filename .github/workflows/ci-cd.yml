@@ -14,7 +14,7 @@ env:
   MYSQL_HOST: 127.0.0.1
   MYSQL_USER: wordpress
   MYSQL_PASSWORD: wordpress
-  MYSQL_ROOT_PASSWORD: password
+  MYSQL_ROOT_PASSWORD: root
 
 jobs:
   validate-composer:
@@ -69,6 +69,7 @@ jobs:
         image: mariadb:latest
         ports:
           - '3306:3306'
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -99,7 +100,7 @@ jobs:
           sudo apt-get update -y && sudo apt-get install -y subversion default-mysql-client
           sudo curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
           sudo chmod +x /bin/*.sh
-          bash /bin/install-wp-tests.sh ${{ env.MYSQL_DATABASE }} ${{ env.MYSQL_USER }} ${{ env.MYSQL_PASSWORD }} ${{ env.MYSQL_HOST }} latest true
+          bash /bin/install-wp-tests.sh ${{ env.MYSQL_DATABASE }} root root ${{ env.MYSQL_HOST }} latest true
 
       - name: Run tests
         run: vendor/bin/phpunit --do-not-cache-result
