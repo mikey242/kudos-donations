@@ -62,57 +62,17 @@ jobs:
           npm run lint:js
           npm run lint:css
 
-  build-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Set up PHP with Composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          tools: composer
-          
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: |
-          npm ci
-          composer install --no-ansi --no-interaction --no-progress --prefer-dist
-          
-      - name: Build front-end assets
-        run: npm run build
-
-      - name: Upload build folder
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-folder
-          path: ./build
-
   test-job:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Download build folder
-        uses: actions/download-artifact@v4
-        with:
-          name: build-folder
+        uses: actions/checkout@v4
 
       - name: Setup node 
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
-      - name: Install NPM dependencies
-        run: npm ci
         
       - name: Set up PHP with Composer
         uses: shivammathur/setup-php@v2
@@ -120,8 +80,13 @@ jobs:
           php-version: ${{ env.PHP_VERSION }}
           tools: composer
 
-      - name: Install Composer dependencies
-        run: composer install --no-ansi --no-interaction --no-progress --prefer-dist
+      - name: Install dependencies
+        run: |
+          npm ci
+          composer install --no-ansi --no-interaction --no-progress --prefer-dist
+
+      - name: Build front-end assets
+        run: npm run build
 
       - name: Start wp-env
         run: npm run wp-env start
@@ -129,11 +94,24 @@ jobs:
       - name: Run tests
         run: npm run test:unit
 
+      - name: Upload build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-folder
+          path: ./build
+
   # zip-job:
+  #   needs: test-job
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Checkout code
   #       uses: actions/checkout@v3
+
+      # - name: Download build folder
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: build-folder
+  
   #     - name: Set up PHP with Composer
   #       uses: shivammathur/setup-php@v2
   #       with:
