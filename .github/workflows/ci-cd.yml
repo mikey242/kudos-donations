@@ -109,15 +109,3 @@ jobs:
 
       - name: Run tests
         run: vendor/bin/phpunit --do-not-cache-result
-
-  release-job:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: kudos-donations.zip
