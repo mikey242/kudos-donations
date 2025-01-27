@@ -2,8 +2,8 @@ name: Release Workflow
 
 on:
   push:
-    tags:
-      - 'v*' # Trigger on tags that start with "v" (e.g., v1.0.1)
+    tags: ['v*']
+    branches: ["master"]
 
 env:
   PHP_VERSION: '7.4'
