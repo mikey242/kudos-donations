@@ -51,9 +51,9 @@ jobs:
           path: kudos-donations.zip
 
       - name: Publish GitHub Release
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v2
         with:
           body: |
             ## What's Changed
             - Automatically generated release.
-          artifacts: kudos-donations.zip
+          files: kudos-donations.zip
