@@ -1,0 +1,36 @@
+name: Reusable Build Workflow
+
+on:
+  workflow_call: # Allows other workflows to call this workflow
+    inputs:
+      php-version:
+        required: true
+        type: string
+      node-version:
+        required: true
+        type: string
+
+jobs:
+  build-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build front-end assets
+        run: npm run build
+
+      - name: Upload build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-folder
+          path: ./build
