@@ -39,7 +39,7 @@ jobs:
       - name: Lint PHP
         run: |
           composer install --no-ansi --no-interaction --no-progress --prefer-dist
-          composer run lint:gitlab
+          composer run lint
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
