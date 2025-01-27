@@ -129,6 +129,7 @@ jobs:
 
   zip-job:
 #    needs: test-job
+    needs: build-job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
