@@ -144,11 +144,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-folder
-
-      - name: Download build folder
-        uses: actions/download-artifact@v4
-        with:
-          name: build-folder
   
       - name: Set up PHP with Composer
         uses: shivammathur/setup-php@v2
