@@ -3,7 +3,6 @@ name: Release Workflow
 on:
   push:
     tags: ['v*']
-    branches: ["master"]
 
 env:
   PHP_VERSION: '7.4'
