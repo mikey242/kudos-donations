@@ -127,36 +127,39 @@ jobs:
       - name: Run tests
         run: vendor/bin/phpunit --do-not-cache-result
 
-  # zip-job:
-  #   needs: test-job
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  zip-job:
+    needs: test-job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # - name: Download build folder
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: build-folder
+      - name: Download build folder
+        uses: actions/download-artifact@v4
+        with:
+          name: build-folder
   
-  #     - name: Set up PHP with Composer
-  #       uses: shivammathur/setup-php@v2
-  #       with:
-  #         php-version: ${{ env.PHP_VERSION }}
-  #         tools: composer
-  #     - name: Install dependencies
-  #       run: composer install --optimize-autoloader --no-dev
-  #     - name: Create zip archive
-  #       run: |
-  #         curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-  #         chmod +x wp-cli.phar
-  #         php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
-  #         composer run make-zip
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: kudos-donations.zip
-  #         path: kudos-donations.zip
+      - name: Set up PHP with Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: composer
+
+      - name: Install dependencies
+        run: composer install --optimize-autoloader --no-dev
+
+      - name: Create zip archive
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
+          composer run make-zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: kudos-donations.zip
+          path: kudos-donations.zip
 
   # release-job:
   #   runs-on: ubuntu-latest
