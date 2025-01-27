@@ -54,7 +54,7 @@ jobs:
           npm run lint:css
 
   build-job:
-    uses: ./.github/workflows/reusable.yml@main
+    uses: ./.github/workflows/reusable.yml
     with:
       php-version: ${{ env.PHP_VERSION }}
       node-version: ${{ env.NODE_VERSION }}
