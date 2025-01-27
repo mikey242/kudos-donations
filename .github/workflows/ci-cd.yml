@@ -170,7 +170,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: kudos-donations
-          path: kudos-donations
+          path: kudos-donations.zip
 
   # release-job:
   #   runs-on: ubuntu-latest
