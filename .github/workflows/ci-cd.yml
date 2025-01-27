@@ -156,7 +156,7 @@ jobs:
           composer run make-zip
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kudos-donations.zip
           path: kudos-donations.zip
