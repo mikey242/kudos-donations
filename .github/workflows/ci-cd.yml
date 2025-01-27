@@ -139,6 +139,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-folder
+          path: ./build
 
       - name: List files after downloading build folder
         run: ls -R
