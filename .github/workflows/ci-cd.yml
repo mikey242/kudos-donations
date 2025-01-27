@@ -56,8 +56,8 @@ jobs:
   build-job:
     uses: ./.github/workflows/reusable.yml
     with:
-      php-version: ${{ env.PHP_VERSION }}
-      node-version: ${{ env.NODE_VERSION }}
+      php-version: '7.4'
+      node-version: '18.18.1'
 
   test-job:
     runs-on: ubuntu-latest
