@@ -1,0 +1,62 @@
+name: Release Workflow
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on tags that start with "v" (e.g., v1.0.1)
+
+env:
+  PHP_VERSION: '7.4'
+  NODE_VERSION: '18.18.1'
+
+jobs:
+  build-job:
+    uses: ./.github/workflows/build.yml
+    with:
+      php-version: '7.4'
+      node-version: '18.18.1'
+
+  zip-job:
+    needs: build-job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build folder
+        uses: actions/download-artifact@v4
+        with:
+          name: build-folder
+          path: ./build
+
+      - name: Set up PHP with Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: composer
+
+      - name: Install dependencies
+        run: composer install --optimize-autoloader --no-dev
+
+      - name: Create zip archive
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
+          composer run make-zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: kudos-donations.zip
+
+      - name: Publish GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## What's Changed
+            - Automatically generated release.
+          artifacts: kudos-donations.zip
