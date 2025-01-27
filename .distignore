@@ -22,6 +22,7 @@ bin
 .distignore
 .eslintrc.json
 .git-blame-ignore-revs
+.github
 .gitignore
 .gitlab-ci.yml
 .imgbotconfig
