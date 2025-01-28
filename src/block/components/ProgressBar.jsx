@@ -20,7 +20,7 @@ const ProgressBar = ({
 			>
 				<div
 					style={{ width: percentage + '%' }}
-					className="flex flex-shrink-0 justify-center items-center"
+					className="flex shrink-0 justify-center items-center"
 				>
 					<div className="h-full w-full bg-green-500" />
 					<div className="left-0 transition-opacity absolute flex items-center justify-center w-full opacity-0" />

@@ -44,7 +44,7 @@ const Button = forwardRef(
 				? 'border-primary border text-primary'
 				: 'border-none text-white',
 			isSmall ? 'px-2 py-2 text-sm' : 'px-5 py-3',
-			'relative leading-none font-bold focus:ring z-1 group cursor-pointer overflow-hidden rounded-lg flex justify-center items-center transition ease-in-out focus:ring-primary focus:ring-offset-2'
+			'relative leading-none font-bold focus:ring-3 z-1 group cursor-pointer overflow-hidden rounded-lg flex justify-center items-center transition ease-in-out focus:ring-primary focus:ring-offset-2'
 		);
 
 		const inner = () => (

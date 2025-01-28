@@ -81,7 +81,7 @@ export const RadioGroupControl = ({
 										option.disabled
 											? 'opacity-50 cursor-not-allowed'
 											: 'cursor-pointer',
-										'transition ease-in-out focus:outline-none border rounded-md py-2 px-2 sm:py-3 sm:px-3 flex items-center justify-center text-sm font-medium sm:flex-1'
+										'transition ease-in-out focus:outline-hidden border rounded-md py-2 px-2 sm:py-3 sm:px-3 flex items-center justify-center text-sm font-medium sm:flex-1'
 									)
 								}
 							>

@@ -25,7 +25,7 @@ export const SelectControl = ({
 					onChange={onChange}
 					className={clsx(
 						// General
-						'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md',
+						'mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-hidden focus:ring-primary focus:border-primary sm:text-sm rounded-md',
 						// Disabled
 						'disabled:cursor-not-allowed disabled:bg-slate-100',
 						// Invalid

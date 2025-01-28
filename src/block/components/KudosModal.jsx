@@ -134,7 +134,7 @@ export const KudosModal = ({
 												</span>
 											)}
 											<button
-												className="bg-transparent transition p-0 inline leading-none border-0 focus:outline-none focus:ring hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center ml-auto"
+												className="bg-transparent transition p-0 inline leading-none border-0 focus:outline-hidden focus:ring-3 hover:text-primary-dark ring-primary ring-offset-2 rounded-full w-5 h-5 cursor-pointer text-center ml-auto"
 												onClick={toggle}
 												type="button"
 												title={__(
