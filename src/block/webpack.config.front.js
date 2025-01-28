@@ -28,8 +28,7 @@ module.exports = merge(commonConfig, {
 							postcssOptions: {
 								plugins: [
 									convertRemToEm,
-									require('tailwindcss'), // Tailwind for front-end
-									require('autoprefixer'),
+									require('@tailwindcss/postcss'),
 								],
 							},
 						},
