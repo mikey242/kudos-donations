@@ -1,5 +1,47 @@
-@import "tailwindcss";
-@config "./tailwind.config.js";
+@source '../../**/*.jsx';
+@source '../../**/*.js';
+@import 'tailwindcss' source(none);
+@plugin '@tailwindcss/forms';
+
+@utility rotate-x-180 {
+	transform: rotateX(180deg);
+}
+
+@theme {
+	--font-family-body: 'var(--kudos-font-body)', 'montserratregular', 'sans-serif';
+	--font-family-heading: 'var(--kudos-font-heading)', 'cabinbold', 'serif';
+	--font-family-mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
+
+	--color-orange-200: #ffd59c;
+	--color-orange-500: #ff9f1c;
+	--color-orange-700: #f58d00;
+
+	--color-primary: var(--kudos-theme-primary);
+	--color-primary-dark: var(--kudos-theme-primary-dark);
+	--color-primary-darker: var(--kudos-theme-primary-darker);
+	--color-secondary: var(--kudos-theme-secondary);
+
+	--breakpoint-xs: '475px'
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 :host {
 	--kudos-screen: xs;
@@ -23,7 +65,7 @@ p {
 }
 
 /* 'xs' and up */
-@screen xs {
+@media (width >= theme(--breakpoint-xs)) {
 
 	:host {
 		--kudos-screen: sm;
@@ -31,7 +73,7 @@ p {
 }
 
 /* 'sm' and up */
-@screen sm {
+@media (width >= theme(--breakpoint-sm)) {
 
 	:host {
 		--kudos-screen: md;
