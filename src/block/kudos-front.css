@@ -1,7 +1,5 @@
-@config "tailwind.config.js";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "./tailwind.config.js";
 
 :host {
 	--kudos-screen: xs;
