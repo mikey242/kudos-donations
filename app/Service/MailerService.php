@@ -13,6 +13,7 @@ use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
 use Kudos\Helpers\Assets;
+use Kudos\Helpers\Campaign;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use PHPMailer\PHPMailer\Exception;
@@ -120,17 +121,29 @@ class MailerService {
 			->get_repository( DonorEntity::class )
 			->get_one_by( [ 'customer_id' => $transaction->customer_id ] );
 
+		// Get campaign name if enabled.
+		$campaign_name = '';
+		if ( Settings::get_setting( 'email_show_campaign_name' ) ) {
+			try {
+				$campaign      = Campaign::get_campaign( $transaction->campaign_id );
+				$campaign_name = $campaign['name'] ?? '';
+			} catch ( \Exception $e ) {
+				$this->logger->warning( 'Unable to get campaign: ' . $e->getMessage() );
+			}
+		}
+
 		// Create array of variables for use in twig template.
 		$render_array = [
-			'name'         => $donor->name ?? '',
-			'date'         => $transaction->created,
-			'description'  => Utils::get_sequence_type( $transaction->sequence_type ),
-			'amount'       => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n(
+			'name'          => $donor->name ?? '',
+			'date'          => $transaction->created,
+			'description'   => Utils::get_sequence_type( $transaction->sequence_type ),
+			'amount'        => ( ! empty( $transaction->currency ) ? html_entity_decode( Utils::get_currency_symbol( $transaction->currency ) ) : '' ) . number_format_i18n(
 				$transaction->value,
 				2
 			),
-			'receipt_id'   => $transaction->order_id,
-			'website_name' => get_bloginfo( 'name' ),
+			'receipt_id'    => $transaction->order_id,
+			'campaign_name' => $campaign_name,
+			'website_name'  => get_bloginfo( 'name' ),
 		];
 
 		// Add a cancel subscription url if transaction associated with a subscription.

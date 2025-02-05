@@ -617,13 +617,13 @@ class Admin {
 	 */
 	public static function get_settings(): array {
 		return [
-			'show_intro'             => [
+			'show_intro'               => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'vendor_mollie'          => [
+			'vendor_mollie'            => [
 				'type'              => 'object',
 				'default'           => [
 					'connected'       => false,
@@ -682,67 +682,73 @@ class Admin {
 				],
 				'sanitize_callback' => [ Settings::class, 'sanitize_vendor' ],
 			],
-			'email_receipt_enable'   => [
+			'email_receipt_enable'     => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'email_bcc'              => [
+			'email_show_campaign_name' => [
+				'type'              => 'boolean',
+				'default'           => false,
+				'show_in_rest'      => true,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'email_bcc'                => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_email',
 			],
-			'smtp_enable'            => [
+			'smtp_enable'              => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'smtp_host'              => [
+			'smtp_host'                => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'smtp_encryption'        => [
+			'smtp_encryption'          => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => 'tls',
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'smtp_autotls'           => [
+			'smtp_autotls'             => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'smtp_from'              => [
+			'smtp_from'                => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => null,
 				'sanitize_callback' => 'sanitize_email',
 			],
-			'smtp_username'          => [
+			'smtp_username'            => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'smtp_password'          => [
+			'smtp_password'            => [
 				'type'         => 'string',
 				'show_in_rest' => true,
 			],
-			'smtp_port'              => [
+			'smtp_port'                => [
 				'type'              => 'number',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'intval',
 			],
-			'spam_protection'        => [
+			'spam_protection'          => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'theme_colors'           => [
+			'theme_colors'             => [
 				'type'              => 'object',
 				'default'           => [
 					'primary'   => '#ff9f1c',
@@ -763,30 +769,30 @@ class Admin {
 				],
 				'sanitize_callback' => [ Settings::class, 'recursive_sanitize_text_field' ],
 			],
-			'terms_link'             => [
+			'terms_link'               => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => null,
 				'sanitize_callback' => 'esc_url_raw',
 			],
-			'privacy_link'           => [
+			'privacy_link'             => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => null,
 				'sanitize_callback' => 'esc_url_raw',
 			],
-			'completed_payment'      => [
+			'completed_payment'        => [
 				'type'         => 'string',
 				'default'      => 'message',
 				'show_in_rest' => true,
 			],
-			'return_message_title'   => [
+			'return_message_title'     => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => __( 'Thank you!', 'kudos-donations' ),
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'return_message_text'    => [
+			'return_message_text'      => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'default'           => sprintf(
@@ -796,40 +802,40 @@ class Admin {
 				),
 				'sanitize_callback' => 'sanitize_text_field',
 			],
-			'custom_return_url'      => [
+			'custom_return_url'        => [
 				'type'              => 'string',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'esc_url_raw',
 			],
-			'payment_vendor'         => [
+			'payment_vendor'           => [
 				'type'    => 'string',
 				'default' => 'mollie',
 			],
-			'debug_mode'             => [
+			'debug_mode'               => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'enable_shortcode'       => [
+			'enable_shortcode'         => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'donate_modal_in_footer' => [
+			'donate_modal_in_footer'   => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'disable_object_cache'   => [
+			'disable_object_cache'     => [
 				'type'              => 'boolean',
 				'show_in_rest'      => true,
 				'default'           => false,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
-			'campaigns'              => [
+			'campaigns'                => [
 				'type'              => 'array',
 				'show_in_rest'      => [
 					'schema' => [
@@ -906,7 +912,7 @@ class Admin {
 				],
 				'sanitize_callback' => [ Campaign::class, 'sanitize_campaigns' ],
 			],
-			'maximum_donation'       => [
+			'maximum_donation'         => [
 				'type'         => 'string',
 				'show_in_rest' => true,
 			],

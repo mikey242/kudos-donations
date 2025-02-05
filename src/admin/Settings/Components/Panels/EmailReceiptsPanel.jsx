@@ -21,6 +21,16 @@ const EmailReceiptsPanel = (props) => {
             {props.settings._kudos_email_receipt_enable ?
                 <Fragment>
                     <br/>
+                    <ToggleControl
+                        label={__('Show campaign name', 'kudos-donations')}
+                        help={__(
+                            'Show the campaign name in the receipt.',
+                            'kudos-donations'
+                        )}
+                        checked={props.settings._kudos_email_show_campaign_name || ''}
+                        onChange={() => props.handleInputChange("_kudos_email_show_campaign_name", !props.settings._kudos_email_show_campaign_name)}
+                    />
+                    <br/>
                     <TextControl
                         label={__('Send receipt copy to:', 'kudos-donations')}
                         help={__('Leave blank to disable.', 'kudos-donations')}

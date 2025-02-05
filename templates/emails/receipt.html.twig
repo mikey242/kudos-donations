@@ -8,11 +8,18 @@
     <h1>{{ __('Hi', 'kudos-donations') ~ ' ' ~ name }},</h1>
     <p>{{ __('Thanks for your donation. This email is a receipt for your records.', 'kudos-donations') }}</p>
     <table class="purchase" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+        {% if campaign_name %}
+            <tr>
+                <td><h3>{{ __('Campaign name', 'kudos-donations') }}: {{ campaign_name }}</h3></td>
+            </tr>
+        {% endif %}
         <tr>
             <td>
-                <h3>{{ __('Order ID', 'kudos-donations') }}: {{ receipt_id }}</h3></td>
+                <h3>{{ __('Order ID', 'kudos-donations') }}: {{ receipt_id }}</h3>
+            </td>
             <td>
-                <h3 class="align-right">{{ __('Date', 'kudos-donations') }}: {{ date | date('d/m/y') }}</h3></td>
+                <h3 class="align-right">{{ __('Date', 'kudos-donations') }}: {{ date | date('d/m/y') }}</h3>
+            </td>
         </tr>
         <tr>
             <td colspan="2">
