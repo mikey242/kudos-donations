@@ -84,11 +84,4 @@ $dotenv->populate(
 \define( 'KUDOS_APP_ENV', sanitize_text_field( $_ENV['APP_ENV'] ) );
 \define( 'KUDOS_ENV_IS_DEVELOPMENT', 'development' === $_ENV['APP_ENV'] );
 
-// Set Whoops as error handler if in development.
-if ( KUDOS_ENV_IS_DEVELOPMENT && class_exists( '\Whoops\Run' ) ) {
-	$whoops = new \Whoops\Run();
-	$whoops->pushHandler( new \Whoops\Handler\PrettyPageHandler() );
-	$whoops->register();
-}
-
 require KUDOS_PLUGIN_DIR . 'includes/namespace.php';
