@@ -181,15 +181,16 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	/**
 	 * Sends receipt to the donor.
 	 *
+	 * @param string $email The email address to send to.
 	 * @param array $args The array of arguments used for sending the email.
 	 */
-	public function send_receipt( array $args ): bool {
+	public function send_receipt( string $email, array $args ): bool {
 
 		// Generate email body from args.
 		$body = $this->twig->render( self::TEMPLATE_RECEIPT, $args );
 
 		return $this->send(
-			$args['email'],
+			$email,
 			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
 			$args['attachments'] ?? null

@@ -71,6 +71,9 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		$donor       = get_post( $donor_id );
 		$transaction = get_post( $transaction_id );
 
+		// Email address.
+		$email = $donor->{DonorPostType::META_FIELD_EMAIL};
+
 		// Create array of variables for use in twig template.
 		$args = [
 			'name'        => $donor->{DonorPostType::META_FIELD_NAME} ?? '',
@@ -111,14 +114,13 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 			'Creating receipt email.',
 			array_merge(
 				[
-					'email'       => $donor->{DonorPostType::META_FIELD_EMAIL},
-					'attachments' => $attachments,
+					'email' => $email,
 					$args,
 				]
 			)
 		);
 
-		return $this->vendor->send_receipt( $args );
+		return $this->vendor->send_receipt( $email, $args );
 	}
 
 
