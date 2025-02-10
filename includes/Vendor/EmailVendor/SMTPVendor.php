@@ -40,6 +40,8 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 */
 	public function __construct( TwigService $twig ) {
 		$this->twig = $twig;
+		// Add filters for encrypting passwords.
+		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
 	}
 
 	/**
@@ -77,9 +79,6 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE, false );
 		$this->bcc                = get_option( self::SETTING_EMAIL_BCC, '' );
 		$this->custom_smtp_config = get_option( self::SETTING_CUSTOM_SMTP, [] );
-
-		// Add filters for encrypting passwords.
-		add_filter( 'pre_update_option_' . self::SETTING_SMTP_PASSWORD, [ $this, 'encrypt_smtp_password' ] );
 	}
 
 	/**
