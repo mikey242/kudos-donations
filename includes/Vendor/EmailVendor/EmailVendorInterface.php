@@ -15,7 +15,8 @@ interface EmailVendorInterface {
 	/**
 	 * Sends receipt to the donor.
 	 *
-	 * @param array $args The arguments.
+	 * @param string $email The email address
+	 * @param array $args The template arguments.
 	 */
-	public function send_receipt( array $args ): bool;
+	public function send_receipt( string $email , array $args ): bool;
 }
