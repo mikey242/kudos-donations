@@ -101,10 +101,12 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	 */
 	public function generate( string $file, string $template, array $data ): ?string {
 
-		// Check if target folder is writeable. If not it is possible that it does not yet exist.
 		$target_dir = \dirname( $file );
+		wp_mkdir_p( $target_dir );
+
+		// Check if target folder is writeable.
 		if ( ! wp_is_writable( $target_dir ) ) {
-			wp_mkdir_p( $target_dir );
+			NoticeService::add_notice( __( 'Cannot generate PDF. Directory not writeable', 'kudos-donations' ) . ': ' . $target_dir, NoticeService::ERROR );
 		}
 
 		// Add logos to $data.
