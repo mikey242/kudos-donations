@@ -25,6 +25,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 
 	public const SETTING_EMAIL_VENDOR         = '_kudos_email_vendor';
 	public const SETTING_EMAIL_RECEIPT_ENABLE = '_kudos_email_receipt_enable';
+	public const SETTING_EMAIL_SHOW_CAMPAIGN  = '_kudos_email_show_campaign_name';
 	private EmailVendorInterface $vendor;
 
 	/**
@@ -74,18 +75,27 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		// Email address.
 		$email = $donor->{DonorPostType::META_FIELD_EMAIL};
 
+		// Get campaign name if enabled.
+		$campaign_name = '';
+		if ( get_option( self::SETTING_EMAIL_SHOW_CAMPAIGN ) ) {
+			$campaign      = get_post( $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID} );
+			$campaign_name = $campaign->post_title;
+		}
+
 		// Create array of variables for use in twig template.
 		$args = [
-			'name'        => $donor->{DonorPostType::META_FIELD_NAME} ?? '',
-			'date'        => $transaction->post_date,
-			'description' => $transaction->post_title,
-			'amount'      => ( ! empty( $transaction->{TransactionPostType::META_FIELD_CURRENCY} ) ? html_entity_decode(
+			'name'          => $donor->{DonorPostType::META_FIELD_NAME} ?? '',
+			'date'          => $transaction->post_date,
+			'description'   => $transaction->post_title,
+			'amount'        => ( ! empty( $transaction->{TransactionPostType::META_FIELD_CURRENCY} ) ? html_entity_decode(
 				Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ]
 			) : '' ) . number_format_i18n(
 				$transaction->{TransactionPostType::META_FIELD_VALUE},
 				2
 			),
-			'receipt_id'  => Utils::get_formatted_id( $transaction_id ),
+			'receipt_id'    => Utils::get_formatted_id( $transaction_id ),
+			'campaign_name' => $campaign_name,
+			'attachments'   => $attachments,
 		];
 
 		// Add a cancel button if this is the receipt for a subscription payment.
@@ -138,6 +148,12 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 				'type'              => FieldType::BOOLEAN,
 				'show_in_rest'      => true,
 				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::SETTING_EMAIL_SHOW_CAMPAIGN  => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'show_in_rest'      => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 		];

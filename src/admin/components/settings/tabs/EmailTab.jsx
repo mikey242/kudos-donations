@@ -65,7 +65,15 @@ const EmailTab = () => {
 						)}
 						name="_kudos_email_receipt_enable"
 					/>
-
+					<ToggleControl
+						label={__('Show campaign name', 'kudos-donations')}
+						isDisabled={!watchSendReceipts}
+						help={__(
+							'Show the campaign name in the receipt email.',
+							'kudos-donations'
+						)}
+						name="_kudos_email_show_campaign_name"
+					/>
 					<TextControl
 						label={__('Send receipt copy to', 'kudos-donations')}
 						isDisabled={!watchSendReceipts}
