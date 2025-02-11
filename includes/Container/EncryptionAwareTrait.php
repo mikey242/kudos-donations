@@ -29,15 +29,15 @@ trait EncryptionAwareTrait {
 	/**
 	 * Encrypt and save an API key.
 	 *
-	 * @param string    $value The value to encrypt.
+	 * @param ?string   $value The value to encrypt.
 	 * @param string    $encrypted_option The option to save it under.
 	 * @param ?callable $callback Callback to run on successful save.
 	 */
-	protected function save_encrypted_key( string $value, string $encrypted_option, ?callable $callback = null ): string {
+	protected function save_encrypted_key( ?string $value, string $encrypted_option, ?callable $callback = null ): string {
 		if ( ! $value ) {
 			// Clear value.
 			update_option( $encrypted_option, '' );
-			return $value;
+			return '';
 		}
 
 		$num_asterisks = substr_count( $value, '*' );
