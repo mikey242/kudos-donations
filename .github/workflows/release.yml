@@ -17,6 +17,8 @@ jobs:
 
   zip-job:
     needs: build-job
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
