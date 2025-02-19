@@ -12,6 +12,7 @@ namespace Kudos\Service;
 use Kudos\Entity\DonorEntity;
 use Kudos\Entity\SubscriptionEntity;
 use Kudos\Entity\TransactionEntity;
+use Kudos\Helpers\Campaign;
 use Kudos\Helpers\Settings;
 use Kudos\Helpers\Utils;
 use Kudos\Service\Vendor\MollieVendor;
@@ -334,6 +335,15 @@ class PaymentService {
 		$frequency_text = Utils::get_frequency_name( $interval );
 		$sequence_type  = 'oneoff' === $interval ? 'oneoff' : 'first';
 
+		// Campaign name.
+		$campaign_name = '';
+		try {
+			$campaign      = Campaign::get_campaign( $campaign_id );
+			$campaign_name = $campaign['name'] ?? '';
+		} catch ( \Exception $e ) {
+			$this->logger->warning( $e->getMessage() );
+		}
+
 		// Create payment settings.
 		$payment_array = [
 			'amount'       => [
@@ -352,7 +362,8 @@ class PaymentService {
 					$order_id
 				),
 				$frequency_text,
-				$order_id
+				$order_id,
+				$campaign_name
 			),
 			'metadata'     => [
 				'order_id'    => $order_id,
