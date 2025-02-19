@@ -67,18 +67,33 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		$object_type = get_post_type_object( get_post_type( $post_id ) );
 		$single_name = $object_type->labels->singular_name;
 
-		$title = apply_filters(
-			'kudos_payment_description',
-			$single_name . sprintf( ' (%1$s)', Utils::get_formatted_id( $post->ID ) ),
-			$post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
-			$post->ID
-		);
-
 		wp_update_post(
 			[
 				'ID'         => $post->ID,
-				'post_title' => $title,
+				'post_title' => $single_name . sprintf( ' (%1$s)', Utils::get_formatted_id( $post->ID ) ),
 			]
+		);
+
+		add_action(
+			'kudos_transaction_post_created',
+			function ( $transaction ) use ( $post_id ) {
+				if ( $transaction->ID === $post_id ) {
+					$post  = get_post( $post_id );
+					$title = apply_filters(
+						'kudos_payment_description',
+						$post->post_title,
+						$post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
+						$post->ID,
+						get_post( $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID} )->post_title ?? '',
+					);
+					wp_update_post(
+						[
+							'ID'         => $transaction->ID,
+							'post_title' => $title,
+						]
+					);
+				}
+			}
 		);
 	}
 
