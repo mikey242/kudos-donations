@@ -118,6 +118,9 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.4.1 =
+* Add campaign name to kudos_payment_description filter parameters
+
 = 3.4.0 =
 * Add ability to show campaign name in the email receipt
 * Update dependencies
