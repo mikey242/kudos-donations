@@ -17,6 +17,7 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -29,6 +30,8 @@ class Payment extends AbstractRestController {
 	public const ROUTE_WEBHOOK = '/webhook';
 	public const ROUTE_TEST    = '/test';
 	public const ROUTE_READY   = '/ready';
+
+	private PaymentVendorInterface $vendor;
 
 	/**
 	 * PaymentRoutes constructor.
@@ -268,6 +271,10 @@ class Payment extends AbstractRestController {
 			]
 		);
 
+		// Do action for post creation, must be before payment made with vendor.
+		do_action( 'kudos_transaction_post_created', $transaction );
+
+		// Create payment with vendor.
 		$url = $this->vendor->create_payment( $args, $transaction->ID, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created.
