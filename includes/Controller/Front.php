@@ -76,25 +76,29 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 
 		// Scripts.
 		$view = Assets::get_script( 'front/block/kudos-front.js' );
-		wp_register_script(
-			self::SCRIPT_HANDLE_VIEW,
-			$view['url'],
-			$view['dependencies'],
-			$view['version'],
-			[
-				'in_footer' => true,
-			]
-		);
+		if ( $view ) {
+			wp_register_script(
+				self::SCRIPT_HANDLE_VIEW,
+				$view['url'],
+				$view['dependencies'],
+				$view['version'],
+				[
+					'in_footer' => true,
+				]
+			);
+		}
 		$edit = Assets::get_script( 'front/block/index.js' );
-		wp_register_script(
-			self::SCRIPT_HANDLE_EDITOR,
-			$edit['url'],
-			$edit['dependencies'],
-			$edit['version'],
-			[
-				'in_footer' => true,
-			]
-		);
+		if ( $edit ) {
+			wp_register_script(
+				self::SCRIPT_HANDLE_EDITOR,
+				$edit['url'],
+				$edit['dependencies'],
+				$edit['version'],
+				[
+					'in_footer' => true,
+				]
+			);
+		}
 		foreach ( self::SCRIPT_HANDLES as $script ) {
 			wp_localize_script(
 				$script,
@@ -122,12 +126,15 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * Register the Kudos block.
 	 */
 	private function register_block(): void {
-		register_block_type(
-			KUDOS_PLUGIN_DIR . '/build/front/block',
-			[
-				'render_callback' => [ $this, 'kudos_render_callback' ],
-			]
-		);
+		$path = KUDOS_PLUGIN_DIR . '/build/front/block';
+		if ( file_exists( $path ) ) {
+			register_block_type(
+				$path,
+				[
+					'render_callback' => [ $this, 'kudos_render_callback' ],
+				]
+			);
+		}
 	}
 
 	/**
