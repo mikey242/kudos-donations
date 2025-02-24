@@ -37,7 +37,6 @@
     "woocommerce/action-scheduler": "^3.5"
   },
   "require-dev": {
-    "micheh/phpcs-gitlab": "^2.0",
     "php-stubs/wordpress-tests-stubs": "^6.3",
     "phpcompatibility/php-compatibility": "^9.3",
     "phpcompatibility/phpcompatibility-wp": "*",
