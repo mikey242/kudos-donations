@@ -49,6 +49,10 @@ Need a Mollie account? Visit their website to [get started](https://www.mollie.c
 
 Yes, Kudos Donations is a free open-source plugin.
 
+= Does Kudos Donations take a commission from my donations?
+
+No, we do not touch your donations.
+
 = Which payment methods are supported? =
 
 This plugin uses Mollie as a payment vendor. Mollie allows you to pay using a wide range of payment methods such as iDeal, credit card and PayPal. For a full list of payment methods please check out [this link](https://www.mollie.com/en/payments).
