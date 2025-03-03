@@ -28,7 +28,7 @@ export const SelectControl = ({
 					onChange={onChange}
 					disabled={isDisabled}
 					help={description}
-					value={value}
+					value={value !== undefined && value !== null ? value : ''}
 					prefix={
 						prefix && (
 							<InputControlPrefixWrapper>
