@@ -54,7 +54,6 @@ export const SettingsPage = () => {
 				content: <HelpTab />,
 			},
 		],
-		AdminControls,
 		useSettingsContext,
 		formMethods
 	);
