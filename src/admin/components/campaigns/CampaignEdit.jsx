@@ -16,7 +16,6 @@ import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
 import { useCampaignsContext } from '../contexts';
 import { applyFilters } from '@wordpress/hooks';
-import * as AdminControls from '../../components/controls';
 
 const CampaignEdit = ({ campaign, recurringAllowed }) => {
 	const methods = useForm({
@@ -54,39 +53,35 @@ const CampaignEdit = ({ campaign, recurringAllowed }) => {
 		handleUpdate(data);
 	};
 
-	const tabs = applyFilters(
-		'kudosCampaignTabs',
-		[
-			{
-				name: 'general',
-				title: __('General', 'kudos-donations'),
-				content: <GeneralTab campaign={campaign} />,
-			},
-			{
-				name: 'text-fields',
-				title: __('Text', 'kudos-donations'),
-				content: <TextFieldsTab />,
-			},
-			{
-				name: 'donation-settings',
-				title: __('Donation settings', 'kudos-donations'),
-				content: (
-					<DonationSettingsTab recurringAllowed={recurringAllowed} />
-				),
-			},
-			{
-				name: 'optional-fields',
-				title: __('Optional fields', 'kudos-donations'),
-				content: <OptionalFieldsTab />,
-			},
-			{
-				name: 'Custom CSS',
-				title: __('Custom CSS', 'kudos-donations'),
-				content: <CustomCSSTab />,
-			},
-		],
-		AdminControls
-	);
+	const tabs = applyFilters('kudosCampaignTabs', [
+		{
+			name: 'general',
+			title: __('General', 'kudos-donations'),
+			content: <GeneralTab campaign={campaign} />,
+		},
+		{
+			name: 'text-fields',
+			title: __('Text', 'kudos-donations'),
+			content: <TextFieldsTab />,
+		},
+		{
+			name: 'donation-settings',
+			title: __('Donation settings', 'kudos-donations'),
+			content: (
+				<DonationSettingsTab recurringAllowed={recurringAllowed} />
+			),
+		},
+		{
+			name: 'optional-fields',
+			title: __('Optional fields', 'kudos-donations'),
+			content: <OptionalFieldsTab />,
+		},
+		{
+			name: 'Custom CSS',
+			title: __('Custom CSS', 'kudos-donations'),
+			content: <CustomCSSTab />,
+		},
+	]);
 
 	return (
 		<Fragment>

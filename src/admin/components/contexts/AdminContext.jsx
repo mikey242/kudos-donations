@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { BrowserRouter, useSearchParams } from 'react-router-dom';
 import { AdminHeader } from '../AdminHeader';
+import * as AdminControls from '../../components/controls';
 
 const AdminContext = createContext(null);
 
@@ -15,6 +16,7 @@ export const AdminProvider = ({ children }) => {
 export const InnerAdminProvider = ({ children }) => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [headerContent, setHeaderContent] = useState(null);
+	window.kudos.AdminControls = AdminControls;
 
 	const updateParam = (name, value) => {
 		searchParams.set(name, value);
