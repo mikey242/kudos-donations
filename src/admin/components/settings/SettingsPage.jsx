@@ -12,7 +12,6 @@ import { AdminTabPanel } from '../AdminTabPanel';
 import { Button, FlexItem } from '@wordpress/components';
 import { useAdminContext, useSettingsContext } from '../contexts';
 import { applyFilters } from '@wordpress/hooks';
-import * as AdminControls from '../../components/controls';
 
 export const SettingsPage = () => {
 	const { setHeaderContent } = useAdminContext();
