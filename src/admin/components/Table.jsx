@@ -4,8 +4,24 @@ import { __ } from '@wordpress/i18n';
 import { useCampaignsContext, useAdminContext } from './contexts';
 
 export const Table = ({ headerItems }) => {
-	const { posts, sort, hasResolved } = useCampaignsContext();
-	const { searchParams } = useAdminContext();
+	const { posts, hasResolved } = useCampaignsContext();
+	const { searchParams, updateParams } = useAdminContext();
+
+	const sort = (orderby) => {
+		const prevOrderby = searchParams.get('orderby');
+		const prevOrder = searchParams.get('order');
+
+		updateParams([
+			{ name: 'orderby', value: orderby },
+			{
+				name: 'order',
+				value:
+					prevOrderby !== orderby || prevOrder === 'desc'
+						? 'asc'
+						: 'desc',
+			},
+		]);
+	};
 
 	return (
 		<>
