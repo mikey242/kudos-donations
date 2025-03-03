@@ -56,7 +56,7 @@ export const Table = ({ headerItems }) => {
 									<TableRow
 										key={post.slug}
 										post={post}
-										headerItems={headerItems}
+										columns={headerItems}
 									/>
 								);
 							})
@@ -79,7 +79,7 @@ const TableMessage = ({ children, colspan = 100 }) => (
 const TableRow = ({ post, columns }) => {
 	return (
 		<tr>
-			{headerItems.map((column) => {
+			{columns.map((column) => {
 				return (
 					<td
 						style={{ verticalAlign: 'middle' }}
