@@ -20,7 +20,7 @@ export const CampaignsProvider = ({
 	postType = 'kudos_campaign',
 	children,
 }) => {
-	const { updateParams, searchParams } = useAdminContext();
+	const { searchParams } = useAdminContext();
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice, removeAllNotices } =
 		useDispatch(noticesStore);
@@ -145,25 +145,8 @@ export const CampaignsProvider = ({
 		);
 	};
 
-	const sort = (orderby) => {
-		const prevOrderby = searchParams.get('orderby');
-		const prevOrder = searchParams.get('order');
-
-		updateParams([
-			{ name: 'orderby', value: orderby },
-			{
-				name: 'order',
-				value:
-					prevOrderby !== orderby || prevOrder === 'desc'
-						? 'asc'
-						: 'desc',
-			},
-		]);
-	};
-
 	const data = {
 		posts: cachedPosts,
-		sort,
 		hasResolved,
 		handleNew,
 		handleDuplicate,
