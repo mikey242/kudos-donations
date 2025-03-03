@@ -157,7 +157,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					/>
 				</PanelBody>
 			</Panel>
-			<>{applyFilters('im/kudos/admin_campaigns/donation_end', '')}</>
+			<>{applyFilters('kudosCampaignsDonationEnd', '')}</>
 		</Fragment>
 	);
 };
