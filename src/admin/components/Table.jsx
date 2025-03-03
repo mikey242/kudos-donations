@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Flex } from '@wordpress/components';
+import { Button, Flex, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useCampaignsContext, useAdminContext } from './contexts';
 
@@ -41,19 +41,15 @@ export const Table = ({ headerItems }) => {
 				</thead>
 				<tbody>
 					<>
+						{!hasResolved && !posts?.length && (
+							<TableMessage>
+								<Spinner />
+							</TableMessage>
+						)}
 						{!posts?.length && hasResolved ? (
-							<tr>
-								<td colSpan={headerItems.length}>
-									<Flex justify="center">
-										<p>
-											{__(
-												'No campaigns',
-												'kudos-donations'
-											)}
-										</p>
-									</Flex>
-								</td>
-							</tr>
+							<TableMessage>
+								<p>{__('No campaigns', 'kudos-donations')}</p>
+							</TableMessage>
 						) : (
 							posts?.map((post) => {
 								return (
@@ -72,7 +68,15 @@ export const Table = ({ headerItems }) => {
 	);
 };
 
-const TableRow = ({ post, headerItems }) => {
+const TableMessage = ({ children, colspan = 100 }) => (
+	<tr>
+		<td colSpan={colspan}>
+			<Flex justify="center">{children}</Flex>
+		</td>
+	</tr>
+);
+
+const TableRow = ({ post, columns }) => {
 	return (
 		<tr>
 			{headerItems.map((column) => {
