@@ -2,7 +2,7 @@ import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormTokenField, RadioGroupControl, TextControl } from '../../controls';
 import React from 'react';
-import { useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { Panel, PanelBody } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
 
@@ -157,7 +157,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					/>
 				</PanelBody>
 			</Panel>
-			<>{applyFilters('kudosCampaignsDonationEnd', '')}</>
+			<>{applyFilters('kudosCampaignsDonationEnd', '', useFormContext)}</>
 		</Fragment>
 	);
 };
