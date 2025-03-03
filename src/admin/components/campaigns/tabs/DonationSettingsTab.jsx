@@ -4,6 +4,7 @@ import { FormTokenField, RadioGroupControl, TextControl } from '../../controls';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 import { Panel, PanelBody } from '@wordpress/components';
+import { applyFilters } from '@wordpress/hooks';
 
 export const DonationSettingsTab = ({ recurringAllowed }) => {
 	const { currencies } = window.kudos;
@@ -156,6 +157,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					/>
 				</PanelBody>
 			</Panel>
+			<>{applyFilters('im/kudos/admin_campaigns/donation_end', '')}</>
 		</Fragment>
 	);
 };
