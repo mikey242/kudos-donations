@@ -55,6 +55,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public const META_FIELD_RETURN_MESSAGE_TEXT      = 'return_message_text';
 	public const META_FIELD_CUSTOM_STYLES            = 'custom_styles';
 	public const META_ALLOW_ANONYMOUS                = 'allow_anonymous';
+	public const META_PAYMENT_DESCRIPTION_FORMAT     = 'payment_description_format';
 
 	/**
 	 * Rest field constants.
@@ -263,6 +264,11 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 			self::META_ALLOW_ANONYMOUS                => [
 				'type'    => FieldType::BOOLEAN,
 				'default' => false,
+			],
+			self::META_PAYMENT_DESCRIPTION_FORMAT     => [
+				'type'         => FieldType::STRING,
+				'show_in_rest' => true,
+				'default'      => __( 'Donation ({{campaign_name}}) - {{order_id}}', 'kudos-donations' ),
 			],
 		];
 	}

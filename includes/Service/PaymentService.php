@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
+use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
@@ -78,10 +79,28 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 			'kudos_transaction_post_created',
 			function ( $transaction ) use ( $post_id ) {
 				if ( $transaction->ID === $post_id ) {
-					$post  = get_post( $post_id );
+					$post = get_post( $post_id );
+
+					$campaign_id        = $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID};
+					$donor_id           = $post->{TransactionPostType::META_FIELD_DONOR_ID};
+					$donor              = get_post( $donor_id );
+					$campaign           = get_post( $campaign_id );
+					$description_format = $campaign->{CampaignPostType::META_PAYMENT_DESCRIPTION_FORMAT};
+
+					// Optional variables.
+					$vars = [
+						'{{order_id}}'      => Utils::get_formatted_id( $post->ID ),
+						'{{type}}'          => $post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
+						'{{donor_name}}'    => $donor->{DonorPostType::META_FIELD_NAME},
+						'{{donor_email}}'   => $donor->{DonorPostType::META_FIELD_EMAIL},
+						'{{campaign_name}}' => $campaign->post_title,
+					];
+
+					$description = strtr( $description_format, $vars );
+
 					$title = apply_filters(
 						'kudos_payment_description',
-						$post->post_title,
+						$description,
 						$post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
 						$post->ID,
 						get_post( $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID} )->post_title ?? '',
