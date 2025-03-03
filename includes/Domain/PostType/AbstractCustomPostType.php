@@ -68,7 +68,7 @@ abstract class AbstractCustomPostType extends AbstractContentType implements Cus
 	public function register(): void {
 		$this->register_post_type();
 		if ( is_a( $this, HasMetaFieldsInterface::class ) ) {
-			$this->register_meta_fields( $this->get_meta_config(), ObjectType::POST, $this->get_slug() );
+			$this->register_meta_fields( apply_filters( $this->get_slug() . '_meta_fields', $this->get_meta_config() ), ObjectType::POST, $this->get_slug() );
 		}
 
 		if ( is_a( $this, HasRestFieldsInterface::class ) ) {
