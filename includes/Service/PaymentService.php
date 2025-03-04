@@ -31,7 +31,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 *
 	 * @see https://stackoverflow.com/questions/36853791/laravel-dynamic-dependency-injection-for-interface-based-on-user-input
 	 *
-	 * @param MailerService $mailer_service Mailer service.
+	 * @param MailerService  $mailer_service Mailer service.
 	 * @param InvoiceService $invoice Invoice service.
 	 */
 	public function __construct( MailerService $mailer_service, InvoiceService $invoice ) {
