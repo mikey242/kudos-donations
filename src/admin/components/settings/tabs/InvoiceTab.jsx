@@ -34,7 +34,7 @@ const InvoiceTab = () => {
 						type="number"
 						label={__('Current Invoice Number', 'kudos-donations')}
 						help={__(
-							'This number automatically increases as transactions are paid.',
+							'This will be the number assigned to the next successful payment. This will automatically increases as transactions are paid.',
 							'kudos-donations'
 						)}
 					/>
