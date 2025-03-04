@@ -24,6 +24,7 @@ use WP_Post;
 class PaymentService extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_VENDOR = '_kudos_payment_vendor';
 	private MailerService $mailer_service;
+	private InvoiceService $invoice;
 
 	/**
 	 * Payment service constructor.
@@ -32,8 +33,9 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 *
 	 * @param MailerService $mailer_service Mailer service.
 	 */
-	public function __construct( MailerService $mailer_service ) {
+	public function __construct( MailerService $mailer_service, InvoiceService $invoice ) {
 		$this->mailer_service = $mailer_service;
+		$this->invoice        = $invoice;
 	}
 
 	/**
@@ -71,7 +73,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		wp_update_post(
 			[
 				'ID'         => $post->ID,
-				'post_title' => $single_name . sprintf( ' (%1$s)', Utils::get_formatted_id( $post->ID ) ),
+				'post_title' => $single_name . \sprintf( ' (%1$s)', Utils::get_formatted_id( $post->ID ) ),
 			]
 		);
 
@@ -175,16 +177,17 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 * @param int $transaction_id Transaction post id..
 	 */
 	public function process_transaction( int $transaction_id ): bool {
-		$mailer = $this->mailer_service;
-
 		$this->logger->debug( 'Processing paid transaction.', [ 'transaction_id' => $transaction_id ] );
+
+		// Generate invoice.
+		$this->invoice->generate_invoice( $transaction_id );
 
 		// Get donor.
 		$donor = get_post( get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true ) );
 
 		if ( $donor->{DonorPostType::META_FIELD_EMAIL} ) {
 			// Send email - email setting is checked in mailer.
-			$mailer->send_receipt( $donor->ID, $transaction_id );
+			$this->mailer_service->send_receipt( $donor->ID, $transaction_id );
 		}
 
 		return true;
