@@ -109,6 +109,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		}
 
 		$data = [
+			'donor_business'  => $donor->{DonorPostType::META_FIELD_BUSINESS_NAME},
 			'donor_name'      => $donor->{DonorPostType::META_FIELD_NAME},
 			'donor_street'    => $donor->{DonorPostType::META_FIELD_STREET},
 			'donor_postcode'  => $donor->{DonorPostType::META_FIELD_POSTCODE},
