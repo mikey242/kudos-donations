@@ -8,5 +8,10 @@
   "constraints": {
     "php": "7.4.0"
   },
-  "constraintsFiltering": "strict"
+  "constraintsFiltering": "strict",
+  "composer": {
+    "lockFileMaintenance": {
+      "enabled": true
+    }
+  }
 }
