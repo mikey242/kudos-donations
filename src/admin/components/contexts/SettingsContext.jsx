@@ -11,7 +11,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Icon } from '@wordpress/components';
+import { Flex, Icon, Spinner } from '@wordpress/components';
 import { IntroGuide } from '../settings/IntroGuide';
 
 const SettingsContext = createContext(null);
@@ -194,8 +194,16 @@ export const SettingsProvider = ({ children }) => {
 				isVendorReady,
 			}}
 		>
-			<IntroGuide />
-			{children}
+			{settingsReady ? (
+				<>
+					<IntroGuide />
+					{children}
+				</>
+			) : (
+				<Flex justify="center">
+					<Spinner />
+				</Flex>
+			)}
 		</SettingsContext.Provider>
 	);
 };
