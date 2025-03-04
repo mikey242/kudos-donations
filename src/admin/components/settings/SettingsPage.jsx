@@ -9,7 +9,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { MollieTab, EmailTab, HelpTab, InvoiceTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
-import { Button, FlexItem } from '@wordpress/components';
+import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalSpacer as Spacer,
+	Button,
+	Flex,
+	FlexItem,
+} from '@wordpress/components';
 import { useAdminContext, useSettingsContext } from '../contexts';
 import { applyFilters } from '@wordpress/hooks';
 
@@ -57,6 +63,18 @@ export const SettingsPage = () => {
 		formMethods
 	);
 
+	const SaveButton = () => (
+		<Button
+			variant="primary"
+			type="submit"
+			isBusy={settingsSaving}
+			disabled={settingsSaving}
+			onClick={() => formRef.current?.requestSubmit()}
+		>
+			{__('Save', 'kudos-donations')}
+		</Button>
+	);
+
 	useEffect(() => {
 		setHeaderContent(
 			<>
@@ -78,15 +96,7 @@ export const SettingsPage = () => {
 					></span>
 				</FlexItem>
 				<FlexItem>
-					<Button
-						variant="primary"
-						type="submit"
-						isBusy={settingsSaving}
-						disabled={settingsSaving}
-						onClick={() => formRef.current?.requestSubmit()}
-					>
-						{__('Save', 'kudos-donations')}
-					</Button>
+					<SaveButton />
 				</FlexItem>
 			</>
 		);
@@ -119,6 +129,10 @@ export const SettingsPage = () => {
 					>
 						<div className="admin-wrap">
 							<AdminTabPanel tabs={tabs} />
+							<Spacer marginTop={'5'} />
+							<Flex justify="flex-start">
+								<SaveButton />
+							</Flex>
 						</div>
 					</form>
 				</FormProvider>
