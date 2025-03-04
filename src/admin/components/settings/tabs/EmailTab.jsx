@@ -248,7 +248,7 @@ const EmailTab = () => {
 						type="email"
 						name="test_email_address"
 						help={__(
-							'Address to send the test email to.',
+							'Address to send the test email to. Please ensure you save changes first.',
 							'kudos-donations'
 						)}
 					/>
