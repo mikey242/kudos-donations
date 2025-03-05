@@ -100,7 +100,7 @@ class Invoice extends AbstractRestController {
 				$this->invoice->generate_invoice( $transaction->ID, true );
 			}
 			// translators: %s represents the number of invoices.
-			return new WP_REST_Response( [ 'message' => wp_sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) ], 200 );
+			return new WP_REST_Response( [ 'message' => \sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) ], 200 );
 		}
 		return new WP_REST_Response( [ 'message' => __( 'No valid transactions.', 'kudos-donations' ) ], 200 );
 	}

@@ -78,7 +78,7 @@ class Mail extends AbstractRestController {
 
 		if ( $result ) {
 			/* translators: %s: API mode */
-			return new WP_REST_Response( [ 'message' => wp_sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) ], 200 );
+			return new WP_REST_Response( [ 'message' => \sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) ], 200 );
 		}
 
 		return new WP_REST_Response( [ 'message' => __( 'Something went wrong sending the test email', 'kudos-donations' ) ], 500 );
