@@ -110,8 +110,9 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 					);
 					wp_update_post(
 						[
-							'ID'         => $transaction->ID,
-							'post_title' => $title,
+							'ID'           => $transaction->ID,
+							'post_title'   => $title,
+							'post_content' => implode( ', ', $vars ),
 						]
 					);
 				}
