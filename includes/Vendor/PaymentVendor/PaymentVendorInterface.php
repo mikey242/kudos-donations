@@ -83,4 +83,11 @@ interface PaymentVendorInterface
 	 * Returns true is the API is ready to communicate.
 	 */
 	public function is_ready(): bool;
+
+	/**
+	 * Returns the api mode.
+	 *
+	 * @return string
+	 */
+	public function get_api_mode(): string;
 }
