@@ -175,12 +175,14 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 				},
 			],
 			'donor'                      => [
-				'value_type' => FieldType::EMAIL,
+				'value_type' => FieldType::STRING,
 				'label'      => __( 'Donor', 'kudos-donations' ),
 				'value'      => function ( $transaction_id ) {
-					$donor_id = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true );
-					if ( $donor_id ) {
-						return get_post_meta( $donor_id, 'email', true );
+					$donor_id = get_post( $transaction_id )->{self::META_FIELD_DONOR_ID};
+					$donor    = get_post( $donor_id );
+					if ( $donor ) {
+						$email_address = $donor->{DonorPostType::META_FIELD_EMAIL};
+						return '<a href="edit.php?post_type=' . self::get_slug() . '&s=' . $email_address . '">' . $email_address . '</a>';
 					}
 					return null;
 				},
