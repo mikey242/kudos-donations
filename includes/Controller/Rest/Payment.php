@@ -271,9 +271,6 @@ class Payment extends AbstractRestController {
 			]
 		);
 
-		// Do action for post creation, must be before payment made with vendor.
-		do_action( 'kudos_transaction_post_created', $transaction );
-
 		// Create payment with vendor.
 		$url = $this->vendor->create_payment( $args, $transaction->ID, $vendor_customer_id );
 
