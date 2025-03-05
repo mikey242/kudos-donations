@@ -193,12 +193,10 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		$attributes = wp_json_encode( $args );
 
 		return wp_kses(
-			wp_sprintf(
-				"<p><span id='$id' class='kudos-form' data-options='$attributes'></span></p>",
-				$args['type'],
-				$args['button_label'],
+			\sprintf(
+				"<p><span id='%s' class='kudos-form' data-options='%s'></span></p>",
 				$id,
-				$args['campaign_id']
+				$attributes
 			),
 			[
 				'p'    => [],
@@ -320,7 +318,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 */
 	private function message_modal_html( string $header, string $body, string $color = '#ff9f1c' ): void {
 		echo wp_kses(
-			wp_sprintf( "<div class='kudos-donations kudos-message' data-color='%s' data-title='%s' data-body='%s'></div>", $color, $header, $body ),
+			\sprintf( "<div class='kudos-donations kudos-message' data-color='%s' data-title='%s' data-body='%s'></div>", $color, $header, $body ),
 			[
 				'div' => [
 					'class'      => [],

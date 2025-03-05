@@ -52,7 +52,7 @@ class EncryptionService extends AbstractRegistrable {
 	 */
 	public static function generate_token( int $post_id ): ?string {
 		if ( ! is_numeric( $post_id ) || $post_id <= 0 ) {
-			throw new Exception( wp_sprintf( 'Invalid post ID supplied to generate_token: %s', (int) $post_id ) );
+			throw new Exception( \sprintf( 'Invalid post ID supplied to generate_token: %s', (int) $post_id ) );
 		}
 
 		return hash_hmac( 'sha256', (string) $post_id, KUDOS_SALT );
