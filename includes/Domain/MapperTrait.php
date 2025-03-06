@@ -134,6 +134,7 @@ trait MapperTrait {
 
 		// Hook for acting on fully created post.
 		do_action( static::get_slug() . '_post_saved', $post_id, $new );
+		do_action( 'kudos_post_saved', $post_id, $new );
 
 		// Return post object or null.
 		return get_post( $post_id );
