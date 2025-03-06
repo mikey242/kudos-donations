@@ -116,6 +116,7 @@ trait TableColumnsTrait {
 							'a'    => [
 								'href'  => [],
 								'class' => [],
+								'title' => [],
 							],
 							'img'  => [
 								'src'   => [],
