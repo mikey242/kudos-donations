@@ -88,7 +88,7 @@ class NoticeService implements HasSettingsInterface {
 		if ( $logo ) {
 			$message = "<div class='logo' style='width: 50px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $message . '</div>';
 		}
-		if ( ! $key ) {
+		if ( \is_null( $key ) ) {
 			$key = wp_generate_uuid4();
 		}
 		add_action(

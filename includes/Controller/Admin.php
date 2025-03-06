@@ -135,7 +135,7 @@ class Admin extends AbstractRegistrable {
 				}
 			);
 			foreach ( $notices as $key => $notice ) {
-				$message     = $notice['message'] ?? '';
+				$message     = $notice['message'] ?? $notice;
 				$level       = $notice['level'] ?? NoticeService::INFO;
 				$dismissible = $notice['dismissible'] ?? true;
 				$logo        = $notice['logo'] ?? true;
@@ -143,7 +143,7 @@ class Admin extends AbstractRegistrable {
 					$message,
 					$level,
 					$dismissible,
-					$key,
+					(string) $key,
 					$logo
 				);
 			}
