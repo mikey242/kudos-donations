@@ -111,14 +111,15 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	public function get_columns_config(): array {
 		return [
 			'donor'                                 => [
-				'value_type' => FieldType::EMAIL,
+				'value_type' => FieldType::STRING,
 				'label'      => __( 'Donor', 'kudos-donations' ),
 				'value'      => function ( $subscription_id ) {
 					$transaction_id = get_post_meta( $subscription_id, SubscriptionPostType::META_FIELD_TRANSACTION_ID, true );
 					if ( $transaction_id ) {
 						$donor_id = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true );
 						if ( $donor_id ) {
-							return get_post_meta( $donor_id, DonorPostType::META_FIELD_EMAIL, true );
+							$email_address = get_post_meta( $donor_id, DonorPostType::META_FIELD_EMAIL, true );
+							return '<a title="' . __( 'Show only this donor', 'kudos-donations' ) . '" href="edit.php?post_type=' . TransactionPostType::get_slug() . '&s=' . $email_address . '">' . $email_address . '</a>';
 						}
 					}
 					return null;
