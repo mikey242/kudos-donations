@@ -45,6 +45,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public const META_FIELD_MINIMUM_DONATION         = 'minimum_donation';
 	public const META_FIELD_MAXIMUM_DONATION         = 'maximum_donation';
 	public const META_FIELD_DONATION_TYPE            = 'donation_type';
+	public const META_FREQUENCY_OPTIONS              = 'frequency_options';
 	public const META_FIELD_THEME_COLOR              = 'theme_color';
 	public const META_FIELD_TERMS_LINK               = 'terms_link';
 	public const META_FIELD_PRIVACY_LINK             = 'privacy_link';
@@ -110,6 +111,11 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 * {@inheritDoc}
 	 */
 	public static function get_meta_config(): array {
+		$allowed_frequencies = [
+			'12 months' => true,
+			'3 months'  => true,
+			'1 month'   => true,
+		];
 		return [
 			self::META_FIELD_CURRENCY                 => [
 				'type'              => FieldType::STRING,
@@ -269,6 +275,29 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
 				'default'      => __( 'Donation ({{campaign_name}}) - {{order_id}}', 'kudos-donations' ),
+			],
+			self::META_FREQUENCY_OPTIONS              => [
+				'type'         => FieldType::OBJECT,
+				'single'       => true,
+				'show_in_rest' => [
+					'schema' => [
+						'type'                 => FieldType::OBJECT,
+						'additionalProperties' => [
+							'type' => 'string',
+						],
+					],
+				],
+				'default'      => array_intersect_key(
+					apply_filters(
+						'kudos_frequency_options',
+						[
+							'12 months' => __( 'Yearly', 'kudos-donations' ),
+							'3 months'  => __( 'Quarterly', 'kudos-donations' ),
+							'1 month'   => __( 'Monthly', 'kudos-donations' ),
+						]
+					),
+					$allowed_frequencies
+				),
 			],
 		];
 	}
