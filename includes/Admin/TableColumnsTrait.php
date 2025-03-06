@@ -121,9 +121,20 @@ trait TableColumnsTrait {
 								'src'   => [],
 								'title' => [],
 							],
-							'span' => [
+							'div'  => [
 								'class' => [],
 								'style' => [],
+								'title' => [],
+							],
+							'svg'  => [
+								'xmlns'        => [],
+								'viewbox'      => [],
+								'stroke'       => [],
+								'stroke-width' => [],
+								'fill'         => [],
+							],
+							'path' => [
+								'd' => [],
 							],
 						]
 					);
