@@ -230,6 +230,7 @@ const Tab = ({ step, campaign }) => {
 				<FrequencyTab
 					title={campaign.meta.subscription_title}
 					description={campaign.meta.subscription_description}
+					frequencyOptions={campaign.meta.frequency_options}
 				/>
 			);
 		case 3:

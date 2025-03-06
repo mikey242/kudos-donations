@@ -6,7 +6,7 @@ import { useEffect } from '@wordpress/element';
 import { SelectControl } from '../controls';
 
 export const FrequencyTab = (props) => {
-	const { title, description, buttons } = props;
+	const { title, description, buttons, frequencyOptions } = props;
 
 	const { setFocus, getValues } = useFormContext();
 
@@ -44,20 +44,12 @@ export const FrequencyTab = (props) => {
 					),
 				}}
 				placeholder={__('Payment frequency', 'kudos-donations')}
-				options={[
-					{
-						value: '12 months',
-						label: __('Yearly', 'kudos-donations'),
-					},
-					{
-						value: '3 months',
-						label: __('Quarterly', 'kudos-donations'),
-					},
-					{
-						value: '1 month',
-						label: __('Monthly', 'kudos-donations'),
-					},
-				]}
+				options={Object.entries(frequencyOptions).map(
+					([value, label]) => ({
+						value,
+						label,
+					})
+				)}
 			/>
 
 			<SelectControl
