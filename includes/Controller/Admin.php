@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Admin\DebugAdminPage;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use IseardMedia\Kudos\Container\Handler\SettingsHandler;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\NoticeService;
@@ -60,7 +59,7 @@ class Admin extends AbstractRegistrable {
 				case 'kudos_clear_settings':
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_settings' ) ) {
 						global $new_allowed_options;
-						$settings = $new_allowed_options[ SettingsHandler::GROUP ];
+						$settings = $new_allowed_options['kudos-donations'];
 						foreach ( $settings as $setting_name ) {
 							delete_option( $setting_name );
 						}
