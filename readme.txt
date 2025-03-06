@@ -118,6 +118,10 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 3.4.2 =
+* Add new filter for adjusting the frequency options (kudos_frequency_options)
+* Update dependencies
+
 = 3.4.1 =
 * Add campaign name to kudos_payment_description filter parameters
 
