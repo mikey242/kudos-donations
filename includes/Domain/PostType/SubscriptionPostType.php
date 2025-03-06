@@ -154,7 +154,7 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 				'value_type' => FieldType::INTEGER,
 				'label'      => __( 'Length', 'kudos-donations' ),
 			],
-			'status'                                => [
+			self::META_FIELD_STATUS                 => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Status', 'kudos-donations' ),
 			],
