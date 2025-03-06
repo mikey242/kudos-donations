@@ -47,8 +47,8 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
 		// Replace returned get_home_url with app_url if defined.
 		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
-		// Runs when new transactions are created.
-		add_action( TransactionPostType::get_slug() . '_post_saved', [ $this, 'on_transaction_update' ], 10, 2 );
+		// Automatically generates post title and content for all Kudos posts.
+		add_action( 'kudos_post_saved', [ $this, 'on_kudos_post_saved' ], 10, 2 );
 	}
 
 	/**
@@ -56,50 +56,56 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 *
 	 * @param int $post_id The id of the post.
 	 */
-	public function on_transaction_update( int $post_id ) {
-		$post = get_post( $post_id );
+	public function on_kudos_post_saved( int $post_id ) {
+		$post        = get_post( $post_id );
+		$object_type = get_post_type_object( get_post_type( $post_id ) );
+		$postarr     = [
+			'ID' => $post_id,
+		];
 
-		$object_type         = get_post_type_object( get_post_type( $post_id ) );
-		$single_name         = $object_type->labels->singular_name;
-		$default_description = $single_name . \sprintf( ' (%1$s)', Utils::get_formatted_id( $post_id ) );
+		switch ( $object_type->name ) {
+			case TransactionPostType::get_slug():
+				$campaign_id        = $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID} ?? '';
+				$donor_id           = $post->{TransactionPostType::META_FIELD_DONOR_ID} ?? '';
+				$donor              = get_post( $donor_id );
+				$campaign           = get_post( $campaign_id );
+				$description_format = $campaign->{CampaignPostType::META_PAYMENT_DESCRIPTION_FORMAT} ?? '';
 
-		$campaign_id        = $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID} ?? '';
-		$donor_id           = $post->{TransactionPostType::META_FIELD_DONOR_ID} ?? '';
-		$donor              = get_post( $donor_id );
-		$campaign           = get_post( $campaign_id );
-		$description_format = $campaign->{CampaignPostType::META_PAYMENT_DESCRIPTION_FORMAT} ?? '';
+				$vars                 = [];
+				$vars['{{order_id}}'] = Utils::get_formatted_id( $post->ID );
+				$vars['{{type}}']     = $post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE} ?? '';
 
-		$vars                 = [];
-		$vars['{{order_id}}'] = Utils::get_formatted_id( $post->ID );
-		$vars['{{type}}']     = $post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE} ?? '';
+				// Add donor variables if available.
+				if ( $donor ) {
+					$vars['{{donor_name}}']  = $donor->{DonorPostType::META_FIELD_NAME} ?? '';
+					$vars['{{donor_email}}'] = $donor->{DonorPostType::META_FIELD_EMAIL} ?? '';
+				}
 
-		// Add donor variables if available.
-		if ( $donor ) {
-			$vars['{{donor_name}}']  = $donor->{DonorPostType::META_FIELD_NAME} ?? '';
-			$vars['{{donor_email}}'] = $donor->{DonorPostType::META_FIELD_EMAIL} ?? '';
+				// Add campaign variables if available.
+				if ( $campaign ) {
+					$vars['{{campaign_name}}'] = $campaign->post_title;
+				}
+
+				// Post content ready.
+				$postarr['post_content'] = implode( ', ', $vars );
+
+				// Generate title.
+				$postarr['post_title'] = apply_filters(
+					'kudos_payment_description',
+					strtr( $description_format, $vars ),
+					$post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
+					$post->ID,
+					get_post( $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID} )->post_title ?? '',
+				);
+				break;
+			default:
+				$single_name           = $object_type->labels->singular_name;
+				$postarr['post_title'] = $single_name . \sprintf( ' (%1$s)', Utils::get_formatted_id( $post_id ) );
 		}
 
-		// Add campaign variables if available.
-		if ( $campaign ) {
-			$vars['{{campaign_name}}'] = $campaign->post_title;
-		}
+		$this->logger->debug( 'Updating Kudos post', [ 'postarr' => $postarr ] );
 
-		// Generate title.
-		$title = apply_filters(
-			'kudos_payment_description',
-			$description_format ? strtr( $description_format, $vars ) : $default_description,
-			$post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
-			$post->ID,
-			get_post( $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID} )->post_title ?? '',
-		);
-
-		wp_update_post(
-			[
-				'ID'           => $post_id,
-				'post_title'   => $title,
-				'post_content' => implode( ', ', $vars ),
-			]
-		);
+		wp_update_post( $postarr );
 	}
 
 	/**
