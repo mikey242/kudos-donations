@@ -113,11 +113,7 @@
                 name: 'recurring_frequency',
                 required: true,
                 placeholder: __('Payment frequency', 'kudos-donations'),
-                options: {
-                    '12 months': __('Yearly', 'kudos-donations'),
-                    '3 months': __('Quarterly', 'kudos-donations'),
-                    '1 month': __('Monthly', 'kudos-donations')
-                }
+                options: frequency_options
             }) }}
 
             {# Recurring payment length #}

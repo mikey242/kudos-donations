@@ -421,6 +421,12 @@ class Front {
 									);
 		$campaign_stats = Campaign::get_campaign_stats( $transactions );
 
+		$allowed_frequencies = [
+			'12 months' => true,
+			'3 months'  => true,
+			'1 month'   => true,
+		];
+
 		$args = [
 			'id'                 => $id,
 			'return_url'         => Utils::get_return_url(),
@@ -435,6 +441,17 @@ class Front {
 			'amount_type'        => $campaign['amount_type'] ?? '',
 			'fixed_amounts'      => $campaign['fixed_amounts'] ?? '',
 			'frequency'          => $campaign['donation_type'] ?? '',
+			'frequency_options'  => array_intersect_key(
+				apply_filters(
+					'kudos_frequency_options',
+					[
+						'12 months' => __( 'Yearly', 'kudos-donations' ),
+						'3 months'  => __( 'Quarterly', 'kudos-donations' ),
+						'1 month'   => __( 'Monthly', 'kudos-donations' ),
+					]
+				),
+				$allowed_frequencies
+			),
 			'address_enabled'    => $campaign['address_enabled'] ?? '',
 			'address_required'   => $campaign['address_required'] ?? '',
 			'message_enabled'    => $campaign['message_enabled'] ?? '',
