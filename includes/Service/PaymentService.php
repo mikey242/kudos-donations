@@ -48,15 +48,15 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		// Replace returned get_home_url with app_url if defined.
 		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
 		// Runs when new transactions are created.
-		add_action( TransactionPostType::get_slug() . '_post_saved', [ $this, 'add_title' ], 10, 2 );
+		add_action( TransactionPostType::get_slug() . '_post_saved', [ $this, 'on_transaction_update' ], 10, 2 );
 	}
 
 	/**
-	 * Adds a description for new transactions.
+	 * Update post title and content.
 	 *
 	 * @param int $post_id The id of the post.
 	 */
-	public function add_title( int $post_id ) {
+	public function on_transaction_update( int $post_id ) {
 		$post = get_post( $post_id );
 
 		$object_type         = get_post_type_object( get_post_type( $post_id ) );
