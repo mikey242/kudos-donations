@@ -159,19 +159,23 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					$sequence = $post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE};
 					switch ( $sequence ) {
 						case 'oneoff':
-							$icon = 'money-alt';
-							break;
-						case 'first':
-							$icon = 'calendar';
+							$icon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+									  <path stroke-linecap="round" stroke-linejoin="round" d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+									</svg>
+									';
 							break;
 						case 'recurring':
-							$icon = 'update';
+						case 'first':
+							$icon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+									  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+									</svg>
+									';
 							break;
 						default:
 							$icon = '';
 
 					}
-					return "<span class='dashicons dashicons-$icon'></span> " . Utils::get_formatted_id( $transaction_id );
+					return '<div class="dashicons" title="' . __( 'Payment type: ', 'kudos-donations' ) . $sequence . '" style="padding-right:10px">' . $icon . '</div>' . Utils::get_formatted_id( $transaction_id );
 				},
 			],
 			'donor'                      => [
