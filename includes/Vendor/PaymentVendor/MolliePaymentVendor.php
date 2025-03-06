@@ -409,6 +409,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		string $interval,
 		int $years
 	) {
+		$this->logger->debug('Creating subscription', ['mandate_id' => $mandate_id, 'interval' => $interval, 'years' => $years]);
 		$donor       = get_post($transaction->{TransactionPostType::META_FIELD_DONOR_ID});
 		$customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID};
 		$start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
@@ -418,6 +419,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 		// Create subscription if valid mandate found.
 		if ($this->check_mandate($customer, $mandate_id)) {
+			$this->logger->debug('Customer has valid mandate, continuing.', ['mandate_id' => $mandate_id]);
 			try {
 
 				// Create subscription post.
@@ -456,6 +458,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				}
 
 				$subscription       = $customer->createSubscription($subscription_args);
+				$this->logger->debug('Subscription created with Mollie', ['result' => $subscription]);
 
 				// Update subscription post with status and subscription id.
 				SubscriptionPostType::save([
@@ -639,7 +642,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
                 // Set up recurring payment if sequence is first.
                 if ($payment->hasSequenceTypeFirst()) {
-                    $this->logger->info('Creating subscription.', $transaction->to_array());
+                    $this->logger->info('Payment is initial subscription payment.', $transaction->to_array());
                     $subscription = $this->create_subscription(
                         $transaction,
                         $payment->mandateId,
