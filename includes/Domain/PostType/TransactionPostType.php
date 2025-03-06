@@ -175,7 +175,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 							$icon = '';
 
 					}
-					return '<div class="dashicons" title="' . __( 'Payment type: ', 'kudos-donations' ) . $sequence . '" style="padding-right:10px">' . $icon . '</div>' . Utils::get_formatted_id( $transaction_id );
+					return '<div class="dashicons" title="' . __( 'Payment type: ', 'kudos-donations' ) . $sequence . '" style="margin-right:10px">' . $icon . '</div>' . Utils::get_formatted_id( $transaction_id );
 				},
 			],
 			'donor'                      => [
@@ -186,7 +186,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 					$donor    = get_post( $donor_id );
 					if ( $donor ) {
 						$email_address = $donor->{DonorPostType::META_FIELD_EMAIL};
-						return '<a href="edit.php?post_type=' . self::get_slug() . '&s=' . $email_address . '">' . $email_address . '</a>';
+						return '<a title="' . __( 'Show only this donor', 'kudos-donations' ) . '" href="edit.php?post_type=' . self::get_slug() . '&s=' . $email_address . '">' . $email_address . '</a>';
 					}
 					return null;
 				},
@@ -232,7 +232,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 								],
 								admin_url( 'edit.php' )
 							);
-							$status_text = '<a class="button button-secondary kudos-transaction-pdf success" href="' . $url . '"><span style="margin-right: 4px; vertical-align: text-top;" class="dashicons dashicons-media-document"></span><span>' . __( 'Paid', 'kudos-donations' ) . '</span></a>';
+							$status_text = '<a title="' . __( 'View invoice', 'kudos-donations' ) . '" class="button button-secondary kudos-transaction-pdf success" href="' . $url . '"><span style="margin-right: 4px; vertical-align: text-top;" class="dashicons dashicons-media-document"></span><span>' . __( 'Paid', 'kudos-donations' ) . '</span></a>';
 							break;
 						case PaymentStatus::OPEN:
 							$status_text = __( 'Open', 'kudos-donations' );

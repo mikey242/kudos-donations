@@ -144,7 +144,7 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 				'label' => __( 'Email', 'kudos-donations' ),
 				'value' => function ( $donor_id ) {
 					$email_address = get_post( $donor_id )->{self::META_FIELD_EMAIL};
-					return '<a href="edit.php?post_type=' . TransactionPostType::get_slug() . '&s=' . $email_address . '">' . $email_address . '</a>';
+					return '<a title="' . __( 'Show only this donor', 'kudos-donations' ) . '" href="edit.php?post_type=' . TransactionPostType::get_slug() . '&s=' . $email_address . '">' . $email_address . '</a>';
 				},
 			],
 			self::META_FIELD_VENDOR_CUSTOMER_ID => [
