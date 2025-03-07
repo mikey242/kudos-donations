@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { KudosForm } from './components/KudosForm';
-import Message from './components/Message';
+import Message, { PaymentStatus } from './components/Message';
 import CampaignProvider from './contexts/CampaignContext';
 import './kudos-fonts.css';
 import './kudos-front.css';
@@ -17,6 +17,7 @@ domReady(() => {
 	// Select the web components as target for render.
 	const forms = document.querySelectorAll('.kudos-form');
 	const messages = document.querySelectorAll('.kudos-message');
+	const status = document.querySelectorAll('.kudos-transaction-status');
 
 	// Kudos Donations form/modal
 	forms.forEach((container) => {
@@ -29,6 +30,20 @@ domReady(() => {
 						label={options?.button_label}
 						displayAs={options?.type ?? 'button'}
 					/>
+				</CampaignProvider>
+			);
+		}
+	});
+
+	// Kudos Payment Status
+	status.forEach((container) => {
+		if (!container.shadowRoot) {
+			const root = createRoot(container);
+			const transactionId = container.dataset.transaction;
+			const campaignId = container.dataset.campaign;
+			root.render(
+				<CampaignProvider campaignId={campaignId}>
+					<PaymentStatus transactionId={transactionId} />
 				</CampaignProvider>
 			);
 		}
