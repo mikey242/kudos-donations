@@ -120,6 +120,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 3.4.2 =
 * Add new filter for adjusting the frequency options (kudos_frequency_options)
+* Fix issue with subscriptions sometimes failing to create
 * Update dependencies
 
 = 3.4.1 =
