@@ -111,11 +111,6 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 * {@inheritDoc}
 	 */
 	public static function get_meta_config(): array {
-		$allowed_frequencies = [
-			'12 months' => true,
-			'3 months'  => true,
-			'1 month'   => true,
-		];
 		return [
 			self::META_FIELD_CURRENCY                 => [
 				'type'              => FieldType::STRING,
@@ -281,13 +276,21 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'single'       => true,
 				'show_in_rest' => [
 					'schema' => [
-						'type'                 => FieldType::OBJECT,
-						'additionalProperties' => [
-							'type' => 'string',
+						'type'       => FieldType::OBJECT,
+						'properties' => [
+							'12 months' => [
+								'type' => 'string',
+							],
+							'3 months'  => [
+								'type' => 'string',
+							],
+							'1 month'   => [
+								'type' => 'string',
+							],
 						],
 					],
 				],
-				'default'      => array_intersect_key(
+				'default'      =>
 					apply_filters(
 						'kudos_frequency_options',
 						[
@@ -296,8 +299,6 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 							'1 month'   => __( 'Monthly', 'kudos-donations' ),
 						]
 					),
-					$allowed_frequencies
-				),
 			],
 		];
 	}
