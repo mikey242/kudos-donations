@@ -308,7 +308,6 @@ class MollieVendor implements VendorInterface {
 		try {
 			$response = $customer->cancelSubscription( $subscription->subscription_id );
 
-			/** @var Subscription $response */
 			return ( $response->status === 'canceled' );
 		} catch ( ApiException $e ) {
 			$this->logger->error( $e->getMessage() );
@@ -640,47 +639,35 @@ class MollieVendor implements VendorInterface {
 			$subscription_array['times'] = Utils::get_times_from_years( $years, $interval );
 		}
 
-		$customer      = $this->get_customer( $customer_id );
-		$valid_mandate = $this->check_mandate( $customer, $mandate_id );
+		// Create subscription.
+		try {
+			$customer = $this->api_client->customers->get( $customer_id );
+			$subscription       = $customer->createSubscription( $subscription_array );
+			$kudos_subscription = new SubscriptionEntity(
+				[
+					'transaction_id'  => $transaction->transaction_id,
+					'customer_id'     => $customer_id,
+					'frequency'       => $interval,
+					'years'           => $years,
+					'value'           => $value,
+					'currency'        => $currency,
+					'subscription_id' => $subscription->id,
+					'status'          => $subscription->status,
+				]
+			);
+			$this->mapper->save( $kudos_subscription );
 
-		// Create subscription if valid mandate found
-		if ( $valid_mandate ) {
-			try {
-				$subscription       = $customer->createSubscription( $subscription_array );
-				$kudos_subscription = new SubscriptionEntity(
-					[
-						'transaction_id'  => $transaction->transaction_id,
-						'customer_id'     => $customer_id,
-						'frequency'       => $interval,
-						'years'           => $years,
-						'value'           => $value,
-						'currency'        => $currency,
-						'subscription_id' => $subscription->id,
-						'status'          => $subscription->status,
-					]
-				);
-				$this->mapper->save( $kudos_subscription );
+			return $subscription;
+		} catch ( ApiException $e ) {
+			$this->logger->error( $e->getMessage(), [
+				'transaction' => $transaction,
+				'mandate_id'  => $mandate_id,
+				'interval'    => $interval,
+				'years'       => $years,
+			] );
 
-				return $subscription;
-			} catch ( ApiException $e ) {
-				$this->logger->error( $e->getMessage(), [
-					'transaction' => $transaction,
-					'mandate_id'  => $mandate_id,
-					'interval'    => $interval,
-					'years'       => $years,
-				] );
-
-				return false;
-			}
+			return false;
 		}
-
-		// No valid mandates
-		$this->logger->error(
-			'Cannot create subscription as customer has no valid mandates.',
-			[ $customer_id ]
-		);
-
-		return false;
 	}
 
 	/**
@@ -698,27 +685,6 @@ class MollieVendor implements VendorInterface {
 
 		// Otherwise, return normal rest URL.
 		return rest_url( $route );
-	}
-
-	/**
-	 * Check the provided customer for valid mandates
-	 *
-	 * @param Customer $customer
-	 * @param string $mandate_id
-	 *
-	 * @return bool
-	 */
-	private function check_mandate( Customer $customer, string $mandate_id ): bool {
-		try {
-			$mandate = $customer->getMandate( $mandate_id );
-			if ( $mandate->isValid() || $mandate->isPending() ) {
-				return true;
-			}
-		} catch ( ApiException $e ) {
-			$this->logger->error( $e->getMessage() );
-		}
-
-		return false;
 	}
 
 	/**
