@@ -63,7 +63,7 @@ function Render({
 					font-size: ${window.kudos?.baseFontSize ?? '1.2rem'};
 					--kudos-font-heading: ${fonts?.header ?? 'cabinbold, sans-serif'} ;
 					--kudos-font-body: ${fonts?.header ?? 'montserratregular, sans-serif'};
-					${themeColor && `--kudos-theme-primary: ${themeColor}`};
+					--kudos-theme-primary: ${themeColor ?? '#ff9f1c'};
 				}`}
 			</style>
 

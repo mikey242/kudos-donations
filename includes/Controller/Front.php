@@ -13,11 +13,8 @@ namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\SettingsService;
@@ -229,57 +226,11 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
 							$campaign_id = $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID};
-							$campaign    = get_post( $campaign_id );
 
-							$return_message_title  = $campaign->{CampaignPostType::META_FIELD_RETURN_MESSAGE_TITLE};
-							$return_message_text   = $campaign->{CampaignPostType::META_FIELD_RETURN_MESSAGE_TEXT};
-							$result                = [];
-							$result['theme_color'] = $campaign->{CampaignPostType::META_FIELD_THEME_COLOR};
-							$status                = $transaction->{TransactionPostType::META_FIELD_STATUS};
-
-							switch ( $status ) {
-								case PaymentStatus::PAID:
-									$donor_id              = $transaction->{TransactionPostType::META_FIELD_DONOR_ID};
-									$donor                 = get_post( $donor_id );
-									$value                 = $transaction->{TransactionPostType::META_FIELD_VALUE};
-									$currency              = $transaction->{TransactionPostType::META_FIELD_CURRENCY};
-									$currency_symbol       = Utils::get_currencies()[ $currency ] ?? null;
-									$vars                  = [
-										'{{value}}' => ( ! empty( $currency_symbol ) ? html_entity_decode(
-											$currency_symbol
-										) : '' ) . number_format_i18n(
-											$value,
-											2
-										),
-										'{{name}}'  => $donor->{DonorPostType::META_FIELD_NAME},
-										'{{email}}' => $donor->{DonorPostType::META_FIELD_EMAIL},
-									];
-									$result['modal_title'] = strtr( $return_message_title, $vars );
-									$result['modal_text']  = strtr( $return_message_text, $vars );
-									break;
-								case PaymentStatus::CANCELED:
-									$result['modal_title'] = __( 'Payment cancelled', 'kudos-donations' );
-									$result['modal_text']  = __(
-										'You have not been charged for this transaction.',
-										'kudos-donations'
-									);
-									break;
-								default:
-									$result['modal_title'] = __( 'Thanks', 'kudos-donations' );
-									$result['modal_text']  = __(
-										'Your donation will be processed soon.',
-										'kudos-donations'
-									);
-									break;
-							}
-
-							if ( $result ) {
-								$this->message_modal_html(
-									$result['modal_title'],
-									$result['modal_text'],
-									$result['theme_color']
-								);
-							}
+							$this->payment_status_modal_html(
+								$transaction_id,
+								$campaign_id
+							);
 						}
 					}
 					break;
@@ -314,17 +265,35 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 *
 	 * @param string $header The header text.
 	 * @param string $body The body text.
-	 * @param string $color The theme color.
 	 */
-	private function message_modal_html( string $header, string $body, string $color = '#ff9f1c' ): void {
+	private function message_modal_html( string $header, string $body ): void {
 		echo wp_kses(
-			\sprintf( "<div class='kudos-donations kudos-message' data-color='%s' data-title='%s' data-body='%s'></div>", $color, $header, $body ),
+			\sprintf( "<div class='kudos-donations kudos-message' data-color='#ff9f1c' data-title='%s' data-body='%s'></div>", $header, $body ),
 			[
 				'div' => [
 					'class'      => [],
 					'data-color' => [],
 					'data-title' => [],
 					'data-body'  => [],
+				],
+			]
+		);
+	}
+
+	/**
+	 * Create message modal with supplied header and body text.
+	 *
+	 * @param string $transaction_id The transaction id.
+	 * @param string $campaign_id The campaign id.
+	 */
+	private function payment_status_modal_html( string $transaction_id, string $campaign_id ): void {
+		echo wp_kses(
+			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s'></div>", $transaction_id, $campaign_id ),
+			[
+				'div' => [
+					'class'            => [],
+					'data-campaign'    => [],
+					'data-transaction' => [],
 				],
 			]
 		);

@@ -10,7 +10,7 @@ import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
 
 export const KudosForm = ({ displayAs, label, previewMode = false }) => {
-	const { campaign, campaignErrors } = useCampaignContext();
+	const { campaign, campaignErrors, isLoading } = useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [formError, setFormError] = useState(null);
 	const [formState, setFormState] = useState({
@@ -102,6 +102,10 @@ export const KudosForm = ({ displayAs, label, previewMode = false }) => {
 			)}
 		</>
 	);
+
+	if (isLoading) {
+		return;
+	}
 
 	return (
 		<Render
