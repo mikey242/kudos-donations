@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import React from 'react';
 import { KudosModal } from './KudosModal';
 import Render from './Render';
@@ -12,23 +12,76 @@ export const PaymentStatus = ({ transactionId }) => {
 	const { campaign, isLoading } = useCampaignContext();
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState(<Spinner />);
-	const [isDone, setIsDone] = useState(false);
-	const [attempts, setAttempts] = useState(1);
+	const pollingRef = useRef(null);
+	const intervalTime = 2000;
+	const maxAttempts = 5;
+
+	// Function to replace placeholders in a message template
+	const replacePlaceholders = (template, data) => {
+		return template.replace(
+			/\{\{(.*?)}}/g,
+			(_, key) => data[key.trim()] || ''
+		);
+	};
 
 	useEffect(() => {
-		if (!transactionId) {
+		if (!transactionId || !campaign) {
 			return;
 		}
 
-		let isMounted = true;
-		const maxAttempts = 5;
-		const intervalTime = 2000;
+		let attempts = 1;
 
-		// Retry or mark as finished
-		const retryOrFinish = () => {
+		// Check transaction status.
+		const checkTransactionStatus = async () => {
+			try {
+				const transaction = await apiFetch({
+					path: `/wp/v2/kudos_transaction/${transactionId}`,
+				});
+
+				switch (transaction.meta.status) {
+					case 'paid':
+						const placeholders = {
+							value:
+								window.kudos.currencies[
+									transaction.meta.currency
+								] + transaction.meta.value,
+							name: transaction.donor.meta.name,
+						};
+						setTitle(campaign.meta.return_message_title);
+						setBody(
+							replacePlaceholders(
+								campaign.meta.return_message_text,
+								placeholders
+							)
+						);
+						clearInterval(pollingRef.current);
+						break;
+					case 'failed':
+						setTitle(__('Payment Failed', 'kudos-donations'));
+						setBody(__('Your payment failed.', 'kudos-donations'));
+						clearInterval(pollingRef.current);
+						break;
+					case 'cancelled':
+						setTitle(__('Payment Cancelled', 'kudos-donations'));
+						setBody(
+							__('Your payment was cancelled.', 'kudos-donations')
+						);
+						clearInterval(pollingRef.current);
+						break;
+				}
+			} catch (error) {
+				setTitle('Error');
+				setBody(error);
+				clearInterval(pollingRef.current);
+			}
+		};
+
+		// Create polling interval.
+		pollingRef.current = setInterval(() => {
 			if (attempts < maxAttempts) {
-				setAttempts((prev) => prev + 1);
-				setTimeout(checkTransactionStatus, intervalTime);
+				checkTransactionStatus().then(() => {
+					attempts++;
+				});
 			} else {
 				setTitle(__('Payment Pending', 'kudos-donations'));
 				setBody(
@@ -37,47 +90,12 @@ export const PaymentStatus = ({ transactionId }) => {
 						'kudos-donations'
 					)
 				);
-				setIsDone(true);
+				clearInterval(pollingRef.current);
 			}
-		};
+		}, intervalTime);
 
-		// Check transaction status
-		const checkTransactionStatus = async () => {
-			if (!isMounted) {
-				return;
-			}
-
-			const transaction = await apiFetch({
-				path: `/wp/v2/kudos_transaction/${transactionId}`,
-			});
-
-			switch (transaction.meta.status) {
-				case 'paid':
-					setTitle(campaign.meta.return_message_title);
-					setBody(campaign.meta.return_message_text);
-					setIsDone(true);
-					break;
-
-				case 'cancelled':
-					setTitle(__('Payment Cancelled', 'kudos-donations'));
-					setBody(
-						__('Your payment was cancelled.', 'kudos-donations')
-					);
-					setIsDone(true);
-					break;
-
-				default:
-					retryOrFinish();
-					break;
-			}
-		};
-
-		setTimeout(checkTransactionStatus, 1000);
-
-		return () => {
-			isMounted = false;
-		};
-	}, [attempts, campaign, transactionId]);
+		return () => clearInterval(pollingRef.current);
+	}, [transactionId, campaign]);
 
 	if (isLoading) {
 		return;
@@ -89,16 +107,16 @@ export const PaymentStatus = ({ transactionId }) => {
 			body={body}
 			color={campaign?.meta?.theme_color}
 			style={campaign?.meta?.custom_styles}
-			dismissible={isDone}
+			dismissible={pollingRef.current}
 		/>
 	);
 };
 
 export default function Message({
-	color,
-	style,
 	title,
 	body,
+	style = '',
+	color = '#ff9f1c',
 	dismissible = false,
 }) {
 	const [ready, setReady] = useState(false);
@@ -115,12 +133,7 @@ export default function Message({
 	return (
 		<>
 			{ready && (
-				<Render
-					style={style}
-					themeColor={color}
-					className={className}
-					fonts={fonts}
-				>
+				<Render style={style} themeColor={color}>
 					<KudosModal toggleModal={closeModal} isOpen={modalOpen}>
 						<>
 							{title && (
@@ -129,9 +142,9 @@ export default function Message({
 								</h2>
 							)}
 							{body && (
-								<p className="text-lg text-center block font-normal mb-4">
+								<div className="text-lg text-center block font-normal mb-4">
 									{body}
-								</p>
+								</div>
 							)}
 							{dismissible && (
 								<Button
