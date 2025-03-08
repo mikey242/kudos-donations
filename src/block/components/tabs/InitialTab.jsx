@@ -59,10 +59,12 @@ export const InitialTab = ({
 	}, [setValue, watchOpen]);
 
 	useEffect(() => {
-		if (!watchEmail) {
-			setValue('recurring', false);
+		if (donationType === 'both') {
+			if (!watchEmail) {
+				setValue('recurring', false);
+			}
 		}
-	}, [setValue, watchEmail]);
+	}, [donationType, setValue, watchEmail]);
 
 	return (
 		<BaseTab title={title} description={description} buttons={buttons}>
@@ -134,7 +136,7 @@ export const InitialTab = ({
 			<TextControl
 				name="name"
 				rules={
-					!anonymous && {
+					(!anonymous || 'recurring' === donationType) && {
 						required: __(
 							'Your name is required',
 							'kudos-donations'
@@ -148,7 +150,7 @@ export const InitialTab = ({
 				name="email"
 				type="email"
 				rules={
-					!anonymous && {
+					(!anonymous || 'recurring' === donationType) && {
 						required: __(
 							'Your email is required',
 							'kudos-donations'
