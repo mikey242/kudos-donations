@@ -76,7 +76,7 @@ export const CampaignsProvider = ({
 	};
 
 	// Handles creating a campaign.
-	const handleNew = (args) => {
+	const handleNew = (args = null) => {
 		// If args is a SyntheticEvent, ignore it and create an empty args object
 		if (args.preventDefault) {
 			args = {};
@@ -93,11 +93,12 @@ export const CampaignsProvider = ({
 			title,
 			status,
 			...other,
-		}).then(() => {
+		}).then((response) => {
 			void createSuccessNotice(
 				__('Campaign created', 'kudos-donations'),
 				{ type: 'snackbar', icon: <Icon icon="plus" /> }
 			);
+			return response;
 		});
 	};
 
