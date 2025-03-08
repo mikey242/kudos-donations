@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Domain;
 
 use WP_Post;
+use WP_REST_Request;
 
 trait MapperTrait {
 
@@ -67,6 +68,23 @@ trait MapperTrait {
 		}
 
 		return get_posts( array_filter( $query ) );
+	}
+
+	/**
+	 * Gets the post using the rest API.
+	 *
+	 * @param int $post_id The ID of the post.
+	 * @return mixed|null
+	 */
+	public static function get_post_using_rest( int $post_id ) {
+		// Use internal REST request to get the donor.
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/' . static::get_slug() . "/{$post_id}" );
+		$response = rest_do_request( $request );
+		if ( $response->is_error() ) {
+			return null; // Return null if donor is not found.
+		}
+
+		return $response->get_data(); // Return the donor's full REST response.
 	}
 
 	/**
