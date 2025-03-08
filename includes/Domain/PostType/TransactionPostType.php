@@ -18,7 +18,6 @@ use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
-use WP_REST_Request;
 
 class TransactionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface, HasAdminColumns {
 
@@ -286,16 +285,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 			self::REST_FIELD_DONOR => [
 				'get_callback' => function ( $transaction ) {
 					$donor_id = $transaction['meta'][ self::META_FIELD_DONOR_ID ];
-
-					// Use internal REST request to get the donor.
-					$request  = new WP_REST_Request( 'GET', "/wp/v2/kudos_donor/{$donor_id}" );
-					$response = rest_do_request( $request );
-
-					if ( $response->is_error() ) {
-						return null; // Return null if donor is not found.
-					}
-
-					return $response->get_data(); // Return the donor's full REST response.
+					return DonorPostType::get_post_using_rest( $donor_id );
 				},
 			],
 		];
