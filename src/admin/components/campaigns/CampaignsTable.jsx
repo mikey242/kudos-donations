@@ -19,6 +19,12 @@ export const CampaignsTable = ({ handleEdit }) => {
 	const { currencies } = window.kudos;
 	const { handleNew, handleDelete, handleDuplicate } = useCampaignsContext();
 
+	const newCampaign = (e) => {
+		handleNew(e).then((response) => {
+			handleEdit('edit', response.id);
+		});
+	};
+
 	const headerItems = [
 		{
 			title: __('Campaign', 'kudos-donations'),
@@ -127,7 +133,7 @@ export const CampaignsTable = ({ handleEdit }) => {
 			<Flex justify="center">
 				<Button
 					variant="secondary"
-					onClick={handleNew}
+					onClick={newCampaign}
 					text={__('New campaign', 'kudos-donations')}
 					icon="plus"
 				/>
