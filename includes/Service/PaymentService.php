@@ -69,7 +69,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 				$donor_id           = $post->{TransactionPostType::META_FIELD_DONOR_ID} ?? '';
 				$donor              = get_post( $donor_id );
 				$campaign           = get_post( $campaign_id );
-				$description_format = $campaign->{CampaignPostType::META_PAYMENT_DESCRIPTION_FORMAT} ?? '';
+				$description_format = $campaign->{CampaignPostType::META_PAYMENT_DESCRIPTION_FORMAT} ?? __( 'Donation ({{campaign_name}}) - {{order_id}}', 'kudos-donations' );
 
 				$vars                 = [];
 				$vars['{{order_id}}'] = Utils::get_formatted_id( $post->ID );
