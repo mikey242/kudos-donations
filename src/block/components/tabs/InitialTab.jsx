@@ -2,7 +2,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import BaseTab from './BaseTab';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
 import { ProgressBar } from '../ProgressBar';
 
@@ -38,11 +38,22 @@ export const InitialTab = ({
 		minimumDonation
 	);
 
+	const isRecurringAllowed = useMemo(() => {
+		return donationType === 'both' && !!watchEmail;
+	}, [donationType, watchEmail]);
+
+	const fixedAmountOptions = useMemo(() => {
+		return fixedAmounts?.map((value) => ({
+			value,
+			label: `${currencySymbol ?? ''}${value.trim()}`,
+		}));
+	}, [fixedAmounts, currencySymbol]);
+
 	useEffect(() => {
-		if (donationType !== 'both') {
-			setValue('recurring', donationType === 'recurring');
+		if (!isRecurringAllowed) {
+			setValue('recurring', false);
 		}
-	}, [donationType, setValue]);
+	}, [isRecurringAllowed, setValue]);
 
 	useEffect(() => {
 		if (watchFixed) {
@@ -59,10 +70,10 @@ export const InitialTab = ({
 	}, [setValue, watchOpen]);
 
 	useEffect(() => {
-		if (donationType === 'both') {
-			if (!watchEmail) {
-				setValue('recurring', false);
-			}
+		if (donationType !== 'both') {
+			setValue('recurring', donationType === 'recurring');
+		} else if (!watchEmail) {
+			setValue('recurring', false);
 		}
 	}, [donationType, setValue, watchEmail]);
 
@@ -78,34 +89,26 @@ export const InitialTab = ({
 					/>
 				</div>
 			)}
-			{(amountType === 'both' || amountType === 'fixed') &&
-				fixedAmounts?.length && (
-					<RadioGroupControl
-						name="valueFixed"
-						ariaLabel={__(
-							'Fixed donation amount',
-							'kudos-donations'
-						)}
-						options={fixedAmounts.map((value) => {
-							return {
-								value,
-								label: (currencySymbol ?? '') + value?.trim(),
-							};
-						})}
-					/>
-				)}
 
-			{(amountType === 'both' || amountType === 'open') && (
+			{amountType !== 'open' && fixedAmountOptions.length > 0 && (
+				<RadioGroupControl
+					name="valueFixed"
+					ariaLabel={__('Fixed donation amount', 'kudos-donations')}
+					options={fixedAmountOptions}
+				/>
+			)}
+
+			{amountType !== 'fixed' && (
 				<TextControl
 					name="valueOpen"
 					ariaLabel={__('Open donation amount', 'kudos-donations')}
 					prefix={currencySymbol}
 					type="number"
-					placeholder={`${
+					placeholder={
 						amountType === 'both'
 							? __('Other amount', 'kudos-donations')
 							: __('Amount', 'kudos-donations')
-					}`}
+					}
 				/>
 			)}
 
