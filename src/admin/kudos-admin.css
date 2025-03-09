@@ -1,9 +1,17 @@
+:root {
+	--kudos-rounded: 0.5rem;
+}
+
 #wpcontent {
 	padding-left: 0 !important;
 }
 
 .auto-fold #wpcontent {
 	padding-left: 0;
+}
+
+.rounded {
+	border-radius: var(--kudos-rounded)
 }
 
 .components-notice-list {
@@ -83,7 +91,7 @@
 		.kudos-version {
 
 			/*border: 1px solid #9ca3af;*/
-			border-radius: 0.5rem;
+			border-radius: var(--kudos-rounded);
 			background-color: #efefef;
 			padding: 0.75em;
 		}
@@ -143,9 +151,17 @@
 			margin-bottom: 1rem;
 			background: #fff;
 			border: 1px solid #e0e0e0;
+			border-radius: var(--kudos-rounded);
+			overflow: hidden;
+			display: block;
+			text-align: center;
 		}
 
 		.components-tab-panel__tab-content {
+
+			.components-panel {
+				border-radius: var(--kudos-rounded);
+			}
 
 			& > * + * {
 				margin-top: 0.85rem;
