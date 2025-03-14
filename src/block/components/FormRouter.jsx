@@ -148,7 +148,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 									<ChevronLeftIcon className="mr-2 w-5 h-5" />
 								}
 							>
-								{__('Back', 'kudos-donations')}
+								<p>{__('Back', 'kudos-donations')}</p>
 							</Button>
 						)}
 						<Button
@@ -163,10 +163,10 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 							}
 						>
 							{steps[currentStep].name === 'Summary' ? (
-								__('Submit', 'kudos-donations')
+								<p>{__('Submit', 'kudos-donations')}</p>
 							) : (
 								<>
-									{__('Next', 'kudos-donations')}
+									<p>{__('Next', 'kudos-donations')}</p>
 									<ChevronRightIcon className="ml-2 w-5 h-5" />
 								</>
 							)}
