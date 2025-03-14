@@ -182,6 +182,8 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 					$this->vendor::get_name()
 				);
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
+			} else {
+				return null;
 			}
 		}
 
