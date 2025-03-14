@@ -128,6 +128,11 @@ This can occur as a result of a conflict with your theme or another plugin and t
 * Allow for partial donation amounts (e.g €1.5)
 * Email "from name" header can now be configured and defaults to website name
 
+= 3.4.2 =
+* Add new filter for adjusting the frequency options (kudos_frequency_options)
+* Fix issue with subscriptions sometimes failing to create
+* Update dependencies
+
 = 3.4.1 =
 * Add campaign name to kudos_payment_description filter parameters
 
