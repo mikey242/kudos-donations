@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fragment, useEffect } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AdminTabPanel } from '../AdminTabPanel';
@@ -84,7 +84,7 @@ const CampaignEdit = ({ campaign, recurringAllowed }) => {
 	]);
 
 	return (
-		<Fragment>
+		<>
 			<Flex justify="center">
 				<h1 className="text-center my-5">
 					{__('Campaign', 'kudos-donations') +
@@ -97,7 +97,7 @@ const CampaignEdit = ({ campaign, recurringAllowed }) => {
 					<AdminTabPanel tabs={tabs} />
 				</form>
 			</FormProvider>
-		</Fragment>
+		</>
 	);
 };
 

@@ -1,4 +1,3 @@
-import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import logo from '../../../../../assets/images/full-logo-green.svg';
 import React from 'react';
@@ -16,7 +15,7 @@ const HelpTab = () => {
 	const { updateSetting } = useSettingsContext();
 
 	return (
-		<Fragment>
+		<>
 			<Panel header={__('Share the love', 'kudos-donations')}>
 				<PanelBody>
 					<p className="mb-2">
@@ -134,7 +133,7 @@ const HelpTab = () => {
 					/>
 				</PanelBody>
 			</Panel>
-		</Fragment>
+		</>
 	);
 };
 

@@ -1,4 +1,3 @@
-import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, ToggleControl, CheckboxControl } from '../../controls';
 import React from 'react';
@@ -9,7 +8,7 @@ export const OptionalFieldsTab = () => {
 	const watchAddress = useWatch({ name: 'meta.address_enabled' });
 
 	return (
-		<Fragment>
+		<>
 			<Panel header={__('Optional fields', 'kudos-donations')}>
 				<PanelBody>
 					<ToggleControl
@@ -67,6 +66,6 @@ export const OptionalFieldsTab = () => {
 					/>
 				</PanelBody>
 			</Panel>
-		</Fragment>
+		</>
 	);
 };
