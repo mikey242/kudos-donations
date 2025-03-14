@@ -1,4 +1,4 @@
-import { Fragment, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -54,7 +54,7 @@ const EmailTab = () => {
 	};
 
 	return (
-		<Fragment>
+		<>
 			<Panel header={__('Email receipts', 'kudos-donations')}>
 				<PanelBody>
 					<ToggleControl
@@ -265,7 +265,7 @@ const EmailTab = () => {
 					</Flex>
 				</PanelBody>
 			</Panel>
-		</Fragment>
+		</>
 	);
 };
 

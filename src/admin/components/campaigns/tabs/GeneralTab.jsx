@@ -1,4 +1,3 @@
-import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import {
 	ColorPicker,
@@ -33,7 +32,7 @@ export const GeneralTab = ({ campaign }) => {
 	};
 
 	return (
-		<Fragment>
+		<>
 			<Panel header={__('Campaign details', 'kudos-donations')}>
 				<PanelBody>
 					<TextControl
@@ -188,6 +187,6 @@ export const GeneralTab = ({ campaign }) => {
 					/>
 				</PanelBody>
 			</Panel>
-		</Fragment>
+		</>
 	);
 };

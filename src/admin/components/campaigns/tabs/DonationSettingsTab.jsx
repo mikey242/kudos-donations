@@ -1,4 +1,3 @@
-import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormTokenField, RadioGroupControl, TextControl } from '../../controls';
 import React from 'react';
@@ -14,7 +13,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 	const minDonation = useWatch({ name: 'meta.minimum_donation' });
 
 	return (
-		<Fragment>
+		<>
 			<Panel header={__('Subscription', 'kudos-donations')}>
 				<PanelBody>
 					<RadioGroupControl
@@ -158,6 +157,6 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 				</PanelBody>
 			</Panel>
 			<>{applyFilters('kudosCampaignsDonationEnd', '', useFormContext)}</>
-		</Fragment>
+		</>
 	);
 };

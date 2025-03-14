@@ -1,4 +1,3 @@
-import { Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextAreaControl, TextControl } from '../../controls';
 import React from 'react';
@@ -6,7 +5,7 @@ import { Panel, PanelBody } from '@wordpress/components';
 
 export const TextFieldsTab = () => {
 	return (
-		<Fragment>
+		<>
 			<Panel header={__('Initial tab', 'kudos-donations')}>
 				<PanelBody>
 					<TextControl
@@ -67,6 +66,6 @@ export const TextFieldsTab = () => {
 					/>
 				</PanelBody>
 			</Panel>
-		</Fragment>
+		</>
 	);
 };
