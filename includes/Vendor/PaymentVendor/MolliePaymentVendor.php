@@ -187,21 +187,27 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * {@inheritDoc}
 	 */
 	public function refresh(): bool {
+
+        $this->config_client();
+		// Rebuild Mollie settings.
+		$payment_methods = array_map(function (Method $method) {
+			return [
+				'id'            => $method->id,
+				'description'   => $method->description,
+				'image'         => $method->image->svg,
+				'minimumAmount' => $method->minimumAmount,
+				'maximumAmount' => (array)$method->maximumAmount,
+			];
+		}, (array)$this->get_active_payment_methods());
+
+        $this->logger->debug('Mollie payment methods', $payment_methods);
+
+		// No payment methods found, return false.
+		if(empty($payment_methods)) {
+			return false;
+		}
+
 		try {
-            $this->config_client();
-			// Rebuild Mollie settings.
-			$payment_methods = array_map(function (Method $method) {
-				return [
-					'id'            => $method->id,
-					'description'   => $method->description,
-					'image'         => $method->image->svg,
-					'minimumAmount' => $method->minimumAmount,
-					'maximumAmount' => (array)$method->maximumAmount,
-				];
-			}, (array)$this->get_active_payment_methods());
-
-            $this->logger->debug('Mollie payment methods', $payment_methods);
-
 			// Handle SEPA Direct Debit separately.
 			$sepa = $this->api_client->methods->get(PaymentMethod::DIRECTDEBIT);
 			if(PaymentMethodStatus::ACTIVATED === $sepa->status) {
@@ -213,28 +219,22 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					'maximumAmount' => $sepa->maximumAmount,
 				];
 			}
-
-			if(empty($payment_methods)) {
-                return false;
-			}
-
-			$this->logger->debug('Mollie refreshed connection settings', [$payment_methods]);
-
-			// Update payment methods.
-			update_option(
-				self::SETTING_PAYMENT_METHODS,
-				$payment_methods
-			);
-
-			// Update recurring status.
-			update_option(self::SETTING_RECURRING, $this->can_use_recurring());
-
-            return true;
 		} catch (ApiException $e) {
-			$this->logger->critical($e->getMessage());
+			$this->logger->critical('Direct debit payment method not found');
 		}
 
-        return false;
+		$this->logger->debug('Mollie refreshed connection settings', [$payment_methods]);
+
+		// Update payment methods.
+		update_option(
+			self::SETTING_PAYMENT_METHODS,
+			$payment_methods
+		);
+
+		// Update recurring status.
+		update_option(self::SETTING_RECURRING, $this->can_use_recurring());
+
+		return true;
 	}
 
     /**
