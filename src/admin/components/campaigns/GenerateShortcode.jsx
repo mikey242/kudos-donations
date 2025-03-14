@@ -8,15 +8,17 @@ import {
 	__experimentalDivider as Divider,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalInputControl as InputControl,
-	BaseControl,
 	Button,
-	ButtonGroup,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	Icon,
 	Modal,
 } from '@wordpress/components';
 import { useCopyToClipboard } from '@wordpress/compose';
 
-function GenerateShortcode({ campaign, iconOnly = false }) {
+export default function GenerateShortcode({ campaign, iconOnly = false }) {
 	const { createSuccessNotice } = useDispatch(noticesStore);
 	const [isOpen, setOpen] = useState(false);
 	const [type, setType] = useState('button');
@@ -62,34 +64,28 @@ function GenerateShortcode({ campaign, iconOnly = false }) {
 					title={__('Generate shortcode', 'kudos-donations')}
 					onRequestClose={closeModal}
 				>
-					<BaseControl
-						id="type"
+					<ToggleGroupControl
 						label={__('Display as', 'kudos-donations')}
 						help={__(
 							'Choose the available payment frequency.',
 							'kudos-donations'
 						)}
+						onChange={(value) => setType(value)}
+						__next40pxDefaultSize
 						__nextHasNoMarginBottom
+						isBlock
+						value={type}
 					>
-						<div>
-							<ButtonGroup>
-								<Button
-									variant="tertiary"
-									isPressed={type === 'button'}
-									onClick={() => setType('button')}
-								>
-									{__('Button with modal', 'kudos-donations')}
-								</Button>
-								<Button
-									variant="tertiary"
-									isPressed={type === 'form'}
-									onClick={() => setType('form')}
-								>
-									{__('Embedded form', 'kudos-donations')}
-								</Button>
-							</ButtonGroup>
-						</div>
-					</BaseControl>
+						<ToggleGroupControlOption
+							value="button"
+							label={__('Button with modal', 'kudos-donations')}
+						/>
+						<ToggleGroupControlOption
+							value="form"
+							label={__('Embedded form', 'kudos-donations')}
+						/>
+					</ToggleGroupControl>
+					<Divider margin="5" />
 					<InputControl
 						name="label"
 						disabled={type === 'form'}
@@ -113,5 +109,3 @@ function GenerateShortcode({ campaign, iconOnly = false }) {
 		</>
 	);
 }
-
-export default GenerateShortcode;
