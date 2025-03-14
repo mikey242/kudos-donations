@@ -38,8 +38,10 @@ class Front extends WP_UnitTestCase {
 	 */
 	public function test_render_callback() {
 		$mollie_mock = $this->createMock(MolliePaymentVendor::class);
+		$mollie_mock->method('is_ready')->willReturn(true);
 		$vendor_factory = $this->createMock( PaymentVendorFactory::class );
 		$vendor_factory->method('get_vendor')->willReturn($mollie_mock);
+
 		$front          = new \IseardMedia\Kudos\Controller\Front( $vendor_factory );
 		$args           = [
 			'campaign_id'  => 291,
