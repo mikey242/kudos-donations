@@ -96,9 +96,9 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				]
 			);
 		}
-		foreach ( self::SCRIPT_HANDLES as $script ) {
+		foreach ( self::SCRIPT_HANDLES as $handle ) {
 			wp_localize_script(
-				$script,
+				$handle,
 				'kudos',
 				[
 					'stylesheets'  => [
