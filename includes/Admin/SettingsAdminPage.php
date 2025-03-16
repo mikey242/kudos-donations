@@ -66,9 +66,7 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			$admin_js['url'],
 			$admin_js['dependencies'],
 			$admin_js['version'],
-			[
-				'in_footer' => true,
-			]
+			true
 		);
 
 		$localized_data = apply_filters(
