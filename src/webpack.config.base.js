@@ -4,6 +4,7 @@ module.exports = {
 	...defaultConfig,
 	optimization: {
 		...defaultConfig.optimization,
+		concatenateModules: false,
 		moduleIds: 'deterministic',
 	},
 };
