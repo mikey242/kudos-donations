@@ -57,9 +57,6 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		$this->register_assets();
 		$this->register_block();
 		$this->register_shortcode();
-		if ( get_option( self::SETTING_ALWAYS_LOAD_ASSETS ) ) {
-			$this->register_assets();
-		}
 		add_action( 'wp_footer', [ $this, 'handle_query_variables' ], 1 );
 	}
 
