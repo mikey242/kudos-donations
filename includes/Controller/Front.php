@@ -76,9 +76,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				$view['url'],
 				$view['dependencies'],
 				$view['version'],
-				[
-					'in_footer' => true,
-				]
+				true
 			);
 		}
 		$edit = Assets::get_script( 'front/block/index.js' );
@@ -88,9 +86,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				$edit['url'],
 				$edit['dependencies'],
 				$edit['version'],
-				[
-					'in_footer' => true,
-				]
+				true
 			);
 		}
 		foreach ( self::SCRIPT_HANDLES as $handle ) {
