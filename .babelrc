@@ -1,5 +1,8 @@
 {
   "presets": [
     "@wordpress/babel-preset-default"
+  ],
+  "plugins": [
+    "@automattic/babel-plugin-preserve-i18n"
   ]
 }
