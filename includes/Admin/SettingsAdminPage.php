@@ -69,6 +69,8 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			true
 		);
 
+		wp_set_script_translations( self::SCRIPT_HANDLE_SETTINGS, 'kudos-donations', \dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages' );
+
 		$localized_data = apply_filters(
 			'kudos_settings_page_localization',
 			[
@@ -81,7 +83,6 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			'kudos',
 			apply_filters( 'kudos_global_localization', $localized_data )
 		);
-		wp_set_script_translations( self::SCRIPT_HANDLE_SETTINGS, 'kudos-donations' );
 	}
 
 	/**

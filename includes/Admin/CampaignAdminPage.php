@@ -71,6 +71,8 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 			true
 		);
 
+		wp_set_script_translations( self::SCRIPT_HANDLE_CAMPAIGNS, 'kudos-donations', \dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages' );
+
 		$localized_data = apply_filters(
 			'kudos_campaigns_page_localization',
 			[
@@ -86,10 +88,6 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 				'kudos_global_localization',
 				$localized_data
 			)
-		);
-		wp_set_script_translations(
-			'kudos-donations-campaigns',
-			'kudos-donations'
 		);
 	}
 
