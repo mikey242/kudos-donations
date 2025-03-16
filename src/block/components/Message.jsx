@@ -13,8 +13,8 @@ export const PaymentStatus = ({ transactionId }) => {
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState(<Spinner />);
 	const pollingRef = useRef(null);
-	const intervalTime = 2000;
-	const maxAttempts = 5;
+	const intervalTime = 1000;
+	const maxAttempts = 10;
 
 	// Function to replace placeholders in a message template
 	const replacePlaceholders = (template, data) => {
