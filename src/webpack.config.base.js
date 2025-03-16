@@ -12,6 +12,9 @@ module.exports = {
 					mangle: {
 						reserved: ['__', '_n', '_nx', '_x'],
 					},
+					compress: {
+						passes: 2, // Fixes issues with gettext for some reason.
+					},
 					format: {
 						comments(node, comment) {
 							const text = comment.value;
