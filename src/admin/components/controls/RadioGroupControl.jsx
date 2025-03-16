@@ -9,7 +9,9 @@ import {
 } from '@wordpress/components';
 import _ from 'lodash';
 
-const RadioGroupControl = ({
+const id = _.uniqueId('kudos');
+
+export const RadioGroupControl = ({
 	name,
 	options,
 	help,
@@ -17,43 +19,57 @@ const RadioGroupControl = ({
 	isDisabled,
 	rules,
 }) => {
-	const id = _.uniqueId('kudos');
-
 	return (
 		<Controller
 			name={name}
 			rules={isDisabled ? {} : rules}
 			disabled={isDisabled}
 			render={({ field: { onChange, value } }) => (
-				<BaseControl
+				<RadioGroupControlBase
+					label={label}
+					value={value}
 					help={help}
-					id={id}
-					className="kudos-button-group"
-					__nextHasNoMarginBottom
-				>
-					<div>
-						<ToggleGroupControl
-							isBlock
-							value={value}
-							label={label}
-							__nextHasNoMarginBottom
-						>
-							{options.map((option) => {
-								return (
-									<ToggleGroupControlOption
-										key={option.value}
-										label={option.label}
-										value={option.value}
-										onClick={() => onChange(option.value)}
-									/>
-								);
-							})}
-						</ToggleGroupControl>
-					</div>
-				</BaseControl>
+					onChange={onChange}
+					options={options}
+				/>
 			)}
 		/>
 	);
 };
 
-export { RadioGroupControl };
+export const RadioGroupControlBase = ({
+	value,
+	label,
+	help,
+	options,
+	onChange,
+}) => {
+	return (
+		<BaseControl
+			help={help}
+			id={id}
+			className="kudos-button-group"
+			__nextHasNoMarginBottom
+		>
+			<div>
+				<ToggleGroupControl
+					isBlock
+					value={value}
+					label={label}
+					__nextHasNoMarginBottom
+				>
+					{options.map((option) => {
+						return (
+							<ToggleGroupControlOption
+								key={option.value}
+								label={option.label}
+								value={option.value}
+								onClick={() => onChange(option.value)}
+							/>
+						);
+					})}
+				</ToggleGroupControl>
+			</div>
+		</BaseControl>
+	);
+};
