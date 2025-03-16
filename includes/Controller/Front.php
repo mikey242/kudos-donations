@@ -101,6 +101,11 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 					'baseFontSize' => get_option( SettingsService::SETTING_BASE_FONT_SIZE ),
 				]
 			);
+			wp_set_script_translations(
+				$handle,
+				'kudos-donations',
+				\dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages'
+			);
 		}
 	}
 
