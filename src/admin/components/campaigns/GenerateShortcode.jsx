@@ -9,14 +9,11 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalInputControl as InputControl,
 	Button,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalToggleGroupControl as ToggleGroupControl,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	Icon,
 	Modal,
 } from '@wordpress/components';
 import { useCopyToClipboard } from '@wordpress/compose';
+import { RadioGroupControlBase } from '../controls';
 
 export default function GenerateShortcode({ campaign, iconOnly = false }) {
 	const { createSuccessNotice } = useDispatch(noticesStore);
@@ -64,7 +61,7 @@ export default function GenerateShortcode({ campaign, iconOnly = false }) {
 					title={__('Generate shortcode', 'kudos-donations')}
 					onRequestClose={closeModal}
 				>
-					<ToggleGroupControl
+					<RadioGroupControlBase
 						label={__('Display as', 'kudos-donations')}
 						help={__(
 							'Choose the available payment frequency.',
@@ -75,16 +72,20 @@ export default function GenerateShortcode({ campaign, iconOnly = false }) {
 						__nextHasNoMarginBottom
 						isBlock
 						value={type}
-					>
-						<ToggleGroupControlOption
-							value="button"
-							label={__('Button with modal', 'kudos-donations')}
-						/>
-						<ToggleGroupControlOption
-							value="form"
-							label={__('Embedded form', 'kudos-donations')}
-						/>
-					</ToggleGroupControl>
+						options={[
+							{
+								label: __(
+									'Button with modal',
+									'kudos-donations'
+								),
+								value: 'button',
+							},
+							{
+								label: __('Embedded form', 'kudos-donations'),
+								value: 'form',
+							},
+						]}
+					/>
 					<Divider margin="5" />
 					<InputControl
 						name="label"
