@@ -204,7 +204,7 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 							],
 							'message' => [
 								'type'    => 'string',
-								'default' => __( 'Kudos Donations: Migration status pending.', 'kudos-donations' ),
+								'default' => 'Kudos Donations: Migration status pending.',
 							],
 						],
 					],
