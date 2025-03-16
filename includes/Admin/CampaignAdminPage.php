@@ -16,6 +16,8 @@ use IseardMedia\Kudos\Helper\Utils;
 
 class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
 
+	public const SCRIPT_HANDLE_CAMPAIGNS = 'kudos-donations-campaigns';
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -50,7 +52,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	public function register_assets(): void {
 		// Enqueue the styles.
 		wp_enqueue_style(
-			'kudos-admin-style',
+			SettingsAdminPage::STYLE_HANDLE_ADMIN,
 			Assets::get_style( 'admin/settings/kudos-admin-settings.css' ),
 			[ 'wp-components' ],
 			KUDOS_VERSION
@@ -62,7 +64,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		// Get and enqueue the script.
 		$admin_js = Assets::get_script( 'admin/campaigns/kudos-admin-campaigns.js' );
 		wp_enqueue_script(
-			'kudos-donations-campaigns',
+			self::SCRIPT_HANDLE_CAMPAIGNS,
 			$admin_js['url'],
 			$admin_js['dependencies'],
 			$admin_js['version'],
@@ -80,7 +82,7 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 		);
 
 		wp_localize_script(
-			'kudos-donations-campaigns',
+			self::SCRIPT_HANDLE_CAMPAIGNS,
 			'kudos',
 			apply_filters(
 				'kudos_global_localization',
