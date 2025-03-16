@@ -17,8 +17,6 @@ use IseardMedia\Kudos\Service\CacheService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Throwable;
-use function add_action;
-use function load_plugin_textdomain;
 
 class Plugin implements LoggerAwareInterface {
 
@@ -84,7 +82,7 @@ class Plugin implements LoggerAwareInterface {
 		add_action(
 			'init',
 			static function (): void {
-				load_plugin_textdomain( 'kudos-donations', false, \dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+				load_plugin_textdomain( 'kudos-donations', false, \dirname( plugin_basename( __FILE__ ), 2 ) . '/languages' );
 			}
 		);
 	}
