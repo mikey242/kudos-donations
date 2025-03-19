@@ -67,6 +67,16 @@
     "release": [
       "@build-production",
       "@make-zip"
+    ],
+    "clean-unused-files" : [
+      "find vendor/dompdf/dompdf/lib/fonts/ ! -name 'Helvetica*' -type f -delete",
+      "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
+    ],
+    "post-install-cmd" : [
+      "@clean-unused-files"
+    ],
+    "post-update-cmd": [
+      "@clean-unused-files"
     ]
   },
   "autoload": {
