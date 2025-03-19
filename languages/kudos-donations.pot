@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kudos Donations 4.0.0-beta-18\n"
+"Project-Id-Version: Kudos Donations 4.0.0-beta-19\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kudos-donations\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-16T14:24:12+00:00\n"
+"POT-Creation-Date: 2025-03-19T11:05:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: kudos-donations\n"
@@ -94,24 +94,24 @@ msgstr ""
 msgid "Your installation of Kudos Donations is incomplete."
 msgstr ""
 
-#: includes/Controller/Front.php:144
+#: includes/Controller/Front.php:147
 msgid "Donate now"
 msgstr ""
 
-#: includes/Controller/Front.php:168
+#: includes/Controller/Front.php:171
 msgid "No Campaign ID specified."
 msgstr ""
 
 #. translators: %s: Payment vendor (e.g. Mollie).
-#: includes/Controller/Front.php:179
+#: includes/Controller/Front.php:182
 msgid "%s not connected."
 msgstr ""
 
-#: includes/Controller/Front.php:251
+#: includes/Controller/Front.php:254
 msgid "Please contact support."
 msgstr ""
 
-#: includes/Controller/Front.php:251
+#: includes/Controller/Front.php:254
 msgid "Thanks for your support!"
 msgstr ""
 
@@ -414,7 +414,7 @@ msgid "Please fill in your address"
 msgstr ""
 
 #: includes/Domain/PostType/CampaignPostType.php:165
-#: includes/Domain/PostType/TransactionPostType.php:275
+#: includes/Domain/PostType/TransactionPostType.php:273
 #: build/admin/campaigns/kudos-admin-campaigns.js:2
 #: build/front/block/index.js:3
 #: build/front/block/kudos-front.js:3
@@ -490,7 +490,7 @@ msgstr ""
 
 #: includes/Domain/PostType/DonorPostType.php:147
 #: includes/Domain/PostType/SubscriptionPostType.php:122
-#: includes/Domain/PostType/TransactionPostType.php:195
+#: includes/Domain/PostType/TransactionPostType.php:174
 msgid "Show only this donor"
 msgstr ""
 
@@ -514,12 +514,12 @@ msgid "Subscriptions"
 msgstr ""
 
 #: includes/Domain/PostType/SubscriptionPostType.php:115
-#: includes/Domain/PostType/TransactionPostType.php:189
+#: includes/Domain/PostType/TransactionPostType.php:168
 msgid "Donor"
 msgstr ""
 
 #: includes/Domain/PostType/SubscriptionPostType.php:140
-#: includes/Domain/PostType/TransactionPostType.php:202
+#: includes/Domain/PostType/TransactionPostType.php:181
 #: build/front/block/index.js:3
 #: build/front/block/kudos-front.js:3
 msgid "Amount"
@@ -539,7 +539,7 @@ msgid "Length"
 msgstr ""
 
 #: includes/Domain/PostType/SubscriptionPostType.php:160
-#: includes/Domain/PostType/TransactionPostType.php:226
+#: includes/Domain/PostType/TransactionPostType.php:224
 msgid "Status"
 msgstr ""
 
@@ -553,41 +553,41 @@ msgctxt "Transaction post type plural name"
 msgid "Transactions"
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:184
+#: includes/Domain/PostType/TransactionPostType.php:205
 msgid "Payment type: "
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:212
+#: includes/Domain/PostType/TransactionPostType.php:210
 #: build/admin/campaigns/kudos-admin-campaigns.js:1
 msgid "Campaign"
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:241
+#: includes/Domain/PostType/TransactionPostType.php:239
 msgid "View invoice"
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:241
+#: includes/Domain/PostType/TransactionPostType.php:239
 msgid "Paid"
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:244
+#: includes/Domain/PostType/TransactionPostType.php:242
 #: build/admin/campaigns/kudos-admin-campaigns.js:2
 msgid "Open"
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:247
+#: includes/Domain/PostType/TransactionPostType.php:245
 msgid "Canceled"
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:250
+#: includes/Domain/PostType/TransactionPostType.php:248
 msgid "Failed"
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:260
+#: includes/Domain/PostType/TransactionPostType.php:258
 msgid "Method"
 msgstr ""
 
-#: includes/Domain/PostType/TransactionPostType.php:268
+#: includes/Domain/PostType/TransactionPostType.php:266
 msgid "Payment method icon"
 msgstr ""
 
@@ -788,7 +788,7 @@ msgid "All values must be numbers"
 msgstr ""
 
 #: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Each value must be higher than the minimum donation amount"
+msgid "Each value must be greater than or equal to the minimum donation amount"
 msgstr ""
 
 #: build/admin/campaigns/kudos-admin-campaigns.js:2
