@@ -108,10 +108,10 @@ class Kernel {
 			// Ensure the config path ends with a directory separator.
 			$config_path = rtrim( $config_path, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
 
-			// Create a YamlFileLoader instance for each config path.
+			// Create a PhpFileLoader instance for each config path.
 			$loader = new PhpFileLoader( $this->container_builder, new FileLocator( $config_path ) );
 
-			// Load the 'services.yaml' from the current config directory.
+			// Load the 'services.php' from the current config directory.
 			try {
 				$loader->load( 'services.php' );
 			} catch ( Exception $e ) {
