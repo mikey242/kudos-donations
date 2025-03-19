@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-03-19T11:05:48+00:00\n"
+"POT-Creation-Date: 2025-03-19T11:48:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: kudos-donations\n"
@@ -396,7 +396,7 @@ msgid "Your support is greatly appreciated and will help to keep us going."
 msgstr ""
 
 #: includes/Domain/PostType/CampaignPostType.php:145
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Subscription"
 msgstr ""
 
@@ -405,7 +405,7 @@ msgid "How often would you like to donate?"
 msgstr ""
 
 #: includes/Domain/PostType/CampaignPostType.php:155
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Address"
 msgstr ""
 
@@ -415,7 +415,7 @@ msgstr ""
 
 #: includes/Domain/PostType/CampaignPostType.php:165
 #: includes/Domain/PostType/TransactionPostType.php:273
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 #: build/front/block/index.js:3
 #: build/front/block/kudos-front.js:3
 msgid "Message"
@@ -426,7 +426,7 @@ msgid "Leave a message."
 msgstr ""
 
 #: includes/Domain/PostType/CampaignPostType.php:175
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Payment"
 msgstr ""
 
@@ -482,7 +482,7 @@ msgid "Name"
 msgstr ""
 
 #: includes/Domain/PostType/DonorPostType.php:144
-#: build/admin/settings/kudos-admin-settings.js:1
+#: build/admin/settings/kudos-admin-settings.js:2
 #: build/front/block/index.js:3
 #: build/front/block/kudos-front.js:3
 msgid "Email"
@@ -520,13 +520,15 @@ msgstr ""
 
 #: includes/Domain/PostType/SubscriptionPostType.php:140
 #: includes/Domain/PostType/TransactionPostType.php:181
+#: build/front/block/index.js:2
 #: build/front/block/index.js:3
+#: build/front/block/kudos-front.js:2
 #: build/front/block/kudos-front.js:3
 msgid "Amount"
 msgstr ""
 
 #: includes/Domain/PostType/SubscriptionPostType.php:148
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Currency"
 msgstr ""
 
@@ -558,7 +560,7 @@ msgid "Payment type: "
 msgstr ""
 
 #: includes/Domain/PostType/TransactionPostType.php:210
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Campaign"
 msgstr ""
 
@@ -571,7 +573,7 @@ msgid "Paid"
 msgstr ""
 
 #: includes/Domain/PostType/TransactionPostType.php:242
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Open"
 msgstr ""
 
@@ -619,419 +621,413 @@ msgstr ""
 msgid "Cannot create subscription as customer has no valid mandates."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
-msgid "No campaigns"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
-msgid "There are invalid fields in the form. Please check the fields and correct any errors."
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
-msgid "General"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
+#. translators: %s is the error message.
 #: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Text"
+msgid "Error creating campaign: %s"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
-msgid "Donation settings"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
 #: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Optional fields"
+msgid "Campaign deleted"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#. translators: %s is the error message.
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Error deleting campaign: %s"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "New Campaign"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Campaign created"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Campaign duplicated"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Campaign updated"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Custom CSS"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
-#: build/front/block/index.js:1
-#: build/front/block/kudos-front.js:1
-msgid "Back"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:1
-#: build/admin/settings/kudos-admin-settings.js:1
-msgid "Save"
-msgstr ""
-
-#. translators: %s is the campaign name
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Edit %s"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Theme color"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Total / Goal"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Progress"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Created"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-#: build/front/block/index.js:3
-msgid "Edit"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Edit campaign"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Duplicate campaign"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Delete campaign"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Are you sure you wish to delete this campaign?"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Your campaigns"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "New campaign"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Donate Now"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Shortcode copied"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Generate shortcode"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Display as"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Choose the available payment frequency."
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-#: build/front/block/index.js:3
-msgid "Button with modal"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-#: build/front/block/index.js:3
-msgid "Embedded form"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Button label"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Add a button label"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
-msgid "Copy shortcode"
-msgstr ""
-
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Donation type"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Choose the available payment frequency."
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 #: build/front/block/index.js:3
 #: build/front/block/kudos-front.js:3
 msgid "One-off"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Both"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Payment type"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Chose the available amount types."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Fixed"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "You need to enter one or more amounts"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "All values must be numbers"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Each value must be greater than or equal to the minimum donation amount"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Each value must not exceed the maximum donation amount"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "List of fixed amounts (max 5)."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Fixed amounts"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "This is the minimum donation that will be accepted."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Minimum donation required"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Minimum value is 1"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Minimum allowed donation"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Maximum donation"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "The maximum donation that you want to allow, leave blank to disable. This does not override your payment provider's maximum."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Campaign details"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Campaign name"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Give your campaign a unique name."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Name required"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Please select a currency"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Set a goal for your campaign."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Goal"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Please enter a goal"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Display goal progress"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "This will display a goal progress bar on your donation form. Make sure you also set a goal."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Add external funds to the total."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Additional funds"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+msgid "Theme color"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Choose a color theme for your campaign."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "After payment"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Show return message"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "This will show a pop-up message to the donor thanking them for their donation."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Title is required"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Message title"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Message required"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Message text"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Use custom return URL"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Once the payment has been completed, return the donor to a custom URL."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "URL"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "URL required"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Optional fields"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Allow anonymous donations"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Allow users to donate without leaving a name or email address. Anonymous users can only perform one-off donations."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Show the address tab."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Make the address required."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Required"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Allow donors to leave a message."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Policy links"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Terms & Conditions URL"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Add a URL to your Terms & Conditions, donors will need to agree to them before donating."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Privacy Policy URL"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Add a URL to your Privacy policy, donors will need to agree to it before donating."
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Initial tab"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Title"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Text"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Subscription tab"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Address tab"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Message tab"
 msgstr ""
 
-#: build/admin/campaigns/kudos-admin-campaigns.js:2
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
 msgid "Payment tab"
 msgstr ""
 
-#. translators: %s is the error message.
 #: build/admin/campaigns/kudos-admin-campaigns.js:3
-msgid "Error creating campaign: %s"
+msgid "There are invalid fields in the form. Please check the fields and correct any errors."
 msgstr ""
 
 #: build/admin/campaigns/kudos-admin-campaigns.js:3
-msgid "Campaign deleted"
+msgid "General"
 msgstr ""
 
-#. translators: %s is the error message.
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Donation settings"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "No campaigns"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Donate Now"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Shortcode copied"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Generate shortcode"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Display as"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+#: build/front/block/index.js:3
+msgid "Button with modal"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+#: build/front/block/index.js:3
+msgid "Embedded form"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Button label"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Add a button label"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:3
+msgid "Copy shortcode"
+msgstr ""
+
+#. translators: %s is the campaign name
 #: build/admin/campaigns/kudos-admin-campaigns.js:4
-msgid "Error deleting campaign: %s"
+msgid "Edit %s"
 msgstr ""
 
 #: build/admin/campaigns/kudos-admin-campaigns.js:4
-msgid "New Campaign"
+msgid "Total / Goal"
 msgstr ""
 
 #: build/admin/campaigns/kudos-admin-campaigns.js:4
-msgid "Campaign created"
+msgid "Progress"
 msgstr ""
 
 #: build/admin/campaigns/kudos-admin-campaigns.js:4
-msgid "Campaign duplicated"
+msgid "Created"
 msgstr ""
 
 #: build/admin/campaigns/kudos-admin-campaigns.js:4
-msgid "Campaign updated"
+#: build/front/block/index.js:3
+msgid "Edit"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+msgid "Edit campaign"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+msgid "Duplicate campaign"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+msgid "Delete campaign"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+msgid "Are you sure you wish to delete this campaign?"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+msgid "Your campaigns"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+msgid "New campaign"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+#: build/front/block/index.js:3
+#: build/front/block/kudos-front.js:3
+msgid "Back"
+msgstr ""
+
+#: build/admin/campaigns/kudos-admin-campaigns.js:4
+#: build/admin/settings/kudos-admin-settings.js:2
+msgid "Save"
 msgstr ""
 
 #. translators: %s is number of migrations processed
 #: build/admin/migrations/kudos-admin-migrations.js:2
 msgid "Running migrations in the background. This might take a minute."
-msgstr ""
-
-#: build/admin/settings/kudos-admin-settings.js:1
-msgid "Settings updated"
 msgstr ""
 
 #: build/admin/settings/kudos-admin-settings.js:1
@@ -1084,23 +1080,7 @@ msgid "Intro guide"
 msgstr ""
 
 #: build/admin/settings/kudos-admin-settings.js:1
-msgid "Mollie"
-msgstr ""
-
-#: build/admin/settings/kudos-admin-settings.js:1
-msgid "Invoice"
-msgstr ""
-
-#: build/admin/settings/kudos-admin-settings.js:1
-msgid "Help"
-msgstr ""
-
-#: build/admin/settings/kudos-admin-settings.js:1
-msgid "ready"
-msgstr ""
-
-#: build/admin/settings/kudos-admin-settings.js:1
-msgid "not ready"
+msgid "Settings updated"
 msgstr ""
 
 #: build/admin/settings/kudos-admin-settings.js:1
@@ -1377,19 +1357,39 @@ msgstr ""
 msgid "Reset Mollie"
 msgstr ""
 
+#: build/admin/settings/kudos-admin-settings.js:2
+msgid "Mollie"
+msgstr ""
+
+#: build/admin/settings/kudos-admin-settings.js:2
+msgid "Invoice"
+msgstr ""
+
+#: build/admin/settings/kudos-admin-settings.js:2
+msgid "Help"
+msgstr ""
+
+#: build/admin/settings/kudos-admin-settings.js:2
+msgid "ready"
+msgstr ""
+
+#: build/admin/settings/kudos-admin-settings.js:2
+msgid "not ready"
+msgstr ""
+
 #: build/front/block/index.js:1
-#: build/front/block/kudos-front.js:1
-msgid "Next"
+#: build/front/block/kudos-front.js:3
+msgid "Campaign not found"
 msgstr ""
 
 #: build/front/block/index.js:1
 #: build/front/block/kudos-front.js:1
-msgid "Submit"
+msgid "On"
 msgstr ""
 
 #: build/front/block/index.js:1
 #: build/front/block/kudos-front.js:1
-msgid "Close modal"
+msgid "Off"
 msgstr ""
 
 #: build/front/block/index.js:1
@@ -1494,6 +1494,11 @@ msgstr ""
 msgid "Open donation amount"
 msgstr ""
 
+#: build/front/block/index.js:2
+#: build/front/block/kudos-front.js:2
+msgid "Other amount"
+msgstr ""
+
 #. translators: %1$s is the currency and %2$s is the maximum donation value
 #: build/front/block/index.js:3
 #: build/front/block/kudos-front.js:3
@@ -1567,7 +1572,17 @@ msgstr ""
 
 #: build/front/block/index.js:3
 #: build/front/block/kudos-front.js:3
-msgid "Campaign not found"
+msgid "Next"
+msgstr ""
+
+#: build/front/block/index.js:3
+#: build/front/block/kudos-front.js:3
+msgid "Submit"
+msgstr ""
+
+#: build/front/block/index.js:3
+#: build/front/block/kudos-front.js:3
+msgid "Close modal"
 msgstr ""
 
 #: build/front/block/index.js:3
@@ -1598,36 +1613,36 @@ msgstr ""
 msgid "Please select a campaign from the sidebar"
 msgstr ""
 
-#: build/front/block/kudos-front.js:1
+#: build/front/block/kudos-front.js:3
+msgid "Loading"
+msgstr ""
+
+#: build/front/block/kudos-front.js:3
 msgid "Payment Failed"
 msgstr ""
 
-#: build/front/block/kudos-front.js:1
+#: build/front/block/kudos-front.js:3
 msgid "Your payment failed."
 msgstr ""
 
-#: build/front/block/kudos-front.js:1
+#: build/front/block/kudos-front.js:3
 msgid "Payment Cancelled"
 msgstr ""
 
-#: build/front/block/kudos-front.js:1
+#: build/front/block/kudos-front.js:3
 msgid "Your payment was cancelled."
 msgstr ""
 
-#: build/front/block/kudos-front.js:1
+#: build/front/block/kudos-front.js:3
 msgid "Payment Pending"
 msgstr ""
 
-#: build/front/block/kudos-front.js:1
+#: build/front/block/kudos-front.js:3
 msgid "Payment could not be verified, please contact us for more information."
 msgstr ""
 
-#: build/front/block/kudos-front.js:1
+#: build/front/block/kudos-front.js:3
 msgid "Close"
-msgstr ""
-
-#: build/front/block/kudos-front.js:1
-msgid "Loading"
 msgstr ""
 
 #: build/front/block/block.json
