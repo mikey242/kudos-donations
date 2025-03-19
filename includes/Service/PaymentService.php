@@ -95,7 +95,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 					strtr( $description_format, $vars ),
 					$post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
 					$post->ID,
-					get_post( $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID} )->post_title ?? '',
+					$campaign,
 				);
 				break;
 			default:
