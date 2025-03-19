@@ -42,6 +42,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 
 		// Config DomPdf.
 		$options = new Options();
+		$options->setDefaultFont( 'sans-serif' );
 		$options->setFontDir( self::FONTS_DIR );
 		$options->setFontCache( self::FONTS_DIR );
 		$options->setFontHeightRatio( 1 );
