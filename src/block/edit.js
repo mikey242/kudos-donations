@@ -50,7 +50,7 @@ const ButtonEdit = (props) => {
 				options={
 					campaigns
 						?.map((item) => ({
-							label: item?.title.rendered,
+							label: item?.title.raw,
 							value: item.id,
 						}))
 						.concat({
@@ -79,7 +79,7 @@ const ButtonEdit = (props) => {
 							>
 								{__('Edit', 'kudos-donations') +
 									' ' +
-									campaign?.title?.rendered}
+									campaign?.title?.raw}
 							</ExternalLink>
 						) : (
 							<ExternalLink href="admin.php?page=kudos-campaigns">

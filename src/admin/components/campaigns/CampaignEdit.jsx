@@ -21,7 +21,7 @@ const CampaignEdit = ({ campaign, recurringAllowed }) => {
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
-			title: campaign?.title?.rendered,
+			title: campaign?.title?.raw,
 		},
 		reValidateMode: 'onSubmit',
 	});
@@ -33,7 +33,7 @@ const CampaignEdit = ({ campaign, recurringAllowed }) => {
 		if (campaign) {
 			reset({
 				...campaign,
-				title: campaign?.title?.rendered || '',
+				title: campaign?.title?.raw || '',
 			});
 		}
 	}, [campaign, reset]);
@@ -89,7 +89,7 @@ const CampaignEdit = ({ campaign, recurringAllowed }) => {
 				<h1 className="text-center my-5">
 					{__('Campaign', 'kudos-donations') +
 						': ' +
-						campaign.title.rendered}
+						campaign.title.raw}
 				</h1>
 			</Flex>
 			<FormProvider {...methods}>

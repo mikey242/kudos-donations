@@ -135,7 +135,7 @@ export const CampaignsProvider = ({
 
 		const data = {
 			...post,
-			title: post.title.rendered,
+			title: post.title.raw,
 			date: new Date(),
 		};
 		handleSave(data).then(() =>
