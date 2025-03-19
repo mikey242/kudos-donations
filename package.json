@@ -1,6 +1,6 @@
 {
   "name": "kudos-donations",
-  "version": "4.0.0-beta-18",
+  "version": "4.0.0-beta-19",
   "private": true,
   "description": " Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.",
   "author": "Michael Iseard",
@@ -79,8 +79,8 @@
     "start:admin": "wp-scripts start --hot --config src/admin/webpack.config.admin.js --webpack-src-dir=src/admin --output-path=build/admin",
     "start:front": "wp-scripts start --hot --config src/block/webpack.config.front.js --output-path=build/front",
     "wp-env": "wp-env",
-    "make-pot": "php wp-cli.phar i18n make-pot . --exclude='src, wordpress, config, assets, tests' --debug",
-    "make-json": "php wp-cli.phar i18n make-json languages/ --no-purge",
+    "make-pot": "wp i18n make-pot . --exclude='src, wordpress, config, assets, tests' --debug",
+    "make-json": "wp i18n make-json languages/ --no-purge",
     "follow-log": "source ./.env && tail -f -n 200 ./wordpress/storage/logs/$APP_ENV.log",
     "serveo": "ssh -R 80:localhost:8888 serveo.net",
     "test:unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/kudos-donations ./vendor/bin/phpunit",
