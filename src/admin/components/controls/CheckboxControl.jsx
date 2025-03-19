@@ -2,14 +2,7 @@ import React from 'react';
 import { CheckboxControl as WPCheckboxControl } from '@wordpress/components';
 import { BaseControl } from './BaseControl';
 
-export const CheckboxControl = ({
-	name,
-	options,
-	label,
-	help,
-	isDisabled,
-	rules,
-}) => {
+export const CheckboxControl = ({ name, label, help, isDisabled, rules }) => {
 	return (
 		<BaseControl
 			name={name}
@@ -20,7 +13,6 @@ export const CheckboxControl = ({
 				<WPCheckboxControl
 					label={label}
 					onChange={onChange}
-					options={options}
 					checked={value}
 					help={description}
 					disabled={isDisabled}
