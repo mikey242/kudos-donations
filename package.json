@@ -31,7 +31,6 @@
     "react-shadow": "^20.5.0"
   },
   "devDependencies": {
-    "@automattic/i18n-loader-webpack-plugin": "^2.0.63",
     "@babel/preset-react": "^7.25.9",
     "@tailwindcss/forms": "^0.5.9",
     "@wordpress/api-fetch": "^7.20.0",
