@@ -36,12 +36,12 @@ export const CampaignsTable = ({ handleEdit }) => {
 					label={sprintf(
 						/* translators: %s is the campaign name */
 						__('Edit %s', 'kudos-donations'),
-						post.title.rendered
+						post.title.raw
 					)}
 					variant="link"
 					onClick={() => handleEdit('edit', post.id)}
 				>
-					{post.title.rendered}
+					{post.title.raw}
 				</Button>
 			),
 		},
