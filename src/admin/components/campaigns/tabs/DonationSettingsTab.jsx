@@ -121,6 +121,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 					/>
 					<TextControl
 						name="meta.minimum_donation"
+						type="number"
 						prefix={currencies[currency]}
 						help={__(
 							'This is the minimum donation that will be accepted.',
