@@ -91,7 +91,7 @@ export const DonationSettingsTab = ({ recurringAllowed }) => {
 									if (numberValue < minDonation) {
 										return (
 											__(
-												`Each value must be higher than the minimum donation amount`,
+												`Each value must be greater than or equal to the minimum donation amount`,
 												'kudos-donations'
 											) + ` (${minDonation}).`
 										);
