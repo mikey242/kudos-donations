@@ -56,7 +56,7 @@
   "scripts": {
     "lint": "vendor/bin/phpcs --severity=1 --report=full --report-source",
     "build-production": [
-      "composer install --optimize-autoloader --no-dev",
+      "composer install --optimize-autoloader --no-dev --prefer-dist",
       "npm run build"
     ],
     "make-zip": [
