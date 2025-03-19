@@ -80,9 +80,8 @@ trait TableColumnsTrait {
 			static function ( $columns ) use ( $post_columns ) {
 				add_filter( 'post_date_column_status', static fn() => null, 10, 2 );
 				unset( $columns['title'] );
-				unset( $columns['cb'] );
 				return array_merge(
-					[ 'cb' => '<input type="checkbox" />' ],
+					[ 'cb' => '<input type="checkbox" />' ], // Move checkbox to beginning.
 					array_map( static fn( $column ) => $column ?? '', $post_columns ),
 					$columns
 				);
