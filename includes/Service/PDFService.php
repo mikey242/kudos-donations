@@ -13,11 +13,11 @@ namespace IseardMedia\Kudos\Service;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Exception;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Helper\Utils;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Throwable;
 
 class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 
@@ -69,23 +69,47 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	}
 
 	/**
-	 * Streams the provided PDF.
+	 * Streams the provided PDF, handling any exceptions.
 	 *
 	 * @param string $file The full path to the file.
 	 */
 	public function stream( string $file ): void {
+		try {
+			$body = $this->get_file_contents( $file );
+			header( 'Content-Type: application/pdf' );
+			header( 'Content-Disposition: inline; filename=' . basename( $file ) . ' ' );
+			header( 'Content-Length: ' . \strlen( $body ) );
+			header( 'Accept-Ranges: bytes' );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $body;
+			exit;
+		} catch ( Exception $e ) {
+			NoticeService::add_notice(
+				__( 'Error fetching invoice. Please check log for details.', 'kudos-donations' ),
+				NoticeService::ERROR
+			);
+			$this->logger->warning( $e->getMessage(), [ 'file' => $file ] );
+		}
+	}
+
+	/**
+	 * Streams the provided PDF.
+	 *
+	 * @throws Exception If the file does not exist or an error occurs during streaming.
+	 *
+	 * @param string $file The full path to the file.
+	 */
+	private function get_file_contents( string $file ): string {
 		if ( ! file_exists( $file ) ) {
-			$this->logger->debug( 'Unable to stream, file not found', [ 'file' => $file ] );
-			return;
+			throw new Exception( esc_html( 'File not found: ' . $file ) );
 		}
 
 		while ( ob_get_level() ) {
 			ob_end_clean();
 		}
 
-		$file_name     = basename( $file );
-		$error_message = __( 'Error fetching invoice. Please check log for details.', 'kudos-donations' );
-		$response      = wp_remote_get(
+		$file_name = basename( $file );
+		$response  = wp_remote_get(
 			self::INVOICE_URL . $file_name,
 			[
 				'headers' => [
@@ -97,41 +121,20 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 		);
 
 		if ( is_wp_error( $response ) ) {
-			NoticeService::add_notice( $error_message, NoticeService::ERROR );
-			$this->logger->warning( $response->get_error_message() );
-			return;
+			throw new Exception( esc_html( $response->get_error_message() ) );
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
-
 		if ( 200 !== $response_code ) {
-			NoticeService::add_notice( $error_message, NoticeService::ERROR );
-			$this->logger->warning(
-				'Failed to fetch PDF.',
-				[
-					'url'           => self::INVOICE_URL . $file_name,
-					'response_code' => $response_code,
-					'message'       => wp_remote_retrieve_response_message( $response ),
-				]
-			);
-			return;
+			throw new Exception( esc_html( wp_remote_retrieve_response_message( $response ) ) );
 		}
 
 		$body = wp_remote_retrieve_body( $response );
 		if ( empty( $body ) ) {
-			NoticeService::add_notice( $error_message, NoticeService::ERROR );
-			$this->logger->warning( 'Empty response body for PDF', [ 'url' => self::INVOICE_URL . $file_name ] );
-			return;
+			throw new Exception( esc_html( __( 'Empty response body for PDF.', 'kudos-donations' ) ) );
 		}
 
-		header( 'Content-Type: application/pdf' );
-		header( "Content-Disposition: inline; filename=\"$file_name\"" );
-		header( 'Content-Length: ' . \strlen( $body ) );
-		header( 'Accept-Ranges: bytes' );
-
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo $body;
-		exit;
+		return $body;
 	}
 
 	/**
@@ -173,7 +176,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 
 			return null;
 
-		} catch ( Throwable $e ) {
+		} catch ( Exception $e ) {
 			$this->logger->critical( $e->getMessage(), $data );
 
 			return null;
