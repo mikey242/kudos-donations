@@ -74,24 +74,64 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	 * @param string $file The full path to the file.
 	 */
 	public function stream( string $file ): void {
-		if ( file_exists( $file ) ) {
-			if ( ob_get_contents() ) {
-				ob_end_clean();
-			}
-			$file_name = basename( $file );
-			$response  = wp_remote_get( self::INVOICE_URL . $file_name );
-			if ( is_wp_error( $response ) ) {
-				$this->logger->warning( $response->get_error_message() );
-				return;
-			}
-			$body = wp_remote_retrieve_body( $response );
-			header( 'Content-type: application/pdf' );
-			header( "Content-disposition: inline;filename=$file_name" );
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $body;
-			exit;
+		if ( ! file_exists( $file ) ) {
+			$this->logger->debug( 'Unable to stream, file not found', [ 'file' => $file ] );
+			return;
 		}
-		$this->logger->debug( 'Unable to steam, file not found', [ 'file' => $file ] );
+
+		while ( ob_get_level() ) {
+			ob_end_clean();
+		}
+
+		$file_name     = basename( $file );
+		$error_message = __( 'Error fetching invoice. Please check log for details.', 'kudos-donations' );
+		$response      = wp_remote_get(
+			self::INVOICE_URL . $file_name,
+			[
+				'headers' => [
+					'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+					'Referer'    => home_url(),
+				],
+				'timeout' => 15,
+			]
+		);
+
+		if ( is_wp_error( $response ) ) {
+			NoticeService::add_notice( $error_message, NoticeService::ERROR );
+			$this->logger->warning( $response->get_error_message() );
+			return;
+		}
+
+		$response_code = wp_remote_retrieve_response_code( $response );
+
+		if ( 200 !== $response_code ) {
+			NoticeService::add_notice( $error_message, NoticeService::ERROR );
+			$this->logger->warning(
+				'Failed to fetch PDF.',
+				[
+					'url'           => self::INVOICE_URL . $file_name,
+					'response_code' => $response_code,
+					'message'       => wp_remote_retrieve_response_message( $response ),
+				]
+			);
+			return;
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+		if ( empty( $body ) ) {
+			NoticeService::add_notice( $error_message, NoticeService::ERROR );
+			$this->logger->warning( 'Empty response body for PDF', [ 'url' => self::INVOICE_URL . $file_name ] );
+			return;
+		}
+
+		header( 'Content-Type: application/pdf' );
+		header( "Content-Disposition: inline; filename=\"$file_name\"" );
+		header( 'Content-Length: ' . \strlen( $body ) );
+		header( 'Accept-Ranges: bytes' );
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $body;
+		exit;
 	}
 
 	/**
