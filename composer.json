@@ -69,7 +69,8 @@
     ],
     "clean-unused-files" : [
       "find vendor/dompdf/dompdf/lib/fonts/ ! -name 'Helvetica*' -type f -delete",
-      "find vendor -type f \\( -iname '*.md' -o -iname 'phpunit.xml' -o -iname 'CHANGELOG' -o -iname 'CHANGELOG.txt' -o -iname 'CREDITS' -o -iname 'README' -o -iname 'README.txt' -o -iname 'LICENSE' -o -iname 'LICENSE.txt' -o -iname 'composer.json' \\) -delete",
+      "find vendor -type f \\( -iname '*.md' -o -iname 'phpunit.xml' -o -iname 'CHANGELOG' -o -iname 'CHANGELOG.txt' -o -iname 'CREDITS' -o -iname 'README' -o -iname 'README.txt' -o -iname 'LICENSE' -o -iname 'LICENSE.txt' -o -iname 'README.rst' -o -iname 'composer.json' \\) -delete",
+      "find vendor -type d \\( -iname 'test' -o -iname 'tests' \\) -prune -exec rm -rf '{}' +",
       "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
     ],
     "post-install-cmd" : [
