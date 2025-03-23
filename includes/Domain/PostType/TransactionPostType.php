@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Domain\PostType;
 
 use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
-use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
