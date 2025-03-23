@@ -34,18 +34,22 @@ export const PaymentStatus = ({ transactionId }) => {
 		// Check transaction status.
 		const checkTransactionStatus = async () => {
 			try {
-				const transaction = await apiFetch({
-					path: `/wp/v2/kudos_transaction/${transactionId}`,
+				const nonce = getNonceFromUrl();
+				const response = await apiFetch({
+					path: `/kudos/v1/payment/status/?id=${transactionId}`,
+					headers: {
+						'X-Kudos-Nonce': nonce,
+					},
 				});
 
-				switch (transaction.meta.status) {
+				switch (response.data.status) {
 					case 'paid':
 						const placeholders = {
 							value:
 								window.kudos.currencies[
-									transaction.meta.currency
-								] + transaction.meta.value,
-							name: transaction.donor.meta.name,
+									response.data.currency
+								] + response.data.value,
+							name: response.data.name,
 						};
 						setTitle(campaign.meta.return_message_title);
 						setBody(
@@ -163,3 +167,8 @@ export default function Message({
 		</>
 	);
 }
+
+const getNonceFromUrl = () => {
+	const params = new URLSearchParams(window.location.search);
+	return params.get('kudos_nonce');
+};
