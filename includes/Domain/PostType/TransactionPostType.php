@@ -19,7 +19,7 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 
-class TransactionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface, HasAdminColumns {
+class TransactionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
 
 	/**
 	 * Meta field constants.
@@ -40,11 +40,6 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	public const META_FIELD_VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
 	public const META_FIELD_INVOICE_NUMBER         = 'invoice_number';
 	public const META_FIELD_CHECKOUT_URL           = 'checkout_url';
-
-	/**
-	 * Rest field constants.
-	 */
-	public const REST_FIELD_DONOR = 'donor';
 
 	/**
 	 * {@inheritDoc}
@@ -271,20 +266,6 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 			self::META_FIELD_MESSAGE     => [
 				'value_type' => FieldType::STRING,
 				'label'      => __( 'Message', 'kudos-donations' ),
-			],
-		];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get_rest_fields(): array {
-		return [
-			self::REST_FIELD_DONOR => [
-				'get_callback' => function ( $transaction ) {
-					$donor_id = $transaction['meta'][ self::META_FIELD_DONOR_ID ];
-					return DonorPostType::get_post_using_rest( $donor_id );
-				},
 			],
 		];
 	}
