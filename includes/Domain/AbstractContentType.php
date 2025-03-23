@@ -26,7 +26,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	/**
 	 * Whether to show the content in the REST API.
 	 */
-	protected const SHOW_IN_REST = true;
+	protected const SHOW_IN_REST = false;
 	/**
 	 * Whether the content is intended for use publicly.
 	 */
