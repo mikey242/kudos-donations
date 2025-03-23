@@ -71,7 +71,7 @@ export const PaymentStatus = ({ transactionId }) => {
 				}
 			} catch (error) {
 				setTitle('Error');
-				setBody(error);
+				setBody(error.message);
 				clearInterval(pollingRef.current);
 			}
 		};
