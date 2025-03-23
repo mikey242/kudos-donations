@@ -165,7 +165,59 @@ class Payment extends AbstractRestController {
 				'callback'            => [ $this->vendor, 'is_ready' ],
 				'permission_callback' => '__return_true',
 			],
+
+			self::ROUTE_STATUS  => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'status' ],
+				'args'                => [
+					'id' => [
+						'type'              => FieldType::INTEGER,
+						'required'          => true,
+						'sanitize_callback' => 'absint',
+					],
+				],
+				'permission_callback' => '__return_true',
+			],
 		];
+	}
+
+	/**
+	 * Check the status for the supplied transaction post id.
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 * @return WP_REST_Response | WP_Error Response object.
+	 */
+	public function status( WP_REST_Request $request ) {
+		$post_id = $request->get_param( 'id' );
+		$nonce   = $request->get_header( 'x-kudos-nonce' );
+
+		if ( ! wp_verify_nonce( $nonce, 'order_complete' . $post_id ) ) {
+			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
+		}
+
+		$transaction = get_post( $post_id );
+
+		if ( $transaction ) {
+			$data     = [
+				'status'   => $transaction->{TransactionPostType::META_FIELD_STATUS},
+				'currency' => $transaction->{TransactionPostType::META_FIELD_CURRENCY},
+				'value'    => $transaction->{TransactionPostType::META_FIELD_VALUE},
+			];
+			$donor_id = $transaction->{TransactionPostType::META_FIELD_DONOR_ID};
+			if ( $donor_id ) {
+				$donor        = get_post( $donor_id );
+				$data['name'] = $donor->{DonorPostType::META_FIELD_NAME};
+			}
+
+			return new WP_REST_Response(
+				[
+					'success' => true,
+					'data'    => $data,
+				]
+			);
+		}
+
+		return new WP_Error( 'transaction_not_found', 'Transaction not found' );
 	}
 
 	/**
