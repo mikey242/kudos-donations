@@ -30,6 +30,7 @@ class Payment extends AbstractRestController {
 	public const ROUTE_WEBHOOK = '/webhook';
 	public const ROUTE_TEST    = '/test';
 	public const ROUTE_READY   = '/ready';
+	public const ROUTE_STATUS  = '/status';
 
 	private PaymentVendorInterface $vendor;
 
@@ -151,7 +152,9 @@ class Payment extends AbstractRestController {
 						'sanitize_callback' => 'absint',
 					],
 				],
-				'permission_callback' => '__return_true',
+				'permission_callback' => function () {
+					return current_user_can( 'read' );
+				},
 			],
 
 			self::ROUTE_TEST    => [
@@ -163,7 +166,9 @@ class Payment extends AbstractRestController {
 			self::ROUTE_READY   => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this->vendor, 'is_ready' ],
-				'permission_callback' => '__return_true',
+				'permission_callback' => function () {
+					return current_user_can( 'read' );
+				},
 			],
 
 			self::ROUTE_STATUS  => [
