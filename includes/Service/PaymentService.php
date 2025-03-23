@@ -98,6 +98,9 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 					$campaign,
 				);
 				break;
+			case CampaignPostType::get_slug():
+				// Ignore campaigns.
+				break;
 			default:
 				$single_name           = $object_type->labels->singular_name;
 				$postarr['post_title'] = $single_name . \sprintf( ' (%1$s)', Utils::get_formatted_id( $post_id ) );
