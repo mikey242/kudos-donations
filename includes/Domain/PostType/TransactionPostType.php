@@ -43,6 +43,13 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function get_show_in_rest(): bool {
+		return current_user_can( 'edit_posts' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function get_slug(): string {
 		return 'kudos_transaction';
 	}

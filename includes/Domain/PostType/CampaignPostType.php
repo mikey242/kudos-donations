@@ -18,8 +18,6 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 
 class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface {
 
-	protected const SHOW_IN_REST = true;
-
 	/**
 	 * Meta field constants.
 	 */
@@ -62,6 +60,13 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 * Rest field constants.
 	 */
 	public const REST_FIELD_TOTAL = 'total';
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_show_in_rest(): bool {
+		return true;
+	}
 
 	/**
 	 * {@inheritDoc}
