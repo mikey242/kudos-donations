@@ -111,7 +111,7 @@ export const PaymentStatus = ({ transactionId }) => {
 			body={body}
 			color={campaign?.meta?.theme_color}
 			style={campaign?.meta?.custom_styles}
-			dismissible={pollingRef.current}
+			dismissible={pollingRef.current ?? false}
 		/>
 	);
 };
@@ -121,7 +121,7 @@ export default function Message({
 	body,
 	style = '',
 	color = '#ff9f1c',
-	dismissible = false,
+	dismissible = true,
 }) {
 	const [ready, setReady] = useState(false);
 	const [modalOpen, setModalOpen] = useState(true);
