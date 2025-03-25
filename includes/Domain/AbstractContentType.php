@@ -24,10 +24,6 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	use RegisterRestFieldsTrait;
 
 	/**
-	 * Whether to show the content in the REST API.
-	 */
-	protected const SHOW_IN_REST = false;
-	/**
 	 * Whether the content is intended for use publicly.
 	 */
 	protected const PUBLIC = false;
@@ -56,11 +52,18 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 			'public'       => static::PUBLIC,
 			'show_ui'      => static::SHOW_UI,
 			'show_in_menu' => static::SHOW_IN_MENU,
-			'show_in_rest' => static::SHOW_IN_REST,
+			'show_in_rest' => $this->get_show_in_rest(),
 			'hierarchical' => static::HIERARCHICAL,
 			'menu_icon'    => $this->get_icon(),
 			'map_meta_cap' => true,
 		];
+	}
+
+	/**
+	 * Determine if rest enabled.
+	 */
+	protected function get_show_in_rest(): bool {
+		return false;
 	}
 
 	/**
