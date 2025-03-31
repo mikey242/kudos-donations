@@ -18,7 +18,7 @@ export const CheckboxControl = ({ name, rules, label, help, isDisabled }) => {
 							onChange={onChange}
 							name={name}
 							type="checkbox"
-							className="disabled:cursor-not-allowed transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
+							className="control disabled:cursor-not-allowed transition focus:ring-primary h-4 w-4 text-primary border-gray-300 rounded"
 							aria-invalid={!!error}
 							aria-errormessage={error?.message}
 						/>
