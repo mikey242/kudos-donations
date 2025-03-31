@@ -91,8 +91,6 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 
 		// Only proceed if the step has changed
 		if (prevStep.current !== step) {
-			prevStep.current = step; // Update the previous step to the current step
-
 			if (!elementRef.current) {
 				return;
 			}
@@ -107,9 +105,18 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				setHeight(newHeight);
 
 				const timeout = setTimeout(() => {
-					setHeight('auto'); // Allow form to grow if validation message appears
+					setHeight('auto'); // Allow form to grow if validation message appears.
 					setCurrentStep(step);
-					target.classList.remove('translate-x-1', 'opacity-0');
+					target.classList.remove(
+						'translate-x-1',
+						'opacity-0',
+						'section-' +
+							steps[prevStep.current]?.name?.toLowerCase()
+					);
+					target.classList.add(
+						'section-' + steps[step]?.name?.toLowerCase()
+					);
+					prevStep.current = step; // Update the previous step to the current step
 				}, 200);
 
 				return () => clearTimeout(timeout);
@@ -127,7 +134,6 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				ref={elementRef}
 				id="form-container"
 				className={clsx(
-					'section-' + steps[step]?.name?.toLowerCase(),
 					isBusy && 'opacity-50',
 					'transition-all duration-200'
 				)}
