@@ -125,17 +125,18 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		<FormProvider {...methods}>
 			<div
 				ref={elementRef}
-				id="kudos-form-container"
+				id="form-container"
 				className={clsx(
+					'section-' + steps[step]?.name?.toLowerCase(),
 					isBusy && 'opacity-50',
 					'transition-all duration-200'
 				)}
 				style={{ height: height + 'px' }}
 			>
-				<form id="kudos-form" onSubmit={methods.handleSubmit(onSubmit)}>
+				<form id="form" onSubmit={methods.handleSubmit(onSubmit)}>
 					<Tab step={currentStep} campaign={campaign} />
 					<div
-						id="kudos-form-buttons"
+						id="form-buttons"
 						className="mt-8 flex justify-between relative"
 					>
 						{currentStep > 1 && (

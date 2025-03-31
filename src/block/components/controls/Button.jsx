@@ -37,6 +37,7 @@ const Button = forwardRef(
 		};
 
 		const classes = clsx(
+			'button',
 			className,
 			isDisabled && 'cursor-not-allowed opacity-75',
 			isBusy && 'cursor-not-allowed',

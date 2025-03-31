@@ -4,7 +4,7 @@ import { Button } from './controls';
 
 const DonateButton = ({ children, onClick = null }) => {
 	return (
-		<div id="kudos-donate-button" className="font-body">
+		<div id="donate-button" className="font-body">
 			<Button
 				onClick={() => onClick && onClick()}
 				className="logo-animate text-base"
