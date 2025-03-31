@@ -58,7 +58,7 @@ export const TextControl = ({
 							aria-label={ariaLabel ?? label ?? placeholder}
 							className={clsx(
 								// General
-								'form-input transition ease-in-out block w-full pr-10 sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
+								'control form-input transition ease-in-out block w-full pr-10 sm:text-sm shadow-sm rounded-md placeholder:text-gray-500',
 								// Focus
 								'focus:outline-none',
 								// Disabled

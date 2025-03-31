@@ -74,7 +74,7 @@ export const RadioGroupControl = ({
 								ref={(el) => (radioRefs.current[index] = el)}
 								className={({ checked }) =>
 									clsx(
-										'focus:ring-2 focus:ring-offset-2 focus:ring-primary',
+										'control focus:ring-2 focus:ring-offset-2 focus:ring-primary',
 										checked
 											? 'bg-primary border-transparent text-white font-bold'
 											: 'bg-white border-gray-300 text-slate-800 hover:bg-gray-50',
