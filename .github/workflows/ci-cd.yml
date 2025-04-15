@@ -64,7 +64,7 @@ jobs:
     needs: build-job
     services:
       mysql:
-        image: mysql:9.2
+        image: mysql:9.3
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: wordpress_test
