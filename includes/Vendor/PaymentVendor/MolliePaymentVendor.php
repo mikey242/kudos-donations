@@ -20,6 +20,7 @@ use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Vendor\AbstractVendor;
 use Mollie\Api\Exceptions\ApiException;
+use Mollie\Api\Exceptions\RequestException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\BaseCollection;
 use Mollie\Api\Resources\Customer;
@@ -45,7 +46,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	public const SETTING_API_KEY_ENCRYPTED_TEST = '_kudos_vendor_mollie_api_key_encrypted_test';
 	public const SETTING_PAYMENT_METHODS = '_kudos_vendor_mollie_payment_methods';
     private string $api_mode = 'test';
-	private MollieApiClient $api_client;
+	public MollieApiClient $api_client;
 
 	/**
      * Mollie constructor.
@@ -219,11 +220,11 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					'maximumAmount' => $sepa->maximumAmount,
 				];
 			}
-		} catch (ApiException $e) {
+		} catch (RequestException $e) {
 			$this->logger->critical('Direct debit payment method not found');
 		}
 
-		$this->logger->debug('Mollie refreshed connection settings', [$payment_methods]);
+		$this->logger->debug('Mollie refreshed connection settings');
 
 		// Update payment methods.
 		update_option(
@@ -246,8 +247,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      */
     public function get_active_payment_methods(array $options = []) {
         try {
-            return $this->api_client->methods->allActive($options);
-        } catch (ApiException $e) {
+            return $this->api_client->methods->allEnabled($options);
+        } catch (RequestException $e) {
             $this->logger->critical($e->getMessage());
 
             return null;
@@ -292,7 +293,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
     public function get_customer( string $vendor_customer_id): ?Customer {
         try {
             return $this->api_client->customers->get($vendor_customer_id);
-        } catch (ApiException $e) {
+        } catch (RequestException $e) {
             $this->logger->critical($e->getMessage());
 
             return null;
@@ -318,7 +319,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
         try {
             return $this->api_client->customers->create($args);
-        } catch (ApiException $e) {
+        } catch (RequestException $e) {
             $this->logger->critical($e->getMessage());
 
             return false;
@@ -333,8 +334,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		$transaction = get_post($transaction_id);
 
         // Set payment frequency.
-        $payment_args['payment_frequency'] = "true" === $payment_args['recurring'] ? $payment_args['recurring_frequency'] : SequenceType::SEQUENCETYPE_ONEOFF;
-	    $sequence_type                     = "true" === $payment_args['recurring'] ? SequenceType::SEQUENCETYPE_FIRST : SequenceType::SEQUENCETYPE_ONEOFF;
+        $payment_args['payment_frequency'] = "true" === $payment_args['recurring'] ? $payment_args['recurring_frequency'] : SequenceType::ONEOFF;
+	    $sequence_type                     = "true" === $payment_args['recurring'] ? SequenceType::FIRST : SequenceType::ONEOFF;
         $payment_args['value']             = number_format(floatval($payment_args['value']), 2, '.', '');
         $redirect_url                      = $payment_args['return_url'];
 
@@ -392,7 +393,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			update_post_meta($transaction_id, TransactionPostType::META_FIELD_CHECKOUT_URL, $checkout_url);
 
             return $checkout_url;
-        } catch (ApiException $e) {
+        } catch (RequestException $e) {
             $this->logger->error('Error creating payment with Mollie', ['error' =>$e->getMessage()]);
             return false;
         }
@@ -556,6 +557,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                     'status'         => $payment->status,
                     'sequence_type'  => $payment->sequenceType,
                     'has_refunds'    => $payment->hasRefunds(),
+	                'metadata'       => $payment->metadata
                 ]
             );
 
@@ -601,7 +603,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
             if ( ! $transaction) {
                 $this->logger->warning(
                     'Webhook received for unknown transaction. Aborting',
-                    ['vendor_id' => $payment_id]
+                    ['vendor_id' => $payment_id, 'transaction_id' => $payment->metadata->transaction_id]
                 );
 
                 return $response;
@@ -675,7 +677,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
                 $this->logger->info('Payment refunded.', ['transaction' => $transaction]);
             }
-        } catch (ApiException $e) {
+        } catch (RequestException $e) {
             $this->logger->error($this::get_name() . " webhook exception: " . $e->getMessage(), ['payment_id' => $payment_id]);
 
             // Send fail response to Mollie so that they know to try again.
@@ -724,11 +726,11 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				$payment = $this->api_client->payments->get($payment_id);
 				$response = $payment->refund(["amount" => $amount]);
 				$this->logger->info(sprintf('Refunding transaction "%s"', $payment_id), ["status" => $response->status, 'amount' => $amount]);
-				if(RefundStatus::STATUS_PENDING == $response->status) {
+				if(RefundStatus::PENDING == $response->status) {
 					return true;
 				}
 				return false;
-			} catch (ApiException $e) {
+			} catch (RequestException $e) {
 				$this->logger->error($e->getMessage());
 			}
 		}
