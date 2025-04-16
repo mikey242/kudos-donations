@@ -104,7 +104,7 @@ export const KudosModal = ({
 							leaveFrom="opacity-100 rotate-0 translate-y-0 scale-100"
 							leaveTo="opacity-0 translate-y-3 scale-90"
 						>
-							<div className="flex min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+							<div className="flex pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 								{/* This element is to trick the browser into centering the modal contents. */}
 								<span
 									className="hidden sm:inline-block sm:align-middle sm:h-screen"
