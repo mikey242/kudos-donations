@@ -113,9 +113,10 @@ trait TableColumnsTrait {
 						$meta_field_output,
 						[
 							'a'    => [
-								'href'  => [],
-								'class' => [],
-								'title' => [],
+								'href'   => [],
+								'class'  => [],
+								'title'  => [],
+								'target' => [],
 							],
 							'img'  => [
 								'src'   => [],

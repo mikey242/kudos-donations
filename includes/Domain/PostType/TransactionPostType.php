@@ -239,7 +239,7 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 								],
 								admin_url( 'edit.php' )
 							);
-							$status_text = '<a title="' . __( 'View invoice', 'kudos-donations' ) . '" class="button button-secondary kudos-transaction-pdf success" href="' . $url . '"><span style="margin-right: 4px; vertical-align: text-top;" class="dashicons dashicons-media-document"></span><span>' . __( 'Paid', 'kudos-donations' ) . '</span></a>';
+							$status_text = '<a target="_blank" title="' . __( 'View invoice', 'kudos-donations' ) . '" class="button button-secondary kudos-transaction-pdf success" href="' . $url . '"><span style="margin-right: 4px; vertical-align: text-top;" class="dashicons dashicons-media-document"></span><span>' . __( 'Paid', 'kudos-donations' ) . '</span></a>';
 							break;
 						case PaymentStatus::OPEN:
 							$status_text = __( 'Open', 'kudos-donations' );
