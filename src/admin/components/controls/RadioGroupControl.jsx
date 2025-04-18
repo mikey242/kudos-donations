@@ -57,6 +57,7 @@ export const RadioGroupControlBase = ({
 					value={value}
 					label={label}
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				>
 					{options.map((option) => {
 						return (
