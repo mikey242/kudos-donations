@@ -12,6 +12,7 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Container;
 
 use IseardMedia\Kudos\Service\EncryptionService;
+use IseardMedia\Kudos\Service\NoticeService;
 
 trait EncryptionAwareTrait {
 
@@ -62,6 +63,14 @@ trait EncryptionAwareTrait {
 	 */
 	protected function get_decrypted_key( string $encrypted_option ): string {
 		$encrypted_key = get_option( $encrypted_option, '' );
-		return $this->encryption->decrypt_password( $encrypted_key );
+		$decrypted     = $this->encryption->decrypt_password( $encrypted_key );
+
+		// If salt check failed or decryption failed.
+		if ( false === $decrypted ) {
+			NoticeService::add_notice( "Error decrypting key '$encrypted_option'. Please reset the key and add it again.", NoticeService::ERROR, true, $encrypted_option );
+			return '';
+		}
+
+		return $decrypted;
 	}
 }
