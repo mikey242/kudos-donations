@@ -52,7 +52,8 @@ export const GeneralTab = ({ campaign }) => {
 						isDisabled={campaign.total > 0}
 						prefix={currencies[watchCurrency]}
 						help={__(
-							'Select the desired currency for this campaign. Cannot be changed once you have received a donation.'
+							'Select the desired currency for this campaign. Cannot be changed once you have received a donation.',
+							'kudos-donations'
 						)}
 						rules={{
 							required: __(

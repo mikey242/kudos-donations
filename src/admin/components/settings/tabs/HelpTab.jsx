@@ -128,7 +128,8 @@ const HelpTab = () => {
 						name="_kudos_base_font_size"
 						label={__('Base font size', 'kudos-donations')}
 						help={__(
-							"This will change the scale of all font sizes and spacing within the Kudos Donations frame. The default is 1rem which is your website's main font size."
+							"This will change the scale of all font sizes and spacing within the Kudos Donations frame. The default is 1rem which is your website's main font size.",
+							'kudos-donations'
 						)}
 					/>
 				</PanelBody>

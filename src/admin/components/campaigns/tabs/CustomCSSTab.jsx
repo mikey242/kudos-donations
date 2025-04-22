@@ -32,7 +32,10 @@ export const CustomCSSTab = () => {
 				<TextAreaControl
 					ref={editorRef} // Attach the ref to the TextAreaControl
 					id={editorId}
-					help="Enter your custom css here. This will only apply to the current campaign."
+					help={__(
+						'Enter your custom css here. This will only apply to the current campaign.',
+						'kudos-donations'
+					)}
 					label={__('Custom CSS', 'kudos-donations')}
 					hideLabelFromVision={true}
 					name="meta.custom_styles"
