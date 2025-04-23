@@ -29,7 +29,7 @@ export const CampaignsProvider = ({
 		'postType',
 		postType,
 		{
-			per_page: 10,
+			per_page: -1,
 			order: searchParams.get('order') ?? 'desc',
 			orderby: searchParams.get('orderby') ?? 'date',
 		}
