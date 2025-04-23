@@ -52,11 +52,6 @@ export const CampaignsTable = ({ handleEdit }) => {
 			),
 		},
 		{
-			title: __('Total / Goal', 'kudos-donations'),
-			valueCallback: (post) =>
-				`${currencies[post.meta?.currency]} ${post.total} / ${post.meta?.goal}`,
-		},
-		{
 			title: __('Progress', 'kudos-donations'),
 			valueCallback: (post) => {
 				const total = post.total;
@@ -75,6 +70,11 @@ export const CampaignsTable = ({ handleEdit }) => {
 					</Tooltip>
 				);
 			},
+		},
+		{
+			title: __('Total', 'kudos-donations'),
+			valueCallback: (post) =>
+				`${currencies[post.meta?.currency]} ${post.total}`,
 		},
 		{
 			title: __('Created', 'kudos-donations'),
