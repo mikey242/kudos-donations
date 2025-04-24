@@ -10,6 +10,8 @@
  * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
  */
 
+declare( strict_types=1 );
+
 namespace IseardMedia\Kudos\Migrations;
 
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
