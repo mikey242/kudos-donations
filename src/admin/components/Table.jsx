@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { useCampaignsContext, useAdminContext } from './contexts';
 
 export const Table = ({ headerItems }) => {
-	const { posts, hasResolved } = useCampaignsContext();
+	const { posts, isLoading, hasLoadedOnce } = useCampaignsContext();
 	const { searchParams, updateParams } = useAdminContext();
 
 	const sort = (orderby) => {
@@ -56,28 +56,24 @@ export const Table = ({ headerItems }) => {
 					</tr>
 				</thead>
 				<tbody>
-					<>
-						{!hasResolved && !posts?.length && (
-							<TableMessage>
-								<Spinner />
-							</TableMessage>
-						)}
-						{!posts?.length && hasResolved ? (
-							<TableMessage>
-								<p>{__('No campaigns', 'kudos-donations')}</p>
-							</TableMessage>
-						) : (
-							posts?.map((post) => {
-								return (
-									<TableRow
-										key={post.slug}
-										post={post}
-										columns={headerItems}
-									/>
-								);
-							})
-						)}
-					</>
+					{/* eslint-disable-next-line no-nested-ternary */}
+					{isLoading ? (
+						<TableMessage>
+							<Spinner />
+						</TableMessage>
+					) : !posts.length && hasLoadedOnce ? (
+						<TableMessage>
+							<p>{__('No campaigns', 'kudos-donations')}</p>
+						</TableMessage>
+					) : (
+						posts.map((post) => (
+							<TableRow
+								key={post.slug}
+								post={post}
+								columns={headerItems}
+							/>
+						))
+					)}
 				</tbody>
 			</table>
 		</>

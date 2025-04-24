@@ -25,6 +25,8 @@ export const CampaignsProvider = ({
 	const { createSuccessNotice, createErrorNotice, removeAllNotices } =
 		useDispatch(noticesStore);
 	const [cachedPosts, setCachedPosts] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 	const { records: posts, hasResolved } = useEntityRecords(
 		'postType',
 		postType,
@@ -38,6 +40,8 @@ export const CampaignsProvider = ({
 	useEffect(() => {
 		if (hasResolved) {
 			setCachedPosts(posts);
+			setIsLoading(false);
+			setHasLoadedOnce(true);
 		}
 	}, [posts, hasResolved]);
 
@@ -149,6 +153,8 @@ export const CampaignsProvider = ({
 	const data = {
 		posts: cachedPosts,
 		hasResolved,
+		isLoading,
+		hasLoadedOnce,
 		handleNew,
 		handleDuplicate,
 		handleDelete,
