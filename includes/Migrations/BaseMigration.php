@@ -80,11 +80,6 @@ abstract class BaseMigration implements MigrationInterface {
 			$chunked  = $job['chunked'] ?? false;
 			$args     = $job['args'] ?? [];
 
-			// Automatically inject limit if chunked and no args defined.
-			if ( $chunked && empty( $args ) ) {
-				$args = [ self::DEFAULT_CHUNK_SIZE ];
-			}
-
 			if ( $this->run_step( $step, fn() => $callback( ...$args ), $chunked ) ) {
 				return true;
 			}
@@ -104,9 +99,7 @@ abstract class BaseMigration implements MigrationInterface {
 	 * @return bool Returns true if this step consumed the request.
 	 */
 	protected function run_step( string $name, callable $callback, bool $chunked = false ): bool {
-		$done_key = "{$name}_done";
-
-		if ( ! empty( $this->progress[ $done_key ] ) ) {
+		if ( ! empty( $this->progress[ $name ]['done'] ) ) {
 			return false;
 		}
 
@@ -114,14 +107,14 @@ abstract class BaseMigration implements MigrationInterface {
 
 		if ( $chunked ) {
 			if ( true === $result ) {
-				$this->progress[ $done_key ] = true;
+				$this->progress[ $name ]['done'] = true;
 				$this->update_progress();
 			}
 			return true; // Always return true for chunked to give it a full request.
 		}
 
 		// One-time step: assume done after one call.
-		$this->progress[ $done_key ] = true;
+		$this->progress[ $name ]['done'] = true;
 		$this->update_progress();
 		return true;
 	}
@@ -146,8 +139,8 @@ abstract class BaseMigration implements MigrationInterface {
 		$running = null;
 
 		foreach ( $this->get_migration_jobs() as $step => $job ) {
-			$done   = ! empty( $this->progress[ "{$step}_done" ] );
-			$offset = $this->progress[ "{$step}_offset" ] ?? 0;
+			$done   = ! empty( $this->progress[ $step ]['done'] );
+			$offset = $this->progress[ $step ]['offset'] ?? 0;
 
 			$steps[ $step ] = [
 				'label'   => $job['label'] ?? ucfirst( str_replace( '_', ' ', $step ) ),
