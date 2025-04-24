@@ -11,14 +11,17 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-class Version401 extends AbstractMigration {
+class Version401 extends BaseMigration {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function run(): bool {
-		return $this->cleanup();
+	public function get_migration_jobs(): array {
+		return [
+			'cleanup' => $this->job( [ $this, 'cleanup' ] ),
+		];
 	}
+
 	/**
 	 * Performs additional cleanup not related to prior.
 	 */

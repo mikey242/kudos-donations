@@ -75,43 +75,50 @@ class Migration extends AbstractRestController {
 	public function rest_migrate_handler( WP_REST_Request $request ) {
 		$batch_size = (int) $request->get_param( 'batch_size' );
 		$offset     = (int) $request->get_param( 'offset' );
-		$migrations = \array_slice( $this->migration->get_migrations(), $offset, $batch_size );
-		$this->logger->debug(
-			'Running migration batch.',
-			[
-				'batch_size' => $batch_size,
-				'offset'     => $offset,
-				'total'      => \count( $this->migration->get_migrations() ),
-			]
-		);
 
-		// Process the migrations in this batch.
-		foreach ( $migrations as $migration ) {
-			// Set current status as busy.
-			update_option( MigrationService::SETTING_MIGRATION_BUSY, true );
+		$migrations       = \array_slice( $this->migration->get_migrations(), $offset, $batch_size );
+		$total_migrations = \count( $this->migration->get_migrations() );
 
-			if ( ! $this->run_migration( $migration ) ) {
-				NoticeService::add_notice( __( 'Migration failed to run. Please check the log for more information.', 'kudos-donations' ), NoticeService::ERROR );
-				update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
-				return new WP_Error(
-					'migration_failed',
-					__( 'Migration failed', 'kudos-donations' ),
-					[ 'migration' => $migration->get_version() ]
-				);
-			}
-			// Set current status as busy.
-			update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
+		if ( empty( $migrations ) ) {
+			return new WP_REST_Response(
+				[
+					'completed'   => true,
+					'next_offset' => $offset,
+				],
+				200
+			);
 		}
 
-		$next_offset = $offset + \count( $migrations );
-		$completed   = empty( $migrations ) || ( $next_offset >= \count( $this->migration->get_migrations() ) );
+		update_option( MigrationService::SETTING_MIGRATION_BUSY, true );
 
-		$this->logger->debug( 'Migration batch complete' );
+		foreach ( $migrations as $migration ) {
+			if ( ! $this->run_migration( $migration ) ) {
+				update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
+				NoticeService::add_notice( __( 'Migration step failed. Please check the logs.', 'kudos-donations' ), NoticeService::ERROR );
+				return new WP_Error( 'migration_failed', __( 'Migration failed.', 'kudos-donations' ) );
+			}
+
+			// Stop here if this migration isn't yet done — keep offset the same.
+			if ( ! $migration->is_complete() ) {
+				update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
+				return new WP_REST_Response(
+					[
+						'completed'   => false,
+						'next_offset' => $offset,
+						'migration'   => \get_class( $migration ),
+						'progress'    => $migration->get_progress_summary(),
+					],
+					200
+				);
+			}
+		}
+
+		$next_offset = $offset + $batch_size;
+		$completed   = $next_offset >= $total_migrations;
 
 		if ( $completed ) {
 			update_option( MigrationService::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 			update_option( MigrationService::SETTING_MIGRATION_BUSY, false );
-			$this->logger->info( 'All migrations completed.' );
 			NoticeService::add_notice( __( 'Migrations completed successfully.', 'kudos-donations' ), NoticeService::SUCCESS, true, 'kudos-migration-complete' );
 		}
 
@@ -130,27 +137,31 @@ class Migration extends AbstractRestController {
 	 * @param MigrationInterface $migration The migration to run.
 	 */
 	private function run_migration( MigrationInterface $migration ): bool {
+		$version = $migration->get_version();
+		$history = get_option( MigrationService::SETTING_MIGRATION_HISTORY, [] );
 
-		// Prevent running migration if already in history.
-		if ( \in_array( $migration->get_version(), get_option( MigrationService::SETTING_MIGRATION_HISTORY, [] ), true ) ) {
-			$this->logger->debug( 'Migration already applied, skipping', [ 'migration' => $migration->get_version() ] );
+		if ( \in_array( $version, $history, true ) ) {
+			$this->logger->debug( 'Migration already applied, skipping', [ 'migration' => $version ] );
 			return true;
 		}
 
-		// Update migration history.
-		$migration_history   = get_option( MigrationService::SETTING_MIGRATION_HISTORY, [] );
-		$migration_history[] = $migration->get_version();
-		update_option( MigrationService::SETTING_MIGRATION_HISTORY, $migration_history );
+		$this->logger->info( 'Running migration step: ' . $version );
 
-		$this->logger->info( 'Running migration: ' . $migration->get_version() );
-
-		// Run migration and stop if not successful.
-		if ( ! $migration->run() ) {
-			$this->logger->error( 'Migration failed.', [ 'migration' => $migration->get_version() ] );
+		if ( ! $migration->step() ) {
+			$this->logger->error( 'Migration step failed.', [ 'migration' => $version ] );
 			return false;
 		}
 
-		$this->logger->info( 'Migration ' . $migration->get_version() . ' complete' );
+		// Still not complete? That's fine — we'll continue on next request.
+		if ( ! $migration->is_complete() ) {
+			$this->logger->info( 'Migration not yet complete, more steps required.', [ 'migration' => $version ] );
+			return true;
+		}
+
+		// Mark as complete if it's now finished.
+		$this->logger->info( 'Migration complete: ' . $version );
+		$history[] = $version;
+		update_option( MigrationService::SETTING_MIGRATION_HISTORY, $history );
 
 		return true;
 	}
