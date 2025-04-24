@@ -6,7 +6,7 @@
  *
  * @copyright 2024 Iseard Media
  *
- *  phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
  */
 
 namespace IseardMedia\Kudos\Migrations;
@@ -19,29 +19,34 @@ use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Vendor\EmailVendor\SMTPVendor;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 
-class Version400 extends AbstractMigration {
-
-	private array $cache;
+class Version400 extends BaseMigration {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function run(): bool {
-		return (
-			$this->migrate_vendor_settings() &&
-			$this->migrate_smtp_settings() &&
-			$this->migrate_donors_to_posts() &&
-			$this->migrate_campaigns_to_posts() &&
-			$this->migrate_transactions_to_posts() &&
-			$this->migrate_subscriptions_to_posts()
-		);
+	public function get_migration_jobs(): array {
+		return [
+			'settings'      => $this->job( [ $this, 'migrate_settings' ], 'Settings' ),
+			'campaigns'     => $this->job( [ $this, 'migrate_campaigns_to_posts' ], 'Campaigns' ),
+			'donors'        => $this->job( [ $this, 'migrate_donors_to_posts' ], 'Donors', true ),
+			'transactions'  => $this->job( [ $this, 'migrate_transactions_to_posts' ], 'Transactions', true ),
+			'subscriptions' => $this->job( [ $this, 'migrate_subscriptions_to_posts' ], 'Subscriptions', true ),
+		];
+	}
+
+	/**
+	 * Migrate all the settings.
+	 */
+	protected function migrate_settings(): bool {
+		$this->migrate_vendor_settings();
+		$this->migrate_smtp_settings();
+		return true;
 	}
 
 	/**
 	 * Migrate the old vendor settings.
 	 */
-	private function migrate_vendor_settings(): bool {
-		$this->logger->info( 'Migrating vendor settings' );
+	protected function migrate_vendor_settings() {
 		$vendor_mollie = get_option( '_kudos_vendor_mollie' );
 		$test_key      = $vendor_mollie['test_key'] ?? null;
 		$live_key      = $vendor_mollie['live_key'] ?? null;
@@ -60,16 +65,12 @@ class Version400 extends AbstractMigration {
 			update_option( MolliePaymentVendor::SETTING_API_KEY_TEST, $test_key );
 			remove_filter( 'kudos_mollie_test_key_validation', '__return_true' );
 		}
-
-		// Always return true, a failure here is not critical.
-		return true;
 	}
 
 	/**
 	 * Migrate custom SMTP config.
 	 */
-	private function migrate_smtp_settings(): bool {
-		$this->logger->info( 'Migrating SMTP settings' );
+	protected function migrate_smtp_settings() {
 		$host       = get_option( '_kudos_smtp_host' ) ?? null;
 		$port       = get_option( '_kudos_smtp_port' ) ?? null;
 		$encryption = get_option( '_kudos_smtp_encryption' ) ?? null;
@@ -105,73 +106,12 @@ class Version400 extends AbstractMigration {
 		}
 
 		update_option( SMTPVendor::SETTING_CUSTOM_SMTP, $new_settings );
-
-		// Always return true, a failure here is not critical.
-		return true;
-	}
-
-	/**
-	 * Migrates donors from custom table to custom post type.
-	 */
-	private function migrate_donors_to_posts(): bool {
-		$table_name = $this->wpdb->prefix . 'kudos_donors';
-
-		// Check if table exists.
-		$prepare = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
-		if ( $this->wpdb->get_var( $prepare ) !== $table_name ) {
-			$this->logger->error( 'Donors table not found', [ 'table_name' => $table_name ] );
-			return false;
-		}
-
-		$query  = "SELECT * FROM $table_name";
-		$donors = $this->wpdb->get_results( $query );
-		$total  = 0;
-
-		$this->logger->info(
-			'Migrating donors',
-			[
-				'ids' => array_map(
-					function ( object $donor ) {
-						return $donor->name;
-					},
-					$donors
-				),
-			]
-		);
-
-		foreach ( $donors as $donor ) {
-
-			$new_donor = DonorPostType::save(
-				[
-					'post_date'                        => $donor->created,
-					DonorPostType::META_FIELD_EMAIL    => $donor->email,
-					DonorPostType::META_FIELD_NAME     => $donor->name,
-					DonorPostType::META_FIELD_BUSINESS_NAME => $donor->business_name,
-					DonorPostType::META_FIELD_STREET   => $donor->street,
-					DonorPostType::META_FIELD_POSTCODE => $donor->postcode,
-					DonorPostType::META_FIELD_CITY     => $donor->city,
-					DonorPostType::META_FIELD_COUNTRY  => $donor->country,
-					DonorPostType::META_FIELD_MODE     => $donor->mode,
-					DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID => $donor->customer_id,
-				]
-			);
-
-			if ( ! $new_donor ) {
-				return false;
-			}
-
-			$this->cache['donor_id'][ $donor->customer_id ] = $new_donor->ID;
-			++$total;
-		}
-
-		$this->logger->info( 'Donors migrated', [ 'count' => $total ] );
-		return true;
 	}
 
 	/**
 	 * Migrate campaigns from a settings array to CampaignPostTypes.
 	 */
-	private function migrate_campaigns_to_posts(): bool {
+	protected function migrate_campaigns_to_posts(): bool {
 		$campaigns = get_option( '_kudos_campaigns', [] );
 
 		// Global settings.
@@ -184,25 +124,12 @@ class Version400 extends AbstractMigration {
 		$terms_url            = get_option( '_kudos_terms_link' );
 		$privacy_url          = get_option( '_kudos_privacy_link' );
 
-		$this->logger->info(
-			'Migrating campaigns',
-			[
-				'names' => array_map(
-					function ( array $campaign ) {
-						return $campaign['name'];
-					},
-					$campaigns
-				),
-			]
-		);
-
 		$total = 0;
 
 		foreach ( $campaigns as $campaign ) {
-
 			$new_campaign = CampaignPostType::save(
 				[
-					'post_title'                           => $campaign['name'],
+					'post_title'                           => $campaign['name'] ?? 'Default',
 					'post_name'                            => $campaign['id'],
 					CampaignPostType::META_FIELD_INITIAL_TITLE => $campaign['modal_title'] ?? '',
 					CampaignPostType::META_FIELD_INITIAL_DESCRIPTION => $campaign['welcome_text'] ?? '',
@@ -233,147 +160,203 @@ class Version400 extends AbstractMigration {
 			}
 
 			// Store old and new ID for later reference.
-			$this->cache['campaign_id'][ $campaign['id'] ] = $new_campaign->ID;
+			$mapping                    = get_transient( 'kudos_campaign_id_map' ) ?? [];
+			$mapping[ $campaign['id'] ] = $new_campaign->ID;
+			set_transient( 'kudos_campaign_id_map', $mapping, DAY_IN_SECONDS );
 			++$total;
 		}
-
-		$this->logger->info( 'Campaigns migrated', [ 'count' => $total ] );
 
 		return true;
 	}
 
 	/**
-	 * Migrate transactions from kudos_transactions table to
-	 * TransactionPostTypes.
+	 * Migrates donors from custom table to custom post type.
 	 */
-	private function migrate_transactions_to_posts(): bool {
-		$table_name = $this->wpdb->prefix . 'kudos_transactions';
+	protected function migrate_donors_to_posts(): bool {
+		$table_name = $this->wpdb->prefix . 'kudos_donors';
 
-		// Check if table exists.
-		$prepare = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
-		if ( $this->wpdb->get_var( $prepare ) !== $table_name ) {
-			$this->logger->error( 'Transactions table not found', [ 'table_name' => $table_name ] );
-			return false;
-		}
-
-		$query          = "SELECT * FROM $table_name";
-		$transactions   = $this->wpdb->get_results( $query );
-		$invoice_number = 1;
-		$total          = 0;
-
-		$this->logger->info(
-			'Migrating transactions',
-			[
-				'ids' => array_map(
-					function ( object $transaction ) {
-						return $transaction->id;
-					},
-					$transactions
-				),
-			]
-		);
-
-		foreach ( $transactions as $transaction ) {
-
-			$new_transaction = TransactionPostType::save(
-				[
-					'post_date'                            => $transaction->created,
-					TransactionPostType::META_FIELD_VALUE  => (int) $transaction->value,
-					TransactionPostType::META_FIELD_CURRENCY => $transaction->currency,
-					TransactionPostType::META_FIELD_STATUS => $transaction->status,
-					TransactionPostType::META_FIELD_METHOD => $transaction->method,
-					TransactionPostType::META_FIELD_MODE   => $transaction->mode,
-					TransactionPostType::META_FIELD_SEQUENCE_TYPE => $transaction->sequence_type,
-					TransactionPostType::META_FIELD_DONOR_ID => $this->cache['donor_id'][ $transaction->customer_id ],
-					TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID => $transaction->transaction_id,
-					TransactionPostType::META_FIELD_REFUNDS => $transaction->refunds,
-					TransactionPostType::META_FIELD_CAMPAIGN_ID => $this->cache['campaign_id'][ $transaction->campaign_id ],
-					TransactionPostType::META_FIELD_MESSAGE => $transaction->message,
-				]
-			);
-
-			// Bail if post not created.
-			if ( ! $new_transaction ) {
-				return false;
-			}
-
-			// If transaction is paid then add invoice number and iterate.
-			if ( 'paid' === $transaction->status ) {
-				TransactionPostType::save(
+		return $this->migrate_from_table(
+			$table_name,
+			'donors',
+			function ( $donor ) {
+				$new_donor = DonorPostType::save(
 					[
-						'ID' => $new_transaction->ID,
-						TransactionPostType::META_FIELD_INVOICE_NUMBER => $invoice_number,
+						'post_date'                        => $donor->created,
+						DonorPostType::META_FIELD_EMAIL    => $donor->email,
+						DonorPostType::META_FIELD_NAME     => $donor->name,
+						DonorPostType::META_FIELD_BUSINESS_NAME => $donor->business_name,
+						DonorPostType::META_FIELD_STREET   => $donor->street,
+						DonorPostType::META_FIELD_POSTCODE => $donor->postcode,
+						DonorPostType::META_FIELD_CITY     => $donor->city,
+						DonorPostType::META_FIELD_COUNTRY  => $donor->country,
+						DonorPostType::META_FIELD_MODE     => $donor->mode,
+						DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID => $donor->customer_id,
 					]
 				);
-				++$invoice_number;
+				if ( ! $new_donor ) {
+					return false;
+				}
+				// Update transient cache.
+				$map                        = get_transient( 'kudos_donor_id_map' ) ?? [];
+				$map[ $donor->customer_id ] = $new_donor->ID;
+				set_transient( 'kudos_donor_id_map', $map, DAY_IN_SECONDS );
+
+				return true;
 			}
-
-			// Store old and new ID for later reference.
-			$this->cache['transaction_id'][ $transaction->transaction_id ] = $new_transaction->ID;
-			++$total;
-		}
-		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
-
-		$this->logger->info( 'Transactions migrated', [ 'count' => $total ] );
-
-		return true;
+		);
 	}
 
 	/**
 	 * Migrate transactions from kudos_transactions table to
 	 * TransactionPostTypes.
 	 */
-	private function migrate_subscriptions_to_posts(): bool {
+	protected function migrate_transactions_to_posts(): bool {
+		$table_name = $this->wpdb->prefix . 'kudos_transactions';
+
+		// Get cache.
+		$donor_cache    = get_transient( 'kudos_donor_id_map' );
+		$campaign_cache = get_transient( 'kudos_campaign_id_map' );
+
+		// Get data.
+		$invoice_number = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER, 1 );
+
+		$result = $this->migrate_from_table(
+			$table_name,
+			'transactions',
+			function ( $transaction ) use ( &$invoice_number, $donor_cache, $campaign_cache ) {
+				$new_transaction = TransactionPostType::save(
+					[
+						'post_date' => $transaction->created,
+						TransactionPostType::META_FIELD_VALUE => (int) $transaction->value,
+						TransactionPostType::META_FIELD_CURRENCY => $transaction->currency,
+						TransactionPostType::META_FIELD_STATUS => $transaction->status,
+						TransactionPostType::META_FIELD_METHOD => $transaction->method,
+						TransactionPostType::META_FIELD_MODE => $transaction->mode,
+						TransactionPostType::META_FIELD_SEQUENCE_TYPE => $transaction->sequence_type,
+						TransactionPostType::META_FIELD_DONOR_ID => $donor_cache[ $transaction->customer_id ],
+						TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID => $transaction->transaction_id,
+						TransactionPostType::META_FIELD_REFUNDS => $transaction->refunds,
+						TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_cache[ $transaction->campaign_id ],
+						TransactionPostType::META_FIELD_MESSAGE => $transaction->message,
+					]
+				);
+
+				// Bail if post not created.
+				if ( ! $new_transaction ) {
+					return false;
+				}
+
+				// If transaction is paid then add invoice number and iterate.
+				if ( 'paid' === $transaction->status ) {
+					TransactionPostType::save(
+						[
+							'ID' => $new_transaction->ID,
+							TransactionPostType::META_FIELD_INVOICE_NUMBER => $invoice_number,
+						]
+					);
+					++$invoice_number;
+				}
+
+				// Store old and new ID for later reference.
+				$mapping                                 = get_transient( 'kudos_transaction_id_map' ) ?? [];
+				$mapping[ $transaction->transaction_id ] = $new_transaction->ID;
+				set_transient( 'kudos_transaction_id_map', $mapping, DAY_IN_SECONDS );
+				return true;
+			}
+		);
+
+		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
+
+		return $result;
+	}
+
+	/**
+	 * Migrate transactions from kudos_transactions table to
+	 * TransactionPostTypes.
+	 */
+	protected function migrate_subscriptions_to_posts(): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_subscriptions';
 
-		// Check if table exists.
-		$prepare = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
-		if ( $this->wpdb->get_var( $prepare ) !== $table_name ) {
-			$this->logger->error( 'Subscriptions table not found', [ 'table_name' => $table_name ] );
+		// Cache.
+		$transaction_cache = get_transient( 'kudos_transaction_id_map' ) ?? [];
+
+		return $this->migrate_from_table(
+			$table_name,
+			'subscriptions',
+			function ( $subscription ) use ( $transaction_cache ) {
+				$new_subscription = SubscriptionPostType::save(
+					[
+						'post_date' => $subscription->created,
+						SubscriptionPostType::META_FIELD_VALUE => (int) $subscription->value,
+						SubscriptionPostType::META_FIELD_CURRENCY => (string) $subscription->currency,
+						SubscriptionPostType::META_FIELD_FREQUENCY => (string) $subscription->frequency,
+						SubscriptionPostType::META_FIELD_YEARS => (int) $subscription->years,
+						SubscriptionPostType::META_FIELD_CUSTOMER_ID => (string) $subscription->customer_id,
+						SubscriptionPostType::META_FIELD_TRANSACTION_ID => (string) $transaction_cache[ $subscription->transaction_id ],
+						SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => (string) $subscription->subscription_id,
+						SubscriptionPostType::META_FIELD_STATUS => (string) $subscription->status,
+					]
+				);
+
+				// Bail if post not created.
+				if ( ! $new_subscription ) {
+					return false;
+				}
+				return true;
+			}
+		);
+	}
+
+	/**
+	 * Generic chunked migration runner.
+	 *
+	 * @param string   $table_name   Full DB table name (with prefix).
+	 * @param string   $step         The step name.
+	 * @param callable $callback     Function to handle each row. Should return bool (true to continue, false to fail).
+	 * @return bool Returns true if this step is complete, false if not or on failure.
+	 */
+	protected function migrate_from_table( string $table_name, string $step, callable $callback ): bool {
+		$offset_key = "{$step}_offset";
+		$offset     = $this->progress[ $offset_key ] ?? 0;
+		$limit      = static::DEFAULT_CHUNK_SIZE;
+
+		// Check table exists.
+		$check = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
+		if ( $this->wpdb->get_var( $check ) !== $table_name ) {
+			$this->logger->error( 'Table not found for migration step', [ 'table' => $table_name ] );
 			return false;
 		}
 
-		$query         = "SELECT * FROM $table_name";
-		$subscriptions = $this->wpdb->get_results( $query );
-		$total         = 0;
+		// Fetch rows.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$query = $this->wpdb->prepare( "SELECT * FROM $table_name LIMIT %d OFFSET %d", $limit, $offset );
+		$rows  = $this->wpdb->get_results( $query );
 
-		$this->logger->info(
-			'Migrating subscriptions',
-			[
-				'ids' => array_map(
-					function ( object $subscription ) {
-						return $subscription->id;
-					},
-					$subscriptions
-				),
-			]
-		);
-
-		foreach ( $subscriptions as $subscription ) {
-
-			$new_subscription = SubscriptionPostType::save(
-				[
-					'post_date'                            => $subscription->created,
-					SubscriptionPostType::META_FIELD_VALUE => (int) $subscription->value,
-					SubscriptionPostType::META_FIELD_CURRENCY => (string) $subscription->currency,
-					SubscriptionPostType::META_FIELD_FREQUENCY => (string) $subscription->frequency,
-					SubscriptionPostType::META_FIELD_YEARS => (int) $subscription->years,
-					SubscriptionPostType::META_FIELD_CUSTOMER_ID => (string) $subscription->customer_id,
-					SubscriptionPostType::META_FIELD_TRANSACTION_ID => (string) $this->cache['transaction_id'][ $subscription->transaction_id ],
-					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => (string) $subscription->subscription_id,
-					SubscriptionPostType::META_FIELD_STATUS => (string) $subscription->status,
-				]
-			);
-
-			// Bail if post not created.
-			if ( ! $new_subscription ) {
-				return false;
-			}
-			++$total;
+		if ( empty( $rows ) ) {
+			$this->logger->info( 'No more rows to process for table', [ 'table' => $table_name ] );
+			return true;
 		}
 
-		$this->logger->info( 'Subscriptions migrated', [ 'count' => $total ] );
+		// Process rows.
+		foreach ( $rows as $row ) {
+			$success = $callback( $row );
 
-		return true;
+			if ( ! $success ) {
+				$this->logger->warning(
+					'Row migration failed.',
+					[
+						'table' => $table_name,
+						'row'   => $row,
+					]
+				);
+				return false;
+			}
+		}
+
+		// Update offset.
+		$this->progress[ $offset_key ] = $offset + \count( $rows );
+		$this->update_progress();
+
+		return \count( $rows ) < $limit;
 	}
 }

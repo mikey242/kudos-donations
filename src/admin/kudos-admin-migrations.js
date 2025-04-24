@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			migrateButton.style.display = 'none';
 			migrateButton.disabled = true;
 			migrationStatus.textContent = __(
-				'Running migrations in the background. This might take a minute.',
+				'Starting migration. This might take a minute.',
 				'kudos-donations'
 			);
 
@@ -31,7 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			},
 		})
 			.then((response) => {
-				if (response.completed) {
+				// eslint-disable-next-line camelcase
+				const { completed, next_offset, progress } = response;
+				if (completed) {
 					// Dismiss notice that has been created.
 					void apiFetch({
 						path: '/kudos/v1/notice/dismiss',
@@ -42,14 +44,27 @@ document.addEventListener('DOMContentLoaded', () => {
 					});
 					migrationStatus.textContent =
 						'Migrations completed successfully!';
-				} else {
-					migrationStatus.textContent = sprintf(
-						/* translators: %s is number of migrations processed */
-						__(`Processed %s migrations…`),
-						response.next_offset
-					);
-					processMigrations(response.next_offset, batch); // Process the next batch.
+					return;
 				}
+
+				const currentStep = progress?.running;
+				const stepOffset = progress?.steps?.[currentStep]?.offset ?? 0;
+
+				const stepLabel = currentStep
+					? currentStep
+							.replace(/_/g, ' ')
+							.replace(/\b\w/g, (l) => l.toUpperCase())
+					: __('Working…');
+
+				migrationStatus.textContent = sprintf(
+					// translators: %1$s is the step label (e.g Transactions) and %2$s is the step offset (e.g. 1000)
+					__('Migrating %1$s: %2$s records processed'),
+					stepLabel,
+					stepOffset
+				);
+
+				// eslint-disable-next-line camelcase
+				processMigrations(next_offset ?? 0, batch);
 			})
 			.catch((error) => {
 				if (error?.message) {
