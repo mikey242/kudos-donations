@@ -106,8 +106,6 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 				$postarr['post_title'] = $single_name . \sprintf( ' (%1$s)', Utils::get_formatted_id( $post_id ) );
 		}
 
-		$this->logger->debug( 'Updating Kudos post', [ 'postarr' => $postarr ] );
-
 		wp_update_post( $postarr );
 	}
 
