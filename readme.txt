@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,14 @@ This can occur as a result of a conflict with your theme or another plugin and t
 6. Automated email receipt
 
 == Changelog ==
+
+= 4.0.2 =
+* Add missing translation calls and domain
+* Remove limit of 10 campaigns visible on campaigns page
+* Show admin notice if EncryptionAwareTrait unable to decrypt option (e.g due to salt change)
+* Add compatibility check during activation
+* Improve migration logic for larger datasets
+* Increase minimum PHP version to 7.4
 
 = 4.0.1 =
 * Update mollie-api-php to 3.0.2
