@@ -184,9 +184,8 @@ class Version400 extends BaseMigration {
 		}
 
 		// Get data.
-		$offset_key = 'donors_offset';
-		$offset     = $this->progress[ $offset_key ] ?? 0;
-		$rows       = $this->get_rows( $table_name, $offset, $limit );
+		$offset = $this->progress['donors']['offset'] ?? 0;
+		$rows   = $this->get_rows( $table_name, $offset, $limit );
 
 		foreach ( $rows as $donor ) {
 			$new_donor = DonorPostType::save(
@@ -213,7 +212,7 @@ class Version400 extends BaseMigration {
 		}
 
 		// Update progress.
-		$this->progress[ $offset_key ] = $offset + \count( $rows );
+		$this->progress['donors']['offset'] = $offset + \count( $rows );
 		$this->update_progress();
 
 		return \count( $rows ) < $limit;
@@ -239,8 +238,7 @@ class Version400 extends BaseMigration {
 
 		// Get data.
 		$invoice_number = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER, 1 );
-		$offset_key     = 'transactions_offset';
-		$offset         = $this->progress[ $offset_key ] ?? 0;
+		$offset         = $this->progress['transactions']['offset'] ?? 0;
 		$rows           = $this->get_rows( $table_name, $offset, $limit );
 
 		foreach ( $rows as $transaction ) {
@@ -285,7 +283,7 @@ class Version400 extends BaseMigration {
 		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
 
 		// Update progress.
-		$this->progress[ $offset_key ] = $offset + \count( $rows );
+		$this->progress['transactions']['offset'] = $offset + \count( $rows );
 		$this->update_progress();
 
 		return \count( $rows ) < $limit;
@@ -309,9 +307,8 @@ class Version400 extends BaseMigration {
 		$transaction_cache = get_transient( 'kudos_transaction_id_map' ) ?? [];
 
 		// Fetch data.
-		$offset_key = 'subscriptions_offset';
-		$offset     = $this->progress[ $offset_key ] ?? 0;
-		$rows       = $this->get_rows( $table_name, $offset, $limit );
+		$offset = $this->progress['subscriptions']['offset'] ?? 0;
+		$rows   = $this->get_rows( $table_name, $offset, $limit );
 
 		foreach ( $rows as $subscription ) {
 			$new_subscription = SubscriptionPostType::save(
@@ -335,7 +332,7 @@ class Version400 extends BaseMigration {
 		}
 
 		// Update progress.
-		$this->progress[ $offset_key ] = $offset + \count( $rows );
+		$this->progress['subscriptions']['offset'] = $offset + \count( $rows );
 		$this->update_progress();
 
 		return \count( $rows ) < $limit;
