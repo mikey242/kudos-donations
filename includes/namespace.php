@@ -8,11 +8,15 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Service\CacheService;
+use IseardMedia\Kudos\Service\CompatibilityService;
 
 /**
  * Handle plugin activation.
  */
 function activate(): void {
+
+	( new CompatibilityService() )->on_plugin_activation();
+
 	PluginFactory::create()->on_plugin_activation();
 
 	/**
