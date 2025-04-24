@@ -59,7 +59,7 @@ export const Table = ({ headerItems }) => {
 					{/* eslint-disable-next-line no-nested-ternary */}
 					{isLoading ? (
 						<TableMessage>
-							<Spinner />
+							<Spinner style={{ margin: 0, padding: '1em' }} />
 						</TableMessage>
 					) : !posts.length && hasLoadedOnce ? (
 						<TableMessage>
