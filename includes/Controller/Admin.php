@@ -115,7 +115,6 @@ class Admin extends AbstractRegistrable {
 					echo '
 					<script type="text/javascript">
 						const notices = document.querySelectorAll(".kudos-notice")
-						console.log(notices)
 						notices.forEach((notice) => {
                             notice.addEventListener("click", function() {
                                 const key = notice.dataset.noticeKey;
