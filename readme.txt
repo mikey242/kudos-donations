@@ -117,6 +117,7 @@ This can occur as a result of a conflict with your theme or another plugin and t
 == Changelog ==
 
 = 4.0.2 =
+* Fix button/form appearing before a campaign is loaded
 * Add missing translation calls and domain
 * Remove limit of 10 campaigns visible on campaigns page
 * Show admin notice if EncryptionAwareTrait unable to decrypt option (e.g due to salt change)
