@@ -26,11 +26,11 @@ class Version400 extends BaseMigration {
 	 */
 	public function get_migration_jobs(): array {
 		return [
-			// 'settings'      => $this->job( [ $this, 'migrate_settings' ], 'Settings' ),
-							'campaigns' => $this->job( [ $this, 'migrate_campaigns_to_posts' ], 'Campaigns' ),
-			'donors'                    => $this->job( [ $this, 'migrate_donors_to_posts' ], 'Donors', true ),
-			'transactions'              => $this->job( [ $this, 'migrate_transactions_to_posts' ], 'Transactions', true ),
-			'subscriptions'             => $this->job( [ $this, 'migrate_subscriptions_to_posts' ], 'Subscriptions', true ),
+			'settings'      => $this->job( [ $this, 'migrate_settings' ], 'Settings' ),
+			'campaigns'     => $this->job( [ $this, 'migrate_campaigns_to_posts' ], 'Campaigns' ),
+			'donors'        => $this->job( [ $this, 'migrate_donors_to_posts' ], 'Donors', true ),
+			'transactions'  => $this->job( [ $this, 'migrate_transactions_to_posts' ], 'Transactions', true ),
+			'subscriptions' => $this->job( [ $this, 'migrate_subscriptions_to_posts' ], 'Subscriptions', true ),
 		];
 	}
 
