@@ -82,7 +82,7 @@ abstract class BaseMigration implements MigrationInterface {
 			$chunked  = $job['chunked'] ?? false;
 			$args     = $job['args'] ?? [];
 
-			if ( $this->run_step( $step, fn() => $callback( ...$args ), $chunked ) ) {
+			if ( $this->run_step( $step, fn() => $callback( $step, ...$args ), $chunked ) ) {
 				return true;
 			}
 		}

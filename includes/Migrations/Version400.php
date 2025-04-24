@@ -175,9 +175,10 @@ class Version400 extends BaseMigration {
 	/**
 	 * Migrates donors from custom table to custom post type.
 	 *
-	 * @param int $limit The number of rows to process.
+	 * @param string $step The name of this step.
+	 * @param int    $limit The number of rows to process.
 	 */
-	protected function migrate_donors_to_posts( int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	protected function migrate_donors_to_posts( string $step, int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_donors';
 
 		// Check table exists.
@@ -186,7 +187,7 @@ class Version400 extends BaseMigration {
 		}
 
 		// Get data.
-		$offset = $this->progress['donors']['offset'] ?? 0;
+		$offset = $this->progress[ $step ]['offset'] ?? 0;
 		$rows   = $this->get_rows( $table_name, $offset, $limit );
 
 		foreach ( $rows as $donor ) {
@@ -214,7 +215,7 @@ class Version400 extends BaseMigration {
 		}
 
 		// Update progress.
-		$this->progress['donors']['offset'] = $offset + \count( $rows );
+		$this->progress[ $step ]['offset'] = $offset + \count( $rows );
 		$this->update_progress();
 
 		return \count( $rows ) < $limit;
@@ -224,9 +225,10 @@ class Version400 extends BaseMigration {
 	 * Migrate transactions from kudos_transactions table to
 	 * TransactionPostTypes.
 	 *
-	 * @param int $limit The number of rows to process.
+	 * @param string $step The name of this step.
+	 * @param int    $limit The number of rows to process.
 	 */
-	protected function migrate_transactions_to_posts( int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	protected function migrate_transactions_to_posts( string $step, int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_transactions';
 
 		// Check table exists.
@@ -240,7 +242,7 @@ class Version400 extends BaseMigration {
 
 		// Get data.
 		$invoice_number = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER, 1 );
-		$offset         = $this->progress['transactions']['offset'] ?? 0;
+		$offset         = $this->progress[ $step ]['offset'] ?? 0;
 		$rows           = $this->get_rows( $table_name, $offset, $limit );
 
 		foreach ( $rows as $transaction ) {
@@ -285,7 +287,7 @@ class Version400 extends BaseMigration {
 		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
 
 		// Update progress.
-		$this->progress['transactions']['offset'] = $offset + \count( $rows );
+		$this->progress[ $step ]['offset'] = $offset + \count( $rows );
 		$this->update_progress();
 
 		return \count( $rows ) < $limit;
@@ -295,9 +297,10 @@ class Version400 extends BaseMigration {
 	 * Migrate transactions from kudos_transactions table to
 	 * TransactionPostTypes.
 	 *
-	 * @param int $limit The number of rows to process.
+	 * @param string $step The name of this step.
+	 * @param int    $limit The number of rows to process.
 	 */
-	protected function migrate_subscriptions_to_posts( int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	protected function migrate_subscriptions_to_posts( string $step, int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_subscriptions';
 
 		// Check table exists.
@@ -309,7 +312,7 @@ class Version400 extends BaseMigration {
 		$transaction_cache = get_transient( 'kudos_transaction_id_map' ) ?? [];
 
 		// Fetch data.
-		$offset = $this->progress['subscriptions']['offset'] ?? 0;
+		$offset = $this->progress[ $step ]['offset'] ?? 0;
 		$rows   = $this->get_rows( $table_name, $offset, $limit );
 
 		foreach ( $rows as $subscription ) {
@@ -334,7 +337,7 @@ class Version400 extends BaseMigration {
 		}
 
 		// Update progress.
-		$this->progress['subscriptions']['offset'] = $offset + \count( $rows );
+		$this->progress[ $step ]['offset'] = $offset + \count( $rows );
 		$this->update_progress();
 
 		return \count( $rows ) < $limit;
