@@ -7,6 +7,7 @@
  * @copyright 2024 Iseard Media
  *
  * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
  */
 
 namespace IseardMedia\Kudos\Migrations;
@@ -364,7 +365,6 @@ class Version400 extends BaseMigration {
 	 * @return array|object|null
 	 */
 	private function get_rows( string $table_name, int $offset, int $limit ) {
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$query = $this->wpdb->prepare( "SELECT * FROM $table_name LIMIT %d OFFSET %d", $limit, $offset );
 		return $this->wpdb->get_results( $query );
 	}
