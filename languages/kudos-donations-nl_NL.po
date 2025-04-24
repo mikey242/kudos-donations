@@ -505,13 +505,13 @@ msgstr "%s ingepland"
 #: includes/Domain/AbstractContentType.php:144
 msgctxt "Label used when an item is switched to a draft"
 msgid "%s reverted to draft"
-msgstr "Label gebruikt wanneer een item wordt teruggezet naar concept%s teruggezet naar concept"
+msgstr "%s teruggezet naar concept"
 
 #. translators: %s: Custom post type singular name.
 #: includes/Domain/AbstractContentType.php:142
 msgctxt "Label used when an item is published with private visibility"
 msgid "%s published privately"
-msgstr "Label gebruikt wanneer een item privé wordt gepubliceerd%s privé gepubliceerd"
+msgstr "%s privé gepubliceerd"
 
 #. translators: %s: Custom post type singular name.
 #: includes/Domain/AbstractContentType.php:140
@@ -547,26 +547,26 @@ msgstr "Filter %s lijst"
 #: includes/Domain/AbstractContentType.php:130
 msgctxt "Label in the media frame for using a featured image"
 msgid "Use as %s featured image"
-msgstr "Label in het mediaframe voor het gebruik van een uitgelichte afbeeldingGebruik als %s uitgelichte afbeelding"
+msgstr "Gebruik als %s uitgelichte afbeelding"
 
 #. translators: %s: Custom post type singular name.
 #: includes/Domain/AbstractContentType.php:128
 msgctxt "Label for removing the featured image"
 msgid "Remove %s featured image"
-msgstr "Label voor het verwijderen van de uitgelichte afbeeldingVerwijder %s uitgelichte afbeelding"
+msgstr "Verwijder %s uitgelichte afbeelding"
 
 #. translators: %s: Custom post type singular name.
 #: includes/Domain/AbstractContentType.php:124
 #: includes/Domain/AbstractContentType.php:126
 msgctxt "Label for setting the featured image"
 msgid "%s Featured image"
-msgstr "Label voor het instellen van de uitgelichte afbeelding%s Uitgelichte afbeelding"
+msgstr "%s Uitgelichte afbeelding"
 
 #. translators: %s: Custom post type singular name.
 #: includes/Domain/AbstractContentType.php:122
 msgctxt "Label for the media frame filter"
 msgid "Uploaded to this %s"
-msgstr "Label voor de mediaframe filterGeüpload naar deze %s"
+msgstr "Geüpload naar deze %s"
 
 #. translators: %s: Custom post type singular name.
 #: includes/Domain/AbstractContentType.php:120
@@ -626,7 +626,7 @@ msgstr "Bekijk %s Naam"
 #: includes/Domain/AbstractContentType.php:102
 msgctxt "Label for viewing a singular item"
 msgid "View %s Name"
-msgstr "Label voor het bekijken van een enkel itemBekijk %s Naam"
+msgstr "Bekijk %s Naam"
 
 #. translators: %s: Custom post type singular name.
 #: includes/Domain/AbstractContentType.php:100
