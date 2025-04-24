@@ -7,6 +7,8 @@
  * @copyright 2024 Iseard Media
  */
 
+declare( strict_types=1 );
+
 namespace IseardMedia\Kudos\Migrations;
 
 use IseardMedia\Kudos\Helper\WpDb;
