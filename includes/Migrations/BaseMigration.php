@@ -110,11 +110,7 @@ abstract class BaseMigration implements MigrationInterface {
 			return false;
 		}
 
-		$this->log_step( $name, 'Starting step...' );
-
 		$result = $callback();
-
-		$this->log_step( $name, 'Step complete', [ 'offset' => $this->progress[ "{$name}_offset" ] ?? 0 ] );
 
 		if ( $chunked ) {
 			if ( true === $result ) {
@@ -140,17 +136,6 @@ abstract class BaseMigration implements MigrationInterface {
 	 */
 	protected function job( callable $callback, ?string $label = null, bool $chunked = false, array $args = [] ): array {
 		return compact( 'callback', 'label', 'chunked', 'args' );
-	}
-
-	/**
-	 * Log a step message.
-	 *
-	 * @param string $step The step name.
-	 * @param string $message The message.
-	 * @param ?array $context Optional context.
-	 */
-	protected function log_step( string $step, string $message, array $context = [] ): void {
-		$this->logger->info( \sprintf( '%s: %s', strtoupper( $step ), $message ), $context );
 	}
 
 	/**
