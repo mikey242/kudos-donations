@@ -147,6 +147,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 						'button_label' => __( 'Donate now', 'kudos-donations' ),
 						'campaign_id'  => '',
 						'type'         => 'button',
+						'alignment'    => 'left',
 					],
 					$args,
 					'kudos'
