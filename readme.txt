@@ -116,6 +116,9 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 4.0.3 =
+* Add ability to set button alignment
+
 = 4.0.2 =
 * Fix button/form appearing before a campaign is loaded
 * Add missing translation calls and domain
