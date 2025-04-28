@@ -36,6 +36,10 @@
     "type": {
       "type": "string",
       "default": "button"
+    },
+    "alignment": {
+      "type": "string",
+      "default": "left"
     }
   },
   "editorScript": "kudos-editor-script",

@@ -9,7 +9,12 @@ import { useCampaignContext } from '../contexts/CampaignContext';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
 
-export const KudosForm = ({ displayAs, label, previewMode = false }) => {
+export const KudosForm = ({
+	displayAs,
+	label,
+	alignment,
+	previewMode = false,
+}) => {
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
 	const [timestamp, setTimestamp] = useState(0);
 	const [formError, setFormError] = useState(null);
@@ -113,6 +118,7 @@ export const KudosForm = ({ displayAs, label, previewMode = false }) => {
 			style={campaign?.meta?.custom_styles}
 			errors={campaignErrors}
 			className={previewMode && 'pointer-events-none'}
+			alignment={alignment}
 		>
 			<>
 				{isFSLogo && <KudosLogoFullScreenAnimated />}

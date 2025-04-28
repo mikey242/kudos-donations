@@ -17,7 +17,7 @@ import { KudosLogo } from './components/KudosLogo';
 
 const ButtonEdit = (props) => {
 	const {
-		attributes: { button_label, type },
+		attributes: { button_label, type, alignment },
 		setAttributes,
 	} = props;
 	const { campaign, isLoading: campaignLoaded } = useCampaignContext();
@@ -26,6 +26,10 @@ const ButtonEdit = (props) => {
 		useEntityRecords('postType', 'kudos_campaign', {
 			per_page: -1,
 		});
+
+	const onChangeAlignment = (newAlignment) => {
+		setAttributes({ alignment: newAlignment });
+	};
 
 	const onChangeButtonLabel = (newValue) => {
 		setAttributes({ button_label: newValue });
@@ -113,12 +117,36 @@ const ButtonEdit = (props) => {
 							onChange={onChangeType}
 						/>
 						{type === 'button' && (
-							<TextControl
-								label={__('Button Label', 'kudos-donations')}
-								value={button_label}
-								onChange={onChangeButtonLabel}
-								__nextHasNoMarginBottom
-							/>
+							<>
+								<TextControl
+									label={__(
+										'Button Label',
+										'kudos-donations'
+									)}
+									value={button_label}
+									onChange={onChangeButtonLabel}
+									__nextHasNoMarginBottom
+								/>
+								<RadioControl
+									label="Alignment"
+									onChange={onChangeAlignment}
+									selected={alignment}
+									options={[
+										{
+											label: 'Left',
+											value: 'left',
+										},
+										{
+											label: 'Center',
+											value: 'center',
+										},
+										{
+											label: 'Right',
+											value: 'right',
+										},
+									]}
+								/>
+							</>
 						)}
 					</PanelBody>
 				</InspectorControls>
@@ -128,6 +156,7 @@ const ButtonEdit = (props) => {
 					displayAs={type}
 					label={button_label}
 					previewMode={true}
+					alignment={alignment}
 				/>
 			) : (
 				!campaignLoaded && (

@@ -9,6 +9,7 @@ function Render({
 	style,
 	className,
 	fonts,
+	alignment,
 	errors = null,
 }) {
 	// Set ready = false if there are stylesheets to load
@@ -23,6 +24,14 @@ function Render({
 			setReady(true);
 		}
 	};
+
+	const alignmentClasses = {
+		left: 'justify-start',
+		center: 'justify-center',
+		right: 'justify-end',
+	};
+
+	const alignmentResult = alignmentClasses[alignment];
 
 	const renderErrors = () => (
 		<>
@@ -68,7 +77,13 @@ function Render({
 			</style>
 
 			<div id="container">
-				<div className={clsx(className, 'font-body text-gray-900')}>
+				<div
+					className={clsx(
+						className,
+						'flex font-body text-gray-900',
+						alignmentResult
+					)}
+				>
 					{ready && !errors ? <>{children}</> : <>{renderErrors()}</>}
 				</div>
 			</div>
