@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.0.2
+Stable tag: 4.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,8 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 4.0.3 =
 * Add ability to set button alignment
+* Migration notice now shows "Resume migration" instead of "Update now" if already started
+* Minor security fixes
 
 = 4.0.2 =
 * Fix button/form appearing before a campaign is loaded
