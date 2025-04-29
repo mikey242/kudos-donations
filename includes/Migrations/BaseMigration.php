@@ -81,7 +81,7 @@ abstract class BaseMigration implements MigrationInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Run the step with provided limit.
 	 */
 	public function step(): bool {
 		foreach ( $this->get_migration_jobs() as $step => $job ) {
@@ -141,7 +141,8 @@ abstract class BaseMigration implements MigrationInterface {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns a generic summary of progress for frontend display.
+	 * Automatically detects current step and offsets for chunked steps.
 	 */
 	public function get_progress_summary(): array {
 		$steps   = [];
