@@ -25,7 +25,7 @@ class Version401 extends BaseMigration {
 	/**
 	 * Performs additional cleanup not related to prior.
 	 */
-	private function cleanup(): bool {
+	public function cleanup(): bool {
 		$this->logger->info( 'Cleaning up old Kudos Donations data' );
 
 		// Remove old options.
