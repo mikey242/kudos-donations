@@ -34,20 +34,4 @@ interface MigrationInterface {
 	 * @phpstan-return array<string, MigrationJob>
 	 */
 	public function get_migration_jobs(): array;
-
-	/**
-	 * Returns a generic summary of progress for frontend display.
-	 * Automatically detects current step and offsets for chunked steps.
-	 */
-	public function get_progress_summary(): array;
-
-	/**
-	 * Run the step with provided limit.
-	 */
-	public function step(): bool;
-
-	/**
-	 * Return true if the migration is complete.
-	 */
-	public function is_complete(): bool;
 }
