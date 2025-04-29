@@ -18,7 +18,7 @@ class Version401 extends BaseMigration {
 	 */
 	public function get_migration_jobs(): array {
 		return [
-			'cleanup' => $this->job( [ $this, 'cleanup' ] ),
+			'cleanup' => $this->job( [ $this, 'cleanup' ], 'Cleaning up' ),
 		];
 	}
 
@@ -38,21 +38,11 @@ class Version401 extends BaseMigration {
 		delete_option( '_kudos_smtp_from' );
 		delete_option( '_kudos_campaigns' );
 
-		// Remove donors table.
-		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_donors';
-		$this->wpdb->query( $del_query );
-
-		// Remove transaction table.
-		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_transactions';
-		$this->wpdb->query( $del_query );
-
-		// Remove subscriptions table.
-		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_subscriptions';
-		$this->wpdb->query( $del_query );
-
-		// Remove log table.
-		$del_query = 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . 'kudos_log';
-		$this->wpdb->query( $del_query );
+		// Remove old tables.
+		$tables = [ 'kudos_donors', 'kudos_transactions', 'kudos_subscriptions', 'kudos_log' ];
+		foreach ( $tables as $table ) {
+			$this->wpdb->query( 'DROP TABLE IF EXISTS ' . $this->wpdb->prefix . $table );
+		}
 		return true;
 	}
 }
