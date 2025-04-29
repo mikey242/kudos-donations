@@ -60,6 +60,13 @@ abstract class BaseMigration implements MigrationInterface {
 	}
 
 	/**
+	 * Returns true if the migration has already been started.
+	 */
+	public function has_started(): bool {
+		return ! empty( $this->progress );
+	}
+
+	/**
 	 * Helper to update progress in DB.
 	 */
 	protected function update_progress(): void {

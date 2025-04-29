@@ -157,12 +157,24 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
+	 * Returns true if a migration is already in progress.
+	 */
+	private function is_migration_in_progress(): bool {
+		foreach ( $this->get_migrations() as $migration ) {
+			if ( $migration->has_started() && ! $migration->is_complete() ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Creates an admin notice with update button.
 	 */
 	private function add_migration_notice(): void {
 		$form  = "<form method='post'>";
 		$form .= "<button id='kudos-migrate-button' class='button-primary confirm' name=" . self::ACTION_MIGRATE . " type='submit'>";
-		$form .= __( 'Update now', 'kudos-donations' );
+		$form .= $this->is_migration_in_progress() ? __( 'Resume migration', 'kudos-donations' ) : __( 'Update now', 'kudos-donations' );
 		$form .= '</button>';
 		$form .= "<i id='kudos-migration-status'></i>";
 		$form .= '</form>';
