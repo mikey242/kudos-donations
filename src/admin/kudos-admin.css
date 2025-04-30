@@ -1,13 +1,8 @@
 :root {
 	--kudos-rounded: 0.5rem;
-}
-
-#wpcontent {
-	padding-left: 0 !important;
-}
-
-.auto-fold #wpcontent {
-	padding-left: 0;
+	--wp-admin-theme-color: #ff9f1c;
+	--wp-admin-theme-color-darker-10: #ff8e1c;
+	--wp-admin-theme-color-darker-20: #ff821c;
 }
 
 .rounded {
