@@ -11,7 +11,6 @@ import {
 	CustomCSSTab,
 } from './tabs';
 import { store as noticesStore } from '@wordpress/notices';
-import { Flex } from '@wordpress/components';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
 import { useAdminContext, useCampaignsContext } from '../contexts';
