@@ -2,8 +2,6 @@ import React from 'react';
 import { KudosLogo } from '../../block/components/KudosLogo';
 import { __ } from '@wordpress/i18n';
 import {
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalHeading as Heading,
 	Flex,
 	FlexBlock,
 	FlexItem,
@@ -32,12 +30,19 @@ export const AdminHeader = () => {
 									</ResponsiveWrapper>
 								</FlexItem>
 								<FlexItem>
-									<Heading level="1" size="22">
+									<span
+										style={{
+											fontSize: '1.5rem',
+											lineHeight: '1.5rem',
+											fontWeight: 600,
+										}}
+										className="kudos-title"
+									>
 										{__(
 											'Kudos Donations',
 											'kudos-donations'
 										)}
-									</Heading>
+									</span>
 								</FlexItem>
 								<FlexItem>
 									<p className="kudos-version">
