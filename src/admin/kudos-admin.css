@@ -72,9 +72,22 @@
 
 .kudos-admin-page {
 
+	h1 {
+		font-weight: 600;
+		padding: 0;
+		margin: .67em 0;
+	}
+
 	.kudos-settings-header {
-		padding: 1.24rem;
-		margin-bottom: 1rem;
+		position: sticky;
+		top: var(--wp-admin--admin-bar--height);
+		margin-top: -10px;
+		margin-inline: -22px -20px;
+		padding-block: 1em;
+		padding-inline: 22px 20px;
+		background-color: #fff;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		z-index: 999;
 
 		.kudos-logo {
 			width: 2.1rem;
@@ -106,6 +119,7 @@
 
 		.status-icon {
 			display: inline-block;
+			vertical-align: middle;
 			width: 15px;
 			height: 15px;
 			border-radius: 100%;
