@@ -5,7 +5,7 @@ import { CampaignsPage } from './components/campaigns/CampaignsPage';
 import { AdminProvider, CampaignsProvider } from './components';
 
 domReady(() => {
-	const container = document.getElementById('kudos-campaigns');
+	const container = document.getElementById('root');
 	if (container) {
 		const root = createRoot(container);
 		root.render(

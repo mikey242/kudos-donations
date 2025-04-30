@@ -43,7 +43,9 @@ class CampaignAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	 * {@inheritDoc}
 	 */
 	public function callback(): void {
-		echo '<div id="kudos-campaigns" class="kudos-admin-page"></div>';
+		echo '<div class="wrap kudos-admin-page">';
+			printf( '<div id="root" data-title="%s"></div>', esc_attr( $this->get_page_title() ) );
+		echo '</div>';
 	}
 
 	/**
