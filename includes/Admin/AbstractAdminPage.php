@@ -74,10 +74,17 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 
 		if ( $this instanceof HasAssetsInterface ) {
 			add_action(
-				"load-$screen_id",
-				function (): void {
-					add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
-					do_action( "{$this->get_menu_slug()}_page_register_assets" );
+				'admin_enqueue_scripts',
+				function ( $hook ) use ( $screen_id ): void {
+					if ( $screen_id === $hook ) {
+						/**
+						 * Load assets.
+						 *
+						 * @var HasAssetsInterface $this
+						 */
+						$this->register_assets();
+						do_action( "{$this->get_menu_slug()}_page_register_assets" );
+					}
 				}
 			);
 		}
