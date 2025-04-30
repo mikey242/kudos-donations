@@ -44,12 +44,17 @@ export const InnerAdminProvider = ({ children }) => {
 		updateParams,
 		deleteParams,
 		searchParams,
+		setPageTitle,
 	};
 
 	return (
 		<AdminContext.Provider value={data}>
 			<AdminHeader />
-			<>{children}</>
+			<Notices />
+			<div className="admin-wrap">
+				<h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>
+				<>{children}</>
+			</div>
 		</AdminContext.Provider>
 	);
 };

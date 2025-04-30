@@ -58,7 +58,7 @@ export const CampaignsPage = () => {
 
 	return (
 		<>
-			<div className="admin-wrap">
+			<>
 				{campaignId ? (
 					currentCampaign && (
 						<>
@@ -75,7 +75,7 @@ export const CampaignsPage = () => {
 				) : (
 					<CampaignsTable handleEdit={updateParam} />
 				)}
-			</div>
+			</>
 		</>
 	);
 };
