@@ -9,7 +9,6 @@ import {
 	ResponsiveWrapper,
 } from '@wordpress/components';
 import { useAdminContext } from './contexts';
-import { Notices } from './Notices';
 
 export const AdminHeader = () => {
 	const { headerContent } = useAdminContext();
@@ -59,7 +58,6 @@ export const AdminHeader = () => {
 					</Flex>
 				</div>
 			</Panel>
-			<Notices />
 		</>
 	);
 };
