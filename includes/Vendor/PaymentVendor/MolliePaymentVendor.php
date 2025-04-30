@@ -178,8 +178,10 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
             update_option(self::SETTING_PAYMENT_METHODS, []);
             return $value;
         } else {
+	        $should_skip_refresh = apply_filters('kudos_mollie_' . $mode . '_key_validation', false);
+	        $callback = $should_skip_refresh ? null : [$this, 'refresh'];
             // Save encrypted value and return only '*'.
-            return $this->save_encrypted_key($value, $encrypted_option, [$this, 'refresh']);
+            return $this->save_encrypted_key($value, $encrypted_option, $callback);
         }
     }
 
