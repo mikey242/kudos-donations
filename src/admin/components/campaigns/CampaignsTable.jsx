@@ -38,7 +38,7 @@ export const CampaignsTable = ({ handleEdit }) => {
 			valueCallback: (post) => (
 				<Button
 					showTooltip={true}
-					style={{ textDecoration: 'none' }}
+					style={{ textDecoration: 'none', color: 'inherit' }}
 					label={sprintf(
 						/* translators: %s is the campaign name */
 						__('Edit %s', 'kudos-donations'),
