@@ -14,7 +14,7 @@ import { store as noticesStore } from '@wordpress/notices';
 import { Flex } from '@wordpress/components';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import { useCampaignsContext } from '../contexts';
+import { useAdminContext, useCampaignsContext } from '../contexts';
 import { applyFilters } from '@wordpress/hooks';
 
 const CampaignEdit = ({ campaign, recurringAllowed }) => {
@@ -28,6 +28,13 @@ const CampaignEdit = ({ campaign, recurringAllowed }) => {
 	const { reset, handleSubmit, formState } = methods;
 	const { createWarningNotice } = useDispatch(noticesStore);
 	const { handleUpdate } = useCampaignsContext();
+	const { setPageTitle } = useAdminContext();
+
+	useEffect(() => {
+		setPageTitle(
+			__('Campaign', 'kudos-donations') + ': ' + campaign.title.raw
+		);
+	}, [campaign, setPageTitle]);
 
 	useEffect(() => {
 		if (campaign) {
@@ -85,13 +92,6 @@ const CampaignEdit = ({ campaign, recurringAllowed }) => {
 
 	return (
 		<>
-			<Flex justify="center">
-				<h1 className="text-center my-5">
-					{__('Campaign', 'kudos-donations') +
-						': ' +
-						campaign.title.raw}
-				</h1>
-			</Flex>
 			<FormProvider {...methods}>
 				<form id="campaign-form" onSubmit={handleSubmit(onSubmit)}>
 					<AdminTabPanel tabs={tabs} />

@@ -12,12 +12,18 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Table } from '../Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useCampaignsContext } from '../contexts';
+import { useAdminContext, useCampaignsContext } from '../contexts';
 import GenerateShortcode from './GenerateShortcode';
+import { useEffect } from '@wordpress/element';
 
 export const CampaignsTable = ({ handleEdit }) => {
 	const { currencies } = window.kudos;
+	const { setPageTitle } = useAdminContext();
 	const { handleNew, handleDelete, handleDuplicate } = useCampaignsContext();
+
+	useEffect(() => {
+		setPageTitle(__('Your campaigns', 'kudos-donations'));
+	}, [setPageTitle]);
 
 	const newCampaign = (e) => {
 		handleNew(e).then((response) => {
@@ -125,9 +131,6 @@ export const CampaignsTable = ({ handleEdit }) => {
 
 	return (
 		<>
-			<Flex justify="center">
-				<h1>{__('Your campaigns', 'kudos-donations')}</h1>
-			</Flex>
 			<Table headerItems={headerItems} />
 			<Spacer marginTop={'5'} />
 			<Flex justify="center">

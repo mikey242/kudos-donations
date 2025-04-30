@@ -33,6 +33,11 @@ export const SettingsPage = () => {
 	});
 	const { formState } = formMethods;
 	const formRef = useRef(null);
+	const { setPageTitle } = useAdminContext();
+
+	useEffect(() => {
+		setPageTitle(__('Settings', 'kudos-donations'));
+	}, [setPageTitle]);
 
 	// Define tabs and panels
 	const tabs = applyFilters(
@@ -118,7 +123,6 @@ export const SettingsPage = () => {
 	};
 
 	return (
-		// Show spinner if not yet loaded
 		<>
 			{settingsReady && (
 				<FormProvider {...formMethods}>
