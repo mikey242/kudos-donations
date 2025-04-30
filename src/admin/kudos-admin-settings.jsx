@@ -6,7 +6,7 @@ import './kudos-admin.css';
 import { AdminProvider, SettingsProvider } from './components';
 
 domReady(() => {
-	const container = document.getElementById('kudos-settings');
+	const container = document.getElementById('root');
 	if (container) {
 		const root = createRoot(container);
 		root.render(
