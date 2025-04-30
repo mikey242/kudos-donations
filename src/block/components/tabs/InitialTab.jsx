@@ -146,7 +146,11 @@ export const InitialTab = ({
 						),
 					}
 				}
-				placeholder={__('Full name', 'kudos-donations')}
+				placeholder={
+					__('Full name', 'kudos-donations') +
+					(anonymous &&
+						' (' + __('optional', 'kudos-donations') + ')')
+				}
 			/>
 
 			<TextControl
@@ -160,7 +164,11 @@ export const InitialTab = ({
 						),
 					}
 				}
-				placeholder={__('Email', 'kudos-donations')}
+				placeholder={
+					__('Email', 'kudos-donations') +
+					(anonymous &&
+						' (' + __('optional', 'kudos-donations') + ')')
+				}
 			/>
 
 			{donationType === 'both' && (
