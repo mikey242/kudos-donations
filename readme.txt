@@ -118,6 +118,8 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 = 4.0.4 =
 * Improve campaign and settings page layout
+* Show 'optional' next to Name/Email when anonymous donations enabled
+* Fix Mollie settings not migration correctly
 * Fix incorrect invoice number after migration
 
 = 4.0.3 =
