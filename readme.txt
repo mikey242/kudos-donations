@@ -116,6 +116,10 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 4.0.4 =
+* Improve campaign and settings page layout
+* Fix incorrect invoice number after migration
+
 = 4.0.3 =
 * Add ability to set button alignment
 * Migration notice now shows "Resume migration" instead of "Update now" if already started
