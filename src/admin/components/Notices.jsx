@@ -22,6 +22,7 @@ export const Notices = () => {
 		<>
 			<div className="admin-wrap">
 				<NoticeList notices={defaultNotices} onRemove={removeNotice} />
+				<div className="wp-header-end"></div>
 			</div>
 			<SnackbarList notices={snackbarNotices} onRemove={removeNotice} />
 		</>
