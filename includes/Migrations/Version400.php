@@ -273,7 +273,7 @@ class Version400 extends BaseMigration {
 				TransactionPostType::save(
 					[
 						'ID' => $new_transaction->ID,
-						TransactionPostType::META_FIELD_INVOICE_NUMBER => $invoice_number,
+						TransactionPostType::META_FIELD_INVOICE_NUMBER => $invoice_number++,
 					]
 				);
 			}
