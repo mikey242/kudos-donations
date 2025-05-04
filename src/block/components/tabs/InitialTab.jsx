@@ -147,9 +147,12 @@ export const InitialTab = ({
 					}
 				}
 				placeholder={
-					__('Full name', 'kudos-donations') +
-					(anonymous &&
-						' (' + __('optional', 'kudos-donations') + ')')
+					anonymous
+						? __('Full name', 'kudos-donations') +
+							' (' +
+							__('optional', 'kudos-donations') +
+							')'
+						: __('Full name', 'kudos-donations')
 				}
 			/>
 
@@ -165,9 +168,12 @@ export const InitialTab = ({
 					}
 				}
 				placeholder={
-					__('Email', 'kudos-donations') +
-					(anonymous &&
-						' (' + __('optional', 'kudos-donations') + ')')
+					anonymous
+						? __('Email', 'kudos-donations') +
+							' (' +
+							__('optional', 'kudos-donations') +
+							')'
+						: __('Email', 'kudos-donations')
 				}
 			/>
 
