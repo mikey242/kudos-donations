@@ -116,6 +116,9 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 4.0.5 =
+* Fix issue with name and email input placeholders showing 'false'
+
 = 4.0.4 =
 * Improve campaign and settings page layout
 * Show 'optional' next to Name/Email when anonymous donations enabled
