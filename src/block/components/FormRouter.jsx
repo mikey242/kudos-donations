@@ -128,6 +128,47 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		}
 	}, [step]); // Only rerun when `step` changes
 
+	const Tab = {
+		1: (
+			<InitialTab
+				campaign={campaign}
+				title={campaign.meta.initial_title}
+				description={campaign.meta.initial_description}
+				currency={campaign.meta.currency}
+				minimumDonation={campaign.meta.minimum_donation}
+				maximumDonation={campaign.meta.maximum_donation}
+				donationType={campaign.meta.donation_type}
+				amountType={campaign.meta.amount_type}
+				fixedAmounts={campaign.meta.fixed_amounts}
+				showGoal={campaign.meta.show_goal}
+				goal={campaign.meta.goal}
+				total={campaign.total}
+				anonymous={campaign.meta.allow_anonymous}
+			/>
+		),
+		2: (
+			<FrequencyTab
+				title={campaign.meta.subscription_title}
+				description={campaign.meta.subscription_description}
+				frequencyOptions={campaign.meta.frequency_options}
+			/>
+		),
+		3: (
+			<AddressTab
+				required={campaign.meta.address_required}
+				title={campaign.meta.address_title}
+				description={campaign.meta.address_description}
+			/>
+		),
+		4: (
+			<MessageTab
+				title={campaign.meta.message_title}
+				description={campaign.meta.message_description}
+			/>
+		),
+		5: <SummaryTab campaign={campaign} />,
+	};
+
 	return (
 		<FormProvider {...methods}>
 			<div
@@ -140,7 +181,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				style={{ height: height + 'px' }}
 			>
 				<form id="form" onSubmit={methods.handleSubmit(onSubmit)}>
-					<Tab step={currentStep} campaign={campaign} />
+					{Tab[currentStep]}
 					<div
 						id="form-buttons"
 						className="mt-8 flex justify-between relative"
@@ -211,55 +252,6 @@ const steps = {
 	5: {
 		name: 'Summary',
 	},
-};
-
-const Tab = ({ step, campaign }) => {
-	switch (step) {
-		case 1:
-			return (
-				<InitialTab
-					title={campaign.meta.initial_title}
-					description={campaign.meta.initial_description}
-					currency={campaign.meta.currency}
-					minimumDonation={campaign.meta.minimum_donation}
-					maximumDonation={campaign.meta.maximum_donation}
-					donationType={campaign.meta.donation_type}
-					amountType={campaign.meta.amount_type}
-					fixedAmounts={campaign.meta.fixed_amounts}
-					showGoal={campaign.meta.show_goal}
-					goal={campaign.meta.goal}
-					total={campaign.total}
-					anonymous={campaign.meta.allow_anonymous}
-				/>
-			);
-		case 2:
-			return (
-				<FrequencyTab
-					title={campaign.meta.subscription_title}
-					description={campaign.meta.subscription_description}
-					frequencyOptions={campaign.meta.frequency_options}
-				/>
-			);
-		case 3:
-			return (
-				<AddressTab
-					required={campaign.meta.address_required}
-					title={campaign.meta.address_title}
-					description={campaign.meta.address_description}
-				/>
-			);
-		case 4:
-			return (
-				<MessageTab
-					title={campaign.meta.message_title}
-					description={campaign.meta.message_description}
-				/>
-			);
-		case 5:
-			return <SummaryTab campaign={campaign} />;
-		default:
-			return null;
-	}
 };
 
 const checkRequirements = (data, target) => {
