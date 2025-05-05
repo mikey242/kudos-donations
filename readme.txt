@@ -116,6 +116,12 @@ This can occur as a result of a conflict with your theme or another plugin and t
 
 == Changelog ==
 
+= 4.0.6 =
+* Improve vendor ready detection in admin (now uses same logic as front-end)
+* Fix 'undefined' error when only adding a live Mollie key
+* Fix Mollie being in unready state after migration
+* Fix deprecation warning for various block editor controls
+
 = 4.0.5 =
 * Fix issue with name and email input placeholders showing 'false'
 
