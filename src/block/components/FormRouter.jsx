@@ -131,7 +131,6 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	const Tabs = {
 		1: (
 			<InitialTab
-				campaign={campaign}
 				title={campaign.meta.initial_title}
 				description={campaign.meta.initial_description}
 				currency={campaign.meta.currency}
