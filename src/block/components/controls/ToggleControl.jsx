@@ -44,7 +44,7 @@ export const ToggleControl = ({ name, rules, label, help, isDisabled }) => {
 							'ml-3'
 						)}
 					>
-						<span className="text-sm font-bold text-gray-700">
+						<span className="text-sm text-gray-700">
 							{label ??
 								(value
 									? __('On', 'kudos-donations')
