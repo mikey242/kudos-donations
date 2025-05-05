@@ -30,18 +30,11 @@ export const SettingsProvider = ({ children }) => {
 		useDispatch(noticesStore);
 
 	useEffect(() => {
-		if (settingsRequest.ready) {
-			const vendor = settings._kudos_payment_vendor;
-			if (vendor) {
-				const mode = settings[`_kudos_vendor_${vendor}_api_mode`];
-				if (mode) {
-					setIsVendorReady(
-						settings[`_kudos_vendor_${vendor}_api_key_${mode}`]
-					);
-				}
-			}
-		}
-	}, [settings, settingsRequest.ready]);
+		apiFetch({
+			path: '/kudos/v1/payment/ready',
+			method: 'GET',
+		}).then((r) => setIsVendorReady(r));
+	}, [settings]);
 
 	const fetchSettings = async () => {
 		await api.loadPromise;
