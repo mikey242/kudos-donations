@@ -45,7 +45,6 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	public const SETTING_API_KEY_ENCRYPTED_LIVE = '_kudos_vendor_mollie_api_key_encrypted_live';
 	public const SETTING_API_KEY_ENCRYPTED_TEST = '_kudos_vendor_mollie_api_key_encrypted_test';
 	public const SETTING_PAYMENT_METHODS = '_kudos_vendor_mollie_payment_methods';
-    private string $api_mode = 'test';
 	public MollieApiClient $api_client;
 
 	/**
@@ -59,7 +58,6 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$this->api_mode   = get_option( self::SETTING_API_MODE );
 		$this->config_client();
 		$this->set_user_agent();
 
@@ -86,7 +84,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * {@inheritDoc}
 	 */
 	public function is_ready(): bool {
-        $mode = $this->api_mode;
+        $mode = $this->get_api_mode();
         $option = constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode));
 		$key = $this->get_decrypted_key($option);
 		$methods = get_option(self::SETTING_PAYMENT_METHODS);
@@ -99,7 +97,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * @return string
 	 */
 	public function get_api_mode(): string {
-		return $this->api_mode;
+		return get_option(self::SETTING_API_MODE, 'test');
 	}
 
     /**
@@ -107,7 +105,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      */
     protected function config_client(): void {
         // Gets the key associated with the specified mode.
-        $mode = $this->api_mode;
+        $mode = $this->get_api_mode();
         $option = constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode));
         $key = $this->get_decrypted_key($option);
 
@@ -159,31 +157,27 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      * @param string $old_value The previous value.
      * @param string $option The option name.
      *
-     * @return string|WP_Error
+     * @return string
      */
-    public function handle_key_update( string $value, string $old_value, string $option): string {
-        // Determine whether the option is LIVE or TEST.
-        if($option === self::SETTING_API_KEY_LIVE) {
-            $mode = 'live';
-        } else {
-            $mode = 'test';
-        }
+	public function handle_key_update(string $value, string $old_value, string $option): string {
+		$mode = ($option === self::SETTING_API_KEY_LIVE) ? 'live' : 'test';
+		$encrypted_option = constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode));
+		$filter_name = "kudos_mollie_{$mode}_key_validation";
 
-        // Define which encrypted key to update.
-        $encrypted_option = constant("self::SETTING_API_KEY_ENCRYPTED_" . strtoupper($mode) );
+		if (!$value) {
+			update_option($encrypted_option, '');
+			update_option(self::SETTING_PAYMENT_METHODS, []);
+			return $value;
+		}
 
-        if(!$value) {
-            // Clear value.
-            update_option($encrypted_option,'');
-            update_option(self::SETTING_PAYMENT_METHODS, []);
-            return $value;
-        } else {
-	        $should_skip_refresh = apply_filters('kudos_mollie_' . $mode . '_key_validation', false);
-	        $callback = $should_skip_refresh ? null : [$this, 'refresh'];
-            // Save encrypted value and return only '*'.
-            return $this->save_encrypted_key($value, $encrypted_option, $callback);
-        }
-    }
+		$should_skip_refresh = apply_filters($filter_name, false);
+
+		// Auto-set the mode to match the key being updated
+		update_option(self::SETTING_API_MODE, $mode);
+
+		$callback = !$should_skip_refresh ? [$this, 'refresh'] : null;
+		return $this->save_encrypted_key($value, $encrypted_option, $callback);
+	}
 
 
 	/**
