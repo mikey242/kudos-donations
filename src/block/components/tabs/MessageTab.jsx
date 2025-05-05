@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -5,7 +6,10 @@ import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import { TextAreaControl } from '../controls';
 
-export const MessageTab = ({ title, description, buttons }) => {
+export const MessageTab = ({ campaign }) => {
+	const {
+		meta: { message_title, message_description },
+	} = campaign;
 	const { setFocus } = useFormContext();
 
 	useEffect(() => {
@@ -13,7 +17,7 @@ export const MessageTab = ({ title, description, buttons }) => {
 	}, [setFocus]);
 
 	return (
-		<BaseTab title={title} description={description} buttons={buttons}>
+		<BaseTab title={message_title} description={message_description}>
 			<TextAreaControl
 				name="message"
 				placeholder={__('Message', 'kudos-donations')}

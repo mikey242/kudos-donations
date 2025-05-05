@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { __, _n, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -6,21 +7,23 @@ import { useEffect, useMemo } from '@wordpress/element';
 import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
 import { ProgressBar } from '../ProgressBar';
 
-export const InitialTab = ({
-	title,
-	description,
-	buttons,
-	minimumDonation = 1,
-	maximumDonation,
-	donationType,
-	amountType,
-	fixedAmounts,
-	goal,
-	showGoal,
-	total,
-	anonymous,
-	currency,
-}) => {
+export const InitialTab = ({ campaign }) => {
+	const {
+		meta: {
+			initial_title,
+			initial_description,
+			currency,
+			minimum_donation,
+			donation_type,
+			fixed_amounts,
+			amountType,
+			maximum_donation,
+			anonymous,
+			show_goal,
+			goal,
+		},
+		total,
+	} = campaign;
 	const currencySymbol = window.kudos?.currencies[currency];
 	const { setValue } = useFormContext();
 	const watchFixed = useWatch({ name: 'valueFixed' });
@@ -32,22 +35,22 @@ export const InitialTab = ({
 		_n(
 			'Minimum donation is %d euro',
 			'Minimum donation is %d euros',
-			minimumDonation,
+			minimum_donation,
 			'kudos-donations'
 		),
-		minimumDonation
+		minimum_donation
 	);
 
 	const isRecurringAllowed = useMemo(() => {
-		return donationType === 'both' && !!watchEmail;
-	}, [donationType, watchEmail]);
+		return donation_type === 'both' && !!watchEmail;
+	}, [donation_type, watchEmail]);
 
 	const fixedAmountOptions = useMemo(() => {
-		return fixedAmounts?.map((value) => ({
+		return fixed_amounts?.map((value) => ({
 			value,
 			label: `${currencySymbol ?? ''}${value.trim()}`,
 		}));
-	}, [fixedAmounts, currencySymbol]);
+	}, [fixed_amounts, currencySymbol]);
 
 	useEffect(() => {
 		if (!isRecurringAllowed) {
@@ -70,16 +73,16 @@ export const InitialTab = ({
 	}, [setValue, watchOpen]);
 
 	useEffect(() => {
-		if (donationType !== 'both') {
-			setValue('recurring', donationType === 'recurring');
+		if (donation_type !== 'both') {
+			setValue('recurring', donation_type === 'recurring');
 		} else if (!watchEmail) {
 			setValue('recurring', false);
 		}
-	}, [donationType, setValue, watchEmail]);
+	}, [donation_type, setValue, watchEmail]);
 
 	return (
-		<BaseTab title={title} description={description} buttons={buttons}>
-			{showGoal && goal > 0 && (
+		<BaseTab title={initial_title} description={initial_description}>
+			{show_goal && goal > 0 && (
 				<div className="my-5">
 					<ProgressBar
 						goal={goal}
@@ -118,11 +121,11 @@ export const InitialTab = ({
 				rules={{
 					required: valueError,
 					min: {
-						value: minimumDonation,
+						value: minimum_donation,
 						message: valueError,
 					},
 					max: {
-						value: maximumDonation,
+						value: maximum_donation,
 						message: sprintf(
 							/* translators: %1$s is the currency and %2$s is the maximum donation value */
 							__(
@@ -130,7 +133,7 @@ export const InitialTab = ({
 								'kudos-donations'
 							),
 							currencySymbol,
-							maximumDonation
+							maximum_donation
 						),
 					},
 				}}
@@ -139,7 +142,7 @@ export const InitialTab = ({
 			<TextControl
 				name="name"
 				rules={
-					(!anonymous || 'recurring' === donationType) && {
+					(!anonymous || 'recurring' === donation_type) && {
 						required: __(
 							'Your name is required',
 							'kudos-donations'
@@ -160,7 +163,7 @@ export const InitialTab = ({
 				name="email"
 				type="email"
 				rules={
-					(!anonymous || 'recurring' === donationType) && {
+					(!anonymous || 'recurring' === donation_type) && {
 						required: __(
 							'Your email is required',
 							'kudos-donations'
@@ -177,7 +180,7 @@ export const InitialTab = ({
 				}
 			/>
 
-			{donationType === 'both' && (
+			{donation_type === 'both' && (
 				<div className="flex justify-center mt-3">
 					<ToggleControl
 						isDisabled={!watchEmail}
