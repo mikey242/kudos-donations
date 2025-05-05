@@ -128,7 +128,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		}
 	}, [step]); // Only rerun when `step` changes
 
-	const Tab = {
+	const Tabs = {
 		1: (
 			<InitialTab
 				campaign={campaign}
@@ -181,7 +181,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				style={{ height: height + 'px' }}
 			>
 				<form id="form" onSubmit={methods.handleSubmit(onSubmit)}>
-					{Tab[currentStep]}
+					{Tabs[currentStep]}
 					<div
 						id="form-buttons"
 						className="mt-8 flex justify-between relative"
