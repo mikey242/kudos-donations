@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useFormContext } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import React from 'react';
@@ -6,8 +7,10 @@ import { useEffect, useMemo } from '@wordpress/element';
 import countryList from 'react-select-country-list';
 import { SelectControl, TextControl } from '../controls';
 
-export const AddressTab = (props) => {
-	const { title, description, buttons, required } = props;
+export const AddressTab = ({ campaign }) => {
+	const {
+		meta: { address_title, address_description, address_required },
+	} = campaign;
 	const countryOptions = useMemo(() => countryList().getData(), []);
 	const { setFocus } = useFormContext();
 
@@ -16,7 +19,7 @@ export const AddressTab = (props) => {
 	}, [setFocus]);
 
 	return (
-		<BaseTab title={title} description={description} buttons={buttons}>
+		<BaseTab title={address_title} description={address_description}>
 			<TextControl
 				name="business_name"
 				placeholder={__('Business name', 'kudos-donations')}
@@ -25,7 +28,7 @@ export const AddressTab = (props) => {
 				name="street"
 				rules={{
 					required: {
-						value: required,
+						value: address_required,
 						message: __('Street required', 'kudos-donations'),
 					},
 				}}
@@ -35,7 +38,7 @@ export const AddressTab = (props) => {
 				name="postcode"
 				rules={{
 					required: {
-						value: required,
+						value: address_required,
 						message: __('Postcode required', 'kudos-donations'),
 					},
 				}}
@@ -45,7 +48,7 @@ export const AddressTab = (props) => {
 				name="city"
 				rules={{
 					required: {
-						value: required,
+						value: address_required,
 						message: __('City required', 'kudos-donations'),
 					},
 				}}
@@ -57,7 +60,7 @@ export const AddressTab = (props) => {
 				options={countryOptions}
 				rules={{
 					required: {
-						value: required,
+						value: address_required,
 						message: __('Country required', 'kudos-donations'),
 					},
 				}}

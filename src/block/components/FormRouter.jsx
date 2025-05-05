@@ -9,13 +9,22 @@ import {
 	SummaryTab,
 } from './tabs';
 import { Button } from './controls';
-import { useLayoutEffect, useRef, useState } from '@wordpress/element';
+import { useLayoutEffect, useMemo, useRef, useState } from '@wordpress/element';
 import { clsx } from 'clsx';
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	LockClosedIcon,
 } from '@heroicons/react/24/outline';
+
+const checkRequirements = (tabs, data, target) => {
+	const reqs = tabs[target]?.requirements;
+	if (!reqs) {
+		return true;
+	}
+
+	return Object.entries(reqs).every(([key, val]) => data[key] === val);
+};
 
 export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	const [height, setHeight] = useState('');
@@ -36,6 +45,40 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		},
 	});
 
+	const Tabs = useMemo(
+		() => ({
+			1: {
+				name: 'Initial',
+				element: <InitialTab campaign={campaign} />,
+			},
+			2: {
+				name: 'Recurring',
+				element: <FrequencyTab campaign={campaign} />,
+				requirements: {
+					recurring: true,
+				},
+			},
+			3: {
+				name: 'Address',
+				element: <AddressTab campaign={campaign} />,
+				requirements: {
+					address_enabled: true,
+				},
+			},
+			4: {
+				name: 'Message',
+				element: <MessageTab campaign={campaign} />,
+			},
+			5: {
+				name: 'Summary',
+				element: <SummaryTab campaign={campaign} />,
+			},
+		}),
+		[campaign]
+	);
+
+	const currentTab = Tabs[currentStep];
+
 	const handlePrev = () => {
 		if (currentStep === 1) {
 			return;
@@ -44,7 +87,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		const state = { ...methods.getValues(), ...campaign.meta };
 
 		// Find next available step.
-		while (!checkRequirements(state, prev) && prev >= 1) {
+		while (!checkRequirements(Tabs, state, prev) && prev >= 1) {
 			prev--;
 		}
 		setFormState((prevState) => ({
@@ -58,7 +101,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		let nextStep = currentStep + 1;
 
 		// Find next available step.
-		while (!checkRequirements(state, nextStep) && nextStep <= 10) {
+		while (!checkRequirements(Tabs, state, nextStep) && nextStep <= 10) {
 			nextStep++;
 		}
 
@@ -110,11 +153,10 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 					target.classList.remove(
 						'translate-x-1',
 						'opacity-0',
-						'section-' +
-							steps[prevStep.current]?.name?.toLowerCase()
+						'section-' + Tabs[prevStep.current]?.name?.toLowerCase()
 					);
 					target.classList.add(
-						'section-' + steps[step]?.name?.toLowerCase()
+						'section-' + Tabs[step]?.name?.toLowerCase()
 					);
 					prevStep.current = step; // Update the previous step to the current step
 				}, 200);
@@ -126,47 +168,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 
 			return () => resizeObserver.disconnect();
 		}
-	}, [step]); // Only rerun when `step` changes
-
-	const Tabs = {
-		1: (
-			<InitialTab
-				title={campaign.meta.initial_title}
-				description={campaign.meta.initial_description}
-				currency={campaign.meta.currency}
-				minimumDonation={campaign.meta.minimum_donation}
-				maximumDonation={campaign.meta.maximum_donation}
-				donationType={campaign.meta.donation_type}
-				amountType={campaign.meta.amount_type}
-				fixedAmounts={campaign.meta.fixed_amounts}
-				showGoal={campaign.meta.show_goal}
-				goal={campaign.meta.goal}
-				total={campaign.total}
-				anonymous={campaign.meta.allow_anonymous}
-			/>
-		),
-		2: (
-			<FrequencyTab
-				title={campaign.meta.subscription_title}
-				description={campaign.meta.subscription_description}
-				frequencyOptions={campaign.meta.frequency_options}
-			/>
-		),
-		3: (
-			<AddressTab
-				title={campaign.meta.address_title}
-				description={campaign.meta.address_description}
-				required={campaign.meta.address_required}
-			/>
-		),
-		4: (
-			<MessageTab
-				title={campaign.meta.message_title}
-				description={campaign.meta.message_description}
-			/>
-		),
-		5: <SummaryTab campaign={campaign} />,
-	};
+	}, [Tabs, step]); // Only rerun when `step` changes
 
 	return (
 		<FormProvider {...methods}>
@@ -180,7 +182,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				style={{ height: height + 'px' }}
 			>
 				<form id="form" onSubmit={methods.handleSubmit(onSubmit)}>
-					{Tabs[currentStep]}
+					{currentTab?.element}
 					<div
 						id="form-buttons"
 						className="mt-8 flex justify-between relative"
@@ -204,12 +206,12 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 							className="ml-auto text-base"
 							isBusy={isBusy}
 							icon={
-								steps[currentStep].name === 'Summary' && (
+								currentTab.name === 'Summary' && (
 									<LockClosedIcon className="mr-2 w-5 h-5" />
 								)
 							}
 						>
-							{steps[currentStep].name === 'Summary' ? (
+							{currentTab.name === 'Summary' ? (
 								<p>{__('Submit', 'kudos-donations')}</p>
 							) : (
 								<>
@@ -223,49 +225,4 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 			</div>
 		</FormProvider>
 	);
-};
-
-// Form router config.
-const steps = {
-	1: {
-		name: 'Initial',
-	},
-	2: {
-		name: 'Recurring',
-		requirements: {
-			recurring: true,
-		},
-	},
-	3: {
-		name: 'Address',
-		requirements: {
-			address_enabled: true,
-		},
-	},
-	4: {
-		name: 'Message',
-		requirements: {
-			message_enabled: true,
-		},
-	},
-	5: {
-		name: 'Summary',
-	},
-};
-
-const checkRequirements = (data, target) => {
-	const reqs = steps[target].requirements;
-	if (reqs) {
-		// Requirements found for target
-		for (const [key, value] of Object.entries(reqs)) {
-			// Iterate through requirements and check if they match data
-			if (value !== data[key]) {
-				// Requirement not satisfied, not OK to proceed
-				return false;
-			}
-		}
-		return true;
-	}
-	// No requirements found, OK to proceed
-	return true;
 };
