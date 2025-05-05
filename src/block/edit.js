@@ -64,6 +64,7 @@ const ButtonEdit = (props) => {
 						}) || []
 				}
 				__nextHasNoMarginBottom
+				__next40pxDefaultSize
 			/>
 		);
 	};
@@ -126,6 +127,7 @@ const ButtonEdit = (props) => {
 									value={button_label}
 									onChange={onChangeButtonLabel}
 									__nextHasNoMarginBottom
+									__next40pxDefaultSize
 								/>
 								<RadioControl
 									label="Alignment"
