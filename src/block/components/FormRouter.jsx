@@ -155,9 +155,9 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		),
 		3: (
 			<AddressTab
-				required={campaign.meta.address_required}
 				title={campaign.meta.address_title}
 				description={campaign.meta.address_description}
+				required={campaign.meta.address_required}
 			/>
 		),
 		4: (
