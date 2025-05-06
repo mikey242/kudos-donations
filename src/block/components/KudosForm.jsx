@@ -8,6 +8,7 @@ import Render from './Render';
 import { useCampaignContext } from '../contexts/CampaignContext';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
+import * as FrontControls from './controls';
 
 export const KudosForm = ({
 	displayAs,
@@ -26,6 +27,9 @@ export const KudosForm = ({
 	const isForm = displayAs === 'form';
 	const isModal = displayAs === 'button';
 	const isFSLogo = displayAs === 'fslogo';
+
+	// Add controls to kudos property for external access.
+	window.kudos.FrontControls = FrontControls;
 
 	useEffect(() => {
 		setTimestamp(Date.now());
