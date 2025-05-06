@@ -16,6 +16,8 @@ import {
 	ChevronRightIcon,
 	LockClosedIcon,
 } from '@heroicons/react/24/outline';
+import { applyFilters } from '@wordpress/hooks';
+import BaseTab from './tabs/BaseTab';
 
 const checkRequirements = (tabs, data, target) => {
 	const reqs = tabs[target]?.requirements;
@@ -46,48 +48,59 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	});
 
 	const Tabs = useMemo(
-		() => ({
-			1: {
-				name: 'Initial',
-				element: <InitialTab campaign={campaign} />,
-			},
-			2: {
-				name: 'Recurring',
-				element: <FrequencyTab campaign={campaign} />,
-				requirements: {
-					recurring: true,
-				},
-			},
-			3: {
-				name: 'Address',
-				element: <AddressTab campaign={campaign} />,
-				requirements: {
-					address_enabled: true,
-				},
-			},
-			4: {
-				name: 'Message',
-				element: <MessageTab campaign={campaign} />,
-			},
-			5: {
-				name: 'Summary',
-				element: <SummaryTab campaign={campaign} />,
-			},
-		}),
+		() =>
+			applyFilters(
+				'kudosFormTabs',
+
+				[
+					{
+						name: 'Initial',
+						element: InitialTab,
+					},
+					{
+						name: 'Recurring',
+						element: FrequencyTab,
+						requirements: {
+							recurring: true,
+						},
+					},
+					{
+						name: 'Address',
+						element: AddressTab,
+						requirements: {
+							address_enabled: true,
+						},
+					},
+					{
+						name: 'Message',
+						element: MessageTab,
+						requirements: {
+							message_enabled: true,
+						},
+					},
+					{
+						name: 'Summary',
+						element: SummaryTab,
+					},
+				],
+				campaign,
+				BaseTab
+			),
 		[campaign]
 	);
 
 	const currentTab = Tabs[currentStep];
+	const CurrentTab = currentTab.element;
 
 	const handlePrev = () => {
-		if (currentStep === 1) {
+		if (currentStep === 0) {
 			return;
 		}
 		let prev = currentStep - 1;
 		const state = { ...methods.getValues(), ...campaign.meta };
 
 		// Find next available step.
-		while (!checkRequirements(Tabs, state, prev) && prev >= 1) {
+		while (!checkRequirements(Tabs, state, prev) && prev >= 0) {
 			prev--;
 		}
 		setFormState((prevState) => ({
@@ -101,7 +114,10 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		let nextStep = currentStep + 1;
 
 		// Find next available step.
-		while (!checkRequirements(Tabs, state, nextStep) && nextStep <= 10) {
+		while (
+			!checkRequirements(Tabs, state, nextStep) &&
+			nextStep <= Tabs.length
+		) {
 			nextStep++;
 		}
 
@@ -113,8 +129,8 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	};
 
 	const onSubmit = (data) => {
-		if (currentStep < 5) {
-			return handleNext(data, currentStep + 1);
+		if (currentStep < Tabs.length - 1) {
+			return handleNext(data);
 		}
 
 		setIsBusy(true);
@@ -182,12 +198,12 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				style={{ height: height + 'px' }}
 			>
 				<form id="form" onSubmit={methods.handleSubmit(onSubmit)}>
-					{currentTab?.element}
+					<CurrentTab campaign={campaign} />
 					<div
 						id="form-buttons"
 						className="mt-8 flex justify-between relative"
 					>
-						{currentStep > 1 && (
+						{currentStep > 0 && (
 							<Button
 								type="button"
 								className="text-base"

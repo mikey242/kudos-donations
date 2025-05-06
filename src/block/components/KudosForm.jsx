@@ -19,7 +19,7 @@ export const KudosForm = ({
 	const [timestamp, setTimestamp] = useState(0);
 	const [formError, setFormError] = useState(null);
 	const [formState, setFormState] = useState({
-		currentStep: 1,
+		currentStep: 0,
 		formData: {},
 	});
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,7 +44,7 @@ export const KudosForm = ({
 	const resetForm = () => {
 		setFormState((prev) => ({
 			...prev,
-			currentStep: 1,
+			currentStep: 0,
 			formData: {},
 		}));
 	};
