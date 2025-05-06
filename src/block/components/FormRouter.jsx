@@ -35,6 +35,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 	const [isBusy, setIsBusy] = useState(false);
 	const elementRef = useRef(null);
 	const firstUpdate = useRef(true);
+	const timeoutRef = useRef(null);
 	const methods = useForm({
 		defaultValues: {
 			recurring: false,
@@ -163,7 +164,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				const newHeight = target.querySelector('form').offsetHeight;
 				setHeight(newHeight);
 
-				const timeout = setTimeout(() => {
+				timeoutRef.current = setTimeout(() => {
 					setHeight('auto'); // Allow form to grow if validation message appears.
 					setCurrentStep(step);
 					target.classList.remove(
@@ -176,13 +177,14 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 					);
 					prevStep.current = step; // Update the previous step to the current step
 				}, 200);
-
-				return () => clearTimeout(timeout);
 			});
 
 			resizeObserver.observe(target.querySelector('form'));
 
-			return () => resizeObserver.disconnect();
+			return () => {
+				resizeObserver.disconnect();
+				clearTimeout(timeoutRef.current);
+			};
 		}
 	}, [Tabs, step]); // Only rerun when `step` changes
 
