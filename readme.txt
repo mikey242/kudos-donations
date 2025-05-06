@@ -113,6 +113,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.0.7 =
+* Fix bug where message tab is shown even when disabled
+
 = 4.0.6 =
 * Improve vendor ready detection in admin (now uses same logic as front-end)
 * Fix 'undefined' error when only adding a live Mollie key
