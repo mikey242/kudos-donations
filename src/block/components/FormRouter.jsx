@@ -195,7 +195,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				id="form-container"
 				className={clsx(
 					isBusy && 'opacity-50',
-					'transition-all duration-200'
+					'w-full transition-all duration-200'
 				)}
 				style={{ height: height + 'px' }}
 			>
