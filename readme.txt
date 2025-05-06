@@ -92,18 +92,15 @@ Here is a list of the shortcode attributes:
 * *button_label* = The label to display for the button.
 * *campaign_id* = ID of the campaign to use for this button.
 * *type* = Whether to show as a button with pop-up or just the form. Can be "button" or "form".
+* *alignment* = How to align the button. Can be "left", "right" or "center"
 
 e.g:
 
 ~~~~
-[kudos button_label="Donate now" campaign_id="default"]
+[kudos button_label="Donate now" campaign_id="default" alignment="center"]
 ~~~~
 
 For general information on how to use shortcodes, please visit [this page](https://codex.wordpress.org/shortcode).
-
-= The donation modal (pop-up) does not appear correctly. =
-
-This can occur as a result of a conflict with your theme or another plugin and the solution can be different for each website. A quick and easy fix to try is to enable the "Modal in footer" option under the help tab in settings.
 
 == Screenshots ==
 
