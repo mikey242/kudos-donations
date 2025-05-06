@@ -115,6 +115,7 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.0.7 =
 * Fix bug where message tab is shown even when disabled
+* Update various dependencies
 
 = 4.0.6 =
 * Improve vendor ready detection in admin (now uses same logic as front-end)
