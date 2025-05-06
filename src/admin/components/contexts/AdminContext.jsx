@@ -18,6 +18,8 @@ export const InnerAdminProvider = ({ children }) => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [headerContent, setHeaderContent] = useState(null);
 	const [pageTitle, setPageTitle] = useState('');
+
+	// Add controls to kudos property for external access.
 	window.kudos.AdminControls = AdminControls;
 
 	const updateParam = (name, value) => {
