@@ -36,6 +36,11 @@ jobs:
           php-version: ${{ env.PHP_VERSION }}
           tools: composer
 
+      - name: Install PHP-Scoper globally
+        run: |
+          composer global require humbug/php-scoper
+          echo "$HOME/.composer/vendor/bin" >> $GITHUB_PATH
+
       - name: Lint PHP
         run: |
           composer install --no-ansi --no-interaction --no-progress --prefer-dist
@@ -92,6 +97,11 @@ jobs:
         with:
           php-version: ${{ env.PHP_VERSION }}
           tools: composer
+
+      - name: Install PHP-Scoper globally
+        run: |
+          composer global require humbug/php-scoper
+          echo "$HOME/.composer/vendor/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
