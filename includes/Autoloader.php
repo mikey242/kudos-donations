@@ -59,7 +59,7 @@ class Autoloader {
 				<div class="notice notice-error">
 					<p>
 						<?php
-							esc_html__( 'Your installation of Kudos Donations is incomplete.', 'kudos-donations' )
+							_e( 'Your installation of Kudos Donations is incomplete.', 'kudos-donations' )
 						?>
 					</p>
 				</div>
