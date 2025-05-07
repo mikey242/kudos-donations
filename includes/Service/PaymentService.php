@@ -84,6 +84,8 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 				// Add campaign variables if available.
 				if ( $campaign ) {
 					$vars['{{campaign_name}}'] = $campaign->post_title;
+				} else {
+					$vars['({{campaign_name}})'] = '';
 				}
 
 				// Post content ready.
