@@ -31,16 +31,12 @@ export const PaymentStatus = ({ transactionId }) => {
 		const checkTransactionStatus = async () => {
 			try {
 				const nonce = getNonceFromUrl();
-				console.log(nonce);
 				const response = await apiFetch({
 					path: `/kudos/v1/payment/status/?id=${transactionId}`,
 					headers: {
 						'X-Kudos-Nonce': nonce,
 					},
 				});
-
-				console.log(response);
-
 				switch (response.data.status) {
 					case 'paid':
 						const placeholders = {
