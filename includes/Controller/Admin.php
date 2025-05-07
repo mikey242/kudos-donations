@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos\Controller;
 use IseardMedia\Kudos\Admin\DebugAdminPage;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
+use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
@@ -93,6 +94,26 @@ class Admin extends AbstractRegistrable {
 						$log_files = DebugAdminPage::get_logs();
 						foreach ( $log_files as $log_file ) {
 							wp_delete_file( $log_file );
+						}
+					}
+					break;
+				case 'kudos_assign_orphan_transactions_to_campaign':
+					if ( wp_verify_nonce( $nonce, 'kudos_assign_orphan_transactions_to_campaign' ) ) {
+						$campaign_id = $_POST['kudos_campaign'];
+
+						if ( ! $campaign_id ) {
+							break;
+						}
+
+						$transactions = TransactionPostType::get_posts( [ TransactionPostType::META_FIELD_CAMPAIGN_ID => '' ] );
+						$this->logger->info( \sprintf( 'Assigning %s orphan transactions to campaign', \count( $transactions ) ), [ 'campaign_id' => $campaign_id ] );
+						foreach ( $transactions as $transaction ) {
+							TransactionPostType::save(
+								[
+									'ID' => $transaction->ID,
+									TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_id,
+								]
+							);
 						}
 					}
 					break;

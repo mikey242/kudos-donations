@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
+use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\MigrationService;
 use Monolog\Handler\RotatingFileHandler;
 
@@ -241,7 +242,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 								performing any of these actions.</strong></p>
 						<hr/>
 
-						<p>Settings actions.</p>
+						<h2>Settings actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_settings' ); ?>
 							<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_clear_settings'>
@@ -251,7 +252,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 						<hr/>
 
-						<p>Campaign actions.</p>
+						<h2>Campaign actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_campaigns' ); ?>
 							<button type='submit' class="button-secondary confirm" name='kudos_action'
@@ -262,7 +263,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 						<hr/>
 
-						<p>Cache actions.</p>
+						<h2>Cache actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_twig_cache' ); ?>
 							<button class="button-secondary confirm" type='submit' name='kudos_action'
@@ -286,7 +287,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 						<hr/>
 
-						<p>Log actions.</p>
+						<h2>Log actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_logs' ); ?>
 							<button class="button-secondary confirm" type='submit' name='kudos_action'
@@ -296,7 +297,25 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 						<hr/>
 
-						<p>Migration History:</p>
+						<h2>Transaction actions</h2>
+						<form action="" method='post' style="display: inline">
+							<?php wp_nonce_field( 'kudos_assign_orphan_transactions_to_campaign' ); ?>
+							<label for="kudos_campaign"><?php esc_html_e( 'Assign unassigned transaction to campaign:', 'kudos-donations' ); ?></label><br/><select name="kudos_campaign" id="kudos_campaign">
+								<?php
+									$campaigns = CampaignPostType::get_posts();
+								foreach ( $campaigns as $campaign ) {
+									echo '<option value="' . esc_attr( $campaign->ID ) . '">' . esc_html( $campaign->post_title ) . '</option>';
+								}
+								?>
+							</select>
+							<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_assign_orphan_transactions_to_campaign'>
+								Assign
+							</button>
+						</form>
+
+						<hr/>
+
+						<h2>Migration History:</h2>
 						<ul>
 						<?php
 						foreach ( get_option( MigrationService::SETTING_MIGRATION_HISTORY ) as $migration ) {
