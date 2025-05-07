@@ -74,6 +74,7 @@
       "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
     ],
     "run-scoper": [
+      "composer bin php-scoper require --dev humbug/php-scoper",
       "vendor/bin/php-scoper add-prefix --config=scoper.inc.php",
       "bash post-scoper.sh"
     ],
