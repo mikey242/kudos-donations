@@ -21,7 +21,7 @@
 
 namespace IseardMedia\Kudos;
 
-use Monolog\Logger;
+use KudosDonationsDeps\Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 
 // If this file is called directly, abort.

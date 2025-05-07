@@ -13,7 +13,7 @@ namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\MigrationService;
-use Monolog\Handler\RotatingFileHandler;
+use KudosDonationsDeps\Monolog\Handler\RotatingFileHandler;
 
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
 
