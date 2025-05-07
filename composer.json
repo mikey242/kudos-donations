@@ -13,6 +13,7 @@
       "php": "7.4"
     },
     "allow-plugins": {
+      "bamarni/composer-bin-plugin": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true,
       "typisttech/imposter-plugin": false
@@ -34,6 +35,7 @@
     "woocommerce/action-scheduler": "^3.9"
   },
   "require-dev": {
+    "bamarni/composer-bin-plugin": "^1.8",
     "php-stubs/wordpress-tests-stubs": "^6.3",
     "phpcompatibility/php-compatibility": "^9.3",
     "phpcompatibility/phpcompatibility-wp": "*",
@@ -72,14 +74,16 @@
       "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
     ],
     "run-scoper": [
-      "php-scoper add-prefix --config=scoper.inc.php",
+      "vendor/bin/php-scoper add-prefix --config=scoper.inc.php",
       "bash post-scoper.sh"
     ],
     "post-install-cmd" : [
-      "@clean-unused-files"
+      "@clean-unused-files",
+      "@run-scoper"
     ],
     "post-update-cmd": [
-      "@clean-unused-files"
+      "@clean-unused-files",
+      "@run-scoper"
     ]
   },
   "autoload": {

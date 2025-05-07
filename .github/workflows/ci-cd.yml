@@ -87,15 +87,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Run PHP-Scoper in Docker
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/app \
-            -w /app \
-            humbugphp/php-scoper:latest \
-            php-scoper add-prefix --config=scoper.inc.php
-            bash post-scoper.sh
-
       - name: Set up PHP with Composer
         uses: shivammathur/setup-php@v2
         with:
