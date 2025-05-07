@@ -93,7 +93,8 @@ jobs:
             -v ${{ github.workspace }}:/app \
             -w /app \
             humbugphp/php-scoper:latest \
-            composer run run-scoper
+            php-scoper add-prefix --config=scoper.inc.php
+            bash post-scoper.sh
 
       - name: Set up PHP with Composer
         uses: shivammathur/setup-php@v2
