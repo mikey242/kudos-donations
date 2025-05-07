@@ -25,6 +25,7 @@ trait TableColumnsTrait {
 
 		if ( ! empty( $column_config ) ) {
 			$this->remove_actions( $post_type );
+			$this->customize_status_filters( $post_type );
 			$this->config_column_headers( $post_type, $column_config );
 			$this->populate_columns( $post_type, $column_config );
 			$this->make_columns_sortable( $post_type, $column_config );
@@ -63,6 +64,18 @@ trait TableColumnsTrait {
 			},
 			10,
 			2
+		);
+	}
+
+	/**
+	 * Customize the status filter links (e.g., All, Published).
+	 *
+	 * @param string $post_type The post type.
+	 */
+	private function customize_status_filters( string $post_type ): void {
+		add_filter(
+			'views_edit-' . $post_type,
+			fn() => []
 		);
 	}
 
