@@ -300,7 +300,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Transaction actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_assign_orphan_transactions_to_campaign' ); ?>
-							<label for="kudos_campaign"><?php esc_html_e( 'Assign unassigned transaction to campaign:', 'kudos-donations' ); ?></label><br/><select name="kudos_campaign" id="kudos_campaign">
+							<label for="kudos_campaign"><?php esc_html_e( 'Assign unassigned transactions to campaign:', 'kudos-donations' ); ?></label><br/><select name="kudos_campaign" id="kudos_campaign">
 								<?php
 									$campaigns = CampaignPostType::get_posts();
 								foreach ( $campaigns as $campaign ) {
