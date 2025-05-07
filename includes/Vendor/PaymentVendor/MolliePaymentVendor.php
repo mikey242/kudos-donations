@@ -144,7 +144,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		]);
 
 		if ($methods) {
-			return $methods->count > 0;
+			return $methods->count() > 0;
 		}
 
 		return false;
