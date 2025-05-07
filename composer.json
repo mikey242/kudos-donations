@@ -76,12 +76,10 @@
       "bash post-scoper.sh"
     ],
     "post-install-cmd" : [
-      "@clean-unused-files",
-      "@run-scoper"
+      "@clean-unused-files"
     ],
     "post-update-cmd": [
-      "@clean-unused-files",
-      "@run-scoper"
+      "@clean-unused-files"
     ]
   },
   "autoload": {
