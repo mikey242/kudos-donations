@@ -24,7 +24,7 @@ class Autoloader {
 	 * If the autoloader is not present, let's log the failure and display a nice admin notice.
 	 */
 	public static function init(): bool {
-		$autoloaders = [ \dirname( __DIR__ ) . '/vendor/autoload_packages.php' ];
+		$autoloaders = [ \dirname( __DIR__ ) . '/vendor/autoload.php' ];
 
 		foreach ( $autoloaders as $autoloader ) {
 			if ( ! is_readable( $autoloader ) ) {

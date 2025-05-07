@@ -13,7 +13,6 @@
       "php": "7.4"
     },
     "allow-plugins": {
-      "automattic/jetpack-autoloader": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true,
       "typisttech/imposter-plugin": false
@@ -22,7 +21,6 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
-    "automattic/jetpack-autoloader": "^5.0",
     "dompdf/dompdf": "^3",
     "mollie/mollie-api-php": "^v3.0.0",
     "monolog/monolog": "^2",
@@ -73,16 +71,24 @@
       "find vendor -type d \\( -iname 'test' -o -iname 'tests' \\) -prune -exec rm -rf '{}' +",
       "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
     ],
+    "run-scoper": [
+      "php-scoper add-prefix --config=scoper.inc.php",
+      "bash post-scoper.sh"
+    ],
     "post-install-cmd" : [
-      "@clean-unused-files"
+      "@clean-unused-files",
+      "@run-scoper"
     ],
     "post-update-cmd": [
-      "@clean-unused-files"
+      "@clean-unused-files",
+      "@run-scoper"
     ]
   },
   "autoload": {
     "psr-4": {
-      "IseardMedia\\Kudos\\": "includes/"
+      "IseardMedia\\Kudos\\": "includes/",
+      "KudosDonationsDeps\\Mollie\\Api\\": "third-party/mollie/mollie-api-php/src",
+      "KudosDonationsDeps\\Monolog\\": "third-party/monolog/monolog/src/Monolog"
     },
     "files": [
       "includes/helpers.php"
