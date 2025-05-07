@@ -114,6 +114,7 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.0.7 =
+* Add debug action for assigning orphaned transactions to selected campaign
 * Fix bug where message tab is shown even when disabled
 * Update various dependencies
 
