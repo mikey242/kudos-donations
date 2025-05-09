@@ -9,7 +9,7 @@
 
 declare( strict_types=1 );
 
-use Dompdf\Dompdf;
+use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Container\EncryptionAwareInterface;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
@@ -25,10 +25,10 @@ use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorFactory;
 use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorInterface;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
-use KudosDonationsDeps\Mollie\Api\MollieApiClient;
-use KudosDonationsDeps\Monolog\Handler\RotatingFileHandler;
-use KudosDonationsDeps\Monolog\Handler\WhatFailureGroupHandler;
-use KudosDonationsDeps\Monolog\Logger;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
+use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
+use IseardMedia\Kudos\ThirdParty\Monolog\Handler\WhatFailureGroupHandler;
+use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -69,7 +69,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 
 	// Load base plugin.
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
-			->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php}' )->lazy();
+			->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php,vendor}' )->lazy();
 
 	$services->set( RotatingFileHandler::class )
 		->args(
