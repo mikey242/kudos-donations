@@ -12,7 +12,6 @@ jobs:
   build-job:
     uses: ./.github/workflows/build.yml
     with:
-      php-version: '7.4'
       node-version: '18.18.1'
 
   zip-job:
