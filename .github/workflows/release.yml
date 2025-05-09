@@ -5,7 +5,7 @@ on:
     tags: ['*']
 
 env:
-  PHP_VERSION: '7.4'
+  PHP_VERSION: '8.2'
   NODE_VERSION: '18.18.1'
 
 jobs:
