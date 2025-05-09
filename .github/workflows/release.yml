@@ -38,6 +38,12 @@ jobs:
       - name: Install dependencies
         run: composer install --optimize-autoloader --no-dev
 
+      - name: Run php-scoper
+        run: |
+          composer global require humbug/php-scoper
+          composer run run-scoper
+          composer dump-autoload --optimize
+
       - name: Create zip archive
         run: |
           curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
