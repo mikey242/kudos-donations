@@ -11,14 +11,14 @@ $finders = [
 	      ->ignoreDotFiles(true)
 	      ->path([
 			  'mollie/',
-		      'monolog/'
+		      'monolog/',
+		      'dompdf/'
 	      ])
 	      ->in('vendor'),
 ];
 
 return [
-	'prefix' => 'KudosDonationsDeps',
-	'output-dir' => 'third-party',
+	'prefix' => 'IseardMedia\\Kudos\\ThirdParty',
 	'finders' => $finders,
 	'exclude-namespaces' => [
 		'IseardMedia\\Kudos\\',
