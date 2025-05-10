@@ -12,6 +12,8 @@ use WP_UnitTestCase;
  */
 class CacheService extends WP_UnitTestCase {
 
+	protected string $file;
+
 	public function setUp(): void {
 		/**
 		 * Create file ad folder in cache directory.
