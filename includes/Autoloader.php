@@ -19,24 +19,24 @@ class Autoloader {
 	private function __construct() {}
 
 	/**
-	 * Require the autoloader and return the result.
+	 * Require autoloaders and return the result.
 	 *
-	 * If the autoloader is not present, let's log the failure and display a nice admin notice.
+	 * If an autoloader is not present, let's log the failure and display a nice admin notice.
 	 */
 	public static function init(): bool {
-		$autoloaders = [ \dirname( __DIR__ ) . '/vendor/autoload_packages.php' ];
+		$autoloaders = [
+			\dirname( __DIR__ ) . '/vendor/autoload.php',
+			\dirname( __DIR__ ) . '/third-party/vendor/autoload.php',
+		];
 
+		// Load standard Composer autoloader.
 		foreach ( $autoloaders as $autoloader ) {
 			if ( ! is_readable( $autoloader ) ) {
 				self::missing_autoloader();
 				return false;
 			}
 
-			$autoloader_result = require $autoloader;
-
-			if ( ! $autoloader_result ) {
-				return false;
-			}
+			require $autoloader;
 		}
 
 		return true;

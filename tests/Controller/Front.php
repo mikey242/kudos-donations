@@ -7,7 +7,6 @@ namespace Controller;
 
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use WP_UnitTestCase;
 
 /**

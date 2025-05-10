@@ -5,14 +5,13 @@ on:
     tags: ['*']
 
 env:
-  PHP_VERSION: '7.4'
+  PHP_VERSION: '8.2'
   NODE_VERSION: '18.18.1'
 
 jobs:
   build-job:
     uses: ./.github/workflows/build.yml
     with:
-      php-version: '7.4'
       node-version: '18.18.1'
 
   zip-job:
@@ -30,11 +29,11 @@ jobs:
           name: build-folder
           path: ./build
 
-      - name: Set up PHP with Composer
+      - name: Set up PHP with Composer and PHP-Scoper
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-          tools: composer
+          tools: composer, php-scoper
 
       - name: Install dependencies
         run: composer install --optimize-autoloader --no-dev

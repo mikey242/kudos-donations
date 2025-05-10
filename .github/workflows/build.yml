@@ -3,9 +3,6 @@ name: Reusable Build Workflow
 on:
   workflow_call: # Allows other workflows to call this workflow
     inputs:
-      php-version:
-        required: true
-        type: string
       node-version:
         required: true
         type: string
