@@ -29,9 +29,6 @@ jobs:
           name: build-folder
           path: ./build
 
-      - name: Install php-scoper
-        run: composer global require humbug/php-scoper
-
       - name: Set up PHP with Composer and PHP-Scoper
         uses: shivammathur/setup-php@v2
         with:
