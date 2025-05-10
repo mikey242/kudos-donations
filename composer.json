@@ -107,9 +107,9 @@
   "autoload": {
     "psr-4": {
       "IseardMedia\\Kudos\\": "includes/",
-      "Mollie\\": "third-party/mollie/mollie-api-php/src",
-      "Dompdf\\": "third-party/dompdf/dompdf/src",
-      "Monolog\\": "third-party/monolog/monolog/src"
+      "Mollie\\": "third-party/vendor/mollie/mollie-api-php/src/",
+      "Dompdf\\": "third-party/vendor/dompdf/dompdf/src/",
+      "Monolog\\": "third-party/vendor/monolog/monolog/src/"
     },
     "files": [
       "includes/helpers.php"
