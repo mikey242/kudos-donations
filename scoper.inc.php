@@ -12,7 +12,6 @@ $finders = [
 	      ->path([
 			  'mollie/',
 		      'monolog/',
-		      'dompdf/'
 	      ])
 	      ->in('vendor'),
 ];

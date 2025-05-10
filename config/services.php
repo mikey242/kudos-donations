@@ -9,6 +9,7 @@
 
 declare( strict_types=1 );
 
+use Dompdf\Dompdf;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Container\EncryptionAwareInterface;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
@@ -20,7 +21,6 @@ use IseardMedia\Kudos\Container\Registrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
-use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\WhatFailureGroupHandler;
