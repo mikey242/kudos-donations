@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up PHP with Composer
+      - name: Set up PHP with Composer and PHP-Scoper
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
@@ -30,11 +30,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up PHP with Composer
+      - name: Set up PHP with Composer and PHP-Scoper
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-          tools: composer
+          tools: composer, php-scoper
 
       - name: Lint PHP
         run: |
@@ -86,11 +86,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Set up PHP with Composer
+      - name: Set up PHP with Composer and PHP-Scoper
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-          tools: composer
+          tools: composer, php-scoper
 
       - name: Install php-scoper
         run: composer global require humbug/php-scoper

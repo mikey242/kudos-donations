@@ -32,11 +32,11 @@ jobs:
       - name: Install php-scoper
         run: composer global require humbug/php-scoper
 
-      - name: Set up PHP with Composer
+      - name: Set up PHP with Composer and PHP-Scoper
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-          tools: composer
+          tools: composer, php-scoper
 
       - name: Install dependencies
         run: composer install --optimize-autoloader --no-dev
