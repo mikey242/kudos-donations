@@ -92,6 +92,9 @@ jobs:
           php-version: ${{ env.PHP_VERSION }}
           tools: composer
 
+      - name: Install php-scoper
+        run: composer global require humbug/php-scoper
+
       - name: Install dependencies
         run: |
           npm ci
