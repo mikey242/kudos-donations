@@ -23,6 +23,7 @@ return [
 	'exclude-namespaces' => [
 		'IseardMedia\\Kudos\\',
 		'Psr\\',
-		'Composer'
+		'Composer',
+		'Masterminds'
 	],
 ];
