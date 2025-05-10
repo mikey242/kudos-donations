@@ -3,7 +3,7 @@
  * Plugin tests
  */
 
-namespace Controller;
+namespace Controller\Rest;
 
 use Dompdf\Dompdf;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
