@@ -5,7 +5,7 @@
 
 namespace Controller;
 
-use Dompdf\Dompdf;
+use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\PDFService;
