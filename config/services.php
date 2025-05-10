@@ -9,7 +9,6 @@
 
 declare( strict_types=1 );
 
-use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Container\EncryptionAwareInterface;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
@@ -21,14 +20,15 @@ use IseardMedia\Kudos\Container\Registrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
-use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorFactory;
-use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorInterface;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
+use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\WhatFailureGroupHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
+use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorFactory;
+use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorInterface;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
