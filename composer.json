@@ -71,9 +71,14 @@
       "find vendor -type d \\( -iname 'test' -o -iname 'tests' \\) -prune -exec rm -rf '{}' +",
       "php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
     ],
+    "remove-from-vendor": [
+      "rm -rf vendor/mollie",
+      "rm -rf vendor/monolog"
+    ],
     "post-install-cmd" : [
       "@clean-unused-files",
-      "@prefix-dependencies-test"
+      "@prefix-dependencies-test",
+      "@remove-from-vendor"
     ],
     "post-update-cmd": [
       "@clean-unused-files",
