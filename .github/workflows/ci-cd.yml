@@ -97,12 +97,6 @@ jobs:
           npm ci
           composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
-      - name: Run php-scoper
-        run: |
-          composer global require humbug/php-scoper
-          composer run prefix-dependencies
-          composer dump-autoload --optimize
-
       - name: Install subversion
         run: |
           sudo apt-get update -y --allow-releaseinfo-change
