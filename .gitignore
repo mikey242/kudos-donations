@@ -14,3 +14,4 @@ includes/Dependencies
 /wp-cli.phar
 /.phpunit.result.cache
 /wordpress/
+/third-party/

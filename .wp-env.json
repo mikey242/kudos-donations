@@ -15,9 +15,5 @@
 		"WP_DEBUG_DISPLAY": true,
 		"WP_DEBUG_LOG": true,
 		"QM_ENABLE_CAPS_PANEL": true
-	},
-	"mappings": {
-		"wp-content/uploads/kudos-donations/": "./wordpress/storage",
-		"wp-content/cache/kudos-donations/": "./wordpress/cache"
 	}
 }

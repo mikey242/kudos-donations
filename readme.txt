@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.0.7
+Stable tag: 4.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,10 @@ For general information on how to use shortcodes, please visit [this page](https
 6. Automated email receipt
 
 == Changelog ==
+
+= 4.0.8 =
+* Add php scoping for Mollie and Monolog packages reducing conflicts with other plugins
+* dev: Update php_codesniffer to 3.13.0
 
 = 4.0.7 =
 * Add debug action for assigning orphaned transactions to selected campaign

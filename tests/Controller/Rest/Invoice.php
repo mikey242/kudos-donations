@@ -3,7 +3,7 @@
  * Plugin tests
  */
 
-namespace Controller;
+namespace Controller\Rest;
 
 use Dompdf\Dompdf;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
@@ -11,7 +11,7 @@ use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Service\PDFService;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
-use Monolog\Logger;
+use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use WP_REST_Request;
 use WP_REST_Server;
 use WP_UnitTestCase;
