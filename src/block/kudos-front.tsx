@@ -14,7 +14,7 @@ import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import React from 'react';
-import { KudosButtonAttributes } from './edit';
+import { KudosButtonAttributes } from './components/Edit';
 
 domReady(() => {
 	// Select the web components as target for render.
