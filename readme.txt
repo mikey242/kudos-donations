@@ -113,6 +113,10 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.0.8 =
+* Add php scoping for Mollie and Monolog packages reducing conflicts with other plugins
+* dev: Update php_codesniffer to 3.13.0
+
 = 4.0.7 =
 * Add debug action for assigning orphaned transactions to selected campaign
 * Fix bug where message tab is shown even when disabled
