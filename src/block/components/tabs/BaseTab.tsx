@@ -1,8 +1,12 @@
 import React from 'react';
 
-function BaseTab(props) {
-	const { title, description, children } = props;
+interface BaseTabProps {
+	title: string;
+	description: string;
+	children: React.ReactNode;
+}
 
+const BaseTab = ({ title, description, children }: BaseTabProps) => {
 	return (
 		<div className="form-section block w-full relative mt-4 p-0">
 			<legend className="block m-auto">
@@ -16,6 +20,6 @@ function BaseTab(props) {
 			{children}
 		</div>
 	);
-}
+};
 
 export default BaseTab;

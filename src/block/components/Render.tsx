@@ -1,9 +1,21 @@
-import React from 'react';
 import { clsx } from 'clsx';
 import { useRef, useState } from '@wordpress/element';
 import root from 'react-shadow';
+import React, { ReactNode } from 'react';
+interface RenderProps {
+	children: ReactNode;
+	themeColor?: string;
+	style?: string;
+	className?: string;
+	fonts?: {
+		header?: string;
+		body?: string;
+	};
+	alignment?: 'left' | 'center' | 'right';
+	errors?: string[] | null;
+}
 
-function Render({
+const Render = ({
 	children,
 	themeColor,
 	style,
@@ -11,7 +23,7 @@ function Render({
 	fonts,
 	alignment,
 	errors = null,
-}) {
+}: RenderProps) => {
 	// Set ready = false if there are stylesheets to load
 	const [ready, setReady] = useState(!window.kudos?.stylesheets);
 	// Count number of stylesheets to load
@@ -89,6 +101,6 @@ function Render({
 			</div>
 		</root.div>
 	);
-}
+};
 
 export default Render;

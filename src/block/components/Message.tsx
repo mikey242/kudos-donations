@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from '@wordpress/element';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { KudosModal } from './KudosModal';
 import Render from './Render';
 import { Button } from './controls';
@@ -8,16 +8,31 @@ import apiFetch from '@wordpress/api-fetch';
 import { Spinner } from './Spinner';
 import { useCampaignContext } from '../contexts/CampaignContext';
 
-export const PaymentStatus = ({ transactionId }) => {
+interface PaymentStatusProps {
+	transactionId: string;
+}
+interface KudosPayment {
+	data: {
+		status: 'paid' | 'failed' | 'cancelled';
+		value: string;
+		currency: string;
+		name: string;
+	};
+}
+
+export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 	const { campaign, isLoading } = useCampaignContext();
-	const [title, setTitle] = useState('');
-	const [body, setBody] = useState(<Spinner />);
-	const pollingRef = useRef(null);
+	const [title, setTitle] = useState<string>('');
+	const [body, setBody] = useState<ReactNode>(<Spinner />);
+	const pollingRef = useRef<NodeJS.Timeout>(null);
 	const intervalTime = 1000;
 	const maxAttempts = 10;
 
 	// Function to replace placeholders in a message template
-	const replacePlaceholders = (template, data) => {
+	const replacePlaceholders = (
+		template: string,
+		data: Record<string, string>
+	) => {
 		return template.replace(
 			/\{\{(.*?)}}/g,
 			(_, key) => data[key.trim()] || ''
@@ -31,12 +46,12 @@ export const PaymentStatus = ({ transactionId }) => {
 		const checkTransactionStatus = async () => {
 			try {
 				const nonce = getNonceFromUrl();
-				const response = await apiFetch({
+				const response = (await apiFetch({
 					path: `/kudos/v1/payment/status/?id=${transactionId}`,
 					headers: {
 						'X-Kudos-Nonce': nonce,
 					},
-				});
+				})) as KudosPayment;
 				switch (response.data.status) {
 					case 'paid':
 						const placeholders = {
@@ -106,7 +121,7 @@ export const PaymentStatus = ({ transactionId }) => {
 			body={body}
 			color={campaign?.meta?.theme_color}
 			style={campaign?.meta?.custom_styles}
-			dismissible={pollingRef.current ?? false}
+			dismissible={!!pollingRef.current}
 		/>
 	);
 };

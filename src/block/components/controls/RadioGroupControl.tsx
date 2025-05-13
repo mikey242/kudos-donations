@@ -3,6 +3,24 @@ import { Label, Radio, RadioGroup } from '@headlessui/react';
 import { clsx } from 'clsx';
 import { BaseController } from './BaseController';
 import { useCallback, useRef } from '@wordpress/element';
+import { ControllerRenderProps, RegisterOptions } from 'react-hook-form';
+
+type OnChangeFn = ControllerRenderProps['onChange'];
+export interface RadioGroupOption {
+	label: string;
+	value: string;
+	disabled?: boolean;
+}
+
+interface RadioGroupControlProps {
+	name: string;
+	options: RadioGroupOption[];
+	help?: string;
+	isDisabled?: boolean;
+	rules?: RegisterOptions;
+	label?: string;
+	ariaLabel: string;
+}
 
 export const RadioGroupControl = ({
 	name,
@@ -12,12 +30,12 @@ export const RadioGroupControl = ({
 	rules,
 	label,
 	ariaLabel,
-}) => {
+}: RadioGroupControlProps) => {
 	// Create refs for each radio button to handle focus programmatically
-	const radioRefs = useRef([]);
+	const radioRefs = useRef<Array<HTMLElement | null>>([]);
 	// Helper function to handle keyboard events for custom navigation.
 	const handleKeyDown = useCallback(
-		(event, onChange, value) => {
+		(event: React.KeyboardEvent, onChange: OnChangeFn, value: string) => {
 			// Find the current index of the selected option.
 			const currentIndex = options.findIndex(
 				(option) => option.value === value
@@ -62,11 +80,11 @@ export const RadioGroupControl = ({
 						disabled={isDisabled}
 						className="first:mt-0 mt-3 grid gap-3 grid-flow-row xs:grid-flow-col xs:auto-cols-fr"
 						aria-label={ariaLabel ?? label}
-						onKeyDown={(event) =>
+						onKeyDown={(event: React.KeyboardEvent) =>
 							handleKeyDown(event, onChange, value)
 						}
 					>
-						{options.map((option, index) => (
+						{options.map((option: RadioGroupOption, index) => (
 							<Radio
 								key={option.value}
 								value={option.value}

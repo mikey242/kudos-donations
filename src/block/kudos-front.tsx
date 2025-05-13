@@ -4,7 +4,8 @@
  *  @see https://stackoverflow.com/questions/42274721/shadow-dom-and-reactjs
  */
 
-import React from 'react';
+/* eslint-disable camelcase */
+
 import { KudosForm } from './components/KudosForm';
 import Message, { PaymentStatus } from './components/Message';
 import CampaignProvider from './contexts/CampaignContext';
@@ -12,18 +13,24 @@ import './kudos-fonts.css';
 import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
+import React from 'react';
+import { KudosButtonAttributes } from './edit';
 
 domReady(() => {
 	// Select the web components as target for render.
-	const forms = document.querySelectorAll('.kudos-form');
-	const messages = document.querySelectorAll('.kudos-message');
-	const status = document.querySelectorAll('.kudos-transaction-status');
+	const forms = document.querySelectorAll<HTMLElement>('.kudos-form');
+	const messages = document.querySelectorAll<HTMLElement>('.kudos-message');
+	const status = document.querySelectorAll<HTMLElement>(
+		'.kudos-transaction-status'
+	);
 
 	// Kudos Donations form/modal
 	forms.forEach((container) => {
 		if (!container.shadowRoot) {
 			const root = createRoot(container);
-			const options = JSON.parse(container.dataset?.options);
+			const options: KudosButtonAttributes = JSON.parse(
+				container.dataset?.options
+			);
 			root.render(
 				<CampaignProvider campaignId={options?.campaign_id}>
 					<KudosForm

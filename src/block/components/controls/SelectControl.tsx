@@ -2,7 +2,20 @@ import React from 'react';
 import { BaseController } from './BaseController';
 import { clsx } from 'clsx';
 import { Select } from '@headlessui/react';
+import { RegisterOptions } from 'react-hook-form';
 
+interface SelectControlProps {
+	name: string;
+	rules?: RegisterOptions;
+	options: {
+		label: string;
+		value: string;
+	}[];
+	placeholder?: string;
+	isDisabled?: boolean;
+	help?: string;
+	ariaLabel?: string;
+}
 export const SelectControl = ({
 	name,
 	rules,
@@ -11,7 +24,7 @@ export const SelectControl = ({
 	isDisabled,
 	help,
 	ariaLabel,
-}) => {
+}: SelectControlProps) => {
 	return (
 		<BaseController
 			name={name}
