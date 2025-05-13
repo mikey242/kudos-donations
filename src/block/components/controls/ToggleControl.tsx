@@ -4,7 +4,21 @@ import { clsx } from 'clsx';
 import { BaseController } from './BaseController';
 import { __ } from '@wordpress/i18n';
 
-export const ToggleControl = ({ name, rules, label, help, isDisabled }) => {
+interface ToggleControlProps {
+	name: string;
+	rules?: any;
+	label?: string;
+	help?: string;
+	isDisabled?: boolean;
+}
+
+export const ToggleControl = ({
+	name,
+	rules,
+	label,
+	help,
+	isDisabled,
+}: ToggleControlProps) => {
 	return (
 		<BaseController
 			name={name}

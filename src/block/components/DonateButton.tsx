@@ -2,7 +2,12 @@ import { KudosLogo } from './KudosLogo';
 import React from 'react';
 import { Button } from './controls';
 
-const DonateButton = ({ children, onClick = null }) => {
+interface DonateButtonProps {
+	onClick?: () => void;
+	children: React.ReactNode;
+}
+
+const DonateButton = ({ children, onClick = null }: DonateButtonProps) => {
 	return (
 		<Button
 			id="donate-button"

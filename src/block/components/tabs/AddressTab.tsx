@@ -6,8 +6,13 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
 import countryList from 'react-select-country-list';
 import { SelectControl, TextControl } from '../controls';
+import { Campaign } from '../../contexts/CampaignContext';
 
-export const AddressTab = ({ campaign }) => {
+interface AddressTabProps {
+	campaign: Campaign;
+}
+
+export const AddressTab = ({ campaign }: AddressTabProps) => {
 	const {
 		meta: { address_title, address_description, address_required },
 	} = campaign;
@@ -64,7 +69,6 @@ export const AddressTab = ({ campaign }) => {
 						message: __('Country required', 'kudos-donations'),
 					},
 				}}
-				error={__('Country required', 'kudos-donations')}
 			/>
 		</BaseTab>
 	);

@@ -5,16 +5,24 @@ import logo from '../../../assets/images/logo-colour.svg';
 import { Transition } from '@headlessui/react';
 import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import React, { ReactNode } from 'react';
+
+interface KudosModalProps {
+	isOpen?: boolean;
+	toggleModal: () => void;
+	children: ReactNode;
+	showLogo?: boolean;
+}
 
 export const KudosModal = ({
 	isOpen = false,
 	toggleModal,
 	children,
 	showLogo = true,
-}) => {
-	const targetRef = useRef(null);
-	const [firstElement, setFirstElement] = useState(null);
-	const [lastElement, setLastElement] = useState(null);
+}: KudosModalProps) => {
+	const targetRef = useRef<HTMLDivElement | null>(null);
+	const [firstElement, setFirstElement] = useState<HTMLElement | null>(null);
+	const [lastElement, setLastElement] = useState<HTMLElement | null>(null);
 
 	const toggle = useCallback(() => {
 		if (typeof toggleModal === 'function') {
@@ -23,29 +31,31 @@ export const KudosModal = ({
 	}, [toggleModal]);
 
 	const setUp = useCallback(() => {
-		const focusableElements = targetRef.current?.querySelectorAll(
-			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-		);
+		const focusableElements =
+			targetRef.current?.querySelectorAll<HTMLElement>(
+				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+			);
 		setFirstElement(focusableElements ? focusableElements[0] : null);
 		setLastElement(
 			focusableElements
 				? focusableElements[focusableElements.length - 1]
 				: null
 		);
-		const initialFocus = targetRef.current?.querySelector(
+		const initialFocus = targetRef.current?.querySelector<HTMLElement>(
 			'[name*="value"]:not([type="hidden"])'
 		);
 		initialFocus?.focus();
 	}, []);
 
 	const handleKeyPress = useCallback(
-		(e) => {
-			if (e.key === 'Escape' || e.keyCode === 27) {
+		(e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
 				toggle();
 			}
-			if (e.key === 'Tab' || e.keyCode === 9) {
-				const activeElement =
-					targetRef.current.getRootNode().activeElement;
+			if (e.key === 'Tab') {
+				const activeElement = (
+					targetRef.current.getRootNode() as Document
+				).activeElement as HTMLElement;
 				if (e.shiftKey && activeElement === firstElement) {
 					e.preventDefault();
 					lastElement.focus();

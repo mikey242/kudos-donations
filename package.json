@@ -33,6 +33,9 @@
   "devDependencies": {
     "@babel/preset-react": "^7.25.9",
     "@tailwindcss/forms": "^0.5.9",
+    "@types/lodash": "^4.17.16",
+    "@types/react-select-country-list": "^2.2.3",
+    "@types/wordpress__blocks": "^12.5.17",
     "@wordpress/api-fetch": "^7.22.0",
     "@wordpress/babel-preset-default": "^8.22.0",
     "@wordpress/block-editor": "^14.17.0",
