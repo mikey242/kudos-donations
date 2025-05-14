@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useEffect, useState } from '@wordpress/element';
+import { createPortal, useEffect, useState } from '@wordpress/element';
 import React from 'react';
 import { FormRouter } from './FormRouter';
 import { KudosModal } from './KudosModal';
@@ -109,6 +109,31 @@ export const KudosForm = ({
 			});
 	}
 
+	const renderModal = () => {
+		const portalContainer = document.getElementById('kudos-portal');
+		if (portalContainer) {
+			return createPortal(
+				<Render
+					themeColor={campaign?.meta?.theme_color}
+					style={campaign?.meta?.custom_styles}
+					errors={campaignErrors}
+					className={previewMode && 'pointer-events-none'}
+					alignment={alignment}
+				>
+					<KudosModal toggleModal={toggleModal} isOpen={isModalOpen}>
+						{renderDonationForm()}
+					</KudosModal>
+				</Render>,
+				portalContainer
+			);
+		}
+		return (
+			<KudosModal toggleModal={toggleModal} isOpen={isModalOpen}>
+				{renderDonationForm()}
+			</KudosModal>
+		);
+	};
+
 	const renderDonationForm = () => (
 		<>
 			{formError && (
@@ -132,30 +157,27 @@ export const KudosForm = ({
 	}
 
 	return (
-		<Render
-			themeColor={campaign?.meta?.theme_color}
-			style={campaign?.meta?.custom_styles}
-			errors={campaignErrors}
-			className={previewMode && 'pointer-events-none'}
-			alignment={alignment}
-		>
-			<>
-				{isFSLogo && <KudosLogoFullScreenAnimated />}
-				{isForm && renderDonationForm()}
-				{isModal && (
-					<>
-						<DonateButton onClick={toggleModal}>
-							{label}
-						</DonateButton>
-						<KudosModal
-							toggleModal={toggleModal}
-							isOpen={isModalOpen}
-						>
-							{renderDonationForm()}
-						</KudosModal>
-					</>
-				)}
-			</>
-		</Render>
+		<>
+			<Render
+				themeColor={campaign?.meta?.theme_color}
+				style={campaign?.meta?.custom_styles}
+				errors={campaignErrors}
+				className={previewMode && 'pointer-events-none'}
+				alignment={alignment}
+			>
+				<>
+					{isFSLogo && <KudosLogoFullScreenAnimated />}
+					{isForm && renderDonationForm()}
+					{isModal && (
+						<>
+							<DonateButton onClick={toggleModal}>
+								{label}
+							</DonateButton>
+							{renderModal()}
+						</>
+					)}
+				</>
+			</Render>
+		</>
 	);
 };
