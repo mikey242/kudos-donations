@@ -62,6 +62,7 @@ phpunit-integration.xml.dist
 phpunit-integration-multisite.xml
 phpunit-integration-multisite.xml.dist
 tailwind.config.js
+tsconfig.json
 
 # Misc
 README.md
