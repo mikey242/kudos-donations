@@ -193,6 +193,9 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		$id         = Utils::generate_id( 'kudos-' );
 		$attributes = wp_json_encode( $args );
 
+		// Add Kudos Portal for mounting the modal.
+		add_action( 'wp_footer', [ $this, 'kudos_portal_html' ] );
+
 		return wp_kses(
 			\sprintf(
 				"<p><span id='%s' class='kudos-form' data-options='%s'></span></p>",
@@ -208,6 +211,13 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Renders the Kudos Portal.
+	 */
+	public function kudos_portal_html(): void {
+		echo '<div id="kudos-portal"></div>';
 	}
 
 	/**
