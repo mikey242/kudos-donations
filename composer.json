@@ -79,32 +79,14 @@
     ],
     "post-install-cmd" : [
       "@clean-unused-files",
-      "@prefix-dependencies-test",
+      "@prefix-dependencies",
       "@remove-from-vendor"
     ],
     "post-update-cmd": [
       "@clean-unused-files",
-      "@prefix-dependencies-test"
+      "@prefix-dependencies"
     ],
     "prefix-dependencies": [
-      "@composer --working-dir=php-scoper install",
-      "@php -dxdebug.mode=off php-scoper/vendor/bin/php-scoper add --output-dir=./third-party --force --quiet",
-      "@autoload-third-party",
-      "@composer dump-autoload --no-dev",
-      "echo '🧹 Cleaning up unscoped vendor packages...'",
-      "rm -rf vendor/mollie",
-      "rm -rf vendor/monolog",
-      "rm -rf vendor/dompdf",
-      "echo '✅ Removed vendor copies of Mollie and Monolog'"
-    ],
-    "autoload-third-party": [
-      "echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > third-party/composer.json",
-      "@composer --working-dir=third-party dump-autoload --classmap-authoritative --no-interaction",
-      "cp third-party/vendor/composer/autoload_classmap.php third-party/",
-      "rm -rf third-party/vendor && rm third-party/composer.json",
-      "mkdir -p third-party/vendor/composer && mv third-party/autoload_classmap.php third-party/vendor/composer/"
-    ],
-    "prefix-dependencies-test": [
       "php-scoper add-prefix --output-dir=./third-party/vendor --force --quiet",
       "echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > ./third-party/composer.json",
       "@composer dump-autoload --working-dir ./third-party --no-dev --classmap-authoritative",
