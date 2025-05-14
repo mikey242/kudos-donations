@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { clsx } from 'clsx';
 import { get } from 'lodash';
-import { Controller, useFormContext } from 'react-hook-form';
+import {
+	Controller,
+	ControllerRenderProps,
+	FieldError,
+	FieldValues,
+	RegisterOptions,
+	useFormContext,
+} from 'react-hook-form';
+
+interface BaseControllerProps {
+	name: string;
+	type?: string;
+	isDisabled?: boolean;
+	help?: ReactNode;
+	children?: ReactNode;
+	rules?: RegisterOptions;
+	render?: (params: {
+		field: ControllerRenderProps<FieldValues, string>;
+		error: FieldError | undefined;
+	}) => ReactNode;
+}
 
 export const BaseController = ({
 	children,
@@ -11,13 +31,13 @@ export const BaseController = ({
 	name,
 	render,
 	rules,
-}) => {
+}: BaseControllerProps) => {
 	const {
 		formState: { errors },
 		control,
 	} = useFormContext();
 
-	const error = get(errors, name);
+	const error = get(errors, name) as FieldError | undefined;
 
 	return (
 		<div className={clsx('field', 'field-' + name, 'first:mt-0 mt-3')}>
@@ -55,7 +75,10 @@ const Help = ({ children }) => {
 	);
 };
 
-const Error = ({ error }) => {
+interface ErrorProps {
+	error?: FieldError;
+}
+const Error = ({ error }: ErrorProps) => {
 	return (
 		<>
 			{error?.message && (

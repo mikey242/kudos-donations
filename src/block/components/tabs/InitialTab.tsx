@@ -5,9 +5,15 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import { useEffect, useMemo } from '@wordpress/element';
 import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
+import type { RadioGroupOption } from '../controls';
 import { ProgressBar } from '../ProgressBar';
+import { Campaign } from '../../contexts/CampaignContext';
 
-export const InitialTab = ({ campaign }) => {
+interface InitialTabProps {
+	campaign: Campaign;
+}
+
+export const InitialTab = ({ campaign }: InitialTabProps) => {
 	const {
 		meta: {
 			initial_title,
@@ -16,20 +22,22 @@ export const InitialTab = ({ campaign }) => {
 			minimum_donation,
 			donation_type,
 			fixed_amounts,
-			amountType,
+			amount_type,
 			maximum_donation,
-			anonymous,
+			allow_anonymous,
 			show_goal,
 			goal,
 		},
 		total,
 	} = campaign;
-	const currencySymbol = window.kudos?.currencies[currency];
+	const currencySymbol = useMemo(() => {
+		return window.kudos?.currencies?.[currency] ?? currency;
+	}, [currency]);
 	const { setValue } = useFormContext();
-	const watchFixed = useWatch({ name: 'valueFixed' });
-	const watchOpen = useWatch({ name: 'valueOpen' });
-	const watchValue = useWatch({ name: 'value' });
-	const watchEmail = useWatch({ name: 'email' });
+	const watchFixed: string = useWatch({ name: 'valueFixed' });
+	const watchOpen: string = useWatch({ name: 'valueOpen' });
+	const watchValue: number = useWatch({ name: 'value' });
+	const watchEmail: string = useWatch({ name: 'email' });
 	const valueError = sprintf(
 		/* translators: %d is the amount in euros. */
 		_n(
@@ -45,7 +53,7 @@ export const InitialTab = ({ campaign }) => {
 		return donation_type === 'both' && !!watchEmail;
 	}, [donation_type, watchEmail]);
 
-	const fixedAmountOptions = useMemo(() => {
+	const fixedAmountOptions: RadioGroupOption[] = useMemo(() => {
 		return fixed_amounts?.map((value) => ({
 			value,
 			label: `${currencySymbol ?? ''}${value.trim()}`,
@@ -93,7 +101,7 @@ export const InitialTab = ({ campaign }) => {
 				</div>
 			)}
 
-			{amountType !== 'open' && fixedAmountOptions.length > 0 && (
+			{amount_type !== 'open' && fixedAmountOptions.length > 0 && (
 				<RadioGroupControl
 					name="valueFixed"
 					ariaLabel={__('Fixed donation amount', 'kudos-donations')}
@@ -101,14 +109,14 @@ export const InitialTab = ({ campaign }) => {
 				/>
 			)}
 
-			{amountType !== 'fixed' && (
+			{amount_type !== 'fixed' && (
 				<TextControl
 					name="valueOpen"
 					ariaLabel={__('Open donation amount', 'kudos-donations')}
 					prefix={currencySymbol}
 					type="number"
 					placeholder={
-						amountType === 'both'
+						amount_type === 'both'
 							? __('Other amount', 'kudos-donations')
 							: __('Amount', 'kudos-donations')
 					}
@@ -142,7 +150,7 @@ export const InitialTab = ({ campaign }) => {
 			<TextControl
 				name="name"
 				rules={
-					(!anonymous || 'recurring' === donation_type) && {
+					(!allow_anonymous || 'recurring' === donation_type) && {
 						required: __(
 							'Your name is required',
 							'kudos-donations'
@@ -150,7 +158,7 @@ export const InitialTab = ({ campaign }) => {
 					}
 				}
 				placeholder={
-					anonymous
+					allow_anonymous
 						? __('Full name', 'kudos-donations') +
 							' (' +
 							__('optional', 'kudos-donations') +
@@ -163,7 +171,7 @@ export const InitialTab = ({ campaign }) => {
 				name="email"
 				type="email"
 				rules={
-					(!anonymous || 'recurring' === donation_type) && {
+					(!allow_anonymous || 'recurring' === donation_type) && {
 						required: __(
 							'Your email is required',
 							'kudos-donations'
@@ -171,7 +179,7 @@ export const InitialTab = ({ campaign }) => {
 					}
 				}
 				placeholder={
-					anonymous
+					allow_anonymous
 						? __('Email', 'kudos-donations') +
 							' (' +
 							__('optional', 'kudos-donations') +

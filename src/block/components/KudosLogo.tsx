@@ -1,12 +1,19 @@
 import React from 'react';
 import { clsx } from 'clsx';
 
+interface KudosLogoProps {
+	lineColor?: string;
+	heartColor?: string;
+	className?: string;
+	style?: React.CSSProperties;
+}
+
 const KudosLogo = ({
 	lineColor = '#2ec4b6',
 	heartColor = '#ff9f1c',
 	className,
 	style,
-}) => {
+}: KudosLogoProps) => {
 	return (
 		<svg
 			className={clsx(

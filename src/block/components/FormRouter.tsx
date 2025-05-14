@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
 import {
 	InitialTab,
 	FrequencyTab,
@@ -18,8 +18,46 @@ import {
 } from '@heroicons/react/24/outline';
 import { applyFilters } from '@wordpress/hooks';
 import BaseTab from './tabs/BaseTab';
+import { Campaign } from '../contexts/CampaignContext';
 
-const checkRequirements = (tabs, data, target) => {
+interface TabDefinition {
+	name: string;
+	element: React.ComponentType<{ campaign: Campaign }>;
+	requirements?: Record<string, any>;
+}
+interface Tab {
+	name: string;
+	element: React.ComponentType<{ campaign: Campaign }>;
+	requirements?: Record<string, any>;
+}
+
+interface FormData {
+	recurring: boolean;
+	business_name: string;
+	city: string;
+	country: string;
+	postcode: string;
+	street: string;
+	message: string;
+	[key: string]: any;
+}
+interface FormRouterProps {
+	step: number;
+	campaign: Campaign;
+	submitForm: (data: FormData) => Promise<any>;
+	setFormState: React.Dispatch<
+		React.SetStateAction<{
+			currentStep: number;
+			formData: Record<string, any>;
+		}>
+	>;
+}
+
+const checkRequirements = (
+	tabs: Tab[],
+	data: Record<string, any>,
+	target: number
+): boolean => {
 	const reqs = tabs[target]?.requirements;
 	if (!reqs) {
 		return true;
@@ -28,15 +66,20 @@ const checkRequirements = (tabs, data, target) => {
 	return Object.entries(reqs).every(([key, val]) => data[key] === val);
 };
 
-export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
-	const [height, setHeight] = useState('');
-	const [currentStep, setCurrentStep] = useState(step);
-	const prevStep = useRef(step); // Ref to keep track of the previous step
-	const [isBusy, setIsBusy] = useState(false);
-	const elementRef = useRef(null);
-	const firstUpdate = useRef(true);
-	const timeoutRef = useRef(null);
-	const methods = useForm({
+export const FormRouter = ({
+	step,
+	campaign,
+	submitForm,
+	setFormState,
+}: FormRouterProps) => {
+	const [height, setHeight] = useState<string>('');
+	const [currentStep, setCurrentStep] = useState<number>(step);
+	const prevStep = useRef<number>(step); // Ref to keep track of the previous step
+	const [isBusy, setIsBusy] = useState<boolean>(false);
+	const elementRef = useRef<HTMLDivElement>(null);
+	const firstUpdate = useRef<boolean>(true);
+	const timeoutRef = useRef<ReturnType<typeof setTimeout | null>>(null);
+	const methods: UseFormReturn<FormData> = useForm<FormData>({
 		defaultValues: {
 			recurring: false,
 			business_name: '',
@@ -48,7 +91,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		},
 	});
 
-	const Tabs = useMemo(
+	const Tabs = useMemo<TabDefinition[]>(
 		() =>
 			applyFilters(
 				'kudosFormTabs',
@@ -86,7 +129,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 				],
 				campaign,
 				BaseTab
-			),
+			) as TabDefinition[],
 		[campaign]
 	);
 
@@ -110,7 +153,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		}));
 	};
 
-	const handleNext = (data) => {
+	const handleNext = (data: FormData) => {
 		const state = { ...data, ...campaign.meta };
 		let nextStep = currentStep + 1;
 
@@ -129,7 +172,7 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 		}));
 	};
 
-	const onSubmit = (data) => {
+	const onSubmit = (data: FormData) => {
 		if (currentStep < Tabs.length - 1) {
 			return handleNext(data);
 		}
@@ -159,10 +202,10 @@ export const FormRouter = ({ step, campaign, submitForm, setFormState }) => {
 			target.classList.add('translate-x-1', 'opacity-0');
 
 			const oldHeight = target.querySelector('form').offsetHeight;
-			setHeight(oldHeight);
+			setHeight(oldHeight.toString());
 			const resizeObserver = new ResizeObserver(() => {
 				const newHeight = target.querySelector('form').offsetHeight;
-				setHeight(newHeight);
+				setHeight(newHeight.toString());
 
 				timeoutRef.current = setTimeout(() => {
 					setHeight('auto'); // Allow form to grow if validation message appears.

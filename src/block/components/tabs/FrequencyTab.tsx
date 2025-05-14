@@ -5,8 +5,13 @@ import React from 'react';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import { SelectControl } from '../controls';
+import { Campaign } from '../../contexts/CampaignContext';
 
-export const FrequencyTab = ({ campaign }) => {
+interface FrequencyTabProps {
+	campaign: Campaign;
+}
+
+export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
 	const {
 		meta: {
 			subscription_title,
@@ -32,7 +37,7 @@ export const FrequencyTab = ({ campaign }) => {
 		setFocus('recurring_frequency');
 	}, [setFocus]);
 
-	const isMoreThanOne = (years) => {
+	const isMoreThanOne = (years: number) => {
 		const frequency = getValues('recurring_frequency');
 		if (frequency) {
 			return (12 / parseInt(frequency, 10)) * years !== 1;

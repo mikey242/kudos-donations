@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 
-function Spinner({}) {
+const Spinner = ({}) => {
 	return (
 		<div className="text-center">
 			<div role="status">
@@ -27,6 +27,6 @@ function Spinner({}) {
 			</div>
 		</div>
 	);
-}
+};
 
 export { Spinner };

@@ -1,7 +1,22 @@
 import React from 'react';
 import { BaseController } from './BaseController';
+import { RegisterOptions } from 'react-hook-form';
 
-export const CheckboxControl = ({ name, rules, label, help, isDisabled }) => {
+interface CheckboxControlProps {
+	name: string;
+	rules?: RegisterOptions;
+	label?: string;
+	help?: string;
+	isDisabled?: boolean;
+}
+
+export const CheckboxControl = ({
+	name,
+	rules,
+	label,
+	help,
+	isDisabled,
+}: CheckboxControlProps) => {
 	return (
 		<BaseController
 			name={name}
