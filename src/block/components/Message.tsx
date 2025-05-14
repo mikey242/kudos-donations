@@ -126,13 +126,21 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 	);
 };
 
+interface MessageProps {
+	title: string;
+	body: ReactNode;
+	style?: string;
+	color?: string;
+	dismissible?: boolean;
+}
+
 export default function Message({
 	title,
 	body,
 	style = '',
 	color = '#ff9f1c',
 	dismissible = true,
-}) {
+}: MessageProps) {
 	const [ready, setReady] = useState(false);
 	const [modalOpen, setModalOpen] = useState(true);
 
