@@ -13,6 +13,7 @@
       "php": "7.4"
     },
     "allow-plugins": {
+      "automattic/jetpack-autoloader": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true,
       "typisttech/imposter-plugin": false
@@ -21,6 +22,7 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
+    "automattic/jetpack-autoloader": "^5.0",
     "dompdf/dompdf": "^3",
     "mollie/mollie-api-php": "^v3.0.0",
     "monolog/monolog": "^2",
