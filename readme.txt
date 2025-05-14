@@ -113,6 +113,11 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.0.9 =
+* Use portal in footer for rendering modal if possible
+* Re-implement Jetpack Autoloader
+* Implement TypeScript for the Kudos Donations block
+
 = 4.0.8 =
 * Add php scoping for Mollie and Monolog packages reducing conflicts with other plugins
 * dev: Update php_codesniffer to 3.13.0
