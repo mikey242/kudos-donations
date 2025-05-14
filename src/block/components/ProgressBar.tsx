@@ -1,13 +1,21 @@
 import React from 'react';
 import { FlagIcon } from '@heroicons/react/20/solid';
 
+interface ProgressBarProps {
+	goal: number;
+	total?: number;
+	extra?: number;
+	currency?: string;
+	showGoal?: boolean;
+}
+
 const ProgressBar = ({
 	goal,
 	total = 0,
 	currency = '',
 	extra = 0,
 	showGoal = true,
-}) => {
+}: ProgressBarProps) => {
 	const percentage = goal ? Math.round((total / goal) * 100) : 0;
 	const extraPercentage = goal ? extra / (goal - total) : 0;
 

@@ -14,8 +14,8 @@ const remRegex = /(?<=\d)rem/g;
 
 module.exports = merge(commonConfig, {
 	entry: {
-		'block/index': resolve(__dirname, 'index.js'),
-		'block/kudos-front': resolve(__dirname, 'kudos-front.jsx'),
+		'block/index': resolve(__dirname, 'index.ts'),
+		'block/kudos-front': resolve(__dirname, 'kudos-front.tsx'),
 	},
 	module: {
 		rules: [

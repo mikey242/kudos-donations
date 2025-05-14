@@ -3,6 +3,16 @@ import { BaseController } from './BaseController';
 import { clsx } from 'clsx';
 import { Textarea } from '@headlessui/react';
 
+interface TextAreaControlProps {
+	name: string;
+	rules?: any;
+	label?: string;
+	help?: string;
+	placeholder?: string;
+	isDisabled?: boolean;
+	ariaLabel?: string;
+}
+
 export const TextAreaControl = ({
 	name,
 	label,
@@ -11,7 +21,7 @@ export const TextAreaControl = ({
 	help,
 	isDisabled,
 	ariaLabel,
-}) => {
+}: TextAreaControlProps) => {
 	return (
 		<BaseController
 			name={name}

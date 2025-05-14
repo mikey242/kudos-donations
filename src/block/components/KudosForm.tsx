@@ -10,20 +10,32 @@ import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
 import * as FrontControls from './controls';
 
+interface KudosFormProps {
+	displayAs: 'form' | 'button' | 'fslogo';
+	label?: string;
+	alignment?: 'left' | 'center' | 'right';
+	previewMode?: boolean;
+}
+
+interface FormState {
+	currentStep: number;
+	formData: Record<string, any>;
+}
+
 export const KudosForm = ({
 	displayAs,
 	label,
 	alignment,
 	previewMode = false,
-}) => {
+}: KudosFormProps) => {
 	const { campaign, campaignErrors, isLoading } = useCampaignContext();
-	const [timestamp, setTimestamp] = useState(0);
-	const [formError, setFormError] = useState(null);
-	const [formState, setFormState] = useState({
+	const [timestamp, setTimestamp] = useState<number>(0);
+	const [formError, setFormError] = useState<string | null>(null);
+	const [formState, setFormState] = useState<FormState>({
 		currentStep: 0,
 		formData: {},
 	});
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const isForm = displayAs === 'form';
 	const isModal = displayAs === 'button';
 	const isFSLogo = displayAs === 'fslogo';
@@ -53,20 +65,23 @@ export const KudosForm = ({
 		}));
 	};
 
-	async function submitForm(data) {
+	async function submitForm(data: Record<string, any>): Promise<any> {
 		if (previewMode) {
 			return;
 		}
 		setFormError(null);
 		const formData = new window.FormData();
 		formData.append('timestamp', timestamp.toString());
-		formData.append('campaign_id', campaign.id);
+		formData.append('campaign_id', campaign!.id.toString());
 		formData.append(
 			'return_url',
-			campaign.meta.use_custom_return_url
-				? campaign.meta.custom_return_url
-				: window.location.href
+			String(
+				campaign!.meta.use_custom_return_url
+					? campaign!.meta.custom_return_url
+					: window.location.href
+			)
 		);
+
 		for (const key in data) {
 			if (key === 'field') {
 				formData.append(key, data[key][1]);
@@ -78,9 +93,9 @@ export const KudosForm = ({
 		return apiFetch({
 			path: '/kudos/v1/payment/create',
 			method: 'POST',
-			body: new URLSearchParams(formData),
+			body: new URLSearchParams(formData as any),
 		})
-			.then((result) => {
+			.then((result: any) => {
 				if (result.success) {
 					window.location.href = result.url;
 				} else {
@@ -88,7 +103,7 @@ export const KudosForm = ({
 				}
 				return result;
 			})
-			.catch((error) => {
+			.catch((error: any) => {
 				setFormError(error.message);
 				return error;
 			});

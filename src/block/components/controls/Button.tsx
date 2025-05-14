@@ -1,11 +1,30 @@
 import { clsx } from 'clsx';
-import React from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 import { forwardRef } from '@wordpress/element';
 
-const Button = forwardRef(
+interface ButtonProps {
+	type?: 'button' | 'submit' | 'reset';
+	id?: string;
+	children: ReactNode;
+	href?: string;
+	isOutline?: boolean;
+	isExternal?: boolean;
+	isDisabled?: boolean;
+	isSmall?: boolean;
+	isBusy?: boolean;
+	icon?: ReactNode;
+	form?: string;
+	ariaLabel?: string;
+	className?: string;
+	onClick?: () => void;
+	style?: CSSProperties;
+}
+
+const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
 	(
 		{
 			type = 'button',
+			id,
 			children,
 			href,
 			isOutline,
@@ -22,7 +41,7 @@ const Button = forwardRef(
 		},
 		ref
 	) => {
-		const handleClick = (e) => {
+		const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 			if (href) {
 				e.preventDefault();
 				window.location.href = href;
@@ -88,9 +107,10 @@ const Button = forwardRef(
 			<>
 				{href ? (
 					<a
+						id={id}
 						href={href}
 						target={isExternal && '_blank'}
-						ref={ref}
+						ref={ref as React.Ref<HTMLAnchorElement>}
 						className={classes}
 						aria-label={ariaLabel}
 					>
@@ -98,9 +118,10 @@ const Button = forwardRef(
 					</a>
 				) : (
 					<button
+						id={id}
 						type={type}
 						onClick={handleClick}
-						ref={ref}
+						ref={ref as React.Ref<HTMLButtonElement>}
 						form={form}
 						disabled={isDisabled || isBusy}
 						className={classes}

@@ -4,6 +4,19 @@ import { BaseController } from './BaseController';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { Input } from '@headlessui/react';
 
+interface TextControlProps {
+	name: string;
+	rules?: any;
+	label?: string;
+	help?: string;
+	prefix?: string;
+	type?: string;
+	placeholder?: string;
+	isDisabled?: boolean;
+	isReadOnly?: boolean;
+	ariaLabel?: string;
+}
+
 export const TextControl = ({
 	name,
 	rules,
@@ -15,7 +28,7 @@ export const TextControl = ({
 	prefix,
 	type = 'text',
 	placeholder,
-}) => {
+}: TextControlProps) => {
 	const prefixRef = useRef(null);
 	const [width, setWidth] = useState(0);
 	useEffect(() => {

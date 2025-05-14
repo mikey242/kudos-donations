@@ -5,11 +5,26 @@ import { useFormContext } from 'react-hook-form';
 import { CheckboxControl } from '../controls';
 import { createInterpolateElement } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
-export const SummaryTab = ({ campaign }) => {
+import { Campaign } from '../../contexts/CampaignContext';
+
+interface SummaryTabProps {
+	campaign: Campaign;
+}
+
+interface SummaryCheckbox {
+	name: string;
+	enabled: string;
+	label: string;
+	rules?: {
+		required: string;
+	};
+}
+
+export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 	const { meta } = campaign;
 	const { getValues } = useFormContext();
 	const values = getValues();
-	const recurringText = () => {
+	const recurringText = (): string => {
 		const recurring = getValues('recurring');
 		if (!recurring) {
 			return __('One off', 'kudos-donations');
@@ -82,7 +97,7 @@ export const SummaryTab = ({ campaign }) => {
 			},
 		],
 		campaign
-	);
+	) as SummaryCheckbox[];
 
 	return (
 		<BaseTab
@@ -133,7 +148,7 @@ export const SummaryTab = ({ campaign }) => {
 	);
 };
 
-function getFrequencyName(frequency) {
+function getFrequencyName(frequency: string) {
 	switch (frequency) {
 		case '12 months':
 			return __('Yearly', 'kudos-donations');
