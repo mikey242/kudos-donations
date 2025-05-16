@@ -55,6 +55,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 			'hierarchical' => static::HIERARCHICAL,
 			'menu_icon'    => $this->get_icon(),
 			'map_meta_cap' => true,
+			'capabilities' => $this->get_capabilities(),
 		];
 	}
 
@@ -71,6 +72,16 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	 */
 	protected function get_icon(): string {
 		return 'dashicons-admin-post';
+	}
+
+	/**
+	 * Gets the capabilities for the current content type.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/get_post_type_capabilities/
+	 * @see https://developer.wordpress.org/reference/functions/register_taxonomy/
+	 */
+	protected function get_capabilities(): array {
+		return [ 'create_posts' => false ];
 	}
 
 	/**
