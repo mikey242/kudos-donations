@@ -73,7 +73,7 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	 */
 	protected function get_capabilities(): array {
 		return [
-			'create_posts' => true,
+			'create_posts' => 'edit_posts',
 		];
 	}
 

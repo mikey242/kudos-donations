@@ -40,7 +40,13 @@ abstract class AbstractCustomPostType extends AbstractContentType implements Cus
 	 * {@inheritDoc}
 	 */
 	public function get_args(): array {
-		return array_merge( [ 'supports' => $this->get_supports() ], parent::get_args() );
+		return array_merge(
+			[
+				'supports'        => $this->get_supports(),
+				'capability_type' => 'post',
+			],
+			parent::get_args()
+		);
 	}
 
 	/**
