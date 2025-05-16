@@ -6,15 +6,15 @@ module.exports = merge(commonConfig, {
 	entry: {
 		'settings/kudos-admin-settings': resolve(
 			__dirname,
-			'kudos-admin-settings.jsx'
+			'kudos-admin-settings.tsx'
 		),
 		'campaigns/kudos-admin-campaigns': resolve(
 			__dirname,
-			'kudos-admin-campaigns.jsx'
+			'kudos-admin-campaigns.tsx'
 		),
 		'migrations/kudos-admin-migrations': resolve(
 			__dirname,
-			'kudos-admin-migrations.js'
+			'kudos-admin-migrations.ts'
 		),
 	},
 	module: {

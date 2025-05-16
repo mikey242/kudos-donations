@@ -33,6 +33,7 @@
   "devDependencies": {
     "@babel/preset-react": "^7.25.9",
     "@tailwindcss/forms": "^0.5.9",
+    "@types/codemirror": "^5.60.15",
     "@types/lodash": "^4.17.16",
     "@types/react-select-country-list": "^2.2.3",
     "@types/wordpress__blocks": "^12.5.17",
