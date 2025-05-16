@@ -48,7 +48,6 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 		return [
 			'description'  => $this->get_description(),
 			'labels'       => $this->get_labels(),
-			'capabilities' => $this->get_capabilities(),
 			'public'       => static::PUBLIC,
 			'show_ui'      => static::SHOW_UI,
 			'show_in_menu' => static::SHOW_IN_MENU,
@@ -73,14 +72,6 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	protected function get_icon(): string {
 		return 'dashicons-admin-post';
 	}
-
-	/**
-	 * Gets the capabilities for the current content type.
-	 *
-	 * @see https://developer.wordpress.org/reference/functions/get_post_type_capabilities/
-	 * @see https://developer.wordpress.org/reference/functions/register_taxonomy/
-	 */
-	abstract protected function get_capabilities(): array;
 
 	/**
 	 * Returns the default labels.

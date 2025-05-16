@@ -28,15 +28,6 @@ abstract class AbstractCustomPostType extends AbstractContentType implements Cus
 	use TableColumnsTrait;
 
 	/**
-	 * Allows changing the capabilities of the CPT. By default, we want to disable post creation by the user.
-	 *
-	 * @see https://developer.wordpress.org/reference/functions/get_post_type_capabilities/
-	 */
-	protected function get_capabilities(): array {
-		return [ 'create_posts' => false ];
-	}
-
-	/**
 	 * Returns supported features.
 	 *
 	 * @see https://developer.wordpress.org/reference/functions/register_post_type/#supports
