@@ -34,7 +34,7 @@ const ProgressBar = ({
 					<div className="left-0 transition-opacity absolute flex items-center justify-center w-full opacity-0" />
 					<div className="absolute right-1/2 translate-x-1/2">
 						<span>{percentage + '%'}</span>
-						<span className="hidden sm:inline">
+						<span className="hidden xs:inline">
 							{' ( ' + currency + total + ')'}
 						</span>
 					</div>
