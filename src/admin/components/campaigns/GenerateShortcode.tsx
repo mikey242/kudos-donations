@@ -110,6 +110,7 @@ export default function GenerateShortcode({
 						help={__('Add a button label', 'kudos-donations')}
 						value={label}
 						onChange={setLabel}
+						__next40pxDefaultSize
 					/>
 					<Divider margin="5" />
 					<RadioControl
