@@ -114,8 +114,10 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.0.10 =
-* Fix compatibility issue with WooCommerce where creating Kudos posts would return a 403 error
 * React-based admin pages now rewritten to TypeScript
+* Fix a compatibility issue with WooCommerce where creating campaigns would return a 403 error
+* Improve donation form look on small screens
+* Update various dependencies
 
 = 4.0.9 =
 * Use portal in footer for rendering modal if possible
