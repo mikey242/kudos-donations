@@ -97,21 +97,46 @@ class Admin extends AbstractRegistrable {
 						}
 					}
 					break;
-				case 'kudos_assign_orphan_transactions_to_campaign':
-					if ( wp_verify_nonce( $nonce, 'kudos_assign_orphan_transactions_to_campaign' ) ) {
-						$campaign_id = $_POST['kudos_campaign'];
+				case 'kudos_assign_transactions_to_campaign':
+					if ( wp_verify_nonce( $nonce, 'kudos_assign_transactions_to_campaign' ) ) {
+						$from = $_POST['kudos_from_campaign'];
+						$to   = $_POST['kudos_to_campaign'];
 
-						if ( ! $campaign_id ) {
-							break;
+						switch ( $from ) {
+							case '_orphaned_transactions_':
+								$transactions = $this->get_orphan_transaction_ids();
+								break;
+							case '_all_transactions_':
+								$transactions = array_map(
+									fn( $t ) => $t->ID,
+									TransactionPostType::get_posts()
+								);
+								break;
+							default:
+								$transactions = array_map(
+									fn( $t ) => $t->ID,
+									TransactionPostType::get_posts(
+										[
+											TransactionPostType::META_FIELD_CAMPAIGN_ID => $from,
+										]
+									)
+								);
+								break;
 						}
 
-						$transactions = TransactionPostType::get_posts( [ TransactionPostType::META_FIELD_CAMPAIGN_ID => '' ] );
-						$this->logger->info( \sprintf( 'Assigning %s orphan transactions to campaign', \count( $transactions ) ), [ 'campaign_id' => $campaign_id ] );
+						$this->logger->info(
+							\sprintf( 'Assigning %s transactions to campaign', \count( $transactions ) ),
+							[
+								'from' => $from,
+								'to'   => $to,
+							]
+						);
+
 						foreach ( $transactions as $transaction ) {
 							TransactionPostType::save(
 								[
-									'ID' => $transaction->ID,
-									TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_id,
+									'ID' => $transaction,
+									TransactionPostType::META_FIELD_CAMPAIGN_ID => $to,
 								]
 							);
 						}
@@ -167,5 +192,25 @@ class Admin extends AbstractRegistrable {
 				);
 			}
 		}
+	}
+
+	/**
+	 * Gets a list of transactions with no Campaign.
+	 */
+	private function get_orphan_transaction_ids(): array {
+		$transactions           = TransactionPostType::get_posts();
+		$orphan_transaction_ids = [];
+
+		foreach ( $transactions as $transaction ) {
+			$campaign_id = get_post_meta( $transaction->ID, TransactionPostType::META_FIELD_CAMPAIGN_ID, true );
+
+			$is_missing = empty( $campaign_id ) || ! CampaignPostType::get_post( [ 'ID' => $campaign_id ] );
+
+			if ( $is_missing ) {
+				$orphan_transaction_ids[] = $transaction->ID;
+			}
+		}
+
+		return $orphan_transaction_ids;
 	}
 }
