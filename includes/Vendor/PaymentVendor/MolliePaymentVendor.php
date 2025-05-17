@@ -131,8 +131,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-    public static function supports_recurring(): bool {
-        return true;
+    public static function recurring_enabled(): bool {
+        return (bool) get_option(self::SETTING_RECURRING, false);
     }
 
 	/**
