@@ -1,17 +1,17 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "mergeConfidence:all-badges",
-    ":preserveSemverRanges"
-  ],
-  "constraints": {
-    "php": "7.4.0"
-  },
-  "constraintsFiltering": "strict",
-  "composer": {
-    "lockFileMaintenance": {
-      "enabled": true
-    }
-  }
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"config:recommended",
+		"mergeConfidence:all-badges",
+		":preserveSemverRanges"
+	],
+	"constraints": {
+		"php": "7.4.0"
+	},
+	"constraintsFiltering": "strict",
+	"composer": {
+		"lockFileMaintenance": {
+			"enabled": true
+		}
+	}
 }

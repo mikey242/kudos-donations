@@ -1,60 +1,60 @@
 name: Release Workflow
 
 on:
-  push:
-    tags: ['*']
+    push:
+        tags: ['*']
 
 env:
-  PHP_VERSION: '8.2'
-  NODE_VERSION: '18.18.1'
+    PHP_VERSION: '8.2'
+    NODE_VERSION: '18.18.1'
 
 jobs:
-  build-job:
-    uses: ./.github/workflows/build.yml
-    with:
-      node-version: '18.18.1'
-
-  zip-job:
-    needs: build-job
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build folder
-        uses: actions/download-artifact@v4
+    build-job:
+        uses: ./.github/workflows/build.yml
         with:
-          name: build-folder
-          path: ./build
+            node-version: '18.18.1'
 
-      - name: Set up PHP with Composer and PHP-Scoper
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          tools: composer, php-scoper
+    zip-job:
+        needs: build-job
+        permissions:
+            contents: write
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: composer install --optimize-autoloader --no-dev
+            - name: Download build folder
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-folder
+                  path: ./build
 
-      - name: Create zip archive
-        run: |
-          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          chmod +x wp-cli.phar
-          php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
-          composer run make-zip
+            - name: Set up PHP with Composer and PHP-Scoper
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ env.PHP_VERSION }}
+                  tools: composer, php-scoper
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: release
-          path: kudos-donations.zip
+            - name: Install dependencies
+              run: composer install --optimize-autoloader --no-dev
 
-      - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          body: |
-            ## What's Changed
-            - Automatically generated release.
-          files: kudos-donations.zip
+            - name: Create zip archive
+              run: |
+                  curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+                  chmod +x wp-cli.phar
+                  php wp-cli.phar package install wp-cli/dist-archive-command --allow-root
+                  composer run make-zip
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: release
+                  path: kudos-donations.zip
+
+            - name: Publish GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  body: |
+                      ## What's Changed
+                      - Automatically generated release.
+                  files: kudos-donations.zip

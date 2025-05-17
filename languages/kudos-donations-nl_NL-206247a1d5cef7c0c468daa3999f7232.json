@@ -1,1 +1,84 @@
-{"translation-revision-date":"2025-03-16 13:23:09+0000","generator":"WP-CLI\/2.11.0","source":"build\/front\/block\/kudos-front.js","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","lang":"nl","plural-forms":"nplurals=2; plural=n != 1;"},"Loading":["Laden"],"Payment could not be verified, please contact us for more information.":["Betaling kon niet worden geverifieerd, neem contact met ons op voor meer informatie."],"Payment Pending":["Betaling in afwachting"],"Your payment was cancelled.":["Je betaling is geannuleerd."],"Your payment failed.":["Je betaling is mislukt."],"Payment Failed":["Betaling mislukt"],"Campaign not found":["Campagne niet gevonden"],"Accept <a>Terms and Conditions<\/a>":["Ik accepteer de <a>voorwaarden en condities<\/a>"],"Accept <a>Privacy Policy<\/a>":["Accepteer <a>Privacy Beleid<\/a>"],"anonymous":["anoniem"],"Full name":["Volledige naam"],"Open donation amount":["Open donatiebedrag"],"Fixed donation amount":["Vast donatiebedrag"],"Please accept this to continue":["Accepteer dit om verder te gaan"],"One off":["Eenmalig"],"Recurring donation":["Terugkerende donatie"],"Maximum donation is %1$s%2$s":["Maximale donatie is %1$s%2$s"],"Country required":["Land vereist"],"City required":["Stad vereist"],"Postcode required":["Postcode vereist"],"Street required":["Straat vereist"],"Submit":["Verstuur"],"Back":["Terug"],"Close modal":["Pop-up sluiten"],"Business name":["Bedrijfsnaam"],"Message":["Bericht"],"Close":["Sluiten"],"Donation duration":["Donatieduur"],"Next":["Volgende"],"years":["jaren"],"year":["jaar"],"Payment frequency":["Betalingsfrequentie"],"E-mail address":["E-mailadres"],"Subscriptions must be more than one payment":["Abonnementen bestaan uit meer dan \u00e9\u00e9n betaling"],"Please select a payment duration":["Selecteer betalingsduur"],"Please select a payment frequency":["Selecteer betalingsfrequentie"],"Recurring":["Periodiek"],"One-off":["Eenmalig"],"Country":["Land"],"City":["Stad"],"Postcode":["Postcode"],"Street":["Straat"],"Type":["Type"],"Monthly":["Maandelijks"],"Quarterly":["Per kwartaal"],"Yearly":["Jaarlijks"],"Continuous":["Doorlopend"],"Payment Cancelled":["Betaling geannuleerd"],"Minimum donation is %d euro":["Minimum donatie is %d euro","Minimum donatie is %d euro's"],"Your email is required":["Vul je e-mailadres in"],"Your name is required":["Vul je naam in"],"Amount":["Bedrag"],"Email":["E-mail"],"Name":["Naam"]}}}
+{
+	"translation-revision-date": "2025-03-16 13:23:09+0000",
+	"generator": "WP-CLI\/2.11.0",
+	"source": "build\/front\/block\/kudos-front.js",
+	"domain": "messages",
+	"locale_data": {
+		"messages": {
+			"": {
+				"domain": "messages",
+				"lang": "nl",
+				"plural-forms": "nplurals=2; plural=n != 1;"
+			},
+			"Loading": ["Laden"],
+			"Payment could not be verified, please contact us for more information.": [
+				"Betaling kon niet worden geverifieerd, neem contact met ons op voor meer informatie."
+			],
+			"Payment Pending": ["Betaling in afwachting"],
+			"Your payment was cancelled.": ["Je betaling is geannuleerd."],
+			"Your payment failed.": ["Je betaling is mislukt."],
+			"Payment Failed": ["Betaling mislukt"],
+			"Campaign not found": ["Campagne niet gevonden"],
+			"Accept <a>Terms and Conditions<\/a>": [
+				"Ik accepteer de <a>voorwaarden en condities<\/a>"
+			],
+			"Accept <a>Privacy Policy<\/a>": [
+				"Accepteer <a>Privacy Beleid<\/a>"
+			],
+			"anonymous": ["anoniem"],
+			"Full name": ["Volledige naam"],
+			"Open donation amount": ["Open donatiebedrag"],
+			"Fixed donation amount": ["Vast donatiebedrag"],
+			"Please accept this to continue": [
+				"Accepteer dit om verder te gaan"
+			],
+			"One off": ["Eenmalig"],
+			"Recurring donation": ["Terugkerende donatie"],
+			"Maximum donation is %1$s%2$s": ["Maximale donatie is %1$s%2$s"],
+			"Country required": ["Land vereist"],
+			"City required": ["Stad vereist"],
+			"Postcode required": ["Postcode vereist"],
+			"Street required": ["Straat vereist"],
+			"Submit": ["Verstuur"],
+			"Back": ["Terug"],
+			"Close modal": ["Pop-up sluiten"],
+			"Business name": ["Bedrijfsnaam"],
+			"Message": ["Bericht"],
+			"Close": ["Sluiten"],
+			"Donation duration": ["Donatieduur"],
+			"Next": ["Volgende"],
+			"years": ["jaren"],
+			"year": ["jaar"],
+			"Payment frequency": ["Betalingsfrequentie"],
+			"E-mail address": ["E-mailadres"],
+			"Subscriptions must be more than one payment": [
+				"Abonnementen bestaan uit meer dan \u00e9\u00e9n betaling"
+			],
+			"Please select a payment duration": ["Selecteer betalingsduur"],
+			"Please select a payment frequency": [
+				"Selecteer betalingsfrequentie"
+			],
+			"Recurring": ["Periodiek"],
+			"One-off": ["Eenmalig"],
+			"Country": ["Land"],
+			"City": ["Stad"],
+			"Postcode": ["Postcode"],
+			"Street": ["Straat"],
+			"Type": ["Type"],
+			"Monthly": ["Maandelijks"],
+			"Quarterly": ["Per kwartaal"],
+			"Yearly": ["Jaarlijks"],
+			"Continuous": ["Doorlopend"],
+			"Payment Cancelled": ["Betaling geannuleerd"],
+			"Minimum donation is %d euro": [
+				"Minimum donatie is %d euro",
+				"Minimum donatie is %d euro's"
+			],
+			"Your email is required": ["Vul je e-mailadres in"],
+			"Your name is required": ["Vul je naam in"],
+			"Amount": ["Bedrag"],
+			"Email": ["E-mail"],
+			"Name": ["Naam"]
+		}
+	}
+}

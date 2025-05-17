@@ -22,8 +22,11 @@ declare global {
 		kudos?: KudosGlobal;
 		wp: {
 			codeEditor: {
-				initialize: (id: string, settings: CodeEditorSettings) => CodeEditorInstance;
-			}
+				initialize: (
+					id: string,
+					settings: CodeEditorSettings
+				) => CodeEditorInstance;
+			};
 		};
 	}
 }
