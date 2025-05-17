@@ -14,6 +14,7 @@ import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import { useAdminContext } from './AdminContext';
 import type { Campaign } from '../../../types/wp';
+import apiFetch from '@wordpress/api-fetch';
 
 interface CampaignsContextValue {
 	posts: Campaign[];
@@ -26,6 +27,7 @@ interface CampaignsContextValue {
 	handleUpdate: (data: Partial<Campaign>) => Promise<any>;
 	handleDelete: (postId: number) => void;
 	handleDuplicate: (post: Campaign) => void;
+	recurringEnabled: boolean;
 }
 
 const CampaignsContext = createContext<CampaignsContextValue | null>(null);
@@ -41,6 +43,7 @@ export const CampaignsProvider = ({
 	const [cachedPosts, setCachedPosts] = useState<Campaign[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
+	const [recurringEnabled, setRecurringEnabled] = useState<boolean>(false);
 	const { records: posts, hasResolved } = useEntityRecords<Campaign>(
 		'postType',
 		postType,
@@ -58,6 +61,13 @@ export const CampaignsProvider = ({
 			setHasLoadedOnce(true);
 		}
 	}, [posts, hasResolved]);
+
+	useEffect(() => {
+		apiFetch({
+			path: '/kudos/v1/payment/recurring-enabled',
+			method: 'GET',
+		}).then((r: boolean) => setRecurringEnabled(r));
+	}, []);
 
 	const handleSave = useCallback(
 		async (args = {}): Promise<any | null> => {
@@ -180,6 +190,7 @@ export const CampaignsProvider = ({
 		handleDuplicate,
 		handleDelete,
 		handleUpdate,
+		recurringEnabled,
 	};
 
 	return (
