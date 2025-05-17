@@ -14,10 +14,14 @@ namespace IseardMedia\Kudos\Admin;
 use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Service\MigrationService;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
+use Monolog\Logger;
 
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
 
 	private const LOG_DIR = KUDOS_STORAGE_DIR . 'logs/';
+
+	private const TAB_LOG     = 'log';
+	private const TAB_ACTIONS = 'actions';
 
 	/**
 	 * Pattern used for parsing log entries.
@@ -138,12 +142,12 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 			<nav class="nav-tab-wrapper">
-				<a href="<?php echo esc_attr( add_query_arg( 'tab', 'log' ) ); ?>"
+				<a href="<?php echo esc_url( add_query_arg( 'tab', 'log' ) ); ?>"
 					class="nav-tab <?php echo ( 'log' === $this->current_tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
 				<?php
 				if ( KUDOS_DEBUG ) :
 					?>
-					<a href="<?php echo esc_attr( add_query_arg( 'tab', 'actions' ) ); ?>"
+					<a href="<?php echo esc_url( add_query_arg( 'tab', 'actions' ) ); ?>"
 						class="nav-tab <?php echo ( 'actions' === $this->current_tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
 				<?php endif; ?>
 			</nav>
@@ -154,7 +158,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 				switch ( $this->current_tab ) :
 
-					case 'log':
+					case self::TAB_LOG:
 						if ( $this->log_files ) {
 							?>
 							<form name="log-form" action="" method='post' style="margin: 1em 0">
@@ -178,13 +182,16 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 							</form>
 
 						<table class='form-table' style="table-layout: auto">
-							<tbody>
+							<thead>
 							<tr>
-								<th class='row-title'>Date</th>
-								<th>Level</th>
-								<th>Message</th>
-								<th>Context</th>
+								<th><?php esc_html_e( 'Date', 'kudos-donations' ); ?></th>
+								<th><?php esc_html_e( 'Level', 'kudos-donations' ); ?></th>
+								<th><?php esc_html_e( 'Message', 'kudos-donations' ); ?></th>
+								<th><?php esc_html_e( 'Context', 'kudos-donations' ); ?></th>
 							</tr>
+							</thead>
+
+							<tbody>
 
 							<?php
 							foreach ( $this->get_log_content() as $key => $log ) {
@@ -195,11 +202,11 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 								$context = $log['context'] ?? '[]';
 
 								switch ( $level ) {
-									case 'CRITICAL':
-									case 'ERROR':
+									case Logger::CRITICAL:
+									case Logger::ERROR:
 										$class = 'notice-error';
 										break;
-									case 'DEBUG':
+									case Logger::DEBUG:
 										$class = 'notice-debug';
 										break;
 									default:
@@ -220,9 +227,9 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 										);
 										?>
 									</td>
-									<td><?php echo esc_attr( $level ); ?></td>
+									<td><code><?php echo esc_attr( $level ); ?></code></td>
 									<td><?php echo esc_textarea( $message ); ?></td>
-									<td><?php echo '<code>' . esc_textarea( $context ) . '</code>'; ?></td>
+									<td><code><?php echo esc_textarea( $context ); ?></code></td>
 
 								</tr>
 
@@ -235,7 +242,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						}
 						break;
 
-					case 'actions':
+					case self::TAB_ACTIONS:
+						$campaigns = CampaignPostType::get_posts();
 						?>
 						<p><strong>Please use the following actions only if you are having issues. Remember to back up your data
 								before
@@ -245,9 +253,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Settings actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_settings' ); ?>
-							<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_clear_settings'>
-								Reset ALL settings
-							</button>
+							<?php submit_button( __( 'Reset ALL settings', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<input type="hidden" name="kudos_action" value="kudos_clear_settings" />
 						</form>
 
 						<hr/>
@@ -255,10 +262,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Campaign actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_campaigns' ); ?>
-							<button type='submit' class="button-secondary confirm" name='kudos_action'
-									value='kudos_clear_campaigns'>
-								Clear campaigns
-							</button>
+							<?php submit_button( __( 'Clear campaigns', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<input type="hidden" name="kudos_action" value="kudos_clear_campaigns" />
 						</form>
 
 						<hr/>
@@ -266,23 +271,20 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Cache actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_twig_cache' ); ?>
-							<button class="button-secondary confirm" type='submit' name='kudos_action'
-									value='kudos_clear_twig_cache'>Clear twig cache
-							</button>
+							<?php submit_button( __( 'Clear twig cache', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<input type="hidden" name="kudos_action" value="kudos_clear_twig_cache" />
 						</form>
 
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_container_cache' ); ?>
-							<button class="button-secondary confirm" type='submit' name='kudos_action'
-									value='kudos_clear_container_cache'>Clear container cache
-							</button>
+							<?php submit_button( __( 'Clear container cache', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<input type="hidden" name="kudos_action" value="kudos_clear_container_cache" />
 						</form>
 
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_all_cache' ); ?>
-							<button class="button-secondary confirm" type='submit' name='kudos_action'
-									value='kudos_clear_all_cache'>Clear all cache
-							</button>
+							<?php submit_button( __( 'Clear all cache', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<input type="hidden" name="kudos_action" value="kudos_clear_all_cache" />
 						</form>
 
 						<hr/>
@@ -290,27 +292,64 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Log actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_logs' ); ?>
-							<button class="button-secondary confirm" type='submit' name='kudos_action'
-									value='kudos_clear_logs'>Clear logs
-							</button>
+							<?php submit_button( __( 'Clear logs', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<input type="hidden" name="kudos_action" value="kudos_clear_logs" />
 						</form>
 
 						<hr/>
 
 						<h2>Transaction actions</h2>
-						<form action="" method='post' style="display: inline">
-							<?php wp_nonce_field( 'kudos_assign_orphan_transactions_to_campaign' ); ?>
-							<label for="kudos_campaign"><?php esc_html_e( 'Assign unassigned transactions to campaign:', 'kudos-donations' ); ?></label><br/><select name="kudos_campaign" id="kudos_campaign">
-								<?php
-									$campaigns = CampaignPostType::get_posts();
-								foreach ( $campaigns as $campaign ) {
-									echo '<option value="' . esc_attr( $campaign->ID ) . '">' . esc_html( $campaign->post_title ) . '</option>';
-								}
-								?>
-							</select>
-							<button type='submit' class="button-secondary confirm" name='kudos_action' value='kudos_assign_orphan_transactions_to_campaign'>
-								Assign
-							</button>
+
+						<form method="post" action="">
+							<?php wp_nonce_field( 'kudos_assign_transactions_to_campaign' ); ?>
+
+							<table class="form-table">
+								<tr>
+									<th scope="row">
+										<label for="kudos_from_campaign"><?php esc_html_e( 'Transactions from:', 'kudos-donations' ); ?></label>
+									</th>
+									<td>
+										<select name="kudos_from_campaign" id="kudos_from_campaign" class="regular-text">
+											<optgroup label="<?php esc_attr_e( 'Global', 'kudos-donations' ); ?>">
+												<option value="_all_transactions_"><?php esc_html_e( 'All transactions', 'kudos-donations' ); ?></option>
+												<option value="_orphaned_transactions_"><?php esc_html_e( 'Orphaned transactions', 'kudos-donations' ); ?></option>
+											</optgroup>
+											<optgroup label="<?php esc_attr_e( 'Campaigns', 'kudos-donations' ); ?>">
+											<?php
+											foreach ( $campaigns as $campaign ) {
+												printf(
+													'<option value="%s">%s</option>',
+													esc_attr( $campaign->ID ),
+													esc_html( $campaign->post_title )
+												);
+											}
+											?>
+											</optgroup>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="kudos_to_campaign"><?php esc_html_e( 'Assign to campaign:', 'kudos-donations' ); ?></label>
+									</th>
+									<td>
+										<select name="kudos_to_campaign" id="kudos_to_campaign" class="regular-text">
+											<?php
+											foreach ( $campaigns as $campaign ) {
+												printf(
+													'<option value="%s">%s</option>',
+													esc_attr( $campaign->ID ),
+													esc_html( $campaign->post_title )
+												);
+											}
+											?>
+										</select>
+									</td>
+								</tr>
+							</table>
+
+							<?php submit_button( __( 'Assign Transactions', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<input type="hidden" name="kudos_action" value="kudos_assign_transactions_to_campaign" />
 						</form>
 
 						<hr/>
