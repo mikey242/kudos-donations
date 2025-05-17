@@ -1,22 +1,18 @@
+/* eslint-disable camelcase */
 import { __ } from '@wordpress/i18n';
 import { FormTokenField, RadioGroupControl, TextControl } from '../../controls';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { Panel, PanelBody } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
-
-interface DonationSettingsTabProps {
-	recurringAllowed: boolean;
-}
-
-export const DonationSettingsTab = ({
-	recurringAllowed,
-}: DonationSettingsTabProps): React.ReactNode => {
+import { useCampaignsContext } from '../../contexts';
+export const DonationSettingsTab = (): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const amountType = useWatch({ name: 'meta.amount_type' });
 	const currency = useWatch({ name: 'meta.currency' });
 	const maxDonation = useWatch({ name: 'meta.maximum_donation' });
 	const minDonation = useWatch({ name: 'meta.minimum_donation' });
+	const { recurringEnabled } = useCampaignsContext();
 
 	return (
 		<>
@@ -37,12 +33,12 @@ export const DonationSettingsTab = ({
 							{
 								label: __('Subscription', 'kudos-donations'),
 								value: 'recurring',
-								disabled: !recurringAllowed,
+								disabled: !recurringEnabled,
 							},
 							{
 								label: __('Both', 'kudos-donations'),
 								value: 'both',
-								disabled: !recurringAllowed,
+								disabled: !recurringEnabled,
 							},
 						]}
 					/>

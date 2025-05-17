@@ -19,13 +19,9 @@ import type { Campaign } from '../../../types/wp';
 
 interface CampaignEditProps {
 	campaign: Campaign;
-	recurringAllowed: boolean;
 }
 
-const CampaignEdit = ({
-	campaign,
-	recurringAllowed,
-}: CampaignEditProps): React.ReactNode => {
+const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -84,11 +80,7 @@ const CampaignEdit = ({
 				{
 					name: 'donation-settings',
 					title: __('Donation settings', 'kudos-donations'),
-					content: (
-						<DonationSettingsTab
-							recurringAllowed={recurringAllowed}
-						/>
-					),
+					content: <DonationSettingsTab />,
 				},
 				{
 					name: 'optional-fields',
@@ -101,7 +93,7 @@ const CampaignEdit = ({
 					content: <CustomCSSTab />,
 				},
 			]),
-		[campaign, recurringAllowed]
+		[campaign]
 	) as AdminTab[];
 
 	return (
