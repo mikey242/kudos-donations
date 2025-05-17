@@ -51,6 +51,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 		$this->current_log_file  = file_exists( $log_file ) ? $log_file : ( ! empty( $this->log_files ) ? end( $this->log_files ) : '' );
 		$this->current_log_level = 'ALL';
 		$this->process_form_data();
+		$this->add_js();
 	}
 
 	/**
@@ -79,6 +80,31 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	 */
 	public static function get_position(): int {
 		return 100;
+	}
+
+	/**
+	 * Add JS to the footer.
+	 */
+	private function add_js(): void {
+		add_action(
+			'admin_footer',
+			function () {
+				?>
+			<script type="text/javascript">
+				document.addEventListener('DOMContentLoaded', function () {
+					document.querySelectorAll('form button[data-confirm], form input[type=submit][data-confirm]').forEach(function (btn) {
+						btn.addEventListener('click', function (e) {
+							const message = btn.getAttribute('data-confirm');
+							if (!confirm(message)) {
+								e.preventDefault();
+							}
+						});
+					});
+				});
+			</script>
+				<?php
+			}
+		);
 	}
 
 	/**
@@ -142,7 +168,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 			<nav class="nav-tab-wrapper">
 				<a href="<?php echo esc_url( add_query_arg( 'tab', 'actions' ) ); ?>"
-				   class="nav-tab <?php echo ( 'actions' === $this->current_tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
+					class="nav-tab <?php echo ( 'actions' === $this->current_tab ) ? 'nav-tab-active' : ''; ?>">Actions</a>
 				<a href="<?php echo esc_url( add_query_arg( 'tab', 'log' ) ); ?>"
 					class="nav-tab <?php echo ( 'log' === $this->current_tab ) ? 'nav-tab-active' : ''; ?>">Log</a>
 
@@ -166,7 +192,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Settings actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_settings' ); ?>
-							<?php submit_button( __( 'Reset ALL settings', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<?php submit_button( __( 'Reset ALL settings', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to reset all settings?', 'kudos-donations' ) ] ); ?>
 							<input type="hidden" name="kudos_action" value="kudos_clear_settings" />
 						</form>
 
@@ -175,7 +201,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Campaign actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_campaigns' ); ?>
-							<?php submit_button( __( 'Clear campaigns', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<?php submit_button( __( 'Clear campaigns', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to delete all campaigns?', 'kudos-donations' ) ] ); ?>
 							<input type="hidden" name="kudos_action" value="kudos_clear_campaigns" />
 						</form>
 
@@ -184,19 +210,19 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Cache actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_twig_cache' ); ?>
-							<?php submit_button( __( 'Clear twig cache', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<?php submit_button( __( 'Clear twig cache', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to clear twig cache?', 'kudos-donations' ) ] ); ?>
 							<input type="hidden" name="kudos_action" value="kudos_clear_twig_cache" />
 						</form>
 
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_container_cache' ); ?>
-							<?php submit_button( __( 'Clear container cache', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<?php submit_button( __( 'Clear container cache', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to clear container cache?', 'kudos-donations' ) ] ); ?>
 							<input type="hidden" name="kudos_action" value="kudos_clear_container_cache" />
 						</form>
 
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_all_cache' ); ?>
-							<?php submit_button( __( 'Clear all cache', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<?php submit_button( __( 'Clear all cache', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to clear all cache?', 'kudos-donations' ) ] ); ?>
 							<input type="hidden" name="kudos_action" value="kudos_clear_all_cache" />
 						</form>
 
@@ -205,7 +231,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Log actions</h2>
 						<form action="" method='post' style="display: inline">
 							<?php wp_nonce_field( 'kudos_clear_logs' ); ?>
-							<?php submit_button( __( 'Clear logs', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<?php submit_button( __( 'Clear logs', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to clear the log?', 'kudos-donations' ) ] ); ?>
 							<input type="hidden" name="kudos_action" value="kudos_clear_logs" />
 						</form>
 
@@ -261,7 +287,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 								</tr>
 							</table>
 
-							<?php submit_button( __( 'Assign Transactions', 'kudos-donations' ), 'secondary', 'kudos_action', false ); ?>
+							<?php submit_button( __( 'Assign Transactions', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to move the selected transactions to the selected campaign?', 'kudos-donations' ) ] ); ?>
 							<input type="hidden" name="kudos_action" value="kudos_assign_transactions_to_campaign" />
 						</form>
 
