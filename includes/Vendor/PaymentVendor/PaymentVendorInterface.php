@@ -28,7 +28,7 @@ interface PaymentVendorInterface
      *
      * @return bool
      */
-    public static function supports_recurring(): bool;
+    public static function recurring_enabled(): bool;
 
 	/**
 	 * Refresh the local vendor settings.
