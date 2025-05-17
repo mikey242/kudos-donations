@@ -16,6 +16,7 @@ bin
 /src
 /tests
 /languages
+/.cloudflared
 
 # Configuration
 .babelrc

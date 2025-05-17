@@ -1,1 +1,170 @@
-{"translation-revision-date":"2025-03-16 13:23:09+0000","generator":"WP-CLI\/2.11.0","source":"build\/admin\/campaigns\/kudos-admin-campaigns.js","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","lang":"nl","plural-forms":"nplurals=2; plural=n != 1;"},"Payment type":["Betalingstype"],"The maximum donation that you want to allow, leave blank to disable. This does not override your payment provider's maximum.":["De maximale donatie die je wilt toestaan, laat leeg om deze uit te schakelen. Dit overschrijft niet de maximale limiet van je betaalprovider."],"Each value must not exceed the maximum donation amount":["Elke waarde mag het maximale donatiebedrag niet overschrijden."],"Each value must be higher than the minimum donation amount":["Elke waarde moet hoger zijn dan het minimale donatiebedrag."],"Edit %s":["Bewerk %s"],"Campaign duplicated":["Campagne gedupliceerd"],"New Campaign":["Nieuwe campagne"],"Error deleting campaign: %s":["Fout bij verwijderen campagne: %s"],"Error creating campaign: %s":["Fout bij aanmaken campagne: %s"],"Payment tab":["Tabblad betaling"],"Message tab":["Bericht tab"],"Address tab":["Tabblad adres"],"Policy links":["Beleid links"],"Allow users to donate without leaving a name or email address. Anonymous users can only perform one-off donations.":["Sta gebruikers toe te doneren zonder naam of e-mailadres in te vullen. Anonieme gebruikers kunnen alleen eenmalige donaties doen."],"Allow anonymous donations":["Sta anonieme donaties toe"],"URL required":["URL verplicht"],"Message required":["Bericht vereist"],"Title is required":["Titel is vereist"],"After payment":["Na betaling"],"Please enter a goal":["Voer een doel in"],"Please select a currency":["Selecteer een valuta"],"Select the desired currency for this campaign. Cannot be changed once you have received a donation.":["Selecteer de gewenste valuta voor deze campagne. Dit kan niet meer gewijzigd worden zodra je een donatie hebt ontvangen."],"This is the minimum donation that will be accepted.":["Dit is de minimale donatie die wordt geaccepteerd."],"List of fixed amounts (max 5).":["Lijst met vaste bedragen (max 5)."],"You need to enter one or more amounts":["Je moet \u00e9\u00e9n of meer bedragen invoeren"],"All values must be numbers":["Alle waarden moeten nummers zijn"],"Progress":["Voortgang"],"Total \/ Goal":["Totaal \/ Doel"],"Custom CSS":["Aangepaste CSS"],"There are invalid fields in the form. Please check the fields and correct any errors.":["Er zijn ongeldige velden in het formulier. Controleer de velden en corrigeer eventuele fouten."],"Maximum donation":["Maximum donatie"],"Add a URL to your Privacy policy, donors will need to agree to it before donating.":["Voeg een URL toe naar je Privacybeleid, donateurs moeten hiermee akkoord gaan voordat ze kunnen doneren."],"Add a URL to your Terms & Conditions, donors will need to agree to them before donating.":["Voeg een URL toe naar je Algemene Voorwaarden, donateurs moeten hiermee akkoord gaan voordat ze kunnen doneren."],"Once the payment has been completed, return the donor to a custom URL.":["Stuur de donateur naar een aangepaste URL zodra de betaling is voltooid."],"This will show a pop-up message to the donor thanking them for their donation.":["Dit toont een pop-up bericht aan de donateur om ze te bedanken voor hun donatie."],"This will display a goal progress bar on your donation form. Make sure you also set a goal.":["Dit toont een voortgangsbalk voor je doel op het donatieformulier. Vergeet niet om een doel in te stellen."],"Display goal progress":["Toon voortgang van het doel"],"Shortcode copied":["Shortcode gekopieerd"],"Button with modal":["Knop met modal"],"Created":["Aangemaakt"],"Campaign updated":["Campagne bijgewerkt"],"Campaign created":["Campagne gecre\u00eberd"],"Add a button label":["Voeg een knoplabel toe"],"Embedded form":["Ingesloten formulier"],"Display as":["Weergeven als"],"Generate shortcode":["Shortcode genereren"],"No campaigns":["Geen campagnes"],"Duplicate campaign":["Dupliceer campagne"],"Edit campaign":["Campagne bewerken"],"Your campaigns":["Jouw campagnes"],"Back":["Terug"],"Privacy Policy URL":["Privacybeleid URL"],"Terms & Conditions URL":["Algemene voorwaarden URL"],"Allow donors to leave a message.":["Laat donateurs een bericht achterlaten."],"Show the address tab.":["Toon het tabblad Adres."],"Optional fields":["Optionele velden"],"Fixed amounts":["Vaste bedragen"],"Minimum allowed donation":["Minimale toegestane donatie"],"Minimum donation required":["Minimale donatie vereist"],"Chose the available amount types.":["Kies de beschikbare bedragtypes."],"Choose the available payment frequency.":["Kies de beschikbare betalingsfrequentie."],"Donation settings":["Donatie-instellingen"],"Message title":["Berichttitel"],"Initial tab":["Eerste tab"],"Show return message":["Toon terugkeerbericht"],"Choose a color theme for your campaign.":["Kies een kleurthema voor je campagne."],"Add external funds to the total.":["Voeg externe fondsen toe aan het totaal."],"Minimum value is 1":["Minimumwaarde is 1"],"Set a goal for your campaign.":["Stel een doel in voor je campagne."],"Name required":["Naam verplicht"],"Give your campaign a unique name.":["Geef je campagne een unieke naam."],"Additional funds":["Extra bedrag"],"Message":["Bericht"],"General":["Algemeen"],"Goal":["Doel"],"Copy shortcode":["Kopieer shortcode"],"Campaign details":["Campagne gegevens"],"Campaign name":["Campagne naam"],"New campaign":["Nieuwe campagne"],"Delete campaign":["Verwijder campagne"],"Are you sure you wish to delete this campaign?":["Weet je zeker dat je deze campagne wilt verwijderen?"],"Make the address required.":["Adresveld is verplicht om in te vullen."],"Donation type":["Donatie soort"],"Both":["Beide"],"Fixed":["Vaste bedragen"],"Payment":["Betaling"],"Campaign deleted":["Campagne verwijderd"],"Campaign":["Campagne"],"Theme color":["Themakleur"],"Text":["Tekst"],"Title":["Titel"],"Save":["Opslaan"],"Donate Now":["Doneer nu"],"Edit":["Bewerk"],"One-off":["Eenmalig"],"Address":["Adres"],"Subscription tab":["Abonnement tab"],"Subscription":["Abonnement"],"Currency":["Valuta"],"Please enter a valid URL":["Voer een geldige URL in"],"Open":["Open"],"URL":["URL"],"Use custom return URL":["Gebruik een aangepaste retour-URL"],"Message text":["Bericht tekst"],"Required":["Verplicht"],"Button label":["Knop tekst"],"Kudos Donations":["Kudos Donations"]}}}
+{
+	"translation-revision-date": "2025-03-16 13:23:09+0000",
+	"generator": "WP-CLI\/2.11.0",
+	"source": "build\/admin\/campaigns\/kudos-admin-campaigns.js",
+	"domain": "messages",
+	"locale_data": {
+		"messages": {
+			"": {
+				"domain": "messages",
+				"lang": "nl",
+				"plural-forms": "nplurals=2; plural=n != 1;"
+			},
+			"Payment type": ["Betalingstype"],
+			"The maximum donation that you want to allow, leave blank to disable. This does not override your payment provider's maximum.": [
+				"De maximale donatie die je wilt toestaan, laat leeg om deze uit te schakelen. Dit overschrijft niet de maximale limiet van je betaalprovider."
+			],
+			"Each value must not exceed the maximum donation amount": [
+				"Elke waarde mag het maximale donatiebedrag niet overschrijden."
+			],
+			"Each value must be higher than the minimum donation amount": [
+				"Elke waarde moet hoger zijn dan het minimale donatiebedrag."
+			],
+			"Edit %s": ["Bewerk %s"],
+			"Campaign duplicated": ["Campagne gedupliceerd"],
+			"New Campaign": ["Nieuwe campagne"],
+			"Error deleting campaign: %s": [
+				"Fout bij verwijderen campagne: %s"
+			],
+			"Error creating campaign: %s": ["Fout bij aanmaken campagne: %s"],
+			"Payment tab": ["Tabblad betaling"],
+			"Message tab": ["Bericht tab"],
+			"Address tab": ["Tabblad adres"],
+			"Policy links": ["Beleid links"],
+			"Allow users to donate without leaving a name or email address. Anonymous users can only perform one-off donations.": [
+				"Sta gebruikers toe te doneren zonder naam of e-mailadres in te vullen. Anonieme gebruikers kunnen alleen eenmalige donaties doen."
+			],
+			"Allow anonymous donations": ["Sta anonieme donaties toe"],
+			"URL required": ["URL verplicht"],
+			"Message required": ["Bericht vereist"],
+			"Title is required": ["Titel is vereist"],
+			"After payment": ["Na betaling"],
+			"Please enter a goal": ["Voer een doel in"],
+			"Please select a currency": ["Selecteer een valuta"],
+			"Select the desired currency for this campaign. Cannot be changed once you have received a donation.": [
+				"Selecteer de gewenste valuta voor deze campagne. Dit kan niet meer gewijzigd worden zodra je een donatie hebt ontvangen."
+			],
+			"This is the minimum donation that will be accepted.": [
+				"Dit is de minimale donatie die wordt geaccepteerd."
+			],
+			"List of fixed amounts (max 5).": [
+				"Lijst met vaste bedragen (max 5)."
+			],
+			"You need to enter one or more amounts": [
+				"Je moet \u00e9\u00e9n of meer bedragen invoeren"
+			],
+			"All values must be numbers": ["Alle waarden moeten nummers zijn"],
+			"Progress": ["Voortgang"],
+			"Total \/ Goal": ["Totaal \/ Doel"],
+			"Custom CSS": ["Aangepaste CSS"],
+			"There are invalid fields in the form. Please check the fields and correct any errors.": [
+				"Er zijn ongeldige velden in het formulier. Controleer de velden en corrigeer eventuele fouten."
+			],
+			"Maximum donation": ["Maximum donatie"],
+			"Add a URL to your Privacy policy, donors will need to agree to it before donating.": [
+				"Voeg een URL toe naar je Privacybeleid, donateurs moeten hiermee akkoord gaan voordat ze kunnen doneren."
+			],
+			"Add a URL to your Terms & Conditions, donors will need to agree to them before donating.": [
+				"Voeg een URL toe naar je Algemene Voorwaarden, donateurs moeten hiermee akkoord gaan voordat ze kunnen doneren."
+			],
+			"Once the payment has been completed, return the donor to a custom URL.": [
+				"Stuur de donateur naar een aangepaste URL zodra de betaling is voltooid."
+			],
+			"This will show a pop-up message to the donor thanking them for their donation.": [
+				"Dit toont een pop-up bericht aan de donateur om ze te bedanken voor hun donatie."
+			],
+			"This will display a goal progress bar on your donation form. Make sure you also set a goal.": [
+				"Dit toont een voortgangsbalk voor je doel op het donatieformulier. Vergeet niet om een doel in te stellen."
+			],
+			"Display goal progress": ["Toon voortgang van het doel"],
+			"Shortcode copied": ["Shortcode gekopieerd"],
+			"Button with modal": ["Knop met modal"],
+			"Created": ["Aangemaakt"],
+			"Campaign updated": ["Campagne bijgewerkt"],
+			"Campaign created": ["Campagne gecre\u00eberd"],
+			"Add a button label": ["Voeg een knoplabel toe"],
+			"Embedded form": ["Ingesloten formulier"],
+			"Display as": ["Weergeven als"],
+			"Generate shortcode": ["Shortcode genereren"],
+			"No campaigns": ["Geen campagnes"],
+			"Duplicate campaign": ["Dupliceer campagne"],
+			"Edit campaign": ["Campagne bewerken"],
+			"Your campaigns": ["Jouw campagnes"],
+			"Back": ["Terug"],
+			"Privacy Policy URL": ["Privacybeleid URL"],
+			"Terms & Conditions URL": ["Algemene voorwaarden URL"],
+			"Allow donors to leave a message.": [
+				"Laat donateurs een bericht achterlaten."
+			],
+			"Show the address tab.": ["Toon het tabblad Adres."],
+			"Optional fields": ["Optionele velden"],
+			"Fixed amounts": ["Vaste bedragen"],
+			"Minimum allowed donation": ["Minimale toegestane donatie"],
+			"Minimum donation required": ["Minimale donatie vereist"],
+			"Chose the available amount types.": [
+				"Kies de beschikbare bedragtypes."
+			],
+			"Choose the available payment frequency.": [
+				"Kies de beschikbare betalingsfrequentie."
+			],
+			"Donation settings": ["Donatie-instellingen"],
+			"Message title": ["Berichttitel"],
+			"Initial tab": ["Eerste tab"],
+			"Show return message": ["Toon terugkeerbericht"],
+			"Choose a color theme for your campaign.": [
+				"Kies een kleurthema voor je campagne."
+			],
+			"Add external funds to the total.": [
+				"Voeg externe fondsen toe aan het totaal."
+			],
+			"Minimum value is 1": ["Minimumwaarde is 1"],
+			"Set a goal for your campaign.": [
+				"Stel een doel in voor je campagne."
+			],
+			"Name required": ["Naam verplicht"],
+			"Give your campaign a unique name.": [
+				"Geef je campagne een unieke naam."
+			],
+			"Additional funds": ["Extra bedrag"],
+			"Message": ["Bericht"],
+			"General": ["Algemeen"],
+			"Goal": ["Doel"],
+			"Copy shortcode": ["Kopieer shortcode"],
+			"Campaign details": ["Campagne gegevens"],
+			"Campaign name": ["Campagne naam"],
+			"New campaign": ["Nieuwe campagne"],
+			"Delete campaign": ["Verwijder campagne"],
+			"Are you sure you wish to delete this campaign?": [
+				"Weet je zeker dat je deze campagne wilt verwijderen?"
+			],
+			"Make the address required.": [
+				"Adresveld is verplicht om in te vullen."
+			],
+			"Donation type": ["Donatie soort"],
+			"Both": ["Beide"],
+			"Fixed": ["Vaste bedragen"],
+			"Payment": ["Betaling"],
+			"Campaign deleted": ["Campagne verwijderd"],
+			"Campaign": ["Campagne"],
+			"Theme color": ["Themakleur"],
+			"Text": ["Tekst"],
+			"Title": ["Titel"],
+			"Save": ["Opslaan"],
+			"Donate Now": ["Doneer nu"],
+			"Edit": ["Bewerk"],
+			"One-off": ["Eenmalig"],
+			"Address": ["Adres"],
+			"Subscription tab": ["Abonnement tab"],
+			"Subscription": ["Abonnement"],
+			"Currency": ["Valuta"],
+			"Please enter a valid URL": ["Voer een geldige URL in"],
+			"Open": ["Open"],
+			"URL": ["URL"],
+			"Use custom return URL": ["Gebruik een aangepaste retour-URL"],
+			"Message text": ["Bericht tekst"],
+			"Required": ["Verplicht"],
+			"Button label": ["Knop tekst"],
+			"Kudos Donations": ["Kudos Donations"]
+		}
+	}
+}

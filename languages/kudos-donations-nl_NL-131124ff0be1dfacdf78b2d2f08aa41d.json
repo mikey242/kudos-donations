@@ -1,1 +1,163 @@
-{"translation-revision-date":"2025-03-16 13:23:09+0000","generator":"WP-CLI\/2.11.0","source":"build\/admin\/settings\/kudos-admin-settings.js","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","lang":"nl","plural-forms":"nplurals=2; plural=n != 1;"},"This will be the number assigned to the next successful payment. This will automatically increases as transactions are paid.":["Dit wordt het nummer dat aan de volgende succesvolle betaling wordt toegekend. Dit wordt automatisch verhoogd naarmate transacties worden betaald."],"Address to send the test email to. Please ensure you save changes first.":["Adres om de test-e-mail naar te verzenden. Zorg ervoor dat je eerst de wijzigingen opslaat."],"Show the campaign name in the receipt email.":["Toon de campagnenaam in de ontvangstbevestiging e-mail."],"Show campaign name":["Toon campagnenaam"],"This will change the scale of all font sizes and spacing within the Kudos Donations frame. The default is 1rem which is your website's main font size.":["Dit verandert de schaal van alle lettergroottes en de tussenruimtes binnen het Kudos Donations-frame. De standaardwaarde is 1rem, wat de hoofdlettergrootte van je website is."],"Base font size":["Basis lettergrootte"],"No payment methods found.":["Geen betaalmethoden gevonden."],"Read more about Mollie recurring payments":["Lees meer over terugkerende betalingen bij Mollie"],"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card', 'PayPal' or 'SEPA Direct Debit'. Please note that 'SEPA Direct Debit' does not appear as a payment option as it uses other payment options to set-up the subscription. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.":["Dit zijn de betaalmethoden die beschikbaar zijn voor je donateurs. Om terugkerende betalingen (abonnementen) te gebruiken, moet je 'Creditcard', 'PayPal' of 'SEPA Automatische Incasso' hebben geactiveerd. Let op: 'SEPA Automatische Incasso' verschijnt niet als een directe betaaloptie, omdat het andere betaalopties gebruikt om het abonnement in te stellen. Als je wijzigingen hebt aangebracht in de betaalmethoden in je Mollie-dashboard, klik dan op de vernieuw-knop hieronder om deze lijst bij te werken."],"Refresh Payment Methods":["Betaalmethoden vernieuwen"],"Available payment methods":["Beschikbare betaalmethoden"],"Visit our Documentation":["Lees onze documentatie"],"Invoice":["Factuur"],"not ready":["niet klaar"],"ready":["klaar"],"Reset Mollie":["Mollie resetten"],"Key must start with \"%s\"":["De sleutel moet beginnen met \"%s\""],"Current Invoice Number":["Huidige factuurnummer"],"This will appear on your invoices.":["Dit verschijnt op je facturen."],"VAT Number":["BTW nummer"],"This is your address as it will appear on the invoice.":["Dit is je adres zoals het op de factuur komt te staan."],"Invoice Address":["Factuur adres"],"Your details":["Je gegevens"],"Enables debug logging. Please only enable this if advised to by support.":["Zet debug logging aan. Schakel dit alleen in als support het aangeeft."],"Reset password":["Reset wachtwoord"],"This password will be encrypted in the database.":["Dit wachtwoord wordt gecodeerd in de database opgeslagen."],"Intro guide":["Introductiegids"],"Visit the campaigns page and click the \"+ New campaign\" button to create your first campaign. Then click the edit button to start customising it.":["Ga naar de campagnepagina en klik op de \"+ Nieuwe campagne\" knop om je eerste campagne te maken. Klik daarna op bewerken om het aan te passen."],"Login to your Mollie account and grab your API keys. Then visit the settings page and enter them in the Mollie section.":["Log in op je Mollie account en haal je API-sleutels op. Ga daarna naar de instellingenpagina en vul ze in bij het Mollie-gedeelte."],"Place a form":["Plaats een formulier"],"This name will be used in the \"From\" field.":["Deze naam wordt gebruikt in het \"Van\" veld."],"Email from name":["E-mail van naam"],"This email address will be used in the \"From\" field.":["Dit e-mailadres wordt gebruikt in het veld 'Van'."],"For most servers TLS is the recommended option. If your SMTP provider offers both SSL and TLS options, we recommend using TLS.":["Voor de meeste servers is TLS de aanbevolen optie; als de SMTP-provider zowel SSL- als TLS-opties aanbiedt, raden we aan TLS te gebruiken."],"The email server port number.":["Het poortnummer van de mailserver."],"The email server.":["De mailserver."],"Allow you to configure an external SMTP email server.":["Laat je een externe SMTP-mailserver configureren."],"Add an email address here to send a copy of every donation receipt.":["Voeg hier een e-mailadres toe om een kopie van elke donatiebon te ontvangen."],"This will ensure that the JavaScript for Kudos is loaded on every page.":["Dit zorgt ervoor dat de JavaScript voor Kudos op elke pagina wordt geladen."],"Always load assets":["Laad altijd assets"],"Test email":["Test e-mail"],"Visit Mollie dashboard":["Bezoek het Mollie-dashboard"],"With the API mode still on \"Test\" make a payment using Kudos Donations. If it worked then you can switch to \"Live\".":["Met de API modus nog steeds op \"Test\" doe een betaling met Kudos Donaties. Als het werkt, kan je overschakelen naar \"Live\"."],"Complete these simple steps to set up your first donation campaign. Click the \"next\" button to get started":["Voltooi deze eenvoudige stappen om je eerste donatiecampagne op te zetten. Klik op de knop \"volgende\" om te beginnen"],"Visit Kudos Donations":["Ga naar Kudos Donations"],"Send":["Versturen"],"Do you like using Kudos? Please let us know your thoughts.":["Gebruik je Kudos graag? Geef ons feedback."],"SMTP settings":["SMTP instellingen"],"Help":["Help"],"Settings updated":["Instelling ge\u00fcpdatet"],"Show welcome guide":["Toon welkomstbericht"],"Support forums":["Support forums"],"Don't hesitate to get in touch if you need any help or have a suggestion.":["Neem contact met ons op als je hulp nodig hebt of een suggestie hebt."],"Need some assistance?":["Hulp nodig?"],"Leave a review":["Laat een beoordeling achter"],"Share the love":["Deel de liefde"],"Test and go Live":["Test en ga live"],"Use the Kudos Donations block or shortcode to place the button anywhere on your website.":["Gebruik het Kudos donatie blok of de shortcode om de knop overal op je site te plaatsen."],"Set up a campaign":["Zet een campagne op"],"Connect with Mollie":["Verbind met Mollie"],"Welcome to Kudos Donations":["Welkom bij Kudos Donations"],"This field is required.":["Dit veld is vereist."],"Use custom SMTP settings":["Gebruik aangepaste SMTP instellingen"],"Advanced":["Geavanceerd"],"Mollie":["Mollie"],"Debug mode":["Debug modus"],"Send receipt copy to":["Verzend een kopie naar"],"Once a payment has been completed, you can automatically send an email receipt to the donor.":["Wanneer een betaling is voltooid, kun je automatisch een ontvangstbewijs per e-mail naar de donateur sturen."],"Send email receipts":["E-mailontvangstbewijzen verzenden"],"Email receipts":["E-mail ontvangstbewijzen"],"When using Kudos Donations for the first time, the payment mode is set to \"Test\". Check that the configuration is working correctly. Once you are ready to receive live payments you can switch the mode to \"Live\".":["Wanneer je Kudos Donations voor de eerste keer gebruikt, staat de betalingsmodus op 'Test'. Controleer of de configuratie correct werkt. Zodra je klaar bent om live-betalingen te ontvangen, schakel de modus naar 'Live'."],"API Mode":["API modus"],"API Keys":["API-sleutels"],"Email address":["E-mailadres"],"From address":["Van adres"],"Password":["Wachtwoord"],"This is usually an email address.":["Dit is meestal een e-mailadres."],"Username":["Gebruikersnaam"],"Port":["Poort"],"TLS":["TLS"],"SSL":["SSL"],"None":["Geen"],"Encryption":["Versleuteling"],"Host":["Host"],"Save":["Opslaan"],"Other":["Anders"],"Email":["E-mail"],"Live":["Live"],"Test":["Test"],"Kudos Donations":["Kudos Donations"]}}}
+{
+	"translation-revision-date": "2025-03-16 13:23:09+0000",
+	"generator": "WP-CLI\/2.11.0",
+	"source": "build\/admin\/settings\/kudos-admin-settings.js",
+	"domain": "messages",
+	"locale_data": {
+		"messages": {
+			"": {
+				"domain": "messages",
+				"lang": "nl",
+				"plural-forms": "nplurals=2; plural=n != 1;"
+			},
+			"This will be the number assigned to the next successful payment. This will automatically increases as transactions are paid.": [
+				"Dit wordt het nummer dat aan de volgende succesvolle betaling wordt toegekend. Dit wordt automatisch verhoogd naarmate transacties worden betaald."
+			],
+			"Address to send the test email to. Please ensure you save changes first.": [
+				"Adres om de test-e-mail naar te verzenden. Zorg ervoor dat je eerst de wijzigingen opslaat."
+			],
+			"Show the campaign name in the receipt email.": [
+				"Toon de campagnenaam in de ontvangstbevestiging e-mail."
+			],
+			"Show campaign name": ["Toon campagnenaam"],
+			"This will change the scale of all font sizes and spacing within the Kudos Donations frame. The default is 1rem which is your website's main font size.": [
+				"Dit verandert de schaal van alle lettergroottes en de tussenruimtes binnen het Kudos Donations-frame. De standaardwaarde is 1rem, wat de hoofdlettergrootte van je website is."
+			],
+			"Base font size": ["Basis lettergrootte"],
+			"No payment methods found.": ["Geen betaalmethoden gevonden."],
+			"Read more about Mollie recurring payments": [
+				"Lees meer over terugkerende betalingen bij Mollie"
+			],
+			"These are the payment methods available to your donors. In order to use recurring payments (subscriptions) you will need to have either 'Card', 'PayPal' or 'SEPA Direct Debit'. Please note that 'SEPA Direct Debit' does not appear as a payment option as it uses other payment options to set-up the subscription. If you have made changes to the payment methods in your Mollie dashboard, please click the refresh button below to update this list.": [
+				"Dit zijn de betaalmethoden die beschikbaar zijn voor je donateurs. Om terugkerende betalingen (abonnementen) te gebruiken, moet je 'Creditcard', 'PayPal' of 'SEPA Automatische Incasso' hebben geactiveerd. Let op: 'SEPA Automatische Incasso' verschijnt niet als een directe betaaloptie, omdat het andere betaalopties gebruikt om het abonnement in te stellen. Als je wijzigingen hebt aangebracht in de betaalmethoden in je Mollie-dashboard, klik dan op de vernieuw-knop hieronder om deze lijst bij te werken."
+			],
+			"Refresh Payment Methods": ["Betaalmethoden vernieuwen"],
+			"Available payment methods": ["Beschikbare betaalmethoden"],
+			"Visit our Documentation": ["Lees onze documentatie"],
+			"Invoice": ["Factuur"],
+			"not ready": ["niet klaar"],
+			"ready": ["klaar"],
+			"Reset Mollie": ["Mollie resetten"],
+			"Key must start with \"%s\"": [
+				"De sleutel moet beginnen met \"%s\""
+			],
+			"Current Invoice Number": ["Huidige factuurnummer"],
+			"This will appear on your invoices.": [
+				"Dit verschijnt op je facturen."
+			],
+			"VAT Number": ["BTW nummer"],
+			"This is your address as it will appear on the invoice.": [
+				"Dit is je adres zoals het op de factuur komt te staan."
+			],
+			"Invoice Address": ["Factuur adres"],
+			"Your details": ["Je gegevens"],
+			"Enables debug logging. Please only enable this if advised to by support.": [
+				"Zet debug logging aan. Schakel dit alleen in als support het aangeeft."
+			],
+			"Reset password": ["Reset wachtwoord"],
+			"This password will be encrypted in the database.": [
+				"Dit wachtwoord wordt gecodeerd in de database opgeslagen."
+			],
+			"Intro guide": ["Introductiegids"],
+			"Visit the campaigns page and click the \"+ New campaign\" button to create your first campaign. Then click the edit button to start customising it.": [
+				"Ga naar de campagnepagina en klik op de \"+ Nieuwe campagne\" knop om je eerste campagne te maken. Klik daarna op bewerken om het aan te passen."
+			],
+			"Login to your Mollie account and grab your API keys. Then visit the settings page and enter them in the Mollie section.": [
+				"Log in op je Mollie account en haal je API-sleutels op. Ga daarna naar de instellingenpagina en vul ze in bij het Mollie-gedeelte."
+			],
+			"Place a form": ["Plaats een formulier"],
+			"This name will be used in the \"From\" field.": [
+				"Deze naam wordt gebruikt in het \"Van\" veld."
+			],
+			"Email from name": ["E-mail van naam"],
+			"This email address will be used in the \"From\" field.": [
+				"Dit e-mailadres wordt gebruikt in het veld 'Van'."
+			],
+			"For most servers TLS is the recommended option. If your SMTP provider offers both SSL and TLS options, we recommend using TLS.": [
+				"Voor de meeste servers is TLS de aanbevolen optie; als de SMTP-provider zowel SSL- als TLS-opties aanbiedt, raden we aan TLS te gebruiken."
+			],
+			"The email server port number.": [
+				"Het poortnummer van de mailserver."
+			],
+			"The email server.": ["De mailserver."],
+			"Allow you to configure an external SMTP email server.": [
+				"Laat je een externe SMTP-mailserver configureren."
+			],
+			"Add an email address here to send a copy of every donation receipt.": [
+				"Voeg hier een e-mailadres toe om een kopie van elke donatiebon te ontvangen."
+			],
+			"This will ensure that the JavaScript for Kudos is loaded on every page.": [
+				"Dit zorgt ervoor dat de JavaScript voor Kudos op elke pagina wordt geladen."
+			],
+			"Always load assets": ["Laad altijd assets"],
+			"Test email": ["Test e-mail"],
+			"Visit Mollie dashboard": ["Bezoek het Mollie-dashboard"],
+			"With the API mode still on \"Test\" make a payment using Kudos Donations. If it worked then you can switch to \"Live\".": [
+				"Met de API modus nog steeds op \"Test\" doe een betaling met Kudos Donaties. Als het werkt, kan je overschakelen naar \"Live\"."
+			],
+			"Complete these simple steps to set up your first donation campaign. Click the \"next\" button to get started": [
+				"Voltooi deze eenvoudige stappen om je eerste donatiecampagne op te zetten. Klik op de knop \"volgende\" om te beginnen"
+			],
+			"Visit Kudos Donations": ["Ga naar Kudos Donations"],
+			"Send": ["Versturen"],
+			"Do you like using Kudos? Please let us know your thoughts.": [
+				"Gebruik je Kudos graag? Geef ons feedback."
+			],
+			"SMTP settings": ["SMTP instellingen"],
+			"Help": ["Help"],
+			"Settings updated": ["Instelling ge\u00fcpdatet"],
+			"Show welcome guide": ["Toon welkomstbericht"],
+			"Support forums": ["Support forums"],
+			"Don't hesitate to get in touch if you need any help or have a suggestion.": [
+				"Neem contact met ons op als je hulp nodig hebt of een suggestie hebt."
+			],
+			"Need some assistance?": ["Hulp nodig?"],
+			"Leave a review": ["Laat een beoordeling achter"],
+			"Share the love": ["Deel de liefde"],
+			"Test and go Live": ["Test en ga live"],
+			"Use the Kudos Donations block or shortcode to place the button anywhere on your website.": [
+				"Gebruik het Kudos donatie blok of de shortcode om de knop overal op je site te plaatsen."
+			],
+			"Set up a campaign": ["Zet een campagne op"],
+			"Connect with Mollie": ["Verbind met Mollie"],
+			"Welcome to Kudos Donations": ["Welkom bij Kudos Donations"],
+			"This field is required.": ["Dit veld is vereist."],
+			"Use custom SMTP settings": [
+				"Gebruik aangepaste SMTP instellingen"
+			],
+			"Advanced": ["Geavanceerd"],
+			"Mollie": ["Mollie"],
+			"Debug mode": ["Debug modus"],
+			"Send receipt copy to": ["Verzend een kopie naar"],
+			"Once a payment has been completed, you can automatically send an email receipt to the donor.": [
+				"Wanneer een betaling is voltooid, kun je automatisch een ontvangstbewijs per e-mail naar de donateur sturen."
+			],
+			"Send email receipts": ["E-mailontvangstbewijzen verzenden"],
+			"Email receipts": ["E-mail ontvangstbewijzen"],
+			"When using Kudos Donations for the first time, the payment mode is set to \"Test\". Check that the configuration is working correctly. Once you are ready to receive live payments you can switch the mode to \"Live\".": [
+				"Wanneer je Kudos Donations voor de eerste keer gebruikt, staat de betalingsmodus op 'Test'. Controleer of de configuratie correct werkt. Zodra je klaar bent om live-betalingen te ontvangen, schakel de modus naar 'Live'."
+			],
+			"API Mode": ["API modus"],
+			"API Keys": ["API-sleutels"],
+			"Email address": ["E-mailadres"],
+			"From address": ["Van adres"],
+			"Password": ["Wachtwoord"],
+			"This is usually an email address.": [
+				"Dit is meestal een e-mailadres."
+			],
+			"Username": ["Gebruikersnaam"],
+			"Port": ["Poort"],
+			"TLS": ["TLS"],
+			"SSL": ["SSL"],
+			"None": ["Geen"],
+			"Encryption": ["Versleuteling"],
+			"Host": ["Host"],
+			"Save": ["Opslaan"],
+			"Other": ["Anders"],
+			"Email": ["E-mail"],
+			"Live": ["Live"],
+			"Test": ["Test"],
+			"Kudos Donations": ["Kudos Donations"]
+		}
+	}
+}
