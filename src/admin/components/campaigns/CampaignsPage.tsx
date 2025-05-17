@@ -69,10 +69,7 @@ export const CampaignsPage = (): React.ReactNode => {
 			{campaignId ? (
 				currentCampaign && (
 					<>
-						<CampaignEdit
-							campaign={currentCampaign}
-							recurringAllowed={false}
-						/>
+						<CampaignEdit campaign={currentCampaign} />
 						<Spacer marginTop={'5'} />
 						<Flex justify="flex-start">
 							{
