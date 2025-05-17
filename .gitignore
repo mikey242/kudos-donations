@@ -15,3 +15,4 @@ includes/Dependencies
 /.phpunit.result.cache
 /wordpress/
 /third-party/
+/.cloudflared
