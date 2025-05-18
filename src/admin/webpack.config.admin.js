@@ -16,6 +16,10 @@ module.exports = merge(commonConfig, {
 			__dirname,
 			'kudos-admin-transactions.tsx'
 		),
+		'donors/kudos-admin-donors': resolve(
+			__dirname,
+			'kudos-admin-donors.tsx'
+		),
 		'migrations/kudos-admin-migrations': resolve(
 			__dirname,
 			'kudos-admin-migrations.ts'
