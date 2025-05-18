@@ -13,7 +13,6 @@ import { Notices } from '../Notices';
 import { useCallback } from '@wordpress/element';
 
 interface AdminContextValue {
-	headerContent: ReactNode;
 	setHeaderContent: Dispatch<SetStateAction<ReactNode>>;
 	setPageTitle: Dispatch<SetStateAction<string>>;
 	searchParams: URLSearchParams;
@@ -73,7 +72,6 @@ export const InnerAdminProvider = ({ children }) => {
 	);
 
 	const data: AdminContextValue = {
-		headerContent,
 		setHeaderContent,
 		updateParam,
 		updateParams,
@@ -84,7 +82,7 @@ export const InnerAdminProvider = ({ children }) => {
 
 	return (
 		<AdminContext.Provider value={data}>
-			<AdminHeader />
+			<AdminHeader children={headerContent} />
 			<Notices />
 			<div className="admin-wrap">
 				<h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>

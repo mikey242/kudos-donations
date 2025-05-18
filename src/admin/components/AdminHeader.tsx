@@ -8,11 +8,14 @@ import {
 	Panel,
 	ResponsiveWrapper,
 } from '@wordpress/components';
-import { useAdminContext } from './contexts';
 
-export const AdminHeader = (): React.ReactNode => {
-	const { headerContent } = useAdminContext();
+interface AdminHeaderProps {
+	children: React.ReactNode;
+}
 
+export const AdminHeader = ({
+	children,
+}: AdminHeaderProps): React.ReactNode => {
 	return (
 		<>
 			<Panel className={'kudos-settings-header'}>
@@ -52,7 +55,7 @@ export const AdminHeader = (): React.ReactNode => {
 						</FlexBlock>
 						<FlexItem>
 							<Flex justify="flex-end" align="center">
-								{headerContent}
+								{children}
 							</Flex>
 						</FlexItem>
 					</Flex>
