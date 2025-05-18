@@ -175,13 +175,13 @@ export const TransactionsTable = (): React.ReactNode => {
 					<Button
 						size="compact"
 						icon="trash"
-						label={__('Delete campaign', 'kudos-donations')}
+						label={__('Delete transaction', 'kudos-donations')}
 						onClick={() => {
 							return (
 								// eslint-disable-next-line no-alert
 								window.confirm(
 									__(
-										'Are you sure you wish to delete this campaign?',
+										'Are you sure you wish to delete this transaction?',
 										'kudos-donations'
 									)
 								) && handleDelete(post.id)
