@@ -67,6 +67,10 @@
 
 .kudos-admin-page {
 
+	.components-button svg {
+		fill: none;
+	}
+
 	h1 {
 		font-weight: 600;
 		padding: 0;
