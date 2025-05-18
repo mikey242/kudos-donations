@@ -13,46 +13,52 @@ import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import { useAdminContext } from './AdminContext';
-import type { Campaign } from '../../../types/wp';
-import apiFetch from '@wordpress/api-fetch';
+import type { Post } from '../../../types/wp';
 
-interface CampaignsContextValue {
-	posts: Campaign[];
+interface PostsContextValue<T extends Post = Post> {
+	posts: T[];
 	hasResolved: boolean;
 	isLoading: boolean;
 	hasLoadedOnce: boolean;
-	handleNew: (
-		args?: Partial<Campaign> | React.SyntheticEvent
-	) => Promise<any>;
-	handleUpdate: (data: Partial<Campaign>) => Promise<any>;
+	totalPages: number;
+	totalItems: number;
+	handleNew: (args?: Partial<T> | React.SyntheticEvent) => Promise<any>;
+	handleUpdate: (data: Partial<T>) => Promise<any>;
 	handleDelete: (postId: number) => void;
-	handleDuplicate: (post: Campaign) => void;
-	recurringEnabled: boolean;
+	handleDuplicate: (post: T) => void;
 }
 
-const CampaignsContext = createContext<CampaignsContextValue | null>(null);
+const PostsContext = createContext<PostsContextValue<any> | null>(null);
 
-export const CampaignsProvider = ({
-	postType = 'kudos_campaign',
+interface PostsProviderProps {
+	children: React.ReactNode;
+	singular?: string;
+	postType: string;
+}
+
+export const PostsProvider = <T extends Post>({
+	postType,
+	singular = 'Post',
 	children,
-}) => {
+}: PostsProviderProps) => {
 	const { searchParams } = useAdminContext();
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
-	const [cachedPosts, setCachedPosts] = useState<Campaign[]>([]);
+	const [cachedPosts, setCachedPosts] = useState<T[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
-	const [recurringEnabled, setRecurringEnabled] = useState<boolean>(false);
-	const { records: posts, hasResolved } = useEntityRecords<Campaign>(
-		'postType',
-		postType,
-		{
-			per_page: -1,
-			order: searchParams.get('order') ?? 'desc',
-			orderby: searchParams.get('orderby') ?? 'date',
-		}
-	);
+	const {
+		records: posts,
+		hasResolved,
+		totalPages,
+		totalItems,
+	} = useEntityRecords<T>('postType', postType, {
+		per_page: 10,
+		page: searchParams.get('paged') ?? 1,
+		order: searchParams.get('order') ?? 'desc',
+		orderby: searchParams.get('orderby') ?? 'date',
+	});
 
 	useEffect(() => {
 		if (hasResolved) {
@@ -62,19 +68,12 @@ export const CampaignsProvider = ({
 		}
 	}, [posts, hasResolved]);
 
-	useEffect(() => {
-		apiFetch({
-			path: '/kudos/v1/payment/recurring-enabled',
-			method: 'GET',
-		}).then((r: boolean) => setRecurringEnabled(r));
-	}, []);
-
 	const handleSave = useCallback(
-		async (args = {}): Promise<any | null> => {
+		async (args = {}): Promise<T | null> => {
 			try {
 				const response = await saveEntityRecord(
 					'postType',
-					'kudos_campaign',
+					postType,
 					args
 				);
 
@@ -85,29 +84,30 @@ export const CampaignsProvider = ({
 			} catch (error: any) {
 				void createErrorNotice(
 					sprintf(
-						/* translators: %s is the error message. */
-						__('Error creating campaign: %s', 'kudos-donations'),
+						/* translators: %1$s is the post type and %2$s is the error message. */
+						__('Error creating %1$s: %2$s', 'kudos-donations'),
+						singular,
 						error.message
 					)
 				);
 				return null;
 			}
 		},
-		[createErrorNotice, saveEntityRecord]
+		[createErrorNotice, postType, saveEntityRecord, singular]
 	);
 
-	const handleUpdate = async (data: Partial<Campaign>) => {
+	const handleUpdate = async (data: Partial<T>) => {
 		const response = await handleSave(data);
-		void createSuccessNotice(__('Campaign updated', 'kudos-donations'), {
+		void createSuccessNotice(__('Post updated', 'kudos-donations'), {
 			type: 'snackbar',
 			icon: <Icon icon="saved" />,
 		});
 		return response;
 	};
 
-	// Handles creating a campaign.
+	// Handles creating a post.
 	const handleNew = async (
-		args?: Partial<Campaign> | React.SyntheticEvent
+		args?: Partial<T> | React.SyntheticEvent
 	): Promise<any> => {
 		// If args is a SyntheticEvent, ignore it and create an empty args object
 		if (
@@ -119,10 +119,11 @@ export const CampaignsProvider = ({
 
 		// Set default arguments.
 		const {
-			title = __('New Campaign', 'kudos-donations'),
+			/* translators: %s is the post type name. */
+			title = sprintf(__('New %s', 'kudos-donations'), singular),
 			status = 'publish',
 			...rest
-		} = (args as Partial<Campaign>) || {};
+		} = (args as Partial<T>) || {};
 
 		const response = await handleSave({
 			title,
@@ -132,7 +133,8 @@ export const CampaignsProvider = ({
 
 		if (response) {
 			void createSuccessNotice(
-				__('Campaign created', 'kudos-donations'),
+				/* translators: %s is the post type name. */
+				sprintf(__('%s created', 'kudos-donations'), singular),
 				{
 					type: 'snackbar',
 					icon: <Icon icon="plus" />,
@@ -145,11 +147,12 @@ export const CampaignsProvider = ({
 	const handleDelete = useCallback(
 		async (postId: number): Promise<void> => {
 			try {
-				await deleteEntityRecord('postType', 'kudos_campaign', postId, {
+				await deleteEntityRecord('postType', postType, postId, {
 					force: true,
 				});
 				await createSuccessNotice(
-					__('Campaign deleted', 'kudos-donations'),
+					/* translators: %s is the post type name. */
+					sprintf(__('%s deleted', 'kudos-donations'), singular),
 					{
 						type: 'snackbar',
 						icon: <Icon icon="trash" />,
@@ -158,31 +161,40 @@ export const CampaignsProvider = ({
 			} catch (error: any) {
 				await createErrorNotice(
 					sprintf(
-						/* translators: %s is the error message. */
-						__('Error deleting campaign: %s', 'kudos-donations'),
+						/* translators: %1$s is the post type and %2$s is the error message. */
+						__('Error deleting %1$s: %2$s', 'kudos-donations'),
+						singular,
 						error?.message ?? 'Unknown error'
 					),
 					{ type: 'snackbar' }
 				);
 			}
 		},
-		[createSuccessNotice, createErrorNotice, deleteEntityRecord]
+		[
+			deleteEntityRecord,
+			postType,
+			createSuccessNotice,
+			singular,
+			createErrorNotice,
+		]
 	);
 
 	// Prepares data for duplicating current post.
-	const handleDuplicate = (post: Campaign) => {
+	const handleDuplicate = (post: T) => {
 		const { id, ...rest } = post;
 
-		const data: Partial<Campaign> = {
+		const data = {
 			...rest,
 			title: { raw: post.title.raw, rendered: '' },
 			date: new Date().toISOString(),
-		};
+		} as Partial<T>;
 		return handleSave(data);
 	};
 
-	const data = {
+	const data: PostsContextValue<T> = {
 		posts: cachedPosts,
+		totalItems,
+		totalPages,
 		hasResolved,
 		isLoading,
 		hasLoadedOnce,
@@ -190,24 +202,21 @@ export const CampaignsProvider = ({
 		handleDuplicate,
 		handleDelete,
 		handleUpdate,
-		recurringEnabled,
 	};
 
 	return (
 		<>
-			<CampaignsContext.Provider value={data}>
+			<PostsContext.Provider value={data}>
 				{children}
-			</CampaignsContext.Provider>
+			</PostsContext.Provider>
 		</>
 	);
 };
 
-export const useCampaignsContext = (): CampaignsContextValue => {
-	const context = useContext(CampaignsContext);
+export const usePostsContext = <T extends Post>(): PostsContextValue<T> => {
+	const context = useContext(PostsContext);
 	if (!context) {
-		throw new Error(
-			'useCampaignsContext must be used within a CampaignsProvider'
-		);
+		throw new Error('usePostsContext must be used within a PostsProvider');
 	}
 	return context;
 };

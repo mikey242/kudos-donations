@@ -12,7 +12,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Table } from '../Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, useCampaignsContext } from '../contexts';
+import { useAdminContext, usePostsContext } from '../contexts';
 import GenerateShortcode from './GenerateShortcode';
 import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/wp';
@@ -27,7 +27,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 		isLoading,
 		hasLoadedOnce,
 		posts,
-	} = useCampaignsContext();
+	} = usePostsContext();
 
 	useEffect(() => {
 		setPageTitle(__('Your campaigns', 'kudos-donations'));
@@ -145,7 +145,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 
 	return (
 		<>
-			<Table<Campaign>
+			<Table
 				posts={posts}
 				headerItems={headerItems}
 				isLoading={isLoading}

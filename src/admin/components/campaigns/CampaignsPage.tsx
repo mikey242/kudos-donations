@@ -2,7 +2,7 @@ import React from 'react';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import CampaignEdit from './CampaignEdit';
 import { CampaignsTable } from './CampaignsTable';
-import { useCampaignsContext, useAdminContext } from '../contexts';
+import { usePostsContext, useAdminContext } from '../contexts';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalSpacer as Spacer,
@@ -34,7 +34,7 @@ export const CampaignsPage = (): React.ReactNode => {
 	const [currentCampaign, setCurrentCampaign] = useState<Campaign | null>(
 		null
 	);
-	const { posts } = useCampaignsContext();
+	const { posts } = usePostsContext<Campaign>();
 	const { setHeaderContent, updateParam, searchParams, deleteParams } =
 		useAdminContext();
 	const campaignId = searchParams.get('edit');
