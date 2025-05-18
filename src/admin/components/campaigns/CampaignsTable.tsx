@@ -1,9 +1,6 @@
 import {
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalSpacer as Spacer,
 	Button,
 	ColorIndicator,
-	Flex,
 	ProgressBar,
 	Tooltip,
 	VisuallyHidden,
@@ -21,7 +18,6 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setPageTitle } = useAdminContext();
 	const {
-		handleNew,
 		handleDelete,
 		handleDuplicate,
 		isLoading,
@@ -34,14 +30,6 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 	useEffect(() => {
 		setPageTitle(__('Your campaigns', 'kudos-donations'));
 	}, [setPageTitle]);
-
-	const newCampaign = (e: React.SyntheticEvent) => {
-		handleNew(e).then((response: Campaign) => {
-			if (response?.id) {
-				handleEdit('edit', response.id);
-			}
-		});
-	};
 
 	const headerItems = [
 		{
@@ -139,7 +127,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 							);
 						}}
 					/>
-					<GenerateShortcode campaign={post} iconOnly={true} />
+					<GenerateShortcode campaign={post} iconOnly />
 				</>
 			),
 		},
@@ -155,15 +143,6 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 				totalPages={totalPages}
 				totalItems={totalItems}
 			/>
-			<Spacer marginTop={'5'} />
-			<Flex justify="center">
-				<Button
-					variant="secondary"
-					onClick={newCampaign}
-					text={__('New campaign', 'kudos-donations')}
-					icon="plus"
-				/>
-			</Flex>
 		</>
 	);
 };
