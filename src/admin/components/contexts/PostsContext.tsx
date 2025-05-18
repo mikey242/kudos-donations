@@ -62,7 +62,7 @@ export const PostsProvider = <T extends Post>({
 
 	useEffect(() => {
 		if (hasResolved) {
-			setCachedPosts(posts);
+			setCachedPosts(posts ?? []);
 			setIsLoading(false);
 			setHasLoadedOnce(true);
 		}
