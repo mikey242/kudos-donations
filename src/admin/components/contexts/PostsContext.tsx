@@ -96,53 +96,58 @@ export const PostsProvider = <T extends Post>({
 		[createErrorNotice, postType, saveEntityRecord, singular]
 	);
 
-	const handleUpdate = async (data: Partial<T>) => {
-		const response = await handleSave(data);
-		void createSuccessNotice(__('Post updated', 'kudos-donations'), {
-			type: 'snackbar',
-			icon: <Icon icon="saved" />,
-		});
-		return response;
-	};
+	const handleUpdate = useCallback(
+		async (data: Partial<T>) => {
+			const response = await handleSave(data);
+			void createSuccessNotice(__('Post updated', 'kudos-donations'), {
+				type: 'snackbar',
+				icon: <Icon icon="saved" />,
+			});
+			return response;
+		},
+		[createSuccessNotice, handleSave]
+	);
 
 	// Handles creating a post.
-	const handleNew = async (
-		args?: Partial<T> | React.SyntheticEvent
-	): Promise<any> => {
-		// If args is a SyntheticEvent, ignore it and create an empty args object
-		if (
-			args &&
-			typeof (args as React.SyntheticEvent).preventDefault === 'function'
-		) {
-			args = {};
-		}
+	const handleNew = useCallback(
+		async (args?: Partial<T> | React.SyntheticEvent): Promise<any> => {
+			// If args is a SyntheticEvent, ignore it and create an empty args object
+			if (
+				args &&
+				typeof (args as React.SyntheticEvent).preventDefault ===
+					'function'
+			) {
+				args = {};
+			}
 
-		// Set default arguments.
-		const {
-			/* translators: %s is the post type name. */
-			title = sprintf(__('New %s', 'kudos-donations'), singular),
-			status = 'publish',
-			...rest
-		} = (args as Partial<T>) || {};
-
-		const response = await handleSave({
-			title,
-			status,
-			...rest,
-		});
-
-		if (response) {
-			void createSuccessNotice(
+			// Set default arguments.
+			const {
 				/* translators: %s is the post type name. */
-				sprintf(__('%s created', 'kudos-donations'), singular),
-				{
-					type: 'snackbar',
-					icon: <Icon icon="plus" />,
-				}
-			);
-		}
-		return response;
-	};
+				title = sprintf(__('New %s', 'kudos-donations'), singular),
+				status = 'publish',
+				...rest
+			} = (args as Partial<T>) || {};
+
+			const response = await handleSave({
+				title,
+				status,
+				...rest,
+			});
+
+			if (response) {
+				void createSuccessNotice(
+					/* translators: %s is the post type name. */
+					sprintf(__('%s created', 'kudos-donations'), singular),
+					{
+						type: 'snackbar',
+						icon: <Icon icon="plus" />,
+					}
+				);
+			}
+			return response;
+		},
+		[createSuccessNotice, handleSave, singular]
+	);
 
 	const handleDelete = useCallback(
 		async (postId: number): Promise<void> => {
