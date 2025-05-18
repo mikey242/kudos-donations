@@ -37,9 +37,13 @@ class TransactionPostType extends AbstractCustomPostType implements HasMetaField
 	public const META_FIELD_VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
 	public const META_FIELD_INVOICE_NUMBER         = 'invoice_number';
 	public const META_FIELD_CHECKOUT_URL           = 'checkout_url';
-	public const REST_FIELD_DONOR                  = 'donor';
-	public const REST_FIELD_CAMPAIGN               = 'campaign';
-	public const REST_FIELD_INVOICE_URL            = 'invoice_url';
+
+	/**
+	 * Rest field constants.
+	 */
+	public const REST_FIELD_DONOR       = 'donor';
+	public const REST_FIELD_CAMPAIGN    = 'campaign';
+	public const REST_FIELD_INVOICE_URL = 'invoice_url';
 
 	/**
 	 * {@inheritDoc}
