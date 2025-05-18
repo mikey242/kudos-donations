@@ -27,6 +27,8 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 		isLoading,
 		hasLoadedOnce,
 		posts,
+		totalPages,
+		totalItems,
 	} = usePostsContext();
 
 	useEffect(() => {
@@ -150,6 +152,8 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 				headerItems={headerItems}
 				isLoading={isLoading}
 				hasLoadedOnce={hasLoadedOnce}
+				totalPages={totalPages}
+				totalItems={totalItems}
 			/>
 			<Spacer marginTop={'5'} />
 			<Flex justify="center">

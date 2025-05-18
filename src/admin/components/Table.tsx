@@ -1,13 +1,36 @@
 import React from 'react';
-import { Button, Flex, Spinner } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalSpacer as Spacer,
+	Button,
+	Flex,
+	Spinner,
+} from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
 import { useAdminContext } from './contexts';
 import type { Post } from '../../types/wp';
+import {
+	ChevronDoubleLeftIcon,
+	ChevronDoubleRightIcon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+} from '@heroicons/react/24/outline';
 
 interface HeaderItem<T extends Post = Post> {
 	title: string | React.ReactNode;
 	key: string;
-	orderby?: string;
+	orderby?:
+		| 'author'
+		| 'date'
+		| 'id'
+		| 'include'
+		| 'modified'
+		| 'parent'
+		| 'relevance'
+		| 'slug'
+		| 'include_slugs'
+		| 'title'
+		| string;
 	valueCallback?: (post: T) => React.ReactNode;
 }
 
@@ -16,6 +39,8 @@ interface TableProps<T extends Post = Post> {
 	posts?: T[];
 	isLoading?: boolean;
 	hasLoadedOnce?: boolean;
+	totalPages?: number;
+	totalItems?: number;
 }
 
 export const Table = <T extends Post>({
@@ -23,6 +48,8 @@ export const Table = <T extends Post>({
 	posts,
 	isLoading,
 	hasLoadedOnce = false,
+	totalPages,
+	totalItems,
 }: TableProps<T>): React.ReactNode => {
 	const { searchParams, updateParams } = useAdminContext();
 
@@ -82,7 +109,7 @@ export const Table = <T extends Post>({
 						</TableMessage>
 					) : !posts.length && hasLoadedOnce ? (
 						<TableMessage>
-							<p>{__('No campaigns', 'kudos-donations')}</p>
+							<p>{__('No posts', 'kudos-donations')}</p>
 						</TableMessage>
 					) : (
 						posts.map((post) => (
@@ -95,6 +122,10 @@ export const Table = <T extends Post>({
 					)}
 				</tbody>
 			</table>
+			<Spacer marginTop={'5'} />
+			{!isLoading && totalPages > 1 && (
+				<Pagination totalPages={totalPages} totalItems={totalItems} />
+			)}
 		</>
 	);
 };
@@ -122,7 +153,7 @@ interface TableRowProps<T extends Post> {
 
 const TableRow = <T extends Post>({ post, columns }: TableRowProps<T>) => {
 	return (
-		<tr>
+		<tr role="row">
 			{columns.map((column) => {
 				return (
 					<td
@@ -134,5 +165,76 @@ const TableRow = <T extends Post>({ post, columns }: TableRowProps<T>) => {
 				);
 			})}
 		</tr>
+	);
+};
+
+interface PaginationProps {
+	totalPages: number;
+	totalItems: number;
+}
+
+const Pagination = ({
+	totalItems,
+	totalPages,
+}: PaginationProps): React.ReactNode => {
+	const { searchParams, updateParam } = useAdminContext();
+	const currentPage = parseInt(searchParams.get('paged') ?? '1', 10);
+	return (
+		<Flex justify="center">
+			{/* First Page */}
+			<Button
+				variant="link"
+				onClick={() => updateParam('paged', '1')}
+				disabled={currentPage === 1}
+				label={__('First page', 'kudos-donations')}
+				showTooltip
+			>
+				<ChevronDoubleLeftIcon style={{ width: 20, height: 20 }} />
+			</Button>
+
+			{/* Previous Page */}
+			<Button
+				variant="link"
+				onClick={() => updateParam('paged', String(currentPage - 1))}
+				disabled={currentPage <= 1}
+				label={__('Previous page', 'kudos-donations')}
+				showTooltip
+			>
+				<ChevronLeftIcon style={{ width: 20, height: 20 }} />
+			</Button>
+
+			{/* Page Info */}
+			<span style={{ padding: '0 1rem', lineHeight: '2rem' }}>
+				{sprintf(
+					// translators: %1$d is current page, %1$d is the total number of pages
+					__('Page %1$d of %2$d', 'kudos-donations'),
+					currentPage,
+					totalPages
+				)}{' '}
+				({totalItems} {__('items', 'kudos-donations')})
+			</span>
+
+			{/* Next Page */}
+			<Button
+				variant="link"
+				onClick={() => updateParam('paged', String(currentPage + 1))}
+				disabled={currentPage >= totalPages}
+				label={__('Next page', 'kudos-donations')}
+				showTooltip
+			>
+				<ChevronRightIcon style={{ width: 20, height: 20 }} />
+			</Button>
+
+			{/* Last Page */}
+			<Button
+				variant="link"
+				onClick={() => updateParam('paged', String(totalPages))}
+				disabled={currentPage >= totalPages}
+				label={__('Last page', 'kudos-donations')}
+				showTooltip
+			>
+				<ChevronDoubleRightIcon style={{ width: 20, height: 20 }} />
+			</Button>
+		</Flex>
 	);
 };
