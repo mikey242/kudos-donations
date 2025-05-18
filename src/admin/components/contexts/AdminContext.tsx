@@ -44,17 +44,23 @@ export const InnerAdminProvider = ({ children }) => {
 	// Add controls to kudos property for external access.
 	window.kudos.AdminControls = AdminControls;
 
-	const updateParam = (name: string, value: string) => {
-		searchParams.set(name, value);
-		setSearchParams(searchParams);
-	};
+	const updateParam = useCallback(
+		(name: string, value: string) => {
+			searchParams.set(name, value);
+			setSearchParams(searchParams);
+		},
+		[searchParams, setSearchParams]
+	);
 
-	const updateParams = (params: { name: string; value: string }[]) => {
-		params.forEach((param) => {
-			searchParams.set(param.name, param.value);
-		});
-		setSearchParams(searchParams);
-	};
+	const updateParams = useCallback(
+		(params: { name: string; value: string }[]) => {
+			params.forEach((param) => {
+				searchParams.set(param.name, param.value);
+			});
+			setSearchParams(searchParams);
+		},
+		[searchParams, setSearchParams]
+	);
 
 	const deleteParams = useCallback(
 		(params: string[]) => {
