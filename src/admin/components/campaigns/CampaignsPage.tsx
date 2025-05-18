@@ -47,7 +47,7 @@ export const CampaignsPage = (): React.ReactNode => {
 	const headerButton = useMemo(
 		() => (
 			<Button
-				variant="secondary"
+				variant="primary"
 				onClick={(
 					e: React.SyntheticEvent<Element, Event> | Partial<Campaign>
 				) => {
