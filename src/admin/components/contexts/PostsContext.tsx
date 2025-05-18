@@ -54,8 +54,8 @@ export const PostsProvider = <T extends Post>({
 		totalPages,
 		totalItems,
 	} = useEntityRecords<T>('postType', postType, {
-		per_page: 10,
-		page: searchParams.get('paged') ?? 1,
+		per_page: 20,
+		page: parseInt(searchParams.get('paged') ?? '1', 10),
 		order: searchParams.get('order') ?? 'desc',
 		orderby: searchParams.get('orderby') ?? 'date',
 	});
