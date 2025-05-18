@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
 import CampaignEdit from './CampaignEdit';
 import { CampaignsTable } from './CampaignsTable';
 import { usePostsContext, useAdminContext } from '../contexts';
@@ -34,7 +34,7 @@ export const CampaignsPage = (): React.ReactNode => {
 	const [currentCampaign, setCurrentCampaign] = useState<Campaign | null>(
 		null
 	);
-	const { posts } = usePostsContext<Campaign>();
+	const { posts, handleNew } = usePostsContext<Campaign>();
 	const { setHeaderContent, updateParam, searchParams, deleteParams } =
 		useAdminContext();
 	const campaignId = searchParams.get('edit');
@@ -43,6 +43,26 @@ export const CampaignsPage = (): React.ReactNode => {
 		setCurrentCampaign(null);
 		deleteParams(['edit', 'order', 'tab']);
 	}, [deleteParams]);
+
+	const headerButton = useMemo(
+		() => (
+			<Button
+				variant="secondary"
+				onClick={(
+					e: React.SyntheticEvent<Element, Event> | Partial<Campaign>
+				) => {
+					handleNew(e).then((response: Campaign) => {
+						if (response?.id) {
+							updateParam('edit', String(response.id));
+						}
+					});
+				}}
+				text={__('New campaign', 'kudos-donations')}
+				icon="plus"
+			/>
+		),
+		[handleNew, updateParam]
+	);
 
 	useEffect(() => {
 		if (campaignId && posts) {
@@ -60,9 +80,11 @@ export const CampaignsPage = (): React.ReactNode => {
 					onBack={clearCurrentCampaign}
 				/>
 			);
+		} else {
+			setHeaderContent(headerButton);
 		}
 		return () => setHeaderContent(null);
-	}, [clearCurrentCampaign, currentCampaign, setHeaderContent]);
+	}, [clearCurrentCampaign, currentCampaign, headerButton, setHeaderContent]);
 
 	return (
 		<>
