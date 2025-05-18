@@ -69,7 +69,7 @@ class TransactionsAdminPage extends AbstractAdminPage implements HasCallbackInte
 		$settings = wp_enqueue_code_editor( [ 'type' => 'text/css' ] );
 
 		// Get and enqueue the script.
-		$admin_js = Assets::get_script( 'admin/campaigns/kudos-admin-transactions.js' );
+		$admin_js = Assets::get_script( 'admin/transactions/kudos-admin-transactions.js' );
 		wp_enqueue_script(
 			self::SCRIPT_HANDLE_CAMPAIGNS,
 			$admin_js['url'],
