@@ -5,14 +5,18 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { Panel, PanelBody } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
-import { useCampaignsContext } from '../../contexts';
-export const DonationSettingsTab = (): React.ReactNode => {
+
+interface DonationSettingsTabProps {
+	recurringEnabled?: boolean;
+}
+export const DonationSettingsTab = ({
+	recurringEnabled = false,
+}: DonationSettingsTabProps): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const amountType = useWatch({ name: 'meta.amount_type' });
 	const currency = useWatch({ name: 'meta.currency' });
 	const maxDonation = useWatch({ name: 'meta.maximum_donation' });
 	const minDonation = useWatch({ name: 'meta.minimum_donation' });
-	const { recurringEnabled } = useCampaignsContext();
 
 	return (
 		<>

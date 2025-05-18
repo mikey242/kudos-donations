@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useEffect, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AdminTab, AdminTabPanel } from '../AdminTabPanel';
@@ -13,9 +13,10 @@ import {
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import { useAdminContext, useCampaignsContext } from '../contexts';
+import { useAdminContext, usePostsContext } from '../contexts';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/wp';
+import apiFetch from '@wordpress/api-fetch';
 
 interface CampaignEditProps {
 	campaign: Campaign;
@@ -31,8 +32,9 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	});
 	const { reset, handleSubmit, formState } = methods;
 	const { createWarningNotice } = useDispatch(noticesStore);
-	const { handleUpdate } = useCampaignsContext();
+	const { handleUpdate } = usePostsContext();
 	const { setPageTitle } = useAdminContext();
+	const [recurringEnabled, setRecurringEnabled] = useState<boolean>(false);
 
 	useEffect(() => {
 		setPageTitle(
@@ -48,6 +50,13 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 			});
 		}
 	}, [campaign, reset]);
+
+	useEffect(() => {
+		apiFetch({
+			path: '/kudos/v1/payment/recurring-enabled',
+			method: 'GET',
+		}).then((r: boolean) => setRecurringEnabled(r));
+	}, []);
 
 	useEffect(() => {
 		if (formState.isSubmitted && !isEmpty(formState.errors)) {
@@ -80,7 +89,11 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 				{
 					name: 'donation-settings',
 					title: __('Donation settings', 'kudos-donations'),
-					content: <DonationSettingsTab />,
+					content: (
+						<DonationSettingsTab
+							recurringEnabled={recurringEnabled}
+						/>
+					),
 				},
 				{
 					name: 'optional-fields',
@@ -93,7 +106,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 					content: <CustomCSSTab />,
 				},
 			]),
-		[campaign]
+		[campaign, recurringEnabled]
 	) as AdminTab[];
 
 	return (

@@ -2,7 +2,9 @@ import { createRoot } from '@wordpress/element';
 import React from 'react';
 import domReady from '@wordpress/dom-ready';
 import { CampaignsPage } from './components/campaigns/CampaignsPage';
-import { AdminProvider, CampaignsProvider } from './components';
+import { AdminProvider, PostsProvider } from './components';
+import type { Campaign } from '../types/wp';
+import { __ } from '@wordpress/i18n';
 
 domReady(() => {
 	const container = document.getElementById('root');
@@ -10,9 +12,12 @@ domReady(() => {
 		const root = createRoot(container);
 		root.render(
 			<AdminProvider>
-				<CampaignsProvider>
+				<PostsProvider<Campaign>
+					postType="kudos_campaign"
+					singular={__('Campaign', 'kudos-donations')}
+				>
 					<CampaignsPage />
-				</CampaignsProvider>
+				</PostsProvider>
 			</AdminProvider>
 		);
 	}
