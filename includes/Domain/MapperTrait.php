@@ -78,7 +78,8 @@ trait MapperTrait {
 	 */
 	public static function get_post_using_rest( int $post_id ) {
 		// Use internal REST request to get the donor.
-		$request  = new WP_REST_Request( 'GET', '/wp/v2/' . static::get_slug() . "/{$post_id}" );
+		$request = new WP_REST_Request( 'GET', '/wp/v2/' . static::get_slug() . "/{$post_id}" );
+		$request->set_param( 'context', 'edit' );
 		$response = rest_do_request( $request );
 		if ( $response->is_error() ) {
 			return null; // Return null if donor is not found.
