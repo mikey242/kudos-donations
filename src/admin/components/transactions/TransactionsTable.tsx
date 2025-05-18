@@ -105,12 +105,12 @@ export const TransactionsTable = (): React.ReactNode => {
 						const url = post.invoice_url;
 
 						return (
-							<a
+							<Button
+								variant="secondary"
 								href={url}
 								target="_blank"
 								rel="noreferrer"
 								title={__('View invoice', 'kudos-donations')}
-								className="button button-secondary kudos-transaction-pdf success"
 							>
 								<span
 									className="dashicons dashicons-media-document"
@@ -120,7 +120,7 @@ export const TransactionsTable = (): React.ReactNode => {
 									}}
 								/>
 								{__('Paid', 'kudos-donations')}
-							</a>
+							</Button>
 						);
 
 					case 'open':
