@@ -15,6 +15,8 @@ import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import { useEffect, useRef, useState } from '@wordpress/element';
+import { Input } from '@headlessui/react';
 
 interface HeaderItem<T extends Post = Post> {
 	title: string | React.ReactNode;
@@ -179,6 +181,30 @@ const Pagination = ({
 }: PaginationProps): React.ReactNode => {
 	const { searchParams, updateParam } = useAdminContext();
 	const currentPage = parseInt(searchParams.get('paged') ?? '1', 10);
+	const [isEditing, setIsEditing] = useState(false);
+	const [inputValue, setInputValue] = useState(String(currentPage));
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (isEditing && inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [isEditing]);
+
+	const goToPage = (page: number) => {
+		const safePage = Math.max(1, Math.min(page, totalPages));
+		updateParam('paged', String(safePage));
+		setIsEditing(false);
+	};
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			goToPage(Number(inputValue));
+		} else if (e.key === 'Escape') {
+			setInputValue(String(currentPage));
+			setIsEditing(false);
+		}
+	};
+
 	return (
 		<Flex justify="center">
 			{/* First Page */}
@@ -204,14 +230,55 @@ const Pagination = ({
 			</Button>
 
 			{/* Page Info */}
-			<span style={{ padding: '0 1rem', lineHeight: '2rem' }}>
-				{sprintf(
-					// translators: %1$d is current page, %1$d is the total number of pages
-					__('Page %1$d of %2$d', 'kudos-donations'),
-					currentPage,
-					totalPages
-				)}{' '}
-				({totalItems} {__('items', 'kudos-donations')})
+			<span
+				role="button"
+				tabIndex={0}
+				style={{
+					padding: '0 1rem',
+					lineHeight: '2rem',
+					cursor: 'pointer',
+				}}
+				onClick={() => setIsEditing(true)}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter' || e.key === ' ') {
+						e.preventDefault();
+						setIsEditing(true);
+					}
+				}}
+			>
+				{isEditing ? (
+					<Input
+						ref={inputRef}
+						type="number"
+						max={totalPages}
+						min={1}
+						value={inputValue}
+						onChange={(e) => setInputValue(e.target.value)}
+						onBlur={() => goToPage(Number(inputValue))}
+						onKeyDown={handleKeyDown}
+						style={{
+							width: '4em',
+							textAlign: 'center',
+							fontSize: '1rem',
+						}}
+					/>
+				) : (
+					<>
+						{sprintf(
+							// translators: %1$d is the current page, %2$d is the total number of pages
+							__('Page %1$d of %2$d', 'kudos-donations'),
+							currentPage,
+							totalPages
+						)}{' '}
+						(
+						{sprintf(
+							// translators: %1$d is the total number of items
+							__('%1$d items', 'kudos-donations'),
+							totalItems
+						)}
+						)
+					</>
+				)}
 			</span>
 
 			{/* Next Page */}
