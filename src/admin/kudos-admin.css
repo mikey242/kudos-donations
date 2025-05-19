@@ -181,4 +181,24 @@
 			}
 		}
 	}
+
+	table {
+
+		th,td {
+			display: none;
+		}
+
+		th:nth-child(1),
+		td:nth-child(1) {
+			display: block;
+		}
+
+		@media (min-width: 768px) {
+
+			th,
+			td {
+				display: table-cell; /* Hide a specific column */
+			}
+		}
+	}
 }
