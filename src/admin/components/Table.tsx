@@ -73,7 +73,7 @@ export const Table = <T extends Post>({
 
 	return (
 		<>
-			{!isLoading && totalPages > 1 && (
+			{hasLoadedOnce && totalPages > 1 && (
 				<Pagination totalPages={totalPages} totalItems={totalItems} />
 			)}
 			<table className="widefat striped rounded">
@@ -106,13 +106,13 @@ export const Table = <T extends Post>({
 						))}
 					</tr>
 				</thead>
-				<tbody>
+				<tbody className={isLoading ? 'is-loading' : 'is-loaded'}>
 					{/* eslint-disable-next-line no-nested-ternary */}
-					{isLoading ? (
+					{isLoading && !hasLoadedOnce ? (
 						<TableMessage>
 							<Spinner style={{ margin: 0, padding: '1em' }} />
 						</TableMessage>
-					) : !posts.length && hasLoadedOnce ? (
+					) : posts.length === 0 && hasLoadedOnce ? (
 						<TableMessage>
 							<p>{__('No posts', 'kudos-donations')}</p>
 						</TableMessage>
@@ -127,7 +127,7 @@ export const Table = <T extends Post>({
 					)}
 				</tbody>
 			</table>
-			{!isLoading && totalPages > 1 && (
+			{hasLoadedOnce && totalPages > 1 && (
 				<Pagination totalPages={totalPages} totalItems={totalItems} />
 			)}
 		</>

@@ -184,6 +184,12 @@
 
 	table {
 
+		.is-loading {
+			opacity: 0.5;
+			pointer-events: none;
+			transition: opacity 0.2s ease-in-out;
+		}
+
 		th,td {
 			display: none;
 		}
