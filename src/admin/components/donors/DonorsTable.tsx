@@ -32,6 +32,7 @@ export const DonorsTable = (): React.ReactNode => {
 		{
 			key: 'email',
 			title: __('Email', 'kudos-donations'),
+			orderby: 'meta_value',
 			valueCallback: (post: Donor): React.ReactNode =>
 				post.meta.email ?? '',
 		},
