@@ -190,7 +190,7 @@
 
 		th:nth-child(1),
 		td:nth-child(1) {
-			display: block;
+			display: table-cell;
 		}
 
 		@media (min-width: 768px) {
