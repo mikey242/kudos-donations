@@ -1,4 +1,11 @@
-import { Button, Flex, VisuallyHidden } from '@wordpress/components';
+import {
+	Button,
+	ColorIndicator,
+	Dashicon,
+	Flex,
+	FlexItem,
+	VisuallyHidden,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { Table } from '../Table';
 import React from 'react';
@@ -91,66 +98,70 @@ export const TransactionsTable = (): React.ReactNode => {
 		{
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
-			valueCallback: (post: Transaction): string => {
-				return post.campaign?.title.raw ?? '';
-			},
+			valueCallback: (post: Transaction): React.ReactNode =>
+				post.campaign?.title.raw ?? '',
 		},
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const status = post.meta.status;
+
 				switch (status) {
 					case 'paid':
-						const url = post.invoice_url;
-
 						return (
-							<Button
-								variant="secondary"
-								href={url}
-								target="_blank"
-								rel="noreferrer"
-								title={__('View invoice', 'kudos-donations')}
-							>
-								<span
-									className="dashicons dashicons-media-document"
-									style={{
-										marginRight: 4,
-										verticalAlign: 'text-top',
-									}}
+							<Flex>
+								<Dashicon
+									title={__('Paid', 'kudos-donations')}
+									icon="yes-alt"
 								/>
-								{__('Paid', 'kudos-donations')}
-							</Button>
+							</Flex>
 						);
 
 					case 'open':
-						return __('Open', 'kudos-donations');
+						return (
+							<Flex>
+								<Dashicon
+									title={__('Open', 'kudos-donations')}
+									icon="clock"
+								/>
+							</Flex>
+						);
 
 					case 'canceled':
 						return (
-							<>
-								{__('Canceled', 'kudos-donations')}{' '}
-								<span className="dashicons dashicons-no" />
-							</>
+							<Flex>
+								<Dashicon
+									title={__('Canceled', 'kudos-donations')}
+									icon="no-alt"
+								/>
+							</Flex>
+						);
+
+					case 'expired':
+						return (
+							<Flex>
+								<Dashicon
+									title={__('Expired', 'kudos-donations')}
+									icon="warning"
+								/>
+							</Flex>
 						);
 
 					case 'failed':
 						return (
-							<>
-								{__('Failed', 'kudos-donations')}{' '}
-								<span className="dashicons dashicons-no" />
-							</>
+							<Flex>
+								<Dashicon
+									title={__('Failed', 'kudos-donations')}
+									icon="warning"
+								/>
+							</Flex>
 						);
 
 					default:
 						return status;
 				}
 			},
-		},
-		{
-			key: 'method',
-			title: __('Method', 'kudos-donations'),
-			valueCallback: (post: Transaction): string => post.meta.method,
 		},
 		{
 			key: 'message',
@@ -166,30 +177,44 @@ export const TransactionsTable = (): React.ReactNode => {
 			),
 		},
 		{
-			key: 'edit',
+			key: 'actions',
 			title: (
-				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
+				<VisuallyHidden>
+					{__('Actions', 'kudos-donations')}
+				</VisuallyHidden>
 			),
-			valueCallback: (post: Campaign): React.ReactNode => (
-				<>
-					<Button
-						size="compact"
-						icon="trash"
-						label={__('Delete transaction', 'kudos-donations')}
-						onClick={() => {
-							return (
-								// eslint-disable-next-line no-alert
-								window.confirm(
-									__(
-										'Are you sure you wish to delete this transaction?',
-										'kudos-donations'
-									)
-								) && handleDelete(post.id)
-							);
-						}}
-					/>
-				</>
-			),
+			valueCallback: (post: Transaction): React.ReactNode => {
+				const status = post.meta.status;
+				const url = post.invoice_url;
+				return (
+					<Flex justify="flex-end">
+						{status === 'paid' && (
+							<Button
+								size="compact"
+								icon="media-document"
+								href={url}
+								title={__('View invoice', 'kudos-donations')}
+							/>
+						)}
+						<Button
+							size="compact"
+							icon="trash"
+							label={__('Delete transaction', 'kudos-donations')}
+							onClick={() => {
+								return (
+									// eslint-disable-next-line no-alert
+									window.confirm(
+										__(
+											'Are you sure you wish to delete this transaction?',
+											'kudos-donations'
+										)
+									) && handleDelete(post.id)
+								);
+							}}
+						/>
+					</Flex>
+				);
+			},
 		},
 	];
 
