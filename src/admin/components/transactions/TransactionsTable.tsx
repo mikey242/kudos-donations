@@ -76,7 +76,7 @@ export const TransactionsTable = (): React.ReactNode => {
 
 				return (
 					<Flex
-						justify="center"
+						justify="space-between"
 						title={
 							__('Payment type:', 'kudos-donations') + sequence
 						}
