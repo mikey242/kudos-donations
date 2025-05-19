@@ -73,6 +73,9 @@ export const Table = <T extends Post>({
 
 	return (
 		<>
+			{!isLoading && totalPages > 1 && (
+				<Pagination totalPages={totalPages} totalItems={totalItems} />
+			)}
 			<table className="widefat striped rounded">
 				<thead>
 					<tr>
@@ -124,7 +127,6 @@ export const Table = <T extends Post>({
 					)}
 				</tbody>
 			</table>
-			<Spacer marginTop={'5'} />
 			{!isLoading && totalPages > 1 && (
 				<Pagination totalPages={totalPages} totalItems={totalItems} />
 			)}
@@ -206,102 +208,110 @@ const Pagination = ({
 	};
 
 	return (
-		<Flex justify="center">
-			{/* First Page */}
-			<Button
-				variant="link"
-				onClick={() => updateParam('paged', '1')}
-				disabled={currentPage === 1}
-				label={__('First page', 'kudos-donations')}
-				showTooltip
-			>
-				<ChevronDoubleLeftIcon style={{ width: 20, height: 20 }} />
-			</Button>
+		<>
+			<Spacer marginTop={'3'} />
+			<Flex justify="center">
+				{/* First Page */}
+				<Button
+					variant="link"
+					onClick={() => updateParam('paged', '1')}
+					disabled={currentPage === 1}
+					label={__('First page', 'kudos-donations')}
+					showTooltip
+				>
+					<ChevronDoubleLeftIcon style={{ width: 20, height: 20 }} />
+				</Button>
 
-			{/* Previous Page */}
-			<Button
-				variant="link"
-				onClick={() => updateParam('paged', String(currentPage - 1))}
-				disabled={currentPage <= 1}
-				label={__('Previous page', 'kudos-donations')}
-				showTooltip
-			>
-				<ChevronLeftIcon style={{ width: 20, height: 20 }} />
-			</Button>
-
-			{/* Page Info */}
-			<span
-				role="button"
-				tabIndex={0}
-				style={{
-					padding: '0 1rem',
-					lineHeight: '2rem',
-					cursor: 'pointer',
-				}}
-				onClick={() => setIsEditing(true)}
-				onKeyDown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
-						e.preventDefault();
-						setIsEditing(true);
+				{/* Previous Page */}
+				<Button
+					variant="link"
+					onClick={() =>
+						updateParam('paged', String(currentPage - 1))
 					}
-				}}
-			>
-				{isEditing ? (
-					<Input
-						ref={inputRef}
-						type="number"
-						max={totalPages}
-						min={1}
-						value={inputValue}
-						onChange={(e) => setInputValue(e.target.value)}
-						onBlur={() => goToPage(Number(inputValue))}
-						onKeyDown={handleKeyDown}
-						style={{
-							width: '4em',
-							textAlign: 'center',
-							fontSize: '1rem',
-						}}
-					/>
-				) : (
-					<>
-						{sprintf(
-							// translators: %1$d is the current page, %2$d is the total number of pages
-							__('Page %1$d of %2$d', 'kudos-donations'),
-							currentPage,
-							totalPages
-						)}{' '}
-						(
-						{sprintf(
-							// translators: %1$d is the total number of items
-							__('%1$d items', 'kudos-donations'),
-							totalItems
-						)}
-						)
-					</>
-				)}
-			</span>
+					disabled={currentPage <= 1}
+					label={__('Previous page', 'kudos-donations')}
+					showTooltip
+				>
+					<ChevronLeftIcon style={{ width: 20, height: 20 }} />
+				</Button>
 
-			{/* Next Page */}
-			<Button
-				variant="link"
-				onClick={() => updateParam('paged', String(currentPage + 1))}
-				disabled={currentPage >= totalPages}
-				label={__('Next page', 'kudos-donations')}
-				showTooltip
-			>
-				<ChevronRightIcon style={{ width: 20, height: 20 }} />
-			</Button>
+				{/* Page Info */}
+				<span
+					role="button"
+					tabIndex={0}
+					style={{
+						padding: '0 1rem',
+						lineHeight: '2rem',
+						cursor: 'pointer',
+					}}
+					onClick={() => setIsEditing(true)}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							e.preventDefault();
+							setIsEditing(true);
+						}
+					}}
+				>
+					{isEditing ? (
+						<Input
+							ref={inputRef}
+							type="number"
+							max={totalPages}
+							min={1}
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							onBlur={() => goToPage(Number(inputValue))}
+							onKeyDown={handleKeyDown}
+							style={{
+								width: '4em',
+								textAlign: 'center',
+								fontSize: '1rem',
+							}}
+						/>
+					) : (
+						<>
+							{sprintf(
+								// translators: %1$d is the current page, %2$d is the total number of pages
+								__('Page %1$d of %2$d', 'kudos-donations'),
+								currentPage,
+								totalPages
+							)}{' '}
+							(
+							{sprintf(
+								// translators: %1$d is the total number of items
+								__('%1$d items', 'kudos-donations'),
+								totalItems
+							)}
+							)
+						</>
+					)}
+				</span>
 
-			{/* Last Page */}
-			<Button
-				variant="link"
-				onClick={() => updateParam('paged', String(totalPages))}
-				disabled={currentPage >= totalPages}
-				label={__('Last page', 'kudos-donations')}
-				showTooltip
-			>
-				<ChevronDoubleRightIcon style={{ width: 20, height: 20 }} />
-			</Button>
-		</Flex>
+				{/* Next Page */}
+				<Button
+					variant="link"
+					onClick={() =>
+						updateParam('paged', String(currentPage + 1))
+					}
+					disabled={currentPage >= totalPages}
+					label={__('Next page', 'kudos-donations')}
+					showTooltip
+				>
+					<ChevronRightIcon style={{ width: 20, height: 20 }} />
+				</Button>
+
+				{/* Last Page */}
+				<Button
+					variant="link"
+					onClick={() => updateParam('paged', String(totalPages))}
+					disabled={currentPage >= totalPages}
+					label={__('Last page', 'kudos-donations')}
+					showTooltip
+				>
+					<ChevronDoubleRightIcon style={{ width: 20, height: 20 }} />
+				</Button>
+			</Flex>
+			<Spacer marginTop={'3'} />
+		</>
 	);
 };
