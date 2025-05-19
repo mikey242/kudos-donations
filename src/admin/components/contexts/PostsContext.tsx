@@ -59,6 +59,10 @@ export const PostsProvider = <T extends Post>({
 		page: parseInt(searchParams.get('paged') ?? '1', 10),
 		order: searchParams.get('order') ?? 'desc',
 		orderby: searchParams.get('orderby') ?? 'date',
+		metaKey: searchParams.get('meta_key') ?? '',
+		metaValue: searchParams.get('meta_value') ?? '',
+		metaCompare: searchParams.get('meta_compare') ?? '=',
+		metaType: searchParams.get('meta_type') ?? 'string',
 	});
 
 	useEffect(() => {

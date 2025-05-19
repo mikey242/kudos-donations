@@ -34,6 +34,7 @@ interface HeaderItem<T extends Post = Post> {
 		| 'title'
 		| string;
 	valueCallback?: (post: T) => React.ReactNode;
+	width?: string | number;
 }
 
 interface TableProps<T extends Post = Post> {
@@ -59,28 +60,55 @@ export const Table = <T extends Post>({
 		const prevOrderby = searchParams.get('orderby');
 		const prevOrder = searchParams.get('order');
 
-		updateParams([
+		const nextOrder =
+			prevOrderby !== orderby || prevOrder === 'desc' ? 'asc' : 'desc';
+
+		// Always update order and orderby
+		const updates = [
 			{ name: 'orderby', value: orderby },
-			{
-				name: 'order',
-				value:
-					prevOrderby !== orderby || prevOrder === 'desc'
-						? 'asc'
-						: 'desc',
-			},
-		]);
+			{ name: 'order', value: nextOrder },
+		];
+
+		// Dynamically determine the meta_key and meta_type
+		const column = headerItems.find((item) => item.orderby === orderby);
+
+		if (orderby.startsWith('meta_value')) {
+			if (column?.key) {
+				updates.push({ name: 'meta_key', value: column.key });
+
+				if (orderby === 'meta_value_num') {
+					updates.push({ name: 'meta_type', value: 'NUMERIC' });
+				} else {
+					// Ensure meta_type is cleared if switching to string-based meta sorting
+					updates.push({ name: 'meta_type', value: '' });
+				}
+			}
+		} else {
+			// If not meta_value at all, clear meta_key and meta_type
+			updates.push({ name: 'meta_key', value: '' });
+			updates.push({ name: 'meta_type', value: '' });
+		}
+
+		updateParams(updates);
 	};
 
 	return (
 		<>
-			{hasLoadedOnce && totalPages > 1 && (
+			{hasLoadedOnce && (
 				<Pagination totalPages={totalPages} totalItems={totalItems} />
 			)}
 			<table className="widefat striped rounded">
 				<thead>
 					<tr>
 						{headerItems.map((item) => (
-							<th key={item.key}>
+							<th
+								key={item.key}
+								style={
+									item.width
+										? { width: item.width }
+										: undefined
+								}
+							>
 								{item.orderby ? (
 									<Button
 										onClick={() => {
@@ -127,7 +155,7 @@ export const Table = <T extends Post>({
 					)}
 				</tbody>
 			</table>
-			{hasLoadedOnce && totalPages > 1 && (
+			{hasLoadedOnce && (
 				<Pagination totalPages={totalPages} totalItems={totalItems} />
 			)}
 		</>
@@ -161,7 +189,13 @@ const TableRow = <T extends Post>({ post, columns }: TableRowProps<T>) => {
 			{columns.map((column) => {
 				return (
 					<td
-						style={{ verticalAlign: 'middle' }}
+						style={{
+							verticalAlign: 'middle',
+							width: column.width ?? 'auto',
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							overflowWrap: 'anywhere',
+						}}
 						key={column.key + post.id}
 					>
 						{column.valueCallback && column.valueCallback(post)}
@@ -273,14 +307,14 @@ const Pagination = ({
 							{sprintf(
 								// translators: %1$d is the current page, %2$d is the total number of pages
 								__('Page %1$d of %2$d', 'kudos-donations'),
-								currentPage,
-								totalPages
+								currentPage ?? 0,
+								totalPages ?? 0
 							)}{' '}
 							(
 							{sprintf(
 								// translators: %1$d is the total number of items
 								__('%1$d items', 'kudos-donations'),
-								totalItems
+								totalItems ?? 0
 							)}
 							)
 						</>
