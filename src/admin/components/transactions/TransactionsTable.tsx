@@ -1,18 +1,11 @@
-import {
-	Button,
-	ColorIndicator,
-	Dashicon,
-	Flex,
-	FlexItem,
-	VisuallyHidden,
-} from '@wordpress/components';
+import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { Table } from '../Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
 import { useEffect } from '@wordpress/element';
-import type { Campaign, Transaction } from '../../../types/wp';
+import type { Transaction } from '../../../types/wp';
 import {
 	ArrowPathIcon,
 	ArrowRightCircleIcon,
