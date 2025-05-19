@@ -31,12 +31,14 @@ export const TransactionsTable = (): React.ReactNode => {
 			key: 'description',
 			title: __('Description', 'kudos-donations'),
 			orderby: 'title',
+			width: '20%',
 			valueCallback: (post: Transaction): React.ReactNode =>
 				post.title.raw,
 		},
 		{
 			key: 'donor',
 			title: __('Donor', 'kudos-donations'),
+			width: '15%',
 			valueCallback: (post: Transaction): React.ReactNode =>
 				post.donor?.meta.email ??
 				post.donor?.meta?.name ??
@@ -45,7 +47,9 @@ export const TransactionsTable = (): React.ReactNode => {
 		},
 		{
 			key: 'value',
+			orderby: 'meta_value_num',
 			title: __('Amount', 'kudos-donations'),
+			width: '5%',
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const value = post.meta?.value;
 				const currency = post.meta?.currency;
@@ -76,7 +80,7 @@ export const TransactionsTable = (): React.ReactNode => {
 
 				return (
 					<Flex
-						justify="space-between"
+						justify="center"
 						title={
 							__('Payment type:', 'kudos-donations') + sequence
 						}
@@ -91,12 +95,15 @@ export const TransactionsTable = (): React.ReactNode => {
 		{
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
+			width: '20%',
 			valueCallback: (post: Transaction): React.ReactNode =>
 				post.campaign?.title.raw ?? '',
 		},
 		{
 			key: 'status',
+			orderby: 'meta_value',
 			title: __('Status', 'kudos-donations'),
+			width: '5%',
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const status = post.meta.status;
 
@@ -159,12 +166,14 @@ export const TransactionsTable = (): React.ReactNode => {
 		{
 			key: 'message',
 			title: __('Message', 'kudos-donations'),
+			width: '20%',
 			valueCallback: (post: Transaction): string => post.meta.message,
 		},
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
+			width: '10%',
 			valueCallback: (post: Transaction): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),
@@ -176,6 +185,7 @@ export const TransactionsTable = (): React.ReactNode => {
 					{__('Actions', 'kudos-donations')}
 				</VisuallyHidden>
 			),
+			width: '5%',
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const status = post.meta.status;
 				const url = post.invoice_url;
