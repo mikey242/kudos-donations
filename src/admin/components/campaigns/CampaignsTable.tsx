@@ -107,7 +107,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 					/>
 					<Button
 						size="compact"
-						icon="media-document"
+						icon="admin-page"
 						label={__('Duplicate campaign', 'kudos-donations')}
 						onClick={() => handleDuplicate(post)}
 					/>
