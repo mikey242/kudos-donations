@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Domain\PostType;
 
 use IseardMedia\Kudos\Admin\TableColumnsTrait;
 use IseardMedia\Kudos\Domain\AbstractContentType;
-use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Domain\MapperTrait;
@@ -125,10 +124,6 @@ abstract class AbstractCustomPostType extends AbstractContentType implements Cus
 
 		if ( $this instanceof HasRestFieldsInterface ) {
 			$this->register_rest_fields( apply_filters( $this->get_slug() . '_rest_fields', $this->get_rest_fields() ), $this->get_slug() );
-		}
-
-		if ( $this instanceof HasAdminColumns ) {
-			$this->add_table_columns( $this->get_slug(), $this->get_columns_config() );
 		}
 	}
 }
