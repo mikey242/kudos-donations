@@ -37,6 +37,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
 			orderby: 'title',
+			width: '25%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<Button
 					showTooltip={true}
