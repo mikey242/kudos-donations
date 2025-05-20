@@ -1,12 +1,13 @@
 import {
 	Button,
 	ColorIndicator,
+	Flex,
 	ProgressBar,
 	Tooltip,
 	VisuallyHidden,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { Table } from '../Table';
+import { Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
@@ -98,7 +99,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
 			),
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<>
+				<Flex justify="flex-end">
 					<Button
 						size="compact"
 						icon="edit"
@@ -111,6 +112,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 						label={__('Duplicate campaign', 'kudos-donations')}
 						onClick={() => handleDuplicate(post)}
 					/>
+					<GenerateShortcode campaign={post} iconOnly />
 					<Button
 						size="compact"
 						icon="trash"
@@ -127,8 +129,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 							);
 						}}
 					/>
-					<GenerateShortcode campaign={post} iconOnly />
-				</>
+				</Flex>
 			),
 		},
 	];
