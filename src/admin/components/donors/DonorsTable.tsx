@@ -1,6 +1,6 @@
-import { Button, VisuallyHidden } from '@wordpress/components';
+import { Button, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { Table } from '../Table';
+import { Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
@@ -26,6 +26,7 @@ export const DonorsTable = (): React.ReactNode => {
 			key: 'name',
 			title: __('Name', 'kudos-donations'),
 			orderby: 'title',
+			width: '25%',
 			valueCallback: (post: Donor): React.ReactNode =>
 				post.meta.name ?? '',
 		},
@@ -54,8 +55,8 @@ export const DonorsTable = (): React.ReactNode => {
 			title: (
 				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
 			),
-			valueCallback: (post: Campaign): React.ReactNode => (
-				<>
+			valueCallback: (post: Donor): React.ReactNode => (
+				<Flex justify="flex-end">
 					<Button
 						size="compact"
 						icon="trash"
@@ -72,7 +73,7 @@ export const DonorsTable = (): React.ReactNode => {
 							);
 						}}
 					/>
-				</>
+				</Flex>
 			),
 		},
 	];

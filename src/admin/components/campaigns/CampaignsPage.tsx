@@ -91,7 +91,7 @@ export const CampaignsPage = (): React.ReactNode => {
 	]);
 
 	return (
-		<>
+		<div className="admin-wrap">
 			{campaignId ? (
 				currentCampaign && (
 					<>
@@ -101,6 +101,6 @@ export const CampaignsPage = (): React.ReactNode => {
 			) : (
 				<CampaignsTable handleEdit={updateParam} />
 			)}
-		</>
+		</div>
 	);
 };

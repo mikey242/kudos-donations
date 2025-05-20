@@ -84,10 +84,8 @@ export const InnerAdminProvider = ({ children }) => {
 		<AdminContext.Provider value={data}>
 			<AdminHeader children={headerContent} />
 			<Notices />
-			<div className="admin-wrap">
-				<h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>
-				<>{children}</>
-			</div>
+			<h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>
+			<>{children}</>
 		</AdminContext.Provider>
 	);
 };
