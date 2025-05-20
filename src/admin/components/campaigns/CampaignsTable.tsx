@@ -12,7 +12,7 @@ import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
 import GenerateShortcode from './GenerateShortcode';
 import { useEffect } from '@wordpress/element';
-import type { Campaign } from '../../../types/wp';
+import type { Campaign } from '../../../types/posts';
 
 export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;

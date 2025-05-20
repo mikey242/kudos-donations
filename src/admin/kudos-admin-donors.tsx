@@ -2,7 +2,7 @@ import { createRoot } from '@wordpress/element';
 import React from 'react';
 import domReady from '@wordpress/dom-ready';
 import { AdminProvider, PostsProvider } from './components';
-import type { Campaign } from '../types/wp';
+import type { Campaign } from '../types/posts';
 import { __ } from '@wordpress/i18n';
 import { DonorsTable } from './components/donors/DonorsTable';
 
