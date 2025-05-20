@@ -11,12 +11,11 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\PostType;
 
-use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
+use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Utils;
 
-class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasAdminColumns {
+class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface {
 
 	/**
 	 * Meta field constants.
@@ -29,6 +28,12 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	public const META_FIELD_CUSTOMER_ID            = 'customer_id';
 	public const META_FIELD_TRANSACTION_ID         = 'transaction_id';
 	public const META_FIELD_VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
+
+	/**
+	 * Rest field constants.
+	 */
+	public const REST_FIELD_DONOR    = 'donor';
+	public const REST_FIELD_CAMPAIGN = 'campaign';
 
 	/**
 	 * {@inheritDoc}
@@ -63,6 +68,13 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	 */
 	protected function get_icon(): string {
 		return 'dashicons-update';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_show_in_rest(): bool {
+		return current_user_can( 'edit_posts' );
 	}
 
 	/**
@@ -108,56 +120,27 @@ class SubscriptionPostType extends AbstractCustomPostType implements HasMetaFiel
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_columns_config(): array {
+	public function get_rest_fields(): array {
 		return [
-			'donor'                                 => [
-				'value_type' => FieldType::STRING,
-				'label'      => __( 'Donor', 'kudos-donations' ),
-				'value'      => function ( $subscription_id ) {
-					$transaction_id = get_post_meta( $subscription_id, SubscriptionPostType::META_FIELD_TRANSACTION_ID, true );
-					if ( $transaction_id ) {
-						$donor_id = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true );
-						if ( $donor_id ) {
-							$email_address = get_post_meta( $donor_id, DonorPostType::META_FIELD_EMAIL, true );
-							return '<a title="' . __( 'Show only this donor', 'kudos-donations' ) . '" href="edit.php?post_type=' . TransactionPostType::get_slug() . '&s=' . $email_address . '">' . $email_address . '</a>';
-						}
+			self::REST_FIELD_DONOR    => [
+				'get_callback' => function ( $subscription ) {
+					$transaction_id = $subscription['meta'][ self::META_FIELD_TRANSACTION_ID ] ?? null;
+					if ( ! $transaction_id ) {
+						return null;
 					}
-					return null;
+					$donor_id = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true );
+					return DonorPostType::get_post_using_rest( (int) $donor_id );
 				},
 			],
-			'ID'                                    => [
-				'value_type' => FieldType::STRING,
-				'value'      => function ( $subscription_id ) {
-					return Utils::get_formatted_id( $subscription_id );
+			self::REST_FIELD_CAMPAIGN => [
+				'get_callback' => function ( $subscription ) {
+					$transaction_id = $subscription['meta'][ self::META_FIELD_TRANSACTION_ID ] ?? null;
+					if ( ! $transaction_id ) {
+						return null;
+					}
+					$campaign_id = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_CAMPAIGN_ID, true );
+					return CampaignPostType::get_post_using_rest( (int) $campaign_id );
 				},
-			],
-			self::META_FIELD_VENDOR_SUBSCRIPTION_ID => [
-				'value_type' => FieldType::STRING,
-				'label'      => __( 'Vendor ID', 'kudos-donations' ),
-			],
-			self::META_FIELD_VALUE                  => [
-				'value_type' => FieldType::INTEGER,
-				'label'      => __( 'Amount', 'kudos-donations' ),
-				'value'      => function ( $transaction_id ) {
-					$value = get_post_meta( $transaction_id, TransactionPostType::META_FIELD_VALUE, true );
-					return Utils::format_value_for_display( $value );
-				},
-			],
-			self::META_FIELD_CURRENCY               => [
-				'value_type' => FieldType::STRING,
-				'label'      => __( 'Currency', 'kudos-donations' ),
-			],
-			self::META_FIELD_FREQUENCY              => [
-				'value_type' => FieldType::INTEGER,
-				'label'      => __( 'Frequency', 'kudos-donations' ),
-			],
-			self::META_FIELD_YEARS                  => [
-				'value_type' => FieldType::INTEGER,
-				'label'      => __( 'Length', 'kudos-donations' ),
-			],
-			self::META_FIELD_STATUS                 => [
-				'value_type' => FieldType::STRING,
-				'label'      => __( 'Status', 'kudos-donations' ),
 			],
 		];
 	}
