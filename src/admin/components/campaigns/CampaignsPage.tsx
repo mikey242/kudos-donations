@@ -6,7 +6,7 @@ import { usePostsContext, useAdminContext } from '../contexts';
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import GenerateShortcode from './GenerateShortcode';
-import type { Campaign } from '../../../types/wp';
+import type { Campaign } from '../../../types/posts';
 
 const NavigationButtons = ({ campaign, onBack }): React.ReactNode => (
 	<>

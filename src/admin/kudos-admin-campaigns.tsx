@@ -3,7 +3,7 @@ import React from 'react';
 import domReady from '@wordpress/dom-ready';
 import { CampaignsPage } from './components/campaigns/CampaignsPage';
 import { AdminProvider, PostsProvider } from './components';
-import type { Campaign } from '../types/wp';
+import type { Campaign } from '../types/posts';
 import { __ } from '@wordpress/i18n';
 
 domReady(() => {

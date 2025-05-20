@@ -5,7 +5,7 @@ import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
 import { useEffect } from '@wordpress/element';
-import type { Transaction } from '../../../types/wp';
+import type { Transaction } from '../../../types/posts';
 import {
 	ArrowPathIcon,
 	ArrowRightCircleIcon,
