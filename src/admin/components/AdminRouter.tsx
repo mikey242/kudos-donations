@@ -5,13 +5,18 @@ import { DonorsTable } from './donors/DonorsTable';
 import { TransactionsTable } from './transactions/TransactionsTable';
 import { SubscriptionsTable } from './subscriptions/SubscriptionsTable';
 import { SettingsPage } from './settings/SettingsPage';
+import { useEffect } from '@wordpress/element';
 
 interface Props {
 	defaultView: string;
 }
 export const AdminRouter = ({ defaultView }: Props): React.ReactNode => {
-	const { searchParams } = useAdminContext();
+	const { searchParams, updateParam } = useAdminContext();
 	const view = searchParams.get('view') ?? defaultView;
+
+	useEffect(() => {
+		updateParam('view', view);
+	}, [updateParam, view]);
 
 	switch (view) {
 		case 'kudos-transactions':

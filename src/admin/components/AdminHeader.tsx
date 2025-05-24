@@ -8,6 +8,7 @@ import {
 	Panel,
 	ResponsiveWrapper,
 } from '@wordpress/components';
+import { AdminMenu } from './AdminMenu';
 
 interface AdminHeaderProps {
 	children: React.ReactNode;
@@ -18,7 +19,7 @@ export const AdminHeader = ({
 }: AdminHeaderProps): React.ReactNode => {
 	return (
 		<>
-			<Panel className={'kudos-settings-header'}>
+			<Panel className="kudos-admin-header">
 				<div className="admin-wrap">
 					<Flex align="center" justify="space-between">
 						<FlexBlock>
@@ -59,6 +60,7 @@ export const AdminHeader = ({
 							</Flex>
 						</FlexItem>
 					</Flex>
+					<AdminMenu />
 				</div>
 			</Panel>
 		</>
