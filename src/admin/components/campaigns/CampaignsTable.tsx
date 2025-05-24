@@ -1,18 +1,19 @@
 import {
 	Button,
 	ColorIndicator,
+	Flex,
 	ProgressBar,
 	Tooltip,
 	VisuallyHidden,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { Table } from '../Table';
+import { Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
 import GenerateShortcode from './GenerateShortcode';
 import { useEffect } from '@wordpress/element';
-import type { Campaign } from '../../../types/wp';
+import type { Campaign } from '../../../types/posts';
 
 export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
@@ -36,6 +37,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
 			orderby: 'title',
+			width: '25%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<Button
 					showTooltip={true}
@@ -98,7 +100,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
 			),
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<>
+				<Flex justify="flex-end">
 					<Button
 						size="compact"
 						icon="edit"
@@ -107,10 +109,11 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 					/>
 					<Button
 						size="compact"
-						icon="media-document"
+						icon="admin-page"
 						label={__('Duplicate campaign', 'kudos-donations')}
 						onClick={() => handleDuplicate(post)}
 					/>
+					<GenerateShortcode campaign={post} iconOnly />
 					<Button
 						size="compact"
 						icon="trash"
@@ -127,8 +130,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 							);
 						}}
 					/>
-					<GenerateShortcode campaign={post} iconOnly />
-				</>
+				</Flex>
 			),
 		},
 	];

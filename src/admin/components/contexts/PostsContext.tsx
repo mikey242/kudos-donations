@@ -4,6 +4,7 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from '@wordpress/element';
 // eslint-disable-next-line import/default
@@ -13,7 +14,7 @@ import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import { useAdminContext } from './AdminContext';
-import type { Post } from '../../../types/wp';
+import type { Post } from '../../../types/posts';
 
 interface PostsContextValue<T extends Post = Post> {
 	posts: T[];
@@ -58,12 +59,16 @@ export const PostsProvider = <T extends Post>({
 		page: parseInt(searchParams.get('paged') ?? '1', 10),
 		order: searchParams.get('order') ?? 'desc',
 		orderby: searchParams.get('orderby') ?? 'date',
+		metaKey: searchParams.get('meta_key') ?? '',
+		metaValue: searchParams.get('meta_value') ?? '',
+		metaCompare: searchParams.get('meta_compare') ?? '=',
+		metaType: searchParams.get('meta_type') ?? 'string',
 	});
 
 	useEffect(() => {
+		setIsLoading(!hasResolved);
 		if (hasResolved) {
 			setCachedPosts(posts ?? []);
-			setIsLoading(false);
 			setHasLoadedOnce(true);
 		}
 	}, [posts, hasResolved]);
@@ -185,29 +190,46 @@ export const PostsProvider = <T extends Post>({
 	);
 
 	// Prepares data for duplicating current post.
-	const handleDuplicate = (post: T) => {
-		const { id, ...rest } = post;
+	const handleDuplicate = useCallback(
+		(post: T) => {
+			const { id, ...rest } = post;
 
-		const data = {
-			...rest,
-			title: { raw: post.title.raw, rendered: '' },
-			date: new Date().toISOString(),
-		} as Partial<T>;
-		return handleSave(data);
-	};
+			const data = {
+				...rest,
+				title: { raw: post.title.raw, rendered: '' },
+				date: new Date().toISOString(),
+			} as Partial<T>;
+			return handleSave(data);
+		},
+		[handleSave]
+	);
 
-	const data: PostsContextValue<T> = {
-		posts: cachedPosts,
-		totalItems,
-		totalPages,
-		hasResolved,
-		isLoading,
-		hasLoadedOnce,
-		handleNew,
-		handleDuplicate,
-		handleDelete,
-		handleUpdate,
-	};
+	const data: PostsContextValue<T> = useMemo(
+		() => ({
+			posts: cachedPosts,
+			totalItems,
+			totalPages,
+			hasResolved,
+			isLoading,
+			hasLoadedOnce,
+			handleNew,
+			handleDuplicate,
+			handleDelete,
+			handleUpdate,
+		}),
+		[
+			cachedPosts,
+			handleDelete,
+			handleDuplicate,
+			handleNew,
+			handleUpdate,
+			hasLoadedOnce,
+			hasResolved,
+			isLoading,
+			totalItems,
+			totalPages,
+		]
+	);
 
 	return (
 		<>

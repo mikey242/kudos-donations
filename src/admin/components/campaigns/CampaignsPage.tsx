@@ -1,17 +1,12 @@
 import React from 'react';
-import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import CampaignEdit from './CampaignEdit';
 import { CampaignsTable } from './CampaignsTable';
 import { usePostsContext, useAdminContext } from '../contexts';
-import {
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalSpacer as Spacer,
-	Button,
-	Flex,
-} from '@wordpress/components';
+import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import GenerateShortcode from './GenerateShortcode';
-import type { Campaign } from '../../../types/wp';
+import type { Campaign } from '../../../types/posts';
 
 const NavigationButtons = ({ campaign, onBack }): React.ReactNode => (
 	<>
@@ -30,6 +25,15 @@ const NavigationButtons = ({ campaign, onBack }): React.ReactNode => (
 	</>
 );
 
+const NewCampaignButton = ({ handleClick }) => (
+	<Button
+		variant="primary"
+		onClick={handleClick}
+		text={__('New campaign', 'kudos-donations')}
+		icon="plus"
+	/>
+);
+
 export const CampaignsPage = (): React.ReactNode => {
 	const [currentCampaign, setCurrentCampaign] = useState<Campaign | null>(
 		null
@@ -43,26 +47,6 @@ export const CampaignsPage = (): React.ReactNode => {
 		setCurrentCampaign(null);
 		deleteParams(['edit', 'order', 'tab']);
 	}, [deleteParams]);
-
-	const headerButton = useMemo(
-		() => (
-			<Button
-				variant="secondary"
-				onClick={(
-					e: React.SyntheticEvent<Element, Event> | Partial<Campaign>
-				) => {
-					handleNew(e).then((response: Campaign) => {
-						if (response?.id) {
-							updateParam('edit', String(response.id));
-						}
-					});
-				}}
-				text={__('New campaign', 'kudos-donations')}
-				icon="plus"
-			/>
-		),
-		[handleNew, updateParam]
-	);
 
 	useEffect(() => {
 		if (campaignId && posts) {
@@ -81,27 +65,38 @@ export const CampaignsPage = (): React.ReactNode => {
 				/>
 			);
 		} else {
-			setHeaderContent(headerButton);
+			setHeaderContent(
+				<NewCampaignButton
+					handleClick={(
+						e:
+							| React.SyntheticEvent<Element, Event>
+							| Partial<Campaign>
+					) => {
+						handleNew(e).then((response: Campaign) => {
+							if (response?.id) {
+								updateParam('edit', String(response.id));
+							}
+						});
+					}}
+				/>
+			);
 		}
 		return () => setHeaderContent(null);
-	}, [clearCurrentCampaign, currentCampaign, headerButton, setHeaderContent]);
+	}, [
+		clearCurrentCampaign,
+		currentCampaign,
+		handleNew,
+		setHeaderContent,
+		updateParam,
+	]);
 
 	return (
 		<>
 			{campaignId ? (
 				currentCampaign && (
-					<>
+					<div className="admin-wrap">
 						<CampaignEdit campaign={currentCampaign} />
-						<Spacer marginTop={'5'} />
-						<Flex justify="flex-start">
-							{
-								<NavigationButtons
-									campaign={currentCampaign}
-									onBack={clearCurrentCampaign}
-								/>
-							}
-						</Flex>
-					</>
+					</div>
 				)
 			) : (
 				<CampaignsTable handleEdit={updateParam} />
