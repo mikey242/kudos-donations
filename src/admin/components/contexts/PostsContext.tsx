@@ -14,7 +14,7 @@ import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import { useAdminContext } from './AdminContext';
-import type { Post } from '../../../types/wp';
+import type { Post } from '../../../types/posts';
 
 interface PostsContextValue<T extends Post = Post> {
 	posts: T[];
