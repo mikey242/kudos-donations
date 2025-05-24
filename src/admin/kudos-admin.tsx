@@ -1,18 +1,19 @@
 import { createRoot } from '@wordpress/element';
 import React from 'react';
 import domReady from '@wordpress/dom-ready';
-import { SettingsPage } from './components/settings/SettingsPage';
 import './kudos-admin.css';
 import { AdminProvider, SettingsProvider } from './components';
+import { AdminRouter } from './components/AdminRouter';
 
 domReady(() => {
 	const container = document.getElementById('root');
+	const defaultView = container?.dataset?.view ?? 'campaigns';
 	if (container) {
 		const root = createRoot(container);
 		root.render(
 			<AdminProvider>
 				<SettingsProvider>
-					<SettingsPage />
+					<AdminRouter defaultView={defaultView} />
 				</SettingsProvider>
 			</AdminProvider>
 		);
