@@ -11,7 +11,6 @@ import { AdminHeader } from '../AdminHeader';
 import * as AdminControls from '../../components/controls';
 import { Notices } from '../Notices';
 import { useCallback } from '@wordpress/element';
-import { AdminMenu } from '../AdminMenu';
 
 interface AdminContextValue {
 	setHeaderContent: Dispatch<SetStateAction<ReactNode>>;
@@ -84,7 +83,6 @@ export const InnerAdminProvider = ({ children }) => {
 	return (
 		<AdminContext.Provider value={data}>
 			<AdminHeader children={headerContent} />
-			<AdminMenu />
 			<Notices />
 			<h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>
 			<>{children}</>
