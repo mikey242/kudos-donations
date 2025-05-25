@@ -8,7 +8,6 @@ import {
 	Panel,
 	ResponsiveWrapper,
 } from '@wordpress/components';
-import { AdminMenu } from './AdminMenu';
 
 interface AdminHeaderProps {
 	children: React.ReactNode;
