@@ -1,6 +1,6 @@
 import React from 'react';
 import type { IconType } from '@wordpress/components';
-import { Button, Flex, NavigableMenu, Panel } from '@wordpress/components';
+import { Button, Flex, Panel } from '@wordpress/components';
 import { useAdminContext } from './contexts';
 
 interface NavItem {
@@ -35,31 +35,29 @@ export const AdminMenu = (): React.ReactNode => {
 	};
 
 	return (
-		<>
-			<div className="kudos-admin-menu">
-				<div className="admin-wrap">
-					<Flex justify="center" align="center">
-						{navItems.map(({ label, view, icon }) => {
-							const isActive = currentView === view;
-							return (
-								<Button
-									style={{ textDecoration: 'none' }}
-									key={view}
-									variant="link"
-									icon={icon ?? 'marker'}
-									className={isActive ? 'is-active' : ''}
-									href={`?page=kudos-admin&view=${view}`}
-									onClick={(e: React.MouseEvent) =>
-										onClick(e, view)
-									}
-								>
-									{label}
-								</Button>
-							);
-						})}
-					</Flex>
-				</div>
+		<Panel className="kudos-admin-menu">
+			<div className="admin-wrap">
+				<Flex justify="center" align="center">
+					{navItems.map(({ label, view, icon }) => {
+						const isActive = currentView === view;
+						return (
+							<Button
+								style={{ textDecoration: 'none' }}
+								key={view}
+								variant="link"
+								icon={icon ?? 'marker'}
+								className={isActive ? 'is-active' : ''}
+								href={`?page=kudos-admin&view=${view}`}
+								onClick={(e: React.MouseEvent) =>
+									onClick(e, view)
+								}
+							>
+								{label}
+							</Button>
+						);
+					})}
+				</Flex>
 			</div>
-		</>
+		</Panel>
 	);
 };
