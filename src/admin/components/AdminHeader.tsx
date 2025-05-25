@@ -60,7 +60,6 @@ export const AdminHeader = ({
 							</Flex>
 						</FlexItem>
 					</Flex>
-					<AdminMenu />
 				</div>
 			</Panel>
 		</>
