@@ -11,14 +11,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\PostType;
 
-use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 
-class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface, HasAdminColumns {
+class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInterface, HasRestFieldsInterface {
 
 	/**
 	 * Meta field constants.
@@ -132,36 +131,6 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 			self::REST_FIELD_TOTAL => [
 				'get_callback' => function ( $item ) {
 					$donor_id = $item['id'];
-					return $this->get_total( $donor_id );
-				},
-			],
-		];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get_columns_config(): array {
-		return [
-			self::META_FIELD_NAME               => [
-				'label'      => __( 'Name', 'kudos-donations' ),
-				'value_type' => FieldType::STRING,
-			],
-			self::META_FIELD_EMAIL              => [
-				'label' => __( 'Email', 'kudos-donations' ),
-				'value' => function ( $donor_id ) {
-					$email_address = get_post( $donor_id )->{self::META_FIELD_EMAIL};
-					return '<a title="' . __( 'Show only this donor', 'kudos-donations' ) . '" href="edit.php?post_type=' . TransactionPostType::get_slug() . '&s=' . $email_address . '">' . $email_address . '</a>';
-				},
-			],
-			self::META_FIELD_VENDOR_CUSTOMER_ID => [
-				'label'      => __( 'Vendor ID', 'kudos-donations' ),
-				'value_type' => FieldType::STRING,
-			],
-			'total_donations'                   => [
-				'label'      => __( 'Total donated', 'kudos-donations' ),
-				'value_type' => FieldType::STRING,
-				'value'      => function ( $donor_id ) {
 					return $this->get_total( $donor_id );
 				},
 			],

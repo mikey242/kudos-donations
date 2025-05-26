@@ -11,15 +11,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
-
-class TransactionsAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterface {
+class TransactionsAdminPage extends AbstractReactSubPage {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_page_title(): string {
-		return '';
+		return __( 'Kudos Transactions', 'kudos-donations' );
 	}
 
 	/**
@@ -33,7 +31,7 @@ class TransactionsAdminPage extends AbstractAdminPage implements SubmenuAdminPag
 	 * {@inheritDoc}
 	 */
 	public static function get_menu_slug(): string {
-		return 'edit.php?post_type=' . TransactionPostType::get_slug();
+		return 'kudos-transactions';
 	}
 
 	/**

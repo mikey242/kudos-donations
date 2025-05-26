@@ -4,14 +4,7 @@ const { resolve } = require('node:path');
 
 module.exports = merge(commonConfig, {
 	entry: {
-		'settings/kudos-admin-settings': resolve(
-			__dirname,
-			'kudos-admin-settings.tsx'
-		),
-		'campaigns/kudos-admin-campaigns': resolve(
-			__dirname,
-			'kudos-admin-campaigns.tsx'
-		),
+		'kudos-admin': resolve(__dirname, 'kudos-admin.tsx'),
 		'migrations/kudos-admin-migrations': resolve(
 			__dirname,
 			'kudos-admin-migrations.ts'
