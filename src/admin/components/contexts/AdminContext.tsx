@@ -16,13 +16,18 @@ interface AdminContextValue {
 	setHeaderContent: Dispatch<SetStateAction<ReactNode>>;
 	setPageTitle: Dispatch<SetStateAction<string>>;
 	searchParams: URLSearchParams;
-	updateParam: (name: string, value: string) => void;
-	updateParams: (params: { name: string; value: string }[]) => void;
-	deleteParams: (params: string[]) => void;
+	setQueryParams: (params: SetQueryParamsProps) => void;
 }
 
 interface ProviderProps {
 	children: ReactNode;
+}
+
+interface SetQueryParamsProps {
+	set?: { name: string; value: string }[];
+	delete?: string[];
+	reset?: boolean;
+	preserveKeys?: string[];
 }
 
 const AdminContext = createContext<AdminContextValue | null>(null);
@@ -43,41 +48,39 @@ export const InnerAdminProvider = ({ children }) => {
 	// Add controls to kudos property for external access.
 	window.kudos.AdminControls = AdminControls;
 
-	const updateParam = useCallback(
-		(name: string, value: string) => {
-			searchParams.set(name, value);
-			setSearchParams(searchParams);
-		},
-		[searchParams, setSearchParams]
-	);
+	const setQueryParams = useCallback(
+		(updates: SetQueryParamsProps) => {
+			const params = updates.reset
+				? new URLSearchParams()
+				: new URLSearchParams(searchParams.toString());
 
-	const updateParams = useCallback(
-		(params: { name: string; value: string }[]) => {
-			params.forEach((param) => {
-				searchParams.set(param.name, param.value);
-			});
-			setSearchParams(searchParams);
-		},
-		[searchParams, setSearchParams]
-	);
+			if (updates.reset && updates.preserveKeys?.length) {
+				updates.preserveKeys.forEach((key) => {
+					const val = searchParams.get(key);
+					if (val !== null) {
+						params.set(key, val);
+					}
+				});
+			}
 
-	const deleteParams = useCallback(
-		(params: string[]) => {
-			params.forEach((param) => {
-				searchParams.delete(param);
+			updates.delete?.forEach((key) => {
+				params.delete(key);
 			});
-			setSearchParams(searchParams);
+
+			updates.set?.forEach(({ name, value }) => {
+				params.set(name, value);
+			});
+
+			setSearchParams(params);
 		},
 		[searchParams, setSearchParams]
 	);
 
 	const data: AdminContextValue = {
 		setHeaderContent,
-		updateParam,
-		updateParams,
-		deleteParams,
 		searchParams,
 		setPageTitle,
+		setQueryParams,
 	};
 
 	return (

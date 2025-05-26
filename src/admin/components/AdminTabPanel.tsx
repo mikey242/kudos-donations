@@ -15,10 +15,12 @@ interface AdminTabPanelProps {
 export const AdminTabPanel = ({
 	tabs,
 }: AdminTabPanelProps): React.ReactNode => {
-	const { searchParams, updateParam } = useAdminContext();
+	const { searchParams, setQueryParams } = useAdminContext();
 
 	const updateTab = (tabName: string) => {
-		updateParam('tab', tabName);
+		setQueryParams({
+			set: [{ name: 'tab', value: tabName }],
+		});
 	};
 
 	return (

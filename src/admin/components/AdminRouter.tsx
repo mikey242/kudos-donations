@@ -11,12 +11,14 @@ interface Props {
 	defaultView: string;
 }
 export const AdminRouter = ({ defaultView }: Props): React.ReactNode => {
-	const { searchParams, updateParam } = useAdminContext();
+	const { searchParams, setQueryParams } = useAdminContext();
 	const view = searchParams.get('view') ?? defaultView;
 
 	useEffect(() => {
-		updateParam('view', view);
-	}, [updateParam, view]);
+		setQueryParams({
+			set: [{ name: 'view', value: view }],
+		});
+	}, [setQueryParams, view]);
 
 	switch (view) {
 		case 'kudos-transactions':
