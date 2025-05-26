@@ -39,14 +39,16 @@ export const CampaignsPage = (): React.ReactNode => {
 		null
 	);
 	const { posts, handleNew } = usePostsContext<Campaign>();
-	const { setHeaderContent, updateParam, searchParams, deleteParams } =
+	const { setHeaderContent, searchParams, setQueryParams } =
 		useAdminContext();
 	const campaignId = searchParams.get('edit');
 
 	const clearCurrentCampaign = useCallback(() => {
 		setCurrentCampaign(null);
-		deleteParams(['edit', 'order', 'tab']);
-	}, [deleteParams]);
+		setQueryParams({
+			delete: ['edit', 'order', 'tab'],
+		});
+	}, [setQueryParams]);
 
 	useEffect(() => {
 		if (campaignId && posts) {
@@ -68,13 +70,18 @@ export const CampaignsPage = (): React.ReactNode => {
 			setHeaderContent(
 				<NewCampaignButton
 					handleClick={(
-						e:
-							| React.SyntheticEvent<Element, Event>
-							| Partial<Campaign>
+						e: React.SyntheticEvent | Partial<Campaign>
 					) => {
 						handleNew(e).then((response: Campaign) => {
 							if (response?.id) {
-								updateParam('edit', String(response.id));
+								setQueryParams({
+									set: [
+										{
+											name: 'edit',
+											value: String(response.id),
+										},
+									],
+								});
 							}
 						});
 					}}
@@ -87,7 +94,7 @@ export const CampaignsPage = (): React.ReactNode => {
 		currentCampaign,
 		handleNew,
 		setHeaderContent,
-		updateParam,
+		setQueryParams,
 	]);
 
 	return (
@@ -99,7 +106,13 @@ export const CampaignsPage = (): React.ReactNode => {
 					</div>
 				)
 			) : (
-				<CampaignsTable handleEdit={updateParam} />
+				<CampaignsTable
+					handleEdit={(name: string, value: string) => {
+						setQueryParams({
+							set: [{ name, value }],
+						});
+					}}
+				/>
 			)}
 		</>
 	);

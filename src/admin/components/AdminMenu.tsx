@@ -10,7 +10,7 @@ interface NavItem {
 }
 
 export const AdminMenu = (): React.ReactNode => {
-	const { updateParam, searchParams, deleteParams } = useAdminContext();
+	const { searchParams, setQueryParams } = useAdminContext();
 	const currentView = searchParams.get('view') ?? 'donors';
 
 	const navItems: NavItem[] = [
@@ -30,8 +30,11 @@ export const AdminMenu = (): React.ReactNode => {
 	];
 	const onClick = (e: React.MouseEvent, view: string) => {
 		e.preventDefault();
-		deleteParams(['tab', 'paged', 'edit']);
-		updateParam('view', view);
+		setQueryParams({
+			reset: true,
+			preserveKeys: ['page'],
+			set: [{ name: 'view', value: view }],
+		});
 	};
 
 	return (

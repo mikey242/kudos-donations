@@ -25,7 +25,7 @@ export const Pagination = ({
 	totalItems,
 	totalPages,
 }: PaginationProps): React.ReactNode => {
-	const { searchParams, updateParam } = useAdminContext();
+	const { searchParams, setQueryParams } = useAdminContext();
 	const currentPage = parseInt(searchParams.get('paged') ?? '1', 10);
 	const [isEditing, setIsEditing] = useState(false);
 	const [inputValue, setInputValue] = useState(String(currentPage));
@@ -39,7 +39,9 @@ export const Pagination = ({
 
 	const goToPage = (page: number) => {
 		const safePage = Math.max(1, Math.min(page, totalPages));
-		updateParam('paged', String(safePage));
+		setQueryParams({
+			set: [{ name: 'paged', value: String(safePage) }],
+		});
 		setIsEditing(false);
 	};
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -58,7 +60,7 @@ export const Pagination = ({
 				{/* First Page */}
 				<Button
 					variant="link"
-					onClick={() => updateParam('paged', '1')}
+					onClick={() => goToPage(1)}
 					disabled={currentPage === 1}
 					label={__('First page', 'kudos-donations')}
 					showTooltip
@@ -69,9 +71,7 @@ export const Pagination = ({
 				{/* Previous Page */}
 				<Button
 					variant="link"
-					onClick={() =>
-						updateParam('paged', String(currentPage - 1))
-					}
+					onClick={() => goToPage(currentPage - 1)}
 					disabled={currentPage <= 1}
 					label={__('Previous page', 'kudos-donations')}
 					showTooltip
@@ -134,9 +134,7 @@ export const Pagination = ({
 				{/* Next Page */}
 				<Button
 					variant="link"
-					onClick={() =>
-						updateParam('paged', String(currentPage + 1))
-					}
+					onClick={() => goToPage(currentPage + 1)}
 					disabled={currentPage >= totalPages}
 					label={__('Next page', 'kudos-donations')}
 					showTooltip
@@ -147,7 +145,7 @@ export const Pagination = ({
 				{/* Last Page */}
 				<Button
 					variant="link"
-					onClick={() => updateParam('paged', String(totalPages))}
+					onClick={() => goToPage(totalPages)}
 					disabled={currentPage >= totalPages}
 					label={__('Last page', 'kudos-donations')}
 					showTooltip

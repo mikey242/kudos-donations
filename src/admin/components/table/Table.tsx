@@ -43,7 +43,7 @@ export const Table = <T extends Post>({
 	totalPages,
 	totalItems,
 }: TableProps<T>): React.ReactNode => {
-	const { searchParams, updateParams } = useAdminContext();
+	const { searchParams, setQueryParams } = useAdminContext();
 	const isFirstLoad = isLoading && !hasLoadedOnce;
 	const getSortIcon = (orderby: string): IconType => {
 		if (searchParams.get('orderby') !== orderby) {
@@ -83,17 +83,20 @@ export const Table = <T extends Post>({
 				updates.push({ name: 'meta_type', value: '' });
 			}
 
-			updateParams(updates);
+			setQueryParams({ set: updates });
 		},
-		[searchParams, headerItems, updateParams]
+		[searchParams, headerItems, setQueryParams]
 	);
 
 	return (
 		<>
+			{hasLoadedOnce && (
+				<Pagination totalPages={totalPages} totalItems={totalItems} />
+			)}
 			<table
 				className="widefat striped rounded"
 				style={{
-					tableLayout: isFirstLoad ? 'unset' : 'fixed',
+					tableLayout: posts.length === 0 ? 'unset' : 'fixed',
 				}}
 			>
 				<thead>

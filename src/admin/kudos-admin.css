@@ -83,7 +83,6 @@
 		margin-top: -10px;
 		margin-inline: -22px -20px;
 		padding-block: 1em;
-		padding-block-end: 0;
 		padding-inline: 22px 20px;
 		background-color: #fff;
 		border: none;
@@ -96,6 +95,8 @@
 		}
 
 		@media screen and (max-width: 782px) {
+			position: initial;
+			top: initial;
 
 			.kudos-title, .kudos-version {
 				display: none;
