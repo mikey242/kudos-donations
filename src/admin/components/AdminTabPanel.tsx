@@ -1,5 +1,9 @@
 import React from 'react';
-import { TabPanel } from '@wordpress/components';
+import {
+	TabPanel,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalVStack as VStack,
+} from '@wordpress/components';
 import { useAdminContext } from './contexts';
 
 export interface AdminTab {
@@ -30,7 +34,7 @@ export const AdminTabPanel = ({
 				onSelect={updateTab}
 				tabs={tabs}
 			>
-				{(tab) => tab.content}
+				{(tab) => <VStack spacing={4}>{tab.content}</VStack>}
 			</TabPanel>
 		</div>
 	);
