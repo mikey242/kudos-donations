@@ -4,14 +4,14 @@ import React from 'react';
 import { useSettingsContext } from '../../contexts';
 import { Button, Flex, FlexItem } from '@wordpress/components';
 import { TextControl, ToggleControl } from '../../controls';
-import { SectionPanel } from '../../SectionPanel';
+import { Panel } from '../../Panel';
 
 const HelpTab = (): React.ReactNode => {
 	const { updateSetting } = useSettingsContext();
 
 	return (
 		<>
-			<SectionPanel title={__('Share the love', 'kudos-donations')}>
+			<Panel header={__('Share the love', 'kudos-donations')}>
 				<p className="mb-2">
 					{__(
 						'Do you like using Kudos? Please let us know your thoughts.',
@@ -29,10 +29,8 @@ const HelpTab = (): React.ReactNode => {
 						{__('Leave a review', 'kudos-donations')}
 					</Button>
 				</Flex>
-			</SectionPanel>
-			<SectionPanel
-				title={__('Need some assistance?', 'kudos-donations')}
-			>
+			</Panel>
+			<Panel header={__('Need some assistance?', 'kudos-donations')}>
 				<p>
 					{__(
 						"Don't hesitate to get in touch if you need any help or have a suggestion.",
@@ -99,8 +97,8 @@ const HelpTab = (): React.ReactNode => {
 						</Button>
 					</FlexItem>
 				</Flex>
-			</SectionPanel>
-			<SectionPanel title={__('Advanced', 'kudos-donations')}>
+			</Panel>
+			<Panel header={__('Advanced', 'kudos-donations')}>
 				<ToggleControl
 					name="_kudos_always_load_assets"
 					label={__('Always load assets', 'kudos-donations')}
@@ -125,7 +123,7 @@ const HelpTab = (): React.ReactNode => {
 						'kudos-donations'
 					)}
 				/>
-			</SectionPanel>
+			</Panel>
 		</>
 	);
 };

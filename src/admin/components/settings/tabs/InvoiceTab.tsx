@@ -1,12 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { TextAreaControl, TextControl } from '../../controls';
-import { SectionPanel } from '../../SectionPanel';
+import { Panel } from '../../Panel';
 
 const InvoiceTab = (): React.ReactNode => {
 	return (
 		<>
-			<SectionPanel title={__('Your details', 'kudos-donations')}>
+			<Panel header={__('Your details', 'kudos-donations')}>
 				<TextAreaControl
 					name="_kudos_invoice_company_address"
 					label={__('Invoice Address', 'kudos-donations')}
@@ -23,8 +23,8 @@ const InvoiceTab = (): React.ReactNode => {
 						'kudos-donations'
 					)}
 				/>
-			</SectionPanel>
-			<SectionPanel title={__('Other', 'kudos-donations')}>
+			</Panel>
+			<Panel header={__('Other', 'kudos-donations')}>
 				<TextControl
 					name="_kudos_invoice_number"
 					type="number"
@@ -34,7 +34,7 @@ const InvoiceTab = (): React.ReactNode => {
 						'kudos-donations'
 					)}
 				/>
-			</SectionPanel>
+			</Panel>
 		</>
 	);
 };

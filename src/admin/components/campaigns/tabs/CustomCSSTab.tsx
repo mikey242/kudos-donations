@@ -1,9 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { TextAreaControl } from '../../controls';
 import React from 'react';
-import { Panel, PanelBody } from '@wordpress/components';
 import { useEffect, useRef } from '@wordpress/element';
 import { useFormContext } from 'react-hook-form';
+import { Panel } from '../../Panel';
 
 export const CustomCSSTab = (): React.ReactNode => {
 	const { setValue } = useFormContext(); // Get methods from React Hook Form
@@ -28,19 +28,17 @@ export const CustomCSSTab = (): React.ReactNode => {
 
 	return (
 		<Panel header={__('Custom CSS', 'kudos-donations')}>
-			<PanelBody>
-				<TextAreaControl
-					ref={editorRef}
-					id={editorId}
-					help={__(
-						'Enter your custom css here. This will only apply to the current campaign.',
-						'kudos-donations'
-					)}
-					label={__('Custom CSS', 'kudos-donations')}
-					hideLabelFromVision={true}
-					name="meta.custom_styles"
-				/>
-			</PanelBody>
+			<TextAreaControl
+				ref={editorRef}
+				id={editorId}
+				help={__(
+					'Enter your custom css here. This will only apply to the current campaign.',
+					'kudos-donations'
+				)}
+				label={__('Custom CSS', 'kudos-donations')}
+				hideLabelFromVision={true}
+				name="meta.custom_styles"
+			/>
 		</Panel>
 	);
 };

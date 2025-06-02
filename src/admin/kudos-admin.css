@@ -173,13 +173,6 @@
 		margin: 1rem auto;
 	}
 
-	.components-panel__body.is-opened {
-
-		& > * + * {
-			margin-top: 0.85rem;
-		}
-	}
-
 	.kudos-settings-tab-panel {
 
 		.components-tab-panel__tabs {
