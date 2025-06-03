@@ -1,4 +1,4 @@
-import { Button, Flex, VisuallyHidden } from '@wordpress/components';
+import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { Table } from '../table/Table';
 import React from 'react';
@@ -6,6 +6,7 @@ import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Subscription } from '../../../types/posts';
+import { IconKey } from '@wordpress/components/build-types/dashicon/types';
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setPageTitle } = useAdminContext();
@@ -24,12 +25,46 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 
 	const headerItems = [
 		{
-			key: 'description',
-			title: __('Description', 'kudos-donations'),
-			orderby: 'title',
-			width: '25%',
-			valueCallback: (post: Subscription): React.ReactNode =>
-				post.title.raw ?? '',
+			key: 'status',
+			title: __('Status', 'kudos-donations'),
+			width: '10%',
+			valueCallback: (post: Subscription): React.ReactNode => {
+				const status = post.meta.status;
+
+				const statusConfig: Record<
+					string,
+					{ title: string; icon: string }
+				> = {
+					active: {
+						title: __('Paid', 'kudos-donations'),
+						icon: 'yes-alt',
+					},
+					canceled: {
+						title: __('Canceled', 'kudos-donations'),
+						icon: 'no-alt',
+					},
+					suspended: {
+						title: __('Suspended', 'kudos-donations'),
+						icon: 'warning',
+					},
+					completed: {
+						title: __('Completed', 'kudos-donations'),
+						icon: 'yes',
+					},
+				};
+				const config = statusConfig[status];
+
+				return (
+					config && (
+						<Flex justify="center">
+							<Dashicon
+								title={config.title}
+								icon={config.icon as IconKey}
+							/>
+						</Flex>
+					)
+				);
+			},
 		},
 		{
 			key: 'donor',
@@ -39,6 +74,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		},
 		{
 			key: 'amount',
+			orderby: 'meta_value_num',
 			title: __('Amount', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode => {
 				const value = post.meta?.value;
@@ -69,12 +105,6 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Length', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode =>
 				post.meta.years,
-		},
-		{
-			key: 'status',
-			title: __('Status', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode =>
-				post.meta.status,
 		},
 		{
 			key: 'date',
