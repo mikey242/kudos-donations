@@ -1,6 +1,12 @@
-import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
+import {
+	Button,
+	Dashicon,
+	Flex,
+	Tooltip,
+	VisuallyHidden,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { Table } from '../table/Table';
+import { HeaderItem, Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
@@ -10,7 +16,8 @@ import {
 	ArrowPathIcon,
 	ArrowRightCircleIcon,
 } from '@heroicons/react/24/outline';
-export const TransactionsTable = (): React.ReactNode => {
+import { IconKey } from '@wordpress/components/build-types/dashicon/types';
+export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setPageTitle } = useAdminContext();
 	const {
@@ -26,18 +33,59 @@ export const TransactionsTable = (): React.ReactNode => {
 		setPageTitle(__('Your transactions', 'kudos-donations'));
 	}, [setPageTitle]);
 
-	const headerItems = [
+	const headerItems: HeaderItem[] = [
 		{
-			key: 'description',
-			title: __('Description', 'kudos-donations'),
-			orderby: 'title',
-			width: '25%',
-			valueCallback: (post: Transaction): React.ReactNode =>
-				post.title.raw,
+			key: 'status',
+			orderby: 'meta_value',
+			title: __('Status', 'kudos-donations'),
+			width: '10%',
+			valueCallback: (post: Transaction): React.ReactNode => {
+				const status = post.meta.status;
+
+				const statusConfig: Record<
+					string,
+					{ title: string; icon: string }
+				> = {
+					paid: {
+						title: __('Paid', 'kudos-donations'),
+						icon: 'yes-alt',
+					},
+					open: {
+						title: __('Open', 'kudos-donations'),
+						icon: 'clock',
+					},
+					canceled: {
+						title: __('Canceled', 'kudos-donations'),
+						icon: 'no-alt',
+					},
+					expired: {
+						title: __('Expired', 'kudos-donations'),
+						icon: 'warning',
+					},
+					failed: {
+						title: __('Failed', 'kudos-donations'),
+						icon: 'warning',
+					},
+				};
+
+				const config = statusConfig[status];
+
+				return config ? (
+					<Flex justify="center">
+						<Dashicon
+							title={config.title}
+							icon={config.icon as IconKey}
+						/>
+					</Flex>
+				) : (
+					status
+				);
+			},
 		},
 		{
 			key: 'donor',
 			title: __('Donor', 'kudos-donations'),
+
 			valueCallback: (post: Transaction): React.ReactNode =>
 				post.donor?.meta.email ??
 				post.donor?.meta?.name ??
@@ -97,67 +145,17 @@ export const TransactionsTable = (): React.ReactNode => {
 				post.campaign?.title.raw ?? '',
 		},
 		{
-			key: 'status',
-			orderby: 'meta_value',
-			title: __('Status', 'kudos-donations'),
-			valueCallback: (post: Transaction): React.ReactNode => {
-				const status = post.meta.status;
-
-				switch (status) {
-					case 'paid':
-						return (
-							<Flex>
-								<Dashicon
-									title={__('Paid', 'kudos-donations')}
-									icon="yes-alt"
-								/>
-							</Flex>
-						);
-
-					case 'open':
-						return (
-							<Flex>
-								<Dashicon
-									title={__('Open', 'kudos-donations')}
-									icon="clock"
-								/>
-							</Flex>
-						);
-
-					case 'canceled':
-						return (
-							<Flex>
-								<Dashicon
-									title={__('Canceled', 'kudos-donations')}
-									icon="no-alt"
-								/>
-							</Flex>
-						);
-
-					case 'expired':
-						return (
-							<Flex>
-								<Dashicon
-									title={__('Expired', 'kudos-donations')}
-									icon="warning"
-								/>
-							</Flex>
-						);
-
-					case 'failed':
-						return (
-							<Flex>
-								<Dashicon
-									title={__('Failed', 'kudos-donations')}
-									icon="warning"
-								/>
-							</Flex>
-						);
-
-					default:
-						return status;
-				}
-			},
+			key: 'message',
+			title: __('Message', 'kudos-donations'),
+			align: 'center',
+			valueCallback: (post: Transaction): React.ReactNode =>
+				post.meta.message && (
+					<Tooltip text={post.meta.message}>
+						<span>
+							<Dashicon icon="text" />
+						</span>
+					</Tooltip>
+				),
 		},
 		{
 			key: 'date',
@@ -174,15 +172,22 @@ export const TransactionsTable = (): React.ReactNode => {
 					{__('Actions', 'kudos-donations')}
 				</VisuallyHidden>
 			),
+			align: 'right',
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const status = post.meta.status;
 				const url = post.invoice_url;
 				return (
-					<Flex justify="flex-end">
+					<>
+						<Button
+							size="compact"
+							icon="media-document"
+							onClick={() => handleEdit(post.id)}
+							title={__('View more', 'kudos-donations')}
+						/>
 						{status === 'paid' && (
 							<Button
 								size="compact"
-								icon="media-document"
+								icon="download"
 								href={url}
 								title={__('View invoice', 'kudos-donations')}
 							/>
@@ -203,7 +208,7 @@ export const TransactionsTable = (): React.ReactNode => {
 								);
 							}}
 						/>
-					</Flex>
+					</>
 				);
 			},
 		},

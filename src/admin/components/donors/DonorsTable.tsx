@@ -6,7 +6,7 @@ import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Donor } from '../../../types/posts';
-export const DonorsTable = (): React.ReactNode => {
+export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { setPageTitle } = useAdminContext();
 	const {
 		handleDelete,
@@ -57,6 +57,12 @@ export const DonorsTable = (): React.ReactNode => {
 			),
 			valueCallback: (post: Donor): React.ReactNode => (
 				<Flex justify="flex-end">
+					<Button
+						size="compact"
+						icon="media-document"
+						onClick={() => handleEdit(post.id)}
+						title={__('View more', 'kudos-donations')}
+					/>
 					<Button
 						size="compact"
 						icon="trash"

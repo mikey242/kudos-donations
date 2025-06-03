@@ -13,8 +13,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
-import { useAdminContext } from './AdminContext';
 import type { Post } from '../../../types/posts';
+import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 
 interface PostsContextValue<T extends Post = Post> {
 	posts: T[];
@@ -27,6 +27,7 @@ interface PostsContextValue<T extends Post = Post> {
 	handleUpdate: (data: Partial<T>) => Promise<any>;
 	handleDelete: (postId: number) => void;
 	handleDuplicate: (post: T) => void;
+	postType: string;
 }
 
 const PostsContext = createContext<PostsContextValue<any> | null>(null);
@@ -42,7 +43,17 @@ export const PostsProvider = <T extends Post>({
 	singular = 'Post',
 	children,
 }: PostsProviderProps) => {
-	const { searchParams } = useAdminContext();
+	const [query] = useQueryStates({
+		paged: parseAsInteger.withDefault(1),
+		order: parseAsString.withDefault('desc'),
+		orderby: parseAsString.withDefault('date'),
+		metaKey: parseAsString.withDefault(''),
+		metaValue: parseAsString.withDefault(''),
+		metaCompare: parseAsString.withDefault('='),
+		metaType: parseAsString.withDefault('string'),
+	});
+	const { paged, order, orderby, metaKey, metaValue, metaCompare, metaType } =
+		query;
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
@@ -56,13 +67,13 @@ export const PostsProvider = <T extends Post>({
 		totalItems,
 	} = useEntityRecords<T>('postType', postType, {
 		per_page: 20,
-		page: parseInt(searchParams.get('paged') ?? '1', 10),
-		order: searchParams.get('order') ?? 'desc',
-		orderby: searchParams.get('orderby') ?? 'date',
-		metaKey: searchParams.get('meta_key') ?? '',
-		metaValue: searchParams.get('meta_value') ?? '',
-		metaCompare: searchParams.get('meta_compare') ?? '=',
-		metaType: searchParams.get('meta_type') ?? 'string',
+		page: paged,
+		order,
+		orderby,
+		metaKey,
+		metaValue,
+		metaCompare,
+		metaType,
 	});
 
 	useEffect(() => {
@@ -216,6 +227,7 @@ export const PostsProvider = <T extends Post>({
 			handleDuplicate,
 			handleDelete,
 			handleUpdate,
+			postType,
 		}),
 		[
 			cachedPosts,
@@ -226,6 +238,7 @@ export const PostsProvider = <T extends Post>({
 			hasLoadedOnce,
 			hasResolved,
 			isLoading,
+			postType,
 			totalItems,
 			totalPages,
 		]

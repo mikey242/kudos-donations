@@ -1,7 +1,7 @@
 import React from 'react';
 import type { IconType } from '@wordpress/components';
 import { Button, Flex } from '@wordpress/components';
-import { useAdminContext } from './contexts';
+import { useQueryState } from 'nuqs';
 
 interface NavItem {
 	label: string;
@@ -10,8 +10,9 @@ interface NavItem {
 }
 
 export const AdminMenu = (): React.ReactNode => {
-	const { searchParams, setQueryParams } = useAdminContext();
-	const currentView = searchParams.get('view') ?? 'donors';
+	const [currentView, setCurrentView] = useQueryState('view', {
+		defaultValue: 'donors',
+	});
 
 	const navItems: NavItem[] = [
 		{ label: 'Campaigns', view: 'kudos-campaigns', icon: 'megaphone' },
@@ -30,11 +31,7 @@ export const AdminMenu = (): React.ReactNode => {
 	];
 	const onClick = (e: React.MouseEvent, view: string) => {
 		e.preventDefault();
-		setQueryParams({
-			reset: true,
-			preserveKeys: ['page'],
-			set: [{ name: 'view', value: view }],
-		});
+		void setCurrentView(view);
 	};
 
 	return (

@@ -157,16 +157,14 @@ export const SettingsPage = (): React.ReactNode => {
 						ref={formRef}
 						onSubmit={formMethods.handleSubmit(save)}
 					>
-						<div className="admin-wrap">
-							<AdminTabPanel tabs={tabs} />
-							<Spacer marginTop={'5'} />
-							<Flex justify="flex-start">
-								<SaveButton
-									isSaving={settingsSaving}
-									onClick={handleSave}
-								/>
-							</Flex>
-						</div>
+						<AdminTabPanel tabs={tabs} />
+						<Spacer marginTop={'5'} />
+						<Flex justify="flex-start">
+							<SaveButton
+								isSaving={settingsSaving}
+								onClick={handleSave}
+							/>
+						</Flex>
 					</form>
 				</FormProvider>
 			)}

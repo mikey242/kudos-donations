@@ -6,81 +6,48 @@ import React, {
 	useContext,
 	useState,
 } from 'react';
-import { BrowserRouter, useSearchParams } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { AdminHeader } from '../AdminHeader';
 import * as AdminControls from '../../components/controls';
 import { Notices } from '../Notices';
-import { useCallback } from '@wordpress/element';
+// eslint-disable-next-line import/no-unresolved
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
+import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 
 interface AdminContextValue {
 	setHeaderContent: Dispatch<SetStateAction<ReactNode>>;
 	setPageTitle: Dispatch<SetStateAction<string>>;
-	searchParams: URLSearchParams;
-	setQueryParams: (params: SetQueryParamsProps) => void;
+	pageTitle: string;
 }
 
 interface ProviderProps {
 	children: ReactNode;
 }
 
-interface SetQueryParamsProps {
-	set?: { name: string; value: string }[];
-	delete?: string[];
-	reset?: boolean;
-	preserveKeys?: string[];
-}
-
 const AdminContext = createContext<AdminContextValue | null>(null);
 
 export const AdminProvider = ({ children }: ProviderProps) => {
 	return (
-		<BrowserRouter>
-			<InnerAdminProvider>{children}</InnerAdminProvider>
-		</BrowserRouter>
+		<NuqsAdapter>
+			<BrowserRouter>
+				<InnerAdminProvider>{children}</InnerAdminProvider>
+			</BrowserRouter>
+		</NuqsAdapter>
 	);
 };
 
 export const InnerAdminProvider = ({ children }) => {
-	const [searchParams, setSearchParams] = useSearchParams();
 	const [headerContent, setHeaderContent] = useState<ReactNode>(null);
 	const [pageTitle, setPageTitle] = useState<string>('');
 
 	// Add controls to kudos property for external access.
 	window.kudos.AdminControls = AdminControls;
 
-	const setQueryParams = useCallback(
-		(updates: SetQueryParamsProps) => {
-			const params = updates.reset
-				? new URLSearchParams()
-				: new URLSearchParams(searchParams.toString());
-
-			if (updates.reset && updates.preserveKeys?.length) {
-				updates.preserveKeys.forEach((key) => {
-					const val = searchParams.get(key);
-					if (val !== null) {
-						params.set(key, val);
-					}
-				});
-			}
-
-			updates.delete?.forEach((key) => {
-				params.delete(key);
-			});
-
-			updates.set?.forEach(({ name, value }) => {
-				params.set(name, value);
-			});
-
-			setSearchParams(params);
-		},
-		[searchParams, setSearchParams]
-	);
-
+	// Define export data.
 	const data: AdminContextValue = {
 		setHeaderContent,
-		searchParams,
 		setPageTitle,
-		setQueryParams,
+		pageTitle,
 	};
 
 	return (
@@ -102,4 +69,14 @@ export const useAdminContext = (): AdminContextValue => {
 		);
 	}
 	return context;
+};
+
+export const useAdminQueryParams = () => {
+	return useQueryStates({
+		edit: parseAsInteger.withDefault(null),
+		order: parseAsString.withDefault(null),
+		tab: parseAsString.withDefault(null),
+		paged: parseAsInteger.withDefault(1),
+		view: parseAsString,
+	});
 };

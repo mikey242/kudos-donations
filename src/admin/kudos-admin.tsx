@@ -13,7 +13,9 @@ domReady(() => {
 		root.render(
 			<AdminProvider>
 				<SettingsProvider>
-					<AdminRouter defaultView={defaultView} />
+					<div className="admin-wrap">
+						<AdminRouter defaultView={defaultView} />
+					</div>
 				</SettingsProvider>
 			</AdminProvider>
 		);

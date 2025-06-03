@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AdminTab, AdminTabPanel } from '../AdminTabPanel';
@@ -13,16 +13,41 @@ import {
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import { useAdminContext, usePostsContext } from '../contexts';
+import {
+	useAdminContext,
+	useAdminQueryParams,
+	usePostsContext,
+} from '../contexts';
 import { applyFilters } from '@wordpress/hooks';
-import type { Campaign } from '../../../types/wp';
 import apiFetch from '@wordpress/api-fetch';
+import type { Campaign } from '../../../types/posts';
+import { Button } from '@wordpress/components';
+import GenerateShortcode from './GenerateShortcode';
+
+const NavigationButtons = ({ campaign, onBack }): React.ReactNode => (
+	<>
+		<Button
+			variant="secondary"
+			icon="arrow-left"
+			onClick={onBack}
+			type="button"
+		>
+			{__('Back', 'kudos-donations')}
+		</Button>
+		<GenerateShortcode campaign={campaign} />
+		<Button variant="primary" type="submit" form="campaign-form">
+			{__('Save', 'kudos-donations')}
+		</Button>
+	</>
+);
 
 interface CampaignEditProps {
 	campaign: Campaign;
 }
 
 const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
+	const [, setParams] = useAdminQueryParams();
+	const { setHeaderContent, setPageTitle } = useAdminContext();
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -33,13 +58,39 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const { reset, handleSubmit, formState } = methods;
 	const { createWarningNotice } = useDispatch(noticesStore);
 	const { handleUpdate } = usePostsContext();
-	const { setPageTitle } = useAdminContext();
 	const [recurringEnabled, setRecurringEnabled] = useState<boolean>(false);
 
+	const clearParams = useCallback(() => {
+		return setParams({
+			edit: null,
+			order: null,
+			tab: null,
+			paged: 1,
+		});
+	}, [setParams]);
+
 	useEffect(() => {
-		setPageTitle(
-			__('Campaign', 'kudos-donations') + ': ' + campaign.title.raw
-		);
+		if (campaign) {
+			setHeaderContent(
+				<NavigationButtons
+					campaign={campaign}
+					onBack={() => {
+						void clearParams();
+					}}
+				/>
+			);
+		}
+		return () => {
+			setHeaderContent(null);
+		};
+	}, [campaign, clearParams, setHeaderContent]);
+
+	useEffect(() => {
+		if (campaign) {
+			setPageTitle(
+				__('Campaign', 'kudos-donations') + ': ' + campaign.title.raw
+			);
+		}
 	}, [campaign, setPageTitle]);
 
 	useEffect(() => {
@@ -108,6 +159,10 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 			]),
 		[campaign, recurringEnabled]
 	) as AdminTab[];
+
+	if (!campaign) {
+		return null;
+	}
 
 	return (
 		<>

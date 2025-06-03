@@ -14,10 +14,9 @@ import { useAdminContext, usePostsContext } from '../contexts';
 import GenerateShortcode from './GenerateShortcode';
 import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/posts';
-
-export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
+export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
-	const { setPageTitle } = useAdminContext();
+	const { setPageTitle, setHeaderContent } = useAdminContext();
 	const {
 		handleDelete,
 		handleDuplicate,
@@ -32,6 +31,18 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 		setPageTitle(__('Your campaigns', 'kudos-donations'));
 	}, [setPageTitle]);
 
+	useEffect(() => {
+		setHeaderContent(
+			<Button
+				variant="primary"
+				onClick={handleNew}
+				text={__('New campaign', 'kudos-donations')}
+				icon="plus"
+			/>
+		);
+		return () => setHeaderContent(null);
+	}, [handleNew, setHeaderContent]);
+
 	const headerItems = [
 		{
 			key: 'campaign',
@@ -41,14 +52,17 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<Button
 					showTooltip={true}
-					style={{ textDecoration: 'none', color: 'inherit' }}
+					style={{
+						fontWeight: 'bold',
+						color: 'inherit',
+					}}
 					label={sprintf(
 						/* translators: %s is the campaign name */
 						__('Edit %s', 'kudos-donations'),
 						post.title.raw
 					)}
 					variant="link"
-					onClick={() => handleEdit('edit', post.id)}
+					onClick={() => handleEdit(post.id)}
 				>
 					{post.title.raw}
 				</Button>
@@ -105,7 +119,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 						size="compact"
 						icon="edit"
 						label={__('Edit campaign', 'kudos-donations')}
-						onClick={() => handleEdit('edit', post.id)}
+						onClick={() => handleEdit(post.id)}
 					/>
 					<Button
 						size="compact"

@@ -2,12 +2,12 @@ import React from 'react';
 import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useAdminContext } from '../contexts';
 import type { Post } from '../../../types/posts';
 import { Pagination } from './Pagination';
 import { useCallback } from '@wordpress/element';
+import { parseAsString, useQueryStates } from 'nuqs';
 
-interface HeaderItem<T extends Post = Post> {
+export interface HeaderItem<T extends Post = Post> {
 	title: string | React.ReactNode;
 	key: string;
 	orderby?:
@@ -23,6 +23,7 @@ interface HeaderItem<T extends Post = Post> {
 		| 'title'
 		| string;
 	valueCallback?: (post: T) => React.ReactNode;
+	align?: 'left' | 'right' | 'center' | 'justify' | 'start' | 'end';
 	width?: string | number;
 }
 
@@ -43,49 +44,52 @@ export const Table = <T extends Post>({
 	totalPages,
 	totalItems,
 }: TableProps<T>): React.ReactNode => {
-	const { searchParams, setQueryParams } = useAdminContext();
 	const isFirstLoad = isLoading && !hasLoadedOnce;
-	const getSortIcon = (orderby: string): IconType => {
-		if (searchParams.get('orderby') !== orderby) {
+	const [params, setParams] = useQueryStates({
+		order: parseAsString,
+		orderby: parseAsString.withDefault(''),
+		meta_key: parseAsString.withDefault(''),
+		meta_type: parseAsString.withDefault(''),
+	});
+
+	const { order, orderby } = params;
+
+	const getSortIcon = (value: string): IconType => {
+		if (orderby !== value) {
 			return 'sort';
 		}
-		return searchParams.get('order') === 'asc' ? 'arrow-up' : 'arrow-down';
+		return order === 'asc' ? 'arrow-up' : 'arrow-down';
 	};
 
 	const sort = useCallback(
-		(orderby: string) => {
-			const prevOrderby = searchParams.get('orderby');
-			const prevOrder = searchParams.get('order');
-			const isSameColumn = prevOrderby === orderby;
+		(newOrderBy: string) => {
+			const prevOrderby = orderby;
+			const prevOrder = order;
+			const isSameColumn = prevOrderby === newOrderBy;
 
 			const nextOrder =
 				isSameColumn && prevOrder === 'asc' ? 'desc' : 'asc';
-			const updates = [
-				{ name: 'orderby', value: orderby },
-				{ name: 'order', value: nextOrder },
-			];
 
-			const isMetaSort = orderby.startsWith('meta_value');
-			const column = headerItems.find((item) => item.orderby === orderby);
+			const isMetaSort = newOrderBy.startsWith('meta_value');
+			const column = headerItems.find(
+				(item) => item.orderby === newOrderBy
+			);
 			const metaKey = column?.key ?? '';
 
-			if (isMetaSort && metaKey) {
-				updates.push({ name: 'meta_key', value: metaKey });
-
-				// Only apply meta_type when sorting numerically
-				updates.push({
-					name: 'meta_type',
-					value: orderby === 'meta_value_num' ? 'NUMERIC' : '',
-				});
-			} else {
-				// Clear meta sort params if not sorting on meta
-				updates.push({ name: 'meta_key', value: '' });
-				updates.push({ name: 'meta_type', value: '' });
-			}
-
-			setQueryParams({ set: updates });
+			void setParams({
+				order: nextOrder,
+				orderby: newOrderBy,
+				meta_key: isMetaSort && metaKey ? metaKey : '',
+				meta_type:
+					// eslint-disable-next-line no-nested-ternary
+					isMetaSort && metaKey
+						? orderby === 'meta_value_num'
+							? 'NUMERIC'
+							: ''
+						: '',
+			});
 		},
-		[searchParams, headerItems, setQueryParams]
+		[headerItems, order, orderby, setParams]
 	);
 
 	return (
@@ -182,7 +186,10 @@ const TableRow = <T extends Post>({ post, columns }: TableRowProps<T>) => {
 				return (
 					<td
 						className="table-cell"
-						style={{ width: column.width ?? 'auto' }}
+						style={{
+							width: column.width ?? 'auto',
+							textAlign: column.align ?? 'left',
+						}}
 						key={column.key + post.id}
 					>
 						{column.valueCallback && column.valueCallback(post)}
