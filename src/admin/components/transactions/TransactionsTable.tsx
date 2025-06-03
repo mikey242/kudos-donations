@@ -36,7 +36,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const headerItems: HeaderItem[] = [
 		{
 			key: 'status',
-			orderby: 'meta_value',
 			title: __('Status', 'kudos-donations'),
 			width: '10%',
 			valueCallback: (post: Transaction): React.ReactNode => {
@@ -70,15 +69,15 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 
 				const config = statusConfig[status];
 
-				return config ? (
-					<Flex justify="center">
-						<Dashicon
-							title={config.title}
-							icon={config.icon as IconKey}
-						/>
-					</Flex>
-				) : (
-					status
+				return (
+					config && (
+						<Flex justify="center">
+							<Dashicon
+								title={config.title}
+								icon={config.icon as IconKey}
+							/>
+						</Flex>
+					)
 				);
 			},
 		},

@@ -26,7 +26,6 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'name',
 			title: __('Name', 'kudos-donations'),
 			orderby: 'title',
-			width: '25%',
 			valueCallback: (post: Donor): React.ReactNode =>
 				post.meta.name ?? '',
 		},
