@@ -6,7 +6,7 @@ import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Subscription } from '../../../types/posts';
-export const SubscriptionsTable = (): React.ReactNode => {
+export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setPageTitle } = useAdminContext();
 	const {
@@ -91,6 +91,12 @@ export const SubscriptionsTable = (): React.ReactNode => {
 			),
 			valueCallback: (post: Subscription): React.ReactNode => (
 				<Flex justify="flex-end">
+					<Button
+						size="compact"
+						icon="media-document"
+						onClick={() => handleEdit(post.id)}
+						title={__('View more', 'kudos-donations')}
+					/>
 					<Button
 						size="compact"
 						icon="trash"

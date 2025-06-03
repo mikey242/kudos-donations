@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAdminContext } from '../contexts';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
@@ -15,6 +14,7 @@ import {
 	ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { Input } from '@headlessui/react';
+import { parseAsInteger, useQueryState } from 'nuqs';
 
 interface PaginationProps {
 	totalPages: number;
@@ -25,8 +25,10 @@ export const Pagination = ({
 	totalItems,
 	totalPages,
 }: PaginationProps): React.ReactNode => {
-	const { searchParams, setQueryParams } = useAdminContext();
-	const currentPage = parseInt(searchParams.get('paged') ?? '1', 10);
+	const [currentPage, setCurrentPage] = useQueryState(
+		'paged',
+		parseAsInteger.withDefault(1)
+	);
 	const [isEditing, setIsEditing] = useState(false);
 	const [inputValue, setInputValue] = useState(String(currentPage));
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -37,16 +39,13 @@ export const Pagination = ({
 		}
 	}, [isEditing]);
 
-	const goToPage = (page: number) => {
-		const safePage = Math.max(1, Math.min(page, totalPages));
-		setQueryParams({
-			set: [{ name: 'paged', value: String(safePage) }],
-		});
+	const goToPage = async (page: number) => {
+		await setCurrentPage(page);
 		setIsEditing(false);
 	};
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+	const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
-			goToPage(Number(inputValue));
+			await goToPage(Number(inputValue));
 		} else if (e.key === 'Escape') {
 			setInputValue(String(currentPage));
 			setIsEditing(false);
