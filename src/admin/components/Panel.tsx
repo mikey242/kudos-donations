@@ -16,7 +16,7 @@ export const Panel = ({ header, children }: PanelProps) => (
 	<Card>
 		<CardHeader>{header}</CardHeader>
 		<CardBody>
-			<VStack spacing={3}>{children}</VStack>
+			<VStack spacing={5}>{children}</VStack>
 		</CardBody>
 	</Card>
 );
