@@ -36,7 +36,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 					{ title: string; icon: string }
 				> = {
 					active: {
-						title: __('Paid', 'kudos-donations'),
+						title: __('Active', 'kudos-donations'),
 						icon: 'yes-alt',
 					},
 					canceled: {
