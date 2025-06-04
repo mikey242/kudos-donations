@@ -1,7 +1,7 @@
 import React from 'react';
 import type { IconType } from '@wordpress/components';
 import { Button, Flex } from '@wordpress/components';
-import { useQueryState } from 'nuqs';
+import { useAdminQueryParams } from './contexts';
 
 interface NavItem {
 	label: string;
@@ -9,30 +9,25 @@ interface NavItem {
 	icon?: IconType;
 }
 
-export const AdminMenu = (): React.ReactNode => {
-	const [currentView, setCurrentView] = useQueryState('view', {
-		defaultValue: 'donors',
-	});
+const navItems: NavItem[] = [
+	{ label: 'Campaigns', view: 'kudos-campaigns', icon: 'megaphone' },
+	{
+		label: 'Transactions',
+		view: 'kudos-transactions',
+		icon: 'money-alt',
+	},
+	{
+		label: 'Subscriptions',
+		view: 'kudos-subscriptions',
+		icon: 'update',
+	},
+	{ label: 'Donors', view: 'kudos-donors', icon: 'groups' },
+	{ label: 'Settings', view: 'kudos-settings', icon: 'admin-settings' },
+];
 
-	const navItems: NavItem[] = [
-		{ label: 'Campaigns', view: 'kudos-campaigns', icon: 'megaphone' },
-		{
-			label: 'Transactions',
-			view: 'kudos-transactions',
-			icon: 'money-alt',
-		},
-		{
-			label: 'Subscriptions',
-			view: 'kudos-subscriptions',
-			icon: 'update',
-		},
-		{ label: 'Donors', view: 'kudos-donors', icon: 'groups' },
-		{ label: 'Settings', view: 'kudos-settings', icon: 'admin-settings' },
-	];
-	const onClick = (e: React.MouseEvent, view: string) => {
-		e.preventDefault();
-		void setCurrentView(view);
-	};
+export const AdminMenu = (): React.ReactNode => {
+	const [params] = useAdminQueryParams();
+	const { page: currentView } = params;
 
 	return (
 		<div className="kudos-admin-menu">
@@ -46,8 +41,7 @@ export const AdminMenu = (): React.ReactNode => {
 							variant="link"
 							icon={icon ?? 'marker'}
 							className={isActive ? 'is-active' : ''}
-							href={`?page=kudos-admin&view=${view}`}
-							onClick={(e: React.MouseEvent) => onClick(e, view)}
+							href={`?page=${view}`}
 						>
 							{label}
 						</Button>

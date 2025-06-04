@@ -7,14 +7,13 @@ import { AdminRouter } from './components/AdminRouter';
 
 domReady(() => {
 	const container = document.getElementById('root');
-	const defaultView = container?.dataset?.view ?? 'campaigns';
 	if (container) {
 		const root = createRoot(container);
 		root.render(
 			<AdminProvider>
 				<SettingsProvider>
 					<div className="admin-wrap">
-						<AdminRouter defaultView={defaultView} />
+						<AdminRouter />
 					</div>
 				</SettingsProvider>
 			</AdminProvider>
