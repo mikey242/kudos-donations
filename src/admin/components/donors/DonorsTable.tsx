@@ -45,6 +45,7 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
+			width: '10%',
 			valueCallback: (post: Donor): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),
