@@ -3,9 +3,9 @@ import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import type { Post } from '../../../types/posts';
-import { Pagination } from './Pagination';
 import { useCallback } from '@wordpress/element';
 import { parseAsString, useQueryStates } from 'nuqs';
+import { TableControls } from './TableControls';
 
 export interface HeaderItem<T extends Post = Post> {
 	title: string | React.ReactNode;
@@ -45,12 +45,7 @@ export const Table = <T extends Post>({
 	totalItems,
 }: TableProps<T>): React.ReactNode => {
 	const isFirstLoad = isLoading && !hasLoadedOnce;
-	const [params, setParams] = useQueryStates({
-		order: parseAsString,
-		orderby: parseAsString.withDefault(''),
-		meta_key: parseAsString.withDefault(''),
-		meta_type: parseAsString.withDefault(''),
-	});
+	const [params, setParams] = useAdminTableParams();
 
 	const { order, orderby } = params;
 
@@ -95,7 +90,10 @@ export const Table = <T extends Post>({
 	return (
 		<>
 			{hasLoadedOnce && (
-				<Pagination totalPages={totalPages} totalItems={totalItems} />
+				<TableControls
+					totalPages={totalPages}
+					totalItems={totalItems}
+				/>
 			)}
 			<table
 				className="widefat striped rounded"
@@ -152,7 +150,10 @@ export const Table = <T extends Post>({
 				</tbody>
 			</table>
 			{hasLoadedOnce && (
-				<Pagination totalPages={totalPages} totalItems={totalItems} />
+				<TableControls
+					totalPages={totalPages}
+					totalItems={totalItems}
+				/>
 			)}
 		</>
 	);
@@ -198,4 +199,14 @@ const TableRow = <T extends Post>({ post, columns }: TableRowProps<T>) => {
 			})}
 		</tr>
 	);
+};
+
+export const useAdminTableParams = () => {
+	return useQueryStates({
+		order: parseAsString,
+		orderby: parseAsString.withDefault(''),
+		meta_key: parseAsString.withDefault(''),
+		meta_type: parseAsString.withDefault(''),
+		search: parseAsString.withDefault(''),
+	});
 };

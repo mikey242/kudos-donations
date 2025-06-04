@@ -52,9 +52,18 @@ export const PostsProvider = <T extends Post>({
 		metaValue: parseAsString.withDefault(''),
 		metaCompare: parseAsString.withDefault('='),
 		metaType: parseAsString.withDefault('string'),
+		search: parseAsString,
 	});
-	const { paged, order, orderby, metaKey, metaValue, metaCompare, metaType } =
-		query;
+	const {
+		paged,
+		order,
+		orderby,
+		metaKey,
+		metaValue,
+		metaCompare,
+		metaType,
+		search,
+	} = query;
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
@@ -69,6 +78,7 @@ export const PostsProvider = <T extends Post>({
 	} = useEntityRecords<T>('postType', postType, {
 		per_page: 20,
 		page: paged,
+		search,
 		order,
 		orderby,
 		metaKey,
