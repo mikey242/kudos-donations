@@ -5,6 +5,7 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from '@wordpress/element';
 // eslint-disable-next-line import/default
@@ -76,13 +77,24 @@ export const PostsProvider = <T extends Post>({
 		metaType,
 	});
 
+	const prevPostTypeRef = useRef(postType);
+
 	useEffect(() => {
+		const postTypeChanged = prevPostTypeRef.current !== postType;
+
+		if (postTypeChanged) {
+			setCachedPosts([]);
+			setHasLoadedOnce(false);
+			prevPostTypeRef.current = postType;
+		}
+
 		setIsLoading(!hasResolved);
+
 		if (hasResolved) {
 			setCachedPosts(posts ?? []);
 			setHasLoadedOnce(true);
 		}
-	}, [posts, hasResolved]);
+	}, [posts, hasResolved, postType]);
 
 	const handleSave = useCallback(
 		async (args = {}): Promise<T | null> => {
