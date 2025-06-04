@@ -4,7 +4,6 @@ import { DonorsTable } from './donors/DonorsTable';
 import { TransactionsTable } from './transactions/TransactionsTable';
 import { SubscriptionsTable } from './subscriptions/SubscriptionsTable';
 import { SettingsPage } from './settings/SettingsPage';
-import { useEffect, useRef } from '@wordpress/element';
 import { EntityPage } from './EntityPage';
 import { CampaignsTable } from './campaigns/CampaignsTable';
 import CampaignEdit from './campaigns/CampaignEdit';
@@ -58,48 +57,18 @@ const AdminPages = {
 	'kudos-settings': () => <SettingsPage />,
 };
 
-export const AdminRouter = ({
-	defaultView,
-}: {
-	defaultView: string;
-}): React.ReactNode => {
-	const [params, setParams] = useAdminQueryParams();
-	const { view } = params;
-	const lastView = useRef<string | null>(null);
+export const AdminRouter = (): React.ReactNode => {
+	const [params] = useAdminQueryParams();
+	const { page } = params;
 
-	useEffect(() => {
-		// On first render, set the default view if not present
-		if (!view) {
-			void setParams({ view: defaultView });
-			return;
-		}
-
-		// Skip clearing on first mount
-		if (lastView.current === null) {
-			lastView.current = view;
-			return;
-		}
-
-		// If view changed, clear other stateful query params
-		if (view !== lastView.current) {
-			void setParams({
-				post: null,
-				order: null,
-				tab: null,
-				paged: 1,
-			});
-			lastView.current = view;
-		}
-	}, [view, defaultView, setParams]);
-
-	const page = AdminPages[view];
-	if (!page) {
+	const currentPage = AdminPages[page];
+	if (!currentPage) {
 		return (
 			<Flex justify="center">
-				<p>{`Unknown view: "${view}"`}</p>
+				<p>{`Unknown view: "${currentPage}"`}</p>
 			</Flex>
 		);
 	}
 
-	return page();
+	return currentPage();
 };

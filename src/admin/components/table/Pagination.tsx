@@ -14,7 +14,7 @@ import {
 	ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { Input } from '@headlessui/react';
-import { parseAsInteger, useQueryState } from 'nuqs';
+import { useAdminQueryParams } from '../contexts';
 
 interface PaginationProps {
 	totalPages: number;
@@ -25,10 +25,8 @@ export const Pagination = ({
 	totalItems,
 	totalPages,
 }: PaginationProps): React.ReactNode => {
-	const [currentPage, setCurrentPage] = useQueryState(
-		'paged',
-		parseAsInteger.withDefault(1)
-	);
+	const [params, setParams] = useAdminQueryParams();
+	const { paged: currentPage } = params;
 	const [isEditing, setIsEditing] = useState(false);
 	const [inputValue, setInputValue] = useState(String(currentPage));
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +38,7 @@ export const Pagination = ({
 	}, [isEditing]);
 
 	const goToPage = async (page: number) => {
-		await setCurrentPage(page);
+		await setParams({ paged: page });
 		setIsEditing(false);
 	};
 	const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
