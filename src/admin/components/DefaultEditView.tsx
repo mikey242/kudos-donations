@@ -63,7 +63,7 @@ const DefaultEditView = ({ post }: PostEditProps): React.ReactNode => {
 	const [, setParams] = useAdminQueryParams();
 
 	const clearParams = useCallback(() => {
-		void setParams({ edit: null, order: null, tab: null });
+		void setParams({ post: null, order: null, tab: null });
 	}, [setParams]);
 
 	useEffect(() => {

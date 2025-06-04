@@ -73,7 +73,7 @@ export const useAdminContext = (): AdminContextValue => {
 
 export const useAdminQueryParams = () => {
 	return useQueryStates({
-		edit: parseAsInteger.withDefault(null),
+		post: parseAsInteger.withDefault(null),
 		order: parseAsString.withDefault(null),
 		tab: parseAsString.withDefault(null),
 		paged: parseAsInteger.withDefault(1),

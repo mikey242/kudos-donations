@@ -16,7 +16,7 @@ export const EntityPage = ({
 	renderTable,
 	renderEdit,
 }: EntityPageProps): React.ReactNode => {
-	const [postId, setPostId] = useQueryState('edit', parseAsInteger);
+	const [postId, setPostId] = useQueryState('post', parseAsInteger);
 	const [currentPost, setCurrentPost] = useState<Post | null>(null);
 	const { posts, handleNew } = usePostsContext<Post>();
 

@@ -62,7 +62,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 
 	const clearParams = useCallback(() => {
 		return setParams({
-			edit: null,
+			post: null,
 			order: null,
 			tab: null,
 			paged: 1,

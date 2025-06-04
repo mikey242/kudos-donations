@@ -83,7 +83,7 @@ export const AdminRouter = ({
 		// If view changed, clear other stateful query params
 		if (view !== lastView.current) {
 			void setParams({
-				edit: null,
+				post: null,
 				order: null,
 				tab: null,
 				paged: 1,
