@@ -1,10 +1,7 @@
 /* eslint-disable camelcase */
 import React from 'react';
 import type { BlockEditProps } from '@wordpress/blocks';
-import CampaignProvider, {
-	Campaign,
-	useCampaignContext,
-} from '../contexts/CampaignContext';
+import { useCampaignContext } from '../contexts/';
 import { useEntityRecords } from '@wordpress/core-data';
 import { __ } from '@wordpress/i18n';
 import {
@@ -16,8 +13,10 @@ import {
 	TextControl,
 } from '@wordpress/components';
 import { KudosForm } from './KudosForm';
-import { KudosLogo } from './KudosLogo'; // or just call it directly inside
+import { KudosLogo } from './KudosLogo';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+import CampaignProvider from '../contexts/campaign-context';
+import type { Campaign } from '../../types/posts';
 
 export interface KudosButtonAttributes {
 	button_label: string;

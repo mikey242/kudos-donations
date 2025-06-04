@@ -6,7 +6,7 @@ import { Button } from './controls';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { Spinner } from './Spinner';
-import { useCampaignContext } from '../contexts/CampaignContext';
+import { useCampaignContext } from '../contexts';
 
 interface PaymentStatusProps {
 	transactionId: string;
