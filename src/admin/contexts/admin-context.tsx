@@ -7,12 +7,10 @@ import React, {
 	useState,
 } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AdminHeader } from '../components/AdminHeader';
 import * as AdminControls from '../components/controls';
-import { Notices } from '../components/Notices';
+import { AdminHeader, Notices } from '../components';
 // eslint-disable-next-line import/no-unresolved
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 
 interface AdminContextValue {
 	setHeaderContent: Dispatch<SetStateAction<ReactNode>>;

@@ -8,13 +8,13 @@
 
 import { KudosForm } from './components/KudosForm';
 import Message, { PaymentStatus } from './components/Message';
-import CampaignProvider from './contexts/CampaignContext';
 import './kudos-fonts.css';
 import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import React from 'react';
 import { KudosButtonAttributes } from './components/Edit';
+import CampaignProvider from './contexts/campaign-context';
 
 domReady(() => {
 	// Select the web components as target for render.
