@@ -1,25 +1,39 @@
-import type { Post } from '../../../types/posts';
 import { useState } from '@wordpress/element';
+import type { IconType } from '@wordpress/components';
 import { Button, Modal } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { PostMeta } from '../DefaultEditView';
 import React from 'react';
 
-export const DetailsModal = ({ post }: { post: Post }) => {
-	const [isOpen, setIsOpen] = useState(false);
+interface DetailsModalProps {
+	content: React.ReactNode | string;
+	title?: string;
+	modalSize?: 'small' | 'fill' | 'large' | 'medium';
+	icon?: IconType;
+}
 
+export const DetailsModal = ({
+	content,
+	title,
+	modalSize = 'small',
+	icon = 'info',
+}: DetailsModalProps) => {
+	const [isOpen, setIsOpen] = useState(false);
 	return (
 		<>
 			<Button
-				icon="info"
-				size="small"
-				label={__('View donor details', 'kudos-donations')}
+				icon={icon}
+				size="compact"
+				label={__('View details', 'kudos-donations')}
 				onClick={() => setIsOpen((prev) => !prev)}
 				isPressed={isOpen}
 			/>
 			{isOpen && (
-				<Modal onRequestClose={() => setIsOpen(false)}>
-					<PostMeta post={post} />
+				<Modal
+					title={title}
+					size={modalSize}
+					onRequestClose={() => setIsOpen(false)}
+				>
+					{content}
 				</Modal>
 			)}
 		</>
