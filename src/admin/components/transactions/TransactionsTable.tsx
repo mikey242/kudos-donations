@@ -19,9 +19,9 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		handleDelete,
 		isLoading,
 		hasLoadedOnce,
-		posts,
 		totalPages,
 		totalItems,
+		posts,
 	} = usePostsContext();
 
 	useEffect(() => {
@@ -142,7 +142,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 				post.meta.message && (
 					<DetailsModal
 						title={__('Message', 'kudos-donations')}
-						icon="text"
 						content={
 							<p style={{ fontSize: '16px' }}>
 								{post.meta.message}
@@ -179,14 +178,13 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 							onClick={() => handleEdit(post.id)}
 							title={__('View more', 'kudos-donations')}
 						/>
-						{status === 'paid' && (
-							<Button
-								size="compact"
-								icon="download"
-								href={url}
-								title={__('View invoice', 'kudos-donations')}
-							/>
-						)}
+						<Button
+							size="compact"
+							icon="download"
+							disabled={status !== 'paid'}
+							href={url}
+							title={__('View invoice', 'kudos-donations')}
+						/>
 						<Button
 							size="compact"
 							icon="trash"
