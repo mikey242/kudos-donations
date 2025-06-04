@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from '@wordpress/element';
-import { usePostsContext } from './contexts';
+import { usePostsContext } from '../contexts';
 import type { Post } from '../../types/posts';
 import { parseAsInteger, useQueryState } from 'nuqs';
 

@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { HeaderItem, Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../contexts';
+import { useAdminContext, usePostsContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Transaction } from '../../../types/posts';
 import {

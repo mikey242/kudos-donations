@@ -1,7 +1,7 @@
 import React from 'react';
 import type { IconType } from '@wordpress/components';
 import { Button, Flex } from '@wordpress/components';
-import { useAdminQueryParams } from './contexts';
+import { useAdminQueryParams } from '../hooks';
 
 interface NavItem {
 	label: string;
@@ -26,7 +26,7 @@ const navItems: NavItem[] = [
 ];
 
 export const AdminMenu = (): React.ReactNode => {
-	const [params] = useAdminQueryParams();
+	const { params } = useAdminQueryParams();
 	const { page: currentView } = params;
 
 	return (

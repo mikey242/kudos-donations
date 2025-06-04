@@ -7,9 +7,9 @@ import React, {
 	useState,
 } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { AdminHeader } from '../AdminHeader';
-import * as AdminControls from '../../components/controls';
-import { Notices } from '../Notices';
+import { AdminHeader } from '../components/AdminHeader';
+import * as AdminControls from '../components/controls';
+import { Notices } from '../components/Notices';
 // eslint-disable-next-line import/no-unresolved
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
@@ -69,13 +69,4 @@ export const useAdminContext = (): AdminContextValue => {
 		);
 	}
 	return context;
-};
-
-export const useAdminQueryParams = () => {
-	return useQueryStates({
-		post: parseAsInteger.withDefault(null).withOptions({ history: 'push' }),
-		tab: parseAsString.withDefault(null),
-		paged: parseAsInteger.withDefault(1).withOptions({ history: 'push' }),
-		page: parseAsString,
-	});
 };

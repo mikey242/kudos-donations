@@ -3,10 +3,10 @@ import { __ } from '@wordpress/i18n';
 import { Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Subscription } from '../../../types/posts';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
+import { useAdminContext, usePostsContext } from '../../contexts';
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setPageTitle } = useAdminContext();
@@ -120,6 +120,12 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			),
 			valueCallback: (post: Subscription): React.ReactNode => (
 				<Flex justify="flex-end">
+					<Button
+						size="compact"
+						icon="money-alt"
+						href={`?page=kudos-transactions&metaKey=donor_id&metaValue=${post.donor.id}&metaCompare=%3D`}
+						title={__('View donations', 'kudos-donations')}
+					/>
 					<Button
 						size="compact"
 						icon="media-document"

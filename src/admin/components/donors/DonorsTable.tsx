@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../contexts';
+import { useAdminContext, usePostsContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Donor } from '../../../types/posts';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
@@ -25,7 +25,6 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'name',
 			title: __('Name', 'kudos-donations'),
-			orderby: 'title',
 			valueCallback: (post: Donor): React.ReactNode =>
 				post.meta.name ?? '',
 		},
@@ -57,6 +56,12 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			),
 			valueCallback: (post: Donor): React.ReactNode => (
 				<Flex justify="flex-end">
+					<Button
+						size="compact"
+						icon="money-alt"
+						href={`?page=kudos-transactions&metaKey=donor_id&metaValue=${post.id}&metaCompare=%3D`}
+						title={__('View donations', 'kudos-donations')}
+					/>
 					<Button
 						size="compact"
 						icon="media-document"

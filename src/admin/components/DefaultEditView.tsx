@@ -1,7 +1,8 @@
 import React from 'react';
 import { useCallback, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useAdminContext, useAdminQueryParams } from './contexts';
+import { useAdminContext } from '../contexts';
+import { useAdminQueryParams } from '../hooks';
 import type { Post } from '../../types/posts';
 import {
 	Button,
@@ -60,7 +61,7 @@ interface PostEditProps {
 
 const DefaultEditView = ({ post }: PostEditProps): React.ReactNode => {
 	const { setPageTitle, setHeaderContent } = useAdminContext();
-	const [, setParams] = useAdminQueryParams();
+	const { setParams } = useAdminQueryParams();
 
 	const clearParams = useCallback(() => {
 		void setParams({ post: null, tab: null });

@@ -13,11 +13,8 @@ import {
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import {
-	useAdminContext,
-	useAdminQueryParams,
-	usePostsContext,
-} from '../contexts';
+import { useAdminContext, usePostsContext } from '../../contexts';
+import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
 import apiFetch from '@wordpress/api-fetch';
 import type { Campaign } from '../../../types/posts';
@@ -46,7 +43,7 @@ interface CampaignEditProps {
 }
 
 const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
-	const [, setParams] = useAdminQueryParams();
+	const { setParams } = useAdminQueryParams();
 	const { setHeaderContent, setPageTitle } = useAdminContext();
 	const methods = useForm({
 		defaultValues: {
@@ -63,7 +60,6 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const clearParams = useCallback(() => {
 		return setParams({
 			post: null,
-			order: null,
 			tab: null,
 			paged: 1,
 		});

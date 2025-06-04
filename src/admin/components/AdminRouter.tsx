@@ -1,5 +1,6 @@
 import React from 'react';
-import { PostsProvider, useAdminQueryParams } from './contexts';
+import { PostsProvider } from '../contexts';
+import { useAdminQueryParams } from '../hooks';
 import { DonorsTable } from './donors/DonorsTable';
 import { TransactionsTable } from './transactions/TransactionsTable';
 import { SubscriptionsTable } from './subscriptions/SubscriptionsTable';
@@ -58,7 +59,7 @@ const AdminPages = {
 };
 
 export const AdminRouter = (): React.ReactNode => {
-	const [params] = useAdminQueryParams();
+	const { params } = useAdminQueryParams();
 	const { page } = params;
 
 	const currentPage = AdminPages[page];
