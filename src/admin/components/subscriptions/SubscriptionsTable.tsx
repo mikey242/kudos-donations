@@ -35,7 +35,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Status', 'kudos-donations'),
 			width: '7%',
 			valueCallback: (post: Subscription): React.ReactNode => {
-				const status = post.meta.status;
+				const status = post.meta?.status;
 
 				const statusConfig: Record<
 					string,
@@ -123,7 +123,8 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 					<Button
 						size="compact"
 						icon="money-alt"
-						href={`?page=kudos-transactions&metaKey=donor_id&metaValue=${post.donor.id}&metaCompare=%3D`}
+						disabled={!post.donor}
+						href={`?page=kudos-transactions&metaKey=donor_id&metaValue=${post.donor?.id}&metaCompare=%3D`}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					<Button
