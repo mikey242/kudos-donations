@@ -63,7 +63,7 @@ const DefaultEditView = ({ post }: PostEditProps): React.ReactNode => {
 	const [, setParams] = useAdminQueryParams();
 
 	const clearParams = useCallback(() => {
-		void setParams({ post: null, order: null, tab: null });
+		void setParams({ post: null, tab: null });
 	}, [setParams]);
 
 	useEffect(() => {
@@ -93,29 +93,41 @@ const DefaultEditView = ({ post }: PostEditProps): React.ReactNode => {
 	return (
 		<VStack spacing={4}>
 			<Panel header={__('Post details', 'kudos-donations')}>
-				<Row label={__('ID', 'kudos-donations')} value={post.id} />
-				<Row
-					label={__('Date', 'kudos-donations')}
-					value={new Date(post.date).toLocaleDateString()}
-				/>
-				<Row
-					label={__('Description', 'kudos-donations')}
-					value={post.title.raw}
-				/>
+				<PostDetails post={post} />
 			</Panel>
 			<Panel header={__('Meta details', 'kudos-donations')}>
-				{Object.entries(post.meta)
-					.sort(([a], [b]) => a.localeCompare(b))
-					.map(([key, value]) => (
-						<Row
-							key={key}
-							label={key.replace(/_/g, ' ')}
-							value={String(value)}
-						/>
-					))}
+				<PostMeta post={post} />
 			</Panel>
 		</VStack>
 	);
 };
+
+export const PostDetails = ({ post }) => (
+	<>
+		<Row label={__('ID', 'kudos-donations')} value={post.id} />
+		<Row
+			label={__('Date', 'kudos-donations')}
+			value={new Date(post.date).toLocaleDateString()}
+		/>
+		<Row
+			label={__('Description', 'kudos-donations')}
+			value={post.title.raw}
+		/>
+	</>
+);
+
+export const PostMeta = ({ post }) => (
+	<>
+		{Object.entries(post.meta)
+			.sort(([a], [b]) => a.localeCompare(b))
+			.map(([key, value]) => (
+				<Row
+					key={key}
+					label={key.replace(/_/g, ' ')}
+					value={String(value)}
+				/>
+			))}
+	</>
+);
 
 export default DefaultEditView;
