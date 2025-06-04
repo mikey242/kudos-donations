@@ -1,10 +1,4 @@
-import {
-	Button,
-	Dashicon,
-	Flex,
-	Tooltip,
-	VisuallyHidden,
-} from '@wordpress/components';
+import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { HeaderItem, Table } from '../table/Table';
 import React from 'react';
@@ -17,6 +11,7 @@ import {
 	ArrowRightCircleIcon,
 } from '@heroicons/react/24/outline';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
+import { DetailsModal } from '../table/DetailsModal';
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setPageTitle } = useAdminContext();
@@ -145,11 +140,15 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			width: '7%',
 			valueCallback: (post: Transaction): React.ReactNode =>
 				post.meta.message && (
-					<Tooltip text={post.meta.message}>
-						<span>
-							<Dashicon icon="text" />
-						</span>
-					</Tooltip>
+					<DetailsModal
+						title={__('Message', 'kudos-donations')}
+						icon="text"
+						content={
+							<p style={{ fontSize: '16px' }}>
+								{post.meta.message}
+							</p>
+						}
+					/>
 				),
 		},
 		{
