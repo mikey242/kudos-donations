@@ -16,7 +16,7 @@ import {
 	Flex,
 	FlexItem,
 } from '@wordpress/components';
-import { useAdminContext, useSettingsContext } from '../contexts';
+import { useAdminContext, useSettingsContext } from '../../contexts';
 import { applyFilters } from '@wordpress/hooks';
 import type { KudosSettings } from '../../../types/settings';
 

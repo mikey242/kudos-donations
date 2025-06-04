@@ -2,7 +2,7 @@ import { createRoot } from '@wordpress/element';
 import React from 'react';
 import domReady from '@wordpress/dom-ready';
 import './kudos-admin.css';
-import { AdminProvider, SettingsProvider } from './components';
+import { AdminProvider, SettingsProvider } from './contexts';
 import { AdminRouter } from './components/AdminRouter';
 
 domReady(() => {

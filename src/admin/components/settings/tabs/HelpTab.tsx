@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import logo from '../../../../../assets/images/full-logo-green.svg';
 import React from 'react';
-import { useSettingsContext } from '../../contexts';
+import { useSettingsContext } from '../../../contexts';
 import { Button, Flex, FlexItem } from '@wordpress/components';
 import { TextControl, ToggleControl } from '../../controls';
 import { Panel } from '../../Panel';

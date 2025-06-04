@@ -10,7 +10,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../contexts';
+import { useAdminContext, usePostsContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/posts';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
@@ -70,6 +70,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 		{
 			key: 'theme',
 			title: __('Theme color', 'kudos-donations'),
+			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<ColorIndicator colorValue={post.meta?.theme_color} />
 			),
@@ -77,6 +78,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 		{
 			key: 'progress',
 			title: __('Progress', 'kudos-donations'),
+			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => {
 				const total = post.total;
 				const goal = post.meta.goal;
@@ -115,6 +117,12 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			),
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<Flex justify="flex-end">
+					<Button
+						size="compact"
+						icon="money-alt"
+						href={`?page=kudos-transactions&metaKey=campaign_id&metaValue=${post.id}&metaCompare=%3D`}
+						title={__('View donations', 'kudos-donations')}
+					/>
 					<Button
 						size="compact"
 						icon="edit"

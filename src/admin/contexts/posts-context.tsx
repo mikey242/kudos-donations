@@ -5,7 +5,6 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
-	useRef,
 	useState,
 } from '@wordpress/element';
 // eslint-disable-next-line import/default
@@ -14,7 +13,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
-import type { Post } from '../../../types/posts';
+import type { Post } from '../../types/posts';
 import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 
 interface PostsContextValue<T extends Post = Post> {
@@ -87,24 +86,13 @@ export const PostsProvider = <T extends Post>({
 		metaType,
 	});
 
-	const prevPostTypeRef = useRef(postType);
-
 	useEffect(() => {
-		const postTypeChanged = prevPostTypeRef.current !== postType;
-
-		if (postTypeChanged) {
-			setCachedPosts([]);
-			setHasLoadedOnce(false);
-			prevPostTypeRef.current = postType;
-		}
-
 		setIsLoading(!hasResolved);
-
 		if (hasResolved) {
 			setCachedPosts(posts ?? []);
 			setHasLoadedOnce(true);
 		}
-	}, [posts, hasResolved, postType]);
+	}, [posts, hasResolved]);
 
 	const handleSave = useCallback(
 		async (args = {}): Promise<T | null> => {

@@ -4,8 +4,8 @@ import type { IconType } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import type { Post } from '../../../types/posts';
 import { useCallback } from '@wordpress/element';
-import { parseAsString, useQueryStates } from 'nuqs';
 import { TableControls } from './TableControls';
+import { useAdminTableParams } from '../../hooks';
 
 export interface HeaderItem<T extends Post = Post> {
 	title: string | React.ReactNode;
@@ -45,7 +45,7 @@ export const Table = <T extends Post>({
 	totalItems,
 }: TableProps<T>): React.ReactNode => {
 	const isFirstLoad = isLoading && !hasLoadedOnce;
-	const [params, setParams] = useAdminTableParams();
+	const { params, setParams } = useAdminTableParams();
 
 	const { order, orderby } = params;
 
@@ -74,8 +74,8 @@ export const Table = <T extends Post>({
 			void setParams({
 				order: nextOrder,
 				orderby: newOrderBy,
-				meta_key: isMetaSort && metaKey ? metaKey : '',
-				meta_type:
+				metaKey: isMetaSort && metaKey ? metaKey : '',
+				metaType:
 					// eslint-disable-next-line no-nested-ternary
 					isMetaSort && metaKey
 						? orderby === 'meta_value_num'
@@ -199,14 +199,4 @@ const TableRow = <T extends Post>({ post, columns }: TableRowProps<T>) => {
 			})}
 		</tr>
 	);
-};
-
-export const useAdminTableParams = () => {
-	return useQueryStates({
-		order: parseAsString,
-		orderby: parseAsString.withDefault(''),
-		meta_key: parseAsString.withDefault(''),
-		meta_type: parseAsString.withDefault(''),
-		search: parseAsString.withDefault(''),
-	});
 };

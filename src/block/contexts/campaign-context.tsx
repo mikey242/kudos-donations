@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { Flex, Spinner } from '@wordpress/components';
-import type { Campaign } from '../../types/wp';
+import type { Campaign } from '../../types/posts';
 
 interface CampaignContextType {
 	campaign: Campaign | null;
