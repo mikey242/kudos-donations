@@ -35,9 +35,16 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 
 	const headerItems: HeaderItem[] = [
 		{
+			key: 'donor',
+			title: __('Donor', 'kudos-donations'),
+
+			valueCallback: (post: Transaction): React.ReactNode =>
+				post.donor?.meta?.name ?? post.donor?.meta.email ?? '',
+		},
+		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
-			width: '10%',
+			width: '7%',
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const status = post.meta.status;
 
@@ -71,25 +78,13 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 
 				return (
 					config && (
-						<Flex justify="center">
-							<Dashicon
-								title={config.title}
-								icon={config.icon as IconKey}
-							/>
-						</Flex>
+						<Dashicon
+							title={config.title}
+							icon={config.icon as IconKey}
+						/>
 					)
 				);
 			},
-		},
-		{
-			key: 'donor',
-			title: __('Donor', 'kudos-donations'),
-
-			valueCallback: (post: Transaction): React.ReactNode =>
-				post.donor?.meta.email ??
-				post.donor?.meta?.name ??
-				post.donor?.id ??
-				'',
 		},
 		{
 			key: 'value',
@@ -125,7 +120,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 
 				return (
 					<Flex
-						justify="center"
+						justify="flex-start"
 						title={
 							__('Payment type:', 'kudos-donations') + sequence
 						}
@@ -147,6 +142,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'message',
 			title: __('Message', 'kudos-donations'),
 			align: 'center',
+			width: '7%',
 			valueCallback: (post: Transaction): React.ReactNode =>
 				post.meta.message && (
 					<Tooltip text={post.meta.message}>
@@ -160,6 +156,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
+			width: '10%',
 			valueCallback: (post: Transaction): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),

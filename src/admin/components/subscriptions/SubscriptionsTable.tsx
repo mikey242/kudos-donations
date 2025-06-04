@@ -25,9 +25,15 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 
 	const headerItems = [
 		{
+			key: 'donor',
+			title: __('Donor', 'kudos-donations'),
+			valueCallback: (post: Subscription): React.ReactNode =>
+				post.donor?.meta?.name ?? post.donor?.meta.email ?? '',
+		},
+		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
-			width: '10%',
+			width: '7%',
 			valueCallback: (post: Subscription): React.ReactNode => {
 				const status = post.meta.status;
 
@@ -56,21 +62,13 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 
 				return (
 					config && (
-						<Flex justify="center">
-							<Dashicon
-								title={config.title}
-								icon={config.icon as IconKey}
-							/>
-						</Flex>
+						<Dashicon
+							title={config.title}
+							icon={config.icon as IconKey}
+						/>
 					)
 				);
 			},
-		},
-		{
-			key: 'donor',
-			title: __('Donor', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode =>
-				post.donor?.meta.name ?? post.donor?.meta.email ?? '',
 		},
 		{
 			key: 'amount',
@@ -110,6 +108,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
+			width: '10%',
 			valueCallback: (post: Subscription): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),

@@ -11,7 +11,6 @@ import { Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../contexts';
-import GenerateShortcode from './GenerateShortcode';
 import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/posts';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
@@ -104,6 +103,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
+			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),
@@ -127,7 +127,6 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 						label={__('Duplicate campaign', 'kudos-donations')}
 						onClick={() => handleDuplicate(post)}
 					/>
-					<GenerateShortcode campaign={post} iconOnly />
 					<Button
 						size="compact"
 						icon="trash"
