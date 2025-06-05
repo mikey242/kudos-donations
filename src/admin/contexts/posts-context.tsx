@@ -14,7 +14,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import type { Post } from '../../types/posts';
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
+import { useAdminTableParams } from '../hooks';
 
 interface PostsContextValue<T extends Post = Post> {
 	posts: T[];
@@ -41,16 +41,7 @@ export const PostsProvider = <T extends Post>({
 	postType,
 	children,
 }: PostsProviderProps) => {
-	const [query] = useQueryStates({
-		paged: parseAsInteger.withDefault(1),
-		order: parseAsString.withDefault('desc'),
-		orderby: parseAsString.withDefault('date'),
-		metaKey: parseAsString.withDefault(''),
-		metaValue: parseAsString.withDefault(''),
-		metaCompare: parseAsString.withDefault('='),
-		metaType: parseAsString.withDefault('string'),
-		search: parseAsString,
-	});
+	const { params } = useAdminTableParams();
 	const {
 		paged,
 		order,
@@ -60,7 +51,7 @@ export const PostsProvider = <T extends Post>({
 		metaCompare,
 		metaType,
 		search,
-	} = query;
+	} = params;
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
@@ -74,7 +65,7 @@ export const PostsProvider = <T extends Post>({
 		totalItems,
 	} = useEntityRecords<T>('postType', postType, {
 		per_page: 20,
-		page: paged,
+		page: Number(paged),
 		search,
 		order,
 		orderby,
