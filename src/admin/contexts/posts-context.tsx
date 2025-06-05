@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import {
 	createContext,
@@ -46,9 +47,9 @@ export const PostsProvider = <T extends Post>({
 		paged,
 		order,
 		orderby,
-		metaKey,
-		metaValue,
-		metaCompare,
+		meta_key,
+		meta_value,
+		meta_query,
 		metaType,
 		search,
 	} = params;
@@ -69,9 +70,9 @@ export const PostsProvider = <T extends Post>({
 		search,
 		order,
 		orderby,
-		metaKey,
-		metaValue,
-		metaCompare,
+		meta_key,
+		meta_value,
+		meta_query,
 		metaType,
 	});
 

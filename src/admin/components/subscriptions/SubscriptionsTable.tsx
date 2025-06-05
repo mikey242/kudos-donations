@@ -67,7 +67,6 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		},
 		{
 			key: 'value',
-			orderby: 'meta_value_num',
 			title: __('Amount', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode => {
 				const value = post.meta?.value;
@@ -119,7 +118,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 						size="compact"
 						icon="money-alt"
 						disabled={!post.donor}
-						href={`?page=kudos-transactions&metaKey=donor_id&metaValue=${post.donor?.id}&metaCompare=%3D`}
+						href={`?page=kudos-transactions&meta_key=donor_id&meta_value=${post.donor?.id}`}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					{settings._kudos_debug_mode && (

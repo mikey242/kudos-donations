@@ -77,7 +77,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		},
 		{
 			key: 'value',
-			orderby: 'meta_value_num',
 			title: __('Amount', 'kudos-donations'),
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const value = post.meta?.value;

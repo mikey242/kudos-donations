@@ -3,10 +3,10 @@ import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 const defaultFilterParams = {
 	order: 'desc',
 	orderby: 'date',
-	metaKey: '',
-	metaValue: '',
-	metaCompare: '=',
-	metaType: 'string',
+	meta_key: '',
+	meta_value: '',
+	meta_query: '',
+	metaType: '',
 	search: '',
 };
 
@@ -22,9 +22,9 @@ export const useAdminTableParams = () => {
 			.withOptions({ history: 'push' }),
 		order: parseAsString.withDefault(defaultParams.order),
 		orderby: parseAsString.withDefault(defaultParams.orderby),
-		metaKey: parseAsString.withDefault(defaultParams.metaKey),
-		metaValue: parseAsString.withDefault(defaultParams.metaValue),
-		metaCompare: parseAsString.withDefault(defaultParams.metaCompare),
+		meta_key: parseAsString.withDefault(defaultParams.meta_key),
+		meta_value: parseAsString.withDefault(defaultParams.meta_value),
+		meta_query: parseAsString.withDefault(defaultParams.meta_query),
 		metaType: parseAsString.withDefault(defaultParams.metaType),
 		search: parseAsString.withDefault(defaultParams.search),
 	});
@@ -35,7 +35,7 @@ export const useAdminTableParams = () => {
 	);
 
 	// Reset to default values.
-	const resetParams = () => void setParams(defaultFilterParams);
+	const resetParams = () => setParams(defaultFilterParams);
 
 	return { params, setParams, resetParams, hasActiveFilters };
 };

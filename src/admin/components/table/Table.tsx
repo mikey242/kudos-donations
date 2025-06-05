@@ -73,26 +73,12 @@ export const Table = <T extends Post>({
 			const nextOrder =
 				isSameColumn && prevOrder === 'asc' ? 'desc' : 'asc';
 
-			const isMetaSort = newOrderBy.startsWith('meta_value');
-			const column = headerItems.find(
-				(item) => item.orderby === newOrderBy
-			);
-			const metaKey = column?.key ?? '';
-
 			void setParams({
 				order: nextOrder,
 				orderby: newOrderBy,
-				metaKey: isMetaSort && metaKey ? metaKey : '',
-				metaType:
-					// eslint-disable-next-line no-nested-ternary
-					isMetaSort && metaKey
-						? orderby === 'meta_value_num'
-							? 'NUMERIC'
-							: ''
-						: '',
 			});
 		},
-		[headerItems, order, orderby, setParams]
+		[order, orderby, setParams]
 	);
 
 	return (
@@ -106,7 +92,7 @@ export const Table = <T extends Post>({
 			<table
 				className="widefat striped rounded"
 				style={{
-					tableLayout: posts.length === 0 ? 'unset' : 'fixed',
+					tableLayout: posts.length === 0 ? 'auto' : 'fixed',
 				}}
 			>
 				<thead>
@@ -114,6 +100,7 @@ export const Table = <T extends Post>({
 						{headerItems.map((item) => (
 							<th
 								key={item.key}
+								scope="col"
 								style={
 									item.width
 										? { width: item.width }
