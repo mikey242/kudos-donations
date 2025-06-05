@@ -63,46 +63,14 @@ abstract class AbstractCustomPostType extends AbstractContentType implements Cus
 	 */
 	private function add_meta_to_rest_query() {
 		add_filter(
-			'rest_' . $this->get_slug() . '_collection_params',
-			function ( $params ) {
-				$params['orderby']['enum'][] = 'meta_value';
-				$params['orderby']['enum'][] = 'meta_value_num';
-				return $params;
-			}
-		);
-		add_filter(
 			'rest_' . $this->get_slug() . '_query',
 			function ( $args, $request ) {
-				$meta_key = $request->get_param( 'metaKey' );
-				if ( $meta_key ) {
-					$args['meta_key']   = sanitize_key( $meta_key );
-					$args['meta_value'] = sanitize_text_field( $request->get_param( 'metaValue' ) );
+				$args += [
+					'meta_key'   => $request['meta_key'],
+					'meta_value' => $request['meta_value'],
+					'meta_query' => $request['meta_query'],
+				];
 
-					$meta_type = $request->get_param( 'metaType' );
-					if ( $meta_type ) {
-						$args['meta_type'] = sanitize_key( $meta_type );
-					}
-
-					$meta_compare      = strtoupper( $request->get_param( 'metaCompare' ) ?? '=' );
-					$valid_comparisons = [
-						'=',
-						'!=',
-						'>',
-						'>=',
-						'<',
-						'<=',
-						'LIKE',
-						'NOT LIKE',
-						'IN',
-						'NOT IN',
-						'EXISTS',
-						'NOT EXISTS',
-					];
-
-					if ( \in_array( $meta_compare, $valid_comparisons, true ) ) {
-						$args['meta_compare'] = $meta_compare;
-					}
-				}
 				return $args;
 			},
 			10,

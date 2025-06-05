@@ -116,7 +116,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 					<Button
 						size="compact"
 						icon="money-alt"
-						href={`?page=kudos-transactions&metaKey=campaign_id&metaValue=${post.id}&metaCompare=%3D`}
+						href={`?page=kudos-transactions&meta_key=campaign_id&meta_value=${post.id}`}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					<Button

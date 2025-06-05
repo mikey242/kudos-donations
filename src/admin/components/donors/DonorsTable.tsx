@@ -26,7 +26,6 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'email',
 			title: __('Email', 'kudos-donations'),
-			orderby: 'meta_value',
 			valueCallback: (post: Donor): React.ReactNode =>
 				post.meta.email ?? '',
 		},
@@ -54,7 +53,7 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 					<Button
 						size="compact"
 						icon="money-alt"
-						href={`?page=kudos-transactions&metaKey=donor_id&metaValue=${post.id}&metaCompare=%3D`}
+						href={`?page=kudos-transactions&meta_key=donor_id&meta_value=${post.id}`}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					{settings._kudos_debug_mode && (

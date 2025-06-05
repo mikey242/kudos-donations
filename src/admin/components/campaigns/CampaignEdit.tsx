@@ -61,7 +61,6 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 		return setParams({
 			post: null,
 			tab: null,
-			paged: 1,
 		});
 	}, [setParams]);
 
