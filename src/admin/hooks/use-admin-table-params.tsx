@@ -1,7 +1,6 @@
 import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 
-const defaultParams = {
-	paged: 1,
+const defaultFilterParams = {
 	order: 'desc',
 	orderby: 'date',
 	metaKey: '',
@@ -11,9 +10,16 @@ const defaultParams = {
 	search: '',
 };
 
+const defaultParams = {
+	...defaultFilterParams,
+	paged: 1,
+};
+
 export const useAdminTableParams = () => {
 	const [params, setParams] = useQueryStates({
-		paged: parseAsInteger.withDefault(defaultParams.paged),
+		paged: parseAsInteger
+			.withDefault(defaultParams.paged)
+			.withOptions({ history: 'push' }),
 		order: parseAsString.withDefault(defaultParams.order),
 		orderby: parseAsString.withDefault(defaultParams.orderby),
 		metaKey: parseAsString.withDefault(defaultParams.metaKey),
@@ -23,16 +29,13 @@ export const useAdminTableParams = () => {
 		search: parseAsString.withDefault(defaultParams.search),
 	});
 
-	// Don't include page number in reset logic.
-	delete defaultParams.paged;
-
 	// Check to see if any values differ from default.
-	const hasActiveFilters = Object.entries(defaultParams).some(
+	const hasActiveFilters = Object.entries(defaultFilterParams).some(
 		([key, defaultValue]) => params[key] !== defaultValue
 	);
 
 	// Reset to default values.
-	const resetParams = () => void setParams(defaultParams);
+	const resetParams = () => void setParams(defaultFilterParams);
 
 	return { params, setParams, resetParams, hasActiveFilters };
 };

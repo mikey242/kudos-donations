@@ -49,14 +49,13 @@ export const Table = <T extends Post>({
 	const { params, setParams } = useAdminTableParams();
 	const { setPageTitle } = useAdminContext();
 	const { postTypes } = usePostsContext();
+	const { order, orderby } = params;
 
 	useEffect(() => {
 		if (postTypes) {
 			setPageTitle(`Your ${postTypes.labels.name}`);
 		}
 	}, [postTypes, setPageTitle]);
-
-	const { order, orderby } = params;
 
 	const getSortIcon = (value: string): IconType => {
 		if (orderby !== value) {
