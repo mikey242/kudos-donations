@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import type { Post } from '../../../types/posts';
-import { useCallback } from '@wordpress/element';
+import { useCallback, useEffect } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminTableParams } from '../../hooks';
+import { useAdminContext, usePostsContext } from '../../contexts';
 
 export interface HeaderItem<T extends Post = Post> {
 	title: string | React.ReactNode;
@@ -46,6 +47,14 @@ export const Table = <T extends Post>({
 }: TableProps<T>): React.ReactNode => {
 	const isFirstLoad = isLoading && !hasLoadedOnce;
 	const { params, setParams } = useAdminTableParams();
+	const { setPageTitle } = useAdminContext();
+	const { postTypes } = usePostsContext();
+
+	useEffect(() => {
+		if (postTypes) {
+			setPageTitle(`Your ${postTypes.labels.name}`);
+		}
+	}, [postTypes, setPageTitle]);
 
 	const { order, orderby } = params;
 
@@ -136,7 +145,13 @@ export const Table = <T extends Post>({
 						</TableMessage>
 					) : posts.length === 0 && hasLoadedOnce ? (
 						<TableMessage>
-							<p>{__('No posts', 'kudos-donations')}</p>
+							<p>
+								{sprintf(
+									// translators: %s is the plural post type name (e.g. Transactions)
+									__('No %s', 'kudos-donations'),
+									postTypes?.name
+								)}
+							</p>
 						</TableMessage>
 					) : (
 						posts.map((post) => (
@@ -149,7 +164,7 @@ export const Table = <T extends Post>({
 					)}
 				</tbody>
 			</table>
-			{hasLoadedOnce && (
+			{hasLoadedOnce && totalPages > 1 && (
 				<TableControls
 					totalPages={totalPages}
 					totalItems={totalItems}

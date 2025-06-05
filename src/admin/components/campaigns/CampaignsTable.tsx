@@ -15,7 +15,7 @@ import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/posts';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
-	const { setPageTitle, setHeaderContent } = useAdminContext();
+	const { setHeaderContent } = useAdminContext();
 	const {
 		handleDelete,
 		handleDuplicate,
@@ -25,10 +25,6 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 		totalPages,
 		totalItems,
 	} = usePostsContext();
-
-	useEffect(() => {
-		setPageTitle(__('Your campaigns', 'kudos-donations'));
-	}, [setPageTitle]);
 
 	useEffect(() => {
 		setHeaderContent(

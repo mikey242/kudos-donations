@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCallback, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useAdminContext } from '../contexts';
+import { useAdminContext, usePostsContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import type { Post } from '../../types/posts';
 import {
@@ -61,6 +61,7 @@ interface PostEditProps {
 
 const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 	const { setPageTitle, setHeaderContent } = useAdminContext();
+	const { postTypes } = usePostsContext();
 	const { setParams } = useAdminQueryParams();
 
 	const clearParams = useCallback(() => {
@@ -83,9 +84,9 @@ const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 
 	useEffect(() => {
 		if (post) {
-			setPageTitle(__('Details', 'kudos-donations') + ': ' + post.id);
+			setPageTitle(postTypes.labels.singular_name + ': ' + post.id);
 		}
-	}, [post, setPageTitle]);
+	}, [post, postTypes, setPageTitle]);
 
 	if (!post) {
 		return null;

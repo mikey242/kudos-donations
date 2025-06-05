@@ -2,12 +2,7 @@ import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import {
-	useAdminContext,
-	usePostsContext,
-	useSettingsContext,
-} from '../../contexts';
-import { useEffect } from '@wordpress/element';
+import { usePostsContext, useSettingsContext } from '../../contexts';
 import type { Transaction } from '../../../types/posts';
 import {
 	ArrowPathIcon,
@@ -18,7 +13,6 @@ import { DetailsModal, HeaderItem, Table } from '../table';
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { settings } = useSettingsContext();
-	const { setPageTitle } = useAdminContext();
 	const {
 		handleDelete,
 		isLoading,
@@ -27,10 +21,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		totalItems,
 		posts,
 	} = usePostsContext();
-
-	useEffect(() => {
-		setPageTitle(__('Your transactions', 'kudos-donations'));
-	}, [setPageTitle]);
 
 	const headerItems: HeaderItem[] = [
 		{
@@ -121,7 +111,9 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 					<Flex
 						justify="flex-start"
 						title={
-							__('Payment type:', 'kudos-donations') + sequence
+							__('Payment type:', 'kudos-donations') +
+							' ' +
+							sequence
 						}
 					>
 						<div className="dashicons">{icon}</div>
