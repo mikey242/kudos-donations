@@ -1,15 +1,15 @@
 import React from 'react';
 import { PostsProvider } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
-import { DonorsTable } from './donors/DonorsTable';
-import { TransactionsTable } from './transactions/TransactionsTable';
-import { SubscriptionsTable } from './subscriptions/SubscriptionsTable';
-import { SettingsPage } from './settings/SettingsPage';
+import { DonorsTable } from './donors';
+import { TransactionsTable } from './transactions';
+import { SubscriptionsTable } from './subscriptions';
+import { SettingsPage } from './settings';
 import { EntityPage } from './EntityPage';
-import { CampaignsTable } from './campaigns/CampaignsTable';
+import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
 import type { Campaign } from '../../types/posts';
-import DefaultEditView from './DefaultEditView';
+import SinglePostView from './SinglePostView';
 import { Flex } from '@wordpress/components';
 
 const AdminPages = {
@@ -31,7 +31,7 @@ const AdminPages = {
 				renderTable={(editPost) => (
 					<DonorsTable handleEdit={editPost} />
 				)}
-				renderEdit={(post) => <DefaultEditView post={post} />}
+				renderEdit={(post) => <SinglePostView post={post} />}
 			/>
 		</PostsProvider>
 	),
@@ -41,7 +41,7 @@ const AdminPages = {
 				renderTable={(editPost) => (
 					<TransactionsTable handleEdit={editPost} />
 				)}
-				renderEdit={(post) => <DefaultEditView post={post} />}
+				renderEdit={(post) => <SinglePostView post={post} />}
 			/>
 		</PostsProvider>
 	),
@@ -51,7 +51,7 @@ const AdminPages = {
 				renderTable={(editPost) => (
 					<SubscriptionsTable handleEdit={editPost} />
 				)}
-				renderEdit={(post) => <DefaultEditView post={post} />}
+				renderEdit={(post) => <SinglePostView post={post} />}
 			/>
 		</PostsProvider>
 	),

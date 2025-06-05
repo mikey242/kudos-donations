@@ -1,9 +1,12 @@
 import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { HeaderItem, Table } from '../table/Table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../../contexts';
+import {
+	useAdminContext,
+	usePostsContext,
+	useSettingsContext,
+} from '../../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Transaction } from '../../../types/posts';
 import {
@@ -11,9 +14,10 @@ import {
 	ArrowRightCircleIcon,
 } from '@heroicons/react/24/outline';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
-import { DetailsModal } from '../table/DetailsModal';
+import { DetailsModal, HeaderItem, Table } from '../table';
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
+	const { settings } = useSettingsContext();
 	const { setPageTitle } = useAdminContext();
 	const {
 		handleDelete,
@@ -172,12 +176,14 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 				const url = post.invoice_url;
 				return (
 					<>
-						<Button
-							size="compact"
-							icon="media-document"
-							onClick={() => handleEdit(post.id)}
-							title={__('View more', 'kudos-donations')}
-						/>
+						{settings._kudos_debug_mode && (
+							<Button
+								size="compact"
+								icon="media-document"
+								onClick={() => handleEdit(post.id)}
+								title={__('View more', 'kudos-donations')}
+							/>
+						)}
 						<Button
 							size="compact"
 							icon="download"

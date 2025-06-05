@@ -6,14 +6,13 @@
 
 /* eslint-disable camelcase */
 
-import { KudosForm } from './components/KudosForm';
+import { KudosForm, KudosButtonAttributes } from './components';
 import Message, { PaymentStatus } from './components/Message';
 import './kudos-fonts.css';
 import './kudos-front.css';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import React from 'react';
-import { KudosButtonAttributes } from './components/Edit';
 import CampaignProvider from './contexts/campaign-context';
 
 domReady(() => {
