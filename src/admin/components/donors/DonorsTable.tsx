@@ -3,15 +3,9 @@ import { __ } from '@wordpress/i18n';
 import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import {
-	useAdminContext,
-	usePostsContext,
-	useSettingsContext,
-} from '../../contexts';
-import { useEffect } from '@wordpress/element';
+import { usePostsContext, useSettingsContext } from '../../contexts';
 import type { Donor } from '../../../types/posts';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
-	const { setPageTitle } = useAdminContext();
 	const { settings } = useSettingsContext();
 	const {
 		handleDelete,
@@ -21,10 +15,6 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		totalPages,
 		totalItems,
 	} = usePostsContext();
-
-	useEffect(() => {
-		setPageTitle(__('Your donors', 'kudos-donations'));
-	}, [setPageTitle]);
 
 	const headerItems = [
 		{
