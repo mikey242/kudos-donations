@@ -66,7 +66,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			},
 		},
 		{
-			key: 'amount',
+			key: 'value',
 			orderby: 'meta_value_num',
 			title: __('Amount', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode => {
