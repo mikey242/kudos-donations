@@ -1,13 +1,18 @@
 import { Button, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { Table } from '../table/Table';
+import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../../contexts';
+import {
+	useAdminContext,
+	usePostsContext,
+	useSettingsContext,
+} from '../../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Donor } from '../../../types/posts';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { setPageTitle } = useAdminContext();
+	const { settings } = useSettingsContext();
 	const {
 		handleDelete,
 		isLoading,
@@ -62,12 +67,14 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 						href={`?page=kudos-transactions&metaKey=donor_id&metaValue=${post.id}&metaCompare=%3D`}
 						title={__('View donations', 'kudos-donations')}
 					/>
-					<Button
-						size="compact"
-						icon="media-document"
-						onClick={() => handleEdit(post.id)}
-						title={__('View more', 'kudos-donations')}
-					/>
+					{settings._kudos_debug_mode && (
+						<Button
+							size="compact"
+							icon="media-document"
+							onClick={() => handleEdit(post.id)}
+							title={__('View more', 'kudos-donations')}
+						/>
+					)}
 					<Button
 						size="compact"
 						icon="trash"

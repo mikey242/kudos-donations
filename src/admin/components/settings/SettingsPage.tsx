@@ -1,7 +1,3 @@
-/**
- * @see https://www.codeinwp.com/blog/plugin-options-page-gutenberg/
- * @see https://github.com/HardeepAsrani/my-awesome-plugin/
- */
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';

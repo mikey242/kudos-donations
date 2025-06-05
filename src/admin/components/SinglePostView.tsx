@@ -59,7 +59,7 @@ interface PostEditProps {
 	post: Post;
 }
 
-const DefaultEditView = ({ post }: PostEditProps): React.ReactNode => {
+const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 	const { setPageTitle, setHeaderContent } = useAdminContext();
 	const { setParams } = useAdminQueryParams();
 
@@ -131,4 +131,4 @@ export const PostMeta = ({ post }) => (
 	</>
 );
 
-export default DefaultEditView;
+export default SinglePostView;

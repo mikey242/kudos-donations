@@ -13,7 +13,7 @@ import { __ } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Flex, Icon, Spinner } from '@wordpress/components';
-import { IntroGuide } from '../components/settings/IntroGuide';
+import { IntroGuide } from '../components';
 import type { KudosSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
 

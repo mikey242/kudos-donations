@@ -1,14 +1,19 @@
 import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { Table } from '../table/Table';
+import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEffect } from '@wordpress/element';
 import type { Subscription } from '../../../types/posts';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
-import { useAdminContext, usePostsContext } from '../../contexts';
+import {
+	useAdminContext,
+	usePostsContext,
+	useSettingsContext,
+} from '../../contexts';
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
+	const { settings } = useSettingsContext();
 	const { setPageTitle } = useAdminContext();
 	const {
 		handleDelete,
@@ -127,12 +132,14 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 						href={`?page=kudos-transactions&metaKey=donor_id&metaValue=${post.donor?.id}&metaCompare=%3D`}
 						title={__('View donations', 'kudos-donations')}
 					/>
-					<Button
-						size="compact"
-						icon="media-document"
-						onClick={() => handleEdit(post.id)}
-						title={__('View more', 'kudos-donations')}
-					/>
+					{settings._kudos_debug_mode && (
+						<Button
+							size="compact"
+							icon="media-document"
+							onClick={() => handleEdit(post.id)}
+							title={__('View more', 'kudos-donations')}
+						/>
+					)}
 					<Button
 						size="compact"
 						icon="trash"

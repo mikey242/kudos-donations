@@ -7,7 +7,7 @@ import {
 	VisuallyHidden,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { Table } from '../table/Table';
+import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../../contexts';
