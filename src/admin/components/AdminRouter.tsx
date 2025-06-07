@@ -11,10 +11,15 @@ import CampaignEdit from './campaigns/CampaignEdit';
 import type { Campaign } from '../../types/posts';
 import SinglePostView from './SinglePostView';
 import { Flex } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 const AdminPages = {
 	'kudos-campaigns': () => (
-		<PostsProvider postType={'kudos_campaign'}>
+		<PostsProvider
+			pluralName={__('Campaigns', 'kudos-donations')}
+			singularName={__('Campaign', 'kudos-donations')}
+			postType={'kudos_campaign'}
+		>
 			<EntityPage
 				renderTable={(editPost, newPost) => (
 					<CampaignsTable handleNew={newPost} handleEdit={editPost} />
@@ -26,7 +31,11 @@ const AdminPages = {
 		</PostsProvider>
 	),
 	'kudos-donors': () => (
-		<PostsProvider postType="kudos_donor">
+		<PostsProvider
+			pluralName={__('Donors', 'kudos-donations')}
+			singularName={__('Donor', 'kudos-donations')}
+			postType="kudos_donor"
+		>
 			<EntityPage
 				renderTable={(editPost) => (
 					<DonorsTable handleEdit={editPost} />
@@ -36,7 +45,11 @@ const AdminPages = {
 		</PostsProvider>
 	),
 	'kudos-transactions': () => (
-		<PostsProvider postType="kudos_transaction">
+		<PostsProvider
+			pluralName={__('Transactions', 'kudos-donations')}
+			singularName={__('Transaction', 'kudos-donations')}
+			postType="kudos_transaction"
+		>
 			<EntityPage
 				renderTable={(editPost) => (
 					<TransactionsTable handleEdit={editPost} />
@@ -46,7 +59,11 @@ const AdminPages = {
 		</PostsProvider>
 	),
 	'kudos-subscriptions': () => (
-		<PostsProvider postType="kudos_subscription">
+		<PostsProvider
+			pluralName={__('Subscriptions', 'kudos-donations')}
+			singularName={__('Subscription', 'kudos-donations')}
+			postType="kudos_subscription"
+		>
 			<EntityPage
 				renderTable={(editPost) => (
 					<SubscriptionsTable handleEdit={editPost} />
