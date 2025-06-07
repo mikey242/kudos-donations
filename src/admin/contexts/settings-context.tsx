@@ -31,6 +31,7 @@ interface SettingsContextValue {
 	settingsReady: boolean;
 	settingsSaving: boolean;
 	isVendorReady: boolean;
+	recurringEnabled: boolean;
 }
 
 interface ProviderProps {
@@ -54,6 +55,7 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 	const [settingsSaving, setSettingsSaving] = useState<boolean>(false);
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
+	const [recurringEnabled, setRecurringEnabled] = useState<boolean>(false);
 
 	useEffect(() => {
 		apiFetch({
@@ -61,6 +63,13 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 			method: 'GET',
 		}).then((r: boolean) => setIsVendorReady(r));
 	}, [settings]);
+
+	useEffect(() => {
+		apiFetch({
+			path: '/kudos/v1/payment/recurring-enabled',
+			method: 'GET',
+		}).then((r: boolean) => setRecurringEnabled(r));
+	}, []);
 
 	const fetchSettings = async () => {
 		await api.loadPromise;
@@ -220,6 +229,7 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 				settingsReady,
 				settingsSaving,
 				isVendorReady,
+				recurringEnabled,
 			}}
 		>
 			{settingsReady ? (

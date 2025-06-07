@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AdminTab, AdminTabPanel } from '../AdminTabPanel';
@@ -13,10 +13,13 @@ import {
 import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
-import { useAdminContext, usePostsContext } from '../../contexts';
+import {
+	useAdminContext,
+	usePostsContext,
+	useSettingsContext,
+} from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
-import apiFetch from '@wordpress/api-fetch';
 import type { Campaign } from '../../../types/posts';
 import { Button } from '@wordpress/components';
 import GenerateShortcode from './GenerateShortcode';
@@ -45,6 +48,7 @@ interface CampaignEditProps {
 const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const { updateParams } = useAdminQueryParams();
 	const { setHeaderContent, setPageTitle } = useAdminContext();
+	const { recurringEnabled } = useSettingsContext();
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -55,7 +59,6 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const { reset, handleSubmit, formState } = methods;
 	const { createWarningNotice } = useDispatch(noticesStore);
 	const { handleUpdate } = usePostsContext();
-	const [recurringEnabled, setRecurringEnabled] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (campaign) {
@@ -92,13 +95,6 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 			});
 		}
 	}, [campaign, reset]);
-
-	useEffect(() => {
-		apiFetch({
-			path: '/kudos/v1/payment/recurring-enabled',
-			method: 'GET',
-		}).then((r: boolean) => setRecurringEnabled(r));
-	}, []);
 
 	useEffect(() => {
 		if (formState.isSubmitted && !isEmpty(formState.errors)) {
