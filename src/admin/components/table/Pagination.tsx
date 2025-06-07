@@ -22,7 +22,7 @@ export const Pagination = ({
 	const { params, updateParams } = useAdminQueryParams();
 	const { paged: currentPage } = params;
 	const [isEditing, setIsEditing] = useState(false);
-	const [inputValue, setInputValue] = useState(String(currentPage));
+	const [inputValue, setInputValue] = useState<number>(currentPage);
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
@@ -30,6 +30,12 @@ export const Pagination = ({
 			inputRef.current.focus();
 		}
 	}, [isEditing]);
+
+	useEffect(() => {
+		if (!isEditing) {
+			setInputValue(currentPage);
+		}
+	}, [currentPage, isEditing]);
 
 	const goToPage = async (page: number) => {
 		await updateParams({ paged: page });
@@ -39,7 +45,7 @@ export const Pagination = ({
 		if (e.key === 'Enter') {
 			await goToPage(Number(inputValue));
 		} else if (e.key === 'Escape') {
-			setInputValue(String(currentPage));
+			setInputValue(currentPage);
 			setIsEditing(false);
 		}
 	};
@@ -92,7 +98,7 @@ export const Pagination = ({
 						max={totalPages}
 						min={1}
 						value={inputValue}
-						onChange={(value) => setInputValue(value)}
+						onChange={(value) => setInputValue(Number(value))}
 						onBlur={() => goToPage(Number(inputValue))}
 						onKeyDown={handleKeyDown}
 						style={{
