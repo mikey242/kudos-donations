@@ -38,7 +38,8 @@ export const Pagination = ({
 	}, [currentPage, isEditing]);
 
 	const goToPage = async (page: number) => {
-		await updateParams({ paged: page });
+		const sanitizedPage = Math.min(Math.max(1, page), totalPages);
+		await updateParams({ paged: sanitizedPage });
 		setIsEditing(false);
 	};
 	const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
