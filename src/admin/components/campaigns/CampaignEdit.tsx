@@ -47,7 +47,7 @@ interface CampaignEditProps {
 
 const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const { updateParams } = useAdminQueryParams();
-	const { setHeaderContent, setPageTitle } = useAdminContext();
+	const { setHeaderContent } = useAdminContext();
 	const { recurringEnabled } = useSettingsContext();
 	const methods = useForm({
 		defaultValues: {
@@ -78,14 +78,6 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 			setHeaderContent(null);
 		};
 	}, [campaign, setHeaderContent, updateParams]);
-
-	useEffect(() => {
-		if (campaign) {
-			setPageTitle(
-				__('Campaign', 'kudos-donations') + ': ' + campaign.title.raw
-			);
-		}
-	}, [campaign, setPageTitle]);
 
 	useEffect(() => {
 		if (campaign) {
