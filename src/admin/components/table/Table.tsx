@@ -3,10 +3,10 @@ import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import type { Post } from '../../../types/posts';
-import { useCallback, useEffect } from '@wordpress/element';
+import { useCallback } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
-import { useAdminContext, usePostsContext } from '../../contexts';
+import { usePostsContext } from '../../contexts';
 
 export interface HeaderItem<T extends Post = Post> {
 	title: string | React.ReactNode;
@@ -76,12 +76,8 @@ export const Table = <T extends Post>({
 
 	return (
 		<>
-			{hasLoadedOnce && (
-				<TableControls
-					totalPages={totalPages}
-					totalItems={totalItems}
-				/>
-			)}
+			<TableControls totalPages={totalPages} totalItems={totalItems} />
+
 			<table
 				className="widefat striped rounded"
 				style={{
@@ -143,12 +139,7 @@ export const Table = <T extends Post>({
 					)}
 				</tbody>
 			</table>
-			{hasLoadedOnce && totalPages > 1 && (
-				<TableControls
-					totalPages={totalPages}
-					totalItems={totalItems}
-				/>
-			)}
+			<TableControls totalPages={totalPages} totalItems={totalItems} />
 		</>
 	);
 };
