@@ -116,7 +116,7 @@ For general information on how to use shortcodes, please visit [this page](https
 = 4.1.0 =
 * Major rework of admin pages - Transactions, Donors and Subscriptions are now rendered in react
 * Add ability to view individual post details (for Transactions, Donors, Subscriptions)
-* Add pagination to admin tables
+* Add pagination to all admin tables
 * Update HeadlessUI to v2.2.4
 
 
