@@ -1,6 +1,10 @@
 import React from 'react';
-import { TabPanel } from '@wordpress/components';
-import { useAdminContext } from './contexts';
+import {
+	TabPanel,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalVStack as VStack,
+} from '@wordpress/components';
+import { useQueryState } from 'nuqs';
 
 export interface AdminTab {
 	name: string;
@@ -15,20 +19,16 @@ interface AdminTabPanelProps {
 export const AdminTabPanel = ({
 	tabs,
 }: AdminTabPanelProps): React.ReactNode => {
-	const { searchParams, updateParam } = useAdminContext();
+	const [tabName, setTabName] = useQueryState('tab');
 
-	const updateTab = (tabName: string) => {
-		updateParam('tab', tabName);
+	const updateTab = async (tab: string) => {
+		await setTabName(tab);
 	};
 
 	return (
 		<div className="kudos-settings-tab-panel">
-			<TabPanel
-				initialTabName={searchParams.get('tab')}
-				onSelect={updateTab}
-				tabs={tabs}
-			>
-				{(tab) => tab.content}
+			<TabPanel initialTabName={tabName} onSelect={updateTab} tabs={tabs}>
+				{(tab) => <VStack spacing={4}>{tab.content}</VStack>}
 			</TabPanel>
 		</div>
 	);

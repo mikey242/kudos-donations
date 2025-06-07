@@ -1,7 +1,3 @@
-/**
- * @see https://www.codeinwp.com/blog/plugin-options-page-gutenberg/
- * @see https://github.com/HardeepAsrani/my-awesome-plugin/
- */
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
@@ -16,7 +12,7 @@ import {
 	Flex,
 	FlexItem,
 } from '@wordpress/components';
-import { useAdminContext, useSettingsContext } from '../contexts';
+import { useAdminContext, useSettingsContext } from '../../contexts';
 import { applyFilters } from '@wordpress/hooks';
 import type { KudosSettings } from '../../../types/settings';
 
@@ -60,11 +56,6 @@ export const SettingsPage = (): React.ReactNode => {
 	});
 	const { formState } = formMethods;
 	const formRef = useRef<HTMLFormElement | null>(null);
-	const { setPageTitle } = useAdminContext();
-
-	useEffect(() => {
-		setPageTitle(__('Settings', 'kudos-donations'));
-	}, [setPageTitle]);
 
 	const handleSave = () => {
 		formRef.current?.requestSubmit();
@@ -127,6 +118,10 @@ export const SettingsPage = (): React.ReactNode => {
 				</FlexItem>
 			</>
 		);
+
+		return () => {
+			setHeaderContent(null);
+		};
 	}, [
 		isVendorReady,
 		setHeaderContent,
@@ -153,16 +148,14 @@ export const SettingsPage = (): React.ReactNode => {
 						ref={formRef}
 						onSubmit={formMethods.handleSubmit(save)}
 					>
-						<div className="admin-wrap">
-							<AdminTabPanel tabs={tabs} />
-							<Spacer marginTop={'5'} />
-							<Flex justify="flex-start">
-								<SaveButton
-									isSaving={settingsSaving}
-									onClick={handleSave}
-								/>
-							</Flex>
-						</div>
+						<AdminTabPanel tabs={tabs} />
+						<Spacer marginTop={'5'} />
+						<Flex justify="flex-start">
+							<SaveButton
+								isSaving={settingsSaving}
+								onClick={handleSave}
+							/>
+						</Flex>
 					</form>
 				</FormProvider>
 			)}

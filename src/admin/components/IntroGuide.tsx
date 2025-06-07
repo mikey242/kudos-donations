@@ -1,8 +1,8 @@
-import intro from '../../../../assets/images/full-logo-green.png';
-import mollie from '../../../../assets/images/guide-mollie-api.png';
-import campaign from '../../../../assets/images/guide-campaign.png';
-import button from '../../../../assets/images/guide-button.png';
-import live from '../../../../assets/images/guide-test-live.png';
+import intro from '../../../assets/images/full-logo-green.png';
+import mollie from '../../../assets/images/guide-mollie-api.png';
+import campaign from '../../../assets/images/guide-campaign.png';
+import button from '../../../assets/images/guide-button.png';
+import live from '../../../assets/images/guide-test-live.png';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useSettingsContext } from '../contexts';

@@ -11,15 +11,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
-
-class SubscriptionsAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterface {
+class SubscriptionsAdminPage extends AbstractReactSubPage {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_page_title(): string {
-		return '';
+		return __( 'Kudos subscriptions', 'kudos-donations' );
 	}
 
 	/**
@@ -33,7 +31,7 @@ class SubscriptionsAdminPage extends AbstractAdminPage implements SubmenuAdminPa
 	 * {@inheritDoc}
 	 */
 	public static function get_menu_slug(): string {
-		return 'edit.php?post_type=' . SubscriptionPostType::get_slug();
+		return 'kudos-subscriptions';
 	}
 
 	/**

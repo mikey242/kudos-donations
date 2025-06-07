@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos\Domain\PostType;
 
 use IseardMedia\Kudos\Admin\TableColumnsTrait;
 use IseardMedia\Kudos\Domain\AbstractContentType;
-use IseardMedia\Kudos\Domain\HasAdminColumns;
 use IseardMedia\Kudos\Domain\HasMetaFieldsInterface;
 use IseardMedia\Kudos\Domain\HasRestFieldsInterface;
 use IseardMedia\Kudos\Domain\MapperTrait;
@@ -60,20 +59,39 @@ abstract class AbstractCustomPostType extends AbstractContentType implements Cus
 	}
 
 	/**
+	 * Add meta to REST query.
+	 */
+	private function add_meta_to_rest_query() {
+		add_filter(
+			'rest_' . $this->get_slug() . '_query',
+			function ( $args, $request ) {
+				$args += [
+					'meta_key'   => $request['meta_key'],
+					'meta_value' => $request['meta_value'],
+					'meta_query' => $request['meta_query'],
+				];
+
+				return $args;
+			},
+			10,
+			2
+		);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		$this->register_post_type();
-		if ( is_a( $this, HasMetaFieldsInterface::class ) ) {
+		if ( ! post_type_exists( $this->get_slug() ) ) {
+			$this->register_post_type();
+		}
+		if ( $this instanceof HasMetaFieldsInterface ) {
+			$this->add_meta_to_rest_query();
 			$this->register_meta_fields( apply_filters( $this->get_slug() . '_meta_fields', $this->get_meta_config() ), ObjectType::POST, $this->get_slug() );
 		}
 
-		if ( is_a( $this, HasRestFieldsInterface::class ) ) {
+		if ( $this instanceof HasRestFieldsInterface ) {
 			$this->register_rest_fields( apply_filters( $this->get_slug() . '_rest_fields', $this->get_rest_fields() ), $this->get_slug() );
-		}
-
-		if ( is_a( $this, HasAdminColumns::class ) ) {
-			$this->add_table_columns( $this->get_slug(), $this->get_columns_config() );
 		}
 	}
 }

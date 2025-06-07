@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-
-class DonorAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterface {
+class DonorAdminPage extends AbstractReactSubPage {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_page_title(): string {
-		return '';
+		return __( 'Kudos donors', 'kudos-donations' );
 	}
 
 	/**
@@ -34,7 +32,7 @@ class DonorAdminPage extends AbstractAdminPage implements SubmenuAdminPageInterf
 	 * {@inheritDoc}
 	 */
 	public static function get_menu_slug(): string {
-		return 'edit.php?post_type=' . DonorPostType::get_slug();
+		return 'kudos-donors';
 	}
 
 	/**

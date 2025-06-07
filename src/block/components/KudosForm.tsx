@@ -5,7 +5,7 @@ import React from 'react';
 import { FormRouter } from './FormRouter';
 import { KudosModal } from './KudosModal';
 import Render from './Render';
-import { useCampaignContext } from '../contexts/CampaignContext';
+import { useCampaignContext } from '../contexts';
 import { DonateButton } from './DonateButton';
 import { KudosLogoFullScreenAnimated } from './KudosLogo';
 import * as FrontControls from './controls';

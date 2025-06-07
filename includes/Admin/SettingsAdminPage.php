@@ -11,13 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Helper\Assets;
-
-class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterface, HasAssetsInterface, SubmenuAdminPageInterface {
-
-	public const SCRIPT_HANDLE_SETTINGS = 'kudos-donations-settings';
-	public const STYLE_HANDLE_ADMIN     = 'kudos-admin-style';
-
+class SettingsAdminPage extends AbstractReactSubPage {
 	/**
 	 * {@inheritDoc}
 	 */
@@ -37,54 +31,6 @@ class SettingsAdminPage extends AbstractAdminPage implements HasCallbackInterfac
 	 */
 	public static function get_menu_slug(): string {
 		return 'kudos-settings';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function callback(): void {
-		echo '<div class="wrap kudos-admin-page">';
-			printf( '<div id="root" data-title="%s"></div>', esc_attr( $this->get_page_title() ) );
-		echo '</div>';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function register_assets(): void {
-		// Enqueue the styles.
-		wp_enqueue_style(
-			self::STYLE_HANDLE_ADMIN,
-			Assets::get_style( 'admin/settings/kudos-admin-settings.css' ),
-			[ 'wp-components' ],
-			KUDOS_VERSION
-		);
-
-		// Get and enqueue the script.
-		$admin_js = Assets::get_script( 'admin/settings/kudos-admin-settings.js' );
-
-		wp_enqueue_script(
-			self::SCRIPT_HANDLE_SETTINGS,
-			$admin_js['url'],
-			$admin_js['dependencies'],
-			$admin_js['version'],
-			true
-		);
-
-		wp_set_script_translations( self::SCRIPT_HANDLE_SETTINGS, 'kudos-donations', \dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages' );
-
-		$localized_data = apply_filters(
-			'kudos_settings_page_localization',
-			[
-				'migrations_pending' => (bool) get_option( '_kudos_migrations_pending' ),
-			]
-		);
-
-		wp_localize_script(
-			self::SCRIPT_HANDLE_SETTINGS,
-			'kudos',
-			apply_filters( 'kudos_global_localization', $localized_data )
-		);
 	}
 
 	/**

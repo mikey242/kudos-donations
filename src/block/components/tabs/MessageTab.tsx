@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import { TextAreaControl } from '../controls';
-import { Campaign } from '../../contexts/CampaignContext';
+import type { Campaign } from '../../../types/posts';
 
 interface MessageTabProps {
 	campaign: Campaign;

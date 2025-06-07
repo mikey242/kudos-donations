@@ -1,9 +1,29 @@
 import apiFetch from '@wordpress/api-fetch';
 import { __, sprintf } from '@wordpress/i18n';
+import type { WPErrorResponse } from '../types/wp';
+
+interface MigrationProgress {
+	running?: string;
+	steps?: {
+		[stepName: string]: {
+			offset: number;
+		};
+	};
+}
+
+interface MigrationResponse {
+	completed: boolean;
+	next_offset?: number;
+	progress?: MigrationProgress;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-	const migrateButton = document.getElementById('kudos-migrate-button');
-	const migrationStatus = document.getElementById('kudos-migration-status');
+	const migrateButton = document.getElementById(
+		'kudos-migrate-button'
+	) as HTMLButtonElement | null;
+	const migrationStatus = document.getElementById(
+		'kudos-migration-status'
+	) as HTMLElement | null;
 	const batchSize = 1;
 	const offset = 0;
 
@@ -21,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 
-	function processMigrations(currentOffset, batch) {
+	function processMigrations(currentOffset: number, batch: number) {
 		apiFetch({
 			path: '/kudos/v1/migration/migrate/',
 			method: 'POST',
@@ -30,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				batch_size: batch,
 			},
 		})
-			.then((response) => {
+			.then((response: MigrationResponse) => {
 				// eslint-disable-next-line camelcase
 				const { completed, next_offset, progress } = response;
 				if (completed) {
@@ -66,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				// eslint-disable-next-line camelcase
 				processMigrations(next_offset ?? 0, batch);
 			})
-			.catch((error) => {
+			.catch((error: WPErrorResponse) => {
 				if (error?.message) {
 					migrationStatus.textContent = error.message;
 				} else {

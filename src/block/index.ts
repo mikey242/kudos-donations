@@ -1,18 +1,18 @@
+import type { BlockConfiguration } from '@wordpress/blocks';
 import { registerBlockType } from '@wordpress/blocks';
 import save from './save';
-import { KudosLogo } from './components/KudosLogo';
+import { KudosLogo } from './components';
 import metadata from './block.json';
 import Edit, { KudosButtonAttributes } from './components/Edit';
 
 /**
  * Register block.
  */
-registerBlockType<KudosButtonAttributes>(metadata.name, {
-	title: metadata.title,
-	description: metadata.description,
-	category: metadata.category,
-	attributes: metadata.attributes,
-	icon: KudosLogo,
-	edit: Edit,
-	save,
-});
+registerBlockType<KudosButtonAttributes>(
+	metadata as BlockConfiguration<KudosButtonAttributes>,
+	{
+		icon: KudosLogo,
+		edit: Edit,
+		save,
+	}
+);

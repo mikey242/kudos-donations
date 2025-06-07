@@ -4,13 +4,13 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
-import { useSettingsContext } from '../../contexts';
+import { useSettingsContext } from '../../../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Button, Disabled, Flex, Icon, PanelRow } from '@wordpress/components';
 import { RadioControl, TextControl, ToggleControl } from '../../controls';
 import type { WPErrorResponse, WPResponse } from '../../../../types/wp';
-import { SectionPanel } from '../../SectionPanel';
+import { Panel } from '../../Panel';
 
 const EmailTab = (): React.ReactNode => {
 	const { watch, getValues } = useFormContext();
@@ -49,7 +49,7 @@ const EmailTab = (): React.ReactNode => {
 
 	return (
 		<>
-			<SectionPanel title={__('Email receipts', 'kudos-donations')}>
+			<Panel header={__('Email receipts', 'kudos-donations')}>
 				<ToggleControl
 					label={__('Send email receipts', 'kudos-donations')}
 					help={__(
@@ -76,8 +76,8 @@ const EmailTab = (): React.ReactNode => {
 						'kudos-donations'
 					)}
 				/>
-			</SectionPanel>
-			<SectionPanel title={__('SMTP settings', 'kudos-donations')}>
+			</Panel>
+			<Panel header={__('SMTP settings', 'kudos-donations')}>
 				<PanelRow>
 					<ToggleControl
 						name="_kudos_smtp_enable"
@@ -220,8 +220,8 @@ const EmailTab = (): React.ReactNode => {
 						/>
 					</>
 				)}
-			</SectionPanel>
-			<SectionPanel title={__('Test email', 'kudos-donations')}>
+			</Panel>
+			<Panel header={__('Test email', 'kudos-donations')}>
 				<TextControl
 					label={__('Email address', 'kudos-donations')}
 					prefix="@"
@@ -243,7 +243,7 @@ const EmailTab = (): React.ReactNode => {
 						{__('Send', 'kudos-donations')}
 					</Button>
 				</Flex>
-			</SectionPanel>
+			</Panel>
 		</>
 	);
 };
