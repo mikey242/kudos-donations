@@ -26,8 +26,12 @@ const navItems: NavItem[] = [
 ];
 
 export const AdminMenu = (): React.ReactNode => {
-	const { params } = useAdminQueryParams();
+	const { params, setParams } = useAdminQueryParams();
 	const { page: currentView } = params;
+
+	const changePage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		void setParams({ page: e.currentTarget?.value });
+	};
 
 	return (
 		<div className="kudos-admin-menu">
@@ -41,7 +45,8 @@ export const AdminMenu = (): React.ReactNode => {
 							variant="link"
 							icon={icon ?? 'marker'}
 							className={isActive ? 'is-active' : ''}
-							href={`?page=${view}`}
+							onClick={changePage}
+							value={view}
 						>
 							{label}
 						</Button>

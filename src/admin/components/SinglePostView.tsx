@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCallback, useEffect } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useAdminContext, usePostsContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
@@ -62,25 +62,20 @@ interface PostEditProps {
 const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 	const { setPageTitle, setHeaderContent } = useAdminContext();
 	const { singularName } = usePostsContext();
-	const { setParams } = useAdminQueryParams();
-
-	const clearParams = useCallback(() => {
-		void setParams({ post: null, tab: null });
-	}, [setParams]);
+	const { updateParams } = useAdminQueryParams();
 
 	useEffect(() => {
 		setHeaderContent(
 			<NavigationButtons
 				onBack={() => {
-					void clearParams();
+					void updateParams({ post: null, tab: null });
 				}}
 			/>
 		);
 		return () => {
 			setHeaderContent(null);
-			void clearParams();
 		};
-	}, [clearParams, setHeaderContent]);
+	}, [updateParams, setHeaderContent]);
 
 	useEffect(() => {
 		if (post) {

@@ -6,8 +6,10 @@ import { dateI18n } from '@wordpress/date';
 import type { Subscription } from '../../../types/posts';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
 import { usePostsContext, useSettingsContext } from '../../contexts';
+import { useAdminQueryParams } from '../../hooks';
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
+	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
 	const {
 		handleDelete,
@@ -17,6 +19,14 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		totalPages,
 		totalItems,
 	} = usePostsContext();
+
+	const changeView = (postId: number) => {
+		void setParams({
+			page: 'kudos-transactions',
+			meta_key: 'donor_id',
+			meta_value: String(postId),
+		});
+	};
 
 	const headerItems = [
 		{
@@ -118,7 +128,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 						size="compact"
 						icon="money-alt"
 						disabled={!post.donor}
-						href={`?page=kudos-transactions&meta_key=donor_id&meta_value=${post.donor?.id}`}
+						onClick={() => changeView(post.donor?.id)}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					{settings._kudos_debug_mode && (

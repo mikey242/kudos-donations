@@ -12,6 +12,7 @@ import type { Campaign } from '../../types/posts';
 import SinglePostView from './SinglePostView';
 import { Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { useEffect, useState } from '@wordpress/element';
 
 const AdminPages = {
 	'kudos-campaigns': () => (
@@ -75,11 +76,18 @@ const AdminPages = {
 	'kudos-settings': () => <SettingsPage />,
 };
 
-export const AdminRouter = (): React.ReactNode => {
+export const AdminRouter = ({ defaultView }): React.ReactNode => {
 	const { params } = useAdminQueryParams();
+	const [selectedPage, setSelectedPage] = useState(defaultView);
 	const { page } = params;
 
-	const currentPage = AdminPages[page];
+	useEffect(() => {
+		if (page) {
+			setSelectedPage(page);
+		}
+	}, [page]);
+
+	const currentPage = AdminPages[selectedPage];
 	if (!currentPage) {
 		return (
 			<Flex justify="center">

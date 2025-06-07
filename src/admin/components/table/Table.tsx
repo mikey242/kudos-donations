@@ -5,7 +5,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import type { Post } from '../../../types/posts';
 import { useCallback, useEffect } from '@wordpress/element';
 import { TableControls } from './TableControls';
-import { useAdminTableParams } from '../../hooks';
+import { useAdminQueryParams } from '../../hooks';
 import { useAdminContext, usePostsContext } from '../../contexts';
 
 export interface HeaderItem<T extends Post = Post> {
@@ -46,7 +46,7 @@ export const Table = <T extends Post>({
 	totalItems,
 }: TableProps<T>): React.ReactNode => {
 	const isFirstLoad = isLoading && !hasLoadedOnce;
-	const { params, setParams } = useAdminTableParams();
+	const { params, setParams } = useAdminQueryParams();
 	const { setPageTitle } = useAdminContext();
 	const { pluralName } = usePostsContext();
 	const { order, orderby } = params;

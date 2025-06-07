@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
+import { useEffect, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AdminTab, AdminTabPanel } from '../AdminTabPanel';
@@ -43,7 +43,7 @@ interface CampaignEditProps {
 }
 
 const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
-	const { setParams } = useAdminQueryParams();
+	const { updateParams } = useAdminQueryParams();
 	const { setHeaderContent, setPageTitle } = useAdminContext();
 	const methods = useForm({
 		defaultValues: {
@@ -57,20 +57,16 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const { handleUpdate } = usePostsContext();
 	const [recurringEnabled, setRecurringEnabled] = useState<boolean>(false);
 
-	const clearParams = useCallback(() => {
-		return setParams({
-			post: null,
-			tab: null,
-		});
-	}, [setParams]);
-
 	useEffect(() => {
 		if (campaign) {
 			setHeaderContent(
 				<NavigationButtons
 					campaign={campaign}
 					onBack={() => {
-						void clearParams();
+						void updateParams({
+							post: null,
+							tab: null,
+						});
 					}}
 				/>
 			);
@@ -78,7 +74,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 		return () => {
 			setHeaderContent(null);
 		};
-	}, [campaign, clearParams, setHeaderContent]);
+	}, [campaign, setHeaderContent, updateParams]);
 
 	useEffect(() => {
 		if (campaign) {

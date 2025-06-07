@@ -8,7 +8,7 @@ import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 } from '@heroicons/react/24/outline';
-import { useAdminTableParams } from '../../hooks';
+import { useAdminQueryParams } from '../../hooks';
 
 interface PaginationProps {
 	totalPages: number;
@@ -19,7 +19,7 @@ export const Pagination = ({
 	totalItems,
 	totalPages,
 }: PaginationProps): React.ReactNode => {
-	const { params, setParams } = useAdminTableParams();
+	const { params, updateParams } = useAdminQueryParams();
 	const { paged: currentPage } = params;
 	const [isEditing, setIsEditing] = useState(false);
 	const [inputValue, setInputValue] = useState(String(currentPage));
@@ -32,7 +32,7 @@ export const Pagination = ({
 	}, [isEditing]);
 
 	const goToPage = async (page: number) => {
-		await setParams({ paged: page });
+		await updateParams({ paged: page });
 		setIsEditing(false);
 	};
 	const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {

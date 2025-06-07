@@ -13,8 +13,10 @@ import { dateI18n } from '@wordpress/date';
 import { useAdminContext, usePostsContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/posts';
+import { useAdminQueryParams } from '../../hooks';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
+	const { setParams } = useAdminQueryParams();
 	const { setHeaderContent } = useAdminContext();
 	const {
 		handleDelete,
@@ -37,6 +39,14 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 		);
 		return () => setHeaderContent(null);
 	}, [handleNew, setHeaderContent]);
+
+	const changeView = (postId: number) => {
+		void setParams({
+			page: 'kudos-transactions',
+			meta_key: 'campaign_id',
+			meta_value: String(postId),
+		});
+	};
 
 	const headerItems = [
 		{
@@ -116,7 +126,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 					<Button
 						size="compact"
 						icon="money-alt"
-						href={`?page=kudos-transactions&meta_key=campaign_id&meta_value=${post.id}`}
+						onClick={() => changeView(post.id)}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					<Button

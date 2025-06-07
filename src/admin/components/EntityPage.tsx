@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from '@wordpress/element';
 import { usePostsContext } from '../contexts';
 import type { Post } from '../../types/posts';
-import { parseAsInteger, useQueryState } from 'nuqs';
+import { useAdminQueryParams } from '../hooks';
 
 interface EntityPageProps {
 	renderTable: (
@@ -16,20 +16,21 @@ export const EntityPage = ({
 	renderTable,
 	renderEdit,
 }: EntityPageProps): React.ReactNode => {
-	const [postId, setPostId] = useQueryState('post', parseAsInteger);
+	const { params, updateParams } = useAdminQueryParams();
+	const { post: postId } = params;
 	const [currentPost, setCurrentPost] = useState<Post | null>(null);
 	const { posts, handleNew } = usePostsContext<Post>();
 
 	const newPost = async (input: React.SyntheticEvent | Partial<Post>) => {
 		await handleNew(input).then((response) => {
 			if (response?.id) {
-				setPostId(response.id);
+				updateParams({ post: response.id });
 			}
 		});
 	};
 
-	const editPost = async (id: number) => {
-		await setPostId(id);
+	const editPost = (id: number) => {
+		void updateParams({ post: id });
 	};
 
 	useEffect(() => {

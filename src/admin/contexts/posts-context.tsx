@@ -15,7 +15,7 @@ import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import type { Post } from '../../types/posts';
-import { useAdminTableParams } from '../hooks';
+import { useAdminQueryParams } from '../hooks';
 
 interface PostsContextValue<T extends Post = Post> {
 	posts: T[];
@@ -47,7 +47,7 @@ export const PostsProvider = <T extends Post>({
 	pluralName,
 	children,
 }: PostsProviderProps) => {
-	const { params } = useAdminTableParams();
+	const { params } = useAdminQueryParams();
 	const {
 		paged,
 		order,

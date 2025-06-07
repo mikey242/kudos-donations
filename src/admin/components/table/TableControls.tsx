@@ -7,7 +7,7 @@ import {
 	FlexItem,
 } from '@wordpress/components';
 import { Pagination } from './Pagination';
-import { useAdminTableParams } from '../../hooks';
+import { useAdminQueryParams } from '../../hooks';
 import { __ } from '@wordpress/i18n';
 
 interface TableControlsProps {
@@ -19,7 +19,7 @@ export const TableControls = ({
 	totalItems,
 	totalPages,
 }: TableControlsProps): React.ReactNode => {
-	const { resetParams, hasActiveFilters } = useAdminTableParams();
+	const { resetFilterParams, hasActiveFilters } = useAdminQueryParams();
 
 	return (
 		<>
@@ -31,7 +31,7 @@ export const TableControls = ({
 							size="compact"
 							variant={'tertiary'}
 							icon={'dismiss'}
-							onClick={resetParams}
+							onClick={resetFilterParams}
 						>
 							{__('Reset view', 'kudos-donations')}
 						</Button>
