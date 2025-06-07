@@ -1,19 +1,21 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import {
 	createContext,
 	useCallback,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 } from '@wordpress/element';
-// eslint-disable-next-line import/default
+
 import { useEntityRecords } from '@wordpress/core-data';
 import { __, sprintf } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
-import { useAdminContext } from './AdminContext';
-import type { Post } from '../../../types/wp';
+import type { Post } from '../../types/posts';
+import { useAdminQueryParams } from '../hooks';
 
 interface PostsContextValue<T extends Post = Post> {
 	posts: T[];
@@ -26,22 +28,36 @@ interface PostsContextValue<T extends Post = Post> {
 	handleUpdate: (data: Partial<T>) => Promise<any>;
 	handleDelete: (postId: number) => void;
 	handleDuplicate: (post: T) => void;
+	singularName: string;
+	pluralName: string;
 }
 
 const PostsContext = createContext<PostsContextValue<any> | null>(null);
 
 interface PostsProviderProps {
 	children: React.ReactNode;
-	singular?: string;
 	postType: string;
+	singularName: string;
+	pluralName: string;
 }
 
 export const PostsProvider = <T extends Post>({
 	postType,
-	singular = 'Post',
+	singularName,
+	pluralName,
 	children,
 }: PostsProviderProps) => {
-	const { searchParams } = useAdminContext();
+	const { params } = useAdminQueryParams();
+	const {
+		paged,
+		order,
+		orderby,
+		meta_key,
+		meta_value,
+		meta_query,
+		metaType,
+		search,
+	} = params;
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
@@ -55,15 +71,20 @@ export const PostsProvider = <T extends Post>({
 		totalItems,
 	} = useEntityRecords<T>('postType', postType, {
 		per_page: 20,
-		page: parseInt(searchParams.get('paged') ?? '1', 10),
-		order: searchParams.get('order') ?? 'desc',
-		orderby: searchParams.get('orderby') ?? 'date',
+		page: Number(paged),
+		search,
+		order,
+		orderby,
+		meta_key,
+		meta_value,
+		meta_query,
+		metaType,
 	});
 
 	useEffect(() => {
+		setIsLoading(!hasResolved);
 		if (hasResolved) {
 			setCachedPosts(posts ?? []);
-			setIsLoading(false);
 			setHasLoadedOnce(true);
 		}
 	}, [posts, hasResolved]);
@@ -86,26 +107,33 @@ export const PostsProvider = <T extends Post>({
 					sprintf(
 						/* translators: %1$s is the post type and %2$s is the error message. */
 						__('Error creating %1$s: %2$s', 'kudos-donations'),
-						singular,
+						singularName,
 						error.message
 					)
 				);
 				return null;
 			}
 		},
-		[createErrorNotice, postType, saveEntityRecord, singular]
+		[createErrorNotice, postType, saveEntityRecord, singularName]
 	);
 
 	const handleUpdate = useCallback(
 		async (data: Partial<T>) => {
 			const response = await handleSave(data);
-			void createSuccessNotice(__('Post updated', 'kudos-donations'), {
-				type: 'snackbar',
-				icon: <Icon icon="saved" />,
-			});
+			void createSuccessNotice(
+				sprintf(
+					/* translators: %s is the post type singular name. */
+					__('%s updated', 'kudos-donations'),
+					singularName
+				),
+				{
+					type: 'snackbar',
+					icon: <Icon icon="saved" />,
+				}
+			);
 			return response;
 		},
-		[createSuccessNotice, handleSave]
+		[createSuccessNotice, handleSave, singularName]
 	);
 
 	// Handles creating a post.
@@ -122,8 +150,11 @@ export const PostsProvider = <T extends Post>({
 
 			// Set default arguments.
 			const {
-				/* translators: %s is the post type name. */
-				title = sprintf(__('New %s', 'kudos-donations'), singular),
+				title = sprintf(
+					/* translators: %s is the post type name. */
+					__('New %s', 'kudos-donations'),
+					singularName
+				),
 				status = 'publish',
 				...rest
 			} = (args as Partial<T>) || {};
@@ -136,8 +167,11 @@ export const PostsProvider = <T extends Post>({
 
 			if (response) {
 				void createSuccessNotice(
-					/* translators: %s is the post type name. */
-					sprintf(__('%s created', 'kudos-donations'), singular),
+					sprintf(
+						/* translators: %s is the post type name. */
+						__('%s created', 'kudos-donations'),
+						singularName
+					),
 					{
 						type: 'snackbar',
 						icon: <Icon icon="plus" />,
@@ -146,7 +180,7 @@ export const PostsProvider = <T extends Post>({
 			}
 			return response;
 		},
-		[createSuccessNotice, handleSave, singular]
+		[createSuccessNotice, handleSave, singularName]
 	);
 
 	const handleDelete = useCallback(
@@ -156,8 +190,11 @@ export const PostsProvider = <T extends Post>({
 					force: true,
 				});
 				await createSuccessNotice(
-					/* translators: %s is the post type name. */
-					sprintf(__('%s deleted', 'kudos-donations'), singular),
+					sprintf(
+						/* translators: %s is the post type name. */
+						__('%s deleted', 'kudos-donations'),
+						singularName
+					),
 					{
 						type: 'snackbar',
 						icon: <Icon icon="trash" />,
@@ -168,7 +205,7 @@ export const PostsProvider = <T extends Post>({
 					sprintf(
 						/* translators: %1$s is the post type and %2$s is the error message. */
 						__('Error deleting %1$s: %2$s', 'kudos-donations'),
-						singular,
+						singularName,
 						error?.message ?? 'Unknown error'
 					),
 					{ type: 'snackbar' }
@@ -179,35 +216,56 @@ export const PostsProvider = <T extends Post>({
 			deleteEntityRecord,
 			postType,
 			createSuccessNotice,
-			singular,
+			singularName,
 			createErrorNotice,
 		]
 	);
 
 	// Prepares data for duplicating current post.
-	const handleDuplicate = (post: T) => {
-		const { id, ...rest } = post;
+	const handleDuplicate = useCallback(
+		(post: T) => {
+			const { id, ...rest } = post;
 
-		const data = {
-			...rest,
-			title: { raw: post.title.raw, rendered: '' },
-			date: new Date().toISOString(),
-		} as Partial<T>;
-		return handleSave(data);
-	};
+			const data = {
+				...rest,
+				title: { raw: post.title.raw, rendered: '' },
+				date: new Date().toISOString(),
+			} as Partial<T>;
+			return handleSave(data);
+		},
+		[handleSave]
+	);
 
-	const data: PostsContextValue<T> = {
-		posts: cachedPosts,
-		totalItems,
-		totalPages,
-		hasResolved,
-		isLoading,
-		hasLoadedOnce,
-		handleNew,
-		handleDuplicate,
-		handleDelete,
-		handleUpdate,
-	};
+	const data: PostsContextValue<T> = useMemo(
+		() => ({
+			posts: cachedPosts,
+			totalItems,
+			totalPages,
+			hasResolved,
+			isLoading,
+			hasLoadedOnce,
+			handleNew,
+			handleDuplicate,
+			handleDelete,
+			handleUpdate,
+			singularName,
+			pluralName,
+		}),
+		[
+			cachedPosts,
+			handleDelete,
+			handleDuplicate,
+			handleNew,
+			handleUpdate,
+			hasLoadedOnce,
+			hasResolved,
+			isLoading,
+			singularName,
+			pluralName,
+			totalItems,
+			totalPages,
+		]
+	);
 
 	return (
 		<>

@@ -1,6 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
-import { useSettingsContext } from '../../contexts';
+import { useSettingsContext } from '../../../contexts';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import {
@@ -12,7 +12,7 @@ import {
 	Icon,
 } from '@wordpress/components';
 import { RadioGroupControl, TextControl } from '../../controls';
-import { SectionPanel } from '../../SectionPanel';
+import { Panel } from '../../Panel';
 
 type ApiMode = 'live' | 'test';
 
@@ -74,7 +74,7 @@ const MollieTab = (): React.ReactNode => {
 
 	return (
 		<>
-			<SectionPanel title={__('API Mode', 'kudos-donations')}>
+			<Panel header={__('API Mode', 'kudos-donations')}>
 				<RadioGroupControl
 					name="_kudos_vendor_mollie_api_mode"
 					label={__('API Mode', 'kudos-donations')}
@@ -95,11 +95,9 @@ const MollieTab = (): React.ReactNode => {
 						'kudos-donations'
 					)}
 				/>
-			</SectionPanel>
+			</Panel>
 
-			<SectionPanel
-				title={__('Available payment methods', 'kudos-donations')}
-			>
+			<Panel header={__('Available payment methods', 'kudos-donations')}>
 				{renderPaymentMethods()}
 				<p>
 					{__(
@@ -125,8 +123,8 @@ const MollieTab = (): React.ReactNode => {
 						{__('Refresh Payment Methods', 'kudos-donations')}
 					</Button>
 				</Flex>
-			</SectionPanel>
-			<SectionPanel title={__('API Keys', 'kudos-donations')}>
+			</Panel>
+			<Panel header={__('API Keys', 'kudos-donations')}>
 				{(['live', 'test'] as ApiMode[]).map((mode, i) => {
 					const isDisabled = !!apiKeyStatus[mode];
 					return (
@@ -176,7 +174,7 @@ const MollieTab = (): React.ReactNode => {
 						{__('Reset Mollie', 'kudos-donations')}
 					</Button>
 				</Flex>
-			</SectionPanel>
+			</Panel>
 		</>
 	);
 };

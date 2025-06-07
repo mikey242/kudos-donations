@@ -15,7 +15,7 @@ import {
 } from '@wordpress/components';
 import { useCopyToClipboard } from '@wordpress/compose';
 import { RadioGroupControlBase } from '../controls';
-import type { Campaign } from '../../../types/wp';
+import type { Campaign } from '../../../types/posts';
 
 interface GenerateShortcodeProps {
 	campaign: Campaign;

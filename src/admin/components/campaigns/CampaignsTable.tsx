@@ -1,22 +1,23 @@
 import {
 	Button,
 	ColorIndicator,
+	Flex,
 	ProgressBar,
 	Tooltip,
 	VisuallyHidden,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { Table } from '../Table';
+import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../contexts';
-import GenerateShortcode from './GenerateShortcode';
+import { useAdminContext, usePostsContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
-import type { Campaign } from '../../../types/wp';
-
-export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
+import type { Campaign } from '../../../types/posts';
+import { useAdminQueryParams } from '../../hooks';
+export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
-	const { setPageTitle } = useAdminContext();
+	const { setParams } = useAdminQueryParams();
+	const { setHeaderContent } = useAdminContext();
 	const {
 		handleDelete,
 		handleDuplicate,
@@ -28,25 +29,45 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 	} = usePostsContext();
 
 	useEffect(() => {
-		setPageTitle(__('Your campaigns', 'kudos-donations'));
-	}, [setPageTitle]);
+		setHeaderContent(
+			<Button
+				variant="primary"
+				onClick={handleNew}
+				text={__('New campaign', 'kudos-donations')}
+				icon="plus"
+			/>
+		);
+		return () => setHeaderContent(null);
+	}, [handleNew, setHeaderContent]);
+
+	const changeView = (postId: number) => {
+		void setParams({
+			page: 'kudos-transactions',
+			meta_key: 'campaign_id',
+			meta_value: String(postId),
+		});
+	};
 
 	const headerItems = [
 		{
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
 			orderby: 'title',
+			width: '25%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<Button
 					showTooltip={true}
-					style={{ textDecoration: 'none', color: 'inherit' }}
+					style={{
+						fontWeight: 'bold',
+						color: 'inherit',
+					}}
 					label={sprintf(
 						/* translators: %s is the campaign name */
 						__('Edit %s', 'kudos-donations'),
 						post.title.raw
 					)}
 					variant="link"
-					onClick={() => handleEdit('edit', post.id)}
+					onClick={() => handleEdit(post.id)}
 				>
 					{post.title.raw}
 				</Button>
@@ -55,6 +76,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'theme',
 			title: __('Theme color', 'kudos-donations'),
+			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<ColorIndicator colorValue={post.meta?.theme_color} />
 			),
@@ -62,6 +84,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'progress',
 			title: __('Progress', 'kudos-donations'),
+			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => {
 				const total = post.total;
 				const goal = post.meta.goal;
@@ -88,6 +111,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
+			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),
@@ -98,16 +122,22 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 				<VisuallyHidden>{__('Edit', 'kudos-donations')}</VisuallyHidden>
 			),
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<>
+				<Flex justify="flex-end">
+					<Button
+						size="compact"
+						icon="money-alt"
+						onClick={() => changeView(post.id)}
+						title={__('View donations', 'kudos-donations')}
+					/>
 					<Button
 						size="compact"
 						icon="edit"
 						label={__('Edit campaign', 'kudos-donations')}
-						onClick={() => handleEdit('edit', post.id)}
+						onClick={() => handleEdit(post.id)}
 					/>
 					<Button
 						size="compact"
-						icon="media-document"
+						icon="admin-page"
 						label={__('Duplicate campaign', 'kudos-donations')}
 						onClick={() => handleDuplicate(post)}
 					/>
@@ -127,8 +157,7 @@ export const CampaignsTable = ({ handleEdit }): React.ReactNode => {
 							);
 						}}
 					/>
-					<GenerateShortcode campaign={post} iconOnly />
-				</>
+				</Flex>
 			),
 		},
 	];

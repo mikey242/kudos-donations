@@ -18,7 +18,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { applyFilters } from '@wordpress/hooks';
 import BaseTab from './tabs/BaseTab';
-import { Campaign } from '../contexts/CampaignContext';
+import type { Campaign } from '../../types/posts';
 
 interface TabDefinition {
 	name: string;
