@@ -95,43 +95,6 @@ class CompatibilityService {
 			return $wp_compatibility;
 		}
 
-		$rest_compatibility = $this->check_rest_api();
-		if ( is_wp_error( $rest_compatibility ) ) {
-			return $rest_compatibility;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Checks if the Rest API is working.
-	 *
-	 * @return true|WP_Error True if all checks pass, WP_Error if any fail.
-	 */
-	public function check_rest_api() {
-		$response = wp_remote_get( rest_url( 'wp/v2/types/post' ) );
-
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message();
-		} else {
-			$status_code = wp_remote_retrieve_response_code( $response );
-			if ( 200 !== $status_code ) {
-				$body          = wp_remote_retrieve_body( $response );
-				$json          = json_decode( $body, true );
-				$error_message = $json['message'] ?? 'Unexpected REST API status code: ' . $status_code;
-			}
-		}
-
-		if ( isset( $error_message ) ) {
-			return new WP_Error(
-				'rest_api_error',
-				\sprintf(
-				/* translators: %s: Error returned by rest api */
-					__( 'This plugin requires a working WordPress REST API. Error:  %s.', 'kudos-donations' ),
-					esc_html( $error_message ),
-				)
-			);
-		}
 		return true;
 	}
 }
