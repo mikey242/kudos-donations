@@ -77,12 +77,6 @@ const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 		};
 	}, [updateParams, setHeaderContent]);
 
-	useEffect(() => {
-		if (post) {
-			setPageTitle(singularName + ': ' + post.id);
-		}
-	}, [post, singularName, setPageTitle]);
-
 	if (!post) {
 		return null;
 	}

@@ -56,11 +56,6 @@ export const SettingsPage = (): React.ReactNode => {
 	});
 	const { formState } = formMethods;
 	const formRef = useRef<HTMLFormElement | null>(null);
-	const { setPageTitle } = useAdminContext();
-
-	useEffect(() => {
-		setPageTitle(__('Settings', 'kudos-donations'));
-	}, [setPageTitle]);
 
 	const handleSave = () => {
 		formRef.current?.requestSubmit();
