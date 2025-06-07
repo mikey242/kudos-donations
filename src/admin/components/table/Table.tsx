@@ -47,15 +47,8 @@ export const Table = <T extends Post>({
 }: TableProps<T>): React.ReactNode => {
 	const isFirstLoad = isLoading && !hasLoadedOnce;
 	const { params, setParams } = useAdminQueryParams();
-	const { setPageTitle } = useAdminContext();
 	const { pluralName } = usePostsContext();
 	const { order, orderby } = params;
-
-	useEffect(() => {
-		if (pluralName) {
-			setPageTitle(`Your ${pluralName}`);
-		}
-	}, [pluralName, setPageTitle]);
 
 	const getSortIcon = (value: string): IconType => {
 		if (orderby !== value) {
