@@ -27,7 +27,7 @@ class CompatibilityService {
 			wp_die(
 				\sprintf(
 				/* translators: %s: Error message returned by check */
-					esc_html( __( 'Kudos Donations requires a working WordPress REST API. Error: %s', 'kudos-donations' ) ),
+					esc_html( __( 'Kudos Donations failed to activate. Error: %s', 'kudos-donations' ) ),
 					esc_html( $compatibility->get_error_message() )
 				),
 				esc_html( __( 'Kudos Donations Activation Error', 'kudos-donations' ) ),
