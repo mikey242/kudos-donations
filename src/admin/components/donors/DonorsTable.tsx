@@ -5,8 +5,10 @@ import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { usePostsContext, useSettingsContext } from '../../contexts';
 import type { Donor } from '../../../types/posts';
+import { useAdminQueryParams } from '../../hooks';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { settings } = useSettingsContext();
+	const { setParams } = useAdminQueryParams();
 	const {
 		handleDelete,
 		isLoading,
@@ -15,6 +17,14 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		totalPages,
 		totalItems,
 	} = usePostsContext();
+
+	const changeView = (postId: number) => {
+		void setParams({
+			page: 'kudos-transactions',
+			meta_key: 'donor_id',
+			meta_value: String(postId),
+		});
+	};
 
 	const headerItems = [
 		{
@@ -53,7 +63,8 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 					<Button
 						size="compact"
 						icon="money-alt"
-						href={`?page=kudos-transactions&meta_key=donor_id&meta_value=${post.id}`}
+						onClick={() => changeView(post.id)}
+						// href={`?page=kudos-transactions&meta_key=donor_id&meta_value=${post.id}`}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					{settings._kudos_debug_mode && (

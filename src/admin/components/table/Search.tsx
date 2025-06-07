@@ -1,10 +1,10 @@
 import { TextControl } from '@wordpress/components';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import React from 'react';
-import { useAdminTableParams } from '../../hooks';
+import { useAdminQueryParams } from '../../hooks';
 
 export const Search = () => {
-	const { params, setParams } = useAdminTableParams();
+	const { params, setParams } = useAdminQueryParams();
 	const [input, setInput] = useState(params.search || '');
 
 	// Debounce search updates
