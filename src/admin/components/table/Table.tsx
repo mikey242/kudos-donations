@@ -48,14 +48,14 @@ export const Table = <T extends Post>({
 	const isFirstLoad = isLoading && !hasLoadedOnce;
 	const { params, setParams } = useAdminTableParams();
 	const { setPageTitle } = useAdminContext();
-	const { postTypes } = usePostsContext();
+	const { pluralName } = usePostsContext();
 	const { order, orderby } = params;
 
 	useEffect(() => {
-		if (postTypes) {
-			setPageTitle(`Your ${postTypes.labels.name}`);
+		if (pluralName) {
+			setPageTitle(`Your ${pluralName}`);
 		}
-	}, [postTypes, setPageTitle]);
+	}, [pluralName, setPageTitle]);
 
 	const getSortIcon = (value: string): IconType => {
 		if (orderby !== value) {
@@ -135,7 +135,7 @@ export const Table = <T extends Post>({
 								{sprintf(
 									// translators: %s is the plural post type name (e.g. Transactions)
 									__('No %s', 'kudos-donations'),
-									postTypes?.name
+									pluralName
 								)}
 							</p>
 						</TableMessage>

@@ -8,10 +8,10 @@ import {
 	useMemo,
 	useState,
 } from '@wordpress/element';
-import type { Type } from '@wordpress/core-data';
-import { useEntityRecords, store as coreDataStore } from '@wordpress/core-data';
+
+import { useEntityRecords } from '@wordpress/core-data';
 import { __, sprintf } from '@wordpress/i18n';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import type { Post } from '../../types/posts';
@@ -28,7 +28,8 @@ interface PostsContextValue<T extends Post = Post> {
 	handleUpdate: (data: Partial<T>) => Promise<any>;
 	handleDelete: (postId: number) => void;
 	handleDuplicate: (post: T) => void;
-	postTypes: Type;
+	singularName: string;
+	pluralName: string;
 }
 
 const PostsContext = createContext<PostsContextValue<any> | null>(null);
@@ -36,10 +37,14 @@ const PostsContext = createContext<PostsContextValue<any> | null>(null);
 interface PostsProviderProps {
 	children: React.ReactNode;
 	postType: string;
+	singularName: string;
+	pluralName: string;
 }
 
 export const PostsProvider = <T extends Post>({
 	postType,
+	singularName,
+	pluralName,
 	children,
 }: PostsProviderProps) => {
 	const { params } = useAdminTableParams();
@@ -76,20 +81,6 @@ export const PostsProvider = <T extends Post>({
 		metaType,
 	});
 
-	const postTypes = useSelect(
-		(select) => select(coreDataStore).getPostType(postType),
-		[postType]
-	);
-
-	const hasResolvedPostType = useSelect(
-		(select) =>
-			// @ts-ignore
-			select(coreDataStore).hasFinishedResolution('getPostType', [
-				postType,
-			]),
-		[postType]
-	);
-
 	useEffect(() => {
 		setIsLoading(!hasResolved);
 		if (hasResolved) {
@@ -116,14 +107,14 @@ export const PostsProvider = <T extends Post>({
 					sprintf(
 						/* translators: %1$s is the post type and %2$s is the error message. */
 						__('Error creating %1$s: %2$s', 'kudos-donations'),
-						postTypes.labels.singular_name,
+						singularName,
 						error.message
 					)
 				);
 				return null;
 			}
 		},
-		[createErrorNotice, postType, postTypes, saveEntityRecord]
+		[createErrorNotice, postType, saveEntityRecord, singularName]
 	);
 
 	const handleUpdate = useCallback(
@@ -133,7 +124,7 @@ export const PostsProvider = <T extends Post>({
 				sprintf(
 					/* translators: %s is the post type singular name. */
 					__('%s updated', 'kudos-donations'),
-					postTypes.labels.singular_name
+					singularName
 				),
 				{
 					type: 'snackbar',
@@ -142,7 +133,7 @@ export const PostsProvider = <T extends Post>({
 			);
 			return response;
 		},
-		[createSuccessNotice, handleSave, postTypes]
+		[createSuccessNotice, handleSave, singularName]
 	);
 
 	// Handles creating a post.
@@ -162,7 +153,7 @@ export const PostsProvider = <T extends Post>({
 				title = sprintf(
 					/* translators: %s is the post type name. */
 					__('New %s', 'kudos-donations'),
-					postTypes.labels.singular_name
+					singularName
 				),
 				status = 'publish',
 				...rest
@@ -179,7 +170,7 @@ export const PostsProvider = <T extends Post>({
 					sprintf(
 						/* translators: %s is the post type name. */
 						__('%s created', 'kudos-donations'),
-						postTypes.labels.singular_name
+						singularName
 					),
 					{
 						type: 'snackbar',
@@ -189,7 +180,7 @@ export const PostsProvider = <T extends Post>({
 			}
 			return response;
 		},
-		[createSuccessNotice, handleSave, postTypes]
+		[createSuccessNotice, handleSave, singularName]
 	);
 
 	const handleDelete = useCallback(
@@ -202,7 +193,7 @@ export const PostsProvider = <T extends Post>({
 					sprintf(
 						/* translators: %s is the post type name. */
 						__('%s deleted', 'kudos-donations'),
-						postTypes.labels.singular_name
+						singularName
 					),
 					{
 						type: 'snackbar',
@@ -214,7 +205,7 @@ export const PostsProvider = <T extends Post>({
 					sprintf(
 						/* translators: %1$s is the post type and %2$s is the error message. */
 						__('Error deleting %1$s: %2$s', 'kudos-donations'),
-						postTypes.labels.singular_name,
+						singularName,
 						error?.message ?? 'Unknown error'
 					),
 					{ type: 'snackbar' }
@@ -225,7 +216,7 @@ export const PostsProvider = <T extends Post>({
 			deleteEntityRecord,
 			postType,
 			createSuccessNotice,
-			postTypes,
+			singularName,
 			createErrorNotice,
 		]
 	);
@@ -257,7 +248,8 @@ export const PostsProvider = <T extends Post>({
 			handleDuplicate,
 			handleDelete,
 			handleUpdate,
-			postTypes,
+			singularName,
+			pluralName,
 		}),
 		[
 			cachedPosts,
@@ -268,7 +260,8 @@ export const PostsProvider = <T extends Post>({
 			hasLoadedOnce,
 			hasResolved,
 			isLoading,
-			postTypes,
+			singularName,
+			pluralName,
 			totalItems,
 			totalPages,
 		]
@@ -277,7 +270,7 @@ export const PostsProvider = <T extends Post>({
 	return (
 		<>
 			<PostsContext.Provider value={data}>
-				{hasResolvedPostType && children}
+				{children}
 			</PostsContext.Provider>
 		</>
 	);

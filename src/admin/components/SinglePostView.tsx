@@ -61,7 +61,7 @@ interface PostEditProps {
 
 const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 	const { setPageTitle, setHeaderContent } = useAdminContext();
-	const { postTypes } = usePostsContext();
+	const { singularName } = usePostsContext();
 	const { setParams } = useAdminQueryParams();
 
 	const clearParams = useCallback(() => {
@@ -84,9 +84,9 @@ const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 
 	useEffect(() => {
 		if (post) {
-			setPageTitle(postTypes.labels.singular_name + ': ' + post.id);
+			setPageTitle(singularName + ': ' + post.id);
 		}
-	}, [post, postTypes, setPageTitle]);
+	}, [post, singularName, setPageTitle]);
 
 	if (!post) {
 		return null;
