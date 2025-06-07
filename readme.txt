@@ -119,7 +119,6 @@ For general information on how to use shortcodes, please visit [this page](https
 * Add pagination to all admin tables
 * Update HeadlessUI to v2.2.4
 
-
 = 4.0.11 =
 * Debug page renamed to advanced
 * Added action for bulk moving transactions between campaigns
