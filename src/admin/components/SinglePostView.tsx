@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useAdminContext, usePostsContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import type { Post } from '../../types/posts';
@@ -60,9 +60,9 @@ interface PostEditProps {
 }
 
 const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
-	const { setPageTitle, setHeaderContent } = useAdminContext();
-	const { singularName } = usePostsContext();
+	const { setHeaderContent } = useAdminContext();
 	const { updateParams } = useAdminQueryParams();
+	const { singularName } = usePostsContext();
 
 	useEffect(() => {
 		setHeaderContent(
@@ -89,7 +89,13 @@ const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 
 	return (
 		<VStack spacing={4}>
-			<Panel header={__('Post details', 'kudos-donations')}>
+			<Panel
+				header={sprintf(
+					// translators: %s is the post type singular name (e.g Transaction)
+					__('%s details', 'kudos-donations'),
+					singularName
+				)}
+			>
 				<PostDetails post={post} />
 			</Panel>
 			<Panel header={__('Meta details', 'kudos-donations')}>
