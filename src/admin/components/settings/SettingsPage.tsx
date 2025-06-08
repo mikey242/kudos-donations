@@ -140,7 +140,7 @@ export const SettingsPage = (): React.ReactNode => {
 	};
 
 	return (
-		<>
+		<div className="admin-wrap">
 			{settingsReady && (
 				<FormProvider {...formMethods}>
 					<form
@@ -159,6 +159,6 @@ export const SettingsPage = (): React.ReactNode => {
 					</form>
 				</FormProvider>
 			)}
-		</>
+		</div>
 	);
 };
