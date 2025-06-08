@@ -49,6 +49,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 							updateParams({
 								meta_key: filter.meta_key,
 								meta_value: filter.meta_value,
+								paged: 1,
 							})
 						}
 					>
