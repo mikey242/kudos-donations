@@ -4,9 +4,7 @@ import {
 	createContext,
 	useCallback,
 	useContext,
-	useEffect,
 	useMemo,
-	useState,
 } from '@wordpress/element';
 
 import { useEntityRecords } from '@wordpress/core-data';
@@ -20,8 +18,6 @@ import { useAdminQueryParams } from '../hooks';
 interface PostsContextValue<T extends Post = Post> {
 	posts: T[];
 	hasResolved: boolean;
-	isLoading: boolean;
-	hasLoadedOnce: boolean;
 	totalPages: number;
 	totalItems: number;
 	handleNew: (args?: Partial<T> | React.SyntheticEvent) => Promise<any>;
@@ -61,9 +57,6 @@ export const PostsProvider = <T extends Post>({
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
-	const [cachedPosts, setCachedPosts] = useState<T[]>([]);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
 	const {
 		records: posts,
 		hasResolved,
@@ -80,14 +73,6 @@ export const PostsProvider = <T extends Post>({
 		meta_query,
 		metaType,
 	});
-
-	useEffect(() => {
-		setIsLoading(!hasResolved);
-		if (hasResolved) {
-			setCachedPosts(posts ?? []);
-			setHasLoadedOnce(true);
-		}
-	}, [posts, hasResolved]);
 
 	const handleSave = useCallback(
 		async (args = {}): Promise<T | null> => {
@@ -238,12 +223,10 @@ export const PostsProvider = <T extends Post>({
 
 	const data: PostsContextValue<T> = useMemo(
 		() => ({
-			posts: cachedPosts,
+			posts,
 			totalItems,
 			totalPages,
 			hasResolved,
-			isLoading,
-			hasLoadedOnce,
 			handleNew,
 			handleDuplicate,
 			handleDelete,
@@ -252,14 +235,12 @@ export const PostsProvider = <T extends Post>({
 			pluralName,
 		}),
 		[
-			cachedPosts,
+			posts,
 			handleDelete,
 			handleDuplicate,
 			handleNew,
 			handleUpdate,
-			hasLoadedOnce,
 			hasResolved,
-			isLoading,
 			singularName,
 			pluralName,
 			totalItems,

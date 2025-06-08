@@ -3,7 +3,7 @@ import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import type { Post } from '../../../types/posts';
-import { useCallback } from '@wordpress/element';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
 import { usePostsContext } from '../../contexts';
@@ -42,16 +42,24 @@ interface TableProps<T extends Post = Post> {
 export const Table = <T extends Post>({
 	headerItems,
 	posts,
-	isLoading,
-	hasLoadedOnce = false,
 	totalPages,
 	totalItems,
 	filters,
 }: TableProps<T>): React.ReactNode => {
-	const isFirstLoad = isLoading && !hasLoadedOnce;
+	const [cachedPosts, setCachedPosts] = useState<Post[]>(posts);
+	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { params, setParams } = useAdminQueryParams();
-	const { pluralName } = usePostsContext();
+	const { pluralName, hasResolved } = usePostsContext();
 	const { order, orderby } = params;
+
+	useEffect(() => {
+		setIsLoading(!hasResolved);
+		if (hasResolved) {
+			setCachedPosts(posts ?? []);
+			setHasLoadedOnce(true);
+		}
+	}, [posts, hasResolved]);
 
 	const getSortIcon = (value: string): IconType => {
 		if (orderby !== value) {
@@ -87,12 +95,15 @@ export const Table = <T extends Post>({
 			<table
 				className="widefat striped rounded"
 				style={{
-					tableLayout: posts.length === 0 ? 'auto' : 'fixed',
+					tableLayout:
+						cachedPosts?.length === 0 || !cachedPosts
+							? 'auto'
+							: 'fixed',
 				}}
 			>
 				<thead>
 					<tr>
-						{headerItems.map((item) => (
+						{headerItems?.map((item) => (
 							<th
 								key={item.key}
 								scope="col"
@@ -120,11 +131,11 @@ export const Table = <T extends Post>({
 				</thead>
 				<tbody className={isLoading ? 'is-loading' : 'is-loaded'}>
 					{/* eslint-disable-next-line no-nested-ternary */}
-					{isFirstLoad ? (
+					{!cachedPosts ? (
 						<TableMessage>
 							<Spinner style={{ margin: 0, padding: '1em' }} />
 						</TableMessage>
-					) : posts.length === 0 && hasLoadedOnce ? (
+					) : cachedPosts?.length === 0 && hasLoadedOnce ? (
 						<TableMessage>
 							<p>
 								{sprintf(
@@ -135,7 +146,7 @@ export const Table = <T extends Post>({
 							</p>
 						</TableMessage>
 					) : (
-						posts.map((post) => (
+						cachedPosts?.map((post) => (
 							<TableRow
 								key={post.slug}
 								post={post}

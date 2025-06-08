@@ -18,15 +18,8 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { setHeaderContent } = useAdminContext();
-	const {
-		handleDelete,
-		handleDuplicate,
-		isLoading,
-		hasLoadedOnce,
-		posts,
-		totalPages,
-		totalItems,
-	} = usePostsContext();
+	const { handleDelete, handleDuplicate, posts, totalPages, totalItems } =
+		usePostsContext();
 
 	useEffect(() => {
 		setHeaderContent(
@@ -53,7 +46,6 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
 			orderby: 'title',
-			width: '25%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<Button
 					showTooltip={true}
@@ -76,7 +68,6 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 		{
 			key: 'theme',
 			title: __('Theme color', 'kudos-donations'),
-			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<ColorIndicator colorValue={post.meta?.theme_color} />
 			),
@@ -84,7 +75,6 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 		{
 			key: 'progress',
 			title: __('Progress', 'kudos-donations'),
-			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => {
 				const total = post.total;
 				const goal = post.meta.goal;
@@ -111,7 +101,6 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
-			width: '10%',
 			valueCallback: (post: Campaign): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),
@@ -167,8 +156,6 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			<Table
 				posts={posts}
 				headerItems={headerItems}
-				isLoading={isLoading}
-				hasLoadedOnce={hasLoadedOnce}
 				totalPages={totalPages}
 				totalItems={totalItems}
 			/>
