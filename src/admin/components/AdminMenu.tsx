@@ -2,6 +2,7 @@ import React from 'react';
 import type { IconType } from '@wordpress/components';
 import { Button, Flex } from '@wordpress/components';
 import { useAdminQueryParams } from '../hooks';
+import { __ } from '@wordpress/i18n';
 
 interface NavItem {
 	label: string;
@@ -10,19 +11,31 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-	{ label: 'Campaigns', view: 'kudos-campaigns', icon: 'megaphone' },
 	{
-		label: 'Transactions',
+		label: __('Campaigns', 'kudos-donations'),
+		view: 'kudos-campaigns',
+		icon: 'megaphone',
+	},
+	{
+		label: __('Transactions', 'kudos-donations'),
 		view: 'kudos-transactions',
 		icon: 'money-alt',
 	},
 	{
-		label: 'Subscriptions',
+		label: __('Subscriptions', 'kudos-donations'),
 		view: 'kudos-subscriptions',
 		icon: 'update',
 	},
-	{ label: 'Donors', view: 'kudos-donors', icon: 'groups' },
-	{ label: 'Settings', view: 'kudos-settings', icon: 'admin-settings' },
+	{
+		label: __('Donors', 'kudos-donations'),
+		view: 'kudos-donors',
+		icon: 'groups',
+	},
+	{
+		label: __('Settings', 'kudos-donations'),
+		view: 'kudos-settings',
+		icon: 'admin-settings',
+	},
 ];
 
 export const AdminMenu = (): React.ReactNode => {
