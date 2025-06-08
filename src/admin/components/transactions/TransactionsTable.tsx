@@ -13,14 +13,7 @@ import { DetailsModal, HeaderItem, Table } from '../table';
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { settings } = useSettingsContext();
-	const {
-		handleDelete,
-		isLoading,
-		hasLoadedOnce,
-		totalPages,
-		totalItems,
-		posts,
-	} = usePostsContext();
+	const { handleDelete, totalPages, totalItems, posts } = usePostsContext();
 
 	const headerItems: HeaderItem[] = [
 		{
@@ -33,7 +26,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
-			width: '7%',
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const status = post.meta.status;
 
@@ -132,7 +124,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'message',
 			title: __('Message', 'kudos-donations'),
 			align: 'center',
-			width: '7%',
 			valueCallback: (post: Transaction): React.ReactNode =>
 				post.meta.message && (
 					<DetailsModal
@@ -149,7 +140,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
-			width: '10%',
 			valueCallback: (post: Transaction): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),
@@ -238,8 +228,6 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 				filters={filters}
 				posts={posts}
 				headerItems={headerItems}
-				isLoading={isLoading}
-				hasLoadedOnce={hasLoadedOnce}
 				totalItems={totalItems}
 				totalPages={totalPages}
 			/>

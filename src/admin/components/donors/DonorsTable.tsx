@@ -9,14 +9,7 @@ import { useAdminQueryParams } from '../../hooks';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { setParams } = useAdminQueryParams();
-	const {
-		handleDelete,
-		isLoading,
-		hasLoadedOnce,
-		posts,
-		totalPages,
-		totalItems,
-	} = usePostsContext();
+	const { handleDelete, posts, totalPages, totalItems } = usePostsContext();
 
 	const changeView = (postId: number) => {
 		void setParams({
@@ -48,7 +41,6 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
-			width: '10%',
 			valueCallback: (post: Donor): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),
@@ -101,8 +93,6 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			<Table
 				posts={posts}
 				headerItems={headerItems}
-				isLoading={isLoading}
-				hasLoadedOnce={hasLoadedOnce}
 				totalItems={totalItems}
 				totalPages={totalPages}
 			/>

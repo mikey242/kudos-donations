@@ -11,14 +11,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
-	const {
-		handleDelete,
-		isLoading,
-		hasLoadedOnce,
-		posts,
-		totalPages,
-		totalItems,
-	} = usePostsContext();
+	const { handleDelete, posts, totalPages, totalItems } = usePostsContext();
 
 	const changeView = (postId: number) => {
 		void setParams({
@@ -38,7 +31,6 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
-			width: '7%',
 			valueCallback: (post: Subscription): React.ReactNode => {
 				const status = post.meta?.status;
 
@@ -112,7 +104,6 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'date',
-			width: '10%',
 			valueCallback: (post: Subscription): React.ReactNode => (
 				<i>{dateI18n('d-m-Y', post.date, null)}</i>
 			),
@@ -184,8 +175,6 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 				filters={filters}
 				posts={posts}
 				headerItems={headerItems}
-				isLoading={isLoading}
-				hasLoadedOnce={hasLoadedOnce}
 				totalItems={totalItems}
 				totalPages={totalPages}
 			/>
