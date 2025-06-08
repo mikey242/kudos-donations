@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Button, Flex } from '@wordpress/components';
+import { Button, Card, Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useAdminQueryParams } from '../../hooks';
@@ -28,46 +28,48 @@ export const Filters = ({ filters }: FiltersProps) => {
 	);
 
 	return (
-		<Flex align="center" wrap>
-			<Button
-				size="compact"
-				isPressed={!meta_key && !meta_value}
-				onClick={resetFilterParams}
-			>
-				{__('All', 'kudos-donations')}
-			</Button>
-			{filters?.map((filter: Filter) => (
+		<Card style={{ padding: '5px' }}>
+			<Flex gap={1} align="center" wrap>
 				<Button
 					size="compact"
-					key={`${filter.meta_key}:${filter.meta_value}`}
-					isPressed={
-						meta_key === filter.meta_key &&
-						meta_value === filter.meta_value
-					}
-					onClick={() =>
-						updateParams({
-							meta_key: filter.meta_key,
-							meta_value: filter.meta_value,
-						})
-					}
+					isPressed={!meta_key && !meta_value}
+					onClick={resetFilterParams}
 				>
-					{filter.label}
+					{__('All', 'kudos-donations')}
 				</Button>
-			))}
-			{meta_key && meta_value && !activeInList && (
-				<Button
-					size="compact"
-					isPressed
-					onClick={() =>
-						updateParams({
-							meta_key,
-							meta_value,
-						})
-					}
-				>
-					{`${meta_key}: ${meta_value}`}
-				</Button>
-			)}
-		</Flex>
+				{filters?.map((filter: Filter) => (
+					<Button
+						size="compact"
+						key={`${filter.meta_key}:${filter.meta_value}`}
+						isPressed={
+							meta_key === filter.meta_key &&
+							meta_value === filter.meta_value
+						}
+						onClick={() =>
+							updateParams({
+								meta_key: filter.meta_key,
+								meta_value: filter.meta_value,
+							})
+						}
+					>
+						{filter.label}
+					</Button>
+				))}
+				{meta_key && meta_value && !activeInList && (
+					<Button
+						size="compact"
+						isPressed
+						onClick={() =>
+							updateParams({
+								meta_key,
+								meta_value,
+							})
+						}
+					>
+						{`${meta_key}: ${meta_value}`}
+					</Button>
+				)}
+			</Flex>
+		</Card>
 	);
 };
