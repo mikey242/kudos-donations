@@ -1,5 +1,5 @@
 import React from 'react';
-import { KudosLogo } from '../../block/components/KudosLogo';
+import { KudosLogo } from '../../block/components';
 import { __ } from '@wordpress/i18n';
 import {
 	Flex,
@@ -20,7 +20,7 @@ export const AdminHeader = ({
 	return (
 		<>
 			<Panel className="kudos-admin-header">
-				<div className="kudos-admin-header-top admin-wrap">
+				<div className="kudos-admin-header-top admin-wrap-wide">
 					<Flex align="center" justify="space-between">
 						<FlexBlock>
 							<Flex direction="row" justify="flex-start">

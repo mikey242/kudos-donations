@@ -42,9 +42,13 @@ export const EntityPage = ({
 
 	return (
 		<>
-			{postId && renderEdit
-				? renderEdit(currentPost)
-				: renderTable(editPost, newPost)}
+			{postId && renderEdit ? (
+				<div className="admin-wrap"> {renderEdit(currentPost)}</div>
+			) : (
+				<div className="admin-wrap-wide">
+					{renderTable(editPost, newPost)}
+				</div>
+			)}
 		</>
 	);
 };

@@ -169,6 +169,11 @@
 		margin: auto;
 	}
 
+	.admin-wrap-wide {
+		max-width: 1080px;
+		margin: auto;
+	}
+
 	.kudos-admin-notices {
 		margin: 1rem auto;
 	}
