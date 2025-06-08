@@ -30,8 +30,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 	return (
 		<Flex align="center" wrap>
 			<Button
-				variant="link"
-				style={{ padding: '5px' }}
+				size="compact"
 				isPressed={!meta_key && !meta_value}
 				onClick={resetFilterParams}
 			>
@@ -39,8 +38,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 			</Button>
 			{filters?.map((filter: Filter) => (
 				<Button
-					variant="link"
-					style={{ padding: '5px' }}
+					size="compact"
 					key={`${filter.meta_key}:${filter.meta_value}`}
 					isPressed={
 						meta_key === filter.meta_key &&
@@ -58,8 +56,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 			))}
 			{meta_key && meta_value && !activeInList && (
 				<Button
-					variant="link"
-					style={{ padding: '5px' }}
+					size="compact"
 					isPressed
 					onClick={() =>
 						updateParams({
