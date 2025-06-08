@@ -160,9 +160,28 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		},
 	];
 
+	const filters = [
+		{
+			label: __('Monthly', 'kudos-donations'),
+			meta_key: 'frequency',
+			meta_value: '1 month',
+		},
+		{
+			label: __('Quarterly', 'kudos-donations'),
+			meta_key: 'frequency',
+			meta_value: '3 months',
+		},
+		{
+			label: __('Yearly', 'kudos-donations'),
+			meta_key: 'frequency',
+			meta_value: '12 months',
+		},
+	];
+
 	return (
 		<>
 			<Table
+				filters={filters}
 				posts={posts}
 				headerItems={headerItems}
 				isLoading={isLoading}

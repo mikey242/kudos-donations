@@ -1,0 +1,76 @@
+/* eslint-disable camelcase */
+import { Button, Flex } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import React from 'react';
+import { useAdminQueryParams } from '../../hooks';
+
+export interface Filter {
+	label: string;
+	meta_key: string;
+	meta_value: string;
+}
+
+interface FiltersProps {
+	filters: Filter[];
+}
+
+export const Filters = ({ filters }: FiltersProps) => {
+	const { updateParams, resetFilterParams, params } = useAdminQueryParams();
+	const { meta_key, meta_value } = params;
+
+	if (!filters) {
+		return;
+	}
+
+	const activeInList = filters.some(
+		(filter) =>
+			filter.meta_key === meta_key && filter.meta_value === meta_value
+	);
+
+	return (
+		<Flex align="center" wrap>
+			<Button
+				variant="link"
+				style={{ padding: '5px' }}
+				isPressed={!meta_key && !meta_value}
+				onClick={resetFilterParams}
+			>
+				{__('All', 'kudos-donations')}
+			</Button>
+			{filters?.map((filter: Filter) => (
+				<Button
+					variant="link"
+					style={{ padding: '5px' }}
+					key={`${filter.meta_key}:${filter.meta_value}`}
+					isPressed={
+						meta_key === filter.meta_key &&
+						meta_value === filter.meta_value
+					}
+					onClick={() =>
+						updateParams({
+							meta_key: filter.meta_key,
+							meta_value: filter.meta_value,
+						})
+					}
+				>
+					{filter.label}
+				</Button>
+			))}
+			{meta_key && meta_value && !activeInList && (
+				<Button
+					variant="link"
+					style={{ padding: '5px' }}
+					isPressed
+					onClick={() =>
+						updateParams({
+							meta_key,
+							meta_value,
+						})
+					}
+				>
+					{`${meta_key}: ${meta_value}`}
+				</Button>
+			)}
+		</Flex>
+	);
+};

@@ -204,9 +204,38 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		},
 	];
 
+	const filters = [
+		{
+			label: __('Paid', 'kudos-donations'),
+			meta_key: 'status',
+			meta_value: 'paid',
+		},
+		{
+			label: __('Open', 'kudos-donations'),
+			meta_key: 'status',
+			meta_value: 'open',
+		},
+		{
+			label: __('Failed', 'kudos-donations'),
+			meta_key: 'status',
+			meta_value: 'failed',
+		},
+		{
+			label: __('Cancelled', 'kudos-donations'),
+			meta_key: 'staus',
+			meta_value: 'canceled',
+		},
+		{
+			label: __('Expired', 'kudos-donations'),
+			meta_key: 'status',
+			meta_value: 'expired',
+		},
+	];
+
 	return (
 		<>
 			<Table
+				filters={filters}
 				posts={posts}
 				headerItems={headerItems}
 				isLoading={isLoading}

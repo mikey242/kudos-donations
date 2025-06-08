@@ -7,6 +7,7 @@ import { useCallback } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
 import { usePostsContext } from '../../contexts';
+import { Filter } from './Filters';
 
 export interface HeaderItem<T extends Post = Post> {
 	title: string | React.ReactNode;
@@ -35,6 +36,7 @@ interface TableProps<T extends Post = Post> {
 	hasLoadedOnce?: boolean;
 	totalPages?: number;
 	totalItems?: number;
+	filters?: Filter[];
 }
 
 export const Table = <T extends Post>({
@@ -44,6 +46,7 @@ export const Table = <T extends Post>({
 	hasLoadedOnce = false,
 	totalPages,
 	totalItems,
+	filters,
 }: TableProps<T>): React.ReactNode => {
 	const isFirstLoad = isLoading && !hasLoadedOnce;
 	const { params, setParams } = useAdminQueryParams();
@@ -76,8 +79,11 @@ export const Table = <T extends Post>({
 
 	return (
 		<>
-			<TableControls totalPages={totalPages} totalItems={totalItems} />
-
+			<TableControls
+				filters={filters}
+				totalPages={totalPages}
+				totalItems={totalItems}
+			/>
 			<table
 				className="widefat striped rounded"
 				style={{
