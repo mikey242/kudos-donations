@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Button, Card, Flex } from '@wordpress/components';
+import { Button, Flex, Panel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { useAdminQueryParams } from '../../hooks';
@@ -28,7 +28,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 	);
 
 	return (
-		<Card style={{ padding: '5px' }}>
+		<Panel>
 			<Flex gap={1} align="center" wrap>
 				<Button
 					size="compact"
@@ -71,6 +71,6 @@ export const Filters = ({ filters }: FiltersProps) => {
 					</Button>
 				)}
 			</Flex>
-		</Card>
+		</Panel>
 	);
 };
