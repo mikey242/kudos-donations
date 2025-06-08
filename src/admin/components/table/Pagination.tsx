@@ -80,7 +80,6 @@ export const Pagination = ({
 				role="button"
 				tabIndex={0}
 				style={{
-					padding: '0 1rem',
 					lineHeight: '2rem',
 					cursor: 'pointer',
 				}}
