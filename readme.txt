@@ -4,7 +4,7 @@ Tags: donation, mollie, payment, ideal, credit card
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.1.0
+Stable tag: 4.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,11 @@ For general information on how to use shortcodes, please visit [this page](https
 6. Automated email receipt
 
 == Changelog ==
+
+= 4.1.1 =
+* User wider admin wrapper for tables
+* Fix missing translation calls in admin menu
+* Fix page numbers not resetting when changing filter
 
 = 4.1.0 =
 * Major rework of admin pages - Transactions, Donors and Subscriptions are now rendered in react
