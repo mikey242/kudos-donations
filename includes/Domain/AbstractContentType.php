@@ -30,7 +30,7 @@ abstract class AbstractContentType implements ContentTypeInterface, Registrable,
 	/**
 	 * Whether the content should be visible in the Admin UI.
 	 */
-	protected const SHOW_UI = true;
+	protected const SHOW_UI = false;
 	/**
 	 * Should a link to the UI be added to the menu.
 	 * Since Kudos Donations uses its own menu we will add this ourselves later.
