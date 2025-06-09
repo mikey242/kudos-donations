@@ -111,7 +111,7 @@ const ButtonEdit = ({
 						<CampaignSelector />
 						{campaign?.id ? (
 							<ExternalLink
-								href={`admin.php?page=kudos-campaigns&edit=${campaign.id}`}
+								href={`admin.php?page=kudos-campaigns&post=${campaign.id}`}
 							>
 								{__('Edit', 'kudos-donations') +
 									' ' +
