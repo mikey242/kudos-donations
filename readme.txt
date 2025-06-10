@@ -114,6 +114,7 @@ For general information on how to use shortcodes, please visit [this page](https
 == Changelog ==
 
 = 4.1.2 =
+* Fix transactions/donors/subscriptions not appearing when using php 8.2
 * Fix bug with "Edit campaign" link in the block editor
 * Fix form error message appearing incorrectly
 * Fix error when viewing log file

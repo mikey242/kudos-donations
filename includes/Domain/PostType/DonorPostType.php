@@ -160,7 +160,7 @@ class DonorPostType extends AbstractCustomPostType implements HasMetaFieldsInter
 			}
 
 			// Add value to sum for this currency.
-			$currency_sums[ $currency ] += $transaction->{TransactionPostType::META_FIELD_VALUE};
+			$currency_sums[ $currency ] += (float) $transaction->{TransactionPostType::META_FIELD_VALUE};
 
 		}
 

@@ -92,7 +92,7 @@ const Render = ({
 				<div
 					className={clsx(
 						className,
-						'flex flex-col font-body text-gray-900',
+						'flex font-body text-gray-900',
 						alignmentResult
 					)}
 				>
