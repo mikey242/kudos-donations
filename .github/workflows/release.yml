@@ -12,7 +12,7 @@ jobs:
     build-job:
         uses: ./.github/workflows/build.yml
         with:
-            node-version: ${{ env.NODE_VERSION }}
+            node-version: '18.18.1'
 
     zip-job:
         needs: build-job
