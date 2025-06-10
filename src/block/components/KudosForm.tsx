@@ -135,7 +135,7 @@ export const KudosForm = ({
 	};
 
 	const renderDonationForm = () => (
-		<>
+		<div>
 			{formError && (
 				<small className="text-center block font-normal mb-4 text-sm text-red-500">
 					{formError}
@@ -149,7 +149,7 @@ export const KudosForm = ({
 					submitForm={submitForm}
 				/>
 			)}
-		</>
+		</div>
 	);
 
 	if (isLoading) {
