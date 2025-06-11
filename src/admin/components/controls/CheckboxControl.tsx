@@ -19,7 +19,7 @@ export const CheckboxControl = ({
 				<WPCheckboxControl
 					label={label}
 					onChange={onChange}
-					checked={value}
+					checked={value ?? false}
 					help={description}
 					disabled={isDisabled}
 					__nextHasNoMarginBottom
