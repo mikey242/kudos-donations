@@ -79,7 +79,7 @@ class Payment extends AbstractRestController {
 					],
 					'email'         => [
 						'type'              => FieldType::STRING,
-						'required'          => true,
+						'required'          => false,
 						'sanitize_callback' => 'sanitize_email',
 					],
 					'recurring'     => [
