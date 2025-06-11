@@ -101,20 +101,8 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 			return null;
 		}
 
-		// Get donor.
-		$donor = DonorPostType::get_post( [ 'ID' => $transaction->{TransactionPostType::META_FIELD_DONOR_ID} ] );
-		if ( ! $donor ) {
-			$this->logger->debug( 'Error generating invoice: Donor not found', [ 'donor_id' => $donor->ID ] );
-			return null;
-		}
-
+		// Populate data array.
 		$data = [
-			'donor_business'  => $donor->{DonorPostType::META_FIELD_BUSINESS_NAME},
-			'donor_name'      => $donor->{DonorPostType::META_FIELD_NAME},
-			'donor_street'    => $donor->{DonorPostType::META_FIELD_STREET},
-			'donor_postcode'  => $donor->{DonorPostType::META_FIELD_POSTCODE},
-			'donor_city'      => $donor->{DonorPostType::META_FIELD_CITY},
-			'donor_country'   => $donor->{DonorPostType::META_FIELD_COUNTRY},
 			'order_id'        => $transaction->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID},
 			'vendor'          => $transaction->{TransactionPostType::META_FIELD_VENDOR},
 			'sequence_type'   => $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
@@ -130,6 +118,17 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 			],
 			'total'           => Utils::format_value_for_display( $transaction->{TransactionPostType::META_FIELD_VALUE} ),
 		];
+
+		// Append donor.
+		$donor = DonorPostType::get_post( [ 'ID' => $transaction->{TransactionPostType::META_FIELD_DONOR_ID} ] );
+		if ( $donor ) {
+				$data['donor_business'] = $donor->{DonorPostType::META_FIELD_BUSINESS_NAME};
+				$data['donor_name']     = $donor->{DonorPostType::META_FIELD_NAME};
+				$data['donor_street']   = $donor->{DonorPostType::META_FIELD_STREET};
+				$data['donor_postcode'] = $donor->{DonorPostType::META_FIELD_POSTCODE};
+				$data['donor_city']     = $donor->{DonorPostType::META_FIELD_CITY};
+				$data['donor_country']  = $donor->{DonorPostType::META_FIELD_COUNTRY};
+		}
 
 		$this->logger->debug( 'Generating new invoice.', [ 'file' => $file ] );
 
