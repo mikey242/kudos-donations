@@ -61,6 +61,10 @@ jobs:
     test-job:
         runs-on: ubuntu-latest
         needs: build-job
+        strategy:
+          matrix:
+            php-version: [ '7.4', '8.0', '8.1', '8.2' ]
+        name: PHP ${{ matrix.php-version }} Test
         services:
             mysql:
                 image: mysql:9.3
@@ -89,7 +93,7 @@ jobs:
             - name: Set up PHP with Composer and PHP-Scoper
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ env.PHP_VERSION }}
+                  php-version: ${{ matrix.php-version }}
                   tools: composer, php-scoper
 
             - name: Install dependencies
