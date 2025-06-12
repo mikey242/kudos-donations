@@ -22,6 +22,7 @@ export const CheckboxControl = ({
 					checked={value ?? false}
 					help={description}
 					disabled={isDisabled}
+					style={{ opacity: isDisabled ? '0.3' : '1' }}
 					__nextHasNoMarginBottom
 				/>
 			)}
