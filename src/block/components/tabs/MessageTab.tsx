@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import BaseTab from './BaseTab';
@@ -13,9 +13,12 @@ interface MessageTabProps {
 
 export const MessageTab = ({ campaign }: MessageTabProps) => {
 	const {
-		meta: { message_title, message_description },
+		meta: { message_title, message_description, message_required },
 	} = campaign;
 	const { setFocus } = useFormContext();
+	const optional = !message_required
+		? '(' + __('optional', 'kudos-donations') + ')'
+		: '';
 
 	useEffect(() => {
 		setFocus('message');
@@ -25,7 +28,18 @@ export const MessageTab = ({ campaign }: MessageTabProps) => {
 		<BaseTab title={message_title} description={message_description}>
 			<TextAreaControl
 				name="message"
-				placeholder={__('Message', 'kudos-donations')}
+				rules={
+					message_required && {
+						required: __(
+							'This field is required',
+							'kudos-donations'
+						),
+					}
+				}
+				placeholder={
+					// translators: %s shows (optional) when field not required.
+					sprintf(__('Message %s', 'kudos-donations'), optional)
+				}
 			/>
 		</BaseTab>
 	);

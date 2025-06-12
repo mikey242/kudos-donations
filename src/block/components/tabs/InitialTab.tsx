@@ -24,9 +24,12 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 			fixed_amounts,
 			amount_type,
 			maximum_donation,
-			allow_anonymous,
 			show_goal,
 			goal,
+			name_enabled,
+			name_required,
+			email_enabled,
+			email_required,
 		},
 		total,
 	} = campaign;
@@ -48,6 +51,8 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 		),
 		minimum_donation
 	);
+	const optional = __('optional', 'kudos-donations');
+	const emailRequired = email_required || 'recurring' === donation_type;
 
 	const isRecurringAllowed = useMemo(() => {
 		return donation_type === 'both' && !!watchEmail;
@@ -147,48 +152,46 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 				}}
 			/>
 
-			<TextControl
-				name="name"
-				rules={
-					(!allow_anonymous || 'recurring' === donation_type) && {
-						required: __(
-							'Your name is required',
-							'kudos-donations'
-						),
+			{name_enabled && (
+				<TextControl
+					name="name"
+					rules={
+						name_required && {
+							required: __(
+								'Your name is required',
+								'kudos-donations'
+							),
+						}
 					}
-				}
-				placeholder={
-					allow_anonymous
-						? __('Full name', 'kudos-donations') +
-							' (' +
-							__('optional', 'kudos-donations') +
-							')'
-						: __('Full name', 'kudos-donations')
-				}
-			/>
+					placeholder={sprintf(
+						// translators: %s shows (optional) when field not required.
+						__('Full name %s', 'kudos-donations'),
+						!name_required ? '(' + optional + ')' : ''
+					)}
+				/>
+			)}
 
-			<TextControl
-				name="email"
-				type="email"
-				rules={
-					(!allow_anonymous || 'recurring' === donation_type) && {
-						required: __(
-							'Your email is required',
-							'kudos-donations'
-						),
+			{email_enabled && (
+				<TextControl
+					name="email"
+					type="email"
+					rules={
+						emailRequired && {
+							required: __(
+								'Your email is required',
+								'kudos-donations'
+							),
+						}
 					}
-				}
-				placeholder={
-					allow_anonymous
-						? __('Email', 'kudos-donations') +
-							' (' +
-							__('optional', 'kudos-donations') +
-							')'
-						: __('Email', 'kudos-donations')
-				}
-			/>
+					placeholder={sprintf(
+						// translators: %s shows (optional) when field not required.
+						__('Email %s', 'kudos-donations'),
+						!emailRequired ? '(' + optional + ')' : ''
+					)}
+				/>
+			)}
 
-			{donation_type === 'both' && (
+			{donation_type === 'both' && email_enabled && (
 				<div className="flex justify-center mt-3">
 					<ToggleControl
 						isDisabled={!watchEmail}

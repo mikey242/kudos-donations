@@ -2,7 +2,7 @@
 import { useFormContext } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import React from 'react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
 import countryList from 'react-select-country-list';
 import { SelectControl, TextControl } from '../controls';
@@ -18,6 +18,9 @@ export const AddressTab = ({ campaign }: AddressTabProps) => {
 	} = campaign;
 	const countryOptions = useMemo(() => countryList().getData(), []);
 	const { setFocus } = useFormContext();
+	const optional = !address_required
+		? '(' + __('optional', 'kudos-donations') + ')'
+		: '';
 
 	useEffect(() => {
 		setFocus('business_name');
@@ -27,7 +30,11 @@ export const AddressTab = ({ campaign }: AddressTabProps) => {
 		<BaseTab title={address_title} description={address_description}>
 			<TextControl
 				name="business_name"
-				placeholder={__('Business name', 'kudos-donations')}
+				placeholder={sprintf(
+					// translators: %s shows (optional) when field not required.
+					__('Business name %s', 'kudos-donations'),
+					optional
+				)}
 			/>
 			<TextControl
 				name="street"
@@ -37,7 +44,11 @@ export const AddressTab = ({ campaign }: AddressTabProps) => {
 						message: __('Street required', 'kudos-donations'),
 					},
 				}}
-				placeholder={__('Street', 'kudos-donations')}
+				placeholder={sprintf(
+					// translators: %s shows (optional) when field not required.
+					__('Street %s', 'kudos-donations'),
+					optional
+				)}
 			/>
 			<TextControl
 				name="postcode"
@@ -47,7 +58,11 @@ export const AddressTab = ({ campaign }: AddressTabProps) => {
 						message: __('Postcode required', 'kudos-donations'),
 					},
 				}}
-				placeholder={__('Postcode', 'kudos-donations')}
+				placeholder={sprintf(
+					// translators: %s shows (optional) when field not required.
+					__('Postcode %s', 'kudos-donations'),
+					optional
+				)}
 			/>
 			<TextControl
 				name="city"
@@ -57,11 +72,19 @@ export const AddressTab = ({ campaign }: AddressTabProps) => {
 						message: __('City required', 'kudos-donations'),
 					},
 				}}
-				placeholder={__('City', 'kudos-donations')}
+				placeholder={sprintf(
+					// translators: %s shows (optional) when field not required.
+					__('City %s', 'kudos-donations'),
+					optional
+				)}
 			/>
 			<SelectControl
 				name="country"
-				placeholder={__('Country', 'kudos-donations')}
+				placeholder={sprintf(
+					// translators: %s shows (optional) when field not required.
+					__('Country %s', 'kudos-donations'),
+					optional
+				)}
 				options={countryOptions}
 				rules={{
 					required: {

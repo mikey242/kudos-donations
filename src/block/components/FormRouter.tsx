@@ -108,6 +108,8 @@ export const FormRouter = ({
 			postcode: '',
 			street: '',
 			message: '',
+			name: '',
+			email: '',
 		},
 	});
 
