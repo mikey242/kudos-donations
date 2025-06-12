@@ -78,6 +78,12 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php-version }}
+                tools: phpunit
+
             - name: Download plugin dependencies
               uses: actions/download-artifact@v4
               with:
@@ -93,13 +99,10 @@ jobs:
               run: |
                   sudo curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
                   sudo chmod +x /bin/*.sh
-                  bash /bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:${{ job.services.mysql.ports['3306'] }} ${{ matrix.php-version }} true
-
-            - name: Fix permissions for PHPUnit
-              run: chmod +x vendor/bin/phpunit
+                  bash /bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:${{ job.services.mysql.ports['3306'] }} latest true
 
             - name: Show PHP version
               run: php -v
 
             - name: Run tests
-              run: vendor/bin/phpunit --do-not-cache-result
+              run: phpunit --do-not-cache-result
