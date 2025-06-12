@@ -118,7 +118,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
 			valueCallback: (post: Transaction): React.ReactNode =>
-				post.campaign?.title.raw ?? '',
+				post.campaign?.title.raw ?? post.campaign?.title.rendered ?? '',
 		},
 		{
 			key: 'message',
