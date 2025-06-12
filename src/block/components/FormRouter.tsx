@@ -53,17 +53,37 @@ interface FormRouterProps {
 	>;
 }
 
+export const matchesRequirements = (
+	state: Record<string, any>,
+	requirements: Record<string, any> = {}
+): boolean => {
+	const deepMatches = (data: any, expected: any): boolean => {
+		if (typeof expected !== 'object' || expected === null) {
+			return data === expected;
+		}
+		if (typeof data !== 'object' || data === null) {
+			return false;
+		}
+		return Object.entries(expected).every(([key, val]) =>
+			deepMatches(data[key], val)
+		);
+	};
+
+	return Object.entries(requirements).every(([key, value]) =>
+		deepMatches(state[key], value)
+	);
+};
+
 const checkRequirements = (
 	tabs: Tab[],
-	data: Record<string, any>,
-	target: number
+	state: Record<string, any>,
+	index: number
 ): boolean => {
-	const reqs = tabs[target]?.requirements;
+	const reqs = tabs[index]?.requirements;
 	if (!reqs) {
 		return true;
 	}
-
-	return Object.entries(reqs).every(([key, val]) => data[key] === val);
+	return matchesRequirements(state, reqs);
 };
 
 export const FormRouter = ({
@@ -88,6 +108,8 @@ export const FormRouter = ({
 			postcode: '',
 			street: '',
 			message: '',
+			name: '',
+			email: '',
 		},
 	});
 

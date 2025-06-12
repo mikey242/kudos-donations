@@ -5,6 +5,7 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { applyFilters } from '@wordpress/hooks';
 import { Panel } from '../../Panel';
+import { useEffect } from '@wordpress/element';
 
 interface DonationSettingsTabProps {
 	recurringEnabled?: boolean;
@@ -13,10 +14,25 @@ export const DonationSettingsTab = ({
 	recurringEnabled = false,
 }: DonationSettingsTabProps): React.ReactNode => {
 	const { currencies } = window.kudos;
+	const { setValue, getValues } = useFormContext();
 	const amountType = useWatch({ name: 'meta.amount_type' });
 	const currency = useWatch({ name: 'meta.currency' });
 	const maxDonation = useWatch({ name: 'meta.maximum_donation' });
 	const minDonation = useWatch({ name: 'meta.minimum_donation' });
+	const donationType = useWatch({ name: 'meta.donation_type' });
+
+	useEffect(() => {
+		if (donationType !== 'oneoff') {
+			// Only force email_enabled if it's currently false
+			if (!getValues('meta.email_enabled')) {
+				setValue('meta.email_enabled', true, { shouldDirty: false });
+			}
+			// Always enforce internal flag for email requirement
+			if (!getValues('meta.email_required')) {
+				setValue('meta.email_required', true, { shouldDirty: false });
+			}
+		}
+	}, [donationType, getValues, setValue]);
 
 	return (
 		<>
