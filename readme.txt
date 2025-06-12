@@ -115,6 +115,7 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.1.3 =
 * Campaign optional fields now have more granular settings. Can now control visibility and requirement separately.
+* Update various dependencies
 
 = 4.1.2 =
 * Fix transactions/donors/subscriptions not appearing when using php 8.2
