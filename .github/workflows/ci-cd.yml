@@ -64,7 +64,7 @@ jobs:
         strategy:
           matrix:
             php-version: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
-        name: PHP ${{ matrix.php-version }} Test
+        name: PHP ${{ matrix.php-version }} tests
         services:
             mysql:
                 image: mysql:9.3
