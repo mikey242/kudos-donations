@@ -98,5 +98,8 @@ jobs:
             - name: Fix permissions for PHPUnit
               run: chmod +x vendor/bin/phpunit
 
+            - name: Show PHP version
+              run: php -v
+
             - name: Run tests
               run: vendor/bin/phpunit --do-not-cache-result
