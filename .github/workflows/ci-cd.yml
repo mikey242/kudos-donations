@@ -81,25 +81,14 @@ jobs:
             - name: Download build folder
               uses: actions/download-artifact@v4
               with:
-                  name: build-folder
-                  path: ./build
+                  name: plugin-deps
+                  path: ./
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ env.NODE_VERSION }}
                   cache: 'npm'
-
-            - name: Set up PHP with Composer and PHP-Scoper
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: ${{ matrix.php-version }}
-                  tools: composer, php-scoper
-
-            - name: Install dependencies
-              run: |
-                  npm ci
-                  composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
             - name: Install subversion
               run: |
