@@ -23,11 +23,11 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
-            - name: Download build folder
+            - name: Download plugin dependencies
               uses: actions/download-artifact@v4
               with:
-                  name: build-folder
-                  path: ./build
+                name: plugin-deps
+                path: ./
 
             - name: Set up PHP with Composer and PHP-Scoper
               uses: shivammathur/setup-php@v2
