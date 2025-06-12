@@ -1,6 +1,6 @@
 <?php
 /**
- * Migration for version 4.0.0.
+ * Migration for version 4.1.3.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
@@ -11,15 +11,38 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-class Version401 extends BaseMigration {
+use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
+
+class Version413 extends BaseMigration {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_migration_jobs(): array {
 		return [
-			'cleanup' => $this->job( [ $this, 'cleanup' ], 'Cleaning up' ),
+			'database' => $this->job( [ $this, 'remove_anonymous_option' ], 'Updating database' ),
+			'cleanup'  => $this->job( [ $this, 'cleanup' ], 'Cleaning up' ),
 		];
+	}
+
+	/**
+	 * Remove old anonymous donation option and use it to set email and name field requirements.
+	 */
+	public function remove_anonymous_option() {
+		$this->logger->info( 'Migrating anonymous donor options' );
+		$campaigns = CampaignPostType::get_posts();
+		foreach ( $campaigns as $campaign ) {
+			$anonymous = get_post_meta( $campaign->ID, 'allow_anonymous' );
+			if ( $anonymous ) {
+				CampaignPostType::save(
+					[
+						'ID' => $campaign->ID,
+						CampaignPostType::META_FIELD_NAME_REQUIRED => false,
+						CampaignPostType::META_FIELD_EMAIL_REQUIRED => ! ( 'oneoff' === $campaign->{CampaignPostType::META_FIELD_DONATION_TYPE} ),
+					]
+				);
+			}
+		}
 	}
 
 	/**
