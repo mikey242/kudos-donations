@@ -35,9 +35,14 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public const META_FIELD_MESSAGE_DESCRIPTION      = 'message_description';
 	public const META_FIELD_PAYMENT_TITLE            = 'payment_title';
 	public const META_FIELD_PAYMENT_DESCRIPTION      = 'payment_description';
+	public const META_FIELD_EMAIL_ENABLED            = 'email_enabled';
+	public const META_FIELD_EMAIL_REQUIRED           = 'email_required';
+	public const META_FIELD_NAME_ENABLED             = 'name_enabled';
+	public const META_FIELD_NAME_REQUIRED            = 'name_required';
 	public const META_FIELD_ADDRESS_ENABLED          = 'address_enabled';
 	public const META_FIELD_ADDRESS_REQUIRED         = 'address_required';
 	public const META_FIELD_MESSAGE_ENABLED          = 'message_enabled';
+	public const META_FIELD_MESSAGE_REQUIRED         = 'message_required';
 	public const META_FIELD_AMOUNT_TYPE              = 'amount_type';
 	public const META_FIELD_FIXED_AMOUNTS            = 'fixed_amounts';
 	public const META_FIELD_MINIMUM_DONATION         = 'minimum_donation';
@@ -53,7 +58,6 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 	public const META_FIELD_RETURN_MESSAGE_TITLE     = 'return_message_title';
 	public const META_FIELD_RETURN_MESSAGE_TEXT      = 'return_message_text';
 	public const META_FIELD_CUSTOM_STYLES            = 'custom_styles';
-	public const META_ALLOW_ANONYMOUS                = 'allow_anonymous';
 	public const META_PAYMENT_DESCRIPTION_FORMAT     = 'payment_description_format';
 
 	/**
@@ -184,6 +188,27 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'sanitize_callback' => 'sanitize_text_field',
 				'default'           => __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ),
 			],
+
+			self::META_FIELD_EMAIL_ENABLED            => [
+				'type'              => FieldType::BOOLEAN,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+				'default'           => true,
+			],
+			self::META_FIELD_EMAIL_REQUIRED           => [
+				'type'              => FieldType::BOOLEAN,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+				'default'           => true,
+			],
+			self::META_FIELD_NAME_ENABLED             => [
+				'type'              => FieldType::BOOLEAN,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+				'default'           => true,
+			],
+			self::META_FIELD_NAME_REQUIRED            => [
+				'type'              => FieldType::BOOLEAN,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+				'default'           => true,
+			],
 			self::META_FIELD_ADDRESS_ENABLED          => [
 				'type'              => FieldType::BOOLEAN,
 				'sanitize_callback' => 'rest_sanitize_boolean',
@@ -193,6 +218,10 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
 			self::META_FIELD_MESSAGE_ENABLED          => [
+				'type'              => FieldType::BOOLEAN,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			self::META_FIELD_MESSAGE_REQUIRED         => [
 				'type'              => FieldType::BOOLEAN,
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			],
@@ -266,10 +295,6 @@ class CampaignPostType extends AbstractCustomPostType implements HasMetaFieldsIn
 			],
 			self::META_FIELD_CUSTOM_STYLES            => [
 				'type' => FieldType::STRING,
-			],
-			self::META_ALLOW_ANONYMOUS                => [
-				'type'    => FieldType::BOOLEAN,
-				'default' => false,
 			],
 			self::META_PAYMENT_DESCRIPTION_FORMAT     => [
 				'type'         => FieldType::STRING,
