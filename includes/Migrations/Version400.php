@@ -4,7 +4,7 @@
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  *
  * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
  * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -40,7 +40,7 @@ class Version400 extends BaseMigration {
 	/**
 	 * Migrate all the settings.
 	 */
-	protected function migrate_settings(): bool {
+	public function migrate_settings(): bool {
 		$this->migrate_vendor_settings();
 		$this->migrate_smtp_settings();
 		return true;
@@ -49,7 +49,7 @@ class Version400 extends BaseMigration {
 	/**
 	 * Migrate the old vendor settings.
 	 */
-	protected function migrate_vendor_settings() {
+	public function migrate_vendor_settings() {
 		$vendor_mollie = get_option( '_kudos_vendor_mollie' );
 		$test_key      = $vendor_mollie['test_key'] ?? null;
 		$live_key      = $vendor_mollie['live_key'] ?? null;
@@ -69,7 +69,7 @@ class Version400 extends BaseMigration {
 	/**
 	 * Migrate custom SMTP config.
 	 */
-	protected function migrate_smtp_settings() {
+	public function migrate_smtp_settings() {
 		$host       = get_option( '_kudos_smtp_host' ) ?? null;
 		$port       = get_option( '_kudos_smtp_port' ) ?? null;
 		$encryption = get_option( '_kudos_smtp_encryption' ) ?? null;
@@ -110,7 +110,7 @@ class Version400 extends BaseMigration {
 	/**
 	 * Migrate campaigns from a settings array to CampaignPostTypes.
 	 */
-	protected function migrate_campaigns_to_posts(): bool {
+	public function migrate_campaigns_to_posts(): bool {
 		$campaigns = get_option( '_kudos_campaigns', [] );
 
 		// Global settings.
@@ -174,11 +174,11 @@ class Version400 extends BaseMigration {
 	 * @param string $step The name of this step.
 	 * @param int    $limit The number of rows to process.
 	 */
-	protected function migrate_donors_to_posts( string $step, int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	public function migrate_donors_to_posts( string $step = 'Donors', int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_donors';
 
 		// Check table exists.
-		if ( ! $this->table_exists( $table_name ) ) {
+		if ( ! $this->wpdb->table_exists( $table_name ) ) {
 			return false;
 		}
 
@@ -224,11 +224,11 @@ class Version400 extends BaseMigration {
 	 * @param string $step The name of this step.
 	 * @param int    $limit The number of rows to process.
 	 */
-	protected function migrate_transactions_to_posts( string $step, int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	public function migrate_transactions_to_posts( string $step = 'Transactions', int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_transactions';
 
 		// Check table exists.
-		if ( ! $this->table_exists( $table_name ) ) {
+		if ( ! $this->wpdb->table_exists( $table_name ) ) {
 			return false;
 		}
 
@@ -296,11 +296,11 @@ class Version400 extends BaseMigration {
 	 * @param string $step The name of this step.
 	 * @param int    $limit The number of rows to process.
 	 */
-	protected function migrate_subscriptions_to_posts( string $step, int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	public function migrate_subscriptions_to_posts( string $step = 'Subscriptions', int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
 		$table_name = $this->wpdb->prefix . 'kudos_subscriptions';
 
 		// Check table exists.
-		if ( ! $this->table_exists( $table_name ) ) {
+		if ( ! $this->wpdb->table_exists( $table_name ) ) {
 			return false;
 		}
 
@@ -337,21 +337,6 @@ class Version400 extends BaseMigration {
 		$this->update_progress();
 
 		return \count( $rows ) < $limit;
-	}
-
-	/**
-	 * Check if specified table exists.
-	 *
-	 * @param string $table_name The table name to check (e.g. wp_kudos_transactions).
-	 */
-	private function table_exists( string $table_name ): bool {
-		// Check table exists.
-		$check = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
-		if ( $this->wpdb->get_var( $check ) !== $table_name ) {
-			$this->logger->error( 'Table not found for migration step', [ 'table' => $table_name ] );
-			return false;
-		}
-		return true;
 	}
 
 	/**

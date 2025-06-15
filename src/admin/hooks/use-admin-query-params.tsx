@@ -3,12 +3,10 @@ import { useCallback } from '@wordpress/element';
 
 const defaultTableFilterParams = {
 	order: 'desc',
-	orderby: 'date',
-	meta_key: '',
-	meta_value: '',
-	meta_query: '',
-	metaType: '',
+	orderby: 'created_at',
 	search: '',
+	column: '',
+	value: '',
 };
 
 const defaultParams = {
@@ -31,13 +29,10 @@ export const useAdminQueryParams = () => {
 		paged: parseAsInteger
 			.withDefault(defaultParams.paged)
 			.withOptions({ history: 'push' }),
-
+		column: parseAsString.withDefault(defaultParams.column),
+		value: parseAsString.withDefault(defaultParams.value),
 		order: parseAsString.withDefault(defaultParams.order),
 		orderby: parseAsString.withDefault(defaultParams.orderby),
-		meta_key: parseAsString.withDefault(defaultParams.meta_key),
-		meta_value: parseAsString.withDefault(defaultParams.meta_value),
-		meta_query: parseAsString.withDefault(defaultParams.meta_query),
-		metaType: parseAsString.withDefault(defaultParams.metaType),
 		search: parseAsString.withDefault(defaultParams.search),
 	});
 

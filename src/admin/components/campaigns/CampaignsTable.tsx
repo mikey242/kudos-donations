@@ -36,8 +36,8 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const changeView = (postId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			meta_key: 'campaign_id',
-			meta_value: String(postId),
+			column: 'campaign_id',
+			value: String(postId),
 		});
 	};
 
@@ -56,12 +56,12 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 					label={sprintf(
 						/* translators: %s is the campaign name */
 						__('Edit %s', 'kudos-donations'),
-						post.title.raw
+						post.title
 					)}
 					variant="link"
 					onClick={() => handleEdit(post.id)}
 				>
-					{post.title.raw}
+					{post.title}
 				</Button>
 			),
 		},
@@ -69,15 +69,15 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'theme',
 			title: __('Theme color', 'kudos-donations'),
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<ColorIndicator colorValue={post.meta?.theme_color} />
+				<ColorIndicator colorValue={post.theme_color} />
 			),
 		},
 		{
 			key: 'progress',
 			title: __('Progress', 'kudos-donations'),
 			valueCallback: (post: Campaign): React.ReactNode => {
-				const total = post.total;
-				const goal = post.meta.goal;
+				const total = Number(post.total);
+				const goal = Number(post.goal);
 				const progress =
 					total && goal ? Math.round((total / goal) * 100) : 0;
 
@@ -95,14 +95,14 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'total',
 			title: __('Total', 'kudos-donations'),
 			valueCallback: (post: Campaign): React.ReactNode =>
-				`${currencies[post.meta?.currency]} ${post.total}`,
+				`${currencies[post.currency]} ${post.total}`,
 		},
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
-			orderby: 'date',
+			orderby: 'created_at',
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.date, null)}</i>
+				<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
 			),
 		},
 		{

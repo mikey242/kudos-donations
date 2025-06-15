@@ -2,14 +2,14 @@ import React from 'react';
 import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import type { Post } from '../../../types/posts';
+import type { BaseEntity } from '../../../types/posts';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
 import { usePostsContext } from '../../contexts';
 import { Filter } from './Filters';
 
-export interface HeaderItem<T extends Post = Post> {
+export interface HeaderItem<T extends BaseEntity = BaseEntity> {
 	title: string | React.ReactNode;
 	key: string;
 	orderby?:
@@ -29,7 +29,7 @@ export interface HeaderItem<T extends Post = Post> {
 	width?: string | number;
 }
 
-interface TableProps<T extends Post = Post> {
+interface TableProps<T extends BaseEntity = BaseEntity> {
 	headerItems: HeaderItem<T>[];
 	posts?: T[];
 	isLoading?: boolean;
@@ -39,17 +39,17 @@ interface TableProps<T extends Post = Post> {
 	filters?: Filter[];
 }
 
-export const Table = <T extends Post>({
+export const Table = <T extends BaseEntity>({
 	headerItems,
 	posts,
 	totalPages,
 	totalItems,
 	filters,
 }: TableProps<T>): React.ReactNode => {
-	const [cachedPosts, setCachedPosts] = useState<Post[]>(posts);
+	const [cachedPosts, setCachedPosts] = useState<BaseEntity[]>(posts);
 	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const { params, setParams } = useAdminQueryParams();
+	const { params, updateParams } = useAdminQueryParams();
 	const { pluralName, hasResolved } = usePostsContext();
 	const { order, orderby } = params;
 
@@ -77,12 +77,12 @@ export const Table = <T extends Post>({
 			const nextOrder =
 				isSameColumn && prevOrder === 'asc' ? 'desc' : 'asc';
 
-			void setParams({
+			void updateParams({
 				order: nextOrder,
 				orderby: newOrderBy,
 			});
 		},
-		[order, orderby, setParams]
+		[order, orderby, updateParams]
 	);
 
 	return (
@@ -148,7 +148,7 @@ export const Table = <T extends Post>({
 					) : (
 						cachedPosts?.map((post) => (
 							<TableRow
-								key={post.slug}
+								key={post.id}
 								post={post}
 								columns={headerItems}
 							/>
@@ -177,12 +177,15 @@ const TableMessage = ({
 	</tr>
 );
 
-interface TableRowProps<T extends Post> {
+interface TableRowProps<T extends BaseEntity> {
 	post: T;
 	columns: HeaderItem<T>[];
 }
 
-const TableRow = <T extends Post>({ post, columns }: TableRowProps<T>) => {
+const TableRow = <T extends BaseEntity>({
+	post,
+	columns,
+}: TableRowProps<T>) => {
 	return (
 		<tr role="row">
 			{columns.map((column) => {

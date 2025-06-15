@@ -4,18 +4,21 @@ import {
 	createContext,
 	useCallback,
 	useContext,
+	useEffect,
 	useMemo,
+	useState,
 } from '@wordpress/element';
 
-import { useEntityRecords } from '@wordpress/core-data';
 import { __, sprintf } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
-import type { Post } from '../../types/posts';
+import type { BaseEntity } from '../../types/posts';
 import { useAdminQueryParams } from '../hooks';
+import apiFetch from '@wordpress/api-fetch';
+import { addQueryArgs } from '@wordpress/url';
 
-interface PostsContextValue<T extends Post = Post> {
+interface PostsContextValue<T extends BaseEntity = BaseEntity> {
 	posts: T[];
 	hasResolved: boolean;
 	totalPages: number;
@@ -26,6 +29,15 @@ interface PostsContextValue<T extends Post = Post> {
 	handleDuplicate: (post: T) => void;
 	singularName: string;
 	pluralName: string;
+	postType: string;
+}
+
+interface Response<T extends BaseEntity> {
+	items: T[];
+	total: number;
+	total_pages: number;
+	per_page: number;
+	paged: number;
 }
 
 const PostsContext = createContext<PostsContextValue<any> | null>(null);
@@ -37,55 +49,52 @@ interface PostsProviderProps {
 	pluralName: string;
 }
 
-export const PostsProvider = <T extends Post>({
+export const PostsProvider = <T extends BaseEntity>({
 	postType,
 	singularName,
 	pluralName,
 	children,
 }: PostsProviderProps) => {
 	const { params } = useAdminQueryParams();
-	const {
-		paged,
-		order,
-		orderby,
-		meta_key,
-		meta_value,
-		meta_query,
-		metaType,
-		search,
-	} = params;
-	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
+	const { paged, order, orderby, column, value } = params;
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
-	const {
-		records: posts,
-		hasResolved,
-		totalPages,
-		totalItems,
-	} = useEntityRecords<T>('postType', postType, {
-		per_page: 20,
-		page: Number(paged),
-		search,
-		order,
-		orderby,
-		meta_key,
-		meta_value,
-		meta_query,
-		metaType,
-	});
+
+	const [posts, setPosts] = useState<T[]>([]);
+	const [hasResolved, setHasResolved] = useState(false);
+	const [totalPages, setTotalPages] = useState(1);
+	const [totalItems, setTotalItems] = useState(0);
+
+	const fetchPosts = useCallback(async () => {
+		try {
+			const args = { paged, orderby, order, column, value };
+			const response: Response<T> = await apiFetch({
+				path: addQueryArgs(`/kudos/v1/${postType}`, args),
+			});
+			setPosts(response.items);
+			setHasResolved(true);
+			setTotalItems(response.total);
+			setTotalPages(response.total_pages);
+		} catch (error) {
+			setHasResolved(true);
+		}
+	}, [postType, paged, order, orderby, column, value]);
+
+	useEffect(() => {
+		void fetchPosts();
+	}, [fetchPosts]);
 
 	const handleSave = useCallback(
 		async (args = {}): Promise<T | null> => {
 			try {
-				const response = await saveEntityRecord(
-					'postType',
-					postType,
-					args
-				);
+				const response = await apiFetch<T>({
+					path: `/kudos/v1/${postType}`,
+					method: 'POST',
+					data: args,
+				});
 
-				if (!response) {
-					throw new Error('No response from API.');
-				}
+				await fetchPosts();
+
 				return response;
 			} catch (error: any) {
 				void createErrorNotice(
@@ -99,7 +108,7 @@ export const PostsProvider = <T extends Post>({
 				return null;
 			}
 		},
-		[createErrorNotice, postType, saveEntityRecord, singularName]
+		[createErrorNotice, fetchPosts, postType, singularName]
 	);
 
 	const handleUpdate = useCallback(
@@ -123,16 +132,7 @@ export const PostsProvider = <T extends Post>({
 
 	// Handles creating a post.
 	const handleNew = useCallback(
-		async (args?: Partial<T> | React.SyntheticEvent): Promise<any> => {
-			// If args is a SyntheticEvent, ignore it and create an empty args object
-			if (
-				args &&
-				typeof (args as React.SyntheticEvent).preventDefault ===
-					'function'
-			) {
-				args = {};
-			}
-
+		async (args?: Partial<T>): Promise<any> => {
 			// Set default arguments.
 			const {
 				title = sprintf(
@@ -140,13 +140,11 @@ export const PostsProvider = <T extends Post>({
 					__('New %s', 'kudos-donations'),
 					singularName
 				),
-				status = 'publish',
 				...rest
 			} = (args as Partial<T>) || {};
 
 			const response = await handleSave({
 				title,
-				status,
 				...rest,
 			});
 
@@ -169,11 +167,13 @@ export const PostsProvider = <T extends Post>({
 	);
 
 	const handleDelete = useCallback(
-		async (postId: number): Promise<void> => {
+		async (id: number): Promise<void> => {
 			try {
-				await deleteEntityRecord('postType', postType, postId, {
-					force: true,
+				await apiFetch({
+					path: `/kudos/v1/campaign/${id}`,
+					method: 'DELETE',
 				});
+				await fetchPosts();
 				await createSuccessNotice(
 					sprintf(
 						/* translators: %s is the post type name. */
@@ -197,24 +197,18 @@ export const PostsProvider = <T extends Post>({
 				);
 			}
 		},
-		[
-			deleteEntityRecord,
-			postType,
-			createSuccessNotice,
-			singularName,
-			createErrorNotice,
-		]
+		[fetchPosts, createSuccessNotice, singularName, createErrorNotice]
 	);
 
 	// Prepares data for duplicating current post.
 	const handleDuplicate = useCallback(
 		(post: T) => {
-			const { id, ...rest } = post;
+			const { id, wp_post_id, ...rest } = post;
 
 			const data = {
 				...rest,
-				title: { raw: post.title.raw, rendered: '' },
-				date: new Date().toISOString(),
+				title: post.title,
+				created_at: new Date().toISOString(),
 			} as Partial<T>;
 			return handleSave(data);
 		},
@@ -233,6 +227,7 @@ export const PostsProvider = <T extends Post>({
 			handleUpdate,
 			singularName,
 			pluralName,
+			postType,
 		}),
 		[
 			posts,
@@ -243,6 +238,7 @@ export const PostsProvider = <T extends Post>({
 			hasResolved,
 			singularName,
 			pluralName,
+			postType,
 			totalItems,
 			totalPages,
 		]
@@ -257,7 +253,9 @@ export const PostsProvider = <T extends Post>({
 	);
 };
 
-export const usePostsContext = <T extends Post>(): PostsContextValue<T> => {
+export const usePostsContext = <
+	T extends BaseEntity,
+>(): PostsContextValue<T> => {
 	const context = useContext(PostsContext);
 	if (!context) {
 		throw new Error('usePostsContext must be used within a PostsProvider');

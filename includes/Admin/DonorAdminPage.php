@@ -5,7 +5,7 @@
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  * @see \IseardMedia\Kudos\Domain\PostType\DonorPostType
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);

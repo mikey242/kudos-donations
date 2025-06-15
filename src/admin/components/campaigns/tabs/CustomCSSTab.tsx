@@ -21,7 +21,7 @@ export const CustomCSSTab = (): React.ReactNode => {
 			// Update the form state whenever the CodeMirror content changes
 			editor?.codemirror.on('change', () => {
 				const value = editor.codemirror.getValue();
-				setValue('meta.custom_styles', value, { shouldValidate: true });
+				setValue('custom_styles', value, { shouldValidate: true });
 			});
 		}
 	}, [setValue]);
@@ -37,7 +37,7 @@ export const CustomCSSTab = (): React.ReactNode => {
 				)}
 				label={__('Custom CSS', 'kudos-donations')}
 				hideLabelFromVision={true}
-				name="meta.custom_styles"
+				name="custom_styles"
 			/>
 		</Panel>
 	);

@@ -15,21 +15,21 @@ export const DonationSettingsTab = ({
 }: DonationSettingsTabProps): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setValue, getValues } = useFormContext();
-	const amountType = useWatch({ name: 'meta.amount_type' });
-	const currency = useWatch({ name: 'meta.currency' });
-	const maxDonation = useWatch({ name: 'meta.maximum_donation' });
-	const minDonation = useWatch({ name: 'meta.minimum_donation' });
-	const donationType = useWatch({ name: 'meta.donation_type' });
+	const amountType = useWatch({ name: 'amount_type' });
+	const currency = useWatch({ name: 'currency' });
+	const maxDonation = useWatch({ name: 'maximum_donation' });
+	const minDonation = useWatch({ name: 'minimum_donation' });
+	const donationType = useWatch({ name: 'donation_type' });
 
 	useEffect(() => {
 		if (donationType !== 'oneoff') {
 			// Only force email_enabled if it's currently false
-			if (!getValues('meta.email_enabled')) {
-				setValue('meta.email_enabled', true, { shouldDirty: false });
+			if (!getValues('email_enabled')) {
+				setValue('email_enabled', true, { shouldDirty: false });
 			}
 			// Always enforce internal flag for email requirement
-			if (!getValues('meta.email_required')) {
-				setValue('meta.email_required', true, { shouldDirty: false });
+			if (!getValues('email_required')) {
+				setValue('email_required', true, { shouldDirty: false });
 			}
 		}
 	}, [donationType, getValues, setValue]);
@@ -38,7 +38,7 @@ export const DonationSettingsTab = ({
 		<>
 			<Panel header={__('Subscription', 'kudos-donations')}>
 				<RadioGroupControl
-					name="meta.donation_type"
+					name="donation_type"
 					label={__('Donation type', 'kudos-donations')}
 					help={__(
 						'Choose the available payment frequency.',
@@ -64,7 +64,7 @@ export const DonationSettingsTab = ({
 			</Panel>
 			<Panel header={__('Payment', 'kudos-donations')}>
 				<RadioGroupControl
-					name="meta.amount_type"
+					name="amount_type"
 					label={__('Payment type', 'kudos-donations')}
 					help={__(
 						'Chose the available amount types.',
@@ -86,7 +86,7 @@ export const DonationSettingsTab = ({
 					]}
 				/>
 				<FormTokenField
-					name="meta.fixed_amounts"
+					name="fixed_amounts"
 					isDisabled={amountType === 'open'}
 					maxLength={5}
 					rules={{
@@ -139,7 +139,7 @@ export const DonationSettingsTab = ({
 					label={__('Fixed amounts', 'kudos-donations')}
 				/>
 				<TextControl
-					name="meta.minimum_donation"
+					name="minimum_donation"
 					type="number"
 					prefix={currencies[currency]}
 					help={__(
@@ -162,7 +162,7 @@ export const DonationSettingsTab = ({
 					label={__('Minimum allowed donation', 'kudos-donations')}
 				/>
 				<TextControl
-					name="meta.maximum_donation"
+					name="maximum_donation"
 					prefix={currencies[currency]}
 					type="number"
 					label={__('Maximum donation', 'kudos-donations')}

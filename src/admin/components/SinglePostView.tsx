@@ -3,7 +3,7 @@ import { useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminContext, usePostsContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
-import type { Post } from '../../types/posts';
+import type { BaseEntity } from '../../types/posts';
 import {
 	Button,
 	Flex,
@@ -56,7 +56,7 @@ const Row = ({
 );
 
 interface PostEditProps {
-	post: Post;
+	post: BaseEntity;
 }
 
 const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
@@ -90,32 +90,15 @@ const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 					singularName
 				)}
 			>
-				<PostDetails post={post} />
-			</Panel>
-			<Panel header={__('Meta details', 'kudos-donations')}>
 				<PostMeta post={post} />
 			</Panel>
 		</VStack>
 	);
 };
 
-export const PostDetails = ({ post }) => (
-	<>
-		<Row label={__('ID', 'kudos-donations')} value={post.id} />
-		<Row
-			label={__('Date', 'kudos-donations')}
-			value={new Date(post.date).toLocaleDateString()}
-		/>
-		<Row
-			label={__('Description', 'kudos-donations')}
-			value={post.title.raw}
-		/>
-	</>
-);
-
 export const PostMeta = ({ post }) => (
 	<>
-		{Object.entries(post.meta)
+		{Object.entries(post)
 			.sort(([a], [b]) => a.localeCompare(b))
 			.map(([key, value]) => (
 				<Row

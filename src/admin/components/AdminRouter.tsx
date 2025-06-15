@@ -19,7 +19,7 @@ const AdminPages = {
 		<PostsProvider
 			pluralName={__('Campaigns', 'kudos-donations')}
 			singularName={__('Campaign', 'kudos-donations')}
-			postType={'kudos_campaign'}
+			postType="campaign"
 		>
 			<EntityPage
 				renderTable={(editPost, newPost) => (
@@ -35,7 +35,7 @@ const AdminPages = {
 		<PostsProvider
 			pluralName={__('Donors', 'kudos-donations')}
 			singularName={__('Donor', 'kudos-donations')}
-			postType="kudos_donor"
+			postType="donor"
 		>
 			<EntityPage
 				renderTable={(editPost) => (
@@ -49,7 +49,7 @@ const AdminPages = {
 		<PostsProvider
 			pluralName={__('Transactions', 'kudos-donations')}
 			singularName={__('Transaction', 'kudos-donations')}
-			postType="kudos_transaction"
+			postType="transaction"
 		>
 			<EntityPage
 				renderTable={(editPost) => (
@@ -63,7 +63,7 @@ const AdminPages = {
 		<PostsProvider
 			pluralName={__('Subscriptions', 'kudos-donations')}
 			singularName={__('Subscription', 'kudos-donations')}
-			postType="kudos_subscription"
+			postType="subscription"
 		>
 			<EntityPage
 				renderTable={(editPost) => (

@@ -16,8 +16,8 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const changeView = (postId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			meta_key: 'donor_id',
-			meta_value: String(postId),
+			column: 'donor_id',
+			value: String(postId),
 		});
 	};
 
@@ -26,13 +26,13 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'donor',
 			title: __('Donor', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode =>
-				post.donor?.meta?.name ?? post.donor?.meta.email ?? '',
+				post.donor?.name ?? post.donor?.email ?? '',
 		},
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode => {
-				const status = post.meta?.status;
+				const status = post?.status;
 
 				const statusConfig: Record<
 					string,
@@ -71,15 +71,14 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'value',
 			title: __('Amount', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode => {
-				const value = post.meta?.value;
-				const currency = post.meta?.currency;
+				const value = post?.value;
+				const currency = post?.currency;
 
 				if (!value || !currency) {
 					return null;
 				}
 
-				const currencySymbol =
-					currencies[post.meta?.currency] ?? currency;
+				const currencySymbol = currencies[post?.currency] ?? currency;
 				return (
 					<span>
 						{currencySymbol}
@@ -92,20 +91,19 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'frequency',
 			title: __('Frequency', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode =>
-				post.meta.frequency,
+				post.frequency,
 		},
 		{
 			key: 'length',
 			title: __('Length', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode =>
-				post.meta.years,
+			valueCallback: (post: Subscription): React.ReactNode => post.years,
 		},
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
-			orderby: 'date',
+			orderby: 'created_at',
 			valueCallback: (post: Subscription): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.date, null)}</i>
+				<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
 			),
 		},
 		{
@@ -154,18 +152,18 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const filters = [
 		{
 			label: __('Monthly', 'kudos-donations'),
-			meta_key: 'frequency',
-			meta_value: '1 month',
+			column: 'frequency',
+			value: '1 month',
 		},
 		{
 			label: __('Quarterly', 'kudos-donations'),
-			meta_key: 'frequency',
-			meta_value: '3 months',
+			column: 'frequency',
+			value: '3 months',
 		},
 		{
 			label: __('Yearly', 'kudos-donations'),
-			meta_key: 'frequency',
-			meta_value: '12 months',
+			column: 'frequency',
+			value: '12 months',
 		},
 	];
 
