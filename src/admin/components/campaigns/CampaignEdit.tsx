@@ -52,7 +52,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
-			title: campaign?.title?.raw,
+			title: campaign?.title,
 		},
 		reValidateMode: 'onSubmit',
 	});
@@ -83,7 +83,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 		if (campaign) {
 			reset({
 				...campaign,
-				title: campaign.title.raw,
+				title: campaign.title,
 			});
 		}
 	}, [campaign, reset]);

@@ -21,13 +21,13 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Donor', 'kudos-donations'),
 
 			valueCallback: (post: Transaction): React.ReactNode =>
-				post.donor?.meta?.name ?? post.donor?.meta.email ?? '',
+				post.donor?.name ?? post.donor?.email ?? '',
 		},
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
 			valueCallback: (post: Transaction): React.ReactNode => {
-				const status = post.meta.status;
+				const status = post.status;
 
 				const statusConfig: Record<
 					string,
@@ -70,17 +70,17 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'value',
 			title: __('Amount', 'kudos-donations'),
+			orderby: 'value',
 			valueCallback: (post: Transaction): React.ReactNode => {
-				const value = post.meta?.value;
-				const currency = post.meta?.currency;
-				const sequence = post.meta?.sequence_type;
+				const value = post.value;
+				const currency = post.currency;
+				const sequence = post.sequence_type;
 
 				if (!value || !currency) {
 					return null;
 				}
 
-				const currencySymbol =
-					currencies[post.meta?.currency] ?? currency;
+				const currencySymbol = currencies[post.currency] ?? currency;
 
 				let icon: React.ReactNode;
 
@@ -118,20 +118,18 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
 			valueCallback: (post: Transaction): React.ReactNode =>
-				post.campaign?.title.raw ?? post.campaign?.title.rendered ?? '',
+				post.campaign?.title ?? '',
 		},
 		{
 			key: 'message',
 			title: __('Message', 'kudos-donations'),
 			align: 'center',
 			valueCallback: (post: Transaction): React.ReactNode =>
-				post.meta.message && (
+				post.message && (
 					<DetailsModal
 						title={__('Message', 'kudos-donations')}
 						content={
-							<p style={{ fontSize: '16px' }}>
-								{post.meta.message}
-							</p>
+							<p style={{ fontSize: '16px' }}>{post.message}</p>
 						}
 					/>
 				),
@@ -139,9 +137,9 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
-			orderby: 'date',
+			orderby: 'created_at',
 			valueCallback: (post: Transaction): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.date, null)}</i>
+				<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
 			),
 		},
 		{
@@ -153,7 +151,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			),
 			align: 'right',
 			valueCallback: (post: Transaction): React.ReactNode => {
-				const status = post.meta.status;
+				const status = post.status;
 				const url = post.invoice_url;
 				return (
 					<>
@@ -197,28 +195,28 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const filters = [
 		{
 			label: __('Paid', 'kudos-donations'),
-			meta_key: 'status',
-			meta_value: 'paid',
+			column: 'status',
+			value: 'paid',
 		},
 		{
 			label: __('Open', 'kudos-donations'),
-			meta_key: 'status',
-			meta_value: 'open',
+			column: 'status',
+			value: 'open',
 		},
 		{
 			label: __('Failed', 'kudos-donations'),
-			meta_key: 'status',
-			meta_value: 'failed',
+			column: 'status',
+			value: 'failed',
 		},
 		{
 			label: __('Cancelled', 'kudos-donations'),
-			meta_key: 'staus',
-			meta_value: 'canceled',
+			column: 'staus',
+			value: 'canceled',
 		},
 		{
 			label: __('Expired', 'kudos-donations'),
-			meta_key: 'status',
-			meta_value: 'expired',
+			column: 'status',
+			value: 'expired',
 		},
 	];
 

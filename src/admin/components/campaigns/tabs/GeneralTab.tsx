@@ -18,11 +18,11 @@ interface GeneralTabProps {
 export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const watchUseReturnMessage = useWatch({
-		name: 'meta.show_return_message',
+		name: 'show_return_message',
 	});
-	const watchDisplayGoal = useWatch({ name: 'meta.show_goal' });
-	const watchCurrency = useWatch({ name: 'meta.currency' });
-	const watchUseReturnURL = useWatch({ name: 'meta.use_custom_return_url' });
+	const watchDisplayGoal = useWatch({ name: 'show_goal' });
+	const watchCurrency = useWatch({ name: 'currency' });
+	const watchUseReturnURL = useWatch({ name: 'use_custom_return_url' });
 
 	const isValidUrl = (value: string) => {
 		let url: URL;
@@ -51,7 +51,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 					}}
 				/>
 				<SelectControl
-					name="meta.currency"
+					name="currency"
 					label={__('Currency', 'kudos-donations')}
 					isDisabled={campaign.total > 0}
 					prefix={currencies[watchCurrency]}
@@ -74,7 +74,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 				/>
 				<TextControl
 					type="number"
-					name="meta.goal"
+					name="goal"
 					prefix={currencies[watchCurrency]}
 					help={__(
 						'Set a goal for your campaign.',
@@ -96,7 +96,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 					}}
 				/>
 				<ToggleControl
-					name="meta.show_goal"
+					name="show_goal"
 					label={__('Display goal progress', 'kudos-donations')}
 					help={__(
 						'This will display a goal progress bar on your donation form. Make sure you also set a goal.',
@@ -105,7 +105,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 				/>
 				<TextControl
 					type="number"
-					name="meta.additional_funds"
+					name="additional_funds"
 					prefix={currencies[watchCurrency]}
 					help={__(
 						'Add external funds to the total.',
@@ -123,7 +123,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 					}}
 				/>
 				<ColorPicker
-					name="meta.theme_color"
+					name="theme_color"
 					label={__('Theme color', 'kudos-donations')}
 					help={__(
 						'Choose a color theme for your campaign.',
@@ -133,7 +133,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 			</Panel>
 			<Panel header={__('After payment', 'kudos-donations')}>
 				<ToggleControl
-					name="meta.show_return_message"
+					name="show_return_message"
 					label={__('Show return message', 'kudos-donations')}
 					help={__(
 						'This will show a pop-up message to the donor thanking them for their donation.',
@@ -141,7 +141,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 					)}
 				/>
 				<TextControl
-					name="meta.return_message_title"
+					name="return_message_title"
 					isDisabled={!watchUseReturnMessage}
 					rules={{
 						required: __('Title is required', 'kudos-donations'),
@@ -149,7 +149,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 					label={__('Message title', 'kudos-donations')}
 				/>
 				<TextAreaControl
-					name="meta.return_message_text"
+					name="return_message_text"
 					rules={{
 						required: __('Message required', 'kudos-donations'),
 					}}
@@ -157,7 +157,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 					label={__('Message text', 'kudos-donations')}
 				/>
 				<ToggleControl
-					name="meta.use_custom_return_url"
+					name="use_custom_return_url"
 					label={__('Use custom return URL', 'kudos-donations')}
 					help={__(
 						'Once the payment has been completed, return the donor to a custom URL.',
@@ -165,7 +165,7 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 					)}
 				/>
 				<TextControl
-					name="meta.custom_return_url"
+					name="custom_return_url"
 					isDisabled={!watchUseReturnURL}
 					label={__('URL', 'kudos-donations')}
 					rules={{

@@ -6,8 +6,8 @@ import { useAdminQueryParams } from '../../hooks';
 
 export interface Filter {
 	label: string;
-	meta_key: string;
-	meta_value: string;
+	column: string;
+	value: string;
 }
 
 interface FiltersProps {
@@ -16,15 +16,14 @@ interface FiltersProps {
 
 export const Filters = ({ filters }: FiltersProps) => {
 	const { updateParams, resetFilterParams, params } = useAdminQueryParams();
-	const { meta_key, meta_value } = params;
+	const { column, value } = params;
 
 	if (!filters) {
 		return;
 	}
 
 	const activeInList = filters.some(
-		(filter) =>
-			filter.meta_key === meta_key && filter.meta_value === meta_value
+		(filter) => filter.column === column && filter.value === value
 	);
 
 	return (
@@ -32,7 +31,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 			<Flex gap={1} align="center" wrap>
 				<Button
 					size="compact"
-					isPressed={!meta_key && !meta_value}
+					isPressed={!column && !value}
 					onClick={resetFilterParams}
 				>
 					{__('All', 'kudos-donations')}
@@ -40,15 +39,14 @@ export const Filters = ({ filters }: FiltersProps) => {
 				{filters?.map((filter: Filter) => (
 					<Button
 						size="compact"
-						key={`${filter.meta_key}:${filter.meta_value}`}
+						key={`${filter.column}:${filter.value}`}
 						isPressed={
-							meta_key === filter.meta_key &&
-							meta_value === filter.meta_value
+							column === filter.column && value === filter.value
 						}
 						onClick={() =>
 							updateParams({
-								meta_key: filter.meta_key,
-								meta_value: filter.meta_value,
+								column: filter.column,
+								value: filter.value,
 								paged: 1,
 							})
 						}
@@ -56,18 +54,18 @@ export const Filters = ({ filters }: FiltersProps) => {
 						{filter.label}
 					</Button>
 				))}
-				{meta_key && meta_value && !activeInList && (
+				{column && value && !activeInList && (
 					<Button
 						size="compact"
 						isPressed
 						onClick={() =>
 							updateParams({
-								meta_key,
-								meta_value,
+								column,
+								value,
 							})
 						}
 					>
-						{`${meta_key}: ${meta_value}`}
+						{`${column}: ${value}`}
 					</Button>
 				)}
 			</Flex>

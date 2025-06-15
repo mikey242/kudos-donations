@@ -4,7 +4,7 @@
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -14,26 +14,29 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use Exception;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Subscription extends AbstractRestController {
+class Subscription extends AbstractRepositoryRestController {
 
 	public const ROUTE_CANCEL = '/cancel';
 
 	/**
 	 * Subscription routes constructor.
 	 *
-	 * @param PaymentVendorFactory $factory Current vendor.
+	 * @param PaymentVendorFactory   $factory Current vendor.
+	 * @param SubscriptionRepository $subscription Subscription repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory ) {
+	public function __construct( PaymentVendorFactory $factory, SubscriptionRepository $subscription ) {
 		parent::__construct();
 
-		$this->rest_base = 'subscription';
-		$this->vendor    = $factory->get_vendor();
+		$this->rest_base  = 'subscription';
+		$this->repository = $subscription;
+		$this->vendor     = $factory->get_vendor();
 	}
 
 	/**
@@ -41,6 +44,11 @@ class Subscription extends AbstractRestController {
 	 */
 	public function get_routes(): array {
 		return [
+			'/'                => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => '__return_true',
+			],
 			self::ROUTE_CANCEL => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'cancel' ],

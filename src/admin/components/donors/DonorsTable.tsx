@@ -14,8 +14,8 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const changeView = (postId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			meta_key: 'donor_id',
-			meta_value: String(postId),
+			column: 'donor_id',
+			value: String(postId),
 		});
 	};
 
@@ -23,14 +23,12 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'name',
 			title: __('Name', 'kudos-donations'),
-			valueCallback: (post: Donor): React.ReactNode =>
-				post.meta.name ?? '',
+			valueCallback: (post: Donor): React.ReactNode => post.name ?? '',
 		},
 		{
 			key: 'email',
 			title: __('Email', 'kudos-donations'),
-			valueCallback: (post: Donor): React.ReactNode =>
-				post.meta.email ?? '',
+			valueCallback: (post: Donor): React.ReactNode => post.email ?? '',
 		},
 		{
 			key: 'value',
@@ -40,9 +38,9 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
-			orderby: 'date',
+			orderby: 'created_at',
 			valueCallback: (post: Donor): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.date, null)}</i>
+				<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
 			),
 		},
 		{
