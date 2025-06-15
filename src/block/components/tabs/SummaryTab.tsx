@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import BaseTab from './BaseTab';
@@ -21,7 +22,13 @@ interface SummaryCheckbox {
 }
 
 export const SummaryTab = ({ campaign }: SummaryTabProps) => {
-	const { meta } = campaign;
+	const {
+		privacy_link,
+		terms_link,
+		payment_title,
+		payment_description,
+		currency,
+	} = campaign;
 	const { getValues } = useFormContext();
 	const values = getValues();
 	const recurringText = (): string => {
@@ -49,7 +56,7 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 		[
 			{
 				name: 'privacy',
-				enabled: meta.privacy_link,
+				enabled: privacy_link,
 				label: createInterpolateElement(
 					__('Accept <a>Privacy Policy</a>', 'kudos-donations'),
 					{
@@ -58,7 +65,7 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 							<a
 								target="_blank"
 								className="underline"
-								href={meta.privacy_link}
+								href={privacy_link}
 								rel="noreferrer"
 							></a>
 						),
@@ -73,7 +80,7 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 			},
 			{
 				name: 'terms',
-				enabled: meta.terms_link,
+				enabled: terms_link,
 				label: createInterpolateElement(
 					__('Accept <a>Terms and Conditions</a>', 'kudos-donations'),
 					{
@@ -82,7 +89,7 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 							<a
 								target="_blank"
 								className="underline"
-								href={meta.terms_link}
+								href={terms_link}
 								rel="noreferrer"
 							></a>
 						),
@@ -100,10 +107,7 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 	) as SummaryCheckbox[];
 
 	return (
-		<BaseTab
-			title={meta.payment_title}
-			description={meta.payment_description}
-		>
+		<BaseTab title={payment_title} description={payment_description}>
 			<div className="kudos_summary text-left block bg-gray-100 p-2 border-0 border-solid border-t-2 border-primary">
 				<p className="my-1">
 					<strong>{__('Name', 'kudos-donations')}: </strong>
@@ -123,7 +127,7 @@ export const SummaryTab = ({ campaign }: SummaryTabProps) => {
 				</p>
 				<p className="my-1">
 					<strong>{__('Amount', 'kudos-donations')}: </strong>
-					<span>{`${window.kudos?.currencies[meta.currency]} ${values.value}`}</span>
+					<span>{`${window.kudos?.currencies[currency]} ${values.value}`}</span>
 				</p>
 				<p className="my-1">
 					<strong>{__('Type', 'kudos-donations')}: </strong>

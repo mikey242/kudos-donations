@@ -25,7 +25,7 @@ class DonorRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_column_schema(): array {
+	public function get_column_schema(): array {
 		return [];
 	}
 }

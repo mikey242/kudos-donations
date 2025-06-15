@@ -12,13 +12,8 @@ interface FrequencyTabProps {
 }
 
 export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
-	const {
-		meta: {
-			subscription_title,
-			subscription_description,
-			frequency_options,
-		},
-	} = campaign;
+	const { subscription_title, subscription_description, frequency_options } =
+		campaign;
 
 	const { setFocus, getValues } = useFormContext();
 

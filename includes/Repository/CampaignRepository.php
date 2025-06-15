@@ -26,52 +26,228 @@ class CampaignRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_column_schema(): array {
+	public function get_column_schema(): array {
 		return [
-			'id'                         => FieldType::INTEGER,
-			'wp_post_id'                 => FieldType::INTEGER,
-			'title'                      => FieldType::STRING,
-			'currency'                   => FieldType::STRING,
-			'goal'                       => FieldType::FLOAT,
-			'show_goal'                  => FieldType::BOOLEAN,
-			'additional_funds'           => FieldType::FLOAT,
-			'amount_type'                => FieldType::STRING,
-			'fixed_amounts'              => FieldType::OBJECT,
-			'minimum_donation'           => FieldType::FLOAT,
-			'maximum_donation'           => FieldType::FLOAT,
-			'donation_type'              => FieldType::STRING,
-			'frequency_options'          => FieldType::OBJECT,
-			'email_enabled'              => FieldType::BOOLEAN,
-			'email_required'             => FieldType::BOOLEAN,
-			'name_enabled'               => FieldType::BOOLEAN,
-			'name_required'              => FieldType::BOOLEAN,
-			'address_enabled'            => FieldType::BOOLEAN,
-			'address_required'           => FieldType::BOOLEAN,
-			'message_enabled'            => FieldType::BOOLEAN,
-			'message_required'           => FieldType::BOOLEAN,
-			'theme_color'                => FieldType::STRING,
-			'terms_link'                 => FieldType::STRING,
-			'privacy_link'               => FieldType::STRING,
-			'show_return_message'        => FieldType::BOOLEAN,
-			'use_custom_return_url'      => FieldType::BOOLEAN,
-			'custom_return_url'          => FieldType::STRING,
-			'payment_description_format' => FieldType::STRING,
-			'custom_styles'              => FieldType::STRING,
-			'initial_title'              => FieldType::STRING,
-			'initial_description'        => FieldType::STRING,
-			'subscription_title'         => FieldType::STRING,
-			'subscription_description'   => FieldType::STRING,
-			'address_title'              => FieldType::STRING,
-			'address_description'        => FieldType::STRING,
-			'message_title'              => FieldType::STRING,
-			'message_description'        => FieldType::STRING,
-			'payment_title'              => FieldType::STRING,
-			'payment_description'        => FieldType::STRING,
-			'return_message_title'       => FieldType::STRING,
-			'return_message_text'        => FieldType::STRING,
-			'allow_anonymous'            => FieldType::BOOLEAN,
-			'created_at'                 => FieldType::STRING,
-			'updated_at'                 => FieldType::STRING,
+			'id'                         => [
+				'type'              => FieldType::INTEGER,
+				'default'           => null,
+				'sanitize_callback' => 'absint',
+			],
+			'wp_post_id'                 => [
+				'type'              => FieldType::INTEGER,
+				'default'           => null,
+				'sanitize_callback' => 'absint',
+			],
+			'title'                      => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'currency'                   => [
+				'type'              => FieldType::STRING,
+				'default'           => 'EUR',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'goal'                       => [
+				'type'              => FieldType::FLOAT,
+				'default'           => null,
+				'sanitize_callback' => 'floatval',
+			],
+			'show_goal'                  => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'additional_funds'           => [
+				'type'              => FieldType::FLOAT,
+				'default'           => null,
+				'sanitize_callback' => 'floatval',
+			],
+			'amount_type'                => [
+				'type'              => FieldType::STRING,
+				'default'           => 'fixed',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'fixed_amounts'              => [
+				'type'              => FieldType::OBJECT,
+				'default'           => [],
+				'sanitize_callback' => [ $this, 'sanitize_json_field' ],
+			],
+			'minimum_donation'           => [
+				'type'              => FieldType::FLOAT,
+				'default'           => null,
+				'sanitize_callback' => 'floatval',
+			],
+			'maximum_donation'           => [
+				'type'              => FieldType::FLOAT,
+				'default'           => null,
+				'sanitize_callback' => 'floatval',
+			],
+			'donation_type'              => [
+				'type'              => FieldType::STRING,
+				'default'           => 'oneoff',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'frequency_options'          => [
+				'type'              => FieldType::OBJECT,
+				'default'           => [],
+				'sanitize_callback' => [ $this, 'sanitize_json_field' ],
+			],
+			'email_enabled'              => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => true,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'email_required'             => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => true,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'name_enabled'               => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => true,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'name_required'              => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => true,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'address_enabled'            => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'address_required'           => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'message_enabled'            => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'message_required'           => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'theme_color'                => [
+				'type'              => FieldType::STRING,
+				'default'           => '#ff9f1c',
+				'sanitize_callback' => 'sanitize_hex_color',
+			],
+			'terms_link'                 => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
+			],
+			'privacy_link'               => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
+			],
+			'show_return_message'        => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'use_custom_return_url'      => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'custom_return_url'          => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
+			],
+			'payment_description_format' => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'custom_styles'              => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_textarea_field',
+			],
+			'initial_title'              => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'initial_description'        => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_textarea_field',
+			],
+			'subscription_title'         => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'subscription_description'   => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_textarea_field',
+			],
+			'address_title'              => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'address_description'        => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_textarea_field',
+			],
+			'message_title'              => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'message_description'        => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_textarea_field',
+			],
+			'payment_title'              => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'payment_description'        => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_textarea_field',
+			],
+			'return_message_title'       => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'return_message_text'        => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_textarea_field',
+			],
+			'allow_anonymous'            => [
+				'type'              => FieldType::BOOLEAN,
+				'default'           => false,
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			],
+			'created_at'                 => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
+			'updated_at'                 => [
+				'type'              => FieldType::STRING,
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			],
 		];
 	}
 
