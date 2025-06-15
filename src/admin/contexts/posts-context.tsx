@@ -32,7 +32,7 @@ interface PostsContextValue<T extends BaseEntity = BaseEntity> {
 	postType: string;
 }
 
-interface Response<T extends BaseEntity> {
+export interface EntityRestResponse<T extends BaseEntity> {
 	items: T[];
 	total: number;
 	total_pages: number;
@@ -68,7 +68,7 @@ export const PostsProvider = <T extends BaseEntity>({
 	const fetchPosts = useCallback(async () => {
 		try {
 			const args = { paged, orderby, order, column, value };
-			const response: Response<T> = await apiFetch({
+			const response: EntityRestResponse<T> = await apiFetch({
 				path: addQueryArgs(`/kudos/v1/${postType}`, args),
 			});
 			setPosts(response.items);

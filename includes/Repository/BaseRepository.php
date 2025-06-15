@@ -41,7 +41,7 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	/**
 	 * Get the schema for the repository.
 	 */
-	abstract public static function get_column_schema(): array;
+	abstract public function get_column_schema(): array;
 
 	/**
 	 * Get the specified row by id.
@@ -49,10 +49,14 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	 * @param int $id The id to fetch.
 	 */
 	public function find( int $id ): ?array {
-		return $this->wpdb->get_row(
-			$this->wpdb->prepare( "SELECT * FROM {$this->table} WHERE id = %d", $id ),
-			ARRAY_A
+		$results = $this->query(
+			[
+				'where' => [ 'id' => $id ],
+				'limit' => 1,
+			]
 		);
+
+		return $results[0] ?? null;
 	}
 
 	/**
@@ -62,14 +66,11 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	 * @param array $columns The list of columns to return.
 	 */
 	public function find_by( array $criteria, array $columns = [ '*' ] ): array {
-		$select = implode( ', ', $columns );
-		$parts  = $this->build_where_clause( $criteria );
-
-		$sql = "SELECT $select FROM {$this->table} {$parts['where_sql']}";
-
-		return $this->wpdb->get_results(
-			$this->wpdb->prepare( $sql, ...$parts['params'] ),
-			ARRAY_A
+		return $this->query(
+			[
+				'where'   => $criteria,
+				'columns' => $columns,
+			]
 		);
 	}
 
@@ -79,13 +80,14 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	 * @param int $post_id The post id to search by.
 	 */
 	public function find_by_post_id( int $post_id ): ?array {
-		return $this->wpdb->get_row(
-			$this->wpdb->prepare(
-				"SELECT * FROM {$this->table} WHERE wp_post_id = %d",
-				$post_id
-			),
-			ARRAY_A
+		$results = $this->query(
+			[
+				'where' => [ 'wp_post_id' => $post_id ],
+				'limit' => 1,
+			]
 		);
+
+		return $results[0] ?? null;
 	}
 
 	/**
@@ -95,7 +97,8 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	 * @return int|false The inserted row ID or false on failure.
 	 */
 	public function insert( array $data ) {
-		$success = $this->wpdb->insert( $this->table, $data );
+		$prepared_data = $this->prepare_for_db( $data );
+		$success       = $this->wpdb->insert( $this->table, $prepared_data );
 
 		if ( ! $success ) {
 			return false;
@@ -111,7 +114,8 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	 * @param array $data The data to update.
 	 */
 	public function update( int $id, array $data ): bool {
-		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
+		$prepared_data = $this->prepare_for_db( $data );
+		return $this->wpdb->update( $this->table, $prepared_data, [ 'id' => $id ] ) !== false;
 	}
 
 	/**
@@ -132,25 +136,20 @@ abstract class BaseRepository implements LoggerAwareInterface {
 		return $this->query( [ 'columns' => $columns ] );
 	}
 
+	/**
+	 * Main query method for fetching rows.
+	 *
+	 * @param array $args The args to pass to the query.
+	 *
+	 * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+	 */
 	public function query( array $args = [] ): array {
 		$select = isset( $args['columns'] ) ? implode( ', ', $args['columns'] ) : '*';
-		$where  = [];
-		$params = [];
 
-		foreach ( $args['where'] ?? [] as $column => $value ) {
-			if ( \is_int( $value ) ) {
-				$where[] = "`$column` = %d";
-			} elseif ( \is_float( $value ) ) {
-				$where[] = "`$column` = %f";
-			} else {
-				$where[] = "`$column` = %s";
-			}
-			$params[] = $value;
-		}
+		$where = $this->build_where_clause( $args['where'] ?? [] );
 
-		$where_sql = $where ? 'WHERE ' . implode( ' AND ', $where ) : '';
-		$order_by  = isset( $args['orderby'] ) ? 'ORDER BY `' . esc_sql( $args['orderby'] ) . '`' : '';
-		$order     = isset( $args['order'] ) ? strtoupper( $args['order'] ) : 'ASC';
+		$order_by = isset( $args['orderby'] ) ? 'ORDER BY `' . esc_sql( $args['orderby'] ) . '`' : '';
+		$order    = isset( $args['order'] ) ? strtoupper( $args['order'] ) : 'ASC';
 		if ( $order_by ) {
 			$order_by .= " $order";
 		}
@@ -159,19 +158,24 @@ abstract class BaseRepository implements LoggerAwareInterface {
 		$limit_sql  = isset( $limit ) ? "LIMIT $limit" : '';
 		$offset_sql = isset( $offset ) ? "OFFSET $offset" : '';
 
-		$sql = trim( "SELECT $select FROM {$this->table} $where_sql $order_by $limit_sql $offset_sql" );
+		$sql = trim( "SELECT $select FROM {$this->table} {$where['sql']} $order_by $limit_sql $offset_sql" );
 
 		$results = $this->wpdb->get_results(
-			$this->wpdb->prepare( $sql, ...$params ),
+			$this->wpdb->prepare( $sql, ...$where['params'] ),
 			ARRAY_A
 		);
 
 		return array_map( fn( $row ) => $this->cast_types( $row ), $results );
 	}
 
+	/**
+	 * Count results of a specific query.
+	 *
+	 * @param array $where The WHERE clause.
+	 */
 	public function count_query( array $where = [] ): int {
 		$parts = $this->build_where_clause( $where );
-		$sql   = "SELECT COUNT(*) FROM {$this->table} {$parts['where_sql']}";
+		$sql   = "SELECT COUNT(*) FROM {$this->table} {$parts['sql']}";
 
 		return (int) $this->wpdb->get_var(
 			$this->wpdb->prepare( $sql, ...$parts['params'] )
@@ -199,8 +203,8 @@ abstract class BaseRepository implements LoggerAwareInterface {
 		}
 
 		return [
-			'where_sql' => $clauses ? 'WHERE ' . implode( ' AND ', $clauses ) : '',
-			'params'    => $params,
+			'sql'    => $clauses ? 'WHERE ' . implode( ' AND ', $clauses ) : '',
+			'params' => $params,
 		];
 	}
 
@@ -209,30 +213,107 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	 *
 	 * @param array $row The row to cast.
 	 */
-	public static function cast_types( array $row ): array {
-		$schema = static::get_column_schema();
+	protected function cast_types( array $row ): array {
+		$schema = $this->get_column_schema();
 
-		foreach ( $schema as $key => $type ) {
+		foreach ( $schema as $key => $args ) {
 			if ( ! \array_key_exists( $key, $row ) ) {
 				continue;
 			}
 
+			$value = $row[ $key ];
+			$type  = $args['type'] ?? null;
+
 			switch ( $type ) {
 				case FieldType::INTEGER:
-					$row[ $key ] = (int) $row[ $key ];
+					$row[ $key ] = is_numeric( $value ) ? (int) $value : null;
 					break;
+
 				case FieldType::FLOAT:
-					$row[ $key ] = isset( $row[ $key ] ) ? (float) $row[ $key ] : null;
+					$row[ $key ] = '' === $value || null === $value ? null : (float) $value;
 					break;
+
 				case FieldType::BOOLEAN:
-					$row[ $key ] = filter_var( $row[ $key ], FILTER_VALIDATE_BOOLEAN );
+					$row[ $key ] = filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
 					break;
+
 				case FieldType::OBJECT:
-					$row[ $key ] = $row[ $key ] && json_decode( $row[ $key ], true ) ?? [];
+					if ( \is_array( $value ) || \is_object( $value ) ) {
+						// Already decoded.
+						$row[ $key ] = $value;
+					} elseif ( \is_string( $value ) && $this->is_valid_json( $value ) ) {
+						$decoded     = json_decode( $value, true );
+						$row[ $key ] = \is_array( $decoded ) || \is_object( $decoded ) ? $decoded : $value;
+					}
+					break;
+
+				case FieldType::STRING:
+				default:
+					$row[ $key ] = \is_scalar( $value ) ? (string) $value : '';
 					break;
 			}
 		}
 
 		return $row;
+	}
+
+	/**
+	 * Sanitize JSON field.
+	 *
+	 * @param mixed $value The field value to sanitize.
+	 * @return false|string|null
+	 */
+	public function sanitize_json_field( $value ) {
+		if ( \is_array( $value ) || \is_object( $value ) ) {
+			return wp_json_encode( $value );
+		}
+
+		if ( \is_string( $value ) ) {
+			json_decode( $value );
+			return json_last_error() === JSON_ERROR_NONE ? $value : null;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Prepares values for insertion into db.
+	 *
+	 * @param array $data The data for insertion.
+	 */
+	protected function prepare_for_db( array $data ): array {
+		$schema = $this->get_column_schema();
+
+		foreach ( $schema as $key => $args ) {
+			if ( ! \array_key_exists( $key, $data ) ) {
+				continue;
+			}
+
+			$value = $data[ $key ];
+
+			// Normalize empty strings to null.
+			if ( '' === $value ) {
+				$value = null;
+			}
+
+			// Sanitize if possible.
+			if ( isset( $args['sanitize_callback'] ) && \is_callable( $args['sanitize_callback'] ) ) {
+				$value = \call_user_func( $args['sanitize_callback'], $value );
+			}
+
+			$data[ $key ] = $value;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Check if a string contains valid JSON.
+	 *
+	 * @param string $json The string to check.
+	 */
+	protected function is_valid_json( string $json ): bool {
+		json_decode( $json );
+		return json_last_error() === JSON_ERROR_NONE;
 	}
 }

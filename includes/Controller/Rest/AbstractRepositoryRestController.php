@@ -33,6 +33,10 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 					'callback'            => [ $this, 'get_items' ],
 					'permission_callback' => '__return_true',
 					'args'                => [
+						'columns'  => [
+							'type'     => 'array',
+							'required' => false,
+						],
 						'paged'    => [
 							'type'              => 'integer',
 							'default'           => 1,
@@ -73,11 +77,20 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 				],
 			],
 			'/(?P<id>\d+)' => [
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_item' ],
+				'permission_callback' => '__return_true',
+				'args'                => [
+					'id' => [
+						'required' => true,
+						'type'     => 'integer',
+					],
+				],
 				[
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'update_item' ],
 					'permission_callback' => [ $this, 'can_manage_options' ],
-					'args'                => $this->get_args(),
+					'args'                => $this->get_rest_args(),
 				],
 				[
 					'methods'             => \WP_REST_Server::DELETABLE,
@@ -111,8 +124,46 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 		return [];
 	}
 
-	protected function get_args(): array {
-		return [];
+	public function get_rest_args(): array {
+		$schema = $this->repository->get_column_schema();
+		$args   = [];
+
+		foreach ( $schema as $key => $field ) {
+			$type = $field['type'];
+			switch ( $type ) {
+				case FieldType::FLOAT:
+					$rest_type = 'number';
+					break;
+				default:
+					$rest_type = $type;
+					break;
+			}
+
+			$args[ $key ] = [
+				'type'              => $rest_type,
+				'default'           => $field['default'] ?? null,
+				'sanitize_callback' => $field['sanitize_callback'] ?? null,
+			];
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Get a single entity by ID.
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_item( $request ) {
+		$id   = (int) $request->get_param( 'id' );
+		$item = $this->repository->find( $id );
+
+		if ( ! $item ) {
+			return new WP_Error( 'not_found', __( 'Campaign not found.', 'kudos-donations' ), [ 'status' => 404 ] );
+		}
+
+		return new WP_REST_Response( $this->add_rest_fields( $item ), 200 );
 	}
 
 	/**
@@ -123,6 +174,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 	public function get_items( $request ): WP_REST_Response {
 		$paged    = max( 1, (int) $request->get_param( 'paged' ) );
 		$per_page = max( 1, (int) $request->get_param( 'per_page' ) );
+		$columns  = $request->get_param( 'columns' );
 		$orderby  = $request->get_param( 'orderby' );
 		$order    = $request->get_param( 'order' );
 		$offset   = ( $paged - 1 ) * $per_page;
@@ -135,6 +187,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 		}
 
 		$args = [
+			'columns' => $columns,
 			'limit'   => $per_page,
 			'offset'  => $offset,
 			'orderby' => $orderby,
@@ -164,7 +217,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 	 */
 	public function create_item( $request ) {
 		$params = $request->get_params();
-		$data   = array_intersect_key( $params, array_flip( array_keys( $this->repository::get_column_schema() ) ) );
+		$data   = array_intersect_key( $params, array_flip( array_keys( $this->repository->get_column_schema() ) ) );
 		$data   = array_map(
 			function ( $value ) {
 				return '' === $value ? null : $value;

@@ -37,7 +37,7 @@ export default function CampaignProvider({
 			setIsLoading(true);
 
 			// Try by ID
-			apiFetch({ path: `/wp/v2/kudos_campaign/${campaignId}` })
+			apiFetch({ path: `/kudos/v1/campaign/${campaignId}` })
 				.then((postById: unknown) => {
 					setCampaign(postById as Campaign);
 					setIsLoading(false);
@@ -46,7 +46,7 @@ export default function CampaignProvider({
 					if (error?.data?.status === 404) {
 						// Try by slug
 						apiFetch({
-							path: `/wp/v2/kudos_campaign?slug=${campaignId}`,
+							path: `/kudos/v1/campaign?slug=${campaignId}`,
 						})
 							.then((postBySlug: unknown) => {
 								const posts = postBySlug as Campaign[];

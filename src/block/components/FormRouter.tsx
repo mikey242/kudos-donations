@@ -163,7 +163,7 @@ export const FormRouter = ({
 			return;
 		}
 		let prev = currentStep - 1;
-		const state = { ...methods.getValues(), ...campaign.meta };
+		const state = { ...methods.getValues(), ...campaign };
 
 		// Find next available step.
 		while (!checkRequirements(Tabs, state, prev) && prev >= 0) {
@@ -176,7 +176,7 @@ export const FormRouter = ({
 	};
 
 	const handleNext = (data: FormData) => {
-		const state = { ...data, ...campaign.meta };
+		const state = { ...data, ...campaign };
 		let nextStep = currentStep + 1;
 
 		// Find next available step.

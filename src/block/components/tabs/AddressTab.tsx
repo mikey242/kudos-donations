@@ -13,9 +13,7 @@ interface AddressTabProps {
 }
 
 export const AddressTab = ({ campaign }: AddressTabProps) => {
-	const {
-		meta: { address_title, address_description, address_required },
-	} = campaign;
+	const { address_title, address_description, address_required } = campaign;
 	const countryOptions = useMemo(() => countryList().getData(), []);
 	const { setFocus } = useFormContext();
 	const optional = !address_required

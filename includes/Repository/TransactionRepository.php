@@ -54,9 +54,9 @@ class TransactionRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
-	public static function get_column_schema(): array {
+	public function get_column_schema(): array {
 		return [
-			'status' => FieldType::STRING,
+//			'status' => FieldType::STRING,
 		];
 	}
 }

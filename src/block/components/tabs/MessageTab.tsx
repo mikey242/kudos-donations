@@ -12,9 +12,7 @@ interface MessageTabProps {
 }
 
 export const MessageTab = ({ campaign }: MessageTabProps) => {
-	const {
-		meta: { message_title, message_description, message_required },
-	} = campaign;
+	const { message_title, message_description, message_required } = campaign;
 	const { setFocus } = useFormContext();
 	const optional = !message_required
 		? '(' + __('optional', 'kudos-donations') + ')'

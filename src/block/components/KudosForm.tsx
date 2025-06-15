@@ -76,8 +76,8 @@ export const KudosForm = ({
 		formData.append(
 			'return_url',
 			String(
-				campaign!.meta.use_custom_return_url
-					? campaign!.meta.custom_return_url
+				campaign!.use_custom_return_url
+					? campaign!.custom_return_url
 					: window.location.href
 			)
 		);
@@ -114,8 +114,8 @@ export const KudosForm = ({
 		if (portalContainer) {
 			return createPortal(
 				<Render
-					themeColor={campaign?.meta?.theme_color}
-					style={campaign?.meta?.custom_styles}
+					themeColor={campaign?.theme_color}
+					style={campaign?.custom_styles}
 					errors={campaignErrors}
 					className={previewMode && 'pointer-events-none'}
 					alignment={alignment}
@@ -135,7 +135,7 @@ export const KudosForm = ({
 	};
 
 	const renderDonationForm = () => (
-		<div>
+		<div className="w-full">
 			{formError && (
 				<small className="text-center block font-normal mb-4 text-sm text-red-500">
 					{formError}
@@ -159,8 +159,8 @@ export const KudosForm = ({
 	return (
 		<>
 			<Render
-				themeColor={campaign?.meta?.theme_color}
-				style={campaign?.meta?.custom_styles}
+				themeColor={campaign?.theme_color}
+				style={campaign?.custom_styles}
 				errors={campaignErrors}
 				className={previewMode && 'pointer-events-none'}
 				alignment={alignment}
