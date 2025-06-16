@@ -1,6 +1,6 @@
 <?php
 /**
- * Migration to create the campaigns table.
+ * Schema for tables.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
@@ -11,14 +11,12 @@ namespace IseardMedia\Kudos\Lifecycle;
 
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Helper\WpDb;
+use IseardMedia\Kudos\Repository\CampaignRepository;
+use IseardMedia\Kudos\Repository\DonorRepository;
+use IseardMedia\Kudos\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Repository\TransactionRepository;
 
 class SchemaInstaller implements ActivationAwareInterface {
-
-	public const TABLE_CAMPAIGNS     = 'kudos_campaigns';
-	public const TABLE_TRANSACTIONS  = 'kudos_transactions';
-	public const TABLE_DONORS        = 'kudos_donors';
-	public const TABLE_SUBSCRIPTIONS = 'kudos_subscriptions';
-
 	private WpDb $wpdb;
 
 	/**
@@ -44,11 +42,11 @@ class SchemaInstaller implements ActivationAwareInterface {
 	 * Creates the kudos_campaigns custom table.
 	 */
 	public function create_campaigns_table(): void {
-		if ( $this->wpdb->table_exists( self::TABLE_CAMPAIGNS ) ) {
+		if ( $this->wpdb->table_exists( CampaignRepository::TABLE_NAME ) ) {
 			return;
 		}
 
-		$table   = $this->wpdb->table( self::TABLE_CAMPAIGNS );
+		$table   = $this->wpdb->table( CampaignRepository::TABLE_NAME );
 		$charset = $this->wpdb->get_charset_collate();
 
 		$sql = "
@@ -94,7 +92,6 @@ class SchemaInstaller implements ActivationAwareInterface {
 				payment_description TEXT DEFAULT NULL,
 				return_message_title TEXT DEFAULT NULL,
 				return_message_text TEXT DEFAULT NULL,
-				allow_anonymous BOOLEAN DEFAULT FALSE,
 				created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 				updated_at DATETIME DEFAULT NULL,
 				UNIQUE KEY unique_post (wp_post_id)
@@ -108,11 +105,11 @@ class SchemaInstaller implements ActivationAwareInterface {
 	 * Creates the kudos_transactions custom table.
 	 */
 	public function create_transactions_table(): void {
-		if ( $this->wpdb->table_exists( self::TABLE_TRANSACTIONS ) ) {
+		if ( $this->wpdb->table_exists( TransactionRepository::TABLE_NAME ) ) {
 			return;
 		}
 
-		$table   = $this->wpdb->table( self::TABLE_TRANSACTIONS );
+		$table   = $this->wpdb->table( TransactionRepository::TABLE_NAME );
 		$charset = $this->wpdb->get_charset_collate();
 
 		$sql = "
@@ -153,11 +150,11 @@ class SchemaInstaller implements ActivationAwareInterface {
 	 * Creates the kudos_donors custom table.
 	 */
 	public function create_donors_table(): void {
-		if ( $this->wpdb->table_exists( self::TABLE_DONORS ) ) {
+		if ( $this->wpdb->table_exists( DonorRepository::TABLE_NAME ) ) {
 			return;
 		}
 
-		$table   = $this->wpdb->table( self::TABLE_DONORS );
+		$table   = $this->wpdb->table( DonorRepository::TABLE_NAME );
 		$charset = $this->wpdb->get_charset_collate();
 
 		$sql = "
@@ -189,11 +186,11 @@ class SchemaInstaller implements ActivationAwareInterface {
 	 * Creates the kudos_subscriptions custom table.
 	 */
 	public function create_subscriptions_table(): void {
-		if ( $this->wpdb->table_exists( self::TABLE_SUBSCRIPTIONS ) ) {
+		if ( $this->wpdb->table_exists( SubscriptionRepository::TABLE_NAME ) ) {
 			return;
 		}
 
-		$table   = $this->wpdb->table( self::TABLE_SUBSCRIPTIONS );
+		$table   = $this->wpdb->table( SubscriptionRepository::TABLE_NAME );
 		$charset = $this->wpdb->get_charset_collate();
 
 		$sql = "
@@ -206,7 +203,7 @@ class SchemaInstaller implements ActivationAwareInterface {
 				frequency VARCHAR(50),
 				years INT DEFAULT NULL,
 				status VARCHAR(20),
-				customer_id VARCHAR(255),
+				donor_id VARCHAR(255),
 				transaction_id BIGINT UNSIGNED DEFAULT NULL,
 				vendor_subscription_id VARCHAR(255),
 				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
