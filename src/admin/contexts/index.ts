@@ -1,3 +1,3 @@
 export * from './admin-context';
-export * from './posts-context';
+export * from './entities-context';
 export * from './settings-context';

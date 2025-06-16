@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import { useAdminContext, usePostsContext } from '../contexts';
+import { useAdminContext, useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import type { BaseEntity } from '../../types/posts';
 import {
@@ -62,7 +62,7 @@ interface PostEditProps {
 const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 	const { setHeaderContent } = useAdminContext();
 	const { updateParams } = useAdminQueryParams();
-	const { singularName } = usePostsContext();
+	const { singularName } = useEntitiesContext();
 
 	useEffect(() => {
 		setHeaderContent(

@@ -15,7 +15,7 @@ import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
 import {
 	useAdminContext,
-	usePostsContext,
+	useEntitiesContext,
 	useSettingsContext,
 } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
@@ -58,7 +58,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	});
 	const { reset, handleSubmit, formState } = methods;
 	const { createWarningNotice } = useDispatch(noticesStore);
-	const { handleUpdate } = usePostsContext();
+	const { handleUpdate } = useEntitiesContext();
 
 	useEffect(() => {
 		if (campaign) {

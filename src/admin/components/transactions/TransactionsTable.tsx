@@ -2,7 +2,7 @@ import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { usePostsContext, useSettingsContext } from '../../contexts';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import type { Transaction } from '../../../types/posts';
 import {
 	ArrowPathIcon,
@@ -13,7 +13,8 @@ import { DetailsModal, HeaderItem, Table } from '../table';
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { settings } = useSettingsContext();
-	const { handleDelete, totalPages, totalItems, posts } = usePostsContext();
+	const { handleDelete, totalPages, totalItems, posts } =
+		useEntitiesContext();
 
 	const headerItems: HeaderItem[] = [
 		{

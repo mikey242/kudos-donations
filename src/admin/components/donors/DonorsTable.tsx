@@ -3,13 +3,14 @@ import { __ } from '@wordpress/i18n';
 import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { usePostsContext, useSettingsContext } from '../../contexts';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import type { Donor } from '../../../types/posts';
 import { useAdminQueryParams } from '../../hooks';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { setParams } = useAdminQueryParams();
-	const { handleDelete, posts, totalPages, totalItems } = usePostsContext();
+	const { handleDelete, posts, totalPages, totalItems } =
+		useEntitiesContext();
 
 	const changeView = (postId: number) => {
 		void setParams({

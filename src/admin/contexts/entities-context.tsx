@@ -18,7 +18,7 @@ import { useAdminQueryParams } from '../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 
-interface PostsContextValue<T extends BaseEntity = BaseEntity> {
+interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	posts: T[];
 	hasResolved: boolean;
 	totalPages: number;
@@ -40,21 +40,21 @@ export interface EntityRestResponse<T extends BaseEntity> {
 	paged: number;
 }
 
-const PostsContext = createContext<PostsContextValue<any> | null>(null);
+const EntitiesContext = createContext<EntitiesContextValue<any> | null>(null);
 
-interface PostsProviderProps {
+interface EntitiesProviderProps {
 	children: React.ReactNode;
 	postType: string;
 	singularName: string;
 	pluralName: string;
 }
 
-export const PostsProvider = <T extends BaseEntity>({
+export const EntitiesProvider = <T extends BaseEntity>({
 	postType,
 	singularName,
 	pluralName,
 	children,
-}: PostsProviderProps) => {
+}: EntitiesProviderProps) => {
 	const { params } = useAdminQueryParams();
 	const { paged, order, orderby, column, value } = params;
 	const { createSuccessNotice, createErrorNotice } =
@@ -170,7 +170,7 @@ export const PostsProvider = <T extends BaseEntity>({
 		async (id: number): Promise<void> => {
 			try {
 				await apiFetch({
-					path: `/kudos/v1/campaign/${id}`,
+					path: `/kudos/v1/${postType}/${id}`,
 					method: 'DELETE',
 				});
 				await fetchPosts();
@@ -197,7 +197,13 @@ export const PostsProvider = <T extends BaseEntity>({
 				);
 			}
 		},
-		[fetchPosts, createSuccessNotice, singularName, createErrorNotice]
+		[
+			postType,
+			fetchPosts,
+			createSuccessNotice,
+			singularName,
+			createErrorNotice,
+		]
 	);
 
 	// Prepares data for duplicating current post.
@@ -215,7 +221,7 @@ export const PostsProvider = <T extends BaseEntity>({
 		[handleSave]
 	);
 
-	const data: PostsContextValue<T> = useMemo(
+	const data: EntitiesContextValue<T> = useMemo(
 		() => ({
 			posts,
 			totalItems,
@@ -246,19 +252,21 @@ export const PostsProvider = <T extends BaseEntity>({
 
 	return (
 		<>
-			<PostsContext.Provider value={data}>
+			<EntitiesContext.Provider value={data}>
 				{children}
-			</PostsContext.Provider>
+			</EntitiesContext.Provider>
 		</>
 	);
 };
 
-export const usePostsContext = <
+export const useEntitiesContext = <
 	T extends BaseEntity,
->(): PostsContextValue<T> => {
-	const context = useContext(PostsContext);
+>(): EntitiesContextValue<T> => {
+	const context = useContext(EntitiesContext);
 	if (!context) {
-		throw new Error('usePostsContext must be used within a PostsProvider');
+		throw new Error(
+			'useEntitiesContext must be used within a EntitiesProvider'
+		);
 	}
 	return context;
 };

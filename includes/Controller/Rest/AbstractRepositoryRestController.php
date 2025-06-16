@@ -77,13 +77,15 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 				],
 			],
 			'/(?P<id>\d+)' => [
-				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_item' ],
-				'permission_callback' => '__return_true',
-				'args'                => [
-					'id' => [
-						'required' => true,
-						'type'     => 'integer',
+				[
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => '__return_true',
+					'args'                => [
+						'id' => [
+							'required' => true,
+							'type'     => 'integer',
+						],
 					],
 				],
 				[
@@ -264,8 +266,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function delete_item( $request ): WP_REST_Response {
-		$id = (int) $request->get_param( 'id' );
-
+		$id      = (int) $request->get_param( 'id' );
 		$deleted = $this->repository->delete( $id );
 
 		if ( ! $deleted ) {

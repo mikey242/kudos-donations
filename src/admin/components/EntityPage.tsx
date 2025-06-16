@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from '@wordpress/element';
-import { usePostsContext } from '../contexts';
+import { useEntitiesContext } from '../contexts';
 import type { BaseEntity } from '../../types/posts';
 import { useAdminQueryParams } from '../hooks';
 
@@ -19,13 +19,10 @@ export const EntityPage = ({
 	const { params, updateParams } = useAdminQueryParams();
 	const { post: postId } = params;
 	const [currentPost, setCurrentPost] = useState<BaseEntity | null>(null);
-	const { posts, handleNew } = usePostsContext<BaseEntity>();
+	const { posts, handleNew } = useEntitiesContext<BaseEntity>();
 
-	const newPost = async (
-		input: React.SyntheticEvent | Partial<BaseEntity>
-	) => {
+	const newPost = async () => {
 		await handleNew().then((response) => {
-			console.log(response);
 			if (response?.id) {
 				updateParams({ post: response.id });
 			}
