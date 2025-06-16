@@ -24,19 +24,23 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	protected string $table;
 
 	/**
+	 * Field constants.
+	 */
+	public const ID         = 'id';
+	public const POST_ID    = 'wp_post_id';
+	public const TITLE      = 'title';
+	public const CREATED_AT = 'created_at';
+	public const UPDATED_AT = 'updated_at';
+
+	/**
 	 * BaseRepository constructor.
 	 *
 	 * @param WpDb $wpdb For interfacing with the wpdb.
 	 */
 	public function __construct( WpDb $wpdb ) {
 		$this->wpdb  = $wpdb;
-		$this->table = $this->wpdb->table( $this->get_table_name() );
+		$this->table = $this->wpdb->table( static::TABLE_NAME );
 	}
-
-	/**
-	 * Required for selecting the correct table.
-	 */
-	abstract protected function get_table_name(): string;
 
 	/**
 	 * Get the schema for the repository.
@@ -315,5 +319,20 @@ abstract class BaseRepository implements LoggerAwareInterface {
 	protected function is_valid_json( string $json ): bool {
 		json_decode( $json );
 		return json_last_error() === JSON_ERROR_NONE;
+	}
+
+	/**
+	 * Returns the schema field.
+	 *
+	 * @param string   $type The type of field (e.g string).
+	 * @param mixed    $default_value The default value for this field.
+	 * @param callable $sanitize Sanitize callback.
+	 */
+	protected function make_schema_field( string $type, $default_value, callable $sanitize ): array {
+		return [
+			'type'              => $type,
+			'default'           => $default_value,
+			'sanitize_callback' => $sanitize,
+		];
 	}
 }

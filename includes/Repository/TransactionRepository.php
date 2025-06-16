@@ -12,51 +12,94 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Repository;
 
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
+use IseardMedia\Kudos\Helper\Utils;
 
 class TransactionRepository extends BaseRepository {
 
 	/**
-	 * {@inheritDoc}
+	 * Field constants.
 	 */
-	protected function get_table_name(): string {
-		return SchemaInstaller::TABLE_TRANSACTIONS;
-	}
+	public const TABLE_NAME = 'kudos_transactions';
 
-	public function get_total_by_campaign_id( int $campaign_id ): float {
-		$table = $this->wpdb->table( 'kudos_transactions' );
-
-		$sql = $this->wpdb->prepare(
-			"SELECT SUM(value) FROM {$table} WHERE campaign_id = %d AND status = %s",
-			$campaign_id,
-			'paid'
-		);
-
-		$total = $this->wpdb->get_var( $sql );
-
-		return (float) $total ?? 0;
-	}
-
-	public function get_total_by_donor_id( int $donor_id ): float {
-		$table = $this->wpdb->table( 'kudos_transactions' );
-
-		$sql = $this->wpdb->prepare(
-			"SELECT SUM(value) FROM {$table} WHERE donor_id = %d AND status = %s",
-			$donor_id,
-			'paid'
-		);
-
-		$total = $this->wpdb->get_var( $sql );
-
-		return (float) ( $total ?? 0 );
-	}
+	/**
+	 * Field constants.
+	 */
+	public const VALUE                  = 'value';
+	public const CURRENCY               = 'currency';
+	public const STATUS                 = 'status';
+	public const METHOD                 = 'method';
+	public const MODE                   = 'mode';
+	public const SEQUENCE_TYPE          = 'sequence_type';
+	public const DONOR_ID               = 'donor_id';
+	public const VENDOR_PAYMENT_ID      = 'vendor_payment_id';
+	public const CAMPAIGN_ID            = 'campaign_id';
+	public const REFUNDS                = 'refunds';
+	public const MESSAGE                = 'message';
+	public const VENDOR                 = 'vendor';
+	public const VENDOR_CUSTOMER_ID     = 'vendor_customer_id';
+	public const VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
+	public const INVOICE_NUMBER         = 'invoice_number';
+	public const CHECKOUT_URL           = 'checkout_url';
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_column_schema(): array {
 		return [
-//			'status' => FieldType::STRING,
+			self::VALUE                  => $this->make_schema_field( FieldType::NUMBER, null, [ Utils::class, 'sanitize_float' ] ),
+			self::CURRENCY               => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::STATUS                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::METHOD                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::MODE                   => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::SEQUENCE_TYPE          => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::DONOR_ID               => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::VENDOR_PAYMENT_ID      => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::CAMPAIGN_ID            => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::REFUNDS                => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::MESSAGE                => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::VENDOR                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::VENDOR_CUSTOMER_ID     => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::VENDOR_SUBSCRIPTION_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::INVOICE_NUMBER         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::CHECKOUT_URL           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_url' ),
 		];
+	}
+
+	/**
+	 * Get total paid transaction value for a given campaign.
+	 *
+	 * @param int $campaign_id The campaign entity id.
+	 */
+	public function get_total_by_campaign_id( int $campaign_id ): float {
+		return $this->get_total_by( 'campaign_id', $campaign_id );
+	}
+
+	/**
+	 * Get total by donor id.
+	 *
+	 * @param int $donor_id The donor entity id.
+	 */
+	public function get_total_by_donor_id( int $donor_id ): float {
+		return $this->get_total_by( 'donor_id', $donor_id );
+	}
+
+	/**
+	 * Base method for returning total value of donations.
+	 *
+	 * @param string $column The column to filter by.
+	 * @param mixed  $value The value of the column.
+	 */
+	protected function get_total_by( string $column, $value ): float {
+		if ( ! preg_match( '/^[a-zA-Z0-9_]+$/', $column ) ) {
+			return 0.0;
+		}
+
+		$sql = $this->wpdb->prepare(
+			"SELECT SUM(value) FROM {$this->table} WHERE {$column} = %s AND status = %s",
+			$value,
+			'paid'
+		);
+
+		return (float) ( $this->wpdb->get_var( $sql ) ?? 0 );
 	}
 }

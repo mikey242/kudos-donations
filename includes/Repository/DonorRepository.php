@@ -11,21 +11,42 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Repository;
 
-use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
+use IseardMedia\Kudos\Enum\FieldType;
 
 class DonorRepository extends BaseRepository {
 
 	/**
-	 * {@inheritDoc}
+	 * Field constants.
 	 */
-	protected function get_table_name(): string {
-		return SchemaInstaller::TABLE_DONORS;
-	}
+	public const TABLE_NAME = 'kudos_donors';
+
+	/**
+	 * Field constants.
+	 */
+	public const EMAIL              = 'email';
+	public const MODE               = 'mode';
+	public const NAME               = 'name';
+	public const BUSINESS_NAME      = 'business_name';
+	public const STREET             = 'street';
+	public const POSTCODE           = 'postcode';
+	public const CITY               = 'city';
+	public const COUNTRY            = 'country';
+	public const VENDOR_CUSTOMER_ID = 'vendor_customer_id';
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_column_schema(): array {
-		return [];
+		return [
+			self::EMAIL              => $this->make_schema_field( FieldType::STRING, null, 'sanitize_email' ),
+			self::MODE               => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::NAME               => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::BUSINESS_NAME      => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::STREET             => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::POSTCODE           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::CITY               => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::COUNTRY            => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::VENDOR_CUSTOMER_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+		];
 	}
 }
