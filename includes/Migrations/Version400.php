@@ -178,13 +178,21 @@ class Version400 extends BaseMigration {
 		$table_name = $this->wpdb->prefix . 'kudos_donors';
 
 		// Check table exists.
-		if ( ! $this->wpdb->table_exists( $table_name ) ) {
-			return false;
+		if ( ! $this->table_exists( $table_name ) ) {
+			$this->progress[ $step ]['done'] = true;
+			$this->update_progress();
+			return true;
 		}
 
 		// Get data.
 		$offset = $this->progress[ $step ]['offset'] ?? 0;
 		$rows   = $this->get_rows( $table_name, $offset, $limit );
+
+		if ( empty( $rows ) ) {
+			$this->progress[ $step ]['done'] = true;
+			$this->update_progress();
+			return true;
+		}
 
 		foreach ( $rows as $donor ) {
 			$new_donor = DonorPostType::save(
@@ -214,7 +222,7 @@ class Version400 extends BaseMigration {
 		$this->progress[ $step ]['offset'] = $offset + \count( $rows );
 		$this->update_progress();
 
-		return \count( $rows ) < $limit;
+		return false;
 	}
 
 	/**
@@ -228,7 +236,7 @@ class Version400 extends BaseMigration {
 		$table_name = $this->wpdb->prefix . 'kudos_transactions';
 
 		// Check table exists.
-		if ( ! $this->wpdb->table_exists( $table_name ) ) {
+		if ( ! $this->table_exists( $table_name ) ) {
 			return false;
 		}
 
@@ -300,7 +308,7 @@ class Version400 extends BaseMigration {
 		$table_name = $this->wpdb->prefix . 'kudos_subscriptions';
 
 		// Check table exists.
-		if ( ! $this->wpdb->table_exists( $table_name ) ) {
+		if ( ! $this->table_exists( $table_name ) ) {
 			return false;
 		}
 
@@ -350,5 +358,20 @@ class Version400 extends BaseMigration {
 	private function get_rows( string $table_name, int $offset, int $limit ) {
 		$query = $this->wpdb->prepare( "SELECT * FROM $table_name LIMIT %d OFFSET %d", $limit, $offset );
 		return $this->wpdb->get_results( $query );
+	}
+
+	/**
+	 * Check if specified table exists.
+	 *
+	 * @param string $table_name The table name to check (e.g. wp_kudos_transactions).
+	 */
+	private function table_exists( string $table_name ): bool {
+		// Check table exists.
+		$check = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
+		if ( $this->wpdb->get_var( $check ) !== $table_name ) {
+			$this->logger->error( 'Table not found for migration step', [ 'table' => $table_name ] );
+			return false;
+		}
+		return true;
 	}
 }
