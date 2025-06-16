@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
+use IseardMedia\Kudos\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 use Psr\Log\LoggerInterface;
 
@@ -23,6 +24,7 @@ class Version500 extends BaseMigration {
 	private CampaignRepository $campaign_repository;
 	private TransactionRepository $transaction_repository;
 	private DonorRepository $donor_repository;
+	private SubscriptionRepository $subscription_repository;
 
 	/**
 	 * {@inheritDoc}
@@ -30,9 +32,10 @@ class Version500 extends BaseMigration {
 	public function __construct( WpDb $wpdb, LoggerInterface $logger ) {
 		parent::__construct( $wpdb, $logger );
 		( new SchemaInstaller( $wpdb ) )->on_plugin_activation();
-		$this->campaign_repository    = new CampaignRepository( $wpdb );
-		$this->transaction_repository = new TransactionRepository( $wpdb );
-		$this->donor_repository       = new DonorRepository( $wpdb );
+		$this->campaign_repository     = new CampaignRepository( $wpdb );
+		$this->transaction_repository  = new TransactionRepository( $wpdb );
+		$this->donor_repository        = new DonorRepository( $wpdb );
+		$this->subscription_repository = new SubscriptionRepository( $wpdb );
 	}
 
 	/**
@@ -40,9 +43,10 @@ class Version500 extends BaseMigration {
 	 */
 	public function get_migration_jobs(): array {
 		return [
-			'donors'       => $this->job( [ $this, 'migrate_donors' ], 'Migrating Kudos Donors to DB', true ),
-			'campaigns'    => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating Kudos Campaigns to DB', true ),
-			'transactions' => $this->job( [ $this, 'migrate_transactions' ], 'Migrating Kudos Transactions to DB', true ),
+			'donors'        => $this->job( [ $this, 'migrate_donors' ], 'Migrating Kudos Donors to DB', true ),
+			'campaigns'     => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating Kudos Campaigns to DB', true ),
+			'transactions'  => $this->job( [ $this, 'migrate_transactions' ], 'Migrating Kudos Transactions to DB', true ),
+			'subscriptions' => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating Kudos Subscriptions to DB', true ),
 		];
 	}
 
@@ -178,7 +182,6 @@ class Version500 extends BaseMigration {
 				'payment_description'        => get_post_meta( $post_id, 'payment_description', true ),
 				'return_message_title'       => get_post_meta( $post_id, 'return_message_title', true ),
 				'return_message_text'        => get_post_meta( $post_id, 'return_message_text', true ),
-				'allow_anonymous'            => (bool) get_post_meta( $post_id, 'allow_anonymous', true ),
 				'created_at'                 => get_post_time( 'Y-m-d H:i:s', true, $post ),
 				'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
@@ -194,6 +197,11 @@ class Version500 extends BaseMigration {
 		return false; // Tell BaseMigration to resume.
 	}
 
+	/**
+	 * Migrates kudos_transaction CPTs to the kudos_transactions table in chunks.
+	 *
+	 * @param string $step The step.
+	 */
 	public function migrate_transactions( string $step ): bool {
 		$offset    = $this->progress[ $step ]['offset'] ?? 0;
 		$limit     = self::DEFAULT_CHUNK_SIZE;
@@ -270,6 +278,82 @@ class Version500 extends BaseMigration {
 		}
 
 		$this->progress[ $step ]['offset'] = $offset + $limit;
+		$this->update_progress();
+
+		return false;
+	}
+
+	/**
+	 * Migrates kudos_subscription CPTs to the kudos_subscriptions table in chunks.
+	 *
+	 * @param string $step The step.
+	 */
+	public function migrate_subscriptions( string $step ): bool {
+		$offset    = $this->progress[ $step ]['offset'] ?? 0;
+		$limit     = self::DEFAULT_CHUNK_SIZE;
+		$post_type = 'kudos_subscription';
+
+		$posts = get_posts(
+			[
+				'post_type'        => $post_type,
+				'post_status'      => 'any',
+				'numberposts'      => $limit,
+				'offset'           => $offset,
+				'orderby'          => 'ID',
+				'order'            => 'ASC',
+				'suppress_filters' => false,
+			]
+		);
+
+		if ( empty( $posts ) ) {
+			$this->logger->info( 'No more subscriptions to migrate.' );
+			$this->progress[ $step ]['done'] = true;
+			$this->update_progress();
+			return true;
+		}
+
+		// Create a donor map.
+		$donor_map  = [];
+		$donor_rows = $this->donor_repository->all();
+		foreach ( $donor_rows as $row ) {
+			$donor_map[ $row['wp_post_id'] ] = $row['id'];
+		}
+
+		// Create a transaction map.
+		$transaction_map = get_transient( 'kudos_transaction_id_map' ) ?? [];
+
+		foreach ( $posts as $post ) {
+			$post_id = $post->ID;
+
+			$existing = $this->subscription_repository->find_by_post_id( $post_id );
+			if ( $existing ) {
+				$this->logger->info( "Subscription post {$post_id} already migrated. Skipping." );
+				continue;
+			}
+
+			$legacy_donor_id       = (int) get_post_meta( $post_id, 'customer_id', true );
+			$legacy_transaction_id = (int) get_post_meta( $post_id, 'transaction_id', true );
+
+			$data = [
+				'wp_post_id'             => $post_id,
+				'title'                  => get_post_field( 'post_title', $post_id ),
+				'value'                  => (float) get_post_meta( $post_id, 'value', true ),
+				'currency'               => get_post_meta( $post_id, 'currency', true ),
+				'frequency'              => get_post_meta( $post_id, 'frequency', true ),
+				'years'                  => (int) get_post_meta( $post_id, 'years', true ),
+				'status'                 => get_post_meta( $post_id, 'status', true ),
+				'donor_id'               => $donor_map[ $legacy_donor_id ] ?? null,
+				'transaction_id'         => $transaction_map[ $legacy_transaction_id ] ?? null,
+				'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
+				'created_at'             => get_post_time( 'Y-m-d H:i:s', true, $post ),
+				'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+			];
+
+			$this->subscription_repository->insert( $data );
+			$this->logger->info( "Migrated subscription post {$post_id}" );
+		}
+
+		$this->progress[ $step ]['offset'] = $offset + \count( $posts );
 		$this->update_progress();
 
 		return false;
