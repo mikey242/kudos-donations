@@ -6,7 +6,7 @@ import type { BaseEntity } from '../../../types/posts';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';
-import { usePostsContext } from '../../contexts';
+import { useEntitiesContext } from '../../contexts';
 import { Filter } from './Filters';
 
 export interface HeaderItem<T extends BaseEntity = BaseEntity> {
@@ -50,7 +50,7 @@ export const Table = <T extends BaseEntity>({
 	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { params, updateParams } = useAdminQueryParams();
-	const { pluralName, hasResolved } = usePostsContext();
+	const { pluralName, hasResolved } = useEntitiesContext();
 	const { order, orderby } = params;
 
 	useEffect(() => {

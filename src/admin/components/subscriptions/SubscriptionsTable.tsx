@@ -5,13 +5,14 @@ import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import type { Subscription } from '../../../types/posts';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
-import { usePostsContext, useSettingsContext } from '../../contexts';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
-	const { handleDelete, posts, totalPages, totalItems } = usePostsContext();
+	const { handleDelete, posts, totalPages, totalItems } =
+		useEntitiesContext();
 
 	const changeView = (postId: number) => {
 		void setParams({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PostsProvider } from '../contexts';
+import { EntitiesProvider } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import { DonorsTable } from './donors';
 import { TransactionsTable } from './transactions';
@@ -16,7 +16,7 @@ import { useEffect, useState } from '@wordpress/element';
 
 const AdminPages = {
 	'kudos-campaigns': () => (
-		<PostsProvider
+		<EntitiesProvider
 			pluralName={__('Campaigns', 'kudos-donations')}
 			singularName={__('Campaign', 'kudos-donations')}
 			postType="campaign"
@@ -29,10 +29,10 @@ const AdminPages = {
 					<CampaignEdit campaign={currentCampaign as Campaign} />
 				)}
 			/>
-		</PostsProvider>
+		</EntitiesProvider>
 	),
 	'kudos-donors': () => (
-		<PostsProvider
+		<EntitiesProvider
 			pluralName={__('Donors', 'kudos-donations')}
 			singularName={__('Donor', 'kudos-donations')}
 			postType="donor"
@@ -43,10 +43,10 @@ const AdminPages = {
 				)}
 				renderEdit={(post) => <SinglePostView post={post} />}
 			/>
-		</PostsProvider>
+		</EntitiesProvider>
 	),
 	'kudos-transactions': () => (
-		<PostsProvider
+		<EntitiesProvider
 			pluralName={__('Transactions', 'kudos-donations')}
 			singularName={__('Transaction', 'kudos-donations')}
 			postType="transaction"
@@ -57,10 +57,10 @@ const AdminPages = {
 				)}
 				renderEdit={(post) => <SinglePostView post={post} />}
 			/>
-		</PostsProvider>
+		</EntitiesProvider>
 	),
 	'kudos-subscriptions': () => (
-		<PostsProvider
+		<EntitiesProvider
 			pluralName={__('Subscriptions', 'kudos-donations')}
 			singularName={__('Subscription', 'kudos-donations')}
 			postType="subscription"
@@ -71,7 +71,7 @@ const AdminPages = {
 				)}
 				renderEdit={(post) => <SinglePostView post={post} />}
 			/>
-		</PostsProvider>
+		</EntitiesProvider>
 	),
 	'kudos-settings': () => <SettingsPage />,
 };

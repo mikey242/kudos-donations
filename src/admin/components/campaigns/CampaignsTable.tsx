@@ -10,7 +10,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../../contexts';
+import { useAdminContext, useEntitiesContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
 import type { Campaign } from '../../../types/posts';
 import { useAdminQueryParams } from '../../hooks';
@@ -19,7 +19,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { setParams } = useAdminQueryParams();
 	const { setHeaderContent } = useAdminContext();
 	const { handleDelete, handleDuplicate, posts, totalPages, totalItems } =
-		usePostsContext();
+		useEntitiesContext();
 
 	useEffect(() => {
 		setHeaderContent(
