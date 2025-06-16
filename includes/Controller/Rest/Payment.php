@@ -11,11 +11,13 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Repository\CampaignRepository;
+use IseardMedia\Kudos\Repository\DonorRepository;
+use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_Error;
@@ -34,17 +36,26 @@ class Payment extends AbstractRestController {
 	public const ROUTE_RECURRING_ENABLED = '/recurring-enabled';
 
 	private PaymentVendorInterface $vendor;
+	private CampaignRepository $campaign_repository;
+	private DonorRepository $donor_repository;
+	private TransactionRepository $transaction_repository;
 
 	/**
 	 * PaymentRoutes constructor.
 	 *
-	 * @param PaymentVendorFactory $factory Current vendor.
+	 * @param PaymentVendorFactory  $factory Current vendor.
+	 * @param CampaignRepository    $campaign_repository The campaign repository.
+	 * @param DonorRepository       $donor_repository The donor repository.
+	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory ) {
+	public function __construct( PaymentVendorFactory $factory, CampaignRepository $campaign_repository, DonorRepository $donor_repository, TransactionRepository $transaction_repository ) {
 		parent::__construct();
 
-		$this->rest_base = 'payment';
-		$this->vendor    = $factory->get_vendor();
+		$this->rest_base              = 'payment';
+		$this->vendor                 = $factory->get_vendor();
+		$this->campaign_repository    = $campaign_repository;
+		$this->donor_repository       = $donor_repository;
+		$this->transaction_repository = $transaction_repository;
 	}
 
 	/**
@@ -259,10 +270,10 @@ class Payment extends AbstractRestController {
 			return new WP_REST_Response( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ], 400 );
 		}
 
-		$campaign = get_post( $values['campaign_id'] );
+		$campaign = $this->campaign_repository->find( (int) $values['campaign_id'] );
 
 		$defaults = [
-			'currency'         => $campaign->{CampaignPostType::META_FIELD_CURRENCY},
+			'currency'         => $campaign['currency'],
 			'recurring_length' => 0,
 			'return_url'       => get_site_url(),
 			'name'             => null,
@@ -296,10 +307,10 @@ class Payment extends AbstractRestController {
 			];
 
 			// Search for existing donor based on email and mode.
-			$donor = DonorPostType::get_post(
+			$donor = $this->donor_repository->find_by(
 				[
-					DonorPostType::META_FIELD_EMAIL => $args['email'],
-					DonorPostType::META_FIELD_MODE  => $this->vendor->get_api_mode(),
+					'email' => $args['email'],
+					'mode'  => $this->vendor->get_api_mode(),
 				]
 			);
 
@@ -310,21 +321,14 @@ class Payment extends AbstractRestController {
 			}
 
 			// Update or create donor.
-			$donor = DonorPostType::save(
-				array_merge(
-					[
-						'ID' => $donor->ID ?? null,
-					],
-					$donor_meta
-				)
-			);
+			$donor = $this->donor_repository->insert( $donor_meta );
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
-		$vendor_customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID} ?? null;
-		$transaction        = TransactionPostType::save(
+		$vendor_customer_id = $donor[ DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID ] ?? null;
+		$transaction        = $this->transaction_repository->insert(
 			[
-				TransactionPostType::META_FIELD_DONOR_ID => $donor->ID ?? null,
+				TransactionPostType::META_FIELD_DONOR_ID => $donor ?? null,
 				TransactionPostType::META_FIELD_VALUE    => $args['value'],
 				TransactionPostType::META_FIELD_CURRENCY => $args['currency'],
 				TransactionPostType::META_FIELD_STATUS   => 'open',
@@ -338,7 +342,7 @@ class Payment extends AbstractRestController {
 		);
 
 		// Create payment with vendor.
-		$url = $this->vendor->create_payment( $args, $transaction->ID, $vendor_customer_id );
+		$url = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created.
 		if ( $url ) {
