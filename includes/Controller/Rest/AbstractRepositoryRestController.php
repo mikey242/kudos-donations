@@ -38,12 +38,12 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 							'required' => false,
 						],
 						'paged'    => [
-							'type'              => 'integer',
+							'type'              => FieldType::INTEGER,
 							'default'           => 1,
 							'sanitize_callback' => 'absint',
 						],
 						'per_page' => [
-							'type'              => 'integer',
+							'type'              => FieldType::INTEGER,
 							'default'           => 20,
 							'sanitize_callback' => 'absint',
 						],
@@ -58,7 +58,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 							'sanitize_callback' => 'sanitize_text_field',
 						],
 						'where'    => [
-							'type'              => 'object',
+							'type'              => FieldType::OBJECT,
 							'validate_callback' => '__return_true',
 							'sanitize_callback' => '__return_true',
 						],
@@ -84,7 +84,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 					'args'                => [
 						'id' => [
 							'required' => true,
-							'type'     => 'integer',
+							'type'     => FieldType::INTEGER,
 						],
 					],
 				],
@@ -101,7 +101,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 					'args'                => [
 						'id' => [
 							'required' => true,
-							'type'     => 'integer',
+							'type'     => FieldType::INTEGER,
 						],
 					],
 				],
