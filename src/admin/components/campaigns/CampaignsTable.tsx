@@ -7,7 +7,7 @@ import {
 	VisuallyHidden,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { Table } from '../table';
+import { HeaderItem, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, useEntitiesContext } from '../../contexts';
@@ -40,7 +40,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 		});
 	};
 
-	const headerItems = [
+	const headerItems: HeaderItem[] = [
 		{
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),

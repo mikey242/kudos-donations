@@ -19,7 +19,6 @@ const AdminPages = {
 		<EntitiesProvider
 			pluralName={__('Campaigns', 'kudos-donations')}
 			singularName={__('Campaign', 'kudos-donations')}
-			// key="campaign"
 			entityType="campaign"
 		>
 			<EntityPage
@@ -39,7 +38,6 @@ const AdminPages = {
 		<EntitiesProvider
 			pluralName={__('Donors', 'kudos-donations')}
 			singularName={__('Donor', 'kudos-donations')}
-			// key="donor"
 			entityType="donor"
 		>
 			<EntityPage
@@ -54,7 +52,6 @@ const AdminPages = {
 		<EntitiesProvider
 			pluralName={__('Transactions', 'kudos-donations')}
 			singularName={__('Transaction', 'kudos-donations')}
-			// key="transaction"
 			entityType="transaction"
 		>
 			<EntityPage
@@ -69,7 +66,6 @@ const AdminPages = {
 		<EntitiesProvider
 			pluralName={__('Subscriptions', 'kudos-donations')}
 			singularName={__('Subscription', 'kudos-donations')}
-			// key="subscriptions"
 			entityType="subscription"
 		>
 			<EntityPage

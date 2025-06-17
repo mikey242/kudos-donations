@@ -13,9 +13,7 @@ namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
-use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Service\CacheService;
-use IseardMedia\Kudos\Service\MigrationService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Throwable;
@@ -35,24 +33,10 @@ class Plugin implements LoggerAwareInterface {
 	 */
 	public function __construct(
 		RegistrableHandler $registrable_handler,
-		ActivationHandler $activation_handler,
-		CampaignRepository $campaign_repository
+		ActivationHandler $activation_handler
 	) {
 		$this->registrable_handler = $registrable_handler;
 		$this->activation_handler  = $activation_handler;
-
-		add_action(
-			'init',
-			function () use ( $campaign_repository ) {
-				$history = get_option( MigrationService::SETTING_MIGRATION_HISTORY );
-				unset( $history[2] );
-				update_option( MigrationService::SETTING_MIGRATION_HISTORY, $history );
-//				update_option(MigrationService::SETTING_DB_VERSION, '4.1.3');
-				// $campaign = $campaign_repository->all();
-				// $transactions = $campaign_repository->get_transactions(4);
-				// dd($campaign);
-			}
-		);
 	}
 
 	/**
