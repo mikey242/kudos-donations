@@ -126,6 +126,9 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 		return [];
 	}
 
+	/**
+	 * Generates rest route args based on schema.
+	 */
 	public function get_rest_args(): array {
 		$schema = $this->repository->get_column_schema();
 		$args   = [];

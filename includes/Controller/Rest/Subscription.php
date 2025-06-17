@@ -1,6 +1,6 @@
 <?php
 /**
- * Subscription Rest Routes.
+ * Subscription entity rest routes.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
