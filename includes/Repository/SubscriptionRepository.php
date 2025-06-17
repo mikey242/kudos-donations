@@ -28,8 +28,9 @@ class SubscriptionRepository extends BaseRepository {
 	public const FREQUENCY              = 'frequency';
 	public const YEARS                  = 'years';
 	public const STATUS                 = 'status';
-	public const CUSTOMER_ID            = 'customer_id';
 	public const TRANSACTION_ID         = 'transaction_id';
+	public const DONOR_ID               = 'donor_id';
+	public const VENDOR_CUSTOMER_ID     = 'vendor_customer_id';
 	public const VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
 
 	/**
@@ -42,8 +43,9 @@ class SubscriptionRepository extends BaseRepository {
 			self::FREQUENCY              => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::YEARS                  => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::STATUS                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
-			self::CUSTOMER_ID            => $this->make_schema_field( FieldType::STRING, null, 'absint' ),
 			self::TRANSACTION_ID         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::DONOR_ID               => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::VENDOR_CUSTOMER_ID     => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::VENDOR_SUBSCRIPTION_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 		];
 	}

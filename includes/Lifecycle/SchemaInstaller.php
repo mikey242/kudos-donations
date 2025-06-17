@@ -203,15 +203,17 @@ class SchemaInstaller implements ActivationAwareInterface {
 				frequency VARCHAR(50),
 				years INT DEFAULT NULL,
 				status VARCHAR(20),
-				donor_id VARCHAR(255),
 				transaction_id BIGINT UNSIGNED DEFAULT NULL,
+				donor_id BIGINT UNSIGNED DEFAULT NULL,
+				vendor_customer_id VARCHAR(255),
 				vendor_subscription_id VARCHAR(255),
 				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				updated_at DATETIME DEFAULT NULL,
 				UNIQUE KEY unique_post (wp_post_id),
 				KEY idx_status (status),
 				KEY idx_frequency (frequency),
-				KEY idx_transaction (transaction_id)
+				KEY idx_transaction (transaction_id),
+				KEY idx_donor (donor_id)
 			) {$charset};
 		";
 
