@@ -42,13 +42,8 @@ class Subscription extends AbstractRepositoryRestController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_routes(): array {
+	public function get_additional_routes(): array {
 		return [
-			'/'                => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_items' ],
-				'permission_callback' => '__return_true',
-			],
 			self::ROUTE_CANCEL => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'cancel' ],
