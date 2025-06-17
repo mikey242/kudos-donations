@@ -81,18 +81,11 @@ const AdminPages = {
 
 export const AdminRouter = ({ defaultView }): React.ReactNode => {
 	const { params } = useAdminQueryParams();
-	const [selectedPage, setSelectedPage] = useState(defaultView);
-	const { page } = params;
+	const page = params.page ?? defaultView;
 
-	useEffect(() => {
-		if (page) {
-			setSelectedPage(page);
-		}
-	}, [page]);
+	const CurrentPageComponent = AdminPages[page];
 
-	const CurrentPage = AdminPages[selectedPage];
-
-	if (!CurrentPage) {
+	if (!CurrentPageComponent) {
 		return (
 			<Flex justify="center">
 				<p>{`Unknown view: "${page}"`}</p>
@@ -100,5 +93,6 @@ export const AdminRouter = ({ defaultView }): React.ReactNode => {
 		);
 	}
 
-	return <CurrentPage />;
+	// 🔑 Force remount on view change
+	return <CurrentPageComponent key={page} />;
 };
