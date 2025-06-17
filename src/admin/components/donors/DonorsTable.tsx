@@ -9,8 +9,7 @@ import { useAdminQueryParams } from '../../hooks';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { setParams } = useAdminQueryParams();
-	const { handleDelete, posts, totalPages, totalItems } =
-		useEntitiesContext();
+	const { handleDelete } = useEntitiesContext();
 
 	const changeView = (postId: number) => {
 		void setParams({
@@ -89,12 +88,7 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 
 	return (
 		<>
-			<Table
-				posts={posts}
-				headerItems={headerItems}
-				totalItems={totalItems}
-				totalPages={totalPages}
-			/>
+			<Table headerItems={headerItems} />
 		</>
 	);
 };

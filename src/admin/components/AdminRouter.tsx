@@ -9,7 +9,7 @@ import { EntityPage } from './EntityPage';
 import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
 import type { Campaign } from '../../types/posts';
-import SinglePostView from './SinglePostView';
+import SingleEntityView from './SingleEntityView';
 import { Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
@@ -19,11 +19,15 @@ const AdminPages = {
 		<EntitiesProvider
 			pluralName={__('Campaigns', 'kudos-donations')}
 			singularName={__('Campaign', 'kudos-donations')}
-			postType="campaign"
+			// key="campaign"
+			entityType="campaign"
 		>
 			<EntityPage
-				renderTable={(editPost, newPost) => (
-					<CampaignsTable handleNew={newPost} handleEdit={editPost} />
+				renderTable={(editEntity, newEntity) => (
+					<CampaignsTable
+						handleNew={newEntity}
+						handleEdit={editEntity}
+					/>
 				)}
 				renderEdit={(currentCampaign) => (
 					<CampaignEdit campaign={currentCampaign as Campaign} />
@@ -35,13 +39,14 @@ const AdminPages = {
 		<EntitiesProvider
 			pluralName={__('Donors', 'kudos-donations')}
 			singularName={__('Donor', 'kudos-donations')}
-			postType="donor"
+			// key="donor"
+			entityType="donor"
 		>
 			<EntityPage
-				renderTable={(editPost) => (
-					<DonorsTable handleEdit={editPost} />
+				renderTable={(editEntity) => (
+					<DonorsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(post) => <SinglePostView post={post} />}
+				renderEdit={(entity) => <SingleEntityView entity={entity} />}
 			/>
 		</EntitiesProvider>
 	),
@@ -49,13 +54,14 @@ const AdminPages = {
 		<EntitiesProvider
 			pluralName={__('Transactions', 'kudos-donations')}
 			singularName={__('Transaction', 'kudos-donations')}
-			postType="transaction"
+			// key="transaction"
+			entityType="transaction"
 		>
 			<EntityPage
-				renderTable={(editPost) => (
-					<TransactionsTable handleEdit={editPost} />
+				renderTable={(editEntity) => (
+					<TransactionsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(post) => <SinglePostView post={post} />}
+				renderEdit={(entity) => <SingleEntityView entity={entity} />}
 			/>
 		</EntitiesProvider>
 	),
@@ -63,13 +69,14 @@ const AdminPages = {
 		<EntitiesProvider
 			pluralName={__('Subscriptions', 'kudos-donations')}
 			singularName={__('Subscription', 'kudos-donations')}
-			postType="subscription"
+			// key="subscriptions"
+			entityType="subscription"
 		>
 			<EntityPage
-				renderTable={(editPost) => (
-					<SubscriptionsTable handleEdit={editPost} />
+				renderTable={(editEntity) => (
+					<SubscriptionsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(post) => <SinglePostView post={post} />}
+				renderEdit={(entity) => <SingleEntityView entity={entity} />}
 			/>
 		</EntitiesProvider>
 	),

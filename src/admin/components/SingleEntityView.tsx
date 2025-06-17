@@ -56,10 +56,10 @@ const Row = ({
 );
 
 interface PostEditProps {
-	post: BaseEntity;
+	entity: BaseEntity;
 }
 
-const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
+const SingleEntityView = ({ entity }: PostEditProps): React.ReactNode => {
 	const { setHeaderContent } = useAdminContext();
 	const { updateParams } = useAdminQueryParams();
 	const { singularName } = useEntitiesContext();
@@ -68,7 +68,7 @@ const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 		setHeaderContent(
 			<NavigationButtons
 				onBack={() => {
-					void updateParams({ post: null, tab: null });
+					void updateParams({ entity: null, tab: null });
 				}}
 			/>
 		);
@@ -77,7 +77,7 @@ const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 		};
 	}, [updateParams, setHeaderContent]);
 
-	if (!post) {
+	if (!entity) {
 		return null;
 	}
 
@@ -85,29 +85,23 @@ const SinglePostView = ({ post }: PostEditProps): React.ReactNode => {
 		<VStack spacing={4}>
 			<Panel
 				header={sprintf(
-					// translators: %s is the post type singular name (e.g Transaction)
+					// translators: %s is the entity type singular name (e.g. Transaction)
 					__('%s details', 'kudos-donations'),
 					singularName
 				)}
 			>
-				<PostMeta post={post} />
+				{Object.entries(entity)
+					.sort(([a], [b]) => a.localeCompare(b))
+					.map(([key, value]) => (
+						<Row
+							key={key}
+							label={key.replace(/_/g, ' ')}
+							value={String(value)}
+						/>
+					))}
 			</Panel>
 		</VStack>
 	);
 };
 
-export const PostMeta = ({ post }) => (
-	<>
-		{Object.entries(post)
-			.sort(([a], [b]) => a.localeCompare(b))
-			.map(([key, value]) => (
-				<Row
-					key={key}
-					label={key.replace(/_/g, ' ')}
-					value={String(value)}
-				/>
-			))}
-	</>
-);
-
-export default SinglePostView;
+export default SingleEntityView;

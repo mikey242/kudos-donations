@@ -10,7 +10,7 @@ const defaultTableFilterParams = {
 };
 
 const defaultParams = {
-	post: null,
+	entity: null,
 	tab: null,
 	page: '',
 	paged: 1,
@@ -19,8 +19,8 @@ const defaultParams = {
 
 export const useAdminQueryParams = () => {
 	const [params, setQueryParams] = useQueryStates({
-		post: parseAsInteger
-			.withDefault(defaultParams.post)
+		entity: parseAsInteger
+			.withDefault(defaultParams.entity)
 			.withOptions({ history: 'push' }),
 
 		tab: parseAsString.withDefault(defaultParams.tab),
@@ -52,7 +52,7 @@ export const useAdminQueryParams = () => {
 	// Reset everything to full default (use with caution).
 	const resetAllParams = () => void setParams(defaultParams);
 
-	// Reset just the filter params (excluding paged, post, tab, etc).
+	// Reset just the filter params (excluding paged, entity, tab, etc).
 	const resetFilterParams = () =>
 		void setQueryParams(defaultTableFilterParams);
 
