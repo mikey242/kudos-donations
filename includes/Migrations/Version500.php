@@ -247,8 +247,8 @@ class Version500 extends BaseMigration {
 				$donor_map[ $row['wp_post_id'] ] = $row['id'];
 			}
 
-			$legacy_campaign_id = (int) get_post_meta( $post_id, 'campaign_id', true );
-			$legacy_donor_id    = (int) get_post_meta( $post_id, 'donor_id', true );
+			$campaign_id = (int) get_post_meta( $post_id, 'campaign_id', true );
+			$donor_id    = (int) get_post_meta( $post_id, 'donor_id', true );
 
 			$data = [
 				'wp_post_id'             => $post_id,
@@ -259,8 +259,8 @@ class Version500 extends BaseMigration {
 				'method'                 => get_post_meta( $post_id, 'method', true ),
 				'mode'                   => get_post_meta( $post_id, 'mode', true ),
 				'sequence_type'          => get_post_meta( $post_id, 'sequence_type', true ),
-				'donor_id'               => $donor_map[ $legacy_donor_id ] ?? null,
-				'campaign_id'            => $campaign_map[ $legacy_campaign_id ] ?? null,
+				'donor_id'               => $donor_map[ $donor_id ] ?? null,
+				'campaign_id'            => $campaign_map[ $campaign_id ] ?? null,
 				'vendor'                 => get_post_meta( $post_id, 'vendor', true ),
 				'vendor_payment_id'      => get_post_meta( $post_id, 'vendor_payment_id', true ),
 				'vendor_customer_id'     => get_post_meta( $post_id, 'vendor_customer_id', true ),
@@ -312,15 +312,25 @@ class Version500 extends BaseMigration {
 			return true;
 		}
 
-		// Create a donor map.
+		// Create a transaction map to migrate old id to new id.
+		$transaction_map  = [];
+		$transaction_rows = $this->transaction_repository->all();
+		foreach ( $transaction_rows as $row ) {
+			$transaction_post_id  = $row['wp_post_id'];
+			$legacy_donor_post_id = (int) get_post_meta( $transaction_post_id, 'donor_id', true );
+
+			$transaction_map[ $transaction_post_id ] = [
+				'id'       => $row['id'],
+				'donor_id' => $legacy_donor_post_id,
+			];
+		}
+
+		// Create a donor map to migrate old id to new id.
 		$donor_map  = [];
 		$donor_rows = $this->donor_repository->all();
 		foreach ( $donor_rows as $row ) {
 			$donor_map[ $row['wp_post_id'] ] = $row['id'];
 		}
-
-		// Create a transaction map.
-		$transaction_map = get_transient( 'kudos_transaction_id_map' ) ?? [];
 
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
@@ -331,8 +341,17 @@ class Version500 extends BaseMigration {
 				continue;
 			}
 
-			$legacy_donor_id       = (int) get_post_meta( $post_id, 'customer_id', true );
-			$legacy_transaction_id = (int) get_post_meta( $post_id, 'transaction_id', true );
+			$legacy_transaction_post_id = (int) get_post_meta( $post_id, 'transaction_id', true );
+			$transaction_id             = null;
+			$donor_id                   = null;
+
+			if ( isset( $transaction_map[ $legacy_transaction_post_id ] ) ) {
+				$transaction_entry = $transaction_map[ $legacy_transaction_post_id ];
+				$transaction_id    = $transaction_entry['id'];
+
+				$legacy_donor_post_id = $transaction_entry['donor_id'];
+				$donor_id             = $donor_map[ $legacy_donor_post_id ] ?? null;
+			}
 
 			$data = [
 				'wp_post_id'             => $post_id,
@@ -342,8 +361,9 @@ class Version500 extends BaseMigration {
 				'frequency'              => get_post_meta( $post_id, 'frequency', true ),
 				'years'                  => (int) get_post_meta( $post_id, 'years', true ),
 				'status'                 => get_post_meta( $post_id, 'status', true ),
-				'donor_id'               => $donor_map[ $legacy_donor_id ] ?? null,
-				'transaction_id'         => $transaction_map[ $legacy_transaction_id ] ?? null,
+				'transaction_id'         => $transaction_id,
+				'donor_id'               => $donor_id,
+				'vendor_customer_id'     => get_post_meta( $post_id, 'customer_id', true ),
 				'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
 				'created_at'             => get_post_time( 'Y-m-d H:i:s', true, $post ),
 				'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
