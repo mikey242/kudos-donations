@@ -36,7 +36,7 @@ export const EntityPage = ({
 	useEffect(() => {
 		if (entityId && entities) {
 			const found = entities.find(
-				(post) => Number(post.id) === Number(entityId)
+				(entity) => Number(entity.id) === Number(entityId)
 			);
 			setCurrentEntity(found ?? null);
 		}
