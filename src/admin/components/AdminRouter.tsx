@@ -90,14 +90,15 @@ export const AdminRouter = ({ defaultView }): React.ReactNode => {
 		}
 	}, [page]);
 
-	const currentPage = AdminPages[selectedPage];
-	if (!currentPage) {
+	const CurrentPage = AdminPages[selectedPage];
+
+	if (!CurrentPage) {
 		return (
 			<Flex justify="center">
-				<p>{`Unknown view: "${currentPage}"`}</p>
+				<p>{`Unknown view: "${page}"`}</p>
 			</Flex>
 		);
 	}
 
-	return currentPage();
+	return <CurrentPage />;
 };
