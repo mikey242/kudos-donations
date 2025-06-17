@@ -67,7 +67,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 					campaign={campaign}
 					onBack={() => {
 						void updateParams({
-							post: null,
+							entity: null,
 							tab: null,
 						});
 					}}

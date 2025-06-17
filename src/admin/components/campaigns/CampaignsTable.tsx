@@ -18,8 +18,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { setHeaderContent } = useAdminContext();
-	const { handleDelete, handleDuplicate, posts, totalPages, totalItems } =
-		useEntitiesContext();
+	const { handleDelete, handleDuplicate } = useEntitiesContext();
 
 	useEffect(() => {
 		setHeaderContent(
@@ -153,12 +152,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 
 	return (
 		<>
-			<Table
-				posts={posts}
-				headerItems={headerItems}
-				totalPages={totalPages}
-				totalItems={totalItems}
-			/>
+			<Table headerItems={headerItems} />
 		</>
 	);
 };

@@ -17,35 +17,35 @@ export const EntityPage = ({
 	renderEdit,
 }: EntityPageProps): React.ReactNode => {
 	const { params, updateParams } = useAdminQueryParams();
-	const { post: postId } = params;
-	const [currentPost, setCurrentPost] = useState<BaseEntity | null>(null);
-	const { posts, handleNew } = useEntitiesContext<BaseEntity>();
+	const { entity: entityId } = params;
+	const [currentEntity, setCurrentEntity] = useState<BaseEntity | null>(null);
+	const { entities, handleNew } = useEntitiesContext<BaseEntity>();
 
 	const newPost = async () => {
 		await handleNew().then((response) => {
 			if (response?.id) {
-				updateParams({ post: response.id });
+				updateParams({ entity: response.id });
 			}
 		});
 	};
 
 	const editPost = (id: number) => {
-		void updateParams({ post: id });
+		void updateParams({ entity: id });
 	};
 
 	useEffect(() => {
-		if (postId && posts) {
-			const found = posts.find(
-				(post) => Number(post.id) === Number(postId)
+		if (entityId && entities) {
+			const found = entities.find(
+				(post) => Number(post.id) === Number(entityId)
 			);
-			setCurrentPost(found ?? null);
+			setCurrentEntity(found ?? null);
 		}
-	}, [postId, posts]);
+	}, [entityId, entities]);
 
 	return (
 		<>
-			{postId && renderEdit ? (
-				<div className="admin-wrap"> {renderEdit(currentPost)}</div>
+			{entityId && renderEdit ? (
+				<div className="admin-wrap"> {renderEdit(currentEntity)}</div>
 			) : (
 				<div className="admin-wrap-wide">
 					{renderTable(editPost, newPost)}

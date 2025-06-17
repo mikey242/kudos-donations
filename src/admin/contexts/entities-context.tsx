@@ -19,17 +19,17 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 
 interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
-	posts: T[];
+	entities: T[];
 	hasResolved: boolean;
 	totalPages: number;
 	totalItems: number;
 	handleNew: (args?: Partial<T> | React.SyntheticEvent) => Promise<any>;
 	handleUpdate: (data: Partial<T>) => Promise<any>;
-	handleDelete: (postId: number) => void;
-	handleDuplicate: (post: T) => void;
+	handleDelete: (entityId: number) => void;
+	handleDuplicate: (entity: T) => void;
 	singularName: string;
 	pluralName: string;
-	postType: string;
+	entityType: string;
 }
 
 export interface EntityRestResponse<T extends BaseEntity> {
@@ -44,13 +44,20 @@ const EntitiesContext = createContext<EntitiesContextValue<any> | null>(null);
 
 interface EntitiesProviderProps {
 	children: React.ReactNode;
-	postType: string;
+	entityType: string;
 	singularName: string;
 	pluralName: string;
 }
 
+type EntityState<T> = {
+	entities: T[];
+	hasResolved: boolean;
+	totalItems: number;
+	totalPages: number;
+};
+
 export const EntitiesProvider = <T extends BaseEntity>({
-	postType,
+	entityType,
 	singularName,
 	pluralName,
 	children,
@@ -59,47 +66,58 @@ export const EntitiesProvider = <T extends BaseEntity>({
 	const { paged, order, orderby, column, value } = params;
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
+	const [state, setState] = useState<EntityState<T>>({
+		entities: [],
+		hasResolved: false,
+		totalItems: 0,
+		totalPages: 1,
+	});
 
-	const [posts, setPosts] = useState<T[]>([]);
-	const [hasResolved, setHasResolved] = useState(false);
-	const [totalPages, setTotalPages] = useState(1);
-	const [totalItems, setTotalItems] = useState(0);
-
-	const fetchPosts = useCallback(async () => {
+	const fetchEntities = useCallback(async () => {
 		try {
+			setState((prev) => ({
+				...prev,
+				hasResolved: false,
+			}));
 			const args = { paged, orderby, order, column, value };
-			const response: EntityRestResponse<T> = await apiFetch({
-				path: addQueryArgs(`/kudos/v1/${postType}`, args),
+			apiFetch({
+				path: addQueryArgs(`/kudos/v1/${entityType}`, args),
+			}).then((response: EntityRestResponse<T>) => {
+				setState({
+					entities: response.items,
+					hasResolved: true,
+					totalItems: response.total,
+					totalPages: response.total_pages,
+				});
 			});
-			setPosts(response.items);
-			setHasResolved(true);
-			setTotalItems(response.total);
-			setTotalPages(response.total_pages);
 		} catch (error) {
-			setHasResolved(true);
+			setState((prev) => ({
+				...prev,
+				hasResolved: true,
+			}));
 		}
-	}, [postType, paged, order, orderby, column, value]);
+	}, [column, entityType, order, orderby, paged, value]);
 
 	useEffect(() => {
-		void fetchPosts();
-	}, [fetchPosts]);
+		void fetchEntities();
+	}, [fetchEntities]);
 
 	const handleSave = useCallback(
 		async (args = {}): Promise<T | null> => {
 			try {
 				const response = await apiFetch<T>({
-					path: `/kudos/v1/${postType}`,
+					path: `/kudos/v1/${entityType}`,
 					method: 'POST',
 					data: args,
 				});
 
-				await fetchPosts();
+				await fetchEntities();
 
 				return response;
 			} catch (error: any) {
 				void createErrorNotice(
 					sprintf(
-						/* translators: %1$s is the post type and %2$s is the error message. */
+						/* translators: %1$s is the entity type and %2$s is the error message. */
 						__('Error creating %1$s: %2$s', 'kudos-donations'),
 						singularName,
 						error.message
@@ -108,7 +126,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 				return null;
 			}
 		},
-		[createErrorNotice, fetchPosts, postType, singularName]
+		[createErrorNotice, fetchEntities, entityType, singularName]
 	);
 
 	const handleUpdate = useCallback(
@@ -116,7 +134,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 			const response = await handleSave(data);
 			void createSuccessNotice(
 				sprintf(
-					/* translators: %s is the post type singular name. */
+					/* translators: %s is the entity type singular name. */
 					__('%s updated', 'kudos-donations'),
 					singularName
 				),
@@ -130,13 +148,13 @@ export const EntitiesProvider = <T extends BaseEntity>({
 		[createSuccessNotice, handleSave, singularName]
 	);
 
-	// Handles creating a post.
+	// Handles creating a entity.
 	const handleNew = useCallback(
 		async (args?: Partial<T>): Promise<any> => {
 			// Set default arguments.
 			const {
 				title = sprintf(
-					/* translators: %s is the post type name. */
+					/* translators: %s is the entity type name. */
 					__('New %s', 'kudos-donations'),
 					singularName
 				),
@@ -151,7 +169,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 			if (response) {
 				void createSuccessNotice(
 					sprintf(
-						/* translators: %s is the post type name. */
+						/* translators: %s is the entity type name. */
 						__('%s created', 'kudos-donations'),
 						singularName
 					),
@@ -170,13 +188,13 @@ export const EntitiesProvider = <T extends BaseEntity>({
 		async (id: number): Promise<void> => {
 			try {
 				await apiFetch({
-					path: `/kudos/v1/${postType}/${id}`,
+					path: `/kudos/v1/${entityType}/${id}`,
 					method: 'DELETE',
 				});
-				await fetchPosts();
+				await fetchEntities();
 				await createSuccessNotice(
 					sprintf(
-						/* translators: %s is the post type name. */
+						/* translators: %s is the entity type name. */
 						__('%s deleted', 'kudos-donations'),
 						singularName
 					),
@@ -188,7 +206,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 			} catch (error: any) {
 				await createErrorNotice(
 					sprintf(
-						/* translators: %1$s is the post type and %2$s is the error message. */
+						/* translators: %1$s is the entity type and %2$s is the error message. */
 						__('Error deleting %1$s: %2$s', 'kudos-donations'),
 						singularName,
 						error?.message ?? 'Unknown error'
@@ -198,22 +216,22 @@ export const EntitiesProvider = <T extends BaseEntity>({
 			}
 		},
 		[
-			postType,
-			fetchPosts,
+			entityType,
+			fetchEntities,
 			createSuccessNotice,
 			singularName,
 			createErrorNotice,
 		]
 	);
 
-	// Prepares data for duplicating current post.
+	// Prepares data for duplicating current entity.
 	const handleDuplicate = useCallback(
-		(post: T) => {
-			const { id, wp_post_id, ...rest } = post;
+		(entity: T) => {
+			const { id, wp_post_id, ...rest } = entity;
 
 			const data = {
 				...rest,
-				title: post.title,
+				title: entity.title,
 				created_at: new Date().toISOString(),
 			} as Partial<T>;
 			return handleSave(data);
@@ -223,30 +241,30 @@ export const EntitiesProvider = <T extends BaseEntity>({
 
 	const data: EntitiesContextValue<T> = useMemo(
 		() => ({
-			posts,
-			totalItems,
-			totalPages,
-			hasResolved,
+			entities: state.entities,
+			hasResolved: state.hasResolved,
+			totalItems: state.totalItems,
+			totalPages: state.totalPages,
 			handleNew,
 			handleDuplicate,
 			handleDelete,
 			handleUpdate,
 			singularName,
 			pluralName,
-			postType,
+			entityType,
 		}),
 		[
-			posts,
+			state.entities,
+			state.hasResolved,
+			state.totalItems,
+			state.totalPages,
 			handleDelete,
 			handleDuplicate,
 			handleNew,
 			handleUpdate,
-			hasResolved,
 			singularName,
 			pluralName,
-			postType,
-			totalItems,
-			totalPages,
+			entityType,
 		]
 	);
 

@@ -13,8 +13,7 @@ import { DetailsModal, HeaderItem, Table } from '../table';
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { settings } = useSettingsContext();
-	const { handleDelete, totalPages, totalItems, posts } =
-		useEntitiesContext();
+	const { handleDelete } = useEntitiesContext();
 
 	const headerItems: HeaderItem[] = [
 		{
@@ -211,7 +210,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		},
 		{
 			label: __('Cancelled', 'kudos-donations'),
-			column: 'staus',
+			column: 'status',
 			value: 'canceled',
 		},
 		{
@@ -223,13 +222,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 
 	return (
 		<>
-			<Table
-				filters={filters}
-				posts={posts}
-				headerItems={headerItems}
-				totalItems={totalItems}
-				totalPages={totalPages}
-			/>
+			<Table filters={filters} headerItems={headerItems} />
 		</>
 	);
 };

@@ -31,35 +31,30 @@ export interface HeaderItem<T extends BaseEntity = BaseEntity> {
 
 interface TableProps<T extends BaseEntity = BaseEntity> {
 	headerItems: HeaderItem<T>[];
-	posts?: T[];
 	isLoading?: boolean;
 	hasLoadedOnce?: boolean;
-	totalPages?: number;
-	totalItems?: number;
 	filters?: Filter[];
 }
 
 export const Table = <T extends BaseEntity>({
 	headerItems,
-	posts,
-	totalPages,
-	totalItems,
 	filters,
 }: TableProps<T>): React.ReactNode => {
-	const [cachedPosts, setCachedPosts] = useState<BaseEntity[]>(posts);
+	const [cachedPosts, setCachedPosts] = useState<BaseEntity[]>();
 	const [hasLoadedOnce, setHasLoadedOnce] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { params, updateParams } = useAdminQueryParams();
-	const { pluralName, hasResolved } = useEntitiesContext();
+	const { pluralName, hasResolved, entities, totalPages, totalItems } =
+		useEntitiesContext();
 	const { order, orderby } = params;
 
 	useEffect(() => {
 		setIsLoading(!hasResolved);
 		if (hasResolved) {
-			setCachedPosts(posts ?? []);
+			setCachedPosts(entities ?? []);
 			setHasLoadedOnce(true);
 		}
-	}, [posts, hasResolved]);
+	}, [hasResolved, entities]);
 
 	const getSortIcon = (value: string): IconType => {
 		if (orderby !== value) {

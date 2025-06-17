@@ -11,8 +11,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
-	const { handleDelete, posts, totalPages, totalItems } =
-		useEntitiesContext();
+	const { handleDelete } = useEntitiesContext();
 
 	const changeView = (postId: number) => {
 		void setParams({
@@ -170,13 +169,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 
 	return (
 		<>
-			<Table
-				filters={filters}
-				posts={posts}
-				headerItems={headerItems}
-				totalItems={totalItems}
-				totalPages={totalPages}
-			/>
+			<Table filters={filters} headerItems={headerItems} />
 		</>
 	);
 };
