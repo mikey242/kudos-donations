@@ -57,16 +57,12 @@ const ButtonEdit = ({
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
 	const fetchPosts = useCallback(async () => {
-		try {
-			const response: EntityRestResponse<Campaign> = await apiFetch({
-				path: addQueryArgs('/kudos/v1/campaign', {
-					columns: ['id', 'title'],
-				}),
-			});
-			setCampaigns(response.items);
-		} catch (error) {
-			console.log(error);
-		}
+		const response: EntityRestResponse<Campaign> = await apiFetch({
+			path: addQueryArgs('/kudos/v1/campaign', {
+				columns: ['id', 'title'],
+			}),
+		});
+		setCampaigns(response.items);
 	}, []);
 
 	useEffect(() => {
