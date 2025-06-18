@@ -42,7 +42,7 @@ class Transaction extends AbstractRepositoryRestController {
 					'_wpnonce'     => wp_create_nonce( "view_invoice_$transaction_id" ),
 					'id'           => $transaction_id,
 				],
-				admin_url( 'edit.php' )
+				admin_url( 'admin.php' )
 			);
 		}
 		return $item;
