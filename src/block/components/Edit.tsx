@@ -15,7 +15,7 @@ import { KudosForm } from './KudosForm';
 import { KudosLogo } from './KudosLogo';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import CampaignProvider from '../contexts/campaign-context';
-import type { Campaign } from '../../types/posts';
+import type { Campaign } from '../../types/entity';
 import apiFetch from '@wordpress/api-fetch';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { addQueryArgs } from '@wordpress/url';

@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import type { Subscription } from '../../../types/posts';
+import type { Subscription } from '../../../types/entity';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';

@@ -20,7 +20,7 @@ import {
 } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 import { Button } from '@wordpress/components';
 import GenerateShortcode from './GenerateShortcode';
 

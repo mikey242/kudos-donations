@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from '@wordpress/element';
 import { useEntitiesContext } from '../contexts';
-import type { BaseEntity } from '../../types/posts';
+import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams } from '../hooks';
 
 interface EntityPageProps {

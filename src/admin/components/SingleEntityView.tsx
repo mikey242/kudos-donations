@@ -3,7 +3,7 @@ import { useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminContext, useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
-import type { BaseEntity } from '../../types/posts';
+import type { BaseEntity } from '../../types/entity';
 import {
 	Button,
 	Flex,

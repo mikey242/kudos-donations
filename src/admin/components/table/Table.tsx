@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Flex, Spinner } from '@wordpress/components';
 import type { IconType } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import type { BaseEntity } from '../../../types/posts';
+import type { BaseEntity } from '../../../types/entity';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { TableControls } from './TableControls';
 import { useAdminQueryParams } from '../../hooks';

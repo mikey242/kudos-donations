@@ -8,7 +8,7 @@ import {
 } from '../../controls';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
-import type { Campaign } from '../../../../types/posts';
+import type { Campaign } from '../../../../types/entity';
 import { Panel } from '../../Panel';
 
 interface GeneralTabProps {
