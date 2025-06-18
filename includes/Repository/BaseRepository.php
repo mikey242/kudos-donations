@@ -302,14 +302,26 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			}
 
 			// Sanitize if possible.
-			if ( isset( $args['sanitize_callback'] ) && \is_callable( $args['sanitize_callback'] ) ) {
-				$value = \call_user_func( $args['sanitize_callback'], $value );
-			}
+			$value = $this->maybe_sanitize( $args['sanitize_callback'] ?? null, $value );
 
 			$data[ $key ] = $value;
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Checks if value is not null before sanitizing.
+	 *
+	 * @param callable $callback The sanitize callback.
+	 * @param mixed    $value The value to sanitize.
+	 * @return mixed|null
+	 */
+	protected function maybe_sanitize( callable $callback, $value ) {
+		if ( null === $value ) {
+			return null;
+		}
+		return \is_callable( $callback ) ? \call_user_func( $callback, $value ) : $value;
 	}
 
 	/**
