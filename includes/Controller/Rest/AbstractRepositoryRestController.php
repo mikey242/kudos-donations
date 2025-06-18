@@ -230,9 +230,10 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 			$data
 		);
 
-		if ( $data['id'] ) {
-			$id = $data['id'];
-			unset( $data['id'] );
+		// Remove post id when updating, as this is passed separately.
+		if ( isset( $data[ BaseRepository::ID ] ) && $data[ BaseRepository::ID ] ) {
+			$id = $data[ BaseRepository::ID ];
+			unset( $data[ BaseRepository::ID ] );
 			$this->repository->update( $id, $data );
 		} else {
 			$id = $this->repository->insert( $data );
