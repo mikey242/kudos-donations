@@ -4,8 +4,9 @@ import { useFormContext } from 'react-hook-form';
 import React from 'react';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
-import { SelectControl } from '../controls';
+import { SelectControl, SelectOption } from '../controls';
 import type { Campaign } from '../../../types/posts';
+import { applyFilters } from '@wordpress/hooks';
 
 interface FrequencyTabProps {
 	campaign: Campaign;
@@ -26,6 +27,16 @@ export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
 					? __('Continuous', 'kudos-donations')
 					: i + ' ' + _n('year', 'years', i, 'kudos-donations'),
 		})
+	);
+
+	const filteredDuration = applyFilters(
+		'kudosFormDuration',
+		duration
+	) as SelectOption[];
+
+	const filteredFrequencyOptions = applyFilters(
+		'kudosFormFrequencyOptions',
+		frequency_options
 	);
 
 	useEffect(() => {
@@ -54,7 +65,7 @@ export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
 					),
 				}}
 				placeholder={__('Payment frequency', 'kudos-donations')}
-				options={Object.entries(frequency_options).map(
+				options={Object.entries(filteredFrequencyOptions).map(
 					([value, label]) => ({
 						value,
 						label,
@@ -77,7 +88,7 @@ export const FrequencyTab = ({ campaign }: FrequencyTabProps) => {
 						),
 				}}
 				placeholder={__('Donation duration', 'kudos-donations')}
-				options={duration}
+				options={filteredDuration}
 			/>
 		</BaseTab>
 	);
