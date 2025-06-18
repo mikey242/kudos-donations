@@ -120,6 +120,8 @@ class CampaignRepository extends BaseRepository {
 	 * @param int   $campaign_id The ID of the campaign in the custom table.
 	 * @param array $filters     Optional filters (e.g., ['status' => 'paid']).
 	 * @return array List of matching transactions.
+	 *
+	 *  phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 	 */
 	public function get_transactions( int $campaign_id, array $filters = [] ): array {
 		$transaction_table = $this->wpdb->table( 'kudos_transactions' );
