@@ -10,24 +10,34 @@ import {
 	FlexBlock,
 } from '@wordpress/components';
 import React from 'react';
+import { useState } from '@wordpress/element';
 
 interface PanelProps {
 	header: string;
 	children: React.ReactNode;
+	initialOpen?: boolean;
 }
 
-export const Panel = ({ header, children }: PanelProps) => (
-	<Card>
-		<CardHeader>
-			<Heading size={16} level={3}>
-				{header}
-			</Heading>
-		</CardHeader>
-		<CardBody>
-			<VStack spacing={5}>{children}</VStack>
-		</CardBody>
-	</Card>
-);
+export const Panel = ({ header, children, initialOpen = true }: PanelProps) => {
+	const [open, setOpen] = useState(initialOpen);
+	return (
+		<Card>
+			<CardHeader
+				style={{ cursor: 'pointer' }}
+				onClick={() => setOpen(!open)}
+			>
+				<Heading size={16} level={3}>
+					{header}
+				</Heading>
+			</CardHeader>
+			{open && (
+				<CardBody>
+					<VStack spacing={5}>{children}</VStack>
+				</CardBody>
+			)}
+		</Card>
+	);
+};
 
 export const PanelRow = ({ children }: { children: React.ReactNode }) => (
 	<Flex gap={5} align="flex-start" justify="flex-start">
