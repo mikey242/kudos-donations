@@ -13,12 +13,17 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Repository\DonorRepository;
+use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
+use IseardMedia\Kudos\Repository\TransactionRepository;
 
-class InvoiceService extends AbstractRegistrable implements HasSettingsInterface {
+class InvoiceService extends AbstractRegistrable implements HasSettingsInterface, RepositoryAwareInterface {
+
+	use RepositoryAwareTrait;
 
 	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
 	public const SETTING_INVOICE_NUMBER          = '_kudos_invoice_number';
@@ -95,7 +100,9 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		}
 
 		// Get transaction.
-		$transaction = TransactionPostType::get_post( [ 'ID' => $transaction_id ] );
+		$transactions = $this->repository_manager->get( TransactionRepository::class );
+		$transaction  = $transactions->find( $transaction_id );
+
 		if ( ! $transaction ) {
 			$this->logger->debug( 'Error generating invoice: Transaction not found', [ 'transaction_id' => $transaction_id ] );
 			return null;
@@ -103,31 +110,32 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 
 		// Populate data array.
 		$data = [
-			'order_id'        => $transaction->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID},
-			'vendor'          => $transaction->{TransactionPostType::META_FIELD_VENDOR},
-			'sequence_type'   => $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
-			'id'              => gmdate( 'Y' ) . '_' . $transaction->{TransactionPostType::META_FIELD_INVOICE_NUMBER},
-			'date'            => $transaction->post_date,
+			'order_id'        => $transaction[ TransactionRepository::VENDOR_PAYMENT_ID ],
+			'vendor'          => $transaction[ TransactionRepository::VENDOR ],
+			'sequence_type'   => $transaction[ TransactionRepository::SEQUENCE_TYPE ],
+			'id'              => gmdate( 'Y' ) . '_' . $transaction[ TransactionRepository::INVOICE_NUMBER ],
+			'date'            => $transaction[ BaseRepository::CREATED_AT ],
 			'company_name'    => Utils::get_company_name(),
 			'company_address' => get_option( self::SETTING_INVOICE_COMPANY_ADDRESS ),
 			'vat_number'      => get_option( self::SETTING_INVOICE_VAT_NUMBER ),
-			'currency_symbol' => Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ],
+			'currency_symbol' => Utils::get_currencies()[ $transaction[ TransactionRepository::CURRENCY ] ],
 			'items'           => [
-				$transaction->post_title       => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
-				__( 'VAT', 'kudos-donations' ) => 0,
+				$transaction[ BaseRepository::TITLE ] => number_format_i18n( $transaction[ TransactionRepository::VALUE ], 2 ),
+				__( 'VAT', 'kudos-donations' )        => 0,
 			],
-			'total'           => Utils::format_value_for_display( $transaction->{TransactionPostType::META_FIELD_VALUE} ),
+			'total'           => Utils::format_value_for_display( $transaction[ TransactionRepository::VALUE ] ),
 		];
 
 		// Append donor.
-		$donor = DonorPostType::get_post( [ 'ID' => $transaction->{TransactionPostType::META_FIELD_DONOR_ID} ] );
+		$donors = $this->repository_manager->get( DonorRepository::class );
+		$donor  = $donors->find_by( [ 'ID' => $transaction[ TransactionRepository::DONOR_ID ] ] );
 		if ( $donor ) {
-				$data['donor_business'] = $donor->{DonorPostType::META_FIELD_BUSINESS_NAME};
-				$data['donor_name']     = $donor->{DonorPostType::META_FIELD_NAME};
-				$data['donor_street']   = $donor->{DonorPostType::META_FIELD_STREET};
-				$data['donor_postcode'] = $donor->{DonorPostType::META_FIELD_POSTCODE};
-				$data['donor_city']     = $donor->{DonorPostType::META_FIELD_CITY};
-				$data['donor_country']  = $donor->{DonorPostType::META_FIELD_COUNTRY};
+				$data['donor_business'] = $donor[ DonorRepository::BUSINESS_NAME ] ?? '';
+				$data['donor_name']     = $donor[ DonorRepository::NAME ] ?? '';
+				$data['donor_street']   = $donor[ DonorRepository::STREET ] ?? '';
+				$data['donor_postcode'] = $donor[ DonorRepository::POSTCODE ] ?? '';
+				$data['donor_city']     = $donor[ DonorRepository::CITY ] ?? '';
+				$data['donor_country']  = $donor[ DonorRepository::COUNTRY ] ?? '';
 		}
 
 		$this->logger->debug( 'Generating new invoice.', [ 'file' => $file ] );
