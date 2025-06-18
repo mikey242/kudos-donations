@@ -31,6 +31,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
+			orderby: 'status',
 			valueCallback: (post: Subscription): React.ReactNode => {
 				const status = post?.status;
 
@@ -70,6 +71,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'value',
 			title: __('Amount', 'kudos-donations'),
+			orderby: 'value',
 			valueCallback: (post: Subscription): React.ReactNode => {
 				const value = post?.value;
 				const currency = post?.currency;
@@ -86,6 +88,12 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 					</span>
 				);
 			},
+		},
+		{
+			key: 'campaign',
+			title: __('Campaign', 'kudos-donations'),
+			valueCallback: (post: Subscription): React.ReactNode =>
+				post.campaign?.title,
 		},
 		{
 			key: 'frequency',

@@ -26,6 +26,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
+			orderby: 'status',
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const status = post.status;
 
