@@ -12,7 +12,7 @@ import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useAdminContext, useEntitiesContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
