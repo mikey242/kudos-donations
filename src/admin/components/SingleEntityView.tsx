@@ -55,6 +55,52 @@ const Row = ({
 	</Flex>
 );
 
+const renderField = (
+	key: string,
+	value: unknown,
+	depth: number = 0
+): React.ReactNode => {
+	const label = key.replace(/_/g, ' ');
+
+	if (value === null || value === undefined) {
+		return (
+			<Row
+				key={key}
+				label={label}
+				value={<em>{__('None', 'kudos-donations')}</em>}
+			/>
+		);
+	}
+
+	if (Array.isArray(value)) {
+		return (
+			<Panel
+				key={key}
+				initialOpen={depth < 1}
+				header={`${label} (${__('Array', 'kudos-donations')})`}
+			>
+				{value.map((item, index) =>
+					renderField(`${label} ${index + 1}`, item, depth + 1)
+				)}
+			</Panel>
+		);
+	}
+
+	if (typeof value === 'object') {
+		return (
+			<Panel key={key} header={label} initialOpen={false}>
+				{Object.entries(value)
+					.sort(([a], [b]) => a.localeCompare(b))
+					.map(([subKey, subValue]) =>
+						renderField(subKey, subValue, depth + 1)
+					)}
+			</Panel>
+		);
+	}
+
+	return <Row key={key} label={label} value={String(value)} />;
+};
+
 interface PostEditProps {
 	entity: BaseEntity;
 }
@@ -85,20 +131,37 @@ const SingleEntityView = ({ entity }: PostEditProps): React.ReactNode => {
 		<VStack spacing={4}>
 			<Panel
 				header={sprintf(
-					// translators: %s is the entity type singular name (e.g. Transaction)
+					// translators: %s is the entity singular name (e.g Transaction
 					__('%s details', 'kudos-donations'),
 					singularName
 				)}
 			>
 				{Object.entries(entity)
-					.sort(([a], [b]) => a.localeCompare(b))
-					.map(([key, value]) => (
-						<Row
-							key={key}
-							label={key.replace(/_/g, ' ')}
-							value={String(value)}
-						/>
-					))}
+					.sort(([aKey, aVal], [bKey, bVal]) => {
+						const getPriority = (val: unknown) => {
+							if (val === null || val === undefined) {
+								return 0;
+							}
+							if (Array.isArray(val)) {
+								return 1;
+							}
+							if (typeof val === 'object') {
+								return 2;
+							}
+							return 0;
+						};
+
+						const priorityA = getPriority(aVal);
+						const priorityB = getPriority(bVal);
+
+						if (priorityA !== priorityB) {
+							return priorityA - priorityB;
+						}
+
+						// Fallback to key sort
+						return aKey.localeCompare(bKey);
+					})
+					.map(([key, value]) => renderField(key, value))}
 			</Panel>
 		</VStack>
 	);
