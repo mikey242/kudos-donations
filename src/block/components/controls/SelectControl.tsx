@@ -4,13 +4,15 @@ import { clsx } from 'clsx';
 import { Select } from '@headlessui/react';
 import { RegisterOptions } from 'react-hook-form';
 
+export interface SelectOption {
+	label: string;
+	value: string;
+}
+
 interface SelectControlProps {
 	name: string;
 	rules?: RegisterOptions;
-	options: {
-		label: string;
-		value: string;
-	}[];
+	options: SelectOption[];
 	placeholder?: string;
 	isDisabled?: boolean;
 	help?: string;
