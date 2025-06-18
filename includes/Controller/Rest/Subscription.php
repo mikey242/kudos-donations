@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use WP_REST_Request;
@@ -26,6 +27,7 @@ class Subscription extends AbstractRepositoryRestController {
 
 	public const ROUTE_CANCEL = '/cancel';
 	private DonorRepository $donor_repository;
+	private TransactionRepository $transaction_repository;
 
 	/**
 	 * Subscription routes constructor.
@@ -33,14 +35,21 @@ class Subscription extends AbstractRepositoryRestController {
 	 * @param PaymentVendorFactory   $factory Current vendor.
 	 * @param SubscriptionRepository $subscription Subscription repository.
 	 * @param DonorRepository        $donor_repository Donor repository.
+	 * @param TransactionRepository  $transaction_repository Transaction repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory, SubscriptionRepository $subscription, DonorRepository $donor_repository ) {
+	public function __construct(
+		PaymentVendorFactory $factory,
+		SubscriptionRepository $subscription,
+		DonorRepository $donor_repository,
+		TransactionRepository $transaction_repository
+	) {
 		parent::__construct();
 
-		$this->rest_base        = 'subscription';
-		$this->repository       = $subscription;
-		$this->donor_repository = $donor_repository;
-		$this->vendor           = $factory->get_vendor();
+		$this->rest_base              = 'subscription';
+		$this->repository             = $subscription;
+		$this->donor_repository       = $donor_repository;
+		$this->transaction_repository = $transaction_repository;
+		$this->vendor                 = $factory->get_vendor();
 	}
 
 	/**
@@ -71,8 +80,11 @@ class Subscription extends AbstractRepositoryRestController {
 	 * {@inheritDoc}
 	 */
 	protected function add_rest_fields( array $item ): array {
+		if ( ! empty( $item[ SubscriptionRepository::DONOR_ID ] ) ) {
+			$item['donor'] = $this->donor_repository->find( (int) $item[ SubscriptionRepository::DONOR_ID ] );
+		}
 		if ( ! empty( $item[ SubscriptionRepository::TRANSACTION_ID ] ) ) {
-			$item['donor'] = $this->donor_repository->find( (int) $item['donor_id'] );
+			$item['transaction'] = $this->transaction_repository->find( (int) $item[ SubscriptionRepository::TRANSACTION_ID ] );
 		}
 		return $item;
 	}
