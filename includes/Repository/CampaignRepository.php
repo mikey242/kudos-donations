@@ -113,33 +113,37 @@ class CampaignRepository extends BaseRepository {
 		];
 	}
 
+	/**
+	 * Returns linked transactions.
+	 *
+	 * @param array $campaign The campaign array.
+	 */
+	public function get_transactions( array $campaign ): ?array {
+		$campaign_id = $campaign[ self::ID ] ?? null;
+		if ( ! $campaign_id ) {
+			return null;
+		}
+
+		$transaction_repository = $this->get_repository_manager()->get( TransactionRepository::class );
+
+		return $transaction_repository->find_by( [ 'campaign_id' => $campaign_id ] );
+	}
 
 	/**
-	 * Get all transactions linked to a specific campaign.
+	 * Returns the total donations for supplied campaign.
 	 *
-	 * @param int   $campaign_id The ID of the campaign in the custom table.
-	 * @param array $filters     Optional filters (e.g., ['status' => 'paid']).
-	 * @return array List of matching transactions.
-	 *
-	 *  phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+	 * @param array $campaign The campaign array.
 	 */
-	public function get_transactions( int $campaign_id, array $filters = [] ): array {
-		$transaction_table = $this->wpdb->table( 'kudos_transactions' );
+	public function get_total( array $campaign ): float {
+		$transactions = $this->get_transactions( $campaign );
 
-		$criteria = array_merge( [ 'campaign_id' => $campaign_id ], $filters );
-		$criteria = array_filter(
-			$criteria,
-			fn( $key ) => preg_match( '/^[a-zA-Z0-9_]+$/', $key ),
-			ARRAY_FILTER_USE_KEY
-		);
-
-		$where = $this->build_where_clause( $criteria );
-
-		$sql = "SELECT * FROM {$transaction_table} {$where['sql']} ORDER BY created_at DESC";
-
-		return $this->wpdb->get_results(
-			$this->wpdb->prepare( $sql, ...$where['params'] ),
-			ARRAY_A
+		return array_sum(
+			array_map(
+				function ( $item ) {
+					return 'paid' === $item['status'] ? (float) $item['value'] : 0.00;
+				},
+				$transactions
+			)
 		);
 	}
 }

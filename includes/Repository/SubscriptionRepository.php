@@ -49,4 +49,48 @@ class SubscriptionRepository extends BaseRepository {
 			self::VENDOR_SUBSCRIPTION_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 		];
 	}
+
+	/**
+	 * Returns linked transaction.
+	 *
+	 * @param array $subscription The subscription array.
+	 */
+	public function get_transaction( array $subscription ): ?array {
+		$transaction_id = $subscription[ self::TRANSACTION_ID ] ?? null;
+		if ( ! $transaction_id ) {
+			return null;
+		}
+		$transaction_repository = $this->get_repository_manager()->get( TransactionRepository::class );
+		return $transaction_repository->find( (int) $transaction_id );
+	}
+
+	/**
+	 * Returns linked donor.
+	 *
+	 * @param array $subscription The subscription array.
+	 */
+	public function get_donor( array $subscription ): ?array {
+		$donor_id = $subscription[ self::DONOR_ID ] ?? null;
+		if ( ! $donor_id ) {
+			return null;
+		}
+
+		$donor_repository = $this->get_repository_manager()->get( DonorRepository::class );
+		return $donor_repository->find( (int) $donor_id );
+	}
+
+	/**
+	 * Returns campaign.
+	 *
+	 * @param array $subscription The subscription array.
+	 */
+	public function get_campaign( array $subscription ): ?array {
+		$transaction = $this->get_transaction( $subscription );
+		if ( ! $transaction ) {
+			return null;
+		}
+
+		$campaign_repository = $this->get_repository_manager()->get( CampaignRepository::class );
+		return $campaign_repository->find( (int) $transaction[ TransactionRepository::CAMPAIGN_ID ] );
+	}
 }

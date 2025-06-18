@@ -16,9 +16,10 @@ use IseardMedia\Kudos\Helper\WpDb;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-abstract class BaseRepository implements LoggerAwareInterface {
+abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterface, RepositoryAwareInterface {
 
 	use LoggerAwareTrait;
+	use RepositoryAwareTrait;
 
 	protected WpDb $wpdb;
 	protected string $table;

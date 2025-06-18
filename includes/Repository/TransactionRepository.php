@@ -66,6 +66,32 @@ class TransactionRepository extends BaseRepository {
 	}
 
 	/**
+	 * Returns linked donor.
+	 *
+	 * @param array $transaction The subscription array.
+	 */
+	public function get_donor( array $transaction ): ?array {
+		$donor_id = $transaction[ self::DONOR_ID ] ?? null;
+		if ( ! $donor_id ) {
+			return null;
+		}
+		return $this->repository_manager->get( DonorRepository::class )->find( (int) $donor_id );
+	}
+
+	/**
+	 * Returns linked campaign.
+	 *
+	 * @param array $transaction The subscription array.
+	 */
+	public function get_campaign( array $transaction ): ?array {
+		$campaign_id = $transaction[ self::CAMPAIGN_ID ] ?? null;
+		if ( ! $campaign_id ) {
+			return null;
+		}
+		return $this->repository_manager->get( CampaignRepository::class )->find( (int) $campaign_id );
+	}
+
+	/**
 	 * Get total paid transaction value for a given campaign.
 	 *
 	 * @param int $campaign_id The campaign entity id.
