@@ -12,7 +12,6 @@ import type { Campaign } from '../../types/entity';
 import SingleEntityView from './SingleEntityView';
 import { Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
 
 const AdminPages = {
 	'kudos-campaigns': () => (
