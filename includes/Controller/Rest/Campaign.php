@@ -33,4 +33,11 @@ class Campaign extends AbstractRepositoryRestController {
 		$item['total'] = $this->repository->get_total( $item );
 		return $item;
 	}
+
+	/**
+	 * Fetching specific campaign needs to be publicly available.
+	 */
+	protected function can_read_one(): callable {
+		return '__return_true';
+	}
 }

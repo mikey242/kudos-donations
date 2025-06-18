@@ -31,7 +31,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_items' ],
-					'permission_callback' => '__return_true',
+					'permission_callback' => $this->can_list(),
 					'args'                => [
 						'columns'  => [
 							'type'     => 'array',
@@ -67,7 +67,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 				[
 					'methods'             => \WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'create_item' ],
-					'permission_callback' => [ $this, 'can_manage_options' ],
+					'permission_callback' => $this->can_create(),
 					'args'                => [
 						'title' => [
 							'type'     => FieldType::STRING,
@@ -80,7 +80,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 				[
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_item' ],
-					'permission_callback' => '__return_true',
+					'permission_callback' => $this->can_read_one(),
 					'args'                => [
 						'id' => [
 							'required' => true,
@@ -91,13 +91,13 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 				[
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'update_item' ],
-					'permission_callback' => [ $this, 'can_manage_options' ],
+					'permission_callback' => $this->can_update(),
 					'args'                => $this->get_rest_args(),
 				],
 				[
 					'methods'             => \WP_REST_Server::DELETABLE,
 					'callback'            => [ $this, 'delete_item' ],
-					'permission_callback' => [ $this, 'can_manage_options' ],
+					'permission_callback' => $this->can_delete(),
 					'args'                => [
 						'id' => [
 							'required' => true,
@@ -294,5 +294,40 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 	 */
 	protected function add_rest_fields( array $item ): array {
 		return $item;
+	}
+
+	/**
+	 * Specifies who can read a specified record of this entity.
+	 */
+	protected function can_read_one(): callable {
+		return [ $this, 'can_manage_options' ];
+	}
+
+	/**
+	 * Specifies who can list all records of this entity.
+	 */
+	protected function can_list(): callable {
+		return [ $this, 'can_manage_options' ];
+	}
+
+	/**
+	 * Specifies who can create records of this entity.
+	 */
+	protected function can_create(): callable {
+		return [ $this, 'can_edit_posts' ];
+	}
+
+	/**
+	 * Specifies who can update records of this entity.
+	 */
+	protected function can_update(): callable {
+		return [ $this, 'can_edit_posts' ];
+	}
+
+	/**
+	 * Specifies who can delete records of this entity.
+	 */
+	protected function can_delete(): callable {
+		return [ $this, 'can_edit_posts' ];
 	}
 }
