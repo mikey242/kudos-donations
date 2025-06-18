@@ -43,7 +43,7 @@ class Invoice extends AbstractRestController {
 	 */
 	public function get_routes(): array {
 		return [
-			'/get/transaction/(?P<id>\d+)' => [
+			'/(?P<id>\d+)' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_invoice' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
@@ -60,7 +60,7 @@ class Invoice extends AbstractRestController {
 					],
 				],
 			],
-			'/regenerate'                  => [
+			'/regenerate'  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'regenerate_invoices' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
