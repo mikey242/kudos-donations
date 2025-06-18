@@ -6,7 +6,7 @@ import { useFormContext } from 'react-hook-form';
 import { CheckboxControl } from '../controls';
 import { createInterpolateElement } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 
 interface SummaryTabProps {
 	campaign: Campaign;

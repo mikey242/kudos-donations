@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import type { Transaction } from '../../../types/posts';
+import type { Transaction } from '../../../types/entity';
 import {
 	ArrowPathIcon,
 	ArrowRightCircleIcon,

@@ -6,7 +6,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
 import countryList from 'react-select-country-list';
 import { SelectControl, TextControl } from '../controls';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 
 interface AddressTabProps {
 	campaign: Campaign;

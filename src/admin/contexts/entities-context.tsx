@@ -13,7 +13,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
-import type { BaseEntity } from '../../types/posts';
+import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams } from '../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';

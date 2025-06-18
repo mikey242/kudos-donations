@@ -7,7 +7,7 @@ import { useEffect, useMemo } from '@wordpress/element';
 import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
 import type { RadioGroupOption } from '../controls';
 import { ProgressBar } from '../ProgressBar';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 
 interface InitialTabProps {
 	campaign: Campaign;

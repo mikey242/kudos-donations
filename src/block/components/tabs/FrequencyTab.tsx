@@ -5,7 +5,7 @@ import React from 'react';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import { SelectControl, SelectOption } from '../controls';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 import { applyFilters } from '@wordpress/hooks';
 
 interface FrequencyTabProps {

@@ -8,7 +8,7 @@ import { SettingsPage } from './settings';
 import { EntityPage } from './EntityPage';
 import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
-import type { Campaign } from '../../types/posts';
+import type { Campaign } from '../../types/entity';
 import SingleEntityView from './SingleEntityView';
 import { Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
