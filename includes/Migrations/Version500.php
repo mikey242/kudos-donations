@@ -50,6 +50,11 @@ class Version500 extends BaseMigration {
 		];
 	}
 
+	/**
+	 * Migrates kudos_donor CPTs to the kudos_donors table in chunks.
+	 *
+	 * @param string $step The step name.
+	 */
 	public function migrate_donors( string $step ): bool {
 		$offset    = $this->progress[ $step ]['offset'] ?? 0;
 		$limit     = self::DEFAULT_CHUNK_SIZE;
@@ -109,6 +114,8 @@ class Version500 extends BaseMigration {
 
 	/**
 	 * Migrates kudos_campaign CPTs to the kudos_campaigns table in chunks.
+	 *
+	 * @param string $step The step name.
 	 */
 	public function migrate_campaigns( string $step ): bool {
 		$offset    = $this->progress[ $step ]['offset'] ?? 0;

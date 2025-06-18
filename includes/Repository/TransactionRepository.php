@@ -88,14 +88,19 @@ class TransactionRepository extends BaseRepository {
 	 *
 	 * @param string $column The column to filter by.
 	 * @param mixed  $value The value of the column.
+	 *
+	 *  phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+	 *  phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	 */
 	protected function get_total_by( string $column, $value ): float {
 		if ( ! preg_match( '/^[a-zA-Z0-9_]+$/', $column ) ) {
 			return 0.0;
 		}
 
+		$column_esc = esc_sql( $column );
+
 		$sql = $this->wpdb->prepare(
-			"SELECT SUM(value) FROM {$this->table} WHERE {$column} = %s AND status = %s",
+			"SELECT SUM(value) FROM {$this->table} WHERE {$column_esc} = %s AND status = %s",
 			$value,
 			'paid'
 		);
