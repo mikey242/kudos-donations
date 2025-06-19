@@ -120,7 +120,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param array $data The data to insert.
 	 * @return int|false The inserted row ID or false on failure.
 	 */
-	public function insert( array $data ) {
+	private function insert( array $data ) {
 		$prepared_data = $this->prepare_for_db( $data );
 		$success       = $this->wpdb->insert( $this->table, $prepared_data );
 
@@ -149,17 +149,14 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @return int|false The inserted or updated row ID, or false on failure.
 	 */
 	public function upsert( array $data ) {
-		$prepared_data = $this->prepare_for_db( $data );
+		if ( isset( $data[ self::ID ] ) && $data[ self::ID ] ) {
+			$id = (int) $data[ self::ID ];
+			unset( $data[ self::ID ] );
 
-		if ( isset( $prepared_data[ self::ID ] ) && $prepared_data[ self::ID ] ) {
-			$id = (int) $prepared_data[ self::ID ];
-			unset( $prepared_data[ self::ID ] );
-
-			$updated = $this->update( $id, $prepared_data );
-			return $updated ? $id : false;
+			return $this->update( $id, $data ) ? $id : false;
 		}
 
-		return $this->insert( $prepared_data );
+		return $this->insert( $data );
 	}
 
 	/**
@@ -318,6 +315,17 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 		}
 
 		return null;
+	}
+
+	/**
+	 * Handles sanitizing float values.
+	 *
+	 * @param mixed            $value The value to sanitize.
+	 * @param \WP_REST_Request $request Request object.
+	 * @param string           $param Field name.
+	 */
+	public static function sanitize_float( $value, $request = null, $param = null ): ?float {
+		return \is_scalar( $value ) ? \floatval( $value ) : null;
 	}
 
 	/**

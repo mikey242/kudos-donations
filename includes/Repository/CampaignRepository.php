@@ -71,13 +71,13 @@ class CampaignRepository extends BaseRepository {
 			self::POST_ID                    => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::TITLE                      => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
 			self::CURRENCY                   => $this->make_schema_field( FieldType::STRING, 'EUR', 'sanitize_text_field' ),
-			self::GOAL                       => $this->make_schema_field( FieldType::FLOAT, null, 'floatval' ),
+			self::GOAL                       => $this->make_schema_field( FieldType::FLOAT, null, [$this, 'sanitize_float'] ),
 			self::SHOW_GOAL                  => $this->make_schema_field( FieldType::BOOLEAN, false, 'rest_sanitize_boolean' ),
-			self::ADDITIONAL_FUNDS           => $this->make_schema_field( FieldType::FLOAT, null, 'floatval' ),
+			self::ADDITIONAL_FUNDS           => $this->make_schema_field( FieldType::FLOAT, null, [$this, 'sanitize_float'] ),
 			self::AMOUNT_TYPE                => $this->make_schema_field( FieldType::STRING, 'fixed', 'sanitize_text_field' ),
 			self::FIXED_AMOUNTS              => $this->make_schema_field( FieldType::OBJECT, [], [ $this, 'sanitize_json_field' ] ),
-			self::MINIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, 'floatval' ),
-			self::MAXIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, 'floatval' ),
+			self::MINIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, [$this, 'sanitize_float'] ),
+			self::MAXIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, [$this, 'sanitize_float'] ),
 			self::DONATION_TYPE              => $this->make_schema_field( FieldType::STRING, 'oneoff', 'sanitize_text_field' ),
 			self::FREQUENCY_OPTIONS          => $this->make_schema_field( FieldType::OBJECT, [], [ $this, 'sanitize_json_field' ] ),
 			self::EMAIL_ENABLED              => $this->make_schema_field( FieldType::BOOLEAN, true, 'rest_sanitize_boolean' ),
@@ -108,8 +108,6 @@ class CampaignRepository extends BaseRepository {
 			self::PAYMENT_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
 			self::RETURN_MESSAGE_TITLE       => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
 			self::RETURN_MESSAGE_TEXT        => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
-			self::CREATED_AT                 => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
-			self::UPDATED_AT                 => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
 		];
 	}
 

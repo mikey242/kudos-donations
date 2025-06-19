@@ -68,12 +68,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 					'methods'             => \WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'create_item' ],
 					'permission_callback' => $this->can_create(),
-					'args'                => [
-						'title' => [
-							'type'     => FieldType::STRING,
-							'required' => true,
-						],
-					],
+					'args'                => $this->get_rest_args(),
 				],
 			],
 			'/(?P<id>\d+)' => [
@@ -87,12 +82,6 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 							'type'     => FieldType::INTEGER,
 						],
 					],
-				],
-				[
-					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'update_item' ],
-					'permission_callback' => $this->can_update(),
-					'args'                => $this->get_rest_args(),
 				],
 				[
 					'methods'             => \WP_REST_Server::DELETABLE,
@@ -230,37 +219,14 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 			$data
 		);
 
-		// Remove post id when updating, as this is passed separately.
-		if ( isset( $data[ BaseRepository::ID ] ) && $data[ BaseRepository::ID ] ) {
-			$id = $data[ BaseRepository::ID ];
-			unset( $data[ BaseRepository::ID ] );
-			$this->repository->update( $id, $data );
-		} else {
-			$id = $this->repository->insert( $data );
-		}
+		// Create/update record.
+		$id = $this->repository->upsert( $data );
 
 		if ( ! $id ) {
 			return new WP_Error( 'cannot_create', __( 'Could not create campaign.', 'kudos-donations' ), [ 'status' => 500 ] );
 		}
 
 		return new WP_REST_Response( $this->repository->find( $id ), 201 );
-	}
-
-	/**
-	 * Update existing new entity.
-	 *
-	 * @param WP_REST_Request $request The request object.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function update_item( $request ) {
-		$id   = (int) $request['id'];
-		$data = $request->get_params();
-
-		if ( ! $this->repository->update( $id, $data ) ) {
-			return new WP_Error( 'cannot_update', __( 'Could not update campaign.', 'kudos-donations' ), [ 'status' => 500 ] );
-		}
-
-		return new WP_REST_Response( $this->repository->find( $id ), 200 );
 	}
 
 	/**
@@ -314,13 +280,6 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 	 * Specifies who can create records of this entity.
 	 */
 	protected function can_create(): callable {
-		return [ $this, 'can_edit_posts' ];
-	}
-
-	/**
-	 * Specifies who can update records of this entity.
-	 */
-	protected function can_update(): callable {
 		return [ $this, 'can_edit_posts' ];
 	}
 
