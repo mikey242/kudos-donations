@@ -13,10 +13,10 @@ namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
@@ -33,14 +33,17 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		self::SCRIPT_HANDLE_EDITOR,
 	];
 	private PaymentVendorInterface $vendor;
+	private TransactionRepository $transactions;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param PaymentVendorFactory $factory Payment vendor factory.
+	 * @param PaymentVendorFactory  $factory Payment vendor factory.
+	 * @param TransactionRepository $transaction_repository Transactions repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory ) {
-		$this->vendor = $factory->get_vendor();
+	public function __construct( PaymentVendorFactory $factory, TransactionRepository $transaction_repository ) {
+		$this->vendor       = $factory->get_vendor();
+		$this->transactions = $transaction_repository;
 	}
 
 	/**
@@ -236,13 +239,13 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 					$transaction_id = isset( $_REQUEST['kudos_transaction_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_transaction_id'] ) ) : '';
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
-						$transaction = get_post( $transaction_id );
+						$transaction = $this->transactions->find( (int) $transaction_id );
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
-							$campaign_id = $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID};
+							$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
 
 							$this->payment_status_modal_html(
-								$transaction_id,
+								(int) $transaction_id,
 								$campaign_id
 							);
 						}
@@ -297,10 +300,10 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	/**
 	 * Create message modal with supplied header and body text.
 	 *
-	 * @param string $transaction_id The transaction id.
-	 * @param string $campaign_id The campaign id.
+	 * @param int $transaction_id The transaction id.
+	 * @param int $campaign_id The campaign id.
 	 */
-	private function payment_status_modal_html( string $transaction_id, string $campaign_id ): void {
+	private function payment_status_modal_html( int $transaction_id, int $campaign_id ): void {
 		echo wp_kses(
 			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s'></div>", $transaction_id, $campaign_id ),
 			[
