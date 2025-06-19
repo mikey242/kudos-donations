@@ -80,6 +80,25 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	}
 
 	/**
+	 * Find a single row by specified criteria.
+	 *
+	 * @param array $criteria Key-value pairs for WHERE clause.
+	 * @param array $columns  List of columns to return. Defaults to all.
+	 * @return array|null     The matching row, or null if not found.
+	 */
+	public function find_one_by( array $criteria, array $columns = [ '*' ] ): ?array {
+		$results = $this->query(
+			[
+				'where'   => $criteria,
+				'columns' => $columns,
+				'limit'   => 1,
+			]
+		);
+
+		return $results[0] ?? null;
+	}
+
+	/**
 	 * Find by the post id. This is for legacy access.
 	 *
 	 * @param int $post_id The post id to search by.
@@ -121,6 +140,26 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	public function update( int $id, array $data ): bool {
 		$prepared_data = $this->prepare_for_db( $data );
 		return $this->wpdb->update( $this->table, $prepared_data, [ 'id' => $id ] ) !== false;
+	}
+
+	/**
+	 * Upsert a record (insert or update depending on presence of ID).
+	 *
+	 * @param array $data The data to upsert.
+	 * @return int|false The inserted or updated row ID, or false on failure.
+	 */
+	public function upsert( array $data ) {
+		$prepared_data = $this->prepare_for_db( $data );
+
+		if ( isset( $prepared_data[ self::ID ] ) && $prepared_data[ self::ID ] ) {
+			$id = (int) $prepared_data[ self::ID ];
+			unset( $prepared_data[ self::ID ] );
+
+			$updated = $this->update( $id, $prepared_data );
+			return $updated ? $id : false;
+		}
+
+		return $this->insert( $prepared_data );
 	}
 
 	/**
