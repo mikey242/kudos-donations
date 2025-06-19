@@ -61,10 +61,10 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 								] + response.data.value,
 							name: response.data.name,
 						};
-						setTitle(campaign.meta.return_message_title);
+						setTitle(campaign.return_message_title);
 						setBody(
 							replacePlaceholders(
-								campaign.meta.return_message_text,
+								campaign.return_message_text,
 								placeholders
 							)
 						);
@@ -119,8 +119,8 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 		<Message
 			title={title}
 			body={body}
-			color={campaign?.meta?.theme_color}
-			style={campaign?.meta?.custom_styles}
+			color={campaign?.theme_color}
+			style={campaign?.custom_styles}
 			dismissible={!!pollingRef.current}
 		/>
 	);
