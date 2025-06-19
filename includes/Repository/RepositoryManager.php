@@ -16,7 +16,7 @@ class RepositoryManager {
 	/**
 	 * Array of repositories.
 	 *
-	 * @var RepositoryInterface[]
+	 * @var array<class-string<RepositoryInterface>, RepositoryInterface>
 	 */
 	protected array $repositories = [];
 
@@ -46,7 +46,12 @@ class RepositoryManager {
 	 *
 	 * @throws \RuntimeException Thrown if repository not found.
 	 *
-	 * @param string $class_name FQCN for repository.
+	 * @param class-string<T> $class_name FQCN for repository.
+	 * @return T
+	 *
+	 * @template T of RepositoryInterface
+	 *
+	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
 	public function get( string $class_name ): RepositoryInterface {
 		if ( ! isset( $this->repositories[ $class_name ] ) ) {
