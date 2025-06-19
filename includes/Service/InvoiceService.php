@@ -128,7 +128,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 
 		// Append donor.
 		$donors = $this->repository_manager->get( DonorRepository::class );
-		$donor  = $donors->find_by( [ 'ID' => $transaction[ TransactionRepository::DONOR_ID ] ] );
+		$donor  = $donors->find_one_by( [ BaseRepository::ID => $transaction[ TransactionRepository::DONOR_ID ] ] );
 		if ( $donor ) {
 				$data['donor_business'] = $donor[ DonorRepository::BUSINESS_NAME ] ?? '';
 				$data['donor_name']     = $donor[ DonorRepository::NAME ] ?? '';

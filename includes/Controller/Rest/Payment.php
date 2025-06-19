@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\CampaignRepository;
@@ -219,18 +219,18 @@ class Payment extends AbstractRestController {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
-		$transaction = get_post( $post_id );
+		$transaction = $this->transaction_repository->find( $post_id );
 
 		if ( $transaction ) {
 			$data     = [
-				'status'   => $transaction->{TransactionPostType::META_FIELD_STATUS},
-				'currency' => $transaction->{TransactionPostType::META_FIELD_CURRENCY},
-				'value'    => $transaction->{TransactionPostType::META_FIELD_VALUE},
+				'status'   => $transaction[ TransactionRepository::STATUS ],
+				'currency' => $transaction[ TransactionRepository::CURRENCY ],
+				'value'    => $transaction[ TransactionRepository::VALUE ],
 			];
-			$donor_id = $transaction->{TransactionPostType::META_FIELD_DONOR_ID};
+			$donor_id = $transaction[ TransactionRepository::DONOR_ID ];
 			if ( $donor_id ) {
-				$donor        = get_post( $donor_id );
-				$data['name'] = $donor->{DonorPostType::META_FIELD_NAME};
+				$donor                         = $this->donor_repository->find( $donor_id );
+				$data[ DonorRepository::NAME ] = $donor[ DonorRepository::NAME ];
 			}
 
 			return new WP_REST_Response(
@@ -331,24 +331,25 @@ class Payment extends AbstractRestController {
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
-		$vendor_customer_id = $donor[ DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID ] ?? null;
-		$transaction        = $this->transaction_repository->insert(
+		$vendor_customer_id = $donor[ DonorRepository::VENDOR_CUSTOMER_ID ] ?? null;
+		$transaction_id     = $this->transaction_repository->upsert(
 			[
-				TransactionPostType::META_FIELD_DONOR_ID => $donor ?? null,
-				TransactionPostType::META_FIELD_VALUE    => $args['value'],
-				TransactionPostType::META_FIELD_CURRENCY => $args['currency'],
-				TransactionPostType::META_FIELD_STATUS   => 'open',
-				TransactionPostType::META_FIELD_MODE     => $this->vendor->get_api_mode(),
-				TransactionPostType::META_FIELD_SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
-				TransactionPostType::META_FIELD_CAMPAIGN_ID => (int) $args['campaign_id'],
-				TransactionPostType::META_FIELD_MESSAGE  => $args['message'],
-				TransactionPostType::META_FIELD_VENDOR   => $this->vendor::get_slug(),
-				TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID => $vendor_customer_id,
+				TransactionRepository::DONOR_ID           => $donor ?? null,
+				TransactionRepository::VALUE              => $args[ TransactionRepository::VALUE ],
+				TransactionRepository::CURRENCY           => $args[ TransactionRepository::CURRENCY ],
+				TransactionRepository::STATUS             => PaymentStatus::OPEN,
+				TransactionRepository::MODE               => $this->vendor->get_api_mode(),
+				TransactionRepository::SEQUENCE_TYPE      => 'true' === $args['recurring'] ? 'first' : 'oneoff',
+				TransactionRepository::CAMPAIGN_ID        => (int) $args[ TransactionRepository::CAMPAIGN_ID ],
+				TransactionRepository::MESSAGE            => $args[ TransactionRepository::MESSAGE ],
+				TransactionRepository::VENDOR             => $this->vendor::get_slug(),
+				TransactionRepository::VENDOR_CUSTOMER_ID => $vendor_customer_id,
 			]
 		);
 
 		// Create payment with vendor.
-		$url = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
+		$transaction = $this->transaction_repository->find( $transaction_id );
+		$url         = $this->vendor->create_payment( $args, $transaction );
 
 		// Return checkout url if payment successfully created.
 		if ( $url ) {

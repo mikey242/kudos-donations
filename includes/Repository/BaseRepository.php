@@ -67,7 +67,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	public function find( int $id ): ?array {
 		$results = $this->query(
 			[
-				'where' => [ 'id' => $id ],
+				'where' => [ self::ID => $id ],
 				'limit' => 1,
 			]
 		);
