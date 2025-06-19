@@ -102,7 +102,7 @@ class Version500 extends BaseMigration {
 				'updated_at'         => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
-			$this->donor_repository->insert( $data );
+			$this->donor_repository->upsert( $data );
 			$this->logger->info( "Migrated donor post {$post_id}" );
 		}
 
@@ -193,7 +193,7 @@ class Version500 extends BaseMigration {
 				'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
-			$this->campaign_repository->insert( $data );
+			$this->campaign_repository->upsert( $data );
 			$this->logger->info( "Migrated campaign post {$post_id}" );
 		}
 
@@ -280,7 +280,7 @@ class Version500 extends BaseMigration {
 				'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
-			$this->transaction_repository->insert( $data );
+			$this->transaction_repository->upsert( $data );
 			$this->logger->info( "Migrated transaction post {$post_id}" );
 		}
 
@@ -376,7 +376,7 @@ class Version500 extends BaseMigration {
 				'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
-			$this->subscription_repository->insert( $data );
+			$this->subscription_repository->upsert( $data );
 			$this->logger->info( "Migrated subscription post {$post_id}" );
 		}
 
