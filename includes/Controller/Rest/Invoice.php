@@ -31,8 +31,6 @@ class Invoice extends AbstractRestController {
 	 * @param InvoiceService $invoice Invoice service.
 	 */
 	public function __construct( PDFService $pdf, InvoiceService $invoice ) {
-		parent::__construct();
-
 		$this->rest_base = 'invoice';
 		$this->pdf       = $pdf;
 		$this->invoice   = $invoice;

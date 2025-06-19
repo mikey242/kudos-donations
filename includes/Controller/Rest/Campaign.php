@@ -21,7 +21,6 @@ class Campaign extends AbstractRepositoryRestController {
 	 * @param CampaignRepository $campaign_repository The campaign repository.
 	 */
 	public function __construct( CampaignRepository $campaign_repository ) {
-		parent::__construct();
 		$this->rest_base  = 'campaign';
 		$this->repository = $campaign_repository;
 	}

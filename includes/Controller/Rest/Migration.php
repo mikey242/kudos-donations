@@ -35,8 +35,6 @@ class Migration extends AbstractRestController {
 	 * @param MigrationService $migration Migration handler.
 	 */
 	public function __construct( MigrationService $migration ) {
-		parent::__construct();
-
 		$this->rest_base = 'migration';
 		$this->migration = $migration;
 	}

@@ -23,8 +23,6 @@ class Notice extends AbstractRestController {
 	 * PaymentRoutes constructor.
 	 */
 	public function __construct() {
-		parent::__construct();
-
 		$this->rest_base = 'notice';
 	}
 

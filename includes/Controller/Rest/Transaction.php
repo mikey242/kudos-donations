@@ -20,7 +20,6 @@ class Transaction extends AbstractRepositoryRestController {
 	 * @param TransactionRepository $transactions The transaction repository.
 	 */
 	public function __construct( TransactionRepository $transactions ) {
-		parent::__construct();
 		$this->rest_base  = 'transaction';
 		$this->repository = $transactions;
 	}

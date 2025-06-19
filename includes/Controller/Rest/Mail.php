@@ -32,8 +32,6 @@ class Mail extends AbstractRestController {
 	 * @param MailerService $mailer Mailer service.
 	 */
 	public function __construct( MailerService $mailer ) {
-		parent::__construct();
-
 		$this->rest_base = 'email';
 		$this->mailer    = $mailer;
 	}
