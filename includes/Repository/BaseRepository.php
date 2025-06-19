@@ -44,6 +44,16 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	}
 
 	/**
+	 * The singular name.
+	 */
+	abstract protected function get_singular_name(): string;
+
+	/**
+	 * The plural name.
+	 */
+	abstract protected function get_plural_name(): string;
+
+	/**
 	 * Get the schema for the repository.
 	 */
 	abstract public function get_column_schema(): array;

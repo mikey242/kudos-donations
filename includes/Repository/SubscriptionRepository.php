@@ -36,6 +36,20 @@ class SubscriptionRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function get_singular_name(): string {
+		return _x( 'Subscription', 'Subscription post type singular name', 'kudos-donations' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_plural_name(): string {
+		return _x( 'Subscriptions', 'Subscription post type plural name', 'kudos-donations' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_column_schema(): array {
 		return [
 			self::VALUE                  => $this->make_schema_field( FieldType::NUMBER, null, 'floatval' ),

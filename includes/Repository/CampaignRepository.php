@@ -67,6 +67,20 @@ class CampaignRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
+	protected function get_singular_name(): string {
+		return _x( 'Campaign', 'Campaign post type singular name', 'kudos-donations' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function get_plural_name(): string {
+		return _x( 'Campaigns', 'Campaign post type plural name', 'kudos-donations' );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function get_column_schema(): array {
 		return [
 			self::ID                         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
