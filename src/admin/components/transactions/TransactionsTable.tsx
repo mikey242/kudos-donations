@@ -1,9 +1,15 @@
-import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
+import {
+	Button,
+	Dashicon,
+	Flex,
+	Tooltip,
+	VisuallyHidden,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import type { Transaction } from '../../../types/entity';
+import type { Campaign, Transaction } from '../../../types/entity';
 import {
 	ArrowPathIcon,
 	ArrowRightCircleIcon,
@@ -139,8 +145,10 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
 			orderby: 'created_at',
-			valueCallback: (post: Transaction): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+			valueCallback: (post: Campaign): React.ReactNode => (
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
+					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				</Tooltip>
 			),
 		},
 		{

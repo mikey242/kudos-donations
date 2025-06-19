@@ -101,7 +101,9 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			title: __('Created', 'kudos-donations'),
 			orderby: 'created_at',
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
+					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				</Tooltip>
 			),
 		},
 		{
