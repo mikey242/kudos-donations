@@ -121,8 +121,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @return int|false The inserted row ID or false on failure.
 	 */
 	private function insert( array $data ) {
-		$prepared_data = $this->prepare_for_db( $data );
-		$success       = $this->wpdb->insert( $this->table, $prepared_data );
+		$success = $this->wpdb->insert( $this->table, $data );
 
 		if ( ! $success ) {
 			return false;
@@ -137,9 +136,9 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param int   $id The id of the record to update.
 	 * @param array $data The data to update.
 	 */
-	public function update( int $id, array $data ): bool {
-		$prepared_data = $this->prepare_for_db( $data );
-		return $this->wpdb->update( $this->table, $prepared_data, [ 'id' => $id ] ) !== false;
+	private function update( int $id, array $data ): bool {
+		$data[ self::UPDATED_AT ] = current_time( 'mysql', true );
+		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
 	}
 
 	/**
@@ -149,14 +148,15 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @return int|false The inserted or updated row ID, or false on failure.
 	 */
 	public function upsert( array $data ) {
-		if ( isset( $data[ self::ID ] ) && $data[ self::ID ] ) {
-			$id = (int) $data[ self::ID ];
-			unset( $data[ self::ID ] );
+		$prepared_data = $this->sanitize_data_from_schema( $data );
+		if ( isset( $prepared_data[ self::ID ] ) && $prepared_data[ self::ID ] ) {
+			$id = (int) $prepared_data[ self::ID ];
+			unset( $prepared_data[ self::ID ] );
 
-			return $this->update( $id, $data ) ? $id : false;
+			return $this->update( $id, $prepared_data ) ? $id : false;
 		}
 
-		return $this->insert( $data );
+		return $this->insert( $prepared_data );
 	}
 
 	/**
@@ -228,7 +228,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param array $criteria The criteria.
 	 */
-	protected function build_where_clause( array $criteria ): array {
+	private function build_where_clause( array $criteria ): array {
 		$clauses = [];
 		$params  = [];
 
@@ -299,41 +299,11 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	}
 
 	/**
-	 * Sanitize JSON field.
-	 *
-	 * @param mixed $value The field value to sanitize.
-	 * @return false|string|null
-	 */
-	public function sanitize_json_field( $value ) {
-		if ( \is_array( $value ) || \is_object( $value ) ) {
-			return wp_json_encode( $value );
-		}
-
-		if ( \is_string( $value ) ) {
-			json_decode( $value );
-			return json_last_error() === JSON_ERROR_NONE ? $value : null;
-		}
-
-		return null;
-	}
-
-	/**
-	 * Handles sanitizing float values.
-	 *
-	 * @param mixed            $value The value to sanitize.
-	 * @param \WP_REST_Request $request Request object.
-	 * @param string           $param Field name.
-	 */
-	public static function sanitize_float( $value, $request = null, $param = null ): ?float {
-		return \is_scalar( $value ) ? \floatval( $value ) : null;
-	}
-
-	/**
 	 * Prepares values for insertion into db.
 	 *
 	 * @param array $data The data for insertion.
 	 */
-	protected function prepare_for_db( array $data ): array {
+	private function sanitize_data_from_schema( array $data ): array {
 		$schema = $this->get_column_schema();
 
 		foreach ( $schema as $key => $args ) {
@@ -364,7 +334,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param mixed    $value The value to sanitize.
 	 * @return mixed|null
 	 */
-	protected function maybe_sanitize( callable $callback, $value ) {
+	private function maybe_sanitize( callable $callback, $value ) {
 		if ( null === $value ) {
 			return null;
 		}
@@ -376,7 +346,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param string $json The string to check.
 	 */
-	protected function is_valid_json( string $json ): bool {
+	private function is_valid_json( string $json ): bool {
 		json_decode( $json );
 		return json_last_error() === JSON_ERROR_NONE;
 	}

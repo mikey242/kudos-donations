@@ -15,6 +15,8 @@ use IseardMedia\Kudos\Enum\FieldType;
 
 class CampaignRepository extends BaseRepository {
 
+	use SanitizeTrait;
+
 	/**
 	 * Field constants.
 	 */
@@ -68,16 +70,16 @@ class CampaignRepository extends BaseRepository {
 	public function get_column_schema(): array {
 		return [
 			self::ID                         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::POST_ID                    => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::POST_ID                    => $this->make_schema_field( FieldType::INTEGER, null, [ $this, 'sanitize_int_or_null' ] ),
 			self::TITLE                      => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
 			self::CURRENCY                   => $this->make_schema_field( FieldType::STRING, 'EUR', 'sanitize_text_field' ),
-			self::GOAL                       => $this->make_schema_field( FieldType::FLOAT, null, [$this, 'sanitize_float'] ),
+			self::GOAL                       => $this->make_schema_field( FieldType::FLOAT, null, [ $this, 'sanitize_float' ] ),
 			self::SHOW_GOAL                  => $this->make_schema_field( FieldType::BOOLEAN, false, 'rest_sanitize_boolean' ),
-			self::ADDITIONAL_FUNDS           => $this->make_schema_field( FieldType::FLOAT, null, [$this, 'sanitize_float'] ),
+			self::ADDITIONAL_FUNDS           => $this->make_schema_field( FieldType::FLOAT, null, [ $this, 'sanitize_float' ] ),
 			self::AMOUNT_TYPE                => $this->make_schema_field( FieldType::STRING, 'fixed', 'sanitize_text_field' ),
-			self::FIXED_AMOUNTS              => $this->make_schema_field( FieldType::OBJECT, [], [ $this, 'sanitize_json_field' ] ),
-			self::MINIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, [$this, 'sanitize_float'] ),
-			self::MAXIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, [$this, 'sanitize_float'] ),
+			self::FIXED_AMOUNTS              => $this->make_schema_field( FieldType::OBJECT, [ '5', '10', '25', '50' ], [ $this, 'sanitize_json_field' ] ),
+			self::MINIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, [ $this, 'sanitize_float' ] ),
+			self::MAXIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, [ $this, 'sanitize_float' ] ),
 			self::DONATION_TYPE              => $this->make_schema_field( FieldType::STRING, 'oneoff', 'sanitize_text_field' ),
 			self::FREQUENCY_OPTIONS          => $this->make_schema_field( FieldType::OBJECT, [], [ $this, 'sanitize_json_field' ] ),
 			self::EMAIL_ENABLED              => $this->make_schema_field( FieldType::BOOLEAN, true, 'rest_sanitize_boolean' ),
@@ -94,20 +96,22 @@ class CampaignRepository extends BaseRepository {
 			self::SHOW_RETURN_MESSAGE        => $this->make_schema_field( FieldType::BOOLEAN, false, 'rest_sanitize_boolean' ),
 			self::USE_CUSTOM_RETURN_URL      => $this->make_schema_field( FieldType::BOOLEAN, false, 'rest_sanitize_boolean' ),
 			self::CUSTOM_RETURN_URL          => $this->make_schema_field( FieldType::STRING, '', 'esc_url_raw' ),
-			self::PAYMENT_DESCRIPTION_FORMAT => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
+			self::PAYMENT_DESCRIPTION_FORMAT => $this->make_schema_field( FieldType::STRING, __( 'Donation ({{campaign_name}}) - {{order_id}}', 'kudos-donations' ), 'sanitize_text_field' ),
 			self::CUSTOM_STYLES              => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
-			self::INITIAL_TITLE              => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
-			self::INITIAL_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
-			self::SUBSCRIPTION_TITLE         => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
-			self::SUBSCRIPTION_DESCRIPTION   => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
-			self::ADDRESS_TITLE              => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
-			self::ADDRESS_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
-			self::MESSAGE_TITLE              => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
-			self::MESSAGE_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
-			self::PAYMENT_TITLE              => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
-			self::PAYMENT_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
-			self::RETURN_MESSAGE_TITLE       => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
-			self::RETURN_MESSAGE_TEXT        => $this->make_schema_field( FieldType::STRING, '', 'sanitize_textarea_field' ),
+			self::INITIAL_TITLE              => $this->make_schema_field( FieldType::STRING, __( 'Support us!', 'kudos-donations' ), 'sanitize_text_field' ),
+			self::INITIAL_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, __( 'Your support is greatly appreciated and will help to keep us going.', 'kudos-donations' ), 'sanitize_textarea_field' ),
+			self::SUBSCRIPTION_TITLE         => $this->make_schema_field( FieldType::STRING, __( 'Subscription', 'kudos-donations' ), 'sanitize_text_field' ),
+			self::SUBSCRIPTION_DESCRIPTION   => $this->make_schema_field( FieldType::STRING, __( 'How often would you like to donate?', 'kudos-donations' ), 'sanitize_textarea_field' ),
+			self::ADDRESS_TITLE              => $this->make_schema_field( FieldType::STRING, __( 'Address', 'kudos-donations' ), 'sanitize_text_field' ),
+			self::ADDRESS_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, __( 'Please fill in your address', 'kudos-donations' ), 'sanitize_textarea_field' ),
+			self::MESSAGE_TITLE              => $this->make_schema_field( FieldType::STRING, __( 'Message', 'kudos-donations' ), 'sanitize_text_field' ),
+			self::MESSAGE_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, __( 'Leave a message.', 'kudos-donations' ), 'sanitize_textarea_field' ),
+			self::PAYMENT_TITLE              => $this->make_schema_field( FieldType::STRING, __( 'Payment', 'kudos-donations' ), 'sanitize_text_field' ),
+			self::PAYMENT_DESCRIPTION        => $this->make_schema_field( FieldType::STRING, __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ), 'sanitize_textarea_field' ),
+			self::RETURN_MESSAGE_TITLE       => $this->make_schema_field( FieldType::STRING, __( 'Payment received', 'kudos-donations' ), 'sanitize_text_field' ),
+			self::RETURN_MESSAGE_TEXT        => $this->make_schema_field( FieldType::STRING, __( 'Thank you for your donation!', 'kudos-donations' ), 'sanitize_textarea_field' ),
+			self::CREATED_AT                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::UPDATED_AT                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 		];
 	}
 
