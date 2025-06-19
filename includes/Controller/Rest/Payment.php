@@ -15,6 +15,7 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
@@ -305,21 +306,28 @@ class Payment extends AbstractRestController {
 			];
 
 			// Search for existing donor based on email and mode.
-			$donor = $this->donor_repository->find_by(
+			$donor = $this->donor_repository->find_one_by(
 				[
-					'email' => $args['email'],
-					'mode'  => $this->vendor->get_api_mode(),
+					DonorRepository::EMAIL => $args['email'],
+					DonorRepository::MODE  => $this->vendor->get_api_mode(),
 				]
 			);
 
 			// Create new customer with vendor if none found.
-			if ( ! $donor ) {
-				$customer = $this->vendor->create_customer( $args['email'], $args['name'] );
+			if ( empty( $donor ) ) {
+				$customer = $this->vendor->create_customer( $args[ DonorRepository::EMAIL ], $args[ DonorRepository::NAME ] );
 				$donor_meta[ DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID ] = $customer->id;
 			}
 
 			// Update or create donor.
-			$donor = $this->donor_repository->insert( $donor_meta );
+			$donor = $this->donor_repository->upsert(
+				array_merge(
+					[
+						BaseRepository::ID => (int) $donor[ BaseRepository::ID ] ?? null,
+					],
+					$donor_meta
+				)
+			);
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
