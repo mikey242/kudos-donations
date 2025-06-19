@@ -1,4 +1,10 @@
-import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
+import {
+	Button,
+	Dashicon,
+	Flex,
+	Tooltip,
+	VisuallyHidden,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { Table } from '../table';
 import React from 'react';
@@ -111,7 +117,9 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Created', 'kudos-donations'),
 			orderby: 'created_at',
 			valueCallback: (post: Subscription): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
+					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				</Tooltip>
 			),
 		},
 		{
