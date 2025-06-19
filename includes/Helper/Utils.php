@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Helper;
 
+use IseardMedia\Kudos\Repository\BaseRepository;
+
 class Utils {
 
 	/**
@@ -179,6 +181,20 @@ class Utils {
 		$type      = substr( $post_type, 6, 2 );
 
 		return 'k' . $type . '_' . $year . $post_id;
+	}
+
+	/**
+	 * Returns a formatted id based on the entity id and created date.
+	 *
+	 * @param array  $entity Entity array.
+	 * @param string $singular_name The entity singular name (e.g. Transaction).
+	 */
+	public static function get_id( array $entity, string $singular_name ): string {
+		$id   = $entity[ BaseRepository::ID ];
+		$date = $entity[ BaseRepository::CREATED_AT ];
+		$year = substr( $date, 0, 4 );
+		$type = substr( strtolower( $singular_name ), 0, 2 );
+		return 'k' . $type . '_' . $year . $id;
 	}
 
 	/**
