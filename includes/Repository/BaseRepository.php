@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Repository;
 
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Helper\WpDb;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -137,7 +138,17 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			return false;
 		}
 
-		return $this->wpdb->insert_id;
+		$id = $this->wpdb->insert_id;
+
+		// Generate title if none provided.
+		if ( empty( $data[ self::TITLE ] ) ) {
+			$args         = $this->find( $id );
+			$formatted_id = Utils::get_id( $args, static::get_singular_name() );
+			$title        = static::get_singular_name() . \sprintf( ' (%1$s)', $formatted_id );
+			$this->wpdb->update( $this->table, [ self::TITLE => $title ], [ 'id' => $id ] );
+		}
+
+		return $id;
 	}
 
 	/**
