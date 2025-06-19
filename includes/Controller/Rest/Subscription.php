@@ -32,8 +32,6 @@ class Subscription extends AbstractRepositoryRestController {
 	 * @param SubscriptionRepository $subscription Subscription repository.
 	 */
 	public function __construct( PaymentVendorFactory $factory, SubscriptionRepository $subscription ) {
-		parent::__construct();
-
 		$this->rest_base  = 'subscription';
 		$this->repository = $subscription;
 		$this->vendor     = $factory->get_vendor();

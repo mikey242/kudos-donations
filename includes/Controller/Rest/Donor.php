@@ -25,7 +25,6 @@ class Donor extends AbstractRepositoryRestController {
 	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
 	public function __construct( DonorRepository $repository, TransactionRepository $transaction_repository ) {
-		parent::__construct();
 		$this->rest_base              = 'donor';
 		$this->repository             = $repository;
 		$this->transaction_repository = $transaction_repository;

@@ -49,8 +49,6 @@ class Payment extends AbstractRestController {
 	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
 	public function __construct( PaymentVendorFactory $factory, CampaignRepository $campaign_repository, DonorRepository $donor_repository, TransactionRepository $transaction_repository ) {
-		parent::__construct();
-
 		$this->rest_base              = 'payment';
 		$this->vendor                 = $factory->get_vendor();
 		$this->campaign_repository    = $campaign_repository;

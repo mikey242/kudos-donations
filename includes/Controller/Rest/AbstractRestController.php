@@ -22,12 +22,7 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 
 	use LoggerAwareTrait;
 
-	/**
-	 * Configure the namespace for the plugin.
-	 */
-	public function __construct() {
-		$this->namespace = 'kudos/v1';
-	}
+	protected $namespace = 'kudos/v1';
 
 	/**
 	 * Returns the REST namespace.
