@@ -44,14 +44,14 @@ class TransactionRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_singular_name(): string {
+	public static function get_singular_name(): string {
 		return _x( 'Transaction', 'Transaction post type singular name', 'kudos-donations' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_plural_name(): string {
+	public static function get_plural_name(): string {
 		return _x( 'Transactions', 'Transaction post type plural name', 'kudos-donations' );
 	}
 

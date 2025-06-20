@@ -18,8 +18,15 @@ use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
+use IseardMedia\Kudos\Repository\TransactionRepository;
 
-class PaymentService extends AbstractRegistrable implements HasSettingsInterface {
+class PaymentService extends AbstractRegistrable implements HasSettingsInterface, RepositoryAwareInterface {
+
+	use RepositoryAwareTrait;
+
 	public const SETTING_VENDOR = '_kudos_payment_vendor';
 	private MailerService $mailer_service;
 	private InvoiceService $invoice;
@@ -132,8 +139,13 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	public function iterate_invoice_number( int $transaction_id ) {
 
 		$current = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER );
-
-		if ( update_post_meta( $transaction_id, TransactionPostType::META_FIELD_INVOICE_NUMBER, $current ) ) {
+		$result  = $this->get_repository( TransactionRepository::class )->upsert(
+			[
+				BaseRepository::ID                    => $transaction_id,
+				TransactionRepository::INVOICE_NUMBER => $current,
+			]
+		);
+		if ( $result ) {
 			update_option( InvoiceService::SETTING_INVOICE_NUMBER, ( $current + 1 ) );
 		}
 	}
@@ -175,13 +187,8 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		// Generate invoice.
 		$this->invoice->generate_invoice( $transaction_id );
 
-		// Get donor.
-		$donor = get_post( get_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, true ) );
-
-		if ( $donor->{DonorPostType::META_FIELD_EMAIL} ) {
-			// Send email - email setting is checked in mailer.
-			$this->mailer_service->send_receipt( $donor->ID, $transaction_id );
-		}
+		// Send email - email setting is checked in mailer.
+		$this->mailer_service->send_receipt( $transaction_id );
 
 		return true;
 	}

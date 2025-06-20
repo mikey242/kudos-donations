@@ -35,4 +35,18 @@ trait RepositoryAwareTrait {
 		}
 		return $this->repository_manager;
 	}
+
+	/**
+	 * Get a specific repository instance by FQCN.
+	 *
+	 * @param class-string<T> $class_name Repository class name.
+	 * @return T
+	 *
+	 * @template T of RepositoryInterface
+	 *
+	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
+	 */
+	protected function get_repository( string $class_name ): RepositoryInterface {
+		return $this->get_repository_manager()->get( $class_name );
+	}
 }

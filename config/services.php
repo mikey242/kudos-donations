@@ -97,8 +97,8 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->call( 'pushHandler', [ service( WhatFailureGroupHandler::class ) ] );
 
 	// External libraries.
-	$services->set( Dompdf::class );
-	$services->set( MollieApiClient::class );
+	$services->set( Dompdf::class )->lazy();
+	$services->set( MollieApiClient::class )->lazy();
 
 	// Register repositories with managers.
 	$services->set( PaymentVendorFactory::class )
@@ -108,13 +108,13 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->set( EmailVendorFactory::class )
 		->args( [ tagged_locator( 'kudos.email_vendor' ) ] )->lazy();
 	$services->set( RegistrableHandler::class )
-		->args( [ tagged_iterator( 'kudos.registrable' ) ] );
+		->args( [ tagged_iterator( 'kudos.registrable' ) ] )->lazy();
 	$services->set( ActivationHandler::class )
-		->args( [ tagged_iterator( 'kudos.activation' ) ] );
+		->args( [ tagged_iterator( 'kudos.activation' ) ] )->lazy();
 	$services->set( UpgradeHandler::class )
-		->args( [ tagged_iterator( 'kudos.upgradeable' ) ] );
+		->args( [ tagged_iterator( 'kudos.upgradeable' ) ] )->lazy();
 	$services->set( RepositoryManager::class )
-		->args( [ tagged_iterator( 'kudos.repository' ) ] );
+		->args( [ tagged_iterator( 'kudos.repository' ) ] )->lazy();
 
 	// Filter for adding additional services.
 	do_action( 'kudos_container_configurator', $services );

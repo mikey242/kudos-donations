@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 
 class Transaction extends AbstractRepositoryRestController {
