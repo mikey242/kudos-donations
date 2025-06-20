@@ -56,17 +56,18 @@ interface PaymentVendorInterface
      *
      * @param array $payment_args Parameters to pass to mollie to create a payment.
      * @param array $transaction The transaction entity array.
+     * @param string $vendor_customer_id The vendors customer id.
      *
      * @return string|false
      */
-    public function create_payment(array $payment_args, array $transaction);
+    public function create_payment(array $payment_args, array $transaction, string $vendor_customer_id);
 
 	/**
 	 * Refunds the provided transaction.
 	 *
-	 * @param int $post_id The post ID of the transaction to refund.
+	 * @param int $entity_id The entity ID of the transaction to refund.
 	 */
-	public function refund(int $post_id): bool;
+	public function refund(int $entity_id): bool;
 
     /**
      * Vendor webhook action.

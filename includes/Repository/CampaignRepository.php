@@ -25,6 +25,7 @@ class CampaignRepository extends BaseRepository {
 	/**
 	 * Field constants.
 	 */
+	public const POST_SLUG                  = 'wp_post_slug';
 	public const CURRENCY                   = 'currency';
 	public const GOAL                       = 'goal';
 	public const SHOW_GOAL                  = 'show_goal';
@@ -67,14 +68,14 @@ class CampaignRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_singular_name(): string {
+	public static function get_singular_name(): string {
 		return _x( 'Campaign', 'Campaign post type singular name', 'kudos-donations' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_plural_name(): string {
+	public static function get_plural_name(): string {
 		return _x( 'Campaigns', 'Campaign post type plural name', 'kudos-donations' );
 	}
 
@@ -92,10 +93,18 @@ class CampaignRepository extends BaseRepository {
 			self::ADDITIONAL_FUNDS           => $this->make_schema_field( FieldType::FLOAT, null, [ $this, 'sanitize_float' ] ),
 			self::AMOUNT_TYPE                => $this->make_schema_field( FieldType::STRING, 'fixed', 'sanitize_text_field' ),
 			self::FIXED_AMOUNTS              => $this->make_schema_field( FieldType::OBJECT, [ '5', '10', '25', '50' ], [ $this, 'sanitize_json_field' ] ),
-			self::MINIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, [ $this, 'sanitize_float' ] ),
-			self::MAXIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, null, [ $this, 'sanitize_float' ] ),
+			self::MINIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, 1, [ $this, 'sanitize_float' ] ),
+			self::MAXIMUM_DONATION           => $this->make_schema_field( FieldType::FLOAT, 5000, [ $this, 'sanitize_float' ] ),
 			self::DONATION_TYPE              => $this->make_schema_field( FieldType::STRING, 'oneoff', 'sanitize_text_field' ),
-			self::FREQUENCY_OPTIONS          => $this->make_schema_field( FieldType::OBJECT, [], [ $this, 'sanitize_json_field' ] ),
+			self::FREQUENCY_OPTIONS          => $this->make_schema_field(
+				FieldType::OBJECT,
+				[
+					'12 months' => __( 'Yearly', 'kudos-donations' ),
+					'3 months'  => __( 'Quarterly', 'kudos-donations' ),
+					'1 month'   => __( 'Monthly', 'kudos-donations' ),
+				],
+				[ $this, 'sanitize_json_field' ]
+			),
 			self::EMAIL_ENABLED              => $this->make_schema_field( FieldType::BOOLEAN, true, 'rest_sanitize_boolean' ),
 			self::EMAIL_REQUIRED             => $this->make_schema_field( FieldType::BOOLEAN, true, 'rest_sanitize_boolean' ),
 			self::NAME_ENABLED               => $this->make_schema_field( FieldType::BOOLEAN, true, 'rest_sanitize_boolean' ),
@@ -140,7 +149,7 @@ class CampaignRepository extends BaseRepository {
 			return null;
 		}
 
-		$transaction_repository = $this->get_repository_manager()->get( TransactionRepository::class );
+		$transaction_repository = $this->get_repository( TransactionRepository::class );
 
 		return $transaction_repository->find_by( [ 'campaign_id' => $campaign_id ] );
 	}

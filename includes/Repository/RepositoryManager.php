@@ -37,8 +37,7 @@ class RepositoryManager {
 	 * @param RepositoryInterface $service Service.
 	 */
 	public function add( RepositoryInterface $service ): void {
-		$class_name                        = \get_class( $service );
-		$this->repositories[ $class_name ] = $service;
+		$this->repositories[ \get_class( $service ) ] = $service;
 	}
 
 	/**

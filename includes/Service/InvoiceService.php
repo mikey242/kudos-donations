@@ -100,8 +100,8 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		}
 
 		// Get transaction.
-		$transactions = $this->repository_manager->get( TransactionRepository::class );
-		$transaction  = $transactions->find( $transaction_id );
+		$transaction = $this->get_repository( TransactionRepository::class )
+							->find( $transaction_id );
 
 		if ( ! $transaction ) {
 			$this->logger->debug( 'Error generating invoice: Transaction not found', [ 'transaction_id' => $transaction_id ] );
@@ -127,7 +127,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		];
 
 		// Append donor.
-		$donors = $this->repository_manager->get( DonorRepository::class );
+		$donors = $this->get_repository( DonorRepository::class );
 		$donor  = $donors->find_one_by( [ BaseRepository::ID => $transaction[ TransactionRepository::DONOR_ID ] ] );
 		if ( $donor ) {
 				$data['donor_business'] = $donor[ DonorRepository::BUSINESS_NAME ] ?? '';

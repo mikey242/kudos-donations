@@ -11,10 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
@@ -38,8 +34,6 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\PaymentMethod;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\PaymentMethodStatus;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\RefundStatus;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
-use WP_Error;
-use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -60,6 +54,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      */
     public function __construct( MollieApiClient $api_client ) {
 	    $this->api_client = $api_client;
+	    add_action('kudos_mollie_handle_status_change', [$this, 'handle_status_change']);
     }
 
 	/**
@@ -333,10 +328,9 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-    public function create_payment(array $payment_args, array $transaction) {
+    public function create_payment(array $payment_args, array $transaction, string $vendor_customer_id) {
 
 		$transaction_id = $transaction[BaseRepository::ID];
-	    $vendor_customer_id = $transaction_id[TransactionRepository::VENDOR_CUSTOMER_ID] ?? null;
 
         // Set payment frequency.
         $payment_args['payment_frequency'] = "true" === $payment_args['recurring'] ? $payment_args['recurring_frequency'] : SequenceType::ONEOFF;
@@ -345,8 +339,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
         $redirect_url                      = $payment_args['return_url'];
 
         // Add order id query arg to return url if option to show message enabled.
-	    $campaigns = $this->repository_manager->get(CampaignRepository::class);
-		$campaign = $campaigns->find((int) $payment_args['campaign_id']);
+		$campaign =  $this->get_repository(CampaignRepository::class)
+			->find((int) $payment_args['campaign_id']);
 		$show_return_message = $campaign[CampaignRepository::SHOW_RETURN_MESSAGE];
         if ( ! empty($show_return_message)) {
             $action       = 'order_complete';
@@ -397,8 +391,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			$checkout_url =$payment->getCheckoutUrl();
 
 			// Update meta field from payment object.
-	        $transactions = $this->repository_manager->get(TransactionRepository::class);
-			$transactions->upsert(array_merge($transaction, [TransactionRepository::CHECKOUT_URL => $checkout_url]));
+	        $this->get_repository(TransactionRepository::class)
+		        ->upsert(array_merge($transaction, [TransactionRepository::CHECKOUT_URL => $checkout_url]));
 
             return $checkout_url;
         } catch (RequestException $e) {
@@ -413,17 +407,17 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * @return false|Subscription
 	 */
 	public function create_subscription(
-		WP_Post $transaction,
+		array $transaction,
 		string $mandate_id,
 		string $interval,
 		int $years
 	) {
 		$this->logger->debug('Creating subscription', ['mandate_id' => $mandate_id, 'interval' => $interval, 'years' => $years]);
-		$donor       = get_post($transaction->{TransactionPostType::META_FIELD_DONOR_ID});
-		$customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID};
+		$donor       = $this->get_repository(DonorRepository::class)->find($transaction[TransactionRepository::DONOR_ID]);
+		$customer_id = $donor[DonorRepository::VENDOR_CUSTOMER_ID];
 		$start_date  = gmdate('Y-m-d', strtotime('+' . $interval));
-		$currency    = $transaction->{TransactionPostType::META_FIELD_CURRENCY};
-		$value       = Utils::format_value_for_use($transaction->{TransactionPostType::META_FIELD_VALUE});
+		$currency    = $transaction[TransactionRepository::CURRENCY];
+		$value       = Utils::format_value_for_use($transaction[TransactionRepository::VALUE]);
 		$customer    = $this->get_customer($customer_id);
 
 		// Create subscription if valid mandate found.
@@ -432,13 +426,14 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			try {
 
 				// Create subscription post.
-				$subscription_post = SubscriptionPostType::save([
-					SubscriptionPostType::META_FIELD_FREQUENCY              => $interval,
-					SubscriptionPostType::META_FIELD_YEARS                  => $years,
-					SubscriptionPostType::META_FIELD_VALUE                  => $value,
-					SubscriptionPostType::META_FIELD_CURRENCY               => $currency,
-					SubscriptionPostType::META_FIELD_TRANSACTION_ID         => $transaction->ID
+				$subscription_id = $this->get_repository(SubscriptionRepository::class)->upsert([
+					SubscriptionRepository::FREQUENCY              => $interval,
+					SubscriptionRepository::YEARS                  => $years,
+					SubscriptionRepository::VALUE                  => $value,
+					SubscriptionRepository::CURRENCY               => $currency,
+					SubscriptionRepository::TRANSACTION_ID         => $transaction[BaseRepository::ID]
 				]);
+				$subscription_entity = $this->get_repository(SubscriptionRepository::class)->find($subscription_id);
 
 				// Prepare arguments to send to Mollie.
 				$subscription_args = [
@@ -450,15 +445,15 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					'mandateId'   => $mandate_id,
 					'interval'    => $interval,
 					'startDate'   => $start_date,
-					'description' => $subscription_post->post_title,
+					'description' => $subscription_entity[BaseRepository::TITLE],
 					'metadata'    => [
-						TransactionPostType::META_FIELD_CAMPAIGN_ID => $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID},
-						TransactionPostType::META_FIELD_DONOR_ID => $transaction->{TransactionPostType::META_FIELD_DONOR_ID}
+						TransactionRepository::CAMPAIGN_ID => $transaction[TransactionRepository::CAMPAIGN_ID],
+						TransactionRepository::DONOR_ID => $transaction[TransactionRepository::DONOR_ID]
 					],
 				];
 
 				// Disable startDate for test mode.
-				if ('test' === $transaction->{TransactionPostType::META_FIELD_MODE}) {
+				if ('test' === $transaction[TransactionRepository::MODE]) {
 					unset($subscription_args['startDate']);
 				}
 
@@ -470,10 +465,10 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				$this->logger->debug('Subscription created with Mollie', ['result' => $subscription]);
 
 				// Update subscription post with status and subscription id.
-				SubscriptionPostType::save([
-					'ID' => $subscription_post->ID,
-					SubscriptionPostType::META_FIELD_STATUS                 => $subscription->status,
-					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id,
+				$this->get_repository(SubscriptionRepository::class)->upsert([
+					BaseRepository::ID => $subscription_entity[BaseRepository::ID],
+					SubscriptionRepository::STATUS                 => $subscription->status,
+					SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id,
 				]);
 
 				return $subscription;
@@ -510,45 +505,60 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
         return get_rest_url(null, $route);
     }
 
-    /**
-     * Mollie webhook handler.
-     *
-     * @param WP_REST_Request $request Request object.
-     *
-     * @return WP_Error|WP_REST_Response
-     */
-    public function rest_webhook(WP_REST_Request $request) {
-        // Sanitize request params.
-        $request->sanitize_params();
+	/**
+	 * Mollie webhook handler.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function rest_webhook(WP_REST_Request $request): WP_REST_Response {
+		// Sanitize request params.
+		$request->sanitize_params();
 
-        // ID is case-sensitive (e.g: tr_HUW39xpdFN).
-        $payment_id = $request->get_param('id');
+		// ID is case-sensitive (e.g: tr_HUW39xpdFN).
+		$payment_id = $request->get_param('id');
+		// Log request.
+		$this->logger->info(
+			"Webhook requested by " . $this::get_name(),
+			[
+				'payment_id' => $payment_id,
+			]
+		);
 
-        // Mollie API.
-        $mollie = $this->api_client;
+		/**
+		 * Create success response object.
+		 *
+		 * @link https://developer.wordpress.org/reference/classes/wp_rest_response/
+		 */
+		$response = new WP_REST_Response([
+			'success' => true,
+			'id'      => $payment_id,
+		]);
 
-        // Log request.
-        $this->logger->info(
-            "Webhook requested by " . $this::get_name(),
-            [
-                'payment_id' => $payment_id,
-            ]
-        );
+		$response->add_link( 'self', rest_url( $request->get_route() ) );
 
-        try {
-            /**
-             * Create success response object.
-             *
-             * @link https://developer.wordpress.org/reference/functions/wp_send_json_success/
-             */
-            $response = rest_ensure_response(
-                [
-                    'success' => true,
-                    'id'      => $payment_id,
-                ]
-            );
+		// Process the payment asynchronously.
+		Utils::enqueue_async_action(
+			'kudos_mollie_handle_status_change',
+			[ 'payment_id' => $payment_id ],
+			'kudos-donations'
+		);
 
-            $response->add_link('self', rest_url($request->get_route()));
+		return $response;
+	}
+
+	/**
+	 * Mollie webhook handler.
+	 *
+	 * @param string $payment_id Request object.
+	 *
+	 * @throws RequestException
+	 */
+    public function handle_status_change(string $payment_id): bool {
+
+	        // Mollie API.
+	        $mollie = $this->api_client;
 
             /**
              * Get the payment object from Mollie.
@@ -569,7 +579,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                 ]
             );
 
-	        $transactions = $this->repository_manager->get(TransactionRepository::class);
+			// Get the transactions' repository.
+	        $transactions = $this->get_repository(TransactionRepository::class);
 
             /**
              * Create new transaction if this is a recurring payment.
@@ -583,22 +594,28 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                 $subscription = $customer->getSubscription($payment->subscriptionId);
 
 				//	Get post id if $campaign_id is slug from pre 4.0.0 version.
-				$campaign_id = $subscription->metadata->{TransactionPostType::META_FIELD_CAMPAIGN_ID};
-				$campaign = CampaignPostType::get_post_by_id_or_slug($campaign_id);
-				$campaign_id = $campaign->ID;
+				$campaign_id = $subscription->metadata->{TransactionRepository::CAMPAIGN_ID};
+				$campaign_repository = $this->get_repository(CampaignRepository::class);
+				$campaign = $campaign_repository
+				                 ->find_one_by([ BaseRepository::ID => $campaign_id]) ??
+							$campaign_repository
+								->find_one_by([ CampaignRepository::POST_SLUG => $campaign_id ]);
+				$campaign_id = $campaign[BaseRepository::ID];
 
 				// Get Donor ID. If subscription from pre 4.0.0, use customerId to get new donor ID.
-	            $donor_id = $subscription->metadata->{TransactionPostType::META_FIELD_DONOR_ID}
-	                        ?? DonorPostType::get_post([DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID => $subscription->customerId])->ID ?? null;
+	            $donor_id = $subscription->metadata->{TransactionRepository::DONOR_ID}
+	                        ?? $this->get_repository(DonorRepository::class)
+	                                ->find_one_by([DonorRepository::VENDOR_CUSTOMER_ID => $subscription->customerId])[BaseRepository::ID] ?? null;
 
 				// Save new transaction.
-                $transaction  = TransactionPostType::save(
+                $transaction_id  = $transactions->upsert(
 					[
-						TransactionPostType::META_FIELD_DONOR_ID => $donor_id,
-	                    TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_id ?? '',
-						TransactionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id
+						TransactionRepository::DONOR_ID => $donor_id,
+	                    TransactionRepository::CAMPAIGN_ID => $campaign_id ?? '',
+						TransactionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id
                     ]
                 );
+				$transaction = $transactions->find($transaction_id);
             } else {
 	            $transaction = $transactions->find((int) $payment->metadata->transaction_id);
             }
@@ -616,12 +633,12 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                     ['vendor_id' => $payment_id, 'transaction_id' => $payment->metadata->transaction_id]
                 );
 
-                return $response;
+                return false;
             }
 
             // Update transaction status.
 			$transactions->upsert(array_merge($transaction, [
-				TransactionPostType::META_FIELD_STATUS => $payment->status
+				TransactionRepository::STATUS => $payment->status
 			]));
 
             // Create action with post id as parameter.
@@ -632,38 +649,38 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                  * The payment is paid and isn't refunded or charged back.
                  * If it already has an ID then it has already been processed.
                  */
-                if ($payment_id === $transaction->ID) {
+                if ($payment_id === $transaction[TransactionRepository::VENDOR_PAYMENT_ID]) {
                     $this->logger->debug('Duplicate webhook detected. Ignoring', ['transaction_id' => $payment_id]);
 
-                    return $response;
+                    return false;
                 }
 
                 // Update transaction.
 	            $transactions->upsert([
-					BaseRepository::ID                                     => $transaction[BaseRepository::ID],
-		            TransactionPostType::META_FIELD_STATUS                 => $payment->status,
-		            TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID      => $payment->id,
-		            TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID     => $payment->customerId,
-		            TransactionPostType::META_FIELD_VALUE                  => $payment->amount->value,
-		            TransactionPostType::META_FIELD_CURRENCY               => $payment->amount->currency,
-		            TransactionPostType::META_FIELD_SEQUENCE_TYPE          => $payment->sequenceType,
-		            TransactionPostType::META_FIELD_METHOD                 => $payment->method,
-		            TransactionPostType::META_FIELD_MODE                   => $payment->mode
+					BaseRepository::ID                            => $transaction[BaseRepository::ID],
+		            TransactionRepository::STATUS                 => $payment->status,
+		            TransactionRepository::VENDOR_PAYMENT_ID      => $payment->id,
+		            TransactionRepository::VENDOR_CUSTOMER_ID     => $payment->customerId,
+		            TransactionRepository::VALUE                  => $payment->amount->value,
+		            TransactionRepository::CURRENCY               => $payment->amount->currency,
+		            TransactionRepository::SEQUENCE_TYPE          => $payment->sequenceType,
+		            TransactionRepository::METHOD                 => $payment->method,
+		            TransactionRepository::MODE                   => $payment->mode
 	            ]);
 
                 // Set up recurring payment if sequence is first.
                 if ($payment->hasSequenceTypeFirst()) {
-                    $this->logger->info('Payment is initial subscription payment.', $transaction->to_array());
+                    $this->logger->info('Payment is initial subscription payment.', $transaction);
                     $subscription = $this->create_subscription(
                         $transaction,
                         $payment->mandateId,
-                        $payment->metadata->{SubscriptionPostType::META_FIELD_FREQUENCY},
-	                    (int) $payment->metadata->{SubscriptionPostType::META_FIELD_YEARS}
+                        $payment->metadata->{SubscriptionRepository::FREQUENCY},
+	                    (int) $payment->metadata->{SubscriptionRepository::YEARS}
                     );
 	                // Update transaction with subscription ID.
 	                $transactions->upsert([
-		                BaseRepository::ID                                     => $transaction->ID,
-		                TransactionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $subscription->id
+                        BaseRepository::ID                            => $transaction[BaseRepository::ID],
+		                TransactionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id
 	                ]);
                 }
             } elseif ($payment->hasRefunds()) {
@@ -671,7 +688,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                  * The payment has been (partially) refunded.
                  * The status of the payment is still "paid".
                  */
-                do_action('kudos_mollie_refund', $transaction->ID);
+                do_action('kudos_mollie_refund', $transaction[BaseRepository::ID]);
 
 	            // Update transaction.
 	            $transactions->upsert([
@@ -686,19 +703,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
                 $this->logger->info('Payment refunded.', ['transaction' => $transaction]);
             }
-        } catch (RequestException $e) {
-            $this->logger->error($this::get_name() . " webhook exception: " . $e->getMessage(), ['payment_id' => $payment_id]);
 
-            // Send fail response to Mollie so that they know to try again.
-            return rest_ensure_response(
-                new WP_REST_Response([
-                    'success' => false,
-                    'id'      => $payment_id,
-                ], 500)
-            );
-        }
-
-        return $response;
+        return true;
     }
 
     /**
@@ -725,12 +731,13 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-	public function refund( int $post_id ): bool {
-		$post = get_post($post_id);
-		if(TransactionPostType::get_slug() === $post->post_type) {
-			$payment_id = $post->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID};
-			$amount['value'] = Utils::format_value_for_use($post->{TransactionPostType::META_FIELD_VALUE});
-			$amount['currency'] = $post->{TransactionPostType::META_FIELD_CURRENCY};
+	public function refund( int $entity_id ): bool {
+		$post = get_post($entity_id);
+		$transaction = $this->get_repository(TransactionRepository::class)->find($entity_id);
+		if($transaction) {
+			$payment_id = $transaction[TransactionRepository::VENDOR_PAYMENT_ID];
+			$amount['value'] = Utils::format_value_for_use($transaction[TransactionRepository::VALUE]);
+			$amount['currency'] = $transaction[TransactionRepository::CURRENCY];
 			try {
 				$payment = $this->api_client->payments->get($payment_id);
 				$response = $payment->refund(["amount" => $amount]);

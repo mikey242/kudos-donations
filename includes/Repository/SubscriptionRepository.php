@@ -36,14 +36,14 @@ class SubscriptionRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_singular_name(): string {
+	public static function get_singular_name(): string {
 		return _x( 'Subscription', 'Subscription post type singular name', 'kudos-donations' );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_plural_name(): string {
+	public static function get_plural_name(): string {
 		return _x( 'Subscriptions', 'Subscription post type plural name', 'kudos-donations' );
 	}
 
@@ -74,7 +74,7 @@ class SubscriptionRepository extends BaseRepository {
 		if ( ! $transaction_id ) {
 			return null;
 		}
-		$transaction_repository = $this->get_repository_manager()->get( TransactionRepository::class );
+		$transaction_repository = $this->get_repository( TransactionRepository::class );
 		return $transaction_repository->find( (int) $transaction_id );
 	}
 
@@ -89,7 +89,7 @@ class SubscriptionRepository extends BaseRepository {
 			return null;
 		}
 
-		$donor_repository = $this->get_repository_manager()->get( DonorRepository::class );
+		$donor_repository = $this->get_repository( DonorRepository::class );
 		return $donor_repository->find( (int) $donor_id );
 	}
 
@@ -104,7 +104,7 @@ class SubscriptionRepository extends BaseRepository {
 			return null;
 		}
 
-		$campaign_repository = $this->get_repository_manager()->get( CampaignRepository::class );
+		$campaign_repository = $this->get_repository( CampaignRepository::class );
 		return $campaign_repository->find( (int) $transaction[ TransactionRepository::CAMPAIGN_ID ] );
 	}
 }

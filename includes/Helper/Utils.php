@@ -105,6 +105,35 @@ class Utils {
 	}
 
 	/**
+	 * Enqueues an async action using Action Scheduler.
+	 *
+	 * @param string      $hook       The name of the WordPress action to trigger.
+	 * @param array       $args       Arguments to pass to the action callback.
+	 * @param string|null $group      (Optional) Group name for the action.
+	 * @param bool        $overwrite  Whether to replace existing async action.
+	 */
+	public static function enqueue_async_action(
+		string $hook,
+		array $args = [],
+		?string $group = null,
+		bool $overwrite = false
+	): void {
+		if ( class_exists( 'ActionScheduler' ) && \function_exists( 'as_enqueue_async_action' ) ) {
+			if ( $overwrite ) {
+				as_unschedule_action( $hook, $args, $group );
+			}
+
+			// Avoid scheduling duplicates if $overwrite is false.
+			if ( $overwrite || false === as_next_scheduled_action( $hook, $args, $group ) ) {
+				as_enqueue_async_action( $hook, $args, $group );
+			}
+		} else {
+			// Fallback: run it immediately.
+			do_action( $hook, ...array_values( $args ) );
+		}
+	}
+
+	/**
 	 * SVG logo.
 	 */
 	public static function get_kudos_logo_svg(): string {
