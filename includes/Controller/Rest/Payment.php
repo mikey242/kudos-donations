@@ -320,7 +320,7 @@ class Payment extends AbstractRestController implements RepositoryAwareInterface
 
 			// Update or create donor.
 			$donor_id = $this->get_repository( DonorRepository::class )
-				->upsert(
+				->save(
 					array_merge(
 						[
 							BaseRepository::ID => (int) $donor[ BaseRepository::ID ] ?? null,
@@ -334,7 +334,7 @@ class Payment extends AbstractRestController implements RepositoryAwareInterface
 		// Create the payment. If there is no customer ID it will be un-linked.
 		$vendor_customer_id = $donor[ DonorRepository::VENDOR_CUSTOMER_ID ] ?? null;
 		$transaction_id     = $this->get_repository( TransactionRepository::class )
-			->upsert(
+			->save(
 				[
 					TransactionRepository::DONOR_ID      => $donor_id ?? null,
 					TransactionRepository::VALUE         => $args[ TransactionRepository::VALUE ],

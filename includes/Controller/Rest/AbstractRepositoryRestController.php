@@ -220,7 +220,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 		);
 
 		// Create/update record.
-		$id = $this->repository->upsert( $data );
+		$id = $this->repository->save( $data );
 
 		if ( ! $id ) {
 			return new WP_Error( 'cannot_create', __( 'Could not create campaign.', 'kudos-donations' ), [ 'status' => 500 ] );

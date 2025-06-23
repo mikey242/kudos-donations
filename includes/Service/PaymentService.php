@@ -139,7 +139,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	public function iterate_invoice_number( int $transaction_id ) {
 
 		$current = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER );
-		$result  = $this->get_repository( TransactionRepository::class )->upsert(
+		$result  = $this->get_repository( TransactionRepository::class )->save(
 			[
 				BaseRepository::ID                    => $transaction_id,
 				TransactionRepository::INVOICE_NUMBER => $current,

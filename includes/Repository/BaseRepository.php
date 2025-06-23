@@ -168,7 +168,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param array $data The data to upsert.
 	 * @return int|false The inserted or updated row ID, or false on failure.
 	 */
-	public function upsert( array $data ) {
+	public function save( array $data ) {
 		$prepared_data = $this->sanitize_data_from_schema( $data );
 		if ( isset( $prepared_data[ self::ID ] ) && $prepared_data[ self::ID ] ) {
 			$id = (int) $prepared_data[ self::ID ];

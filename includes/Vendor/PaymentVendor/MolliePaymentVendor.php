@@ -392,7 +392,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 			// Update meta field from payment object.
 	        $this->get_repository(TransactionRepository::class)
-		        ->upsert(array_merge($transaction, [TransactionRepository::CHECKOUT_URL => $checkout_url]));
+		        ->save(array_merge($transaction, [ TransactionRepository::CHECKOUT_URL => $checkout_url]));
 
             return $checkout_url;
         } catch (RequestException $e) {
@@ -426,7 +426,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			try {
 
 				// Create subscription post.
-				$subscription_id = $this->get_repository(SubscriptionRepository::class)->upsert([
+				$subscription_id = $this->get_repository(SubscriptionRepository::class)->save([
 					SubscriptionRepository::FREQUENCY              => $interval,
 					SubscriptionRepository::YEARS                  => $years,
 					SubscriptionRepository::VALUE                  => $value,
@@ -465,8 +465,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				$this->logger->debug('Subscription created with Mollie', ['result' => $subscription]);
 
 				// Update subscription post with status and subscription id.
-				$this->get_repository(SubscriptionRepository::class)->upsert([
-					BaseRepository::ID => $subscription_entity[BaseRepository::ID],
+				$this->get_repository(SubscriptionRepository::class)->save([
+					BaseRepository::ID => $subscription_id,
 					SubscriptionRepository::STATUS                 => $subscription->status,
 					SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id,
 				]);
@@ -608,7 +608,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	                                ->find_one_by([DonorRepository::VENDOR_CUSTOMER_ID => $subscription->customerId])[BaseRepository::ID] ?? null;
 
 				// Save new transaction.
-                $transaction_id  = $transactions->upsert(
+                $transaction_id  = $transactions->save(
 					[
 						TransactionRepository::DONOR_ID => $donor_id,
 	                    TransactionRepository::CAMPAIGN_ID => $campaign_id ?? '',
@@ -637,7 +637,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
             }
 
             // Update transaction status.
-			$transactions->upsert(array_merge($transaction, [
+			$transactions->save(array_merge($transaction, [
 				TransactionRepository::STATUS => $payment->status
 			]));
 
@@ -656,7 +656,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                 }
 
                 // Update transaction.
-	            $transactions->upsert([
+	            $transactions->save([
 					BaseRepository::ID                            => $transaction[BaseRepository::ID],
 		            TransactionRepository::STATUS                 => $payment->status,
 		            TransactionRepository::VENDOR_PAYMENT_ID      => $payment->id,
@@ -678,7 +678,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	                    (int) $payment->metadata->{SubscriptionRepository::YEARS}
                     );
 	                // Update transaction with subscription ID.
-	                $transactions->upsert([
+	                $transactions->save([
                         BaseRepository::ID                            => $transaction[BaseRepository::ID],
 		                TransactionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id
 	                ]);
@@ -691,7 +691,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                 do_action('kudos_mollie_refund', $transaction[BaseRepository::ID]);
 
 	            // Update transaction.
-	            $transactions->upsert([
+	            $transactions->save([
 		            BaseRepository::ID => $transaction->ID,
 		            TransactionRepository::REFUNDS => json_encode(
 			            [
