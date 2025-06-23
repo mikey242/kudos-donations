@@ -425,13 +425,16 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			$this->logger->debug('Customer has valid mandate, continuing.', ['mandate_id' => $mandate_id]);
 			try {
 
+				$donor = $this->get_repository(DonorRepository::class)->find((int) $transaction[TransactionRepository::DONOR_ID]);
+
 				// Create subscription post.
 				$subscription_id = $this->get_repository(SubscriptionRepository::class)->save([
 					SubscriptionRepository::FREQUENCY              => $interval,
 					SubscriptionRepository::YEARS                  => $years,
 					SubscriptionRepository::VALUE                  => $value,
 					SubscriptionRepository::CURRENCY               => $currency,
-					SubscriptionRepository::TRANSACTION_ID         => $transaction[BaseRepository::ID]
+					SubscriptionRepository::TRANSACTION_ID         => $transaction[BaseRepository::ID],
+					SubscriptionRepository::DONOR_ID               => $donor[BaseRepository::ID]
 				]);
 				$subscription_entity = $this->get_repository(SubscriptionRepository::class)->find($subscription_id);
 
@@ -468,6 +471,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				$this->get_repository(SubscriptionRepository::class)->save([
 					BaseRepository::ID => $subscription_id,
 					SubscriptionRepository::STATUS                 => $subscription->status,
+					SubscriptionRepository::VENDOR_CUSTOMER_ID     => $subscription->customerId,
 					SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id,
 				]);
 
