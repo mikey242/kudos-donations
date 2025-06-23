@@ -227,7 +227,10 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			ARRAY_A
 		);
 
-		return array_map( fn( $row ) => $this->cast_types( $row ), $results );
+		return array_map(
+			fn( $row ) => $this->transform_result( $this->cast_types( $row ) ),
+			$results
+		);
 	}
 
 	/**
@@ -268,6 +271,16 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			'sql'    => $clauses ? 'WHERE ' . implode( ' AND ', $clauses ) : '',
 			'params' => $params,
 		];
+	}
+
+	/**
+	 * Allows child repositories to append or transform results.
+	 *
+	 * @param array $row The base row from DB.
+	 * @return array     The modified/enriched row.
+	 */
+	protected function transform_result( array $row ): array {
+		return $row;
 	}
 
 	/**
