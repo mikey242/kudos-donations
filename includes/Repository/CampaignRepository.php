@@ -142,8 +142,9 @@ class CampaignRepository extends BaseRepository {
 	 * Returns linked transactions.
 	 *
 	 * @param array $campaign The campaign array.
+	 * @param array $columns Columns to return.
 	 */
-	public function get_transactions( array $campaign ): ?array {
+	public function get_transactions( array $campaign, array $columns = [ '*' ] ): ?array {
 		$campaign_id = $campaign[ self::ID ] ?? null;
 		if ( ! $campaign_id ) {
 			return null;
@@ -151,7 +152,7 @@ class CampaignRepository extends BaseRepository {
 
 		$transaction_repository = $this->get_repository( TransactionRepository::class );
 
-		return $transaction_repository->find_by( [ 'campaign_id' => $campaign_id ] );
+		return $transaction_repository->find_by( [ 'campaign_id' => $campaign_id ], $columns );
 	}
 
 	/**
@@ -160,8 +161,7 @@ class CampaignRepository extends BaseRepository {
 	 * @param array $campaign The campaign array.
 	 */
 	public function get_total( array $campaign ): float {
-		$transactions = $this->get_transactions( $campaign );
-
+		$transactions = $this->get_transactions( $campaign, [ 'status', 'value' ] );
 		return array_sum(
 			array_map(
 				function ( $item ) {
