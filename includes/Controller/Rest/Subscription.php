@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use Exception;
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
@@ -91,12 +92,12 @@ class Subscription extends AbstractRepositoryRestController {
 			);
 		}
 
-		$this->logger->info( 'Subscription: Cancelling subscription', [ 'post_id' => $post_id ] );
+		$this->logger->info( 'Cancelling subscription', [ 'post_id' => $post_id ] );
 
 		// Check if token is valid.
 		try {
 			if ( ! EncryptionService::verify_token( $post_id, $token ) ) {
-				$this->logger->info( 'Subscription: Invalid token supplied' );
+				$this->logger->info( 'Invalid token supplied' );
 				return new WP_REST_Response(
 					[
 						'message' => __( 'Token expired', 'kudos-donations' ),
@@ -115,16 +116,16 @@ class Subscription extends AbstractRepositoryRestController {
 		}
 
 		// Get subscription post from supplied row id.
-		$subscription = get_post( $post_id );
+		$subscription = $this->repository->find( $post_id );
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
 
 		if ( $result ) {
 			// Cancelling was successful. Update entity with canceled status.
-			SubscriptionPostType::save(
+			$this->repository->save(
 				[
-					'ID' => $post_id,
+					BaseRepository::ID => (int) $post_id,
 					SubscriptionPostType::META_FIELD_STATUS => 'cancelled',
 				]
 			);
@@ -132,8 +133,8 @@ class Subscription extends AbstractRepositoryRestController {
 			$this->logger->info(
 				'Subscription cancelled.',
 				[
-					'ID'              => $post_id,
-					'subscription_id' => get_post_meta( $post_id, 'subscription_id', true ),
+					BaseRepository::ID => $post_id,
+					'subscription_id'  => $subscription[ SubscriptionRepository::VENDOR_SUBSCRIPTION_ID ],
 				]
 			);
 			return new WP_REST_Response(

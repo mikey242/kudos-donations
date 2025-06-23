@@ -69,6 +69,8 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 			return false;
 		}
 
+		$this->logger->debug( 'Receipt emails enabled, setting up email.', [ 'transaction_id' => $transaction_id ] );
+
 		$transaction = $this->get_repository( TransactionRepository::class )
 			->find( $transaction_id );
 		$donor       = $this->get_repository( TransactionRepository::class )
@@ -79,6 +81,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 
 		// Bail if no email address.
 		if ( ! $email ) {
+			$this->logger->debug( 'Cannot send email: donor has no email address', [ 'donor' => $donor ] );
 			return false;
 		}
 
@@ -112,23 +115,26 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 		// Add a cancel button if this is the receipt for a subscription payment.
 		try {
 			if ( 'oneoff' !== $transaction[ TransactionRepository::SEQUENCE_TYPE ] ) {
+				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ SubscriptionRepository::TRANSACTION_ID => $transaction[ BaseRepository::ID ] ] );
 				$subscription = $this->get_repository( SubscriptionRepository::class )->find_one_by(
 					[
 						SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $transaction[ TransactionRepository::VENDOR_SUBSCRIPTION_ID ],
 					]
 				);
-				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ SubscriptionRepository::TRANSACTION_ID => $transaction[ BaseRepository::ID ] ] );
-				$args['cancel_url'] = add_query_arg(
-					[
-						'kudos_action' => 'cancel_subscription',
-						'token'        => EncryptionService::generate_token( $subscription[ BaseRepository::ID ] ),
-						'id'           => $subscription[ BaseRepository::ID ],
-					],
-					apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
-				);
+				if ( $subscription ) {
+					$this->logger->debug( 'Found subscription', [ 'subscription' => $subscription ] );
+					$args['cancel_url'] = add_query_arg(
+						[
+							'kudos_action' => 'cancel_subscription',
+							'token'        => EncryptionService::generate_token( (int) $subscription[ BaseRepository::ID ] ),
+							'id'           => $subscription[ BaseRepository::ID ],
+						],
+						apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
+					);
+				}
 			}
 		} catch ( \Exception $e ) {
-			$this->logger->error( 'Error adding cancel button: ' . $e->getMessage() );
+			$this->logger->error( 'Error adding cancel button', [ 'message' => $e->getMessage() ] );
 		}
 
 		$this->logger->debug(
