@@ -220,7 +220,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 		$limit_sql  = isset( $limit ) ? "LIMIT $limit" : '';
 		$offset_sql = isset( $offset ) ? "OFFSET $offset" : '';
 
-		$sql = trim( "SELECT $select FROM {$this->table} {$where['sql']} $order_by $limit_sql $offset_sql" );
+		$sql = trim( "SELECT $select FROM $this->table {$where['sql']} $order_by $limit_sql $offset_sql" );
 
 		$results = $this->wpdb->get_results(
 			$this->wpdb->prepare( $sql, ...$where['params'] ),
@@ -237,7 +237,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 */
 	public function count_query( array $where = [] ): int {
 		$parts = $this->build_where_clause( $where );
-		$sql   = "SELECT COUNT(*) FROM {$this->table} {$parts['sql']}";
+		$sql   = "SELECT COUNT(*) FROM $this->table {$parts['sql']}";
 
 		return (int) $this->wpdb->get_var(
 			$this->wpdb->prepare( $sql, ...$parts['params'] )
