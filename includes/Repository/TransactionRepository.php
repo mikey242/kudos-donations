@@ -106,6 +106,19 @@ class TransactionRepository extends BaseRepository {
 	}
 
 	/**
+	 * Returns linked campaign.
+	 *
+	 * @param array $transaction The subscription array.
+	 */
+	public function get_subscription( array $transaction ): ?array {
+		$vendor_subscription_id = $transaction[ self::VENDOR_SUBSCRIPTION_ID ] ?? null;
+		if ( ! $vendor_subscription_id ) {
+			return null;
+		}
+		return $this->repository_manager->get( SubscriptionRepository::class )->find_one_by( [ SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $vendor_subscription_id ] );
+	}
+
+	/**
 	 * Get total paid transaction value for a given campaign.
 	 *
 	 * @param int $campaign_id The campaign entity id.

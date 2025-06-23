@@ -218,7 +218,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 		$mail = wp_mail( $to, $subject, $body, '', $attachment );
 
 		if ( $mail ) {
-			$this->logger->debug(
+			$this->logger->info(
 				'Email sent successfully.',
 				[
 					'to'      => $to,

@@ -262,22 +262,21 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      * @return bool
      */
     public function cancel_subscription( array $subscription): bool {
-		$transaction = get_post($subscription->{SubscriptionRepository::TRANSACTION_ID});
-		$customer_id = $transaction->{TransactionRepository::VENDOR_CUSTOMER_ID};
+		$transaction = $this->get_repository(TransactionRepository::class)->find((int) $subscription[SubscriptionRepository::TRANSACTION_ID]);
+		$customer_id = $transaction[TransactionRepository::VENDOR_CUSTOMER_ID];
 	    $customer = $this->get_customer($customer_id);
 
         // Bail if no subscription found locally or if not active.
-        if ('active' !== $subscription->{SubscriptionRepository::STATUS} || null === $customer) {
+        if ('active' !== $subscription[SubscriptionRepository::STATUS] || null === $customer) {
             return false;
         }
 
         // Cancel the subscription via Mollie's API.
         try {
-            $response = $customer->cancelSubscription($subscription->{SubscriptionRepository::VENDOR_SUBSCRIPTION_ID});
-
+            $response = $customer->cancelSubscription($subscription[SubscriptionRepository::VENDOR_SUBSCRIPTION_ID]);
             return ($response->status === PaymentStatus::CANCELED);
         } catch (ApiException $e) {
-            $this->logger->error($e->getMessage());
+            $this->logger->error('Error cancelling subscription:', ['message' => $e->getMessage()]);
             return false;
         }
     }

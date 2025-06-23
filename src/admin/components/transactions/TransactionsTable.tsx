@@ -48,7 +48,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 						title: __('Open', 'kudos-donations'),
 						icon: 'clock',
 					},
-					canceled: {
+					cancelled: {
 						title: __('Canceled', 'kudos-donations'),
 						icon: 'no-alt',
 					},

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 
 class Transaction extends AbstractRepositoryRestController {
@@ -30,8 +29,9 @@ class Transaction extends AbstractRepositoryRestController {
 	 * {@inheritDoc}
 	 */
 	protected function add_rest_fields( array $item ): array {
-		$item['campaign'] = $this->repository->get_campaign( $item );
-		$item['donor']    = $this->repository->get_donor( $item );
+		$item['campaign']     = $this->repository->get_campaign( $item );
+		$item['donor']        = $this->repository->get_donor( $item );
+		$item['subscription'] = $this->repository->get_subscription( $item );
 
 		if ( 'paid' === $item['status'] ) {
 			$transaction_id = $item['id'];

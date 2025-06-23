@@ -269,7 +269,7 @@ class Version500 extends BaseMigration {
 				'sequence_type'          => get_post_meta( $post_id, 'sequence_type', true ),
 				'donor_id'               => $donor_map[ $donor_id ] ?? null,
 				'campaign_id'            => $campaign_map[ $campaign_id ] ?? null,
-				'vendor'                 => get_post_meta( $post_id, 'vendor', true ),
+				'vendor'                 => 'mollie', // All payments are currently made with Mollie.
 				'vendor_payment_id'      => get_post_meta( $post_id, 'vendor_payment_id', true ),
 				'vendor_customer_id'     => get_post_meta( $post_id, 'vendor_customer_id', true ),
 				'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
