@@ -736,7 +736,6 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * {@inheritDoc}
 	 */
 	public function refund( int $entity_id ): bool {
-		$post = get_post($entity_id);
 		$transaction = $this->get_repository(TransactionRepository::class)->find($entity_id);
 		if($transaction) {
 			$payment_id = $transaction[TransactionRepository::VENDOR_PAYMENT_ID];
