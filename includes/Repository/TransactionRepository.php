@@ -83,39 +83,42 @@ class TransactionRepository extends BaseRepository {
 	 * Returns linked donor.
 	 *
 	 * @param array $transaction The subscription array.
+	 * @param array $columns The list of columns to return.
 	 */
-	public function get_donor( array $transaction ): ?array {
+	public function get_donor( array $transaction, array $columns = [ '*' ] ): ?array {
 		$donor_id = $transaction[ self::DONOR_ID ] ?? null;
 		if ( ! $donor_id ) {
 			return null;
 		}
-		return $this->repository_manager->get( DonorRepository::class )->find( (int) $donor_id );
+		return $this->repository_manager->get( DonorRepository::class )->find( (int) $donor_id, $columns );
 	}
 
 	/**
 	 * Returns linked campaign.
 	 *
 	 * @param array $transaction The subscription array.
+	 * @param array $columns The list of columns to return.
 	 */
-	public function get_campaign( array $transaction ): ?array {
+	public function get_campaign( array $transaction, array $columns = [ '*' ] ): ?array {
 		$campaign_id = $transaction[ self::CAMPAIGN_ID ] ?? null;
 		if ( ! $campaign_id ) {
 			return null;
 		}
-		return $this->repository_manager->get( CampaignRepository::class )->find( (int) $campaign_id );
+		return $this->repository_manager->get( CampaignRepository::class )->find( (int) $campaign_id, $columns );
 	}
 
 	/**
 	 * Returns linked campaign.
 	 *
 	 * @param array $transaction The subscription array.
+	 * @param array $columns The list of columns to return.
 	 */
-	public function get_subscription( array $transaction ): ?array {
+	public function get_subscription( array $transaction, array $columns = [ '*' ] ): ?array {
 		$vendor_subscription_id = $transaction[ self::VENDOR_SUBSCRIPTION_ID ] ?? null;
 		if ( ! $vendor_subscription_id ) {
 			return null;
 		}
-		return $this->repository_manager->get( SubscriptionRepository::class )->find_one_by( [ SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $vendor_subscription_id ] );
+		return $this->repository_manager->get( SubscriptionRepository::class )->find_one_by( [ SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $vendor_subscription_id ], $columns );
 	}
 
 	/**
@@ -153,7 +156,7 @@ class TransactionRepository extends BaseRepository {
 		$column_esc = esc_sql( $column );
 
 		$sql = $this->wpdb->prepare(
-			"SELECT SUM(value) FROM {$this->table} WHERE {$column_esc} = %s AND status = %s",
+			"SELECT SUM(value) FROM $this->table WHERE $column_esc = %s AND status = %s",
 			$value,
 			'paid'
 		);

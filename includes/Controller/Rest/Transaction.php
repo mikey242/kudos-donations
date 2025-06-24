@@ -29,8 +29,8 @@ class Transaction extends AbstractRepositoryRestController {
 	 * {@inheritDoc}
 	 */
 	protected function add_rest_fields( array $item ): array {
-		$item['campaign']     = $this->repository->get_campaign( $item );
-		$item['donor']        = $this->repository->get_donor( $item );
+		$item['campaign']     = $this->repository->get_campaign( $item, [ 'title' ] );
+		$item['donor']        = $this->repository->get_donor( $item, [ 'name' ] );
 		$item['subscription'] = $this->repository->get_subscription( $item );
 
 		if ( 'paid' === $item['status'] ) {

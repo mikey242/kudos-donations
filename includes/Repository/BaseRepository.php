@@ -62,13 +62,15 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	/**
 	 * Get the specified row by id.
 	 *
-	 * @param int $id The id to fetch.
+	 * @param int   $id The id to fetch.
+	 * @param array $columns The list of columns to return.
 	 */
-	public function find( int $id ): ?array {
+	public function find( int $id, array $columns = [ '*' ] ): ?array {
 		$results = $this->query(
 			[
-				'where' => [ self::ID => $id ],
-				'limit' => 1,
+				'where'   => [ self::ID => $id ],
+				'limit'   => 1,
+				'columns' => $columns,
 			]
 		);
 
