@@ -118,7 +118,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ SubscriptionRepository::TRANSACTION_ID => $transaction[ BaseRepository::ID ] ] );
 				$subscription = $this->get_repository( SubscriptionRepository::class )->find_one_by(
 					[
-						SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $transaction[ TransactionRepository::VENDOR_SUBSCRIPTION_ID ],
+						SubscriptionRepository::TRANSACTION_ID => $transaction[ BaseRepository::ID ],
 					]
 				);
 				if ( $subscription ) {
