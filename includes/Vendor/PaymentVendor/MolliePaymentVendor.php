@@ -262,9 +262,11 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
      * @return bool
      */
     public function cancel_subscription( array $subscription): bool {
-		$transaction = $this->get_repository(TransactionRepository::class)->find((int) $subscription[SubscriptionRepository::TRANSACTION_ID]);
-		$customer_id = $transaction[TransactionRepository::VENDOR_CUSTOMER_ID];
-	    $customer = $this->get_customer($customer_id);
+		$transaction_repository = $this->get_repository(TransactionRepository::class);
+		$transaction = $transaction_repository->find((int) $subscription[SubscriptionRepository::TRANSACTION_ID]);
+		$donor = $transaction_repository->get_donor($transaction);
+		$vendor_customer_id = $donor[DonorRepository::VENDOR_CUSTOMER_ID];
+	    $customer = $this->get_customer($vendor_customer_id);
 
         // Bail if no subscription found locally or if not active.
         if ('active' !== $subscription[SubscriptionRepository::STATUS] || null === $customer) {
@@ -663,7 +665,6 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					BaseRepository::ID                            => $transaction[BaseRepository::ID],
 		            TransactionRepository::STATUS                 => $payment->status,
 		            TransactionRepository::VENDOR_PAYMENT_ID      => $payment->id,
-		            TransactionRepository::VENDOR_CUSTOMER_ID     => $payment->customerId,
 		            TransactionRepository::VALUE                  => $payment->amount->value,
 		            TransactionRepository::CURRENCY               => $payment->amount->currency,
 		            TransactionRepository::SEQUENCE_TYPE          => $payment->sequenceType,

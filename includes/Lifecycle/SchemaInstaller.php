@@ -128,7 +128,6 @@ class SchemaInstaller implements ActivationAwareInterface {
 				campaign_id BIGINT UNSIGNED DEFAULT NULL,
 				vendor VARCHAR(100),
 				vendor_payment_id VARCHAR(255),
-				vendor_customer_id VARCHAR(255),
 				vendor_subscription_id VARCHAR(255),
 				invoice_number BIGINT UNSIGNED DEFAULT NULL,
 				checkout_url TEXT DEFAULT NULL,

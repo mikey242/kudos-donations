@@ -271,7 +271,6 @@ class Version500 extends BaseMigration {
 				'campaign_id'            => $campaign_map[ $campaign_id ] ?? null,
 				'vendor'                 => 'mollie', // All payments are currently made with Mollie.
 				'vendor_payment_id'      => get_post_meta( $post_id, 'vendor_payment_id', true ),
-				'vendor_customer_id'     => get_post_meta( $post_id, 'vendor_customer_id', true ),
 				'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
 				'invoice_number'         => (int) get_post_meta( $post_id, 'invoice_number', true ),
 				'checkout_url'           => get_post_meta( $post_id, 'checkout_url', true ),

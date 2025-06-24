@@ -345,7 +345,6 @@ class Payment extends AbstractRestController implements RepositoryAwareInterface
 					TransactionRepository::CAMPAIGN_ID   => (int) $args[ TransactionRepository::CAMPAIGN_ID ],
 					TransactionRepository::MESSAGE       => $args[ TransactionRepository::MESSAGE ],
 					TransactionRepository::VENDOR        => $this->vendor::get_slug(),
-					TransactionRepository::VENDOR_CUSTOMER_ID => $vendor_customer_id,
 				]
 			);
 
