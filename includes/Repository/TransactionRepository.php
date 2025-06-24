@@ -36,7 +36,6 @@ class TransactionRepository extends BaseRepository {
 	public const REFUNDS                = 'refunds';
 	public const MESSAGE                = 'message';
 	public const VENDOR                 = 'vendor';
-	public const VENDOR_CUSTOMER_ID     = 'vendor_customer_id';
 	public const VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
 	public const INVOICE_NUMBER         = 'invoice_number';
 	public const CHECKOUT_URL           = 'checkout_url';
@@ -72,7 +71,6 @@ class TransactionRepository extends BaseRepository {
 			self::REFUNDS                => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::MESSAGE                => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::VENDOR                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
-			self::VENDOR_CUSTOMER_ID     => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::VENDOR_SUBSCRIPTION_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::INVOICE_NUMBER         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::CHECKOUT_URL           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_url' ),
