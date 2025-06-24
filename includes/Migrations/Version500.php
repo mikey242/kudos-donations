@@ -259,25 +259,24 @@ class Version500 extends BaseMigration {
 			$donor_id    = (int) get_post_meta( $post_id, 'donor_id', true );
 
 			$data = [
-				'wp_post_id'             => $post_id,
-				'title'                  => get_post_field( 'post_title', $post_id ),
-				'value'                  => (float) get_post_meta( $post_id, 'value', true ),
-				'currency'               => get_post_meta( $post_id, 'currency', true ),
-				'status'                 => get_post_meta( $post_id, 'status', true ),
-				'method'                 => get_post_meta( $post_id, 'method', true ),
-				'mode'                   => get_post_meta( $post_id, 'mode', true ),
-				'sequence_type'          => get_post_meta( $post_id, 'sequence_type', true ),
-				'donor_id'               => $donor_map[ $donor_id ] ?? null,
-				'campaign_id'            => $campaign_map[ $campaign_id ] ?? null,
-				'vendor'                 => 'mollie', // All payments are currently made with Mollie.
-				'vendor_payment_id'      => get_post_meta( $post_id, 'vendor_payment_id', true ),
-				'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
-				'invoice_number'         => (int) get_post_meta( $post_id, 'invoice_number', true ),
-				'checkout_url'           => get_post_meta( $post_id, 'checkout_url', true ),
-				'message'                => get_post_meta( $post_id, 'message', true ),
-				'refunds'                => get_post_meta( $post_id, 'refunds', true ),
-				'created_at'             => get_post_time( 'Y-m-d H:i:s', true, $post ),
-				'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+				'wp_post_id'        => $post_id,
+				'title'             => get_post_field( 'post_title', $post_id ),
+				'value'             => (float) get_post_meta( $post_id, 'value', true ),
+				'currency'          => get_post_meta( $post_id, 'currency', true ),
+				'status'            => get_post_meta( $post_id, 'status', true ),
+				'method'            => get_post_meta( $post_id, 'method', true ),
+				'mode'              => get_post_meta( $post_id, 'mode', true ),
+				'sequence_type'     => get_post_meta( $post_id, 'sequence_type', true ),
+				'donor_id'          => $donor_map[ $donor_id ] ?? null,
+				'campaign_id'       => $campaign_map[ $campaign_id ] ?? null,
+				'vendor'            => 'mollie', // All payments are currently made with Mollie.
+				'vendor_payment_id' => get_post_meta( $post_id, 'vendor_payment_id', true ),
+				'invoice_number'    => (int) get_post_meta( $post_id, 'invoice_number', true ),
+				'checkout_url'      => get_post_meta( $post_id, 'checkout_url', true ),
+				'message'           => get_post_meta( $post_id, 'message', true ),
+				'refunds'           => get_post_meta( $post_id, 'refunds', true ),
+				'created_at'        => get_post_time( 'Y-m-d H:i:s', true, $post ),
+				'updated_at'        => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
 			$this->transaction_repository->save( $data );

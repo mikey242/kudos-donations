@@ -617,7 +617,6 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					[
 						TransactionRepository::DONOR_ID => $donor_id,
 	                    TransactionRepository::CAMPAIGN_ID => $campaign_id ?? '',
-						TransactionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id
                     ]
                 );
 				$transaction = $transactions->find($transaction_id);
@@ -675,17 +674,12 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                 // Set up recurring payment if sequence is first.
                 if ($payment->hasSequenceTypeFirst()) {
                     $this->logger->info('Payment is initial subscription payment.', $transaction);
-                    $subscription = $this->create_subscription(
+                    $this->create_subscription(
                         $transaction,
                         $payment->mandateId,
                         $payment->metadata->{SubscriptionRepository::FREQUENCY},
 	                    (int) $payment->metadata->{SubscriptionRepository::YEARS}
                     );
-	                // Update transaction with subscription ID.
-	                $transactions->save([
-                        BaseRepository::ID                            => $transaction[BaseRepository::ID],
-		                TransactionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id
-	                ]);
                 }
             } elseif ($payment->hasRefunds()) {
                 /*
