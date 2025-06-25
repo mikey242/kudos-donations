@@ -3,6 +3,8 @@ import { useEffect, useState } from '@wordpress/element';
 import { useEntitiesContext } from '../contexts';
 import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams } from '../hooks';
+import apiFetch from '@wordpress/api-fetch';
+import { addQueryArgs } from '@wordpress/url';
 
 interface EntityPageProps {
 	renderTable: (
@@ -19,7 +21,8 @@ export const EntityPage = ({
 	const { params, updateParams } = useAdminQueryParams();
 	const { entity: entityId } = params;
 	const [currentEntity, setCurrentEntity] = useState<BaseEntity | null>(null);
-	const { entities, handleNew } = useEntitiesContext<BaseEntity>();
+	const { entities, handleNew, entityType, hasResolved } =
+		useEntitiesContext<BaseEntity>();
 
 	const newPost = async () => {
 		await handleNew().then((response) => {
@@ -34,13 +37,21 @@ export const EntityPage = ({
 	};
 
 	useEffect(() => {
-		if (entityId && entities) {
+		if (entityId && hasResolved) {
 			const found = entities.find(
 				(entity) => Number(entity.id) === Number(entityId)
 			);
-			setCurrentEntity(found ?? null);
+			if (found) {
+				setCurrentEntity(found);
+			} else {
+				apiFetch({
+					path: addQueryArgs(`/kudos/v1/${entityType}/${entityId}`),
+				}).then((response: BaseEntity) => {
+					setCurrentEntity(response);
+				});
+			}
 		}
-	}, [entityId, entities]);
+	}, [entityId, entities, entityType, hasResolved]);
 
 	return (
 		<>
