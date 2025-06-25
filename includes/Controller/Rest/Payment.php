@@ -323,7 +323,7 @@ class Payment extends AbstractRestController implements RepositoryAwareInterface
 				->save(
 					array_merge(
 						[
-							BaseRepository::ID => (int) $donor[ BaseRepository::ID ] ?? null,
+							BaseRepository::ID => (int) $donor ? $donor[ BaseRepository::ID ] : null,
 						],
 						$donor_meta
 					)
