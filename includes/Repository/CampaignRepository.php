@@ -149,10 +149,8 @@ class CampaignRepository extends BaseRepository {
 		if ( ! $campaign_id ) {
 			return null;
 		}
-
-		$transaction_repository = $this->get_repository( TransactionRepository::class );
-
-		return $transaction_repository->find_by( [ 'campaign_id' => $campaign_id ], $columns );
+		return $this->get_repository( TransactionRepository::class )
+			->find_by( [ 'campaign_id' => $campaign_id ], $columns );
 	}
 
 	/**

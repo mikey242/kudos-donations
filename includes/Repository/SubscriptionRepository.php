@@ -74,8 +74,8 @@ class SubscriptionRepository extends BaseRepository {
 		if ( ! $transaction_id ) {
 			return null;
 		}
-		$transaction_repository = $this->get_repository( TransactionRepository::class );
-		return $transaction_repository->find( (int) $transaction_id );
+		return $this->get_repository( TransactionRepository::class )
+			->find( (int) $transaction_id );
 	}
 
 	/**
@@ -88,9 +88,8 @@ class SubscriptionRepository extends BaseRepository {
 		if ( ! $donor_id ) {
 			return null;
 		}
-
-		$donor_repository = $this->get_repository( DonorRepository::class );
-		return $donor_repository->find( (int) $donor_id );
+		return $this->get_repository( DonorRepository::class )
+			->find( (int) $donor_id );
 	}
 
 	/**
@@ -103,8 +102,7 @@ class SubscriptionRepository extends BaseRepository {
 		if ( ! $transaction ) {
 			return null;
 		}
-
-		$campaign_repository = $this->get_repository( CampaignRepository::class );
-		return $campaign_repository->find( (int) $transaction[ TransactionRepository::CAMPAIGN_ID ] );
+		return $this->get_repository( CampaignRepository::class )
+			->find( (int) $transaction[ TransactionRepository::CAMPAIGN_ID ] );
 	}
 }
