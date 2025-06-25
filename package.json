@@ -87,6 +87,7 @@
 		"make-pot": "wp i18n make-pot . --exclude='src, wordpress, config, assets, tests' --debug",
 		"make-json": "wp i18n make-json languages/ --no-purge",
 		"start:tunnel": "cloudflared tunnel --config .cloudflared/config.yml run",
+		"follow-log": "wp-env run cli tail -f wp-content/debug.log",
 		"test:unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/kudos-donations ./vendor/bin/phpunit",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style 'src/**/*.css'",
