@@ -34,7 +34,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 		}
 
 		void updateParams({
-			where: filter.where,
+			where: { ...params.where, ...filter.where },
 			paged: 1,
 		});
 	};
