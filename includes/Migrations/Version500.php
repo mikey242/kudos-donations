@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Migrations;
 
+use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
+use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
@@ -43,10 +45,12 @@ class Version500 extends BaseMigration {
 	 */
 	public function get_migration_jobs(): array {
 		return [
-			'donors'        => $this->job( [ $this, 'migrate_donors' ], 'Migrating Kudos Donors to DB', true ),
-			'campaigns'     => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating Kudos Campaigns to DB', true ),
-			'transactions'  => $this->job( [ $this, 'migrate_transactions' ], 'Migrating Kudos Transactions to DB', true ),
-			'subscriptions' => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating Kudos Subscriptions to DB', true ),
+			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating Kudos Donors to DB', true ),
+			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating Kudos Campaigns to DB', true ),
+			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating Kudos Transactions to DB', true ),
+			'subscriptions'                   => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating Kudos Subscriptions to DB', true ),
+			'backfill_transactions'           => $this->job( [ $this, 'backfill_transactions_from_subscription' ], 'Add subscription id to transactions', true ),
+			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions', true ),
 		];
 	}
 
@@ -247,6 +251,7 @@ class Version500 extends BaseMigration {
 			foreach ( $campaign_rows as $row ) {
 				$campaign_map[ $row['wp_post_id'] ] = $row['id'];
 			}
+			$campaign_id = (int) get_post_meta( $post_id, 'campaign_id', true );
 
 			// Create a donor map to migrate old id to new id.
 			$donor_map  = [];
@@ -254,9 +259,7 @@ class Version500 extends BaseMigration {
 			foreach ( $donor_rows as $row ) {
 				$donor_map[ $row['wp_post_id'] ] = $row['id'];
 			}
-
-			$campaign_id = (int) get_post_meta( $post_id, 'campaign_id', true );
-			$donor_id    = (int) get_post_meta( $post_id, 'donor_id', true );
+			$donor_id = (int) get_post_meta( $post_id, 'donor_id', true );
 
 			$data = [
 				'wp_post_id'        => $post_id,
@@ -270,6 +273,7 @@ class Version500 extends BaseMigration {
 				'donor_id'          => $donor_map[ $donor_id ] ?? null,
 				'campaign_id'       => $campaign_map[ $campaign_id ] ?? null,
 				'vendor'            => 'mollie', // All payments are currently made with Mollie.
+				'subscription_id'   => null, // Populated on second pass since subscriptions not available yet.
 				'vendor_payment_id' => get_post_meta( $post_id, 'vendor_payment_id', true ),
 				'invoice_number'    => (int) get_post_meta( $post_id, 'invoice_number', true ),
 				'checkout_url'      => get_post_meta( $post_id, 'checkout_url', true ),
@@ -380,6 +384,196 @@ class Version500 extends BaseMigration {
 		}
 
 		$this->progress[ $step ]['offset'] = $offset + \count( $posts );
+		$this->update_progress();
+
+		return false;
+	}
+
+	/**
+	 * Updates transactions with correct subscription_id.
+	 *
+	 * @param string $step The step.
+	 */
+	public function backfill_transactions_from_subscription( string $step ): bool {
+		$offset = $this->progress[ $step ]['offset'] ?? 0;
+		$limit  = self::DEFAULT_CHUNK_SIZE;
+
+		// Step 1: Directly link from subscriptions using transaction_id.
+		$subscriptions = $this->subscription_repository->query(
+			[
+				'columns' => [ 'id', 'wp_post_id' ],
+				'orderby' => 'id',
+				'order'   => 'ASC',
+				'limit'   => $limit,
+				'offset'  => $offset,
+			]
+		);
+
+		if ( empty( $subscriptions ) ) {
+			$this->logger->info( 'No more transactions to backfill.', [ 'step' => $step ] );
+			return true;
+		}
+
+		foreach ( $subscriptions as $subscription ) {
+			$subscription_post_id = $subscription[ BaseRepository::POST_ID ];
+			$subscription_id      = $subscription[ BaseRepository::ID ];
+
+			// Get legacy transaction post ID from subscription post meta.
+			$transaction_post_id = get_post_meta(
+				$subscription_post_id,
+				SubscriptionPostType::META_FIELD_TRANSACTION_ID,
+				true
+			);
+
+			if ( empty( $transaction_post_id ) ) {
+				$this->logger->warning( "No transaction_id meta found for subscription {$subscription_post_id}" );
+				continue;
+			}
+
+			// Find transaction row by wp_post_id.
+			$transaction = $this->transaction_repository->find_by_post_id( (int) $transaction_post_id );
+
+			if ( ! $transaction ) {
+				$this->logger->warning( "No migrated transaction found for post ID {$transaction_post_id}" );
+				continue;
+			}
+
+			// Update transaction row with the resolved subscription_id.
+			$this->transaction_repository->save(
+				[
+					BaseRepository::ID                     => $transaction[ BaseRepository::ID ],
+					TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
+				]
+			);
+
+			$this->logger->info( "Linked transaction {$transaction_post_id} to subscription {$subscription_id}" );
+		}
+
+		$this->progress[ $step ]['offset'] = $offset + $limit;
+		$this->update_progress();
+
+		return false;
+	}
+
+	/**
+	 * Updates transactions with correct subscription_id.
+	 *
+	 * @param string $step The step.
+	 */
+	public function backfill_remaining_transactions( string $step ): bool {
+		$offset = $this->progress[ $step ]['offset'] ?? 0;
+		$limit  = self::DEFAULT_CHUNK_SIZE;
+
+		$orphaned_transactions = $this->transaction_repository->query(
+			[
+				'columns' => [ 'id', 'wp_post_id', 'donor_id', 'campaign_id', 'value', 'sequence_type', 'subscription_id' ],
+				'where'   => [
+					'sequence_type' => 'recurring',
+				],
+				'orderby' => 'id',
+				'order'   => 'ASC',
+				'limit'   => $limit,
+				'offset'  => $offset,
+			]
+		);
+
+		if ( empty( $orphaned_transactions ) ) {
+			$this->logger->info( 'No orphaned recurring transactions to backfill.', [ 'step' => $step ] );
+			return true;
+		}
+
+		$subscriptions = $this->subscription_repository->all();
+
+		$simple_map = []; // donor_id-value => [sub_ids...].
+		$strict_map = []; // donor_id-value-campaign_id => [sub_ids...].
+
+		foreach ( $subscriptions as $sub ) {
+			$donor_id = $sub[ SubscriptionRepository::DONOR_ID ] ?? null;
+			$value    = $sub[ SubscriptionRepository::VALUE ] ?? null;
+
+			if ( ! $donor_id || ! $value ) {
+				continue;
+			}
+
+			$key_simple = "{$donor_id}-{$value}";
+
+			if ( ! isset( $simple_map[ $key_simple ] ) ) {
+				$simple_map[ $key_simple ] = [];
+			}
+			$simple_map[ $key_simple ][] = $sub['id'];
+
+			// Try to resolve campaign_id for strict fallback.
+			$transaction = $this->transaction_repository->find_one_by(
+				[
+					TransactionRepository::SUBSCRIPTION_ID => (int) $sub[ BaseRepository::ID ],
+				]
+			);
+
+			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ] ?? null;
+			if ( $campaign_id ) {
+				$key_strict = "{$donor_id}-{$value}-{$campaign_id}";
+
+				if ( ! isset( $strict_map[ $key_strict ] ) ) {
+					$strict_map[ $key_strict ] = [];
+				}
+				$strict_map[ $key_strict ][] = $sub['id'];
+			}
+		}
+
+		// Now backfill transactions.
+		foreach ( $orphaned_transactions as $transaction ) {
+			$donor_id    = $transaction[ TransactionRepository::DONOR_ID ];
+			$value       = $transaction[ TransactionRepository::VALUE ];
+			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
+
+			$key_simple = "{$donor_id}-{$value}";
+			$key_strict = "{$donor_id}-{$value}-{$campaign_id}";
+
+			if ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) === 1 ) {
+				$subscription_id = $simple_map[ $key_simple ][0];
+
+				$this->transaction_repository->save(
+					[
+						BaseRepository::ID => $transaction[ BaseRepository::ID ],
+						TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
+					]
+				);
+
+				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription {$subscription_id} via simple match" );
+			} elseif ( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) === 1 ) {
+				$subscription_id = $strict_map[ $key_strict ][0];
+
+				$this->transaction_repository->save(
+					[
+						BaseRepository::ID => $transaction[ BaseRepository::ID ],
+						TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
+					]
+				);
+
+				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription {$subscription_id} via strict match" );
+			} elseif ( ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) > 1 ) ||
+						( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) > 1 ) ) {
+				$this->logger->warning(
+					"Ambiguous match for transaction {$transaction['id']}",
+					[
+						'donor_id'    => $donor_id,
+						'value'       => $value,
+						'campaign_id' => $campaign_id,
+					]
+				);
+			} else {
+				$this->logger->warning(
+					"No matching subscription found for transaction {$transaction['id']}",
+					[
+						'donor_id'    => $donor_id,
+						'value'       => $value,
+						'campaign_id' => $campaign_id,
+					]
+				);
+			}
+		}
+
+		$this->progress[ $step ]['offset'] = $offset + $limit;
 		$this->update_progress();
 
 		return false;
