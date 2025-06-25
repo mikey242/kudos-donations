@@ -339,28 +339,20 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param array $data The data for insertion.
 	 */
-	private function sanitize_data_from_schema( array $data ): array {
-		$schema = $this->get_column_schema();
+	public function sanitize_data_from_schema( array $data ): array {
+		$schema  = $this->get_column_schema();
+		$allowed = array_intersect_key( $data, $schema );
 
-		foreach ( $schema as $key => $args ) {
-			if ( ! \array_key_exists( $key, $data ) ) {
-				continue;
-			}
-
-			$value = $data[ $key ];
-
-			// Normalize empty strings to null.
+		foreach ( $allowed as $key => &$value ) {
 			if ( '' === $value ) {
 				$value = null;
 			}
 
-			// Sanitize if possible.
-			$value = $this->maybe_sanitize( $args['sanitize_callback'] ?? null, $value );
-
-			$data[ $key ] = $value;
+			$callback = $schema[ $key ]['sanitize_callback'] ?? null;
+			$value    = $this->maybe_sanitize( $callback, $value );
 		}
 
-		return $data;
+		return $allowed;
 	}
 
 	/**

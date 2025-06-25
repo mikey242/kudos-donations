@@ -204,28 +204,23 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const filters = [
 		{
 			label: __('Paid', 'kudos-donations'),
-			column: 'status',
-			value: 'paid',
+			where: { status: 'paid' },
 		},
 		{
 			label: __('Open', 'kudos-donations'),
-			column: 'status',
-			value: 'open',
+			where: { status: 'open' },
 		},
 		{
 			label: __('Failed', 'kudos-donations'),
-			column: 'status',
-			value: 'failed',
+			where: { status: 'failed' },
 		},
 		{
 			label: __('Cancelled', 'kudos-donations'),
-			column: 'status',
-			value: 'canceled',
+			where: { status: 'canceled' },
 		},
 		{
 			label: __('Expired', 'kudos-donations'),
-			column: 'status',
-			value: 'expired',
+			where: { status: 'expired' },
 		},
 	];
 

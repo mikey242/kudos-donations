@@ -1,12 +1,19 @@
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
+import {
+	parseAsInteger,
+	parseAsString,
+	parseAsJson,
+	useQueryStates,
+} from 'nuqs';
+import { z } from 'zod';
 import { useCallback } from '@wordpress/element';
+
+const whereSchema = z.record(z.string(), z.union([z.string(), z.number()]));
 
 const defaultTableFilterParams = {
 	order: 'desc',
 	orderby: 'created_at',
 	search: '',
-	column: '',
-	value: '',
+	where: {},
 };
 
 const defaultParams = {
@@ -29,8 +36,9 @@ export const useAdminQueryParams = () => {
 		paged: parseAsInteger
 			.withDefault(defaultParams.paged)
 			.withOptions({ history: 'push' }),
-		column: parseAsString.withDefault(defaultParams.column),
-		value: parseAsString.withDefault(defaultParams.value),
+		where: parseAsJson(whereSchema.parse)
+			.withDefault({})
+			.withOptions({ history: 'push' }),
 		order: parseAsString.withDefault(defaultParams.order),
 		orderby: parseAsString.withDefault(defaultParams.orderby),
 		search: parseAsString.withDefault(defaultParams.search),

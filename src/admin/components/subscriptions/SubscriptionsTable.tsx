@@ -22,8 +22,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const changeView = (entityId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			column: 'subscription_id',
-			value: String(entityId),
+			where: { subscription_id: String(entityId) },
 		});
 	};
 
@@ -168,18 +167,15 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const filters = [
 		{
 			label: __('Monthly', 'kudos-donations'),
-			column: 'frequency',
-			value: '1 month',
+			where: { frequency: '1 month' },
 		},
 		{
 			label: __('Quarterly', 'kudos-donations'),
-			column: 'frequency',
-			value: '3 months',
+			where: { frequency: '3 months' },
 		},
 		{
 			label: __('Yearly', 'kudos-donations'),
-			column: 'frequency',
-			value: '12 months',
+			where: { frequency: '12 months' },
 		},
 	];
 

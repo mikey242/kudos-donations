@@ -35,8 +35,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const changeView = (postId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			column: 'campaign_id',
-			value: String(postId),
+			where: { campaign_id: String(postId) },
 		});
 	};
 

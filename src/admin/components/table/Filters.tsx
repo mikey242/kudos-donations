@@ -6,8 +6,7 @@ import { useAdminQueryParams } from '../../hooks';
 
 export interface Filter {
 	label: string;
-	column: string;
-	value: string;
+	where: Record<string, string>;
 }
 
 interface FiltersProps {
@@ -16,14 +15,34 @@ interface FiltersProps {
 
 export const Filters = ({ filters }: FiltersProps) => {
 	const { updateParams, resetFilterParams, params } = useAdminQueryParams();
-	const { column, value } = params;
+	const currentWhere = params.where || {};
 
 	if (!filters) {
 		return;
 	}
 
-	const activeInList = filters.some(
-		(filter) => filter.column === column && filter.value === value
+	const activeFilter = filters.find((filter) =>
+		Object.entries(filter.where).every(
+			([key, value]) => currentWhere[key] === value
+		)
+	);
+
+	const handleClick = (filter?: Filter) => {
+		if (!filter) {
+			resetFilterParams();
+			return;
+		}
+
+		void updateParams({
+			where: filter.where,
+			paged: 1,
+		});
+	};
+
+	// For displaying unknown filters
+	const knownKeys = filters.flatMap((f) => Object.keys(f.where));
+	const unknownFilters = Object.entries(currentWhere).filter(
+		([key]) => !knownKeys.includes(key)
 	);
 
 	return (
@@ -31,7 +50,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 			<Flex gap={1} align="center" wrap>
 				<Button
 					size="compact"
-					isPressed={!column && !value}
+					isPressed={Object.keys(currentWhere).length === 0}
 					onClick={resetFilterParams}
 				>
 					{__('All', 'kudos-donations')}
@@ -39,35 +58,32 @@ export const Filters = ({ filters }: FiltersProps) => {
 				{filters?.map((filter: Filter) => (
 					<Button
 						size="compact"
-						key={`${filter.column}:${filter.value}`}
-						isPressed={
-							column === filter.column && value === filter.value
-						}
-						onClick={() =>
-							updateParams({
-								column: filter.column,
-								value: filter.value,
-								paged: 1,
-							})
-						}
+						key={JSON.stringify(filter.where)}
+						isPressed={activeFilter === filter}
+						onClick={() => handleClick(filter)}
 					>
 						{filter.label}
 					</Button>
 				))}
-				{column && value && !activeInList && (
+				{unknownFilters.map(([key, value]) => (
 					<Button
 						size="compact"
+						key={`${key}:${value}`}
 						isPressed
 						onClick={() =>
 							updateParams({
-								column,
-								value,
+								where: Object.fromEntries(
+									Object.entries(currentWhere).filter(
+										([k]) => k !== key
+									)
+								),
+								paged: 1,
 							})
 						}
 					>
-						{`${column}: ${value}`}
+						{`${key}: ${value}`}
 					</Button>
-				)}
+				))}
 			</Flex>
 		</Panel>
 	);
