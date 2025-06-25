@@ -19,11 +19,11 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { handleDelete } = useEntitiesContext();
 
-	const changeView = (postId: string) => {
+	const changeView = (entityId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			column: 'vendor_subscription_id',
-			value: postId,
+			column: 'subscription_id',
+			value: String(entityId),
 		});
 	};
 
@@ -133,7 +133,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 						size="compact"
 						icon="money-alt"
 						disabled={!post.donor}
-						onClick={() => changeView(post.vendor_subscription_id)}
+						onClick={() => changeView(post.id)}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					{settings._kudos_debug_mode && (

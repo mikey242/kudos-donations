@@ -32,6 +32,7 @@ class TransactionRepository extends BaseRepository {
 	public const SEQUENCE_TYPE     = 'sequence_type';
 	public const DONOR_ID          = 'donor_id';
 	public const CAMPAIGN_ID       = 'campaign_id';
+	public const SUBSCRIPTION_ID   = 'subscription_id';
 	public const REFUNDS           = 'refunds';
 	public const MESSAGE           = 'message';
 	public const VENDOR            = 'vendor';
@@ -66,6 +67,7 @@ class TransactionRepository extends BaseRepository {
 			self::SEQUENCE_TYPE     => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::DONOR_ID          => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::CAMPAIGN_ID       => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::SUBSCRIPTION_ID   => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::REFUNDS           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::MESSAGE           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::VENDOR            => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
@@ -112,8 +114,12 @@ class TransactionRepository extends BaseRepository {
 	 * @param array $columns The list of columns to return.
 	 */
 	public function get_subscription( array $transaction, array $columns = [ '*' ] ): ?array {
+		$subscription_id = $transaction[ self::SUBSCRIPTION_ID ];
+		if ( ! $subscription_id ) {
+			return null;
+		}
 		return $this->get_repository( SubscriptionRepository::class )
-			->find_one_by( [ SubscriptionRepository::TRANSACTION_ID => $transaction[ BaseRepository::ID ] ], $columns );
+			->find( $transaction[ self::SUBSCRIPTION_ID ], $columns );
 	}
 
 	/**
