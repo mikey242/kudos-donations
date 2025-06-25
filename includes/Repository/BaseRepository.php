@@ -119,7 +119,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	public function find_by_post_id( int $post_id ): ?array {
 		$results = $this->query(
 			[
-				'where' => [ 'wp_post_id' => $post_id ],
+				'where' => [ self::POST_ID => $post_id ],
 				'limit' => 1,
 			]
 		);

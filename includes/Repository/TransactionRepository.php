@@ -31,13 +31,13 @@ class TransactionRepository extends BaseRepository {
 	public const MODE              = 'mode';
 	public const SEQUENCE_TYPE     = 'sequence_type';
 	public const DONOR_ID          = 'donor_id';
-	public const VENDOR_PAYMENT_ID = 'vendor_payment_id';
 	public const CAMPAIGN_ID       = 'campaign_id';
 	public const REFUNDS           = 'refunds';
 	public const MESSAGE           = 'message';
 	public const VENDOR            = 'vendor';
 	public const INVOICE_NUMBER    = 'invoice_number';
 	public const CHECKOUT_URL      = 'checkout_url';
+	public const VENDOR_PAYMENT_ID = 'vendor_payment_id';
 
 	/**
 	 * {@inheritDoc}
@@ -65,13 +65,13 @@ class TransactionRepository extends BaseRepository {
 			self::MODE              => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::SEQUENCE_TYPE     => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::DONOR_ID          => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::VENDOR_PAYMENT_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::CAMPAIGN_ID       => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::REFUNDS           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::MESSAGE           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::VENDOR            => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::INVOICE_NUMBER    => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::CHECKOUT_URL      => $this->make_schema_field( FieldType::STRING, null, 'sanitize_url' ),
+			self::VENDOR_PAYMENT_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 		];
 	}
 
@@ -86,7 +86,8 @@ class TransactionRepository extends BaseRepository {
 		if ( ! $donor_id ) {
 			return null;
 		}
-		return $this->repository_manager->get( DonorRepository::class )->find( (int) $donor_id, $columns );
+		return $this->repository_manager->get( DonorRepository::class )
+			->find( (int) $donor_id, $columns );
 	}
 
 	/**
@@ -100,7 +101,8 @@ class TransactionRepository extends BaseRepository {
 		if ( ! $campaign_id ) {
 			return null;
 		}
-		return $this->repository_manager->get( CampaignRepository::class )->find( (int) $campaign_id, $columns );
+		return $this->get_repository( CampaignRepository::class )
+			->find( (int) $campaign_id, $columns );
 	}
 
 	/**
