@@ -126,6 +126,7 @@ class SchemaInstaller implements ActivationAwareInterface {
 				sequence_type VARCHAR(20),
 				donor_id BIGINT UNSIGNED DEFAULT NULL,
 				campaign_id BIGINT UNSIGNED DEFAULT NULL,
+				subscription_id BIGINT UNSIGNED DEFAULT NULL,
 				vendor VARCHAR(100),
 				vendor_payment_id VARCHAR(255),
 				invoice_number BIGINT UNSIGNED DEFAULT NULL,
@@ -137,6 +138,7 @@ class SchemaInstaller implements ActivationAwareInterface {
 				KEY idx_status (status),
 				KEY idx_campaign (campaign_id),
 				KEY idx_donor (donor_id),
+				KEY idx_subscription (subscription_id),
 				KEY idx_vendor_payment (vendor_payment_id(191)),
 				UNIQUE KEY unique_post (wp_post_id)
 			) {$charset};

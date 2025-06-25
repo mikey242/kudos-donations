@@ -405,7 +405,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * Creates a subscription based on the provided transaction
 	 *
-	 * @return false|Subscription
+	 * @return int|false
 	 */
 	public function create_subscription(
 		array $transaction,
@@ -452,7 +452,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					'description' => $subscription_entity[BaseRepository::TITLE],
 					'metadata'    => [
 						TransactionRepository::CAMPAIGN_ID => $transaction[TransactionRepository::CAMPAIGN_ID],
-						TransactionRepository::DONOR_ID => $transaction[TransactionRepository::DONOR_ID]
+						TransactionRepository::DONOR_ID => $transaction[TransactionRepository::DONOR_ID],
+						TransactionRepository::SUBSCRIPTION_ID => $subscription_id
 					],
 				];
 
@@ -469,14 +470,12 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				$this->logger->debug('Subscription created with Mollie', ['result' => $subscription]);
 
 				// Update subscription post with status and subscription id.
-				$this->get_repository(SubscriptionRepository::class)->save([
+				return $this->get_repository(SubscriptionRepository::class)->save([
 					BaseRepository::ID => $subscription_id,
 					SubscriptionRepository::STATUS                 => $subscription->status,
 					SubscriptionRepository::VENDOR_CUSTOMER_ID     => $subscription->customerId,
 					SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id,
 				]);
-
-				return $subscription;
 			} catch (ApiException $e) {
 				$this->logger->error($e->getMessage(), [
 					'transaction' => $transaction,
@@ -674,12 +673,17 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                 // Set up recurring payment if sequence is first.
                 if ($payment->hasSequenceTypeFirst()) {
                     $this->logger->info('Payment is initial subscription payment.', $transaction);
-                    $this->create_subscription(
+                    $subscription_id = $this->create_subscription(
                         $transaction,
                         $payment->mandateId,
                         $payment->metadata->{SubscriptionRepository::FREQUENCY},
 	                    (int) $payment->metadata->{SubscriptionRepository::YEARS}
                     );
+	                // Update transaction with subscription ID.
+	                $transactions->save([
+                        BaseRepository::ID                            => $transaction[BaseRepository::ID],
+		                TransactionRepository::SUBSCRIPTION_ID        => $subscription_id
+	                ]);
                 }
             } elseif ($payment->hasRefunds()) {
                 /*
