@@ -606,6 +606,14 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 								->find_one_by([ CampaignRepository::POST_SLUG => $campaign_id ]);
 				$campaign_id = $campaign[BaseRepository::ID];
 
+				// Subscription id.
+	            $subscription_id = $subscription->metadata->{TransactionRepository::SUBSCRIPTION_ID};
+				if(!$subscription_id) {
+					$subscription_id = $this->get_repository(SubscriptionRepository::class)->find_one_by([
+						SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $subscription->id
+					]);
+				}
+
 				// Get Donor ID. If subscription from pre 4.0.0, use customerId to get new donor ID.
 	            $donor_id = $subscription->metadata->{TransactionRepository::DONOR_ID}
 	                        ?? $this->get_repository(DonorRepository::class)
@@ -614,8 +622,9 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				// Save new transaction.
                 $transaction_id  = $transactions->save(
 					[
-						TransactionRepository::DONOR_ID => $donor_id,
+						TransactionRepository::DONOR_ID => $donor_id ?? '',
 	                    TransactionRepository::CAMPAIGN_ID => $campaign_id ?? '',
+						TransactionRepository::SUBSCRIPTION_ID => $subscription_id ?? ''
                     ]
                 );
 				$transaction = $transactions->find($transaction_id);
