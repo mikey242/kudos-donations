@@ -59,8 +59,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 						],
 						'where'    => [
 							'type'              => FieldType::OBJECT,
-							'validate_callback' => '__return_true',
-							'sanitize_callback' => '__return_true',
+							'sanitize_callback' => [ $this, 'sanitize_where_field' ],
 						],
 					],
 				],
@@ -172,13 +171,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 		$orderby  = $request->get_param( 'orderby' );
 		$order    = $request->get_param( 'order' );
 		$offset   = ( $paged - 1 ) * $per_page;
-		$column   = $request->get_param( 'column' );
-		$value    = $request->get_param( 'value' );
-
-		$where = [];
-		if ( $column && null !== $value ) {
-			$where[ $column ] = $value;
-		}
+		$where    = $request->get_param( 'where' ) ?? [];
 
 		$args = [
 			'columns' => $columns,
@@ -288,5 +281,14 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 	 */
 	protected function can_delete(): callable {
 		return [ $this, 'can_edit_posts' ];
+	}
+
+	/**
+	 * Sanitizes known fields and filters out unknown ones.
+	 *
+	 * @param array $value The "where" value.
+	 */
+	public function sanitize_where_field( array $value ): array {
+		return $this->repository->sanitize_data_from_schema( $value );
 	}
 }

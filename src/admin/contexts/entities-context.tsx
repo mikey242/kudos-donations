@@ -63,7 +63,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 	children,
 }: EntitiesProviderProps) => {
 	const { params } = useAdminQueryParams();
-	const { paged, order, orderby, column, value } = params;
+	const { paged, order, orderby, where } = params;
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 	const [state, setState] = useState<EntityState<T>>({
@@ -79,7 +79,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 				...prev,
 				hasResolved: false,
 			}));
-			const args = { paged, orderby, order, column, value };
+			const args = { paged, orderby, order, where };
 			apiFetch({
 				path: addQueryArgs(`/kudos/v1/${entityType}`, args),
 			}).then((response: EntityRestResponse<T>) => {
@@ -96,7 +96,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 				hasResolved: true,
 			}));
 		}
-	}, [column, entityType, order, orderby, paged, value]);
+	}, [entityType, order, orderby, paged, where]);
 
 	useEffect(() => {
 		void fetchEntities();

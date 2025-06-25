@@ -14,8 +14,7 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const changeView = (postId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			column: 'donor_id',
-			value: String(postId),
+			where: { donor_id: String(postId) },
 		});
 	};
 
