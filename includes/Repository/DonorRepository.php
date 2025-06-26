@@ -50,7 +50,7 @@ class DonorRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_column_schema(): array {
+	public function get_additional_column_schema(): array {
 		return [
 			self::EMAIL              => $this->make_schema_field( FieldType::STRING, null, 'sanitize_email' ),
 			self::MODE               => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
