@@ -82,7 +82,7 @@ class CampaignRepository extends BaseRepository {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_column_schema(): array {
+	public function get_additional_column_schema(): array {
 		return [
 			self::ID                         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::POST_ID                    => $this->make_schema_field( FieldType::INTEGER, null, [ $this, 'sanitize_int_or_null' ] ),

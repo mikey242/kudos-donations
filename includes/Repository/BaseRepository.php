@@ -55,9 +55,27 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	abstract public static function get_plural_name(): string;
 
 	/**
+	 * Defines the common entity schema.
+	 */
+	private function get_base_column_schema(): array {
+		return [
+			self::POST_ID    => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::CREATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::UPDATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+		];
+	}
+
+	/**
+	 * Returns the entire column schema.
+	 */
+	public function get_column_schema(): array {
+		return array_merge( $this->get_base_column_schema(), $this->get_additional_column_schema() );
+	}
+
+	/**
 	 * Get the schema for the repository.
 	 */
-	abstract public function get_column_schema(): array;
+	abstract public function get_additional_column_schema(): array;
 
 	/**
 	 * Get the specified row by id.
