@@ -33,5 +33,5 @@ interface MigrationInterface {
 	 *
 	 * @phpstan-return array<string, MigrationJob>
 	 */
-	public function get_migration_jobs(): array;
+	public function get_jobs(): array;
 }
