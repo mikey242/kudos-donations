@@ -169,7 +169,7 @@ class SchemaInstaller implements ActivationAwareInterface {
 			CREATE TABLE {$table} (
 				id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 				wp_post_id BIGINT UNSIGNED NULL,
-				title VARCHAR(255) NOT NULL,
+				title VARCHAR(255) NULL,
 				email VARCHAR(255),
 				mode VARCHAR(20),
 				name VARCHAR(255),
