@@ -24,32 +24,34 @@ use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 
 class Version400 extends BaseMigration {
 
+	protected string $version = '4.0.0';
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_jobs(): array {
 		return [
-			'settings'      => $this->job( [ $this, 'migrate_settings' ], 'Settings' ),
-			'campaigns'     => $this->job( [ $this, 'migrate_campaigns_to_posts' ], 'Campaigns' ),
-			'donors'        => $this->job( [ $this, 'migrate_donors_to_posts' ], 'Donors', true ),
-			'transactions'  => $this->job( [ $this, 'migrate_transactions_to_posts' ], 'Transactions', true ),
-			'subscriptions' => $this->job( [ $this, 'migrate_subscriptions_to_posts' ], 'Subscriptions', true ),
+			'migrate_settings'               => $this->job( [ $this, 'migrate_settings' ], 'Migrating settings' ),
+			'migrate_campaigns_to_posts'     => $this->job( [ $this, 'migrate_campaigns_to_posts' ], 'Migrating campaigns' ),
+			'migrate_donors_to_posts'        => $this->job( [ $this, 'migrate_donors_to_posts' ], 'Migrating donors' ),
+			'migrate_transactions_to_posts'  => $this->job( [ $this, 'migrate_transactions_to_posts' ], 'Migrating transactions' ),
+			'migrate_subscriptions_to_posts' => $this->job( [ $this, 'migrate_subscriptions_to_posts' ], 'Migrating subscriptions' ),
 		];
 	}
 
 	/**
 	 * Migrate all the settings.
 	 */
-	public function migrate_settings(): bool {
+	public function migrate_settings(): int {
 		$this->migrate_vendor_settings();
 		$this->migrate_smtp_settings();
-		return true;
+		return 1;
 	}
 
 	/**
 	 * Migrate the old vendor settings.
 	 */
-	public function migrate_vendor_settings() {
+	public function migrate_vendor_settings(): int {
 		$vendor_mollie = get_option( '_kudos_vendor_mollie' );
 		$test_key      = $vendor_mollie['test_key'] ?? null;
 		$live_key      = $vendor_mollie['live_key'] ?? null;
@@ -64,12 +66,14 @@ class Version400 extends BaseMigration {
 		}
 
 		update_option( MolliePaymentVendor::SETTING_API_MODE, $mode );
+
+		return 1;
 	}
 
 	/**
 	 * Migrate custom SMTP config.
 	 */
-	public function migrate_smtp_settings() {
+	public function migrate_smtp_settings(): int {
 		$host       = get_option( '_kudos_smtp_host' ) ?? null;
 		$port       = get_option( '_kudos_smtp_port' ) ?? null;
 		$encryption = get_option( '_kudos_smtp_encryption' ) ?? null;
@@ -105,12 +109,14 @@ class Version400 extends BaseMigration {
 		}
 
 		update_option( SMTPVendor::SETTING_CUSTOM_SMTP, $new_settings );
+
+		return 1;
 	}
 
 	/**
 	 * Migrate campaigns from a settings array to CampaignPostTypes.
 	 */
-	public function migrate_campaigns_to_posts(): bool {
+	public function migrate_campaigns_to_posts(): int {
 		$campaigns = get_option( '_kudos_campaigns', [] );
 
 		// Global settings.
@@ -153,9 +159,9 @@ class Version400 extends BaseMigration {
 				]
 			);
 
-			// Bail if post not created.
+			// Skip if post not created.
 			if ( ! $new_campaign ) {
-				return false;
+				continue;
 			}
 
 			// Store old and new ID for later reference.
@@ -165,39 +171,34 @@ class Version400 extends BaseMigration {
 			++$total;
 		}
 
-		return true;
+		return 1;
 	}
 
 	/**
 	 * Migrates donors from custom table to custom post type.
 	 *
-	 * @param string $step The name of this step.
-	 * @param int    $limit The number of rows to process.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_donors_to_posts( string $step = 'Donors', int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	public function migrate_donors_to_posts( int $offset, int $limit ): int {
 		$table_name = $this->wpdb->prefix . 'kudos_donors';
 
 		// Check table exists.
 		if ( ! $this->table_exists( $table_name ) ) {
-			$this->progress[ $step ]['done'] = true;
-			$this->update_progress();
-			return true;
+			return 0;
 		}
 
-		// Get data.
-		$offset = $this->progress[ $step ]['offset'] ?? 0;
-		$rows   = $this->get_rows( $table_name, $offset, $limit );
+		// Get data in chunks.
+		$rows = $this->get_rows( $table_name, $offset, $limit );
 
 		if ( empty( $rows ) ) {
-			$this->progress[ $step ]['done'] = true;
-			$this->update_progress();
-			return true;
+			return 0;
 		}
 
 		foreach ( $rows as $donor ) {
 			$new_donor = DonorPostType::save(
 				[
-					'post_date'                        => $donor->created,
+					'post_date'                        => $donor->created ?? null,
 					DonorPostType::META_FIELD_EMAIL    => $donor->email,
 					DonorPostType::META_FIELD_NAME     => $donor->name,
 					DonorPostType::META_FIELD_BUSINESS_NAME => $donor->business_name,
@@ -206,38 +207,40 @@ class Version400 extends BaseMigration {
 					DonorPostType::META_FIELD_CITY     => $donor->city,
 					DonorPostType::META_FIELD_COUNTRY  => $donor->country,
 					DonorPostType::META_FIELD_MODE     => $donor->mode,
-					DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID => $donor->customer_id,
+					DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID => $donor->customer_id ?? null,
 				]
 			);
+
+			// Skip if donor not created.
 			if ( ! $new_donor ) {
-				return false;
+				continue;
 			}
+
 			// Update transient cache.
-			$map                        = get_transient( 'kudos_donor_id_map' ) ?? [];
-			$map[ $donor->customer_id ] = $new_donor->ID;
-			set_transient( 'kudos_donor_id_map', $map, DAY_IN_SECONDS );
+			if ( $donor->customer_id ?? null ) {
+				$map                        = get_transient( 'kudos_donor_id_map' ) ?? [];
+				$map[ $donor->customer_id ] = $new_donor->ID;
+				set_transient( 'kudos_donor_id_map', $map, DAY_IN_SECONDS );
+			}
 		}
 
 		// Update progress.
-		$this->progress[ $step ]['offset'] = $offset + \count( $rows );
-		$this->update_progress();
-
-		return false;
+		return \count( $rows );
 	}
 
 	/**
 	 * Migrate transactions from kudos_transactions table to
 	 * TransactionPostTypes.
 	 *
-	 * @param string $step The name of this step.
-	 * @param int    $limit The number of rows to process.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_transactions_to_posts( string $step = 'Transactions', int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	public function migrate_transactions_to_posts( int $offset, int $limit ): int {
 		$table_name = $this->wpdb->prefix . 'kudos_transactions';
 
 		// Check table exists.
 		if ( ! $this->table_exists( $table_name ) ) {
-			return false;
+			return 0;
 		}
 
 		// Get cache.
@@ -246,8 +249,8 @@ class Version400 extends BaseMigration {
 
 		// Get data.
 		$invoice_number = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER, 1 );
-		$offset         = $this->progress[ $step ]['offset'] ?? 0;
 		$rows           = $this->get_rows( $table_name, $offset, $limit );
+		$mapping        = get_transient( 'kudos_transaction_id_map' ) ?? [];
 
 		foreach ( $rows as $transaction ) {
 			$new_transaction = TransactionPostType::save(
@@ -259,7 +262,7 @@ class Version400 extends BaseMigration {
 					TransactionPostType::META_FIELD_METHOD => $transaction->method,
 					TransactionPostType::META_FIELD_MODE   => $transaction->mode,
 					TransactionPostType::META_FIELD_SEQUENCE_TYPE => $transaction->sequence_type,
-					TransactionPostType::META_FIELD_DONOR_ID => $donor_cache[ $transaction->customer_id ],
+					TransactionPostType::META_FIELD_DONOR_ID => $donor_cache[ $transaction->customer_id ] ?? null,
 					TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID => $transaction->transaction_id,
 					TransactionPostType::META_FIELD_REFUNDS => $transaction->refunds,
 					TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_cache[ $transaction->campaign_id ],
@@ -267,9 +270,9 @@ class Version400 extends BaseMigration {
 				]
 			);
 
-			// Bail if post not created.
+			// Skip if post not created.
 			if ( ! $new_transaction ) {
-				return false;
+				continue;
 			}
 
 			// If transaction is paid then add invoice number and iterate.
@@ -283,44 +286,43 @@ class Version400 extends BaseMigration {
 			}
 
 			// Store old and new ID for later reference.
-			$mapping                                 = get_transient( 'kudos_transaction_id_map' ) ?? [];
 			$mapping[ $transaction->transaction_id ] = $new_transaction->ID;
-			set_transient( 'kudos_transaction_id_map', $mapping, DAY_IN_SECONDS );
 		}
 
+		set_transient( 'kudos_transaction_id_map', $mapping, DAY_IN_SECONDS );
 		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
 
 		// Update progress.
-		$this->progress[ $step ]['offset'] = $offset + \count( $rows );
-		$this->update_progress();
-
-		return \count( $rows ) < $limit;
+		return \count( $rows );
 	}
 
 	/**
 	 * Migrate transactions from kudos_transactions table to
 	 * TransactionPostTypes.
 	 *
-	 * @param string $step The name of this step.
-	 * @param int    $limit The number of rows to process.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_subscriptions_to_posts( string $step = 'Subscriptions', int $limit = self::DEFAULT_CHUNK_SIZE ): bool {
+	public function migrate_subscriptions_to_posts( int $offset, int $limit ): int {
 		$table_name = $this->wpdb->prefix . 'kudos_subscriptions';
 
 		// Check table exists.
 		if ( ! $this->table_exists( $table_name ) ) {
-			return false;
+			return 0;
 		}
 
 		// Cache.
 		$transaction_cache = get_transient( 'kudos_transaction_id_map' ) ?? [];
 
 		// Fetch data.
-		$offset = $this->progress[ $step ]['offset'] ?? 0;
-		$rows   = $this->get_rows( $table_name, $offset, $limit );
+		$rows = $this->get_rows( $table_name, $offset, $limit );
+
+		if ( empty( $rows ) ) {
+			return 0;
+		}
 
 		foreach ( $rows as $subscription ) {
-			$new_subscription = SubscriptionPostType::save(
+			SubscriptionPostType::save(
 				[
 					'post_date'                            => $subscription->created,
 					SubscriptionPostType::META_FIELD_VALUE => (int) $subscription->value,
@@ -328,23 +330,14 @@ class Version400 extends BaseMigration {
 					SubscriptionPostType::META_FIELD_FREQUENCY => (string) $subscription->frequency,
 					SubscriptionPostType::META_FIELD_YEARS => (int) $subscription->years,
 					SubscriptionPostType::META_FIELD_CUSTOMER_ID => (string) $subscription->customer_id,
-					SubscriptionPostType::META_FIELD_TRANSACTION_ID => (string) $transaction_cache[ $subscription->transaction_id ],
+					SubscriptionPostType::META_FIELD_TRANSACTION_ID => (string) $transaction_cache[ $subscription->transaction_id ] ?? '',
 					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => (string) $subscription->subscription_id,
 					SubscriptionPostType::META_FIELD_STATUS => (string) $subscription->status,
 				]
 			);
-
-			// Bail if post not created.
-			if ( ! $new_subscription ) {
-				return false;
-			}
 		}
 
-		// Update progress.
-		$this->progress[ $step ]['offset'] = $offset + \count( $rows );
-		$this->update_progress();
-
-		return \count( $rows ) < $limit;
+		return \count( $rows );
 	}
 
 	/**
@@ -352,10 +345,10 @@ class Version400 extends BaseMigration {
 	 *
 	 * @param string $table_name Table name to query.
 	 * @param int    $offset Offset of results.
-	 * @param int    $limit Limit of results.
+	 * @param int    $limit The number of records to fetch.
 	 * @return array|object|null
 	 */
-	private function get_rows( string $table_name, int $offset, int $limit ) {
+	private function get_rows( string $table_name, int $offset, int $limit = self::DEFAULT_CHUNK_SIZE ) {
 		$query = $this->wpdb->prepare( "SELECT * FROM $table_name LIMIT %d OFFSET %d", $limit, $offset );
 		return $this->wpdb->get_results( $query );
 	}

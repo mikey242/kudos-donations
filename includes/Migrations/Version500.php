@@ -1,6 +1,6 @@
 <?php
 /**
- * Migration to create the campaigns table.
+ * Migration to create the custom data tables.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
@@ -12,44 +12,51 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Migrations;
 
 use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
-use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
+use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
-use Psr\Log\LoggerInterface;
 
-class Version500 extends BaseMigration {
+class Version500 extends BaseMigration implements RepositoryAwareInterface {
 
-	private CampaignRepository $campaign_repository;
-	private TransactionRepository $transaction_repository;
-	private DonorRepository $donor_repository;
-	private SubscriptionRepository $subscription_repository;
+	use RepositoryAwareTrait;
+
+	protected string $version = '5.0.0';
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function get_jobs(): array {
 		return [
-			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating Kudos Donors to DB', true ),
-			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating Kudos Campaigns to DB', true ),
-			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating Kudos Transactions to DB', true ),
-			'subscriptions'                   => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating Kudos Subscriptions to DB', true ),
-			'backfill_transactions'           => $this->job( [ $this, 'backfill_transactions_from_subscription' ], 'Add subscription id to transactions', true ),
-			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions', true ),
+			'create_schema'                   => $this->job( [ $this, 'create_schema' ], 'Creating schema' ),
+			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating Kudos Donors' ),
+			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating Kudos Campaigns' ),
+			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating Kudos Transactions' ),
+			'subscriptions'                   => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating Kudos Subscriptions' ),
+			'backfill_transactions'           => $this->job( [ $this, 'backfill_transactions_from_subscription' ], 'Add subscription id to transactions' ),
+			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions' ),
 		];
+	}
+
+	/**
+	 * Creates the table schemas.
+	 */
+	public function create_schema(): int {
+		( new SchemaInstaller( $this->wpdb ) )->create_schema();
+		return 1;
 	}
 
 	/**
 	 * Migrates kudos_donor CPTs to the kudos_donors table in chunks.
 	 *
-	 * @param string $step The step name.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_donors( string $step ): bool {
-		$offset    = $this->progress[ $step ]['offset'] ?? 0;
-		$limit     = self::DEFAULT_CHUNK_SIZE;
+	public function migrate_donors( int $offset, int $limit ): int {
 		$post_type = 'kudos_donor';
 
 		$posts = get_posts(
@@ -66,15 +73,15 @@ class Version500 extends BaseMigration {
 
 		if ( empty( $posts ) ) {
 			$this->logger->info( 'No more donors to migrate.' );
-			return true;
+			return 0;
 		}
 
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $this->donor_repository->find_by_post_id( $post_id );
+			$existing = $this->get_repository( DonorRepository::class )->find_by_post_id( $post_id );
 			if ( $existing ) {
-				$this->logger->info( "Donor post {$post_id} already migrated. Skipping." );
+				$this->logger->info( "Donor post $post_id already migrated. Skipping." );
 				continue;
 			}
 
@@ -94,24 +101,26 @@ class Version500 extends BaseMigration {
 				'updated_at'         => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
-			$this->donor_repository->save( $data );
-			$this->logger->info( "Migrated donor post {$post_id}" );
+			$this->get_repository( DonorRepository::class )->save( $data );
+			$this->logger->info(
+				"Migrated donor post $post_id",
+				[
+					'data'    => $data,
+					'wp_post' => $post,
+				]
+			);
 		}
 
-		$this->progress[ $step ]['offset'] = $offset + $limit;
-		$this->update_progress();
-
-		return false;
+		return \count( $posts );
 	}
 
 	/**
 	 * Migrates kudos_campaign CPTs to the kudos_campaigns table in chunks.
 	 *
-	 * @param string $step The step name.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_campaigns( string $step ): bool {
-		$offset    = $this->progress[ $step ]['offset'] ?? 0;
-		$limit     = self::DEFAULT_CHUNK_SIZE;
+	public function migrate_campaigns( int $offset, int $limit ): int {
 		$post_type = 'kudos_campaign';
 
 		$posts = get_posts(
@@ -128,15 +137,15 @@ class Version500 extends BaseMigration {
 
 		if ( empty( $posts ) ) {
 			$this->logger->info( 'No more campaigns to migrate.' );
-			return true; // Migration complete.
+			return 0;
 		}
 
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $this->campaign_repository->find_by_post_id( $post_id );
+			$existing = $this->get_repository( CampaignRepository::class )->find_by_post_id( $post_id );
 			if ( $existing ) {
-				$this->logger->info( "Campaign post {$post_id} already migrated. Skipping." );
+				$this->logger->info( "Campaign post $post_id already migrated. Skipping." );
 				continue;
 			}
 
@@ -186,25 +195,26 @@ class Version500 extends BaseMigration {
 				'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
-			$this->campaign_repository->save( $data );
-			$this->logger->info( "Migrated campaign post {$post_id}" );
+			$this->get_repository( CampaignRepository::class )->save( $data );
+			$this->logger->info(
+				"Migrated campaign post $post_id",
+				[
+					'data'    => $data,
+					'wp_post' => $post,
+				]
+			);
 		}
 
-		// Update offset and save progress.
-		$this->progress[ $step ]['offset'] = $offset + $limit;
-		$this->update_progress();
-
-		return false; // Tell BaseMigration to resume.
+		return \count( $posts );
 	}
 
 	/**
 	 * Migrates kudos_transaction CPTs to the kudos_transactions table in chunks.
 	 *
-	 * @param string $step The step.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_transactions( string $step ): bool {
-		$offset    = $this->progress[ $step ]['offset'] ?? 0;
-		$limit     = self::DEFAULT_CHUNK_SIZE;
+	public function migrate_transactions( int $offset, int $limit ): int {
 		$post_type = 'kudos_transaction';
 
 		$posts = get_posts(
@@ -221,21 +231,21 @@ class Version500 extends BaseMigration {
 
 		if ( empty( $posts ) ) {
 			$this->logger->info( 'No more transactions to migrate.' );
-			return true;
+			return 0;
 		}
 
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $this->transaction_repository->find_by_post_id( $post_id );
+			$existing = $this->get_repository( TransactionRepository::class )->find_by_post_id( $post_id );
 			if ( $existing ) {
-				$this->logger->info( "Transaction post {$post_id} already migrated. Skipping." );
+				$this->logger->info( "Transaction post $post_id already migrated. Skipping." );
 				continue;
 			}
 
 			// Create a campaign map to migrate old id to new id.
 			$campaign_map  = [];
-			$campaign_rows = $this->campaign_repository->all();
+			$campaign_rows = $this->get_repository( CampaignRepository::class )->all();
 			foreach ( $campaign_rows as $row ) {
 				$campaign_map[ $row['wp_post_id'] ] = $row['id'];
 			}
@@ -243,7 +253,7 @@ class Version500 extends BaseMigration {
 
 			// Create a donor map to migrate old id to new id.
 			$donor_map  = [];
-			$donor_rows = $this->donor_repository->all();
+			$donor_rows = $this->get_repository( DonorRepository::class )->all();
 			foreach ( $donor_rows as $row ) {
 				$donor_map[ $row['wp_post_id'] ] = $row['id'];
 			}
@@ -271,24 +281,26 @@ class Version500 extends BaseMigration {
 				'updated_at'        => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
-			$this->transaction_repository->save( $data );
-			$this->logger->info( "Migrated transaction post {$post_id}" );
+			$this->get_repository( TransactionRepository::class )->save( $data );
+			$this->logger->info(
+				"Migrated transaction post $post_id",
+				[
+					'data'    => $data,
+					'wp_post' => $post,
+				]
+			);
 		}
 
-		$this->progress[ $step ]['offset'] = $offset + $limit;
-		$this->update_progress();
-
-		return false;
+		return \count( $posts );
 	}
 
 	/**
 	 * Migrates kudos_subscription CPTs to the kudos_subscriptions table in chunks.
 	 *
-	 * @param string $step The step.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_subscriptions( string $step ): bool {
-		$offset    = $this->progress[ $step ]['offset'] ?? 0;
-		$limit     = self::DEFAULT_CHUNK_SIZE;
+	public function migrate_subscriptions( int $offset, int $limit ): int {
 		$post_type = 'kudos_subscription';
 
 		$posts = get_posts(
@@ -305,14 +317,12 @@ class Version500 extends BaseMigration {
 
 		if ( empty( $posts ) ) {
 			$this->logger->info( 'No more subscriptions to migrate.' );
-			$this->progress[ $step ]['done'] = true;
-			$this->update_progress();
-			return true;
+			return 0;
 		}
 
 		// Create a transaction map to migrate old id to new id.
 		$transaction_map  = [];
-		$transaction_rows = $this->transaction_repository->all();
+		$transaction_rows = $this->get_repository( TransactionRepository::class )->all();
 		foreach ( $transaction_rows as $row ) {
 			$transaction_post_id  = $row['wp_post_id'];
 			$legacy_donor_post_id = (int) get_post_meta( $transaction_post_id, 'donor_id', true );
@@ -325,7 +335,7 @@ class Version500 extends BaseMigration {
 
 		// Create a donor map to migrate old id to new id.
 		$donor_map  = [];
-		$donor_rows = $this->donor_repository->all();
+		$donor_rows = $this->get_repository( DonorRepository::class )->all();
 		foreach ( $donor_rows as $row ) {
 			$donor_map[ $row['wp_post_id'] ] = $row['id'];
 		}
@@ -333,9 +343,9 @@ class Version500 extends BaseMigration {
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $this->subscription_repository->find_by_post_id( $post_id );
+			$existing = $this->get_repository( SubscriptionRepository::class )->find_by_post_id( $post_id );
 			if ( $existing ) {
-				$this->logger->info( "Subscription post {$post_id} already migrated. Skipping." );
+				$this->logger->info( "Subscription post $post_id already migrated. Skipping." );
 				continue;
 			}
 
@@ -367,27 +377,29 @@ class Version500 extends BaseMigration {
 				'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 			];
 
-			$this->subscription_repository->save( $data );
-			$this->logger->info( "Migrated subscription post {$post_id}" );
+			$this->get_repository( SubscriptionRepository::class )->save( $data );
+			$this->logger->info(
+				"Migrated subscription post $post_id",
+				[
+					'data'    => $data,
+					'wp_post' => $post,
+				]
+			);
 		}
 
-		$this->progress[ $step ]['offset'] = $offset + \count( $posts );
-		$this->update_progress();
-
-		return false;
+		return \count( $posts );
 	}
 
 	/**
 	 * Updates transactions with correct subscription_id.
 	 *
-	 * @param string $step The step.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function backfill_transactions_from_subscription( string $step ): bool {
-		$offset = $this->progress[ $step ]['offset'] ?? 0;
-		$limit  = self::DEFAULT_CHUNK_SIZE;
+	public function backfill_transactions_from_subscription( int $offset, int $limit ): int {
 
-		// Step 1: Directly link from subscriptions using transaction_id.
-		$subscriptions = $this->subscription_repository->query(
+		// Get all subscriptions.
+		$subscriptions = $this->get_repository( SubscriptionRepository::class )->query(
 			[
 				'columns' => [ 'id', 'wp_post_id' ],
 				'orderby' => 'id',
@@ -398,8 +410,8 @@ class Version500 extends BaseMigration {
 		);
 
 		if ( empty( $subscriptions ) ) {
-			$this->logger->info( 'No more transactions to backfill.', [ 'step' => $step ] );
-			return true;
+			$this->logger->info( 'No more transactions to backfill.' );
+			return 0;
 		}
 
 		foreach ( $subscriptions as $subscription ) {
@@ -414,45 +426,40 @@ class Version500 extends BaseMigration {
 			);
 
 			if ( empty( $transaction_post_id ) ) {
-				$this->logger->warning( "No transaction_id meta found for subscription {$subscription_post_id}" );
+				$this->logger->warning( "No transaction_id meta found for subscription $subscription_post_id" );
 				continue;
 			}
 
 			// Find transaction row by wp_post_id.
-			$transaction = $this->transaction_repository->find_by_post_id( (int) $transaction_post_id );
+			$transaction = $this->get_repository( TransactionRepository::class )->find_by_post_id( (int) $transaction_post_id );
 
 			if ( ! $transaction ) {
-				$this->logger->warning( "No migrated transaction found for post ID {$transaction_post_id}" );
+				$this->logger->warning( "No migrated transaction found for post ID $transaction_post_id" );
 				continue;
 			}
 
 			// Update transaction row with the resolved subscription_id.
-			$this->transaction_repository->save(
+			$this->get_repository( TransactionRepository::class )->save(
 				[
 					BaseRepository::ID                     => $transaction[ BaseRepository::ID ],
 					TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
-				]
+				],
 			);
 
-			$this->logger->info( "Linked transaction {$transaction_post_id} to subscription {$subscription_id}" );
+			$this->logger->info( "Linked transaction $transaction_post_id to subscription $subscription_id" );
 		}
 
-		$this->progress[ $step ]['offset'] = $offset + $limit;
-		$this->update_progress();
-
-		return false;
+		return \count( $subscriptions );
 	}
 
 	/**
 	 * Updates transactions with correct subscription_id.
 	 *
-	 * @param string $step The step.
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
 	 */
-	public function backfill_remaining_transactions( string $step ): bool {
-		$offset = $this->progress[ $step ]['offset'] ?? 0;
-		$limit  = self::DEFAULT_CHUNK_SIZE;
-
-		$orphaned_transactions = $this->transaction_repository->query(
+	public function backfill_remaining_transactions( int $offset, int $limit ): int {
+		$orphaned_transactions = $this->get_repository( TransactionRepository::class )->query(
 			[
 				'columns' => [ 'id', 'wp_post_id', 'donor_id', 'campaign_id', 'value', 'sequence_type', 'subscription_id' ],
 				'where'   => [
@@ -466,11 +473,11 @@ class Version500 extends BaseMigration {
 		);
 
 		if ( empty( $orphaned_transactions ) ) {
-			$this->logger->info( 'No orphaned recurring transactions to backfill.', [ 'step' => $step ] );
-			return true;
+			$this->logger->info( 'No orphaned recurring transactions to backfill.' );
+			return 0;
 		}
 
-		$subscriptions = $this->subscription_repository->all();
+		$subscriptions = $this->get_repository( SubscriptionRepository::class )->all();
 
 		$simple_map = []; // donor_id-value => [sub_ids...].
 		$strict_map = []; // donor_id-value-campaign_id => [sub_ids...].
@@ -483,7 +490,7 @@ class Version500 extends BaseMigration {
 				continue;
 			}
 
-			$key_simple = "{$donor_id}-{$value}";
+			$key_simple = "$donor_id-$value";
 
 			if ( ! isset( $simple_map[ $key_simple ] ) ) {
 				$simple_map[ $key_simple ] = [];
@@ -491,7 +498,7 @@ class Version500 extends BaseMigration {
 			$simple_map[ $key_simple ][] = $sub['id'];
 
 			// Try to resolve campaign_id for strict fallback.
-			$transaction = $this->transaction_repository->find_one_by(
+			$transaction = $this->get_repository( TransactionRepository::class )->find_one_by(
 				[
 					TransactionRepository::SUBSCRIPTION_ID => (int) $sub[ BaseRepository::ID ],
 				]
@@ -499,7 +506,7 @@ class Version500 extends BaseMigration {
 
 			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ] ?? null;
 			if ( $campaign_id ) {
-				$key_strict = "{$donor_id}-{$value}-{$campaign_id}";
+				$key_strict = "$donor_id-$value-$campaign_id";
 
 				if ( ! isset( $strict_map[ $key_strict ] ) ) {
 					$strict_map[ $key_strict ] = [];
@@ -514,31 +521,31 @@ class Version500 extends BaseMigration {
 			$value       = $transaction[ TransactionRepository::VALUE ];
 			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
 
-			$key_simple = "{$donor_id}-{$value}";
-			$key_strict = "{$donor_id}-{$value}-{$campaign_id}";
+			$key_simple = "$donor_id-$value";
+			$key_strict = "$donor_id-$value-$campaign_id";
 
 			if ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) === 1 ) {
 				$subscription_id = $simple_map[ $key_simple ][0];
 
-				$this->transaction_repository->save(
+				$this->get_repository( TransactionRepository::class )->save(
 					[
 						BaseRepository::ID => $transaction[ BaseRepository::ID ],
 						TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
 					]
 				);
 
-				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription {$subscription_id} via simple match" );
+				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription $subscription_id via simple match" );
 			} elseif ( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) === 1 ) {
 				$subscription_id = $strict_map[ $key_strict ][0];
 
-				$this->transaction_repository->save(
+				$this->get_repository( TransactionRepository::class )->save(
 					[
 						BaseRepository::ID => $transaction[ BaseRepository::ID ],
 						TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
 					]
 				);
 
-				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription {$subscription_id} via strict match" );
+				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription $subscription_id via strict match" );
 			} elseif ( ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) > 1 ) ||
 						( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) > 1 ) ) {
 				$this->logger->warning(
@@ -561,9 +568,6 @@ class Version500 extends BaseMigration {
 			}
 		}
 
-		$this->progress[ $step ]['offset'] = $offset + $limit;
-		$this->update_progress();
-
-		return false;
+		return \count( $orphaned_transactions );
 	}
 }
