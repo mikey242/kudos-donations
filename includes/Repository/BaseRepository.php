@@ -196,10 +196,22 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			$id = (int) $prepared_data[ self::ID ];
 			unset( $prepared_data[ self::ID ] );
 
-			return $this->update( $id, $prepared_data ) ? $id : false;
+			$result = $this->update( $id, $prepared_data ) ? $id : false;
+		} else {
+			$result = $this->insert( $prepared_data );
 		}
 
-		return $this->insert( $prepared_data );
+		if ( $this->wpdb->last_error ) {
+			$this->logger->error(
+				'Failed to update or insert record',
+				[
+					'last_error'    => $this->wpdb->last_error,
+					'prepared_data' => $prepared_data,
+				]
+			);
+		}
+
+		return $result;
 	}
 
 	/**
