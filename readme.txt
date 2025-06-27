@@ -113,6 +113,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.2.0 =
+* Optimize data storage
+
 = 4.1.3 =
 * Campaign optional fields now have more granular settings. Can now control visibility and requirement separately.
 * Update various dependencies
