@@ -149,11 +149,14 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_item( $request ) {
-		$id   = (int) $request->get_param( 'id' );
-		$item = $this->repository->find( $id );
+		$id = (int) $request->get_param( 'id' );
+
+		// Try to find the entity by id and if none found assume it is the old post id.
+		$item = $this->repository->find( $id ) ?? $this->repository->find_one_by( [ BaseRepository::POST_ID => $id ] );
 
 		if ( ! $item ) {
-			return new WP_Error( 'not_found', __( 'Campaign not found.', 'kudos-donations' ), [ 'status' => 404 ] );
+			// translators: %s is the entity type singular name (e.g Transaction).
+			return new WP_Error( 'not_found', \sprintf( __( '%s not found.', 'kudos-donations' ), $this->repository::get_singular_name() ), [ 'status' => 404 ] );
 		}
 
 		return new WP_REST_Response( $this->add_rest_fields( $item ), 200 );
