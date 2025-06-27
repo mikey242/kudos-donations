@@ -13,6 +13,7 @@ use Dompdf\Dompdf;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Container\EncryptionAwareInterface;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
+use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use IseardMedia\Kudos\Container\Handler\SettingsHandler;
 use IseardMedia\Kudos\Container\Handler\UpgradeHandler;
@@ -115,6 +116,8 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->args( [ tagged_iterator( 'kudos.upgradeable' ) ] )->lazy();
 	$services->set( RepositoryManager::class )
 		->args( [ tagged_iterator( 'kudos.repository' ) ] )->lazy();
+	$services->set( MigrationHandler::class )
+		->args( [ tagged_iterator( 'kudos.migration' ) ] )->lazy();
 
 	// Filter for adding additional services.
 	do_action( 'kudos_container_configurator', $services );

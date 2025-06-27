@@ -18,12 +18,12 @@ use Psr\Log\NullLogger;
 abstract class BaseMigration implements MigrationInterface {
 
 	protected const DEFAULT_CHUNK_SIZE = 50;
+	protected const OFFSET_KEY         = 'offset';
+	protected const COMPLETE_KEY       = 'complete';
 
+	protected string $version;
 	protected WpDb $wpdb;
 	protected LoggerInterface $logger;
-
-	protected array $progress = [];
-	protected string $progress_key;
 
 	/**
 	 * Constructor for migrations.
@@ -32,142 +32,140 @@ abstract class BaseMigration implements MigrationInterface {
 	 * @param LoggerInterface|null $logger Logger instance.
 	 */
 	public function __construct( WpDb $wpdb, ?LoggerInterface $logger = null ) {
-		$this->wpdb         = $wpdb;
-		$this->logger       = $logger ?? new NullLogger();
-		$this->progress_key = '_kudos_migration_progress_' . str_replace( '.', '_', $this->get_version() );
-		$this->progress     = get_option( $this->progress_key, [] );
+		$this->wpdb   = $wpdb;
+		$this->logger = $logger ?? new NullLogger();
 	}
 
 	/**
-	 * Gets the version number from the static class name.
-	 * e.g. Version400 will return 4.0.0 as the version number.
-	 */
-	public function get_version(): string {
-		$class = str_replace( __NAMESPACE__ . '\\', '', static::class );
-		$num   = filter_var( $class, FILTER_SANITIZE_NUMBER_INT );
-		return implode( '.', str_split( $num ) );
-	}
-
-	/**
-	 * Returns true if the migration is complete.
-	 */
-	public function is_complete(): bool {
-		if ( ! empty( $this->progress['done'] ) ) {
-			$this->clear_progress();
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Returns true if the migration has already been started.
-	 */
-	public function has_started(): bool {
-		return ! empty( $this->progress );
-	}
-
-	/**
-	 * Helper to update progress in DB.
-	 */
-	protected function update_progress(): void {
-		update_option( $this->progress_key, $this->progress );
-	}
-
-	/**
-	 * Reset and delete progress.
-	 */
-	protected function clear_progress(): void {
-		delete_option( $this->progress_key );
-	}
-
-	/**
-	 * Run the step with provided limit.
-	 */
-	public function step(): bool {
-		foreach ( $this->get_migration_jobs() as $step => $job ) {
-			$callback = $job['callback'];
-			$chunked  = $job['chunked'] ?? false;
-			$args     = $job['args'] ?? [];
-
-			if ( $this->run_step( $step, fn() => $callback( $step, ...$args ), $chunked ) ) {
-				return true;
-			}
-		}
-
-		$this->progress['done'] = true;
-		$this->update_progress();
-		return true;
-	}
-
-	/**
-	 * Run a named step and automatically mark it as complete when done.
+	 * Runs a single job for this migration in a batch.
 	 *
-	 * @param string   $name     Step name key (e.g., 'donors').
-	 * @param callable $callback The function to call.
-	 * @param bool     $chunked  If true, marks complete only when callback returns true (fully done).
-	 * @return bool Returns true if this step consumed the request.
+	 * @param string $job The job name (as defined in get_jobs()).
+	 * @return bool True if the job ran successfully, false otherwise.
 	 */
-	protected function run_step( string $name, callable $callback, bool $chunked = false ): bool {
-		if ( ! empty( $this->progress[ $name ]['done'] ) ) {
+	public function run( string $job ): bool {
+		$jobs = $this->get_jobs();
+
+		if ( ! isset( $jobs[ $job ] ) || ! \is_callable( $jobs[ $job ]['callback'] ?? null ) ) {
+			$this->logger->warning( "Migration job '$job' is not defined or not callable." );
 			return false;
 		}
 
-		$result = $callback();
-
-		if ( $chunked ) {
-			if ( true === $result ) {
-				$this->progress[ $name ]['done'] = true;
-				$this->update_progress();
-			}
-			return true; // Always return true for chunked to give it a full request.
+		if ( $this->is_complete( $job ) ) {
+			$this->logger->info( "Migration job '$job' is already complete." );
+			return false;
 		}
 
-		// One-time step: assume done after one call.
-		$this->progress[ $name ]['done'] = true;
-		$this->update_progress();
-		return true;
+		$offset   = $this->get_offset( $job );
+		$callback = $jobs[ $job ]['callback'];
+		$limit    = static::DEFAULT_CHUNK_SIZE;
+
+		try {
+			// Expect the callback to return the number of items processed.
+			$processed = (int) \call_user_func( $callback, $offset, $limit );
+
+			if ( $processed < $limit ) {
+				$this->mark_complete( $job );
+				$this->logger->info( "Migration job '$job' completed." );
+			} else {
+				$this->set_offset( $job, $offset + $limit );
+				$this->logger->info( "Migration job '$job' processed $processed items from offset $offset." );
+			}
+
+			return true;
+		} catch ( \Throwable $e ) {
+			$this->logger->error( "Migration job '$job' failed: " . $e->getMessage() );
+			return false;
+		}
 	}
+
+	/**
+	 * Returns the version of the migration.
+	 */
+	public function get_version(): string {
+		return $this->version;
+	}
+
+	/**
+	 * Returns an array of job function names.
+	 *
+	 * @return array<string, array{callback: callable, label?: string}>
+	 */
+	abstract public function get_jobs(): array;
 
 	/**
 	 * Defines a job.
 	 *
 	 * @param callable    $callback The callback to run.
 	 * @param string|null $label The label to display to the front-end.
-	 * @param bool        $chunked Whether the job is chunked or not (run in batches).
-	 * @param array       $args Any additional args to pass to the callback.
+	 * @return array{callback: callable, label?: string}
 	 */
-	protected function job( callable $callback, ?string $label = null, bool $chunked = false, array $args = [] ): array {
-		return compact( 'callback', 'label', 'chunked', 'args' );
+	protected function job( callable $callback, ?string $label = null ): array {
+		return compact( 'callback', 'label' );
 	}
 
 	/**
-	 * Returns a generic summary of progress for frontend display.
-	 * Automatically detects current step and offsets for chunked steps.
+	 * Builds a unique option key used to store the state of a job.
+	 *
+	 * @param string $job The job name.
 	 */
-	public function get_progress_summary(): array {
-		$steps   = [];
-		$running = null;
+	protected function get_option_key( string $job ): string {
+		return "_kudos_migration_{$this->version}_{$job}_state";
+	}
 
-		foreach ( $this->get_migration_jobs() as $step => $job ) {
-			$done   = ! empty( $this->progress[ $step ]['done'] );
-			$offset = $this->progress[ $step ]['offset'] ?? 0;
+	/**
+	 * Retrieves the current offset for a given job.
+	 *
+	 * @param string $job The job method name.
+	 */
+	public function get_offset( string $job ): int {
+		$state = get_option( $this->get_option_key( $job ), [] );
+		return isset( $state[ self::OFFSET_KEY ] ) ? (int) $state[ self::OFFSET_KEY ] : 0;
+	}
 
-			$steps[ $step ] = [
-				'label'   => $job['label'] ?? ucfirst( str_replace( '_', ' ', $step ) ),
-				'status'  => $done,
-				'offset'  => $offset,
-				'chunked' => $job['chunked'] ?? false,
-			];
+	/**
+	 * Updates the offset for a given job.
+	 *
+	 * @param string $job The job method name.
+	 * @param int    $offset The new offset.
+	 */
+	protected function set_offset( string $job, int $offset ): void {
+		$state                       = get_option( $this->get_option_key( $job ), [] );
+		$state[ self::OFFSET_KEY ]   = $offset;
+		$state[ self::COMPLETE_KEY ] = false;
+		update_option( $this->get_option_key( $job ), $state );
+	}
 
-			if ( ! $done && null === $running ) {
-				$running = $step;
-			}
-		}
+	/**
+	 * Marks the current job as completed.
+	 *
+	 * @param string $job The job method name.
+	 */
+	protected function mark_complete( string $job ): void {
+		update_option(
+			$this->get_option_key( $job ),
+			[
+				self::OFFSET_KEY   => 0,
+				self::COMPLETE_KEY => true,
+			]
+		);
+	}
 
-		return [
-			'steps'   => $steps,
-			'running' => $running,
-			'done'    => ! empty( $this->progress['done'] ),
-		];
+	/**
+	 * Checks if migration job is complete.
+	 *
+	 * @param string $job The job method name.
+	 */
+	public function is_complete( string $job ): bool {
+		$state = get_option( $this->get_option_key( $job ), [] );
+		return ! empty( $state[ self::COMPLETE_KEY ] );
+	}
+
+	/**
+	 * Clears the stored state for a job.
+	 *
+	 * @param string $job The job method name.
+	 */
+	protected function clear_job_state( string $job ): void {
+		delete_option( $this->get_option_key( $job ) );
 	}
 }

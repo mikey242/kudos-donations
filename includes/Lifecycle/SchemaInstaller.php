@@ -32,6 +32,13 @@ class SchemaInstaller implements ActivationAwareInterface {
 	 * {@inheritDoc}
 	 */
 	public function on_plugin_activation(): void {
+		$this->create_schema();
+	}
+
+	/**
+	 * Creates all table schemas.
+	 */
+	public function create_schema() {
 		$this->create_campaigns_table();
 		$this->create_transactions_table();
 		$this->create_donors_table();
