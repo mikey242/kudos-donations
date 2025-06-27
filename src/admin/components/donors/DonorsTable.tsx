@@ -22,11 +22,13 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'name',
 			title: __('Name', 'kudos-donations'),
+			orderby: 'name',
 			valueCallback: (post: Donor): React.ReactNode => post.name ?? '',
 		},
 		{
 			key: 'email',
 			title: __('Email', 'kudos-donations'),
+			orderby: 'email',
 			valueCallback: (post: Donor): React.ReactNode => post.email ?? '',
 		},
 		{
