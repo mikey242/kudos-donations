@@ -102,13 +102,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			];
 
 			$this->get_repository( DonorRepository::class )->save( $data );
-			$this->logger->info(
-				"Migrated donor post $post_id",
-				[
-					'data'    => $data,
-					'wp_post' => $post,
-				]
-			);
+			$this->logger->info( "Migrated donor post $post_id", [ 'data' => $data ] );
 		}
 
 		return \count( $posts );
@@ -196,13 +190,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			];
 
 			$this->get_repository( CampaignRepository::class )->save( $data );
-			$this->logger->info(
-				"Migrated campaign post $post_id",
-				[
-					'data'    => $data,
-					'wp_post' => $post,
-				]
-			);
+			$this->logger->info( "Migrated campaign post $post_id", [ 'data' => $data ] );
 		}
 
 		return \count( $posts );
@@ -282,13 +270,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			];
 
 			$this->get_repository( TransactionRepository::class )->save( $data );
-			$this->logger->info(
-				"Migrated transaction post $post_id",
-				[
-					'data'    => $data,
-					'wp_post' => $post,
-				]
-			);
+			$this->logger->info( "Migrated transaction post $post_id", [ 'data' => $data ] );
 		}
 
 		return \count( $posts );
@@ -378,13 +360,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			];
 
 			$this->get_repository( SubscriptionRepository::class )->save( $data );
-			$this->logger->info(
-				"Migrated subscription post $post_id",
-				[
-					'data'    => $data,
-					'wp_post' => $post,
-				]
-			);
+			$this->logger->info( "Migrated subscription post $post_id", [ 'data' => $data ] );
 		}
 
 		return \count( $posts );
