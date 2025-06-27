@@ -64,7 +64,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 					],
 				],
 				[
-					'methods'             => \WP_REST_Server::CREATABLE,
+					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'create_item' ],
 					'permission_callback' => $this->can_create(),
 					'args'                => $this->get_rest_args(),
@@ -72,7 +72,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 			],
 			'/(?P<id>\d+)' => [
 				[
-					'methods'             => \WP_REST_Server::READABLE,
+					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_item' ],
 					'permission_callback' => $this->can_read_one(),
 					'args'                => [
@@ -83,7 +83,7 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 					],
 				],
 				[
-					'methods'             => \WP_REST_Server::DELETABLE,
+					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => [ $this, 'delete_item' ],
 					'permission_callback' => $this->can_delete(),
 					'args'                => [
