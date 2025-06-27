@@ -41,7 +41,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 
 	// For displaying unknown filters
 	const knownKeys = filters.flatMap((f) => Object.keys(f.where));
-	const unknownFilters = Object.entries(currentWhere).filter(
+	const otherFilters = Object.entries(currentWhere).filter(
 		([key]) => !knownKeys.includes(key)
 	);
 
@@ -65,11 +65,13 @@ export const Filters = ({ filters }: FiltersProps) => {
 						{filter.label}
 					</Button>
 				))}
-				{unknownFilters.map(([key, value]) => (
+				{otherFilters.map(([key, value]) => (
 					<Button
 						size="compact"
+						variant="primary"
 						key={`${key}:${value}`}
-						isPressed
+						icon="dismiss"
+						iconSize={15}
 						onClick={() =>
 							updateParams({
 								where: Object.fromEntries(
