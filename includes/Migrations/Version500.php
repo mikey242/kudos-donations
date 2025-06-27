@@ -31,19 +31,7 @@ class Version500 extends BaseMigration {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function __construct( WpDb $wpdb, LoggerInterface $logger ) {
-		parent::__construct( $wpdb, $logger );
-		( new SchemaInstaller( $wpdb ) )->on_plugin_activation();
-		$this->campaign_repository     = new CampaignRepository( $wpdb );
-		$this->transaction_repository  = new TransactionRepository( $wpdb );
-		$this->donor_repository        = new DonorRepository( $wpdb );
-		$this->subscription_repository = new SubscriptionRepository( $wpdb );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get_migration_jobs(): array {
+	public function get_jobs(): array {
 		return [
 			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating Kudos Donors to DB', true ),
 			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating Kudos Campaigns to DB', true ),

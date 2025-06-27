@@ -27,7 +27,7 @@ class Version400 extends BaseMigration {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_migration_jobs(): array {
+	public function get_jobs(): array {
 		return [
 			'settings'      => $this->job( [ $this, 'migrate_settings' ], 'Settings' ),
 			'campaigns'     => $this->job( [ $this, 'migrate_campaigns_to_posts' ], 'Campaigns' ),

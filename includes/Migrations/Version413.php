@@ -18,7 +18,7 @@ class Version413 extends BaseMigration {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_migration_jobs(): array {
+	public function get_jobs(): array {
 		return [
 			'database' => $this->job( [ $this, 'remove_anonymous_option' ], 'Updating database' ),
 			'cleanup'  => $this->job( [ $this, 'cleanup' ], 'Cleaning up' ),
