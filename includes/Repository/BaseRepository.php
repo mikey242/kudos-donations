@@ -59,7 +59,9 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 */
 	private function get_base_column_schema(): array {
 		return [
+			self::ID         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::POST_ID    => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::TITLE      => $this->make_schema_field( FieldType::STRING, null, 'sanitize_title' ),
 			self::CREATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::UPDATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 		];
@@ -183,7 +185,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	}
 
 	/**
-	 * Upsert a record (insert or update depending on presence of ID).
+	 * Save a record (insert or update depending on presence of ID).
 	 *
 	 * @param array $data The data to upsert.
 	 * @return int|false The inserted or updated row ID, or false on failure.
@@ -367,7 +369,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			}
 
 			$callback = $schema[ $key ]['sanitize_callback'] ?? null;
-			$value    = $this->maybe_sanitize( $callback, $value );
+			$value    = $callback ? $this->maybe_sanitize( $callback, $value ) : $value;
 		}
 
 		return $allowed;
