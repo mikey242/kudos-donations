@@ -29,6 +29,7 @@ use BadMethodCallException;
  * @method int|false delete(string $table, array $where, array|string|null $where_format = null) Delete rows from a table, returning the number of affected rows or false on failure.
  * @method int|false query(string $query) Execute a raw SQL query, returning the number of rows affected or false on failure.
  * @property int|false insert_id The id of the last inserted item.
+ * @property string last_error The error encountered during the last query.
  */
 class WpDb {
 
