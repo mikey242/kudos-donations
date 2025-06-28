@@ -60,13 +60,11 @@ const renderField = (
 	value: unknown,
 	depth: number = 0
 ): React.ReactNode => {
-	const label = key.replace(/_/g, ' ');
-
 	if (value === null || value === undefined) {
 		return (
 			<Row
 				key={key}
-				label={label}
+				label={key}
 				value={<em>{__('None', 'kudos-donations')}</em>}
 			/>
 		);
@@ -77,10 +75,10 @@ const renderField = (
 			<Panel
 				key={key}
 				initialOpen={depth < 1}
-				header={`${label} (${__('Array', 'kudos-donations')})`}
+				header={`${key} (${__('Array', 'kudos-donations')})`}
 			>
 				{value.map((item, index) =>
-					renderField(`${label} ${index + 1}`, item, depth + 1)
+					renderField(`${key} ${index + 1}`, item, depth + 1)
 				)}
 			</Panel>
 		);
@@ -88,7 +86,7 @@ const renderField = (
 
 	if (typeof value === 'object') {
 		return (
-			<Panel key={key} header={label} initialOpen={false}>
+			<Panel key={key} header={key} initialOpen={false}>
 				{Object.entries(value)
 					.sort(([a], [b]) => a.localeCompare(b))
 					.map(([subKey, subValue]) =>
@@ -98,7 +96,7 @@ const renderField = (
 		);
 	}
 
-	return <Row key={key} label={label} value={String(value)} />;
+	return <Row key={key} label={key} value={String(value)} />;
 };
 
 interface PostEditProps {
