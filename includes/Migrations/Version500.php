@@ -32,10 +32,10 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 	public function get_jobs(): array {
 		return [
 			'create_schema'                   => $this->job( [ $this, 'create_schema' ], 'Creating schema' ),
-			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating Kudos Donors' ),
-			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating Kudos Campaigns' ),
-			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating Kudos Transactions' ),
-			'subscriptions'                   => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating Kudos Subscriptions' ),
+			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating donors' ),
+			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating campaigns' ),
+			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating transactions' ),
+			'subscriptions'                   => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating subscriptions' ),
 			'backfill_transactions'           => $this->job( [ $this, 'backfill_transactions_from_subscription' ], 'Add subscription id to transactions' ),
 			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions' ),
 		];
