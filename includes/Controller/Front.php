@@ -11,7 +11,6 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller;
 
-use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Assets;
@@ -23,7 +22,7 @@ use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Front extends AbstractRegistrable implements HasSettingsInterface {
+class Front extends BaseController implements HasSettingsInterface {
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	public const STYLE_HANDLE_VIEW          = 'kudos-fonts';
 	public const SCRIPT_HANDLE_VIEW         = 'kudos-view-script';

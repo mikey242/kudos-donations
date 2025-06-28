@@ -15,7 +15,7 @@ use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 
-class Donor extends AbstractRepositoryRestController {
+class Donor extends BaseRepositoryRestController {
 
 	private TransactionRepository $transaction_repository;
 

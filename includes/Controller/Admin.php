@@ -12,20 +12,15 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Admin\DebugAdminPage;
-use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\CampaignRepository;
-use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Admin extends AbstractRegistrable implements RepositoryAwareInterface {
-
-	use RepositoryAwareTrait;
+class Admin extends BaseController {
 
 	/**
 	 * {@inheritDoc}

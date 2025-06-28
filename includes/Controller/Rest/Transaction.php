@@ -13,7 +13,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Repository\TransactionRepository;
 
-class Transaction extends AbstractRepositoryRestController {
+class Transaction extends BaseRepositoryRestController {
 	/**
 	 * Campaign rest route constructor.
 	 *

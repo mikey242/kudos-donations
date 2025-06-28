@@ -27,7 +27,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Payment extends AbstractRestController implements RepositoryAwareInterface {
+class Payment extends BaseRestController implements RepositoryAwareInterface {
 
 	use RepositoryAwareTrait;
 

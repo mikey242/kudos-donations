@@ -11,18 +11,16 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Container\Delayed;
-use IseardMedia\Kudos\Container\Registrable;
-use Psr\Log\LoggerAwareInterface;
+use IseardMedia\Kudos\Controller\BaseController;
 use Psr\Log\LoggerAwareTrait;
 use WP_Error;
-use WP_REST_Controller;
 
-abstract class AbstractRestController extends WP_REST_Controller implements Registrable, Delayed, LoggerAwareInterface {
+abstract class BaseRestController extends BaseController {
 
 	use LoggerAwareTrait;
 
-	protected $namespace = 'kudos/v1';
+	protected string $namespace = 'kudos/v1';
+	protected string $rest_base = '';
 
 	/**
 	 * Returns the REST namespace.
@@ -53,7 +51,7 @@ abstract class AbstractRestController extends WP_REST_Controller implements Regi
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Registers the routes defined in get_routes.
 	 */
 	public function register_routes(): void {
 		foreach ( $this->get_routes() as $route => $args ) {

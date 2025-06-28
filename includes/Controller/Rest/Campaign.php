@@ -17,7 +17,7 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class Campaign extends AbstractRepositoryRestController {
+class Campaign extends BaseRepositoryRestController {
 
 	/**
 	 * Campaign rest route constructor.
