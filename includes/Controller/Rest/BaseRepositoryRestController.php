@@ -18,7 +18,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-abstract class AbstractRepositoryRestController extends AbstractRestController {
+abstract class BaseRepositoryRestController extends BaseRestController {
 
 	protected BaseRepository $repository;
 

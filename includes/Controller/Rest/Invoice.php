@@ -20,9 +20,10 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Invoice extends AbstractRestController {
+class Invoice extends BaseRestController {
 
 	private InvoiceService $invoice;
+	private PDFService $pdf;
 
 	/**
 	 * PaymentRoutes constructor.

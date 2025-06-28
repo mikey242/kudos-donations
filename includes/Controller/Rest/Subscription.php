@@ -17,13 +17,15 @@ use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
+use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Subscription extends AbstractRepositoryRestController {
+class Subscription extends BaseRepositoryRestController {
 
 	public const ROUTE_CANCEL = '/cancel';
+	private ?VendorInterface $vendor;
 
 	/**
 	 * Subscription routes constructor.

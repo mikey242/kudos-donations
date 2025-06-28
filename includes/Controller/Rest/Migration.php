@@ -16,7 +16,7 @@ use IseardMedia\Kudos\Enum\FieldType;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Migration extends AbstractRestController {
+class Migration extends BaseRestController {
 
 	/**
 	 * Migration handler.
