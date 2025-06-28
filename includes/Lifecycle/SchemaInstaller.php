@@ -124,7 +124,7 @@ class SchemaInstaller implements ActivationAwareInterface {
 			CREATE TABLE {$table} (
 				id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 				wp_post_id BIGINT UNSIGNED NULL,
-				title VARCHAR(255) NOT NULL,
+				title VARCHAR(255) NULL,
 				value DECIMAL(10,2) NOT NULL,
 				currency CHAR(3) NOT NULL DEFAULT 'EUR',
 				status VARCHAR(20) NOT NULL,
@@ -205,7 +205,7 @@ class SchemaInstaller implements ActivationAwareInterface {
 			CREATE TABLE {$table} (
 				id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 				wp_post_id BIGINT UNSIGNED NULL,
-				title VARCHAR(255) NOT NULL,
+				title VARCHAR(255) NULL,
 				value DECIMAL(10,2) NOT NULL,
 				currency CHAR(3) NOT NULL DEFAULT 'EUR',
 				frequency VARCHAR(50),
