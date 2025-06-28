@@ -84,9 +84,7 @@ class CampaignRepository extends BaseRepository {
 	 */
 	public function get_additional_column_schema(): array {
 		return [
-			self::ID                         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::POST_ID                    => $this->make_schema_field( FieldType::INTEGER, null, [ $this, 'sanitize_int_or_null' ] ),
-			self::TITLE                      => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
+			self::POST_SLUG                  => $this->make_schema_field( FieldType::INTEGER, null, 'sanitize_title_with_dashes' ),
 			self::CURRENCY                   => $this->make_schema_field( FieldType::STRING, 'EUR', 'sanitize_text_field' ),
 			self::GOAL                       => $this->make_schema_field( FieldType::FLOAT, null, [ $this, 'sanitize_float' ] ),
 			self::SHOW_GOAL                  => $this->make_schema_field( FieldType::BOOLEAN, false, 'rest_sanitize_boolean' ),

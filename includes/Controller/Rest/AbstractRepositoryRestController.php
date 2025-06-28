@@ -151,8 +151,8 @@ abstract class AbstractRepositoryRestController extends AbstractRestController {
 	public function get_item( $request ) {
 		$id = (int) $request->get_param( 'id' );
 
-		// Try to find the entity by id and if none found assume it is the old post id.
-		$item = $this->repository->find( $id ) ?? $this->repository->find_one_by( [ BaseRepository::POST_ID => $id ] );
+		// Try to find the entity by id.
+		$item = $this->repository->find( $id );
 
 		if ( ! $item ) {
 			// translators: %s is the entity type singular name (e.g Transaction).
