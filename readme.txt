@@ -1,4 +1,4 @@
-=== Kudos Donations ===
+=== Kudos Donations: Easy Donations with Mollie | One-off & Recurring | PDF Invoices | Buttons & Forms ===
 Contributors: iseardmedia
 Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.6
