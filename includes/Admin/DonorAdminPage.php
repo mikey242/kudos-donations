@@ -3,7 +3,6 @@
  * Transactions Admin Page.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
- * @see \IseardMedia\Kudos\Domain\PostType\DonorPostType
  *
  * @copyright 2025 Iseard Media
  */
