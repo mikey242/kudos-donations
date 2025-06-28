@@ -61,7 +61,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 		return [
 			self::ID         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::POST_ID    => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::TITLE      => $this->make_schema_field( FieldType::STRING, null, 'sanitize_title' ),
+			self::TITLE      => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
 			self::CREATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::UPDATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 		];
