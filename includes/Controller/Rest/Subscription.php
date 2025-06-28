@@ -12,7 +12,6 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use Exception;
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
@@ -125,8 +124,8 @@ class Subscription extends AbstractRepositoryRestController {
 			// Cancelling was successful. Update entity with canceled status.
 			$this->repository->save(
 				[
-					BaseRepository::ID => (int) $post_id,
-					SubscriptionPostType::META_FIELD_STATUS => 'cancelled',
+					BaseRepository::ID             => (int) $post_id,
+					SubscriptionRepository::STATUS => 'cancelled',
 				]
 			);
 

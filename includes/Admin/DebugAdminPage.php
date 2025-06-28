@@ -11,12 +11,17 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
+use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Repository\CampaignRepository;
+use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 
-class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
+class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface, RepositoryAwareInterface {
+
+	use RepositoryAwareTrait;
 
 	private const LOG_DIR     = KUDOS_STORAGE_DIR . 'logs/';
 	private const TAB_LOG     = 'log';
@@ -182,8 +187,9 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 				switch ( $this->current_tab ) :
 
 					case self::TAB_ACTIONS:
-						$campaigns = CampaignPostType::get_posts();
+						$campaigns = $this->get_repository( CampaignRepository::class )->all();
 						?>
+
 						<p><strong>Please use the following actions only if you are having issues. Remember to back up your data
 								before
 								performing any of these actions.</strong></p>
@@ -258,8 +264,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 												foreach ( $campaigns as $campaign ) {
 													printf(
 														'<option value="%s">%s</option>',
-														esc_attr( $campaign->ID ),
-														esc_html( $campaign->post_title )
+														esc_attr( $campaign[ BaseRepository::ID ] ),
+														esc_html( $campaign[ BaseRepository::TITLE ] )
 													);
 												}
 												?>
@@ -277,8 +283,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 											foreach ( $campaigns as $campaign ) {
 												printf(
 													'<option value="%s">%s</option>',
-													esc_attr( $campaign->ID ),
-													esc_html( $campaign->post_title )
+													esc_attr( $campaign[ BaseRepository::ID ] ),
+													esc_html( $campaign[ BaseRepository::TITLE ] )
 												);
 											}
 											?>

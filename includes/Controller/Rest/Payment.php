@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
@@ -293,14 +292,14 @@ class Payment extends AbstractRestController implements RepositoryAwareInterface
 		if ( $args['email'] ) {
 
 			$donor_meta = [
-				DonorPostType::META_FIELD_MODE          => $this->vendor->get_api_mode(),
-				DonorPostType::META_FIELD_EMAIL         => $args['email'],
-				DonorPostType::META_FIELD_NAME          => $args['name'],
-				DonorPostType::META_FIELD_BUSINESS_NAME => $args['business_name'],
-				DonorPostType::META_FIELD_STREET        => $args['street'],
-				DonorPostType::META_FIELD_POSTCODE      => $args['postcode'],
-				DonorPostType::META_FIELD_CITY          => $args['city'],
-				DonorPostType::META_FIELD_COUNTRY       => $args['country'],
+				DonorRepository::MODE          => $this->vendor->get_api_mode(),
+				DonorRepository::EMAIL         => $args['email'],
+				DonorRepository::NAME          => $args['name'],
+				DonorRepository::BUSINESS_NAME => $args['business_name'],
+				DonorRepository::STREET        => $args['street'],
+				DonorRepository::POSTCODE      => $args['postcode'],
+				DonorRepository::CITY          => $args['city'],
+				DonorRepository::COUNTRY       => $args['country'],
 			];
 
 			// Search for existing donor based on email and mode.
@@ -315,7 +314,7 @@ class Payment extends AbstractRestController implements RepositoryAwareInterface
 			// Create new customer with vendor if none found.
 			if ( empty( $donor ) ) {
 				$customer = $this->vendor->create_customer( $args[ DonorRepository::EMAIL ], $args[ DonorRepository::NAME ] );
-				$donor_meta[ DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID ] = $customer->id;
+				$donor_meta[ DonorRepository::VENDOR_CUSTOMER_ID ] = $customer->id;
 			}
 
 			// Update or create donor.
