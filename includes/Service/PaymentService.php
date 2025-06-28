@@ -13,9 +13,6 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Repository\BaseRepository;
@@ -54,68 +51,6 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		add_action( 'kudos_process_transaction', [ $this, 'process_transaction' ] );
 		// Replace returned get_home_url with app_url if defined.
 		add_filter( 'rest_url', [ $this, 'use_alternate_app_url' ], 1, 2 );
-		// Automatically generates post title and content for all Kudos posts.
-		add_action( 'kudos_post_saved', [ $this, 'on_kudos_post_saved' ], 10, 2 );
-	}
-
-	/**
-	 * Update post title and content.
-	 *
-	 * @param int $post_id The id of the post.
-	 */
-	public function on_kudos_post_saved( int $post_id ) {
-		$post        = get_post( $post_id );
-		$object_type = get_post_type_object( get_post_type( $post_id ) );
-		$postarr     = [
-			'ID' => $post_id,
-		];
-
-		switch ( $object_type->name ) {
-			case TransactionPostType::get_slug():
-				$campaign_id        = $post->{TransactionPostType::META_FIELD_CAMPAIGN_ID} ?? '';
-				$donor_id           = $post->{TransactionPostType::META_FIELD_DONOR_ID} ?? '';
-				$donor              = get_post( $donor_id );
-				$campaign           = get_post( $campaign_id );
-				$description_format = $campaign->{CampaignPostType::META_PAYMENT_DESCRIPTION_FORMAT} ?? __( 'Donation ({{campaign_name}}) - {{order_id}}', 'kudos-donations' );
-
-				$vars                 = [];
-				$vars['{{order_id}}'] = Utils::get_formatted_id( $post->ID );
-				$vars['{{type}}']     = $post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE} ?? '';
-
-				// Add donor variables if available.
-				if ( $donor ) {
-					$vars['{{donor_name}}']  = $donor->{DonorPostType::META_FIELD_NAME} ?? '';
-					$vars['{{donor_email}}'] = $donor->{DonorPostType::META_FIELD_EMAIL} ?? '';
-				}
-
-				// Add campaign variables if available.
-				if ( $campaign ) {
-					$vars['{{campaign_name}}'] = $campaign->post_title;
-				} else {
-					$vars['({{campaign_name}})'] = '';
-				}
-
-				// Post content ready.
-				$postarr['post_content'] = implode( ', ', $vars );
-
-				// Generate title.
-				$postarr['post_title'] = apply_filters(
-					'kudos_payment_description',
-					strtr( $description_format, $vars ),
-					$post->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
-					$post->ID,
-					$campaign,
-				);
-				break;
-			case CampaignPostType::get_slug():
-				// Ignore campaigns.
-				break;
-			default:
-				$single_name           = $object_type->labels->singular_name;
-				$postarr['post_title'] = $single_name . \sprintf( ' (%1$s)', Utils::get_formatted_id( $post_id ) );
-		}
-
-		wp_update_post( $postarr );
 	}
 
 	/**

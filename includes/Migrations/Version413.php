@@ -11,8 +11,6 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-
 class Version413 extends BaseMigration {
 
 	protected string $version = '4.1.3';
@@ -31,17 +29,17 @@ class Version413 extends BaseMigration {
 	 * Remove old anonymous donation option and use it to set email and name field requirements.
 	 */
 	public function remove_anonymous_option(): bool {
-		$campaigns = CampaignPostType::get_posts();
+		$campaigns = get_posts(
+			[
+				'post_type'      => 'kudos_campaign',
+				'posts_per_page' => -1,
+			]
+		);
 		foreach ( $campaigns as $campaign ) {
 			$anonymous = get_post_meta( $campaign->ID, 'allow_anonymous' );
 			if ( $anonymous ) {
-				CampaignPostType::save(
-					[
-						'ID' => $campaign->ID,
-						CampaignPostType::META_FIELD_NAME_REQUIRED => false,
-						CampaignPostType::META_FIELD_EMAIL_REQUIRED => ! ( 'oneoff' === $campaign->{CampaignPostType::META_FIELD_DONATION_TYPE} ),
-					]
-				);
+				update_post_meta( $campaign->ID, 'name_required', false );
+				update_post_meta( $campaign->ID, 'email_required', ! ( 'oneoff' === ( $campaign->donation_type ?? 'oneoff' ) ) );
 			}
 		}
 		return 1;

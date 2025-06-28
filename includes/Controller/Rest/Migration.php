@@ -76,25 +76,33 @@ class Migration extends AbstractRestController {
 			);
 		}
 
-		foreach ( $migrations as $migration ) {
-			if ( \in_array( $migration->get_version(), $history, true ) ) {
-				continue;
+		$pending_migrations = array_filter(
+			$migrations,
+			function ( $migration ) use ( $history ) {
+				return ! \in_array( $migration->get_version(), $history, true );
 			}
+		);
+
+		foreach ( $pending_migrations as $migration ) {
 			foreach ( $migration->get_jobs() as $job_name => $job_details ) {
-				if ( ! $migration->is_complete( $job_name ) ) {
-					$migration->run( $job_name );
-					return new WP_REST_Response(
-						[
-							'success'  => true,
-							'progress' => [
-								'version'  => $migration->get_version(),
-								'job'      => $job_details['label'] ?? $job_name,
-								'complete' => $migration->is_complete( $job_name ),
-								'offset'   => $migration->get_offset( $job_name ),
-							],
-						]
-					);
+				if ( $migration->is_complete( $job_name ) ) {
+					continue;
 				}
+
+				$migration->run( $job_name );
+
+				return new WP_REST_Response(
+					[
+						'success'  => true,
+						'progress' => [
+							'version'  => $migration->get_version(),
+							'job'      => $job_details['label'] ?? $job_name,
+							'complete' => $migration->is_complete( $job_name ),
+							'offset'   => $migration->get_offset( $job_name ),
+						],
+					]
+				);
+
 			}
 			$history[] = $migration->get_version();
 			update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, $history );

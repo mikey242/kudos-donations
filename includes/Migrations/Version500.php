@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
 use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\CampaignRepository;
@@ -397,7 +396,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			// Get legacy transaction post ID from subscription post meta.
 			$transaction_post_id = get_post_meta(
 				$subscription_post_id,
-				SubscriptionPostType::META_FIELD_TRANSACTION_ID,
+				'transaction_id',
 				true
 			);
 

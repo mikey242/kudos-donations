@@ -14,13 +14,12 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Vendor\EmailVendor\SMTPVendor;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
+use WP_Post;
 
 class Version400 extends BaseMigration {
 
@@ -132,43 +131,53 @@ class Version400 extends BaseMigration {
 		$total = 0;
 
 		foreach ( $campaigns as $campaign ) {
-			$new_campaign = CampaignPostType::save(
-				[
-					'post_title'                           => $campaign['name'] ?? 'Default',
-					'post_name'                            => $campaign['id'],
-					CampaignPostType::META_FIELD_INITIAL_TITLE => $campaign['modal_title'] ?? '',
-					CampaignPostType::META_FIELD_INITIAL_DESCRIPTION => $campaign['welcome_text'] ?? '',
-					CampaignPostType::META_FIELD_ADDRESS_ENABLED => $campaign['address_enabled'] ?? false,
-					CampaignPostType::META_FIELD_ADDRESS_REQUIRED => $campaign['address_required'] ?? false,
-					CampaignPostType::META_FIELD_MESSAGE_ENABLED => $campaign['message_enabled'] ?? false,
-					CampaignPostType::META_FIELD_AMOUNT_TYPE => $campaign['amount_type'] ?? 'open',
-					CampaignPostType::META_FIELD_GOAL      => $campaign['campaign_goal'] ?? '',
-					CampaignPostType::META_FIELD_ADDITIONAL_FUNDS => $campaign['additional_funds'] ?? '',
-					CampaignPostType::META_FIELD_SHOW_GOAL => $campaign['show_progress'] ?? false,
-					CampaignPostType::META_FIELD_DONATION_TYPE => $campaign['donation_type'] ?? 'oneoff',
-					CampaignPostType::META_FIELD_FIXED_AMOUNTS => explode( ',', $campaign['fixed_amounts'] ?? '' ) ?? [ 5,10,25,50 ],
-					CampaignPostType::META_FIELD_THEME_COLOR => $theme_colour ? $theme_colour['primary'] : '#ff9f1c',
+			if ( \is_array( $campaign ) ) {
+				$post_args = [
+					'post_type'  => 'kudos_campaign',
+					'post_title' => $campaign['name'] ?? 'Default',
+					'post_name'  => $campaign['id'],
+				];
+
+				$meta_args = [
+					'initial_title'         => $campaign['modal_title'] ?? '',
+					'initial_description'   => $campaign['welcome_text'] ?? '',
+					'address_enabled'       => $campaign['address_enabled'] ?? false,
+					'address_required'      => $campaign['address_required'] ?? false,
+					'message_enabled'       => $campaign['message_enabled'] ?? false,
+					'amount_type'           => $campaign['amount_type'] ?? 'open',
+					'goal'                  => $campaign['campaign_goal'] ?? '',
+					'additional_funds'      => $campaign['additional_funds'] ?? '',
+					'show_goal'             => $campaign['show_progress'] ?? false,
+					'donation_type'         => $campaign['donation_type'] ?? 'oneoff',
+					'fixed_amounts'         => explode( ',', $campaign['fixed_amounts'] ?? '' ) ?? [ 5, 10, 25, 50 ],
+					'theme_color'           => $theme_colour ? $theme_colour['primary'] : '#ff9f1c',
 					// Add these global settings which are now campaign scoped.
-					CampaignPostType::META_FIELD_SHOW_RETURN_MESSAGE => $show_return_message,
-					CampaignPostType::META_FIELD_RETURN_MESSAGE_TITLE => $return_message_title,
-					CampaignPostType::META_FIELD_RETURN_MESSAGE_TEXT => $return_message_text,
-					CampaignPostType::META_FIELD_USE_CUSTOM_RETURN_URL => $custom_return_enable,
-					CampaignPostType::META_FIELD_CUSTOM_RETURN_URL => $custom_return_url,
-					CampaignPostType::META_FIELD_TERMS_LINK => $terms_url,
-					CampaignPostType::META_FIELD_PRIVACY_LINK => $privacy_url,
-				]
-			);
+					'show_return_message'   => $show_return_message,
+					'return_message_title'  => $return_message_title,
+					'return_message_text'   => $return_message_text,
+					'use_custom_return_url' => $custom_return_enable,
+					'custom_return_url'     => $custom_return_url,
+					'terms_link'            => $terms_url,
+					'privacy_link'          => $privacy_url,
+				];
 
-			// Skip if post not created.
-			if ( ! $new_campaign ) {
-				continue;
+				$new_campaign = self::save( $post_args, $meta_args );
+
+				// Skip if post not created.
+				if ( ! $new_campaign ) {
+					continue;
+				}
+
+				// Store old and new ID for later reference.
+				$mapping = get_transient( 'kudos_campaign_id_map' ) ?? [];
+				$mapping = \is_array( $mapping ) ? $mapping : [];
+
+				if ( ! empty( $campaign['id'] ) ) {
+					$mapping[ $campaign['id'] ] = $new_campaign->ID;
+				}
+				set_transient( 'kudos_campaign_id_map', $mapping, DAY_IN_SECONDS );
+				++$total;
 			}
-
-			// Store old and new ID for later reference.
-			$mapping                    = get_transient( 'kudos_campaign_id_map' ) ?? [];
-			$mapping[ $campaign['id'] ] = $new_campaign->ID;
-			set_transient( 'kudos_campaign_id_map', $mapping, DAY_IN_SECONDS );
-			++$total;
 		}
 
 		return 1;
@@ -196,31 +205,40 @@ class Version400 extends BaseMigration {
 		}
 
 		foreach ( $rows as $donor ) {
-			$new_donor = DonorPostType::save(
-				[
-					'post_date'                        => $donor->created ?? null,
-					DonorPostType::META_FIELD_EMAIL    => $donor->email,
-					DonorPostType::META_FIELD_NAME     => $donor->name,
-					DonorPostType::META_FIELD_BUSINESS_NAME => $donor->business_name,
-					DonorPostType::META_FIELD_STREET   => $donor->street,
-					DonorPostType::META_FIELD_POSTCODE => $donor->postcode,
-					DonorPostType::META_FIELD_CITY     => $donor->city,
-					DonorPostType::META_FIELD_COUNTRY  => $donor->country,
-					DonorPostType::META_FIELD_MODE     => $donor->mode,
-					DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID => $donor->customer_id ?? null,
-				]
-			);
+			$post_args = [
+				'post_type' => 'kudos_donor',
+				'post_date' => $donor->created ?? null,
+			];
+
+			$meta_args = [
+				'email'              => $donor->email,
+				'name'               => $donor->name,
+				'business_name'      => $donor->business_name,
+				'street'             => $donor->street,
+				'postcode'           => $donor->postcode,
+				'city'               => $donor->city,
+				'country'            => $donor->country,
+				'mode'               => $donor->mode,
+				'vendor_customer_id' => $donor->customer_id ?? null,
+			];
+
+			$new_donor = self::save( $post_args, $meta_args );
 
 			// Skip if donor not created.
 			if ( ! $new_donor ) {
 				continue;
 			}
 
+			$this->create_post_title( $new_donor->ID );
+
 			// Update transient cache.
 			if ( $donor->customer_id ?? null ) {
-				$map                        = get_transient( 'kudos_donor_id_map' ) ?? [];
-				$map[ $donor->customer_id ] = $new_donor->ID;
-				set_transient( 'kudos_donor_id_map', $map, DAY_IN_SECONDS );
+				$mapping = get_transient( 'kudos_donor_id_map' ) ?? [];
+				$mapping = \is_array( $mapping ) ? $mapping : [];
+				if ( ! empty( $donor->customer_id ) ) {
+					$mapping[ $donor->customer_id ] = $new_donor->ID;
+				}
+				set_transient( 'kudos_donor_id_map', $mapping, DAY_IN_SECONDS );
 			}
 		}
 
@@ -251,42 +269,52 @@ class Version400 extends BaseMigration {
 		$invoice_number = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER, 1 );
 		$rows           = $this->get_rows( $table_name, $offset, $limit );
 		$mapping        = get_transient( 'kudos_transaction_id_map' ) ?? [];
+		$mapping        = \is_array( $mapping ) ? $mapping : [];
 
 		foreach ( $rows as $transaction ) {
-			$new_transaction = TransactionPostType::save(
-				[
-					'post_date'                            => $transaction->created,
-					TransactionPostType::META_FIELD_VALUE  => (int) $transaction->value,
-					TransactionPostType::META_FIELD_CURRENCY => $transaction->currency,
-					TransactionPostType::META_FIELD_STATUS => $transaction->status,
-					TransactionPostType::META_FIELD_METHOD => $transaction->method,
-					TransactionPostType::META_FIELD_MODE   => $transaction->mode,
-					TransactionPostType::META_FIELD_SEQUENCE_TYPE => $transaction->sequence_type,
-					TransactionPostType::META_FIELD_DONOR_ID => $donor_cache[ $transaction->customer_id ] ?? null,
-					TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID => $transaction->transaction_id,
-					TransactionPostType::META_FIELD_REFUNDS => $transaction->refunds,
-					TransactionPostType::META_FIELD_CAMPAIGN_ID => $campaign_cache[ $transaction->campaign_id ],
-					TransactionPostType::META_FIELD_MESSAGE => $transaction->message,
-				]
-			);
+			$post_args = [
+				'post_type' => 'kudos_transaction',
+				'post_date' => $transaction->created,
+			];
+
+			$meta_args = [
+				'value'             => (int) $transaction->value,
+				'currency'          => $transaction->currency,
+				'status'            => $transaction->status,
+				'method'            => $transaction->method,
+				'mode'              => $transaction->mode,
+				'sequence_type'     => $transaction->sequence_type,
+				'donor_id'          => $donor_cache[ $transaction->customer_id ] ?? null,
+				'vendor_payment_id' => $transaction->transaction_id,
+				'refunds'           => $transaction->refunds,
+				'campaign_id'       => $campaign_cache[ $transaction->campaign_id ] ?? null,
+				'message'           => $transaction->message,
+			];
+
+			$new_transaction = self::save( $post_args, $meta_args );
 
 			// Skip if post not created.
 			if ( ! $new_transaction ) {
 				continue;
 			}
 
+			$this->create_post_title( $new_transaction->ID );
+
 			// If transaction is paid then add invoice number and iterate.
-			if ( 'paid' === $transaction->status ) {
-				TransactionPostType::save(
+			if ( PaymentStatus::PAID === $transaction->status ) {
+				self::save(
 					[
-						'ID' => $new_transaction->ID,
-						TransactionPostType::META_FIELD_INVOICE_NUMBER => $invoice_number++,
-					]
+						'ID'        => $new_transaction->ID,
+						'post_type' => 'kudos_transaction',
+					],
+					[ 'invoice_number' => $invoice_number++ ]
 				);
 			}
 
 			// Store old and new ID for later reference.
-			$mapping[ $transaction->transaction_id ] = $new_transaction->ID;
+			if ( ! empty( $transaction->transaction_id ) ) {
+				$mapping[ $transaction->transaction_id ] = $new_transaction->ID;
+			}
 		}
 
 		set_transient( 'kudos_transaction_id_map', $mapping, DAY_IN_SECONDS );
@@ -322,19 +350,30 @@ class Version400 extends BaseMigration {
 		}
 
 		foreach ( $rows as $subscription ) {
-			SubscriptionPostType::save(
-				[
-					'post_date'                            => $subscription->created,
-					SubscriptionPostType::META_FIELD_VALUE => (int) $subscription->value,
-					SubscriptionPostType::META_FIELD_CURRENCY => (string) $subscription->currency,
-					SubscriptionPostType::META_FIELD_FREQUENCY => (string) $subscription->frequency,
-					SubscriptionPostType::META_FIELD_YEARS => (int) $subscription->years,
-					SubscriptionPostType::META_FIELD_CUSTOMER_ID => (string) $subscription->customer_id,
-					SubscriptionPostType::META_FIELD_TRANSACTION_ID => (string) $transaction_cache[ $subscription->transaction_id ] ?? '',
-					SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => (string) $subscription->subscription_id,
-					SubscriptionPostType::META_FIELD_STATUS => (string) $subscription->status,
-				]
-			);
+			$post_args = [
+				'post_type' => 'kudos_subscription',
+				'post_date' => $subscription->created,
+			];
+
+			$meta_args = [
+				'value'                  => (int) $subscription->value,
+				'currency'               => (string) $subscription->currency,
+				'frequency'              => (string) $subscription->frequency,
+				'years'                  => (int) $subscription->years,
+				'customer_id'            => (string) $subscription->customer_id,
+				'transaction_id'         => (string) $transaction_cache[ $subscription->transaction_id ] ?? '',
+				'vendor_subscription_id' => (string) $subscription->subscription_id,
+				'status'                 => (string) $subscription->status,
+			];
+
+			$new_subscription = self::save( $post_args, $meta_args );
+
+			// Skip if post not created.
+			if ( ! $new_subscription ) {
+				continue;
+			}
+
+			$this->create_post_title( $new_subscription->ID );
 		}
 
 		return \count( $rows );
@@ -366,5 +405,105 @@ class Version400 extends BaseMigration {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Update post title and content.
+	 *
+	 * @param int $post_id The id of the post.
+	 */
+	public function create_post_title( int $post_id ) {
+		$post        = get_post( $post_id );
+		$object_type = get_post_type_object( get_post_type( $post_id ) );
+		$postarr     = [
+			'ID' => $post_id,
+		];
+
+		switch ( $object_type->name ) {
+			case 'kudos_transaction':
+				$campaign_id        = $post->campaign_id ?? '';
+				$donor_id           = $post->donor_id ?? '';
+				$donor              = get_post( $donor_id );
+				$campaign           = get_post( $campaign_id );
+				$description_format = $campaign->payment_description_format ?? __( 'Donation ({{campaign_name}}) - {{order_id}}', 'kudos-donations' );
+
+				$vars                 = [];
+				$vars['{{order_id}}'] = Utils::get_formatted_id( $post->ID );
+				$vars['{{type}}']     = $post->sequence_type ?? '';
+
+				// Add donor variables if available.
+				if ( $donor ) {
+					$vars['{{donor_name}}']  = $donor->name ?? '';
+					$vars['{{donor_email}}'] = $donor->email ?? '';
+				}
+
+				// Add campaign variables if available.
+				if ( $campaign ) {
+					$vars['{{campaign_name}}'] = $campaign->post_title;
+				} else {
+					$vars['({{campaign_name}})'] = '';
+				}
+
+				// Post content ready.
+				$postarr['post_content'] = implode( ', ', $vars );
+
+				// Generate title.
+				$postarr['post_title'] = apply_filters(
+					'kudos_payment_description',
+					strtr( $description_format, $vars ),
+					$post->sequence_type ?? 'oneoff',
+					$post->ID,
+					$campaign,
+				);
+				break;
+			default:
+				$single_name           = $object_type->labels->singular_name;
+				$postarr['post_title'] = $single_name . \sprintf( ' (%1$s)', Utils::get_formatted_id( $post_id ) );
+		}
+
+		wp_update_post( $postarr );
+	}
+
+	/**
+	 * Create or update a post.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/wp_insert_post/#parameters.
+	 *
+	 * @param array $post_args Array of post fields.
+	 * @param array $meta_args Array of meta fields.
+	 */
+	public static function save( array $post_args, array $meta_args ): ?WP_Post {
+
+		$post_id = isset( $post_args['ID'] ) ? absint( $post_args['ID'] ) : 0;
+
+		$post_args = array_merge(
+			[
+				'post_content' => '',
+				'post_status'  => 'publish',
+				'post_author'  => '',
+			],
+			$post_args
+		);
+
+		// Save or update post.
+		if ( $post_id ) {
+			$post_id = wp_update_post( $post_args, true );
+		} else {
+			$post_id = wp_insert_post( $post_args, true );
+		}
+
+		// Bail if post not saved/updated.
+		if ( is_wp_error( $post_id ) ) {
+			return null;
+		}
+
+		// Update meta.
+		foreach ( $meta_args as $meta_key => $meta_value ) {
+			// Sanitize and save meta value.
+			update_post_meta( $post_id, sanitize_key( $meta_key ), $meta_value );
+		}
+
+		// Return post object or null.
+		return get_post( $post_id );
 	}
 }
