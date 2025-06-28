@@ -256,8 +256,13 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 
 		$sql = trim( "SELECT $select FROM $this->table {$where['sql']} $order_by $limit_sql $offset_sql" );
 
+
+		if ( ! empty( $where['params'] ) ) {
+			$sql = $this->wpdb->prepare( $sql, ...$where['params'] );
+		}
+
 		$results = $this->wpdb->get_results(
-			$this->wpdb->prepare( $sql, ...$where['params'] ),
+			$sql,
 			ARRAY_A
 		);
 
