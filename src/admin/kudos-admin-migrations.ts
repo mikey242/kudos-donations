@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					method: 'POST',
 				});
 
-				migrationStatus.textContent = result.progress?.job;
+				migrationStatus.textContent = `${result.progress.version}: ${result.progress?.job}`;
 
 				if (!result.success) {
 					throw new Error('Migration failed');
