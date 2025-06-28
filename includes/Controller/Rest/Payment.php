@@ -246,7 +246,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
-	public function create_item( $request ): WP_REST_Response {
+	public function create_item( WP_REST_Request $request ): WP_REST_Response {
 		// Verify nonce.
 		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			return new WP_REST_Response(
