@@ -115,6 +115,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.2.0 =
 * Optimize data storage
+* Automatically link all subscription payment to their subscription (not just initial payment)
+* Allow multiple filters to be applied to admin tables
+* Debug mode: Show linked entity when viewing individual details
 
 = 4.1.3 =
 * Campaign optional fields now have more granular settings. Can now control visibility and requirement separately.
