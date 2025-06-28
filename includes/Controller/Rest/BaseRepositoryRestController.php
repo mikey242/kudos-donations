@@ -148,7 +148,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
-	public function get_item( $request ) {
+	public function get_item( WP_REST_Request $request ) {
 		$id = (int) $request->get_param( 'id' );
 
 		// Try to find the entity by id.
@@ -167,7 +167,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 *
 	 * @param WP_REST_Request $request The request object.
 	 */
-	public function get_items( $request ): WP_REST_Response {
+	public function get_items( WP_REST_Request $request ): WP_REST_Response {
 		$paged    = max( 1, (int) $request->get_param( 'paged' ) );
 		$per_page = max( 1, (int) $request->get_param( 'per_page' ) );
 		$columns  = $request->get_param( 'columns' );
@@ -205,7 +205,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
-	public function create_item( $request ) {
+	public function create_item( WP_REST_Request $request ) {
 		$params = $request->get_params();
 		$data   = array_intersect_key( $params, array_flip( array_keys( $this->repository->get_column_schema() ) ) );
 		$data   = array_map(
@@ -231,7 +231,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
-	public function delete_item( $request ): WP_REST_Response {
+	public function delete_item( WP_REST_Request $request ): WP_REST_Response {
 		$id      = (int) $request->get_param( 'id' );
 		$deleted = $this->repository->delete( $id );
 

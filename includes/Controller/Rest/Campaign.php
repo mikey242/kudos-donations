@@ -35,7 +35,7 @@ class Campaign extends BaseRepositoryRestController {
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
-	public function get_item( $request ) {
+	public function get_item( WP_REST_Request $request ) {
 		$id = (int) $request->get_param( 'id' );
 
 		// Try to find the entity by id and if none found assume it is the wp_post_id or wp_post_slug from earlier versions.
