@@ -39,6 +39,7 @@ class Kernel {
 
 	/**
 	 * Gets the name for the container file.
+	 * Uses a hash of the plugin version as part of the filename to ensure old dumped containers not used.
 	 */
 	private function get_container_file(): string {
 		$cached_version_hash = get_option( '_kudos_version_hash' );
@@ -71,7 +72,7 @@ class Kernel {
 			$this->container_builder->compile( true );
 			$this->dump_container( $container_file_path );
 			$this->container         = $this->container_builder;
-			$this->container_builder = null; // Clear the builder reference after compilation.
+			$this->container_builder = null;
 		}
 	}
 
