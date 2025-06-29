@@ -21,6 +21,7 @@
 
 namespace IseardMedia\Kudos;
 
+use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -56,9 +57,9 @@ if ( ! Autoloader::init() ) {
 $dotenv = new Dotenv();
 try {
 	$dotenv->load( __DIR__ . '/.env' );
-	// phpcs:ignore
-} catch ( \Exception $ignored ) {
+} catch ( \Exception $e ) {
 	$_ENV['APP_ENV'] = 'production';
+	NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
 }
 
 // Action Scheduler.

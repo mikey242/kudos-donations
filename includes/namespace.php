@@ -9,6 +9,7 @@ namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\CompatibilityService;
+use IseardMedia\Kudos\Service\NoticeService;
 
 /**
  * Handle plugin activation.
@@ -62,6 +63,7 @@ function bootstrap_plugin(): void {
 	try {
 		PluginFactory::create()->register();
 	} catch ( \Throwable $e ) {
+		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
 		CacheService::recursively_clear_cache();
 	}
 }
