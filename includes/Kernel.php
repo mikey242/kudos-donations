@@ -42,13 +42,10 @@ class Kernel {
 	 * Uses a hash of the plugin version as part of the filename to ensure old dumped containers not used.
 	 */
 	private function get_container_file(): string {
-		$cached_version_hash = get_option( '_kudos_version_hash' );
-		$strings_to_hash     = apply_filters( 'kudos_container_hash_string', KUDOS_VERSION );
-		if ( ! $cached_version_hash || hash( 'md5', $strings_to_hash ) !== $cached_version_hash ) {
-			$cached_version_hash = hash( 'md5', $strings_to_hash );
-			update_option( '_kudos_version_hash', $cached_version_hash );
-		}
-		return 'container-' . $cached_version_hash . '.php';
+		$hash_source = apply_filters( 'kudos_container_hash_string', KUDOS_VERSION );
+		$hash        = hash( 'md5', $hash_source );
+
+		return 'container-' . $hash . '.php';
 	}
 
 	/**
