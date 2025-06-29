@@ -84,6 +84,7 @@
 		"start:admin": "wp-scripts start --hot --config src/admin/webpack.config.admin.js --webpack-src-dir=src/admin --output-path=build/admin",
 		"start:front": "wp-scripts start --hot --config src/block/webpack.config.front.js --output-path=build/front",
 		"wp-env": "wp-env",
+		"wp-env:debug": "wp-env start --xdebug",
 		"make-pot": "wp i18n make-pot . --exclude='src, wordpress, config, assets, tests' --debug",
 		"make-json": "wp i18n make-json languages/ --no-purge",
 		"start:tunnel": "cloudflared tunnel --config .cloudflared/config.yml run",
