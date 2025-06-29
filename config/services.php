@@ -49,21 +49,21 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 
 	// Tag services.
 	$services->instanceof( Registrable::class )
-			->tag( 'kudos.registrable' )->lazy();
+			->tag( 'kudos.registrable' );
 	$services->instanceof( ActivationAwareInterface::class )
-			->tag( 'kudos.activation' )->lazy();
+			->tag( 'kudos.activation' );
 	$services->instanceof( UpgradeAwareInterface::class )
-			->tag( 'kudos.upgradeable' )->lazy();
+			->tag( 'kudos.upgradeable' );
 	$services->instanceof( HasSettingsInterface::class )
-			->tag( 'kudos.has_settings' )->lazy();
+			->tag( 'kudos.has_settings' );
 	$services->instanceof( MigrationInterface::class )
-			->tag( 'kudos.migration' )->lazy();
+			->tag( 'kudos.migration' );
 	$services->instanceof( PaymentVendorInterface::class )
-			->tag( 'kudos.payment_vendor' )->lazy();
+			->tag( 'kudos.payment_vendor' );
 	$services->instanceof( EmailVendorInterface::class )
-			->tag( 'kudos.email_vendor' )->lazy();
+			->tag( 'kudos.email_vendor' );
 	$services->instanceof( RepositoryInterface::class )
-			->tag( 'kudos.repository' )->lazy();
+			->tag( 'kudos.repository' );
 
 	// Set encryption service on required services.
 	$services->instanceof( EncryptionAwareInterface::class )
@@ -79,7 +79,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 
 	// Load base plugin.
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
-			->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php,vendor}' )->lazy();
+			->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php,vendor}' );
 
 	$services->set( RotatingFileHandler::class )
 		->args(
@@ -98,26 +98,26 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->call( 'pushHandler', [ service( WhatFailureGroupHandler::class ) ] );
 
 	// External libraries.
-	$services->set( Dompdf::class )->lazy();
-	$services->set( MollieApiClient::class )->lazy();
+	$services->set( Dompdf::class );
+	$services->set( MollieApiClient::class );
 
 	// Register repositories with managers.
 	$services->set( PaymentVendorFactory::class )
-		->args( [ tagged_locator( 'kudos.payment_vendor' ) ] )->lazy();
+		->args( [ tagged_locator( 'kudos.payment_vendor' ) ] );
 	$services->set( SettingsHandler::class )
-		->args( [ tagged_locator( 'kudos.has_settings' ), 'kudos-donations' ] )->lazy();
+		->args( [ tagged_locator( 'kudos.has_settings' ), 'kudos-donations' ] );
 	$services->set( EmailVendorFactory::class )
-		->args( [ tagged_locator( 'kudos.email_vendor' ) ] )->lazy();
+		->args( [ tagged_locator( 'kudos.email_vendor' ) ] );
 	$services->set( RegistrableHandler::class )
-		->args( [ tagged_iterator( 'kudos.registrable' ) ] )->lazy();
+		->args( [ tagged_iterator( 'kudos.registrable' ) ] );
 	$services->set( ActivationHandler::class )
-		->args( [ tagged_iterator( 'kudos.activation' ) ] )->lazy();
+		->args( [ tagged_iterator( 'kudos.activation' ) ] );
 	$services->set( UpgradeHandler::class )
-		->args( [ tagged_iterator( 'kudos.upgradeable' ) ] )->lazy();
+		->args( [ tagged_iterator( 'kudos.upgradeable' ) ] );
 	$services->set( RepositoryManager::class )
-		->args( [ tagged_iterator( 'kudos.repository' ) ] )->lazy();
+		->args( [ tagged_iterator( 'kudos.repository' ) ] );
 	$services->set( MigrationHandler::class )
-		->args( [ tagged_iterator( 'kudos.migration' ) ] )->lazy();
+		->args( [ tagged_iterator( 'kudos.migration' ) ] );
 
 	// Filter for adding additional services.
 	do_action( 'kudos_container_configurator', $services );
