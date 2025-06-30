@@ -52,7 +52,11 @@ export const Pagination = ({
 	};
 
 	return (
-		<Flex justify="flex-end" align="center">
+		<Flex
+			className="kudos-table-paginator"
+			justify="flex-end"
+			align="center"
+		>
 			{/* First Page */}
 			<Button
 				variant="link"
