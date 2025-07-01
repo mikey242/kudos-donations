@@ -60,7 +60,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	private function get_base_column_schema(): array {
 		return [
 			self::ID         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::POST_ID    => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::POST_ID    => $this->make_schema_field( FieldType::INTEGER, null, 'sanitize_text_field' ),
 			self::TITLE      => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
 			self::CREATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::UPDATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
