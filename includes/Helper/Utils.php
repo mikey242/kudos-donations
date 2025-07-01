@@ -239,4 +239,18 @@ class Utils {
 		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
 		return [ $first_name, $last_name ];
 	}
+
+	/**
+	 * Switch locale.
+	 *
+	 * @param string $locale Locale code to switch to.
+	 */
+	public static function switch_to_plugin_locale( string $locale ): void {
+		if ( switch_to_locale( $locale ) ) {
+
+			// Ensure translations are reloaded from WP_LANG_DIR/plugins/.
+			unload_textdomain( 'kudos-donations' );
+			load_textdomain( 'kudos-donations', WP_LANG_DIR . '/plugins/kudos-donations-' . $locale . '.mo' );
+		}
+	}
 }
