@@ -1,6 +1,6 @@
-=== Kudos Donations ===
+=== Kudos Donations: Easy Donations with Mollie | One-off & Recurring | PDF Invoices | Buttons & Forms ===
 Contributors: iseardmedia
-Tags: donation, mollie, payment, ideal, credit card
+Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
