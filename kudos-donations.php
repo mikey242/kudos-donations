@@ -85,4 +85,10 @@ $dotenv->populate(
 \define( 'KUDOS_APP_ENV', sanitize_text_field( $_ENV['APP_ENV'] ) );
 \define( 'KUDOS_ENV_IS_DEVELOPMENT', 'development' === $_ENV['APP_ENV'] );
 
+// Load dev commands if in dev environment.
+$dev_bootstrap = __DIR__ . '/includes-dev/bootstrap.php';
+if ( file_exists( $dev_bootstrap ) ) {
+	require_once $dev_bootstrap;
+}
+
 require KUDOS_PLUGIN_DIR . 'includes/namespace.php';

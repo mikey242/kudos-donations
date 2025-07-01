@@ -11,4 +11,14 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Repository;
 
-interface RepositoryInterface {}
+interface RepositoryInterface {
+	/**
+	 * The singular name.
+	 */
+	public static function get_singular_name(): string;
+
+	/**
+	 * The plural name.
+	 */
+	public static function get_plural_name(): string;
+}
