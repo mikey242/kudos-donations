@@ -124,6 +124,17 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 				__( 'VAT', 'kudos-donations' )        => 0,
 			],
 			'total'           => Utils::format_value_for_display( $transaction[ TransactionRepository::VALUE ] ),
+			'text'            => [
+				'invoice'     => __( 'Invoice', 'kudos-donations' ),
+				'date'        => __( 'Date', 'kudos-donations' ),
+				'to'          => __( 'To', 'kudos-donations' ),
+				'from'        => __( 'From', 'kudos-donations' ),
+				'description' => __( 'Description', 'kudos-donations' ),
+				'amount'      => __( 'Amount', 'kudos-donations' ),
+				'total'       => __( 'Total', 'kudos-donations' ),
+				'vat_number'  => __( 'VAT Number', 'kudos-donations' ),
+				'created_by'  => __( 'Created by', 'kudos-donations' ),
+			],
 		];
 
 		// Append donor.

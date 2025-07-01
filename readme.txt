@@ -4,7 +4,7 @@ Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.1.3
+Stable tag: 4.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,10 @@ For general information on how to use shortcodes, please visit [this page](https
 * Automatically link all subscription payment to their subscription (not just initial payment)
 * Allow multiple filters to be applied to admin tables
 * Debug mode: Show linked entity when viewing individual details
+
+= 4.1.4 =
+* Fix translation issues in emails/pdfs (move translation calls out of twig templates)
+* Update various dependencies
 
 = 4.1.3 =
 * Campaign optional fields now have more granular settings. Can now control visibility and requirement separately.

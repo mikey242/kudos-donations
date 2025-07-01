@@ -186,6 +186,22 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 */
 	public function send_receipt( string $email, array $args ): bool {
 
+		$args = wp_parse_args($args, [
+			'text' => [
+				'preheader'         => __('This is a receipt for your recent donation on: ', 'kudos-donations'),
+				'body'              => __('Thanks for your donation. This email is a receipt for your records.', 'kudos-donations'),
+				'campaign'          => __('Campaign name', 'kudos-donations'),
+				'order_id'          => __('Order ID', 'kudos-donations'),
+				'date'              => __('Date', 'kudos-donations'),
+				'description'       => __('Description', 'kudos-donations'),
+				'amount'            => __('Amount', 'kudos-donations'),
+				'total'             => __('Total', 'kudos-donations'),
+				'thanks'            => __('Thanks', 'kudos-donations'),
+				'cancel_sub'        => __('Want to cancel your subscription?', 'kudos-donations'),
+				'cancel_sub_button' => __('Click here', 'kudos-donations')
+			]
+		]);
+
 		// Generate email body from args.
 		$body = $this->twig->render( self::TEMPLATE_RECEIPT, $args );
 
