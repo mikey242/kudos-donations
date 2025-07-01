@@ -132,7 +132,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		if ( $donor ) {
 			$locale = $donor[ DonorRepository::LOCALE ];
 			if ( $locale ) {
-				$this->logger->debug( "Switching locale to $locale", [ 'donor' => $donor ] );
+				$this->logger->debug( "Switching locale to $locale" );
 				// Switch to donor's locale if available.
 				Utils::switch_locale( $donor[ DonorRepository::LOCALE ] );
 			}

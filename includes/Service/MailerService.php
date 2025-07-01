@@ -82,6 +82,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 		// Switch to donor's locale.
 		$locale = $donor[ DonorRepository::LOCALE ];
 		if ( $locale ) {
+			$this->logger->debug( "Switching locale to $locale" );
 			Utils::switch_locale( $locale );
 		}
 
