@@ -36,6 +36,7 @@
 		"woocommerce/action-scheduler": "^3.9"
 	},
 	"require-dev": {
+		"fakerphp/faker": "^1.24",
 		"php-stubs/wordpress-tests-stubs": "^6.3",
 		"phpcompatibility/php-compatibility": "^9.3",
 		"phpcompatibility/phpcompatibility-wp": "*",
@@ -102,5 +103,10 @@
 		"files": [
 			"includes/helpers.php"
 		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"IseardMedia\\Kudos\\Dev\\": "includes-dev/"
+		}
 	}
 }
