@@ -31,7 +31,7 @@ class DonorRepository extends BaseRepository {
 	public const POSTCODE           = 'postcode';
 	public const CITY               = 'city';
 	public const COUNTRY            = 'country';
-	public const LANGUAGE           = 'language';
+	public const LOCALE             = 'locale';
 	public const VENDOR_CUSTOMER_ID = 'vendor_customer_id';
 
 	/**
@@ -61,7 +61,7 @@ class DonorRepository extends BaseRepository {
 			self::POSTCODE           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::CITY               => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::COUNTRY            => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
-			self::LANGUAGE           => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::LOCALE             => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::VENDOR_CUSTOMER_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 		];
 	}

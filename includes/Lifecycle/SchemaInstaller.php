@@ -179,13 +179,13 @@ class SchemaInstaller implements ActivationAwareInterface {
 				city VARCHAR(100),
 				country CHAR(2),
 				vendor_customer_id VARCHAR(255),
-				language CHAR(5) DEFAULT NULL,
+				locale CHAR(5) DEFAULT NULL,
 				created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 				updated_at DATETIME DEFAULT NULL,
 				UNIQUE KEY unique_post (wp_post_id),
 				KEY idx_email (email),
 				KEY idx_country (country),
-               	KEY idx_language (language)
+               	KEY idx_locale (locale)
 			) {$charset};
 		";
 

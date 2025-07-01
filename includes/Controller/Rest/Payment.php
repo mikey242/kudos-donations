@@ -301,7 +301,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				DonorRepository::POSTCODE      => $args['postcode'],
 				DonorRepository::CITY          => $args['city'],
 				DonorRepository::COUNTRY       => $args['country'],
-				DonorRepository::LANGUAGE      => $args['language'],
+				DonorRepository::LOCALE        => Utils::normalize_locale( $args['language'] ),
 			];
 
 			// Search for existing donor based on email and mode.
