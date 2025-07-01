@@ -281,7 +281,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			'country'          => null,
 			'message'          => null,
 			'campaign_id'      => null,
-			'language'         => 'en',
+			'language'         => 'en_US',
 		];
 
 		$args = wp_parse_args( $values, $defaults );
