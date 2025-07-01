@@ -323,9 +323,9 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			$donor_id = $this->get_repository( DonorRepository::class )
 				->save(
 					array_merge(
-						[
-							BaseRepository::ID => (int) $donor ? $donor[ BaseRepository::ID ] : null,
-						],
+						$donor ? [
+							BaseRepository::ID => $donor[ BaseRepository::ID ],
+						] : [],
 						$donor_meta
 					)
 				);
