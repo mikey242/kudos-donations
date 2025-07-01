@@ -401,10 +401,6 @@
     </style>
     <![endif]-->
 </head><body>
-<span class="preheader">
-    {% block preheader %}
-    {% endblock preheader %}
-</span>
 <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
     <tr>
         <td align="center">
@@ -440,12 +436,12 @@
                                     <p class="sub align-center">
                                         &copy; {{ 'now' | date('Y') }} {{ company_name }}
                                         {% if vat_number %}
-                                            | {{ __('VAT Number', 'kudos-donations') }}: {{ vat_number }}
+                                            | {{ text.vat_number }}: {{ vat_number }}
                                         {% endif %}
                                     </p>
                                     {% if logos.logo_small %}
                                         <p class="sub align-center">
-                                            <span>{{ __('Created by', 'kudos-donations') }}</span>
+                                            <span>{{ text.created_by }}</span>
                                             <img class="logo-small" width="18" src="{{ logos.logo_small }}"
                                                  alt="Kudos Donations Logo">
                                             <span>Kudos Donations</span>
