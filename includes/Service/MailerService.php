@@ -79,6 +79,12 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 		// Email address.
 		$email = $donor[ DonorRepository::EMAIL ];
 
+		// Switch to donor's locale.
+		$locale = $donor[ DonorRepository::LOCALE ];
+		if ( $locale ) {
+			Utils::switch_locale( $locale );
+		}
+
 		// Bail if no email address.
 		if ( ! $email ) {
 			$this->logger->debug( 'Cannot send email: donor has no email address', [ 'donor' => $donor ] );
@@ -147,7 +153,9 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 			)
 		);
 
-		return $this->vendor->send_receipt( $email, $args );
+		$result = $this->vendor->send_receipt( $email, $args );
+		restore_previous_locale();
+		return $result;
 	}
 
 

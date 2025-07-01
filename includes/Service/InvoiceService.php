@@ -124,30 +124,41 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 				__( 'VAT', 'kudos-donations' )        => 0,
 			],
 			'total'           => Utils::format_value_for_display( $transaction[ TransactionRepository::VALUE ] ),
-			'text'            => [
-				'invoice'     => __( 'Invoice', 'kudos-donations' ),
-				'date'        => __( 'Date', 'kudos-donations' ),
-				'to'          => __( 'To', 'kudos-donations' ),
-				'from'        => __( 'From', 'kudos-donations' ),
-				'description' => __( 'Description', 'kudos-donations' ),
-				'amount'      => __( 'Amount', 'kudos-donations' ),
-				'total'       => __( 'Total', 'kudos-donations' ),
-				'vat_number'  => __( 'VAT Number', 'kudos-donations' ),
-				'created_by'  => __( 'Created by', 'kudos-donations' ),
-			],
 		];
 
 		// Append donor.
 		$donors = $this->get_repository( DonorRepository::class );
 		$donor  = $donors->find_one_by( [ BaseRepository::ID => $transaction[ TransactionRepository::DONOR_ID ] ] );
 		if ( $donor ) {
-				$data['donor_business'] = $donor[ DonorRepository::BUSINESS_NAME ] ?? '';
-				$data['donor_name']     = $donor[ DonorRepository::NAME ] ?? '';
-				$data['donor_street']   = $donor[ DonorRepository::STREET ] ?? '';
-				$data['donor_postcode'] = $donor[ DonorRepository::POSTCODE ] ?? '';
-				$data['donor_city']     = $donor[ DonorRepository::CITY ] ?? '';
-				$data['donor_country']  = $donor[ DonorRepository::COUNTRY ] ?? '';
+			$locale = $donor[ DonorRepository::LOCALE ];
+			if ( $locale ) {
+				$this->logger->debug( "Switching locale to $locale", [ 'donor' => $donor ] );
+				// Switch to donor's locale if available.
+				Utils::switch_locale( $donor[ DonorRepository::LOCALE ] );
+			}
+			$data['donor_business'] = $donor[ DonorRepository::BUSINESS_NAME ] ?? '';
+			$data['donor_name']     = $donor[ DonorRepository::NAME ] ?? '';
+			$data['donor_street']   = $donor[ DonorRepository::STREET ] ?? '';
+			$data['donor_postcode'] = $donor[ DonorRepository::POSTCODE ] ?? '';
+			$data['donor_city']     = $donor[ DonorRepository::CITY ] ?? '';
+			$data['donor_country']  = $donor[ DonorRepository::COUNTRY ] ?? '';
 		}
+
+		// Add text.
+		$data['text'] = [
+			'invoice'     => __( 'Invoice', 'kudos-donations' ),
+			'date'        => __( 'Date', 'kudos-donations' ),
+			'to'          => __( 'To', 'kudos-donations' ),
+			'from'        => __( 'From', 'kudos-donations' ),
+			'description' => __( 'Description', 'kudos-donations' ),
+			'amount'      => __( 'Amount', 'kudos-donations' ),
+			'total'       => __( 'Total', 'kudos-donations' ),
+			'vat_number'  => __( 'VAT Number', 'kudos-donations' ),
+			'created_by'  => __( 'Created by', 'kudos-donations' ),
+		];
+
+		// Restore locale to original state.
+		restore_previous_locale();
 
 		$this->logger->debug( 'Generating new invoice.', [ 'file' => $file ] );
 

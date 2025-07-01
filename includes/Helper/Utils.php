@@ -245,12 +245,31 @@ class Utils {
 	 *
 	 * @param string $locale Locale code to switch to.
 	 */
-	public static function switch_to_plugin_locale( string $locale ): void {
+	public static function switch_locale( string $locale ): void {
 		if ( switch_to_locale( $locale ) ) {
 
 			// Ensure translations are reloaded from WP_LANG_DIR/plugins/.
 			unload_textdomain( 'kudos-donations' );
 			load_textdomain( 'kudos-donations', WP_LANG_DIR . '/plugins/kudos-donations-' . $locale . '.mo' );
 		}
+	}
+
+	/**
+	 * Normalize a browser locale like 'nl' to a full WP locale like 'nl_NL'.
+	 *
+	 * @param string $locale Short or full locale code.
+	 * @return string Normalized locale or fallback to 'en_US'.
+	 */
+	public static function normalize_locale( string $locale ): string {
+		$locale    = str_replace( '-', '_', strtolower( $locale ) );
+		$available = get_available_languages();
+
+		foreach ( $available as $available_locale ) {
+			if ( stripos( $available_locale, $locale ) === 0 ) {
+				return $available_locale;
+			}
+		}
+
+		return 'en_US'; // fallback.
 	}
 }
