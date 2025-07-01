@@ -15,6 +15,8 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
@@ -22,7 +24,10 @@ use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Front extends BaseController implements HasSettingsInterface {
+class Front extends BaseController implements HasSettingsInterface, RepositoryAwareInterface {
+
+	use RepositoryAwareTrait;
+
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	public const STYLE_HANDLE_VIEW          = 'kudos-fonts';
 	public const SCRIPT_HANDLE_VIEW         = 'kudos-view-script';
@@ -32,17 +37,14 @@ class Front extends BaseController implements HasSettingsInterface {
 		self::SCRIPT_HANDLE_EDITOR,
 	];
 	private PaymentVendorInterface $vendor;
-	private TransactionRepository $transactions;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param PaymentVendorFactory  $factory Payment vendor factory.
-	 * @param TransactionRepository $transaction_repository Transactions repository.
+	 * @param PaymentVendorFactory $factory Payment vendor factory.
 	 */
-	public function __construct( PaymentVendorFactory $factory, TransactionRepository $transaction_repository ) {
-		$this->vendor       = $factory->get_vendor();
-		$this->transactions = $transaction_repository;
+	public function __construct( PaymentVendorFactory $factory ) {
+		$this->vendor = $factory->get_vendor();
 	}
 
 	/**
@@ -238,7 +240,7 @@ class Front extends BaseController implements HasSettingsInterface {
 					$transaction_id = isset( $_REQUEST['kudos_transaction_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_transaction_id'] ) ) : '';
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
-						$transaction = $this->transactions->find( (int) $transaction_id );
+						$transaction = $this->get_repository( TransactionRepository::class )->find( (int) $transaction_id );
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
 							$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
