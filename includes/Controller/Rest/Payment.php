@@ -281,6 +281,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			'country'          => null,
 			'message'          => null,
 			'campaign_id'      => null,
+			'language'         => 'en',
 		];
 
 		$args = wp_parse_args( $values, $defaults );
@@ -300,6 +301,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				DonorRepository::POSTCODE      => $args['postcode'],
 				DonorRepository::CITY          => $args['city'],
 				DonorRepository::COUNTRY       => $args['country'],
+				DonorRepository::LANGUAGE      => $args['language'],
 			];
 
 			// Search for existing donor based on email and mode.

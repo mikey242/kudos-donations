@@ -110,6 +110,7 @@ export const FormRouter = ({
 			message: '',
 			name: '',
 			email: '',
+			language: navigator.language,
 		},
 	});
 
