@@ -160,7 +160,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			return false;
 		}
 
-		$id = $this->wpdb->insert_id;
+		$id = $this->wpdb->get_insert_id();
 
 		// Generate title if none provided.
 		if ( empty( $data[ self::TITLE ] ) && $id ) {
