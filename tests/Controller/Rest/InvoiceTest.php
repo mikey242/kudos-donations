@@ -5,25 +5,26 @@
 
 namespace Controller\Rest;
 
+use BaseTestCase;
 use Dompdf\Dompdf;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Repository\DonorRepository;
+use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\PDFService;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use WP_REST_Request;
 use WP_REST_Server;
-use WP_UnitTestCase;
 
 /**
  * Invoice rest route related tests.
  */
-class Invoice extends WP_UnitTestCase {
+class InvoiceTest extends BaseTestCase {
 
 	private WP_REST_Request $request;
 
-	public function set_up() {
+	public function set_up():void {
+		parent::set_up();
 
 		// Create PDFService dependencies
 		$twig   = $this->createMock( TwigService::class );
@@ -35,31 +36,29 @@ class Invoice extends WP_UnitTestCase {
 		$pdf->setLogger( $logger );
 		$pdf->on_plugin_activation();
 
-		// Create Donor and link to Transaction.
-		$donor_id = $this->factory()->post->create(
-			[
-				'post_status' => 'publish',
-				'post_type'   => DonorPostType::get_slug(),
-			]
-		);
-		update_post_meta( $donor_id, DonorPostType::META_FIELD_NAME, 'John Smith' );
+		//Get repository.
+		$transaction_repository = new TransactionRepository($this->wpdb);
+		$donor_repository = new DonorRepository($this->wpdb);
 
-		$transaction_id = $this->factory()->post->create(
+		// Create Donor and link to Transaction.
+		$donor_id = $donor_repository->save([
+			DonorRepository::NAME => 'John Smith'
+		]);
+
+		$transaction_id = $transaction_repository->save(
 			[
-				'post_status' => 'publish',
-				'post_type'   => TransactionPostType::get_slug(),
+				TransactionRepository::DONOR_ID => $donor_id,
+				TransactionRepository::VENDOR_PAYMENT_ID => 'tr_12345',
+				TransactionRepository::VENDOR => MolliePaymentVendor::get_slug(),
+				TransactionRepository::SEQUENCE_TYPE => 'oneoff',
+				TransactionRepository::INVOICE_NUMBER => 1,
+				TransactionRepository::CURRENCY => 'EUR',
+				TransactionRepository::VALUE => '10',
 			]
 		);
-		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_DONOR_ID, $donor_id );
-		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID, 'tr_12345' );
-		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_VENDOR, MolliePaymentVendor::get_slug() );
-		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_SEQUENCE_TYPE, 'oneoff' );
-		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_INVOICE_NUMBER, 1 );
-		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_CURRENCY, 'EUR' );
-		update_post_meta( $transaction_id, TransactionPostType::META_FIELD_VALUE, '10' );
 
 		// Define Request.
-		$this->request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/get/transaction/$transaction_id" );
+		$this->request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/$transaction_id" );
 	}
 
 	/**
