@@ -131,6 +131,11 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 						'required'          => false,
 						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
+					'language'      => [
+						'type'              => FieldType::STRING,
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
 				],
 			],
 
