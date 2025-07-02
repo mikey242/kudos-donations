@@ -215,6 +215,7 @@ class SchemaInstaller implements ActivationAwareInterface {
 				status VARCHAR(20),
 				transaction_id BIGINT UNSIGNED DEFAULT NULL,
 				donor_id BIGINT UNSIGNED DEFAULT NULL,
+				campaign_id BIGINT UNSIGNED DEFAULT NULL,
 				vendor_customer_id VARCHAR(255),
 				vendor_subscription_id VARCHAR(255),
 				created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

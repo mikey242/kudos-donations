@@ -342,6 +342,13 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				$donor_id             = $donor_map[ $legacy_donor_post_id ] ?? null;
 			}
 
+			// Get campaign.
+			$campaign_id = null;
+			$transaction = $this->get_repository( TransactionRepository::class )->find( $transaction_id );
+			if ( $transaction ) {
+				$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
+			}
+
 			$data = [
 				'wp_post_id'             => $post_id,
 				'title'                  => get_post_field( 'post_title', $post_id ),
@@ -352,6 +359,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				'status'                 => get_post_meta( $post_id, 'status', true ),
 				'transaction_id'         => $transaction_id,
 				'donor_id'               => $donor_id,
+				'campaign_id'            => $campaign_id,
 				'vendor_customer_id'     => get_post_meta( $post_id, 'customer_id', true ),
 				'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
 				'created_at'             => get_post_time( 'Y-m-d H:i:s', true, $post ),

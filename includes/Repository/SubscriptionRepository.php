@@ -30,6 +30,7 @@ class SubscriptionRepository extends BaseRepository {
 	public const STATUS                 = 'status';
 	public const TRANSACTION_ID         = 'transaction_id';
 	public const DONOR_ID               = 'donor_id';
+	public const CAMPAIGN_ID            = 'campaign_id';
 	public const VENDOR_CUSTOMER_ID     = 'vendor_customer_id';
 	public const VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
 
@@ -59,6 +60,7 @@ class SubscriptionRepository extends BaseRepository {
 			self::STATUS                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::TRANSACTION_ID         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::DONOR_ID               => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
+			self::CAMPAIGN_ID            => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
 			self::VENDOR_CUSTOMER_ID     => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::VENDOR_SUBSCRIPTION_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 		];
@@ -98,11 +100,20 @@ class SubscriptionRepository extends BaseRepository {
 	 * @param array $subscription The subscription array.
 	 */
 	public function get_campaign( array $subscription ): ?array {
-		$transaction = $this->get_transaction( $subscription );
-		if ( ! $transaction ) {
-			return null;
+		$campaign_id = $subscription[ self::CAMPAIGN_ID ];
+
+		// Fallback: get campaign id from linked transaction.
+		if ( ! $campaign_id ) {
+			$transaction = $this->get_transaction( $subscription );
+
+			if ( ! $transaction ) {
+				return null;
+			}
+
+			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
 		}
+
 		return $this->get_repository( CampaignRepository::class )
-			->find( (int) $transaction[ TransactionRepository::CAMPAIGN_ID ] );
+			->find( (int) $campaign_id );
 	}
 }
