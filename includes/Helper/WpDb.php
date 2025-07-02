@@ -125,4 +125,14 @@ class WpDb {
 	public function get_insert_id(): int {
 		return (int) $this->wpdb->insert_id;
 	}
+
+	/**
+	 * Truncate a custom plugin table.
+	 *
+	 * @param string $table_name Table name without prefix.
+	 */
+	public function truncate_table( string $table_name ): void {
+		$wpdb = $this->wpdb;
+		$wpdb->query( $wpdb->prepare( 'TRUNCATE TABLE %i', $wpdb->prefix . $table_name ) );
+	}
 }
