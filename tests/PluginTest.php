@@ -4,9 +4,9 @@
  */
 
 /**
- * Sample test case.
+ * @covers \IseardMedia\Kudos\Plugin
  */
-class Plugin extends WP_UnitTestCase {
+class PluginTest extends WP_UnitTestCase {
 
 	/**
 	 * Test that plugin container is created.

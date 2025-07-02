@@ -9,6 +9,9 @@ use BaseTestCase;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 
+/**
+ * @covers \IseardMedia\Kudos\Repository\DonorRepository
+ */
 class DonorRepositoryTest extends BaseTestCase {
 
 	private DonorRepository $donor_repository;
