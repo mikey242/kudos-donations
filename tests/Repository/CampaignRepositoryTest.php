@@ -10,6 +10,9 @@ use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 
+/**
+ * @covers \IseardMedia\Kudos\Repository\CampaignRepository
+ */
 class CampaignRepositoryTest extends BaseTestCase {
 
 	private CampaignRepository $campaign_repository;

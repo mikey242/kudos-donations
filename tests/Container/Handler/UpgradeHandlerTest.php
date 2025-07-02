@@ -9,9 +9,9 @@ use Plugin_Upgrader;
 use WP_UnitTestCase;
 
 /**
- * Sample test case.
+ * @covers \IseardMedia\Kudos\Container\Handler\UpgradeHandler
  */
-class UpgradeHandler extends WP_UnitTestCase {
+class UpgradeHandlerTest extends WP_UnitTestCase {
 
 	public function setUp(): void {
 		// Include necessary WordPress files to access the classes needed for the upgrade process.
