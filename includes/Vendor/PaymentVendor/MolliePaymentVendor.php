@@ -29,7 +29,6 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\BaseCollection;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Customer;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Method;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\MethodCollection;
-use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Subscription;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\PaymentMethod;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\PaymentMethodStatus;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\RefundStatus;
@@ -435,7 +434,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					SubscriptionRepository::VALUE                  => $value,
 					SubscriptionRepository::CURRENCY               => $currency,
 					SubscriptionRepository::TRANSACTION_ID         => $transaction[BaseRepository::ID],
-					SubscriptionRepository::DONOR_ID               => $donor[BaseRepository::ID]
+					SubscriptionRepository::DONOR_ID               => $donor[BaseRepository::ID],
+					SubscriptionRepository::CAMPAIGN_ID            => $transaction[TransactionRepository::CAMPAIGN_ID]
 				]);
 				$subscription_entity = $this->get_repository(SubscriptionRepository::class)->find($subscription_id);
 
@@ -686,7 +686,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                         $transaction,
                         $payment->mandateId,
                         $payment->metadata->{SubscriptionRepository::FREQUENCY},
-	                    (int) $payment->metadata->{SubscriptionRepository::YEARS}
+	                    (int) $payment->metadata->{SubscriptionRepository::YEARS},
                     );
 	                // Update transaction with subscription ID.
 	                $transactions->save([
