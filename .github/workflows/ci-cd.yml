@@ -7,7 +7,6 @@ on:
         branches: ['main']
 
 env:
-    PHP_VERSION: '8.2'
     NODE_VERSION: '18.18.1'
 
 jobs:
@@ -19,7 +18,7 @@ jobs:
             - name: Set up PHP with Composer and PHP-Scoper
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ env.PHP_VERSION }}
+                  php-version: 8.2
                   tools: composer
             - name: Validate Composer configuration
               run: composer --no-ansi validate
@@ -33,7 +32,7 @@ jobs:
             - name: Set up PHP with Composer and PHP-Scoper
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ env.PHP_VERSION }}
+                  php-version: 8.2
                   tools: composer, php-scoper
 
             - name: Lint PHP
@@ -44,7 +43,7 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: ${{ env.NODE_VERSION }}
+                  node-version: 18.18.1
                   cache: 'npm'
 
             - name: Lint JavaScript and CSS
@@ -56,7 +55,7 @@ jobs:
     build-job:
         uses: ./.github/workflows/build.yml
         with:
-            node-version: '18.18.1'
+            node-version: 18.18.1
 
     test-job:
         runs-on: ubuntu-latest
