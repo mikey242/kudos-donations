@@ -66,10 +66,10 @@ class WpDb {
 	 * @return mixed The result from the wpdb method.
 	 */
 	public function __call( string $name, array $arguments ) {
-		if ( method_exists( $this->wpdb, $name ) ) {
+		if ( \is_callable( [ $this->wpdb, $name ] ) ) {
 			return \call_user_func_array( [ $this->wpdb, $name ], $arguments );
 		} else {
-			throw new BadMethodCallException( esc_html( "Method $name does not exist in the wpdb class" ) );
+			throw new BadMethodCallException( esc_html( "Method '$name' does not exist in the wpdb class" ) );
 		}
 	}
 
@@ -117,5 +117,12 @@ class WpDb {
 	public function run_dbdelta( string $sql ): void {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+	}
+
+	/**
+	 * Returns the last inserted id.
+	 */
+	public function get_insert_id(): int {
+		return (int) $this->wpdb->insert_id;
 	}
 }
