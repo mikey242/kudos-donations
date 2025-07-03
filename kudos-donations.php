@@ -59,7 +59,6 @@ try {
 	$dotenv->load( __DIR__ . '/.env' );
 } catch ( \Exception $e ) {
 	$_ENV['APP_ENV'] = 'production';
-	NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
 }
 
 // Action Scheduler.
