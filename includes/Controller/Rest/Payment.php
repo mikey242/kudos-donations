@@ -7,7 +7,7 @@
  * @copyright 2025 Iseard Media
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
@@ -193,15 +193,10 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'status' ],
 				'args'                => [
-					'id'       => [
+					'id' => [
 						'type'              => FieldType::INTEGER,
 						'required'          => true,
 						'sanitize_callback' => 'absint',
-					],
-					'vendorId' => [
-						'type'              => FieldType::STRING,
-						'required'          => false,
-						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 				'permission_callback' => '__return_true',
@@ -216,20 +211,19 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	 * @return WP_REST_Response | WP_Error Response object.
 	 */
 	public function status( WP_REST_Request $request ) {
-		$entity_id         = $request->get_param( 'id' );
-		$vendor_payment_id = $request->get_param( 'vendorId' );
-		$nonce             = $request->get_header( 'x-kudos-nonce' );
+		$entity_id = $request->get_param( 'id' );
+		$nonce     = $request->get_header( 'x-kudos-nonce' );
 
 		if ( ! wp_verify_nonce( $nonce, 'order_complete' . $entity_id ) ) {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
 		$transaction = $this->get_repository( TransactionRepository::class )
-			->find( $entity_id );
+							->find( $entity_id );
 
-		if ( PaymentStatus::OPEN === $transaction[ TransactionRepository::STATUS ] && $vendor_payment_id ) {
+		if ( PaymentStatus::OPEN === $transaction[ TransactionRepository::STATUS ] ) {
 			$this->logger->debug( 'Status still open, manually calling handle_status_change' );
-			$this->vendor->handle_status_change( $vendor_payment_id );
+			$this->vendor->handle_status_change( $transaction[ TransactionRepository::VENDOR_PAYMENT_ID ] );
 		}
 
 		if ( $transaction ) {
@@ -241,7 +235,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			$donor_id = $transaction[ TransactionRepository::DONOR_ID ];
 			if ( $donor_id ) {
 				$donor                         = $this->get_repository( DonorRepository::class )
-					->find( $donor_id );
+														->find( $donor_id );
 				$data[ DonorRepository::NAME ] = $donor[ DonorRepository::NAME ];
 			}
 
@@ -282,7 +276,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 		}
 
 		$campaign = $this->get_repository( CampaignRepository::class )
-			->find( (int) $values['campaign_id'] );
+						->find( (int) $values['campaign_id'] );
 
 		$defaults = [
 			'currency'         => $campaign['currency'],
@@ -322,12 +316,12 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 
 			// Search for existing donor based on email and mode.
 			$donor = $this->get_repository( DonorRepository::class )
-				->find_one_by(
-					[
-						DonorRepository::EMAIL => $args['email'],
-						DonorRepository::MODE  => $this->vendor->get_api_mode(),
-					]
-				);
+							->find_one_by(
+								[
+									DonorRepository::EMAIL => $args['email'],
+									DonorRepository::MODE  => $this->vendor->get_api_mode(),
+								]
+							);
 
 			// Create new customer with vendor if none found.
 			if ( empty( $donor ) ) {
@@ -337,37 +331,37 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 
 			// Update or create donor.
 			$donor_id = $this->get_repository( DonorRepository::class )
-				->save(
-					array_merge(
-						$donor ? [
-							BaseRepository::ID => $donor[ BaseRepository::ID ],
-						] : [],
-						$donor_meta
-					)
-				);
+							->save(
+								array_merge(
+									$donor ? [
+										BaseRepository::ID => $donor[ BaseRepository::ID ],
+									] : [],
+									$donor_meta
+								)
+							);
 			$donor    = $this->get_repository( DonorRepository::class )->find( $donor_id );
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
 		$vendor_customer_id = $donor[ DonorRepository::VENDOR_CUSTOMER_ID ] ?? null;
 		$transaction_id     = $this->get_repository( TransactionRepository::class )
-			->save(
-				[
-					TransactionRepository::DONOR_ID      => $donor_id ?? null,
-					TransactionRepository::VALUE         => $args[ TransactionRepository::VALUE ],
-					TransactionRepository::CURRENCY      => $args[ TransactionRepository::CURRENCY ],
-					TransactionRepository::STATUS        => PaymentStatus::OPEN,
-					TransactionRepository::MODE          => $this->vendor->get_api_mode(),
-					TransactionRepository::SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
-					TransactionRepository::CAMPAIGN_ID   => (int) $args[ TransactionRepository::CAMPAIGN_ID ],
-					TransactionRepository::MESSAGE       => $args[ TransactionRepository::MESSAGE ],
-					TransactionRepository::VENDOR        => $this->vendor::get_slug(),
-				]
-			);
+									->save(
+										[
+											TransactionRepository::DONOR_ID      => $donor_id ?? null,
+											TransactionRepository::VALUE         => $args[ TransactionRepository::VALUE ],
+											TransactionRepository::CURRENCY      => $args[ TransactionRepository::CURRENCY ],
+											TransactionRepository::STATUS        => PaymentStatus::OPEN,
+											TransactionRepository::MODE          => $this->vendor->get_api_mode(),
+											TransactionRepository::SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
+											TransactionRepository::CAMPAIGN_ID   => (int) $args[ TransactionRepository::CAMPAIGN_ID ],
+											TransactionRepository::MESSAGE       => $args[ TransactionRepository::MESSAGE ],
+											TransactionRepository::VENDOR        => $this->vendor::get_slug(),
+										]
+									);
 
 		// Create payment with vendor.
 		$transaction = $this->get_repository( TransactionRepository::class )
-			->find( $transaction_id );
+							->find( $transaction_id );
 		$url         = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created.
@@ -426,6 +420,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
 		do_action( 'kudos_' . $this->vendor::get_slug() . '_webhook_requested', $request );
+
 		return $this->vendor->rest_webhook( $request );
 	}
 
@@ -436,6 +431,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	 */
 	public function refund( WP_REST_Request $request ): bool {
 		$entity_id = $request->get_param( 'id' );
+
 		return $this->vendor->refund( $entity_id );
 	}
 }
