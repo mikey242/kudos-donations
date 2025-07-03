@@ -157,6 +157,7 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 					'kudos'
 				);
 				$this->enqueue_assets();
+
 				return $this->kudos_render_callback( $args );
 			}
 		);
@@ -187,6 +188,7 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 					__( '%s not connected.', 'kudos-donations' ),
 					$this->vendor::get_name()
 				);
+
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
 			} else {
 				return null;
@@ -228,7 +230,7 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 	 * Handles the various query variables and shows relevant modals.
 	 */
 	public function handle_query_variables(): void {
-		if ( isset( $_REQUEST['kudos_action'] ) && -1 !== $_REQUEST['kudos_action'] ) {
+		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
 
 			// Enqueue script / style in case we are on another page.
@@ -236,9 +238,8 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 
 			switch ( $action ) {
 				case 'order_complete':
-					$nonce             = isset( $_REQUEST['kudos_nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) ) : '';
-					$transaction_id    = isset( $_REQUEST['kudos_transaction_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_transaction_id'] ) ) : '';
-					$vendor_payment_id = isset( $_REQUEST['vendor_payment_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['vendor_payment_id'] ) ) : '';
+					$nonce          = isset( $_REQUEST['kudos_nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) ) : '';
+					$transaction_id = isset( $_REQUEST['kudos_transaction_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_transaction_id'] ) ) : '';
 
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
@@ -250,7 +251,6 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 							$this->payment_status_modal_html(
 								(int) $transaction_id,
 								$campaign_id,
-								$vendor_payment_id
 							);
 						}
 					}
@@ -267,10 +267,10 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 					);
 					$response = rest_do_request( $request );
 					$data     = $response->get_data();
-						$this->message_modal_html(
-							$data['message'],
-							$response->is_error() ? __( 'Please contact support.', 'kudos-donations' ) : __( 'Thanks for your support!', 'kudos-donations' )
-						);
+					$this->message_modal_html(
+						$data['message'],
+						$response->is_error() ? __( 'Please contact support.', 'kudos-donations' ) : __( 'Thanks for your support!', 'kudos-donations' )
+					);
 					break;
 				default:
 					$this->message_modal_html(
@@ -304,19 +304,17 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 	/**
 	 * Create message modal with supplied header and body text.
 	 *
-	 * @param int     $transaction_id The transaction id.
-	 * @param int     $campaign_id The campaign id.
-	 * @param ?string $vendor_payment_id The vendor's payment id.
+	 * @param int $transaction_id The transaction id.
+	 * @param int $campaign_id The campaign id.
 	 */
-	private function payment_status_modal_html( int $transaction_id, int $campaign_id, ?string $vendor_payment_id = null ): void {
+	private function payment_status_modal_html( int $transaction_id, int $campaign_id ): void {
 		echo wp_kses(
-			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s' data-vendor-id='%s' ></div>", $transaction_id, $campaign_id, $vendor_payment_id ),
+			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s' ></div>", $transaction_id, $campaign_id ),
 			[
 				'div' => [
 					'class'            => [],
 					'data-campaign'    => [],
 					'data-transaction' => [],
-					'data-vendor-id'   => [],
 				],
 			]
 		);
