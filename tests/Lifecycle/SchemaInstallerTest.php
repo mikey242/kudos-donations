@@ -75,4 +75,19 @@ class SchemaInstallerTest extends BaseTestCase {
 			$this->get_repository(SubscriptionRepository::class)->get_all_fields()
 		);
 	}
+
+	/**
+	 * Check that specified table contains the specified columns.
+	 *
+	 * @param string $table The name of the table to check.
+	 * @param array $expected_columns Array of columns to look for.
+	 */
+	protected function assertTableHasColumns( string $table, array $expected_columns ): void {
+		$columns = $this->wpdb->get_results("SHOW COLUMNS FROM {$this->wpdb->table($table)}", ARRAY_A);
+		$column_names = array_column($columns, 'Field');
+
+		foreach ( $expected_columns as $column ) {
+			$this->assertContains($column, $column_names, "Missing expected column '$column' in '$table'");
+		}
+	}
 }
