@@ -51,53 +51,39 @@ class SchemaInstallerTest extends BaseTestCase {
 	 * Ensure important columns exist in kudos_campaigns.
 	 */
 	public function test_campaigns_table_has_expected_columns(): void {
-		$this->schema->create_campaigns_table();
-
-		$this->assertTableHasColumns(CampaignRepository::TABLE_NAME, [
-			'id',
-			'title',
-			'currency',
-			'goal',
-		]);
+		$this->assertTableHasColumns(
+			CampaignRepository::TABLE_NAME,
+			$this->get_repository(CampaignRepository::class)->get_all_fields()
+		);
 	}
 
 	/**
 	 * Ensure important columns exist in kudos_donors.
 	 */
 	public function test_donors_table_has_expected_columns(): void {
-		$this->schema->create_donors_table();
-
-		$this->assertTableHasColumns(DonorRepository::TABLE_NAME, [
-			'id',
-			'email',
-			'country',
-		]);
+		$this->assertTableHasColumns(
+			DonorRepository::TABLE_NAME,
+			$this->get_repository(DonorRepository::class)->get_all_fields()
+		);
 	}
 
 	/**
 	 * Ensure important columns exist in kudos_transactions.
 	 */
 	public function test_transactions_table_has_expected_columns(): void {
-		$this->schema->create_transactions_table();
-
-		$this->assertTableHasColumns(TransactionRepository::TABLE_NAME, [
-			'id',
-			'value',
-			'status',
-		]);
+		$this->assertTableHasColumns(
+			TransactionRepository::TABLE_NAME,
+			$this->get_repository(TransactionRepository::class)->get_all_fields()
+		);
 	}
 
 	/**
 	 * Ensure important columns exist in kudos_subscriptions.
 	 */
 	public function test_subscriptions_table_has_expected_columns(): void {
-		$this->schema->create_subscriptions_table();
-
-		$this->assertTableHasColumns(SubscriptionRepository::TABLE_NAME, [
-			'id',
-			'status',
-			'donor_id',
-			'frequency',
-		]);
+		$this->assertTableHasColumns(
+			SubscriptionRepository::TABLE_NAME,
+			$this->get_repository(SubscriptionRepository::class)->get_all_fields()
+		);
 	}
 }
