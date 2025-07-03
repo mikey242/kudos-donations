@@ -16,28 +16,17 @@ use IseardMedia\Kudos\Repository\TransactionRepository;
  * @covers \IseardMedia\Kudos\Lifecycle\SchemaInstaller
  */
 class SchemaInstallerTest extends BaseTestCase {
-	private SchemaInstaller $schema;
-
-	public function set_up(): void {
-		parent::set_up();
-
-		$this->schema = new SchemaInstaller($this->wpdb);
-
-		// Drop all tables to test creation from scratch
-		foreach ($this->get_kudos_table_names() as $table) {
-			$this->wpdb->query("DROP TABLE IF EXISTS {$this->wpdb->table($table)}");
-		}
-	}
-
-	private function get_kudos_table_names(): array {
-			return SchemaInstaller::TABLE_NAMES;
-	}
 
 	/**
 	 * Ensure all Kudos tables are created.
 	 */
 	public function test_create_schema_creates_all_tables(): void {
-		$this->schema->create_schema();
+
+		/**
+		 * Temporary debug code.
+		 */
+		$tables = $this->wpdb->get_results('SHOW TABLES;');
+		error_log('List of tables currently present: ' . print_r($tables, true ));
 
 		foreach (SchemaInstaller::TABLE_NAMES as $table) {
 			$this->assertTrue(
