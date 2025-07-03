@@ -98,13 +98,13 @@ class WpDb {
 	/**
 	 * Check if the provided table exists.
 	 *
-	 * @param string $table The name of the table (without prefix).
+	 * @param string $base_table_name The name of the table (without prefix).
 	 */
-	public function table_exists( string $table ): bool {
+	public function table_exists( string $base_table_name ): bool {
 		return (bool) $this->get_var(
 			$this->prepare(
 				'SHOW TABLES LIKE %s',
-				$this->table( $table )
+				$this->table( $base_table_name )
 			)
 		);
 	}
