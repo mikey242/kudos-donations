@@ -639,7 +639,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				[
 					TransactionRepository::DONOR_ID        => $donor_id ?? '',
 					TransactionRepository::CAMPAIGN_ID     => $campaign_id ?? '',
-					TransactionRepository::SUBSCRIPTION_ID => $subscription_id ?? ''
+					TransactionRepository::SUBSCRIPTION_ID => $subscription_id ?? '',
+					TransactionRepository::VENDOR          => self::get_slug()
 				]
 			);
 			$transaction    = $transactions->find( $transaction_id );
