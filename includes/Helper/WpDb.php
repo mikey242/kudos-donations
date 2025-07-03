@@ -115,7 +115,9 @@ class WpDb {
 	 * @param string $sql The sqp statement.
 	 */
 	public function run_dbdelta( string $sql ): void {
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		if ( ! \function_exists( 'dbDelta' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		}
 		dbDelta( $sql );
 	}
 
