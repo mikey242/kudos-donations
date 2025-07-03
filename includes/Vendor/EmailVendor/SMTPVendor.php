@@ -281,7 +281,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * @param WP_Error $error WP_Error object.
 	 */
 	public function handle_error( WP_Error $error ): void {
-		$this->logger->error( 'Error sending email.', [ $error->get_error_messages() ] );
+		$this->logger->error( 'Error sending email.', [ 'message' => $error->get_error_messages() ] );
 	}
 
 	/**
