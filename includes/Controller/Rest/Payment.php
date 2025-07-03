@@ -344,20 +344,19 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 
 		// Create the payment. If there is no customer ID it will be un-linked.
 		$vendor_customer_id = $donor[ DonorRepository::VENDOR_CUSTOMER_ID ] ?? null;
-		$transaction_id     = $this->get_repository( TransactionRepository::class )
-									->save(
-										[
-											TransactionRepository::DONOR_ID      => $donor_id ?? null,
-											TransactionRepository::VALUE         => $args[ TransactionRepository::VALUE ],
-											TransactionRepository::CURRENCY      => $args[ TransactionRepository::CURRENCY ],
-											TransactionRepository::STATUS        => PaymentStatus::OPEN,
-											TransactionRepository::MODE          => $this->vendor->get_api_mode(),
-											TransactionRepository::SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
-											TransactionRepository::CAMPAIGN_ID   => (int) $args[ TransactionRepository::CAMPAIGN_ID ],
-											TransactionRepository::MESSAGE       => $args[ TransactionRepository::MESSAGE ],
-											TransactionRepository::VENDOR        => $this->vendor::get_slug(),
-										]
-									);
+		$transaction_id     = $this->get_repository( TransactionRepository::class )->save(
+			[
+				TransactionRepository::DONOR_ID      => $donor_id ?? null,
+				TransactionRepository::VALUE         => $args[ TransactionRepository::VALUE ],
+				TransactionRepository::CURRENCY      => $args[ TransactionRepository::CURRENCY ],
+				TransactionRepository::STATUS        => PaymentStatus::OPEN,
+				TransactionRepository::MODE          => $this->vendor->get_api_mode(),
+				TransactionRepository::SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
+				TransactionRepository::CAMPAIGN_ID   => (int) $args[ TransactionRepository::CAMPAIGN_ID ],
+				TransactionRepository::MESSAGE       => $args[ TransactionRepository::MESSAGE ],
+				TransactionRepository::VENDOR        => $this->vendor::get_slug(),
+			]
+		);
 
 		// Create payment with vendor.
 		$transaction = $this->get_repository( TransactionRepository::class )

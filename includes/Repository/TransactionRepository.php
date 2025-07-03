@@ -7,11 +7,12 @@
  * @copyright 2025 Iseard Media
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Repository;
 
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
 
 class TransactionRepository extends BaseRepository {
@@ -61,7 +62,7 @@ class TransactionRepository extends BaseRepository {
 		return [
 			self::VALUE             => $this->make_schema_field( FieldType::NUMBER, null, [ Utils::class, 'sanitize_float' ] ),
 			self::CURRENCY          => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
-			self::STATUS            => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			self::STATUS            => $this->make_schema_field( FieldType::STRING, PaymentStatus::OPEN, 'sanitize_text_field' ),
 			self::METHOD            => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::MODE              => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::SEQUENCE_TYPE     => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
@@ -88,8 +89,9 @@ class TransactionRepository extends BaseRepository {
 		if ( ! $donor_id ) {
 			return null;
 		}
+
 		return $this->repository_manager->get( DonorRepository::class )
-			->find( (int) $donor_id, $columns );
+										->find( (int) $donor_id, $columns );
 	}
 
 	/**
@@ -103,8 +105,9 @@ class TransactionRepository extends BaseRepository {
 		if ( ! $campaign_id ) {
 			return null;
 		}
+
 		return $this->get_repository( CampaignRepository::class )
-			->find( (int) $campaign_id, $columns );
+					->find( (int) $campaign_id, $columns );
 	}
 
 	/**
@@ -118,8 +121,9 @@ class TransactionRepository extends BaseRepository {
 		if ( ! $subscription_id ) {
 			return null;
 		}
+
 		return $this->get_repository( SubscriptionRepository::class )
-			->find( $transaction[ self::SUBSCRIPTION_ID ], $columns );
+					->find( $transaction[ self::SUBSCRIPTION_ID ], $columns );
 	}
 
 	/**
