@@ -82,8 +82,5 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 			error_log("Running query: DROP TABLE IF EXISTS $full_table");
 			$this->wpdb->query("DROP TABLE IF EXISTS $full_table");
 		}
-
-		$schema = new SchemaInstaller($this->wpdb);
-		$schema->create_schema();
 	}
 }

@@ -4,6 +4,8 @@
  */
 
 // Change filesystem access method.
+use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
+
 const FS_METHOD = 'direct';
 
 require dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
@@ -31,6 +33,9 @@ require_once "{$_tests_dir}/includes/functions.php";
 // Manually load the plugin being tested.
 function _manually_load_plugin() {
 	require dirname( __DIR__ ) . '/kudos-donations.php';
+	$wpdb = new \IseardMedia\Kudos\Helper\WpDb();
+	$schema = new SchemaInstaller($wpdb);
+	$schema->create_schema();
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
