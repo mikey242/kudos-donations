@@ -22,6 +22,12 @@ interface PaymentVendorInterface
 	 */
 	public static function get_slug(): string;
 
+	/**
+	 * Checks the status of provided payment
+	 * @param string $payment_id The vendor's payment id.
+	 */
+	public function check_payment_status( string $payment_id ): ?string;
+
     /**
      * Returns true if vendor supports recurring payments.
      *
@@ -77,6 +83,13 @@ interface PaymentVendorInterface
      * @return WP_Error|WP_REST_Response
      */
     public function rest_webhook(WP_REST_Request $request);
+
+	/**
+	 * Method for handling a status change, generally called by webhook.
+	 *
+	 * @param string $vendor_payment_id The vendor's payment id.
+	 */
+	public function handle_status_change( string $vendor_payment_id ): bool;
 
 	/**
 	 * Returns true is the API is ready to communicate.

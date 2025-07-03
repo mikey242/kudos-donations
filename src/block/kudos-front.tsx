@@ -48,9 +48,13 @@ domReady(() => {
 			const root = createRoot(container);
 			const transactionId = container.dataset.transaction;
 			const campaignId = container.dataset.campaign;
+			const vendorId = container.dataset.vendorId;
 			root.render(
 				<CampaignProvider campaignId={campaignId}>
-					<PaymentStatus transactionId={transactionId} />
+					<PaymentStatus
+						transactionId={transactionId}
+						vendorId={vendorId}
+					/>
 				</CampaignProvider>
 			);
 		}

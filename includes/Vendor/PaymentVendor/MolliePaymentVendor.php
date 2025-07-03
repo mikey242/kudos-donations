@@ -338,22 +338,6 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
         $payment_args['value']             = number_format(floatval($payment_args['value']), 2, '.', '');
         $redirect_url                      = $payment_args['return_url'];
 
-        // Add order id query arg to return url if option to show message enabled.
-		$campaign =  $this->get_repository(CampaignRepository::class)
-			->find((int) $payment_args['campaign_id']);
-		$show_return_message = $campaign[CampaignRepository::SHOW_RETURN_MESSAGE];
-        if ( ! empty($show_return_message)) {
-            $action       = 'order_complete';
-            $redirect_url = add_query_arg(
-                [
-                    'kudos_action'   => 'order_complete',
-                    'kudos_transaction_id' => $transaction_id,
-                    'kudos_nonce'    => wp_create_nonce($action . $transaction_id),
-                ],
-                $payment_args['return_url']
-            );
-        }
-
         // Create payment settings.
         $payment_array = [
             "amount"       => [
@@ -381,6 +365,24 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
         try {
             $payment = $this->api_client->payments->create($payment_array);
+
+	        // Add required params to return url.
+	        $campaign =  $this->get_repository(CampaignRepository::class)
+	                          ->find((int) $payment_args['campaign_id']);
+	        $show_return_message = $campaign[CampaignRepository::SHOW_RETURN_MESSAGE];
+	        $action       = 'order_complete';
+	        $payment->redirectUrl = add_query_arg(
+		        [
+			        'kudos_action'   => 'order_complete',
+			        'kudos_show_message' => $show_return_message,
+			        'kudos_transaction_id' => $transaction_id,
+			        'kudos_nonce'    => wp_create_nonce($action . $transaction_id),
+			        TransactionRepository::VENDOR_PAYMENT_ID => $payment->id
+		        ],
+		        $redirect_url
+	        );
+
+			$payment->update();
 
             $this->logger->info(
                 "New " . $this->get_name() . " payment created.",
@@ -555,11 +557,11 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * Mollie webhook handler.
 	 *
-	 * @param string $payment_id Request object.
+	 * @param string $vendor_payment_id The Mollie payment id.
 	 *
 	 * @throws RequestException
 	 */
-    public function handle_status_change(string $payment_id): bool {
+    public function handle_status_change(string $vendor_payment_id): bool {
 
 	        // Mollie API.
 	        $mollie = $this->api_client;
@@ -569,13 +571,13 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
              *
              * @link https://docs.mollie.com/reference/v2/payments-api/get-payment
              */
-            $payment = $mollie->payments->get($payment_id);
+            $payment = $mollie->payments->get($vendor_payment_id);
 
             // Log payment retrieval.
             $this->logger->debug(
                 "Payment retrieved from Mollie.",
                 [
-                    'vendor_id'      => $payment_id,
+                    'vendor_id'      => $vendor_payment_id,
                     'status'         => $payment->status,
                     'sequence_type'  => $payment->sequenceType,
                     'has_refunds'    => $payment->hasRefunds(),
@@ -642,7 +644,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
             if ( ! $transaction) {
                 $this->logger->warning(
                     'Webhook received for unknown transaction. Aborting',
-                    ['vendor_id' => $payment_id, 'transaction_id' => $payment->metadata->transaction_id]
+                    ['vendor_id' => $vendor_payment_id, 'transaction_id' => $payment->metadata->transaction_id]
                 );
 
                 return false;
@@ -661,8 +663,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
                  * The payment is paid and isn't refunded or charged back.
                  * If it already has an ID then it has already been processed.
                  */
-                if ($payment_id === $transaction[TransactionRepository::VENDOR_PAYMENT_ID]) {
-                    $this->logger->debug('Duplicate webhook detected. Ignoring', ['transaction_id' => $payment_id]);
+                if ($vendor_payment_id === $transaction[TransactionRepository::VENDOR_PAYMENT_ID]) {
+                    $this->logger->debug('Duplicate webhook detected. Ignoring', ['transaction_id' => $vendor_payment_id]);
 
                     return false;
                 }
@@ -842,5 +844,18 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				'default' => []
 			]
 		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function check_payment_status( string $payment_id ): ?string {
+		try {
+			$payment = $this->api_client->payments->get($payment_id);
+			return $payment->status;
+		} catch (RequestException $e) {
+			$this->logger->error('Error checking payment status', [ 'message' => $e->getMessage() ]);
+			return null;
+		}
 	}
 }
