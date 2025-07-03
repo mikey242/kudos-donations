@@ -10,6 +10,7 @@ import { useCampaignContext } from '../contexts';
 
 interface PaymentStatusProps {
 	transactionId: string;
+	vendorId: string;
 }
 interface KudosPayment {
 	data: {
@@ -20,7 +21,10 @@ interface KudosPayment {
 	};
 }
 
-export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
+export const PaymentStatus = ({
+	transactionId,
+	vendorId,
+}: PaymentStatusProps) => {
 	const { campaign, isLoading } = useCampaignContext();
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<ReactNode>(<Spinner />);
@@ -47,7 +51,7 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 			try {
 				const nonce = getNonceFromUrl();
 				const response = (await apiFetch({
-					path: `/kudos/v1/payment/status/?id=${transactionId}`,
+					path: `/kudos/v1/payment/status/?id=${transactionId}&vendorId=${vendorId}`,
 					headers: {
 						'X-Kudos-Nonce': nonce,
 					},
@@ -109,7 +113,7 @@ export const PaymentStatus = ({ transactionId }: PaymentStatusProps) => {
 		}, intervalTime);
 
 		return () => clearInterval(pollingRef.current);
-	}, [transactionId, campaign]);
+	}, [transactionId, campaign, vendorId]);
 
 	if (isLoading) {
 		return;

@@ -236,8 +236,10 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 
 			switch ( $action ) {
 				case 'order_complete':
-					$nonce          = isset( $_REQUEST['kudos_nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) ) : '';
-					$transaction_id = isset( $_REQUEST['kudos_transaction_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_transaction_id'] ) ) : '';
+					$nonce             = isset( $_REQUEST['kudos_nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) ) : '';
+					$transaction_id    = isset( $_REQUEST['kudos_transaction_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_transaction_id'] ) ) : '';
+					$vendor_payment_id = isset( $_REQUEST['vendor_payment_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['vendor_payment_id'] ) ) : '';
+
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
 						$transaction = $this->get_repository( TransactionRepository::class )->find( (int) $transaction_id );
@@ -247,7 +249,8 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 
 							$this->payment_status_modal_html(
 								(int) $transaction_id,
-								$campaign_id
+								$campaign_id,
+								$vendor_payment_id
 							);
 						}
 					}
@@ -301,17 +304,19 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 	/**
 	 * Create message modal with supplied header and body text.
 	 *
-	 * @param int $transaction_id The transaction id.
-	 * @param int $campaign_id The campaign id.
+	 * @param int     $transaction_id The transaction id.
+	 * @param int     $campaign_id The campaign id.
+	 * @param ?string $vendor_payment_id The vendor's payment id.
 	 */
-	private function payment_status_modal_html( int $transaction_id, int $campaign_id ): void {
+	private function payment_status_modal_html( int $transaction_id, int $campaign_id, ?string $vendor_payment_id = null ): void {
 		echo wp_kses(
-			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s'></div>", $transaction_id, $campaign_id ),
+			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s' data-vendor-id='%s' ></div>", $transaction_id, $campaign_id, $vendor_payment_id ),
 			[
 				'div' => [
 					'class'            => [],
 					'data-campaign'    => [],
 					'data-transaction' => [],
+					'data-vendor-id'   => [],
 				],
 			]
 		);

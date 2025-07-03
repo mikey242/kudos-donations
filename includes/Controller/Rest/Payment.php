@@ -193,10 +193,15 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'status' ],
 				'args'                => [
-					'id' => [
+					'id'       => [
 						'type'              => FieldType::INTEGER,
 						'required'          => true,
 						'sanitize_callback' => 'absint',
+					],
+					'vendorId' => [
+						'type'              => FieldType::STRING,
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 				'permission_callback' => '__return_true',
@@ -211,15 +216,21 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	 * @return WP_REST_Response | WP_Error Response object.
 	 */
 	public function status( WP_REST_Request $request ) {
-		$post_id = $request->get_param( 'id' );
-		$nonce   = $request->get_header( 'x-kudos-nonce' );
+		$entity_id         = $request->get_param( 'id' );
+		$vendor_payment_id = $request->get_param( 'vendorId' );
+		$nonce             = $request->get_header( 'x-kudos-nonce' );
 
-		if ( ! wp_verify_nonce( $nonce, 'order_complete' . $post_id ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'order_complete' . $entity_id ) ) {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
 		$transaction = $this->get_repository( TransactionRepository::class )
-			->find( $post_id );
+			->find( $entity_id );
+
+		if ( PaymentStatus::OPEN === $transaction[ TransactionRepository::STATUS ] && $vendor_payment_id ) {
+			$this->logger->debug( 'Status still open, manually calling handle_status_change' );
+			$this->vendor->handle_status_change( $vendor_payment_id );
+		}
 
 		if ( $transaction ) {
 			$data     = [
