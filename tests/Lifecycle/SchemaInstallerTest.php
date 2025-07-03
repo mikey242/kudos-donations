@@ -24,7 +24,7 @@ class SchemaInstallerTest extends BaseTestCase {
 		foreach (SchemaInstaller::TABLE_NAMES as $table) {
 			$this->assertTrue(
 				$this->wpdb->table_exists($table),
-				"Failed asserting table '$table' exists"
+				"Table does not exist: " . $this->wpdb->table($table)
 			);
 		}
 	}
