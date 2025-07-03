@@ -664,9 +664,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		}
 
 		// Exit early if already processed
-		if ( isset( $transaction[ TransactionRepository::STATUS ] )
-		     && $transaction[ TransactionRepository::STATUS ] !== PaymentStatus::OPEN ) {
-
+		if ( ! empty( $transaction[ TransactionRepository::STATUS ] ) && $transaction[ TransactionRepository::STATUS ] !== PaymentStatus::OPEN ) {
 			$this->logger->debug( 'Duplicate handle_status_change call. Skipping.', [
 				'payment_id'     => $vendor_payment_id,
 				'transaction_id' => $transaction[ BaseRepository::ID ],
