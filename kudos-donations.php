@@ -21,7 +21,6 @@
 
 namespace IseardMedia\Kudos;
 
-use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 
