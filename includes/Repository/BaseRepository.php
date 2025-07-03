@@ -429,4 +429,11 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			'sanitize_callback' => $sanitize,
 		];
 	}
+
+	/**
+	 * Gets a list of fields for the current repository as defined in get_column_schema().
+	 */
+	public function get_all_fields(): array {
+		return array_keys( static::get_column_schema() );
+	}
 }
