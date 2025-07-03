@@ -21,13 +21,6 @@ class SchemaInstallerTest extends BaseTestCase {
 	 * Ensure all Kudos tables are created.
 	 */
 	public function test_create_schema_creates_all_tables(): void {
-
-		/**
-		 * Temporary debug code.
-		 */
-		$tables = $this->wpdb->get_results('SHOW TABLES;');
-		error_log('List of tables currently present: ' . print_r($tables, true ));
-
 		foreach (SchemaInstaller::TABLE_NAMES as $table) {
 			$this->assertTrue(
 				$this->wpdb->table_exists($table),
