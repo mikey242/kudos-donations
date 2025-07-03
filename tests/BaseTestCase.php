@@ -58,21 +58,6 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 	}
 
 	/**
-	 * Check that specified table contains the specified columns.
-	 *
-	 * @param string $table The name of the table to check.
-	 * @param array $expected_columns Array of columns to look for.
-	 */
-	protected function assertTableHasColumns( string $table, array $expected_columns ): void {
-		$columns = $this->wpdb->get_results("SHOW COLUMNS FROM {$this->wpdb->table($table)}", ARRAY_A);
-		$column_names = array_column($columns, 'Field');
-
-		foreach ( $expected_columns as $column ) {
-			$this->assertContains($column, $column_names, "Missing expected column '$column' in '$table'");
-		}
-	}
-
-	/**
 	 * Clear the schema between runs.
 	 */
 	private function reset_plugin_schema() {
