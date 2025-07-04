@@ -6,7 +6,7 @@
 
 /* eslint-disable camelcase */
 
-import { KudosForm, KudosButtonAttributes } from './components';
+import { KudosButtonAttributes, KudosForm } from './components';
 import Message, { PaymentStatus } from './components/Message';
 import './kudos-fonts.css';
 import './kudos-front.css';
@@ -50,9 +50,7 @@ domReady(() => {
 			const campaignId = container.dataset.campaign;
 			root.render(
 				<CampaignProvider campaignId={campaignId}>
-					<PaymentStatus
-						transactionId={transactionId}
-					/>
+					<PaymentStatus transactionId={transactionId} />
 				</CampaignProvider>
 			);
 		}
