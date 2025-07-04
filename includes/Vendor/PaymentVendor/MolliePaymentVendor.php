@@ -397,11 +397,13 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 			// Update meta field from payment object.
 			$this->get_repository( TransactionRepository::class )
-			     ->save( [
-				     ...$transaction,
-				     TransactionRepository::CHECKOUT_URL      => $checkout_url,
-				     TransactionRepository::VENDOR_PAYMENT_ID => $payment->id
-			     ] );
+			     ->save(array_merge(
+				     $transaction,
+				     [
+					     TransactionRepository::CHECKOUT_URL      => $checkout_url,
+					     TransactionRepository::VENDOR_PAYMENT_ID => $payment->id,
+				     ]
+			     ));
 
 			return $checkout_url;
 		} catch ( RequestException $e ) {
