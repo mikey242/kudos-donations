@@ -66,7 +66,7 @@ interface PaymentVendorInterface {
 	 *
 	 * @return string|false
 	 */
-	public function create_payment( array $payment_args, array $transaction, ?string $vendor_customer_id );
+	public function create_payment( array $payment_args, array $transaction, ?string $vendor_customer_id = null );
 
 	/**
 	 * Refunds the provided transaction.
