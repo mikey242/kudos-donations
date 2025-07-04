@@ -333,7 +333,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-	public function create_payment( array $payment_args, array $transaction, ?string $vendor_customer_id ) {
+	public function create_payment( array $payment_args, array $transaction, ?string $vendor_customer_id = null ) {
 
 		$transaction_id = $transaction[ BaseRepository::ID ];
 
@@ -346,7 +346,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		// Add order id query arg to return url if option to show message enabled.
 		$campaign            = $this->get_repository( CampaignRepository::class )
 		                            ->find( (int) $payment_args['campaign_id'] );
-		$show_return_message = $campaign[ CampaignRepository::SHOW_RETURN_MESSAGE ];
+		$show_return_message = $campaign[ CampaignRepository::SHOW_RETURN_MESSAGE ] ?? false;
 		if ( ! empty( $show_return_message ) ) {
 			$action       = 'order_complete';
 			$redirect_url = add_query_arg(
@@ -416,12 +416,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 *
 	 * @return int|false
 	 */
-	public function create_subscription(
-		array $transaction,
-		string $mandate_id,
-		string $interval,
-		int $years
-	) {
+	public function create_subscription( array $transaction, string $mandate_id, string $interval, int $years	) {
 		$this->logger->debug( 'Creating subscription', [
 			'mandate_id' => $mandate_id,
 			'interval'   => $interval,
