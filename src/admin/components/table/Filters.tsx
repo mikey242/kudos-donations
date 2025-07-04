@@ -6,8 +6,7 @@ import { useAdminQueryParams } from '../../hooks';
 
 export interface Filter {
 	label: string;
-	meta_key: string;
-	meta_value: string;
+	where: Record<string, string>;
 }
 
 interface FiltersProps {
@@ -16,15 +15,34 @@ interface FiltersProps {
 
 export const Filters = ({ filters }: FiltersProps) => {
 	const { updateParams, resetFilterParams, params } = useAdminQueryParams();
-	const { meta_key, meta_value } = params;
+	const currentWhere = params.where || {};
 
 	if (!filters) {
 		return;
 	}
 
-	const activeInList = filters.some(
-		(filter) =>
-			filter.meta_key === meta_key && filter.meta_value === meta_value
+	const activeFilter = filters.find((filter) =>
+		Object.entries(filter.where).every(
+			([key, value]) => currentWhere[key] === value
+		)
+	);
+
+	const handleClick = (filter?: Filter) => {
+		if (!filter) {
+			resetFilterParams();
+			return;
+		}
+
+		void updateParams({
+			where: { ...params.where, ...filter.where },
+			paged: 1,
+		});
+	};
+
+	// For displaying unknown filters
+	const knownKeys = filters.flatMap((f) => Object.keys(f.where));
+	const otherFilters = Object.entries(currentWhere).filter(
+		([key]) => !knownKeys.includes(key)
 	);
 
 	return (
@@ -32,7 +50,7 @@ export const Filters = ({ filters }: FiltersProps) => {
 			<Flex gap={1} align="center" wrap>
 				<Button
 					size="compact"
-					isPressed={!meta_key && !meta_value}
+					isPressed={Object.keys(currentWhere).length === 0}
 					onClick={resetFilterParams}
 				>
 					{__('All', 'kudos-donations')}
@@ -40,36 +58,34 @@ export const Filters = ({ filters }: FiltersProps) => {
 				{filters?.map((filter: Filter) => (
 					<Button
 						size="compact"
-						key={`${filter.meta_key}:${filter.meta_value}`}
-						isPressed={
-							meta_key === filter.meta_key &&
-							meta_value === filter.meta_value
-						}
-						onClick={() =>
-							updateParams({
-								meta_key: filter.meta_key,
-								meta_value: filter.meta_value,
-								paged: 1,
-							})
-						}
+						key={JSON.stringify(filter.where)}
+						isPressed={activeFilter === filter}
+						onClick={() => handleClick(filter)}
 					>
 						{filter.label}
 					</Button>
 				))}
-				{meta_key && meta_value && !activeInList && (
+				{otherFilters.map(([key, value]) => (
 					<Button
 						size="compact"
-						isPressed
+						variant="primary"
+						key={`${key}:${value}`}
+						icon="dismiss"
+						iconSize={15}
 						onClick={() =>
 							updateParams({
-								meta_key,
-								meta_value,
+								where: Object.fromEntries(
+									Object.entries(currentWhere).filter(
+										([k]) => k !== key
+									)
+								),
+								paged: 1,
 							})
 						}
 					>
-						{`${meta_key}: ${meta_value}`}
+						{`${key}: ${value}`}
 					</Button>
-				)}
+				))}
 			</Flex>
 		</Panel>
 	);

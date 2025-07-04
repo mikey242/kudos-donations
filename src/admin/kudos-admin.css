@@ -67,10 +67,6 @@
 
 .kudos-admin-page {
 
-	.components-button svg {
-		fill: none;
-	}
-
 	h1 {
 		font-weight: 600;
 		padding: 0;
@@ -195,6 +191,14 @@
 			.components-panel {
 				border-radius: var(--kudos-rounded);
 			}
+		}
+	}
+
+
+	.kudos-table-paginator {
+
+		.components-button svg {
+			fill: none;
 		}
 	}
 

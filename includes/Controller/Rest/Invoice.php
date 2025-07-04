@@ -4,7 +4,7 @@
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
@@ -20,9 +20,10 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Invoice extends AbstractRestController {
+class Invoice extends BaseRestController {
 
 	private InvoiceService $invoice;
+	private PDFService $pdf;
 
 	/**
 	 * PaymentRoutes constructor.
@@ -31,8 +32,6 @@ class Invoice extends AbstractRestController {
 	 * @param InvoiceService $invoice Invoice service.
 	 */
 	public function __construct( PDFService $pdf, InvoiceService $invoice ) {
-		parent::__construct();
-
 		$this->rest_base = 'invoice';
 		$this->pdf       = $pdf;
 		$this->invoice   = $invoice;
@@ -43,7 +42,7 @@ class Invoice extends AbstractRestController {
 	 */
 	public function get_routes(): array {
 		return [
-			'/get/transaction/(?P<id>\d+)' => [
+			'/(?P<id>\d+)' => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_invoice' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
@@ -60,7 +59,7 @@ class Invoice extends AbstractRestController {
 					],
 				],
 			],
-			'/regenerate'                  => [
+			'/regenerate'  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'regenerate_invoices' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],

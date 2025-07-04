@@ -15,12 +15,12 @@ import { isEmpty } from 'lodash';
 import { useDispatch } from '@wordpress/data';
 import {
 	useAdminContext,
-	usePostsContext,
+	useEntitiesContext,
 	useSettingsContext,
 } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 import { Button } from '@wordpress/components';
 import GenerateShortcode from './GenerateShortcode';
 
@@ -52,13 +52,13 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
-			title: campaign?.title?.raw,
+			title: campaign?.title,
 		},
 		reValidateMode: 'onSubmit',
 	});
 	const { reset, handleSubmit, formState } = methods;
 	const { createWarningNotice } = useDispatch(noticesStore);
-	const { handleUpdate } = usePostsContext();
+	const { handleUpdate } = useEntitiesContext();
 
 	useEffect(() => {
 		if (campaign) {
@@ -67,7 +67,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 					campaign={campaign}
 					onBack={() => {
 						void updateParams({
-							post: null,
+							entity: null,
 							tab: null,
 						});
 					}}
@@ -83,7 +83,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 		if (campaign) {
 			reset({
 				...campaign,
-				title: campaign.title.raw,
+				title: campaign.title,
 			});
 		}
 	}, [campaign, reset]);

@@ -8,51 +8,51 @@ export const TextFieldsTab = () => {
 		<>
 			<Panel header={__('Initial tab', 'kudos-donations')}>
 				<TextControl
-					name="meta.initial_title"
+					name="initial_title"
 					label={__('Title', 'kudos-donations')}
 				/>
 				<TextAreaControl
-					name="meta.initial_description"
+					name="initial_description"
 					label={__('Text', 'kudos-donations')}
 				/>
 			</Panel>
 			<Panel header={__('Subscription tab', 'kudos-donations')}>
 				<TextControl
-					name="meta.subscription_title"
+					name="subscription_title"
 					label={__('Title', 'kudos-donations')}
 				/>
 				<TextAreaControl
-					name="meta.subscription_description"
+					name="subscription_description"
 					label={__('Text', 'kudos-donations')}
 				/>
 			</Panel>
 			<Panel header={__('Address tab', 'kudos-donations')}>
 				<TextControl
-					name="meta.address_title"
+					name="address_title"
 					label={__('Title', 'kudos-donations')}
 				/>
 				<TextAreaControl
-					name="meta.address_description"
+					name="address_description"
 					label={__('Text', 'kudos-donations')}
 				/>
 			</Panel>
 			<Panel header={__('Message tab', 'kudos-donations')}>
 				<TextControl
-					name="meta.message_title"
+					name="message_title"
 					label={__('Title', 'kudos-donations')}
 				/>
 				<TextAreaControl
-					name="meta.message_description"
+					name="message_description"
 					label={__('Text', 'kudos-donations')}
 				/>
 			</Panel>
 			<Panel header={__('Payment tab', 'kudos-donations')}>
 				<TextControl
-					name="meta.payment_title"
+					name="payment_title"
 					label={__('Title', 'kudos-donations')}
 				/>
 				<TextAreaControl
-					name="meta.payment_description"
+					name="payment_description"
 					label={__('Text', 'kudos-donations')}
 				/>
 			</Panel>

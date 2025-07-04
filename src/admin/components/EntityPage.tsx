@@ -1,15 +1,17 @@
 import React from 'react';
 import { useEffect, useState } from '@wordpress/element';
-import { usePostsContext } from '../contexts';
-import type { Post } from '../../types/posts';
+import { useEntitiesContext } from '../contexts';
+import type { BaseEntity } from '../../types/entity';
 import { useAdminQueryParams } from '../hooks';
+import apiFetch from '@wordpress/api-fetch';
+import { addQueryArgs } from '@wordpress/url';
 
 interface EntityPageProps {
 	renderTable: (
 		editPost: (id: string | number) => void,
-		newPost: (e: React.SyntheticEvent | Partial<Post>) => void
+		newPost: (e: React.SyntheticEvent | Partial<BaseEntity>) => void
 	) => React.ReactNode;
-	renderEdit?: (post: Post) => React.ReactNode;
+	renderEdit?: (post: BaseEntity) => React.ReactNode;
 }
 
 export const EntityPage = ({
@@ -17,33 +19,44 @@ export const EntityPage = ({
 	renderEdit,
 }: EntityPageProps): React.ReactNode => {
 	const { params, updateParams } = useAdminQueryParams();
-	const { post: postId } = params;
-	const [currentPost, setCurrentPost] = useState<Post | null>(null);
-	const { posts, handleNew } = usePostsContext<Post>();
+	const { entity: entityId } = params;
+	const [currentEntity, setCurrentEntity] = useState<BaseEntity | null>(null);
+	const { entities, handleNew, entityType, hasResolved } =
+		useEntitiesContext<BaseEntity>();
 
-	const newPost = async (input: React.SyntheticEvent | Partial<Post>) => {
-		await handleNew(input).then((response) => {
+	const newPost = async () => {
+		await handleNew().then((response) => {
 			if (response?.id) {
-				updateParams({ post: response.id });
+				updateParams({ entity: response.id });
 			}
 		});
 	};
 
 	const editPost = (id: number) => {
-		void updateParams({ post: id });
+		void updateParams({ entity: id });
 	};
 
 	useEffect(() => {
-		if (postId && posts) {
-			const found = posts.find((post) => post.id === Number(postId));
-			setCurrentPost(found ?? null);
+		if (entityId && hasResolved) {
+			const found = entities.find(
+				(entity) => Number(entity.id) === Number(entityId)
+			);
+			if (found) {
+				setCurrentEntity(found);
+			} else {
+				apiFetch({
+					path: addQueryArgs(`/kudos/v1/${entityType}/${entityId}`),
+				}).then((response: BaseEntity) => {
+					setCurrentEntity(response);
+				});
+			}
 		}
-	}, [postId, posts]);
+	}, [entityId, entities, entityType, hasResolved]);
 
 	return (
 		<>
-			{postId && renderEdit ? (
-				<div className="admin-wrap"> {renderEdit(currentPost)}</div>
+			{entityId && renderEdit ? (
+				<div className="admin-wrap"> {renderEdit(currentEntity)}</div>
 			) : (
 				<div className="admin-wrap-wide">
 					{renderTable(editPost, newPost)}
