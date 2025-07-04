@@ -66,4 +66,14 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 			$this->wpdb->query("DROP TABLE IF EXISTS $full_table");
 		}
 	}
+
+	/**
+	 * Helper to assert provided string is a valid URL.
+	 */
+	protected function assertValidUrl(string $url): void {
+		$this->assertNotFalse(
+			filter_var($url, FILTER_VALIDATE_URL),
+			"Invalid URL: $url"
+		);
+	}
 }
