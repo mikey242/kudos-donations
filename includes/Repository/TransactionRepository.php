@@ -60,7 +60,7 @@ class TransactionRepository extends BaseRepository {
 	 */
 	public function get_additional_column_schema(): array {
 		return [
-			self::VALUE             => $this->make_schema_field( FieldType::NUMBER, null, [ Utils::class, 'sanitize_float' ] ),
+			self::VALUE             => $this->make_schema_field( FieldType::FLOAT, null, [ Utils::class, 'sanitize_float' ] ),
 			self::CURRENCY          => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::STATUS            => $this->make_schema_field( FieldType::STRING, PaymentStatus::OPEN, 'sanitize_text_field' ),
 			self::METHOD            => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
