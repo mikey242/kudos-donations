@@ -53,7 +53,7 @@ class SubscriptionRepository extends BaseRepository {
 	 */
 	public function get_additional_column_schema(): array {
 		return [
-			self::VALUE                  => $this->make_schema_field( FieldType::NUMBER, null, 'floatval' ),
+			self::VALUE                  => $this->make_schema_field( FieldType::FLOAT, null, [ Utils::class, 'sanitize_float' ] ),
 			self::CURRENCY               => $this->make_schema_field( FieldType::STRING, 'EUR', 'sanitize_text_field' ),
 			self::FREQUENCY              => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
 			self::YEARS                  => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
