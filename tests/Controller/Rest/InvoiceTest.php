@@ -7,6 +7,8 @@ namespace Controller\Rest;
 
 use BaseTestCase;
 use Dompdf\Dompdf;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\PDFService;
@@ -41,21 +43,19 @@ class InvoiceTest extends BaseTestCase {
 		$donor_repository = new DonorRepository($this->wpdb);
 
 		// Create Donor and link to Transaction.
-		$donor_id = $donor_repository->save([
-			DonorRepository::NAME => 'John Smith'
-		]);
+		$donor = new DonorEntity(['name' => 'John Smith']);
+		$donor_id = $donor_repository->upsert($donor);
 
-		$transaction_id = $transaction_repository->save(
-			[
-				TransactionRepository::DONOR_ID => $donor_id,
-				TransactionRepository::VENDOR_PAYMENT_ID => 'tr_12345',
-				TransactionRepository::VENDOR => MolliePaymentVendor::get_slug(),
-				TransactionRepository::SEQUENCE_TYPE => 'oneoff',
-				TransactionRepository::INVOICE_NUMBER => 1,
-				TransactionRepository::CURRENCY => 'EUR',
-				TransactionRepository::VALUE => '10',
-			]
-		);
+		$transaction = new TransactionEntity([
+			'donor_id'          => $donor_id,
+			'vendor_payment_id' => 'tr_12345',
+			'vendor'            => MolliePaymentVendor::get_slug(),
+			'sequence_type'     => 'oneoff',
+			'invoice_number'    => 1,
+			'currency'          => 'EUR',
+			'value'             => 10.00,
+		]);
+		$transaction_id = $transaction_repository->upsert($transaction);
 
 		// Define Request.
 		$this->request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/$transaction_id" );

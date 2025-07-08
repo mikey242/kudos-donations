@@ -12,6 +12,8 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use Exception;
+use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
@@ -22,6 +24,9 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
+/**
+ * @extends BaseRepositoryRestController<CampaignEntity>
+ */
 class Subscription extends BaseRepositoryRestController {
 
 	public const ROUTE_CANCEL = '/cancel';
@@ -65,12 +70,14 @@ class Subscription extends BaseRepositoryRestController {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @param SubscriptionEntity $item Subscription entity.
 	 */
-	protected function add_rest_fields( array $item ): array {
-		$item['donor']       = $this->repository->get_donor( $item );
-		$item['transaction'] = $this->repository->get_transaction( $item );
-		$item['campaign']    = $this->repository->get_campaign( $item );
-		return $item;
+	protected function add_rest_fields( $item ): array {
+		$item->donor       = $this->repository->get_donor( $item );
+		$item->transaction = $this->repository->get_transaction( $item );
+		$item->campaign    = $this->repository->get_campaign( $item );
+		return (array) $item;
 	}
 
 	/**
@@ -117,25 +124,22 @@ class Subscription extends BaseRepositoryRestController {
 		}
 
 		// Get subscription post from supplied row id.
-		$subscription = $this->repository->find( $post_id );
+		/** @var SubscriptionEntity $subscription */
+		$subscription = $this->repository->get( $post_id );
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
 
 		if ( $result ) {
 			// Cancelling was successful. Update entity with canceled status.
-			$this->repository->save(
-				[
-					BaseRepository::ID             => (int) $post_id,
-					SubscriptionRepository::STATUS => 'cancelled',
-				]
-			);
+			$subscription->status = 'cancelled';
+			$this->repository->upsert( $subscription );
 
 			$this->logger->info(
 				'Subscription cancelled.',
 				[
 					BaseRepository::ID => $post_id,
-					'subscription_id'  => $subscription[ SubscriptionRepository::VENDOR_SUBSCRIPTION_ID ],
+					'subscription_id'  => $subscription->vendor_subscription_id,
 				]
 			);
 			return new WP_REST_Response(

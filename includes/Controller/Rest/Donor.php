@@ -11,31 +11,29 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Entity\DonorEntity;
 use IseardMedia\Kudos\Repository\DonorRepository;
-use IseardMedia\Kudos\Repository\TransactionRepository;
 
+/**
+ * @extends BaseRepositoryRestController<DonorEntity>
+ */
 class Donor extends BaseRepositoryRestController {
-
-	private TransactionRepository $transaction_repository;
 
 	/**
 	 * Campaign rest route constructor.
 	 *
-	 * @param DonorRepository       $repository The campaign repository.
-	 * @param TransactionRepository $transaction_repository The transaction repository.
+	 * @param DonorRepository $repository The campaign repository.
 	 */
-	public function __construct( DonorRepository $repository, TransactionRepository $transaction_repository ) {
-		$this->rest_base              = 'donor';
-		$this->repository             = $repository;
-		$this->transaction_repository = $transaction_repository;
+	public function __construct( DonorRepository $repository ) {
+		$this->rest_base  = 'donor';
+		$this->repository = $repository;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function add_rest_fields( array $item ): array {
-		$item['total'] = $this->transaction_repository->get_total_by_donor_id( (int) $item[ BaseRepository::ID ] );
-		return $item;
+	protected function add_rest_fields( $item ): array {
+		$item->total = $this->get_transaction_repository()->get_total_by_donor_id( $item->id );
+		return (array) $item;
 	}
 }

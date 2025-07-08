@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Repository;
 
+use IseardMedia\Kudos\Entity\BaseEntity;
+
 trait RepositoryAwareTrait {
 
 	protected ?RepositoryManager $repository_manager = null;
@@ -39,14 +41,43 @@ trait RepositoryAwareTrait {
 	/**
 	 * Get a specific repository instance by FQCN.
 	 *
-	 * @param class-string<T> $class_name Repository class name.
-	 * @return T
+	 * @param class-string<TRepository> $class_name Repository class name.
+	 * @return TRepository
 	 *
-	 * @template T of RepositoryInterface
+	 * @template TEntity of BaseEntity
+	 * @template TRepository of BaseRepository<TEntity>
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
-	protected function get_repository( string $class_name ): RepositoryInterface {
+	protected function get_repository( string $class_name ) {
 		return $this->get_repository_manager()->get( $class_name );
+	}
+
+	/**
+	 * Returns and instance of the CampaignRepository.
+	 */
+	protected function get_campaign_repository(): CampaignRepository {
+		return $this->get_repository( CampaignRepository::class );
+	}
+
+	/**
+	 * Returns and instance of the DonorRepository.
+	 */
+	protected function get_donor_repository(): DonorRepository {
+		return $this->get_repository( DonorRepository::class );
+	}
+
+	/**
+	 * Returns and instance of the TransactionRepository.
+	 */
+	protected function get_transaction_repository(): TransactionRepository {
+		return $this->get_repository( TransactionRepository::class );
+	}
+
+	/**
+	 * Returns and instance of the SubscriptionRepository.
+	 */
+	protected function get_subscription_repository(): SubscriptionRepository {
+		return $this->get_repository( SubscriptionRepository::class );
 	}
 }

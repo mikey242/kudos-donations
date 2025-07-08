@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Admin\DebugAdminPage;
-use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\CacheService;
@@ -70,7 +70,7 @@ class Admin extends BaseController {
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_campaigns' ) ) {
 						$campaigns = $this->get_repository( CampaignRepository::class )->all();
 						foreach ( $campaigns as $campaign ) {
-							wp_delete_post( $campaign->ID, true );
+							wp_delete_post( $campaign->id, true );
 						}
 					}
 					break;
@@ -99,8 +99,9 @@ class Admin extends BaseController {
 					break;
 				case 'kudos_assign_transactions_to_campaign':
 					if ( wp_verify_nonce( $nonce, 'kudos_assign_transactions_to_campaign' ) ) {
-						$from = $_POST['kudos_from_campaign'];
-						$to   = $_POST['kudos_to_campaign'];
+						$from             = $_POST['kudos_from_campaign'];
+						$to               = $_POST['kudos_to_campaign'];
+						$transaction_repo = $this->get_repository( TransactionRepository::class );
 
 						switch ( $from ) {
 							case '_orphaned_transactions_':
@@ -108,16 +109,16 @@ class Admin extends BaseController {
 								break;
 							case '_all_transactions_':
 								$transactions = array_map(
-									fn( $t ) => $t->ID,
-									$this->get_repository( TransactionRepository::class )->all()
+									fn( $t ) => $t->id,
+									$transaction_repo->all()
 								);
 								break;
 							default:
 								$transactions = array_map(
-									fn( $t ) => $t->ID,
-									$this->get_repository( TransactionRepository::class )->find_by(
+									fn( $t ) => $t->id,
+									$transaction_repo->find_by(
 										[
-											TransactionRepository::CAMPAIGN_ID => $from,
+											'campaign_id' => $from,
 										]
 									)
 								);
@@ -133,12 +134,8 @@ class Admin extends BaseController {
 						);
 
 						foreach ( $transactions as $transaction ) {
-							$this->get_repository( TransactionRepository::class )->save(
-								[
-									BaseRepository::ID => $transaction,
-									TransactionRepository::CAMPAIGN_ID => $to,
-								]
-							);
+							$transaction->campaign_id = $to;
+							$transaction_repo->upsert( $transaction );
 						}
 					}
 					break;
@@ -196,18 +193,21 @@ class Admin extends BaseController {
 
 	/**
 	 * Gets a list of transactions with no Campaign.
+	 *
+	 * @return TransactionEntity[]
 	 */
 	private function get_orphan_transaction_ids(): array {
+		/** @var TransactionEntity[] $transactions */
 		$transactions           = $this->get_repository( TransactionRepository::class )->all();
 		$orphan_transaction_ids = [];
 
 		foreach ( $transactions as $transaction ) {
-			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
+			$campaign_id = $transaction->campaign_id;
 
-			$is_missing = empty( $campaign_id ) || ! $this->get_repository( CampaignRepository::class )->find( $campaign_id );
+			$is_missing = empty( $campaign_id ) || ! $this->get_repository( CampaignRepository::class )->get( $campaign_id );
 
 			if ( $is_missing ) {
-				$orphan_transaction_ids[] = $transaction[ BaseRepository::ID ];
+				$orphan_transaction_ids[] = $transaction->id;
 			}
 		}
 

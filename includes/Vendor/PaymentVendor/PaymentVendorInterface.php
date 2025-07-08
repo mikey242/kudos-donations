@@ -2,6 +2,8 @@
 
 namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -43,11 +45,11 @@ interface PaymentVendorInterface {
 	/**
 	 * Cancel the specified subscription.
 	 *
-	 * @param array $subscription subscription row.
+	 * @param SubscriptionEntity $subscription subscription row.
 	 *
 	 * @return bool
 	 */
-	public function cancel_subscription( array $subscription ): bool;
+	public function cancel_subscription( SubscriptionEntity $subscription ): bool;
 
 	/**
 	 * Create a customer.
@@ -61,12 +63,12 @@ interface PaymentVendorInterface {
 	 * Creates a payment and returns it as an object.
 	 *
 	 * @param array $payment_args Parameters to pass to mollie to create a payment.
-	 * @param array $transaction The transaction entity array.
+	 * @param TransactionEntity $transaction The transaction entity array.
 	 * @param ?string $vendor_customer_id The vendors customer id.
 	 *
 	 * @return string|false
 	 */
-	public function create_payment( array $payment_args, array $transaction, ?string $vendor_customer_id = null );
+	public function create_payment( array $payment_args, TransactionEntity $transaction, ?string $vendor_customer_id = null );
 
 	/**
 	 * Refunds the provided transaction.

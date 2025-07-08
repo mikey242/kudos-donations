@@ -11,14 +11,16 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Repository\BaseRepository;
-use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
+use IseardMedia\Kudos\Repository\SanitizeTrait;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
@@ -30,6 +32,7 @@ use WP_REST_Server;
 class Payment extends BaseRestController implements RepositoryAwareInterface {
 
 	use RepositoryAwareTrait;
+	use SanitizeTrait;
 
 	public const ROUTE_CREATE            = '/create';
 	public const ROUTE_REFUND            = '/refund';
@@ -74,7 +77,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 					'value'         => [
 						'type'              => FieldType::NUMBER,
 						'required'          => true,
-						'sanitize_callback' => [ Utils::class, 'sanitize_float' ],
+						'sanitize_callback' => [ $this, 'sanitize_float' ],
 					],
 					'name'          => [
 						'type'              => FieldType::STRING,
@@ -218,25 +221,27 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
+		/** @var TransactionEntity $transaction */
 		$transaction = $this->get_repository( TransactionRepository::class )
-							->find( $entity_id );
+			->get( $entity_id );
 
-		if ( PaymentStatus::OPEN === $transaction[ TransactionRepository::STATUS ] ) {
+		if ( PaymentStatus::OPEN === $transaction->status ) {
 			$this->logger->debug( 'Status still open, manually calling handle_status_change' );
-			$this->vendor->handle_status_change( $transaction[ TransactionRepository::VENDOR_PAYMENT_ID ] );
+			$this->vendor->handle_status_change( $transaction->vendor_payment_id );
 		}
 
 		if ( $transaction ) {
 			$data     = [
-				'status'   => $transaction[ TransactionRepository::STATUS ],
-				'currency' => $transaction[ TransactionRepository::CURRENCY ],
-				'value'    => $transaction[ TransactionRepository::VALUE ],
+				'status'   => $transaction->status,
+				'currency' => $transaction->currency,
+				'value'    => $transaction->value,
 			];
-			$donor_id = $transaction[ TransactionRepository::DONOR_ID ];
+			$donor_id = $transaction->donor_id;
 			if ( $donor_id ) {
-				$donor                         = $this->get_repository( DonorRepository::class )
-														->find( $donor_id );
-				$data[ DonorRepository::NAME ] = $donor[ DonorRepository::NAME ];
+				/** @var DonorEntity $donor */
+				$donor        = $this->get_repository( DonorRepository::class )
+														->get( $donor_id );
+				$data['name'] = $donor->name;
 			}
 
 			return new WP_REST_Response(
@@ -275,11 +280,12 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			return new WP_REST_Response( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ], 400 );
 		}
 
-		$campaign = $this->get_repository( CampaignRepository::class )
-						->find( (int) $values['campaign_id'] );
+		/** @var CampaignEntity $campaign */
+		$campaign = $this->get_campaign_repository()
+						->get( (int) $values['campaign_id'] );
 
 		$defaults = [
-			'currency'         => $campaign['currency'],
+			'currency'         => $campaign->currency,
 			'recurring_length' => 0,
 			'return_url'       => get_site_url(),
 			'name'             => null,
@@ -302,65 +308,62 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 		// If email found, try to find an existing customer or create a new one.
 		if ( $args['email'] ) {
 
-			$donor_meta = [
-				DonorRepository::MODE          => $this->vendor->get_api_mode(),
-				DonorRepository::EMAIL         => $args['email'],
-				DonorRepository::NAME          => $args['name'],
-				DonorRepository::BUSINESS_NAME => $args['business_name'],
-				DonorRepository::STREET        => $args['street'],
-				DonorRepository::POSTCODE      => $args['postcode'],
-				DonorRepository::CITY          => $args['city'],
-				DonorRepository::COUNTRY       => $args['country'],
-				DonorRepository::LOCALE        => Utils::normalize_locale( $args['language'] ),
+			$donor_args = [
+				'mode'          => $this->vendor->get_api_mode(),
+				'email'         => $args['email'],
+				'name'          => $args['name'],
+				'business_name' => $args['business_name'],
+				'street'        => $args['street'],
+				'postcode'      => $args['postcode'],
+				'city'          => $args['city'],
+				'country'       => $args['country'],
+				'locale'        => Utils::normalize_locale( $args['language'] ),
 			];
 
 			// Search for existing donor based on email and mode.
-			$donor = $this->get_repository( DonorRepository::class )
-							->find_one_by(
-								[
-									DonorRepository::EMAIL => $args['email'],
-									DonorRepository::MODE  => $this->vendor->get_api_mode(),
-								]
-							);
+			$donor = $this->get_donor_repository()
+				->find_one_by(
+					[
+						'email' => $args['email'],
+						'mode'  => $this->vendor->get_api_mode(),
+					]
+				);
 
-			// Create new customer with vendor if none found.
 			if ( empty( $donor ) ) {
-				$customer = $this->vendor->create_customer( $args[ DonorRepository::EMAIL ], $args[ DonorRepository::NAME ] );
-				$donor_meta[ DonorRepository::VENDOR_CUSTOMER_ID ] = $customer->id;
+				// Create new customer with vendor if none found.
+				$customer                         = $this->vendor->create_customer( $args['email'], $args['name'] );
+				$donor_args['vendor_customer_id'] = $customer->id;
+				$donor                            = new DonorEntity( $donor_args );
+			} else {
+				// Otherwise update existing donor object.
+				$donor->fill( $donor_args );
 			}
 
-			// Update or create donor.
-			$donor_id = $this->get_repository( DonorRepository::class )
-							->save(
-								array_merge(
-									$donor ? [
-										BaseRepository::ID => $donor[ BaseRepository::ID ],
-									] : [],
-									$donor_meta
-								)
-							);
-			$donor    = $this->get_repository( DonorRepository::class )->find( $donor_id );
+			// Save donor and fetch updated record.
+			$donor_id = $this->get_donor_repository()
+				->upsert( $donor );
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
-		$vendor_customer_id = $donor[ DonorRepository::VENDOR_CUSTOMER_ID ] ?? null;
-		$transaction_id     = $this->get_repository( TransactionRepository::class )->save(
+		$vendor_customer_id = $donor->vendor_customer_id ?? null;
+		$transaction        = new TransactionEntity(
 			[
-				TransactionRepository::DONOR_ID      => $donor_id ?? null,
-				TransactionRepository::VALUE         => $args[ TransactionRepository::VALUE ],
-				TransactionRepository::CURRENCY      => $args[ TransactionRepository::CURRENCY ],
-				TransactionRepository::STATUS        => PaymentStatus::OPEN,
-				TransactionRepository::MODE          => $this->vendor->get_api_mode(),
-				TransactionRepository::SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
-				TransactionRepository::CAMPAIGN_ID   => (int) $args[ TransactionRepository::CAMPAIGN_ID ],
-				TransactionRepository::MESSAGE       => $args[ TransactionRepository::MESSAGE ],
-				TransactionRepository::VENDOR        => $this->vendor::get_slug(),
+				'donor_id'      => $donor_id ?? null,
+				'value'         => $args['value'],
+				'currency'      => $args['currency'],
+				'status'        => PaymentStatus::OPEN,
+				'mode'          => $this->vendor->get_api_mode(),
+				'sequence_type' => 'true' === $args['recurring'] ? 'first' : 'oneoff',
+				'campaign_id'   => (int) $args['campaign_id'],
+				'message'       => $args['message'],
+				'vendor'        => $this->vendor::get_slug(),
 			]
 		);
 
+		$transaction_id = $this->get_repository( TransactionRepository::class )->upsert( $transaction );
 		// Create payment with vendor.
 		$transaction = $this->get_repository( TransactionRepository::class )
-							->find( $transaction_id );
+							->get( $transaction_id );
 		$url         = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created.

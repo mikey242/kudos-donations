@@ -26,14 +26,14 @@ class DonorsFixtures extends BaseFixtures {
 	 */
 	protected function generate_random_entity(): array {
 		return [
-			DonorRepository::NAME               => $this->faker->name(),
-			DonorRepository::EMAIL              => $this->faker->email(),
-			DonorRepository::COUNTRY            => $this->faker->countryCode(),
-			DonorRepository::BUSINESS_NAME      => $this->faker->company(),
-			DonorRepository::POSTCODE           => $this->faker->postcode(),
-			DonorRepository::STREET             => $this->faker->streetAddress(),
-			DonorRepository::CITY               => $this->faker->city(),
-			DonorRepository::VENDOR_CUSTOMER_ID => 'cst_' . wp_rand( 1000000, 9999999 ),
+			'name'               => $this->faker->name(),
+			'email'              => $this->faker->email(),
+			'country'            => $this->faker->countryCode(),
+			'business_name'      => $this->faker->company(),
+			'postcode'           => $this->faker->postcode(),
+			'street'             => $this->faker->streetAddress(),
+			'city'               => $this->faker->city(),
+			'vendor_customer_id' => 'cst_' . wp_rand( 1000000, 9999999 ),
 		];
 	}
 }
