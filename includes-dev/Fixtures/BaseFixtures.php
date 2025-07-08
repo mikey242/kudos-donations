@@ -87,6 +87,7 @@ abstract class BaseFixtures {
 			if ( ! $result ) {
 				WP_CLI::halt( 1 );
 			}
+			$entity    = $this->repository->get( $result );
 			$created[] = $result;
 			WP_CLI::log( "Created $singular_name: " . $entity->title );
 		}
