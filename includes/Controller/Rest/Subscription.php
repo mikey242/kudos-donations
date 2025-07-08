@@ -133,7 +133,7 @@ class Subscription extends BaseRepositoryRestController {
 		if ( $result ) {
 			// Cancelling was successful. Update entity with canceled status.
 			$subscription->status = 'cancelled';
-			$this->repository->upsert( $subscription );
+			$this->repository->update( $subscription );
 
 			$this->logger->info(
 				'Subscription cancelled.',

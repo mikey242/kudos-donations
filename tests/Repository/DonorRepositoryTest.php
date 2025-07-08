@@ -27,7 +27,7 @@ class DonorRepositoryTest extends BaseTestCase {
 	 */
 	public function test_save_creates_campaign(): void {
 		$campaign = new CampaignEntity([ 'title' => 'Test Donor']);
-		$id = $this->donor_repository->upsert($campaign);
+		$id = $this->donor_repository->insert($campaign);
 
 		$this->assertIsInt($id);
 		$this->assertGreaterThan(0, $id);
@@ -38,7 +38,7 @@ class DonorRepositoryTest extends BaseTestCase {
 	 */
 	public function test_find_returns_donor_by_id(): void {
 		$donor = new DonorEntity([ 'title' => 'Find me' ]);
-		$id = $this->donor_repository->upsert($donor);
+		$id = $this->donor_repository->insert($donor);
 
 		$donor = $this->donor_repository->get($id);
 
@@ -65,10 +65,10 @@ class DonorRepositoryTest extends BaseTestCase {
 	 */
 	public function test_save_updates_existing_donor(): void {
 		$donor = new DonorEntity([ 'email' => 'original@example.com' ]);
-		$id = $this->donor_repository->upsert($donor);
+		$id = $this->donor_repository->insert($donor);
 		$donor->id = $id;
 		$donor->email = 'updated@example.com';
-		$this->donor_repository->upsert($donor);
+		$this->donor_repository->update($donor);
 
 		/** @var DonorEntity $updated */
 		$updated = $this->donor_repository->get($id);
@@ -81,7 +81,7 @@ class DonorRepositoryTest extends BaseTestCase {
 	 */
 	public function test_find_by_returns_expected_results(): void {
 		$donor = new DonorEntity([ 'email' => 'unique@example.com' ]);
-		$this->donor_repository->upsert($donor);
+		$this->donor_repository->insert($donor);
 		/** @var DonorEntity[] $results */
 		$results = $this->donor_repository->find_by([ 'email' => 'unique@example.com' ]);
 
@@ -111,7 +111,7 @@ class DonorRepositoryTest extends BaseTestCase {
 	 */
 	public function test_delete_removes_donor(): void {
 		$donor = new DonorEntity([ 'email' => 'todelete@example.com' ]);
-		$id = $this->donor_repository->upsert($donor);
+		$id = $this->donor_repository->insert($donor);
 		$deleted = $this->donor_repository->delete($id);
 
 		$this->assertTrue($deleted);

@@ -128,7 +128,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 
 		// Setup required entities
 		$campaign = new CampaignEntity(['title' => 'Fail campaign']);
-		$campaign_id = $this->get_repository(CampaignRepository::class)->upsert($campaign);
+		$campaign_id = $this->get_repository(CampaignRepository::class)->insert($campaign);
 		$payment_args = [
 			'amount' => [ 'currency' => 'EUR', 'value' => '10.00' ],
 			'description' => 'Fail test',
@@ -143,7 +143,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 		];
 
 		$transaction = new TransactionEntity(['title' => 'Failing Transaction']);
-		$transaction_id = $this->get_repository(TransactionRepository::class)->upsert($transaction);
+		$transaction_id = $this->get_repository(TransactionRepository::class)->insert($transaction);
 		$transaction = $this->get_repository(TransactionRepository::class)->get($transaction_id);
 
 		$result = $this->vendor->create_payment($payment_args, $transaction);
@@ -201,12 +201,12 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 		$payment_args = array_merge($default_args, $overrides);
 
 		$campaign = new CampaignEntity(['show_return_message' => $payment_args['show_return_message'] ?? false]);
-		$campaign_id = $this->get_repository(CampaignRepository::class)->upsert($campaign);
+		$campaign_id = $this->get_repository(CampaignRepository::class)->insert($campaign);
 
 		$payment_args['campaign_id'] = $campaign_id;
 
 		$transaction = new TransactionEntity(['title' => 'Test transaction']);
-		$transaction_id = $this->get_repository(TransactionRepository::class)->upsert($transaction);
+		$transaction_id = $this->get_repository(TransactionRepository::class)->insert($transaction);
 		$transaction = $this->get_repository(TransactionRepository::class)->get($transaction_id);
 
 		$payment_mock = $this->createMock(Payment::class);

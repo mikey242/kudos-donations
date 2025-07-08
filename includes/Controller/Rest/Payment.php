@@ -360,7 +360,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			]
 		);
 
-		$transaction_id = $this->get_repository( TransactionRepository::class )->upsert( $transaction );
+		$transaction_id = $this->get_repository( TransactionRepository::class )->insert( $transaction );
 		// Create payment with vendor.
 		$transaction = $this->get_repository( TransactionRepository::class )
 							->get( $transaction_id );

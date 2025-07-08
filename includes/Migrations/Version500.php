@@ -106,7 +106,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				]
 			);
 
-			$donor_repo->upsert( $donor );
+			$donor_repo->insert( $donor );
 			$this->logger->info( "Migrated donor post $post_id", [ 'data' => $donor->to_array() ] );
 		}
 
@@ -197,7 +197,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				]
 			);
 
-			$campaign_repo->upsert( $campaign );
+			$campaign_repo->insert( $campaign );
 			$this->logger->info( "Migrated campaign post $post_id", [ 'data' => $campaign->to_array() ] );
 		}
 
@@ -284,7 +284,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				]
 			);
 
-			$transaction_repo->upsert( $transaction );
+			$transaction_repo->insert( $transaction );
 			$this->logger->info( "Migrated transaction post $post_id", [ 'data' => $transaction->to_array() ] );
 		}
 
@@ -390,7 +390,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				]
 			);
 
-			$subscription_repo->upsert( $subscription );
+			$subscription_repo->insert( $subscription );
 			$this->logger->info( "Migrated subscription post $post_id", [ 'data' => $subscription->to_array() ] );
 		}
 
@@ -452,7 +452,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 
 			// Update transaction row with the resolved subscription_id.
 			$transaction->subscription_id = $subscription_id;
-			$transaction_repo->upsert( $transaction );
+			$transaction_repo->update( $transaction );
 
 			$this->logger->info( "Linked transaction $transaction_post_id to subscription $subscription_id" );
 		}
@@ -542,14 +542,14 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				$subscription_id = $simple_map[ $key_simple ][0];
 
 				$transaction->subscription_id = $subscription_id;
-				$transaction_repo->upsert( $transaction );
+				$transaction_repo->update( $transaction );
 
 				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription $subscription_id via simple match" );
 			} elseif ( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) === 1 ) {
 				$subscription_id = $strict_map[ $key_strict ][0];
 
 				$transaction->subscription_id = $subscription_id;
-				$transaction_repo->upsert( $transaction );
+				$transaction_repo->update( $transaction );
 
 				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription $subscription_id via strict match" );
 			} elseif ( ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) > 1 ) ||

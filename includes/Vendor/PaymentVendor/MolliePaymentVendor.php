@@ -404,7 +404,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			$transaction->checkout_url = $checkout_url;
 			$transaction->vendor_payment_id = $payment->id;
 			$this->get_repository(TransactionRepository::class)
-			     ->upsert($transaction);
+			     ->update($transaction);
 
 			return $checkout_url;
 		} catch ( RequestException $e ) {
@@ -450,7 +450,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					'donor_id'       => $transaction->donor_id,
 					'campaign_id'    => $transaction->campaign_id
 				] );
-				$subscription_id     = $subscriptions->upsert($subscription_entity);
+				$subscription_id     = $subscriptions->insert($subscription_entity);
 
 				// Prepare arguments to send to Mollie.
 				$subscription_args = [
@@ -483,12 +483,11 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				$this->logger->debug( 'Subscription created with Mollie', [ 'result' => $subscription ] );
 
 				// Update subscription post with status and subscription id.
-				$subscription_entity->fill([
+				return $subscriptions->patch($subscription_id, [
 					'status' => $subscription->status,
 					'vendor_customer_id' => $subscription->customerId,
 					'vendor_subscription_id' => $subscription->id,
 				]);
-				return $subscriptions->upsert($subscription_entity);
 			} catch ( ApiException $e ) {
 				$this->logger->error( $e->getMessage(), [
 					'transaction' => $transaction,

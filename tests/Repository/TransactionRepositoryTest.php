@@ -26,7 +26,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 		$campaign_repository          = $this->get_repository(CampaignRepository::class);
 
 		$campaign = new CampaignEntity([ 'title' => 'Default Campaign']);
-		$this->campaign_id = $campaign_repository->upsert($campaign);
+		$this->campaign_id = $campaign_repository->insert($campaign);
 	}
 
 	/**
@@ -39,7 +39,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 			'status'      => 'paid',
 			'currency'    => 'EUR'
 		]);
-		$id = $this->transaction_repository->upsert($transaction);
+		$id = $this->transaction_repository->insert($transaction);
 
 		$this->assertIsInt($id);
 		$this->assertGreaterThan(0, $id);
@@ -55,7 +55,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 			'status'      => 'paid',
 			'currency'    => 'EUR'
 		]);
-		$id = $this->transaction_repository->upsert($transaction);
+		$id = $this->transaction_repository->insert($transaction);
 
 		/** @var TransactionEntity $transaction */
 		$transaction = $this->transaction_repository->get($id);
@@ -74,7 +74,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 			'status'      => 'open',
 			'currency'    => 'EUR'
 		]);
-		$id = $this->transaction_repository->upsert($transaction);
+		$id = $this->transaction_repository->insert($transaction);
 
 		$transaction->status = 'cancelled';
 		$transaction->id = $id;
@@ -95,7 +95,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 			'status'      => 'refunded',
 			'currency'    => 'EUR'
 		]);
-		$this->transaction_repository->upsert($transaction);
+		$this->transaction_repository->insert($transaction);
 
 		/** @var TransactionEntity[] $results */
 		$results = $this->transaction_repository->find_by([
@@ -125,8 +125,8 @@ class TransactionRepositoryTest extends BaseTestCase {
 			'currency'    => 'EUR'
 		]);
 
-		$this->transaction_repository->upsert($transaction_2);
-		$this->transaction_repository->upsert($transaction_1);
+		$this->transaction_repository->insert($transaction_2);
+		$this->transaction_repository->insert($transaction_1);
 
 		$all = $this->transaction_repository->all();
 
@@ -152,7 +152,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 			'status'      => 'paid',
 			'currency'    => 'EUR'
 		]);
-		$id = $this->transaction_repository->upsert($transaction);
+		$id = $this->transaction_repository->insert($transaction);
 
 		$deleted = $this->transaction_repository->delete($id);
 		$this->assertTrue($deleted);
