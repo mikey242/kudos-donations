@@ -149,16 +149,6 @@ class Utils {
 	}
 
 	/**
-	 * Sanitizes float values.
-	 *
-	 * @param mixed $input The value to sanitize.
-	 * @return mixed
-	 */
-	public static function sanitize_float( $input ) {
-		return filter_var( $input, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
-	}
-
-	/**
 	 * Formats donation value for display. Do not use to send to payment provider or store value.
 	 *
 	 * @param string $value The value to display.
