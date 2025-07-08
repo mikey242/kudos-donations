@@ -212,12 +212,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	public function create_item( WP_REST_Request $request ) {
 		$params = $request->get_params();
 		$data   = array_intersect_key( $params, array_flip( array_keys( $this->repository->get_column_schema() ) ) );
-		$data   = array_map(
-			function ( $value ) {
-				return '' === $value ? null : $value;
-			},
-			$data
-		);
+		$data   = array_map( fn( $value ) => '' === $value ? null : $value, $data );
 		$entity = $this->repository->new_entity( $data );
 
 		// Create/update record.
