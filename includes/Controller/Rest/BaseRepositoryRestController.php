@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Entity\BaseEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use WP_Error;
@@ -18,6 +19,9 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
+/**
+ * @template TEntity of BaseEntity
+ */
 abstract class BaseRepositoryRestController extends BaseRestController {
 
 	protected BaseRepository $repository;
@@ -152,7 +156,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		$id = (int) $request->get_param( 'id' );
 
 		// Try to find the entity by id.
-		$item = $this->repository->find( $id );
+		$item = $this->repository->get( $id );
 
 		if ( ! $item ) {
 			// translators: %s is the entity type singular name (e.g Transaction).
@@ -214,15 +218,16 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 			},
 			$data
 		);
+		$entity = $this->repository->new_entity( $data );
 
 		// Create/update record.
-		$id = $this->repository->save( $data );
+		$id = $this->repository->upsert( $entity );
 
 		if ( ! $id ) {
 			return new WP_Error( 'cannot_create', __( 'Could not create campaign.', 'kudos-donations' ), [ 'status' => 500 ] );
 		}
 
-		return new WP_REST_Response( $this->repository->find( $id ), 201 );
+		return new WP_REST_Response( $this->repository->get( $id ), 201 );
 	}
 
 	/**
@@ -252,10 +257,10 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * Optionally enrich items (e.g., join campaign, donor, etc).
 	 * Override in child controllers.
 	 *
-	 * @param array $item Item to add to the response object.
+	 * @param TEntity $item Item to add to the response object.
 	 */
-	protected function add_rest_fields( array $item ): array {
-		return $item;
+	protected function add_rest_fields( $item ): array {
+		return (array) $item;
 	}
 
 	/**

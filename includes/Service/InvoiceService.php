@@ -13,9 +13,10 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
@@ -100,8 +101,9 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		}
 
 		// Get transaction.
+		/** @var TransactionEntity $transaction */
 		$transaction = $this->get_repository( TransactionRepository::class )
-							->find( $transaction_id );
+							->get( $transaction_id );
 
 		if ( ! $transaction ) {
 			$this->logger->debug( 'Error generating invoice: Transaction not found', [ 'transaction_id' => $transaction_id ] );
@@ -110,38 +112,39 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 
 		// Populate data array.
 		$data = [
-			'order_id'        => $transaction[ TransactionRepository::VENDOR_PAYMENT_ID ],
-			'vendor'          => $transaction[ TransactionRepository::VENDOR ],
-			'sequence_type'   => $transaction[ TransactionRepository::SEQUENCE_TYPE ],
-			'id'              => gmdate( 'Y' ) . '_' . $transaction[ TransactionRepository::INVOICE_NUMBER ],
-			'date'            => $transaction[ BaseRepository::CREATED_AT ],
+			'order_id'        => $transaction->vendor_payment_id,
+			'vendor'          => $transaction->vendor,
+			'sequence_type'   => $transaction->sequence_type,
+			'id'              => gmdate( 'Y' ) . '_' . $transaction->invoice_number,
+			'date'            => $transaction->created_at,
 			'company_name'    => Utils::get_company_name(),
 			'company_address' => get_option( self::SETTING_INVOICE_COMPANY_ADDRESS ),
 			'vat_number'      => get_option( self::SETTING_INVOICE_VAT_NUMBER ),
-			'currency_symbol' => Utils::get_currencies()[ $transaction[ TransactionRepository::CURRENCY ] ],
+			'currency_symbol' => Utils::get_currencies()[ $transaction->currency ],
 			'items'           => [
-				$transaction[ BaseRepository::TITLE ] => number_format_i18n( $transaction[ TransactionRepository::VALUE ], 2 ),
-				__( 'VAT', 'kudos-donations' )        => 0,
+				$transaction->title            => number_format_i18n( $transaction->value, 2 ),
+				__( 'VAT', 'kudos-donations' ) => 0,
 			],
-			'total'           => Utils::format_value_for_display( $transaction[ TransactionRepository::VALUE ] ),
+			'total'           => Utils::format_value_for_display( (string) $transaction->value ),
 		];
 
 		// Append donor.
 		$donors = $this->get_repository( DonorRepository::class );
-		$donor  = $donors->find_one_by( [ BaseRepository::ID => $transaction[ TransactionRepository::DONOR_ID ] ] );
+		/** @var DonorEntity $donor */
+		$donor = $donors->find_one_by( [ 'id' => $transaction->donor_id ] );
 		if ( $donor ) {
-			$locale = $donor[ DonorRepository::LOCALE ];
+			$locale = $donor->locale;
 			if ( $locale ) {
 				$this->logger->debug( "Switching locale to $locale" );
 				// Switch to donor's locale if available.
-				Utils::switch_locale( $donor[ DonorRepository::LOCALE ] );
+				Utils::switch_locale( $locale );
 			}
-			$data['donor_business'] = $donor[ DonorRepository::BUSINESS_NAME ] ?? '';
-			$data['donor_name']     = $donor[ DonorRepository::NAME ] ?? '';
-			$data['donor_street']   = $donor[ DonorRepository::STREET ] ?? '';
-			$data['donor_postcode'] = $donor[ DonorRepository::POSTCODE ] ?? '';
-			$data['donor_city']     = $donor[ DonorRepository::CITY ] ?? '';
-			$data['donor_country']  = $donor[ DonorRepository::COUNTRY ] ?? '';
+			$data['donor_business'] = $donor->business_name ?? '';
+			$data['donor_name']     = $donor->name ?? '';
+			$data['donor_street']   = $donor->street ?? '';
+			$data['donor_postcode'] = $donor->postcode ?? '';
+			$data['donor_city']     = $donor->city ?? '';
+			$data['donor_country']  = $donor->country ?? '';
 		}
 
 		// Add text.

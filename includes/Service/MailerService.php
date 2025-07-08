@@ -13,6 +13,9 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
+use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Repository\BaseRepository;
@@ -71,16 +74,18 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 
 		$this->logger->debug( 'Receipt emails enabled, setting up email.', [ 'transaction_id' => $transaction_id ] );
 
+		/** @var TransactionEntity $transaction */
 		$transaction = $this->get_repository( TransactionRepository::class )
-			->find( $transaction_id );
-		$donor       = $this->get_repository( TransactionRepository::class )
-			->get_donor( $transaction );
+							->get( $transaction_id );
+		/** @var DonorEntity $donor */
+		$donor = $this->get_repository( TransactionRepository::class )
+						->get_donor( $transaction );
 
 		// Email address.
-		$email = $donor[ DonorRepository::EMAIL ];
+		$email = $donor->email;
 
 		// Switch to donor's locale.
-		$locale = $donor[ DonorRepository::LOCALE ];
+		$locale = $donor->locale;
 		if ( $locale ) {
 			$this->logger->debug( "Switching locale to $locale" );
 			Utils::switch_locale( $locale );
@@ -93,25 +98,26 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 		}
 
 		// Assign attachment.
-		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction[ BaseRepository::ID ] );
+		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction->id );
 
 		// Get campaign name if enabled.
 		$campaign_name = '';
 		if ( get_option( self::SETTING_EMAIL_SHOW_CAMPAIGN ) ) {
+			/** @var CampaignEntity $campaign */
 			$campaign      = $this->get_repository( TransactionRepository::class )
 									->get_campaign( $transaction );
-			$campaign_name = $campaign[ BaseRepository::TITLE ];
+			$campaign_name = $campaign->title;
 		}
 
 		// Create array of variables for use in twig template.
 		$args = [
-			'name'          => $donor[ DonorRepository::NAME ] ?? '',
-			'date'          => $transaction[ BaseRepository::CREATED_AT ],
-			'description'   => $transaction[ BaseRepository::TITLE ],
-			'amount'        => ( ! empty( $transaction[ TransactionRepository::CURRENCY ] ) ? html_entity_decode(
-				Utils::get_currencies()[ $transaction[ TransactionRepository::CURRENCY ] ]
+			'name'          => $donor->name ?? '',
+			'date'          => $transaction->created_at,
+			'description'   => $transaction->title,
+			'amount'        => ( ! empty( $transaction->currency ) ? html_entity_decode(
+				Utils::get_currencies()[ $transaction->currency ]
 			) : '' ) . number_format_i18n(
-				$transaction[ TransactionRepository::VALUE ],
+				$transaction->value,
 				2
 			),
 			'receipt_id'    => Utils::get_id( $transaction, TransactionRepository::get_singular_name() ),
@@ -121,11 +127,11 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 
 		// Add a cancel button if this is the receipt for a subscription payment.
 		try {
-			if ( 'oneoff' !== $transaction[ TransactionRepository::SEQUENCE_TYPE ] ) {
-				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ SubscriptionRepository::TRANSACTION_ID => $transaction[ BaseRepository::ID ] ] );
+			if ( 'oneoff' !== $transaction->sequence_type ) {
+				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ 'transaction_id' => $transaction->id ] );
 				$subscription = $this->get_repository( SubscriptionRepository::class )->find_one_by(
 					[
-						SubscriptionRepository::TRANSACTION_ID => $transaction[ BaseRepository::ID ],
+						'transaction_id' => $transaction->id,
 					]
 				);
 				if ( $subscription ) {
@@ -133,8 +139,8 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 					$args['cancel_url'] = add_query_arg(
 						[
 							'kudos_action' => 'cancel_subscription',
-							'token'        => EncryptionService::generate_token( (int) $subscription[ BaseRepository::ID ] ),
-							'id'           => $subscription[ BaseRepository::ID ],
+							'token'        => EncryptionService::generate_token( $subscription->id ),
+							'id'           => $subscription->id,
 						],
 						apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
 					);

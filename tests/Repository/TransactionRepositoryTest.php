@@ -6,7 +6,8 @@
 namespace Repository;
 
 use BaseTestCase;
-use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 
@@ -24,21 +25,21 @@ class TransactionRepositoryTest extends BaseTestCase {
 		$this->transaction_repository = $this->get_repository(TransactionRepository::class);
 		$campaign_repository          = $this->get_repository(CampaignRepository::class);
 
-		$this->campaign_id = $campaign_repository->save([
-			BaseRepository::TITLE => 'Default Campaign'
-		]);
+		$campaign = new CampaignEntity([ 'title' => 'Default Campaign']);
+		$this->campaign_id = $campaign_repository->upsert($campaign);
 	}
 
 	/**
 	 * Test that transaction is created and returned.
 	 */
 	public function test_save_creates_transaction(): void {
-		$id = $this->transaction_repository->save([
+		$transaction = new TransactionEntity([
 			'campaign_id' => $this->campaign_id,
 			'value'       => 10.50,
 			'status'      => 'paid',
 			'currency'    => 'EUR'
 		]);
+		$id = $this->transaction_repository->upsert($transaction);
 
 		$this->assertIsInt($id);
 		$this->assertGreaterThan(0, $id);
@@ -48,76 +49,84 @@ class TransactionRepositoryTest extends BaseTestCase {
 	 * Test that find() returns transaction by ID.
 	 */
 	public function test_find_returns_transaction_by_id(): void {
-		$id = $this->transaction_repository->save([
+		$transaction = new TransactionEntity([
 			'campaign_id' => $this->campaign_id,
 			'value'       => 25.00,
 			'status'      => 'paid',
 			'currency'    => 'EUR'
 		]);
+		$id = $this->transaction_repository->upsert($transaction);
 
-		$transaction = $this->transaction_repository->find($id);
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->transaction_repository->get($id);
 
 		$this->assertNotNull($transaction);
-		$this->assertSame('paid', $transaction['status']);
+		$this->assertSame('paid', $transaction->status);
 	}
 
 	/**
 	 * Test that save() updates an existing transaction.
 	 */
 	public function test_save_updates_transaction(): void {
-		$id = $this->transaction_repository->save([
+		$transaction = new TransactionEntity([
 			'campaign_id' => $this->campaign_id,
 			'value'       => 20.00,
 			'status'      => 'open',
 			'currency'    => 'EUR'
 		]);
+		$id = $this->transaction_repository->upsert($transaction);
 
-		$this->transaction_repository->save([
-			BaseRepository::ID => $id,
-			'status'           => 'cancelled'
-		]);
+		$transaction->status = 'cancelled';
+		$transaction->id = $id;
+		$this->transaction_repository->update($transaction);
 
-		$updated = $this->transaction_repository->find($id);
-		$this->assertSame('cancelled', $updated['status']);
+		/** @var TransactionEntity $updated */
+		$updated = $this->transaction_repository->get($id);
+		$this->assertSame('cancelled', $updated->status);
 	}
 
 	/**
 	 * Test find_by() returns matching transaction(s).
 	 */
 	public function test_find_by_returns_matching_transactions(): void {
-		$this->transaction_repository->save([
+		$transaction = new TransactionEntity([
 			'campaign_id' => $this->campaign_id,
 			'value'       => 15.00,
 			'status'      => 'refunded',
 			'currency'    => 'EUR'
 		]);
+		$this->transaction_repository->upsert($transaction);
 
+		/** @var TransactionEntity[] $results */
 		$results = $this->transaction_repository->find_by([
 			'status' => 'refunded'
 		]);
 
 		$this->assertIsArray($results);
 		$this->assertCount(1, $results);
-		$this->assertSame('refunded', $results[0]['status']);
+		$this->assertSame('refunded', $results[0]->status);
 	}
 
 	/**
 	 * Test that all() returns all transactions.
 	 */
 	public function test_all_returns_all_transactions(): void {
-		$this->transaction_repository->save([
+
+		$transaction_1 = new TransactionEntity([
 			'campaign_id' => $this->campaign_id,
 			'value'       => 5.00,
 			'status'      => 'paid',
 			'currency'    => 'EUR'
 		]);
-
-		$this->transaction_repository->save([
+		$transaction_2 = new TransactionEntity([
 			'campaign_id' => $this->campaign_id,
 			'value'       => 9.99,
 			'status'      => 'failed',
 			'currency'    => 'EUR'
 		]);
+
+		$this->transaction_repository->upsert($transaction_2);
+		$this->transaction_repository->upsert($transaction_1);
 
 		$all = $this->transaction_repository->all();
 
@@ -129,7 +138,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 	 * Test that find() returns null for invalid ID.
 	 */
 	public function test_find_returns_null_for_invalid_id(): void {
-		$transaction = $this->transaction_repository->find(99999);
+		$transaction = $this->transaction_repository->get(99999);
 		$this->assertNull($transaction);
 	}
 
@@ -137,17 +146,18 @@ class TransactionRepositoryTest extends BaseTestCase {
 	 * Test delete() removes transaction from database.
 	 */
 	public function test_delete_removes_transaction(): void {
-		$id = $this->transaction_repository->save([
+		$transaction = new TransactionEntity([
 			'campaign_id' => $this->campaign_id,
 			'value'       => 30.00,
 			'status'      => 'paid',
 			'currency'    => 'EUR'
 		]);
+		$id = $this->transaction_repository->upsert($transaction);
 
 		$deleted = $this->transaction_repository->delete($id);
 		$this->assertTrue($deleted);
 
-		$transaction = $this->transaction_repository->find($id);
+		$transaction = $this->transaction_repository->get($id);
 		$this->assertNull($transaction);
 	}
 }

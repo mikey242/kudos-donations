@@ -11,8 +11,11 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Migrations;
 
+use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
-use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
@@ -56,7 +59,8 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 	 * @param int $limit The number of records to fetch.
 	 */
 	public function migrate_donors( int $offset, int $limit ): int {
-		$post_type = 'kudos_donor';
+		$post_type  = 'kudos_donor';
+		$donor_repo = $this->get_repository( DonorRepository::class );
 
 		$posts = get_posts(
 			[
@@ -78,30 +82,32 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $this->get_repository( DonorRepository::class )->find_by_post_id( $post_id );
+			$existing = $donor_repo->find_by_post_id( $post_id );
 			if ( $existing ) {
 				$this->logger->info( "Donor post $post_id already migrated. Skipping." );
 				continue;
 			}
 
-			$data = [
-				'wp_post_id'         => $post_id,
-				'title'              => get_post_field( 'post_title', $post_id ),
-				'name'               => get_post_meta( $post_id, 'name', true ),
-				'email'              => get_post_meta( $post_id, 'email', true ),
-				'mode'               => get_post_meta( $post_id, 'mode', true ),
-				'business_name'      => get_post_meta( $post_id, 'business_name', true ),
-				'street'             => get_post_meta( $post_id, 'street', true ),
-				'postcode'           => get_post_meta( $post_id, 'postcode', true ),
-				'city'               => get_post_meta( $post_id, 'city', true ),
-				'country'            => get_post_meta( $post_id, 'country', true ),
-				'vendor_customer_id' => get_post_meta( $post_id, 'vendor_customer_id', true ),
-				'created_at'         => get_post_time( 'Y-m-d H:i:s', true, $post ),
-				'updated_at'         => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
-			];
+			$donor = new DonorEntity(
+				[
+					'wp_post_id'         => $post_id,
+					'title'              => get_post_field( 'post_title', $post_id ),
+					'name'               => get_post_meta( $post_id, 'name', true ),
+					'email'              => get_post_meta( $post_id, 'email', true ),
+					'mode'               => get_post_meta( $post_id, 'mode', true ),
+					'business_name'      => get_post_meta( $post_id, 'business_name', true ),
+					'street'             => get_post_meta( $post_id, 'street', true ),
+					'postcode'           => get_post_meta( $post_id, 'postcode', true ),
+					'city'               => get_post_meta( $post_id, 'city', true ),
+					'country'            => get_post_meta( $post_id, 'country', true ),
+					'vendor_customer_id' => get_post_meta( $post_id, 'vendor_customer_id', true ),
+					'created_at'         => get_post_time( 'Y-m-d H:i:s', true, $post ),
+					'updated_at'         => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+				]
+			);
 
-			$this->get_repository( DonorRepository::class )->save( $data );
-			$this->logger->info( "Migrated donor post $post_id", [ 'data' => $data ] );
+			$donor_repo->upsert( $donor );
+			$this->logger->info( "Migrated donor post $post_id", [ 'data' => $donor->to_array() ] );
 		}
 
 		return \count( $posts );
@@ -114,7 +120,8 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 	 * @param int $limit The number of records to fetch.
 	 */
 	public function migrate_campaigns( int $offset, int $limit ): int {
-		$post_type = 'kudos_campaign';
+		$post_type     = 'kudos_campaign';
+		$campaign_repo = $this->get_repository( CampaignRepository::class );
 
 		$posts = get_posts(
 			[
@@ -136,60 +143,62 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $this->get_repository( CampaignRepository::class )->find_by_post_id( $post_id );
+			$existing = $campaign_repo->find_by_post_id( $post_id );
 			if ( $existing ) {
 				$this->logger->info( "Campaign post $post_id already migrated. Skipping." );
 				continue;
 			}
 
-			$data = [
-				'wp_post_id'                 => $post_id,
-				'wp_post_slug'               => sanitize_title( $post->post_name ),
-				'title'                      => get_post_field( 'post_title', $post_id ),
-				'currency'                   => get_post_meta( $post_id, 'currency', true ),
-				'goal'                       => get_post_meta( $post_id, 'goal', true ),
-				'show_goal'                  => (bool) get_post_meta( $post_id, 'show_goal', true ),
-				'additional_funds'           => get_post_meta( $post_id, 'additional_funds', true ),
-				'amount_type'                => get_post_meta( $post_id, 'amount_type', true ),
-				'fixed_amounts'              => wp_json_encode( get_post_meta( $post_id, 'fixed_amounts', true ) ) ?? [],
-				'minimum_donation'           => get_post_meta( $post_id, 'minimum_donation', true ),
-				'maximum_donation'           => get_post_meta( $post_id, 'maximum_donation', true ),
-				'donation_type'              => get_post_meta( $post_id, 'donation_type', true ),
-				'frequency_options'          => wp_json_encode( get_post_meta( $post_id, 'frequency_options', true ) ) ?? [],
-				'email_enabled'              => (bool) get_post_meta( $post_id, 'email_enabled', true ),
-				'email_required'             => (bool) get_post_meta( $post_id, 'email_required', true ),
-				'name_enabled'               => (bool) get_post_meta( $post_id, 'name_enabled', true ),
-				'name_required'              => (bool) get_post_meta( $post_id, 'name_required', true ),
-				'address_enabled'            => (bool) get_post_meta( $post_id, 'address_enabled', true ),
-				'address_required'           => (bool) get_post_meta( $post_id, 'address_required', true ),
-				'message_enabled'            => (bool) get_post_meta( $post_id, 'message_enabled', true ),
-				'message_required'           => (bool) get_post_meta( $post_id, 'message_required', true ),
-				'theme_color'                => get_post_meta( $post_id, 'theme_color', true ) ?? '#ff9f1c',
-				'terms_link'                 => get_post_meta( $post_id, 'terms_link', true ),
-				'privacy_link'               => get_post_meta( $post_id, 'privacy_link', true ),
-				'show_return_message'        => (bool) get_post_meta( $post_id, 'show_return_message', true ),
-				'use_custom_return_url'      => (bool) get_post_meta( $post_id, 'use_custom_return_url', true ),
-				'custom_return_url'          => get_post_meta( $post_id, 'custom_return_url', true ),
-				'payment_description_format' => get_post_meta( $post_id, 'payment_description_format', true ),
-				'custom_styles'              => get_post_meta( $post_id, 'custom_styles', true ),
-				'initial_title'              => get_post_meta( $post_id, 'initial_title', true ),
-				'initial_description'        => get_post_meta( $post_id, 'initial_description', true ),
-				'subscription_title'         => get_post_meta( $post_id, 'subscription_title', true ),
-				'subscription_description'   => get_post_meta( $post_id, 'subscription_description', true ),
-				'address_title'              => get_post_meta( $post_id, 'address_title', true ),
-				'address_description'        => get_post_meta( $post_id, 'address_description', true ),
-				'message_title'              => get_post_meta( $post_id, 'message_title', true ),
-				'message_description'        => get_post_meta( $post_id, 'message_description', true ),
-				'payment_title'              => get_post_meta( $post_id, 'payment_title', true ),
-				'payment_description'        => get_post_meta( $post_id, 'payment_description', true ),
-				'return_message_title'       => get_post_meta( $post_id, 'return_message_title', true ),
-				'return_message_text'        => get_post_meta( $post_id, 'return_message_text', true ),
-				'created_at'                 => get_post_time( 'Y-m-d H:i:s', true, $post ),
-				'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
-			];
+			$campaign = new CampaignEntity(
+				[
+					'wp_post_id'                 => $post_id,
+					'wp_post_slug'               => sanitize_title( $post->post_name ),
+					'title'                      => get_post_field( 'post_title', $post_id ),
+					'currency'                   => get_post_meta( $post_id, 'currency', true ),
+					'goal'                       => get_post_meta( $post_id, 'goal', true ),
+					'show_goal'                  => (bool) get_post_meta( $post_id, 'show_goal', true ),
+					'additional_funds'           => get_post_meta( $post_id, 'additional_funds', true ),
+					'amount_type'                => get_post_meta( $post_id, 'amount_type', true ),
+					'fixed_amounts'              => wp_json_encode( get_post_meta( $post_id, 'fixed_amounts', true ) ) ?? [],
+					'minimum_donation'           => get_post_meta( $post_id, 'minimum_donation', true ),
+					'maximum_donation'           => get_post_meta( $post_id, 'maximum_donation', true ),
+					'donation_type'              => get_post_meta( $post_id, 'donation_type', true ),
+					'frequency_options'          => wp_json_encode( get_post_meta( $post_id, 'frequency_options', true ) ) ?? [],
+					'email_enabled'              => (bool) get_post_meta( $post_id, 'email_enabled', true ),
+					'email_required'             => (bool) get_post_meta( $post_id, 'email_required', true ),
+					'name_enabled'               => (bool) get_post_meta( $post_id, 'name_enabled', true ),
+					'name_required'              => (bool) get_post_meta( $post_id, 'name_required', true ),
+					'address_enabled'            => (bool) get_post_meta( $post_id, 'address_enabled', true ),
+					'address_required'           => (bool) get_post_meta( $post_id, 'address_required', true ),
+					'message_enabled'            => (bool) get_post_meta( $post_id, 'message_enabled', true ),
+					'message_required'           => (bool) get_post_meta( $post_id, 'message_required', true ),
+					'theme_color'                => get_post_meta( $post_id, 'theme_color', true ) ?? '#ff9f1c',
+					'terms_link'                 => get_post_meta( $post_id, 'terms_link', true ),
+					'privacy_link'               => get_post_meta( $post_id, 'privacy_link', true ),
+					'show_return_message'        => (bool) get_post_meta( $post_id, 'show_return_message', true ),
+					'use_custom_return_url'      => (bool) get_post_meta( $post_id, 'use_custom_return_url', true ),
+					'custom_return_url'          => get_post_meta( $post_id, 'custom_return_url', true ),
+					'payment_description_format' => get_post_meta( $post_id, 'payment_description_format', true ),
+					'custom_styles'              => get_post_meta( $post_id, 'custom_styles', true ),
+					'initial_title'              => get_post_meta( $post_id, 'initial_title', true ),
+					'initial_description'        => get_post_meta( $post_id, 'initial_description', true ),
+					'subscription_title'         => get_post_meta( $post_id, 'subscription_title', true ),
+					'subscription_description'   => get_post_meta( $post_id, 'subscription_description', true ),
+					'address_title'              => get_post_meta( $post_id, 'address_title', true ),
+					'address_description'        => get_post_meta( $post_id, 'address_description', true ),
+					'message_title'              => get_post_meta( $post_id, 'message_title', true ),
+					'message_description'        => get_post_meta( $post_id, 'message_description', true ),
+					'payment_title'              => get_post_meta( $post_id, 'payment_title', true ),
+					'payment_description'        => get_post_meta( $post_id, 'payment_description', true ),
+					'return_message_title'       => get_post_meta( $post_id, 'return_message_title', true ),
+					'return_message_text'        => get_post_meta( $post_id, 'return_message_text', true ),
+					'created_at'                 => get_post_time( 'Y-m-d H:i:s', true, $post ),
+					'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+				]
+			);
 
-			$this->get_repository( CampaignRepository::class )->save( $data );
-			$this->logger->info( "Migrated campaign post $post_id", [ 'data' => $data ] );
+			$campaign_repo->upsert( $campaign );
+			$this->logger->info( "Migrated campaign post $post_id", [ 'data' => $campaign->to_array() ] );
 		}
 
 		return \count( $posts );
@@ -202,7 +211,10 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 	 * @param int $limit The number of records to fetch.
 	 */
 	public function migrate_transactions( int $offset, int $limit ): int {
-		$post_type = 'kudos_transaction';
+		$post_type        = 'kudos_transaction';
+		$transaction_repo = $this->get_repository( TransactionRepository::class );
+		$campaign_repo    = $this->get_repository( CampaignRepository::class );
+		$donor_repo       = $this->get_repository( DonorRepository::class );
 
 		$posts = get_posts(
 			[
@@ -224,52 +236,56 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $this->get_repository( TransactionRepository::class )->find_by_post_id( $post_id );
+			$existing = $transaction_repo->find_by_post_id( $post_id );
 			if ( $existing ) {
 				$this->logger->info( "Transaction post $post_id already migrated. Skipping." );
 				continue;
 			}
 
 			// Create a campaign map to migrate old id to new id.
-			$campaign_map  = [];
-			$campaign_rows = $this->get_repository( CampaignRepository::class )->all();
+			$campaign_map = [];
+			/** @var CampaignEntity[] $campaign_rows */
+			$campaign_rows = $campaign_repo->all();
 			foreach ( $campaign_rows as $row ) {
-				$campaign_map[ $row['wp_post_id'] ] = $row['id'];
+				$campaign_map[ $row->wp_post_id ] = $row['id'];
 			}
 			$campaign_id = (int) get_post_meta( $post_id, 'campaign_id', true );
 
 			// Create a donor map to migrate old id to new id.
-			$donor_map  = [];
-			$donor_rows = $this->get_repository( DonorRepository::class )->all();
+			$donor_map = [];
+			/** @var DonorEntity[] $donor_rows */
+			$donor_rows = $donor_repo->all();
 			foreach ( $donor_rows as $row ) {
-				$donor_map[ $row['wp_post_id'] ] = $row['id'];
+				$donor_map[ $row->wp_post_id ] = $row['id'];
 			}
 			$donor_id = (int) get_post_meta( $post_id, 'donor_id', true );
 
-			$data = [
-				'wp_post_id'        => $post_id,
-				'title'             => get_post_field( 'post_title', $post_id ),
-				'value'             => (float) get_post_meta( $post_id, 'value', true ),
-				'currency'          => get_post_meta( $post_id, 'currency', true ),
-				'status'            => get_post_meta( $post_id, 'status', true ),
-				'method'            => get_post_meta( $post_id, 'method', true ),
-				'mode'              => get_post_meta( $post_id, 'mode', true ),
-				'sequence_type'     => get_post_meta( $post_id, 'sequence_type', true ),
-				'donor_id'          => $donor_map[ $donor_id ] ?? null,
-				'campaign_id'       => $campaign_map[ $campaign_id ] ?? null,
-				'vendor'            => 'mollie', // All payments are currently made with Mollie.
-				'subscription_id'   => null, // Populated on second pass since subscriptions not available yet.
-				'vendor_payment_id' => get_post_meta( $post_id, 'vendor_payment_id', true ),
-				'invoice_number'    => (int) get_post_meta( $post_id, 'invoice_number', true ),
-				'checkout_url'      => get_post_meta( $post_id, 'checkout_url', true ),
-				'message'           => get_post_meta( $post_id, 'message', true ),
-				'refunds'           => get_post_meta( $post_id, 'refunds', true ),
-				'created_at'        => get_post_time( 'Y-m-d H:i:s', true, $post ),
-				'updated_at'        => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
-			];
+			$transaction = new TransactionEntity(
+				[
+					'wp_post_id'        => $post_id,
+					'title'             => get_post_field( 'post_title', $post_id ),
+					'value'             => (float) get_post_meta( $post_id, 'value', true ),
+					'currency'          => get_post_meta( $post_id, 'currency', true ),
+					'status'            => get_post_meta( $post_id, 'status', true ),
+					'method'            => get_post_meta( $post_id, 'method', true ),
+					'mode'              => get_post_meta( $post_id, 'mode', true ),
+					'sequence_type'     => get_post_meta( $post_id, 'sequence_type', true ),
+					'donor_id'          => $donor_map[ $donor_id ] ?? null,
+					'campaign_id'       => $campaign_map[ $campaign_id ] ?? null,
+					'vendor'            => 'mollie', // All payments are currently made with Mollie.
+					'subscription_id'   => null, // Populated on second pass since subscriptions not available yet.
+					'vendor_payment_id' => get_post_meta( $post_id, 'vendor_payment_id', true ),
+					'invoice_number'    => (int) get_post_meta( $post_id, 'invoice_number', true ),
+					'checkout_url'      => get_post_meta( $post_id, 'checkout_url', true ),
+					'message'           => get_post_meta( $post_id, 'message', true ),
+					'refunds'           => get_post_meta( $post_id, 'refunds', true ),
+					'created_at'        => get_post_time( 'Y-m-d H:i:s', true, $post ),
+					'updated_at'        => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+				]
+			);
 
-			$this->get_repository( TransactionRepository::class )->save( $data );
-			$this->logger->info( "Migrated transaction post $post_id", [ 'data' => $data ] );
+			$transaction_repo->upsert( $transaction );
+			$this->logger->info( "Migrated transaction post $post_id", [ 'data' => $transaction->to_array() ] );
 		}
 
 		return \count( $posts );
@@ -282,7 +298,10 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 	 * @param int $limit The number of records to fetch.
 	 */
 	public function migrate_subscriptions( int $offset, int $limit ): int {
-		$post_type = 'kudos_subscription';
+		$post_type         = 'kudos_subscription';
+		$transaction_repo  = $this->get_repository( TransactionRepository::class );
+		$subscription_repo = $this->get_repository( SubscriptionRepository::class );
+		$donor_repo        = $this->get_repository( DonorRepository::class );
 
 		$posts = get_posts(
 			[
@@ -302,29 +321,31 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		}
 
 		// Create a transaction map to migrate old id to new id.
-		$transaction_map  = [];
-		$transaction_rows = $this->get_repository( TransactionRepository::class )->all();
+		$transaction_map = [];
+		/** @var TransactionEntity[] $transaction_rows */
+		$transaction_rows = $transaction_repo->all();
 		foreach ( $transaction_rows as $row ) {
-			$transaction_post_id  = $row['wp_post_id'];
+			$transaction_post_id  = $row->wp_post_id;
 			$legacy_donor_post_id = (int) get_post_meta( $transaction_post_id, 'donor_id', true );
 
 			$transaction_map[ $transaction_post_id ] = [
-				'id'       => $row['id'],
+				'id'       => $row->id,
 				'donor_id' => $legacy_donor_post_id,
 			];
 		}
 
 		// Create a donor map to migrate old id to new id.
-		$donor_map  = [];
-		$donor_rows = $this->get_repository( DonorRepository::class )->all();
+		$donor_map = [];
+		/** @var DonorEntity[] $donor_rows */
+		$donor_rows = $donor_repo->all();
 		foreach ( $donor_rows as $row ) {
-			$donor_map[ $row['wp_post_id'] ] = $row['id'];
+			$donor_map[ $row->wp_post_id ] = $row->id;
 		}
 
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $this->get_repository( SubscriptionRepository::class )->find_by_post_id( $post_id );
+			$existing = $subscription_repo->find_by_post_id( $post_id );
 			if ( $existing ) {
 				$this->logger->info( "Subscription post $post_id already migrated. Skipping." );
 				continue;
@@ -344,30 +365,33 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 
 			// Get campaign.
 			$campaign_id = null;
-			$transaction = $this->get_repository( TransactionRepository::class )->find( $transaction_id );
+			/** @var TransactionEntity $transaction */
+			$transaction = $transaction_repo->get( $transaction_id );
 			if ( $transaction ) {
-				$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
+				$campaign_id = $transaction->campaign_id;
 			}
 
-			$data = [
-				'wp_post_id'             => $post_id,
-				'title'                  => get_post_field( 'post_title', $post_id ),
-				'value'                  => (float) get_post_meta( $post_id, 'value', true ),
-				'currency'               => get_post_meta( $post_id, 'currency', true ),
-				'frequency'              => get_post_meta( $post_id, 'frequency', true ),
-				'years'                  => (int) get_post_meta( $post_id, 'years', true ),
-				'status'                 => get_post_meta( $post_id, 'status', true ),
-				'transaction_id'         => $transaction_id,
-				'donor_id'               => $donor_id,
-				'campaign_id'            => $campaign_id,
-				'vendor_customer_id'     => get_post_meta( $post_id, 'customer_id', true ),
-				'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
-				'created_at'             => get_post_time( 'Y-m-d H:i:s', true, $post ),
-				'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
-			];
+			$subscription = new SubscriptionEntity(
+				[
+					'wp_post_id'             => $post_id,
+					'title'                  => get_post_field( 'post_title', $post_id ),
+					'value'                  => (float) get_post_meta( $post_id, 'value', true ),
+					'currency'               => get_post_meta( $post_id, 'currency', true ),
+					'frequency'              => get_post_meta( $post_id, 'frequency', true ),
+					'years'                  => (int) get_post_meta( $post_id, 'years', true ),
+					'status'                 => get_post_meta( $post_id, 'status', true ),
+					'transaction_id'         => $transaction_id,
+					'donor_id'               => $donor_id,
+					'campaign_id'            => $campaign_id,
+					'vendor_customer_id'     => get_post_meta( $post_id, 'customer_id', true ),
+					'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
+					'created_at'             => get_post_time( 'Y-m-d H:i:s', true, $post ),
+					'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+				]
+			);
 
-			$this->get_repository( SubscriptionRepository::class )->save( $data );
-			$this->logger->info( "Migrated subscription post $post_id", [ 'data' => $data ] );
+			$subscription_repo->upsert( $subscription );
+			$this->logger->info( "Migrated subscription post $post_id", [ 'data' => $subscription->to_array() ] );
 		}
 
 		return \count( $posts );
@@ -381,8 +405,12 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 	 */
 	public function backfill_transactions_from_subscription( int $offset, int $limit ): int {
 
+		$transaction_repo  = $this->get_repository( TransactionRepository::class );
+		$subscription_repo = $this->get_repository( SubscriptionRepository::class );
+
 		// Get all subscriptions.
-		$subscriptions = $this->get_repository( SubscriptionRepository::class )->query(
+		/** @var SubscriptionEntity[] $subscriptions */
+		$subscriptions = $subscription_repo->query(
 			[
 				'columns' => [ 'id', 'wp_post_id' ],
 				'orderby' => 'id',
@@ -398,8 +426,8 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		}
 
 		foreach ( $subscriptions as $subscription ) {
-			$subscription_post_id = $subscription[ BaseRepository::POST_ID ];
-			$subscription_id      = $subscription[ BaseRepository::ID ];
+			$subscription_post_id = $subscription->wp_post_id;
+			$subscription_id      = $subscription->id;
 
 			// Get legacy transaction post ID from subscription post meta.
 			$transaction_post_id = get_post_meta(
@@ -414,7 +442,8 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			}
 
 			// Find transaction row by wp_post_id.
-			$transaction = $this->get_repository( TransactionRepository::class )->find_by_post_id( (int) $transaction_post_id );
+			/** @var TransactionEntity $transaction */
+			$transaction = $transaction_repo->find_by_post_id( (int) $transaction_post_id );
 
 			if ( ! $transaction ) {
 				$this->logger->warning( "No migrated transaction found for post ID $transaction_post_id" );
@@ -422,12 +451,8 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			}
 
 			// Update transaction row with the resolved subscription_id.
-			$this->get_repository( TransactionRepository::class )->save(
-				[
-					BaseRepository::ID                     => $transaction[ BaseRepository::ID ],
-					TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
-				],
-			);
+			$transaction->subscription_id = $subscription_id;
+			$transaction_repo->upsert( $transaction );
 
 			$this->logger->info( "Linked transaction $transaction_post_id to subscription $subscription_id" );
 		}
@@ -442,7 +467,11 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 	 * @param int $limit The number of records to fetch.
 	 */
 	public function backfill_remaining_transactions( int $offset, int $limit ): int {
-		$orphaned_transactions = $this->get_repository( TransactionRepository::class )->query(
+		$transaction_repo  = $this->get_repository( TransactionRepository::class );
+		$subscription_repo = $this->get_repository( SubscriptionRepository::class );
+
+		/** @var TransactionEntity[] $orphaned_transactions */
+		$orphaned_transactions = $transaction_repo->query(
 			[
 				'columns' => [ 'id', 'wp_post_id', 'donor_id', 'campaign_id', 'value', 'sequence_type', 'subscription_id' ],
 				'where'   => [
@@ -460,14 +489,15 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			return 0;
 		}
 
-		$subscriptions = $this->get_repository( SubscriptionRepository::class )->all();
+		/** @var SubscriptionEntity[] $subscriptions */
+		$subscriptions = $subscription_repo->all();
 
 		$simple_map = []; // donor_id-value => [sub_ids...].
 		$strict_map = []; // donor_id-value-campaign_id => [sub_ids...].
 
 		foreach ( $subscriptions as $sub ) {
-			$donor_id = $sub[ SubscriptionRepository::DONOR_ID ] ?? null;
-			$value    = $sub[ SubscriptionRepository::VALUE ] ?? null;
+			$donor_id = $sub->donor_id ?? null;
+			$value    = $sub->value ?? null;
 
 			if ( ! $donor_id || ! $value ) {
 				continue;
@@ -478,31 +508,32 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			if ( ! isset( $simple_map[ $key_simple ] ) ) {
 				$simple_map[ $key_simple ] = [];
 			}
-			$simple_map[ $key_simple ][] = $sub['id'];
+			$simple_map[ $key_simple ][] = $sub->id;
 
 			// Try to resolve campaign_id for strict fallback.
-			$transaction = $this->get_repository( TransactionRepository::class )->find_one_by(
+			/** @var TransactionEntity $transaction */
+			$transaction = $transaction_repo->find_one_by(
 				[
-					TransactionRepository::SUBSCRIPTION_ID => (int) $sub[ BaseRepository::ID ],
+					'subscription_id' => $sub->id,
 				]
 			);
 
-			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ] ?? null;
+			$campaign_id = $transaction->campaign_id ?? null;
 			if ( $campaign_id ) {
 				$key_strict = "$donor_id-$value-$campaign_id";
 
 				if ( ! isset( $strict_map[ $key_strict ] ) ) {
 					$strict_map[ $key_strict ] = [];
 				}
-				$strict_map[ $key_strict ][] = $sub['id'];
+				$strict_map[ $key_strict ][] = $sub->id;
 			}
 		}
 
 		// Now backfill transactions.
 		foreach ( $orphaned_transactions as $transaction ) {
-			$donor_id    = $transaction[ TransactionRepository::DONOR_ID ];
-			$value       = $transaction[ TransactionRepository::VALUE ];
-			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
+			$donor_id    = $transaction->donor_id;
+			$value       = $transaction->value;
+			$campaign_id = $transaction->campaign_id;
 
 			$key_simple = "$donor_id-$value";
 			$key_strict = "$donor_id-$value-$campaign_id";
@@ -510,23 +541,15 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			if ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) === 1 ) {
 				$subscription_id = $simple_map[ $key_simple ][0];
 
-				$this->get_repository( TransactionRepository::class )->save(
-					[
-						BaseRepository::ID => $transaction[ BaseRepository::ID ],
-						TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
-					]
-				);
+				$transaction->subscription_id = $subscription_id;
+				$transaction_repo->upsert( $transaction );
 
 				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription $subscription_id via simple match" );
 			} elseif ( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) === 1 ) {
 				$subscription_id = $strict_map[ $key_strict ][0];
 
-				$this->get_repository( TransactionRepository::class )->save(
-					[
-						BaseRepository::ID => $transaction[ BaseRepository::ID ],
-						TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
-					]
-				);
+				$transaction->subscription_id = $subscription_id;
+				$transaction_repo->upsert( $transaction );
 
 				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription $subscription_id via strict match" );
 			} elseif ( ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) > 1 ) ||

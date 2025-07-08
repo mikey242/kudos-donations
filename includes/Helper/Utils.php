@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Helper;
 
-use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Entity\BaseEntity;
 
 class Utils {
 
@@ -160,10 +160,10 @@ class Utils {
 	/**
 	 * Formats donation value for use with payment provider or storage. Should not be localized.
 	 *
-	 * @param string $value The value to format.
+	 * @param float $value The value to format.
 	 */
-	public static function format_value_for_use( string $value ): string {
-		return number_format( \floatval( $value ), 2, '.', '' );
+	public static function format_value_for_use( float $value ): string {
+		return number_format( $value, 2, '.', '' );
 	}
 
 	/**
@@ -205,12 +205,12 @@ class Utils {
 	/**
 	 * Returns a formatted id based on the entity id and created date.
 	 *
-	 * @param array  $entity Entity array.
-	 * @param string $singular_name The entity singular name (e.g. Transaction).
+	 * @param BaseEntity $entity Entity object.
+	 * @param string     $singular_name The entity singular name (e.g. Transaction).
 	 */
-	public static function get_id( array $entity, string $singular_name ): string {
-		$id   = $entity[ BaseRepository::ID ];
-		$date = $entity[ BaseRepository::CREATED_AT ];
+	public static function get_id( BaseEntity $entity, string $singular_name ): string {
+		$id   = $entity->id;
+		$date = $entity->created_at;
 		$year = substr( $date, 0, 4 );
 		$type = substr( strtolower( $singular_name ), 0, 2 );
 		return 'k' . $type . '_' . $year . $id;

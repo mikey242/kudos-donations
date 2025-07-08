@@ -11,12 +11,15 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Entity\CampaignEntity;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
+/**
+ * @extends BaseRepositoryRestController<CampaignEntity>
+ */
 class Campaign extends BaseRepositoryRestController {
 
 	/**
@@ -39,9 +42,9 @@ class Campaign extends BaseRepositoryRestController {
 		$id = (int) $request->get_param( 'id' );
 
 		// Try to find the entity by id and if none found assume it is the wp_post_id or wp_post_slug from earlier versions.
-		$item = $this->repository->find( $id ) ??
-				$this->repository->find_one_by( [ BaseRepository::POST_ID => $id ] ) ??
-				$this->repository->find_one_by( [ CampaignRepository::POST_SLUG => $id ] );
+		$item = $this->repository->get( $id ) ??
+				$this->repository->find_one_by( [ 'wp_post_id' => $id ] ) ??
+				$this->repository->find_one_by( [ 'wp_post_slug' => $id ] );
 
 		if ( ! $item ) {
 			// translators: %s is the entity type singular name (e.g Transaction).
@@ -54,9 +57,9 @@ class Campaign extends BaseRepositoryRestController {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function add_rest_fields( array $item ): array {
-		$item['total'] = $this->repository->get_total( $item );
-		return $item;
+	protected function add_rest_fields( $item ): array {
+		$item->total = $this->repository->get_total( $item );
+		return (array) $item;
 	}
 
 	/**

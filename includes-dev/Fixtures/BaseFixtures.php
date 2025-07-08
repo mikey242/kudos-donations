@@ -85,10 +85,10 @@ abstract class BaseFixtures {
 				]
 			);
 			if ( empty( $entity_data ) ) {
-				\WP_CLI::warning( "Skipping $singular_name: no valid data." );
+				WP_CLI::warning( "Skipping $singular_name: no valid data." );
 				continue;
 			}
-			$result = $this->repository->save( $entity_data );
+			$result = $this->repository->upsert( $entity_data );
 			if ( ! $result ) {
 				WP_CLI::halt( 1 );
 			}

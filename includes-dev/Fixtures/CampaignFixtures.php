@@ -44,15 +44,15 @@ class CampaignFixtures extends BaseFixtures {
 		$currency       = $currencies[ array_rand( $currencies ) ];
 
 		return [
-			BaseRepository::TITLE                   => $title . ' #' . wp_rand( 1000, 9999 ),
-			CampaignRepository::GOAL                => $this->faker->numberBetween( 500, 5000 ),
-			CampaignRepository::CURRENCY            => $currency,
-			CampaignRepository::THEME_COLOR         => $this->faker->hexColor(),
-			CampaignRepository::SHOW_GOAL           => wp_rand( 0, 1 ),
-			CampaignRepository::SHOW_RETURN_MESSAGE => wp_rand( 0, 1 ),
-			CampaignRepository::AMOUNT_TYPE         => $amount_types[ array_rand( $amount_types ) ],
-			CampaignRepository::DONATION_TYPE       => $donation_types[ array_rand( $donation_types ) ],
-			CampaignRepository::MINIMUM_DONATION    => 1,
+			'title'               => $title . ' #' . wp_rand( 1000, 9999 ),
+			'goal'                => $this->faker->numberBetween( 500, 5000 ),
+			'currency'            => $currency,
+			'theme_color'         => $this->faker->hexColor(),
+			'show_goal'           => wp_rand( 0, 1 ),
+			'show_return_message' => wp_rand( 0, 1 ),
+			'amount_type'         => $amount_types[ array_rand( $amount_types ) ],
+			'donation_type'       => $donation_types[ array_rand( $donation_types ) ],
+			'minimum_donation'    => 1,
 		];
 	}
 }

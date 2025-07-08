@@ -11,12 +11,14 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Repository;
 
+use IseardMedia\Kudos\Entity\BaseEntity;
+
 class RepositoryManager {
 
 	/**
 	 * Array of repositories.
 	 *
-	 * @var array<class-string<RepositoryInterface>, RepositoryInterface>
+	 * @var array<string, mixed>
 	 */
 	protected array $repositories = [];
 
@@ -45,14 +47,15 @@ class RepositoryManager {
 	 *
 	 * @throws \RuntimeException Thrown if repository not found.
 	 *
-	 * @param class-string<T> $class_name FQCN for repository.
-	 * @return T
+	 * @param class-string<TRepository> $class_name Repository class name.
+	 * @return TRepository
 	 *
-	 * @template T of RepositoryInterface
+	 * @template TEntity of BaseEntity
+	 * @template TRepository of BaseRepository<TEntity>
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
-	public function get( string $class_name ): RepositoryInterface {
+	public function get( string $class_name ) {
 		if ( ! isset( $this->repositories[ $class_name ] ) ) {
 			throw new \RuntimeException( esc_attr( "Repository not registered: $class_name" ) );
 		}

@@ -11,7 +11,10 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Dev\Fixtures;
 
-use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
@@ -22,7 +25,6 @@ class TransactionFixtures extends BaseFixtures {
 
 	private const SUBSCRIPTION_POOL_KEY = '_kudos_fixture_subscription_pool';
 	private SubscriptionRepository $subscription_repository;
-	private DonorRepository $donor_repository;
 
 	/**
 	 * {@inheritDoc}
@@ -31,7 +33,6 @@ class TransactionFixtures extends BaseFixtures {
 		delete_transient( self::SUBSCRIPTION_POOL_KEY );
 		$this->repository              = new TransactionRepository( $this->wpdb );
 		$this->subscription_repository = new SubscriptionRepository( $this->wpdb );
-		$this->donor_repository        = new DonorRepository( $this->wpdb );
 	}
 
 	/**
@@ -46,10 +47,10 @@ class TransactionFixtures extends BaseFixtures {
 		$subscription    = $this->reserve_subscription();
 		$subscription_id = null;
 		if ( $subscription ) {
-			$subscription_id = $subscription[ BaseRepository::ID ];
+			$subscription_id = $subscription->id;
 			$sequence_type   = SequenceType::FIRST;
-			$value           = $subscription[ SubscriptionRepository::VALUE ];
-			$currency        = $subscription[ SubscriptionRepository::CURRENCY ];
+			$value           = $subscription->value;
+			$currency        = $subscription->currency;
 		} else {
 			$sequence_type = $this->pick_weighted(
 				[
@@ -65,45 +66,49 @@ class TransactionFixtures extends BaseFixtures {
 		switch ( $sequence_type ) {
 			case SequenceType::ONEOFF:
 			case SequenceType::FIRST:
-				$campaigns   = ( new CampaignRepository( $wpdb ) )->all();
+				/** @var CampaignEntity[] $campaigns */
+				$campaigns = ( new CampaignRepository( $wpdb ) )->all();
+				/** @var DonorEntity[] $donors */
 				$donors      = ( new DonorRepository( $wpdb ) )->all();
 				$campaign    = $campaigns[ array_rand( $campaigns ) ];
-				$campaign_id = $campaign[ BaseRepository::ID ];
+				$campaign_id = $campaign->id;
 				$donor       = $donors ? $donors[ array_rand( $donors ) ] : null;
-				$donor_id    = $donor[ BaseRepository::ID ] ?? null;
+				$donor_id    = $donor->id ?? null;
 				if ( SequenceType::ONEOFF === $sequence_type ) {
 					$value    = $this->faker->numberBetween( 10, 200 );
-					$currency = $campaign[ CampaignRepository::CURRENCY ];
+					$currency = $campaign->currency;
 				}
 				break;
 			case SequenceType::RECURRING:
-				$subscriptions     = $this->subscription_repository->all();
-				$subscription      = $subscriptions[ array_rand( $subscriptions ) ];
-				$subscription_id   = $subscription[ BaseRepository::ID ];
-				$value             = $subscription[ SubscriptionRepository::VALUE ];
+				/** @var SubscriptionEntity[] $subscriptions */
+				$subscriptions   = $this->subscription_repository->all();
+				$subscription    = $subscriptions[ array_rand( $subscriptions ) ];
+				$subscription_id = $subscription->id;
+				$value           = $subscription->value;
+				/** @var TransactionEntity $first_transaction */
 				$first_transaction = $this->repository->find_one_by(
 					[
-						TransactionRepository::SUBSCRIPTION_ID => $subscription_id,
+						'subscription_id' => $subscription_id,
 					]
 				);
 				if ( $first_transaction ) {
-					$campaign_id = $first_transaction[ TransactionRepository::CAMPAIGN_ID ];
-					$donor_id    = $first_transaction[ TransactionRepository::DONOR_ID ];
-					$currency    = $first_transaction[ TransactionRepository::CURRENCY ];
+					$campaign_id = $first_transaction->campaign_id;
+					$donor_id    = $first_transaction->donor_id;
+					$currency    = $first_transaction->currency;
 				}
 				break;
 		}
 
 		return [
-			TransactionRepository::CAMPAIGN_ID       => $campaign_id,
-			TransactionRepository::DONOR_ID          => $donor_id,
-			TransactionRepository::SEQUENCE_TYPE     => $sequence_type,
-			TransactionRepository::VALUE             => $value,
-			TransactionRepository::CURRENCY          => $currency,
-			TransactionRepository::VENDOR_PAYMENT_ID => 'tr_' . wp_rand( 1000000, 9999999 ),
-			TransactionRepository::MODE              => 'live',
-			TransactionRepository::STATUS            => 'paid',
-			TransactionRepository::SUBSCRIPTION_ID   => $subscription_id,
+			'campaign_id'       => $campaign_id,
+			'donor_id'          => $donor_id,
+			'sequence_type'     => $sequence_type,
+			'value'             => $value,
+			'currency'          => $currency,
+			'vendor_payment_id' => 'tr_' . wp_rand( 1000000, 9999999 ),
+			'mode'              => 'live',
+			'status'            => 'paid',
+			'subscription_id'   => $subscription_id,
 		];
 	}
 
@@ -112,18 +117,16 @@ class TransactionFixtures extends BaseFixtures {
 	 */
 	protected function after( array $created_entities ): void {
 		foreach ( $created_entities as $transaction_id ) {
-			$transaction = $this->repository->find( $transaction_id );
-			if ( SequenceType::FIRST === $transaction[ TransactionRepository::SEQUENCE_TYPE ] ) {
-				$donor_id = $transaction[ TransactionRepository::DONOR_ID ];
-				$donor    = $this->donor_repository->find( $donor_id );
-				$sub_id   = $transaction[ TransactionRepository::SUBSCRIPTION_ID ];
-				$this->subscription_repository->save(
-					[
-						BaseRepository::ID               => $sub_id,
-						SubscriptionRepository::TRANSACTION_ID => $transaction[ BaseRepository::ID ],
-						SubscriptionRepository::DONOR_ID => $donor[ BaseRepository::ID ],
-					]
-				);
+			/** @var TransactionEntity $transaction */
+			$transaction = $this->repository->get( $transaction_id );
+			if ( SequenceType::FIRST === $transaction->sequence_type ) {
+				$donor_id = $transaction->donor_id;
+				$sub_id   = $transaction->subscription_id;
+				/** @var SubscriptionEntity $subscription */
+				$subscription                 = $this->subscription_repository->get( $sub_id );
+				$subscription->transaction_id = $transaction_id;
+				$subscription->donor_id       = $donor_id;
+				$this->subscription_repository->upsert( $subscription );
 			}
 		}
 	}
@@ -131,7 +134,7 @@ class TransactionFixtures extends BaseFixtures {
 	/**
 	 * Returns valid subscription.
 	 */
-	private function reserve_subscription(): ?array {
+	private function reserve_subscription(): ?SubscriptionEntity {
 		$pool = $this->get_subscription_pool();
 
 		if ( empty( $pool ) ) {
@@ -152,6 +155,8 @@ class TransactionFixtures extends BaseFixtures {
 
 	/**
 	 * Returns an array of valid fist transactions.
+	 *
+	 * @return SubscriptionEntity[]
 	 */
 	private function get_subscription_pool(): array {
 		$subscriptions = get_transient( self::SUBSCRIPTION_POOL_KEY );

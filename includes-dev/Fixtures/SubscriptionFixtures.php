@@ -30,17 +30,17 @@ class SubscriptionFixtures extends BaseFixtures {
 
 		// 4. Return the subscription data
 		return [
-			SubscriptionRepository::FREQUENCY              => $this->pick_weighted(
+			'frequency'              => $this->pick_weighted(
 				[
 					'monthly'   => 60,
 					'quarterly' => 25,
 					'yearly'    => 15,
 				]
 			),
-			SubscriptionRepository::YEARS                  => wp_rand( 2, 10 ),
-			SubscriptionRepository::VENDOR_SUBSCRIPTION_ID => $vendor_id,
-			SubscriptionRepository::STATUS                 => SubscriptionStatus::ACTIVE,
-			SubscriptionRepository::VALUE                  => $this->faker->numberBetween( 20, 200 ),
+			'years'                  => wp_rand( 2, 10 ),
+			'vendor_subscription_id' => $vendor_id,
+			'status'                 => SubscriptionStatus::ACTIVE,
+			'value'                  => $this->faker->numberBetween( 20, 200 ),
 		];
 	}
 }

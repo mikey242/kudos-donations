@@ -1,7 +1,8 @@
 <?php
 namespace Vendor\PaymentVendor;
 
-use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\RequestException;
@@ -37,7 +38,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 		$result = $this->create_payment_fixture();
 
 		$this->assertSame('https://mollie.com/checkout/123', $result['checkout_url']);
-		$this->assertSame('tr_abc123', $result['transaction'][TransactionRepository::VENDOR_PAYMENT_ID]);
+		$this->assertSame('tr_abc123', $result['transaction']->vendor_payment_id);
 	}
 
 	/**
@@ -126,9 +127,8 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 		$this->api_mock->payments = $payments_mock;
 
 		// Setup required entities
-		$campaign_id = $this->get_repository(CampaignRepository::class)->save([
-			BaseRepository::TITLE => 'Fail Campaign',
-		]);
+		$campaign = new CampaignEntity(['title' => 'Fail campaign']);
+		$campaign_id = $this->get_repository(CampaignRepository::class)->upsert($campaign);
 		$payment_args = [
 			'amount' => [ 'currency' => 'EUR', 'value' => '10.00' ],
 			'description' => 'Fail test',
@@ -142,10 +142,9 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 			'name' => 'Fail Tester',
 		];
 
-		$transaction_id = $this->get_repository(TransactionRepository::class)->save([
-			BaseRepository::TITLE => 'Failing Transaction'
-		]);
-		$transaction = $this->get_repository(TransactionRepository::class)->find($transaction_id);
+		$transaction = new TransactionEntity(['title' => 'Failing Transaction']);
+		$transaction_id = $this->get_repository(TransactionRepository::class)->upsert($transaction);
+		$transaction = $this->get_repository(TransactionRepository::class)->get($transaction_id);
 
 		$result = $this->vendor->create_payment($payment_args, $transaction);
 
@@ -180,6 +179,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 
 	/**
 	 * Creates a payment with default values that can be overridden.
+	 *
 	 * @param array $overrides Values to override.
 	 * @param \Closure|null $assert_callback Callback.
 	 * @param ?string $vendor_customer_id The vendor customer id.
@@ -200,17 +200,14 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 
 		$payment_args = array_merge($default_args, $overrides);
 
-		$campaign_id = $this->get_repository(CampaignRepository::class)->save([
-			BaseRepository::TITLE => 'Test Campaign',
-			CampaignRepository::SHOW_RETURN_MESSAGE => $payment_args['show_return_message'] ?? false,
-		]);
+		$campaign = new CampaignEntity(['show_return_message' => $payment_args['show_return_message'] ?? false]);
+		$campaign_id = $this->get_repository(CampaignRepository::class)->upsert($campaign);
 
 		$payment_args['campaign_id'] = $campaign_id;
 
-		$transaction_id = $this->get_repository(TransactionRepository::class)->save([
-			BaseRepository::TITLE => 'Test transaction'
-		]);
-		$transaction = $this->get_repository(TransactionRepository::class)->find($transaction_id);
+		$transaction = new TransactionEntity(['title' => 'Test transaction']);
+		$transaction_id = $this->get_repository(TransactionRepository::class)->upsert($transaction);
+		$transaction = $this->get_repository(TransactionRepository::class)->get($transaction_id);
 
 		$payment_mock = $this->createMock(Payment::class);
 		$payment_mock->method('getCheckoutUrl')->willReturn('https://mollie.com/checkout/123');
@@ -235,7 +232,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 
 		$checkout_url = $this->vendor->create_payment($payment_args, $transaction, $vendor_customer_id);
 
-		$updated = $this->get_repository(TransactionRepository::class)->find($transaction_id);
+		$updated = $this->get_repository(TransactionRepository::class)->get($transaction_id);
 
 		return [
 			'transaction_id' => $transaction_id,

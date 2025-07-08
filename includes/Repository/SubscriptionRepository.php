@@ -11,28 +11,17 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Repository;
 
+use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 
 class SubscriptionRepository extends BaseRepository {
 
-	/**
-	 * Table name.
-	 */
-	public const TABLE_NAME = 'kudos_subscriptions';
+	use SanitizeTrait;
 
-	/**
-	 * Field constants.
-	 */
-	public const VALUE                  = 'value';
-	public const CURRENCY               = 'currency';
-	public const FREQUENCY              = 'frequency';
-	public const YEARS                  = 'years';
-	public const STATUS                 = 'status';
-	public const TRANSACTION_ID         = 'transaction_id';
-	public const DONOR_ID               = 'donor_id';
-	public const CAMPAIGN_ID            = 'campaign_id';
-	public const VENDOR_CUSTOMER_ID     = 'vendor_customer_id';
-	public const VENDOR_SUBSCRIPTION_ID = 'vendor_subscription_id';
+	public const TABLE_NAME = 'kudos_subscriptions';
 
 	/**
 	 * {@inheritDoc}
@@ -53,54 +42,54 @@ class SubscriptionRepository extends BaseRepository {
 	 */
 	public function get_additional_column_schema(): array {
 		return [
-			self::VALUE                  => $this->make_schema_field( FieldType::FLOAT, null, [ Utils::class, 'sanitize_float' ] ),
-			self::CURRENCY               => $this->make_schema_field( FieldType::STRING, 'EUR', 'sanitize_text_field' ),
-			self::FREQUENCY              => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
-			self::YEARS                  => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::STATUS                 => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
-			self::TRANSACTION_ID         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::DONOR_ID               => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::CAMPAIGN_ID            => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::VENDOR_CUSTOMER_ID     => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
-			self::VENDOR_SUBSCRIPTION_ID => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			'value'                  => $this->make_schema_field( FieldType::FLOAT, [ $this, 'sanitize_float' ] ),
+			'currency'               => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
+			'frequency'              => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
+			'years'                  => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
+			'status'                 => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
+			'transaction_id'         => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
+			'donor_id'               => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
+			'campaign_id'            => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
+			'vendor_customer_id'     => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
+			'vendor_subscription_id' => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 		];
 	}
 
 	/**
 	 * Returns linked transaction.
 	 *
-	 * @param array $subscription The subscription array.
+	 * @param SubscriptionEntity $subscription The subscription array.
 	 */
-	public function get_transaction( array $subscription ): ?array {
-		$transaction_id = $subscription[ self::TRANSACTION_ID ] ?? null;
+	public function get_transaction( SubscriptionEntity $subscription ): ?TransactionEntity {
+		$transaction_id = $subscription->transaction_id ?? null;
 		if ( ! $transaction_id ) {
 			return null;
 		}
 		return $this->get_repository( TransactionRepository::class )
-			->find( (int) $transaction_id );
+			->get( $transaction_id );
 	}
 
 	/**
 	 * Returns linked donor.
 	 *
-	 * @param array $subscription The subscription array.
+	 * @param SubscriptionEntity $subscription The subscription array.
 	 */
-	public function get_donor( array $subscription ): ?array {
-		$donor_id = $subscription[ self::DONOR_ID ] ?? null;
+	public function get_donor( SubscriptionEntity $subscription ): ?DonorEntity {
+		$donor_id = $subscription->donor_id ?? null;
 		if ( ! $donor_id ) {
 			return null;
 		}
 		return $this->get_repository( DonorRepository::class )
-			->find( (int) $donor_id );
+			->get( $donor_id );
 	}
 
 	/**
 	 * Returns campaign.
 	 *
-	 * @param array $subscription The subscription array.
+	 * @param SubscriptionEntity $subscription The subscription array.
 	 */
-	public function get_campaign( array $subscription ): ?array {
-		$campaign_id = $subscription[ self::CAMPAIGN_ID ];
+	public function get_campaign( SubscriptionEntity $subscription ): ?CampaignEntity {
+		$campaign_id = $subscription->campaign_id;
 
 		// Fallback: get campaign id from linked transaction.
 		if ( ! $campaign_id ) {
@@ -110,10 +99,19 @@ class SubscriptionRepository extends BaseRepository {
 				return null;
 			}
 
-			$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
+			$campaign_id = $transaction->campaign_id;
 		}
 
 		return $this->get_repository( CampaignRepository::class )
-			->find( (int) $campaign_id );
+			->get( $campaign_id );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return class-string<SubscriptionEntity>
+	 */
+	protected function get_entity_class(): string {
+		return SubscriptionEntity::class;
 	}
 }

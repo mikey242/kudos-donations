@@ -11,12 +11,18 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Repository;
 
+use IseardMedia\Kudos\Entity\BaseEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Helper\WpDb;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
+/**
+ * Template for BaseEntity classes.
+ *
+ * @template TEntity of BaseEntity
+ */
 abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterface, RepositoryAwareInterface {
 
 	use LoggerAwareTrait;
@@ -29,10 +35,8 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * Field constants.
 	 */
 	public const ID         = 'id';
-	public const POST_ID    = 'wp_post_id';
 	public const TITLE      = 'title';
 	public const CREATED_AT = 'created_at';
-	public const UPDATED_AT = 'updated_at';
 
 	/**
 	 * BaseRepository constructor.
@@ -59,11 +63,11 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 */
 	private function get_base_column_schema(): array {
 		return [
-			self::ID         => $this->make_schema_field( FieldType::INTEGER, null, 'absint' ),
-			self::POST_ID    => $this->make_schema_field( FieldType::INTEGER, null, 'sanitize_text_field' ),
-			self::TITLE      => $this->make_schema_field( FieldType::STRING, '', 'sanitize_text_field' ),
-			self::CREATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
-			self::UPDATED_AT => $this->make_schema_field( FieldType::STRING, null, 'sanitize_text_field' ),
+			'id'         => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
+			'wp_post_id' => $this->make_schema_field( FieldType::INTEGER, 'sanitize_text_field' ),
+			'title'      => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
+			'created_at' => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
+			'updated_at' => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 		];
 	}
 
@@ -84,11 +88,12 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param int   $id The id to fetch.
 	 * @param array $columns The list of columns to return.
+	 * @return TEntity|null
 	 */
-	public function find( int $id, array $columns = [ '*' ] ): ?array {
+	public function get( int $id, array $columns = [ '*' ] ) {
 		$results = $this->query(
 			[
-				'where'   => [ self::ID => $id ],
+				'where'   => [ 'id' => $id ],
 				'limit'   => 1,
 				'columns' => $columns,
 			]
@@ -102,6 +107,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param array $criteria The criteria to search by.
 	 * @param array $columns The list of columns to return.
+	 * @return TEntity[]
 	 */
 	public function find_by( array $criteria, array $columns = [ '*' ] ): array {
 		return $this->query(
@@ -117,9 +123,9 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param array $criteria Key-value pairs for WHERE clause.
 	 * @param array $columns  List of columns to return. Defaults to all.
-	 * @return array|null     The matching row, or null if not found.
+	 * @return TEntity[] | null     The matching row, or null if not found.
 	 */
-	public function find_one_by( array $criteria, array $columns = [ '*' ] ): ?array {
+	public function find_one_by( array $criteria, array $columns = [ '*' ] ): ?BaseEntity {
 		$results = $this->query(
 			[
 				'where'   => $criteria,
@@ -139,7 +145,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	public function find_by_post_id( int $post_id ): ?array {
 		$results = $this->query(
 			[
-				'where' => [ self::POST_ID => $post_id ],
+				'where' => [ 'wp_post_id' => $post_id ],
 				'limit' => 1,
 			]
 		);
@@ -150,10 +156,12 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	/**
 	 * Insert record with provided data.
 	 *
-	 * @param array $data The data to insert.
+	 * @param BaseEntity $entity The data to insert.
 	 * @return int|false The inserted row ID or false on failure.
 	 */
-	private function insert( array $data ) {
+	public function insert( BaseEntity $entity ) {
+		$data = $this->prepare_for_persistence( $entity->to_array() );
+
 		$success = $this->wpdb->insert( $this->table, $data );
 
 		if ( ! $success ) {
@@ -163,11 +171,11 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 		$id = $this->wpdb->get_insert_id();
 
 		// Generate title if none provided.
-		if ( empty( $data[ self::TITLE ] ) && $id ) {
-			$args         = $this->find( $id );
-			$formatted_id = Utils::get_id( $args, static::get_singular_name() );
+		if ( empty( $data['title'] ) && $id ) {
+			$entity       = $this->get( $id );
+			$formatted_id = Utils::get_id( $entity, static::get_singular_name() );
 			$title        = static::get_singular_name() . \sprintf( ' (%1$s)', $formatted_id );
-			$this->wpdb->update( $this->table, [ self::TITLE => $title ], [ 'id' => $id ] );
+			$this->wpdb->update( $this->table, [ 'title' => $title ], [ 'id' => $id ] );
 		}
 
 		return $id;
@@ -176,37 +184,64 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	/**
 	 * Update the provided record.
 	 *
-	 * @param int   $id The id of the record to update.
-	 * @param array $data The data to update.
+	 * @throws \InvalidArgumentException Thrown if id missing.
+	 *
+	 * @param BaseEntity $entity The data to update.
 	 */
-	private function update( int $id, array $data ): bool {
-		$data[ self::UPDATED_AT ] = current_time( 'mysql', true );
+	public function update( BaseEntity $entity ): bool {
+		$data = $this->prepare_for_persistence( $entity->to_array() );
+
+		if ( ! isset( $data['id'] ) ) {
+			throw new \InvalidArgumentException( 'Cannot update entity without ID.' );
+		}
+
+		$id = (int) $data['id'];
+		unset( $data['id'] );
+
+		$data['updated_at'] = current_time( 'mysql', true );
+
+		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
+	}
+
+	/**
+	 * Patch specific fields of an existing entity.
+	 *
+	 * @throws \RuntimeException If entity with provided id doesn't exist.
+	 *
+	 * @param int   $id   The ID of the entity to update.
+	 * @param array $data The partial data to update.
+	 * @return bool True if the update succeeded.
+	 */
+	public function patch( int $id, array $data ): bool {
+
+		if ( ! $this->get( $id ) ) {
+			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( $id ) ) );
+		}
+
+		$data = $this->prepare_for_persistence( $data );
+
 		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
 	}
 
 	/**
 	 * Save a record (insert or update depending on presence of ID).
 	 *
-	 * @param array $data The data to upsert.
+	 * @param BaseEntity $entity The data to upsert.
 	 * @return int|false The inserted or updated row ID, or false on failure.
 	 */
-	public function save( array $data ) {
-		$prepared_data = $this->sanitize_data_from_schema( $data );
-		if ( isset( $prepared_data[ self::ID ] ) && $prepared_data[ self::ID ] ) {
-			$id = (int) $prepared_data[ self::ID ];
-			unset( $prepared_data[ self::ID ] );
-
-			$result = $this->update( $id, $prepared_data ) ? $id : false;
+	public function upsert( BaseEntity $entity ) {
+		if ( $entity->id ?? null ) {
+			$result = $this->update( $entity ) ? $entity->id : false;
 		} else {
-			$result = $this->insert( $prepared_data );
+			$result = $this->insert( $entity );
 		}
 
 		if ( $this->wpdb->last_error ) {
 			$this->logger->error(
 				'Failed to update or insert record',
 				[
-					'last_error'    => $this->wpdb->last_error,
-					'prepared_data' => $prepared_data,
+					'last_error' => $this->wpdb->last_error,
+					'entity'     => $entity->to_array(),
 				]
 			);
 		}
@@ -236,6 +271,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * Main query method for fetching rows.
 	 *
 	 * @param array $args The args to pass to the query.
+	 * @return TEntity[]
 	 *
 	 * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 	 */
@@ -266,7 +302,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 		);
 
 		return array_map(
-			fn( $row ) => $this->transform_result( $this->cast_types( $row ) ),
+			fn( $row ) => $this->transform_result( $row ),
 			$results
 		);
 	}
@@ -309,16 +345,6 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			'sql'    => $clauses ? 'WHERE ' . implode( ' AND ', $clauses ) : '',
 			'params' => $params,
 		];
-	}
-
-	/**
-	 * Allows child repositories to append or transform results.
-	 *
-	 * @param array $row The base row from DB.
-	 * @return array     The modified/enriched row.
-	 */
-	protected function transform_result( array $row ): array {
-		return $row;
 	}
 
 	/**
@@ -419,13 +445,11 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * Returns the schema field.
 	 *
 	 * @param string   $type The type of field (e.g string).
-	 * @param mixed    $default_value The default value for this field.
 	 * @param callable $sanitize Sanitize callback.
 	 */
-	protected function make_schema_field( string $type, $default_value, callable $sanitize ): array {
+	protected function make_schema_field( string $type, callable $sanitize ): array {
 		return [
 			'type'              => $type,
-			'default'           => $default_value,
 			'sanitize_callback' => $sanitize,
 		];
 	}
@@ -435,5 +459,45 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 */
 	public function get_all_fields(): array {
 		return array_keys( static::get_column_schema() );
+	}
+
+	/**
+	 * Gets the associated entity class.
+	 *
+	 * @return class-string<TEntity>
+	 */
+	abstract protected function get_entity_class(): string;
+
+	/**
+	 * Creates a new entity from data array.
+	 *
+	 * @param array $data The raw array data.
+	 * @return TEntity
+	 */
+	public function new_entity( array $data ) {
+		return $this->transform_result( $data );
+	}
+
+	/**
+	 * Prepares an entity for insertion or update.
+	 *
+	 * @param array $data The entity data to process.
+	 * @return array<string, mixed>
+	 */
+	private function prepare_for_persistence( array $data ): array {
+		$data = $this->cast_types( $data );
+		return $this->sanitize_data_from_schema( $data );
+	}
+
+	/**
+	 * Convert result into entity.
+	 *
+	 * @param array $row The result from the db.
+	 * @return TEntity
+	 */
+	private function transform_result( array $row, $apply_defaults = true ) {
+		$entity_class  = $this->get_entity_class();
+		$sanitized_row = $this->sanitize_data_from_schema( $row );
+		return new $entity_class( $this->cast_types( $sanitized_row ), $apply_defaults );
 	}
 }

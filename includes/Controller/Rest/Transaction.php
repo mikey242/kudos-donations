@@ -11,8 +11,12 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 
+/**
+ * @extends BaseRepositoryRestController<TransactionEntity>
+ */
 class Transaction extends BaseRepositoryRestController {
 	/**
 	 * Campaign rest route constructor.
@@ -28,15 +32,15 @@ class Transaction extends BaseRepositoryRestController {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function add_rest_fields( array $item ): array {
-		$item['campaign']     = $this->repository->get_campaign( $item, [ 'title' ] );
-		$item['donor']        = $this->repository->get_donor( $item, [ 'name' ] );
-		$item['subscription'] = $this->repository->get_subscription( $item );
+	protected function add_rest_fields( $item ): array {
+		$item->campaign     = $this->repository->get_campaign( $item, [ 'title' ] );
+		$item->donor        = $this->repository->get_donor( $item, [ 'name' ] );
+		$item->subscription = $this->repository->get_subscription( $item );
 
-		if ( 'paid' === $item['status'] ) {
-			$transaction_id = $item['id'];
+		if ( 'paid' === $item->status ) {
+			$transaction_id = $item->id;
 
-			$item['invoice_url'] = add_query_arg(
+			$item->invoice_url = add_query_arg(
 				[
 					'kudos_action' => 'view_invoice',
 					'_wpnonce'     => wp_create_nonce( "view_invoice_$transaction_id" ),
@@ -45,6 +49,6 @@ class Transaction extends BaseRepositoryRestController {
 				admin_url( 'admin.php' )
 			);
 		}
-		return $item;
+		return (array) $item;
 	}
 }

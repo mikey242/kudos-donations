@@ -12,12 +12,14 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\HasSettingsInterface;
+use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
@@ -243,10 +245,11 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
-						$transaction = $this->get_repository( TransactionRepository::class )->find( (int) $transaction_id );
+						/** @var TransactionEntity $transaction */
+						$transaction = $this->get_repository( TransactionRepository::class )->get( (int) $transaction_id );
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
-							$campaign_id = $transaction[ TransactionRepository::CAMPAIGN_ID ];
+							$campaign_id = $transaction->campaign_id;
 
 							$this->payment_status_modal_html(
 								(int) $transaction_id,
