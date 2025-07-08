@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Dev\Fixtures;
 
+use IseardMedia\Kudos\Entity\DonorEntity;
 use IseardMedia\Kudos\Repository\DonorRepository;
 
 class DonorsFixtures extends BaseFixtures {
@@ -24,16 +25,18 @@ class DonorsFixtures extends BaseFixtures {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function generate_random_entity(): array {
-		return [
-			'name'               => $this->faker->name(),
-			'email'              => $this->faker->email(),
-			'country'            => $this->faker->countryCode(),
-			'business_name'      => $this->faker->company(),
-			'postcode'           => $this->faker->postcode(),
-			'street'             => $this->faker->streetAddress(),
-			'city'               => $this->faker->city(),
-			'vendor_customer_id' => 'cst_' . wp_rand( 1000000, 9999999 ),
-		];
+	protected function generate_random_entity(): DonorEntity {
+		return new DonorEntity(
+			[
+				'name'               => $this->faker->name(),
+				'email'              => $this->faker->email(),
+				'country'            => $this->faker->countryCode(),
+				'business_name'      => $this->faker->company(),
+				'postcode'           => $this->faker->postcode(),
+				'street'             => $this->faker->streetAddress(),
+				'city'               => $this->faker->city(),
+				'vendor_customer_id' => 'cst_' . wp_rand( 1000000, 9999999 ),
+			]
+		);
 	}
 }

@@ -38,7 +38,7 @@ class TransactionFixtures extends BaseFixtures {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function generate_random_entity(): array {
+	protected function generate_random_entity(): TransactionEntity {
 		$wpdb     = $this->wpdb;
 		$value    = $this->faker->numberBetween( 10, 200 );
 		$currency = 'EUR';
@@ -99,17 +99,19 @@ class TransactionFixtures extends BaseFixtures {
 				break;
 		}
 
-		return [
-			'campaign_id'       => $campaign_id,
-			'donor_id'          => $donor_id,
-			'sequence_type'     => $sequence_type,
-			'value'             => $value,
-			'currency'          => $currency,
-			'vendor_payment_id' => 'tr_' . wp_rand( 1000000, 9999999 ),
-			'mode'              => 'live',
-			'status'            => 'paid',
-			'subscription_id'   => $subscription_id,
-		];
+		return new TransactionEntity(
+			[
+				'campaign_id'       => $campaign_id,
+				'donor_id'          => $donor_id,
+				'sequence_type'     => $sequence_type,
+				'value'             => $value,
+				'currency'          => $currency,
+				'vendor_payment_id' => 'tr_' . wp_rand( 1000000, 9999999 ),
+				'mode'              => 'live',
+				'status'            => 'paid',
+				'subscription_id'   => $subscription_id,
+			]
+		);
 	}
 
 	/**

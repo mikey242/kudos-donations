@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Dev\Fixtures;
 
 use Faker\Factory;
 use Faker\Generator;
+use IseardMedia\Kudos\Entity\BaseEntity;
 use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\RepositoryInterface;
@@ -77,23 +78,18 @@ abstract class BaseFixtures {
 
 		$created = [];
 		for ( $x = 0; $x < $count; $x++ ) {
-			$entity_data = $this->generate_random_entity();
-			$entity_data = array_merge(
-				$entity_data,
-				[
-					BaseRepository::CREATED_AT => $this->faker->dateTimeThisDecade()->format( 'Y-m-d H:i:s' ),
-				]
-			);
-			if ( empty( $entity_data ) ) {
+			$entity             = $this->generate_random_entity();
+			$entity->created_at = $this->faker->dateTimeThisDecade()->format( 'Y-m-d H:i:s' );
+			if ( empty( $entity ) ) {
 				WP_CLI::warning( "Skipping $singular_name: no valid data." );
 				continue;
 			}
-			$result = $this->repository->upsert( $entity_data );
+			$result = $this->repository->upsert( $entity );
 			if ( ! $result ) {
 				WP_CLI::halt( 1 );
 			}
 			$created[] = $result;
-			WP_CLI::log( "Created $singular_name: " . $entity_data['title'] );
+			WP_CLI::log( "Created $singular_name: " . $entity->title );
 		}
 
 		// After hook.
@@ -107,7 +103,7 @@ abstract class BaseFixtures {
 	/**
 	 * Generates random entity data.
 	 */
-	abstract protected function generate_random_entity();
+	abstract protected function generate_random_entity(): BaseEntity;
 
 	/**
 	 * Optional pre-processing hook before entities created.
