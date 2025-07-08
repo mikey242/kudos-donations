@@ -19,7 +19,6 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Repository\TransactionRepository;
-use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;

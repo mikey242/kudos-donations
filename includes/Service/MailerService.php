@@ -18,8 +18,6 @@ use IseardMedia\Kudos\Entity\DonorEntity;
 use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Repository\BaseRepository;
-use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
