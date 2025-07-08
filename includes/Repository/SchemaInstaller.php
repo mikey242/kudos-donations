@@ -7,14 +7,10 @@
  * @copyright 2025 Iseard Media
  */
 
-namespace IseardMedia\Kudos\Lifecycle;
+namespace IseardMedia\Kudos\Repository;
 
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Helper\WpDb;
-use IseardMedia\Kudos\Repository\CampaignRepository;
-use IseardMedia\Kudos\Repository\DonorRepository;
-use IseardMedia\Kudos\Repository\SubscriptionRepository;
-use IseardMedia\Kudos\Repository\TransactionRepository;
 
 class SchemaInstaller implements ActivationAwareInterface {
 	private WpDb $wpdb;
