@@ -32,13 +32,6 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	protected string $table;
 
 	/**
-	 * Field constants.
-	 */
-	public const ID         = 'id';
-	public const TITLE      = 'title';
-	public const CREATED_AT = 'created_at';
-
-	/**
 	 * BaseRepository constructor.
 	 *
 	 * @param WpDb $wpdb For interfacing with the wpdb.

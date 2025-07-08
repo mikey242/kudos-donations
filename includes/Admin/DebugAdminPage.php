@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
-use IseardMedia\Kudos\Repository\BaseRepository;
+use IseardMedia\Kudos\Entity\CampaignEntity;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
@@ -187,6 +187,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 				switch ( $this->current_tab ) :
 
 					case self::TAB_ACTIONS:
+						/** @var CampaignEntity[] $campaigns */
 						$campaigns = $this->get_repository( CampaignRepository::class )->all();
 						?>
 
@@ -264,8 +265,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 												foreach ( $campaigns as $campaign ) {
 													printf(
 														'<option value="%s">%s</option>',
-														esc_attr( $campaign[ BaseRepository::ID ] ),
-														esc_html( $campaign[ BaseRepository::TITLE ] )
+														esc_attr( $campaign->id ),
+														esc_html( $campaign->title )
 													);
 												}
 												?>
@@ -283,8 +284,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 											foreach ( $campaigns as $campaign ) {
 												printf(
 													'<option value="%s">%s</option>',
-													esc_attr( $campaign[ BaseRepository::ID ] ),
-													esc_html( $campaign[ BaseRepository::TITLE ] )
+													esc_attr( $campaign->id ),
+													esc_html( $campaign->title )
 												);
 											}
 											?>

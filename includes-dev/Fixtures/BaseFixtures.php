@@ -15,7 +15,6 @@ use Faker\Factory;
 use Faker\Generator;
 use IseardMedia\Kudos\Entity\BaseEntity;
 use IseardMedia\Kudos\Helper\WpDb;
-use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\RepositoryInterface;
 use WP_CLI;
 use WP_CLI\ExitException;
@@ -132,6 +131,7 @@ abstract class BaseFixtures {
 			WP_CLI::confirm( "Are you sure you want to delete all $plural_name?" );
 		}
 
+		/** @var BaseEntity[] $all */
 		$all = $this->repository->all();
 
 		if ( empty( $all ) ) {
@@ -140,7 +140,7 @@ abstract class BaseFixtures {
 		}
 
 		foreach ( $all as $entity ) {
-			$this->repository->delete( $entity[ BaseRepository::ID ] );
+			$this->repository->delete( $entity->id );
 		}
 
 		WP_CLI::success( \count( $all ) . " $plural_name deleted." );
