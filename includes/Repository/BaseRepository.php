@@ -134,8 +134,9 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * Find by the post id. This is for legacy access.
 	 *
 	 * @param int $post_id The post id to search by.
+	 * @return TEntity|null
 	 */
-	public function find_by_post_id( int $post_id ): ?array {
+	public function find_by_post_id( int $post_id ) {
 		$results = $this->query(
 			[
 				'where' => [ 'wp_post_id' => $post_id ],
