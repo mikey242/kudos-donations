@@ -1,6 +1,6 @@
 <?php
 
-use IseardMedia\Kudos\Lifecycle\SchemaInstaller;
+use IseardMedia\Kudos\Repository\SchemaInstaller;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
