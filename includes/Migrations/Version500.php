@@ -84,7 +84,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $donor_repo->find_by_post_id( $post_id );
+			$existing = $donor_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
 				$this->logger->info( "Donor post $post_id already migrated. Skipping." );
 				continue;
@@ -145,7 +145,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $campaign_repo->find_by_post_id( $post_id );
+			$existing = $campaign_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
 				$this->logger->info( "Campaign post $post_id already migrated. Skipping." );
 				continue;
@@ -237,7 +237,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $transaction_repo->find_by_post_id( $post_id );
+			$existing = $transaction_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
 				$this->logger->info( "Transaction post $post_id already migrated. Skipping." );
 				continue;
@@ -346,7 +346,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		foreach ( $posts as $post ) {
 			$post_id = $post->ID;
 
-			$existing = $subscription_repo->find_by_post_id( $post_id );
+			$existing = $subscription_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
 				$this->logger->info( "Subscription post $post_id already migrated. Skipping." );
 				continue;
@@ -444,7 +444,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 
 			// Find transaction row by wp_post_id.
 			/** @var TransactionEntity $transaction */
-			$transaction = $transaction_repo->find_by_post_id( (int) $transaction_post_id );
+			$transaction = $transaction_repo->find_one_by( [ 'wp_post_id' => (int) $transaction_post_id ] );
 
 			if ( ! $transaction ) {
 				$this->logger->warning( "No migrated transaction found for post ID $transaction_post_id" );

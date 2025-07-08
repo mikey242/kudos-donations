@@ -132,30 +132,13 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	}
 
 	/**
-	 * Find by the post id. This is for legacy access.
-	 *
-	 * @param int $post_id The post id to search by.
-	 * @return TEntity|null
-	 */
-	public function find_by_post_id( int $post_id ) {
-		$results = $this->query(
-			[
-				'where' => [ 'wp_post_id' => $post_id ],
-				'limit' => 1,
-			]
-		);
-
-		return $results[0] ?? null;
-	}
-
-	/**
 	 * Insert record with provided data.
 	 *
 	 * @param BaseEntity $entity The data to insert.
 	 * @return int|false The inserted row ID or false on failure.
 	 */
 	public function insert( BaseEntity $entity ) {
-		$data = $this->prepare_for_persistence( $entity->to_array() );
+		$data = $this->normalize_data( $entity->to_array() );
 
 		$success = $this->wpdb->insert( $this->table, $data );
 
@@ -184,7 +167,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param BaseEntity $entity The data to update.
 	 */
 	public function update( BaseEntity $entity ): bool {
-		$data = $this->prepare_for_persistence( $entity->to_array() );
+		$data = $this->normalize_data( $entity->to_array() );
 
 		if ( ! isset( $data['id'] ) ) {
 			throw new \InvalidArgumentException( 'Cannot update entity without ID.' );
@@ -213,7 +196,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( $id ) ) );
 		}
 
-		$data = $this->prepare_for_persistence( $data );
+		$data = $this->normalize_data( $data );
 
 		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
 	}
@@ -296,10 +279,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			ARRAY_A
 		);
 
-		return array_map(
-			fn( $row ) => $this->transform_result( $row ),
-			$results
-		);
+		return array_map( fn( $row ) => $this->transform_result( $row ), $results );
 	}
 
 	/**
@@ -406,24 +386,19 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			}
 
 			$callback = $schema[ $key ]['sanitize_callback'] ?? null;
-			$value    = $callback ? $this->maybe_sanitize( $callback, $value ) : $value;
+			if ( $callback && null !== $value && \is_callable( $callback ) ) {
+				$value = \call_user_func( $callback, $value );
+			}
 		}
 
 		return $allowed;
 	}
 
 	/**
-	 * Checks if value is not null before sanitizing.
-	 *
-	 * @param callable $callback The sanitize callback.
-	 * @param mixed    $value The value to sanitize.
-	 * @return mixed|null
+	 * Gets a list of fields for the current repository as defined in get_column_schema().
 	 */
-	private function maybe_sanitize( callable $callback, $value ) {
-		if ( null === $value ) {
-			return null;
-		}
-		return \is_callable( $callback ) ? \call_user_func( $callback, $value ) : $value;
+	public function get_all_fields(): array {
+		return array_keys( $this->get_column_schema() );
 	}
 
 	/**
@@ -450,13 +425,6 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	}
 
 	/**
-	 * Gets a list of fields for the current repository as defined in get_column_schema().
-	 */
-	public function get_all_fields(): array {
-		return array_keys( static::get_column_schema() );
-	}
-
-	/**
 	 * Gets the associated entity class.
 	 *
 	 * @return class-string<TEntity>
@@ -479,20 +447,21 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param array $data The entity data to process.
 	 * @return array<string, mixed>
 	 */
-	private function prepare_for_persistence( array $data ): array {
-		$data = $this->cast_types( $data );
-		return $this->sanitize_data_from_schema( $data );
+	private function normalize_data( array $data ): array {
+		$data = $this->sanitize_data_from_schema( $data );
+		return $this->cast_types( $data );
 	}
 
 	/**
 	 * Convert result into entity.
 	 *
 	 * @param array $row The result from the db.
+	 * @param bool  $apply_defaults Whether to apply default values or not.
 	 * @return TEntity
 	 */
-	private function transform_result( array $row ) {
-		$entity_class  = $this->get_entity_class();
-		$sanitized_row = $this->sanitize_data_from_schema( $row );
-		return new $entity_class( $this->cast_types( $sanitized_row ) );
+	private function transform_result( array $row, bool $apply_defaults = true ) {
+		$entity_class = $this->get_entity_class();
+		$data         = $this->normalize_data( $row );
+		return new $entity_class( $data, $apply_defaults );
 	}
 }
