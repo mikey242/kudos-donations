@@ -15,7 +15,6 @@ use Exception;
 use IseardMedia\Kudos\Entity\CampaignEntity;
 use IseardMedia\Kudos\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Repository\BaseRepository;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
@@ -138,8 +137,8 @@ class Subscription extends BaseRepositoryRestController {
 			$this->logger->info(
 				'Subscription cancelled.',
 				[
-					BaseRepository::ID => $post_id,
-					'subscription_id'  => $subscription->vendor_subscription_id,
+					'id'              => $post_id,
+					'subscription_id' => $subscription->vendor_subscription_id,
 				]
 			);
 			return new WP_REST_Response(
