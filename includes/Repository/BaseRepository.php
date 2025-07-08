@@ -27,6 +27,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 
 	use LoggerAwareTrait;
 	use RepositoryAwareTrait;
+	use SanitizeTrait;
 
 	protected WpDb $wpdb;
 	protected string $table;

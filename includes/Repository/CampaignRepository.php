@@ -19,8 +19,6 @@ use IseardMedia\Kudos\Enum\FieldType;
  */
 class CampaignRepository extends BaseRepository {
 
-	use SanitizeTrait;
-
 	public const TABLE_NAME = 'kudos_campaigns';
 
 	/**
