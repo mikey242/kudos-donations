@@ -135,7 +135,7 @@ class Admin extends BaseController {
 
 						foreach ( $transactions as $transaction ) {
 							$transaction->campaign_id = $to;
-							$transaction_repo->upsert( $transaction );
+							$transaction_repo->update( $transaction );
 						}
 					}
 					break;

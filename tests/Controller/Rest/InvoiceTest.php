@@ -44,7 +44,7 @@ class InvoiceTest extends BaseTestCase {
 
 		// Create Donor and link to Transaction.
 		$donor = new DonorEntity(['name' => 'John Smith']);
-		$donor_id = $donor_repository->upsert($donor);
+		$donor_id = $donor_repository->insert($donor);
 
 		$transaction = new TransactionEntity([
 			'donor_id'          => $donor_id,
@@ -55,7 +55,7 @@ class InvoiceTest extends BaseTestCase {
 			'currency'          => 'EUR',
 			'value'             => 10.00,
 		]);
-		$transaction_id = $transaction_repository->upsert($transaction);
+		$transaction_id = $transaction_repository->insert($transaction);
 
 		// Define Request.
 		$this->request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/$transaction_id" );

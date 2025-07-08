@@ -84,7 +84,7 @@ abstract class BaseFixtures {
 				WP_CLI::warning( "Skipping $singular_name: no valid data." );
 				continue;
 			}
-			$result = $this->repository->upsert( $entity );
+			$result = $this->repository->insert( $entity );
 			if ( ! $result ) {
 				WP_CLI::halt( 1 );
 			}
