@@ -109,15 +109,6 @@ class TransactionRepository extends BaseRepository {
 	}
 
 	/**
-	 * Get total paid transaction value for a given campaign.
-	 *
-	 * @param int $campaign_id The campaign entity id.
-	 */
-	public function get_total_by_campaign_id( int $campaign_id ): float {
-		return $this->get_total_by( 'campaign_id', $campaign_id );
-	}
-
-	/**
 	 * Get total by donor id.
 	 *
 	 * @param int $donor_id The donor entity id.
