@@ -5,6 +5,8 @@
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
  * @copyright 2025 Iseard Media
+ *
+ * @phpcs:disable Universal.Operators.DisallowShortTernary.Found
  */
 
 declare(strict_types=1);
@@ -154,16 +156,16 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 					'wp_post_id'                 => $post_id,
 					'wp_post_slug'               => sanitize_title( $post->post_name ),
 					'title'                      => get_post_field( 'post_title', $post_id ),
-					'currency'                   => get_post_meta( $post_id, 'currency', true ),
-					'goal'                       => get_post_meta( $post_id, 'goal', true ),
+					'currency'                   => get_post_meta( $post_id, 'currency', true ) ?: 'EUR',
+					'goal'                       => (float) get_post_meta( $post_id, 'goal', true ),
 					'show_goal'                  => (bool) get_post_meta( $post_id, 'show_goal', true ),
-					'additional_funds'           => get_post_meta( $post_id, 'additional_funds', true ),
+					'additional_funds'           => (float) get_post_meta( $post_id, 'additional_funds', true ),
 					'amount_type'                => get_post_meta( $post_id, 'amount_type', true ),
-					'fixed_amounts'              => wp_json_encode( get_post_meta( $post_id, 'fixed_amounts', true ) ) ?? [],
-					'minimum_donation'           => get_post_meta( $post_id, 'minimum_donation', true ),
-					'maximum_donation'           => get_post_meta( $post_id, 'maximum_donation', true ),
+					'fixed_amounts'              => get_post_meta( $post_id, 'fixed_amounts', true ) ?: [],
+					'minimum_donation'           => get_post_meta( $post_id, 'minimum_donation', true ) ?: 1.0,
+					'maximum_donation'           => get_post_meta( $post_id, 'maximum_donation', true ) ?: 5000.0,
 					'donation_type'              => get_post_meta( $post_id, 'donation_type', true ),
-					'frequency_options'          => wp_json_encode( get_post_meta( $post_id, 'frequency_options', true ) ) ?? [],
+					'frequency_options'          => get_post_meta( $post_id, 'frequency_options', true ) ?: [],
 					'email_enabled'              => (bool) get_post_meta( $post_id, 'email_enabled', true ),
 					'email_required'             => (bool) get_post_meta( $post_id, 'email_required', true ),
 					'name_enabled'               => (bool) get_post_meta( $post_id, 'name_enabled', true ),
@@ -172,7 +174,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 					'address_required'           => (bool) get_post_meta( $post_id, 'address_required', true ),
 					'message_enabled'            => (bool) get_post_meta( $post_id, 'message_enabled', true ),
 					'message_required'           => (bool) get_post_meta( $post_id, 'message_required', true ),
-					'theme_color'                => get_post_meta( $post_id, 'theme_color', true ) ?? '#ff9f1c',
+					'theme_color'                => get_post_meta( $post_id, 'theme_color', true ) ?: '#ff9f1c',
 					'terms_link'                 => get_post_meta( $post_id, 'terms_link', true ),
 					'privacy_link'               => get_post_meta( $post_id, 'privacy_link', true ),
 					'show_return_message'        => (bool) get_post_meta( $post_id, 'show_return_message', true ),
@@ -196,7 +198,6 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 					'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 				]
 			);
-
 			$campaign_repo->insert( $campaign );
 			$this->logger->info( "Migrated campaign post $post_id", [ 'data' => $campaign->to_array() ] );
 		}
@@ -247,7 +248,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			/** @var CampaignEntity[] $campaign_rows */
 			$campaign_rows = $campaign_repo->all();
 			foreach ( $campaign_rows as $row ) {
-				$campaign_map[ $row->wp_post_id ] = $row['id'];
+				$campaign_map[ $row->wp_post_id ] = $row->id;
 			}
 			$campaign_id = (int) get_post_meta( $post_id, 'campaign_id', true );
 
@@ -256,7 +257,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			/** @var DonorEntity[] $donor_rows */
 			$donor_rows = $donor_repo->all();
 			foreach ( $donor_rows as $row ) {
-				$donor_map[ $row->wp_post_id ] = $row['id'];
+				$donor_map[ $row->wp_post_id ] = $row->id;
 			}
 			$donor_id = (int) get_post_meta( $post_id, 'donor_id', true );
 
@@ -544,18 +545,18 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				$transaction->subscription_id = $subscription_id;
 				$transaction_repo->update( $transaction );
 
-				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription $subscription_id via simple match" );
+				$this->logger->info( "Backfilled transaction $transaction->id with subscription $subscription_id via simple match" );
 			} elseif ( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) === 1 ) {
 				$subscription_id = $strict_map[ $key_strict ][0];
 
 				$transaction->subscription_id = $subscription_id;
 				$transaction_repo->update( $transaction );
 
-				$this->logger->info( "Backfilled transaction {$transaction['id']} with subscription $subscription_id via strict match" );
+				$this->logger->info( "Backfilled transaction $transaction->id with subscription $subscription_id via strict match" );
 			} elseif ( ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) > 1 ) ||
 						( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) > 1 ) ) {
 				$this->logger->warning(
-					"Ambiguous match for transaction {$transaction['id']}",
+					"Ambiguous match for transaction $transaction->id",
 					[
 						'donor_id'    => $donor_id,
 						'value'       => $value,
@@ -564,7 +565,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				);
 			} else {
 				$this->logger->warning(
-					"No matching subscription found for transaction {$transaction['id']}",
+					"No matching subscription found for transaction $transaction->id",
 					[
 						'donor_id'    => $donor_id,
 						'value'       => $value,
