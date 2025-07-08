@@ -210,7 +210,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param int   $id   The ID of the entity to update.
 	 * @param array $data The partial data to update.
-	 * @return bool True if the update succeeded.
+	 * @return int|false  True if the update succeeded.
 	 */
 	public function patch( int $id, array $data ): bool {
 
