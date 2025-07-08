@@ -495,9 +495,9 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param array $row The result from the db.
 	 * @return TEntity
 	 */
-	private function transform_result( array $row, $apply_defaults = true ) {
+	private function transform_result( array $row ) {
 		$entity_class  = $this->get_entity_class();
 		$sanitized_row = $this->sanitize_data_from_schema( $row );
-		return new $entity_class( $this->cast_types( $sanitized_row ), $apply_defaults );
+		return new $entity_class( $this->cast_types( $sanitized_row ) );
 	}
 }

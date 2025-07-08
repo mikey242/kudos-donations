@@ -16,7 +16,6 @@ use IseardMedia\Kudos\Entity\DonorEntity;
 use IseardMedia\Kudos\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Enum\PaymentStatus;
 
 class TransactionRepository extends BaseRepository {
 
