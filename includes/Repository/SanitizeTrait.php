@@ -43,11 +43,21 @@ trait SanitizeTrait {
 			return wp_json_encode( $value );
 		}
 
-		if ( \is_string( $value ) ) {
+		if ( \is_string( $value ) && $this->is_valid_json( $value ) ) {
 			json_decode( $value );
 			return json_last_error() === JSON_ERROR_NONE ? $value : null;
 		}
 
 		return null;
+	}
+
+	/**
+	 * Check if a string contains valid JSON.
+	 *
+	 * @param string $json The string to check.
+	 */
+	public function is_valid_json( string $json ): bool {
+		json_decode( $json );
+		return json_last_error() === JSON_ERROR_NONE;
 	}
 }
