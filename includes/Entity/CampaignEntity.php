@@ -19,11 +19,11 @@ class CampaignEntity extends BaseEntity {
 	public bool $show_goal;
 	public ?float $additional_funds = null;
 	public string $amount_type;
-	public array $fixed_amounts;
+	public ?array $fixed_amounts;
 	public float $minimum_donation;
 	public float $maximum_donation;
 	public string $donation_type;
-	public array $frequency_options;
+	public ?array $frequency_options;
 	public bool $email_enabled;
 	public bool $email_required;
 	public bool $name_enabled;
