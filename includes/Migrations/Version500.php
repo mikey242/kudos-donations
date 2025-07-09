@@ -157,43 +157,43 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 					'wp_post_slug'               => sanitize_title( $post->post_name ),
 					'title'                      => get_post_field( 'post_title', $post_id ),
 					'currency'                   => get_post_meta( $post_id, 'currency', true ) ?: 'EUR',
-					'goal'                       => (float) get_post_meta( $post_id, 'goal', true ),
-					'show_goal'                  => (bool) get_post_meta( $post_id, 'show_goal', true ),
-					'additional_funds'           => (float) get_post_meta( $post_id, 'additional_funds', true ),
+					'goal'                       => $this->get_meta_float( $post_id, 'goal' ),
+					'show_goal'                  => $this->get_meta_bool( $post_id, 'show_goal', false ),
+					'additional_funds'           => $this->get_meta_float( $post_id, 'additional_funds' ),
 					'amount_type'                => get_post_meta( $post_id, 'amount_type', true ),
 					'fixed_amounts'              => get_post_meta( $post_id, 'fixed_amounts', true ) ?: [],
 					'minimum_donation'           => get_post_meta( $post_id, 'minimum_donation', true ) ?: 1.0,
 					'maximum_donation'           => get_post_meta( $post_id, 'maximum_donation', true ) ?: 5000.0,
 					'donation_type'              => get_post_meta( $post_id, 'donation_type', true ),
 					'frequency_options'          => get_post_meta( $post_id, 'frequency_options', true ) ?: [],
-					'email_enabled'              => (bool) get_post_meta( $post_id, 'email_enabled', true ),
-					'email_required'             => (bool) get_post_meta( $post_id, 'email_required', true ),
-					'name_enabled'               => (bool) get_post_meta( $post_id, 'name_enabled', true ),
-					'name_required'              => (bool) get_post_meta( $post_id, 'name_required', true ),
-					'address_enabled'            => (bool) get_post_meta( $post_id, 'address_enabled', true ),
-					'address_required'           => (bool) get_post_meta( $post_id, 'address_required', true ),
-					'message_enabled'            => (bool) get_post_meta( $post_id, 'message_enabled', true ),
-					'message_required'           => (bool) get_post_meta( $post_id, 'message_required', true ),
+					'email_enabled'              => $this->get_meta_bool( $post_id, 'email_enabled', true ),
+					'email_required'             => $this->get_meta_bool( $post_id, 'email_required', true ),
+					'name_enabled'               => $this->get_meta_bool( $post_id, 'name_enabled', true ),
+					'name_required'              => $this->get_meta_bool( $post_id, 'name_required', true ),
+					'address_enabled'            => $this->get_meta_bool( $post_id, 'address_enabled', false ),
+					'address_required'           => $this->get_meta_bool( $post_id, 'address_required', false ),
+					'message_enabled'            => $this->get_meta_bool( $post_id, 'message_enabled', false ),
+					'message_required'           => $this->get_meta_bool( $post_id, 'message_required', false ),
 					'theme_color'                => get_post_meta( $post_id, 'theme_color', true ) ?: '#ff9f1c',
 					'terms_link'                 => get_post_meta( $post_id, 'terms_link', true ),
 					'privacy_link'               => get_post_meta( $post_id, 'privacy_link', true ),
-					'show_return_message'        => (bool) get_post_meta( $post_id, 'show_return_message', true ),
-					'use_custom_return_url'      => (bool) get_post_meta( $post_id, 'use_custom_return_url', true ),
+					'show_return_message'        => $this->get_meta_bool( $post_id, 'show_return_message', false ),
+					'use_custom_return_url'      => $this->get_meta_bool( $post_id, 'use_custom_return_url', false ),
 					'custom_return_url'          => get_post_meta( $post_id, 'custom_return_url', true ),
 					'payment_description_format' => get_post_meta( $post_id, 'payment_description_format', true ),
 					'custom_styles'              => get_post_meta( $post_id, 'custom_styles', true ),
 					'initial_title'              => get_post_meta( $post_id, 'initial_title', true ),
 					'initial_description'        => get_post_meta( $post_id, 'initial_description', true ),
-					'subscription_title'         => get_post_meta( $post_id, 'subscription_title', true ),
-					'subscription_description'   => get_post_meta( $post_id, 'subscription_description', true ),
-					'address_title'              => get_post_meta( $post_id, 'address_title', true ),
-					'address_description'        => get_post_meta( $post_id, 'address_description', true ),
-					'message_title'              => get_post_meta( $post_id, 'message_title', true ),
-					'message_description'        => get_post_meta( $post_id, 'message_description', true ),
-					'payment_title'              => get_post_meta( $post_id, 'payment_title', true ),
-					'payment_description'        => get_post_meta( $post_id, 'payment_description', true ),
-					'return_message_title'       => get_post_meta( $post_id, 'return_message_title', true ),
-					'return_message_text'        => get_post_meta( $post_id, 'return_message_text', true ),
+					'subscription_title'         => get_post_meta( $post_id, 'subscription_title', true ) ?: __( 'Subscription', 'kudos-donations' ),
+					'subscription_description'   => get_post_meta( $post_id, 'subscription_description', true ) ?: __( 'How often would you like to donate?', 'kudos-donations' ),
+					'address_title'              => get_post_meta( $post_id, 'address_title', true ) ?: __( 'Address', 'kudos-donations' ),
+					'address_description'        => get_post_meta( $post_id, 'address_description', true ) ?: __( 'Please fill in your address', 'kudos-donations' ),
+					'message_title'              => get_post_meta( $post_id, 'message_title', true ) ?: __( 'Message', 'kudos-donations' ),
+					'message_description'        => get_post_meta( $post_id, 'message_description', true ) ?: __( 'Leave a message.', 'kudos-donations' ),
+					'payment_title'              => get_post_meta( $post_id, 'payment_title', true ) ?: __( 'Payment', 'kudos-donations' ),
+					'payment_description'        => get_post_meta( $post_id, 'payment_description', true ) ?: __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ),
+					'return_message_title'       => get_post_meta( $post_id, 'return_message_title', true ) ?: __( 'Payment received', 'kudos-donations' ),
+					'return_message_text'        => get_post_meta( $post_id, 'return_message_text', true ) ?: __( 'Thank you for your donation!', 'kudos-donations' ),
 					'created_at'                 => get_post_time( 'Y-m-d H:i:s', true, $post ),
 					'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
 				]
@@ -265,7 +265,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				[
 					'wp_post_id'        => $post_id,
 					'title'             => get_post_field( 'post_title', $post_id ),
-					'value'             => (float) get_post_meta( $post_id, 'value', true ),
+					'value'             => $this->get_meta_float( $post_id, 'value' ),
 					'currency'          => get_post_meta( $post_id, 'currency', true ),
 					'status'            => get_post_meta( $post_id, 'status', true ),
 					'method'            => get_post_meta( $post_id, 'method', true ),
@@ -376,7 +376,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 				[
 					'wp_post_id'             => $post_id,
 					'title'                  => get_post_field( 'post_title', $post_id ),
-					'value'                  => (float) get_post_meta( $post_id, 'value', true ),
+					'value'                  => $this->get_meta_float( $post_id, 'value' ),
 					'currency'               => get_post_meta( $post_id, 'currency', true ),
 					'frequency'              => get_post_meta( $post_id, 'frequency', true ),
 					'years'                  => (int) get_post_meta( $post_id, 'years', true ),
@@ -576,5 +576,29 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		}
 
 		return \count( $orphaned_transactions );
+	}
+
+	/**
+	 * Returns a meta bool value with default.
+	 *
+	 * @param int    $post_id The post id.
+	 * @param string $key The meta key.
+	 * @param bool   $default_value The default value to return if meta value is empty.
+	 */
+	private function get_meta_bool( int $post_id, string $key, bool $default_value ): bool {
+		$raw = get_post_meta( $post_id, $key, true );
+		return '' === $raw ? $default_value : filter_var( $raw, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) ?? $default_value;
+	}
+
+	/**
+	 * Returns a meta float value with default.
+	 *
+	 * @param int    $post_id The post id.
+	 * @param string $key The meta key.
+	 * @param ?float $default_value The default value to return if meta value is empty.
+	 */
+	private function get_meta_float( int $post_id, string $key, ?float $default_value = null ): ?float {
+		$value = get_post_meta( $post_id, $key, true );
+		return is_numeric( $value ) ? (float) $value : $default_value;
 	}
 }
