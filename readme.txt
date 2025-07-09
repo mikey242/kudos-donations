@@ -116,6 +116,8 @@ For general information on how to use shortcodes, please visit [this page](https
 = 4.2.0 =
 * Optimize data storage making the plugin faster and use less space
 * Fix incorrect PHPMailer namespace for SMTPVendor
+* Fix some icons missing in the admin pages
+* Profile name now shown next to "Mollie ready" when connected
 * Receipt emails now sent in donor's browser language (only for new donors)
 * Automatically link all subscription payment to their subscription (not just initial payment)
 * Allow multiple filters to be applied to admin tables
