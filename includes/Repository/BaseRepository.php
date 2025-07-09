@@ -138,7 +138,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @return int|false The inserted row ID or false on failure.
 	 */
 	public function insert( BaseEntity $entity ) {
-		$data = $this->normalize_data( $entity->to_array() );
+		$data = $this->sanitize_data_from_schema( $entity->to_array() );
 
 		$success = $this->wpdb->insert( $this->table, $data );
 
@@ -167,7 +167,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param BaseEntity $entity The data to update.
 	 */
 	public function update( BaseEntity $entity ): bool {
-		$data = $this->normalize_data( $entity->to_array() );
+		$data = $this->sanitize_data_from_schema( $entity->to_array() );
 
 		if ( ! isset( $data['id'] ) ) {
 			throw new \InvalidArgumentException( 'Cannot update entity without ID.' );
@@ -196,7 +196,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( $id ) ) );
 		}
 
-		$data = $this->normalize_data( $data );
+		$data = $this->sanitize_data_from_schema( $data );
 
 		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
 	}
@@ -327,7 +327,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param array $row The row to cast.
 	 */
-	protected function cast_types( array $row ): array {
+	public function cast_types( array $row ): array {
 		$schema = $this->get_column_schema();
 
 		foreach ( $schema as $key => $args ) {
@@ -357,7 +357,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 						$row[ $key ] = $value;
 					} elseif ( \is_string( $value ) && $this->is_valid_json( $value ) ) {
 						$decoded     = json_decode( $value, true );
-						$row[ $key ] = \is_array( $decoded ) || \is_object( $decoded ) ? $decoded : $value;
+						$row[ $key ] = \is_array( $decoded ) || \is_object( $decoded ) ? $decoded : null;
 					}
 					break;
 
@@ -402,16 +402,6 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	}
 
 	/**
-	 * Check if a string contains valid JSON.
-	 *
-	 * @param string $json The string to check.
-	 */
-	private function is_valid_json( string $json ): bool {
-		json_decode( $json );
-		return json_last_error() === JSON_ERROR_NONE;
-	}
-
-	/**
 	 * Returns the schema field.
 	 *
 	 * @param string   $type The type of field (e.g string).
@@ -437,19 +427,9 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * @param array $data The raw array data.
 	 * @return TEntity
 	 */
-	public function new_entity( array $data ) {
-		return $this->transform_result( $data );
-	}
-
-	/**
-	 * Prepares an entity for insertion or update.
-	 *
-	 * @param array $data The entity data to process.
-	 * @return array<string, mixed>
-	 */
-	private function normalize_data( array $data ): array {
-		$data = $this->sanitize_data_from_schema( $data );
-		return $this->cast_types( $data );
+	public function new_entity( array $data ): BaseEntity {
+		$entity_class = $this->get_entity_class();
+		return new $entity_class( $data );
 	}
 
 	/**
@@ -461,7 +441,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 */
 	private function transform_result( array $row, bool $apply_defaults = true ) {
 		$entity_class = $this->get_entity_class();
-		$data         = $this->normalize_data( $row );
+		$data         = $this->cast_types( $row );
 		return new $entity_class( $data, $apply_defaults );
 	}
 }
