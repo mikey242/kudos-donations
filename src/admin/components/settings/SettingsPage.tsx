@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { MollieTab, EmailTab, HelpTab, InvoiceTab } from './tabs';
+import { EmailTab, HelpTab, InvoiceTab, MollieTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import {
@@ -98,7 +98,8 @@ export const SettingsPage = (): React.ReactNode => {
 						{isVendorReady
 							? settings?._kudos_payment_vendor +
 								' ' +
-								__('ready', 'kudos-donations')
+								__('ready', 'kudos-donations') +
+								` (${settings?._kudos_vendor_mollie_profile?.name}) `
 							: __('not ready', 'kudos-donations')}
 					</span>
 				</FlexItem>

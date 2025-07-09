@@ -41,8 +41,10 @@ use WP_REST_Request;
 use WP_REST_Response;
 
 class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterface, RepositoryAwareInterface {
+
 	use RepositoryAwareTrait;
 
+	public const SETTING_PROFILE = '_kudos_vendor_mollie_profile';
 	public const SETTING_API_MODE = '_kudos_vendor_mollie_api_mode';
 	public const SETTING_RECURRING = '_kudos_vendor_mollie_recurring';
 	public const SETTING_API_KEY_LIVE = '_kudos_vendor_mollie_api_key_live';
@@ -226,7 +228,23 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				];
 			}
 		} catch ( RequestException $e ) {
-			$this->logger->critical( 'Direct debit payment method not found' );
+			$this->logger->critical( 'Direct debit payment method not found', ['message' => $e->getMessage()] );
+		}
+
+		try {
+			// Get profile.
+			$profile = $this->api_client->profiles->getCurrent();
+			$this->logger->debug('Mollie profile fetched', [$profile]);
+			// Update profile.
+			update_option(self::SETTING_PROFILE, [
+				'id' => $profile->id,
+				'mode' => $profile->mode,
+				'name' => $profile->name,
+				'website' => $profile->website,
+				'status' => $profile->status
+			]);
+		} catch (RequestException $e) {
+			$this->logger->warning('Cannot get Mollie profile', ['message' => $e->getMessage()]);
 		}
 
 		$this->logger->debug( 'Mollie refreshed connection settings' );
@@ -790,6 +808,30 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 */
 	public static function get_settings(): array {
 		return [
+			self::SETTING_PROFILE => [
+				'type' => FieldType::OBJECT,
+				'show_in_rest' => [
+					'schema' => [
+						'properties' => [
+							'id'            => [
+								'type' => FieldType::STRING,
+							],
+							'mode' => [
+								'type' => FieldType::STRING,
+							],
+							'name' => [
+								'type' => FieldType::STRING
+							],
+							'website' => [
+								'type' => FieldType::STRING
+							],
+							'status' => [
+								'type' => FieldType::STRING
+							]
+						]
+					]
+				],
+			],
 			self::SETTING_API_MODE               => [
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
