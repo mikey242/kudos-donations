@@ -96,7 +96,17 @@ interface PaymentVendorInterface {
 	/**
 	 * Returns true is the API is ready to communicate.
 	 */
-	public function is_ready(): bool;
+	public function is_vendor_ready(): bool;
+
+	/**
+	 * Returns the status of the vendor in an array.
+	 *
+	 * @returns array{
+	 *     ready: bool,  // Result of is_vendor_ready.
+	 *     text: string  // The message to display to the end user.
+	 * }
+	 */
+	public function vendor_status(): array;
 
 	/**
 	 * Returns the api mode.

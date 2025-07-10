@@ -23,7 +23,8 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 
 	use RepositoryAwareTrait;
 
-	public const SETTING_VENDOR = '_kudos_payment_vendor';
+	public const SETTING_VENDOR        = '_kudos_payment_vendor';
+	public const SETTING_VENDOR_STATUS = '_kudos_payment_vendor_status';
 	private MailerService $mailer_service;
 	private InvoiceService $invoice;
 
@@ -129,10 +130,20 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 */
 	public static function get_settings(): array {
 		return [
-			self::SETTING_VENDOR => [
+			self::SETTING_VENDOR        => [
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
 				'default'      => 'mollie',
+			],
+			self::SETTING_VENDOR_STATUS => [
+				'type'         => FieldType::OBJECT,
+				'show_in_rest' => [
+					'properties' => [
+						'id' => [
+							'type' => FieldType::STRING,
+						],
+					],
+				],
 			],
 		];
 	}

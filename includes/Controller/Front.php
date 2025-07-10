@@ -182,7 +182,7 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 		}
 
 		// Check if the current vendor is connected.
-		if ( ! $this->vendor->is_ready() ) {
+		if ( ! $this->vendor->is_vendor_ready() ) {
 			if ( current_user_can( 'manage_options' ) ) {
 				$message = \sprintf(
 				/* translators: %s: Payment vendor (e.g. Mollie). */

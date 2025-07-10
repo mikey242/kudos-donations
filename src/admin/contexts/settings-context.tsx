@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 import api from '@wordpress/api';
 import {
 	createContext,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -14,23 +15,26 @@ import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Flex, Icon, Spinner } from '@wordpress/components';
 import { IntroGuide } from '../components';
-import type { KudosSettings } from '../../types/settings';
+import type { BaseSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
 
-interface SettingsContextValue {
-	settings: KudosSettings;
-	setSettings: (newSettings: KudosSettings) => void;
+interface SettingsContextValue<T extends BaseSettings> {
+	settings: T;
+	setSettings: (newSettings: T) => void;
 	checkingApiKey: boolean;
 	fetchSettings: () => Promise<void>;
 	checkApiKey: () => Promise<any>;
-	updateSetting: (option: string, value: any) => Promise<any>;
+	updateSetting: <K extends keyof T>(option: K, value: T[K]) => Promise<T>;
 	updateSettings: (
-		data: Partial<KudosSettings>,
+		data: Partial<T>,
 		dirtyFields?: unknown
 	) => Promise<void | any>;
 	settingsReady: boolean;
 	settingsSaving: boolean;
-	isVendorReady: boolean;
+	vendorStatus: {
+		ready: boolean;
+		text: string;
+	};
 	recurringEnabled: boolean;
 }
 
@@ -38,19 +42,21 @@ interface ProviderProps {
 	children: ReactNode;
 }
 
-const SettingsContext = createContext<SettingsContextValue | null>(null);
+const SettingsContext = createContext<any | null>(null);
 
-export const SettingsProvider = ({ children }: ProviderProps) => {
+export const SettingsProvider = <T extends BaseSettings>({
+	children,
+}: ProviderProps) => {
 	const [settingsRequest, setSettingsRequest] = useState<{
-		settings: KudosSettings;
+		settings: T;
 		ready: boolean;
 	}>({
 		ready: false,
-		settings: {} as KudosSettings,
+		settings: {} as T,
 	});
 	const settingsReady = settingsRequest.ready;
 	const { settings } = settingsRequest;
-	const [isVendorReady, setIsVendorReady] = useState<boolean>(false);
+	const [vendorStatus, setVendorStatus] = useState<boolean>(false);
 	const [checkingApiKey, setCheckingApiKey] = useState<boolean>(false);
 	const [settingsSaving, setSettingsSaving] = useState<boolean>(false);
 	const { createSuccessNotice, createErrorNotice } =
@@ -59,9 +65,9 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 
 	useEffect(() => {
 		apiFetch({
-			path: '/kudos/v1/payment/ready',
+			path: '/kudos/v1/payment/vendor',
 			method: 'GET',
-		}).then((r: boolean) => setIsVendorReady(r));
+		}).then((r: boolean) => setVendorStatus(r));
 	}, [settings]);
 
 	useEffect(() => {
@@ -71,7 +77,7 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 		}).then((r: boolean) => setRecurringEnabled(r));
 	}, []);
 
-	const fetchSettings = async () => {
+	const fetchSettings = useCallback(async () => {
 		await api.loadPromise;
 		const settingsModel = new api.models.Settings();
 		const allSettings = await settingsModel.fetch();
@@ -83,15 +89,15 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 			}, {});
 		setSettingsRequest({
 			ready: true,
-			settings: filteredSettings as KudosSettings,
+			settings: filteredSettings as T,
 		});
-	};
+	}, []);
 
 	useEffect(() => {
 		void fetchSettings();
-	}, []);
+	}, [fetchSettings]);
 
-	const setSettings = (newSettings: KudosSettings) => {
+	const setSettings = (newSettings: T) => {
 		setSettingsRequest((prevState) => {
 			return {
 				...prevState,
@@ -102,10 +108,7 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 	};
 
 	// Update all settings.
-	async function updateSettings(
-		data: KudosSettings,
-		dirtyFields = null
-	): Promise<void> {
+	async function updateSettings(data: T, dirtyFields = null): Promise<void> {
 		// If dirty fields have been specified, then filter out unchanged data.
 		if (dirtyFields) {
 			data = dirtyValues(dirtyFields, data);
@@ -125,7 +128,7 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 		// Save to database.
 		return model
 			.save()
-			.then(async (response: KudosSettings) => {
+			.then(async (response: T) => {
 				return new Promise<void>((resolve) => {
 					setTimeout(() => {
 						createSuccessNotice(
@@ -149,16 +152,16 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 
 	// Update an individual setting, uses current state if value not specified.
 	async function updateSetting(
-		option: keyof KudosSettings,
-		value: KudosSettings[keyof KudosSettings]
-	): Promise<KudosSettings> {
+		option: keyof T,
+		value: T[keyof T]
+	): Promise<T> {
 		// Create WordPress settings model.
 		const model = new api.models.Settings({
 			[option]: value,
 		});
 
 		// Save to database.
-		return model.save().then((response: KudosSettings) => {
+		return model.save().then((response: T) => {
 			setSettings(response);
 			return response;
 		});
@@ -183,10 +186,7 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 	}
 
 	// @see https://github.com/orgs/react-hook-form/discussions/1991#discussioncomment-31308
-	const dirtyValues = (
-		dirtyFields: unknown,
-		allValues: KudosSettings
-	): KudosSettings => {
+	const dirtyValues = (dirtyFields: unknown, allValues: T): T => {
 		// If dirtyFields is true or an array, return the entire allValues
 		if (dirtyFields === true || Array.isArray(dirtyFields)) {
 			return allValues;
@@ -228,7 +228,7 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 				updateSettings,
 				settingsReady,
 				settingsSaving,
-				isVendorReady,
+				vendorStatus,
 				recurringEnabled,
 			}}
 		>
@@ -246,12 +246,14 @@ export const SettingsProvider = ({ children }: ProviderProps) => {
 	);
 };
 
-export const useSettingsContext = (): SettingsContextValue => {
+export const useSettingsContext = <
+	T extends BaseSettings,
+>(): SettingsContextValue<T> => {
 	const context = useContext(SettingsContext);
 	if (!context) {
 		throw new Error(
 			'useSettingsContext must be used within a SettingsProvider'
 		);
 	}
-	return context;
+	return context as SettingsContextValue<T>;
 };
