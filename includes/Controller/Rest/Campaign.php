@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Entity\BaseEntity;
 use IseardMedia\Kudos\Entity\CampaignEntity;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use WP_Error;
@@ -57,7 +58,7 @@ class Campaign extends BaseRepositoryRestController {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function add_rest_fields( $item ): array {
+	protected function add_rest_fields( BaseEntity $item ): array {
 		$item->total = $this->repository->get_total( $item );
 		return (array) $item;
 	}

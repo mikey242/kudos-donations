@@ -253,8 +253,10 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * Override in child controllers.
 	 *
 	 * @param TEntity $item Item to add to the response object.
+	 *
+	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
-	protected function add_rest_fields( $item ): array {
+	protected function add_rest_fields( BaseEntity $item ): array {
 		return (array) $item;
 	}
 

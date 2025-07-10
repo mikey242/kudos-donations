@@ -134,8 +134,10 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	/**
 	 * Insert record with provided data.
 	 *
-	 * @param BaseEntity $entity The data to insert.
+	 * @param TEntity $entity The data to insert.
 	 * @return int|false The inserted row ID or false on failure.
+	 *
+	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
 	public function insert( BaseEntity $entity ) {
 		$data = $this->sanitize_data_from_schema( $entity->to_array() );
@@ -164,7 +166,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @throws \InvalidArgumentException Thrown if id missing.
 	 *
-	 * @param BaseEntity $entity The data to update.
+	 * @param TEntity $entity The data to update.
 	 */
 	public function update( BaseEntity $entity ): bool {
 		$data = $this->sanitize_data_from_schema( $entity->to_array() );
@@ -182,29 +184,9 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	}
 
 	/**
-	 * Patch specific fields of an existing entity.
-	 *
-	 * @throws \RuntimeException If entity with provided id doesn't exist.
-	 *
-	 * @param int   $id   The ID of the entity to update.
-	 * @param array $data The partial data to update.
-	 * @return int|false  True if the update succeeded.
-	 */
-	public function patch( int $id, array $data ): bool {
-
-		if ( ! $this->get( $id ) ) {
-			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( $id ) ) );
-		}
-
-		$data = $this->sanitize_data_from_schema( $data );
-
-		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
-	}
-
-	/**
 	 * Save a record (insert or update depending on presence of ID).
 	 *
-	 * @param BaseEntity $entity The data to upsert.
+	 * @param TEntity $entity The data to upsert.
 	 * @return int|false The inserted or updated row ID, or false on failure.
 	 */
 	public function upsert( BaseEntity $entity ) {
@@ -225,6 +207,26 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Patch specific fields of an existing entity.
+	 *
+	 * @throws \RuntimeException If entity with provided id doesn't exist.
+	 *
+	 * @param int   $id   The ID of the entity to update.
+	 * @param array $data The partial data to update.
+	 * @return int|false  True if the update succeeded.
+	 */
+	public function patch( int $id, array $data ): bool {
+
+		if ( ! $this->get( $id ) ) {
+			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( $id ) ) );
+		}
+
+		$data = $this->sanitize_data_from_schema( $data );
+
+		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
 	}
 
 	/**

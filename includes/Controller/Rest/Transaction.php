@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
+use IseardMedia\Kudos\Entity\BaseEntity;
 use IseardMedia\Kudos\Entity\TransactionEntity;
 use IseardMedia\Kudos\Repository\TransactionRepository;
 
@@ -32,7 +33,7 @@ class Transaction extends BaseRepositoryRestController {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function add_rest_fields( $item ): array {
+	protected function add_rest_fields( BaseEntity $item ): array {
 		$item->campaign     = $this->repository->get_campaign( $item, [ 'title' ] );
 		$item->donor        = $this->repository->get_donor( $item, [ 'name' ] );
 		$item->subscription = $this->repository->get_subscription( $item );
