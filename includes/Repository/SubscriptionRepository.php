@@ -100,6 +100,10 @@ class SubscriptionRepository extends BaseRepository {
 			$campaign_id = $transaction->campaign_id;
 		}
 
+		if ( ! $campaign_id ) {
+			return null;
+		}
+
 		return $this->get_repository( CampaignRepository::class )
 			->get( $campaign_id );
 	}
