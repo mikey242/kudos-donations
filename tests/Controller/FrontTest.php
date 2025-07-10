@@ -38,7 +38,7 @@ class FrontTest extends WP_UnitTestCase {
 	 */
 	public function test_render_callback() {
 		$mollie_mock = $this->createMock(MolliePaymentVendor::class);
-		$mollie_mock->method('is_ready')->willReturn(true);
+		$mollie_mock->method( 'is_vendor_ready' )->willReturn(true);
 		$vendor_factory = $this->createMock( PaymentVendorFactory::class );
 		$vendor_factory->method('get_vendor')->willReturn($mollie_mock);
 

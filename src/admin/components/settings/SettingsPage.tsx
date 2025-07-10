@@ -14,7 +14,7 @@ import {
 } from '@wordpress/components';
 import { useAdminContext, useSettingsContext } from '../../contexts';
 import { applyFilters } from '@wordpress/hooks';
-import type { KudosSettings } from '../../../types/settings';
+import type { BaseSettings } from '../../../types/settings';
 
 interface SaveButtonProps {
 	isSaving: boolean;
@@ -49,7 +49,7 @@ export const SettingsPage = (): React.ReactNode => {
 		settingsSaving,
 		updateSettings,
 		settings,
-		isVendorReady,
+		vendorStatus,
 	} = useSettingsContext();
 	const formMethods = useForm({
 		defaultValues: settings,
@@ -95,18 +95,15 @@ export const SettingsPage = (): React.ReactNode => {
 			<>
 				<FlexItem>
 					<span className="status-text">
-						{isVendorReady
-							? settings?._kudos_payment_vendor +
-								' ' +
-								__('ready', 'kudos-donations') +
-								` (${settings?._kudos_vendor_mollie_profile?.name}) `
+						{vendorStatus.ready
+							? vendorStatus.text
 							: __('not ready', 'kudos-donations')}
 					</span>
 				</FlexItem>
 				<FlexItem>
 					<span
 						className={clsx(
-							isVendorReady ? 'ready' : 'not-ready',
+							vendorStatus.ready ? 'ready' : 'not-ready',
 							'status-icon'
 						)}
 					></span>
@@ -124,7 +121,7 @@ export const SettingsPage = (): React.ReactNode => {
 			setHeaderContent(null);
 		};
 	}, [
-		isVendorReady,
+		vendorStatus,
 		setHeaderContent,
 		settings?._kudos_payment_vendor,
 		settingsSaving,
@@ -136,7 +133,7 @@ export const SettingsPage = (): React.ReactNode => {
 		}
 	}, [formMethods, settings]);
 
-	const save = (data: KudosSettings): Promise<void> => {
+	const save = (data: BaseSettings): Promise<void> => {
 		return updateSettings(data, formState.dirtyFields);
 	};
 

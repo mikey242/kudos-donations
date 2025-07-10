@@ -91,13 +91,24 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * {@inheritDoc}
 	 */
-	public function is_ready(): bool {
+	public function is_vendor_ready(): bool {
 		$mode    = $this->get_api_mode();
 		$option  = constant( "self::SETTING_API_KEY_ENCRYPTED_" . strtoupper( $mode ) );
 		$key     = $this->get_decrypted_key( $option );
 		$methods = get_option( self::SETTING_PAYMENT_METHODS );
-
 		return ! empty( $key ) && ! empty( $methods ) ?? false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function vendor_status(): array {
+		$name = get_option(self::SETTING_PROFILE)['name'] ?? null;
+
+		return [
+			'ready' => $this->is_vendor_ready(),
+			'text'  => sprintf(__('%s ready'), self::get_name()) . ($name ? ' (' . $name . ')' : ''),
+		];
 	}
 
 	/**

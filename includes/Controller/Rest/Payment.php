@@ -38,7 +38,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	public const ROUTE_REFUND            = '/refund';
 	public const ROUTE_WEBHOOK           = '/webhook';
 	public const ROUTE_TEST              = '/test';
-	public const ROUTE_READY             = '/ready';
+	public const ROUTE_VENDOR_STATUS     = '/vendor';
 	public const ROUTE_STATUS            = '/status';
 	public const ROUTE_RECURRING_ENABLED = '/recurring-enabled';
 
@@ -176,9 +176,9 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 
-			self::ROUTE_READY             => [
+			self::ROUTE_VENDOR_STATUS     => [
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this->vendor, 'is_ready' ],
+				'callback'            => [ $this->vendor, 'vendor_status' ],
 				'permission_callback' => function () {
 					return current_user_can( 'read' );
 				},
