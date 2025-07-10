@@ -48,7 +48,7 @@ interface CampaignEditProps {
 const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 	const { updateParams } = useAdminQueryParams();
 	const { setHeaderContent } = useAdminContext();
-	const { recurringEnabled } = useSettingsContext();
+	const { vendorStatus } = useSettingsContext();
 	const methods = useForm({
 		defaultValues: {
 			...campaign,
@@ -121,7 +121,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 					title: __('Donation settings', 'kudos-donations'),
 					content: (
 						<DonationSettingsTab
-							recurringEnabled={recurringEnabled}
+							recurringEnabled={vendorStatus.recurring}
 						/>
 					),
 				},
@@ -136,7 +136,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 					content: <CustomCSSTab />,
 				},
 			]),
-		[campaign, recurringEnabled]
+		[campaign, vendorStatus.recurring]
 	) as AdminTab[];
 
 	if (!campaign) {

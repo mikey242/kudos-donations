@@ -107,6 +107,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 		return [
 			'ready' => $this->is_vendor_ready(),
+			'recurring' => $this->can_use_recurring(),
 			'text'  => sprintf(__('%s ready'), self::get_name()) . ($name ? ' (' . $name . ')' : ''),
 		];
 	}
