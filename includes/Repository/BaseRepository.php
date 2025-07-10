@@ -53,6 +53,13 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	abstract public static function get_plural_name(): string;
 
 	/**
+	 * Gets the associated entity class.
+	 *
+	 * @return class-string<TEntity>
+	 */
+	abstract protected function get_entity_class(): string;
+
+	/**
 	 * Defines the common entity schema.
 	 */
 	private function get_base_column_schema(): array {
@@ -415,13 +422,6 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 			'sanitize_callback' => $sanitize,
 		];
 	}
-
-	/**
-	 * Gets the associated entity class.
-	 *
-	 * @return class-string<TEntity>
-	 */
-	abstract protected function get_entity_class(): string;
 
 	/**
 	 * Creates a new entity from data array.
