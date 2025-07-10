@@ -33,9 +33,9 @@ interface SettingsContextValue<T extends BaseSettings> {
 	settingsSaving: boolean;
 	vendorStatus: {
 		ready: boolean;
+		recurring: boolean;
 		text: string;
 	};
-	recurringEnabled: boolean;
 }
 
 interface ProviderProps {
@@ -61,20 +61,12 @@ export const SettingsProvider = <T extends BaseSettings>({
 	const [settingsSaving, setSettingsSaving] = useState<boolean>(false);
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
-	const [recurringEnabled, setRecurringEnabled] = useState<boolean>(false);
 
 	useEffect(() => {
 		apiFetch({
 			path: '/kudos/v1/payment/vendor',
 			method: 'GET',
 		}).then((r: boolean) => setVendorStatus(r));
-	}, [settings]);
-
-	useEffect(() => {
-		apiFetch({
-			path: '/kudos/v1/payment/recurring-enabled',
-			method: 'GET',
-		}).then((r: boolean) => setRecurringEnabled(r));
 	}, []);
 
 	const fetchSettings = useCallback(async () => {
@@ -229,7 +221,6 @@ export const SettingsProvider = <T extends BaseSettings>({
 				settingsReady,
 				settingsSaving,
 				vendorStatus,
-				recurringEnabled,
 			}}
 		>
 			{settingsReady ? (
