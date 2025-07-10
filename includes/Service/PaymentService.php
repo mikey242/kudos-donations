@@ -138,11 +138,24 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 			self::SETTING_VENDOR_STATUS => [
 				'type'         => FieldType::OBJECT,
 				'show_in_rest' => [
-					'properties' => [
-						'id' => [
-							'type' => FieldType::STRING,
+					'schema' => [
+						'properties' => [
+							'ready'     => [
+								'type' => FieldType::BOOLEAN,
+							],
+							'recurring' => [
+								'type' => FieldType::BOOLEAN,
+							],
+							'text'      => [
+								'type' => FieldType::STRING,
+							],
 						],
 					],
+				],
+				'default'      => [
+					'ready'     => false,
+					'recurring' => false,
+					'text'      => '',
 				],
 			],
 		];

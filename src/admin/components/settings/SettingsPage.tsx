@@ -44,13 +44,8 @@ interface SettingsTab {
 
 export const SettingsPage = (): React.ReactNode => {
 	const { setHeaderContent } = useAdminContext();
-	const {
-		settingsReady,
-		settingsSaving,
-		updateSettings,
-		settings,
-		vendorStatus,
-	} = useSettingsContext();
+	const { settingsReady, settingsSaving, updateSettings, settings } =
+		useSettingsContext();
 	const formMethods = useForm({
 		defaultValues: settings,
 	});
@@ -95,15 +90,17 @@ export const SettingsPage = (): React.ReactNode => {
 			<>
 				<FlexItem>
 					<span className="status-text">
-						{vendorStatus.ready
-							? vendorStatus.text
+						{settings._kudos_payment_vendor_status.ready
+							? settings._kudos_payment_vendor_status.text
 							: __('not ready', 'kudos-donations')}
 					</span>
 				</FlexItem>
 				<FlexItem>
 					<span
 						className={clsx(
-							vendorStatus.ready ? 'ready' : 'not-ready',
+							settings._kudos_payment_vendor_status.ready
+								? 'ready'
+								: 'not-ready',
 							'status-icon'
 						)}
 					></span>
@@ -121,7 +118,7 @@ export const SettingsPage = (): React.ReactNode => {
 			setHeaderContent(null);
 		};
 	}, [
-		vendorStatus,
+		settings._kudos_payment_vendor_status,
 		setHeaderContent,
 		settings?._kudos_payment_vendor,
 		settingsSaving,

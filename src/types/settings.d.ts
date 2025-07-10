@@ -19,4 +19,9 @@ export interface BaseSettings {
 	_kudos_custom_smtp: string | null;
 	_kudos_smtp_password: string;
 	_kudos_smtp_enable: boolean;
+	_kudos_payment_vendor_status: {
+		ready: boolean;
+		recurring: boolean;
+		text: string;
+	};
 }

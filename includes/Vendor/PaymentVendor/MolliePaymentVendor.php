@@ -24,6 +24,7 @@ use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SubscriptionStatus;
 use IseardMedia\Kudos\Vendor\AbstractVendor;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\ApiException;
@@ -104,10 +105,10 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 */
 	public function vendor_status(): array {
 		$name = get_option(self::SETTING_PROFILE)['name'] ?? null;
-
+		$ready = $this->is_vendor_ready();
 		return [
-			'ready' => $this->is_vendor_ready(),
-			'recurring' => $this->can_use_recurring(),
+			'ready' => $ready,
+			'recurring' => $ready && $this->can_use_recurring(),
 			'text'  => sprintf(__('%s ready'), self::get_name()) . ($name ? ' (' . $name . ')' : ''),
 		];
 	}
@@ -269,6 +270,15 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 		// Update recurring status.
 		update_option( self::SETTING_RECURRING, $this->can_use_recurring() );
+
+		// Update vendor status.
+		$ready = $this->is_vendor_ready();
+		$name = get_option(self::SETTING_PROFILE)['name'] ?? null;
+		update_option(PaymentService::SETTING_VENDOR_STATUS, [
+			'ready' => $ready,
+			'recurring' => $ready && $this->can_use_recurring(),
+			'text'  => sprintf(__('%s ready'), self::get_name()) . ($name ? ' (' . $name . ')' : ''),
+		]);
 
 		return true;
 	}
