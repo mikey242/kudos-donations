@@ -12,7 +12,7 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use Exception;
-use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Entity\BaseEntity;
 use IseardMedia\Kudos\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
@@ -24,7 +24,7 @@ use WP_REST_Response;
 use WP_REST_Server;
 
 /**
- * @extends BaseRepositoryRestController<CampaignEntity>
+ * @extends BaseRepositoryRestController<SubscriptionEntity>
  */
 class Subscription extends BaseRepositoryRestController {
 
@@ -69,10 +69,8 @@ class Subscription extends BaseRepositoryRestController {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @param SubscriptionEntity $item Subscription entity.
 	 */
-	protected function add_rest_fields( $item ): array {
+	protected function add_rest_fields( BaseEntity $item ): array {
 		$item->donor       = $this->repository->get_donor( $item );
 		$item->transaction = $this->repository->get_transaction( $item );
 		$item->campaign    = $this->repository->get_campaign( $item );
