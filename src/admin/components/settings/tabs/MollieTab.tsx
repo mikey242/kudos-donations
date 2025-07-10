@@ -18,13 +18,8 @@ import type { MollieSettings } from '../../../../types/mollie';
 type ApiMode = 'live' | 'test';
 
 const MollieTab = (): React.ReactNode => {
-	const {
-		checkingApiKey,
-		checkApiKey,
-		updateSettings,
-		settings,
-		vendorStatus,
-	} = useSettingsContext<MollieSettings>();
+	const { checkingApiKey, checkApiKey, updateSettings, settings } =
+		useSettingsContext<MollieSettings>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 
@@ -118,7 +113,7 @@ const MollieTab = (): React.ReactNode => {
 						type="button"
 						variant="link"
 						isBusy={checkingApiKey}
-						disabled={!vendorStatus || checkingApiKey}
+						disabled={checkingApiKey}
 						// icon="update"
 					>
 						{__('Refresh Payment Methods', 'kudos-donations')}

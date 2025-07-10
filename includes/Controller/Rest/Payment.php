@@ -34,12 +34,11 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	use RepositoryAwareTrait;
 	use SanitizeTrait;
 
-	public const ROUTE_CREATE        = '/create';
-	public const ROUTE_REFUND        = '/refund';
-	public const ROUTE_WEBHOOK       = '/webhook';
-	public const ROUTE_TEST          = '/test';
-	public const ROUTE_VENDOR_STATUS = '/vendor';
-	public const ROUTE_STATUS        = '/status';
+	public const ROUTE_CREATE  = '/create';
+	public const ROUTE_REFUND  = '/refund';
+	public const ROUTE_WEBHOOK = '/webhook';
+	public const ROUTE_TEST    = '/test';
+	public const ROUTE_STATUS  = '/status';
 
 	private PaymentVendorInterface $vendor;
 
@@ -58,7 +57,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	 */
 	public function get_routes(): array {
 		return [
-			self::ROUTE_CREATE        => [
+			self::ROUTE_CREATE  => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'create_item' ],
 				'permission_callback' => '__return_true',
@@ -141,7 +140,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				],
 			],
 
-			self::ROUTE_WEBHOOK       => [
+			self::ROUTE_WEBHOOK => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'handle_webhook' ],
 				'args'                => [
@@ -154,7 +153,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				'permission_callback' => '__return_true',
 			],
 
-			self::ROUTE_REFUND        => [
+			self::ROUTE_REFUND  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'refund' ],
 				'args'                => [
@@ -169,21 +168,13 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				},
 			],
 
-			self::ROUTE_TEST          => [
+			self::ROUTE_TEST    => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'test_connection' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 
-			self::ROUTE_VENDOR_STATUS => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this->vendor, 'vendor_status' ],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
-			],
-
-			self::ROUTE_STATUS        => [
+			self::ROUTE_STATUS  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'status' ],
 				'args'                => [

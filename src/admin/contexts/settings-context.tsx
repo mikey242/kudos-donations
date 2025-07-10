@@ -31,11 +31,6 @@ interface SettingsContextValue<T extends BaseSettings> {
 	) => Promise<void | any>;
 	settingsReady: boolean;
 	settingsSaving: boolean;
-	vendorStatus: {
-		ready: boolean;
-		recurring: boolean;
-		text: string;
-	};
 }
 
 interface ProviderProps {
@@ -56,18 +51,10 @@ export const SettingsProvider = <T extends BaseSettings>({
 	});
 	const settingsReady = settingsRequest.ready;
 	const { settings } = settingsRequest;
-	const [vendorStatus, setVendorStatus] = useState<boolean>(false);
 	const [checkingApiKey, setCheckingApiKey] = useState<boolean>(false);
 	const [settingsSaving, setSettingsSaving] = useState<boolean>(false);
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
-
-	useEffect(() => {
-		apiFetch({
-			path: '/kudos/v1/payment/vendor',
-			method: 'GET',
-		}).then((r: boolean) => setVendorStatus(r));
-	}, []);
 
 	const fetchSettings = useCallback(async () => {
 		await api.loadPromise;
@@ -220,7 +207,6 @@ export const SettingsProvider = <T extends BaseSettings>({
 				updateSettings,
 				settingsReady,
 				settingsSaving,
-				vendorStatus,
 			}}
 		>
 			{settingsReady ? (

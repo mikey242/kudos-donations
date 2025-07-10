@@ -17,6 +17,7 @@ use IseardMedia\Kudos\Entity\CampaignEntity;
 use IseardMedia\Kudos\Entity\DonorEntity;
 use IseardMedia\Kudos\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Repository\CampaignRepository;
 use IseardMedia\Kudos\Repository\DonorRepository;
 use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
@@ -24,12 +25,27 @@ use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Repository\SchemaInstaller;
 use IseardMedia\Kudos\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
+use Psr\Log\LoggerInterface;
 
 class Version500 extends BaseMigration implements RepositoryAwareInterface {
 
 	use RepositoryAwareTrait;
 
 	protected string $version = '5.0.0';
+	private MolliePaymentVendor $mollie;
+
+	/**
+	 * Add MolliePaymentVendor for handling refresh.
+	 *
+	 * @param MolliePaymentVendor  $mollie_payment_vendor Mollie related functions.
+	 * @param WpDb                 $wpdb wpdb wrapper.
+	 * @param LoggerInterface|null $logger Logger interface.
+	 */
+	public function __construct( MolliePaymentVendor $mollie_payment_vendor, WpDb $wpdb, ?LoggerInterface $logger = null ) {
+		parent::__construct( $wpdb, $logger );
+		$this->mollie = $mollie_payment_vendor;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -43,6 +59,7 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			'subscriptions'                   => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating subscriptions' ),
 			'backfill_transactions'           => $this->job( [ $this, 'backfill_transactions_from_subscription' ], 'Add subscription id to transactions' ),
 			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions' ),
+			'refresh_mollie'                  => $this->job( [ $this, 'refresh_mollie_status' ], 'Refresh Mollie status' ),
 		];
 	}
 
@@ -576,6 +593,14 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 		}
 
 		return \count( $orphaned_transactions );
+	}
+
+	/**
+	 * Refresh mollie status to populate new option.
+	 */
+	public function refresh_mollie_status(): int {
+		$this->mollie->refresh();
+		return 1;
 	}
 
 	/**
