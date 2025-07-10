@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
+use IseardMedia\Kudos\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\PDFService;
 use WP_REST_Request;
@@ -93,10 +93,10 @@ class Invoice extends BaseRestController {
 	 * Regenerate all invoices.
 	 */
 	public function regenerate_invoices(): WP_REST_Response {
-		$transactions = TransactionPostType::get_posts( [ TransactionPostType::META_FIELD_STATUS => PaymentStatus::PAID ] );
+		$transactions = $this->get_repository( TransactionRepository::class )->find_by( [ 'status' => PaymentStatus::PAID ] );
 		if ( $transactions ) {
 			foreach ( $transactions as $transaction ) {
-				$this->invoice->generate_invoice( $transaction->ID, true );
+				$this->invoice->generate_invoice( $transaction->id, true );
 			}
 			// translators: %s represents the number of invoices.
 			return new WP_REST_Response( [ 'message' => \sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) ], 200 );
