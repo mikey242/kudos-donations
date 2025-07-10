@@ -92,6 +92,6 @@ export const AdminRouter = ({ defaultView }): React.ReactNode => {
 		);
 	}
 
-	// 🔑 Force remount on view change
+	// Force remount on view change.
 	return <CurrentPageComponent key={page} />;
 };
