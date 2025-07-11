@@ -45,17 +45,17 @@ class RepositoryManager {
 	/**
 	 * Gets the requested repository.
 	 *
-	 * @param class-string<TRepository> $class_name Repository class name.
+	 * @throws \RuntimeException Thrown if repository not found.
 	 *
-	 * @return BaseRepository
+	 * @param class-string<TRepository> $class_name Repository class name.
+	 * @return TRepository
 	 *
 	 * @template TEntity of BaseEntity
 	 * @template TRepository of BaseRepository<TEntity>
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
-	 * @throws \RuntimeException Thrown if repository not found.
 	 */
-	public function get( string $class_name ) {
+	public function get( string $class_name ): BaseRepository {
 		if ( ! isset( $this->repositories[ $class_name ] ) ) {
 			throw new \RuntimeException( esc_attr( "Repository not registered: $class_name" ) );
 		}

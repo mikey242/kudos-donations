@@ -309,10 +309,11 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 */
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool {
 		$transaction_repository = $this->get_repository(TransactionRepository::class);
-		$transaction            = $transaction_repository->get( (int) $subscription->transaction_id );
-		$donor                  = $transaction_repository->get_donor( $transaction );
-		$vendor_customer_id     = $donor->vendor_customer_id;
-		$customer               = $this->get_customer( $vendor_customer_id );
+		/** @var TransactionEntity $transaction */
+		$transaction        = $transaction_repository->get( (int) $subscription->transaction_id );
+		$donor              = $transaction_repository->get_donor( $transaction );
+		$vendor_customer_id = $donor->vendor_customer_id;
+		$customer           = $this->get_customer( $vendor_customer_id );
 
 		// Bail if no subscription found locally or if not active.
 		if ( SubscriptionStatus::ACTIVE !== $subscription->status || null === $customer ) {
@@ -730,7 +731,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 			// Set up recurring payment if sequence is first.
 			if ( $payment->hasSequenceTypeFirst() ) {
-				$this->logger->info( 'Payment is initial subscription payment.', $transaction );
+				$this->logger->info( 'Payment is initial subscription payment.', [ $transaction ] );
 				$subscription_id = $this->create_subscription(
 					$transaction,
 					$payment->mandateId,

@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
@@ -263,7 +264,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 		}
 
 		/** @var CampaignEntity $campaign */
-		$campaign = $this->get_campaign_repository()
+		$campaign = $this->get_repository( CampaignRepository::class )
 						->get( (int) $values['campaign_id'] );
 
 		$defaults = [
@@ -303,7 +304,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			];
 
 			// Search for existing donor based on email and mode.
-			$donor = $this->get_donor_repository()
+			$donor = $this->get_repository( DonorRepository::class )
 				->find_one_by(
 					[
 						'email' => $args['email'],
@@ -322,7 +323,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			}
 
 			// Save donor and fetch updated record.
-			$donor_id = $this->get_donor_repository()
+			$donor_id = $this->get_repository( DonorRepository::class )
 				->upsert( $donor );
 		}
 

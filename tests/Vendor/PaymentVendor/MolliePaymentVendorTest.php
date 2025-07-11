@@ -141,10 +141,12 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 			'email' => 'fail@example.com',
 			'name' => 'Fail Tester',
 		];
+		/** @var TransactionRepository $transactions */
+		$transactions = $this->get_repository(TransactionRepository::class);
 
 		$transaction = new TransactionEntity(['title' => 'Failing Transaction']);
-		$transaction_id = $this->get_repository(TransactionRepository::class)->insert($transaction);
-		$transaction = $this->get_repository(TransactionRepository::class)->get($transaction_id);
+		$transaction_id = $transactions->insert($transaction);
+		$transaction = $transactions->get($transaction_id);
 
 		$result = $this->vendor->create_payment($payment_args, $transaction);
 
@@ -197,6 +199,8 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 			'email' => 'john.smith@example.com',
 			'name' => 'John Smith'
 		];
+		/** @var TransactionRepository $transactions */
+		$transactions = $this->get_repository(TransactionRepository::class);
 
 		$payment_args = array_merge($default_args, $overrides);
 
@@ -206,8 +210,8 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 		$payment_args['campaign_id'] = $campaign_id;
 
 		$transaction = new TransactionEntity(['title' => 'Test transaction']);
-		$transaction_id = $this->get_repository(TransactionRepository::class)->insert($transaction);
-		$transaction = $this->get_repository(TransactionRepository::class)->get($transaction_id);
+		$transaction_id = $transactions->insert($transaction);
+		$transaction = $transactions->get($transaction_id);
 
 		$payment_mock = $this->createMock(Payment::class);
 		$payment_mock->method('getCheckoutUrl')->willReturn('https://mollie.com/checkout/123');
@@ -232,7 +236,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 
 		$checkout_url = $this->vendor->create_payment($payment_args, $transaction, $vendor_customer_id);
 
-		$updated = $this->get_repository(TransactionRepository::class)->get($transaction_id);
+		$updated = $transactions->get($transaction_id);
 
 		return [
 			'transaction_id' => $transaction_id,

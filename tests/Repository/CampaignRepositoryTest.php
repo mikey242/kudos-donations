@@ -196,8 +196,9 @@ class CampaignRepositoryTest extends BaseTestCase {
 		$transaction_repo->insert($transaction_2);
 		$transaction_repo->insert($transaction_3);
 
+		/** @var CampaignEntity $campaign */
 		$campaign = $this->campaign_repository->get($campaign_id);
-		$total = $this->campaign_repository->get_total($campaign);
+		$total    = $this->campaign_repository->get_total($campaign);
 
 		$this->assertSame(35.00, $total);
 	}
