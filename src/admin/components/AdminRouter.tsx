@@ -1,5 +1,5 @@
 import React from 'react';
-import { PostsProvider } from '../contexts';
+import { EntitiesProvider } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import { DonorsTable } from './donors';
 import { TransactionsTable } from './transactions';
@@ -8,93 +8,90 @@ import { SettingsPage } from './settings';
 import { EntityPage } from './EntityPage';
 import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
-import type { Campaign } from '../../types/posts';
-import SinglePostView from './SinglePostView';
+import type { Campaign } from '../../types/entity';
+import SingleEntityView from './SingleEntityView';
 import { Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
 
 const AdminPages = {
 	'kudos-campaigns': () => (
-		<PostsProvider
+		<EntitiesProvider
 			pluralName={__('Campaigns', 'kudos-donations')}
 			singularName={__('Campaign', 'kudos-donations')}
-			postType={'kudos_campaign'}
+			entityType="campaign"
 		>
 			<EntityPage
-				renderTable={(editPost, newPost) => (
-					<CampaignsTable handleNew={newPost} handleEdit={editPost} />
+				renderTable={(editEntity, newEntity) => (
+					<CampaignsTable
+						handleNew={newEntity}
+						handleEdit={editEntity}
+					/>
 				)}
 				renderEdit={(currentCampaign) => (
 					<CampaignEdit campaign={currentCampaign as Campaign} />
 				)}
 			/>
-		</PostsProvider>
+		</EntitiesProvider>
 	),
 	'kudos-donors': () => (
-		<PostsProvider
+		<EntitiesProvider
 			pluralName={__('Donors', 'kudos-donations')}
 			singularName={__('Donor', 'kudos-donations')}
-			postType="kudos_donor"
+			entityType="donor"
 		>
 			<EntityPage
-				renderTable={(editPost) => (
-					<DonorsTable handleEdit={editPost} />
+				renderTable={(editEntity) => (
+					<DonorsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(post) => <SinglePostView post={post} />}
+				renderEdit={(entity) => <SingleEntityView entity={entity} />}
 			/>
-		</PostsProvider>
+		</EntitiesProvider>
 	),
 	'kudos-transactions': () => (
-		<PostsProvider
+		<EntitiesProvider
 			pluralName={__('Transactions', 'kudos-donations')}
 			singularName={__('Transaction', 'kudos-donations')}
-			postType="kudos_transaction"
+			entityType="transaction"
 		>
 			<EntityPage
-				renderTable={(editPost) => (
-					<TransactionsTable handleEdit={editPost} />
+				renderTable={(editEntity) => (
+					<TransactionsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(post) => <SinglePostView post={post} />}
+				renderEdit={(entity) => <SingleEntityView entity={entity} />}
 			/>
-		</PostsProvider>
+		</EntitiesProvider>
 	),
 	'kudos-subscriptions': () => (
-		<PostsProvider
+		<EntitiesProvider
 			pluralName={__('Subscriptions', 'kudos-donations')}
 			singularName={__('Subscription', 'kudos-donations')}
-			postType="kudos_subscription"
+			entityType="subscription"
 		>
 			<EntityPage
-				renderTable={(editPost) => (
-					<SubscriptionsTable handleEdit={editPost} />
+				renderTable={(editEntity) => (
+					<SubscriptionsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(post) => <SinglePostView post={post} />}
+				renderEdit={(entity) => <SingleEntityView entity={entity} />}
 			/>
-		</PostsProvider>
+		</EntitiesProvider>
 	),
 	'kudos-settings': () => <SettingsPage />,
 };
 
 export const AdminRouter = ({ defaultView }): React.ReactNode => {
 	const { params } = useAdminQueryParams();
-	const [selectedPage, setSelectedPage] = useState(defaultView);
-	const { page } = params;
+	const page = params.page ?? defaultView;
 
-	useEffect(() => {
-		if (page) {
-			setSelectedPage(page);
-		}
-	}, [page]);
+	const CurrentPageComponent = AdminPages[page];
 
-	const currentPage = AdminPages[selectedPage];
-	if (!currentPage) {
+	if (!CurrentPageComponent) {
 		return (
 			<Flex justify="center">
-				<p>{`Unknown view: "${currentPage}"`}</p>
+				<p>{`Unknown view: "${page}"`}</p>
 			</Flex>
 		);
 	}
 
-	return currentPage();
+	// Force remount on view change.
+	return <CurrentPageComponent key={page} />;
 };

@@ -8,7 +8,7 @@
  * Plugin Name:       Kudos Donations
  * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
- * Version:           4.1.4
+ * Version:           4.2.0
  * Author:            Iseard Media
  * Author URI:        https://iseard.media
  * Requires at least: 6.6
@@ -32,8 +32,8 @@ if ( ! \defined( 'WPINC' ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-\define( 'KUDOS_VERSION', '4.1.4' );
-\define( 'KUDOS_DB_VERSION', '4.1.3' );
+\define( 'KUDOS_VERSION', '4.2.0' );
+\define( 'KUDOS_DB_VERSION', '5.0.0' );
 \define( 'KUDOS_PLUGIN_FILE', __FILE__ );
 \define( 'KUDOS_PLUGIN_URL', plugin_dir_url( KUDOS_PLUGIN_FILE ) );
 \define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( KUDOS_PLUGIN_FILE ) );
@@ -56,8 +56,7 @@ if ( ! Autoloader::init() ) {
 $dotenv = new Dotenv();
 try {
 	$dotenv->load( __DIR__ . '/.env' );
-	// phpcs:ignore
-} catch ( \Exception $ignored ) {
+} catch ( \Exception $e ) {
 	$_ENV['APP_ENV'] = 'production';
 }
 
@@ -83,5 +82,11 @@ $dotenv->populate(
 // Define constant for easily accessing environment.
 \define( 'KUDOS_APP_ENV', sanitize_text_field( $_ENV['APP_ENV'] ) );
 \define( 'KUDOS_ENV_IS_DEVELOPMENT', 'development' === $_ENV['APP_ENV'] );
+
+// Load dev commands if in dev environment.
+$dev_bootstrap = __DIR__ . '/includes-dev/bootstrap.php';
+if ( file_exists( $dev_bootstrap ) ) {
+	require_once $dev_bootstrap;
+}
 
 require KUDOS_PLUGIN_DIR . 'includes/namespace.php';

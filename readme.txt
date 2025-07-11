@@ -113,6 +113,16 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.2.0 =
+* Optimize data storage making the plugin faster and use less space
+* Fix incorrect PHPMailer namespace for SMTPVendor
+* Fix some icons missing in the admin pages
+* Profile name now shown next to "Mollie ready" when connected
+* Receipt emails now sent in donor's browser language (only for new donors)
+* Automatically link all subscription payment to their subscription (not just initial payment)
+* Allow multiple filters to be applied to admin tables
+* Debug mode: Show linked entity when viewing individual details
+
 = 4.1.4 =
 * Fix translation issues in emails/pdfs (move translation calls out of twig templates)
 * Update various dependencies

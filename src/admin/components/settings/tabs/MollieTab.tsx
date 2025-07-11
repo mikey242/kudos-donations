@@ -13,17 +13,13 @@ import {
 } from '@wordpress/components';
 import { RadioGroupControl, TextControl } from '../../controls';
 import { Panel } from '../../Panel';
+import type { MollieSettings } from '../../../../types/mollie';
 
 type ApiMode = 'live' | 'test';
 
 const MollieTab = (): React.ReactNode => {
-	const {
-		checkingApiKey,
-		checkApiKey,
-		updateSettings,
-		settings,
-		isVendorReady,
-	} = useSettingsContext();
+	const { checkingApiKey, checkApiKey, updateSettings, settings } =
+		useSettingsContext<MollieSettings>();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 
@@ -31,7 +27,7 @@ const MollieTab = (): React.ReactNode => {
 		_kudos_vendor_mollie_payment_methods: paymentMethods,
 		_kudos_vendor_mollie_api_key_live: liveKey,
 		_kudos_vendor_mollie_api_key_test: testKey,
-	} = settings;
+	} = settings as MollieSettings;
 
 	const apiKeyStatus: Record<ApiMode, string> = {
 		live: liveKey,
@@ -117,7 +113,7 @@ const MollieTab = (): React.ReactNode => {
 						type="button"
 						variant="link"
 						isBusy={checkingApiKey}
-						disabled={!isVendorReady || checkingApiKey}
+						disabled={checkingApiKey}
 						// icon="update"
 					>
 						{__('Refresh Payment Methods', 'kudos-donations')}

@@ -4,7 +4,7 @@
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
@@ -17,14 +17,12 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Notice extends AbstractRestController {
+class Notice extends BaseRestController {
 
 	/**
 	 * PaymentRoutes constructor.
 	 */
 	public function __construct() {
-		parent::__construct();
-
 		$this->rest_base = 'notice';
 	}
 

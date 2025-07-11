@@ -4,7 +4,7 @@
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 namespace IseardMedia\Kudos\Migrations;
@@ -33,5 +33,5 @@ interface MigrationInterface {
 	 *
 	 * @phpstan-return array<string, MigrationJob>
 	 */
-	public function get_migration_jobs(): array;
+	public function get_jobs(): array;
 }
