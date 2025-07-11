@@ -18,7 +18,7 @@ use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use IseardMedia\Kudos\Vendor\VendorInterface;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -29,7 +29,7 @@ use WP_REST_Server;
 class Subscription extends BaseRepositoryRestController {
 
 	public const ROUTE_CANCEL = '/cancel';
-	private ?VendorInterface $vendor;
+	private ?PaymentVendorInterface $vendor;
 
 	/**
 	 * Subscription routes constructor.
