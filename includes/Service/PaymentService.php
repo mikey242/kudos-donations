@@ -13,11 +13,11 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Utils;
 
 class PaymentService extends AbstractRegistrable implements HasSettingsInterface, RepositoryAwareInterface {
 

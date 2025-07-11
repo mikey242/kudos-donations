@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\Entity;
 
-use IseardMedia\Kudos\Domain\Entity\BaseEntity;
-
 class DonorEntity extends BaseEntity {
 
 	public string $email;

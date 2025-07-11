@@ -15,12 +15,12 @@ use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
-use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Utils;
 
 class InvoiceService extends AbstractRegistrable implements HasSettingsInterface, RepositoryAwareInterface {
 

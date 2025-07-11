@@ -14,8 +14,8 @@ namespace IseardMedia\Kudos\Dev\Fixtures;
 use Faker\Factory;
 use Faker\Generator;
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
-use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Domain\Repository\RepositoryInterface;
+use IseardMedia\Kudos\Helper\WpDb;
 use WP_CLI;
 use WP_CLI\ExitException;
 
