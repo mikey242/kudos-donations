@@ -13,12 +13,12 @@ namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
-use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Assets;
-use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Helper\Assets;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\SettingsService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
