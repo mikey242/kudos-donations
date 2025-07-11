@@ -6,12 +6,12 @@
 namespace Repository;
 
 use BaseTestCase;
-use IseardMedia\Kudos\Entity\CampaignEntity;
-use IseardMedia\Kudos\Entity\DonorEntity;
-use IseardMedia\Kudos\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 
 /**
- * @covers \IseardMedia\Kudos\Repository\DonorRepository
+ * @covers \IseardMedia\Kudos\Domain\Repository\DonorRepository
  */
 class DonorRepositoryTest extends BaseTestCase {
 

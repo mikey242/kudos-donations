@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Dev\Fixtures;
 
-use IseardMedia\Kudos\Entity\CampaignEntity;
-use IseardMedia\Kudos\Entity\DonorEntity;
-use IseardMedia\Kudos\Entity\SubscriptionEntity;
-use IseardMedia\Kudos\Entity\TransactionEntity;
-use IseardMedia\Kudos\Repository\CampaignRepository;
-use IseardMedia\Kudos\Repository\DonorRepository;
-use IseardMedia\Kudos\Repository\SubscriptionRepository;
-use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
 
 class TransactionFixtures extends BaseFixtures {

@@ -6,13 +6,13 @@
 namespace Repository;
 
 use BaseTestCase;
-use IseardMedia\Kudos\Entity\CampaignEntity;
-use IseardMedia\Kudos\Entity\TransactionEntity;
-use IseardMedia\Kudos\Repository\CampaignRepository;
-use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 
 /**
- * @covers \IseardMedia\Kudos\Repository\CampaignRepository
+ * @covers \IseardMedia\Kudos\Domain\Repository\CampaignRepository
  */
 class CampaignRepositoryTest extends BaseTestCase {
 

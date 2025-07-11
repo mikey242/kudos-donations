@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Dev\Fixtures;
 
-use IseardMedia\Kudos\Entity\CampaignEntity;
-use IseardMedia\Kudos\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 
 class CampaignFixtures extends BaseFixtures {
 	/**

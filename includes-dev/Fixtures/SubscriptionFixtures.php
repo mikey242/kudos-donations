@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Dev\Fixtures;
 
-use IseardMedia\Kudos\Entity\SubscriptionEntity;
-use IseardMedia\Kudos\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SubscriptionStatus;
 
 class SubscriptionFixtures extends BaseFixtures {

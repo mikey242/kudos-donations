@@ -9,7 +9,7 @@
 
 declare( strict_types=1 );
 
-namespace IseardMedia\Kudos\Repository;
+namespace IseardMedia\Kudos\Domain\Repository;
 
 interface RepositoryInterface {
 	/**

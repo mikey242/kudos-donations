@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 
 abstract class BaseController extends AbstractRegistrable implements RepositoryAwareInterface {
 

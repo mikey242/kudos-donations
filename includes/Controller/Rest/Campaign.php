@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Entity\BaseEntity;
-use IseardMedia\Kudos\Entity\CampaignEntity;
-use IseardMedia\Kudos\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

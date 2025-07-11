@@ -2,8 +2,8 @@
 
 namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 
-use IseardMedia\Kudos\Entity\SubscriptionEntity;
-use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

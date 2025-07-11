@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Admin\DebugAdminPage;
-use IseardMedia\Kudos\Entity\TransactionEntity;
-use IseardMedia\Kudos\Repository\CampaignRepository;
-use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;

@@ -7,10 +7,10 @@ namespace Controller\Rest;
 
 use BaseTestCase;
 use Dompdf\Dompdf;
-use IseardMedia\Kudos\Entity\DonorEntity;
-use IseardMedia\Kudos\Entity\TransactionEntity;
-use IseardMedia\Kudos\Repository\DonorRepository;
-use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\PDFService;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;

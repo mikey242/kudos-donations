@@ -11,17 +11,17 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Entity\CampaignEntity;
-use IseardMedia\Kudos\Entity\DonorEntity;
-use IseardMedia\Kudos\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Repository\DonorRepository;
-use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
-use IseardMedia\Kudos\Repository\SanitizeTrait;
-use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
+use IseardMedia\Kudos\Domain\Repository\SanitizeTrait;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_Error;

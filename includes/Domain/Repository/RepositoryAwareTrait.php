@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Repository;
+namespace IseardMedia\Kudos\Domain\Repository;
 
-use IseardMedia\Kudos\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 
 trait RepositoryAwareTrait {
 
@@ -42,7 +42,7 @@ trait RepositoryAwareTrait {
 	 * Get a specific repository instance by FQCN.
 	 *
 	 * @param class-string<TRepository> $class_name Repository class name.
-	 * @return TRepository
+	 * @return BaseRepository
 	 *
 	 * @template TEntity of BaseEntity
 	 * @template TRepository of BaseRepository<TEntity>

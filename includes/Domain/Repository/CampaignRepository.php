@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Repository;
+namespace IseardMedia\Kudos\Domain\Repository;
 
-use IseardMedia\Kudos\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 
 /**

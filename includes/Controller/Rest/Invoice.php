@@ -13,7 +13,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
-use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\PDFService;
 use WP_REST_Request;

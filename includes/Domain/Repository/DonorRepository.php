@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Repository;
+namespace IseardMedia\Kudos\Domain\Repository;
 
-use IseardMedia\Kudos\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 
 class DonorRepository extends BaseRepository {
