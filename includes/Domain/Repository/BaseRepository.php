@@ -15,17 +15,14 @@ use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Helper\WpDb;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 
 /**
  * Template for BaseEntity classes.
  *
  * @template TEntity of BaseEntity
  */
-abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterface, RepositoryAwareInterface {
+abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInterface {
 
-	use LoggerAwareTrait;
 	use RepositoryAwareTrait;
 	use SanitizeTrait;
 
@@ -39,8 +36,13 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 */
 	public function __construct( WpDb $wpdb ) {
 		$this->wpdb  = $wpdb;
-		$this->table = $this->wpdb->table( static::TABLE_NAME );
+		$this->table = $this->wpdb->table( $this->get_table_name() );
 	}
+
+	/**
+	 * Returns the table name.
+	 */
+	abstract public static function get_table_name(): string;
 
 	/**
 	 * The singular name.
@@ -204,13 +206,8 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 		}
 
 		if ( $this->wpdb->last_error ) {
-			$this->logger->error(
-				'Failed to update or insert record',
-				[
-					'last_error' => $this->wpdb->last_error,
-					'entity'     => $entity->to_array(),
-				]
-			);
+			// phpcs:disable: WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( $this->wpdb->last_error );
 		}
 
 		return $result;

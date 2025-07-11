@@ -56,7 +56,7 @@ trait SanitizeTrait {
 	 *
 	 * @param string $json The string to check.
 	 */
-	public function is_valid_json( string $json ): bool {
+	public static function is_valid_json( string $json ): bool {
 		json_decode( $json );
 		return json_last_error() === JSON_ERROR_NONE;
 	}

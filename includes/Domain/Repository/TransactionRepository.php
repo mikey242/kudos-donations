@@ -19,7 +19,12 @@ use IseardMedia\Kudos\Enum\FieldType;
 
 class TransactionRepository extends BaseRepository {
 
-	public const TABLE_NAME = 'kudos_transactions';
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_table_name(): string {
+		return 'kudos_transactions';
+	}
 
 	/**
 	 * {@inheritDoc}

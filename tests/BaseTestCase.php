@@ -61,7 +61,7 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 	 * Clear the schema between runs.
 	 */
 	private function reset_plugin_schema() {
-		foreach ( SchemaInstaller::TABLE_NAMES as $table ) {
+		foreach ( SchemaInstaller::get_tables() as $table ) {
 			$full_table = $this->wpdb->table($table);
 			$this->wpdb->query("DROP TABLE IF EXISTS $full_table");
 		}
