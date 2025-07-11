@@ -13,7 +13,9 @@ namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 
 /**
  * @extends BaseRepositoryRestController<DonorEntity>
@@ -34,7 +36,7 @@ class Donor extends BaseRepositoryRestController {
 	 * {@inheritDoc}
 	 */
 	protected function add_rest_fields( BaseEntity $item ): array {
-		$item->total = $this->get_transaction_repository()->get_total_by_donor_id( $item->id );
+		$item->total = $this->get_repository( TransactionRepository::class )->get_total_by_donor_id( $item->id );
 		return (array) $item;
 	}
 }

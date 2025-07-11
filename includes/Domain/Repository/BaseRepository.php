@@ -89,7 +89,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param int   $id The id to fetch.
 	 * @param array $columns The list of columns to return.
-	 * @return BaseEntity|null
+	 * @return TEntity|null
 	 */
 	public function get( int $id, array $columns = [ '*' ] ) {
 		$results = $this->query(
@@ -108,7 +108,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param array $criteria The criteria to search by.
 	 * @param array $columns The list of columns to return.
-	 * @return BaseEntity
+	 * @return TEntity[]
 	 */
 	public function find_by( array $criteria, array $columns = [ '*' ] ): array {
 		return $this->query(
@@ -124,7 +124,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param array $criteria Key-value pairs for WHERE clause.
 	 * @param array $columns  List of columns to return. Defaults to all.
-	 * @return BaseEntity | null     The matching row, or null if not found.
+	 * @return TEntity | null     The matching row, or null if not found.
 	 */
 	public function find_one_by( array $criteria, array $columns = [ '*' ] ): ?BaseEntity {
 		$results = $this->query(
@@ -141,7 +141,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	/**
 	 * Insert record with provided data.
 	 *
-	 * @param BaseEntity $entity The data to insert.
+	 * @param TEntity $entity The data to insert.
 	 * @return int|false The inserted row ID or false on failure.
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
@@ -173,7 +173,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @throws \InvalidArgumentException Thrown if id missing.
 	 *
-	 * @param BaseEntity $entity The data to update.
+	 * @param TEntity $entity The data to update.
 	 */
 	public function update( BaseEntity $entity ): bool {
 		$data = $this->sanitize_data_from_schema( $entity->to_array() );
@@ -193,7 +193,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	/**
 	 * Save a record (insert or update depending on presence of ID).
 	 *
-	 * @param BaseEntity $entity The data to upsert.
+	 * @param TEntity $entity The data to upsert.
 	 * @return int|false The inserted or updated row ID, or false on failure.
 	 */
 	public function upsert( BaseEntity $entity ) {
@@ -258,7 +258,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * Main query method for fetching rows.
 	 *
 	 * @param array $args The args to pass to the query.
-	 * @return BaseEntity
+	 * @return TEntity[]
 	 *
 	 * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 	 */
@@ -413,7 +413,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	/**
 	 * Returns the schema field.
 	 *
-	 * @param string   $type The type of field (e.g string).
+	 * @param string   $type The type of field (e.g. string).
 	 * @param callable $sanitize Sanitize callback.
 	 */
 	protected function make_schema_field( string $type, callable $sanitize ): array {
@@ -427,6 +427,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 * Creates a new entity from data array.
 	 *
 	 * @param array $data The raw array data.
+	 * @return TEntity
 	 */
 	public function new_entity( array $data ): BaseEntity {
 		$entity_class = $this->get_entity_class();
@@ -438,7 +439,7 @@ abstract class BaseRepository implements LoggerAwareInterface, RepositoryInterfa
 	 *
 	 * @param array $row The result from the db.
 	 * @param bool  $apply_defaults Whether to apply default values or not.
-	 * @return BaseEntity
+	 * @return TEntity
 	 */
 	private function transform_result( array $row, bool $apply_defaults = true ) {
 		$entity_class = $this->get_entity_class();

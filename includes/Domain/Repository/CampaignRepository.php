@@ -101,16 +101,16 @@ class CampaignRepository extends BaseRepository {
 	 * Returns the total donations for supplied campaign.
 	 *
 	 * @param CampaignEntity $campaign The campaign array.
+	 *
+	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
 	public function get_total( CampaignEntity $campaign ): float {
 		$transactions = $this->get_transactions( $campaign, [ 'status', 'value' ] );
-		return array_sum(
-			array_map(
-				function ( $item ) {
-					return 'paid' === $item->status ? (float) $item->value : 0.00;
-				},
-				$transactions
-			)
+		return array_reduce(
+			$transactions,
+			static fn( float $carry, $item ): float =>
+			'paid' === $item->status ? $carry + (float) $item->value : $carry,
+			0.0
 		);
 	}
 
