@@ -17,7 +17,7 @@ class TransactionEntity extends BaseEntity {
 
 	public float $value;
 	public string $currency;
-	public string $status;
+	public string $status = PaymentStatus::OPEN;
 	public ?string $method;
 	public ?string $mode;
 	public ?string $sequence_type;
@@ -34,13 +34,4 @@ class TransactionEntity extends BaseEntity {
 	public ?CampaignEntity $campaign;
 	public ?DonorEntity $donor;
 	public ?SubscriptionEntity $subscription;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected function defaults(): array {
-		return [
-			'status' => PaymentStatus::OPEN,
-		];
-	}
 }

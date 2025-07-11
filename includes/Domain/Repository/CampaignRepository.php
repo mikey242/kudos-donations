@@ -19,7 +19,12 @@ use IseardMedia\Kudos\Enum\FieldType;
  */
 class CampaignRepository extends BaseRepository {
 
-	public const TABLE_NAME = 'kudos_campaigns';
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_table_name(): string {
+		return 'kudos_campaigns';
+	}
 
 	/**
 	 * {@inheritDoc}

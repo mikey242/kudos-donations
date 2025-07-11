@@ -21,7 +21,7 @@ class SchemaInstallerTest extends BaseTestCase {
 	 * Ensure all Kudos tables are created.
 	 */
 	public function test_create_schema_creates_all_tables(): void {
-		foreach (SchemaInstaller::TABLE_NAMES as $table) {
+		foreach (SchemaInstaller::get_tables() as $table) {
 			$this->assertTrue(
 				$this->wpdb->table_exists($table),
 				"Table does not exist: " . $this->wpdb->table($table)
@@ -34,7 +34,7 @@ class SchemaInstallerTest extends BaseTestCase {
 	 */
 	public function test_campaigns_table_has_expected_columns(): void {
 		$this->assertTableHasColumns(
-			CampaignRepository::TABLE_NAME,
+			CampaignRepository::get_table_name(),
 			$this->get_repository(CampaignRepository::class)->get_all_fields()
 		);
 	}
@@ -44,7 +44,7 @@ class SchemaInstallerTest extends BaseTestCase {
 	 */
 	public function test_donors_table_has_expected_columns(): void {
 		$this->assertTableHasColumns(
-			DonorRepository::TABLE_NAME,
+			DonorRepository::get_table_name(),
 			$this->get_repository(DonorRepository::class)->get_all_fields()
 		);
 	}
@@ -54,7 +54,7 @@ class SchemaInstallerTest extends BaseTestCase {
 	 */
 	public function test_transactions_table_has_expected_columns(): void {
 		$this->assertTableHasColumns(
-			TransactionRepository::TABLE_NAME,
+			TransactionRepository::get_table_name(),
 			$this->get_repository(TransactionRepository::class)->get_all_fields()
 		);
 	}
@@ -64,7 +64,7 @@ class SchemaInstallerTest extends BaseTestCase {
 	 */
 	public function test_subscriptions_table_has_expected_columns(): void {
 		$this->assertTableHasColumns(
-			SubscriptionRepository::TABLE_NAME,
+			SubscriptionRepository::get_table_name(),
 			$this->get_repository(SubscriptionRepository::class)->get_all_fields()
 		);
 	}

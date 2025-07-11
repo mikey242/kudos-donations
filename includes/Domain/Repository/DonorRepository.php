@@ -16,7 +16,12 @@ use IseardMedia\Kudos\Enum\FieldType;
 
 class DonorRepository extends BaseRepository {
 
-	public const TABLE_NAME = 'kudos_donors';
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_table_name(): string {
+		return 'kudos_donors';
+	}
 
 	/**
 	 * {@inheritDoc}
