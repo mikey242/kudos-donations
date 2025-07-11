@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
-use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Domain\Repository\BaseRepository;
+use IseardMedia\Kudos\Enum\FieldType;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
