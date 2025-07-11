@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Helper;
 
-use IseardMedia\Kudos\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 
 class Utils {
 

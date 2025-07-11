@@ -4,7 +4,7 @@
  */
 
 // Change filesystem access method.
-use IseardMedia\Kudos\Repository\SchemaInstaller;
+use IseardMedia\Kudos\Domain\Repository\SchemaInstaller;
 
 const FS_METHOD = 'direct';
 

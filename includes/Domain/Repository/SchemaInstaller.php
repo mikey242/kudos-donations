@@ -7,7 +7,7 @@
  * @copyright 2025 Iseard Media
  */
 
-namespace IseardMedia\Kudos\Repository;
+namespace IseardMedia\Kudos\Domain\Repository;
 
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Helper\WpDb;

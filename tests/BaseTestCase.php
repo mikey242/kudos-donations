@@ -1,13 +1,13 @@
 <?php
 
-use IseardMedia\Kudos\Repository\SchemaInstaller;
-use IseardMedia\Kudos\Repository\CampaignRepository;
-use IseardMedia\Kudos\Repository\DonorRepository;
-use IseardMedia\Kudos\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Repository\RepositoryAwareTrait;
-use IseardMedia\Kudos\Repository\RepositoryManager;
-use IseardMedia\Kudos\Repository\SubscriptionRepository;
-use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Repository\SchemaInstaller;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
+use IseardMedia\Kudos\Domain\Repository\RepositoryManager;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 
 abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareInterface {
 

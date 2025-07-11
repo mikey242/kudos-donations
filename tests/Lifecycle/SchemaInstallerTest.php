@@ -6,14 +6,14 @@
 namespace Lifecycle;
 
 use BaseTestCase;
-use IseardMedia\Kudos\Repository\SchemaInstaller;
-use IseardMedia\Kudos\Repository\CampaignRepository;
-use IseardMedia\Kudos\Repository\DonorRepository;
-use IseardMedia\Kudos\Repository\SubscriptionRepository;
-use IseardMedia\Kudos\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Repository\SchemaInstaller;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 
 /**
- * @covers \IseardMedia\Kudos\Repository\SchemaInstaller
+ * @covers \IseardMedia\Kudos\Domain\Repository\SchemaInstaller
  */
 class SchemaInstallerTest extends BaseTestCase {
 

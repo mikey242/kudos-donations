@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Entity\BaseEntity;
-use IseardMedia\Kudos\Entity\DonorEntity;
-use IseardMedia\Kudos\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 
 /**
  * @extends BaseRepositoryRestController<DonorEntity>

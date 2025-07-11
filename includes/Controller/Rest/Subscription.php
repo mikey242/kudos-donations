@@ -12,10 +12,10 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use Exception;
-use IseardMedia\Kudos\Entity\BaseEntity;
-use IseardMedia\Kudos\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Domain\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
 use IseardMedia\Kudos\Vendor\VendorInterface;

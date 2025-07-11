@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Entity;
+namespace IseardMedia\Kudos\Domain\Entity;
 
 class SubscriptionEntity extends BaseEntity {
 

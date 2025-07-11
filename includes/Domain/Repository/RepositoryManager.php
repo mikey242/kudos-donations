@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace IseardMedia\Kudos\Repository;
+namespace IseardMedia\Kudos\Domain\Repository;
 
-use IseardMedia\Kudos\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 
 class RepositoryManager {
 
@@ -45,15 +45,15 @@ class RepositoryManager {
 	/**
 	 * Gets the requested repository.
 	 *
-	 * @throws \RuntimeException Thrown if repository not found.
-	 *
 	 * @param class-string<TRepository> $class_name Repository class name.
-	 * @return TRepository
+	 *
+	 * @return BaseRepository
 	 *
 	 * @template TEntity of BaseEntity
 	 * @template TRepository of BaseRepository<TEntity>
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
+	 * @throws \RuntimeException Thrown if repository not found.
 	 */
 	public function get( string $class_name ) {
 		if ( ! isset( $this->repositories[ $class_name ] ) ) {

@@ -9,7 +9,7 @@
 
 declare( strict_types=1 );
 
-namespace IseardMedia\Kudos\Entity;
+namespace IseardMedia\Kudos\Domain\Entity;
 
 class BaseEntity {
 
@@ -26,12 +26,11 @@ class BaseEntity {
 	 * @param bool                 $apply_defaults Whether to merge incoming data with specified defaults.
 	 */
 	public function __construct( array $data, bool $apply_defaults = true ) {
-		$data = $apply_defaults ? array_merge( $this->defaults(), $data ) : $data;
-		$this->fill( $data );
+		$this->fill( $apply_defaults ? array_merge( $this->defaults(), $data ) : $data );
 	}
 
 	/**
-	 * Specif the default values for this entity.
+	 * Specify the default values for this entity.
 	 */
 	protected function defaults(): array {
 		return [];
