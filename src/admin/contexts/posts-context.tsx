@@ -52,27 +52,26 @@ export const PostsProvider = <T extends Post>({
 		meta_value,
 		meta_query,
 		metaType,
-		search,
 	} = params;
 	const { saveEntityRecord, deleteEntityRecord } = useDispatch('core');
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
+	const query = {
+		per_page: 20,
+		page: Number(paged),
+		order,
+		orderby,
+		...(meta_key ? { meta_key } : {}),
+		...(meta_value ? { meta_value } : {}),
+		...(meta_query ? { meta_query } : {}),
+		...(metaType ? { metaType } : {}),
+	};
 	const {
 		records: posts,
 		hasResolved,
 		totalPages,
 		totalItems,
-	} = useEntityRecords<T>('postType', postType, {
-		per_page: 20,
-		page: Number(paged),
-		search,
-		order,
-		orderby,
-		meta_key,
-		meta_value,
-		meta_query,
-		metaType,
-	});
+	} = useEntityRecords<T>('postType', postType, query);
 
 	const handleSave = useCallback(
 		async (args = {}): Promise<T | null> => {
