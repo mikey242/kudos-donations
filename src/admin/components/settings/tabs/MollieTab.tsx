@@ -17,13 +17,8 @@ import { Panel } from '../../Panel';
 type ApiMode = 'live' | 'test';
 
 const MollieTab = (): React.ReactNode => {
-	const {
-		checkingApiKey,
-		checkApiKey,
-		updateSettings,
-		settings,
-		isVendorReady,
-	} = useSettingsContext();
+	const { checkingApiKey, checkApiKey, updateSettings, settings } =
+		useSettingsContext();
 	const { createSuccessNotice, createErrorNotice } =
 		useDispatch(noticesStore);
 
@@ -117,7 +112,7 @@ const MollieTab = (): React.ReactNode => {
 						type="button"
 						variant="link"
 						isBusy={checkingApiKey}
-						disabled={!isVendorReady || checkingApiKey}
+						disabled={checkingApiKey}
 						// icon="update"
 					>
 						{__('Refresh Payment Methods', 'kudos-donations')}
