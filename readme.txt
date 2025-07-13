@@ -113,6 +113,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.1.5 =
+* Fix bug where inconsistent post results returned from rest api query
+
 = 4.1.4 =
 * Fix translation issues in emails/pdfs (move translation calls out of twig templates)
 * Update various dependencies
