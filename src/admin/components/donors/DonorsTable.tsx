@@ -32,8 +32,8 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			valueCallback: (post: Donor): React.ReactNode => post.email ?? '',
 		},
 		{
-			key: 'value',
-			title: __('Total donated', 'kudos-donations'),
+			key: 'number',
+			title: __('Total donations', 'kudos-donations'),
 			valueCallback: (post: Donor): React.ReactNode => post.total,
 		},
 		{
