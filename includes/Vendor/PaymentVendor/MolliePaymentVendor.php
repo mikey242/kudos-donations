@@ -125,7 +125,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * Change the API client to the key for the specified mode.
 	 */
-	protected function config_client(): void {
+	protected function config_client(): bool {
 		// Gets the key associated with the specified mode.
 		$mode   = $this->get_api_mode();
 		$option = constant( "self::SETTING_API_KEY_ENCRYPTED_" . strtoupper( $mode ) );
@@ -134,10 +134,12 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		if ( $key ) {
 			try {
 				$this->api_client->setApiKey( $key );
+				return true;
 			} catch ( ApiException $e ) {
 				$this->logger->critical( $e->getMessage() );
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -209,7 +211,11 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 */
 	public function refresh(): bool {
 
-		$this->config_client();
+		// Bail if unable to set api key with Mollie.
+		if(!$this->config_client()) {
+			return false;
+		}
+
 		// Rebuild Mollie settings.
 		$payment_methods = array_map( function ( Method $method ) {
 			return [
