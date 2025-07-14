@@ -53,6 +53,7 @@ class Plugin implements LoggerAwareInterface {
 	 */
 	public function on_plugin_activation(): void {
 		CacheService::recursively_clear_cache();
+		flush_rewrite_rules();
 		$this->activation_handler->process();
 		$this->logger->info(
 			'Plugin activated.',
