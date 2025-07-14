@@ -178,14 +178,12 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		// Check if the current vendor is connected.
 		if ( ! $this->vendor->is_ready() ) {
 			if ( current_user_can( 'manage_options' ) ) {
-				$message = \sprintf(
+				$message = 'Kudos Donations: ' . \sprintf(
 				/* translators: %s: Payment vendor (e.g. Mollie). */
 					__( '%s not connected.', 'kudos-donations' ),
 					$this->vendor::get_name()
 				);
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
-			} else {
-				return null;
 			}
 		}
 
