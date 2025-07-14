@@ -116,6 +116,7 @@ For general information on how to use shortcodes, please visit [this page](https
 = 4.1.5 =
 * Fix bug where inconsistent post results returned from rest api query
 * Allow Mollie to be refreshed even it status is "not connected"
+* As a failsafe, show donation form to non-logged in users even if payment vendor is not connected
 
 = 4.1.4 =
 * Fix translation issues in emails/pdfs (move translation calls out of twig templates)
