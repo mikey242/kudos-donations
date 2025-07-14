@@ -26,15 +26,25 @@ class Kernel {
 	private ?ContainerBuilder $container_builder = null;
 	private ?ContainerInterface $container       = null;
 	private ?WP_Filesystem_Base $file_system;
+	private bool $use_cache;
 	private string $cache_folder;
 
 	/**
 	 * Kernel constructor.
 	 *
 	 * @throws Exception Thrown in load_config.
+	 *
+	 * @param bool $use_cache Whether to use a cached version of the container.
 	 */
-	public function __construct() {
-		$this->initialize_container();
+	public function __construct( bool $use_cache = false ) {
+		$this->use_cache    = $use_cache;
+		$this->cache_folder = apply_filters( 'kudos_container_cache_dir', KUDOS_CACHE_DIR . 'container/' );
+
+		if ( $this->use_cache && $this->load_cached_container() ) {
+			return;
+		}
+
+		$this->build_container();
 	}
 
 	/**
@@ -42,35 +52,60 @@ class Kernel {
 	 * Uses a hash of the plugin version as part of the filename to ensure old dumped containers not used.
 	 */
 	private function get_container_file(): string {
-		$hash_source = apply_filters( 'kudos_container_hash_string', KUDOS_VERSION );
+		$hash_source = apply_filters( 'kudos_container_hash_string', KUDOS_VERSION . $this->get_config_path() );
 		$hash        = hash( 'md5', $hash_source );
 
 		return 'container-' . $hash . '.php';
 	}
 
 	/**
-	 * Create the container.
+	 * Creates the container based on loaded config.
 	 *
-	 * @throws Exception Thrown if config could not be loaded.
+	 * @throws Exception Thrown in load_config.
 	 */
-	private function initialize_container(): void {
-		$this->cache_folder  = $this->get_cache_folder();
-		$container_file_path = $this->cache_folder . self::get_container_file();
+	private function build_container(): void {
+		$this->container_builder = new ContainerBuilder();
+		$this->load_config();
 
-		// Enable cache if not in development mode.
-		if ( $this->is_production() && file_exists( $container_file_path ) ) {
-			require_once $container_file_path;
-			$this->container = new \KudosContainer();
-		} else {
-			CacheService::recursively_clear_cache( 'container' );
-			$this->container_builder = new ContainerBuilder();
+		$this->container_builder->compile( true );
+		$this->container = $this->container_builder;
+
+		if ( $this->use_cache ) {
 			$this->initialize_filesystem();
-			$this->load_config();
-			$this->container_builder->compile( true );
-			$this->dump_container( $container_file_path );
-			$this->container         = $this->container_builder;
-			$this->container_builder = null;
+			if ( ! KUDOS_ENV_IS_DEVELOPMENT ) {
+				CacheService::recursively_clear_cache( 'container' );
+			}
+			$this->dump_container( $this->cache_folder . $this->get_container_file() );
 		}
+
+		$this->container_builder = null;
+	}
+
+	/**
+	 * Load container from cache.
+	 */
+	private function load_cached_container(): bool {
+		$container_file_path = $this->cache_folder . $this->get_container_file();
+
+		// Bail if container file not found.
+		if ( ! file_exists( $container_file_path ) ) {
+			return false;
+		}
+
+		// Check no existing instances of KudosContainer exist (unlikely) before requiring ours.
+		if ( ! class_exists( 'KudosContainer', false ) ) {
+			require_once $container_file_path;
+		}
+
+		// We should now have a KudosContainer class available, bail if not.
+		if ( ! class_exists( 'KudosContainer' ) ) {
+			return false;
+		}
+
+		/** @var ContainerInterface $container */
+		$container       = new \KudosContainer();
+		$this->container = $container;
+		return true;
 	}
 
 	/**
@@ -84,15 +119,6 @@ class Kernel {
 		WP_Filesystem();
 		$this->file_system = $wp_filesystem;
 		wp_mkdir_p( $this->cache_folder );
-	}
-
-	/**
-	 * Get the cache folder path.
-	 *
-	 * @return string The cache folder path.
-	 */
-	private function get_cache_folder(): string {
-		return KUDOS_CACHE_DIR . 'container/';
 	}
 
 	/**
@@ -110,13 +136,7 @@ class Kernel {
 			$loader = new PhpFileLoader( $this->container_builder, new FileLocator( $config_path ) );
 
 			// Load the 'services.php' from the current config directory.
-			try {
-				$loader->load( 'services.php' );
-			} catch ( Exception $e ) {
-				// phpcs:disable WordPress.PHP.DevelopmentFunctions
-				error_log( $e->getMessage() );
-				NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
-			}
+			$loader->load( 'services.php' );
 		}
 	}
 
@@ -130,15 +150,6 @@ class Kernel {
 	}
 
 	/**
-	 * Check if the environment is production.
-	 *
-	 * @return bool True if in production, false otherwise.
-	 */
-	private function is_production(): bool {
-		return ! KUDOS_ENV_IS_DEVELOPMENT;
-	}
-
-	/**
 	 * Dumps the compiled container to a file for caching purposes.
 	 *
 	 * @param string $container_file_path The file to dump the container to.
@@ -148,12 +159,10 @@ class Kernel {
 		$container_dump = $dumper->dump( [ 'class' => 'KudosContainer' ] );
 
 		if ( ! $this->file_system->put_contents( $container_file_path, $container_dump ) ) {
-			if ( KUDOS_DEBUG ) {
-				NoticeService::notice(
-					'Failed to write the container to the cache file. Please ensure that the "wp-content/cache" directory is writable.',
-					NoticeService::ERROR,
-				);
-			}
+			NoticeService::notice(
+				'Failed to write the container to the cache file. Please ensure that the "wp-content/cache" directory is writable.',
+				NoticeService::ERROR,
+			);
 		}
 	}
 
