@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Service\NoticeService;
-use Psr\Container\ContainerExceptionInterface;
 
 /**
  * Class PluginFactory
@@ -22,24 +21,29 @@ class PluginFactory {
 	/**
 	 * Create and return an instance of the plugin.
 	 *
-	 * This always returns a shared instance. This way, outside code can always
-	 * get access to the object instance of the plugin.
+	 * @throws \RuntimeException If plugin instance cannot be created.
 	 *
 	 * @return Plugin Plugin instance
 	 */
 	public static function create(): Plugin {
 		static $plugin = null;
 
-		if ( null === $plugin ) {
-			try {
-				$kernel    = new Kernel();
-				$container = $kernel->get_container();
-				$plugin    = $container->get( Plugin::class );
-			} catch ( ContainerExceptionInterface  $e ) {
-				// phpcs:disable WordPress.PHP.DevelopmentFunctions
-				error_log( $e->getMessage() );
-				NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+		if ( null !== $plugin ) {
+			return $plugin;
+		}
+
+		try {
+			$kernel    = new Kernel( false );
+			$container = $kernel->get_container();
+			$plugin    = $container->get( Plugin::class );
+
+			if ( ! $plugin instanceof Plugin ) {
+				throw new \RuntimeException( 'Error loading Kudos Donations: Resolved plugin is not a Plugin instance.' );
 			}
+		} catch ( \Throwable  $e ) {
+			// phpcs:disable WordPress.PHP.DevelopmentFunctions
+			error_log( $e->getMessage() );
+			NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
 		}
 
 		return $plugin;
