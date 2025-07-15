@@ -1,6 +1,5 @@
 <?php
 
-use IseardMedia\Kudos\Domain\Repository\SchemaInstaller;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
@@ -8,6 +7,10 @@ use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\RepositoryManager;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Schema\CampaignSchema;
+use IseardMedia\Kudos\Domain\Schema\DonorSchema;
+use IseardMedia\Kudos\Domain\Schema\SubscriptionSchema;
+use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
 
 abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareInterface {
 
@@ -25,10 +28,6 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 
 		// Configure repositories.
 		$this->configure_repositories();
-
-		// Clear schema
-		$this->reset_plugin_schema();
-
 	}
 
 	/**
@@ -37,10 +36,10 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 	private function configure_repositories() {
 		// Initialize all repositories
 		$repositories = [
-			new CampaignRepository($this->wpdb),
-			new TransactionRepository($this->wpdb),
-			new DonorRepository($this->wpdb),
-			new SubscriptionRepository($this->wpdb),
+			new CampaignRepository($this->wpdb, new CampaignSchema()),
+			new TransactionRepository($this->wpdb, new TransactionSchema()),
+			new DonorRepository($this->wpdb, new DonorSchema()),
+			new SubscriptionRepository($this->wpdb, new SubscriptionSchema()),
 		];
 
 		// Wire up repository manager
@@ -55,16 +54,6 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 
 		// Set the repository manager on tests so they can call it.
 		$this->set_repository_manager($manager);
-	}
-
-	/**
-	 * Clear the schema between runs.
-	 */
-	private function reset_plugin_schema() {
-		foreach ( SchemaInstaller::get_tables() as $table ) {
-			$full_table = $this->wpdb->table($table);
-			$this->wpdb->query("DROP TABLE IF EXISTS $full_table");
-		}
 	}
 
 	/**

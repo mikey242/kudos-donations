@@ -11,6 +11,8 @@ use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Schema\DonorSchema;
+use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
 use IseardMedia\Kudos\Service\PDFService;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
@@ -39,8 +41,8 @@ class InvoiceTest extends BaseTestCase {
 		$pdf->on_plugin_activation();
 
 		//Get repository.
-		$transaction_repository = new TransactionRepository($this->wpdb);
-		$donor_repository = new DonorRepository($this->wpdb);
+		$transaction_repository = new TransactionRepository($this->wpdb, new TransactionSchema());
+		$donor_repository = new DonorRepository($this->wpdb, new DonorSchema());
 
 		// Create Donor and link to Transaction.
 		$donor = new DonorEntity(['name' => 'John Smith']);
