@@ -21,18 +21,17 @@ use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
-use IseardMedia\Kudos\Domain\Repository\SchemaInstaller;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 use Psr\Log\LoggerInterface;
 
-class Version500 extends BaseMigration implements RepositoryAwareInterface {
+class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
 	use RepositoryAwareTrait;
 
-	protected string $version = '5.0.0';
+	protected string $version = '4.2.0';
 	private MolliePaymentVendor $mollie;
 
 	/**
@@ -52,7 +51,6 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 	 */
 	public function get_jobs(): array {
 		return [
-			'create_schema'                   => $this->job( [ $this, 'create_schema' ], 'Creating schema' ),
 			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating donors' ),
 			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating campaigns' ),
 			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating transactions' ),
@@ -61,14 +59,6 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions' ),
 			'refresh_mollie'                  => $this->job( [ $this, 'refresh_mollie_status' ], 'Refresh Mollie status' ),
 		];
-	}
-
-	/**
-	 * Creates the table schemas.
-	 */
-	public function create_schema(): int {
-		( new SchemaInstaller( $this->wpdb ) )->create_schema();
-		return 1;
 	}
 
 	/**
@@ -384,9 +374,11 @@ class Version500 extends BaseMigration implements RepositoryAwareInterface {
 			// Get campaign.
 			$campaign_id = null;
 			/** @var TransactionEntity $transaction */
-			$transaction = $transaction_repo->get( $transaction_id );
-			if ( $transaction ) {
-				$campaign_id = $transaction->campaign_id;
+			if ( $transaction_id ) {
+				$transaction = $transaction_repo->get( $transaction_id );
+				if ( $transaction ) {
+					$campaign_id = $transaction->campaign_id;
+				}
 			}
 
 			$subscription = new SubscriptionEntity(
