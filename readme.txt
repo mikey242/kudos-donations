@@ -121,7 +121,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Receipt emails now sent in donor's browser language (only for new donors)
 * Automatically link all subscription payment to their subscription (not just initial payment)
 * Allow multiple filters to be applied to admin tables
-* Debug mode: Show linked entity when viewing individual details
+* Debug mode: Show linked entities when viewing individual details
 
 = 4.1.5 =
 * Fix bug where inconsistent post results returned from rest api query
