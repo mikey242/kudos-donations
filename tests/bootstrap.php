@@ -4,6 +4,8 @@
  */
 
 // Change filesystem access method.
+use IseardMedia\Kudos\Helper\Utils;
+
 const FS_METHOD = 'direct';
 
 require dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
@@ -32,6 +34,7 @@ require_once "{$_tests_dir}/includes/functions.php";
 function _manually_load_plugin() {
 	require dirname( __DIR__ ) . '/kudos-donations.php';
 	$wpdb = new \IseardMedia\Kudos\Helper\WpDb();
+	Utils::create_all_tables($wpdb);
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );

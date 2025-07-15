@@ -12,8 +12,30 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Helper;
 
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Table\CampaignsTable;
+use IseardMedia\Kudos\Domain\Table\DonorsTable;
+use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
+use IseardMedia\Kudos\Domain\Table\TransactionsTable;
 
 class Utils {
+
+	/**
+	 * Creates the required tables.
+	 *
+	 * @param WpDb $wpdb WpDb wrapper instance.
+	 */
+	public static function create_all_tables( WpDb $wpdb ): void {
+		$tables = [
+			CampaignsTable::class,
+			DonorsTable::class,
+			TransactionsTable::class,
+			SubscriptionsTable::class,
+		];
+
+		foreach ( $tables as $table_class ) {
+			( new $table_class( $wpdb ) )->create_table();
+		}
+	}
 
 	/**
 	 * Returns an array of supported currencies and their symbols.
