@@ -319,7 +319,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 				$donor                            = new DonorEntity( $donor_args );
 			} else {
 				// Otherwise update existing donor object.
-				$donor->fill( $donor_args );
+				$donor->hydrate( $donor_args );
 			}
 
 			// Save donor and fetch updated record.
