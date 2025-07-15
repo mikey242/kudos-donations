@@ -724,15 +724,14 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 			// Update transaction.
-			$transaction->fill([
-				'status'            => $payment->status,
-				'vendor_payment_id' => $payment->id,
-				'value'             => floatval($payment->amount->value),
-				'currency'          => $payment->amount->currency,
-				'sequence_type'     => $payment->sequenceType,
-				'method'            => $payment->method,
-				'mode'              => $payment->mode
-			]);
+			$transaction->status            = $payment->status;
+			$transaction->vendor_payment_id = $payment->id;
+			$transaction->value             = floatval($payment->amount->value);
+			$transaction->currency          = $payment->amount->currency;
+			$transaction->sequence_type     = $payment->sequenceType;
+			$transaction->method            = $payment->method;
+			$transaction->mode              = $payment->mode;
+
 			$transactions->update($transaction);
 
 			// Set up recurring payment if sequence is first.
@@ -745,10 +744,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					(int) $payment->metadata->years
 				);
 				// Update transaction with subscription ID.
-				$transaction->fill([
-					'id'                     => $transaction->id,
-					'subscription_id' => $subscription_id
-				]);
+				$transaction->subscription_id = $subscription_id;
 				$transactions->update($transaction);
 			}
 		} elseif ( $payment->hasRefunds() ) {
