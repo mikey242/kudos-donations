@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Domain\Repository;
 
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
-use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Domain\Schema\BaseSchema;
 use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Helper\WpDb;
 
@@ -24,19 +24,21 @@ use IseardMedia\Kudos\Helper\WpDb;
 abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInterface {
 
 	use RepositoryAwareTrait;
-	use SanitizeTrait;
 
 	protected WpDb $wpdb;
 	protected string $table;
+	private BaseSchema $schema;
 
 	/**
 	 * BaseRepository constructor.
 	 *
-	 * @param WpDb $wpdb For interfacing with the wpdb.
+	 * @param WpDb       $wpdb For interfacing with the wpdb.
+	 * @param BaseSchema $schema The schema for this repository.
 	 */
-	public function __construct( WpDb $wpdb ) {
-		$this->wpdb  = $wpdb;
-		$this->table = $this->wpdb->table( $this->get_table_name() );
+	public function __construct( WpDb $wpdb, BaseSchema $schema ) {
+		$this->wpdb   = $wpdb;
+		$this->table  = $this->wpdb->table( static::get_table_name() );
+		$this->schema = $schema;
 	}
 
 	/**
@@ -60,31 +62,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @return class-string<TEntity>
 	 */
 	abstract protected function get_entity_class(): string;
-
-	/**
-	 * Defines the common entity schema.
-	 */
-	private function get_base_column_schema(): array {
-		return [
-			'id'         => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
-			'wp_post_id' => $this->make_schema_field( FieldType::INTEGER, 'sanitize_text_field' ),
-			'title'      => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
-			'created_at' => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
-			'updated_at' => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
-		];
-	}
-
-	/**
-	 * Returns the entire column schema.
-	 */
-	public function get_column_schema(): array {
-		return array_merge( $this->get_base_column_schema(), $this->get_additional_column_schema() );
-	}
-
-	/**
-	 * Get the schema for the repository.
-	 */
-	abstract public function get_additional_column_schema(): array;
 
 	/**
 	 * Get the specified row by id.
@@ -149,7 +126,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
 	public function insert( BaseEntity $entity ) {
-		$data = $this->sanitize_data_from_schema( $entity->to_array() );
+		$data = $this->schema->sanitize_data_from_schema( $entity->to_array() );
 
 		$success = $this->wpdb->insert( $this->table, $data );
 
@@ -178,7 +155,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @param TEntity $entity The data to update.
 	 */
 	public function update( BaseEntity $entity ): bool {
-		$data = $this->sanitize_data_from_schema( $entity->to_array() );
+		$data = $this->schema->sanitize_data_from_schema( $entity->to_array() );
 
 		if ( ! isset( $data['id'] ) ) {
 			throw new \InvalidArgumentException( 'Cannot update entity without ID.' );
@@ -228,7 +205,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( $id ) ) );
 		}
 
-		$data = $this->sanitize_data_from_schema( $data );
+		$data = $this->schema->sanitize_data_from_schema( $data );
 
 		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
 	}
@@ -329,95 +306,10 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	}
 
 	/**
-	 * Cast the provided row as the types specified in get_column_schema.
-	 *
-	 * @param array $row The row to cast.
-	 */
-	public function cast_types( array $row ): array {
-		$schema = $this->get_column_schema();
-
-		foreach ( $schema as $key => $args ) {
-			if ( ! \array_key_exists( $key, $row ) ) {
-				continue;
-			}
-
-			$value = $row[ $key ];
-			$type  = $args['type'] ?? null;
-
-			switch ( $type ) {
-				case FieldType::INTEGER:
-					$row[ $key ] = is_numeric( $value ) ? (int) $value : null;
-					break;
-
-				case FieldType::FLOAT:
-					$row[ $key ] = '' === $value || null === $value ? null : (float) $value;
-					break;
-
-				case FieldType::BOOLEAN:
-					$row[ $key ] = filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
-					break;
-
-				case FieldType::OBJECT:
-					if ( \is_array( $value ) || \is_object( $value ) ) {
-						// Already decoded.
-						$row[ $key ] = $value;
-					} elseif ( \is_string( $value ) && $this->is_valid_json( $value ) ) {
-						$decoded     = json_decode( $value, true );
-						$row[ $key ] = \is_array( $decoded ) || \is_object( $decoded ) ? $decoded : null;
-					}
-					break;
-
-				case FieldType::STRING:
-				default:
-					$row[ $key ] = \is_scalar( $value ) ? (string) $value : '';
-					break;
-			}
-		}
-
-		return $row;
-	}
-
-	/**
-	 * Prepares values for insertion into db.
-	 *
-	 * @param array $data The data for insertion.
-	 */
-	public function sanitize_data_from_schema( array $data ): array {
-		$schema  = $this->get_column_schema();
-		$allowed = array_intersect_key( $data, $schema );
-
-		foreach ( $allowed as $key => &$value ) {
-			if ( '' === $value ) {
-				$value = null;
-			}
-
-			$callback = $schema[ $key ]['sanitize_callback'] ?? null;
-			if ( $callback && null !== $value && \is_callable( $callback ) ) {
-				$value = \call_user_func( $callback, $value );
-			}
-		}
-
-		return $allowed;
-	}
-
-	/**
 	 * Gets a list of fields for the current repository as defined in get_column_schema().
 	 */
 	public function get_all_fields(): array {
-		return array_keys( $this->get_column_schema() );
-	}
-
-	/**
-	 * Returns the schema field.
-	 *
-	 * @param string   $type The type of field (e.g. string).
-	 * @param callable $sanitize Sanitize callback.
-	 */
-	protected function make_schema_field( string $type, callable $sanitize ): array {
-		return [
-			'type'              => $type,
-			'sanitize_callback' => $sanitize,
-		];
+		return array_keys( $this->schema->get_column_schema() );
 	}
 
 	/**
@@ -440,7 +332,14 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 */
 	private function transform_result( array $row, bool $apply_defaults = true ) {
 		$entity_class = $this->get_entity_class();
-		$data         = $this->cast_types( $row );
+		$data         = $this->schema->cast_types( $row );
 		return new $entity_class( $data, $apply_defaults );
+	}
+
+	/**
+	 * Return the linked schema instance.
+	 */
+	public function get_schema(): BaseSchema {
+		return $this->schema;
 	}
 }
