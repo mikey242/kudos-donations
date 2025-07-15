@@ -26,7 +26,7 @@ class BaseEntity {
 	 * @param bool                 $apply_defaults Whether to merge incoming data with specified defaults.
 	 */
 	public function __construct( array $data, bool $apply_defaults = true ) {
-		$this->fill( $apply_defaults ? array_merge( $this->defaults(), $data ) : $data );
+		$this->hydrate( $apply_defaults ? array_merge( $this->defaults(), $data ) : $data );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class BaseEntity {
 	 *
 	 * @param array $data Raw data to use.
 	 */
-	public function fill( array $data ): void {
+	public function hydrate( array $data ): void {
 		foreach ( $data as $key => $value ) {
 			if ( \property_exists( $this, $key ) ) {
 				$this->{$key} = $value;
