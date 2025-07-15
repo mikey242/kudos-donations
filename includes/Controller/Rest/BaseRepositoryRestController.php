@@ -122,7 +122,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * Generates rest route args based on schema.
 	 */
 	public function get_rest_args(): array {
-		$schema = $this->repository->get_column_schema();
+		$schema = $this->repository->get_schema()->get_column_schema();
 		$args   = [];
 
 		foreach ( $schema as $key => $field ) {
@@ -210,9 +210,9 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item( WP_REST_Request $request ) {
-		$schema_keys = array_keys( $this->repository->get_column_schema() );
+		$schema_keys = array_keys( $this->repository->get_schema()->get_column_schema() );
 		$filtered    = array_intersect_key( $request->get_params(), array_flip( $schema_keys ) );
-		$casted      = $this->repository->cast_types( $filtered );
+		$casted      = $this->repository->get_schema()->cast_types( $filtered );
 		$entity      = $this->repository->new_entity( $casted );
 
 		// Create/update record.
@@ -294,6 +294,6 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * @param array $value The "where" value.
 	 */
 	public function sanitize_where_field( array $value ): array {
-		return $this->repository->sanitize_data_from_schema( $value );
+		return $this->repository->get_schema()->sanitize_data_from_schema( $value );
 	}
 }

@@ -5,6 +5,8 @@
  * @link https://gitlab.iseard.media/michael/kudos-donations
  *
  * @copyright 2025 Iseard Media
+ *
+ * @phpcs:disable WordPress.WP.ClassNameCase.Incorrect
  */
 
 declare( strict_types=1 );
@@ -20,9 +22,18 @@ use IseardMedia\Kudos\Container\Handler\UpgradeHandler;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Container\Registrable;
 use IseardMedia\Kudos\Container\UpgradeAwareInterface;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryManager;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Schema\CampaignSchema;
+use IseardMedia\Kudos\Domain\Schema\DonorSchema;
+use IseardMedia\Kudos\Domain\Schema\SubscriptionSchema;
+use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
+use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
@@ -118,6 +129,39 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->args( [ tagged_iterator( 'kudos.repository' ) ] );
 	$services->set( MigrationHandler::class )
 		->args( [ tagged_iterator( 'kudos.migration' ) ] );
+
+	// Configure repositories.
+	$services->set( TransactionRepository::class )
+			->args(
+				[
+					service( WpDb::class ),
+					service( TransactionSchema::class ),
+				]
+			);
+
+	$services->set( CampaignRepository::class )
+			->args(
+				[
+					service( WpDb::class ),
+					service( CampaignSchema::class ),
+				]
+			);
+
+	$services->set( DonorRepository::class )
+			->args(
+				[
+					service( WpDb::class ),
+					service( DonorSchema::class ),
+				]
+			);
+
+	$services->set( SubscriptionRepository::class )
+			->args(
+				[
+					service( WpDb::class ),
+					service( SubscriptionSchema::class ),
+				]
+			);
 
 	// Filter for adding additional services.
 	do_action( 'kudos_container_configurator', $services );
