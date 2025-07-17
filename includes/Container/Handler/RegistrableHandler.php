@@ -48,6 +48,8 @@ class RegistrableHandler {
 
 	/**
 	 * Runs initialize on each service.
+	 *
+	 * @psalm-suppress UndefinedMethod
 	 */
 	public function process(): void {
 		// Remove disabled services.
@@ -58,7 +60,7 @@ class RegistrableHandler {
 		// Add 'register' callback function to specified hook.
 		foreach ( $enabled_services as $service ) {
 			// Add specified action or call register directly.
-			if ( is_a( $service, Delayed::class, true ) ) {
+			if ( $service instanceof Delayed ) {
 				add_action(
 					$service::get_registration_action(),
 					[ $service, 'register' ],

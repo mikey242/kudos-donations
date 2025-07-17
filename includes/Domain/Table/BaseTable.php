@@ -69,12 +69,12 @@ abstract class BaseTable implements ActivationAwareInterface {
 	/**
 	 * Setup this database table.
 	 */
-	abstract protected function get_schema();
+	abstract protected function get_schema(): string;
 
 	/**
 	 * Creates the table in the database.
 	 */
-	public function create_table() {
+	public function create_table(): void {
 		$table_name = $this->wpdb->table( static::get_name() );
 		$charset    = $this->wpdb->get_charset_collate();
 		$schema     = $this->schema;

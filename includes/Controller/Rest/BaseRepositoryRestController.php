@@ -156,10 +156,11 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		$id = (int) $request->get_param( 'id' );
 
 		// Try to find the entity by id.
+		/** @var ?TEntity $item */
 		$item = $this->repository->get( $id );
 
-		if ( ! $item ) {
-			// translators: %s is the entity type singular name (e.g Transaction).
+		if ( null === $item ) {
+			// translators: %s is the entity type singular name (e.g. Transaction).
 			return new WP_Error( 'not_found', \sprintf( __( '%s not found.', 'kudos-donations' ), $this->repository::get_singular_name() ), [ 'status' => 404 ] );
 		}
 
@@ -170,6 +171,8 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * Get the repository items.
 	 *
 	 * @param WP_REST_Request $request The request object.
+	 *
+	 * @psalm-suppress InvalidArgument
 	 */
 	public function get_items( WP_REST_Request $request ): WP_REST_Response {
 		$paged    = max( 1, (int) $request->get_param( 'paged' ) );
@@ -178,7 +181,8 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		$orderby  = $request->get_param( 'orderby' );
 		$order    = $request->get_param( 'order' );
 		$offset   = ( $paged - 1 ) * $per_page;
-		$where    = $request->get_param( 'where' ) ?? [];
+		/** @var array<string, scalar> $where */
+		$where = $request->get_param( 'where' ) ?? '';
 
 		$args = [
 			'columns' => $columns,
@@ -218,7 +222,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		// Create/update record.
 		$id = $this->repository->upsert( $entity );
 
-		if ( ! $id ) {
+		if ( false === $id ) {
 			return new WP_Error( 'cannot_create', __( 'Could not create campaign.', 'kudos-donations' ), [ 'status' => 500 ] );
 		}
 
@@ -231,15 +235,12 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
-	public function delete_item( WP_REST_Request $request ): WP_REST_Response {
+	public function delete_item( WP_REST_Request $request ) {
 		$id      = (int) $request->get_param( 'id' );
 		$deleted = $this->repository->delete( $id );
 
 		if ( ! $deleted ) {
-			return new WP_REST_Response(
-				[ 'message' => __( 'Failed to delete item.', 'kudos-donations' ) ],
-				500
-			);
+			return new WP_Error( 'cannot_create', __( 'Failed to delete item.', 'kudos-donations' ), [ 'status' => 500 ] );
 		}
 
 		return new WP_REST_Response(

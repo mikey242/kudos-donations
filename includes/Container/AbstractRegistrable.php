@@ -12,11 +12,10 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Container;
 
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 
 abstract class AbstractRegistrable implements Delayed, Registrable, LoggerAwareInterface {
 
-	use LoggerAwareTrait;
+	use SafeLoggerTrait;
 
 	/**
 	 * {@inheritDoc}

@@ -18,8 +18,13 @@ function activate(): void {
 
 	( new CompatibilityService() )->on_plugin_activation();
 
-	PluginFactory::create()->on_plugin_activation();
-
+	try {
+		PluginFactory::create()->on_plugin_activation();
+	} catch ( \Throwable $e ) {
+		// phpcs:disable WordPress.PHP.DevelopmentFunctions
+		error_log( $e->getMessage() );
+		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+	}
 	/**
 	 * Fires when the plugin is activated.
 	 *
@@ -34,7 +39,13 @@ register_activation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\activate' );
  * Handles plugin deactivation.
  */
 function deactivate(): void {
-	PluginFactory::create()->on_plugin_deactivation();
+	try {
+		PluginFactory::create()->on_plugin_deactivation();
+	} catch ( \Throwable $e ) {
+		// phpcs:disable WordPress.PHP.DevelopmentFunctions
+		error_log( $e->getMessage() );
+		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+	}
 
 	/**
 	 * Fires after plugin deactivation.
@@ -45,16 +56,6 @@ function deactivate(): void {
 }
 
 register_deactivation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
-
-/**
- * Returns the Kudos Donations plugin instance.
- *
- * Can be used by other plugins to integrate with the plugin
- * or to simply detect whether the plugin is active.
- */
-function get_plugin_instance(): Plugin {
-	return PluginFactory::create();
-}
 
 /**
  * Bootstrap the plugin.

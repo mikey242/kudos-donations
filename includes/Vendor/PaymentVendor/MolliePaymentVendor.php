@@ -41,6 +41,7 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
 use WP_REST_Request;
 use WP_REST_Response;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterface, RepositoryAwareInterface {
 
 	use RepositoryAwareTrait;
@@ -96,8 +97,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		$mode    = $this->get_api_mode();
 		$option  = constant( "self::SETTING_API_KEY_ENCRYPTED_" . strtoupper( $mode ) );
 		$key     = $this->get_decrypted_key( $option );
-		$methods = get_option( self::SETTING_PAYMENT_METHODS );
-		return ! empty( $key ) && ! empty( $methods ) ?? false;
+		$methods = (array) get_option( self::SETTING_PAYMENT_METHODS );
+		return ! empty( $key ) && ! empty( $methods );
 	}
 
 	/**
@@ -109,7 +110,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		return [
 			'ready' => $ready,
 			'recurring' => $ready && $this->can_use_recurring(),
-			'text'  => sprintf(__('%s ready'), self::get_name()) . ($name ? ' (' . $name . ')' : ''),
+			'text' => sprintf(__('%%s ready'), self::get_name()) . (is_string($name) && $name !== '' ? ' (' . $name . ')' : ''),
 		];
 	}
 
@@ -136,7 +137,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				$this->api_client->setApiKey( $key );
 				return true;
 			} catch ( ApiException $e ) {
-				$this->logger->critical( $e->getMessage() );
+				$this->get_logger()->critical( $e->getMessage() );
 			}
 		}
 		return false;
@@ -227,7 +228,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			];
 		}, (array) $this->get_active_payment_methods() );
 
-		$this->logger->debug( 'Mollie payment methods', $payment_methods );
+		$this->get_logger()->debug( 'Mollie payment methods', $payment_methods );
 
 		// No payment methods found, return false.
 		if ( empty( $payment_methods ) ) {
@@ -247,13 +248,13 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				];
 			}
 		} catch ( RequestException $e ) {
-			$this->logger->critical( 'Direct debit payment method not found', ['message' => $e->getMessage()] );
+			$this->get_logger()->critical( 'Direct debit payment method not found', ['message' => $e->getMessage()] );
 		}
 
 		try {
 			// Get profile.
 			$profile = $this->api_client->profiles->getCurrent();
-			$this->logger->debug('Mollie profile fetched', [$profile]);
+			$this->get_logger()->debug('Mollie profile fetched', [$profile]);
 			// Update profile.
 			update_option(self::SETTING_PROFILE, [
 				'id' => $profile->id,
@@ -263,10 +264,10 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				'status' => $profile->status
 			]);
 		} catch (RequestException $e) {
-			$this->logger->warning('Cannot get Mollie profile', ['message' => $e->getMessage()]);
+			$this->get_logger()->warning('Cannot get Mollie profile', ['message' => $e->getMessage()]);
 		}
 
-		$this->logger->debug( 'Mollie refreshed connection settings' );
+		$this->get_logger()->debug( 'Mollie refreshed connection settings' );
 
 		// Update payment methods.
 		update_option(
@@ -278,13 +279,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		update_option( self::SETTING_RECURRING, $this->can_use_recurring() );
 
 		// Update vendor status.
-		$ready = $this->is_vendor_ready();
-		$name = get_option(self::SETTING_PROFILE)['name'] ?? null;
-		update_option(PaymentService::SETTING_VENDOR_STATUS, [
-			'ready' => $ready,
-			'recurring' => $ready && $this->can_use_recurring(),
-			'text'  => sprintf(__('%s ready'), self::get_name()) . ($name ? ' (' . $name . ')' : ''),
-		]);
+		update_option(PaymentService::SETTING_VENDOR_STATUS, $this->vendor_status());
 
 		return true;
 	}
@@ -300,7 +295,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		try {
 			return $this->api_client->methods->allEnabled( $options );
 		} catch ( RequestException $e ) {
-			$this->logger->critical( $e->getMessage() );
+			$this->get_logger()->critical( $e->getMessage() );
 
 			return null;
 		}
@@ -314,11 +309,17 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * @return bool
 	 */
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool {
+		if(null === $subscription->vendor_subscription_id) {
+			return false;
+		}
 		$transaction_repository = $this->get_repository(TransactionRepository::class);
 		/** @var TransactionEntity $transaction */
 		$transaction        = $transaction_repository->get( (int) $subscription->transaction_id );
 		$donor              = $transaction_repository->get_donor( $transaction );
-		$vendor_customer_id = $donor->vendor_customer_id;
+		$vendor_customer_id = $donor->vendor_customer_id ?? null;
+		if(null === $vendor_customer_id) {
+			return false;
+		}
 		$customer           = $this->get_customer( $vendor_customer_id );
 
 		// Bail if no subscription found locally or if not active.
@@ -332,7 +333,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 			return ( $response->status === PaymentStatus::CANCELED );
 		} catch ( ApiException $e ) {
-			$this->logger->error( 'Error cancelling subscription:', [ 'message' => $e->getMessage() ] );
+			$this->get_logger()->error( 'Error cancelling subscription:', [ 'message' => $e->getMessage() ] );
 
 			return false;
 		}
@@ -349,7 +350,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		try {
 			return $this->api_client->customers->get( $vendor_customer_id );
 		} catch ( RequestException $e ) {
-			$this->logger->critical( $e->getMessage() );
+			$this->get_logger()->critical( $e->getMessage() );
 
 			return null;
 		}
@@ -375,7 +376,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		try {
 			return $this->api_client->customers->create( $args );
 		} catch ( RequestException $e ) {
-			$this->logger->critical( $e->getMessage() );
+			$this->get_logger()->critical( $e->getMessage() );
 
 			return false;
 		}
@@ -398,8 +399,8 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		/** @var CampaignEntity $campaign */
 		$campaign            = $this->get_repository(CampaignRepository::class)
 		                            ->get( (int) $payment_args['campaign_id'] );
-		$show_return_message = $campaign->show_return_message ?? false;
-		if ( ! empty( $show_return_message ) ) {
+		$show_return_message = $campaign->show_return_message;
+		if ( $show_return_message ) {
 			$action       = 'order_complete';
 			$redirect_url = add_query_arg(
 				[
@@ -432,14 +433,14 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		];
 
 		// Link payment to customer if specified.
-		if ( $vendor_customer_id ) {
+		if ( null !== $vendor_customer_id ) {
 			$payment_array['customerId'] = $vendor_customer_id;
 		}
 
 		try {
 			$payment = $this->api_client->payments->create( $payment_array );
 
-			$this->logger->info(
+			$this->get_logger()->info(
 				"New " . $this->get_name() . " payment created.",
 				[ 'transaction_id' => $transaction_id, 'sequence_type' => $payment->sequenceType ]
 			);
@@ -453,9 +454,9 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			$this->get_repository(TransactionRepository::class)
 			     ->update($transaction);
 
-			return $checkout_url;
+			return $checkout_url ?? false;
 		} catch ( RequestException $e ) {
-			$this->logger->error( 'Error creating payment with Mollie', [ 'error' => $e->getMessage() ] );
+			$this->get_logger()->error( 'Error creating payment with Mollie', [ 'error' => $e->getMessage() ] );
 
 			return false;
 		}
@@ -464,25 +465,46 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	/**
 	 * Creates a subscription based on the provided transaction
 	 *
-	 * @return int|false
+	 * @param TransactionEntity $transaction
+	 * @param string $mandate_id
+	 * @param string $interval
+	 * @param int $years
+	 *
+	 * @return false|int
 	 */
 	public function create_subscription( TransactionEntity $transaction, string $mandate_id, string $interval, int $years	) {
-		$this->logger->debug( 'Creating subscription', [
+		$this->get_logger()->debug( 'Creating subscription', [
 			'mandate_id' => $mandate_id,
 			'interval'   => $interval,
 			'years'      => $years
 		] );
+
+		// Bail if no donor id found on transaction
+		if(null === $transaction->donor_id) {
+			return false;
+		}
+
 		/** @var DonorEntity $donor */
-		$donor       = $this->get_repository(DonorRepository::class)->get( $transaction->donor_id );
-		$customer_id = $donor->vendor_customer_id;
-		$start_date  = gmdate( 'Y-m-d', strtotime( '+' . $interval ) );
-		$currency    = $transaction->currency;
-		$value       = Utils::format_value_for_use( $transaction->value );
-		$customer    = $this->get_customer( $customer_id );
+		$donor              = $this->get_repository(DonorRepository::class)->get( $transaction->donor_id );
+		$vendor_customer_id = $donor->vendor_customer_id;
+
+		// Bail if no vendor customer id.
+		if(null === $vendor_customer_id ) {
+			return false;
+		}
+
+		$start_date         = gmdate( 'Y-m-d', strtotime( '+' . $interval ) );
+		$currency           = $transaction->currency;
+		$value              = Utils::format_value_for_use( $transaction->value );
+		$customer           = $this->get_customer( $vendor_customer_id );
+
+		if(null === $customer) {
+			return false;
+		}
 
 		// Create subscription if valid mandate found.
 		if ( $this->check_mandate( $customer, $mandate_id ) ) {
-			$this->logger->debug( 'Customer has valid mandate, continuing.', [ 'mandate_id' => $mandate_id ] );
+			$this->get_logger()->debug( 'Customer has valid mandate, continuing.', [ 'mandate_id' => $mandate_id ] );
 			try {
 
 				$subscriptions = $this->get_repository(SubscriptionRepository::class);
@@ -498,6 +520,10 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					'campaign_id'    => $transaction->campaign_id
 				] );
 				$subscription_id     = $subscriptions->insert($subscription_entity);
+
+				if(false === $subscription_id) {
+					return false;
+				}
 
 				// Prepare arguments to send to Mollie.
 				$subscription_args = [
@@ -527,16 +553,16 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				}
 
 				$subscription = $customer->createSubscription( $subscription_args );
-				$this->logger->debug( 'Subscription created with Mollie', [ 'result' => $subscription ] );
+				$this->get_logger()->debug( 'Subscription created with Mollie', [ 'result' => $subscription ] );
 
 				// Update subscription post with status and subscription id.
 				return $subscriptions->patch($subscription_id, [
 					'status' => $subscription->status,
 					'vendor_customer_id' => $subscription->customerId,
 					'vendor_subscription_id' => $subscription->id,
-				]);
+				]) ? $subscription_id : false;
 			} catch ( ApiException $e ) {
-				$this->logger->error( $e->getMessage(), [
+				$this->get_logger()->error( $e->getMessage(), [
 					'transaction' => $transaction,
 					'mandate_id'  => $mandate_id,
 					'interval'    => $interval,
@@ -548,9 +574,9 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		}
 
 		// No valid mandates.
-		$this->logger->error(
+		$this->get_logger()->error(
 			__( 'Cannot create subscription as customer has no valid mandates.', 'kudos-donations' ),
-			[ $customer_id ]
+			[ $vendor_customer_id ]
 		);
 
 		return false;
@@ -582,7 +608,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		// ID is case-sensitive (e.g: tr_HUW39xpdFN).
 		$payment_id = $request->get_param( 'id' );
 		// Log request.
-		$this->logger->info(
+		$this->get_logger()->info(
 			"Webhook requested by " . $this::get_name(),
 			[
 				'payment_id' => $payment_id,
@@ -629,16 +655,20 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		 * @link https://docs.mollie.com/reference/v2/payments-api/get-payment
 		 */
 		$payment = $mollie->payments->get( $vendor_payment_id );
+		$payment_metadata = $payment->metadata;
+		if ( ! is_object( $payment_metadata ) ) {
+			return false;
+		}
 
 		// Log payment retrieval.
-		$this->logger->debug(
+		$this->get_logger()->debug(
 			"Payment retrieved from Mollie.",
 			[
 				'vendor_id'     => $vendor_payment_id,
 				'status'        => $payment->status,
 				'sequence_type' => $payment->sequenceType,
 				'has_refunds'   => $payment->hasRefunds(),
-				'metadata'      => $payment->metadata
+				'metadata'      => $payment_metadata
 			]
 		);
 
@@ -650,14 +680,20 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		 * e.g. New recurring payment.
 		 */
 		if ( $payment->hasSequenceTypeRecurring() ) {
-			$this->logger->debug( 'Recurring payment received, creating transaction.', [
+			$this->get_logger()->debug( 'Recurring payment received, creating transaction.', [
 				'subscription_id' => $payment->subscriptionId,
 			] );
+
+			// Bail if required properties not set.
+			if(null === $payment->customerId || null === $payment->subscriptionId) {
+				return false;
+			}
+
 			$customer     = $mollie->customers->get( $payment->customerId );
 			$subscription = $customer->getSubscription( $payment->subscriptionId );
 
 			//	Get post id if $campaign_id is slug from pre 4.0.0 version.
-			$campaign_id         = $subscription->metadata->campaign_id;
+			$campaign_id         = $subscription->metadata->campaign_id ?? null;
 			$campaigns = $this->get_repository( CampaignRepository::class );
 			/** @var CampaignEntity $campaign */
 			$campaign    = $campaigns
@@ -667,13 +703,13 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			$campaign_id = $campaign->id;
 
 			// Subscription id.
-			$subscription_id = $subscription->metadata->subscription_id;
-			if ( ! $subscription_id ) {
+			$subscription_id = $subscription->metadata->subscription_id ?? null;
+			if ( null === $subscription_id ) {
 				/** @var SubscriptionEntity $subscription_entity */
 				$subscription_entity = $this->get_repository( SubscriptionRepository::class )->find_one_by( [
 					'vendor_subscription_id' => $subscription->id
 				] );
-				$subscription_id     = $subscription_entity->id ?? null;
+				$subscription_id     = $subscription_entity->id;
 			}
 
 			// Get Donor ID. If subscription from pre 4.0.0, use customerId to get new donor ID.
@@ -689,10 +725,17 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 					'vendor'          => self::get_slug()
 				]			);
 			$transaction_id = $transactions->insert($transaction);
+
+			if(false === $transaction_id) {
+				return false;
+			}
+
 			$transaction    = $transactions->get( $transaction_id );
 		} else {
+			$transaction_id = $payment_metadata->transaction_id;
+
 			/** @var TransactionEntity $transaction */
-			$transaction = $transactions->get( (int) $payment->metadata->transaction_id );
+			$transaction = $transactions->get( (int) $transaction_id );
 		}
 
 		/**
@@ -703,9 +746,10 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		 * @link https://docs.mollie.com/overview/webhooks#how-to-handle-unknown-ids
 		 */
 		if ( ! $transaction ) {
-			$this->logger->warning(
+			$transaction_id = $payment_metadata->transaction_id ?? null;
+			$this->get_logger()->warning(
 				'Webhook received for unknown transaction. Aborting',
-				[ 'vendor_id' => $vendor_payment_id, 'transaction_id' => $payment->metadata->transaction_id ]
+				[ 'vendor_id' => $vendor_payment_id, 'transaction_id' => $transaction_id ]
 			);
 
 			return false;
@@ -713,7 +757,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 		// Exit early if already processed
 		if ( ! empty( $transaction->status ) && $transaction->status !== PaymentStatus::OPEN ) {
-			$this->logger->debug( 'Duplicate handle_status_change call. Skipping.', [
+			$this->get_logger()->debug( 'Duplicate handle_status_change call. Skipping.', [
 				'payment_id'     => $vendor_payment_id,
 				'transaction_id' => $transaction->id,
 				'status'         => $transaction->status,
@@ -736,13 +780,24 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 			// Set up recurring payment if sequence is first.
 			if ( $payment->hasSequenceTypeFirst() ) {
-				$this->logger->info( 'Payment is initial subscription payment.', [ $transaction ] );
+				$this->get_logger()->info( 'Payment is initial subscription payment.', [ $transaction ] );
+
+				if(null === $payment->mandateId) {
+					return false;
+				}
+
 				$subscription_id = $this->create_subscription(
 					$transaction,
 					$payment->mandateId,
-					$payment->metadata->frequency,
-					(int) $payment->metadata->years
+					$payment_metadata->frequency,
+					(int) $payment_metadata->years
 				);
+
+				// Bail if failed to create subscription.
+				if(false === $subscription_id) {
+					return false;
+				}
+
 				// Update transaction with subscription ID.
 				$transaction->subscription_id = $subscription_id;
 				$transactions->update($transaction);
@@ -764,7 +819,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			);
 			$transactions->update($transaction);
 
-			$this->logger->info( 'Payment refunded.', [
+			$this->get_logger()->info( 'Payment refunded.', [
 				'transaction' => $transaction,
 				'refunded'    => $payment->getAmountRefunded(),
 				'remaining'   => $payment->getAmountRemaining(),
@@ -792,7 +847,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				return true;
 			}
 		} catch ( ApiException $e ) {
-			$this->logger->error( $e->getMessage() );
+			$this->get_logger()->error( $e->getMessage() );
 		}
 
 		return false;
@@ -802,16 +857,22 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * {@inheritDoc}
 	 */
 	public function refund( int $entity_id ): bool {
-		/** @var TransactionEntity $transaction */
+		/** @var TransactionEntity|null $transaction */
 		$transaction = $this->get_repository( TransactionRepository::class )->get( $entity_id );
-		if ( $transaction ) {
+		$amount = [];
+		if ( null !== $transaction ) {
 			$payment_id         = $transaction->vendor_payment_id;
+
+			if(null === $payment_id) {
+				return false;
+			}
+
 			$amount['value']    = Utils::format_value_for_use( $transaction->value );
 			$amount['currency'] = $transaction->currency;
 			try {
 				$payment  = $this->api_client->payments->get( $payment_id );
 				$response = $payment->refund( [ "amount" => $amount ] );
-				$this->logger->info( sprintf( 'Refunding transaction "%s"', $payment_id ), [
+				$this->get_logger()->info( sprintf( 'Refunding transaction "%s"', $payment_id ), [
 					"status" => $response->status,
 					'amount' => $amount
 				] );
@@ -821,7 +882,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 				return false;
 			} catch ( RequestException $e ) {
-				$this->logger->error( $e->getMessage() );
+				$this->get_logger()->error( $e->getMessage() );
 			}
 		}
 
@@ -942,7 +1003,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 			return $payment->status;
 		} catch ( RequestException $e ) {
-			$this->logger->error( 'Error checking payment status', [ 'message' => $e->getMessage() ] );
+			$this->get_logger()->error( 'Error checking payment status', [ 'message' => $e->getMessage() ] );
 
 			return null;
 		}

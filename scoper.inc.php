@@ -25,4 +25,14 @@ return [
 		'Composer',
 		'Masterminds'
 	],
+	'patchers' => [
+		static function (string $filePath, string $prefix, string $content): string {
+			// Rewrite legacy Mollie docblocks to match scoped namespace
+			return preg_replace_callback(
+				'/@return\s+\\\\Mollie\\\\Api\\\\Resources\\\\([A-Za-z]+)/',
+				static fn(array $matches): string => '@return \\' . $prefix . '\\Mollie\\Api\\Resources\\' . $matches[1],
+				$content
+			);
+		},
+	],
 ];

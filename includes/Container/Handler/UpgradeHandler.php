@@ -60,11 +60,11 @@ class UpgradeHandler extends AbstractRegistrable {
 		foreach ( $this->services as $service ) {
 			add_action(
 				'upgrader_process_complete',
-				function ( $upgrader, $hook_extra ) use ( $service ) {
+				function ( \Plugin_Upgrader $upgrader, array $hook_extra ) use ( $service ) {
 					if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] && isset( $hook_extra['plugins'] ) ) {
 						foreach ( $hook_extra['plugins'] as $plugin ) {
 							if ( str_contains( $plugin, 'kudos-donations.php' ) ) {
-								$this->logger->debug( 'Kudos Donations upgrade detected.', [ 'plugin' => $plugin ] );
+								$this->get_logger()->debug( 'Kudos Donations upgrade detected.', [ 'plugin' => $plugin ] );
 								do_action( 'kudos_donations_upgraded', $plugin );
 								$service->on_plugin_upgrade();
 							}

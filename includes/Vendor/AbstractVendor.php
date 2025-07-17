@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract Newsletter provider.
+ * Abstract vendor class.
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations
  *

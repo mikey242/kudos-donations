@@ -17,9 +17,6 @@ use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 
-/**
- * @template T of VendorInterface
- */
 abstract class AbstractVendorFactory extends AbstractRegistrable {
 
 	private ServiceLocator $vendor_locator;
@@ -57,17 +54,20 @@ abstract class AbstractVendorFactory extends AbstractRegistrable {
 
 	/**
 	 * Create a vendor instance.
-	 * @return T
 	 */
 	public function get_vendor(): ?VendorInterface {
-		$selected_vendor       = get_option( $this->get_vendor_settings_key(), $this->get_default_vendor() );
-		/** @var VendorInterface $class */
-		foreach ($this->vendor_locator->getProvidedServices() as $class => $service) {
+		$selected_vendor       = (string) get_option( $this->get_vendor_settings_key(), $this->get_default_vendor() );
+		/** @var array<string, string> $vendors */
+		$vendors = $this->vendor_locator->getProvidedServices();
+		/** @var class-string<VendorInterface> $class */
+		foreach ($vendors as $class => $_) {
 			if($class::get_slug() === $selected_vendor) {
 				try {
-					return $this->vendor_locator->get($class);
+					/** @var VendorInterface $vendor */
+					$vendor = $this->vendor_locator->get($class);
+					return $vendor;
 				} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
-					$this->logger->error($e->getMessage());
+					$this->get_logger()->error($e->getMessage());
 				}
 			}
 		}
@@ -88,7 +88,7 @@ abstract class AbstractVendorFactory extends AbstractRegistrable {
 		 *
 		 * @var VendorInterface $vendor_class
 		 */
-		foreach ($this->vendor_locator->getProvidedServices() as $vendor_class => $vendorService) {
+		foreach ($this->vendor_locator->getProvidedServices() as $vendor_class => $_) {
 			// Use a static method or reflection to get the name without instantiating the service
 			if (method_exists($vendor_class, 'get_name')) {
 				$providers[] = [

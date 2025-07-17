@@ -17,6 +17,9 @@ use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Table\TransactionsTable;
 
+/**
+ * @extends BaseRepository<TransactionEntity>
+ */
 class TransactionRepository extends BaseRepository {
 
 	/**
@@ -48,7 +51,7 @@ class TransactionRepository extends BaseRepository {
 	 */
 	public function get_donor( TransactionEntity $transaction, array $columns = [ '*' ] ): ?DonorEntity {
 		$donor_id = $transaction->donor_id ?? null;
-		if ( ! $donor_id ) {
+		if ( null === $donor_id ) {
 			return null;
 		}
 
@@ -64,7 +67,7 @@ class TransactionRepository extends BaseRepository {
 	 */
 	public function get_campaign( TransactionEntity $transaction, array $columns = [ '*' ] ): ?CampaignEntity {
 		$campaign_id = $transaction->campaign_id ?? null;
-		if ( ! $campaign_id ) {
+		if ( null === $campaign_id ) {
 			return null;
 		}
 
@@ -80,7 +83,7 @@ class TransactionRepository extends BaseRepository {
 	 */
 	public function get_subscription( TransactionEntity $transaction, array $columns = [ '*' ] ): ?SubscriptionEntity {
 		$subscription_id = $transaction->subscription_id;
-		if ( ! $subscription_id ) {
+		if ( null === $subscription_id ) {
 			return null;
 		}
 
@@ -118,6 +121,10 @@ class TransactionRepository extends BaseRepository {
 			$value,
 			'paid'
 		);
+
+		if ( false === $sql ) {
+			return 0;
+		}
 
 		return (float) ( $this->wpdb->get_var( $sql ) ?? 0 );
 	}

@@ -17,6 +17,9 @@ use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
 
+/**
+ * @extends BaseRepository<SubscriptionEntity>
+ */
 class SubscriptionRepository extends BaseRepository {
 
 	/**
@@ -47,7 +50,7 @@ class SubscriptionRepository extends BaseRepository {
 	 */
 	public function get_transaction( SubscriptionEntity $subscription ): ?TransactionEntity {
 		$transaction_id = $subscription->transaction_id ?? null;
-		if ( ! $transaction_id ) {
+		if ( null === $transaction_id ) {
 			return null;
 		}
 		return $this->get_repository( TransactionRepository::class )
@@ -61,7 +64,7 @@ class SubscriptionRepository extends BaseRepository {
 	 */
 	public function get_donor( SubscriptionEntity $subscription ): ?DonorEntity {
 		$donor_id = $subscription->donor_id ?? null;
-		if ( ! $donor_id ) {
+		if ( null === $donor_id ) {
 			return null;
 		}
 		return $this->get_repository( DonorRepository::class )
@@ -77,7 +80,7 @@ class SubscriptionRepository extends BaseRepository {
 		$campaign_id = $subscription->campaign_id;
 
 		// Fallback: get campaign id from linked transaction.
-		if ( ! $campaign_id ) {
+		if ( null === $campaign_id ) {
 			$transaction = $this->get_transaction( $subscription );
 
 			if ( ! $transaction ) {
@@ -87,7 +90,7 @@ class SubscriptionRepository extends BaseRepository {
 			$campaign_id = $transaction->campaign_id;
 		}
 
-		if ( ! $campaign_id ) {
+		if ( null === $campaign_id ) {
 			return null;
 		}
 

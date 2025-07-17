@@ -36,6 +36,7 @@ class Autoloader {
 				return false;
 			}
 
+			/** @psalm-suppress UnresolvableInclude */
 			require $autoloader;
 		}
 
@@ -45,7 +46,7 @@ class Autoloader {
 	/**
 	 * If the autoloader is missing, add an admin notice.
 	 */
-	protected static function missing_autoloader() {
+	protected static function missing_autoloader(): void {
 		if ( \defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			// This message is not translated as at this point it's too early to load translations.
 			error_log(  // phpcs:ignore

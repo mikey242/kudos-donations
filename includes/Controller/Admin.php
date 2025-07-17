@@ -41,8 +41,8 @@ class Admin extends BaseController {
 	 * Handles the various query variables and shows relevant modals.
 	 */
 	public function handle_query_variables(): void {
-		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
-			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
+		if ( isset( $_REQUEST['kudos_action'] ) ) {
+			$action = sanitize_text_field( wp_unslash( (string) $_REQUEST['kudos_action'] ) );
 			$this->logger->debug( 'Action requested', [ 'action' => $action ] );
 			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 
@@ -109,7 +109,7 @@ class Admin extends BaseController {
 								break;
 							case '_all_transactions_':
 								$transactions = array_map(
-									fn( $t ) => $t->id,
+									fn( TransactionEntity $t ): int => $t->id,
 									$transaction_repo->all()
 								);
 								break;

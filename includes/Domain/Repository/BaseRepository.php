@@ -66,8 +66,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	/**
 	 * Get the specified row by id.
 	 *
-	 * @param int   $id The id to fetch.
-	 * @param array $columns The list of columns to return.
+	 * @param int           $id The id to fetch.
+	 * @param array<string> $columns List of columns to return. Defaults to all.
 	 * @return TEntity|null
 	 */
 	public function get( int $id, array $columns = [ '*' ] ) {
@@ -75,7 +75,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 			[
 				'where'   => [ 'id' => $id ],
 				'limit'   => 1,
-				'columns' => $columns,
+				'columns' => array_values( $columns ),
 			]
 		);
 
@@ -85,15 +85,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	/**
 	 * Find by specified criteria.
 	 *
-	 * @param array $criteria The criteria to search by.
-	 * @param array $columns The list of columns to return.
+	 * @param array<string, mixed> $criteria Key-value pairs for WHERE clause.
+	 * @param array<string>        $columns List of columns to return. Defaults to all.
 	 * @return TEntity[]
 	 */
 	public function find_by( array $criteria, array $columns = [ '*' ] ): array {
 		return $this->query(
 			[
 				'where'   => $criteria,
-				'columns' => $columns,
+				'columns' => array_values( $columns ),
 			]
 		);
 	}
@@ -101,15 +101,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	/**
 	 * Find a single row by specified criteria.
 	 *
-	 * @param array $criteria Key-value pairs for WHERE clause.
-	 * @param array $columns  List of columns to return. Defaults to all.
+	 * @param array<string, mixed> $criteria Key-value pairs for WHERE clause.
+	 * @param array<string>        $columns  List of columns to return. Defaults to all.
 	 * @return TEntity | null     The matching row, or null if not found.
 	 */
 	public function find_one_by( array $criteria, array $columns = [ '*' ] ): ?BaseEntity {
 		$results = $this->query(
 			[
 				'where'   => $criteria,
-				'columns' => $columns,
+				'columns' => array_values( $columns ),
 				'limit'   => 1,
 			]
 		);
@@ -130,7 +130,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 
 		$success = $this->wpdb->insert( $this->table, $data );
 
-		if ( ! $success ) {
+		if ( false === $success ) {
 			return false;
 		}
 
@@ -138,10 +138,12 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 
 		// Generate title if none provided.
 		if ( empty( $data['title'] ) && $id ) {
-			$entity       = $this->get( $id );
-			$formatted_id = Utils::get_id( $entity, static::get_singular_name() );
-			$title        = static::get_singular_name() . \sprintf( ' (%1$s)', $formatted_id );
-			$this->wpdb->update( $this->table, [ 'title' => $title ], [ 'id' => $id ] );
+			$entity = $this->get( $id );
+			if ( $entity ) {
+				$formatted_id = Utils::get_id( $entity, static::get_singular_name() );
+				$title        = static::get_singular_name() . \sprintf( ' (%1$s)', $formatted_id );
+				$this->wpdb->update( $this->table, [ 'title' => $title ], [ 'id' => $id ] );
+			}
 		}
 
 		return $id;
@@ -176,7 +178,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @return int|false The inserted or updated row ID, or false on failure.
 	 */
 	public function upsert( BaseEntity $entity ) {
-		if ( $entity->id ?? null ) {
+		if ( $entity->id ) {
 			$result = $this->update( $entity ) ? $entity->id : false;
 		} else {
 			$result = $this->insert( $entity );
@@ -197,12 +199,12 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 *
 	 * @param int   $id   The ID of the entity to update.
 	 * @param array $data The partial data to update.
-	 * @return int|false  True if the update succeeded.
+	 * @return bool  True if the update succeeded.
 	 */
 	public function patch( int $id, array $data ): bool {
 
 		if ( ! $this->get( $id ) ) {
-			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( $id ) ) );
+			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( (string) $id ) ) );
 		}
 
 		$data = $this->schema->sanitize_data_from_schema( $data );
@@ -222,7 +224,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	/**
 	 * Return all records for this repository.
 	 *
-	 * @param array $columns The list of columns to return.
+	 * @param list<string> $columns The list of columns to return.
 	 */
 	public function all( array $columns = [ '*' ] ): array {
 		return $this->query( [ 'columns' => $columns ] );
@@ -235,19 +237,28 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @return TEntity[]
 	 *
 	 * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+	 *
+	 * @psalm-param array{
+	 * columns?: list<string>|array<string>,
+	 * where?: array<string, scalar>,
+	 * orderby?: string,
+	 * order?: 'ASC'|'DESC',
+	 * limit?: int,
+	 * offset?: int
+	 * } $args
 	 */
 	public function query( array $args = [] ): array {
 		$select = isset( $args['columns'] ) ? implode( ', ', $args['columns'] ) : '*';
 
 		$where = $this->build_where_clause( $args['where'] ?? [] );
 
-		$order_by = isset( $args['orderby'] ) ? 'ORDER BY `' . esc_sql( $args['orderby'] ) . '`' : '';
+		$order_by = isset( $args['orderby'] ) ? 'ORDER BY `' . $args['orderby'] . '`' : '';
 		$order    = isset( $args['order'] ) ? strtoupper( $args['order'] ) : 'ASC';
 		if ( $order_by ) {
 			$order_by .= " $order";
 		}
-		$limit      = isset( $args['limit'] ) ? (int) $args['limit'] : null;
-		$offset     = isset( $args['offset'] ) ? (int) $args['offset'] : null;
+		$limit      = $args['limit'] ?? null;
+		$offset     = $args['offset'] ?? null;
 		$limit_sql  = isset( $limit ) ? "LIMIT $limit" : '';
 		$offset_sql = isset( $offset ) ? "OFFSET $offset" : '';
 
@@ -258,31 +269,38 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 		}
 
 		$results = $this->wpdb->get_results(
-			$sql,
+			(string) $sql,
 			ARRAY_A
 		);
 
-		return array_map( fn( $row ) => $this->transform_result( $row ), $results );
+		if ( ! \is_array( $results ) ) {
+			$results = [];
+		}
+
+		return array_map( fn( array $row ) => $this->transform_result( $row ), $results );
 	}
 
 	/**
 	 * Count results of a specific query.
 	 *
-	 * @param array $where The WHERE clause.
+	 * @param array<string, mixed> $where The WHERE clause.
 	 */
 	public function count_query( array $where = [] ): int {
 		$parts = $this->build_where_clause( $where );
 		$sql   = "SELECT COUNT(*) FROM $this->table {$parts['sql']}";
+		$query = $this->wpdb->prepare( $sql, ...$parts['params'] );
 
-		return (int) $this->wpdb->get_var(
-			$this->wpdb->prepare( $sql, ...$parts['params'] )
-		);
+		if ( false === $query ) {
+			return 0;
+		}
+
+		return (int) $this->wpdb->get_var( $query );
 	}
 
 	/**
 	 * Generate the WHERE sql clause.
 	 *
-	 * @param array $criteria The criteria.
+	 * @param array<string, mixed> $criteria The criteria.
 	 */
 	private function build_where_clause( array $criteria ): array {
 		$clauses = [];
@@ -320,6 +338,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 */
 	public function new_entity( array $data ): BaseEntity {
 		$entity_class = $this->get_entity_class();
+		/** @psalm-suppress UnsafeInstantiation */
 		return new $entity_class( $data );
 	}
 
@@ -333,6 +352,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	private function transform_result( array $row, bool $apply_defaults = true ) {
 		$entity_class = $this->get_entity_class();
 		$data         = $this->schema->cast_types( $row );
+		/** @psalm-suppress UnsafeInstantiation */
 		return new $entity_class( $data, $apply_defaults );
 	}
 
