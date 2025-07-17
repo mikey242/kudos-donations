@@ -27,7 +27,7 @@ class TwigService implements ActivationAwareInterface, LoggerAwareInterface {
 
 	public const CACHE_DIR = KUDOS_CACHE_DIR . 'twig/';
 	private Environment $twig;
-	private array $options;
+	private array $options = [];
 
 	/**
 	 * Twig constructor
@@ -129,7 +129,7 @@ class TwigService implements ActivationAwareInterface, LoggerAwareInterface {
 		 */
 		$apply_filter = new TwigFilter(
 			'apply_filters',
-			function ( $text, $filter ) {
+			function ( string $text, callable $filter ): string {
 				return apply_filters( $filter, $text );
 			}
 		);
@@ -157,7 +157,7 @@ class TwigService implements ActivationAwareInterface, LoggerAwareInterface {
 
 		$number_format = new TwigFilter(
 			'number_format_i18n',
-			function ( $number ) {
+			function ( float $number ): string {
 				return number_format_i18n( $number );
 			}
 		);

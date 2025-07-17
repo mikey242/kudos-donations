@@ -18,6 +18,7 @@ use IseardMedia\Kudos\Vendor\AbstractVendor;
 use PHPMailer\PHPMailer\Exception;
 use WP_Error;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 
 	public const SETTING_CUSTOM_SMTP = '_kudos_custom_smtp';
@@ -28,9 +29,9 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	private const TEMPLATE_RECEIPT = 'emails/receipt.html.twig';
 	private const TEMPLATE_MESSAGE = 'emails/message.html.twig';
 	private TwigService $twig;
-	private bool $enable_custom_smtp;
-	private ?string $bcc;
-	private array $custom_smtp_config;
+	private bool $enable_custom_smtp = false;
+	private ?string $bcc = '';
+	private array $custom_smtp_config = [];
 
 	/**
 	 * Mailer constructor.
@@ -76,8 +77,8 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 */
 	public function register(): void {
 		$this->enable_custom_smtp = (bool) get_option( self::SETTING_SMTP_ENABLE, false );
-		$this->bcc                = get_option( self::SETTING_EMAIL_BCC, '' );
-		$this->custom_smtp_config = get_option( self::SETTING_CUSTOM_SMTP, [] );
+		$this->bcc                = (string) get_option( self::SETTING_EMAIL_BCC, '' );
+		$this->custom_smtp_config = (array) get_option( self::SETTING_CUSTOM_SMTP, [] );
 	}
 
 	/**
@@ -174,6 +175,10 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 			]
 		);
 
+		if(null === $body) {
+			return false;
+		}
+
 		return $this->send( $email, $header, $body );
 	}
 
@@ -204,11 +209,15 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 		// Generate email body from args.
 		$body = $this->twig->render( self::TEMPLATE_RECEIPT, $args );
 
+		if(null === $body) {
+			return false;
+		}
+
 		return $this->send(
 			$email,
 			__( 'Donation Receipt', 'kudos-donations' ),
 			$body,
-			$args['attachments'] ?? null
+			(array) $args['attachments']
 		);
 	}
 
@@ -218,7 +227,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * @param string $to Recipient email address.
 	 * @param string $subject Email subject line.
 	 * @param string $body Body of email.
-	 * @param array $attachment Attachment.
+	 * @param array<array-key, string> $attachment Attachment.
 	 */
 	private function send(
 		string $to,
@@ -233,7 +242,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 		$mail = wp_mail( $to, $subject, $body, '', $attachment );
 
 		if ( $mail ) {
-			$this->logger->info(
+			$this->get_logger()->info(
 				'Email sent successfully.',
 				[
 					'to'      => $to,
@@ -261,7 +270,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * Returns a filtered name.
 	 */
 	public function get_from_name(): string {
-		return $this->custom_smtp_config['from_name'];
+		return (string) $this->custom_smtp_config['from_name'];
 	}
 
 	/**
@@ -281,7 +290,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * @param WP_Error $error WP_Error object.
 	 */
 	public function handle_error( WP_Error $error ): void {
-		$this->logger->error( 'Error sending email.', [ 'message' => $error->get_error_messages() ] );
+		$this->get_logger()->error( 'Error sending email.', [ 'message' => $error->get_error_messages() ] );
 	}
 
 	/**

@@ -36,6 +36,13 @@ class Assets {
 	 * @param string $asset The script name.
 	 * @param string $base_dir Base dir to search.
 	 * @param string $base_url Base use to return.
+	 *
+	 * @psalm-return array{
+	 *  path: string,
+	 *  url: string,
+	 *  dependencies: array,
+	 *  version: string
+	 *  }
 	 */
 	public static function get_script(
 		string $asset,

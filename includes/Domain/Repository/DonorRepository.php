@@ -14,6 +14,9 @@ namespace IseardMedia\Kudos\Domain\Repository;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Table\DonorsTable;
 
+/**
+ * @extends BaseRepository<DonorEntity>
+ */
 class DonorRepository extends BaseRepository {
 
 	/**

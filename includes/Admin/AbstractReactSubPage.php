@@ -33,7 +33,7 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 		// Enqueue the styles.
 		wp_enqueue_style(
 			self::STYLE_HANDLE_ADMIN,
-			Assets::get_style( 'admin/kudos-admin.css' ),
+			Assets::get_style( 'admin/kudos-admin.css' ) ?? '',
 			[ 'wp-components' ],
 			KUDOS_VERSION
 		);
@@ -43,32 +43,34 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 
 		// Get and enqueue the script.
 		$admin_js = Assets::get_script( 'admin/kudos-admin.js' );
-		wp_enqueue_script(
-			self::SCRIPT_HANDLE,
-			$admin_js['url'],
-			$admin_js['dependencies'],
-			$admin_js['version'],
-			true
-		);
+		if ( null !== $admin_js ) {
+			wp_enqueue_script(
+				self::SCRIPT_HANDLE,
+				$admin_js['url'],
+				$admin_js['dependencies'],
+				$admin_js['version'],
+				true
+			);
 
-		wp_set_script_translations( self::SCRIPT_HANDLE, 'kudos-donations', \dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages' );
+			wp_set_script_translations( self::SCRIPT_HANDLE, 'kudos-donations', \dirname( plugin_dir_path( __FILE__ ), 2 ) . '/languages' );
 
-		$localized_data = apply_filters(
-			'kudos_transactions_page_localization',
-			[
-				'currencies' => Utils::get_currencies(),
-				'codeEditor' => $settings,
-			]
-		);
+			$localized_data = apply_filters(
+				'kudos_transactions_page_localization',
+				[
+					'currencies' => Utils::get_currencies(),
+					'codeEditor' => $settings,
+				]
+			);
 
-		wp_localize_script(
-			self::SCRIPT_HANDLE,
-			'kudos',
-			apply_filters(
-				'kudos_global_localization',
-				$localized_data
-			)
-		);
+			wp_localize_script(
+				self::SCRIPT_HANDLE,
+				'kudos',
+				apply_filters(
+					'kudos_global_localization',
+					$localized_data
+				)
+			);
+		}
 	}
 
 	/**

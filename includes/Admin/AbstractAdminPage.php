@@ -46,9 +46,13 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @psalm-suppress InvalidArgument
 	 */
 	public function register(): void {
 		$screen_id = null;
+
+		$callback = $this instanceof HasCallbackInterface ? [ $this, 'callback' ] : null;
 
 		if ( $this instanceof ParentAdminPageInterface ) {
 			$screen_id = add_menu_page(
@@ -56,7 +60,7 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				$this->get_menu_title(),
 				$this->get_capability(),
 				$this->get_menu_slug(),
-				$this instanceof HasCallbackInterface ? [ $this, 'callback' ] : false,
+				$callback,
 				$this->get_icon_url(),
 				$this->get_position()
 			);
@@ -67,7 +71,7 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				$this->get_menu_title(),
 				$this->get_capability(),
 				$this->get_menu_slug(),
-				$this instanceof HasCallbackInterface ? [ $this, 'callback' ] : null,
+				$callback,
 				$this->get_position(),
 			);
 		}
@@ -75,7 +79,7 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 		if ( $this instanceof HasAssetsInterface ) {
 			add_action(
 				'admin_enqueue_scripts',
-				function ( $hook ) use ( $screen_id ): void {
+				function ( string $hook ) use ( $screen_id ): void {
 					if ( $screen_id === $hook ) {
 						/**
 						 * Load assets.

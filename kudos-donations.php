@@ -40,10 +40,10 @@ if ( ! \defined( 'WPINC' ) ) {
 \define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
 \define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
 \define( 'KUDOS_CACHE_DIR', WP_CONTENT_DIR . '/cache/kudos-donations/' );
-\define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
-\define( 'KUDOS_SALT', NONCE_SALT );
-\define( 'KUDOS_AUTH_KEY', AUTH_KEY );
-\define( 'KUDOS_AUTH_SALT', AUTH_SALT );
+\define( 'KUDOS_DEBUG', (bool) get_option( '_kudos_debug_mode' ) );
+\define( 'KUDOS_SALT', (string) NONCE_SALT );
+\define( 'KUDOS_AUTH_KEY', (string) AUTH_KEY );
+\define( 'KUDOS_AUTH_SALT', (string) AUTH_SALT );
 
 require KUDOS_PLUGIN_DIR . 'includes/Autoloader.php';
 
@@ -66,7 +66,7 @@ if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action
 }
 
 // Set the environment as production if not specified.
-if ( empty( $_ENV['APP_ENV'] ) ) {
+if ( ! isset( $_ENV['APP_ENV'] ) || '' === $_ENV['APP_ENV'] ) {
 	$_ENV['APP_ENV'] = 'production';
 }
 

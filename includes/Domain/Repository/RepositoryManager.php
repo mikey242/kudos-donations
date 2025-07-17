@@ -18,14 +18,16 @@ class RepositoryManager {
 	/**
 	 * Array of repositories.
 	 *
-	 * @var array<string, mixed>
+	 * @var array<class-string, BaseRepository>
 	 */
 	protected array $repositories = [];
 
 	/**
 	 * Receives the repositories.
 	 *
-	 * @param iterable $repositories Array of repositories.
+	 * @param iterable<BaseRepository> $repositories Array of repositories.
+	 *
+	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
 	public function __construct( iterable $repositories ) {
 		foreach ( $repositories as $service ) {
@@ -36,9 +38,9 @@ class RepositoryManager {
 	/**
 	 * Add repository to list.
 	 *
-	 * @param RepositoryInterface $service Service.
+	 * @param BaseRepository $service Service.
 	 */
-	public function add( RepositoryInterface $service ): void {
+	public function add( BaseRepository $service ): void {
 		$this->repositories[ \get_class( $service ) ] = $service;
 	}
 
@@ -55,11 +57,12 @@ class RepositoryManager {
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
-	public function get( string $class_name ): BaseRepository {
+	public function get( string $class_name ) {
 		if ( ! isset( $this->repositories[ $class_name ] ) ) {
 			throw new \RuntimeException( esc_attr( "Repository not registered: $class_name" ) );
 		}
 
+		/** @var TRepository */
 		return $this->repositories[ $class_name ];
 	}
 }

@@ -31,7 +31,7 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 *
 	 * @var MigrationInterface[]
 	 */
-	protected array $migrations;
+	protected array $migrations = [];
 
 	/**
 	 * MigrationManager constructor.
@@ -110,7 +110,6 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 
 		NoticeService::notice(
 			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'Please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form,
-			NoticeService::INFO,
 		);
 	}
 
@@ -122,15 +121,17 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 			'admin_enqueue_scripts',
 			function () {
 				$admin_js = Assets::get_script( 'admin/migrations/kudos-admin-migrations.js' );
-				wp_enqueue_script(
-					'kudos-donations-migrations',
-					$admin_js['url'],
-					$admin_js['dependencies'],
-					$admin_js['version'],
-					[
-						'in_footer' => true,
-					]
-				);
+				if ( null !== $admin_js ) {
+					wp_enqueue_script(
+						'kudos-donations-migrations',
+						$admin_js['url'],
+						$admin_js['dependencies'],
+						$admin_js['version'],
+						[
+							'in_footer' => true,
+						]
+					);
+				}
 			}
 		);
 	}
