@@ -2,7 +2,7 @@
 /**
  * Migration for version 4.1.3.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
  * @copyright 2025 Iseard Media
  *

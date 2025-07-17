@@ -6,7 +6,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Kudos Donations
- * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
+ * Plugin URI:        https://github.com/mikey242/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
  * Version:           4.2.0
  * Author:            Iseard Media

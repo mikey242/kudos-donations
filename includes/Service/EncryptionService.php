@@ -2,7 +2,7 @@
 /**
  * Authentication based helper.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  * @see https://permanenttourist.ch/2023/03/storing-credentials-securely-in-wordpress-plugin-settings/
  *
  * @copyright 2025 Iseard Media

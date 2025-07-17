@@ -2,7 +2,7 @@
 /**
  * MigrationInterface.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
  * @copyright 2025 Iseard Media
  */
@@ -34,4 +34,11 @@ interface MigrationInterface {
 	 * @phpstan-return array<string, MigrationJob>
 	 */
 	public function get_jobs(): array;
+
+	/**
+	 * Checks if migration job is complete.
+	 *
+	 * @param string $job The job method name.
+	 */
+	public function is_complete( string $job ): bool;
 }

@@ -2,7 +2,7 @@
 /**
  * Mail Rest Routes.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
  * @copyright 2025 Iseard Media
  */
@@ -63,9 +63,10 @@ class Mail extends BaseRestController {
 	 * @param WP_REST_Request $request Request array.
 	 */
 	public function send_test( WP_REST_Request $request ): WP_REST_Response {
-		$email = sanitize_email( $request['email'] );
+		$raw_email = $request['email'];
+		$email     = \is_string( $raw_email ) ? sanitize_email( $raw_email ) : null;
 
-		if ( ! $email ) {
+		if ( null === $email ) {
 			return new WP_REST_Response( [ 'message' => __( 'Invalid test email address', 'kudos-donations' ) ] );
 		}
 
@@ -74,7 +75,7 @@ class Mail extends BaseRestController {
 
 		$result = $this->mailer->send_message( $email, $header, $message );
 
-		if ( $result ) {
+		if ( true === $result ) {
 			/* translators: %s: API mode */
 			return new WP_REST_Response( [ 'message' => \sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) ], 200 );
 		}

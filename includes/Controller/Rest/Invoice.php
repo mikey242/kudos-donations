@@ -2,7 +2,7 @@
 /**
  * Invoice Rest Routes.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
  * @copyright 2025 Iseard Media
  */
@@ -74,13 +74,13 @@ class Invoice extends BaseRestController {
 	 */
 	public function get_invoice( WP_REST_Request $request ): WP_REST_Response {
 		$transaction_id = $request->get_param( 'id' );
-		$force          = $request->get_param( 'force' );
+		$force          = $request->get_param( 'force' ) ?? false;
 		$view           = $request->get_param( 'view' );
 
 		$file = $this->invoice->generate_invoice( (int) $transaction_id, $force );
 
-		if ( $file ) {
-			if ( $view ) {
+		if ( null !== $file ) {
+			if ( true === $view ) {
 				$this->pdf->stream( $file );
 			}
 			return new WP_REST_Response( [ 'path' => $file ], 200 );

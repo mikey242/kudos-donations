@@ -2,7 +2,7 @@
 /**
  * Autoloader for Kudos Donations.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
  * @source https://github.com/woocommerce/woocommerce/blob/trunk/plugins/woocommerce/woocommerce.php
  *

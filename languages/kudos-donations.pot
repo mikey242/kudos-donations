@@ -23,7 +23,7 @@ msgstr ""
 
 #. Plugin URI of the plugin
 #: kudos-donations.php
-msgid "https://gitlab.iseard.media/michael/kudos-donations"
+msgid "https://github.com/mikey242/kudos-donations"
 msgstr ""
 
 #. Description of the plugin

@@ -2,7 +2,7 @@
 /**
  * Interface for specifying that the target class requires the encryption service.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
  * @copyright 2025 Iseard Media
  */

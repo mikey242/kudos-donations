@@ -1,13 +1,20 @@
-services:
 includes:
-	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon
 
 parameters:
   level: 5
   inferPrivatePropertyTypeFromConstructor: true
-  ignoreErrors:
+
   paths:
-    - includes/
-  scanDirectories:
-  bootstrapFiles:
     - kudos-donations.php
+    - uninstall.php
+    - config
+    - includes
+
+  ignoreErrors:
+    # example:
+    # - '#Call to an undefined method.*#'
+
+  # Optional: Only add if absolutely needed
+  bootstrapFiles:
+    - includes/constants.php
