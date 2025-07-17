@@ -2,7 +2,7 @@
 /**
  * Symfony DI container config.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
  * @copyright 2025 Iseard Media
  *
@@ -90,7 +90,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 
 	// Load base plugin.
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
-			->exclude( KUDOS_PLUGIN_DIR . 'includes/{namespace.php,functions.php,helpers.php,index.php,vendor,Domain/Entity}' );
+			->exclude( KUDOS_PLUGIN_DIR . 'includes/{constants.php,namespace.php,functions.php,helpers.php,index.php,vendor,Domain/Entity}' );
 
 	$services->set( RotatingFileHandler::class )
 		->args(

@@ -2,7 +2,7 @@
 /**
  * Helper for retrieving assets.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
  * @copyright 2025 Iseard Media
  */
@@ -36,8 +36,7 @@ class Assets {
 	 * @param string $asset The script name.
 	 * @param string $base_dir Base dir to search.
 	 * @param string $base_url Base use to return.
-	 *
-	 * @psalm-return array{
+	 * @return array{
 	 *  path: string,
 	 *  url: string,
 	 *  dependencies: array,

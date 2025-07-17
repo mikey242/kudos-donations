@@ -1609,8 +1609,8 @@ msgstr "Voeg een donatieknop toe op elke pagina van je site. Makkelijk & snel ge
 
 #. Plugin URI of the plugin
 #: kudos-donations.php
-msgid "https://gitlab.iseard.media/michael/kudos-donations"
-msgstr "https://gitlab.iseard.media/michael/kudos-donations"
+msgid "https://github.com/mikey242/kudos-donations"
+msgstr "https://github.com/mikey242/kudos-donations"
 
 #. Plugin Name of the plugin
 #: kudos-donations.php build/admin/campaigns/kudos-admin-campaigns.js:1

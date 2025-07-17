@@ -2,7 +2,7 @@
 /**
  * Boilerplate repository rest controller.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
  * @copyright 2025 Iseard Media
  */
@@ -182,7 +182,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		$order    = $request->get_param( 'order' );
 		$offset   = ( $paged - 1 ) * $per_page;
 		/** @var array<string, scalar> $where */
-		$where = $request->get_param( 'where' ) ?? '';
+		$where = $request->get_param( 'where' ) ?? [];
 
 		$args = [
 			'columns' => $columns,
