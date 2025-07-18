@@ -18,6 +18,8 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 
 	use LoggerAwareTrait;
 
+	private ?string $screen_id;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -50,12 +52,12 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 	 * @psalm-suppress InvalidArgument
 	 */
 	public function register(): void {
-		$screen_id = null;
+		$this->screen_id = null;
 
 		$callback = $this instanceof HasCallbackInterface ? [ $this, 'callback' ] : null;
 
 		if ( $this instanceof ParentAdminPageInterface ) {
-			$screen_id = add_menu_page(
+			$this->screen_id = add_menu_page(
 				$this->get_page_title(),
 				$this->get_menu_title(),
 				$this->get_capability(),
@@ -65,7 +67,7 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 				$this->get_position()
 			);
 		} elseif ( $this instanceof SubmenuAdminPageInterface ) {
-			$screen_id = add_submenu_page(
+			$this->screen_id = add_submenu_page(
 				$this->get_parent_slug(),
 				$this->get_page_title(),
 				$this->get_menu_title(),
@@ -77,20 +79,23 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 		}
 
 		if ( $this instanceof HasAssetsInterface ) {
-			add_action(
-				'admin_enqueue_scripts',
-				function ( string $hook ) use ( $screen_id ): void {
-					if ( $screen_id === $hook ) {
-						/**
-						 * Load assets.
-						 *
-						 * @var HasAssetsInterface $this
-						 */
-						$this->register_assets();
-						do_action( "{$this->get_menu_slug()}_page_register_assets" );
-					}
-				}
-			);
+			add_action( 'admin_enqueue_scripts', [ $this, 'maybe_register_assets' ] );
+		}
+	}
+
+	/**
+	 * Register the assets if class implements HasAssetsInterface.
+	 *
+	 * @param string $hook The current admin page.
+	 */
+	public function maybe_register_assets( string $hook ): void {
+		if ( ! $this instanceof HasAssetsInterface ) {
+			return;
+		}
+
+		if ( $hook === $this->screen_id ) {
+			$this->register_assets();
+			do_action( "{$this->get_menu_slug()}_page_register_assets" );
 		}
 	}
 }

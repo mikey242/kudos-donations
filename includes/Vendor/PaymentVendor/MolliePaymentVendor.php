@@ -179,12 +179,12 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 * Handles the saving of the test and live api keys.
 	 *
 	 * @param string $value The new value.
-	 * @param string $old_value The previous value.
+	 * @param string $_old_value The previous value.
 	 * @param string $option The option name.
 	 *
 	 * @return string
 	 */
-	public function handle_key_update( string $value, string $old_value, string $option ): string {
+	public function handle_key_update( string $value, string $_old_value, string $option ): string {
 		$mode             = ( $option === self::SETTING_API_KEY_LIVE ) ? 'live' : 'test';
 		$encrypted_option = constant( "self::SETTING_API_KEY_ENCRYPTED_" . strtoupper( $mode ) );
 		$filter_name      = "kudos_mollie_{$mode}_key_validation";
@@ -623,9 +623,12 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		$response = new WP_REST_Response( [
 			'success' => true,
 			'id'      => $payment_id,
+			'_links' => [
+				'self' => [
+					'href' => rest_url( $request->get_route() )
+				]
+			]
 		] );
-
-		$response->add_link( 'self', rest_url( $request->get_route() ) );
 
 		// Process the payment asynchronously.
 		Utils::enqueue_async_action(
@@ -644,7 +647,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 	 *
 	 * @throws RequestException
 	 */
-	public function handle_status_change( string $vendor_payment_id ): bool {
+	public function handle_status_change( string $vendor_payment_id ): void {
 
 		// Mollie API.
 		$mollie = $this->api_client;
@@ -657,7 +660,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 		$payment = $mollie->payments->get( $vendor_payment_id );
 		$payment_metadata = $payment->metadata;
 		if ( ! is_object( $payment_metadata ) ) {
-			return false;
+			return;
 		}
 
 		// Log payment retrieval.
@@ -686,7 +689,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 			// Bail if required properties not set.
 			if(null === $payment->customerId || null === $payment->subscriptionId) {
-				return false;
+				return;
 			}
 
 			$customer     = $mollie->customers->get( $payment->customerId );
@@ -721,13 +724,13 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 			$transaction = new TransactionEntity([
 					'donor_id'        => $donor_id ?? '',
 					'campaign_id'     => $campaign_id,
-					'subscription_id' => $subscription_id ?? '',
+					'subscription_id' => $subscription_id,
 					'vendor'          => self::get_slug()
 				]			);
 			$transaction_id = $transactions->insert($transaction);
 
 			if(false === $transaction_id) {
-				return false;
+				return;
 			}
 
 			$transaction    = $transactions->get( $transaction_id );
@@ -752,7 +755,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				[ 'vendor_id' => $vendor_payment_id, 'transaction_id' => $transaction_id ]
 			);
 
-			return false;
+			return;
 		}
 
 		// Exit early if already processed
@@ -763,7 +766,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				'status'         => $transaction->status,
 			] );
 
-			return false;
+			return;
 		}
 
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
@@ -783,7 +786,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 				$this->get_logger()->info( 'Payment is initial subscription payment.', [ $transaction ] );
 
 				if(null === $payment->mandateId) {
-					return false;
+					return;
 				}
 
 				$subscription_id = $this->create_subscription(
@@ -795,7 +798,7 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 				// Bail if failed to create subscription.
 				if(false === $subscription_id) {
-					return false;
+					return;
 				}
 
 				// Update transaction with subscription ID.
@@ -828,8 +831,6 @@ class MolliePaymentVendor extends AbstractVendor implements PaymentVendorInterfa
 
 		// Create action with post id as parameter.
 		do_action( "kudos_transaction_$payment->status", $transaction->id );
-
-		return true;
 	}
 
 	/**

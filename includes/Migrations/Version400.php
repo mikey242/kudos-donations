@@ -149,7 +149,7 @@ class Version400 extends BaseMigration {
 					'additional_funds'      => $campaign['additional_funds'] ?? '',
 					'show_goal'             => $campaign['show_progress'] ?? false,
 					'donation_type'         => $campaign['donation_type'] ?? 'oneoff',
-					'fixed_amounts'         => explode( ',', $campaign['fixed_amounts'] ?? '' ) ?? [ 5, 10, 25, 50 ],
+					'fixed_amounts'         => $campaign['fixed_amounts'] ? explode( ',', $campaign['fixed_amounts'] ) : [ 5, 10, 25, 50 ],
 					'theme_color'           => $theme_colour ? $theme_colour['primary'] : '#ff9f1c',
 					// Add these global settings which are now campaign scoped.
 					'show_return_message'   => $show_return_message,
@@ -361,7 +361,7 @@ class Version400 extends BaseMigration {
 				'frequency'              => (string) $subscription->frequency,
 				'years'                  => (int) $subscription->years,
 				'customer_id'            => (string) $subscription->customer_id,
-				'transaction_id'         => (string) $transaction_cache[ $subscription->transaction_id ] ?? '',
+				'transaction_id'         => (string) ( $transaction_cache[ $subscription->transaction_id ] ?? '' ),
 				'vendor_subscription_id' => (string) $subscription->subscription_id,
 				'status'                 => (string) $subscription->status,
 			];

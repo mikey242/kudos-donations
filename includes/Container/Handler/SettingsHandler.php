@@ -33,7 +33,7 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 		/**
 		 * The settings service.
 		 *
-		 * @var HasSettingsInterface $service
+		 * @var class-string<HasSettingsInterface> $service
 		 */
 		foreach ( $service_locator->getProvidedServices() as $service => $_ ) {
 			$this->settings = array_merge( $this->settings, $service::get_settings() );

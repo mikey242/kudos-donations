@@ -452,10 +452,10 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			}
 
 			// Find transaction row by wp_post_id.
-			/** @var TransactionEntity $transaction */
+			/** @var ?TransactionEntity $transaction */
 			$transaction = $transaction_repo->find_one_by( [ 'wp_post_id' => (int) $transaction_post_id ] );
 
-			if ( ! $transaction ) {
+			if ( null === $transaction ) {
 				$this->logger->warning( "No migrated transaction found for post ID $transaction_post_id" );
 				continue;
 			}

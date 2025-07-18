@@ -41,4 +41,19 @@ interface MigrationInterface {
 	 * @param string $job The job method name.
 	 */
 	public function is_complete( string $job ): bool;
+
+	/**
+	 * Runs a single job for this migration in a batch.
+	 *
+	 * @param string $job The job name (as defined in get_jobs()).
+	 * @return bool True if the job ran successfully, false otherwise.
+	 */
+	public function run( string $job ): bool;
+
+	/**
+	 * Retrieves the current offset for a given job.
+	 *
+	 * @param string $job The job method name.
+	 */
+	public function get_offset( string $job ): int;
 }

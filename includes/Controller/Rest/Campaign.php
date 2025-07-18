@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Repository\BaseRepository;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use WP_Error;
 use WP_REST_Request;
@@ -22,6 +23,11 @@ use WP_REST_Response;
  * @extends BaseRepositoryRestController<CampaignEntity>
  */
 class Campaign extends BaseRepositoryRestController {
+
+	/**
+	 * @var CampaignRepository
+	 */
+	protected BaseRepository $repository;
 
 	/**
 	 * Campaign rest route constructor.

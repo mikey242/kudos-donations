@@ -13,12 +13,19 @@ namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\BaseRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 
 /**
  * @extends BaseRepositoryRestController<TransactionEntity>
  */
 class Transaction extends BaseRepositoryRestController {
+
+	/**
+	 * @var TransactionRepository
+	 */
+	protected BaseRepository $repository;
+
 	/**
 	 * Campaign rest route constructor.
 	 *
@@ -28,7 +35,6 @@ class Transaction extends BaseRepositoryRestController {
 		$this->rest_base  = 'transaction';
 		$this->repository = $transactions;
 	}
-
 
 	/**
 	 * {@inheritDoc}

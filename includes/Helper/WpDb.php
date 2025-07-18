@@ -18,18 +18,18 @@ use BadMethodCallException;
  * @see https://www.php.net/manual/en/language.oop5.magic.php
  *
  * @property \wpdb $wpdb This class provides access to all methods of wpdb.
+ * @property int|false $insert_id The id of the last inserted item.
+ * @property string $last_error The error encountered during the last query.
  *
  * @method string get_charset_collate() Get the character set and collation for table creation.
  * @method string|false prepare(string $query, mixed ...$args) Prepare a SQL query safely, returning the prepared query or false on failure.
- * @method array|object|null get_results(string $query, string $output = OBJECT) Retrieve multiple rows from a SQL query.
- * @method array|object|null get_row(string $query, string $output = OBJECT, int $offset = 0) Retrieve one row from a SQL query.
+ * @method array|object|null get_results(string $query, string $output = 'OBJECT') Retrieve multiple rows from a SQL query.
+ * @method array|object|null get_row(string $query, string $output = 'OBJECT', int $offset = 0) Retrieve one row from a SQL query.
  * @method mixed get_var(string $query, int $x = 0, int $y = 0) Retrieve one variable (column value) from a SQL query.
  * @method int|false insert(string $table, array $data, array|string|null $format = null) Insert a row into a table, returning the number of affected rows or false on failure.
  * @method int|false update(string $table, array $data, array $where, array|string|null $format = null, array|string|null $where_format = null) Update rows in a table, returning the number of affected rows or false on failure.
  * @method int|false delete(string $table, array $where, array|string|null $where_format = null) Delete rows from a table, returning the number of affected rows or false on failure.
  * @method int|false query(string $query) Execute a raw SQL query, returning the number of rows affected or false on failure.
- * @property int|false insert_id The id of the last inserted item.
- * @property string last_error The error encountered during the last query.
  */
 class WpDb {
 

@@ -32,7 +32,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 	public const SETTING_EMAIL_VENDOR         = '_kudos_email_vendor';
 	public const SETTING_EMAIL_RECEIPT_ENABLE = '_kudos_email_receipt_enable';
 	public const SETTING_EMAIL_SHOW_CAMPAIGN  = '_kudos_email_show_campaign_name';
-	private EmailVendorInterface $vendor;
+	private ?EmailVendorInterface $vendor;
 
 	/**
 	 * MailerService constructor.

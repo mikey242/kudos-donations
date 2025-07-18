@@ -28,7 +28,7 @@ class Version413 extends BaseMigration {
 	/**
 	 * Remove old anonymous donation option and use it to set email and name field requirements.
 	 */
-	public function remove_anonymous_option(): bool {
+	public function remove_anonymous_option(): int {
 		$campaigns = get_posts(
 			[
 				'post_type'      => 'kudos_campaign',

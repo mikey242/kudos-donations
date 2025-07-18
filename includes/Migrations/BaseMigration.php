@@ -45,7 +45,7 @@ abstract class BaseMigration implements MigrationInterface {
 	public function run( string $job ): bool {
 		$jobs = $this->get_jobs();
 
-		if ( ! isset( $jobs[ $job ] ) || ! \is_callable( $jobs[ $job ]['callback'] ?? null ) ) {
+		if ( ! isset( $jobs[ $job ] ) ) {
 			$this->logger->warning( "Migration job '$job' is not defined or not callable." );
 			return false;
 		}

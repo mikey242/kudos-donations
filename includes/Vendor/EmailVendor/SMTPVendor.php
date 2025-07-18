@@ -16,6 +16,7 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Vendor\AbstractVendor;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 use WP_Error;
 
 /** @psalm-suppress PropertyNotSetInConstructor */
@@ -30,7 +31,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	private const TEMPLATE_MESSAGE = 'emails/message.html.twig';
 	private TwigService $twig;
 	private bool $enable_custom_smtp = false;
-	private ?string $bcc = '';
+	private string $bcc = '';
 	private array $custom_smtp_config = [];
 
 	/**
@@ -107,12 +108,12 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * Initializes the mailer by modifying default config if setting
 	 * is enabled.
 	 *
-	 * @param \PHPMailer $phpmailer WordPress' global PHPMailer instance.
+	 * @param PHPMailer $phpmailer WordPress' global PHPMailer instance.
 	 *
 	 * @throws Exception From PHPMailer.
 	 *
 	 */
-	public function phpmailer_init( \PHPMailer $phpmailer ): void {
+	public function phpmailer_init( PHPMailer $phpmailer ): void {
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$phpmailer->SMTPDebug = 0;
 
