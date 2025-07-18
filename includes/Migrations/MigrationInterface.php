@@ -2,9 +2,9 @@
 /**
  * MigrationInterface.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 namespace IseardMedia\Kudos\Migrations;
@@ -33,5 +33,27 @@ interface MigrationInterface {
 	 *
 	 * @phpstan-return array<string, MigrationJob>
 	 */
-	public function get_migration_jobs(): array;
+	public function get_jobs(): array;
+
+	/**
+	 * Checks if migration job is complete.
+	 *
+	 * @param string $job The job method name.
+	 */
+	public function is_complete( string $job ): bool;
+
+	/**
+	 * Runs a single job for this migration in a batch.
+	 *
+	 * @param string $job The job name (as defined in get_jobs()).
+	 * @return bool True if the job ran successfully, false otherwise.
+	 */
+	public function run( string $job ): bool;
+
+	/**
+	 * Retrieves the current offset for a given job.
+	 *
+	 * @param string $job The job method name.
+	 */
+	public function get_offset( string $job ): int;
 }

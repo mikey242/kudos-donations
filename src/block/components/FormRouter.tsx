@@ -18,7 +18,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { applyFilters } from '@wordpress/hooks';
 import BaseTab from './tabs/BaseTab';
-import type { Campaign } from '../../types/posts';
+import type { Campaign } from '../../types/entity';
 
 interface TabDefinition {
 	name: string;
@@ -110,6 +110,7 @@ export const FormRouter = ({
 			message: '',
 			name: '',
 			email: '',
+			language: navigator.language,
 		},
 	});
 
@@ -163,7 +164,7 @@ export const FormRouter = ({
 			return;
 		}
 		let prev = currentStep - 1;
-		const state = { ...methods.getValues(), ...campaign.meta };
+		const state = { ...methods.getValues(), ...campaign };
 
 		// Find next available step.
 		while (!checkRequirements(Tabs, state, prev) && prev >= 0) {
@@ -176,7 +177,7 @@ export const FormRouter = ({
 	};
 
 	const handleNext = (data: FormData) => {
-		const state = { ...data, ...campaign.meta };
+		const state = { ...data, ...campaign };
 		let nextStep = currentStep + 1;
 
 		// Find next available step.

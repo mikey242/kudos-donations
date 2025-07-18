@@ -2,9 +2,9 @@
 /**
  * Queues and registers settings.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
@@ -33,9 +33,9 @@ class SettingsHandler extends AbstractRegistrable implements ActivationAwareInte
 		/**
 		 * The settings service.
 		 *
-		 * @var HasSettingsInterface $service
+		 * @var class-string<HasSettingsInterface> $service
 		 */
-		foreach ( $service_locator->getProvidedServices() as $service => $name ) {
+		foreach ( $service_locator->getProvidedServices() as $service => $_ ) {
 			$this->settings = array_merge( $this->settings, $service::get_settings() );
 		}
 	}

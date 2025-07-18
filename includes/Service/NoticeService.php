@@ -2,9 +2,9 @@
 /**
  * Notice service.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -84,7 +84,7 @@ class NoticeService implements HasSettingsInterface {
 	 * @param ?string $key Unique key for each notice.
 	 * @param bool    $logo Whether to include the logo or not.
 	 */
-	public static function notice( string $message, string $level, bool $dismissible = false, ?string $key = null, bool $logo = true ): void {
+	public static function notice( string $message, string $level = self::INFO, bool $dismissible = false, ?string $key = null, bool $logo = true ): void {
 		if ( $logo ) {
 			$message = "<div class='logo' style='width: 50px; margin-right: 20px'>" . Utils::get_kudos_logo_svg() . "</div><div class='message'>" . $message . '</div>';
 		}

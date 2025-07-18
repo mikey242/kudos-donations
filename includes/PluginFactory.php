@@ -2,17 +2,17 @@
 /**
  * PluginFactory class.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
 
 namespace IseardMedia\Kudos;
 
-use IseardMedia\Kudos\Service\NoticeService;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class PluginFactory
@@ -22,24 +22,29 @@ class PluginFactory {
 	/**
 	 * Create and return an instance of the plugin.
 	 *
-	 * This always returns a shared instance. This way, outside code can always
-	 * get access to the object instance of the plugin.
+	 * @throws \RuntimeException | NotFoundExceptionInterface | ContainerExceptionInterface If container fails or does not contain the Plugin class.
 	 *
-	 * @return Plugin Plugin instance
+	 * @return Plugin Plugin instance.
 	 */
 	public static function create(): Plugin {
 		static $plugin = null;
 
-		if ( null === $plugin ) {
-			try {
-				$kernel    = new Kernel();
-				$container = $kernel->get_container();
-				$plugin    = $container->get( Plugin::class );
-			} catch ( ContainerExceptionInterface  $e ) {
-				// phpcs:disable WordPress.PHP.DevelopmentFunctions
-				error_log( $e->getMessage() );
-				NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
-			}
+		if ( null !== $plugin ) {
+			/** @var Plugin $plugin */
+			return $plugin;
+		}
+
+		$kernel    = new Kernel( false );
+		$container = $kernel->get_container();
+
+		if ( null === $container ) {
+			throw new \RuntimeException( 'Error fetching container' );
+		}
+
+		$plugin = $container->get( Plugin::class );
+
+		if ( ! $plugin instanceof Plugin ) {
+			throw new \RuntimeException( 'Error loading Kudos Donations: Resolved plugin is not a Plugin instance.' );
 		}
 
 		return $plugin;

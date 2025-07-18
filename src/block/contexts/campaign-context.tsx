@@ -5,7 +5,8 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { Flex, Spinner } from '@wordpress/components';
-import type { Campaign } from '../../types/posts';
+import type { Campaign } from '../../types/entity';
+import { EntityRestResponse } from '../../admin/contexts';
 
 interface CampaignContextType {
 	campaign: Campaign | null;
@@ -37,30 +38,32 @@ export default function CampaignProvider({
 			setIsLoading(true);
 
 			// Try by ID
-			apiFetch({ path: `/wp/v2/kudos_campaign/${campaignId}` })
-				.then((postById: unknown) => {
-					setCampaign(postById as Campaign);
+			apiFetch({ path: `/kudos/v1/campaign/${campaignId}` })
+				.then((postById: Campaign) => {
+					setCampaign(postById);
 					setIsLoading(false);
 				})
 				.catch((error) => {
 					if (error?.data?.status === 404) {
-						// Try by slug
+						// Try by wp_post_slug
 						apiFetch({
-							path: `/wp/v2/kudos_campaign?slug=${campaignId}`,
+							path: `/kudos/v1/campaign?where[wp_post_slug]=${campaignId}`,
 						})
-							.then((postBySlug: unknown) => {
-								const posts = postBySlug as Campaign[];
-								if (posts.length > 0) {
-									setCampaign(posts[0]);
-								} else {
-									setCampaignErrors([
-										__(
-											'Campaign not found',
-											'kudos-donations'
-										),
-									]);
+							.then(
+								(postBySlug: EntityRestResponse<Campaign>) => {
+									const posts = postBySlug.items;
+									if (posts.length > 0) {
+										setCampaign(posts[0]);
+									} else {
+										setCampaignErrors([
+											__(
+												'Campaign not found',
+												'kudos-donations'
+											),
+										]);
+									}
 								}
-							})
+							)
 							.catch(() => {
 								setCampaignErrors([
 									__(

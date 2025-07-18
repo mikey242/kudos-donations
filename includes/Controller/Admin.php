@@ -2,9 +2,9 @@
 /**
  * Admin related functions.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
@@ -12,15 +12,15 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Admin\DebugAdminPage;
-use IseardMedia\Kudos\Container\AbstractRegistrable;
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Admin extends AbstractRegistrable {
+class Admin extends BaseController {
 
 	/**
 	 * {@inheritDoc}
@@ -41,8 +41,8 @@ class Admin extends AbstractRegistrable {
 	 * Handles the various query variables and shows relevant modals.
 	 */
 	public function handle_query_variables(): void {
-		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
-			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
+		if ( isset( $_REQUEST['kudos_action'] ) ) {
+			$action = sanitize_text_field( wp_unslash( (string) $_REQUEST['kudos_action'] ) );
 			$this->logger->debug( 'Action requested', [ 'action' => $action ] );
 			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 
@@ -51,7 +51,7 @@ class Admin extends AbstractRegistrable {
 					$transaction_id = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
 					$force          = isset( $_REQUEST['force'] ) && rest_sanitize_boolean( wp_unslash( $_REQUEST['force'] ) );
 					if ( $transaction_id && wp_verify_nonce( $nonce, $action . '_' . $transaction_id ) ) {
-						$request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/get/transaction/$transaction_id" );
+						$request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/$transaction_id" );
 						$request->set_param( 'force', $force );
 						$request->set_param( 'view', true );
 						rest_do_request( $request );
@@ -68,9 +68,9 @@ class Admin extends AbstractRegistrable {
 					break;
 				case 'kudos_clear_campaigns':
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_campaigns' ) ) {
-						$campaigns = CampaignPostType::get_posts();
+						$campaigns = $this->get_repository( CampaignRepository::class )->all();
 						foreach ( $campaigns as $campaign ) {
-							wp_delete_post( $campaign->ID, true );
+							wp_delete_post( $campaign->id, true );
 						}
 					}
 					break;
@@ -99,8 +99,9 @@ class Admin extends AbstractRegistrable {
 					break;
 				case 'kudos_assign_transactions_to_campaign':
 					if ( wp_verify_nonce( $nonce, 'kudos_assign_transactions_to_campaign' ) ) {
-						$from = $_POST['kudos_from_campaign'];
-						$to   = $_POST['kudos_to_campaign'];
+						$from             = $_POST['kudos_from_campaign'];
+						$to               = $_POST['kudos_to_campaign'];
+						$transaction_repo = $this->get_repository( TransactionRepository::class );
 
 						switch ( $from ) {
 							case '_orphaned_transactions_':
@@ -108,16 +109,16 @@ class Admin extends AbstractRegistrable {
 								break;
 							case '_all_transactions_':
 								$transactions = array_map(
-									fn( $t ) => $t->ID,
-									TransactionPostType::get_posts()
+									fn( TransactionEntity $t ): int => $t->id,
+									$transaction_repo->all()
 								);
 								break;
 							default:
 								$transactions = array_map(
-									fn( $t ) => $t->ID,
-									TransactionPostType::get_posts(
+									fn( $t ) => $t->id,
+									$transaction_repo->find_by(
 										[
-											TransactionPostType::META_FIELD_CAMPAIGN_ID => $from,
+											'campaign_id' => $from,
 										]
 									)
 								);
@@ -133,12 +134,7 @@ class Admin extends AbstractRegistrable {
 						);
 
 						foreach ( $transactions as $transaction ) {
-							TransactionPostType::save(
-								[
-									'ID' => $transaction,
-									TransactionPostType::META_FIELD_CAMPAIGN_ID => $to,
-								]
-							);
+							$transaction_repo->patch( $transaction, [ 'campaign_id' => $to ] );
 						}
 					}
 					break;
@@ -196,18 +192,21 @@ class Admin extends AbstractRegistrable {
 
 	/**
 	 * Gets a list of transactions with no Campaign.
+	 *
+	 * @return list<int>
 	 */
 	private function get_orphan_transaction_ids(): array {
-		$transactions           = TransactionPostType::get_posts();
+		/** @var TransactionEntity[] $transactions */
+		$transactions           = $this->get_repository( TransactionRepository::class )->all();
 		$orphan_transaction_ids = [];
 
 		foreach ( $transactions as $transaction ) {
-			$campaign_id = get_post_meta( $transaction->ID, TransactionPostType::META_FIELD_CAMPAIGN_ID, true );
+			$campaign_id = $transaction->campaign_id;
 
-			$is_missing = empty( $campaign_id ) || ! CampaignPostType::get_post( [ 'ID' => $campaign_id ] );
+			$is_missing = empty( $campaign_id ) || ! $this->get_repository( CampaignRepository::class )->get( $campaign_id );
 
 			if ( $is_missing ) {
-				$orphan_transaction_ids[] = $transaction->ID;
+				$orphan_transaction_ids[] = $transaction->id;
 			}
 		}
 

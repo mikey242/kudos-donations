@@ -7,19 +7,18 @@ import {
 	VisuallyHidden,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { Table } from '../table';
+import { HeaderItem, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { useAdminContext, usePostsContext } from '../../contexts';
+import { useAdminContext, useEntitiesContext } from '../../contexts';
 import { useEffect } from '@wordpress/element';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
 export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { setHeaderContent } = useAdminContext();
-	const { handleDelete, handleDuplicate, posts, totalPages, totalItems } =
-		usePostsContext();
+	const { handleDelete, handleDuplicate } = useEntitiesContext();
 
 	useEffect(() => {
 		setHeaderContent(
@@ -36,12 +35,11 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 	const changeView = (postId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			meta_key: 'campaign_id',
-			meta_value: String(postId),
+			where: { campaign_id: String(postId) },
 		});
 	};
 
-	const headerItems = [
+	const headerItems: HeaderItem[] = [
 		{
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
@@ -56,12 +54,12 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 					label={sprintf(
 						/* translators: %s is the campaign name */
 						__('Edit %s', 'kudos-donations'),
-						post.title.raw
+						post.title
 					)}
 					variant="link"
 					onClick={() => handleEdit(post.id)}
 				>
-					{post.title.raw}
+					{post.title}
 				</Button>
 			),
 		},
@@ -69,15 +67,15 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'theme',
 			title: __('Theme color', 'kudos-donations'),
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<ColorIndicator colorValue={post.meta?.theme_color} />
+				<ColorIndicator colorValue={post.theme_color} />
 			),
 		},
 		{
 			key: 'progress',
 			title: __('Progress', 'kudos-donations'),
 			valueCallback: (post: Campaign): React.ReactNode => {
-				const total = post.total;
-				const goal = post.meta.goal;
+				const total = Number(post.total);
+				const goal = Number(post.goal);
 				const progress =
 					total && goal ? Math.round((total / goal) * 100) : 0;
 
@@ -95,14 +93,16 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 			key: 'total',
 			title: __('Total', 'kudos-donations'),
 			valueCallback: (post: Campaign): React.ReactNode =>
-				`${currencies[post.meta?.currency]} ${post.total}`,
+				`${currencies[post.currency]} ${post.total}`,
 		},
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
-			orderby: 'date',
+			orderby: 'created_at',
 			valueCallback: (post: Campaign): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.date, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
+					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				</Tooltip>
 			),
 		},
 		{
@@ -153,12 +153,7 @@ export const CampaignsTable = ({ handleEdit, handleNew }): React.ReactNode => {
 
 	return (
 		<>
-			<Table
-				posts={posts}
-				headerItems={headerItems}
-				totalPages={totalPages}
-				totalItems={totalItems}
-			/>
+			<Table headerItems={headerItems} />
 		</>
 	);
 };

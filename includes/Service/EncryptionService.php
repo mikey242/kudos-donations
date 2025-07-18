@@ -2,10 +2,10 @@
 /**
  * Authentication based helper.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  * @see https://permanenttourist.ch/2023/03/storing-credentials-securely-in-wordpress-plugin-settings/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
@@ -51,7 +51,7 @@ class EncryptionService extends AbstractRegistrable {
 	 * @param int $post_id The post id to be hashed.
 	 */
 	public static function generate_token( int $post_id ): ?string {
-		if ( ! is_numeric( $post_id ) || $post_id <= 0 ) {
+		if ( $post_id <= 0 ) {
 			throw new Exception( \sprintf( 'Invalid post ID supplied to generate_token: %s', (int) $post_id ) );
 		}
 

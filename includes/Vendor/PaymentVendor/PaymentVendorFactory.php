@@ -2,9 +2,9 @@
 /**
  * Factory for Payment Vendor.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -14,6 +14,9 @@ namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Vendor\AbstractVendorFactory;
 
+/**
+ * @extends AbstractVendorFactory<PaymentVendorInterface>
+ */
 class PaymentVendorFactory extends AbstractVendorFactory {
 
 	/**

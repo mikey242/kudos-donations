@@ -2,21 +2,26 @@
 /**
  * Debug Admin Page.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Admin;
 
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-use IseardMedia\Kudos\Service\MigrationService;
+use IseardMedia\Kudos\Container\Handler\MigrationHandler;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 
-class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
+class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface, RepositoryAwareInterface {
+
+	use RepositoryAwareTrait;
 
 	private const LOG_DIR     = KUDOS_STORAGE_DIR . 'logs/';
 	private const TAB_LOG     = 'log';
@@ -38,18 +43,19 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 	private ?array $log_files;
 	private string $current_tab;
-	private ?string $current_log_level;
-	private ?string $current_log_file;
+	private string $current_log_level = 'ALL';
+	private string $current_log_file;
 
 	/**
 	 * Tools page constructor.
 	 */
 	public function __construct() {
-		$this->current_tab       = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::TAB_ACTIONS; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->log_files         = $this->get_logs();
-		$log_file                = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
-		$this->current_log_file  = file_exists( $log_file ) ? $log_file : ( ! empty( $this->log_files ) ? end( $this->log_files ) : '' );
-		$this->current_log_level = 'ALL';
+		$this->current_tab      = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::TAB_ACTIONS; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$this->log_files        = $this->get_logs();
+		$log_file               = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
+		$this->current_log_file = file_exists( $log_file )
+			? $log_file
+			: ( \is_array( $this->log_files ) && [] !== $this->log_files ? end( $this->log_files ) : '' );
 		$this->process_form_data();
 		$this->add_js();
 	}
@@ -144,10 +150,16 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	 * Gets the log file path to be displayed.
 	 */
 	private function process_form_data(): void {
-		$log_option = isset( $_REQUEST['log_option'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['log_option'] ) ) : null;
-		$log_level  = isset( $_REQUEST['log_level'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['log_level'] ) ) : null;
-		if ( $log_option || $log_level ) {
-			if ( isset( $_REQUEST['_wpnonce'] ) ) {
+		$log_option = isset( $_REQUEST['log_option'] ) && \is_string( $_REQUEST['log_option'] )
+			? sanitize_text_field( wp_unslash( $_REQUEST['log_option'] ) )
+			: null;
+
+		$log_level = isset( $_REQUEST['log_level'] ) && \is_string( $_REQUEST['log_level'] )
+			? sanitize_text_field( wp_unslash( $_REQUEST['log_level'] ) )
+			: 'ALL';
+
+		if ( null !== $log_option ) {
+			if ( isset( $_REQUEST['_wpnonce'] ) && \is_string( $_REQUEST['_wpnonce'] ) ) {
 				$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 				if ( wp_verify_nonce( $nonce, 'log' ) ) {
 					$this->current_log_file  = $log_option;
@@ -182,8 +194,10 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 				switch ( $this->current_tab ) :
 
 					case self::TAB_ACTIONS:
-						$campaigns = CampaignPostType::get_posts();
+						/** @var CampaignEntity[] $campaigns */
+						$campaigns = $this->get_repository( CampaignRepository::class )->all();
 						?>
+
 						<p><strong>Please use the following actions only if you are having issues. Remember to back up your data
 								before
 								performing any of these actions.</strong></p>
@@ -258,8 +272,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 												foreach ( $campaigns as $campaign ) {
 													printf(
 														'<option value="%s">%s</option>',
-														esc_attr( $campaign->ID ),
-														esc_html( $campaign->post_title )
+														esc_attr( (string) $campaign->id ),
+														esc_html( $campaign->title )
 													);
 												}
 												?>
@@ -277,8 +291,8 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 											foreach ( $campaigns as $campaign ) {
 												printf(
 													'<option value="%s">%s</option>',
-													esc_attr( $campaign->ID ),
-													esc_html( $campaign->post_title )
+													esc_attr( (string) $campaign->id ),
+													esc_html( $campaign->title )
 												);
 											}
 											?>
@@ -296,7 +310,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						<h2>Migration History:</h2>
 						<ul>
 							<?php
-							foreach ( get_option( MigrationService::SETTING_MIGRATION_HISTORY ) as $migration ) {
+							foreach ( get_option( MigrationHandler::SETTING_MIGRATION_HISTORY ) as $migration ) {
 								echo '<li>' . esc_attr( $migration ) . '</li>';
 							}
 							?>
@@ -308,7 +322,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 						break;
 
 					case self::TAB_LOG:
-						if ( $this->log_files ) {
+						if ( null !== $this->log_files ) {
 							?>
 							<form name="log-form" action="" method='post' style="margin: 1em 0">
 								<?php wp_nonce_field( 'log' ); ?>
@@ -364,16 +378,18 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 								?>
 
 								<tr style='<?php echo esc_attr( $style ); ?>'
-									class='<?php echo esc_attr( ( 0 === $key % 2 ? 'alternate ' : null ) . $class ); ?>'>
+									class='<?php echo esc_attr( ( 0 === (int) $key % 2 ? 'alternate ' : '' ) . $class ); ?>'>
 
 									<td>
 										<?php
-										echo esc_textarea(
-											wp_date(
-												get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
-												strtotime( $log['datetime'] )
-											)
+										$date_format = ( get_option( 'date_format' ) ?? 'Y-m-d' ) . ' ' . ( get_option( 'time_format' ) ?? 'H:i:s' );
+										$date        = wp_date(
+											$date_format,
+											strtotime( $log['datetime'] )
 										);
+										if ( false !== $date ) {
+											echo esc_textarea( $date );
+										}
 										?>
 									</td>
 									<td><code><?php echo esc_attr( $level ); ?></code></td>

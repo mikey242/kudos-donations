@@ -2,9 +2,9 @@
 /**
  * Mail Rest Routes.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
@@ -17,7 +17,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Mail extends AbstractRestController {
+class Mail extends BaseRestController {
 
 	/**
 	 * Mailer service.
@@ -32,8 +32,6 @@ class Mail extends AbstractRestController {
 	 * @param MailerService $mailer Mailer service.
 	 */
 	public function __construct( MailerService $mailer ) {
-		parent::__construct();
-
 		$this->rest_base = 'email';
 		$this->mailer    = $mailer;
 	}
@@ -65,9 +63,10 @@ class Mail extends AbstractRestController {
 	 * @param WP_REST_Request $request Request array.
 	 */
 	public function send_test( WP_REST_Request $request ): WP_REST_Response {
-		$email = sanitize_email( $request['email'] );
+		$raw_email = $request['email'];
+		$email     = \is_string( $raw_email ) ? sanitize_email( $raw_email ) : null;
 
-		if ( ! $email ) {
+		if ( null === $email ) {
 			return new WP_REST_Response( [ 'message' => __( 'Invalid test email address', 'kudos-donations' ) ] );
 		}
 
@@ -76,7 +75,7 @@ class Mail extends AbstractRestController {
 
 		$result = $this->mailer->send_message( $email, $header, $message );
 
-		if ( $result ) {
+		if ( true === $result ) {
 			/* translators: %s: API mode */
 			return new WP_REST_Response( [ 'message' => \sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) ], 200 );
 		}

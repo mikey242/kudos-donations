@@ -1,10 +1,10 @@
 <?php
 /**
- * Subscription Rest Routes.
+ * Subscription entity rest routes.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -12,34 +12,47 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use Exception;
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
+use IseardMedia\Kudos\Domain\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
+use IseardMedia\Kudos\Domain\Repository\BaseRepository;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
+use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Subscription extends AbstractRestController {
+/**
+ * @extends BaseRepositoryRestController<SubscriptionEntity>
+ */
+class Subscription extends BaseRepositoryRestController {
 
 	public const ROUTE_CANCEL = '/cancel';
 
 	/**
+	 * @var SubscriptionRepository
+	 */
+	protected BaseRepository $repository;
+	private ?PaymentVendorInterface $vendor;
+
+	/**
 	 * Subscription routes constructor.
 	 *
-	 * @param PaymentVendorFactory $factory Current vendor.
+	 * @param PaymentVendorFactory   $factory Current vendor.
+	 * @param SubscriptionRepository $subscription Subscription repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory ) {
-		parent::__construct();
-
-		$this->rest_base = 'subscription';
-		$this->vendor    = $factory->get_vendor();
+	public function __construct( PaymentVendorFactory $factory, SubscriptionRepository $subscription ) {
+		$this->rest_base  = 'subscription';
+		$this->repository = $subscription;
+		$this->vendor     = $factory->get_vendor();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function get_routes(): array {
+	public function get_additional_routes(): array {
 		return [
 			self::ROUTE_CANCEL => [
 				'methods'             => WP_REST_Server::READABLE,
@@ -58,6 +71,16 @@ class Subscription extends AbstractRestController {
 				'permission_callback' => '__return_true',
 			],
 		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function add_rest_fields( BaseEntity $item ): array {
+		$item->donor       = $this->repository->get_donor( $item );
+		$item->transaction = $this->repository->get_transaction( $item );
+		$item->campaign    = $this->repository->get_campaign( $item );
+		return (array) $item;
 	}
 
 	/**
@@ -80,12 +103,12 @@ class Subscription extends AbstractRestController {
 			);
 		}
 
-		$this->logger->info( 'Subscription: Cancelling subscription', [ 'post_id' => $post_id ] );
+		$this->logger->info( 'Cancelling subscription', [ 'post_id' => $post_id ] );
 
 		// Check if token is valid.
 		try {
 			if ( ! EncryptionService::verify_token( $post_id, $token ) ) {
-				$this->logger->info( 'Subscription: Invalid token supplied' );
+				$this->logger->info( 'Invalid token supplied' );
 				return new WP_REST_Response(
 					[
 						'message' => __( 'Token expired', 'kudos-donations' ),
@@ -103,26 +126,26 @@ class Subscription extends AbstractRestController {
 			);
 		}
 
-		// Get subscription post from supplied row id.
-		$subscription = get_post( $post_id );
+		/**
+		 * Get subscription post from supplied row id.
+		 *
+		 * @var ?SubscriptionEntity $subscription
+		 */
+		$subscription = $this->repository->get( $post_id );
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
 
 		if ( $result ) {
 			// Cancelling was successful. Update entity with canceled status.
-			SubscriptionPostType::save(
-				[
-					'ID' => $post_id,
-					SubscriptionPostType::META_FIELD_STATUS => 'cancelled',
-				]
-			);
+			$subscription->status = 'cancelled';
+			$this->repository->update( $subscription );
 
 			$this->logger->info(
 				'Subscription cancelled.',
 				[
-					'ID'              => $post_id,
-					'subscription_id' => get_post_meta( $post_id, 'subscription_id', true ),
+					'id'              => $post_id,
+					'subscription_id' => $subscription->vendor_subscription_id,
 				]
 			);
 			return new WP_REST_Response(
