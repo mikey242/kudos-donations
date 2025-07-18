@@ -4,11 +4,12 @@ namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Vendor\VendorInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
-interface PaymentVendorInterface {
+interface PaymentVendorInterface extends VendorInterface {
 	/**
 	 * Returns the name of the vendor.
 	 *
@@ -91,7 +92,7 @@ interface PaymentVendorInterface {
 	 *
 	 * @param string $vendor_payment_id The vendor's payment id.
 	 */
-	public function handle_status_change( string $vendor_payment_id ): bool;
+	public function handle_status_change( string $vendor_payment_id ): void;
 
 	/**
 	 * Returns true is the API is ready to communicate.

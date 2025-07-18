@@ -204,7 +204,9 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
-		/** @var TransactionEntity $transaction */
+		/**
+		 * @var ?TransactionEntity $transaction
+		 */
 		$transaction = $this->get_repository( TransactionRepository::class )
 			->get( $entity_id );
 
@@ -213,7 +215,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			$this->vendor->handle_status_change( $transaction->vendor_payment_id );
 		}
 
-		if ( $transaction ) {
+		if ( null !== $transaction ) {
 			$data     = [
 				'status'   => $transaction->status,
 				'currency' => $transaction->currency,

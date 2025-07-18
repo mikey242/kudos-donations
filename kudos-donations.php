@@ -32,18 +32,7 @@ if ( ! \defined( 'WPINC' ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-\define( 'KUDOS_VERSION', '4.2.0' );
-\define( 'KUDOS_DB_VERSION', '4.2.0' );
-\define( 'KUDOS_PLUGIN_FILE', __FILE__ );
-\define( 'KUDOS_PLUGIN_URL', plugin_dir_url( KUDOS_PLUGIN_FILE ) );
-\define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( KUDOS_PLUGIN_FILE ) );
-\define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
-\define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
-\define( 'KUDOS_CACHE_DIR', WP_CONTENT_DIR . '/cache/kudos-donations/' );
-\define( 'KUDOS_DEBUG', (bool) get_option( '_kudos_debug_mode' ) );
-\define( 'KUDOS_SALT', (string) NONCE_SALT );
-\define( 'KUDOS_AUTH_KEY', (string) AUTH_KEY );
-\define( 'KUDOS_AUTH_SALT', (string) AUTH_SALT );
+require_once __DIR__ . '/includes/constants.php';
 
 require KUDOS_PLUGIN_DIR . 'includes/Autoloader.php';
 

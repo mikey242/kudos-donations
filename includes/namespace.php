@@ -27,8 +27,6 @@ function activate(): void {
 	}
 	/**
 	 * Fires when the plugin is activated.
-	 *
-	 * @param bool $network_wide Whether the plugin is being activated network-wide.
 	 */
 	do_action( 'kudos_donations_activated' );
 }
@@ -49,8 +47,6 @@ function deactivate(): void {
 
 	/**
 	 * Fires after plugin deactivation.
-	 *
-	 * @param bool $network_wide Whether to deactivate network-wide.
 	 */
 	do_action( 'kudos_donations_deactivated' );
 }

@@ -242,7 +242,9 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
-						/** @var TransactionEntity $transaction */
+						/**
+						 * @var ?TransactionEntity $transaction
+						 */
 						$transaction = $this->get_repository( TransactionRepository::class )->get( (int) $transaction_id );
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {

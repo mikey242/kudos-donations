@@ -11,6 +11,9 @@ parameters:
     - config
     - includes
 
+  scanDirectories:
+    - third-party/
+
   ignoreErrors:
     # example:
     # - '#Call to an undefined method.*#'

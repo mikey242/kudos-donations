@@ -87,46 +87,7 @@ class TransactionRepository extends BaseRepository {
 			return null;
 		}
 
-		return $this->get_repository( SubscriptionRepository::class )
-					->get( $subscription_id, $columns );
-	}
-
-	/**
-	 * Get total by donor id.
-	 *
-	 * @param int $donor_id The donor entity id.
-	 */
-	public function get_total_by_donor_id( int $donor_id ): float {
-		return $this->get_total_by( 'donor_id', $donor_id );
-	}
-
-	/**
-	 * Base method for returning total value of donations.
-	 *
-	 * @param string $column The column to filter by.
-	 * @param mixed  $value The value of the column.
-	 *
-	 *  phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-	 *  phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	 */
-	protected function get_total_by( string $column, $value ): float {
-		if ( ! preg_match( '/^[a-zA-Z0-9_]+$/', $column ) ) {
-			return 0.0;
-		}
-
-		$column_esc = esc_sql( $column );
-
-		$sql = $this->wpdb->prepare(
-			"SELECT SUM(value) FROM $this->table WHERE $column_esc = %s AND status = %s",
-			$value,
-			'paid'
-		);
-
-		if ( false === $sql ) {
-			return 0;
-		}
-
-		return (float) ( $this->wpdb->get_var( $sql ) ?? 0 );
+		return $this->get_repository( SubscriptionRepository::class )->get( $subscription_id, $columns );
 	}
 
 	/**

@@ -193,7 +193,7 @@ class Admin extends BaseController {
 	/**
 	 * Gets a list of transactions with no Campaign.
 	 *
-	 * @return TransactionEntity[]
+	 * @return list<int>
 	 */
 	private function get_orphan_transaction_ids(): array {
 		/** @var TransactionEntity[] $transactions */

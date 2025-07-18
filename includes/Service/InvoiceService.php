@@ -100,12 +100,15 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 			}
 		}
 
-		// Get transaction.
-		/** @var TransactionEntity $transaction */
+		/**
+		 * Get transaction.
+		 *
+		 * @var ?TransactionEntity $transaction
+		 */
 		$transaction = $this->get_repository( TransactionRepository::class )
 							->get( $transaction_id );
 
-		if ( ! $transaction ) {
+		if ( null === $transaction ) {
 			$this->logger->debug( 'Error generating invoice: Transaction not found', [ 'transaction_id' => $transaction_id ] );
 			return null;
 		}
@@ -130,9 +133,9 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 
 		// Append donor.
 		$donors = $this->get_repository( DonorRepository::class );
-		/** @var DonorEntity $donor */
+		/** @var ?DonorEntity $donor */
 		$donor = $donors->find_one_by( [ 'id' => $transaction->donor_id ] );
-		if ( $donor ) {
+		if ( null !== $donor ) {
 			$locale = $donor->locale;
 			if ( $locale ) {
 				$this->logger->debug( "Switching locale to $locale" );

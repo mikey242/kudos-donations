@@ -2,7 +2,9 @@
 
 namespace IseardMedia\Kudos\Vendor\EmailVendor;
 
-interface EmailVendorInterface {
+use IseardMedia\Kudos\Vendor\VendorInterface;
+
+interface EmailVendorInterface extends VendorInterface {
 	/**
 	 * Sends a message.
 	 *

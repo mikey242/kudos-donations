@@ -113,7 +113,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 *
 	 * @param int $transaction_id Transaction post id..
 	 */
-	public function process_transaction( int $transaction_id ): bool {
+	public function process_transaction( int $transaction_id ) {
 		$this->logger->debug( 'Processing paid transaction.', [ 'transaction_id' => $transaction_id ] );
 
 		// Generate invoice.
@@ -121,8 +121,6 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 
 		// Send email - email setting is checked in mailer.
 		$this->mailer_service->send_receipt( $transaction_id );
-
-		return true;
 	}
 
 	/**

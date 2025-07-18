@@ -44,8 +44,8 @@ trait RepositoryAwareTrait {
 	 * @param class-string<TRepository> $class_name Repository class name.
 	 * @return TRepository
 	 *
-	 * @template TEntity of BaseEntity
-	 * @template TRepository of BaseRepository<TEntity>
+	 * @template TTargetEntity of BaseEntity
+	 * @template TRepository of BaseRepository<TTargetEntity>
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */

@@ -77,8 +77,7 @@ abstract class BaseSchema {
 						// Already decoded.
 						$row[ $key ] = $value;
 					} elseif ( \is_string( $value ) && $this->is_valid_json( $value ) ) {
-						$decoded     = json_decode( $value, true );
-						$row[ $key ] = \is_array( $decoded ) || \is_object( $decoded ) ? $decoded : null;
+						$row[ $key ] = json_decode( $value, true );
 					}
 					break;
 

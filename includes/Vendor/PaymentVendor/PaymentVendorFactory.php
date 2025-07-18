@@ -14,6 +14,9 @@ namespace IseardMedia\Kudos\Vendor\PaymentVendor;
 use IseardMedia\Kudos\Service\PaymentService;
 use IseardMedia\Kudos\Vendor\AbstractVendorFactory;
 
+/**
+ * @extends AbstractVendorFactory<PaymentVendorInterface>
+ */
 class PaymentVendorFactory extends AbstractVendorFactory {
 
 	/**
