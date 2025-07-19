@@ -10,15 +10,15 @@ use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Customer;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Payment;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
-use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
+use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use Psr\Log\LoggerInterface;
 
 /**
- * @covers \IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
+ * @covers \IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
  */
 class MolliePaymentVendorTest extends \BaseTestCase {
 
-	private MolliePaymentVendor $vendor;
+	private MolliePaymentProvider $vendor;
 	private MollieApiClient $api_mock;
 
 	protected function setUp(): void {
@@ -26,7 +26,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 
 		$this->api_mock = $this->createMock(MollieApiClient::class);
 		$logger = $this->createMock(LoggerInterface::class);
-		$this->vendor   = new MolliePaymentVendor($this->api_mock);
+		$this->vendor   = new MolliePaymentProvider($this->api_mock);
 		$this->vendor->setLogger($logger);
 		$this->vendor->set_repository_manager($this->get_repository_manager());
 	}

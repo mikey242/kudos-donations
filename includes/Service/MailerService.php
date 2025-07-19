@@ -16,31 +16,32 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorFactory;
-use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorInterface;
+use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderFactory;
+use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderInterface;
 
-class MailerService extends AbstractRegistrable implements HasSettingsInterface, RepositoryAwareInterface {
-
-	use RepositoryAwareTrait;
-
+class MailerService extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_EMAIL_VENDOR         = '_kudos_email_vendor';
 	public const SETTING_EMAIL_RECEIPT_ENABLE = '_kudos_email_receipt_enable';
 	public const SETTING_EMAIL_SHOW_CAMPAIGN  = '_kudos_email_show_campaign_name';
-	private ?EmailVendorInterface $vendor;
+	private ?EmailProviderInterface $vendor;
+	private TransactionRepository $transaction_repository;
+	private SubscriptionRepository $subscription_repository;
 
 	/**
 	 * MailerService constructor.
 	 *
-	 * @param EmailVendorFactory $vendor The currently configured email vendor.
+	 * @param EmailProviderFactory   $vendor The currently configured email vendor.
+	 * @param TransactionRepository  $transaction_repository Transaction repository.
+	 * @param SubscriptionRepository $subscription_repository Subscription repository.
 	 */
-	public function __construct( EmailVendorFactory $vendor ) {
-		$this->vendor = $vendor->get_vendor();
+	public function __construct( EmailProviderFactory $vendor, TransactionRepository $transaction_repository, SubscriptionRepository $subscription_repository ) {
+		$this->vendor                  = $vendor->get_provider();
+		$this->transaction_repository  = $transaction_repository;
+		$this->subscription_repository = $subscription_repository;
 	}
 
 	/**
@@ -73,11 +74,9 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 		$this->logger->debug( 'Receipt emails enabled, setting up email.', [ 'transaction_id' => $transaction_id ] );
 
 		/** @var TransactionEntity $transaction */
-		$transaction = $this->get_repository( TransactionRepository::class )
-							->get( $transaction_id );
+		$transaction = $this->transaction_repository->get( $transaction_id );
 		/** @var DonorEntity $donor */
-		$donor = $this->get_repository( TransactionRepository::class )
-						->get_donor( $transaction );
+		$donor = $this->transaction_repository->get_donor( $transaction );
 
 		// Email address.
 		$email = $donor->email;
@@ -102,8 +101,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 		$campaign_name = '';
 		if ( get_option( self::SETTING_EMAIL_SHOW_CAMPAIGN ) ) {
 			/** @var CampaignEntity $campaign */
-			$campaign      = $this->get_repository( TransactionRepository::class )
-									->get_campaign( $transaction );
+			$campaign      = $this->transaction_repository->get_campaign( $transaction );
 			$campaign_name = $campaign->title;
 		}
 
@@ -127,7 +125,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface,
 		try {
 			if ( 'oneoff' !== $transaction->sequence_type ) {
 				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ 'transaction_id' => $transaction->id ] );
-				$subscription = $this->get_repository( SubscriptionRepository::class )->find_one_by(
+				$subscription = $this->subscription_repository->find_one_by(
 					[
 						'transaction_id' => $transaction->id,
 					]

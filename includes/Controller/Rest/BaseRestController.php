@@ -11,13 +11,10 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Controller\BaseController;
-use Psr\Log\LoggerAwareTrait;
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use WP_Error;
 
-abstract class BaseRestController extends BaseController {
-
-	use LoggerAwareTrait;
+abstract class BaseRestController extends AbstractRegistrable {
 
 	protected string $namespace = 'kudos/v1';
 	protected string $rest_base = '';

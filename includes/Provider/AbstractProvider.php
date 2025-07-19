@@ -7,13 +7,13 @@
  * @copyright 2025 Iseard Media
  */
 
-namespace IseardMedia\Kudos\Vendor;
+namespace IseardMedia\Kudos\Provider;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\EncryptionAwareInterface;
 use IseardMedia\Kudos\Container\EncryptionAwareTrait;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 
-abstract class AbstractVendor extends AbstractRegistrable implements VendorInterface, HasSettingsInterface, EncryptionAwareInterface {
-    use EncryptionAwareTrait;
+abstract class AbstractProvider extends AbstractRegistrable implements ProviderInterface, HasSettingsInterface, EncryptionAwareInterface {
+	use EncryptionAwareTrait;
 }

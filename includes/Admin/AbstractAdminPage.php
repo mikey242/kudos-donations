@@ -12,11 +12,8 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use Psr\Log\LoggerAwareTrait;
 
 abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPageInterface {
-
-	use LoggerAwareTrait;
 
 	private ?string $screen_id;
 

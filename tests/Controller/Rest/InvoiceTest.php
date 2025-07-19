@@ -15,7 +15,7 @@ use IseardMedia\Kudos\Domain\Schema\DonorSchema;
 use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
 use IseardMedia\Kudos\Service\PDFService;
 use IseardMedia\Kudos\Service\TwigService;
-use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
+use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -51,7 +51,7 @@ class InvoiceTest extends BaseTestCase {
 		$transaction = new TransactionEntity([
 			'donor_id'          => $donor_id,
 			'vendor_payment_id' => 'tr_12345',
-			'vendor'            => MolliePaymentVendor::get_slug(),
+			'vendor'            => MolliePaymentProvider::get_slug(),
 			'sequence_type'     => 'oneoff',
 			'invoice_number'    => 1,
 			'currency'          => 'EUR',

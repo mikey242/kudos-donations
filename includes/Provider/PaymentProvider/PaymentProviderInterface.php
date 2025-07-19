@@ -1,26 +1,29 @@
 <?php
+/**
+ * PaymentProviderInterface
+ *
+ * @link https://github.com/mikey242/kudos-donations
+ *
+ * @copyright 2025 Iseard Media
+ */
 
-namespace IseardMedia\Kudos\Vendor\PaymentVendor;
+namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
-use IseardMedia\Kudos\Vendor\VendorInterface;
+use IseardMedia\Kudos\Provider\ProviderInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
-interface PaymentVendorInterface extends VendorInterface {
+interface PaymentProviderInterface extends ProviderInterface {
 	/**
 	 * Returns the name of the vendor.
-	 *
-	 * @return string
 	 */
 	public static function get_name(): string;
 
 	/**
 	 * Gets the vendor slug for identification.
-	 *
-	 * @return string
 	 */
 	public static function get_slug(): string;
 
@@ -33,8 +36,6 @@ interface PaymentVendorInterface extends VendorInterface {
 
 	/**
 	 * Returns true if vendor supports recurring payments.
-	 *
-	 * @return bool
 	 */
 	public static function recurring_enabled(): bool;
 
@@ -47,8 +48,6 @@ interface PaymentVendorInterface extends VendorInterface {
 	 * Cancel the specified subscription.
 	 *
 	 * @param SubscriptionEntity $subscription subscription row.
-	 *
-	 * @return bool
 	 */
 	public function cancel_subscription( SubscriptionEntity $subscription ): bool;
 
@@ -63,10 +62,9 @@ interface PaymentVendorInterface extends VendorInterface {
 	/**
 	 * Creates a payment and returns it as an object.
 	 *
-	 * @param array $payment_args Parameters to pass to mollie to create a payment.
+	 * @param array             $payment_args Parameters to pass to mollie to create a payment.
 	 * @param TransactionEntity $transaction The transaction entity array.
-	 * @param ?string $vendor_customer_id The vendors customer id.
-	 *
+	 * @param ?string           $vendor_customer_id The vendors customer id.
 	 * @return string|false
 	 */
 	public function create_payment( array $payment_args, TransactionEntity $transaction, ?string $vendor_customer_id = null );
@@ -82,7 +80,6 @@ interface PaymentVendorInterface extends VendorInterface {
 	 * Vendor webhook action.
 	 *
 	 * @param WP_REST_Request $request Request array.
-	 *
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function rest_webhook( WP_REST_Request $request );
@@ -111,8 +108,6 @@ interface PaymentVendorInterface extends VendorInterface {
 
 	/**
 	 * Returns the api mode.
-	 *
-	 * @return string
 	 */
 	public function get_api_mode(): string;
 }

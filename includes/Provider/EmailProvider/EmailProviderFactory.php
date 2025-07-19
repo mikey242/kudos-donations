@@ -9,15 +9,15 @@
 
 declare( strict_types=1 );
 
-namespace IseardMedia\Kudos\Vendor\EmailVendor;
+namespace IseardMedia\Kudos\Provider\EmailProvider;
 
+use IseardMedia\Kudos\Provider\AbstractProviderFactory;
 use IseardMedia\Kudos\Service\MailerService;
-use IseardMedia\Kudos\Vendor\AbstractVendorFactory;
 
 /**
- * @extends AbstractVendorFactory<EmailVendorInterface>
+ * @extends AbstractProviderFactory<EmailProviderInterface>
  */
-class EmailVendorFactory extends AbstractVendorFactory {
+class EmailProviderFactory extends AbstractProviderFactory {
 
 	/**
 	 * {@inheritDoc}
@@ -29,7 +29,7 @@ class EmailVendorFactory extends AbstractVendorFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_vendor_settings_key(): string {
+	protected function get_provider_settings_key(): string {
 		return MailerService::SETTING_EMAIL_VENDOR;
 	}
 
@@ -37,13 +37,13 @@ class EmailVendorFactory extends AbstractVendorFactory {
 	 * {@inheritDoc}
 	 */
 	protected function get_default_vendor(): string {
-		return SMTPVendor::get_slug();
+		return SMTPProvider::get_slug();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function get_interface_class(): string {
-		return EmailVendorInterface::class;
+		return EmailProviderInterface::class;
 	}
 }

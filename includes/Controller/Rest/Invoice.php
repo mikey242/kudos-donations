@@ -24,17 +24,20 @@ class Invoice extends BaseRestController {
 
 	private InvoiceService $invoice;
 	private PDFService $pdf;
+	private TransactionRepository $transaction_repository;
 
 	/**
 	 * PaymentRoutes constructor.
 	 *
-	 * @param PDFService     $pdf Mailer service.
-	 * @param InvoiceService $invoice Invoice service.
+	 * @param PDFService            $pdf Mailer service.
+	 * @param InvoiceService        $invoice Invoice service.
+	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
-	public function __construct( PDFService $pdf, InvoiceService $invoice ) {
-		$this->rest_base = 'invoice';
-		$this->pdf       = $pdf;
-		$this->invoice   = $invoice;
+	public function __construct( PDFService $pdf, InvoiceService $invoice, TransactionRepository $transaction_repository ) {
+		$this->rest_base              = 'invoice';
+		$this->pdf                    = $pdf;
+		$this->invoice                = $invoice;
+		$this->transaction_repository = $transaction_repository;
 	}
 
 	/**
@@ -93,7 +96,7 @@ class Invoice extends BaseRestController {
 	 * Regenerate all invoices.
 	 */
 	public function regenerate_invoices(): WP_REST_Response {
-		$transactions = $this->get_repository( TransactionRepository::class )->find_by( [ 'status' => PaymentStatus::PAID ] );
+		$transactions = $this->transaction_repository->find_by( [ 'status' => PaymentStatus::PAID ] );
 		if ( $transactions ) {
 			foreach ( $transactions as $transaction ) {
 				$this->invoice->generate_invoice( $transaction->id, true );

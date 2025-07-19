@@ -20,22 +20,25 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
  * @extends BaseRepositoryRestController<DonorEntity>
  */
 class Donor extends BaseRepositoryRestController {
+	private TransactionRepository $transaction_repository;
 
 	/**
 	 * Campaign rest route constructor.
 	 *
-	 * @param DonorRepository $repository The campaign repository.
+	 * @param DonorRepository       $repository The campaign repository.
+	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
-	public function __construct( DonorRepository $repository ) {
-		$this->rest_base  = 'donor';
-		$this->repository = $repository;
+	public function __construct( DonorRepository $repository, TransactionRepository $transaction_repository ) {
+		$this->rest_base              = 'donor';
+		$this->repository             = $repository;
+		$this->transaction_repository = $transaction_repository;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function add_rest_fields( BaseEntity $item ): array {
-		$item->total = $this->get_repository( TransactionRepository::class )->count_query(
+		$item->total = $this->transaction_repository->count_query(
 			[
 				'donor_id' => $item->id,
 			]

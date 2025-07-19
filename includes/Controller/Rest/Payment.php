@@ -16,23 +16,20 @@ use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\SanitizeTrait;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Payment extends BaseRestController implements RepositoryAwareInterface {
+class Payment extends BaseRestController {
 
-	use RepositoryAwareTrait;
 	use SanitizeTrait;
 
 	public const ROUTE_CREATE  = '/create';
@@ -41,16 +38,25 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 	public const ROUTE_TEST    = '/test';
 	public const ROUTE_STATUS  = '/status';
 
-	private PaymentVendorInterface $vendor;
+	private PaymentProviderInterface $vendor;
+	private TransactionRepository $transaction_repository;
+	private DonorRepository $donor_repository;
+	private CampaignRepository $campaign_repository;
 
 	/**
 	 * PaymentRoutes constructor.
 	 *
-	 * @param PaymentVendorFactory $factory Current vendor.
+	 * @param PaymentProviderFactory $factory Current vendor.
+	 * @param TransactionRepository  $transaction_repository Transaction repository.
+	 * @param DonorRepository        $donor_repository Donor repository.
+	 * @param CampaignRepository     $campaign_repository Campaign repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory ) {
-		$this->rest_base = 'payment';
-		$this->vendor    = $factory->get_vendor();
+	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository, DonorRepository $donor_repository, CampaignRepository $campaign_repository ) {
+		$this->rest_base              = 'payment';
+		$this->vendor                 = $factory->get_provider();
+		$this->transaction_repository = $transaction_repository;
+		$this->donor_repository       = $donor_repository;
+		$this->campaign_repository    = $campaign_repository;
 	}
 
 	/**
@@ -207,8 +213,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 		/**
 		 * @var ?TransactionEntity $transaction
 		 */
-		$transaction = $this->get_repository( TransactionRepository::class )
-			->get( $entity_id );
+		$transaction = $this->transaction_repository->get( $entity_id );
 
 		if ( PaymentStatus::OPEN === $transaction->status ) {
 			$this->logger->debug( 'Status still open, manually calling handle_status_change' );
@@ -224,8 +229,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			$donor_id = $transaction->donor_id;
 			if ( $donor_id ) {
 				/** @var DonorEntity $donor */
-				$donor        = $this->get_repository( DonorRepository::class )
-														->get( $donor_id );
+				$donor        = $this->donor_repository->get( $donor_id );
 				$data['name'] = $donor->name;
 			}
 
@@ -266,8 +270,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 		}
 
 		/** @var CampaignEntity $campaign */
-		$campaign = $this->get_repository( CampaignRepository::class )
-						->get( (int) $values['campaign_id'] );
+		$campaign = $this->campaign_repository->get( (int) $values['campaign_id'] );
 
 		$defaults = [
 			'currency'         => $campaign->currency,
@@ -306,13 +309,12 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			];
 
 			// Search for existing donor based on email and mode.
-			$donor = $this->get_repository( DonorRepository::class )
-				->find_one_by(
-					[
-						'email' => $args['email'],
-						'mode'  => $this->vendor->get_api_mode(),
-					]
-				);
+			$donor = $this->donor_repository->find_one_by(
+				[
+					'email' => $args['email'],
+					'mode'  => $this->vendor->get_api_mode(),
+				]
+			);
 
 			if ( empty( $donor ) ) {
 				// Create new customer with vendor if none found.
@@ -325,8 +327,7 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			}
 
 			// Save donor and fetch updated record.
-			$donor_id = $this->get_repository( DonorRepository::class )
-				->upsert( $donor );
+			$donor_id = $this->donor_repository->upsert( $donor );
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
@@ -345,10 +346,9 @@ class Payment extends BaseRestController implements RepositoryAwareInterface {
 			]
 		);
 
-		$transaction_id = $this->get_repository( TransactionRepository::class )->insert( $transaction );
+		$transaction_id = $this->transaction_repository->insert( $transaction );
 		// Create payment with vendor.
-		$transaction = $this->get_repository( TransactionRepository::class )
-							->get( $transaction_id );
+		$transaction = $this->transaction_repository->get( $transaction_id );
 		$url         = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created.

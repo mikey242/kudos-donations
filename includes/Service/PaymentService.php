@@ -13,32 +13,30 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 
-class PaymentService extends AbstractRegistrable implements HasSettingsInterface, RepositoryAwareInterface {
-
-	use RepositoryAwareTrait;
-
+class PaymentService extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_VENDOR        = '_kudos_payment_vendor';
 	public const SETTING_VENDOR_STATUS = '_kudos_payment_vendor_status';
 	private MailerService $mailer_service;
 	private InvoiceService $invoice;
+	private TransactionRepository $transaction_repository;
 
 	/**
 	 * Payment service constructor.
 	 *
 	 * @see https://stackoverflow.com/questions/36853791/laravel-dynamic-dependency-injection-for-interface-based-on-user-input
 	 *
-	 * @param MailerService  $mailer_service Mailer service.
-	 * @param InvoiceService $invoice Invoice service.
+	 * @param MailerService         $mailer_service Mailer service.
+	 * @param InvoiceService        $invoice Invoice service.
+	 * @param TransactionRepository $transaction_repository Transaction repository.
 	 */
-	public function __construct( MailerService $mailer_service, InvoiceService $invoice ) {
-		$this->mailer_service = $mailer_service;
-		$this->invoice        = $invoice;
+	public function __construct( MailerService $mailer_service, InvoiceService $invoice, TransactionRepository $transaction_repository ) {
+		$this->mailer_service         = $mailer_service;
+		$this->invoice                = $invoice;
+		$this->transaction_repository = $transaction_repository;
 	}
 
 	/**
@@ -72,9 +70,8 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 * @return void
 	 */
 	public function iterate_invoice_number( int $transaction_id ) {
-		$current      = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER );
-		$transactions = $this->get_repository( TransactionRepository::class );
-		$result       = $transactions->patch( $transaction_id, [ 'invoice_number' => $current ] );
+		$current = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER );
+		$result  = $this->transaction_repository->patch( $transaction_id, [ 'invoice_number' => $current ] );
 		if ( $result ) {
 			update_option( InvoiceService::SETTING_INVOICE_NUMBER, ( $current + 1 ) );
 		} else {

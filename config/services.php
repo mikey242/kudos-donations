@@ -35,15 +35,15 @@ use IseardMedia\Kudos\Domain\Schema\SubscriptionSchema;
 use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
 use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
+use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderFactory;
+use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderInterface;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\WhatFailureGroupHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
-use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorFactory;
-use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorInterface;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -69,9 +69,9 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 			->tag( 'kudos.has_settings' );
 	$services->instanceof( MigrationInterface::class )
 			->tag( 'kudos.migration' );
-	$services->instanceof( PaymentVendorInterface::class )
+	$services->instanceof( PaymentProviderInterface::class )
 			->tag( 'kudos.payment_vendor' );
-	$services->instanceof( EmailVendorInterface::class )
+	$services->instanceof( EmailProviderInterface::class )
 			->tag( 'kudos.email_vendor' );
 	$services->instanceof( RepositoryInterface::class )
 			->tag( 'kudos.repository' );
@@ -113,11 +113,11 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->set( MollieApiClient::class );
 
 	// Register repositories with managers.
-	$services->set( PaymentVendorFactory::class )
+	$services->set( PaymentProviderFactory::class )
 		->args( [ tagged_locator( 'kudos.payment_vendor' ) ] );
 	$services->set( SettingsHandler::class )
 		->args( [ tagged_locator( 'kudos.has_settings' ), 'kudos-donations' ] );
-	$services->set( EmailVendorFactory::class )
+	$services->set( EmailProviderFactory::class )
 		->args( [ tagged_locator( 'kudos.email_vendor' ) ] );
 	$services->set( RegistrableHandler::class )
 		->args( [ tagged_iterator( 'kudos.registrable' ) ] );

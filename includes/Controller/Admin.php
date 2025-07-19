@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Admin\DebugAdminPage;
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
@@ -20,7 +21,19 @@ use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Admin extends BaseController {
+class Admin extends AbstractRegistrable {
+
+	private CampaignRepository $campaign_repository;
+	private TransactionRepository $transaction_repository;
+
+	/**
+	 * @param TransactionRepository $transaction_repository Transaction repository.
+	 * @param CampaignRepository    $campaign_repository Campaign repository.
+	 */
+	public function __construct( TransactionRepository $transaction_repository, CampaignRepository $campaign_repository ) {
+		$this->transaction_repository = $transaction_repository;
+		$this->campaign_repository    = $campaign_repository;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -68,7 +81,7 @@ class Admin extends BaseController {
 					break;
 				case 'kudos_clear_campaigns':
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_campaigns' ) ) {
-						$campaigns = $this->get_repository( CampaignRepository::class )->all();
+						$campaigns = $this->campaign_repository->all();
 						foreach ( $campaigns as $campaign ) {
 							wp_delete_post( $campaign->id, true );
 						}
@@ -101,7 +114,7 @@ class Admin extends BaseController {
 					if ( wp_verify_nonce( $nonce, 'kudos_assign_transactions_to_campaign' ) ) {
 						$from             = $_POST['kudos_from_campaign'];
 						$to               = $_POST['kudos_to_campaign'];
-						$transaction_repo = $this->get_repository( TransactionRepository::class );
+						$transaction_repo = $this->transaction_repository;
 
 						switch ( $from ) {
 							case '_orphaned_transactions_':
@@ -197,13 +210,13 @@ class Admin extends BaseController {
 	 */
 	private function get_orphan_transaction_ids(): array {
 		/** @var TransactionEntity[] $transactions */
-		$transactions           = $this->get_repository( TransactionRepository::class )->all();
+		$transactions           = $this->transaction_repository->all();
 		$orphan_transaction_ids = [];
 
 		foreach ( $transactions as $transaction ) {
 			$campaign_id = $transaction->campaign_id;
 
-			$is_missing = empty( $campaign_id ) || ! $this->get_repository( CampaignRepository::class )->get( $campaign_id );
+			$is_missing = empty( $campaign_id ) || ! $this->campaign_repository->get( $campaign_id );
 
 			if ( $is_missing ) {
 				$orphan_transaction_ids[] = $transaction->id;
