@@ -9,15 +9,15 @@
 
 declare( strict_types=1 );
 
-namespace IseardMedia\Kudos\Vendor\PaymentVendor;
+namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
+use IseardMedia\Kudos\Provider\AbstractProviderFactory;
 use IseardMedia\Kudos\Service\PaymentService;
-use IseardMedia\Kudos\Vendor\AbstractVendorFactory;
 
 /**
- * @extends AbstractVendorFactory<PaymentVendorInterface>
+ * @extends AbstractProviderFactory<PaymentProviderInterface>
  */
-class PaymentVendorFactory extends AbstractVendorFactory {
+class PaymentProviderFactory extends AbstractProviderFactory {
 
 	/**
 	 * {@inheritDoc}
@@ -29,7 +29,7 @@ class PaymentVendorFactory extends AbstractVendorFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function get_vendor_settings_key(): string {
+	protected function get_provider_settings_key(): string {
 		return PaymentService::SETTING_VENDOR;
 	}
 
@@ -37,13 +37,13 @@ class PaymentVendorFactory extends AbstractVendorFactory {
 	 * {@inheritDoc}
 	 */
 	protected function get_default_vendor(): string {
-		return MolliePaymentVendor::get_slug();
+		return MolliePaymentProvider::get_slug();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function get_interface_class(): string {
-		return PaymentVendorInterface::class;
+		return PaymentProviderInterface::class;
 	}
 }

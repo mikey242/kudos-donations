@@ -16,9 +16,9 @@ namespace IseardMedia\Kudos\Migrations;
 
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Provider\EmailProvider\SMTPProvider;
+use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Service\InvoiceService;
-use IseardMedia\Kudos\Vendor\EmailVendor\SMTPVendor;
-use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
 use WP_Post;
 
 class Version400 extends BaseMigration {
@@ -57,14 +57,14 @@ class Version400 extends BaseMigration {
 		$mode          = $vendor_mollie['mode'] ?? 'test';
 
 		if ( $live_key ) {
-			update_option( MolliePaymentVendor::SETTING_API_KEY_LIVE, $live_key );
+			update_option( MolliePaymentProvider::SETTING_API_KEY_LIVE, $live_key );
 		}
 
 		if ( $test_key ) {
-			update_option( MolliePaymentVendor::SETTING_API_KEY_TEST, $test_key );
+			update_option( MolliePaymentProvider::SETTING_API_KEY_TEST, $test_key );
 		}
 
-		update_option( MolliePaymentVendor::SETTING_API_MODE, $mode );
+		update_option( MolliePaymentProvider::SETTING_API_MODE, $mode );
 
 		return 1;
 	}
@@ -104,10 +104,10 @@ class Version400 extends BaseMigration {
 			$new_settings['username'] = $username;
 		}
 		if ( $password ) {
-			update_option( SMTPVendor::SETTING_SMTP_PASSWORD, $password );
+			update_option( SMTPProvider::SETTING_SMTP_PASSWORD, $password );
 		}
 
-		update_option( SMTPVendor::SETTING_CUSTOM_SMTP, $new_settings );
+		update_option( SMTPProvider::SETTING_CUSTOM_SMTP, $new_settings );
 
 		return 1;
 	}

@@ -16,28 +16,29 @@ use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 
-class InvoiceService extends AbstractRegistrable implements HasSettingsInterface, RepositoryAwareInterface {
-
-	use RepositoryAwareTrait;
-
+class InvoiceService extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
 	public const SETTING_INVOICE_NUMBER          = '_kudos_invoice_number';
 	public const SETTING_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
 	private PDFService $pdf;
+	private TransactionRepository $transaction_repository;
+	private DonorRepository $donor_repository;
 
 	/**
 	 * InvoiceService constructor.
 	 *
-	 * @param PDFService $pdf PDF service.
+	 * @param PDFService            $pdf PDF service.
+	 * @param TransactionRepository $transaction_repository Transaction repository.
+	 * @param DonorRepository       $donor_repository Donor repository.
 	 */
-	public function __construct( PDFService $pdf ) {
-		$this->pdf = $pdf;
+	public function __construct( PDFService $pdf, TransactionRepository $transaction_repository, DonorRepository $donor_repository ) {
+		$this->pdf                    = $pdf;
+		$this->transaction_repository = $transaction_repository;
+		$this->donor_repository       = $donor_repository;
 	}
 
 	/**
@@ -105,8 +106,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		 *
 		 * @var ?TransactionEntity $transaction
 		 */
-		$transaction = $this->get_repository( TransactionRepository::class )
-							->get( $transaction_id );
+		$transaction = $this->transaction_repository->get( $transaction_id );
 
 		if ( null === $transaction ) {
 			$this->logger->debug( 'Error generating invoice: Transaction not found', [ 'transaction_id' => $transaction_id ] );
@@ -132,7 +132,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		];
 
 		// Append donor.
-		$donors = $this->get_repository( DonorRepository::class );
+		$donors = $this->donor_repository;
 		/** @var ?DonorEntity $donor */
 		$donor = $donors->find_one_by( [ 'id' => $transaction->donor_id ] );
 		if ( null !== $donor ) {

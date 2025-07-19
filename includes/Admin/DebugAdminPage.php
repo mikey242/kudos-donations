@@ -14,14 +14,10 @@ namespace IseardMedia\Kudos\Admin;
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 
-class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface, RepositoryAwareInterface {
-
-	use RepositoryAwareTrait;
+class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
 
 	private const LOG_DIR     = KUDOS_STORAGE_DIR . 'logs/';
 	private const TAB_LOG     = 'log';
@@ -45,15 +41,19 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	private string $current_tab;
 	private string $current_log_level = 'ALL';
 	private string $current_log_file;
+	private CampaignRepository $campaign_repository;
 
 	/**
 	 * Tools page constructor.
+	 *
+	 * @param CampaignRepository $campaign_repository The campaign repository.
 	 */
-	public function __construct() {
-		$this->current_tab      = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::TAB_ACTIONS; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->log_files        = $this->get_logs();
-		$log_file               = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
-		$this->current_log_file = file_exists( $log_file )
+	public function __construct( CampaignRepository $campaign_repository ) {
+		$this->campaign_repository = $campaign_repository;
+		$this->current_tab         = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::TAB_ACTIONS; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$this->log_files           = $this->get_logs();
+		$log_file                  = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
+		$this->current_log_file    = file_exists( $log_file )
 			? $log_file
 			: ( \is_array( $this->log_files ) && [] !== $this->log_files ? end( $this->log_files ) : '' );
 		$this->process_form_data();
@@ -195,7 +195,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 					case self::TAB_ACTIONS:
 						/** @var CampaignEntity[] $campaigns */
-						$campaigns = $this->get_repository( CampaignRepository::class )->all();
+						$campaigns = $this->campaign_repository->all();
 						?>
 
 						<p><strong>Please use the following actions only if you are having issues. Remember to back up your data

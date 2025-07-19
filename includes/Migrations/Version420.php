@@ -24,7 +24,7 @@ use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Helper\WpDb;
-use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
+use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use Psr\Log\LoggerInterface;
 
 class Version420 extends BaseMigration implements RepositoryAwareInterface {
@@ -32,16 +32,16 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	use RepositoryAwareTrait;
 
 	protected string $version = '4.2.0';
-	private MolliePaymentVendor $mollie;
+	private MolliePaymentProvider $mollie;
 
 	/**
 	 * Add MolliePaymentVendor for handling refresh.
 	 *
-	 * @param MolliePaymentVendor  $mollie_payment_vendor Mollie related functions.
-	 * @param WpDb                 $wpdb wpdb wrapper.
-	 * @param LoggerInterface|null $logger Logger interface.
+	 * @param MolliePaymentProvider $mollie_payment_vendor Mollie related functions.
+	 * @param WpDb                  $wpdb wpdb wrapper.
+	 * @param LoggerInterface|null  $logger Logger interface.
 	 */
-	public function __construct( MolliePaymentVendor $mollie_payment_vendor, WpDb $wpdb, ?LoggerInterface $logger = null ) {
+	public function __construct( MolliePaymentProvider $mollie_payment_vendor, WpDb $wpdb, ?LoggerInterface $logger = null ) {
 		parent::__construct( $wpdb, $logger );
 		$this->mollie = $mollie_payment_vendor;
 	}

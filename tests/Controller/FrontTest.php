@@ -6,8 +6,8 @@
 namespace Controller;
 
 use IseardMedia\Kudos\Controller\Front;
-use IseardMedia\Kudos\Vendor\PaymentVendor\MolliePaymentVendor;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
+use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use WP_UnitTestCase;
 
 /**
@@ -37,9 +37,9 @@ class FrontTest extends WP_UnitTestCase {
 	 * Test that plugin container is created.
 	 */
 	public function test_render_callback() {
-		$mollie_mock = $this->createMock(MolliePaymentVendor::class);
+		$mollie_mock = $this->createMock(MolliePaymentProvider::class);
 		$mollie_mock->method( 'is_vendor_ready' )->willReturn(true);
-		$vendor_factory = $this->createMock( PaymentVendorFactory::class );
+		$vendor_factory = $this->createMock( PaymentProviderFactory::class );
 		$vendor_factory->method('get_vendor')->willReturn($mollie_mock);
 
 		$front          = new Front( $vendor_factory );

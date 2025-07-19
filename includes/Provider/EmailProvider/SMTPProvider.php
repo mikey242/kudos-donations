@@ -9,29 +9,28 @@
 
 declare( strict_types=1 );
 
-namespace IseardMedia\Kudos\Vendor\EmailVendor;
+namespace IseardMedia\Kudos\Provider\EmailProvider;
 
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Provider\AbstractProvider;
 use IseardMedia\Kudos\Service\TwigService;
-use IseardMedia\Kudos\Vendor\AbstractVendor;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use WP_Error;
 
-/** @psalm-suppress PropertyNotSetInConstructor */
-class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
+class SMTPProvider extends AbstractProvider implements EmailProviderInterface {
 
-	public const SETTING_CUSTOM_SMTP = '_kudos_custom_smtp';
-	public const SETTING_SMTP_ENABLE = '_kudos_smtp_enable';
-	public const SETTING_EMAIL_BCC = '_kudos_email_bcc';
-	public const SETTING_SMTP_PASSWORD = '_kudos_smtp_password';
+	public const SETTING_CUSTOM_SMTP             = '_kudos_custom_smtp';
+	public const SETTING_SMTP_ENABLE             = '_kudos_smtp_enable';
+	public const SETTING_EMAIL_BCC               = '_kudos_email_bcc';
+	public const SETTING_SMTP_PASSWORD           = '_kudos_smtp_password';
 	public const SETTING_SMTP_PASSWORD_ENCRYPTED = '_kudos_smtp_password_encrypted';
-	private const TEMPLATE_RECEIPT = 'emails/receipt.html.twig';
-	private const TEMPLATE_MESSAGE = 'emails/message.html.twig';
+	private const TEMPLATE_RECEIPT               = 'emails/receipt.html.twig';
+	private const TEMPLATE_MESSAGE               = 'emails/message.html.twig';
 	private TwigService $twig;
-	private bool $enable_custom_smtp = false;
-	private string $bcc = '';
+	private bool $enable_custom_smtp  = false;
+	private string $bcc               = '';
 	private array $custom_smtp_config = [];
 
 	/**
@@ -108,10 +107,9 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * Initializes the mailer by modifying default config if setting
 	 * is enabled.
 	 *
-	 * @param PHPMailer $phpmailer WordPress' global PHPMailer instance.
-	 *
 	 * @throws Exception From PHPMailer.
 	 *
+	 * @param PHPMailer $phpmailer WordPress' global PHPMailer instance.
 	 */
 	public function phpmailer_init( PHPMailer $phpmailer ): void {
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
@@ -176,7 +174,7 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 			]
 		);
 
-		if(null === $body) {
+		if ( null === $body ) {
 			return false;
 		}
 
@@ -187,30 +185,33 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * Sends receipt to the donor.
 	 *
 	 * @param string $email The email address to send to.
-	 * @param array $args The array of arguments used for sending the email.
+	 * @param array  $args The array of arguments used for sending the email.
 	 */
 	public function send_receipt( string $email, array $args ): bool {
 
-		$args = wp_parse_args( $args, [
-			'text' => [
-				'preheader'         => __( 'This is a receipt for your recent donation on: ', 'kudos-donations' ),
-				'body'              => __( 'Thanks for your donation. This email is a receipt for your records.', 'kudos-donations' ),
-				'campaign'          => __( 'Campaign name', 'kudos-donations' ),
-				'order_id'          => __( 'Order ID', 'kudos-donations' ),
-				'date'              => __( 'Date', 'kudos-donations' ),
-				'description'       => __( 'Description', 'kudos-donations' ),
-				'amount'            => __( 'Amount', 'kudos-donations' ),
-				'total'             => __( 'Total', 'kudos-donations' ),
-				'thanks'            => __( 'Thanks', 'kudos-donations' ),
-				'cancel_sub'        => __( 'Want to cancel your subscription?', 'kudos-donations' ),
-				'cancel_sub_button' => __( 'Click here', 'kudos-donations' )
+		$args = wp_parse_args(
+			$args,
+			[
+				'text' => [
+					'preheader'         => __( 'This is a receipt for your recent donation on: ', 'kudos-donations' ),
+					'body'              => __( 'Thanks for your donation. This email is a receipt for your records.', 'kudos-donations' ),
+					'campaign'          => __( 'Campaign name', 'kudos-donations' ),
+					'order_id'          => __( 'Order ID', 'kudos-donations' ),
+					'date'              => __( 'Date', 'kudos-donations' ),
+					'description'       => __( 'Description', 'kudos-donations' ),
+					'amount'            => __( 'Amount', 'kudos-donations' ),
+					'total'             => __( 'Total', 'kudos-donations' ),
+					'thanks'            => __( 'Thanks', 'kudos-donations' ),
+					'cancel_sub'        => __( 'Want to cancel your subscription?', 'kudos-donations' ),
+					'cancel_sub_button' => __( 'Click here', 'kudos-donations' ),
+				],
 			]
-		] );
+		);
 
 		// Generate email body from args.
 		$body = $this->twig->render( self::TEMPLATE_RECEIPT, $args );
 
-		if(null === $body) {
+		if ( null === $body ) {
 			return false;
 		}
 
@@ -225,9 +226,9 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	/**
 	 * Email send function.
 	 *
-	 * @param string $to Recipient email address.
-	 * @param string $subject Email subject line.
-	 * @param string $body Body of email.
+	 * @param string                   $to Recipient email address.
+	 * @param string                   $subject Email subject line.
+	 * @param string                   $body Body of email.
 	 * @param array<array-key, string> $attachment Attachment.
 	 */
 	private function send(
@@ -278,7 +279,6 @@ class SMTPVendor extends AbstractVendor implements EmailVendorInterface {
 	 * Encrypts the SMTP password before storing it in the database.
 	 *
 	 * @param null|string $raw_password The raw password.
-	 *
 	 * @return string The masked password.
 	 */
 	public function encrypt_smtp_password( ?string $raw_password ): string {

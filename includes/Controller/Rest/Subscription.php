@@ -17,9 +17,9 @@ use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Repository\BaseRepository;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -35,18 +35,18 @@ class Subscription extends BaseRepositoryRestController {
 	 * @var SubscriptionRepository
 	 */
 	protected BaseRepository $repository;
-	private ?PaymentVendorInterface $vendor;
+	private ?PaymentProviderInterface $vendor;
 
 	/**
 	 * Subscription routes constructor.
 	 *
-	 * @param PaymentVendorFactory   $factory Current vendor.
+	 * @param PaymentProviderFactory $factory Current vendor.
 	 * @param SubscriptionRepository $subscription Subscription repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory, SubscriptionRepository $subscription ) {
+	public function __construct( PaymentProviderFactory $factory, SubscriptionRepository $subscription ) {
 		$this->rest_base  = 'subscription';
 		$this->repository = $subscription;
-		$this->vendor     = $factory->get_vendor();
+		$this->vendor     = $factory->get_provider();
 	}
 
 	/**

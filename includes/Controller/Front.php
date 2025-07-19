@@ -11,23 +11,20 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller;
 
+use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
-use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\SettingsService;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class Front extends BaseController implements HasSettingsInterface, RepositoryAwareInterface {
-
-	use RepositoryAwareTrait;
+class Front extends AbstractRegistrable implements HasSettingsInterface {
 
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	public const STYLE_HANDLE_VIEW          = 'kudos-fonts';
@@ -37,15 +34,18 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 		self::SCRIPT_HANDLE_VIEW,
 		self::SCRIPT_HANDLE_EDITOR,
 	];
-	private PaymentVendorInterface $vendor;
+	private PaymentProviderInterface $vendor;
+	private TransactionRepository $transaction_repository;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param PaymentVendorFactory $factory Payment vendor factory.
+	 * @param PaymentProviderFactory $factory Payment vendor factory.
+	 * @param TransactionRepository  $transaction_repository Transaction repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory ) {
-		$this->vendor = $factory->get_vendor();
+	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository ) {
+		$this->transaction_repository = $transaction_repository;
+		$this->vendor                 = $factory->get_provider();
 	}
 
 	/**
@@ -245,7 +245,7 @@ class Front extends BaseController implements HasSettingsInterface, RepositoryAw
 						/**
 						 * @var ?TransactionEntity $transaction
 						 */
-						$transaction = $this->get_repository( TransactionRepository::class )->get( (int) $transaction_id );
+						$transaction = $this->transaction_repository->get( (int) $transaction_id );
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
 							$campaign_id = $transaction->campaign_id;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Authentication based helper.
+ * Encryption service.
  *
  * @link https://github.com/mikey242/kudos-donations/
  * @see https://permanenttourist.ch/2023/03/storing-credentials-securely-in-wordpress-plugin-settings/
@@ -26,6 +26,13 @@ class EncryptionService extends AbstractRegistrable {
 	public function register(): void {
 		$this->key  = $this->get_key();
 		$this->salt = $this->get_salt();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function get_registration_action_priority(): int {
+		return 5;
 	}
 
 	/**
