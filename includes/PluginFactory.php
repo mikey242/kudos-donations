@@ -19,6 +19,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class PluginFactory {
 
+	private static ?Kernel $kernel = null;
+
 	/**
 	 * Create and return an instance of the plugin.
 	 *
@@ -34,8 +36,9 @@ class PluginFactory {
 			return $plugin;
 		}
 
-		$kernel    = new Kernel( false );
-		$container = $kernel->get_container();
+		$kernel       = new Kernel( false );
+		self::$kernel = $kernel;
+		$container    = $kernel->get_container();
 
 		if ( null === $container ) {
 			throw new \RuntimeException( 'Error fetching container' );
@@ -48,5 +51,19 @@ class PluginFactory {
 		}
 
 		return $plugin;
+	}
+
+	/**
+	 * Returns the kernel.
+	 *
+	 * @throws \RuntimeException If kernel not yet booted.
+	 *
+	 * @return Kernel Instance of kernel with container getter.
+	 */
+	public static function get_kernel(): Kernel {
+		if ( null === self::$kernel ) {
+			throw new \RuntimeException( 'Kernel has not been booted. Call create_plugin() first.' );
+		}
+		return self::$kernel;
 	}
 }

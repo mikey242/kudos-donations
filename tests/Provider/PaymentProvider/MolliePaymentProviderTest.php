@@ -1,10 +1,13 @@
 <?php
-namespace Vendor\PaymentVendor;
+namespace IseardMedia\Kudos\Tests\Provider\PaymentProvider;
 
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\RequestException;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Customer;
@@ -16,7 +19,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @covers \IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
  */
-class MolliePaymentVendorTest extends \BaseTestCase {
+class MolliePaymentProviderTest extends BaseTestCase {
 
 	private MolliePaymentProvider $vendor;
 	private MollieApiClient $api_mock;
@@ -26,9 +29,12 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 
 		$this->api_mock = $this->createMock(MollieApiClient::class);
 		$logger = $this->createMock(LoggerInterface::class);
-		$this->vendor   = new MolliePaymentProvider($this->api_mock);
+		$transactions = $this->get_from_container(TransactionRepository::class);
+		$donors = $this->get_from_container(DonorRepository::class);
+		$campaigns = $this->get_from_container(CampaignRepository::class);
+		$subscriptions = $this->get_from_container(SubscriptionRepository::class);
+		$this->vendor   = new MolliePaymentProvider($this->api_mock, $campaigns, $transactions, $donors, $subscriptions);
 		$this->vendor->setLogger($logger);
-		$this->vendor->set_repository_manager($this->get_repository_manager());
 	}
 
 	/**
@@ -128,7 +134,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 
 		// Setup required entities
 		$campaign = new CampaignEntity(['title' => 'Fail campaign']);
-		$campaign_id = $this->get_repository(CampaignRepository::class)->insert($campaign);
+		$campaign_id = $this->get_from_container(CampaignRepository::class)->insert($campaign);
 		$payment_args = [
 			'amount' => [ 'currency' => 'EUR', 'value' => '10.00' ],
 			'description' => 'Fail test',
@@ -142,7 +148,7 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 			'name' => 'Fail Tester',
 		];
 		/** @var TransactionRepository $transactions */
-		$transactions = $this->get_repository(TransactionRepository::class);
+		$transactions = $this->get_from_container(TransactionRepository::class);
 
 		$transaction = new TransactionEntity(['title' => 'Failing Transaction']);
 		$transaction_id = $transactions->insert($transaction);
@@ -200,12 +206,12 @@ class MolliePaymentVendorTest extends \BaseTestCase {
 			'name' => 'John Smith'
 		];
 		/** @var TransactionRepository $transactions */
-		$transactions = $this->get_repository(TransactionRepository::class);
+		$transactions = $this->get_from_container(TransactionRepository::class);
 
 		$payment_args = array_merge($default_args, $overrides);
 
 		$campaign = new CampaignEntity(['show_return_message' => $payment_args['show_return_message'] ?? false]);
-		$campaign_id = $this->get_repository(CampaignRepository::class)->insert($campaign);
+		$campaign_id = $this->get_from_container(CampaignRepository::class)->insert($campaign);
 
 		$payment_args['campaign_id'] = $campaign_id;
 

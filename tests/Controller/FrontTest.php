@@ -1,11 +1,14 @@
 <?php
 /**
- * Plugin tests
+ * Front tests
  */
 
-namespace Controller;
+namespace IseardMedia\Kudos\Tests\Controller;
 
 use IseardMedia\Kudos\Controller\Front;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
+use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
+use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use WP_UnitTestCase;
@@ -40,9 +43,9 @@ class FrontTest extends WP_UnitTestCase {
 		$mollie_mock = $this->createMock(MolliePaymentProvider::class);
 		$mollie_mock->method( 'is_vendor_ready' )->willReturn(true);
 		$vendor_factory = $this->createMock( PaymentProviderFactory::class );
-		$vendor_factory->method('get_vendor')->willReturn($mollie_mock);
+		$vendor_factory->method('get_provider')->willReturn($mollie_mock);
 
-		$front          = new Front( $vendor_factory );
+		$front          = new Front( $vendor_factory, new TransactionRepository(new WpDb(), new TransactionSchema()) );
 		$args           = [
 			'campaign_id'  => 291,
 			'button_label' => 'Donate now',
