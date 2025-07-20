@@ -3,7 +3,7 @@
  * UpgradeHandler tests.
  */
 
-namespace Container\Handler;
+namespace IseardMedia\Kudos\Tests\Container\Handler;
 
 use Plugin_Upgrader;
 use WP_UnitTestCase;

@@ -55,7 +55,7 @@
 	},
 	"scripts": {
 		"lint": "vendor/bin/phpcs --severity=1 --report=full --report-source",
-		"phpstan": "vendor/bin/phpstan analyze includes",
+		"phpstan": "vendor/bin/phpstan",
 		"build-production": [
 			"composer install --optimize-autoloader --no-dev --prefer-dist",
 			"npm run build"
@@ -107,7 +107,8 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"IseardMedia\\Kudos\\Dev\\": "includes-dev/"
+			"IseardMedia\\Kudos\\Dev\\": "includes-dev/",
+			"IseardMedia\\Kudos\\Tests\\": "tests/"
 		}
 	}
 }

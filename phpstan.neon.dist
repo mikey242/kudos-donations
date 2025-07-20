@@ -14,6 +14,10 @@ parameters:
   scanDirectories:
     - third-party/
 
+  scanFiles:
+    - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+    - vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
+
   ignoreErrors:
     # example:
     # - '#Call to an undefined method.*#'

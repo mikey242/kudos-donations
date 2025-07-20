@@ -3,9 +3,9 @@
  * DonorRepository tests.
  */
 
-namespace Repository;
+namespace IseardMedia\Kudos\Tests\Repository;
 
-use BaseTestCase;
+use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
@@ -19,7 +19,7 @@ class DonorRepositoryTest extends BaseTestCase {
 
 	public function set_up(): void {
 		parent::set_up();
-		$this->donor_repository = $this->get_repository(DonorRepository::class);
+		$this->donor_repository = $this->get_from_container(DonorRepository::class);
 	}
 
 	/**

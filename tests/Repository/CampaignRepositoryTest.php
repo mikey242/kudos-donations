@@ -3,14 +3,13 @@
  * CampaignRepository tests.
  */
 
-namespace Repository;
+namespace IseardMedia\Kudos\Tests\Repository;
 
-use BaseTestCase;
+use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
-use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
 
 /**
  * @covers \IseardMedia\Kudos\Domain\Repository\CampaignRepository
@@ -21,7 +20,7 @@ class CampaignRepositoryTest extends BaseTestCase {
 
 	public function set_up(): void {
 		parent::set_up();
-		$this->campaign_repository = $this->get_repository(CampaignRepository::class);
+		$this->campaign_repository = $this->get_from_container(CampaignRepository::class);
 	}
 
 	/**
@@ -137,7 +136,7 @@ class CampaignRepositoryTest extends BaseTestCase {
 		$campaign = new CampaignEntity([ 'title' => 'Linked Campaign']);
 		$campaign_id = $this->campaign_repository->insert($campaign);
 
-		$transaction_repo = new TransactionRepository($this->wpdb, new TransactionSchema());
+		$transaction_repo = $this->get_from_container(TransactionRepository::class);
 
 		// Create 2 transactions linked to the campaign
 		$transaction_1 = new TransactionEntity([
@@ -170,7 +169,7 @@ class CampaignRepositoryTest extends BaseTestCase {
 	public function test_get_total_returns_sum_of_paid_transactions(): void {
 		$campaign = new CampaignEntity([ 'title' => 'Total Campaign']);
 		$campaign_id = $this->campaign_repository->insert($campaign);
-		$transaction_repo = new TransactionRepository($this->wpdb, new TransactionSchema());
+		$transaction_repo = $this->get_from_container(TransactionRepository::class);
 
 		$transaction_1 = new TransactionEntity([
 			'campaign_id' => $campaign_id,

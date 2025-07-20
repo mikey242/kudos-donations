@@ -3,9 +3,9 @@
  * TransactionRepository tests.
  */
 
-namespace Repository;
+namespace IseardMedia\Kudos\Tests\Repository;
 
-use BaseTestCase;
+use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
@@ -22,8 +22,8 @@ class TransactionRepositoryTest extends BaseTestCase {
 	public function set_up(): void {
 		parent::set_up();
 
-		$this->transaction_repository = $this->get_repository(TransactionRepository::class);
-		$campaign_repository          = $this->get_repository(CampaignRepository::class);
+		$this->transaction_repository = $this->get_from_container(TransactionRepository::class);
+		$campaign_repository          = $this->get_from_container(CampaignRepository::class);
 
 		$campaign = new CampaignEntity([ 'title' => 'Default Campaign']);
 		$this->campaign_id = $campaign_repository->insert($campaign);
