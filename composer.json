@@ -37,6 +37,7 @@
 	},
 	"require-dev": {
 		"fakerphp/faker": "^1.24",
+		"johnbillion/wp-compat": "^1.3",
 		"php-stubs/wordpress-tests-stubs": "^6.3",
 		"phpcompatibility/php-compatibility": "^9.3",
 		"phpcompatibility/phpcompatibility-wp": "*",
@@ -55,7 +56,7 @@
 	},
 	"scripts": {
 		"lint": "vendor/bin/phpcs --severity=1 --report=full --report-source",
-		"phpstan": "vendor/bin/phpstan",
+		"phpstan": "vendor/bin/phpstan analyse --memory-limit=2048M",
 		"build-production": [
 			"composer install --optimize-autoloader --no-dev --prefer-dist",
 			"npm run build"

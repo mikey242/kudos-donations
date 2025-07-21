@@ -1,0 +1,25 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Path in require_once\(\) "\./wp\-admin/includes/upgrade\.php" is not a file or it does not exist\.$#'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: includes/Helper/WpDb.php
+
+		-
+			message: '#^Path in require_once\(\) "\.//wp\-admin/includes/file\.php" is not a file or it does not exist\.$#'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: includes/Kernel.php
+
+		-
+			message: '#^Property IseardMedia\\Kudos\\Kernel\:\:\$container \(Psr\\Container\\ContainerInterface\|null\) does not accept KudosContainer\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: includes/Kernel.php
+
+		-
+			message: '#^Path in require_once\(\) "\./wp\-admin/includes/file\.php" is not a file or it does not exist\.$#'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: includes/Service/CacheService.php
