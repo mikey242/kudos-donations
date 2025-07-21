@@ -32,11 +32,24 @@ if ( ! \defined( 'WPINC' ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-require_once __DIR__ . '/includes/constants.php';
+\define( 'KUDOS_VERSION', '4.2.0' );
+\define( 'KUDOS_DB_VERSION', '4.2.0' );
+\define( 'KUDOS_PLUGIN_FILE', __FILE__ );
+\define( 'KUDOS_PLUGIN_URL', plugin_dir_url( KUDOS_PLUGIN_FILE ) );
+\define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( KUDOS_PLUGIN_FILE ) );
+\define( 'KUDOS_CACHE_DIR', WP_CONTENT_DIR . '/cache/kudos-donations/' );
+\define( 'KUDOS_DEBUG', (bool) get_option( '_kudos_debug_mode' ) );
 
-require KUDOS_PLUGIN_DIR . 'includes/Autoloader.php';
+if ( \function_exists( 'wp_upload_dir' ) ) {
+	$upload_dir = wp_upload_dir();
+	if ( false === $upload_dir['error'] ) {
+		\define( 'KUDOS_STORAGE_URL', $upload_dir['baseurl'] . '/kudos-donations/' );
+		\define( 'KUDOS_STORAGE_DIR', $upload_dir['basedir'] . '/kudos-donations/' );
+	}
+}
 
 // Autoloader for plugin.
+require KUDOS_PLUGIN_DIR . 'includes/Autoloader.php';
 if ( ! Autoloader::init() ) {
 	return;
 }
@@ -49,14 +62,14 @@ try {
 	$_ENV['APP_ENV'] = 'production';
 }
 
-// Action Scheduler.
-if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
-	include KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
-}
-
 // Set the environment as production if not specified.
 if ( ! isset( $_ENV['APP_ENV'] ) || '' === $_ENV['APP_ENV'] ) {
 	$_ENV['APP_ENV'] = 'production';
+}
+
+// Action Scheduler.
+if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
+	include KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
 }
 
 // Add additional env variables based on WordPress environment.

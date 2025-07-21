@@ -234,11 +234,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * Main query method for fetching rows.
 	 *
 	 * @param array $args The args to pass to the query.
-	 * @return TEntity[]
 	 *
 	 * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+	 * @return TEntity[]
 	 *
-	 * @psalm-param array{
+	 * @phpstan-param array{
 	 * columns?: list<string>|array<string>,
 	 * where?: array<string, scalar>,
 	 * orderby?: string,
