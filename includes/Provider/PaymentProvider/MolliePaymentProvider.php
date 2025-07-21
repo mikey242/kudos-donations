@@ -120,7 +120,8 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 		return [
 			'ready'     => $ready,
 			'recurring' => $ready && $this->can_use_recurring(),
-			'text'      => \sprintf( __( '%%s ready', 'kudos-donations' ), self::get_name() ) . ( \is_string( $name ) && '' !== $name ? ' (' . $name . ')' : '' ),
+			// translators: %s is the name of the payment vendor (e.g Mollie).
+			'text'      => \sprintf( __( '%s ready', 'kudos-donations' ), self::get_name() ) . ( \is_string( $name ) && '' !== $name ? ' (' . $name . ')' : '' ),
 		];
 	}
 
