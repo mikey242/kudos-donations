@@ -178,7 +178,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @return int|false The inserted or updated row ID, or false on failure.
 	 */
 	public function upsert( BaseEntity $entity ) {
-		if ( $entity->id ) {
+		if ( $entity->id ?? false ) {
 			$result = $this->update( $entity ) ? $entity->id : false;
 		} else {
 			$result = $this->insert( $entity );
