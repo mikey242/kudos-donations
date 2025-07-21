@@ -96,6 +96,7 @@ class Plugin implements LoggerAwareInterface {
 			'kudos_global_localization',
 			function ( array $localization ): array {
 				$localization['version'] = KUDOS_VERSION;
+				$localization['env']     = KUDOS_APP_ENV;
 				return $localization;
 			}
 		);
