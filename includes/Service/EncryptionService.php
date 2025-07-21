@@ -17,6 +17,8 @@ use IseardMedia\Kudos\Container\AbstractRegistrable;
 
 class EncryptionService extends AbstractRegistrable {
 
+	private const CIPHER  = 'aes-256-ctr';
+	private const VERSION = 'k1';
 	private string $key;
 	private string $salt;
 
@@ -36,41 +38,41 @@ class EncryptionService extends AbstractRegistrable {
 	}
 
 	/**
-	 * Verifies the provided token against the post id.
+	 * Verifies the provided token against the entity id.
 	 *
-	 * @throws Exception If invalid post_id supplied.
+	 * @throws Exception If invalid entity_id supplied.
 	 *
-	 * @param int    $post_id The ID of the post.
+	 * @param int    $entity_id The ID of the entity.
 	 * @param string $token The token.
 	 */
-	public static function verify_token( int $post_id, string $token ): bool {
+	public static function verify_token( int $entity_id, string $token ): bool {
 		return hash_equals(
-			self::generate_token( $post_id ),
+			self::generate_token( $entity_id ),
 			$token
 		);
 	}
 
 	/**
-	 * Generates a unique token based on the post id.
+	 * Generates a unique token based on the entity id.
 	 *
-	 * @throws Exception If post ID invalid.
+	 * @throws Exception If entity ID invalid.
 	 *
-	 * @param int $post_id The post id to be hashed.
+	 * @param int $entity_id The entity id to be hashed.
 	 */
-	public static function generate_token( int $post_id ): ?string {
-		if ( $post_id <= 0 ) {
-			throw new Exception( \sprintf( 'Invalid post ID supplied to generate_token: %s', (int) $post_id ) );
+	public static function generate_token( int $entity_id ): ?string {
+		if ( $entity_id <= 0 ) {
+			throw new Exception( \sprintf( 'Invalid entity ID supplied to generate_token: %s', (int) $entity_id ) );
 		}
 
-		return hash_hmac( 'sha256', (string) $post_id, KUDOS_SALT );
+		return wp_hash( (string) $entity_id, 'auth', 'sha256' );
 	}
 
 	/**
 	 * Gets the default encryption key, which should ideally be added to wp-config.php.
 	 */
 	private function get_key(): string {
-		if ( \defined( 'KUDOS_AUTH_KEY' ) && '' !== KUDOS_AUTH_KEY ) {
-			return KUDOS_AUTH_KEY;
+		if ( \defined( 'AUTH_KEY' ) && '' !== AUTH_KEY ) {
+			return AUTH_KEY;
 		}
 
 		if ( \defined( 'LOGGED_IN_KEY' ) && '' !== LOGGED_IN_KEY ) {
@@ -84,8 +86,8 @@ class EncryptionService extends AbstractRegistrable {
 	 * Gets the salt, which should ideally be added to wp-config.php.
 	 */
 	private function get_salt(): string {
-		if ( \defined( 'KUDOS_AUTH_SALT' ) && '' !== KUDOS_AUTH_SALT ) {
-			return KUDOS_AUTH_SALT;
+		if ( \defined( 'AUTH_SALT' ) && '' !== AUTH_SALT ) {
+			return AUTH_SALT;
 		}
 
 		if ( \defined( 'LOGGED_IN_SALT' ) && '' !== LOGGED_IN_SALT ) {
@@ -101,25 +103,25 @@ class EncryptionService extends AbstractRegistrable {
 	 * @param string $password Password.
 	 * @return string|false
 	 */
-	public function encrypt_password( string $password ) {
+	public function encrypt( string $password ) {
 		if ( ! \extension_loaded( 'openssl' ) ) {
 			$this->logger->error( 'Tried to encrypt password before openssl was loaded.' );
 			return $password;
 		}
 
-		$method = 'aes-256-ctr';
-		$iv_len = openssl_cipher_iv_length( $method );
+		$iv_len = openssl_cipher_iv_length( self::CIPHER );
 		$iv     = openssl_random_pseudo_bytes( $iv_len );
 
-		$encrypted_value = openssl_encrypt( $password . $this->salt, $method, $this->key, 0, $iv );
+		$encrypted_value = openssl_encrypt( $password . $this->salt, self::CIPHER, $this->key, 0, $iv );
 
 		if ( ! $encrypted_value ) {
 			$this->logger->error( 'Error encrypting password.' );
 			return false;
 		}
 
+		$mac = hash_hmac( 'sha256', $iv . $encrypted_value, $this->key, true );
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-		return base64_encode( $iv . $encrypted_value );
+		return base64_encode( self::VERSION . '|' . $iv . $mac . $encrypted_value );
 	}
 
 	/**
@@ -128,7 +130,7 @@ class EncryptionService extends AbstractRegistrable {
 	 * @param string|array $raw_value The encrypted password.
 	 * @return string|array|false Returns string if parameter is string and array if parameter is array.
 	 */
-	public function decrypt_password( $raw_value ) {
+	public function decrypt( $raw_value ) {
 		// No raw value.
 		if ( ! $raw_value ) {
 			return '';
@@ -142,7 +144,7 @@ class EncryptionService extends AbstractRegistrable {
 		// If parameter is array, rerun with string as parameter.
 		if ( \is_array( $raw_value ) ) {
 			return array_map(
-				fn( $value ) => $this->decrypt_password( $value ),
+				fn( $value ) => $this->decrypt( $value ),
 				$raw_value
 			);
 		}
@@ -152,17 +154,33 @@ class EncryptionService extends AbstractRegistrable {
 
 		// Decoding base64 returned false, something went wrong.
 		if ( ! $raw_value ) {
+			$this->logger->error( 'Error decrypting. Unable to decode base64 string.' );
 			return false;
 		}
 
-		$method = 'aes-256-ctr';
-		$iv_len = openssl_cipher_iv_length( $method );
-		$iv     = substr( $raw_value, 0, $iv_len );
+		$iv_len = openssl_cipher_iv_length( self::CIPHER );
 
-		$raw_value = substr( $raw_value, $iv_len );
+		if ( strpos( $raw_value, 'k1|' ) === 0 ) {
+			$decoded    = substr( $raw_value, 3 ); // Remove version tag.
+			$mac_len    = 32; // SHA256 HMAC, 256 bits = 32 bytes.
+			$iv         = substr( $decoded, 0, $iv_len );
+			$mac        = substr( $decoded, $iv_len, $mac_len );
+			$ciphertext = substr( $decoded, $iv_len + $mac_len );
 
-		$value = openssl_decrypt( $raw_value, $method, $this->key, 0, $iv );
+			$calc_mac = hash_hmac( 'sha256', $iv . $ciphertext, $this->key, true );
+			if ( ! hash_equals( $mac, $calc_mac ) ) {
+				$this->logger->error( 'HMAC verification failed.' );
+				return false;
+			}
+		} else {
+			$decoded    = $raw_value;
+			$iv         = substr( $decoded, 0, $iv_len );
+			$ciphertext = substr( $decoded, $iv_len );
+		}
+
+		$value = openssl_decrypt( $ciphertext, self::CIPHER, $this->key, 0, $iv );
 		if ( ! $value || substr( $value, -\strlen( $this->salt ) ) !== $this->salt ) {
+			$this->logger->error( 'Error decrypting. Salts do not match.' );
 			return false;
 		}
 
