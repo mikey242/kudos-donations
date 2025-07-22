@@ -525,15 +525,17 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 
 				// Create subscription entity.
 				$subscription_entity = new SubscriptionEntity(
-					[
-						'frequency'      => $interval,
-						'years'          => $years,
-						'value'          => $value,
-						'currency'       => $currency,
-						'transaction_id' => $transaction->id,
-						'donor_id'       => $transaction->donor_id,
-						'campaign_id'    => $transaction->campaign_id,
-					]
+					$subscriptions->get_schema()->sanitize_data_from_schema(
+						[
+							'frequency'      => $interval,
+							'years'          => $years,
+							'value'          => $value,
+							'currency'       => $currency,
+							'transaction_id' => $transaction->id,
+							'donor_id'       => $transaction->donor_id,
+							'campaign_id'    => $transaction->campaign_id,
+						]
+					)
 				);
 				$subscription_id     = $subscriptions->insert( $subscription_entity );
 
