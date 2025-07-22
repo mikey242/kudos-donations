@@ -6,16 +6,14 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useMemo } from '@wordpress/element';
 import countryList from 'react-select-country-list';
 import { SelectControl, TextControl } from '../controls';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 
 interface AddressTabProps {
 	campaign: Campaign;
 }
 
 export const AddressTab = ({ campaign }: AddressTabProps) => {
-	const {
-		meta: { address_title, address_description, address_required },
-	} = campaign;
+	const { address_title, address_description, address_required } = campaign;
 	const countryOptions = useMemo(() => countryList().getData(), []);
 	const { setFocus } = useFormContext();
 	const optional = !address_required

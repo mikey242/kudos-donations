@@ -2,9 +2,9 @@
 /**
  * Front related functions.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -13,17 +13,19 @@ namespace IseardMedia\Kudos\Controller;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Assets;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\SettingsService;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
 use WP_REST_Request;
 use WP_REST_Server;
 
 class Front extends AbstractRegistrable implements HasSettingsInterface {
+
 	public const SETTING_ALWAYS_LOAD_ASSETS = '_kudos_always_load_assets';
 	public const STYLE_HANDLE_VIEW          = 'kudos-fonts';
 	public const SCRIPT_HANDLE_VIEW         = 'kudos-view-script';
@@ -32,15 +34,18 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		self::SCRIPT_HANDLE_VIEW,
 		self::SCRIPT_HANDLE_EDITOR,
 	];
-	private PaymentVendorInterface $vendor;
+	private PaymentProviderInterface $vendor;
+	private TransactionRepository $transaction_repository;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param PaymentVendorFactory $factory Payment vendor factory.
+	 * @param PaymentProviderFactory $factory Payment vendor factory.
+	 * @param TransactionRepository  $transaction_repository Transaction repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory ) {
-		$this->vendor = $factory->get_vendor();
+	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository ) {
+		$this->transaction_repository = $transaction_repository;
+		$this->vendor                 = $factory->get_provider();
 	}
 
 	/**
@@ -153,6 +158,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 					'kudos'
 				);
 				$this->enqueue_assets();
+
 				return $this->kudos_render_callback( $args );
 			}
 		);
@@ -176,13 +182,14 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 		}
 
 		// Check if the current vendor is connected.
-		if ( ! $this->vendor->is_ready() ) {
+		if ( ! $this->vendor->is_vendor_ready() ) {
 			if ( current_user_can( 'manage_options' ) ) {
 				$message = 'Kudos Donations: ' . \sprintf(
 				/* translators: %s: Payment vendor (e.g. Mollie). */
 					__( '%s not connected.', 'kudos-donations' ),
 					$this->vendor::get_name()
 				);
+
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
 			}
 		}
@@ -222,7 +229,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * Handles the various query variables and shows relevant modals.
 	 */
 	public function handle_query_variables(): void {
-		if ( isset( $_REQUEST['kudos_action'] ) && -1 !== $_REQUEST['kudos_action'] ) {
+		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
 
 			// Enqueue script / style in case we are on another page.
@@ -232,16 +239,20 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				case 'order_complete':
 					$nonce          = isset( $_REQUEST['kudos_nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_nonce'] ) ) : '';
 					$transaction_id = isset( $_REQUEST['kudos_transaction_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['kudos_transaction_id'] ) ) : '';
+
 					// Return message modal.
 					if ( ! empty( $transaction_id ) && ! empty( $nonce ) ) {
-						$transaction = get_post( $transaction_id );
+						/**
+						 * @var ?TransactionEntity $transaction
+						 */
+						$transaction = $this->transaction_repository->get( (int) $transaction_id );
 
 						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
-							$campaign_id = $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID};
+							$campaign_id = $transaction->campaign_id;
 
 							$this->payment_status_modal_html(
-								$transaction_id,
-								$campaign_id
+								(int) $transaction_id,
+								$campaign_id,
 							);
 						}
 					}
@@ -258,10 +269,10 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 					);
 					$response = rest_do_request( $request );
 					$data     = $response->get_data();
-						$this->message_modal_html(
-							$data['message'],
-							$response->is_error() ? __( 'Please contact support.', 'kudos-donations' ) : __( 'Thanks for your support!', 'kudos-donations' )
-						);
+					$this->message_modal_html(
+						$data['message'],
+						$response->is_error() ? __( 'Please contact support.', 'kudos-donations' ) : __( 'Thanks for your support!', 'kudos-donations' )
+					);
 					break;
 				default:
 					$this->message_modal_html(
@@ -295,12 +306,12 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	/**
 	 * Create message modal with supplied header and body text.
 	 *
-	 * @param string $transaction_id The transaction id.
-	 * @param string $campaign_id The campaign id.
+	 * @param int $transaction_id The transaction id.
+	 * @param int $campaign_id The campaign id.
 	 */
-	private function payment_status_modal_html( string $transaction_id, string $campaign_id ): void {
+	private function payment_status_modal_html( int $transaction_id, int $campaign_id ): void {
 		echo wp_kses(
-			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s'></div>", $transaction_id, $campaign_id ),
+			\sprintf( "<div class='kudos-donations kudos-transaction-status' data-transaction='%s' data-campaign='%s' ></div>", $transaction_id, $campaign_id ),
 			[
 				'div' => [
 					'class'            => [],

@@ -2,9 +2,9 @@
 /**
  * Main Plugin class.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -13,14 +13,14 @@ namespace IseardMedia\Kudos;
 
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
+use IseardMedia\Kudos\Container\SafeLoggerTrait;
 use IseardMedia\Kudos\Service\CacheService;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use Throwable;
 
 class Plugin implements LoggerAwareInterface {
 
-	use LoggerAwareTrait;
+	use SafeLoggerTrait;
 
 	private ActivationHandler $activation_handler;
 	private RegistrableHandler $registrable_handler;
@@ -53,6 +53,7 @@ class Plugin implements LoggerAwareInterface {
 	 */
 	public function on_plugin_activation(): void {
 		CacheService::recursively_clear_cache();
+		flush_rewrite_rules();
 		$this->activation_handler->process();
 		$this->logger->info(
 			'Plugin activated.',
@@ -93,8 +94,9 @@ class Plugin implements LoggerAwareInterface {
 	private function add_global_localization_data(): void {
 		add_filter(
 			'kudos_global_localization',
-			function ( $localization ) {
+			function ( array $localization ): array {
 				$localization['version'] = KUDOS_VERSION;
+				$localization['env']     = KUDOS_APP_ENV;
 				return $localization;
 			}
 		);
@@ -109,7 +111,7 @@ class Plugin implements LoggerAwareInterface {
 			$this->on_plugin_loaded();
 			do_action( 'kudos_donations_loaded' );
 		} catch ( Throwable $e ) {
-			$this->logger->error(
+			$this->get_logger()->error(
 				$e->getMessage(),
 				[
 					'file' => $e->getFile(),

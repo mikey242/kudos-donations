@@ -2,9 +2,9 @@
 /**
  * Mailer service.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -13,28 +13,35 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\SubscriptionPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorFactory;
-use IseardMedia\Kudos\Vendor\EmailVendor\EmailVendorInterface;
+use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderFactory;
+use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderInterface;
 
 class MailerService extends AbstractRegistrable implements HasSettingsInterface {
-
 	public const SETTING_EMAIL_VENDOR         = '_kudos_email_vendor';
 	public const SETTING_EMAIL_RECEIPT_ENABLE = '_kudos_email_receipt_enable';
 	public const SETTING_EMAIL_SHOW_CAMPAIGN  = '_kudos_email_show_campaign_name';
-	private EmailVendorInterface $vendor;
+	private ?EmailProviderInterface $vendor;
+	private TransactionRepository $transaction_repository;
+	private SubscriptionRepository $subscription_repository;
 
 	/**
 	 * MailerService constructor.
 	 *
-	 * @param EmailVendorFactory $vendor The currently configured email vendor.
+	 * @param EmailProviderFactory   $vendor The currently configured email vendor.
+	 * @param TransactionRepository  $transaction_repository Transaction repository.
+	 * @param SubscriptionRepository $subscription_repository Subscription repository.
 	 */
-	public function __construct( EmailVendorFactory $vendor ) {
-		$this->vendor = $vendor->get_vendor();
+	public function __construct( EmailProviderFactory $vendor, TransactionRepository $transaction_repository, SubscriptionRepository $subscription_repository ) {
+		$this->vendor                  = $vendor->get_provider();
+		$this->transaction_repository  = $transaction_repository;
+		$this->subscription_repository = $subscription_repository;
 	}
 
 	/**
@@ -56,68 +63,87 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	/**
 	 * Sends receipt to the donor.
 	 *
-	 * @param int $donor_id Donor id.
 	 * @param int $transaction_id Transaction id.
 	 */
-	public function send_receipt( int $donor_id, int $transaction_id ): bool {
+	public function send_receipt( int $transaction_id ): bool {
 		// Check if setting enabled.
 		if ( ! get_option( self::SETTING_EMAIL_RECEIPT_ENABLE ) ) {
 			return false;
 		}
 
-		// Assign attachment.
-		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction_id );
+		$this->logger->debug( 'Receipt emails enabled, setting up email.', [ 'transaction_id' => $transaction_id ] );
 
-		// Get posts.
-		$donor       = get_post( $donor_id );
-		$transaction = get_post( $transaction_id );
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->transaction_repository->get( $transaction_id );
+		/** @var DonorEntity $donor */
+		$donor = $this->transaction_repository->get_donor( $transaction );
 
 		// Email address.
-		$email = $donor->{DonorPostType::META_FIELD_EMAIL};
+		$email = $donor->email;
+
+		// Switch to donor's locale.
+		$locale = $donor->locale;
+		if ( $locale ) {
+			$this->logger->debug( "Switching locale to $locale" );
+			Utils::switch_locale( $locale );
+		}
+
+		// Bail if no email address.
+		if ( ! $email ) {
+			$this->logger->debug( 'Cannot send email: donor has no email address', [ 'donor' => $donor ] );
+			return false;
+		}
+
+		// Assign attachment.
+		$attachments = (string) apply_filters( 'kudos_receipt_attachment', [], $transaction->id );
 
 		// Get campaign name if enabled.
 		$campaign_name = '';
 		if ( get_option( self::SETTING_EMAIL_SHOW_CAMPAIGN ) ) {
-			$campaign      = get_post( $transaction->{TransactionPostType::META_FIELD_CAMPAIGN_ID} );
-			$campaign_name = $campaign->post_title;
+			/** @var CampaignEntity $campaign */
+			$campaign      = $this->transaction_repository->get_campaign( $transaction );
+			$campaign_name = $campaign->title;
 		}
 
 		// Create array of variables for use in twig template.
 		$args = [
-			'name'          => $donor->{DonorPostType::META_FIELD_NAME} ?? '',
-			'date'          => $transaction->post_date,
-			'description'   => $transaction->post_title,
-			'amount'        => ( ! empty( $transaction->{TransactionPostType::META_FIELD_CURRENCY} ) ? html_entity_decode(
-				Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ]
+			'name'          => $donor->name ?? '',
+			'date'          => $transaction->created_at,
+			'description'   => $transaction->title,
+			'amount'        => ( ! empty( $transaction->currency ) ? html_entity_decode(
+				Utils::get_currencies()[ $transaction->currency ]
 			) : '' ) . number_format_i18n(
-				$transaction->{TransactionPostType::META_FIELD_VALUE},
+				$transaction->value,
 				2
 			),
-			'receipt_id'    => Utils::get_formatted_id( $transaction_id ),
+			'receipt_id'    => Utils::get_id( $transaction, TransactionRepository::get_singular_name() ),
 			'campaign_name' => $campaign_name,
 			'attachments'   => $attachments,
 		];
 
 		// Add a cancel button if this is the receipt for a subscription payment.
 		try {
-			if ( 'oneoff' !== $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE} ) {
-				$subscription = SubscriptionPostType::get_post(
+			if ( 'oneoff' !== $transaction->sequence_type ) {
+				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ 'transaction_id' => $transaction->id ] );
+				$subscription = $this->subscription_repository->find_one_by(
 					[
-						SubscriptionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID => $transaction->{TransactionPostType::META_FIELD_VENDOR_SUBSCRIPTION_ID},
+						'transaction_id' => $transaction->id,
 					]
 				);
-				$this->logger->debug( 'Detected recurring payment. Adding cancel button.', [ SubscriptionPostType::META_FIELD_TRANSACTION_ID => $transaction_id ] );
-				$args['cancel_url'] = add_query_arg(
-					[
-						'kudos_action' => 'cancel_subscription',
-						'token'        => EncryptionService::generate_token( $subscription->ID ),
-						'id'           => $subscription->ID,
-					],
-					apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
-				);
+				if ( $subscription ) {
+					$this->logger->debug( 'Found subscription', [ 'subscription' => $subscription ] );
+					$args['cancel_url'] = add_query_arg(
+						[
+							'kudos_action' => 'cancel_subscription',
+							'token'        => EncryptionService::generate_token( $subscription->id ),
+							'id'           => $subscription->id,
+						],
+						apply_filters( 'kudos_cancel_subscription_url', get_home_url() )
+					);
+				}
 			}
 		} catch ( \Exception $e ) {
-			$this->logger->error( 'Error adding cancel button: ' . $e->getMessage() );
+			$this->logger->error( 'Error adding cancel button', [ 'message' => $e->getMessage() ] );
 		}
 
 		$this->logger->debug(
@@ -130,7 +156,9 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 			)
 		);
 
-		return $this->vendor->send_receipt( $email, $args );
+		$result = $this->vendor->send_receipt( $email, $args );
+		restore_previous_locale();
+		return $result;
 	}
 
 

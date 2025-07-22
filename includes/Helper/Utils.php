@@ -2,16 +2,40 @@
 /**
  * Utils.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Helper;
 
+use IseardMedia\Kudos\Domain\Entity\BaseEntity;
+use IseardMedia\Kudos\Domain\Table\CampaignsTable;
+use IseardMedia\Kudos\Domain\Table\DonorsTable;
+use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
+use IseardMedia\Kudos\Domain\Table\TransactionsTable;
+
 class Utils {
+
+	/**
+	 * Creates the required tables.
+	 *
+	 * @param WpDb $wpdb WpDb wrapper instance.
+	 */
+	public static function create_all_tables( WpDb $wpdb ): void {
+		$tables = [
+			CampaignsTable::class,
+			DonorsTable::class,
+			TransactionsTable::class,
+			SubscriptionsTable::class,
+		];
+
+		foreach ( $tables as $table_class ) {
+			( new $table_class( $wpdb ) )->create_table();
+		}
+	}
 
 	/**
 	 * Returns an array of supported currencies and their symbols.
@@ -103,6 +127,35 @@ class Utils {
 	}
 
 	/**
+	 * Enqueues an async action using Action Scheduler.
+	 *
+	 * @param string      $hook       The name of the WordPress action to trigger.
+	 * @param array       $args       Arguments to pass to the action callback.
+	 * @param string|null $group      (Optional) Group name for the action.
+	 * @param bool        $overwrite  Whether to replace existing async action.
+	 */
+	public static function enqueue_async_action(
+		string $hook,
+		array $args = [],
+		?string $group = null,
+		bool $overwrite = false
+	): void {
+		if ( class_exists( 'ActionScheduler' ) && \function_exists( 'as_enqueue_async_action' ) ) {
+			if ( $overwrite ) {
+				as_unschedule_action( $hook, $args, $group );
+			}
+
+			// Avoid scheduling duplicates if $overwrite is false.
+			if ( $overwrite || false === as_next_scheduled_action( $hook, $args, $group ) ) {
+				as_enqueue_async_action( $hook, $args, $group );
+			}
+		} else {
+			// Fallback: run it immediately.
+			do_action( $hook, ...array_values( $args ) );
+		}
+	}
+
+	/**
 	 * SVG logo.
 	 */
 	public static function get_kudos_logo_svg(): string {
@@ -118,16 +171,6 @@ class Utils {
 	}
 
 	/**
-	 * Sanitizes float values.
-	 *
-	 * @param mixed $input The value to sanitize.
-	 * @return mixed
-	 */
-	public static function sanitize_float( $input ) {
-		return filter_var( $input, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
-	}
-
-	/**
 	 * Formats donation value for display. Do not use to send to payment provider or store value.
 	 *
 	 * @param string $value The value to display.
@@ -139,10 +182,10 @@ class Utils {
 	/**
 	 * Formats donation value for use with payment provider or storage. Should not be localized.
 	 *
-	 * @param string $value The value to format.
+	 * @param float $value The value to format.
 	 */
-	public static function format_value_for_use( string $value ): string {
-		return number_format( \floatval( $value ), 2, '.', '' );
+	public static function format_value_for_use( float $value ): string {
+		return number_format( $value, 2, '.', '' );
 	}
 
 	/**
@@ -182,6 +225,20 @@ class Utils {
 	}
 
 	/**
+	 * Returns a formatted id based on the entity id and created date.
+	 *
+	 * @param BaseEntity $entity Entity object.
+	 * @param string     $singular_name The entity singular name (e.g. Transaction).
+	 */
+	public static function get_id( BaseEntity $entity, string $singular_name ): string {
+		$id   = $entity->id;
+		$date = $entity->created_at;
+		$year = substr( $date, 0, 4 );
+		$type = substr( strtolower( $singular_name ), 0, 2 );
+		return 'k' . $type . '_' . $year . $id;
+	}
+
+	/**
 	 * Uses regex that accepts any word character or hyphen in last name
 	 *
 	 * @link https://stackoverflow.com/questions/13637145/split-text-string-into-first-and-last-name-in-php
@@ -193,5 +250,38 @@ class Utils {
 		$last_name  = ( strpos( $name, ' ' ) === false ) ? '' : preg_replace( '#.*\s([\w-]*)$#', '$1', $name );
 		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
 		return [ $first_name, $last_name ];
+	}
+
+	/**
+	 * Switch locale.
+	 *
+	 * @param string $locale Locale code to switch to.
+	 */
+	public static function switch_locale( string $locale ): void {
+		if ( switch_to_locale( $locale ) ) {
+
+			// Ensure translations are reloaded from WP_LANG_DIR/plugins/.
+			unload_textdomain( 'kudos-donations' );
+			load_textdomain( 'kudos-donations', WP_LANG_DIR . '/plugins/kudos-donations-' . $locale . '.mo' );
+		}
+	}
+
+	/**
+	 * Normalize a browser locale like 'nl' to a full WP locale like 'nl_NL'.
+	 *
+	 * @param string $locale Short or full locale code.
+	 * @return string Normalized locale or fallback to 'en_US'.
+	 */
+	public static function normalize_locale( string $locale ): string {
+		$locale    = str_replace( '-', '_', strtolower( $locale ) );
+		$available = get_available_languages();
+
+		foreach ( $available as $available_locale ) {
+			if ( stripos( $available_locale, $locale ) === 0 ) {
+				return $available_locale;
+			}
+		}
+
+		return 'en_US'; // fallback.
 	}
 }

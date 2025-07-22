@@ -2,9 +2,9 @@
 /**
  * Compatibility service.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -42,6 +42,7 @@ class CompatibilityService {
 	 * @return true|WP_Error True if compatible, WP_Error if not.
 	 */
 	private function check_php_compatibility() {
+		// @phpstan-ignore-next-line
 		if ( version_compare( PHP_VERSION, self::MINIMUM_PHP_VERSION, '<' ) ) {
 			return new WP_Error(
 				'php_version_error',

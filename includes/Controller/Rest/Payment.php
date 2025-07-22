@@ -2,49 +2,61 @@
 /**
  * Payment Rest Routes.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
-declare(strict_types=1);
+declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Controller\Rest;
 
-use IseardMedia\Kudos\Domain\PostType\CampaignPostType;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\SanitizeTrait;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
+use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorFactory;
-use IseardMedia\Kudos\Vendor\PaymentVendor\PaymentVendorInterface;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
+use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Payment extends AbstractRestController {
+class Payment extends BaseRestController {
 
-	public const ROUTE_CREATE            = '/create';
-	public const ROUTE_REFUND            = '/refund';
-	public const ROUTE_WEBHOOK           = '/webhook';
-	public const ROUTE_TEST              = '/test';
-	public const ROUTE_READY             = '/ready';
-	public const ROUTE_STATUS            = '/status';
-	public const ROUTE_RECURRING_ENABLED = '/recurring-enabled';
+	use SanitizeTrait;
 
-	private PaymentVendorInterface $vendor;
+	public const ROUTE_CREATE  = '/create';
+	public const ROUTE_REFUND  = '/refund';
+	public const ROUTE_WEBHOOK = '/webhook';
+	public const ROUTE_TEST    = '/test';
+	public const ROUTE_STATUS  = '/status';
+
+	private PaymentProviderInterface $vendor;
+	private TransactionRepository $transaction_repository;
+	private DonorRepository $donor_repository;
+	private CampaignRepository $campaign_repository;
 
 	/**
 	 * PaymentRoutes constructor.
 	 *
-	 * @param PaymentVendorFactory $factory Current vendor.
+	 * @param PaymentProviderFactory $factory Current vendor.
+	 * @param TransactionRepository  $transaction_repository Transaction repository.
+	 * @param DonorRepository        $donor_repository Donor repository.
+	 * @param CampaignRepository     $campaign_repository Campaign repository.
 	 */
-	public function __construct( PaymentVendorFactory $factory ) {
-		parent::__construct();
-
-		$this->rest_base = 'payment';
-		$this->vendor    = $factory->get_vendor();
+	public function __construct( PaymentProviderFactory $factory, TransactionRepository $transaction_repository, DonorRepository $donor_repository, CampaignRepository $campaign_repository ) {
+		$this->rest_base              = 'payment';
+		$this->vendor                 = $factory->get_provider();
+		$this->transaction_repository = $transaction_repository;
+		$this->donor_repository       = $donor_repository;
+		$this->campaign_repository    = $campaign_repository;
 	}
 
 	/**
@@ -52,7 +64,7 @@ class Payment extends AbstractRestController {
 	 */
 	public function get_routes(): array {
 		return [
-			self::ROUTE_CREATE            => [
+			self::ROUTE_CREATE  => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'create_item' ],
 				'permission_callback' => '__return_true',
@@ -70,7 +82,7 @@ class Payment extends AbstractRestController {
 					'value'         => [
 						'type'              => FieldType::NUMBER,
 						'required'          => true,
-						'sanitize_callback' => [ Utils::class, 'sanitize_float' ],
+						'sanitize_callback' => [ $this, 'sanitize_float' ],
 					],
 					'name'          => [
 						'type'              => FieldType::STRING,
@@ -127,10 +139,15 @@ class Payment extends AbstractRestController {
 						'required'          => false,
 						'sanitize_callback' => 'rest_sanitize_boolean',
 					],
+					'language'      => [
+						'type'              => FieldType::STRING,
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
 				],
 			],
 
-			self::ROUTE_WEBHOOK           => [
+			self::ROUTE_WEBHOOK => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'handle_webhook' ],
 				'args'                => [
@@ -143,7 +160,7 @@ class Payment extends AbstractRestController {
 				'permission_callback' => '__return_true',
 			],
 
-			self::ROUTE_REFUND            => [
+			self::ROUTE_REFUND  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'refund' ],
 				'args'                => [
@@ -158,29 +175,13 @@ class Payment extends AbstractRestController {
 				},
 			],
 
-			self::ROUTE_TEST              => [
+			self::ROUTE_TEST    => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'test_connection' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 
-			self::ROUTE_READY             => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this->vendor, 'is_ready' ],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
-			],
-
-			self::ROUTE_RECURRING_ENABLED => [
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this->vendor, 'recurring_enabled' ],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
-			],
-
-			self::ROUTE_STATUS            => [
+			self::ROUTE_STATUS  => [
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'status' ],
 				'args'                => [
@@ -202,25 +203,34 @@ class Payment extends AbstractRestController {
 	 * @return WP_REST_Response | WP_Error Response object.
 	 */
 	public function status( WP_REST_Request $request ) {
-		$post_id = $request->get_param( 'id' );
-		$nonce   = $request->get_header( 'x-kudos-nonce' );
+		$entity_id = $request->get_param( 'id' );
+		$nonce     = $request->get_header( 'x-kudos-nonce' );
 
-		if ( ! wp_verify_nonce( $nonce, 'order_complete' . $post_id ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'order_complete' . $entity_id ) ) {
 			return new WP_Error( 'invalid_nonce', 'Invalid or expired nonce.' );
 		}
 
-		$transaction = get_post( $post_id );
+		/**
+		 * @var ?TransactionEntity $transaction
+		 */
+		$transaction = $this->transaction_repository->get( $entity_id );
 
-		if ( $transaction ) {
+		if ( PaymentStatus::OPEN === $transaction->status ) {
+			$this->logger->debug( 'Status still open, manually calling handle_status_change' );
+			$this->vendor->handle_status_change( $transaction->vendor_payment_id );
+		}
+
+		if ( null !== $transaction ) {
 			$data     = [
-				'status'   => $transaction->{TransactionPostType::META_FIELD_STATUS},
-				'currency' => $transaction->{TransactionPostType::META_FIELD_CURRENCY},
-				'value'    => $transaction->{TransactionPostType::META_FIELD_VALUE},
+				'status'   => $transaction->status,
+				'currency' => $transaction->currency,
+				'value'    => $transaction->value,
 			];
-			$donor_id = $transaction->{TransactionPostType::META_FIELD_DONOR_ID};
+			$donor_id = $transaction->donor_id;
 			if ( $donor_id ) {
-				$donor        = get_post( $donor_id );
-				$data['name'] = $donor->{DonorPostType::META_FIELD_NAME};
+				/** @var DonorEntity $donor */
+				$donor        = $this->donor_repository->get( $donor_id );
+				$data['name'] = $donor->name;
 			}
 
 			return new WP_REST_Response(
@@ -240,7 +250,7 @@ class Payment extends AbstractRestController {
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
-	public function create_item( $request ): WP_REST_Response {
+	public function create_item( WP_REST_Request $request ): WP_REST_Response {
 		// Verify nonce.
 		if ( ! wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' ) ) {
 			return new WP_REST_Response(
@@ -259,10 +269,11 @@ class Payment extends AbstractRestController {
 			return new WP_REST_Response( [ 'message' => __( 'Request invalid.', 'kudos-donations' ) ], 400 );
 		}
 
-		$campaign = get_post( $values['campaign_id'] );
+		/** @var CampaignEntity $campaign */
+		$campaign = $this->campaign_repository->get( (int) $values['campaign_id'] );
 
 		$defaults = [
-			'currency'         => $campaign->{CampaignPostType::META_FIELD_CURRENCY},
+			'currency'         => $campaign->currency,
 			'recurring_length' => 0,
 			'return_url'       => get_site_url(),
 			'name'             => null,
@@ -274,6 +285,7 @@ class Payment extends AbstractRestController {
 			'country'          => null,
 			'message'          => null,
 			'campaign_id'      => null,
+			'language'         => 'en_US',
 		];
 
 		$args = wp_parse_args( $values, $defaults );
@@ -284,61 +296,60 @@ class Payment extends AbstractRestController {
 		// If email found, try to find an existing customer or create a new one.
 		if ( $args['email'] ) {
 
-			$donor_meta = [
-				DonorPostType::META_FIELD_MODE          => $this->vendor->get_api_mode(),
-				DonorPostType::META_FIELD_EMAIL         => $args['email'],
-				DonorPostType::META_FIELD_NAME          => $args['name'],
-				DonorPostType::META_FIELD_BUSINESS_NAME => $args['business_name'],
-				DonorPostType::META_FIELD_STREET        => $args['street'],
-				DonorPostType::META_FIELD_POSTCODE      => $args['postcode'],
-				DonorPostType::META_FIELD_CITY          => $args['city'],
-				DonorPostType::META_FIELD_COUNTRY       => $args['country'],
+			$donor_args = [
+				'mode'          => $this->vendor->get_api_mode(),
+				'email'         => $args['email'],
+				'name'          => $args['name'],
+				'business_name' => $args['business_name'],
+				'street'        => $args['street'],
+				'postcode'      => $args['postcode'],
+				'city'          => $args['city'],
+				'country'       => $args['country'],
+				'locale'        => Utils::normalize_locale( $args['language'] ),
 			];
 
 			// Search for existing donor based on email and mode.
-			$donor = DonorPostType::get_post(
+			$donor = $this->donor_repository->find_one_by(
 				[
-					DonorPostType::META_FIELD_EMAIL => $args['email'],
-					DonorPostType::META_FIELD_MODE  => $this->vendor->get_api_mode(),
+					'email' => $args['email'],
+					'mode'  => $this->vendor->get_api_mode(),
 				]
 			);
 
-			// Create new customer with vendor if none found.
-			if ( ! $donor ) {
-				$customer = $this->vendor->create_customer( $args['email'], $args['name'] );
-				$donor_meta[ DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID ] = $customer->id;
+			if ( empty( $donor ) ) {
+				// Create new customer with vendor if none found.
+				$customer                         = $this->vendor->create_customer( $args['email'], $args['name'] );
+				$donor_args['vendor_customer_id'] = $customer->id;
+				$donor                            = new DonorEntity( $donor_args );
+			} else {
+				// Otherwise update existing donor object.
+				$donor->hydrate( $donor_args );
 			}
 
-			// Update or create donor.
-			$donor = DonorPostType::save(
-				array_merge(
-					[
-						'ID' => $donor->ID ?? null,
-					],
-					$donor_meta
-				)
-			);
+			// Save donor and fetch updated record.
+			$donor_id = $this->donor_repository->upsert( $donor );
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
-		$vendor_customer_id = $donor->{DonorPostType::META_FIELD_VENDOR_CUSTOMER_ID} ?? null;
-		$transaction        = TransactionPostType::save(
+		$vendor_customer_id = $donor->vendor_customer_id ?? null;
+		$transaction        = new TransactionEntity(
 			[
-				TransactionPostType::META_FIELD_DONOR_ID => $donor->ID ?? null,
-				TransactionPostType::META_FIELD_VALUE    => $args['value'],
-				TransactionPostType::META_FIELD_CURRENCY => $args['currency'],
-				TransactionPostType::META_FIELD_STATUS   => 'open',
-				TransactionPostType::META_FIELD_MODE     => $this->vendor->get_api_mode(),
-				TransactionPostType::META_FIELD_SEQUENCE_TYPE => 'true' === $args['recurring'] ? 'first' : 'oneoff',
-				TransactionPostType::META_FIELD_CAMPAIGN_ID => (int) $args['campaign_id'],
-				TransactionPostType::META_FIELD_MESSAGE  => $args['message'],
-				TransactionPostType::META_FIELD_VENDOR   => $this->vendor::get_slug(),
-				TransactionPostType::META_FIELD_VENDOR_CUSTOMER_ID => $vendor_customer_id,
+				'donor_id'      => $donor_id ?? null,
+				'value'         => $args['value'],
+				'currency'      => $args['currency'],
+				'status'        => PaymentStatus::OPEN,
+				'mode'          => $this->vendor->get_api_mode(),
+				'sequence_type' => 'true' === $args['recurring'] ? 'first' : 'oneoff',
+				'campaign_id'   => (int) $args['campaign_id'],
+				'message'       => $args['message'],
+				'vendor'        => $this->vendor::get_slug(),
 			]
 		);
 
+		$transaction_id = $this->transaction_repository->insert( $transaction );
 		// Create payment with vendor.
-		$url = $this->vendor->create_payment( $args, $transaction->ID, $vendor_customer_id );
+		$transaction = $this->transaction_repository->get( $transaction_id );
+		$url         = $this->vendor->create_payment( $args, $transaction, $vendor_customer_id );
 
 		// Return checkout url if payment successfully created.
 		if ( $url ) {
@@ -396,6 +407,7 @@ class Payment extends AbstractRestController {
 	 */
 	public function handle_webhook( WP_REST_Request $request ) {
 		do_action( 'kudos_' . $this->vendor::get_slug() . '_webhook_requested', $request );
+
 		return $this->vendor->rest_webhook( $request );
 	}
 
@@ -405,7 +417,8 @@ class Payment extends AbstractRestController {
 	 * @param WP_REST_Request $request The request.
 	 */
 	public function refund( WP_REST_Request $request ): bool {
-		$post_id = $request->get_param( 'id' );
-		return $this->vendor->refund( $post_id );
+		$entity_id = $request->get_param( 'id' );
+
+		return $this->vendor->refund( $entity_id );
 	}
 }

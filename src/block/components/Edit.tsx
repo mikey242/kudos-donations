@@ -2,7 +2,6 @@
 import React from 'react';
 import type { BlockEditProps } from '@wordpress/blocks';
 import { useCampaignContext } from '../contexts/';
-import { useEntityRecords } from '@wordpress/core-data';
 import { __ } from '@wordpress/i18n';
 import {
 	ExternalLink,
@@ -16,7 +15,11 @@ import { KudosForm } from './KudosForm';
 import { KudosLogo } from './KudosLogo';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import CampaignProvider from '../contexts/campaign-context';
-import type { Campaign } from '../../types/posts';
+import type { Campaign } from '../../types/entity';
+import apiFetch from '@wordpress/api-fetch';
+import { useCallback, useEffect, useState } from '@wordpress/element';
+import { addQueryArgs } from '@wordpress/url';
+import { EntityRestResponse } from '../../admin/contexts';
 
 export interface KudosButtonAttributes {
 	button_label: string;
@@ -51,10 +54,20 @@ const ButtonEdit = ({
 }: ButtonEditProps) => {
 	const { campaign, isLoading: campaignLoaded } = useCampaignContext();
 	const blockProps = useBlockProps();
-	const { records: campaigns, hasResolved: campaignsLoaded } =
-		useEntityRecords<Campaign>('postType', 'kudos_campaign', {
-			per_page: -1,
+	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+
+	const fetchPosts = useCallback(async () => {
+		const response: EntityRestResponse<Campaign> = await apiFetch({
+			path: addQueryArgs('/kudos/v1/campaign', {
+				columns: ['id', 'title'],
+			}),
 		});
+		setCampaigns(response.items);
+	}, []);
+
+	useEffect(() => {
+		void fetchPosts();
+	}, [fetchPosts]);
 
 	const onChangeAlignment = (newAlignment: string) => {
 		setAttributes({
@@ -78,8 +91,8 @@ const ButtonEdit = ({
 	};
 
 	const options: SelectOption[] = [
-		...(campaigns?.map((item) => ({
-			label: item.title.raw,
+		...(campaigns?.map((item: Campaign) => ({
+			label: item.title,
 			value: item.id.toString(),
 		})) ?? []),
 		{
@@ -102,7 +115,7 @@ const ButtonEdit = ({
 
 	return (
 		<div {...blockProps}>
-			{campaignsLoaded && (
+			{campaigns && (
 				<InspectorControls>
 					<PanelBody
 						title={__('Campaign Settings', 'kudos-donations')}
@@ -115,7 +128,7 @@ const ButtonEdit = ({
 							>
 								{__('Edit', 'kudos-donations') +
 									' ' +
-									campaign?.title?.rendered}
+									campaign?.title}
 							</ExternalLink>
 						) : (
 							<ExternalLink href="admin.php?page=kudos-campaigns">
