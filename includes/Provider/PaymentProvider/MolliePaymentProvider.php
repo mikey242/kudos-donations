@@ -495,6 +495,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 
 		// Bail if no donor id found on transaction.
 		if ( null === $transaction->donor_id ) {
+			$this->logger->error( 'No donor found on transaction, aborting subscription creation', [ 'transaction' => $transaction ] );
 			return false;
 		}
 
@@ -504,6 +505,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 
 		// Bail if no vendor customer id.
 		if ( null === $vendor_customer_id ) {
+			$this->logger->error( 'No vendor id found on donor, aborting subscription creation', [ 'donor' => $donor ] );
 			return false;
 		}
 
@@ -513,6 +515,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 		$customer   = $this->get_customer( $vendor_customer_id );
 
 		if ( null === $customer ) {
+			$this->logger->error( 'Customer not found with Mollie, aborting subscription creation', [ 'vendor_customer_id' => $vendor_customer_id ] );
 			return false;
 		}
 
@@ -541,6 +544,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 				$subscription_entity = $subscriptions->get( $subscription_id ); // Subscription entity needs to be re-fetched to get new title.
 
 				if ( false === $subscription_id ) {
+					$this->logger->error( 'Error inserting subscription into database, aborting subscription creation', [ 'subscription_entity' => $subscription_entity ] );
 					return false;
 				}
 
