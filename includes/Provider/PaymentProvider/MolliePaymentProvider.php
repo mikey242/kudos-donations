@@ -538,6 +538,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 					)
 				);
 				$subscription_id     = $subscriptions->insert( $subscription_entity );
+				$subscription_entity = $subscriptions->get( $subscription_id ); // Subscription entity needs to be re-fetched to get new title.
 
 				if ( false === $subscription_id ) {
 					return false;
