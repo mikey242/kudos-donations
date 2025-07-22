@@ -60,7 +60,7 @@ class UpgradeHandler extends AbstractRegistrable {
 		foreach ( $this->services as $service ) {
 			add_action(
 				'upgrader_process_complete',
-				function ( \Plugin_Upgrader $upgrader, array $hook_extra ) use ( $service ) {
+				function ( \WP_Upgrader $upgrader, array $hook_extra ) use ( $service ) {
 					if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] && isset( $hook_extra['plugins'] ) ) {
 						foreach ( $hook_extra['plugins'] as $plugin ) {
 							if ( str_contains( $plugin, 'kudos-donations.php' ) ) {
