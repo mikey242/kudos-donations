@@ -42,10 +42,8 @@ if ( ! \defined( 'WPINC' ) ) {
 
 if ( \function_exists( 'wp_upload_dir' ) ) {
 	$upload_dir = wp_upload_dir();
-	if ( false === $upload_dir['error'] ) {
-		\define( 'KUDOS_STORAGE_URL', $upload_dir['baseurl'] . '/kudos-donations/' );
-		\define( 'KUDOS_STORAGE_DIR', $upload_dir['basedir'] . '/kudos-donations/' );
-	}
+	\define( 'KUDOS_STORAGE_URL', $upload_dir['baseurl'] . '/kudos-donations/' );
+	\define( 'KUDOS_STORAGE_DIR', $upload_dir['basedir'] . '/kudos-donations/' );
 }
 
 // Autoloader for plugin.
