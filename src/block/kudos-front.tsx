@@ -6,7 +6,7 @@
 
 /* eslint-disable camelcase */
 
-import { KudosForm, KudosButtonAttributes } from './components';
+import { KudosButtonAttributes, KudosForm } from './components';
 import Message, { PaymentStatus } from './components/Message';
 import './kudos-fonts.css';
 import './kudos-front.css';

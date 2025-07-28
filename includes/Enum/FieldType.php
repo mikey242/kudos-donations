@@ -2,9 +2,9 @@
 /**
  * Field Types.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
@@ -16,6 +16,7 @@ class FieldType {
 	public const STRING  = 'string';
 	public const BOOLEAN = 'boolean';
 	public const INTEGER = 'integer';
+	public const FLOAT   = 'float';
 	public const NUMBER  = 'number';
 	public const ARRAY   = 'array';
 	public const EMAIL   = 'email';

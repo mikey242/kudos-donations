@@ -1,9 +1,15 @@
-import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
+import {
+	Button,
+	Dashicon,
+	Flex,
+	Tooltip,
+	VisuallyHidden,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { usePostsContext, useSettingsContext } from '../../contexts';
-import type { Transaction } from '../../../types/posts';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import type { Campaign, Transaction } from '../../../types/entity';
 import {
 	ArrowPathIcon,
 	ArrowRightCircleIcon,
@@ -13,7 +19,7 @@ import { DetailsModal, HeaderItem, Table } from '../table';
 export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { settings } = useSettingsContext();
-	const { handleDelete, totalPages, totalItems, posts } = usePostsContext();
+	const { handleDelete } = useEntitiesContext();
 
 	const headerItems: HeaderItem[] = [
 		{
@@ -21,13 +27,14 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Donor', 'kudos-donations'),
 
 			valueCallback: (post: Transaction): React.ReactNode =>
-				post.donor?.meta?.name ?? post.donor?.meta.email ?? '',
+				post.donor?.name ?? post.donor?.email ?? '',
 		},
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
+			orderby: 'status',
 			valueCallback: (post: Transaction): React.ReactNode => {
-				const status = post.meta.status;
+				const status = post.status;
 
 				const statusConfig: Record<
 					string,
@@ -41,7 +48,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 						title: __('Open', 'kudos-donations'),
 						icon: 'clock',
 					},
-					canceled: {
+					cancelled: {
 						title: __('Canceled', 'kudos-donations'),
 						icon: 'no-alt',
 					},
@@ -70,17 +77,17 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'value',
 			title: __('Amount', 'kudos-donations'),
+			orderby: 'value',
 			valueCallback: (post: Transaction): React.ReactNode => {
-				const value = post.meta?.value;
-				const currency = post.meta?.currency;
-				const sequence = post.meta?.sequence_type;
+				const value = post.value;
+				const currency = post.currency;
+				const sequence = post.sequence_type;
 
 				if (!value || !currency) {
 					return null;
 				}
 
-				const currencySymbol =
-					currencies[post.meta?.currency] ?? currency;
+				const currencySymbol = currencies[post.currency] ?? currency;
 
 				let icon: React.ReactNode;
 
@@ -118,20 +125,18 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'campaign',
 			title: __('Campaign', 'kudos-donations'),
 			valueCallback: (post: Transaction): React.ReactNode =>
-				post.campaign?.title.raw ?? post.campaign?.title.rendered ?? '',
+				post.campaign?.title ?? '',
 		},
 		{
 			key: 'message',
 			title: __('Message', 'kudos-donations'),
 			align: 'center',
 			valueCallback: (post: Transaction): React.ReactNode =>
-				post.meta.message && (
+				post.message && (
 					<DetailsModal
 						title={__('Message', 'kudos-donations')}
 						content={
-							<p style={{ fontSize: '16px' }}>
-								{post.meta.message}
-							</p>
+							<p style={{ fontSize: '16px' }}>{post.message}</p>
 						}
 					/>
 				),
@@ -139,9 +144,11 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
-			orderby: 'date',
-			valueCallback: (post: Transaction): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.date, null)}</i>
+			orderby: 'created_at',
+			valueCallback: (post: Campaign): React.ReactNode => (
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
+					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				</Tooltip>
 			),
 		},
 		{
@@ -153,7 +160,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			),
 			align: 'right',
 			valueCallback: (post: Transaction): React.ReactNode => {
-				const status = post.meta.status;
+				const status = post.status;
 				const url = post.invoice_url;
 				return (
 					<>
@@ -197,40 +204,29 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 	const filters = [
 		{
 			label: __('Paid', 'kudos-donations'),
-			meta_key: 'status',
-			meta_value: 'paid',
+			where: { status: 'paid' },
 		},
 		{
 			label: __('Open', 'kudos-donations'),
-			meta_key: 'status',
-			meta_value: 'open',
+			where: { status: 'open' },
 		},
 		{
 			label: __('Failed', 'kudos-donations'),
-			meta_key: 'status',
-			meta_value: 'failed',
+			where: { status: 'failed' },
 		},
 		{
 			label: __('Cancelled', 'kudos-donations'),
-			meta_key: 'staus',
-			meta_value: 'canceled',
+			where: { status: 'canceled' },
 		},
 		{
 			label: __('Expired', 'kudos-donations'),
-			meta_key: 'status',
-			meta_value: 'expired',
+			where: { status: 'expired' },
 		},
 	];
 
 	return (
 		<>
-			<Table
-				filters={filters}
-				posts={posts}
-				headerItems={headerItems}
-				totalItems={totalItems}
-				totalPages={totalPages}
-			/>
+			<Table filters={filters} headerItems={headerItems} />
 		</>
 	);
 };

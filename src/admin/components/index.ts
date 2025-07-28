@@ -13,4 +13,4 @@ export * from './EntityPage';
 export * from './IntroGuide';
 export * from './Notices';
 export * from './Panel';
-export * from './SinglePostView';
+export * from './SingleEntityView';

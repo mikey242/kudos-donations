@@ -1,23 +1,28 @@
-import { Button, Dashicon, Flex, VisuallyHidden } from '@wordpress/components';
+import {
+	Button,
+	Dashicon,
+	Flex,
+	Tooltip,
+	VisuallyHidden,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import type { Subscription } from '../../../types/posts';
+import type { Subscription } from '../../../types/entity';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
-import { usePostsContext, useSettingsContext } from '../../contexts';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
-	const { handleDelete, posts, totalPages, totalItems } = usePostsContext();
+	const { handleDelete } = useEntitiesContext();
 
-	const changeView = (postId: number) => {
+	const changeView = (entityId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			meta_key: 'donor_id',
-			meta_value: String(postId),
+			where: { subscription_id: String(entityId) },
 		});
 	};
 
@@ -26,13 +31,14 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'donor',
 			title: __('Donor', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode =>
-				post.donor?.meta?.name ?? post.donor?.meta.email ?? '',
+				post.donor?.name ?? post.donor?.email ?? '',
 		},
 		{
 			key: 'status',
 			title: __('Status', 'kudos-donations'),
+			orderby: 'status',
 			valueCallback: (post: Subscription): React.ReactNode => {
-				const status = post.meta?.status;
+				const status = post?.status;
 
 				const statusConfig: Record<
 					string,
@@ -42,7 +48,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 						title: __('Active', 'kudos-donations'),
 						icon: 'yes-alt',
 					},
-					canceled: {
+					cancelled: {
 						title: __('Canceled', 'kudos-donations'),
 						icon: 'no-alt',
 					},
@@ -70,16 +76,16 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'value',
 			title: __('Amount', 'kudos-donations'),
+			orderby: 'value',
 			valueCallback: (post: Subscription): React.ReactNode => {
-				const value = post.meta?.value;
-				const currency = post.meta?.currency;
+				const value = post?.value;
+				const currency = post?.currency;
 
 				if (!value || !currency) {
 					return null;
 				}
 
-				const currencySymbol =
-					currencies[post.meta?.currency] ?? currency;
+				const currencySymbol = currencies[post?.currency] ?? currency;
 				return (
 					<span>
 						{currencySymbol}
@@ -89,23 +95,30 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 			},
 		},
 		{
+			key: 'campaign',
+			title: __('Campaign', 'kudos-donations'),
+			valueCallback: (post: Subscription): React.ReactNode =>
+				post.campaign?.title,
+		},
+		{
 			key: 'frequency',
 			title: __('Frequency', 'kudos-donations'),
 			valueCallback: (post: Subscription): React.ReactNode =>
-				post.meta.frequency,
+				post.frequency,
 		},
 		{
 			key: 'length',
 			title: __('Length', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode =>
-				post.meta.years,
+			valueCallback: (post: Subscription): React.ReactNode => post.years,
 		},
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
-			orderby: 'date',
+			orderby: 'created_at',
 			valueCallback: (post: Subscription): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.date, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
+					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				</Tooltip>
 			),
 		},
 		{
@@ -119,7 +132,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 						size="compact"
 						icon="money-alt"
 						disabled={!post.donor}
-						onClick={() => changeView(post.donor?.id)}
+						onClick={() => changeView(post.id)}
 						title={__('View donations', 'kudos-donations')}
 					/>
 					{settings._kudos_debug_mode && (
@@ -154,30 +167,21 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const filters = [
 		{
 			label: __('Monthly', 'kudos-donations'),
-			meta_key: 'frequency',
-			meta_value: '1 month',
+			where: { frequency: '1 month' },
 		},
 		{
 			label: __('Quarterly', 'kudos-donations'),
-			meta_key: 'frequency',
-			meta_value: '3 months',
+			where: { frequency: '3 months' },
 		},
 		{
 			label: __('Yearly', 'kudos-donations'),
-			meta_key: 'frequency',
-			meta_value: '12 months',
+			where: { frequency: '12 months' },
 		},
 	];
 
 	return (
 		<>
-			<Table
-				filters={filters}
-				posts={posts}
-				headerItems={headerItems}
-				totalItems={totalItems}
-				totalPages={totalPages}
-			/>
+			<Table filters={filters} headerItems={headerItems} />
 		</>
 	);
 };

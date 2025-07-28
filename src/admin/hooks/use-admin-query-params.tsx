@@ -1,18 +1,23 @@
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
+import {
+	parseAsInteger,
+	parseAsString,
+	parseAsJson,
+	useQueryStates,
+} from 'nuqs';
+import { z } from 'zod';
 import { useCallback } from '@wordpress/element';
+
+const whereSchema = z.record(z.string(), z.union([z.string(), z.number()]));
 
 const defaultTableFilterParams = {
 	order: 'desc',
-	orderby: 'date',
-	meta_key: '',
-	meta_value: '',
-	meta_query: '',
-	metaType: '',
+	orderby: 'created_at',
 	search: '',
+	where: {},
 };
 
 const defaultParams = {
-	post: null,
+	entity: null,
 	tab: null,
 	page: '',
 	paged: 1,
@@ -21,8 +26,8 @@ const defaultParams = {
 
 export const useAdminQueryParams = () => {
 	const [params, setQueryParams] = useQueryStates({
-		post: parseAsInteger
-			.withDefault(defaultParams.post)
+		entity: parseAsInteger
+			.withDefault(defaultParams.entity)
 			.withOptions({ history: 'push' }),
 
 		tab: parseAsString.withDefault(defaultParams.tab),
@@ -31,13 +36,11 @@ export const useAdminQueryParams = () => {
 		paged: parseAsInteger
 			.withDefault(defaultParams.paged)
 			.withOptions({ history: 'push' }),
-
+		where: parseAsJson(whereSchema.parse)
+			.withDefault({})
+			.withOptions({ history: 'push' }),
 		order: parseAsString.withDefault(defaultParams.order),
 		orderby: parseAsString.withDefault(defaultParams.orderby),
-		meta_key: parseAsString.withDefault(defaultParams.meta_key),
-		meta_value: parseAsString.withDefault(defaultParams.meta_value),
-		meta_query: parseAsString.withDefault(defaultParams.meta_query),
-		metaType: parseAsString.withDefault(defaultParams.metaType),
 		search: parseAsString.withDefault(defaultParams.search),
 	});
 
@@ -57,7 +60,7 @@ export const useAdminQueryParams = () => {
 	// Reset everything to full default (use with caution).
 	const resetAllParams = () => void setParams(defaultParams);
 
-	// Reset just the filter params (excluding paged, post, tab, etc).
+	// Reset just the filter params (excluding paged, entity, tab, etc).
 	const resetFilterParams = () =>
 		void setQueryParams(defaultTableFilterParams);
 

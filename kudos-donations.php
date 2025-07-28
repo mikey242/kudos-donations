@@ -6,9 +6,9 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Kudos Donations
- * Plugin URI:        https://gitlab.iseard.media/michael/kudos-donations
+ * Plugin URI:        https://github.com/mikey242/kudos-donations
  * Description:       Add a donation button to any page on your website. Easy & fast setup. Works with Mollie payments.
- * Version:           4.1.6
+ * Version:           4.2.0
  * Author:            Iseard Media
  * Author URI:        https://iseard.media
  * Requires at least: 6.6
@@ -32,22 +32,22 @@ if ( ! \defined( 'WPINC' ) ) {
 /**
  * Define all the Kudos Donations constants for use throughout the plugin.
  */
-\define( 'KUDOS_VERSION', '4.1.6' );
-\define( 'KUDOS_DB_VERSION', '4.1.3' );
+\define( 'KUDOS_VERSION', '4.2.0' );
+\define( 'KUDOS_DB_VERSION', '4.2.0' );
 \define( 'KUDOS_PLUGIN_FILE', __FILE__ );
 \define( 'KUDOS_PLUGIN_URL', plugin_dir_url( KUDOS_PLUGIN_FILE ) );
 \define( 'KUDOS_PLUGIN_DIR', plugin_dir_path( KUDOS_PLUGIN_FILE ) );
-\define( 'KUDOS_STORAGE_URL', wp_upload_dir()['baseurl'] . '/kudos-donations/' );
-\define( 'KUDOS_STORAGE_DIR', wp_upload_dir()['basedir'] . '/kudos-donations/' );
 \define( 'KUDOS_CACHE_DIR', WP_CONTENT_DIR . '/cache/kudos-donations/' );
-\define( 'KUDOS_DEBUG', get_option( '_kudos_debug_mode' ) );
-\define( 'KUDOS_SALT', NONCE_SALT );
-\define( 'KUDOS_AUTH_KEY', AUTH_KEY );
-\define( 'KUDOS_AUTH_SALT', AUTH_SALT );
+\define( 'KUDOS_DEBUG', (bool) get_option( '_kudos_debug_mode' ) );
 
-require KUDOS_PLUGIN_DIR . 'includes/Autoloader.php';
+if ( \function_exists( 'wp_upload_dir' ) ) {
+	$upload_dir = wp_upload_dir();
+	\define( 'KUDOS_STORAGE_URL', $upload_dir['baseurl'] . '/kudos-donations/' );
+	\define( 'KUDOS_STORAGE_DIR', $upload_dir['basedir'] . '/kudos-donations/' );
+}
 
 // Autoloader for plugin.
+require KUDOS_PLUGIN_DIR . 'includes/Autoloader.php';
 if ( ! Autoloader::init() ) {
 	return;
 }
@@ -56,19 +56,18 @@ if ( ! Autoloader::init() ) {
 $dotenv = new Dotenv();
 try {
 	$dotenv->load( __DIR__ . '/.env' );
-	// phpcs:ignore
-} catch ( \Exception $ignored ) {
+} catch ( \Exception $e ) {
+	$_ENV['APP_ENV'] = 'production';
+}
+
+// Set the environment as production if not specified.
+if ( ! isset( $_ENV['APP_ENV'] ) || '' === $_ENV['APP_ENV'] ) {
 	$_ENV['APP_ENV'] = 'production';
 }
 
 // Action Scheduler.
 if ( file_exists( KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {
 	include KUDOS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
-}
-
-// Set the environment as production if not specified.
-if ( empty( $_ENV['APP_ENV'] ) ) {
-	$_ENV['APP_ENV'] = 'production';
 }
 
 // Add additional env variables based on WordPress environment.
@@ -83,5 +82,11 @@ $dotenv->populate(
 // Define constant for easily accessing environment.
 \define( 'KUDOS_APP_ENV', sanitize_text_field( $_ENV['APP_ENV'] ) );
 \define( 'KUDOS_ENV_IS_DEVELOPMENT', 'development' === $_ENV['APP_ENV'] );
+
+// Load dev commands if in dev environment.
+$dev_bootstrap = __DIR__ . '/includes-dev/bootstrap.php';
+if ( file_exists( $dev_bootstrap ) ) {
+	require_once $dev_bootstrap;
+}
 
 require KUDOS_PLUGIN_DIR . 'includes/namespace.php';

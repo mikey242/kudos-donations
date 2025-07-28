@@ -7,7 +7,7 @@ import { useEffect, useMemo } from '@wordpress/element';
 import { RadioGroupControl, TextControl, ToggleControl } from '../controls';
 import type { RadioGroupOption } from '../controls';
 import { ProgressBar } from '../ProgressBar';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 
 interface InitialTabProps {
 	campaign: Campaign;
@@ -15,22 +15,20 @@ interface InitialTabProps {
 
 export const InitialTab = ({ campaign }: InitialTabProps) => {
 	const {
-		meta: {
-			initial_title,
-			initial_description,
-			currency,
-			minimum_donation,
-			donation_type,
-			fixed_amounts,
-			amount_type,
-			maximum_donation,
-			show_goal,
-			goal,
-			name_enabled,
-			name_required,
-			email_enabled,
-			email_required,
-		},
+		initial_title,
+		initial_description,
+		currency,
+		minimum_donation,
+		donation_type,
+		fixed_amounts,
+		amount_type,
+		maximum_donation,
+		show_goal,
+		goal,
+		name_enabled,
+		name_required,
+		email_enabled,
+		email_required,
 		total,
 	} = campaign;
 	const currencySymbol = useMemo(() => {
@@ -53,7 +51,6 @@ export const InitialTab = ({ campaign }: InitialTabProps) => {
 	);
 	const optional = __('optional', 'kudos-donations');
 	const emailRequired = email_required || 'recurring' === donation_type;
-
 	const isRecurringAllowed = useMemo(() => {
 		return donation_type === 'both' && !!watchEmail;
 	}, [donation_type, watchEmail]);

@@ -1,20 +1,4 @@
-export interface MolliePaymentMethod {
-	id: string;
-	description: string;
-	image: string;
-	minimumAmount: {
-		value: string;
-		currency: string;
-	};
-	maximumAmount:
-		| {
-				value: string;
-				currency: string;
-		  }
-		| []; // some were empty arrays
-}
-
-export interface KudosSettings {
+export interface BaseSettings {
 	_kudos_always_load_assets: boolean;
 	_kudos_invoice_number: number;
 	_kudos_invoice_company_address: string;
@@ -35,9 +19,9 @@ export interface KudosSettings {
 	_kudos_custom_smtp: string | null;
 	_kudos_smtp_password: string;
 	_kudos_smtp_enable: boolean;
-	_kudos_vendor_mollie_api_mode: 'test' | 'live';
-	_kudos_vendor_mollie_api_key_test: string;
-	_kudos_vendor_mollie_api_key_live: string;
-	_kudos_vendor_mollie_recurring: boolean;
-	_kudos_vendor_mollie_payment_methods: MolliePaymentMethod[];
+	_kudos_payment_vendor_status: {
+		ready: boolean;
+		recurring: boolean;
+		text: string;
+	};
 }

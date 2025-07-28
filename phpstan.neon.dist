@@ -1,13 +1,30 @@
-services:
 includes:
-	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+  - phpstan-baseline.neon
 
 parameters:
   level: 5
   inferPrivatePropertyTypeFromConstructor: true
-  ignoreErrors:
+
   paths:
-    - includes/
-  scanDirectories:
-  bootstrapFiles:
     - kudos-donations.php
+    - uninstall.php
+    - config
+    - includes
+
+  scanDirectories:
+    - third-party/
+
+  scanFiles:
+    - vendor/woocommerce/action-scheduler/functions.php
+    - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+    - vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
+    - kudos-donations.php
+
+  ignoreErrors:
+    # example:
+    # - '#Call to an undefined method.*#'
+
+  # Optional: Only add if absolutely needed
+  bootstrapFiles:
+    - phpstan-bootstrap.php

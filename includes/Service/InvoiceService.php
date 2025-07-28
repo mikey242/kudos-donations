@@ -2,9 +2,9 @@
 /**
  * Invoice Service.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations
+ * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare( strict_types=1 );
@@ -13,25 +13,32 @@ namespace IseardMedia\Kudos\Service;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use IseardMedia\Kudos\Domain\PostType\DonorPostType;
-use IseardMedia\Kudos\Domain\PostType\TransactionPostType;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 
 class InvoiceService extends AbstractRegistrable implements HasSettingsInterface {
-
 	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
 	public const SETTING_INVOICE_NUMBER          = '_kudos_invoice_number';
 	public const SETTING_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
 	private PDFService $pdf;
+	private TransactionRepository $transaction_repository;
+	private DonorRepository $donor_repository;
 
 	/**
 	 * InvoiceService constructor.
 	 *
-	 * @param PDFService $pdf PDF service.
+	 * @param PDFService            $pdf PDF service.
+	 * @param TransactionRepository $transaction_repository Transaction repository.
+	 * @param DonorRepository       $donor_repository Donor repository.
 	 */
-	public function __construct( PDFService $pdf ) {
-		$this->pdf = $pdf;
+	public function __construct( PDFService $pdf, TransactionRepository $transaction_repository, DonorRepository $donor_repository ) {
+		$this->pdf                    = $pdf;
+		$this->transaction_repository = $transaction_repository;
+		$this->donor_repository       = $donor_repository;
 	}
 
 	/**
@@ -94,52 +101,70 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 			}
 		}
 
-		// Get transaction.
-		$transaction = TransactionPostType::get_post( [ 'ID' => $transaction_id ] );
-		if ( ! $transaction ) {
+		/**
+		 * Get transaction.
+		 *
+		 * @var ?TransactionEntity $transaction
+		 */
+		$transaction = $this->transaction_repository->get( $transaction_id );
+
+		if ( null === $transaction ) {
 			$this->logger->debug( 'Error generating invoice: Transaction not found', [ 'transaction_id' => $transaction_id ] );
 			return null;
 		}
 
 		// Populate data array.
 		$data = [
-			'order_id'        => $transaction->{TransactionPostType::META_FIELD_VENDOR_PAYMENT_ID},
-			'vendor'          => $transaction->{TransactionPostType::META_FIELD_VENDOR},
-			'sequence_type'   => $transaction->{TransactionPostType::META_FIELD_SEQUENCE_TYPE},
-			'id'              => gmdate( 'Y' ) . '_' . $transaction->{TransactionPostType::META_FIELD_INVOICE_NUMBER},
-			'date'            => $transaction->post_date,
+			'order_id'        => $transaction->vendor_payment_id,
+			'vendor'          => $transaction->vendor,
+			'sequence_type'   => $transaction->sequence_type,
+			'id'              => gmdate( 'Y' ) . '_' . $transaction->invoice_number,
+			'date'            => $transaction->created_at,
 			'company_name'    => Utils::get_company_name(),
 			'company_address' => get_option( self::SETTING_INVOICE_COMPANY_ADDRESS ),
 			'vat_number'      => get_option( self::SETTING_INVOICE_VAT_NUMBER ),
-			'currency_symbol' => Utils::get_currencies()[ $transaction->{TransactionPostType::META_FIELD_CURRENCY} ],
+			'currency_symbol' => Utils::get_currencies()[ $transaction->currency ],
 			'items'           => [
-				$transaction->post_title       => number_format_i18n( $transaction->{TransactionPostType::META_FIELD_VALUE}, 2 ),
+				$transaction->title            => number_format_i18n( $transaction->value, 2 ),
 				__( 'VAT', 'kudos-donations' ) => 0,
 			],
-			'total'           => Utils::format_value_for_display( $transaction->{TransactionPostType::META_FIELD_VALUE} ),
-			'text'            => [
-				'invoice'     => __( 'Invoice', 'kudos-donations' ),
-				'date'        => __( 'Date', 'kudos-donations' ),
-				'to'          => __( 'To', 'kudos-donations' ),
-				'from'        => __( 'From', 'kudos-donations' ),
-				'description' => __( 'Description', 'kudos-donations' ),
-				'amount'      => __( 'Amount', 'kudos-donations' ),
-				'total'       => __( 'Total', 'kudos-donations' ),
-				'vat_number'  => __( 'VAT Number', 'kudos-donations' ),
-				'created_by'  => __( 'Created by', 'kudos-donations' ),
-			],
+			'total'           => Utils::format_value_for_display( (string) $transaction->value ),
 		];
 
 		// Append donor.
-		$donor = DonorPostType::get_post( [ 'ID' => $transaction->{TransactionPostType::META_FIELD_DONOR_ID} ] );
-		if ( $donor ) {
-				$data['donor_business'] = $donor->{DonorPostType::META_FIELD_BUSINESS_NAME};
-				$data['donor_name']     = $donor->{DonorPostType::META_FIELD_NAME};
-				$data['donor_street']   = $donor->{DonorPostType::META_FIELD_STREET};
-				$data['donor_postcode'] = $donor->{DonorPostType::META_FIELD_POSTCODE};
-				$data['donor_city']     = $donor->{DonorPostType::META_FIELD_CITY};
-				$data['donor_country']  = $donor->{DonorPostType::META_FIELD_COUNTRY};
+		$donors = $this->donor_repository;
+		/** @var ?DonorEntity $donor */
+		$donor = $donors->find_one_by( [ 'id' => $transaction->donor_id ] );
+		if ( null !== $donor ) {
+			$locale = $donor->locale;
+			if ( $locale ) {
+				$this->logger->debug( "Switching locale to $locale" );
+				// Switch to donor's locale if available.
+				Utils::switch_locale( $locale );
+			}
+			$data['donor_business'] = $donor->business_name ?? '';
+			$data['donor_name']     = $donor->name ?? '';
+			$data['donor_street']   = $donor->street ?? '';
+			$data['donor_postcode'] = $donor->postcode ?? '';
+			$data['donor_city']     = $donor->city ?? '';
+			$data['donor_country']  = $donor->country ?? '';
 		}
+
+		// Add text.
+		$data['text'] = [
+			'invoice'     => __( 'Invoice', 'kudos-donations' ),
+			'date'        => __( 'Date', 'kudos-donations' ),
+			'to'          => __( 'To', 'kudos-donations' ),
+			'from'        => __( 'From', 'kudos-donations' ),
+			'description' => __( 'Description', 'kudos-donations' ),
+			'amount'      => __( 'Amount', 'kudos-donations' ),
+			'total'       => __( 'Total', 'kudos-donations' ),
+			'vat_number'  => __( 'VAT Number', 'kudos-donations' ),
+			'created_by'  => __( 'Created by', 'kudos-donations' ),
+		];
+
+		// Restore locale to original state.
+		restore_previous_locale();
 
 		$this->logger->debug( 'Generating new invoice.', [ 'file' => $file ] );
 

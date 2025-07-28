@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { MollieTab, EmailTab, HelpTab, InvoiceTab } from './tabs';
+import { EmailTab, HelpTab, InvoiceTab, MollieTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import {
@@ -14,7 +14,7 @@ import {
 } from '@wordpress/components';
 import { useAdminContext, useSettingsContext } from '../../contexts';
 import { applyFilters } from '@wordpress/hooks';
-import type { KudosSettings } from '../../../types/settings';
+import type { BaseSettings } from '../../../types/settings';
 
 interface SaveButtonProps {
 	isSaving: boolean;
@@ -44,13 +44,8 @@ interface SettingsTab {
 
 export const SettingsPage = (): React.ReactNode => {
 	const { setHeaderContent } = useAdminContext();
-	const {
-		settingsReady,
-		settingsSaving,
-		updateSettings,
-		settings,
-		isVendorReady,
-	} = useSettingsContext();
+	const { settingsReady, settingsSaving, updateSettings, settings } =
+		useSettingsContext();
 	const formMethods = useForm({
 		defaultValues: settings,
 	});
@@ -95,17 +90,17 @@ export const SettingsPage = (): React.ReactNode => {
 			<>
 				<FlexItem>
 					<span className="status-text">
-						{isVendorReady
-							? settings?._kudos_payment_vendor +
-								' ' +
-								__('ready', 'kudos-donations')
+						{settings._kudos_payment_vendor_status.ready
+							? settings._kudos_payment_vendor_status.text
 							: __('not ready', 'kudos-donations')}
 					</span>
 				</FlexItem>
 				<FlexItem>
 					<span
 						className={clsx(
-							isVendorReady ? 'ready' : 'not-ready',
+							settings._kudos_payment_vendor_status.ready
+								? 'ready'
+								: 'not-ready',
 							'status-icon'
 						)}
 					></span>
@@ -123,7 +118,7 @@ export const SettingsPage = (): React.ReactNode => {
 			setHeaderContent(null);
 		};
 	}, [
-		isVendorReady,
+		settings._kudos_payment_vendor_status,
 		setHeaderContent,
 		settings?._kudos_payment_vendor,
 		settingsSaving,
@@ -135,7 +130,7 @@ export const SettingsPage = (): React.ReactNode => {
 		}
 	}, [formMethods, settings]);
 
-	const save = (data: KudosSettings): Promise<void> => {
+	const save = (data: BaseSettings): Promise<void> => {
 		return updateSettings(data, formState.dirtyFields);
 	};
 

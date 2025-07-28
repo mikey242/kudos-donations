@@ -5,16 +5,14 @@ import { useFormContext } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import { useEffect } from '@wordpress/element';
 import { TextAreaControl } from '../controls';
-import type { Campaign } from '../../../types/posts';
+import type { Campaign } from '../../../types/entity';
 
 interface MessageTabProps {
 	campaign: Campaign;
 }
 
 export const MessageTab = ({ campaign }: MessageTabProps) => {
-	const {
-		meta: { message_title, message_description, message_required },
-	} = campaign;
+	const { message_title, message_description, message_required } = campaign;
 	const { setFocus } = useFormContext();
 	const optional = !message_required
 		? '(' + __('optional', 'kudos-donations') + ')'

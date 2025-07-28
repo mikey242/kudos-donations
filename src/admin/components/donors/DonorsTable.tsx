@@ -1,21 +1,20 @@
-import { Button, Flex, VisuallyHidden } from '@wordpress/components';
+import { Button, Flex, Tooltip, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { DetailsModal, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
-import { usePostsContext, useSettingsContext } from '../../contexts';
-import type { Donor } from '../../../types/posts';
+import { useEntitiesContext, useSettingsContext } from '../../contexts';
+import type { Donor } from '../../../types/entity';
 import { useAdminQueryParams } from '../../hooks';
 export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 	const { settings } = useSettingsContext();
 	const { setParams } = useAdminQueryParams();
-	const { handleDelete, posts, totalPages, totalItems } = usePostsContext();
+	const { handleDelete } = useEntitiesContext();
 
 	const changeView = (postId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
-			meta_key: 'donor_id',
-			meta_value: String(postId),
+			where: { donor_id: String(postId) },
 		});
 	};
 
@@ -23,18 +22,18 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'name',
 			title: __('Name', 'kudos-donations'),
-			valueCallback: (post: Donor): React.ReactNode =>
-				post.meta.name ?? '',
+			orderby: 'name',
+			valueCallback: (post: Donor): React.ReactNode => post.name ?? '',
 		},
 		{
 			key: 'email',
 			title: __('Email', 'kudos-donations'),
-			valueCallback: (post: Donor): React.ReactNode =>
-				post.meta.email ?? '',
+			orderby: 'email',
+			valueCallback: (post: Donor): React.ReactNode => post.email ?? '',
 		},
 		{
-			key: 'value',
-			title: __('Total donated', 'kudos-donations'),
+			key: 'number',
+			title: __('Total donations', 'kudos-donations'),
 			valueCallback: (post: Donor): React.ReactNode => post.total,
 		},
 		{
@@ -42,11 +41,11 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			title: __('Address', 'kudos-donations'),
 			valueCallback: (post: Donor): React.ReactNode => {
 				const hasAddress =
-					post.meta.business_name ||
-					post.meta.street ||
-					post.meta.postcode ||
-					post.meta.city ||
-					post.meta.country;
+					post.business_name ||
+					post.street ||
+					post.postcode ||
+					post.city ||
+					post.country;
 
 				return (
 					<>
@@ -55,15 +54,13 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 								title={__('Address', 'kudos-donations')}
 								content={
 									<div style={{ fontSize: '16px' }}>
-										{post.meta.business_name}
+										{post.business_name}
 										<br />
-										{post.meta.street}
+										{post.street}
 										<br />
-										{post.meta.postcode +
-											' ' +
-											post.meta.city}
+										{post.postcode + ' ' + post.city}
 										<br />
-										{post.meta.country}
+										{post.country}
 									</div>
 								}
 							/>
@@ -75,9 +72,11 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'date',
 			title: __('Created', 'kudos-donations'),
-			orderby: 'date',
+			orderby: 'created_at',
 			valueCallback: (post: Donor): React.ReactNode => (
-				<i>{dateI18n('d-m-Y', post.date, null)}</i>
+				<Tooltip text={dateI18n('d-m-Y H:i:s', post.created_at, null)}>
+					<i>{dateI18n('d-m-Y', post.created_at, null)}</i>
+				</Tooltip>
 			),
 		},
 		{
@@ -125,12 +124,7 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 
 	return (
 		<>
-			<Table
-				posts={posts}
-				headerItems={headerItems}
-				totalItems={totalItems}
-				totalPages={totalPages}
-			/>
+			<Table headerItems={headerItems} />
 		</>
 	);
 };

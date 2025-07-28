@@ -2,9 +2,9 @@
 /**
  * Abstract Admin Page.
  *
- * @link https://gitlab.iseard.media/michael/kudos-donations/
+ * @link https://github.com/mikey242/kudos-donations/
  *
- * @copyright 2024 Iseard Media
+ * @copyright 2025 Iseard Media
  */
 
 declare(strict_types=1);
@@ -12,11 +12,10 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Admin;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use Psr\Log\LoggerAwareTrait;
 
 abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPageInterface {
 
-	use LoggerAwareTrait;
+	private ?string $screen_id;
 
 	/**
 	 * {@inheritDoc}
@@ -46,47 +45,54 @@ abstract class AbstractAdminPage extends AbstractRegistrable implements AdminPag
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @psalm-suppress InvalidArgument
 	 */
 	public function register(): void {
-		$screen_id = null;
+		$this->screen_id = null;
+
+		$callback = $this instanceof HasCallbackInterface ? [ $this, 'callback' ] : null;
 
 		if ( $this instanceof ParentAdminPageInterface ) {
-			$screen_id = add_menu_page(
+			$this->screen_id = add_menu_page(
 				$this->get_page_title(),
 				$this->get_menu_title(),
 				$this->get_capability(),
 				$this->get_menu_slug(),
-				$this instanceof HasCallbackInterface ? [ $this, 'callback' ] : false,
+				$callback,
 				$this->get_icon_url(),
 				$this->get_position()
 			);
 		} elseif ( $this instanceof SubmenuAdminPageInterface ) {
-			$screen_id = add_submenu_page(
+			$this->screen_id = add_submenu_page(
 				$this->get_parent_slug(),
 				$this->get_page_title(),
 				$this->get_menu_title(),
 				$this->get_capability(),
 				$this->get_menu_slug(),
-				$this instanceof HasCallbackInterface ? [ $this, 'callback' ] : null,
+				$callback,
 				$this->get_position(),
 			);
 		}
 
 		if ( $this instanceof HasAssetsInterface ) {
-			add_action(
-				'admin_enqueue_scripts',
-				function ( $hook ) use ( $screen_id ): void {
-					if ( $screen_id === $hook ) {
-						/**
-						 * Load assets.
-						 *
-						 * @var HasAssetsInterface $this
-						 */
-						$this->register_assets();
-						do_action( "{$this->get_menu_slug()}_page_register_assets" );
-					}
-				}
-			);
+			add_action( 'admin_enqueue_scripts', [ $this, 'maybe_register_assets' ] );
+		}
+	}
+
+	/**
+	 * Register the assets if class implements HasAssetsInterface.
+	 *
+	 * @param string $hook The current admin page.
+	 */
+	public function maybe_register_assets( string $hook ): void {
+		if ( ! $this instanceof HasAssetsInterface ) {
+			return;
+		}
+
+		if ( $hook === $this->screen_id ) {
+			$this->register_assets();
+			do_action( "{$this->get_menu_slug()}_page_register_assets" );
 		}
 	}
 }
