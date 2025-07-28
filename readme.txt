@@ -4,7 +4,7 @@ Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.1.4
+Stable tag: 4.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,11 @@ For general information on how to use shortcodes, please visit [this page](https
 6. Automated email receipt
 
 == Changelog ==
+
+- 4.1.6 =
+* Add address column to donors table
+* Update headlessui/react to v2.2.6
+* Update Wordpress monorepo
 
 = 4.1.5 =
 * Fix bug where inconsistent post results returned from rest api query
