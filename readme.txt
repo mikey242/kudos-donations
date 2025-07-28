@@ -4,7 +4,7 @@ Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 4.1.5
+Stable tag: 4.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ Add a donation button to any page on your website. Easy & fast setup. Works with
 Kudos Donations is designed to make online fundraising easier than ever. With seamless integration into your WordPress site, customizable options, and real-time tracking of donations, you can focus on growing your cause without the hassle of complicated setups.
 
 = Source =
-The Git repository for this plugin can be found [here](https://github.com/mikey242/kudos-donations).
+The Git repository for this plugin can be found [here](https://gitlab.iseard.media/michael/kudos-donations).
 
 == Installation ==
 
@@ -122,6 +122,11 @@ For general information on how to use shortcodes, please visit [this page](https
 * Automatically link all subscription payment to their subscription (not just initial payment)
 * Allow multiple filters to be applied to admin tables
 * Debug mode: Show linked entities when viewing individual details
+
+- 4.1.6 =
+* Add address column to donors table
+* Update headlessui/react to v2.2.6
+* Update Wordpress monorepo
 
 = 4.1.5 =
 * Fix bug where inconsistent post results returned from rest api query

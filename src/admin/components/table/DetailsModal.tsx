@@ -15,7 +15,7 @@ export const DetailsModal = ({
 	content,
 	title,
 	modalSize = 'small',
-	icon = 'visibility',
+	icon = 'info-outline',
 }: DetailsModalProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	return (

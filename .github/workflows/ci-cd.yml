@@ -66,7 +66,7 @@ jobs:
         name: PHP ${{ matrix.php-version }} tests
         services:
             mysql:
-                image: mysql:9.3
+                image: mysql:9.4
                 env:
                     MYSQL_ROOT_PASSWORD: root
                     MYSQL_DATABASE: wordpress_test

@@ -1,6 +1,6 @@
 import { Button, Flex, Tooltip, VisuallyHidden } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { Table } from '../table';
+import { DetailsModal, Table } from '../table';
 import React from 'react';
 import { dateI18n } from '@wordpress/date';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
@@ -35,6 +35,39 @@ export const DonorsTable = ({ handleEdit }): React.ReactNode => {
 			key: 'number',
 			title: __('Total donations', 'kudos-donations'),
 			valueCallback: (post: Donor): React.ReactNode => post.total,
+		},
+		{
+			key: 'address',
+			title: __('Address', 'kudos-donations'),
+			valueCallback: (post: Donor): React.ReactNode => {
+				const hasAddress =
+					post.business_name ||
+					post.street ||
+					post.postcode ||
+					post.city ||
+					post.country;
+
+				return (
+					<>
+						{hasAddress && (
+							<DetailsModal
+								title={__('Address', 'kudos-donations')}
+								content={
+									<div style={{ fontSize: '16px' }}>
+										{post.business_name}
+										<br />
+										{post.street}
+										<br />
+										{post.postcode + ' ' + post.city}
+										<br />
+										{post.country}
+									</div>
+								}
+							/>
+						)}
+					</>
+				);
+			},
 		},
 		{
 			key: 'date',
