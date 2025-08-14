@@ -48,7 +48,6 @@
 		"@wordpress/compose": "^7.26.0",
 		"@wordpress/core-data": "^7.26.0",
 		"@wordpress/data": "^10.26.0",
-		"@wordpress/dataviews": "^5.0.0",
 		"@wordpress/date": "^5.26.0",
 		"@wordpress/dependency-extraction-webpack-plugin": "^6.26.0",
 		"@wordpress/dom-ready": "^4.26.0",
