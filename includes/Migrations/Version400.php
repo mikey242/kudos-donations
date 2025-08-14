@@ -400,7 +400,7 @@ class Version400 extends BaseMigration {
 	 * @return array|object|null
 	 */
 	private function get_rows( string $table_name, int $offset, int $limit = self::DEFAULT_CHUNK_SIZE ) {
-		$query = $this->wpdb->prepare( "SELECT * FROM $table_name LIMIT %d OFFSET %d", $limit, $offset );
+		$query = $this->wpdb->prepare( "SELECT * FROM $table_name LIMIT %d OFFSET %d", [ $limit, $offset ] );
 		return $this->wpdb->get_results( $query );
 	}
 
@@ -411,7 +411,7 @@ class Version400 extends BaseMigration {
 	 */
 	private function table_exists( string $table_name ): bool {
 		// Check table exists.
-		$check = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
+		$check = $this->wpdb->prepare( 'SHOW TABLES LIKE %s', [ $table_name ] );
 		if ( $this->wpdb->get_var( $check ) !== $table_name ) {
 			$this->logger->error( 'Table not found for migration step', [ 'table' => $table_name ] );
 			return false;
