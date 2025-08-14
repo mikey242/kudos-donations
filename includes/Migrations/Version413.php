@@ -32,7 +32,7 @@ class Version413 extends BaseMigration {
 		$this->logger->info( 'Migrating anonymous donor options' );
 		$campaigns = CampaignPostType::get_posts();
 		foreach ( $campaigns as $campaign ) {
-			$anonymous = get_post_meta( $campaign->ID, 'allow_anonymous' );
+			$anonymous = get_post_meta( $campaign->ID, 'allow_anonymous', true );
 			if ( $anonymous ) {
 				CampaignPostType::save(
 					[
