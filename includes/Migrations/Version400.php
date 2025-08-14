@@ -16,6 +16,7 @@ namespace IseardMedia\Kudos\Migrations;
 
 use IseardMedia\Kudos\Enum\PaymentStatus;
 use IseardMedia\Kudos\Helper\Utils;
+use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Provider\EmailProvider\SMTPProvider;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Service\InvoiceService;
@@ -24,6 +25,17 @@ use WP_Post;
 class Version400 extends BaseMigration {
 
 	protected string $version = '4.0.0';
+
+	protected WpDb $wpdb;
+
+	/**
+	 * Constructor for migrations.
+	 *
+	 * @param WpDb $wpdb The WordPress database wrapper.
+	 */
+	public function __construct( WpDb $wpdb ) {
+		$this->wpdb = $wpdb;
+	}
 
 	/**
 	 * {@inheritDoc}

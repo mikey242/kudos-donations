@@ -11,30 +11,18 @@ declare( strict_types=1 );
 
 namespace IseardMedia\Kudos\Migrations;
 
-use IseardMedia\Kudos\Helper\WpDb;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
+use IseardMedia\Kudos\Container\SafeLoggerTrait;
+use Psr\Log\LoggerAwareInterface;
 
-abstract class BaseMigration implements MigrationInterface {
+abstract class BaseMigration implements MigrationInterface, LoggerAwareInterface {
+
+	use SafeLoggerTrait;
 
 	protected const DEFAULT_CHUNK_SIZE = 50;
 	protected const OFFSET_KEY         = 'offset';
 	protected const COMPLETE_KEY       = 'complete';
 
 	protected string $version;
-	protected WpDb $wpdb;
-	protected LoggerInterface $logger;
-
-	/**
-	 * Constructor for migrations.
-	 *
-	 * @param WpDb                 $wpdb The WordPress database wrapper.
-	 * @param LoggerInterface|null $logger Logger instance.
-	 */
-	public function __construct( WpDb $wpdb, ?LoggerInterface $logger = null ) {
-		$this->wpdb   = $wpdb;
-		$this->logger = $logger ?? new NullLogger();
-	}
 
 	/**
 	 * Runs a single job for this migration in a batch.
