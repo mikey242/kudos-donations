@@ -102,7 +102,6 @@ class DonorRepositoryTest extends BaseTestCase {
 	 */
 	public function test_find_by_returns_empty_array_for_no_match(): void {
 		$results = $this->donor_repository->find_by([ 'email' => 'nonexistent@example.com' ]);
-		$this->assertIsArray($results);
 		$this->assertCount(0, $results);
 	}
 

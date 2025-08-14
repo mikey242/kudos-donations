@@ -57,7 +57,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 		]);
 		$id = $this->transaction_repository->insert($transaction);
 
-		/** @var TransactionEntity $transaction */
+		/** @var ?TransactionEntity $transaction */
 		$transaction = $this->transaction_repository->get($id);
 
 		$this->assertNotNull($transaction);
@@ -102,7 +102,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 			'status' => 'refunded'
 		]);
 
-		$this->assertIsArray($results);
+		$this->assertNotEmpty($results);
 		$this->assertCount(1, $results);
 		$this->assertSame('refunded', $results[0]->status);
 	}
@@ -130,7 +130,7 @@ class TransactionRepositoryTest extends BaseTestCase {
 
 		$all = $this->transaction_repository->all();
 
-		$this->assertIsArray($all);
+		$this->assertNotEmpty($all);
 		$this->assertCount(2, $all);
 	}
 
