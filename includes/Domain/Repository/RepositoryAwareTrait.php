@@ -49,7 +49,7 @@ trait RepositoryAwareTrait {
 	 *
 	 * @phpcs:disable Squiz.Commenting.FunctionComment.IncorrectTypeHint
 	 */
-	protected function get_repository( string $class_name ) {
+	protected function get_repository( string $class_name ): BaseRepository {
 		return $this->get_repository_manager()->get( $class_name );
 	}
 }
