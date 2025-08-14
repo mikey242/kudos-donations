@@ -23,9 +23,12 @@ use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
-use IseardMedia\Kudos\Helper\WpDb;
+use IseardMedia\Kudos\Domain\Table\BaseTable;
+use IseardMedia\Kudos\Domain\Table\CampaignsTable;
+use IseardMedia\Kudos\Domain\Table\DonorsTable;
+use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
+use IseardMedia\Kudos\Domain\Table\TransactionsTable;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
-use Psr\Log\LoggerInterface;
 
 class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
@@ -33,17 +36,28 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
 	protected string $version = '4.2.0';
 	private MolliePaymentProvider $mollie;
+	/**
+	 * @var BaseTable[]
+	 */
+	private array $tables;
 
 	/**
-	 * Add MolliePaymentVendor for handling refresh.
+	 * Add MolliePaymentVendor for handling refresh and add tables for creation.
 	 *
 	 * @param MolliePaymentProvider $mollie_payment_vendor Mollie related functions.
-	 * @param WpDb                  $wpdb wpdb wrapper.
-	 * @param LoggerInterface|null  $logger Logger interface.
+	 * @param CampaignsTable        $campaigns_table The campaigns table class.
+	 * @param DonorsTable           $donors_table The donors table class.
+	 * @param TransactionsTable     $transactions_table The transactions table class.
+	 * @param SubscriptionsTable    $subscriptions_table The subscriptions table class.
 	 */
-	public function __construct( MolliePaymentProvider $mollie_payment_vendor, WpDb $wpdb, ?LoggerInterface $logger = null ) {
-		parent::__construct( $wpdb, $logger );
+	public function __construct( MolliePaymentProvider $mollie_payment_vendor, CampaignsTable $campaigns_table, DonorsTable $donors_table, TransactionsTable $transactions_table, SubscriptionsTable $subscriptions_table ) {
 		$this->mollie = $mollie_payment_vendor;
+		$this->tables = [
+			$campaigns_table,
+			$donors_table,
+			$transactions_table,
+			$subscriptions_table,
+		];
 	}
 
 	/**
@@ -51,6 +65,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 */
 	public function get_jobs(): array {
 		return [
+			'create_tables'                   => $this->job( [ $this, 'create_tables' ], 'Create new tables' ),
 			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating donors' ),
 			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating campaigns' ),
 			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating transactions' ),
@@ -59,6 +74,15 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions' ),
 			'refresh_mollie'                  => $this->job( [ $this, 'refresh_mollie_status' ], 'Refresh Mollie status' ),
 		];
+	}
+
+	/**
+	 * Creates tables.
+	 */
+	public function create_tables() {
+		foreach ( $this->tables as $table ) {
+			$table->create_table();
+		}
 	}
 
 	/**
