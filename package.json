@@ -30,7 +30,7 @@
 		"react-router-dom": "^7.6.3",
 		"react-select-country-list": "^2.2.3",
 		"react-shadow": "^20.6.0",
-		"zod": "^3.25.64"
+		"zod": "^4.0.0"
 	},
 	"devDependencies": {
 		"@babel/preset-react": "^7.27.1",
