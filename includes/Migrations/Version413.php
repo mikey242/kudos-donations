@@ -11,9 +11,22 @@
 
 namespace IseardMedia\Kudos\Migrations;
 
+use IseardMedia\Kudos\Helper\WpDb;
+
 class Version413 extends BaseMigration {
 
 	protected string $version = '4.1.3';
+
+	protected WpDb $wpdb;
+
+	/**
+	 * Constructor for migrations.
+	 *
+	 * @param WpDb $wpdb The WordPress database wrapper.
+	 */
+	public function __construct( WpDb $wpdb ) {
+		$this->wpdb = $wpdb;
+	}
 
 	/**
 	 * {@inheritDoc}
