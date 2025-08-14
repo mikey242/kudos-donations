@@ -6,7 +6,6 @@
 namespace IseardMedia\Kudos\Tests\Repository;
 
 use IseardMedia\Kudos\Tests\BaseTestCase;
-use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 
@@ -25,9 +24,9 @@ class DonorRepositoryTest extends BaseTestCase {
 	/**
 	 * Test that donor is created and returned.
 	 */
-	public function test_save_creates_campaign(): void {
-		$campaign = new CampaignEntity([ 'title' => 'Test Donor']);
-		$id = $this->donor_repository->insert($campaign);
+	public function test_save_creates_donor(): void {
+		$donor = new DonorEntity([ 'title' => 'Test Donor']);
+		$id = $this->donor_repository->insert($donor);
 
 		$this->assertIsInt($id);
 		$this->assertGreaterThan(0, $id);
