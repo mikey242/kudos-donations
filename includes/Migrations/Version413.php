@@ -36,7 +36,7 @@ class Version413 extends BaseMigration {
 			]
 		);
 		foreach ( $campaigns as $campaign ) {
-			$anonymous = get_post_meta( $campaign->ID, 'allow_anonymous' );
+			$anonymous = get_post_meta( $campaign->ID, 'allow_anonymous', true );
 			if ( $anonymous ) {
 				update_post_meta( $campaign->ID, 'name_required', false );
 				update_post_meta( $campaign->ID, 'email_required', ! ( 'oneoff' === ( $campaign->donation_type ?? 'oneoff' ) ) );
