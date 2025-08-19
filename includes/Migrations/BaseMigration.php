@@ -33,6 +33,8 @@ abstract class BaseMigration implements MigrationInterface, LoggerAwareInterface
 	public function run( string $job ): bool {
 		$jobs = $this->get_jobs();
 
+		$this->logger->info( "Migration job '$job' starting." );
+
 		if ( ! isset( $jobs[ $job ] ) ) {
 			$this->logger->warning( "Migration job '$job' is not defined or not callable." );
 			return false;
