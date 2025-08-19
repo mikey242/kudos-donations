@@ -196,7 +196,11 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'minimum_donation'           => $this->get_meta_float( $post_id, 'minimum_donation', 1.0 ),
 					'maximum_donation'           => $this->get_meta_float( $post_id, 'maximum_donation', 5000.0 ),
 					'donation_type'              => get_post_meta( $post_id, 'donation_type', true ),
-					'frequency_options'          => get_post_meta( $post_id, 'frequency_options', true ) ?: [],
+					'frequency_options'          => get_post_meta( $post_id, 'frequency_options', true ) ?: [
+						'12 months' => __( 'Yearly', 'kudos-donations' ),
+						'3 months'  => __( 'Quarterly', 'kudos-donations' ),
+						'1 month'   => __( 'Monthly', 'kudos-donations' ),
+					],
 					'email_enabled'              => $this->get_meta_bool( $post_id, 'email_enabled', true ),
 					'email_required'             => $this->get_meta_bool( $post_id, 'email_required', true ),
 					'name_enabled'               => $this->get_meta_bool( $post_id, 'name_enabled', true ),
