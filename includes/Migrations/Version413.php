@@ -33,8 +33,9 @@ class Version413 extends BaseMigration {
 	 */
 	public function get_jobs(): array {
 		return [
-			'remove_anonymous_option' => $this->job( [ $this, 'remove_anonymous_option' ], 'Updating settings' ),
-			'cleanup_old_tables'      => $this->job( [ $this, 'cleanup' ], 'Cleaning up old tables' ),
+			'remove_anonymous_option'         => $this->job( [ $this, 'remove_anonymous_option' ], 'Updating settings' ),
+			'link_all_transactions_to_donors' => $this->job( [ $this, 'link_all_transactions_to_donors' ], 'Linking all transactions to donors' ),
+			'cleanup_old_tables'              => $this->job( [ $this, 'cleanup' ], 'Cleaning up old tables' ),
 		];
 	}
 
@@ -56,6 +57,57 @@ class Version413 extends BaseMigration {
 			}
 		}
 		return 1;
+	}
+
+	/**
+	 * Link all un-linked transactions to donors using vendor_customer_id.
+	 *
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
+	 */
+	public function link_all_transactions_to_donors( int $offset, int $limit ): int {
+		$transactions = get_posts(
+			[
+				'post_type'        => 'kudos_transaction',
+				'post_status'      => 'any',
+				'numberposts'      => $limit,
+				'offset'           => $offset,
+				'orderby'          => 'ID',
+				'order'            => 'ASC',
+				'suppress_filters' => false,
+			]
+		);
+
+		if ( empty( $transactions ) ) {
+			$this->logger->info( 'No more transactions to link.' );
+			return 0;
+		}
+
+		foreach ( $transactions as $transaction ) {
+			$donor_id           = get_post_meta( $transaction->ID, 'donor_id', true );
+			$vendor_customer_id = get_post_meta( $transaction->ID, 'vendor_customer_id', true );
+			if ( ! $donor_id && $vendor_customer_id ) {
+				$this->logger->info( 'Transaction has no donor_id but does have vendor_customer_id' );
+				$donor_args  = [
+					'post_type'  => 'kudos_donor',
+					'meta_query' => [
+						[
+							'key'   => 'vendor_customer_id',
+							'value' => $vendor_customer_id,
+						],
+					],
+				];
+				$donor_query = new \WP_Query( $donor_args );
+				if ( $donor_query->have_posts() ) {
+					$this->logger->info( 'Donor found, linking to transaction' );
+					$donor_post = $donor_query->posts[0];
+					$donor_id   = $donor_post->ID;
+					update_post_meta( $transaction->ID, 'donor_id', $donor_id );
+				}
+			}
+		}
+
+		return \count( $transactions );
 	}
 
 	/**
