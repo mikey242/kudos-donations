@@ -65,7 +65,7 @@ class Migration extends BaseRestController {
 	 */
 	public function rest_migrate_handler(): WP_REST_Response {
 		$migrations = $this->migration->get_migrations();
-		$history    = get_option( MigrationHandler::SETTING_MIGRATION_HISTORY );
+		$history    = (array) get_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
 
 		if ( empty( $migrations ) ) {
 			return new WP_REST_Response(
