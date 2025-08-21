@@ -512,7 +512,6 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		/** @var TransactionEntity[] $orphaned_transactions */
 		$orphaned_transactions = $transaction_repo->query(
 			[
-				'columns' => [ 'id', 'wp_post_id', 'donor_id', 'campaign_id', 'value', 'sequence_type', 'subscription_id' ],
 				'where'   => [
 					'sequence_type' => 'recurring',
 				],
