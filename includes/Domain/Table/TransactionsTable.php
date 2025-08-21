@@ -38,6 +38,7 @@ class TransactionsTable extends BaseTable {
 			campaign_id bigint(20) unsigned DEFAULT NULL,
 			subscription_id bigint(20) unsigned DEFAULT NULL,
 			vendor varchar(100),
+			vendor_customer_id varchar(255),
 			vendor_payment_id varchar(255),
 			invoice_number bigint(20) unsigned DEFAULT NULL,
 			checkout_url text DEFAULT NULL,
@@ -50,6 +51,7 @@ class TransactionsTable extends BaseTable {
 			KEY idx_donor (donor_id),
 			KEY idx_subscription (subscription_id),
 			KEY idx_vendor_payment (vendor_payment_id(191)),
+			KEY idx_vendor_customer (vendor_customer_id(191)),
 			KEY idx_post (wp_post_id),
 			PRIMARY KEY  (id)
 	";
