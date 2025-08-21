@@ -241,7 +241,7 @@ class Version400 extends BaseMigration {
 				continue;
 			}
 
-			$this->create_post_title( $new_donor->ID );
+			$this::create_post_title( $new_donor->ID );
 
 			// Update transient cache.
 			if ( $donor->customer_id ?? null ) {
@@ -424,7 +424,7 @@ class Version400 extends BaseMigration {
 	 *
 	 * @param int $post_id The id of the post.
 	 */
-	public function create_post_title( int $post_id ) {
+	public static function create_post_title( int $post_id ) {
 		$post        = get_post( $post_id );
 		$object_type = get_post_type_object( get_post_type( $post_id ) );
 		$postarr     = [
