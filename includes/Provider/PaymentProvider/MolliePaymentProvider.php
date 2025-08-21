@@ -461,8 +461,9 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			$checkout_url = $payment->getCheckoutUrl();
 
 			// Update transaction entity from payment object.
-			$transaction->checkout_url      = $checkout_url;
-			$transaction->vendor_payment_id = $payment->id;
+			$transaction->checkout_url       = $checkout_url;
+			$transaction->vendor_payment_id  = $payment->id;
+			$transaction->vendor_customer_id = $payment->customerId;
 			$this->transaction_repository
 				->update( $transaction );
 
@@ -754,10 +755,11 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			// Save new transaction.
 			$transaction    = new TransactionEntity(
 				[
-					'donor_id'        => $donor_id ?? '',
-					'campaign_id'     => $campaign_id,
-					'subscription_id' => $subscription_id,
-					'vendor'          => self::get_slug(),
+					'donor_id'           => $donor_id ?? '',
+					'campaign_id'        => $campaign_id,
+					'subscription_id'    => $subscription_id,
+					'vendor_customer_id' => $subscription->customerId,
+					'vendor'             => self::get_slug(),
 				]
 			);
 			$transaction_id = $transactions->insert( $transaction );
@@ -810,13 +812,14 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 
 		if ( $payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks() ) {
 			// Update transaction.
-			$transaction->status            = $payment->status;
-			$transaction->vendor_payment_id = $payment->id;
-			$transaction->value             = \floatval( $payment->amount->value );
-			$transaction->currency          = $payment->amount->currency;
-			$transaction->sequence_type     = $payment->sequenceType;
-			$transaction->method            = $payment->method;
-			$transaction->mode              = $payment->mode;
+			$transaction->status             = $payment->status;
+			$transaction->vendor_payment_id  = $payment->id;
+			$transaction->vendor_customer_id = $payment->customerId;
+			$transaction->value              = \floatval( $payment->amount->value );
+			$transaction->currency           = $payment->amount->currency;
+			$transaction->sequence_type      = $payment->sequenceType;
+			$transaction->method             = $payment->method;
+			$transaction->mode               = $payment->mode;
 
 			$transactions->update( $transaction );
 
