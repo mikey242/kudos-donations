@@ -9,9 +9,11 @@ import { EntityPage } from './EntityPage';
 import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
 import type { Campaign } from '../../types/entity';
-import SingleEntityView from './SingleEntityView';
 import { Flex } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { TransactionEdit } from './transactions/TransactionEdit';
+import { SubscriptionEdit } from './subscriptions/SubscriptionEdit';
+import { DonorEdit } from './donors/DonorEdit';
 
 const AdminPages = {
 	'kudos-campaigns': () => (
@@ -43,7 +45,7 @@ const AdminPages = {
 				renderTable={(editEntity) => (
 					<DonorsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(entity) => <SingleEntityView entity={entity} />}
+				renderEdit={(entity) => <DonorEdit entity={entity} />}
 			/>
 		</EntitiesProvider>
 	),
@@ -57,7 +59,7 @@ const AdminPages = {
 				renderTable={(editEntity) => (
 					<TransactionsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(entity) => <SingleEntityView entity={entity} />}
+				renderEdit={(entity) => <TransactionEdit entity={entity} />}
 			/>
 		</EntitiesProvider>
 	),
@@ -71,7 +73,7 @@ const AdminPages = {
 				renderTable={(editEntity) => (
 					<SubscriptionsTable handleEdit={editEntity} />
 				)}
-				renderEdit={(entity) => <SingleEntityView entity={entity} />}
+				renderEdit={(entity) => <SubscriptionEdit entity={entity} />}
 			/>
 		</EntitiesProvider>
 	),

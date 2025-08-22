@@ -3,27 +3,15 @@ import { useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminContext, useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
+import { NavigationButtons } from './SingleEntityEdit';
 import type { BaseEntity } from '../../types/entity';
 import {
-	Button,
 	Flex,
 	FlexItem,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalVStack as VStack,
 } from '@wordpress/components';
 import { Panel } from './Panel';
-const NavigationButtons = ({ onBack }): React.ReactNode => (
-	<>
-		<Button
-			variant="secondary"
-			icon="arrow-left"
-			onClick={onBack}
-			type="button"
-		>
-			{__('Back', 'kudos-donations')}
-		</Button>
-	</>
-);
 
 const Row = ({
 	label,
