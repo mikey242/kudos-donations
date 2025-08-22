@@ -138,7 +138,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 					{settings._kudos_debug_mode && (
 						<Button
 							size="compact"
-							icon="media-document"
+							icon="edit"
 							onClick={() => handleEdit(post.id)}
 							title={__('View more', 'kudos-donations')}
 						/>
