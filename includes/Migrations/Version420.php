@@ -95,26 +95,25 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		$post_type  = 'kudos_donor';
 		$donor_repo = $this->get_repository( DonorRepository::class );
 
-		$posts = get_posts(
+		$ids = get_posts(
 			[
 				'post_type'        => $post_type,
 				'post_status'      => 'any',
-				'numberposts'      => $limit,
+				'posts_per_page'   => $limit,
 				'offset'           => $offset,
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
+				'fields'           => 'ids',
 				'suppress_filters' => false,
 			]
 		);
 
-		if ( empty( $posts ) ) {
+		if ( empty( $ids ) ) {
 			$this->logger->info( 'No more donors to migrate.' );
 			return 0;
 		}
 
-		foreach ( $posts as $post ) {
-			$post_id = $post->ID;
-
+		foreach ( $ids as $post_id ) {
 			$existing = $donor_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
 				$this->logger->info( "Donor post $post_id already migrated. Skipping." );
@@ -134,8 +133,8 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'city'               => get_post_meta( $post_id, 'city', true ),
 					'country'            => get_post_meta( $post_id, 'country', true ),
 					'vendor_customer_id' => get_post_meta( $post_id, 'vendor_customer_id', true ),
-					'created_at'         => get_post_time( 'Y-m-d H:i:s', true, $post ),
-					'updated_at'         => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+					'created_at'         => get_post_time( 'Y-m-d H:i:s', true, $post_id ),
+					'updated_at'         => get_post_modified_time( 'Y-m-d H:i:s', true, $post_id ),
 				]
 			);
 
@@ -143,7 +142,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$this->logger->info( "Migrated donor post $post_id", [ 'data' => $donor->to_array() ] );
 		}
 
-		return \count( $posts );
+		return \count( $ids );
 	}
 
 	/**
@@ -156,26 +155,25 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		$post_type     = 'kudos_campaign';
 		$campaign_repo = $this->get_repository( CampaignRepository::class );
 
-		$posts = get_posts(
+		$ids = get_posts(
 			[
 				'post_type'        => $post_type,
 				'post_status'      => 'any',
-				'numberposts'      => $limit,
+				'posts_per_page'   => $limit,
 				'offset'           => $offset,
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
+				'fields'           => 'ids',
 				'suppress_filters' => false,
 			]
 		);
 
-		if ( empty( $posts ) ) {
+		if ( empty( $ids ) ) {
 			$this->logger->info( 'No more campaigns to migrate.' );
 			return 0;
 		}
 
-		foreach ( $posts as $post ) {
-			$post_id = $post->ID;
-
+		foreach ( $ids as $post_id ) {
 			$existing = $campaign_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
 				$this->logger->info( "Campaign post $post_id already migrated. Skipping." );
@@ -185,7 +183,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$campaign = new CampaignEntity(
 				[
 					'wp_post_id'                 => $post_id,
-					'wp_post_slug'               => sanitize_title( $post->post_name ),
+					'wp_post_slug'               => get_the_title( $post_id ),
 					'title'                      => get_post_field( 'post_title', $post_id ),
 					'currency'                   => get_post_meta( $post_id, 'currency', true ) ?: 'EUR',
 					'goal'                       => $this->get_meta_float( $post_id, 'goal' ),
@@ -229,15 +227,15 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'payment_description'        => get_post_meta( $post_id, 'payment_description', true ) ?: __( 'By clicking donate you agree to the following payment:', 'kudos-donations' ),
 					'return_message_title'       => get_post_meta( $post_id, 'return_message_title', true ) ?: __( 'Payment received', 'kudos-donations' ),
 					'return_message_text'        => get_post_meta( $post_id, 'return_message_text', true ) ?: __( 'Thank you for your donation!', 'kudos-donations' ),
-					'created_at'                 => get_post_time( 'Y-m-d H:i:s', true, $post ),
-					'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+					'created_at'                 => get_post_time( 'Y-m-d H:i:s', true, $post_id ),
+					'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post_id ),
 				]
 			);
 			$campaign_repo->insert( $campaign );
 			$this->logger->info( "Migrated campaign post $post_id", [ 'data' => $campaign->to_array() ] );
 		}
 
-		return \count( $posts );
+		return \count( $ids );
 	}
 
 	/**
@@ -252,26 +250,25 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		$campaign_repo    = $this->get_repository( CampaignRepository::class );
 		$donor_repo       = $this->get_repository( DonorRepository::class );
 
-		$posts = get_posts(
+		$ids = get_posts(
 			[
 				'post_type'        => $post_type,
 				'post_status'      => 'any',
-				'numberposts'      => $limit,
+				'posts_per_page'   => $limit,
 				'offset'           => $offset,
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
+				'fields'           => 'ids',
 				'suppress_filters' => false,
 			]
 		);
 
-		if ( empty( $posts ) ) {
+		if ( empty( $ids ) ) {
 			$this->logger->info( 'No more transactions to migrate.' );
 			return 0;
 		}
 
-		foreach ( $posts as $post ) {
-			$post_id = $post->ID;
-
+		foreach ( $ids as $post_id ) {
 			$existing = $transaction_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
 				$this->logger->info( "Transaction post $post_id already migrated. Skipping." );
@@ -316,8 +313,8 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'checkout_url'       => get_post_meta( $post_id, 'checkout_url', true ),
 					'message'            => get_post_meta( $post_id, 'message', true ),
 					'refunds'            => get_post_meta( $post_id, 'refunds', true ),
-					'created_at'         => get_post_time( 'Y-m-d H:i:s', true, $post ),
-					'updated_at'         => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+					'created_at'         => get_post_time( 'Y-m-d H:i:s', true, $post_id ),
+					'updated_at'         => get_post_modified_time( 'Y-m-d H:i:s', true, $post_id ),
 				]
 			);
 
@@ -325,7 +322,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$this->logger->info( "Migrated transaction post $post_id", [ 'data' => $transaction->to_array() ] );
 		}
 
-		return \count( $posts );
+		return \count( $ids );
 	}
 
 	/**
@@ -340,19 +337,20 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		$subscription_repo = $this->get_repository( SubscriptionRepository::class );
 		$donor_repo        = $this->get_repository( DonorRepository::class );
 
-		$posts = get_posts(
+		$ids = get_posts(
 			[
 				'post_type'        => $post_type,
 				'post_status'      => 'any',
-				'numberposts'      => $limit,
+				'posts_per_page'   => $limit,
 				'offset'           => $offset,
 				'orderby'          => 'ID',
 				'order'            => 'ASC',
+				'fields'           => 'ids',
 				'suppress_filters' => false,
 			]
 		);
 
-		if ( empty( $posts ) ) {
+		if ( empty( $ids ) ) {
 			$this->logger->info( 'No more subscriptions to migrate.' );
 			return 0;
 		}
@@ -379,9 +377,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$donor_map[ $row->wp_post_id ] = $row->id;
 		}
 
-		foreach ( $posts as $post ) {
-			$post_id = $post->ID;
-
+		foreach ( $ids as $post_id ) {
 			$existing = $subscription_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
 				$this->logger->info( "Subscription post $post_id already migrated. Skipping." );
@@ -424,8 +420,8 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'campaign_id'            => $campaign_id,
 					'vendor_customer_id'     => get_post_meta( $post_id, 'customer_id', true ),
 					'vendor_subscription_id' => get_post_meta( $post_id, 'vendor_subscription_id', true ),
-					'created_at'             => get_post_time( 'Y-m-d H:i:s', true, $post ),
-					'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post ),
+					'created_at'             => get_post_time( 'Y-m-d H:i:s', true, $post_id ),
+					'updated_at'             => get_post_modified_time( 'Y-m-d H:i:s', true, $post_id ),
 				]
 			);
 
@@ -433,7 +429,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$this->logger->info( "Migrated subscription post $post_id", [ 'data' => $subscription->to_array() ] );
 		}
 
-		return \count( $posts );
+		return \count( $ids );
 	}
 
 	/**
