@@ -7,7 +7,7 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalHeading as Heading,
 	Flex,
-	FlexBlock,
+	FlexBlock, CardFooter,
 } from '@wordpress/components';
 import React from 'react';
 import { useState } from '@wordpress/element';
@@ -15,10 +15,16 @@ import { useState } from '@wordpress/element';
 interface PanelProps {
 	header: string;
 	children: React.ReactNode;
+	footer?: React.ReactNode;
 	initialOpen?: boolean;
 }
 
-export const Panel = ({ header, children, initialOpen = true }: PanelProps) => {
+export const Panel = ({
+	header,
+	children,
+	footer = null,
+	initialOpen = true,
+}: PanelProps) => {
 	const [open, setOpen] = useState(initialOpen);
 	return (
 		<Card>
@@ -35,6 +41,7 @@ export const Panel = ({ header, children, initialOpen = true }: PanelProps) => {
 					<VStack spacing={5}>{children}</VStack>
 				</CardBody>
 			)}
+			{footer && <CardFooter>{footer}</CardFooter>}
 		</Card>
 	);
 };
