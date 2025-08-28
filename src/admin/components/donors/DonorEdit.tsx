@@ -41,7 +41,7 @@ export const DonorEdit = ({ entity }: PostEditProps): React.ReactNode => {
 				},
 				{
 					id: 'postcode',
-					label: 'Transaction id',
+					label: 'Postcode',
 					type: 'text',
 				},
 				{
