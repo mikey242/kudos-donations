@@ -7,7 +7,8 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalHeading as Heading,
 	Flex,
-	FlexBlock, CardFooter,
+	FlexBlock,
+	CardFooter,
 } from '@wordpress/components';
 import React from 'react';
 import { useState } from '@wordpress/element';
