@@ -4,28 +4,39 @@ import React from 'react';
 import { DataForm } from '@wordpress/dataviews/wp';
 import { __, sprintf } from '@wordpress/i18n';
 import { Panel } from './Panel';
-import { useEffect } from '@wordpress/element';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import { useAdminContext, useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
 import { Button } from '@wordpress/components';
 
-interface PostEditProps {
-	data: BaseEntity;
+interface PostEditProps<T extends BaseEntity = BaseEntity> {
+	data: T;
 	fields: Field[];
 	form: {
 		fields: string[];
-		layout?: object;
+		layout?: {
+			labelPosition?: string;
+			type?: 'regular' | 'panel' | 'card';
+		};
 	};
 }
 
 interface Field {
-	elements?: object;
+	elements?: Record<string, unknown>;
 	id: string;
 	label: string;
 	type: string;
 }
 
-export const NavigationButtons = ({ onBack }): React.ReactNode => (
+interface NavigationButtonsProps {
+	onBack: () => void;
+	onSave: () => void;
+}
+
+const NavigationButtons = ({
+	onBack,
+	onSave,
+}: NavigationButtonsProps): React.ReactNode => (
 	<>
 		<Button
 			variant="secondary"
@@ -35,37 +46,47 @@ export const NavigationButtons = ({ onBack }): React.ReactNode => (
 		>
 			{__('Back', 'kudos-donations')}
 		</Button>
+		<Button variant="primary" onClick={onSave} type="button">
+			{__('Save', 'kudos-donations')}
+		</Button>
 	</>
 );
 
-export const SingleEntityEdit = ({
+export const SingleEntityEdit = <T extends BaseEntity>({
 	data,
 	fields,
 	form,
-}: PostEditProps): React.ReactNode => {
+}: PostEditProps<T>): React.ReactNode => {
+	const [formData, setFormData] = useState<T | null>(data ?? null);
 	const { setHeaderContent } = useAdminContext();
 	const { updateParams } = useAdminQueryParams();
 	const { handleUpdate } = useEntitiesContext();
 
+	const onSave = useCallback(() => {
+		void handleUpdate(formData);
+	}, [formData, handleUpdate]);
+
+	const onBack = useCallback(() => {
+		void updateParams({ entity: null, tab: null });
+	}, [updateParams]);
+
 	useEffect(() => {
-		setHeaderContent(
-			<NavigationButtons
-				onBack={() => {
-					void updateParams({ entity: null, tab: null });
-				}}
-			/>
-		);
+		setFormData(data);
+	}, [data]);
+
+	useEffect(() => {
+		setHeaderContent(<NavigationButtons onBack={onBack} onSave={onSave} />);
 		return () => {
 			setHeaderContent(null);
 		};
-	}, [updateParams, setHeaderContent]);
+	}, [onBack, onSave, setHeaderContent]);
 
-	const handleFormChange = (formData: Object) => {
-		const merged = { ...data, ...formData };
-		void handleUpdate(merged);
+	const handleFormChange = (fieldData: Record<string, unknown>) => {
+		const merged = { ...formData, ...fieldData };
+		setFormData(merged);
 	};
 
-	if (!data) {
+	if (!formData) {
 		return null;
 	}
 
@@ -74,21 +95,20 @@ export const SingleEntityEdit = ({
 			header={sprintf(
 				// translators: %s is the entity singular name (e.g Transaction
 				__('%s details', 'kudos-donations'),
-				data?.title
+				formData?.title
 			)}
 		>
 			<DataForm
-				data={data}
+				data={formData}
 				fields={fields}
 				form={{
 					layout: {
 						labelPosition: undefined,
-						openAs: 'modal',
-						type: 'panel',
+						type: 'regular',
 					},
 					...form,
 				}}
-				onChange={(e: Object) => {
+				onChange={(e: Record<string, unknown>) => {
 					handleFormChange(e);
 				}}
 			/>
