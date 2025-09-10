@@ -14,8 +14,15 @@ namespace IseardMedia\Kudos\Admin;
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
+use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
+
+// Ensure WordPress filesystem classes loaded.
+require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 
 class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, SubmenuAdminPageInterface {
 
@@ -23,37 +30,26 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	private const TAB_LOG     = 'log';
 	private const TAB_ACTIONS = 'actions';
 
-	/**
-	 * Pattern used for parsing log entries.
-	 *
-	 * @source https://github.com/devdot/monolog-parser/blob/master/src/Parser.php
-	 */
-	private const PATTERN_MONOLOG2 =
-		'/^' . // start with newline.
-		'\[(?<datetime>.*)] ' . // find the date that is between two brackets [].
-		'(?<channel>[\w-]+).(?<level>\w+): ' . // get the channel and log level, they look like this: channel.ERROR, follow by colon and space.
-		"(?<message>[^\[{\\n]+)" . // next up is the message (containing anything except [ or {, nor a new line).
-		'(?:(?<context> (\[.*?]|\{.*?}))|)' . // followed by a space and anything (non-greedy) in either square [] or curly {} brackets, or nothing at all (skips ahead to line end).
-		'(?:(?<extra> (\[.*]|\{.*}))|)' . // followed by a space and anything (non-greedy) in either square [] or curly {} brackets, or nothing at all (skips ahead to line end).
-		'\s{0,2}$/m';
 
 	private ?array $log_files;
 	private string $current_tab;
 	private string $current_log_level = 'ALL';
 	private string $current_log_file;
 	private CampaignRepository $campaign_repository;
+    private \WP_Filesystem_Direct $file_system;
 
-	/**
+    /**
 	 * Tools page constructor.
 	 *
-	 * @param CampaignRepository $campaign_repository The campaign repository.
+	 * @param CampaignRepository     $campaign_repository The campaign repository.
 	 */
 	public function __construct( CampaignRepository $campaign_repository ) {
-		$this->campaign_repository = $campaign_repository;
-		$this->current_tab         = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::TAB_ACTIONS; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->log_files           = $this->get_logs();
-		$log_file                  = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
-		$this->current_log_file    = file_exists( $log_file )
+        $this->file_system             = new \WP_Filesystem_Direct( true );
+		$this->campaign_repository     = $campaign_repository;
+		$this->current_tab             = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::TAB_ACTIONS; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$this->log_files               = $this->get_logs();
+		$log_file                      = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
+		$this->current_log_file        = $this->file_system->exists( $log_file )
 			? $log_file
 			: ( \is_array( $this->log_files ) && [] !== $this->log_files ? end( $this->log_files ) : '' );
 		$this->process_form_data();
@@ -119,9 +115,21 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	private function get_log_content(): array {
 		$log_array = [];
 		if ( file_exists( $this->current_log_file ) ) {
-			$log_content = array_reverse( file( $this->current_log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) );
-			foreach ( $log_content as $line ) {
-				if ( preg_match( self::PATTERN_MONOLOG2, $line, $log_matches ) ) {
+			$raw_content = $this->file_system->get_contents( $this->current_log_file );
+			$lines = array_filter( explode( "\n", $raw_content ) );
+			
+			foreach ( $lines as $line ) {
+				$log_entry = json_decode( $line, true );
+				if ( $log_entry && is_array( $log_entry ) ) {
+					// Convert JSON format to the expected format for the view.
+					$log_matches = [
+						'datetime' => $log_entry['datetime'] ?? '',
+						'channel'  => $log_entry['channel'] ?? '',
+						'level'    => $log_entry['level_name'] ?? '',
+						'message'  => $log_entry['message'] ?? '',
+						'context'  => ! empty( $log_entry['context'] ) ? wp_json_encode( $log_entry['context'] ) : '[]',
+						'extra'    => ! empty( $log_entry['extra'] ) ? wp_json_encode( $log_entry['extra'] ) : '[]',
+					];
 					$log_array[] = $log_matches;
 				}
 			}
