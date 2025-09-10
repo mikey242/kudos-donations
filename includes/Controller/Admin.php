@@ -153,6 +153,22 @@ class Admin extends AbstractRegistrable {
 						}
 					}
 					break;
+				case 'kudos_link_entities':
+					if ( wp_verify_nonce( $nonce, 'kudos_link_entities' ) ) {
+						$source_repo_class = isset( $_POST['kudos_source_repo'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_source_repo'] ) ) : null;
+						$local_key         = isset( $_POST['kudos_local_key'] ) ? sanitize_text_field( $_POST['kudos_local_key'] ) : null;
+						$vendor_key        = isset( $_POST['kudos_vendor_key'] ) ? sanitize_text_field( $_POST['kudos_vendor_key'] ) : null;
+						$target_repo_class = isset( $_POST['kudos_target_repo'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_target_repo'] ) ) : null;
+						$target_vendor_key = isset( $_POST['kudos_target_vendor_key'] ) ? sanitize_text_field( $_POST['kudos_target_vendor_key'] ) : null;
+
+						$source_repo = $this->repository_manager->get( $source_repo_class );
+						$target_repo = $this->repository_manager->get( $target_repo_class );
+
+						if ( $source_repo && $target_repo ) {
+							$this->link_service->link_entities( $source_repo, $local_key, $vendor_key, $target_repo, $target_vendor_key );
+						}
+					}
+					break;
 				default:
 					$this->logger->debug( 'Action not implemented', [ 'action' => $action ] );
 					break;
