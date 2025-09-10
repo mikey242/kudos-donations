@@ -315,6 +315,70 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 
 						<hr/>
 
+						<h2>Relink entities</h2>
+
+						<form method="post" action="">
+							<?php wp_nonce_field( 'kudos_link_entities' ); ?>
+
+							<table class="form-table">
+								<tr>
+									<th scope="row">
+										<label for="kudos_source_repo"><?php esc_html_e( 'Source repo:', 'kudos-donations' ); ?></label>
+									</th>
+									<td>
+										<select name="kudos_source_repo" id="kudos_source_repo" class="regular-text">
+											<option value="<?php echo DonorRepository::class; ?>"><?php esc_html_e( 'Donors', 'kudos-donations' ); ?></option>
+											<option value="<?php echo CampaignRepository::class; ?>"><?php esc_html_e( 'Campaigns', 'kudos-donations' ); ?></option>
+											<option value="<?php echo TransactionRepository::class; ?>"><?php esc_html_e( 'Transactions', 'kudos-donations' ); ?></option>
+											<option value="<?php echo SubscriptionRepository::class; ?>"><?php esc_html_e( 'Subscriptions', 'kudos-donations' ); ?></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="kudos_local_key"><?php esc_html_e( 'Local key:', 'kudos-donations' ); ?></label>
+									</th>
+									<td>
+										<input name="kudos_local_key" id="kudos_local_key" class="regular-text" />
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="kudos_vendor_key"><?php esc_html_e( 'Vendor key:', 'kudos-donations' ); ?></label>
+									</th>
+									<td>
+										<input name="kudos_vendor_key" id="kudos_vendor_key" class="regular-text" />
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="kudos_target_repo"><?php esc_html_e( 'Target repo:', 'kudos-donations' ); ?></label>
+									</th>
+									<td>
+										<select name="kudos_target_repo" id="kudos_target_repo" class="regular-text">
+											<option value="<?php echo DonorRepository::class; ?>"><?php esc_html_e( 'Donors', 'kudos-donations' ); ?></option>
+											<option value="<?php echo CampaignRepository::class; ?>"><?php esc_html_e( 'Campaigns', 'kudos-donations' ); ?></option>
+											<option value="<?php echo TransactionRepository::class; ?>"><?php esc_html_e( 'Transactions', 'kudos-donations' ); ?></option>
+											<option value="<?php echo SubscriptionRepository::class; ?>"><?php esc_html_e( 'Subscriptions', 'kudos-donations' ); ?></option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="kudos_target_vendor_key"><?php esc_html_e( 'Target vendor key:', 'kudos-donations' ); ?></label>
+									</th>
+									<td>
+										<input name="kudos_target_vendor_key" id="kudos_target_vendor_key" class="regular-text" />
+									</td>
+								</tr>
+							</table>
+
+							<?php submit_button( __( 'Assign Transactions', 'kudos-donations' ), 'secondary', 'kudos_action', false, [ 'data-confirm' => esc_attr__( 'Are you sure you want to move the selected transactions to the selected campaign?', 'kudos-donations' ) ] ); ?>
+							<input type="hidden" name="kudos_action" value="kudos_link_entities" />
+						</form>
+
+						<hr/>
+
 						<h2>Migration History:</h2>
 						<ul>
 							<?php
