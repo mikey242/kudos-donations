@@ -94,7 +94,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
 			->exclude( KUDOS_PLUGIN_DIR . 'includes/{constants.php,namespace.php,functions.php,helpers.php,index.php,vendor,Domain/Entity}' );
 
-    // Configure logger.
+	// Configure logger.
 	$services->set( JsonFormatter::class );
 	$services->set( PsrLogMessageProcessor::class );
 	$services->set( RotatingFileHandler::class )

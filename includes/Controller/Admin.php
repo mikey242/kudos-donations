@@ -15,24 +15,26 @@ use IseardMedia\Kudos\Admin\DebugAdminPage;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\RepositoryManager;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\CacheService;
+use IseardMedia\Kudos\Service\LinkService;
 use IseardMedia\Kudos\Service\NoticeService;
 use WP_REST_Request;
 use WP_REST_Server;
 
 class Admin extends AbstractRegistrable {
 
-	private CampaignRepository $campaign_repository;
-	private TransactionRepository $transaction_repository;
+	private RepositoryManager $repository_manager;
+	private LinkService $link_service;
 
 	/**
-	 * @param TransactionRepository $transaction_repository Transaction repository.
-	 * @param CampaignRepository    $campaign_repository Campaign repository.
+	 * @param RepositoryManager $repository_manager The repository manager.
+	 * @param LinkService       $link_service The linking service.
 	 */
-	public function __construct( TransactionRepository $transaction_repository, CampaignRepository $campaign_repository ) {
-		$this->transaction_repository = $transaction_repository;
-		$this->campaign_repository    = $campaign_repository;
+	public function __construct( RepositoryManager $repository_manager, LinkService $link_service ) {
+		$this->repository_manager = $repository_manager;
+		$this->link_service       = $link_service;
 	}
 
 	/**
@@ -81,7 +83,7 @@ class Admin extends AbstractRegistrable {
 					break;
 				case 'kudos_clear_campaigns':
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_campaigns' ) ) {
-						$campaigns = $this->campaign_repository->all();
+						$campaigns = $this->repository_manager->get( CampaignRepository::class )->all();
 						foreach ( $campaigns as $campaign ) {
 							wp_delete_post( $campaign->id, true );
 						}
@@ -114,7 +116,7 @@ class Admin extends AbstractRegistrable {
 					if ( wp_verify_nonce( $nonce, 'kudos_assign_transactions_to_campaign' ) ) {
 						$from             = $_POST['kudos_from_campaign'];
 						$to               = $_POST['kudos_to_campaign'];
-						$transaction_repo = $this->transaction_repository;
+						$transaction_repo = $this->repository_manager->get( TransactionRepository::class );
 
 						switch ( $from ) {
 							case '_orphaned_transactions_':
@@ -210,13 +212,13 @@ class Admin extends AbstractRegistrable {
 	 */
 	private function get_orphan_transaction_ids(): array {
 		/** @var TransactionEntity[] $transactions */
-		$transactions           = $this->transaction_repository->all();
+		$transactions           = $this->repository_manager->get( TransactionRepository::class )->all();
 		$orphan_transaction_ids = [];
 
 		foreach ( $transactions as $transaction ) {
 			$campaign_id = $transaction->campaign_id;
 
-			$is_missing = empty( $campaign_id ) || ! $this->campaign_repository->get( $campaign_id );
+			$is_missing = empty( $campaign_id ) || ! $this->repository_manager->get( CampaignRepository::class )->get( $campaign_id );
 
 			if ( $is_missing ) {
 				$orphan_transaction_ids[] = $transaction->id;

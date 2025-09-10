@@ -36,20 +36,20 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 	private string $current_log_level = 'ALL';
 	private string $current_log_file;
 	private CampaignRepository $campaign_repository;
-    private \WP_Filesystem_Direct $file_system;
+	private \WP_Filesystem_Direct $file_system;
 
-    /**
+	/**
 	 * Tools page constructor.
 	 *
-	 * @param CampaignRepository     $campaign_repository The campaign repository.
+	 * @param CampaignRepository $campaign_repository The campaign repository.
 	 */
 	public function __construct( CampaignRepository $campaign_repository ) {
-        $this->file_system             = new \WP_Filesystem_Direct( true );
-		$this->campaign_repository     = $campaign_repository;
-		$this->current_tab             = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::TAB_ACTIONS; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$this->log_files               = $this->get_logs();
-		$log_file                      = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
-		$this->current_log_file        = $this->file_system->exists( $log_file )
+		$this->file_system         = new \WP_Filesystem_Direct( true );
+		$this->campaign_repository = $campaign_repository;
+		$this->current_tab         = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::TAB_ACTIONS; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$this->log_files           = $this->get_logs();
+		$log_file                  = KUDOS_STORAGE_DIR . 'logs/' . KUDOS_APP_ENV . '-' . gmdate( RotatingFileHandler::FILE_PER_DAY ) . '.log';
+		$this->current_log_file    = $this->file_system->exists( $log_file )
 			? $log_file
 			: ( \is_array( $this->log_files ) && [] !== $this->log_files ? end( $this->log_files ) : '' );
 		$this->process_form_data();
@@ -116,11 +116,11 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 		$log_array = [];
 		if ( file_exists( $this->current_log_file ) ) {
 			$raw_content = $this->file_system->get_contents( $this->current_log_file );
-			$lines = array_filter( explode( "\n", $raw_content ) );
-			
+			$lines       = array_filter( explode( "\n", $raw_content ) );
+
 			foreach ( $lines as $line ) {
 				$log_entry = json_decode( $line, true );
-				if ( $log_entry && is_array( $log_entry ) ) {
+				if ( $log_entry && \is_array( $log_entry ) ) {
 					// Convert JSON format to the expected format for the view.
 					$log_matches = [
 						'datetime' => $log_entry['datetime'] ?? '',
