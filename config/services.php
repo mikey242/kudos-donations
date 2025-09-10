@@ -41,9 +41,11 @@ use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
+use IseardMedia\Kudos\ThirdParty\Monolog\Formatter\JsonFormatter;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\WhatFailureGroupHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
+use IseardMedia\Kudos\ThirdParty\Monolog\Processor\PsrLogMessageProcessor;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -92,6 +94,9 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->load( 'IseardMedia\Kudos\\', KUDOS_PLUGIN_DIR . 'includes/*' )
 			->exclude( KUDOS_PLUGIN_DIR . 'includes/{constants.php,namespace.php,functions.php,helpers.php,index.php,vendor,Domain/Entity}' );
 
+    // Configure logger.
+	$services->set( JsonFormatter::class );
+	$services->set( PsrLogMessageProcessor::class );
 	$services->set( RotatingFileHandler::class )
 		->args(
 			[
@@ -99,14 +104,14 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 				'5',
 				'%env(LOG_LEVEL)%',
 			]
-		);
-
+		)
+		->call( 'setFormatter', [ service( JsonFormatter::class ) ] );
 	$services->set( WhatFailureGroupHandler::class )
 		->args( [ [ service( RotatingFileHandler::class ) ] ] );
-
 	$services->set( LoggerInterface::class, Logger::class )
 		->args( [ 'kudos_donations' ] )
-		->call( 'pushHandler', [ service( WhatFailureGroupHandler::class ) ] );
+		->call( 'pushHandler', [ service( WhatFailureGroupHandler::class ) ] )
+		->call( 'pushProcessor', [ service( PsrLogMessageProcessor::class ) ] );
 
 	// External libraries.
 	$services->set( Dompdf::class );
