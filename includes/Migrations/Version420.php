@@ -29,6 +29,7 @@ use IseardMedia\Kudos\Domain\Table\DonorsTable;
 use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
 use IseardMedia\Kudos\Domain\Table\TransactionsTable;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
+use IseardMedia\Kudos\Service\LinkService;
 
 class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
@@ -40,6 +41,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 * @var BaseTable[]
 	 */
 	private array $tables;
+	private LinkService $link_service;
 
 	/**
 	 * Add MolliePaymentVendor for handling refresh and add tables for creation.
@@ -49,15 +51,17 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 * @param DonorsTable           $donors_table The donors table class.
 	 * @param TransactionsTable     $transactions_table The transactions table class.
 	 * @param SubscriptionsTable    $subscriptions_table The subscriptions table class.
+	 * @param LinkService           $link_service Reconnect entities via their vendor ids.
 	 */
-	public function __construct( MolliePaymentProvider $mollie_payment_vendor, CampaignsTable $campaigns_table, DonorsTable $donors_table, TransactionsTable $transactions_table, SubscriptionsTable $subscriptions_table ) {
-		$this->mollie = $mollie_payment_vendor;
-		$this->tables = [
+	public function __construct( MolliePaymentProvider $mollie_payment_vendor, CampaignsTable $campaigns_table, DonorsTable $donors_table, TransactionsTable $transactions_table, SubscriptionsTable $subscriptions_table, LinkService $link_service ) {
+		$this->mollie       = $mollie_payment_vendor;
+		$this->tables       = [
 			$campaigns_table,
 			$donors_table,
 			$transactions_table,
 			$subscriptions_table,
 		];
+		$this->link_service = $link_service;
 	}
 
 	/**
@@ -72,6 +76,8 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			'subscriptions'                   => $this->job( [ $this, 'migrate_subscriptions' ], 'Migrating subscriptions' ),
 			'backfill_transactions'           => $this->job( [ $this, 'backfill_transactions_from_subscription' ], 'Add subscription id to transactions' ),
 			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions' ),
+			'relink_donors_to_transactions'   => $this->job( [ $this, 'relink_donors_to_transactions' ], 'Re-linking donors to transactions' ),
+			'relink_donors_to_subscriptions'  => $this->job( [ $this, 'relink_donors_to_subscriptions' ], 'Re-linking donors to subscriptions' ),
 			'refresh_mollie'                  => $this->job( [ $this, 'refresh_mollie_status' ], 'Refresh Mollie status' ),
 		];
 	}
@@ -609,6 +615,28 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		}
 
 		return \count( $orphaned_transactions );
+	}
+
+	/**
+	 * Links donors to transactions based on their vendor_customer_id.
+	 *
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
+	 */
+	public function relink_donors_to_transactions( int $offset, int $limit ): int {
+		$linker = $this->link_service;
+		return $linker->link_entities( TransactionRepository::class, 'donor_id', 'vendor_customer_id', DonorRepository::class, 'vendor_customer_id', $offset, $limit );
+	}
+
+	/**
+	 * Links donors to subscriptions based on their vendor_customer_id.
+	 *
+	 * @param int $offset Offset of results.
+	 * @param int $limit The number of records to fetch.
+	 */
+	public function relink_donors_to_subscriptions( int $offset, int $limit ): int {
+		$linker = $this->link_service;
+		return $linker->link_entities( SubscriptionRepository::class, 'donor_id', 'vendor_customer_id', DonorRepository::class, 'vendor_customer_id', $offset, $limit );
 	}
 
 	/**
