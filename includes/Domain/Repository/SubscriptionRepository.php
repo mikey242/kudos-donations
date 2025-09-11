@@ -49,12 +49,10 @@ class SubscriptionRepository extends BaseRepository {
 	 * @param SubscriptionEntity $subscription The subscription array.
 	 */
 	public function get_transaction( SubscriptionEntity $subscription ): ?TransactionEntity {
-		$transaction_id = $subscription->transaction_id ?? null;
-		if ( null === $transaction_id ) {
-			return null;
-		}
-		return $this->get_repository( TransactionRepository::class )
-			->get( $transaction_id );
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->get_repository( TransactionRepository::class )
+			->find_one_by( [ 'subscription_id' => $subscription->id ] );
+		return $transaction;
 	}
 
 	/**
@@ -67,8 +65,10 @@ class SubscriptionRepository extends BaseRepository {
 		if ( null === $donor_id ) {
 			return null;
 		}
-		return $this->get_repository( DonorRepository::class )
+		/** @var DonorEntity $donor */
+		$donor = $this->get_repository( DonorRepository::class )
 			->get( $donor_id );
+		return $donor;
 	}
 
 	/**
@@ -94,8 +94,10 @@ class SubscriptionRepository extends BaseRepository {
 			return null;
 		}
 
-		return $this->get_repository( CampaignRepository::class )
+		/** @var CampaignEntity $campaign */
+		$campaign = $this->get_repository( CampaignRepository::class )
 			->get( $campaign_id );
+		return $campaign;
 	}
 
 	/**
