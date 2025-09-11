@@ -42,7 +42,6 @@ class SubscriptionsTable extends BaseTable {
 			KEY idx_post (wp_post_id),
 			KEY idx_status (status),
 			KEY idx_frequency (frequency),
-			KEY idx_transaction (transaction_id),
 			KEY idx_donor (donor_id),
 			PRIMARY KEY  (id)
 	";
