@@ -42,7 +42,7 @@ interface PaymentProviderInterface extends ProviderInterface {
 	/**
 	 * Refresh the local vendor settings.
 	 */
-	public function refresh();
+	public function refresh(): bool;
 
 	/**
 	 * Cancel the specified subscription.
@@ -56,6 +56,7 @@ interface PaymentProviderInterface extends ProviderInterface {
 	 *
 	 * @param string $email Donor email address.
 	 * @param string $name Donor name.
+	 * @return mixed
 	 */
 	public function create_customer( string $email, string $name );
 
