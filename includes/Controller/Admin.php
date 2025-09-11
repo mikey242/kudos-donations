@@ -15,7 +15,6 @@ use IseardMedia\Kudos\Admin\DebugAdminPage;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
-use IseardMedia\Kudos\Domain\Repository\RepositoryManager;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\LinkService;
@@ -25,16 +24,19 @@ use WP_REST_Server;
 
 class Admin extends AbstractRegistrable {
 
-	private RepositoryManager $repository_manager;
 	private LinkService $link_service;
+	private CampaignRepository $campaign_repository;
+	private TransactionRepository $transaction_repository;
 
 	/**
-	 * @param RepositoryManager $repository_manager The repository manager.
-	 * @param LinkService       $link_service The linking service.
+	 * @param LinkService           $link_service The linking service.
+	 * @param CampaignRepository    $campaign_repository The campaign repository.
+	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
-	public function __construct( RepositoryManager $repository_manager, LinkService $link_service ) {
-		$this->repository_manager = $repository_manager;
-		$this->link_service       = $link_service;
+	public function __construct( LinkService $link_service, CampaignRepository $campaign_repository, TransactionRepository $transaction_repository ) {
+		$this->link_service           = $link_service;
+		$this->campaign_repository    = $campaign_repository;
+		$this->transaction_repository = $transaction_repository;
 	}
 
 	/**
@@ -83,7 +85,7 @@ class Admin extends AbstractRegistrable {
 					break;
 				case 'kudos_clear_campaigns':
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_campaigns' ) ) {
-						$campaigns = $this->repository_manager->get( CampaignRepository::class )->all();
+						$campaigns = $this->campaign_repository->all();
 						foreach ( $campaigns as $campaign ) {
 							wp_delete_post( $campaign->id, true );
 						}
@@ -116,7 +118,7 @@ class Admin extends AbstractRegistrable {
 					if ( wp_verify_nonce( $nonce, 'kudos_assign_transactions_to_campaign' ) ) {
 						$from             = $_POST['kudos_from_campaign'];
 						$to               = $_POST['kudos_to_campaign'];
-						$transaction_repo = $this->repository_manager->get( TransactionRepository::class );
+						$transaction_repo = $this->transaction_repository;
 
 						switch ( $from ) {
 							case '_orphaned_transactions_':
@@ -161,12 +163,8 @@ class Admin extends AbstractRegistrable {
 						$target_repo_class = isset( $_POST['kudos_target_repo'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_target_repo'] ) ) : null;
 						$target_vendor_key = isset( $_POST['kudos_target_vendor_key'] ) ? sanitize_text_field( $_POST['kudos_target_vendor_key'] ) : null;
 
-						$source_repo = $this->repository_manager->get( $source_repo_class );
-						$target_repo = $this->repository_manager->get( $target_repo_class );
+						$this->link_service->link_entities( $source_repo_class, $local_key, $vendor_key, $target_repo_class, $target_vendor_key );
 
-						if ( $source_repo && $target_repo ) {
-							$this->link_service->link_entities( $source_repo, $local_key, $vendor_key, $target_repo, $target_vendor_key );
-						}
 					}
 					break;
 				default:
@@ -228,13 +226,13 @@ class Admin extends AbstractRegistrable {
 	 */
 	private function get_orphan_transaction_ids(): array {
 		/** @var TransactionEntity[] $transactions */
-		$transactions           = $this->repository_manager->get( TransactionRepository::class )->all();
+		$transactions           = $this->transaction_repository->all();
 		$orphan_transaction_ids = [];
 
 		foreach ( $transactions as $transaction ) {
 			$campaign_id = $transaction->campaign_id;
 
-			$is_missing = empty( $campaign_id ) || ! $this->repository_manager->get( CampaignRepository::class )->get( $campaign_id );
+			$is_missing = empty( $campaign_id ) || ! $this->campaign_repository->get( $campaign_id );
 
 			if ( $is_missing ) {
 				$orphan_transaction_ids[] = $transaction->id;

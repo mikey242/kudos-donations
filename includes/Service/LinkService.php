@@ -16,33 +16,40 @@ use InvalidArgumentException;
 use IseardMedia\Kudos\Container\SafeLoggerTrait;
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 use IseardMedia\Kudos\Domain\Repository\BaseRepository;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
+use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
 use Psr\Log\LoggerAwareInterface;
 use RuntimeException;
 
-class LinkService implements LoggerAwareInterface {
+class LinkService implements LoggerAwareInterface, RepositoryAwareInterface {
 
 	use SafeLoggerTrait;
+	use RepositoryAwareTrait;
 
 	/**
 	 * Link local and vendor IDs between two entities.
 	 *
-	 * @param BaseRepository $source_repo       The repository for the entity that holds the references.
-	 * @param string         $local_key         Column name on the source table holding the local ID (e.g. 'donor_id').
-	 * @param string         $vendor_key        Column name on the source table holding the vendor ID (e.g. 'vendor_customer_id').
-	 * @param BaseRepository $target_repo       The repository for the referenced entity (e.g. DonorRepository).
-	 * @param string         $target_vendor_key Column name on the target table holding its vendor ID (e.g. 'vendor_customer_id').
-	 * @param int            $batch_size        Number of records to process per batch.
-	 * @param int            $offset            Offset to start from.
+	 * @param string $source_repo_class  The repository class name for the entity that holds the references.
+	 * @param string $local_key          Column name on the source table holding the local ID (e.g. 'donor_id').
+	 * @param string $vendor_key         Column name on the source table holding the vendor ID (e.g. 'vendor_customer_id').
+	 * @param string $target_repo_class  The repository class name for the referenced entity (e.g. DonorRepository::class).
+	 * @param string $target_vendor_key  Column name on the target table holding its vendor ID (e.g. 'vendor_customer_id').
+	 * @param int    $offset Offset to start from.
+	 * @param int    $limit         Number of records to process per batch.
 	 */
 	public function link_entities(
-		BaseRepository $source_repo,
+		string $source_repo_class,
 		string $local_key,
 		string $vendor_key,
-		BaseRepository $target_repo,
+		string $target_repo_class,
 		string $target_vendor_key,
-		int $batch_size = 100,
-		int $offset = 0
-	) {
+		int $offset = 0,
+		int $limit = 100
+	): int {
+		// Resolve repositories from class names.
+		$source_repo = $this->get_repository( $source_repo_class );
+		$target_repo = $this->get_repository( $target_repo_class );
+
 		// Validate that the keys exist in the schema.
 		$this->validate_keys( $source_repo, [ $local_key, $vendor_key ] );
 		$this->validate_keys( $target_repo, [ $target_vendor_key ] );
@@ -50,86 +57,89 @@ class LinkService implements LoggerAwareInterface {
 		// Pre-load vendor ID mappings for better performance.
 		$vendor_id_map = $this->build_vendor_id_map( $target_repo, $target_vendor_key );
 
-		do {
-			$records = $source_repo->query(
-				[
-					'limit'  => $batch_size,
-					'offset' => $offset,
-				]
-			);
+		$records = $source_repo->query(
+			[
+				'limit'   => $limit,
+				'offset'  => $offset,
+				'orderby' => 'id',
+				'order'   => 'ASC',
+			]
+		);
 
-			$updates_batch = [];
+		$updates_batch = [];
 
-			foreach ( $records as $record ) {
-				$update_needed = false;
-				$local_id      = $this->get_property_value( $record, $local_key );
-				$vendor_id     = $this->get_property_value( $record, $vendor_key );
+		foreach ( $records as $record ) {
+			$update_needed = false;
+			$local_id      = $this->get_property_value( $record, $local_key );
+			$vendor_id     = $this->get_property_value( $record, $vendor_key );
 
-				// Case 1: Missing local ID but has vendor ID.
-				if ( ! $local_id && $vendor_id ) {
-					$target_id = $vendor_id_map[ $vendor_id ] ?? null;
+			// Case 1: Missing local ID but has vendor ID.
+			if ( ! $local_id && $vendor_id ) {
+				$target_id = $vendor_id_map[ $vendor_id ] ?? null;
 
-					if ( $target_id ) {
-						$this->set_property_value( $record, $local_key, $target_id );
+				if ( $target_id ) {
+					$this->set_property_value( $record, $local_key, $target_id );
+					$update_needed = true;
+
+					$this->logger->info(
+						'Linked {target_entity} by {source_entity} vendor id',
+						[
+							'target_entity' => $target_repo::get_singular_name(),
+							'source_entity' => $source_repo::get_singular_name(),
+							'vendor_key'    => $target_vendor_key,
+							'vendor_id'     => $vendor_id,
+							'local_id'      => $local_id,
+							'entity_id'     => $record->id,
+						]
+					);
+				} else {
+
+					$this->logger->warning(
+						'Could not find {entity} with vendor_id',
+						[
+							'entity'     => $target_repo::get_singular_name(),
+							'vendor_key' => $target_vendor_key,
+							'vendor_id'  => $vendor_id,
+							'entity_id'  => $record->id,
+						]
+					);
+				}
+			}
+
+			// Case 2: Has local ID but missing vendor ID.
+			if ( $local_id && ! $vendor_id ) {
+				$target = $target_repo->get( (int) $local_id );
+
+				if ( $target ) {
+					$target_vendor_id = $this->get_property_value( $target, $target_vendor_key );
+
+					if ( $target_vendor_id ) {
+						$this->set_property_value( $record, $vendor_key, $target_vendor_id );
 						$update_needed = true;
 
 						$this->logger->info(
-							'Linked {entity} by vendor ID',
+							'Updated {source_entity} vendor ID from {target_entity}',
 							[
-								'entity'     => $target_repo::get_singular_name(),
-								'vendor_key' => $target_vendor_key,
-								'vendor_id'  => $vendor_id,
-								'local_id'   => $target_id,
-							]
-						);
-					} else {
-
-						$this->logger->warning(
-							'Could not find {entity} with vendor_id',
-							[
-								'entity'     => $target_repo::get_singular_name(),
-								'vendor_key' => $target_vendor_key,
-								'vendor_id'  => $vendor_id,
+								'target_entity' => $target_repo::get_singular_name(),
+								'source_entity' => $source_repo::get_singular_name(),
+								'local_id'      => $local_id,
+								'vendor_id'     => $target_vendor_id,
+								'entity_id'     => $record->id,
 							]
 						);
 					}
-				}
-
-				// Case 2: Has local ID but missing vendor ID.
-				if ( $local_id && ! $vendor_id ) {
-					$target = $target_repo->get( (int) $local_id );
-
-					if ( $target ) {
-						$target_vendor_id = $this->get_property_value( $target, $target_vendor_key );
-
-						if ( $target_vendor_id ) {
-							$this->set_property_value( $record, $vendor_key, $target_vendor_id );
-							$update_needed = true;
-
-							$this->logger->info(
-								'Updated vendor ID from local entity',
-								[
-									'entity'    => $target_repo::get_singular_name(),
-									'local_id'  => $local_id,
-									'vendor_id' => $target_vendor_id,
-								]
-							);
-						}
-					}
-				}
-
-				if ( $update_needed ) {
-					$updates_batch[] = $record;
 				}
 			}
+
+			if ( $update_needed ) {
+				$updates_batch[] = $record;
+			}
+		}
 
 			// Batch update all modified records.
 			$this->perform_batch_updates( $source_repo, $updates_batch );
 
-			$offset      += $batch_size;
-			$record_count = \count( $records );
-
-		} while ( $record_count === $batch_size );
+			return \count( $records );
 	}
 
 	/**
@@ -139,36 +149,26 @@ class LinkService implements LoggerAwareInterface {
 	 * @param string         $vendor_key The unique vendor key.
 	 */
 	private function build_vendor_id_map( BaseRepository $repo, string $vendor_key ): array {
-		$map        = [];
-		$offset     = 0;
-		$batch_size = 1000;
+		$map = [];
 
-		do {
-			$records = $repo->query(
-				[
-					'columns' => [ 'id', $vendor_key ],
-					'limit'   => $batch_size,
-					'offset'  => $offset,
-				]
-			);
+		$records = $repo->query(
+			[
+				'columns' => [ 'id', $vendor_key ],
+			]
+		);
 
-			foreach ( $records as $record ) {
-				$vendor_id = $this->get_property_value( $record, $vendor_key );
-				if ( $vendor_id ) {
-					$map[ $vendor_id ] = $record->id;
-				}
+		foreach ( $records as $record ) {
+			$vendor_id = $this->get_property_value( $record, $vendor_key );
+			if ( $vendor_id ) {
+				$map[ $vendor_id ] = $record->id;
 			}
-
-			$offset      += $batch_size;
-			$record_count = \count( $records );
-
-		} while ( $record_count === $batch_size );
+		}
 
 		return $map;
 	}
 
 	/**
-	 * Perform batch updates for better performance.
+	 * Perform batch updates.
 	 *
 	 * @param BaseRepository $repo The repository to check against.
 	 * @param array          $entities Array of entities to update.
