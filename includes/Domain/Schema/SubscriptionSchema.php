@@ -25,7 +25,6 @@ class SubscriptionSchema extends BaseSchema {
 			'frequency'              => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 			'years'                  => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
 			'status'                 => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
-			'transaction_id'         => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
 			'donor_id'               => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
 			'campaign_id'            => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
 			'vendor_customer_id'     => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),

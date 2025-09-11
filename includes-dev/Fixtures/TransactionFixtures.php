@@ -125,9 +125,8 @@ class TransactionFixtures extends BaseFixtures {
 				$donor_id = $transaction->donor_id;
 				$sub_id   = $transaction->subscription_id;
 				/** @var SubscriptionEntity $subscription */
-				$subscription                 = $this->subscription_repository->get( $sub_id );
-				$subscription->transaction_id = $transaction_id;
-				$subscription->donor_id       = $donor_id;
+				$subscription           = $this->subscription_repository->get( $sub_id );
+				$subscription->donor_id = $donor_id;
 				$this->subscription_repository->update( $subscription );
 			}
 		}

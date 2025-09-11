@@ -33,7 +33,6 @@ class SubscriptionsTable extends BaseTable {
 			frequency varchar(50),
 			years int DEFAULT NULL,
 			status varchar(20),
-			transaction_id bigint(20) unsigned DEFAULT NULL,
 			donor_id bigint(20) unsigned DEFAULT NULL,
 			campaign_id bigint(20) unsigned DEFAULT NULL,
 			vendor_customer_id varchar(255),

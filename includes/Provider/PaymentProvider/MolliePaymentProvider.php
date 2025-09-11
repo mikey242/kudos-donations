@@ -324,11 +324,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 		if ( null === $subscription->vendor_subscription_id ) {
 			return false;
 		}
-		$transaction_repository = $this->transaction_repository;
-		/** @var TransactionEntity $transaction */
-		$transaction        = $transaction_repository->get( (int) $subscription->transaction_id );
-		$donor              = $transaction_repository->get_donor( $transaction );
-		$vendor_customer_id = $donor->vendor_customer_id ?? null;
+		$vendor_customer_id = $subscription->vendor_customer_id ?? null;
 		if ( null === $vendor_customer_id ) {
 			return false;
 		}
