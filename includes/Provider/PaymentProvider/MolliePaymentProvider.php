@@ -14,7 +14,6 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Provider\PaymentProvider;
 
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
-use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
@@ -500,13 +499,11 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			return false;
 		}
 
-		/** @var DonorEntity $donor */
-		$donor              = $this->donor_repository->get( $transaction->donor_id );
-		$vendor_customer_id = $donor->vendor_customer_id;
+		$vendor_customer_id = $transaction->vendor_customer_id;
 
 		// Bail if no vendor customer id.
 		if ( null === $vendor_customer_id ) {
-			$this->logger->error( 'No vendor id found on donor, aborting subscription creation', [ 'donor' => $donor ] );
+			$this->logger->error( 'No vendor id found on donor, aborting subscription creation', [ 'transaction' => $transaction ] );
 			return false;
 		}
 
