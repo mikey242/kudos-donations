@@ -144,7 +144,7 @@ class DebugAdminPage extends AbstractAdminPage implements HasCallbackInterface, 
 				);
 			}
 		}
-		return $log_array;
+		return array_reverse( $log_array );
 	}
 
 	/**
