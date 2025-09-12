@@ -69,6 +69,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 */
 	public function get_jobs(): array {
 		return [
+			'remove_old_tables'               => $this->job( [ $this, 'remove_old_tables' ], 'Removing old tables' ),
 			'create_tables'                   => $this->job( [ $this, 'create_tables' ], 'Create new tables' ),
 			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating donors' ),
 			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating campaigns' ),
@@ -80,6 +81,15 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			'relink_donors_to_subscriptions'  => $this->job( [ $this, 'relink_donors_to_subscriptions' ], 'Re-linking donors to subscriptions' ),
 			'refresh_mollie'                  => $this->job( [ $this, 'refresh_mollie_status' ], 'Refresh Mollie status' ),
 		];
+	}
+
+	/**
+	 * Remove old versions of tables.
+	 */
+	public function remove_old_tables() {
+		foreach ( $this->tables as $table ) {
+			$table->drop_table();
+		}
 	}
 
 	/**

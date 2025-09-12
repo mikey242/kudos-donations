@@ -80,4 +80,13 @@ abstract class BaseTable implements ActivationAwareInterface {
 		$schema     = $this->schema;
 		$this->wpdb->run_dbdelta( "CREATE TABLE $table_name ( $schema ) $charset" );
 	}
+
+	/**
+	 * Drops the table from the database.
+	 */
+	public function drop_table(): void {
+		$wpdb       = $this->wpdb;
+		$table_name = $wpdb->table( static::get_name() );
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table_name ) );
+	}
 }
