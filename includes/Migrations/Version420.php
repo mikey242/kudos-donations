@@ -431,7 +431,6 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'frequency'              => get_post_meta( $post_id, 'frequency', true ),
 					'years'                  => (int) get_post_meta( $post_id, 'years', true ),
 					'status'                 => get_post_meta( $post_id, 'status', true ),
-					'transaction_id'         => $transaction_id,
 					'donor_id'               => $donor_id,
 					'campaign_id'            => $campaign_id,
 					'vendor_customer_id'     => get_post_meta( $post_id, 'customer_id', true ),
