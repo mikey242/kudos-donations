@@ -200,7 +200,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 			[
 				'items'       => $items,
 				'total'       => $this->repository->count_query( $where ),
-				'total_pages' => (int) ceil( $this->repository->count_query( $where ) / $per_page ),
+				'total_pages' => (int) max( ceil( $this->repository->count_query( $where ) / $per_page ), 1 ),
 				'per_page'    => $per_page,
 				'paged'       => $paged,
 			]
