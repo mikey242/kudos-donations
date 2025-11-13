@@ -52,7 +52,7 @@ jobs:
                   path: kudos-donations.zip
 
             - name: Publish GitHub Release
-              uses: softprops/action-gh-release@19cd0bcd2b95a5f9e0aab8377b3cae33e51c2234
+              uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe
               with:
                   body: |
                       ## What's Changed
