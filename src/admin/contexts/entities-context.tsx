@@ -27,6 +27,7 @@ interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	handleUpdate: (data: Partial<T>) => Promise<any>;
 	handleDelete: (entityId: number) => void;
 	handleDuplicate: (entity: T) => void;
+	fetchEntities: () => void;
 	singularName: string;
 	pluralName: string;
 	entityType: string;
