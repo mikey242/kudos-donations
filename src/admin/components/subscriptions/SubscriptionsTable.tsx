@@ -43,6 +43,7 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 				type: 'snackbar',
 				icon: <Icon icon="dismiss" />,
 			});
+
 			fetchEntities();
 		} catch (error: any) {
 			void createErrorNotice(error.message);
