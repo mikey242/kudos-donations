@@ -252,6 +252,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 			singularName,
 			pluralName,
 			entityType,
+			fetchEntities,
 		}),
 		[
 			state.entities,
@@ -265,6 +266,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 			singularName,
 			pluralName,
 			entityType,
+			fetchEntities,
 		]
 	);
 
