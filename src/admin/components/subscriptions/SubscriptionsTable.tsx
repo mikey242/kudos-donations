@@ -2,6 +2,7 @@ import {
 	Button,
 	Dashicon,
 	Flex,
+	Icon,
 	Tooltip,
 	VisuallyHidden,
 } from '@wordpress/components';
@@ -13,17 +14,40 @@ import type { Subscription } from '../../../types/entity';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
 import { useAdminQueryParams } from '../../hooks';
+import apiFetch from '@wordpress/api-fetch';
+import { useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
-	const { handleDelete } = useEntitiesContext();
+	const { handleDelete, fetchEntities } = useEntitiesContext();
+	const { createSuccessNotice, createErrorNotice } =
+		useDispatch(noticesStore);
 
 	const changeView = (entityId: number) => {
 		void setParams({
 			page: 'kudos-transactions',
 			where: { subscription_id: String(entityId) },
 		});
+	};
+
+	const cancelSubscription = async (entityId: number, token: string) => {
+		try {
+			const response: any = await apiFetch({
+				path: `/kudos/v1/subscription/cancel/?id=${entityId}&token=${token}`,
+				method: 'GET',
+			});
+
+			await createSuccessNotice(response.message, {
+				type: 'snackbar',
+				icon: <Icon icon="dismiss" />,
+			});
+			fetchEntities();
+		} catch (error: any) {
+			void createErrorNotice(error.message);
+			return null;
+		}
 	};
 
 	const headerItems = [
@@ -134,6 +158,13 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 						disabled={!post.donor}
 						onClick={() => changeView(post.id)}
 						title={__('View donations', 'kudos-donations')}
+					/>
+					<Button
+						size="compact"
+						icon="dismiss"
+						disabled={post.status !== 'active'}
+						onClick={() => cancelSubscription(post.id, post.token)}
+						title={__('Cancel subscription', 'kudos-donations')}
 					/>
 					{settings._kudos_debug_mode && (
 						<Button

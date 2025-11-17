@@ -75,11 +75,14 @@ class Subscription extends BaseRepositoryRestController {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @throws Exception
 	 */
 	protected function add_rest_fields( BaseEntity $item ): array {
 		$item->donor       = $this->repository->get_donor( $item );
 		$item->transaction = $this->repository->get_transaction( $item );
 		$item->campaign    = $this->repository->get_campaign( $item );
+		$item->token       = EncryptionService::generate_token( $item->id );
 		return (array) $item;
 	}
 

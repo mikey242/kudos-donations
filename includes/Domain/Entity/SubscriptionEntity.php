@@ -26,6 +26,7 @@ class SubscriptionEntity extends BaseEntity {
 	public ?DonorEntity $donor;
 	public ?TransactionEntity $transaction;
 	public ?CampaignEntity $campaign;
+	public ?string $token;
 
 	/**
 	 * {@inheritDoc}
