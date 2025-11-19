@@ -13,6 +13,7 @@ namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Service\MailerService;
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -25,6 +26,8 @@ class Mail extends BaseRestController {
 	 * @var MailerService
 	 */
 	private MailerService $mailer;
+
+	private string $error_message = '';
 
 	/**
 	 * PaymentRoutes constructor.
@@ -73,13 +76,24 @@ class Mail extends BaseRestController {
 		$header  = __( 'It worked!', 'kudos-donations' );
 		$message = __( 'Looks like your email settings are set up correctly :-)', 'kudos-donations' );
 
+		add_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
 		$result = $this->mailer->send_message( $email, $header, $message );
+		remove_action( 'wp_mail_failed', [ $this, 'handle_error' ] );
 
 		if ( true === $result ) {
 			/* translators: %s: API mode */
 			return new WP_REST_Response( [ 'message' => \sprintf( __( 'Email sent to %s.', 'kudos-donations' ), $email ) ], 200 );
 		}
+		/* translators: %s: The error returned by wp_mailer */
+		return new WP_REST_Response( [ 'message' => \sprintf( __( 'Something went wrong sending the test email: %s', 'kudos-donations' ), $this->error_message ) ], 500 );
+	}
 
-		return new WP_REST_Response( [ 'message' => __( 'Something went wrong sending the test email', 'kudos-donations' ) ], 500 );
+	/**
+	 * Sets the error_message property.
+	 *
+	 * @param WP_Error $error The WordPress error object.
+	 */
+	public function handle_error( WP_Error $error ) {
+		$this->error_message = $error->get_error_message();
 	}
 }
