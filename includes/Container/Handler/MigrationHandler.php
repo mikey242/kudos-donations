@@ -72,10 +72,9 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * Determines if a migration should be run.
 	 */
 	private function should_upgrade(): bool {
-		$db_version     = get_option( self::SETTING_DB_VERSION );
-		$plugin_version = get_option( self::SETTING_PLUGIN_VERSION );
+		$db_version = get_option( self::SETTING_DB_VERSION );
 
-		$current_version = ! empty( $db_version ) ? $db_version : ( ! empty( $plugin_version ) ? $plugin_version : '1.1.0' );
+		$current_version = ! empty( $db_version ) ? $db_version : '';
 
 		$target_version = KUDOS_DB_VERSION;
 		return $current_version && version_compare( $current_version, $target_version, '<' );
