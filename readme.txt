@@ -113,6 +113,11 @@ For general information on how to use shortcodes, please visit [this page](https
 
 == Changelog ==
 
+= 4.1.6 =
+* Add address column to donor table
+* Fix _kudos_db_version option not being set when plugin activated
+* Update dependencies
+
 = 4.1.5 =
 * Fix bug where inconsistent post results returned from rest api query
 * Allow Mollie to be refreshed even it status is "not connected"
