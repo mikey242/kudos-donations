@@ -67,6 +67,8 @@ class MigrationService extends AbstractRegistrable implements HasSettingsInterfa
 		if ( ! $busy_migrating && $this->current_version && version_compare( $this->current_version, $this->target_version, '<' ) ) {
 			$this->enqueue_assets();
 			$this->add_migration_notice();
+		} else {
+			update_option( self::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 		}
 	}
 
