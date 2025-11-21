@@ -124,7 +124,7 @@ For general information on how to use shortcodes, please visit [this page](https
 * Debug mode: Show linked entities when viewing individual details
 * Update headlessui/react to v2.2.6
 * Update zod to 4.0.17
-* Update Wordpress monorepo
+* Update WordPress monorepo
 
 = 4.1.6 =
 * Add address column to donor table
