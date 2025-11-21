@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { EmailTab, HelpTab, InvoiceTab, MollieTab } from './tabs';
+import { EmailTab, HelpTab, ReceiptTab, MollieTab } from './tabs';
 import { clsx } from 'clsx';
 import { AdminTabPanel } from '../AdminTabPanel';
 import {
@@ -71,9 +71,9 @@ export const SettingsPage = (): React.ReactNode => {
 				content: <EmailTab />,
 			},
 			{
-				name: 'invoice',
-				title: __('Invoice', 'kudos-donations'),
-				content: <InvoiceTab />,
+				name: 'receipt',
+				title: __('Receipt', 'kudos-donations'),
+				content: <ReceiptTab />,
 			},
 			{
 				name: 'help',

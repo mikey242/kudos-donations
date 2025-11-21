@@ -95,7 +95,7 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		}
 
 		// Assign attachment.
-		$attachments = (string) apply_filters( 'kudos_receipt_attachment', [], $transaction->id );
+		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction->id );
 
 		// Get campaign name if enabled.
 		$campaign_name = '';

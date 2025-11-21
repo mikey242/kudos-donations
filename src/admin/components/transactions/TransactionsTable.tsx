@@ -161,7 +161,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 			align: 'right',
 			valueCallback: (post: Transaction): React.ReactNode => {
 				const status = post.status;
-				const url = post.invoice_url;
+				const url = post.receipt_url;
 				return (
 					<>
 						{settings._kudos_debug_mode && (
@@ -177,7 +177,7 @@ export const TransactionsTable = ({ handleEdit }): React.ReactNode => {
 							icon="download"
 							disabled={status !== 'paid'}
 							href={url}
-							title={__('View invoice', 'kudos-donations')}
+							title={__('View receipt', 'kudos-donations')}
 						/>
 						<Button
 							size="compact"

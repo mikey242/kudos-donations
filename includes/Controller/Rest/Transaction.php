@@ -47,10 +47,10 @@ class Transaction extends BaseRepositoryRestController {
 		if ( 'paid' === $item->status ) {
 			$transaction_id = $item->id;
 
-			$item->invoice_url = add_query_arg(
+			$item->receipt_url = add_query_arg(
 				[
-					'kudos_action' => 'view_invoice',
-					'_wpnonce'     => wp_create_nonce( "view_invoice_$transaction_id" ),
+					'kudos_action' => 'view_receipt',
+					'_wpnonce'     => wp_create_nonce( "view_receipt_$transaction_id" ),
 					'id'           => $transaction_id,
 				],
 				admin_url( 'admin.php' )

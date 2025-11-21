@@ -72,7 +72,7 @@ export const TransactionEdit = ({ entity }: PostEditProps): React.ReactNode => {
 				},
 				{
 					id: 'invoice_number',
-					label: 'Invoice number',
+					label: 'Receipt number',
 					type: 'integer',
 				},
 				{

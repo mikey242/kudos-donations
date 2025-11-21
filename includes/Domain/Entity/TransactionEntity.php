@@ -31,7 +31,7 @@ class TransactionEntity extends BaseEntity {
 	public ?string $checkout_url;
 	public ?string $vendor_payment_id;
 	public ?string $vendor_customer_id;
-	public ?string $invoice_url;
+	public ?string $receipt_url;
 	public ?CampaignEntity $campaign;
 	public ?DonorEntity $donor;
 	public ?SubscriptionEntity $subscription;
