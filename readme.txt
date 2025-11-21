@@ -115,9 +115,9 @@ For general information on how to use shortcodes, please visit [this page](https
 
 = 4.2.0 =
 * Optimize data storage making the plugin faster and use less space
-* Allow donor address to be viewed from donor table
 * Fix some icons missing in the admin pages
 * Profile name now shown next to "Mollie ready" when connected
+* Invoices renamed to receipts
 * Receipt emails now sent in donor's browser language (only for new donors)
 * Automatically link all subscription payment to their subscription (not just initial payment)
 * Allow multiple filters to be applied to admin tables
@@ -125,6 +125,11 @@ For general information on how to use shortcodes, please visit [this page](https
 * Update headlessui/react to v2.2.6
 * Update zod to 4.0.17
 * Update Wordpress monorepo
+
+= 4.1.6 =
+* Add address column to donor table
+* Fix _kudos_db_version option not being set when plugin activated
+* Update dependencies
 
 = 4.1.5 =
 * Fix bug where inconsistent post results returned from rest api query
