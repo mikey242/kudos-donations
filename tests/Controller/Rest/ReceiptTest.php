@@ -19,9 +19,9 @@ use WP_REST_Request;
 use WP_REST_Server;
 
 /**
- * Invoice rest route related tests.
+ * Receipt rest route related tests.
  */
-class InvoiceTest extends BaseTestCase {
+class ReceiptTest extends BaseTestCase {
 
 	private WP_REST_Request $request;
 
@@ -58,7 +58,7 @@ class InvoiceTest extends BaseTestCase {
 		$transaction_id = $transaction_repository->insert($transaction);
 
 		// Define Request.
-		$this->request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/$transaction_id" );
+		$this->request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/receipt/$transaction_id" );
 	}
 
 	/**

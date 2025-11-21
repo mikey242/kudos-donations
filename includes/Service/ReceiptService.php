@@ -1,6 +1,6 @@
 <?php
 /**
- * Invoice Service.
+ * Receipt Service.
  *
  * @link https://github.com/mikey242/kudos-donations
  *
@@ -20,7 +20,7 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Helper\Utils;
 
-class InvoiceService extends AbstractRegistrable implements HasSettingsInterface {
+class ReceiptService extends AbstractRegistrable implements HasSettingsInterface {
 	public const SETTING_INVOICE_VAT_NUMBER      = '_kudos_invoice_vat_number';
 	public const SETTING_INVOICE_NUMBER          = '_kudos_invoice_number';
 	public const SETTING_INVOICE_COMPANY_ADDRESS = '_kudos_invoice_company_address';
@@ -29,7 +29,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 	private DonorRepository $donor_repository;
 
 	/**
-	 * InvoiceService constructor.
+	 * ReceiptService constructor.
 	 *
 	 * @param PDFService            $pdf PDF service.
 	 * @param TransactionRepository $transaction_repository Transaction repository.
@@ -71,32 +71,32 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 	}
 
 	/**
-	 * Callback for attaching invoice to email.
+	 * Callback for attaching receipt PDF to email.
 	 *
 	 * @param array $attachments Array of current attachments.
 	 * @param int   $transaction_id Transaction ID.
 	 */
 	public function attach_to_email( array $attachments, int $transaction_id ): array {
-		$file = $this->generate_invoice( $transaction_id );
-		$this->logger->debug( 'Adding invoice to email.', [ 'file' => $file ] );
+		$file = $this->generate_receipt( $transaction_id );
+		$this->logger->debug( 'Adding receipt PDF to email.', [ 'file' => $file ] );
 		$attachments[] = $file;
 		return $attachments;
 	}
 
 	/**
-	 * Generate an invoice for the supplied transaction id.
+	 * Generate a receipt for the supplied transaction id.
 	 *
 	 * @param int  $transaction_id The transaction id to use.
 	 * @param bool $force_generate Whether to regenerate even if existing pdf found.
 	 */
-	public function generate_invoice( int $transaction_id, bool $force_generate = false ): ?string {
-		$file_name = "invoice-$transaction_id.pdf";
+	public function generate_receipt( int $transaction_id, bool $force_generate = false ): ?string {
+		$file_name = "receipt-$transaction_id.pdf";
 		$file      = PDFService::INVOICE_DIR . $file_name;
 
 		// Stream existing file if found.
 		if ( ! $force_generate ) {
 			if ( file_exists( $file ) ) {
-				$this->logger->debug( 'Invoice already exists.', [ 'file' => $file ] );
+				$this->logger->debug( 'Receipt already exists.', [ 'file' => $file ] );
 				return $file;
 			}
 		}
@@ -109,7 +109,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		$transaction = $this->transaction_repository->get( $transaction_id );
 
 		if ( null === $transaction ) {
-			$this->logger->debug( 'Error generating invoice: Transaction not found', [ 'transaction_id' => $transaction_id ] );
+			$this->logger->debug( 'Error generating receipt: Transaction not found', [ 'transaction_id' => $transaction_id ] );
 			return null;
 		}
 
@@ -152,7 +152,7 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 
 		// Add text.
 		$data['text'] = [
-			'invoice'     => __( 'Invoice', 'kudos-donations' ),
+			'receipt'     => __( 'Receipt', 'kudos-donations' ),
 			'date'        => __( 'Date', 'kudos-donations' ),
 			'to'          => __( 'To', 'kudos-donations' ),
 			'from'        => __( 'From', 'kudos-donations' ),
@@ -166,8 +166,8 @@ class InvoiceService extends AbstractRegistrable implements HasSettingsInterface
 		// Restore locale to original state.
 		restore_previous_locale();
 
-		$this->logger->debug( 'Generating new invoice.', [ 'file' => $file ] );
+		$this->logger->debug( 'Generating new receipt.', [ 'file' => $file ] );
 
-		return $this->pdf->generate( $file, 'pdf/invoice.html.twig', $data );
+		return $this->pdf->generate( $file, 'pdf/receipt.html.twig', $data );
 	}
 }

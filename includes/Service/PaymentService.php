@@ -21,7 +21,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	public const SETTING_VENDOR        = '_kudos_payment_vendor';
 	public const SETTING_VENDOR_STATUS = '_kudos_payment_vendor_status';
 	private MailerService $mailer_service;
-	private InvoiceService $invoice;
+	private ReceiptService $invoice;
 	private TransactionRepository $transaction_repository;
 
 	/**
@@ -30,10 +30,10 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 * @see https://stackoverflow.com/questions/36853791/laravel-dynamic-dependency-injection-for-interface-based-on-user-input
 	 *
 	 * @param MailerService         $mailer_service Mailer service.
-	 * @param InvoiceService        $invoice Invoice service.
+	 * @param ReceiptService        $invoice Receipt service.
 	 * @param TransactionRepository $transaction_repository Transaction repository.
 	 */
-	public function __construct( MailerService $mailer_service, InvoiceService $invoice, TransactionRepository $transaction_repository ) {
+	public function __construct( MailerService $mailer_service, ReceiptService $invoice, TransactionRepository $transaction_repository ) {
 		$this->mailer_service         = $mailer_service;
 		$this->invoice                = $invoice;
 		$this->transaction_repository = $transaction_repository;
@@ -70,10 +70,10 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	 * @return void
 	 */
 	public function iterate_invoice_number( int $transaction_id ) {
-		$current = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER );
+		$current = (int) get_option( ReceiptService::SETTING_INVOICE_NUMBER );
 		$result  = $this->transaction_repository->patch( $transaction_id, [ 'invoice_number' => $current ] );
 		if ( $result ) {
-			update_option( InvoiceService::SETTING_INVOICE_NUMBER, ( $current + 1 ) );
+			update_option( ReceiptService::SETTING_INVOICE_NUMBER, ( $current + 1 ) );
 		} else {
 			$this->logger->error( 'Error updating invoice number' );
 		}
@@ -114,7 +114,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		$this->logger->debug( 'Processing paid transaction.', [ 'transaction_id' => $transaction_id ] );
 
 		// Generate invoice.
-		$this->invoice->generate_invoice( $transaction_id );
+		$this->invoice->generate_receipt( $transaction_id );
 
 		// Send email - email setting is checked in mailer.
 		$this->mailer_service->send_receipt( $transaction_id );

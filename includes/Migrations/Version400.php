@@ -19,7 +19,7 @@ use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Provider\EmailProvider\SMTPProvider;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
-use IseardMedia\Kudos\Service\InvoiceService;
+use IseardMedia\Kudos\Service\ReceiptService;
 use WP_Post;
 
 class Version400 extends BaseMigration {
@@ -278,7 +278,7 @@ class Version400 extends BaseMigration {
 		$campaign_cache = get_transient( 'kudos_campaign_id_map' );
 
 		// Get data.
-		$invoice_number = (int) get_option( InvoiceService::SETTING_INVOICE_NUMBER, 1 );
+		$invoice_number = (int) get_option( ReceiptService::SETTING_INVOICE_NUMBER, 1 );
 		$rows           = $this->get_rows( $table_name, $offset, $limit );
 		$mapping        = get_transient( 'kudos_transaction_id_map' ) ?? [];
 		$mapping        = \is_array( $mapping ) ? $mapping : [];
@@ -330,7 +330,7 @@ class Version400 extends BaseMigration {
 		}
 
 		set_transient( 'kudos_transaction_id_map', $mapping, DAY_IN_SECONDS );
-		update_option( InvoiceService::SETTING_INVOICE_NUMBER, $invoice_number );
+		update_option( ReceiptService::SETTING_INVOICE_NUMBER, $invoice_number );
 
 		// Update progress.
 		return \count( $rows );

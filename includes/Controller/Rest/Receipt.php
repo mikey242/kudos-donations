@@ -1,6 +1,6 @@
 <?php
 /**
- * Invoice Rest Routes.
+ * Receipt Rest Routes.
  *
  * @link https://github.com/mikey242/kudos-donations/
  *
@@ -14,15 +14,15 @@ namespace IseardMedia\Kudos\Controller\Rest;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Enum\FieldType;
 use IseardMedia\Kudos\Enum\PaymentStatus;
-use IseardMedia\Kudos\Service\InvoiceService;
 use IseardMedia\Kudos\Service\PDFService;
+use IseardMedia\Kudos\Service\ReceiptService;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Invoice extends BaseRestController {
+class Receipt extends BaseRestController {
 
-	private InvoiceService $invoice;
+	private ReceiptService $invoice;
 	private PDFService $pdf;
 	private TransactionRepository $transaction_repository;
 
@@ -30,24 +30,24 @@ class Invoice extends BaseRestController {
 	 * PaymentRoutes constructor.
 	 *
 	 * @param PDFService            $pdf Mailer service.
-	 * @param InvoiceService        $invoice Invoice service.
+	 * @param ReceiptService        $invoice Receipt service.
 	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
-	public function __construct( PDFService $pdf, InvoiceService $invoice, TransactionRepository $transaction_repository ) {
-		$this->rest_base              = 'invoice';
+	public function __construct( PDFService $pdf, ReceiptService $invoice, TransactionRepository $transaction_repository ) {
+		$this->rest_base              = 'receipt';
 		$this->pdf                    = $pdf;
 		$this->invoice                = $invoice;
 		$this->transaction_repository = $transaction_repository;
 	}
 
 	/**
-	 * Mail service routes.
+	 * Receipt service routes.
 	 */
 	public function get_routes(): array {
 		return [
 			'/(?P<id>\d+)' => [
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_invoice' ],
+				'callback'            => [ $this, 'get_receipt' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 				'args'                => [
 					'force' => [
@@ -64,23 +64,23 @@ class Invoice extends BaseRestController {
 			],
 			'/regenerate'  => [
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'regenerate_invoices' ],
+				'callback'            => [ $this, 'regenerate_receipts' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 		];
 	}
 
 	/**
-	 * Generate an invoice for the supplied transaction id.
+	 * Generate a receipt for the supplied transaction id.
 	 *
 	 * @param WP_REST_Request $request The REST request.
 	 */
-	public function get_invoice( WP_REST_Request $request ): WP_REST_Response {
+	public function get_receipt( WP_REST_Request $request ): WP_REST_Response {
 		$transaction_id = $request->get_param( 'id' );
 		$force          = $request->get_param( 'force' ) ?? false;
 		$view           = $request->get_param( 'view' );
 
-		$file = $this->invoice->generate_invoice( (int) $transaction_id, $force );
+		$file = $this->invoice->generate_receipt( (int) $transaction_id, $force );
 
 		if ( null !== $file ) {
 			if ( true === $view ) {
@@ -88,18 +88,18 @@ class Invoice extends BaseRestController {
 			}
 			return new WP_REST_Response( [ 'path' => $file ], 200 );
 		} else {
-			return new WP_REST_Response( [ 'message' => __( 'Something went wrong generating invoice', 'kudos-donations' ) ], 500 );
+			return new WP_REST_Response( [ 'message' => __( 'Something went wrong generating receipt', 'kudos-donations' ) ], 500 );
 		}
 	}
 
 	/**
-	 * Regenerate all invoices.
+	 * Regenerate all receipts.
 	 */
-	public function regenerate_invoices(): WP_REST_Response {
+	public function regenerate_receipts(): WP_REST_Response {
 		$transactions = $this->transaction_repository->find_by( [ 'status' => PaymentStatus::PAID ] );
 		if ( $transactions ) {
 			foreach ( $transactions as $transaction ) {
-				$this->invoice->generate_invoice( $transaction->id, true );
+				$this->invoice->generate_receipt( $transaction->id, true );
 			}
 			// translators: %s represents the number of invoices.
 			return new WP_REST_Response( [ 'message' => \sprintf( __( 'Regenerated %s invoices successfully.', 'kudos-donations' ), \count( $transactions ) ) ], 200 );

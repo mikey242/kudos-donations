@@ -62,7 +62,7 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	 */
 	public function on_plugin_activation(): void {
 		if ( wp_mkdir_p( self::INVOICE_DIR ) && wp_mkdir_p( self::FONTS_DIR ) ) {
-			$this->logger->info( 'Invoice directory created successfully.', [ 'location' => self::INVOICE_DIR ] );
+			$this->logger->info( 'Receipt directory created successfully.', [ 'location' => self::INVOICE_DIR ] );
 		} else {
 			$this->logger->info( 'Unable to create invoice directory.', [ 'location' => self::INVOICE_DIR ] );
 		}

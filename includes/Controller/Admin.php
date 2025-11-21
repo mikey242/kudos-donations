@@ -64,11 +64,11 @@ class Admin extends AbstractRegistrable {
 			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 
 			switch ( $action ) {
-				case 'view_invoice':
+				case 'view_receipt':
 					$transaction_id = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
 					$force          = isset( $_REQUEST['force'] ) && rest_sanitize_boolean( wp_unslash( $_REQUEST['force'] ) );
 					if ( $transaction_id && wp_verify_nonce( $nonce, $action . '_' . $transaction_id ) ) {
-						$request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/invoice/$transaction_id" );
+						$request = new WP_REST_Request( WP_REST_Server::READABLE, "/kudos/v1/receipt/$transaction_id" );
 						$request->set_param( 'force', $force );
 						$request->set_param( 'view', true );
 						rest_do_request( $request );

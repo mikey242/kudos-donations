@@ -15,7 +15,7 @@ export interface Transaction extends BaseEntity {
 	checkout_url?: string;
 	message?: string;
 	refunds?: string;
-	invoice_url?: string;
+	receipt_url?: string;
 	donor: Donor;
 	campaign: Campaign;
 }
