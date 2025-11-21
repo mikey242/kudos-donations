@@ -148,10 +148,12 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 			self::SETTING_DB_VERSION        => [
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
+				'default'      => KUDOS_DB_VERSION,
 			],
 			self::SETTING_PLUGIN_VERSION    => [
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
+				'default'      => KUDOS_VERSION,
 			],
 			self::SETTING_MIGRATION_STATUS  => [
 				'type'         => FieldType::OBJECT,
