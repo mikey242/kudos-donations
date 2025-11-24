@@ -134,7 +134,10 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 		{
 			key: 'length',
 			title: __('Length', 'kudos-donations'),
-			valueCallback: (post: Subscription): React.ReactNode => post.years,
+			valueCallback: (post: Subscription): React.ReactNode =>
+				post.years === 0
+					? __('Continuous', 'kudos-donations')
+					: post.years + ' ' + __('years', 'kudos-donations'),
 		},
 		{
 			key: 'date',
