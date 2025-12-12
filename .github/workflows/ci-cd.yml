@@ -83,7 +83,7 @@ jobs:
                 php-version: ${{ matrix.php-version }}
 
             - name: Download plugin dependencies
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                   name: plugin-deps
                   path: ./
