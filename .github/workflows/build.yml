@@ -35,7 +35,7 @@ jobs:
               run: npm run build
 
             - name: Upload folders
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               with:
                   name: plugin-deps
                   path: |
