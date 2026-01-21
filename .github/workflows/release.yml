@@ -6,13 +6,12 @@ on:
 
 env:
     PHP_VERSION: '8.2'
-    NODE_VERSION: '18.18.1'
 
 jobs:
     build-job:
         uses: ./.github/workflows/build.yml
         with:
-            node-version: '18.18.1'
+            node-version: ${{ vars.NODE_VERSION }}
 
     zip-job:
         needs: build-job

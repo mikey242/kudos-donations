@@ -1,12 +1,3 @@
 {
-	"extends": ["plugin:@wordpress/eslint-plugin/recommended"],
-	"env": {
-		"browser": true,
-		"node": true,
-		"jasmine": true
-	},
-	"parser": "@typescript-eslint/parser",
-	"parserOptions": {
-		"requireConfigFile": false
-	}
+	"extends": ["plugin:@wordpress/eslint-plugin/recommended"]
 }
