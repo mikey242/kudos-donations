@@ -6,9 +6,6 @@ on:
     pull_request:
         branches: ['main']
 
-env:
-    NODE_VERSION: '18.18.1'
-
 jobs:
     validate-composer:
         runs-on: ubuntu-latest
@@ -43,7 +40,7 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v6
               with:
-                  node-version: 24.13.0
+                  node-version: ${{ vars.NODE_VERSION }}
                   cache: 'npm'
 
             - name: Lint JavaScript and CSS
@@ -55,7 +52,7 @@ jobs:
     build-job:
         uses: ./.github/workflows/build.yml
         with:
-            node-version: 18.18.1
+            node-version: ${{ vars.NODE_VERSION }}
 
     test-job:
         runs-on: ubuntu-latest
