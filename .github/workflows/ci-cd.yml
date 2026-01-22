@@ -1,106 +1,111 @@
 name: CI/CD
 
 on:
-    push:
-        branches: ['main']
-    pull_request:
-        branches: ['main']
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
-    validate-composer:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-            - name: Set up PHP with Composer and PHP-Scoper
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.2
-                  tools: composer
-            - name: Validate Composer configuration
-              run: composer --no-ansi validate
-
-    lint:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-
-            - name: Set up PHP with Composer and PHP-Scoper
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.2
-                  tools: composer, php-scoper
-
-            - name: Lint PHP
-              run: |
-                  composer install --no-ansi --no-interaction --no-progress --prefer-dist
-                  composer run lint
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v6
-              with:
-                  node-version: ${{ vars.NODE_VERSION }}
-                  cache: 'npm'
-
-            - name: Lint JavaScript and CSS
-              run: |
-                  npm ci
-                  npm run lint:js
-                  npm run lint:css
-
-    build-job:
-        uses: ./.github/workflows/build.yml
+  validate-composer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Set up PHP with Composer and PHP-Scoper
+        uses: shivammathur/setup-php@v2
         with:
-            node-version: ${{ vars.NODE_VERSION }}
+          php-version: 8.2
+          tools: composer
+      - name: Validate Composer configuration
+        run: composer --no-ansi validate
 
-    test-job:
-        runs-on: ubuntu-latest
-        needs: build-job
-        strategy:
-          matrix:
-            php-version: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
-        name: PHP ${{ matrix.php-version }} tests
-        services:
-            mysql:
-                image: mysql:9.5
-                env:
-                    MYSQL_ROOT_PASSWORD: root
-                    MYSQL_DATABASE: wordpress_test
-                ports:
-                    - 3306
-                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-            - name: Set up PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: ${{ matrix.php-version }}
+      - name: Set up PHP with Composer and PHP-Scoper
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer, php-scoper
 
-            - name: Download plugin dependencies
-              uses: actions/download-artifact@v7
-              with:
-                  name: plugin-deps
-                  path: ./
+      - name: Lint PHP
+        run: |
+          composer install --no-ansi --no-interaction --no-progress --prefer-dist
+          composer run lint
 
-            - name: Install subversion
-              run: |
-                  sudo apt-get update -y --allow-releaseinfo-change
-                  sudo apt-get install -y subversion
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-            - name: Install tests
-              run: |
-                  sudo curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
-                  sudo chmod +x /bin/*.sh
-                  bash /bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:${{ job.services.mysql.ports['3306'] }} latest true
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          cache: "pnpm"
 
-            - name: Show PHP version
-              run: php -v
+      - name: Lint JavaScript and CSS
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run lint:js
+          pnpm run lint:css
 
-            - name: Fix permissions for PHPUnit
-              run: chmod +x vendor/bin/phpunit
+  build-job:
+    uses: ./.github/workflows/build.yml
+    with:
+      node-version: ${{ vars.NODE_VERSION }}
 
-            - name: Run tests
-              run: vendor/bin/phpunit --do-not-cache-result
+  test-job:
+    runs-on: ubuntu-latest
+    needs: build-job
+    strategy:
+      matrix:
+        php-version: ["7.4", "8.0", "8.1", "8.2", "8.3"]
+    name: PHP ${{ matrix.php-version }} tests
+    services:
+      mysql:
+        image: mysql:9.5
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Download plugin dependencies
+        uses: actions/download-artifact@v7
+        with:
+          name: plugin-deps
+          path: ./
+
+      - name: Install subversion
+        run: |
+          sudo apt-get update -y --allow-releaseinfo-change
+          sudo apt-get install -y subversion
+
+      - name: Install tests
+        run: |
+          sudo curl https://raw.githubusercontent.com/wp-cli/scaffold-command/master/templates/install-wp-tests.sh -o /bin/install-wp-tests.sh
+          sudo chmod +x /bin/*.sh
+          bash /bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:${{ job.services.mysql.ports['3306'] }} latest true
+
+      - name: Show PHP version
+        run: php -v
+
+      - name: Fix permissions for PHPUnit
+        run: chmod +x vendor/bin/phpunit
+
+      - name: Run tests
+        run: vendor/bin/phpunit --do-not-cache-result
