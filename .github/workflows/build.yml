@@ -1,44 +1,49 @@
 name: Reusable Build Workflow
 
 on:
-    workflow_call: # Allows other workflows to call this workflow
-        inputs:
-            node-version:
-                required: true
-                type: string
+  workflow_call: # Allows other workflows to call this workflow
+    inputs:
+      node-version:
+        required: true
+        type: string
 
 jobs:
-    build-job:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
+  build-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-            - name: Set up PHP with Composer and PHP-Scoper
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: 8.2
-                tools: composer, php-scoper
+      - name: Set up PHP with Composer and PHP-Scoper
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer, php-scoper
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v6
-              with:
-                node-version: ${{ inputs.node-version }}
-                cache: 'npm'
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-            - name: Install dependencies
-              run: |
-                npm ci
-                composer install --no-ansi --no-interaction --no-progress --prefer-dist
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "pnpm"
 
-            - name: Build front-end assets
-              run: npm run build
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
-            - name: Upload folders
-              uses: actions/upload-artifact@v6
-              with:
-                  name: plugin-deps
-                  path: |
-                    ./build
-                    ./vendor
-                    ./third-party
+      - name: Build front-end assets
+        run: pnpm run build
+
+      - name: Upload folders
+        uses: actions/upload-artifact@v6
+        with:
+          name: plugin-deps
+          path: |
+            ./build
+            ./vendor
+            ./third-party
