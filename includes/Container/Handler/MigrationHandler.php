@@ -101,11 +101,20 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 */
 	private function add_migration_notice(): void {
 		$form  = "<form method='post'>";
-		$form .= "<button id='kudos-migrate-button' class='button-primary confirm' name=" . self::ACTION_MIGRATE . " type='submit'>";
+		$form .= "<input type='checkbox' id='kudos-migrate-checkbox' name='kudos-migrate-checkbox' value='1'>";
+		$form .= "<label for='kudos-migrate-checkbox'>" . __( 'I have backed up my data', 'kudos-donations' ) . '</label>';
+		$form .= "<br><br><button disabled id='kudos-migrate-button' class='button-primary confirm' name=" . self::ACTION_MIGRATE . " type='submit'>";
 		$form .= __( 'Update now', 'kudos-donations' );
 		$form .= '</button>';
 		$form .= "<i id='kudos-migration-status'></i>";
 		$form .= '</form>';
+		$form .= '<script>
+          		    let checkbox = document.getElementById("kudos-migrate-checkbox");
+          		    let button = document.getElementById("kudos-migrate-button");
+          		    checkbox.addEventListener("change", function() {
+          		        button.disabled = !this.checked;
+          		    });
+				</script>';
 
 		NoticeService::notice(
 			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'Please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form,
