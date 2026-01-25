@@ -118,13 +118,12 @@ For general information on how to use shortcodes, please visit [this page](https
 * Fix some icons missing in the admin pages
 * Profile name now shown next to "Mollie ready" when connected
 * Invoices renamed to receipts
+* "From" and "To" fields in receipts now properly aligned
 * Receipt emails now sent in donor's browser language (only for new donors)
 * Automatically link all subscription payment to their subscription (not just initial payment)
 * Allow multiple filters to be applied to admin tables
 * Debug mode: Show linked entities when viewing individual details
-* Update headlessui/react to v2.2.6
-* Update zod to 4.0.17
-* Update WordPress monorepo
+* Update dependencies
 
 = 4.1.6 =
 * Add address column to donor table
