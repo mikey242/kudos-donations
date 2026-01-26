@@ -4,8 +4,8 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalVStack as VStack,
 } from '@wordpress/components';
-import { useQueryState } from 'nuqs';
-import { useRef } from '@wordpress/element';
+import { useState } from '@wordpress/element';
+import { useAdminQueryParams } from '../hooks';
 
 export interface AdminTab {
 	name: string;
@@ -20,21 +20,24 @@ interface AdminTabPanelProps {
 export const AdminTabPanel = ({
 	tabs,
 }: AdminTabPanelProps): React.ReactNode => {
-	const [tabName, setTabName] = useQueryState('tab');
-	const isInitialMount = useRef(true);
+	const { params, updateParams } = useAdminQueryParams();
+	const initialTab = params.tab ?? tabs[0]?.name;
+	const [selectedTab, setSelectedTab] = useState(initialTab);
 
-	const updateTab = async (tab: string) => {
-		// Skip URL update on initial mount to prevent race conditions
-		if (isInitialMount.current) {
-			isInitialMount.current = false;
-			return;
+	const updateTab = (tab: string) => {
+		if (tab !== selectedTab) {
+			setSelectedTab(tab);
+			void updateParams({ tab });
 		}
-		await setTabName(tab);
 	};
 
 	return (
 		<div className="kudos-settings-tab-panel">
-			<TabPanel initialTabName={tabName} onSelect={updateTab} tabs={tabs}>
+			<TabPanel
+				initialTabName={selectedTab}
+				onSelect={updateTab}
+				tabs={tabs}
+			>
 				{(tab) => <VStack spacing={4}>{tab.content}</VStack>}
 			</TabPanel>
 		</div>
