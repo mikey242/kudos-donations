@@ -1,31 +1,36 @@
 import type { BaseEntity } from '../../types/entity';
 import React from 'react';
-// @ts-ignore
-import { DataForm } from '@wordpress/dataviews/wp';
 import { __, sprintf } from '@wordpress/i18n';
 import { Panel } from './Panel';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import { useAdminContext, useEntitiesContext } from '../contexts';
 import { useAdminQueryParams } from '../hooks';
-import { Button } from '@wordpress/components';
+import {
+	Button,
+	TextControl,
+	SelectControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalNumberControl as NumberControl,
+} from '@wordpress/components';
 
 interface PostEditProps<T extends BaseEntity = BaseEntity> {
 	data: T;
 	fields: Field[];
 	form: {
 		fields: string[];
-		layout?: {
-			labelPosition?: string;
-			type?: 'regular' | 'panel' | 'card';
-		};
 	};
 }
 
+interface FieldElement {
+	value: string | number;
+	label: string;
+}
+
 interface Field {
-	elements?: Record<string, unknown>;
+	elements?: FieldElement[];
 	id: string;
 	label: string;
-	type: string;
+	type: 'text' | 'integer' | 'datetime';
 }
 
 interface NavigationButtonsProps {
@@ -90,6 +95,64 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 		return null;
 	}
 
+	const renderField = (field: Field) => {
+		const value = formData[field.id as keyof T];
+
+		if (field.elements && field.elements.length > 0) {
+			return (
+				<SelectControl
+					key={field.id}
+					label={field.label}
+					value={String(value ?? '')}
+					options={[
+						{
+							value: '',
+							label: __('Select…', 'kudos-donations'),
+						},
+						...field.elements.map((el) => ({
+							value: String(el.value),
+							label: el.label,
+						})),
+					]}
+					onChange={(newValue: string) =>
+						handleFormChange({ [field.id]: newValue })
+					}
+				/>
+			);
+		}
+
+		switch (field.type) {
+			case 'integer':
+				return (
+					<NumberControl
+						key={field.id}
+						label={field.label}
+						value={String(value) ?? ''}
+						onChange={(newValue) =>
+							handleFormChange({
+								[field.id]: newValue ? Number(newValue) : null,
+							})
+						}
+					/>
+				);
+			case 'datetime':
+			case 'text':
+			default:
+				return (
+					<TextControl
+						key={field.id}
+						label={field.label}
+						value={String(value ?? '')}
+						onChange={(newValue) =>
+							handleFormChange({ [field.id]: newValue })
+						}
+					/>
+				);
+		}
+	};
+
+	const visibleFields = fields.filter((f) => form.fields.includes(f.id));
+
 	return (
 		<Panel
 			header={sprintf(
@@ -98,20 +161,7 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 				formData?.title
 			)}
 		>
-			<DataForm
-				data={formData}
-				fields={fields}
-				form={{
-					layout: {
-						labelPosition: undefined,
-						type: 'regular',
-					},
-					...form,
-				}}
-				onChange={(e: Record<string, unknown>) => {
-					handleFormChange(e);
-				}}
-			/>
+			{visibleFields.map(renderField)}
 		</Panel>
 	);
 };

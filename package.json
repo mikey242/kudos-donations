@@ -22,7 +22,6 @@
 		"@automattic/babel-plugin-preserve-i18n": "^1.0.0",
 		"@headlessui/react": "2.2.9",
 		"@heroicons/react": "^2.2.0",
-		"@wordpress/dataviews": "^11.0.0",
 		"clsx": "^2.1.1",
 		"focus-trap-react": "^11.0.4",
 		"nuqs": "^2.4.3",
