@@ -17,9 +17,6 @@ importers:
       '@heroicons/react':
         specifier: ^2.2.0
         version: 2.2.0(react@18.3.1)
-      '@wordpress/dataviews':
-        specifier: ^11.0.0
-        version: 11.2.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@17.0.0(typescript@5.9.3))
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
