@@ -5,6 +5,7 @@ import {
 	__experimentalVStack as VStack,
 } from '@wordpress/components';
 import { useQueryState } from 'nuqs';
+import { useRef } from '@wordpress/element';
 
 export interface AdminTab {
 	name: string;
@@ -20,8 +21,14 @@ export const AdminTabPanel = ({
 	tabs,
 }: AdminTabPanelProps): React.ReactNode => {
 	const [tabName, setTabName] = useQueryState('tab');
+	const isInitialMount = useRef(true);
 
 	const updateTab = async (tab: string) => {
+		// Skip URL update on initial mount to prevent race conditions
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
 		await setTabName(tab);
 	};
 
