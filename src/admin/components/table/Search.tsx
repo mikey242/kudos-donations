@@ -4,17 +4,17 @@ import React from 'react';
 import { useAdminQueryParams } from '../../hooks';
 
 export const Search = () => {
-	const { params, setParams } = useAdminQueryParams();
+	const { params, updateParams } = useAdminQueryParams();
 	const [input, setInput] = useState(params.search || '');
 
 	// Debounce search updates
 	useEffect(() => {
 		const timeout = setTimeout(() => {
-			void setParams({ search: input });
+			void updateParams({ search: input });
 		}, 300);
 
 		return () => clearTimeout(timeout);
-	}, [input, setParams]);
+	}, [input, updateParams]);
 
 	const onChange = useCallback((value: string) => {
 		setInput(value);
@@ -23,9 +23,9 @@ export const Search = () => {
 	const onSubmit = useCallback(
 		(e: React.FormEvent) => {
 			e.preventDefault();
-			void setParams({ search: input });
+			void updateParams({ search: input });
 		},
-		[input, setParams]
+		[input, updateParams]
 	);
 
 	return (
