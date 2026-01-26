@@ -57,11 +57,15 @@ phpcs.xml.dist
 phpmd.xml
 phpstan.neon
 phpstan.neon.dist
+phpstan-baseline.neon
+phpstan-bootstrap.php
 phpunit.xml.dist
 phpunit-integration.xml
 phpunit-integration.xml.dist
 phpunit-integration-multisite.xml
 phpunit-integration-multisite.xml.dist
+pnpm-lock.yaml
+pnpm-workspace.yaml
 tailwind.config.js
 tsconfig.json
 
@@ -72,3 +76,4 @@ renovate.json
 scoper.inc.php
 tsconfig.shared.json
 wp-cli.phar
+CLAUDE.md
