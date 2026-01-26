@@ -24,6 +24,7 @@
 		"ext-json": "*",
 		"automattic/jetpack-autoloader": "^5.0",
 		"dompdf/dompdf": "^3",
+		"sabberworm/php-css-parser": "^8.9",
 		"mollie/mollie-api-php": "^v3.0.0",
 		"monolog/monolog": "^2",
 		"psr/log": "^1.1",
