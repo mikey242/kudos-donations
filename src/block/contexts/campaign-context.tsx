@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { Flex, Spinner } from '@wordpress/components';
 import type { Campaign } from '../../types/entity';
-import { EntityRestResponse } from '../../admin/contexts';
 
 interface CampaignContextType {
 	campaign: Campaign | null;
@@ -49,21 +48,18 @@ export default function CampaignProvider({
 						apiFetch({
 							path: `/kudos/v1/campaign/by-slug/${campaignId}`,
 						})
-							.then(
-								(postBySlug: EntityRestResponse<Campaign>) => {
-									const posts = postBySlug.items;
-									if (posts.length > 0) {
-										setCampaign(posts[0]);
-									} else {
-										setCampaignErrors([
-											__(
-												'Campaign not found',
-												'kudos-donations'
-											),
-										]);
-									}
+							.then((postBySlug: Campaign) => {
+								if (postBySlug) {
+									setCampaign(postBySlug);
+								} else {
+									setCampaignErrors([
+										__(
+											'Campaign not found',
+											'kudos-donations'
+										),
+									]);
 								}
-							)
+							})
 							.catch(() => {
 								setCampaignErrors([
 									__(
