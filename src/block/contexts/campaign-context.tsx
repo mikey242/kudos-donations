@@ -47,7 +47,7 @@ export default function CampaignProvider({
 					if (error?.data?.status === 404) {
 						// Try by wp_post_slug
 						apiFetch({
-							path: `/kudos/v1/campaign?where[wp_post_slug]=${campaignId}`,
+							path: `/kudos/v1/campaign/by-slug/${campaignId}`,
 						})
 							.then(
 								(postBySlug: EntityRestResponse<Campaign>) => {
