@@ -2,7 +2,7 @@
 Contributors: iseardmedia
 Tags: donation, fundraising, charity, recurring donations, mollie
 Requires at least: 6.6
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 4.1.6
 License: GPLv2 or later
