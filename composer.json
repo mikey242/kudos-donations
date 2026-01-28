@@ -102,15 +102,15 @@
 			"IseardMedia\\Kudos\\": "includes/",
 			"Mollie\\": "third-party/vendor/mollie/mollie-api-php/src/",
 			"Monolog\\": "third-party/vendor/monolog/monolog/src/"
-		},
-		"files": [
-			"includes/helpers.php"
-		]
+		}
 	},
 	"autoload-dev": {
 		"psr-4": {
 			"IseardMedia\\Kudos\\Dev\\": "includes-dev/",
 			"IseardMedia\\Kudos\\Tests\\": "tests/"
-		}
+		},
+		"files": [
+			"includes-dev/helpers.php"
+		]
 	}
 }
