@@ -4,10 +4,22 @@ import {
 	parseAsJson,
 	useQueryStates,
 } from 'nuqs';
-import { z } from 'zod';
 import { useCallback } from '@wordpress/element';
 
-const whereSchema = z.record(z.string(), z.union([z.string(), z.number()]));
+type WhereRecord = Record<string, string | number>;
+
+const parseWhereSchema = (value: unknown): WhereRecord => {
+	if (typeof value !== 'object' || value === null) {
+		return {};
+	}
+	const result: WhereRecord = {};
+	for (const [key, val] of Object.entries(value)) {
+		if (typeof val === 'string' || typeof val === 'number') {
+			result[key] = val;
+		}
+	}
+	return result;
+};
 
 const defaultTableFilterParams = {
 	order: 'desc',
@@ -36,7 +48,7 @@ export const useAdminQueryParams = () => {
 		paged: parseAsInteger
 			.withDefault(defaultParams.paged)
 			.withOptions({ history: 'push' }),
-		where: parseAsJson(whereSchema.parse)
+		where: parseAsJson(parseWhereSchema)
 			.withDefault({})
 			.withOptions({ history: 'push' }),
 		order: parseAsString.withDefault(defaultParams.order),
