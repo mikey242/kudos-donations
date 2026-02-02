@@ -108,9 +108,6 @@
 		"psr-4": {
 			"IseardMedia\\Kudos\\Dev\\": "includes-dev/",
 			"IseardMedia\\Kudos\\Tests\\": "tests/"
-		},
-		"files": [
-			"includes-dev/helpers.php"
-		]
+		}
 	}
 }
