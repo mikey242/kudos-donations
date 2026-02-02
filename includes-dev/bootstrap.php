@@ -9,6 +9,12 @@
 
 declare( strict_types=1 );
 
+// Load dev helpers.
+$helpers_file = __DIR__ . '/helpers.php';
+if ( file_exists( $helpers_file ) ) {
+	require_once $helpers_file;
+}
+
 use IseardMedia\Kudos\Dev\Fixtures\AllFixtures;
 use IseardMedia\Kudos\Dev\Fixtures\CampaignFixtures;
 use IseardMedia\Kudos\Dev\Fixtures\DonorsFixtures;
