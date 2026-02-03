@@ -26,6 +26,6 @@ class PluginTest extends WP_UnitTestCase {
 	 * Tests that the plugin is running in production.
 	 */
 	public function test_correct_app_env() {
-		$this->assertSame($_ENV['APP_ENV'], 'production');
+		$this->assertSame('production', $_ENV['APP_ENV']);
 	}
 }
