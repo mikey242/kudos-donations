@@ -50,7 +50,7 @@
 		"sirbrillig/phpcs-variable-analysis": "v2.13.0",
 		"slevomat/coding-standard": "^8.6",
 		"sniccowp/php-scoper-wordpress-excludes": "^6.2",
-		"squizlabs/php_codesniffer": "3.13.5",
+		"squizlabs/php_codesniffer": "4.0.1",
 		"szepeviktor/phpstan-wordpress": "^2.0",
 		"wp-coding-standards/wpcs": "3.3.*",
 		"yoast/phpunit-polyfills": "^4.0"
