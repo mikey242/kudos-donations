@@ -20,24 +20,19 @@ jobs:
           php-version: 8.2
           tools: composer, php-scoper
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
         run: |
-          pnpm install --frozen-lockfile
+          npm ci
           composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Build front-end assets
-        run: pnpm run build
+        run: npm run build
 
       - name: Upload folders
         uses: actions/upload-artifact@v6

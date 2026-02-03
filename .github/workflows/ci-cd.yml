@@ -37,22 +37,17 @@ jobs:
           composer install --no-ansi --no-interaction --no-progress --prefer-dist
           composer run lint
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Lint JavaScript and CSS
         run: |
-          pnpm install --frozen-lockfile
-          pnpm run lint:js
-          pnpm run lint:css
+          npm ci
+          npm run lint:js
+          npm run lint:css
 
   build-job:
     uses: ./.github/workflows/build.yml
