@@ -10,15 +10,13 @@ import {
 	OptionalFieldsTab,
 	CustomCSSTab,
 } from './tabs';
-import { store as noticesStore } from '@wordpress/notices';
 import { isEmpty } from 'lodash';
-import { useDispatch } from '@wordpress/data';
 import {
 	useAdminContext,
 	useEntitiesContext,
 	useSettingsContext,
 } from '../../contexts';
-import { useAdminQueryParams } from '../../hooks';
+import { useAdminQueryParams, useNotices } from '../../hooks';
 import { applyFilters } from '@wordpress/hooks';
 import type { Campaign } from '../../../types/entity';
 import { Button } from '@wordpress/components';
@@ -57,7 +55,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 		reValidateMode: 'onSubmit',
 	});
 	const { reset, handleSubmit, formState } = methods;
-	const { createWarningNotice } = useDispatch(noticesStore);
+	const { createWarningNotice } = useNotices();
 	const { handleUpdate } = useEntitiesContext();
 
 	useEffect(() => {

@@ -1,8 +1,7 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useDispatch } from '@wordpress/data';
-import { store as noticesStore } from '@wordpress/notices';
+import { useNotices } from '../../hooks';
 import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalDivider as Divider,
@@ -26,7 +25,7 @@ export default function GenerateShortcode({
 	campaign,
 	iconOnly = false,
 }: GenerateShortcodeProps): React.ReactNode {
-	const { createSuccessNotice } = useDispatch(noticesStore);
+	const { createSuccessNotice } = useNotices();
 	const [isOpen, setOpen] = useState<boolean>(false);
 	const [type, setType] = useState<string>('button');
 	const [label, setLabel] = useState<string>(
