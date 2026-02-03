@@ -84,7 +84,7 @@ export const MigrationModal = () => {
 		<Modal
 			isDismissible={false}
 			shouldCloseOnClickOutside={false}
-			onRequestClose={() => null}
+			onRequestClose={handleCancel}
 			title={__('Upgrade required', 'kudos-donations')}
 		>
 			<p>
