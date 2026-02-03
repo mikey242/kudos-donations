@@ -138,18 +138,6 @@ class NoticeService implements HasSettingsInterface {
 				'id' => [],
 			],
 			'strong' => [],
-			'form'   => [
-				'method' => [],
-			],
-			'input'  => [
-				'id'    => [],
-				'type'  => [],
-				'name'  => [],
-				'value' => [],
-			],
-			'label'  => [
-				'for' => [],
-			],
 			'button' => [
 				'id'       => [],
 				'class'    => [],
@@ -169,7 +157,10 @@ class NoticeService implements HasSettingsInterface {
 				'd'     => [],
 			],
 			'br'     => [],
-			'script' => [],
+			'a'      => [
+				'href'  => [],
+				'class' => [],
+			],
 		];
 	}
 

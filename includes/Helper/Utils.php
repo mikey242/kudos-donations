@@ -284,4 +284,12 @@ class Utils {
 
 		return 'en_US'; // fallback.
 	}
+
+	/**
+	 * Returns true if current page is a Kudos Donations admin page.
+	 */
+	public static function is_kudos_admin(): bool {
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return substr( $page, 0, 6 ) === 'kudos-';
+	}
 }

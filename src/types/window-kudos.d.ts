@@ -6,6 +6,7 @@ export interface KudosGlobal {
 	currencies: Record<string, string>;
 	version: string;
 	codeEditor: CodeEditorSettings;
+	needsUpgrade: boolean;
 	[key: string]: unknown;
 }
 
