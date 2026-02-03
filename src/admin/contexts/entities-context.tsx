@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import React from 'react';
 import {
 	createContext,
 	useCallback,
@@ -8,13 +7,12 @@ import {
 	useMemo,
 	useState,
 } from '@wordpress/element';
+import type { ReactNode, SyntheticEvent } from 'react';
 
 import { __, sprintf } from '@wordpress/i18n';
-import { useDispatch } from '@wordpress/data';
-import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import type { BaseEntity } from '../../types/entity';
-import { useAdminQueryParams } from '../hooks';
+import { useAdminQueryParams, useNotices } from '../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 
@@ -23,7 +21,7 @@ interface EntitiesContextValue<T extends BaseEntity = BaseEntity> {
 	hasResolved: boolean;
 	totalPages: number;
 	totalItems: number;
-	handleNew: (args?: Partial<T> | React.SyntheticEvent) => Promise<any>;
+	handleNew: (args?: Partial<T> | SyntheticEvent) => Promise<any>;
 	handleUpdate: (data: Partial<T>) => Promise<any>;
 	handleDelete: (entityId: number) => void;
 	handleDuplicate: (entity: T) => void;
@@ -44,7 +42,7 @@ export interface EntityRestResponse<T extends BaseEntity> {
 const EntitiesContext = createContext<EntitiesContextValue<any> | null>(null);
 
 interface EntitiesProviderProps {
-	children: React.ReactNode;
+	children: ReactNode;
 	entityType: string;
 	singularName: string;
 	pluralName: string;
@@ -65,8 +63,7 @@ export const EntitiesProvider = <T extends BaseEntity>({
 }: EntitiesProviderProps) => {
 	const { params } = useAdminQueryParams();
 	const { paged, order, orderby, where } = params;
-	const { createSuccessNotice, createErrorNotice } =
-		useDispatch(noticesStore);
+	const { createSuccessNotice, createErrorNotice } = useNotices();
 	const [state, setState] = useState<EntityState<T>>({
 		entities: [],
 		hasResolved: false,

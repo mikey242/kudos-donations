@@ -13,17 +13,14 @@ import { dateI18n } from '@wordpress/date';
 import type { Subscription } from '../../../types/entity';
 import { IconKey } from '@wordpress/components/build-types/dashicon/types';
 import { useEntitiesContext, useSettingsContext } from '../../contexts';
-import { useAdminQueryParams } from '../../hooks';
+import { useAdminQueryParams, useNotices } from '../../hooks';
 import apiFetch from '@wordpress/api-fetch';
-import { useDispatch } from '@wordpress/data';
-import { store as noticesStore } from '@wordpress/notices';
 export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { currencies } = window.kudos;
 	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
 	const { handleDelete, fetchEntities } = useEntitiesContext();
-	const { createSuccessNotice, createErrorNotice } =
-		useDispatch(noticesStore);
+	const { createSuccessNotice, createErrorNotice } = useNotices();
 
 	const changeView = (entityId: number) => {
 		void setParams({
