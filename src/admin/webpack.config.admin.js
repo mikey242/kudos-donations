@@ -5,10 +5,6 @@ const { resolve } = require('node:path');
 module.exports = merge(commonConfig, {
 	entry: {
 		'kudos-admin': resolve(__dirname, 'kudos-admin.tsx'),
-		'migrations/kudos-admin-migrations': resolve(
-			__dirname,
-			'kudos-admin-migrations.ts'
-		),
 	},
 	module: {
 		rules: [

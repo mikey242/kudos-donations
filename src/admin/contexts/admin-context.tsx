@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import * as AdminControls from '../components/controls';
-import { AdminHeader, Notices } from '../components';
+import { AdminHeader, MigrationModal, Notices } from '../components';
 // eslint-disable-next-line import/no-unresolved
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 
@@ -25,6 +25,12 @@ interface ProviderProps {
 const AdminContext = createContext<AdminContextValue | null>(null);
 
 export const AdminProvider = ({ children }: ProviderProps) => {
+	const needsUpgrade = window.kudos?.needsUpgrade ?? false;
+
+	if (needsUpgrade) {
+		return <MigrationModal />;
+	}
+
 	return (
 		<NuqsAdapter>
 			<BrowserRouter>

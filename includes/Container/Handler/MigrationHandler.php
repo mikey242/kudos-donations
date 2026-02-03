@@ -14,13 +14,12 @@ namespace IseardMedia\Kudos\Container\Handler;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
 use IseardMedia\Kudos\Enum\FieldType;
-use IseardMedia\Kudos\Helper\Assets;
+use IseardMedia\Kudos\Helper\Utils;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Service\NoticeService;
 
 class MigrationHandler extends AbstractRegistrable implements HasSettingsInterface {
 
-	private const ACTION_MIGRATE           = 'kudos_migrate_action';
 	public const SETTING_DB_VERSION        = '_kudos_db_version';
 	public const SETTING_MIGRATION_HISTORY = '_kudos_migration_history';
 	public const SETTING_MIGRATION_STATUS  = '_kudos_migration_status';
@@ -62,16 +61,32 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
+		$this->add_localized_data();
+
 		if ( $this->should_upgrade() ) {
-			$this->enqueue_assets();
-			$this->add_migration_notice();
+			if ( ! Utils::is_kudos_admin() ) {
+				$this->add_migration_notice();
+			}
 		}
+	}
+
+	/**
+	 * Adds needsUpgrade to localized script data.
+	 */
+	private function add_localized_data(): void {
+		add_filter(
+			'kudos_global_localization',
+			function ( array $data ): array {
+				$data['needsUpgrade'] = $this->should_upgrade();
+				return $data;
+			}
+		);
 	}
 
 	/**
 	 * Determines if a migration should be run.
 	 */
-	private function should_upgrade(): bool {
+	public function should_upgrade(): bool {
 		$db_version = get_option( self::SETTING_DB_VERSION );
 
 		$current_version = ! empty( $db_version ) ? $db_version : '';
@@ -100,47 +115,14 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	 * Creates an admin notice with update button.
 	 */
 	private function add_migration_notice(): void {
-		$form  = "<form method='post'>";
-		$form .= "<input type='checkbox' id='kudos-migrate-checkbox' name='kudos-migrate-checkbox' value='1'>";
-		$form .= "<label for='kudos-migrate-checkbox'>" . __( 'I have backed up my data', 'kudos-donations' ) . '</label>';
-		$form .= "<br><br><button disabled id='kudos-migrate-button' class='button-primary confirm' name=" . self::ACTION_MIGRATE . " type='submit'>";
-		$form .= __( 'Update now', 'kudos-donations' );
-		$form .= '</button>';
-		$form .= "<i id='kudos-migration-status'></i>";
-		$form .= '</form>';
-		$form .= '<script>
-          		    let checkbox = document.getElementById("kudos-migrate-checkbox");
-          		    let button = document.getElementById("kudos-migrate-button");
-          		    checkbox.addEventListener("change", function() {
-          		        button.disabled = !this.checked;
-          		    });
-				</script>';
+		$form  = '<div>';
+		$form .= "<a href='" . admin_url( '?page=kudos-campaigns' ) . "' class='button button-primary'>";
+		$form .= __( 'Visit dashboard', 'kudos-donations' );
+		$form .= '</a>';
+		$form .= '</div>';
 
 		NoticeService::notice(
 			'<p><strong>' . __( 'Kudos Donations needs to update your database before you can continue.', 'kudos-donations' ) . '</strong><br/>' . __( 'Please make sure you backup your data before proceeding.', 'kudos-donations' ) . '</p>' . $form,
-		);
-	}
-
-	/**
-	 * Enqueues the required assets.
-	 */
-	private function enqueue_assets(): void {
-		add_action(
-			'admin_enqueue_scripts',
-			function () {
-				$admin_js = Assets::get_script( 'admin/migrations/kudos-admin-migrations.js' );
-				if ( null !== $admin_js ) {
-					wp_enqueue_script(
-						'kudos-donations-migrations',
-						$admin_js['url'],
-						$admin_js['dependencies'],
-						$admin_js['version'],
-						[
-							'in_footer' => true,
-						]
-					);
-				}
-			}
 		);
 	}
 

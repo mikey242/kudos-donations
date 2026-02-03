@@ -40,7 +40,13 @@ class Migration extends BaseRestController {
 	 */
 	public function get_routes(): array {
 		return [
-			'/run' => [
+			'/should-upgrade' => [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'should_upgrade' ],
+				'permission_callback' => [ $this, 'can_manage_options' ],
+
+			],
+			'/run'            => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'rest_migrate_handler' ],
 				'args'                => [
@@ -58,6 +64,13 @@ class Migration extends BaseRestController {
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 		];
+	}
+
+	/**
+	 * Check whether there are pending migrations
+	 */
+	public function should_upgrade(): WP_REST_Response {
+		return new WP_REST_Response( $this->migration->should_upgrade() );
 	}
 
 	/**

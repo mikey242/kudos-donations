@@ -11,6 +11,7 @@ export * from './AdminRouter';
 export * from './AdminTabPanel';
 export * from './EntityPage';
 export * from './IntroGuide';
+export * from './MigrationModal';
 export * from './Notices';
 export * from './Panel';
 export * from './SingleEntityView';
