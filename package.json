@@ -102,5 +102,9 @@
 		"plugin-dir": "kudos-donations",
 		"plugin-name": "Kudos Donations",
 		"welcome-build-command": "npm run production"
+	},
+	"overrides": {
+		"@types/react": "$@types/react",
+		"@types/react-dom": "$@types/react-dom"
 	}
 }
