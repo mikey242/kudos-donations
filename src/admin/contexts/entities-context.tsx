@@ -65,8 +65,8 @@ export const EntitiesProvider = <T extends BaseEntity>({
 }: EntitiesProviderProps) => {
 	const { params } = useAdminQueryParams();
 	const { paged, order, orderby, where } = params;
-    const { createSuccessNotice, createErrorNotice } =
-        useDispatch(noticesStore);
+	const { createSuccessNotice, createErrorNotice } =
+		useDispatch(noticesStore);
 	const [state, setState] = useState<EntityState<T>>({
 		entities: [],
 		hasResolved: false,

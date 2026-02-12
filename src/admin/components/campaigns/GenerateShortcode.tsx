@@ -26,7 +26,7 @@ export default function GenerateShortcode({
 	campaign,
 	iconOnly = false,
 }: GenerateShortcodeProps): React.ReactNode {
-    const { createSuccessNotice } = useDispatch(noticesStore);
+	const { createSuccessNotice } = useDispatch(noticesStore);
 	const [isOpen, setOpen] = useState<boolean>(false);
 	const [type, setType] = useState<string>('button');
 	const [label, setLabel] = useState<string>(
