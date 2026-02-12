@@ -10,9 +10,11 @@ import {
 import type { ReactNode, SyntheticEvent } from 'react';
 
 import { __, sprintf } from '@wordpress/i18n';
+import { useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import { Icon } from '@wordpress/components';
 import type { BaseEntity } from '../../types/entity';
-import { useAdminQueryParams, useNotices } from '../hooks';
+import { useAdminQueryParams } from '../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 
@@ -63,7 +65,8 @@ export const EntitiesProvider = <T extends BaseEntity>({
 }: EntitiesProviderProps) => {
 	const { params } = useAdminQueryParams();
 	const { paged, order, orderby, where } = params;
-	const { createSuccessNotice, createErrorNotice } = useNotices();
+    const { createSuccessNotice, createErrorNotice } =
+        useDispatch(noticesStore);
 	const [state, setState] = useState<EntityState<T>>({
 		entities: [],
 		hasResolved: false,
