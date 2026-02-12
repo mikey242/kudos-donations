@@ -22,8 +22,8 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const { setParams } = useAdminQueryParams();
 	const { settings } = useSettingsContext();
 	const { handleDelete, fetchEntities } = useEntitiesContext();
-    const { createSuccessNotice, createErrorNotice } =
-        useDispatch(noticesStore);
+	const { createSuccessNotice, createErrorNotice } =
+		useDispatch(noticesStore);
 
 	const changeView = (entityId: number) => {
 		void setParams({

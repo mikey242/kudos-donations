@@ -57,7 +57,7 @@ const CampaignEdit = ({ campaign }: CampaignEditProps): React.ReactNode => {
 		reValidateMode: 'onSubmit',
 	});
 	const { reset, handleSubmit, formState } = methods;
-    const { createWarningNotice } = useDispatch(noticesStore);
+	const { createWarningNotice } = useDispatch(noticesStore);
 	const { handleUpdate } = useEntitiesContext();
 
 	useEffect(() => {
