@@ -11,9 +11,10 @@ import {
 // eslint-disable-next-line import/default
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
+import { useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import { Flex, Icon, Spinner } from '@wordpress/components';
 import { IntroGuide } from '../components';
-import { useNotices } from '../hooks';
 import type { BaseSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
 
@@ -52,7 +53,8 @@ export const SettingsProvider = <T extends BaseSettings>({
 	const { settings } = settingsRequest;
 	const [checkingApiKey, setCheckingApiKey] = useState<boolean>(false);
 	const [settingsSaving, setSettingsSaving] = useState<boolean>(false);
-	const { createSuccessNotice, createErrorNotice } = useNotices();
+	const { createSuccessNotice, createErrorNotice } =
+		useDispatch(noticesStore);
 
 	const fetchSettings = useCallback(async () => {
 		await api.loadPromise;
