@@ -284,6 +284,11 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			return 0;
 		}
 
+		// Create a campaign map to migrate old id to new id.
+		$campaign_map = [];
+		/** @var CampaignEntity[] $campaign_rows */
+		$campaign_rows = $campaign_repo->all();
+
 		foreach ( $ids as $post_id ) {
 			$existing = $transaction_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
 			if ( $existing ) {
@@ -291,10 +296,6 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				continue;
 			}
 
-			// Create a campaign map to migrate old id to new id.
-			$campaign_map = [];
-			/** @var CampaignEntity[] $campaign_rows */
-			$campaign_rows = $campaign_repo->all();
 			foreach ( $campaign_rows as $row ) {
 				$campaign_map[ $row->wp_post_id ] = $row->id;
 			}
