@@ -49,18 +49,6 @@ class Migration extends BaseRestController {
 			'/run'            => [
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'rest_migrate_handler' ],
-				'args'                => [
-					'limit'  => [
-						'type'     => FieldType::INTEGER,
-						'default'  => 1,
-						'required' => true,
-					],
-					'offset' => [
-						'type'     => FieldType::INTEGER,
-						'default'  => 0,
-						'required' => true,
-					],
-				],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 		];
