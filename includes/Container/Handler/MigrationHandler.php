@@ -22,7 +22,6 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 
 	public const SETTING_DB_VERSION        = '_kudos_db_version';
 	public const SETTING_MIGRATION_HISTORY = '_kudos_migration_history';
-	public const SETTING_MIGRATION_STATUS  = '_kudos_migration_status';
 	public const SETTING_PLUGIN_VERSION    = '_kudos_donations_version';
 
 	/**
@@ -145,25 +144,6 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 				'type'         => FieldType::STRING,
 				'show_in_rest' => true,
 				'default'      => KUDOS_VERSION,
-			],
-			self::SETTING_MIGRATION_STATUS  => [
-				'type'         => FieldType::OBJECT,
-				'default'      => [],
-				'show_in_rest' => [
-					'schema' => [
-						'type'       => 'object',
-						'properties' => [
-							'success' => [
-								'type'    => 'boolean',
-								'default' => false,
-							],
-							'message' => [
-								'type'    => 'string',
-								'default' => 'Kudos Donations: Migration status pending.',
-							],
-						],
-					],
-				],
 			],
 		];
 	}
