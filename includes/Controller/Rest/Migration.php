@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Container\Handler\MigrationHandler;
-use IseardMedia\Kudos\Enum\FieldType;
 use WP_REST_Response;
 use WP_REST_Server;
 
