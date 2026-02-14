@@ -72,15 +72,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @return TEntity|null
 	 */
 	public function get( int $id, array $columns = [ '*' ] ) {
-		$results = $this->query(
-			[
-				'where'   => [ 'id' => $id ],
-				'limit'   => 1,
-				'columns' => array_values( $columns ),
-			]
-		);
-
-		return $results[0] ?? null;
+		return $this->find_one_by( [ 'id' => $id ], $columns );
 	}
 
 	/**
