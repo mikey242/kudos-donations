@@ -350,6 +350,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 */
 	public function new_entity( array $data ): BaseEntity {
 		$entity_class = $this->get_entity_class();
+		$data         = $this->schema->cast_types( $data );
 		/** @psalm-suppress UnsafeInstantiation */
 		return new $entity_class( $data );
 	}
