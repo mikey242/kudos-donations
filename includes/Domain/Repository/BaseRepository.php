@@ -248,17 +248,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * } $args
 	 */
 	public function query( array $args = [] ): array {
-		$valid_fields = $this->get_all_fields();
-
 		if ( isset( $args['columns'] ) && [ '*' ] !== $args['columns'] ) {
-			$args['columns'] = array_filter( $args['columns'], fn( $col ) => \in_array( $col, $valid_fields, true ) );
+			$args['columns'] = array_filter( $args['columns'], fn( $col ) => $this->is_valid_column( $col ) );
 		}
 		$select = isset( $args['columns'] ) ? implode( ', ', $args['columns'] ) : '*';
 
 		$where = $this->build_where_clause( $args['where'] ?? [] );
 
 		$order_by = '';
-		if ( isset( $args['orderby'] ) && \in_array( $args['orderby'], $valid_fields, true ) ) {
+		if ( isset( $args['orderby'] ) && $this->is_valid_column( $args['orderby'] ) ) {
 			$order    = isset( $args['order'] ) && 'DESC' === strtoupper( $args['order'] ) ? 'DESC' : 'ASC';
 			$order_by = "ORDER BY `{$args['orderby']}` $order";
 		}
@@ -306,7 +304,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	}
 
 	/**
-	 * Generate the WHERE sql clause.
+	 * Generate the WHERE SQL clause.
 	 *
 	 * @param array<string, scalar|null> $criteria The criteria.
 	 */
@@ -315,6 +313,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 		$params  = [];
 
 		foreach ( $criteria as $column => $value ) {
+			if ( ! $this->is_valid_column( $column ) ) {
+				continue;
+			}
 			if ( null === $value ) {
 				$clauses[] = "`$column` IS NULL";
 			} elseif ( \is_int( $value ) ) {
@@ -340,6 +341,15 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 */
 	public function get_all_fields(): array {
 		return array_keys( $this->schema->get_column_schema() );
+	}
+
+	/**
+	 * Check if a column name exists in the schema.
+	 *
+	 * @param string $column The column name to validate.
+	 */
+	private function is_valid_column( string $column ): bool {
+		return \in_array( $column, $this->get_all_fields(), true );
 	}
 
 	/**
