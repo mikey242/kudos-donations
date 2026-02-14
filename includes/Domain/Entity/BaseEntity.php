@@ -13,7 +13,7 @@ namespace IseardMedia\Kudos\Domain\Entity;
 
 class BaseEntity {
 
-	public int $id;
+	public ?int $id = null;
 	public string $title;
 	public ?int $wp_post_id;
 	public string $created_at;
