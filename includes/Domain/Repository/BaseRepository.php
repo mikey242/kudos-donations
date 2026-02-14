@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos\Domain\Repository;
 
+use InvalidArgumentException;
 use IseardMedia\Kudos\Domain\Entity\BaseEntity;
 use IseardMedia\Kudos\Domain\Schema\BaseSchema;
 use IseardMedia\Kudos\Helper\Utils;
@@ -136,8 +137,21 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 
 		$id = $this->wpdb->get_insert_id();
 
-		// Generate title if none provided.
-		if ( empty( $data['title'] ) && $id ) {
+		if ( $id ) {
+			$this->after_insert( $id, $data );
+		}
+
+		return $id;
+	}
+
+	/**
+	 * Method called after a successful insert.
+	 *
+	 * @param int                  $id   The inserted row ID.
+	 * @param array<string, mixed> $data The sanitized data that was inserted.
+	 */
+	protected function after_insert( int $id, array $data ): void {
+		if ( empty( $data['title'] ) ) {
 			$entity = $this->get( $id );
 			if ( $entity ) {
 				$formatted_id = Utils::get_id( $entity, static::get_singular_name() );
@@ -145,14 +159,12 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 				$this->wpdb->update( $this->table, [ 'title' => $title ], [ 'id' => $id ] );
 			}
 		}
-
-		return $id;
 	}
 
 	/**
 	 * Update the provided record.
 	 *
-	 * @throws \InvalidArgumentException Thrown if id missing.
+	 * @throws InvalidArgumentException Thrown if id missing.
 	 *
 	 * @param TEntity $entity The data to update.
 	 */
@@ -160,7 +172,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 		$data = $this->schema->sanitize_data_from_schema( $entity->to_array() );
 
 		if ( ! isset( $data['id'] ) ) {
-			throw new \InvalidArgumentException( 'Cannot update entity without ID.' );
+			throw new InvalidArgumentException( 'Cannot update entity without ID.' );
 		}
 
 		$id = (int) $data['id'];
