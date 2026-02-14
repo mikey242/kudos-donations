@@ -240,7 +240,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 *
 	 * @phpstan-param array{
 	 * columns?: list<string>|array<string>,
-	 * where?: array<string, scalar>,
+	 * where?: array<string, scalar|null>,
 	 * orderby?: string,
 	 * order?: 'ASC'|'DESC',
 	 * limit?: int,
@@ -283,7 +283,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	/**
 	 * Count results of a specific query.
 	 *
-	 * @param array<string, mixed> $where The WHERE clause.
+	 * @param array<string, scalar|null> $where The WHERE clause.
 	 */
 	public function count_query( array $where = [] ): int {
 		$parts = $this->build_where_clause( $where );
@@ -300,21 +300,25 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	/**
 	 * Generate the WHERE sql clause.
 	 *
-	 * @param array<string, mixed> $criteria The criteria.
+	 * @param array<string, scalar|null> $criteria The criteria.
 	 */
 	private function build_where_clause( array $criteria ): array {
 		$clauses = [];
 		$params  = [];
 
 		foreach ( $criteria as $column => $value ) {
-			if ( \is_int( $value ) ) {
+			if ( null === $value ) {
+				$clauses[] = "`$column` IS NULL";
+			} elseif ( \is_int( $value ) ) {
 				$clauses[] = "`$column` = %d";
+				$params[]  = $value;
 			} elseif ( \is_float( $value ) ) {
 				$clauses[] = "`$column` = %f";
+				$params[]  = $value;
 			} else {
 				$clauses[] = "`$column` = %s";
+				$params[]  = $value;
 			}
-			$params[] = $value;
 		}
 
 		return [
