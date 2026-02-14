@@ -361,7 +361,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * @param bool  $apply_defaults Whether to apply default values or not.
 	 * @return TEntity
 	 */
-	private function transform_result( array $row, bool $apply_defaults = true ) {
+	private function transform_result( array $row, bool $apply_defaults = true ): BaseEntity {
 		$entity_class = $this->get_entity_class();
 		$data         = $this->schema->cast_types( $row );
 		/** @psalm-suppress UnsafeInstantiation */
