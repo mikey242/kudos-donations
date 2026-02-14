@@ -18,6 +18,8 @@ abstract class BaseSchema {
 
 	use SanitizeTrait;
 
+	private ?array $column_schema = null;
+
 	/**
 	 * Defines the common entity schema.
 	 */
@@ -35,7 +37,10 @@ abstract class BaseSchema {
 	 * Returns the entire column schema.
 	 */
 	public function get_column_schema(): array {
-		return array_merge( $this->get_base_column_schema(), $this->get_additional_column_schema() );
+		if ( null === $this->column_schema ) {
+			$this->column_schema = array_merge( $this->get_base_column_schema(), $this->get_additional_column_schema() );
+		}
+		return $this->column_schema;
 	}
 
 	/**
