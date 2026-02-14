@@ -78,6 +78,8 @@ abstract class BaseSchema {
 						$row[ $key ] = $value;
 					} elseif ( \is_string( $value ) && $this->is_valid_json( $value ) ) {
 						$row[ $key ] = json_decode( $value, true );
+					} else {
+						$row[ $key ] = null;
 					}
 					break;
 
