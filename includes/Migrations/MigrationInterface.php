@@ -15,7 +15,6 @@ namespace IseardMedia\Kudos\Migrations;
  * @phpstan-type MigrationJob array{
  *       callback: callable,
  *       chunked?: bool,
- *       args?: array,
  *       label?: string
  *   }
  */
@@ -36,24 +35,10 @@ interface MigrationInterface {
 	public function get_jobs(): array;
 
 	/**
-	 * Checks if migration job is complete.
-	 *
-	 * @param string $job The job method name.
-	 */
-	public function is_complete( string $job ): bool;
-
-	/**
 	 * Runs a single job for this migration in a batch.
 	 *
 	 * @param string $job The job name (as defined in get_jobs()).
-	 * @return bool True if the job ran successfully, false otherwise.
+	 * @return int Number of items processed. 0 means job is complete.
 	 */
-	public function run( string $job ): bool;
-
-	/**
-	 * Retrieves the current offset for a given job.
-	 *
-	 * @param string $job The job method name.
-	 */
-	public function get_offset( string $job ): int;
+	public function run( string $job ): int;
 }

@@ -34,7 +34,6 @@ class LinkService implements LoggerAwareInterface, RepositoryAwareInterface {
 	 * @param string $vendor_key         Column name on the source table holding the vendor ID (e.g. 'vendor_customer_id').
 	 * @param string $target_repo_class  The repository class name for the referenced entity (e.g. DonorRepository::class).
 	 * @param string $target_vendor_key  Column name on the target table holding its vendor ID (e.g. 'vendor_customer_id').
-	 * @param int    $offset Offset to start from.
 	 * @param int    $limit         Number of records to process per batch.
 	 */
 	public function link_entities(
@@ -43,7 +42,6 @@ class LinkService implements LoggerAwareInterface, RepositoryAwareInterface {
 		string $vendor_key,
 		string $target_repo_class,
 		string $target_vendor_key,
-		int $offset = 0,
 		int $limit = 100
 	): int {
 		// Resolve repositories from class names.
@@ -59,8 +57,8 @@ class LinkService implements LoggerAwareInterface, RepositoryAwareInterface {
 
 		$records = $source_repo->query(
 			[
+				'where'   => [ $local_key => null ],
 				'limit'   => $limit,
-				'offset'  => $offset,
 				'orderby' => 'id',
 				'order'   => 'ASC',
 			]
@@ -106,31 +104,6 @@ class LinkService implements LoggerAwareInterface, RepositoryAwareInterface {
 				}
 			}
 
-			// Case 2: Has local ID but missing vendor ID.
-			if ( $local_id && ! $vendor_id ) {
-				$target = $target_repo->get( (int) $local_id );
-
-				if ( $target ) {
-					$target_vendor_id = $this->get_property_value( $target, $target_vendor_key );
-
-					if ( $target_vendor_id ) {
-						$this->set_property_value( $record, $vendor_key, $target_vendor_id );
-						$update_needed = true;
-
-						$this->logger->info(
-							'Updated {source_entity} vendor ID from {target_entity}',
-							[
-								'target_entity' => $target_repo::get_singular_name(),
-								'source_entity' => $source_repo::get_singular_name(),
-								'local_id'      => $local_id,
-								'vendor_id'     => $target_vendor_id,
-								'entity_id'     => $record->id,
-							]
-						);
-					}
-				}
-			}
-
 			if ( $update_needed ) {
 				$updates_batch[] = $record;
 			}
@@ -139,7 +112,7 @@ class LinkService implements LoggerAwareInterface, RepositoryAwareInterface {
 			// Batch update all modified records.
 			$this->perform_batch_updates( $source_repo, $updates_batch );
 
-			return \count( $records );
+			return \count( $updates_batch );
 	}
 
 	/**

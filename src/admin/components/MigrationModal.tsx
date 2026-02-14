@@ -12,8 +12,6 @@ import apiFetch from '@wordpress/api-fetch';
 interface MigrationProgress {
 	version: string;
 	job: string;
-	complete: boolean;
-	offset: number;
 }
 
 interface MigrationResponse {

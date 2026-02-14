@@ -82,6 +82,15 @@ abstract class BaseTable implements ActivationAwareInterface {
 	}
 
 	/**
+	 * Check if a column exists in this table.
+	 *
+	 * @param string $column The column name.
+	 */
+	public function has_column( string $column ): bool {
+		return $this->wpdb->column_exists( static::get_name(), $column );
+	}
+
+	/**
 	 * Drops the table from the database.
 	 */
 	public function drop_table(): void {
