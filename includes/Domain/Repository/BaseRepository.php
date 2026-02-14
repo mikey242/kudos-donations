@@ -191,17 +191,10 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 */
 	public function upsert( BaseEntity $entity ) {
 		if ( isset( $entity->id ) ) {
-			$result = $this->update( $entity ) ? $entity->id : false;
-		} else {
-			$result = $this->insert( $entity );
+			return $this->update( $entity ) ? $entity->id : false;
 		}
 
-		if ( $this->wpdb->last_error ) {
-			// phpcs:disable: WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( $this->wpdb->last_error );
-		}
-
-		return $result;
+		return $this->insert( $entity );
 	}
 
 	/**
