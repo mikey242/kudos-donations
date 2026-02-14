@@ -16,8 +16,8 @@ class BaseEntity {
 	public ?int $id      = null;
 	public string $title = '';
 	public ?int $wp_post_id;
-	public string $created_at = '';
-	public string $updated_at = '';
+	public ?string $created_at;
+	public ?string $updated_at;
 
 	/**
 	 * Constructor for assigning object properties.
