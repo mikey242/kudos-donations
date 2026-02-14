@@ -24,7 +24,7 @@ abstract class BaseSchema {
 	private function get_base_column_schema(): array {
 		return [
 			'id'         => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
-			'wp_post_id' => $this->make_schema_field( FieldType::INTEGER, 'sanitize_text_field' ),
+			'wp_post_id' => $this->make_schema_field( FieldType::INTEGER, 'absint' ),
 			'title'      => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 			'created_at' => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 			'updated_at' => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
