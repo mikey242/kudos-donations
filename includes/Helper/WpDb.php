@@ -129,6 +129,23 @@ class WpDb {
 	}
 
 	/**
+	 * Check if a column exists in the provided table.
+	 *
+	 * @param string $base_table_name The name of the table (without prefix).
+	 * @param string $column The column name.
+	 */
+	public function column_exists( string $base_table_name, string $column ): bool {
+		$table = $this->table( $base_table_name );
+		return (bool) $this->get_var(
+			$this->prepare(
+				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = %s AND COLUMN_NAME = %s',
+				$table,
+				$column
+			)
+		);
+	}
+
+	/**
 	 * Truncate a custom plugin table.
 	 *
 	 * @param string $table_name Table name without prefix.

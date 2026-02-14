@@ -17,6 +17,7 @@ use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
+use IseardMedia\Kudos\Domain\Repository\BaseRepository;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
@@ -30,6 +31,7 @@ use IseardMedia\Kudos\Domain\Table\SubscriptionsTable;
 use IseardMedia\Kudos\Domain\Table\TransactionsTable;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Service\LinkService;
+use WP_Post;
 
 class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
@@ -69,8 +71,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	 */
 	public function get_jobs(): array {
 		return [
-			'remove_old_tables'               => $this->job( [ $this, 'remove_old_tables' ], 'Removing old tables' ),
-			'create_tables'                   => $this->job( [ $this, 'create_tables' ], 'Create new tables' ),
+			'prepare_tables'                  => $this->job( [ $this, 'prepare_tables' ], 'Preparing tables', false ),
 			'donors'                          => $this->job( [ $this, 'migrate_donors' ], 'Migrating donors' ),
 			'campaigns'                       => $this->job( [ $this, 'migrate_campaigns' ], 'Migrating campaigns' ),
 			'transactions'                    => $this->job( [ $this, 'migrate_transactions' ], 'Migrating transactions' ),
@@ -79,24 +80,22 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			'backfill_remaining_transactions' => $this->job( [ $this, 'backfill_remaining_transactions' ], 'Add subscription id to transactions' ),
 			'relink_donors_to_transactions'   => $this->job( [ $this, 'relink_donors_to_transactions' ], 'Re-linking donors to transactions' ),
 			'relink_donors_to_subscriptions'  => $this->job( [ $this, 'relink_donors_to_subscriptions' ], 'Re-linking donors to subscriptions' ),
-			'refresh_mollie'                  => $this->job( [ $this, 'refresh_mollie_status' ], 'Refresh Mollie status' ),
+			'refresh_mollie'                  => $this->job( [ $this, 'refresh_mollie_status' ], 'Refresh Mollie status', false ),
 		];
 	}
 
 	/**
-	 * Remove old versions of tables.
+	 * Drops old-schema tables and ensures new-schema tables exist.
+	 *
+	 * Only drops a table if it exists with the old schema (lacks the wp_post_id column).
+	 * Tables already created by this migration (with wp_post_id) are left intact.
+	 * dbDelta handles creating missing tables or adding missing columns.
 	 */
-	public function remove_old_tables() {
+	public function prepare_tables(): void {
 		foreach ( $this->tables as $table ) {
-			$table->drop_table();
-		}
-	}
-
-	/**
-	 * Creates tables.
-	 */
-	public function create_tables() {
-		foreach ( $this->tables as $table ) {
+			if ( ! $table->has_column( 'wp_post_id' ) ) {
+				$table->drop_table();
+			}
 			$table->create_table();
 		}
 	}
@@ -104,25 +103,13 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	/**
 	 * Migrates kudos_donor CPTs to the kudos_donors table in chunks.
 	 *
-	 * @param int $offset Offset of results.
 	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_donors( int $offset, int $limit ): int {
+	public function migrate_donors( int $limit ): int {
 		$post_type  = 'kudos_donor';
 		$donor_repo = $this->get_repository( DonorRepository::class );
 
-		$ids = get_posts(
-			[
-				'post_type'        => $post_type,
-				'post_status'      => 'any',
-				'posts_per_page'   => $limit,
-				'offset'           => $offset,
-				'orderby'          => 'ID',
-				'order'            => 'ASC',
-				'fields'           => 'ids',
-				'suppress_filters' => false,
-			]
-		);
+		$ids = $this->get_unmigrated_posts( $donor_repo, $post_type, $limit );
 
 		if ( empty( $ids ) ) {
 			$this->logger->info( 'No more donors to migrate.' );
@@ -130,12 +117,6 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		}
 
 		foreach ( $ids as $post_id ) {
-			$existing = $donor_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
-			if ( $existing ) {
-				$this->logger->info( "Donor post $post_id already migrated. Skipping." );
-				continue;
-			}
-
 			$donor = new DonorEntity(
 				[
 					'wp_post_id'         => $post_id,
@@ -164,25 +145,13 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	/**
 	 * Migrates kudos_campaign CPTs to the kudos_campaigns table in chunks.
 	 *
-	 * @param int $offset Offset of results.
 	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_campaigns( int $offset, int $limit ): int {
+	public function migrate_campaigns( int $limit ): int {
 		$post_type     = 'kudos_campaign';
 		$campaign_repo = $this->get_repository( CampaignRepository::class );
 
-		$ids = get_posts(
-			[
-				'post_type'        => $post_type,
-				'post_status'      => 'any',
-				'posts_per_page'   => $limit,
-				'offset'           => $offset,
-				'orderby'          => 'ID',
-				'order'            => 'ASC',
-				'fields'           => 'ids',
-				'suppress_filters' => false,
-			]
-		);
+		$ids = $this->get_unmigrated_posts( $campaign_repo, $post_type, $limit );
 
 		if ( empty( $ids ) ) {
 			$this->logger->info( 'No more campaigns to migrate.' );
@@ -190,12 +159,6 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		}
 
 		foreach ( $ids as $post_id ) {
-			$existing = $campaign_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
-			if ( $existing ) {
-				$this->logger->info( "Campaign post $post_id already migrated. Skipping." );
-				continue;
-			}
-
 			$campaign = new CampaignEntity(
 				[
 					'wp_post_id'                 => $post_id,
@@ -257,27 +220,15 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	/**
 	 * Migrates kudos_transaction CPTs to the kudos_transactions table in chunks.
 	 *
-	 * @param int $offset Offset of results.
 	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_transactions( int $offset, int $limit ): int {
+	public function migrate_transactions( int $limit ): int {
 		$post_type        = 'kudos_transaction';
 		$transaction_repo = $this->get_repository( TransactionRepository::class );
 		$campaign_repo    = $this->get_repository( CampaignRepository::class );
 		$donor_repo       = $this->get_repository( DonorRepository::class );
 
-		$ids = get_posts(
-			[
-				'post_type'        => $post_type,
-				'post_status'      => 'any',
-				'posts_per_page'   => $limit,
-				'offset'           => $offset,
-				'orderby'          => 'ID',
-				'order'            => 'ASC',
-				'fields'           => 'ids',
-				'suppress_filters' => false,
-			]
-		);
+		$ids = $this->get_unmigrated_posts( $transaction_repo, $post_type, $limit );
 
 		if ( empty( $ids ) ) {
 			$this->logger->info( 'No more transactions to migrate.' );
@@ -288,27 +239,21 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		$campaign_map = [];
 		/** @var CampaignEntity[] $campaign_rows */
 		$campaign_rows = $campaign_repo->all();
+		foreach ( $campaign_rows as $row ) {
+			$campaign_map[ $row->wp_post_id ] = $row->id;
+		}
+
+		// Create a donor map to migrate old id to new id.
+		$donor_map = [];
+		/** @var DonorEntity[] $donor_rows */
+		$donor_rows = $donor_repo->all();
+		foreach ( $donor_rows as $row ) {
+			$donor_map[ $row->wp_post_id ] = $row->id;
+		}
 
 		foreach ( $ids as $post_id ) {
-			$existing = $transaction_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
-			if ( $existing ) {
-				$this->logger->info( "Transaction post $post_id already migrated. Skipping." );
-				continue;
-			}
-
-			foreach ( $campaign_rows as $row ) {
-				$campaign_map[ $row->wp_post_id ] = $row->id;
-			}
 			$campaign_id = (int) get_post_meta( $post_id, 'campaign_id', true );
-
-			// Create a donor map to migrate old id to new id.
-			$donor_map = [];
-			/** @var DonorEntity[] $donor_rows */
-			$donor_rows = $donor_repo->all();
-			foreach ( $donor_rows as $row ) {
-				$donor_map[ $row->wp_post_id ] = $row->id;
-			}
-			$donor_id = (int) get_post_meta( $post_id, 'donor_id', true );
+			$donor_id    = (int) get_post_meta( $post_id, 'donor_id', true );
 
 			$transaction = new TransactionEntity(
 				[
@@ -345,27 +290,15 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	/**
 	 * Migrates kudos_subscription CPTs to the kudos_subscriptions table in chunks.
 	 *
-	 * @param int $offset Offset of results.
 	 * @param int $limit The number of records to fetch.
 	 */
-	public function migrate_subscriptions( int $offset, int $limit ): int {
+	public function migrate_subscriptions( int $limit ): int {
 		$post_type         = 'kudos_subscription';
 		$transaction_repo  = $this->get_repository( TransactionRepository::class );
 		$subscription_repo = $this->get_repository( SubscriptionRepository::class );
 		$donor_repo        = $this->get_repository( DonorRepository::class );
 
-		$ids = get_posts(
-			[
-				'post_type'        => $post_type,
-				'post_status'      => 'any',
-				'posts_per_page'   => $limit,
-				'offset'           => $offset,
-				'orderby'          => 'ID',
-				'order'            => 'ASC',
-				'fields'           => 'ids',
-				'suppress_filters' => false,
-			]
-		);
+		$ids = $this->get_unmigrated_posts( $subscription_repo, $post_type, $limit );
 
 		if ( empty( $ids ) ) {
 			$this->logger->info( 'No more subscriptions to migrate.' );
@@ -395,12 +328,6 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		}
 
 		foreach ( $ids as $post_id ) {
-			$existing = $subscription_repo->find_one_by( [ 'wp_post_id' => $post_id ] );
-			if ( $existing ) {
-				$this->logger->info( "Subscription post $post_id already migrated. Skipping." );
-				continue;
-			}
-
 			$legacy_transaction_post_id = (int) get_post_meta( $post_id, 'transaction_id', true );
 			$transaction_id             = null;
 			$donor_id                   = null;
@@ -451,15 +378,14 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	/**
 	 * Updates transactions with correct subscription_id.
 	 *
-	 * @param int $offset Offset of results.
 	 * @param int $limit The number of records to fetch.
 	 */
-	public function backfill_transactions_from_subscription( int $offset, int $limit ): int {
+	public function backfill_transactions_from_subscription( int $limit ): int {
 
 		$transaction_repo  = $this->get_repository( TransactionRepository::class );
 		$subscription_repo = $this->get_repository( SubscriptionRepository::class );
 
-		// Get all subscriptions.
+		// Get subscriptions that still have transactions needing backfill.
 		/** @var SubscriptionEntity[] $subscriptions */
 		$subscriptions = $subscription_repo->query(
 			[
@@ -467,7 +393,6 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				'orderby' => 'id',
 				'order'   => 'ASC',
 				'limit'   => $limit,
-				'offset'  => $offset,
 			]
 		);
 
@@ -475,6 +400,8 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			$this->logger->info( 'No more transactions to backfill.' );
 			return 0;
 		}
+
+		$processed = 0;
 
 		foreach ( $subscriptions as $subscription ) {
 			$subscription_post_id = $subscription->wp_post_id;
@@ -501,23 +428,28 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				continue;
 			}
 
+			// Skip if already linked.
+			if ( null !== $transaction->subscription_id ) {
+				continue;
+			}
+
 			// Update transaction row with the resolved subscription_id.
 			$transaction->subscription_id = $subscription_id;
 			$transaction_repo->update( $transaction );
+			++$processed;
 
 			$this->logger->info( "Linked transaction $transaction_post_id to subscription $subscription_id" );
 		}
 
-		return \count( $subscriptions );
+		return $processed;
 	}
 
 	/**
 	 * Updates transactions with correct subscription_id.
 	 *
-	 * @param int $offset Offset of results.
 	 * @param int $limit The number of records to fetch.
 	 */
-	public function backfill_remaining_transactions( int $offset, int $limit ): int {
+	public function backfill_remaining_transactions( int $limit ): int {
 		$transaction_repo  = $this->get_repository( TransactionRepository::class );
 		$subscription_repo = $this->get_repository( SubscriptionRepository::class );
 
@@ -525,12 +457,12 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 		$orphaned_transactions = $transaction_repo->query(
 			[
 				'where'   => [
-					'sequence_type' => 'recurring',
+					'sequence_type'   => 'recurring',
+					'subscription_id' => null,
 				],
 				'orderby' => 'id',
 				'order'   => 'ASC',
 				'limit'   => $limit,
-				'offset'  => $offset,
 			]
 		);
 
@@ -579,6 +511,8 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			}
 		}
 
+		$processed = 0;
+
 		// Now backfill transactions.
 		foreach ( $orphaned_transactions as $transaction ) {
 			$donor_id    = $transaction->donor_id;
@@ -593,6 +527,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
 				$transaction->subscription_id = $subscription_id;
 				$transaction_repo->update( $transaction );
+				++$processed;
 
 				$this->logger->info( "Backfilled transaction $transaction->id with subscription $subscription_id via simple match" );
 			} elseif ( isset( $strict_map[ $key_strict ] ) && \count( $strict_map[ $key_strict ] ) === 1 ) {
@@ -600,6 +535,7 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 
 				$transaction->subscription_id = $subscription_id;
 				$transaction_repo->update( $transaction );
+				++$processed;
 
 				$this->logger->info( "Backfilled transaction $transaction->id with subscription $subscription_id via strict match" );
 			} elseif ( ( isset( $simple_map[ $key_simple ] ) && \count( $simple_map[ $key_simple ] ) > 1 ) ||
@@ -624,37 +560,32 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 			}
 		}
 
-		return \count( $orphaned_transactions );
+		return $processed;
 	}
 
 	/**
 	 * Links donors to transactions based on their vendor_customer_id.
 	 *
-	 * @param int $offset Offset of results.
 	 * @param int $limit The number of records to fetch.
 	 */
-	public function relink_donors_to_transactions( int $offset, int $limit ): int {
-		$linker = $this->link_service;
-		return $linker->link_entities( TransactionRepository::class, 'donor_id', 'vendor_customer_id', DonorRepository::class, 'vendor_customer_id', $offset, $limit );
+	public function relink_donors_to_transactions( int $limit ): int {
+		return $this->link_service->link_entities( TransactionRepository::class, 'donor_id', 'vendor_customer_id', DonorRepository::class, 'vendor_customer_id', $limit );
 	}
 
 	/**
 	 * Links donors to subscriptions based on their vendor_customer_id.
 	 *
-	 * @param int $offset Offset of results.
 	 * @param int $limit The number of records to fetch.
 	 */
-	public function relink_donors_to_subscriptions( int $offset, int $limit ): int {
-		$linker = $this->link_service;
-		return $linker->link_entities( SubscriptionRepository::class, 'donor_id', 'vendor_customer_id', DonorRepository::class, 'vendor_customer_id', $offset, $limit );
+	public function relink_donors_to_subscriptions( int $limit ): int {
+		return $this->link_service->link_entities( SubscriptionRepository::class, 'donor_id', 'vendor_customer_id', DonorRepository::class, 'vendor_customer_id', $limit );
 	}
 
 	/**
 	 * Refresh mollie status to populate new option.
 	 */
-	public function refresh_mollie_status(): int {
+	public function refresh_mollie_status(): void {
 		$this->mollie->refresh();
-		return 1;
 	}
 
 	/**
@@ -679,5 +610,32 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 	private function get_meta_float( int $post_id, string $key, ?float $default_value = null ): ?float {
 		$value = get_post_meta( $post_id, $key, true );
 		return is_numeric( $value ) ? (float) $value : $default_value;
+	}
+
+	/**
+	 * @param BaseRepository $repository The repository to use for fetching already migrated posts.
+	 * @param string         $post_type The post type to fetch unmigrated posts from.
+	 * @param int            $limit The number of posts to fetch.
+	 * @return int[]|WP_Post[]
+	 */
+	public function get_unmigrated_posts( BaseRepository $repository, string $post_type, int $limit ): array {
+		$migrated     = $repository->query( [ 'columns' => [ 'wp_post_id' ] ] );
+		$migrated_ids = array_map( fn( $row ) => $row->wp_post_id, $migrated );
+
+		$args = [
+			'post_type'        => $post_type,
+			'post_status'      => 'any',
+			'posts_per_page'   => $limit,
+			'orderby'          => 'ID',
+			'order'            => 'ASC',
+			'fields'           => 'ids',
+			'suppress_filters' => false,
+		];
+
+		if ( ! empty( $migrated_ids ) ) {
+			$args['post__not_in'] = $migrated_ids;
+		}
+
+		return get_posts( $args );
 	}
 }
