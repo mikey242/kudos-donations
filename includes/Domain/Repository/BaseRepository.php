@@ -292,7 +292,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 */
 	public function count_query( array $where = [] ): int {
 		$parts = $this->build_where_clause( $where );
-		$sql   = "SELECT COUNT(*)     FROM $this->table {$parts['sql']}";
+		$sql   = "SELECT COUNT(*) FROM $this->table {$parts['sql']}";
 
 		if ( ! empty( $parts['params'] ) ) {
 			$sql = $this->wpdb->prepare( $sql, ...$parts['params'] );
