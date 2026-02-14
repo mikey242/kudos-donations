@@ -58,7 +58,7 @@ abstract class BaseTable implements ActivationAwareInterface {
 	 * {@inheritDoc}
 	 */
 	public function on_plugin_activation(): void {
-		static::create_table();
+		$this->create_table();
 	}
 
 	/**
