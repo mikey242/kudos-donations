@@ -44,8 +44,7 @@ trait SanitizeTrait {
 		}
 
 		if ( \is_string( $value ) && $this->is_valid_json( $value ) ) {
-			json_decode( $value );
-			return json_last_error() === JSON_ERROR_NONE ? $value : null;
+			return $value;
 		}
 
 		return null;
