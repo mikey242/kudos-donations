@@ -24,34 +24,12 @@ abstract class BaseTable implements ActivationAwareInterface {
 	private WpDb $wpdb;
 
 	/**
-	 * Table name, without the global table prefix.
-	 *
-	 * @var   string
-	 */
-	protected string $name = '';
-
-	/**
-	 * Optional description.
-
-	 * @var   string
-	 */
-	protected string $description = '';
-
-	/**
-	 * Table schema.
-	 *
-	 * @var   string
-	 */
-	protected string $schema = '';
-
-	/**
 	 * Add the WpDb wrapper class as a property.
 	 *
 	 * @param WpDb $wpdb The wpdb wrapper class.
 	 */
 	public function __construct( WpDb $wpdb ) {
-		$this->wpdb   = $wpdb;
-		$this->schema = $this->get_schema();
+		$this->wpdb = $wpdb;
 	}
 
 	/**
@@ -77,7 +55,7 @@ abstract class BaseTable implements ActivationAwareInterface {
 	public function create_table(): void {
 		$table_name = $this->wpdb->table( static::get_name() );
 		$charset    = $this->wpdb->get_charset_collate();
-		$schema     = $this->schema;
+		$schema     = $this->get_schema();
 		$this->wpdb->run_dbdelta( "CREATE TABLE $table_name ( $schema ) $charset" );
 	}
 
