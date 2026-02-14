@@ -248,19 +248,24 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 * } $args
 	 */
 	public function query( array $args = [] ): array {
+		$valid_fields = $this->get_all_fields();
+
+		if ( isset( $args['columns'] ) && [ '*' ] !== $args['columns'] ) {
+			$args['columns'] = array_filter( $args['columns'], fn( $col ) => \in_array( $col, $valid_fields, true ) );
+		}
 		$select = isset( $args['columns'] ) ? implode( ', ', $args['columns'] ) : '*';
 
 		$where = $this->build_where_clause( $args['where'] ?? [] );
 
-		$order_by = isset( $args['orderby'] ) ? 'ORDER BY `' . $args['orderby'] . '`' : '';
-		$order    = isset( $args['order'] ) ? strtoupper( $args['order'] ) : 'ASC';
-		if ( $order_by ) {
-			$order_by .= " $order";
+		$order_by = '';
+		if ( isset( $args['orderby'] ) && \in_array( $args['orderby'], $valid_fields, true ) ) {
+			$order    = isset( $args['order'] ) && 'DESC' === strtoupper( $args['order'] ) ? 'DESC' : 'ASC';
+			$order_by = "ORDER BY `{$args['orderby']}` $order";
 		}
 		$limit      = $args['limit'] ?? null;
 		$offset     = $args['offset'] ?? null;
-		$limit_sql  = isset( $limit ) ? "LIMIT $limit" : '';
-		$offset_sql = isset( $offset ) ? "OFFSET $offset" : '';
+		$limit_sql  = isset( $limit ) ? 'LIMIT ' . absint( $limit ) : '';
+		$offset_sql = isset( $offset ) ? 'OFFSET ' . absint( $offset ) : '';
 
 		$sql = trim( "SELECT $select FROM $this->table {$where['sql']} $order_by $limit_sql $offset_sql" );
 
@@ -287,14 +292,17 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	 */
 	public function count_query( array $where = [] ): int {
 		$parts = $this->build_where_clause( $where );
-		$sql   = "SELECT COUNT(*) FROM $this->table {$parts['sql']}";
-		$query = $this->wpdb->prepare( $sql, ...$parts['params'] );
+		$sql   = "SELECT COUNT(*)     FROM $this->table {$parts['sql']}";
 
-		if ( false === $query ) {
-			return 0;
+		if ( ! empty( $parts['params'] ) ) {
+			$sql = $this->wpdb->prepare( $sql, ...$parts['params'] );
+
+			if ( false === $sql ) {
+				return 0;
+			}
 		}
 
-		return (int) $this->wpdb->get_var( $query );
+		return (int) $this->wpdb->get_var( (string) $sql );
 	}
 
 	/**
