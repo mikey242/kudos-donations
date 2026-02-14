@@ -9,7 +9,7 @@ use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\RequestException;
-use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
+use IseardMedia\Kudos\Tests\Stubs\TestableMollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Customer;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Payment;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
@@ -22,12 +22,12 @@ use Psr\Log\LoggerInterface;
 class MolliePaymentProviderTest extends BaseTestCase {
 
 	private MolliePaymentProvider $vendor;
-	private MollieApiClient $api_mock;
+	private TestableMollieApiClient $api_mock;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->api_mock = $this->createMock(MollieApiClient::class);
+		$this->api_mock = $this->createMock(TestableMollieApiClient::class);
 		$logger = $this->createMock(LoggerInterface::class);
 		$transactions = $this->get_from_container(TransactionRepository::class);
 		$donors = $this->get_from_container(DonorRepository::class);
