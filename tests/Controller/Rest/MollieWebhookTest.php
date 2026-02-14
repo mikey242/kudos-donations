@@ -10,7 +10,7 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
 use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\EndpointCollection\PaymentEndpointCollection;
-use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
+use IseardMedia\Kudos\Tests\Stubs\TestableMollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Payment;
 
 use Psr\Log\LoggerInterface;
@@ -23,14 +23,14 @@ use WP_REST_Request;
 class MollieWebhookTest extends BaseTestCase {
 
 	private MolliePaymentProvider $provider;
-	private MollieApiClient $api_mock;
+	private TestableMollieApiClient $api_mock;
     private TransactionRepository $transaction_repository;
 	private CampaignRepository $campaign_repository;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->api_mock = $this->createMock(MollieApiClient::class);
+		$this->api_mock = $this->createMock(TestableMollieApiClient::class);
 		$this->transaction_repository = $this->get_from_container(TransactionRepository::class);
 		$this->campaign_repository = $this->get_from_container(CampaignRepository::class);
         $logger = $this->createMock(LoggerInterface::class);
