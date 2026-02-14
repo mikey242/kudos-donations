@@ -521,18 +521,16 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 				$subscriptions = $this->subscription_repository;
 
 				// Create subscription entity.
-				$subscription_entity = new SubscriptionEntity(
-					$subscriptions->get_schema()->sanitize_data_from_schema(
-						[
-							'frequency'      => $interval,
-							'years'          => $years,
-							'value'          => $value,
-							'currency'       => $currency,
-							'transaction_id' => $transaction->id,
-							'donor_id'       => $transaction->donor_id,
-							'campaign_id'    => $transaction->campaign_id,
-						]
-					)
+				$subscription_entity = $subscriptions->new_entity(
+					[
+						'frequency'      => $interval,
+						'years'          => $years,
+						'value'          => $value,
+						'currency'       => $currency,
+						'transaction_id' => $transaction->id,
+						'donor_id'       => $transaction->donor_id,
+						'campaign_id'    => $transaction->campaign_id,
+					]
 				);
 				$subscription_id     = $subscriptions->insert( $subscription_entity );
 				$subscription_entity = $subscriptions->get( $subscription_id ); // Subscription entity needs to be re-fetched to get new title.

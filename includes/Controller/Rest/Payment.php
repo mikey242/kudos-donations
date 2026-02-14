@@ -320,7 +320,7 @@ class Payment extends BaseRestController {
 				// Create new customer with vendor if none found.
 				$customer                         = $this->vendor->create_customer( $args['email'], $args['name'] );
 				$donor_args['vendor_customer_id'] = $customer->id;
-				$donor                            = new DonorEntity( $donor_args );
+				$donor                            = $this->donor_repository->new_entity( $donor_args );
 			} else {
 				// Otherwise update existing donor object.
 				$donor->merge( $donor_args );
@@ -332,7 +332,7 @@ class Payment extends BaseRestController {
 
 		// Create the payment. If there is no customer ID it will be un-linked.
 		$vendor_customer_id = $donor->vendor_customer_id ?? null;
-		$transaction        = new TransactionEntity(
+		$transaction        = $this->transaction_repository->new_entity(
 			[
 				'donor_id'      => $donor_id ?? null,
 				'value'         => $args['value'],
@@ -340,7 +340,7 @@ class Payment extends BaseRestController {
 				'status'        => PaymentStatus::OPEN,
 				'mode'          => $this->vendor->get_api_mode(),
 				'sequence_type' => 'true' === $args['recurring'] ? 'first' : 'oneoff',
-				'campaign_id'   => (int) $args['campaign_id'],
+				'campaign_id'   => $args['campaign_id'],
 				'message'       => $args['message'],
 				'vendor'        => $this->vendor::get_slug(),
 			]
