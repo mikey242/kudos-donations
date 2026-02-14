@@ -53,9 +53,7 @@ class BaseEntityTest extends BaseTestCase {
 		$donor = new DonorEntity( [ 'email' => 'test@example.com', 'name' => 'John' ] );
 		$array = $donor->to_array();
 
-		$this->assertArrayHasKey( 'email', $array );
 		$this->assertSame( 'test@example.com', $array['email'] );
-		$this->assertArrayHasKey( 'name', $array );
 		$this->assertSame( 'John', $array['name'] );
 	}
 
