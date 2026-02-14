@@ -13,11 +13,11 @@ namespace IseardMedia\Kudos\Domain\Entity;
 
 class CampaignEntity extends BaseEntity {
 
-	public ?string $wp_post_slug = null;
+	public ?string $wp_post_slug;
 	public string $currency;
-	public ?float $goal = null;
+	public ?float $goal;
 	public bool $show_goal;
-	public ?float $additional_funds = null;
+	public ?float $additional_funds;
 	public string $amount_type;
 	public ?array $fixed_amounts;
 	public float $minimum_donation;
@@ -33,13 +33,13 @@ class CampaignEntity extends BaseEntity {
 	public bool $message_enabled;
 	public bool $message_required;
 	public string $theme_color;
-	public ?string $terms_link   = null;
-	public ?string $privacy_link = null;
+	public ?string $terms_link;
+	public ?string $privacy_link;
 	public bool $show_return_message;
 	public bool $use_custom_return_url;
-	public ?string $custom_return_url = null;
+	public ?string $custom_return_url;
 	public string $payment_description_format;
-	public ?string $custom_styles = null;
+	public ?string $custom_styles;
 	public string $initial_title;
 	public string $initial_description;
 	public string $subscription_title;
@@ -52,7 +52,7 @@ class CampaignEntity extends BaseEntity {
 	public string $payment_description;
 	public string $return_message_title;
 	public string $return_message_text;
-	public ?float $total = null;
+	public ?float $total;
 
 	/**
 	 * {@inheritDoc}
