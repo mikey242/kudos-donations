@@ -20,7 +20,7 @@ class CampaignSchema extends BaseSchema {
 	 */
 	public function get_additional_column_schema(): array {
 		return [
-			'wp_post_slug'               => $this->make_schema_field( FieldType::INTEGER, 'sanitize_title_with_dashes' ),
+			'wp_post_slug'               => $this->make_schema_field( FieldType::STRING, 'sanitize_title_with_dashes' ),
 			'currency'                   => $this->make_schema_field( FieldType::STRING, 'sanitize_text_field' ),
 			'goal'                       => $this->make_schema_field( FieldType::FLOAT, [ $this, 'sanitize_float' ] ),
 			'show_goal'                  => $this->make_schema_field( FieldType::BOOLEAN, 'rest_sanitize_boolean' ),
