@@ -195,21 +195,14 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	/**
 	 * Patch specific fields of an existing entity.
 	 *
-	 * @throws \RuntimeException If entity with provided id doesn't exist.
-	 *
 	 * @param int   $id   The ID of the entity to update.
 	 * @param array $data The partial data to update.
-	 * @return bool  True if the update succeeded.
+	 * @return bool  True if any rows were updated.
 	 */
 	public function patch( int $id, array $data ): bool {
-
-		if ( ! $this->get( $id ) ) {
-			throw new \RuntimeException( \sprintf( 'Entity with ID %s not found.', esc_attr( (string) $id ) ) );
-		}
-
 		$data = $this->schema->sanitize_data_from_schema( $data );
 
-		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) !== false;
+		return $this->wpdb->update( $this->table, $data, [ 'id' => $id ] ) > 0;
 	}
 
 	/**
