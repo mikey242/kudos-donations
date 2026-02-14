@@ -323,7 +323,7 @@ class Payment extends BaseRestController {
 				$donor                            = new DonorEntity( $donor_args );
 			} else {
 				// Otherwise update existing donor object.
-				$donor->hydrate( $donor_args );
+				$donor->merge( $donor_args );
 			}
 
 			// Save donor and fetch updated record.
