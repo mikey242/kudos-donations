@@ -20,13 +20,13 @@ class BaseEntity {
 	public string $updated_at;
 
 	/**
-	 * Constructor for assigning object keys to .
+	 * Constructor for assigning object properties.
 	 *
 	 * @param array<string, mixed> $data The raw row data.
 	 * @param bool                 $apply_defaults Whether to merge incoming data with specified defaults.
 	 */
 	public function __construct( array $data, bool $apply_defaults = true ) {
-		$this->hydrate( $apply_defaults ? array_merge( $this->defaults(), $data ) : $data );
+		$this->merge( $apply_defaults ? array_merge( $this->defaults(), $data ) : $data );
 	}
 
 	/**
@@ -44,11 +44,11 @@ class BaseEntity {
 	}
 
 	/**
-	 * Update properties based on provided data.
+	 * Merge provided data into entity properties.
 	 *
-	 * @param array $data Raw data to use.
+	 * @param array<string, mixed> $data Raw data to use.
 	 */
-	public function hydrate( array $data ): void {
+	public function merge( array $data ): void {
 		foreach ( $data as $key => $value ) {
 			if ( \property_exists( $this, $key ) ) {
 				$this->{$key} = $value;
