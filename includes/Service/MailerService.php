@@ -57,6 +57,9 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 * @param string $message Message body.
 	 */
 	public function send_message( string $email, string $header, string $message ): bool {
+		if ( ! $this->vendor ) {
+			return false;
+		}
 		return $this->vendor->send_message( $email, $header, $message );
 	}
 
@@ -66,6 +69,10 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 	 * @param int $transaction_id Transaction id.
 	 */
 	public function send_receipt( int $transaction_id ): bool {
+		if ( ! $this->vendor ) {
+			return false;
+		}
+
 		// Check if setting enabled.
 		if ( ! get_option( self::SETTING_EMAIL_RECEIPT_ENABLE ) ) {
 			return false;
