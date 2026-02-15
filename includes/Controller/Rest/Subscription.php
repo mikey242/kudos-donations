@@ -141,7 +141,7 @@ class Subscription extends BaseRepositoryRestController {
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
 
 		if ( $result ) {
-			// Cancelling was successful. Update entity with canceled status.
+			// Cancelling was successful. Update entity with cancelled status.
 			$subscription->status = 'cancelled';
 			$this->repository->update( $subscription );
 
@@ -154,7 +154,7 @@ class Subscription extends BaseRepositoryRestController {
 			);
 			return new WP_REST_Response(
 				[
-					'message' => __( 'Subscription canceled', 'kudos-donations' ),
+					'message' => __( 'Subscription cancelled', 'kudos-donations' ),
 				],
 				200
 			);
@@ -163,7 +163,7 @@ class Subscription extends BaseRepositoryRestController {
 		// Result from vendor was false, most likely because subscription was already cancelled.
 		return new WP_REST_Response(
 			[
-				'message' => __( 'Subscription already canceled', 'kudos-donations' ),
+				'message' => __( 'Subscription already cancelled', 'kudos-donations' ),
 			],
 			200
 		);
