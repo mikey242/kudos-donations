@@ -75,7 +75,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 		if ( $result ) {
 			update_option( ReceiptService::SETTING_INVOICE_NUMBER, ( $current + 1 ) );
 		} else {
-			$this->logger->error( 'Error updating invoice number' );
+			$this->logger->warning( 'Invoice number not updated' );
 		}
 	}
 
@@ -108,7 +108,7 @@ class PaymentService extends AbstractRegistrable implements HasSettingsInterface
 	/**
 	 * Processes the transaction. Used by action scheduler.
 	 *
-	 * @param int $transaction_id Transaction post id..
+	 * @param int $transaction_id Transaction post id.
 	 */
 	public function process_transaction( int $transaction_id ) {
 		$this->logger->debug( 'Processing paid transaction.', [ 'transaction_id' => $transaction_id ] );
