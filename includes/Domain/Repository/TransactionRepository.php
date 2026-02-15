@@ -91,6 +91,23 @@ class TransactionRepository extends BaseRepository {
 	}
 
 	/**
+	 * Returns IDs of transactions with no valid campaign.
+	 *
+	 * @return list<int>
+	 */
+	public function get_orphan_ids(): array {
+		$campaign_table = $this->wpdb->table( CampaignRepository::get_table_name() );
+
+		$results = $this->wpdb->get_col(
+			"SELECT t.id FROM $this->table t
+			LEFT JOIN $campaign_table c ON t.campaign_id = c.id
+			WHERE t.campaign_id IS NULL OR c.id IS NULL"
+		);
+
+		return array_map( 'intval', $results );
+	}
+
+	/**
 	 * {@inheritDoc}
 	 *
 	 * @return class-string<TransactionEntity>
