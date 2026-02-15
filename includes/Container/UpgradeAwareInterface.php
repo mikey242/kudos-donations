@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Container;
 interface UpgradeAwareInterface {
 
 	/**
-	 * Act on plugin uninstall.
+	 * Act on plugin upgrade.
 	 */
 	public function on_plugin_upgrade(): void;
 }
