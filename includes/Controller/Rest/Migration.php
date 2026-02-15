@@ -35,7 +35,7 @@ class Migration extends BaseRestController {
 	}
 
 	/**
-	 * Mail service routes.
+	 * Migration routes.
 	 */
 	public function get_routes(): array {
 		return [
@@ -64,10 +64,9 @@ class Migration extends BaseRestController {
 	 * Handles a request for running migrations.
 	 */
 	public function rest_migrate_handler(): WP_REST_Response {
-		$migrations = $this->migration->get_migrations();
-		$history    = (array) get_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
+		$pending_migrations = $this->migration->get_pending_migrations();
 
-		if ( empty( $migrations ) ) {
+		if ( empty( $pending_migrations ) ) {
 			return new WP_REST_Response(
 				[
 					'success' => true,
@@ -76,12 +75,7 @@ class Migration extends BaseRestController {
 			);
 		}
 
-		$pending_migrations = array_filter(
-			$migrations,
-			function ( $migration ) use ( $history ) {
-				return ! \in_array( $migration->get_version(), $history, true );
-			}
-		);
+		$history = (array) get_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
 
 		foreach ( $pending_migrations as $migration ) {
 			foreach ( $migration->get_jobs() as $job_name => $job_details ) {

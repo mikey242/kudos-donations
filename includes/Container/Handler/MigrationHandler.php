@@ -104,6 +104,20 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	}
 
 	/**
+	 * Returns migrations that have not yet been run.
+	 *
+	 * @return MigrationInterface[]
+	 */
+	public function get_pending_migrations(): array {
+		$history = (array) get_option( self::SETTING_MIGRATION_HISTORY, [] );
+
+		return array_filter(
+			$this->migrations,
+			fn( MigrationInterface $migration ) => ! \in_array( $migration->get_version(), $history, true )
+		);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_registration_action(): string {
