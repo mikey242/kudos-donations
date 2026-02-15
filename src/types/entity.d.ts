@@ -44,7 +44,7 @@ export interface Donor extends BaseEntity {
 	city?: string;
 	country?: string;
 	vendor_customer_id?: string;
-	total?: string;
+	transaction_count?: number;
 }
 
 export interface Campaign extends BaseEntity {
