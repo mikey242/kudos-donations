@@ -132,21 +132,55 @@ export const EntitiesProvider = <T extends BaseEntity>({
 
 	const handleUpdate = useCallback(
 		async (data: Partial<T>) => {
-			const response = await handleSave(data);
-			void createSuccessNotice(
-				sprintf(
-					/* translators: %s is the entity type singular name. */
-					__('%s updated', 'kudos-donations'),
-					singularName
-				),
-				{
-					type: 'snackbar',
-					icon: <Icon icon="saved" />,
-				}
-			);
-			return response;
+			if (!data.id) {
+				void createErrorNotice(
+					__('Cannot update without an ID.', 'kudos-donations')
+				);
+				return null;
+			}
+
+			try {
+				const { id, ...rest } = data;
+				const response = await apiFetch<T>({
+					path: `/kudos/v1/${entityType}/${id}`,
+					method: 'PATCH',
+					data: rest,
+				});
+
+				await fetchEntities();
+
+				void createSuccessNotice(
+					sprintf(
+						/* translators: %s is the entity type singular name. */
+						__('%s updated', 'kudos-donations'),
+						singularName
+					),
+					{
+						type: 'snackbar',
+						icon: <Icon icon="saved" />,
+					}
+				);
+
+				return response;
+			} catch (error: any) {
+				void createErrorNotice(
+					sprintf(
+						/* translators: %1$s is the entity type and %2$s is the error message. */
+						__('Error updating %1$s: %2$s', 'kudos-donations'),
+						singularName,
+						error.message
+					)
+				);
+				return null;
+			}
 		},
-		[createSuccessNotice, handleSave, singularName]
+		[
+			createErrorNotice,
+			createSuccessNotice,
+			entityType,
+			fetchEntities,
+			singularName,
+		]
 	);
 
 	// Handles creating a entity.

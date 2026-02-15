@@ -87,6 +87,17 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 					],
 				],
 				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'patch_item' ],
+					'permission_callback' => $this->can_update(),
+					'args'                => [
+						'id' => [
+							'required' => true,
+							'type'     => FieldType::INTEGER,
+						],
+					],
+				],
+				[
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => [ $this, 'delete_item' ],
 					'permission_callback' => $this->can_delete(),
@@ -255,6 +266,37 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	}
 
 	/**
+	 * Patch an existing entity.
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function patch_item( WP_REST_Request $request ) {
+		$id   = (int) $request->get_param( 'id' );
+		$data = array_intersect_key(
+			$request->get_params(),
+			array_flip( $this->repository->get_all_fields() )
+		);
+
+		unset( $data['id'] );
+
+		$entity = $this->repository->get( $id );
+
+		if ( null === $entity ) {
+			return new WP_Error(
+				'not_found',
+				// translators: %s is the entity singular name (e.g Campaign).
+				\sprintf( __( '%s not found.', 'kudos-donations' ), $this->repository::get_singular_name() ),
+				[ 'status' => 404 ]
+			);
+		}
+
+		$this->repository->patch( $id, $data );
+
+		return new WP_REST_Response( $this->add_rest_fields( $this->repository->get( $id ) ), 200 );
+	}
+
+	/**
 	 * Optionally enrich items (e.g., join campaign, donor, etc).
 	 * Override in child controllers.
 	 *
@@ -284,6 +326,13 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	 * Specifies who can create records of this entity.
 	 */
 	protected function can_create(): callable {
+		return [ $this, 'can_edit_posts' ];
+	}
+
+	/**
+	 * Specifies who can update records of this entity.
+	 */
+	protected function can_update(): callable {
 		return [ $this, 'can_edit_posts' ];
 	}
 
