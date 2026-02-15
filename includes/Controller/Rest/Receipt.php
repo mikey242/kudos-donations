@@ -77,7 +77,7 @@ class Receipt extends BaseRestController {
 	 */
 	public function get_receipt( WP_REST_Request $request ): WP_REST_Response {
 		$transaction_id = $request->get_param( 'id' );
-		$force          = $request->get_param( 'force' ) ?? false;
+		$force          = $request->get_param( 'force' );
 		$view           = $request->get_param( 'view' );
 
 		$file = $this->invoice->generate_receipt( (int) $transaction_id, $force );
