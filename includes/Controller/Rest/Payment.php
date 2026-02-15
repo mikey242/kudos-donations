@@ -256,7 +256,6 @@ class Payment extends BaseRestController {
 			return new WP_REST_Response(
 				[
 					'message' => __( 'Request invalid.', 'kudos-donations' ),
-					'nonce'   => $request->get_header( 'X-WP-Nonce' ),
 				],
 				400
 			);
