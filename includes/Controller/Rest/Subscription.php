@@ -64,8 +64,9 @@ class Subscription extends BaseRepositoryRestController {
 						'sanitize_callback' => 'absint',
 					],
 					'token' => [
-						'type'     => FieldType::STRING,
-						'required' => true,
+						'type'              => FieldType::STRING,
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 				],
 				'permission_callback' => '__return_true',
