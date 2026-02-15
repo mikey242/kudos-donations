@@ -276,11 +276,6 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 						$response->is_error() ? __( 'Please contact support.', 'kudos-donations' ) : __( 'Thanks for your support!', 'kudos-donations' )
 					);
 					break;
-				default:
-					$this->message_modal_html(
-						'Unknown',
-						'Unknown action supplied.',
-					);
 			}
 		}
 	}
