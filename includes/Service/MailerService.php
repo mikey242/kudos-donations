@@ -151,10 +151,8 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 		$this->logger->debug(
 			'Creating receipt email.',
 			array_merge(
-				[
-					'email' => $email,
-					$args,
-				]
+				[ 'email' => $email ],
+				$args
 			)
 		);
 
