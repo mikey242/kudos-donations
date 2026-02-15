@@ -47,7 +47,7 @@ class Migration extends BaseRestController {
 			],
 			'/run'            => [
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $this, 'rest_migrate_handler' ],
+				'callback'            => [ $this, 'run_migrations' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 		];
@@ -63,7 +63,7 @@ class Migration extends BaseRestController {
 	/**
 	 * Handles a request for running migrations.
 	 */
-	public function rest_migrate_handler(): WP_REST_Response {
+	public function run_migrations(): WP_REST_Response {
 		$pending_migrations = $this->migration->get_pending_migrations();
 
 		if ( empty( $pending_migrations ) ) {
