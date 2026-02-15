@@ -195,12 +195,13 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 
 		$items = $this->repository->query( $args );
 		$items = array_map( fn( $item ) => $this->add_rest_fields( $item ), $items );
+		$total = $this->repository->count_query( $where );
 
 		return new WP_REST_Response(
 			[
 				'items'       => $items,
-				'total'       => $this->repository->count_query( $where ),
-				'total_pages' => (int) max( ceil( $this->repository->count_query( $where ) / $per_page ), 1 ),
+				'total'       => $total,
+				'total_pages' => (int) max( ceil( $total / $per_page ), 1 ),
 				'per_page'    => $per_page,
 				'paged'       => $paged,
 			]
