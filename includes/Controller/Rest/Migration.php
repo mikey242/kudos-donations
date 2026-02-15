@@ -89,7 +89,8 @@ class Migration extends BaseRestController {
 								'version' => $migration->get_version(),
 								'job'     => $job_details['label'] ?? $job_name,
 							],
-						]
+						],
+						200
 					);
 				}
 			}
@@ -104,7 +105,8 @@ class Migration extends BaseRestController {
 				'success'  => true,
 				'progress' => [],
 				'done'     => true,
-			]
+			],
+			200
 		);
 	}
 }
