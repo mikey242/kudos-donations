@@ -104,8 +104,8 @@ class Admin extends AbstractRegistrable {
 					break;
 				case 'kudos_assign_transactions_to_campaign':
 					if ( wp_verify_nonce( $nonce, 'kudos_assign_transactions_to_campaign' ) ) {
-						$from             = $_POST['kudos_from_campaign'];
-						$to               = $_POST['kudos_to_campaign'];
+						$from             = isset( $_POST['kudos_from_campaign'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_from_campaign'] ) ) : '';
+						$to               = isset( $_POST['kudos_to_campaign'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_to_campaign'] ) ) : '';
 						$transaction_repo = $this->transaction_repository;
 
 						switch ( $from ) {
