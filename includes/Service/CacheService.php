@@ -45,6 +45,10 @@ class CacheService implements UpgradeAwareInterface {
 		WP_Filesystem();
 		global $wp_filesystem;
 
+		if ( ! $wp_filesystem ) {
+			return false;
+		}
+
 		$files = new RecursiveIteratorIterator(
 			new RecursiveDirectoryIterator( $target, FilesystemIterator::SKIP_DOTS ),
 			RecursiveIteratorIterator::CHILD_FIRST
