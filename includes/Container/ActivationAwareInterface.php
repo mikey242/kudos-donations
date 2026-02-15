@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Container;
 interface ActivationAwareInterface {
 
 	/**
-	 * Act on plugin uninstall.
+	 * Act on plugin activation.
 	 */
 	public function on_plugin_activation(): void;
 }
