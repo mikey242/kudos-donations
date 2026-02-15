@@ -111,7 +111,7 @@ class NoticeService implements HasSettingsInterface {
 		printf(
 			'<div class="kudos-notice notice %s %s" data-notice-key="%s" style="display: flex; padding: 10px; align-items: center">%s</div>',
 			esc_attr( $level ),
-			esc_html( $dismissible ? 'is-dismissible' : '' ),
+			esc_attr( $dismissible ? 'is-dismissible' : '' ),
 			esc_attr( $key ),
 			wp_kses(
 				$message,
