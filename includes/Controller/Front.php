@@ -229,7 +229,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 	 * Handles the various query variables and shows relevant modals.
 	 */
 	public function handle_query_variables(): void {
-		if ( isset( $_REQUEST['kudos_action'] ) && - 1 !== $_REQUEST['kudos_action'] ) {
+		if ( isset( $_REQUEST['kudos_action'] ) ) {
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['kudos_action'] ) );
 
 			// Enqueue script / style in case we are on another page.
