@@ -35,8 +35,9 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 	const cancelSubscription = async (entityId: number, token: string) => {
 		try {
 			const response: any = await apiFetch({
-				path: `/kudos/v1/subscription/cancel/?id=${entityId}&token=${token}`,
-				method: 'GET',
+				path: `/kudos/v1/subscription/cancel/`,
+				method: 'POST',
+				data: { id: entityId, token },
 			});
 
 			await createSuccessNotice(response.message, {

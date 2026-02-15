@@ -55,7 +55,7 @@ class Subscription extends BaseRepositoryRestController {
 	public function get_additional_routes(): array {
 		return [
 			self::ROUTE_CANCEL => [
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'cancel' ],
 				'args'                => [
 					'id'    => [
