@@ -87,9 +87,8 @@ class Receipt extends BaseRestController {
 				$this->pdf->stream( $file );
 			}
 			return new WP_REST_Response( [ 'path' => $file ], 200 );
-		} else {
-			return new WP_REST_Response( [ 'message' => __( 'Something went wrong generating receipt', 'kudos-donations' ) ], 500 );
 		}
+		return new WP_REST_Response( [ 'message' => __( 'Something went wrong generating receipt', 'kudos-donations' ) ], 500 );
 	}
 
 	/**
