@@ -245,7 +245,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		$deleted = $this->repository->delete( $id );
 
 		if ( ! $deleted ) {
-			return new WP_Error( 'cannot_create', __( 'Failed to delete item.', 'kudos-donations' ), [ 'status' => 500 ] );
+			return new WP_Error( 'cannot_delete', __( 'Failed to delete item.', 'kudos-donations' ), [ 'status' => 500 ] );
 		}
 
 		return new WP_REST_Response(
