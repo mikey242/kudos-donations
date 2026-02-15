@@ -52,14 +52,12 @@ class TwigService implements ActivationAwareInterface, LoggerAwareInterface {
 	 * Create the twig cache directory
 	 */
 	public function on_plugin_activation(): void {
-		$logger = $this->logger;
-
 		if ( wp_mkdir_p( self::CACHE_DIR ) ) {
-			$logger->info( 'Twig cache directory created successfully.', [ 'location' => self::CACHE_DIR ] );
+			$this->logger->info( 'Twig cache directory created successfully.', [ 'location' => self::CACHE_DIR ] );
 			return;
 		}
 
-		$logger->error( 'Unable to create Kudos Donations Twig cache directory', [ 'location' => self::CACHE_DIR ] );
+		$this->logger->error( 'Unable to create Kudos Donations Twig cache directory', [ 'location' => self::CACHE_DIR ] );
 	}
 
 	/**
