@@ -113,7 +113,6 @@ export const SettingsPage = (): React.ReactNode => {
 				</FlexItem>
 			</>
 		);
-
 		return () => {
 			setHeaderContent(null);
 		};
