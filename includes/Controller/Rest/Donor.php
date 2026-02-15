@@ -38,12 +38,11 @@ class Donor extends BaseRepositoryRestController {
 	 * {@inheritDoc}
 	 */
 	protected function add_rest_fields( BaseEntity $item ): array {
-		$data                      = (array) $item;
-		$data['transaction_count'] = $this->transaction_repository->count_query(
+		$item->transaction_count = $this->transaction_repository->count_query(
 			[
 				'donor_id' => $item->id,
 			]
 		);
-		return $data;
+		return (array) $item;
 	}
 }
