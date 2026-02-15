@@ -217,8 +217,7 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 	public function create_item( WP_REST_Request $request ) {
 		$schema_keys = array_keys( $this->repository->get_schema()->get_column_schema() );
 		$filtered    = array_intersect_key( $request->get_params(), array_flip( $schema_keys ) );
-		$casted      = $this->repository->get_schema()->cast_types( $filtered );
-		$entity      = $this->repository->new_entity( $casted );
+		$entity      = $this->repository->new_entity( $filtered );
 
 		// Create/update record.
 		$id = $this->repository->upsert( $entity );
