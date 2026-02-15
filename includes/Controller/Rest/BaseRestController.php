@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace IseardMedia\Kudos\Controller\Rest;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
-use WP_Error;
 
 abstract class BaseRestController extends AbstractRegistrable {
 
@@ -92,40 +91,18 @@ abstract class BaseRestController extends AbstractRegistrable {
 	}
 
 	/**
-	 * Checks the provided honeypot field and logs request if bot detected.
+	 * Checks the provided honeypot field to detect bots.
 	 *
-	 * @param array $values Array of form value.
+	 * @param array $values Array of form values.
 	 */
 	public function is_bot( array $values ): bool {
-		$time_diff = abs( $values['timestamp'] - time() );
-
-		// Check if tabs completed too quickly.
-		if ( $time_diff < 4 ) {
-			new WP_Error(
-				'rest_forbidden',
-				__( 'Bot detected, rejecting tabs.', 'kudos-donations' ),
-				[
-					'reason'     => 'FormTab completed too quickly',
-					'time_taken' => $time_diff,
-				]
-			);
-
+		// Check if timestamp is present and tabs completed too quickly.
+		if ( isset( $values['timestamp'] ) && abs( (int) $values['timestamp'] - time() ) < 4 ) {
 			return true;
 		}
 
 		// Check if honeypot field completed.
 		if ( ! empty( $values['donation'] ) ) {
-			new WP_Error(
-				'rest_forbidden',
-				__( 'Bot detected, rejecting tabs.', 'kudos-donations' ),
-				array_merge(
-					[
-						'reason' => 'Honeypot field completed',
-					],
-					$values
-				)
-			);
-
 			return true;
 		}
 
