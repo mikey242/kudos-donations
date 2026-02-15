@@ -75,7 +75,7 @@ class Admin extends AbstractRegistrable {
 					if ( wp_verify_nonce( $nonce, 'kudos_clear_campaigns' ) ) {
 						$campaigns = $this->campaign_repository->all();
 						foreach ( $campaigns as $campaign ) {
-							wp_delete_post( $campaign->id, true );
+							$this->campaign_repository->delete( $campaign->id );
 						}
 					}
 					break;
