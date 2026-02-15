@@ -20,14 +20,14 @@ use WP_REST_Server;
 class Notice extends BaseRestController {
 
 	/**
-	 * PaymentRoutes constructor.
+	 * Notice constructor.
 	 */
 	public function __construct() {
 		$this->rest_base = 'notice';
 	}
 
 	/**
-	 * Mail service routes.
+	 * Notice routes.
 	 */
 	public function get_routes(): array {
 
@@ -55,8 +55,8 @@ class Notice extends BaseRestController {
 	public function dismiss_notice( WP_REST_Request $request ): WP_REST_Response {
 		$key = $request->get_param( 'id' );
 		if ( NoticeService::dismiss_notice( $key ) ) {
-			return new WP_REST_Response( 'Notice dismissed', 200 );
+			return new WP_REST_Response( [ 'message' => __( 'Notice dismissed.', 'kudos-donations' ) ], 200 );
 		}
-		return new WP_REST_Response( 'Notice not found', 404 );
+		return new WP_REST_Response( [ 'message' => __( 'Notice not found.', 'kudos-donations' ) ], 404 );
 	}
 }
