@@ -21,7 +21,6 @@ export const TableControls = ({
 }: TableControlsProps): React.ReactNode => {
 	return (
 		<>
-			<Spacer marginTop={'3'} />
 			<Flex justify="space-between">
 				<FlexItem>
 					<Filters filters={filters} />

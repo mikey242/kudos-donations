@@ -6,6 +6,10 @@ import React, {
 	useContext,
 	useState,
 } from 'react';
+import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalSpacer as Spacer,
+} from '@wordpress/components';
 import { BrowserRouter } from 'react-router-dom';
 import * as AdminControls from '../components/controls';
 import { AdminHeader, MigrationModal, Notices } from '../components';
@@ -58,7 +62,8 @@ export const InnerAdminProvider = ({ children }) => {
 		<AdminContext.Provider value={data}>
 			<AdminHeader children={headerContent} />
 			<Notices />
-			<h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>
+			<Spacer marginTop={'7'} />
+			{pageTitle && <h1 style={{ textAlign: 'center' }}>{pageTitle}</h1>}
 			<>{children}</>
 		</AdminContext.Provider>
 	);
