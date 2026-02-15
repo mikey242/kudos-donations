@@ -45,15 +45,10 @@ class Transaction extends BaseRepositoryRestController {
 		$item->subscription = $this->repository->get_subscription( $item );
 
 		if ( 'paid' === $item->status ) {
-			$transaction_id = $item->id;
-
 			$item->receipt_url = add_query_arg(
-				[
-					'kudos_action' => 'view_receipt',
-					'_wpnonce'     => wp_create_nonce( "view_receipt_$transaction_id" ),
-					'id'           => $transaction_id,
-				],
-				admin_url( 'admin.php' )
+				'_wpnonce',
+				wp_create_nonce( 'wp_rest' ),
+				rest_url( "kudos/v1/receipt/{$item->id}?view=true" )
 			);
 		}
 		return (array) $item;
