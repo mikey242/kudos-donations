@@ -57,23 +57,25 @@ class UpgradeHandler extends AbstractRegistrable {
 	 * Runs on_plugin_upgrade on each service.
 	 */
 	public function process(): void {
-		foreach ( $this->services as $service ) {
-			add_action(
-				'upgrader_process_complete',
-				function ( \WP_Upgrader $upgrader, array $hook_extra ) use ( $service ) {
-					if ( 'update' === $hook_extra['action'] && 'plugin' === $hook_extra['type'] && isset( $hook_extra['plugins'] ) ) {
-						foreach ( $hook_extra['plugins'] as $plugin ) {
-							if ( strpos( $plugin, 'kudos-donations.php' ) !== false ) {
-								$this->get_logger()->debug( 'Kudos Donations upgrade detected.', [ 'plugin' => $plugin ] );
-								do_action( 'kudos_donations_upgraded', $plugin );
-								$service->on_plugin_upgrade();
-							}
+		add_action(
+			'upgrader_process_complete',
+			function ( \WP_Upgrader $upgrader, array $hook_extra ) {
+				if ( 'update' !== $hook_extra['action'] || 'plugin' !== $hook_extra['type'] || ! isset( $hook_extra['plugins'] ) ) {
+					return;
+				}
+				foreach ( $hook_extra['plugins'] as $plugin ) {
+					if ( false !== strpos( $plugin, 'kudos-donations.php' ) ) {
+						$this->get_logger()->debug( 'Kudos Donations upgrade detected.', [ 'plugin' => $plugin ] );
+						do_action( 'kudos_donations_upgraded', $plugin );
+						foreach ( $this->services as $service ) {
+							$service->on_plugin_upgrade();
 						}
+						break;
 					}
-				},
-				10,
-				2
-			);
-		}
+				}
+			},
+			10,
+			2
+		);
 	}
 }
