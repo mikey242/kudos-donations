@@ -179,6 +179,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
 			}
+			return null;
 		}
 
 		// Check if the current vendor is connected.
@@ -192,6 +193,7 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 
 				return '<p style="color: red; padding: 1em 0; font-weight: bold">' . $message . '</p>';
 			}
+			return null;
 		}
 
 		// Create unique id for triggering.
