@@ -161,7 +161,7 @@ class Payment extends BaseRestController {
 			],
 
 			self::ROUTE_REFUND  => [
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'refund' ],
 				'args'                => [
 					'id' => [
@@ -170,9 +170,7 @@ class Payment extends BaseRestController {
 						'sanitize_callback' => 'absint',
 					],
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
+				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
 
 			self::ROUTE_TEST    => [
