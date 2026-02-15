@@ -78,8 +78,10 @@ class ReceiptService extends AbstractRegistrable implements HasSettingsInterface
 	 */
 	public function attach_to_email( array $attachments, int $transaction_id ): array {
 		$file = $this->generate_receipt( $transaction_id );
-		$this->logger->debug( 'Adding receipt PDF to email.', [ 'file' => $file ] );
-		$attachments[] = $file;
+		if ( $file ) {
+			$this->logger->debug( 'Adding receipt PDF to email.', [ 'file' => $file ] );
+			$attachments[] = $file;
+		}
 		return $attachments;
 	}
 
@@ -93,7 +95,7 @@ class ReceiptService extends AbstractRegistrable implements HasSettingsInterface
 		$file_name = "receipt-$transaction_id.pdf";
 		$file      = PDFService::INVOICE_DIR . $file_name;
 
-		// Stream existing file if found.
+		// Return existing file if found.
 		if ( ! $force_generate ) {
 			if ( file_exists( $file ) ) {
 				$this->logger->debug( 'Receipt already exists.', [ 'file' => $file ] );
@@ -123,7 +125,7 @@ class ReceiptService extends AbstractRegistrable implements HasSettingsInterface
 			'company_name'    => Utils::get_company_name(),
 			'company_address' => get_option( self::SETTING_INVOICE_COMPANY_ADDRESS ),
 			'vat_number'      => get_option( self::SETTING_INVOICE_VAT_NUMBER ),
-			'currency_symbol' => Utils::get_currencies()[ $transaction->currency ],
+			'currency_symbol' => Utils::get_currencies()[ $transaction->currency ] ?? '',
 			'items'           => [
 				$transaction->title            => number_format_i18n( $transaction->value, 2 ),
 				__( 'VAT', 'kudos-donations' ) => 0,
@@ -132,9 +134,8 @@ class ReceiptService extends AbstractRegistrable implements HasSettingsInterface
 		];
 
 		// Append donor.
-		$donors = $this->donor_repository;
 		/** @var ?DonorEntity $donor */
-		$donor = $donors->find_one_by( [ 'id' => $transaction->donor_id ] );
+		$donor = $this->donor_repository->find_one_by( [ 'id' => $transaction->donor_id ] );
 		if ( null !== $donor ) {
 			$locale = $donor->locale;
 			if ( $locale ) {
