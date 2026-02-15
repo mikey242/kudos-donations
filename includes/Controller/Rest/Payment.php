@@ -388,16 +388,16 @@ class Payment extends BaseRestController {
 				],
 				200
 			);
-		} else {
-			return new WP_REST_Response(
-				[
-					'success' => false,
-					'message' =>
-						__( 'There was an error refreshing payment methods. Please check the log for more information.', 'kudos-donations' ),
-				],
-				500
-			);
 		}
+
+		return new WP_REST_Response(
+			[
+				'success' => false,
+				'message' =>
+					__( 'There was an error refreshing payment methods. Please check the log for more information.', 'kudos-donations' ),
+			],
+			500
+		);
 	}
 
 	/**
