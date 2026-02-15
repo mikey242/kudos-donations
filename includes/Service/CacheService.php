@@ -22,7 +22,7 @@ class CacheService implements UpgradeAwareInterface {
 	 * Clears the cache when the plugin is upgraded.
 	 */
 	public function on_plugin_upgrade(): void {
-		$this->recursively_clear_cache();
+		self::recursively_clear_cache();
 	}
 
 	/**
@@ -34,7 +34,15 @@ class CacheService implements UpgradeAwareInterface {
 	public static function recursively_clear_cache( ?string $dir = null ): bool {
 
 		$target = KUDOS_CACHE_DIR . $dir;
-		if ( ! is_dir( $target ) ) {
+
+		// Ensure the target is within the cache directory.
+		$real_cache  = realpath( KUDOS_CACHE_DIR );
+		$real_target = realpath( $target );
+		if ( ! $real_cache || ! $real_target || 0 !== strpos( $real_target, $real_cache ) ) {
+			return false;
+		}
+
+		if ( ! is_dir( $real_target ) ) {
 			return false;
 		}
 
@@ -50,7 +58,7 @@ class CacheService implements UpgradeAwareInterface {
 		}
 
 		$files = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $target, FilesystemIterator::SKIP_DOTS ),
+			new RecursiveDirectoryIterator( $real_target, FilesystemIterator::SKIP_DOTS ),
 			RecursiveIteratorIterator::CHILD_FIRST
 		);
 
