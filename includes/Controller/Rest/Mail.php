@@ -30,7 +30,7 @@ class Mail extends BaseRestController {
 	private string $error_message = '';
 
 	/**
-	 * PaymentRoutes constructor.
+	 * Mail constructor.
 	 *
 	 * @param MailerService $mailer Mailer service.
 	 */
