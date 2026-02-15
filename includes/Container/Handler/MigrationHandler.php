@@ -88,10 +88,8 @@ class MigrationHandler extends AbstractRegistrable implements HasSettingsInterfa
 	public function should_upgrade(): bool {
 		$db_version = get_option( self::SETTING_DB_VERSION );
 
-		$current_version = ! empty( $db_version ) ? $db_version : '';
-
 		$target_version = KUDOS_DB_VERSION;
-		return $current_version && version_compare( $current_version, $target_version, '<' );
+		return $db_version && version_compare( $db_version, $target_version, '<' );
 	}
 
 	/**
