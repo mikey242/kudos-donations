@@ -73,12 +73,20 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 
 		$this->logger->debug( 'Receipt emails enabled, setting up email.', [ 'transaction_id' => $transaction_id ] );
 
-		/** @var TransactionEntity $transaction */
+		/** @var ?TransactionEntity $transaction */
 		$transaction = $this->transaction_repository->get( $transaction_id );
-		/** @var DonorEntity $donor */
-		$donor = $this->transaction_repository->get_donor( $transaction );
+		if ( ! $transaction ) {
+			$this->logger->debug( 'Cannot send receipt: transaction not found', [ 'transaction_id' => $transaction_id ] );
+			return false;
+		}
 
-		// Email address.
+		/** @var ?DonorEntity $donor */
+		$donor = $this->transaction_repository->get_donor( $transaction );
+		if ( ! $donor || ! $donor->email ) {
+			$this->logger->debug( 'Cannot send receipt: donor or email not found', [ 'transaction_id' => $transaction_id ] );
+			return false;
+		}
+
 		$email = $donor->email;
 
 		// Switch to donor's locale.
@@ -88,21 +96,15 @@ class MailerService extends AbstractRegistrable implements HasSettingsInterface 
 			Utils::switch_locale( $locale );
 		}
 
-		// Bail if no email address.
-		if ( ! $email ) {
-			$this->logger->debug( 'Cannot send email: donor has no email address', [ 'donor' => $donor ] );
-			return false;
-		}
-
 		// Assign attachment.
 		$attachments = apply_filters( 'kudos_receipt_attachment', [], $transaction->id );
 
 		// Get campaign name if enabled.
 		$campaign_name = '';
 		if ( get_option( self::SETTING_EMAIL_SHOW_CAMPAIGN ) ) {
-			/** @var CampaignEntity $campaign */
+			/** @var ?CampaignEntity $campaign */
 			$campaign      = $this->transaction_repository->get_campaign( $transaction );
-			$campaign_name = $campaign->title;
+			$campaign_name = $campaign ? $campaign->title : '';
 		}
 
 		// Create array of variables for use in twig template.
