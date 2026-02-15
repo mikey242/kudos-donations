@@ -66,11 +66,10 @@ class Mail extends BaseRestController {
 	 * @param WP_REST_Request $request Request array.
 	 */
 	public function send_test( WP_REST_Request $request ): WP_REST_Response {
-		$raw_email = $request['email'];
-		$email     = \is_string( $raw_email ) ? sanitize_email( $raw_email ) : null;
+		$email = $request['email'];
 
-		if ( null === $email ) {
-			return new WP_REST_Response( [ 'message' => __( 'Invalid test email address', 'kudos-donations' ) ] );
+		if ( empty( $email ) ) {
+			return new WP_REST_Response( [ 'message' => __( 'Invalid test email address', 'kudos-donations' ) ], 400 );
 		}
 
 		$header  = __( 'It worked!', 'kudos-donations' );
