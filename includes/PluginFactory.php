@@ -62,7 +62,7 @@ class PluginFactory {
 	 */
 	public static function get_kernel(): Kernel {
 		if ( null === self::$kernel ) {
-			throw new \RuntimeException( 'Kernel has not been booted. Call create_plugin() first.' );
+			throw new \RuntimeException( 'Kernel has not been booted. Call create() first.' );
 		}
 		return self::$kernel;
 	}
