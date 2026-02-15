@@ -260,8 +260,8 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 				case 'cancel_subscription':
 					$id      = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
 					$token   = isset( $_REQUEST['token'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['token'] ) ) : '';
-					$request = new WP_REST_Request( WP_REST_Server::READABLE, '/kudos/v1/subscription/cancel' );
-					$request->set_query_params(
+					$request = new WP_REST_Request( WP_REST_Server::CREATABLE, '/kudos/v1/subscription/cancel' );
+					$request->set_body_params(
 						[
 							'id'    => $id,
 							'token' => $token,
