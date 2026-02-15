@@ -109,7 +109,7 @@ class Admin extends AbstractRegistrable {
 
 						switch ( $from ) {
 							case '_orphaned_transactions_':
-								$transactions = $this->get_orphan_transaction_ids();
+								$transactions = $this->transaction_repository->get_orphan_ids();
 								break;
 							case '_all_transactions_':
 								$transactions = array_map(
@@ -206,26 +206,4 @@ class Admin extends AbstractRegistrable {
 		}
 	}
 
-	/**
-	 * Gets a list of transactions with no Campaign.
-	 *
-	 * @return list<int>
-	 */
-	private function get_orphan_transaction_ids(): array {
-		/** @var TransactionEntity[] $transactions */
-		$transactions           = $this->transaction_repository->all();
-		$orphan_transaction_ids = [];
-
-		foreach ( $transactions as $transaction ) {
-			$campaign_id = $transaction->campaign_id;
-
-			$is_missing = empty( $campaign_id ) || ! $this->campaign_repository->get( $campaign_id );
-
-			if ( $is_missing ) {
-				$orphan_transaction_ids[] = $transaction->id;
-			}
-		}
-
-		return $orphan_transaction_ids;
-	}
 }
