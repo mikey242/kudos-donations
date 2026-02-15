@@ -24,7 +24,6 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 	use LoggerAwareTrait;
 
 	public const INVOICE_DIR = KUDOS_STORAGE_DIR . 'invoices/';
-	public const INVOICE_URL = KUDOS_STORAGE_URL . 'invoices/';
 	private const FONTS_DIR  = KUDOS_CACHE_DIR . 'fonts/';
 	private Dompdf $pdf;
 	private TwigService $twig;
@@ -108,30 +107,10 @@ class PDFService implements ActivationAwareInterface, LoggerAwareInterface {
 			ob_end_clean();
 		}
 
-		$file_name = basename( $file );
-		$response  = wp_remote_get(
-			self::INVOICE_URL . $file_name,
-			[
-				'headers' => [
-					'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-					'Referer'    => home_url(),
-				],
-				'timeout' => 15,
-			]
-		);
-
-		if ( is_wp_error( $response ) ) {
-			throw new Exception( esc_html( $response->get_error_message() ) );
-		}
-
-		$response_code = wp_remote_retrieve_response_code( $response );
-		if ( 200 !== $response_code ) {
-			throw new Exception( esc_html( wp_remote_retrieve_response_message( $response ) ) );
-		}
-
-		$body = wp_remote_retrieve_body( $response );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$body = file_get_contents( $file );
 		if ( empty( $body ) ) {
-			throw new Exception( esc_html( __( 'Empty response body for PDF.', 'kudos-donations' ) ) );
+			throw new Exception( esc_html( __( 'Unable to read PDF file.', 'kudos-donations' ) ) );
 		}
 
 		return $body;
