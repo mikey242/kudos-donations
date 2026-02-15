@@ -109,12 +109,16 @@ class Kernel {
 	 * Create required folder for dumping the container.
 	 */
 	private function initialize_filesystem(): void {
-		/** @var WP_Filesystem_Base $wp_filesystem */
 		global $wp_filesystem;
 		if ( ! \function_exists( 'WP_Filesystem' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/file.php';
 		}
 		WP_Filesystem();
+
+		if ( ! $wp_filesystem ) {
+			return;
+		}
+
 		$this->file_system = $wp_filesystem;
 		wp_mkdir_p( $this->cache_folder );
 	}
