@@ -9,6 +9,8 @@
  * @copyright 2025 Iseard Media
  */
 
+declare(strict_types=1);
+
 namespace IseardMedia\Kudos;
 
 class Autoloader {
