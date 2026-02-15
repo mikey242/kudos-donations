@@ -17,7 +17,7 @@ use WP_Error;
 abstract class BaseRestController extends AbstractRegistrable {
 
 	protected string $namespace = 'kudos/v1';
-	protected string $rest_base = '';
+	protected string $rest_base;
 
 	/**
 	 * Returns the REST namespace.
