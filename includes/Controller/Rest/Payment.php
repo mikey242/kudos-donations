@@ -215,33 +215,33 @@ class Payment extends BaseRestController {
 		 */
 		$transaction = $this->transaction_repository->get( $entity_id );
 
+		if ( null === $transaction ) {
+			return new WP_Error( 'transaction_not_found', 'Transaction not found' );
+		}
+
 		if ( PaymentStatus::OPEN === $transaction->status ) {
 			$this->logger->debug( 'Status still open, manually calling handle_status_change' );
 			$this->vendor->handle_status_change( $transaction->vendor_payment_id );
 		}
 
-		if ( null !== $transaction ) {
-			$data     = [
-				'status'   => $transaction->status,
-				'currency' => $transaction->currency,
-				'value'    => $transaction->value,
-			];
-			$donor_id = $transaction->donor_id;
-			if ( $donor_id ) {
-				/** @var DonorEntity $donor */
-				$donor        = $this->donor_repository->get( $donor_id );
-				$data['name'] = $donor->name;
-			}
-
-			return new WP_REST_Response(
-				[
-					'success' => true,
-					'data'    => $data,
-				]
-			);
+		$data     = [
+			'status'   => $transaction->status,
+			'currency' => $transaction->currency,
+			'value'    => $transaction->value,
+		];
+		$donor_id = $transaction->donor_id;
+		if ( $donor_id ) {
+			/** @var DonorEntity $donor */
+			$donor        = $this->donor_repository->get( $donor_id );
+			$data['name'] = $donor->name;
 		}
 
-		return new WP_Error( 'transaction_not_found', 'Transaction not found' );
+		return new WP_REST_Response(
+			[
+				'success' => true,
+				'data'    => $data,
+			]
+		);
 	}
 
 	/**
