@@ -293,6 +293,8 @@ class Payment extends BaseRestController {
 		do_action( 'kudos_submit_payment', $args );
 
 		// If email found, try to find an existing customer or create a new one.
+		$donor    = null;
+		$donor_id = null;
 		if ( $args['email'] ) {
 
 			$donor_args = [
@@ -330,7 +332,7 @@ class Payment extends BaseRestController {
 		}
 
 		// Create the payment. If there is no customer ID it will be un-linked.
-		$vendor_customer_id = $donor->vendor_customer_id ?? null;
+		$vendor_customer_id = $donor ? $donor->vendor_customer_id : null;
 		$transaction        = $this->transaction_repository->new_entity(
 			[
 				'donor_id'      => $donor_id ?? null,
