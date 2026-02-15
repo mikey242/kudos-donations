@@ -94,11 +94,11 @@ class Subscription extends BaseRepositoryRestController {
 	 */
 	public function cancel( WP_REST_Request $request ): WP_REST_Response {
 
-		$post_id = $request->get_param( 'id' );
-		$token   = $request->get_param( 'token' );
+		$entity_id = $request->get_param( 'id' );
+		$token     = $request->get_param( 'token' );
 
 		// Stop if missing a parameter.
-		if ( ! $post_id || ! $token ) {
+		if ( ! $entity_id || ! $token ) {
 			return new WP_REST_Response(
 				[
 					'message' => __( 'Parameter missing', 'kudos-donations' ),
@@ -107,11 +107,11 @@ class Subscription extends BaseRepositoryRestController {
 			);
 		}
 
-		$this->logger->info( 'Cancelling subscription', [ 'post_id' => $post_id ] );
+		$this->logger->info( 'Cancelling subscription', [ 'post_id' => $entity_id ] );
 
 		// Check if token is valid.
 		try {
-			if ( ! EncryptionService::verify_token( $post_id, $token ) ) {
+			if ( ! EncryptionService::verify_token( $entity_id, $token ) ) {
 				$this->logger->info( 'Invalid token supplied' );
 				return new WP_REST_Response(
 					[
@@ -135,7 +135,7 @@ class Subscription extends BaseRepositoryRestController {
 		 *
 		 * @var ?SubscriptionEntity $subscription
 		 */
-		$subscription = $this->repository->get( $post_id );
+		$subscription = $this->repository->get( $entity_id );
 
 		// Cancel subscription with vendor.
 		$result = $subscription && $this->vendor->cancel_subscription( $subscription );
@@ -148,7 +148,7 @@ class Subscription extends BaseRepositoryRestController {
 			$this->logger->info(
 				'Subscription cancelled.',
 				[
-					'id'              => $post_id,
+					'id'              => $entity_id,
 					'subscription_id' => $subscription->vendor_subscription_id,
 				]
 			);
