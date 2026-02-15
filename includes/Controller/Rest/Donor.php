@@ -23,9 +23,9 @@ class Donor extends BaseRepositoryRestController {
 	private TransactionRepository $transaction_repository;
 
 	/**
-	 * Campaign rest route constructor.
+	 * Donor rest route constructor.
 	 *
-	 * @param DonorRepository       $repository The campaign repository.
+	 * @param DonorRepository       $repository The donor repository.
 	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
 	public function __construct( DonorRepository $repository, TransactionRepository $transaction_repository ) {
