@@ -27,9 +27,9 @@ class Receipt extends BaseRestController {
 	private TransactionRepository $transaction_repository;
 
 	/**
-	 * PaymentRoutes constructor.
+	 * Receipt constructor.
 	 *
-	 * @param PDFService            $pdf Mailer service.
+	 * @param PDFService            $pdf PDF service.
 	 * @param ReceiptService        $invoice Receipt service.
 	 * @param TransactionRepository $transaction_repository The transaction repository.
 	 */
