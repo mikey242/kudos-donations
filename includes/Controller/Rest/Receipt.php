@@ -63,7 +63,7 @@ class Receipt extends BaseRestController {
 				],
 			],
 			'/regenerate'  => [
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'regenerate_receipts' ],
 				'permission_callback' => [ $this, 'can_manage_options' ],
 			],
