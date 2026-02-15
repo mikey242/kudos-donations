@@ -52,7 +52,7 @@ abstract class BaseRestController extends AbstractRegistrable {
 	 */
 	public function register_routes(): void {
 		foreach ( $this->get_routes() as $route => $args ) {
-			register_rest_route( static::get_namespace(), static::get_base() . $route, $args );
+			register_rest_route( $this->get_namespace(), $this->get_base() . $route, $args );
 		}
 	}
 
