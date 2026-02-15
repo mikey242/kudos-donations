@@ -104,9 +104,8 @@ class Admin extends AbstractRegistrable {
 					break;
 				case 'kudos_assign_transactions_to_campaign':
 					if ( wp_verify_nonce( $nonce, 'kudos_assign_transactions_to_campaign' ) ) {
-						$from             = isset( $_POST['kudos_from_campaign'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_from_campaign'] ) ) : '';
-						$to               = isset( $_POST['kudos_to_campaign'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_to_campaign'] ) ) : '';
-						$transaction_repo = $this->transaction_repository;
+						$from = isset( $_POST['kudos_from_campaign'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_from_campaign'] ) ) : '';
+						$to   = isset( $_POST['kudos_to_campaign'] ) ? sanitize_text_field( wp_unslash( $_POST['kudos_to_campaign'] ) ) : '';
 
 						switch ( $from ) {
 							case '_orphaned_transactions_':
@@ -115,13 +114,13 @@ class Admin extends AbstractRegistrable {
 							case '_all_transactions_':
 								$transactions = array_map(
 									fn( TransactionEntity $t ): int => $t->id,
-									$transaction_repo->all()
+									$this->transaction_repository->all()
 								);
 								break;
 							default:
 								$transactions = array_map(
 									fn( $t ) => $t->id,
-									$transaction_repo->find_by(
+									$this->transaction_repository->find_by(
 										[
 											'campaign_id' => $from,
 										]
@@ -139,7 +138,7 @@ class Admin extends AbstractRegistrable {
 						);
 
 						foreach ( $transactions as $transaction ) {
-							$transaction_repo->patch( $transaction, [ 'campaign_id' => $to ] );
+							$this->transaction_repository->patch( $transaction, [ 'campaign_id' => $to ] );
 						}
 					}
 					break;
