@@ -238,7 +238,8 @@ class Payment extends BaseRestController {
 			[
 				'success' => true,
 				'data'    => $data,
-			]
+			],
+			200
 		);
 	}
 
@@ -358,7 +359,8 @@ class Payment extends BaseRestController {
 				[
 					'success' => true,
 					'url'     => $url,
-				]
+				],
+				200
 			);
 		}
 
@@ -393,7 +395,7 @@ class Payment extends BaseRestController {
 					'message' =>
 						__( 'There was an error refreshing payment methods. Please check the log for more information.', 'kudos-donations' ),
 				],
-				200
+				500
 			);
 		}
 	}
