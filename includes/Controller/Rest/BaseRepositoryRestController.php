@@ -223,7 +223,12 @@ abstract class BaseRepositoryRestController extends BaseRestController {
 		$id = $this->repository->upsert( $entity );
 
 		if ( false === $id ) {
-			return new WP_Error( 'cannot_create', __( 'Could not create campaign.', 'kudos-donations' ), [ 'status' => 500 ] );
+			return new WP_Error(
+				'cannot_create',
+				// translators: %s is the entity singular name (e.g Campaign).
+				\sprintf( __( 'Could not create %s.', 'kudos-donations' ), $this->repository::get_singular_name() ),
+				[ 'status' => 500 ]
+			);
 		}
 
 		return new WP_REST_Response( $this->repository->get( $id ), 201 );
