@@ -44,7 +44,7 @@ class Payment extends BaseRestController {
 	private CampaignRepository $campaign_repository;
 
 	/**
-	 * PaymentRoutes constructor.
+	 * Payment constructor.
 	 *
 	 * @param PaymentProviderFactory $factory Current vendor.
 	 * @param TransactionRepository  $transaction_repository Transaction repository.
