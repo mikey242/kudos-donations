@@ -27,7 +27,7 @@ class Transaction extends BaseRepositoryRestController {
 	protected BaseRepository $repository;
 
 	/**
-	 * Campaign rest route constructor.
+	 * Transaction rest route constructor.
 	 *
 	 * @param TransactionRepository $transactions The transaction repository.
 	 */
