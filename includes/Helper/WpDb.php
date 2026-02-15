@@ -23,6 +23,7 @@ use BadMethodCallException;
  *
  * @method string get_charset_collate() Get the character set and collation for table creation.
  * @method string|false prepare(string $query, mixed ...$args) Prepare a SQL query safely, returning the prepared query or false on failure.
+ * @method array get_col(string|null $query = null, int $x = 0) Executes a SQL query and returns the column from the SQL result.
  * @method array|object|null get_results(string $query, string $output = 'OBJECT') Retrieve multiple rows from a SQL query.
  * @method array|object|null get_row(string $query, string $output = 'OBJECT', int $offset = 0) Retrieve one row from a SQL query.
  * @method mixed get_var(string $query, int $x = 0, int $y = 0) Retrieve one variable (column value) from a SQL query.

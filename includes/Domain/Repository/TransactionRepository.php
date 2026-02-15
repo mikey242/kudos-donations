@@ -97,11 +97,15 @@ class TransactionRepository extends BaseRepository {
 	 */
 	public function get_orphan_ids(): array {
 		$campaign_table = $this->wpdb->table( CampaignRepository::get_table_name() );
-
-		$results = $this->wpdb->get_col(
-			"SELECT t.id FROM $this->table t
-			LEFT JOIN $campaign_table c ON t.campaign_id = c.id
-			WHERE t.campaign_id IS NULL OR c.id IS NULL"
+		$wpdb           = $this->wpdb;
+		$results        = $wpdb->get_col(
+			$wpdb->prepare(
+				'SELECT t.id FROM %i t
+			LEFT JOIN %i c ON t.campaign_id = c.id
+			WHERE t.campaign_id IS NULL OR c.id IS NULL',
+				$this->table,
+				$campaign_table
+			)
 		);
 
 		return array_map( 'intval', $results );

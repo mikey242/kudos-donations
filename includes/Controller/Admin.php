@@ -205,5 +205,4 @@ class Admin extends AbstractRegistrable {
 			}
 		}
 	}
-
 }
