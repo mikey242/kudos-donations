@@ -23,5 +23,5 @@ class DonorEntity extends BaseEntity {
 	public ?string $country;
 	public ?string $locale;
 	public ?string $vendor_customer_id;
-	public ?float $total;
+	public ?int $transaction_count;
 }
