@@ -249,12 +249,10 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 						 */
 						$transaction = $this->transaction_repository->get( (int) $transaction_id );
 
-						if ( $transaction && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
-							$campaign_id = $transaction->campaign_id;
-
+						if ( $transaction && $transaction->campaign_id && wp_verify_nonce( $nonce, $action . $transaction_id ) ) {
 							$this->payment_status_modal_html(
 								(int) $transaction_id,
-								$campaign_id,
+								$transaction->campaign_id,
 							);
 						}
 					}
