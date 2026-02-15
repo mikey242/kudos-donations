@@ -103,8 +103,9 @@ class Campaign extends BaseRepositoryRestController {
 	 * {@inheritDoc}
 	 */
 	protected function add_rest_fields( BaseEntity $item ): array {
-		$item->total = $this->repository->get_total( $item );
-		return (array) $item;
+		$data          = (array) $item;
+		$data['total'] = $this->repository->get_total( $item );
+		return $data;
 	}
 
 	/**
