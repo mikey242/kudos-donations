@@ -109,10 +109,10 @@ class LinkService implements LoggerAwareInterface, RepositoryAwareInterface {
 			}
 		}
 
-			// Batch update all modified records.
-			$this->perform_batch_updates( $source_repo, $updates_batch );
+		// Batch update all modified records.
+		$this->perform_batch_updates( $source_repo, $updates_batch );
 
-			return \count( $updates_batch );
+		return \count( $updates_batch );
 	}
 
 	/**
