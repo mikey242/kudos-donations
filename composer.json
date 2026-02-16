@@ -13,7 +13,6 @@
 			"php": "7.4"
 		},
 		"allow-plugins": {
-			"automattic/jetpack-autoloader": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"phpstan/extension-installer": true,
 			"typisttech/imposter-plugin": false
@@ -22,7 +21,6 @@
 	"require": {
 		"php": ">=7.4",
 		"ext-json": "*",
-		"automattic/jetpack-autoloader": "^5.0",
 		"dompdf/dompdf": "^3",
 		"mollie/mollie-api-php": "^v3.0.0",
 		"monolog/monolog": "^2",
@@ -33,6 +31,7 @@
 		"symfony/dotenv": "^5.4",
 		"symfony/polyfill-ctype": "^1.31",
 		"symfony/polyfill-mbstring": "^1.31",
+		"symfony/proxy-manager-bridge": "^5.4",
 		"twig/twig": "^3.11",
 		"woocommerce/action-scheduler": "^3.9"
 	},
