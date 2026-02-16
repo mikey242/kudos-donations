@@ -338,6 +338,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 		// Cancel the subscription via Mollie's API.
 		try {
 			$response = $customer->cancelSubscription( $subscription->vendor_subscription_id );
+			$this->logger->info( 'Mollie subscription cancelled', [ 'subscription' => $subscription ] );
 
 			return ( PaymentStatus::CANCELED === $response->status );
 		} catch ( ApiException $e ) {
