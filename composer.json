@@ -77,8 +77,11 @@
 			"php -r \"file_put_contents('vendor/dompdf/dompdf/lib/fonts/installed-fonts.dist.json', json_encode(['sans-serif' => ['normal' => 'Helvetica', 'bold' => 'Helvetica-Bold', 'italic' => 'Helvetica-Oblique', 'bold_italic' => 'Helvetica-BoldOblique']], JSON_PRETTY_PRINT));\""
 		],
 		"remove-from-vendor": [
+			"rm -rf vendor/dompdf",
+			"rm -rf vendor/masterminds",
 			"rm -rf vendor/mollie",
-			"rm -rf vendor/monolog"
+			"rm -rf vendor/monolog",
+			"rm -rf vendor/sabberworm"
 		],
 		"post-install-cmd": [
 			"@clean-unused-files",
@@ -98,9 +101,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"IseardMedia\\Kudos\\": "includes/",
-			"Mollie\\": "third-party/vendor/mollie/mollie-api-php/src/",
-			"Monolog\\": "third-party/vendor/monolog/monolog/src/"
+			"IseardMedia\\Kudos\\": "includes/"
 		}
 	},
 	"autoload-dev": {

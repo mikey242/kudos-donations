@@ -6,7 +6,6 @@
 namespace IseardMedia\Kudos\Tests\Controller\Rest;
 
 use IseardMedia\Kudos\Tests\BaseTestCase;
-use Dompdf\Dompdf;
 use IseardMedia\Kudos\Domain\Entity\DonorEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\DonorRepository;
@@ -14,6 +13,7 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Service\PDFService;
 use IseardMedia\Kudos\Service\TwigService;
 use IseardMedia\Kudos\Provider\PaymentProvider\MolliePaymentProvider;
+use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use WP_REST_Request;
 use WP_REST_Server;

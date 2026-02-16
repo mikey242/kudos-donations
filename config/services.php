@@ -11,7 +11,6 @@
 
 declare( strict_types=1 );
 
-use Dompdf\Dompdf;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Container\EncryptionAwareInterface;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
@@ -40,6 +39,7 @@ use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderInterface;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderFactory;
 use IseardMedia\Kudos\Provider\PaymentProvider\PaymentProviderInterface;
 use IseardMedia\Kudos\Service\EncryptionService;
+use IseardMedia\Kudos\ThirdParty\Dompdf\Dompdf;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Monolog\Formatter\JsonFormatter;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
