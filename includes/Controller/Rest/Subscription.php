@@ -143,13 +143,18 @@ class Subscription extends BaseRepositoryRestController {
 		if ( $result ) {
 			// Cancelling was successful. Update entity with cancelled status.
 			$subscription->status = 'cancelled';
-			$this->repository->update( $subscription );
+			$updated              = $this->repository->update( $subscription );
+
+			if ( ! $updated ) {
+				$this->logger->error( 'Failed to update subscription status.', [ 'id' => $entity_id ] );
+			}
 
 			$this->logger->info(
 				'Subscription cancelled.',
 				[
 					'id'              => $entity_id,
 					'subscription_id' => $subscription->vendor_subscription_id,
+					'db_updated'      => $updated,
 				]
 			);
 			return new WP_REST_Response(
