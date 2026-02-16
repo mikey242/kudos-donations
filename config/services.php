@@ -114,8 +114,8 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->call( 'pushProcessor', [ service( PsrLogMessageProcessor::class ) ] );
 
 	// External libraries.
-	$services->set( Dompdf::class );
-	$services->set( MollieApiClient::class );
+	$services->set( Dompdf::class )->lazy();
+	$services->set( MollieApiClient::class )->lazy();
 
 	// Register repositories with managers.
 	$services->set( PaymentProviderFactory::class )
