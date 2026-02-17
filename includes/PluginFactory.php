@@ -13,7 +13,6 @@ namespace IseardMedia\Kudos;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use RuntimeException;
 
 /**
  * Class PluginFactory
@@ -25,7 +24,7 @@ class PluginFactory {
 	/**
 	 * Create and return an instance of the plugin.
 	 *
-	 * @throws RuntimeException | NotFoundExceptionInterface | ContainerExceptionInterface If container fails or does not contain the Plugin class.
+	 * @throws \RuntimeException | NotFoundExceptionInterface | ContainerExceptionInterface If container fails or does not contain the Plugin class.
 	 *
 	 * @return Plugin Plugin instance.
 	 */
@@ -37,7 +36,7 @@ class PluginFactory {
 			return $plugin;
 		}
 
-		$kernel       = new Kernel( false );
+		$kernel       = new Kernel( true );
 		self::$kernel = $kernel;
 		$container    = $kernel->get_container();
 
