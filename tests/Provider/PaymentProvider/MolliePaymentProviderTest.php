@@ -8,8 +8,12 @@ use IseardMedia\Kudos\Domain\Repository\DonorRepository;
 use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 use IseardMedia\Kudos\Tests\BaseTestCase;
-use IseardMedia\Kudos\ThirdParty\Mollie\Api\Exceptions\RequestException;
-use IseardMedia\Kudos\Tests\Stubs\TestableMollieApiClient;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Fake\MockMollieClient;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Fake\MockResponse;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\PendingRequest;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\Requests\CreateCustomerRequest;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\Http\Requests\CreatePaymentRequest;
+use IseardMedia\Kudos\ThirdParty\Mollie\Api\MollieApiClient;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Customer;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Resources\Payment;
 use IseardMedia\Kudos\ThirdParty\Mollie\Api\Types\SequenceType;
@@ -21,20 +25,25 @@ use Psr\Log\LoggerInterface;
  */
 class MolliePaymentProviderTest extends BaseTestCase {
 
+	private MockMollieClient $client;
 	private MolliePaymentProvider $vendor;
-	private TestableMollieApiClient $api_mock;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->api_mock = $this->createMock(TestableMollieApiClient::class);
-		$logger = $this->createMock(LoggerInterface::class);
-		$transactions = $this->get_from_container(TransactionRepository::class);
-		$donors = $this->get_from_container(DonorRepository::class);
-		$campaigns = $this->get_from_container(CampaignRepository::class);
-		$subscriptions = $this->get_from_container(SubscriptionRepository::class);
-		$this->vendor   = new MolliePaymentProvider($this->api_mock, $campaigns, $transactions, $donors, $subscriptions);
-		$this->vendor->setLogger($logger);
+		$this->client = MollieApiClient::fake([
+			CreatePaymentRequest::class => MockResponse::resource(Payment::class)->with([
+				'id' => 'tr_abc123',
+				'_links' => [
+					'checkout' => [
+						'href' => 'https://mollie.com/checkout/123',
+						'type' => 'text/html',
+					],
+				],
+			])->create(),
+		], true);
+
+		$this->vendor = $this->create_vendor($this->client);
 	}
 
 	/**
@@ -51,10 +60,11 @@ class MolliePaymentProviderTest extends BaseTestCase {
 	 * Test that create_payment updates the return url.
 	 */
 	public function test_creates_payment_update_redirect_url(): void {
-		$this->create_payment_fixture(['show_return_message' => true], function ($args) {
-			$this->assertArrayHasKey('redirectUrl', $args);
-			$this->assertStringContainsString('kudos_transaction_id=', $args['redirectUrl']);
-			return true;
+		$this->create_payment_fixture(['show_return_message' => true]);
+
+		$this->client->assertSent(function (PendingRequest $request) {
+			return $request->payload()->has('redirectUrl')
+				&& strpos($request->payload()->get('redirectUrl'), 'kudos_transaction_id=') !== false;
 		});
 	}
 
@@ -62,10 +72,11 @@ class MolliePaymentProviderTest extends BaseTestCase {
 	 * Test that create_payment does not update the return url.
 	 */
 	public function test_creates_payment_not_update_redirect_url(): void {
-		$this->create_payment_fixture(['show_return_message' => false], function ($args) {
-			$this->assertArrayHasKey('redirectUrl', $args);
-			$this->assertStringNotContainsString('kudos_transaction_id=', $args['redirectUrl']);
-			return true;
+		$this->create_payment_fixture(['show_return_message' => false]);
+
+		$this->client->assertSent(function (PendingRequest $request) {
+			return $request->payload()->has('redirectUrl')
+				&& strpos($request->payload()->get('redirectUrl'), 'kudos_transaction_id=') === false;
 		});
 	}
 
@@ -76,9 +87,10 @@ class MolliePaymentProviderTest extends BaseTestCase {
 		$this->create_payment_fixture([
 			'recurring' => 'true',
 			'recurring_frequency' => '1 month',
-		], function ($args) {
-			$this->assertSame(SequenceType::FIRST, $args['sequenceType']);
-			return true;
+		]);
+
+		$this->client->assertSent(function (PendingRequest $request) {
+			return $request->payload()->get('sequenceType') === SequenceType::FIRST;
 		});
 	}
 
@@ -88,9 +100,10 @@ class MolliePaymentProviderTest extends BaseTestCase {
 	public function test_creates_payment_sets_sequence_type_to_oneoff_for_non_recurring(): void {
 		$this->create_payment_fixture([
 			'recurring' => 'false',
-		], function ($args) {
-			$this->assertSame(SequenceType::ONEOFF, $args['sequenceType']);
-			return true;
+		]);
+
+		$this->client->assertSent(function (PendingRequest $request) {
+			return $request->payload()->get('sequenceType') === SequenceType::ONEOFF;
 		});
 	}
 
@@ -98,41 +111,37 @@ class MolliePaymentProviderTest extends BaseTestCase {
 	 * Test that the Mollie payment metadata is created correctly.
 	 */
 	public function test_creates_payment_includes_expected_metadata(): void {
-		$this->create_payment_fixture([], function ($args) {
-			$meta = $args['metadata'];
-			$this->assertSame('john.smith@example.com', $meta['email']);
-			$this->assertSame('John Smith', $meta['name']);
-			$this->assertArrayHasKey('campaign_id', $meta);
-			$this->assertArrayHasKey('transaction_id', $meta);
-			return true;
+		$this->create_payment_fixture();
+
+		$this->client->assertSent(function (PendingRequest $request) {
+			$meta = $request->payload()->get('metadata');
+			return $meta['email'] === 'john.smith@example.com'
+				&& $meta['name'] === 'John Smith'
+				&& isset($meta['campaign_id'])
+				&& isset($meta['transaction_id']);
 		});
 	}
 
 	/**
-	 * Test that customer
+	 * Test that customer id is included in payment request.
 	 */
 	public function test_creates_payment_with_customer_id(): void {
-		$this->create_payment_fixture([], function ($args) {
-			$this->assertSame('cst_abc123', $args['customerId']);
-			return true;
-		}, 'cst_abc123');
+		$this->create_payment_fixture([], 'cst_abc123');
+
+		$this->client->assertSent(function (PendingRequest $request) {
+			return $request->payload()->get('customerId') === 'cst_abc123';
+		});
 	}
 
 	/**
 	 * Test that create_payment returns false if exception thrown by Mollie api.
 	 */
 	public function test_create_payment_returns_false_on_failure(): void {
-		$request_exception_mock = $this->createMock(RequestException::class);
-		$payments_mock = $this->getMockBuilder(\stdClass::class)
-		                      ->addMethods(['create'])
-		                      ->getMock();
-		$payments_mock->expects($this->once())
-		              ->method('create')
-		              ->willThrowException($request_exception_mock);
+		$client = MollieApiClient::fake([
+			CreatePaymentRequest::class => MockResponse::unprocessableEntity(),
+		]);
+		$vendor = $this->create_vendor($client);
 
-		$this->api_mock->payments = $payments_mock;
-
-		// Setup required entities
 		$campaign = new CampaignEntity(['title' => 'Fail campaign']);
 		$campaign_id = $this->get_from_container(CampaignRepository::class)->insert($campaign);
 		$payment_args = [
@@ -154,7 +163,7 @@ class MolliePaymentProviderTest extends BaseTestCase {
 		$transaction_id = $transactions->insert($transaction);
 		$transaction = $transactions->get($transaction_id);
 
-		$result = $this->vendor->create_payment($payment_args, $transaction);
+		$result = $vendor->create_payment($payment_args, $transaction);
 
 		$this->assertFalse($result);
 	}
@@ -163,19 +172,17 @@ class MolliePaymentProviderTest extends BaseTestCase {
 	 * Test that valid customer is created.
 	 */
 	public function test_creates_customer(): void {
-		$customer_mock = $this->createMock(Customer::class);
-		$customers_mock = $this->getMockBuilder(\stdClass::class)
-		                       ->addMethods(['create'])
-		                       ->getMock();
-		$customers_mock->expects($this->once())
-		               ->method('create')
-		               ->willReturn($customer_mock);
+		$client = MollieApiClient::fake([
+			CreateCustomerRequest::class => MockResponse::resource(Customer::class)->create(),
+		]);
+		$vendor = $this->create_vendor($client);
 
-		$this->api_mock->customers = $customers_mock;
+		$customer = $vendor->create_customer('Jane Doe', 'jane@example.com');
 
-		$customer = $this->vendor->create_customer('Jane Doe', 'jane@example.com');
-
-		$this->assertSame($customer_mock, $customer);
+		$this->assertInstanceOf(Customer::class, $customer);
+		$client->assertSent(function (PendingRequest $request) {
+			return get_class($request->getRequest()) === CreateCustomerRequest::class;
+		});
 	}
 
 	/**
@@ -186,13 +193,29 @@ class MolliePaymentProviderTest extends BaseTestCase {
 	}
 
 	/**
+	 * Creates a MolliePaymentProvider with the given API client.
+	 */
+	private function create_vendor(MockMollieClient $client): MolliePaymentProvider {
+		$logger = $this->createMock(LoggerInterface::class);
+		$vendor = new MolliePaymentProvider(
+			$client,
+			$this->get_from_container(CampaignRepository::class),
+			$this->get_from_container(TransactionRepository::class),
+			$this->get_from_container(DonorRepository::class),
+			$this->get_from_container(SubscriptionRepository::class)
+		);
+		$vendor->setLogger($logger);
+
+		return $vendor;
+	}
+
+	/**
 	 * Creates a payment with default values that can be overridden.
 	 *
 	 * @param array $overrides Values to override.
-	 * @param \Closure|null $assert_callback Callback.
 	 * @param ?string $vendor_customer_id The vendor customer id.
 	 */
-	private function create_payment_fixture(array $overrides = [], \Closure $assert_callback = null, ?string $vendor_customer_id = null): array {
+	private function create_payment_fixture(array $overrides = [], ?string $vendor_customer_id = null): array {
 		$default_args = [
 			'amount' => [ 'currency' => 'EUR', 'value' => '10.00' ],
 			'description' => 'Test donation',
@@ -200,7 +223,7 @@ class MolliePaymentProviderTest extends BaseTestCase {
 			'recurring_length' => '0',
 			'value' => 10,
 			'return_url' => 'https://example.com',
-			'campaign_id' => null, // will be filled dynamically
+			'campaign_id' => null,
 			'currency' => 'EUR',
 			'email' => 'john.smith@example.com',
 			'name' => 'John Smith'
@@ -218,27 +241,6 @@ class MolliePaymentProviderTest extends BaseTestCase {
 		$transaction = new TransactionEntity(['title' => 'Test transaction']);
 		$transaction_id = $transactions->insert($transaction);
 		$transaction = $transactions->get($transaction_id);
-
-		$payment_mock = $this->createMock(Payment::class);
-		$payment_mock->method('getCheckoutUrl')->willReturn('https://mollie.com/checkout/123');
-		$payment_mock->id = 'tr_abc123';
-
-		$payments_mock = $this->getMockBuilder(\stdClass::class)
-		                      ->addMethods(['create'])
-		                      ->getMock();
-
-		if ($assert_callback) {
-			$payments_mock->expects($this->once())
-			              ->method('create')
-			              ->with($this->callback($assert_callback))
-			              ->willReturn($payment_mock);
-		} else {
-			$payments_mock->expects($this->once())
-			              ->method('create')
-			              ->willReturn($payment_mock);
-		}
-
-		$this->api_mock->payments = $payments_mock;
 
 		$checkout_url = $this->vendor->create_payment($payment_args, $transaction, $vendor_customer_id);
 
