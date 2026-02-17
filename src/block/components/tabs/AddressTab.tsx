@@ -3,8 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import BaseTab from './BaseTab';
 import React from 'react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useMemo } from '@wordpress/element';
-import countryList from 'react-select-country-list';
+import { useEffect } from '@wordpress/element';
 import { SelectControl, TextControl } from '../controls';
 import type { Campaign } from '../../../types/entity';
 
@@ -14,7 +13,7 @@ interface AddressTabProps {
 
 export const AddressTab = ({ campaign }: AddressTabProps) => {
 	const { address_title, address_description, address_required } = campaign;
-	const countryOptions = useMemo(() => countryList().getData(), []);
+	const { countries } = window.kudos;
 	const { setFocus } = useFormContext();
 	const optional = !address_required
 		? '(' + __('optional', 'kudos-donations') + ')'
@@ -83,7 +82,12 @@ export const AddressTab = ({ campaign }: AddressTabProps) => {
 					__('Country %s', 'kudos-donations'),
 					optional
 				)}
-				options={countryOptions}
+				options={Object.keys(countries).map((key) => {
+					return {
+						label: countries[key],
+						value: key,
+					};
+				})}
 				rules={{
 					required: {
 						value: address_required,

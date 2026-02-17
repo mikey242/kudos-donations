@@ -59,6 +59,7 @@ abstract class AbstractReactSubPage extends AbstractAdminPage implements HasCall
 				[
 					'currencies' => Utils::get_currencies(),
 					'codeEditor' => $settings,
+					'version'    => KUDOS_VERSION,
 				]
 			);
 
