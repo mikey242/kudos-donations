@@ -4,9 +4,11 @@ export interface KudosGlobal {
 	stylesheets?: string[];
 	baseFontSize?: string;
 	currencies: Record<string, string>;
-	version: string;
+	version?: string;
 	codeEditor: CodeEditorSettings;
 	needsUpgrade: boolean;
+	countries: Record<string, string>;
+	env?: string;
 	[key: string]: unknown;
 }
 

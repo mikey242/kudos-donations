@@ -14,6 +14,7 @@ namespace IseardMedia\Kudos;
 use IseardMedia\Kudos\Container\Handler\ActivationHandler;
 use IseardMedia\Kudos\Container\Handler\RegistrableHandler;
 use IseardMedia\Kudos\Container\SafeLoggerTrait;
+use IseardMedia\Kudos\Helper\Country;
 use IseardMedia\Kudos\Service\CacheService;
 use Psr\Log\LoggerAwareInterface;
 use Throwable;
@@ -95,8 +96,8 @@ class Plugin implements LoggerAwareInterface {
 		add_filter(
 			'kudos_global_localization',
 			function ( array $localization ): array {
-				$localization['version'] = KUDOS_VERSION;
-				$localization['env']     = KUDOS_APP_ENV;
+				$localization['env']       = KUDOS_APP_ENV;
+				$localization['countries'] = Country::get_countries();
 				return $localization;
 			}
 		);

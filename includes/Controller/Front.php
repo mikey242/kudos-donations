@@ -101,13 +101,16 @@ class Front extends AbstractRegistrable implements HasSettingsInterface {
 			wp_localize_script(
 				$handle,
 				'kudos',
-				[
-					'stylesheets'  => [
-						Assets::get_style( 'front/block/kudos-front.css' ),
-					],
-					'currencies'   => Utils::get_currencies(),
-					'baseFontSize' => get_option( SettingsService::SETTING_BASE_FONT_SIZE ),
-				]
+				apply_filters(
+					'kudos_global_localization',
+					[
+						'stylesheets'  => [
+							Assets::get_style( 'front/block/kudos-front.css' ),
+						],
+						'currencies'   => Utils::get_currencies(),
+						'baseFontSize' => get_option( SettingsService::SETTING_BASE_FONT_SIZE ),
+					]
+				)
 			);
 			wp_set_script_translations(
 				$handle,
