@@ -2,10 +2,10 @@
 	"features": {
 		"networking": true
 	},
-	"landingPage": "/wp-admin/admin.php?page=kudos-settings",
+	"landingPage": "/wp-admin/admin.php?page=kudos-campaigns",
 	"preferredVersions": {
-		"php": "7.4",
-		"wp": "6.8"
+		"php": "8.4",
+		"wp": "latest"
 	},
 	"phpExtensionBundles": ["kitchen-sink"],
 	"steps": [
@@ -13,6 +13,13 @@
 			"step": "login",
 			"username": "admin",
 			"password": "password"
+		},
+		{
+			"step": "defineWpConfigConsts",
+			"consts": {
+				"KUDOS_DEMO_MODE": true
+			}
 		}
+
 	]
 }
