@@ -41,7 +41,7 @@ class Transaction extends BaseRepositoryRestController {
 	 */
 	protected function add_rest_fields( BaseEntity $item ): array {
 		$item->campaign     = $this->repository->get_campaign( $item, [ 'title' ] );
-		$item->donor        = $this->repository->get_donor( $item, [ 'name' ] );
+		$item->donor        = $this->repository->get_donor( $item, [ 'name', 'email' ] );
 		$item->subscription = $this->repository->get_subscription( $item );
 
 		if ( 'paid' === $item->status ) {
