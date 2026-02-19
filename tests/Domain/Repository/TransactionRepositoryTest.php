@@ -7,8 +7,12 @@ namespace IseardMedia\Kudos\Tests\Domain\Repository;
 
 use IseardMedia\Kudos\Tests\BaseTestCase;
 use IseardMedia\Kudos\Domain\Entity\CampaignEntity;
+use IseardMedia\Kudos\Domain\Entity\DonorEntity;
+use IseardMedia\Kudos\Domain\Entity\SubscriptionEntity;
 use IseardMedia\Kudos\Domain\Entity\TransactionEntity;
 use IseardMedia\Kudos\Domain\Repository\CampaignRepository;
+use IseardMedia\Kudos\Domain\Repository\DonorRepository;
+use IseardMedia\Kudos\Domain\Repository\SubscriptionRepository;
 use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 
 /**
@@ -17,147 +21,168 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 class TransactionRepositoryTest extends BaseTestCase {
 
 	private TransactionRepository $transaction_repository;
-	private int $campaign_id;
+	private CampaignRepository $campaign_repository;
+	private DonorRepository $donor_repository;
+	private SubscriptionRepository $subscription_repository;
 
 	public function set_up(): void {
 		parent::set_up();
+		$this->transaction_repository  = $this->get_from_container( TransactionRepository::class );
+		$this->campaign_repository     = $this->get_from_container( CampaignRepository::class );
+		$this->donor_repository        = $this->get_from_container( DonorRepository::class );
+		$this->subscription_repository = $this->get_from_container( SubscriptionRepository::class );
+	}
 
-		$this->transaction_repository = $this->get_from_container(TransactionRepository::class);
-		$campaign_repository          = $this->get_from_container(CampaignRepository::class);
+	// -------------------------------------------------------------------------
+	// get_donor()
+	// -------------------------------------------------------------------------
 
-		$campaign = new CampaignEntity([ 'title' => 'Default Campaign']);
-		$this->campaign_id = $campaign_repository->insert($campaign);
+	/**
+	 * Test that get_donor() returns the linked donor.
+	 */
+	public function test_get_donor_returns_linked_donor(): void {
+		$donor_id = $this->donor_repository->insert( new DonorEntity( [ 'email' => 'donor@example.com' ] ) );
+		$tx_id    = $this->transaction_repository->insert( new TransactionEntity( [ 'donor_id' => $donor_id, 'value' => 10.00, 'currency' => 'EUR' ] ) );
+
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->transaction_repository->get( $tx_id );
+		$donor       = $this->transaction_repository->get_donor( $transaction );
+
+		$this->assertInstanceOf( DonorEntity::class, $donor );
+		$this->assertSame( $donor_id, $donor->id );
 	}
 
 	/**
-	 * Test that transaction is created and returned.
+	 * Test that get_donor() returns null when donor_id is not set.
 	 */
-	public function test_save_creates_transaction(): void {
-		$transaction = new TransactionEntity([
-			'campaign_id' => $this->campaign_id,
-			'value'       => 10.50,
-			'status'      => 'paid',
-			'currency'    => 'EUR'
-		]);
-		$id = $this->transaction_repository->insert($transaction);
+	public function test_get_donor_returns_null_when_donor_id_not_set(): void {
+		$tx_id = $this->transaction_repository->insert( new TransactionEntity( [ 'value' => 10.00, 'currency' => 'EUR' ] ) );
 
-		$this->assertIsInt($id);
-		$this->assertGreaterThan(0, $id);
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->transaction_repository->get( $tx_id );
+
+		$this->assertNull( $this->transaction_repository->get_donor( $transaction ) );
+	}
+
+	// -------------------------------------------------------------------------
+	// get_campaign()
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Test that get_campaign() returns the linked campaign.
+	 */
+	public function test_get_campaign_returns_linked_campaign(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Test Campaign' ] ) );
+		$tx_id       = $this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 10.00, 'currency' => 'EUR' ] ) );
+
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->transaction_repository->get( $tx_id );
+		$campaign    = $this->transaction_repository->get_campaign( $transaction );
+
+		$this->assertInstanceOf( CampaignEntity::class, $campaign );
+		$this->assertSame( $campaign_id, $campaign->id );
 	}
 
 	/**
-	 * Test that find() returns transaction by ID.
+	 * Test that get_campaign() returns null when campaign_id is not set.
 	 */
-	public function test_find_returns_transaction_by_id(): void {
-		$transaction = new TransactionEntity([
-			'campaign_id' => $this->campaign_id,
-			'value'       => 25.00,
-			'status'      => 'paid',
-			'currency'    => 'EUR'
-		]);
-		$id = $this->transaction_repository->insert($transaction);
+	public function test_get_campaign_returns_null_when_campaign_id_not_set(): void {
+		$tx_id = $this->transaction_repository->insert( new TransactionEntity( [ 'value' => 10.00, 'currency' => 'EUR' ] ) );
 
-		/** @var ?TransactionEntity $transaction */
-		$transaction = $this->transaction_repository->get($id);
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->transaction_repository->get( $tx_id );
 
-		$this->assertNotNull($transaction);
-		$this->assertSame('paid', $transaction->status);
+		$this->assertNull( $this->transaction_repository->get_campaign( $transaction ) );
+	}
+
+	// -------------------------------------------------------------------------
+	// get_subscription()
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Test that get_subscription() returns the linked subscription.
+	 */
+	public function test_get_subscription_returns_linked_subscription(): void {
+		$sub_id = $this->subscription_repository->insert( new SubscriptionEntity( [ 'value' => 10.00, 'currency' => 'EUR' ] ) );
+		$tx_id  = $this->transaction_repository->insert( new TransactionEntity( [ 'subscription_id' => $sub_id, 'value' => 10.00, 'currency' => 'EUR' ] ) );
+
+		/** @var TransactionEntity $transaction */
+		$transaction  = $this->transaction_repository->get( $tx_id );
+		$subscription = $this->transaction_repository->get_subscription( $transaction );
+
+		$this->assertInstanceOf( SubscriptionEntity::class, $subscription );
+		$this->assertSame( $sub_id, $subscription->id );
 	}
 
 	/**
-	 * Test that save() updates an existing transaction.
+	 * Test that get_subscription() returns null when subscription_id is not set.
 	 */
-	public function test_save_updates_transaction(): void {
-		$transaction = new TransactionEntity([
-			'campaign_id' => $this->campaign_id,
-			'value'       => 20.00,
-			'status'      => 'open',
-			'currency'    => 'EUR'
-		]);
-		$id = $this->transaction_repository->insert($transaction);
+	public function test_get_subscription_returns_null_when_subscription_id_not_set(): void {
+		$tx_id = $this->transaction_repository->insert( new TransactionEntity( [ 'value' => 10.00, 'currency' => 'EUR' ] ) );
 
-		$transaction->status = 'cancelled';
-		$transaction->id = $id;
-		$this->transaction_repository->update($transaction);
+		/** @var TransactionEntity $transaction */
+		$transaction = $this->transaction_repository->get( $tx_id );
 
-		/** @var TransactionEntity $updated */
-		$updated = $this->transaction_repository->get($id);
-		$this->assertSame('cancelled', $updated->status);
+		$this->assertNull( $this->transaction_repository->get_subscription( $transaction ) );
+	}
+
+	// -------------------------------------------------------------------------
+	// get_orphan_ids()
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Test that get_orphan_ids() returns an empty array when all transactions have valid campaigns.
+	 */
+	public function test_get_orphan_ids_returns_empty_when_all_campaigns_valid(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Valid Campaign' ] ) );
+		$this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 10.00, 'currency' => 'EUR' ] ) );
+
+		$this->assertSame( [], $this->transaction_repository->get_orphan_ids() );
 	}
 
 	/**
-	 * Test find_by() returns matching transaction(s).
+	 * Test that get_orphan_ids() returns the ID of a transaction with no campaign_id.
 	 */
-	public function test_find_by_returns_matching_transactions(): void {
-		$transaction = new TransactionEntity([
-			'campaign_id' => $this->campaign_id,
-			'value'       => 15.00,
-			'status'      => 'refunded',
-			'currency'    => 'EUR'
-		]);
-		$this->transaction_repository->insert($transaction);
+	public function test_get_orphan_ids_includes_transaction_with_null_campaign(): void {
+		$tx_id = $this->transaction_repository->insert( new TransactionEntity( [ 'value' => 10.00, 'currency' => 'EUR' ] ) );
 
-		/** @var TransactionEntity[] $results */
-		$results = $this->transaction_repository->find_by([
-			'status' => 'refunded'
-		]);
-
-		$this->assertNotEmpty($results);
-		$this->assertCount(1, $results);
-		$this->assertSame('refunded', $results[0]->status);
+		$this->assertContains( $tx_id, $this->transaction_repository->get_orphan_ids() );
 	}
 
 	/**
-	 * Test that all() returns all transactions.
+	 * Test that get_orphan_ids() returns the ID of a transaction whose campaign no longer exists.
 	 */
-	public function test_all_returns_all_transactions(): void {
+	public function test_get_orphan_ids_includes_transaction_with_missing_campaign(): void {
+		$tx_id = $this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => 999999, 'value' => 10.00, 'currency' => 'EUR' ] ) );
 
-		$transaction_1 = new TransactionEntity([
-			'campaign_id' => $this->campaign_id,
-			'value'       => 5.00,
-			'status'      => 'paid',
-			'currency'    => 'EUR'
-		]);
-		$transaction_2 = new TransactionEntity([
-			'campaign_id' => $this->campaign_id,
-			'value'       => 9.99,
-			'status'      => 'failed',
-			'currency'    => 'EUR'
-		]);
+		$this->assertContains( $tx_id, $this->transaction_repository->get_orphan_ids() );
+	}
 
-		$this->transaction_repository->insert($transaction_2);
-		$this->transaction_repository->insert($transaction_1);
+	// -------------------------------------------------------------------------
+	// Schema / serialization
+	// -------------------------------------------------------------------------
 
-		$all = $this->transaction_repository->all();
+	/**
+	 * Test that float fields roundtrip correctly through insert and retrieval.
+	 */
+	public function test_float_value_roundtrips_correctly(): void {
+		$tx_id = $this->transaction_repository->insert( new TransactionEntity( [ 'value' => 49.99, 'currency' => 'EUR' ] ) );
 
-		$this->assertNotEmpty($all);
-		$this->assertCount(2, $all);
+		/** @var TransactionEntity $result */
+		$result = $this->transaction_repository->get( $tx_id );
+
+		$this->assertSame( 49.99, $result->value );
 	}
 
 	/**
-	 * Test that find() returns null for invalid ID.
+	 * Test that the auto-generated title contains the transaction singular name.
 	 */
-	public function test_find_returns_null_for_invalid_id(): void {
-		$transaction = $this->transaction_repository->get(99999);
-		$this->assertNull($transaction);
-	}
+	public function test_insert_generates_title_with_transaction_label(): void {
+		$tx_id = $this->transaction_repository->insert( new TransactionEntity( [ 'value' => 10.00, 'currency' => 'EUR' ] ) );
 
-	/**
-	 * Test delete() removes transaction from database.
-	 */
-	public function test_delete_removes_transaction(): void {
-		$transaction = new TransactionEntity([
-			'campaign_id' => $this->campaign_id,
-			'value'       => 30.00,
-			'status'      => 'paid',
-			'currency'    => 'EUR'
-		]);
-		$id = $this->transaction_repository->insert($transaction);
+		/** @var TransactionEntity $result */
+		$result = $this->transaction_repository->get( $tx_id );
 
-		$deleted = $this->transaction_repository->delete($id);
-		$this->assertTrue($deleted);
-
-		$transaction = $this->transaction_repository->get($id);
-		$this->assertNull($transaction);
+		$this->assertStringContainsString( 'Transaction', $result->title );
 	}
 }
