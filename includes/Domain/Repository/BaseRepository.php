@@ -370,6 +370,13 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryAwareInt
 	}
 
 	/**
+	 * Returns last error reported by $wpdb.
+	 */
+	public function get_last_db_error(): string {
+		return $this->wpdb->last_error ?? '';
+	}
+
+	/**
 	 * Return the linked schema instance.
 	 */
 	public function get_schema(): BaseSchema {
