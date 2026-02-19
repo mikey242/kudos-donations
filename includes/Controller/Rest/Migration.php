@@ -78,26 +78,49 @@ class Migration extends BaseRestController {
 		$history = (array) get_option( MigrationHandler::SETTING_MIGRATION_HISTORY, [] );
 
 		foreach ( $pending_migrations as $migration ) {
-			foreach ( $migration->get_jobs() as $job_name => $job_details ) {
+			$version       = $migration->get_version();
+			$transient_key = '_kudos_migration_' . $version . '_last_job';
+			$last_job      = get_transient( $transient_key );
+			$jobs          = $migration->get_jobs();
+			$job_names     = array_keys( $jobs );
+
+			// Resume from the last job if we have one stored.
+			if ( false !== $last_job ) {
+				$last_index = array_search( $last_job, $job_names, true );
+				if ( false !== $last_index ) {
+					$job_names = \array_slice( $job_names, $last_index );
+				}
+			}
+
+			foreach ( $job_names as $job_name ) {
 				$processed = $migration->run( $job_name );
 
 				if ( $processed > 0 ) {
+					// Done. Update the transient with the completed job name.
+					set_transient( $transient_key, $job_name, HOUR_IN_SECONDS );
+
 					return new WP_REST_Response(
 						[
 							'success'  => true,
 							'progress' => [
-								'version' => $migration->get_version(),
-								'job'     => $job_details['label'] ?? $job_name,
+								'version'   => $version,
+								'job'       => $jobs[ $job_name ]['label'] ?? $job_name,
+								'processed' => $processed,
 							],
 						],
 						200
 					);
 				}
 			}
-			$history[] = $migration->get_version();
+
+			delete_transient( $transient_key );
+			$history[] = $version;
+
+			// Migration complete, add to migration history.
 			update_option( MigrationHandler::SETTING_MIGRATION_HISTORY, $history );
 		}
 
+		// All migrations complete, update database version.
 		update_option( MigrationHandler::SETTING_DB_VERSION, KUDOS_DB_VERSION );
 
 		return new WP_REST_Response(
