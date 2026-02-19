@@ -342,6 +342,18 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 
 			return ( PaymentStatus::CANCELED === $response->status );
 		} catch ( ApiException $e ) {
+			// Check if the subscription is already cancelled at Mollie's end before treating this as an error.
+			try {
+				$mollie_subscription = $customer->getSubscription( $subscription->vendor_subscription_id );
+				if ( PaymentStatus::CANCELED === $mollie_subscription->status ) {
+					$this->logger->info( 'Subscription already cancelled with Mollie.', [ 'vendor_subscription_id' => $subscription->vendor_subscription_id ] );
+					return true;
+				}
+            // phpcs:ignore
+			} catch ( ApiException $inner ) {
+				// Could not verify subscription status; fall through to error.
+			}
+
 			$this->get_logger()->error( 'Error cancelling subscription:', [ 'message' => $e->getMessage() ] );
 
 			return false;
