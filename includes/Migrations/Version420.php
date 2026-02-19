@@ -135,8 +135,12 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				]
 			);
 
-			$donor_repo->insert( $donor );
-			$this->logger->info( "Migrated donor post $post_id", [ 'data' => $donor->to_array() ] );
+			$result = $donor_repo->insert( $donor );
+			if ( false === $result ) {
+				$this->logger->error( "Failed to insert donor post $post_id", [ 'db_error' => $donor_repo->get_last_db_error() ] );
+			} else {
+				$this->logger->info( "Migrated donor post $post_id", [ 'id' => $result ] );
+			}
 		}
 
 		return \count( $ids );
@@ -210,8 +214,12 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 					'updated_at'                 => get_post_modified_time( 'Y-m-d H:i:s', true, $post_id ),
 				]
 			);
-			$campaign_repo->insert( $campaign );
-			$this->logger->info( "Migrated campaign post $post_id", [ 'data' => $campaign->to_array() ] );
+			$result   = $campaign_repo->insert( $campaign );
+			if ( false === $result ) {
+				$this->logger->error( "Failed to insert campaign post $post_id", [ 'db_error' => $campaign_repo->get_last_db_error() ] );
+			} else {
+				$this->logger->info( "Migrated campaign post $post_id", [ 'id' => $result ] );
+			}
 		}
 
 		return \count( $ids );
@@ -280,8 +288,12 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				]
 			);
 
-			$transaction_repo->insert( $transaction );
-			$this->logger->info( "Migrated transaction post $post_id", [ 'data' => $transaction->to_array() ] );
+			$result = $transaction_repo->insert( $transaction );
+			if ( false === $result ) {
+				$this->logger->error( "Failed to insert transaction post $post_id", [ 'db_error' => $transaction_repo->get_last_db_error() ] );
+			} else {
+				$this->logger->info( "Migrated transaction post $post_id", [ 'id' => $result ] );
+			}
 		}
 
 		return \count( $ids );
@@ -368,8 +380,12 @@ class Version420 extends BaseMigration implements RepositoryAwareInterface {
 				]
 			);
 
-			$subscription_repo->insert( $subscription );
-			$this->logger->info( "Migrated subscription post $post_id", [ 'data' => $subscription->to_array() ] );
+			$result = $subscription_repo->insert( $subscription );
+			if ( false === $result ) {
+				$this->logger->error( "Failed to insert subscription post $post_id", [ 'db_error' => $subscription_repo->get_last_db_error() ] );
+			} else {
+				$this->logger->info( "Migrated subscription post $post_id", [ 'data' => $subscription->to_array() ] );
+			}
 		}
 
 		return \count( $ids );
