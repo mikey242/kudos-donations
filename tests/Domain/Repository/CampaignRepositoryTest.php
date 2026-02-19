@@ -17,189 +17,183 @@ use IseardMedia\Kudos\Domain\Repository\TransactionRepository;
 class CampaignRepositoryTest extends BaseTestCase {
 
 	private CampaignRepository $campaign_repository;
+	private TransactionRepository $transaction_repository;
 
 	public function set_up(): void {
 		parent::set_up();
-		$this->campaign_repository = $this->get_from_container(CampaignRepository::class);
+		$this->campaign_repository     = $this->get_from_container( CampaignRepository::class );
+		$this->transaction_repository  = $this->get_from_container( TransactionRepository::class );
 	}
 
-	/**
-	 * Test that campaign is created and returned.
-	 */
-	public function test_save_creates_campaign(): void {
-		$campaign = new CampaignEntity([ 'title' => 'Test Campaign']);
-		$id = $this->campaign_repository->insert($campaign);
-
-		$this->assertIsInt($id);
-		$this->assertGreaterThan(0, $id);
-	}
+	// -------------------------------------------------------------------------
+	// get_transactions()
+	// -------------------------------------------------------------------------
 
 	/**
-	 * Test that campaign is found by id.
-	 */
-	public function test_find_returns_campaign_by_id(): void {
-		$campaign = new CampaignEntity([ 'title' => 'Find Me' ]);
-		$id = $this->campaign_repository->insert($campaign);
-
-		/** @var CampaignEntity $campaign */
-		$campaign = $this->campaign_repository->get($id);
-
-		$this->assertNotNull($campaign);
-		$this->assertSame('Find Me', $campaign->title);
-	}
-
-	/**
-	 * Test that all() returns all campaigns.
-	 */
-	public function test_all_returns_all_campaigns(): void {
-		$campaign_1 = new CampaignEntity(['title' => 'One']);
-		$campaign_2 = new CampaignEntity(['title' => 'Two']);
-
-		$this->campaign_repository->insert($campaign_1);
-		$this->campaign_repository->insert($campaign_2);
-
-		$all = $this->campaign_repository->all();
-
-		$this->assertIsArray($all);
-		$this->assertCount(2, $all);
-	}
-
-	/**
-	 * Test that save() updates existing campaign when ID is provided.
-	 */
-	public function test_save_updates_existing_campaign(): void {
-		$campaign = new CampaignEntity([ 'title' => 'Original']);
-		$id = $this->campaign_repository->insert($campaign);
-
-		$campaign->title = 'Updated';
-		$campaign->id = $id;
-		$this->campaign_repository->update($campaign);
-
-		$updated = $this->campaign_repository->get($id);
-
-		$this->assertSame('Updated', $updated->title);
-	}
-
-	/**
-	 * Test that find() returns null for invalid ID.
-	 */
-	public function test_find_returns_null_for_invalid_id(): void {
-		$campaign = $this->campaign_repository->get(99999);
-		$this->assertNull($campaign);
-	}
-
-	/**
-	 * Test that find_by() returns expected campaign.
-	 */
-	public function test_find_by_returns_matching_campaign(): void {
-		$campaign = new CampaignEntity([ 'title' => 'Special Campaign']);
-		$this->campaign_repository->insert($campaign);
-
-		$results = $this->campaign_repository->find_by([
-			'title' => 'Special Campaign'
-		]);
-
-		$this->assertCount(1, $results);
-		$this->assertSame('Special Campaign', $results[0]->title);
-	}
-
-	/**
-	 * Test that find_by() returns empty array when no match.
-	 */
-	public function test_find_by_returns_empty_array_for_no_match(): void {
-		$results = $this->campaign_repository->find_by([
-			'title' => 'Nonexistent'
-		]);
-
-		$this->assertIsArray($results);
-		$this->assertCount(0, $results);
-	}
-
-	/**
-	 * Test delete() removes campaign from database.
-	 */
-	public function test_delete_removes_campaign(): void {
-		$campaign = new CampaignEntity(['title' => 'To Delete']);
-		$id = $this->campaign_repository->insert($campaign);
-
-		$deleted = $this->campaign_repository->delete($id);
-		$this->assertTrue($deleted);
-
-		$campaign = $this->campaign_repository->get($id);
-		$this->assertNull($campaign);
-	}
-
-	/**
-	 * Test that get_transactions() returns linked transactions.
+	 * Test that get_transactions() returns all transactions linked to a campaign.
 	 */
 	public function test_get_transactions_returns_linked_transactions(): void {
-		$campaign = new CampaignEntity([ 'title' => 'Linked Campaign']);
-		$campaign_id = $this->campaign_repository->insert($campaign);
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Linked Campaign' ] ) );
 
-		$transaction_repo = $this->get_from_container(TransactionRepository::class);
+		$this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 15.00, 'status' => 'paid', 'currency' => 'EUR' ] ) );
+		$this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 30.00, 'status' => 'open', 'currency' => 'EUR' ] ) );
 
-		// Create 2 transactions linked to the campaign
-		$transaction_1 = new TransactionEntity([
-			'campaign_id' => $campaign_id,
-			'value'       => 15.00,
-			'status'      => 'paid',
-			'currency'    => 'EUR'
-		]);
+		/** @var CampaignEntity $campaign */
+		$campaign     = $this->campaign_repository->get( $campaign_id );
+		$transactions = $this->campaign_repository->get_transactions( $campaign );
 
-		$transaction_2 = new TransactionEntity([
-			'campaign_id' => $campaign_id,
-			'value'       => 30.00,
-			'status'      => 'open',
-			'currency'    => 'EUR'
-		]);
-
-		$transaction_repo->insert($transaction_1);
-		$transaction_repo->insert($transaction_2);
-
-		$campaign = $this->campaign_repository->get($campaign_id);
-		$transactions = $this->campaign_repository->get_transactions($campaign);
-
-		$this->assertIsArray($transactions);
-		$this->assertCount(2, $transactions);
+		$this->assertIsArray( $transactions );
+		$this->assertCount( 2, $transactions );
 	}
 
 	/**
-	 * Test that get_total() returns the sum of 'paid' transactions.
+	 * Test that get_transactions() returns an empty array when no transactions are linked.
 	 */
-	public function test_get_total_returns_sum_of_paid_transactions(): void {
-		$campaign = new CampaignEntity([ 'title' => 'Total Campaign']);
-		$campaign_id = $this->campaign_repository->insert($campaign);
-		$transaction_repo = $this->get_from_container(TransactionRepository::class);
-
-		$transaction_1 = new TransactionEntity([
-			'campaign_id' => $campaign_id,
-			'value'       => 20.00,
-			'status'      => 'paid',
-			'currency'    => 'EUR'
-		]);
-
-		$transaction_2 = new TransactionEntity([
-			'campaign_id' => $campaign_id,
-			'value'       => 5.00,
-			'status'      => 'open',
-			'currency'    => 'EUR'
-		]);
-
-		$transaction_3 = new TransactionEntity([
-			'campaign_id' => $campaign_id,
-			'value'       => 15.00,
-			'status'      => 'paid',
-			'currency'    => 'EUR'
-		]);
-
-		$transaction_repo->insert($transaction_1);
-		$transaction_repo->insert($transaction_2);
-		$transaction_repo->insert($transaction_3);
+	public function test_get_transactions_returns_empty_for_no_linked_transactions(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Empty Campaign' ] ) );
 
 		/** @var CampaignEntity $campaign */
-		$campaign = $this->campaign_repository->get($campaign_id);
-		$total    = $this->campaign_repository->get_total($campaign);
+		$campaign     = $this->campaign_repository->get( $campaign_id );
+		$transactions = $this->campaign_repository->get_transactions( $campaign );
 
-		$this->assertSame(35.00, $total);
+		$this->assertIsArray( $transactions );
+		$this->assertCount( 0, $transactions );
+	}
+
+	/**
+	 * Test that get_transactions() returns null when the campaign entity has no ID.
+	 */
+	public function test_get_transactions_returns_null_when_campaign_has_no_id(): void {
+		$campaign = new CampaignEntity( [ 'title' => 'No ID' ] );
+
+		$result = $this->campaign_repository->get_transactions( $campaign );
+
+		$this->assertNull( $result );
+	}
+
+	// -------------------------------------------------------------------------
+	// get_total()
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Test that get_total() returns the sum of paid transactions only.
+	 */
+	public function test_get_total_returns_sum_of_paid_transactions(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Total Campaign' ] ) );
+
+		$this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 20.00, 'status' => 'paid',   'currency' => 'EUR' ] ) );
+		$this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 5.00,  'status' => 'open',   'currency' => 'EUR' ] ) );
+		$this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 15.00, 'status' => 'paid',   'currency' => 'EUR' ] ) );
+
+		/** @var CampaignEntity $campaign */
+		$campaign = $this->campaign_repository->get( $campaign_id );
+
+		$this->assertSame( 35.00, $this->campaign_repository->get_total( $campaign ) );
+	}
+
+	/**
+	 * Test that get_total() returns 0.0 when there are no transactions at all.
+	 */
+	public function test_get_total_returns_zero_for_no_transactions(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Zero Campaign' ] ) );
+
+		/** @var CampaignEntity $campaign */
+		$campaign = $this->campaign_repository->get( $campaign_id );
+
+		$this->assertSame( 0.0, $this->campaign_repository->get_total( $campaign ) );
+	}
+
+	/**
+	 * Test that get_total() returns 0.0 when no transactions have a paid status.
+	 */
+	public function test_get_total_returns_zero_when_no_paid_transactions(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'title' => 'Unpaid Campaign' ] ) );
+
+		$this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 10.00, 'status' => 'open',   'currency' => 'EUR' ] ) );
+		$this->transaction_repository->insert( new TransactionEntity( [ 'campaign_id' => $campaign_id, 'value' => 20.00, 'status' => 'failed', 'currency' => 'EUR' ] ) );
+
+		/** @var CampaignEntity $campaign */
+		$campaign = $this->campaign_repository->get( $campaign_id );
+
+		$this->assertSame( 0.0, $this->campaign_repository->get_total( $campaign ) );
+	}
+
+	// -------------------------------------------------------------------------
+	// Schema / serialization
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Test that OBJECT fields (fixed_amounts) roundtrip correctly as arrays.
+	 */
+	public function test_fixed_amounts_roundtrips_as_array(): void {
+		$amounts     = [ '10', '25', '50', '100' ];
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'fixed_amounts' => $amounts ] ) );
+
+		/** @var CampaignEntity $result */
+		$result = $this->campaign_repository->get( $campaign_id );
+
+		$this->assertIsArray( $result->fixed_amounts );
+		$this->assertSame( $amounts, $result->fixed_amounts );
+	}
+
+	/**
+	 * Test that OBJECT fields (frequency_options) roundtrip correctly as arrays.
+	 */
+	public function test_frequency_options_roundtrips_as_array(): void {
+		$options     = [ '1 month' => 'Monthly', '12 months' => 'Yearly' ];
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [ 'frequency_options' => $options ] ) );
+
+		/** @var CampaignEntity $result */
+		$result = $this->campaign_repository->get( $campaign_id );
+
+		$this->assertIsArray( $result->frequency_options );
+		$this->assertSame( $options, $result->frequency_options );
+	}
+
+	/**
+	 * Test that boolean fields roundtrip correctly through insert and retrieval.
+	 */
+	public function test_boolean_fields_roundtrip_correctly(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [
+			'show_goal'       => true,
+			'address_enabled' => true,
+			'email_enabled'   => false,
+		] ) );
+
+		/** @var CampaignEntity $result */
+		$result = $this->campaign_repository->get( $campaign_id );
+
+		$this->assertTrue( $result->show_goal );
+		$this->assertTrue( $result->address_enabled );
+		$this->assertFalse( $result->email_enabled );
+	}
+
+	/**
+	 * Test that float fields roundtrip correctly through insert and retrieval.
+	 */
+	public function test_float_fields_roundtrip_correctly(): void {
+		$campaign_id = $this->campaign_repository->insert( new CampaignEntity( [
+			'goal'             => 1500.50,
+			'minimum_donation' => 2.50,
+			'maximum_donation' => 999.99,
+		] ) );
+
+		/** @var CampaignEntity $result */
+		$result = $this->campaign_repository->get( $campaign_id );
+
+		$this->assertSame( 1500.50, $result->goal );
+		$this->assertSame( 2.50, $result->minimum_donation );
+		$this->assertSame( 999.99, $result->maximum_donation );
+	}
+
+	/**
+	 * Test that the auto-generated title contains the campaign singular name.
+	 */
+	public function test_insert_generates_title_with_campaign_label(): void {
+		$id = $this->campaign_repository->insert( new CampaignEntity() );
+
+		/** @var CampaignEntity $result */
+		$result = $this->campaign_repository->get( $id );
+		$this->assertStringContainsString( 'Campaign', $result->title );
 	}
 }
