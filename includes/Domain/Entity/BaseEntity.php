@@ -25,7 +25,7 @@ class BaseEntity {
 	 * @param array<string, mixed> $data The raw row data.
 	 * @param bool                 $apply_defaults Whether to merge incoming data with specified defaults.
 	 */
-	public function __construct( array $data, bool $apply_defaults = true ) {
+	public function __construct( array $data = [], bool $apply_defaults = true ) {
 		$this->merge( $apply_defaults ? array_merge( $this->defaults(), $data ) : $data );
 	}
 
