@@ -4,7 +4,7 @@
  *
  * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2025 Iseard Media
+ * @copyright 2026 Iseard Media
  *
  * @phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
  */

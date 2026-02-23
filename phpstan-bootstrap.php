@@ -4,7 +4,7 @@
  *
  * @link https://gitlab.iseard.media/michael/kudos-donations
  *
- * @copyright 2025 Iseard Media
+ * @copyright 2026 Iseard Media
  */
 
 declare( strict_types=1 );

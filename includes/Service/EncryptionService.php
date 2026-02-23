@@ -5,7 +5,7 @@
  * @link https://github.com/mikey242/kudos-donations/
  * @see https://permanenttourist.ch/2023/03/storing-credentials-securely-in-wordpress-plugin-settings/
  *
- * @copyright 2025 Iseard Media
+ * @copyright 2026 Iseard Media
  */
 
 declare(strict_types=1);

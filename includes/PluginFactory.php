@@ -4,7 +4,7 @@
  *
  * @link https://github.com/mikey242/kudos-donations
  *
- * @copyright 2025 Iseard Media
+ * @copyright 2026 Iseard Media
  */
 
 declare(strict_types=1);
@@ -36,7 +36,7 @@ class PluginFactory {
 			return $plugin;
 		}
 
-		$kernel       = new Kernel( true );
+		$kernel       = new Kernel( ! KUDOS_ENV_IS_DEVELOPMENT );
 		self::$kernel = $kernel;
 		$container    = $kernel->get_container();
 
