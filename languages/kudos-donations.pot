@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Iseard Media
+# Copyright (C) 2026 Iseard Media
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
