@@ -144,7 +144,7 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			try {
 				$this->api_client->setApiKey( $key );
 				return true;
-			} catch ( ApiException $e ) {
+			} catch ( \Exception $e ) {
 				$this->get_logger()->critical( $e->getMessage() );
 			}
 		}
@@ -203,6 +203,15 @@ class MolliePaymentProvider extends AbstractProvider implements PaymentProviderI
 			update_option( self::SETTING_PAYMENT_METHODS, [] );
 
 			return $value;
+		}
+
+		// Validate key format before saving. Mollie throws if the key prefix or
+		// length is wrong, which would crash the site on subsequent page loads.
+		try {
+			$this->api_client->setApiKey( $value );
+		} catch ( \Exception $e ) {
+			$this->get_logger()->error( 'Invalid Mollie API key: ' . $e->getMessage() );
+			return $_old_value;
 		}
 
 		$should_skip_refresh = apply_filters( $filter_name, false );
