@@ -164,6 +164,8 @@ const MollieTab = (): React.ReactNode => {
 								_kudos_vendor_mollie_api_key_live: '',
 								_kudos_vendor_mollie_api_key_test: '',
 								_kudos_vendor_mollie_api_mode: 'test',
+								_kudos_vendor_mollie_profile: null,
+								_kudos_payment_vendor_status: null,
 							});
 						}}
 					>
