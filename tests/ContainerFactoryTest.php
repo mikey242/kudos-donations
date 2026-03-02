@@ -4,9 +4,7 @@
  */
 
 use IseardMedia\Kudos\ContainerFactory;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @covers \IseardMedia\Kudos\ContainerFactory
@@ -14,8 +12,7 @@ use Psr\Container\NotFoundExceptionInterface;
 class ContainerFactoryTest extends WP_UnitTestCase {
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws Exception
      */
     public function test_container_created(): void {
         $container = ContainerFactory::create();
