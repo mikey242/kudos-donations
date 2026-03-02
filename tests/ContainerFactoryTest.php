@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin tests
+ * ContainerFactory tests
  */
 
-use IseardMedia\Kudos\Plugin;
 use IseardMedia\Kudos\ContainerFactory;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
@@ -13,12 +13,12 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class ContainerFactoryTest extends WP_UnitTestCase {
 
-	/**
-	 * @throws ContainerExceptionInterface
-	 * @throws NotFoundExceptionInterface
-	 */
-	public function test_plugin_created(): void {
-		$plugin = ContainerFactory::create();
-		$this->assertInstanceOf( Plugin::class, $plugin );
-	}
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function test_container_created(): void {
+        $container = ContainerFactory::create();
+        $this->assertInstanceOf( ContainerInterface::class, $container );
+    }
 }

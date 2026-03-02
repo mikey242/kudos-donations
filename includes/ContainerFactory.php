@@ -11,59 +11,36 @@ declare(strict_types=1);
 
 namespace IseardMedia\Kudos;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Exception;
+use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 /**
  * Class ContainerFactory
  */
 class ContainerFactory {
 
-	private static ?Kernel $kernel = null;
-
 	/**
-	 * Create and return an instance of the plugin.
+	 * Build and return the DI container.
 	 *
-	 * @throws \RuntimeException | NotFoundExceptionInterface | ContainerExceptionInterface If container fails or does not contain the Plugin class.
+	 * @throws RuntimeException | Exception If the container could not be built.
 	 *
-	 * @return Plugin Plugin instance.
+	 * @return ContainerInterface The compiled container.
 	 */
-	public static function create(): Plugin {
-		static $plugin = null;
+	public static function create(): ContainerInterface {
+		static $container = null;
 
-		if ( null !== $plugin ) {
-			/** @var Plugin $plugin */
-			return $plugin;
+		if ( null !== $container ) {
+			return $container;
 		}
 
-		$kernel       = new Kernel( ! KUDOS_ENV_IS_DEVELOPMENT );
-		self::$kernel = $kernel;
-		$container    = $kernel->get_container();
+		$kernel    = new Kernel( ! KUDOS_ENV_IS_DEVELOPMENT );
+		$container = $kernel->get_container();
 
 		if ( null === $container ) {
-			throw new \RuntimeException( 'Error fetching container' );
+			throw new RuntimeException( 'Error fetching container' );
 		}
 
-		$plugin = $container->get( Plugin::class );
-
-		if ( ! $plugin instanceof Plugin ) {
-			throw new \RuntimeException( 'Error loading Kudos Donations: Resolved plugin is not a Plugin instance.' );
-		}
-
-		return $plugin;
-	}
-
-	/**
-	 * Returns the kernel.
-	 *
-	 * @throws \RuntimeException If kernel not yet booted.
-	 *
-	 * @return Kernel Instance of kernel with container getter.
-	 */
-	public static function get_kernel(): Kernel {
-		if ( null === self::$kernel ) {
-			throw new \RuntimeException( 'Kernel has not been booted. Call create() first.' );
-		}
-		return self::$kernel;
+		return $container;
 	}
 }
