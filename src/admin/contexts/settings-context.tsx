@@ -169,9 +169,7 @@ export const SettingsProvider = <T extends BaseSettings>({
 		<SettingsContext.Provider
 			value={{
 				settings,
-				setSettings,
 				checkingApiKey,
-				fetchSettings,
 				checkApiKey,
 				updateSetting,
 				updateSettings,
