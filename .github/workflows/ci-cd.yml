@@ -7,69 +7,71 @@ on:
     branches: ["main"]
 
 jobs:
-  validate-composer:
+  lint-and-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+
       - name: Set up PHP with Composer and PHP-Scoper
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
           tools: composer
+          coverage: none
+
       - name: Validate Composer configuration
         run: composer --no-ansi validate
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up PHP with Composer and PHP-Scoper
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          tools: composer, php-scoper
-
-      - name: Lint PHP
-        run: |
-          composer install --no-ansi --no-interaction --no-progress --prefer-dist
-          composer run lint
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ vars.NODE_VERSION }}
           cache: "npm"
+          node-version-file: '.nvmrc'
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          composer install --no-ansi --no-interaction --no-progress --prefer-dist
+
+      - name: Lint PHP
+        run: composer run lint
 
       - name: Lint JavaScript and CSS
         run: |
-          npm ci
           npm run lint:js
           npm run lint:css
 
-  build-job:
-    uses: ./.github/workflows/build.yml
-    with:
-      node-version: ${{ vars.NODE_VERSION }}
+      - name: Build front-end assets
+        run: npm run build
 
   test-job:
     runs-on: ubuntu-latest
-    needs: build-job
+    needs: lint-and-build
     strategy:
       matrix:
         php-version: ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]
     name: PHP ${{ matrix.php-version }} tests
     services:
       mysql:
-        image: mysql:9.6
+        image: mariadb:lts
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: wordpress_test
         ports:
           - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=10 --health-start-period=60s
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
