@@ -15,7 +15,7 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 
     use RepositoryAwareTrait;
 
-    private ?ContainerInterface $container;
+    private ContainerInterface $container;
 
     /**
      * Set up each test and truncate custom plugin tables.
