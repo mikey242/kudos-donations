@@ -112,23 +112,6 @@ export const TransactionEdit = ({ entity }: PostEditProps): React.ReactNode => {
 					type: 'datetime',
 				},
 			]}
-			form={{
-				fields: [
-					'title',
-					'value',
-					'currency',
-					'status',
-					'sequence_type',
-					'invoice_number',
-					'vendor',
-					'vendor_customer_id',
-					'vendor_payment_id',
-					'campaign_id',
-					'donor_id',
-					'subscription_id',
-					'created_at',
-				],
-			}}
 		/>
 	);
 };

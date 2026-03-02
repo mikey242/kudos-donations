@@ -65,20 +65,6 @@ export const DonorEdit = ({ entity }: PostEditProps): React.ReactNode => {
 					type: 'datetime',
 				},
 			]}
-			form={{
-				fields: [
-					'title',
-					'name',
-					'business_name',
-					'street',
-					'city',
-					'postcode',
-					'country',
-					'vendor_customer_id',
-					'locale',
-					'created_at',
-				],
-			}}
 		/>
 	);
 };
