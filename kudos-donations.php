@@ -99,7 +99,7 @@ function activate(): void {
 	( new CompatibilityService() )->on_plugin_activation();
 
 	try {
-		ContainerFactory::create()->on_plugin_activation();
+		ContainerFactory::create()->get( Plugin::class )->on_plugin_activation();
 	} catch ( \Throwable $e ) {
         // phpcs:disable WordPress.PHP.DevelopmentFunctions
 		error_log( $e->getMessage() );
@@ -118,7 +118,7 @@ register_activation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\activate' );
  */
 function deactivate(): void {
 	try {
-		ContainerFactory::create()->on_plugin_deactivation();
+		ContainerFactory::create()->get( Plugin::class )->on_plugin_deactivation();
 	} catch ( \Throwable $e ) {
         // phpcs:disable WordPress.PHP.DevelopmentFunctions
 		error_log( $e->getMessage() );
@@ -138,7 +138,7 @@ register_deactivation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
  */
 function bootstrap_plugin(): void {
 	try {
-		ContainerFactory::create()->register();
+		ContainerFactory::create()->get( Plugin::class )->register();
 	} catch ( \Throwable $e ) {
 		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
 		CacheService::recursively_clear_cache();

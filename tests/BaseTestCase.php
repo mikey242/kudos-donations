@@ -13,40 +13,38 @@ use WP_UnitTestCase;
 
 abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareInterface {
 
-	use RepositoryAwareTrait;
+    use RepositoryAwareTrait;
 
-	private ?ContainerInterface $container;
+    private ?ContainerInterface $container;
 
-	/**
-	 * Set up each test and truncate custom plugin tables.
-	 */
-	public function set_up(): void {
-		parent::set_up();
-		try {
-			ContainerFactory::create();
-			$kernel = ContainerFactory::get_kernel();
-			$this->container = $kernel->get_container();
-		} catch ( RuntimeException | ContainerExceptionInterface $e ) {
-			error_log($e->getMessage());
-		}
-	}
+    /**
+     * Set up each test and truncate custom plugin tables.
+     */
+    public function set_up(): void {
+        parent::set_up();
+        try {
+            $this->container = ContainerFactory::create();
+        } catch ( RuntimeException | ContainerExceptionInterface $e ) {
+            error_log($e->getMessage());
+        }
+    }
 
-	protected function get_from_container(string $class) {
-		try {
-			return $this->container->get($class);
-		} catch ( NotFoundExceptionInterface | ContainerExceptionInterface $e ) {
-			error_log($e->getMessage());
-		}
-		return null;
-	}
+    protected function get_from_container(string $class) {
+        try {
+            return $this->container->get($class);
+        } catch ( NotFoundExceptionInterface | ContainerExceptionInterface $e ) {
+            error_log($e->getMessage());
+        }
+        return null;
+    }
 
-	/**
-	 * Helper to assert provided string is a valid URL.
-	 */
-	protected function assertValidUrl(string $url): void {
-		$this->assertNotFalse(
-			filter_var($url, FILTER_VALIDATE_URL),
-			"Invalid URL: $url"
-		);
-	}
+    /**
+     * Helper to assert provided string is a valid URL.
+     */
+    protected function assertValidUrl(string $url): void {
+        $this->assertNotFalse(
+            filter_var($url, FILTER_VALIDATE_URL),
+            "Invalid URL: $url"
+        );
+    }
 }
