@@ -21,7 +21,7 @@ export const TableControls = ({
 }: TableControlsProps): React.ReactNode => {
 	return (
 		<>
-			<Flex justify="space-between">
+			<Flex wrap={true} justify="space-between">
 				<FlexItem>
 					<Filters filters={filters} />
 				</FlexItem>
