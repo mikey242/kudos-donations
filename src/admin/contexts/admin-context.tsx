@@ -10,7 +10,6 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalSpacer as Spacer,
 } from '@wordpress/components';
-import * as AdminControls from '../components/controls';
 import { AdminHeader, MigrationModal, Notices } from '../components';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 
@@ -43,9 +42,6 @@ export const AdminProvider = ({ children }: ProviderProps) => {
 export const InnerAdminProvider = ({ children }) => {
 	const [headerContent, setHeaderContent] = useState<ReactNode>(null);
 	const [pageTitle, setPageTitle] = useState<string>('');
-
-	// Add controls to kudos property for external access.
-	window.kudos.AdminControls = AdminControls;
 
 	// Define export data.
 	const data: AdminContextValue = {
