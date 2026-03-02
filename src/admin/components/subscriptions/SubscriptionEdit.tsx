@@ -77,22 +77,6 @@ export const SubscriptionEdit = ({
 					type: 'datetime',
 				},
 			]}
-			form={{
-				fields: [
-					'title',
-					'value',
-					'currency',
-					'status',
-					'frequency',
-					'years',
-					'transaction_id',
-					'vendor_customer_id',
-					'vendor_subscription_id',
-					'campaign_id',
-					'donor_id',
-					'created_at',
-				],
-			}}
 		/>
 	);
 };

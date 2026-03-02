@@ -16,9 +16,6 @@ import {
 interface PostEditProps<T extends BaseEntity = BaseEntity> {
 	data: T;
 	fields: Field[];
-	form: {
-		fields: string[];
-	};
 }
 
 interface FieldElement {
@@ -60,7 +57,6 @@ const NavigationButtons = ({
 export const SingleEntityEdit = <T extends BaseEntity>({
 	data,
 	fields,
-	form,
 }: PostEditProps<T>): React.ReactNode => {
 	const [formData, setFormData] = useState<T | null>(data ?? null);
 	const { setHeaderContent } = useAdminContext();
@@ -151,8 +147,6 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 		}
 	};
 
-	const visibleFields = fields.filter((f) => form.fields.includes(f.id));
-
 	return (
 		<Panel
 			header={sprintf(
@@ -161,7 +155,7 @@ export const SingleEntityEdit = <T extends BaseEntity>({
 				formData?.title
 			)}
 		>
-			{visibleFields.map(renderField)}
+			{fields.map(renderField)}
 		</Panel>
 	);
 };
