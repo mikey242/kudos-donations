@@ -11,10 +11,17 @@ $finders = [
 	      ->ignoreDotFiles(true)
 	      ->path([
 			  'dompdf/',
+			  'friendsofphp/',
+			  'laminas/',
 			  'masterminds/',
 			  'mollie/',
 			  'monolog/',
 			  'sabberworm/',
+			  'symfony/config/',
+			  'symfony/dependency-injection/',
+			  'symfony/filesystem/',
+			  'symfony/proxy-manager-bridge/',
+			  'symfony/service-contracts/',
 	      ])
 	      ->in('vendor'),
 ];
@@ -53,6 +60,40 @@ return [
                 "'\\" . $prefix . "\\Dompdf\\Positioner\\\\",
                 $content
             );
+		},
+		static function (string $filePath, string $prefix, string $content): string {
+			// ResolveInstanceofConditionalsPass uses hardcoded offsets ('53', 44) based on the
+			// unscoped class name length. Recompute them from the actual scoped class names.
+			if (false === strpos($filePath, 'dependency-injection/Compiler/ResolveInstanceofConditionalsPass.php')) {
+				return $content;
+			}
+			$def_len    = strlen($prefix . '\\Symfony\\Component\\DependencyInjection\\Definition');
+			$child_len  = strlen($prefix . '\\Symfony\\Component\\DependencyInjection\\ChildDefinition');
+			$insert_pos = 4 + strlen((string) $child_len) + $def_len - strlen('Definition');
+			$content = str_replace("substr_replace(\$definition, '53', 2, 2)", "substr_replace(\$definition, '$child_len', 2, 2)", $content);
+			return str_replace("substr_replace(\$definition, 'Child', 44, 0)", "substr_replace(\$definition, 'Child', $insert_pos, 0)", $content);
+		},
+		static function (string $filePath, string $prefix, string $content): string {
+			// Rewrite use statements inside PhpDumper heredoc strings (not caught by php-scoper).
+			if (false === strpos($filePath, 'dependency-injection/Dumper/PhpDumper.php')) {
+				return $content;
+			}
+			return str_replace(
+				'use Symfony\\Component\\DependencyInjection\\',
+				'use ' . $prefix . '\\Symfony\\Component\\DependencyInjection\\',
+				$content
+			);
+		},
+		static function (string $filePath, string $prefix, string $content): string {
+			// Rewrite ProxyManager type hint inside ProxyDumper heredoc string.
+			if (false === strpos($filePath, 'proxy-manager-bridge/LazyProxy/PhpDumper/ProxyDumper.php')) {
+				return $content;
+			}
+			return str_replace(
+				'\\ProxyManager\\Proxy\\LazyLoadingInterface',
+				'\\' . $prefix . '\\ProxyManager\\Proxy\\LazyLoadingInterface',
+				$content
+			);
 		},
 	],
 ];
