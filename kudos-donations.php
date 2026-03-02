@@ -21,6 +21,9 @@
 
 namespace IseardMedia\Kudos;
 
+use IseardMedia\Kudos\Service\CacheService;
+use IseardMedia\Kudos\Service\CompatibilityService;
+use IseardMedia\Kudos\Service\NoticeService;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -89,4 +92,57 @@ if ( file_exists( $dev_bootstrap ) ) {
 	require_once $dev_bootstrap;
 }
 
-require KUDOS_PLUGIN_DIR . 'includes/namespace.php';
+/**
+ * Handle plugin activation.
+ */
+function activate(): void {
+	( new CompatibilityService() )->on_plugin_activation();
+
+	try {
+		PluginFactory::create()->on_plugin_activation();
+	} catch ( \Throwable $e ) {
+        // phpcs:disable WordPress.PHP.DevelopmentFunctions
+		error_log( $e->getMessage() );
+		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+	}
+	/**
+	 * Fires when the plugin is activated.
+	 */
+	do_action( 'kudos_donations_activated' );
+}
+
+register_activation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\activate' );
+
+/**
+ * Handles plugin deactivation.
+ */
+function deactivate(): void {
+	try {
+		PluginFactory::create()->on_plugin_deactivation();
+	} catch ( \Throwable $e ) {
+        // phpcs:disable WordPress.PHP.DevelopmentFunctions
+		error_log( $e->getMessage() );
+		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+	}
+
+	/**
+	 * Fires after plugin deactivation.
+	 */
+	do_action( 'kudos_donations_deactivated' );
+}
+
+register_deactivation_hook( KUDOS_PLUGIN_FILE, __NAMESPACE__ . '\deactivate' );
+
+/**
+ * Bootstrap the plugin.
+ */
+function bootstrap_plugin(): void {
+	try {
+		PluginFactory::create()->register();
+	} catch ( \Throwable $e ) {
+		NoticeService::notice( $e->getMessage(), NoticeService::ERROR );
+		CacheService::recursively_clear_cache();
+	}
+}
+
+add_action( 'plugins_loaded', __NAMESPACE__ . '\bootstrap_plugin' );
