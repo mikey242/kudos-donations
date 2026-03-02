@@ -9,7 +9,7 @@ import { EntityPage } from './EntityPage';
 import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
 import type { Campaign } from '../../types/entity';
-import {Flex, IconType} from '@wordpress/components';
+import { Flex, IconType } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { TransactionEdit } from './transactions/TransactionEdit';
 import { SubscriptionEdit } from './subscriptions/SubscriptionEdit';

@@ -12,7 +12,7 @@ domReady(() => {
 		root.render(
 			<AdminProvider>
 				<SettingsProvider>
-					<AdminRouter/>
+					<AdminRouter />
 				</SettingsProvider>
 			</AdminProvider>
 		);
