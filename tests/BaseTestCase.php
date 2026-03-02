@@ -4,7 +4,7 @@ namespace IseardMedia\Kudos\Tests;
 
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareInterface;
 use IseardMedia\Kudos\Domain\Repository\RepositoryAwareTrait;
-use IseardMedia\Kudos\PluginFactory;
+use IseardMedia\Kudos\ContainerFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -23,8 +23,8 @@ abstract class BaseTestCase extends WP_UnitTestCase implements RepositoryAwareIn
 	public function set_up(): void {
 		parent::set_up();
 		try {
-			PluginFactory::create();
-			$kernel = PluginFactory::get_kernel();
+			ContainerFactory::create();
+			$kernel = ContainerFactory::get_kernel();
 			$this->container = $kernel->get_container();
 		} catch ( RuntimeException | ContainerExceptionInterface $e ) {
 			error_log($e->getMessage());

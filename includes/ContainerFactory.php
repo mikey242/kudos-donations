@@ -1,6 +1,6 @@
 <?php
 /**
- * PluginFactory class.
+ * ContainerFactory class.
  *
  * @link https://github.com/mikey242/kudos-donations
  *
@@ -15,9 +15,9 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * Class PluginFactory
+ * Class ContainerFactory
  */
-class PluginFactory {
+class ContainerFactory {
 
 	private static ?Kernel $kernel = null;
 
