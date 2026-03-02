@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Flex } from '@wordpress/components';
 import { useAdminQueryParams } from '../hooks';
-import {AdminPages} from "./AdminRouter";
+import { AdminPages } from './AdminRouter';
 
 export const AdminMenu = (): React.ReactNode => {
 	const { params, setParams } = useAdminQueryParams();
