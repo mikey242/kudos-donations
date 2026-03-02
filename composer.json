@@ -79,10 +79,19 @@
 		],
 		"remove-from-vendor": [
 			"rm -rf vendor/dompdf",
+			"rm -rf vendor/friendsofphp",
+			"rm -rf vendor/laminas",
 			"rm -rf vendor/masterminds",
 			"rm -rf vendor/mollie",
 			"rm -rf vendor/monolog",
-			"rm -rf vendor/sabberworm"
+			"rm -rf vendor/sabberworm",
+			"rm -rf vendor/symfony/config",
+			"rm -rf vendor/symfony/dependency-injection",
+			"rm -rf vendor/symfony/filesystem",
+			"rm -rf vendor/symfony/proxy-manager-bridge",
+			"rm -rf vendor/symfony/service-contracts",
+			"sed -i '/laminas-code\\/polyfill/d' vendor/composer/autoload_files.php",
+			"sed -i '/laminas-code\\/polyfill/d' vendor/composer/autoload_static.php"
 		],
 		"post-install-cmd": [
 			"@clean-unused-files",

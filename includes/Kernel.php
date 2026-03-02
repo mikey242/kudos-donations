@@ -14,11 +14,11 @@ namespace IseardMedia\Kudos;
 use Exception;
 use IseardMedia\Kudos\Service\CacheService;
 use IseardMedia\Kudos\Service\NoticeService;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\Config\FileLocator;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ContainerBuilder;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use WP_Filesystem_Base;
 
 class Kernel {

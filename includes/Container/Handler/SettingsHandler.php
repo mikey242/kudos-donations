@@ -14,7 +14,7 @@ namespace IseardMedia\Kudos\Container\Handler;
 use IseardMedia\Kudos\Container\AbstractRegistrable;
 use IseardMedia\Kudos\Container\ActivationAwareInterface;
 use IseardMedia\Kudos\Container\HasSettingsInterface;
-use Symfony\Component\DependencyInjection\ServiceLocator;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ServiceLocator;
 
 class SettingsHandler extends AbstractRegistrable implements ActivationAwareInterface {
 

@@ -45,12 +45,12 @@ use IseardMedia\Kudos\ThirdParty\Monolog\Handler\RotatingFileHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Handler\WhatFailureGroupHandler;
 use IseardMedia\Kudos\ThirdParty\Monolog\Logger;
 use IseardMedia\Kudos\ThirdParty\Monolog\Processor\PsrLogMessageProcessor;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
+use function IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\Configurator\service;
+use function IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
+use function IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
 
 return static function ( ContainerConfigurator $container_configurator ): void {
 	$parameters = $container_configurator->parameters();

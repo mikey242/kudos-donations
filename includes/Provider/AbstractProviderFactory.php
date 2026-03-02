@@ -12,9 +12,9 @@ declare( strict_types=1 );
 namespace IseardMedia\Kudos\Provider;
 
 use IseardMedia\Kudos\Container\AbstractRegistrable;
+use IseardMedia\Kudos\ThirdParty\Symfony\Component\DependencyInjection\ServiceLocator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * @template T of ProviderInterface
