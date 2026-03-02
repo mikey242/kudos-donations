@@ -17,6 +17,7 @@ import { Flex, Icon, Spinner } from '@wordpress/components';
 import { IntroGuide } from '../components';
 import type { BaseSettings } from '../../types/settings';
 import type { WPErrorResponse } from '../../types/wp';
+import { dirtyValues } from '../utils';
 
 interface SettingsContextValue<T extends BaseSettings> {
 	settings: T;
@@ -163,37 +164,6 @@ export const SettingsProvider = <T extends BaseSettings>({
 				setCheckingApiKey(false);
 			});
 	}
-
-	// @see https://github.com/orgs/react-hook-form/discussions/1991#discussioncomment-31308
-	const dirtyValues = (dirtyFields: unknown, allValues: T): T => {
-		// If dirtyFields is true or an array, return the entire allValues
-		if (dirtyFields === true || Array.isArray(dirtyFields)) {
-			return allValues;
-		}
-
-		// Process object to get modified fields
-		return Object.fromEntries(
-			Object.entries(dirtyFields)
-				.map(([key, value]) => {
-					// Check if value is an object
-					if (
-						value &&
-						typeof value === 'object' &&
-						!Array.isArray(value)
-					) {
-						// Recursively get dirty fields
-						const nestedDirty = dirtyValues(value, allValues[key]);
-						// Return entire object if any nested field is dirty
-						return nestedDirty !== undefined
-							? [key, allValues[key]]
-							: undefined;
-					}
-					// Return value if the field itself is dirty
-					return value === true ? [key, allValues[key]] : undefined;
-				})
-				.filter((entry) => entry !== undefined) // Filter out undefined entries
-		);
-	};
 
 	return (
 		<SettingsContext.Provider

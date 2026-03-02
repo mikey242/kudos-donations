@@ -16,6 +16,7 @@ import { useAdminQueryParams } from '../../hooks';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
+import { confirmDelete } from '../../utils';
 
 const subscriptionStatusConfig: Record<string, StatusConfig> = {
 	active: { title: __('Active', 'kudos-donations'), icon: 'yes-alt' },
@@ -160,18 +161,16 @@ export const SubscriptionsTable = ({ handleEdit }): React.ReactNode => {
 					<Button
 						size="compact"
 						icon="trash"
-						label={__('Delete donor', 'kudos-donations')}
-						onClick={() => {
-							return (
-								// eslint-disable-next-line no-alert
-								window.confirm(
-									__(
-										'Are you sure you wish to delete this donor?',
-										'kudos-donations'
-									)
-								) && handleDelete(post.id)
-							);
-						}}
+						label={__('Delete subscription', 'kudos-donations')}
+						onClick={() =>
+							confirmDelete(
+								__(
+									'Are you sure you wish to delete this subscription?',
+									'kudos-donations'
+								),
+								() => handleDelete(post.id)
+							)
+						}
 					/>
 				</Flex>
 			),

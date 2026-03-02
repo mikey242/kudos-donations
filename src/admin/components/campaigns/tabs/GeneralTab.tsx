@@ -10,6 +10,7 @@ import React from 'react';
 import { useWatch } from 'react-hook-form';
 import type { Campaign } from '../../../../types/entity';
 import { Panel } from '../../Panel';
+import { isValidUrl } from '../../../utils';
 
 interface GeneralTabProps {
 	campaign: Campaign;
@@ -23,18 +24,6 @@ export const GeneralTab = ({ campaign }: GeneralTabProps): React.ReactNode => {
 	const watchDisplayGoal = useWatch({ name: 'show_goal' });
 	const watchCurrency = useWatch({ name: 'currency' });
 	const watchUseReturnURL = useWatch({ name: 'use_custom_return_url' });
-
-	const isValidUrl = (value: string) => {
-		let url: URL;
-
-		try {
-			url = new URL(value);
-		} catch (_) {
-			return false;
-		}
-
-		return url.protocol === 'http:' || url.protocol === 'https:';
-	};
 
 	return (
 		<>
