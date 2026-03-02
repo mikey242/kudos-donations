@@ -100,8 +100,6 @@
 		}
 
 		.kudos-version {
-
-			/*border: 1px solid #9ca3af;*/
 			border-radius: var(--kudos-rounded);
 			background-color: #efefef;
 			padding: 0.75em;
@@ -168,10 +166,6 @@
 	.admin-wrap-wide {
 		max-width: 1080px;
 		margin: auto;
-	}
-
-	.kudos-admin-notices {
-		margin: 1rem auto;
 	}
 
 	.kudos-settings-tab-panel {
