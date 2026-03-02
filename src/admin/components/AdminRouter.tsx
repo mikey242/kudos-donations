@@ -1,19 +1,18 @@
 import React from 'react';
-import { EntitiesProvider } from '../contexts';
+import { Flex, IconType } from '@wordpress/components';
 import { useAdminQueryParams } from '../hooks';
-import { DonorsTable } from './donors';
-import { TransactionsTable } from './transactions';
-import { SubscriptionsTable } from './subscriptions';
-import { SettingsPage } from './settings';
-import { EntityPage } from './EntityPage';
+import { EntitiesProvider } from '../contexts';
 import { CampaignsTable } from './campaigns';
 import CampaignEdit from './campaigns/CampaignEdit';
-import type { Campaign } from '../../types/entity';
-import { Flex, IconType } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { EntityPage } from './EntityPage';
+import { TransactionsTable } from './transactions';
 import { TransactionEdit } from './transactions/TransactionEdit';
-import { SubscriptionEdit } from './subscriptions/SubscriptionEdit';
-import { DonorEdit } from './donors/DonorEdit';
+import { __ } from '@wordpress/i18n';
+import { SubscriptionsTable } from './subscriptions';
+import { DonorsTable } from './donors';
+import { SettingsPage } from './settings';
+import { SingleEntityEdit } from './SingleEntityEdit';
+import { Campaign } from '../../types/entity';
 
 export interface PageConfig {
 	label: string;
@@ -80,9 +79,75 @@ export const AdminPages: PageConfig[] = [
 					renderTable={(editEntity) => (
 						<SubscriptionsTable handleEdit={editEntity} />
 					)}
-					renderEdit={(entity) => (
-						<SubscriptionEdit entity={entity} />
-					)}
+					renderEdit={(entity) =>
+						entity && (
+							<SingleEntityEdit
+								data={entity}
+								fields={[
+									{
+										id: 'title',
+										label: 'Title',
+										type: 'text',
+									},
+									{
+										id: 'value',
+										label: 'Value',
+										type: 'text',
+									},
+									{
+										id: 'currency',
+										label: 'Currency',
+										type: 'text',
+									},
+									{
+										id: 'status',
+										label: 'Status',
+										type: 'text',
+									},
+									{
+										id: 'frequency',
+										label: 'Frequency',
+										type: 'text',
+									},
+									{
+										id: 'years',
+										label: 'Years',
+										type: 'integer',
+									},
+									{
+										id: 'transaction_id',
+										label: 'Transaction id',
+										type: 'text',
+									},
+									{
+										id: 'vendor_customer_id',
+										label: 'Vendor customer id',
+										type: 'text',
+									},
+									{
+										id: 'vendor_subscription_id',
+										label: 'Vendor subscription id',
+										type: 'text',
+									},
+									{
+										id: 'campaign_id',
+										label: 'Campaign id',
+										type: 'integer',
+									},
+									{
+										id: 'donor_id',
+										label: 'Donor id',
+										type: 'integer',
+									},
+									{
+										id: 'created_at',
+										label: 'Created at',
+										type: 'datetime',
+									},
+								]}
+							/>
+						)
+					}
 				/>
 			</EntitiesProvider>
 		),
@@ -101,7 +166,57 @@ export const AdminPages: PageConfig[] = [
 					renderTable={(editEntity) => (
 						<DonorsTable handleEdit={editEntity} />
 					)}
-					renderEdit={(entity) => <DonorEdit entity={entity} />}
+					renderEdit={(entity) =>
+						entity && (
+							<SingleEntityEdit
+								data={entity}
+								fields={[
+									{
+										id: 'title',
+										label: 'Title',
+										type: 'text',
+									},
+									{ id: 'name', label: 'Name', type: 'text' },
+									{
+										id: 'business_name',
+										label: 'Business name',
+										type: 'text',
+									},
+									{
+										id: 'street',
+										label: 'Street',
+										type: 'text',
+									},
+									{ id: 'city', label: 'City', type: 'text' },
+									{
+										id: 'postcode',
+										label: 'Postcode',
+										type: 'text',
+									},
+									{
+										id: 'country',
+										label: 'Country',
+										type: 'text',
+									},
+									{
+										id: 'vendor_customer_id',
+										label: 'Vendor customer id',
+										type: 'text',
+									},
+									{
+										id: 'locale',
+										label: 'Locale',
+										type: 'text',
+									},
+									{
+										id: 'created_at',
+										label: 'Created at',
+										type: 'datetime',
+									},
+								]}
+							/>
+						)
+					}
 				/>
 			</EntitiesProvider>
 		),
@@ -116,17 +231,19 @@ export const AdminPages: PageConfig[] = [
 
 export const AdminRouter = (): React.ReactNode => {
 	const { params } = useAdminQueryParams();
-	const page = params.page;
+	const page = params.page || AdminPages[0].view;
 
-	const CurrentPageComponent = AdminPages[page];
+	const pageConfig = AdminPages.find((p) => p.view === page);
 
-	if (!CurrentPageComponent) {
+	if (!pageConfig) {
 		return (
 			<Flex justify="center">
 				<p>{`Unknown view: "${page}"`}</p>
 			</Flex>
 		);
 	}
+
+	const CurrentPageComponent = pageConfig.component;
 
 	// Force remount on view change.
 	return <CurrentPageComponent key={page} />;
