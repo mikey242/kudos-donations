@@ -32,7 +32,6 @@ use IseardMedia\Kudos\Domain\Schema\CampaignSchema;
 use IseardMedia\Kudos\Domain\Schema\DonorSchema;
 use IseardMedia\Kudos\Domain\Schema\SubscriptionSchema;
 use IseardMedia\Kudos\Domain\Schema\TransactionSchema;
-use IseardMedia\Kudos\Helper\WpDb;
 use IseardMedia\Kudos\Migrations\MigrationInterface;
 use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderFactory;
 use IseardMedia\Kudos\Provider\EmailProvider\EmailProviderInterface;
@@ -54,6 +53,10 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
 
 return static function ( ContainerConfigurator $container_configurator ): void {
+	$parameters = $container_configurator->parameters();
+	$parameters->set( 'plugin.slug', 'kudos-donations' );
+	$parameters->set( 'log.max_files', 5 );
+
 	$services = $container_configurator->services();
 
 	$services->defaults()
@@ -101,7 +104,7 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->args(
 			[
 				'%env(KUDOS_STORAGE_DIR)%logs/%env(APP_ENV)%.log',
-				'5',
+				'%log.max_files%',
 				'%env(LOG_LEVEL)%',
 			]
 		)
@@ -117,11 +120,21 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 	$services->set( Dompdf::class )->lazy();
 	$services->set( MollieApiClient::class )->lazy();
 
-	// Register repositories with managers.
+	// Configure repositories.
+	$services->set( TransactionRepository::class )
+			->arg( '$schema', service( TransactionSchema::class ) );
+	$services->set( CampaignRepository::class )
+			->arg( '$schema', service( CampaignSchema::class ) );
+	$services->set( DonorRepository::class )
+			->arg( '$schema', service( DonorSchema::class ) );
+	$services->set( SubscriptionRepository::class )
+			->arg( '$schema', service( SubscriptionSchema::class ) );
+
+	// Register handlers and factories.
 	$services->set( PaymentProviderFactory::class )
 		->args( [ tagged_locator( 'kudos.payment_vendor' ) ] );
 	$services->set( SettingsHandler::class )
-		->args( [ tagged_locator( 'kudos.has_settings' ), 'kudos-donations' ] );
+		->args( [ tagged_locator( 'kudos.has_settings' ), '%plugin.slug%' ] );
 	$services->set( EmailProviderFactory::class )
 		->args( [ tagged_locator( 'kudos.email_vendor' ) ] );
 	$services->set( RegistrableHandler::class )
@@ -134,39 +147,6 @@ return static function ( ContainerConfigurator $container_configurator ): void {
 		->args( [ tagged_iterator( 'kudos.repository' ) ] );
 	$services->set( MigrationHandler::class )
 		->args( [ tagged_iterator( 'kudos.migration' ) ] );
-
-	// Configure repositories.
-	$services->set( TransactionRepository::class )
-			->args(
-				[
-					service( WpDb::class ),
-					service( TransactionSchema::class ),
-				]
-			);
-
-	$services->set( CampaignRepository::class )
-			->args(
-				[
-					service( WpDb::class ),
-					service( CampaignSchema::class ),
-				]
-			);
-
-	$services->set( DonorRepository::class )
-			->args(
-				[
-					service( WpDb::class ),
-					service( DonorSchema::class ),
-				]
-			);
-
-	$services->set( SubscriptionRepository::class )
-			->args(
-				[
-					service( WpDb::class ),
-					service( SubscriptionSchema::class ),
-				]
-			);
 
 	// Filter for adding additional services.
 	do_action( 'kudos_container_configurator', $services );
